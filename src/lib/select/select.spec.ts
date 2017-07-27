@@ -1,5 +1,3 @@
-import {TestBed, async, ComponentFixture, fakeAsync, tick, inject} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
 import {
   Component,
   DebugElement,
@@ -9,7 +7,19 @@ import {
   ChangeDetectionStrategy,
   OnInit,
 } from '@angular/core';
+import {
+  ControlValueAccessor,
+  FormControl,
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
+  FormGroup,
+  FormGroupDirective,
+  Validators,
+} from '@angular/forms';
+import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {TestBed, async, ComponentFixture, fakeAsync, tick, inject} from '@angular/core/testing';
 import {MdSelectModule} from './index';
 import {OverlayContainer} from '../core/overlay/overlay-container';
 import {MdSelect} from './select';
@@ -17,9 +27,6 @@ import {getMdSelectDynamicMultipleError, getMdSelectNonArrayValueError} from './
 import {MdOption} from '../core/option/option';
 import {Directionality} from '../core/bidi/index';
 import {DOWN_ARROW, UP_ARROW, ENTER, SPACE, HOME, END, TAB} from '../core/keyboard/keycodes';
-import {
-  ControlValueAccessor, FormControl, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule
-} from '@angular/forms';
 import {Subject} from 'rxjs/Subject';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {dispatchFakeEvent, dispatchKeyboardEvent, wrappedErrorMessage} from '@angular/cdk/testing';
@@ -63,7 +70,11 @@ describe('MdSelect', () => {
         ResetValuesSelect,
         FalsyValueSelect,
         SelectWithGroups,
-        InvalidSelectInForm
+        InvalidSelectInForm,
+        BasicSelectWithoutForms,
+        BasicSelectWithoutFormsPreselected,
+        BasicSelectWithoutFormsMultiple,
+        SelectInsideFormGroup
       ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -702,6 +713,138 @@ describe('MdSelect', () => {
         .toBe(true, 'Expected first option to be selected');
       expect(overlayContainerElement.querySelectorAll('md-option')[0].classList)
         .toContain('mat-selected', 'Expected first option to be selected');
+    });
+
+  });
+
+  describe('selection without Angular forms', () => {
+    it('should set the value when options are clicked', () => {
+      const fixture = TestBed.createComponent(BasicSelectWithoutForms);
+
+      fixture.detectChanges();
+      expect(fixture.componentInstance.selectedFood).toBeFalsy();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
+
+      trigger.click();
+      fixture.detectChanges();
+
+      (overlayContainerElement.querySelector('md-option') as HTMLElement).click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.selectedFood).toBe('steak-0');
+      expect(fixture.componentInstance.select.value).toBe('steak-0');
+      expect(trigger.textContent).toContain('Steak');
+
+      trigger.click();
+      fixture.detectChanges();
+
+      (overlayContainerElement.querySelectorAll('md-option')[2] as HTMLElement).click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.selectedFood).toBe('sandwich-2');
+      expect(fixture.componentInstance.select.value).toBe('sandwich-2');
+      expect(trigger.textContent).toContain('Sandwich');
+    });
+
+    it('should mark options as selected when the value is set', () => {
+      const fixture = TestBed.createComponent(BasicSelectWithoutForms);
+
+      fixture.detectChanges();
+      fixture.componentInstance.selectedFood = 'sandwich-2';
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
+      expect(trigger.textContent).toContain('Sandwich');
+
+      trigger.click();
+      fixture.detectChanges();
+
+      const option = overlayContainerElement.querySelectorAll('md-option')[2];
+
+      expect(option.classList).toContain('mat-selected');
+      expect(fixture.componentInstance.select.value).toBe('sandwich-2');
+    });
+
+    it('should reset the placeholder when a null value is set', () => {
+      const fixture = TestBed.createComponent(BasicSelectWithoutForms);
+
+      fixture.detectChanges();
+      expect(fixture.componentInstance.selectedFood).toBeFalsy();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
+
+      trigger.click();
+      fixture.detectChanges();
+
+      (overlayContainerElement.querySelector('md-option') as HTMLElement).click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.selectedFood).toBe('steak-0');
+      expect(fixture.componentInstance.select.value).toBe('steak-0');
+      expect(trigger.textContent).toContain('Steak');
+
+      fixture.componentInstance.selectedFood = null;
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.select.value).toBeNull();
+      expect(trigger.textContent).not.toContain('Steak');
+    });
+
+    it('should reflect the preselected value', async(() => {
+      const fixture = TestBed.createComponent(BasicSelectWithoutFormsPreselected);
+
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        const trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
+
+        fixture.detectChanges();
+        expect(trigger.textContent).toContain('Pizza');
+
+        trigger.click();
+        fixture.detectChanges();
+
+        const option = overlayContainerElement.querySelectorAll('md-option')[1];
+
+        expect(option.classList).toContain('mat-selected');
+        expect(fixture.componentInstance.select.value).toBe('pizza-1');
+      });
+    }));
+
+    it('should be able to select multiple values', () => {
+      const fixture = TestBed.createComponent(BasicSelectWithoutFormsMultiple);
+
+      fixture.detectChanges();
+      expect(fixture.componentInstance.selectedFoods).toBeFalsy();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
+
+      trigger.click();
+      fixture.detectChanges();
+
+      const options =
+          overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
+
+      options[0].click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.selectedFoods).toEqual(['steak-0']);
+      expect(fixture.componentInstance.select.value).toEqual(['steak-0']);
+      expect(trigger.textContent).toContain('Steak');
+
+      options[2].click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.selectedFoods).toEqual(['steak-0', 'sandwich-2']);
+      expect(fixture.componentInstance.select.value).toEqual(['steak-0', 'sandwich-2']);
+      expect(trigger.textContent).toContain('Steak, Sandwich');
+
+      options[1].click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.selectedFoods).toEqual(['steak-0', 'pizza-1', 'sandwich-2']);
+      expect(fixture.componentInstance.select.value).toEqual(['steak-0', 'pizza-1', 'sandwich-2']);
+      expect(trigger.textContent).toContain('Steak, Pizza, Sandwich');
     });
 
   });
@@ -1584,11 +1727,12 @@ describe('MdSelect', () => {
           'mat-select-required', `Expected the mat-select-required class to be set.`);
       });
 
-      it('should set aria-invalid for selects that are invalid', () => {
+      it('should set aria-invalid for selects that are invalid and touched', () => {
         expect(select.getAttribute('aria-invalid'))
           .toEqual('false', `Expected aria-invalid attr to be false for valid selects.`);
 
         fixture.componentInstance.isRequired = true;
+        fixture.componentInstance.control.markAsTouched();
         fixture.detectChanges();
 
         expect(select.getAttribute('aria-invalid'))
@@ -2361,7 +2505,6 @@ describe('MdSelect', () => {
 
   });
 
-
   describe('reset values', () => {
     let fixture: ComponentFixture<ResetValuesSelect>;
     let trigger: HTMLElement;
@@ -2433,6 +2576,77 @@ describe('MdSelect', () => {
       expect(placeholder.classList).not.toContain('mat-floating-placeholder');
       expect(trigger.textContent).not.toContain('Null');
       expect(trigger.textContent).not.toContain('Undefined');
+    });
+
+  });
+
+  describe('error state', () => {
+    let fixture: ComponentFixture<SelectInsideFormGroup>;
+    let testComponent: SelectInsideFormGroup;
+    let select: HTMLElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SelectInsideFormGroup);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+      select = fixture.debugElement.query(By.css('md-select')).nativeElement;
+    });
+
+    it('should not set the invalid class on a clean select', () => {
+      expect(testComponent.formGroup.untouched).toBe(true, 'Expected the form to be untouched.');
+      expect(testComponent.formControl.invalid).toBe(true, 'Expected form control to be invalid.');
+      expect(select.classList)
+          .not.toContain('mat-select-invalid', 'Expected select not to appear invalid.');
+      expect(select.getAttribute('aria-invalid'))
+          .toBe('false', 'Expected aria-invalid to be set to false.');
+    });
+
+    it('should appear as invalid if it becomes touched', () => {
+      expect(select.classList)
+          .not.toContain('mat-select-invalid', 'Expected select not to appear invalid.');
+      expect(select.getAttribute('aria-invalid'))
+          .toBe('false', 'Expected aria-invalid to be set to false.');
+
+      testComponent.formControl.markAsTouched();
+      fixture.detectChanges();
+
+      expect(select.classList)
+          .toContain('mat-select-invalid', 'Expected select to appear invalid.');
+      expect(select.getAttribute('aria-invalid'))
+          .toBe('true', 'Expected aria-invalid to be set to true.');
+    });
+
+    it('should not have the invalid class when the select becomes valid', () => {
+      testComponent.formControl.markAsTouched();
+      fixture.detectChanges();
+
+      expect(select.classList)
+          .toContain('mat-select-invalid', 'Expected select to appear invalid.');
+      expect(select.getAttribute('aria-invalid'))
+          .toBe('true', 'Expected aria-invalid to be set to true.');
+
+      testComponent.formControl.setValue('pizza-1');
+      fixture.detectChanges();
+
+      expect(select.classList)
+          .not.toContain('mat-select-invalid', 'Expected select not to appear invalid.');
+      expect(select.getAttribute('aria-invalid'))
+          .toBe('false', 'Expected aria-invalid to be set to false.');
+    });
+
+    it('should appear as invalid when the parent form group is submitted', () => {
+      expect(select.classList)
+          .not.toContain('mat-select-invalid', 'Expected select not to appear invalid.');
+      expect(select.getAttribute('aria-invalid'))
+          .toBe('false', 'Expected aria-invalid to be set to false.');
+
+      dispatchFakeEvent(fixture.debugElement.query(By.css('form')).nativeElement, 'submit');
+      fixture.detectChanges();
+
+      expect(select.classList)
+          .toContain('mat-select-invalid', 'Expected select to appear invalid.');
+      expect(select.getAttribute('aria-invalid'))
+          .toBe('true', 'Expected aria-invalid to be set to true.');
     });
 
   });
@@ -2784,6 +2998,7 @@ class BasicSelectWithTheming {
   theme: string;
 }
 
+
 @Component({
   selector: 'reset-values-select',
   template: `
@@ -2809,7 +3024,6 @@ class ResetValuesSelect {
 
   @ViewChild(MdSelect) select: MdSelect;
 }
-
 
 @Component({
   template: `
@@ -2891,4 +3105,83 @@ class SelectWithGroups {
 })
 class InvalidSelectInForm {
   value: any;
+}
+
+
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <md-select placeholder="Food" formControlName="food">
+        <md-option value="steak-0">Steak</md-option>
+        <md-option value="pizza-1">Pizza</md-option>
+      </md-select>
+    </form>
+  `
+})
+class SelectInsideFormGroup {
+  @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
+  formControl = new FormControl('', Validators.required);
+  formGroup = new FormGroup({
+    food: this.formControl
+  });
+}
+
+
+@Component({
+  template: `
+    <md-select placeholder="Food" [(value)]="selectedFood">
+      <md-option *ngFor="let food of foods" [value]="food.value">
+        {{ food.viewValue }}
+      </md-option>
+    </md-select>
+  `
+})
+class BasicSelectWithoutForms {
+  selectedFood: string | null;
+  foods: any[] = [
+    { value: 'steak-0', viewValue: 'Steak' },
+    { value: 'pizza-1', viewValue: 'Pizza' },
+    { value: 'sandwich-2', viewValue: 'Sandwich' },
+  ];
+
+  @ViewChild(MdSelect) select: MdSelect;
+}
+
+@Component({
+  template: `
+    <md-select placeholder="Food" [(value)]="selectedFood">
+      <md-option *ngFor="let food of foods" [value]="food.value">
+        {{ food.viewValue }}
+      </md-option>
+    </md-select>
+  `
+})
+class BasicSelectWithoutFormsPreselected {
+  selectedFood = 'pizza-1';
+  foods: any[] = [
+    { value: 'steak-0', viewValue: 'Steak' },
+    { value: 'pizza-1', viewValue: 'Pizza' },
+  ];
+
+  @ViewChild(MdSelect) select: MdSelect;
+}
+
+@Component({
+  template: `
+    <md-select placeholder="Food" [(value)]="selectedFoods" multiple>
+      <md-option *ngFor="let food of foods" [value]="food.value">
+        {{ food.viewValue }}
+      </md-option>
+    </md-select>
+  `
+})
+class BasicSelectWithoutFormsMultiple {
+  selectedFoods: string[];
+  foods: any[] = [
+    { value: 'steak-0', viewValue: 'Steak' },
+    { value: 'pizza-1', viewValue: 'Pizza' },
+    { value: 'sandwich-2', viewValue: 'Sandwich' },
+  ];
+
+  @ViewChild(MdSelect) select: MdSelect;
 }

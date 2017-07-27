@@ -1,4 +1,4 @@
-import {TestBed, async, ComponentFixture} from '@angular/core/testing';
+import {TestBed, async, ComponentFixture, fakeAsync, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
@@ -25,6 +25,7 @@ import {
   MenuPositionX,
   MenuPositionY,
   MdMenu,
+  MD_MENU_DEFAULT_OPTIONS,
 } from './index';
 import {MENU_PANEL_TOP_PADDING} from './menu-trigger';
 import {extendObject} from '../core/util/object-extend';
@@ -82,7 +83,7 @@ describe('MdMenu', () => {
     }).not.toThrowError();
   });
 
-  it('should close the menu when a click occurs outside the menu', () => {
+  it('should close the menu when a click occurs outside the menu', fakeAsync(() => {
     const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
@@ -90,11 +91,12 @@ describe('MdMenu', () => {
     const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
     backdrop.click();
     fixture.detectChanges();
+    tick(500);
 
     expect(overlayContainerElement.textContent).toBe('');
-  });
+  }));
 
-  it('should close the menu when pressing escape', () => {
+  it('should close the menu when pressing escape', fakeAsync(() => {
     const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
@@ -102,9 +104,10 @@ describe('MdMenu', () => {
     const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
     dispatchKeyboardEvent(panel, 'keydown', ESCAPE);
     fixture.detectChanges();
+    tick(500);
 
     expect(overlayContainerElement.textContent).toBe('');
-  });
+  }));
 
   it('should open a custom menu', () => {
     const fixture = TestBed.createComponent(CustomMenu);
@@ -871,8 +874,42 @@ describe('MdMenu', () => {
       expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(0, 'Expected no open menus');
     });
 
+    it('should set a class on the menu items that trigger a sub-menu', () => {
+      compileTestComponent();
+      instance.rootTrigger.openMenu();
+      fixture.detectChanges();
+
+      const menuItems = overlay.querySelectorAll('[md-menu-item]');
+
+      expect(menuItems[0].classList).toContain('mat-menu-item-submenu-trigger');
+      expect(menuItems[1].classList).not.toContain('mat-menu-item-submenu-trigger');
+    });
+
   });
 
+});
+
+describe('MdMenu default overrides', () => {
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [MdMenuModule, NoopAnimationsModule],
+      declarations: [SimpleMenu],
+      providers: [{
+        provide: MD_MENU_DEFAULT_OPTIONS,
+        useValue: {overlapTrigger: false, xPosition: 'before', yPosition: 'above'},
+      }],
+    }).compileComponents();
+  }));
+
+  it('should allow for the default menu options to be overridden', () => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.detectChanges();
+    const menu = fixture.componentInstance.menu;
+
+    expect(menu.overlapTrigger).toBe(false);
+    expect(menu.xPosition).toBe('before');
+    expect(menu.yPosition).toBe('above');
+  });
 });
 
 @Component({

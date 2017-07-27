@@ -46,7 +46,7 @@ import {createMissingDateImplError} from './datepicker-errors';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {MdCalendar} from './calendar';
 import {first} from '../core/rxjs/index';
-import {coerceBooleanProperty} from '@angular/cdk';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -151,7 +151,10 @@ export class MdDatepicker<D> implements OnDestroy {
   }
   private _disabled: boolean;
 
-  /** Emits new selected date when selected date changes. */
+  /**
+   * Emits new selected date when selected date changes.
+   * @deprecated Switch to the `dateChange` and `dateInput` binding on the input element.
+   */
   @Output() selectedChanged = new EventEmitter<D>();
 
   /** Whether the calendar is open. */
@@ -282,7 +285,6 @@ export class MdDatepicker<D> implements OnDestroy {
   /** Open the calendar as a dialog. */
   private _openAsDialog(): void {
     this._dialogRef = this._dialog.open(MdDatepickerContent, {
-      viewContainerRef: this._viewContainerRef,
       direction: this._dir ? this._dir.value : 'ltr'
     });
     this._dialogRef.afterClosed().subscribe(() => this.close());

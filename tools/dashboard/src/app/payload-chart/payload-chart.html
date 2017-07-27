@@ -14,5 +14,4 @@
   [autoScale]="true">
 </ngx-charts-line-chart>
 
-<md-progress-spinner *ngIf="!chartData.length" class="payload-chart-loading" mode="indeterminate">
-</md-progress-spinner>
+<md-spinner *ngIf="!chartData.length" class="payload-chart-loading"></md-spinner>
