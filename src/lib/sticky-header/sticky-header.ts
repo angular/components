@@ -54,12 +54,6 @@ export const STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER: Provider = {
   useFactory: isPositionStickySupported
 };
 
-// /** Create a factory for sticky-positioning check to make code more testable */
-// export const STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER = {
-//   provide: STICKY_HEADER_SUPPORT_STRATEGY,
-//   useFactory: isPositionStickySupported()
-// };
-
 /**
  * Directive that marks an element as a sticky-header. Inside of a scrolling container (marked with
  * cdkScrollable), this header will "stick" to the top of the scrolling viewport while its sticky
