@@ -5,7 +5,7 @@
 
 <section>
   <h2>Button toggles with icons</h2>
-  <md-button-toggle-group name="alignment">
+  <md-button-toggle-group name="alignment" aria-label="Alignments">
     <md-button-toggle value="left" aria-label="Align left">
       <md-icon>format_align_left</md-icon>
     </md-button-toggle>
@@ -23,7 +23,7 @@
 
 <section>
   <h2>Multi-selection button toggle group</h2>
-  <md-button-toggle-group multiple>
+  <md-button-toggle-group multiple aria-label="Groceries">
     <md-button-toggle>Flour</md-button-toggle>
     <md-button-toggle>Eggs</md-button-toggle>
     <md-button-toggle>Sugar</md-button-toggle>
@@ -33,7 +33,7 @@
 
 <section>
   <h2>Exclusive selection button toggle group</h2>
-  <md-button-toggle-group name="pies" [(ngModel)]="favoritePie">
+  <md-button-toggle-group name="pies" [(ngModel)]="favoritePie"  aria-label="Pies">
     <md-button-toggle *ngFor="let pie of pieOptions" [value]="pie">
       {{pie}}
     </md-button-toggle>
@@ -43,7 +43,7 @@
 
 <section>
   <h2>Disabled button toggle group</h2>
-  <md-button-toggle-group [disabled]="true">
+  <md-button-toggle-group [disabled]="true" aria-label="Groceries">
     <md-button-toggle>Flour</md-button-toggle>
     <md-button-toggle>Eggs</md-button-toggle>
     <md-button-toggle>Sugar</md-button-toggle>
@@ -53,7 +53,7 @@
 
 <section>
   <h2>Vertical button toggle group</h2>
-  <md-button-toggle-group multiple [vertical]="true">
+  <md-button-toggle-group multiple [vertical]="true" aria-label="Groceries">
     <md-button-toggle>Flour</md-button-toggle>
     <md-button-toggle>Eggs</md-button-toggle>
     <md-button-toggle>Sugar</md-button-toggle>
