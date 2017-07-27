@@ -1,0 +1,17 @@
+<ngx-charts-line-chart
+  *ngIf="chartData.length"
+  [scheme]="colorScheme"
+  [results]="chartData"
+  [gradient]="false"
+  [xAxis]="true"
+  [yAxis]="true"
+  [legend]="true"
+  [showXAxisLabel]="true"
+  [showYAxisLabel]="true"
+  [showGridLines]="true"
+  [xAxisLabel]="xAxisLabel"
+  [yAxisLabel]="yAxisLabel"
+  [autoScale]="true">
+</ngx-charts-line-chart>
+
+<md-spinner *ngIf="!chartData.length" class="coverage-chart-loading"></md-spinner>

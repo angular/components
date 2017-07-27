@@ -344,6 +344,37 @@ describe('MdAutocomplete', () => {
       });
     }));
 
+    it('should toggle the visibility when typing and closing the panel', fakeAsync(() => {
+      fixture.componentInstance.trigger.openPanel();
+      tick();
+      fixture.detectChanges();
+
+      expect(overlayContainerElement.querySelector('.mat-autocomplete-panel')!.classList)
+          .toContain('mat-autocomplete-visible', 'Expected panel to be visible.');
+
+      typeInElement('x', input);
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      expect(overlayContainerElement.querySelector('.mat-autocomplete-panel')!.classList)
+          .toContain('mat-autocomplete-hidden', 'Expected panel to be hidden.');
+
+      fixture.componentInstance.trigger.closePanel();
+      fixture.detectChanges();
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+
+      typeInElement('al', input);
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      expect(overlayContainerElement.querySelector('.mat-autocomplete-panel')!.classList)
+          .toContain('mat-autocomplete-visible', 'Expected panel to be visible.');
+    }));
+
   });
 
   it('should have the correct text direction in RTL', () => {
@@ -688,14 +719,27 @@ describe('MdAutocomplete', () => {
         fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
 
         fixture.whenStable().then(() => {
-          spyOn(ENTER_EVENT, 'preventDefault');
-
           fixture.componentInstance.trigger._handleKeydown(ENTER_EVENT);
 
-          expect(ENTER_EVENT.preventDefault).toHaveBeenCalled();
+          expect(ENTER_EVENT.defaultPrevented)
+              .toBe(true, 'Expected the default action to have been prevented.');
         });
       });
     }));
+
+    it('should not prevent the default enter action for a closed panel after a user interaction',
+      fakeAsync(() => {
+        tick();
+        fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
+        tick();
+        fixture.detectChanges();
+
+        fixture.componentInstance.trigger.closePanel();
+        fixture.detectChanges();
+        fixture.componentInstance.trigger._handleKeydown(ENTER_EVENT);
+
+        expect(ENTER_EVENT.defaultPrevented).toBe(false, 'Default action should not be prevented.');
+      }));
 
     it('should fill the text field, not select an option, when SPACE is entered', async(() => {
       fixture.whenStable().then(() => {

@@ -28,6 +28,7 @@ import {
   ChangeDetectionStrategy,
   InjectionToken,
 } from '@angular/core';
+import {NgForm, FormGroupDirective} from '@angular/forms';
 import {MdOption, MdOptionSelectionChange, MdOptgroup} from '../core/option/index';
 import {ENTER, SPACE, UP_ARROW, DOWN_ARROW, HOME, END} from '../core/keyboard/keycodes';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
@@ -36,7 +37,7 @@ import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import {transformPlaceholder, transformPanel, fadeInContent} from './select-animations';
 import {ControlValueAccessor, NgControl} from '@angular/forms';
-import {coerceBooleanProperty} from '@angular/cdk';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ConnectedOverlayDirective} from '../core/overlay/overlay-directives';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {SelectionModel} from '../core/selection/selection';
@@ -153,9 +154,10 @@ export const _MdSelectMixinBase = mixinColor(mixinDisabled(MdSelectBase), 'prima
     '[attr.aria-labelledby]': 'ariaLabelledby',
     '[attr.aria-required]': 'required.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
-    '[attr.aria-invalid]': '_control?.invalid || "false"',
+    '[attr.aria-invalid]': '_isErrorState()',
     '[attr.aria-owns]': '_optionIds',
     '[class.mat-select-disabled]': 'disabled',
+    '[class.mat-select-invalid]': '_isErrorState()',
     '[class.mat-select-required]': 'required',
     'class': 'mat-select',
     '(keydown)': '_handleClosedKeydown($event)',
@@ -325,6 +327,15 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     }
   }
 
+  /** Value of the select control. */
+  @Input()
+  get value() { return this._value; }
+  set value(newValue: any) {
+    this.writeValue(newValue);
+    this._value = newValue;
+  }
+  private _value: any;
+
   /** Aria label of the select. If not specified, the placeholder will be used as label. */
   @Input('aria-label') ariaLabel: string = '';
 
@@ -345,6 +356,13 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Event emitted when the selected value has been changed by the user. */
   @Output() change: EventEmitter<MdSelectChange> = new EventEmitter<MdSelectChange>();
 
+  /**
+   * Event that emits whenever the raw value of the select changes. This is here primarily
+   * to facilitate the two-way binding for the `value` input.
+   * @docs-private
+   */
+  @Output() valueChange = new EventEmitter<any>();
+
   constructor(
     private _viewportRuler: ViewportRuler,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -352,10 +370,13 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     renderer: Renderer2,
     elementRef: ElementRef,
     @Optional() private _dir: Directionality,
+    @Optional() private _parentForm: NgForm,
+    @Optional() private _parentFormGroup: FormGroupDirective,
     @Self() @Optional() public _control: NgControl,
     @Attribute('tabindex') tabIndex: string,
     @Optional() @Inject(MD_PLACEHOLDER_GLOBAL_OPTIONS) placeholderOptions: PlaceholderOptions,
     @Inject(MD_SELECT_SCROLL_STRATEGY) private _scrollStrategyFactory) {
+
     super(renderer, elementRef);
 
     if (this._control) {
@@ -377,11 +398,11 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     this._changeSubscription = startWith.call(this.options.changes, null).subscribe(() => {
       this._resetOptions();
 
-      if (this._control) {
-        // Defer setting the value in order to avoid the "Expression
-        // has changed after it was checked" errors from Angular.
-        Promise.resolve(null).then(() => this._setSelectionByValue(this._control.value));
-      }
+      // Defer setting the value in order to avoid the "Expression
+      // has changed after it was checked" errors from Angular.
+      Promise.resolve().then(() => {
+        this._setSelectionByValue(this._control ? this._control.value : this._value);
+      });
     });
   }
 
@@ -589,6 +610,16 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     return this._selectionModel && this._selectionModel.hasValue();
   }
 
+  /** Whether the select is in an error state. */
+  _isErrorState(): boolean {
+    const isInvalid = this._control && this._control.invalid;
+    const isTouched = this._control && this._control.touched;
+    const isSubmitted = (this._parentFormGroup && this._parentFormGroup.submitted) ||
+        (this._parentForm && this._parentForm.submitted);
+
+    return !!(isInvalid && (isTouched || isSubmitted));
+  }
+
   /**
    * Sets the scroll position of the scroll container. This must be called after
    * the overlay pane is attached or the scroll container element will not yet be
@@ -750,8 +781,10 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       valueToEmit = this.selected ? this.selected.value : fallbackValue;
     }
 
+    this._value = valueToEmit;
     this._onChange(valueToEmit);
     this.change.emit(new MdSelectChange(this, valueToEmit));
+    this.valueChange.emit(valueToEmit);
   }
 
   /** Records option IDs to pass to the aria-owns property. */
