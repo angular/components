@@ -39,11 +39,11 @@ describe('sticky-header with positioning not supported', () => {
   });
 
   it('should be able to find stickyParent', () => {
-    expect(stickyElement.nativeElement.stickyParent).not.toBe(null);
+    expect(stickyHeaderDir.stickyParent).not.toBe(null);
   });
 
   it('should be able to find scrollableContainer', () => {
-    expect(stickyElement.nativeElement.upperScrollableContainer).not.toBe(null);
+    expect(stickyHeaderDir.upperScrollableContainer).not.toBe(null);
   });
 
   it('should stick in the right place when scrolled to the top of the container', fakeAsync(() => {
