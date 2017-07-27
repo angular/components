@@ -152,7 +152,6 @@ export class CdkTable<T> implements CollectionViewer {
 
   constructor(private readonly _differs: IterableDiffers,
               private readonly _changeDetectorRef: ChangeDetectorRef,
-              private readonly _ngZone: NgZone,
               elementRef: ElementRef,
               renderer: Renderer2,
               @Attribute('role') role: string) {
@@ -166,15 +165,6 @@ export class CdkTable<T> implements CollectionViewer {
     this._dataDiffer = this._differs.find([]).create(this._trackByFn);
   }
 
-  ngDoCheck() {
-    // After the the content and view have been initialized and checked then we can connect
-    // to the data source and render data rows. This cannot be done from within change detection,
-    // so the table must wait until the next change detection cycle before rendering.
-    if (this._isViewInitialized && this.dataSource && !this._renderChangeSubscription) {
-      this._observeRenderChanges();
-    }
-  }
-
   ngAfterContentInit() {
     this._cacheColumnDefinitionsByName();
     this._columnDefinitions.changes.subscribe(() => this._cacheColumnDefinitionsByName());
@@ -182,10 +172,6 @@ export class CdkTable<T> implements CollectionViewer {
 
   ngAfterContentChecked() {
     this._renderUpdatedColumns();
-    this._cacheColumnDefinitionsByName();
-  }
-
-  ngAfterViewInit() {
     if (this.dataSource && !this._renderChangeSubscription) {
       this._observeRenderChanges();
     }
@@ -199,17 +185,6 @@ export class CdkTable<T> implements CollectionViewer {
 
     if (this.dataSource) {
       this.dataSource.disconnect(this);
-    }
-  }
-
-  ngAfterContentInit() {
-    // TODO(andrewseguin): Throw an error if two columns share the same name
-    this._columnDefinitions.forEach(columnDef => {
-      this._columnDefinitionsByName.set(columnDef.name, columnDef);
-    });
-
-    if (this.dataSource && !this._renderChangeSubscription) {
-      this._observeRenderChanges();
     }
   }
 
@@ -231,8 +206,8 @@ export class CdkTable<T> implements CollectionViewer {
    */
   private _renderUpdatedColumns() {
     // Re-render the rows when the row definition columns change.
-    this._rowDefinitions.forEach(def => {
-      if (!!def.getColumnsDiff()) {
+    this._rowDefinitions.forEach(rowDefinition => {
+      if (!!rowDefinition.getColumnsDiff()) {
         // Reset the data to an empty array so that renderRowChanges will re-render all new rows.
         this._dataDiffer.diff([]);
 
