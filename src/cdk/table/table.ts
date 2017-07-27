@@ -22,7 +22,6 @@ import {
   IterableDiffer,
   IterableDiffers,
   NgIterable,
-  NgZone,
   QueryList,
   Renderer2,
   TrackByFunction,
@@ -168,6 +167,7 @@ export class CdkTable<T> implements CollectionViewer {
   ngAfterContentInit() {
     this._cacheColumnDefinitionsByName();
     this._columnDefinitions.changes.subscribe(() => this._cacheColumnDefinitionsByName());
+    this._renderHeaderRow();
   }
 
   ngAfterContentChecked() {
@@ -221,8 +221,6 @@ export class CdkTable<T> implements CollectionViewer {
       this._headerRowPlaceholder.viewContainer.clear();
       this._renderHeaderRow();
     }
-
-    this._renderHeaderRow();
   }
 
   /**
