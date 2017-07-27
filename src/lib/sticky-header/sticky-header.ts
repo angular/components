@@ -49,15 +49,11 @@ const DEBOUNCE_TIME: number = 5;
 
 export const STICKY_HEADER_SUPPORT_STRATEGY = new InjectionToken('sticky-header-support-strategy');
 
-export function STICKY_HEADER_SUPPORT_STRATEGY_FACTORY() {
-  return isPositionStickySupported();
-}
-
-/** Create a factory for sticky-positioning check to make code more testable */
-export const STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER = {
-  provide: STICKY_HEADER_SUPPORT_STRATEGY,
-  useFactory: STICKY_HEADER_SUPPORT_STRATEGY_FACTORY
-};
+// /** Create a factory for sticky-positioning check to make code more testable */
+// export const STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER = {
+//   provide: STICKY_HEADER_SUPPORT_STRATEGY,
+//   useFactory: isPositionStickySupported()
+// };
 
 /**
  * Directive that marks an element as a sticky-header. Inside of a scrolling container (marked with
@@ -111,7 +107,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
               scrollable: Scrollable,
               @Optional() public parentRegion: CdkStickyRegion,
               platform: Platform,
-              @Inject(STICKY_HEADER_SUPPORT_STRATEGY) public _stickyPositionSupportCheck) {
+              @Inject(STICKY_HEADER_SUPPORT_STRATEGY) public _isPositionStickySupported) {
     if (platform.isBrowser) {
       this.element = element.nativeElement;
       this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
@@ -151,7 +147,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * sticky positioning. If not, use the original implementation.
    */
   private _setStrategyAccordingToCompatibility(): void {
-    this._isPositionStickySupported = this._stickyPositionSupportCheck;
+    //this._isPositionStickySupported = this._isPositionStickySupported;
     if (this._isPositionStickySupported) {
       this.element.style.top = '0';
       this.element.style.cssText += 'position: -webkit-sticky; position: sticky; ';

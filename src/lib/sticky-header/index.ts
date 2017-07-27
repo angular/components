@@ -9,7 +9,8 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {OverlayModule, MdCommonModule, PlatformModule} from '../core';
 import {CdkStickyRegion, CdkStickyHeader,
-  STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER} from './sticky-header';
+  STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER, STICKY_HEADER_SUPPORT_STRATEGY} from './sticky-header';
+import {isPositionStickySupported} from '@angular/cdk';
 
 
 
@@ -17,7 +18,7 @@ import {CdkStickyRegion, CdkStickyHeader,
   imports: [OverlayModule, MdCommonModule, CommonModule, PlatformModule],
   declarations: [CdkStickyRegion, CdkStickyHeader],
   exports: [CdkStickyRegion, CdkStickyHeader, MdCommonModule],
-  providers: [STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER]
+  providers: [{provide: STICKY_HEADER_SUPPORT_STRATEGY, useFactory: isPositionStickySupported}]
 })
 export class StickyHeaderModule {}
 
