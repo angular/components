@@ -7,7 +7,7 @@
  */
 import {Directive, Input,
   OnDestroy, AfterViewInit, ElementRef, Optional,
-  InjectionToken, Injectable, Inject} from '@angular/core';
+  InjectionToken, Injectable, Inject, Provider} from '@angular/core';
 import {Platform} from '../core/platform/index';
 import {Scrollable} from '../core/overlay/scroll/scrollable';
 import {extendObject} from '../core/util/object-extend';
@@ -49,6 +49,12 @@ const DEBOUNCE_TIME: number = 5;
 
 export const STICKY_HEADER_SUPPORT_STRATEGY = new InjectionToken('sticky-header-support-strategy');
 
+/** Create a factory for sticky-positioning check to make code more testable */
+export const STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER: Provider = {
+  provide: STICKY_HEADER_SUPPORT_STRATEGY,
+  useFactory: isPositionStickySupported
+};
+
 // /** Create a factory for sticky-positioning check to make code more testable */
 // export const STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER = {
 //   provide: STICKY_HEADER_SUPPORT_STRATEGY,
@@ -70,8 +76,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   /** boolean value to mark whether the current header is stuck*/
   isStuck: boolean = false;
-  /** Whether the browser support CSS sticky positioning. */
-  private _isPositionStickySupported: boolean = false;
 
   /** The element with the 'cdkStickyHeader' tag. */
   element: HTMLElement;
@@ -147,7 +151,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * sticky positioning. If not, use the original implementation.
    */
   private _setStrategyAccordingToCompatibility(): void {
-    //this._isPositionStickySupported = this._isPositionStickySupported;
     if (this._isPositionStickySupported) {
       this.element.style.top = '0';
       this.element.style.cssText += 'position: -webkit-sticky; position: sticky; ';
@@ -268,9 +271,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
 
   /**
-   * '_applyStickyPositionStyles()' function contains the main logic of sticky-header. It decides when
-   * a header should be stick and when should it be unstuck by comparing the offsetTop
-   * of scrollable container with the top and bottom of the sticky region.
+   * '_applyStickyPositionStyles()' function contains the main logic of sticky-header.
+   * It decides when a header should be stick and when should it be unstuck by comparing
+   * the offsetTop of scrollable container with the top and bottom of the sticky region.
    */
   _applyStickyPositionStyles(): void {
     let currentPosition: number = this.upperScrollableContainer.offsetTop;
