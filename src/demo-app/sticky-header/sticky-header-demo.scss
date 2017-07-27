@@ -1,6 +1,6 @@
 .demo-sticky {
   .centered {
-    text-align: center;
+    text-align: left;
     -webkit-appearance: none;
     -moz-appearance: none;
     height: 500px;
@@ -24,6 +24,13 @@
 
   }
 
+  h1 {
+    font-size: 20px;
+    padding: 20px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
   h2 {
     font-size: 20px;
     padding: 20px;
@@ -32,6 +39,7 @@
   }
 
   p {
+    text-indent: 4em;
     margin-bottom: 1.5em;
     -webkit-appearance: none;
     -moz-appearance: none;
