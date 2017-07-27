@@ -156,7 +156,7 @@ describe('MdDatepicker', () => {
         testComponent.datepicker.close();
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
+        fixture.whenRenderingDone().then(() => {
           expect(document.querySelector('md-dialog-container')).toBeNull();
         });
       });
@@ -175,7 +175,7 @@ describe('MdDatepicker', () => {
         dispatchMouseEvent(cells[1], 'click');
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
+        fixture.whenRenderingDone().then(() => {
           expect(document.querySelector('md-dialog-container')).toBeNull();
           expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 2));
         });

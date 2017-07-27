@@ -6,6 +6,9 @@ Error.stackTraceLimit = Infinity;
 // take longer in some situations (e.g Saucelabs and Browserstack tunnels)
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
+// make sure to compare and print objects properly
+jasmine.pp = function (obj) { return obj.toString(); };
+
 __karma__.loaded = function () {};
 
 var baseDir = '/base';
