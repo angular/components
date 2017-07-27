@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {StickyHeaderModule, CdkStickyRegion, CdkStickyHeader,
-  STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER} from './index';
+  STICKY_HEADER_SUPPORT_STRATEGY} from './index';
 import {OverlayModule, Scrollable} from '../core/overlay/index';
 import {PlatformModule} from '../core/platform/index';
 import {By} from '@angular/platform-browser';
@@ -22,7 +22,7 @@ describe('sticky-header with positioning not supported', () => {
       imports: [ OverlayModule, PlatformModule, StickyHeaderModule ],
       declarations: [StickyHeaderTest],
       providers: [
-        {provide: STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER, useFactory: mockStickyHeaderCheckFail()},
+        {provide: STICKY_HEADER_SUPPORT_STRATEGY, useValue: false},
       ],
     });
     TestBed.compileComponents();
@@ -39,17 +39,14 @@ describe('sticky-header with positioning not supported', () => {
   });
 
   it('should be able to find stickyParent when sticky positioning is not supported', () => {
-    fixture.detectChanges();
     expect(stickyElement.nativeElement.stickyParent).not.toBe(null);
   });
 
   it('should be able to find scrollableContainer when sticky positioning is not supported', () => {
-    fixture.detectChanges();
     expect(stickyElement.nativeElement.upperScrollableContainer).not.toBe(null);
   });
 
   it('should stick in the right place when scrolled to the top of the container', fakeAsync(() => {
-    fixture.detectChanges();
     let scrollableContainerTop = stickyHeaderDir.upperScrollableContainer
       .getBoundingClientRect().top;
     expect(stickyHeaderDir.element.getBoundingClientRect().top).not.toBe(scrollableContainerTop);
@@ -63,7 +60,6 @@ describe('sticky-header with positioning not supported', () => {
   }));
 
   it('should unstuck when scrolled off the top of the container', fakeAsync(() => {
-    fixture.detectChanges();
     let scrollableContainerTop = stickyHeaderDir.upperScrollableContainer
       .getBoundingClientRect().top;
     expect(stickyHeaderDir.element.getBoundingClientRect().top).not.toBe(scrollableContainerTop);
@@ -82,10 +78,6 @@ describe('sticky-header with positioning not supported', () => {
     expect(stickyHeaderDir.element.getBoundingClientRect().top).not.toBe(scrollableContainerTop);
 
   }));
-
-  function mockStickyHeaderCheckFail() {
-    return false;
-  }
 });
 
 describe('sticky-header with positioning supported', () => {
@@ -93,7 +85,6 @@ describe('sticky-header with positioning supported', () => {
   let testComponent: StickyHeaderTest;
   let stickyElement: DebugElement;
   let stickyParentElement: DebugElement;
-  let scrollableElement: HTMLElement;
   let stickyHeaderDir: CdkStickyHeader;
 
   beforeEach(async(() => {
@@ -101,8 +92,7 @@ describe('sticky-header with positioning supported', () => {
       imports: [ OverlayModule, PlatformModule, StickyHeaderModule ],
       declarations: [StickyHeaderTest],
       providers: [
-        {provide: STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER,
-          useFactory: mockStickyHeaderCheckSuccess()},
+        {provide: STICKY_HEADER_SUPPORT_STRATEGY, useValue: true},
       ],
     });
     TestBed.compileComponents();
@@ -118,18 +108,12 @@ describe('sticky-header with positioning supported', () => {
   });
 
   it('should find sticky positioning is applied', () => {
-    fixture.detectChanges();
     let position = window.getComputedStyle(stickyHeaderDir.element).position;
     expect(position).not.toBe(null);
     if (position != null) {
       expect(/sticky/i.test(position)).toBe(true);
     }
   });
-
-  function mockStickyHeaderCheckSuccess() {
-    return true;
-  }
-
 });
 
 @Component({

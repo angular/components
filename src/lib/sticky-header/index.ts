@@ -9,7 +9,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {OverlayModule, MdCommonModule, PlatformModule} from '../core';
 import {CdkStickyRegion, CdkStickyHeader,
-  STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER, STICKY_HEADER_SUPPORT_STRATEGY} from './sticky-header';
+  STICKY_HEADER_SUPPORT_STRATEGY} from './sticky-header';
 import {isPositionStickySupported} from '@angular/cdk';
 
 
