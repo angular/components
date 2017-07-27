@@ -32,7 +32,7 @@
   <md-grid-list cols="3" rowHeight="200px">
     <md-grid-tile *ngFor="let dog of dogs">
       <md-grid-tile-header>{{dog.name}}</md-grid-tile-header>
-      <img [alt]="dog.name" src="https://material.angularjs.org/material2_assets/ngconf/{{dog.name}}.png">
+      <img alt="Photo of {{dog.name}}" src="https://material.angularjs.org/material2_assets/ngconf/{{dog.name}}.png">
       <md-grid-tile-footer>
         <span md-line>Human: {{dog.human}}</span>
         <md-icon>star_border</md-icon>

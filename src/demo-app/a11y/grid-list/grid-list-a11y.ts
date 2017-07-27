@@ -21,10 +21,10 @@ export class GridListAccessibilityDemo {
   ];
 
   tiles = [
-    {text: 'One', cols: 3, rows: 1, color: 'lightblue'},
-    {text: 'Two', cols: 1, rows: 2, color: 'lightgreen'},
-    {text: 'Three', cols: 1, rows: 1, color: 'lightpink'},
-    {text: 'Four', cols: 2, rows: 1, color: '#DDBDF1'},
+    {text: 'Cappuccino', cols: 3, rows: 1, color: 'lightblue'},
+    {text: 'Mocha', cols: 1, rows: 2, color: 'lightgreen'},
+    {text: 'Latte', cols: 1, rows: 1, color: 'lightpink'},
+    {text: 'Iced coffee', cols: 2, rows: 1, color: '#DDBDF1'},
   ];
 
   fixedCols = 4;
