@@ -38,11 +38,11 @@ describe('sticky-header with positioning not supported', () => {
     scrollableElement = fixture.debugElement.query(By.directive(Scrollable));
   });
 
-  it('should be able to find stickyParent when sticky positioning is not supported', () => {
+  it('should be able to find stickyParent', () => {
     expect(stickyElement.nativeElement.stickyParent).not.toBe(null);
   });
 
-  it('should be able to find scrollableContainer when sticky positioning is not supported', () => {
+  it('should be able to find scrollableContainer', () => {
     expect(stickyElement.nativeElement.upperScrollableContainer).not.toBe(null);
   });
 
