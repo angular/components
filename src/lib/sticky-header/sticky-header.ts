@@ -33,7 +33,6 @@ export class CdkStickyRegion {
   constructor(public readonly _elementRef: ElementRef) { }
 }
 
-
 /** Class applied when the header is "stuck" */
 const STICK_START_CLASS = 'cdk-sticky-header-start';
 
