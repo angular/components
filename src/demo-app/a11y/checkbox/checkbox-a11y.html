@@ -4,9 +4,15 @@
 </section>
 <section>
   <h2>Standalone checkbox</h2>
-  <md-checkbox>A simple checkbox</md-checkbox>
-  <md-checkbox [disabled]="true">Disabled checkbox</md-checkbox>
-  <md-checkbox [indeterminate]="true">An indeterminate checkbox</md-checkbox>
+  <div>
+    <md-checkbox>Yes, I agree to the terms and conditions</md-checkbox>
+  </div>
+  <div>
+    <md-checkbox [disabled]="true">No, I do not agree to the terms and conditions</md-checkbox>
+  </div>
+  <div>
+    <md-checkbox [indeterminate]="true">A partially done task</md-checkbox>
+  </div>
 </section>
 
 <section>
@@ -29,7 +35,7 @@
                    [checked]="allComplete(task)"
                    [indeterminate]="someComplete(task.subtasks)"
                    (change)="setAllCompleted(task.subtasks, $event.checked)">
-        <h3>{{task.name}}</h3>
+        {{task.name}}
       </md-checkbox>
       <div class="sub-list">
         <div *ngFor="let subtask of task.subtasks">
