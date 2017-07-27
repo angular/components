@@ -66,13 +66,13 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
   @Input() startView: 'month' | 'year' = 'month';
 
   /** The currently selected date. */
-  @Input() selected: D;
+  @Input() selected: D | null;
 
   /** The minimum selectable date. */
-  @Input() minDate: D;
+  @Input() minDate: D | null;
 
   /** The maximum selectable date. */
-  @Input() maxDate: D;
+  @Input() maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
@@ -154,6 +154,7 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
 
   /** Handles date selection in the month view. */
   _dateSelected(date: D): void {
+    console.log('date selected', date, this.selected);
     if (!this._dateAdapter.sameDate(date, this.selected)) {
       this.selectedChange.emit(date);
     }

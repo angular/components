@@ -164,7 +164,9 @@ export class MdDatepicker<D> implements OnDestroy {
   id = `md-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
-  _selected: D | null = null;
+  get _selected(): D | null { return this._validSelected; }
+  set _selected(value: D | null) { this._validSelected = this._getValidDateOrNull(value); }
+  private _validSelected: D | null = null;
 
   /** The minimum selectable date. */
   get _minDate(): D | null {
