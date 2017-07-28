@@ -45,7 +45,7 @@
 <h2>Linear Vertical Stepper Demo</h2>
 <md-vertical-stepper>
   <md-step>
-    <form [formGroup]="nameFormGroup" novalidate>
+    <form [formGroup]="nameFormGroup">
       <ng-template mdStepLabel>Fill out your name</ng-template>
       <md-input-container>
         <input mdInput placeholder="First Name" formControlName="firstNameFormCtrl" required>
@@ -62,7 +62,7 @@
   </md-step>
 
   <md-step [disabled]="!nameFormGroup.valid">
-    <form [formGroup]="phoneFormGroup" novalidate>
+    <form [formGroup]="phoneFormGroup">
       <ng-template mdStepLabel>
         <div>Fill out your phone number</div>
       </ng-template>
