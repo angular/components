@@ -42,9 +42,7 @@ export class CheckboxAccessibilityDemo {
       return false;
     }
 
-    return subtasks.every(t => t.completed) ? true
-      : subtasks.every(t => !t.completed) ? false
-      : task.completed;
+    return subtasks.every(t => t.completed);
   }
 
   someComplete(tasks: Task[]): boolean {
