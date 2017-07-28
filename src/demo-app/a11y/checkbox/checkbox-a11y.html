@@ -16,19 +16,6 @@
 </section>
 
 <section>
-  <h2>Pseudo checkboxe</h2>
-  <p>These pseudo checkboxes are for display only</p>
-  <md-pseudo-checkbox></md-pseudo-checkbox>
-  <md-pseudo-checkbox [disabled]="true"></md-pseudo-checkbox>
-
-  <md-pseudo-checkbox state="checked"></md-pseudo-checkbox>
-  <md-pseudo-checkbox state="checked" [disabled]="true"></md-pseudo-checkbox>
-
-  <md-pseudo-checkbox state="indeterminate"></md-pseudo-checkbox>
-  <md-pseudo-checkbox state="indeterminate" [disabled]="true"></md-pseudo-checkbox>
-</section>
-
-<section>
   <h2>Nested checklist</h2>
     <div *ngFor="let task of tasks">
       <md-checkbox [(ngModel)]="task.completed"
