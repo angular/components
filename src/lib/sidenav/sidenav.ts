@@ -30,7 +30,6 @@ import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {first} from '../core/rxjs/index';
 import {DOCUMENT} from '@angular/platform-browser';
-import {merge} from 'rxjs/observable/merge';
 
 
 /** Throws an exception when two MdSidenav are matching the same side. */
@@ -76,7 +75,7 @@ export class MdSidenavToggleResult {
   host: {
     'class': 'mat-sidenav',
     '[@transform]': '_getAnimationState()',
-    '(@transform.start)': '_isAnimating = true',
+    '(@transform.start)': '_onAnimationStart()',
     '(@transform.done)': '_onAnimationEnd($event)',
     '(keydown)': 'handleKeydown($event)',
     // must prevent the browser from aligning text based on value
@@ -121,6 +120,9 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
 
   /** Whether the sidenav is opened. */
   private _opened: boolean = false;
+
+  /** Emits whenever the sidenav has started animating. */
+  _animationStarted = new EventEmitter<void>();
 
   /** Whether the sidenav is animating. Used to prevent overlapping animations. */
   _isAnimating = false;
@@ -255,6 +257,11 @@ export class MdSidenav implements AfterContentInit, OnDestroy {
     return 'void';
   }
 
+  _onAnimationStart() {
+    this._isAnimating = true;
+    this._animationStarted.emit();
+  }
+
   _onAnimationEnd(event: AnimationEvent) {
     const {fromState, toState} = event;
 
@@ -354,7 +361,7 @@ export class MdSidenavContainer implements AfterContentInit {
    * is properly hidden.
    */
   private _watchSidenavToggle(sidenav: MdSidenav): void {
-    merge(sidenav.onOpenStart, sidenav.onCloseStart).subscribe(() => {
+    sidenav._animationStarted.subscribe(() => {
       // Set the transition class on the container so that the animations occur. This should not
       // be set initially because animations should only be triggered via a change in state.
       this._renderer.addClass(this._element.nativeElement, 'mat-sidenav-transition');
@@ -395,9 +402,7 @@ export class MdSidenavContainer implements AfterContentInit {
     this._start = this._end = null;
 
     // Ensure that we have at most one start and one end sidenav.
-    // NOTE: We must call toArray on _sidenavs even though it's iterable
-    // (see https://github.com/Microsoft/TypeScript/issues/3164).
-    for (let sidenav of this._sidenavs.toArray()) {
+    this._sidenavs.forEach(sidenav => {
       if (sidenav.align == 'end') {
         if (this._end != null) {
           throwMdDuplicatedSidenavError('end');
@@ -409,7 +414,7 @@ export class MdSidenavContainer implements AfterContentInit {
         }
         this._start = sidenav;
       }
-    }
+    });
 
     this._right = this._left = null;
 
