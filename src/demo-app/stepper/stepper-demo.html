@@ -42,6 +42,52 @@
   </md-vertical-stepper>
 </form>
 
+<h2>Linear Vertical Stepper Demo</h2>
+<md-vertical-stepper>
+  <md-step>
+    <form [formGroup]="nameFormGroup" novalidate>
+      <ng-template mdStepLabel>Fill out your name</ng-template>
+      <md-input-container>
+        <input mdInput placeholder="First Name" formControlName="firstNameFormCtrl" required>
+        <md-error>This field is required</md-error>
+      </md-input-container>
+      <md-input-container>
+        <input mdInput placeholder="Last Name" formControlName="lastNameFormCtrl" required>
+        <md-error>This field is required</md-error>
+      </md-input-container>
+      <div>
+        <button md-button mdStepperNext>Next</button>
+      </div>
+    </form>
+  </md-step>
+
+  <md-step [disabled]="!nameFormGroup.valid">
+    <form [formGroup]="phoneFormGroup" novalidate>
+      <ng-template mdStepLabel>
+        <div>Fill out your phone number</div>
+      </ng-template>
+      <md-input-container>
+        <input mdInput placeholder="Phone number" formControlName="phoneFormCtrl" required>
+        <md-error>This field is required</md-error>
+      </md-input-container>
+      <div>
+        <button md-button mdStepperPrevious>Back</button>
+        <button md-button mdStepperNext>Next</button>
+      </div>
+    </form>
+  </md-step>
+
+  <md-step [disabled]="!phoneFormGroup.valid">
+    <form>
+      <ng-template mdStepLabel>Confirm your information</ng-template>
+      Everything seems correct.
+      <div>
+        <button md-button>Done</button>
+      </div>
+    </form>
+  </md-step>
+</md-vertical-stepper>
+
 <h2>Vertical Stepper Demo</h2>
 <md-vertical-stepper>
   <md-step>

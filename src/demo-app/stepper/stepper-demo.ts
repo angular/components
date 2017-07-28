@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Validators, FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   moduleId: module.id,
@@ -11,6 +11,9 @@ export class StepperDemo {
   formGroup: FormGroup;
   isNonLinear = false;
 
+  nameFormGroup: FormGroup;
+  phoneFormGroup: FormGroup;
+
   steps = [
     {label: 'Confirm your name', content: 'Last name, First name.'},
     {label: 'Confirm your contact information', content: '123-456-7890'},
@@ -19,9 +22,12 @@ export class StepperDemo {
   ];
 
   /** Returns a FormArray with the name 'formArray'. */
-  get formArray() { return this.formGroup.get('formArray'); }
+  get formArray() {
+    return this.formGroup.get('formArray');
+  }
 
-  constructor(private _formBuilder: FormBuilder) { }
+  constructor(private _formBuilder: FormBuilder) {
+  }
 
   ngOnInit() {
     this.formGroup = this._formBuilder.group({
@@ -34,6 +40,15 @@ export class StepperDemo {
           phoneFormCtrl: [''],
         })
       ])
+    });
+
+    this.nameFormGroup = new FormGroup({
+      firstNameFormCtrl: new FormControl('', Validators.required),
+      lastNameFormCtrl: new FormControl('', Validators.required)
+    });
+
+    this.phoneFormGroup = new FormGroup({
+      phoneFormCtrl: new FormControl('', Validators.required)
     });
   }
 }
