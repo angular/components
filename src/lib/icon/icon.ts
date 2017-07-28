@@ -14,7 +14,7 @@ import {
   OnChanges,
   OnInit,
   Renderer2,
-  SimpleChange,
+  SimpleChanges,
   ViewEncapsulation,
   Attribute,
 } from '@angular/core';
@@ -134,17 +134,16 @@ export class MdIcon extends _MdIconMixinBase implements OnChanges, OnInit, CanCo
     }
   }
 
-  ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
-    const changedInputs = Object.keys(changes);
+  ngOnChanges(changes: SimpleChanges) {
     // Only update the inline SVG icon if the inputs changed, to avoid unnecessary DOM operations.
-    if (changedInputs.indexOf('svgIcon') != -1 || changedInputs.indexOf('svgSrc') != -1) {
-      if (this.svgIcon) {
-        const [namespace, iconName] = this._splitIconName(this.svgIcon);
-        first.call(this._mdIconRegistry.getNamedSvgIcon(iconName, namespace)).subscribe(
-            svg => this._setSvgElement(svg),
-            (err: Error) => console.log(`Error retrieving icon: ${err.message}`));
-      }
+    if ((changes.svgIcon || changes.svgSrc) && this.svgIcon) {
+      const [namespace, iconName] = this._splitIconName(this.svgIcon);
+
+      first.call(this._mdIconRegistry.getNamedSvgIcon(iconName, namespace)).subscribe(
+          svg => this._setSvgElement(svg),
+          (err: Error) => console.log(`Error retrieving icon: ${err.message}`));
     }
+
     if (this._usingFontIcon()) {
       this._updateFontIconClasses();
     }
@@ -164,10 +163,13 @@ export class MdIcon extends _MdIconMixinBase implements OnChanges, OnInit, CanCo
 
   private _setSvgElement(svg: SVGElement) {
     const layoutElement = this._elementRef.nativeElement;
-    // Remove existing child nodes and add the new SVG element.
-    // We would use renderer.detachView(Array.from(layoutElement.childNodes)) here,
-    // but it fails in IE11: https://github.com/angular/angular/issues/6327
-    layoutElement.innerHTML = '';
+
+    // Remove existing child nodes and add the new SVG element. Note that we can't
+    // use innerHTML, because IE will throw if the element has a data binding.
+    for (let child of layoutElement.childNodes) {
+      this._renderer.removeChild(layoutElement, child);
+    }
+
     this._renderer.appendChild(layoutElement, svg);
   }
 
@@ -175,10 +177,12 @@ export class MdIcon extends _MdIconMixinBase implements OnChanges, OnInit, CanCo
     if (!this._usingFontIcon()) {
       return;
     }
+
     const elem = this._elementRef.nativeElement;
     const fontSetClass = this.fontSet ?
         this._mdIconRegistry.classNameForFontAlias(this.fontSet) :
         this._mdIconRegistry.getDefaultFontSetClass();
+
     if (fontSetClass != this._previousFontSetClass) {
       if (this._previousFontSetClass) {
         this._renderer.removeClass(elem, this._previousFontSetClass);
