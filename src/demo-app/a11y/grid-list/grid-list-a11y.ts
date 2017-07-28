@@ -1,9 +1,10 @@
 import {Component} from '@angular/core';
 
-interface Dog {
+export interface Dog {
   name: string;
   human: string;
 }
+
 @Component({
   moduleId: module.id,
   selector: 'grid-list-a11y',
