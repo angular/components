@@ -129,7 +129,7 @@ export class MdDatepicker<D> implements OnDestroy {
     // selected value is.
     return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
   }
-  set startAt(date: D | null) { this._startAt = this._getValidDateOrNull(date); }
+  set startAt(date: D | null) { this._startAt = date; }
   private _startAt: D | null;
 
   /** The view that the calendar should start in. */
@@ -165,7 +165,7 @@ export class MdDatepicker<D> implements OnDestroy {
 
   /** The currently selected date. */
   get _selected(): D | null { return this._validSelected; }
-  set _selected(value: D | null) { this._validSelected = this._getValidDateOrNull(value); }
+  set _selected(value: D | null) { this._validSelected = value; }
   private _validSelected: D | null = null;
 
   /** The minimum selectable date. */
@@ -346,13 +346,5 @@ export class MdDatepicker<D> implements OnDestroy {
         { originX: 'end', originY: 'top' },
         { overlayX: 'end', overlayY: 'bottom' }
       );
-  }
-
-  /**
-   * @param obj The object to check.
-   * @returns The given object if it is both a date instance and valid, otherwise null.
-   */
-  private _getValidDateOrNull(obj: any): D | null {
-    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
   }
 }
