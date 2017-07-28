@@ -1,3 +1,52 @@
+<h2>Linear Vertical Stepper Demo</h2>
+<form [formGroup]="formGroup" novalidate>
+  <div formArrayName="formArray">
+    <md-vertical-stepper>
+      <md-step>
+        <div [formGroupName]="0">
+          <ng-template mdStepLabel>Fill out your name</ng-template>
+          <md-input-container>
+            <input mdInput placeholder="First Name" formControlName="firstNameFormCtrl" required>
+            <md-error>This field is required</md-error>
+          </md-input-container>
+
+          <md-input-container>
+            <input mdInput placeholder="Last Name" formControlName="lastNameFormCtrl" required>
+            <md-error>This field is required</md-error>
+          </md-input-container>
+          <div>
+            <button md-button mdStepperNext>Next</button>
+          </div>
+        </div>
+      </md-step>
+
+      <md-step [disabled]="!formGroup.controls.formArray.controls[0].valid">
+        <div [formGroupName]="1">
+          <ng-template mdStepLabel>
+            <div>Fill out your phone number</div>
+          </ng-template>
+          <md-input-container>
+            <input mdInput placeholder="Phone number" formControlName="phoneFormCtrl" required>
+            <md-error>This field is required</md-error>
+          </md-input-container>
+          <div>
+            <button md-button mdStepperPrevious>Back</button>
+            <button md-button mdStepperNext>Next</button>
+          </div>
+        </div>
+      </md-step>
+
+      <md-step [disabled]="!formGroup.controls.formArray.controls[1].valid">
+        <ng-template mdStepLabel>Confirm your information</ng-template>
+        Everything seems correct.
+        <div>
+          <button md-button>Done</button>
+        </div>
+      </md-step>
+    </md-vertical-stepper>
+  </div>
+</form>
+
 <h2>Horizontal Stepper Demo</h2>
 <md-horizontal-stepper>
   <md-step *ngFor="let step of steps" [label]="step.label">

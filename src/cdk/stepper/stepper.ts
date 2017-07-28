@@ -24,6 +24,7 @@ import {
 } from '@angular/core';
 import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '@angular/cdk/keyboard';
 import {CdkStepLabel} from './step-label';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;
@@ -45,7 +46,7 @@ export class CdkStepperSelectionEvent {
 
 @Component({
   selector: 'cdk-step',
-  templateUrl: 'step.html',
+  templateUrl: 'step.html'
 })
 export class CdkStep {
   /** Template for step label if it exists. */
@@ -53,6 +54,21 @@ export class CdkStep {
 
   /** Template for step content. */
   @ViewChild(TemplateRef) content: TemplateRef<any>;
+
+  /** Whether step is disabled or not. */
+  @Input()
+  get disabled() { return this._disabled; }
+  set disabled(value: any) {
+    this._disabled = coerceBooleanProperty(value);
+  }
+  private _disabled = false;
+
+  /** Whether the user has interacted with step or not. */
+  get interacted() { return this._interacted; }
+  set interacted(value: any) {
+    this._interacted = coerceBooleanProperty(value);
+  }
+  private _interacted = false;
 
   /** Label of the step. */
   @Input()
@@ -84,7 +100,8 @@ export class CdkStepper {
   @Input()
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
-    if (this._selectedIndex != index) {
+    this._steps.toArray()[this._selectedIndex].interacted = true;
+    if (this._selectedIndex != index && !this._steps.toArray()[index].disabled) {
       this._emitStepperSelectionEvent(index);
       this._focusStep(this._selectedIndex);
     }
@@ -153,7 +170,7 @@ export class CdkStepper {
         break;
       case SPACE:
       case ENTER:
-        this._emitStepperSelectionEvent(this._focusIndex);
+        this.selectedIndex = this._focusIndex;
         break;
       default:
         // Return to avoid calling preventDefault on keys that are not explicitly handled.
