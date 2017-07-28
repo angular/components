@@ -1,50 +1,48 @@
 <h2>Linear Vertical Stepper Demo</h2>
-<form [formGroup]="formGroup" novalidate>
-  <div formArrayName="formArray">
-    <md-vertical-stepper>
-      <md-step>
-        <div [formGroupName]="0">
-          <ng-template mdStepLabel>Fill out your name</ng-template>
-          <md-input-container>
-            <input mdInput placeholder="First Name" formControlName="firstNameFormCtrl" required>
-            <md-error>This field is required</md-error>
-          </md-input-container>
+<form [formGroup]="formGroup">
+  <md-vertical-stepper formArrayName="formArray">
+    <md-step formGroupName="0">
+      <ng-template mdStepLabel>Fill out your name</ng-template>
+      <md-input-container>
+        <input mdInput placeholder="First Name" formControlName="firstNameFormCtrl" required>
+        <md-error>This field is required</md-error>
+      </md-input-container>
 
-          <md-input-container>
-            <input mdInput placeholder="Last Name" formControlName="lastNameFormCtrl" required>
-            <md-error>This field is required</md-error>
-          </md-input-container>
-          <div>
-            <button md-button mdStepperNext>Next</button>
-          </div>
-        </div>
-      </md-step>
+      <md-input-container>
+        <input mdInput placeholder="Last Name" formControlName="lastNameFormCtrl" required>
+        <md-error>This field is required</md-error>
+      </md-input-container>
+      <div>
+        <button md-button mdStepperNext type="button">Next</button>
+      </div>
+    </md-step>
 
-      <md-step [disabled]="!formGroup.controls.formArray.controls[0].valid">
-        <div [formGroupName]="1">
-          <ng-template mdStepLabel>
-            <div>Fill out your phone number</div>
-          </ng-template>
-          <md-input-container>
-            <input mdInput placeholder="Phone number" formControlName="phoneFormCtrl" required>
-            <md-error>This field is required</md-error>
-          </md-input-container>
-          <div>
-            <button md-button mdStepperPrevious>Back</button>
-            <button md-button mdStepperNext>Next</button>
-          </div>
-        </div>
-      </md-step>
+    <md-step formGroupName="1"
+             [disabled]="formArray.hasError('invalid step') ?
+             formArray.getError('invalid step').index <= 1 : false">
+      <ng-template mdStepLabel>
+        <div>Fill out your phone number</div>
+      </ng-template>
+      <md-input-container>
+        <input mdInput placeholder="Phone number" formControlName="phoneFormCtrl">
+        <md-error>This field is required</md-error>
+      </md-input-container>
+      <div>
+        <button md-button mdStepperPrevious type="button">Back</button>
+        <button md-button mdStepperNext type="button">Next</button>
+      </div>
+    </md-step>
 
-      <md-step [disabled]="!formGroup.controls.formArray.controls[1].valid">
-        <ng-template mdStepLabel>Confirm your information</ng-template>
-        Everything seems correct.
-        <div>
-          <button md-button>Done</button>
-        </div>
-      </md-step>
-    </md-vertical-stepper>
-  </div>
+    <md-step
+        [disabled]="formArray.hasError('invalid step') ?
+        formArray.getError('invalid step').index <= 2 : false">
+      <ng-template mdStepLabel>Confirm your information</ng-template>
+      Everything seems correct.
+      <div>
+        <button md-button>Done</button>
+      </div>
+    </md-step>
+  </md-vertical-stepper>
 </form>
 
 <h2>Horizontal Stepper Demo</h2>

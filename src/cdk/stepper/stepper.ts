@@ -55,6 +55,7 @@ export class CdkStep {
   /** Template for step content. */
   @ViewChild(TemplateRef) content: TemplateRef<any>;
 
+  // TODO(jwshin): use disabled mixin when moved to cdk.
   /** Whether step is disabled or not. */
   @Input()
   get disabled() { return this._disabled; }
@@ -63,10 +64,10 @@ export class CdkStep {
   }
   private _disabled = false;
 
-  /** Whether the user has interacted with step or not. */
+  /** Whether user has seen the expanded step content or not . */
   get interacted() { return this._interacted; }
-  set interacted(value: any) {
-    this._interacted = coerceBooleanProperty(value);
+  set interacted(value: boolean) {
+    this._interacted = value;
   }
   private _interacted = false;
 

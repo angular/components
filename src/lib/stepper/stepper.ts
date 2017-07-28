@@ -36,7 +36,7 @@ import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
   templateUrl: 'step.html',
   providers: [{provide: MD_ERROR_GLOBAL_OPTIONS, useExisting: MdStep}]
 })
-export class MdStep extends CdkStep {
+export class MdStep extends CdkStep implements ErrorOptions {
   /** Content for step label given by <ng-template matStepLabel> or <ng-template mdStepLabel>. */
   @ContentChild(MdStepLabel) stepLabel: MdStepLabel;
 
@@ -54,6 +54,12 @@ export class MdStep extends CdkStep {
   /** Custom error state matcher that additionally checks for validity of interacted form. */
   errorStateMatcher = (control: FormControl, form: FormGroupDirective | NgForm) => {
     let originalErrorState = this._originalErrorStateMatcher(control, form);
+
+    /**
+     * Custom error state checks for the validity of form that is not submitted or touched
+     * since user can trigger a form change by calling for another step without directly
+     * interacting with the current form.
+     */
     let customErrorState =  control.invalid && this.interacted;
 
     return originalErrorState || customErrorState;

@@ -12,10 +12,7 @@ import {CdkStepper} from './stepper';
 /** Button that moves to the next step in a stepper workflow. */
 @Directive({
   selector: 'button[cdkStepperNext]',
-  host: {
-    '(click)': '_stepper.next()',
-    'type': 'button'
-  }
+  host: {'(click)': '_stepper.next()'}
 })
 export class CdkStepperNext {
   constructor(public _stepper: CdkStepper) { }
@@ -24,10 +21,7 @@ export class CdkStepperNext {
 /** Button that moves to the previous step in a stepper workflow. */
 @Directive({
   selector: 'button[cdkStepperPrevious]',
-  host: {
-    '(click)': '_stepper.previous()',
-    'type': 'button'
-  }
+  host: {'(click)': '_stepper.previous()'}
 })
 export class CdkStepperPrevious {
   constructor(public _stepper: CdkStepper) { }
