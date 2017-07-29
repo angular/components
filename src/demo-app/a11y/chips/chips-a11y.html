@@ -28,6 +28,7 @@
       </md-chip>
     </md-chip-list>
     <input mdInput placeholder="New Contributor..."
+           aria-label="New contributor"
            [mdChipInputFor]="chipList"
            [mdChipInputAddOnBlur]="addOnBlur"
            (mdChipInputTokenEnd)="add($event)" />
