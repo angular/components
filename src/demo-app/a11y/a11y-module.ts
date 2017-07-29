@@ -8,6 +8,7 @@ import {AccessibilityHome, AccessibilityDemo} from './a11y';
 import {ButtonAccessibilityDemo} from './button/button-a11y';
 import {CheckboxAccessibilityDemo} from './checkbox/checkbox-a11y';
 import {RadioAccessibilityDemo} from './radio/radio-a11y';
+import {ToolbarAccessibilityDemo} from './toolbar/toolbar-a11y';
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ export class AccessibilityRoutingModule {}
     ButtonAccessibilityDemo,
     CheckboxAccessibilityDemo,
     RadioAccessibilityDemo,
+    ToolbarAccessibilityDemo
   ]
 })
 export class AccessibilityDemoModule {}
