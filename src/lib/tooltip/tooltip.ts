@@ -238,7 +238,7 @@ export class MdTooltip implements OnDestroy {
 
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */
   show(delay: number = this.showDelay): void {
-    if (this.disabled || !this._message || !this._message.trim()) { return; }
+    if (this.disabled || !this._message || !`${this._message}`.trim()) { return; }
 
     if (!this._tooltipInstance) {
       this._createTooltip();
