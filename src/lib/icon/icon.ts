@@ -33,12 +33,6 @@ export const _MdIconMixinBase = mixinColor(MdIconBase);
 
 /**
  * Component to display an icon. It can be used in the following ways:
- * - Specify the svgSrc input to load an SVG icon from a URL. The SVG content is directly inlined
- *   as a child of the <md-icon> component, so that CSS styles can easily be applied to it.
- *   The URL is loaded via an XMLHttpRequest, so it must be on the same domain as the page or its
- *   server must be configured to allow cross-domain requests.
- *   Example:
- *     <md-icon svgSrc="assets/arrow.svg"></md-icon>
  *
  * - Specify the svgIcon input to load an SVG icon from a URL previously registered with the
  *   addSvgIcon, addSvgIconInNamespace, addSvgIconSet, or addSvgIconSetInNamespace methods of
@@ -136,7 +130,7 @@ export class MdIcon extends _MdIconMixinBase implements OnChanges, OnInit, CanCo
 
   ngOnChanges(changes: SimpleChanges) {
     // Only update the inline SVG icon if the inputs changed, to avoid unnecessary DOM operations.
-    if ((changes.svgIcon || changes.svgSrc) && this.svgIcon) {
+    if (changes.svgIcon && this.svgIcon) {
       const [namespace, iconName] = this._splitIconName(this.svgIcon);
 
       first.call(this._mdIconRegistry.getNamedSvgIcon(iconName, namespace)).subscribe(
@@ -163,11 +157,12 @@ export class MdIcon extends _MdIconMixinBase implements OnChanges, OnInit, CanCo
 
   private _setSvgElement(svg: SVGElement) {
     const layoutElement = this._elementRef.nativeElement;
+    const childCount = layoutElement.childNodes.length;
 
     // Remove existing child nodes and add the new SVG element. Note that we can't
     // use innerHTML, because IE will throw if the element has a data binding.
-    for (let child of layoutElement.childNodes) {
-      this._renderer.removeChild(layoutElement, child);
+    for (let i = 0; i < childCount; i++) {
+      this._renderer.removeChild(layoutElement, layoutElement.childNodes[i]);
     }
 
     this._renderer.appendChild(layoutElement, svg);
