@@ -207,7 +207,7 @@ textarea.mat-input-element {
 
   .mat-input-ripple {
     position: absolute;
-    height: $mat-input-underline-height * 2;
+    height: $mat-input-underline-height;
     top: 0;
     left: 0;
     width: 100%;
@@ -215,6 +215,10 @@ textarea.mat-input-element {
     transform: scaleX(0.5);
     visibility: hidden;
     transition: background-color $swift-ease-in-duration $swift-ease-in-timing-function;
+
+    .mat-focused & {
+      height: $mat-input-underline-height * 2;
+    }
 
     .mat-focused &,
     .mat-input-invalid & {
