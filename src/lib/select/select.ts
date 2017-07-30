@@ -57,6 +57,12 @@ import {
 // tslint:disable-next-line:no-unused-variable
 import {ScrollStrategy, RepositionScrollStrategy} from '../core/overlay/scroll';
 import {Platform} from '@angular/cdk/platform';
+import {
+  defaultErrorStateMatcher,
+  ErrorStateMatcher,
+  ErrorOptions,
+  MD_ERROR_GLOBAL_OPTIONS
+} from '../core/error/error-options';
 
 /**
  * The following style constants are necessary to save here in order
@@ -217,6 +223,9 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Deals with configuring placeholder options */
   private _placeholderOptions: PlaceholderOptions;
 
+  /** Options that determine how an invalid select behaves. */
+  private _errorOptions: ErrorOptions;
+
   /**
    * The width of the trigger. Must be saved to set the min width of the overlay panel
    * and the width of the selected value.
@@ -360,6 +369,9 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Input that can be used to specify the `aria-labelledby` attribute. */
   @Input('aria-labelledby') ariaLabelledby: string = '';
 
+  /** A function used to control when error messages are shown. */
+  @Input() errorStateMatcher: ErrorStateMatcher;
+
   /** Combined stream of all of the child options' change events. */
   get optionSelectionChanges(): Observable<MdOptionSelectionChange> {
     return merge(...this.options.map(option => option.onSelectionChange));
@@ -394,7 +406,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     @Self() @Optional() public _control: NgControl,
     @Attribute('tabindex') tabIndex: string,
     @Optional() @Inject(MD_PLACEHOLDER_GLOBAL_OPTIONS) placeholderOptions: PlaceholderOptions,
-    @Inject(MD_SELECT_SCROLL_STRATEGY) private _scrollStrategyFactory) {
+    @Inject(MD_SELECT_SCROLL_STRATEGY) private _scrollStrategyFactory,
+    @Optional() @Inject(MD_ERROR_GLOBAL_OPTIONS) errorOptions: ErrorOptions) {
 
     super(renderer, elementRef);
 
@@ -405,6 +418,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     this._tabIndex = parseInt(tabIndex) || 0;
     this._placeholderOptions = placeholderOptions ? placeholderOptions : {};
     this.floatPlaceholder = this._placeholderOptions.float || 'auto';
+    this._errorOptions = errorOptions || {};
+    this.errorStateMatcher = this._errorOptions.errorStateMatcher || defaultErrorStateMatcher;
   }
 
   ngOnInit() {
@@ -633,12 +648,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Whether the select is in an error state. */
   _isErrorState(): boolean {
-    const isInvalid = this._control && this._control.invalid;
-    const isTouched = this._control && this._control.touched;
-    const isSubmitted = (this._parentFormGroup && this._parentFormGroup.submitted) ||
-        (this._parentForm && this._parentForm.submitted);
-
-    return !!(isInvalid && (isTouched || isSubmitted));
+    return this.errorStateMatcher(this._control, this._parentFormGroup || this._parentForm);
   }
 
   /**

@@ -1247,7 +1247,7 @@ class MdInputContainerWithFormErrorMessages {
       <md-input-container>
         <input mdInput
             formControlName="name"
-            [errorStateMatcher]="customErrorStateMatcher.bind(this)">
+            [errorStateMatcher]="customErrorStateMatcher">
         <md-hint>Please type something</md-hint>
         <md-error>This field is required</md-error>
       </md-input-container>
@@ -1260,10 +1260,7 @@ class MdInputContainerWithCustomErrorStateMatcher {
   });
 
   errorState = false;
-
-  customErrorStateMatcher(): boolean {
-    return this.errorState;
-  }
+  customErrorStateMatcher = () => this.errorState;
 }
 
 @Component({

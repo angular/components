@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {coerceBooleanProperty, Platform} from '../core';
-import {FormControl, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
+import {FormGroupDirective, NgControl, NgForm} from '@angular/forms';
 import {getSupportedInputTypes} from '../core/platform/features';
 import {
   getMdInputContainerDuplicatedHintError,
@@ -248,7 +248,7 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
 
     // Force setter to be called in case id was not specified.
     this.id = this.id;
-    this._errorOptions = errorOptions ? errorOptions : {};
+    this._errorOptions = errorOptions || {};
     this.errorStateMatcher = this._errorOptions.errorStateMatcher || defaultErrorStateMatcher;
 
     // On some versions of iOS the caret gets stuck in the wrong place when holding down the delete
@@ -321,9 +321,8 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
   /** Re-evaluates the error state. This is only relevant with @angular/forms. */
   private _updateErrorState() {
     const oldState = this._isErrorState;
-    const control = this._ngControl;
-    const parent = this._parentFormGroup || this._parentForm;
-    const newState = control && this.errorStateMatcher(control.control as FormControl, parent);
+    const newState = this.errorStateMatcher(this._ngControl,
+        this._parentFormGroup || this._parentForm);
 
     if (newState !== oldState) {
       this._isErrorState = newState;
