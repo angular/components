@@ -48,7 +48,9 @@ const DEBOUNCE_TIME: number = 5;
 
 export const STICKY_HEADER_SUPPORT_STRATEGY = new InjectionToken('sticky-header-support-strategy');
 
-/** Create a factory for sticky-positioning check to make code more testable */
+/** @docs-private
+ * Create a factory for sticky-positioning check to make code more testable
+ */
 export const STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER: Provider = {
   provide: STICKY_HEADER_SUPPORT_STRATEGY,
   useFactory: isPositionStickySupported
