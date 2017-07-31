@@ -451,17 +451,19 @@ export class MdTooltip implements OnDestroy {
   private _unregisterA11yMessage(message: string) {
     if (!this._platform.isBrowser || !this.message) { return; }
 
+    const a11yMessageElement = a11yMessages.get(message)!;
+    a11yMessageElement.count--;
+
     // Remove the a11y message if this was its last unique instance.
-    const a11yMessageElement = a11yMessages.get(message);
-    if (a11yMessageElement && a11yMessageElement.count == 1) {
+    if (a11yMessageElement.count == 0) {
       this._deleteA11yMessageElement(message);
-      a11yMessageElement.count--;
     }
 
     // If the global messages container no longer has any children, remove it.
     if (!this._getA11yMessagesContainer()!.childNodes.length) {
       this._renderer.removeChild(document.body, this._getA11yMessagesContainer());
     }
+
   }
 
   /**
