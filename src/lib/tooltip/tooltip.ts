@@ -78,15 +78,22 @@ export const MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER = {
   useFactory: MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER_FACTORY
 };
 
+/**
+ * Interface used to register tooltip a11y message elements, with a count of how many tooltips have
+ * the message and the reference to the a11y message element used for the aria-describedby.
+ */
 export interface RegisteredA11yMessage {
   element: HTMLElement;
   count: number;
 }
 
+/** ID used for the body container where all a11y messages are appended. */
 export const A11Y_MESSAGES_CONTAINER_ID = 'md-tooltip-a11y-messages';
 
+/** Global incremental identifier for each registered a11y message.
 let latestA11yMessageId = 0;
 
+/** Global map of all registered a11y message elements that have been placed into the document. */
 const a11yMessages = new Map<string, RegisteredA11yMessage>();
 
 /**
