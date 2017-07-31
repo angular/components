@@ -40,6 +40,14 @@ export class CdkColumnDef {
 
   /** @docs-private */
   @ContentChild(CdkHeaderCellDef) headerCell: CdkHeaderCellDef;
+
+  /**
+   * Returns the column's name with non-alphanumeric characters removed so it can be used
+   * as part of a CSS class. Allows for the special characters - and _.
+   */
+  getClassFriendlyName() {
+    return this.name.replace(/[^a-z0-9_-]/ig, '');
+  }
 }
 
 /** Header cell template container that adds the right classes and role. */
@@ -52,7 +60,7 @@ export class CdkColumnDef {
 })
 export class CdkHeaderCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef, renderer: Renderer2) {
-    renderer.addClass(elementRef.nativeElement, `cdk-column-${columnDef.name}`);
+    renderer.addClass(elementRef.nativeElement, `cdk-column-${columnDef.getClassFriendlyName()}`);
   }
 }
 
@@ -66,6 +74,6 @@ export class CdkHeaderCell {
 })
 export class CdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef, renderer: Renderer2) {
-    renderer.addClass(elementRef.nativeElement, `cdk-column-${columnDef.name}`);
+    renderer.addClass(elementRef.nativeElement, `cdk-column-${columnDef.getClassFriendlyName()}`);
   }
 }
