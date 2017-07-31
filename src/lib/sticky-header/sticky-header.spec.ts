@@ -117,6 +117,8 @@ describe('sticky-header with positioning supported', () => {
 });
 
 @Component({
+  // Use styles to define the style of scrollable container and header,
+  // which help test to make sure whether the header is stuck at the right position.
   styles:[`
     .scrollable-style {
         text-align: center;
