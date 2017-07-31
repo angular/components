@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {MdChipInputEvent} from '@angular/material';
 
 
-interface Person {
+export interface Person {
   name: string;
 }
 
