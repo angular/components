@@ -405,7 +405,7 @@ describe('CdkTable', () => {
       ['a_3', 'b_3', 'c_3'],
     ]);
 
-    // Adding a new object will not update the table until refresh called.
+    // Adding a new object will not update the table until update called.
     arrayDataSource.data.push({a: 'a_4', b: 'b_4', c: 'c_4'});
     arrayCdkTableFixture.detectChanges();  // Prove that detect changes won't render row
     expectTableToMatchContent(tableElement, [
@@ -415,7 +415,7 @@ describe('CdkTable', () => {
       ['a_3', 'b_3', 'c_3'],
     ]);
 
-    arrayDataSource.refresh();  // Calling refresh will trigger update
+    arrayDataSource.update();  // Calling update will trigger update
     arrayCdkTableFixture.detectChanges();  // Prove that detect changes won't render row
     expectTableToMatchContent(tableElement, [
       ['Column A', 'Column B', 'Column C'],

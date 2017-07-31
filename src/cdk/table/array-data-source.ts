@@ -27,7 +27,7 @@ export class ArrayDataSource<T> implements DataSource<T> {
    * Triggers an update to the CollectionViewer. Should be used when elements are added, removed,
    * or moved in the data array and should be reflected in the CollectionViewer.
    */
-  refresh() { this._data.next(this.data); }
+  update() { this._data.next(this.data); }
 
   /**
    * Used by the CollectionViewer. Called when it connects to the data source.
