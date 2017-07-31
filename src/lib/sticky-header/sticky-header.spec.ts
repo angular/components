@@ -1,7 +1,11 @@
 import {async, ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {Component, DebugElement, ViewChild} from '@angular/core';
-import {StickyHeaderModule, CdkStickyRegion,
-  CdkStickyHeader, STICKY_HEADER_SUPPORT_STRATEGY} from './index';
+import {
+  StickyHeaderModule,
+  CdkStickyRegion,
+  CdkStickyHeader,
+  STICKY_HEADER_SUPPORT_STRATEGY
+} from './index';
 import {OverlayModule, Scrollable} from '../core/overlay/index';
 import {PlatformModule} from '../core/platform/index';
 import {By} from '@angular/platform-browser';
@@ -54,8 +58,7 @@ describe('sticky-header with positioning not supported', () => {
 
     // Scroll the scrollableContainer up to stick
     fixture.componentInstance.scrollDown();
-    // Use tick(100) to tick forward to let stickyHeader's _applyStickyPositionStyles()
-    // function finished
+    // wait till animation has finished
     tick(100);
 
     expect(stickyHeader.element.getBoundingClientRect().top).toBe(scrollableContainerTop);
@@ -69,8 +72,7 @@ describe('sticky-header with positioning not supported', () => {
 
     // Scroll the scrollableContainer up to stick
     fixture.componentInstance.scrollDown();
-    // Use tick(100) to tick forward to let stickyHeader's _applyStickyPositionStyles()
-    // function finished
+    // wait till animation has finished
     tick(100);
 
     expect(stickyHeader.element.getBoundingClientRect().top).toBe(scrollableContainerTop);
