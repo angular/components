@@ -199,8 +199,10 @@ describe('NativeDateAdapter', () => {
   it('should parse invalid value as invalid', () => {
     let d = adapter.parse('hello');
     expect(d).not.toBeNull();
-    expect(adapter.isDateInstance(d)).toBe(true);
-    expect(adapter.isValid(d as Date)).toBe(false);
+    expect(adapter.isDateInstance(d))
+        .toBe(true, 'Expected string to have been fed through Date.parse');
+    expect(adapter.isValid(d as Date))
+        .toBe(false, 'Expected to parse as "invalid date" object');
   });
 
   it('should format', () => {
@@ -240,6 +242,11 @@ describe('NativeDateAdapter', () => {
       expect(adapter.format(new Date(2017, JAN, 1), {})).toEqual('Sun Jan 01 2017');
     }
   });
+
+  it('should throw when attempting to format invalid date', () => {
+    expect(() => adapter.format(new Date(NaN), {}))
+        .toThrowError(/NativeDateAdapter: Cannot format invalid date\./);
+  })
 
   it('should add years', () => {
     expect(adapter.addCalendarYears(new Date(2017, JAN, 1), 1)).toEqual(new Date(2018, JAN, 1));

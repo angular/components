@@ -227,7 +227,8 @@ describe('MdDatepicker', () => {
       it('should throw when given wrong data type', () => {
         testComponent.date = '1/1/2017' as any;
 
-        expect(() => fixture.detectChanges()).toThrow();
+        expect(() => fixture.detectChanges())
+            .toThrowError(/Datepicker: value not recognized as a date object by DateAdapter\./);
 
         testComponent.date = null;
       });
