@@ -21,6 +21,7 @@ import {
   TOOLTIP_PANEL_CLASS,
   TooltipPosition
 } from './index';
+import {A11Y_MESSAGES_CONTAINER_ID} from './tooltip';
 
 
 const initialTooltipMessage = 'initial tooltip message';
@@ -32,7 +33,12 @@ describe('MdTooltip', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdTooltipModule, OverlayModule, NoopAnimationsModule],
-      declarations: [BasicTooltipDemo, ScrollableTooltipDemo, OnPushTooltipDemo],
+      declarations: [
+        BasicTooltipDemo,
+        ScrollableTooltipDemo,
+        OnPushTooltipDemo,
+        DynamicTooltipsDemo
+      ],
       providers: [
         {provide: Platform, useValue: {IOS: false, isBrowser: true}},
         {provide: OverlayContainer, useFactory: () => {
@@ -405,6 +411,45 @@ describe('MdTooltip', () => {
     }));
   });
 
+  it('should create a unique a11y message element for each unique message', () => {
+    const dynamicTooltipsFixture = TestBed.createComponent(DynamicTooltipsDemo);
+    dynamicTooltipsFixture.detectChanges();
+
+    // No tooltips, no tooltip a11y container
+    let a11yMessageContainer = document.querySelector(`#${A11Y_MESSAGES_CONTAINER_ID}`)!;
+    expect(a11yMessageContainer).toBe(null);
+
+    // One tooltip, one message - expect the container and one a11y message
+    dynamicTooltipsFixture.componentInstance.tooltips = ['message_1'];
+    dynamicTooltipsFixture.detectChanges();
+    a11yMessageContainer = document.querySelector(`#${A11Y_MESSAGES_CONTAINER_ID}`)!;
+    expect(a11yMessageContainer.childNodes.length).toBe(1);
+    expect(a11yMessageContainer.childNodes[0].textContent).toBe('message_1');
+
+    // Add 'message_2' - Two tooltips, two messages - expect two a11y messages
+    dynamicTooltipsFixture.componentInstance.tooltips = ['message_1', 'message_2'];
+    dynamicTooltipsFixture.detectChanges();
+    a11yMessageContainer = document.querySelector(`#${A11Y_MESSAGES_CONTAINER_ID}`)!;
+    expect(a11yMessageContainer.childNodes.length).toBe(2);
+    expect(a11yMessageContainer.childNodes[0].textContent).toBe('message_1');
+    expect(a11yMessageContainer.childNodes[1].textContent).toBe('message_2');
+
+    // Add 'message_1' - Three tooltips, two messages - expect two a11y messages
+    dynamicTooltipsFixture.componentInstance.tooltips = ['message_1', 'message_2', 'message_1'];
+    dynamicTooltipsFixture.detectChanges();
+    a11yMessageContainer = document.querySelector(`#${A11Y_MESSAGES_CONTAINER_ID}`)!;
+    expect(a11yMessageContainer.childNodes.length).toBe(2);
+    expect(a11yMessageContainer.childNodes[0].textContent).toBe('message_1');
+    expect(a11yMessageContainer.childNodes[1].textContent).toBe('message_2');
+
+    // Remove 'message_2' - Two tooltips, one message - expect one a11y message
+    dynamicTooltipsFixture.componentInstance.tooltips = ['message_1', 'message_1'];
+    dynamicTooltipsFixture.detectChanges();
+    a11yMessageContainer = document.querySelector(`#${A11Y_MESSAGES_CONTAINER_ID}`)!;
+    expect(a11yMessageContainer.childNodes.length).toBe(1);
+    expect(a11yMessageContainer.childNodes[0].textContent).toBe('message_1');
+  });
+
   describe('scrollable usage', () => {
     let fixture: ComponentFixture<ScrollableTooltipDemo>;
     let buttonDebugElement: DebugElement;
@@ -564,4 +609,18 @@ class ScrollableTooltipDemo {
 class OnPushTooltipDemo {
   position: string = 'below';
   message: string = initialTooltipMessage;
+}
+
+
+@Component({
+  selector: 'app',
+  template: `
+      {{tooltips}} Test
+    <button *ngFor="let tooltip of tooltips"
+            [mdTooltip]="tooltip">
+      Button {{tooltip}}
+    </button>`,
+})
+class DynamicTooltipsDemo {
+  tooltips: Array<string> = [];
 }
