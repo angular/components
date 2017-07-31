@@ -116,9 +116,7 @@ describe('sticky-header with positioning supported', () => {
   it('should find sticky positioning is applied', () => {
     let position = window.getComputedStyle(stickyHeader.element).position;
     expect(position).not.toBe(null);
-    if (position != null) {
-      expect(/sticky/i.test(position)).toBe(true);
-    }
+    expect(/sticky/i.test(position!)).toBe(true);
   });
 });
 
