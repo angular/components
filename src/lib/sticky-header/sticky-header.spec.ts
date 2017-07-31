@@ -15,7 +15,7 @@ describe('sticky-header with positioning not supported', () => {
   let stickyElement: DebugElement;
   let stickyParentElement: DebugElement;
   let scrollableElement: DebugElement;
-  let stickyHeaderDir: CdkStickyHeader;
+  let stickyHeader: CdkStickyHeader;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -34,48 +34,48 @@ describe('sticky-header with positioning not supported', () => {
     testComponent = fixture.debugElement.componentInstance;
     stickyElement = fixture.debugElement.query(By.directive(CdkStickyHeader));
     stickyParentElement = fixture.debugElement.query(By.directive(CdkStickyRegion));
-    stickyHeaderDir = stickyElement.injector.get<CdkStickyHeader>(CdkStickyHeader);
+    stickyHeader = stickyElement.injector.get<CdkStickyHeader>(CdkStickyHeader);
     scrollableElement = fixture.debugElement.query(By.directive(Scrollable));
   });
 
   it('should be able to find stickyParent', () => {
-    expect(stickyHeaderDir.stickyParent).not.toBe(null);
+    expect(stickyHeader.stickyParent).not.toBe(null);
   });
 
   it('should be able to find scrollableContainer', () => {
-    expect(stickyHeaderDir.upperScrollableContainer).not.toBe(null);
+    expect(stickyHeader.upperScrollableContainer).not.toBe(null);
   });
 
   it('should stick in the right place when scrolled to the top of the container', fakeAsync(() => {
-    let scrollableContainerTop = stickyHeaderDir.upperScrollableContainer
+    let scrollableContainerTop = stickyHeader.upperScrollableContainer
       .getBoundingClientRect().top;
-    expect(stickyHeaderDir.element.getBoundingClientRect().top).not.toBe(scrollableContainerTop);
+    expect(stickyHeader.element.getBoundingClientRect().top).not.toBe(scrollableContainerTop);
     tick(0);
 
     // Scroll the scrollableContainer up to stick
     fixture.componentInstance.scrollDown();
     tick(100);
 
-    expect(stickyHeaderDir.element.getBoundingClientRect().top).toBe(scrollableContainerTop);
+    expect(stickyHeader.element.getBoundingClientRect().top).toBe(scrollableContainerTop);
   }));
 
   it('should unstuck when scrolled off the top of the container', fakeAsync(() => {
-    let scrollableContainerTop = stickyHeaderDir.upperScrollableContainer
+    let scrollableContainerTop = stickyHeader.upperScrollableContainer
       .getBoundingClientRect().top;
-    expect(stickyHeaderDir.element.getBoundingClientRect().top).not.toBe(scrollableContainerTop);
+    expect(stickyHeader.element.getBoundingClientRect().top).not.toBe(scrollableContainerTop);
     tick(0);
 
     // Scroll the scrollableContainer up to stick
     fixture.componentInstance.scrollDown();
     tick(100);
 
-    expect(stickyHeaderDir.element.getBoundingClientRect().top).toBe(scrollableContainerTop);
+    expect(stickyHeader.element.getBoundingClientRect().top).toBe(scrollableContainerTop);
 
     // Scroll the scrollableContainer down to unstuck
     fixture.componentInstance.scrollBack();
     tick(100);
 
-    expect(stickyHeaderDir.element.getBoundingClientRect().top).not.toBe(scrollableContainerTop);
+    expect(stickyHeader.element.getBoundingClientRect().top).not.toBe(scrollableContainerTop);
 
   }));
 });
@@ -85,7 +85,7 @@ describe('sticky-header with positioning supported', () => {
   let testComponent: StickyHeaderTest;
   let stickyElement: DebugElement;
   let stickyParentElement: DebugElement;
-  let stickyHeaderDir: CdkStickyHeader;
+  let stickyHeader: CdkStickyHeader;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -104,11 +104,11 @@ describe('sticky-header with positioning supported', () => {
     testComponent = fixture.debugElement.componentInstance;
     stickyElement = fixture.debugElement.query(By.directive(CdkStickyHeader));
     stickyParentElement = fixture.debugElement.query(By.directive(CdkStickyRegion));
-    stickyHeaderDir = stickyElement.injector.get<CdkStickyHeader>(CdkStickyHeader);
+    stickyHeader = stickyElement.injector.get<CdkStickyHeader>(CdkStickyHeader);
   });
 
   it('should find sticky positioning is applied', () => {
-    let position = window.getComputedStyle(stickyHeaderDir.element).position;
+    let position = window.getComputedStyle(stickyHeader.element).position;
     expect(position).not.toBe(null);
     if (position != null) {
       expect(/sticky/i.test(position)).toBe(true);
