@@ -453,13 +453,14 @@ export class MdTooltip implements OnDestroy {
 
     // Remove the a11y message if this was its last unique instance.
     const a11yMessageElement = a11yMessages.get(message);
-    if (a11yMessageElement && --a11yMessageElement.count == 0) {
+    if (a11yMessageElement && a11yMessageElement.count == 1) {
       this._deleteA11yMessageElement(message);
+      a11yMessageElement.count--;
     }
 
     // If the global messages container no longer has any children, remove it.
     if (!this._getA11yMessagesContainer()!.childNodes.length) {
-      document.body.removeChild(this._getA11yMessagesContainer()!);
+      this._renderer.removeChild(document.body, this._getA11yMessagesContainer());
     }
   }
 
@@ -475,9 +476,9 @@ export class MdTooltip implements OnDestroy {
       this._createA11yMessagesContainer();
     }
 
-    const messageElement = document.createElement('div');
+    const messageElement = this._renderer.createElement('div');
     messageElement.id = `md-tooltip-message-${latestA11yMessageId++}`;
-    messageElement.innerHTML = message;
+    messageElement.textContent = message;
 
     this._getA11yMessagesContainer()!.appendChild(messageElement);
     a11yMessages.set(message, {element: messageElement, count: 1});
@@ -490,7 +491,7 @@ export class MdTooltip implements OnDestroy {
     if (!this._platform.isBrowser) { return; }
 
     const a11yMessage = a11yMessages.get(message)!;
-    this._getA11yMessagesContainer()!.removeChild(a11yMessage.element);
+    this._renderer.removeChild(this._getA11yMessagesContainer()!, a11yMessage.element);
     a11yMessages.delete(message);
   }
 
@@ -516,11 +517,10 @@ export class MdTooltip implements OnDestroy {
 
   /** Creates the global container for all tooltip a11y messages. */
   private _createA11yMessagesContainer() {
-    const a11yMessagesContainer = document.createElement('div');
+    const a11yMessagesContainer = this._renderer.createElement('div');
     a11yMessagesContainer.id = A11Y_MESSAGES_CONTAINER_ID;
-    a11yMessagesContainer.className = 'cdk-visually-hidden';
-
-    document.body.appendChild(a11yMessagesContainer);
+    this._renderer.addClass(a11yMessagesContainer, 'cdk-visually-hidden');
+    this._renderer.appendChild(document.body, a11yMessagesContainer);
   }
 
   /** Returns the global container for tooltip a11y messages. */
