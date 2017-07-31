@@ -1,5 +1,5 @@
 .demo-sticky {
-  .centered {
+  .demo-centered {
     text-align: left;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -56,33 +56,25 @@
   display: block;
 }
 
-.centered {
-  text-align: center;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  height: 500px;
-  overflow: auto;}
-
-.container {
+.demo-container {
   margin: 0;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
-.header-style{
+.demo-header-style{
   -webkit-appearance: none;
   padding: 20px;
 }
 
-.header-color1 {
+.demo-header-color1 {
   background: #cecece;
 }
 
-.header-color2 {
+.demo-header-color2 {
   background: #cea7a7;
 }
 
-.header-color3 {
+.demo-header-color3 {
   background: #c2eae5;
 }

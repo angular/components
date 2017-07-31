@@ -1,79 +1,33 @@
 <div class="demo-sticky">
-  <div class="centered" cdk-scrollable>
+  <div class="demo-centered" cdk-scrollable>
     <div>
       <h1>Sticky-header Demo</h1>
     </div>
 
-    <div class="container">
+    <div class="demo-container">
 
       <div>
-        <div cdkStickyHeader class="header-style header-color3" >
+        <div cdkStickyHeader class="demo-header-style demo-header-color3" >
           <h2>Unread Messages</h2>
         </div>
-        <P>Min: Branch is this weekend? </P>
-        <P>Li: Yes</P>
-        <P>Chan: Looking</P>
-        <P>Chan: Forward</P>
-        <P>Chan: To It !</P>
-        <P>Min: Branch is this weekend?</P>
-        <P>Li: Yes</P>
-        <P>Eat: Green Peppers</P>
-        <P>Chan: Where? </P>
-        <P>Min: Branch is this weekend?</P>
-        <P>Li: Yes</P>
-        <P>Chan: Where?</P>
-        <P>Eat: Green Peppers</P>
+        <P *ngFor="let item of items">{{item.name}} :  {{item.messages}}</P>
       </div>
 
       <div cdkStickyRegion >
-        <div cdkStickyHeader class="header-style header-color2">
+        <div cdkStickyHeader class="demo-header-style demo-header-color2">
           <h2>Late Messages</h2>
         </div>
-        <P>Min: Branch is this weekend? </P>
-        <P>Li: Yes</P>
-        <P>Chan: Looking</P>
-        <P>Chan: Forward</P>
-        <P>Chan: To It !</P>
-        <P>Min: Branch is this weekend?</P>
-        <P>Li: Yes</P>
-        <P>Eat: Green Peppers</P>
-        <P>Chan: Where? </P>
-        <P>Min: Branch is this weekend?</P>
-        <P>Li: Yes</P>
-        <P>Chan: Where?</P>
-        <P>Eat: Green Peppers</P>
-        <P>Min: Branch is this weekend? </P>
-        <P>Li: Yes</P>
+        <P *ngFor="let item of items">{{item.name}} :  {{item.messages}}</P>
+        <P *ngFor="let item of items">{{item.name}} :  {{item.messages}}</P>
       </div>
 
       <div cdkStickyRegion>
-        <div cdkStickyHeader class="header-style header-color1" >
+        <div cdkStickyHeader class="demo-header-style demo-header-color1" >
           <h2>Read Messages</h2>
         </div>
-        <P>Min: Branch is this weekend? </P>
-        <P>Li: Yes</P>
-        <P>Chan: Looking</P>
-        <P>Chan: Forward</P>
-        <P>Chan: To It !</P>
-        <P>Min: Branch is this weekend?</P>
-        <P>Li: Yes</P>
-        <P>Eat: Green Peppers</P>
-        <P>Chan: Where? </P>
-        <P>Min: Branch is this weekend?</P>
-        <P>Li: Yes</P>
-        <P>Chan: Where?</P>
-        <P>Eat: Green Peppers</P>
-        <P>Min: Branch is this weekend? </P>
-        <P>Li: Yes</P>
-        <P>Min: Branch is this weekend? </P>
-        <P>Li: Yes</P>
-        <P>Chan: Looking</P>
-        <P>Chan: Forward</P>
-        <P>Chan: To It !</P>
-        <P>Min: Branch is this weekend?</P>
-        <P>Li: Yes</P>
+        <P *ngFor="let item of items">{{item.name}} :  {{item.messages}}</P>
+        <P *ngFor="let item of items">{{item.name}} :  {{item.messages}}</P>
       </div>
     </div>
   </div>
-
 </div>
