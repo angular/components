@@ -8,6 +8,7 @@
            [max]="maxBirthday"
            required
            placeholder="Date of birth">
+    <!-- aria-label for <button> is automatically added by mdDatepickerToggle -->
     <button mdSuffix [mdDatepickerToggle]="birthdayPicker"></button>
     <md-error *ngIf="birthdayModel.hasError('required')">
       Please choose a date.
@@ -30,6 +31,7 @@
            [min]="minPaymentDate"
            required
            aria-label="Payment date">
+    <!-- aria-label for <button> is automatically added by mdDatepickerToggle -->
     <button mdSuffix [mdDatepickerToggle]="paymentPicker"></button>
     <md-error *ngIf="paymentDateModel.hasError('required')">
       Please choose a date.
@@ -52,6 +54,7 @@
            [max]="maxTripDate"
            required
            placeholder="Departure date">
+    <!-- aria-label for <button> is automatically added by mdDatepickerToggle -->
     <button mdSuffix [mdDatepickerToggle]="departPicker"></button>
     <md-error *ngIf="departDateModel.hasError('required')">
       Please choose a date.
@@ -72,6 +75,7 @@
            [min]="departDate || minTripDate"
            [max]="maxTripDate"
            placeholder="Return date">
+    <!-- aria-label for <button> is automatically added by mdDatepickerToggle -->
     <button mdSuffix [mdDatepickerToggle]="returnPicker"></button>
     <md-error *ngIf="returnDateModel.hasError('mdDatepickerMin') && !departDate">
       Please choose a later date.
@@ -98,6 +102,7 @@
            [mdDatepickerFilter]="weekdaysOnly"
            required
            placeholder="Appointment date">
+    <!-- aria-label for <button> is automatically added by mdDatepickerToggle -->
     <button mdSuffix [mdDatepickerToggle]="appointmentPicker"></button>
     <md-error *ngIf="appointmentDateModel.hasError('required')">
       Please choose a date.
