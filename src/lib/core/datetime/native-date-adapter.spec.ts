@@ -246,7 +246,7 @@ describe('NativeDateAdapter', () => {
   it('should throw when attempting to format invalid date', () => {
     expect(() => adapter.format(new Date(NaN), {}))
         .toThrowError(/NativeDateAdapter: Cannot format invalid date\./);
-  })
+  });
 
   it('should add years', () => {
     expect(adapter.addCalendarYears(new Date(2017, JAN, 1), 1)).toEqual(new Date(2018, JAN, 1));
