@@ -42,7 +42,8 @@ import {
   // tslint:disable-next-line:no-unused-variable
   ScrollStrategy,
 } from '@angular/cdk/overlay';
-import {coerceBooleanProperty, ESCAPE} from '@angular/cdk/coercion';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ESCAPE} from '@angular/cdk/keyboard';
 
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
@@ -90,7 +91,7 @@ export interface RegisteredA11yMessage {
 /** ID used for the body container where all a11y messages are appended. */
 export const A11Y_MESSAGES_CONTAINER_ID = 'md-tooltip-a11y-messages';
 
-/** Global incremental identifier for each registered a11y message.
+/** Global incremental identifier for each registered a11y message. */
 let latestA11yMessageId = 0;
 
 /** Global map of all registered a11y message elements that have been placed into the document. */
@@ -478,8 +479,6 @@ export class MdTooltip implements OnDestroy {
     messageElement.id = `md-tooltip-message-${latestA11yMessageId++}`;
     messageElement.innerHTML = message;
 
-    console.log(this._getA11yMessagesContainer());
-    console.log(messageElement);
     this._getA11yMessagesContainer()!.appendChild(messageElement);
     a11yMessages.set(message, {element: messageElement, count: 1});
 

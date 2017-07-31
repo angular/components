@@ -409,6 +409,13 @@ describe('MdTooltip', () => {
       expect(tooltipWrapper).toBeTruthy('Expected tooltip to be shown.');
       expect(tooltipWrapper.getAttribute('dir')).toBe('rtl', 'Expected tooltip to be in RTL mode.');
     }));
+
+    fit('should be able to set the tooltip message as a number', fakeAsync(() => {
+      fixture.componentInstance.message = 100;
+      fixture.detectChanges();
+
+      expect(tooltipDirective.message).toBe('100');
+    }));
   });
 
   it('should create a unique a11y message element for each unique message', () => {
@@ -561,7 +568,7 @@ describe('MdTooltip', () => {
 })
 class BasicTooltipDemo {
   position: string = 'below';
-  message: string = initialTooltipMessage;
+  message: any = initialTooltipMessage;
   showButton: boolean = true;
   showTooltipClass = false;
   @ViewChild(MdTooltip) tooltip: MdTooltip;
