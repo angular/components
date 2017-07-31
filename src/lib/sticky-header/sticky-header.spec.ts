@@ -50,10 +50,12 @@ describe('sticky-header with positioning not supported', () => {
     let scrollableContainerTop = stickyHeader.upperScrollableContainer
       .getBoundingClientRect().top;
     expect(stickyHeader.element.getBoundingClientRect().top).not.toBe(scrollableContainerTop);
-    tick(0);
+    tick();
 
     // Scroll the scrollableContainer up to stick
     fixture.componentInstance.scrollDown();
+    // Use tick(100) to tick forward to let stickyHeader's _applyStickyPositionStyles()
+    // function finished
     tick(100);
 
     expect(stickyHeader.element.getBoundingClientRect().top).toBe(scrollableContainerTop);
@@ -63,10 +65,12 @@ describe('sticky-header with positioning not supported', () => {
     let scrollableContainerTop = stickyHeader.upperScrollableContainer
       .getBoundingClientRect().top;
     expect(stickyHeader.element.getBoundingClientRect().top).not.toBe(scrollableContainerTop);
-    tick(0);
+    tick();
 
     // Scroll the scrollableContainer up to stick
     fixture.componentInstance.scrollDown();
+    // Use tick(100) to tick forward to let stickyHeader's _applyStickyPositionStyles()
+    // function finished
     tick(100);
 
     expect(stickyHeader.element.getBoundingClientRect().top).toBe(scrollableContainerTop);
