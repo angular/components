@@ -125,15 +125,15 @@ describe('sticky-header with positioning supported', () => {
   // which help test to make sure whether the header is stuck at the right position.
   styles:[`
     .scrollable-style {
-        text-align: center;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        height: 300px;
-        overflow: auto;
+      text-align: center;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      height: 300px;
+      overflow: auto;
     }
     .heading-style {
-        background: whitesmoke;
-        padding: 5px;
+      background: whitesmoke;
+      padding: 5px;
     }
   `],
   template: `
