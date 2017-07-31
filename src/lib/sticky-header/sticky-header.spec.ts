@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {Component, DebugElement, ViewChild} from '@angular/core';
-import {StickyHeaderModule, CdkStickyRegion, CdkStickyHeader,
-  STICKY_HEADER_SUPPORT_STRATEGY} from './index';
+import {StickyHeaderModule, CdkStickyRegion,
+  CdkStickyHeader, STICKY_HEADER_SUPPORT_STRATEGY} from './index';
 import {OverlayModule, Scrollable} from '../core/overlay/index';
 import {PlatformModule} from '../core/platform/index';
 import {By} from '@angular/platform-browser';
