@@ -410,7 +410,7 @@ describe('MdTooltip', () => {
       expect(tooltipWrapper.getAttribute('dir')).toBe('rtl', 'Expected tooltip to be in RTL mode.');
     }));
 
-    fit('should be able to set the tooltip message as a number', fakeAsync(() => {
+    it('should be able to set the tooltip message as a number', fakeAsync(() => {
       fixture.componentInstance.message = 100;
       fixture.detectChanges();
 
