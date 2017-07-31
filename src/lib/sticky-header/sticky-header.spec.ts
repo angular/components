@@ -117,15 +117,24 @@ describe('sticky-header with positioning supported', () => {
 });
 
 @Component({
-  template: `
-    <div cdk-scrollable style="text-align: center;
+  styles:[`
+    .scrollable-style {
+        text-align: center;
         -webkit-appearance: none;
         -moz-appearance: none;
         height: 300px;
-        overflow: auto;">
+        overflow: auto;
+    }
+    .heading-style {
+        background: whitesmoke;
+        padding: 5px;
+    }
+  `],
+  template: `
+    <div cdk-scrollable class="scrollable-style">
       <p *ngFor="let item of items"> {{item.name}} : {{item.message}}</p>
       <div cdkStickyRegion>
-        <div cdkStickyHeader style="background: whitesmoke; padding: 5px;">
+        <div cdkStickyHeader class="heading-style">
           <h2>Heading 1</h2>
         </div>
         <p *ngFor="let item of items"> {{item.name}} : {{item.message}}</p>
