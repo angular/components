@@ -68,7 +68,8 @@ export class MdHeaderCell extends _MdHeaderCell {
               elementRef: ElementRef,
               renderer: Renderer2) {
     super(columnDef, elementRef, renderer);
-    renderer.addClass(elementRef.nativeElement, `mat-column-${columnDef.getClassFriendlyName()}`);
+    renderer.addClass(elementRef.nativeElement,
+        `mat-column-${columnDef.getCssClassFriendlyName()}`);
   }
 }
 
@@ -85,6 +86,7 @@ export class MdCell extends _MdCell {
               elementRef: ElementRef,
               renderer: Renderer2) {
     super(columnDef, elementRef, renderer);
-    renderer.addClass(elementRef.nativeElement, `mat-column-${columnDef.getClassFriendlyName()}`);
+    renderer.addClass(elementRef.nativeElement,
+        `mat-column-${columnDef.getCssClassFriendlyName()}`);
   }
 }
