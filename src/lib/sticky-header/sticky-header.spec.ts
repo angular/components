@@ -123,39 +123,29 @@ describe('sticky-header with positioning supported', () => {
         -moz-appearance: none;
         height: 300px;
         overflow: auto;">
-      <p>test test test</p>
-      <p>test test test</p>
-      <p>test test test</p>
-      <p>test test test</p>
-      <p>test test test</p>
-      <p>test test test</p>
-      <div cdkStickyRegion id="theStickyHeaderLalala">
+      <p *ngFor="let item of items"> {{item.name}} : {{item.message}}</p>
+      <div cdkStickyRegion>
         <div cdkStickyHeader style="background: whitesmoke; padding: 5px;">
           <h2>Heading 1</h2>
         </div>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
-        <p>test test test</p>
+        <p *ngFor="let item of items"> {{item.name}} : {{item.message}}</p>
+        <p *ngFor="let item of items"> {{item.name}} : {{item.message}}</p>
+        <p *ngFor="let item of items"> {{item.name}} : {{item.message}}</p>
       </div>
     </div>
   `})
 class StickyHeaderTest {
   @ViewChild(Scrollable) scrollingContainer: Scrollable;
+
+  items: any[] = [
+    {'name': 'Forrest', 'message': 'Life was like a box of chocolates'},
+    {'name': 'Gump', 'message': 'you never know what you are gonna get'},
+    {'name': 'Lion King', 'message': 'Everything you see exists together'},
+    {'name': 'Jack', 'message': 'in a delicate balance'},
+    {'name': 'Garfield', 'message': 'Save Water'},
+    {'name': 'Shawshank', 'message': 'There is something inside'},
+    {'name': 'Jone', 'message': 'Enough movies?'},
+  ];
 
   scrollDown() {
     const scrollingContainerEl = this.scrollingContainer.getElementRef().nativeElement;
