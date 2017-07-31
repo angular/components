@@ -38,7 +38,7 @@ export function composeRelease(packageName: string, options: ComposeReleaseOptio
 
   replaceVersionPlaceholders(releasePath);
   createTypingsReexportFile(releasePath, './typings/index', packageName);
-  createMetadataReexportFile(releasePath, './typings/index', packageName);
+  createMetadataReexportFile(releasePath, './typings/index', packageName, packageName);
 
   if (options.useSecondaryEntryPoints) {
     createFilesForSecondaryEntryPoint(packageName, packagePath, releasePath);
@@ -68,12 +68,17 @@ function createFilesForSecondaryEntryPoint(packageName: string, packagePath: str
     // Create a typings and a metadata re-export within the entry-point to point to the
     // typings we just copied.
     createTypingsReexportFile(entryPointDir, `./typings/index`, 'index');
-    createMetadataReexportFile(entryPointDir, `./typings/index`, 'index');
+    createMetadataReexportFile(
+        entryPointDir, `./typings/index`, 'index', `${packageName}/${entryPointName}`);
 
     // Finally, create both a d.ts and metadata file for this entry-point in the root of
     // the package that re-exports from the entry-point's directory.
     createTypingsReexportFile(releasePath, `./${entryPointName}/index`, entryPointName);
-    createMetadataReexportFile(releasePath, `./${entryPointName}/index`, entryPointName);
+    createMetadataReexportFile(
+        releasePath,
+        `./${entryPointName}/index`,
+        entryPointName,
+        `${packageName}/${entryPointName}`);
   });
 }
 
