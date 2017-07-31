@@ -255,7 +255,6 @@ export class MdTooltip implements OnDestroy {
     }
 
     this._unregisterA11yMessage(this.message);
-
   }
 
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */
