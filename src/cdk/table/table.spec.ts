@@ -918,6 +918,11 @@ function expectTableToMatchContent(tableElement: Element, expectedTableContent: 
   });
 
   // Check data row cells
+  const rows = getRows(tableElement);
+  if (rows.length != expectedTableContent.length) {
+    missedExpectations.push(`Expected ${expectedTableContent.length} rows but was ${rows.length}`);
+  }
+
   getRows(tableElement).forEach((row, rowIndex) => {
     getCells(row).forEach((cell, cellIndex) => {
       const expected = expectedTableContent.length ?
