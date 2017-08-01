@@ -81,6 +81,9 @@ export {
   A11yModule,
 } from '@angular/cdk/a11y';
 
+// Selection
+export {SelectionModel} from '@angular/cdk/collections';
+
 export {
   UniqueSelectionDispatcher,
   UniqueSelectionDispatcherListener,
