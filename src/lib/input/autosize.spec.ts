@@ -130,7 +130,7 @@ describe('MdTextareaAutosize', () => {
       .toBeGreaterThan(previousMinHeight, 'Expected the textarea to grow to two rows.');
   });
 
-  it('should calculate the proper height a specified amount of max rows', () => {
+  it('should calculate the proper height based on the specified amount of max rows', () => {
     fixture.componentInstance.content = [1, 2, 3, 4, 5, 6, 7, 8].join('\n');
     fixture.detectChanges();
     autosize.resizeToFitContent();
