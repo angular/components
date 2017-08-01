@@ -6,9 +6,13 @@ import {ACCESSIBILITY_DEMO_ROUTES} from './routes';
 import {DemoMaterialModule} from '../demo-material-module';
 import {AccessibilityHome, AccessibilityDemo} from './a11y';
 import {ButtonAccessibilityDemo} from './button/button-a11y';
+import {ButtonToggleAccessibilityDemo} from './button-toggle/button-toggle-a11y';
 import {CheckboxAccessibilityDemo} from './checkbox/checkbox-a11y';
+import {ChipsAccessibilityDemo} from './chips/chips-a11y';
+import {GridListAccessibilityDemo} from './grid-list/grid-list-a11y';
 import {RadioAccessibilityDemo} from './radio/radio-a11y';
 import {MenuAccessibilityDemo} from './menu/menu-a11y';
+import {DatepickerAccessibilityDemo} from './datepicker/datepicker-a11y';
 
 @NgModule({
   imports: [
@@ -22,18 +26,22 @@ export class AccessibilityRoutingModule {}
 
 @NgModule({
   imports: [
+    AccessibilityRoutingModule,
     CommonModule,
+    DemoMaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    AccessibilityRoutingModule,
-    DemoMaterialModule,
   ],
   declarations: [
     AccessibilityDemo,
     MenuAccessibilityDemo,
     AccessibilityHome,
     ButtonAccessibilityDemo,
+    ButtonToggleAccessibilityDemo,
     CheckboxAccessibilityDemo,
+    ChipsAccessibilityDemo,
+    DatepickerAccessibilityDemo,
+    GridListAccessibilityDemo,
     RadioAccessibilityDemo,
   ]
 })

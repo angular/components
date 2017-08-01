@@ -143,11 +143,11 @@
   // we need to divide by the scale factor to make it half of the original text size. We again need
   // to subtract off the line spacing since the mocks measure to the edge of the text, not the  edge
   // of the line.
-  $subscript-margin-top: 0.5em / $subscript-font-scale - $line-spacing;
+  $subscript-margin-top: 0.5em / $subscript-font-scale - ($line-spacing * 2);
   // The padding applied to the input-wrapper to reserve space for the subscript, since it's
   // absolutely positioned. This is a combination of the subscript's margin and line-height, but we
   // need to multiply by the subscript font scale factor since the wrapper has a larger font size.
-  $wrapper-padding-bottom: 0.5em + ($line-height * $subscript-font-scale);
+  $wrapper-padding-bottom: ($subscript-margin-top + $line-height) * $subscript-font-scale;
 
   .mat-input-container {
     font-family: mat-font-family($config);
@@ -163,9 +163,9 @@
   .mat-input-prefix,
   .mat-input-suffix {
     // Allow icons in a prefix or suffix to adapt to the correct size.
-    .mat-icon,
-    .mat-datepicker-toggle {
+    .mat-icon {
       font-size: $prefix-suffix-icon-font-size;
+      line-height: $line-height;
     }
 
     // Allow icon buttons in a prefix or suffix to adapt to the correct size.
@@ -174,7 +174,8 @@
       width: $prefix-suffix-icon-font-scale * 1em;
 
       .mat-icon {
-        line-height: $prefix-suffix-icon-font-scale;
+        height: $line-height * 1em;
+        line-height: $line-height;
       }
     }
   }
@@ -190,6 +191,12 @@
       @include _mat-input-placeholder-floating($subscript-font-scale,
           $infix-padding, $infix-margin-top);
     }
+  }
+
+  // <input> elements seem to have their height set slightly too large on Safari causing the text to
+  // be misaligned w.r.t. the placeholder. Adding this margin corrects it.
+  input.mat-input-element {
+    margin-top: -$line-spacing * 1em;
   }
 
   .mat-input-placeholder-wrapper {

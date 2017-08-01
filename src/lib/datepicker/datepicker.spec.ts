@@ -223,6 +223,15 @@ describe('MdDatepicker', () => {
         expect(ownedElement).not.toBeNull();
         expect((ownedElement as Element).tagName.toLowerCase()).toBe('md-calendar');
       });
+
+      it('should throw when given wrong data type', () => {
+        testComponent.date = '1/1/2017' as any;
+
+        expect(() => fixture.detectChanges())
+            .toThrowError(/Datepicker: value not recognized as a date object by DateAdapter\./);
+
+        testComponent.date = null;
+      });
     });
 
     describe('datepicker with too many inputs', () => {
@@ -411,6 +420,21 @@ describe('MdDatepicker', () => {
 
         expect(inputEl.classList).toContain('ng-touched');
       });
+
+      it('should mark input touched on calendar selection', () => {
+        let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+
+        expect(inputEl.classList).toContain('ng-untouched');
+
+        testComponent.datepicker._selectAndClose(new Date(2017, JAN, 1));
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          fixture.detectChanges();
+
+          expect(inputEl.classList).toContain('ng-touched');
+        });
+      });
     });
 
     describe('datepicker with formControl', () => {
@@ -465,7 +489,7 @@ describe('MdDatepicker', () => {
       });
     });
 
-    describe('datepicker with mdDatepickerToggle', () => {
+    describe('datepicker with md-datepicker-toggle', () => {
       let fixture: ComponentFixture<DatepickerWithToggle>;
       let testComponent: DatepickerWithToggle;
 
@@ -887,7 +911,7 @@ describe('MdDatepicker', () => {
 class StandardDatepicker {
   touch = false;
   disabled = false;
-  date = new Date(2020, JAN, 1);
+  date: Date | null = new Date(2020, JAN, 1);
   @ViewChild('d') datepicker: MdDatepicker<Date>;
   @ViewChild(MdDatepickerInput) datepickerInput: MdDatepickerInput<Date>;
 }
@@ -960,7 +984,7 @@ class DatepickerWithFormControl {
 @Component({
   template: `
     <input [mdDatepicker]="d">
-    <button [mdDatepickerToggle]="d"></button>
+    <md-datepicker-toggle [for]="d"></md-datepicker-toggle>
     <md-datepicker #d [touchUi]="touchUI"></md-datepicker>
   `,
 })
@@ -987,13 +1011,13 @@ class InputContainerDatepicker {
 @Component({
   template: `
     <input [mdDatepicker]="d" [(ngModel)]="date" [min]="minDate" [max]="maxDate">
-    <button [mdDatepickerToggle]="d"></button>
+    <md-datepicker-toggle [for]="d"></md-datepicker-toggle>
     <md-datepicker #d></md-datepicker>
   `,
 })
 class DatepickerWithMinAndMaxValidation {
   @ViewChild('d') datepicker: MdDatepicker<Date>;
-  date: Date;
+  date: Date | null;
   minDate = new Date(2010, JAN, 1);
   maxDate = new Date(2020, JAN, 1);
 }
@@ -1002,7 +1026,7 @@ class DatepickerWithMinAndMaxValidation {
 @Component({
   template: `
     <input [mdDatepicker]="d" [(ngModel)]="date" [mdDatepickerFilter]="filter">
-    <button [mdDatepickerToggle]="d"></button>
+    <md-datepicker-toggle [for]="d"></md-datepicker-toggle>
     <md-datepicker #d [touchUi]="true"></md-datepicker>
   `,
 })
