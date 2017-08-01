@@ -8,5 +8,4 @@ import {Component} from '@angular/core';
   styleUrls: ['toolbar-a11y.css'],
 })
 export class ToolbarAccessibilityDemo {
-  // TODO(tinayuangao): Add use cases
 }
