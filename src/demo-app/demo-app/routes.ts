@@ -39,6 +39,7 @@ import {ExpansionDemo} from '../expansion/expansion-demo';
 import {DemoApp} from './demo-app';
 import {AccessibilityDemo} from '../a11y/a11y';
 import {ACCESSIBILITY_DEMO_ROUTES} from '../a11y/routes';
+import {StickyHeaderDemo} from '../sticky-header/sticky-header-demo';
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: DemoApp, children: [
@@ -79,6 +80,7 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'typography', component: TypographyDemo},
     {path: 'expansion', component: ExpansionDemo},
   ]}
+  {path: 'sticky-header', component: StickyHeaderDemo}
 ];
 
 export const ALL_ROUTES: Routes = [
