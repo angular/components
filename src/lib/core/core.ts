@@ -28,6 +28,10 @@ export {
   ObserveContent,
 } from '@angular/cdk/observers';
 
+export {
+  SelectionModel
+} from '@angular/cdk/collections';
+
 // RTL
 export {Dir, Direction, Directionality, BidiModule} from './bidi/index';
 
@@ -80,9 +84,6 @@ export {
   isFakeMousedownFromScreenReader,
   A11yModule,
 } from '@angular/cdk/a11y';
-
-// Selection
-export {SelectionModel} from '@angular/cdk/collections';
 
 export {
   UniqueSelectionDispatcher,
