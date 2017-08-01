@@ -18,7 +18,11 @@ export class AccessibilityDemo {
   navItems = [
     {name: 'Home', route: '.'},
     {name: 'Button', route: 'button'},
+    {name: 'Button toggle', route: 'button-toggle'},
     {name: 'Checkbox', route: 'checkbox'},
+    {name: 'Chips', route: 'chips'},
+    {name: 'Datepicker', route: 'datepicker'},
+    {name: 'Grid list', route: 'grid-list'},
     {name: 'Radio buttons', route: 'radio'},
     {name: 'Toolbar', route: 'toolbar'},
   ];
