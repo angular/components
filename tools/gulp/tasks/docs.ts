@@ -71,7 +71,7 @@ task('docs', [
 task('markdown-docs', () => {
   // Extend the renderer for custom heading anchor rendering
   markdown.marked.Renderer.prototype.heading = (text: string, level: number): string => {
-    if(level === 3 || level === 4) {
+    if (level === 3 || level === 4) {
       const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
       return `
         <h${level} id="${escapedText}" class="docs-header-link">
