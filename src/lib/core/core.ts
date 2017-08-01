@@ -14,7 +14,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {PortalModule} from '@angular/cdk/portal';
 import {MdLineModule} from './line/line';
 import {MdOptionModule} from './option/index';
-import {MdSelectionModule} from './selection/index';
+import {MdPseudoCheckboxModule} from './selection/index';
 import {MdRippleModule} from './ripple/index';
 
 // Re-exports of the CDK to avoid breaking changes.
@@ -138,7 +138,7 @@ export {
     OverlayModule,
     A11yModule,
     MdOptionModule,
-    MdSelectionModule,
+    MdPseudoCheckboxModule,
   ],
   exports: [
     MdLineModule,
@@ -149,7 +149,7 @@ export {
     OverlayModule,
     A11yModule,
     MdOptionModule,
-    MdSelectionModule,
+    MdPseudoCheckboxModule,
   ],
 })
 export class MdCoreModule {}

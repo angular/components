@@ -12,7 +12,7 @@ import {HeaderRowPlaceholder, RowPlaceholder, CdkTable} from './table';
 import {CdkCellOutlet, CdkHeaderRow, CdkHeaderRowDef, CdkRow, CdkRowDef} from './row';
 import {CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCell, CdkCellDef} from './cell';
 
-export * from './data-source';
+export * from '../collections/data-source';
 export * from './table';
 export * from './cell';
 export * from './row';
