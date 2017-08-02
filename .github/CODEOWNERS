@@ -50,7 +50,7 @@ src/lib/core/datetime/**           @mmalerba
 src/cdk/coercion/**                @jelbourn
 src/cdk/rxjs/**                    @jelbourn
 src/cdk/observers/**               @jelbourn @crisbeto
-src/cdk/collections/**             @jelbourn @andrewseguin
+src/cdk/collections/**             @jelbourn @crisbeto @andrewseguin
 src/cdk/a11y/**                    @jelbourn @devversion
 src/cdk/platform/**                @jelbourn @devversion
 src/cdk/bidi/**                    @jelbourn
