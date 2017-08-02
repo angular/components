@@ -95,6 +95,7 @@ export const MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER = {
     '(touchend)': 'hide(' + TOUCHEND_HIDE_DELAY + ')',
   },
   exportAs: 'mdTooltip',
+  providers: [AriaDescriber],
 })
 export class MdTooltip implements OnDestroy {
   _overlayRef: OverlayRef | null;
@@ -419,10 +420,9 @@ export class MdTooltip implements OnDestroy {
     if (ariaDescribedBy && ariaDescribedBy.indexOf('md-tooltip-message') == -1) { return; }
 
     if (this.message) {
-      const registeredA11yMessage = this._ariaDescriber.registerMessage(this.message);
-      const tooltipMessageElementId = registeredA11yMessage.element.id;
       this._renderer.setAttribute(
-          this._elementRef.nativeElement, 'aria-describedby', tooltipMessageElementId);
+          this._elementRef.nativeElement, 'aria-describedby',
+          this._ariaDescriber.registerMessage(this.message));
     } else {
       this._renderer.setAttribute(this._elementRef.nativeElement, 'aria-describedby', '');
     }

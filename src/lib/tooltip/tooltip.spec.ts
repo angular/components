@@ -293,6 +293,10 @@ describe('MdTooltip', () => {
       expect(overlayContainerElement.textContent).toBe('');
     }));
 
+    fit('should have an aria-described element with the tooltip message', fakeAsync(() => {
+      const button = fixture.nativeElement.querySelector('button');
+    }));
+
     it('should not try to dispose the tooltip when destroyed and done hiding', fakeAsync(() => {
       tooltipDirective.show();
       fixture.detectChanges();
@@ -416,45 +420,6 @@ describe('MdTooltip', () => {
 
       expect(tooltipDirective.message).toBe('100');
     }));
-  });
-
-  it('should create a unique a11y message element for each unique message', () => {
-    const dynamicTooltipsFixture = TestBed.createComponent(DynamicTooltipsDemo);
-    dynamicTooltipsFixture.detectChanges();
-
-    // No tooltips, no tooltip a11y container
-    let a11yMessageContainer = document.querySelector(`#${A11Y_MESSAGES_CONTAINER_ID}`)!;
-    expect(a11yMessageContainer).toBe(null);
-
-    // One tooltip, one message - expect the container and one a11y message
-    dynamicTooltipsFixture.componentInstance.tooltips = ['message_1'];
-    dynamicTooltipsFixture.detectChanges();
-    a11yMessageContainer = document.querySelector(`#${A11Y_MESSAGES_CONTAINER_ID}`)!;
-    expect(a11yMessageContainer.childNodes.length).toBe(1);
-    expect(a11yMessageContainer.childNodes[0].textContent).toBe('message_1');
-
-    // Add 'message_2' - Two tooltips, two messages - expect two a11y messages
-    dynamicTooltipsFixture.componentInstance.tooltips = ['message_1', 'message_2'];
-    dynamicTooltipsFixture.detectChanges();
-    a11yMessageContainer = document.querySelector(`#${A11Y_MESSAGES_CONTAINER_ID}`)!;
-    expect(a11yMessageContainer.childNodes.length).toBe(2);
-    expect(a11yMessageContainer.childNodes[0].textContent).toBe('message_1');
-    expect(a11yMessageContainer.childNodes[1].textContent).toBe('message_2');
-
-    // Add 'message_1' - Three tooltips, two messages - expect two a11y messages
-    dynamicTooltipsFixture.componentInstance.tooltips = ['message_1', 'message_2', 'message_1'];
-    dynamicTooltipsFixture.detectChanges();
-    a11yMessageContainer = document.querySelector(`#${A11Y_MESSAGES_CONTAINER_ID}`)!;
-    expect(a11yMessageContainer.childNodes.length).toBe(2);
-    expect(a11yMessageContainer.childNodes[0].textContent).toBe('message_1');
-    expect(a11yMessageContainer.childNodes[1].textContent).toBe('message_2');
-
-    // Remove 'message_2' - Two tooltips, one message - expect one a11y message
-    dynamicTooltipsFixture.componentInstance.tooltips = ['message_1', 'message_1'];
-    dynamicTooltipsFixture.detectChanges();
-    a11yMessageContainer = document.querySelector(`#${A11Y_MESSAGES_CONTAINER_ID}`)!;
-    expect(a11yMessageContainer.childNodes.length).toBe(1);
-    expect(a11yMessageContainer.childNodes[0].textContent).toBe('message_1');
   });
 
   describe('scrollable usage', () => {
