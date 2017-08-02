@@ -46,7 +46,8 @@
     }
 
     .mat-subheader {
-      @include mat-typography-level-to-styles($config, body-2);
+      font: mat-font-weight($config, body-2) mat-font-size($config, body-2)
+            mat-font-family($config, body-2);
     }
   }
 
