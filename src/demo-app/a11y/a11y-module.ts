@@ -13,6 +13,7 @@ import {GridListAccessibilityDemo} from './grid-list/grid-list-a11y';
 import {RadioAccessibilityDemo} from './radio/radio-a11y';
 import {DatepickerAccessibilityDemo} from './datepicker/datepicker-a11y';
 import {InputAccessibilityDemo} from './input/input-a11y';
+import {SliderAccessibilityDemo} from './slider/slider-a11y';
 
 @NgModule({
   imports: [
@@ -43,6 +44,7 @@ export class AccessibilityRoutingModule {}
     GridListAccessibilityDemo,
     InputAccessibilityDemo,
     RadioAccessibilityDemo,
+    SliderAccessibilityDemo,
   ]
 })
 export class AccessibilityDemoModule {}
