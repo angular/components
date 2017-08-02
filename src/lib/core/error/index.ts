@@ -9,12 +9,12 @@
 
 import {NgModule} from '@angular/core';
 import {MdError} from './error';
-import {ErrorOptions} from './error-options';
+import {ErrorStateMatcher} from './error-options';
 
 @NgModule({
   declarations: [MdError],
   exports: [MdError],
-  providers: [ErrorOptions],
+  providers: [ErrorStateMatcher],
 })
 export class MdErrorModule {}
 

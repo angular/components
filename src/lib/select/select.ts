@@ -57,7 +57,7 @@ import {
 // tslint:disable-next-line:no-unused-variable
 import {ScrollStrategy, RepositionScrollStrategy} from '../core/overlay/scroll';
 import {Platform} from '@angular/cdk/platform';
-import {ErrorStateMatcher, ErrorOptions} from '../core/error/error-options';
+import {ErrorStateMatcher} from '../core/error/error-options';
 
 /**
  * The following style constants are necessary to save here in order
@@ -361,7 +361,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Input that can be used to specify the `aria-labelledby` attribute. */
   @Input('aria-labelledby') ariaLabelledby: string = '';
 
-  /** A function used to control when error messages are shown. */
+  /** An object used to control when error messages are shown. */
   @Input() errorStateMatcher: ErrorStateMatcher;
 
   /** Combined stream of all of the child options' change events. */
@@ -390,7 +390,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     private _changeDetectorRef: ChangeDetectorRef,
     private _overlay: Overlay,
     private _platform: Platform,
-    private _errorOptions: ErrorOptions,
+    private _globalErrorStateMatcher: ErrorStateMatcher,
     renderer: Renderer2,
     elementRef: ElementRef,
     @Optional() private _dir: Directionality,
@@ -638,12 +638,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Whether the select is in an error state. */
   _isErrorState(): boolean {
-    if (this.errorStateMatcher) {
-      return this.errorStateMatcher(this._control, this._parentFormGroup || this._parentForm);
-    }
-
-    return this._errorOptions.isErrorState(this._control,
-        this._parentFormGroup || this._parentForm);
+    const matcher = this.errorStateMatcher || this._globalErrorStateMatcher;
+    return matcher.match(this._control, this._parentFormGroup || this._parentForm);
   }
 
   /**

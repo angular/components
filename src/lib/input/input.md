@@ -125,21 +125,23 @@ the error messages.
 ```
 
 ```ts
-function myErrorStateMatcher(control: FormControl, form: FormGroupDirective | NgForm): boolean {
-  // Error when invalid control is dirty, touched, or submitted
-  const isSubmitted = form && form.submitted;
-  return !!(control.invalid && (control.dirty || control.touched || isSubmitted)));
+class MyErrorStateMatcher implements ErrorStateMatcher {
+  match(control: NgControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    // Error when invalid control is dirty, touched, or submitted
+    const isSubmitted = form && form.submitted;
+    return !!(control.invalid && (control.dirty || control.touched || isSubmitted)));
+  }
 }
 ```
 
 A global error state matcher can be specified by setting the `ErrorOptions` provider. This applies
-to all inputs. For convenience, `showOnDirtyErrorStateMatcher` is available in order to globally
+to all inputs. For convenience, `ShowOnDirtyErrorStateMatcher` is available in order to globally
 cause input errors to show when the input is dirty and invalid.
 
 ```ts
 @NgModule({
   providers: [
-    {provide: ErrorOptions, useValue: { isErrorState: showOnDirtyErrorStateMatcher }}
+    {provide: ErrorOptions, useClass: ShowOnDirtyErrorStateMatcher}
   ]
 })
 ```

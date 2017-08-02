@@ -44,7 +44,7 @@ import {
   MD_PLACEHOLDER_GLOBAL_OPTIONS,
   PlaceholderOptions
 } from '../core/placeholder/placeholder-options';
-import {ErrorOptions, ErrorStateMatcher, MdError} from '../core/error/index';
+import {ErrorStateMatcher, MdError} from '../core/error/index';
 import {Subject} from 'rxjs/Subject';
 import {startWith} from '@angular/cdk/rxjs';
 
@@ -188,7 +188,7 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
   get readonly() { return this._readonly; }
   set readonly(value: any) { this._readonly = coerceBooleanProperty(value); }
 
-  /** A function used to control when error messages are shown. */
+  /** An object used to control when error messages are shown. */
   @Input() errorStateMatcher: ErrorStateMatcher;
 
   /** The input element's value. */
@@ -222,7 +222,7 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
   constructor(private _elementRef: ElementRef,
               private _renderer: Renderer2,
               private _platform: Platform,
-              private _errorOptions: ErrorOptions,
+              private _globalErrorStateMatcher: ErrorStateMatcher,
               @Optional() @Self() public _ngControl: NgControl,
               @Optional() private _parentForm: NgForm,
               @Optional() private _parentFormGroup: FormGroupDirective) {
@@ -300,9 +300,8 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
   /** Re-evaluates the error state. This is only relevant with @angular/forms. */
   private _updateErrorState() {
     const oldState = this._isErrorState;
-    const newState = this.errorStateMatcher ?
-        this.errorStateMatcher(this._ngControl, this._parentFormGroup || this._parentForm) :
-        this._errorOptions.isErrorState(this._ngControl, this._parentFormGroup || this._parentForm);
+    const matcher = this.errorStateMatcher || this._globalErrorStateMatcher;
+    const newState = matcher.match(this._ngControl, this._parentFormGroup || this._parentForm);
 
     if (newState !== oldState) {
       this._isErrorState = newState;

@@ -31,7 +31,7 @@ import {Subject} from 'rxjs/Subject';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {dispatchFakeEvent, dispatchKeyboardEvent, wrappedErrorMessage} from '@angular/cdk/testing';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
-import {ErrorOptions} from '../core/error/error-options';
+import {ErrorStateMatcher} from '../core/error/error-options';
 import {
   FloatPlaceholderType,
   MD_PLACEHOLDER_GLOBAL_OPTIONS
@@ -2689,7 +2689,7 @@ describe('MdSelect', () => {
       expect(component.control.invalid).toBe(false);
       expect(component.select._isErrorState()).toBe(false);
 
-      customErrorFixture.componentInstance.errorStateMatcher = matcher;
+      customErrorFixture.componentInstance.errorStateMatcher = { match: matcher };
       customErrorFixture.detectChanges();
 
       expect(component.select._isErrorState()).toBe(true);
@@ -2697,8 +2697,8 @@ describe('MdSelect', () => {
     });
 
     it('should be able to override the error matching behavior via the injection token', () => {
-      const errorOptions: ErrorOptions = {
-        isErrorState: jasmine.createSpy('error state matcher').and.returnValue(true)
+      const errorOptions: ErrorStateMatcher = {
+        match: jasmine.createSpy('error state matcher').and.returnValue(true)
       };
 
       fixture.destroy();
@@ -2706,7 +2706,7 @@ describe('MdSelect', () => {
       TestBed.resetTestingModule().configureTestingModule({
         imports: [MdSelectModule, ReactiveFormsModule, FormsModule, NoopAnimationsModule],
         declarations: [SelectInsideFormGroup],
-        providers: [{ provide: ErrorOptions, useValue: errorOptions }],
+        providers: [{ provide: ErrorStateMatcher, useValue: errorOptions }],
       });
 
       const errorFixture = TestBed.createComponent(SelectInsideFormGroup);
@@ -2715,7 +2715,7 @@ describe('MdSelect', () => {
       errorFixture.detectChanges();
 
       expect(component.select._isErrorState()).toBe(true);
-      expect(errorOptions.errorStateMatcher).toHaveBeenCalled();
+      expect(errorOptions.match).toHaveBeenCalled();
     });
   });
 
@@ -3272,6 +3272,6 @@ class CustomErrorBehaviorSelect {
     { value: 'steak-0', viewValue: 'Steak' },
     { value: 'pizza-1', viewValue: 'Pizza' },
   ];
-  errorStateMatcher = () => false;
+  errorStateMatcher: ErrorStateMatcher;
 }
 

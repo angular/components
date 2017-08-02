@@ -22,7 +22,7 @@ import {
   getMdInputContainerPlaceholderConflictError
 } from './input-container-errors';
 import {MD_PLACEHOLDER_GLOBAL_OPTIONS} from '../core/placeholder/placeholder-options';
-import {ErrorOptions, showOnDirtyErrorStateMatcher} from '../core/error/error-options';
+import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher} from '../core/error/error-options';
 
 describe('MdInputContainer without forms', function () {
   beforeEach(async(() => {
@@ -895,11 +895,7 @@ describe('MdInputContainer with forms', () => {
         declarations: [
           MdInputContainerWithFormErrorMessages
         ],
-        providers: [
-          {
-            provide: ErrorOptions,
-            useValue: { isErrorState: globalErrorStateMatcher } }
-        ]
+        providers: [{ provide: ErrorStateMatcher, useValue: { match: globalErrorStateMatcher } }]
       });
 
       let fixture = TestBed.createComponent(MdInputContainerWithFormErrorMessages);
@@ -926,12 +922,7 @@ describe('MdInputContainer with forms', () => {
         declarations: [
           MdInputContainerWithFormErrorMessages
         ],
-        providers: [
-          {
-            provide: ErrorOptions,
-            useValue: { isErrorState: showOnDirtyErrorStateMatcher }
-          }
-        ]
+        providers: [{ provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher }]
       });
 
       let fixture = TestBed.createComponent(MdInputContainerWithFormErrorMessages);
@@ -1260,7 +1251,9 @@ class MdInputContainerWithCustomErrorStateMatcher {
   });
 
   errorState = false;
-  customErrorStateMatcher = () => this.errorState;
+  customErrorStateMatcher: ErrorStateMatcher = {
+    match: () => this.errorState
+  };
 }
 
 @Component({

@@ -127,8 +127,7 @@ export {
   MdErrorModule,
   MdError,
   ErrorStateMatcher,
-  ErrorOptions,
-  showOnDirtyErrorStateMatcher,
+  ShowOnDirtyErrorStateMatcher,
 } from './error/index';
 
 @NgModule({
