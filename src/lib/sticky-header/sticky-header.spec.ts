@@ -43,11 +43,11 @@ describe('sticky-header with positioning not supported', () => {
   });
 
   it('should be able to find stickyParent', () => {
-    expect(stickyHeader.stickyParent).not.toBe(null);
+    expect(stickyHeader.stickyParent).not.toBeNull();
   });
 
   it('should be able to find scrollableContainer', () => {
-    expect(stickyHeader.upperScrollableContainer).not.toBe(null);
+    expect(stickyHeader.upperScrollableContainer).not.toBeNull();
   });
 
   it('should stick in the right place when scrolled to the top of the container', fakeAsync(() => {
@@ -115,7 +115,7 @@ describe('sticky-header with positioning supported', () => {
 
   it('should find sticky positioning is applied', () => {
     let position = window.getComputedStyle(stickyHeader.element).position;
-    expect(position).not.toBe(null);
+    expect(position).not.toBeNull();
     expect(/sticky/i.test(position!)).toBe(true);
   });
 });
@@ -147,7 +147,7 @@ describe('test sticky-header without StickyRegion', () => {
 
   it('should be able to find stickyParent', () => {
     let p = stickyHeader.stickyParent;
-    expect(p).not.toBe(null);
+    expect(p).not.toBeNull();
     expect(p!.id).toBe('default-region');
   });
 });
