@@ -13,7 +13,7 @@ export class TableBasicExample {
   dataSource = new ExampleDataSource();
 }
 
-interface Element {
+export interface Element {
   name: string;
   position: number;
   weight: number;
