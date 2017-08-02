@@ -113,7 +113,7 @@ To install via npm, use the following command:
 npm install --save hammerjs
 ```
 
-After installing, import it on your app's root module.
+After installing, import it on your app's entry point (`src/main.ts`).
 ```ts
 import 'hammerjs';
 ```
