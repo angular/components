@@ -1,26 +1,29 @@
 import {join} from 'path';
 import {readdirSync, lstatSync} from 'fs';
-import {buildConfig} from './build-config';
 import {spawnSync} from 'child_process';
+import {BuildPackage} from './build-package';
 
+
+/** List of directories under a package that should not be treated as entry-points. */
 const DIR_BLACKLIST = ['testing'];
 
 /**
- * Gets secondary entry-points for a given package.
+ * Gets secondary entry-points for a given package in the order they should be built.
  *
  * This currently assumes that every directory under a package should be an entry-point except for
  * specifically black-listed directories.
  *
- * @param packageName The package name for which to get entry points, e.g., 'cdk'.
+ * @param pkg The package for which to get entry points, e.g., 'cdk'.
  * @returns An array of secondary entry-points names, e.g., ['a11y', 'bidi', ...]
  */
-export function getSecondaryEntryPointsForPackage(packageName: string) {
-  const packageDir = join(buildConfig.packagesDir, packageName);
+export function getSecondaryEntryPointsForPackage(pkg: BuildPackage) {
+  const packageName = pkg.packageName;
+  const packageDir = pkg.packageRoot;
 
   // First get the list of all entry-points as the list of directories in the package excluding
   // blacklisted directories (e.g., "testing").
   const entryPoints = readdirSync(packageDir)
-      .filter(f => lstatSync(join(packageDir, f)).isDirectory() && DIR_BLACKLIST.indexOf(f) < 0);
+      .filter(f => lstatSync(join(packageDir, f)).isDirectory() && DIR_BLACKLIST.includes(f));
 
   // Create nodes that comprise the build graph.
   const buildNodes: BuildNode[] = entryPoints.map(p => ({name: p, deps: []}));
@@ -74,7 +77,7 @@ function getBuildOrder(node: BuildNode): string[] {
   return [...buildOrder, node.name];
 }
 
-
+/** A node in the build graph of a package's entry-points. */
 interface BuildNode {
   name: string;
   deps: BuildNode[];
