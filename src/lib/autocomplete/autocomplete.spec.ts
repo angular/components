@@ -897,6 +897,7 @@ describe('MdAutocomplete', () => {
     it('should close the panel when pressing escape', async(() => {
       const trigger = fixture.componentInstance.trigger;
       const escapeEvent = createKeyboardEvent('keydown', ESCAPE);
+      const stopPropagationSpy = spyOn(escapeEvent, 'stopPropagation').and.callThrough();
 
       input.focus();
 
@@ -908,6 +909,7 @@ describe('MdAutocomplete', () => {
 
         expect(document.activeElement).toBe(input, 'Expected input to continue to be focused.');
         expect(trigger.panelOpen).toBe(false, 'Expected panel to be closed.');
+        expect(stopPropagationSpy).toHaveBeenCalled();
       });
     }));
 
