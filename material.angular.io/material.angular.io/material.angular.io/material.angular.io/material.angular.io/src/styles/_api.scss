@@ -40,6 +40,11 @@
   font-size: 12px;
 }
 
+.docs-api-class-name,
+.docs-api-module-import {
+  display: inline;
+}
+
 .docs-api-method-name-cell {
   font-weight: 700;
   font-size: 18px;
@@ -54,4 +59,11 @@
 .docs-api-output-marker {
   // Size corresponding to "caption"-style text in the spec.
   font-size: 12px;
+}
+
+.docs-api-class-name,
+.docs-api-module-import,
+.docs-api-class-selector-name,
+.docs-api-class-export-name {
+  padding: 3px;
 }

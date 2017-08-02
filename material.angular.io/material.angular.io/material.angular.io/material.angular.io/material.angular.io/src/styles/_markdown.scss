@@ -34,6 +34,14 @@
   margin: 16px auto;
   display: block;
   padding: 20px;
+
+  .docs-markdown-code {
+    padding: 0;
+  }
+}
+
+.docs-markdown-code {
+  padding: 3px;
 }
 
 code, pre {
