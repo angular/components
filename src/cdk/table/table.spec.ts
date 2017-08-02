@@ -104,8 +104,9 @@ describe('CdkTable', () => {
         crazyColumnNameAppFixture.nativeElement.querySelector('cdk-table');
     crazyColumnNameAppFixture.detectChanges();
 
+    // Column was named 'crazy-column-NAME-1!@#$%^-_&*()2'
     expect(getHeaderCells(crazyColumnNameTableElement)[0].classList)
-        .toContain('cdk-column-crazy-column-NAME-1-_2');
+        .toContain('cdk-column-crazy-column-NAME-1-------_----2');
   });
 
   it('should disconnect the data source when table is destroyed', () => {
