@@ -1,0 +1,31 @@
+<div>
+  <div class="example-centered" cdk-scrollable>
+    <div>
+      <h1>Sticky-header Demo</h1>
+    </div>
+
+    <div class="example-container">
+
+      <div>
+        <div cdkStickyHeader class="demo-header-style demo-header-color3" >
+          <h2>Unread Messages</h2>
+        </div>
+        <p *ngFor="let item of items">{{item.name}} :  {{item.messages}}</p>
+      </div>
+
+      <div cdkStickyRegion >
+        <div cdkStickyHeader class="demo-header-style demo-header-color2">
+          <h2>Late Messages</h2>
+        </div>
+        <p *ngFor="let item of items">{{item.name}} :  {{item.messages}}</p>
+      </div>
+
+      <div cdkStickyRegion>
+        <div cdkStickyHeader class="demo-header-style demo-header-color1" >
+          <h2>Read Messages</h2>
+        </div>
+        <p *ngFor="let item of items">{{item.name}} :  {{item.messages}}</p>
+      </div>
+    </div>
+  </div>
+</div>
