@@ -44,12 +44,7 @@ import {
   MD_PLACEHOLDER_GLOBAL_OPTIONS,
   PlaceholderOptions
 } from '../core/placeholder/placeholder-options';
-import {
-  defaultErrorStateMatcher,
-  ErrorOptions,
-  ErrorStateMatcher,
-  MD_ERROR_GLOBAL_OPTIONS
-} from '../core/error/error-options';
+import {ErrorOptions, ErrorStateMatcher, MdError} from '../core/error/index';
 import {Subject} from 'rxjs/Subject';
 import {startWith} from '@angular/cdk/rxjs';
 
@@ -97,19 +92,6 @@ export class MdHint {
   @Input() id: string = `md-input-hint-${nextUniqueId++}`;
 }
 
-/** Single error message to be shown underneath the input. */
-@Directive({
-  selector: 'md-error, mat-error',
-  host: {
-    'class': 'mat-input-error',
-    'role': 'alert',
-    '[attr.id]': 'id',
-  }
-})
-export class MdErrorDirective {
-  @Input() id: string = `md-input-error-${nextUniqueId++}`;
-}
-
 /** Prefix to be placed the the front of the input. */
 @Directive({
   selector: '[mdPrefix], [matPrefix]'
@@ -151,7 +133,6 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
   private _readonly = false;
   private _id: string;
   private _uid = `md-input-${nextUniqueId++}`;
-  private _errorOptions: ErrorOptions;
   private _previousNativeValue = this.value;
 
   /** Whether the input is in an error state. */
@@ -241,15 +222,13 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
   constructor(private _elementRef: ElementRef,
               private _renderer: Renderer2,
               private _platform: Platform,
+              private _errorOptions: ErrorOptions,
               @Optional() @Self() public _ngControl: NgControl,
               @Optional() private _parentForm: NgForm,
-              @Optional() private _parentFormGroup: FormGroupDirective,
-              @Optional() @Inject(MD_ERROR_GLOBAL_OPTIONS) errorOptions: ErrorOptions) {
+              @Optional() private _parentFormGroup: FormGroupDirective) {
 
     // Force setter to be called in case id was not specified.
     this.id = this.id;
-    this._errorOptions = errorOptions || {};
-    this.errorStateMatcher = this._errorOptions.errorStateMatcher || defaultErrorStateMatcher;
 
     // On some versions of iOS the caret gets stuck in the wrong place when holding down the delete
     // key. In order to get around this we need to "jiggle" the caret loose. Since this bug only
@@ -321,8 +300,8 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
   /** Re-evaluates the error state. This is only relevant with @angular/forms. */
   private _updateErrorState() {
     const oldState = this._isErrorState;
-    const newState = this.errorStateMatcher(this._ngControl,
-        this._parentFormGroup || this._parentForm);
+    const errorMatcher = this.errorStateMatcher || this._errorOptions.errorStateMatcher;
+    const newState = errorMatcher(this._ngControl, this._parentFormGroup || this._parentForm);
 
     if (newState !== oldState) {
       this._isErrorState = newState;
@@ -463,7 +442,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   @ViewChild('underline') underlineRef: ElementRef;
   @ContentChild(MdInputDirective) _mdInputChild: MdInputDirective;
   @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
-  @ContentChildren(MdErrorDirective) _errorChildren: QueryList<MdErrorDirective>;
+  @ContentChildren(MdError) _errorChildren: QueryList<MdError>;
   @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;
   @ContentChildren(MdPrefix) _prefixChildren: QueryList<MdPrefix>;
   @ContentChildren(MdSuffix) _suffixChildren: QueryList<MdSuffix>;

@@ -132,14 +132,14 @@ function myErrorStateMatcher(control: FormControl, form: FormGroupDirective | Ng
 }
 ```
 
-A global error state matcher can be specified by setting the `MD_ERROR_GLOBAL_OPTIONS` provider. This applies
-to all inputs. For convenience, `showOnDirtyErrorStateMatcher` is available in order to globally cause
-input errors to show when the input is dirty and invalid.
+A global error state matcher can be specified by setting the `ErrorOptions` provider. This applies
+to all inputs. For convenience, `showOnDirtyErrorStateMatcher` is available in order to globally
+cause input errors to show when the input is dirty and invalid.
 
 ```ts
 @NgModule({
   providers: [
-    {provide: MD_ERROR_GLOBAL_OPTIONS, useValue: { errorStateMatcher: showOnDirtyErrorStateMatcher }}
+    {provide: ErrorOptions, useValue: { errorStateMatcher: showOnDirtyErrorStateMatcher }}
   ]
 })
 ```

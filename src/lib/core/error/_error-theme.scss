@@ -1,0 +1,9 @@
+@import '../theming/palette';
+@import '../theming/theming';
+
+
+@mixin mat-error-theme($theme) {
+  .mat-error {
+    color: mat-color(map-get($theme, warn));
+  }
+}

@@ -22,7 +22,7 @@ import {
   getMdInputContainerPlaceholderConflictError
 } from './input-container-errors';
 import {MD_PLACEHOLDER_GLOBAL_OPTIONS} from '../core/placeholder/placeholder-options';
-import {MD_ERROR_GLOBAL_OPTIONS, showOnDirtyErrorStateMatcher} from '../core/error/error-options';
+import {ErrorOptions, showOnDirtyErrorStateMatcher} from '../core/error/error-options';
 
 describe('MdInputContainer without forms', function () {
   beforeEach(async(() => {
@@ -897,7 +897,7 @@ describe('MdInputContainer with forms', () => {
         ],
         providers: [
           {
-            provide: MD_ERROR_GLOBAL_OPTIONS,
+            provide: ErrorOptions,
             useValue: { errorStateMatcher: globalErrorStateMatcher } }
         ]
       });
@@ -928,7 +928,7 @@ describe('MdInputContainer with forms', () => {
         ],
         providers: [
           {
-            provide: MD_ERROR_GLOBAL_OPTIONS,
+            provide: ErrorOptions,
             useValue: { errorStateMatcher: showOnDirtyErrorStateMatcher }
           }
         ]

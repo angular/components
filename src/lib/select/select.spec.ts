@@ -31,7 +31,7 @@ import {Subject} from 'rxjs/Subject';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {dispatchFakeEvent, dispatchKeyboardEvent, wrappedErrorMessage} from '@angular/cdk/testing';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
-import {MD_ERROR_GLOBAL_OPTIONS, ErrorOptions} from '../core/error/error-options';
+import {ErrorOptions} from '../core/error/error-options';
 import {
   FloatPlaceholderType,
   MD_PLACEHOLDER_GLOBAL_OPTIONS
@@ -2706,7 +2706,7 @@ describe('MdSelect', () => {
       TestBed.resetTestingModule().configureTestingModule({
         imports: [MdSelectModule, ReactiveFormsModule, FormsModule, NoopAnimationsModule],
         declarations: [SelectInsideFormGroup],
-        providers: [{ provide: MD_ERROR_GLOBAL_OPTIONS, useValue: errorOptions }],
+        providers: [{ provide: ErrorOptions, useValue: errorOptions }],
       });
 
       const errorFixture = TestBed.createComponent(SelectInsideFormGroup);
