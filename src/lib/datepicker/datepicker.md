@@ -128,9 +128,7 @@ By default the datepicker will use the locale code from the `LOCALE_ID` injectio
 export class MyApp {}
 ```
 
-#### Setting/Switching the locale at runtime
-It's possible to set/switch the locale at runtime using the setLocale method from 
-the DateAdapter.
+It's also possible to set the locale at runtime using the `setLocale` method of the `DateAdapter`.
 
 ```ts
 import { DateAdapter, NativeDateAdapter } from '@angular/material';
