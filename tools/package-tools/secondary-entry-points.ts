@@ -1,11 +1,8 @@
-import {join} from 'path';
-import {readdirSync, lstatSync} from 'fs';
+import {join, basename} from 'path';
+import {readdirSync, lstatSync, existsSync} from 'fs';
 import {spawnSync} from 'child_process';
 import {BuildPackage} from './build-package';
 
-
-/** List of directories under a package that should not be treated as entry-points. */
-const DIR_BLACKLIST = ['testing'];
 
 /**
  * Gets secondary entry-points for a given package in the order they should be built.
@@ -20,10 +17,11 @@ export function getSecondaryEntryPointsForPackage(pkg: BuildPackage) {
   const packageName = pkg.packageName;
   const packageDir = pkg.packageRoot;
 
-  // First get the list of all entry-points as the list of directories in the package excluding
-  // blacklisted directories (e.g., "testing").
+  // Get the list of all entry-points as the list of directories in the package that have a
+  // tsconfig-build.json
   const entryPoints = readdirSync(packageDir)
-      .filter(f => lstatSync(join(packageDir, f)).isDirectory() && DIR_BLACKLIST.includes(f));
+      .filter(f => lstatSync(join(packageDir, f)).isDirectory())
+      .filter(d => existsSync(join(packageDir, d, 'tsconfig-build.json')));
 
   // Create nodes that comprise the build graph.
   const buildNodes: BuildNode[] = entryPoints.map(p => ({name: p, deps: []}));
@@ -44,8 +42,8 @@ export function getSecondaryEntryPointsForPackage(pkg: BuildPackage) {
     node.deps = spawnSync('egrep', [
       '-roh',
       '--include', '*.ts',
-      `from.'@angular/cdk/.+';`,
-      `./src/cdk/${node.name}/`
+      `from.'@angular/${packageName}/.+';`,
+      `${packageDir}/${node.name}/`
     ])
     .stdout
     .toString()
