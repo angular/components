@@ -318,6 +318,9 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     this._multiple = coerceBooleanProperty(value);
   }
 
+  /** Function that maps the selected values to (a single) display value in the trigger. */
+  @Input() multipleDisplayWith: ((viewValues: any[]) => string) | null = null;
+
   /** Whether to float the placeholder text. */
   @Input()
   get floatPlaceholder(): FloatPlaceholderType { return this._floatPlaceholder; }
@@ -530,6 +533,10 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   get triggerValue(): string {
     if (this._multiple) {
       let selectedOptions = this._selectionModel.selected.map(option => option.viewValue);
+
+      if (this.multipleDisplayWith) {
+        return this.multipleDisplayWith(selectedOptions);
+      }
 
       if (this._isRtl()) {
         selectedOptions.reverse();
