@@ -8,6 +8,7 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
   $is-dark-theme: map-get($theme, is-dark);
+  $exportBackgroundOpacity: if($is-dark-theme, 0.06, 0.03);
 
   .docs-api-method-name-cell {
     color: mat-color($primary, 800);
@@ -22,5 +23,12 @@
   // captured in the top nav-bar.
   .docs-api-h1 {
     display: none !important;
+  }
+
+  .docs-api-class-name,
+  .docs-api-module-import,
+  .docs-api-class-selector-name,
+  .docs-api-class-export-name {
+    background: rgba(mat-color($foreground, secondary-text), $exportBackgroundOpacity);
   }
 }

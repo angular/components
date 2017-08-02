@@ -16,6 +16,18 @@
   .docs-markdown-pre {
     background: rgba(mat-color($foreground, secondary-text), .01);
     border: .5px solid rgba(mat-color($foreground, secondary-text), .03);
+
+    .docs-markdown-code {
+      background: transparent;
+    }
+  }
+
+  .docs-markdown-code {
+    @if $is-dark-theme {
+      background: rgba(mat-color($foreground, secondary-text), .06);
+    }
+    @else {
+      background: rgba(mat-color($foreground, secondary-text), .03);
+    }
   }
 }
-
