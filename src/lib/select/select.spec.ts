@@ -2698,7 +2698,7 @@ describe('MdSelect', () => {
 
     it('should be able to override the error matching behavior via the injection token', () => {
       const errorOptions: ErrorOptions = {
-        errorStateMatcher: jasmine.createSpy('error state matcher').and.returnValue(true)
+        isErrorState: jasmine.createSpy('error state matcher').and.returnValue(true)
       };
 
       fixture.destroy();

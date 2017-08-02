@@ -12,11 +12,6 @@ import {FormGroupDirective, NgForm, NgControl} from '@angular/forms';
 export type ErrorStateMatcher =
   (control: NgControl | null, form: FormGroupDirective | NgForm | null) => boolean;
 
-/** Returns whether control is invalid and is either touched or is a part of a submitted form. */
-export const defaultErrorStateMatcher: ErrorStateMatcher = (control, form) => {
-  return control ? !!(control.invalid && (control.touched || (form && form.submitted))) : false;
-};
-
 /** Returns whether control is invalid and is either dirty or is a part of a submitted form. */
 export const showOnDirtyErrorStateMatcher: ErrorStateMatcher = (control, form) => {
   return control ? !!(control.invalid && (control.dirty || (form && form.submitted))) : false;
@@ -28,5 +23,7 @@ export const showOnDirtyErrorStateMatcher: ErrorStateMatcher = (control, form) =
  */
 @Injectable()
 export class ErrorOptions {
-  errorStateMatcher: ErrorStateMatcher = defaultErrorStateMatcher;
+  isErrorState(control: NgControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    return control ? !!(control.invalid && (control.touched || (form && form.submitted))) : false;
+  }
 }

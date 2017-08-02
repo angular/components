@@ -139,7 +139,7 @@ cause input errors to show when the input is dirty and invalid.
 ```ts
 @NgModule({
   providers: [
-    {provide: ErrorOptions, useValue: { errorStateMatcher: showOnDirtyErrorStateMatcher }}
+    {provide: ErrorOptions, useValue: { isErrorState: showOnDirtyErrorStateMatcher }}
   ]
 })
 ```

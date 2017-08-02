@@ -898,7 +898,7 @@ describe('MdInputContainer with forms', () => {
         providers: [
           {
             provide: ErrorOptions,
-            useValue: { errorStateMatcher: globalErrorStateMatcher } }
+            useValue: { isErrorState: globalErrorStateMatcher } }
         ]
       });
 
@@ -929,7 +929,7 @@ describe('MdInputContainer with forms', () => {
         providers: [
           {
             provide: ErrorOptions,
-            useValue: { errorStateMatcher: showOnDirtyErrorStateMatcher }
+            useValue: { isErrorState: showOnDirtyErrorStateMatcher }
           }
         ]
       });

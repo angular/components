@@ -128,7 +128,6 @@ export {
   MdError,
   ErrorStateMatcher,
   ErrorOptions,
-  defaultErrorStateMatcher,
   showOnDirtyErrorStateMatcher,
 } from './error/index';
 

@@ -638,8 +638,12 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Whether the select is in an error state. */
   _isErrorState(): boolean {
-    const errorMatcher = this.errorStateMatcher || this._errorOptions.errorStateMatcher;
-    return errorMatcher(this._control, this._parentFormGroup || this._parentForm);
+    if (this.errorStateMatcher) {
+      return this.errorStateMatcher(this._control, this._parentFormGroup || this._parentForm);
+    }
+
+    return this._errorOptions.isErrorState(this._control,
+        this._parentFormGroup || this._parentForm);
   }
 
   /**

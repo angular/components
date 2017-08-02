@@ -300,8 +300,9 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
   /** Re-evaluates the error state. This is only relevant with @angular/forms. */
   private _updateErrorState() {
     const oldState = this._isErrorState;
-    const errorMatcher = this.errorStateMatcher || this._errorOptions.errorStateMatcher;
-    const newState = errorMatcher(this._ngControl, this._parentFormGroup || this._parentForm);
+    const newState = this.errorStateMatcher ?
+        this.errorStateMatcher(this._ngControl, this._parentFormGroup || this._parentForm) :
+        this._errorOptions.isErrorState(this._ngControl, this._parentFormGroup || this._parentForm);
 
     if (newState !== oldState) {
       this._isErrorState = newState;
