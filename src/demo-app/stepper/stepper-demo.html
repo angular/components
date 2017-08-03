@@ -44,7 +44,7 @@
 
 <h2>Linear Vertical Stepper Demo</h2>
 <md-vertical-stepper>
-  <md-step>
+  <md-step [valid]="nameFormGroup.valid">
     <form [formGroup]="nameFormGroup">
       <ng-template mdStepLabel>Fill out your name</ng-template>
       <md-input-container>
@@ -61,13 +61,13 @@
     </form>
   </md-step>
 
-  <md-step [disabled]="!nameFormGroup.valid">
+  <md-step [valid]="phoneFormGroup.valid">
     <form [formGroup]="phoneFormGroup">
       <ng-template mdStepLabel>
         <div>Fill out your phone number</div>
       </ng-template>
       <md-input-container>
-        <input mdInput placeholder="Phone number" formControlName="phoneFormCtrl" required>
+        <input mdInput placeholder="Phone number" formControlName="phoneFormCtrl">
         <md-error>This field is required</md-error>
       </md-input-container>
       <div>
@@ -77,7 +77,7 @@
     </form>
   </md-step>
 
-  <md-step [disabled]="!phoneFormGroup.valid">
+  <md-step>
     <form>
       <ng-template mdStepLabel>Confirm your information</ng-template>
       Everything seems correct.

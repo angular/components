@@ -48,7 +48,7 @@ export class StepperDemo {
     });
 
     this.phoneFormGroup = new FormGroup({
-      phoneFormCtrl: new FormControl('', Validators.required)
+      phoneFormCtrl: new FormControl('')
     });
   }
 }
