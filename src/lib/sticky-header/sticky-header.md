@@ -3,10 +3,14 @@ while its corresponding `cdkStickyRegion` is in view.
 
 <!-- example(sticky-header-overview) -->
 
-The sticky-header is a useful component when users want to implement a container focusing on displaying headers,
-subheaders and detailed contents. It can make the header of every `<cdkStickyRegion>` element stick to the top of
-the container while scrolling. When the current `<cdkStickyRegion>` element is completely scrolled out of the upper 
-scrollable container, the following `<cdkStickyRegion>` element header will replace it. 
+The parent scrolling container for a sticky-header must be marked with `cdkScrollable`.
+This scrolling container contians one or more elements with `cdkStickyRegion`,
+each with their own `cdkStickyHeader`. As the regions are scrolled, the header for the
+region currently within the scrolling viewport will stick to the top.
+
+![alt text][id]
+
+[id]: ./sticky-header.jpg
 
 Sticky-Header should be used within a scrollable container, which is `<cdk-scrollable>`. There are two ways to use 
 Sticky-Header. 
