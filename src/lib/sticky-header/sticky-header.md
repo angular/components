@@ -7,7 +7,8 @@ subheaders and detailed contents. It can make the header of every `<cdkStickyReg
 the container while scrolling. When the current `<cdkStickyRegion>` element is completely scrolled out of the upper 
 scrollable container, the following `<cdkStickyRegion>` element header will replace it. 
 
-There are two ways to use Sticky-Header.
+Sticky-Header should be used within a scrollable container, which is `<cdk-scrollable>`. There are two ways to use 
+Sticky-Header. 
 
 The first way is to just define a `<cdkStickyHeader>` without `<cdkStickyRegion>`. And the first direct 
 parent element of the `<cdkStickyHeader>` element will be set as its sticky-region. Like this:
