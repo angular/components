@@ -298,6 +298,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   _handleKeydown(event: KeyboardEvent): void {
     if (event.keyCode === ESCAPE && this.panelOpen) {
       this.closePanel();
+      event.stopPropagation();
     } else if (this.activeOption && event.keyCode === ENTER && this.panelOpen) {
       this.activeOption._selectViaInteraction();
       event.preventDefault();
@@ -409,9 +410,18 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   private _setTriggerValue(value: any): void {
     const toDisplay = this.autocomplete.displayWith ? this.autocomplete.displayWith(value) : value;
+
     // Simply falling back to an empty string if the display value is falsy does not work properly.
     // The display value can also be the number zero and shouldn't fall back to an empty string.
-    this._element.nativeElement.value = toDisplay != null ? toDisplay : '';
+    const inputValue = toDisplay != null ? toDisplay : '';
+
+    // If it's used in a Material container, we should set it through
+    // the property so it can go through the change detection.
+    if (this._inputContainer) {
+      this._inputContainer._mdInputChild.value = inputValue;
+    } else {
+      this._element.nativeElement.value = inputValue;
+    }
   }
 
    /**
