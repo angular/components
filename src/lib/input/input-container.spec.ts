@@ -895,7 +895,9 @@ describe('MdInputContainer with forms', () => {
         declarations: [
           MdInputContainerWithFormErrorMessages
         ],
-        providers: [{ provide: ErrorStateMatcher, useValue: { match: globalErrorStateMatcher } }]
+        providers: [
+          { provide: ErrorStateMatcher, useValue: { isErrorSate: globalErrorStateMatcher } }
+        ]
       });
 
       let fixture = TestBed.createComponent(MdInputContainerWithFormErrorMessages);
@@ -1252,7 +1254,7 @@ class MdInputContainerWithCustomErrorStateMatcher {
 
   errorState = false;
   customErrorStateMatcher: ErrorStateMatcher = {
-    match: () => this.errorState
+    isErrorSate: () => this.errorState
   };
 }
 

@@ -62,7 +62,8 @@ A placeholder for the input can be specified in one of two ways: either using th
 attribute on the `input` or `textarea`, or using an `md-placeholder` element in the
 `md-input-container`. Using both will raise an error.
 
-Global default placeholder options can be specified by setting the `MD_PLACEHOLDER_GLOBAL_OPTIONS` provider. This setting will apply to all components that support the floating placeholder.
+Global default placeholder options can be specified by setting the `MD_PLACEHOLDER_GLOBAL_OPTIONS`
+provider. This setting will apply to all components that support the floating placeholder.
 
 ```ts
 @NgModule({
@@ -110,12 +111,12 @@ warn color.
 
 ### Custom Error Matcher
 
-By default, error messages are shown when the control is invalid and either the user has interacted with
-(touched) the element or the parent form has been submitted. If you wish to override this
+By default, error messages are shown when the control is invalid and either the user has interacted
+with (touched) the element or the parent form has been submitted. If you wish to override this
 behavior (e.g. to show the error as soon as the invalid control is dirty or when a parent form group
 is invalid), you can use the `errorStateMatcher` property of the `mdInput`. To use this property,
-create a function in your component class that returns a boolean. A result of `true` will display
-the error messages.
+create an `ErrorStateMatcher` object in your component class that has a `isErrorSate` function which
+returns a boolean. A result of `true` will display the error messages.
 
 ```html
 <md-input-container>
@@ -126,22 +127,22 @@ the error messages.
 
 ```ts
 class MyErrorStateMatcher implements ErrorStateMatcher {
-  match(control: NgControl | null, form: FormGroupDirective | NgForm | null): boolean {
+  isErrorSate(control: NgControl | null, form: FormGroupDirective | NgForm | null): boolean {
     // Error when invalid control is dirty, touched, or submitted
     const isSubmitted = form && form.submitted;
-    return !!(control.invalid && (control.dirty || control.touched || isSubmitted)));
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)));
   }
 }
 ```
 
-A global error state matcher can be specified by setting the `ErrorOptions` provider. This applies
-to all inputs. For convenience, `ShowOnDirtyErrorStateMatcher` is available in order to globally
-cause input errors to show when the input is dirty and invalid.
+A global error state matcher can be specified by setting the `ErrorStateMatcher` provider. This
+applies to all inputs. For convenience, `ShowOnDirtyErrorStateMatcher` is available in order to
+globally cause input errors to show when the input is dirty and invalid.
 
 ```ts
 @NgModule({
   providers: [
-    {provide: ErrorOptions, useClass: ShowOnDirtyErrorStateMatcher}
+    {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
   ]
 })
 ```

@@ -2689,7 +2689,7 @@ describe('MdSelect', () => {
       expect(component.control.invalid).toBe(false);
       expect(component.select._isErrorState()).toBe(false);
 
-      customErrorFixture.componentInstance.errorStateMatcher = { match: matcher };
+      customErrorFixture.componentInstance.errorStateMatcher = { isErrorSate: matcher };
       customErrorFixture.detectChanges();
 
       expect(component.select._isErrorState()).toBe(true);
@@ -2697,8 +2697,8 @@ describe('MdSelect', () => {
     });
 
     it('should be able to override the error matching behavior via the injection token', () => {
-      const errorOptions: ErrorStateMatcher = {
-        match: jasmine.createSpy('error state matcher').and.returnValue(true)
+      const errorStateMatcher: ErrorStateMatcher = {
+        isErrorSate: jasmine.createSpy('error state matcher').and.returnValue(true)
       };
 
       fixture.destroy();
@@ -2706,7 +2706,7 @@ describe('MdSelect', () => {
       TestBed.resetTestingModule().configureTestingModule({
         imports: [MdSelectModule, ReactiveFormsModule, FormsModule, NoopAnimationsModule],
         declarations: [SelectInsideFormGroup],
-        providers: [{ provide: ErrorStateMatcher, useValue: errorOptions }],
+        providers: [{ provide: ErrorStateMatcher, useValue: errorStateMatcher }],
       });
 
       const errorFixture = TestBed.createComponent(SelectInsideFormGroup);
@@ -2715,7 +2715,7 @@ describe('MdSelect', () => {
       errorFixture.detectChanges();
 
       expect(component.select._isErrorState()).toBe(true);
-      expect(errorOptions.match).toHaveBeenCalled();
+      expect(errorStateMatcher.isErrorSate).toHaveBeenCalled();
     });
   });
 
