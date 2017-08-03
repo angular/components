@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
-import {
-  Validators, FormBuilder, FormGroup, FormArray, ValidationErrors, ValidatorFn
-} from '@angular/forms';
+import {Validators, FormBuilder, FormGroup} from '@angular/forms';
+import {stepValidator} from '@angular/material';
 
 @Component({
   moduleId: module.id,
@@ -34,20 +33,7 @@ export class StepperDemo {
         this._formBuilder.group({
           phoneFormCtrl: [''],
         })
-      ], this._stepValidator)
+      ], stepValidator)
     });
-  }
-
-  /**
-   * Form array validator to check if all form groups in form array are valid.
-   * If not, it will return the index of the first invalid form group.
-   */
-  private _stepValidator: ValidatorFn = (formArray: FormArray): ValidationErrors | null => {
-    for (let i = 0; i < formArray.length; i++) {
-      if (formArray.at(i).invalid) {
-        return {'invalid step': {'index': i}};
-      }
-    }
-    return null;
   }
 }

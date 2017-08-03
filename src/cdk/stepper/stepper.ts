@@ -65,11 +65,7 @@ export class CdkStep {
   private _disabled = false;
 
   /** Whether user has seen the expanded step content or not . */
-  get interacted() { return this._interacted; }
-  set interacted(value: boolean) {
-    this._interacted = value;
-  }
-  private _interacted = false;
+  interacted = false;
 
   /** Label of the step. */
   @Input()
