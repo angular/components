@@ -12,11 +12,15 @@ region currently within the scrolling viewport will stick to the top.
 
 [id]: ./sticky-header.jpg
 
-Sticky-Header should be used within a scrollable container, which is `cdkScrollable`. There are two ways to use 
-Sticky-Header. 
+Sticky-Header should be used within a scrollable container, which is `cdkScrollable`. Sticky-Header can be used by defining
+two directives, which are `cdkStickyHeader` and `cdkStickyRegion`'
 
-The first way is to just define a `cdkStickyHeader` without `cdkStickyRegion`. And the first direct 
-parent element of the `cdkStickyHeader` element will be set as its sticky-region. Like this:
+If no `cdkStickyRegion` is explicitly defined for a sticky-header, the directive will use its 
+immediate parent element. 
+
+Examples are as follow:
+
+1. `cdkStickyHeader` without `cdkStickyRegion`':
 ```html
 <div cdk-scrollable>
   <div>
@@ -33,8 +37,8 @@ parent element of the `cdkStickyHeader` element will be set as its sticky-region
   </div>
 </div>
 ```
-The other way to use a sticky-header is to define a sticky-region by your self. Each `cdkStickyRegion` should only have one 
-`cdkStickyHeader` in it.
+
+2. `cdkStickyHeader` with `cdkStickyRegion`':
 ```html
 <div cdk-scrollable>
   <div cdkStickyRegion>
