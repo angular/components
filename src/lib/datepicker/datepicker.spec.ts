@@ -181,6 +181,26 @@ describe('MdDatepicker', () => {
         });
       });
 
+      it('setting twice to the same selected value should update input and close calendar', () => {
+        for (let changeCount = 1; changeCount < 3; changeCount++) {
+          const currentDay = changeCount;
+          testComponent.datepicker.open();
+          fixture.detectChanges();
+
+          expect(document.querySelector('md-datepicker-content')).not.toBeNull();
+          expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, currentDay));
+
+          let cells = document.querySelectorAll('.mat-calendar-body-cell');
+          dispatchMouseEvent(cells[1], 'click');
+          fixture.detectChanges();
+        }
+
+        fixture.whenStable().then(() => {
+          expect(document.querySelector('md-dialog-container')).toBeNull();
+          expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 2));
+        });
+      });
+
       it('startAt should fallback to input value', () => {
         expect(testComponent.datepicker.startAt).toEqual(new Date(2020, JAN, 1));
       });
