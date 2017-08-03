@@ -813,6 +813,14 @@ describe('MdInputContainer with forms', () => {
           .toBe(1, 'Expected one hint to still be shown.');
       });
     }));
+
+    it('should set the proper role on the error messages', () => {
+      testComponent.formControl.markAsTouched();
+      fixture.detectChanges();
+
+      expect(containerEl.querySelector('md-error')!.getAttribute('role')).toBe('alert');
+    });
+
   });
 
   describe('custom error behavior', () => {

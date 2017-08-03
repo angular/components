@@ -100,7 +100,8 @@ export class MdHint {
 @Directive({
   selector: 'md-error, mat-error',
   host: {
-    'class': 'mat-input-error'
+    'class': 'mat-input-error',
+    'role': 'alert',
   }
 })
 export class MdErrorDirective { }
