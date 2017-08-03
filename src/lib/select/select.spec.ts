@@ -2689,7 +2689,7 @@ describe('MdSelect', () => {
       expect(component.control.invalid).toBe(false);
       expect(component.select._isErrorState()).toBe(false);
 
-      customErrorFixture.componentInstance.errorStateMatcher = { isErrorSate: matcher };
+      customErrorFixture.componentInstance.errorStateMatcher = { isErrorState: matcher };
       customErrorFixture.detectChanges();
 
       expect(component.select._isErrorState()).toBe(true);
@@ -2698,7 +2698,7 @@ describe('MdSelect', () => {
 
     it('should be able to override the error matching behavior via the injection token', () => {
       const errorStateMatcher: ErrorStateMatcher = {
-        isErrorSate: jasmine.createSpy('error state matcher').and.returnValue(true)
+        isErrorState: jasmine.createSpy('error state matcher').and.returnValue(true)
       };
 
       fixture.destroy();
@@ -2715,7 +2715,7 @@ describe('MdSelect', () => {
       errorFixture.detectChanges();
 
       expect(component.select._isErrorState()).toBe(true);
-      expect(errorStateMatcher.isErrorSate).toHaveBeenCalled();
+      expect(errorStateMatcher.isErrorState).toHaveBeenCalled();
     });
   });
 

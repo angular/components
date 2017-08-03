@@ -896,7 +896,7 @@ describe('MdInputContainer with forms', () => {
           MdInputContainerWithFormErrorMessages
         ],
         providers: [
-          { provide: ErrorStateMatcher, useValue: { isErrorSate: globalErrorStateMatcher } }
+          { provide: ErrorStateMatcher, useValue: { isErrorState: globalErrorStateMatcher } }
         ]
       });
 
@@ -1254,7 +1254,7 @@ class MdInputContainerWithCustomErrorStateMatcher {
 
   errorState = false;
   customErrorStateMatcher: ErrorStateMatcher = {
-    isErrorSate: () => this.errorState
+    isErrorState: () => this.errorState
   };
 }
 

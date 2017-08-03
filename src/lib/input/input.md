@@ -115,7 +115,7 @@ By default, error messages are shown when the control is invalid and either the 
 with (touched) the element or the parent form has been submitted. If you wish to override this
 behavior (e.g. to show the error as soon as the invalid control is dirty or when a parent form group
 is invalid), you can use the `errorStateMatcher` property of the `mdInput`. To use this property,
-create an `ErrorStateMatcher` object in your component class that has a `isErrorSate` function which
+create an `ErrorStateMatcher` object in your component class that has a `isErrorState` function which
 returns a boolean. A result of `true` will display the error messages.
 
 ```html
@@ -127,7 +127,7 @@ returns a boolean. A result of `true` will display the error messages.
 
 ```ts
 class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorSate(control: NgControl | null, form: FormGroupDirective | NgForm | null): boolean {
+  isErrorState(control: NgControl | null, form: FormGroupDirective | NgForm | null): boolean {
     // Error when invalid control is dirty, touched, or submitted
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)));
