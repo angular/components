@@ -579,7 +579,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
     if (this._mdInputChild) {
       let ids: string[] = [];
 
-      if (this._getDisplayedMessages() == 'hint') {
+      if (this._getDisplayedMessages() === 'hint') {
         let startHint = this._hintChildren ?
             this._hintChildren.find(hint => hint.align === 'start') : null;
         let endHint = this._hintChildren ?
@@ -594,10 +594,8 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
         if (endHint) {
           ids.push(endHint.id);
         }
-      } else {
-        if (this._errorChildren) {
-          ids = this._errorChildren.map(mdError => mdError.id);
-        }
+      } else if (this._errorChildren) {
+        ids = this._errorChildren.map(mdError => mdError.id);
       }
 
       this._mdInputChild.ariaDescribedby = ids.join(' ');
