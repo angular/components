@@ -1,4 +1,5 @@
-Angular Material `<sticky-header>` is an attribute/component which makes DOM elements sticky to a specific parent.
+The `cdkStickyHeader` directive "sticks" an element to the top of a scrolling container
+while its corresponding `cdkStickyRegion` is in view.
 
 <!-- example(sticky-header-overview) -->
 
