@@ -12,7 +12,7 @@ region currently within the scrolling viewport will stick to the top.
 
 [id]: ./sticky-header.jpg
 
-Sticky-Header should be used within a scrollable container, which is `cdk-scrollable`. There are two ways to use 
+Sticky-Header should be used within a scrollable container, which is `cdkScrollable`. There are two ways to use 
 Sticky-Header. 
 
 The first way is to just define a `cdkStickyHeader` without `cdkStickyRegion`. And the first direct 
