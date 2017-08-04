@@ -489,7 +489,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   /** Returns the width of the input element, so the panel width can match it. */
   private _getHostWidth(): number {
-    return this._element.nativeElement.getBoundingClientRect().width;
+    return this._getConnectedElement().nativeElement.getBoundingClientRect().width;
   }
 
   /** Reset active item to -1 so arrow events will activate the correct options.*/
