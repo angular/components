@@ -7,6 +7,13 @@
   overflow: auto;
 }
 
+.sticky-header-example .global-format {
+  margin: 0;
+  border: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
 .sticky-header-example h1 {
   font-size: 20px;
   padding: 5px;
