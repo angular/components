@@ -1,4 +1,4 @@
-import {join, basename} from 'path';
+import {join} from 'path';
 import {readdirSync, lstatSync, existsSync} from 'fs';
 import {spawnSync} from 'child_process';
 import {BuildPackage} from './build-package';
@@ -19,8 +19,7 @@ export function getSecondaryEntryPointsForPackage(pkg: BuildPackage) {
 
   // Get the list of all entry-points as the list of directories in the package that have a
   // tsconfig-build.json
-  const entryPoints = readdirSync(packageDir)
-      .filter(f => lstatSync(join(packageDir, f)).isDirectory())
+  const entryPoints = getSubdirectoryNames(packageDir)
       .filter(d => existsSync(join(packageDir, d, 'tsconfig-build.json')));
 
   // Create nodes that comprise the build graph.
@@ -73,6 +72,11 @@ function getBuildOrder(node: BuildNode): string[] {
 
   node.visited = true;
   return [...buildOrder, node.name];
+}
+
+/** Gets the names of all subdirectories for a given path. */
+export function getSubdirectoryNames(dir: string): string[] {
+  return readdirSync(dir).filter(f => lstatSync(join(dir, f)).isDirectory());
 }
 
 /** A node in the build graph of a package's entry-points. */
