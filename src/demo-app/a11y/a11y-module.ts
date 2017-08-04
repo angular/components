@@ -5,6 +5,7 @@ import {RouterModule} from '@angular/router';
 import {ACCESSIBILITY_DEMO_ROUTES} from './routes';
 import {DemoMaterialModule} from '../demo-material-module';
 import {AccessibilityDemo, AccessibilityHome} from './a11y';
+import {AutocompleteAccessibilityDemo} from './autocomplete/autocomplete-a11y';
 import {ButtonAccessibilityDemo} from './button/button-a11y';
 import {ButtonToggleAccessibilityDemo} from './button-toggle/button-toggle-a11y';
 import {CheckboxAccessibilityDemo} from './checkbox/checkbox-a11y';
@@ -14,6 +15,7 @@ import {RadioAccessibilityDemo} from './radio/radio-a11y';
 import {DatepickerAccessibilityDemo} from './datepicker/datepicker-a11y';
 import {InputAccessibilityDemo} from './input/input-a11y';
 import {SliderAccessibilityDemo} from './slider/slider-a11y';
+
 
 @NgModule({
   imports: [
@@ -36,6 +38,7 @@ export class AccessibilityRoutingModule {}
   declarations: [
     AccessibilityDemo,
     AccessibilityHome,
+    AutocompleteAccessibilityDemo,
     ButtonAccessibilityDemo,
     ButtonToggleAccessibilityDemo,
     CheckboxAccessibilityDemo,

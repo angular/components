@@ -1,4 +1,5 @@
 import {Routes} from '@angular/router';
+import {AutocompleteAccessibilityDemo} from './autocomplete/autocomplete-a11y';
 import {ButtonAccessibilityDemo} from './button/button-a11y';
 import {ButtonToggleAccessibilityDemo} from './button-toggle/button-toggle-a11y';
 import {CheckboxAccessibilityDemo} from './checkbox/checkbox-a11y';
@@ -12,6 +13,7 @@ import {SliderAccessibilityDemo} from './slider/slider-a11y';
 
 export const ACCESSIBILITY_DEMO_ROUTES: Routes = [
   {path: '', component: AccessibilityHome},
+  {path: 'autocomplete', component: AutocompleteAccessibilityDemo},
   {path: 'button', component: ButtonAccessibilityDemo},
   {path: 'button-toggle', component: ButtonToggleAccessibilityDemo},
   {path: 'checkbox', component: CheckboxAccessibilityDemo},
