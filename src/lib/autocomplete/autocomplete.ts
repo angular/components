@@ -97,11 +97,9 @@ export class MdAutocomplete implements AfterContentInit {
     });
   }
 
-  /** Sets a class on the panel based on its position (used to set y-offset). */
+  /** Sets a class on the panel based on whether it is visible. */
   _getClassList() {
     return {
-      'mat-autocomplete-panel-below': this.positionY === 'below',
-      'mat-autocomplete-panel-above': this.positionY === 'above',
       'mat-autocomplete-visible': this.showPanel,
       'mat-autocomplete-hidden': !this.showPanel
     };

@@ -467,7 +467,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   private _getOverlayPosition(): PositionStrategy {
     this._positionStrategy =  this._overlay.position().connectedTo(
-        this._element,
+        this._getConnectedElement(),
         {originX: 'start', originY: 'bottom'}, {overlayX: 'start', overlayY: 'top'})
         .withFallbackPosition(
             {originX: 'start', originY: 'top'}, {overlayX: 'start', overlayY: 'bottom'}
@@ -476,10 +476,11 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     return this._positionStrategy;
   }
 
-  /**
-   * This method subscribes to position changes in the autocomplete panel, so the panel's
-   * y-offset can be adjusted to match the new position.
-   */
+  private _getConnectedElement(): ElementRef {
+    return this._inputContainer ? this._inputContainer._connectionContainerRef : this._element;
+  }
+
+  /** This method subscribes to position changes in the autocomplete panel. */
   private _subscribeToPositionChanges(strategy: ConnectedPositionStrategy) {
     this._panelPositionSubscription = strategy.onPositionChange.subscribe(change => {
       this.autocomplete.positionY = change.connectionPair.originY === 'top' ? 'above' : 'below';
