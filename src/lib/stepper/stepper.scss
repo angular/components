@@ -1,83 +1,76 @@
 $mat-horizontal-stepper-header-height: 72px;
-$mat-vertical-stepper-header-height: 24px;
-$mat-stepper-circle-size: 24px;
+$mat-label-header-height: 24px;
 $mat-stepper-label-min-width: 50px;
-$mat-stepper-container-padding: 24px;
-$mat-horizontal-stepper-index-margin-right: 8px;
-$mat-horizontal-stepper-index-martin-top: 24px;
-$mat-vertical-stepper-index-margin-right: 12px;
-$mat-vertical-stepper-content-padding-bottom: 48px;
-$mat-vertical-stepper-content-padding-top: 16px;
+$mat-stepper-side-gap: 24px;
+$mat-vertical-stepper-content-margin-right: 12px;
+$mat-vertical-stepper-content-padding: 16px 0 32px 0;
 $mat-vertical-content-container-padding: 8px;
 $mat-connector-line-width: 1px;
-$mat-connector-line-margin: 8px;
-$mat-connector-line-margin-top: 36px;
+$mat-connector-line-gap: 8px;
+$mat-horizontal-connector-line-size: 5%;
 
 :host {
   display: block;
-  padding-left: $mat-stepper-container-padding;
+  padding-left: $mat-stepper-side-gap;
 }
 
 .mat-stepper-label {
   display: inline-flex;
   white-space: nowrap;
   overflow: hidden;
+  // TODO(jwshin): text-overflow does not work as expected.
   text-overflow: ellipsis;
-  flex-shrink: 1;
   min-width: $mat-stepper-label-min-width;
 }
 
 .mat-stepper-index {
   border-radius: 50%;
-  height: $mat-stepper-circle-size;
-  width: $mat-stepper-circle-size;
+  height: $mat-label-header-height;
+  width: $mat-label-header-height;
   text-align: center;
-  line-height: $mat-stepper-circle-size;
+  line-height: $mat-label-header-height;
 }
 
 .mat-horizontal-stepper-header-container {
   white-space: nowrap;
   display: flex;
-  padding-right: $mat-stepper-container-padding;
+  padding-right: $mat-stepper-side-gap;
+  align-items: center;
 }
 
 .mat-horizontal-stepper-header {
   display: inline-flex;
   line-height: $mat-horizontal-stepper-header-height;
-  flex-grow: 0;
-  flex-shrink: 1;
   overflow: hidden;
+  align-items: center;
 
   .mat-stepper-index {
-    margin-right: $mat-horizontal-stepper-index-margin-right;
-    margin-top: $mat-horizontal-stepper-index-martin-top;
+    margin-right: $mat-connector-line-gap;
     display: inline-block;
-    flex-shrink: 0;
+    flex: none;
   }
 }
 
 .mat-vertical-stepper-header {
   display: inline-flex;
-  line-height: $mat-vertical-stepper-header-height;
+  align-items: center;
 
   .mat-stepper-index {
-    margin-right: $mat-vertical-stepper-index-margin-right;
+    margin-right: $mat-vertical-stepper-content-margin-right;
   }
 }
 
 .connector-line {
   border-top-width: $mat-connector-line-width;
   border-top-style: solid;
-  margin-top: $mat-connector-line-margin-top;
-  width: 5%;
-  flex-grow: 1;
-  flex-shrink: 1;
-  margin-left: $mat-connector-line-margin;
-  margin-right: $mat-connector-line-margin;
+  width: $mat-horizontal-connector-line-size;
+  flex: auto;
+  margin: 0 $mat-connector-line-gap;
+  height: 0;
 }
 
 .mat-horizontal-stepper-content {
-  padding-right: $mat-stepper-container-padding;
+  padding-right: $mat-stepper-side-gap;
 
   &[aria-expanded='false'] {
     display: none;
@@ -85,23 +78,21 @@ $mat-connector-line-margin-top: 36px;
 }
 
 .vertical-content-container {
-  content: '';
   border-left-width: $mat-connector-line-width;
   border-left-style: solid;
-  margin: $mat-connector-line-margin 0 $mat-connector-line-margin 12px;
+  margin: $mat-connector-line-gap 0 $mat-connector-line-gap $mat-vertical-stepper-content-margin-right;
   padding: $mat-vertical-content-container-padding 0;
 }
 
 .mat-vertical-stepper-content {
-  padding-left: $mat-stepper-container-padding;
+  padding-left: $mat-stepper-side-gap;
 
   &[aria-expanded='false'] {
     display: none;
   }
 
   &[aria-expanded='true'] {
-    padding-bottom: $mat-vertical-stepper-content-padding-bottom;
-    padding-top: $mat-vertical-stepper-content-padding-top;
+    padding: $mat-vertical-stepper-content-padding;
   }
 }
 
@@ -113,6 +104,6 @@ $mat-connector-line-margin-top: 36px;
   }
 
   &:first-child {
-    padding-top: $mat-stepper-container-padding;
+    padding-top: $mat-stepper-side-gap;
   }
 }
