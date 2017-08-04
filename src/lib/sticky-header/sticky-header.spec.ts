@@ -11,7 +11,7 @@ import {PlatformModule} from '../core/platform/index';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 
-
+const DEBOUNCE_TIME: number = 5;
 
 describe('sticky-header with positioning not supported', () => {
   let fixture: ComponentFixture<StickyHeaderTest>;
@@ -58,8 +58,8 @@ describe('sticky-header with positioning not supported', () => {
 
     // Scroll the scrollableContainer up to stick
     fixture.componentInstance.scrollDown();
-    // wait till animation has finished
-    tick(100);
+    // wait for the DEBOUNCE_TIME
+    tick(DEBOUNCE_TIME);
 
     expect(stickyHeader.element.getBoundingClientRect().top).toBe(scrollableContainerTop);
   }));
@@ -72,14 +72,14 @@ describe('sticky-header with positioning not supported', () => {
 
     // Scroll the scrollableContainer up to stick
     fixture.componentInstance.scrollDown();
-    // wait till animation has finished
-    tick(100);
+    // wait for the DEBOUNCE_TIME
+    tick(DEBOUNCE_TIME);
 
     expect(stickyHeader.element.getBoundingClientRect().top).toBe(scrollableContainerTop);
 
     // Scroll the scrollableContainer down to unstuck
     fixture.componentInstance.scrollBack();
-    tick(100);
+    tick(DEBOUNCE_TIME);
 
     expect(stickyHeader.element.getBoundingClientRect().top).not.toBe(scrollableContainerTop);
 
