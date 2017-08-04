@@ -8,10 +8,6 @@ This scrolling container contians one or more elements with `cdkStickyRegion`,
 each with their own `cdkStickyHeader`. As the regions are scrolled, the header for the
 region currently within the scrolling viewport will stick to the top.
 
-![alt text][id]
-
-[id]: ./sticky-header.jpg
-
 Sticky-Header should be used within a scrollable container, which is `cdkScrollable`. Sticky-Header can be used by defining
 two directives, which are `cdkStickyHeader` and `cdkStickyRegion`'
 
