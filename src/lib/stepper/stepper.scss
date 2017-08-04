@@ -1,9 +1,21 @@
-$mat-stepper-header-height: 72px;
+$mat-horizontal-stepper-header-height: 72px;
+$mat-vertical-stepper-header-height: 24px;
 $mat-stepper-circle-size: 24px;
+$mat-stepper-label-min-width: 50px;
+$mat-stepper-container-padding: 24px;
+$mat-horizontal-stepper-index-margin-right: 8px;
+$mat-horizontal-stepper-index-martin-top: 24px;
+$mat-vertical-stepper-index-margin-right: 12px;
+$mat-vertical-stepper-content-padding-bottom: 48px;
+$mat-vertical-stepper-content-padding-top: 16px;
+$mat-vertical-content-container-padding: 8px;
+$mat-connector-line-width: 1px;
+$mat-connector-line-margin: 8px;
+$mat-connector-line-margin-top: 36px;
 
 :host {
   display: block;
-  padding-left: 24px;
+  padding-left: $mat-stepper-container-padding;
 }
 
 .mat-stepper-label {
@@ -12,7 +24,7 @@ $mat-stepper-circle-size: 24px;
   overflow: hidden;
   text-overflow: ellipsis;
   flex-shrink: 1;
-  min-width: 50px;
+  min-width: $mat-stepper-label-min-width;
 }
 
 .mat-stepper-index {
@@ -26,19 +38,19 @@ $mat-stepper-circle-size: 24px;
 .mat-horizontal-stepper-header-container {
   white-space: nowrap;
   display: flex;
-  padding-right: 24px;
+  padding-right: $mat-stepper-container-padding;
 }
 
 .mat-horizontal-stepper-header {
   display: inline-flex;
-  line-height: $mat-stepper-header-height;
+  line-height: $mat-horizontal-stepper-header-height;
   flex-grow: 0;
   flex-shrink: 1;
   overflow: hidden;
 
   .mat-stepper-index {
-    margin-right: 8px;
-    margin-top: 24px;
+    margin-right: $mat-horizontal-stepper-index-margin-right;
+    margin-top: $mat-horizontal-stepper-index-martin-top;
     display: inline-block;
     flex-shrink: 0;
   }
@@ -46,27 +58,26 @@ $mat-stepper-circle-size: 24px;
 
 .mat-vertical-stepper-header {
   display: inline-flex;
-  line-height: 24px;
+  line-height: $mat-vertical-stepper-header-height;
 
   .mat-stepper-index {
-    margin-right: 12px;
+    margin-right: $mat-vertical-stepper-index-margin-right;
   }
 }
 
 .connector-line {
-  border: 0;
-  height: 1px;
-  border-top: 1px solid #bdbdbd;
-  margin-top: 36px;
+  border-top-width: $mat-connector-line-width;
+  border-top-style: solid;
+  margin-top: $mat-connector-line-margin-top;
   width: 5%;
   flex-grow: 1;
   flex-shrink: 1;
-  margin-left: 8px;
-  margin-right: 8px;
+  margin-left: $mat-connector-line-margin;
+  margin-right: $mat-connector-line-margin;
 }
 
 .mat-horizontal-stepper-content {
-  padding-right: 24px;
+  padding-right: $mat-stepper-container-padding;
 
   &[aria-expanded='false'] {
     display: none;
@@ -75,23 +86,22 @@ $mat-stepper-circle-size: 24px;
 
 .vertical-content-container {
   content: '';
-  border-left: 1px solid #bdbdbd;
-  top: 0;
-  bottom: 0;
-  margin: 8px 0 8px 12px;
-  padding: 8px 0;
+  border-left-width: $mat-connector-line-width;
+  border-left-style: solid;
+  margin: $mat-connector-line-margin 0 $mat-connector-line-margin 12px;
+  padding: $mat-vertical-content-container-padding 0;
 }
 
 .mat-vertical-stepper-content {
-  margin-left: 24px;
+  padding-left: $mat-stepper-container-padding;
 
   &[aria-expanded='false'] {
     display: none;
   }
 
   &[aria-expanded='true'] {
-    padding-bottom: 48px;
-    padding-top: 16px;
+    padding-bottom: $mat-vertical-stepper-content-padding-bottom;
+    padding-top: $mat-vertical-stepper-content-padding-top;
   }
 }
 
@@ -103,6 +113,6 @@ $mat-stepper-circle-size: 24px;
   }
 
   &:first-child {
-    padding-top: 24px;
+    padding-top: $mat-stepper-container-padding;
   }
 }

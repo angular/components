@@ -14,7 +14,7 @@
     }
 
     .mat-stepper-index {
-      background: mat-color($primary);
+      background-color: mat-color($primary);
       color: mat-color($primary, default-contrast);
     }
 
@@ -30,6 +30,14 @@
   }
 
   .mat-stepper-horizontal, .mat-stepper-vertical {
-    background: mat-color($background, 'card');
+    background-color: mat-color($background, card);
+  }
+
+  .vertical-content-container {
+    border-left-color: mat-color($foreground, divider);
+  }
+
+  .connector-line {
+    border-top-color: mat-color($foreground, divider);
   }
 }
