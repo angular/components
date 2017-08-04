@@ -52,6 +52,7 @@ import {
 } from '../core/error/error-options';
 import {Subject} from 'rxjs/Subject';
 import {startWith} from '@angular/cdk/rxjs';
+import {Observable} from 'rxjs/Observable';
 
 // Invalid input type. Using one of these will throw an MdInputContainerUnsupportedTypeError.
 const MD_INPUT_INVALID_TYPES = [
@@ -97,6 +98,7 @@ export class MdHint {
   @Input() id: string = `md-input-hint-${nextUniqueId++}`;
 }
 
+
 /** Single error message to be shown underneath the input. */
 @Directive({
   selector: 'md-error, mat-error',
@@ -109,6 +111,7 @@ export class MdHint {
 export class MdErrorDirective {
   @Input() id: string = `md-input-error-${nextUniqueId++}`;
 }
+
 
 /** Prefix to be placed the the front of the input. */
 @Directive({
@@ -124,6 +127,43 @@ export class MdPrefix {}
 export class MdSuffix {}
 
 
+/** An interface which allows a control to work inside of a md-text-field. */
+export abstract class MdTextFieldControl {
+  /** Stream that emits whenever the state of the control changes. */
+  stateChanges: Observable<void>;
+
+  /** Gets the element ID for this control. */
+  abstract getId(): string;
+
+  /** Fets the placeholder for this contorl. */
+  abstract getPlaceholder(): string;
+
+  /** Gets the NgControl for this control. */
+  abstract getNgControl(): NgControl | null;
+
+  /** Whether the control is focused. */
+  abstract isFocused(): boolean;
+
+  /** Whether the control is empty. */
+  abstract isEmpty(): boolean;
+
+  /** Whether the control is required. */
+  abstract isRequired(): boolean;
+
+  /** Whether the control is disabled. */
+  abstract isDisabled(): boolean;
+
+  /** Whether the control is in an error state. */
+  abstract isErrorState(): boolean;
+
+  /** Sets the list of element IDs that currently describe this control. */
+  abstract setDescribedByIds(ids: string[]): void;
+
+  /** Focuses this control. */
+  abstract focus(): void;
+}
+
+
 /** Marker for the input element that `MdInputContainer` is wrapping. */
 @Directive({
   selector: `input[mdInput], textarea[mdInput], input[matInput], textarea[matInput]`,
@@ -135,39 +175,38 @@ export class MdSuffix {}
     '[placeholder]': 'placeholder',
     '[disabled]': 'disabled',
     '[required]': 'required',
-    '[attr.aria-describedby]': 'ariaDescribedby || null',
+    '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-invalid]': '_isErrorState',
     '(blur)': '_focusChanged(false)',
     '(focus)': '_focusChanged(true)',
     '(input)': '_onInput()',
-  }
+  },
+  providers: [{provide: MdTextFieldControl, useExisting: MdInputDirective}],
 })
-export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
+export class MdInputDirective implements MdTextFieldControl, OnChanges, OnDestroy, DoCheck {
   /** Variables used as cache for getters and setters. */
   private _type = 'text';
-  private _placeholder: string = '';
   private _disabled = false;
   private _required = false;
-  private _readonly = false;
   private _id: string;
   private _uid = `md-input-${nextUniqueId++}`;
   private _errorOptions: ErrorOptions;
   private _previousNativeValue = this.value;
+  private _focused = false;
 
   /** Whether the input is in an error state. */
   _isErrorState = false;
 
   /** Whether the element is focused or not. */
-  focused = false;
 
   /** Sets the aria-describedby attribute on the input for improved a11y. */
-  ariaDescribedby: string;
+  _ariaDescribedby: string;
 
   /**
    * Stream that emits whenever the state of the input changes. This allows for other components
    * (mostly `md-input-container`) that depend on the properties of `mdInput` to update their view.
    */
-  _stateChanges = new Subject<void>();
+  stateChanges = new Subject<void>();
 
   /** Whether the element is disabled. */
   @Input()
@@ -202,11 +241,6 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
     }
   }
 
-  /** Whether the element is readonly. */
-  @Input()
-  get readonly() { return this._readonly; }
-  set readonly(value: any) { this._readonly = coerceBooleanProperty(value); }
-
   /** A function used to control when error messages are shown. */
   @Input() errorStateMatcher: ErrorStateMatcher;
 
@@ -215,18 +249,8 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
   set value(value: string) {
     if (value !== this.value) {
       this._elementRef.nativeElement.value = value;
-      this._stateChanges.next();
+      this.stateChanges.next();
     }
-  }
-
-  /** Whether the input is empty. */
-  get empty() {
-    return !this._isNeverEmpty() &&
-        (this.value == null || this.value === '') &&
-        // Check if the input contains bad input. If so, we know that it only appears empty because
-        // the value failed to parse. From the user's perspective it is not empty.
-        // TODO(mmalerba): Add e2e test for bad input case.
-        !this._isBadInput();
   }
 
   private _neverEmptyInputTypes = [
@@ -269,11 +293,11 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
   }
 
   ngOnChanges() {
-    this._stateChanges.next();
+    this.stateChanges.next();
   }
 
   ngOnDestroy() {
-    this._stateChanges.complete();
+    this.stateChanges.complete();
   }
 
   ngDoCheck() {
@@ -289,12 +313,6 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
     }
   }
 
-  _onFocus() {
-    if (!this._readonly) {
-      this.focused = true;
-    }
-  }
-
   /** Focuses the input element. */
   focus() {
     this._elementRef.nativeElement.focus();
@@ -302,9 +320,9 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
 
   /** Callback for the cases where the focused state of the input changes. */
   _focusChanged(isFocused: boolean) {
-    if (isFocused !== this.focused) {
-      this.focused = isFocused;
-      this._stateChanges.next();
+    if (isFocused !== this._focused) {
+      this._focused = isFocused;
+      this.stateChanges.next();
     }
   }
 
@@ -327,7 +345,7 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
 
     if (newState !== oldState) {
       this._isErrorState = newState;
-      this._stateChanges.next();
+      this.stateChanges.next();
     }
   }
 
@@ -337,7 +355,7 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
 
     if (this._previousNativeValue !== newValue) {
       this._previousNativeValue = newValue;
-      this._stateChanges.next();
+      this.stateChanges.next();
     }
   }
 
@@ -370,6 +388,40 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
     let nodeName = this._platform.isBrowser ? nativeElement.nodeName : nativeElement.name;
     return nodeName ? nodeName.toLowerCase() === 'textarea' : false;
   }
+
+  // Implemented as part of MdTextFieldControl.
+  getId(): string { return this.id; }
+
+  // Implemented as part of MdTextFieldControl.
+  getPlaceholder(): string { return this.placeholder; }
+
+  // Implemented as part of MdTextFieldControl.
+  getNgControl(): NgControl | null { return this._ngControl; }
+
+  // Implemented as part of MdTextFieldControl.
+  isFocused(): boolean { return this._focused; }
+
+  // Implemented as part of MdTextFieldControl.
+  isEmpty(): boolean {
+    return !this._isNeverEmpty() &&
+        (this.value == null || this.value === '') &&
+        // Check if the input contains bad input. If so, we know that it only appears empty because
+        // the value failed to parse. From the user's perspective it is not empty.
+        // TODO(mmalerba): Add e2e test for bad input case.
+        !this._isBadInput();
+  }
+
+  // Implemented as part of MdTextFieldControl.
+  isRequired(): boolean { return this.required; }
+
+  // Implemented as part of MdTextFieldControl.
+  isDisabled(): boolean { return this.disabled; }
+
+  // Implemented as part of MdTextFieldControl.
+  isErrorState(): boolean { return this._isErrorState; }
+
+  // Implemented as part of MdTextFieldControl.
+  setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
 }
 
 
@@ -394,8 +446,8 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
     // Remove align attribute to prevent it from interfering with layout.
     '[attr.align]': 'null',
     'class': 'mat-input-container',
-    '[class.mat-input-invalid]': '_mdInputChild._isErrorState',
-    '[class.mat-focused]': '_mdInputChild.focused',
+    '[class.mat-input-invalid]': '_textFieldControl.isErrorState()',
+    '[class.mat-focused]': '_textFieldControl.isFocused()',
     '[class.ng-untouched]': '_shouldForward("untouched")',
     '[class.ng-touched]': '_shouldForward("touched")',
     '[class.ng-pristine]': '_shouldForward("pristine")',
@@ -463,7 +515,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   /** Reference to the input's underline element. */
   @ViewChild('underline') underlineRef: ElementRef;
   @ViewChild('connectionContainer') _connectionContainerRef: ElementRef;
-  @ContentChild(MdInputDirective) _mdInputChild: MdInputDirective;
+  @ContentChild(MdTextFieldControl) _textFieldControl: MdTextFieldControl;
   @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
   @ContentChildren(MdErrorDirective) _errorChildren: QueryList<MdErrorDirective>;
   @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;
@@ -482,14 +534,15 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
     this._validateInputChild();
 
     // Subscribe to changes in the child input state in order to update the container UI.
-    startWith.call(this._mdInputChild._stateChanges, null).subscribe(() => {
+    startWith.call(this._textFieldControl.stateChanges, null).subscribe(() => {
       this._validatePlaceholders();
       this._syncAriaDescribedby();
       this._changeDetectorRef.markForCheck();
     });
 
-    if (this._mdInputChild._ngControl && this._mdInputChild._ngControl.valueChanges) {
-      this._mdInputChild._ngControl.valueChanges.subscribe(() => {
+    let ngControl = this._textFieldControl.getNgControl();
+    if (ngControl && ngControl.valueChanges) {
+      ngControl.valueChanges.subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });
     }
@@ -519,25 +572,24 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
 
   /** Determines whether a class from the NgControl should be forwarded to the host element. */
   _shouldForward(prop: string): boolean {
-    let control = this._mdInputChild ? this._mdInputChild._ngControl : null;
-    return control && (control as any)[prop];
+    let ngControl = this._textFieldControl ? this._textFieldControl.getNgControl : null;
+    return ngControl && (ngControl as any)[prop];
   }
 
   /** Whether the input has a placeholder. */
   _hasPlaceholder() {
-    return !!(this._mdInputChild.placeholder || this._placeholderChild);
+    return !!(this._textFieldControl.getPlaceholder() || this._placeholderChild);
   }
 
   /** Focuses the underlying input. */
   _focusInput() {
-    this._mdInputChild.focus();
+    this._textFieldControl.focus();
   }
 
   /** Determines whether to display hints or errors. */
   _getDisplayedMessages(): 'error' | 'hint' {
-    let input = this._mdInputChild;
-    return (this._errorChildren && this._errorChildren.length > 0 && input._isErrorState) ?
-        'error' : 'hint';
+    return (this._errorChildren && this._errorChildren.length > 0 &&
+            this._textFieldControl.isErrorState()) ? 'error' : 'hint';
   }
 
   /**
@@ -545,7 +597,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
    * `md-placeholder` attribute.
    */
   private _validatePlaceholders() {
-    if (this._mdInputChild.placeholder && this._placeholderChild) {
+    if (this._textFieldControl.getPlaceholder() && this._placeholderChild) {
       throw getMdInputContainerPlaceholderConflictError();
     }
   }
@@ -587,7 +639,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
    * of the currently-specified hints, as well as a generated id for the hint label.
    */
   private _syncAriaDescribedby() {
-    if (this._mdInputChild) {
+    if (this._textFieldControl) {
       let ids: string[] = [];
 
       if (this._getDisplayedMessages() === 'hint') {
@@ -609,7 +661,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
         ids = this._errorChildren.map(mdError => mdError.id);
       }
 
-      this._mdInputChild.ariaDescribedby = ids.join(' ');
+      this._textFieldControl.setDescribedByIds(ids);
     }
   }
 
@@ -617,7 +669,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
    * Throws an error if the container's input child was removed.
    */
   protected _validateInputChild() {
-    if (!this._mdInputChild) {
+    if (!this._textFieldControl) {
       throw getMdInputContainerMissingMdInputError();
     }
   }
