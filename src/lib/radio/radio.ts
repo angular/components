@@ -332,6 +332,7 @@ export const _MdRadioButtonMixinBase = mixinColor(mixinDisableRipple(MdRadioButt
     '[class.mat-radio-checked]': 'checked',
     '[class.mat-radio-disabled]': 'disabled',
     '[attr.id]': 'id',
+    '(focus)': '_inputElement.nativeElement.focus()',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
