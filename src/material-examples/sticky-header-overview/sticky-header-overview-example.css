@@ -1,79 +1,75 @@
-.example-centered {
+.sticky-header-example .example-centered {
   text-align: left;
   -webkit-appearance: none;
   -moz-appearance: none;
   height: 300px;
   width: 500px;
-  overflow: auto;}
-
-button {
-  position: fixed;
-  margin: 16px;
-  z-index: 99;
+  overflow: auto;
 }
 
-* {
-  margin: 0;
-  padding: 0;
+.sticky-header-example button {
+    position: fixed;
+    margin: 16px;
+    z-index: 99;
 }
 
-body {
-  font: 14px/1.5 Helvetica, Arial, sans-serif;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
+.sticky-header-example * {
+    margin: 0;
+    padding: 0;
 }
 
-h1 {
-  font-size: 20px;
-  padding: 5px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+.sticky-header-example body {
+    font: 14px/1.5 Helvetica, Arial, sans-serif;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
-h2 {
-  font-size: 20px;
-  padding: 5px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+.sticky-header-example h1 {
+    font-size: 20px;
+    padding: 5px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
-p {
-  text-indent: 4em;
-  padding:5px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+.sticky-header-example h2 {
+    font-size: 20px;
+    padding: 5px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
-div{
-  margin: 0; border: 0; padding: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+.sticky-header-example p {
+    text-indent: 4em;
+    padding:5px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
-.mat-radio-button {
-  display: block;
+.sticky-header-example div{
+    margin: 0; border: 0; padding: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
-.example-container {
-  margin: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+.sticky-header-example .example-container {
+    margin: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
-.demo-header-style{
-  -webkit-appearance: none;
-  padding: 5px;
+.sticky-header-example .demo-header-style{
+    -webkit-appearance: none;
+    padding: 5px;
 }
 
-.demo-header-color1 {
-  background: #cecece;
+.sticky-header-example .demo-header-color1 {
+    background: #cecece;
 }
 
-.demo-header-color2 {
-  background: #cea7a7;
+.sticky-header-example .demo-header-color2 {
+    background: #cea7a7;
 }
 
-.demo-header-color3 {
-  background: #c2eae5;
+.sticky-header-example .demo-header-color3 {
+    background: #c2eae5;
 }
