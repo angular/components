@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {Directive, Input,
-  OnDestroy, AfterViewInit, ElementRef, Optional} from '@angular/core';
-import {Platform} from '../core/platform';
+  OnDestroy, AfterViewInit, ElementRef, Optional,
+  InjectionToken, Injectable, Inject, Provider} from '@angular/core';
+import {Platform} from '../core/platform/index';
 import {Scrollable} from '../core/overlay/scroll/scrollable';
 import {extendObject} from '../core/util/object-extend';
 import {Subscription} from 'rxjs/Subscription';
@@ -32,7 +33,6 @@ export class CdkStickyRegion {
   constructor(public readonly _elementRef: ElementRef) { }
 }
 
-
 /** Class applied when the header is "stuck" */
 const STICK_START_CLASS = 'cdk-sticky-header-start';
 
@@ -45,6 +45,16 @@ const STICK_END_CLASS = 'cdk-sticky-header-end';
  * positioning adversely.
  */
 const DEBOUNCE_TIME: number = 5;
+
+export const STICKY_HEADER_SUPPORT_STRATEGY = new InjectionToken('sticky-header-support-strategy');
+
+/** @docs-private
+ * Create a factory for sticky-positioning check to make code more testable
+ */
+export const STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER: Provider = {
+  provide: STICKY_HEADER_SUPPORT_STRATEGY,
+  useFactory: isPositionStickySupported
+};
 
 /**
  * Directive that marks an element as a sticky-header. Inside of a scrolling container (marked with
@@ -61,8 +71,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   /** boolean value to mark whether the current header is stuck*/
   isStuck: boolean = false;
-  /** Whether the browser support CSS sticky positioning. */
-  private _isPositionStickySupported: boolean = false;
 
   /** The element with the 'cdkStickyHeader' tag. */
   element: HTMLElement;
@@ -97,7 +105,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   constructor(element: ElementRef,
               scrollable: Scrollable,
               @Optional() public parentRegion: CdkStickyRegion,
-              platform: Platform) {
+              platform: Platform,
+              @Inject(STICKY_HEADER_SUPPORT_STRATEGY) public _isPositionStickySupported) {
     if (platform.isBrowser) {
       this.element = element.nativeElement;
       this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
@@ -137,7 +146,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
    * sticky positioning. If not, use the original implementation.
    */
   private _setStrategyAccordingToCompatibility(): void {
-    this._isPositionStickySupported = isPositionStickySupported();
     if (this._isPositionStickySupported) {
       this.element.style.top = '0';
       this.element.style.cssText += 'position: -webkit-sticky; position: sticky; ';
@@ -258,9 +266,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
 
   /**
-   * '_applyStickyPositionStyles()' function contains the main logic of sticky-header. It decides when
-   * a header should be stick and when should it be unstuck by comparing the offsetTop
-   * of scrollable container with the top and bottom of the sticky region.
+   * '_applyStickyPositionStyles()' function contains the main logic of sticky-header.
+   * It decides when a header should be stick and when should it be unstuck by comparing
+   * the offsetTop of scrollable container with the top and bottom of the sticky region.
    */
   _applyStickyPositionStyles(): void {
     let currentPosition: number = this.upperScrollableContainer.offsetTop;
