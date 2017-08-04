@@ -11,6 +11,7 @@ import {PortalHost, Portal} from '../portal/portal';
 import {OverlayState} from './overlay-state';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
+import {first} from 'rxjs/operator/first';
 
 
 /**
@@ -46,11 +47,14 @@ export class OverlayRef implements PortalHost {
     let attachResult = this._portalHost.attach(portal);
 
     // Update the pane element with the given state configuration.
-    this._updateStackingOrder();
-    this.updateSize();
-    this.updateDirection();
-    this.updatePosition();
-    this._state.scrollStrategy.enable();
+    first.call(this._ngZone.onStable).subscribe(() => {
+      console.log('ZONE IS STABLE');
+      this._updateStackingOrder();
+      this.updateSize();
+      this.updateDirection();
+      this.updatePosition();
+      this._state.scrollStrategy.enable();
+    });
 
     // Enable pointer events for the overlay pane element.
     this._togglePointerEvents(true);
