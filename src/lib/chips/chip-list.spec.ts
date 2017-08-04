@@ -246,7 +246,7 @@ describe('MdChipList', () => {
           tick();
 
           expect(chipListInstance._tabIndex).toBe(4, 'Expected tabIndex to be reset back to 4');
-        }))
+        }));
       });
     });
   });
