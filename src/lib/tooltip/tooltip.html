@@ -1,7 +1,7 @@
 <div class="mat-tooltip"
      [ngClass]="tooltipClass"
+     [innerHtml]="message"
      [style.transform-origin]="_transformOrigin"
      [@state]="_visibility"
      (@state.done)="_afterVisibilityAnimation($event)">
-  {{message}}
 </div>
