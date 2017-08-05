@@ -25,7 +25,10 @@ export class OverlayContainer {
   get themeClass(): string { return this._themeClass; }
   set themeClass(value: string) {
     if (this._containerElement) {
-      this._containerElement.classList.remove(this._themeClass);
+
+      if (this._safeClassDefiner(this._themeClass)) {
+        this._containerElement.classList.remove(this._themeClass);
+      }
 
       if (value) {
         this._containerElement.classList.add(value);
@@ -60,6 +63,20 @@ export class OverlayContainer {
 
     document.body.appendChild(container);
     this._containerElement = container;
+  }
+
+  /***
+   * @description classList.contains throw error if get checked for empty string in classList
+   * @param className
+   * @return {boolean}
+   * @private
+   */
+  private _safeClassDefiner(className: string): boolean {
+    try {
+      return this._containerElement.classList.contains(className);
+    } catch (e) {
+      return false;
+    }
   }
 }
 
