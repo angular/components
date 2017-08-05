@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {Validators, FormBuilder, FormGroup} from '@angular/forms';
-import {stepValidator} from '@angular/material';
 
 @Component({
   moduleId: module.id,
@@ -33,7 +32,7 @@ export class StepperDemo {
         this._formBuilder.group({
           phoneFormCtrl: [''],
         })
-      ], stepValidator)
+      ])
     });
   }
 }

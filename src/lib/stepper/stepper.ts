@@ -37,19 +37,6 @@ import {
  * Form array validator to check if all form groups in form array are valid.
  * If not, it will return the index of the first invalid form group.
  */
-export const stepValidator: ValidatorFn = (formArray: FormArray): ValidationErrors | null => {
-  for (let i = 0; i < formArray.length; i++) {
-    if (formArray.at(i).invalid) {
-      return {'invalid step': {'index': i}};
-    }
-  }
-  return null;
-};
-
-/**
- * Form array validator to check if all form groups in form array are valid.
- * If not, it will return the index of the first invalid form group.
- */
 
 @Component({
   moduleId: module.id,

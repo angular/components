@@ -25,6 +25,7 @@ import {
 import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '@angular/cdk/keyboard';
 import {CdkStepLabel} from './step-label';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {AbstractControl} from '@angular/forms';
 
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;
@@ -55,14 +56,13 @@ export class CdkStep {
   /** Template for step content. */
   @ViewChild(TemplateRef) content: TemplateRef<any>;
 
-  // TODO(jwshin): use disabled mixin when moved to cdk.
-  /** Whether step is disabled or not. */
+  /** The top level abstract control of the step. */
   @Input()
-  get disabled() { return this._disabled; }
-  set disabled(value: any) {
-    this._disabled = coerceBooleanProperty(value);
+  get stepControl() { return this._stepControl; }
+  set stepControl(control: AbstractControl) {
+    this._stepControl = control;
   }
-  private _disabled = false;
+  private _stepControl: AbstractControl;
 
   /** Whether user has seen the expanded step content or not . */
   interacted = false;
@@ -98,7 +98,10 @@ export class CdkStepper {
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
     this._steps.toArray()[this._selectedIndex].interacted = true;
-    if (this._selectedIndex != index && !this._steps.toArray()[index].disabled) {
+    for (let i = 0; i < index; i++) {
+      if (!this._steps.toArray()[i].stepControl.valid) { return; }
+    }
+    if (this._selectedIndex != index) {
       this._emitStepperSelectionEvent(index);
       this._focusStep(this._selectedIndex);
     }

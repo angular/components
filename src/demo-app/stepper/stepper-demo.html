@@ -1,7 +1,7 @@
 <h2>Linear Vertical Stepper Demo</h2>
 <form [formGroup]="formGroup">
   <md-vertical-stepper formArrayName="formArray">
-    <md-step formGroupName="0">
+    <md-step formGroupName="0" [stepControl]="formArray.get([0])">
       <ng-template mdStepLabel>Fill out your name</ng-template>
       <md-input-container>
         <input mdInput placeholder="First Name" formControlName="firstNameFormCtrl" required>
@@ -17,9 +17,7 @@
       </div>
     </md-step>
 
-    <md-step formGroupName="1"
-             [disabled]="formArray.hasError('invalid step') ?
-             formArray.getError('invalid step').index <= 1 : false">
+    <md-step formGroupName="1" [stepControl]="formArray.get([1])">
       <ng-template mdStepLabel>
         <div>Fill out your phone number</div>
       </ng-template>
@@ -33,9 +31,7 @@
       </div>
     </md-step>
 
-    <md-step
-        [disabled]="formArray.hasError('invalid step') ?
-        formArray.getError('invalid step').index <= 2 : false">
+    <md-step>
       <ng-template mdStepLabel>Confirm your information</ng-template>
       Everything seems correct.
       <div>
