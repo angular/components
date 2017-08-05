@@ -644,7 +644,7 @@ describe('MdInputContainer without forms', function () {
 
     // Call the focus handler directly to avoid flakyness where
     // browsers don't focus elements if the window is minimized.
-    input._onFocus();
+    input._focusChanged(true);
     fixture.detectChanges();
 
     expect(container.classList).toContain('mat-focused');
@@ -660,7 +660,7 @@ describe('MdInputContainer without forms', function () {
 
     // Call the focus handler directly to avoid flakyness where
     // browsers don't focus elements if the window is minimized.
-    input._onFocus();
+    input._focusChanged(true);
     fixture.detectChanges();
 
     expect(input.focused).toBe(false);

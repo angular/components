@@ -1,5 +1,6 @@
 @import '../core/style/variables';
 @import '../core/style/vendor-prefixes';
+@import '../core/a11y/a11y';
 
 
 // Min amount of space between start and end hint.
@@ -195,6 +196,9 @@ textarea.mat-input-element {
   height: $mat-input-underline-height;
   width: 100%;
 
+  // Note that we use a border because a background won't be rendered in high contrast mode.
+  border-bottom: solid $mat-input-underline-height currentColor;
+
   &.mat-disabled {
     background-position: 0;
     background-color: transparent;
@@ -203,7 +207,7 @@ textarea.mat-input-element {
   .mat-input-ripple {
     position: absolute;
     height: $mat-input-underline-height;
-    top: 0;
+    top: $mat-input-underline-height;
     left: 0;
     width: 100%;
     transform-origin: 50%;
@@ -221,6 +225,12 @@ textarea.mat-input-element {
       transform: scaleX(1);
       transition: transform 150ms linear,
       background-color $swift-ease-in-duration $swift-ease-in-timing-function;
+    }
+
+    @include cdk-high-contrast {
+      // Hide the ripple in high contrast mode, because it covers
+      // the bottom border, blending it in with the background.
+      display: none;
     }
   }
 }
