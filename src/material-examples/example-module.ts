@@ -440,7 +440,7 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
-  'table-basic': {
+    'table-basic': {
     title: 'Basic table',
     component: TableBasicExample,
     additionalFiles: null,
@@ -483,7 +483,7 @@ export const EXAMPLE_COMPONENTS = {
     selectorName: null
   },
   'tabs-template-label': {
-    title: 'Coming soon!',
+    title: 'Complex Example',
     component: TabsTemplateLabelExample,
     additionalFiles: null,
     selectorName: null
