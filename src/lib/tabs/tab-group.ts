@@ -23,7 +23,7 @@ import {
   AfterContentChecked,
   OnDestroy,
 } from '@angular/core';
-import {coerceBooleanProperty} from '../core';
+import {coerceBooleanProperty, HammerEvent} from '../core';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import {MdTab} from './tab';
@@ -184,7 +184,7 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
     }
   }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     this._subscribeToTabLabels();
 
     // Subscribe to changes in the amount of tabs, in order to be
@@ -195,7 +195,7 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this._tabsSubscription) {
       this._tabsSubscription.unsubscribe();
     }
@@ -213,7 +213,7 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
     this._isInitialized = true;
   }
 
-  _focusChanged(index: number) {
+  _focusChanged(index: number): void {
     this.focusChange.emit(this._createChangeEvent(index));
   }
 
@@ -232,7 +232,7 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
    * binding to be updated, we need to subscribe to changes in it and trigger change detection
    * manually.
    */
-  private _subscribeToTabLabels() {
+  private _subscribeToTabLabels(): void {
     if (this._tabLabelSubscription) {
       this._tabLabelSubscription.unsubscribe();
     }
@@ -274,5 +274,32 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
   _removeTabBodyWrapperHeight(): void {
     this._tabBodyWrapperHeight = this._tabBodyWrapper.nativeElement.clientHeight;
     this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height', '');
+  }
+
+  /** Finds the next tab in the stack for the given direction */
+  _findNextTabByIndex(index: number, direction: string): number {
+    const tabsArray = this._tabs.toArray();
+    const nextIdx = direction === 'right' ? index + 1 : index - 1;
+
+    if(nextIdx < tabsArray.length && nextIdx >= 0) {
+      const nextTab = tabsArray[nextIdx];
+      if(nextTab.disabled) {
+        return this._findNextTabByIndex(nextIdx, direction);
+      } else {
+        return nextIdx;
+      }
+    }
+
+    return index;
+  }
+
+  /** Body content was swiped left/right */
+  _bodyContentSwiped(event: HammerEvent): void {
+    if(this.selectedIndex === null) this.selectedIndex = 0;
+    if(this.selectedIndex !== 0 && event.type === 'swiperight') {
+      this.selectedIndex = this._findNextTabByIndex(this.selectedIndex, 'left');
+    } else if(this.selectedIndex < this._tabs.length && event.type === 'swipeleft') {
+      this.selectedIndex = this._findNextTabByIndex(this.selectedIndex, 'right');
+    }
   }
 }

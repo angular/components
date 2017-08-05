@@ -33,6 +33,7 @@
                [content]="tab.content"
                [position]="tab.position"
                [origin]="tab.origin"
+               (onSwipe)="_bodyContentSwiped($event)"
                (onCentered)="_removeTabBodyWrapperHeight()"
                (onCentering)="_setTabBodyWrapperHeight($event)">
   </md-tab-body>
