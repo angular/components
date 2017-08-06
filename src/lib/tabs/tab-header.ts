@@ -31,6 +31,7 @@ import {
   ENTER,
   Directionality,
   Direction,
+  HammerEvent,
 } from '../core';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdInkBar} from './ink-bar';
@@ -329,6 +330,13 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
   }
   get scrollDistance(): number { return this._scrollDistance; }
 
+  /** Handle swipe events scrolling the tabs */
+  _handleSwipe(event: HammerEvent): void {
+    const curDistance = this.scrollDistance || 0;
+    this.scrollDistance = curDistance - event.deltaX;
+    this._updateTabScrollPosition();
+  }
+
   /**
    * Moves the tab list in the 'before' or 'after' direction (towards the beginning of the list or
    * the end of the list, respectively). The distance to scroll is computed to be a third of the
@@ -435,4 +443,5 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
 
     this._inkBar.alignToElement(selectedLabelWrapper);
   }
+
 }

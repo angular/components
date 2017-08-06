@@ -58,6 +58,8 @@ export interface HammerManager {
 /** @docs-private */
 export interface HammerEvent {
   type: string;
+  deltaX: number;
+  deltaY: number;
   stopPropagation(): void;
   preventDefault(): void;
 }
