@@ -840,7 +840,7 @@ describe('MdInputContainer with forms', () => {
       fixture.componentInstance.formControl.markAsTouched();
       fixture.detectChanges();
 
-      let errorIds = fixture.debugElement.queryAll(By.css('.mat-input-error'))
+      let errorIds = fixture.debugElement.queryAll(By.css('.mat-error'))
           .map(el => el.nativeElement.getAttribute('id')).join(' ');
       describedBy = inputEl.getAttribute('aria-describedby');
 
