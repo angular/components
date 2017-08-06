@@ -517,7 +517,7 @@ describe('MdAutocomplete', () => {
 
     it('should disable input in view when disabled programmatically', () => {
       const inputUnderline =
-          fixture.debugElement.query(By.css('.mat-input-underline')).nativeElement;
+          fixture.debugElement.query(By.css('.mat-form-field-underline')).nativeElement;
 
       expect(input.disabled)
           .toBe(false, `Expected input to start out enabled in view.`);
@@ -1319,10 +1319,10 @@ describe('MdAutocomplete', () => {
         fixture.detectChanges();
 
         const input = fixture.nativeElement.querySelector('input');
-        const placeholder = fixture.nativeElement.querySelector('.mat-input-placeholder');
+        const placeholder = fixture.nativeElement.querySelector('.mat-form-field-placeholder');
 
         expect(input.value).toBe('California');
-        expect(placeholder.classList).not.toContain('mat-empty');
+        expect(placeholder.classList).not.toContain('mat-form-field-empty');
       }));
 
   });

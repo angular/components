@@ -596,7 +596,7 @@ describe('MdDatepicker', () => {
 
       it('should attach popup to input-container underline', () => {
         let attachToRef = testComponent.datepickerInput.getPopupConnectionElementRef();
-        expect(attachToRef.nativeElement.classList.contains('mat-input-underline'))
+        expect(attachToRef.nativeElement.classList.contains('mat-form-field-underline'))
             .toBe(true, 'popup should be attached to input-container underline');
       });
     });

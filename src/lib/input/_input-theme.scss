@@ -13,35 +13,33 @@
   $is-dark-theme: map-get($theme, is-dark);
 
   // Placeholder colors. Required is used for the `*` star shown in the placeholder.
-  $input-placeholder-color: mat-color($foreground, secondary-text);
-  $input-floating-placeholder-color: mat-color($primary);
-  $input-required-placeholder-color: mat-color($accent);
+  $form-field-placeholder-color: mat-color($foreground, secondary-text);
+  $form-field-floating-placeholder-color: mat-color($primary);
+  $form-field-required-placeholder-color: mat-color($accent);
 
   // Underline colors.
-  $input-underline-color: mat-color($foreground, divider, if($is-dark-theme, 0.7, 0.42));
-  $input-underline-color-accent: mat-color($accent);
-  $input-underline-color-warn: mat-color($warn);
-  $input-underline-focused-color: mat-color($primary);
+  $form-field-underline-color: mat-color($foreground, divider, if($is-dark-theme, 0.7, 0.42));
+  $form-field-underline-color-accent: mat-color($accent);
+  $form-field-underline-color-warn: mat-color($warn);
+  $form-field-underline-focused-color: mat-color($primary);
 
-  .mat-input-placeholder {
-    color: $input-placeholder-color;
+  .mat-form-field-placeholder {
+    color: $form-field-placeholder-color;
   }
 
   .mat-hint {
     color: mat-color($foreground, secondary-text);
   }
 
-  // :focus is applied to the input, but we apply mat-focused to the other elements
-  // that need to listen to it.
-  .mat-focused .mat-input-placeholder {
-    color: $input-floating-placeholder-color;
+  .mat-focused .mat-form-field-placeholder {
+    color: $form-field-floating-placeholder-color;
 
     &.mat-accent {
-      color: $input-underline-color-accent;
+      color: $form-field-underline-color-accent;
     }
 
     &.mat-warn {
-      color: $input-underline-color-warn;
+      color: $form-field-underline-color-warn;
     }
   }
 
@@ -49,60 +47,60 @@
     color: mat-color($foreground, secondary-text, if($is-dark-theme, 0.7, 0.42));
   }
 
-  // See _mat-input-placeholder-floating mixin in input-container.scss
-  input.mat-input-element:-webkit-autofill + .mat-input-placeholder,
-  .mat-focused .mat-input-placeholder.mat-float {
-    .mat-placeholder-required {
-      color: $input-required-placeholder-color;
+  // See _mat-form-field-placeholder-floating mixin in form-field.scss
+  input.mat-input-element:-webkit-autofill + .mat-form-field-placeholder,
+  .mat-focused .mat-form-field-placeholder.mat-form-field-float {
+    .mat-form-field-required-marker {
+      color: $form-field-required-placeholder-color;
     }
   }
 
-  .mat-input-underline {
-    background-color: $input-underline-color;
+  .mat-form-field-underline {
+    background-color: $form-field-underline-color;
 
     &.mat-disabled {
-      @include mat-control-disabled-underline($input-underline-color);
+      @include mat-control-disabled-underline($form-field-underline-color);
     }
   }
 
-  .mat-input-ripple {
-    background-color: $input-underline-focused-color;
+  .mat-form-field-ripple {
+    background-color: $form-field-underline-focused-color;
 
     &.mat-accent {
-      background-color: $input-underline-color-accent;
+      background-color: $form-field-underline-color-accent;
     }
 
     &.mat-warn {
-      background-color: $input-underline-color-warn;
+      background-color: $form-field-underline-color-warn;
     }
   }
 
-  // Styling for the error state of the input container. Note that while the same can be
+  // Styling for the error state of the form field. Note that while the same can be
   // achieved with the ng-* classes, we use this approach in order to ensure that the same
   // logic is used to style the error state and to show the error messages.
-  .mat-input-invalid {
-    .mat-input-placeholder {
-      color: $input-underline-color-warn;
+  .mat-form-field-invalid {
+    .mat-form-field-placeholder {
+      color: $form-field-underline-color-warn;
 
       &.mat-accent,
-      &.mat-float .mat-placeholder-required {
-        color: $input-underline-color-warn;
+      &.mat-form-field-float .mat-form-field-required-marker {
+        color: $form-field-underline-color-warn;
       }
     }
 
-    .mat-input-ripple {
-      background-color: $input-underline-color-warn;
+    .mat-form-field-ripple {
+      background-color: $form-field-underline-color-warn;
     }
   }
 
-  .mat-input-error {
-    color: $input-underline-color-warn;
+  .mat-error {
+    color: $form-field-underline-color-warn;
   }
 }
 
-// Applies a floating placeholder above the input itself.
-@mixin _mat-input-placeholder-floating($font-scale, $infix-padding, $infix-margin-top) {
-  // We use perspecitve to fix the text blurriness as described here:
+// Applies a floating placeholder above the form field control itself.
+@mixin _mat-form-field-placeholder-floating($font-scale, $infix-padding, $infix-margin-top) {
+  // We use perspective to fix the text blurriness as described here:
   // http://www.useragentman.com/blog/2014/05/04/fixing-typography-inside-of-2-d-css-transforms/
   // This results in a small jitter after the label floats on Firefox, which the
   // translateZ fixes.
@@ -132,36 +130,36 @@
   // The padding on the infix. Mocks show half of the text size, but seem to measure from the edge
   // of the text itself, not the edge of the line; therefore we subtract off the line spacing.
   $infix-padding: 0.5em - $line-spacing;
-  // The margin applied to the input-infix to reserve space for the floating label.
+  // The margin applied to the form-field-infix to reserve space for the floating label.
   $infix-margin-top: 1em * $line-height * $subscript-font-scale;
   // Font size to use for the label and subscript text.
   $subscript-font-size: $subscript-font-scale * 100%;
   // Font size to use for the for the prefix and suffix icons.
   $prefix-suffix-icon-font-size: $prefix-suffix-icon-font-scale * 100%;
-  // The space between the bottom of the input table and the subscript container. Mocks show half of
-  // the text size, but this margin is applied to an element with the subscript text font size, so
-  // we need to divide by the scale factor to make it half of the original text size. We again need
-  // to subtract off the line spacing since the mocks measure to the edge of the text, not the  edge
-  // of the line.
+  // The space between the bottom of the .mat-form-field-flex area and the subscript wrapper.
+  // Mocks show half of the text size, but this margin is applied to an element with the subscript
+  // text font size, so we need to divide by the scale factor to make it half of the original text
+  // size. We again need to subtract off the line spacing since the mocks measure to the edge of the
+  // text, not the  edge of the line.
   $subscript-margin-top: 0.5em / $subscript-font-scale - ($line-spacing * 2);
-  // The padding applied to the input-wrapper to reserve space for the subscript, since it's
+  // The padding applied to the form-field-wrapper to reserve space for the subscript, since it's
   // absolutely positioned. This is a combination of the subscript's margin and line-height, but we
   // need to multiply by the subscript font scale factor since the wrapper has a larger font size.
   $wrapper-padding-bottom: ($subscript-margin-top + $line-height) * $subscript-font-scale;
 
-  .mat-input-container {
+  .mat-form-field {
     font-family: mat-font-family($config);
     font-size: inherit;
     font-weight: mat-font-weight($config, input);
     line-height: mat-line-height($config, input);
   }
 
-  .mat-input-wrapper {
+  .mat-form-field-wrapper {
     padding-bottom: $wrapper-padding-bottom;
   }
 
-  .mat-input-prefix,
-  .mat-input-suffix {
+  .mat-form-field-prefix,
+  .mat-form-field-suffix {
     // Allow icons in a prefix or suffix to adapt to the correct size.
     .mat-icon {
       font-size: $prefix-suffix-icon-font-size;
@@ -180,15 +178,15 @@
     }
   }
 
-  .mat-input-infix {
+  .mat-form-field-infix {
     padding: $infix-padding 0;
     // Throws off the baseline if we do it as a real margin, so we do it as a border instead.
     border-top: $infix-margin-top solid transparent;
   }
 
   .mat-input-element {
-    &:-webkit-autofill + .mat-input-placeholder-wrapper .mat-float {
-      @include _mat-input-placeholder-floating($subscript-font-scale,
+    &:-webkit-autofill + .mat-form-field-placeholder-wrapper .mat-form-field-float {
+      @include _mat-form-field-placeholder-floating($subscript-font-scale,
           $infix-padding, $infix-margin-top);
     }
   }
@@ -199,28 +197,29 @@
     margin-top: -$line-spacing * 1em;
   }
 
-  .mat-input-placeholder-wrapper {
+  .mat-form-field-placeholder-wrapper {
     top: -$infix-margin-top;
     padding-top: $infix-margin-top;
   }
 
-  .mat-input-placeholder {
+  .mat-form-field-placeholder {
     top: $infix-margin-top + $infix-padding;
 
-    // Show the placeholder above the input when it's not empty, or focused.
-    &.mat-float:not(.mat-empty), .mat-focused &.mat-float {
-      @include _mat-input-placeholder-floating($subscript-font-scale,
+    // Show the placeholder above the control when it's not empty, or focused.
+    &.mat-form-field-float:not(.mat-form-field-empty),
+    .mat-focused &.mat-form-field-float {
+      @include _mat-form-field-placeholder-floating($subscript-font-scale,
           $infix-padding, $infix-margin-top);
     }
   }
 
-  .mat-input-underline {
+  .mat-form-field-underline {
     // We want the underline to start at the end of the content box, not the padding box,
     // so we move it up by the padding amount.
     bottom: $wrapper-padding-bottom;
   }
 
-  .mat-input-subscript-wrapper {
+  .mat-form-field-subscript-wrapper {
     font-size: $subscript-font-size;
     margin-top: $subscript-margin-top;
 

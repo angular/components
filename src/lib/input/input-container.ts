@@ -81,7 +81,7 @@ let nextUniqueId = 0;
 export class MdPlaceholder {}
 
 
-/** Hint text to be shown underneath the input. */
+/** Hint text to be shown underneath the form field control. */
 @Directive({
   selector: 'md-hint, mat-hint',
   host: {
@@ -103,7 +103,7 @@ export class MdHint {
 @Directive({
   selector: 'md-error, mat-error',
   host: {
-    'class': 'mat-input-error',
+    'class': 'mat-error',
     'role': 'alert',
     '[attr.id]': 'id',
   }
@@ -127,18 +127,18 @@ export class MdPrefix {}
 export class MdSuffix {}
 
 
-/** An interface which allows a control to work inside of a md-form-field. */
+/** An interface which allows a control to work inside of a `MdFormField`. */
 export abstract class MdFormFieldControl {
   /**
-   * Stream that emits whenever the state of the control changes such that the md-form-field needs
-   * to be change detected.
+   * Stream that emits whenever the state of the control changes such that the parent `MdFormField`
+   * needs to run change detection.
    */
   stateChanges: Observable<void>;
 
   /** Gets the element ID for this control. */
   abstract getId(): string;
 
-  /** Fets the placeholder for this control. */
+  /** Gets the placeholder for this control. */
   abstract getPlaceholder(): string;
 
   /** Gets the NgControl for this control. */
@@ -196,13 +196,9 @@ export class MdInput implements MdFormFieldControl, OnChanges, OnDestroy, DoChec
   private _errorOptions: ErrorOptions;
   private _previousNativeValue = this.value;
   private _focused = false;
+  private _isErrorState = false;
 
-  /** Whether the input is in an error state. */
-  _isErrorState = false;
-
-  /** Whether the element is focused or not. */
-
-  /** Sets the aria-describedby attribute on the input for improved a11y. */
+  /** The aria-describedby attribute on the input for improved a11y. */
   _ariaDescribedby: string;
 
   /**
@@ -337,9 +333,9 @@ export class MdInput implements MdFormFieldControl, OnChanges, OnDestroy, DoChec
   /** Re-evaluates the error state. This is only relevant with @angular/forms. */
   private _updateErrorState() {
     const oldState = this._isErrorState;
-    const control = this._ngControl;
+    const ngControl = this._ngControl;
     const parent = this._parentFormGroup || this._parentForm;
-    const newState = control && this.errorStateMatcher(control.control as FormControl, parent);
+    const newState = ngControl && this.errorStateMatcher(ngControl.control as FormControl, parent);
 
     if (newState !== oldState) {
       this._isErrorState = newState;
@@ -426,9 +422,7 @@ export class MdInput implements MdFormFieldControl, OnChanges, OnDestroy, DoChec
 }
 
 
-/**
- * Container for text inputs that applies Material Design styling and behavior.
- */
+/** Container for form controls that applies Material Design styling and behavior. */
 @Component({
   moduleId: module.id,
   selector: 'md-input-container, mat-input-container, md-form-field, mat-form-field',
@@ -446,8 +440,9 @@ export class MdInput implements MdFormFieldControl, OnChanges, OnDestroy, DoChec
   host: {
     // Remove align attribute to prevent it from interfering with layout.
     '[attr.align]': 'null',
-    'class': 'mat-input-container',
+    'class': 'mat-input-container mat-form-field',
     '[class.mat-input-invalid]': '_control.isErrorState()',
+    '[class.mat-form-field-invalid]': '_control.isErrorState()',
     '[class.mat-focused]': '_control.isFocused()',
     '[class.ng-untouched]': '_shouldForward("untouched")',
     '[class.ng-touched]': '_shouldForward("touched")',
@@ -588,8 +583,8 @@ export class MdFormField implements AfterViewInit, AfterContentInit, AfterConten
   }
 
   /**
-   * Ensure that there is only one placeholder (either `input` attribute or child element with the
-   * `md-placeholder` attribute.
+   * Ensure that there is only one placeholder (either `placeholder` attribute on the child control
+   * or child element with the `md-placeholder` directive).
    */
   private _validatePlaceholders() {
     if (this._control.getPlaceholder() && this._placeholderChild) {
@@ -597,9 +592,7 @@ export class MdFormField implements AfterViewInit, AfterContentInit, AfterConten
     }
   }
 
-  /**
-   * Does any extra processing that is required when handling the hints.
-   */
+  /** Does any extra processing that is required when handling the hints. */
   private _processHints() {
     this._validateHints();
     this._syncDescribedByIds();
@@ -660,9 +653,7 @@ export class MdFormField implements AfterViewInit, AfterContentInit, AfterConten
     }
   }
 
-  /**
-   * Throws an error if the container's input child was removed.
-   */
+  /** Throws an error if the form field's control is missing. */
   protected _validateControlChild() {
     if (!this._control) {
       throw getMdFormFieldMissingControlError();
