@@ -33,4 +33,22 @@
     </md-menu>
   </section>
 
+  <section>
+    <h2>Menu with links</h2>
+    <button md-icon-button [mdMenuTriggerFor]="menu2">
+      <md-icon>more_vert</md-icon>
+    </button>
+    <md-menu #menu2="mdMenu">
+      <a href="http:/.google.com" md-menu-item>
+        Google
+      </a>
+      <a href="http://angular.io" md-menu-item>
+        Angular
+      </a>
+      <a href="http://material.angular.io" md-menu-item>
+        Material
+      </a>
+    </md-menu>
+  </section>
+
 </div>
