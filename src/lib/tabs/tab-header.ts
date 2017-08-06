@@ -24,6 +24,7 @@ import {
   Renderer2,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  HostListener
 } from '@angular/core';
 import {
   RIGHT_ARROW,
@@ -387,6 +388,7 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
    * This is an expensive call that forces a layout reflow to compute box and scroll metrics and
    * should be called sparingly.
    */
+  @HostListener('window:resize')
   _checkPaginationEnabled() {
     this._showPaginationControls =
         this._tabList.nativeElement.scrollWidth > this._elementRef.nativeElement.offsetWidth;
