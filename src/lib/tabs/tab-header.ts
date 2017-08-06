@@ -80,6 +80,7 @@ export const _MdTabHeaderMixinBase = mixinDisableRipple(MdTabHeaderBase);
     'class': 'mat-tab-header',
     '[class.mat-tab-header-pagination-controls-enabled]': '_showPaginationControls',
     '[class.mat-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
+    '(window:resize)': "_checkPaginationEnabled()"
   }
 })
 export class MdTabHeader extends _MdTabHeaderMixinBase
@@ -388,7 +389,6 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
    * This is an expensive call that forces a layout reflow to compute box and scroll metrics and
    * should be called sparingly.
    */
-  @HostListener('window:resize')
   _checkPaginationEnabled() {
     this._showPaginationControls =
         this._tabList.nativeElement.scrollWidth > this._elementRef.nativeElement.offsetWidth;
