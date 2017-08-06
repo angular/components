@@ -8,10 +8,10 @@
 
 import {NgModule} from '@angular/core';
 import {
-  MdErrorDirective,
+  MdError,
   MdHint,
-  MdInputContainer,
-  MdInputDirective,
+  MdFormField,
+  MdInput,
   MdPlaceholder,
   MdPrefix,
   MdSuffix
@@ -23,10 +23,10 @@ import {PlatformModule} from '../core/platform/index';
 
 @NgModule({
   declarations: [
-    MdErrorDirective,
+    MdError,
     MdHint,
-    MdInputContainer,
-    MdInputDirective,
+    MdFormField,
+    MdInput,
     MdPlaceholder,
     MdPrefix,
     MdSuffix,
@@ -37,10 +37,10 @@ import {PlatformModule} from '../core/platform/index';
     PlatformModule,
   ],
   exports: [
-    MdErrorDirective,
+    MdError,
     MdHint,
-    MdInputContainer,
-    MdInputDirective,
+    MdFormField,
+    MdInput,
     MdPlaceholder,
     MdPrefix,
     MdSuffix,

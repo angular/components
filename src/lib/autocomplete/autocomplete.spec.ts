@@ -23,7 +23,7 @@ import {Directionality, Direction} from '../core/bidi/index';
 import {Subscription} from 'rxjs/Subscription';
 import {ENTER, DOWN_ARROW, SPACE, UP_ARROW, ESCAPE} from '../core/keyboard/keycodes';
 import {MdOption} from '../core/option/option';
-import {MdInputContainer} from '../input/input-container';
+import {MdFormField} from '../input/input-container';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {createKeyboardEvent, dispatchFakeEvent, typeInElement} from '@angular/cdk/testing';
@@ -1417,7 +1417,7 @@ class SimpleAutocomplete implements OnDestroy {
 
   @ViewChild(MdAutocompleteTrigger) trigger: MdAutocompleteTrigger;
   @ViewChild(MdAutocomplete) panel: MdAutocomplete;
-  @ViewChild(MdInputContainer) inputContainer: MdInputContainer;
+  @ViewChild(MdFormField) inputContainer: MdFormField;
   @ViewChildren(MdOption) options: QueryList<MdOption>;
 
   states = [

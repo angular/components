@@ -7,22 +7,22 @@
  */
 
 /** @docs-private */
-export function getMdInputContainerPlaceholderConflictError(): Error {
+export function getMdFormFieldPlaceholderConflictError(): Error {
   return Error('Placeholder attribute and child element were both specified.');
 }
 
 /** @docs-private */
-export function getMdInputContainerUnsupportedTypeError(type: string): Error {
-  return Error(`Input type "${type}" isn't supported by md-input-container.`);
+export function getMdInputUnsupportedTypeError(type: string): Error {
+  return Error(`Input type "${type}" isn't supported by mdInput.`);
 }
 
 /** @docs-private */
-export function getMdInputContainerDuplicatedHintError(align: string): Error {
+export function getMdFormFieldDuplicatedHintError(align: string): Error {
   return Error(`A hint was already declared for 'align="${align}"'.`);
 }
 
 /** @docs-private */
-export function getMdInputContainerMissingMdInputError(): Error {
-  return Error('md-input-container must contain an mdInput directive. ' +
-                   'Did you forget to add mdInput to the native input or textarea element?');
+export function getMdFormFieldMissingControlError(): Error {
+  return Error('md-form-field must contain a MdFormFieldControl. ' +
+               'Did you forget to add mdInput to the native input or textarea element?');
 }

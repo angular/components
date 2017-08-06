@@ -5,22 +5,22 @@
     </div>
 
     <div class="mat-input-infix">
-      <ng-content selector="input, textarea"></ng-content>
+      <ng-content></ng-content>
 
       <span class="mat-input-placeholder-wrapper">
         <label class="mat-input-placeholder"
-               [attr.for]="_textFieldControl.getId()"
-               [class.mat-empty]="_textFieldControl.isEmpty() && !_shouldAlwaysFloat"
+               [attr.for]="_control.getId()"
+               [class.mat-empty]="_control.isEmpty() && !_shouldAlwaysFloat"
                [class.mat-float]="_canPlaceholderFloat"
                [class.mat-accent]="color == 'accent'"
                [class.mat-warn]="color == 'warn'"
                *ngIf="_hasPlaceholder()">
           <ng-content select="md-placeholder, mat-placeholder"></ng-content>
-          {{_textFieldControl.getPlaceholder()}}
+          {{_control.getPlaceholder()}}
           <span
             class="mat-placeholder-required"
             aria-hidden="true"
-            *ngIf="!hideRequiredMarker && _textFieldControl.isRequired()">*</span>
+            *ngIf="!hideRequiredMarker && _control.isRequired()">*</span>
         </label>
       </span>
     </div>
@@ -31,7 +31,7 @@
   </div>
 
   <div class="mat-input-underline" #underline
-       [class.mat-disabled]="_textFieldControl.isDisabled()">
+       [class.mat-disabled]="_control.isDisabled()">
     <span class="mat-input-ripple"
           [class.mat-accent]="color == 'accent'"
           [class.mat-warn]="color == 'warn'"></span>

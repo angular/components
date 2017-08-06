@@ -34,10 +34,10 @@ import {coerceBooleanProperty, Platform} from '../core';
 import {FormControl, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
 import {getSupportedInputTypes} from '../core/platform/features';
 import {
-  getMdInputContainerDuplicatedHintError,
-  getMdInputContainerMissingMdInputError,
-  getMdInputContainerPlaceholderConflictError,
-  getMdInputContainerUnsupportedTypeError
+  getMdFormFieldDuplicatedHintError,
+  getMdFormFieldMissingControlError,
+  getMdFormFieldPlaceholderConflictError,
+  getMdInputUnsupportedTypeError
 } from './input-container-errors';
 import {
   FloatPlaceholderType,
@@ -54,7 +54,7 @@ import {Subject} from 'rxjs/Subject';
 import {startWith} from '@angular/cdk/rxjs';
 import {Observable} from 'rxjs/Observable';
 
-// Invalid input type. Using one of these will throw an MdInputContainerUnsupportedTypeError.
+// Invalid input type. Using one of these will throw an MdInputUnsupportedTypeError.
 const MD_INPUT_INVALID_TYPES = [
   'button',
   'checkbox',
@@ -94,12 +94,12 @@ export class MdHint {
   /** Whether to align the hint label at the start or end of the line. */
   @Input() align: 'start' | 'end' = 'start';
 
-  /** Unique ID for the hint. Used for the aria-describedby on the input. */
-  @Input() id: string = `md-input-hint-${nextUniqueId++}`;
+  /** Unique ID for the hint. Used for the aria-describedby on the form field control. */
+  @Input() id: string = `md-hint-${nextUniqueId++}`;
 }
 
 
-/** Single error message to be shown underneath the input. */
+/** Single error message to be shown underneath the form field. */
 @Directive({
   selector: 'md-error, mat-error',
   host: {
@@ -108,34 +108,37 @@ export class MdHint {
     '[attr.id]': 'id',
   }
 })
-export class MdErrorDirective {
-  @Input() id: string = `md-input-error-${nextUniqueId++}`;
+export class MdError {
+  @Input() id: string = `md-error-${nextUniqueId++}`;
 }
 
 
-/** Prefix to be placed the the front of the input. */
+/** Prefix to be placed the the front of the form field. */
 @Directive({
-  selector: '[mdPrefix], [matPrefix]'
+  selector: '[mdPrefix], [matPrefix]',
 })
 export class MdPrefix {}
 
 
-/** Suffix to be placed at the end of the input. */
+/** Suffix to be placed at the end of the form field. */
 @Directive({
-  selector: '[mdSuffix], [matSuffix]'
+  selector: '[mdSuffix], [matSuffix]',
 })
 export class MdSuffix {}
 
 
-/** An interface which allows a control to work inside of a md-text-field. */
-export abstract class MdTextFieldControl {
-  /** Stream that emits whenever the state of the control changes. */
+/** An interface which allows a control to work inside of a md-form-field. */
+export abstract class MdFormFieldControl {
+  /**
+   * Stream that emits whenever the state of the control changes such that the md-form-field needs
+   * to be change detected.
+   */
   stateChanges: Observable<void>;
 
   /** Gets the element ID for this control. */
   abstract getId(): string;
 
-  /** Fets the placeholder for this contorl. */
+  /** Fets the placeholder for this control. */
   abstract getPlaceholder(): string;
 
   /** Gets the NgControl for this control. */
@@ -164,7 +167,7 @@ export abstract class MdTextFieldControl {
 }
 
 
-/** Marker for the input element that `MdInputContainer` is wrapping. */
+/** Directive that allows a native input to work inside a `MdFormField`. */
 @Directive({
   selector: `input[mdInput], textarea[mdInput], input[matInput], textarea[matInput]`,
   host: {
@@ -181,9 +184,9 @@ export abstract class MdTextFieldControl {
     '(focus)': '_focusChanged(true)',
     '(input)': '_onInput()',
   },
-  providers: [{provide: MdTextFieldControl, useExisting: MdInputDirective}],
+  providers: [{provide: MdFormFieldControl, useExisting: MdInput}],
 })
-export class MdInputDirective implements MdTextFieldControl, OnChanges, OnDestroy, DoCheck {
+export class MdInput implements MdFormFieldControl, OnChanges, OnDestroy, DoCheck {
   /** Variables used as cache for getters and setters. */
   private _type = 'text';
   private _disabled = false;
@@ -203,8 +206,8 @@ export class MdInputDirective implements MdTextFieldControl, OnChanges, OnDestro
   _ariaDescribedby: string;
 
   /**
-   * Stream that emits whenever the state of the input changes. This allows for other components
-   * (mostly `md-input-container`) that depend on the properties of `mdInput` to update their view.
+   * Stream that emits whenever the state of the input changes such that the wrapping `MdFormField`
+   * needs to run change detection.
    */
   stateChanges = new Subject<void>();
 
@@ -313,11 +316,6 @@ export class MdInputDirective implements MdTextFieldControl, OnChanges, OnDestro
     }
   }
 
-  /** Focuses the input element. */
-  focus() {
-    this._elementRef.nativeElement.focus();
-  }
-
   /** Callback for the cases where the focused state of the input changes. */
   _focusChanged(isFocused: boolean) {
     if (isFocused !== this._focused) {
@@ -362,11 +360,11 @@ export class MdInputDirective implements MdTextFieldControl, OnChanges, OnDestro
   /** Make sure the input is a supported type. */
   private _validateType() {
     if (MD_INPUT_INVALID_TYPES.indexOf(this._type) > -1) {
-      throw getMdInputContainerUnsupportedTypeError(this._type);
+      throw getMdInputUnsupportedTypeError(this._type);
     }
   }
 
-  /** Checks whether the input type isn't one of the types that are never empty. */
+  /** Checks whether the input type is one of the types that are never empty. */
   private _isNeverEmpty() {
     return this._neverEmptyInputTypes.indexOf(this._type) > -1;
   }
@@ -389,19 +387,19 @@ export class MdInputDirective implements MdTextFieldControl, OnChanges, OnDestro
     return nodeName ? nodeName.toLowerCase() === 'textarea' : false;
   }
 
-  // Implemented as part of MdTextFieldControl.
+  // Implemented as part of MdFormFieldControl.
   getId(): string { return this.id; }
 
-  // Implemented as part of MdTextFieldControl.
+  // Implemented as part of MdFormFieldControl.
   getPlaceholder(): string { return this.placeholder; }
 
-  // Implemented as part of MdTextFieldControl.
+  // Implemented as part of MdFormFieldControl.
   getNgControl(): NgControl | null { return this._ngControl; }
 
-  // Implemented as part of MdTextFieldControl.
+  // Implemented as part of MdFormFieldControl.
   isFocused(): boolean { return this._focused; }
 
-  // Implemented as part of MdTextFieldControl.
+  // Implemented as part of MdFormFieldControl.
   isEmpty(): boolean {
     return !this._isNeverEmpty() &&
         (this.value == null || this.value === '') &&
@@ -411,17 +409,20 @@ export class MdInputDirective implements MdTextFieldControl, OnChanges, OnDestro
         !this._isBadInput();
   }
 
-  // Implemented as part of MdTextFieldControl.
+  // Implemented as part of MdFormFieldControl.
   isRequired(): boolean { return this.required; }
 
-  // Implemented as part of MdTextFieldControl.
+  // Implemented as part of MdFormFieldControl.
   isDisabled(): boolean { return this.disabled; }
 
-  // Implemented as part of MdTextFieldControl.
+  // Implemented as part of MdFormFieldControl.
   isErrorState(): boolean { return this._isErrorState; }
 
-  // Implemented as part of MdTextFieldControl.
+  // Implemented as part of MdFormFieldControl.
   setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
+
+  // Implemented as part of MdFormFieldControl.
+  focus() { this._elementRef.nativeElement.focus(); }
 }
 
 
@@ -430,7 +431,7 @@ export class MdInputDirective implements MdTextFieldControl, OnChanges, OnDestro
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-input-container, mat-input-container',
+  selector: 'md-input-container, mat-input-container, md-form-field, mat-form-field',
   templateUrl: 'input-container.html',
   styleUrls: ['input-container.css'],
   animations: [
@@ -438,16 +439,16 @@ export class MdInputDirective implements MdTextFieldControl, OnChanges, OnDestro
       state('enter', style({ opacity: 1, transform: 'translateY(0%)' })),
       transition('void => enter', [
         style({ opacity: 0, transform: 'translateY(-100%)' }),
-        animate('300ms cubic-bezier(0.55, 0, 0.55, 0.2)')
-      ])
-    ])
+        animate('300ms cubic-bezier(0.55, 0, 0.55, 0.2)'),
+      ]),
+    ]),
   ],
   host: {
     // Remove align attribute to prevent it from interfering with layout.
     '[attr.align]': 'null',
     'class': 'mat-input-container',
-    '[class.mat-input-invalid]': '_textFieldControl.isErrorState()',
-    '[class.mat-focused]': '_textFieldControl.isFocused()',
+    '[class.mat-input-invalid]': '_control.isErrorState()',
+    '[class.mat-focused]': '_control.isFocused()',
     '[class.ng-untouched]': '_shouldForward("untouched")',
     '[class.ng-touched]': '_shouldForward("touched")',
     '[class.ng-pristine]': '_shouldForward("pristine")',
@@ -455,16 +456,16 @@ export class MdInputDirective implements MdTextFieldControl, OnChanges, OnDestro
     '[class.ng-valid]': '_shouldForward("valid")',
     '[class.ng-invalid]': '_shouldForward("invalid")',
     '[class.ng-pending]': '_shouldForward("pending")',
-    '(click)': '_focusInput()',
+    '(click)': '_control.focus()',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterContentChecked {
+export class MdFormField implements AfterViewInit, AfterContentInit, AfterContentChecked {
   private _placeholderOptions: PlaceholderOptions;
 
-  /** Color of the input divider, based on the theme. */
+  /** Color of the form field underline, based on the theme. */
   @Input() color: 'primary' | 'accent' | 'warn' = 'primary';
 
   /** @deprecated Use `color` instead. */
@@ -489,7 +490,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   /** State of the md-hint and md-error animations. */
   _subscriptAnimationState: string = '';
 
-  /** Text for the input hint. */
+  /** Text for the form field hint. */
   @Input()
   get hintLabel() { return this._hintLabel; }
   set hintLabel(value: string) {
@@ -499,7 +500,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   private _hintLabel = '';
 
   // Unique id for the hint label.
-  _hintLabelId: string = `md-input-hint-${nextUniqueId++}`;
+  _hintLabelId: string = `md-hint-${nextUniqueId++}`;
 
   /** Whether the placeholder should always float, never float or float as the user types. */
   @Input()
@@ -512,35 +513,34 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   }
   private _floatPlaceholder: FloatPlaceholderType;
 
-  /** Reference to the input's underline element. */
+  /** Reference to the form field's underline element. */
   @ViewChild('underline') underlineRef: ElementRef;
   @ViewChild('connectionContainer') _connectionContainerRef: ElementRef;
-  @ContentChild(MdTextFieldControl) _textFieldControl: MdTextFieldControl;
+  @ContentChild(MdFormFieldControl) _control: MdFormFieldControl;
   @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
-  @ContentChildren(MdErrorDirective) _errorChildren: QueryList<MdErrorDirective>;
+  @ContentChildren(MdError) _errorChildren: QueryList<MdError>;
   @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;
   @ContentChildren(MdPrefix) _prefixChildren: QueryList<MdPrefix>;
   @ContentChildren(MdSuffix) _suffixChildren: QueryList<MdSuffix>;
 
   constructor(
-    public _elementRef: ElementRef,
-    private _changeDetectorRef: ChangeDetectorRef,
+    public _elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef,
     @Optional() @Inject(MD_PLACEHOLDER_GLOBAL_OPTIONS) placeholderOptions: PlaceholderOptions) {
       this._placeholderOptions = placeholderOptions ? placeholderOptions : {};
       this.floatPlaceholder = this._placeholderOptions.float || 'auto';
     }
 
   ngAfterContentInit() {
-    this._validateInputChild();
+    this._validateControlChild();
 
-    // Subscribe to changes in the child input state in order to update the container UI.
-    startWith.call(this._textFieldControl.stateChanges, null).subscribe(() => {
+    // Subscribe to changes in the child control state in order to update the form field UI.
+    startWith.call(this._control.stateChanges, null).subscribe(() => {
       this._validatePlaceholders();
-      this._syncAriaDescribedby();
+      this._syncDescribedByIds();
       this._changeDetectorRef.markForCheck();
     });
 
-    let ngControl = this._textFieldControl.getNgControl();
+    let ngControl = this._control.getNgControl();
     if (ngControl && ngControl.valueChanges) {
       ngControl.valueChanges.subscribe(() => {
         this._changeDetectorRef.markForCheck();
@@ -555,13 +555,13 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
 
     // Update the aria-described by when the number of errors changes.
     startWith.call(this._errorChildren.changes, null).subscribe(() => {
-      this._syncAriaDescribedby();
+      this._syncDescribedByIds();
       this._changeDetectorRef.markForCheck();
     });
   }
 
   ngAfterContentChecked() {
-    this._validateInputChild();
+    this._validateControlChild();
   }
 
   ngAfterViewInit() {
@@ -572,24 +572,19 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
 
   /** Determines whether a class from the NgControl should be forwarded to the host element. */
   _shouldForward(prop: string): boolean {
-    let ngControl = this._textFieldControl ? this._textFieldControl.getNgControl : null;
+    let ngControl = this._control ? this._control.getNgControl : null;
     return ngControl && (ngControl as any)[prop];
   }
 
-  /** Whether the input has a placeholder. */
+  /** Whether the form field has a placeholder. */
   _hasPlaceholder() {
-    return !!(this._textFieldControl.getPlaceholder() || this._placeholderChild);
-  }
-
-  /** Focuses the underlying input. */
-  _focusInput() {
-    this._textFieldControl.focus();
+    return !!(this._control.getPlaceholder() || this._placeholderChild);
   }
 
   /** Determines whether to display hints or errors. */
   _getDisplayedMessages(): 'error' | 'hint' {
     return (this._errorChildren && this._errorChildren.length > 0 &&
-            this._textFieldControl.isErrorState()) ? 'error' : 'hint';
+            this._control.isErrorState()) ? 'error' : 'hint';
   }
 
   /**
@@ -597,8 +592,8 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
    * `md-placeholder` attribute.
    */
   private _validatePlaceholders() {
-    if (this._textFieldControl.getPlaceholder() && this._placeholderChild) {
-      throw getMdInputContainerPlaceholderConflictError();
+    if (this._control.getPlaceholder() && this._placeholderChild) {
+      throw getMdFormFieldPlaceholderConflictError();
     }
   }
 
@@ -607,7 +602,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
    */
   private _processHints() {
     this._validateHints();
-    this._syncAriaDescribedby();
+    this._syncDescribedByIds();
   }
 
   /**
@@ -621,12 +616,12 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
       this._hintChildren.forEach((hint: MdHint) => {
         if (hint.align == 'start') {
           if (startHint || this.hintLabel) {
-            throw getMdInputContainerDuplicatedHintError('start');
+            throw getMdFormFieldDuplicatedHintError('start');
           }
           startHint = hint;
         } else if (hint.align == 'end') {
           if (endHint) {
-            throw getMdInputContainerDuplicatedHintError('end');
+            throw getMdFormFieldDuplicatedHintError('end');
           }
           endHint = hint;
         }
@@ -635,11 +630,11 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   }
 
   /**
-   * Sets the child input's `aria-describedby` to a space-separated list of the ids
-   * of the currently-specified hints, as well as a generated id for the hint label.
+   * Sets the list of element IDs that describe the child control. This allows the control to update
+   * its `aria-describedby` attribute accordingly.
    */
-  private _syncAriaDescribedby() {
-    if (this._textFieldControl) {
+  private _syncDescribedByIds() {
+    if (this._control) {
       let ids: string[] = [];
 
       if (this._getDisplayedMessages() === 'hint') {
@@ -661,16 +656,16 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
         ids = this._errorChildren.map(mdError => mdError.id);
       }
 
-      this._textFieldControl.setDescribedByIds(ids);
+      this._control.setDescribedByIds(ids);
     }
   }
 
   /**
    * Throws an error if the container's input child was removed.
    */
-  protected _validateInputChild() {
-    if (!this._textFieldControl) {
-      throw getMdInputContainerMissingMdInputError();
+  protected _validateControlChild() {
+    if (!this._control) {
+      throw getMdFormFieldMissingControlError();
     }
   }
 }

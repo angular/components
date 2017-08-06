@@ -40,7 +40,7 @@ import {Observable} from 'rxjs/Observable';
 import {MdOptionSelectionChange, MdOption} from '../core/option/option';
 import {ENTER, UP_ARROW, DOWN_ARROW, ESCAPE} from '../core/keyboard/keycodes';
 import {Directionality} from '../core/bidi/index';
-import {MdInputContainer, MdInputDirective} from '../input/input-container';
+import {MdFormField, MdInput} from '../input/input-container';
 import {Subscription} from 'rxjs/Subscription';
 import {merge} from 'rxjs/observable/merge';
 import {fromEvent} from 'rxjs/observable/fromEvent';
@@ -153,7 +153,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
               private _changeDetectorRef: ChangeDetectorRef,
               @Inject(MD_AUTOCOMPLETE_SCROLL_STRATEGY) private _scrollStrategy,
               @Optional() private _dir: Directionality,
-              @Optional() @Host() private _inputContainer: MdInputContainer,
+              @Optional() @Host() private _inputContainer: MdFormField,
               @Optional() @Inject(DOCUMENT) private _document: any) {}
 
   ngOnDestroy() {
@@ -411,8 +411,8 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     // If it's used in a Material container, we should set it through
     // the property so it can go through the change detection.
     if (this._inputContainer &&
-        this._inputContainer._textFieldControl instanceof MdInputDirective) {
-      this._inputContainer._textFieldControl.value = inputValue;
+        this._inputContainer._control instanceof MdInput) {
+      this._inputContainer._control.value = inputValue;
     } else {
       this._element.nativeElement.value = inputValue;
     }
