@@ -13,7 +13,7 @@ import {MdStepper} from './stepper';
   moduleId: module.id,
   selector: 'md-vertical-stepper, mat-vertical-stepper',
   templateUrl: 'stepper-vertical.html',
-  styleUrls: ['stepper.scss'],
+  styleUrls: ['stepper.css'],
   inputs: ['selectedIndex'],
   host: {
     'class': 'mat-stepper-vertical',
