@@ -13,7 +13,7 @@ import {MdStepper} from './stepper';
   moduleId: module.id,
   selector: 'md-horizontal-stepper, mat-horizontal-stepper',
   templateUrl: 'stepper-horizontal.html',
-  styleUrls: ['stepper.scss'],
+  styleUrls: ['stepper.css'],
   inputs: ['selectedIndex'],
   host: {
     'class': 'mat-stepper-horizontal',

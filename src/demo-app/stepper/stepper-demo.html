@@ -1,3 +1,113 @@
+<h2>Vertical Stepper Demo</h2>
+<md-vertical-stepper>
+  <md-step>
+    <ng-template mdStepLabel>Fill out your name</ng-template>
+    <md-input-container>
+      <input mdInput placeholder="First Name">
+      <md-error>This field is required</md-error>
+    </md-input-container>
+
+    <md-input-container>
+      <input mdInput placeholder="Last Name">
+      <md-error>This field is required</md-error>
+    </md-input-container>
+    <div>
+      <button md-button mdStepperNext type="button">Next</button>
+    </div>
+  </md-step>
+
+  <md-step>
+    <ng-template mdStepLabel>
+      <div>Fill out your phone number</div>
+    </ng-template>
+    <md-input-container>
+      <input mdInput placeholder="Phone number">
+      <md-error>This field is required</md-error>
+    </md-input-container>
+    <div>
+      <button md-button mdStepperPrevious type="button">Back</button>
+      <button md-button mdStepperNext type="button">Next</button>
+    </div>
+  </md-step>
+
+  <md-step>
+    <ng-template mdStepLabel>
+      <div>Fill out your address</div>
+    </ng-template>
+    <md-input-container>
+      <input mdInput placeholder="Address">
+      <md-error>This field is required</md-error>
+    </md-input-container>
+    <div>
+      <button md-button mdStepperPrevious type="button">Back</button>
+      <button md-button mdStepperNext type="button">Next</button>
+    </div>
+  </md-step>
+
+  <md-step>
+    <ng-template mdStepLabel>Confirm your information</ng-template>
+    Everything seems correct.
+    <div>
+      <button md-button>Done</button>
+    </div>
+  </md-step>
+</md-vertical-stepper>
+
+<h2>Horizontal Stepper Demo</h2>
+<md-horizontal-stepper>
+  <md-step>
+    <ng-template mdStepLabel>Fill out your name</ng-template>
+    <md-input-container>
+      <input mdInput placeholder="First Name">
+      <md-error>This field is required</md-error>
+    </md-input-container>
+
+    <md-input-container>
+      <input mdInput placeholder="Last Name">
+      <md-error>This field is required</md-error>
+    </md-input-container>
+    <div>
+      <button md-button mdStepperNext type="button">Next</button>
+    </div>
+  </md-step>
+
+  <md-step>
+    <ng-template mdStepLabel>
+      <div>Fill out your phone number</div>
+    </ng-template>
+    <md-input-container>
+      <input mdInput placeholder="Phone number">
+      <md-error>This field is required</md-error>
+    </md-input-container>
+    <div>
+      <button md-button mdStepperPrevious type="button">Back</button>
+      <button md-button mdStepperNext type="button">Next</button>
+    </div>
+  </md-step>
+
+  <md-step>
+    <ng-template mdStepLabel>
+      <div>Fill out your address</div>
+    </ng-template>
+    <md-input-container>
+      <input mdInput placeholder="Address">
+      <md-error>This field is required</md-error>
+    </md-input-container>
+    <div>
+      <button md-button mdStepperPrevious type="button">Back</button>
+      <button md-button mdStepperNext type="button">Next</button>
+    </div>
+  </md-step>
+
+  <md-step>
+    <ng-template mdStepLabel>Confirm your information</ng-template>
+    Everything seems correct.
+    <div>
+      <button md-button>Done</button>
+    </div>
+  </md-step>
+</md-horizontal-stepper>
+
 <h2>Horizontal Stepper Demo</h2>
 <md-horizontal-stepper>
   <md-step *ngFor="let step of steps" [label]="step.label">

@@ -1,0 +1,43 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+@import '../core/typography/_typography-utils.scss';
+
+@mixin mat-stepper-theme($theme) {
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+  $primary: map-get($theme, primary);
+
+  .mat-horizontal-stepper-header, .mat-vertical-stepper-header {
+
+    .mat-stepper-label {
+      color: mat-color($foreground, text);
+    }
+
+    .mat-stepper-index {
+      background-color: mat-color($primary);
+      color: mat-color($primary, default-contrast);
+    }
+
+    &[aria-selected='false'] {
+      .mat-stepper-label {
+        color: mat-color($foreground, disabled-text);
+      }
+
+      .mat-stepper-index {
+        background-color: mat-color($foreground, disabled-text);
+      }
+    }
+  }
+
+  .mat-stepper-horizontal, .mat-stepper-vertical {
+    background-color: mat-color($background, card);
+  }
+
+  .vertical-content-container {
+    border-left-color: mat-color($foreground, divider);
+  }
+
+  .connector-line {
+    border-top-color: mat-color($foreground, divider);
+  }
+}

@@ -23,7 +23,7 @@ import {MdStepLabel} from './step-label';
 @Component({
   moduleId: module.id,
   selector: 'md-step, mat-step',
-  templateUrl: 'step.html',
+  templateUrl: 'step.html'
 })
 export class MdStep extends CdkStep {
   /** Content for step label given by <ng-template matStepLabel> or <ng-template mdStepLabel>. */

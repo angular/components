@@ -1,5 +1,5 @@
-<div *ngFor="let step of _steps; let i = index; let isLast = last">
-  <div #stepHeader class="mat-stepper-header" role="tab"
+<div class="mat-step" *ngFor="let step of _steps; let i = index; let isLast = last">
+  <div #stepHeader class="mat-vertical-stepper-header" role="tab"
        [id]="_getStepLabelId(i)"
        [attr.aria-controls]="_getStepContentId(i)"
        [attr.aria-selected]="selectedIndex == i"
@@ -19,11 +19,12 @@
     </div>
 
   </div>
-  <div *ngIf="!isLast" class="connector-line"></div>
-  <div class="mat-stepper-content" role="tabpanel"
-       [id]="_getStepContentId(i)"
-       [attr.aria-labelledby]="_getStepLabelId(i)"
-       [attr.aria-expanded]="selectedIndex == i">
-    <ng-container [ngTemplateOutlet]="step.content"></ng-container>
+  <div class="vertical-content-container">
+    <div class="mat-vertical-stepper-content" role="tabpanel"
+         [id]="_getStepContentId(i)"
+         [attr.aria-labelledby]="_getStepLabelId(i)"
+         [attr.aria-expanded]="selectedIndex == i">
+      <ng-container [ngTemplateOutlet]="step.content"></ng-container>
+    </div>
   </div>
 </div>
