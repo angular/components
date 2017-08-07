@@ -6,18 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ListKeyManager, ListKeyManagerItem} from './list-key-manager';
+import {ListKeyManager, ListKeyManagerOption} from './list-key-manager';
 
 /**
  * This is the interface for focusable items (used by the FocusKeyManager).
  * Each item must know how to focus itself, whether or not it is currently disabled
  * and be able to supply it's label.
  */
-export interface Focusable extends ListKeyManagerItem {
+export interface FocusableOption extends ListKeyManagerOption {
   focus(): void;
 }
 
-export class FocusKeyManager extends ListKeyManager<Focusable> {
+export class FocusKeyManager extends ListKeyManager<FocusableOption> {
   /**
    * This method sets the active item to the item at the specified index.
    * It also adds focuses the newly active item.

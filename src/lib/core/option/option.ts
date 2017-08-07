@@ -174,7 +174,7 @@ export class MdOption {
     }
   }
 
-  /** Fetches the label to be used when determining whether the option should be focused. */
+  /** Gets the label to be used when determining whether the option should be focused. */
   getLabel(): string {
     return this.viewValue;
   }
@@ -206,7 +206,7 @@ export class MdOption {
     return this.disabled ? '-1' : '0';
   }
 
-  /** Fetches the host DOM element. */
+  /** Gets the host DOM element. */
   _getHostElement(): HTMLElement {
     return this._element.nativeElement;
   }

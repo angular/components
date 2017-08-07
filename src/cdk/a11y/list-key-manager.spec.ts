@@ -22,12 +22,11 @@ class FakeHighlightable {
 }
 
 class FakeQueryList<T> extends QueryList<T> {
-  get length() { return this.items.length; }
   items: T[];
-  toArray() {
-    return this.items;
-  }
+  get length() { return this.items.length; }
   get first() { return this.items[0]; }
+  toArray() { return this.items; }
+  some() { return this.items.some.apply(this.items, arguments); }
 }
 
 
@@ -396,6 +395,16 @@ describe('Key managers', () => {
       beforeEach(() => {
         keyManager.withTypeAhead(debounceInterval);
         keyManager.setActiveItem(-1);
+      });
+
+      it('should throw if the items do not implement the getLabel method', () => {
+        const invalidQueryList = new FakeQueryList();
+
+        invalidQueryList.items = [{ disabled: false }];
+
+        const invalidManager = new ListKeyManager(invalidQueryList);
+
+        expect(() => invalidManager.withTypeAhead()).toThrowError(/must implement/);
       });
 
       it('should debounce the input key presses', fakeAsync(() => {

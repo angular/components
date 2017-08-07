@@ -16,7 +16,7 @@ import {RxChain, debounceTime, filter, map, doOperator} from '@angular/cdk/rxjs'
 /**
  * This interface is for items that can be passed to a ListKeyManager.
  */
-export interface ListKeyManagerItem {
+export interface ListKeyManagerOption {
   disabled?: boolean;
   getLabel?(): string;
 }
@@ -25,13 +25,15 @@ export interface ListKeyManagerItem {
  * This class manages keyboard events for selectable lists. If you pass it a query list
  * of items, it will set the active item correctly when arrow events occur.
  */
-export class ListKeyManager<T extends ListKeyManagerItem> {
+export class ListKeyManager<T extends ListKeyManagerOption> {
   private _activeItemIndex = -1;
   private _activeItem: T;
   private _wrap = false;
-  private _pressedInputKeys: number[] = [];
   private _nonNavigationKeyStream = new Subject<number>();
   private _typeaheadSubscription: Subscription;
+
+  // Buffer for the letters that the user has pressed when the typeahead option is turned on.
+  private _pressedInputKeys: number[] = [];
 
   constructor(private _items: QueryList<T>) { }
 
@@ -57,6 +59,9 @@ export class ListKeyManager<T extends ListKeyManagerItem> {
       this._typeaheadSubscription.unsubscribe();
     }
 
+    // Debounce the presses of non-navigational keys, collect the ones that correspond to letters
+    // and convert those letters back into a string. Afterwards find the first item that starts
+    // with that string and select it.
     this._typeaheadSubscription = RxChain.from(this._nonNavigationKeyStream)
       .call(filter, keyCode => keyCode >= A && keyCode <= Z)
       .call(doOperator, keyCode => this._pressedInputKeys.push(keyCode))
@@ -64,12 +69,13 @@ export class ListKeyManager<T extends ListKeyManagerItem> {
       .call(filter, () => this._pressedInputKeys.length > 0)
       .call(map, () => String.fromCharCode(...this._pressedInputKeys))
       .subscribe(inputString => {
-        const activeItemIndex = this._items.toArray().findIndex(item => {
-          return item.getLabel!().toUpperCase().trim().startsWith(inputString);
-        });
+        const items = this._items.toArray();
 
-        if (activeItemIndex > -1) {
-          this.setActiveItem(activeItemIndex);
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].getLabel!().toUpperCase().trim().indexOf(inputString) === 0) {
+            this.setActiveItem(i);
+            break;
+          }
         }
 
         this._pressedInputKeys = [];
@@ -95,6 +101,9 @@ export class ListKeyManager<T extends ListKeyManagerItem> {
     switch (event.keyCode) {
       case DOWN_ARROW: this.setNextItemActive(); break;
       case UP_ARROW: this.setPreviousItemActive(); break;
+
+      // Note that we return here, in order to avoid preventing
+      // the default action of unsupported keys.
       default: this._nonNavigationKeyStream.next(event.keyCode); return;
     }
 
