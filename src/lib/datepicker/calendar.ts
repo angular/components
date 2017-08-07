@@ -154,9 +154,7 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
 
   /** Handles date selection in the month view. */
   _dateSelected(date: D): void {
-    if (!this._dateAdapter.sameDate(date, this.selected)) {
-      this.selectedChange.emit(date);
-    }
+    this.selectedChange.emit(date);
   }
 
   /** Handles month selection in the year view. */
