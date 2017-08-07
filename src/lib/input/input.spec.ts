@@ -12,15 +12,17 @@ import {
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdInputModule} from './index';
-import {MdFormField, MdInput} from './input-container';
+import {MdInput} from './input';
 import {Platform} from '../core/platform/platform';
 import {PlatformModule} from '../core/platform/index';
 import {wrappedErrorMessage, dispatchFakeEvent} from '@angular/cdk/testing';
 import {
+  MdFormField,
+  MdFormFieldModule,
   getMdFormFieldDuplicatedHintError,
   getMdFormFieldMissingControlError,
-  getMdFormFieldPlaceholderConflictError
-} from './input-container-errors';
+  getMdFormFieldPlaceholderConflictError,
+} from '../form-field/index';
 import {MD_PLACEHOLDER_GLOBAL_OPTIONS} from '../core/placeholder/placeholder-options';
 import {MD_ERROR_GLOBAL_OPTIONS, showOnDirtyErrorStateMatcher} from '../core/error/error-options';
 
@@ -29,6 +31,7 @@ describe('MdInputContainer without forms', function () {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
+        MdFormFieldModule,
         MdInputModule,
         NoopAnimationsModule,
         PlatformModule,
@@ -84,6 +87,7 @@ describe('MdInputContainer without forms', function () {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
+        MdFormFieldModule,
         MdInputModule,
         NoopAnimationsModule
       ],
@@ -660,6 +664,7 @@ describe('MdInputContainer with forms', () => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
+        MdFormFieldModule,
         MdInputModule,
         NoopAnimationsModule,
         PlatformModule,
@@ -874,6 +879,7 @@ describe('MdInputContainer with forms', () => {
       TestBed.configureTestingModule({
         imports: [
           FormsModule,
+          MdFormFieldModule,
           MdInputModule,
           NoopAnimationsModule,
           ReactiveFormsModule,
@@ -905,6 +911,7 @@ describe('MdInputContainer with forms', () => {
       TestBed.configureTestingModule({
         imports: [
           FormsModule,
+          MdFormFieldModule,
           MdInputModule,
           NoopAnimationsModule,
           ReactiveFormsModule,

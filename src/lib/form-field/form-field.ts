@@ -16,57 +16,29 @@ import {
   ContentChild,
   ContentChildren,
   Directive,
-  DoCheck,
   ElementRef,
   Inject,
   Input,
-  OnChanges,
-  OnDestroy,
   Optional,
   QueryList,
-  Renderer2,
-  Self,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {coerceBooleanProperty, Platform} from '../core';
-import {FormControl, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
-import {getSupportedInputTypes} from '../core/platform/features';
+import {coerceBooleanProperty} from '../core';
+import {NgControl} from '@angular/forms';
 import {
   getMdFormFieldDuplicatedHintError,
   getMdFormFieldMissingControlError,
   getMdFormFieldPlaceholderConflictError,
-  getMdInputUnsupportedTypeError
-} from './input-container-errors';
+} from './form-field-errors';
 import {
   FloatPlaceholderType,
   MD_PLACEHOLDER_GLOBAL_OPTIONS,
   PlaceholderOptions
 } from '../core/placeholder/placeholder-options';
-import {
-  defaultErrorStateMatcher,
-  ErrorOptions,
-  ErrorStateMatcher,
-  MD_ERROR_GLOBAL_OPTIONS
-} from '../core/error/error-options';
-import {Subject} from 'rxjs/Subject';
 import {startWith} from '@angular/cdk/rxjs';
 import {Observable} from 'rxjs/Observable';
-
-// Invalid input type. Using one of these will throw an MdInputUnsupportedTypeError.
-const MD_INPUT_INVALID_TYPES = [
-  'button',
-  'checkbox',
-  'color',
-  'file',
-  'hidden',
-  'image',
-  'radio',
-  'range',
-  'reset',
-  'submit'
-];
 
 let nextUniqueId = 0;
 
@@ -167,267 +139,15 @@ export abstract class MdFormFieldControl {
 }
 
 
-/** Directive that allows a native input to work inside a `MdFormField`. */
-@Directive({
-  selector: `input[mdInput], textarea[mdInput], input[matInput], textarea[matInput]`,
-  host: {
-    'class': 'mat-input-element',
-    // Native input properties that are overwritten by Angular inputs need to be synced with
-    // the native input element. Otherwise property bindings for those don't work.
-    '[id]': 'id',
-    '[placeholder]': 'placeholder',
-    '[disabled]': 'disabled',
-    '[required]': 'required',
-    '[attr.aria-describedby]': '_ariaDescribedby || null',
-    '[attr.aria-invalid]': '_isErrorState',
-    '(blur)': '_focusChanged(false)',
-    '(focus)': '_focusChanged(true)',
-    '(input)': '_onInput()',
-  },
-  providers: [{provide: MdFormFieldControl, useExisting: MdInput}],
-})
-export class MdInput implements MdFormFieldControl, OnChanges, OnDestroy, DoCheck {
-  /** Variables used as cache for getters and setters. */
-  private _type = 'text';
-  private _disabled = false;
-  private _required = false;
-  private _id: string;
-  private _uid = `md-input-${nextUniqueId++}`;
-  private _errorOptions: ErrorOptions;
-  private _previousNativeValue = this.value;
-  private _focused = false;
-  private _isErrorState = false;
-
-  /** The aria-describedby attribute on the input for improved a11y. */
-  _ariaDescribedby: string;
-
-  /**
-   * Stream that emits whenever the state of the input changes such that the wrapping `MdFormField`
-   * needs to run change detection.
-   */
-  stateChanges = new Subject<void>();
-
-  /** Whether the element is disabled. */
-  @Input()
-  get disabled() { return this._ngControl ? this._ngControl.disabled : this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
-
-  /** Unique id of the element. */
-  @Input()
-  get id() { return this._id; }
-  set id(value: string) { this._id = value || this._uid; }
-
-  /** Placeholder attribute of the element. */
-  @Input() placeholder: string = '';
-
-  /** Whether the element is required. */
-  @Input()
-  get required() { return this._required; }
-  set required(value: any) { this._required = coerceBooleanProperty(value); }
-
-  /** Input type of the element. */
-  @Input()
-  get type() { return this._type; }
-  set type(value: string) {
-    this._type = value || 'text';
-    this._validateType();
-
-    // When using Angular inputs, developers are no longer able to set the properties on the native
-    // input element. To ensure that bindings for `type` work, we need to sync the setter
-    // with the native property. Textarea elements don't support the type property or attribute.
-    if (!this._isTextarea() && getSupportedInputTypes().has(this._type)) {
-      this._renderer.setProperty(this._elementRef.nativeElement, 'type', this._type);
-    }
-  }
-
-  /** A function used to control when error messages are shown. */
-  @Input() errorStateMatcher: ErrorStateMatcher;
-
-  /** The input element's value. */
-  get value() { return this._elementRef.nativeElement.value; }
-  set value(value: string) {
-    if (value !== this.value) {
-      this._elementRef.nativeElement.value = value;
-      this.stateChanges.next();
-    }
-  }
-
-  private _neverEmptyInputTypes = [
-    'date',
-    'datetime',
-    'datetime-local',
-    'month',
-    'time',
-    'week'
-  ].filter(t => getSupportedInputTypes().has(t));
-
-  constructor(private _elementRef: ElementRef,
-              private _renderer: Renderer2,
-              private _platform: Platform,
-              @Optional() @Self() public _ngControl: NgControl,
-              @Optional() private _parentForm: NgForm,
-              @Optional() private _parentFormGroup: FormGroupDirective,
-              @Optional() @Inject(MD_ERROR_GLOBAL_OPTIONS) errorOptions: ErrorOptions) {
-
-    // Force setter to be called in case id was not specified.
-    this.id = this.id;
-    this._errorOptions = errorOptions ? errorOptions : {};
-    this.errorStateMatcher = this._errorOptions.errorStateMatcher || defaultErrorStateMatcher;
-
-    // On some versions of iOS the caret gets stuck in the wrong place when holding down the delete
-    // key. In order to get around this we need to "jiggle" the caret loose. Since this bug only
-    // exists on iOS, we only bother to install the listener on iOS.
-    if (_platform.IOS) {
-      _renderer.listen(_elementRef.nativeElement, 'keyup', (event: Event) => {
-        let el = event.target as HTMLInputElement;
-        if (!el.value && !el.selectionStart && !el.selectionEnd) {
-          // Note: Just setting `0, 0` doesn't fix the issue. Setting `1, 1` fixes it for the first
-          // time that you type text and then hold delete. Toggling to `1, 1` and then back to
-          // `0, 0` seems to completely fix it.
-          el.setSelectionRange(1, 1);
-          el.setSelectionRange(0, 0);
-        }
-      });
-    }
-  }
-
-  ngOnChanges() {
-    this.stateChanges.next();
-  }
-
-  ngOnDestroy() {
-    this.stateChanges.complete();
-  }
-
-  ngDoCheck() {
-    if (this._ngControl) {
-      // We need to re-evaluate this on every change detection cycle, because there are some
-      // error triggers that we can't subscribe to (e.g. parent form submissions). This means
-      // that whatever logic is in here has to be super lean or we risk destroying the performance.
-      this._updateErrorState();
-    } else {
-      // When the input isn't used together with `@angular/forms`, we need to check manually for
-      // changes to the native `value` property in order to update the floating label.
-      this._dirtyCheckNativeValue();
-    }
-  }
-
-  /** Callback for the cases where the focused state of the input changes. */
-  _focusChanged(isFocused: boolean) {
-    if (isFocused !== this._focused) {
-      this._focused = isFocused;
-      this.stateChanges.next();
-    }
-  }
-
-  _onInput() {
-    // This is a noop function and is used to let Angular know whenever the value changes.
-    // Angular will run a new change detection each time the `input` event has been dispatched.
-    // It's necessary that Angular recognizes the value change, because when floatingLabel
-    // is set to false and Angular forms aren't used, the placeholder won't recognize the
-    // value changes and will not disappear.
-    // Listening to the input event wouldn't be necessary when the input is using the
-    // FormsModule or ReactiveFormsModule, because Angular forms also listens to input events.
-  }
-
-  /** Re-evaluates the error state. This is only relevant with @angular/forms. */
-  private _updateErrorState() {
-    const oldState = this._isErrorState;
-    const ngControl = this._ngControl;
-    const parent = this._parentFormGroup || this._parentForm;
-    const newState = ngControl && this.errorStateMatcher(ngControl.control as FormControl, parent);
-
-    if (newState !== oldState) {
-      this._isErrorState = newState;
-      this.stateChanges.next();
-    }
-  }
-
-  /** Does some manual dirty checking on the native input `value` property. */
-  private _dirtyCheckNativeValue() {
-    const newValue = this.value;
-
-    if (this._previousNativeValue !== newValue) {
-      this._previousNativeValue = newValue;
-      this.stateChanges.next();
-    }
-  }
-
-  /** Make sure the input is a supported type. */
-  private _validateType() {
-    if (MD_INPUT_INVALID_TYPES.indexOf(this._type) > -1) {
-      throw getMdInputUnsupportedTypeError(this._type);
-    }
-  }
-
-  /** Checks whether the input type is one of the types that are never empty. */
-  private _isNeverEmpty() {
-    return this._neverEmptyInputTypes.indexOf(this._type) > -1;
-  }
-
-  /** Checks whether the input is invalid based on the native validation. */
-  private _isBadInput() {
-    // The `validity` property won't be present on platform-server.
-    let validity = (this._elementRef.nativeElement as HTMLInputElement).validity;
-    return validity && validity.badInput;
-  }
-
-  /** Determines if the component host is a textarea. If not recognizable it returns false. */
-  private _isTextarea() {
-    let nativeElement = this._elementRef.nativeElement;
-
-    // In Universal, we don't have access to `nodeName`, but the same can be achieved with `name`.
-    // Note that this shouldn't be necessary once Angular switches to an API that resembles the
-    // DOM closer.
-    let nodeName = this._platform.isBrowser ? nativeElement.nodeName : nativeElement.name;
-    return nodeName ? nodeName.toLowerCase() === 'textarea' : false;
-  }
-
-  // Implemented as part of MdFormFieldControl.
-  getId(): string { return this.id; }
-
-  // Implemented as part of MdFormFieldControl.
-  getPlaceholder(): string { return this.placeholder; }
-
-  // Implemented as part of MdFormFieldControl.
-  getNgControl(): NgControl | null { return this._ngControl; }
-
-  // Implemented as part of MdFormFieldControl.
-  isFocused(): boolean { return this._focused; }
-
-  // Implemented as part of MdFormFieldControl.
-  isEmpty(): boolean {
-    return !this._isNeverEmpty() &&
-        (this.value == null || this.value === '') &&
-        // Check if the input contains bad input. If so, we know that it only appears empty because
-        // the value failed to parse. From the user's perspective it is not empty.
-        // TODO(mmalerba): Add e2e test for bad input case.
-        !this._isBadInput();
-  }
-
-  // Implemented as part of MdFormFieldControl.
-  isRequired(): boolean { return this.required; }
-
-  // Implemented as part of MdFormFieldControl.
-  isDisabled(): boolean { return this.disabled; }
-
-  // Implemented as part of MdFormFieldControl.
-  isErrorState(): boolean { return this._isErrorState; }
-
-  // Implemented as part of MdFormFieldControl.
-  setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
-
-  // Implemented as part of MdFormFieldControl.
-  focus() { this._elementRef.nativeElement.focus(); }
-}
-
-
 /** Container for form controls that applies Material Design styling and behavior. */
 @Component({
   moduleId: module.id,
   selector: 'md-input-container, mat-input-container, md-form-field, mat-form-field',
-  templateUrl: 'input-container.html',
-  styleUrls: ['input-container.css'],
+  templateUrl: 'form-field.html',
+  // MdInput is a directive and can't have styles, so we need to include its styles here.
+  // The MdInput styles are fairly minimal so it shouldn't be a big deal for people who aren't using
+  // MdInput.
+  styleUrls: ['form-field.css', '../input/input.css'],
   animations: [
     trigger('transitionMessages', [
       state('enter', style({ opacity: 1, transform: 'translateY(0%)' })),
@@ -519,11 +239,11 @@ export class MdFormField implements AfterViewInit, AfterContentInit, AfterConten
   @ContentChildren(MdSuffix) _suffixChildren: QueryList<MdSuffix>;
 
   constructor(
-    public _elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(MD_PLACEHOLDER_GLOBAL_OPTIONS) placeholderOptions: PlaceholderOptions) {
-      this._placeholderOptions = placeholderOptions ? placeholderOptions : {};
-      this.floatPlaceholder = this._placeholderOptions.float || 'auto';
-    }
+      public _elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef,
+      @Optional() @Inject(MD_PLACEHOLDER_GLOBAL_OPTIONS) placeholderOptions: PlaceholderOptions) {
+    this._placeholderOptions = placeholderOptions ? placeholderOptions : {};
+    this.floatPlaceholder = this._placeholderOptions.float || 'auto';
+  }
 
   ngAfterContentInit() {
     this._validateControlChild();
@@ -579,7 +299,7 @@ export class MdFormField implements AfterViewInit, AfterContentInit, AfterConten
   /** Determines whether to display hints or errors. */
   _getDisplayedMessages(): 'error' | 'hint' {
     return (this._errorChildren && this._errorChildren.length > 0 &&
-            this._control.isErrorState()) ? 'error' : 'hint';
+        this._control.isErrorState()) ? 'error' : 'hint';
   }
 
   /**

@@ -23,7 +23,7 @@ import {Directionality, Direction} from '../core/bidi/index';
 import {Subscription} from 'rxjs/Subscription';
 import {ENTER, DOWN_ARROW, SPACE, UP_ARROW, ESCAPE} from '../core/keyboard/keycodes';
 import {MdOption} from '../core/option/option';
-import {MdFormField} from '../input/input-container';
+import {MdFormField, MdFormFieldModule} from '../form-field/index';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {createKeyboardEvent, dispatchFakeEvent, typeInElement} from '@angular/cdk/testing';
@@ -41,6 +41,7 @@ describe('MdAutocomplete', () => {
     TestBed.configureTestingModule({
       imports: [
         MdAutocompleteModule,
+        MdFormFieldModule,
         MdInputModule,
         FormsModule,
         ReactiveFormsModule,

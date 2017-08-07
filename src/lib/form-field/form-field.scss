@@ -62,63 +62,20 @@ $mat-form-field-underline-height: 1px !default;
   flex: auto;
 }
 
-// The Input element proper.
-.mat-input-element {
-  // Font needs to be inherited, because by default <input> has a system font.
-  font: inherit;
-
-  // The Material input should match whatever background it is above.
-  background: transparent;
-
-  // If background matches current background then so should the color for proper contrast
-  color: currentColor;
-
-  // By default, <input> has a padding, border, outline and a default width.
-  border: none;
-  outline: none;
-  padding: 0;
-  margin: 0;
-  width: 100%;
-
-  // Prevent textareas from being resized outside the form field.
-  max-width: 100%;
-  resize: vertical;
-
-  // Needed to make last line of the textarea line up with the baseline.
-  vertical-align: bottom;
-
-  // Undo the red box-shadow glow added by Firefox on invalid inputs.
-  // See https://developer.mozilla.org/en-US/docs/Web/CSS/:-moz-ui-invalid
-  &:-moz-ui-invalid {
-    box-shadow: none;
+// Pseudo-class for Chrome and Safari auto-fill to move the placeholder to the floating position.
+// This is necessary because these browsers do not actually fire any events when a form auto-fill is
+// occurring. Once the autofill is committed, a change event happen and the regular md-form-field
+// classes take over to fulfill this behaviour. Assumes the autofill is non-empty.
+.mat-form-field-autofill-float:-webkit-autofill + .mat-form-field-placeholder-wrapper {
+  // The control is still technically empty at this point, so we need to hide non-floating
+  // placeholders to prevent overlapping with the autofilled value.
+  .mat-form-field-placeholder {
+    display: none;
   }
 
-  // Pseudo-class for Chrome and Safari auto-fill to move the placeholder to
-  // the floating position. This is necessary because these browsers do not actually
-  // fire any events when a form auto-fill is occurring.
-  // Once the autofill is committed, a change event happen and the regular md-form-field
-  // classes take over to fulfill this behaviour.
-  // Assumes the autofill is non-empty.
-  &:-webkit-autofill + .mat-form-field-placeholder-wrapper {
-    // The input is still technically empty at this point, so we need to hide non-floating
-    // placeholders to prevent overlapping with the autofilled value.
-    .mat-form-field-placeholder {
-      display: none;
-    }
-
-    .mat-form-field-float {
-      display: block;
-      transition: none;
-    }
-  }
-
-  // Note that we can't use something like visibility: hidden or
-  // display: none, because IE ends up preventing the user from
-  // focusing the input altogether.
-  @include input-placeholder {
-    // Needs to be !important, because the placeholder will end up inheriting the
-    // input color in IE, if the consumer overrides it with a higher specificity.
-    color: transparent !important;
+  .mat-form-field-float {
+    display: block;
+    transition: none;
   }
 }
 
@@ -132,11 +89,6 @@ $mat-form-field-underline-height: 1px !default;
   height: 100%;
   overflow: hidden;
   pointer-events: none;  // We shouldn't catch mouse events (let them through).
-}
-
-// Prevents IE from always adding a scrollbar by default.
-textarea.mat-input-element {
-  overflow: auto;
 }
 
 // The placeholder label. This is invisible unless it is. The logic to show it is
@@ -163,8 +115,8 @@ textarea.mat-input-element {
 
   transform-origin: 0 0;
   transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
-              color $swift-ease-out-duration $swift-ease-out-timing-function,
-              width $swift-ease-out-duration $swift-ease-out-timing-function;
+  color $swift-ease-out-duration $swift-ease-out-timing-function,
+  width $swift-ease-out-duration $swift-ease-out-timing-function;
 
   // Hide the placeholder initially, and only show it when it's floating or the control is empty.
   display: none;

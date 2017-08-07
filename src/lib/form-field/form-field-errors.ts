@@ -12,11 +12,6 @@ export function getMdFormFieldPlaceholderConflictError(): Error {
 }
 
 /** @docs-private */
-export function getMdInputUnsupportedTypeError(type: string): Error {
-  return Error(`Input type "${type}" isn't supported by mdInput.`);
-}
-
-/** @docs-private */
 export function getMdFormFieldDuplicatedHintError(align: string): Error {
   return Error(`A hint was already declared for 'align="${align}"'.`);
 }
@@ -24,5 +19,5 @@ export function getMdFormFieldDuplicatedHintError(align: string): Error {
 /** @docs-private */
 export function getMdFormFieldMissingControlError(): Error {
   return Error('md-form-field must contain a MdFormFieldControl. ' +
-               'Did you forget to add mdInput to the native input or textarea element?');
+      'Did you forget to add mdInput to the native input or textarea element?');
 }

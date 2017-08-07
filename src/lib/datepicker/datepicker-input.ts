@@ -31,7 +31,7 @@ import {
   Validators
 } from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
-import {MdFormField} from '../input/input-container';
+import {MdFormField} from '../form-field/index';
 import {DOWN_ARROW} from '../core/keyboard/keycodes';
 import {DateAdapter} from '../core/datetime/index';
 import {createMissingDateImplError} from './datepicker-errors';
