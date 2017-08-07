@@ -1075,8 +1075,6 @@ describe('MdAutocomplete', () => {
 
       expect(Math.floor(inputBottom))
           .toEqual(Math.floor(panelTop), `Expected panel top to match input bottom by default.`);
-      expect(fixture.componentInstance.trigger.autocomplete.positionY)
-          .toEqual('below', `Expected autocomplete positionY to default to below.`);
     });
 
     it('should reposition the panel on scroll', () => {
@@ -1116,8 +1114,6 @@ describe('MdAutocomplete', () => {
 
       expect(Math.floor(inputTop))
           .toEqual(Math.floor(panelBottom), `Expected panel to fall back to above position.`);
-      expect(fixture.componentInstance.trigger.autocomplete.positionY)
-          .toEqual('above', `Expected autocomplete positionY to be "above" if panel won't fit.`);
     });
 
     it('should align panel properly when filtering in "above" position', async(() => {
@@ -1138,8 +1134,6 @@ describe('MdAutocomplete', () => {
 
         expect(Math.floor(inputTop))
             .toEqual(Math.floor(panelBottom), `Expected panel to stay aligned after filtering.`);
-        expect(fixture.componentInstance.trigger.autocomplete.positionY)
-            .toEqual('above', `Expected autocomplete positionY to be "above" if panel won't fit.`);
       });
     }));
 

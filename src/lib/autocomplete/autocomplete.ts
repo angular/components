@@ -28,8 +28,6 @@ import {ActiveDescendantKeyManager} from '../core/a11y/activedescendant-key-mana
  */
 let _uniqueAutocompleteIdCounter = 0;
 
-export type AutocompletePositionY = 'above' | 'below';
-
 @Component({
   moduleId: module.id,
   selector: 'md-autocomplete, mat-autocomplete',
@@ -46,9 +44,6 @@ export class MdAutocomplete implements AfterContentInit {
 
   /** Manages active item in option list based on key events. */
   _keyManager: ActiveDescendantKeyManager;
-
-  /** Whether the autocomplete panel displays above or below its trigger. */
-  positionY: AutocompletePositionY = 'below';
 
   /** Whether the autocomplete panel should be visible, depending on option length. */
   showPanel = false;
