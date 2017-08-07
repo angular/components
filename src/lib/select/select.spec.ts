@@ -2450,6 +2450,42 @@ describe('MdSelect', () => {
       expect(trigger.textContent).toContain('Tacos, Pizza, Steak');
     });
 
+    it('should display a custom text if multipleDisplayWith is set', () => {
+      testInstance.select.multipleDisplayWith = (values: string[]): string => {
+        return `${values.length} selected`;
+      };
+      trigger.click();
+      fixture.detectChanges();
+
+      const options = overlayContainerElement.querySelectorAll('md-option') as
+          NodeListOf<HTMLElement>;
+
+      options[0].click();
+      options[2].click();
+      options[5].click();
+      fixture.detectChanges();
+
+      expect(trigger.textContent).toContain('3 selected');
+    });
+
+    it('should only affect the text if multipleDisplayWith is set', () => {
+      testInstance.select.multipleDisplayWith = (values: string[]): string => {
+        return `${values.length} selected`;
+      };
+      trigger.click();
+      fixture.detectChanges();
+
+      const options = overlayContainerElement.querySelectorAll('md-option') as
+          NodeListOf<HTMLElement>;
+
+      options[0].click();
+      options[2].click();
+      options[5].click();
+      fixture.detectChanges();
+
+      expect(testInstance.control.value).toEqual(['steak-0', 'tacos-2', 'eggs-5']);
+    });
+
     it('should throw an exception when trying to set a non-array value', async(() => {
       expect(() => {
         testInstance.control.setValue('not-an-array');
