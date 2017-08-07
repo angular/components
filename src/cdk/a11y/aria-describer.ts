@@ -20,7 +20,7 @@ export interface RegisteredMessage {
 }
 
 /** ID used for the body container where all messages are appended. */
-export const MESSAGES_CONTAINER_ID = 'md-aria-describedby-messages';
+export const MESSAGES_CONTAINER_ID = 'cdk-aria-describedby-messages';
 
 /** Global incremental identifier for each registered message element. */
 let nextId = 0;
@@ -101,7 +101,7 @@ export class AriaDescriber {
    */
   private _createMessageElement(message: string): HTMLElement {
     const messageElement = this._renderer.createElement('div');
-    this._renderer.setAttribute(messageElement, 'id', `md-aria-describedby-message-${nextId++}`);
+    this._renderer.setAttribute(messageElement, 'id', `cdk-aria-describedby-message-${nextId++}`);
     this._renderer.appendChild(messageElement, this._renderer.createText(message));
 
     if (!messagesContainer) { this._createMessagesContainer(); }
