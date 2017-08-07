@@ -3,7 +3,7 @@ For help getting started with a new Angular app, check out the
 
 For existing apps, follow these steps to begin using Angular Material.
 
-## Step 1: Install Angular Material and Angular CDK
+### Step 1: Install Angular Material and Angular CDK
 
 ```bash
 npm install --save @angular/material @angular/cdk
@@ -16,7 +16,7 @@ build should not be considered stable and may break between releases.
 npm install --save angular/material2-builds angular/cdk-builds
 ```
 
-## Step 2: Animations
+### Step 2: Animations
 
 Some Material components depend on the Angular animations module in order to be able to do
 more advanced transitions. If you want these animations to work in your app, you have to
@@ -50,7 +50,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 export class PizzaPartyAppModule { }
 ```
 
-## Step 3: Import the component modules
+### Step 3: Import the component modules
 
 Import the NgModule for each component you want to use: 
 
@@ -82,7 +82,7 @@ export class MyOwnCustomMaterialModule { }
 Whichever approach you use, be sure to import the Angular Material modules _after_ Angular's 
 `BrowserModule`, as the import order matters for NgModules.
 
-## Step 4: Include a theme
+### Step 4: Include a theme
 
 Including a theme is **required** to apply all of the core and theme styles to your application.
 
@@ -98,7 +98,7 @@ your `index.html`.
 For more information on theming and instructions on how to create a custom theme, see the
 [theming guide](./theming.md).
 
-## Step 5: Gesture Support
+### Step 5: Gesture Support
 
 Some components (`md-slide-toggle`, `md-slider`, `mdTooltip`) rely on
 [HammerJS](http://hammerjs.github.io/) for gestures. In order to get the full feature-set of these
@@ -113,12 +113,12 @@ To install via npm, use the following command:
 npm install --save hammerjs
 ```
 
-After installing, import it on your app's root module.
+After installing, import it on your app's entry point (e.g. `src/main.ts`).
 ```ts
 import 'hammerjs';
 ```
 
-## Step 6 (Optional): Add Material Icons
+### Step 6 (Optional): Add Material Icons
 
 If you want to use the `md-icon` component with the official 
 [Material Design Icons](https://material.io/icons/), load the icon font in your `index.html`.
@@ -133,24 +133,34 @@ For more information on using Material Icons, check out the
 Note that `md-icon` supports any font or svg icons; using Material Icons is one of many options.
 
 
-## Appendix: Configuring SystemJS
+### Appendix: Configuring SystemJS
 
 If your project is using SystemJS for module loading, you will need to add `@angular/material` and
-`@angular/cdk` to the SystemJS configuration:
+`@angular/cdk` to the SystemJS configuration.
+
+The `@angular/cdk` package is organized of multiple entry-points. 
+Each of these entry-points must be registered individually with SystemJS.
+
+Here is a example configuration where `@angular/material`, `@angular/cdk/platform` and 
+`@angular/cdk/a11y` are used:
+
 
 ```js
 System.config({
-  // existing configuration options
+  // Existing configuration options
   map: {
     // ...
     '@angular/material': 'npm:@angular/material/bundles/material.umd.js',
-    '@angular/cdk': 'npm:@angular/cdk/bundles/cdk.umd.js'
+    
+    // CDK individual packages
+    '@angular/cdk/platform': 'npm:@angular/cdk/bundles/cdk-platform.umd.js',
+    '@angular/cdk/a11y': 'npm:@angular/cdk/bundles/cdk-a11y.umd.js',
     // ...
   }
 });
 ```
 
 
-## Example Angular Material projects
+### Example Angular Material projects
 - [material.angular.io](https://material.angular.io) -
 We build our own documentation with Angular Material!

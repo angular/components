@@ -13,7 +13,8 @@ describe('MdExpansionPanel', () => {
         MdExpansionModule
       ],
       declarations: [
-        PanelWithContent
+        PanelWithContent,
+        PanelWithCustomMargin
       ],
     });
     TestBed.compileComponents();
@@ -76,19 +77,100 @@ describe('MdExpansionPanel', () => {
     button.focus();
     expect(document.activeElement).not.toBe(button, 'Expected button to no longer be focusable.');
   }));
+
+  it('should not override the panel margin if it is not inside an accordion', fakeAsync(() => {
+    let fixture = TestBed.createComponent(PanelWithCustomMargin);
+    fixture.detectChanges();
+
+    let panel = fixture.debugElement.query(By.css('md-expansion-panel'));
+    let styles = getComputedStyle(panel.nativeElement);
+
+    expect(panel.componentInstance._getDisplayMode()).toBe('void');
+    expect(styles.marginTop).toBe('13px');
+    expect(styles.marginBottom).toBe('13px');
+    expect(styles.marginLeft).toBe('37px');
+    expect(styles.marginRight).toBe('37px');
+
+    fixture.componentInstance.expanded = true;
+    fixture.detectChanges();
+    tick(250);
+
+    styles = getComputedStyle(panel.nativeElement);
+
+    expect(panel.componentInstance._getDisplayMode()).toBe('void');
+    expect(styles.marginTop).toBe('13px');
+    expect(styles.marginBottom).toBe('13px');
+    expect(styles.marginLeft).toBe('37px');
+    expect(styles.marginRight).toBe('37px');
+  }));
+
+  it('should be able to hide the toggle', () => {
+    const fixture = TestBed.createComponent(PanelWithContent);
+    const header = fixture.debugElement.query(By.css('.mat-expansion-panel-header')).nativeElement;
+
+    fixture.detectChanges();
+
+    expect(header.querySelector('.mat-expansion-indicator'))
+        .toBeTruthy('Expected indicator to be shown.');
+
+    fixture.componentInstance.hideToggle = true;
+    fixture.detectChanges();
+
+    expect(header.querySelector('.mat-expansion-indicator'))
+        .toBeFalsy('Expected indicator to be hidden.');
+  });
+
+  it('should update the indicator rotation when the expanded state is toggled programmatically',
+    fakeAsync(() => {
+      const fixture = TestBed.createComponent(PanelWithContent);
+
+      fixture.detectChanges();
+      tick(250);
+
+      const arrow = fixture.debugElement.query(By.css('.mat-expansion-indicator')).nativeElement;
+
+      expect(arrow.style.transform).toBe('rotate(0deg)', 'Expected no rotation.');
+
+      fixture.componentInstance.expanded = true;
+      fixture.detectChanges();
+      tick(250);
+
+      expect(arrow.style.transform).toBe('rotate(180deg)', 'Expected 180 degree rotation.');
+    }));
 });
 
 
-@Component({template: `
+@Component({
+  template: `
   <md-expansion-panel [expanded]="expanded"
+                      [hideToggle]="hideToggle"
                       (opened)="openCallback()"
                       (closed)="closeCallback()">
     <md-expansion-panel-header>Panel Title</md-expansion-panel-header>
     <p>Some content</p>
     <button>I am a button</button>
-  </md-expansion-panel>`})
+  </md-expansion-panel>`
+})
 class PanelWithContent {
   expanded: boolean = false;
+  hideToggle: boolean = false;
   openCallback = jasmine.createSpy('openCallback');
   closeCallback = jasmine.createSpy('closeCallback');
+}
+
+
+@Component({
+  styles: [
+    `md-expansion-panel {
+      margin: 13px 37px;
+    }`
+  ],
+  template: `
+  <md-expansion-panel [expanded]="expanded">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores officia, aliquam dicta
+    corrupti maxime voluptate accusamus impedit atque incidunt pariatur.
+  </md-expansion-panel>`
+})
+class PanelWithCustomMargin {
+  expanded: boolean = false;
 }

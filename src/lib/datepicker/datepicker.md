@@ -25,7 +25,7 @@ An optional datepicker toggle button is available. A toggle can be added to the 
 
 ```html
 <input [mdDatepicker]="myDatepicker">
-<button [mdDatepickerToggle]="myDatepicker"></button>
+<md-datepicker-toggle [for]="myDatepicker"></md-datepicker-toggle>
 <md-datepicker #myDatepicker></md-datepicker>
 ```
 
@@ -35,7 +35,7 @@ can easily be used as a prefix or suffix on the material input:
 ```html
 <md-input-container>
   <input mdInput [mdDatepicker]="myDatepicker">
-  <button mdSuffix [mdDatepickerToggle]="myDatepicker"></button>
+  <md-datepicker-toggle mdSuffix [for]="myDatepicker"></md-datepicker-toggle>
 </md-input-container>
 <md-datepicker #myDatepicker></md-datepicker>
 ```
@@ -126,6 +126,22 @@ By default the datepicker will use the locale code from the `LOCALE_ID` injectio
   ],
 })
 export class MyApp {}
+```
+
+It's also possible to set the locale at runtime using the `setLocale` method of the `DateAdapter`.
+
+```ts
+import { DateAdapter, NativeDateAdapter } from '@angular/material';
+
+@Component({
+  selector:    'foo',
+  template: ''
+})
+export class FooComponent {
+  constructor(dateAdapter: DateAdapter<NativeDateAdapter>) {
+    dateAdapter.setLocale('de-DE');
+  }
+}
 ```
 
 #### Choosing a date implementation and date format settings

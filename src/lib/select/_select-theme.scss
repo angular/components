@@ -66,18 +66,21 @@
     }
   }
 
-  .mat-select:focus:not(.mat-select-disabled).mat-warn,
-  .mat-select:not(:focus).ng-invalid.ng-touched:not(.mat-select-disabled) {
+  .mat-select:focus:not(.mat-select-disabled).mat-warn, .mat-select-invalid {
     @include _mat-select-inner-content-theme($warn);
   }
 }
 
 @mixin mat-select-typography($config) {
+  $trigger-font-size: mat-font-size($config, subheading-2);
+
   .mat-select {
+    // Reserve enough space for the floating placeholder.
+    padding-top: $trigger-font-size;
     font-family: mat-font-family($config);
   }
 
   .mat-select-trigger {
-    font-size: mat-font-size($config, subheading-2);
+    font-size: $trigger-font-size;
   }
 }

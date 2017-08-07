@@ -1,4 +1,4 @@
-import {TestBed, async, ComponentFixture} from '@angular/core/testing';
+import {TestBed, async, ComponentFixture, fakeAsync, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
@@ -25,10 +25,16 @@ import {
   MenuPositionX,
   MenuPositionY,
   MdMenu,
+  MD_MENU_DEFAULT_OPTIONS,
 } from './index';
 import {MENU_PANEL_TOP_PADDING} from './menu-trigger';
 import {extendObject} from '../core/util/object-extend';
-import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
+import {
+  dispatchKeyboardEvent,
+  dispatchMouseEvent,
+  dispatchEvent,
+  createKeyboardEvent,
+} from '@angular/cdk/testing';
 
 
 describe('MdMenu', () => {
@@ -45,7 +51,8 @@ describe('MdMenu', () => {
         OverlapMenu,
         CustomMenuPanel,
         CustomMenu,
-        NestedMenu
+        NestedMenu,
+        NestedMenuCustomElevation
       ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -82,7 +89,7 @@ describe('MdMenu', () => {
     }).not.toThrowError();
   });
 
-  it('should close the menu when a click occurs outside the menu', () => {
+  it('should close the menu when a click occurs outside the menu', fakeAsync(() => {
     const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
@@ -90,21 +97,27 @@ describe('MdMenu', () => {
     const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
     backdrop.click();
     fixture.detectChanges();
+    tick(500);
 
     expect(overlayContainerElement.textContent).toBe('');
-  });
+  }));
 
-  it('should close the menu when pressing escape', () => {
+  it('should close the menu when pressing escape', fakeAsync(() => {
     const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
 
     const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
-    dispatchKeyboardEvent(panel, 'keydown', ESCAPE);
+    const event = createKeyboardEvent('keydown', ESCAPE);
+    const stopPropagationSpy = spyOn(event, 'stopPropagation').and.callThrough();
+
+    dispatchEvent(panel, event);
     fixture.detectChanges();
+    tick(500);
 
     expect(overlayContainerElement.textContent).toBe('');
-  });
+    expect(stopPropagationSpy).toHaveBeenCalled();
+  }));
 
   it('should open a custom menu', () => {
     const fixture = TestBed.createComponent(CustomMenu);
@@ -527,7 +540,7 @@ describe('MdMenu', () => {
       expect(instance.levelTwoTrigger.triggersSubmenu()).toBe(true);
     });
 
-    it('should set the `isSubmenu` flag on the menu instances', () => {
+    it('should set the `parentMenu` on the sub-menu instances', () => {
       compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
@@ -538,9 +551,9 @@ describe('MdMenu', () => {
       instance.levelTwoTrigger.openMenu();
       fixture.detectChanges();
 
-      expect(instance.rootMenu.isSubmenu).toBe(false);
-      expect(instance.levelOneMenu.isSubmenu).toBe(true);
-      expect(instance.levelTwoMenu.isSubmenu).toBe(true);
+      expect(instance.rootMenu.parentMenu).toBeFalsy();
+      expect(instance.levelOneMenu.parentMenu).toBe(instance.rootMenu);
+      expect(instance.levelTwoMenu.parentMenu).toBe(instance.levelOneMenu);
     });
 
     it('should pass the layout direction the nested menus', () => {
@@ -871,8 +884,113 @@ describe('MdMenu', () => {
       expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(0, 'Expected no open menus');
     });
 
+    it('should set a class on the menu items that trigger a sub-menu', () => {
+      compileTestComponent();
+      instance.rootTrigger.openMenu();
+      fixture.detectChanges();
+
+      const menuItems = overlay.querySelectorAll('[md-menu-item]');
+
+      expect(menuItems[0].classList).toContain('mat-menu-item-submenu-trigger');
+      expect(menuItems[1].classList).not.toContain('mat-menu-item-submenu-trigger');
+    });
+
+    it('should increase the sub-menu elevation based on its depth', () => {
+      compileTestComponent();
+      instance.rootTrigger.openMenu();
+      fixture.detectChanges();
+
+      instance.levelOneTrigger.openMenu();
+      fixture.detectChanges();
+
+      instance.levelTwoTrigger.openMenu();
+      fixture.detectChanges();
+
+      const menus = overlay.querySelectorAll('.mat-menu-panel');
+
+      expect(menus[0].classList)
+          .toContain('mat-elevation-z2', 'Expected root menu to have base elevation.');
+      expect(menus[1].classList)
+          .toContain('mat-elevation-z3', 'Expected first sub-menu to have base elevation + 1.');
+      expect(menus[2].classList)
+          .toContain('mat-elevation-z4', 'Expected second sub-menu to have base elevation + 2.');
+    });
+
+    it('should update the elevation when the same menu is opened at a different depth', () => {
+      compileTestComponent();
+      instance.rootTrigger.openMenu();
+      fixture.detectChanges();
+
+      instance.levelOneTrigger.openMenu();
+      fixture.detectChanges();
+
+      instance.levelTwoTrigger.openMenu();
+      fixture.detectChanges();
+
+      let lastMenu = overlay.querySelectorAll('.mat-menu-panel')[2];
+
+      expect(lastMenu.classList)
+          .toContain('mat-elevation-z4', 'Expected menu to have the base elevation plus two.');
+
+      (overlay.querySelector('.cdk-overlay-backdrop')! as HTMLElement).click();
+      fixture.detectChanges();
+
+      expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(0, 'Expected no open menus');
+
+      instance.alternateTrigger.openMenu();
+      fixture.detectChanges();
+
+      lastMenu = overlay.querySelector('.mat-menu-panel') as HTMLElement;
+
+      expect(lastMenu.classList)
+          .not.toContain('mat-elevation-z4', 'Expected menu not to maintain old elevation.');
+      expect(lastMenu.classList)
+          .toContain('mat-elevation-z2', 'Expected menu to have the proper updated elevation.');
+    });
+
+    it('should not increase the elevation if the user specified a custom one', () => {
+      const elevationFixture = TestBed.createComponent(NestedMenuCustomElevation);
+
+      elevationFixture.detectChanges();
+      elevationFixture.componentInstance.rootTrigger.openMenu();
+      elevationFixture.detectChanges();
+
+      elevationFixture.componentInstance.levelOneTrigger.openMenu();
+      elevationFixture.detectChanges();
+
+      const menuClasses = overlayContainerElement.querySelectorAll('.mat-menu-panel')[1].classList;
+
+      expect(menuClasses)
+          .toContain('mat-elevation-z24', 'Expected user elevation to be maintained');
+      expect(menuClasses)
+          .not.toContain('mat-elevation-z3', 'Expected no stacked elevation.');
+    });
+
   });
 
+});
+
+describe('MdMenu default overrides', () => {
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [MdMenuModule, NoopAnimationsModule],
+      declarations: [SimpleMenu],
+      providers: [{
+        provide: MD_MENU_DEFAULT_OPTIONS,
+        useValue: {overlapTrigger: false, xPosition: 'before', yPosition: 'above'},
+      }],
+    }).compileComponents();
+  }));
+
+  it('should allow for the default menu options to be overridden', () => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.detectChanges();
+    const menu = fixture.componentInstance.menu;
+
+    expect(menu.overlapTrigger).toBe(false);
+    expect(menu.xPosition).toBe('before');
+    expect(menu.yPosition).toBe('above');
+  });
 });
 
 @Component({
@@ -939,7 +1057,7 @@ class CustomMenuPanel implements MdMenuPanel {
   xPosition: MenuPositionX = 'after';
   yPosition: MenuPositionY = 'below';
   overlapTrigger = true;
-  isSubmenu = false;
+  parentMenu: MdMenuPanel;
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
   @Output() close = new EventEmitter<void | 'click' | 'keydown'>();
@@ -966,6 +1084,10 @@ class CustomMenu {
       [mdMenuTriggerFor]="root"
       #rootTrigger="mdMenuTrigger"
       #rootTriggerEl>Toggle menu</button>
+
+    <button
+      [mdMenuTriggerFor]="levelTwo"
+      #alternateTrigger="mdMenuTrigger">Toggle alternate menu</button>
 
     <md-menu #root="mdMenu">
       <button md-menu-item
@@ -996,10 +1118,31 @@ class NestedMenu {
   @ViewChild('root') rootMenu: MdMenu;
   @ViewChild('rootTrigger') rootTrigger: MdMenuTrigger;
   @ViewChild('rootTriggerEl') rootTriggerEl: ElementRef;
+  @ViewChild('alternateTrigger') alternateTrigger: MdMenuTrigger;
 
   @ViewChild('levelOne') levelOneMenu: MdMenu;
   @ViewChild('levelOneTrigger') levelOneTrigger: MdMenuTrigger;
 
   @ViewChild('levelTwo') levelTwoMenu: MdMenu;
   @ViewChild('levelTwoTrigger') levelTwoTrigger: MdMenuTrigger;
+}
+
+@Component({
+  template: `
+    <button [mdMenuTriggerFor]="root" #rootTrigger="mdMenuTrigger">Toggle menu</button>
+
+    <md-menu #root="mdMenu">
+      <button md-menu-item
+        [mdMenuTriggerFor]="levelOne"
+        #levelOneTrigger="mdMenuTrigger">One</button>
+    </md-menu>
+
+    <md-menu #levelOne="mdMenu" class="mat-elevation-z24">
+      <button md-menu-item>Two</button>
+    </md-menu>
+  `
+})
+class NestedMenuCustomElevation {
+  @ViewChild('rootTrigger') rootTrigger: MdMenuTrigger;
+  @ViewChild('levelOneTrigger') levelOneTrigger: MdMenuTrigger;
 }

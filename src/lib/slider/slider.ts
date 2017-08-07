@@ -385,14 +385,11 @@ export class MdSlider extends _MdSliderMixinBase
 
   private _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
-  /** The last value for which a change event was emitted. */
-  private _lastChangeValue: number | null;
-
-  /** The last value for which an input event was emitted. */
-  private _lastInputValue: number | null;
-
   /** Decimal places to round to, based on the step amount. */
   private _roundLabelTo: number;
+
+  /** The value of the slider when the slide start event fires. */
+  private _valueOnSlideStart: number | null;
 
   /**
    * Whether mouse events should be converted to a slider position by calculating their distance
@@ -438,13 +435,16 @@ export class MdSlider extends _MdSliderMixinBase
       return;
     }
 
+    let oldValue = this.value;
     this._isSliding = false;
     this._renderer.addFocus();
     this._updateValueFromPosition({x: event.clientX, y: event.clientY});
 
-    /* Emits a change and input event if the value changed. */
-    this._emitInputEvent();
-    this._emitValueIfChanged();
+    /* Emit a change and input event if the value changed. */
+    if (oldValue != this.value) {
+      this._emitInputEvent();
+      this._emitChangeEvent();
+    }
   }
 
   _onSlide(event: HammerInput) {
@@ -452,15 +452,25 @@ export class MdSlider extends _MdSliderMixinBase
       return;
     }
 
+    // The slide start event sometimes fails to fire on iOS, so if we're not already in the sliding
+    // state, call the slide start handler manually.
+    if (!this._isSliding) {
+      this._onSlideStart(null);
+    }
+
     // Prevent the slide from selecting anything else.
     event.preventDefault();
+
+    let oldValue = this.value;
     this._updateValueFromPosition({x: event.center.x, y: event.center.y});
 
     // Native range elements always emit `input` events when the value changed while sliding.
-    this._emitInputEvent();
+    if (oldValue != this.value) {
+      this._emitInputEvent();
+    }
   }
 
-  _onSlideStart(event: HammerInput) {
+  _onSlideStart(event: HammerInput | null) {
     if (this.disabled) {
       return;
     }
@@ -468,15 +478,23 @@ export class MdSlider extends _MdSliderMixinBase
     // Simulate mouseenter in case this is a mobile device.
     this._onMouseenter();
 
-    event.preventDefault();
     this._isSliding = true;
     this._renderer.addFocus();
-    this._updateValueFromPosition({x: event.center.x, y: event.center.y});
+    this._valueOnSlideStart = this.value;
+
+    if (event) {
+      this._updateValueFromPosition({x: event.center.x, y: event.center.y});
+      event.preventDefault();
+    }
   }
 
   _onSlideEnd() {
     this._isSliding = false;
-    this._emitValueIfChanged();
+
+    if (this._valueOnSlideStart != this.value) {
+      this._emitChangeEvent();
+    }
+    this._valueOnSlideStart = null;
   }
 
   _onFocus() {
@@ -492,6 +510,8 @@ export class MdSlider extends _MdSliderMixinBase
 
   _onKeydown(event: KeyboardEvent) {
     if (this.disabled) { return; }
+
+    let oldValue = this.value;
 
     switch (event.keyCode) {
       case PAGE_UP:
@@ -531,8 +551,11 @@ export class MdSlider extends _MdSliderMixinBase
         // it.
         return;
     }
-    this._emitInputEvent();
-    this._emitValueIfChanged();
+
+    if (oldValue != this.value) {
+      this._emitInputEvent();
+      this._emitChangeEvent();
+    }
 
     this._isSliding = true;
     event.preventDefault();
@@ -572,22 +595,14 @@ export class MdSlider extends _MdSliderMixinBase
   }
 
   /** Emits a change event if the current value is different from the last emitted value. */
-  private _emitValueIfChanged() {
-    if (this.value != this._lastChangeValue) {
-      let event = this._createChangeEvent();
-      this._lastChangeValue = this.value;
-      this._controlValueAccessorChangeFn(this.value);
-      this.change.emit(event);
-    }
+  private _emitChangeEvent() {
+    this._controlValueAccessorChangeFn(this.value);
+    this.change.emit(this._createChangeEvent());
   }
 
   /** Emits an input event when the current value is different from the last emitted value. */
   private _emitInputEvent() {
-    if (this.value != this._lastInputValue) {
-      let event = this._createChangeEvent();
-      this._lastInputValue = this.value;
-      this.input.emit(event);
-    }
+    this.input.emit(this._createChangeEvent());
   }
 
   /** Updates the amount of space between ticks as a percentage of the width of the slider. */

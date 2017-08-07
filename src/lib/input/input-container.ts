@@ -7,29 +7,31 @@
  */
 
 import {
-  AfterContentInit,
   AfterContentChecked,
+  AfterContentInit,
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
   ContentChildren,
   Directive,
+  DoCheck,
   ElementRef,
-  EventEmitter,
+  Inject,
   Input,
+  OnChanges,
+  OnDestroy,
   Optional,
-  Output,
   QueryList,
   Renderer2,
   Self,
   ViewChild,
   ViewEncapsulation,
-  Inject
 } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {coerceBooleanProperty, Platform} from '../core';
-import {FormGroupDirective, NgControl, NgForm, FormControl} from '@angular/forms';
+import {FormControl, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
 import {getSupportedInputTypes} from '../core/platform/features';
 import {
   getMdInputContainerDuplicatedHintError,
@@ -39,15 +41,17 @@ import {
 } from './input-container-errors';
 import {
   FloatPlaceholderType,
-  PlaceholderOptions,
-  MD_PLACEHOLDER_GLOBAL_OPTIONS
+  MD_PLACEHOLDER_GLOBAL_OPTIONS,
+  PlaceholderOptions
 } from '../core/placeholder/placeholder-options';
 import {
   defaultErrorStateMatcher,
-  ErrorStateMatcher,
   ErrorOptions,
+  ErrorStateMatcher,
   MD_ERROR_GLOBAL_OPTIONS
 } from '../core/error/error-options';
+import {Subject} from 'rxjs/Subject';
+import {startWith} from '@angular/cdk/rxjs';
 
 // Invalid input type. Using one of these will throw an MdInputContainerUnsupportedTypeError.
 const MD_INPUT_INVALID_TYPES = [
@@ -97,10 +101,14 @@ export class MdHint {
 @Directive({
   selector: 'md-error, mat-error',
   host: {
-    'class': 'mat-input-error'
+    'class': 'mat-input-error',
+    'role': 'alert',
+    '[attr.id]': 'id',
   }
 })
-export class MdErrorDirective { }
+export class MdErrorDirective {
+  @Input() id: string = `md-input-error-${nextUniqueId++}`;
+}
 
 /** Prefix to be placed the the front of the input. */
 @Directive({
@@ -128,14 +136,13 @@ export class MdSuffix {}
     '[disabled]': 'disabled',
     '[required]': 'required',
     '[attr.aria-describedby]': 'ariaDescribedby || null',
-    '[attr.aria-invalid]': '_isErrorState()',
-    '(blur)': '_onBlur()',
-    '(focus)': '_onFocus()',
+    '[attr.aria-invalid]': '_isErrorState',
+    '(blur)': '_focusChanged(false)',
+    '(focus)': '_focusChanged(true)',
     '(input)': '_onInput()',
   }
 })
-export class MdInputDirective {
-
+export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
   /** Variables used as cache for getters and setters. */
   private _type = 'text';
   private _placeholder: string = '';
@@ -143,8 +150,12 @@ export class MdInputDirective {
   private _required = false;
   private _readonly = false;
   private _id: string;
-  private _cachedUid: string;
+  private _uid = `md-input-${nextUniqueId++}`;
   private _errorOptions: ErrorOptions;
+  private _previousNativeValue = this.value;
+
+  /** Whether the input is in an error state. */
+  _isErrorState = false;
 
   /** Whether the element is focused or not. */
   focused = false;
@@ -152,30 +163,24 @@ export class MdInputDirective {
   /** Sets the aria-describedby attribute on the input for improved a11y. */
   ariaDescribedby: string;
 
+  /**
+   * Stream that emits whenever the state of the input changes. This allows for other components
+   * (mostly `md-input-container`) that depend on the properties of `mdInput` to update their view.
+   */
+  _stateChanges = new Subject<void>();
+
   /** Whether the element is disabled. */
   @Input()
-  get disabled() {
-    return this._ngControl ? this._ngControl.disabled : this._disabled;
-  }
-
-  set disabled(value: any) {
-    this._disabled = coerceBooleanProperty(value);
-  }
+  get disabled() { return this._ngControl ? this._ngControl.disabled : this._disabled; }
+  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
 
   /** Unique id of the element. */
   @Input()
   get id() { return this._id; }
-  set id(value: string) {this._id = value || this._uid; }
+  set id(value: string) { this._id = value || this._uid; }
 
   /** Placeholder attribute of the element. */
-  @Input()
-  get placeholder() { return this._placeholder; }
-  set placeholder(value: string) {
-    if (this._placeholder !== value) {
-      this._placeholder = value;
-      this._placeholderChange.emit(this._placeholder);
-    }
-  }
+  @Input() placeholder: string = '';
 
   /** Whether the element is required. */
   @Input()
@@ -207,12 +212,12 @@ export class MdInputDirective {
 
   /** The input element's value. */
   get value() { return this._elementRef.nativeElement.value; }
-  set value(value: string) { this._elementRef.nativeElement.value = value; }
-
-  /**
-   * Emits an event when the placeholder changes so that the `md-input-container` can re-validate.
-   */
-  @Output() _placeholderChange = new EventEmitter<string>();
+  set value(value: string) {
+    if (value !== this.value) {
+      this._elementRef.nativeElement.value = value;
+      this._stateChanges.next();
+    }
+  }
 
   /** Whether the input is empty. */
   get empty() {
@@ -223,8 +228,6 @@ export class MdInputDirective {
         // TODO(mmalerba): Add e2e test for bad input case.
         !this._isBadInput();
   }
-
-  private get _uid() { return this._cachedUid = this._cachedUid || `md-input-${nextUniqueId++}`; }
 
   private _neverEmptyInputTypes = [
     'date',
@@ -245,13 +248,46 @@ export class MdInputDirective {
 
     // Force setter to be called in case id was not specified.
     this.id = this.id;
-
     this._errorOptions = errorOptions ? errorOptions : {};
     this.errorStateMatcher = this._errorOptions.errorStateMatcher || defaultErrorStateMatcher;
+
+    // On some versions of iOS the caret gets stuck in the wrong place when holding down the delete
+    // key. In order to get around this we need to "jiggle" the caret loose. Since this bug only
+    // exists on iOS, we only bother to install the listener on iOS.
+    if (_platform.IOS) {
+      _renderer.listen(_elementRef.nativeElement, 'keyup', (event: Event) => {
+        let el = event.target as HTMLInputElement;
+        if (!el.value && !el.selectionStart && !el.selectionEnd) {
+          // Note: Just setting `0, 0` doesn't fix the issue. Setting `1, 1` fixes it for the first
+          // time that you type text and then hold delete. Toggling to `1, 1` and then back to
+          // `0, 0` seems to completely fix it.
+          el.setSelectionRange(1, 1);
+          el.setSelectionRange(0, 0);
+        }
+      });
+    }
   }
 
-  /** Focuses the input element. */
-  focus() { this._elementRef.nativeElement.focus(); }
+  ngOnChanges() {
+    this._stateChanges.next();
+  }
+
+  ngOnDestroy() {
+    this._stateChanges.complete();
+  }
+
+  ngDoCheck() {
+    if (this._ngControl) {
+      // We need to re-evaluate this on every change detection cycle, because there are some
+      // error triggers that we can't subscribe to (e.g. parent form submissions). This means
+      // that whatever logic is in here has to be super lean or we risk destroying the performance.
+      this._updateErrorState();
+    } else {
+      // When the input isn't used together with `@angular/forms`, we need to check manually for
+      // changes to the native `value` property in order to update the floating label.
+      this._dirtyCheckNativeValue();
+    }
+  }
 
   _onFocus() {
     if (!this._readonly) {
@@ -259,7 +295,18 @@ export class MdInputDirective {
     }
   }
 
-  _onBlur() { this.focused = false; }
+  /** Focuses the input element. */
+  focus() {
+    this._elementRef.nativeElement.focus();
+  }
+
+  /** Callback for the cases where the focused state of the input changes. */
+  _focusChanged(isFocused: boolean) {
+    if (isFocused !== this.focused) {
+      this.focused = isFocused;
+      this._stateChanges.next();
+    }
+  }
 
   _onInput() {
     // This is a noop function and is used to let Angular know whenever the value changes.
@@ -271,22 +318,42 @@ export class MdInputDirective {
     // FormsModule or ReactiveFormsModule, because Angular forms also listens to input events.
   }
 
-  /** Whether the input is in an error state. */
-  _isErrorState(): boolean {
+  /** Re-evaluates the error state. This is only relevant with @angular/forms. */
+  private _updateErrorState() {
+    const oldState = this._isErrorState;
     const control = this._ngControl;
-    const form = this._parentFormGroup || this._parentForm;
-    return control && this.errorStateMatcher(control.control as FormControl, form);
+    const parent = this._parentFormGroup || this._parentForm;
+    const newState = control && this.errorStateMatcher(control.control as FormControl, parent);
+
+    if (newState !== oldState) {
+      this._isErrorState = newState;
+      this._stateChanges.next();
+    }
+  }
+
+  /** Does some manual dirty checking on the native input `value` property. */
+  private _dirtyCheckNativeValue() {
+    const newValue = this.value;
+
+    if (this._previousNativeValue !== newValue) {
+      this._previousNativeValue = newValue;
+      this._stateChanges.next();
+    }
   }
 
   /** Make sure the input is a supported type. */
   private _validateType() {
-    if (MD_INPUT_INVALID_TYPES.indexOf(this._type) !== -1) {
+    if (MD_INPUT_INVALID_TYPES.indexOf(this._type) > -1) {
       throw getMdInputContainerUnsupportedTypeError(this._type);
     }
   }
 
-  private _isNeverEmpty() { return this._neverEmptyInputTypes.indexOf(this._type) !== -1; }
+  /** Checks whether the input type isn't one of the types that are never empty. */
+  private _isNeverEmpty() {
+    return this._neverEmptyInputTypes.indexOf(this._type) > -1;
+  }
 
+  /** Checks whether the input is invalid based on the native validation. */
   private _isBadInput() {
     // The `validity` property won't be present on platform-server.
     let validity = (this._elementRef.nativeElement as HTMLInputElement).validity;
@@ -327,7 +394,7 @@ export class MdInputDirective {
     // Remove align attribute to prevent it from interfering with layout.
     '[attr.align]': 'null',
     'class': 'mat-input-container',
-    '[class.mat-input-invalid]': '_mdInputChild._isErrorState()',
+    '[class.mat-input-invalid]': '_mdInputChild._isErrorState',
     '[class.mat-focused]': '_mdInputChild.focused',
     '[class.ng-untouched]': '_shouldForward("untouched")',
     '[class.ng-touched]': '_shouldForward("touched")',
@@ -339,6 +406,7 @@ export class MdInputDirective {
     '(click)': '_focusInput()',
   },
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterContentChecked {
@@ -347,7 +415,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   /** Color of the input divider, based on the theme. */
   @Input() color: 'primary' | 'accent' | 'warn' = 'primary';
 
-  /** @deprecated Use color instead. */
+  /** @deprecated Use `color` instead. */
   @Input()
   get dividerColor() { return this.color; }
   set dividerColor(value) { this.color = value; }
@@ -385,23 +453,20 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   @Input()
   get floatPlaceholder() { return this._floatPlaceholder; }
   set floatPlaceholder(value: FloatPlaceholderType) {
-    this._floatPlaceholder = value || this._placeholderOptions.float || 'auto';
+    if (value !== this._floatPlaceholder) {
+      this._floatPlaceholder = value || this._placeholderOptions.float || 'auto';
+      this._changeDetectorRef.markForCheck();
+    }
   }
   private _floatPlaceholder: FloatPlaceholderType;
 
   /** Reference to the input's underline element. */
   @ViewChild('underline') underlineRef: ElementRef;
-
   @ContentChild(MdInputDirective) _mdInputChild: MdInputDirective;
-
   @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
-
   @ContentChildren(MdErrorDirective) _errorChildren: QueryList<MdErrorDirective>;
-
   @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;
-
   @ContentChildren(MdPrefix) _prefixChildren: QueryList<MdPrefix>;
-
   @ContentChildren(MdSuffix) _suffixChildren: QueryList<MdSuffix>;
 
   constructor(
@@ -414,18 +479,31 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
 
   ngAfterContentInit() {
     this._validateInputChild();
-    this._processHints();
-    this._validatePlaceholders();
 
-    // Re-validate when things change.
-    this._hintChildren.changes.subscribe(() => this._processHints());
-    this._mdInputChild._placeholderChange.subscribe(() => this._validatePlaceholders());
+    // Subscribe to changes in the child input state in order to update the container UI.
+    startWith.call(this._mdInputChild._stateChanges, null).subscribe(() => {
+      this._validatePlaceholders();
+      this._syncAriaDescribedby();
+      this._changeDetectorRef.markForCheck();
+    });
 
-    // Mark for check when the input's value changes to recalculate whether input is empty
-    const control = this._mdInputChild._ngControl;
-    if (control && control.valueChanges) {
-      control.valueChanges.subscribe(() => this._changeDetectorRef.markForCheck());
+    if (this._mdInputChild._ngControl && this._mdInputChild._ngControl.valueChanges) {
+      this._mdInputChild._ngControl.valueChanges.subscribe(() => {
+        this._changeDetectorRef.markForCheck();
+      });
     }
+
+    // Re-validate when the number of hints changes.
+    startWith.call(this._hintChildren.changes, null).subscribe(() => {
+      this._processHints();
+      this._changeDetectorRef.markForCheck();
+    });
+
+    // Update the aria-described by when the number of errors changes.
+    startWith.call(this._errorChildren.changes, null).subscribe(() => {
+      this._syncAriaDescribedby();
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   ngAfterContentChecked() {
@@ -445,15 +523,20 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   }
 
   /** Whether the input has a placeholder. */
-  _hasPlaceholder() { return !!(this._mdInputChild.placeholder || this._placeholderChild); }
+  _hasPlaceholder() {
+    return !!(this._mdInputChild.placeholder || this._placeholderChild);
+  }
 
   /** Focuses the underlying input. */
-  _focusInput() { this._mdInputChild.focus(); }
+  _focusInput() {
+    this._mdInputChild.focus();
+  }
 
   /** Determines whether to display hints or errors. */
   _getDisplayedMessages(): 'error' | 'hint' {
     let input = this._mdInputChild;
-    return (this._errorChildren.length > 0 && input._isErrorState()) ? 'error' : 'hint';
+    return (this._errorChildren && this._errorChildren.length > 0 && input._isErrorState) ?
+        'error' : 'hint';
   }
 
   /**
@@ -505,19 +588,24 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   private _syncAriaDescribedby() {
     if (this._mdInputChild) {
       let ids: string[] = [];
-      let startHint = this._hintChildren ?
-          this._hintChildren.find(hint => hint.align === 'start') : null;
-      let endHint = this._hintChildren ?
-          this._hintChildren.find(hint => hint.align === 'end') : null;
 
-      if (startHint) {
-        ids.push(startHint.id);
-      } else if (this._hintLabel) {
-        ids.push(this._hintLabelId);
-      }
+      if (this._getDisplayedMessages() === 'hint') {
+        let startHint = this._hintChildren ?
+            this._hintChildren.find(hint => hint.align === 'start') : null;
+        let endHint = this._hintChildren ?
+            this._hintChildren.find(hint => hint.align === 'end') : null;
 
-      if (endHint) {
-        ids.push(endHint.id);
+        if (startHint) {
+          ids.push(startHint.id);
+        } else if (this._hintLabel) {
+          ids.push(this._hintLabelId);
+        }
+
+        if (endHint) {
+          ids.push(endHint.id);
+        }
+      } else if (this._errorChildren) {
+        ids = this._errorChildren.map(mdError => mdError.id);
       }
 
       this._mdInputChild.ariaDescribedby = ids.join(' ');

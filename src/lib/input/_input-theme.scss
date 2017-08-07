@@ -102,12 +102,12 @@
 
 // Applies a floating placeholder above the input itself.
 @mixin _mat-input-placeholder-floating($font-scale, $infix-padding, $infix-margin-top) {
+  // We use perspecitve to fix the text blurriness as described here:
+  // http://www.useragentman.com/blog/2014/05/04/fixing-typography-inside-of-2-d-css-transforms/
+  // This results in a small jitter after the label floats on Firefox, which the
+  // translateZ fixes.
   transform: translateY(-$infix-margin-top - $infix-padding)
              scale($font-scale)
-             // We use perspecitve to fix the text blurriness as described here:
-             // http://www.useragentman.com/blog/2014/05/04/fixing-typography-inside-of-2-d-css-transforms/
-             // This results in a small jitter after the label floats on Firefox, which the
-             // translateZ fixes.
              perspective(100px) translateZ(0.001px);
   // The tricks above used to smooth out the animation on chrome and firefox actually make things
   // worse on IE, so we don't include them in the IE version.
@@ -143,14 +143,17 @@
   // we need to divide by the scale factor to make it half of the original text size. We again need
   // to subtract off the line spacing since the mocks measure to the edge of the text, not the  edge
   // of the line.
-  $subscript-margin-top: 0.5em / $subscript-font-scale - $line-spacing;
+  $subscript-margin-top: 0.5em / $subscript-font-scale - ($line-spacing * 2);
   // The padding applied to the input-wrapper to reserve space for the subscript, since it's
   // absolutely positioned. This is a combination of the subscript's margin and line-height, but we
   // need to multiply by the subscript font scale factor since the wrapper has a larger font size.
   $wrapper-padding-bottom: ($subscript-margin-top + $line-height) * $subscript-font-scale;
 
   .mat-input-container {
-    @include mat-typography-level-to-styles($config, input);
+    font-family: mat-font-family($config);
+    font-size: inherit;
+    font-weight: mat-font-weight($config, input);
+    line-height: mat-line-height($config, input);
   }
 
   .mat-input-wrapper {
@@ -160,9 +163,9 @@
   .mat-input-prefix,
   .mat-input-suffix {
     // Allow icons in a prefix or suffix to adapt to the correct size.
-    .mat-icon,
-    .mat-datepicker-toggle {
+    .mat-icon {
       font-size: $prefix-suffix-icon-font-size;
+      line-height: $line-height;
     }
 
     // Allow icon buttons in a prefix or suffix to adapt to the correct size.
@@ -171,7 +174,8 @@
       width: $prefix-suffix-icon-font-scale * 1em;
 
       .mat-icon {
-        line-height: $prefix-suffix-icon-font-scale;
+        height: $line-height * 1em;
+        line-height: $line-height;
       }
     }
   }
@@ -187,6 +191,12 @@
       @include _mat-input-placeholder-floating($subscript-font-scale,
           $infix-padding, $infix-margin-top);
     }
+  }
+
+  // <input> elements seem to have their height set slightly too large on Safari causing the text to
+  // be misaligned w.r.t. the placeholder. Adding this margin corrects it.
+  input.mat-input-element {
+    margin-top: -$line-spacing * 1em;
   }
 
   .mat-input-placeholder-wrapper {

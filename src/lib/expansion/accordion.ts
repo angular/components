@@ -7,7 +7,7 @@
  */
 
 import {Directive, Input} from '@angular/core';
-import {coerceBooleanProperty} from '@angular/cdk';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /** MdAccordion's display modes. */
 export type MdAccordionDisplayMode = 'default' | 'flat';
@@ -19,7 +19,7 @@ let nextId = 0;
  * Directive whose purpose is to manage the expanded state of CdkAccordionItem children.
  */
 @Directive({
-  selector: '[cdk-accordion]',
+  selector: 'cdk-accordion, [cdk-accordion]',
 })
 export class CdkAccordion {
   /** A readonly id value to use for unique selection coordination. */

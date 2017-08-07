@@ -122,13 +122,19 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   /** Event emitted when the associated menu is closed. */
   @Output() onMenuClose = new EventEmitter<void>();
 
-  constructor(private _overlay: Overlay,
-              private _element: ElementRef,
-              private _viewContainerRef: ViewContainerRef,
-              @Inject(MD_MENU_SCROLL_STRATEGY) private _scrollStrategy,
-              @Optional() private _parentMenu: MdMenu,
-              @Optional() @Self() private _menuItemInstance: MdMenuItem,
-              @Optional() private _dir: Directionality) { }
+  constructor(
+    private _overlay: Overlay,
+    private _element: ElementRef,
+    private _viewContainerRef: ViewContainerRef,
+    @Inject(MD_MENU_SCROLL_STRATEGY) private _scrollStrategy,
+    @Optional() private _parentMenu: MdMenu,
+    @Optional() @Self() private _menuItemInstance: MdMenuItem,
+    @Optional() private _dir: Directionality) {
+
+    if (_menuItemInstance) {
+      _menuItemInstance._triggersSubmenu = this.triggersSubmenu();
+    }
+  }
 
   ngAfterViewInit() {
     this._checkMenu();
@@ -218,8 +224,9 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    * the menu was opened via the keyboard.
    */
   private _initMenu(): void {
-    this.menu.isSubmenu = this.triggersSubmenu();
+    this.menu.parentMenu = this.triggersSubmenu() ? this._parentMenu : undefined;
     this.menu.direction = this.dir;
+    this._setMenuElevation();
     this._setIsMenuOpen(true);
 
     // Should only set focus if opened via the keyboard, so keyboard users can
@@ -227,6 +234,21 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
     // see the focus style.
     if (!this._openedByMouse) {
       this.menu.focusFirstItem();
+    }
+  }
+
+  /** Updates the menu elevation based on the amount of parent menus that it has. */
+  private _setMenuElevation(): void {
+    if (this.menu.setElevation) {
+      let depth = 0;
+      let parentMenu = this.menu.parentMenu;
+
+      while (parentMenu) {
+        depth++;
+        parentMenu = parentMenu.parentMenu;
+      }
+
+      this.menu.setElevation(depth);
     }
   }
 

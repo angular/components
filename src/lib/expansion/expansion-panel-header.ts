@@ -12,6 +12,10 @@ import {
   Host,
   ViewEncapsulation,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  OnDestroy,
+  Renderer2,
+  ElementRef,
 } from '@angular/core';
 import {
   trigger,
@@ -22,6 +26,10 @@ import {
 } from '@angular/animations';
 import {SPACE, ENTER} from '../core/keyboard/keycodes';
 import {MdExpansionPanel, EXPANSION_PANEL_ANIMATION_TIMING} from './expansion-panel';
+import {filter} from '../core/rxjs/index';
+import {FocusOriginMonitor} from '../core/style/index';
+import {merge} from 'rxjs/observable/merge';
+import {Subscription} from 'rxjs/Subscription';
 
 
 /**
@@ -56,14 +64,33 @@ import {MdExpansionPanel, EXPANSION_PANEL_ANIMATION_TIMING} from './expansion-pa
       transition('expanded <=> collapsed', animate(EXPANSION_PANEL_ANIMATION_TIMING)),
     ]),
     trigger('expansionHeight', [
-      state('collapsed', style({height: '48px', 'line-height': '48px'})),
-      state('expanded', style({height: '64px', 'line-height': '64px'})),
+      state('collapsed', style({height: '48px'})),
+      state('expanded', style({height: '64px'})),
       transition('expanded <=> collapsed', animate(EXPANSION_PANEL_ANIMATION_TIMING)),
     ]),
   ],
 })
-export class MdExpansionPanelHeader {
-  constructor(@Host() public panel: MdExpansionPanel) {}
+export class MdExpansionPanelHeader implements OnDestroy {
+  private _parentChangeSubscription: Subscription | null = null;
+
+  constructor(
+    @Host() public panel: MdExpansionPanel,
+    private _renderer: Renderer2,
+    private _element: ElementRef,
+    private _focusOriginMonitor: FocusOriginMonitor,
+    private _changeDetectorRef: ChangeDetectorRef) {
+
+    // Since the toggle state depends on an @Input on the panel, we
+    // need to  subscribe and trigger change detection manually.
+    this._parentChangeSubscription = merge(
+      panel.opened,
+      panel.closed,
+      filter.call(panel._inputChanges, changes => !!changes.hideToggle)
+    )
+    .subscribe(() => this._changeDetectorRef.markForCheck());
+
+    _focusOriginMonitor.monitor(_element.nativeElement, _renderer, false);
+  }
 
   /** Toggles the expanded state of the panel. */
   _toggle(): void {
@@ -102,6 +129,15 @@ export class MdExpansionPanelHeader {
       default:
         return;
     }
+  }
+
+  ngOnDestroy() {
+    if (this._parentChangeSubscription) {
+      this._parentChangeSubscription.unsubscribe();
+      this._parentChangeSubscription = null;
+    }
+
+    this._focusOriginMonitor.stopMonitoring(this._element.nativeElement);
   }
 }
 

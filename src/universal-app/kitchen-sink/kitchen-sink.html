@@ -85,7 +85,7 @@
 
 <md-input-container>
   <input type="text" mdInput [mdDatepicker]="birthday" placeholder="Birthday">
-  <button mdSuffix [mdDatepickerToggle]="birthday"></button>
+  <md-datepicker-toggle mdSuffix [for]="birthday"></md-datepicker-toggle>
   <md-datepicker #birthday></md-datepicker>
 </md-input-container>
 
@@ -159,10 +159,10 @@
 <md-radio-button name="onions" disabled>Red</md-radio-button>
 
 <h2>Select</h2>
-<md-select>
-  <md-option>Glass</md-option>
-  <md-option>Ceramic</md-option>
-  <md-option>Steel</md-option>
+<md-select value="ceramic">
+  <md-option value="glass">Glass</md-option>
+  <md-option value="ceramic">Ceramic</md-option>
+  <md-option value="steel">Steel</md-option>
 </md-select>
 
 <h2>Sidenav</h2>
@@ -198,6 +198,12 @@
  <a md-tab-link href="https://google.com" active>Also Google</a>
 </nav>
 
+<h2>Paginator</h2>
+
+<md-paginator [length]="100"
+              [pageSizeOptions]="[5, 10, 25, 100]">
+</md-paginator>
+
 <h2>Toolbar</h2>
 <md-toolbar>Basic toolbar</md-toolbar>
 <md-toolbar>
@@ -208,3 +214,16 @@
 <h2>Tooltip</h2>
 
 <button mdTooltip="Action!">Go</button>
+
+<h2>Autosize textarea</h2>
+<textarea mdTextareaAutosize mdAutosizeMaxRows="10"></textarea>
+
+<h2>Expansion Panel</h2>
+<md-expansion-panel>
+  <md-expansion-panel-header>
+    <mat-panel-description>This is a panel description.</mat-panel-description>
+    <mat-panel-title>Panel Title</mat-panel-title>
+  </md-expansion-panel-header>
+  This is the content text that makes sense here.
+  <md-action-row>Action</md-action-row>
+</md-expansion-panel>

@@ -7,6 +7,7 @@ import {Observable} from 'rxjs/Observable';
 import {combineLatest} from 'rxjs/observable/combineLatest';
 import {CdkTableModule} from './index';
 import {map} from 'rxjs/operator/map';
+import {getTableDuplicateColumnNameError, getTableUnknownColumnError} from './table-errors';
 
 describe('CdkTable', () => {
   let fixture: ComponentFixture<SimpleCdkTableApp>;
@@ -24,7 +25,11 @@ describe('CdkTable', () => {
         DynamicDataSourceCdkTableApp,
         CustomRoleCdkTableApp,
         TrackByCdkTableApp,
+        DynamicColumnDefinitionsCdkTableApp,
         RowContextCdkTableApp,
+        DuplicateColumnDefNameCdkTableApp,
+        MissingColumnDefCdkTableApp,
+        CrazyColumnNameCdkTableApp,
       ],
     }).compileComponents();
   }));
@@ -37,8 +42,7 @@ describe('CdkTable', () => {
     table = component.table;
     tableElement = fixture.nativeElement.querySelector('cdk-table');
 
-    fixture.detectChanges();  // Let the component and table create embedded views
-    fixture.detectChanges();  // Let the cells render
+    fixture.detectChanges();
   });
 
   describe('should initialize', () => {
@@ -94,6 +98,17 @@ describe('CdkTable', () => {
     });
   });
 
+  it('should be able to apply class-friendly css class names for the column cells', () => {
+    const crazyColumnNameAppFixture = TestBed.createComponent(CrazyColumnNameCdkTableApp);
+    const crazyColumnNameTableElement =
+        crazyColumnNameAppFixture.nativeElement.querySelector('cdk-table');
+    crazyColumnNameAppFixture.detectChanges();
+
+    // Column was named 'crazy-column-NAME-1!@#$%^-_&*()2'
+    expect(getHeaderCells(crazyColumnNameTableElement)[0].classList)
+        .toContain('cdk-column-crazy-column-NAME-1-------_----2');
+  });
+
   it('should disconnect the data source when table is destroyed', () => {
     expect(dataSource.isConnected).toBe(true);
 
@@ -108,6 +123,57 @@ describe('CdkTable', () => {
     expect(fixture.nativeElement.querySelector('cdk-table').getAttribute('role')).toBe('treegrid');
   });
 
+  it('should throw an error if two column definitions have the same name', () => {
+    expect(() => TestBed.createComponent(DuplicateColumnDefNameCdkTableApp).detectChanges())
+        .toThrowError(getTableDuplicateColumnNameError('column_a').message);
+  });
+
+  it('should throw an error if a column definition is requested but not defined', () => {
+    expect(() => TestBed.createComponent(MissingColumnDefCdkTableApp).detectChanges())
+        .toThrowError(getTableUnknownColumnError('column_a').message);
+  });
+
+  it('should be able to dynamically add/remove column definitions', () => {
+    const dynamicColumnDefFixture = TestBed.createComponent(DynamicColumnDefinitionsCdkTableApp);
+    dynamicColumnDefFixture.detectChanges();
+    dynamicColumnDefFixture.detectChanges();
+
+    const dynamicColumnDefTable = dynamicColumnDefFixture.nativeElement.querySelector('cdk-table');
+    const dynamicColumnDefComp = dynamicColumnDefFixture.componentInstance;
+
+    // Add a new column and expect it to show up in the table
+    let columnA = 'columnA';
+    dynamicColumnDefComp.dynamicColumns.push(columnA);
+    dynamicColumnDefFixture.detectChanges();
+    expectTableToMatchContent(dynamicColumnDefTable, [
+      [columnA], // Header row
+      [columnA], // Data rows
+      [columnA],
+      [columnA],
+    ]);
+
+    // Add another new column and expect it to show up in the table
+    let columnB = 'columnB';
+    dynamicColumnDefComp.dynamicColumns.push(columnB);
+    dynamicColumnDefFixture.detectChanges();
+    expectTableToMatchContent(dynamicColumnDefTable, [
+      [columnA, columnB], // Header row
+      [columnA, columnB], // Data rows
+      [columnA, columnB],
+      [columnA, columnB],
+    ]);
+
+    // Remove column A expect only column B to be rendered
+    dynamicColumnDefComp.dynamicColumns.shift();
+    dynamicColumnDefFixture.detectChanges();
+    expectTableToMatchContent(dynamicColumnDefTable, [
+      [columnB], // Header row
+      [columnB], // Data rows
+      [columnB],
+      [columnB],
+    ]);
+  });
+
   it('should re-render the rows when the data changes', () => {
     dataSource.addData();
     fixture.detectChanges();
@@ -119,8 +185,6 @@ describe('CdkTable', () => {
       expect(getCells(row).length).toBe(component.columnsToRender.length);
     });
   });
-
-  // TODO(andrewseguin): Add test for dynamic classes on header/rows
 
   it('should use differ to add/remove/move rows', () => {
     // Each row receives an attribute 'initialIndex' the element's original place
@@ -182,9 +246,7 @@ describe('CdkTable', () => {
       dataSource = trackByComponent.dataSource as FakeDataSource;
       table = trackByComponent.table;
       tableElement = trackByFixture.nativeElement.querySelector('cdk-table');
-
-      trackByFixture.detectChanges();  // Let the component and table create embedded views
-      trackByFixture.detectChanges();  // Let the cells render
+      trackByFixture.detectChanges();
 
       // Each row receives an attribute 'initialIndex' the element's original place
       getRows(tableElement).forEach((row: Element, index: number) => {
@@ -307,12 +369,10 @@ describe('CdkTable', () => {
   });
 
   it('should match the right table content with dynamic data source', () => {
-    fixture = TestBed.createComponent(DynamicDataSourceCdkTableApp);
-    component = fixture.componentInstance;
-    tableElement = fixture.nativeElement.querySelector('cdk-table');
-
-    fixture.detectChanges();  // Let the table render the rows
-    fixture.detectChanges();  // Let the rows render their cells
+    const dynamicDataSourceFixture = TestBed.createComponent(DynamicDataSourceCdkTableApp);
+    component = dynamicDataSourceFixture.componentInstance;
+    tableElement = dynamicDataSourceFixture.nativeElement.querySelector('cdk-table');
+    dynamicDataSourceFixture.detectChanges();
 
     // Expect that the component has no data source and the table element reflects empty data.
     expect(component.dataSource).toBe(undefined);
@@ -323,10 +383,10 @@ describe('CdkTable', () => {
     // Add a data source that has initialized data. Expect that the table shows this data.
     const dynamicDataSource = new FakeDataSource();
     component.dataSource = dynamicDataSource;
-    fixture.detectChanges();
+    dynamicDataSourceFixture.detectChanges();
     expect(dynamicDataSource.isConnected).toBe(true);
 
-    let data = component.dataSource.data;
+    const data = component.dataSource.data;
     expectTableToMatchContent(tableElement, [
       ['Column A'],
       [data[0].a],
@@ -336,12 +396,26 @@ describe('CdkTable', () => {
 
     // Remove the data source and check to make sure the table is empty again.
     component.dataSource = null;
-    fixture.detectChanges();
+    dynamicDataSourceFixture.detectChanges();
 
     // Expect that the old data source has been disconnected.
     expect(dynamicDataSource.isConnected).toBe(false);
     expectTableToMatchContent(tableElement, [
       ['Column A']
+    ]);
+
+    // Reconnect a data source and check that the table is populated
+    const newDynamicDataSource = new FakeDataSource();
+    component.dataSource = newDynamicDataSource;
+    dynamicDataSourceFixture.detectChanges();
+    expect(newDynamicDataSource.isConnected).toBe(true);
+
+    const newData = component.dataSource.data;
+    expectTableToMatchContent(tableElement, [
+      ['Column A'],
+      [newData[0].a],
+      [newData[1].a],
+      [newData[2].a],
     ]);
   });
 
@@ -349,11 +423,9 @@ describe('CdkTable', () => {
     const contextFixture = TestBed.createComponent(RowContextCdkTableApp);
     const contextComponent = contextFixture.componentInstance;
     tableElement = contextFixture.nativeElement.querySelector('cdk-table');
+    contextFixture.detectChanges();
 
-    contextFixture.detectChanges();  // Let the table initialize its view
-    contextFixture.detectChanges();  // Let the table render the rows and cells
-
-    const rowElements = contextFixture.nativeElement.querySelectorAll('cdk-row');
+    let rowElements = contextFixture.nativeElement.querySelectorAll('cdk-row');
 
     // Rows should not have any context classes
     for (let i = 0; i < rowElements.length; i++) {
@@ -387,9 +459,7 @@ describe('CdkTable', () => {
     const contextFixture = TestBed.createComponent(RowContextCdkTableApp);
     const contextComponent = contextFixture.componentInstance;
     tableElement = contextFixture.nativeElement.querySelector('cdk-table');
-
-    contextFixture.detectChanges();  // Let the table initialize its view
-    contextFixture.detectChanges();  // Let the table render the rows and cells
+    contextFixture.detectChanges();
 
     const rowElements = contextFixture.nativeElement.querySelectorAll('cdk-row');
 
@@ -586,6 +656,26 @@ class TrackByCdkTableApp {
 
 @Component({
   template: `
+    <cdk-table [dataSource]="dataSource">
+      <ng-container [cdkColumnDef]="column" *ngFor="let column of dynamicColumns">
+        <cdk-header-cell *cdkHeaderCellDef> {{column}} </cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{column}} </cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="dynamicColumns"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: dynamicColumns;"></cdk-row>
+    </cdk-table>
+  `
+})
+class DynamicColumnDefinitionsCdkTableApp {
+  dynamicColumns: any[] = [];
+  dataSource: FakeDataSource = new FakeDataSource();
+
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
+}
+
+@Component({
+  template: `
     <cdk-table [dataSource]="dataSource" role="treegrid">
       <ng-container cdkColumnDef="column_a">
         <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
@@ -602,6 +692,65 @@ class CustomRoleCdkTableApp {
   columnsToRender = ['column_a'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
+}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource">
+      <ng-container [cdkColumnDef]="columnsToRender[0]">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
+    </cdk-table>
+  `
+})
+class CrazyColumnNameCdkTableApp {
+  dataSource: FakeDataSource = new FakeDataSource();
+  columnsToRender = ['crazy-column-NAME-1!@#$%^-_&*()2'];
+
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
+}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_a">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_a">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="['column_a']"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: ['column_a']"></cdk-row>
+    </cdk-table>
+  `
+})
+class DuplicateColumnDefNameCdkTableApp {
+  dataSource: FakeDataSource = new FakeDataSource();
+}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_b">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="['column_a']"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: ['column_a']"></cdk-row>
+    </cdk-table>
+  `
+})
+class MissingColumnDefCdkTableApp {
+  dataSource: FakeDataSource = new FakeDataSource();
 }
 
 @Component({
@@ -681,7 +830,7 @@ function expectTableToMatchContent(tableElement: Element, expectedTableContent: 
   // Check data row cells
   getRows(tableElement).forEach((row, rowIndex) => {
     getCells(row).forEach((cell, cellIndex) => {
-      const expected = expectedHeaderContent ?
+      const expected = expectedTableContent.length ?
           expectedTableContent[rowIndex][cellIndex] :
           null;
       checkCellContent(cell, expected);

@@ -377,6 +377,15 @@ describe('MdInputContainer without forms', function () {
     expect(el.nativeElement.textContent).toMatch(/hello\s+\*/g);
   });
 
+  it('should hide the required star from screen readers', () => {
+    let fixture = TestBed.createComponent(MdInputContainerPlaceholderRequiredTestComponent);
+    fixture.detectChanges();
+
+    let el = fixture.debugElement.query(By.css('.mat-placeholder-required')).nativeElement;
+
+    expect(el.getAttribute('aria-hidden')).toBe('true');
+  });
+
   it('hide placeholder required star when set to hide the required marker', () => {
     let fixture = TestBed.createComponent(MdInputContainerPlaceholderRequiredTestComponent);
     fixture.detectChanges();
@@ -564,6 +573,25 @@ describe('MdInputContainer without forms', function () {
 
     expect(labelEl.classList).not.toContain('mat-empty');
     expect(labelEl.classList).not.toContain('mat-float');
+  });
+
+  it('should be able to toggle the floating placeholder programmatically', () => {
+    const fixture = TestBed.createComponent(MdInputContainerWithId);
+
+    fixture.detectChanges();
+
+    const inputContainer = fixture.debugElement.query(By.directive(MdInputContainer));
+    const containerInstance = inputContainer.componentInstance as MdInputContainer;
+    const placeholder = inputContainer.nativeElement.querySelector('.mat-input-placeholder');
+
+    expect(containerInstance.floatPlaceholder).toBe('auto');
+    expect(placeholder.classList).toContain('mat-empty', 'Expected input to be considered empty.');
+
+    containerInstance.floatPlaceholder = 'always';
+    fixture.detectChanges();
+
+    expect(placeholder.classList)
+        .not.toContain('mat-empty', 'Expected input to be considered not empty.');
   });
 
   it('should not have prefix and suffix elements when none are specified', () => {
@@ -794,6 +822,31 @@ describe('MdInputContainer with forms', () => {
           .toBe(1, 'Expected one hint to still be shown.');
       });
     }));
+
+    it('should set the proper role on the error messages', () => {
+      testComponent.formControl.markAsTouched();
+      fixture.detectChanges();
+
+      expect(containerEl.querySelector('md-error')!.getAttribute('role')).toBe('alert');
+    });
+
+    it('sets the aria-describedby to reference errors when in error state', () => {
+      let hintId = fixture.debugElement.query(By.css('.mat-hint')).nativeElement.getAttribute('id');
+      let describedBy = inputEl.getAttribute('aria-describedby');
+
+      expect(hintId).toBeTruthy('hint should be shown');
+      expect(describedBy).toBe(hintId);
+
+      fixture.componentInstance.formControl.markAsTouched();
+      fixture.detectChanges();
+
+      let errorIds = fixture.debugElement.queryAll(By.css('.mat-input-error'))
+          .map(el => el.nativeElement.getAttribute('id')).join(' ');
+      describedBy = inputEl.getAttribute('aria-describedby');
+
+      expect(errorIds).toBeTruthy('errors should be shown');
+      expect(describedBy).toBe(errorIds);
+    });
   });
 
   describe('custom error behavior', () => {

@@ -8,6 +8,7 @@
 
 import {Inject, Injectable, Optional, LOCALE_ID} from '@angular/core';
 import {DateAdapter} from './date-adapter';
+import {extendObject} from '../util/object-extend';
 
 
 // TODO(mmalerba): Remove when we no longer support safari 9.
@@ -55,6 +56,14 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     super();
     super.setLocale(localeId);
   }
+
+  /**
+   * Whether to use `timeZone: 'utc'` with `Intl.DateTimeFormat` when formatting dates.
+   * Without this `Intl.DateTimeFormat` sometimes chooses the wrong timeZone, which can throw off
+   * the result. (e.g. in the en-US locale `new Date(1800, 7, 14).toLocaleDateString()`
+   * will produce `'8/13/1800'`.
+   */
+  useUtcForDisplay = true;
 
   getYear(date: Date): number {
     return date.getFullYear();
@@ -148,12 +157,23 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   parse(value: any): Date | null {
     // We have no way using the native JS Date to set the parse format or locale, so we ignore these
     // parameters.
-    let timestamp = typeof value == 'number' ? value : Date.parse(value);
-    return isNaN(timestamp) ? null : new Date(timestamp);
+    if (typeof value == 'number') {
+      return new Date(value);
+    }
+    return value ? new Date(Date.parse(value)) : null;
   }
 
   format(date: Date, displayFormat: Object): string {
+    if (!this.isValid(date)) {
+      throw Error('NativeDateAdapter: Cannot format invalid date.');
+    }
     if (SUPPORTS_INTL_API) {
+      if (this.useUtcForDisplay) {
+        date = new Date(Date.UTC(
+            date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(),
+            date.getMinutes(), date.getSeconds(), date.getMilliseconds()));
+        displayFormat = extendObject({}, displayFormat, {timeZone: 'utc'});
+      }
       let dtf = new Intl.DateTimeFormat(this.locale, displayFormat);
       return this._stripDirectionalityCharacters(dtf.format(date));
     }
@@ -190,6 +210,14 @@ export class NativeDateAdapter extends DateAdapter<Date> {
       this._2digit(date.getUTCMonth() + 1),
       this._2digit(date.getUTCDate())
     ].join('-');
+  }
+
+  isDateInstance(obj: any) {
+    return obj instanceof Date;
+  }
+
+  isValid(date: Date) {
+    return !isNaN(date.getTime());
   }
 
   /** Creates a date but allows the month and date to overflow. */

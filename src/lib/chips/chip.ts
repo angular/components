@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 
 import {Focusable} from '../core/a11y/focus-key-manager';
-import {coerceBooleanProperty} from '@angular/cdk';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 import {SPACE, BACKSPACE, DELETE} from '../core/keyboard/keycodes';
@@ -53,6 +53,7 @@ export class MdBasicChip { }
   selector: `md-basic-chip, [md-basic-chip], md-chip, [md-chip],
              mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]`,
   inputs: ['color', 'disabled'],
+  exportAs: 'mdChip',
   host: {
     'class': 'mat-chip',
     'tabindex': '-1',
