@@ -6,7 +6,13 @@ import {
   TestBed,
   tick
 } from '@angular/core/testing';
-import {ChangeDetectionStrategy, Component, DebugElement, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DebugElement,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -293,9 +299,20 @@ describe('MdTooltip', () => {
       expect(overlayContainerElement.textContent).toBe('');
     }));
 
-    fit('should have an aria-described element with the tooltip message', fakeAsync(() => {
-      const button = fixture.nativeElement.querySelector('button');
-    }));
+    it('should have an aria-described element with the tooltip message', () => {
+      const dynamicTooltipsDemoFixture = TestBed.createComponent(DynamicTooltipsDemo);
+      const dynamicTooltipsComponent = dynamicTooltipsDemoFixture.componentInstance;
+
+      dynamicTooltipsComponent.tooltips = ['Tooltip One', 'Tooltip Two'];
+      dynamicTooltipsDemoFixture.detectChanges();
+
+      const buttons = dynamicTooltipsComponent.getButtons();
+      const firstButtonAria = buttons[0].getAttribute('aria-describedby');
+      expect(document.querySelector(`#${firstButtonAria}`)!.textContent).toBe('Tooltip One');
+
+      const secondButtonAria = buttons[1].getAttribute('aria-describedby');
+      expect(document.querySelector(`#${secondButtonAria}`)!.textContent).toBe('Tooltip Two');
+    });
 
     it('should not try to dispose the tooltip when destroyed and done hiding', fakeAsync(() => {
       tooltipDirective.show();
@@ -587,7 +604,6 @@ class OnPushTooltipDemo {
 @Component({
   selector: 'app',
   template: `
-      {{tooltips}} Test
     <button *ngFor="let tooltip of tooltips"
             [mdTooltip]="tooltip">
       Button {{tooltip}}
@@ -595,4 +611,10 @@ class OnPushTooltipDemo {
 })
 class DynamicTooltipsDemo {
   tooltips: Array<string> = [];
+
+  constructor(private _elementRef: ElementRef) {}
+
+  getButtons() {
+    return this._elementRef.nativeElement.querySelectorAll('button');
+  }
 }

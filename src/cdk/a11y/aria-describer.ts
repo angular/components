@@ -1,13 +1,22 @@
-import {Injectable, Renderer2, Optional} from '@angular/core';
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {Injectable, Optional, Renderer2} from '@angular/core';
 import {Platform} from '@angular/cdk/platform';
+import {addAriaReferencedId, removeAriaReferencedId} from './aria-reference';
 
 /**
  * Interface used to register message elements and keep a count of how many registrations have
  * the same message and the reference to the message element used for the aria-describedby.
  */
 export interface RegisteredMessage {
-  element: HTMLElement;
-  count: number;
+  messageElement: HTMLElement;
+  hostElements: HTMLElement[];
 }
 
 /** ID used for the body container where all messages are appended. */
@@ -39,48 +48,51 @@ export class AriaDescriber {
   }
 
   /**
-   * Registers the message for accessibility. If this message has not yet been
-   * registered, a new element will be created in a visually hidden container with the message
-   * as its content. This provides screenreaders a reference the trigger's aria-describedby.
-   * If an element has already been created for this message, increase that registered message's
-   * reference count.
-   * @returns Identifier of the created message element.
+   * Adds to the host element an aria-describedby reference to a hidden element that contains
+   * the message. If the same message has already been registered, then it will reuse the created
+   * message element.
    */
-  registerMessage(message: string): string {
-    if (!this._platform.isBrowser || !message) { return ''; }
+  addDescription(hostElement: HTMLElement, message: string) {
+    if (!this._platform.isBrowser || !message.trim()) { return; }
 
-    const registeredMessage = registeredMessages.get(message);
-    if (registeredMessage) {
-      registeredMessage.count++;
-      return registeredMessage.element.id;
+    if (!registeredMessages.get(message)) {
+      const messageElement = this._createMessageElement(message);
+      registeredMessages.set(message, {messageElement, hostElements: []});
     }
 
-    const messageElement = this._createMessageElement(message)!;
-    registeredMessages.set(message, {element: messageElement, count: 1});
-
-    return messageElement.id;
+    const registeredMessage = registeredMessages.get(message)!;
+    registeredMessage.hostElements.push(hostElement);
+    addAriaReferencedId(hostElement, registeredMessage.messageElement.id, 'aria-describedby');
   }
 
   /**
-   * Removes the message element if this is the last count of its registration.
-   * Otherwise, decrease the reference count of the registered message.
+   * Removes the host element's aria-describedby reference to the message element.
    */
-  unregisterMessage(message: string) {
-    if (!this._platform.isBrowser || !message) { return; }
+  removeDescription(hostElement: HTMLElement, message: string) {
+    if (!this._platform.isBrowser || !message.trim()) { return; }
 
     const registeredMessage = registeredMessages.get(message)!;
-    registeredMessage.count--;
+    registeredMessage.hostElements = registeredMessage.hostElements.filter(el => el != hostElement);
+    removeAriaReferencedId(hostElement, registeredMessage.messageElement.id, 'aria-describedby');
 
-    // Remove the message if this was its last unique instance.
-    if (registeredMessage.count == 0) {
+    if (registeredMessage.hostElements.length == 0) {
       this._deleteMessageElement(message);
     }
 
-    // If the global messages container no longer has any children, remove it.
-    if (messagesContainer && !messagesContainer!.childNodes.length) {
-      this._renderer.removeChild(document.body, messagesContainer);
-      messagesContainer = null;
+    if (messagesContainer!.childNodes.length == 0) {
+      this._deleteMessagesContainer();
     }
+  }
+
+  /** Unregisters all created message elements and removes the message container. */
+  _unregisterAllMessages() {
+    registeredMessages.forEach((registeredMessage, message) => {
+      registeredMessage.hostElements.forEach(hostElement => {
+        this.removeDescription(hostElement, message);
+      });
+    });
+
+    registeredMessages.clear();
   }
 
   /**
@@ -88,12 +100,11 @@ export class AriaDescriber {
    * as its content.
    */
   private _createMessageElement(message: string): HTMLElement {
-    // Create a visually hidden container for the accessibility messages if one does not yet exist.
-    if (!messagesContainer) { this._createMessagesContainer(); }
-
     const messageElement = this._renderer.createElement('div');
     this._renderer.setAttribute(messageElement, 'id', `md-aria-describedby-message-${nextId++}`);
     this._renderer.appendChild(messageElement, this._renderer.createText(message));
+
+    if (!messagesContainer) { this._createMessagesContainer(); }
     this._renderer.appendChild(messagesContainer, messageElement);
 
     return messageElement;
@@ -101,16 +112,23 @@ export class AriaDescriber {
 
   /** Deletes the message element from the global messages container. */
   private _deleteMessageElement(message: string) {
-    const registeredMessage = registeredMessages.get(message)!;
-    this._renderer.removeChild(messagesContainer, registeredMessage.element);
+    const messageElement = registeredMessages.get(message)!.messageElement;
+    this._renderer.removeChild(messagesContainer, messageElement);
     registeredMessages.delete(message);
   }
 
   /** Creates the global container for all aria-describedby messages. */
   private _createMessagesContainer() {
     messagesContainer = this._renderer.createElement('div');
+
     this._renderer.setAttribute(messagesContainer, 'id', MESSAGES_CONTAINER_ID);
     this._renderer.addClass(messagesContainer, 'cdk-visually-hidden');
     this._renderer.appendChild(document.body, messagesContainer);
+  }
+
+  /** Deletes the global messages container. */
+  private _deleteMessagesContainer() {
+    this._renderer.removeChild(document.body, messagesContainer);
+    messagesContainer = null;
   }
 }

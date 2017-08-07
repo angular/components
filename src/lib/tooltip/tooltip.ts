@@ -148,13 +148,14 @@ export class MdTooltip implements OnDestroy {
   /** The message to be displayed in the tooltip */
   @Input('mdTooltip') get message() { return this._message; }
   set message(value: string) {
-    if (this._message) { this._ariaDescriber.unregisterMessage(this._message); }
+    if (this._message) {
+      this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this._message);
+    }
 
     // If the message is not a string (e.g. number), convert it to a string and trim it.
     this._message = value ? `${value}`.trim() : '';
     this._updateTooltipMessage();
-
-    this._setAriaDescribedBy();
+    this._ariaDescriber.addDescription(this._elementRef.nativeElement, this.message);
   }
 
   /** Classes to be passed to the tooltip. Supports the same syntax as `ngClass`. */
@@ -240,7 +241,7 @@ export class MdTooltip implements OnDestroy {
       this._leaveListener();
     }
 
-    this._ariaDescriber.unregisterMessage(this.message);
+    this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this.message);
   }
 
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */
@@ -405,26 +406,6 @@ export class MdTooltip implements OnDestroy {
     if (this._tooltipInstance) {
       this._tooltipInstance.tooltipClass = tooltipClass;
       this._tooltipInstance._markForCheck();
-    }
-  }
-
-  /** Returns the trigger's aria-describedby attribute. */
-  private _getAriaDescribedby(): string {
-    return this._elementRef.nativeElement.getAttribute('aria-describedby');
-  }
-
-  /** Sets the trigger's aria-describedby attribute to the tooltip message element. */
-  private _setAriaDescribedBy() {
-    // Return if an aria-describedby already exists and it is not referencing a tooltip message.
-    const ariaDescribedBy = this._elementRef.nativeElement.getAttribute('aria-describedby');
-    if (ariaDescribedBy && ariaDescribedBy.indexOf('md-tooltip-message') == -1) { return; }
-
-    if (this.message) {
-      this._renderer.setAttribute(
-          this._elementRef.nativeElement, 'aria-describedby',
-          this._ariaDescriber.registerMessage(this.message));
-    } else {
-      this._renderer.setAttribute(this._elementRef.nativeElement, 'aria-describedby', '');
     }
   }
 }
