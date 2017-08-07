@@ -23,8 +23,7 @@ import {
   NgZone,
   Renderer2,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  HostListener
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   RIGHT_ARROW,
@@ -41,7 +40,7 @@ import {of as observableOf} from 'rxjs/observable/of';
 import {merge} from 'rxjs/observable/merge';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
-
+import {RxChain, debounceTime} from '@angular/cdk/rxjs';
 
 /**
  * The directions that scrolling can go in when the header's tabs exceed the header width. 'After'
@@ -79,8 +78,7 @@ export const _MdTabHeaderMixinBase = mixinDisableRipple(MdTabHeaderBase);
   host: {
     'class': 'mat-tab-header',
     '[class.mat-tab-header-pagination-controls-enabled]': '_showPaginationControls',
-    '[class.mat-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
-    '(window:resize)': "_checkPaginationEnabled()"
+    '[class.mat-tab-header-rtl]': "_getLayoutDirection() == 'rtl'"
   }
 })
 export class MdTabHeader extends _MdTabHeaderMixinBase
@@ -123,6 +121,9 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
 
   private _selectedIndex: number = 0;
 
+  /** subscription for the window resize handler */
+  private _resizeSubscription: Subscription | null;
+
   /** The index of the active tab. */
   @Input()
   get selectedIndex(): number { return this._selectedIndex; }
@@ -145,6 +146,11 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
               private _changeDetectorRef: ChangeDetectorRef,
               @Optional() private _dir: Directionality) {
     super();
+
+    // TODO: Add library level window listener https://goo.gl/FJWhZM
+    this._resizeSubscription = RxChain.from(fromEvent(window, 'resize'))
+      .call(debounceTime, 150)
+      .subscribe(() => this._checkPaginationEnabled());
   }
 
   ngAfterContentChecked(): void {
@@ -209,6 +215,11 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
     if (this._realignInkBar) {
       this._realignInkBar.unsubscribe();
       this._realignInkBar = null;
+    }
+
+    if (this._resizeSubscription) {
+      this._resizeSubscription.unsubscribe();
+      this._resizeSubscription = null;
     }
   }
 
