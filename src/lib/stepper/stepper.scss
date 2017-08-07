@@ -1,7 +1,109 @@
-.mat-stepper-content[aria-expanded='false'] {
-  display: none;
+$mat-horizontal-stepper-header-height: 72px !default;
+$mat-label-header-height: 24px !default;
+$mat-stepper-label-min-width: 50px !default;
+$mat-stepper-side-gap: 24px !default;
+$mat-vertical-stepper-content-margin: 12px !default;
+$mat-vertical-stepper-content-padding: 16px 0 32px $mat-stepper-side-gap !default;
+$mat-vertical-content-container-padding: 8px !default;
+$mat-connector-line-width: 1px !default;
+$mat-connector-line-gap: 8px !default;
+$mat-horizontal-connector-line-size: 5% !default;
+$mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-gap !default;
+
+:host {
+  display: block;
+  padding: 0 $mat-stepper-side-gap $mat-stepper-side-gap $mat-stepper-side-gap;
 }
 
-.mat-stepper-index, .mat-stepper-label {
-  display: inline-block;
+.mat-stepper-label {
+  display: inline-flex;
+  white-space: nowrap;
+  overflow: hidden;
+  // TODO(jwshin): text-overflow does not work as expected.
+  text-overflow: ellipsis;
+  min-width: $mat-stepper-label-min-width;
+}
+
+.mat-stepper-index {
+  border-radius: 50%;
+  height: $mat-label-header-height;
+  width: $mat-label-header-height;
+  text-align: center;
+  line-height: $mat-label-header-height;
+}
+
+.mat-horizontal-stepper-header-container {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+.mat-horizontal-stepper-header {
+  display: inline-flex;
+  line-height: $mat-horizontal-stepper-header-height;
+  overflow: hidden;
+  align-items: center;
+
+  .mat-stepper-index {
+    margin-right: $mat-connector-line-gap;
+    display: inline-block;
+    flex: none;
+  }
+}
+
+.mat-vertical-stepper-header {
+  display: flex;
+  align-items: center;
+  margin: $mat-connector-line-gap 0;
+
+  .mat-stepper-index {
+    margin-right: $mat-vertical-stepper-content-margin;
+  }
+}
+
+.connector-line {
+  border-top-width: $mat-connector-line-width;
+  border-top-style: solid;
+  width: $mat-horizontal-connector-line-size;
+  flex: auto;
+  margin: 0 $mat-connector-line-gap;
+  height: 0;
+}
+
+.mat-horizontal-stepper-content[aria-expanded='false'] {
+    display: none;
+}
+
+.vertical-content-container {
+  border-left-width: $mat-connector-line-width;
+  border-left-style: solid;
+  margin-left: $mat-vertical-stepper-content-margin;
+  padding: $mat-vertical-content-container-padding 0;
+}
+
+.mat-vertical-stepper-content {
+  padding-left: $mat-stepper-side-gap;
+
+  &[aria-expanded='false'] {
+    display: none;
+  }
+
+  &[aria-expanded='true'] {
+    padding: $mat-vertical-stepper-content-padding;
+  }
+}
+
+.mat-step {
+  margin-top: $mat-connector-line-gap;
+
+  &:last-child {
+    .vertical-content-container {
+      border: none;
+    }
+  }
+
+  &:first-child {
+    margin-top: 0;
+    padding-top: $mat-vertical-stepper-margin-top;
+  }
 }
