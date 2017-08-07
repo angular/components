@@ -1,4 +1,4 @@
-import {SelectionModel} from '@angular/cdk/collections';
+import {SelectionModel} from './selection';
 
 
 describe('SelectionModel', () => {
