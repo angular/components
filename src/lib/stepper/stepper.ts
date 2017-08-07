@@ -15,10 +15,14 @@ import {
   // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
   // tslint:disable-next-line:no-unused-variable
   ElementRef,
+  QueryList, ViewChild,
+  ElementRef,
   QueryList,
   ViewChildren
 }from '@angular/core';
 import {MdStepLabel} from './step-label';
+
+export type MdStepContentPositionState = 'left' | 'center' | 'right';
 
 @Component({
   moduleId: module.id,
@@ -29,6 +33,17 @@ export class MdStep extends CdkStep {
   /** Content for step label given by <ng-template matStepLabel> or <ng-template mdStepLabel>. */
   @ContentChild(MdStepLabel) stepLabel: MdStepLabel;
 
+  _position: MdStepContentPositionState;
+  set position(position: number) {
+    if (position < 0) {
+      this._position = 'left';
+    } else if (position > 0) {
+      this._position = 'right';
+    } else {
+      this._position = 'center';
+    }
+  }
+
   constructor(mdStepper: MdStepper) {
     super(mdStepper);
   }
@@ -37,6 +52,8 @@ export class MdStep extends CdkStep {
 export class MdStepper extends CdkStepper {
   /** The list of step headers of the steps in the stepper. */
   @ViewChildren('stepHeader') _stepHeader: QueryList<ElementRef>;
+
+  @ViewChild('verticalContent') _verticalContent: ElementRef;
 
   /** Steps that the stepper holds. */
   @ContentChildren(MdStep) _steps: QueryList<MdStep>;

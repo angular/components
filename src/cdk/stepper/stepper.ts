@@ -80,6 +80,8 @@ export class CdkStepper {
   /** The list of step headers of the steps in the stepper. */
   _stepHeader: QueryList<ElementRef>;
 
+  _verticalContent: ElementRef;
+
   /** The index of the selected step. */
   @Input()
   get selectedIndex() { return this._selectedIndex; }
@@ -133,6 +135,18 @@ export class CdkStepper {
   }
 
   private _emitStepperSelectionEvent(newIndex: number): void {
+    // if (this._verticalContent != null) {
+    //   this._verticalContent.toArray()[newIndex].nativeElement.style.height = this._verticalContent.toArray()[this._selectedIndex].nativeElement.offsetHeight+'px';
+    //   this._verticalContent.toArray()[this._selectedIndex].nativeElement.style.height = '0px';
+    //   console.log(this._verticalContent.toArray()[newIndex].nativeElement.offsetHeight);
+    // }
+
+    if (this._verticalContent != null) {
+      //console.log(this._verticalContent.nativeElement.clientHeight);
+      if (this._verticalContent.nativeElement.clientHeight) this._verticalContent.nativeElement.style.height = 0;
+      else this._verticalContent.nativeElement.height = this._verticalContent.nativeElement.scrollHeight+'px';
+
+    }
     const stepsArray = this._steps.toArray();
     this.selectionChange.emit({
       selectedIndex: newIndex,

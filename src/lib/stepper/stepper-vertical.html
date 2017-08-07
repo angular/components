@@ -20,7 +20,8 @@
 
   </div>
   <div class="vertical-content-container">
-    <div class="mat-vertical-stepper-content" role="tabpanel"
+    <div *ngIf="selectedIndex==i" #verticalContent
+         class="mat-vertical-stepper-content" role="tabpanel"
          [id]="_getStepContentId(i)"
          [attr.aria-labelledby]="_getStepLabelId(i)"
          [attr.aria-expanded]="selectedIndex == i">
