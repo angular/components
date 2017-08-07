@@ -16,7 +16,7 @@ import {
   createKeyboardEvent,
   dispatchEvent,
 } from '@angular/cdk/testing';
-import {MdFormFieldModule} from "../form-field/index";
+import {MdFormFieldModule} from '../form-field/index';
 
 describe('MdDatepicker', () => {
   afterEach(inject([OverlayContainer], (container: OverlayContainer) => {

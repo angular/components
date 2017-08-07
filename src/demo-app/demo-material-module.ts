@@ -51,7 +51,7 @@ import {CdkTableModule} from '@angular/cdk/table';
     MdDatepickerModule,
     MdDialogModule,
     MdExpansionModule,
-    //MdFormFieldModule,
+    MdFormFieldModule,
     MdGridListModule,
     MdIconModule,
     MdInputModule,
