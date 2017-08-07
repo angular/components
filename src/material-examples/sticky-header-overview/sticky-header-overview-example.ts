@@ -11,7 +11,7 @@ import {CdkStickyRegion, CdkStickyHeader} from '@angular/material';
 })
 
 export class StickyHeaderOverviewExample {
-  items: any[] = [
+  items = [
     {name: 'Min', messages: 'Brunch is this weekend?'},
     {name: 'Li', messages: 'Yes'},
     {name: 'Chan', messages: 'Looking'},
