@@ -122,6 +122,7 @@ export class AriaDescriber {
     messagesContainer = this._renderer.createElement('div');
 
     this._renderer.setAttribute(messagesContainer, 'id', MESSAGES_CONTAINER_ID);
+    this._renderer.setAttribute(messagesContainer, 'aria-hidden', 'true');
     this._renderer.addClass(messagesContainer, 'cdk-visually-hidden');
     this._renderer.appendChild(document.body, messagesContainer);
   }
