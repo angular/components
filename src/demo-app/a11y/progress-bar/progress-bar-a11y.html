@@ -1,0 +1,22 @@
+<section>
+  <h2>Survey progress (Determinate progress bar)</h2>
+  <md-progress-bar mode="determinate" [value]="surveyProgress" color="primary">
+  </md-progress-bar>
+</section>
+
+<section>
+  <h2>Video progress (Progress bar with buffer) </h2>
+  <md-progress-bar [value]="videoPlayValue" [bufferValue]="videoBufferValue" mode="buffer"
+                   color="primary"></md-progress-bar>
+</section>
+
+<section>
+  <h2>Loading content progress (Indeterminate progress bar)</h2>
+    <md-progress-bar mode="indeterminate" color="warn"></md-progress-bar>
+</section>
+
+<section>
+  <h2>Searching... (Query progress bar)</h2>
+
+  <md-progress-bar mode="query" color="accent"></md-progress-bar>
+</section>
