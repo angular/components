@@ -395,17 +395,28 @@ describe('Overlay', () => {
   });
 
   describe('panelClass', () => {
-    let config: OverlayState;
-    config = new OverlayState();
-    config.panelClass = 'custom-panel-class';
-
     it('should apply a custom overlay pane class', () => {
-      let overlayRef = overlay.create(config);
-      overlayRef.attach(componentPortal);
+      const config = new OverlayState();
+
+      config.panelClass = 'custom-panel-class';
+      overlay.create(config).attach(componentPortal);
       viewContainerFixture.detectChanges();
 
-      let pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
       expect(pane.classList).toContain('custom-panel-class');
+    });
+
+    it('should be able to apply multiple classes', () => {
+      const config = new OverlayState();
+
+      config.panelClass = ['custom-class-one', 'custom-class-two'];
+      overlay.create(config).attach(componentPortal);
+      viewContainerFixture.detectChanges();
+
+      const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+      expect(pane.classList).toContain('custom-class-one');
+      expect(pane.classList).toContain('custom-class-two');
     });
   });
 
@@ -475,6 +486,11 @@ describe('OverlayContainer theming', () => {
     overlayContainer.themeClass = 'new-theme';
     expect(overlayContainerElement.classList).not.toContain('initial-theme');
     expect(overlayContainerElement.classList).toContain('new-theme');
+  });
+
+  it('should not throw when switching from a blank theme', () => {
+    overlayContainer.themeClass = '';
+    expect(() => overlayContainer.themeClass = 'new-theme').not.toThrow();
   });
 });
 

@@ -17,13 +17,16 @@ export class AccessibilityHome {}
 export class AccessibilityDemo {
   navItems = [
     {name: 'Home', route: '.'},
+    {name: 'Autocomplete', route: 'autocomplete'},
     {name: 'Button', route: 'button'},
     {name: 'Button toggle', route: 'button-toggle'},
     {name: 'Checkbox', route: 'checkbox'},
     {name: 'Chips', route: 'chips'},
     {name: 'Datepicker', route: 'datepicker'},
     {name: 'Grid list', route: 'grid-list'},
+    {name: 'Input', route: 'input'},
     {name: 'Radio buttons', route: 'radio'},
     {name: 'Menu', route: 'menu'}
+    {name: 'Slider', route: 'slider'},
   ];
 }

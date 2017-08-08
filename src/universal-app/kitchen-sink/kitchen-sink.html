@@ -211,6 +211,26 @@
   <md-toolbar-row>Toolbar</md-toolbar-row>
 </md-toolbar>
 
+<h2>Sort</h2>
+
+<table mdSort>
+  <tr>
+    <th md-sort-header="name">Name</th>
+    <th md-sort-header="calories">Calories</th>
+    <th md-sort-header="fat">Fat</th>
+    <th md-sort-header="carbs">Carbs</th>
+    <th md-sort-header="protein">Protein</th>
+  </tr>
+
+  <tr>
+    <td>Cupcake</td>
+    <td>305</td>
+    <td>4</td>
+    <td>67</td>
+    <td>4</td>
+  </tr>
+</table>
+
 <h2>Tooltip</h2>
 
 <button mdTooltip="Action!">Go</button>
@@ -227,3 +247,15 @@
   This is the content text that makes sense here.
   <md-action-row>Action</md-action-row>
 </md-expansion-panel>
+
+<h2>CDK Table</h2>
+
+<cdk-table #table [dataSource]="cdkTableDataSource">
+  <ng-container cdkColumnDef="userId">
+    <cdk-header-cell *cdkHeaderCellDef>ID</cdk-header-cell>
+    <cdk-cell *cdkCellDef="let row">{{row.userId}}</cdk-cell>
+  </ng-container>
+
+  <cdk-header-row *cdkHeaderRowDef="cdkTableColumns" ></cdk-header-row>
+  <cdk-row *cdkRowDef="let row; columns: cdkTableColumns;"></cdk-row>
+</cdk-table>
