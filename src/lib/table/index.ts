@@ -17,6 +17,7 @@ import {MdCommonModule} from '../core';
 export * from './cell';
 export * from './table';
 export * from './row';
+export * from './array-data-source';
 
 @NgModule({
   imports: [CdkTableModule, CommonModule, MdCommonModule],

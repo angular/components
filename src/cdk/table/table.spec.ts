@@ -8,7 +8,6 @@ import {combineLatest} from 'rxjs/observable/combineLatest';
 import {CdkTableModule} from './index';
 import {map} from 'rxjs/operator/map';
 import {getTableDuplicateColumnNameError, getTableUnknownColumnError} from './table-errors';
-import {ArrayDataSource} from './array-data-source';
 
 describe('CdkTable', () => {
   let fixture: ComponentFixture<SimpleCdkTableApp>;
@@ -31,7 +30,6 @@ describe('CdkTable', () => {
         DuplicateColumnDefNameCdkTableApp,
         MissingColumnDefCdkTableApp,
         CrazyColumnNameCdkTableApp,
-        ArrayDataSourceCdkTableApp,
       ],
     }).compileComponents();
   }));
@@ -370,62 +368,6 @@ describe('CdkTable', () => {
     ]);
   });
 
-  it('should be able to use the array data source to render the table', () => {
-    const arrayCdkTableFixture = TestBed.createComponent(ArrayDataSourceCdkTableApp);
-    tableElement = arrayCdkTableFixture.nativeElement.querySelector('cdk-table');
-    arrayCdkTableFixture.detectChanges();
-
-    expectTableToMatchContent(tableElement, [
-      ['Column A', 'Column B', 'Column C'],
-      ['a_1', 'b_1', 'c_1']
-    ]);
-
-    const arrayDataSource = arrayCdkTableFixture.componentInstance.dataSource;
-    arrayDataSource.data = [
-      {a: 'a_1', b: 'b_1', c: 'c_1'},
-      {a: 'a_2', b: 'b_2', c: 'c_2'},
-      {a: 'a_3', b: 'b_3', c: 'c_3'},
-    ];
-    arrayCdkTableFixture.detectChanges();  // Allow cells to populate their templates
-
-    expectTableToMatchContent(tableElement, [
-      ['Column A', 'Column B', 'Column C'],
-      ['a_1', 'b_1', 'c_1'],
-      ['a_2', 'b_2', 'c_2'],
-      ['a_3', 'b_3', 'c_3'],
-    ]);
-
-    // Making a change to the data should update the table.
-    arrayDataSource.data[0].a = 'changed_a_1';
-    arrayCdkTableFixture.detectChanges();  // Allow cells to populate their templates
-    expectTableToMatchContent(tableElement, [
-      ['Column A', 'Column B', 'Column C'],
-      ['changed_a_1', 'b_1', 'c_1'],
-      ['a_2', 'b_2', 'c_2'],
-      ['a_3', 'b_3', 'c_3'],
-    ]);
-
-    // Adding a new object will not update the table until update called.
-    arrayDataSource.data.push({a: 'a_4', b: 'b_4', c: 'c_4'});
-    arrayCdkTableFixture.detectChanges();  // Prove that detect changes won't render row
-    expectTableToMatchContent(tableElement, [
-      ['Column A', 'Column B', 'Column C'],
-      ['changed_a_1', 'b_1', 'c_1'],
-      ['a_2', 'b_2', 'c_2'],
-      ['a_3', 'b_3', 'c_3'],
-    ]);
-
-    arrayDataSource.update();  // Calling update will trigger update
-    arrayCdkTableFixture.detectChanges();  // Prove that detect changes won't render row
-    expectTableToMatchContent(tableElement, [
-      ['Column A', 'Column B', 'Column C'],
-      ['changed_a_1', 'b_1', 'c_1'],
-      ['a_2', 'b_2', 'c_2'],
-      ['a_3', 'b_3', 'c_3'],
-      ['a_4', 'b_4', 'c_4'],
-    ]);
-  });
-
   it('should match the right table content with dynamic data source', () => {
     const dynamicDataSourceFixture = TestBed.createComponent(DynamicDataSourceCdkTableApp);
     component = dynamicDataSourceFixture.componentInstance;
@@ -732,37 +674,6 @@ class DynamicColumnDefinitionsCdkTableApp {
   @ViewChild(CdkTable) table: CdkTable<TestData>;
 }
 
-@Component({
-  template: `
-    <cdk-table [dataSource]="dataSource">
-      <ng-container cdkColumnDef="column_a">
-        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
-      </ng-container>
-
-      <ng-container cdkColumnDef="column_b">
-        <cdk-header-cell *cdkHeaderCellDef> Column B</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> {{row.b}}</cdk-cell>
-      </ng-container>
-
-      <ng-container cdkColumnDef="column_c">
-        <cdk-header-cell *cdkHeaderCellDef> Column C</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> {{row.c}}</cdk-cell>
-      </ng-container>
-
-      <cdk-header-row class="customHeaderRowClass"
-                      *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
-      <cdk-row class="customRowClass"
-               *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
-    </cdk-table>
-  `
-})
-class ArrayDataSourceCdkTableApp {
-  dataSource = new ArrayDataSource<TestData>([{a: 'a_1', b: 'b_1', c: 'c_1'}]);
-  columnsToRender = ['column_a', 'column_b', 'column_c'];
-
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
-}
 
 @Component({
   template: `
