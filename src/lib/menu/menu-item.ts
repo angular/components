@@ -39,7 +39,9 @@ export const _MdMenuItemMixinBase = mixinDisabled(MdMenuItemBase);
   templateUrl: 'menu-item.html',
   exportAs: 'mdMenuItem',
 })
-export class MdMenuItem extends _MdMenuItemMixinBase implements FocusableOption, CanDisable, OnDestroy {
+export class MdMenuItem extends _MdMenuItemMixinBase implements FocusableOption, CanDisable,
+  OnDestroy {
+
   /** Stream that emits when the menu item is hovered. */
   hover: Subject<MdMenuItem> = new Subject();
 

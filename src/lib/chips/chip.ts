@@ -68,7 +68,8 @@ export class MdBasicChip { }
     '(blur)': '_hasFocus = false',
   }
 })
-export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestroy, CanColor, CanDisable {
+export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestroy, CanColor,
+  CanDisable {
 
   @ContentChild(forwardRef(() => MdChipRemove)) _chipRemove: MdChipRemove;
 
