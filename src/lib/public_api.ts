@@ -46,3 +46,6 @@ export * from './tabs/index';
 export * from './tabs/tab-nav-bar/index';
 export * from './toolbar/index';
 export * from './tooltip/index';
+
+// TODO(mmalerba): Temporary alias to avoid breakages, cleanup later.
+export {MdFormField as MdInputContainer} from './form-field/index';

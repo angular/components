@@ -25,9 +25,8 @@ import {MdFormFieldModule} from '../form-field/index';
     PlatformModule,
   ],
   exports: [
-    // TODO(mmalerba): We import and re-export the form field module since all existing users of
-    // `MdInput` will need this to continue using `md-input-container`. We may want to keep this
-    // long term since the `MdInput` directive will almost always be used with `md-form-field`.
+    // We re-export the `MdFormFieldModule` since `MdInput` will almost always be used together with
+    // `MdFormField`.
     MdFormFieldModule,
     MdInput,
     MdTextareaAutosize,

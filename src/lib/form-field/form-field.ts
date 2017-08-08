@@ -15,7 +15,6 @@ import {
   Component,
   ContentChild,
   ContentChildren,
-  Directive,
   ElementRef,
   Inject,
   Input,
@@ -26,7 +25,6 @@ import {
 } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {coerceBooleanProperty} from '../core';
-import {NgControl} from '@angular/forms';
 import {
   getMdFormFieldDuplicatedHintError,
   getMdFormFieldMissingControlError,
@@ -38,110 +36,21 @@ import {
   PlaceholderOptions
 } from '../core/placeholder/placeholder-options';
 import {startWith} from '@angular/cdk/rxjs';
-import {Observable} from 'rxjs/Observable';
+import {MdError} from './error';
+import {MdFormFieldControl} from './form-field-control';
+import {MdHint} from './hint';
+import {MdPlaceholder} from './placeholder';
+import {MdPrefix} from './prefix';
+import {MdSuffix} from './suffix';
+
 
 let nextUniqueId = 0;
-
-
-/**
- * The placeholder directive. The content can declare this to implement more
- * complex placeholders.
- */
-@Directive({
-  selector: 'md-placeholder, mat-placeholder'
-})
-export class MdPlaceholder {}
-
-
-/** Hint text to be shown underneath the form field control. */
-@Directive({
-  selector: 'md-hint, mat-hint',
-  host: {
-    'class': 'mat-hint',
-    '[class.mat-right]': 'align == "end"',
-    '[attr.id]': 'id',
-  }
-})
-export class MdHint {
-  /** Whether to align the hint label at the start or end of the line. */
-  @Input() align: 'start' | 'end' = 'start';
-
-  /** Unique ID for the hint. Used for the aria-describedby on the form field control. */
-  @Input() id: string = `md-hint-${nextUniqueId++}`;
-}
-
-
-/** Single error message to be shown underneath the form field. */
-@Directive({
-  selector: 'md-error, mat-error',
-  host: {
-    'class': 'mat-error',
-    'role': 'alert',
-    '[attr.id]': 'id',
-  }
-})
-export class MdError {
-  @Input() id: string = `md-error-${nextUniqueId++}`;
-}
-
-
-/** Prefix to be placed the the front of the form field. */
-@Directive({
-  selector: '[mdPrefix], [matPrefix]',
-})
-export class MdPrefix {}
-
-
-/** Suffix to be placed at the end of the form field. */
-@Directive({
-  selector: '[mdSuffix], [matSuffix]',
-})
-export class MdSuffix {}
-
-
-/** An interface which allows a control to work inside of a `MdFormField`. */
-export abstract class MdFormFieldControl {
-  /**
-   * Stream that emits whenever the state of the control changes such that the parent `MdFormField`
-   * needs to run change detection.
-   */
-  stateChanges: Observable<void>;
-
-  /** Gets the element ID for this control. */
-  abstract getId(): string;
-
-  /** Gets the placeholder for this control. */
-  abstract getPlaceholder(): string;
-
-  /** Gets the NgControl for this control. */
-  abstract getNgControl(): NgControl | null;
-
-  /** Whether the control is focused. */
-  abstract isFocused(): boolean;
-
-  /** Whether the control is empty. */
-  abstract isEmpty(): boolean;
-
-  /** Whether the control is required. */
-  abstract isRequired(): boolean;
-
-  /** Whether the control is disabled. */
-  abstract isDisabled(): boolean;
-
-  /** Whether the control is in an error state. */
-  abstract isErrorState(): boolean;
-
-  /** Sets the list of element IDs that currently describe this control. */
-  abstract setDescribedByIds(ids: string[]): void;
-
-  /** Focuses this control. */
-  abstract focus(): void;
-}
 
 
 /** Container for form controls that applies Material Design styling and behavior. */
 @Component({
   moduleId: module.id,
+  // TODO(mmalerba): the input-container selectors and classes are deprecated and will be removed.
   selector: 'md-input-container, mat-input-container, md-form-field, mat-form-field',
   templateUrl: 'form-field.html',
   // MdInput is a directive and can't have styles, so we need to include its styles here.
@@ -158,8 +67,6 @@ export abstract class MdFormFieldControl {
     ]),
   ],
   host: {
-    // Remove align attribute to prevent it from interfering with layout.
-    '[attr.align]': 'null',
     'class': 'mat-input-container mat-form-field',
     '[class.mat-input-invalid]': '_control.isErrorState()',
     '[class.mat-form-field-invalid]': '_control.isErrorState()',

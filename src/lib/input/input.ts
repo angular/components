@@ -29,7 +29,7 @@ import {
   MD_ERROR_GLOBAL_OPTIONS
 } from '../core/error/error-options';
 import {Subject} from 'rxjs/Subject';
-import {MdFormFieldControl} from '../form-field/form-field';
+import {MdFormFieldControl} from '../form-field/index';
 
 // Invalid input type. Using one of these will throw an MdInputUnsupportedTypeError.
 const MD_INPUT_INVALID_TYPES = [

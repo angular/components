@@ -7,14 +7,12 @@
  */
 
 import {NgModule} from '@angular/core';
-import {
-  MdError,
-  MdHint,
-  MdFormField,
-  MdPlaceholder,
-  MdPrefix,
-  MdSuffix
-} from './form-field';
+import {MdError} from './error';
+import {MdFormField} from './form-field';
+import {MdHint} from './hint';
+import {MdPlaceholder} from './placeholder';
+import {MdPrefix} from './prefix';
+import {MdSuffix} from './suffix';
 import {CommonModule} from '@angular/common';
 import {PlatformModule} from '../core/platform/index';
 
@@ -44,6 +42,12 @@ import {PlatformModule} from '../core/platform/index';
 export class MdFormFieldModule {}
 
 
+export * from './error';
 export * from './form-field';
+export * from './form-field-control';
 export * from './form-field-errors';
+export * from './hint';
+export * from './placeholder';
+export * from './prefix';
+export * from './suffix';
 

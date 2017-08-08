@@ -502,8 +502,8 @@ describe('MdInputContainer without forms', function () {
 
     fixture.detectChanges();
 
-    let hintLabel = fixture.debugElement.query(By.css('.mat-hint')).nativeElement;
-    let endLabel = fixture.debugElement.query(By.css('.mat-hint[align="end"]')).nativeElement;
+    let hintLabel = fixture.debugElement.query(By.css('.mat-hint:not(.mat-right)')).nativeElement;
+    let endLabel = fixture.debugElement.query(By.css('.mat-hint.mat-right')).nativeElement;
     let input = fixture.debugElement.query(By.css('input')).nativeElement;
     let ariaValue = input.getAttribute('aria-describedby');
 
