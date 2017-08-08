@@ -13,18 +13,18 @@
   $is-dark-theme: map-get($theme, is-dark);
 
   // Placeholder colors. Required is used for the `*` star shown in the placeholder.
-  $form-field-placeholder-color: mat-color($foreground, secondary-text);
-  $form-field-floating-placeholder-color: mat-color($primary);
-  $form-field-required-placeholder-color: mat-color($accent);
+  $placeholder-color: mat-color($foreground, secondary-text);
+  $floating-placeholder-color: mat-color($primary);
+  $required-placeholder-color: mat-color($accent);
 
   // Underline colors.
-  $form-field-underline-color: mat-color($foreground, divider, if($is-dark-theme, 0.7, 0.42));
-  $form-field-underline-color-accent: mat-color($accent);
-  $form-field-underline-color-warn: mat-color($warn);
-  $form-field-underline-focused-color: mat-color($primary);
+  $underline-color: mat-color($foreground, divider, if($is-dark-theme, 0.7, 0.42));
+  $underline-color-accent: mat-color($accent);
+  $underline-color-warn: mat-color($warn);
+  $underline-focused-color: mat-color($primary);
 
   .mat-form-field-placeholder {
-    color: $form-field-placeholder-color;
+    color: $placeholder-color;
   }
 
   .mat-hint {
@@ -32,41 +32,41 @@
   }
 
   .mat-focused .mat-form-field-placeholder {
-    color: $form-field-floating-placeholder-color;
+    color: $floating-placeholder-color;
 
     &.mat-accent {
-      color: $form-field-underline-color-accent;
+      color: $underline-color-accent;
     }
 
     &.mat-warn {
-      color: $form-field-underline-color-warn;
+      color: $underline-color-warn;
     }
   }
 
   .mat-form-field-autofill-float:-webkit-autofill + .mat-form-field-placeholder,
   .mat-focused .mat-form-field-placeholder.mat-form-field-float {
     .mat-form-field-required-marker {
-      color: $form-field-required-placeholder-color;
+      color: $required-placeholder-color;
     }
   }
 
   .mat-form-field-underline {
-    background-color: $form-field-underline-color;
+    background-color: $underline-color;
 
     &.mat-disabled {
-      @include mat-control-disabled-underline($form-field-underline-color);
+      @include mat-control-disabled-underline($underline-color);
     }
   }
 
   .mat-form-field-ripple {
-    background-color: $form-field-underline-focused-color;
+    background-color: $underline-focused-color;
 
     &.mat-accent {
-      background-color: $form-field-underline-color-accent;
+      background-color: $underline-color-accent;
     }
 
     &.mat-warn {
-      background-color: $form-field-underline-color-warn;
+      background-color: $underline-color-warn;
     }
   }
 
@@ -75,21 +75,21 @@
   // logic is used to style the error state and to show the error messages.
   .mat-form-field-invalid {
     .mat-form-field-placeholder {
-      color: $form-field-underline-color-warn;
+      color: $underline-color-warn;
 
       &.mat-accent,
       &.mat-form-field-float .mat-form-field-required-marker {
-        color: $form-field-underline-color-warn;
+        color: $underline-color-warn;
       }
     }
 
     .mat-form-field-ripple {
-      background-color: $form-field-underline-color-warn;
+      background-color: $underline-color-warn;
     }
   }
 
   .mat-error {
-    color: $form-field-underline-color-warn;
+    color: $underline-color-warn;
   }
 }
 

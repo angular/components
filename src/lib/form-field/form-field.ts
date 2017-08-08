@@ -58,6 +58,7 @@ let nextUniqueId = 0;
   // MdInput.
   styleUrls: ['form-field.css', '../input/input.css'],
   animations: [
+    // TODO(mmalerba): Use angular animations for placeholder animation as well.
     trigger('transitionMessages', [
       state('enter', style({ opacity: 1, transform: 'translateY(0%)' })),
       transition('void => enter', [
@@ -138,7 +139,7 @@ export class MdFormField implements AfterViewInit, AfterContentInit, AfterConten
   /** Reference to the form field's underline element. */
   @ViewChild('underline') underlineRef: ElementRef;
   @ViewChild('connectionContainer') _connectionContainerRef: ElementRef;
-  @ContentChild(MdFormFieldControl) _control: MdFormFieldControl;
+  @ContentChild(MdFormFieldControl) _control: MdFormFieldControl<any>;
   @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
   @ContentChildren(MdError) _errorChildren: QueryList<MdError>;
   @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;

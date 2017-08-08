@@ -11,7 +11,7 @@ import {NgControl} from '@angular/forms';
 
 
 /** An interface which allows a control to work inside of a `MdFormField`. */
-export abstract class MdFormFieldControl {
+export abstract class MdFormFieldControl<T> {
   /**
    * Stream that emits whenever the state of the control changes such that the parent `MdFormField`
    * needs to run change detection.
@@ -19,7 +19,7 @@ export abstract class MdFormFieldControl {
   stateChanges: Observable<void>;
 
   /** The value of the control. */
-  value: any;
+  value: T;
 
   /** Gets the element ID for this control. */
   abstract getId(): string;

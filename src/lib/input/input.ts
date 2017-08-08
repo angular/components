@@ -67,7 +67,7 @@ let nextUniqueId = 0;
   },
   providers: [{provide: MdFormFieldControl, useExisting: MdInput}],
 })
-export class MdInput implements MdFormFieldControl, OnChanges, OnDestroy, DoCheck {
+export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, DoCheck {
   /** Variables used as cache for getters and setters. */
   private _type = 'text';
   private _disabled = false;
