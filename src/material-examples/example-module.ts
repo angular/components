@@ -84,6 +84,7 @@ import {ToolbarMultirowExample} from './toolbar-multirow/toolbar-multirow-exampl
 import {ToolbarOverviewExample} from './toolbar-overview/toolbar-overview-example';
 import {TooltipOverviewExample} from './tooltip-overview/tooltip-overview-example';
 import {TooltipPositionExample} from './tooltip-position/tooltip-position-example';
+import {StickyHeaderOverviewExample} from './sticky-header-overview/sticky-header-overview-example';
 
 export const EXAMPLE_COMPONENTS = {
   'autocomplete-display': {
@@ -512,6 +513,12 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'sticky-header-overview': {
+    title: 'Sticky-Header',
+    component: StickyHeaderOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
 };
 
 export const EXAMPLE_LIST = [
@@ -586,6 +593,7 @@ export const EXAMPLE_LIST = [
   ToolbarOverviewExample,
   TooltipOverviewExample,
   TooltipPositionExample,
+  StickyHeaderOverviewExample,
 ];
 
 @NgModule({
