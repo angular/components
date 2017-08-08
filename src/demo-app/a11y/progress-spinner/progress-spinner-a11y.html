@@ -1,16 +1,13 @@
 <section>
   <h2>Loading indicator (Indeterminate progress spinner)</h2>
-  <md-progress-spinner mode="indeterminate" color="primary" [strokeWidth]="1">
-  </md-progress-spinner>
-  <md-progress-spinner mode="indeterminate" color="accent"></md-progress-spinner>
-  <md-spinner color="warn"></md-spinner>
+  <md-spinner color="indeterminate" [strokeWidth]="1"></md-spinner>
+  <md-spinner color="accent"></md-spinner>
 </section>
 
 <section>
-  <h2>Potion of completion (Determinate progress spinner) </h2>
-  <md-progress-spinner mode="determinate" color="primary"
-                       [value]="potionValue"></md-progress-spinner>
-  <md-progress-spinner mode="determinate" [strokeWidth]="1" color="warn"
-                       [value]="potionValue"></md-progress-spinner>
+  <h2>Portion of completion (Determinate progress spinner) </h2>
+  <md-progress-spinner [strokeWidth]="1" color="primary"
+                       [value]="portionValue"></md-progress-spinner>
+  <md-progress-spinner color="warn" [value]="portionValue"></md-progress-spinner>
 
 </section>
