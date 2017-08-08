@@ -24,6 +24,7 @@ export class AccessibilityDemo {
     {name: 'Chips', route: 'chips'},
     {name: 'Datepicker', route: 'datepicker'},
     {name: 'Grid list', route: 'grid-list'},
+    {name: 'Icon', route: 'icon'},
     {name: 'Input', route: 'input'},
     {name: 'Radio buttons', route: 'radio'},
     {name: 'Slider', route: 'slider'},

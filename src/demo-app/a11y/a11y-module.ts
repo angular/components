@@ -13,6 +13,7 @@ import {ChipsAccessibilityDemo} from './chips/chips-a11y';
 import {GridListAccessibilityDemo} from './grid-list/grid-list-a11y';
 import {RadioAccessibilityDemo} from './radio/radio-a11y';
 import {DatepickerAccessibilityDemo} from './datepicker/datepicker-a11y';
+import {IconAccessibilityDemo} from './icon/icon-a11y';
 import {InputAccessibilityDemo} from './input/input-a11y';
 import {SliderAccessibilityDemo} from './slider/slider-a11y';
 
@@ -45,6 +46,7 @@ export class AccessibilityRoutingModule {}
     ChipsAccessibilityDemo,
     DatepickerAccessibilityDemo,
     GridListAccessibilityDemo,
+    IconAccessibilityDemo,
     InputAccessibilityDemo,
     RadioAccessibilityDemo,
     SliderAccessibilityDemo,
