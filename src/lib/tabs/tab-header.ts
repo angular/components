@@ -41,6 +41,7 @@ import {merge} from 'rxjs/observable/merge';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
 import {RxChain, debounceTime} from '@angular/cdk/rxjs';
+import {Platform} from '@angular/cdk/platform';
 
 /**
  * The directions that scrolling can go in when the header's tabs exceed the header width. 'After'
@@ -78,7 +79,7 @@ export const _MdTabHeaderMixinBase = mixinDisableRipple(MdTabHeaderBase);
   host: {
     'class': 'mat-tab-header',
     '[class.mat-tab-header-pagination-controls-enabled]': '_showPaginationControls',
-    '[class.mat-tab-header-rtl]': "_getLayoutDirection() == 'rtl'"
+    '[class.mat-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
   }
 })
 export class MdTabHeader extends _MdTabHeaderMixinBase
@@ -144,13 +145,16 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
               private _ngZone: NgZone,
               private _renderer: Renderer2,
               private _changeDetectorRef: ChangeDetectorRef,
-              @Optional() private _dir: Directionality) {
+              @Optional() private _dir: Directionality,
+              platform: Platform) {
     super();
 
-    // TODO: Add library level window listener https://goo.gl/FJWhZM
-    this._resizeSubscription = RxChain.from(fromEvent(window, 'resize'))
-      .call(debounceTime, 150)
-      .subscribe(() => this._checkPaginationEnabled());
+    if (platform.isBrowser) {
+      // TODO: Add library level window listener https://goo.gl/y25X5M
+      this._resizeSubscription = RxChain.from(fromEvent(window, 'resize'))
+        .call(debounceTime, 150)
+        .subscribe(() => this._checkPaginationEnabled());
+    }
   }
 
   ngAfterContentChecked(): void {
