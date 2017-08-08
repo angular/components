@@ -56,8 +56,7 @@ import {getMdSortHeaderNotContainedWithinMdSortError} from './sort-errors';
     trigger('indicatorRotate', [
       state('asc', style({transform: 'rotate(45deg)'})),
       state('desc', style({transform: 'rotate(225deg)'})),
-      /** Use standart animation curve from material guidelines */
-      transition('asc <=> desc', animate('225ms cubic-bezier(0.4,0.0,0.2,1)'))
+      transition('asc <=> desc', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
     ])
   ]
 })
@@ -115,9 +114,5 @@ export class MdSortHeader implements MdSortable {
   /** Whether this MdSortHeader is currently sorted in either ascending or descending order. */
   _isSorted() {
     return this._sort.active == this.id && this._sort.direction;
-  }
-
-  _getSortingState() {
-    return this._sort.direction;
   }
 }
