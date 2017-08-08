@@ -1,7 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
 import {PeopleDatabase, UserData} from './people-database';
 import {PersonDataSource} from './person-data-source';
-import {MdPaginator, MdSort} from '@angular/material';
+import {MdPaginator, MdSort, MdTableDataSource} from '@angular/material';
 
 export type UserProperties = 'userId' | 'userName' | 'progress' | 'color' | undefined;
 
@@ -16,7 +16,7 @@ const properties = ['id', 'name', 'progress', 'color'];
   styleUrls: ['table-demo.css'],
 })
 export class TableDemo {
-  dataSource: PersonDataSource | null;
+  dataSource: MdTableDataSource<UserData> | null;
   displayedColumns: UserProperties[] = [];
   trackByStrategy: TrackByStrategy = 'reference';
   changeReferences = false;
@@ -31,7 +31,7 @@ export class TableDemo {
 
   constructor(public _peopleDatabase: PeopleDatabase) { }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.connect();
   }
 
@@ -53,8 +53,17 @@ export class TableDemo {
 
   connect() {
     this.displayedColumns = ['userId', 'userName', 'progress', 'color'];
-    this.dataSource = new PersonDataSource(this._peopleDatabase,
-        this._paginator, this.sort);
+    this.dataSource = new MdTableDataSource(this._peopleDatabase.data, this.sort, this._paginator);
+    this.dataSource.dataAccessor = (data: UserData, property: string) => {
+      switch (property) {
+        case 'userId': return +data.id;
+        case 'userName': return data.name;
+        case 'progress': return +data.progress;
+        case 'color': return data.color;
+        default: return '';
+      }
+    };
+
     this._peopleDatabase.initialize();
   }
 
