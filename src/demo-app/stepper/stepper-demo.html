@@ -1,5 +1,6 @@
-<h2>Linear Vertical Stepper Demo</h2>
 <md-checkbox [(ngModel)]="isNonLinear">Disable linear mode</md-checkbox>
+
+<h3>Linear Vertical Stepper Demo using FormArray</h3>
 <form [formGroup]="formGroup">
   <md-vertical-stepper formArrayName="formArray" [linear]="!isNonLinear">
     <md-step formGroupName="0" [stepControl]="formArray.get([0])">
@@ -42,17 +43,17 @@
   </md-vertical-stepper>
 </form>
 
-<h2>Linear Vertical Stepper Demo</h2>
-<md-vertical-stepper>
-  <md-step [valid]="nameFormGroup.valid">
+<h3>Linear Horizontal Stepper Demo using multiple FormGroups</h3>
+<md-horizontal-stepper [linear]="!isNonLinear">
+  <md-step [stepControl]="nameFormGroup">
     <form [formGroup]="nameFormGroup">
       <ng-template mdStepLabel>Fill out your name</ng-template>
       <md-input-container>
-        <input mdInput placeholder="First Name" formControlName="firstNameFormCtrl" required>
+        <input mdInput placeholder="First Name" formControlName="firstNameCtrl" required>
         <md-error>This field is required</md-error>
       </md-input-container>
       <md-input-container>
-        <input mdInput placeholder="Last Name" formControlName="lastNameFormCtrl" required>
+        <input mdInput placeholder="Last Name" formControlName="lastNameCtrl" required>
         <md-error>This field is required</md-error>
       </md-input-container>
       <div>
@@ -61,13 +62,11 @@
     </form>
   </md-step>
 
-  <md-step [valid]="phoneFormGroup.valid">
+  <md-step [stepControl]="phoneFormGroup">
     <form [formGroup]="phoneFormGroup">
-      <ng-template mdStepLabel>
-        <div>Fill out your phone number</div>
-      </ng-template>
+      <ng-template mdStepLabel>Fill out your phone number</ng-template>
       <md-input-container>
-        <input mdInput placeholder="Phone number" formControlName="phoneFormCtrl">
+        <input mdInput placeholder="Phone number" formControlName="phoneCtrl">
         <md-error>This field is required</md-error>
       </md-input-container>
       <div>
@@ -86,9 +85,9 @@
       </div>
     </form>
   </md-step>
-</md-vertical-stepper>
+</md-horizontal-stepper>
 
-<h2>Vertical Stepper Demo</h2>
+<h3>Vertical Stepper Demo</h3>
 <md-vertical-stepper>
   <md-step>
     <ng-template mdStepLabel>Fill out your name</ng-template>
@@ -143,7 +142,7 @@
   </md-step>
 </md-vertical-stepper>
 
-<h2>Horizontal Stepper Demo</h2>
+<h3>Horizontal Stepper Demo</h3>
 <md-horizontal-stepper>
   <md-step>
     <ng-template mdStepLabel>Fill out your name</ng-template>
@@ -198,7 +197,7 @@
   </md-step>
 </md-horizontal-stepper>
 
-<h2>Horizontal Stepper Demo</h2>
+<h3>Horizontal Stepper Demo</h3>
 <md-horizontal-stepper>
   <md-step *ngFor="let step of steps" [label]="step.label">
     <md-input-container>
@@ -211,7 +210,7 @@
   </md-step>
 </md-horizontal-stepper>
 
-<h2>Horizontal Stepper Demo with Templated Label</h2>
+<h3>Horizontal Stepper Demo with Templated Label</h3>
 <md-horizontal-stepper>
   <md-step *ngFor="let step of steps">
     <ng-template mdStepLabel>{{step.label}}</ng-template>

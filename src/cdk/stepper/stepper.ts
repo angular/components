@@ -209,7 +209,7 @@ export class CdkStepper {
     stepsArray[this._selectedIndex].interacted = true;
     if (this._linear) {
       for (let i = 0; i < index; i++) {
-        if (!stepsArray[i].stepControl.valid) {
+        if (stepsArray[i].stepControl.invalid) {
           return true;
         }
       }

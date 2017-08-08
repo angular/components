@@ -22,12 +22,9 @@ export class StepperDemo {
   ];
 
   /** Returns a FormArray with the name 'formArray'. */
-  get formArray() {
-    return this.formGroup.get('formArray');
-  }
+  get formArray() { return this.formGroup.get('formArray'); }
 
-  constructor(private _formBuilder: FormBuilder) {
-  }
+  constructor(private _formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.formGroup = this._formBuilder.group({
@@ -43,12 +40,12 @@ export class StepperDemo {
     });
 
     this.nameFormGroup = new FormGroup({
-      firstNameFormCtrl: new FormControl('', Validators.required),
-      lastNameFormCtrl: new FormControl('', Validators.required)
+      firstNameCtrl: new FormControl('', Validators.required),
+      lastNameCtrl: new FormControl('', Validators.required)
     });
 
     this.phoneFormGroup = new FormGroup({
-      phoneFormCtrl: new FormControl('')
+      phoneCtrl: new FormControl('')
     });
   }
 }
