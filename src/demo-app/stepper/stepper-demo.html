@@ -1,3 +1,47 @@
+<h2>Linear Vertical Stepper Demo</h2>
+<md-checkbox [(ngModel)]="isNonLinear">Disable linear mode</md-checkbox>
+<form [formGroup]="formGroup">
+  <md-vertical-stepper formArrayName="formArray" [linear]="!isNonLinear">
+    <md-step formGroupName="0" [stepControl]="formArray.get([0])">
+      <ng-template mdStepLabel>Fill out your name</ng-template>
+      <md-input-container>
+        <input mdInput placeholder="First Name" formControlName="firstNameFormCtrl" required>
+        <md-error>This field is required</md-error>
+      </md-input-container>
+
+      <md-input-container>
+        <input mdInput placeholder="Last Name" formControlName="lastNameFormCtrl" required>
+        <md-error>This field is required</md-error>
+      </md-input-container>
+      <div>
+        <button md-button mdStepperNext type="button">Next</button>
+      </div>
+    </md-step>
+
+    <md-step formGroupName="1" [stepControl]="formArray.get([1])">
+      <ng-template mdStepLabel>
+        <div>Fill out your phone number</div>
+      </ng-template>
+      <md-input-container>
+        <input mdInput placeholder="Phone number" formControlName="phoneFormCtrl">
+        <md-error>This field is required</md-error>
+      </md-input-container>
+      <div>
+        <button md-button mdStepperPrevious type="button">Back</button>
+        <button md-button mdStepperNext type="button">Next</button>
+      </div>
+    </md-step>
+
+    <md-step>
+      <ng-template mdStepLabel>Confirm your information</ng-template>
+      Everything seems correct.
+      <div>
+        <button md-button>Done</button>
+      </div>
+    </md-step>
+  </md-vertical-stepper>
+</form>
+
 <h2>Vertical Stepper Demo</h2>
 <md-vertical-stepper>
   <md-step>
@@ -134,16 +178,3 @@
     </div>
   </md-step>
 </md-horizontal-stepper>
-
-<h2>Vertical Stepper Demo</h2>
-<md-vertical-stepper>
-  <md-step *ngFor="let step of steps" [label]="step.label">
-    <md-input-container>
-      <input mdInput placeholder="Answer" [(ngModel)]="step.content">
-    </md-input-container>
-    <div>
-      <button md-button mdStepperPrevious>Back</button>
-      <button md-button mdStepperNext>Next</button>
-    </div>
-  </md-step>
-</md-vertical-stepper>
