@@ -6,5 +6,5 @@ import {Component} from '@angular/core';
   templateUrl: 'progress-spinner-a11y.html'
 })
 export class ProgressSpinnerAccessibilityDemo {
-  loadingValue: number = 30;
+  potionValue: number = 60;
 }
