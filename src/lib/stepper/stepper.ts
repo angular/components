@@ -28,15 +28,7 @@ import {
   MD_ERROR_GLOBAL_OPTIONS,
   ErrorStateMatcher
 } from '../core/error/error-options';
-import {
-  FormArray, FormControl, FormGroupDirective, NgForm, ValidationErrors,
-  ValidatorFn
-} from '@angular/forms';
-
-/**
- * Form array validator to check if all form groups in form array are valid.
- * If not, it will return the index of the first invalid form group.
- */
+import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
 
 @Component({
   moduleId: module.id,

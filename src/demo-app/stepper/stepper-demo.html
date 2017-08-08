@@ -1,6 +1,6 @@
 <h2>Linear Vertical Stepper Demo</h2>
 <form [formGroup]="formGroup">
-  <md-vertical-stepper formArrayName="formArray">
+  <md-vertical-stepper formArrayName="formArray" linear>
     <md-step formGroupName="0" [stepControl]="formArray.get([0])">
       <ng-template mdStepLabel>Fill out your name</ng-template>
       <md-input-container>

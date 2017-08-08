@@ -84,6 +84,7 @@ export class CdkStep {
   host: {
     '(focus)': '_focusStep()',
     '(keydown)': '_onKeydown($event)',
+    '[linear]': 'linear',
   },
 })
 export class CdkStepper {
@@ -93,15 +94,19 @@ export class CdkStepper {
   /** The list of step headers of the steps in the stepper. */
   _stepHeader: QueryList<ElementRef>;
 
+  /** Whether the validity of previous steps should be checked or not. */
+  @Input()
+  get linear() { return this._linear; }
+  set linear(value: any) {
+    this._linear = coerceBooleanProperty(value);
+  }
+  private _linear = false;
+
   /** The index of the selected step. */
   @Input()
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
-    this._steps.toArray()[this._selectedIndex].interacted = true;
-    for (let i = 0; i < index; i++) {
-      if (!this._steps.toArray()[i].stepControl.valid) { return; }
-    }
-    if (this._selectedIndex != index) {
+    if (this._selectedIndex != index && !this._anyControlsInvalid(index)) {
       this._emitStepperSelectionEvent(index);
       this._focusStep(this._selectedIndex);
     }
@@ -182,5 +187,18 @@ export class CdkStepper {
   private _focusStep(index: number) {
     this._focusIndex = index;
     this._stepHeader.toArray()[this._focusIndex].nativeElement.focus();
+  }
+
+  private _anyControlsInvalid(index: number): boolean {
+    const stepsArray = this._steps.toArray();
+    stepsArray[this._selectedIndex].interacted = true;
+    if (this._linear) {
+      for (let i = 0; i < index; i++) {
+        if (!stepsArray[i].stepControl.valid) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }
