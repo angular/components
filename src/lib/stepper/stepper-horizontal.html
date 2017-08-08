@@ -24,12 +24,13 @@
     <div *ngIf="!isLast" class="connector-line"></div>
   </ng-container>
 </div>
-
-<div *ngFor="let step of _steps; let i = index"
-     class="mat-horizontal-stepper-content" role="tabpanel"
-     [@stepEnterExit]="step._position"
-     [id]="_getStepContentId(i)"
-     [attr.aria-labelledby]="_getStepLabelId(i)"
-     [attr.aria-expanded]="selectedIndex == i">
-  <ng-container [ngTemplateOutlet]="step.content"></ng-container>
+<div class="horizontal-content-container">
+  <div *ngFor="let step of _steps; let i = index"
+       class="mat-horizontal-stepper-content" role="tabpanel"
+       [@stepEnterExit]="step._position"
+       [id]="_getStepContentId(i)"
+       [attr.aria-labelledby]="_getStepLabelId(i)"
+       [attr.aria-expanded]="selectedIndex == i">
+    <ng-container [ngTemplateOutlet]="step.content"></ng-container>
+  </div>
 </div>

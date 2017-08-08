@@ -5,7 +5,7 @@ $mat-label-header-height: 24px !default;
 $mat-stepper-label-min-width: 50px !default;
 $mat-stepper-side-gap: 24px !default;
 $mat-vertical-stepper-content-margin: 12px !default;
-$mat-vertical-stepper-content-padding: 16px 0 32px $mat-stepper-side-gap !default;
+$mat-vertical-content-padding-bottom: 32px !default;
 $mat-vertical-content-container-padding: 8px !default;
 $mat-connector-line-width: 1px !default;
 $mat-connector-line-gap: 8px !default;
@@ -45,6 +45,7 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
   line-height: $mat-horizontal-stepper-header-height;
   overflow: hidden;
   align-items: center;
+  outline: none;
 
   .mat-stepper-index {
     margin-right: $mat-connector-line-gap;
@@ -75,14 +76,16 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
 
 .mat-horizontal-stepper-content {
   //transition: opacity 5s $ease-in-out-curve-function;
-  transition: 5s;
-  height: inherit;
+  //height: inherit;
+  overflow: hidden;
 
   &[aria-expanded='false'] {
-    //display: none;
     height: 0;
-    overflow: hidden;
   }
+}
+
+.horizontal-content-container {
+  overflow: hidden;
 }
 
 .vertical-content-container {
@@ -94,19 +97,24 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
 
 .mat-vertical-stepper-content {
   padding-left: $mat-stepper-side-gap;
-  transition: transform 2s $ease-in-out-curve-function;
+  //transition: transform 2s $ease-in-out-curve-function;
   //height: inherit;
+  overflow: hidden;
 
   &[aria-expanded='false'] {
     //height: 0;
-    overflow: hidden;
-    transform: scaleY(0);
+    //overflow: hidden;
+    //transform: scaleY(0);
   }
 
   &[aria-expanded='true'] {
-    padding: $mat-vertical-stepper-content-padding;
-    transform: scaleY(1);
+    //padding: $mat-vertical-stepper-content-padding;
+    //transform: scaleY(1);
   }
+}
+
+.vertical-content {
+  padding-bottom: $mat-vertical-content-padding-bottom;
 }
 
 .mat-step {

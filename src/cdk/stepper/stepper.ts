@@ -20,13 +20,15 @@ import {
   Component,
   ContentChild,
   ViewChild,
-  TemplateRef
+  TemplateRef, AfterContentChecked
 } from '@angular/core';
 import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '@angular/cdk/keyboard';
 import {CdkStepLabel} from './step-label';
 
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;
+
+export type CdkStepContentPositionState = 'left' | 'center' | 'right';
 
 /** Change event emitted on selection changes. */
 export class CdkStepperSelectionEvent {
@@ -58,6 +60,17 @@ export class CdkStep {
   @Input()
   label: string;
 
+  _position: CdkStepContentPositionState;
+  set position(position: number) {
+    if (position < 0) {
+      this._position = 'left';
+    } else if (position > 0) {
+      this._position = 'right';
+    } else {
+      this._position = 'center';
+    }
+  }
+
   constructor(private _stepper: CdkStepper) { }
 
   /** Selects this step component. */
@@ -73,7 +86,7 @@ export class CdkStep {
     '(keydown)': '_onKeydown($event)',
   },
 })
-export class CdkStepper {
+export class CdkStepper implements AfterContentChecked {
   /** The list of step components that the stepper is holding. */
   @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
 
@@ -89,6 +102,7 @@ export class CdkStepper {
     if (this._selectedIndex != index) {
       this._emitStepperSelectionEvent(index);
       this._focusStep(this._selectedIndex);
+      this._setStepPosition();
     }
   }
   private _selectedIndex: number = 0;
@@ -112,6 +126,10 @@ export class CdkStepper {
 
   constructor() {
     this._groupId = nextId++;
+  }
+
+  ngAfterContentChecked(): void {
+    this._setStepPosition();
   }
 
   /** Selects and focuses the next step in list. */
@@ -144,7 +162,7 @@ export class CdkStepper {
     if (this._verticalContent != null) {
       //console.log(this._verticalContent.nativeElement.clientHeight);
       if (this._verticalContent.nativeElement.clientHeight) this._verticalContent.nativeElement.style.height = 0;
-      else this._verticalContent.nativeElement.height = this._verticalContent.nativeElement.scrollHeight+'px';
+      else this._verticalContent.nativeElement.height = this._verticalContent.nativeElement.scrollHeight + 'px';
 
     }
     const stepsArray = this._steps.toArray();
@@ -176,8 +194,19 @@ export class CdkStepper {
     event.preventDefault();
   }
 
+  _getExpandedState(index: number) {
+    return index == this._selectedIndex ? 'expanded' : 'collapsed';
+  }
+
   private _focusStep(index: number) {
     this._focusIndex = index;
     this._stepHeader.toArray()[this._focusIndex].nativeElement.focus();
+  }
+
+  private _setStepPosition() {
+    this._steps.forEach((step: CdkStep, index: number) => {
+      step.position = index - this._selectedIndex;
+    });
+    console.log('here');
   }
 }

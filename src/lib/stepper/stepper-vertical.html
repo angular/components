@@ -20,12 +20,15 @@
 
   </div>
   <div class="vertical-content-container">
-    <div *ngIf="selectedIndex==i" #verticalContent
+    <div #verticalContent
          class="mat-vertical-stepper-content" role="tabpanel"
+         [@stepExpandCollapse]="_getExpandedState(i)"
          [id]="_getStepContentId(i)"
          [attr.aria-labelledby]="_getStepLabelId(i)"
          [attr.aria-expanded]="selectedIndex == i">
-      <ng-container [ngTemplateOutlet]="step.content"></ng-container>
+      <div class="vertical-content">
+        <ng-container[ngTemplateOutlet]="step.content"></ng-container>
+      </div>
     </div>
   </div>
 </div>

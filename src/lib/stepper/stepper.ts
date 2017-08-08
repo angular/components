@@ -16,13 +16,10 @@ import {
   // tslint:disable-next-line:no-unused-variable
   ElementRef,
   QueryList, ViewChild,
-  ElementRef,
-  QueryList,
   ViewChildren
 }from '@angular/core';
 import {MdStepLabel} from './step-label';
 
-export type MdStepContentPositionState = 'left' | 'center' | 'right';
 
 @Component({
   moduleId: module.id,
@@ -32,17 +29,6 @@ export type MdStepContentPositionState = 'left' | 'center' | 'right';
 export class MdStep extends CdkStep {
   /** Content for step label given by <ng-template matStepLabel> or <ng-template mdStepLabel>. */
   @ContentChild(MdStepLabel) stepLabel: MdStepLabel;
-
-  _position: MdStepContentPositionState;
-  set position(position: number) {
-    if (position < 0) {
-      this._position = 'left';
-    } else if (position > 0) {
-      this._position = 'right';
-    } else {
-      this._position = 'center';
-    }
-  }
 
   constructor(mdStepper: MdStepper) {
     super(mdStepper);
