@@ -30,6 +30,10 @@ import {AbstractControl} from '@angular/forms';
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;
 
+/**
+ * Position state of the content of each step in horizontal stepper that is used for transitioning
+ * the content into correct position upon step selection change.
+ */
 export type CdkStepContentPositionState = 'left' | 'center' | 'right';
 
 /** Change event emitted on selection changes. */
@@ -73,7 +77,10 @@ export class CdkStep {
   @Input()
   label: string;
 
+  /** Position state of step. */
   _position: CdkStepContentPositionState;
+
+  /** Sets the CdkStepContentPositionState of step. */
   set position(position: number) {
     if (position < 0) {
       this._position = 'left';
@@ -111,8 +118,6 @@ export class CdkStepper implements AfterContentChecked {
   get linear() { return this._linear; }
   set linear(value: any) { this._linear = coerceBooleanProperty(value); }
   private _linear = false;
-
-  _verticalContent: ElementRef;
 
   /** The index of the selected step. */
   @Input()
@@ -172,18 +177,6 @@ export class CdkStepper implements AfterContentChecked {
   }
 
   private _emitStepperSelectionEvent(newIndex: number): void {
-    // if (this._verticalContent != null) {
-    //   this._verticalContent.toArray()[newIndex].nativeElement.style.height = this._verticalContent.toArray()[this._selectedIndex].nativeElement.offsetHeight+'px';
-    //   this._verticalContent.toArray()[this._selectedIndex].nativeElement.style.height = '0px';
-    //   console.log(this._verticalContent.toArray()[newIndex].nativeElement.offsetHeight);
-    // }
-
-    if (this._verticalContent != null) {
-      //console.log(this._verticalContent.nativeElement.clientHeight);
-      if (this._verticalContent.nativeElement.clientHeight) this._verticalContent.nativeElement.style.height = 0;
-      else this._verticalContent.nativeElement.height = this._verticalContent.nativeElement.scrollHeight + 'px';
-
-    }
     const stepsArray = this._steps.toArray();
     this.selectionChange.emit({
       selectedIndex: newIndex,
@@ -213,6 +206,7 @@ export class CdkStepper implements AfterContentChecked {
     event.preventDefault();
   }
 
+  /** Get whether a step has 'expanded' or 'collapsed' state for vertical stepper. */
   _getExpandedState(index: number) {
     return index == this._selectedIndex ? 'expanded' : 'collapsed';
   }
@@ -235,10 +229,13 @@ export class CdkStepper implements AfterContentChecked {
     return false;
   }
 
+  /**
+   * Set the shifted index position of each step in horizontal stepper, where zero represents
+   * the selected step.
+   */
   private _setStepPosition() {
     this._steps.forEach((step: CdkStep, index: number) => {
       step.position = index - this._selectedIndex;
     });
-    console.log('here');
   }
 }

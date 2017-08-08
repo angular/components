@@ -75,8 +75,6 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
 }
 
 .mat-horizontal-stepper-content {
-  //transition: opacity 5s $ease-in-out-curve-function;
-  //height: inherit;
   overflow: hidden;
 
   &[aria-expanded='false'] {
@@ -97,20 +95,7 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
 
 .mat-vertical-stepper-content {
   padding-left: $mat-stepper-side-gap;
-  //transition: transform 2s $ease-in-out-curve-function;
-  //height: inherit;
   overflow: hidden;
-
-  &[aria-expanded='false'] {
-    //height: 0;
-    //overflow: hidden;
-    //transform: scaleY(0);
-  }
-
-  &[aria-expanded='true'] {
-    //padding: $mat-vertical-stepper-content-padding;
-    //transform: scaleY(1);
-  }
 }
 
 .vertical-content {
