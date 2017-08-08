@@ -24,6 +24,8 @@ import {
 } from '@angular/core';
 import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '@angular/cdk/keyboard';
 import {CdkStepLabel} from './step-label';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {AbstractControl} from '@angular/forms';
 
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;
@@ -45,7 +47,7 @@ export class CdkStepperSelectionEvent {
 
 @Component({
   selector: 'cdk-step',
-  templateUrl: 'step.html',
+  templateUrl: 'step.html'
 })
 export class CdkStep {
   /** Template for step label if it exists. */
@@ -53,6 +55,17 @@ export class CdkStep {
 
   /** Template for step content. */
   @ViewChild(TemplateRef) content: TemplateRef<any>;
+
+  /** The top level abstract control of the step. */
+  @Input()
+  get stepControl() { return this._stepControl; }
+  set stepControl(control: AbstractControl) {
+    this._stepControl = control;
+  }
+  private _stepControl: AbstractControl;
+
+  /** Whether user has seen the expanded step content or not . */
+  interacted = false;
 
   /** Label of the step. */
   @Input()
@@ -70,7 +83,7 @@ export class CdkStep {
   selector: 'cdk-stepper',
   host: {
     '(focus)': '_focusStep()',
-    '(keydown)': '_onKeydown($event)',
+    '(keydown)': '_onKeydown($event)'
   },
 })
 export class CdkStepper {
@@ -80,11 +93,17 @@ export class CdkStepper {
   /** The list of step headers of the steps in the stepper. */
   _stepHeader: QueryList<ElementRef>;
 
+  /** Whether the validity of previous steps should be checked or not. */
+  @Input()
+  get linear() { return this._linear; }
+  set linear(value: any) { this._linear = coerceBooleanProperty(value); }
+  private _linear = false;
+
   /** The index of the selected step. */
   @Input()
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
-    if (this._selectedIndex != index) {
+    if (this._selectedIndex != index && !this._anyControlsInvalid(index)) {
       this._emitStepperSelectionEvent(index);
       this._focusStep(this._selectedIndex);
     }
@@ -153,7 +172,7 @@ export class CdkStepper {
         break;
       case SPACE:
       case ENTER:
-        this._emitStepperSelectionEvent(this._focusIndex);
+        this.selectedIndex = this._focusIndex;
         break;
       default:
         // Return to avoid calling preventDefault on keys that are not explicitly handled.
@@ -165,5 +184,18 @@ export class CdkStepper {
   private _focusStep(index: number) {
     this._focusIndex = index;
     this._stepHeader.toArray()[this._focusIndex].nativeElement.focus();
+  }
+
+  private _anyControlsInvalid(index: number): boolean {
+    const stepsArray = this._steps.toArray();
+    stepsArray[this._selectedIndex].interacted = true;
+    if (this._linear) {
+      for (let i = 0; i < index; i++) {
+        if (!stepsArray[i].stepControl.valid) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }
