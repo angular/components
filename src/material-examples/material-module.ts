@@ -8,7 +8,7 @@ import {
   MdListModule, MdMenuModule, MdProgressBarModule, MdProgressSpinnerModule,
   MdRadioModule, MdSelectModule, MdSidenavModule, MdSliderModule, MdSortModule,
   MdSlideToggleModule, MdSnackBarModule, MdTableModule, MdTabsModule, MdToolbarModule,
-  MdTooltipModule
+  MdTooltipModule, StickyHeaderModule,
 } from '@angular/material';
 
 @NgModule({
@@ -40,7 +40,8 @@ import {
     MdTooltipModule,
     MdPaginatorModule,
     MdSortModule,
-    MdTableModule
+    MdTableModule,
+    StickyHeaderModule
   ]
 })
 export class ExampleMaterialModule {}

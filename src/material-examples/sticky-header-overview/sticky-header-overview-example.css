@@ -1,0 +1,40 @@
+.sticky-header-example .example-centered {
+  text-align: left;
+  height: 300px;
+  width: 600px;
+  overflow: auto;
+}
+
+.sticky-header-example .global-format {
+  margin: 0;
+  border: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.sticky-header-example .example-headers {
+  font-size: 20px;
+  font-weight: 600;
+  padding: 10px;
+}
+
+.sticky-header-example p {
+  text-indent: 4em;
+  padding:10px;
+}
+
+.sticky-header-example .demo-header-style {
+  padding: 5px;
+}
+
+.sticky-header-example .demo-header-color1 {
+  background: #cecece;
+}
+
+.sticky-header-example .demo-header-color2 {
+  background: #cea7a7;
+}
+
+.sticky-header-example .demo-header-color3 {
+  background: #c2eae5;
+}
