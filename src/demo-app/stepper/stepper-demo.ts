@@ -5,10 +5,11 @@ import {Validators, FormBuilder, FormGroup} from '@angular/forms';
   moduleId: module.id,
   selector: 'stepper-demo',
   templateUrl: 'stepper-demo.html',
-  styleUrls: ['stepper-demo.scss'],
+  styleUrls: ['stepper-demo.scss']
 })
 export class StepperDemo {
   formGroup: FormGroup;
+  isNonLinear = false;
 
   steps = [
     {label: 'Confirm your name', content: 'Last name, First name.'},

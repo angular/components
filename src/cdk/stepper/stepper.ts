@@ -83,8 +83,7 @@ export class CdkStep {
   selector: 'cdk-stepper',
   host: {
     '(focus)': '_focusStep()',
-    '(keydown)': '_onKeydown($event)',
-    '[linear]': 'linear',
+    '(keydown)': '_onKeydown($event)'
   },
 })
 export class CdkStepper {
@@ -97,9 +96,7 @@ export class CdkStepper {
   /** Whether the validity of previous steps should be checked or not. */
   @Input()
   get linear() { return this._linear; }
-  set linear(value: any) {
-    this._linear = coerceBooleanProperty(value);
-  }
+  set linear(value: any) { this._linear = coerceBooleanProperty(value); }
   private _linear = false;
 
   /** The index of the selected step. */

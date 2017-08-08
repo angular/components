@@ -55,11 +55,9 @@ export class MdStep extends CdkStep implements ErrorOptions {
   errorStateMatcher = (control: FormControl, form: FormGroupDirective | NgForm) => {
     let originalErrorState = this._originalErrorStateMatcher(control, form);
 
-    /**
-     * Custom error state checks for the validity of form that is not submitted or touched
-     * since user can trigger a form change by calling for another step without directly
-     * interacting with the current form.
-     */
+    // Custom error state checks for the validity of form that is not submitted or touched
+    // since user can trigger a form change by calling for another step without directly
+    // interacting with the current form.
     let customErrorState =  control.invalid && this.interacted;
 
     return originalErrorState || customErrorState;
