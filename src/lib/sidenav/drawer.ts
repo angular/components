@@ -80,7 +80,7 @@ export class MdDrawerToggleResult {
     '(keydown)': 'handleKeydown($event)',
     // must prevent the browser from aligning text based on value
     '[attr.align]': 'null',
-    '[class.mat-drawer-end]': 'side === "end"',
+    '[class.mat-drawer-end]': 'position === "end"',
     '[class.mat-drawer-over]': 'mode === "over"',
     '[class.mat-drawer-push]': 'mode === "push"',
     '[class.mat-drawer-side]': 'mode === "side"',
@@ -98,22 +98,22 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
 
   /** The side that the drawer is attached to. */
   @Input()
-  get side() { return this._side; }
-  set side(value) {
+  get position() { return this._position; }
+  set position(value) {
     // Make sure we have a valid value.
     value = value === 'end' ? 'end' : 'start';
-    if (value != this._side) {
-      this._side = value;
+    if (value != this._position) {
+      this._position = value;
       this.onAlignChanged.emit();
-      this.onSideChanged.emit();
+      this.onPositionChanged.emit();
     }
   }
-  private _side: 'start' | 'end' = 'start';
+  private _position: 'start' | 'end' = 'start';
 
   /** @deprecated */
   @Input()
-  get align() { return this.side; }
-  set align(value) { this.side = value; }
+  get align() { return this.position; }
+  set align(value) { this.position = value; }
 
   /** Mode of the drawer; one of 'over', 'push' or 'side'. */
   @Input() mode: 'over' | 'push' | 'side' = 'over';
@@ -150,7 +150,7 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
   @Output('close') onClose = new EventEmitter<MdDrawerToggleResult | void>();
 
   /** Event emitted when the drawer's side changes. */
-  @Output('side-changed') onSideChanged = new EventEmitter<void>();
+  @Output('side-changed') onPositionChanged = new EventEmitter<void>();
 
   /** @deprecated */
   @Output('align-changed') onAlignChanged = new EventEmitter<void>();
@@ -400,7 +400,7 @@ export class MdDrawerContainer implements AfterContentInit {
     }
     // NOTE: We need to wait for the microtask queue to be empty before validating,
     // since both drawers may be swapping sides at the same time.
-    takeUntil.call(drawer.onSideChanged, this._drawers.changes).subscribe(() =>
+    takeUntil.call(drawer.onPositionChanged, this._drawers.changes).subscribe(() =>
         first.call(this._ngZone.onMicrotaskEmpty).subscribe(() => this._validateDrawers()));
   }
 
@@ -419,7 +419,7 @@ export class MdDrawerContainer implements AfterContentInit {
 
     // Ensure that we have at most one start and one end drawer.
     this._drawers.forEach(drawer => {
-      if (drawer.side == 'end') {
+      if (drawer.position == 'end') {
         if (this._end != null) {
           throwMdDuplicatedDrawerError('end');
         }

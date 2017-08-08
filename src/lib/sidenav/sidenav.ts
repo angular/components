@@ -42,7 +42,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
     '(keydown)': 'handleKeydown($event)',
     // must prevent the browser from aligning text based on value
     '[attr.align]': 'null',
-    '[class.mat-drawer-end]': 'side === "end"',
+    '[class.mat-drawer-end]': 'position === "end"',
     '[class.mat-drawer-over]': 'mode === "over"',
     '[class.mat-drawer-push]': 'mode === "push"',
     '[class.mat-drawer-side]': 'mode === "side"',

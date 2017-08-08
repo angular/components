@@ -372,8 +372,8 @@ class DrawerContainerNoDrawerTestApp { }
 @Component({
   template: `
     <md-drawer-container>
-      <md-drawer side="start"> </md-drawer>
-      <md-drawer side="end"> </md-drawer>
+      <md-drawer [position]="start"></md-drawer>
+      <md-drawer [position]="end"></md-drawer>
     </md-drawer-container>`,
 })
 class DrawerContainerTwoDrawerTestApp {
@@ -384,9 +384,9 @@ class DrawerContainerTwoDrawerTestApp {
 @Component({
   template: `
     <md-drawer-container (backdropClick)="backdropClicked()">
-      <md-drawer #drawer side="start"
-                  (open)="open()"
-                  (close)="close()">
+      <md-drawer #drawer [position]="start"
+                 (open)="open()"
+                 (close)="close()">
         <button #drawerButton>Content.</button>
       </md-drawer>
       <button (click)="drawer.open()" class="open" #openButton></button>
@@ -438,8 +438,8 @@ class DrawerSetToOpenedTrue { }
 @Component({
   template: `
     <md-drawer-container>
-      <md-drawer #drawer1 [side]="drawer1Side"></md-drawer>
-      <md-drawer #drawer2 [side]="drawer2Side"></md-drawer>
+      <md-drawer #drawer1 [position]="drawer1Side"></md-drawer>
+      <md-drawer #drawer2 [position]="drawer2Side"></md-drawer>
     </md-drawer-container>`,
 })
 class DrawerDynamicSide {
@@ -450,7 +450,7 @@ class DrawerDynamicSide {
 @Component({
   template: `
     <md-drawer-container>
-      <md-drawer side="start" [mode]="mode">
+      <md-drawer [position]="start" [mode]="mode">
         <a class="link1" href="#">link1</a>
       </md-drawer>
       <a class="link2" href="#">link2</a>
