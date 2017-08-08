@@ -1,13 +1,16 @@
 <section>
   <h2>Loading indicator (Indeterminate progress spinner)</h2>
-  <md-spinner color="indeterminate" [strokeWidth]="1"></md-spinner>
-  <md-spinner color="accent"></md-spinner>
+  <md-spinner color="indeterminate" [strokeWidth]="1" aria-label="Loading"></md-spinner>
+  <md-spinner color="accent" aria-label="Loading"></md-spinner>
 </section>
 
 <section>
   <h2>Portion of completion (Determinate progress spinner) </h2>
   <md-progress-spinner [strokeWidth]="1" color="primary"
-                       [value]="portionValue"></md-progress-spinner>
-  <md-progress-spinner color="warn" [value]="portionValue"></md-progress-spinner>
+                       [value]="portionValue" aria-label="Portion complete">
+  </md-progress-spinner>
+  <md-progress-spinner color="warn" [value]="portionValue"
+                       aria-label="Portion complete">
+  </md-progress-spinner>
 
 </section>
