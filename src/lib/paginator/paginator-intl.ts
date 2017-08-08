@@ -7,7 +7,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import {Subject} from 'rxjs/Subject';
 
 /**
  * To modify the labels and text displayed, create a new instance of MdPaginatorIntl and
