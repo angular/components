@@ -17,7 +17,7 @@ import {IconAccessibilityDemo} from './icon/icon-a11y';
 import {InputAccessibilityDemo} from './input/input-a11y';
 import {ProgressSpinnerAccessibilityDemo} from './progress-spinner/progress-spinner-a11y';
 import {SliderAccessibilityDemo} from './slider/slider-a11y';
-import {SnackBarAccessibilityDemo, SnackBarPizzaPartyDemo} from './snack-bar/snack-bar-a11y';
+import {SnackBarAccessibilityDemo} from './snack-bar/snack-bar-a11y';
 
 
 @NgModule({
@@ -54,10 +54,6 @@ export class AccessibilityRoutingModule {}
     RadioAccessibilityDemo,
     SliderAccessibilityDemo,
     SnackBarAccessibilityDemo,
-    SnackBarPizzaPartyDemo,
-  ],
-  entryComponents: [
-    SnackBarPizzaPartyDemo,
   ]
 })
 export class AccessibilityDemoModule {}

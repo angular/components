@@ -13,20 +13,7 @@ export class SnackBarAccessibilityDemo {
     this.snackBar.open('Disco party!', 'Dismiss', {duration: 5000});
   }
 
-  openPizzaPartySnackBar() {
-    this.snackBar.openFromComponent(SnackBarPizzaPartyDemo, {duration: 5000});
-  }
-
   openNotificationSnackBar() {
     this.snackBar.open('Thank you for your support!', '', {duration: 2000});
   }
 }
-
-@Component({
-  selector: 'snack-bar-component-example-snack',
-  template: `<span class="example-pizza-party">
-               🍕 Pizza party!!! 
-             </span>`,
-  styles: [`.example-pizza-party { color: pink; }`]
-})
-export class SnackBarPizzaPartyDemo {}
