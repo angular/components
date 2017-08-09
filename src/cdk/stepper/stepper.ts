@@ -20,7 +20,7 @@ import {
   Component,
   ContentChild,
   ViewChild,
-  TemplateRef, AfterContentChecked
+  TemplateRef
 } from '@angular/core';
 import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '@angular/cdk/keyboard';
 import {CdkStepLabel} from './step-label';
@@ -31,13 +31,13 @@ import {AbstractControl} from '@angular/forms';
 let nextId = 0;
 
 /**
- * Position state of the content of each step in horizontal stepper that is used for transitioning
+ * Position state of the content of each step in stepper that is used for transitioning
  * the content into correct position upon step selection change.
  */
-export type CdkStepContentPositionState = 'left' | 'center' | 'right';
+export type StepContentPositionState = 'previous' | 'current' | 'next';
 
 /** Change event emitted on selection changes. */
-export class CdkStepperSelectionEvent {
+export class StepperSelectionEvent {
   /** Index of the step now selected. */
   selectedIndex: number;
 
@@ -77,20 +77,6 @@ export class CdkStep {
   @Input()
   label: string;
 
-  /** Position state of step. */
-  _position: CdkStepContentPositionState;
-
-  /** Sets the CdkStepContentPositionState of step. */
-  set position(position: number) {
-    if (position < 0) {
-      this._position = 'left';
-    } else if (position > 0) {
-      this._position = 'right';
-    } else {
-      this._position = 'center';
-    }
-  }
-
   constructor(private _stepper: CdkStepper) { }
 
   /** Selects this step component. */
@@ -106,7 +92,7 @@ export class CdkStep {
     '(keydown)': '_onKeydown($event)'
   },
 })
-export class CdkStepper implements AfterContentChecked {
+export class CdkStepper {
   /** The list of step components that the stepper is holding. */
   @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
 
@@ -126,7 +112,6 @@ export class CdkStepper implements AfterContentChecked {
     if (this._selectedIndex != index && !this._anyControlsInvalid(index)) {
       this._emitStepperSelectionEvent(index);
       this._focusStep(this._selectedIndex);
-      this._setStepPosition();
     }
   }
   private _selectedIndex: number = 0;
@@ -140,7 +125,7 @@ export class CdkStepper implements AfterContentChecked {
   }
 
   /** Event emitted when the selected step has changed. */
-  @Output() selectionChange = new EventEmitter<CdkStepperSelectionEvent>();
+  @Output() selectionChange = new EventEmitter<StepperSelectionEvent>();
 
   /** The index of the step that the focus can be set. */
   _focusIndex: number = 0;
@@ -150,10 +135,6 @@ export class CdkStepper implements AfterContentChecked {
 
   constructor() {
     this._groupId = nextId++;
-  }
-
-  ngAfterContentChecked(): void {
-    this._setStepPosition();
   }
 
   /** Selects and focuses the next step in list. */
@@ -171,9 +152,21 @@ export class CdkStepper implements AfterContentChecked {
     return `mat-step-label-${this._groupId}-${i}`;
   }
 
-  /** Returns nique id for each step content element. */
+  /** Returns unique id for each step content element. */
   _getStepContentId(i: number): string {
     return `mat-step-content-${this._groupId}-${i}`;
+  }
+
+  /** Returns position state of the step with the given index. */
+  _getAnimationDirection(index: number): StepContentPositionState {
+    const position = index - this._selectedIndex;
+    if (position < 0) {
+      return 'previous';
+    } else if (position > 0) {
+      return 'next';
+    } else {
+      return 'current';
+    }
   }
 
   private _emitStepperSelectionEvent(newIndex: number): void {
@@ -206,11 +199,6 @@ export class CdkStepper implements AfterContentChecked {
     event.preventDefault();
   }
 
-  /** Get whether a step has 'expanded' or 'collapsed' state for vertical stepper. */
-  _getExpandedState(index: number) {
-    return index == this._selectedIndex ? 'expanded' : 'collapsed';
-  }
-
   private _focusStep(index: number) {
     this._focusIndex = index;
     this._stepHeader.toArray()[this._focusIndex].nativeElement.focus();
@@ -227,15 +215,5 @@ export class CdkStepper implements AfterContentChecked {
       }
     }
     return false;
-  }
-
-  /**
-   * Set the shifted index position of each step in horizontal stepper, where zero represents
-   * the selected step.
-   */
-  private _setStepPosition() {
-    this._steps.forEach((step: CdkStep, index: number) => {
-      step.position = index - this._selectedIndex;
-    });
   }
 }
