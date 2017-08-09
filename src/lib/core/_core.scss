@@ -7,6 +7,8 @@
 @import 'option/option-theme';
 @import 'option/optgroup';
 @import 'option/optgroup-theme';
+@import 'error/error';
+@import 'error/error-theme';
 @import 'selection/pseudo-checkbox/pseudo-checkbox-theme';
 @import 'typography/all-typography';
 
@@ -25,6 +27,7 @@
   @include mat-ripple();
   @include mat-option();
   @include mat-optgroup();
+  @include mat-error();
   @include cdk-a11y();
   @include cdk-overlay();
 }
@@ -35,6 +38,7 @@
   @include mat-option-theme($theme);
   @include mat-optgroup-theme($theme);
   @include mat-pseudo-checkbox-theme($theme);
+  @include mat-error-theme($theme);
 
   // Wrapper element that provides the theme background when the
   // user's content isn't inside of a `md-sidenav-container`.

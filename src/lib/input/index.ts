@@ -8,7 +8,6 @@
 
 import {NgModule} from '@angular/core';
 import {
-  MdErrorDirective,
   MdHint,
   MdInputContainer,
   MdInputDirective,
@@ -19,11 +18,11 @@ import {
 import {MdTextareaAutosize} from './autosize';
 import {CommonModule} from '@angular/common';
 import {PlatformModule} from '../core/platform/index';
+import {MdErrorModule} from '../core/error/index';
 
 
 @NgModule({
   declarations: [
-    MdErrorDirective,
     MdHint,
     MdInputContainer,
     MdInputDirective,
@@ -35,9 +34,9 @@ import {PlatformModule} from '../core/platform/index';
   imports: [
     CommonModule,
     PlatformModule,
+    MdErrorModule,
   ],
   exports: [
-    MdErrorDirective,
     MdHint,
     MdInputContainer,
     MdInputDirective,
@@ -45,6 +44,7 @@ import {PlatformModule} from '../core/platform/index';
     MdPrefix,
     MdSuffix,
     MdTextareaAutosize,
+    MdErrorModule,
   ],
 })
 export class MdInputModule {}

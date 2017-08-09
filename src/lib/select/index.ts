@@ -9,7 +9,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MdSelect, MD_SELECT_SCROLL_STRATEGY_PROVIDER} from './select';
-import {MdCommonModule, OverlayModule, MdOptionModule} from '../core';
+import {MdCommonModule, OverlayModule, MdOptionModule, MdErrorModule} from '../core';
 
 
 @NgModule({
@@ -18,8 +18,9 @@ import {MdCommonModule, OverlayModule, MdOptionModule} from '../core';
     OverlayModule,
     MdOptionModule,
     MdCommonModule,
+    MdErrorModule,
   ],
-  exports: [MdSelect, MdOptionModule, MdCommonModule],
+  exports: [MdSelect, MdOptionModule, MdCommonModule, MdErrorModule],
   declarations: [MdSelect],
   providers: [MD_SELECT_SCROLL_STRATEGY_PROVIDER]
 })

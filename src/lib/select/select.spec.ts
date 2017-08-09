@@ -31,6 +31,7 @@ import {Subject} from 'rxjs/Subject';
 import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
 import {dispatchFakeEvent, dispatchKeyboardEvent, wrappedErrorMessage} from '@angular/cdk/testing';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
+import {ErrorStateMatcher} from '../core/error/error-options';
 import {
   FloatPlaceholderType,
   MD_PLACEHOLDER_GLOBAL_OPTIONS
@@ -74,7 +75,8 @@ describe('MdSelect', () => {
         BasicSelectWithoutForms,
         BasicSelectWithoutFormsPreselected,
         BasicSelectWithoutFormsMultiple,
-        SelectInsideFormGroup
+        SelectInsideFormGroup,
+        CustomErrorBehaviorSelect
       ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -2675,6 +2677,46 @@ describe('MdSelect', () => {
           .toBe('true', 'Expected aria-invalid to be set to true.');
     });
 
+    it('should be able to override the error matching behavior via an @Input', () => {
+      fixture.destroy();
+
+      const customErrorFixture = TestBed.createComponent(CustomErrorBehaviorSelect);
+      const component = customErrorFixture.componentInstance;
+      const matcher = jasmine.createSpy('error state matcher').and.returnValue(true);
+
+      customErrorFixture.detectChanges();
+
+      expect(component.control.invalid).toBe(false);
+      expect(component.select._isErrorState()).toBe(false);
+
+      customErrorFixture.componentInstance.errorStateMatcher = { isErrorState: matcher };
+      customErrorFixture.detectChanges();
+
+      expect(component.select._isErrorState()).toBe(true);
+      expect(matcher).toHaveBeenCalled();
+    });
+
+    it('should be able to override the error matching behavior via the injection token', () => {
+      const errorStateMatcher: ErrorStateMatcher = {
+        isErrorState: jasmine.createSpy('error state matcher').and.returnValue(true)
+      };
+
+      fixture.destroy();
+
+      TestBed.resetTestingModule().configureTestingModule({
+        imports: [MdSelectModule, ReactiveFormsModule, FormsModule, NoopAnimationsModule],
+        declarations: [SelectInsideFormGroup],
+        providers: [{ provide: ErrorStateMatcher, useValue: errorStateMatcher }],
+      });
+
+      const errorFixture = TestBed.createComponent(SelectInsideFormGroup);
+      const component = errorFixture.componentInstance;
+
+      errorFixture.detectChanges();
+
+      expect(component.select._isErrorState()).toBe(true);
+      expect(errorStateMatcher.isErrorState).toHaveBeenCalled();
+    });
   });
 
 });
@@ -3147,6 +3189,7 @@ class InvalidSelectInForm {
 })
 class SelectInsideFormGroup {
   @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
+  @ViewChild(MdSelect) select: MdSelect;
   formControl = new FormControl('', Validators.required);
   formGroup = new FormGroup({
     food: this.formControl
@@ -3212,3 +3255,23 @@ class BasicSelectWithoutFormsMultiple {
 
   @ViewChild(MdSelect) select: MdSelect;
 }
+
+@Component({
+  template: `
+    <md-select placeholder="Food" [formControl]="control" [errorStateMatcher]="errorStateMatcher">
+      <md-option *ngFor="let food of foods" [value]="food.value">
+        {{ food.viewValue }}
+      </md-option>
+    </md-select>
+  `
+})
+class CustomErrorBehaviorSelect {
+  @ViewChild(MdSelect) select: MdSelect;
+  control = new FormControl();
+  foods: any[] = [
+    { value: 'steak-0', viewValue: 'Steak' },
+    { value: 'pizza-1', viewValue: 'Pizza' },
+  ];
+  errorStateMatcher: ErrorStateMatcher;
+}
+

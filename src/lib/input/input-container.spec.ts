@@ -22,7 +22,7 @@ import {
   getMdInputContainerPlaceholderConflictError
 } from './input-container-errors';
 import {MD_PLACEHOLDER_GLOBAL_OPTIONS} from '../core/placeholder/placeholder-options';
-import {MD_ERROR_GLOBAL_OPTIONS, showOnDirtyErrorStateMatcher} from '../core/error/error-options';
+import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher} from '../core/error/error-options';
 
 describe('MdInputContainer without forms', function () {
   beforeEach(async(() => {
@@ -840,7 +840,7 @@ describe('MdInputContainer with forms', () => {
       fixture.componentInstance.formControl.markAsTouched();
       fixture.detectChanges();
 
-      let errorIds = fixture.debugElement.queryAll(By.css('.mat-input-error'))
+      let errorIds = fixture.debugElement.queryAll(By.css('.mat-error'))
           .map(el => el.nativeElement.getAttribute('id')).join(' ');
       describedBy = inputEl.getAttribute('aria-describedby');
 
@@ -896,9 +896,7 @@ describe('MdInputContainer with forms', () => {
           MdInputContainerWithFormErrorMessages
         ],
         providers: [
-          {
-            provide: MD_ERROR_GLOBAL_OPTIONS,
-            useValue: { errorStateMatcher: globalErrorStateMatcher } }
+          { provide: ErrorStateMatcher, useValue: { isErrorState: globalErrorStateMatcher } }
         ]
       });
 
@@ -926,12 +924,7 @@ describe('MdInputContainer with forms', () => {
         declarations: [
           MdInputContainerWithFormErrorMessages
         ],
-        providers: [
-          {
-            provide: MD_ERROR_GLOBAL_OPTIONS,
-            useValue: { errorStateMatcher: showOnDirtyErrorStateMatcher }
-          }
-        ]
+        providers: [{ provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher }]
       });
 
       let fixture = TestBed.createComponent(MdInputContainerWithFormErrorMessages);
@@ -1247,7 +1240,7 @@ class MdInputContainerWithFormErrorMessages {
       <md-input-container>
         <input mdInput
             formControlName="name"
-            [errorStateMatcher]="customErrorStateMatcher.bind(this)">
+            [errorStateMatcher]="customErrorStateMatcher">
         <md-hint>Please type something</md-hint>
         <md-error>This field is required</md-error>
       </md-input-container>
@@ -1260,10 +1253,9 @@ class MdInputContainerWithCustomErrorStateMatcher {
   });
 
   errorState = false;
-
-  customErrorStateMatcher(): boolean {
-    return this.errorState;
-  }
+  customErrorStateMatcher: ErrorStateMatcher = {
+    isErrorState: () => this.errorState
+  };
 }
 
 @Component({

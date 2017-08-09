@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {coerceBooleanProperty, Platform} from '../core';
-import {FormControl, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
+import {FormGroupDirective, NgControl, NgForm} from '@angular/forms';
 import {getSupportedInputTypes} from '../core/platform/features';
 import {
   getMdInputContainerDuplicatedHintError,
@@ -44,12 +44,7 @@ import {
   MD_PLACEHOLDER_GLOBAL_OPTIONS,
   PlaceholderOptions
 } from '../core/placeholder/placeholder-options';
-import {
-  defaultErrorStateMatcher,
-  ErrorOptions,
-  ErrorStateMatcher,
-  MD_ERROR_GLOBAL_OPTIONS
-} from '../core/error/error-options';
+import {ErrorStateMatcher, MdError} from '../core/error/index';
 import {Subject} from 'rxjs/Subject';
 import {startWith} from '@angular/cdk/rxjs';
 
@@ -97,19 +92,6 @@ export class MdHint {
   @Input() id: string = `md-input-hint-${nextUniqueId++}`;
 }
 
-/** Single error message to be shown underneath the input. */
-@Directive({
-  selector: 'md-error, mat-error',
-  host: {
-    'class': 'mat-input-error',
-    'role': 'alert',
-    '[attr.id]': 'id',
-  }
-})
-export class MdErrorDirective {
-  @Input() id: string = `md-input-error-${nextUniqueId++}`;
-}
-
 /** Prefix to be placed the the front of the input. */
 @Directive({
   selector: '[mdPrefix], [matPrefix]'
@@ -151,7 +133,6 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
   private _readonly = false;
   private _id: string;
   private _uid = `md-input-${nextUniqueId++}`;
-  private _errorOptions: ErrorOptions;
   private _previousNativeValue = this.value;
 
   /** Whether the input is in an error state. */
@@ -207,7 +188,7 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
   get readonly() { return this._readonly; }
   set readonly(value: any) { this._readonly = coerceBooleanProperty(value); }
 
-  /** A function used to control when error messages are shown. */
+  /** An object used to control when error messages are shown. */
   @Input() errorStateMatcher: ErrorStateMatcher;
 
   /** The input element's value. */
@@ -241,15 +222,13 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
   constructor(private _elementRef: ElementRef,
               private _renderer: Renderer2,
               private _platform: Platform,
+              private _globalErrorStateMatcher: ErrorStateMatcher,
               @Optional() @Self() public _ngControl: NgControl,
               @Optional() private _parentForm: NgForm,
-              @Optional() private _parentFormGroup: FormGroupDirective,
-              @Optional() @Inject(MD_ERROR_GLOBAL_OPTIONS) errorOptions: ErrorOptions) {
+              @Optional() private _parentFormGroup: FormGroupDirective) {
 
     // Force setter to be called in case id was not specified.
     this.id = this.id;
-    this._errorOptions = errorOptions ? errorOptions : {};
-    this.errorStateMatcher = this._errorOptions.errorStateMatcher || defaultErrorStateMatcher;
 
     // On some versions of iOS the caret gets stuck in the wrong place when holding down the delete
     // key. In order to get around this we need to "jiggle" the caret loose. Since this bug only
@@ -320,10 +299,9 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
 
   /** Re-evaluates the error state. This is only relevant with @angular/forms. */
   private _updateErrorState() {
-    const oldState = this._isErrorState;
-    const control = this._ngControl;
-    const parent = this._parentFormGroup || this._parentForm;
-    const newState = control && this.errorStateMatcher(control.control as FormControl, parent);
+    let oldState = this._isErrorState;
+    let matcher = this.errorStateMatcher || this._globalErrorStateMatcher;
+    let newState = matcher.isErrorState(this._ngControl, this._parentFormGroup || this._parentForm);
 
     if (newState !== oldState) {
       this._isErrorState = newState;
@@ -465,7 +443,7 @@ export class MdInputContainer implements AfterViewInit, AfterContentInit, AfterC
   @ViewChild('connectionContainer') _connectionContainerRef: ElementRef;
   @ContentChild(MdInputDirective) _mdInputChild: MdInputDirective;
   @ContentChild(MdPlaceholder) _placeholderChild: MdPlaceholder;
-  @ContentChildren(MdErrorDirective) _errorChildren: QueryList<MdErrorDirective>;
+  @ContentChildren(MdError) _errorChildren: QueryList<MdError>;
   @ContentChildren(MdHint) _hintChildren: QueryList<MdHint>;
   @ContentChildren(MdPrefix) _prefixChildren: QueryList<MdPrefix>;
   @ContentChildren(MdSuffix) _suffixChildren: QueryList<MdSuffix>;

@@ -16,6 +16,7 @@ import {OverlayModule} from './overlay/index';
 import {A11yModule} from './a11y/index';
 import {MdSelectionModule} from './selection/index';
 import {MdRippleModule} from './ripple/index';
+import {MdErrorModule} from './error/index';
 
 // Re-exports of the CDK to avoid breaking changes.
 export {
@@ -123,12 +124,11 @@ export {
 
 // Error
 export {
+  MdErrorModule,
+  MdError,
   ErrorStateMatcher,
-  ErrorOptions,
-  MD_ERROR_GLOBAL_OPTIONS,
-  defaultErrorStateMatcher,
-  showOnDirtyErrorStateMatcher
-} from './error/error-options';
+  ShowOnDirtyErrorStateMatcher,
+} from './error/index';
 
 @NgModule({
   imports: [
@@ -141,6 +141,7 @@ export {
     A11yModule,
     MdOptionModule,
     MdSelectionModule,
+    MdErrorModule,
   ],
   exports: [
     MdLineModule,
@@ -152,6 +153,7 @@ export {
     A11yModule,
     MdOptionModule,
     MdSelectionModule,
+    MdErrorModule,
   ],
 })
 export class MdCoreModule {}
