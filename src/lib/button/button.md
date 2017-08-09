@@ -31,3 +31,9 @@ to capitalize buttons automatically via `text-transform: uppercase`, because it 
 certain locales. It is also worth noting that using ALL CAPS in the text itself causes issues for
 screen-readers, which will read the text character-by-character. We leave the decision of how to
 approach this to the consuming app.
+
+### Accessibility
+
+For buttons or links with icon only such as `md-fab`, `md-mini-fab`, `md-icon-button`, they should 
+be marked by `aria-label` or `aria-labelledby` with meaningful label. 
+

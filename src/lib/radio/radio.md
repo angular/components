@@ -27,3 +27,7 @@ Individual radio-buttons inside of a radio-group will inherit the `name` of the 
 ### Use with `@angular/forms`
 `<md-radio-group>` is compatible with `@angular/forms` and supports both `FormsModule`
 and `ReactiveFormsModule`.
+
+### Accessibility
+For radio button groups, each group should should be marked by  `aria-label` or `aria-labelledby`
+with meaningful label.

@@ -18,5 +18,12 @@ and `ngModel` is not supported.
 The button-toggles will present themselves as either checkboxes or radio-buttons based on the 
 presence of the `multiple` attribute. 
 
+For button toggles with icons only, Each button toggle should be marked with meaningful label by 
+`aria-label` or `aria-labelledby`.
+
+For button toggle groups, each group should be marked with meaningful label  by adding `aria-label`
+or `aria-labelledby`.
+
+
 ### Orientation
 The button-toggles can be rendered in a vertical orientation by adding the `vertical` attribute.

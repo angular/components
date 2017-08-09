@@ -41,3 +41,9 @@ however, more rows will simply be added for it the tile to fill.
 
 A header and footer can be added to an `md-grid-tile` using the `md-grid-tile-header` and
 `md-grid-tile-footer` elements respectively.
+
+### Accessibility
+Non-interactive grid list for layout purpose only should add `role=“list”` to the grid list.
+
+Interactive grid list should add appropriate `role` attribute according to the usage. 
+
