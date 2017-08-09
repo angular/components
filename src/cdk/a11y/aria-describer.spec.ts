@@ -100,6 +100,13 @@ describe('AriaDescriber', () => {
     expectMessages(['My Message']);
     expectMessage(component.element4, 'My Message');
   });
+
+  it('should be able to handle multiple regisitrations of the same message to an element', () => {
+    ariaDescriber.describe(component.element1, 'My Message');
+    ariaDescriber.describe(component.element1, 'My Message');
+    expectMessages(['My Message']);
+    expectMessage(component.element1, 'My Message');
+  });
 });
 
 function getMessagesContainer() {

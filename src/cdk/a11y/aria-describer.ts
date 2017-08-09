@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, Optional, SkipSelf} from '@angular/core';
 import {Platform} from '@angular/cdk/platform';
 import {addAriaReferencedId, getAriaReferenceIds, removeAriaReferencedId} from './aria-reference';
 
@@ -59,26 +59,22 @@ export class AriaDescriber {
       createMessageElement(message);
     }
 
-    const registeredMessage = messageRegistry.get(message)!;
-    registeredMessage.referenceCount++;
-    addAriaReferencedId(hostElement, 'aria-describedby', registeredMessage.messageElement.id);
-    hostElement.setAttribute(CDK_DESCRIBEDBY_HOST_ATTRIBUTE, '');
+    if (!isElementDescribedByMessage(hostElement, message)) {
+      addMessageReference(hostElement, message);
+    }
   }
 
   /** Removes the host element's aria-describedby reference to the message element. */
   removeDescription(hostElement: Element, message: string) {
-    if (!this._platform.isBrowser || !`${message}`.trim() ||
-        hostElement.getAttribute(CDK_DESCRIBEDBY_HOST_ATTRIBUTE) == null) {
+    if (!this._platform.isBrowser || !`${message}`.trim()) {
       return;
     }
 
-    const registeredMessage = messageRegistry.get(message)!;
-    registeredMessage.referenceCount--;
+    if (isElementDescribedByMessage(hostElement, message)) {
+      removeMessageReference(hostElement, message);
+    }
 
-    removeAriaReferencedId(hostElement, 'aria-describedby', registeredMessage.messageElement.id);
-    hostElement.removeAttribute(CDK_DESCRIBEDBY_HOST_ATTRIBUTE);
-
-    if (registeredMessage.referenceCount === 0) {
+    if (messageRegistry.get(message)!.referenceCount === 0) {
       deleteMessageElement(message);
     }
 
@@ -141,9 +137,61 @@ function deleteMessagesContainer() {
   messagesContainer = null;
 }
 
+/** Removes all cdk-describedby messages that are hosted through the element. */
 function removeCdkDescribedByReferenceIds(element: Element) {
   // Remove all aria-describedby reference IDs that are prefixed by CDK_DESCRIBEDBY_ID_PREFIX
   const originalReferenceIds = getAriaReferenceIds(element, 'aria-describedby')
       .filter(id => id.indexOf(CDK_DESCRIBEDBY_ID_PREFIX) != 0);
   element.setAttribute('aria-describedby', originalReferenceIds.join(' '));
 }
+
+/**
+ * Adds a message reference to the element using aria-describedby and increments the registered
+ * message's reference count.
+ */
+function addMessageReference(element: Element, message: string) {
+  const registeredMessage = messageRegistry.get(message)!;
+
+  // Add the aria-describedby reference and set the describedby_host attribute to mark the element.
+  addAriaReferencedId(element, 'aria-describedby', registeredMessage.messageElement.id);
+  element.setAttribute(CDK_DESCRIBEDBY_HOST_ATTRIBUTE, '');
+
+  registeredMessage.referenceCount++;
+}
+
+/**
+ * Removes a message reference from the element using aria-describedby and decrements the registered
+ * message's reference count.
+ */
+function removeMessageReference(element: Element, message: string) {
+  const registeredMessage = messageRegistry.get(message)!;
+  registeredMessage.referenceCount--;
+
+  removeAriaReferencedId(element, 'aria-describedby', registeredMessage.messageElement.id);
+  element.removeAttribute(CDK_DESCRIBEDBY_HOST_ATTRIBUTE);
+}
+
+/** Returns true if the element has been described by the provided message ID. */
+function isElementDescribedByMessage(element: Element, message: string) {
+  const referenceIds = getAriaReferenceIds(element, 'aria-describedby');
+  const messageId = messageRegistry.get(message)!.messageElement.id;
+
+  return referenceIds.indexOf(messageId) != -1;
+}
+
+/** @docs-private */
+export function ARIA_DESCRIBER_PROVIDER_FACTORY(
+    parentDispatcher: AriaDescriber, platform: Platform) {
+  return parentDispatcher || new AriaDescriber(platform);
+}
+
+/** @docs-private */
+export const ARIA_DESCRIBER_PROVIDER = {
+  // If there is already an AriaDescriber available, use that. Otherwise, provide a new one.
+  provide: AriaDescriber,
+  deps: [
+    [new Optional(), new SkipSelf(), AriaDescriber],
+    Platform
+  ],
+  useFactory: ARIA_DESCRIBER_PROVIDER_FACTORY
+};

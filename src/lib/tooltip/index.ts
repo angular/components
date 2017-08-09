@@ -12,7 +12,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {PlatformModule} from '@angular/cdk/platform';
 import {MdCommonModule} from '../core';
 import {MdTooltip, TooltipComponent, MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER} from './tooltip';
-import {A11yModule} from '@angular/cdk/a11y';
+import {A11yModule, ARIA_DESCRIBER_PROVIDER} from '@angular/cdk/a11y';
 
 
 @NgModule({
@@ -26,7 +26,7 @@ import {A11yModule} from '@angular/cdk/a11y';
   exports: [MdTooltip, TooltipComponent, MdCommonModule],
   declarations: [MdTooltip, TooltipComponent],
   entryComponents: [TooltipComponent],
-  providers: [MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER],
+  providers: [MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER, ARIA_DESCRIBER_PROVIDER],
 })
 export class MdTooltipModule {}
 

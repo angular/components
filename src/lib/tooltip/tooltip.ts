@@ -43,7 +43,7 @@ import {
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ESCAPE} from '@angular/cdk/keyboard';
+import {ESCAPE} from '@angular/cdk/keycodes';
 import {AriaDescriber} from '@angular/cdk/a11y';
 
 

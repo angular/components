@@ -37,10 +37,6 @@ export function removeAriaReferencedId(el: Element, attr: string, id: string) {
  * Used for attributes such as aria-labelledby, aria-owns, etc.
  */
 export function getAriaReferenceIds(el: Element, attr: string): string[] {
-  const idsValue = (el.getAttribute(attr) || '').trim();
-
   // Get string array of all individual ids (whitespace deliminated) in the attribute value
-  const idsArray = idsValue.match(/\S+/g) || [];
-
-  return idsArray.map(id => id.trim());
+  return (el.getAttribute(attr) || '').match(/\S+/g) || [];
 }
