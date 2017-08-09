@@ -140,6 +140,20 @@ describe('MdDialog', () => {
     });
   }));
 
+  it('should close a dialog and get back a result before it is closed', async(() => {
+    let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
+    let beforeCloseCallback = jasmine.createSpy('beforeClose callback');
+
+    dialogRef.beforeClose().subscribe(beforeCloseCallback);
+    dialogRef.close('Bulbasaurus');
+    viewContainerFixture.detectChanges();
+
+    viewContainerFixture.whenStable().then(() => {
+      expect(beforeCloseCallback).toHaveBeenCalledWith('Bulbasaurus');
+      expect(overlayContainerElement.querySelector('md-dialog-container')).toBeNull();
+    });
+  }));
+
   it('should close a dialog via the escape key', async(() => {
     dialog.open(PizzaMsg, {
       viewContainerRef: testViewContainerRef
