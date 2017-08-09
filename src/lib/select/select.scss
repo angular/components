@@ -14,6 +14,7 @@ $mat-select-trigger-underline-height: 1px !default;
 .mat-select {
   display: inline-block;
   outline: none;
+  max-width: 100%;
 }
 
 .mat-select-trigger {
@@ -53,6 +54,9 @@ $mat-select-trigger-underline-height: 1px !default;
   padding: 0 2px;
   transform-origin: left top;
   flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   // These values are duplicated from animation code in order to
   // allow placeholders to sometimes float without animating,
