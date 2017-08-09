@@ -1,6 +1,5 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
-import {MdIconRegistry} from '@angular/material';
+import {MdSnackBar} from '@angular/material';
 
 @Component({
   moduleId: module.id,
@@ -9,11 +8,9 @@ import {MdIconRegistry} from '@angular/material';
   encapsulation: ViewEncapsulation.None,
 })
 export class IconAccessibilityDemo {
-  constructor(mdIconRegistry: MdIconRegistry, sanitizer: DomSanitizer) {
-    mdIconRegistry
-      .addSvgIcon('thumb-up',
-        sanitizer.bypassSecurityTrustResourceUrl('/icon/assets/thumbup-icon.svg'))
-      .addSvgIconSetInNamespace('core',
-        sanitizer.bypassSecurityTrustResourceUrl('/icon/assets/core-icon-set.svg'));
+  constructor(private snackBar: MdSnackBar) {}
+
+  deleteIcon() {
+    this.snackBar.open('Item deleted', '', {duration: 2000});
   }
 }
