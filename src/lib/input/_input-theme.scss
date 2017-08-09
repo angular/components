@@ -58,10 +58,11 @@
   }
 
   .mat-input-underline {
-    background-color: $input-underline-color;
+    color: $input-underline-color;
 
     &.mat-disabled {
       @include mat-control-disabled-underline($input-underline-color);
+      color: transparent;
     }
   }
 
@@ -182,8 +183,7 @@
 
   .mat-input-infix {
     padding: $infix-padding 0;
-    // Throws off the baseline if we do it as a real margin, so we do it as a border instead.
-    border-top: $infix-margin-top solid transparent;
+    margin-top: $infix-margin-top;
   }
 
   .mat-input-element {

@@ -289,12 +289,6 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
     }
   }
 
-  _onFocus() {
-    if (!this._readonly) {
-      this.focused = true;
-    }
-  }
-
   /** Focuses the input element. */
   focus() {
     this._elementRef.nativeElement.focus();
@@ -302,7 +296,7 @@ export class MdInputDirective implements OnChanges, OnDestroy, DoCheck {
 
   /** Callback for the cases where the focused state of the input changes. */
   _focusChanged(isFocused: boolean) {
-    if (isFocused !== this.focused) {
+    if (isFocused !== this.focused && (!isFocused || !this._readonly)) {
       this.focused = isFocused;
       this._stateChanges.next();
     }
