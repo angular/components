@@ -9,8 +9,11 @@
 /** IDs are deliminated by an empty space, as per the spec. */
 const ID_DELIMINATOR = ' ';
 
-/** Adds an aria reference ID to an element's aria property if it is not already present. */
-export function addAriaReferencedId(el: HTMLElement, id: string, attr: string) {
+/**
+ * Adds the given ID to the specified ARIA attribute on an element.
+ * Used for attributes such as aria-labelledby, aria-owns, etc.
+ */
+export function addAriaReferencedId(el: Element, attr: string, id: string) {
   const ids = getAriaReferenceIds(el, attr);
   if (ids.some(existingId => existingId.trim() == id.trim())) { return; }
   ids.push(id.trim());
@@ -18,16 +21,26 @@ export function addAriaReferencedId(el: HTMLElement, id: string, attr: string) {
   el.setAttribute(attr, ids.join(ID_DELIMINATOR));
 }
 
-/** Removes an aria reference ID from an element's aria property. */
-export function removeAriaReferencedId(el: HTMLElement, id: string, attr: string) {
+/**
+ * Removes the given ID from the specified ARIA attribute on an element.
+ * Used for attributes such as aria-labelledby, aria-owns, etc.
+ */
+export function removeAriaReferencedId(el: Element, attr: string, id: string) {
   const ids = getAriaReferenceIds(el, attr);
   const filteredIds = ids.filter(val => val != id.trim());
 
   el.setAttribute(attr, filteredIds.join(ID_DELIMINATOR));
 }
 
-/** Returns a list of an element's aria reference IDs for the provided aria attribute. */
-export function getAriaReferenceIds(el: HTMLElement, attr: string): string[] {
-  const ids = (el.getAttribute(attr) || '').trim();
-  return ids ? ids.split(ID_DELIMINATOR).map(id => id.trim()) : [];
+/**
+ * Gets the list of IDs referenced by the given ARIA attribute on an element.
+ * Used for attributes such as aria-labelledby, aria-owns, etc.
+ */
+export function getAriaReferenceIds(el: Element, attr: string): string[] {
+  const idsValue = (el.getAttribute(attr) || '').trim();
+
+  // Get string array of all individual ids (whitespace deliminated) in the attribute value
+  const idsArray = idsValue.match(/\S+/g) || [];
+
+  return idsArray.map(id => id.trim());
 }

@@ -95,7 +95,6 @@ export const MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER = {
     '(touchend)': 'hide(' + TOUCHEND_HIDE_DELAY + ')',
   },
   exportAs: 'mdTooltip',
-  providers: [AriaDescriber],
 })
 export class MdTooltip implements OnDestroy {
   _overlayRef: OverlayRef | null;
@@ -155,7 +154,7 @@ export class MdTooltip implements OnDestroy {
     // If the message is not a string (e.g. number), convert it to a string and trim it.
     this._message = value ? `${value}`.trim() : '';
     this._updateTooltipMessage();
-    this._ariaDescriber.addDescription(this._elementRef.nativeElement, this.message);
+    this._ariaDescriber.describe(this._elementRef.nativeElement, this.message);
   }
 
   /** Classes to be passed to the tooltip. Supports the same syntax as `ngClass`. */

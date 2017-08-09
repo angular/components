@@ -49,14 +49,20 @@ describe('AriaReference', () => {
     expect(['reference_1']);
   });
 
+  it('should retrieve ids that are deliminated by extra whitespace', () => {
+    testElement!.setAttribute('aria-describedby', 'reference_1      reference_2');
+    expect(getAriaReferenceIds(testElement!, 'aria-describedby'))
+        .toEqual(['reference_1', 'reference_2']);
+  });
+
   /** Utility that adds the id to the test element with an arbitrary aria attribute. */
   function addId(id: string) {
-    addAriaReferencedId(testElement!, id, 'aria-describedby');
+    addAriaReferencedId(testElement!, 'aria-describedby', id);
   }
 
   /** Utility that removes the id to the test element with an arbitrary aria attribute. */
   function removeId(id: string) {
-    removeAriaReferencedId(testElement!, id, 'aria-describedby');
+    removeAriaReferencedId(testElement!, 'aria-describedby', id);
   }
 
   /**

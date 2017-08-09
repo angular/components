@@ -1,4 +1,4 @@
-import {A11yModule} from './index';
+import {A11yModule, CDK_DESCRIBEDBY_HOST_ATTRIBUTE} from './index';
 import {AriaDescriber, MESSAGES_CONTAINER_ID} from './aria-describer';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ElementRef, ViewChild} from '@angular/core';
@@ -8,110 +8,97 @@ describe('AriaDescriber', () => {
   let component: TestApp;
   let fixture: ComponentFixture<TestApp>;
 
-  describe('with component provider', () => {
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [A11yModule],
+      declarations: [TestApp],
+      providers: [AriaDescriber],
+    }).compileComponents();
+  }));
 
-    beforeEach(async(() => {
-      TestBed.configureTestingModule({
-        imports: [A11yModule],
-        declarations: [TestApp]
-      }).compileComponents();
-    }));
-
-    beforeEach(() => {
-      fixture = TestBed.createComponent(TestApp);
-      component = fixture.componentInstance;
-      ariaDescriber = component.ariaDescriber;
-    });
-
-    afterEach(() => {
-      ariaDescriber._unregisterAllMessages();
-    });
-
-    it('should initialize without the message container', () => {
-      expect(getMessagesContainer()).toBeNull();
-    });
-
-    it('should be able to create a message element', () => {
-      ariaDescriber.addDescription(component.container1.nativeElement, 'My Message');
-      expectMessages(['My Message']);
-    });
-
-    it('should not register empty strings', () => {
-      ariaDescriber.addDescription(component.container1.nativeElement, '');
-      expect(getMessageElements()).toBe(null);
-    });
-
-    it('should de-dupe a message registered multiple times', () => {
-      ariaDescriber.addDescription(component.container1.nativeElement, 'My Message');
-      ariaDescriber.addDescription(component.container2.nativeElement, 'My Message');
-      ariaDescriber.addDescription(component.container3.nativeElement, 'My Message');
-      expectMessages(['My Message']);
-      expectMessage(component.container1.nativeElement, 'My Message');
-    });
-
-    it('should be able to register multiple messages', () => {
-      ariaDescriber.addDescription(component.container1.nativeElement, 'First Message');
-      ariaDescriber.addDescription(component.container2.nativeElement, 'Second Message');
-      expectMessages(['First Message', 'Second Message']);
-      expectMessage(component.container1.nativeElement, 'First Message');
-      expectMessage(component.container2.nativeElement, 'Second Message');
-    });
-
-    it('should be able to unregister messages', () => {
-      ariaDescriber.addDescription(component.container1.nativeElement, 'My Message');
-      expectMessages(['My Message']);
-
-      // Register again to check dedupe
-      ariaDescriber.addDescription(component.container2.nativeElement, 'My Message');
-      expectMessages(['My Message']);
-
-      // Unregister one message and make sure the message is still present in the container
-      ariaDescriber.removeDescription(component.container1.nativeElement, 'My Message');
-      expectMessages(['My Message']);
-
-      // Unregister the second message, message container should be gone
-      ariaDescriber.removeDescription(component.container2.nativeElement, 'My Message');
-      expect(getMessagesContainer()).toBeNull();
-    });
-
-    it('should be able to unregister messages while having others registered', () => {
-      ariaDescriber.addDescription(component.container1.nativeElement, 'Persistent Message');
-      ariaDescriber.addDescription(component.container2.nativeElement, 'My Message');
-      expectMessages(['Persistent Message', 'My Message']);
-
-      // Register again to check dedupe
-      ariaDescriber.addDescription(component.container3.nativeElement, 'My Message');
-      expectMessages(['Persistent Message', 'My Message']);
-
-      // Unregister one message and make sure the message is still present in the container
-      ariaDescriber.removeDescription(component.container2.nativeElement, 'My Message');
-      expectMessages(['Persistent Message', 'My Message']);
-
-      // Unregister the second message, message container should be gone
-      ariaDescriber.removeDescription(component.container3.nativeElement, 'My Message');
-      expectMessages(['Persistent Message']);
-    });
-
-    it('should be able to append to an existing list of aria describedby', () => {
-      ariaDescriber.addDescription(component.container4.nativeElement, 'My Message');
-      expectMessages(['My Message']);
-      expectMessage(component.container4.nativeElement, 'My Message');
-    });
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TestApp);
+    component = fixture.componentInstance;
+    ariaDescriber = component.ariaDescriber;
   });
 
-  describe('without provider', () => {
-    beforeEach(async(() => {
-      TestBed.configureTestingModule({
-        imports: [A11yModule],
-        declarations: [TestAppWithoutProvider]
-      }).compileComponents();
-    }));
+  afterEach(() => {
+    ariaDescriber.ngOnDestroy();
+  });
 
-    it('should fail to instantiate due to not importing describer as part of component', () => {
-      expect(() => {
-        TestBed.createComponent(TestAppWithoutProvider);
-      }).toThrow();
-    });
+  it('should initialize without the message container', () => {
+    expect(getMessagesContainer()).toBeNull();
+  });
+
+  it('should be able to create a message element', () => {
+    ariaDescriber.describe(component.element1, 'My Message');
+    expectMessages(['My Message']);
+  });
+
+  it('should not register empty strings', () => {
+    ariaDescriber.describe(component.element1, '');
+    expect(getMessageElements()).toBe(null);
+  });
+
+  it('should de-dupe a message registered multiple times', () => {
+    ariaDescriber.describe(component.element1, 'My Message');
+    ariaDescriber.describe(component.element2, 'My Message');
+    ariaDescriber.describe(component.element3, 'My Message');
+    expectMessages(['My Message']);
+    expectMessage(component.element1, 'My Message');
+    expectMessage(component.element2, 'My Message');
+    expectMessage(component.element3, 'My Message');
+  });
+
+  it('should be able to register multiple messages', () => {
+    ariaDescriber.describe(component.element1, 'First Message');
+    ariaDescriber.describe(component.element2, 'Second Message');
+    expectMessages(['First Message', 'Second Message']);
+    expectMessage(component.element1, 'First Message');
+    expectMessage(component.element2, 'Second Message');
+  });
+
+  it('should be able to unregister messages', () => {
+    ariaDescriber.describe(component.element1, 'My Message');
+    expectMessages(['My Message']);
+
+    // Register again to check dedupe
+    ariaDescriber.describe(component.element2, 'My Message');
+    expectMessages(['My Message']);
+
+    // Unregister one message and make sure the message is still present in the container
+    ariaDescriber.removeDescription(component.element1, 'My Message');
+    expect(component.element1.hasAttribute(CDK_DESCRIBEDBY_HOST_ATTRIBUTE)).toBeFalsy();
+    expectMessages(['My Message']);
+
+    // Unregister the second message, message container should be gone
+    ariaDescriber.removeDescription(component.element2, 'My Message');
+    expect(component.element2.hasAttribute(CDK_DESCRIBEDBY_HOST_ATTRIBUTE)).toBeFalsy();
+    expect(getMessagesContainer()).toBeNull();
+  });
+
+  it('should be able to unregister messages while having others registered', () => {
+    ariaDescriber.describe(component.element1, 'Persistent Message');
+    ariaDescriber.describe(component.element2, 'My Message');
+    expectMessages(['Persistent Message', 'My Message']);
+
+    // Register again to check dedupe
+    ariaDescriber.describe(component.element3, 'My Message');
+    expectMessages(['Persistent Message', 'My Message']);
+
+    // Unregister one message and make sure the message is still present in the container
+    ariaDescriber.removeDescription(component.element2, 'My Message');
+    expectMessages(['Persistent Message', 'My Message']);
+
+    // Unregister the second message, message container should be gone
+    ariaDescriber.removeDescription(component.element3, 'My Message');
+    expectMessages(['Persistent Message']);
+  });
+
+  it('should be able to append to an existing list of aria describedby', () => {
+    ariaDescriber.describe(component.element4, 'My Message');
+    expectMessages(['My Message']);
+    expectMessage(component.element4, 'My Message');
   });
 });
 
@@ -129,31 +116,25 @@ function getMessageElements(): Node[] | null {
 /** Checks that the messages array matches the existing created message elements. */
 function expectMessages(messages: string[]) {
   const messageElements = getMessageElements();
-  if (!messageElements) {
-    fail(`Expected messages ${messages} but there were no message elements`);
-    return;
-  }
+  expect(messageElements).toBeDefined();
 
-  expect(messages.length).toBe(messageElements.length);
+  expect(messages.length).toBe(messageElements!.length);
   messages.forEach((message, i) => {
-    expect(messageElements[i].textContent).toBe(message);
+    expect(messageElements![i].textContent).toBe(message);
   });
 }
 
 /** Checks that an element points to a message element that contains the message. */
-function expectMessage(el: HTMLElement, message: string) {
+function expectMessage(el: Element, message: string) {
   const ariaDescribedBy = el.getAttribute('aria-describedby');
-  if (!ariaDescribedBy) {
-    fail(`No aria-describedby for ${el}`);
-    return;
-  }
+  expect(ariaDescribedBy).toBeDefined();
 
-  const messages: string[] = [];
-  ariaDescribedBy.split(' ').forEach(referenceId => {
+  const cdkDescribedBy = el.getAttribute(CDK_DESCRIBEDBY_HOST_ATTRIBUTE);
+  expect(cdkDescribedBy).toBeDefined();
+
+  const messages = ariaDescribedBy!.split(' ').map(referenceId => {
     const messageElement = document.querySelector(`#${referenceId}`);
-    if (messageElement) {
-      messages.push(messageElement.textContent || '');
-    }
+    return messageElement ? messageElement.textContent : '';
   });
 
   expect(messages).toContain(message);
@@ -161,25 +142,25 @@ function expectMessage(el: HTMLElement, message: string) {
 
 @Component({
   template: `
-    <div #container1></div>
-    <div #container2></div>
-    <div #container3></div>
-    <div #container4 aria-describedby="existing-aria-describedby1 existing-aria-describedby2"></div>
+    <div #element1></div>
+    <div #element2></div>
+    <div #element3></div>
+    <div #element4 aria-describedby="existing-aria-describedby1 existing-aria-describedby2"></div>
   `,
-  providers: [AriaDescriber],
 })
 class TestApp {
-  @ViewChild('container1') container1: ElementRef;
-  @ViewChild('container2') container2: ElementRef;
-  @ViewChild('container3') container3: ElementRef;
-  @ViewChild('container4') container4: ElementRef;
+  @ViewChild('element1') _element1: ElementRef;
+  get element1(): Element { return this._element1.nativeElement; }
 
-  constructor(public ariaDescriber: AriaDescriber) { }
-}
+  @ViewChild('element2') _element2: ElementRef;
+  get element2(): Element { return this._element2.nativeElement; }
 
-@Component({
-  template: `<div #element1></div>`,
-})
-class TestAppWithoutProvider {
+  @ViewChild('element3') _element3: ElementRef;
+  get element3(): Element { return this._element3.nativeElement; }
+
+  @ViewChild('element4') _element4: ElementRef;
+  get element4(): Element { return this._element4.nativeElement; }
+
+
   constructor(public ariaDescriber: AriaDescriber) { }
 }
