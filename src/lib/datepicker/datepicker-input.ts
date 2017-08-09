@@ -224,13 +224,13 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   ngAfterContentInit() {
     if (this._datepicker) {
       this._datepickerSubscription =
-          this._datepicker.selectedChanged.subscribe((selected: D) => {
-            this.value = selected;
-            this._cvaOnChange(selected);
-            this._onTouched();
-            this.dateInput.emit(new MdDatepickerInputEvent(this, this._elementRef.nativeElement));
-            this.dateChange.emit(new MdDatepickerInputEvent(this, this._elementRef.nativeElement));
-          });
+        this._datepicker.selectedChanged.subscribe((selected: D) => {
+          this.value = selected;
+          this._cvaOnChange(selected);
+          this._onTouched();
+          this.dateInput.emit(new MdDatepickerInputEvent(this, this._elementRef.nativeElement));
+          this.dateChange.emit(new MdDatepickerInputEvent(this, this._elementRef.nativeElement));
+        });
     }
   }
 

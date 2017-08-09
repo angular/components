@@ -67,6 +67,9 @@ export class MdMonthView<D> implements AfterContentInit {
   /** Emits when a new date is selected. */
   @Output() selectedChange = new EventEmitter<D | null>();
 
+  /** Emits when date is picked */
+  @Output() userSelection = new EventEmitter();
+
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
 
@@ -116,9 +119,15 @@ export class MdMonthView<D> implements AfterContentInit {
 
   /** Handles when a new date is selected. */
   _dateSelected(date: number) {
-    this.selectedChange.emit(this._dateAdapter.createDate(
-        this._dateAdapter.getYear(this.activeDate), this._dateAdapter.getMonth(this.activeDate),
-        date));
+    if (this._selectedDate != date) {
+      const selectedYear = this._dateAdapter.getYear(this.activeDate);
+      const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
+      const selectedDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
+
+      this.selectedChange.emit(selectedDate);
+    }
+
+    this.userSelection.emit();
   }
 
   /** Initializes this month view. */

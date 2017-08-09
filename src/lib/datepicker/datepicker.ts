@@ -230,7 +230,6 @@ export class MdDatepicker<D> implements OnDestroy {
     if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
       this.selectedChanged.emit(date);
     }
-    this.close();
   }
 
   /**
