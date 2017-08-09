@@ -60,7 +60,7 @@ let nextUniqueId = 0;
     '[disabled]': 'disabled',
     '[required]': 'required',
     '[attr.aria-describedby]': '_ariaDescribedby || null',
-    '[attr.aria-invalid]': '_isErrorState',
+    '[attr.aria-invalid]': 'errorState',
     '(blur)': '_focusChanged(false)',
     '(focus)': '_focusChanged(true)',
     '(input)': '_onInput()',
@@ -76,8 +76,12 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
   private _uid = `md-input-${nextUniqueId++}`;
   private _errorOptions: ErrorOptions;
   private _previousNativeValue = this.value;
-  private _focused = false;
-  private _isErrorState = false;
+
+  /** Whether the input is focused. */
+  focused = false;
+
+  /** Whether the input is in an error state. */
+  errorState = false;
 
   /** The aria-describedby attribute on the input for improved a11y. */
   _ariaDescribedby: string;
@@ -90,7 +94,7 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
 
   /** Whether the element is disabled. */
   @Input()
-  get disabled() { return this._ngControl ? this._ngControl.disabled : this._disabled; }
+  get disabled() { return this.ngControl ? this.ngControl.disabled : this._disabled; }
   set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
 
   /** Unique id of the element. */
@@ -145,7 +149,7 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
   constructor(private _elementRef: ElementRef,
               private _renderer: Renderer2,
               private _platform: Platform,
-              @Optional() @Self() public _ngControl: NgControl,
+              @Optional() @Self() public ngControl: NgControl,
               @Optional() private _parentForm: NgForm,
               @Optional() private _parentFormGroup: FormGroupDirective,
               @Optional() @Inject(MD_ERROR_GLOBAL_OPTIONS) errorOptions: ErrorOptions) {
@@ -181,7 +185,7 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
   }
 
   ngDoCheck() {
-    if (this._ngControl) {
+    if (this.ngControl) {
       // We need to re-evaluate this on every change detection cycle, because there are some
       // error triggers that we can't subscribe to (e.g. parent form submissions). This means
       // that whatever logic is in here has to be super lean or we risk destroying the performance.
@@ -195,8 +199,8 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
 
   /** Callback for the cases where the focused state of the input changes. */
   _focusChanged(isFocused: boolean) {
-    if (isFocused !== this._focused) {
-      this._focused = isFocused;
+    if (isFocused !== this.focused) {
+      this.focused = isFocused;
       this.stateChanges.next();
     }
   }
@@ -213,13 +217,13 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
 
   /** Re-evaluates the error state. This is only relevant with @angular/forms. */
   private _updateErrorState() {
-    const oldState = this._isErrorState;
-    const ngControl = this._ngControl;
+    const oldState = this.errorState;
+    const ngControl = this.ngControl;
     const parent = this._parentFormGroup || this._parentForm;
     const newState = ngControl && this.errorStateMatcher(ngControl.control as FormControl, parent);
 
     if (newState !== oldState) {
-      this._isErrorState = newState;
+      this.errorState = newState;
       this.stateChanges.next();
     }
   }
@@ -265,19 +269,7 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
   }
 
   // Implemented as part of MdFormFieldControl.
-  getId(): string { return this.id; }
-
-  // Implemented as part of MdFormFieldControl.
-  getPlaceholder(): string { return this.placeholder; }
-
-  // Implemented as part of MdFormFieldControl.
-  getNgControl(): NgControl | null { return this._ngControl; }
-
-  // Implemented as part of MdFormFieldControl.
-  isFocused(): boolean { return this._focused; }
-
-  // Implemented as part of MdFormFieldControl.
-  isEmpty(): boolean {
+  get empty(): boolean {
     return !this._isNeverEmpty() &&
         (this.value == null || this.value === '') &&
         // Check if the input contains bad input. If so, we know that it only appears empty because
@@ -285,15 +277,6 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
         // TODO(mmalerba): Add e2e test for bad input case.
         !this._isBadInput();
   }
-
-  // Implemented as part of MdFormFieldControl.
-  isRequired(): boolean { return this.required; }
-
-  // Implemented as part of MdFormFieldControl.
-  isDisabled(): boolean { return this.disabled; }
-
-  // Implemented as part of MdFormFieldControl.
-  isErrorState(): boolean { return this._isErrorState; }
 
   // Implemented as part of MdFormFieldControl.
   setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }

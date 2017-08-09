@@ -9,20 +9,20 @@
 
       <span class="mat-input-placeholder-wrapper mat-form-field-placeholder-wrapper">
         <label class="mat-input-placeholder mat-form-field-placeholder"
-               [attr.for]="_control.getId()"
-               [class.mat-empty]="_control.isEmpty() && !_shouldAlwaysFloat"
-               [class.mat-form-field-empty]="_control.isEmpty() && !_shouldAlwaysFloat"
+               [attr.for]="_control.id"
+               [class.mat-empty]="_control.empty && !_shouldAlwaysFloat"
+               [class.mat-form-field-empty]="_control.empty && !_shouldAlwaysFloat"
                [class.mat-float]="_canPlaceholderFloat"
                [class.mat-form-field-float]="_canPlaceholderFloat"
                [class.mat-accent]="color == 'accent'"
                [class.mat-warn]="color == 'warn'"
                *ngIf="_hasPlaceholder()">
           <ng-content select="md-placeholder, mat-placeholder"></ng-content>
-          {{_control.getPlaceholder()}}
+          {{_control.placeholder}}
           <span
             class="mat-placeholder-required mat-form-field-required-marker"
             aria-hidden="true"
-            *ngIf="!hideRequiredMarker && _control.isRequired()">*</span>
+            *ngIf="!hideRequiredMarker && _control.required">*</span>
         </label>
       </span>
     </div>
@@ -33,7 +33,7 @@
   </div>
 
   <div class="mat-input-underline mat-form-field-underline" #underline
-       [class.mat-disabled]="_control.isDisabled()">
+       [class.mat-disabled]="_control.disabled">
     <span class="mat-input-ripple mat-form-field-ripple"
           [class.mat-accent]="color == 'accent'"
           [class.mat-warn]="color == 'warn'"></span>

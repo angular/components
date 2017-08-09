@@ -69,9 +69,9 @@ let nextUniqueId = 0;
   ],
   host: {
     'class': 'mat-input-container mat-form-field',
-    '[class.mat-input-invalid]': '_control.isErrorState()',
-    '[class.mat-form-field-invalid]': '_control.isErrorState()',
-    '[class.mat-focused]': '_control.isFocused()',
+    '[class.mat-input-invalid]': '_control.errorState',
+    '[class.mat-form-field-invalid]': '_control.errorState',
+    '[class.mat-focused]': '_control.focused',
     '[class.ng-untouched]': '_shouldForward("untouched")',
     '[class.ng-touched]': '_shouldForward("touched")',
     '[class.ng-pristine]': '_shouldForward("pristine")',
@@ -163,7 +163,7 @@ export class MdFormField implements AfterViewInit, AfterContentInit, AfterConten
       this._changeDetectorRef.markForCheck();
     });
 
-    let ngControl = this._control.getNgControl();
+    let ngControl = this._control.ngControl;
     if (ngControl && ngControl.valueChanges) {
       ngControl.valueChanges.subscribe(() => {
         this._changeDetectorRef.markForCheck();
@@ -195,19 +195,19 @@ export class MdFormField implements AfterViewInit, AfterContentInit, AfterConten
 
   /** Determines whether a class from the NgControl should be forwarded to the host element. */
   _shouldForward(prop: string): boolean {
-    let ngControl = this._control ? this._control.getNgControl : null;
+    let ngControl = this._control ? this._control.ngControl : null;
     return ngControl && (ngControl as any)[prop];
   }
 
   /** Whether the form field has a placeholder. */
   _hasPlaceholder() {
-    return !!(this._control.getPlaceholder() || this._placeholderChild);
+    return !!(this._control.placeholder || this._placeholderChild);
   }
 
   /** Determines whether to display hints or errors. */
   _getDisplayedMessages(): 'error' | 'hint' {
     return (this._errorChildren && this._errorChildren.length > 0 &&
-        this._control.isErrorState()) ? 'error' : 'hint';
+        this._control.errorState) ? 'error' : 'hint';
   }
 
   /**
@@ -215,7 +215,7 @@ export class MdFormField implements AfterViewInit, AfterContentInit, AfterConten
    * or child element with the `md-placeholder` directive).
    */
   private _validatePlaceholders() {
-    if (this._control.getPlaceholder() && this._placeholderChild) {
+    if (this._control.placeholder && this._placeholderChild) {
       throw getMdFormFieldPlaceholderConflictError();
     }
   }
