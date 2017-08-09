@@ -33,9 +33,9 @@ import {DOCUMENT} from '@angular/platform-browser';
 import {merge} from 'rxjs/observable/merge';
 
 
-/** Throws an exception when two MdDrawer are matching the same side. */
-export function throwMdDuplicatedDrawerError(side: string) {
-  throw Error(`A drawer was already declared for 'side="${side}"'`);
+/** Throws an exception when two MdDrawer are matching the same position. */
+export function throwMdDuplicatedDrawerError(position: string) {
+  throw Error(`A drawer was already declared for 'position="${position}"'`);
 }
 
 
@@ -149,8 +149,8 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
   /** Event emitted when the drawer is fully closed. */
   @Output('close') onClose = new EventEmitter<MdDrawerToggleResult | void>();
 
-  /** Event emitted when the drawer's side changes. */
-  @Output('side-changed') onPositionChanged = new EventEmitter<void>();
+  /** Event emitted when the drawer's position changes. */
+  @Output('positionChanged') onPositionChanged = new EventEmitter<void>();
 
   /** @deprecated */
   @Output('align-changed') onAlignChanged = new EventEmitter<void>();
@@ -316,16 +316,16 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
 export class MdDrawerContainer implements AfterContentInit {
   @ContentChildren(MdDrawer) _drawers: QueryList<MdDrawer>;
 
-  /** The drawer child with the `start` side. */
+  /** The drawer child with the `start` position. */
   get start() { return this._start; }
 
-  /** The drawer child with the `end` side. */
+  /** The drawer child with the `end` position. */
   get end() { return this._end; }
 
   /** Event emitted when the drawer backdrop is clicked. */
   @Output() backdropClick = new EventEmitter<void>();
 
-  /** The drawer at the start/end side, independent of direction. */
+  /** The drawer at the start/end position, independent of direction. */
   private _start: MdDrawer | null;
   private _end: MdDrawer | null;
 
@@ -356,7 +356,7 @@ export class MdDrawerContainer implements AfterContentInit {
       this._validateDrawers();
       this._drawers.forEach((drawer: MdDrawer) => {
         this._watchDrawerToggle(drawer);
-        this._watchDrawerSide(drawer);
+        this._watchDrawerPosition(drawer);
       });
     });
   }
@@ -392,14 +392,15 @@ export class MdDrawerContainer implements AfterContentInit {
   }
 
   /**
-   * Subscribes to drawer onSideChanged event in order to re-validate drawers when the side changes.
+   * Subscribes to drawer onPositionChanged event in order to re-validate drawers when the position
+   * changes.
    */
-  private _watchDrawerSide(drawer: MdDrawer): void {
+  private _watchDrawerPosition(drawer: MdDrawer): void {
     if (!drawer) {
       return;
     }
     // NOTE: We need to wait for the microtask queue to be empty before validating,
-    // since both drawers may be swapping sides at the same time.
+    // since both drawers may be swapping positions at the same time.
     takeUntil.call(drawer.onPositionChanged, this._drawers.changes).subscribe(() =>
         first.call(this._ngZone.onMicrotaskEmpty).subscribe(() => this._validateDrawers()));
   }

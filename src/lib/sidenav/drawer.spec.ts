@@ -18,7 +18,7 @@ describe('MdDrawer', () => {
         DrawerContainerNoDrawerTestApp,
         DrawerSetToOpenedFalse,
         DrawerSetToOpenedTrue,
-        DrawerDynamicSide,
+        DrawerDynamicPosition,
         DrawerWitFocusableElements,
       ],
     });
@@ -234,24 +234,24 @@ describe('MdDrawer', () => {
           .toBe(false, 'Expected drawer not to have a native align attribute.');
     });
 
-    it('should throw when multiple drawers have the same side', fakeAsync(() => {
-      const fixture = TestBed.createComponent(DrawerDynamicSide);
+    it('should throw when multiple drawers have the same position', fakeAsync(() => {
+      const fixture = TestBed.createComponent(DrawerDynamicPosition);
       fixture.detectChanges();
       tick();
 
-      const testComponent: DrawerDynamicSide = fixture.debugElement.componentInstance;
-      testComponent.drawer1Side = 'end';
+      const testComponent: DrawerDynamicPosition = fixture.debugElement.componentInstance;
+      testComponent.drawer1Position = 'end';
 
       expect(() => fixture.detectChanges()).toThrow();
     }));
 
-    it('should not throw when drawers swap sides', () => {
-      const fixture = TestBed.createComponent(DrawerDynamicSide);
+    it('should not throw when drawers swap positions', () => {
+      const fixture = TestBed.createComponent(DrawerDynamicPosition);
       fixture.detectChanges();
 
-      const testComponent: DrawerDynamicSide = fixture.debugElement.componentInstance;
-      testComponent.drawer1Side = 'end';
-      testComponent.drawer2Side = 'start';
+      const testComponent: DrawerDynamicPosition = fixture.debugElement.componentInstance;
+      testComponent.drawer1Position = 'end';
+      testComponent.drawer2Position = 'start';
 
       expect(() => fixture.detectChanges()).not.toThrow();
     });
@@ -368,12 +368,12 @@ describe('MdDrawerContainer', () => {
 @Component({template: `<md-drawer-container></md-drawer-container>`})
 class DrawerContainerNoDrawerTestApp { }
 
-/** Test component that contains an MdDrawerContainer and 2 MdDrawer on the same side. */
+/** Test component that contains an MdDrawerContainer and 2 MdDrawer in the same position. */
 @Component({
   template: `
     <md-drawer-container>
-      <md-drawer [position]="start"></md-drawer>
-      <md-drawer [position]="end"></md-drawer>
+      <md-drawer position="start"></md-drawer>
+      <md-drawer position="end"></md-drawer>
     </md-drawer-container>`,
 })
 class DrawerContainerTwoDrawerTestApp {
@@ -384,7 +384,7 @@ class DrawerContainerTwoDrawerTestApp {
 @Component({
   template: `
     <md-drawer-container (backdropClick)="backdropClicked()">
-      <md-drawer #drawer [position]="start"
+      <md-drawer #drawer position="start"
                  (open)="open()"
                  (close)="close()">
         <button #drawerButton>Content.</button>
@@ -438,19 +438,19 @@ class DrawerSetToOpenedTrue { }
 @Component({
   template: `
     <md-drawer-container>
-      <md-drawer #drawer1 [position]="drawer1Side"></md-drawer>
-      <md-drawer #drawer2 [position]="drawer2Side"></md-drawer>
+      <md-drawer #drawer1 [position]="drawer1Position"></md-drawer>
+      <md-drawer #drawer2 [position]="drawer2Position"></md-drawer>
     </md-drawer-container>`,
 })
-class DrawerDynamicSide {
-  drawer1Side = 'start';
-  drawer2Side = 'end';
+class DrawerDynamicPosition {
+  drawer1Position = 'start';
+  drawer2Position = 'end';
 }
 
 @Component({
   template: `
     <md-drawer-container>
-      <md-drawer [position]="start" [mode]="mode">
+      <md-drawer position="start" [mode]="mode">
         <a class="link1" href="#">link1</a>
       </md-drawer>
       <a class="link2" href="#">link2</a>
