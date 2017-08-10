@@ -78,7 +78,7 @@ export const MD_DATEPICKER_SCROLL_STRATEGY_PROVIDER = {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-datepicker-content',
+  selector: 'md-datepicker-content, mat-datepicker-content',
   templateUrl: 'datepicker-content.html',
   styleUrls: ['datepicker-content.css'],
   host: {
