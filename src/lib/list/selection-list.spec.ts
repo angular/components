@@ -109,7 +109,7 @@ describe('MdSelectionList', () => {
       expect(selectList.selected.length).toBe(0);
       expect(listOption[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
 
-      testListItem.toggle();
+      testListItem._handleClick();
       fixture.detectChanges();
 
       expect(selectList.selected.length).toBe(0);
@@ -266,7 +266,7 @@ describe('MdSelectionList', () => {
 
       expect(selectList.selected.length).toBe(0);
 
-      testListItem.toggle();
+      testListItem._handleClick();
       fixture.detectChanges();
 
       expect(selectList.selected.length).toBe(0);
