@@ -82,6 +82,41 @@ export class MdRipple implements OnChanges, OnDestroy {
   /** Whether foreground ripples should be visible outside the component's bounds. */
   @Input('mdRippleUnbounded') unbounded: boolean;
 
+  // Properties with `mat-` prefix for noconflict mode.
+  @Input('matRippleTrigger')
+  get matRippleTrigger() { return this.trigger; }
+  set matRippleTrigger(v) { this.trigger = v; }
+
+  // Properties with `mat-` prefix for noconflict mode.
+  @Input('matRippleCentered')
+  get matRippleCentered() { return this.centered; }
+  set matRippleCentered(v) { this.centered = v; }
+
+  // Properties with `mat-` prefix for noconflict mode.
+  @Input('matRippleDisabled')
+  get matRippleDisabled() { return this.disabled; }
+  set matRippleDisabled(v) { this.disabled = v; }
+
+  // Properties with `mat-` prefix for noconflict mode.
+  @Input('matRippleRadius')
+  get matRippleRadius() { return this.radius; }
+  set matRippleRadius(v) { this.radius = v; }
+
+  // Properties with `mat-` prefix for noconflict mode.
+  @Input('matRippleSpeedFactor')
+  get matRippleSpeedFactor() { return this.speedFactor; }
+  set matRippleSpeedFactor(v) { this.speedFactor = v; }
+
+  // Properties with `mat-` prefix for noconflict mode.
+  @Input('matRippleColor')
+  get matRippleColor() { return this.color; }
+  set matRippleColor(v) { this.color = v; }
+
+  // Properties with `mat-` prefix for noconflict mode.
+  @Input('matRippleUnbounded')
+  get matRippleUnbounded() { return this.unbounded; }
+  set matRippleUnbounded(v) { this.unbounded = v; }
+
   /** Renderer for the ripple DOM manipulations. */
   private _rippleRenderer: RippleRenderer;
 
