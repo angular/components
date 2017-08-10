@@ -33,11 +33,11 @@
     background-color: mat-color($background, card);
   }
 
-  .vertical-content-container {
+  .mat-vertical-content-container {
     border-left-color: mat-color($foreground, divider);
   }
 
-  .connector-line {
+  .mat-connector-line {
     border-top-color: mat-color($foreground, divider);
   }
 }

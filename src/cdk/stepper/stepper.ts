@@ -30,8 +30,14 @@ import {AbstractControl} from '@angular/forms';
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;
 
+/**
+ * Position state of the content of each step in stepper that is used for transitioning
+ * the content into correct position upon step selection change.
+ */
+export type StepContentPositionState = 'previous' | 'current' | 'next';
+
 /** Change event emitted on selection changes. */
-export class CdkStepperSelectionEvent {
+export class StepperSelectionEvent {
   /** Index of the step now selected. */
   selectedIndex: number;
 
@@ -119,7 +125,7 @@ export class CdkStepper {
   }
 
   /** Event emitted when the selected step has changed. */
-  @Output() selectionChange = new EventEmitter<CdkStepperSelectionEvent>();
+  @Output() selectionChange = new EventEmitter<StepperSelectionEvent>();
 
   /** The index of the step that the focus can be set. */
   _focusIndex: number = 0;
@@ -146,9 +152,21 @@ export class CdkStepper {
     return `mat-step-label-${this._groupId}-${i}`;
   }
 
-  /** Returns nique id for each step content element. */
+  /** Returns unique id for each step content element. */
   _getStepContentId(i: number): string {
     return `mat-step-content-${this._groupId}-${i}`;
+  }
+
+  /** Returns position state of the step with the given index. */
+  _getAnimationDirection(index: number): StepContentPositionState {
+    const position = index - this._selectedIndex;
+    if (position < 0) {
+      return 'previous';
+    } else if (position > 0) {
+      return 'next';
+    } else {
+      return 'current';
+    }
   }
 
   private _emitStepperSelectionEvent(newIndex: number): void {
