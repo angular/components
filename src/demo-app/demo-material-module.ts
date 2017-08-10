@@ -31,7 +31,8 @@ import {
   MdTabsModule,
   MdToolbarModule,
   MdTooltipModule,
-  StyleModule
+  StyleModule,
+  StickyHeaderModule
 } from '@angular/material';
 import {CdkTableModule} from '@angular/cdk/table';
 
@@ -72,7 +73,8 @@ import {CdkTableModule} from '@angular/cdk/table';
     MdTooltipModule,
     MdNativeDateModule,
     CdkTableModule,
-    StyleModule
+    StyleModule,
+    StickyHeaderModule
   ]
 })
 export class DemoMaterialModule {}

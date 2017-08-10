@@ -46,7 +46,7 @@ import {
   OverlayContainer,
 } from '@angular/material';
 import {TableHeaderDemo} from '../table/table-header-demo';
-
+import {StickyHeaderDemo} from '../sticky-header/sticky-header-demo';
 @NgModule({
   imports: [
     CommonModule,
@@ -105,6 +105,7 @@ import {TableHeaderDemo} from '../table/table-header-demo';
     PlatformDemo,
     TypographyDemo,
     ExpansionDemo,
+    StickyHeaderDemo,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},

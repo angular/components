@@ -79,8 +79,8 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'style', component: StyleDemo},
     {path: 'typography', component: TypographyDemo},
     {path: 'expansion', component: ExpansionDemo},
+    {path: 'sticky-header', component: StickyHeaderDemo},
   ]}
-  {path: 'sticky-header', component: StickyHeaderDemo}
 ];
 
 export const ALL_ROUTES: Routes = [

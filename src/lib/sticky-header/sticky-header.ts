@@ -14,7 +14,7 @@ import {extendObject} from '../core/util/object-extend';
 import {Subscription} from 'rxjs/Subscription';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {RxChain, debounceTime} from '../core/rxjs/index';
-import {isPositionStickySupported} from '@angular/cdk';
+import {isPositionStickySupported} from '@angular/cdk/platform';
 
 
 /**

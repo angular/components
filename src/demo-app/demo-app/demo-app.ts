@@ -91,7 +91,7 @@ export class DemoApp {
     {name: 'Tooltip', route: '/tooltip'},
     {name: 'Platform', route: '/platform'},
     {name: 'Style', route: '/style'},
-    {name: 'Typography', route: '/typography'}
+    {name: 'Typography', route: '/typography'},
     {name: 'Sticky Header', route: 'sticky-header'}
   ];
 

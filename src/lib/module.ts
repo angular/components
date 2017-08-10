@@ -87,7 +87,7 @@ const MATERIAL_MODULES = [
   A11yModule,
   PlatformModule,
   MdCommonModule,
-  ObserversModule
+  ObserversModule,
   StickyHeaderModule,
 ];
 
