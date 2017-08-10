@@ -20,7 +20,7 @@ import {coerceBooleanProperty, SelectionModel} from '../core';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {Subscription} from 'rxjs/Subscription';
 import {SPACE} from '../core/keyboard/keycodes';
-import {Focusable} from '../core/a11y/focus-key-manager';
+import {FocusableOption} from '../core/a11y/focus-key-manager';
 import {MdListOption, MdSelectionListOptionEvent} from './list-option';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 import {RxChain, switchMap, startWith} from '../core/rxjs/index';
@@ -46,7 +46,7 @@ export const _MdSelectionListMixinBase = mixinDisabled(MdSelectionListBase);
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MdSelectionList extends _MdSelectionListMixinBase
-  implements Focusable, CanDisable, AfterContentInit, OnDestroy {
+  implements FocusableOption, CanDisable, AfterContentInit, OnDestroy {
   private _disableRipple: boolean = false;
 
   /** Tab index for the selection-list. */

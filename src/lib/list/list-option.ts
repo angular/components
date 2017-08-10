@@ -24,7 +24,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import {coerceBooleanProperty, MdLine, MdLineSetter} from '../core';
-import {Focusable} from '../core/a11y/focus-key-manager';
+import {FocusableOption} from '../core/a11y/focus-key-manager';
 import {MdSelectionList} from './selection-list';
 
 export interface MdSelectionListOptionEvent {
@@ -55,7 +55,7 @@ const FOCUSED_STYLE: string = 'mat-list-item-focus';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
+export class MdListOption implements AfterContentInit, OnDestroy, FocusableOption {
   private _lineSetter: MdLineSetter;
   private _disableRipple: boolean = false;
   private _selected: boolean = false;
@@ -81,7 +81,6 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   @Input() checkboxPosition: 'before' | 'after' = 'after';
 
   /** Whether the option is disabled. */
-  @HostBinding('class.mat-list-item-disabled')
   @Input()
   get disabled() { return (this.selectionList && this.selectionList.disabled) || this._disabled; }
   set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
