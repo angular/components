@@ -80,6 +80,11 @@ $mat-select-trigger-underline-height: 1px !default;
   }
 }
 
+.mat-select-placeholder-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .mat-select-value {
   position: absolute;
   max-width: calc(100% - #{($mat-select-arrow-size + $mat-select-arrow-margin) * 2});
