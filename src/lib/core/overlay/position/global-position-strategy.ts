@@ -168,4 +168,8 @@ export class GlobalPositionStrategy implements PositionStrategy {
       this._wrapper = null;
     }
   }
+
+  recalculateLastPosition() {
+    // noop since the automatic positioning is handled by CSS.
+  }
 }
