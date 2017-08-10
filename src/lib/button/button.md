@@ -34,6 +34,6 @@ approach this to the consuming app.
 
 ### Accessibility
 
-For buttons or links with icon only such as `md-fab`, `md-mini-fab`, `md-icon-button`, they should 
-be marked by `aria-label` or `aria-labelledby` with meaningful label. 
+Buttons or links with icons only (such as `md-fab`, `md-mini-fab`, and `md-icon-button`) should 
+be marked with a meaningful label using `aria-label` or `aria-labelledby`.
 

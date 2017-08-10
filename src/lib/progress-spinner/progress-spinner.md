@@ -23,4 +23,5 @@ The color of a progress-spinner can be changed by using the `color` property. By
 progress-spinners use the theme's primary color. This can be changed to `'accent'` or `'warn'`.
 
 ### Accessibility
-Each progress spinner should be marked by  `aria-label` or `aria-labelledby` with meaningful label.
+Each progress spinner should be marked with an `aria-label` or `aria-labelledby` with a meaningful
+label.

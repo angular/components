@@ -29,5 +29,5 @@ Individual radio-buttons inside of a radio-group will inherit the `name` of the 
 and `ReactiveFormsModule`.
 
 ### Accessibility
-For radio button groups, each group should should be marked by  `aria-label` or `aria-labelledby`
-with meaningful label.
+Radio button groups should should be marked by `aria-label` or `aria-labelledby`
+with a meaningful label.

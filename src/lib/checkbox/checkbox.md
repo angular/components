@@ -28,6 +28,6 @@ The color of a `<md-checkbox>` can be changed by using the `color` property. By 
 use the theme's accent color. This can be changed to `'primary'` or `'warn'`.  
 
 ### Accessibility
-Standalone checkbox without text or labels should be marked by `aria-label` or `aria-labelledby`
-with meaningful label. 
+Standalone checkboxes without text or labels should be marked by `aria-label` or `aria-labelledby`
+with a meaningful label. 
 
