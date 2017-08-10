@@ -121,7 +121,7 @@ export class TemplatePortal<C> extends Portal<C> {
     this.templateRef = template;
     this.viewContainerRef = viewContainerRef;
     if (context) {
-     this.context = context;
+      this.context = context;
     }
   }
 
@@ -129,8 +129,8 @@ export class TemplatePortal<C> extends Portal<C> {
     return this.templateRef.elementRef;
   }
 
-  attach(host: PortalHost, context?: C): C {
-    this.context = context!;
+  attach(host: PortalHost, context: C | undefined = this.context): C {
+    this.context = context;
     return super.attach(host);
   }
 

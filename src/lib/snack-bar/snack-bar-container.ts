@@ -110,6 +110,7 @@ export class MdSnackBarContainer extends BasePortalHost implements OnDestroy {
   }
 
   /** Attach a template portal as content to this snack bar container. */
+  /* tslint:disable-next-line */
   attachTemplatePortal<C>(): EmbeddedViewRef<C> {
     throw Error('Not yet implemented');
   }
