@@ -20,7 +20,6 @@ import {
   OnDestroy,
   EventEmitter,
   Output,
-  HostBinding,
   ChangeDetectorRef
 } from '@angular/core';
 import {coerceBooleanProperty, MdLine, MdLineSetter} from '../core';
