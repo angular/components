@@ -8,6 +8,7 @@
 
 import {Component} from '@angular/core';
 import {MdStepper} from './stepper';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   moduleId: module.id,
@@ -19,6 +20,15 @@ import {MdStepper} from './stepper';
     'class': 'mat-stepper-horizontal',
     'role': 'tablist',
   },
+  animations: [
+    trigger('stepTransition', [
+      state('previous', style({transform: 'translate3d(-100%, 0, 0)', visibility: 'hidden'})),
+      state('current', style({transform: 'translate3d(0%, 0, 0)', visibility: 'visible'})),
+      state('next', style({transform: 'translate3d(100%, 0, 0)', visibility: 'hidden'})),
+      transition('* => *',
+          animate('500ms cubic-bezier(0.35, 0, 0.25, 1)'))
+    ])
+  ],
   providers: [{provide: MdStepper, useExisting: MdHorizontalStepper}]
 })
 export class MdHorizontalStepper extends MdStepper { }

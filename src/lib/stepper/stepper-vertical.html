@@ -19,12 +19,15 @@
     </div>
 
   </div>
-  <div class="vertical-content-container">
+  <div class="mat-vertical-content-container">
     <div class="mat-vertical-stepper-content" role="tabpanel"
+         [@stepTransition]="_getAnimationDirection(i)"
          [id]="_getStepContentId(i)"
          [attr.aria-labelledby]="_getStepLabelId(i)"
          [attr.aria-expanded]="selectedIndex == i">
-      <ng-container [ngTemplateOutlet]="step.content"></ng-container>
+      <div class="mat-vertical-content">
+        <ng-container[ngTemplateOutlet]="step.content"></ng-container>
+      </div>
     </div>
   </div>
 </div>
