@@ -80,8 +80,8 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
   /** Emits when the currently selected date changes. */
   @Output() selectedChange = new EventEmitter<D>();
 
-  /** Emits when any date is selected */
-  @Output() userSelection = new EventEmitter();
+  /** Emits when any date is selected. */
+  @Output() userSelection = new EventEmitter<void>();
 
   /** Date filter for the month and year views. */
   _dateFilterForViews = (date: D) => {

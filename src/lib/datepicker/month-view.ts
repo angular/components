@@ -67,8 +67,8 @@ export class MdMonthView<D> implements AfterContentInit {
   /** Emits when a new date is selected. */
   @Output() selectedChange = new EventEmitter<D | null>();
 
-  /** Emits when date is picked */
-  @Output() userSelection = new EventEmitter();
+  /** Emits when any date is selected. */
+  @Output() userSelection = new EventEmitter<void>();
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
