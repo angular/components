@@ -190,8 +190,10 @@ describe('MdDatepicker', () => {
         });
       });
 
-      it('clicking the currently selected date should close the calendar without firing selectedChanged', () => {
-        const selectedChangedSpy = spyOn(testComponent.datepicker.selectedChanged, 'emit').and.callThrough();
+      it('clicking the currently selected date should close the calendar' +
+          'without firing selectedChanged', () => {
+        const selectedChangedSpy =
+            spyOn(testComponent.datepicker.selectedChanged, 'emit').and.callThrough();
         for (let changeCount = 1; changeCount < 3; changeCount++) {
           const currentDay = changeCount;
           testComponent.datepicker.open();
