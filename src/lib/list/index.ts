@@ -20,8 +20,7 @@ import {
   MdDividerCssMatStyler,
   MdListSubheaderCssMatStyler
 } from './list';
-import {MdSelectionList} from './selection-list';
-import {MdListOption} from './list-option';
+import {MdSelectionList, MdListOption} from './selection-list';
 
 
 @NgModule({
@@ -61,4 +60,3 @@ export class MdListModule {}
 
 export * from './list';
 export * from './selection-list';
-export * from './list-option';

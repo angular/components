@@ -137,7 +137,7 @@ describe('MdSelectionList', () => {
       expect(selectList.selected.length).toBe(0);
 
       focusItem.focus();
-      selectionList.componentInstance.keydown(SPACE_EVENT);
+      selectionList.componentInstance._keydown(SPACE_EVENT);
 
       fixture.detectChanges();
 
@@ -156,7 +156,7 @@ describe('MdSelectionList', () => {
       focusItem.focus();
       expect(manager.activeItemIndex).toEqual(2);
 
-      selectionList.componentInstance.keydown(UP_EVENT);
+      selectionList.componentInstance._keydown(UP_EVENT);
 
       fixture.detectChanges();
 
@@ -175,7 +175,7 @@ describe('MdSelectionList', () => {
       focusItem.focus();
       expect(manager.activeItemIndex).toEqual(2);
 
-      selectionList.componentInstance.keydown(DOWN_EVENT);
+      selectionList.componentInstance._keydown(DOWN_EVENT);
 
       fixture.detectChanges();
 
@@ -221,7 +221,7 @@ describe('MdSelectionList', () => {
       fixture.detectChanges();
 
       expect(listItemEl.nativeElement).toBe(document.activeElement);
-      if (!platform.TRIDENT) {
+      if (platform.SAFARI || platform.FIREFOX) {
         expect(listItemEl.nativeElement.className).toContain('mat-list-item-focus');
       }
 
