@@ -84,38 +84,38 @@ export class MdRipple implements OnChanges, OnDestroy {
 
   // Properties with `mat-` prefix for noconflict mode.
   @Input('matRippleTrigger')
-  get matRippleTrigger() { return this.trigger; }
-  set matRippleTrigger(v) { this.trigger = v; }
+  get _matRippleTrigger() { return this.trigger; }
+  set _matRippleTrigger(v) { this.trigger = v; }
 
   // Properties with `mat-` prefix for noconflict mode.
   @Input('matRippleCentered')
-  get matRippleCentered() { return this.centered; }
-  set matRippleCentered(v) { this.centered = v; }
+  get _matRippleCentered() { return this.centered; }
+  set _matRippleCentered(v) { this.centered = v; }
 
   // Properties with `mat-` prefix for noconflict mode.
   @Input('matRippleDisabled')
-  get matRippleDisabled() { return this.disabled; }
-  set matRippleDisabled(v) { this.disabled = v; }
+  get _matRippleDisabled() { return this.disabled; }
+  set _matRippleDisabled(v) { this.disabled = v; }
 
   // Properties with `mat-` prefix for noconflict mode.
   @Input('matRippleRadius')
-  get matRippleRadius() { return this.radius; }
-  set matRippleRadius(v) { this.radius = v; }
+  get _matRippleRadius() { return this.radius; }
+  set _matRippleRadius(v) { this.radius = v; }
 
   // Properties with `mat-` prefix for noconflict mode.
   @Input('matRippleSpeedFactor')
-  get matRippleSpeedFactor() { return this.speedFactor; }
-  set matRippleSpeedFactor(v) { this.speedFactor = v; }
+  get _matRippleSpeedFactor() { return this.speedFactor; }
+  set _matRippleSpeedFactor(v) { this.speedFactor = v; }
 
   // Properties with `mat-` prefix for noconflict mode.
   @Input('matRippleColor')
-  get matRippleColor() { return this.color; }
-  set matRippleColor(v) { this.color = v; }
+  get _matRippleColor() { return this.color; }
+  set _matRippleColor(v) { this.color = v; }
 
   // Properties with `mat-` prefix for noconflict mode.
   @Input('matRippleUnbounded')
-  get matRippleUnbounded() { return this.unbounded; }
-  set matRippleUnbounded(v) { this.unbounded = v; }
+  get _matRippleUnbounded() { return this.unbounded; }
+  set _matRippleUnbounded(v) { this.unbounded = v; }
 
   /** Renderer for the ripple DOM manipulations. */
   private _rippleRenderer: RippleRenderer;
