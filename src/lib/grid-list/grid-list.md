@@ -43,7 +43,10 @@ A header and footer can be added to an `md-grid-tile` using the `md-grid-tile-he
 `md-grid-tile-footer` elements respectively.
 
 ### Accessibility
-Non-interactive grid lists for layout purposes only should have `role="list".`
+By default, the grid-list assumes that it will be used in a purely decorative fashion and thus sets
+no roles, ARIA attributes, or keyboard shortcuts. This is equivalent to having a sequence of `<div>`
+elements on the page. Any interactive content within the grid-list should be given an appropriate
+accessibility treatment based on the specific workflow of your application.
 
-Interactive grid list should add appropriate `role` attribute according to the usage. 
-
+If the grid-list is used to present a list of _non-interactive_ content items, then the grid-list
+element should be given `role="list"` and each tile should be given `role="listitem"`.

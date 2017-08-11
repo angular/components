@@ -30,4 +30,4 @@ The color of a progress-bar can be changed by using the `color` property. By def
 use the theme's primary color. This can be changed to `'accent'` or `'warn'`.  
 
 ### Accessibility
-Each progress bar should be marked by `aria-label` or `aria-labelledby` with a meaningful label.
+Each progress bar should be given a meaningful label via `aria-label` or `aria-labelledby`.
