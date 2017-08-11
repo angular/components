@@ -223,7 +223,7 @@ export class MdDatepicker<D> implements OnDestroy {
     }
   }
 
-  /** Selects the given date and closes the currently open popup or dialog. */
+  /** Selects the given date */
   _select(date: D): void {
     let oldValue = this._selected;
     this._selected = date;
