@@ -44,7 +44,7 @@ describe('MdDatepicker', () => {
           DatepickerWithStartAt,
           DatepickerWithStartView,
           DatepickerWithToggle,
-          InputContainerDatepicker,
+          FormFieldDatepicker,
           MultiInputDatepicker,
           NoInputDatepicker,
           StandardDatepicker,
@@ -580,12 +580,12 @@ describe('MdDatepicker', () => {
         }));
     });
 
-    describe('datepicker inside input-container', () => {
-      let fixture: ComponentFixture<InputContainerDatepicker>;
-      let testComponent: InputContainerDatepicker;
+    describe('datepicker inside md-form-field', () => {
+      let fixture: ComponentFixture<FormFieldDatepicker>;
+      let testComponent: FormFieldDatepicker;
 
       beforeEach(async(() => {
-        fixture = TestBed.createComponent(InputContainerDatepicker);
+        fixture = TestBed.createComponent(FormFieldDatepicker);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
@@ -596,10 +596,10 @@ describe('MdDatepicker', () => {
         fixture.detectChanges();
       }));
 
-      it('should attach popup to input-container underline', () => {
+      it('should attach popup to md-form-field underline', () => {
         let attachToRef = testComponent.datepickerInput.getPopupConnectionElementRef();
         expect(attachToRef.nativeElement.classList.contains('mat-form-field-underline'))
-            .toBe(true, 'popup should be attached to input-container underline');
+            .toBe(true, 'popup should be attached to md-form-field underline');
       });
     });
 
@@ -1014,13 +1014,13 @@ class DatepickerWithToggle {
 
 @Component({
   template: `
-      <md-input-container>
+      <md-form-field>
         <input mdInput [mdDatepicker]="d">
         <md-datepicker #d></md-datepicker>
-      </md-input-container>
+      </md-form-field>
   `,
 })
-class InputContainerDatepicker {
+class FormFieldDatepicker {
   @ViewChild('d') datepicker: MdDatepicker<Date>;
   @ViewChild(MdDatepickerInput) datepickerInput: MdDatepickerInput<Date>;
 }
