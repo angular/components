@@ -29,7 +29,7 @@ Individual radio-buttons inside of a radio-group will inherit the `name` of the 
 and `ReactiveFormsModule`.
 
 ### Accessibility
-The `<md-radop-button>` uses an internal `<input type="radio">` to provide an accessible experience.
+The `<md-radio-button>` uses an internal `<input type="radio">` to provide an accessible experience.
 This internal radio button receives focus and is automatically labelled by the text content of the
 `<md-radio-button>` element.
 
