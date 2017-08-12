@@ -117,7 +117,7 @@ export class MdListOption implements AfterContentInit, OnDestroy, FocusableOptio
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
               private _changeDetector: ChangeDetectorRef,
-              @Self() @Optional() @Inject(forwardRef(() => MdButton)) public selectionList: MdSelectionList) { }
+              @Self() @Optional() @Inject(forwardRef(() => MdSelectionList)) public selectionList: MdSelectionList) { }
 
 
   ngAfterContentInit() {
