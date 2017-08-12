@@ -21,7 +21,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   OnDestroy,
-  Self,
   forwardRef,
   Inject,
 } from '@angular/core';
