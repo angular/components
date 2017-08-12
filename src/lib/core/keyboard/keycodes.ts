@@ -21,5 +21,7 @@ export {
   TAB,
   ESCAPE,
   BACKSPACE,
-  DELETE
-} from '@angular/cdk/keyboard';
+  DELETE,
+  A,
+  Z,
+} from '@angular/cdk/keycodes';

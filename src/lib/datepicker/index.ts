@@ -9,7 +9,9 @@
 import {NgModule} from '@angular/core';
 import {MdMonthView} from './month-view';
 import {CommonModule} from '@angular/common';
-import {A11yModule, OverlayModule, StyleModule} from '../core';
+import {OverlayModule} from '@angular/cdk/overlay';
+import {A11yModule} from '@angular/cdk/a11y';
+import {StyleModule} from '../core';
 import {MdCalendarBody} from './calendar-body';
 import {MdYearView} from './year-view';
 import {
@@ -47,10 +49,14 @@ export * from './year-view';
     A11yModule,
   ],
   exports: [
+    MdCalendar,
+    MdCalendarBody,
     MdDatepicker,
     MdDatepickerContent,
     MdDatepickerInput,
     MdDatepickerToggle,
+    MdMonthView,
+    MdYearView,
   ],
   declarations: [
     MdCalendar,

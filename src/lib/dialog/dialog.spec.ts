@@ -21,12 +21,11 @@ import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
-import {MdDialogModule} from './index';
-import {MdDialog, MD_DIALOG_DATA} from './dialog';
 import {MdDialogContainer} from './dialog-container';
-import {OverlayContainer, ESCAPE} from '../core';
-import {MdDialogRef} from './dialog-ref';
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {ESCAPE} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
+import {MdDialogModule, MdDialogRef, MdDialog, MD_DIALOG_DATA} from './index';
 
 
 describe('MdDialog', () => {
@@ -205,32 +204,31 @@ describe('MdDialog', () => {
   });
 
   it('should notify the observers if all open dialogs have finished closing', async(() => {
-    const ref1 = dialog.open(PizzaMsg, {
-      viewContainerRef: testViewContainerRef
-    });
-    const ref2 = dialog.open(ContentElementDialog, {
-      viewContainerRef: testViewContainerRef
-    });
-    let allClosed = false;
+    const ref1 = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
+    const ref2 = dialog.open(ContentElementDialog, { viewContainerRef: testViewContainerRef });
+    const spy = jasmine.createSpy('afterAllClosed spy');
 
-    dialog.afterAllClosed.subscribe(() => {
-      allClosed = true;
-    });
+    dialog.afterAllClosed.subscribe(spy);
 
     ref1.close();
     viewContainerFixture.detectChanges();
 
     viewContainerFixture.whenStable().then(() => {
-      expect(allClosed).toBeFalsy();
+      expect(spy).not.toHaveBeenCalled();
 
       ref2.close();
       viewContainerFixture.detectChanges();
-
-      viewContainerFixture.whenStable().then(() => {
-        expect(allClosed).toBeTruthy();
-      });
+      viewContainerFixture.whenStable().then(() => expect(spy).toHaveBeenCalled());
     });
   }));
+
+  it('should emit the afterAllClosed stream on subscribe if there are no open dialogs', () => {
+    const spy = jasmine.createSpy('afterAllClosed spy');
+
+    dialog.afterAllClosed.subscribe(spy);
+
+    expect(spy).toHaveBeenCalled();
+  });
 
   it('should should override the width of the overlay pane', () => {
     dialog.open(PizzaMsg, {
@@ -467,6 +465,30 @@ describe('MdDialog', () => {
       expect(dialogRef.componentInstance).toBeFalsy('Expected reference to have been cleared.');
     });
   }));
+
+  it('should assign a unique id to each dialog', () => {
+    const one = dialog.open(PizzaMsg);
+    const two = dialog.open(PizzaMsg);
+
+    expect(one.id).toBeTruthy();
+    expect(two.id).toBeTruthy();
+    expect(one.id).not.toBe(two.id);
+  });
+
+  it('should allow for the id to be overwritten', () => {
+    const dialogRef = dialog.open(PizzaMsg, { id: 'pizza' });
+    expect(dialogRef.id).toBe('pizza');
+  });
+
+  it('should throw when trying to open a dialog with the same id as another dialog', () => {
+    dialog.open(PizzaMsg, { id: 'pizza' });
+    expect(() => dialog.open(PizzaMsg, { id: 'pizza' })).toThrowError(/must be unique/g);
+  });
+
+  it('should be able to find a dialog by id', () => {
+    const dialogRef = dialog.open(PizzaMsg, { id: 'pizza' });
+    expect(dialog.getDialogById('pizza')).toBe(dialogRef);
+  });
 
   describe('disableClose option', () => {
     it('should prevent closing via clicks on the backdrop', () => {

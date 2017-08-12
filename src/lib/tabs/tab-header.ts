@@ -23,25 +23,21 @@ import {
   NgZone,
   Renderer2,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
+  ChangeDetectorRef
 } from '@angular/core';
-import {
-  RIGHT_ARROW,
-  LEFT_ARROW,
-  ENTER,
-  Directionality,
-  Direction,
-  HammerInput,
-} from '../core';
-import {MdTabLabelWrapper} from './tab-label-wrapper';
-import {MdInkBar} from './ink-bar';
+import {HammerInput} from '../core';
+import {Directionality, Direction} from '@angular/cdk/bidi';
+import {RIGHT_ARROW, LEFT_ARROW, ENTER} from '@angular/cdk/keycodes';
+import {auditTime, startWith} from '@angular/cdk/rxjs';
 import {Subscription} from 'rxjs/Subscription';
-import {auditTime, startWith} from '../core/rxjs/index';
 import {of as observableOf} from 'rxjs/observable/of';
 import {merge} from 'rxjs/observable/merge';
 import {fromEvent} from 'rxjs/observable/fromEvent';
+import {MdTabLabelWrapper} from './tab-label-wrapper';
+import {MdInkBar} from './ink-bar';
 import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
-
+import {RxChain, debounceTime} from '@angular/cdk/rxjs';
+import {Platform} from '@angular/cdk/platform';
 
 /**
  * The directions that scrolling can go in when the header's tabs exceed the header width. 'After'
@@ -122,6 +118,9 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
 
   private _selectedIndex: number = 0;
 
+  /** subscription for the window resize handler */
+  private _resizeSubscription: Subscription | null;
+
   /** The index of the active tab. */
   @Input()
   get selectedIndex(): number { return this._selectedIndex; }
@@ -142,8 +141,16 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
               private _ngZone: NgZone,
               private _renderer: Renderer2,
               private _changeDetectorRef: ChangeDetectorRef,
-              @Optional() private _dir: Directionality) {
+              @Optional() private _dir: Directionality,
+              platform: Platform) {
     super();
+
+    if (platform.isBrowser) {
+      // TODO: Add library level window listener https://goo.gl/y25X5M
+      this._resizeSubscription = RxChain.from(fromEvent(window, 'resize'))
+        .call(debounceTime, 150)
+        .subscribe(() => this._checkPaginationEnabled());
+    }
   }
 
   ngAfterContentChecked(): void {
@@ -208,6 +215,11 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
     if (this._realignInkBar) {
       this._realignInkBar.unsubscribe();
       this._realignInkBar = null;
+    }
+
+    if (this._resizeSubscription) {
+      this._resizeSubscription.unsubscribe();
+      this._resizeSubscription = null;
     }
   }
 

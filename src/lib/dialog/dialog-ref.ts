@@ -6,17 +6,19 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {OverlayRef, GlobalPositionStrategy} from '../core';
+import {OverlayRef, GlobalPositionStrategy} from '@angular/cdk/overlay';
+import {filter, first, RxChain} from '@angular/cdk/rxjs';
 import {DialogPosition} from './dialog-config';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {MdDialogContainer} from './dialog-container';
-import {RxChain, first, filter} from '../core/rxjs/index';
 
 
 // TODO(jelbourn): resizing
 // TODO(jelbourn): afterOpen and beforeClose
 
+// Counter for unique dialog ids.
+let uniqueId = 0;
 
 /**
  * Reference to a dialog opened via the MdDialog service.
@@ -34,7 +36,11 @@ export class MdDialogRef<T> {
   /** Result to be passed to afterClosed. */
   private _result: any;
 
-  constructor(private _overlayRef: OverlayRef, private _containerInstance: MdDialogContainer) {
+  constructor(
+    private _overlayRef: OverlayRef,
+    private _containerInstance: MdDialogContainer,
+    public readonly id: string = `md-dialog-${uniqueId++}`) {
+
     RxChain.from(_containerInstance._animationStateChanged)
       .call(filter, event => event.phaseName === 'done' && event.toState === 'exit')
       .call(first)

@@ -7,6 +7,8 @@
  */
 
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -17,12 +19,11 @@ import {
   Output,
   Renderer2,
   ViewEncapsulation,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
+  ViewChild,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {coerceBooleanProperty, coerceNumberProperty, HammerInput} from '../core';
-import {Directionality} from '../core/bidi/index';
+import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
+import {Directionality} from '@angular/cdk/bidi';
 import {
   DOWN_ARROW,
   END,
@@ -31,10 +32,11 @@ import {
   PAGE_DOWN,
   PAGE_UP,
   RIGHT_ARROW,
-  UP_ARROW
-} from '../core/keyboard/keycodes';
+  UP_ARROW,
+} from '@angular/cdk/keycodes';
+import {HammerInput} from '../core';
 import {FocusOrigin, FocusOriginMonitor} from '../core/style/focus-origin-monitor';
-import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
+import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 
 
 /**
@@ -377,9 +379,6 @@ export class MdSlider extends _MdSliderMixinBase
   /** The size of a tick interval as a percentage of the size of the track. */
   private _tickIntervalPercent: number = 0;
 
-  /** A renderer to handle updating the slider's thumb and fill track. */
-  private _renderer: SliderRenderer;
-
   /** The dimensions of the slider. */
   private _sliderDimensions: ClientRect | null = null;
 
@@ -390,6 +389,9 @@ export class MdSlider extends _MdSliderMixinBase
 
   /** The value of the slider when the slide start event fires. */
   private _valueOnSlideStart: number | null;
+
+  /** Reference to the inner slider wrapper element. */
+  @ViewChild('sliderWrapper') private _sliderWrapper: ElementRef;
 
   /**
    * Whether mouse events should be converted to a slider position by calculating their distance
@@ -412,7 +414,6 @@ export class MdSlider extends _MdSliderMixinBase
     this._focusOriginMonitor
         .monitor(this._elementRef.nativeElement, renderer, true)
         .subscribe((origin: FocusOrigin) => this._isActive = !!origin && origin !== 'keyboard');
-    this._renderer = new SliderRenderer(this._elementRef);
   }
 
   ngOnDestroy() {
@@ -426,7 +427,7 @@ export class MdSlider extends _MdSliderMixinBase
 
     // We save the dimensions of the slider here so we can use them to update the spacing of the
     // ticks and determine where on the slider click and slide events happen.
-    this._sliderDimensions = this._renderer.getSliderDimensions();
+    this._sliderDimensions = this._getSliderDimensions();
     this._updateTickIntervalPercent();
   }
 
@@ -437,7 +438,7 @@ export class MdSlider extends _MdSliderMixinBase
 
     let oldValue = this.value;
     this._isSliding = false;
-    this._renderer.addFocus();
+    this._focusHostElement();
     this._updateValueFromPosition({x: event.clientX, y: event.clientY});
 
     /* Emit a change and input event if the value changed. */
@@ -479,7 +480,7 @@ export class MdSlider extends _MdSliderMixinBase
     this._onMouseenter();
 
     this._isSliding = true;
-    this._renderer.addFocus();
+    this._focusHostElement();
     this._valueOnSlideStart = this.value;
 
     if (event) {
@@ -500,7 +501,7 @@ export class MdSlider extends _MdSliderMixinBase
   _onFocus() {
     // We save the dimensions of the slider here so we can use them to update the spacing of the
     // ticks and determine where on the slider click and slide events happen.
-    this._sliderDimensions = this._renderer.getSliderDimensions();
+    this._sliderDimensions = this._getSliderDimensions();
     this._updateTickIntervalPercent();
   }
 
@@ -648,6 +649,23 @@ export class MdSlider extends _MdSliderMixinBase
   }
 
   /**
+   * Get the bounding client rect of the slider track element.
+   * The track is used rather than the native element to ignore the extra space that the thumb can
+   * take up.
+   */
+  private _getSliderDimensions() {
+    return this._sliderWrapper ? this._sliderWrapper.nativeElement.getBoundingClientRect() : null;
+  }
+
+  /**
+   * Focuses the native element.
+   * Currently only used to allow a blur event to fire but will be used with keyboard input later.
+   */
+  private _focusHostElement() {
+    this._elementRef.nativeElement.focus();
+  }
+
+  /**
    * Sets the model value. Implemented as part of ControlValueAccessor.
    * @param value
    */
@@ -680,35 +698,5 @@ export class MdSlider extends _MdSliderMixinBase
    */
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
-  }
-}
-
-/**
- * Renderer class in order to keep all dom manipulation in one place and outside of the main class.
- * @docs-private
- */
-export class SliderRenderer {
-  private _sliderElement: HTMLElement;
-
-  constructor(elementRef: ElementRef) {
-    this._sliderElement = elementRef.nativeElement;
-  }
-
-  /**
-   * Get the bounding client rect of the slider track element.
-   * The track is used rather than the native element to ignore the extra space that the thumb can
-   * take up.
-   */
-  getSliderDimensions() {
-    let wrapperElement = this._sliderElement.querySelector('.mat-slider-wrapper');
-    return wrapperElement ? wrapperElement.getBoundingClientRect() : null;
-  }
-
-  /**
-   * Focuses the native element.
-   * Currently only used to allow a blur event to fire but will be used with keyboard input later.
-   */
-  addFocus() {
-    this._sliderElement.focus();
   }
 }

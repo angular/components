@@ -1,41 +1,39 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   DebugElement,
+  OnInit,
   QueryList,
   ViewChild,
   ViewChildren,
-  ChangeDetectionStrategy,
-  OnInit,
 } from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
+  FormGroup,
+  FormGroupDirective,
   FormsModule,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  FormGroup,
-  FormGroupDirective,
   Validators,
 } from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {TestBed, async, ComponentFixture, fakeAsync, tick, inject} from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
+import {Directionality} from '@angular/cdk/bidi';
+import {DOWN_ARROW, END, ENTER, HOME, SPACE, TAB, UP_ARROW} from '@angular/cdk/keycodes';
+import {OverlayContainer, ScrollDispatcher, ViewportRuler} from '@angular/cdk/overlay';
+import {dispatchFakeEvent, dispatchKeyboardEvent, wrappedErrorMessage} from '@angular/cdk/testing';
+import {Subject} from 'rxjs/Subject';
+import {map} from 'rxjs/operator/map';
 import {MdSelectModule} from './index';
-import {OverlayContainer} from '../core/overlay/overlay-container';
 import {MdSelect} from './select';
 import {getMdSelectDynamicMultipleError, getMdSelectNonArrayValueError} from './select-errors';
 import {MdOption} from '../core/option/option';
-import {Directionality} from '../core/bidi/index';
-import {DOWN_ARROW, UP_ARROW, ENTER, SPACE, HOME, END, TAB} from '../core/keyboard/keycodes';
-import {Subject} from 'rxjs/Subject';
-import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
-import {dispatchFakeEvent, dispatchKeyboardEvent, wrappedErrorMessage} from '@angular/cdk/testing';
-import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {
   FloatPlaceholderType,
   MD_PLACEHOLDER_GLOBAL_OPTIONS
 } from '../core/placeholder/placeholder-options';
-import {map} from 'rxjs/operator/map';
 
 
 describe('MdSelect', () => {
@@ -74,7 +72,8 @@ describe('MdSelect', () => {
         BasicSelectWithoutForms,
         BasicSelectWithoutFormsPreselected,
         BasicSelectWithoutFormsMultiple,
-        SelectInsideFormGroup
+        SelectInsideFormGroup,
+        SelectWithCustomTrigger
       ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -950,7 +949,6 @@ describe('MdSelect', () => {
     });
 
   });
-
 
   describe('animations', () => {
     let fixture: ComponentFixture<BasicSelect>;
@@ -2529,6 +2527,21 @@ describe('MdSelect', () => {
       expect(panel.classList).toContain('mat-warn');
     });
 
+    it('should allow the user to customize the label', () => {
+      fixture.destroy();
+
+      const labelFixture = TestBed.createComponent(SelectWithCustomTrigger);
+      labelFixture.detectChanges();
+
+      labelFixture.componentInstance.control.setValue('pizza-1');
+      labelFixture.detectChanges();
+
+      const label = labelFixture.debugElement.query(By.css('.mat-select-value')).nativeElement;
+
+      expect(label.textContent).toContain('azziP',
+          'Expected the displayed text to be "Pizza" in reverse.');
+    });
+
   });
 
   describe('reset values', () => {
@@ -3211,4 +3224,25 @@ class BasicSelectWithoutFormsMultiple {
   ];
 
   @ViewChild(MdSelect) select: MdSelect;
+}
+
+@Component({
+  selector: 'select-with-custom-trigger',
+  template: `
+    <md-select placeholder="Food" [formControl]="control" #select="mdSelect">
+      <md-select-trigger>
+        {{ select.selected?.viewValue.split('').reverse().join('') }}
+      </md-select-trigger>
+      <md-option *ngFor="let food of foods" [value]="food.value">
+        {{ food.viewValue }}
+      </md-option>
+    </md-select>
+  `
+})
+class SelectWithCustomTrigger {
+  foods: any[] = [
+    { value: 'steak-0', viewValue: 'Steak' },
+    { value: 'pizza-1', viewValue: 'Pizza' },
+  ];
+  control = new FormControl();
 }
