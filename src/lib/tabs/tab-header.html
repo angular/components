@@ -7,8 +7,8 @@
 </div>
 
 <div class="mat-tab-label-container" #tabListContainer
-     (swipeleft)="_handleSwipe($event)"
-     (swiperight)="_handleSwipe($event)"
+     (swipe)="_handleSwipeDrag($event)"
+     (drag)="_handleSwipeDrag($event)"
      (keydown)="_handleKeydown($event)">
   <div class="mat-tab-list" #tabList role="tablist" (cdkObserveContent)="_onContentChanges()">
     <div class="mat-tab-labels">

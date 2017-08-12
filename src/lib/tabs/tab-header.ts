@@ -31,7 +31,7 @@ import {
   ENTER,
   Directionality,
   Direction,
-  HammerEvent,
+  HammerInput,
 } from '../core';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdInkBar} from './ink-bar';
@@ -331,7 +331,7 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
   get scrollDistance(): number { return this._scrollDistance; }
 
   /** Handle swipe events scrolling the tabs */
-  _handleSwipe(event: HammerEvent): void {
+  _handleSwipeDrag(event: HammerInput): void {
     const curDistance = this.scrollDistance || 0;
     this.scrollDistance = curDistance - event.deltaX;
     this._updateTabScrollPosition();

@@ -27,7 +27,7 @@ import {
   transition,
   AnimationEvent,
 } from '@angular/animations';
-import {TemplatePortal, PortalHostDirective, Directionality, Direction, HammerEvent} from '../core';
+import {TemplatePortal, PortalHostDirective, Directionality, Direction, HammerInput} from '../core';
 
 /**
  * These position states are used internally as animation states for the tab body. Setting the
@@ -96,7 +96,7 @@ export class MdTabBody implements OnInit, AfterViewChecked {
   @Output() onCentered: EventEmitter<void> = new EventEmitter<void>(true);
 
   /** Event emitted when the tab body is swiped left/right */
-  @Output() onSwipe: EventEmitter<HammerEvent> = new EventEmitter<HammerEvent>();
+  @Output() onSwipe: EventEmitter<HammerInput> = new EventEmitter<HammerInput>();
 
   /** The tab body content to display. */
   @Input('content') _content: TemplatePortal;

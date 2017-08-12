@@ -22,8 +22,9 @@ import {
   AfterContentInit,
   AfterContentChecked,
   OnDestroy,
+  Optional,
 } from '@angular/core';
-import {coerceBooleanProperty, HammerEvent} from '../core';
+import {coerceBooleanProperty, HammerInput, Directionality} from '../core';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import {MdTab} from './tab';
@@ -143,7 +144,8 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
 
   constructor(_renderer: Renderer2,
               elementRef: ElementRef,
-              private _changeDetectorRef: ChangeDetectorRef) {
+              private _changeDetectorRef: ChangeDetectorRef,
+              @Optional() private _dir: Directionality) {
     super(_renderer, elementRef);
     this._groupId = nextId++;
   }
@@ -276,30 +278,38 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
     this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height', '');
   }
 
-  /** Finds the next tab in the stack for the given direction */
-  _findNextTabByIndex(index: number, direction: string): number {
-    const tabsArray = this._tabs.toArray();
-    const nextIdx = direction === 'right' ? index + 1 : index - 1;
-
-    if(nextIdx < tabsArray.length && nextIdx >= 0) {
-      const nextTab = tabsArray[nextIdx];
-      if(nextTab.disabled) {
-        return this._findNextTabByIndex(nextIdx, direction);
-      } else {
-        return nextIdx;
-      }
-    }
-
-    return index;
-  }
-
   /** Body content was swiped left/right */
-  _bodyContentSwiped(event: HammerEvent): void {
-    if(this.selectedIndex === null) this.selectedIndex = 0;
-    if(this.selectedIndex !== 0 && event.type === 'swiperight') {
-      this.selectedIndex = this._findNextTabByIndex(this.selectedIndex, 'left');
-    } else if(this.selectedIndex < this._tabs.length && event.type === 'swipeleft') {
-      this.selectedIndex = this._findNextTabByIndex(this.selectedIndex, 'right');
+  _bodyContentSwiped(event: HammerInput): void {
+    if (this.selectedIndex === null) {
+      this.selectedIndex = 0;
+    }
+
+    let direction = event.deltaX > 0 ? 'right' : 'left';
+    if (this._dir.value === 'rtl') {
+      direction = direction === 'left' ? 'right' : 'left';
+    }
+
+    if (this.selectedIndex !== 0 && direction === 'right') {
+      this._setActiveItemByIndex(this.selectedIndex - 1, -1);
+    } else if (this.selectedIndex < this._tabs.length && direction === 'left') {
+      this._setActiveItemByIndex(this.selectedIndex + 1, 1);
     }
   }
+
+  /**
+   * Sets the active item to the first enabled item starting at the index specified. If the
+   * item is disabled, it will move in the fallbackDelta direction until it either
+   * finds an enabled item or encounters the end of the list.
+   */
+  private _setActiveItemByIndex(index: number,
+                                fallbackDelta: number,
+                                items = this._tabs.toArray()): void {
+    if (!items[index]) { return; }
+    while (items[index].disabled) {
+      index += fallbackDelta;
+      if (!items[index]) { return; }
+    }
+    this.selectedIndex = index;
+  }
+
 }

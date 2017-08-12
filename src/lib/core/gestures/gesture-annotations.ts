@@ -16,6 +16,7 @@
 export interface HammerInput {
   preventDefault: () => {};
   deltaX: number;
+  type: string;
   deltaY: number;
   center: { x: number; y: number; };
 }
@@ -53,13 +54,4 @@ export interface HammerManager {
   emit(event: string, data: any): void;
   off(events: string, handler?: Function): void;
   on(events: string, handler: Function): void;
-}
-
-/** @docs-private */
-export interface HammerEvent {
-  type: string;
-  deltaX: number;
-  deltaY: number;
-  stopPropagation(): void;
-  preventDefault(): void;
 }

@@ -1,6 +1,5 @@
 <div class="mat-tab-body-content" #content
-     (swipeleft)="onSwipe.emit($event)"
-     (swiperight)="onSwipe.emit($event)"
+     (swipe)="onSwipe.emit($event)"
      [@translateTab]="_position"
      (@translateTab.start)="_onTranslateTabStarted($event)"
      (@translateTab.done)="_onTranslateTabComplete($event)">
