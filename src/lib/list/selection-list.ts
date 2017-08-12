@@ -23,6 +23,7 @@ import {
   OnDestroy,
   Self,
   forwardRef,
+  Inject,
 } from '@angular/core';
 import {coerceBooleanProperty, SelectionModel, MdLine, MdLineSetter} from '../core';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
@@ -118,7 +119,7 @@ export class MdListOption implements AfterContentInit, OnDestroy, FocusableOptio
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
               private _changeDetector: ChangeDetectorRef,
-              @Self() @Optional() @Inject(forwardRef(() => MdSelectionList)) public selectionList: MdSelectionList) { }
+              @Optional() @Inject(forwardRef(() => MdSelectionList)) public selectionList: MdSelectionList) { }
 
 
   ngAfterContentInit() {
