@@ -22,6 +22,7 @@ import {
   ChangeDetectorRef,
   OnDestroy,
   Self,
+  forwardRef,
 } from '@angular/core';
 import {coerceBooleanProperty, SelectionModel, MdLine, MdLineSetter} from '../core';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
