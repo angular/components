@@ -10,6 +10,7 @@ import {AccessibilityHome} from './a11y';
 import {DatepickerAccessibilityDemo} from './datepicker/datepicker-a11y';
 import {IconAccessibilityDemo} from './icon/icon-a11y';
 import {InputAccessibilityDemo} from './input/input-a11y';
+import {MenuAccessibilityDemo} from './menu/menu-a11y';
 import {ProgressSpinnerAccessibilityDemo} from './progress-spinner/progress-spinner-a11y';
 import {SliderAccessibilityDemo} from './slider/slider-a11y';
 
@@ -24,6 +25,7 @@ export const ACCESSIBILITY_DEMO_ROUTES: Routes = [
   {path: 'grid-list', component: GridListAccessibilityDemo},
   {path: 'icon', component: IconAccessibilityDemo},
   {path: 'input', component: InputAccessibilityDemo},
+  {path: 'menu', component: MenuAccessibilityDemo},
   {path: 'progress-spinner', component: ProgressSpinnerAccessibilityDemo},
   {path: 'radio', component: RadioAccessibilityDemo},
   {path: 'slider', component: SliderAccessibilityDemo},
