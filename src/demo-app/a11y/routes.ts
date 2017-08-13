@@ -23,6 +23,6 @@ export const ACCESSIBILITY_DEMO_ROUTES: Routes = [
   {path: 'grid-list', component: GridListAccessibilityDemo},
   {path: 'input', component: InputAccessibilityDemo},
   {path: 'radio', component: RadioAccessibilityDemo},
+  {path: 'slider', component: SliderAccessibilityDemo},
   {path: 'toolbar', component: ToolbarAccessibilityDemo}
-  {path: 'slider', component: SliderAccessibilityDemo}
 ];
