@@ -284,11 +284,9 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
         this.openPanel();
       }
 
-      Promise.resolve().then(() => {
-        if (isArrowKey || this.autocomplete._keyManager.activeItem !== prevActiveItem) {
-          this._scrollToOption();
-        }
-      });
+      if (isArrowKey || this.autocomplete._keyManager.activeItem !== prevActiveItem) {
+        this._scrollToOption();
+      }
     }
   }
 
@@ -368,8 +366,13 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    */
   private _subscribeToClosingActions(): Subscription {
     const firstStable = first.call(this._zone.onStable.asObservable());
-    const optionChanges = map.call(this.autocomplete.options.changes, () =>
-      this._positionStrategy.recalculateLastPosition());
+    const optionChanges = switchMap.call(this.autocomplete.options.changes, () => {
+      this._positionStrategy.recalculateLastPosition();
+
+      // Defer emitting to the stream until the next tick, because changing
+      // bindings in here will cause "changed after checked" errors.
+      return Promise.resolve();
+    });
 
     // When the zone is stable initially, and when the option list changes...
     return RxChain.from(merge(firstStable, optionChanges))
