@@ -6,6 +6,7 @@ import {CheckboxAccessibilityDemo} from './checkbox/checkbox-a11y';
 import {ChipsAccessibilityDemo} from './chips/chips-a11y';
 import {GridListAccessibilityDemo} from './grid-list/grid-list-a11y';
 import {RadioAccessibilityDemo} from './radio/radio-a11y';
+import {MenuAccessibilityDemo} from './menu/menu-a11y';
 import {AccessibilityHome} from './a11y';
 import {DatepickerAccessibilityDemo} from './datepicker/datepicker-a11y';
 import {IconAccessibilityDemo} from './icon/icon-a11y';
@@ -26,5 +27,6 @@ export const ACCESSIBILITY_DEMO_ROUTES: Routes = [
   {path: 'input', component: InputAccessibilityDemo},
   {path: 'progress-spinner', component: ProgressSpinnerAccessibilityDemo},
   {path: 'radio', component: RadioAccessibilityDemo},
+  {path: 'menu', component: MenuAccessibilityDemo}
   {path: 'slider', component: SliderAccessibilityDemo},
 ];

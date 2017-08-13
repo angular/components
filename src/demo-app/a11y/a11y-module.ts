@@ -12,6 +12,7 @@ import {CheckboxAccessibilityDemo} from './checkbox/checkbox-a11y';
 import {ChipsAccessibilityDemo} from './chips/chips-a11y';
 import {GridListAccessibilityDemo} from './grid-list/grid-list-a11y';
 import {RadioAccessibilityDemo} from './radio/radio-a11y';
+import {MenuAccessibilityDemo} from './menu/menu-a11y';
 import {DatepickerAccessibilityDemo} from './datepicker/datepicker-a11y';
 import {IconAccessibilityDemo} from './icon/icon-a11y';
 import {InputAccessibilityDemo} from './input/input-a11y';
@@ -39,6 +40,7 @@ export class AccessibilityRoutingModule {}
   ],
   declarations: [
     AccessibilityDemo,
+    MenuAccessibilityDemo,
     AccessibilityHome,
     AutocompleteAccessibilityDemo,
     ButtonAccessibilityDemo,
