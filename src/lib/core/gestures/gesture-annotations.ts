@@ -16,6 +16,7 @@
 export interface HammerInput {
   preventDefault: () => {};
   deltaX: number;
+  direction: number;
   type: string;
   deltaY: number;
   center: { x: number; y: number; };

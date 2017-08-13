@@ -286,15 +286,17 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
       this.selectedIndex = 0;
     }
 
-    let direction = event.deltaX > 0 ? 'right' : 'left';
-    if (this._dir.value === 'rtl') {
-      direction = direction === 'left' ? 'right' : 'left';
-    }
+    if (event.direction === 2 || event.direction === 4) {
+      let direction = event.direction === 4 ? 'right' : 'left';
+      if (this._dir.value === 'rtl') {
+        direction = direction === 'left' ? 'right' : 'left';
+      }
 
-    if (this.selectedIndex !== 0 && direction === 'right') {
-      this._setActiveItemByIndex(this.selectedIndex - 1, -1);
-    } else if (this.selectedIndex < this._tabs.length && direction === 'left') {
-      this._setActiveItemByIndex(this.selectedIndex + 1, 1);
+      if (this.selectedIndex !== 0 && direction === 'right') {
+        this._setActiveItemByIndex(this.selectedIndex - 1, -1);
+      } else if (this.selectedIndex < this._tabs.length && direction === 'left') {
+        this._setActiveItemByIndex(this.selectedIndex + 1, 1);
+      }
     }
   }
 
