@@ -59,6 +59,7 @@ $mat-form-field-underline-height: 1px !default;
   display: block;
   position: relative;
   flex: auto;
+  min-width: 0;
 }
 
 // Pseudo-class for Chrome and Safari auto-fill to move the placeholder to the floating position.

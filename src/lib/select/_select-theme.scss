@@ -60,15 +60,14 @@
 }
 
 @mixin mat-select-typography($config) {
-  $trigger-font-size: mat-font-size($config, subheading-2);
+  // The unit-less line-height from the font config.
+  $line-height: mat-line-height($config, input);
 
   .mat-select {
-    // Reserve enough space for the floating placeholder.
-    padding-top: $trigger-font-size;
     font-family: mat-font-family($config);
   }
 
   .mat-select-trigger {
-    font-size: $trigger-font-size;
+    height: $line-height * 1em;
   }
 }

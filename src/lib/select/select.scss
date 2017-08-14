@@ -4,7 +4,6 @@
 @import '../core/style/vendor-prefixes';
 @import '../../cdk/a11y/a11y';
 
-$mat-select-trigger-height: 30px !default;
 $mat-select-trigger-min-width: 112px !default;
 $mat-select-arrow-size: 5px !default;
 $mat-select-arrow-margin: 4px !default;
@@ -13,12 +12,17 @@ $mat-select-panel-max-height: 256px !default;
 .mat-select {
   display: inline-block;
   outline: none;
+
+  // Inside of a form field we want it to expand to take the available space.
+  .mat-form-field & {
+    display: block;
+    width: 100%;
+  }
 }
 
 .mat-select-trigger {
   display: flex;
   align-items: center;
-  height: $mat-select-trigger-height;
   min-width: $mat-select-trigger-min-width;
   cursor: pointer;
   position: relative;
@@ -31,34 +35,14 @@ $mat-select-panel-max-height: 256px !default;
 }
 
 .mat-select-value {
-  position: absolute;
-  max-width: calc(100% - #{($mat-select-arrow-size + $mat-select-arrow-margin) * 2});
-  flex-grow: 1;
-
-  // Firefox and some versions of IE incorrectly keep absolutely
-  // positioned children of flex containers in the flex flow when calculating
-  // position. This has been fixed for Firefox 52, slated for early 2017.
-  // Bug report: https://bugzilla.mozilla.org/show_bug.cgi?id=874718
-  //
-  // In the meantime, we must adjust the position to fit the top, left, and bottom edge of the
-  // containing trigger element. In doing so, we can use align-items: center to allow the text to
-  // correctly position itself in the middle of the container.
-  top: 0;
-  left: 0;
-  bottom: 0;
-
   display: flex;
+  flex: auto;
   align-items: center;
-
-  [dir='rtl'] & {
-    left: auto;
-    right: 0;
-  }
+  min-width: 0;
 }
 
 .mat-select-value-text {
   @include mat-truncate-line();
-  line-height: $mat-select-trigger-height;
 }
 
 .mat-select-arrow {
