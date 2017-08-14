@@ -1,7 +1,7 @@
 import {inject, async, TestBed} from '@angular/core/testing';
 import {SafeResourceUrl, DomSanitizer} from '@angular/platform-browser';
-import {HttpModule, XHRBackend} from '@angular/http';
-import {MockBackend} from '@angular/http/testing';
+import {HttpClient} from '@angular/common/http';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {Component} from '@angular/core';
 import {MdIconModule} from './index';
 import {MdIconRegistry, getMdIconNoHttpProviderError} from './icon-registry';
@@ -40,17 +40,13 @@ describe('MdIcon', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpModule, MdIconModule],
+      imports: [HttpClientTestingModule, MdIconModule],
       declarations: [
         IconWithColor,
         IconWithLigature,
         IconWithCustomFontCss,
         IconFromSvgName,
         IconWithAriaHiddenFalse,
-      ],
-      providers: [
-        MockBackend,
-        {provide: XHRBackend, useExisting: MockBackend},
       ]
     });
 
@@ -60,19 +56,18 @@ describe('MdIcon', () => {
   let mdIconRegistry: MdIconRegistry;
   let sanitizer: DomSanitizer;
   let httpRequestUrls: string[];
+  let http: HttpClient;
+  let httpMock: HttpTestingController;
 
-  let deps = [MdIconRegistry, MockBackend, DomSanitizer];
-  beforeEach(inject(deps, (mir: MdIconRegistry, mockBackend: MockBackend, ds: DomSanitizer) => {
+  let deps = [MdIconRegistry, HttpClient, HttpTestingController, DomSanitizer];
+  beforeEach(inject(deps, (mir: MdIconRegistry, hc: HttpClient,
+    hm: HttpTestingController, ds: DomSanitizer) => {
     mdIconRegistry = mir;
     sanitizer = ds;
-    // Keep track of requests so we can verify caching behavior.
-    // Return responses for the SVGs defined in fake-svgs.ts.
+    http = hc;
+    httpMock = hm;
+
     httpRequestUrls = [];
-    mockBackend.connections.subscribe((connection: any) => {
-      const url = connection.request.url;
-      httpRequestUrls.push(url);
-      connection.mockRespond(getFakeSvgHttpResponse(url));
-    });
   }));
 
   it('should apply class based on color attribute', () => {
@@ -126,8 +121,10 @@ describe('MdIcon', () => {
 
   describe('Icons from URLs', () => {
     it('should register icon URLs by name', () => {
-      mdIconRegistry.addSvgIcon('fluffy', trust('cat.svg'));
-      mdIconRegistry.addSvgIcon('fido', trust('dog.svg'));
+      addRemoteIcon(...[
+        { name: 'fluffy', url: 'cat.svg', isTrusted: true },
+        { name: 'fido', url: 'dog.svg', isTrusted: true }
+      ]);
 
       let fixture = TestBed.createComponent(IconFromSvgName);
       const testComponent = fixture.componentInstance;
@@ -155,7 +152,7 @@ describe('MdIcon', () => {
     });
 
     it('should throw an error when using an untrusted icon url', () => {
-      mdIconRegistry.addSvgIcon('fluffy', 'farm-set-1.svg');
+      addRemoteIcon({ name: 'fluffy', url: 'farm-set-1.svg', isTrusted: false });
 
       expect(() => {
         let fixture = TestBed.createComponent(IconFromSvgName);
@@ -165,7 +162,7 @@ describe('MdIcon', () => {
     });
 
     it('should throw an error when using an untrusted icon set url', () => {
-      mdIconRegistry.addSvgIconSetInNamespace('farm', 'farm-set-1.svg');
+      addRemoteIconSetInNamespace({ namespace: 'farm', url: 'farm-set-1.svg', isTrusted: false });
 
       expect(() => {
         let fixture = TestBed.createComponent(IconFromSvgName);
@@ -175,7 +172,7 @@ describe('MdIcon', () => {
     });
 
     it('should extract icon from SVG icon set', () => {
-      mdIconRegistry.addSvgIconSetInNamespace('farm', trust('farm-set-1.svg'));
+      addRemoteIconSetInNamespace({ namespace: 'farm', url: 'farm-set-1.svg', isTrusted: true });
 
       let fixture = TestBed.createComponent(IconFromSvgName);
 
@@ -208,9 +205,11 @@ describe('MdIcon', () => {
     });
 
     it('should allow multiple icon sets in a namespace', () => {
-      mdIconRegistry.addSvgIconSetInNamespace('farm', trust('farm-set-1.svg'));
-      mdIconRegistry.addSvgIconSetInNamespace('farm', trust('farm-set-2.svg'));
-      mdIconRegistry.addSvgIconSetInNamespace('arrows', trust('arrow-set.svg'));
+      addRemoteIconSetInNamespace(...[
+        { namespace: 'farm', url: 'farm-set-1.svg', isTrusted: true },
+        { namespace: 'farm', url: 'farm-set-2.svg', isTrusted: true },
+        { namespace: 'arrows', url: 'arrow-set.svg', isTrusted: true }
+      ]);
 
       let fixture = TestBed.createComponent(IconFromSvgName);
 
@@ -249,7 +248,7 @@ describe('MdIcon', () => {
     });
 
     it('should unwrap <symbol> nodes', () => {
-      mdIconRegistry.addSvgIconSetInNamespace('farm', trust('farm-set-3.svg'));
+      addRemoteIconSetInNamespace({ namespace: 'farm', url: 'farm-set-3.svg', isTrusted: true });
 
       const fixture = TestBed.createComponent(IconFromSvgName);
       const testComponent = fixture.componentInstance;
@@ -268,7 +267,7 @@ describe('MdIcon', () => {
     });
 
     it('should not wrap <svg> elements in icon sets in another svg tag', () => {
-      mdIconRegistry.addSvgIconSet(trust('arrow-set.svg'));
+      addRemoteIconSet({ url: 'arrow-set.svg', isTrusted: true });
 
       let fixture = TestBed.createComponent(IconFromSvgName);
 
@@ -285,7 +284,7 @@ describe('MdIcon', () => {
     });
 
     it('should return unmodified copies of icons from icon sets', () => {
-      mdIconRegistry.addSvgIconSet(trust('arrow-set.svg'));
+      addRemoteIconSet({ url: 'arrow-set.svg', isTrusted: true });
 
       let fixture = TestBed.createComponent(IconFromSvgName);
 
@@ -345,10 +344,46 @@ describe('MdIcon', () => {
   function trust(iconUrl: string): SafeResourceUrl {
     return sanitizer.bypassSecurityTrustResourceUrl(iconUrl);
   }
+
+  /** Mocks a request */
+  function mockRequest(url: string) {
+    // Keep track of requests so we can verify caching behavior.
+    httpRequestUrls.push(url);
+    // Return responses for the SVGs defined in fake-svgs.ts.
+    let req = httpMock.expectOne(url);
+    req.flush(getFakeSvgHttpResponse(url));
+  }
+
+  /** Mocks a request to get an svg icon */
+  function addRemoteIcon(...icons: { name: string; url: string; isTrusted: boolean; }[]) {
+    for (let icon of icons) {
+      let { name, url, isTrusted = false } = icon;
+      mdIconRegistry.addSvgIcon(name, isTrusted ? trust(url) : url);
+      mockRequest(url);
+    }
+  }
+
+  /** Mocks a request to get an svg icon set in namespace */
+  function addRemoteIconSetInNamespace(
+    ...icons: { namespace: string; url: string; isTrusted: boolean; }[]) {
+    for (let icon of icons) {
+      let { namespace, url, isTrusted = false } = icon;
+      mdIconRegistry.addSvgIconSetInNamespace(namespace, isTrusted ? trust(url) : url);
+      mockRequest(url);
+    }
+  }
+
+  function addRemoteIconSet(...icons: { url: string; isTrusted: boolean; }[]) {
+    for (let icon of icons) {
+      let { url, isTrusted = false } = icon;
+      mdIconRegistry.addSvgIconSet(isTrusted ? trust(url) : url);
+      mockRequest(url);
+    }
+  }
 });
 
 
-describe('MdIcon without HttpModule', () => {
+describe('MdIcon without HttpClientModule', () => {
   let mdIconRegistry: MdIconRegistry;
   let sanitizer: DomSanitizer;
 

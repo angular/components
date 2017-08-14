@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Http} from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 import {DataSource} from '@angular/cdk/table';
 import {MdPaginator, MdSort} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
@@ -23,7 +23,7 @@ export class TableHttpExample implements OnInit {
   @ViewChild(MdPaginator) paginator: MdPaginator;
   @ViewChild(MdSort) sort: MdSort;
 
-  constructor(private http: Http) {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
     this.exampleDatabase = new ExampleHttpDao(this.http);
@@ -46,15 +46,14 @@ export interface GithubIssue {
 
 /** An example database that the data source uses to retrieve data for the table. */
 export class ExampleHttpDao {
-  constructor(private http: Http) {}
+  constructor(private http: HttpClient) {}
 
   getRepoIssues(sort: string, order: string, page: number): Observable<GithubApi> {
     const href = 'https://api.github.com/search/issues';
     const requestUrl =
       `${href}?q=repo:angular/material2&sort=${sort}&order=${order}&page=${page + 1}`;
 
-    return this.http.get(requestUrl)
-                    .map(response => response.json() as GithubApi);
+    return this.http.get<GithubApi>(requestUrl);
   }
 }
 

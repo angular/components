@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Http} from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 import * as firebase from 'firebase';
 import 'rxjs/add/operator/toPromise';
 
@@ -17,7 +17,7 @@ export class FirebaseService {
   /** The screenshot results */
   screenshotResultSummary: ScreenshotResultSummary;
 
-  constructor(private _http: Http) {
+  constructor(private _http: HttpClient) {
     // Initialize Firebase
     firebase.initializeApp(config.firebase);
 
@@ -157,9 +157,8 @@ export class FirebaseService {
     let url =
       `https://api.github.com/repos/${config.repoSlug}/commits/` +
       `${this.screenshotResultSummary.sha}/status`;
-    return this._http.get(url).toPromise()
-      .then((response) => {
-        let statusResponse = response.json();
+    return this._http.get<{ statuses: any }>(url).toPromise()
+      .then((statusResponse) => {
         let screenshotStatus = statusResponse.statuses.find((status) =>
           status.context === 'Screenshot Tests');
         switch (screenshotStatus && screenshotStatus.state) {

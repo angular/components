@@ -6,8 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Response, ResponseOptions} from '@angular/http';
-
 /**
  * Fake URLs and associated SVG documents used by tests.
  * @docs-private
@@ -64,11 +62,11 @@ const FAKE_SVGS = (() => {
  */
 export function getFakeSvgHttpResponse(url: string) {
   if (FAKE_SVGS.has(url)) {
-    return new Response(new ResponseOptions({
+    return {
       status: 200,
       body: FAKE_SVGS.get(url),
-    }));
+    };
   } else {
-    return new Response(new ResponseOptions({status: 404}));
+    return {status: 404};
   }
 }

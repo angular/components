@@ -14,7 +14,7 @@ System.config({
     '@angular/core': 'node:@angular/core/bundles/core.umd.js',
     '@angular/common': 'node:@angular/common/bundles/common.umd.js',
     '@angular/compiler': 'node:@angular/compiler/bundles/compiler.umd.js',
-    '@angular/http': 'node:@angular/http/bundles/http.umd.js',
+    '@angular/common/http': 'node:@angular/common/bundles/common-http.umd.js',
     '@angular/forms': 'node:@angular/forms/bundles/forms.umd.js',
     '@angular/router': 'node:@angular/router/bundles/router.umd.js',
     '@angular/animations': 'node:@angular/animations/bundles/animations.umd.js',

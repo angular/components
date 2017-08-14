@@ -8,7 +8,7 @@
 
 import {Injectable, SecurityContext, Optional, SkipSelf} from '@angular/core';
 import {SafeResourceUrl, DomSanitizer} from '@angular/platform-browser';
-import {Http} from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {_throw as observableThrow} from 'rxjs/observable/throw';
 import {of as observableOf} from 'rxjs/observable/of';
@@ -27,12 +27,13 @@ export function getMdIconNameNotFoundError(iconName: string): Error {
 
 /**
  * Returns an exception to be thrown when the consumer attempts to use
- * `<md-icon>` without including @angular/http.
+ * `<md-icon>` without including @angular/common/http.
  * @docs-private
  */
 export function getMdIconNoHttpProviderError(): Error {
-  return Error('Could not find Http provider for use with Angular Material icons. ' +
-               'Please include the HttpModule from @angular/http in your app imports.');
+  return Error('Could not find HttpClient provider for use with Angular Material icons. ' +
+               'Please include the HttpClientModule from @angular/common/http ' +
+               'in your app imports.');
 }
 
 
@@ -91,7 +92,7 @@ export class MdIconRegistry {
    */
   private _defaultFontSetClass = 'material-icons';
 
-  constructor(@Optional() private _http: Http, private _sanitizer: DomSanitizer) {}
+  constructor(@Optional() private _http: HttpClient, private _sanitizer: DomSanitizer) {}
 
   /**
    * Registers an icon by URL in the default namespace.
@@ -462,8 +463,7 @@ export class MdIconRegistry {
 
     // TODO(jelbourn): for some reason, the `finally` operator "loses" the generic type on the
     // Observable. Figure out why and fix it.
-    const req = RxChain.from(this._http.get(url))
-      .call(map, response => response.text())
+    const req = RxChain.from(this._http.get(url, { responseType: 'text' }))
       .call(finallyOperator, () => this._inProgressUrlFetches.delete(url))
       .call(share)
       .result();
@@ -475,7 +475,7 @@ export class MdIconRegistry {
 
 /** @docs-private */
 export function ICON_REGISTRY_PROVIDER_FACTORY(
-    parentRegistry: MdIconRegistry, http: Http, sanitizer: DomSanitizer) {
+    parentRegistry: MdIconRegistry, http: HttpClient, sanitizer: DomSanitizer) {
   return parentRegistry || new MdIconRegistry(http, sanitizer);
 }
 
@@ -483,7 +483,11 @@ export function ICON_REGISTRY_PROVIDER_FACTORY(
 export const ICON_REGISTRY_PROVIDER = {
   // If there is already an MdIconRegistry available, use that. Otherwise, provide a new one.
   provide: MdIconRegistry,
-  deps: [[new Optional(), new SkipSelf(), MdIconRegistry], [new Optional(), Http], DomSanitizer],
+  deps: [
+    [new Optional(), new SkipSelf(), MdIconRegistry],
+    [new Optional(), HttpClient],
+    DomSanitizer
+  ],
   useFactory: ICON_REGISTRY_PROVIDER_FACTORY
 };
 
