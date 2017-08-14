@@ -32,7 +32,8 @@ import {
   MdTabsModule,
   MdToolbarModule,
   MdTooltipModule,
-  StyleModule
+  StyleModule,
+  MdStepperModule,
 } from '@angular/material';
 import {CdkTableModule} from '@angular/cdk/table';
 
@@ -69,6 +70,7 @@ import {CdkTableModule} from '@angular/cdk/table';
     MdSliderModule,
     MdSnackBarModule,
     MdSortModule,
+    MdStepperModule,
     MdTabsModule,
     MdToolbarModule,
     MdTooltipModule,
