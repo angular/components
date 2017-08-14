@@ -6,8 +6,12 @@
        [tabIndex]="_focusIndex == i ? 0 : -1"
        (click)="step.select()"
        (keydown)="_onKeydown($event)">
-    <div class="mat-stepper-index">
+    <div class="mat-stepper-index-new" *ngIf="!step.completed || selectedIndex == i">
       {{i + 1}}
+    </div>
+    <div class="mat-stepper-index-interacted" *ngIf="step.completed && selectedIndex != i">
+      <md-icon *ngIf="!step.editable">done</md-icon>
+      <md-icon *ngIf="step.editable">create</md-icon>
     </div>
 
     <div class="mat-stepper-label">

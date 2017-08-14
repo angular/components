@@ -77,6 +77,21 @@ export class CdkStep {
   @Input()
   label: string;
 
+  @Input()
+  get editable() { return this._editable; }
+  set editable(value: any) {
+    this._editable = coerceBooleanProperty(value);
+  }
+  private _editable = true;
+
+  get completed() {
+    if (this._stepControl instanceof AbstractControl) {
+      return this._stepControl.valid && this.interacted;
+    } else {
+      return this.interacted;
+    }
+  }
+
   constructor(private _stepper: CdkStepper) { }
 
   /** Selects this step component. */
@@ -109,6 +124,7 @@ export class CdkStepper {
   @Input()
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
+    if (index < this._selectedIndex && !this._steps.toArray()[index].editable) { return; }
     if (this._selectedIndex != index && !this._anyControlsInvalid(index)) {
       this._emitStepperSelectionEvent(index);
       this._focusStep(this._selectedIndex);

@@ -13,7 +13,8 @@
       color: mat-color($foreground, text);
     }
 
-    .mat-stepper-index {
+    .mat-stepper-index-interacted,
+    .mat-stepper-index-new {
       background-color: mat-color($primary);
       color: mat-color($primary, default-contrast);
     }
@@ -23,7 +24,7 @@
         color: mat-color($foreground, disabled-text);
       }
 
-      .mat-stepper-index {
+      .mat-stepper-index-new {
         background-color: mat-color($foreground, disabled-text);
       }
     }

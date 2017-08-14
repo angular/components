@@ -10,6 +10,7 @@ import {Validators, FormBuilder, FormGroup} from '@angular/forms';
 export class StepperDemo {
   formGroup: FormGroup;
   isNonLinear = false;
+  isNonEditable = false;
 
   steps = [
     {label: 'Confirm your name', content: 'Last name, First name.'},

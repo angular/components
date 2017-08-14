@@ -26,7 +26,8 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
   min-width: $mat-stepper-label-min-width;
 }
 
-.mat-stepper-index {
+.mat-stepper-index-new,
+.mat-stepper-index-interacted {
   border-radius: 50%;
   height: $mat-label-header-height;
   width: $mat-label-header-height;
@@ -47,7 +48,8 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
   align-items: center;
   outline: none;
 
-  .mat-stepper-index {
+  .mat-stepper-index-new,
+  .mat-stepper-index-interacted {
     margin-right: $mat-connector-line-gap;
     display: inline-block;
     flex: none;
@@ -60,7 +62,8 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
   margin: $mat-connector-line-gap 0;
   outline: none;
 
-  .mat-stepper-index {
+  .mat-stepper-index-new,
+  .mat-stepper-index-interacted {
     margin-right: $mat-vertical-stepper-content-margin;
   }
 }
