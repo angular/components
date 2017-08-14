@@ -9,10 +9,6 @@
   .mat-select-trigger, .mat-select-arrow {
     color: $color;
   }
-
-  .mat-select-underline {
-    background-color: $color;
-  }
 }
 
 @mixin mat-select-theme($theme) {
@@ -22,20 +18,10 @@
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
   $is-dark-theme: map-get($theme, is-dark);
-  $underline-color: mat-color($foreground, divider, if($is-dark-theme, 0.7, 0.42));
 
   .mat-select-trigger,
   .mat-select-arrow {
     color: mat-color($foreground, secondary-text);
-  }
-
-  .mat-select-underline {
-    background-color: $underline-color;
-  }
-
-  [aria-disabled='true'] .mat-select-underline {
-    // Since this is a dotted line, we need to make it slightly darker to get it to stand out.
-    @include mat-control-disabled-underline($underline-color);
   }
 
   .mat-select-disabled .mat-select-value,
@@ -65,10 +51,6 @@
 
     &.mat-accent {
       @include _mat-select-inner-content-theme($accent);
-    }
-
-    &.mat-select-required .mat-select-placeholder::after {
-      color: mat-color($warn);
     }
   }
 

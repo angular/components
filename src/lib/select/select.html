@@ -1,26 +1,18 @@
 <div
-  cdk-overlay-origin
-  class="mat-select-trigger"
-  aria-hidden="true"
-  (click)="toggle()"
-  #origin="cdkOverlayOrigin"
-  #trigger>
-  <span
-    class="mat-select-placeholder"
-    [class.mat-floating-placeholder]="_hasValue()"
-    [@transformPlaceholder]="_getPlaceholderAnimationState()"
-    [style.opacity]="_getPlaceholderOpacity()"
-    [style.width.px]="_selectedValueWidth">{{ placeholder }}</span>
-
-  <span class="mat-select-value" *ngIf="_hasValue()">
-    <span class="mat-select-value-text" [ngSwitch]="!!customTrigger">
+    cdk-overlay-origin
+    class="mat-select-trigger"
+    aria-hidden="true"
+    (click)="toggle()"
+    #origin="cdkOverlayOrigin"
+    #trigger>
+  <span class="mat-select-value">
+    <span class="mat-select-value-text" *ngIf="!empty" [ngSwitch]="!!customTrigger">
       <span *ngSwitchDefault>{{ triggerValue }}</span>
       <ng-content select="md-select-trigger, mat-select-trigger" *ngSwitchCase="true"></ng-content>
     </span>
   </span>
 
   <span class="mat-select-arrow"></span>
-  <span class="mat-select-underline"></span>
 </div>
 
 <ng-template

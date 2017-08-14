@@ -952,7 +952,7 @@ describe('MdSelect', () => {
       spyOn(fixture.componentInstance.customAccessor, 'writeValue');
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.customAccessor.select._control)
+      expect(fixture.componentInstance.customAccessor.select.ngControl)
           .toBe(null, 'Expected md-select NOT to inherit control from parent value accessor.');
       expect(fixture.componentInstance.customAccessor.writeValue).toHaveBeenCalled();
     });

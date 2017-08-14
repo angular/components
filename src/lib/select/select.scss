@@ -9,7 +9,6 @@ $mat-select-trigger-min-width: 112px !default;
 $mat-select-arrow-size: 5px !default;
 $mat-select-arrow-margin: 4px !default;
 $mat-select-panel-max-height: 256px !default;
-$mat-select-trigger-underline-height: 1px !default;
 
 .mat-select {
   display: inline-block;
@@ -28,55 +27,6 @@ $mat-select-trigger-underline-height: 1px !default;
   .mat-select-disabled & {
     @include user-select(none);
     cursor: default;
-  }
-}
-
-.mat-select-underline {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: $mat-select-trigger-underline-height;
-
-  .mat-select:focus & {
-    height: $mat-select-trigger-underline-height * 2;
-  }
-
-  .mat-select-disabled & {
-    background-color: transparent;
-    background-position: 0 bottom;
-  }
-}
-
-.mat-select-placeholder {
-  position: relative;
-  padding: 0 2px;
-  transform-origin: left top;
-  flex-grow: 1;
-
-  // These values are duplicated from animation code in order to
-  // allow placeholders to sometimes float without animating,
-  // for example when the value is set programmatically.
-  // TODO(kara): Change when animations API supports skipping animation.
-  &.mat-floating-placeholder {
-    top: -22px;
-    left: -2px;
-    text-align: left;
-    transform: scale(0.75);
-  }
-
-  [dir='rtl'] & {
-    transform-origin: right top;
-
-    &.mat-floating-placeholder {
-      left: 2px;
-      text-align: right;
-    }
-  }
-
-  // TODO: Double-check accessibility of this style
-  .mat-select-required &::after {
-    content: ' *';
   }
 }
 

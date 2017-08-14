@@ -49,19 +49,18 @@ import {ControlValueAccessor, FormGroupDirective, NgControl, NgForm} from '@angu
 import {
   CanColor,
   CanDisable,
-  FloatPlaceholderType,
   HasTabIndex,
-  MD_PLACEHOLDER_GLOBAL_OPTIONS,
   MdOptgroup,
   MdOption,
   MdOptionSelectionChange,
   mixinColor,
   mixinDisabled,
   mixinTabIndex,
-  PlaceholderOptions,
 } from '@angular/material/core';
+import {MdFormFieldControl} from '@angular/material/form-field';
 import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
+import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {fadeInContent, transformPanel, transformPlaceholder} from './select-animations';
 import {
@@ -69,6 +68,9 @@ import {
   getMdSelectNonArrayValueError,
   getMdSelectNonFunctionValueError,
 } from './select-errors';
+
+
+let nextUniqueId = 0;
 
 /**
  * The following style constants are necessary to save here in order
@@ -182,30 +184,31 @@ export class MdSelectTrigger {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'role': 'listbox',
+    '[attr.id]': 'id',
     '[attr.tabindex]': 'tabIndex',
     '[attr.aria-label]': '_ariaLabel',
     '[attr.aria-labelledby]': 'ariaLabelledby',
     '[attr.aria-required]': 'required.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
-    '[attr.aria-invalid]': '_isErrorState()',
+    '[attr.aria-invalid]': 'errorState',
     '[attr.aria-owns]': '_optionIds',
     '[attr.aria-multiselectable]': 'multiple',
     '[class.mat-select-disabled]': 'disabled',
-    '[class.mat-select-invalid]': '_isErrorState()',
+    '[class.mat-select-invalid]': 'errorState',
     '[class.mat-select-required]': 'required',
     'class': 'mat-select',
     '(keydown)': '_handleClosedKeydown($event)',
     '(blur)': '_onBlur()',
   },
   animations: [
-    transformPlaceholder,
     transformPanel,
     fadeInContent
   ],
+  providers: [{provide: MdFormFieldControl, useExisting: MdSelect}],
   exportAs: 'mdSelect, matSelect',
 })
 export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, OnDestroy, OnInit,
-    ControlValueAccessor, CanColor, CanDisable, HasTabIndex {
+    ControlValueAccessor, CanColor, CanDisable, HasTabIndex, MdFormFieldControl<any> {
   /** Whether or not the overlay panel is open. */
   private _panelOpen = false;
 
@@ -233,14 +236,11 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Comparison function to specify which option is displayed. Defaults to object equality. */
   private _compareWith = (o1: any, o2: any) => o1 === o2;
 
+  /** Unique id for this input. */
+  private _uid = `mat-select-${nextUniqueId++}`;
+
   /** Deals with the selection logic. */
   _selectionModel: SelectionModel<MdOption>;
-
-  /** The animation state of the placeholder. */
-  private _placeholderState = '';
-
-  /** Deals with configuring placeholder options */
-  private _placeholderOptions: PlaceholderOptions;
 
   /**
    * The width of the trigger. Must be saved to set the min width of the overlay panel
@@ -250,12 +250,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Manages keyboard events for options in the panel. */
   _keyManager: FocusKeyManager<MdOption>;
-
-  /**
-   * The width of the selected option's value. Must be set programmatically
-   * to ensure its overflow is clipped, as it's absolutely positioned.
-   */
-  _selectedValueWidth: number;
 
   /** View -> model callback called when value changes */
   _onChange: (value: any) => void = () => {};
@@ -302,6 +296,19 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       overlayY: 'bottom',
     },
   ];
+
+  /**
+   * Stream that emits whenever the state of the select changes such that the wrapping `MdFormField`
+   * needs to run change detection.
+   * TODO(mmalerba): Call emit at appropriate times.
+   */
+  stateChanges = new Subject<void>();
+
+  /** Whether the select is focused. TODO(mmalerba): Implement for real. */
+  focused = false;
+
+  /** TODO(mmalerba): Implement for real. */
+  setDescribedByIds(x: string[]) {return x}
 
   /** Trigger that opens the select. */
   @ViewChild('trigger') trigger: ElementRef;
@@ -365,14 +372,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     }
   }
 
-  /** Whether to float the placeholder text. */
-  @Input()
-  get floatPlaceholder(): FloatPlaceholderType { return this._floatPlaceholder; }
-  set floatPlaceholder(value: FloatPlaceholderType) {
-    this._floatPlaceholder = value || this._placeholderOptions.float || 'auto';
-  }
-  private _floatPlaceholder: FloatPlaceholderType;
-
   /** Value of the select control. */
   @Input()
   get value() { return this._value; }
@@ -396,6 +395,12 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Input that can be used to specify the `aria-labelledby` attribute. */
   @Input('aria-labelledby') ariaLabelledby: string = '';
+
+  /** Unique id of the element. */
+  @Input()
+  get id() { return this._id; }
+  set id(value: string) { this._id = value || this._uid; }
+  private _id: string;
 
   /** Combined stream of all of the child options' change events. */
   get optionSelectionChanges(): Observable<MdOptionSelectionChange> {
@@ -427,20 +432,20 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     @Optional() private _dir: Directionality,
     @Optional() private _parentForm: NgForm,
     @Optional() private _parentFormGroup: FormGroupDirective,
-    @Self() @Optional() public _control: NgControl,
+    @Self() @Optional() public ngControl: NgControl,
     @Attribute('tabindex') tabIndex: string,
-    @Optional() @Inject(MD_PLACEHOLDER_GLOBAL_OPTIONS) placeholderOptions: PlaceholderOptions,
     @Inject(MD_SELECT_SCROLL_STRATEGY) private _scrollStrategyFactory) {
 
     super(renderer, elementRef);
 
-    if (this._control) {
-      this._control.valueAccessor = this;
+    if (this.ngControl) {
+      this.ngControl.valueAccessor = this;
     }
 
     this.tabIndex = parseInt(tabIndex) || 0;
-    this._placeholderOptions = placeholderOptions ? placeholderOptions : {};
-    this.floatPlaceholder = this._placeholderOptions.float || 'auto';
+
+    // Force setter to be called in case id was not specified.
+    this.id = this.id;
   }
 
   ngOnInit() {
@@ -478,7 +483,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     }
 
     this._calculateOverlayPosition();
-    this._placeholderState = this._floatPlaceholderState();
     this._panelOpen = true;
     this._changeDetectorRef.markForCheck();
   }
@@ -487,11 +491,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   close(): void {
     if (this._panelOpen) {
       this._panelOpen = false;
-
-      if (this._selectionModel.isEmpty()) {
-        this._placeholderState = '';
-      }
-
       this._changeDetectorRef.markForCheck();
       this.focus();
     }
@@ -656,14 +655,14 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   }
 
   /** Whether the select has a value. */
-  _hasValue(): boolean {
-    return this._selectionModel && this._selectionModel.hasValue();
+  get empty(): boolean {
+    return this._selectionModel && this._selectionModel.isEmpty();
   }
 
   /** Whether the select is in an error state. */
-  _isErrorState(): boolean {
-    const isInvalid = this._control && this._control.invalid;
-    const isTouched = this._control && this._control.touched;
+  get errorState(): boolean {
+    const isInvalid = this.ngControl && this.ngControl.invalid;
+    const isTouched = this.ngControl && this.ngControl.touched;
     const isSubmitted = (this._parentFormGroup && this._parentFormGroup.submitted) ||
         (this._parentForm && this._parentForm.submitted);
 
@@ -713,12 +712,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       if (correspondingOption) {
         this._keyManager.setActiveItem(this.options.toArray().indexOf(correspondingOption));
       }
-    }
-
-    this._setValueWidth();
-
-    if (this._selectionModel.isEmpty()) {
-      this._placeholderState = '';
     }
 
     this._changeDetectorRef.markForCheck();
@@ -788,7 +781,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     this._optionSubscription = filter.call(this.optionSelectionChanges,
       event => event.isUserInput).subscribe(event => {
         this._onSelect(event.source);
-        this._setValueWidth();
 
         if (!this.multiple) {
           this.close();
@@ -880,15 +872,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       this.options.forEach(option => option.disableRipple = this.disableRipple);
     }
   }
-  /**
-   * Must set the width of the selected option's value programmatically
-   * because it is absolutely positioned and otherwise will not clip
-   * overflow. The selection arrow is 9px wide, add 4px of padding = 13
-   */
-  private _setValueWidth() {
-    this._selectedValueWidth = this._triggerWidth - 13;
-    this._changeDetectorRef.markForCheck();
-  }
 
   /**
    * Focuses the selected item. If no option is selected, it will focus
@@ -923,7 +906,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     // The farthest the panel can be scrolled before it hits the bottom
     const maxScroll = scrollContainerHeight - panelHeight;
 
-    if (this._hasValue()) {
+    if (!this.empty) {
       let selectedOptionOffset = this._getOptionIndex(this._selectionModel.selected[0])!;
 
       selectedOptionOffset += MdOption.countGroupLabelsBeforeOption(selectedOptionOffset,
@@ -966,28 +949,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     // scrollTop so the option is centered based on its middle, not its top edge.
     const optimalScrollPosition = optionOffsetFromScrollTop - scrollBuffer + halfOptionHeight;
     return clampValue(0, optimalScrollPosition, maxScroll);
-  }
-
-  /**
-   * Figures out the appropriate animation state for the placeholder.
-   */
-  _getPlaceholderAnimationState(): string {
-    if (this.floatPlaceholder === 'never') {
-      return '';
-    }
-
-    if (this.floatPlaceholder === 'always') {
-      return this._floatPlaceholderState();
-    }
-
-    return this._placeholderState;
-  }
-
-  /**
-   * Determines the CSS `opacity` of the placeholder element.
-   */
-  _getPlaceholderOpacity(): string {
-    return (this.floatPlaceholder !== 'never' || this._selectionModel.isEmpty()) ? '1' : '0';
   }
 
   /** Returns the aria-label of the select component. */
@@ -1152,11 +1113,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     const originY =
         Math.abs(this._offsetY) - SELECT_OPTION_HEIGHT_ADJUSTMENT + SELECT_ITEM_HEIGHT / 2;
     return `50% ${originY}px 0px`;
-  }
-
-  /** Figures out the floating placeholder state value. */
-  private _floatPlaceholderState(): string {
-    return this._isRtl() ? 'floating-rtl' : 'floating-ltr';
   }
 
   /** Handles the user pressing the arrow keys on a closed select.  */

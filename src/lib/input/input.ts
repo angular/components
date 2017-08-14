@@ -55,7 +55,7 @@ let nextUniqueId = 0;
     'class': 'mat-input-element mat-form-field-autofill-control',
     // Native input properties that are overwritten by Angular inputs need to be synced with
     // the native input element. Otherwise property bindings for those don't work.
-    '[id]': 'id',
+    '[attr.id]': 'id',
     '[placeholder]': 'placeholder',
     '[disabled]': 'disabled',
     '[required]': 'required',
