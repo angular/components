@@ -951,10 +951,10 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   }
 
   /**
-   * Determines the CSS `opacity` of the placeholder element.
+   * Determines whether the select's placeholder should be visible.
    */
-  _getPlaceholderOpacity(): string {
-    return (this.floatPlaceholder !== 'never' || this._selectionModel.isEmpty()) ? '1' : '0';
+  _getPlaceholderVisibility(): boolean {
+    return this.floatPlaceholder === 'never' && this._selectionModel.hasValue();
   }
 
   /** Returns the aria-label of the select component. */
