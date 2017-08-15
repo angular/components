@@ -48,7 +48,7 @@ export class AccessibilityRoutingModule {}
     GridListAccessibilityDemo,
     InputAccessibilityDemo,
     RadioAccessibilityDemo,
-    ToolbarAccessibilityDemo
+    ToolbarAccessibilityDemo,
     SliderAccessibilityDemo,
   ]
 })
