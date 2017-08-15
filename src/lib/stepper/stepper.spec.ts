@@ -9,6 +9,7 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {MdStepperNext, MdStepperPrevious} from './stepper-button';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
+import {MdStepper} from './stepper';
 
 describe('MdHorizontalStepper', () => {
   beforeEach(async(() => {
@@ -26,7 +27,6 @@ describe('MdHorizontalStepper', () => {
   describe('basic horizontal stepper', () => {
     let fixture: ComponentFixture<SimpleMdHorizontalStepperApp>;
     let stepperComponent: MdHorizontalStepper;
-    let stepperEl: HTMLElement;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleMdHorizontalStepperApp);
@@ -43,11 +43,10 @@ describe('MdHorizontalStepper', () => {
     it('should change selected index on header click', () => {
       let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
       checkSelectionChangeOnHeaderClick(stepperComponent, fixture, stepHeaders);
-
     });
 
     it('should set the "tablist" role on stepper', () => {
-      stepperEl = fixture.debugElement.query(By.css('md-horizontal-stepper')).nativeElement;
+      let stepperEl = fixture.debugElement.query(By.css('md-horizontal-stepper')).nativeElement;
       expect(stepperEl.getAttribute('role')).toBe('tablist');
     });
 
@@ -125,7 +124,6 @@ describe('MdVerticalStepper', () => {
   describe('basic vertical stepper', () => {
     let fixture: ComponentFixture<SimpleMdVerticalStepperApp>;
     let stepperComponent: MdVerticalStepper;
-    let stepperEl: HTMLElement;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleMdVerticalStepperApp);
@@ -146,7 +144,7 @@ describe('MdVerticalStepper', () => {
     });
 
     it('should set the "tablist" role on stepper', () => {
-      stepperEl = fixture.debugElement.query(By.css('md-vertical-stepper')).nativeElement;
+      let stepperEl = fixture.debugElement.query(By.css('md-vertical-stepper')).nativeElement;
       expect(stepperEl.getAttribute('role')).toBe('tablist');
     });
 
@@ -209,8 +207,7 @@ describe('MdVerticalStepper', () => {
   });
 });
 
-function checkSelectionChangeOnHeaderClick(stepperComponent:
-                                               MdHorizontalStepper | MdVerticalStepper,
+function checkSelectionChangeOnHeaderClick(stepperComponent: MdStepper,
                                            fixture: ComponentFixture<any>,
                                            stepHeaders: DebugElement[]) {
   expect(stepperComponent.selectedIndex).toBe(0);
@@ -230,7 +227,7 @@ function checkSelectionChangeOnHeaderClick(stepperComponent:
   expect(stepperComponent.selectedIndex).toBe(2);
 }
 
-function checkExpandedContent(stepperComponent: MdHorizontalStepper | MdVerticalStepper,
+function checkExpandedContent(stepperComponent: MdStepper,
                               fixture: ComponentFixture<any>,
                               stepContents: DebugElement[]) {
   let firstStepContentEl = stepContents[0].nativeElement;
@@ -244,8 +241,7 @@ function checkExpandedContent(stepperComponent: MdHorizontalStepper | MdVertical
   expect(secondStepContentEl.getAttribute('aria-expanded')).toBe('true');
 }
 
-function checkCorrectLabel(stepperComponent: MdHorizontalStepper | MdVerticalStepper,
-                           fixture: ComponentFixture<any>) {
+function checkCorrectLabel(stepperComponent: MdStepper, fixture: ComponentFixture<any>) {
   let selectedLabel = fixture.nativeElement.querySelector('[aria-selected="true"]');
   expect(selectedLabel.textContent).toMatch('Step 1');
 
@@ -262,8 +258,7 @@ function checkCorrectLabel(stepperComponent: MdHorizontalStepper | MdVerticalSte
   expect(selectedLabel.textContent).toMatch('New Label');
 }
 
-function checkNextStepperButton(stepperComponent: MdHorizontalStepper | MdVerticalStepper,
-                                fixture: ComponentFixture<any>) {
+function checkNextStepperButton(stepperComponent: MdStepper, fixture: ComponentFixture<any>) {
   expect(stepperComponent.selectedIndex).toBe(0);
 
   let nextButtonNativeEl = fixture.debugElement
@@ -288,8 +283,7 @@ function checkNextStepperButton(stepperComponent: MdHorizontalStepper | MdVertic
   expect(stepperComponent.selectedIndex).toBe(2);
 }
 
-function checkPreviousStepperButton(stepperComponent: MdHorizontalStepper | MdVerticalStepper,
-                                    fixture: ComponentFixture<any>) {
+function checkPreviousStepperButton(stepperComponent: MdStepper, fixture: ComponentFixture<any>) {
   expect(stepperComponent.selectedIndex).toBe(0);
 
   stepperComponent.selectedIndex = 2;
@@ -315,8 +309,7 @@ function checkPreviousStepperButton(stepperComponent: MdHorizontalStepper | MdVe
   expect(stepperComponent.selectedIndex).toBe(0);
 }
 
-function checkStepPosition(stepperComponent: MdHorizontalStepper | MdVerticalStepper,
-                           fixture: ComponentFixture<any>) {
+function checkStepPosition(stepperComponent: MdStepper, fixture: ComponentFixture<any>) {
   expect(stepperComponent._getAnimationDirection(0)).toBe('current');
   expect(stepperComponent._getAnimationDirection(1)).toBe('next');
   expect(stepperComponent._getAnimationDirection(2)).toBe('next');
@@ -336,7 +329,7 @@ function checkStepPosition(stepperComponent: MdHorizontalStepper | MdVerticalSte
   expect(stepperComponent._getAnimationDirection(2)).toBe('current');
 }
 
-function checkKeyboardEvent(stepperComponent: MdHorizontalStepper | MdVerticalStepper,
+function checkKeyboardEvent(stepperComponent: MdStepper,
                             fixture: ComponentFixture<any>,
                             stepHeaders: DebugElement[]) {
   expect(stepperComponent._focusIndex).toBe(0);
@@ -395,7 +388,7 @@ function checkKeyboardEvent(stepperComponent: MdHorizontalStepper | MdVerticalSt
 }
 
 function checkLinearStepperValidity(stepHeaderEl: HTMLElement,
-                                    stepperComponent: MdHorizontalStepper | MdVerticalStepper,
+                                    stepperComponent: MdStepper,
                                     testComponent:
                                         LinearMdHorizontalStepperApp | LinearMdVerticalStepperApp,
                                     fixture: ComponentFixture<any>) {
@@ -458,9 +451,9 @@ class SimpleMdHorizontalStepperApp {
       <md-step [stepControl]="oneGroup">
         <form [formGroup]="oneGroup">
           <ng-template mdStepLabel>Step one</ng-template>
-          <md-input-container>
+          <md-form-field>
             <input mdInput formControlName="oneCtrl" required>
-          </md-input-container>
+          </md-form-field>
           <div>
             <button md-button mdStepperPrevious>Back</button>
             <button md-button mdStepperNext>Next</button>
@@ -470,9 +463,9 @@ class SimpleMdHorizontalStepperApp {
       <md-step [stepControl]="twoGroup">
         <form [formGroup]="twoGroup">
           <ng-template mdStepLabel>Step two</ng-template>
-          <md-input-container>
+          <md-form-field>
             <input mdInput formControlName="twoCtrl" required>
-          </md-input-container>
+          </md-form-field>
           <div>
             <button md-button mdStepperPrevious>Back</button>
             <button md-button mdStepperNext>Next</button>
@@ -535,9 +528,9 @@ class SimpleMdVerticalStepperApp {
       <md-step [stepControl]="oneGroup">
         <form [formGroup]="oneGroup">
           <ng-template mdStepLabel>Step one</ng-template>
-          <md-input-container>
+          <md-form-field>
             <input mdInput formControlName="oneCtrl" required>
-          </md-input-container>
+          </md-form-field>
           <div>
             <button md-button mdStepperPrevious>Back</button>
             <button md-button mdStepperNext>Next</button>
@@ -547,9 +540,9 @@ class SimpleMdVerticalStepperApp {
       <md-step [stepControl]="twoGroup">
         <form [formGroup]="twoGroup">
           <ng-template mdStepLabel>Step two</ng-template>
-          <md-input-container>
+          <md-form-field>
             <input mdInput formControlName="twoCtrl" required>
-          </md-input-container>
+          </md-form-field>
           <div>
             <button md-button mdStepperPrevious>Back</button>
             <button md-button mdStepperNext>Next</button>
