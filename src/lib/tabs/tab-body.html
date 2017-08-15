@@ -1,3 +1,4 @@
+<!-- touch-action workaround for https://github.com/angular/material2/issues/6484 -->
 <div class="mat-tab-body-content" #content
      (swipe)="onSwipe.emit($event)"
      [style.touch-action]="'pan-y'"
