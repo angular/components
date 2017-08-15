@@ -9,21 +9,24 @@
 
   .mat-horizontal-stepper-header, .mat-vertical-stepper-header {
 
-    .mat-stepper-label {
+    .mat-stepper-label-active {
       color: mat-color($foreground, text);
     }
 
-    .mat-stepper-index {
+    .mat-stepper-label-inactive,
+    .mat-step-optional {
+      color: mat-color($foreground, disabled-text);
+    }
+
+    .mat-stepper-index-interacted,
+    .mat-stepper-index-new {
       background-color: mat-color($primary);
       color: mat-color($primary, default-contrast);
     }
 
     &[aria-selected='false'] {
-      .mat-stepper-label {
-        color: mat-color($foreground, disabled-text);
-      }
 
-      .mat-stepper-index {
+      .mat-stepper-index-new {
         background-color: mat-color($foreground, disabled-text);
       }
     }
