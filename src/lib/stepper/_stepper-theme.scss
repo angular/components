@@ -9,8 +9,12 @@
 
   .mat-horizontal-stepper-header, .mat-vertical-stepper-header {
 
-    .mat-stepper-label {
+    .mat-stepper-label-active {
       color: mat-color($foreground, text);
+    }
+
+    .mat-stepper-label-inactive {
+      color: mat-color($foreground, disabled-text);
     }
 
     .mat-stepper-index-interacted,
@@ -19,10 +23,11 @@
       color: mat-color($primary, default-contrast);
     }
 
+    .mat-step-optional {
+      color: mat-color($foreground, disabled-text);
+    }
+
     &[aria-selected='false'] {
-      .mat-stepper-label {
-        color: mat-color($foreground, disabled-text);
-      }
 
       .mat-stepper-index-new {
         background-color: mat-color($foreground, disabled-text);

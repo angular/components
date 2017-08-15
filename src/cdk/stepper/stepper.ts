@@ -77,6 +77,7 @@ export class CdkStep {
   @Input()
   label: string;
 
+  /** Whether user is able to return later to edit step. */
   @Input()
   get editable() { return this._editable; }
   set editable(value: any) {
@@ -84,6 +85,15 @@ export class CdkStep {
   }
   private _editable = true;
 
+  /** Whether the completion of step is optional or not. */
+  @Input()
+  get optional() { return this._optional; }
+  set optional(value: any) {
+    this._optional = coerceBooleanProperty(value);
+  }
+  private _optional = false;
+
+  /** Return whether step is completed or not. */
   get completed() {
     if (this._stepControl instanceof AbstractControl) {
       return this._stepControl.valid && this.interacted;
@@ -225,7 +235,7 @@ export class CdkStepper {
     stepsArray[this._selectedIndex].interacted = true;
     if (this._linear) {
       for (let i = 0; i < index; i++) {
-        if (!stepsArray[i].stepControl.valid) {
+        if (stepsArray[i].stepControl.invalid && !stepsArray[i].optional) {
           return true;
         }
       }

@@ -32,7 +32,7 @@ export class StepperDemo {
           lastNameFormCtrl: ['', Validators.required],
         }),
         this._formBuilder.group({
-          phoneFormCtrl: [''],
+          phoneFormCtrl: ['', Validators.required],
         })
       ])
     });

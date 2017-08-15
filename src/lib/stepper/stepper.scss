@@ -11,19 +11,22 @@ $mat-connector-line-width: 1px !default;
 $mat-connector-line-gap: 8px !default;
 $mat-horizontal-connector-line-size: 5% !default;
 $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-gap !default;
+$mat-step-optional-label-font-size: 12px;
 
 :host {
   display: block;
   padding: 0 $mat-stepper-side-gap $mat-stepper-side-gap $mat-stepper-side-gap;
 }
 
-.mat-stepper-label {
-  display: inline-flex;
+.mat-stepper-label-active,
+.mat-stepper-label-inactive {
+  display: inline-block;
   white-space: nowrap;
   overflow: hidden;
   // TODO(jwshin): text-overflow does not work as expected.
   text-overflow: ellipsis;
   min-width: $mat-stepper-label-min-width;
+  vertical-align: middle;
 }
 
 .mat-stepper-index-new,
@@ -33,6 +36,7 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
   width: $mat-label-header-height;
   text-align: center;
   line-height: $mat-label-header-height;
+  display: inline-block;
 }
 
 .mat-horizontal-stepper-header-container {
@@ -42,8 +46,8 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
 }
 
 .mat-horizontal-stepper-header {
-  display: inline-flex;
-  line-height: $mat-horizontal-stepper-header-height;
+  display: flex;
+  height: $mat-horizontal-stepper-header-height;
   overflow: hidden;
   align-items: center;
   outline: none;
@@ -51,7 +55,6 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
   .mat-stepper-index-new,
   .mat-stepper-index-interacted {
     margin-right: $mat-connector-line-gap;
-    display: inline-block;
     flex: none;
   }
 }
@@ -61,11 +64,16 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
   align-items: center;
   margin: $mat-connector-line-gap 0;
   outline: none;
+  max-height: $mat-label-header-height;
 
   .mat-stepper-index-new,
   .mat-stepper-index-interacted {
     margin-right: $mat-vertical-stepper-content-margin;
   }
+}
+
+.mat-step-optional {
+  font-size: $mat-step-optional-label-font-size;
 }
 
 .mat-connector-line {

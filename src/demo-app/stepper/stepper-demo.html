@@ -18,12 +18,12 @@
       </div>
     </md-step>
 
-    <md-step formGroupName="1" [stepControl]="formArray.get([1])">
+    <md-step formGroupName="1" [stepControl]="formArray.get([1])" [optional]="true">
       <ng-template mdStepLabel>
         <div>Fill out your phone number</div>
       </ng-template>
       <md-input-container>
-        <input mdInput placeholder="Phone number" formControlName="phoneFormCtrl">
+        <input mdInput placeholder="Phone number" formControlName="phoneFormCtrl" required>
         <md-error>This field is required</md-error>
       </md-input-container>
       <div>
