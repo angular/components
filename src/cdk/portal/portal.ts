@@ -129,6 +129,11 @@ export class TemplatePortal<C> extends Portal<C> {
     return this.templateRef.elementRef;
   }
 
+  /**
+   * Attach the the portal to the provided `PortalHost`.
+   * When a context is provided it will override the `context` property of the `TemplatePortal`
+   * instance.
+   */
   attach(host: PortalHost, context: C | undefined = this.context): C {
     this.context = context;
     return super.attach(host);
