@@ -1,14 +1,17 @@
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {By} from '@angular/platform-browser';
+import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {ViewportRuler} from '@angular/cdk/overlay';
 import {dispatchFakeEvent, FakeViewportRuler} from '@angular/cdk/testing';
 import {Observable} from 'rxjs/Observable';
 import {MdTab, MdTabGroup, MdTabHeaderPosition, MdTabsModule} from './index';
+import {TestGestureConfig} from '../core/gestures/test-gesture-config';
 
 
 describe('MdTabGroup', () => {
+  let gestureConfig: TestGestureConfig;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdTabsModule, NoopAnimationsModule],
@@ -22,6 +25,10 @@ describe('MdTabGroup', () => {
       ],
       providers: [
         {provide: ViewportRuler, useClass: FakeViewportRuler},
+        {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
+          gestureConfig = new TestGestureConfig();
+          return gestureConfig;
+        }},
       ]
     });
 
@@ -169,6 +176,22 @@ describe('MdTabGroup', () => {
       expect(testElement.querySelectorAll('.mat-ripple-element').length)
         .toBe(0, 'Expected no ripple to show up on label mousedown.');
     });
+
+    it('should switch tabs on body swipe', () => {
+      let component = fixture.debugElement.componentInstance;
+      component.selectedIndex = 0;
+      checkSelectedIndex(0, fixture);
+
+      // select the second tab
+      const body =  fixture.nativeElement.
+        querySelector('.mat-tab-body-active .mat-tab-body-content');
+
+      dispatchSwipeEvent(body, 2, gestureConfig);
+      checkSelectedIndex(1, fixture);
+
+      dispatchSwipeEvent(body, 4, gestureConfig);
+      checkSelectedIndex(0, fixture);
+    });
   });
 
   describe('dynamic binding tabs', () => {
@@ -290,6 +313,16 @@ describe('MdTabGroup', () => {
       expect(tabGroupNode.classList).toContain('mat-tab-group-inverted-header');
     });
   });
+
+  function dispatchSwipeEvent(bodyElement: HTMLElement,
+                              direction: number,
+                              config: TestGestureConfig): void {
+    config.emitEventForElement('swipe', bodyElement, {
+      deltaX: direction === 2 ? -100 : 100,
+      direction: direction,
+      srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
+    });
+  }
 
   /**
    * Checks that the `selectedIndex` has been updated; checks that the label and body have their

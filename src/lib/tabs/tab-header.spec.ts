@@ -3,7 +3,7 @@ import {
 } from '@angular/core/testing';
 import {Component, ViewChild, ViewContainerRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {By} from '@angular/platform-browser';
+import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {PortalModule} from '@angular/cdk/portal';
 import {ViewportRuler} from '@angular/cdk/overlay';
@@ -14,7 +14,7 @@ import {MdRippleModule} from '../core/ripple/index';
 import {MdInkBar} from './ink-bar';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {Subject} from 'rxjs/Subject';
-
+import {TestGestureConfig} from '../core/gestures/test-gesture-config';
 
 
 describe('MdTabHeader', () => {
@@ -22,6 +22,7 @@ describe('MdTabHeader', () => {
   let change = new Subject();
   let fixture: ComponentFixture<SimpleTabHeaderApp>;
   let appComponent: SimpleTabHeaderApp;
+  let gestureConfig: TestGestureConfig;
 
   beforeEach(async(() => {
     dir = 'ltr';
@@ -36,6 +37,10 @@ describe('MdTabHeader', () => {
       providers: [
         {provide: Directionality, useFactory: () => ({value: dir, change: change.asObservable()})},
         {provide: ViewportRuler, useClass: FakeViewportRuler},
+        {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
+          gestureConfig = new TestGestureConfig();
+          return gestureConfig;
+        }}
       ]
     });
 
@@ -206,6 +211,21 @@ describe('MdTabHeader', () => {
           .toBe(0, 'Expected no ripple to show up after mousedown');
       });
 
+      it('should update scroll to next set on swipe', () => {
+        appComponent.addTabsForScrolling();
+        fixture.detectChanges();
+
+        expect(appComponent.mdTabHeader.scrollDistance).toBe(0);
+
+        let tabListContainer = appComponent.mdTabHeader._tabListContainer.nativeElement;
+
+        dispatchSwipeEvent(tabListContainer, 100, gestureConfig);
+        fixture.detectChanges();
+
+        expect(appComponent.mdTabHeader.scrollDistance)
+          .toBe(appComponent.mdTabHeader._getMaxScrollDistance());
+      });
+
     });
 
     describe('rtl', () => {
@@ -327,4 +347,16 @@ class SimpleTabHeaderApp {
   addTabsForScrolling() {
     this.tabs.push({label: 'new'}, {label: 'new'}, {label: 'new'}, {label: 'new'});
   }
+}
+
+function dispatchSwipeEvent(headerElement: HTMLElement, percent: number,
+                            gestureConfig: TestGestureConfig): void {
+  let trackElement = headerElement.querySelector('.mat-tab-list')!;
+  let dimensions = trackElement.getBoundingClientRect();
+  let x = dimensions.left + (dimensions.width * percent);
+
+  gestureConfig.emitEventForElement('swipe', headerElement, {
+    deltaX: x * -1,
+    srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
+  });
 }

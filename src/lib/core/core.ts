@@ -58,7 +58,7 @@ export * from '@angular/cdk/overlay';
 export {GestureConfig} from './gestures/gesture-config';
 // Explicitly specify the interfaces which should be re-exported, because if everything
 // is re-exported, module bundlers may run into issues with treeshaking.
-export {HammerInput, HammerManager} from './gestures/gesture-annotations';
+export {HammerInput, HammerManager, HammerDirection} from './gestures/gesture-annotations';
 
 // Ripple
 export * from './ripple/index';

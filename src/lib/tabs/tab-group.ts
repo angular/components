@@ -24,8 +24,8 @@ import {
   OnDestroy,
   Optional,
 } from '@angular/core';
-import {HammerInput} from '../core';
-import {Directionality, Direction} from '@angular/cdk/bidi';
+import {HammerInput, HammerDirection} from '../core';
+import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {map} from '@angular/cdk/rxjs';
 import {Observable} from 'rxjs/Observable';
@@ -286,15 +286,16 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
       this.selectedIndex = 0;
     }
 
-    if (event.direction === 2 || event.direction === 4) {
-      let direction = event.direction === 4 ? 'right' : 'left';
+    if (event.direction === HammerDirection.left || event.direction === HammerDirection.right) {
+      let direction = event.direction;
       if (this._dir.value === 'rtl') {
-        direction = direction === 'left' ? 'right' : 'left';
+        direction = direction === HammerDirection.left ?
+          HammerDirection.right : HammerDirection.left;
       }
 
-      if (this.selectedIndex !== 0 && direction === 'right') {
+      if (this.selectedIndex !== 0 && direction === HammerDirection.right) {
         this._setActiveItemByIndex(this.selectedIndex - 1, -1);
-      } else if (this.selectedIndex < this._tabs.length && direction === 'left') {
+      } else if (this.selectedIndex < this._tabs.length && direction === HammerDirection.left) {
         this._setActiveItemByIndex(this.selectedIndex + 1, 1);
       }
     }

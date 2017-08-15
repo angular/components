@@ -16,10 +16,16 @@
 export interface HammerInput {
   preventDefault: () => {};
   deltaX: number;
-  direction: number;
+  direction: HammerDirection;
   type: string;
   deltaY: number;
   center: { x: number; y: number; };
+}
+
+/** @docs-private */
+export enum HammerDirection {
+  left = 2,
+  right = 4
 }
 
 /** @docs-private */
