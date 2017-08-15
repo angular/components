@@ -180,11 +180,13 @@ export class MdSelectTrigger {}
     '[attr.aria-invalid]': 'errorState',
     '[attr.aria-owns]': '_optionIds',
     '[attr.aria-multiselectable]': 'multiple',
+    '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[class.mat-select-disabled]': 'disabled',
     '[class.mat-select-invalid]': 'errorState',
     '[class.mat-select-required]': 'required',
     'class': 'mat-select',
     '(keydown)': '_handleClosedKeydown($event)',
+    '(focus)': '_onFocus()',
     '(blur)': '_onBlur()',
   },
   animations: [
@@ -228,6 +230,9 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** The cached height of the trigger element. */
   private _triggerHeight: number;
+
+  /** The aria-describedby attribute on the select for improved a11y. */
+  _ariaDescribedby: string;
 
   /** The cached font-size of the trigger element. */
   _triggerFontSize = 0;
@@ -297,11 +302,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
    */
   stateChanges = new Subject<void>();
 
-  /** Whether the select is focused. TODO(mmalerba): Implement for real. */
   focused = false;
-
-  /** TODO(mmalerba): Implement for real. */
-  setDescribedByIds(x: string[]) {return x}
 
   /** Trigger that opens the select. */
   @ViewChild('trigger') trigger: ElementRef;
@@ -329,6 +330,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   get placeholder() { return this._placeholder; }
   set placeholder(value: string) {
     this._placeholder = value;
+    this.stateChanges.next();
 
     // Must wait to record the trigger width to ensure placeholder width is included.
     Promise.resolve(null).then(() => this._setTriggerWidth());
@@ -337,7 +339,10 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Whether the component is required. */
   @Input()
   get required() { return this._required; }
-  set required(value: any) { this._required = coerceBooleanProperty(value); }
+  set required(value: any) {
+    this._required = coerceBooleanProperty(value);
+    this.stateChanges.next();
+  }
 
   /** Whether the user should be allowed to select multiple options. */
   @Input()
@@ -374,6 +379,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   set value(newValue: any) {
     this.writeValue(newValue);
     this._value = newValue;
+    this.stateChanges.next();
   }
   private _value: any;
 
@@ -395,7 +401,10 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Unique id of the element. */
   @Input()
   get id() { return this._id; }
-  set id(value: string) { this._id = value || this._uid; }
+  set id(value: string) {
+    this._id = value || this._uid;
+    this.stateChanges.next();
+  }
   private _id: string;
 
   /** Combined stream of all of the child options' change events. */
@@ -535,6 +544,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     this._changeDetectorRef.markForCheck();
+    this.stateChanges.next();
   }
 
   /** Whether or not the overlay panel is open. */
@@ -631,14 +641,23 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     this._changeDetectorRef.markForCheck();
   }
 
+  _onFocus() {
+    if (!this.disabled) {
+      this.focused = true;
+      this.stateChanges.next();
+    }
+  }
+
   /**
    * Calls the touched callback only if the panel is closed. Otherwise, the trigger will
    * "blur" to the panel when it opens, causing a false positive.
    */
   _onBlur() {
     if (!this.disabled && !this.panelOpen) {
+      this.focused = false;
       this._onTouched();
       this._changeDetectorRef.markForCheck();
+      this.stateChanges.next();
     }
   }
 
@@ -1141,6 +1160,9 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   private _getItemCount(): number {
     return this.options.length + this.optionGroups.length;
   }
+
+  /** Sets the list of element IDs that currently describe this select. */
+  setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
 }
 
 /** Clamps a value n between min and max values. */

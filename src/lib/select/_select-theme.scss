@@ -52,9 +52,14 @@
     &.mat-accent {
       @include _mat-select-inner-content-theme($accent);
     }
+
+    &.mat-warn,
+    &.mat-select-invalid {
+      @include _mat-select-inner-content-theme($warn);
+    }
   }
 
-  .mat-select:focus:not(.mat-select-disabled).mat-warn, .mat-select-invalid {
+  .mat-select.mat-select-invalid:not(.mat-select-disabled) {
     @include _mat-select-inner-content-theme($warn);
   }
 }
