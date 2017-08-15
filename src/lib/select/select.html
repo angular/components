@@ -6,6 +6,7 @@
     #origin="cdkOverlayOrigin"
     #trigger>
   <span class="mat-select-value">
+    <div #measureFontSize class="mat-select-measure-font-size" aria-hidden="true"></div>
     <span class="mat-select-value-text" *ngIf="!empty" [ngSwitch]="!!customTrigger">
       <span *ngSwitchDefault>{{ triggerValue }}</span>
       <ng-content select="md-select-trigger, mat-select-trigger" *ngSwitchCase="true"></ng-content>
@@ -36,7 +37,8 @@
     (@transformPanel.done)="_onPanelDone()"
     (keydown)="_handlePanelKeydown($event)"
     [style.transformOrigin]="_transformOrigin"
-    [class.mat-select-panel-done-animating]="_panelDoneAnimating">
+    [class.mat-select-panel-done-animating]="_panelDoneAnimating"
+    [style.font-size.px]="_triggerFontSize">
 
     <div class="mat-select-content" [@fadeInContent]="'showing'" (@fadeInContent.done)="_onFadeInDone()">
       <ng-content></ng-content>

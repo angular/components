@@ -8,6 +8,7 @@ $mat-select-trigger-min-width: 112px !default;
 $mat-select-arrow-size: 5px !default;
 $mat-select-arrow-margin: 4px !default;
 $mat-select-panel-max-height: 256px !default;
+$mat-select-item-height: 3em !default;
 
 .mat-select {
   display: inline-block;
@@ -63,5 +64,23 @@ $mat-select-panel-max-height: 256px !default;
 
   @include cdk-high-contrast {
     outline: solid 1px;
+  }
+}
+
+.mat-select-measure-font-size {
+  position: absolute;
+  display: block;
+  height: 1em;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+// Override optgroup and option to scale based on font-size of the trigger.
+.mat-select-panel {
+  .mat-optgroup-label,
+  .mat-option {
+    font-size: inherit;
+    line-height: $mat-select-item-height;
+    height: $mat-select-item-height;
   }
 }
