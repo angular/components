@@ -6,8 +6,8 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
   <md-card>
     <md-card-subtitle>ngModel</md-card-subtitle>
 
-    <md-form-field>
-      <md-select placeholder="Drink" [color]="drinksTheme" [(ngModel)]="currentDrink" [required]="drinksRequired"
+    <md-form-field [floatPlaceholder]="floatPlaceholder" [color]="drinksTheme">
+      <md-select placeholder="Drink" [(ngModel)]="currentDrink" [required]="drinksRequired"
         [disabled]="drinksDisabled" #drinkControl="ngModel">
         <md-option>None</md-option>
         <md-option *ngFor="let drink of drinks" [value]="drink.value" [disabled]="drink.disabled">
@@ -44,8 +44,8 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <md-card-subtitle>Multiple selection</md-card-subtitle>
 
     <md-card-content>
-      <md-form-field>
-        <md-select multiple [color]="pokemonTheme" placeholder="Pokemon" [(ngModel)]="currentPokemon"
+      <md-form-field [color]="pokemonTheme">
+        <md-select multiple placeholder="Pokemon" [(ngModel)]="currentPokemon"
           [required]="pokemonRequired" [disabled]="pokemonDisabled" #pokemonControl="ngModel">
           <md-option *ngFor="let creature of pokemon" [value]="creature.value">
             {{ creature.viewValue }}
@@ -138,9 +138,11 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <md-card-subtitle>formControl</md-card-subtitle>
 
       <md-card-content>
-        <md-select placeholder="Food i would like to eat" [formControl]="foodControl">
-          <md-option *ngFor="let food of foods" [value]="food.value"> {{ food.viewValue }}</md-option>
-        </md-select>
+        <md-form-field>
+          <md-select placeholder="Food i would like to eat" [formControl]="foodControl">
+            <md-option *ngFor="let food of foods" [value]="food.value"> {{ food.viewValue }}</md-option>
+          </md-select>
+        </md-form-field>
         <p> Value: {{ foodControl.value }} </p>
         <p> Touched: {{ foodControl.touched }} </p>
         <p> Dirty: {{ foodControl.dirty }} </p>

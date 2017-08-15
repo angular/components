@@ -12,11 +12,6 @@ $mat-select-item-height: 3em !default;
 .mat-select {
   display: inline-block;
   outline: none;
-
-  // Inside of a form field we want it to expand to take the available space.
-  .mat-form-field & {
-    width: 100%;
-  }
 }
 
 .mat-select-trigger {

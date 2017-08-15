@@ -3,13 +3,6 @@
 @import '../core/style/form-common';
 @import '../core/typography/typography-utils';
 
-@mixin _mat-select-inner-content-theme($palette) {
-  $color: mat-color($palette);
-
-  .mat-select-trigger, .mat-select-arrow {
-    color: $color;
-  }
-}
 
 @mixin mat-select-theme($theme) {
   $foreground: map-get($theme, foreground);
@@ -19,14 +12,8 @@
   $warn: map-get($theme, warn);
   $is-dark-theme: map-get($theme, is-dark);
 
-  .mat-select-trigger,
-  .mat-select-arrow {
-    color: mat-color($foreground, secondary-text);
-  }
-
   .mat-select-disabled .mat-select-value,
-  .mat-select-arrow,
-  .mat-select-trigger {
+  .mat-select-arrow {
     color: mat-color($foreground, secondary-text);
   }
 
@@ -44,23 +31,32 @@
     }
   }
 
-  .mat-select:focus:not(.mat-select-disabled) {
-    &.mat-primary {
-      @include _mat-select-inner-content-theme($primary);
+  .mat-form-field {
+    &.mat-focused {
+      &.mat-primary .mat-select-arrow {
+        color: mat-color($primary);
+      }
+
+      &.mat-accent .mat-select-arrow {
+        color: mat-color($accent);
+      }
+
+      &.mat-warn .mat-select-arrow {
+        color: mat-color($warn);
+      }
     }
 
-    &.mat-accent {
-      @include _mat-select-inner-content-theme($accent);
+    .mat-select.mat-select-invalid .mat-select-arrow {
+      color: mat-color($warn);
     }
 
-    &.mat-warn,
-    &.mat-select-invalid {
-      @include _mat-select-inner-content-theme($warn);
+    .mat-select.mat-select-disabled .mat-select-arrow {
+      color: mat-color($foreground, secondary-text);
     }
   }
 
-  .mat-select.mat-select-invalid:not(.mat-select-disabled) {
-    @include _mat-select-inner-content-theme($warn);
+  .mat-select.mat-select-disabled .mat-select-arrow {
+    color: mat-color($warn);
   }
 }
 

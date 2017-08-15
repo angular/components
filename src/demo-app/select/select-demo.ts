@@ -21,7 +21,7 @@ export class SelectDemo {
   currentPokemonFromGroup: string;
   currentDigimon: string;
   latestChangeEvent: MdSelectChange;
-  floatPlaceholder: string = 'auto'; // add to form-field
+  floatPlaceholder: string = 'auto';
   foodControl = new FormControl('pizza-1');
   topHeightCtrl = new FormControl(0);
   drinksTheme = 'primary';

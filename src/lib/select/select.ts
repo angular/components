@@ -47,13 +47,11 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
 import {
-  CanColor,
   CanDisable,
   HasTabIndex,
   MdOptgroup,
   MdOption,
   MdOptionSelectionChange,
-  mixinColor,
   mixinDisabled,
   mixinTabIndex,
 } from '@angular/material/core';
@@ -147,8 +145,7 @@ export class MdSelectChange {
 export class MdSelectBase {
   constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
-export const _MdSelectMixinBase =
-  mixinTabIndex(mixinColor(mixinDisabled(MdSelectBase), 'primary'));
+export const _MdSelectMixinBase = mixinTabIndex(mixinDisabled(MdSelectBase));
 
 
 /**
@@ -165,7 +162,7 @@ export class MdSelectTrigger {}
   selector: 'md-select, mat-select',
   templateUrl: 'select.html',
   styleUrls: ['select.css'],
-  inputs: ['color', 'disabled', 'tabIndex'],
+  inputs: ['disabled', 'tabIndex'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -197,7 +194,7 @@ export class MdSelectTrigger {}
   exportAs: 'mdSelect, matSelect',
 })
 export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, OnDestroy, OnInit,
-    ControlValueAccessor, CanColor, CanDisable, HasTabIndex, MdFormFieldControl<any> {
+    ControlValueAccessor, CanDisable, HasTabIndex, MdFormFieldControl<any> {
   /** Whether or not the overlay panel is open. */
   private _panelOpen = false;
 
@@ -379,7 +376,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   set value(newValue: any) {
     this.writeValue(newValue);
     this._value = newValue;
-    this.stateChanges.next();
   }
   private _value: any;
 
@@ -455,6 +451,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   ngOnInit() {
     this._selectionModel = new SelectionModel<MdOption>(this.multiple, undefined, false);
+    this.stateChanges.next();
   }
 
   ngAfterContentInit() {
@@ -753,6 +750,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     if (correspondingOption) {
       isUserInput ? correspondingOption._selectViaInteraction() : correspondingOption.select();
       this._selectionModel.select(correspondingOption);
+      this.stateChanges.next();
     }
 
     return correspondingOption;
@@ -770,6 +768,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
         option.deselect();
       }
     });
+    this.stateChanges.next();
   }
 
   private _getTriggerRect(): ClientRect {
@@ -810,6 +809,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     // TODO(crisbeto): handle blank/null options inside multi-select.
     if (this.multiple) {
       this._selectionModel.toggle(option);
+      this.stateChanges.next();
       wasSelected ? option.deselect() : option.select();
       this._sortValues();
     } else {
@@ -819,6 +819,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
         this._propagateChanges(option.value);
       } else {
         this._selectionModel.select(option);
+        this.stateChanges.next();
       }
     }
 
@@ -840,6 +841,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
           this._selectionModel.select(option);
         }
       });
+      this.stateChanges.next();
     }
   }
 
