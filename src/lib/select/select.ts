@@ -19,7 +19,7 @@ import {
   ViewportRuler,
 } from '@angular/cdk/overlay';
 import {Platform} from '@angular/cdk/platform';
-import {filter, startWith} from '@angular/cdk/rxjs';
+import {filter, first, startWith} from '@angular/cdk/rxjs';
 import {
   AfterContentInit,
   Attribute,
@@ -35,6 +35,7 @@ import {
   InjectionToken,
   Input,
   isDevMode,
+  NgZone,
   OnDestroy,
   OnInit,
   Optional,
@@ -60,7 +61,7 @@ import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
-import {fadeInContent, transformPanel, transformPlaceholder} from './select-animations';
+import {fadeInContent, transformPanel} from './select-animations';
 import {
   getMdSelectDynamicMultipleError,
   getMdSelectNonArrayValueError,
@@ -295,7 +296,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /**
    * Stream that emits whenever the state of the select changes such that the wrapping `MdFormField`
    * needs to run change detection.
-   * TODO(mmalerba): Call emit at appropriate times.
    */
   stateChanges = new Subject<void>();
 
@@ -428,6 +428,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     private _viewportRuler: ViewportRuler,
     private _changeDetectorRef: ChangeDetectorRef,
     private _platform: Platform,
+    private _ngZone: NgZone,
     renderer: Renderer2,
     elementRef: ElementRef,
     @Optional() private _dir: Directionality,
@@ -487,6 +488,13 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     this._calculateOverlayPosition();
     this._panelOpen = true;
     this._changeDetectorRef.markForCheck();
+
+    // Set the font size on the panel element once it exists.
+    first.call(this._ngZone.onStable).subscribe(() => {
+      if (this._triggerFontSize && this.overlayDir.overlayRef.overlayElement) {
+        this.overlayDir.overlayRef.overlayElement.style.fontSize = `${this._triggerFontSize}px`;
+      }
+    });
   }
 
   /** Closes the overlay panel and focuses the host element. */
