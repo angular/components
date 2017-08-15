@@ -13,7 +13,8 @@
       color: mat-color($foreground, text);
     }
 
-    .mat-stepper-label-inactive {
+    .mat-stepper-label-inactive,
+    .mat-step-optional {
       color: mat-color($foreground, disabled-text);
     }
 
@@ -21,10 +22,6 @@
     .mat-stepper-index-new {
       background-color: mat-color($primary);
       color: mat-color($primary, default-contrast);
-    }
-
-    .mat-step-optional {
-      color: mat-color($foreground, disabled-text);
     }
 
     &[aria-selected='false'] {

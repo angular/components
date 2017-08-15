@@ -95,11 +95,7 @@ export class CdkStep {
 
   /** Return whether step is completed or not. */
   get completed() {
-    if (this._stepControl instanceof AbstractControl) {
-      return this._stepControl.valid && this.interacted;
-    } else {
-      return this.interacted;
-    }
+    return this._stepControl ? this._stepControl.valid && this.interacted : this.interacted;
   }
 
   constructor(private _stepper: CdkStepper) { }
