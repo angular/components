@@ -4,7 +4,6 @@
 @import '../core/style/vendor-prefixes';
 @import '../../cdk/a11y/a11y';
 
-$mat-select-trigger-min-width: 112px !default;
 $mat-select-arrow-size: 5px !default;
 $mat-select-arrow-margin: 4px !default;
 $mat-select-panel-max-height: 256px !default;
@@ -16,15 +15,12 @@ $mat-select-item-height: 3em !default;
 
   // Inside of a form field we want it to expand to take the available space.
   .mat-form-field & {
-    display: block;
     width: 100%;
   }
 }
 
 .mat-select-trigger {
-  display: flex;
-  align-items: center;
-  min-width: $mat-select-trigger-min-width;
+  display: inline-table;
   cursor: pointer;
   position: relative;
   box-sizing: border-box;
@@ -36,14 +32,20 @@ $mat-select-item-height: 3em !default;
 }
 
 .mat-select-value {
-  display: flex;
-  flex: auto;
-  align-items: center;
-  min-width: 0;
+  display: table-cell;
+  max-width: 0;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mat-select-value-text {
   @include mat-truncate-line();
+}
+
+.mat-select-arrow-wrapper {
+  display: table-cell;
+  vertical-align: middle;
 }
 
 .mat-select-arrow {
