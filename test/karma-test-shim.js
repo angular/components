@@ -58,6 +58,7 @@ System.config({
     '@angular/cdk/platform': 'dist/packages/cdk/platform/index.js',
     '@angular/cdk/portal': 'dist/packages/cdk/portal/index.js',
     '@angular/cdk/rxjs': 'dist/packages/cdk/rxjs/index.js',
+    '@angular/cdk/stepper': 'dist/packages/cdk/stepper/index.js',
     '@angular/cdk/table': 'dist/packages/cdk/table/index.js',
     '@angular/cdk/testing': 'dist/packages/cdk/testing/index.js',
   },
