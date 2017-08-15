@@ -67,9 +67,6 @@ export {HammerInput, HammerManager} from './gestures/gesture-annotations';
 // Ripple
 export * from './ripple/index';
 
-// Selection
-export * from './selection/selection';
-
 // a11y
 export {
   AriaLivePoliteness,
