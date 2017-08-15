@@ -5,15 +5,15 @@ import {By} from '@angular/platform-browser';
 import {MdHorizontalStepper} from './stepper-horizontal';
 import {MdVerticalStepper} from './stepper-vertical';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MdStepperNext, MdStepperPrevious} from './stepper-button';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 
-fdescribe('MdHorizontalStepper', () => {
+describe('MdHorizontalStepper', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdStepperModule, NoopAnimationsModule, FormsModule, ReactiveFormsModule],
+      imports: [MdStepperModule, NoopAnimationsModule, ReactiveFormsModule],
       declarations: [
         SimpleMdHorizontalStepperApp,
         LinearMdHorizontalStepperApp
@@ -41,8 +41,8 @@ fdescribe('MdHorizontalStepper', () => {
     });
 
     it('should change selected index on header click', () => {
-      let stepHeader = fixture.debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
-      checkSelectionChangeOnHeaderClick(stepperComponent, fixture, stepHeader);
+      let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
+      checkSelectionChangeOnHeaderClick(stepperComponent, fixture, stepHeaders);
 
     });
 
@@ -51,9 +51,9 @@ fdescribe('MdHorizontalStepper', () => {
       expect(stepperEl.getAttribute('role')).toBe('tablist');
     });
 
-    it('should expand the right content', () => {
-      let stepContent = fixture.debugElement.queryAll(By.css(`.mat-horizontal-stepper-content`));
-      checkExpandedContent(stepperComponent, fixture, stepContent);
+    it('should set aria-expanded of content correctly', () => {
+      let stepContents = fixture.debugElement.queryAll(By.css(`.mat-horizontal-stepper-content`));
+      checkExpandedContent(stepperComponent, fixture, stepContents);
     });
 
     it('should display the correct label', () => {
@@ -73,8 +73,8 @@ fdescribe('MdHorizontalStepper', () => {
     });
 
     it('should support keyboard events to move and select focus', () => {
-      let stepHeader = fixture.debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
-      checkKeyboardEvent(stepperComponent, fixture, stepHeader);
+      let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
+      checkKeyboardEvent(stepperComponent, fixture, stepHeaders);
     });
   });
 
@@ -98,6 +98,7 @@ fdescribe('MdHorizontalStepper', () => {
 
     it('should not move to next step if current step is not valid', () => {
       expect(testComponent.oneGroup.get('oneCtrl')!.value).toBe('');
+      expect(testComponent.oneGroup.get('oneCtrl')!.valid).toBe(false);
       expect(testComponent.oneGroup.valid).toBe(false);
       expect(stepperComponent.selectedIndex).toBe(0);
 
@@ -108,10 +109,10 @@ fdescribe('MdHorizontalStepper', () => {
   });
 });
 
-fdescribe('MdVerticalStepper', () => {
+describe('MdVerticalStepper', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdStepperModule, NoopAnimationsModule, FormsModule, ReactiveFormsModule],
+      imports: [MdStepperModule, NoopAnimationsModule, ReactiveFormsModule],
       declarations: [
         SimpleMdVerticalStepperApp,
         LinearMdVerticalStepperApp
@@ -139,8 +140,8 @@ fdescribe('MdVerticalStepper', () => {
     });
 
     it('should change selected index on header click', () => {
-      let stepHeader = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
-      checkSelectionChangeOnHeaderClick(stepperComponent, fixture, stepHeader);
+      let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
+      checkSelectionChangeOnHeaderClick(stepperComponent, fixture, stepHeaders);
 
     });
 
@@ -149,9 +150,9 @@ fdescribe('MdVerticalStepper', () => {
       expect(stepperEl.getAttribute('role')).toBe('tablist');
     });
 
-    it('should expand the right content', () => {
-      let stepContent = fixture.debugElement.queryAll(By.css(`.mat-vertical-stepper-content`));
-      checkExpandedContent(stepperComponent, fixture, stepContent);
+    it('should set aria-expanded of content correctly', () => {
+      let stepContents = fixture.debugElement.queryAll(By.css(`.mat-vertical-stepper-content`));
+      checkExpandedContent(stepperComponent, fixture, stepContents);
     });
 
     it('should display the correct label', () => {
@@ -171,8 +172,8 @@ fdescribe('MdVerticalStepper', () => {
     });
 
     it('should support keyboard events to move and select focus', () => {
-      let stepHeader = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
-      checkKeyboardEvent(stepperComponent, fixture, stepHeader);
+      let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
+      checkKeyboardEvent(stepperComponent, fixture, stepHeaders);
     });
   });
 
@@ -196,6 +197,7 @@ fdescribe('MdVerticalStepper', () => {
 
     it('should not move to next step if current step is not valid', () => {
       expect(testComponent.oneGroup.get('oneCtrl')!.value).toBe('');
+      expect(testComponent.oneGroup.get('oneCtrl')!.valid).toBe(false);
       expect(testComponent.oneGroup.valid).toBe(false);
       expect(stepperComponent.selectedIndex).toBe(0);
 
@@ -210,18 +212,18 @@ fdescribe('MdVerticalStepper', () => {
 function checkSelectionChangeOnHeaderClick(stepperComponent:
                                                MdHorizontalStepper | MdVerticalStepper,
                                            fixture: ComponentFixture<any>,
-                                           stepHeader: DebugElement[]) {
+                                           stepHeaders: DebugElement[]) {
   expect(stepperComponent.selectedIndex).toBe(0);
 
   // select the second step
-  let stepHeaderEl = stepHeader[1].nativeElement;
+  let stepHeaderEl = stepHeaders[1].nativeElement;
   stepHeaderEl.click();
   fixture.detectChanges();
 
   expect(stepperComponent.selectedIndex).toBe(1);
 
   // select the third step
-  stepHeaderEl = stepHeader[2].nativeElement;
+  stepHeaderEl = stepHeaders[2].nativeElement;
   stepHeaderEl.click();
   fixture.detectChanges();
 
@@ -230,16 +232,16 @@ function checkSelectionChangeOnHeaderClick(stepperComponent:
 
 function checkExpandedContent(stepperComponent: MdHorizontalStepper | MdVerticalStepper,
                               fixture: ComponentFixture<any>,
-                              stepContent: DebugElement[]) {
-  let stepContentEl = stepContent[0].nativeElement;
-  expect(stepContentEl.getAttribute('aria-expanded')).toBe('true');
+                              stepContents: DebugElement[]) {
+  let firstStepContentEl = stepContents[0].nativeElement;
+  expect(firstStepContentEl.getAttribute('aria-expanded')).toBe('true');
 
   stepperComponent.selectedIndex = 1;
   fixture.detectChanges();
 
-  expect(stepContentEl.getAttribute('aria-expanded')).toBe('false');
-  stepContentEl = stepContent[1].nativeElement;
-  expect(stepContentEl.getAttribute('aria-expanded')).toBe('true');
+  expect(firstStepContentEl.getAttribute('aria-expanded')).toBe('false');
+  let secondStepContentEl = stepContents[1].nativeElement;
+  expect(secondStepContentEl.getAttribute('aria-expanded')).toBe('true');
 }
 
 function checkCorrectLabel(stepperComponent: MdHorizontalStepper | MdVerticalStepper,
@@ -336,47 +338,60 @@ function checkStepPosition(stepperComponent: MdHorizontalStepper | MdVerticalSte
 
 function checkKeyboardEvent(stepperComponent: MdHorizontalStepper | MdVerticalStepper,
                             fixture: ComponentFixture<any>,
-                            stepHeader: DebugElement[]) {
+                            stepHeaders: DebugElement[]) {
   expect(stepperComponent._focusIndex).toBe(0);
   expect(stepperComponent.selectedIndex).toBe(0);
 
-  let stepHeaderEl = stepHeader[0].nativeElement;
+  let stepHeaderEl = stepHeaders[0].nativeElement;
   dispatchKeyboardEvent(stepHeaderEl, 'keydown', RIGHT_ARROW);
   fixture.detectChanges();
 
-  expect(stepperComponent._focusIndex).toBe(1);
-  expect(stepperComponent.selectedIndex).toBe(0);
+  expect(stepperComponent._focusIndex)
+      .toBe(1, 'Expected index of focused step to be increased by 1 after RIGHT_ARROW event.');
+  expect(stepperComponent.selectedIndex)
+      .toBe(0, 'Expected index of selected step to remain unchanged after RIGHT_ARROW event.');
 
-  stepHeaderEl = stepHeader[1].nativeElement;
+  stepHeaderEl = stepHeaders[1].nativeElement;
   dispatchKeyboardEvent(stepHeaderEl, 'keydown', ENTER);
   fixture.detectChanges();
 
-  expect(stepperComponent._focusIndex).toBe(1);
-  expect(stepperComponent.selectedIndex).toBe(1);
+  expect(stepperComponent._focusIndex)
+      .toBe(1, 'Expected index of focused step to remain unchanged after ENTER event.');
+  expect(stepperComponent.selectedIndex)
+      .toBe(1,
+          'Expected index of selected step to change to index of focused step after EVENT event.');
 
-  stepHeaderEl = stepHeader[1].nativeElement;
+  stepHeaderEl = stepHeaders[1].nativeElement;
   dispatchKeyboardEvent(stepHeaderEl, 'keydown', LEFT_ARROW);
   fixture.detectChanges();
 
-  expect(stepperComponent._focusIndex).toBe(0);
-  expect(stepperComponent.selectedIndex).toBe(1);
+  expect(stepperComponent._focusIndex)
+      .toBe(0, 'Expected index of focused step to decrease by 1 after LEFT_ARROW event.');
+  expect(stepperComponent.selectedIndex)
+      .toBe(1, 'Expected index of selected step to remain unchanged after LEFT_ARROW event.');
 
   // When the focus is on the last step and right arrow key is pressed, the focus should cycle
   // through to the first step.
   stepperComponent._focusIndex = 2;
-  stepHeaderEl = stepHeader[2].nativeElement;
+  stepHeaderEl = stepHeaders[2].nativeElement;
   dispatchKeyboardEvent(stepHeaderEl, 'keydown', RIGHT_ARROW);
   fixture.detectChanges();
 
-  expect(stepperComponent._focusIndex).toBe(0);
-  expect(stepperComponent.selectedIndex).toBe(1);
+  expect(stepperComponent._focusIndex)
+      .toBe(0,
+          'Expected index of focused step to cycle through to index 0 after RIGHT_ARROW event.');
+  expect(stepperComponent.selectedIndex)
+      .toBe(1, 'Expected index of selected step to remain unchanged after RIGHT_ARROW event.');
 
-  stepHeaderEl = stepHeader[0].nativeElement;
+  stepHeaderEl = stepHeaders[0].nativeElement;
   dispatchKeyboardEvent(stepHeaderEl, 'keydown', SPACE);
   fixture.detectChanges();
 
-  expect(stepperComponent._focusIndex).toBe(0);
-  expect(stepperComponent.selectedIndex).toBe(0);
+  expect(stepperComponent._focusIndex)
+      .toBe(0, 'Expected index of focused to remain unchanged after SPACE event.');
+  expect(stepperComponent.selectedIndex)
+      .toBe(0,
+          'Expected index of selected step to change to index of focused step after SPACE event.');
 }
 
 function checkLinearStepperValidity(stepHeaderEl: HTMLElement,
