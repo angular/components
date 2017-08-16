@@ -19,7 +19,7 @@
     </div>
 
   </div>
-  <div class="mat-vertical-content-container">
+  <div class="mat-vertical-content-container" [class.mat-stepper-vertical-line]="!isLast">
     <div class="mat-vertical-stepper-content" role="tabpanel"
          [@stepTransition]="_getAnimationDirection(i)"
          [id]="_getStepContentId(i)"
