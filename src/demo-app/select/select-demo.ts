@@ -115,8 +115,8 @@ export class SelectDemo {
     this.currentPokemon = ['eevee-4', 'psyduck-6'];
   }
 
-  setDrinkObjectByCopy(selectedDrink: {}) {
-    this.currentDrinkObject = selectedDrink ? {...selectedDrink} : undefined;
+  reassignDrinkByCopy() {
+    this.currentDrinkObject = {...this.currentDrinkObject};
   }
 
   compareDrinkObjectsByValue(d1: {value: string}, d2: {value: string}) {
