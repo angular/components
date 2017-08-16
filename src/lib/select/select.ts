@@ -52,7 +52,11 @@ import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import {fadeInContent, transformPanel, transformPlaceholder} from './select-animations';
 import {SelectionModel} from '../core/selection/selection';
-import {getMdSelectDynamicMultipleError, getMdSelectNonArrayValueError} from './select-errors';
+import {
+  getMdSelectDynamicMultipleError,
+  getMdSelectNonArrayValueError,
+  getMdSelectNonFunctionValueError
+} from './select-errors';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 import {MdOptgroup, MdOption, MdOptionSelectionChange} from '../core/option/index';
@@ -350,8 +354,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   get compareWith() { return this._compareWith; }
   set compareWith(fn: (o1: any, o2: any) => boolean) {
     if (typeof fn !== 'function') {
-      throw new TypeError(
-        `compareWith must be a function, but received ${JSON.stringify(fn)}`);
+      throw getMdSelectNonFunctionValueError();
     }
     this._compareWith = fn;
     if (this._selectionModel) {
@@ -753,7 +756,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       isUserInput ? correspondingOption._selectViaInteraction() : correspondingOption.select();
       this._selectionModel.select(correspondingOption);
     }
-      
+
     return correspondingOption;
   }
 

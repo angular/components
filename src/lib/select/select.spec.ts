@@ -28,12 +28,17 @@ import {Subject} from 'rxjs/Subject';
 import {map} from 'rxjs/operator/map';
 import {MdSelectModule} from './index';
 import {MdSelect} from './select';
-import {getMdSelectDynamicMultipleError, getMdSelectNonArrayValueError} from './select-errors';
+import {
+  getMdSelectDynamicMultipleError,
+  getMdSelectNonArrayValueError,
+  getMdSelectNonFunctionValueError
+} from './select-errors';
 import {MdOption} from '../core/option/option';
 import {
   FloatPlaceholderType,
   MD_PLACEHOLDER_GLOBAL_OPTIONS
 } from '../core/placeholder/placeholder-options';
+import {extendObject} from '../core/util/object-extend';
 
 
 describe('MdSelect', () => {
@@ -2728,20 +2733,24 @@ describe('MdSelect', () => {
       fixture.detectChanges();
     }));
 
-    it('should have a selection', () => {
-      const selectedOption = instance.select.selected as MdOption;
-      expect(selectedOption.value.value).toEqual('pizza-1');
-    });
+    describe('when comparing by value', () => {
 
-    it('should update when making a new selection', async(() => {
-      instance.options.last._selectViaInteraction();
-      fixture.detectChanges();
-      fixture.whenStable().then(() => {
+      it('should have a selection', () => {
         const selectedOption = instance.select.selected as MdOption;
-        expect(instance.selectedFood.value).toEqual('tacos-2');
-        expect(selectedOption.value.value).toEqual('tacos-2');
+        expect(selectedOption.value.value).toEqual('pizza-1');
       });
-    }));
+
+      it('should update when making a new selection', async(() => {
+        instance.options.last._selectViaInteraction();
+        fixture.detectChanges();
+        fixture.whenStable().then(() => {
+          const selectedOption = instance.select.selected as MdOption;
+          expect(instance.selectedFood.value).toEqual('tacos-2');
+          expect(selectedOption.value.value).toEqual('tacos-2');
+        });
+      }));
+
+    });
 
     describe('when comparing by reference', () => {
       beforeEach(async(() => {
@@ -2759,7 +2768,7 @@ describe('MdSelect', () => {
         expect(instance.select.selected).toBeUndefined();
       });
 
-      it('should not update the selection when changing the value', async(() => {
+      it('should not update the selection if value is copied on change', async(() => {
         instance.options.first._selectViaInteraction();
         fixture.detectChanges();
         fixture.whenStable().then(() => {
@@ -2778,7 +2787,7 @@ describe('MdSelect', () => {
       it('should throw an error', () => {
         expect(() => {
           fixture.detectChanges();
-        }).toThrowError('compareWith must be a function, but received null');
+        }).toThrowError(wrappedErrorMessage(getMdSelectNonFunctionValueError()));
       });
 
     });
@@ -3375,6 +3384,6 @@ class NgModelCompareWithSelect {
   compareByReference(f1: any, f2: any) { return f1 === f2; }
 
   setFoodByCopy(newValue: {value: string, viewValue: string}) {
-    this.selectedFood = Object.assign({}, newValue);
+    this.selectedFood = extendObject({}, newValue);
   }
 }
