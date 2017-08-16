@@ -31,8 +31,8 @@
                [attr.aria-labelledby]="_getTabLabelId(i)"
                [class.mat-tab-body-active]="selectedIndex == i"
                [content]="tab.content"
-               [position]="tab.position"
-               [origin]="tab.origin"
+               [position]="tab._position"
+               [origin]="tab._origin"
                (onCentered)="_removeTabBodyWrapperHeight()"
                (onCentering)="_setTabBodyWrapperHeight($event)">
   </md-tab-body>
