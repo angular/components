@@ -10,6 +10,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 export class StepperDemo {
   formGroup: FormGroup;
   isNonLinear = false;
+  isNonEditable = false;
 
   nameFormGroup: FormGroup;
   phoneFormGroup: FormGroup;
@@ -34,7 +35,7 @@ export class StepperDemo {
           lastNameFormCtrl: ['', Validators.required],
         }),
         this._formBuilder.group({
-          phoneFormCtrl: [''],
+          phoneFormCtrl: ['', Validators.required],
         })
       ])
     });

@@ -77,6 +77,26 @@ export class CdkStep {
   @Input()
   label: string;
 
+  @Input()
+  get editable() { return this._editable; }
+  set editable(value: any) {
+    this._editable = coerceBooleanProperty(value);
+  }
+  private _editable = true;
+
+  /** Whether the completion of step is optional or not. */
+  @Input()
+  get optional() { return this._optional; }
+  set optional(value: any) {
+    this._optional = coerceBooleanProperty(value);
+  }
+  private _optional = false;
+
+  /** Return whether step is completed or not. */
+  get completed() {
+    return this._stepControl ? this._stepControl.valid && this.interacted : this.interacted;
+  }
+
   constructor(private _stepper: CdkStepper) { }
 
   /** Selects this step component. */
@@ -109,6 +129,7 @@ export class CdkStepper {
   @Input()
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
+    if (index < this._selectedIndex && !this._steps.toArray()[index].editable) { return; }
     if (this._selectedIndex != index && !this._anyControlsInvalid(index)) {
       this._emitStepperSelectionEvent(index);
       this._focusStep(this._selectedIndex);
@@ -208,7 +229,7 @@ export class CdkStepper {
     const stepsArray = this._steps.toArray();
     stepsArray[this._selectedIndex].interacted = true;
     if (this._linear) {
-      return stepsArray.slice(0, index).some(step => step.stepControl.invalid);
+      return stepsArray.slice(0, index).some(step => step.stepControl.invalid && !step.optional);
     }
     return false;
   }
