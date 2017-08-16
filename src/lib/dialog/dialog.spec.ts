@@ -141,15 +141,20 @@ describe('MdDialog', () => {
   }));
 
   it('should close a dialog and get back a result before it is closed', async(() => {
-    let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
-    let beforeCloseCallback = jasmine.createSpy('beforeClose callback');
+    const dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
 
-    dialogRef.beforeClose().subscribe(beforeCloseCallback);
+    // beforeClose should emit before dialog container is destroyed
+    const beforeCloseHandler = jasmine.createSpy('beforeClose callback').and.callFake(() => {
+      expect(overlayContainerElement.querySelector('md-dialog-container'))
+          .not.toBeNull('dialog container exists when beforeClose is called');
+    });
+
+    dialogRef.beforeClose().subscribe(beforeCloseHandler);
     dialogRef.close('Bulbasaurus');
     viewContainerFixture.detectChanges();
 
     viewContainerFixture.whenStable().then(() => {
-      expect(beforeCloseCallback).toHaveBeenCalledWith('Bulbasaurus');
+      expect(beforeCloseHandler).toHaveBeenCalledWith('Bulbasaurus');
       expect(overlayContainerElement.querySelector('md-dialog-container')).toBeNull();
     });
   }));
