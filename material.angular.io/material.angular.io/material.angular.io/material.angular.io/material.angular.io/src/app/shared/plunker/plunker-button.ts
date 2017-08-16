@@ -18,7 +18,7 @@ export class PlunkerButton {
    * The form creation usually happens extremely quickly, but we handle the case of the
    * plunker not yet being ready for people will poor network connections or slow devices.
    */
-  isDisabled: boolean = false;
+  isDisabled = false;
   plunkerForm: HTMLFormElement;
 
   @Input()

@@ -10,6 +10,7 @@ import {
 } from '@angular/material';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {HeaderLink} from './header-link';
 
 
 // ExampleViewer is included in the DocViewerModule because they have a circular dependency.
@@ -23,8 +24,8 @@ import {NgModule} from '@angular/core';
     PortalModule,
     PlunkerButtonModule
   ],
-  declarations: [DocViewer, ExampleViewer],
-  entryComponents: [ExampleViewer],
-  exports: [DocViewer, ExampleViewer],
+  declarations: [DocViewer, ExampleViewer, HeaderLink],
+  entryComponents: [ExampleViewer, HeaderLink],
+  exports: [DocViewer, ExampleViewer, HeaderLink],
 })
 export class DocViewerModule { }

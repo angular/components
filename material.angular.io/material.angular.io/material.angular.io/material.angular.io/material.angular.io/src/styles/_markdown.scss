@@ -51,3 +51,25 @@ code, pre {
 pre {
   font-size: 12px;
 }
+
+.docs-header-link {
+  // deduct -30px so the anchor icon will be positioned outside
+  // the content and pad it 30px so the header will set inline
+  // with the content displayed, absolute position will make
+  // it where you can't hover the header
+  padding-left: 30px;
+  margin-left: -30px;
+  position: relative;
+
+  .material-icons {
+    display: none;
+  }
+
+  &:hover {
+    .material-icons {
+      display: block;
+      position: absolute;
+      left: 0;
+    }
+  }
+}

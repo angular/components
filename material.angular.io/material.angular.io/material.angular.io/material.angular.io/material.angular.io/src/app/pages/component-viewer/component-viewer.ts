@@ -5,7 +5,7 @@ import {ComponentPageTitle} from '../page-title/page-title';
 import {MdTabsModule} from '@angular/material';
 import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
 import {CommonModule} from '@angular/common';
-
+import {TableOfContentsModule} from '../../shared/table-of-contents/table-of-contents.module';
 
 @Component({
   selector: 'app-component-viewer',
@@ -55,10 +55,14 @@ export class ComponentApi extends ComponentOverview {}
 })
 export class ComponentExamples extends ComponentOverview {}
 
-
-
 @NgModule({
-  imports: [MdTabsModule, RouterModule, DocViewerModule, CommonModule],
+  imports: [
+    MdTabsModule,
+    RouterModule,
+    DocViewerModule,
+    CommonModule,
+    TableOfContentsModule
+  ],
   exports: [ComponentViewer],
   declarations: [ComponentViewer, ComponentOverview, ComponentApi, ComponentExamples],
   providers: [DocumentationItems, ComponentPageTitle],

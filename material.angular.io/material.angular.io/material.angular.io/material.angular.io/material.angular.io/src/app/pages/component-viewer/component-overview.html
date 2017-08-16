@@ -1,3 +1,6 @@
 <doc-viewer
     documentUrl="/assets/documents/overview/{{componentViewer.componentDocItem.id}}.html"
-    class="docs-component-view-text-content"></doc-viewer>
+    class="docs-component-view-text-content docs-component-overview"
+    (contentLoaded)="toc.updateScrollPosition()">
+</doc-viewer>
+<table-of-contents #toc container=".mat-sidenav-content"></table-of-contents>

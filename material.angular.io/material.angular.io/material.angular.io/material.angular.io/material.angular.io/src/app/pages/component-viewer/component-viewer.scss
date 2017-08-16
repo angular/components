@@ -24,5 +24,30 @@ app-component-viewer {
 }
 
 .docs-component-viewer-content {
+  position: relative;
   min-height: 500px;
+
+  table-of-contents {
+    display: inline-flex;
+    top: 35px;
+
+    @media (max-width: $small-breakpoint-width) {
+      display: none;
+    }
+  }
+}
+
+.docs-component-view-text-content {
+  display: inline-flex;
+  flex-grow: 1;
+}
+
+.docs-component-overview {
+  width: 80%;
+  margin-right: 20px;
+
+  @media (max-width: $small-breakpoint-width) {
+    width: 100%;
+    margin-right: 0;
+  }
 }
