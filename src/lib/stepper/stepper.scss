@@ -4,7 +4,7 @@ $mat-horizontal-stepper-header-height: 72px !default;
 $mat-label-header-height: 24px !default;
 $mat-stepper-label-min-width: 50px !default;
 $mat-stepper-side-gap: 24px !default;
-$mat-vertical-stepper-content-margin: 12px !default;
+$mat-vertical-stepper-content-margin: 36px !default;
 $mat-vertical-content-padding-bottom: 32px !default;
 $mat-vertical-content-container-padding: 8px !default;
 $mat-connector-line-width: 1px !default;
@@ -14,7 +14,6 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
 
 :host {
   display: block;
-  padding: 0 $mat-stepper-side-gap $mat-stepper-side-gap $mat-stepper-side-gap;
 }
 
 .mat-stepper-label {
@@ -38,6 +37,7 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
   white-space: nowrap;
   display: flex;
   align-items: center;
+  padding: 0 $mat-stepper-side-gap;
 }
 
 .mat-horizontal-stepper-header {
@@ -46,6 +46,15 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
   overflow: hidden;
   align-items: center;
   outline: none;
+  padding: 0 $mat-connector-line-gap;
+
+  &:first-child {
+    padding-left: 0;
+  }
+
+  &:last-child {
+    padding-right: 0;
+  }
 
   .mat-stepper-index {
     margin-right: $mat-connector-line-gap;
@@ -57,11 +66,11 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
 .mat-vertical-stepper-header {
   display: flex;
   align-items: center;
-  margin: $mat-connector-line-gap 0;
+  padding: $mat-connector-line-gap $mat-stepper-side-gap;
   outline: none;
 
   .mat-stepper-index {
-    margin-right: $mat-vertical-stepper-content-margin;
+    margin-right: $mat-vertical-stepper-content-margin - $mat-stepper-side-gap;
   }
 }
 
@@ -70,7 +79,6 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
   border-top-style: solid;
   width: $mat-horizontal-connector-line-size;
   flex: auto;
-  margin: 0 $mat-connector-line-gap;
   height: 0;
 }
 
@@ -84,6 +92,7 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
 
 .mat-horizontal-content-container {
   overflow: hidden;
+  padding: 0 $mat-stepper-side-gap $mat-stepper-side-gap $mat-stepper-side-gap;
 }
 
 .mat-vertical-content-container {
@@ -103,9 +112,10 @@ $mat-vertical-stepper-margin-top: $mat-stepper-side-gap - $mat-connector-line-ga
 }
 
 .mat-step {
-  margin-top: $mat-connector-line-gap;
 
   &:last-child {
+    padding-bottom: $mat-stepper-side-gap;
+
     .mat-vertical-content-container {
       border: none;
     }
