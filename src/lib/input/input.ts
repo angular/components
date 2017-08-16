@@ -281,6 +281,9 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
   }
 
   // Implemented as part of MdFormFieldControl.
+  get shouldPlaceholderFloat(): boolean { return this.focused || !this.empty; }
+
+  // Implemented as part of MdFormFieldControl.
   setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
 
   // Implemented as part of MdFormFieldControl.

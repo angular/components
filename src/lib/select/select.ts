@@ -1179,6 +1179,9 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     this.focus();
     this.open();
   }
+
+  // Implemented as part of MdFormFieldControl.
+  get shouldPlaceholderFloat() { return !this.empty; }
 }
 
 /** Clamps a value n between min and max values. */

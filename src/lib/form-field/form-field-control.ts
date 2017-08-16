@@ -36,6 +36,9 @@ export abstract class MdFormFieldControl<T> {
   /** Whether the control is empty. */
   readonly empty: boolean;
 
+  /** Whether the `MdFormField` label should try to float. */
+  readonly shouldPlaceholderFloat: boolean;
+
   /** Whether the control is required. */
   readonly required: boolean;
 
