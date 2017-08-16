@@ -55,11 +55,11 @@ export class PizzaPartyAppModule { }
 Import the NgModule for each component you want to use: 
 
 ```ts
-import {MdButtonModule, MdCheckboxModule} from '@angular/material';
+import {MdButtonModule, MdCheckboxModule, MaterialModule} from '@angular/material';
 
 @NgModule({
   ...
-  imports: [MdButtonModule, MdCheckboxModule],
+  imports: [MdButtonModule, MdCheckboxModule, MaterialModule],
   ...
 })
 export class PizzaPartyAppModule { }
