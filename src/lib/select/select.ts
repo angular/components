@@ -466,9 +466,9 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       return;
     }
 
-    if (!this._triggerWidth) {
-      this._setTriggerWidth();
-    }
+    // Always set the trigger width since we need to
+    // update the panel with its new minWidth when opening it
+    this._setTriggerWidth();
 
     this._calculateOverlayPosition();
     this._placeholderState = this._floatPlaceholderState();

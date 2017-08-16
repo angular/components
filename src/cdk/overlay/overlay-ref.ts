@@ -47,7 +47,7 @@ export class OverlayRef implements PortalHost {
 
     // Update the pane element with the given state configuration.
     this._updateStackingOrder();
-    this.updateSize();
+    this._setSizeStyles();
     this.updateDirection();
     this.updatePosition();
     this._state.scrollStrategy.enable();
@@ -155,8 +155,29 @@ export class OverlayRef implements PortalHost {
     this._pane.setAttribute('dir', this._state.direction!);
   }
 
+  /** Updates the state size of the overlay */
+  updateSize(state: OverlayState) {
+    if (state.width || state.width === 0) {
+      this._state.width = state.width;
+    }
+
+    if (state.height || state.height === 0) {
+      this._state.height = state.height;
+    }
+
+    if (state.minWidth || state.minWidth === 0) {
+      this._state.minWidth = state.minWidth;
+    }
+
+    if (state.minHeight || state.minHeight === 0) {
+      this._state.minHeight = state.minHeight;
+    }
+
+    this._setSizeStyles();
+  }
+
   /** Updates the size of the overlay based on the overlay config. */
-  updateSize() {
+  private _setSizeStyles() {
     if (this._state.width || this._state.width === 0) {
       this._pane.style.width = formatCssUnit(this._state.width);
     }
