@@ -1171,8 +1171,14 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     return this.options.length + this.optionGroups.length;
   }
 
-  /** Sets the list of element IDs that currently describe this select. */
+  // Implemented as part of MdFormFieldControl.
   setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
+
+  // Implemented as part of MdFormFieldControl.
+  onContainerClick() {
+    this.focus();
+    this.open();
+  }
 }
 
 /** Clamps a value n between min and max values. */

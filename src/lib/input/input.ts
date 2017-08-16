@@ -197,6 +197,8 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
     }
   }
 
+  focus() { this._elementRef.nativeElement.focus(); }
+
   /** Callback for the cases where the focused state of the input changes. */
   _focusChanged(isFocused: boolean) {
     if (isFocused !== this.focused) {
@@ -282,5 +284,5 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
   setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
 
   // Implemented as part of MdFormFieldControl.
-  focus() { this._elementRef.nativeElement.focus(); }
+  onContainerClick() { this.focus(); }
 }

@@ -48,6 +48,6 @@ export abstract class MdFormFieldControl<T> {
   /** Sets the list of element IDs that currently describe this control. */
   abstract setDescribedByIds(ids: string[]): void;
 
-  /** Focuses this control. */
-  abstract focus(): void;
+  /** Handles a click on the control's container. */
+  abstract onContainerClick(event: MouseEvent): void;
 }
