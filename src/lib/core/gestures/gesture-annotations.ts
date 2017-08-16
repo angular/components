@@ -24,8 +24,8 @@ export interface HammerInput {
 
 /** @docs-private */
 export enum HammerDirection {
-  left = 2,
-  right = 4
+  Left = 2,
+  Right = 4
 }
 
 /** @docs-private */

@@ -211,7 +211,7 @@ describe('MdTabHeader', () => {
           .toBe(0, 'Expected no ripple to show up after mousedown');
       });
 
-      it('should update scroll to next set on swipe', () => {
+      it('should update pagination on swipe', () => {
         appComponent.addTabsForScrolling();
         fixture.detectChanges();
 

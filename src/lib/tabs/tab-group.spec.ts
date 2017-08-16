@@ -7,7 +7,7 @@ import {dispatchFakeEvent, FakeViewportRuler} from '@angular/cdk/testing';
 import {Observable} from 'rxjs/Observable';
 import {MdTab, MdTabGroup, MdTabHeaderPosition, MdTabsModule} from './index';
 import {TestGestureConfig} from '../core/gestures/test-gesture-config';
-
+import {HammerDirection} from '../core';
 
 describe('MdTabGroup', () => {
   let gestureConfig: TestGestureConfig;
@@ -177,20 +177,39 @@ describe('MdTabGroup', () => {
         .toBe(0, 'Expected no ripple to show up on label mousedown.');
     });
 
-    it('should switch tabs on body swipe', () => {
+    it('should change tabs on body swipe', () => {
       let component = fixture.debugElement.componentInstance;
       component.selectedIndex = 0;
       checkSelectedIndex(0, fixture);
 
       // select the second tab
-      const body =  fixture.nativeElement.
-        querySelector('.mat-tab-body-active .mat-tab-body-content');
+      const body =
+          fixture.nativeElement.querySelector('.mat-tab-body-active .mat-tab-body-content');
 
-      dispatchSwipeEvent(body, 2, gestureConfig);
+      dispatchSwipeEvent(body, HammerDirection.Left, gestureConfig);
       checkSelectedIndex(1, fixture);
 
-      dispatchSwipeEvent(body, 4, gestureConfig);
+      dispatchSwipeEvent(body, HammerDirection.Right, gestureConfig);
       checkSelectedIndex(0, fixture);
+    });
+
+    it('should change tabs to next non-disabled on body swipe', () => {
+      let disabledFixture = TestBed.createComponent(DisabledTabsTestApp);
+      disabledFixture.detectChanges();
+
+      let component = disabledFixture.debugElement.componentInstance;
+      component.selectedIndex = 0;
+      checkSelectedIndex(0, disabledFixture);
+
+      // select the second tab
+      const body =
+        disabledFixture.nativeElement.querySelector('.mat-tab-body-active .mat-tab-body-content');
+
+      dispatchSwipeEvent(body, HammerDirection.Left, gestureConfig);
+      checkSelectedIndex(2, disabledFixture);
+
+      dispatchSwipeEvent(body, HammerDirection.Right, gestureConfig);
+      checkSelectedIndex(0, disabledFixture);
     });
   });
 
@@ -315,12 +334,12 @@ describe('MdTabGroup', () => {
   });
 
   function dispatchSwipeEvent(bodyElement: HTMLElement,
-                              direction: number,
+                              direction: HammerDirection,
                               config: TestGestureConfig): void {
     config.emitEventForElement('swipe', bodyElement, {
-      deltaX: direction === 2 ? -100 : 100,
+      deltaX: direction === HammerDirection.Left ? -100 : 100,
       direction: direction,
-      srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
+      srcEvent: {preventDefault: jasmine.createSpy('preventDefault')}
     });
   }
 
