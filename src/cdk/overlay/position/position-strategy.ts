@@ -6,8 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {OverlayRef} from '@angular/cdk/overlay';
+
 /** Strategy for setting the position on an overlay. */
 export interface PositionStrategy {
+
+  /** Attaches this position strategy to an overlay. */
+  attach(overlay: OverlayRef): void;
 
   /** Updates the position of the overlay element. */
   apply(element: Element): void;

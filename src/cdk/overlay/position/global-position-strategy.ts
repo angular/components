@@ -7,6 +7,7 @@
  */
 
 import {PositionStrategy} from './position-strategy';
+import {OverlayRef} from '../overlay-ref';
 
 
 /**
@@ -16,6 +17,9 @@ import {PositionStrategy} from './position-strategy';
  * element to become blurry.
  */
 export class GlobalPositionStrategy implements PositionStrategy {
+  /** The overlay to which this strategy is attached. */
+  private _overlayRef: OverlayRef;
+
   private _cssPosition: string = 'static';
   private _topOffset: string = '';
   private _bottomOffset: string = '';
@@ -28,6 +32,10 @@ export class GlobalPositionStrategy implements PositionStrategy {
 
   /* A lazily-created wrapper for the overlay element that is used as a flex container.  */
   private _wrapper: HTMLElement | null = null;
+
+  attach(overlayRef: OverlayRef): void {
+    this._overlayRef = overlayRef;
+  }
 
   /**
    * Sets the top position of the overlay. Clears any previously set vertical position.
