@@ -107,6 +107,16 @@ import {
   MdDialogTitle
 } from './dialog/index';
 import {
+  MdError,
+  MdFormField,
+  MdFormFieldControl,
+  MdFormFieldModule,
+  MdHint,
+  MdPlaceholder,
+  MdPrefix,
+  MdSuffix
+} from './form-field/index';
+import {
   MdAccordion,
   MdAccordionDisplayMode,
   MdExpansionModule,
@@ -375,6 +385,14 @@ export {MdDialogContent as MatDialogContent};
 export {MdDialogActions as MatDialogActions};
 export {MdDialogConfig as MatDialogConfig};
 export {MdDialogRef as MatDialogRef};
+export {MdFormFieldModule as MatFormFieldModule};
+export {MdError as MatError};
+export {MdFormField as MatFormField};
+export {MdFormFieldControl as MatFormFieldControl};
+export {MdHint as MatHint};
+export {MdPlaceholder as MatPlaceholder};
+export {MdPrefix as MatPrefix};
+export {MdSuffix as MatSuffix};
 export {MdExpansionModule as MatExpansionModule};
 export {MdAccordion as MatAccordion};
 export {MdAccordionDisplayMode as MatAccordionDisplayMode};
