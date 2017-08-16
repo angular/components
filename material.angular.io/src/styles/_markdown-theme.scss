@@ -8,6 +8,7 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
   $is-dark-theme: map-get($theme, is-dark);
+  $exportBackgroundOpacity: if($is-dark-theme, 0.06, 0.03);
 
   .docs-markdown-a {
     color: mat-color($primary);
@@ -21,13 +22,13 @@
       background: transparent;
     }
   }
+  
+  .docs-markdown-h3 .material-icons,
+  .docs-markdown-h4 .material-icons {
+    color: mat-color($foreground, secondary-text);
+  }
 
   .docs-markdown-code {
-    @if $is-dark-theme {
-      background: rgba(mat-color($foreground, secondary-text), .06);
-    }
-    @else {
-      background: rgba(mat-color($foreground, secondary-text), .03);
-    }
+    background: rgba(mat-color($foreground, secondary-text), $exportBackgroundOpacity);
   }
 }

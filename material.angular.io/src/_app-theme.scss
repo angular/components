@@ -9,6 +9,7 @@
 @import './app/shared/example-viewer/example-viewer-theme';
 @import './app/shared/footer/footer-theme';
 @import './app/shared/navbar/navbar-theme';
+@import './app/shared/table-of-contents/table-of-contents-theme';
 @import './styles/api-theme';
 @import './styles/markdown-theme';
 @import './styles/svg-theme';
@@ -53,4 +54,5 @@
   @include guide-list-theme($theme);
   @include home-page-theme($theme);
   @include nav-bar-theme($theme);
+  @include table-of-contents-theme($theme);
 }
