@@ -46,3 +46,6 @@ export * from './tabs/index';
 export * from './tabs/tab-nav-bar/index';
 export * from './toolbar/index';
 export * from './tooltip/index';
+
+// Export all classes and types with mat-prefix
+export * from './mat-exports';
