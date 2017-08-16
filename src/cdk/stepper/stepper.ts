@@ -109,9 +109,12 @@ export class CdkStepper {
   @Input()
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
-    if (this._selectedIndex != index && !this._anyControlsInvalid(index)) {
+    if (this._anyControlsInvalid(index)) {
+      // remove focus from clicked step header if the step is not able to be selected
+      this._stepHeader.toArray()[index].nativeElement.blur();
+    } else if (this._selectedIndex != index) {
       this._emitStepperSelectionEvent(index);
-      this._focusStep(this._selectedIndex);
+      this._focusIndex = this._selectedIndex;
     }
   }
   private _selectedIndex: number = 0;

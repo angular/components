@@ -9,6 +9,11 @@
 
   .mat-horizontal-stepper-header, .mat-vertical-stepper-header {
 
+    &:focus,
+    &:hover {
+      background-color: mat-color($background, hover);
+    }
+
     .mat-stepper-label {
       color: mat-color($foreground, text);
     }
@@ -33,11 +38,11 @@
     background-color: mat-color($background, card);
   }
 
-  .mat-vertical-content-container {
+  .mat-stepper-vertical-line::before {
     border-left-color: mat-color($foreground, divider);
   }
 
-  .mat-connector-line {
+  .mat-stepper-horizontal-line {
     border-top-color: mat-color($foreground, divider);
   }
 }
