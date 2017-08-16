@@ -45,6 +45,10 @@ export class OverlayRef implements PortalHost {
   attach(portal: Portal<any>): any {
     let attachResult = this._portalHost.attach(portal);
 
+    if (this._state.positionStrategy) {
+      this._state.positionStrategy.attach(this);
+    }
+
     // Update the pane element with the given state configuration.
     this._updateStackingOrder();
     this.updateSize();

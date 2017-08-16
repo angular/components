@@ -537,6 +537,7 @@ class FakePositionStrategy implements PositionStrategy {
     return Promise.resolve(null);
   }
 
+  attach() {}
   dispose() {}
 }
 
