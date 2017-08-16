@@ -38,11 +38,11 @@
     background-color: mat-color($background, card);
   }
 
-  .mat-vertical-content-container {
+  .mat-stepper-vertical-line::before {
     border-left-color: mat-color($foreground, divider);
   }
 
-  .mat-connector-line {
+  .mat-stepper-horizontal-line {
     border-top-color: mat-color($foreground, divider);
   }
 }
