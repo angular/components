@@ -20,14 +20,13 @@ import {
   AfterContentChecked,
   AfterContentInit,
   OnDestroy,
-  NgZone,
   Renderer2,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
 } from '@angular/core';
 import {HammerInput} from '../core';
 import {Directionality, Direction} from '@angular/cdk/bidi';
-import {RIGHT_ARROW, LEFT_ARROW, ENTER} from '@angular/cdk/keycodes';
+import {RIGHT_ARROW, LEFT_ARROW, ENTER, SPACE} from '@angular/cdk/keycodes';
 import {auditTime, startWith} from '@angular/cdk/rxjs';
 import {Subscription} from 'rxjs/Subscription';
 import {of as observableOf} from 'rxjs/observable/of';
@@ -36,8 +35,6 @@ import {fromEvent} from 'rxjs/observable/fromEvent';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdInkBar} from './ink-bar';
 import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
-import {RxChain, debounceTime} from '@angular/cdk/rxjs';
-import {Platform} from '@angular/cdk/platform';
 
 /**
  * The directions that scrolling can go in when the header's tabs exceed the header width. 'After'
@@ -118,15 +115,11 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
 
   private _selectedIndex: number = 0;
 
-  /** subscription for the window resize handler */
-  private _resizeSubscription: Subscription | null;
-
   /** The index of the active tab. */
   @Input()
   get selectedIndex(): number { return this._selectedIndex; }
   set selectedIndex(value: number) {
     this._selectedIndexChanged = this._selectedIndex != value;
-
     this._selectedIndex = value;
     this._focusIndex = value;
   }
@@ -138,19 +131,10 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
   @Output() indexFocused = new EventEmitter();
 
   constructor(private _elementRef: ElementRef,
-              private _ngZone: NgZone,
               private _renderer: Renderer2,
               private _changeDetectorRef: ChangeDetectorRef,
-              @Optional() private _dir: Directionality,
-              platform: Platform) {
+              @Optional() private _dir: Directionality) {
     super();
-
-    if (platform.isBrowser) {
-      // TODO: Add library level window listener https://goo.gl/y25X5M
-      this._resizeSubscription = RxChain.from(fromEvent(window, 'resize'))
-        .call(debounceTime, 150)
-        .subscribe(() => this._checkPaginationEnabled());
-    }
   }
 
   ngAfterContentChecked(): void {
@@ -189,7 +173,9 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
         this._focusPreviousTab();
         break;
       case ENTER:
+      case SPACE:
         this.selectFocusedIndex.emit(this.focusIndex);
+        event.preventDefault();
         break;
     }
   }
@@ -198,16 +184,14 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
    * Aligns the ink bar to the selected tab on load.
    */
   ngAfterContentInit() {
-    this._realignInkBar = this._ngZone.runOutsideAngular(() => {
-      let dirChange = this._dir ? this._dir.change : observableOf(null);
-      let resize = typeof window !== 'undefined' ?
-          auditTime.call(fromEvent(window, 'resize'), 10) :
-          observableOf(null);
+    const dirChange = this._dir ? this._dir.change : observableOf(null);
+    const resize = typeof window !== 'undefined' ?
+        auditTime.call(fromEvent(window, 'resize'), 150) :
+        observableOf(null);
 
-      return startWith.call(merge(dirChange, resize), null).subscribe(() => {
-        this._updatePagination();
-        this._alignInkBarToSelectedTab();
-      });
+    this._realignInkBar = startWith.call(merge(dirChange, resize), null).subscribe(() => {
+      this._updatePagination();
+      this._alignInkBarToSelectedTab();
     });
   }
 
@@ -215,11 +199,6 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
     if (this._realignInkBar) {
       this._realignInkBar.unsubscribe();
       this._realignInkBar = null;
-    }
-
-    if (this._resizeSubscription) {
-      this._resizeSubscription.unsubscribe();
-      this._resizeSubscription = null;
     }
   }
 
@@ -408,14 +387,18 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
    * should be called sparingly.
    */
   _checkPaginationEnabled() {
-    this._showPaginationControls =
+    const isEnabled =
         this._tabList.nativeElement.scrollWidth > this._elementRef.nativeElement.offsetWidth;
 
-    if (!this._showPaginationControls) {
+    if (!isEnabled) {
       this.scrollDistance = 0;
     }
 
-    this._changeDetectorRef.markForCheck();
+    if (isEnabled !== this._showPaginationControls) {
+      this._changeDetectorRef.markForCheck();
+    }
+
+    this._showPaginationControls = isEnabled;
   }
 
   /**
@@ -449,9 +432,9 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
 
   /** Tells the ink-bar to align itself to the current label wrapper */
   private _alignInkBarToSelectedTab(): void {
-    const selectedLabelWrapper = this._labelWrappers && this._labelWrappers.length
-        ? this._labelWrappers.toArray()[this.selectedIndex].elementRef.nativeElement
-        : null;
+    const selectedLabelWrapper = this._labelWrappers && this._labelWrappers.length ?
+        this._labelWrappers.toArray()[this.selectedIndex].elementRef.nativeElement :
+        null;
 
     this._inkBar.alignToElement(selectedLabelWrapper);
   }

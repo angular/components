@@ -20,7 +20,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import {MdOption} from '../core';
-import {ActiveDescendantKeyManager} from '../core/a11y/activedescendant-key-manager';
+import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 
 /**
  * Autocomplete IDs need to be unique across components, so this counter exists outside of
@@ -43,7 +43,7 @@ let _uniqueAutocompleteIdCounter = 0;
 export class MdAutocomplete implements AfterContentInit {
 
   /** Manages active item in option list based on key events. */
-  _keyManager: ActiveDescendantKeyManager;
+  _keyManager: ActiveDescendantKeyManager<MdOption>;
 
   /** Whether the autocomplete panel should be visible, depending on option length. */
   showPanel = false;
@@ -66,7 +66,7 @@ export class MdAutocomplete implements AfterContentInit {
   constructor(private _changeDetectorRef: ChangeDetectorRef) { }
 
   ngAfterContentInit() {
-    this._keyManager = new ActiveDescendantKeyManager(this.options).withWrap();
+    this._keyManager = new ActiveDescendantKeyManager<MdOption>(this.options).withWrap();
   }
 
   /**

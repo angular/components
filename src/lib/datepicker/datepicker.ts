@@ -79,7 +79,7 @@ export const MD_DATEPICKER_SCROLL_STRATEGY_PROVIDER = {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-datepicker-content',
+  selector: 'md-datepicker-content, mat-datepicker-content',
   templateUrl: 'datepicker-content.html',
   styleUrls: ['datepicker-content.css'],
   host: {
@@ -224,14 +224,13 @@ export class MdDatepicker<D> implements OnDestroy {
     }
   }
 
-  /** Selects the given date and closes the currently open popup or dialog. */
-  _selectAndClose(date: D): void {
+  /** Selects the given date */
+  _select(date: D): void {
     let oldValue = this._selected;
     this._selected = date;
     if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
       this.selectedChanged.emit(date);
     }
-    this.close();
   }
 
   /**
@@ -278,7 +277,9 @@ export class MdDatepicker<D> implements OnDestroy {
     if (this._calendarPortal && this._calendarPortal.isAttached) {
       this._calendarPortal.detach();
     }
-    if (this._focusedElementBeforeOpen && 'focus' in this._focusedElementBeforeOpen) {
+    if (this._focusedElementBeforeOpen &&
+      typeof this._focusedElementBeforeOpen.focus === 'function') {
+
       this._focusedElementBeforeOpen.focus();
       this._focusedElementBeforeOpen = null;
     }

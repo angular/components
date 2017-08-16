@@ -47,7 +47,7 @@ import {Subscription} from 'rxjs/Subscription';
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-calendar',
+  selector: 'md-calendar, mat-calendar',
   templateUrl: 'calendar.html',
   styleUrls: ['calendar.css'],
   host: {
@@ -79,6 +79,9 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
 
   /** Emits when the currently selected date changes. */
   @Output() selectedChange = new EventEmitter<D>();
+
+  /** Emits when any date is selected. */
+  @Output() userSelection = new EventEmitter<void>();
 
   /** Date filter for the month and year views. */
   _dateFilterForViews = (date: D) => {
@@ -157,6 +160,10 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
     if (!this._dateAdapter.sameDate(date, this.selected)) {
       this.selectedChange.emit(date);
     }
+  }
+
+  _userSelected(): void {
+    this.userSelection.emit();
   }
 
   /** Handles month selection in the year view. */

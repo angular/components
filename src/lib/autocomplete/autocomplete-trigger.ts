@@ -97,8 +97,8 @@ export function getMdAutocompleteMissingPanelError(): Error {
 }
 
 @Directive({
-  selector: 'input[mdAutocomplete], input[matAutocomplete],' +
-            'textarea[mdAutocomplete], textarea[matAutocomplete]',
+  selector: `input[mdAutocomplete], input[matAutocomplete],
+             textarea[mdAutocomplete], textarea[matAutocomplete]`,
   host: {
     'role': 'combobox',
     'autocomplete': 'off',
@@ -231,7 +231,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   /** The currently active option, coerced to MdOption type. */
   get activeOption(): MdOption | null {
     if (this.autocomplete && this.autocomplete._keyManager) {
-      return this.autocomplete._keyManager.activeItem as MdOption;
+      return this.autocomplete._keyManager.activeItem;
     }
 
     return null;
@@ -248,12 +248,12 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       fromEvent(this._document, 'touchend')
     )).call(filter, (event: MouseEvent | TouchEvent) => {
       const clickTarget = event.target as HTMLElement;
-      const inputContainer = this._formField ?
+      const formField = this._formField ?
           this._formField._elementRef.nativeElement : null;
 
       return this._panelOpen &&
              clickTarget !== this._element.nativeElement &&
-             (!inputContainer || !inputContainer.contains(clickTarget)) &&
+             (!formField || !formField.contains(clickTarget)) &&
              (!!this._overlayRef && !this._overlayRef.overlayElement.contains(clickTarget));
     }).result();
   }
@@ -292,18 +292,20 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   _handleKeydown(event: KeyboardEvent): void {
     if (event.keyCode === ESCAPE && this.panelOpen) {
+      this._resetActiveItem();
       this.closePanel();
       event.stopPropagation();
     } else if (this.activeOption && event.keyCode === ENTER && this.panelOpen) {
       this.activeOption._selectViaInteraction();
+      this._resetActiveItem();
       event.preventDefault();
     } else {
       const prevActiveItem = this.autocomplete._keyManager.activeItem;
       const isArrowKey = event.keyCode === UP_ARROW || event.keyCode === DOWN_ARROW;
 
-      this.autocomplete._keyManager.onKeydown(event);
-
-      if (isArrowKey) {
+      if (this.panelOpen) {
+        this.autocomplete._keyManager.onKeydown(event);
+      } else if (isArrowKey) {
         this.openPanel();
       }
 
@@ -439,7 +441,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    * Clear any previous selected option and emit a selection change event for this option
    */
   private _clearPreviousSelectedOption(skip: MdOption) {
-    this.autocomplete.options.forEach((option) => {
+    this.autocomplete.options.forEach(option => {
       if (option != skip && option.selected) {
         option.deselect();
       }
