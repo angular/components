@@ -267,11 +267,6 @@ import {
   MdTooltipModule
 } from './tooltip/index';
 
-/**
- * This file contains re-exports of all Md-prefixed classes and types that are exported by the
- * public-api. Used for mat-compatible projects that reference selectors with the mat-prefix.
- */
-
 export {MdAutocompleteModule as MatAutocompleteModule};
 export {MdAutocomplete as MatAutocomplete};
 export {MD_AUTOCOMPLETE_SCROLL_STRATEGY as MAT_AUTOCOMPLETE_SCROLL_STRATEGY};
