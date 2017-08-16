@@ -607,6 +607,34 @@ describe('MatSelect', () => {
         trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
       }));
 
+      it('should set the width of the overlay based on the trigger and resize', async(() => {
+      trigger.style.width = '200px';
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        trigger.click();
+        fixture.detectChanges();
+        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        expect(pane.style.minWidth).toBe('200px',
+            'Expected pane minWidth to be 200px initially');
+
+        const backdrop =
+            overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+        backdrop.click();
+        fixture.detectChanges();
+        fixture.whenStable().then(() => {
+
+          trigger.style.width = '400px';
+          fixture.detectChanges();
+          fixture.whenStable().then(() => {
+            trigger.click();
+            fixture.detectChanges();
+            expect(pane.style.minWidth).toBe('400px',
+                'Expected pane minWidth to be 400px after resize');
+          });
+        });
+      });
+    }));
+
       it('should not throw when attempting to open too early', () => {
         // Create component and then immediately open without running change detection
         fixture = TestBed.createComponent(BasicSelect);

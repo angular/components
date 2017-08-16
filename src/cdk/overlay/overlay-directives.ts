@@ -275,6 +275,23 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       hasBackdrop: this.hasBackdrop
     });
 
+    this._configureSize(overlayConfig);
+
+    overlayConfig.hasBackdrop = this.hasBackdrop;
+
+    if (this.backdropClass) {
+      overlayConfig.backdropClass = this.backdropClass;
+    }
+
+    this._position = this._createPositionStrategy() as ConnectedPositionStrategy;
+    overlayConfig.positionStrategy = this._position;
+    overlayConfig.scrollStrategy = this.scrollStrategy;
+
+    return overlayConfig;
+  }
+
+  /** Configure the overlay size based on the directive's inputs */
+  private _configureSize(overlayConfig: OverlayState): void {
     if (this.width || this.width === 0) {
       overlayConfig.width = this.width;
     }
@@ -290,12 +307,9 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     if (this.minHeight || this.minHeight === 0) {
       overlayConfig.minHeight = this.minHeight;
     }
-
     if (this.backdropClass) {
       overlayConfig.backdropClass = this.backdropClass;
     }
-
-    return overlayConfig;
   }
 
   /** Returns the position strategy of the overlay to be set on the overlay config */
@@ -330,6 +344,11 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _attachOverlay() {
     if (!this._overlayRef) {
       this._createOverlay();
+    } else {
+      // Update the overlay size, in case the directive's inputs have changed
+      const overlayState = new OverlayState();
+      this._configureSize(overlayState);
+      this._overlayRef.updateSize(overlayState);
     }
 
     this._position.withDirection(this.dir);

@@ -225,6 +225,27 @@ export class OverlayRef implements PortalOutlet {
     this._pane.setAttribute('dir', this._config.direction!);
   }
 
+  /** Updates the state size of the overlay */
+  updateSize(state: OverlayState) {
+    if (state.width || state.width === 0) {
+      this._config.width = state.width;
+    }
+
+    if (state.height || state.height === 0) {
+      this._config.height = state.height;
+    }
+
+    if (state.minWidth || state.minWidth === 0) {
+      this._config.minWidth = state.minWidth;
+    }
+
+    if (state.minHeight || state.minHeight === 0) {
+      this._config.minHeight = state.minHeight;
+    }
+
+    this._updateElementSize();
+  }
+
   /** Updates the size of the overlay element based on the overlay config. */
   private _updateElementSize() {
     if (this._config.width || this._config.width === 0) {
