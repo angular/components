@@ -208,11 +208,7 @@ export class CdkStepper {
     const stepsArray = this._steps.toArray();
     stepsArray[this._selectedIndex].interacted = true;
     if (this._linear) {
-      for (let i = 0; i < index; i++) {
-        if (!stepsArray[i].stepControl.valid) {
-          return true;
-        }
-      }
+      return stepsArray.slice(0, index).some(step => step.stepControl.invalid);
     }
     return false;
   }

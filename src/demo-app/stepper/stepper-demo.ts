@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Validators, FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   moduleId: module.id,
@@ -10,6 +10,9 @@ import {Validators, FormBuilder, FormGroup} from '@angular/forms';
 export class StepperDemo {
   formGroup: FormGroup;
   isNonLinear = false;
+
+  nameFormGroup: FormGroup;
+  phoneFormGroup: FormGroup;
 
   steps = [
     {label: 'Confirm your name', content: 'Last name, First name.'},
@@ -34,6 +37,15 @@ export class StepperDemo {
           phoneFormCtrl: [''],
         })
       ])
+    });
+
+    this.nameFormGroup = this._formBuilder.group({
+      firstNameCtrl: ['', Validators.required],
+      lastNameCtrl: ['', Validators.required],
+    });
+
+    this.phoneFormGroup = this._formBuilder.group({
+      phoneCtrl: ['', Validators.required]
     });
   }
 }
