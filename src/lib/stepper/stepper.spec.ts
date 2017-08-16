@@ -75,6 +75,16 @@ describe('MdHorizontalStepper', () => {
       let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
       checkKeyboardEvent(stepperComponent, fixture, stepHeaders);
     });
+
+    it('should only be able to return to a previous step if it is editable', () => {
+      checkEditableStep(stepperComponent, fixture);
+    });
+
+    it('should show icon instead of index and active label on completed steps', () => {
+      let stepperComponentEl = fixture.debugElement
+          .query(By.css('md-horizontal-stepper')).nativeElement;
+      checkStepIcon(stepperComponent, stepperComponentEl, fixture);
+    });
   });
 
   describe('linear horizontal stepper', () => {
@@ -104,6 +114,10 @@ describe('MdHorizontalStepper', () => {
       let stepHeaderEl = fixture.debugElement
           .queryAll(By.css('.mat-horizontal-stepper-header'))[1].nativeElement;
       checkLinearStepperValidity(stepHeaderEl, stepperComponent, testComponent, fixture);
+    });
+
+    it('should be able to move to next step even when invalid if current step is optional', () => {
+      checkOptionalStep(stepperComponent, testComponent, fixture);
     });
   });
 });
@@ -173,6 +187,16 @@ describe('MdVerticalStepper', () => {
       let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
       checkKeyboardEvent(stepperComponent, fixture, stepHeaders);
     });
+
+    it('should only be able to return to a previous step if it is editable', () => {
+      checkEditableStep(stepperComponent, fixture);
+    });
+
+    it('should show icon instead of index on completed steps', () => {
+      let stepperComponentEl = fixture.debugElement
+          .query(By.css('md-vertical-stepper')).nativeElement;
+      checkStepIcon(stepperComponent, stepperComponentEl, fixture);
+    });
   });
 
   describe('linear vertical stepper', () => {
@@ -203,6 +227,10 @@ describe('MdVerticalStepper', () => {
           .queryAll(By.css('.mat-vertical-stepper-header'))[1].nativeElement;
 
       checkLinearStepperValidity(stepHeaderEl, stepperComponent, testComponent, fixture);
+    });
+
+    it('should be able to move to next step even when invalid if current step is optional', () => {
+      checkOptionalStep(stepperComponent, testComponent, fixture);
     });
   });
 });
@@ -410,6 +438,57 @@ function checkLinearStepperValidity(stepHeaderEl: HTMLElement,
 
   expect(testComponent.oneGroup.valid).toBe(true);
   expect(stepperComponent.selectedIndex).toBe(1);
+}
+
+function checkEditableStep(stepperComponent: MdStepper,
+                           fixture: ComponentFixture<any>) {
+  stepperComponent.selectedIndex = 1;
+  stepperComponent._steps.toArray()[0].editable = false;
+  let previousButtonNativeEl = fixture.debugElement
+      .queryAll(By.directive(MdStepperPrevious))[1].nativeElement;
+  previousButtonNativeEl.click();
+  fixture.detectChanges();
+
+  expect(stepperComponent.selectedIndex).toBe(1);
+
+  stepperComponent._steps.toArray()[0].editable = true;
+  previousButtonNativeEl.click();
+  fixture.detectChanges();
+
+  expect(stepperComponent.selectedIndex).toBe(0);
+}
+
+function checkOptionalStep(stepperComponent: MdStepper,
+                           testComponent: LinearMdHorizontalStepperApp | LinearMdVerticalStepperApp,
+                           fixture: ComponentFixture<any>) {
+  expect(testComponent.oneGroup.get('oneCtrl')!.value).toBe('');
+  expect(testComponent.oneGroup.get('oneCtrl')!.valid).toBe(false);
+  expect(testComponent.oneGroup.valid).toBe(false);
+  expect(stepperComponent.selectedIndex).toBe(0);
+
+  stepperComponent._steps.toArray()[0].optional = true;
+  let nextButtonNativeEl = fixture.debugElement
+      .queryAll(By.directive(MdStepperNext))[0].nativeElement;
+  nextButtonNativeEl.click();
+  fixture.detectChanges();
+
+  expect(stepperComponent.selectedIndex).toBe(1);
+}
+
+function checkStepIcon(stepperComponent: MdStepper,
+                       stepperComponentEl: HTMLElement,
+                       fixture: ComponentFixture<any>) {
+  expect(stepperComponent._steps.toArray()[0].completed).toBe(false);
+  expect(stepperComponentEl.querySelectorAll('.mat-stepper-index-interacted').length).toBe(0);
+  expect(stepperComponentEl.querySelectorAll('.mat-stepper-label-active').length).toBe(1);
+  let nextButtonNativeEl = fixture.debugElement
+      .queryAll(By.directive(MdStepperNext))[0].nativeElement;
+  nextButtonNativeEl.click();
+  fixture.detectChanges();
+
+  expect(stepperComponent._steps.toArray()[0].completed).toBe(true);
+  expect(stepperComponentEl.querySelectorAll('.mat-stepper-index-interacted').length).toBe(1);
+  expect(stepperComponentEl.querySelectorAll('.mat-stepper-label-active').length).toBe(2);
 }
 
 @Component({
