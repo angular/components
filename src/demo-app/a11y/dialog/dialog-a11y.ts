@@ -27,6 +27,10 @@ export class DialogAccessibilityDemo {
   openNeptuneDialog() {
     this.dialog.open(DialogNeptuneExampleDialog);
   }
+
+  openAddressDialog() {
+    this.dialog.open(DialogAddressFormDialog);
+  }
 }
 
 @Component({
@@ -39,10 +43,7 @@ export class DialogFruitExampleDialog {}
 @Component({
   moduleId: module.id,
   selector: 'dialog-welcome-a11y',
-  template: `Welcome to Angular Material dialog demo page!
-  <md-dialog-actions>
-    <button md-raised-button color="primary" md-dialog-close>Close</button>
-  </md-dialog-actions>`
+  templateUrl: 'dialog-welcome-a11y.html'
 })
 export class DialogWelcomeExampleDialog {}
 
@@ -69,5 +70,11 @@ export class DialogNeptuneExampleDialog {
   ],
   templateUrl: './dialog-neptune-iframe-a11y.html'
 })
-export class DialogNeptuneIFrameDialog {
-}
+export class DialogNeptuneIFrameDialog {}
+
+@Component({
+  moduleId: module.id,
+  selector: 'dialog-address-form-a11y',
+  templateUrl: 'dialog-address-form-a11y.html'
+})
+export class DialogAddressFormDialog {}

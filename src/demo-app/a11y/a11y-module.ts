@@ -12,6 +12,7 @@ import {CheckboxAccessibilityDemo} from './checkbox/checkbox-a11y';
 import {ChipsAccessibilityDemo} from './chips/chips-a11y';
 import {
   DialogAccessibilityDemo,
+  DialogAddressFormDialog,
   DialogFruitExampleDialog,
   DialogNeptuneExampleDialog,
   DialogNeptuneIFrameDialog,
@@ -57,6 +58,7 @@ export class AccessibilityRoutingModule {}
     ChipsAccessibilityDemo,
     DatepickerAccessibilityDemo,
     DialogAccessibilityDemo,
+    DialogAddressFormDialog,
     DialogFruitExampleDialog,
     DialogNeptuneExampleDialog,
     DialogNeptuneIFrameDialog,
@@ -72,6 +74,7 @@ export class AccessibilityRoutingModule {}
   ],
   entryComponents: [
     DialogAccessibilityDemo,
+    DialogAddressFormDialog,
     DialogFruitExampleDialog,
     DialogNeptuneExampleDialog,
     DialogNeptuneIFrameDialog,
