@@ -679,6 +679,17 @@ describe('MdDialog', () => {
       document.body.removeChild(input);
     }));
 
+    it('should move focus to the container if there are no focusable elements in the dialog',
+      fakeAsync(() => {
+        dialog.open(DialogWithoutFocusableElements);
+
+        viewContainerFixture.detectChanges();
+        flushMicrotasks();
+
+        expect(document.activeElement.tagName)
+            .toBe('MD-DIALOG-CONTAINER', 'Expected dialog container to be focused.');
+      }));
+
   });
 
   describe('dialog content elements', () => {
@@ -893,6 +904,9 @@ class DialogWithInjectedData {
   constructor(@Inject(MD_DIALOG_DATA) public data: any) { }
 }
 
+@Component({template: '<p>Pasta</p>'})
+class DialogWithoutFocusableElements {}
+
 // Create a real (non-test) NgModule as a workaround for
 // https://github.com/angular/angular/issues/10760
 const TEST_DIRECTIVES = [
@@ -901,7 +915,8 @@ const TEST_DIRECTIVES = [
   DirectiveWithViewContainer,
   ComponentWithOnPushViewContainer,
   ContentElementDialog,
-  DialogWithInjectedData
+  DialogWithInjectedData,
+  DialogWithoutFocusableElements
 ];
 
 @NgModule({
@@ -912,7 +927,8 @@ const TEST_DIRECTIVES = [
     ComponentWithChildViewContainer,
     PizzaMsg,
     ContentElementDialog,
-    DialogWithInjectedData
+    DialogWithInjectedData,
+    DialogWithoutFocusableElements,
   ],
 })
 class DialogTestModule { }
