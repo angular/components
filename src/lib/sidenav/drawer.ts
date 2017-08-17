@@ -29,8 +29,8 @@ import {Directionality, coerceBooleanProperty} from '../core';
 import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {first, takeUntil, startWith, auditTime} from '../core/rxjs/index';
-import {Subscription} from 'rxjs';
-import {of as observableOf} from 'rxjs/observable/of'
+import {Subscription} from 'rxjs/subscription';
+import {of as observableOf} from 'rxjs/observable/of';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {DOCUMENT} from '@angular/platform-browser';
 import {merge} from 'rxjs/observable/merge';
@@ -333,11 +333,13 @@ export class MdDrawerContainer implements AfterContentInit {
    * e.g., breakpointWidth="500"
    */
   @Input() breakpointWidth: number;
-  
+
   /** Whether the drawer changes modes when collapsing. */
   @Input()
   get breakpointChangeMode(): boolean { return this._breakpointChangeMode; }
-  set breakpointChangeMode(value: boolean) { this._breakpointChangeMode = coerceBooleanProperty(value); }
+  set breakpointChangeMode(value: boolean) {
+    this._breakpointChangeMode = coerceBooleanProperty(value);
+  }
   private _breakpointChangeMode: boolean = true;
 
   /**
@@ -381,19 +383,21 @@ export class MdDrawerContainer implements AfterContentInit {
         this._watchDrawerPosition(drawer);
       });
     });
-    
-    const resize = typeof window !== 'undefined' ? auditTime.call(fromEvent(window, 'resize'), 150) : observableOf(null);
-    
+
+    const resize = typeof window !== 'undefined' ?
+      auditTime.call(fromEvent(window, 'resize'), 150) :
+      observableOf(null);
+
     this._updateDrawer = startWith.call(resize, null).subscribe(() => {
       if (this._element.nativeElement.offsetWidth < this.breakpointWidth) {
         if (this.breakpointChangeMode) {
-          this._drawers.forEach(drawer => drawer.mode = "over");
+          this._drawers.forEach(drawer => drawer.mode = 'over');
         }
         this.close();
       }
-      if (window.innerWidth > this.breakpointWidth) {
+      if (this._element.nativeElement.offsetWidth > this.breakpointWidth) {
         if (this.breakpointChangeMode) {
-          this._drawers.forEach(drawer => drawer.mode = "side");
+          this._drawers.forEach(drawer => drawer.mode = 'side');
         }
         this.open();
       }
