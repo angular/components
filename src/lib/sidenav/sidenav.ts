@@ -23,6 +23,7 @@ import {
   OnDestroy,
   Inject,
   ChangeDetectorRef,
+  HostListener
 } from '@angular/core';
 import {animate, state, style, transition, trigger, AnimationEvent} from '@angular/animations';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
@@ -316,6 +317,35 @@ export class MdSidenavContainer implements AfterContentInit {
   /** The sidenav child with the `end` alignment. */
   get end() { return this._end; }
 
+  /**
+   * Width of the container at which it breaks
+   * e.g., breakpointWidth="500"
+   */
+  @Input() breakpointWidth: number;
+
+  /** Mode of the breakpoint; either true or false */
+  @Input() breakpointChangeMode: true | false = true;
+  
+  /**
+   * Responsively toggle the sidenav using the breakpoint.
+   * Note that this only works when the window is rezied.
+   * If you resize it some other way, call checkBreakpoint().
+   */
+  @HostListener('window:resize', ['$event'])
+  checkBreakpoint() {
+    if (this._element.nativeElement.offsetWidth < this.breakpointWidth) {
+      if (this.breakpointChangeMode)
+        this._sidenavs.forEach(sidenav => sidenav.mode = "over");
+      this.close();
+    }
+    if (window.innerWidth > this.breakpointWidth) {
+      if (this.breakpointChangeMode)        
+        this._sidenavs.forEach(sidenav => sidenav.mode = "side");
+      this.open();
+    }
+    this._updateStyles();
+  }
+
   /** Event emitted when the sidenav backdrop is clicked. */
   @Output() backdropClick = new EventEmitter<void>();
 
@@ -353,6 +383,7 @@ export class MdSidenavContainer implements AfterContentInit {
         this._watchSidenavAlign(sidenav);
       });
     });
+    this.checkBreakpoint();
   }
 
   /** Calls `open` of both start and end sidenavs */
