@@ -167,6 +167,10 @@ export class MdFormField implements AfterViewInit, AfterContentInit, AfterConten
 
   ngAfterContentInit() {
     this._validateControlChild();
+    if (this._control.controlType) {
+      this._elementRef.nativeElement.classList.add(
+          `mat-form-field-type-${this._control.controlType}`);
+    }
 
     // Subscribe to changes in the child control state in order to update the form field UI.
     startWith.call(this._control.stateChanges, null).subscribe(() => {

@@ -298,7 +298,11 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
    */
   stateChanges = new Subject<void>();
 
+  /** Whether the select is focused. */
   focused = false;
+
+  /** A name for this control that can be used by `md-form-field`. */
+  controlType = 'mat-select';
 
   /** Trigger that opens the select. */
   @ViewChild('trigger') trigger: ElementRef;

@@ -92,6 +92,9 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
    */
   stateChanges = new Subject<void>();
 
+  /** A name for this control that can be used by `md-form-field`. */
+  controlType = 'mat-input';
+
   /** Whether the element is disabled. */
   @Input()
   get disabled() { return this.ngControl ? this.ngControl.disabled : this._disabled; }

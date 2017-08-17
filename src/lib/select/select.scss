@@ -81,3 +81,7 @@ $mat-select-item-height: 3em !default;
     height: $mat-select-item-height;
   }
 }
+
+.mat-form-field-type-mat-select .mat-form-field-flex {
+  cursor: pointer;
+}
