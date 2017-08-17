@@ -19,7 +19,8 @@ import {
   ViewEncapsulation,
   Inject,
 } from '@angular/core';
-import {FocusOriginMonitor, Platform} from '../core';
+import {Platform} from '@angular/cdk/platform';
+import {FocusOriginMonitor} from '../core';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
@@ -111,10 +112,10 @@ export const _MdButtonMixinBase = mixinColor(mixinDisabled(mixinDisableRipple(Md
  */
 @Component({
   moduleId: module.id,
-  selector: 'button[md-button], button[md-raised-button], button[md-icon-button],' +
-            'button[md-fab], button[md-mini-fab],' +
-            'button[mat-button], button[mat-raised-button], button[mat-icon-button],' +
-            'button[mat-fab], button[mat-mini-fab]',
+  selector: `button[md-button], button[md-raised-button], button[md-icon-button],
+             button[md-fab], button[md-mini-fab],
+             button[mat-button], button[mat-raised-button], button[mat-icon-button],
+             button[mat-fab], button[mat-mini-fab]`,
   host: {
     '[disabled]': 'disabled || null',
   },

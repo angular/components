@@ -8,56 +8,58 @@
 
 import {
   AfterContentInit,
+  Attribute,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChild,
   ContentChildren,
   ElementRef,
   EventEmitter,
+  Inject,
+  InjectionToken,
   Input,
   OnDestroy,
+  OnInit,
   Optional,
   Output,
   QueryList,
   Renderer2,
   Self,
-  ViewEncapsulation,
   ViewChild,
-  ChangeDetectorRef,
-  Attribute,
-  OnInit,
-  Inject,
-  ChangeDetectionStrategy,
-  InjectionToken,
+  ViewEncapsulation,
   Directive,
 } from '@angular/core';
-import {NgForm, FormGroupDirective} from '@angular/forms';
-import {MdOption, MdOptionSelectionChange, MdOptgroup} from '../core/option/index';
-import {ENTER, SPACE, UP_ARROW, DOWN_ARROW, HOME, END} from '../core/keyboard/keycodes';
-import {FocusKeyManager} from '../core/a11y/focus-key-manager';
-import {Directionality} from '../core/bidi/index';
+import {ControlValueAccessor, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
+import {DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import {FocusKeyManager} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {filter, startWith} from '@angular/cdk/rxjs';
+import {
+  ConnectedOverlayDirective,
+  Overlay,
+  RepositionScrollStrategy,
+  // This import is only used to define a generic type. The current TypeScript version incorrectly
+  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
+  // tslint:disable-next-line:no-unused-variable
+  ScrollStrategy,
+  ViewportRuler
+} from '@angular/cdk/overlay';
+import {merge} from 'rxjs/observable/merge';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
-import {transformPlaceholder, transformPanel, fadeInContent} from './select-animations';
-import {ControlValueAccessor, NgControl} from '@angular/forms';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ConnectedOverlayDirective} from '../core/overlay/overlay-directives';
-import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
+import {fadeInContent, transformPanel, transformPlaceholder} from './select-animations';
 import {SelectionModel} from '../core/selection/selection';
-import {Overlay} from '../core/overlay/overlay';
 import {getMdSelectDynamicMultipleError, getMdSelectNonArrayValueError} from './select-errors';
-import {startWith, filter} from '../core/rxjs/index';
-import {merge} from 'rxjs/observable/merge';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
+import {MdOptgroup, MdOption, MdOptionSelectionChange} from '../core/option/index';
 import {
   FloatPlaceholderType,
-  PlaceholderOptions,
-  MD_PLACEHOLDER_GLOBAL_OPTIONS
+  MD_PLACEHOLDER_GLOBAL_OPTIONS,
+  PlaceholderOptions
 } from '../core/placeholder/placeholder-options';
-// This import is only used to define a generic type. The current TypeScript version incorrectly
-// considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
-// tslint:disable-next-line:no-unused-variable
-import {ScrollStrategy, RepositionScrollStrategy} from '../core/overlay/scroll';
 import {Platform} from '@angular/cdk/platform';
 
 /**
@@ -126,7 +128,8 @@ export const MD_SELECT_SCROLL_STRATEGY =
     new InjectionToken<() => ScrollStrategy>('md-select-scroll-strategy');
 
 /** @docs-private */
-export function MD_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay) {
+export function MD_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
+    () => RepositionScrollStrategy {
   return () => overlay.scrollStrategies.reposition();
 }
 
@@ -236,7 +239,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   _triggerWidth: number;
 
   /** Manages keyboard events for options in the panel. */
-  _keyManager: FocusKeyManager;
+  _keyManager: FocusKeyManager<MdOption>;
 
   /**
    * The width of the selected option's value. Must be set programmatically
@@ -684,7 +687,13 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       value.forEach((currentValue: any) => this._selectValue(currentValue, isUserInput));
       this._sortValues();
     } else {
-      this._selectValue(value, isUserInput);
+      const correspondingOption = this._selectValue(value, isUserInput);
+
+      // Shift focus to the active item. Note that we shouldn't do this in multiple
+      // mode, because we don't know what option the user interacted with last.
+      if (correspondingOption) {
+        this._keyManager.setActiveItem(this.options.toArray().indexOf(correspondingOption));
+      }
     }
 
     this._setValueWidth();
@@ -701,15 +710,13 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
    * @returns Option that has the corresponding value.
    */
   private _selectValue(value: any, isUserInput = false): MdOption | undefined {
-    let optionsArray = this.options.toArray();
-    let correspondingOption = optionsArray.find(option => {
+    let correspondingOption = this.options.find(option => {
       return option.value != null && option.value === value;
     });
 
     if (correspondingOption) {
       isUserInput ? correspondingOption._selectViaInteraction() : correspondingOption.select();
       this._selectionModel.select(correspondingOption);
-      this._keyManager.setActiveItem(optionsArray.indexOf(correspondingOption));
     }
 
     return correspondingOption;
@@ -734,7 +741,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Sets up a key manager to listen to keyboard events on the overlay panel. */
   private _initKeyManager() {
-    this._keyManager = new FocusKeyManager(this.options).withTypeAhead();
+    this._keyManager = new FocusKeyManager<MdOption>(this.options).withTypeAhead();
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close());
   }
 

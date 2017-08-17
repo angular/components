@@ -30,5 +30,6 @@ export class AccessibilityDemo {
     {name: 'Radio buttons', route: 'radio'},
     {name: 'Slider', route: 'slider'},
     {name: 'Slide toggle', route: 'slide-toggle'},
+    {name: 'Snack bar', route: 'snack-bar'},
   ];
 }
