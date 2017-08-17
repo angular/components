@@ -196,7 +196,7 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
   ngAfterContentInit() {
     this._focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement);
     this._focusTrap.enabled = this.isFocusTrapEnabled;
-    Promise.resolve().then(() => this._enableAnimations = true);
+    this._enableAnimations = true;
   }
 
   ngOnDestroy() {
