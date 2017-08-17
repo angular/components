@@ -48,6 +48,19 @@
   </div>
 </md-sidenav-container>
 
+<h2>Responsive Sidenav</h2>
+
+<md-sidenav-container class="demo-sidenav-container" breakpointWidth="500" breakpointChangeMode="true">
+  <md-sidenav #start2 opened mode="side">
+    Drawer
+  </md-sidenav>
+
+  <div class="demo-sidenav-content">
+    The sidenav will responsively open and close, resize your window!
+    <button md-button (click)="start2.toggle()">Toggle Start Side Drawer</button>
+  </div>
+</md-sidenav-container>
+
 <h2>Dynamic Alignment Sidenav</h2>
 
 <md-sidenav-container class="demo-sidenav-container">
