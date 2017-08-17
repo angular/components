@@ -90,7 +90,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     this._pane = overlayRef.overlayElement;
   }
 
-  /** To be used to for any cleanup after the element gets destroyed. */
+  /** Performs any cleanup after the element is destroyed. */
   dispose() { }
 
   /**
@@ -98,7 +98,6 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * to the origin fits on-screen.
    * @docs-private
    *
-   * @param element Element to which to apply the CSS styles.
    * @returns Resolves when the styles have been applied.
    */
   apply(): void {

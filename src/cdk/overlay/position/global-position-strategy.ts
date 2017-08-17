@@ -168,9 +168,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
     parentStyles.alignItems = this._alignItems;
   }
 
-  /**
-   * Removes the wrapper element from the DOM.
-   */
+  /** Removes the wrapper element from the DOM. */
   dispose(): void {
     if (this._wrapper && this._wrapper.parentNode) {
       this._wrapper.parentNode.removeChild(this._wrapper);
