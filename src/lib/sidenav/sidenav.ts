@@ -338,7 +338,7 @@ export class MdSidenavContainer implements AfterContentInit {
         this._sidenavs.forEach(sidenav => sidenav.mode = "over");
       this.close();
     }
-    if (window.innerWidth > this.breakpointWidth) {
+    if (this._element.nativeElement.offsetWidth > this.breakpointWidth) {
       if (this.breakpointChangeMode)        
         this._sidenavs.forEach(sidenav => sidenav.mode = "side");
       this.open();
