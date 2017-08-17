@@ -334,7 +334,7 @@ export class MdDrawerContainer implements AfterContentInit {
    */
   @Input() breakpointWidth: number;
   
-  /** Whether the the drawer changes modes when collapsing. */
+  /** Whether the drawer changes modes when collapsing. */
   @Input()
   get breakpointChangeMode(): boolean { return this._breakpointChangeMode; }
   set breakpointChangeMode(value: boolean) { this._breakpointChangeMode = coerceBooleanProperty(value); }
