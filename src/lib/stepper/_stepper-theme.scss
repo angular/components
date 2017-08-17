@@ -23,8 +23,7 @@
       color: mat-color($foreground, disabled-text);
     }
 
-    .mat-stepper-index-interacted,
-    .mat-stepper-index-new {
+    .mat-step-indicator {
       background-color: mat-color($primary);
       color: mat-color($primary, default-contrast);
     }
@@ -34,7 +33,7 @@
         color: mat-color($foreground, disabled-text);
       }
 
-      .mat-stepper-index-new {
+      .mat-step-indicator-not-touched {
         background-color: mat-color($foreground, disabled-text);
       }
     }

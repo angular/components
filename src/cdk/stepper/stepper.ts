@@ -93,7 +93,16 @@ export class CdkStep {
   private _optional = false;
 
   /** Return whether step is completed or not. */
+  @Input()
   get completed() {
+    return this._customCompleted == null ? this._defaultCompleted : this._customCompleted;
+  }
+  set completed(value: any) {
+    this._customCompleted = coerceBooleanProperty(value);
+  }
+  private _customCompleted: boolean | null = null;
+
+  private get _defaultCompleted() {
     return this._stepControl ? this._stepControl.valid && this.interacted : this.interacted;
   }
 
@@ -190,6 +199,15 @@ export class CdkStepper {
       return 'next';
     } else {
       return 'current';
+    }
+  }
+
+  _getIndicatorType(index: number): 'number' | 'edit' | 'done' {
+    const step = this._steps.toArray()[index];
+    if (!step.completed || this._selectedIndex == index) {
+      return 'number';
+    } else {
+      return step.editable ? 'edit' : 'done';
     }
   }
 

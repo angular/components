@@ -24,8 +24,7 @@ $mat-step-optional-font-size: 12px;
   vertical-align: middle;
 }
 
-.mat-stepper-index-new ,
-.mat-stepper-index-interacted {
+.mat-step-indicator {
   border-radius: 50%;
   height: $mat-stepper-label-header-height;
   width: $mat-stepper-label-header-height;
@@ -48,8 +47,7 @@ $mat-step-optional-font-size: 12px;
   outline: none;
   padding: 0 $mat-stepper-side-gap;
 
-  .mat-stepper-index-new ,
-  .mat-stepper-index-interacted {
+  .mat-step-indicator {
     margin-right: $mat-stepper-line-gap;
     flex: none;
   }
@@ -62,8 +60,7 @@ $mat-step-optional-font-size: 12px;
   outline: none;
   max-height: $mat-stepper-label-header-height;
 
-  .mat-stepper-index-new ,
-  .mat-stepper-index-interacted {
+  .mat-step-indicator {
     margin-right: $mat-vertical-stepper-content-margin - $mat-stepper-side-gap;
   }
 }

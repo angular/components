@@ -19,7 +19,7 @@
       </div>
     </md-step>
 
-    <md-step formGroupName="1" [stepControl]="formArray.get([1])" [optional]="true">
+    <md-step formGroupName="1" [stepControl]="formArray.get([1])" optional>
       <ng-template mdStepLabel>
         <div>Fill out your phone number</div>
       </ng-template>
@@ -62,7 +62,7 @@
     </form>
   </md-step>
 
-  <md-step [stepControl]="phoneFormGroup">
+  <md-step [stepControl]="phoneFormGroup" optional>
     <form [formGroup]="phoneFormGroup">
       <ng-template mdStepLabel>Fill out your phone number</ng-template>
       <md-form-field>
