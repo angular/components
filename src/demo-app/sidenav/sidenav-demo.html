@@ -36,7 +36,7 @@
   </div>
 </md-sidenav-container>
 
-<h2>Sidenav Already Opened</h2>
+<h2>Drawer Already Opened</h2>
 
 <md-sidenav-container class="demo-sidenav-container">
   <md-sidenav #start2 opened mode="side">
@@ -45,6 +45,18 @@
 
   <div class="demo-sidenav-content">
     <button md-button (click)="start2.toggle()">Toggle Start Side Drawer</button>
+  </div>
+</md-sidenav-container>
+
+<h2>Responsive Drawer</h2>
+
+<md-sidenav-container class="demo-sidenav-container" breakpointWidth="800" breakpointChangeMode>
+  <md-sidenav #start3 opened>
+    Drawer
+  </md-sidenav>
+
+  <div class="demo-sidenav-content">
+    <button md-button (click)="start3.toggle()">Toggle Start Side Drawer</button>
   </div>
 </md-sidenav-container>
 

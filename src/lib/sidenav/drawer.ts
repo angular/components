@@ -28,7 +28,10 @@ import {animate, state, style, transition, trigger, AnimationEvent} from '@angul
 import {Directionality, coerceBooleanProperty} from '../core';
 import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
-import {first, takeUntil, startWith} from '../core/rxjs/index';
+import {first, takeUntil, startWith, auditTime} from '../core/rxjs/index';
+import {Subscription} from 'rxjs';
+import {of as observableOf} from 'rxjs/observable/of'
+import {fromEvent} from 'rxjs/observable/fromEvent';
 import {DOCUMENT} from '@angular/platform-browser';
 import {merge} from 'rxjs/observable/merge';
 
@@ -325,6 +328,25 @@ export class MdDrawerContainer implements AfterContentInit {
   /** Event emitted when the drawer backdrop is clicked. */
   @Output() backdropClick = new EventEmitter<void>();
 
+  /**
+   * Width of the container at which it breaks
+   * e.g., breakpointWidth="500"
+   */
+  @Input() breakpointWidth: number;
+  
+  /** Whether the the drawer changes modes when collapsing. */
+  @Input()
+  get breakpointChangeMode(): boolean { return this._breakpointChangeMode; }
+  set breakpointChangeMode(value: boolean) { this._breakpointChangeMode = coerceBooleanProperty(value); }
+  private _breakpointChangeMode: boolean = true;
+
+  /**
+   * Responsively toggle the drawer using the breakpoint.
+   * Note that this only works when the window is rezied.
+   * If you resize it some other way, call _updateDrawer().
+   */
+  _updateDrawer: Subscription | null = null;
+
   /** The drawer at the start/end position, independent of direction. */
   private _start: MdDrawer | null;
   private _end: MdDrawer | null;
@@ -359,6 +381,31 @@ export class MdDrawerContainer implements AfterContentInit {
         this._watchDrawerPosition(drawer);
       });
     });
+    
+    const resize = typeof window !== 'undefined' ? auditTime.call(fromEvent(window, 'resize'), 150) : observableOf(null);
+    
+    this._updateDrawer = startWith.call(resize, null).subscribe(() => {
+      if (this._element.nativeElement.offsetWidth < this.breakpointWidth) {
+        if (this.breakpointChangeMode) {
+          this._drawers.forEach(drawer => drawer.mode = "over");
+        }
+        this.close();
+      }
+      if (window.innerWidth > this.breakpointWidth) {
+        if (this.breakpointChangeMode) {
+          this._drawers.forEach(drawer => drawer.mode = "side");
+        }
+        this.open();
+      }
+    });
+
+  }
+
+  ngOnDestroy() {
+    if (this._updateDrawer) {
+      this._updateDrawer.unsubscribe();
+      this._updateDrawer = null;
+    }
   }
 
   /** Calls `open` of both start and end drawers */
