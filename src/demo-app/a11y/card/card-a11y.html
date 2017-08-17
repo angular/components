@@ -1,4 +1,22 @@
 <section>
+  <h2>Dogs group</h2>
+  <p>Showing a card with a group of content</p>
+  <md-card class="example-card" role="group">
+    <md-card-content>
+      <p>Herding Group</p>
+      <p>Hound Group</p>
+      <p>Non-Sporting Group</p>
+      <p>Sporting Group</p>
+      <p>Terrier Group</p>
+      <p>Toy Group</p>
+      <p>Working Group</p>
+      <p>Foundation Stock Service</p>
+      <p>Miscellaneous Class</p>
+    </md-card-content>
+  </md-card>
+</section>
+
+<section>
   <h2>Husky</h2>
   <p>Showing a card with title only</p>
   <md-card class="example-card">
@@ -19,8 +37,7 @@
 <section>
   <h2>German Shepherd</h2>
   <p>
-    Showing a card with title, subtitle, and a footer. The footer displays a progress bar when
-    user search for more dogs.
+    Showing a card with title, subtitle, and a footer.
   </p>
   <md-card class="example-card">
     <md-card-subtitle>Dog breed</md-card-subtitle>
@@ -30,17 +47,9 @@
       Germany. The breed's officially recognized name is German Shepherd Dog in the English
       language. The breed is also known as the Alsatian in Britain and Ireland.
     </md-card-content>
-    <md-card-actions>
-      Search for more dogs...
-      <button md-button (click)="showProgress = !showProgress">
-        {{showProgress ? 'Cancel' : 'Search'}}
-      </button>
-    </md-card-actions>
     <md-card-footer>
-      <md-progress-bar mode="indeterminate" aria-label="Loading" *ngIf="showProgress">
-      </md-progress-bar>
+      People also search for Rottweiler, Siberian Husky, Labrador Retriever, Doberman Pinscher
     </md-card-footer>
-
   </md-card>
 </section>
 
@@ -81,5 +90,4 @@
       <button md-button (click)="openSnackbar('Shared Shiba Inu')">share</button>
     </md-card-actions>
   </md-card>
-
 </section>
