@@ -990,7 +990,7 @@ describe('MatMenu', () => {
           .not.toContain('mat-elevation-z3', 'Expected no stacked elevation.');
     });
 
-    it('should close all of the menus when the root is closed programmatically', fakeAsync(() => {
+    it('should close all of the menus when the root is closed programmatically', () => {
       compileTestComponent();
       instance.rootTrigger.openMenu();
       fixture.detectChanges();
@@ -1007,13 +1007,9 @@ describe('MatMenu', () => {
 
       instance.rootTrigger.closeMenu();
       fixture.detectChanges();
-      tick(500);
 
       expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(0, 'Expected no open menus');
-      expect(instance.rootCloseCallback).toHaveBeenCalledTimes(1);
-      expect(instance.levelOneCloseCallback).toHaveBeenCalledTimes(1);
-      expect(instance.levelTwoCloseCallback).toHaveBeenCalledTimes(1);
-    }));
+    });
 
     it('should toggle a nested menu when its trigger is added after init', fakeAsync(() => {
       compileTestComponent();

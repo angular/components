@@ -17,6 +17,7 @@ import {
   ChangeDetectorRef,
   ViewChild,
   ViewEncapsulation,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
 import {DOCUMENT} from '@angular/platform-browser';
@@ -118,7 +119,13 @@ export class MatDialogContainer extends BasePortalHost {
     }
 
     this._savePreviouslyFocusedElement();
-    return this._portalHost.attachComponentPortal(portal);
+
+    const componentRef = this._portalHost.attachComponentPortal(portal);
+
+    // Ensure that the initial view change are picked up.
+    componentRef.changeDetectorRef.markForCheck();
+
+    return componentRef;
   }
 
   /**
@@ -131,7 +138,12 @@ export class MatDialogContainer extends BasePortalHost {
     }
 
     this._savePreviouslyFocusedElement();
-    return this._portalHost.attachTemplatePortal(portal);
+
+    const locals = this._portalHost.attachTemplatePortal(portal);
+
+    this._changeDetectorRef.markForCheck();
+
+    return locals;
   }
 
   /** Moves the focus inside the focus trap. */
