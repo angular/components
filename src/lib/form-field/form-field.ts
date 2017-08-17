@@ -85,7 +85,6 @@ let nextUniqueId = 0;
     '[class.ng-valid]': '_shouldForward("valid")',
     '[class.ng-invalid]': '_shouldForward("invalid")',
     '[class.ng-pending]': '_shouldForward("pending")',
-    '(click)': '_control.onContainerClick($event)',
   },
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
