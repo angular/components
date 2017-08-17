@@ -150,7 +150,7 @@ export class OverlayRef implements PortalHost {
   /** Updates the position of the overlay based on the position strategy. */
   updatePosition() {
     if (this._state.positionStrategy) {
-      this._state.positionStrategy.apply(this._pane);
+      this._state.positionStrategy.apply();
     }
   }
 

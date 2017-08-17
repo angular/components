@@ -141,10 +141,11 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Apply the position to the element.
    * @docs-private
    *
-   * @param element Element to which to apply the CSS.
    * @returns Resolved when the styles have been applied.
    */
-  apply(element: HTMLElement): void {
+  apply(): void {
+    const element = this._overlayRef.overlayElement;
+
     if (!this._wrapper && element.parentNode) {
       this._wrapper = document.createElement('div');
       this._wrapper.classList.add('cdk-global-overlay-wrapper');
