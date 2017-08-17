@@ -14,6 +14,9 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
           {{ drink.viewValue }}
         </md-option>
       </md-select>
+      <md-icon mdPrefix class="demo-drink-icon">local_drink</md-icon>
+      <md-hint>Pick a drink!</md-hint>
+      <md-error>You must make a selection</md-error>
     </md-form-field>
     <p> Value: {{ currentDrink }} </p>
     <p> Touched: {{ drinkControl.touched }} </p>
