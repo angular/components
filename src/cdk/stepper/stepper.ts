@@ -202,15 +202,6 @@ export class CdkStepper {
     }
   }
 
-  _getIndicatorType(index: number): 'number' | 'edit' | 'done' {
-    const step = this._steps.toArray()[index];
-    if (!step.completed || this._selectedIndex == index) {
-      return 'number';
-    } else {
-      return step.editable ? 'edit' : 'done';
-    }
-  }
-
   private _emitStepperSelectionEvent(newIndex: number): void {
     const stepsArray = this._steps.toArray();
     this.selectionChange.emit({

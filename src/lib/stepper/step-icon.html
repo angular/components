@@ -1,0 +1,5 @@
+<div [ngSwitch]="_getIndicatorType()">
+  <span *ngSwitchCase="'number'">{{index + 1}}</span>
+  <md-icon *ngSwitchCase="'edit'">create</md-icon>
+  <md-icon *ngSwitchCase="'done'">done</md-icon>
+</div>

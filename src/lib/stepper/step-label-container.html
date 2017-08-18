@@ -1,0 +1,7 @@
+<!-- If there is a label template, use it. -->
+<ng-container class="label" *ngIf="step.stepLabel" [ngTemplateOutlet]="step.stepLabel.template">
+</ng-container>
+<!-- It there is no label template, fall back to the text label. -->
+<div class="label" *ngIf="!step.stepLabel">{{step.label}}</div>
+
+<div class="mat-step-optional" *ngIf="step.optional">Optional</div>

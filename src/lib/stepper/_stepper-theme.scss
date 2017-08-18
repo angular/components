@@ -23,7 +23,7 @@
       color: mat-color($foreground, disabled-text);
     }
 
-    .mat-step-indicator {
+    .mat-step-icon {
       background-color: mat-color($primary);
       color: mat-color($primary, default-contrast);
     }
@@ -33,7 +33,7 @@
         color: mat-color($foreground, disabled-text);
       }
 
-      .mat-step-indicator-not-touched {
+      .mat-step-icon-not-touched {
         background-color: mat-color($foreground, disabled-text);
       }
     }

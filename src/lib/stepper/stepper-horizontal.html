@@ -8,29 +8,14 @@
          [tabIndex]="_focusIndex == i ? 0 : -1"
          (click)="step.select()"
          (keydown)="_onKeydown($event)">
-      <div class="mat-step-indicator"
-           [ngSwitch]="_getIndicatorType(i)"
-           [class.mat-step-indicator-not-touched]="_getIndicatorType(i) == 'number'">
-        <span *ngSwitchCase="'number'">{{i + 1}}</span>
-        <md-icon *ngSwitchCase="'edit'">create</md-icon>
-        <md-icon *ngSwitchCase="'done'">done</md-icon>
-      </div>
-
-      <div [class.mat-stepper-label-active]="step.completed || selectedIndex == i"
-           [class.mat-stepper-label-inactive]="!step.completed && selectedIndex != i">
-        <!-- If there is a label template, use it. -->
-        <ng-container *ngIf="step.stepLabel" [ngTemplateOutlet]="step.stepLabel.template">
-        </ng-container>
-        <!-- It there is no label template, fall back to the text label. -->
-        <div *ngIf="!step.stepLabel">{{step.label}}</div>
-
-        <div class="mat-step-optional" *ngIf="step.optional">Optional</div>
-      </div>
+      <md-step-icon [step]="step" [selected]="selectedIndex == i" [index]="i"></md-step-icon>
+      <md-step-label-container [step]="step" [selected]="selectedIndex == i">
+      </md-step-label-container>
     </div>
-
     <div *ngIf="!isLast" class="mat-stepper-horizontal-line"></div>
   </ng-container>
 </div>
+
 <div class="mat-horizontal-content-container">
   <div *ngFor="let step of _steps; let i = index"
        class="mat-horizontal-stepper-content" role="tabpanel"

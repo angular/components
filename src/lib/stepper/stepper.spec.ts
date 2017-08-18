@@ -85,12 +85,6 @@ describe('MdHorizontalStepper', () => {
     it('should only be able to return to a previous step if it is editable', () => {
       assertEditableStepChange(stepperComponent, fixture);
     });
-
-    it('should show icon instead of index and active label on completed steps', () => {
-      let stepperComponentEl = fixture.debugElement
-          .query(By.css('md-horizontal-stepper')).nativeElement;
-      assertCorrectStepIcon(stepperComponent, stepperComponentEl, fixture);
-    });
   });
 
   describe('linear horizontal stepper', () => {
@@ -208,12 +202,6 @@ describe('MdVerticalStepper', () => {
 
     it('should only be able to return to a previous step if it is editable', () => {
       assertEditableStepChange(stepperComponent, fixture);
-    });
-
-    it('should show icon instead of index on completed steps', () => {
-      let stepperComponentEl = fixture.debugElement
-          .query(By.css('md-vertical-stepper')).nativeElement;
-      assertCorrectStepIcon(stepperComponent, stepperComponentEl, fixture);
     });
   });
 
@@ -533,24 +521,6 @@ function assertOptionalStepValidity(stepperComponent: MdStepper,
   fixture.detectChanges();
 
   expect(stepperComponent.selectedIndex).toBe(1);
-}
-
-/** Asserts that the correct step indicator is set upon step selection change event. */
-function assertCorrectStepIcon(stepperComponent: MdStepper,
-                       stepperComponentEl: HTMLElement,
-                       fixture: ComponentFixture<any>) {
-  let stepsArray = stepperComponent._steps.toArray();
-  expect(stepsArray[0].completed).toBe(false);
-  expect(stepperComponent._getIndicatorType(0)).toBe('number');
-  expect(stepperComponentEl.querySelectorAll('.mat-stepper-label-active').length).toBe(1);
-  let nextButtonNativeEl = fixture.debugElement
-      .queryAll(By.directive(MdStepperNext))[0].nativeElement;
-  nextButtonNativeEl.click();
-  fixture.detectChanges();
-
-  expect(stepsArray[0].completed).toBe(true);
-  expect(stepperComponent._getIndicatorType(0)).not.toBe('number');
-  expect(stepperComponentEl.querySelectorAll('.mat-stepper-label-active').length).toBe(2);
 }
 
 @Component({
