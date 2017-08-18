@@ -1,4 +1,4 @@
-# Customizing Angular Material components
+# Customizing Angular Material component styles
 
 ### Styling concepts
 
