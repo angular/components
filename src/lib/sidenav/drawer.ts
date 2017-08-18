@@ -394,8 +394,7 @@ export class MdDrawerContainer implements AfterContentInit {
           this._drawers.forEach(drawer => drawer.mode = 'over');
         }
         this.close();
-      }
-      if (this._element.nativeElement.offsetWidth > this.breakpointWidth) {
+      } else {
         if (this.breakpointChangeMode) {
           this._drawers.forEach(drawer => drawer.mode = 'side');
         }
