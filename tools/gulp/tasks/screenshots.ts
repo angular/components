@@ -73,10 +73,14 @@ function getPullRequestRef(database: Database, prNumber: string) {
 
 /** Uploads necessary Travis CI job variables that will be used in the Screenshot Panel. */
 function uploadTravisJobInfo(database: Database, prNumber: string) {
-  return getPullRequestRef(database, prNumber).update({
-    sha: process.env['TRAVIS_PULL_REQUEST_SHA'],
-    travis: process.env['TRAVIS_JOB_ID'],
-  });
+  try {
+    return getPullRequestRef(database, prNumber).update({
+      sha: process.env['TRAVIS_PULL_REQUEST_SHA'],
+      travis: process.env['TRAVIS_JOB_ID'],
+    });
+  } catch (e) {
+    return Promise.reject(e);
+  }
 }
 
 /** Downloads all golden screenshot files and stores them in the local file system. */
