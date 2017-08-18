@@ -15,7 +15,10 @@ By default, Angular component styles are scoped to affect the component's view. 
 the styles you write will affect all the elements in your component template. They will *not*
 affect elements that are children of other components within your template. You can read more
 about view encapsulation in the
-[Angular documentation](https://angular.io/guide/component-styles#view-encapsulation).
+[Angular documentation](https://angular.io/guide/component-styles#view-encapsulation). You may
+also wish to take a look at
+[_The State of CSS in Angular_](https://blog.angular.io/the-state-of-css-in-angular-4a52d4bd2700)
+on the Angular blog.
 
 ##### Selector specificity
 
