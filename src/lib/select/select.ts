@@ -494,7 +494,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
     // Set the font size on the panel element once it exists.
     first.call(this._ngZone.onStable).subscribe(() => {
-      if (this._triggerFontSize && this.overlayDir.overlayRef.overlayElement) {
+      if (this._triggerFontSize && this.overlayDir.overlayRef &&
+          this.overlayDir.overlayRef.overlayElement) {
         this.overlayDir.overlayRef.overlayElement.style.fontSize = `${this._triggerFontSize}px`;
       }
     });
@@ -1047,12 +1048,16 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       const firstDisplayedIndex = this._getItemCount() - maxOptionsDisplayed;
       const selectedDisplayIndex = selectedIndex - firstDisplayedIndex;
 
+      // The first item is partially out of the viewport. Therefore we need to calculate what
+      // portion of it is shown in the viewport and account for it in our offset.
+      let partialItemHeight =
+          itemHeight - (this._getItemCount() * itemHeight - SELECT_PANEL_MAX_HEIGHT) % itemHeight;
+
       // Because the panel height is longer than the height of the options alone,
       // there is always extra padding at the top or bottom of the panel. When
       // scrolled to the very bottom, this padding is at the top of the panel and
       // must be added to the offset.
-      optionOffsetFromPanelTop =
-          selectedDisplayIndex * itemHeight + SELECT_PANEL_PADDING_Y;
+      optionOffsetFromPanelTop = selectedDisplayIndex * itemHeight + partialItemHeight;
     } else {
       // If the option was scrolled to the middle of the panel using a scroll buffer,
       // its offset will be the scroll buffer minus the half height that was added to
@@ -1097,7 +1102,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Adjusts the overlay panel up to fit in the viewport. */
   private _adjustPanelUp(panelHeightBottom: number, bottomSpaceAvailable: number) {
-    const distanceBelowViewport = panelHeightBottom - bottomSpaceAvailable;
+    // Browsers ignore fractional scroll offsets, so we need to round.
+    const distanceBelowViewport = Math.round(panelHeightBottom - bottomSpaceAvailable);
 
     // Scrolls the panel up by the distance it was extending past the boundary, then
     // adjusts the offset by that amount to move the panel up into the viewport.
@@ -1118,7 +1124,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Adjusts the overlay panel down to fit in the viewport. */
   private _adjustPanelDown(panelHeightTop: number, topSpaceAvailable: number,
                            maxScroll: number) {
-    const distanceAboveViewport = panelHeightTop - topSpaceAvailable;
+    // Browsers ignore fractional scroll offsets, so we need to round.
+    const distanceAboveViewport = Math.round(panelHeightTop - topSpaceAvailable);
 
     // Scrolls the panel down by the distance it was extending past the boundary, then
     // adjusts the offset by that amount to move the panel down into the viewport.
