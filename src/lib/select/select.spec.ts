@@ -590,8 +590,8 @@ describe('MdSelect', () => {
 
       const options =
           overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
-      expect(options[1].classList)
-          .toContain('mat-selected', `Expected option with the control's new value to be selected.`);
+      expect(options[1].classList).toContain('mat-selected',
+          `Expected option with the control's new value to be selected.`);
     });
 
     it('should update the form value when the view changes', () => {
@@ -974,7 +974,7 @@ describe('MdSelect', () => {
       trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
       formField = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
     }));
-/* TODO(mmalerba): Verify this is correct behavior
+
     it('should float the placeholder when the panel is open and unselected', () => {
       expect(formField.classList.contains('mat-form-field-should-float'))
           .toBe(false, 'Expected placeholder to initially have a normal position.');
@@ -992,7 +992,7 @@ describe('MdSelect', () => {
       expect(formField.classList.contains('mat-form-field-should-float'))
           .toBe(false, 'Expected placeholder to animate back down to normal position.');
     });
-*/
+
     it('should add a class to the panel when the menu is done animating', fakeAsync(() => {
       trigger.click();
       fixture.detectChanges();
@@ -1037,7 +1037,7 @@ describe('MdSelect', () => {
       const optionTop = options[index].getBoundingClientRect().top;
       const triggerFontSize = parseInt(window.getComputedStyle(trigger)['font-size']);
 
-      // TODO(mmalerba): not really sure where the "+1" is coming from here...
+      /** TODO(mmalerba): not really sure where the "+1" is coming from here... */
       expect(Math.floor(optionTop)).toBe(Math.floor(triggerTop - triggerFontSize + 1),
           `Expected trigger to align with option ${index}.`);
 
@@ -1151,8 +1151,8 @@ describe('MdSelect', () => {
         fixture.whenStable().then(() => {
           // The selected option should be scrolled to the center of the panel.
           // This will be its original offset from the scrollTop - half the panel height + half the
-          // option height. 10 (option index + 3 group labels before it) * 48 (option height) = 480px.
-          // 480 (offset from scrollTop) - 256/2 + 48/2 = 376px
+          // option height. 10 (option index + 3 group labels before it) * 48 (option height) =
+          // 480px. 480 (offset from scrollTop) - 256/2 + 48/2 = 376px
           expect(Math.floor(scrollContainer.scrollTop))
               .toBe(376, `Expected overlay panel to be scrolled to center the selected option.`);
 
@@ -3153,7 +3153,6 @@ class BasicSelectWithTheming {
         <md-option *ngFor="let food of foods" [value]="food.value">
           {{ food.viewValue }}
         </md-option>
-  
         <md-option>None</md-option>
       </md-select>
     </md-form-field>
@@ -3199,12 +3198,10 @@ class FalsyValueSelect {
       <md-select placeholder="Pokemon" [formControl]="control">
         <md-optgroup *ngFor="let group of pokemonTypes" [label]="group.name"
           [disabled]="group.disabled">
-  
           <md-option *ngFor="let pokemon of group.pokemon" [value]="pokemon.value">
             {{ pokemon.viewValue }}
           </md-option>
         </md-optgroup>
-  
         <md-option value="mime-11">Mr. Mime</md-option>
       </md-select>
     </md-form-field>
@@ -3331,7 +3328,7 @@ class BasicSelectWithoutFormsPreselected {
 }
 
 @Component({
-  template: `      
+  template: `
     <md-form-field>
       <md-select placeholder="Food" [(value)]="selectedFoods" multiple>
         <md-option *ngFor="let food of foods" [value]="food.value">
@@ -3355,8 +3352,8 @@ class BasicSelectWithoutFormsMultiple {
 
 @Component({
   selector: 'select-with-custom-trigger',
-  template: `      
-    <md-form-field>  
+  template: `
+    <md-form-field>
       <md-select placeholder="Food" [formControl]="control" #select="mdSelect">
         <md-select-trigger>
           {{ select.selected?.viewValue.split('').reverse().join('') }}

@@ -9,6 +9,8 @@ $mat-select-arrow-margin: 4px !default;
 $mat-select-panel-max-height: 256px !default;
 $mat-select-item-height: 3em !default;
 
+$mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-arrow-margin);
+
 .mat-select {
   //display: inline-block;
   outline: none;
@@ -82,6 +84,12 @@ $mat-select-item-height: 3em !default;
   }
 }
 
-.mat-form-field-type-mat-select .mat-form-field-flex {
-  cursor: pointer;
+.mat-form-field-type-mat-select {
+  .mat-form-field-flex {
+    cursor: pointer;
+  }
+
+  .mat-form-field-placeholder {
+    width: calc(100% - #{$mat-select-placeholder-arrow-space});
+  }
 }
