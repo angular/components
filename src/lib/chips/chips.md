@@ -37,4 +37,4 @@ also gain focus when clicked, ensuring keyboard navigation starts at the appropr
 ### Theming
 The selected color of an `<md-chip>` can be changed by using the `color` property. By default, chips
 use a neutral background color based on the current theme (light or dark). This can be changed to 
-`'primary'`, `'accent'`, or `'warn'`.
+`'primary'`, `'accent'` or `'warn'`.
