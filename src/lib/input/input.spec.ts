@@ -198,8 +198,7 @@ describe('MdInput without forms', function () {
     expect(labelEl.classList).not.toContain('mat-form-field-float');
   }));
 
-  /* TODO(mmalerba): investigate expression changed after checked.
-  fit('should not be empty when the value set before view init', async(() => {
+  it('should not be empty when the value set before view init', async(() => {
     let fixture = TestBed.createComponent(MdInputWithValueBinding);
     fixture.detectChanges();
 
@@ -212,7 +211,7 @@ describe('MdInput without forms', function () {
     fixture.detectChanges();
 
     expect(placeholderEl.classList).toContain('mat-form-field-empty');
-  }));*/
+  }));
 
   it('should add id', () => {
     let fixture = TestBed.createComponent(MdInputTextTestController);

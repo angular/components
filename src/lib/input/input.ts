@@ -132,6 +132,7 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
   @Input() errorStateMatcher: ErrorStateMatcher;
 
   /** The input element's value. */
+  @Input()
   get value() { return this._elementRef.nativeElement.value; }
   set value(value: string) {
     if (value !== this.value) {

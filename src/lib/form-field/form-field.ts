@@ -22,7 +22,7 @@ import {
   Inject,
   Input,
   Optional,
-  QueryList,
+  QueryList, Renderer2,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -159,7 +159,9 @@ export class MdFormField implements AfterViewInit, AfterContentInit, AfterConten
   @ContentChildren(MdSuffix) _suffixChildren: QueryList<MdSuffix>;
 
   constructor(
-      public _elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef,
+      public _elementRef: ElementRef,
+      private _renderer: Renderer2,
+      private _changeDetectorRef: ChangeDetectorRef,
       @Optional() @Inject(MD_PLACEHOLDER_GLOBAL_OPTIONS) placeholderOptions: PlaceholderOptions) {
     this._placeholderOptions = placeholderOptions ? placeholderOptions : {};
     this.floatPlaceholder = this._placeholderOptions.float || 'auto';
@@ -168,8 +170,8 @@ export class MdFormField implements AfterViewInit, AfterContentInit, AfterConten
   ngAfterContentInit() {
     this._validateControlChild();
     if (this._control.controlType) {
-      this._elementRef.nativeElement.classList.add(
-          `mat-form-field-type-${this._control.controlType}`);
+      this._renderer.addClass(
+          this._elementRef.nativeElement, `mat-form-field-type-${this._control.controlType}`);
     }
 
     // Subscribe to changes in the child control state in order to update the form field UI.
