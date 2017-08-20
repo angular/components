@@ -143,7 +143,7 @@ export class MdSnackBar {
     const contentRef = container.attachComponentPortal(portal);
 
     // We can't pass this via the injector, because the injector is created earlier.
-    snackBarRef.instance = contentRef.instance;
+    snackBarRef.componentInstance = contentRef.instance;
 
     return snackBarRef;
   }
