@@ -1036,10 +1036,15 @@ describe('MdSelect', () => {
       const options = overlayPane.querySelectorAll('md-option');
       const optionTop = options[index].getBoundingClientRect().top;
       const triggerFontSize = parseInt(window.getComputedStyle(trigger)['font-size']);
+      const triggerLineHeightEm = 1.125;
 
-      /** TODO(mmalerba): not really sure where the "+1" is coming from here... */
-      expect(Math.floor(optionTop)).toBe(Math.floor(triggerTop - triggerFontSize + 1),
-          `Expected trigger to align with option ${index}.`);
+      // Extra trigger height beyond the font size caused by the fact that the line-height is
+      // greater than 1em.
+      const triggerExtraLineSpaceAbove = (1 - triggerLineHeightEm) * triggerFontSize / 2;
+
+      expect(Math.floor(optionTop))
+          .toBe(Math.floor(triggerTop - triggerFontSize - triggerExtraLineSpaceAbove),
+              `Expected trigger to align with option ${index}.`);
 
       // For the animation to start at the option's center, its origin must be the distance
       // from the top of the overlay to the option top + half the option height (48/2 = 24).
@@ -1166,12 +1171,44 @@ describe('MdSelect', () => {
         formField.style.position = 'fixed';
         formField.style.left = '20px';
       });
-/* TODO(mmalerba): The numbers in these tests are really hard to follow,
-need to come up with good replacement tests, but I believe the actual logic works correctly now.
+
       it('should adjust position of centered option if there is little space above', async(() => {
-        // Push the select to a position with not quite enough space on the top to open
-        // with the option completely centered (needs 112px at least: 256/2 - (48 - 16)/2)
-        formField.style.top = '85px';
+        const formField = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
+        const trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
+
+        const selectMenuHeight = 256;
+        const selectMenuViewportPadding = 8;
+        const selectItemHeight = 48;
+        const selectedIndex = 4;
+        const fontSize = 16;
+        const lineHeightEm = 1.125;
+        const expectedExtraScroll = 5;
+
+        // Trigger element height.
+        const triggerHeight = fontSize * lineHeightEm;
+
+        // Ideal space above selected item in order to center it.
+        const idealSpaceAboveSelectedItem = (selectMenuHeight - selectItemHeight) / 2;
+
+        // Actual space above selected item.
+        const actualSpaceAboveSelectedItem = selectItemHeight * selectedIndex;
+
+        // Ideal scroll position to center.
+        const idealScrollTop = actualSpaceAboveSelectedItem - idealSpaceAboveSelectedItem;
+
+        // Top-most select-position that allows for perfect centering.
+        const topMostPositionForPerfectCentering =
+            idealSpaceAboveSelectedItem + selectMenuViewportPadding +
+            (selectItemHeight - triggerHeight) / 2;
+
+        // Position of select relative to top edge of md-form-field.
+        const formFieldTopSpace =
+            trigger.getBoundingClientRect().top - formField.getBoundingClientRect().top;
+
+        const formFieldTop =
+            topMostPositionForPerfectCentering - formFieldTopSpace - expectedExtraScroll;
+
+        formField.style.top = `${formFieldTop}px`;
 
         // Select an option in the middle of the list
         fixture.componentInstance.control.setValue('chips-4');
@@ -1183,20 +1220,53 @@ need to come up with good replacement tests, but I believe the actual logic work
         const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
 
         fixture.whenStable().then(() => {
-          // Scroll should adjust by the difference between the top space available (85px + 8px
-          // viewport padding = 77px) and the height of the panel above the option (112px).
-          // 112px - 93px = 20px difference + original scrollTop 88px = 108px
           expect(scrollContainer.scrollTop)
-              .toEqual(108, `Expected panel to adjust scroll position to fit in viewport.`);
+              .toEqual(idealScrollTop + 5,
+                  `Expected panel to adjust scroll position to fit in viewport.`);
 
           checkTriggerAlignedWithOption(4);
         });
       }));
 
       it('should adjust position of centered option if there is little space below', async(() => {
+        const formField = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
+        const trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
+
+        const selectMenuHeight = 256;
+        const selectMenuViewportPadding = 8;
+        const selectItemHeight = 48;
+        const selectedIndex = 4;
+        const fontSize = 16;
+        const lineHeightEm = 1.125;
+        const expectedExtraScroll = 5;
+
+        // Trigger element height.
+        const triggerHeight = fontSize * lineHeightEm;
+
+        // Ideal space above selected item in order to center it.
+        const idealSpaceAboveSelectedItem = (selectMenuHeight - selectItemHeight) / 2;
+
+        // Actual space above selected item.
+        const actualSpaceAboveSelectedItem = selectItemHeight * selectedIndex;
+
+        // Ideal scroll position to center.
+        const idealScrollTop = actualSpaceAboveSelectedItem - idealSpaceAboveSelectedItem;
+
+        // Bottom-most select-position that allows for perfect centering.
+        const bottomMostPositionForPerfectCentering =
+            idealSpaceAboveSelectedItem + selectMenuViewportPadding +
+            (selectItemHeight - triggerHeight) / 2;
+
+        // Position of select relative to bottom edge of md-form-field:
+        const formFieldBottomSpace =
+            formField.getBoundingClientRect().bottom - trigger.getBoundingClientRect().bottom;
+
+        const formFieldBottom =
+            bottomMostPositionForPerfectCentering - formFieldBottomSpace - expectedExtraScroll;
+
         // Push the select to a position with not quite enough space on the bottom to open
         // with the option completely centered (needs 113px at least: 256/2 - 48/2 + 9)
-        formField.style.bottom = '56px';
+        formField.style.bottom = `${formFieldBottom}px`;
 
         // Select an option in the middle of the list
         fixture.componentInstance.control.setValue('chips-4');
@@ -1215,14 +1285,15 @@ need to come up with good replacement tests, but I believe the actual logic work
             // (56px from the bottom of the screen - 8px padding = 48px)
             // and the height of the panel below the option (113px).
             // 113px - 48px = 75px difference. Original scrollTop 88px - 75px = 23px
-            expect(Math.ceil(scrollContainer.scrollTop))
-                .toEqual(23, `Expected panel to adjust scroll position to fit in viewport.`);
+            expect(scrollContainer.scrollTop)
+                .toEqual(idealScrollTop - expectedExtraScroll,
+                    `Expected panel to adjust scroll position to fit in viewport.`);
 
             checkTriggerAlignedWithOption(4);
           });
         });
       }));
-*/
+
       it('should fall back to "above" positioning if scroll adjustment will not help', () => {
         // Push the select to a position with not enough space on the bottom to open
         formField.style.bottom = '56px';
@@ -1637,9 +1708,16 @@ need to come up with good replacement tests, but I believe the actual logic work
           // 16px is the default option padding
           expect(Math.floor(selectedOptionLeft)).toEqual(Math.floor(triggerLeft - 16));
         }));
-/* TODO(mmalerba): Again, pretty sure this is right, just need to write a test that I can
- * understand.
+
       it('should align the first option to the trigger, if nothing is selected', async(() => {
+        // Push down the form field so there is space for the item to completely align.
+        formField.style.top = '100px';
+
+        const menuItemHeight = 48;
+        const triggerFontSize = 16;
+        const triggerLineHeightEm = 1.125;
+        const triggerHeight = triggerFontSize * triggerLineHeightEm;
+
         trigger.click();
         groupFixture.detectChanges();
 
@@ -1649,16 +1727,14 @@ need to come up with good replacement tests, but I believe the actual logic work
           const option = overlayContainerElement.querySelector('.cdk-overlay-pane md-option');
           const optionTop = option ? option.getBoundingClientRect().top : 0;
 
-          expect(Math.floor(optionTop))
-              .toBe(Math.floor(triggerTop), 'Expected trigger to align with the first option.');
+          expect(optionTop + (menuItemHeight - triggerHeight) / 2)
+              .toBe(triggerTop, 'Expected trigger to align with the first option.');
         });
       }));
- */
     });
   });
 
   describe('accessibility', () => {
-
     describe('for select', () => {
       let fixture: ComponentFixture<BasicSelect>;
       let select: HTMLElement;
@@ -2161,7 +2237,7 @@ need to come up with good replacement tests, but I believe the actual logic work
         TestBed.createComponent(SelectEarlyAccessSibling).detectChanges();
       }).not.toThrow();
     }));
-/* TODO(mmalerba): no idea whats up with this
+
     it('should not throw selection model-related errors in addition to the errors from ngModel',
       async(() => {
         const fixture = TestBed.createComponent(InvalidSelectInForm);
@@ -2172,8 +2248,6 @@ need to come up with good replacement tests, but I believe the actual logic work
         // The second run shouldn't throw selection-model related errors.
         expect(() => fixture.detectChanges()).not.toThrow();
       }));
-      */
-
 
     it('should not throw when the triggerValue is accessed when there is no selected value', () => {
       const fixture = TestBed.createComponent(BasicSelect);
@@ -2360,8 +2434,6 @@ need to come up with good replacement tests, but I believe the actual logic work
       expect(testInstance.control.value).toEqual([]);
     });
 
-    /* TODO(mmalerba): not sure why this fails... It doesn't register the update when option 2 is
-    deselected, but it works fine in the demo app.
     it('should update the label', async(() => {
       trigger.click();
       fixture.detectChanges();
@@ -2384,7 +2456,7 @@ need to come up with good replacement tests, but I believe the actual logic work
           expect(trigger.textContent).toContain('Steak, Eggs');
         });
       });
-    }));*/
+    }));
 
     it('should be able to set the selected value by taking an array', () => {
       trigger.click();

@@ -100,12 +100,6 @@ export const SELECT_ITEM_HEIGHT_EM = 3;
 export const SELECT_MULTIPLE_PANEL_PADDING_X = SELECT_PANEL_PADDING_X * 1.5 + 20;
 
 /**
- * The panel's padding on the y-axis. This padding indicates there are more
- * options available if you scroll.
- */
-export const SELECT_PANEL_PADDING_Y = 16;
-
-/**
  * The select panel will only "fit" inside the viewport if it is positioned at
  * this value or more away from the viewport boundary.
  */
@@ -680,7 +674,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Whether the select has a value. */
   get empty(): boolean {
-    return this._selectionModel && this._selectionModel.isEmpty();
+    return !this._selectionModel || this._selectionModel.isEmpty();
   }
 
   /** Whether the select is in an error state. */
@@ -876,6 +870,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     this._onChange(valueToEmit);
     this.change.emit(new MdSelectChange(this, valueToEmit));
     this.valueChange.emit(valueToEmit);
+    this._changeDetectorRef.markForCheck();
   }
 
   /** Records option IDs to pass to the aria-owns property. */
