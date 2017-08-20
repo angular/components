@@ -32,11 +32,10 @@ import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 let _uniqueAutocompleteIdCounter = 0;
 
 /** Event object that is emitted when an autocomplete option is selected */
-export class MdAutocompleteSelect {
+export class MdAutocompleteSelectedEvent {
   constructor(public source: MdAutocomplete, public option: MdOption) { }
 }
 
-export type AutocompletePositionY = 'above' | 'below';
 
 @Component({
   moduleId: module.id,
@@ -74,7 +73,8 @@ export class MdAutocomplete implements AfterContentInit {
   @Input() displayWith: ((value: any) => string) | null = null;
 
   /** Event that is emitted whenever an option from the list is selected. */
-  @Output() select: EventEmitter<MdAutocompleteSelect> = new EventEmitter<MdAutocompleteSelect>();
+  @Output() optionSelected: EventEmitter<MdAutocompleteSelectedEvent> =
+      new EventEmitter<MdAutocompleteSelectedEvent>();
 
   /** Unique ID to be used by autocomplete trigger's "aria-owns" property. */
   id: string = `md-autocomplete-${_uniqueAutocompleteIdCounter++}`;
@@ -110,8 +110,8 @@ export class MdAutocomplete implements AfterContentInit {
 
   /** Emits the `select` event. */
   _emitSelectEvent(option: MdOption): void {
-    const selectEvent = new MdAutocompleteSelect(this, option);
-    this.select.emit(selectEvent);
+    const event = new MdAutocompleteSelectedEvent(this, option);
+    this.optionSelected.emit(event);
   }
 
   /** Sets a class on the panel based on whether it is visible. */

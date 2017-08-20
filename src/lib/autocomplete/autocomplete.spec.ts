@@ -21,7 +21,7 @@ import {
   MdAutocomplete,
   MdAutocompleteModule,
   MdAutocompleteTrigger,
-  MdAutocompleteSelect,
+  MdAutocompleteSelectedEvent,
 } from './index';
 import {MdInputModule} from '../input/index';
 import {Subscription} from 'rxjs/Subscription';
@@ -1551,7 +1551,7 @@ describe('MdAutocomplete', () => {
       });
     }));
 
-  it('should call emit an event when an option is selected', fakeAsync(() => {
+  it('should emit an event when an option is selected', fakeAsync(() => {
     let fixture = TestBed.createComponent(AutocompleteWithSelectEvent);
 
     fixture.detectChanges();
@@ -1560,7 +1560,7 @@ describe('MdAutocomplete', () => {
     fixture.detectChanges();
 
     let options = overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
-    let spy = fixture.componentInstance.select;
+    let spy = fixture.componentInstance.optionSelected;
 
     options[1].click();
     tick();
@@ -1568,10 +1568,36 @@ describe('MdAutocomplete', () => {
 
     expect(spy).toHaveBeenCalledTimes(1);
 
-    let event = spy.calls.mostRecent().args[0] as MdAutocompleteSelect;
+    let event = spy.calls.mostRecent().args[0] as MdAutocompleteSelectedEvent;
 
     expect(event.source).toBe(fixture.componentInstance.autocomplete);
     expect(event.option.value).toBe('Washington');
+  }));
+
+  it('should emit an event when a newly-added option is selected', fakeAsync(() => {
+    let fixture = TestBed.createComponent(AutocompleteWithSelectEvent);
+
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openPanel();
+    tick();
+    fixture.detectChanges();
+
+    fixture.componentInstance.states.push('Puerto Rico');
+    fixture.detectChanges();
+
+    let options = overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
+    let spy = fixture.componentInstance.optionSelected;
+
+    options[3].click();
+    tick();
+    fixture.detectChanges();
+
+    expect(spy).toHaveBeenCalledTimes(1);
+
+    let event = spy.calls.mostRecent().args[0] as MdAutocompleteSelectedEvent;
+
+    expect(event.source).toBe(fixture.componentInstance.autocomplete);
+    expect(event.option.value).toBe('Puerto Rico');
   }));
 });
 
@@ -1857,7 +1883,8 @@ class AutocompleteWithGroups {
     <md-input-container>
       <input mdInput placeholder="State" [mdAutocomplete]="auto" [(ngModel)]="selectedState">
     </md-input-container>
-    <md-autocomplete #auto="mdAutocomplete" (select)="select($event)">
+
+    <md-autocomplete #auto="mdAutocomplete" (optionSelected)="optionSelected($event)">
       <md-option *ngFor="let state of states" [value]="state">
         <span>{{ state }}</span>
       </md-option>
@@ -1867,7 +1894,7 @@ class AutocompleteWithGroups {
 class AutocompleteWithSelectEvent {
   selectedState: string;
   states = ['New York', 'Washington', 'Oregon'];
-  select = jasmine.createSpy('select callback');
+  optionSelected = jasmine.createSpy('optionSelected callback');
 
   @ViewChild(MdAutocompleteTrigger) trigger: MdAutocompleteTrigger;
   @ViewChild(MdAutocomplete) autocomplete: MdAutocomplete;
