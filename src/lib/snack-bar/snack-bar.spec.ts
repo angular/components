@@ -97,9 +97,9 @@ describe('MdSnackBar', () => {
 
     viewContainerFixture.detectChanges();
 
-    expect(snackBarRef.componentInstance instanceof SimpleSnackBar)
+    expect(snackBarRef.instance instanceof SimpleSnackBar)
       .toBe(true, 'Expected the snack bar content component to be SimpleSnackBar');
-    expect(snackBarRef.componentInstance.snackBarRef)
+    expect(snackBarRef.instance.snackBarRef)
       .toBe(snackBarRef, 'Expected the snack bar reference to be placed in the component instance');
 
     let messageElement = overlayContainerElement.querySelector('snack-bar-container')!;
@@ -120,9 +120,9 @@ describe('MdSnackBar', () => {
 
     viewContainerFixture.detectChanges();
 
-    expect(snackBarRef.componentInstance instanceof SimpleSnackBar)
+    expect(snackBarRef.instance instanceof SimpleSnackBar)
       .toBe(true, 'Expected the snack bar content component to be SimpleSnackBar');
-    expect(snackBarRef.componentInstance.snackBarRef)
+    expect(snackBarRef.instance.snackBarRef)
       .toBe(snackBarRef, 'Expected the snack bar reference to be placed in the component instance');
 
     let messageElement = overlayContainerElement.querySelector('snack-bar-container')!;
@@ -385,7 +385,7 @@ describe('MdSnackBar', () => {
     it('should open a custom component', () => {
       const snackBarRef = snackBar.openFromComponent(BurritosNotification);
 
-      expect(snackBarRef.componentInstance instanceof BurritosNotification)
+      expect(snackBarRef.instance instanceof BurritosNotification)
         .toBe(true, 'Expected the snack bar content component to be BurritosNotification');
       expect(overlayContainerElement.textContent!.trim())
           .toBe('Burritos are on the way.', 'Expected component to have the proper text.');
@@ -394,7 +394,7 @@ describe('MdSnackBar', () => {
     it('should inject the snack bar reference into the component', () => {
       const snackBarRef = snackBar.openFromComponent(BurritosNotification);
 
-      expect(snackBarRef.componentInstance.snackBarRef)
+      expect(snackBarRef.instance.snackBarRef)
         .toBe(snackBarRef, 'Expected component to have an injected snack bar reference.');
     });
 
@@ -405,9 +405,8 @@ describe('MdSnackBar', () => {
         }
       });
 
-      expect(snackBarRef.componentInstance.data)
-          .toBeTruthy('Expected component to have a data object.');
-      expect(snackBarRef.componentInstance.data.burritoType)
+      expect(snackBarRef.instance.data).toBeTruthy('Expected component to have a data object.');
+      expect(snackBarRef.instance.data.burritoType)
         .toBe('Chimichanga', 'Expected the injected data object to be the one the user provided.');
     });
 
