@@ -539,6 +539,8 @@ describe('MatAutocomplete', () => {
       tick();
 
       fixture.detectChanges();
+      tick();
+
       expect(input.value).toEqual('', `Expected input value to be empty after reset.`);
     }));
 
@@ -1584,7 +1586,9 @@ describe('MatAutocomplete', () => {
       fixture.detectChanges();
       dispatchFakeEvent(fixture.debugElement.query(By.css('input')).nativeElement, 'focusin');
       tick(1000);
+
       fixture.detectChanges();
+      tick();
 
       Promise.resolve().then(() => {
         let panel = overlayContainerElement.querySelector('.mat-autocomplete-panel') as HTMLElement;
