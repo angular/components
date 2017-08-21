@@ -1173,9 +1173,6 @@ describe('MdSelect', () => {
       });
 
       it('should adjust position of centered option if there is little space above', async(() => {
-        const formField = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
-        const trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
-
         const selectMenuHeight = 256;
         const selectMenuViewportPadding = 8;
         const selectItemHeight = 48;
@@ -1229,9 +1226,6 @@ describe('MdSelect', () => {
       }));
 
       it('should adjust position of centered option if there is little space below', async(() => {
-        const formField = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
-        const trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
-
         const selectMenuHeight = 256;
         const selectMenuViewportPadding = 8;
         const selectItemHeight = 48;
