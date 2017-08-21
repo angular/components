@@ -23,15 +23,15 @@ on the Angular blog.
 ##### Selector specificity
 
 Each CSS declaration has a level of *specificity* based on the type and number of selectors used.
-More specific styles will take precedence of less specific styles. Angular Material uses the least
-specific selectors possible for its components in order to make it easy to override them. You can
-read more about specificity and how it is calculated on the
+More specific styles will take precedence over less specific styles. Angular Material uses the
+least specific selectors possible for its components in order to make it easy to override them.
+You can read more about specificity and how it is calculated on the
 [MDN web docs](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity).
 
 ##### Component location
 
 Some Angular Material components, specifically overlay-based ones like MdDialog, MdSnakcbar, etc.,
-do not exist as children of your component. Often they are injected elswhere in the DOM. This is
+do not exist as children of your component. Often they are injected elsewhere in the DOM. This is
 important to keep in mind, since even using high specificity and shadow-piercing selectors will
 not target elements that are not direct children of your component. Global styles are recommended
 for targeting such components.
