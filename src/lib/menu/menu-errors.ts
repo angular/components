@@ -39,21 +39,19 @@ export function throwMdMenuInvalidPositionY() {
 }
 
 /**
- * Throws an exception for the case when menu's x offset is not valid.
- * In other words, it must be a number.
+ * Throws an exception for the case when menu's x offset is not a number.
  * @docs-private
  */
 export function throwInvalidOffsetX() {
-  throw Error(`x offset must be a number'.
-      Example: <md-menu xOffset="20" #menu="mdMenu"></md-menu>`);
+  throw Error(`x offset must be a number.
+      Example: <md-menu xOffset=20 #menu="mdMenu"></md-menu>`);
 }
 
 /**
- * Throws an exception for the case when menu's y offset is not valid.
- * In other words, it must be a number.
+ * Throws an exception for the case when menu's y offset is not a number.
  * @docs-private
  */
  export function throwInvalidOffsetY() {
-  throw Error(`y offset must be a number'.
-      Example: <md-menu yOffset="20" #menu="mdMenu"></md-menu>`);
+  throw Error(`y offset must be a number.
+      Example: <md-menu yOffset=20 #menu="mdMenu"></md-menu>`);
 }
