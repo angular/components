@@ -105,13 +105,6 @@ export const SELECT_MULTIPLE_PANEL_PADDING_X = SELECT_PANEL_PADDING_X * 1.5 + 20
  */
 export const SELECT_PANEL_VIEWPORT_PADDING = 8;
 
-/**
- * Default minimum width of the trigger based on the CSS.
- * Used as a fallback for server-side rendering.
- * @docs-private
- */
-const SELECT_TRIGGER_MIN_WIDTH = 112;
-
 /** Injection token that determines the scroll handling while a select is open. */
 export const MD_SELECT_SCROLL_STRATEGY =
     new InjectionToken<() => ScrollStrategy>('md-select-scroll-strategy');
@@ -219,8 +212,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Unique id for this input. */
   private _uid = `mat-select-${nextUniqueId++}`;
 
-  /** The cached height of the trigger element. */
-  private _triggerHeight: number;
+  /** The last measured value for the trigger's client bounding rect. */
+  _triggerRect: ClientRect;
 
   /** The aria-describedby attribute on the select for improved a11y. */
   _ariaDescribedby: string;
@@ -230,12 +223,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Deals with the selection logic. */
   _selectionModel: SelectionModel<MdOption>;
-
-  /**
-   * The width of the trigger. Must be saved to set the min width of the overlay panel
-   * and the width of the selected value.
-   */
-  _triggerWidth: number;
 
   /** Manages keyboard events for options in the panel. */
   _keyManager: FocusKeyManager<MdOption>;
@@ -301,9 +288,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Trigger that opens the select. */
   @ViewChild('trigger') trigger: ElementRef;
 
-  /** Element used to measure the font-size of the trigger element. */
-  @ViewChild('measureFontSize') _measureFontSizeEl: ElementRef;
-
   /** Overlay pane containing the options. */
   @ViewChild(ConnectedOverlayDirective) overlayDir: ConnectedOverlayDirective;
 
@@ -325,9 +309,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   set placeholder(value: string) {
     this._placeholder = value;
     this.stateChanges.next();
-
-    // Must wait to record the trigger width to ensure placeholder width is included.
-    Promise.resolve(null).then(() => this._setTriggerWidth());
   }
 
   /** Whether the component is required. */
@@ -424,7 +405,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   constructor(
     private _viewportRuler: ViewportRuler,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _platform: Platform,
     private _ngZone: NgZone,
     renderer: Renderer2,
     elementRef: ElementRef,
@@ -478,9 +458,10 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       return;
     }
 
-    if (!this._triggerWidth) {
-      this._setTriggerWidth();
-    }
+    this._triggerRect = this.trigger.nativeElement.getBoundingClientRect();
+    // Note: The computed font-size will be a string pixel value (e.g. "16px").
+    // `parseInt` ignores the trailing 'px' and converts this to a number.
+    this._triggerFontSize = parseInt(getComputedStyle(this.trigger.nativeElement)['font-size']);
 
     this._calculateOverlayPosition();
     this._panelOpen = true;
@@ -583,17 +564,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Whether the element is in RTL mode. */
   _isRtl(): boolean {
     return this._dir ? this._dir.value === 'rtl' : false;
-  }
-
-  /**
-   * Sets the width of the trigger element. This is necessary to match
-   * the overlay width to the trigger width.
-   */
-  private _setTriggerWidth(): void {
-    this._triggerWidth = this._platform.isBrowser ? this._getTriggerRect().width :
-        SELECT_TRIGGER_MIN_WIDTH;
-
-    this._changeDetectorRef.markForCheck();
   }
 
   /** Handles the keyboard interactions of a closed select. */
@@ -777,10 +747,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     this.stateChanges.next();
   }
 
-  private _getTriggerRect(): ClientRect {
-    return this.trigger.nativeElement.getBoundingClientRect();
-  }
-
   /** Sets up a key manager to listen to keyboard events on the overlay panel. */
   private _initKeyManager() {
     this._keyManager = new FocusKeyManager<MdOption>(this.options).withTypeAhead();
@@ -923,9 +889,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Calculates the scroll position and x- and y-offsets of the overlay panel. */
   private _calculateOverlayPosition(): void {
-    this._triggerHeight = this.trigger.nativeElement.getBoundingClientRect().height;
-    this._triggerFontSize = this._measureFontSizeEl.nativeElement.getBoundingClientRect().height;
-
     const itemHeight = this._triggerFontSize * SELECT_ITEM_HEIGHT_EM;
 
     const items = this._getItemCount();
@@ -1033,7 +996,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   private _calculateOverlayOffsetY(selectedIndex: number, scrollBuffer: number,
                                   maxScroll: number): number {
     const itemHeight = this._triggerFontSize * SELECT_ITEM_HEIGHT_EM;
-    const optionHeightAdjustment = (itemHeight - this._triggerHeight) / 2;
+    const optionHeightAdjustment = (itemHeight - this._triggerRect.height) / 2;
     const maxOptionsDisplayed = Math.floor(SELECT_PANEL_MAX_HEIGHT / itemHeight);
     let optionOffsetFromPanelTop: number;
 
@@ -1075,16 +1038,15 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   private _checkOverlayWithinViewport(maxScroll: number): void {
     const itemHeight = this._triggerFontSize * SELECT_ITEM_HEIGHT_EM;
     const viewportRect = this._viewportRuler.getViewportRect();
-    const triggerRect = this._getTriggerRect();
 
-    const topSpaceAvailable = triggerRect.top - SELECT_PANEL_VIEWPORT_PADDING;
+    const topSpaceAvailable = this._triggerRect.top - SELECT_PANEL_VIEWPORT_PADDING;
     const bottomSpaceAvailable =
-        viewportRect.height - triggerRect.bottom - SELECT_PANEL_VIEWPORT_PADDING;
+        viewportRect.height - this._triggerRect.bottom - SELECT_PANEL_VIEWPORT_PADDING;
 
     const panelHeightTop = Math.abs(this._offsetY);
     const totalPanelHeight =
         Math.min(this._getItemCount() * itemHeight, SELECT_PANEL_MAX_HEIGHT);
-    const panelHeightBottom = totalPanelHeight - panelHeightTop - triggerRect.height;
+    const panelHeightBottom = totalPanelHeight - panelHeightTop - this._triggerRect.height;
 
     if (panelHeightBottom > bottomSpaceAvailable) {
       this._adjustPanelUp(panelHeightBottom, bottomSpaceAvailable);
@@ -1142,7 +1104,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Sets the transform origin point based on the selected option. */
   private _getOriginBasedOnOption(): string {
     const itemHeight = this._triggerFontSize * SELECT_ITEM_HEIGHT_EM;
-    const optionHeightAdjustment = (itemHeight - this._triggerHeight) / 2;
+    const optionHeightAdjustment = (itemHeight - this._triggerRect.height) / 2;
     const originY = Math.abs(this._offsetY) - optionHeightAdjustment + itemHeight / 2;
     return `50% ${originY}px 0px`;
   }

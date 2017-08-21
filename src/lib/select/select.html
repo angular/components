@@ -5,7 +5,6 @@
      #origin="cdkOverlayOrigin"
      #trigger>
   <div class="mat-select-value">
-    <div #measureFontSize class="mat-select-measure-font-size" aria-hidden="true"></div>
     <ng-container *ngIf="empty">&nbsp;</ng-container>
     <span class="mat-select-value-text" *ngIf="!empty" [ngSwitch]="!!customTrigger">
       <span *ngSwitchDefault>{{ triggerValue }}</span>
@@ -24,7 +23,7 @@
   [origin]="origin"
   [open]="panelOpen"
   [positions]="_positions"
-  [minWidth]="_triggerWidth"
+  [minWidth]="_triggerRect?.width"
   [offsetY]="_offsetY"
   (backdropClick)="close()"
   (attach)="_onAttached()"
