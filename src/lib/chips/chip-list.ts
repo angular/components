@@ -76,8 +76,10 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   /** Tab index for the chip list. */
   _tabIndex = 0;
 
-  /** User defined tab index.
-   * When it is not null, use user defined tab index. Otherwise use _tabIndex */
+  /**
+   * User defined tab index.
+   * When it is not null, use user defined tab index. Otherwise use _tabIndex
+   */
   _userTabIndex: number | null = null;
 
   /** The FocusKeyManager which handles focus. */
