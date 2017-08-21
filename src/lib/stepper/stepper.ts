@@ -20,7 +20,7 @@ import {
   QueryList,
   SkipSelf,
   ViewChildren
-}from '@angular/core';
+} from '@angular/core';
 import {MdStepLabel} from './step-label';
 import {
   defaultErrorStateMatcher,
@@ -66,7 +66,7 @@ export class MdStep extends CdkStep implements ErrorOptions {
 
 export class MdStepper extends CdkStepper implements ErrorOptions {
   /** The list of step headers of the steps in the stepper. */
-  @ViewChildren('stepHeader') _stepHeader: QueryList<ElementRef>;
+  @ViewChildren('stepperHeader') _stepHeader: QueryList<ElementRef>;
 
   /** Steps that the stepper holds. */
   @ContentChildren(MdStep) _steps: QueryList<MdStep>;

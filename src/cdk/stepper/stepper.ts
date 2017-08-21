@@ -164,7 +164,7 @@ export class CdkStepper {
   _focusIndex: number = 0;
 
   /** Used to track unique ID for each stepper component. */
-  private _groupId: number;
+  _groupId: number;
 
   constructor() {
     this._groupId = nextId++;
@@ -241,7 +241,7 @@ export class CdkStepper {
     const stepsArray = this._steps.toArray();
     stepsArray[this._selectedIndex].interacted = true;
     if (this._linear) {
-      return stepsArray.slice(0, index).some(step => step.stepControl.invalid && !step.optional);
+      return stepsArray.slice(0, index).some(step => step.stepControl.invalid);
     }
     return false;
   }

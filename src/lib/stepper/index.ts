@@ -18,8 +18,8 @@ import {MdCommonModule} from '../core';
 import {MdStepLabel} from './step-label';
 import {MdStepperNext, MdStepperPrevious} from './stepper-button';
 import {MdIconModule} from '../icon/index';
-import {MdStepIcon} from './step-icon';
-import {MdStepLabelContainer} from './step-label-container';
+import {MdStepHeader} from './step-header';
+import {MdStepContent} from './step-content';
 
 @NgModule({
   imports: [
@@ -31,9 +31,9 @@ import {MdStepLabelContainer} from './step-label-container';
     MdIconModule
   ],
   exports: [MdCommonModule, MdHorizontalStepper, MdVerticalStepper, MdStep, MdStepLabel, MdStepper,
-    MdStepperNext, MdStepperPrevious, MdStepIcon, MdStepLabelContainer],
+    MdStepperNext, MdStepperPrevious, MdStepHeader, MdStepContent],
   declarations: [MdHorizontalStepper, MdVerticalStepper, MdStep, MdStepLabel, MdStepper,
-    MdStepperNext, MdStepperPrevious, MdStepIcon, MdStepLabelContainer],
+    MdStepperNext, MdStepperPrevious, MdStepHeader, MdStepContent],
 })
 export class MdStepperModule {}
 
@@ -42,5 +42,5 @@ export * from './stepper-vertical';
 export * from './step-label';
 export * from './stepper';
 export * from './stepper-button';
-export * from './step-icon';
-export * from './step-label-container';
+export * from './step-header';
+export * from './step-content';

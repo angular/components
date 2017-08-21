@@ -11,6 +11,8 @@ import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {MdStepper} from './stepper';
 
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
 describe('MdHorizontalStepper', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -77,13 +79,19 @@ describe('MdHorizontalStepper', () => {
     });
 
     it('should not set focus on header of selected step if header is not clicked', () => {
-      let stepHeaderEl = fixture.debugElement
-          .queryAll(By.css('.mat-horizontal-stepper-header'))[1].nativeElement;
-      assertStepHeaderFocusNotCalled(stepHeaderEl, stepperComponent, fixture);
+      assertStepHeaderFocusNotCalled(stepperComponent, fixture);
     });
 
     it('should only be able to return to a previous step if it is editable', () => {
       assertEditableStepChange(stepperComponent, fixture);
+    });
+
+    it('should set create icon if step is editable and completed', () => {
+      assertCorrectStepIcon(stepperComponent, fixture, true, 'edit');
+    });
+
+    it('should set done icon if step is not editable and is completed', () => {
+      assertCorrectStepIcon(stepperComponent, fixture, false, 'done');
     });
   });
 
@@ -117,9 +125,7 @@ describe('MdHorizontalStepper', () => {
     });
 
     it('should not focus step header upon click if it is not able to be selected', () => {
-      let stepHeaderEl = fixture.debugElement
-          .queryAll(By.css('.mat-horizontal-stepper-header'))[1].nativeElement;
-      assertStepHeaderBlurred(stepHeaderEl, fixture);
+      assertStepHeaderBlurred(fixture);
     });
 
     it('should be able to move to next step even when invalid if current step is optional', () => {
@@ -195,13 +201,19 @@ describe('MdVerticalStepper', () => {
     });
 
     it('should not set focus on header of selected step if header is not clicked', () => {
-      let stepHeaderEl = fixture.debugElement
-          .queryAll(By.css('.mat-vertical-stepper-header'))[1].nativeElement;
-      assertStepHeaderFocusNotCalled(stepHeaderEl, stepperComponent, fixture);
+      assertStepHeaderFocusNotCalled(stepperComponent, fixture);
     });
 
     it('should only be able to return to a previous step if it is editable', () => {
       assertEditableStepChange(stepperComponent, fixture);
+    });
+
+    it('should set create icon if step is editable and completed', () => {
+      assertCorrectStepIcon(stepperComponent, fixture, true, 'edit');
+    });
+
+    it('should set done icon if step is not editable and is completed', () => {
+      assertCorrectStepIcon(stepperComponent, fixture, false, 'done');
     });
   });
 
@@ -236,9 +248,7 @@ describe('MdVerticalStepper', () => {
     });
 
     it('should not focus step header upon click if it is not able to be selected', () => {
-      let stepHeaderEl = fixture.debugElement
-          .queryAll(By.css('.mat-vertical-stepper-header'))[1].nativeElement;
-      assertStepHeaderBlurred(stepHeaderEl, fixture);
+      assertStepHeaderBlurred(fixture);
     });
 
     it('should be able to move to next step even when invalid if current step is optional', () => {
@@ -436,9 +446,10 @@ function assertCorrectKeyboardInteraction(stepperComponent: MdStepper,
 }
 
 /** Asserts that step selection change using stepper buttons does not focus step header. */
-function assertStepHeaderFocusNotCalled(stepHeaderEl: HTMLElement,
-                                       stepperComponent: MdStepper,
-                                       fixture: ComponentFixture<any>) {
+function assertStepHeaderFocusNotCalled(stepperComponent: MdStepper,
+                                        fixture: ComponentFixture<any>) {
+  let stepHeaderEl = fixture.debugElement
+      .queryAll(By.css('.mat-stepper-header'))[1].nativeElement;
   let nextButtonNativeEl = fixture.debugElement
       .queryAll(By.directive(MdStepperNext))[0].nativeElement;
   spyOn(stepHeaderEl, 'focus');
@@ -478,7 +489,9 @@ function assertLinearStepperValidity(stepHeaderEl: HTMLElement,
 }
 
 /** Asserts that step header focus is blurred if the step cannot be selected upon header click. */
-function assertStepHeaderBlurred(stepHeaderEl: HTMLElement, fixture: ComponentFixture<any>) {
+function assertStepHeaderBlurred(fixture: ComponentFixture<any>) {
+  let stepHeaderEl = fixture.debugElement
+      .queryAll(By.css('.mat-stepper-header'))[1].nativeElement;
   spyOn(stepHeaderEl, 'blur');
   stepHeaderEl.click();
   fixture.detectChanges();
@@ -505,22 +518,62 @@ function assertEditableStepChange(stepperComponent: MdStepper,
   expect(stepperComponent.selectedIndex).toBe(0);
 }
 
-/** Asserts that it is only possible to skip a step in linear stepper if the step is optional. */
+/**
+ * Asserts that it is possible to skip an optional step in linear stepper if there is no input
+ * or the input is valid.
+ */
 function assertOptionalStepValidity(stepperComponent: MdStepper,
                            testComponent: LinearMdHorizontalStepperApp | LinearMdVerticalStepperApp,
                            fixture: ComponentFixture<any>) {
-  expect(testComponent.oneGroup.get('oneCtrl')!.value).toBe('');
-  expect(testComponent.oneGroup.get('oneCtrl')!.valid).toBe(false);
-  expect(testComponent.oneGroup.valid).toBe(false);
-  expect(stepperComponent.selectedIndex).toBe(0);
+  testComponent.oneGroup.get('oneCtrl')!.setValue('input');
+  testComponent.twoGroup.get('twoCtrl')!.setValue('input');
+  stepperComponent.selectedIndex = 2;
+  fixture.detectChanges();
 
-  stepperComponent._steps.toArray()[0].optional = true;
+  expect(stepperComponent.selectedIndex).toBe(2);
+  expect(testComponent.threeGroup.get('threeCtrl')!.valid).toBe(true);
+
   let nextButtonNativeEl = fixture.debugElement
-      .queryAll(By.directive(MdStepperNext))[0].nativeElement;
+      .queryAll(By.directive(MdStepperNext))[2].nativeElement;
   nextButtonNativeEl.click();
   fixture.detectChanges();
 
-  expect(stepperComponent.selectedIndex).toBe(1);
+  expect(stepperComponent.selectedIndex)
+      .toBe(3, 'Expected selectedIndex to change when optional step input is empty.');
+
+  stepperComponent.selectedIndex = 2;
+  testComponent.threeGroup.get('threeCtrl')!.setValue('input');
+  nextButtonNativeEl.click();
+  fixture.detectChanges();
+
+  expect(testComponent.threeGroup.get('threeCtrl')!.valid).toBe(false);
+  expect(stepperComponent.selectedIndex)
+      .toBe(2, 'Expected selectedIndex to remain unchanged when optional step input is invalid.');
+
+  testComponent.threeGroup.get('threeCtrl')!.setValue('123@gmail.com');
+  nextButtonNativeEl.click();
+  fixture.detectChanges();
+
+  expect(testComponent.threeGroup.get('threeCtrl')!.valid).toBe(true);
+  expect(stepperComponent.selectedIndex)
+      .toBe(3, 'Expected selectedIndex to change when optional step input is valid.');
+}
+
+/** Asserts that step header set the correct icon depending on the state of step. */
+function assertCorrectStepIcon(stepperComponent: MdStepper,
+                               fixture: ComponentFixture<any>,
+                               isEditable: boolean,
+                               icon: String) {
+  let stepHeaderComponent = fixture.debugElement
+      .queryAll(By.css('md-step-header'))[0].componentInstance;
+  let nextButtonNativeEl = fixture.debugElement
+      .queryAll(By.directive(MdStepperNext))[0].nativeElement;
+  expect(stepHeaderComponent._getIndicatorType()).toBe('number');
+  stepperComponent._steps.toArray()[0].editable = isEditable;
+  nextButtonNativeEl.click();
+  fixture.detectChanges();
+
+  expect(stepHeaderComponent._getIndicatorType()).toBe(icon);
 }
 
 @Component({
@@ -583,12 +636,28 @@ class SimpleMdHorizontalStepperApp {
           </div>
         </form>
       </md-step>
+      <md-step [stepControl]="threeGroup" optional>
+        <form [formGroup]="threeGroup">
+          <ng-template mdStepLabel>Step two</ng-template>
+          <md-form-field>
+            <input mdInput formControlName="threeCtrl">
+          </md-form-field>
+          <div>
+            <button md-button mdStepperPrevious>Back</button>
+            <button md-button mdStepperNext>Next</button>
+          </div>
+        </form>
+      </md-step>
+      <md-step>
+        Done
+      </md-step>
     </md-horizontal-stepper>
   `
 })
 class LinearMdHorizontalStepperApp {
   oneGroup: FormGroup;
   twoGroup: FormGroup;
+  threeGroup: FormGroup;
 
   ngOnInit() {
     this.oneGroup = new FormGroup({
@@ -596,6 +665,9 @@ class LinearMdHorizontalStepperApp {
     });
     this.twoGroup = new FormGroup({
       twoCtrl: new FormControl('', Validators.required)
+    });
+    this.threeGroup = new FormGroup({
+      threeCtrl: new FormControl('', Validators.pattern(EMAIL_REGEX))
     });
   }
 }
@@ -660,12 +732,28 @@ class SimpleMdVerticalStepperApp {
           </div>
         </form>
       </md-step>
+      <md-step [stepControl]="threeGroup" optional>
+        <form [formGroup]="threeGroup">
+          <ng-template mdStepLabel>Step two</ng-template>
+          <md-form-field>
+            <input mdInput formControlName="threeCtrl">
+          </md-form-field>
+          <div>
+            <button md-button mdStepperPrevious>Back</button>
+            <button md-button mdStepperNext>Next</button>
+          </div>
+        </form>
+      </md-step>
+      <md-step>
+        Done
+      </md-step>
     </md-vertical-stepper>
   `
 })
 class LinearMdVerticalStepperApp {
   oneGroup: FormGroup;
   twoGroup: FormGroup;
+  threeGroup: FormGroup;
 
   ngOnInit() {
     this.oneGroup = new FormGroup({
@@ -673,6 +761,9 @@ class LinearMdVerticalStepperApp {
     });
     this.twoGroup = new FormGroup({
       twoCtrl: new FormControl('', Validators.required)
+    });
+    this.threeGroup = new FormGroup({
+      threeCtrl: new FormControl('', Validators.pattern(EMAIL_REGEX))
     });
   }
 }

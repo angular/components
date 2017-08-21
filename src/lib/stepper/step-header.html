@@ -1,0 +1,20 @@
+<div [class.mat-horizontal-stepper-header]="horizontal"
+     [class.mat-vertical-stepper-header]="!horizontal">
+  <div [class.mat-step-icon]="_getIndicatorType() != 'number' || selected"
+       [class.mat-step-icon-not-touched]="_getIndicatorType() == 'number' && !selected"
+       [ngSwitch]="_getIndicatorType()">
+    <span *ngSwitchCase="'number'">{{index + 1}}</span>
+    <md-icon *ngSwitchCase="'edit'">create</md-icon>
+    <md-icon *ngSwitchCase="'done'">done</md-icon>
+  </div>
+  <div [class.mat-step-label-active]="step.completed || selected"
+       [class.mat-step-label-inactive]="!step.completed && !selected">
+    <!-- If there is a label template, use it. -->
+    <ng-container *ngIf="step.stepLabel" [ngTemplateOutlet]="step.stepLabel.template">
+    </ng-container>
+    <!-- It there is no label template, fall back to the text label. -->
+    <div class="text-label" *ngIf="!step.stepLabel">{{step.label}}</div>
+
+    <div class="mat-step-optional" *ngIf="step.optional">Optional</div>
+  </div>
+</div>

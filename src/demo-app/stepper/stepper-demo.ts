@@ -1,6 +1,8 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
 @Component({
   moduleId: module.id,
   selector: 'stepper-demo',
@@ -13,7 +15,7 @@ export class StepperDemo {
   isNonEditable = false;
 
   nameFormGroup: FormGroup;
-  phoneFormGroup: FormGroup;
+  emailFormGroup: FormGroup;
 
   steps = [
     {label: 'Confirm your name', content: 'Last name, First name.'},
@@ -35,8 +37,8 @@ export class StepperDemo {
           lastNameFormCtrl: ['', Validators.required],
         }),
         this._formBuilder.group({
-          phoneFormCtrl: ['', Validators.required],
-        })
+          emailFormCtrl: ['', Validators.pattern(EMAIL_REGEX)]
+        }),
       ])
     });
 
@@ -45,8 +47,8 @@ export class StepperDemo {
       lastNameCtrl: ['', Validators.required],
     });
 
-    this.phoneFormGroup = this._formBuilder.group({
-      phoneCtrl: ['', Validators.required]
+    this.emailFormGroup = this._formBuilder.group({
+      emailCtrl: ['', Validators.pattern(EMAIL_REGEX)]
     });
   }
 }

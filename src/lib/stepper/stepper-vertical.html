@@ -1,25 +1,21 @@
 <div class="mat-step" *ngFor="let step of _steps; let i = index; let isLast = last">
-  <div #stepHeader class="mat-vertical-stepper-header" role="tab"
-       [id]="_getStepLabelId(i)"
-       [attr.aria-controls]="_getStepContentId(i)"
-       [attr.aria-selected]="selectedIndex == i"
-       [tabIndex]="_focusIndex == i ? 0 : -1"
-       (click)="step.select()"
-       (keydown)="_onKeydown($event)">
-    <md-step-icon [step]="step" [selected]="selectedIndex == i" [index]="i"></md-step-icon>
-    <md-step-label-container [step]="step" [selected]="selectedIndex == i">
-    </md-step-label-container>
+  <div class="mat-stepper-header" #stepperHeader (click)="step.select()"
+       (keydown)="_onKeydown($event)" [tabIndex]="_focusIndex == i ? 0 : -1">
+    <md-step-header  horizontal="false"
+                     [labelId]="_getStepLabelId(i)"
+                     [contentId]="_getStepContentId(i)"
+                     [index]="i"
+                     [selected]="selectedIndex == i">
+
+    </md-step-header>
   </div>
 
   <div class="mat-vertical-content-container" [class.mat-stepper-vertical-line]="!isLast">
-    <div class="mat-vertical-stepper-content" role="tabpanel"
-         [@stepTransition]="_getAnimationDirection(i)"
-         [id]="_getStepContentId(i)"
-         [attr.aria-labelledby]="_getStepLabelId(i)"
-         [attr.aria-expanded]="selectedIndex == i">
-      <div class="mat-vertical-content">
-        <ng-container[ngTemplateOutlet]="step.content"></ng-container>
-      </div>
-    </div>
+    <md-step-content horizontal="false"
+                     [@stepTransition]="_getAnimationDirection(i)"
+                     [labelId]="_getStepLabelId(i)"
+                     [contentId]="_getStepContentId(i)"
+                     [selectedIndex]="selectedIndex"
+                     [index]="i"></md-step-content>
   </div>
 </div>

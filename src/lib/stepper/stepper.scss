@@ -1,71 +1,23 @@
 @import '../core/style/variables';
 
-$mat-horizontal-stepper-header-height: 72px !default;
-$mat-stepper-label-header-height: 24px !default;
-$mat-stepper-label-min-width: 50px !default;
 $mat-stepper-side-gap: 24px !default;
 $mat-vertical-stepper-content-margin: 36px !default;
 $mat-stepper-line-width: 1px !default;
 $mat-stepper-line-gap: 8px !default;
-$mat-step-optional-font-size: 12px;
 
 :host {
   display: block;
 }
 
-.mat-step-label-container {
-  display: inline-block;
-  white-space: nowrap;
+.mat-stepper-header {
   overflow: hidden;
-  // TODO(jwshin): text-overflow does not work as expected.
-  text-overflow: ellipsis;
-  min-width: $mat-stepper-label-min-width;
-  vertical-align: middle;
-}
-
-.mat-step-icon {
-  border-radius: 50%;
-  height: $mat-stepper-label-header-height;
-  width: $mat-stepper-label-header-height;
-  text-align: center;
-  line-height: $mat-stepper-label-header-height;
-  display: inline-block;
+  outline: none;
 }
 
 .mat-horizontal-stepper-header-container {
   white-space: nowrap;
   display: flex;
   align-items: center;
-}
-
-.mat-horizontal-stepper-header {
-  display: flex;
-  height: $mat-horizontal-stepper-header-height;
-  overflow: hidden;
-  align-items: center;
-  outline: none;
-  padding: 0 $mat-stepper-side-gap;
-
-  .mat-step-icon {
-    margin-right: $mat-stepper-line-gap;
-    flex: none;
-  }
-}
-
-.mat-vertical-stepper-header {
-  display: flex;
-  align-items: center;
-  padding: $mat-stepper-side-gap;
-  outline: none;
-  max-height: $mat-stepper-label-header-height;
-
-  .mat-step-icon {
-    margin-right: $mat-vertical-stepper-content-margin - $mat-stepper-side-gap;
-  }
-}
-
-.mat-step-optional {
-  font-size: $mat-step-optional-font-size;
 }
 
 .mat-stepper-horizontal-line {
@@ -79,6 +31,7 @@ $mat-step-optional-font-size: 12px;
 
 .mat-horizontal-stepper-content {
   overflow: hidden;
+  display: flex;
 
   &[aria-expanded='false'] {
     height: 0;
@@ -107,11 +60,8 @@ $mat-step-optional-font-size: 12px;
 }
 
 .mat-vertical-stepper-content {
+  display: flex;
   overflow: hidden;
-}
-
-.mat-vertical-content {
-  padding: 0 $mat-stepper-side-gap $mat-stepper-side-gap $mat-stepper-side-gap;
 }
 
 .mat-step:last-child {

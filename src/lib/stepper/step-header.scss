@@ -1,0 +1,66 @@
+$mat-horizontal-stepper-header-height: 72px !default;
+$mat-stepper-label-header-height: 24px !default;
+$mat-stepper-label-min-width: 50px !default;
+$mat-stepper-side-gap: 24px !default;
+$mat-vertical-stepper-content-margin: 36px !default;
+$mat-stepper-line-gap: 8px !default;
+$mat-step-optional-font-size: 12px;
+
+:host {
+  display: flex;
+}
+
+.mat-horizontal-stepper-header {
+  display: flex;
+  height: $mat-horizontal-stepper-header-height;
+  overflow: hidden;
+  align-items: center;
+  padding: 0 $mat-stepper-side-gap;
+
+  .mat-step-icon,
+  .mat-step-icon-not-touched {
+    margin-right: $mat-stepper-line-gap;
+    flex: none;
+  }
+}
+
+.mat-vertical-stepper-header {
+  display: flex;
+  align-items: center;
+  padding: $mat-stepper-side-gap;
+  max-height: $mat-stepper-label-header-height;
+
+  .mat-step-icon,
+  .mat-step-icon-not-touched {
+    margin-right: $mat-vertical-stepper-content-margin - $mat-stepper-side-gap;
+  }
+}
+
+.mat-step-optional {
+  font-size: $mat-step-optional-font-size;
+}
+
+.mat-step-icon,
+.mat-step-icon-not-touched {
+  border-radius: 50%;
+  height: $mat-stepper-label-header-height;
+  width: $mat-stepper-label-header-height;
+  text-align: center;
+  line-height: $mat-stepper-label-header-height;
+  display: inline-block;
+}
+
+.mat-step-label-active,
+.mat-step-label-inactive {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: $mat-stepper-label-min-width;
+  vertical-align: middle;
+}
+
+.text-label {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
