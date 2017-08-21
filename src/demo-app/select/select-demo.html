@@ -33,7 +33,9 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <p>
       <label for="drinks-theme">Theme:</label>
       <select [(ngModel)]="drinksTheme" id="drinks-theme">
-        <option *ngFor="let theme of availableThemes" [value]="theme.value">{{ theme.name }}</option>
+        <option *ngFor="let theme of availableThemes" [value]="theme.value">
+          {{theme.name}}
+        </option>
       </select>
     </p>
 
@@ -111,15 +113,17 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
   <md-card>
     <md-card-subtitle>compareWith</md-card-subtitle>
     <md-card-content>
-      <md-select placeholder="Drink" [color]="drinksTheme"
-                 [(ngModel)]="currentDrinkObject"
-                 [required]="drinkObjectRequired"
-                 [compareWith]="compareByValue ? compareDrinkObjectsByValue : compareByReference"
-                 #drinkObjectControl="ngModel">
-        <md-option *ngFor="let drink of drinks" [value]="drink" [disabled]="drink.disabled">
-          {{ drink.viewValue }}
-        </md-option>
-      </md-select>
+      <md-form-field [color]="drinksTheme">
+        <md-select placeholder="Drink"
+                   [(ngModel)]="currentDrinkObject"
+                   [required]="drinkObjectRequired"
+                   [compareWith]="compareByValue ? compareDrinkObjectsByValue : compareByReference"
+                   #drinkObjectControl="ngModel">
+          <md-option *ngFor="let drink of drinks" [value]="drink" [disabled]="drink.disabled">
+            {{ drink.viewValue }}
+          </md-option>
+        </md-select>
+      </md-form-field>
       <p> Value: {{ currentDrinkObject | json }} </p>
       <p> Touched: {{ drinkObjectControl.touched }} </p>
       <p> Dirty: {{ drinkObjectControl.dirty }} </p>
