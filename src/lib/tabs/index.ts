@@ -20,7 +20,7 @@ import {MdTabLink, MdTabNav} from './tab-nav-bar/tab-nav-bar';
 import {MdInkBar} from './ink-bar';
 import {MdTabBody} from './tab-body';
 import {MdTabHeader} from './tab-header';
-
+import {MdTabLabelTruncate} from './tab-truncate';
 
 @NgModule({
   imports: [
@@ -49,7 +49,8 @@ import {MdTabHeader} from './tab-header';
     MdTabNav,
     MdTabLink,
     MdTabBody,
-    MdTabHeader
+    MdTabHeader,
+    MdTabLabelTruncate
   ],
   providers: [VIEWPORT_RULER_PROVIDER],
 })
