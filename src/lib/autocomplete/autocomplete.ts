@@ -20,15 +20,13 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import {MdOption} from '../core';
-import {ActiveDescendantKeyManager} from '../core/a11y/activedescendant-key-manager';
+import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 
 /**
  * Autocomplete IDs need to be unique across components, so this counter exists outside of
  * the component definition.
  */
 let _uniqueAutocompleteIdCounter = 0;
-
-export type AutocompletePositionY = 'above' | 'below';
 
 @Component({
   moduleId: module.id,
@@ -45,10 +43,7 @@ export type AutocompletePositionY = 'above' | 'below';
 export class MdAutocomplete implements AfterContentInit {
 
   /** Manages active item in option list based on key events. */
-  _keyManager: ActiveDescendantKeyManager;
-
-  /** Whether the autocomplete panel displays above or below its trigger. */
-  positionY: AutocompletePositionY = 'below';
+  _keyManager: ActiveDescendantKeyManager<MdOption>;
 
   /** Whether the autocomplete panel should be visible, depending on option length. */
   showPanel = false;
@@ -71,7 +66,7 @@ export class MdAutocomplete implements AfterContentInit {
   constructor(private _changeDetectorRef: ChangeDetectorRef) { }
 
   ngAfterContentInit() {
-    this._keyManager = new ActiveDescendantKeyManager(this.options).withWrap();
+    this._keyManager = new ActiveDescendantKeyManager<MdOption>(this.options).withWrap();
   }
 
   /**
@@ -97,11 +92,9 @@ export class MdAutocomplete implements AfterContentInit {
     });
   }
 
-  /** Sets a class on the panel based on its position (used to set y-offset). */
+  /** Sets a class on the panel based on whether it is visible. */
   _getClassList() {
     return {
-      'mat-autocomplete-panel-below': this.positionY === 'below',
-      'mat-autocomplete-panel-above': this.positionY === 'above',
       'mat-autocomplete-visible': this.showPanel,
       'mat-autocomplete-hidden': !this.showPanel
     };

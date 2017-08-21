@@ -9,27 +9,27 @@
 import {
   Component,
   ComponentRef,
-  ViewChild,
-  ViewEncapsulation,
-  NgZone,
   ElementRef,
+  EmbeddedViewRef,
   EventEmitter,
   Inject,
+  NgZone,
   Optional,
   ChangeDetectorRef,
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
-import {
-  animate,
-  trigger,
-  state,
-  style,
-  transition,
-  AnimationEvent,
-} from '@angular/animations';
+import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
 import {DOCUMENT} from '@angular/platform-browser';
-import {BasePortalHost, ComponentPortal, PortalHostDirective, TemplatePortal} from '../core';
+import {
+  BasePortalHost,
+  ComponentPortal,
+  PortalHostDirective,
+  TemplatePortal
+} from '@angular/cdk/portal';
+import {FocusTrap, FocusTrapFactory} from '@angular/cdk/a11y';
 import {MdDialogConfig} from './dialog-config';
-import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
+
 
 /**
  * Throws an exception for the case when a ComponentPortal is
@@ -125,7 +125,7 @@ export class MdDialogContainer extends BasePortalHost {
    * Attach a TemplatePortal as content to this dialog container.
    * @param portal Portal to be attached as the dialog content.
    */
-  attachTemplatePortal(portal: TemplatePortal): Map<string, any> {
+  attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C> {
     if (this._portalHost.hasAttached()) {
       throwMdDialogContentAlreadyAttachedError();
     }
@@ -151,7 +151,7 @@ export class MdDialogContainer extends BasePortalHost {
     const toFocus = this._elementFocusedBeforeDialogWasOpened;
 
     // We need the extra check, because IE can set the `activeElement` to null in some cases.
-    if (toFocus && 'focus' in toFocus) {
+    if (toFocus && typeof toFocus.focus === 'function') {
       toFocus.focus();
     }
 

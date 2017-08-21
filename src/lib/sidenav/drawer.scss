@@ -1,0 +1,116 @@
+@import '../core/style/variables';
+@import '../core/style/elevation';
+@import '../core/style/layout-common';
+@import '../core/a11y/a11y';
+
+// stylelint-disable max-line-length
+// Mixin that creates a new stacking context.
+// see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context
+// stylelint-enable
+@mixin mat-drawer-stacking-context() {
+  position: relative;
+
+  // Use a transform to create a new stacking context.
+  transform: translate3d(0, 0, 0);
+}
+
+.mat-drawer-container {
+  // We need a stacking context here so that the backdrop and drawers are clipped to the
+  // MdDrawerContainer. This creates a new z-index stack so we use low numbered z-indices.
+  // We create another stacking context in the '.mat-drawer-content' and in each drawer so that
+  // the application content does not get messed up with our own CSS.
+  @include mat-drawer-stacking-context();
+
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+
+  // Need this to take up space in the layout.
+  display: block;
+
+  // Hide the drawers when they're closed.
+  overflow: hidden;
+
+  // TODO(hansl): Update this with a more robust solution.
+  &[fullscreen] {
+    @include mat-fill();
+
+    &.mat-drawer-opened {
+      overflow: hidden;
+    }
+  }
+}
+
+.mat-drawer-backdrop {
+  @include mat-fill();
+
+  display: block;
+
+  // Because of the new stacking context, the z-index stack is new and we can use our own
+  // numbers.
+  z-index: 2;
+
+  // We use 'visibility: hidden | visible' because 'display: none' will not animate any
+  // transitions, while visibility will interpolate transitions properly.
+  // see https://developer.mozilla.org/en-US/docs/Web/CSS/visibility, the Interpolation
+  // section.
+  visibility: hidden;
+
+  &.mat-drawer-shown {
+    visibility: visible;
+  }
+
+  @include cdk-high-contrast {
+    opacity: 0.5;
+  }
+}
+
+.mat-drawer-content {
+  @include mat-drawer-stacking-context();
+
+  display: block;
+  height: 100%;
+  overflow: auto;
+}
+
+.mat-drawer {
+  @include mat-drawer-stacking-context();
+
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  min-width: 5vw;
+  outline: 0;
+  box-sizing: border-box;
+  height: 100%;
+  overflow-y: auto; // TODO(kara): revisit scrolling behavior for drawers
+  transform: translate3d(-100%, 0, 0);
+
+  &.mat-drawer-side {
+    z-index: 1;
+  }
+
+  &.mat-drawer-end {
+    right: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+
+  [dir='rtl'] & {
+    transform: translate3d(100%, 0, 0);
+
+    &.mat-drawer-end {
+      left: 0;
+      right: auto;
+      transform: translate3d(-100%, 0, 0);
+    }
+  }
+
+  &.mat-drawer-opening, &.mat-drawer-opened {
+    &:not(.mat-drawer-side) {
+      // The elevation of z-16 is noted in the design specifications.
+      // See https://material.io/guidelines/patterns/navigation-drawer.html#
+      @include mat-elevation(16);
+    }
+  }
+}

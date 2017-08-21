@@ -145,7 +145,7 @@ export class MdOption {
   focus(): void {
     const element = this._getHostElement();
 
-    if ('focus' in element) {
+    if (typeof element.focus === 'function') {
       element.focus();
     }
   }
@@ -172,6 +172,11 @@ export class MdOption {
       this._active = false;
       this._changeDetectorRef.markForCheck();
     }
+  }
+
+  /** Gets the label to be used when determining whether the option should be focused. */
+  getLabel(): string {
+    return this.viewValue;
   }
 
   /** Ensures the option is selected when activated from the keyboard. */
@@ -201,7 +206,7 @@ export class MdOption {
     return this.disabled ? '-1' : '0';
   }
 
-  /** Fetches the host DOM element. */
+  /** Gets the host DOM element. */
   _getHostElement(): HTMLElement {
     return this._element.nativeElement;
   }

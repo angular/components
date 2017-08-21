@@ -9,12 +9,13 @@
 import {
   Component,
   ComponentRef,
+  EmbeddedViewRef,
   ViewChild,
   NgZone,
   OnDestroy,
   Renderer2,
   ElementRef,
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   trigger,
@@ -28,12 +29,11 @@ import {
   BasePortalHost,
   ComponentPortal,
   PortalHostDirective,
-} from '../core';
-import {MdSnackBarConfig} from './snack-bar-config';
+} from '@angular/cdk/portal';
+import {first} from '@angular/cdk/rxjs';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {first} from '../core/rxjs/index';
-
+import {MdSnackBarConfig} from './snack-bar-config';
 
 
 export type SnackBarState = 'initial' | 'visible' | 'complete' | 'void';
@@ -110,7 +110,7 @@ export class MdSnackBarContainer extends BasePortalHost implements OnDestroy {
   }
 
   /** Attach a template portal as content to this snack bar container. */
-  attachTemplatePortal(): Map<string, any> {
+  attachTemplatePortal(): EmbeddedViewRef<any> {
     throw Error('Not yet implemented');
   }
 

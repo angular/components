@@ -1,6 +1,10 @@
-import {Component, ViewEncapsulation, ElementRef, ChangeDetectionStrategy} from '@angular/core';
-
-const changeDetectionKey = 'mdDemoChangeDetection';
+import {
+  Component,
+  ViewEncapsulation,
+  ElementRef,
+  Renderer2,
+} from '@angular/core';
+import {OverlayContainer} from '@angular/material';
 
 /**
  * The entry app for demo site. Routes under `accessibility` will use AccessibilityDemo component,
@@ -28,15 +32,6 @@ export class EntryApp {}
 })
 export class Home {}
 
-@Component({
-  moduleId: module.id,
-  selector: 'demo-app-on-push',
-  template: '<ng-content></ng-content>',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-})
-export class DemoAppOnPush {}
-
 /**
  * DemoApp with toolbar and sidenav.
  */
@@ -45,14 +40,10 @@ export class DemoAppOnPush {}
   selector: 'demo-app',
   templateUrl: 'demo-app.html',
   styleUrls: ['demo-app.css'],
-  host: {
-    '[class.unicorn-dark-theme]': 'dark',
-  },
   encapsulation: ViewEncapsulation.None,
 })
 export class DemoApp {
   dark = false;
-  changeDetectionStrategy: string;
   navItems = [
     {name: 'Autocomplete', route: '/autocomplete'},
     {name: 'Button', route: '/button'},
@@ -90,14 +81,10 @@ export class DemoApp {
     {name: 'Typography', route: '/typography'}
   ];
 
-  constructor(private _element: ElementRef) {
-    // Some browsers will throw when trying to access localStorage in incognito.
-    try {
-      this.changeDetectionStrategy = window.localStorage.getItem(changeDetectionKey) || 'Default';
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  constructor(
+    private _element: ElementRef,
+    private _renderer: Renderer2,
+    private _overlayContainer: OverlayContainer) {}
 
   toggleFullscreen() {
     let elem = this._element.nativeElement.querySelector('.demo-content');
@@ -112,14 +99,17 @@ export class DemoApp {
     }
   }
 
-  toggleChangeDetection() {
-    try {
-      this.changeDetectionStrategy = this.changeDetectionStrategy === 'Default' ?
-          'OnPush' : 'Default';
-      window.localStorage.setItem(changeDetectionKey, this.changeDetectionStrategy);
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
+  toggleTheme() {
+    const darkThemeClass = 'unicorn-dark-theme';
+
+    this.dark = !this.dark;
+
+    if (this.dark) {
+      this._renderer.addClass(this._element.nativeElement, darkThemeClass);
+      this._overlayContainer.themeClass = darkThemeClass;
+    } else {
+      this._renderer.removeClass(this._element.nativeElement, darkThemeClass);
+      this._overlayContainer.themeClass = '';
     }
   }
 }

@@ -7,7 +7,7 @@
  */
 
 import {ViewContainerRef} from '@angular/core';
-import {Direction} from '../core';
+import {Direction} from '@angular/cdk/bidi';
 
 /** Valid ARIA roles for a dialog element. */
 export type DialogRole = 'dialog' | 'alertdialog';
@@ -33,11 +33,14 @@ export class MdDialogConfig {
    */
   viewContainerRef?: ViewContainerRef;
 
+  /** ID for the dialog. If omitted, a unique one will be generated. */
+  id?: string;
+
   /** The ARIA role of the dialog element. */
   role?: DialogRole = 'dialog';
 
   /** Custom class for the overlay pane. */
-  panelClass?: string = '';
+  panelClass?: string | string[] = '';
 
   /** Whether the dialog has a backdrop. */
   hasBackdrop?: boolean = true;

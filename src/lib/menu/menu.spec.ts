@@ -1,4 +1,4 @@
-import {TestBed, async, ComponentFixture, fakeAsync, tick} from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
@@ -8,24 +8,19 @@ import {
   Input,
   Output,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {
-  OverlayContainer,
-  Directionality,
-  Direction,
-  ESCAPE,
-  RIGHT_ARROW,
-  LEFT_ARROW,
-} from '../core';
-import {
+  MD_MENU_DEFAULT_OPTIONS,
+  MdMenu,
   MdMenuModule,
-  MdMenuTrigger,
   MdMenuPanel,
+  MdMenuTrigger,
   MenuPositionX,
   MenuPositionY,
-  MdMenu,
-  MD_MENU_DEFAULT_OPTIONS,
 } from './index';
 import {MENU_PANEL_TOP_PADDING} from './menu-trigger';
 import {extendObject} from '../core/util/object-extend';
@@ -595,7 +590,7 @@ describe('MdMenu', () => {
       subscription.unsubscribe();
     });
 
-    it('should toggle a nested menu when its trigger is hovered', () => {
+    it('should toggle a nested menu when its trigger is hovered', fakeAsync(() => {
       compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
@@ -612,33 +607,39 @@ describe('MdMenu', () => {
 
       dispatchMouseEvent(items[items.indexOf(levelOneTrigger) + 1], 'mouseenter');
       fixture.detectChanges();
+      tick(500);
+
       expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(1, 'Expected one open menu');
       expect(levelOneTrigger.classList)
           .not.toContain('mat-menu-item-highlighted', 'Expected the trigger to not be highlighted');
-    });
+    }));
 
-    it('should close all the open sub-menus when the hover state is changed at the root', () => {
-      compileTestComponent();
-      instance.rootTriggerEl.nativeElement.click();
-      fixture.detectChanges();
+    it('should close all the open sub-menus when the hover state is changed at the root',
+      fakeAsync(() => {
+        compileTestComponent();
+        instance.rootTriggerEl.nativeElement.click();
+        fixture.detectChanges();
 
-      const items = Array.from(overlay.querySelectorAll('.mat-menu-panel [md-menu-item]'));
-      const levelOneTrigger = overlay.querySelector('#level-one-trigger')!;
+        const items = Array.from(overlay.querySelectorAll('.mat-menu-panel [md-menu-item]'));
+        const levelOneTrigger = overlay.querySelector('#level-one-trigger')!;
 
-      dispatchMouseEvent(levelOneTrigger, 'mouseenter');
-      fixture.detectChanges();
+        dispatchMouseEvent(levelOneTrigger, 'mouseenter');
+        fixture.detectChanges();
 
-      const levelTwoTrigger = overlay.querySelector('#level-two-trigger')! as HTMLElement;
-      dispatchMouseEvent(levelTwoTrigger, 'mouseenter');
-      fixture.detectChanges();
+        const levelTwoTrigger = overlay.querySelector('#level-two-trigger')! as HTMLElement;
+        dispatchMouseEvent(levelTwoTrigger, 'mouseenter');
+        fixture.detectChanges();
 
-      expect(overlay.querySelectorAll('.mat-menu-panel').length)
-          .toBe(3, 'Expected three open menus');
+        expect(overlay.querySelectorAll('.mat-menu-panel').length)
+            .toBe(3, 'Expected three open menus');
 
-      dispatchMouseEvent(items[items.indexOf(levelOneTrigger) + 1], 'mouseenter');
-      fixture.detectChanges();
-      expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(1, 'Expected one open menu');
-    });
+        dispatchMouseEvent(items[items.indexOf(levelOneTrigger) + 1], 'mouseenter');
+        fixture.detectChanges();
+        tick(500);
+
+        expect(overlay.querySelectorAll('.mat-menu-panel').length)
+            .toBe(1, 'Expected one open menu');
+      }));
 
     it('should open a nested menu when its trigger is clicked', () => {
       compileTestComponent();
@@ -658,7 +659,7 @@ describe('MdMenu', () => {
           .toBe(2, 'Expected repeat clicks not to close the menu.');
     });
 
-    it('should open and close a nested menu with arrow keys in ltr', () => {
+    it('should open and close a nested menu with arrow keys in ltr', fakeAsync(() => {
       compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
@@ -674,11 +675,12 @@ describe('MdMenu', () => {
       expect(panels.length).toBe(2, 'Expected two open menus');
       dispatchKeyboardEvent(panels[1], 'keydown', LEFT_ARROW);
       fixture.detectChanges();
+      tick(500);
 
       expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(1);
-    });
+    }));
 
-    it('should open and close a nested menu with the arrow keys in rtl', () => {
+    it('should open and close a nested menu with the arrow keys in rtl', fakeAsync(() => {
       dir = 'rtl';
       fixture.destroy();
       compileTestComponent();
@@ -696,9 +698,10 @@ describe('MdMenu', () => {
       expect(panels.length).toBe(2, 'Expected two open menus');
       dispatchKeyboardEvent(panels[1], 'keydown', RIGHT_ARROW);
       fixture.detectChanges();
+      tick(500);
 
       expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(1);
-    });
+    }));
 
     it('should not do anything with the arrow keys for a top-level menu', () => {
       compileTestComponent();
@@ -718,7 +721,7 @@ describe('MdMenu', () => {
           .toBe(1, 'Expected one menu to remain open');
     });
 
-    it('should close all of the menus when the backdrop is clicked', () => {
+    it('should close all of the menus when the backdrop is clicked', fakeAsync(() => {
       compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
@@ -738,9 +741,10 @@ describe('MdMenu', () => {
 
       (overlay.querySelector('.cdk-overlay-backdrop')! as HTMLElement).click();
       fixture.detectChanges();
+      tick(500);
 
       expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(0, 'Expected no open menus');
-    });
+    }));
 
     it('should shift focus between the sub-menus', () => {
       compileTestComponent();
@@ -863,7 +867,7 @@ describe('MdMenu', () => {
       expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + MENU_PANEL_TOP_PADDING);
     });
 
-    it('should close all of the menus when an item is clicked', () => {
+    it('should close all of the menus when an item is clicked', fakeAsync(() => {
       compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
@@ -880,9 +884,10 @@ describe('MdMenu', () => {
 
       (menus[2].querySelector('.mat-menu-item')! as HTMLElement).click();
       fixture.detectChanges();
+      tick(500);
 
       expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(0, 'Expected no open menus');
-    });
+    }));
 
     it('should set a class on the menu items that trigger a sub-menu', () => {
       compileTestComponent();
@@ -916,37 +921,40 @@ describe('MdMenu', () => {
           .toContain('mat-elevation-z4', 'Expected second sub-menu to have base elevation + 2.');
     });
 
-    it('should update the elevation when the same menu is opened at a different depth', () => {
-      compileTestComponent();
-      instance.rootTrigger.openMenu();
-      fixture.detectChanges();
+    it('should update the elevation when the same menu is opened at a different depth',
+      fakeAsync(() => {
+        compileTestComponent();
+        instance.rootTrigger.openMenu();
+        fixture.detectChanges();
 
-      instance.levelOneTrigger.openMenu();
-      fixture.detectChanges();
+        instance.levelOneTrigger.openMenu();
+        fixture.detectChanges();
 
-      instance.levelTwoTrigger.openMenu();
-      fixture.detectChanges();
+        instance.levelTwoTrigger.openMenu();
+        fixture.detectChanges();
 
-      let lastMenu = overlay.querySelectorAll('.mat-menu-panel')[2];
+        let lastMenu = overlay.querySelectorAll('.mat-menu-panel')[2];
 
-      expect(lastMenu.classList)
-          .toContain('mat-elevation-z4', 'Expected menu to have the base elevation plus two.');
+        expect(lastMenu.classList)
+            .toContain('mat-elevation-z4', 'Expected menu to have the base elevation plus two.');
 
-      (overlay.querySelector('.cdk-overlay-backdrop')! as HTMLElement).click();
-      fixture.detectChanges();
+        (overlay.querySelector('.cdk-overlay-backdrop')! as HTMLElement).click();
+        fixture.detectChanges();
+        tick(500);
 
-      expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(0, 'Expected no open menus');
+        expect(overlay.querySelectorAll('.mat-menu-panel').length)
+            .toBe(0, 'Expected no open menus');
 
-      instance.alternateTrigger.openMenu();
-      fixture.detectChanges();
+        instance.alternateTrigger.openMenu();
+        fixture.detectChanges();
 
-      lastMenu = overlay.querySelector('.mat-menu-panel') as HTMLElement;
+        lastMenu = overlay.querySelector('.mat-menu-panel') as HTMLElement;
 
-      expect(lastMenu.classList)
-          .not.toContain('mat-elevation-z4', 'Expected menu not to maintain old elevation.');
-      expect(lastMenu.classList)
-          .toContain('mat-elevation-z2', 'Expected menu to have the proper updated elevation.');
-    });
+        expect(lastMenu.classList)
+            .not.toContain('mat-elevation-z4', 'Expected menu not to maintain old elevation.');
+        expect(lastMenu.classList)
+            .toContain('mat-elevation-z2', 'Expected menu to have the proper updated elevation.');
+      }));
 
     it('should not increase the elevation if the user specified a custom one', () => {
       const elevationFixture = TestBed.createComponent(NestedMenuCustomElevation);
@@ -965,6 +973,29 @@ describe('MdMenu', () => {
       expect(menuClasses)
           .not.toContain('mat-elevation-z3', 'Expected no stacked elevation.');
     });
+
+    it('should close all of the menus when the root is closed programmatically', fakeAsync(() => {
+      compileTestComponent();
+      instance.rootTrigger.openMenu();
+      fixture.detectChanges();
+
+      instance.levelOneTrigger.openMenu();
+      fixture.detectChanges();
+
+      instance.levelTwoTrigger.openMenu();
+      fixture.detectChanges();
+
+      const menus = overlay.querySelectorAll('.mat-menu-panel');
+
+      expect(menus.length).toBe(3, 'Expected three open menus');
+
+      instance.rootTrigger.closeMenu();
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(0, 'Expected no open menus');
+    }));
+
 
   });
 

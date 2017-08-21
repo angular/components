@@ -8,54 +8,63 @@
 
 import {
   AfterContentInit,
+  Attribute,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  ContentChild,
   ContentChildren,
   ElementRef,
   EventEmitter,
+  Inject,
+  InjectionToken,
   Input,
   OnDestroy,
+  OnInit,
   Optional,
   Output,
   QueryList,
   Renderer2,
   Self,
-  ViewEncapsulation,
   ViewChild,
-  ChangeDetectorRef,
-  Attribute,
-  OnInit,
-  Inject,
-  ChangeDetectionStrategy,
-  InjectionToken,
+  ViewEncapsulation,
+  Directive,
+  isDevMode,
 } from '@angular/core';
-import {NgForm, FormGroupDirective} from '@angular/forms';
-import {MdOption, MdOptionSelectionChange, MdOptgroup} from '../core/option/index';
-import {ENTER, SPACE, UP_ARROW, DOWN_ARROW, HOME, END} from '../core/keyboard/keycodes';
-import {FocusKeyManager} from '../core/a11y/focus-key-manager';
-import {Directionality} from '../core/bidi/index';
+import {ControlValueAccessor, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
+import {DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import {FocusKeyManager} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {filter, startWith} from '@angular/cdk/rxjs';
+import {
+  ConnectedOverlayDirective,
+  Overlay,
+  RepositionScrollStrategy,
+  // This import is only used to define a generic type. The current TypeScript version incorrectly
+  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
+  // tslint:disable-next-line:no-unused-variable
+  ScrollStrategy,
+  ViewportRuler
+} from '@angular/cdk/overlay';
+import {merge} from 'rxjs/observable/merge';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
-import {transformPlaceholder, transformPanel, fadeInContent} from './select-animations';
-import {ControlValueAccessor, NgControl} from '@angular/forms';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ConnectedOverlayDirective} from '../core/overlay/overlay-directives';
-import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
+import {fadeInContent, transformPanel, transformPlaceholder} from './select-animations';
 import {SelectionModel} from '../core/selection/selection';
-import {Overlay} from '../core/overlay/overlay';
-import {getMdSelectDynamicMultipleError, getMdSelectNonArrayValueError} from './select-errors';
-import {startWith, filter} from '../core/rxjs/index';
-import {merge} from 'rxjs/observable/merge';
+import {
+  getMdSelectDynamicMultipleError,
+  getMdSelectNonArrayValueError,
+  getMdSelectNonFunctionValueError
+} from './select-errors';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
+import {MdOptgroup, MdOption, MdOptionSelectionChange} from '../core/option/index';
 import {
   FloatPlaceholderType,
-  PlaceholderOptions,
-  MD_PLACEHOLDER_GLOBAL_OPTIONS
+  MD_PLACEHOLDER_GLOBAL_OPTIONS,
+  PlaceholderOptions
 } from '../core/placeholder/placeholder-options';
-// This import is only used to define a generic type. The current TypeScript version incorrectly
-// considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
-// tslint:disable-next-line:no-unused-variable
-import {ScrollStrategy, RepositionScrollStrategy} from '../core/overlay/scroll';
 import {Platform} from '@angular/cdk/platform';
 
 /**
@@ -124,7 +133,8 @@ export const MD_SELECT_SCROLL_STRATEGY =
     new InjectionToken<() => ScrollStrategy>('md-select-scroll-strategy');
 
 /** @docs-private */
-export function MD_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay) {
+export function MD_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
+    () => RepositionScrollStrategy {
   return () => overlay.scrollStrategies.reposition();
 }
 
@@ -146,6 +156,16 @@ export class MdSelectBase {
   constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
 export const _MdSelectMixinBase = mixinColor(mixinDisabled(MdSelectBase), 'primary');
+
+
+/**
+ * Allows the user to customize the trigger that is displayed when the select has a value.
+ */
+@Directive({
+  selector: 'md-select-trigger, mat-select-trigger'
+})
+export class MdSelectTrigger {}
+
 
 @Component({
   moduleId: module.id,
@@ -205,6 +225,9 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Whether the component is in multiple selection mode. */
   private _multiple: boolean = false;
 
+  /** Comparison function to specify which option is displayed. Defaults to object equality. */
+  private _compareWith = (o1: any, o2: any) => o1 === o2;
+
   /** Deals with the selection logic. */
   _selectionModel: SelectionModel<MdOption>;
 
@@ -224,7 +247,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   _triggerWidth: number;
 
   /** Manages keyboard events for options in the panel. */
-  _keyManager: FocusKeyManager;
+  _keyManager: FocusKeyManager<MdOption>;
 
   /**
    * The width of the selected option's value. Must be set programmatically
@@ -293,6 +316,9 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
   @Input() panelClass: string|string[]|Set<string>|{[key: string]: any};
 
+  /** User-supplied override of the trigger element. */
+  @ContentChild(MdSelectTrigger) customTrigger: MdSelectTrigger;
+
   /** Placeholder to be shown if no value has been selected. */
   @Input()
   get placeholder() { return this._placeholder; }
@@ -317,6 +343,24 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     }
 
     this._multiple = coerceBooleanProperty(value);
+  }
+
+  /**
+   * A function to compare the option values with the selected values. The first argument
+   * is a value from an option. The second is a value from the selection. A boolean
+   * should be returned.
+   */
+  @Input()
+  get compareWith() { return this._compareWith; }
+  set compareWith(fn: (o1: any, o2: any) => boolean) {
+    if (typeof fn !== 'function') {
+      throw getMdSelectNonFunctionValueError();
+    }
+    this._compareWith = fn;
+    if (this._selectionModel) {
+      // A different comparator means the selection could change.
+      this._initializeSelection();
+    }
   }
 
   /** Whether to float the placeholder text. */
@@ -416,12 +460,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
     this._changeSubscription = startWith.call(this.options.changes, null).subscribe(() => {
       this._resetOptions();
-
-      // Defer setting the value in order to avoid the "Expression
-      // has changed after it was checked" errors from Angular.
-      Promise.resolve().then(() => {
-        this._setSelectionByValue(this._control ? this._control.value : this._value);
-      });
+      this._initializeSelection();
     });
   }
 
@@ -652,6 +691,14 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
     scrollContainer!.scrollTop = this._scrollTop;
   }
 
+  private _initializeSelection(): void {
+    // Defer setting the value in order to avoid the "Expression
+    // has changed after it was checked" errors from Angular.
+    Promise.resolve().then(() => {
+      this._setSelectionByValue(this._control ? this._control.value : this._value);
+    });
+  }
+
   /**
    * Sets the selected option based on a value. If no option can be
    * found with the designated value, the select trigger is cleared.
@@ -669,7 +716,13 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       value.forEach((currentValue: any) => this._selectValue(currentValue, isUserInput));
       this._sortValues();
     } else {
-      this._selectValue(value, isUserInput);
+      const correspondingOption = this._selectValue(value, isUserInput);
+
+      // Shift focus to the active item. Note that we shouldn't do this in multiple
+      // mode, because we don't know what option the user interacted with last.
+      if (correspondingOption) {
+        this._keyManager.setActiveItem(this.options.toArray().indexOf(correspondingOption));
+      }
     }
 
     this._setValueWidth();
@@ -686,19 +739,27 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
    * @returns Option that has the corresponding value.
    */
   private _selectValue(value: any, isUserInput = false): MdOption | undefined {
-    let optionsArray = this.options.toArray();
-    let correspondingOption = optionsArray.find(option => {
-      return option.value != null && option.value === value;
+    const correspondingOption = this.options.find((option: MdOption) => {
+      try {
+        // Treat null as a special reset value.
+        return option.value != null && this._compareWith(option.value,  value);
+      } catch (error) {
+        if (isDevMode()) {
+          // Notify developers of errors in their comparator.
+          console.warn(error);
+        }
+        return false;
+      }
     });
 
     if (correspondingOption) {
       isUserInput ? correspondingOption._selectViaInteraction() : correspondingOption.select();
       this._selectionModel.select(correspondingOption);
-      this._keyManager.setActiveItem(optionsArray.indexOf(correspondingOption));
     }
 
     return correspondingOption;
   }
+
 
   /**
    * Clears the select trigger and deselects every option in the list.
@@ -719,7 +780,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Sets up a key manager to listen to keyboard events on the overlay panel. */
   private _initKeyManager() {
-    this._keyManager = new FocusKeyManager(this.options);
+    this._keyManager = new FocusKeyManager<MdOption>(this.options).withTypeAhead();
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close());
   }
 

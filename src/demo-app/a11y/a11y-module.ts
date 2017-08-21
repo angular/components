@@ -14,8 +14,13 @@ import {GridListAccessibilityDemo} from './grid-list/grid-list-a11y';
 import {RadioAccessibilityDemo} from './radio/radio-a11y';
 import {ToolbarAccessibilityDemo} from './toolbar/toolbar-a11y';
 import {DatepickerAccessibilityDemo} from './datepicker/datepicker-a11y';
+import {IconAccessibilityDemo} from './icon/icon-a11y';
 import {InputAccessibilityDemo} from './input/input-a11y';
+import {ProgressSpinnerAccessibilityDemo} from './progress-spinner/progress-spinner-a11y';
 import {SliderAccessibilityDemo} from './slider/slider-a11y';
+import {SlideToggleAccessibilityDemo} from './slide-toggle/slide-toggle-a11y';
+import {SnackBarAccessibilityDemo} from './snack-bar/snack-bar-a11y';
+import {SelectAccessibilityDemo} from './select/select-a11y';
 
 
 @NgModule({
@@ -46,10 +51,15 @@ export class AccessibilityRoutingModule {}
     ChipsAccessibilityDemo,
     DatepickerAccessibilityDemo,
     GridListAccessibilityDemo,
+    IconAccessibilityDemo,
     InputAccessibilityDemo,
+    ProgressSpinnerAccessibilityDemo,
     RadioAccessibilityDemo,
     ToolbarAccessibilityDemo,
     SliderAccessibilityDemo,
+    SlideToggleAccessibilityDemo,
+    SnackBarAccessibilityDemo,
+    SelectAccessibilityDemo,
   ]
 })
 export class AccessibilityDemoModule {}

@@ -26,6 +26,7 @@ export const _MdTabMixinBase = mixinDisabled(MdTabBase);
   templateUrl: 'tab.html',
   inputs: ['disabled'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  exportAs: 'mdTab',
 })
 export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
   /** Content for the tab label given by <ng-template md-tab-label>. */
@@ -38,8 +39,8 @@ export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChan
   @Input('label') textLabel: string = '';
 
   /** The portal that will be the hosted content of the tab */
-  private _contentPortal: TemplatePortal | null = null;
-  get content(): TemplatePortal | null { return this._contentPortal; }
+  private _contentPortal: TemplatePortal<any> | null = null;
+  get content(): TemplatePortal<any> | null { return this._contentPortal; }
 
   /** Emits whenever the label changes. */
   _labelChange = new Subject<void>();
@@ -55,6 +56,11 @@ export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChan
    * was already a selected tab. Provides context of what position the tab should originate from.
    */
   origin: number | null = null;
+
+  /**
+   * Whether the tab is currently active.
+   */
+  isActive = false;
 
   constructor(private _viewContainerRef: ViewContainerRef) {
     super();
