@@ -22,12 +22,37 @@ _Hint: `<md-basic-chip>` receives the `mat-basic-chip` CSS class in addition to 
 Chips can be selected via the `selected` property. Selection can be disabled by setting
 `selectable` to `false` on the `<md-chip-list>`.
 
-Selection emits the `(select)` output while deselecting emits the `(deselect)` output. Both outputs
-receive a ChipEvent object with a structure of `{ chip: alteredChip }`.
+Selection and deselecting emit the `(onSelectionChange)` output. The output receive a
+ChipSelectionChange object with a structure of `{ source: alteredChip, isUserInput: boolean }`.
 
 ### Disabled chips
 Individual chips may be disabled by applying the `disabled` attribute to the chip. When disabled,
 chips are neither selectable nor focusable. Currently, disabled chips receive no special styling.
+
+### Chip input
+Chip input can work with chip list to add new chips to the chip list. It implements chip-specified
+behaviors to an input element inside `<md-form-field>`. Chip input may be placed inside or outside of
+an `<md-chip-list>`.
+
+```html
+<md-form-field>
+  <md-chip-list #chipList>
+    <md-chip>Chip 1<md-chip>
+   <md-chip>Chip 2<md-chip>
+ </md-chip-list>
+ <input mdChipInputFor="chipList">
+</md-form-field>
+```
+
+```html
+<md-form-field>
+ <md-chip-list #chipList>
+   <md-chip>Chip 1<md-chip>
+   <md-chip>Chip 2<md-chip>
+   <input mdChipInputFor="chipList">
+ </md-chip-list>
+</md-form-field>
+```
 
 ### Keyboard interaction
 Users can move through the chips using the arrow keys and select/deselect them with the space. Chips

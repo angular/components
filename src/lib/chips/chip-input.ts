@@ -6,7 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Output, EventEmitter, ElementRef, Input} from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  Output,
+  EventEmitter,
+  Input,
+  Optional,
+  Renderer2,
+  Self,
+} from '@angular/core';
+import {FormGroupDirective, NgControl, NgForm} from '@angular/forms';
+import {Platform} from '@angular/cdk/platform';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ENTER} from '@angular/material/core';
 import {MdChipList} from './chip-list';
@@ -16,16 +27,21 @@ export interface MdChipInputEvent {
   value: string;
 }
 
+/**
+ * Directive that adds chip-specific behaviors to an input element inside <md-form-field>.
+ * May be placed inside or outside of an <md-chip-list>.
+ */
 @Directive({
   selector: 'input[mdChipInputFor], input[matChipInputFor]',
   host: {
-    'class': 'mat-chip-input',
+    'class': 'mat-chip-input mat-input-element',
     '(keydown)': '_keydown($event)',
-    '(blur)': '_blur()'
+    '(blur)': '_blur()',
+    '(focus)': '_focus()',
   }
 })
 export class MdChipInput {
-
+  focused: boolean = false;
   _chipList: MdChipList;
 
   /** Register input for chip list */
@@ -33,7 +49,7 @@ export class MdChipInput {
   set chipList(value: MdChipList) {
     if (value) {
       this._chipList = value;
-      this._chipList.registerInput(this._inputElement);
+      this._chipList.registerInput(this);
     }
   }
 
@@ -68,10 +84,22 @@ export class MdChipInput {
   get matSeparatorKeyCodes() { return this.separatorKeyCodes; }
   set matSeparatorKeyCodes(v: number[]) { this.separatorKeyCodes = v; }
 
+  @Input() placeholder: string = '';
+
+  get empty(): boolean {
+    let value: string | null = this._elementRef.nativeElement.value;
+    return value == null || value === '';
+  }
+
   /** The native input element to which this directive is attached. */
   protected _inputElement: HTMLInputElement;
 
-  constructor(protected _elementRef: ElementRef) {
+  constructor(protected _elementRef: ElementRef,
+              protected _renderer: Renderer2,
+              protected _platform: Platform,
+              @Optional() @Self() public ngControl: NgControl,
+              @Optional() protected _parentForm: NgForm,
+              @Optional() protected _parentFormGroup: FormGroupDirective) {
     this._inputElement = this._elementRef.nativeElement as HTMLInputElement;
   }
 
@@ -85,6 +113,17 @@ export class MdChipInput {
     if (this.addOnBlur) {
       this._emitChipEnd();
     }
+    this.focused = false;
+    // Blur the chip list if it is not focused
+    if (!this._chipList.focused) {
+      this._chipList._blur();
+    }
+    this._chipList.stateChanges.next();
+  }
+
+  _focus() {
+    this.focused = true;
+    this._chipList.stateChanges.next();
   }
 
   /** Checks to see if the (chipEnd) event needs to be emitted. */
@@ -100,4 +139,6 @@ export class MdChipInput {
       }
     }
   }
+
+  focus() { this._elementRef.nativeElement.focus(); }
 }
