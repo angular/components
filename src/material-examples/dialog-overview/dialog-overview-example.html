@@ -1,1 +1,13 @@
-<button md-button (click)="openDialog()">Open dialog</button>
+<ol>
+  <li>
+    <md-form-field>
+      <input mdInput [(ngModel)]="name" placeholder="What's your name?">
+    </md-form-field>
+  </li>
+  <li>
+    <button md-raised-button (click)="openDialog()">Pick one</button>
+  </li>
+  <li *ngIf="animal">
+    You chose: <i>{{animal}}</i>
+  </li>
+</ol>

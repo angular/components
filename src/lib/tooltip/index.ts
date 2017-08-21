@@ -8,9 +8,10 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {OverlayModule, MdCommonModule} from '../core';
-import {PlatformModule} from '../core/platform/index';
-import {MdTooltip, TooltipComponent} from './tooltip';
+import {OverlayModule} from '@angular/cdk/overlay';
+import {PlatformModule} from '@angular/cdk/platform';
+import {MdCommonModule} from '../core';
+import {MdTooltip, TooltipComponent, MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER} from './tooltip';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import {MdTooltip, TooltipComponent} from './tooltip';
   exports: [MdTooltip, TooltipComponent, MdCommonModule],
   declarations: [MdTooltip, TooltipComponent],
   entryComponents: [TooltipComponent],
+  providers: [MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER],
 })
 export class MdTooltipModule {}
 

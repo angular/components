@@ -8,13 +8,11 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {
-  OverlayModule,
-  PortalModule,
-  A11yModule,
-  MdCommonModule,
-} from '../core';
-import {MdDialog} from './dialog';
+import {OverlayModule} from '@angular/cdk/overlay';
+import {PortalModule} from '@angular/cdk/portal';
+import {A11yModule} from '@angular/cdk/a11y';
+import {MdCommonModule} from '../core';
+import {MdDialog, MD_DIALOG_SCROLL_STRATEGY_PROVIDER} from './dialog';
 import {MdDialogContainer} from './dialog-container';
 import {
   MdDialogClose,
@@ -49,6 +47,7 @@ import {
   ],
   providers: [
     MdDialog,
+    MD_DIALOG_SCROLL_STRATEGY_PROVIDER,
   ],
   entryComponents: [MdDialogContainer],
 })

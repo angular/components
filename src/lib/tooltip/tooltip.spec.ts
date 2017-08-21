@@ -1,25 +1,26 @@
 import {
   async,
   ComponentFixture,
-  TestBed,
-  tick,
   fakeAsync,
-  flushMicrotasks
+  flushMicrotasks,
+  TestBed,
+  tick
 } from '@angular/core/testing';
-import {
-  Component,
-  DebugElement,
-  ViewChild,
-  ChangeDetectionStrategy
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DebugElement, ViewChild} from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {TooltipPosition, MdTooltip, MdTooltipModule, SCROLL_THROTTLE_MS} from './index';
-import {Directionality, Direction} from '../core/bidi/index';
-import {OverlayModule, Scrollable, OverlayContainer} from '../core/overlay/index';
-import {Platform} from '../core/platform/platform';
-import {dispatchFakeEvent} from '../core/testing/dispatch-events';
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {OverlayContainer, OverlayModule, Scrollable} from '@angular/cdk/overlay';
+import {Platform} from '@angular/cdk/platform';
+import {dispatchFakeEvent} from '@angular/cdk/testing';
+import {
+  MdTooltip,
+  MdTooltipModule,
+  SCROLL_THROTTLE_MS,
+  TOOLTIP_PANEL_CLASS,
+  TooltipPosition
+} from './index';
 
 
 const initialTooltipMessage = 'initial tooltip message';
@@ -113,6 +114,18 @@ describe('MdTooltip', () => {
       tick(tooltipDelay);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
       expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
+    }));
+
+    it('should set a css class on the overlay panel element', fakeAsync(() => {
+      tooltipDirective.show();
+      fixture.detectChanges();
+      tick(0);
+
+      const overlayRef = tooltipDirective._overlayRef;
+
+      expect(overlayRef).not.toBeNull();
+      expect(overlayRef!.overlayElement.classList).toContain(TOOLTIP_PANEL_CLASS,
+          'Expected the overlay panel element to have the tooltip panel class set.');
     }));
 
     it('should not show if disabled', fakeAsync(() => {
@@ -415,17 +428,21 @@ describe('MdTooltip', () => {
       tick(0);
 
       // Expect that the tooltip is displayed
-      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+      expect(tooltipDirective._isTooltipVisible())
+          .toBe(true, 'Expected tooltip to be initially visible');
 
       // Scroll the page but tick just before the default throttle should update.
       fixture.componentInstance.scrollDown();
       tick(SCROLL_THROTTLE_MS - 1);
-      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+      expect(tooltipDirective._isTooltipVisible())
+          .toBe(true, 'Expected tooltip to be visible when scrolling, before throttle limit');
 
       // Finish ticking to the throttle's limit and check that the scroll event notified the
       // tooltip and it was hidden.
-      tick(1);
-      expect(tooltipDirective._isTooltipVisible()).toBe(false);
+      tick(100);
+      fixture.detectChanges();
+      expect(tooltipDirective._isTooltipVisible())
+          .toBe(false, 'Expected tooltip hidden when scrolled out of view, after throttle limit');
     }));
   });
 

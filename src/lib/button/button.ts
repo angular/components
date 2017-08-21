@@ -12,18 +12,18 @@ import {
   Directive,
   ElementRef,
   forwardRef,
-  HostBinding,
-  Input,
   OnDestroy,
   Optional,
   Renderer2,
   Self,
   ViewEncapsulation,
-  Inject
+  Inject,
 } from '@angular/core';
-import {coerceBooleanProperty, FocusOriginMonitor, Platform} from '../core';
+import {Platform} from '@angular/cdk/platform';
+import {FocusOriginMonitor} from '../core';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
+import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
 
 
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
@@ -104,7 +104,7 @@ export class MdMiniFab {
 export class MdButtonBase {
   constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
-export const _MdButtonMixinBase = mixinColor(mixinDisabled(MdButtonBase));
+export const _MdButtonMixinBase = mixinColor(mixinDisabled(mixinDisableRipple(MdButtonBase)));
 
 
 /**
@@ -112,33 +112,27 @@ export const _MdButtonMixinBase = mixinColor(mixinDisabled(MdButtonBase));
  */
 @Component({
   moduleId: module.id,
-  selector: 'button[md-button], button[md-raised-button], button[md-icon-button],' +
-            'button[md-fab], button[md-mini-fab],' +
-            'button[mat-button], button[mat-raised-button], button[mat-icon-button],' +
-            'button[mat-fab], button[mat-mini-fab]',
+  selector: `button[md-button], button[md-raised-button], button[md-icon-button],
+             button[md-fab], button[md-mini-fab],
+             button[mat-button], button[mat-raised-button], button[mat-icon-button],
+             button[mat-fab], button[mat-mini-fab]`,
   host: {
     '[disabled]': 'disabled || null',
   },
   templateUrl: 'button.html',
   styleUrls: ['button.css'],
-  inputs: ['disabled', 'color'],
+  inputs: ['disabled', 'disableRipple', 'color'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisable, CanColor {
+export class MdButton extends _MdButtonMixinBase
+    implements OnDestroy, CanDisable, CanColor, CanDisableRipple {
+
   /** Whether the button is round. */
   _isRoundButton: boolean = this._hasAttributeWithPrefix('fab', 'mini-fab');
 
   /** Whether the button is icon button. */
   _isIconButton: boolean = this._hasAttributeWithPrefix('icon-button');
-
-  /** Whether the ripple effect on click should be disabled. */
-  private _disableRipple: boolean = false;
-
-  /** Whether the ripple effect for this button is disabled. */
-  @Input()
-  get disableRipple() { return this._disableRipple; }
-  set disableRipple(v) { this._disableRipple = coerceBooleanProperty(v); }
 
   constructor(renderer: Renderer2,
               elementRef: ElementRef,
@@ -193,14 +187,16 @@ export class MdButton extends _MdButtonMixinBase implements OnDestroy, CanDisabl
   selector: `a[md-button], a[md-raised-button], a[md-icon-button], a[md-fab], a[md-mini-fab],
              a[mat-button], a[mat-raised-button], a[mat-icon-button], a[mat-fab], a[mat-mini-fab]`,
   host: {
+    '[attr.tabindex]': 'disabled ? -1 : 0',
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
     '(click)': '_haltDisabledEvents($event)',
   },
-  inputs: ['disabled', 'color'],
+  inputs: ['disabled', 'disableRipple', 'color'],
   templateUrl: 'button.html',
   styleUrls: ['button.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdAnchor extends MdButton {
   constructor(
@@ -209,12 +205,6 @@ export class MdAnchor extends MdButton {
       elementRef: ElementRef,
       renderer: Renderer2) {
     super(renderer, elementRef, platform, focusOriginMonitor);
-  }
-
-  /** @docs-private */
-  @HostBinding('tabIndex')
-  get tabIndex(): number {
-    return this.disabled ? -1 : 0;
   }
 
   _haltDisabledEvents(event: Event) {

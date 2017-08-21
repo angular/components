@@ -14,7 +14,9 @@ import {
   Input,
   ContentChildren,
   QueryList,
-  AfterContentInit, Directive
+  AfterContentInit,
+  Directive,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {MdLine, MdLineSetter} from '../core';
 import {coerceToNumber} from './grid-list-measure';
@@ -23,12 +25,12 @@ import {coerceToNumber} from './grid-list-measure';
   moduleId: module.id,
   selector: 'md-grid-tile, mat-grid-tile',
   host: {
-    'role': 'listitem',
     'class': 'mat-grid-tile',
   },
   templateUrl: 'grid-tile.html',
   styleUrls: ['grid-list.css'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdGridTile {
   _rowspan: number = 1;
@@ -58,7 +60,8 @@ export class MdGridTile {
 @Component({
   moduleId: module.id,
   selector: 'md-grid-tile-header, mat-grid-tile-header, md-grid-tile-footer, mat-grid-tile-footer',
-  templateUrl: 'grid-tile-text.html'
+  templateUrl: 'grid-tile-text.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdGridTileText implements AfterContentInit {
   /**

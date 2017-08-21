@@ -17,6 +17,7 @@ import {
   Optional,
   AfterViewChecked,
   ViewEncapsulation,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {
   trigger,
@@ -26,7 +27,9 @@ import {
   transition,
   AnimationEvent,
 } from '@angular/animations';
-import {TemplatePortal, PortalHostDirective, Directionality, Direction} from '../core';
+import {TemplatePortal, PortalHostDirective} from '@angular/cdk/portal';
+import {Directionality, Direction} from '@angular/cdk/bidi';
+
 
 /**
  * These position states are used internally as animation states for the tab body. Setting the
@@ -59,6 +62,7 @@ export type MdTabBodyOriginState = 'left' | 'right';
   templateUrl: 'tab-body.html',
   styleUrls: ['tab-body.css'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'mat-tab-body',
   },

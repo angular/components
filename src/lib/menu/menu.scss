@@ -1,17 +1,27 @@
 // TODO(kara): update vars for desktop when MD team responds
-// TODO(kara): animation for menu opening
 
 @import '../core/style/button-common';
 @import '../core/style/layout-common';
 @import '../core/style/menu-common';
 @import '../core/a11y/a11y';
+@import '../core/style/layout-common';
 
 $mat-menu-vertical-padding: 8px !default;
+$mat-menu-border-radius: 2px !default;
+$mat-menu-submenu-indicator-size: 10px !default;
 
 .mat-menu-panel {
-  @include mat-menu-base();
+  @include mat-menu-base(2);
   @include mat-menu-positions();
   max-height: calc(100vh - #{$mat-menu-item-height});
+  border-radius: $mat-menu-border-radius;
+
+  // Prevent the user from interacting while the panel is still animating.
+  // This avoids issues where the user could accidentally open a sub-menu,
+  // because of the `overlapTrigger` option.
+  &.ng-animating {
+    pointer-events: none;
+  }
 
   @include cdk-high-contrast {
     outline: solid 1px;
@@ -27,6 +37,43 @@ $mat-menu-vertical-padding: 8px !default;
   @include mat-button-reset();
   @include mat-menu-item-base();
   position: relative;
+
+  .mat-icon {
+    vertical-align: middle;
+  }
+}
+
+.mat-menu-item-submenu-trigger {
+  // Increase the side padding to prevent the indicator from overlapping the text.
+  padding-right: $mat-menu-side-padding * 2;
+
+  // Renders a triangle to indicate that the menu item will open a sub-menu.
+  &::after {
+    $size: $mat-menu-submenu-indicator-size / 2;
+
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: $size 0 $size $size;
+    border-color: transparent transparent transparent currentColor;
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    right: $mat-menu-side-padding;
+    transform: translateY(-50%);
+  }
+
+  [dir='rtl'] & {
+    padding-right: $mat-menu-side-padding / 2;
+    padding-left: $mat-menu-side-padding * 2;
+
+    &::after {
+      right: auto;
+      left: $mat-menu-side-padding;
+      transform: rotateY(180deg) translateY(-50%);
+    }
+  }
 }
 
 button.mat-menu-item {
@@ -34,9 +81,5 @@ button.mat-menu-item {
 }
 
 .mat-menu-ripple {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+  @include mat-fill;
 }

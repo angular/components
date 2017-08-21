@@ -1,16 +1,17 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {MdSort, MdSortHeader, Sort, SortDirection, MdSortModule} from './index';
-import {CdkDataTableModule, DataSource, CollectionViewer} from '../core/data-table/index';
+import {By} from '@angular/platform-browser';
+import {MdSort, MdSortHeader, Sort, SortDirection, MdSortModule, MdSortHeaderIntl} from './index';
+import {CdkTableModule, DataSource, CollectionViewer} from '@angular/cdk/table';
 import {Observable} from 'rxjs/Observable';
-import {dispatchMouseEvent} from '../core/testing/dispatch-events';
 import {
   getMdSortDuplicateMdSortableIdError,
   getMdSortHeaderMissingIdError,
   getMdSortHeaderNotContainedWithinMdSortError
 } from './sort-errors';
-import {wrappedErrorMessage} from '../core/testing/wrapped-error-message';
+import {wrappedErrorMessage, dispatchMouseEvent} from '@angular/cdk/testing';
 import {map} from '../core/rxjs/index';
+import {MdTableModule} from '../table/index';
 
 describe('MdSort', () => {
   let fixture: ComponentFixture<SimpleMdSortApp>;
@@ -19,10 +20,11 @@ describe('MdSort', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSortModule, CdkDataTableModule],
+      imports: [MdSortModule, MdTableModule, CdkTableModule],
       declarations: [
         SimpleMdSortApp,
         CdkTableMdSortApp,
+        MdTableMdSortApp,
         MdSortHeaderMissingMdSortApp,
         MdSortDuplicateMdSortableIdsApp,
         MdSortableMissingIdApp
@@ -48,13 +50,26 @@ describe('MdSort', () => {
 
   it('should use the column definition if used within a cdk table', () => {
     let cdkTableMdSortAppFixture = TestBed.createComponent(CdkTableMdSortApp);
-
     let cdkTableMdSortAppComponent = cdkTableMdSortAppFixture.componentInstance;
 
     cdkTableMdSortAppFixture.detectChanges();
     cdkTableMdSortAppFixture.detectChanges();
 
     const sortables = cdkTableMdSortAppComponent.mdSort.sortables;
+    expect(sortables.size).toBe(3);
+    expect(sortables.has('column_a')).toBe(true);
+    expect(sortables.has('column_b')).toBe(true);
+    expect(sortables.has('column_c')).toBe(true);
+  });
+
+  it('should use the column definition if used within an md table', () => {
+    let mdTableMdSortAppFixture = TestBed.createComponent(MdTableMdSortApp);
+    let mdTableMdSortAppComponent = mdTableMdSortAppFixture.componentInstance;
+
+    mdTableMdSortAppFixture.detectChanges();
+    mdTableMdSortAppFixture.detectChanges();
+
+    const sortables = mdTableMdSortAppComponent.mdSort.sortables;
     expect(sortables.size).toBe(3);
     expect(sortables.has('column_a')).toBe(true);
     expect(sortables.has('column_b')).toBe(true);
@@ -126,6 +141,18 @@ describe('MdSort', () => {
     const button = fixture.nativeElement.querySelector('#defaultSortHeaderA button');
     expect(button.getAttribute('aria-label')).toBe('Change sorting for defaultSortHeaderA');
   });
+
+  it('should re-render when the i18n labels have changed',
+    inject([MdSortHeaderIntl], (intl: MdSortHeaderIntl) => {
+      const header = fixture.debugElement.query(By.directive(MdSortHeader)).nativeElement;
+      const button = header.querySelector('.mat-sort-header-button');
+
+      intl.sortButtonLabel = () => 'Sort all of the things';
+      intl.changes.next();
+      fixture.detectChanges();
+
+      expect(button.getAttribute('aria-label')).toBe('Sort all of the things');
+    }));
 });
 
 /**
@@ -203,6 +230,7 @@ class FakeDataSource extends DataSource<any> {
   connect(collectionViewer: CollectionViewer): Observable<any[]> {
     return map.call(collectionViewer.viewChange, () => []);
   }
+  disconnect() {}
 }
 
 @Component({
@@ -229,6 +257,36 @@ class FakeDataSource extends DataSource<any> {
   `
 })
 class CdkTableMdSortApp {
+  @ViewChild(MdSort) mdSort: MdSort;
+
+  dataSource = new FakeDataSource();
+  columnsToRender = ['column_a', 'column_b', 'column_c'];
+}
+
+@Component({
+  template: `
+    <md-table [dataSource]="dataSource" mdSort>
+      <ng-container mdColumnDef="column_a">
+        <md-header-cell *mdHeaderCellDef #sortHeaderA md-sort-header> Column A </md-header-cell>
+        <md-cell *mdCellDef="let row"> {{row.a}} </md-cell>
+      </ng-container>
+
+      <ng-container mdColumnDef="column_b">
+        <md-header-cell *mdHeaderCellDef #sortHeaderB md-sort-header> Column B </md-header-cell>
+        <md-cell *mdCellDef="let row"> {{row.b}} </md-cell>
+      </ng-container>
+
+      <ng-container mdColumnDef="column_c">
+        <md-header-cell *mdHeaderCellDef #sortHeaderC md-sort-header> Column C </md-header-cell>
+        <md-cell *mdCellDef="let row"> {{row.c}} </md-cell>
+      </ng-container>
+
+      <md-header-row *mdHeaderRowDef="columnsToRender"></md-header-row>
+      <md-row *mdRowDef="let row; columns: columnsToRender"></md-row>
+    </md-table>
+  `
+})
+class MdTableMdSortApp {
   @ViewChild(MdSort) mdSort: MdSort;
 
   dataSource = new FakeDataSource();

@@ -6,10 +6,10 @@ export const payloadGithubStatus = https.onRequest(async (request, response) => 
   const authToken = request.header('auth-token');
   const commitSha = request.header('commit-sha');
   const packageName = request.header('package-name');
-  const packageSize = parseFloat(request.header('package-full-size'));
-  const packageDiff = parseFloat(request.header('package-size-diff'));
+  const packageSize = parseFloat(request.header('package-full-size') || '');
+  const packageDiff = parseFloat(request.header('package-size-diff') || '');
 
-  if (!verifyToken(authToken)) {
+  if (!authToken || !verifyToken(authToken)) {
     return response.status(403).json({message: 'Auth token is not valid'});
   }
 
@@ -36,11 +36,12 @@ export const payloadGithubStatus = https.onRequest(async (request, response) => 
   // Better message about the diff that shows whether the payload increased or decreased.
   const diffMessage = packageDiff < 0 ? 'decrease' : 'increase';
   const diffFormatted = Math.abs(packageDiff).toFixed(2);
+  const packageSizeFormatted = packageSize.toFixed(2);
 
   await setGithubStatus(commitSha, {
     result: true,
     name: `${capitalizeFirstLetter(packageName)} Payload Size`,
-    description: `${packageSize}kb / ${diffFormatted}kb ${diffMessage} (ES2015 bundle)`
+    description: `${packageSizeFormatted}kb / ${diffFormatted}kb ${diffMessage} (ES2015 bundle)`
   });
 
   response.json({message: 'Payload Github status successfully set.'});

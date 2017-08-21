@@ -8,17 +8,19 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MdRippleModule, MdCommonModule, FocusOriginMonitor, ObserveContentModule} from '../core';
+import {ObserversModule} from '@angular/cdk/observers';
+import {MdRippleModule, MdCommonModule, FocusOriginMonitor} from '../core';
 import {MdCheckbox} from './checkbox';
-
+import {MdCheckboxRequiredValidator} from './checkbox-required-validator';
 
 @NgModule({
-  imports: [CommonModule, MdRippleModule, MdCommonModule, ObserveContentModule],
-  exports: [MdCheckbox, MdCommonModule],
-  declarations: [MdCheckbox],
+  imports: [CommonModule, MdRippleModule, MdCommonModule, ObserversModule],
+  exports: [MdCheckbox, MdCheckboxRequiredValidator, MdCommonModule],
+  declarations: [MdCheckbox, MdCheckboxRequiredValidator],
   providers: [FocusOriginMonitor]
 })
 export class MdCheckboxModule {}
 
 
 export * from './checkbox';
+export * from './checkbox-required-validator';

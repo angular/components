@@ -1,0 +1,34 @@
+<div class="example-container mat-elevation-z8">
+  <md-table #table [dataSource]="dataSource">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- Position Column -->
+    <ng-container mdColumnDef="position">
+      <md-header-cell *mdHeaderCellDef> No. </md-header-cell>
+      <md-cell *mdCellDef="let element"> {{element.position}} </md-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container mdColumnDef="name">
+      <md-header-cell *mdHeaderCellDef> Name </md-header-cell>
+      <md-cell *mdCellDef="let element"> {{element.name}} </md-cell>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container mdColumnDef="weight">
+      <md-header-cell *mdHeaderCellDef> Weight </md-header-cell>
+      <md-cell *mdCellDef="let element"> {{element.weight}} </md-cell>
+    </ng-container>
+
+    <!-- Color Column -->
+    <ng-container mdColumnDef="symbol">
+      <md-header-cell *mdHeaderCellDef> Symbol </md-header-cell>
+      <md-cell *mdCellDef="let element"> {{element.symbol}} </md-cell>
+    </ng-container>
+
+    <md-header-row *mdHeaderRowDef="displayedColumns"></md-header-row>
+    <md-row *mdRowDef="let row; columns: displayedColumns;"></md-row>
+  </md-table>
+</div>

@@ -1,12 +1,22 @@
-<div class="mat-select-trigger" cdk-overlay-origin (click)="toggle()" #origin="cdkOverlayOrigin" #trigger>
+<div
+  cdk-overlay-origin
+  class="mat-select-trigger"
+  aria-hidden="true"
+  (click)="toggle()"
+  #origin="cdkOverlayOrigin"
+  #trigger>
   <span
     class="mat-select-placeholder"
-    [class.mat-floating-placeholder]="_selectionModel.hasValue()"
+    [class.mat-floating-placeholder]="_hasValue()"
     [@transformPlaceholder]="_getPlaceholderAnimationState()"
     [style.opacity]="_getPlaceholderOpacity()"
     [style.width.px]="_selectedValueWidth"> {{ placeholder }} </span>
-  <span class="mat-select-value" *ngIf="_selectionModel.hasValue()">
-    <span class="mat-select-value-text">{{ triggerValue }}</span>
+
+  <span class="mat-select-value" *ngIf="_hasValue()">
+    <span class="mat-select-value-text" [ngSwitch]="!!customTrigger">
+      <span *ngSwitchDefault>{{ triggerValue }}</span>
+      <ng-content select="md-select-trigger, mat-select-trigger" *ngSwitchCase="true"></ng-content>
+    </span>
   </span>
 
   <span class="mat-select-arrow"></span>
@@ -17,6 +27,7 @@
   cdk-connected-overlay
   hasBackdrop
   backdropClass="cdk-overlay-transparent-backdrop"
+  [scrollStrategy]="_scrollStrategy"
   [origin]="origin"
   [open]="panelOpen"
   [positions]="_positions"

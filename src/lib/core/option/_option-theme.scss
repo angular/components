@@ -16,15 +16,15 @@
       background: mat-color($background, hover);
     }
 
-    &.mat-selected.mat-primary, .mat-primary &.mat-selected {
+    .mat-primary &.mat-selected {
       color: mat-color($primary);
     }
 
-    &.mat-selected.mat-accent, .mat-accent &.mat-selected {
+    .mat-accent &.mat-selected {
       color: mat-color($accent);
     }
 
-    &.mat-selected.mat-warn, .mat-warn &.mat-selected {
+    .mat-warn &.mat-selected {
       color: mat-color($warn);
     }
 
@@ -47,7 +47,7 @@
 @mixin mat-option-typography($config) {
   .mat-option {
     font: {
-      family: mat-font-family($config);
+      family: mat-font-family($config, subheading-2);
       size: mat-font-size($config, subheading-2);
     }
   }

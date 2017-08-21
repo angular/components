@@ -9,27 +9,26 @@
 import {
   Component,
   ComponentRef,
-  ViewChild,
-  ViewEncapsulation,
-  NgZone,
-  OnDestroy,
   ElementRef,
   EventEmitter,
   Inject,
+  NgZone,
   Optional,
+  ChangeDetectorRef,
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
-import {
-  animate,
-  trigger,
-  state,
-  style,
-  transition,
-  AnimationEvent,
-} from '@angular/animations';
+import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
 import {DOCUMENT} from '@angular/platform-browser';
-import {BasePortalHost, ComponentPortal, PortalHostDirective, TemplatePortal} from '../core';
+import {
+  BasePortalHost,
+  ComponentPortal,
+  PortalHostDirective,
+  TemplatePortal
+} from '@angular/cdk/portal';
+import {FocusTrap, FocusTrapFactory} from '@angular/cdk/a11y';
 import {MdDialogConfig} from './dialog-config';
-import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
+
 
 /**
  * Throws an exception for the case when a ComponentPortal is
@@ -67,7 +66,9 @@ export function throwMdDialogContentAlreadyAttachedError() {
     'class': 'mat-dialog-container',
     '[attr.role]': '_config?.role',
     '[attr.aria-labelledby]': '_ariaLabelledBy',
+    '[attr.aria-describedby]': '_config?.ariaDescribedBy || null',
     '[@slideDialog]': '_state',
+    '(@slideDialog.start)': '_onAnimationStart($event)',
     '(@slideDialog.done)': '_onAnimationDone($event)',
   },
 })
@@ -81,29 +82,29 @@ export class MdDialogContainer extends BasePortalHost {
   /** Element that was focused before the dialog was opened. Save this to restore upon close. */
   private _elementFocusedBeforeDialogWasOpened: HTMLElement | null = null;
 
-  /** Reference to the global document object. */
-  private _document: Document;
-
   /** The dialog configuration. */
   _config: MdDialogConfig;
 
   /** State of the dialog animation. */
   _state: 'void' | 'enter' | 'exit' = 'enter';
 
-  /** Emits the current animation state whenever it changes. */
-  _onAnimationStateChange = new EventEmitter<AnimationEvent>();
+  /** Emits when an animation state changes. */
+  _animationStateChanged = new EventEmitter<AnimationEvent>();
 
   /** ID of the element that should be considered as the dialog's label. */
   _ariaLabelledBy: string | null = null;
+
+  /** Whether the container is currently mid-animation. */
+  _isAnimating = false;
 
   constructor(
     private _ngZone: NgZone,
     private _elementRef: ElementRef,
     private _focusTrapFactory: FocusTrapFactory,
-    @Optional() @Inject(DOCUMENT) _document: any) {
+    private _changeDetectorRef: ChangeDetectorRef,
+    @Optional() @Inject(DOCUMENT) private _document: any) {
 
     super();
-    this._document = _document;
   }
 
   /**
@@ -149,7 +150,7 @@ export class MdDialogContainer extends BasePortalHost {
     const toFocus = this._elementFocusedBeforeDialogWasOpened;
 
     // We need the extra check, because IE can set the `activeElement` to null in some cases.
-    if (toFocus && 'focus' in toFocus) {
+    if (toFocus && typeof toFocus.focus === 'function') {
       toFocus.focus();
     }
 
@@ -167,13 +168,28 @@ export class MdDialogContainer extends BasePortalHost {
 
   /** Callback, invoked whenever an animation on the host completes. */
   _onAnimationDone(event: AnimationEvent) {
-    this._onAnimationStateChange.emit(event);
-
     if (event.toState === 'enter') {
       this._trapFocus();
     } else if (event.toState === 'exit') {
       this._restoreFocus();
-      this._onAnimationStateChange.complete();
     }
+
+    this._animationStateChanged.emit(event);
+    this._isAnimating = false;
+  }
+
+  /** Callback, invoked when an animation on the host starts. */
+  _onAnimationStart(event: AnimationEvent) {
+    this._isAnimating = true;
+    this._animationStateChanged.emit(event);
+  }
+
+  /** Starts the dialog exit animation. */
+  _startExitAnimation(): void {
+    this._state = 'exit';
+
+    // Mark the container for check so it can react if the
+    // view container is using OnPush change detection.
+    this._changeDetectorRef.markForCheck();
   }
 }

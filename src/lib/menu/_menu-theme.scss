@@ -7,7 +7,7 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  .mat-menu-content {
+  .mat-menu-panel {
     background: mat-color($background, 'card');
   }
 
@@ -18,13 +18,17 @@
     &[disabled] {
       color: mat-color($foreground, 'disabled');
     }
+  }
 
-    .mat-icon {
-      color: mat-color($foreground, 'icon');
-      vertical-align: middle;
-    }
+  .mat-menu-item .mat-icon,
+  .mat-menu-item-submenu-trigger::after {
+    color: mat-color($foreground, 'icon');
+  }
 
-    &:hover:not([disabled]), &:focus:not([disabled]) {
+  .mat-menu-item:hover,
+  .mat-menu-item:focus,
+  .mat-menu-item-highlighted {
+    &:not([disabled]) {
       background: mat-color($background, 'hover');
     }
   }
@@ -33,7 +37,7 @@
 @mixin mat-menu-typography($config) {
   .mat-menu-item {
     font: {
-      family: mat-font-family($config);
+      family: mat-font-family($config, subheading-2);
       size: mat-font-size($config, subheading-2);
     }
   }

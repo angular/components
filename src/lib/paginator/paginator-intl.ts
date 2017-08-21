@@ -7,6 +7,7 @@
  */
 
 import {Injectable} from '@angular/core';
+import {Subject} from 'rxjs/Subject';
 
 /**
  * To modify the labels and text displayed, create a new instance of MdPaginatorIntl and
@@ -14,6 +15,12 @@ import {Injectable} from '@angular/core';
  */
 @Injectable()
 export class MdPaginatorIntl {
+  /**
+   * Stream that emits whenever the labels here are changed. Use this to notify
+   * components if the labels have changed after initialization.
+   */
+  changes: Subject<void> = new Subject<void>();
+
   /** A label for the page size selector. */
   itemsPerPageLabel = 'Items per page:';
 

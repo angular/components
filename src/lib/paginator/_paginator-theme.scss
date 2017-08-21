@@ -5,6 +5,11 @@
 
 @mixin mat-paginator-theme($theme) {
   $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .mat-paginator {
+    background: mat-color($background, 'card');
+  }
 
   .mat-paginator,
   .mat-paginator-page-size .mat-select-trigger {
@@ -26,16 +31,10 @@
 }
 
 @mixin mat-paginator-typography($config) {
-  .mat-paginator {
-    font: {
-      family: mat-font-family($config);
-      size: mat-font-size($config, caption);
-    }
-  }
-
+  .mat-paginator,
   .mat-paginator-page-size .mat-select-trigger {
     font: {
-      family: mat-font-family($config);
+      family: mat-font-family($config, caption);
       size: mat-font-size($config, caption);
     }
   }

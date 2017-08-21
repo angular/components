@@ -7,34 +7,46 @@
  */
 
 import {
+  ChangeDetectorRef,
   Directive,
   ElementRef,
   forwardRef,
   Host,
+  Inject,
+  InjectionToken,
   Input,
   NgZone,
-  Optional,
   OnDestroy,
+  Optional,
   ViewContainerRef,
-  Inject,
-  ChangeDetectorRef,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {DOCUMENT} from '@angular/platform-browser';
-import {Overlay, OverlayRef, OverlayState, TemplatePortal} from '../core';
-import {MdAutocomplete} from './autocomplete';
-import {PositionStrategy} from '../core/overlay/position/position-strategy';
-import {ConnectedPositionStrategy} from '../core/overlay/position/connected-position-strategy';
+import {Directionality} from '@angular/cdk/bidi';
+import {filter, first, map, RxChain, switchMap} from '@angular/cdk/rxjs';
+import {
+  ConnectedPositionStrategy,
+  Overlay,
+  OverlayRef,
+  OverlayState,
+  PositionStrategy,
+  RepositionScrollStrategy,
+  // This import is only used to define a generic type. The current TypeScript version incorrectly
+  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
+  // tslint:disable-next-line:no-unused-variable
+  ScrollStrategy,
+} from '@angular/cdk/overlay';
+import {TemplatePortal} from '@angular/cdk/portal';
+import {DOWN_ARROW, ENTER, ESCAPE, UP_ARROW} from '@angular/cdk/keycodes';
 import {Observable} from 'rxjs/Observable';
-import {MdOptionSelectionChange, MdOption} from '../core/option/option';
-import {ENTER, UP_ARROW, DOWN_ARROW, ESCAPE} from '../core/keyboard/keycodes';
-import {Directionality} from '../core/bidi/index';
-import {MdInputContainer} from '../input/input-container';
+import {MdFormField} from '../form-field/index';
 import {Subscription} from 'rxjs/Subscription';
 import {merge} from 'rxjs/observable/merge';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {of as observableOf} from 'rxjs/observable/of';
-import {RxChain, switchMap, first, filter} from '../core/rxjs/index';
+import {MdOption, MdOptionSelectionChange} from '../core/option/option';
+import {MdAutocomplete} from './autocomplete';
+
 
 /**
  * The following style constants are necessary to save here in order
@@ -47,6 +59,23 @@ export const AUTOCOMPLETE_OPTION_HEIGHT = 48;
 
 /** The total height of the autocomplete panel. */
 export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
+
+/** Injection token that determines the scroll handling while the autocomplete panel is open. */
+export const MD_AUTOCOMPLETE_SCROLL_STRATEGY =
+    new InjectionToken<() => ScrollStrategy>('md-autocomplete-scroll-strategy');
+
+/** @docs-private */
+export function MD_AUTOCOMPLETE_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
+    () => RepositionScrollStrategy {
+  return () => overlay.scrollStrategies.reposition();
+}
+
+/** @docs-private */
+export const MD_AUTOCOMPLETE_SCROLL_STRATEGY_PROVIDER = {
+  provide: MD_AUTOCOMPLETE_SCROLL_STRATEGY,
+  deps: [Overlay],
+  useFactory: MD_AUTOCOMPLETE_SCROLL_STRATEGY_PROVIDER_FACTORY,
+};
 
 /**
  * Provider that allows the autocomplete to register as a ControlValueAccessor.
@@ -68,8 +97,8 @@ export function getMdAutocompleteMissingPanelError(): Error {
 }
 
 @Directive({
-  selector: 'input[mdAutocomplete], input[matAutocomplete],' +
-            'textarea[mdAutocomplete], textarea[matAutocomplete]',
+  selector: `input[mdAutocomplete], input[matAutocomplete],
+             textarea[mdAutocomplete], textarea[matAutocomplete]`,
   host: {
     'role': 'combobox',
     'autocomplete': 'off',
@@ -91,9 +120,6 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   private _overlayRef: OverlayRef | null;
   private _portal: TemplatePortal;
   private _panelOpen: boolean = false;
-
-  /** The subscription to positioning changes in the autocomplete panel. */
-  private _panelPositionSubscription: Subscription;
 
   /** Strategy that is used to position the panel. */
   private _positionStrategy: ConnectedPositionStrategy;
@@ -127,15 +153,12 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
               private _viewContainerRef: ViewContainerRef,
               private _zone: NgZone,
               private _changeDetectorRef: ChangeDetectorRef,
+              @Inject(MD_AUTOCOMPLETE_SCROLL_STRATEGY) private _scrollStrategy,
               @Optional() private _dir: Directionality,
-              @Optional() @Host() private _inputContainer: MdInputContainer,
+              @Optional() @Host() private _formField: MdFormField,
               @Optional() @Inject(DOCUMENT) private _document: any) {}
 
   ngOnDestroy() {
-    if (this._panelPositionSubscription) {
-      this._panelPositionSubscription.unsubscribe();
-    }
-
     this._destroyPanel();
   }
 
@@ -175,14 +198,17 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this._closingActionsSubscription.unsubscribe();
     }
 
-    this._panelOpen = false;
     this._resetPlaceholder();
 
-    // We need to trigger change detection manually, because
-    // `fromEvent` doesn't seem to do it at the proper time.
-    // This ensures that the placeholder is reset when the
-    // user clicks outside.
-    this._changeDetectorRef.detectChanges();
+    if (this._panelOpen) {
+      this._panelOpen = false;
+
+      // We need to trigger change detection manually, because
+      // `fromEvent` doesn't seem to do it at the proper time.
+      // This ensures that the placeholder is reset when the
+      // user clicks outside.
+      this._changeDetectorRef.detectChanges();
+    }
   }
 
   /**
@@ -205,7 +231,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   /** The currently active option, coerced to MdOption type. */
   get activeOption(): MdOption | null {
     if (this.autocomplete && this.autocomplete._keyManager) {
-      return this.autocomplete._keyManager.activeItem as MdOption;
+      return this.autocomplete._keyManager.activeItem;
     }
 
     return null;
@@ -222,12 +248,12 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       fromEvent(this._document, 'touchend')
     )).call(filter, (event: MouseEvent | TouchEvent) => {
       const clickTarget = event.target as HTMLElement;
-      const inputContainer = this._inputContainer ?
-          this._inputContainer._elementRef.nativeElement : null;
+      const formField = this._formField ?
+          this._formField._elementRef.nativeElement : null;
 
       return this._panelOpen &&
              clickTarget !== this._element.nativeElement &&
-             (!inputContainer || !inputContainer.contains(clickTarget)) &&
+             (!formField || !formField.contains(clickTarget)) &&
              (!!this._overlayRef && !this._overlayRef.overlayElement.contains(clickTarget));
     }).result();
   }
@@ -266,17 +292,20 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   _handleKeydown(event: KeyboardEvent): void {
     if (event.keyCode === ESCAPE && this.panelOpen) {
+      this._resetActiveItem();
       this.closePanel();
-    } else if (this.activeOption && event.keyCode === ENTER) {
+      event.stopPropagation();
+    } else if (this.activeOption && event.keyCode === ENTER && this.panelOpen) {
       this.activeOption._selectViaInteraction();
+      this._resetActiveItem();
       event.preventDefault();
     } else {
       const prevActiveItem = this.autocomplete._keyManager.activeItem;
       const isArrowKey = event.keyCode === UP_ARROW || event.keyCode === DOWN_ARROW;
 
-      this.autocomplete._keyManager.onKeydown(event);
-
-      if (isArrowKey) {
+      if (this.panelOpen) {
+        this.autocomplete._keyManager.onKeydown(event);
+      } else if (isArrowKey) {
         this.openPanel();
       }
 
@@ -304,8 +333,8 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    * This method manually floats the placeholder until the panel can be closed.
    */
   private _floatPlaceholder(): void {
-    if (this._inputContainer && this._inputContainer.floatPlaceholder === 'auto') {
-      this._inputContainer.floatPlaceholder = 'always';
+    if (this._formField && this._formField.floatPlaceholder === 'auto') {
+      this._formField.floatPlaceholder = 'always';
       this._manuallyFloatingPlaceholder = true;
     }
   }
@@ -313,7 +342,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   /** If the placeholder has been manually elevated, return it to its normal state. */
   private _resetPlaceholder(): void  {
     if (this._manuallyFloatingPlaceholder) {
-      this._inputContainer.floatPlaceholder = 'auto';
+      this._formField.floatPlaceholder = 'auto';
       this._manuallyFloatingPlaceholder = false;
     }
   }
@@ -348,12 +377,17 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    * stream every time the option list changes.
    */
   private _subscribeToClosingActions(): Subscription {
+    const firstStable = first.call(this._zone.onStable);
+    const optionChanges = map.call(this.autocomplete.options.changes, () =>
+      this._positionStrategy.recalculateLastPosition());
+
     // When the zone is stable initially, and when the option list changes...
-    return RxChain.from(merge(first.call(this._zone.onStable), this.autocomplete.options.changes))
+    return RxChain.from(merge(firstStable, optionChanges))
       // create a new stream of panelClosingActions, replacing any previous streams
       // that were created, and flatten it so our stream only emits closing events...
       .call(switchMap, () => {
-        this._resetPanel();
+        this._resetActiveItem();
+        this.autocomplete._setVisibility();
         return this.panelClosingActions;
       })
       // when the first closing event occurs...
@@ -373,9 +407,18 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   private _setTriggerValue(value: any): void {
     const toDisplay = this.autocomplete.displayWith ? this.autocomplete.displayWith(value) : value;
+
     // Simply falling back to an empty string if the display value is falsy does not work properly.
     // The display value can also be the number zero and shouldn't fall back to an empty string.
-    this._element.nativeElement.value = toDisplay != null ? toDisplay : '';
+    const inputValue = toDisplay != null ? toDisplay : '';
+
+    // If it's used within a `MdFormField`, we should set it through the property so it can go
+    // through change detection.
+    if (this._formField) {
+      this._formField._control.value = inputValue;
+    } else {
+      this._element.nativeElement.value = inputValue;
+    }
   }
 
    /**
@@ -398,7 +441,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    * Clear any previous selected option and emit a selection change event for this option
    */
   private _clearPreviousSelectedOption(skip: MdOption) {
-    this.autocomplete.options.forEach((option) => {
+    this.autocomplete.options.forEach(option => {
       if (option != skip && option.selected) {
         option.deselect();
       }
@@ -415,49 +458,32 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     overlayState.positionStrategy = this._getOverlayPosition();
     overlayState.width = this._getHostWidth();
     overlayState.direction = this._dir ? this._dir.value : 'ltr';
-    overlayState.scrollStrategy = this._overlay.scrollStrategies.reposition();
+    overlayState.scrollStrategy = this._scrollStrategy();
     return overlayState;
   }
 
   private _getOverlayPosition(): PositionStrategy {
     this._positionStrategy =  this._overlay.position().connectedTo(
-        this._element,
+        this._getConnectedElement(),
         {originX: 'start', originY: 'bottom'}, {overlayX: 'start', overlayY: 'top'})
         .withFallbackPosition(
             {originX: 'start', originY: 'top'}, {overlayX: 'start', overlayY: 'bottom'}
         );
-    this._subscribeToPositionChanges(this._positionStrategy);
     return this._positionStrategy;
   }
 
-  /**
-   * This method subscribes to position changes in the autocomplete panel, so the panel's
-   * y-offset can be adjusted to match the new position.
-   */
-  private _subscribeToPositionChanges(strategy: ConnectedPositionStrategy) {
-    this._panelPositionSubscription = strategy.onPositionChange.subscribe(change => {
-      this.autocomplete.positionY = change.connectionPair.originY === 'top' ? 'above' : 'below';
-    });
+  private _getConnectedElement(): ElementRef {
+    return this._formField ? this._formField._connectionContainerRef : this._element;
   }
 
   /** Returns the width of the input element, so the panel width can match it. */
   private _getHostWidth(): number {
-    return this._element.nativeElement.getBoundingClientRect().width;
+    return this._getConnectedElement().nativeElement.getBoundingClientRect().width;
   }
 
   /** Reset active item to -1 so arrow events will activate the correct options.*/
   private _resetActiveItem(): void {
     this.autocomplete._keyManager.setActiveItem(-1);
-  }
-
-  /**
-   * Resets the active item and re-calculates alignment of the panel in case its size
-   * has changed due to fewer or greater number of options.
-   */
-  private _resetPanel() {
-    this._resetActiveItem();
-    this._positionStrategy.recalculateLastPosition();
-    this.autocomplete._setVisibility();
   }
 
 }

@@ -31,7 +31,7 @@ Using the `side` mode on mobile devices can affect the performance and is also n
 [Material Design specification](https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-behavior).
 
 ### Positioning the sidenav
-The `align` property determines whether the sidenav appears at the `"start"` or `"end"` of the
+The `position` property determines whether the sidenav appears at the `"start"` or `"end"` of the
 container. This is affected by the current text direction ("ltr" or "rtl"). By default, the sidenav
 appears at the start of the container.
 
@@ -68,5 +68,5 @@ html, body, material-app, md-sidenav-container, .my-content {
 ```
 
 ### FABs inside sidenav
-For a sidenav with a FAB (or other floating element), the recommended approach is to place the FAB
+For a sidenav with a FAB (Floating Action Button) or other floating element, the recommended approach is to place the FAB
 outside of the scrollable region and absolutely position it.

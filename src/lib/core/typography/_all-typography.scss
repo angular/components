@@ -5,8 +5,10 @@
 @import '../../card/card-theme';
 @import '../../checkbox/checkbox-theme';
 @import '../../chips/chips-theme';
+@import '../../table/table-theme';
 @import '../../datepicker/datepicker-theme';
 @import '../../dialog/dialog-theme';
+@import '../../expansion/expansion-theme';
 @import '../../grid-list/grid-list-theme';
 @import '../../icon/icon-theme';
 @import '../../input/input-theme';
@@ -26,10 +28,15 @@
 @import '../../snack-bar/simple-snack-bar-theme';
 @import '../option/option-theme';
 @import '../option/optgroup-theme';
+@import '../../form-field/form-field-theme';
 
 
 // Includes all of the typographic styles.
-@mixin angular-material-typography($config: mat-typography-config()) {
+@mixin angular-material-typography($config: null) {
+  @if $config == null {
+    $config: mat-typography-config();
+  }
+
   @include mat-base-typography($config);
   @include mat-autocomplete-typography($config);
   @include mat-button-typography($config);
@@ -37,8 +44,11 @@
   @include mat-card-typography($config);
   @include mat-checkbox-typography($config);
   @include mat-chips-typography($config);
+  @include mat-table-typography($config);
   @include mat-datepicker-typography($config);
   @include mat-dialog-typography($config);
+  @include mat-expansion-panel-typography($config);
+  @include mat-form-field-typography($config);
   @include mat-grid-list-typography($config);
   @include mat-icon-typography($config);
   @include mat-input-typography($config);

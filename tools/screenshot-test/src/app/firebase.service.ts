@@ -45,7 +45,7 @@ export class FirebaseService {
   /** Set pull request number. All test information and pull request information will be retrived
    * from database
    */
-  set prNumber(prNumber: string){
+  set prNumber(prNumber: string) {
     this.screenshotResultSummary = new ScreenshotResultSummary();
     this.screenshotResultSummary.prNumber = prNumber;
     this._readPullRequestScreenshotReport();
@@ -71,10 +71,9 @@ export class FirebaseService {
             this._readResults(childSnapshot);
             break;
         }
+
         counter++;
-        if (counter === snapshot.numChildren()) {
-          return true;
-        }
+        return counter === snapshot.numChildren();
       });
     });
   }
@@ -123,11 +122,11 @@ export class FirebaseService {
     this.screenshotResultSummary.testNames = [];
     this.screenshotResultSummary.testResultsByName.clear();
     childSnapshot.forEach((resultSnapshot: firebase.database.DataSnapshot) => {
-      this._addTestResults(resultSnapshot.key, resultSnapshot.val());
-      childCounter++;
-      if (childCounter === childSnapshot.numChildren()) {
-        return true;
+      if (resultSnapshot.key) {
+        this._addTestResults(resultSnapshot.key, resultSnapshot.val());
       }
+      childCounter++;
+      return childCounter === childSnapshot.numChildren();
     });
   }
 

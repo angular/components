@@ -8,23 +8,34 @@
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
   OnInit,
   Output,
-  ViewEncapsulation
+  ViewEncapsulation,
+  OnDestroy,
 } from '@angular/core';
 import {MdPaginatorIntl} from './paginator-intl';
 import {MATERIAL_COMPATIBILITY_MODE} from '../core';
+import {Subscription} from 'rxjs/Subscription';
+
+/** The default page size if there is no page size and there are no provided page size options. */
+const DEFAULT_PAGE_SIZE = 50;
 
 /**
  * Change event object that is emitted when the user selects a
  * different page size or navigates to another page.
  */
 export class PageEvent {
+  /** The current page index. */
   pageIndex: number;
+
+  /** The current page size */
   pageSize: number;
+
+  /** The current total number of items being paged */
   length: number;
 }
 
@@ -47,14 +58,27 @@ export class PageEvent {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MdPaginator implements OnInit {
+export class MdPaginator implements OnInit, OnDestroy {
   private _initialized: boolean;
+  private _intlChanges: Subscription;
 
   /** The zero-based page index of the displayed list of items. Defaulted to 0. */
-  @Input() pageIndex: number = 0;
+  @Input()
+  get pageIndex(): number { return this._pageIndex; }
+  set pageIndex(pageIndex: number) {
+    this._pageIndex = pageIndex;
+    this._changeDetectorRef.markForCheck();
+  }
+  _pageIndex: number = 0;
 
   /** The length of the total number of items that are being paginated. Defaulted to 0. */
-  @Input() length: number = 0;
+  @Input()
+  get length(): number { return this._length; }
+  set length(length: number) {
+    this._length = length;
+    this._changeDetectorRef.markForCheck();
+  }
+  _length: number = 0;
 
   /** Number of items to display on a page. By default set to 50. */
   @Input()
@@ -63,7 +87,7 @@ export class MdPaginator implements OnInit {
     this._pageSize = pageSize;
     this._updateDisplayedPageSizeOptions();
   }
-  private _pageSize: number = 50;
+  private _pageSize: number;
 
   /** The set of provided page size options to display to the user. */
   @Input()
@@ -80,33 +104,40 @@ export class MdPaginator implements OnInit {
   /** Displayed set of page size options. Will be sorted and include current page size. */
   _displayedPageSizeOptions: number[];
 
-  constructor(public _intl: MdPaginatorIntl) { }
+  constructor(public _intl: MdPaginatorIntl,
+              private _changeDetectorRef: ChangeDetectorRef) {
+    this._intlChanges = _intl.changes.subscribe(() => this._changeDetectorRef.markForCheck());
+  }
 
   ngOnInit() {
     this._initialized = true;
     this._updateDisplayedPageSizeOptions();
   }
 
-  /** Increments the page index to the next page index if a next page exists. */
+  ngOnDestroy() {
+    this._intlChanges.unsubscribe();
+  }
+
+  /** Advances to the next page if it exists. */
   nextPage() {
     if (!this.hasNextPage()) { return; }
     this.pageIndex++;
     this._emitPageEvent();
   }
 
-  /** Decrements the page index to the previous page index if a next page exists. */
+  /** Move back to the previous page if it exists. */
   previousPage() {
     if (!this.hasPreviousPage()) { return; }
     this.pageIndex--;
     this._emitPageEvent();
   }
 
-  /** Returns true if the user can go to the next page. */
+  /** Whether there is a previous page. */
   hasPreviousPage() {
     return this.pageIndex >= 1 && this.pageSize != 0;
   }
 
-  /** Returns true if the user can go to the next page. */
+  /** Whether there is a next page. */
   hasNextPage() {
     const numberOfPages = Math.ceil(this.length / this.pageSize) - 1;
     return this.pageIndex < numberOfPages && this.pageSize != 0;
@@ -137,6 +168,13 @@ export class MdPaginator implements OnInit {
   private _updateDisplayedPageSizeOptions() {
     if (!this._initialized) { return; }
 
+    // If no page size is provided, use the first page size option or the default page size.
+    if (!this.pageSize) {
+      this._pageSize = this.pageSizeOptions.length != 0 ?
+          this.pageSizeOptions[0] :
+          DEFAULT_PAGE_SIZE;
+    }
+
     this._displayedPageSizeOptions = this.pageSizeOptions.slice();
     if (this._displayedPageSizeOptions.indexOf(this.pageSize) == -1) {
       this._displayedPageSizeOptions.push(this.pageSize);
@@ -144,6 +182,8 @@ export class MdPaginator implements OnInit {
 
     // Sort the numbers using a number-specific sort function.
     this._displayedPageSizeOptions.sort((a, b) => a - b);
+
+    this._changeDetectorRef.markForCheck();
   }
 
   /** Emits an event notifying that a change of the paginator's properties has been triggered. */

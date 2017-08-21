@@ -84,9 +84,9 @@ export class FocusOriginMonitor {
     }
     // Check if we're already monitoring this element.
     if (this._elementInfo.has(element)) {
-      let info = this._elementInfo.get(element);
-      info!.checkChildren = checkChildren;
-      return info!.subject.asObservable();
+      let cachedInfo = this._elementInfo.get(element);
+      cachedInfo!.checkChildren = checkChildren;
+      return cachedInfo!.subject.asObservable();
     }
 
     // Create monitored element info.
@@ -288,7 +288,7 @@ export class FocusOriginMonitor {
    * @param event The blur event.
    * @param element The monitored element.
    */
-  private _onBlur(event: FocusEvent, element: HTMLElement) {
+  _onBlur(event: FocusEvent, element: HTMLElement) {
     // If we are counting child-element-focus as focused, make sure that we aren't just blurring in
     // order to focus another child of the monitored element.
     const elementInfo = this._elementInfo.get(element);
@@ -334,13 +334,13 @@ export class CdkMonitorFocus implements OnDestroy {
   }
 }
 
-
+/** @docs-private */
 export function FOCUS_ORIGIN_MONITOR_PROVIDER_FACTORY(
     parentDispatcher: FocusOriginMonitor, ngZone: NgZone, platform: Platform) {
   return parentDispatcher || new FocusOriginMonitor(ngZone, platform);
 }
 
-
+/** @docs-private */
 export const FOCUS_ORIGIN_MONITOR_PROVIDER = {
   // If there is already a FocusOriginMonitor available, use that. Otherwise, provide a new one.
   provide: FocusOriginMonitor,

@@ -6,22 +6,10 @@
 This is the home for the Angular team's Material Design components built for and with Angular.
 
 #### Quick links
-[Documentation, demos, and guides](https://material.angular.io) | 
+[Documentation, demos, and guides][aio] | 
 [Google group](https://groups.google.com/forum/#!forum/angular-material2) |
 [Contributing](https://github.com/angular/material2/blob/master/CONTRIBUTING.md) |
 [Plunker Template](http://plnkr.co/edit/o077B6uEiiIgkC0S06dd?p=preview)
-
-### Installation
-
-The latest release of Angular Material can be installed from npm
-
-`npm install @angular/material`
-
-A snapshot build with the latest changes from
-[master](https://github.com/angular/material2/tree/master) is also available.
-Note that this snapshot build should not be considered stable and may break between releases.
-
-`npm install --save angular/material2-builds angular/cdk-builds`
 
 ### Getting started
 
@@ -42,16 +30,16 @@ Also see our [`Good for community contribution`](https://github.com/angular/mate
 label.
 
 High level stuff planned for Q3 2017 (July - September):
-- As many bug fixes as humanly possible
-- Additional features for data-table
-- More accessibility improvements
-- Nested menus
-- All components are OnPush
-- Improved documentation, guides, examples, and navigation on material.angular.io
-- Improve library-wide API consistency
-- Stepper component
-- Sticky header helper
-- action-list and selection-list
+* As many bug fixes as humanly possible
+* Additional features for data-table
+* Continued accessibility improvements
+* Nested menus
+* All components are OnPush
+* Improved documentation, guides, examples, and navigation on [material.angular.io][aio]
+* Improve library-wide API consistency
+* Stepper component
+* Sticky header helper
+* action-list and selection-list
 
 
 #### Available features
@@ -64,6 +52,7 @@ High level stuff planned for Q3 2017 (July - September):
 | cards            |                                                        |   [Docs][2]  |
 | checkbox         |                                                        |   [Docs][3]  |
 | chips            |        Chip-remove, integration with input in-progress |   [Docs][26] |
+| data-table       | Sticky headers & incremental row rendering in-progress |   [Docs][28] |
 | datepicker       |                                                        |   [Docs][25] |
 | dialog           |                                                        |   [Docs][22] |
 | expansion-panel  |                                    Needs documentation |           -  |
@@ -72,6 +61,7 @@ High level stuff planned for Q3 2017 (July - September):
 | input            |                                                        |   [Docs][5]  |
 | list             |                   Selection and action list planned Q3 |   [Docs][8]  |
 | menu             |                                 Nested menu planned Q3 |   [Docs][17] |
+| paginator        |                                                        |   [Docs][29] |
 | progress-bar     |                                                        |   [Docs][12] |
 | progress-spinner |                                                        |   [Docs][11] |
 | radio            |                                                        |   [Docs][4]  |
@@ -81,25 +71,25 @@ High level stuff planned for Q3 2017 (July - September):
 | slide-toggle     |                                                        |   [Docs][14] |
 | slider           |                                                        |   [Docs][16] |
 | snackbar / toast |                                                        |   [Docs][21] |
+| sort-header      |                                                        |   [Docs][30] |
 | tabs             |                                                        |   [Docs][13] |
 | textarea         |                                                        |   [Docs][5]  |
 | toolbar          |                                                        |   [Docs][7]  |
 | tooltip          |                                                        |   [Docs][18] |
-|                                                                                          |
+| ---------------- | ------------------------------------------------------ | ------------ | 
 | theming          |                                                        |  [Guide][20] |
 | typography       |                                                        |  [Guide][27] |
 | layout           |                      See [angular/flex-layout][lay_rp] |  [Wiki][0]   |
+| cdk              |                    Launched, documentation in-progress |              |
 
 
 #### In progress, planned, and non-planned features
 
 | Feature          | Status                              | Docs         | Issue          |
 |------------------|-------------------------------------|--------------|----------------|
-| @angular/cdk     |                         Coming soon |           -  |                |
-| data-table       |                         Coming soon |           -  |   [#581][0581] |
-| tree             |                  Design in-progress |           -  |  [#3175][3175] |
-| stepper          |        Not started, planned Q3 2017 |           -  |   [#508][0508] |
-| sticky-header    |        Not started, planned Q3 2017 |           -  |   [#474][0474] |
+| tree             |      In-progress ([sneak peek][31]) |           -  |  [#3175][3175] |
+| stepper          |        In-progress, planned Q3 2017 |           -  |   [#508][0508] |
+| sticky-header    |        In-progress, planned Q3 2017 |           -  |   [#474][0474] |
 | virtual-repeat   |        Not started, planned Q4 2017 |           -  |   [#823][0823] |
 | fab speed-dial   |            Not started, not planned |           -  |   [#860][0860] |
 | fab toolbar      |            Not started, not planned |           -  |              - |
@@ -134,6 +124,10 @@ High level stuff planned for Q3 2017 (July - September):
 [25]: https://material.angular.io/components/component/datepicker
 [26]: https://material.angular.io/components/component/chips
 [27]: https://material.angular.io/guide/typography
+[28]: https://material.angular.io/components/component/table
+[29]: https://material.angular.io/components/component/paginator
+[30]: https://material.angular.io/components/component/sort
+[31]: https://tina-material-tree.firebaseapp.com/simple-tree
 
 [0107]: https://github.com/angular/material2/issues/107
 [0119]: https://github.com/angular/material2/issues/119
@@ -156,9 +150,10 @@ High level stuff planned for Q3 2017 (July - September):
 [0995]: https://github.com/angular/material2/pull/995
 [0474]: https://github.com/angular/material2/pull/474
 
+[aio]: https://material.angular.io
 [getting-started]: https://github.com/angular/material2/blob/master/guides/getting-started.md
-[theming]: https://github.com/angular/material2/blob/master/guides/theming.md
 [lay_rp]:  https://github.com/angular/flex-layout
+[theming]: https://github.com/angular/material2/blob/master/guides/theming.md
 
 
 ## The goal of Angular Material

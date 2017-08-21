@@ -8,10 +8,11 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {OverlayModule, MdCommonModule} from '../core';
-import {MdMenu} from './menu-directive';
+import {MdCommonModule} from '../core';
+import {OverlayModule} from '@angular/cdk/overlay';
+import {MdMenu, MD_MENU_DEFAULT_OPTIONS} from './menu-directive';
 import {MdMenuItem} from './menu-item';
-import {MdMenuTrigger} from './menu-trigger';
+import {MdMenuTrigger, MD_MENU_SCROLL_STRATEGY_PROVIDER} from './menu-trigger';
 import {MdRippleModule} from '../core/ripple/index';
 
 
@@ -24,6 +25,17 @@ import {MdRippleModule} from '../core/ripple/index';
   ],
   exports: [MdMenu, MdMenuItem, MdMenuTrigger, MdCommonModule],
   declarations: [MdMenu, MdMenuItem, MdMenuTrigger],
+  providers: [
+    MD_MENU_SCROLL_STRATEGY_PROVIDER,
+    {
+      provide: MD_MENU_DEFAULT_OPTIONS,
+      useValue: {
+        overlapTrigger: true,
+        xPosition: 'after',
+        yPosition: 'below',
+      },
+    }
+  ],
 })
 export class MdMenuModule {}
 

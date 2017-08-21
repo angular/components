@@ -1,15 +1,11 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {MdCalendar} from './calendar';
 import {By} from '@angular/platform-browser';
 import {MdMonthView} from './month-view';
 import {MdYearView} from './year-view';
 import {MdCalendarBody} from './calendar-body';
-import {
-  dispatchFakeEvent,
-  dispatchKeyboardEvent,
-  dispatchMouseEvent
-} from '../core/testing/dispatch-events';
+import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
 import {
   DOWN_ARROW,
   END,
@@ -25,13 +21,7 @@ import {MdDatepickerIntl} from './datepicker-intl';
 import {MdNativeDateModule} from '../core/datetime/index';
 import {NoConflictStyleCompatibilityMode} from '../core';
 import {MdButtonModule} from '../button/index';
-
-
-// When constructing a Date, the month is zero-based. This can be confusing, since people are
-// used to seeing them one-based. So we create these aliases to make reading the tests easier.
-const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9,
-      NOV = 10, DEC = 11;
-
+import {AUG, DEC, FEB, JAN, JUL, NOV, MAR, MAY, JUN, SEP} from '../core/testing/month-constants';
 
 describe('MdCalendar', () => {
   beforeEach(async(() => {
@@ -157,6 +147,18 @@ describe('MdCalendar', () => {
       expect(calendarInstance._monthView).toBe(true, 'should be in month view');
       expect(testComponent.selected).toEqual(new Date(2017, JAN, 31));
     });
+
+    it('should re-render when the i18n labels have changed',
+      inject([MdDatepickerIntl], (intl: MdDatepickerIntl) => {
+        const button = fixture.debugElement.nativeElement
+            .querySelector('.mat-calendar-period-button');
+
+        intl.switchToYearViewLabel = 'Go to year view?';
+        intl.changes.next();
+        fixture.detectChanges();
+
+        expect(button.getAttribute('aria-label')).toBe('Go to year view?');
+      }));
 
     describe('a11y', () => {
       describe('calendar body', () => {

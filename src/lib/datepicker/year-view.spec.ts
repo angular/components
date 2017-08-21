@@ -1,29 +1,16 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdYearView} from './year-view';
 import {MdCalendarBody} from './calendar-body';
-import {MdNativeDateModule, DateAdapter, NativeDateAdapter} from '../core/datetime/index';
-
-
-// When constructing a Date, the month is zero-based. This can be confusing, since people are
-// used to seeing them one-based. So we create these aliases to make reading the tests easier.
-const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9,
-      NOV = 10, DEC = 11;
-
+import {MdNativeDateModule} from '../core/datetime/index';
+import {FEB, JAN, JUL, JUN, MAR} from '../core/testing/month-constants';
 
 describe('MdYearView', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         MdNativeDateModule,
-      ],
-      providers: [
-        {provide: DateAdapter, useFactory: () => {
-          let adapter = new NativeDateAdapter();
-          adapter.setLocale('en-US');
-          return adapter;
-        }}
       ],
       declarations: [
         MdCalendarBody,
@@ -89,6 +76,16 @@ describe('MdYearView', () => {
       expect((cellEls[0] as HTMLElement).innerText.trim()).toBe('JAN');
       expect(cellEls[0].classList).toContain('mat-calendar-body-active');
     });
+
+    it('should allow selection of month with less days than current active date', () => {
+      testComponent.date = new Date(2017, JUL, 31);
+      fixture.detectChanges();
+
+      expect(testComponent.yearView._monthSelected(JUN));
+      fixture.detectChanges();
+
+      expect(testComponent.selected).toEqual(new Date(2017, JUN, 30));
+    });
   });
 
   describe('year view with date filter', () => {
@@ -121,6 +118,8 @@ describe('MdYearView', () => {
 class StandardYearView {
   date = new Date(2017, JAN, 5);
   selected = new Date(2017, MAR, 10);
+
+  @ViewChild(MdYearView) yearView: MdYearView<Date>;
 }
 
 

@@ -1,7 +1,10 @@
+// We can use relative imports for imports from the cdk because we bundle everything
+// up into a single flat scss file for material.
+@import '../../cdk/overlay/overlay';
+
 // Core styles that can be used to apply material design treatments to any element.
 @import 'a11y/a11y';
 @import 'style/elevation';
-@import 'overlay/overlay';
 @import 'ripple/ripple';
 @import 'option/option';
 @import 'option/option-theme';
@@ -11,7 +14,7 @@
 @import 'typography/all-typography';
 
 // Mixin that renders all of the core styles that are not theme-dependent.
-@mixin mat-core() {
+@mixin mat-core($typography-config: null) {
   // Provides external CSS classes for each elevation value. Each CSS class is formatted as
   // `mat-elevation-z$zValue` where `$zValue` corresponds to the z-space to which the element is
   // elevated.
@@ -21,7 +24,7 @@
     }
   }
 
-  @include angular-material-typography();
+  @include angular-material-typography($typography-config);
   @include mat-ripple();
   @include mat-option();
   @include mat-optgroup();

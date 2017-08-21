@@ -7,33 +7,57 @@
  */
 
 import {
-  Injector,
-  InjectionToken,
   ComponentRef,
+  Inject,
   Injectable,
+  InjectionToken,
+  Injector,
   Optional,
   SkipSelf,
   TemplateRef,
 } from '@angular/core';
 import {Location} from '@angular/common';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import {ComponentPortal, ComponentType, TemplatePortal} from '@angular/cdk/portal';
 import {
+  BlockScrollStrategy,
   Overlay,
   OverlayRef,
-  ComponentType,
   OverlayState,
-  ComponentPortal,
-} from '../core';
+  // This import is only used to define a generic type. The current TypeScript version incorrectly
+  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
+  // tslint:disable-next-line:no-unused-variable
+  ScrollStrategy,
+} from '@angular/cdk/overlay';
+import {ESCAPE} from '@angular/cdk/keycodes';
+import {startWith} from '@angular/cdk/rxjs';
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import {defer} from 'rxjs/observable/defer';
+import {PortalInjector} from '../core/portal/portal-injector';
 import {extendObject} from '../core/util/object-extend';
-import {ESCAPE} from '../core/keyboard/keycodes';
-import {DialogInjector} from './dialog-injector';
 import {MdDialogConfig} from './dialog-config';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContainer} from './dialog-container';
-import {TemplatePortal} from '../core/portal/portal';
 
 export const MD_DIALOG_DATA = new InjectionToken<any>('MdDialogData');
+
+
+/** Injection token that determines the scroll handling while the dialog is open. */
+export const MD_DIALOG_SCROLL_STRATEGY =
+    new InjectionToken<() => ScrollStrategy>('md-dialog-scroll-strategy');
+
+/** @docs-private */
+export function MD_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
+    () => BlockScrollStrategy {
+  return () => overlay.scrollStrategies.block();
+}
+
+/** @docs-private */
+export const MD_DIALOG_SCROLL_STRATEGY_PROVIDER = {
+  provide: MD_DIALOG_SCROLL_STRATEGY,
+  deps: [Overlay],
+  useFactory: MD_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY,
+};
 
 
 /**
@@ -47,30 +71,32 @@ export class MdDialog {
   private _boundKeydown = this._handleKeydown.bind(this);
 
   /** Keeps track of the currently-open dialogs. */
-  get _openDialogs(): MdDialogRef<any>[] {
-    return this._parentDialog ? this._parentDialog._openDialogs : this._openDialogsAtThisLevel;
+  get openDialogs(): MdDialogRef<any>[] {
+    return this._parentDialog ? this._parentDialog.openDialogs : this._openDialogsAtThisLevel;
   }
 
-  /** Subject for notifying the user that a dialog has opened. */
-  get _afterOpen(): Subject<MdDialogRef<any>> {
-    return this._parentDialog ? this._parentDialog._afterOpen : this._afterOpenAtThisLevel;
+  /** Stream that emits when a dialog has been opened. */
+  get afterOpen(): Subject<MdDialogRef<any>> {
+    return this._parentDialog ? this._parentDialog.afterOpen : this._afterOpenAtThisLevel;
   }
 
-  /** Subject for notifying the user that all open dialogs have finished closing. */
-  get _afterAllClosed(): Subject<void> {
-    return this._parentDialog ?
-      this._parentDialog._afterAllClosed : this._afterAllClosedAtThisLevel;
+  get _afterAllClosed() {
+    const parent = this._parentDialog;
+    return parent ? parent._afterAllClosed : this._afterAllClosedAtThisLevel;
   }
 
-  /** Gets an observable that is notified when a dialog has been opened. */
-  afterOpen: Observable<MdDialogRef<any>> = this._afterOpen.asObservable();
-
-  /** Gets an observable that is notified when all open dialog have finished closing. */
-  afterAllClosed: Observable<void> = this._afterAllClosed.asObservable();
+  /**
+   * Stream that emits when all open dialog have finished closing.
+   * Will emit on subscribe if there are no open dialogs to begin with.
+   */
+  afterAllClosed: Observable<void> = defer<void>(() => this.openDialogs.length ?
+      this._afterAllClosed :
+      startWith.call(this._afterAllClosed, undefined));
 
   constructor(
       private _overlay: Overlay,
       private _injector: Injector,
+      @Inject(MD_DIALOG_SCROLL_STRATEGY) private _scrollStrategy,
       @Optional() private _location: Location,
       @Optional() @SkipSelf() private _parentDialog: MdDialog) {
 
@@ -91,20 +117,32 @@ export class MdDialog {
    */
   open<T>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
           config?: MdDialogConfig): MdDialogRef<T> {
+
+    const inProgressDialog = this.openDialogs.find(dialog => dialog._isAnimating());
+
+    // If there's a dialog that is in the process of being opened, return it instead.
+    if (inProgressDialog) {
+      return inProgressDialog;
+    }
+
     config = _applyConfigDefaults(config);
 
-    let overlayRef = this._createOverlay(config);
-    let dialogContainer = this._attachDialogContainer(overlayRef, config);
-    let dialogRef =
+    if (config.id && this.getDialogById(config.id)) {
+      throw Error(`Dialog with id "${config.id}" exists already. The dialog id must be unique.`);
+    }
+
+    const overlayRef = this._createOverlay(config);
+    const dialogContainer = this._attachDialogContainer(overlayRef, config);
+    const dialogRef =
         this._attachDialogContent(componentOrTemplateRef, dialogContainer, overlayRef, config);
 
-    if (!this._openDialogs.length) {
+    if (!this.openDialogs.length) {
       document.addEventListener('keydown', this._boundKeydown);
     }
 
-    this._openDialogs.push(dialogRef);
+    this.openDialogs.push(dialogRef);
     dialogRef.afterClosed().subscribe(() => this._removeOpenDialog(dialogRef));
-    this._afterOpen.next(dialogRef);
+    this.afterOpen.next(dialogRef);
 
     return dialogRef;
   }
@@ -113,15 +151,23 @@ export class MdDialog {
    * Closes all of the currently-open dialogs.
    */
   closeAll(): void {
-    let i = this._openDialogs.length;
+    let i = this.openDialogs.length;
 
     while (i--) {
       // The `_openDialogs` property isn't updated after close until the rxjs subscription
       // runs on the next microtask, in addition to modifying the array as we're going
       // through it. We loop through all of them and call close without assuming that
       // they'll be removed from the list instantaneously.
-      this._openDialogs[i].close();
+      this.openDialogs[i].close();
     }
+  }
+
+  /**
+   * Finds an open dialog by its id.
+   * @param id ID to use when looking up the dialog.
+   */
+  getDialogById(id: string): MdDialogRef<any> | undefined {
+    return this.openDialogs.find(dialog => dialog.id === id);
   }
 
   /**
@@ -130,7 +176,7 @@ export class MdDialog {
    * @returns A promise resolving to the OverlayRef for the created overlay.
    */
   private _createOverlay(config: MdDialogConfig): OverlayRef {
-    let overlayState = this._getOverlayState(config);
+    const overlayState = this._getOverlayState(config);
     return this._overlay.create(overlayState);
   }
 
@@ -140,10 +186,10 @@ export class MdDialog {
    * @returns The overlay configuration.
    */
   private _getOverlayState(dialogConfig: MdDialogConfig): OverlayState {
-    let overlayState = new OverlayState();
+    const overlayState = new OverlayState();
     overlayState.panelClass = dialogConfig.panelClass;
     overlayState.hasBackdrop = dialogConfig.hasBackdrop;
-    overlayState.scrollStrategy = this._overlay.scrollStrategies.block();
+    overlayState.scrollStrategy = this._scrollStrategy();
     overlayState.direction = dialogConfig.direction;
     if (dialogConfig.backdropClass) {
       overlayState.backdropClass = dialogConfig.backdropClass;
@@ -184,7 +230,7 @@ export class MdDialog {
 
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
-    let dialogRef = new MdDialogRef<T>(overlayRef, dialogContainer);
+    const dialogRef = new MdDialogRef<T>(overlayRef, dialogContainer, config.id);
 
     // When the dialog backdrop is clicked, we want to close it.
     if (config.hasBackdrop) {
@@ -198,8 +244,8 @@ export class MdDialog {
     if (componentOrTemplateRef instanceof TemplateRef) {
       dialogContainer.attachTemplatePortal(new TemplatePortal(componentOrTemplateRef, null!));
     } else {
-      let injector = this._createInjector<T>(config, dialogRef, dialogContainer);
-      let contentRef = dialogContainer.attachComponentPortal(
+      const injector = this._createInjector<T>(config, dialogRef, dialogContainer);
+      const contentRef = dialogContainer.attachComponentPortal(
           new ComponentPortal(componentOrTemplateRef, undefined, injector));
       dialogRef.componentInstance = contentRef.instance;
     }
@@ -222,16 +268,16 @@ export class MdDialog {
   private _createInjector<T>(
       config: MdDialogConfig,
       dialogRef: MdDialogRef<T>,
-      dialogContainer: MdDialogContainer): DialogInjector {
+      dialogContainer: MdDialogContainer): PortalInjector {
 
-    let userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
-    let injectionTokens = new WeakMap();
+    const userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
+    const injectionTokens = new WeakMap();
 
     injectionTokens.set(MdDialogRef, dialogRef);
     injectionTokens.set(MdDialogContainer, dialogContainer);
     injectionTokens.set(MD_DIALOG_DATA, config.data);
 
-    return new DialogInjector(userInjector || this._injector, injectionTokens);
+    return new PortalInjector(userInjector || this._injector, injectionTokens);
   }
 
   /**
@@ -239,13 +285,13 @@ export class MdDialog {
    * @param dialogRef Dialog to be removed.
    */
   private _removeOpenDialog(dialogRef: MdDialogRef<any>) {
-    let index = this._openDialogs.indexOf(dialogRef);
+    const index = this.openDialogs.indexOf(dialogRef);
 
     if (index > -1) {
-      this._openDialogs.splice(index, 1);
+      this.openDialogs.splice(index, 1);
 
       // no open dialogs are left, call next on afterAllClosed Subject
-      if (!this._openDialogs.length) {
+      if (!this.openDialogs.length) {
         this._afterAllClosed.next();
         document.removeEventListener('keydown', this._boundKeydown);
       }
@@ -257,8 +303,8 @@ export class MdDialog {
    * top dialog when the user presses escape.
    */
   private _handleKeydown(event: KeyboardEvent): void {
-    let topDialog = this._openDialogs[this._openDialogs.length - 1];
-    let canClose = topDialog ? !topDialog.disableClose : false;
+    const topDialog = this.openDialogs[this.openDialogs.length - 1];
+    const canClose = topDialog ? !topDialog.disableClose : false;
 
     if (event.keyCode === ESCAPE && canClose) {
       topDialog.close();

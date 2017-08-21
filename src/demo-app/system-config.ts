@@ -26,7 +26,18 @@ System.config({
       'node:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
 
     '@angular/material': 'dist/bundles/material.umd.js',
-    '@angular/cdk': 'dist/bundles/cdk.umd.js'
+    '@angular/cdk': 'dist/bundles/cdk.umd.js',
+    '@angular/cdk/a11y': 'dist/bundles/cdk-a11y.umd.js',
+    '@angular/cdk/bidi': 'dist/bundles/cdk-bidi.umd.js',
+    '@angular/cdk/coercion': 'dist/bundles/cdk-coercion.umd.js',
+    '@angular/cdk/keycodes': 'dist/bundles/cdk-keycodes.umd.js',
+    '@angular/cdk/observers': 'dist/bundles/cdk-observers.umd.js',
+    '@angular/cdk/overlay': 'dist/bundles/cdk-overlay.umd.js',
+    '@angular/cdk/platform': 'dist/bundles/cdk-platform.umd.js',
+    '@angular/cdk/portal': 'dist/bundles/cdk-portal.umd.js',
+    '@angular/cdk/rxjs': 'dist/bundles/cdk-rxjs.umd.js',
+    '@angular/cdk/table': 'dist/bundles/cdk-table.umd.js',
+    '@angular/cdk/testing': 'dist/bundles/cdk-testing.umd.js',
   },
   packages: {
     // Thirdparty barrels.

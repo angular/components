@@ -29,7 +29,7 @@ import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-year-view',
+  selector: 'md-year-view, mat-year-view',
   templateUrl: 'year-view.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -95,9 +95,11 @@ export class MdYearView<D> implements AfterContentInit {
 
   /** Handles when a new month is selected. */
   _monthSelected(month: number) {
+    let daysInMonth = this._dateAdapter.getNumDaysInMonth(
+        this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1));
     this.selectedChange.emit(this._dateAdapter.createDate(
         this._dateAdapter.getYear(this.activeDate), month,
-        this._dateAdapter.getDate(this.activeDate)));
+        Math.min(this._dateAdapter.getDate(this.activeDate), daysInMonth)));
   }
 
   /** Initializes this month view. */
@@ -108,7 +110,7 @@ export class MdYearView<D> implements AfterContentInit {
 
     let monthNames = this._dateAdapter.getMonthNames('short');
     // First row of months only contains 5 elements so we can fit the year label on the same row.
-    this._months = [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9, 10, 11]].map(row => row.map(
+    this._months = [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11]].map(row => row.map(
         month => this._createCellForMonth(month, monthNames[month])));
   }
 

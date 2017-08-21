@@ -8,14 +8,15 @@
 
 import {Directive, ElementRef, Input, AfterViewInit, Optional, Self} from '@angular/core';
 import {NgControl} from '@angular/forms';
+import {Platform} from '@angular/cdk/platform';
 
 
 /**
  * Directive to automatically resize a textarea to fit its content.
  */
 @Directive({
-  selector: 'textarea[md-autosize], textarea[mdTextareaAutosize],' +
-            'textarea[mat-autosize], textarea[matTextareaAutosize]',
+  selector: `textarea[md-autosize], textarea[mdTextareaAutosize],
+             textarea[mat-autosize], textarea[matTextareaAutosize]`,
   exportAs: 'mdTextareaAutosize',
   host: {
     '(input)': 'resizeToFitContent()',
@@ -46,7 +47,7 @@ export class MdTextareaAutosize implements AfterViewInit {
     this._setMaxHeight();
   }
 
-  @Input('matAutosizeMaxRows')
+  @Input('matAutosizeMinRows')
   get _matAutosizeMinRows() { return this.minRows; }
   set _matAutosizeMinRows(v) { this.minRows = v; }
 
@@ -57,7 +58,11 @@ export class MdTextareaAutosize implements AfterViewInit {
   /** Cached height of a textarea with a single row. */
   private _cachedLineHeight: number;
 
-  constructor(private _elementRef: ElementRef, @Optional() @Self() formControl: NgControl) {
+  constructor(
+    private _elementRef: ElementRef,
+    private _platform: Platform,
+    @Optional() @Self() formControl: NgControl) {
+
     if (formControl && formControl.valueChanges) {
       formControl.valueChanges.subscribe(() => this.resizeToFitContent());
     }
@@ -84,8 +89,10 @@ export class MdTextareaAutosize implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this._cacheTextareaLineHeight();
-    this.resizeToFitContent();
+    if (this._platform.isBrowser) {
+      this._cacheTextareaLineHeight();
+      this.resizeToFitContent();
+    }
   }
 
   /** Sets a style property on the textarea element. */
@@ -119,6 +126,13 @@ export class MdTextareaAutosize implements AfterViewInit {
     textareaClone.style.minHeight = '';
     textareaClone.style.maxHeight = '';
 
+    // In Firefox it happens that textarea elements are always bigger than the specified amount
+    // of rows. This is because Firefox tries to add extra space for the horizontal scrollbar.
+    // As a workaround that removes the extra space for the scrollbar, we can just set overflow
+    // to hidden. This ensures that there is no invalid calculation of the line height.
+    // See Firefox bug report: https://bugzilla.mozilla.org/show_bug.cgi?id=33654
+    textareaClone.style.overflow = 'hidden';
+
     textarea.parentNode!.appendChild(textareaClone);
     this._cachedLineHeight = textareaClone.clientHeight;
     textarea.parentNode!.removeChild(textareaClone);
@@ -131,15 +145,19 @@ export class MdTextareaAutosize implements AfterViewInit {
   /** Resize the textarea to fit its content. */
   resizeToFitContent() {
     const textarea = this._elementRef.nativeElement as HTMLTextAreaElement;
+
     if (textarea.value === this._previousValue) {
       return;
     }
 
     // Reset the textarea height to auto in order to shrink back to its default size.
+    // Also temporarily force overflow:hidden, so scroll bars do not interfere with calculations.
     textarea.style.height = 'auto';
+    textarea.style.overflow = 'hidden';
 
     // Use the scrollHeight to know how large the textarea *would* be if fit its entire value.
     textarea.style.height = `${textarea.scrollHeight}px`;
+    textarea.style.overflow = '';
 
     this._previousValue = textarea.value;
   }

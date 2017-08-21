@@ -23,6 +23,9 @@ $(npm bin)/ngc -p scripts/closure-compiler/tsconfig-rxjs.json
 # Create a list of all RxJS source files.
 rxjsSourceFiles=$(find dist/packages/rxjs -name '*.js');
 
+# List of entry points in the CDK package. Exclude "testing" since it's not an entry point.
+cdkEntryPoints=($(find src/cdk -maxdepth 1 -mindepth 1 -type d -not -name testing -exec basename {} \;))
+
 # Due a Closure Compiler issue https://github.com/google/closure-compiler/issues/2247
 # we need to add exports to the different RxJS ES2015 files.
 for i in $rxjsSourceFiles; do
@@ -86,6 +89,12 @@ OPTS=(
   "--entry_point=./dist/packages/demo-app/main.js"
   "--dependency_mode=STRICT"
 )
+
+# Walk through every entry-point of the CDK and add it to closure options.
+for i in "${cdkEntryPoints[@]}"; do
+  OPTS+=("--js_module_root=dist/releases/cdk/${i}")
+  OPTS+=("dist/releases/cdk/@angular/cdk/${i}.js")
+done
 
 # Write closure flags to a closure flagfile.
 closureFlags=$(mktemp)

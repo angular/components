@@ -1,0 +1,172 @@
+<div class="demo-data-source-actions">
+  <div>
+    <button md-raised-button (click)="connect()">Connect New Data Source</button>
+    <button md-raised-button (click)="disconnect()" [disabled]="!dataSource">Disconnect Data Source</button>
+  </div>
+
+  <div>
+    <button md-raised-button (click)="_peopleDatabase.shuffle(changeReferences)">Randomize Data</button>
+    <md-checkbox [(ngModel)]="changeReferences">Change references</md-checkbox>
+  </div>
+
+  <div class="demo-track-by-select">
+    <div class="demo-track-by-label">Track By</div>
+    <md-radio-group [(ngModel)]="trackByStrategy">
+      <md-radio-button [value]="'reference'">Reference</md-radio-button>
+      <md-radio-button [value]="'id'">ID</md-radio-button>
+      <md-radio-button [value]="'index'">Index</md-radio-button>
+    </md-radio-group>
+  </div>
+</div>
+
+<md-card class="demo-table-card">
+  <h3>
+    CdkTable With Dynamic Column Def
+    <div>
+      <button md-raised-button
+              (click)="addDynamicColumnDef()"
+              [disabled]="dynamicColumnIds.length >= 4">
+        Add Column Def
+      </button>
+      <button md-raised-button
+              (click)="removeDynamicColumnDef()"
+              [disabled]="dynamicColumnIds.length == 0">
+        Remove Column Def
+      </button>
+    </div>
+  </h3>
+
+  <cdk-table [dataSource]="dataSource">
+    <ng-container [cdkColumnDef]="column.id" *ngFor="let column of dynamicColumnDefs">
+      <cdk-header-cell *cdkHeaderCellDef> {{column.headerText}} </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row"> {{row[column.property]}} </cdk-cell>
+    </ng-container>
+
+    <cdk-header-row *cdkHeaderRowDef="dynamicColumnIds"></cdk-header-row>
+    <cdk-row *cdkRowDef="let row; columns: dynamicColumnIds;"></cdk-row>
+  </cdk-table>
+</md-card>
+
+<md-card class="demo-table-card">
+  <h3>CdkTable Example</h3>
+
+  <div class="demo-highlighter">
+    Highlight:
+    <md-checkbox (change)="toggleHighlight('first', $event.checked)">First Row</md-checkbox>
+    <md-checkbox (change)="toggleHighlight('last', $event.checked)">Last Row</md-checkbox>
+    <md-checkbox (change)="toggleHighlight('even', $event.checked)">Even Rows</md-checkbox>
+    <md-checkbox (change)="toggleHighlight('odd', $event.checked)">Odd Rows</md-checkbox>
+  </div>
+
+  <cdk-table #table mdSort
+               [dataSource]="dataSource"
+               [trackBy]="userTrackBy">
+
+    <!-- Column Definition: ID -->
+    <ng-container cdkColumnDef="userId">
+      <cdk-header-cell *cdkHeaderCellDef
+                       md-sort-header arrowPosition="before">
+          ID
+        </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row"> {{row.id}} </cdk-cell>
+    </ng-container>
+
+    <!-- Column Definition: Progress -->
+    <ng-container cdkColumnDef="progress">
+      <cdk-header-cell *cdkHeaderCellDef
+                         md-sort-header start="desc">
+          Progress
+        </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row">
+        <div class="demo-progress-stat">{{row.progress}}%</div>
+        <div class="demo-progress-indicator-container">
+          <div class="demo-progress-indicator"
+               [style.background]="row.progress > 50 ? 'green' : 'red'"
+               [style.opacity]="getOpacity(row.progress)"
+               [style.width.%]="row.progress"></div>
+        </div>
+      </cdk-cell>
+    </ng-container>
+
+    <!-- Column Definition: Name -->
+    <ng-container cdkColumnDef="userName">
+      <cdk-header-cell *cdkHeaderCellDef md-sort-header>
+          Name
+        </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row"> {{row.name}} </cdk-cell>
+    </ng-container>
+
+    <!-- Column Definition: Color -->
+    <ng-container cdkColumnDef="color">
+      <cdk-header-cell *cdkHeaderCellDef
+                         md-sort-header disableClear>
+          Color
+        </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row" [style.color]="row.color"> {{row.color}} </cdk-cell>
+    </ng-container>
+
+    <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
+    <cdk-row *cdkRowDef="let row; columns: displayedColumns;
+                           let first = first; let last = last; let even = even; let odd = odd"
+               [ngClass]="{
+                 'demo-row-highlight-first': highlights.has('first') && first,
+                 'demo-row-highlight-last': highlights.has('last') && last,
+                 'demo-row-highlight-even': highlights.has('even') && even,
+                 'demo-row-highlight-odd': highlights.has('odd') && odd
+               }">
+      </cdk-row>
+  </cdk-table>
+</md-card>
+
+<h3>MdTable Example</h3>
+
+<div class="demo-table-container demo-mat-table-example mat-elevation-z4">
+
+  <table-header-demo (shiftColumns)="displayedColumns.push(displayedColumns.shift())"
+                     (toggleColorColumn)="toggleColorColumn()">
+  </table-header-demo>
+
+  <md-table [dataSource]="dataSource" [trackBy]="userTrackBy">
+
+    <!-- Column Definition: ID -->
+    <ng-container cdkColumnDef="userId">
+      <md-header-cell *mdHeaderCellDef> ID </md-header-cell>
+      <md-cell *mdCellDef="let row"> {{row.id}} </md-cell>
+    </ng-container>
+
+    <!-- Column Definition: Progress -->
+    <ng-container mdColumnDef="progress">
+      <md-header-cell *mdHeaderCellDef> Progress </md-header-cell>
+      <md-cell *mdCellDef="let row">
+        <div class="demo-progress-stat">{{row.progress}}%</div>
+        <div class="demo-progress-indicator-container">
+          <div class="demo-progress-indicator"
+               [style.background]="row.progress > 50 ? 'green' : 'red'"
+               [style.opacity]="getOpacity(row.progress)"
+               [style.width.%]="row.progress"></div>
+        </div>
+      </md-cell>
+    </ng-container>
+
+    <!-- Column Definition: Name -->
+    <ng-container mdColumnDef="userName">
+      <md-header-cell *mdHeaderCellDef> Name </md-header-cell>
+      <md-cell *mdCellDef="let row"> {{row.name}} </md-cell>
+    </ng-container>
+
+    <!-- Column Definition: Color -->
+    <ng-container mdColumnDef="color">
+      <md-header-cell *mdHeaderCellDef>Color</md-header-cell>
+      <md-cell *mdCellDef="let row" [style.color]="row.color"> {{row.color}} </md-cell>
+    </ng-container>
+
+    <md-header-row *mdHeaderRowDef="displayedColumns"></md-header-row>
+    <md-row *mdRowDef="let row; columns: displayedColumns"></md-row>
+
+  </md-table>
+
+  <md-paginator #paginator
+                [length]="_peopleDatabase.data.length"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+  </md-paginator>
+</div>

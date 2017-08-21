@@ -13,13 +13,25 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
-  Input,
   Optional,
   QueryList,
   Renderer2,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
 } from '@angular/core';
-import {coerceBooleanProperty, MdLine, MdLineSetter} from '../core';
+import {MdLine, MdLineSetter} from '../core';
+import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
+
+// Boilerplate for applying mixins to MdList.
+/** @docs-private */
+export class MdListBase {}
+export const _MdListMixinBase = mixinDisableRipple(MdListBase);
+
+// Boilerplate for applying mixins to MdListItem.
+/** @docs-private */
+export class MdListItemBase {}
+export const _MdListItemMixinBase = mixinDisableRipple(MdListItemBase);
+
 
 @Directive({
   selector: 'md-divider, mat-divider',
@@ -36,19 +48,11 @@ export class MdListDivider {}
   host: {'role': 'list'},
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
-  encapsulation: ViewEncapsulation.None
+  inputs: ['disableRipple'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdList {
-  private _disableRipple: boolean = false;
-
-  /**
-   * Whether the ripple effect should be disabled on the list-items or not.
-   * This flag only has an effect for `md-nav-list` components.
-   */
-  @Input()
-  get disableRipple() { return this._disableRipple; }
-  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
-}
+export class MdList extends _MdListMixinBase implements CanDisableRipple {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
@@ -105,7 +109,7 @@ export class MdListIconCssMatStyler {}
  * @docs-private
  */
 @Directive({
-  selector: '[md-subheader], [mat-subheader]',
+  selector: '[md-subheader], [mat-subheader], [mdSubheader], [matSubheader]',
   host: {'class': 'mat-subheader'}
 })
 export class MdListSubheaderCssMatStyler {}
@@ -119,21 +123,14 @@ export class MdListSubheaderCssMatStyler {}
     '(focus)': '_handleFocus()',
     '(blur)': '_handleBlur()',
   },
+  inputs: ['disableRipple'],
   templateUrl: 'list-item.html',
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdListItem implements AfterContentInit {
+export class MdListItem extends _MdListItemMixinBase implements AfterContentInit, CanDisableRipple {
   private _lineSetter: MdLineSetter;
-  private _disableRipple: boolean = false;
   private _isNavList: boolean = false;
-
-  /**
-   * Whether the ripple effect on click should be disabled. This applies only to list items that are
-   * part of a nav list. The value of `disableRipple` on the `md-nav-list` overrides this flag.
-   */
-  @Input()
-  get disableRipple() { return this._disableRipple; }
-  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
 
   @ContentChildren(MdLine) _lines: QueryList<MdLine>;
 
@@ -150,6 +147,7 @@ export class MdListItem implements AfterContentInit {
               private _element: ElementRef,
               @Optional() private _list: MdList,
               @Optional() navList: MdNavListCssMatStyler) {
+    super();
     this._isNavList = !!navList;
   }
 

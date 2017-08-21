@@ -17,7 +17,9 @@ import {
   NgZone,
   Optional,
   Output,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
 import {
   DOWN_ARROW,
@@ -36,6 +38,7 @@ import {createMissingDateImplError} from './datepicker-errors';
 import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
 import {MATERIAL_COMPATIBILITY_MODE} from '../core';
 import {first} from '../core/rxjs/index';
+import {Subscription} from 'rxjs/Subscription';
 
 
 /**
@@ -44,7 +47,7 @@ import {first} from '../core/rxjs/index';
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-calendar',
+  selector: 'md-calendar, mat-calendar',
   templateUrl: 'calendar.html',
   styleUrls: ['calendar.css'],
   host: {
@@ -53,7 +56,9 @@ import {first} from '../core/rxjs/index';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdCalendar<D> implements AfterContentInit {
+export class MdCalendar<D> implements AfterContentInit, OnDestroy {
+  private _intlChanges: Subscription;
+
   /** A date representing the period (month or year) to start the calendar in. */
   @Input() startAt: D;
 
@@ -61,19 +66,22 @@ export class MdCalendar<D> implements AfterContentInit {
   @Input() startView: 'month' | 'year' = 'month';
 
   /** The currently selected date. */
-  @Input() selected: D;
+  @Input() selected: D | null;
 
   /** The minimum selectable date. */
-  @Input() minDate: D;
+  @Input() minDate: D | null;
 
   /** The maximum selectable date. */
-  @Input() maxDate: D;
+  @Input() maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
 
   /** Emits when the currently selected date changes. */
   @Output() selectedChange = new EventEmitter<D>();
+
+  /** Emits when any date is selected. */
+  @Output() userSelection = new EventEmitter<void>();
 
   /** Date filter for the month and year views. */
   _dateFilterForViews = (date: D) => {
@@ -123,13 +131,18 @@ export class MdCalendar<D> implements AfterContentInit {
               private _ngZone: NgZone,
               @Optional() @Inject(MATERIAL_COMPATIBILITY_MODE) public _isCompatibilityMode: boolean,
               @Optional() private _dateAdapter: DateAdapter<D>,
-              @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats) {
+              @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats,
+              changeDetectorRef: ChangeDetectorRef) {
+
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
+
     if (!this._dateFormats) {
       throw createMissingDateImplError('MD_DATE_FORMATS');
     }
+
+    this._intlChanges = _intl.changes.subscribe(() => changeDetectorRef.markForCheck());
   }
 
   ngAfterContentInit() {
@@ -138,11 +151,19 @@ export class MdCalendar<D> implements AfterContentInit {
     this._monthView = this.startView != 'year';
   }
 
+  ngOnDestroy() {
+    this._intlChanges.unsubscribe();
+  }
+
   /** Handles date selection in the month view. */
   _dateSelected(date: D): void {
     if (!this._dateAdapter.sameDate(date, this.selected)) {
       this.selectedChange.emit(date);
     }
+  }
+
+  _userSelected(): void {
+    this.userSelection.emit();
   }
 
   /** Handles month selection in the year view. */

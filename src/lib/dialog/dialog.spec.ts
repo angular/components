@@ -15,17 +15,17 @@ import {
   ViewContainerRef,
   Injector,
   Inject,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
-import {MdDialogModule} from './index';
-import {MdDialog, MD_DIALOG_DATA} from './dialog';
 import {MdDialogContainer} from './dialog-container';
-import {OverlayContainer, ESCAPE} from '../core';
-import {MdDialogRef} from './dialog-ref';
-import {dispatchKeyboardEvent} from '../core/testing/dispatch-events';
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {ESCAPE} from '@angular/cdk/keycodes';
+import {dispatchKeyboardEvent} from '@angular/cdk/testing';
+import {MdDialogModule, MdDialogRef, MdDialog, MD_DIALOG_DATA} from './index';
 
 
 describe('MdDialog', () => {
@@ -117,6 +117,15 @@ describe('MdDialog', () => {
     expect(dialogContainerElement.getAttribute('role')).toBe('alertdialog');
   });
 
+  it('should apply the specified `aria-describedby`', () => {
+    dialog.open(PizzaMsg, { ariaDescribedBy: 'description-element' });
+
+    viewContainerFixture.detectChanges();
+
+    let dialogContainerElement = overlayContainerElement.querySelector('md-dialog-container')!;
+    expect(dialogContainerElement.getAttribute('aria-describedby')).toBe('description-element');
+  });
+
   it('should close a dialog and get back a result', async(() => {
     let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
     let afterCloseCallback = jasmine.createSpy('afterClose callback');
@@ -142,6 +151,31 @@ describe('MdDialog', () => {
     viewContainerFixture.whenStable().then(() => {
       expect(overlayContainerElement.querySelector('md-dialog-container')).toBeNull();
     });
+  }));
+
+  it('should close from a ViewContainerRef with OnPush change detection', fakeAsync(() => {
+    const onPushFixture = TestBed.createComponent(ComponentWithOnPushViewContainer);
+
+    onPushFixture.detectChanges();
+
+    const dialogRef = dialog.open(PizzaMsg, {
+      viewContainerRef: onPushFixture.componentInstance.viewContainerRef
+    });
+
+    flushMicrotasks();
+    onPushFixture.detectChanges();
+    flushMicrotasks();
+
+    expect(overlayContainerElement.querySelectorAll('md-dialog-container').length)
+        .toBe(1, 'Expected one open dialog.');
+
+    dialogRef.close();
+    flushMicrotasks();
+    onPushFixture.detectChanges();
+    tick(500);
+
+    expect(overlayContainerElement.querySelectorAll('md-dialog-container').length)
+        .toBe(0, 'Expected no open dialogs.');
   }));
 
   it('should close when clicking on the overlay backdrop', async(() => {
@@ -170,32 +204,31 @@ describe('MdDialog', () => {
   });
 
   it('should notify the observers if all open dialogs have finished closing', async(() => {
-    const ref1 = dialog.open(PizzaMsg, {
-      viewContainerRef: testViewContainerRef
-    });
-    const ref2 = dialog.open(ContentElementDialog, {
-      viewContainerRef: testViewContainerRef
-    });
-    let allClosed = false;
+    const ref1 = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
+    const ref2 = dialog.open(ContentElementDialog, { viewContainerRef: testViewContainerRef });
+    const spy = jasmine.createSpy('afterAllClosed spy');
 
-    dialog.afterAllClosed.subscribe(() => {
-      allClosed = true;
-    });
+    dialog.afterAllClosed.subscribe(spy);
 
     ref1.close();
     viewContainerFixture.detectChanges();
 
     viewContainerFixture.whenStable().then(() => {
-      expect(allClosed).toBeFalsy();
+      expect(spy).not.toHaveBeenCalled();
 
       ref2.close();
       viewContainerFixture.detectChanges();
-
-      viewContainerFixture.whenStable().then(() => {
-        expect(allClosed).toBeTruthy();
-      });
+      viewContainerFixture.whenStable().then(() => expect(spy).toHaveBeenCalled());
     });
   }));
+
+  it('should emit the afterAllClosed stream on subscribe if there are no open dialogs', () => {
+    const spy = jasmine.createSpy('afterAllClosed spy');
+
+    dialog.afterAllClosed.subscribe(spy);
+
+    expect(spy).toHaveBeenCalled();
+  });
 
   it('should should override the width of the overlay pane', () => {
     dialog.open(PizzaMsg, {
@@ -310,7 +343,7 @@ describe('MdDialog', () => {
   });
 
   it('should allow setting the layout direction', () => {
-    let dialogRef = dialog.open(PizzaMsg, { direction: 'rtl' });
+    dialog.open(PizzaMsg, { direction: 'rtl' });
 
     viewContainerFixture.detectChanges();
 
@@ -376,14 +409,25 @@ describe('MdDialog', () => {
 
   it('should have the componentInstance available in the afterClosed callback', fakeAsync(() => {
     let dialogRef = dialog.open(PizzaMsg);
+    let spy = jasmine.createSpy('afterClosed spy');
+
+    flushMicrotasks();
+    viewContainerFixture.detectChanges();
+    flushMicrotasks();
 
     dialogRef.afterClosed().subscribe(() => {
+      spy();
       expect(dialogRef.componentInstance).toBeTruthy('Expected component instance to be defined.');
     });
 
     dialogRef.close();
-    tick(500);
+
+    flushMicrotasks();
     viewContainerFixture.detectChanges();
+    tick(500);
+
+    // Ensure that the callback actually fires.
+    expect(spy).toHaveBeenCalled();
   }));
 
   describe('passing in data', () => {
@@ -421,6 +465,30 @@ describe('MdDialog', () => {
       expect(dialogRef.componentInstance).toBeFalsy('Expected reference to have been cleared.');
     });
   }));
+
+  it('should assign a unique id to each dialog', () => {
+    const one = dialog.open(PizzaMsg);
+    const two = dialog.open(PizzaMsg);
+
+    expect(one.id).toBeTruthy();
+    expect(two.id).toBeTruthy();
+    expect(one.id).not.toBe(two.id);
+  });
+
+  it('should allow for the id to be overwritten', () => {
+    const dialogRef = dialog.open(PizzaMsg, { id: 'pizza' });
+    expect(dialogRef.id).toBe('pizza');
+  });
+
+  it('should throw when trying to open a dialog with the same id as another dialog', () => {
+    dialog.open(PizzaMsg, { id: 'pizza' });
+    expect(() => dialog.open(PizzaMsg, { id: 'pizza' })).toThrowError(/must be unique/g);
+  });
+
+  it('should be able to find a dialog by id', () => {
+    const dialogRef = dialog.open(PizzaMsg, { id: 'pizza' });
+    expect(dialog.getDialogById('pizza')).toBe(dialogRef);
+  });
 
   describe('disableClose option', () => {
     it('should prevent closing via clicks on the backdrop', () => {
@@ -557,12 +625,12 @@ describe('MdDialog', () => {
       document.body.appendChild(button);
       button.focus();
 
-      let dialogRef = dialog.open(PizzaMsg, {
-        viewContainerRef: testViewContainerRef
-      });
+      let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
 
+      flushMicrotasks();
       viewContainerFixture.detectChanges();
       flushMicrotasks();
+
       expect(document.activeElement.id)
           .not.toBe('dialog-trigger', 'Expected the focus to change when dialog was opened.');
 
@@ -570,9 +638,9 @@ describe('MdDialog', () => {
       expect(document.activeElement.id).not.toBe('dialog-trigger',
           'Expcted the focus not to have changed before the animation finishes.');
 
-      tick(500);
-      viewContainerFixture.detectChanges();
       flushMicrotasks();
+      viewContainerFixture.detectChanges();
+      tick(500);
 
       expect(document.activeElement.id).toBe('dialog-trigger',
           'Expected that the trigger was refocused after the dialog is closed.');
@@ -594,9 +662,12 @@ describe('MdDialog', () => {
 
       let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
 
-      dialogRef.afterClosed().subscribe(() => input.focus());
+      tick(500);
+      viewContainerFixture.detectChanges();
 
+      dialogRef.afterClosed().subscribe(() => input.focus());
       dialogRef.close();
+
       tick(500);
       viewContainerFixture.detectChanges();
       flushMicrotasks();
@@ -666,7 +737,7 @@ describe('MdDialog', () => {
       });
     }));
 
-    it('should set the aria-labelled by attribute to the id of the title', async(() => {
+    it('should set the aria-labelledby attribute to the id of the title', async(() => {
       let title = overlayContainerElement.querySelector('[md-dialog-title]')!;
       let container = overlayContainerElement.querySelector('md-dialog-container')!;
 
@@ -767,6 +838,14 @@ class DirectiveWithViewContainer {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: 'hello',
+})
+class ComponentWithOnPushViewContainer {
+  constructor(public viewContainerRef: ViewContainerRef) { }
+}
+
+@Component({
   selector: 'arbitrary-component',
   template: `<dir-with-view-container></dir-with-view-container>`,
 })
@@ -820,6 +899,7 @@ const TEST_DIRECTIVES = [
   ComponentWithChildViewContainer,
   PizzaMsg,
   DirectiveWithViewContainer,
+  ComponentWithOnPushViewContainer,
   ContentElementDialog,
   DialogWithInjectedData
 ];

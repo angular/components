@@ -1,4 +1,5 @@
 <ngx-charts-line-chart
+  *ngIf="chartData.length"
   [scheme]="colorScheme"
   [results]="chartData"
   [gradient]="false"
@@ -12,3 +13,5 @@
   [yAxisLabel]="yAxisLabel"
   [autoScale]="true">
 </ngx-charts-line-chart>
+
+<md-spinner *ngIf="!chartData.length" class="payload-chart-loading"></md-spinner>

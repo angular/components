@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule, ModuleWithProviders} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CompatibilityModule, UNIQUE_SELECTION_DISPATCHER_PROVIDER} from '../core';
+import {CompatibilityModule, StyleModule, UNIQUE_SELECTION_DISPATCHER_PROVIDER} from '../core';
 import {
   MdExpansionPanelHeader,
   MdExpansionPanelDescription,
@@ -24,7 +24,7 @@ import {
 } from './accordion';
 
 @NgModule({
-  imports: [CompatibilityModule, CommonModule],
+  imports: [CompatibilityModule, CommonModule, StyleModule],
   exports: [
     CdkAccordion,
     MdAccordion,

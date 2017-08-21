@@ -366,7 +366,7 @@ $mat-light-green: (
     400: $black-87-opacity,
     500: $black-87-opacity,
     600: $black-87-opacity,
-    700: $black-87-opacity,
+    700: white,
     800: white,
     900: white,
     A100: $black-87-opacity,
@@ -659,6 +659,8 @@ $mat-light-theme-background: (
   selected-button: map_get($mat-grey, 300),
   selected-disabled-button: map_get($mat-grey, 400),
   disabled-button-toggle: map_get($mat-grey, 200),
+  unselected-chip: map_get($mat-grey, 300),
+  disabled-list-option: map_get($mat-grey, 200),
 );
 
 // Background palette for dark themes.
@@ -674,7 +676,9 @@ $mat-dark-theme-background: (
   focused-button: $white-6-opacity,
   selected-button: map_get($mat-grey, 900),
   selected-disabled-button: map_get($mat-grey, 800),
-  disabled-button-toggle: map_get($mat-grey, 1000),
+  disabled-button-toggle: black,
+  unselected-chip: map_get($mat-grey, 700),
+  disabled-list-option: black,
 );
 
 // Foreground palette for light themes.
@@ -690,6 +694,7 @@ $mat-light-theme-foreground: (
   icon:              rgba(black, 0.54),
   icons:             rgba(black, 0.54),
   text:              rgba(black, 0.87),
+  slider-min:        rgba(black, 0.87),
   slider-off:        rgba(black, 0.26),
   slider-off-active: rgba(black, 0.38),
 );
@@ -707,6 +712,7 @@ $mat-dark-theme-foreground: (
   icon:              white,
   icons:             white,
   text:              white,
+  slider-min:        white,
   slider-off:        rgba(white, 0.3),
   slider-off-active: rgba(white, 0.3),
 );

@@ -5,6 +5,8 @@
   @include mat-elevation-transition;
   box-sizing: content-box;
   display: block;
+  margin: 0;
+  transition: margin 225ms $mat-fast-out-slow-in-timing-function;
 
   &:not([class*='mat-elevation-z']) {
     @include mat-elevation(2);
@@ -19,6 +21,10 @@
   padding: 0 24px 16px;
 }
 
+.mat-expansion-panel-spacing {
+  margin: 16px 0;
+}
+
 .mat-action-row {
   border-top-style: solid;
   border-top-width: 1px;
@@ -29,5 +35,10 @@
 
   button.mat-button {
     margin-left: 8px;
+
+    [dir='rtl'] & {
+      margin-left: 0;
+      margin-right: 8px;
+    }
   }
 }

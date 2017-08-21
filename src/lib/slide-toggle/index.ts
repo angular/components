@@ -7,19 +7,19 @@
  */
 
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
+import {PlatformModule} from '@angular/cdk/platform';
 import {MdSlideToggle} from './slide-toggle';
 import {
   FOCUS_ORIGIN_MONITOR_PROVIDER,
   GestureConfig,
   MdCommonModule,
   MdRippleModule,
-  PlatformModule,
 } from '../core';
 
+
 @NgModule({
-  imports: [FormsModule, MdRippleModule, MdCommonModule, PlatformModule],
+  imports: [MdRippleModule, MdCommonModule, PlatformModule],
   exports: [MdSlideToggle, MdCommonModule],
   declarations: [MdSlideToggle],
   providers: [

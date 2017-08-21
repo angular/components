@@ -1,7 +1,7 @@
 The datepicker allows users to enter a date either through text input, or by choosing a date from
 the calendar. It is made up of several components and directives that work together:
 
-<!-- TODO: INSERT OVERVIEW EXAMPLE HERE -->
+<!-- example(datepicker-overview) -->
 
 ### Current state
 Currently the datepicker is in the beginning stages and supports basic date selection functionality.
@@ -25,19 +25,19 @@ An optional datepicker toggle button is available. A toggle can be added to the 
 
 ```html
 <input [mdDatepicker]="myDatepicker">
-<button [mdDatepickerToggle]="myDatepicker"></button>
+<md-datepicker-toggle [for]="myDatepicker"></md-datepicker-toggle>
 <md-datepicker #myDatepicker></md-datepicker>
 ```
 
-This works exactly the same with an input that is part of an `<md-input-container>` and the toggle
+This works exactly the same with an input that is part of an `<md-form-field>` and the toggle
 can easily be used as a prefix or suffix on the material input:
 
 ```html
-<md-input-container>
+<md-form-field>
   <input mdInput [mdDatepicker]="myDatepicker">
-  <button mdSuffix [mdDatepickerToggle]="myDatepicker"></button>
-</md-input-container>
-<md-datepicker #myDatepicker></md-datepicker>
+  <md-datepicker-toggle mdSuffix [for]="myDatepicker"></md-datepicker-toggle>
+  <md-datepicker #myDatepicker></md-datepicker>
+</md-form-field>
 ```
 
 ### Setting the calendar starting view
@@ -51,14 +51,7 @@ open to the month or year containing today's date. This behavior can be overridd
 `startAt` property of `md-datepicker`. In this case the calendar will open to the month or year
 containing the `startAt` date.
 
-```ts
-startDate = new Date(1990, 0, 1);
-```
-
-```html
-...
-<md-datepicker startView="year" [startAt]="startDate"></md-datepicker>
-```
+<!-- example(datepicker-start-view) -->
 
 ### Date validation
 There are three properties that add date validation to the datepicker input. The first two are the
@@ -66,6 +59,8 @@ There are three properties that add date validation to the datepicker input. The
 disable all dates on the calendar popup before or after the respective values and prevent the user
 from advancing the calendar past the `month` or `year` (depending on current view) containing the
 `min` or `max` date.
+
+<!-- example(datepicker-min-max) -->
 
 The second way to add date validation is using the `mdDatepickerFilter` property of the datepicker
 input. This property accepts a function of `<D> => boolean` (where `<D>` is the date type used by
@@ -77,16 +72,7 @@ difference between using `mdDatepickerFilter` vs using `min` or `max` is that fi
 dates before or after a certain point, will not prevent the user from advancing the calendar past
 that point.
 
-```ts
-myFilter = (d: Date) => d.getFullYear() > 2005
-minDate = new Date(2000, 0, 1);
-maxDate = new Date(2020, 11, 31);
-```
-
-```html
-<input [mdDatepicker]="d" [mdDatepickerFilter]="myFilter" [min]="minDate" [max]="maxDate" ngModel>
-<md-datepicker #d></md-datepicker>
-```
+<!-- example(datepicker-filter) -->
 
 In this example the user can back past 2005, but all of the dates before then will be unselectable.
 They will not be able to go further back in the calendar than 2000. If they manually type in a date
@@ -96,6 +82,17 @@ Each validation property has a different error that can be checked:
  * A value that violates the `min` property will have a `mdDatepickerMin` error.
  * A value that violates the `max` property will have a `mdDatepickerMax` error.
  * A value that violates the `mdDatepickerFilter` property will have a `mdDatepickerFilter` error.
+ 
+### Input and change events
+The input's native `input` and `change` events will only trigger due to user interaction with the
+input element; they will not fire when the user selects a date from the calendar popup. Because of
+this limitation, the datepicker input also has support for `dateInput` and `dateChange` events.
+These trigger when the user interacts with either the input or the popup.
+  
+```html
+<input [mdDatepicker]="d" (dateInput)="onInput($event)" (dateChange)="onChange($event)">
+<md-datepicker #d></md-datepicker>
+```
 
 ### Touch UI mode
 The datepicker normally opens as a popup under the input. However this is not ideal for touch
@@ -103,20 +100,13 @@ devices that don't have as much screen real estate and need bigger click targets
 `md-datepicker` has a `touchUi` property that can be set to `true` in order to enable a more touch
 friendly UI where the calendar opens in a large dialog.
 
+<!-- example(datepicker-touch) -->
+
 ### Manually opening and closing the calendar
 The calendar popup can be programmatically controlled using the `open` and `close` methods on the
 `md-datepicker`. It also has an `opened` property that reflects the status of the popup.
 
-```ts
-@Component({...})
-export class MyComponent implements AfterViewInit {
-  @ViewChild(MdDatepicker) dp: MdDatepicker<Date>;
-
-  ngAfterViewInit() {
-    dp.open();
-  }
-}
-```
+<!-- example(datepicker-api) -->
 
 ### Internationalization
 In order to support internationalization, the datepicker supports customization of the following
@@ -124,6 +114,35 @@ three pieces via injection:
  1. The date implementation that the datepicker accepts.
  2. The display and parse formats used by the datepicker.
  3. The message strings used in the datepicker's UI.
+
+#### Setting the locale code
+By default the datepicker will use the locale code from the `LOCALE_ID` injection token from
+`@angular/core`. If you want to override it, you can provide a new value for the token:
+
+```ts
+@NgModule({
+  providers: [
+    {provide: LOCALE_ID, useValue: 'en-GB'},
+  ],
+})
+export class MyApp {}
+```
+
+It's also possible to set the locale at runtime using the `setLocale` method of the `DateAdapter`.
+
+```ts
+import { DateAdapter, NativeDateAdapter } from '@angular/material';
+
+@Component({
+  selector:    'foo',
+  template: ''
+})
+export class FooComponent {
+  constructor(dateAdapter: DateAdapter<NativeDateAdapter>) {
+    dateAdapter.setLocale('de-DE');
+  }
+}
+```
 
 #### Choosing a date implementation and date format settings
 The datepicker was built to be date implementation agnostic. This means that it can be made to work

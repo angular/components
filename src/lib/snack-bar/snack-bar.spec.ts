@@ -7,11 +7,19 @@ import {
   flushMicrotasks,
   tick
 } from '@angular/core/testing';
-import {NgModule, Component, Directive, ViewChild, ViewContainerRef} from '@angular/core';
+import {NgModule, Component, Directive, ViewChild, ViewContainerRef, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MdSnackBarModule, MdSnackBar, MdSnackBarConfig, SimpleSnackBar} from './index';
-import {OverlayContainer, LiveAnnouncer} from '../core';
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
+import {
+  MdSnackBarModule,
+  MdSnackBar,
+  MdSnackBarConfig,
+  MdSnackBarRef,
+  SimpleSnackBar,
+  MD_SNACK_BAR_DATA,
+} from './index';
 
 
 // TODO(josephperrott): Update tests to mock waiting for time to complete for animations.
@@ -47,7 +55,7 @@ describe('MdSnackBar', () => {
 
   afterEach(() => {
     overlayContainerElement.innerHTML = '';
-    liveAnnouncer._removeLiveElement();
+    liveAnnouncer.ngOnDestroy();
   });
 
   beforeEach(() => {
@@ -174,17 +182,6 @@ describe('MdSnackBar', () => {
     });
   }));
 
-  it('should open a custom component', () => {
-    let config = {viewContainerRef: testViewContainerRef};
-    let snackBarRef = snackBar.openFromComponent(BurritosNotification, config);
-
-    expect(snackBarRef.instance instanceof BurritosNotification)
-      .toBe(true, 'Expected the snack bar content component to be BurritosNotification');
-    expect(overlayContainerElement.textContent!.trim())
-        .toBe('Burritos are on the way.',
-              `Expected the overlay text content to be 'Burritos are on the way'`);
-  });
-
   it('should set the animation state to visible on entry', () => {
     let config = {viewContainerRef: testViewContainerRef};
     let snackBarRef = snackBar.open(simpleMessage, undefined, config);
@@ -309,6 +306,29 @@ describe('MdSnackBar', () => {
       tick(500);
     }));
 
+  it('should allow manually closing with an action', fakeAsync(() => {
+    let dismissObservableCompleted = false;
+    let actionObservableCompleted = false;
+    let snackBarRef = snackBar.open('Some content');
+    viewContainerFixture.detectChanges();
+
+    snackBarRef.afterDismissed().subscribe(undefined, undefined, () => {
+      dismissObservableCompleted = true;
+    });
+    snackBarRef.onAction().subscribe(undefined, undefined, () => {
+      actionObservableCompleted = true;
+    });
+
+    snackBarRef.closeWithAction();
+    viewContainerFixture.detectChanges();
+    flushMicrotasks();
+
+    expect(dismissObservableCompleted).toBeTruthy('Expected the snack bar to be dismissed');
+    expect(actionObservableCompleted).toBeTruthy('Expected the snack bar to notify of action');
+
+    tick(500);
+  }));
+
   it('should dismiss automatically after a specified timeout', fakeAsync(() => {
     let dismissObservableCompleted = false;
     let config = new MdSnackBarConfig();
@@ -361,6 +381,60 @@ describe('MdSnackBar', () => {
     expect(pane.getAttribute('dir')).toBe('rtl', 'Expected the pane to be in RTL mode.');
   });
 
+  describe('with custom component', () => {
+    it('should open a custom component', () => {
+      const snackBarRef = snackBar.openFromComponent(BurritosNotification);
+
+      expect(snackBarRef.instance instanceof BurritosNotification)
+        .toBe(true, 'Expected the snack bar content component to be BurritosNotification');
+      expect(overlayContainerElement.textContent!.trim())
+          .toBe('Burritos are on the way.', 'Expected component to have the proper text.');
+    });
+
+    it('should inject the snack bar reference into the component', () => {
+      const snackBarRef = snackBar.openFromComponent(BurritosNotification);
+
+      expect(snackBarRef.instance.snackBarRef)
+        .toBe(snackBarRef, 'Expected component to have an injected snack bar reference.');
+    });
+
+    it('should be able to inject arbitrary user data', () => {
+      const snackBarRef = snackBar.openFromComponent(BurritosNotification, {
+        data: {
+          burritoType: 'Chimichanga'
+        }
+      });
+
+      expect(snackBarRef.instance.data).toBeTruthy('Expected component to have a data object.');
+      expect(snackBarRef.instance.data.burritoType)
+        .toBe('Chimichanga', 'Expected the injected data object to be the one the user provided.');
+    });
+
+    it('should allow manually closing with an action', fakeAsync(() => {
+      let dismissObservableCompleted = false;
+      let actionObservableCompleted = false;
+      const snackBarRef = snackBar.openFromComponent(BurritosNotification);
+      viewContainerFixture.detectChanges();
+
+      snackBarRef.afterDismissed().subscribe(undefined, undefined, () => {
+        dismissObservableCompleted = true;
+      });
+      snackBarRef.onAction().subscribe(undefined, undefined, () => {
+        actionObservableCompleted = true;
+      });
+
+      snackBarRef.closeWithAction();
+      viewContainerFixture.detectChanges();
+      flushMicrotasks();
+
+      expect(dismissObservableCompleted).toBeTruthy('Expected the snack bar to be dismissed');
+      expect(actionObservableCompleted).toBeTruthy('Expected the snack bar to notify of action');
+
+      tick(500);
+    }));
+
+  });
+
 });
 
 describe('MdSnackBar with parent MdSnackBar', () => {
@@ -396,7 +470,7 @@ describe('MdSnackBar with parent MdSnackBar', () => {
 
   afterEach(() => {
     overlayContainerElement.innerHTML = '';
-    liveAnnouncer._removeLiveElement();
+    liveAnnouncer.ngOnDestroy();
   });
 
   it('should close snackBars opened by parent when opening from child MdSnackBar', fakeAsync(() => {
@@ -453,7 +527,11 @@ class ComponentWithChildViewContainer {
 
 /** Simple component for testing ComponentPortal. */
 @Component({template: '<p>Burritos are on the way.</p>'})
-class BurritosNotification {}
+class BurritosNotification {
+  constructor(
+    public snackBarRef: MdSnackBarRef<BurritosNotification>,
+    @Inject(MD_SNACK_BAR_DATA) public data: any) { }
+}
 
 
 @Component({
