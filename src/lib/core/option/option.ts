@@ -223,7 +223,7 @@ export class MdOption {
    * @param options Flat list of all of the options.
    * @param optionGroups Flat list of all of the option groups.
    */
-  public static countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<MdOption>,
+  static countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<MdOption>,
     optionGroups: QueryList<MdOptgroup>): number {
 
     if (optionGroups.length) {

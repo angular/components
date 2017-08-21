@@ -3,12 +3,12 @@ import {FormControl, NgModel} from '@angular/forms';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
 
-interface State {
+export interface State {
   code: string;
   name: string;
 }
 
-interface StateGroup {
+export interface StateGroup {
   letter: string;
   states: State[];
 }
