@@ -66,7 +66,8 @@ export class MdBasicChip { }
     '(keydown)': '_handleKeydown($event)',
     '(focus)': '_hasFocus = true',
     '(blur)': '_hasFocus = false',
-  }
+  },
+
 })
 export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestroy, CanColor,
   CanDisable {
