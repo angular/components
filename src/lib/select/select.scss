@@ -66,14 +66,6 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
   }
 }
 
-.mat-select-measure-font-size {
-  position: absolute;
-  display: block;
-  height: 1em;
-  visibility: hidden;
-  pointer-events: none;
-}
-
 // Override optgroup and option to scale based on font-size of the trigger.
 .mat-select-panel {
   .mat-optgroup-label,
