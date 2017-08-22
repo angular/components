@@ -8,7 +8,7 @@
 
 import {
   ChangeDetectionStrategy,
-  Component,
+  Component, ContentChild,
   ContentChildren,
   ViewEncapsulation
 } from '@angular/core';
@@ -18,8 +18,21 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   moduleId: module.id,
+  selector: 'md-sidenav-content, mat-sidenav-content',
+  template: '<ng-content></ng-content>',
+  host: {
+    'class': 'mat-drawer-content mat-sidenav-content',
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+})
+export class MdSidenavContent {}
+
+
+@Component({
+  moduleId: module.id,
   selector: 'md-sidenav, mat-sidenav',
-  templateUrl: 'drawer.html',
+  template: '<ng-content></ng-content>',
   animations: [
     trigger('transform', [
       state('open, open-instant', style({
@@ -58,7 +71,7 @@ export class MdSidenav extends MdDrawer {}
 @Component({
   moduleId: module.id,
   selector: 'md-sidenav-container, mat-sidenav-container',
-  templateUrl: 'drawer-container.html',
+  templateUrl: 'sidenav-container.html',
   styleUrls: [
     'drawer.css',
     'drawer-transitions.css',
@@ -72,4 +85,6 @@ export class MdSidenav extends MdDrawer {}
 })
 export class MdSidenavContainer extends MdDrawerContainer {
   @ContentChildren(MdSidenav) _drawers;
+
+  @ContentChild(MdSidenavContent) _content;
 }
