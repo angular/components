@@ -29,7 +29,7 @@ import {Directionality, coerceBooleanProperty, coerceNumberProperty} from '../co
 import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {first, takeUntil, startWith, auditTime} from '../core/rxjs/index';
-import {Subscription} from 'rxjs/subscription';
+import {Subscription} from 'rxjs/Subscription';
 import {of as observableOf} from 'rxjs/observable/of';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {DOCUMENT} from '@angular/platform-browser';
@@ -398,8 +398,7 @@ export class MdDrawerContainer implements AfterContentInit {
           this._drawers.forEach(drawer => drawer.mode = 'over');
         }
         this.close();
-      }
-      if (this._element.nativeElement.offsetWidth > this.breakpointWidth) {
+      } else {
         if (this.breakpointChangeMode) {
           this._drawers.forEach(drawer => drawer.mode = 'side');
         }
