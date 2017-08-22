@@ -404,9 +404,9 @@ export class MdDrawerContainer implements AfterContentInit {
         }
         this.open();
       }
-    }
+    };
     this._updateDrawerSubscription = startWith.call(resize, null).subscribe(this._updateDrawer);
-    
+
   }
 
   ngOnDestroy() {
