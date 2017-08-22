@@ -11,20 +11,14 @@ import {CdkStepper, CdkStep} from './stepper';
 import {CommonModule} from '@angular/common';
 import {CdkStepLabel} from './step-label';
 import {CdkStepperNext, CdkStepperPrevious} from './stepper-button';
-import {CdkStepHeader} from './step-header';
-import {CdkStepContent} from './step-content';
 
 @NgModule({
   imports: [CommonModule],
-  exports: [CdkStep, CdkStepper, CdkStepLabel, CdkStepperNext, CdkStepperPrevious, CdkStepHeader,
-    CdkStepContent],
-  declarations: [CdkStep, CdkStepper, CdkStepLabel, CdkStepperNext, CdkStepperPrevious,
-    CdkStepHeader, CdkStepContent]
+  exports: [CdkStep, CdkStepper, CdkStepLabel, CdkStepperNext, CdkStepperPrevious],
+  declarations: [CdkStep, CdkStepper, CdkStepLabel, CdkStepperNext, CdkStepperPrevious]
 })
 export class CdkStepperModule {}
 
 export * from './stepper';
 export * from './step-label';
 export * from './stepper-button';
-export * from './step-header';
-export * from './step-content';

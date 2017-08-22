@@ -564,16 +564,14 @@ function assertCorrectStepIcon(stepperComponent: MdStepper,
                                fixture: ComponentFixture<any>,
                                isEditable: boolean,
                                icon: String) {
-  let stepHeaderComponent = fixture.debugElement
-      .queryAll(By.css('md-step-header'))[0].componentInstance;
   let nextButtonNativeEl = fixture.debugElement
       .queryAll(By.directive(MdStepperNext))[0].nativeElement;
-  expect(stepHeaderComponent._getIndicatorType()).toBe('number');
+  expect(stepperComponent._getIndicatorType(0)).toBe('number');
   stepperComponent._steps.toArray()[0].editable = isEditable;
   nextButtonNativeEl.click();
   fixture.detectChanges();
 
-  expect(stepHeaderComponent._getIndicatorType()).toBe(icon);
+  expect(stepperComponent._getIndicatorType(0)).toBe(icon);
 }
 
 @Component({

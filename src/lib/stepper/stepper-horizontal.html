@@ -2,11 +2,16 @@
   <ng-container *ngFor="let step of _steps; let i = index; let isLast = last">
     <div class="mat-stepper-header" #stepperHeader (click)="step.select()"
          (keydown)="_onKeydown($event)" [tabIndex]="_focusIndex == i ? 0 : -1">
-      <md-step-header  horizontal
+      <md-step-header  class="mat-horizontal-stepper-header"
                        [labelId]="_getStepLabelId(i)"
                        [contentId]="_getStepContentId(i)"
                        [index]="i"
-                       [selected]="selectedIndex == i">
+                       [icon]="_getIndicatorType(i)"
+                       [stepLabel]="step.stepLabel"
+                       [label]="step.label"
+                       [selected]="selectedIndex == i"
+                       [active]="step.completed || selectedIndex == i"
+                       [optional]="step.optional">
       </md-step-header>
     </div>
     <div *ngIf="!isLast" class="mat-stepper-horizontal-line"></div>
@@ -14,11 +19,12 @@
 </div>
 
 <div class="mat-horizontal-content-container">
-  <md-step-content *ngFor="let step of _steps; let i = index"
-                   horizontal
-                   [@stepTransition]="_getAnimationDirection(i)"
-                   [labelId]="_getStepLabelId(i)"
-                   [contentId]="_getStepContentId(i)"
-                   [selectedIndex]="selectedIndex"
-                   [index]="i" ></md-step-content>
+  <div *ngFor="let step of _steps; let i = index"
+       class="mat-horizontal-stepper-content" role="tabpanel"
+       [@stepTransition]="_getAnimationDirection(i)"
+       [id]="_getStepContentId(i)"
+       [attr.aria-labelledby]="_getStepLabelId(i)"
+       [attr.aria-expanded]="selectedIndex == i">
+    <ng-container [ngTemplateOutlet]="step.content"></ng-container>
+  </div>
 </div>

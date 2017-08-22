@@ -19,7 +19,7 @@ import {
   Optional,
   QueryList,
   SkipSelf,
-  ViewChildren
+  ViewChildren, ViewEncapsulation
 } from '@angular/core';
 import {MdStepLabel} from './step-label';
 import {
@@ -34,7 +34,8 @@ import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
   moduleId: module.id,
   selector: 'md-step, mat-step',
   templateUrl: 'step.html',
-  providers: [{provide: MD_ERROR_GLOBAL_OPTIONS, useExisting: MdStep}]
+  providers: [{provide: MD_ERROR_GLOBAL_OPTIONS, useExisting: MdStep}],
+  encapsulation: ViewEncapsulation.None
 })
 export class MdStep extends CdkStep implements ErrorOptions {
   /** Content for step label given by <ng-template matStepLabel> or <ng-template mdStepLabel>. */

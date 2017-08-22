@@ -1,5 +1,7 @@
 @import '../core/style/variables';
 
+$mat-horizontal-stepper-header-height: 72px !default;
+$mat-stepper-label-header-height: 24px !default;
 $mat-stepper-side-gap: 24px !default;
 $mat-vertical-stepper-content-margin: 36px !default;
 $mat-stepper-line-width: 1px !default;
@@ -29,9 +31,34 @@ $mat-stepper-line-gap: 8px !default;
   min-width: $mat-stepper-line-gap + $mat-stepper-side-gap;
 }
 
+.mat-horizontal-stepper-header {
+  display: flex;
+  height: $mat-horizontal-stepper-header-height;
+  overflow: hidden;
+  align-items: center;
+  padding: 0 $mat-stepper-side-gap;
+
+  .mat-step-icon,
+  .mat-step-icon-not-touched {
+    margin-right: $mat-stepper-line-gap;
+    flex: none;
+  }
+}
+
+.mat-vertical-stepper-header {
+  display: flex;
+  align-items: center;
+  padding: $mat-stepper-side-gap;
+  max-height: $mat-stepper-label-header-height;
+
+  .mat-step-icon,
+  .mat-step-icon-not-touched {
+    margin-right: $mat-vertical-stepper-content-margin - $mat-stepper-side-gap;
+  }
+}
+
 .mat-horizontal-stepper-content {
   overflow: hidden;
-  display: flex;
 
   &[aria-expanded='false'] {
     height: 0;
@@ -60,8 +87,11 @@ $mat-stepper-line-gap: 8px !default;
 }
 
 .mat-vertical-stepper-content {
-  display: flex;
   overflow: hidden;
+}
+
+.mat-vertical-content {
+  padding: 0 $mat-stepper-side-gap $mat-stepper-side-gap $mat-stepper-side-gap;
 }
 
 .mat-step:last-child {

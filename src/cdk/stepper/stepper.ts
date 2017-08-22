@@ -20,7 +20,8 @@ import {
   Component,
   ContentChild,
   ViewChild,
-  TemplateRef
+  TemplateRef,
+  ViewEncapsulation
 } from '@angular/core';
 import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '@angular/cdk/keycodes';
 import {CdkStepLabel} from './step-label';
@@ -53,7 +54,8 @@ export class StepperSelectionEvent {
 
 @Component({
   selector: 'cdk-step',
-  templateUrl: 'step.html'
+  templateUrl: 'step.html',
+  encapsulation: ViewEncapsulation.None
 })
 export class CdkStep {
   /** Template for step label if it exists. */
@@ -138,8 +140,8 @@ export class CdkStepper {
   @Input()
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
-    if (index < this._selectedIndex && !this._steps.toArray()[index].editable) { return; }
-    if (this._anyControlsInvalid(index)) {
+    if (this._anyControlsInvalid(index)
+        || index < this._selectedIndex && !this._steps.toArray()[index].editable) {
       // remove focus from clicked step header if the step is not able to be selected
       this._stepHeader.toArray()[index].nativeElement.blur();
     } else if (this._selectedIndex != index) {
@@ -199,6 +201,16 @@ export class CdkStepper {
       return 'next';
     } else {
       return 'current';
+    }
+  }
+
+  /** Returns the type of icon to be displayed. */
+  _getIndicatorType(index: number): 'number' | 'edit' | 'done' {
+    const step = this._steps.toArray()[index];
+    if (!step.completed || this._selectedIndex == index) {
+      return 'number';
+    } else {
+      return step.editable ? 'edit' : 'done';
     }
   }
 
