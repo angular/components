@@ -20,7 +20,8 @@ import {
   Component,
   ContentChild,
   ViewChild,
-  TemplateRef
+  TemplateRef,
+  ViewEncapsulation
 } from '@angular/core';
 import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '@angular/cdk/keycodes';
 import {CdkStepLabel} from './step-label';
@@ -53,7 +54,8 @@ export class StepperSelectionEvent {
 
 @Component({
   selector: 'cdk-step',
-  templateUrl: 'step.html'
+  templateUrl: 'step.html',
+  encapsulation: ViewEncapsulation.None
 })
 export class CdkStep {
   /** Template for step label if it exists. */
@@ -76,6 +78,35 @@ export class CdkStep {
   /** Label of the step. */
   @Input()
   label: string;
+
+  @Input()
+  get editable() { return this._editable; }
+  set editable(value: any) {
+    this._editable = coerceBooleanProperty(value);
+  }
+  private _editable = true;
+
+  /** Whether the completion of step is optional or not. */
+  @Input()
+  get optional() { return this._optional; }
+  set optional(value: any) {
+    this._optional = coerceBooleanProperty(value);
+  }
+  private _optional = false;
+
+  /** Return whether step is completed or not. */
+  @Input()
+  get completed() {
+    return this._customCompleted == null ? this._defaultCompleted : this._customCompleted;
+  }
+  set completed(value: any) {
+    this._customCompleted = coerceBooleanProperty(value);
+  }
+  private _customCompleted: boolean | null = null;
+
+  private get _defaultCompleted() {
+    return this._stepControl ? this._stepControl.valid && this.interacted : this.interacted;
+  }
 
   constructor(private _stepper: CdkStepper) { }
 
@@ -109,7 +140,8 @@ export class CdkStepper {
   @Input()
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
-    if (this._anyControlsInvalid(index)) {
+    if (this._anyControlsInvalid(index)
+        || index < this._selectedIndex && !this._steps.toArray()[index].editable) {
       // remove focus from clicked step header if the step is not able to be selected
       this._stepHeader.toArray()[index].nativeElement.blur();
     } else if (this._selectedIndex != index) {
@@ -134,7 +166,7 @@ export class CdkStepper {
   _focusIndex: number = 0;
 
   /** Used to track unique ID for each stepper component. */
-  private _groupId: number;
+  _groupId: number;
 
   constructor() {
     this._groupId = nextId++;
@@ -169,6 +201,16 @@ export class CdkStepper {
       return 'next';
     } else {
       return 'current';
+    }
+  }
+
+  /** Returns the type of icon to be displayed. */
+  _getIndicatorType(index: number): 'number' | 'edit' | 'done' {
+    const step = this._steps.toArray()[index];
+    if (!step.completed || this._selectedIndex == index) {
+      return 'number';
+    } else {
+      return step.editable ? 'edit' : 'done';
     }
   }
 

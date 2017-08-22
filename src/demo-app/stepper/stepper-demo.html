@@ -19,13 +19,13 @@
       </div>
     </md-step>
 
-    <md-step formGroupName="1" [stepControl]="formArray.get([1])">
+    <md-step formGroupName="1" [stepControl]="formArray.get([1])" optional>
       <ng-template mdStepLabel>
-        <div>Fill out your phone number</div>
+        <div>Fill out your email address</div>
       </ng-template>
       <md-input-container>
-        <input mdInput placeholder="Phone number" formControlName="phoneFormCtrl">
-        <md-error>This field is required</md-error>
+        <input mdInput placeholder="Email address" formControlName="emailFormCtrl">
+        <md-error>The input is invalid.</md-error>
       </md-input-container>
       <div>
         <button md-button mdStepperPrevious type="button">Back</button>
@@ -62,12 +62,12 @@
     </form>
   </md-step>
 
-  <md-step [stepControl]="phoneFormGroup">
-    <form [formGroup]="phoneFormGroup">
+  <md-step [stepControl]="emailFormGroup" optional>
+    <form [formGroup]="emailFormGroup">
       <ng-template mdStepLabel>Fill out your phone number</ng-template>
       <md-form-field>
-        <input mdInput placeholder="Phone number" formControlName="phoneCtrl" required>
-        <md-error>This field is required</md-error>
+        <input mdInput placeholder="Email address" formControlName="emailCtrl">
+        <md-error>The input is invalid</md-error>
       </md-form-field>
       <div>
         <button md-button mdStepperPrevious>Back</button>
@@ -88,30 +88,28 @@
 </md-horizontal-stepper>
 
 <h3>Vertical Stepper Demo</h3>
+<md-checkbox [(ngModel)]="isNonEditable">Make steps non-editable</md-checkbox>
 <md-vertical-stepper>
-  <md-step>
+  <md-step [editable]="!isNonEditable">
     <ng-template mdStepLabel>Fill out your name</ng-template>
     <md-form-field>
       <input mdInput placeholder="First Name">
-      <md-error>This field is required</md-error>
     </md-form-field>
 
     <md-form-field>
       <input mdInput placeholder="Last Name">
-      <md-error>This field is required</md-error>
     </md-form-field>
     <div>
       <button md-button mdStepperNext type="button">Next</button>
     </div>
   </md-step>
 
-  <md-step>
+  <md-step [editable]="!isNonEditable">
     <ng-template mdStepLabel>
       <div>Fill out your phone number</div>
     </ng-template>
     <md-form-field>
       <input mdInput placeholder="Phone number">
-      <md-error>This field is required</md-error>
     </md-form-field>
     <div>
       <button md-button mdStepperPrevious type="button">Back</button>
@@ -119,13 +117,12 @@
     </div>
   </md-step>
 
-  <md-step>
+  <md-step [editable]="!isNonEditable">
     <ng-template mdStepLabel>
       <div>Fill out your address</div>
     </ng-template>
     <md-form-field>
       <input mdInput placeholder="Address">
-      <md-error>This field is required</md-error>
     </md-form-field>
     <div>
       <button md-button mdStepperPrevious type="button">Back</button>
@@ -148,12 +145,10 @@
     <ng-template mdStepLabel>Fill out your name</ng-template>
     <md-form-field>
       <input mdInput placeholder="First Name">
-      <md-error>This field is required</md-error>
     </md-form-field>
 
     <md-form-field>
       <input mdInput placeholder="Last Name">
-      <md-error>This field is required</md-error>
     </md-form-field>
     <div>
       <button md-button mdStepperNext type="button">Next</button>
@@ -161,12 +156,9 @@
   </md-step>
 
   <md-step>
-    <ng-template mdStepLabel>
-      <div>Fill out your phone number</div>
-    </ng-template>
+    <ng-template mdStepLabel>Fill out your phone number</ng-template>
     <md-form-field>
       <input mdInput placeholder="Phone number">
-      <md-error>This field is required</md-error>
     </md-form-field>
     <div>
       <button md-button mdStepperPrevious type="button">Back</button>
@@ -175,12 +167,9 @@
   </md-step>
 
   <md-step>
-    <ng-template mdStepLabel>
-      <div>Fill out your address</div>
-    </ng-template>
+    <ng-template mdStepLabel>Fill out your address</ng-template>
     <md-form-field>
       <input mdInput placeholder="Address">
-      <md-error>This field is required</md-error>
     </md-form-field>
     <div>
       <button md-button mdStepperPrevious type="button">Back</button>

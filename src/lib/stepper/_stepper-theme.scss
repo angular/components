@@ -7,30 +7,29 @@
   $background: map-get($theme, background);
   $primary: map-get($theme, primary);
 
-  .mat-horizontal-stepper-header, .mat-vertical-stepper-header {
-
+  .mat-step-header {
     &:focus,
     &:hover {
       background-color: mat-color($background, hover);
     }
 
-    .mat-stepper-label {
+    .mat-step-label-active {
       color: mat-color($foreground, text);
     }
 
-    .mat-stepper-index {
+    .mat-step-label-inactive,
+    .mat-step-optional {
+      color: mat-color($foreground, disabled-text);
+    }
+
+    .mat-step-icon {
       background-color: mat-color($primary);
       color: mat-color($primary, default-contrast);
     }
 
-    &[aria-selected='false'] {
-      .mat-stepper-label {
-        color: mat-color($foreground, disabled-text);
-      }
-
-      .mat-stepper-index {
-        background-color: mat-color($foreground, disabled-text);
-      }
+    .mat-step-icon-not-touched {
+      background-color: mat-color($foreground, disabled-text);
+      color: mat-color($primary, default-contrast);
     }
   }
 

@@ -19,8 +19,9 @@ import {
   Optional,
   QueryList,
   SkipSelf,
-  ViewChildren
-}from '@angular/core';
+  ViewChildren,
+  ViewEncapsulation
+} from '@angular/core';
 import {MdStepLabel} from './step-label';
 import {
   defaultErrorStateMatcher,
@@ -29,12 +30,14 @@ import {
   ErrorStateMatcher
 } from '../core/error/error-options';
 import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
+import {MdStepHeader} from './step-header';
 
 @Component({
   moduleId: module.id,
   selector: 'md-step, mat-step',
   templateUrl: 'step.html',
-  providers: [{provide: MD_ERROR_GLOBAL_OPTIONS, useExisting: MdStep}]
+  providers: [{provide: MD_ERROR_GLOBAL_OPTIONS, useExisting: MdStep}],
+  encapsulation: ViewEncapsulation.None
 })
 export class MdStep extends CdkStep implements ErrorOptions {
   /** Content for step label given by <ng-template matStepLabel> or <ng-template mdStepLabel>. */
@@ -66,7 +69,7 @@ export class MdStep extends CdkStep implements ErrorOptions {
 
 export class MdStepper extends CdkStepper implements ErrorOptions {
   /** The list of step headers of the steps in the stepper. */
-  @ViewChildren('stepHeader') _stepHeader: QueryList<ElementRef>;
+  @ViewChildren(MdStepHeader, {read: ElementRef}) _stepHeader: QueryList<ElementRef>;
 
   /** Steps that the stepper holds. */
   @ContentChildren(MdStep) _steps: QueryList<MdStep>;

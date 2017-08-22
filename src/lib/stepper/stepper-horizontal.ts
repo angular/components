@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {MdStepper} from './stepper';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
@@ -29,6 +29,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
           animate('500ms cubic-bezier(0.35, 0, 0.25, 1)'))
     ])
   ],
-  providers: [{provide: MdStepper, useExisting: MdHorizontalStepper}]
+  providers: [{provide: MdStepper, useExisting: MdHorizontalStepper}],
+  encapsulation: ViewEncapsulation.None
 })
 export class MdHorizontalStepper extends MdStepper { }

@@ -17,13 +17,22 @@ import {CdkStepperModule} from '@angular/cdk/stepper';
 import {MdCommonModule} from '../core';
 import {MdStepLabel} from './step-label';
 import {MdStepperNext, MdStepperPrevious} from './stepper-button';
+import {MdIconModule} from '../icon/index';
+import {MdStepHeader} from './step-header';
 
 @NgModule({
-  imports: [MdCommonModule, CommonModule, PortalModule, MdButtonModule, CdkStepperModule],
+  imports: [
+    MdCommonModule,
+    CommonModule,
+    PortalModule,
+    MdButtonModule,
+    CdkStepperModule,
+    MdIconModule
+  ],
   exports: [MdCommonModule, MdHorizontalStepper, MdVerticalStepper, MdStep, MdStepLabel, MdStepper,
-    MdStepperNext, MdStepperPrevious],
+    MdStepperNext, MdStepperPrevious, MdStepHeader],
   declarations: [MdHorizontalStepper, MdVerticalStepper, MdStep, MdStepLabel, MdStepper,
-    MdStepperNext, MdStepperPrevious],
+    MdStepperNext, MdStepperPrevious, MdStepHeader],
 })
 export class MdStepperModule {}
 
@@ -32,3 +41,4 @@ export * from './stepper-vertical';
 export * from './step-label';
 export * from './stepper';
 export * from './stepper-button';
+export * from './step-header';
