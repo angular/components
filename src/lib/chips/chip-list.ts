@@ -20,7 +20,7 @@ import {
   Renderer2,
   Self,
 } from '@angular/core';
-
+import {ControlValueAccessor, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
 import {MdChip} from './chip';
 import {MdChipInput} from './chip-input';
 import {MdFormFieldControl} from '../form-field/form-field-control';
@@ -30,7 +30,6 @@ import {Directionality} from '@angular/cdk/bidi';
 import {Subscription} from 'rxjs/Subscription';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Subject} from 'rxjs/Subject';
-import {  NgControl } from '@angular/forms';
 
 let nextUniqueId = 0;
 
@@ -62,7 +61,8 @@ let nextUniqueId = 0;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MdChipList implements MdFormFieldControl<any>, AfterContentInit, OnDestroy {
+export class MdChipList implements MdFormFieldControl<any>, ControlValueAccessor, CanDisable,
+    AfterContentInit, OnDestroy {
 
   /** When a chip is destroyed, we track the index so we can focus the appropriate next chip. */
   protected _lastDestroyedIndex: number|null = null;
