@@ -106,8 +106,7 @@
              translateZ(0.001px);
   // The tricks above used to smooth out the animation on chrome and firefox actually make things
   // worse on IE, so we don't include them in the IE version.
-  -ms-transform: translateY(-$infix-margin-top - $infix-padding)
-  scale($font-scale);
+  -ms-transform: translateY(-$infix-margin-top - $infix-padding) scale($font-scale);
 
   width: 100% / $font-scale;
 }
@@ -182,11 +181,15 @@
   }
 
   .mat-form-field-can-float {
-    &.mat-form-field-should-float .mat-form-field-placeholder,
+    &.mat-form-field-should-float .mat-form-field-placeholder {
+      @include _mat-form-field-placeholder-floating(
+          $subscript-font-scale, $infix-padding, $infix-margin-top);
+    }
+
     .mat-form-field-autofill-control:-webkit-autofill + .mat-form-field-placeholder-wrapper
         .mat-form-field-placeholder {
       @include _mat-form-field-placeholder-floating(
-          $subscript-font-scale, $infix-padding, $infix-margin-top);
+              $subscript-font-scale, $infix-padding, $infix-margin-top);
     }
   }
 
