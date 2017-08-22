@@ -18,14 +18,20 @@ import {
   Optional,
   ElementRef,
   Renderer2,
+  Self,
 } from '@angular/core';
-
+import {ControlValueAccessor, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
 import {MdChip} from './chip';
+import {MdChipInput} from './chip-input';
+import {MdFormFieldControl} from '../form-field/form-field-control';
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {BACKSPACE, DELETE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '../core/keyboard/keycodes';
 import {Directionality} from '@angular/cdk/bidi';
 import {Subscription} from 'rxjs/Subscription';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Subject} from 'rxjs/Subject';
+
+let nextUniqueId = 0;
 
 /**
  * A material design chips component (named ChipList for it's similarity to the List component).
@@ -44,20 +50,19 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
   exportAs: 'mdChipList',
   host: {
     '[attr.tabindex]': '_tabIndex',
+    '[attr.aria-describedby]': '_ariaDescribedby || null',
     'role': 'listbox',
     'class': 'mat-chip-list',
-
     '(focus)': 'focus()',
     '(keydown)': '_keydown($event)'
   },
-  queries: {
-    chips: new ContentChildren(MdChip)
-  },
+  providers: [{provide: MdFormFieldControl, useExisting: MdChipList}],
   styleUrls: ['chips.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MdChipList implements AfterContentInit, OnDestroy {
+export class MdChipList implements MdFormFieldControl<any>, ControlValueAccessor, CanDisable,
+    AfterContentInit, OnDestroy {
 
   /** When a chip is destroyed, we track the index so we can focus the appropriate next chip. */
   protected _lastDestroyedIndex: number|null = null;
@@ -71,7 +76,34 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   /** Whether or not the chip is selectable. */
   protected _selectable: boolean = true;
 
-  protected _inputElement: HTMLInputElement;
+  /** The chip input to add more chips */
+  protected _chipInput: MdChipInput;
+
+  /** The aria-describedby attribute on the chip list for improved a11y. */
+  protected _ariaDescribedby: string;
+
+  /**
+   * Stream that emits whenever the state of the input changes such that the wrapping `MdFormField`
+   * needs to run change detection.
+   */
+  stateChanges = new Subject<void>();
+
+  /** Id of the chip list */
+  protected  _id: string;
+
+  /** Uid of the chip list */
+  protected  _uid: string = `md-chip-list-${nextUniqueId++}`;
+
+  /** Whether this is required */
+  protected _required: boolean = false;
+
+  /** Whether this is disabled */
+  protected _disabled: boolean = false;
+
+  protected _value: any;
+
+  /** Placeholder for the chip list. Alternatively, placeholder can set to MdChipInput */
+  protected _placeholder: string;
 
   /** Tab index for the chip list. */
   _tabIndex = 0;
@@ -79,12 +111,62 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   /** The FocusKeyManager which handles focus. */
   _keyManager: FocusKeyManager<MdChip>;
 
-  /** The chip components contained within this chip list. */
-  chips: QueryList<MdChip>;
+  /** Required for FormFieldControl */
+  @Input()
+  get value() { return this._value; }
+  set value(newValue: any) { this._value = newValue; }
 
-  constructor(protected _renderer: Renderer2, protected _elementRef: ElementRef,
-              @Optional() private _dir: Directionality) {
+  /** Required for FormFieldControl. The ID of the chip list */
+  @Input()
+  set id(value: string) { this._id = value; }
+  get id() { return this._id || this._uid; }
+
+  /** Required for FormFieldControl. Whether the chip list is required. */
+  @Input()
+  set required(value: any) { this._required = coerceBooleanProperty(value); }
+  get required() {
+    return this._required;
   }
+
+  /** For FormFieldControl. Use chip input's placholder if there's a chip input */
+  @Input()
+  set placeholder(value: string) { this._placeholder = value; }
+  get placeholder() {
+    if (this._chipInput) {
+      return this._chipInput.placeholder;
+    } else {
+      return this._placeholder;
+    }
+  }
+
+  /** For FormFieldControl. If any of the chips has focus, or the chip input has focus */
+  get focused() {
+    return !!this.chips.find((chip) => chip._hasFocus) ||
+      (this._chipInput && this._chipInput.focused);
+  }
+
+  /** For FormFieldControl. The chip list is empty if there's no chip and there's no input */
+  get empty(): boolean {
+    return (!this._chipInput || this._chipInput.empty) && this.chips.length === 0;
+  }
+
+  /** For FormFieldControl. The disabled is not depend on chip input */
+  @Input()
+  get disabled() { return this.ngControl ? this.ngControl.disabled : this._disabled; }
+  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+
+  get errorState(): boolean {
+    return this._chipInput && this._chipInput.errorState;
+  }
+
+
+  /** The chip components contained within this chip list. */
+  @ContentChildren(MdChip) chips: QueryList<MdChip>;
+
+  constructor(protected _renderer: Renderer2,
+              protected _elementRef: ElementRef,
+              @Optional() private _dir: Directionality,
+              @Optional() @Self() public ngControl: NgControl) {}
 
   ngAfterContentInit(): void {
     this._keyManager = new FocusKeyManager<MdChip>(this.chips).withWrap();
@@ -93,6 +175,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
     // it back to the first chip when the user tabs out.
     this._tabOutSubscription = this._keyManager.tabOut.subscribe(() => {
       this._tabIndex = -1;
+      console.log(`${this.id}  tab out`);
       setTimeout(() => this._tabIndex = 0);
     });
 
@@ -139,8 +222,8 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   }
 
   /** Associates an HTML input element with this chip list. */
-  registerInput(inputElement: HTMLInputElement) {
-    this._inputElement = inputElement;
+  registerInput(inputElement: MdChipInput) {
+    this._chipInput = inputElement;
   }
 
   /**
@@ -149,8 +232,12 @@ export class MdChipList implements AfterContentInit, OnDestroy {
    */
   focus() {
     // TODO: ARIA says this should focus the first `selected` chip if any are selected.
-    if (this.chips.length > 0) {
+    // Focus on first element if there's no chipInput inside chip-list
+    if (this._chipInput && this._chipInput.focused) {
+      // do nothing
+    } else if (this.chips.length > 0) {
       this._keyManager.setFirstItemActive();
+      this.stateChanges.next();
     } else {
       this._focusInput();
     }
@@ -158,8 +245,8 @@ export class MdChipList implements AfterContentInit, OnDestroy {
 
   /** Attempt to focus an input if we have one. */
   _focusInput() {
-    if (this._inputElement) {
-      this._inputElement.focus();
+    if (this._chipInput) {
+      this._chipInput.focus();
     }
   }
 
@@ -195,6 +282,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
         this._keyManager.onKeydown(event);
       }
     }
+    this.stateChanges.next();
   }
 
   /**
@@ -236,6 +324,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
       if (this._isValidIndex(chipIndex)) {
         this._keyManager.updateActiveItemIndex(chipIndex);
       }
+      this.stateChanges.next();
     });
 
     // On destroy, remove the item from our list, and setup our destroyed focus check
@@ -256,6 +345,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
 
       }
 
+      this.stateChanges.next();
       this._chipSet.delete(chip);
       chip.destroy.unsubscribe();
     });
@@ -305,4 +395,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
 
     return false;
   }
+
+  // Implemented as part of MdFormFieldControl.
+  setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
 }
