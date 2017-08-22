@@ -25,7 +25,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import {animate, state, style, transition, trigger, AnimationEvent} from '@angular/animations';
-import {Directionality, coerceBooleanProperty} from '../core';
+import {Directionality, coerceBooleanProperty, coerceNumberProperty} from '../core';
 import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
 import {first, takeUntil, startWith, auditTime} from '../core/rxjs/index';
@@ -328,26 +328,30 @@ export class MdDrawerContainer implements AfterContentInit {
   /** Event emitted when the drawer backdrop is clicked. */
   @Output() backdropClick = new EventEmitter<void>();
 
-  /**
-   * Width of the container at which it breaks
-   * e.g., breakpointWidth="500"
-   */
-  @Input() breakpointWidth: number;
+  /** Breakpoint width (in px) at which the sidenav collapses. */
+
+  @Input()
+  get breakpointWidth() { return this._breakpointWidth; }
+  set breakpointWidth(v: number) {
+    this._breakpointWidth = coerceNumberProperty(v, this._breakpointWidth);
+  }
+  private _breakpointWidth: number;
 
   /** Whether the drawer changes modes when collapsing. */
   @Input()
-  get breakpointChangeMode(): boolean { return this._breakpointChangeMode; }
+  get breakpointChangeMode() { return this._breakpointChangeMode; }
   set breakpointChangeMode(value: boolean) {
     this._breakpointChangeMode = coerceBooleanProperty(value);
   }
-  private _breakpointChangeMode: boolean = true;
+  private _breakpointChangeMode = true;
 
   /**
    * Responsively toggle the drawer using the breakpoint.
    * Note that this only works when the window is rezied.
    * If you resize it some other way, call _updateDrawer().
    */
-  _updateDrawer: Subscription | null = null;
+  private _updateDrawerSubscription: Subscription | null = null;
+  private _updateDrawer() {}
 
   /** The drawer at the start/end position, independent of direction. */
   private _start: MdDrawer | null;
@@ -388,7 +392,7 @@ export class MdDrawerContainer implements AfterContentInit {
       auditTime.call(fromEvent(window, 'resize'), 150) :
       observableOf(null);
 
-    this._updateDrawer = startWith.call(resize, null).subscribe(() => {
+    this._updateDrawer = () => {
       if (this._element.nativeElement.offsetWidth < this.breakpointWidth) {
         if (this.breakpointChangeMode) {
           this._drawers.forEach(drawer => drawer.mode = 'over');
@@ -401,14 +405,14 @@ export class MdDrawerContainer implements AfterContentInit {
         }
         this.open();
       }
-    });
-
+    }
+    this._updateDrawerSubscription = startWith.call(resize, null).subscribe(this._updateDrawer);
+    
   }
 
   ngOnDestroy() {
-    if (this._updateDrawer) {
-      this._updateDrawer.unsubscribe();
-      this._updateDrawer = null;
+    if (this._updateDrawerSubscription) {
+      this._updateDrawerSubscription.unsubscribe();
     }
   }
 
