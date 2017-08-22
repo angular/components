@@ -118,9 +118,7 @@ describe('MatSelect', () => {
           }};
         }}
       ]
-    });
-
-    TestBed.compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(inject([ViewportRuler], (_ruler: ViewportRuler) => {
@@ -1760,7 +1758,7 @@ describe('MatSelect', () => {
             `Expected trigger label to align along x-axis, accounting for the padding in rtl.`);
       }));
 
-      it('should not adjust if all options are within a group, except the selected one',
+      fit('should not adjust if all options are within a group, except the selected one',
         fakeAsync(() => {
           groupFixture.componentInstance.control.setValue('mime-11');
           groupFixture.detectChanges();
