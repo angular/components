@@ -10,8 +10,9 @@
 @mixin mat-drawer-stacking-context() {
   position: relative;
 
-  // Use a transform to create a new stacking context.
-  transform: translate3d(0, 0, 0);
+  // Use a z-index to create a new stacking context. (We can't use transform because it breaks fixed
+  // positioning inside of the transformed element).
+  z-index: 1;
 }
 
 .mat-drawer-container {
