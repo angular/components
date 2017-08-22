@@ -6,10 +6,6 @@ $mat-stepper-line-gap: 8px !default;
 $mat-step-optional-font-size: 12px;
 $mat-step-header-icon-size: 16px !default;
 
-:host {
-  display: flex;
-}
-
 .mat-step-optional {
   font-size: $mat-step-optional-font-size;
 }

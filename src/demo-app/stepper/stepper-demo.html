@@ -64,7 +64,7 @@
 
   <md-step [stepControl]="emailFormGroup" optional>
     <form [formGroup]="emailFormGroup">
-      <ng-template mdStepLabel>Fill out your phone number</ng-template>
+      <ng-template mdStepLabel>Fill out your email address</ng-template>
       <md-form-field>
         <input mdInput placeholder="Email address" formControlName="emailCtrl">
         <md-error>The input is invalid</md-error>
@@ -139,10 +139,9 @@
   </md-step>
 </md-vertical-stepper>
 
-<h3>Horizontal Stepper Demo</h3>
+<h3>Horizontal Stepper Demo with Text Label</h3>
 <md-horizontal-stepper>
-  <md-step>
-    <ng-template mdStepLabel>Fill out your name</ng-template>
+  <md-step label="Fill out your name">
     <md-form-field>
       <input mdInput placeholder="First Name">
     </md-form-field>
@@ -155,8 +154,7 @@
     </div>
   </md-step>
 
-  <md-step>
-    <ng-template mdStepLabel>Fill out your phone number</ng-template>
+  <md-step label="Fill out your phone number">
     <md-form-field>
       <input mdInput placeholder="Phone number">
     </md-form-field>
@@ -166,8 +164,7 @@
     </div>
   </md-step>
 
-  <md-step>
-    <ng-template mdStepLabel>Fill out your address</ng-template>
+  <md-step label="Fill out your address">
     <md-form-field>
       <input mdInput placeholder="Address">
     </md-form-field>
@@ -177,24 +174,10 @@
     </div>
   </md-step>
 
-  <md-step>
-    <ng-template mdStepLabel>Confirm your information</ng-template>
+  <md-step label="Confirm your information">
     Everything seems correct.
     <div>
       <button md-button>Done</button>
-    </div>
-  </md-step>
-</md-horizontal-stepper>
-
-<h3>Horizontal Stepper Demo</h3>
-<md-horizontal-stepper>
-  <md-step *ngFor="let step of steps" [label]="step.label">
-    <md-form-field>
-      <input mdInput placeholder="Answer" [(ngModel)]="step.content">
-    </md-form-field>
-    <div>
-      <button md-button mdStepperPrevious>Back</button>
-      <button md-button mdStepperNext>Next</button>
     </div>
   </md-step>
 </md-horizontal-stepper>
