@@ -22,8 +22,6 @@ import {
   animate,
   transition
 } from '@angular/animations';
-import {MdSort, MdSortable} from './sort';
-import {MdSortHeaderIntl} from './sort-header-intl';
 import {CdkColumnDef} from '@angular/cdk/table';
 import {Subscription} from 'rxjs/Subscription';
 import {merge} from 'rxjs/observable/merge';
