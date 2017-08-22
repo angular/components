@@ -7,10 +7,10 @@
 <div [class.mat-step-label-active]="active"
      [class.mat-step-label-inactive]="!active">
   <!-- If there is a label template, use it. -->
-  <ng-container *ngIf="stepLabel" [ngTemplateOutlet]="stepLabel.template">
+  <ng-container *ngIf="_templateLabel" [ngTemplateOutlet]="label.template">
   </ng-container>
   <!-- It there is no label template, fall back to the text label. -->
-  <div class="mat-step-text-label" *ngIf="!stepLabel">{{label}}</div>
+  <div class="mat-step-text-label" *ngIf="_stringLabel">{{label}}</div>
 
   <div class="mat-step-optional" *ngIf="optional">Optional</div>
 </div>

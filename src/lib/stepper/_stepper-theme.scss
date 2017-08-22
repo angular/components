@@ -7,14 +7,12 @@
   $background: map-get($theme, background);
   $primary: map-get($theme, primary);
 
-  .mat-stepper-header {
+  .mat-step-header {
     &:focus,
     &:hover {
       background-color: mat-color($background, hover);
     }
-  }
 
-  .mat-step-header {
     .mat-step-label-active {
       color: mat-color($foreground, text);
     }

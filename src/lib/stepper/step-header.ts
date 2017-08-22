@@ -17,40 +17,21 @@ import {MdStepLabel} from './step-label';
   host: {
     'class': 'mat-step-header',
     'role': 'tab',
-    '[attr.id]': 'labelId',
-    '[attr.aria-controls]': 'contentId',
-    '[attr.aria-selected]': 'selected'
   },
   encapsulation: ViewEncapsulation.None
 })
 export class MdStepHeader {
-  /** Unique label ID of step header. */
-  @Input()
-  labelId: string;
-
-  /** Unique content ID of step content. */
-  @Input()
-  contentId: string;
-
   /** Icon for the given step. */
   @Input()
   icon: string;
 
-  /** Text label of the given step. */
+  /** Label of the given step. */
   @Input()
   get label() { return this._label; }
   set label(value: any) {
     this._label = value;
   }
-  private _label: string;
-
-  /** Templated label of the given step. */
-  @Input()
-  get stepLabel() { return this._stepLabel; }
-  set stepLabel(value: any) {
-    this._stepLabel = value;
-  }
-  private _stepLabel: MdStepLabel;
+  private _label: MdStepLabel | string;
 
   /** Index of the given step. */
   @Input()
@@ -83,4 +64,14 @@ export class MdStepHeader {
     this._optional = coerceBooleanProperty(value);
   }
   private _optional: boolean;
+
+  /** Returns string label of given step if it is a text label. */
+  get _stringLabel(): string | null {
+    return this.label instanceof MdStepLabel ? null : this.label;
+  }
+
+  /** Returns MdStepLabel if the label of given step is a template label. */
+  get _templateLabel(): MdStepLabel | null {
+    return this.label instanceof MdStepLabel ? this.label : null;
+  }
 }

@@ -4,6 +4,7 @@ $mat-stepper-side-gap: 24px !default;
 $mat-vertical-stepper-content-margin: 36px !default;
 $mat-stepper-line-gap: 8px !default;
 $mat-step-optional-font-size: 12px;
+$mat-step-header-icon-size: 16px !default;
 
 :host {
   display: flex;
@@ -18,9 +19,15 @@ $mat-step-optional-font-size: 12px;
   border-radius: 50%;
   height: $mat-stepper-label-header-height;
   width: $mat-stepper-label-header-height;
-  text-align: center;
-  line-height: $mat-stepper-label-header-height;
-  display: inline-block;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.mat-step-icon .mat-icon {
+  font-size: $mat-step-header-icon-size;
+  height: $mat-step-header-icon-size;
+  width: $mat-step-header-icon-size;
 }
 
 .mat-step-label-active,

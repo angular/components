@@ -449,7 +449,7 @@ function assertCorrectKeyboardInteraction(stepperComponent: MdStepper,
 function assertStepHeaderFocusNotCalled(stepperComponent: MdStepper,
                                         fixture: ComponentFixture<any>) {
   let stepHeaderEl = fixture.debugElement
-      .queryAll(By.css('.mat-stepper-header'))[1].nativeElement;
+      .queryAll(By.css('md-step-header'))[1].nativeElement;
   let nextButtonNativeEl = fixture.debugElement
       .queryAll(By.directive(MdStepperNext))[0].nativeElement;
   spyOn(stepHeaderEl, 'focus');
@@ -491,7 +491,7 @@ function assertLinearStepperValidity(stepHeaderEl: HTMLElement,
 /** Asserts that step header focus is blurred if the step cannot be selected upon header click. */
 function assertStepHeaderBlurred(fixture: ComponentFixture<any>) {
   let stepHeaderEl = fixture.debugElement
-      .queryAll(By.css('.mat-stepper-header'))[1].nativeElement;
+      .queryAll(By.css('md-step-header'))[1].nativeElement;
   spyOn(stepHeaderEl, 'blur');
   stepHeaderEl.click();
   fixture.detectChanges();
