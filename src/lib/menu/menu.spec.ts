@@ -864,7 +864,7 @@ describe('MatMenu', () => {
       expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + MENU_PANEL_TOP_PADDING);
     });
 
-    it('should fall back to aligning to the right edge of the trigger in rtl', () => {
+    fit('should fall back to aligning to the right edge of the trigger in rtl', fakeAsync(() => {
       dir = 'rtl';
       compileTestComponent();
       instance.rootTriggerEl.nativeElement.style.position = 'fixed';
@@ -872,16 +872,22 @@ describe('MatMenu', () => {
       instance.rootTriggerEl.nativeElement.style.top = '50%';
       instance.rootTrigger.openMenu();
       fixture.detectChanges();
+      tick(1000);
 
       instance.levelOneTrigger.openMenu();
       fixture.detectChanges();
+      tick(1000);
+
+
+      fixture.detectChanges();
+      tick(1000);
 
       const triggerRect = overlay.querySelector('#level-one-trigger')!.getBoundingClientRect();
       const panelRect = overlay.querySelectorAll('.mat-menu-panel')[1].getBoundingClientRect();
 
       expect(Math.round(triggerRect.right)).toBe(Math.round(panelRect.left));
       expect(Math.round(triggerRect.top)).toBe(Math.round(panelRect.top) + MENU_PANEL_TOP_PADDING);
-    });
+    }));
 
     it('should close all of the menus when an item is clicked', fakeAsync(() => {
       compileTestComponent();
@@ -990,7 +996,7 @@ describe('MatMenu', () => {
           .not.toContain('mat-elevation-z3', 'Expected no stacked elevation.');
     });
 
-    it('should close all of the menus when the root is closed programmatically', () => {
+    it('should close all of the menus when the root is closed programmatically', fakeAsync(() => {
       compileTestComponent();
       instance.rootTrigger.openMenu();
       fixture.detectChanges();
@@ -1007,9 +1013,10 @@ describe('MatMenu', () => {
 
       instance.rootTrigger.closeMenu();
       fixture.detectChanges();
+      tick(500);
 
       expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(0, 'Expected no open menus');
-    });
+    }));
 
     it('should toggle a nested menu when its trigger is added after init', fakeAsync(() => {
       compileTestComponent();
