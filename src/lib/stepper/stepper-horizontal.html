@@ -9,7 +9,7 @@
                      [attr.aria-selected]="selectedIndex == i"
                      [index]="i"
                      [icon]="_getIndicatorType(i)"
-                     [label]="step.stepLabel ? step.stepLabel : step.label"
+                     [label]="step.stepLabel || step.label"
                      [selected]="selectedIndex == i"
                      [active]="step.completed || selectedIndex == i"
                      [optional]="step.optional">

@@ -27,11 +27,7 @@ export class MdStepHeader {
 
   /** Label of the given step. */
   @Input()
-  get label() { return this._label; }
-  set label(value: any) {
-    this._label = value;
-  }
-  private _label: MdStepLabel | string;
+  label: MdStepLabel | string;
 
   /** Index of the given step. */
   @Input()
