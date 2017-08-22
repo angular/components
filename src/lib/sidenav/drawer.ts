@@ -20,6 +20,7 @@ import {
   ContentChildren,
   ElementRef,
   EventEmitter,
+  forwardRef,
   Inject,
   Input,
   NgZone,
@@ -60,11 +61,28 @@ export class MdDrawerToggleResult {
   template: '<ng-content></ng-content>',
   host: {
     'class': 'mat-drawer-content',
+    '[style.marginLeft.px]': '_margins.left',
+    '[style.marginRight.px]': '_margins.right',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MdDrawerContent {}
+export class MdDrawerContent implements AfterContentInit {
+  /** Margins to be applied to the content. */
+  _margins: {left: number, right: number} = {left: 0, right: 0};
+
+  constructor(
+      private _changeDetectorRef: ChangeDetectorRef,
+      @Inject(forwardRef(() => MdDrawerContainer)) private _container: MdDrawerContainer) {
+  }
+
+  ngAfterContentInit() {
+    this._container._contentMargins.subscribe((margins) => {
+      this._margins = margins;
+      this._changeDetectorRef.markForCheck();
+    });
+  }
+}
 
 
 /**
@@ -374,8 +392,7 @@ export class MdDrawerContainer implements AfterContentInit, OnDestroy {
   /** Subscription to the Directionality change EventEmitter. */
   private _dirChangeSubscription = Subscription.EMPTY;
 
-  /** Inline styles to be applied to the container. */
-  _styles: { marginLeft: string; marginRight: string; transform: string; };
+  _contentMargins = new Subject<{left: number, right: number}>();
 
   constructor(@Optional() private _dir: Directionality, private _element: ElementRef,
               private _renderer: Renderer2, private _ngZone: NgZone,
@@ -422,7 +439,7 @@ export class MdDrawerContainer implements AfterContentInit, OnDestroy {
       // Set the transition class on the container so that the animations occur. This should not
       // be set initially because animations should only be triggered via a change in state.
       this._renderer.addClass(this._element.nativeElement, 'mat-drawer-transition');
-      this._updateStyles();
+      this._updateContentMargins();
       this._changeDetectorRef.markForCheck();
     });
 
@@ -452,8 +469,10 @@ export class MdDrawerContainer implements AfterContentInit, OnDestroy {
   /** Subscribes to changes in drawer mode so we can run change detection. */
   private _watchDrawerMode(drawer: MdDrawer): void {
     if (drawer) {
-      takeUntil.call(drawer._modeChanged, this._drawers.changes).subscribe(
-          () => this._changeDetectorRef.markForCheck());
+      takeUntil.call(drawer._modeChanged, this._drawers.changes).subscribe(() => {
+        this._updateContentMargins();
+        this._changeDetectorRef.markForCheck()
+      });
     }
   }
 
@@ -519,29 +538,33 @@ export class MdDrawerContainer implements AfterContentInit, OnDestroy {
   }
 
   /**
-   * Return the width of the drawer, if it's in the proper mode and opened.
-   * This may relayout the view, so do not call this often.
-   * @param drawer
-   * @param mode
+   * Recalculates and updates the inline styles for the content. Note that this should be used
+   * sparingly, because it causes a reflow.
    */
-  private _getDrawerEffectiveWidth(drawer: MdDrawer, mode: string): number {
-    return (this._isDrawerOpen(drawer) && drawer.mode == mode) ? drawer._width : 0;
-  }
+  private _updateContentMargins() {
+    let left = 0;
+    let right = 0;
 
-  /**
-   * Recalculates and updates the inline styles. Note that this
-   * should be used sparingly, because it causes a reflow.
-   */
-  private _updateStyles() {
-    const marginLeft = this._left ? this._getDrawerEffectiveWidth(this._left, 'side') : 0;
-    const marginRight = this._right ? this._getDrawerEffectiveWidth(this._right, 'side') : 0;
-    const leftWidth = this._left ? this._getDrawerEffectiveWidth(this._left, 'push') : 0;
-    const rightWidth = this._right ? this._getDrawerEffectiveWidth(this._right, 'push') : 0;
+    if (this._left && this._left.opened) {
+      if (this._left.mode == 'side') {
+        left += this._left._width;
+      } else if (this._left.mode == 'push') {
+        let width = this._left._width;
+        left += width;
+        right -= width;
+      }
+    }
 
-    this._styles = {
-      marginLeft: `${marginLeft}px`,
-      marginRight: `${marginRight}px`,
-      transform: `translate3d(${leftWidth - rightWidth}px, 0, 0)`
-    };
+    if (this._right && this._right.opened) {
+      if (this._right.mode == 'side') {
+        right += this._right._width;
+      } else if (this._right.mode == 'push') {
+        let width = this._right._width;
+        right += width;
+        left -= width;
+      }
+    }
+
+    this._contentMargins.next({left, right});
   }
 }

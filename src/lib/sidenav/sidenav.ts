@@ -7,12 +7,12 @@
  */
 
 import {
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component, ContentChild,
-  ContentChildren,
+  ContentChildren, forwardRef, Inject, Input,
   ViewEncapsulation
 } from '@angular/core';
-import {MdDrawer, MdDrawerContainer} from './drawer';
+import {MdDrawer, MdDrawerContainer, MdDrawerContent} from './drawer';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
 
@@ -22,11 +22,19 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
   template: '<ng-content></ng-content>',
   host: {
     'class': 'mat-drawer-content mat-sidenav-content',
+    '[style.marginLeft.px]': '_margins.left',
+    '[style.marginRight.px]': '_margins.right',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MdSidenavContent {}
+export class MdSidenavContent extends MdDrawerContent {
+  constructor(
+      changeDetectorRef: ChangeDetectorRef,
+      @Inject(forwardRef(() => MdSidenavContainer)) container: MdSidenavContainer) {
+    super(changeDetectorRef, container);
+  }
+}
 
 
 @Component({
@@ -49,6 +57,7 @@ export class MdSidenavContent {}
   ],
   host: {
     'class': 'mat-drawer mat-sidenav',
+    'tabIndex': '-1',
     '[@transform]': '_animationState',
     '(@transform.start)': '_onAnimationStart()',
     '(@transform.done)': '_onAnimationEnd($event)',
@@ -59,13 +68,30 @@ export class MdSidenavContent {}
     '[class.mat-drawer-over]': 'mode === "over"',
     '[class.mat-drawer-push]': 'mode === "push"',
     '[class.mat-drawer-side]': 'mode === "side"',
-    'tabIndex': '-1',
+    '[class.mat-app-sidenav-fixed]': 'fixedInViewport',
+    '[style.top.px]': 'fixedInViewport ? fixedTopGap : null',
+    '[style.bottom.px]': 'fixedInViewport ? fixedBottomGap : null',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
 })
-export class MdSidenav extends MdDrawer {}
+export class MdSidenav extends MdDrawer {
+  /** Whether the sidenav is fixed in the viewport. */
+  @Input() fixedInViewport = true;
+
+  /**
+   * The gap between the top of the sidenav and the top of the viewport when the sidenav is in fixed
+   * mode.
+   */
+  @Input() fixedTopGap = 0;
+
+  /**
+   * The gap between the bottom of the sidenav and the bottom of the viewport when the sidenav is in
+   * fixed mode.
+   */
+  @Input() fixedBottomGap = 0;
+}
 
 
 @Component({
