@@ -14,7 +14,7 @@ import {wrappedErrorMessage, dispatchMouseEvent} from '@angular/cdk/testing';
 import {map} from '../core/rxjs/index';
 import {MdTableModule} from '../table/index';
 
-fdescribe('MdSort', () => {
+describe('MdSort', () => {
   let fixture: ComponentFixture<SimpleMdSortApp>;
 
   let component: SimpleMdSortApp;
