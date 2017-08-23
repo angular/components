@@ -40,6 +40,10 @@
       "./tools/package-tools/rollup-globals.ts",
       "src/+(lib|cdk|material-examples)/**/*.ts"
     ],
+    "on-push-change-detection": [
+      true,
+      "(lib|cdk)\/((?!spec.ts).)*.ts$"
+    ],
     "one-line": [
       true,
       "check-catch",
