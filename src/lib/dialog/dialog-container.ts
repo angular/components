@@ -10,6 +10,7 @@ import {
   Component,
   ComponentRef,
   ElementRef,
+  EmbeddedViewRef,
   EventEmitter,
   Inject,
   NgZone,
@@ -64,6 +65,7 @@ export function throwMdDialogContentAlreadyAttachedError() {
   ],
   host: {
     'class': 'mat-dialog-container',
+    'tabindex': '-1',
     '[attr.role]': '_config?.role',
     '[attr.aria-labelledby]': '_ariaLabelledBy',
     '[attr.aria-describedby]': '_config?.ariaDescribedBy || null',
@@ -124,7 +126,7 @@ export class MdDialogContainer extends BasePortalHost {
    * Attach a TemplatePortal as content to this dialog container.
    * @param portal Portal to be attached as the dialog content.
    */
-  attachTemplatePortal(portal: TemplatePortal): Map<string, any> {
+  attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C> {
     if (this._portalHost.hasAttached()) {
       throwMdDialogContentAlreadyAttachedError();
     }
@@ -142,7 +144,13 @@ export class MdDialogContainer extends BasePortalHost {
     // If were to attempt to focus immediately, then the content of the dialog would not yet be
     // ready in instances where change detection has to run first. To deal with this, we simply
     // wait for the microtask queue to be empty.
-    this._focusTrap.focusInitialElementWhenReady();
+    this._focusTrap.focusInitialElementWhenReady().then(hasMovedFocus => {
+      // If we didn't find any focusable elements inside the dialog, focus the
+      // container so the user can't tab into other elements behind it.
+      if (!hasMovedFocus) {
+        this._elementRef.nativeElement.focus();
+      }
+    });
   }
 
   /** Restores focus to the element that was focused before the dialog opened. */
