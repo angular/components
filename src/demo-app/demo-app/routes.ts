@@ -16,7 +16,7 @@ import {PortalDemo} from '../portal/portal-demo';
 import {ProgressBarDemo} from '../progress-bar/progress-bar-demo';
 import {ProgressSpinnerDemo} from '../progress-spinner/progress-spinner-demo';
 import {SelectDemo} from '../select/select-demo';
-import {SidenavDemo} from '../sidenav/sidenav-demo';
+import {DrawerDemo} from '../drawer/drawer-demo';
 import {SlideToggleDemo} from '../slide-toggle/slide-toggle-demo';
 import {SliderDemo} from '../slider/slider-demo';
 import {RadioDemo} from '../radio/radio-demo';
@@ -52,7 +52,7 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'datepicker', component: DatepickerDemo},
     {path: 'radio', component: RadioDemo},
     {path: 'select', component: SelectDemo},
-    {path: 'sidenav', component: SidenavDemo},
+    {path: 'drawer', component: DrawerDemo},
     {path: 'slide-toggle', component: SlideToggleDemo},
     {path: 'slider', component: SliderDemo},
     {path: 'progress-spinner', component: ProgressSpinnerDemo},

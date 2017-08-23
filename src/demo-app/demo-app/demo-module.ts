@@ -26,7 +26,7 @@ import {ButtonDemo} from '../button/button-demo';
 import {CheckboxDemo, MdCheckboxDemoNestedChecklist} from '../checkbox/checkbox-demo';
 import {SelectDemo} from '../select/select-demo';
 import {SliderDemo} from '../slider/slider-demo';
-import {SidenavDemo} from '../sidenav/sidenav-demo';
+import {DrawerDemo} from '../drawer/drawer-demo';
 import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
 import {PortalDemo, ScienceJoke} from '../portal/portal-demo';
 import {MenuDemo} from '../menu/menu-demo';
@@ -89,7 +89,7 @@ import {TableHeaderDemo} from '../table/table-header-demo';
     RotiniPanel,
     ScienceJoke,
     SelectDemo,
-    SidenavDemo,
+    DrawerDemo,
     SliderDemo,
     SlideToggleDemo,
     SpagettiPanel,
