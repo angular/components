@@ -7,11 +7,11 @@ to tabular data.
 
 To add sorting behavior and styling to a set of table headers, add the `<md-sort-header>` component
 to each header and provide an `id` that will identify it. These headers should be contained within a
-parent element with the `mdSort` directive, which will emit an `mdSortChange` event when the user
+parent element with the `mdSort` directive, which will emit a `sortChange` event when the user
  triggers sorting on the header.
 
 Users can trigger the sort header through a mouse click or keyboard action. When this happens, the
-`mdSort` will emit an `mdSortChange` event that contains the ID of the header triggered and the
+`mdSort` will emit a `sortChange` event that contains the ID of the header triggered and the
 direction to sort (`asc` or `desc`).
 
 #### Changing the sort order
