@@ -14,7 +14,7 @@ import {wrappedErrorMessage, dispatchMouseEvent} from '@angular/cdk/testing';
 import {map} from '../core/rxjs/index';
 import {MdTableModule} from '../table/index';
 
-describe('MdSort', () => {
+fdescribe('MdSort', () => {
   let fixture: ComponentFixture<SimpleMdSortApp>;
 
   let component: SimpleMdSortApp;
@@ -199,10 +199,10 @@ function testSingleColumnSortDirectionSequence(fixture: ComponentFixture<SimpleM
          [mdSortDirection]="direction"
          [mdSortDisableClear]="disableClear"
          (mdSortChange)="latestSortEvent = $event">
-      <div id="defaultSortHeaderA" #defaultSortHeaderA md-sort-header="defaultSortHeaderA"> A </div>
-      <div id="defaultSortHeaderB" #defaultSortHeaderB md-sort-header="defaultSortHeaderB"> B </div>
-      <div id="overrideStart" md-sort-header="overrideStart" start="desc"> D </div>
-      <div id="overrideDisableClear" md-sort-header="overrideDisableClear" disableClear> E </div>
+      <div id="defaultSortHeaderA" #defaultSortHeaderA md-sort-header="defaultSortHeaderA"> A</div>
+      <div id="defaultSortHeaderB" #defaultSortHeaderB md-sort-header="defaultSortHeaderB"> B</div>
+      <div id="overrideStart" md-sort-header="overrideStart" start="desc"> D</div>
+      <div id="overrideDisableClear" md-sort-header="overrideDisableClear" disableClear> E</div>
     </div>
   `
 })
