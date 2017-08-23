@@ -15,7 +15,7 @@ import {MdSnackBarContainer} from './snack-bar-container';
  * Reference to a snack bar dispatched from the snack bar service.
  */
 export class MdSnackBarRef<T> {
-  /** The instance of snack bar. */
+  /** The instance of the component making up the content of the snack bar. */
   componentInstance: T;
 
   /**
