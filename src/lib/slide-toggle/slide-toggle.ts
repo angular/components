@@ -36,7 +36,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
-import {CanTabIndex, mixinTabIndex} from '../core/common-behaviors/tabindex';
+import {HasTabIndex, mixinTabIndex} from '../core/common-behaviors/tabindex';
 
 // Increasing integer for generating unique ids for slide-toggle components.
 let nextUniqueId = 0;
@@ -80,7 +80,7 @@ export const _MdSlideToggleMixinBase =
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MdSlideToggle extends _MdSlideToggleMixinBase implements OnDestroy, AfterContentInit,
-    ControlValueAccessor, CanDisable, CanColor, CanTabIndex, CanDisableRipple {
+    ControlValueAccessor, CanDisable, CanColor, HasTabIndex, CanDisableRipple {
 
   private onChange = (_: any) => {};
   private onTouched = () => {};

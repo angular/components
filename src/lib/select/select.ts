@@ -66,7 +66,7 @@ import {
   PlaceholderOptions
 } from '../core/placeholder/placeholder-options';
 import {Platform} from '@angular/cdk/platform';
-import {CanTabIndex, mixinTabIndex} from '../core/common-behaviors/tabindex';
+import {HasTabIndex, mixinTabIndex} from '../core/common-behaviors/tabindex';
 
 /**
  * The following style constants are necessary to save here in order
@@ -202,7 +202,7 @@ export class MdSelectTrigger {}
   exportAs: 'mdSelect',
 })
 export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, OnDestroy, OnInit,
-    ControlValueAccessor, CanColor, CanDisable, CanTabIndex {
+    ControlValueAccessor, CanColor, CanDisable, HasTabIndex {
   /** Whether or not the overlay panel is open. */
   private _panelOpen = false;
 
