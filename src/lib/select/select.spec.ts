@@ -1758,20 +1758,22 @@ describe('MatSelect', () => {
             `Expected trigger label to align along x-axis, accounting for the padding in rtl.`);
       }));
 
-      fit('should not adjust if all options are within a group, except the selected one',
-        fakeAsync(() => {
+      it('should not adjust if all options are within a group, except the selected one',
+        async(() => {
           groupFixture.componentInstance.control.setValue('mime-11');
           groupFixture.detectChanges();
 
           trigger.click();
           groupFixture.detectChanges();
 
-          const selected = document.querySelector('.cdk-overlay-pane mat-option.mat-selected')!;
-          const selectedOptionLeft = selected.getBoundingClientRect().left;
-          const triggerLeft = trigger.getBoundingClientRect().left;
+          fixture.whenStable().then(() => {
+            const selected = document.querySelector('.cdk-overlay-pane mat-option.mat-selected')!;
+            const selectedOptionLeft = selected.getBoundingClientRect().left;
+            const triggerLeft = trigger.getBoundingClientRect().left;
 
-          // 16px is the default option padding
-          expect(Math.floor(selectedOptionLeft)).toEqual(Math.floor(triggerLeft - 16));
+            // 16px is the default option padding
+            expect(Math.floor(selectedOptionLeft)).toEqual(Math.floor(triggerLeft - 16));
+          });
         }));
 
       it('should align the first option to the trigger, if nothing is selected', async(() => {
