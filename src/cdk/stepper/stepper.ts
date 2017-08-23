@@ -66,12 +66,7 @@ export class CdkStep {
   @ViewChild(TemplateRef) content: TemplateRef<any>;
 
   /** The top level abstract control of the step. */
-  @Input()
-  get stepControl() { return this._stepControl; }
-  set stepControl(control: AbstractControl) {
-    this._stepControl = control;
-  }
-  private _stepControl: AbstractControl;
+  @Input() stepControl: AbstractControl;
 
   /** Whether user has seen the expanded step content or not . */
   interacted = false;
@@ -106,7 +101,7 @@ export class CdkStep {
   private _customCompleted: boolean | null = null;
 
   private get _defaultCompleted() {
-    return this._stepControl ? this._stepControl.valid && this.interacted : this.interacted;
+    return this.stepControl ? this.stepControl.valid && this.interacted : this.interacted;
   }
 
   constructor(private _stepper: CdkStepper) { }
