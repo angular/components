@@ -45,7 +45,7 @@ export class MatHeaderRowDef extends _MdHeaderRowDef { }
  * Captures the header row's template and other row properties such as the columns to display.
  */
 @Directive({
-  selector: '[mdRowDef], [matRowDef]',
+  selector: '[mdRowDef]',
   providers: [{provide: CdkRowDef, useExisting: MdRowDef}],
   inputs: ['columns: mdRowDefColumns'],
 })
