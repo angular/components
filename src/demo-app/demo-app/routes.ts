@@ -29,7 +29,7 @@ import {RadioDemo} from '../radio/radio-demo';
 import {RippleDemo} from '../ripple/ripple-demo';
 import {ScreenTypeDemo} from '../screen-type/screen-type-demo';
 import {SelectDemo} from '../select/select-demo';
-import {SidenavDemo} from '../sidenav/sidenav-demo';
+import {DrawerDemo} from '../drawer/drawer-demo';
 import {SlideToggleDemo} from '../slide-toggle/slide-toggle-demo';
 import {SliderDemo} from '../slider/slider-demo';
 import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
@@ -72,7 +72,7 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'radio', component: RadioDemo},
     {path: 'ripple', component: RippleDemo},
     {path: 'select', component: SelectDemo},
-    {path: 'sidenav', component: SidenavDemo},
+    {path: 'drawer', component: DrawerDemo},
     {path: 'slide-toggle', component: SlideToggleDemo},
     {path: 'slider', component: SliderDemo},
     {path: 'snack-bar', component: SnackBarDemo},
