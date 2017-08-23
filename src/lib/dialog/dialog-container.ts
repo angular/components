@@ -10,6 +10,7 @@ import {
   Component,
   ComponentRef,
   ElementRef,
+  EmbeddedViewRef,
   EventEmitter,
   Inject,
   NgZone,
@@ -17,7 +18,6 @@ import {
   ChangeDetectorRef,
   ViewChild,
   ViewEncapsulation,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
 import {DOCUMENT} from '@angular/platform-browser';
@@ -51,7 +51,6 @@ export function throwMdDialogContentAlreadyAttachedError() {
   templateUrl: 'dialog-container.html',
   styleUrls: ['dialog.css'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('slideDialog', [
       // Note: The `enter` animation doesn't transition to something like `translate3d(0, 0, 0)
@@ -66,6 +65,7 @@ export function throwMdDialogContentAlreadyAttachedError() {
   ],
   host: {
     'class': 'mat-dialog-container',
+    'tabindex': '-1',
     '[attr.role]': '_config?.role',
     '[attr.aria-labelledby]': '_ariaLabelledBy',
     '[attr.aria-describedby]': '_config?.ariaDescribedBy || null',
@@ -119,31 +119,20 @@ export class MdDialogContainer extends BasePortalHost {
     }
 
     this._savePreviouslyFocusedElement();
-
-    const componentRef = this._portalHost.attachComponentPortal(portal);
-
-    // Ensure that the initial view change are picked up.
-    componentRef.changeDetectorRef.markForCheck();
-
-    return componentRef;
+    return this._portalHost.attachComponentPortal(portal);
   }
 
   /**
    * Attach a TemplatePortal as content to this dialog container.
    * @param portal Portal to be attached as the dialog content.
    */
-  attachTemplatePortal(portal: TemplatePortal): Map<string, any> {
+  attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C> {
     if (this._portalHost.hasAttached()) {
       throwMdDialogContentAlreadyAttachedError();
     }
 
     this._savePreviouslyFocusedElement();
-
-    const locals = this._portalHost.attachTemplatePortal(portal);
-
-    this._changeDetectorRef.markForCheck();
-
-    return locals;
+    return this._portalHost.attachTemplatePortal(portal);
   }
 
   /** Moves the focus inside the focus trap. */
@@ -155,7 +144,13 @@ export class MdDialogContainer extends BasePortalHost {
     // If were to attempt to focus immediately, then the content of the dialog would not yet be
     // ready in instances where change detection has to run first. To deal with this, we simply
     // wait for the microtask queue to be empty.
-    this._focusTrap.focusInitialElementWhenReady();
+    this._focusTrap.focusInitialElementWhenReady().then(hasMovedFocus => {
+      // If we didn't find any focusable elements inside the dialog, focus the
+      // container so the user can't tab into other elements behind it.
+      if (!hasMovedFocus) {
+        this._elementRef.nativeElement.focus();
+      }
+    });
   }
 
   /** Restores focus to the element that was focused before the dialog opened. */

@@ -23,6 +23,7 @@ import {
   AfterContentChecked,
   OnDestroy,
   Optional,
+  ViewEncapsulation,
 } from '@angular/core';
 import {HammerInput, HammerDirection} from '../core';
 import {Directionality} from '@angular/cdk/bidi';
@@ -65,6 +66,7 @@ export const _MdTabGroupMixinBase = mixinColor(mixinDisableRipple(MdTabGroupBase
   selector: 'md-tab-group, mat-tab-group',
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   inputs: ['color', 'disableRipple'],
   host: {
