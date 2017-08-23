@@ -13,7 +13,7 @@ import {
   MD_AUTOCOMPLETE_VALUE_ACCESSOR,
   MdAutocomplete,
   MdAutocompleteModule,
-  MdAutocompleteTrigger
+  MdAutocompleteTrigger,
 } from './autocomplete/index';
 import {
   MdAnchor,
@@ -24,7 +24,7 @@ import {
   MdFab,
   MdIconButtonCssMatStyler,
   MdMiniFab,
-  MdRaisedButtonCssMatStyler
+  MdRaisedButtonCssMatStyler,
 } from './button/index';
 import {
   MD_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR,
@@ -33,7 +33,7 @@ import {
   MdButtonToggleGroup,
   MdButtonToggleGroupBase,
   MdButtonToggleGroupMultiple,
-  MdButtonToggleModule
+  MdButtonToggleModule,
 } from './button-toggle/index';
 import {
   MdCard,
@@ -50,7 +50,7 @@ import {
   MdCardSubtitle,
   MdCardTitle,
   MdCardTitleGroup,
-  MdCardXlImage
+  MdCardXlImage,
 } from './card/index';
 import {
   MdBasicChip,
@@ -61,7 +61,7 @@ import {
   MdChipInputEvent,
   MdChipList,
   MdChipRemove,
-  MdChipsModule
+  MdChipsModule,
 } from './chips/index';
 import {
   MD_CHECKBOX_CONTROL_VALUE_ACCESSOR,
@@ -70,7 +70,7 @@ import {
   MdCheckboxBase,
   MdCheckboxChange,
   MdCheckboxModule,
-  MdCheckboxRequiredValidator
+  MdCheckboxRequiredValidator,
 } from './checkbox/index';
 import {
   MD_DATEPICKER_SCROLL_STRATEGY,
@@ -89,7 +89,7 @@ import {
   MdDatepickerModule,
   MdDatepickerToggle,
   MdMonthView,
-  MdYearView
+  MdYearView,
 } from './datepicker/index';
 import {
   MD_DIALOG_DATA,
@@ -104,7 +104,7 @@ import {
   MdDialogContent,
   MdDialogModule,
   MdDialogRef,
-  MdDialogTitle
+  MdDialogTitle,
 } from './dialog/index';
 import {
   MdError,
@@ -114,7 +114,7 @@ import {
   MdHint,
   MdPlaceholder,
   MdPrefix,
-  MdSuffix
+  MdSuffix,
 } from './form-field/index';
 import {
   MdAccordion,
@@ -125,7 +125,7 @@ import {
   MdExpansionPanelDescription,
   MdExpansionPanelHeader,
   MdExpansionPanelState,
-  MdExpansionPanelTitle
+  MdExpansionPanelTitle,
 } from './expansion/index';
 import {MdGridList, MdGridListModule, MdGridTile} from './grid-list/index';
 import {MdIcon, MdIconBase, MdIconModule, MdIconRegistry} from './icon/index';
@@ -146,7 +146,7 @@ import {
   MdNavListCssMatStyler,
   MdSelectionList,
   MdSelectionListBase,
-  MdSelectionListOptionEvent
+  MdSelectionListOptionEvent,
 } from './list/index';
 import {
   MD_DATE_FORMATS,
@@ -179,7 +179,7 @@ import {
   MdMenuItem,
   MdMenuModule,
   MdMenuPanel,
-  MdMenuTrigger
+  MdMenuTrigger,
 } from './menu/index';
 import {MdPaginator, MdPaginatorIntl, MdPaginatorModule} from './paginator/index';
 import {MdProgressBar, MdProgressBarModule} from './progress-bar/index';
@@ -188,7 +188,7 @@ import {
   MdProgressSpinnerBase,
   MdProgressSpinnerCssMatStyler,
   MdProgressSpinnerModule,
-  MdSpinner
+  MdSpinner,
 } from './progress-spinner/index';
 import {
   MD_RADIO_GROUP_CONTROL_VALUE_ACCESSOR,
@@ -197,7 +197,7 @@ import {
   MdRadioChange,
   MdRadioGroup,
   MdRadioGroupBase,
-  MdRadioModule
+  MdRadioModule,
 } from './radio/index';
 import {
   MD_SELECT_SCROLL_STRATEGY,
@@ -207,7 +207,7 @@ import {
   MdSelectBase,
   MdSelectChange,
   MdSelectModule,
-  MdSelectTrigger
+  MdSelectTrigger,
 } from './select/index';
 import {
   MdDrawer,
@@ -222,14 +222,14 @@ import {
   MdSlider,
   MdSliderBase,
   MdSliderChange,
-  MdSliderModule
+  MdSliderModule,
 } from './slider/index';
 import {
   MD_SLIDE_TOGGLE_VALUE_ACCESSOR,
   MdSlideToggle,
   MdSlideToggleBase,
   MdSlideToggleChange,
-  MdSlideToggleModule
+  MdSlideToggleModule,
 } from './slide-toggle/index';
 import {
   MD_SNACK_BAR_DATA,
@@ -237,7 +237,7 @@ import {
   MdSnackBarConfig,
   MdSnackBarContainer,
   MdSnackBarModule,
-  MdSnackBarRef
+  MdSnackBarRef,
 } from './snack-bar/index';
 import {MdSort, MdSortable, MdSortHeader, MdSortHeaderIntl, MdSortModule} from './sort/index';
 import {
@@ -251,7 +251,7 @@ import {
   MdRow,
   MdRowDef,
   MdTable,
-  MdTableModule
+  MdTableModule,
 } from './table/index';
 import {
   MdInkBar,
@@ -268,7 +268,7 @@ import {
   MdTabLabelWrapper,
   MdTabLink,
   MdTabNav,
-  MdTabsModule
+  MdTabsModule,
 } from './tabs/index';
 import {MdToolbar, MdToolbarBase, MdToolbarModule, MdToolbarRow} from './toolbar/index';
 import {
@@ -276,7 +276,7 @@ import {
   MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER,
   MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER_FACTORY,
   MdTooltip,
-  MdTooltipModule
+  MdTooltipModule,
 } from './tooltip/index';
 
 export {MD_AUTOCOMPLETE_SCROLL_STRATEGY as MAT_AUTOCOMPLETE_SCROLL_STRATEGY};
