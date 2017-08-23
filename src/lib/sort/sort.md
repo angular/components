@@ -11,7 +11,7 @@ parent element with the `mdSort` directive, which will emit a `sortChange` event
  triggers sorting on the header.
 
 Users can trigger the sort header through a mouse click or keyboard action. When this happens, the
-`mdSort` will emit an `sortChange` event that contains the ID of the header triggered and the
+`mdSort` will emit a `sortChange` event that contains the ID of the header triggered and the
 direction to sort (`asc` or `desc`).
 
 #### Changing the sort order
