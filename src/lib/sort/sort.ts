@@ -72,7 +72,7 @@ export class MdSort {
   set _matSortDisableClear(v) { this.disableClear = v; }
 
   /** Event emitted when the user changes either the active sort or sort direction. */
-  @Output('mdSortChange') sortChange = new EventEmitter<Sort>();
+  @Output('mdSortChange') readonly sortChange = new EventEmitter<Sort>();
 
   @Output('matSortChange')
   get _matSortChange(): EventEmitter<Sort> { return this.sortChange; }
