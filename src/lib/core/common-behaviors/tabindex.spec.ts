@@ -34,6 +34,11 @@ describe('mixinTabIndex', () => {
 
     expect(instance.tabIndex)
       .toBe(20, 'Expected tabIndex to be set to 20 initially');
+
+    instance.tabIndex = 0;
+
+    expect(instance.tabIndex)
+      .toBe(0, 'Expected tabIndex to still support 0 as value');
   });
 
 });

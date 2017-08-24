@@ -18,13 +18,12 @@ export interface HasTabIndex {
 export function mixinTabIndex<T extends Constructor<CanDisable>>(base: T, defaultTabIndex = 0)
     : Constructor<HasTabIndex> & T {
   return class extends base {
-    private _tabIndex: number;
+    private _tabIndex: number = defaultTabIndex;
 
-    get tabIndex(): number { return this.disabled ? -1 : this._tabIndex || defaultTabIndex; }
+    get tabIndex(): number { return this.disabled ? -1 : this._tabIndex; }
     set tabIndex(value: number) {
-      if (typeof value !== 'undefined') {
-        this._tabIndex = value;
-      }
+      // If the specified tabIndex value is null or undefined, fall back to the default value.
+      this._tabIndex = value != null ? value : defaultTabIndex;
     }
 
     constructor(...args: any[]) {
