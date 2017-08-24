@@ -1,10 +1,5 @@
 @import '../core/style/variables';
-
-$mat-toolbar-height-desktop: 64px !default;
-$mat-toolbar-height-mobile-portrait: 56px !default;
-$mat-toolbar-height-mobile-landscape: 48px !default;
-
-$mat-toolbar-padding: 16px !default;
+@import 'variables';
 
 
 @mixin mat-toolbar-height($height) {
