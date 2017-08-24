@@ -72,6 +72,9 @@ export class MdAutocomplete implements AfterContentInit {
   /** Function that maps an option's control value to its display value in the trigger. */
   @Input() displayWith: ((value: any) => string) | null = null;
 
+  /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
+  @Input() panelClass: string|string[]|Set<string>|{[key: string]: any};
+
   /** Event that is emitted whenever an option from the list is selected. */
   @Output() optionSelected: EventEmitter<MdAutocompleteSelectedEvent> =
       new EventEmitter<MdAutocompleteSelectedEvent>();
@@ -112,14 +115,6 @@ export class MdAutocomplete implements AfterContentInit {
   _emitSelectEvent(option: MdOption): void {
     const event = new MdAutocompleteSelectedEvent(this, option);
     this.optionSelected.emit(event);
-  }
-
-  /** Sets a class on the panel based on whether it is visible. */
-  _getClassList() {
-    return {
-      'mat-autocomplete-visible': this.showPanel,
-      'mat-autocomplete-hidden': !this.showPanel
-    };
   }
 
 }
