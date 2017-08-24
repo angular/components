@@ -89,10 +89,10 @@ describe('Style compatibility', () => {
 });
 
 
-@Component({ template: `<md-checkbox>Hungry</md-checkbox>` })
+@Component({template: `<md-checkbox>Hungry</md-checkbox>`})
 class ComponentWithMdCheckbox { }
 
-@Component({ template: `<mat-checkbox>Hungry</mat-checkbox>` })
+@Component({template: `<mat-checkbox>Hungry</mat-checkbox>`})
 class ComponentWithMatCheckbox { }
 
 

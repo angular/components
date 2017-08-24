@@ -298,7 +298,7 @@ describe('MdRipple', () => {
     it('should allow persistent ripple elements', fakeAsync(() => {
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
 
-      let rippleRef = rippleDirective.launch(0, 0, { persistent: true });
+      let rippleRef = rippleDirective.launch(0, 0, {persistent: true});
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
 
@@ -335,7 +335,7 @@ describe('MdRipple', () => {
    it('should properly set ripple states', fakeAsync(() => {
      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
 
-     let rippleRef = rippleDirective.launch(0, 0, { persistent: true });
+     let rippleRef = rippleDirective.launch(0, 0, {persistent: true});
 
      expect(rippleRef.state).toBe(RippleState.FADING_IN);
      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
@@ -369,7 +369,7 @@ describe('MdRipple', () => {
       TestBed.configureTestingModule({
         imports: [MdRippleModule],
         declarations: [testComponent],
-        providers: [{ provide: MD_RIPPLE_GLOBAL_OPTIONS, useValue: rippleConfig }]
+        providers: [{provide: MD_RIPPLE_GLOBAL_OPTIONS, useValue: rippleConfig}]
       });
 
       fixture = TestBed.createComponent(testComponent);
@@ -380,7 +380,7 @@ describe('MdRipple', () => {
     }
 
     it('should work without having any binding set', () => {
-      createTestComponent({ disabled: true }, RippleContainerWithoutBindings);
+      createTestComponent({disabled: true}, RippleContainerWithoutBindings);
 
       dispatchMouseEvent(rippleTarget, 'mousedown');
       dispatchMouseEvent(rippleTarget, 'mouseup');
@@ -394,7 +394,7 @@ describe('MdRipple', () => {
     });
 
     it('when disabled should not show any ripples on mousedown', () => {
-      createTestComponent({ disabled: true });
+      createTestComponent({disabled: true});
 
       dispatchMouseEvent(rippleTarget, 'mousedown');
       dispatchMouseEvent(rippleTarget, 'mouseup');
@@ -408,7 +408,7 @@ describe('MdRipple', () => {
     });
 
     it('when disabled should still allow manual ripples', () => {
-      createTestComponent({ disabled: true });
+      createTestComponent({disabled: true});
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
 
@@ -418,7 +418,7 @@ describe('MdRipple', () => {
     });
 
     it('should support changing the baseSpeedFactor', fakeAsync(() => {
-      createTestComponent({ baseSpeedFactor: 0.5 });
+      createTestComponent({baseSpeedFactor: 0.5});
 
       dispatchMouseEvent(rippleTarget, 'mousedown');
       dispatchMouseEvent(rippleTarget, 'mouseup');
@@ -436,9 +436,9 @@ describe('MdRipple', () => {
     }));
 
     it('should combine individual speed factor with baseSpeedFactor', fakeAsync(() => {
-      createTestComponent({ baseSpeedFactor: 0.5 });
+      createTestComponent({baseSpeedFactor: 0.5});
 
-      rippleDirective.launch(0, 0, { speedFactor: 1.5 });
+      rippleDirective.launch(0, 0, {speedFactor: 1.5});
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
 

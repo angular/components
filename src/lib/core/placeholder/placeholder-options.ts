@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import { InjectionToken } from '@angular/core';
+import {InjectionToken} from '@angular/core';
 
 /** InjectionToken that can be used to specify the global placeholder options. */
 export const MD_PLACEHOLDER_GLOBAL_OPTIONS =

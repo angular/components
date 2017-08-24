@@ -201,7 +201,7 @@ function uploadGoldenScreenshots() {
     const filePath = path.join(SCREENSHOT_DIR, fileName);
     const storageDestination = `${FIREBASE_STORAGE_GOLDENS}/${fileName}`;
 
-    return bucket.upload(filePath, { destination: storageDestination });
+    return bucket.upload(filePath, {destination: storageDestination});
   }));
 }
 

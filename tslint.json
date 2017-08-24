@@ -2,6 +2,9 @@
   "rulesDirectory": [
     "./tools/tslint-rules/"
   ],
+  "extends": [
+    "tslint-eslint-rules"
+  ],
   "rules": {
     "max-line-length": [true, 100],
     // Disable this flag because of SHA tslint#48b0c597f9257712c7d1f04b55ed0aa60e333f6a
@@ -76,8 +79,8 @@
       ["fdescribe"],
       ["xit"],
       ["xdescribe"],
-      { "name": "HostBinding", "message": "Use `host` in the component definition instead." },
-      { "name": "HostListener", "message": "Use `host` in the component definition instead." }
+      {"name": "HostBinding", "message": "Use `host` in the component definition instead."},
+      {"name": "HostListener", "message": "Use `host` in the component definition instead."}
     ],
     // Disallows importing the whole RxJS library. Submodules can be still imported.
     "import-blacklist": [true, "rxjs"],
@@ -103,6 +106,7 @@
       true,
       "./tools/package-tools/rollup-globals.ts",
       "src/+(lib|cdk|material-examples)/**/*.ts"
-    ]
+    ],
+    "object-curly-spacing": [true, "never"]
   }
 }

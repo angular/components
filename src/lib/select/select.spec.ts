@@ -97,7 +97,7 @@ describe('MdSelect', () => {
 
           return {getContainerElement: () => overlayContainerElement};
         }},
-        {provide: Directionality, useFactory: () => dir = { value: 'ltr' }},
+        {provide: Directionality, useFactory: () => dir = {value: 'ltr'}},
         {provide: ScrollDispatcher, useFactory: () => {
           return {scrolled: (_delay: number, callback: () => any) => {
             return scrolledSubject.asObservable().subscribe(callback);
@@ -2273,7 +2273,7 @@ describe('MdSelect', () => {
         declarations: [
           FloatPlaceholderSelect
         ],
-        providers: [{ provide: MD_PLACEHOLDER_GLOBAL_OPTIONS, useValue: { float: 'always' } }]
+        providers: [{provide: MD_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'always'}}]
       });
 
       fixture = TestBed.createComponent(FloatPlaceholderSelect);
@@ -2508,7 +2508,7 @@ describe('MdSelect', () => {
         expect(testInstance.options.toArray().every(option => option.multiple)).toBe(true,
             'Expected `multiple` to have been added to initial set of options.');
 
-        testInstance.foods.push({ value: 'cake-8', viewValue: 'Cake' });
+        testInstance.foods.push({value: 'cake-8', viewValue: 'Cake'});
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
@@ -2819,14 +2819,14 @@ describe('MdSelect', () => {
 })
 class BasicSelect {
   foods: any[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'tacos-2', viewValue: 'Tacos', disabled: true },
-    { value: 'sandwich-3', viewValue: 'Sandwich' },
-    { value: 'chips-4', viewValue: 'Chips' },
-    { value: 'eggs-5', viewValue: 'Eggs' },
-    { value: 'pasta-6', viewValue: 'Pasta' },
-    { value: 'sushi-7', viewValue: 'Sushi' },
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos', disabled: true},
+    {value: 'sandwich-3', viewValue: 'Sandwich'},
+    {value: 'chips-4', viewValue: 'Chips'},
+    {value: 'eggs-5', viewValue: 'Eggs'},
+    {value: 'pasta-6', viewValue: 'Pasta'},
+    {value: 'sushi-7', viewValue: 'Sushi'},
   ];
   control = new FormControl();
   isRequired: boolean;
@@ -2852,9 +2852,9 @@ class BasicSelect {
 })
 class NgModelSelect {
   foods: any[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'tacos-2', viewValue: 'Tacos' },
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'},
   ];
   isDisabled: boolean;
 
@@ -2892,9 +2892,9 @@ class ManySelects {}
 class NgIfSelect {
   isShowing = false;
   foods: any[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'tacos-2', viewValue: 'Tacos'}
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'}
   ];
   control = new FormControl('pizza-1');
 
@@ -2943,9 +2943,9 @@ class SelectInitWithoutOptions {
 
   addOptions() {
     this.foods = [
-      { value: 'steak-0', viewValue: 'Steak' },
-      { value: 'pizza-1', viewValue: 'Pizza' },
-      { value: 'tacos-2', viewValue: 'Tacos'}
+      {value: 'steak-0', viewValue: 'Steak'},
+      {value: 'pizza-1', viewValue: 'Pizza'},
+      {value: 'tacos-2', viewValue: 'Tacos'}
     ];
   }
 }
@@ -3020,9 +3020,9 @@ export class ThrowsErrorOnInit implements OnInit {
 })
 class BasicSelectOnPush {
   foods: any[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'tacos-2', viewValue: 'Tacos' },
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'},
   ];
   control = new FormControl();
 }
@@ -3040,9 +3040,9 @@ class BasicSelectOnPush {
 })
 class BasicSelectOnPushPreselected {
   foods: any[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'tacos-2', viewValue: 'Tacos' },
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'},
   ];
   control = new FormControl('pizza-1');
 }
@@ -3062,9 +3062,9 @@ class FloatPlaceholderSelect {
   floatPlaceholder: FloatPlaceholderType | null = 'auto';
   control = new FormControl();
   foods: any[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'tacos-2', viewValue: 'Tacos'}
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'}
   ];
 
   @ViewChild(MdSelect) select: MdSelect;
@@ -3080,14 +3080,14 @@ class FloatPlaceholderSelect {
 })
 class MultiSelect {
   foods: any[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'tacos-2', viewValue: 'Tacos' },
-    { value: 'sandwich-3', viewValue: 'Sandwich' },
-    { value: 'chips-4', viewValue: 'Chips' },
-    { value: 'eggs-5', viewValue: 'Eggs' },
-    { value: 'pasta-6', viewValue: 'Pasta' },
-    { value: 'sushi-7', viewValue: 'Sushi' },
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'},
+    {value: 'sandwich-3', viewValue: 'Sandwich'},
+    {value: 'chips-4', viewValue: 'Chips'},
+    {value: 'eggs-5', viewValue: 'Eggs'},
+    {value: 'pasta-6', viewValue: 'Pasta'},
+    {value: 'sushi-7', viewValue: 'Sushi'},
   ];
   control = new FormControl();
 
@@ -3163,12 +3163,12 @@ class BasicSelectWithTheming {
 })
 class ResetValuesSelect {
   foods: any[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'tacos-2', viewValue: 'Tacos' },
-    { value: false, viewValue: 'Falsy' },
-    { viewValue: 'Undefined' },
-    { value: null, viewValue: 'Null' },
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'},
+    {value: false, viewValue: 'Falsy'},
+    {viewValue: 'Undefined'},
+    {value: null, viewValue: 'Null'},
   ];
   control = new FormControl();
 
@@ -3184,8 +3184,8 @@ class ResetValuesSelect {
 })
 class FalsyValueSelect {
   foods: any[] = [
-    { value: 0, viewValue: 'Steak' },
-    { value: 1, viewValue: 'Pizza' },
+    {value: 0, viewValue: 'Steak'},
+    {value: 1, viewValue: 'Pizza'},
   ];
   control = new FormControl();
   @ViewChildren(MdOption) options: QueryList<MdOption>;
@@ -3214,33 +3214,33 @@ class SelectWithGroups {
     {
       name: 'Grass',
       pokemon: [
-        { value: 'bulbasaur-0', viewValue: 'Bulbasaur' },
-        { value: 'oddish-1', viewValue: 'Oddish' },
-        { value: 'bellsprout-2', viewValue: 'Bellsprout' }
+        {value: 'bulbasaur-0', viewValue: 'Bulbasaur'},
+        {value: 'oddish-1', viewValue: 'Oddish'},
+        {value: 'bellsprout-2', viewValue: 'Bellsprout'}
       ]
     },
     {
       name: 'Water',
       disabled: true,
       pokemon: [
-        { value: 'squirtle-3', viewValue: 'Squirtle' },
-        { value: 'psyduck-4', viewValue: 'Psyduck' },
-        { value: 'horsea-5', viewValue: 'Horsea' }
+        {value: 'squirtle-3', viewValue: 'Squirtle'},
+        {value: 'psyduck-4', viewValue: 'Psyduck'},
+        {value: 'horsea-5', viewValue: 'Horsea'}
       ]
     },
     {
       name: 'Fire',
       pokemon: [
-        { value: 'charmander-6', viewValue: 'Charmander' },
-        { value: 'vulpix-7', viewValue: 'Vulpix' },
-        { value: 'flareon-8', viewValue: 'Flareon' }
+        {value: 'charmander-6', viewValue: 'Charmander'},
+        {value: 'vulpix-7', viewValue: 'Vulpix'},
+        {value: 'flareon-8', viewValue: 'Flareon'}
       ]
     },
     {
       name: 'Psychic',
       pokemon: [
-        { value: 'mew-9', viewValue: 'Mew' },
-        { value: 'mewtwo-10', viewValue: 'Mewtwo' },
+        {value: 'mew-9', viewValue: 'Mew'},
+        {value: 'mewtwo-10', viewValue: 'Mewtwo'},
       ]
     }
   ];
@@ -3289,9 +3289,9 @@ class SelectInsideFormGroup {
 class BasicSelectWithoutForms {
   selectedFood: string | null;
   foods: any[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'sandwich-2', viewValue: 'Sandwich' },
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'sandwich-2', viewValue: 'Sandwich'},
   ];
 
   @ViewChild(MdSelect) select: MdSelect;
@@ -3309,8 +3309,8 @@ class BasicSelectWithoutForms {
 class BasicSelectWithoutFormsPreselected {
   selectedFood = 'pizza-1';
   foods: any[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
   ];
 
   @ViewChild(MdSelect) select: MdSelect;
@@ -3328,9 +3328,9 @@ class BasicSelectWithoutFormsPreselected {
 class BasicSelectWithoutFormsMultiple {
   selectedFoods: string[];
   foods: any[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'sandwich-2', viewValue: 'Sandwich' },
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'sandwich-2', viewValue: 'Sandwich'},
   ];
 
   @ViewChild(MdSelect) select: MdSelect;
@@ -3352,8 +3352,8 @@ class BasicSelectWithoutFormsMultiple {
 })
 class SelectWithCustomTrigger {
   foods: any[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
   ];
   control = new FormControl();
 }
@@ -3370,11 +3370,11 @@ class SelectWithCustomTrigger {
 })
 class NgModelCompareWithSelect {
   foods: ({value: string, viewValue: string})[] = [
-    { value: 'steak-0', viewValue: 'Steak' },
-    { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'tacos-2', viewValue: 'Tacos' },
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'},
   ];
-  selectedFood: {value: string, viewValue: string} = { value: 'pizza-1', viewValue: 'Pizza' };
+  selectedFood: {value: string, viewValue: string} = {value: 'pizza-1', viewValue: 'Pizza'};
   comparator: ((f1: any, f2: any) => boolean)|null = this.compareByValue;
 
   @ViewChild(MdSelect) select: MdSelect;

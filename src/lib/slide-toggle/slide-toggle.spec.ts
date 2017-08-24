@@ -447,7 +447,7 @@ describe('MdSlideToggle without forms', () => {
       expect(slideToggle.checked).toBe(false);
 
       gestureConfig.emitEventForElement('slidestart', slideThumbContainer);
-      gestureConfig.emitEventForElement('slide', slideThumbContainer, { deltaX: 0 });
+      gestureConfig.emitEventForElement('slide', slideThumbContainer, {deltaX: 0});
       gestureConfig.emitEventForElement('slideend', slideThumbContainer);
 
       // Flush the timeout for the slide ending.

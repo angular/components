@@ -94,7 +94,7 @@ describe('MdInput without forms', function () {
       declarations: [
         MdInputWithId
       ],
-      providers: [{ provide: MD_PLACEHOLDER_GLOBAL_OPTIONS, useValue: { float: 'always' } }]
+      providers: [{provide: MD_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'always'}}]
     });
 
     let fixture = TestBed.createComponent(MdInputWithId);
@@ -917,7 +917,7 @@ describe('MdInput with forms', () => {
         providers: [
           {
             provide: MD_ERROR_GLOBAL_OPTIONS,
-            useValue: { errorStateMatcher: globalErrorStateMatcher } }
+            useValue: {errorStateMatcher: globalErrorStateMatcher} }
         ]
       });
 
@@ -949,7 +949,7 @@ describe('MdInput with forms', () => {
         providers: [
           {
             provide: MD_ERROR_GLOBAL_OPTIONS,
-            useValue: { errorStateMatcher: showOnDirtyErrorStateMatcher }
+            useValue: {errorStateMatcher: showOnDirtyErrorStateMatcher}
           }
         ]
       });

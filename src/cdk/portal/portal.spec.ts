@@ -482,7 +482,7 @@ class ArbitraryViewContainerRefComponent {
 class PortalTestApp {
   @ViewChildren(TemplatePortalDirective) portals: QueryList<TemplatePortalDirective>;
   @ViewChild(PortalHostDirective) portalHost: PortalHostDirective;
-  @ViewChild('templateRef', { read: TemplateRef }) templateRef: TemplateRef<any>;
+  @ViewChild('templateRef', {read: TemplateRef}) templateRef: TemplateRef<any>;
 
   selectedPortal: Portal<any>;
   fruit: string = 'Banana';

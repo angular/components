@@ -4,7 +4,7 @@ import {RxChain, map, filter, first} from './index';
 
 describe('RxChain', () => {
   it('should call all of the operators in the chain', () => {
-    let operators = { map, filter, first };
+    let operators = {map, filter, first};
 
     spyOn(operators, 'map');
     spyOn(operators, 'filter');

@@ -2,7 +2,7 @@ import {watch} from 'gulp';
 import {triggerLivereload} from './trigger-livereload';
 
 /** Options that will be passed to the watch function of Gulp.*/
-const gulpWatchOptions = { debounceDelay: 700 };
+const gulpWatchOptions = {debounceDelay: 700};
 
 /**
  * Function that watches a set of file globs and runs given Gulp tasks if a given file changes.

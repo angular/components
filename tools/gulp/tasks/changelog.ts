@@ -11,7 +11,7 @@ const gitSemverTags = require('git-semver-tags');
 const changelogFile = join(buildConfig.projectDir, 'CHANGELOG.md');
 
 /** Default changelog options that are passed to gulp-conventional-changelog. */
-const changelogOptions = { preset: 'angular' };
+const changelogOptions = {preset: 'angular'};
 
 /** Task that generates a new changelog section from the latest tag to HEAD. */
 task('changelog', async () => {
@@ -33,7 +33,7 @@ task('changelog', async () => {
 /** Task that re-generates the full changelog. */
 task('changelog:full', () => {
   return src(changelogFile)
-    .pipe(gulpChangelog({ ...changelogOptions, releaseCount: 0 }))
+    .pipe(gulpChangelog({...changelogOptions, releaseCount: 0}))
     .pipe(dest('./'));
 });
 

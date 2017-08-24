@@ -480,7 +480,7 @@ describe('OverlayContainer theming', () => {
   let overlayContainerElement: HTMLElement;
 
   beforeEach(async(() => {
-    TestBed.configureTestingModule({ imports: [OverlayContainerThemingTestModule] });
+    TestBed.configureTestingModule({imports: [OverlayContainerThemingTestModule]});
     TestBed.compileComponents();
   }));
 

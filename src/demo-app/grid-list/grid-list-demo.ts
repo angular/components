@@ -16,12 +16,12 @@ export class GridListDemo {
   ];
 
   dogs: Object[] = [
-    { name: 'Porter', human: 'Kara' },
-    { name: 'Mal', human: 'Jeremy' },
-    { name: 'Koby', human: 'Igor' },
-    { name: 'Razzle', human: 'Ward' },
-    { name: 'Molly', human: 'Rob' },
-    { name: 'Husi', human: 'Matias' },
+    {name: 'Porter', human: 'Kara'},
+    {name: 'Mal', human: 'Jeremy'},
+    {name: 'Koby', human: 'Igor'},
+    {name: 'Razzle', human: 'Ward'},
+    {name: 'Molly', human: 'Rob'},
+    {name: 'Husi', human: 'Matias'},
   ];
 
   basicRowHeight = 80;

@@ -70,10 +70,10 @@ export class CoverageChart {
     data = this.filterDuplicateDays(data);
 
     return [
-      { name: 'Lines', series: this.createCoverageChartItems(data, 'lines') },
-      { name: 'Branches', series: this.createCoverageChartItems(data, 'branches') },
-      { name: 'Functions', series: this.createCoverageChartItems(data, 'functions') },
-      { name: 'Statements', series: this.createCoverageChartItems(data, 'statements') }
+      {name: 'Lines', series: this.createCoverageChartItems(data, 'lines')},
+      {name: 'Branches', series: this.createCoverageChartItems(data, 'branches')},
+      {name: 'Functions', series: this.createCoverageChartItems(data, 'functions')},
+      {name: 'Statements', series: this.createCoverageChartItems(data, 'statements')}
     ];
   }
 
@@ -86,7 +86,7 @@ export class CoverageChart {
       // dates in the x-axis.
       const date = new Date(result.timestamp);
 
-      return { name: date, value: entryResult.pct };
+      return {name: date, value: entryResult.pct};
     });
   }
 }

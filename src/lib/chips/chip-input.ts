@@ -93,7 +93,7 @@ export class MdChipInput {
       this._chipList._keydown(event);
     }
     if (!event || this.separatorKeyCodes.indexOf(event.keyCode) > -1) {
-      this.chipEnd.emit({ input: this._inputElement, value: this._inputElement.value });
+      this.chipEnd.emit({input: this._inputElement, value: this._inputElement.value});
 
       if (event) {
         event.preventDefault();

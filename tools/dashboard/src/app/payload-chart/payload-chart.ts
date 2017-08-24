@@ -79,13 +79,13 @@ export class PayloadChart {
       // dates in the x-axis.
       const date = new Date(result.timestamp);
 
-      materialChartItems.push({ name: date, value: result.material_fesm_2015 });
-      cdkChartItems.push({ name: date, value: result.cdk_fesm_2015 });
+      materialChartItems.push({name: date, value: result.material_fesm_2015});
+      cdkChartItems.push({name: date, value: result.cdk_fesm_2015});
     });
 
     return [
-      { name: 'Material', series: materialChartItems },
-      { name: 'CDK', series: cdkChartItems }
+      {name: 'Material', series: materialChartItems},
+      {name: 'CDK', series: cdkChartItems}
     ];
   }
 

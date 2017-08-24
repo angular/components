@@ -308,7 +308,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   @ViewChild(ConnectedOverlayDirective) overlayDir: ConnectedOverlayDirective;
 
   /** All of the defined select options. */
-  @ContentChildren(MdOption, { descendants: true }) options: QueryList<MdOption>;
+  @ContentChildren(MdOption, {descendants: true}) options: QueryList<MdOption>;
 
   /** All of the defined groups of options. */
   @ContentChildren(MdOptgroup) optionGroups: QueryList<MdOptgroup>;

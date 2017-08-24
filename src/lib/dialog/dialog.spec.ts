@@ -87,7 +87,7 @@ describe('MdDialog', () => {
 
     const data = {value: 'Knees'};
 
-    let dialogRef = dialog.open(templateRefFixture.componentInstance.templateRef, { data });
+    let dialogRef = dialog.open(templateRefFixture.componentInstance.templateRef, {data});
 
     viewContainerFixture.detectChanges();
 
@@ -132,7 +132,7 @@ describe('MdDialog', () => {
   });
 
   it('should apply the configured role to the dialog element', () => {
-    dialog.open(PizzaMsg, { role: 'alertdialog' });
+    dialog.open(PizzaMsg, {role: 'alertdialog'});
 
     viewContainerFixture.detectChanges();
 
@@ -141,7 +141,7 @@ describe('MdDialog', () => {
   });
 
   it('should apply the specified `aria-describedby`', () => {
-    dialog.open(PizzaMsg, { ariaDescribedBy: 'description-element' });
+    dialog.open(PizzaMsg, {ariaDescribedBy: 'description-element'});
 
     viewContainerFixture.detectChanges();
 
@@ -150,7 +150,7 @@ describe('MdDialog', () => {
   });
 
   it('should close a dialog and get back a result', async(() => {
-    let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
+    let dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
     let afterCloseCallback = jasmine.createSpy('afterClose callback');
 
     dialogRef.afterClosed().subscribe(afterCloseCallback);
@@ -270,8 +270,8 @@ describe('MdDialog', () => {
   });
 
   it('should notify the observers if all open dialogs have finished closing', async(() => {
-    const ref1 = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
-    const ref2 = dialog.open(ContentElementDialog, { viewContainerRef: testViewContainerRef });
+    const ref1 = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+    const ref2 = dialog.open(ContentElementDialog, {viewContainerRef: testViewContainerRef});
     const spy = jasmine.createSpy('afterAllClosed spy');
 
     dialog.afterAllClosed.subscribe(spy);
@@ -389,13 +389,13 @@ describe('MdDialog', () => {
 
     expect(overlayPane.style.marginLeft).toBe('250px');
 
-    dialogRef.updatePosition({ left: '500px' });
+    dialogRef.updatePosition({left: '500px'});
 
     expect(overlayPane.style.marginLeft).toBe('500px');
   });
 
   it('should allow for the dimensions to be updated', () => {
-    let dialogRef = dialog.open(PizzaMsg, { width: '100px' });
+    let dialogRef = dialog.open(PizzaMsg, {width: '100px'});
 
     viewContainerFixture.detectChanges();
 
@@ -409,7 +409,7 @@ describe('MdDialog', () => {
   });
 
   it('should allow setting the layout direction', () => {
-    dialog.open(PizzaMsg, { direction: 'rtl' });
+    dialog.open(PizzaMsg, {direction: 'rtl'});
 
     viewContainerFixture.detectChanges();
 
@@ -434,7 +434,7 @@ describe('MdDialog', () => {
   }));
 
   it('should set the proper animation states', () => {
-    let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
+    let dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
     let dialogContainer: MdDialogContainer =
         viewContainerFixture.debugElement.query(By.directive(MdDialogContainer)).componentInstance;
 
@@ -542,17 +542,17 @@ describe('MdDialog', () => {
   });
 
   it('should allow for the id to be overwritten', () => {
-    const dialogRef = dialog.open(PizzaMsg, { id: 'pizza' });
+    const dialogRef = dialog.open(PizzaMsg, {id: 'pizza'});
     expect(dialogRef.id).toBe('pizza');
   });
 
   it('should throw when trying to open a dialog with the same id as another dialog', () => {
-    dialog.open(PizzaMsg, { id: 'pizza' });
-    expect(() => dialog.open(PizzaMsg, { id: 'pizza' })).toThrowError(/must be unique/g);
+    dialog.open(PizzaMsg, {id: 'pizza'});
+    expect(() => dialog.open(PizzaMsg, {id: 'pizza'})).toThrowError(/must be unique/g);
   });
 
   it('should be able to find a dialog by id', () => {
-    const dialogRef = dialog.open(PizzaMsg, { id: 'pizza' });
+    const dialogRef = dialog.open(PizzaMsg, {id: 'pizza'});
     expect(dialog.getDialogById('pizza')).toBe(dialogRef);
   });
 
@@ -691,7 +691,7 @@ describe('MdDialog', () => {
       document.body.appendChild(button);
       button.focus();
 
-      let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
+      let dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
 
       flushMicrotasks();
       viewContainerFixture.detectChanges();
@@ -726,7 +726,7 @@ describe('MdDialog', () => {
       document.body.appendChild(input);
       button.focus();
 
-      let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
+      let dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
 
       tick(500);
       viewContainerFixture.detectChanges();
