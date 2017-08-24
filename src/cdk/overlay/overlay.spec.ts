@@ -133,7 +133,7 @@ describe('Overlay', () => {
   });
 
   it('should set the direction', () => {
-    const state = new OverlayState({ direction: 'rtl' });
+    const state = new OverlayState({direction: 'rtl'});
 
     overlay.create(state).attach(componentPortal);
 
@@ -152,7 +152,7 @@ describe('Overlay', () => {
   });
 
   it('should emit the attachment event after everything is added to the DOM', () => {
-    let state = new OverlayState({ hasBackdrop: true });
+    let state = new OverlayState({hasBackdrop: true});
     let overlayRef = overlay.create(state);
 
     overlayRef.attachments().subscribe(() => {
@@ -411,7 +411,7 @@ describe('Overlay', () => {
 
   describe('panelClass', () => {
     it('should apply a custom overlay pane class', () => {
-      const config = new OverlayState({ panelClass: 'custom-panel-class' });
+      const config = new OverlayState({panelClass: 'custom-panel-class'});
 
       overlay.create(config).attach(componentPortal);
       viewContainerFixture.detectChanges();
@@ -421,7 +421,7 @@ describe('Overlay', () => {
     });
 
     it('should be able to apply multiple classes', () => {
-      const config = new OverlayState({ panelClass: ['custom-class-one', 'custom-class-two'] });
+      const config = new OverlayState({panelClass: ['custom-class-one', 'custom-class-two']});
 
       overlay.create(config).attach(componentPortal);
       viewContainerFixture.detectChanges();
@@ -440,7 +440,7 @@ describe('Overlay', () => {
 
     beforeEach(() => {
       fakeScrollStrategy = new FakeScrollStrategy();
-      config = new OverlayState({ scrollStrategy: fakeScrollStrategy });
+      config = new OverlayState({scrollStrategy: fakeScrollStrategy});
       overlayRef = overlay.create(config);
     });
 

@@ -74,7 +74,7 @@ export class OverlayDemo {
             {originX: 'start', originY: 'bottom'},
             {overlayX: 'start', overlayY: 'top'} );
 
-    let config = new OverlayState({ positionStrategy: strategy });
+    let config = new OverlayState({positionStrategy: strategy});
     let overlayRef = this.overlay.create(config);
 
     overlayRef.attach(new ComponentPortal(SpagettiPanel, this.viewContainerRef));
@@ -87,7 +87,7 @@ export class OverlayDemo {
             {originX: 'start', originY: 'bottom'},
             {overlayX: 'end', overlayY: 'top'} );
 
-    let config = new OverlayState({ positionStrategy: strategy });
+    let config = new OverlayState({positionStrategy: strategy});
     let overlayRef = this.overlay.create(config);
 
     overlayRef.attach(this.tortelliniTemplate);
