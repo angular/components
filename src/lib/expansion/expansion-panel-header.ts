@@ -75,8 +75,8 @@ export class MdExpansionPanelHeader implements OnDestroy {
   private _parentChangeSubscription: Subscription | null = null;
 
   constructor(
+    renderer: Renderer2,
     @Host() public panel: MdExpansionPanel,
-    private _renderer: Renderer2,
     private _element: ElementRef,
     private _focusOriginMonitor: FocusOriginMonitor,
     private _changeDetectorRef: ChangeDetectorRef) {
@@ -90,7 +90,7 @@ export class MdExpansionPanelHeader implements OnDestroy {
     )
     .subscribe(() => this._changeDetectorRef.markForCheck());
 
-    _focusOriginMonitor.monitor(_element.nativeElement, _renderer, false);
+    _focusOriginMonitor.monitor(_element.nativeElement, renderer, false);
   }
 
   /** Toggles the expanded state of the panel. */
