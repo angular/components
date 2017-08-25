@@ -240,7 +240,9 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
       this._tabLabelSubscription.unsubscribe();
     }
 
-    this._tabLabelSubscription = merge(...this._tabs.map(tab => tab._labelChange)).subscribe(() => {
+    this._tabLabelSubscription = merge(
+        ...this._tabs.map(tab => tab._disableChange),
+        ...this._tabs.map(tab => tab._labelChange)).subscribe(() => {
       this._changeDetectorRef.markForCheck();
     });
   }

@@ -186,6 +186,25 @@ describe('MdTabGroup', () => {
       expect(tabs[1].isActive).toBe(false);
       expect(tabs[2].isActive).toBe(true);
     });
+
+    it('should set the disabled flag on tab', () => {
+      fixture.detectChanges();
+
+      const tabs = fixture.componentInstance.tabs.toArray();
+
+      tabs[0].disabled = false;
+      fixture.detectChanges();
+
+      let labels = fixture.debugElement.queryAll(By.css('.mat-tab-disabled'));
+      expect(labels.length).toBe(0);
+
+      tabs[0].disabled = true;
+      fixture.detectChanges();
+
+      expect(tabs[0].disabled).toBe(true);
+      labels = fixture.debugElement.queryAll(By.css('.mat-tab-disabled'));
+      expect(labels.length).toBe(0);
+    });
   });
 
   describe('dynamic binding tabs', () => {
