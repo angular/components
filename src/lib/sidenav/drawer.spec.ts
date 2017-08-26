@@ -36,6 +36,7 @@ describe('MdDrawer', () => {
       let drawer = fixture.debugElement.query(By.directive(MdDrawer));
       let drawerBackdropElement = fixture.debugElement.query(By.css('.mat-drawer-backdrop'));
 
+      drawerBackdropElement.nativeElement.style.transition = 'none';
       fixture.debugElement.query(By.css('.open')).nativeElement.click();
       fixture.detectChanges();
 
