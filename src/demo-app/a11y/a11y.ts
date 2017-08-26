@@ -36,5 +36,6 @@ export class AccessibilityDemo {
     {name: 'Snack bar', route: 'snack-bar'},
     {name: 'Select', route: 'select'},
     {name: 'Toolbar', route: 'toolbar'},
+    {name: 'Table', route: 'table'},
   ];
 }

@@ -32,7 +32,7 @@ import {SliderAccessibilityDemo} from './slider/slider-a11y';
 import {SlideToggleAccessibilityDemo} from './slide-toggle/slide-toggle-a11y';
 import {SnackBarAccessibilityDemo} from './snack-bar/snack-bar-a11y';
 import {SelectAccessibilityDemo} from './select/select-a11y';
-
+import {TableAccessibilityDemo} from './table/table-a11y';
 
 @NgModule({
   imports: [
@@ -79,6 +79,7 @@ export class AccessibilityRoutingModule {}
     SlideToggleAccessibilityDemo,
     SnackBarAccessibilityDemo,
     SelectAccessibilityDemo,
+    TableAccessibilityDemo,
   ],
   entryComponents: [
     DialogAccessibilityDemo,
