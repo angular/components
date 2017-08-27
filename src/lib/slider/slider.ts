@@ -126,6 +126,9 @@ export const _MdSliderMixinBase = mixinColor(mixinDisabled(MdSliderBase), 'accen
 })
 export class MdSlider extends _MdSliderMixinBase
     implements ControlValueAccessor, OnDestroy, CanDisable, CanColor {
+  
+  @Input() customDisplayValue;
+  
   /** Whether the slider is inverted. */
   @Input()
   get invert() { return this._invert; }
@@ -247,6 +250,12 @@ export class MdSlider extends _MdSliderMixinBase
 
   /** The value to be used for display purposes. */
   get displayValue(): string | number {
+    // Issue: Need Slider with values 0.1, 0.5, 1, 2, 5, 10, 15, 20, 30
+    // Solution: On some step it is posible show value what we want
+    if (this.customDisplayValue) {
+      return this.customDisplayValue;
+    }
+
     // Note that this could be improved further by rounding something like 0.999 to 1 or
     // 0.899 to 0.9, however it is very performance sensitive, because it gets called on
     // every change detection cycle.
