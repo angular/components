@@ -70,7 +70,7 @@ describe('MdTabGroup', () => {
       });
     }));
 
-    fit('should support two-way binding for selectedIndex', async(() => {
+    it('should support two-way binding for selectedIndex', async(() => {
       let component = fixture.componentInstance;
       component.selectedIndex = 0;
       fixture.detectChanges();
