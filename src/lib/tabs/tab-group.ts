@@ -131,9 +131,7 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
   private _backgroundColor: ThemePalette;
 
   /** Output to enable support for two-way binding on `[(selectedIndex)]` */
-  @Output() get selectedIndexChange(): Observable<number> {
-    return map.call(this.selectChange, event => event.index);
-  }
+  @Output() selectedIndexChange = new EventEmitter();
 
   /** Event emitted when focus has changed within a tab group. */
   @Output() focusChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>();
@@ -157,9 +155,10 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
    * a new selected tab should transition in (from the left or right).
    */
   ngAfterContentChecked(): void {
-    // Clamp the next selected index to the bounds of 0 and the tabs length. Note the `|| 0`, which
-    // ensures that values like NaN can't get through and which would otherwise throw the
-    // component into an infinite loop (since Math.max(NaN, 0) === NaN).
+    // Clamp the next selected index to the boundsof 0 and the tabs length.
+    // Note the `|| 0`, which ensures that values like NaN can't get through
+    // and which would otherwise throw the component into an infinite loop
+    // (since Math.max(NaN, 0) === NaN).
     let indexToSelect = this._indexToSelect =
         Math.min(this._tabs.length - 1, Math.max(this._indexToSelect || 0, 0));
 
@@ -167,9 +166,11 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
     // the selected index has not yet been initialized.
     if (this._selectedIndex != indexToSelect && this._selectedIndex != null) {
       this.selectChange.emit(this._createChangeEvent(indexToSelect));
+      // prevent expression changed error
+      setTimeout(() => this.selectedIndexChange.emit(indexToSelect));
     }
 
-    // Setup the position for each tab and optionally setup an origin on the next selected tab.
+      // Setup the position for each tab and optionally setup an origin on the next selected tab.
     this._tabs.forEach((tab: MdTab, index: number) => {
       tab.position = index - indexToSelect;
       tab.isActive = index === indexToSelect;
