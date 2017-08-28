@@ -15,6 +15,7 @@ import {
   // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
   // tslint:disable-next-line:no-unused-variable
   ElementRef,
+  forwardRef,
   Inject,
   Optional,
   QueryList,
@@ -50,7 +51,7 @@ export class MdStep extends _MdStep implements ErrorOptions {
   /** Original ErrorStateMatcher that checks the validity of form control. */
   private _originalErrorStateMatcher: ErrorStateMatcher;
 
-  constructor(mdStepper: MdStepper,
+  constructor(@Inject(forwardRef(() => MdStepper)) mdStepper: MdStepper,
               @Optional() @SkipSelf() @Inject(MD_ERROR_GLOBAL_OPTIONS) errorOptions: ErrorOptions) {
     super(mdStepper);
     this._originalErrorStateMatcher =

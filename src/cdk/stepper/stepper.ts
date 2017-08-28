@@ -21,7 +21,10 @@ import {
   ContentChild,
   ViewChild,
   TemplateRef,
-  ViewEncapsulation, Optional
+  ViewEncapsulation,
+  Optional,
+  Inject,
+  forwardRef
 } from '@angular/core';
 import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '@angular/cdk/keycodes';
 import {CdkStepLabel} from './step-label';
@@ -104,7 +107,7 @@ export class CdkStep {
     return this.stepControl ? this.stepControl.valid && this.interacted : this.interacted;
   }
 
-  constructor(private _stepper: CdkStepper) { }
+  constructor(@Inject(forwardRef(() => CdkStepper)) private _stepper: CdkStepper) { }
 
   /** Selects this step component. */
   select(): void {
