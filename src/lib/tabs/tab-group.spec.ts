@@ -70,7 +70,7 @@ describe('MdTabGroup', () => {
       });
     }));
 
-    it('should support two-way binding for selectedIndex', async(() => {
+    it('should set to correct tab on fast change', async(() => {
       let component = fixture.componentInstance;
       component.selectedIndex = 0;
       fixture.detectChanges();

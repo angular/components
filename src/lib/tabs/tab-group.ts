@@ -166,11 +166,12 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
     // the selected index has not yet been initialized.
     if (this._selectedIndex != indexToSelect && this._selectedIndex != null) {
       this.selectChange.emit(this._createChangeEvent(indexToSelect));
-      // prevent expression changed error
+      // Emitting this value after change detection has run
+      // since the checked content may contain this variable
       this._zone.run(() => this.selectedIndexChange.emit(indexToSelect));
     }
 
-      // Setup the position for each tab and optionally setup an origin on the next selected tab.
+    // Setup the position for each tab and optionally setup an origin on the next selected tab.
     this._tabs.forEach((tab: MdTab, index: number) => {
       tab.position = index - indexToSelect;
       tab.isActive = index === indexToSelect;
