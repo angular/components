@@ -23,6 +23,7 @@ import {
   AfterContentChecked,
   OnDestroy,
   ViewEncapsulation,
+  NgZone,
 } from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Subscription} from 'rxjs/Subscription';
@@ -141,6 +142,7 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
 
   constructor(_renderer: Renderer2,
               elementRef: ElementRef,
+              private _zone: NgZone,
               private _changeDetectorRef: ChangeDetectorRef) {
     super(_renderer, elementRef);
     this._groupId = nextId++;
@@ -165,7 +167,7 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
     if (this._selectedIndex != indexToSelect && this._selectedIndex != null) {
       this.selectChange.emit(this._createChangeEvent(indexToSelect));
       // prevent expression changed error
-      setTimeout(() => this.selectedIndexChange.emit(indexToSelect));
+      this._zone.run(() => this.selectedIndexChange.emit(indexToSelect));
     }
 
       // Setup the position for each tab and optionally setup an origin on the next selected tab.
