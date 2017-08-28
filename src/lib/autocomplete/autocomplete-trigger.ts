@@ -109,16 +109,16 @@ export function getMdAutocompleteMissingPanelError(): Error {
     '[attr.aria-owns]': 'autocomplete?.id',
     // Note: we use `focusin`, as opposed to `focus`, in order to open the panel
     // a little earlier. This avoids issues where IE delays the focusing of the input.
-    '(focusin)': 'openPanel()',
-    '(input)': '_handleInput($event)',
+    '(focusin)': '_handleFocus()',
     '(blur)': '_onTouched()',
+    '(input)': '_handleInput($event)',
     '(keydown)': '_handleKeydown($event)',
   },
   providers: [MD_AUTOCOMPLETE_VALUE_ACCESSOR]
 })
 export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   private _overlayRef: OverlayRef | null;
-  private _portal: TemplatePortal;
+  private _portal: TemplatePortal<any>;
   private _panelOpen: boolean = false;
 
   /** Strategy that is used to position the panel. */
@@ -169,26 +169,8 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   /** Opens the autocomplete suggestion panel. */
   openPanel(): void {
-    if (!this.autocomplete) {
-      throw getMdAutocompleteMissingPanelError();
-    }
-
-    if (!this._overlayRef) {
-      this._createOverlay();
-    } else {
-      /** Update the panel width, in case the host width has changed */
-      this._overlayRef.getState().width = this._getHostWidth();
-      this._overlayRef.updateSize();
-    }
-
-    if (this._overlayRef && !this._overlayRef.hasAttached()) {
-      this._overlayRef.attach(this._portal);
-      this._closingActionsSubscription = this._subscribeToClosingActions();
-    }
-
-    this.autocomplete._setVisibility();
+    this._attachOverlay();
     this._floatPlaceholder();
-    this._panelOpen = true;
   }
 
   /** Closes the autocomplete suggestion panel. */
@@ -327,14 +309,25 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     }
   }
 
+  _handleFocus(): void {
+    this._attachOverlay();
+    this._floatPlaceholder(true);
+  }
+
   /**
    * In "auto" mode, the placeholder will animate down as soon as focus is lost.
    * This causes the value to jump when selecting an option with the mouse.
    * This method manually floats the placeholder until the panel can be closed.
+   * @param shouldAnimate Whether the placeholder should be animated when it is floated.
    */
-  private _floatPlaceholder(): void {
+  private _floatPlaceholder(shouldAnimate = false): void {
     if (this._formField && this._formField.floatPlaceholder === 'auto') {
-      this._formField.floatPlaceholder = 'always';
+      if (shouldAnimate) {
+        this._formField._animateAndLockPlaceholder();
+      } else {
+        this._formField.floatPlaceholder = 'always';
+      }
+
       this._manuallyFloatingPlaceholder = true;
     }
   }
@@ -357,8 +350,10 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    * not adjusted.
    */
   private _scrollToOption(): void {
-    const optionOffset = this.autocomplete._keyManager.activeItemIndex ?
-        this.autocomplete._keyManager.activeItemIndex * AUTOCOMPLETE_OPTION_HEIGHT : 0;
+    const activeOptionIndex = this.autocomplete._keyManager.activeItemIndex || 0;
+    const labelCount = MdOption.countGroupLabelsBeforeOption(activeOptionIndex,
+        this.autocomplete.options, this.autocomplete.optionGroups);
+    const optionOffset = (activeOptionIndex + labelCount) * AUTOCOMPLETE_OPTION_HEIGHT;
     const panelTop = this.autocomplete._getScrollTop();
 
     if (optionOffset < panelTop) {
@@ -432,6 +427,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this._setTriggerValue(event.source.value);
       this._onChange(event.source.value);
       this._element.nativeElement.focus();
+      this.autocomplete._emitSelectEvent(event.source);
     }
 
     this.closePanel();
@@ -448,9 +444,27 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     });
   }
 
-  private _createOverlay(): void {
-    this._portal = new TemplatePortal(this.autocomplete.template, this._viewContainerRef);
-    this._overlayRef = this._overlay.create(this._getOverlayConfig());
+  private _attachOverlay(): void {
+    if (!this.autocomplete) {
+      throw getMdAutocompleteMissingPanelError();
+    }
+
+    if (!this._overlayRef) {
+      this._portal = new TemplatePortal(this.autocomplete.template, this._viewContainerRef);
+      this._overlayRef = this._overlay.create(this._getOverlayConfig());
+    } else {
+      /** Update the panel width, in case the host width has changed */
+      this._overlayRef.getState().width = this._getHostWidth();
+      this._overlayRef.updateSize();
+    }
+
+    if (this._overlayRef && !this._overlayRef.hasAttached()) {
+      this._overlayRef.attach(this._portal);
+      this._closingActionsSubscription = this._subscribeToClosingActions();
+    }
+
+    this.autocomplete._setVisibility();
+    this._panelOpen = true;
   }
 
   private _getOverlayConfig(): OverlayState {

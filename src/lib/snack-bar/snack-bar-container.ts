@@ -9,12 +9,14 @@
 import {
   Component,
   ComponentRef,
+  EmbeddedViewRef,
   ViewChild,
   NgZone,
   OnDestroy,
   Renderer2,
   ElementRef,
   ChangeDetectionStrategy,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   trigger,
@@ -52,8 +54,10 @@ export const HIDE_ANIMATION = '195ms cubic-bezier(0.0,0.0,0.2,1)';
   templateUrl: 'snack-bar-container.html',
   styleUrls: ['snack-bar-container.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
   host: {
     'role': 'alert',
+    'class': 'mat-snack-bar-container',
     '[@state]': 'animationState',
     '(@state.done)': 'onAnimationEnd($event)'
   },
@@ -109,7 +113,7 @@ export class MdSnackBarContainer extends BasePortalHost implements OnDestroy {
   }
 
   /** Attach a template portal as content to this snack bar container. */
-  attachTemplatePortal(): Map<string, any> {
+  attachTemplatePortal(): EmbeddedViewRef<any> {
     throw Error('Not yet implemented');
   }
 

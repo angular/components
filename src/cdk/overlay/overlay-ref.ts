@@ -45,6 +45,10 @@ export class OverlayRef implements PortalHost {
   attach(portal: Portal<any>): any {
     let attachResult = this._portalHost.attach(portal);
 
+    if (this._state.positionStrategy) {
+      this._state.positionStrategy.attach(this);
+    }
+
     // Update the pane element with the given state configuration.
     this._updateStackingOrder();
     this.updateSize();
@@ -146,7 +150,7 @@ export class OverlayRef implements PortalHost {
   /** Updates the position of the overlay based on the position strategy. */
   updatePosition() {
     if (this._state.positionStrategy) {
-      this._state.positionStrategy.apply(this._pane);
+      this._state.positionStrategy.apply();
     }
   }
 
@@ -171,6 +175,14 @@ export class OverlayRef implements PortalHost {
 
     if (this._state.minHeight || this._state.minHeight === 0) {
       this._pane.style.minHeight = formatCssUnit(this._state.minHeight);
+    }
+
+    if (this._state.maxWidth || this._state.maxWidth === 0) {
+      this._pane.style.maxWidth = formatCssUnit(this._state.maxWidth);
+    }
+
+    if (this._state.maxHeight || this._state.maxHeight === 0) {
+      this._pane.style.maxHeight = formatCssUnit(this._state.maxHeight);
     }
   }
 
