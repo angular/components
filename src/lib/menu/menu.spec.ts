@@ -1082,7 +1082,7 @@ class SimpleMenu {
 @Component({
   template: `
     <button [mdMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
-    <md-menu [xPosition]="xPosition" [yPosition]="yPosition"#menu="mdMenu">
+    <md-menu [xPosition]="xPosition" [yPosition]="yPosition" #menu="mdMenu">
       <button md-menu-item> Positioned Content </button>
     </md-menu>
   `

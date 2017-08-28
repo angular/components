@@ -118,7 +118,7 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
     this.setPositionClasses();
   }
 
-  /** Amount of x offset of the menu. */
+  /** Units in pixels to be set in x offset of the menu. */
   @Input()
   get xOffset() { return this._xOffset; }
   set xOffset(value: number) {
@@ -129,7 +129,7 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
     this._xOffset = offset;
   }
 
-    /** Amount of y offset of the menu. */
+    /** Units in pixels to be set in y offset of the menu. */
   @Input()
   get yOffset() { return this._yOffset; }
   set yOffset(value: number) {
