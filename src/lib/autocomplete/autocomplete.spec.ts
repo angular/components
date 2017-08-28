@@ -1633,6 +1633,7 @@ describe('MatAutocomplete', () => {
     fixture.componentInstance.states.push('Puerto Rico');
     fixture.detectChanges();
     tick();
+    fixture.detectChanges();
 
     let options = overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
     let spy = fixture.componentInstance.optionSelected;
