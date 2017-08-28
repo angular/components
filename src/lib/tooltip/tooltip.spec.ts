@@ -27,7 +27,6 @@ import {
   TOOLTIP_PANEL_CLASS,
   TooltipPosition
 } from './index';
-import {A11Y_MESSAGES_CONTAINER_ID} from './tooltip';
 
 
 const initialTooltipMessage = 'initial tooltip message';
