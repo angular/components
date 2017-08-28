@@ -2,14 +2,12 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {MdStepperModule} from './index';
 import {By} from '@angular/platform-browser';
-import {MdHorizontalStepper} from './stepper-horizontal';
-import {MdVerticalStepper} from './stepper-vertical';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MdStepperNext, MdStepperPrevious} from './stepper-button';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
-import {MdStepper} from './stepper';
+import {MdStepper, MdHorizontalStepper, MdVerticalStepper} from './stepper';
 
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
