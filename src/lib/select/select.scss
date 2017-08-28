@@ -5,7 +5,6 @@
 @import '../core/a11y/a11y';
 
 $mat-select-trigger-height: 30px !default;
-$mat-select-trigger-min-width: 112px !default;
 $mat-select-arrow-size: 5px !default;
 $mat-select-arrow-margin: 4px !default;
 $mat-select-panel-max-height: 256px !default;
@@ -20,7 +19,6 @@ $mat-select-trigger-underline-height: 1px !default;
   display: flex;
   align-items: center;
   height: $mat-select-trigger-height;
-  min-width: $mat-select-trigger-min-width;
   cursor: pointer;
   position: relative;
   box-sizing: border-box;
