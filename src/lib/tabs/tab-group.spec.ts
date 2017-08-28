@@ -186,24 +186,34 @@ describe('MdTabGroup', () => {
       expect(tabs[1].isActive).toBe(false);
       expect(tabs[2].isActive).toBe(true);
     });
+  });
+
+  describe('disable tabs', () => {
+    let fixture: ComponentFixture<DisabledTabsTestApp>;
+    beforeEach(() => {
+      fixture = TestBed.createComponent(DisabledTabsTestApp);
+    });
+
+    it('should have one disabled tab', () => {
+      fixture.detectChanges();
+      const labels = fixture.debugElement.queryAll(By.css('.mat-tab-disabled'));
+      expect(labels.length).toBe(1);
+    });
 
     it('should set the disabled flag on tab', () => {
       fixture.detectChanges();
 
       const tabs = fixture.componentInstance.tabs.toArray();
-
-      tabs[0].disabled = false;
-      fixture.detectChanges();
-
       let labels = fixture.debugElement.queryAll(By.css('.mat-tab-disabled'));
-      expect(labels.length).toBe(0);
+      expect(tabs[2].disabled).toBe(false);
+      expect(labels.length).toBe(1);
 
-      tabs[0].disabled = true;
+      fixture.componentInstance.isDisabled = true;
       fixture.detectChanges();
 
-      expect(tabs[0].disabled).toBe(true);
+      expect(tabs[2].disabled).toBe(true);
       labels = fixture.debugElement.queryAll(By.css('.mat-tab-disabled'));
-      expect(labels.length).toBe(0);
+      expect(labels.length).toBe(2);
     });
   });
 
@@ -481,14 +491,17 @@ class BindedTabsTestApp {
         <ng-template md-tab-label>Tab Two</ng-template>
         Tab two content
       </md-tab>
-      <md-tab>
+      <md-tab [disabled]="isDisabled">
         <ng-template md-tab-label>Tab Three</ng-template>
         Tab three content
       </md-tab>
     </md-tab-group>
   `,
 })
-class DisabledTabsTestApp {}
+class DisabledTabsTestApp {
+  @ViewChildren(MdTab) tabs: QueryList<MdTab>;
+  isDisabled = false;
+}
 
 @Component({
   template: `
