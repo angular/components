@@ -8,6 +8,11 @@ $mat-drawer-side-drawer-z-index: 2;
 $mat-drawer-backdrop-z-index: 3;
 $mat-drawer-over-drawer-z-index: 4;
 
+$mat-drawer-content-z-index: 1;
+$mat-drawer-side-drawer-z-index: 2;
+$mat-drawer-backdrop-z-index: 3;
+$mat-drawer-over-drawer-z-index: 4;
+
 // stylelint-disable max-line-length
 // Mixin that creates a new stacking context.
 // see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context
