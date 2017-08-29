@@ -6,10 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Inject, Injectable, Optional, LOCALE_ID} from '@angular/core';
+import {Inject, Injectable, Optional, InjectionToken} from '@angular/core';
 import {DateAdapter} from './date-adapter';
 import {extendObject} from '../util/object-extend';
-
 
 // TODO(mmalerba): Remove when we no longer support safari 9.
 /** Whether the browser supports the Intl API. */
@@ -48,13 +47,15 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
   return valuesArray;
 }
 
+/** InjectionToken for datepicker that can be used to override default locale code. */
+export const MAT_DATE_LOCALE = new InjectionToken<string>('MdDateLocale');
 
 /** Adapts the native JS Date for use with cdk-based components that work with dates. */
 @Injectable()
 export class NativeDateAdapter extends DateAdapter<Date> {
-  constructor(@Optional() @Inject(LOCALE_ID) localeId: any) {
+  constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: any) {
     super();
-    super.setLocale(localeId);
+    super.setLocale(matDateLocale);
   }
 
   /**

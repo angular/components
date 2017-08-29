@@ -1,6 +1,5 @@
 import {TestBed, async, inject} from '@angular/core/testing';
-import {LOCALE_ID} from '@angular/core';
-import {NativeDateAdapter, NativeDateModule, DateAdapter} from './index';
+import {NativeDateAdapter, NativeDateModule, DateAdapter, MAT_DATE_LOCALE} from './index';
 import {Platform} from '../platform/index';
 import {DEC, FEB, JAN, MAR} from '../testing/month-constants';
 
@@ -334,13 +333,13 @@ describe('NativeDateAdapter', () => {
 });
 
 
-describe('NativeDateAdapter with LOCALE_ID override', () => {
+describe('NativeDateAdapter with MAT_DATE_LOCALE override', () => {
   let adapter: NativeDateAdapter;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [NativeDateModule],
-      providers: [{provide: LOCALE_ID, useValue: 'da-DK'}]
+      providers: [{provide: MAT_DATE_LOCALE, useValue: 'da-DK'}]
     }).compileComponents();
   }));
 

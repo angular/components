@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import {DateAdapter} from './date-adapter';
-import {NativeDateAdapter} from './native-date-adapter';
+import {NativeDateAdapter, MAT_DATE_LOCALE} from './native-date-adapter';
 import {MD_DATE_FORMATS} from './date-formats';
 import {MD_NATIVE_DATE_FORMATS} from './native-date-formats';
 
@@ -20,7 +20,10 @@ export * from './native-date-formats';
 
 
 @NgModule({
-  providers: [{provide: DateAdapter, useClass: NativeDateAdapter}],
+  providers: [
+    {provide: DateAdapter, useClass: NativeDateAdapter},
+    {provide: MAT_DATE_LOCALE, useExisting: LOCALE_ID}
+  ],
 })
 export class NativeDateModule {}
 
