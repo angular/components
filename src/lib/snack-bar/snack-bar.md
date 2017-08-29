@@ -73,6 +73,6 @@ export class MessageArchivedComponent {
 }
 ```
 ### Accessibility
-A Snackbar automatically goes away after a short time, so you can't count on the user seeing the
+A snack-bar automatically goes away after a short time, so you can't count on the user seeing the
 message or having a chance to press the button. For this reason, you should consider offering an
-alternate way to perform any Snackbar action.
+alternate way to perform any snack-bar action.
