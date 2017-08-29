@@ -145,8 +145,8 @@ export class MdListOption extends _MdListOptionMixinBase
   }
 
   /** Whether this list item should show a ripple effect when clicked.  */
-  _isRippleEnabled() {
-    return !this.disableRipple && !this.selectionList.disableRipple;
+  _isRippleDisabled() {
+    return this.disableRipple || this.selectionList.disableRipple;
   }
 
   _handleClick() {
