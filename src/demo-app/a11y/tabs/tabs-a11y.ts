@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
 
 @Component({
   moduleId: module.id,
@@ -20,7 +19,7 @@ export class TabsAccessibilityDemo {
     {
       label: 'German Shepherd',
       content: `The German Shepherd is a breed of medium to large-sized working dog that originated
-          in Germany. The breed's officially recognized name is German Shepherd Dog in the 
+          in Germany. The breed's officially recognized name is German Shepherd Dog in the
           English language. The breed is also known as the Alsatian in Britain and Ireland.`
     }, {
       label: 'Labrador Retriever',
@@ -31,11 +30,11 @@ export class TabsAccessibilityDemo {
       label: 'Rottweiler',
       disabled: true,
       content: `The Rottweiler is a breed of domestic dog, regarded as medium-to-large or large.
-          The dogs were known in German as Rottweiler Metzgerhund, meaning Rottweil butchers' dogs, 
+          The dogs were known in German as Rottweiler Metzgerhund, meaning Rottweil butchers' dogs,
           because their main use was to ...`
     }, {
       label: 'Beagle',
-      content: `The Beagle is a breed of small hound, similar in appearance to the much larger 
+      content: `The Beagle is a breed of small hound, similar in appearance to the much larger
           foxhound. The beagle is a scent hound, developed primarily for hunting hare.`
     },
   ];
