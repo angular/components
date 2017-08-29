@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import {Http} from '@angular/http';
 import {ComponentPortal, DomPortalHost} from '@angular/material';
+import {Subscription} from 'rxjs/Subscription';
 import {ExampleViewer} from '../example-viewer/example-viewer';
 import {HeaderLink} from './header-link';
 
@@ -21,6 +22,7 @@ import {HeaderLink} from './header-link';
 })
 export class DocViewer implements OnDestroy {
   private _portalHosts: DomPortalHost[] = [];
+  private _documentFetchSubscription: Subscription;
 
   /** The URL of the document to display. */
   @Input()
@@ -39,7 +41,12 @@ export class DocViewer implements OnDestroy {
 
   /** Fetch a document by URL. */
   private _fetchDocument(url: string) {
-    this._http.get(url).subscribe(
+    // Cancel previous pending request
+    if (this._documentFetchSubscription) {
+      this._documentFetchSubscription.unsubscribe();
+    }
+
+    this._documentFetchSubscription = this._http.get(url).subscribe(
         response => {
           // TODO(mmalerba): Trust HTML.
           if (response.ok) {
@@ -95,5 +102,9 @@ export class DocViewer implements OnDestroy {
 
   ngOnDestroy() {
     this._clearLiveExamples();
+
+    if (this._documentFetchSubscription) {
+      this._documentFetchSubscription.unsubscribe();
+    }
   }
 }
