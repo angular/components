@@ -1,0 +1,23 @@
+.demo-sidenav-area {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  .mat-sidenav-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .mat-sidenav-content {
+    padding: 32px;
+  }
+
+  .demo-filler-content {
+    padding: 60px;
+  }
+}

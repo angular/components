@@ -1,0 +1,53 @@
+<button md-raised-button (click)="isLaunched = true" *ngIf="!isLaunched" color="primary">
+  Launch Fullscreen Sidenav Demo
+</button>
+
+<div class="demo-sidenav-area" *ngIf="isLaunched">
+  <md-sidenav-container>
+    <md-sidenav #start (open)="myinput.focus()" mode="side">
+      Start Side Sidenav
+      <br>
+      <button md-button (click)="start.close()">Close</button>
+      <br>
+      <button md-button (click)="end.open()">Open End Side</button>
+      <br>
+      <button md-button
+              (click)="start.mode = (start.mode == 'push' ? 'over' : (start.mode == 'over' ? 'side' : 'push'))">Toggle Mode</button>
+      <div>Mode: {{start.mode}}</div>
+      <br>
+      <input #myinput>
+      <div class="demo-filler-content" *ngFor="let c of fillerContent">Filler Content</div>
+    </md-sidenav>
+
+    <md-sidenav #end position="end">
+      End Side Sidenav
+      <br>
+      <button md-button (click)="end.close()">Close</button>
+      <div class="demo-filler-content" *ngFor="let c of fillerContent">Filler Content</div>
+    </md-sidenav>
+
+    <md-sidenav-content>
+      <div>
+        <button md-raised-button (click)="isLaunched = false">
+          Exit Fullscreen Sidenav Demo
+        </button>
+      </div>
+
+      <div>
+        <h3>Sidenav</h3>
+        <button md-button (click)="start.toggle()">Toggle Start Side Sidenav</button>
+        <button md-button (click)="end.toggle()">Toggle End Side Sidenav</button>
+        <button md-button>Toggle fixed mode</button>
+        <button md-button>Toggle fixed covers header/footer</button>
+      </div>
+
+      <div>
+        <h3>Header / Footer</h3>
+        <button md-button>Toggle header</button>
+        <button md-button>Toggle footer</button>
+      </div>
+
+      <div class="demo-filler-content" *ngFor="let c of fillerContent">Filler Content</div>
+    </md-sidenav-content>
+  </md-sidenav-container>
+</div>
