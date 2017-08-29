@@ -31,7 +31,9 @@
 .mat-expansion-panel-header-description {
   display: flex;
   flex-grow: 1;
+  line-height: 1.75;
   margin-right: 16px;
+  vertical-align: middle;
 
   [dir='rtl'] & {
     margin-right: 0;
@@ -44,15 +46,22 @@
 }
 
 /**
+ * Margin added to the to properly center the arrow vertically.
+ */
+.mat-expansion-indicator {
+  margin-bottom: 2.83px;
+}
+
+/**
  * Creates the expansion indicator arrow. Done using ::after rather than having
  * additional nodes in the template.
  */
-.mat-expansion-indicator::after {
+.mat-expansion-indicator {
   border-style: solid;
   border-width: 0 2px 2px 0;
-  content: '';
   display: inline-block;
   padding: 3px;
-  transform: rotate(45deg);
   vertical-align: middle;
+  position: relative;
+  transform: rotate(45deg);
 }
