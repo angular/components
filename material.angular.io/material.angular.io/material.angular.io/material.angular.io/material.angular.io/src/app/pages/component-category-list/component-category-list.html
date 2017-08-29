@@ -1,9 +1,10 @@
 <div class="docs-component-category-list">
-  <md-card
-      *ngFor="let category of docItems.getItemsInCategories()"
-      class="docs-component-category-list-card"
-      [routerLink]="['/categories/', category.id]">
-    <md-card-title>{{category.name}}</md-card-title>
-    <p class="docs-component-category-list-card-summary">{{category.summary}}</p>
-  </md-card>
+  <a *ngFor="let category of docItems.getItemsInCategories()"
+    class="docs-component-category-list-item"
+    [routerLink]="['/categories/', category.id]">
+    <md-card class="docs-component-category-list-card">
+      <md-card-title>{{category.name}}</md-card-title>
+      <p class="docs-component-category-list-card-summary">{{category.summary}}</p>
+    </md-card>
+  </a>
 </div>

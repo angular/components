@@ -10,8 +10,7 @@
   }
 }
 
-.docs-component-category-list-card {
-  cursor: pointer;
+.docs-component-category-list-item {
   display: inline-block;
   margin: 20px;
   vertical-align: top;
@@ -19,6 +18,10 @@
 
   .mat-card-title {
     font-size: 20px;
+  }
+
+  &, &:active, &:hover, &:focus {
+    text-decoration: none;
   }
 }
 
