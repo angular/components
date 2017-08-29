@@ -68,7 +68,7 @@ export class MdSidenavContent extends MdDrawerContent {
     '[class.mat-drawer-over]': 'mode === "over"',
     '[class.mat-drawer-push]': 'mode === "push"',
     '[class.mat-drawer-side]': 'mode === "side"',
-    '[class.mat-app-sidenav-fixed]': 'fixedInViewport',
+    '[class.mat-sidenav-fixed]': 'fixedInViewport',
     '[style.top.px]': 'fixedInViewport ? fixedTopGap : null',
     '[style.bottom.px]': 'fixedInViewport ? fixedBottomGap : null',
   },
