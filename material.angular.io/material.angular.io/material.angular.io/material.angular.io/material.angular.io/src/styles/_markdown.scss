@@ -2,9 +2,17 @@
 
 .docs-markdown-h1 {
   display: inline-block;
-  font-size: 20px;
+  font-size: 34px;
   font-weight: 400;
   padding: 5px;
+}
+
+.docs-markdown-h2 {
+  font-size: 24px;
+}
+
+.docs-markdown-h3 {
+  font-size: 20px;
 }
 
 .docs-markdown-h2,
@@ -13,7 +21,7 @@
 }
 
 .docs-markdown-h5 {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .docs-markdown-p {
@@ -26,7 +34,7 @@
 }
 
 .docs-markdown-td code {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .docs-markdown-pre {
@@ -49,7 +57,7 @@ code, pre {
 }
 
 pre {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .docs-header-link {
