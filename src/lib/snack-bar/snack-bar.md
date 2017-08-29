@@ -72,3 +72,7 @@ export class MessageArchivedComponent {
   constructor(@Inject(MD_SNACK_BAR_DATA) public data: any) { }
 }
 ```
+### Accessibility
+A Snackbar automatically goes away after a short time, so you can't count on the user seeing the
+message or having a chance to press the button. For this reason, you should consider offering an
+alternate way to perform any Snackbar action.

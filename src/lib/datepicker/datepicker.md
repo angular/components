@@ -228,3 +228,6 @@ application root module.
 })
 export class MyApp {}
 ```
+### Accessibility
+The input box for datepicker should have a placeholder or be given a meaningful label via
+`aria-label` or `aria-labelledby`.

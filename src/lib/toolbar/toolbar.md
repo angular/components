@@ -49,3 +49,7 @@ easily accomplished with `display: flex`:
 The color of a `<md-toolbar>` can be changed by using the `color` property. By default, toolbars
 use a neutral background color based on the current theme (light or dark). This can be changed to 
 `'primary'`, `'accent'`, or `'warn'`.  
+
+### Accessibility
+Toolbar items without text or labels should be given a meaningful label via `aria-label` or
+`aria-labelledby`.
