@@ -141,6 +141,17 @@ describe('MdSlider without forms', () => {
       expect(sliderNativeElement.classList).not.toContain('mat-slider-sliding');
     });
 
+    it('should remove focus after the slider is updated', () => {
+      spyOn(sliderNativeElement, 'blur');
+
+      expect(sliderNativeElement.blur).not.toHaveBeenCalled();
+
+      dispatchClickEventSequence(sliderNativeElement, 0.39);
+      fixture.detectChanges();
+
+      expect(sliderNativeElement.blur).toHaveBeenCalled();
+    });
+
     it('should have thumb gap when at min value', () => {
       expect(trackFillElement.style.transform).toContain('translateX(-7px)');
     });

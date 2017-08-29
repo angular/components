@@ -445,6 +445,7 @@ export class MdSlider extends _MdSliderMixinBase
       this._emitInputEvent();
       this._emitChangeEvent();
     }
+    this._elementRef.nativeElement.blur();
   }
 
   _onSlide(event: HammerInput) {
