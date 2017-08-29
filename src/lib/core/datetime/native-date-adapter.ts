@@ -48,12 +48,12 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
 }
 
 /** InjectionToken for datepicker that can be used to override default locale code. */
-export const MAT_DATE_LOCALE = new InjectionToken<string>('MdDateLocale');
+export const MAT_DATE_LOCALE = new InjectionToken<string>('MAT_DATE_LOCALE');
 
 /** Adapts the native JS Date for use with cdk-based components that work with dates. */
 @Injectable()
 export class NativeDateAdapter extends DateAdapter<Date> {
-  constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: any) {
+  constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string) {
     super();
     super.setLocale(matDateLocale);
   }
