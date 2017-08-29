@@ -104,6 +104,9 @@ export * from './animation/animation';
 // Selection
 export * from './selection/index';
 
+// Media Query Manager
+export * from './media-query/index';
+
 // Compatibility
 export {CompatibilityModule, NoConflictStyleCompatibilityMode} from './compatibility/compatibility';
 
