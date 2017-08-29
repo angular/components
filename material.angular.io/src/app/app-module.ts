@@ -48,7 +48,6 @@ import {DocViewerModule} from './shared/doc-viewer/doc-viewer-module';
     DocViewerModule,
     FooterModule,
     GuideListModule,
-    GuideListModule,
     GuideViewerModule,
     HomepageModule,
     NavBarModule,

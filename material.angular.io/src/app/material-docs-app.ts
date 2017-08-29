@@ -1,5 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {Router, NavigationStart} from '@angular/router';
+import {Router, NavigationEnd} from '@angular/router';
+import 'rxjs/add/operator/filter';
 
 
 @Component({
@@ -12,19 +13,24 @@ export class MaterialDocsApp {
   showShadow = false;
 
   constructor(router: Router) {
+    const routesWithNavbarShadow = ['/categories', '/components'];
+
     let previousRoute = router.routerState.snapshot.url;
 
-    router.events.subscribe((data: NavigationStart) => {
-      this.showShadow = data.url.startsWith('/components');
+    router.events
+      .filter(event => event instanceof NavigationEnd )
+      .subscribe((data: NavigationEnd) => {
+        this.showShadow = !!routesWithNavbarShadow
+            .find(route => data.urlAfterRedirects.startsWith(route));
 
-      // We want to reset the scroll position on navigation except when navigating within
-      // the documentation for a single component.
-      if (!isNavigationWithinComponentView(previousRoute, data.url)) {
-        resetScrollPosition();
-      }
+        // We want to reset the scroll position on navigation except when navigating within
+        // the documentation for a single component.
+        if (!isNavigationWithinComponentView(previousRoute, data.urlAfterRedirects)) {
+          resetScrollPosition();
+        }
 
-      previousRoute = data.url;
-    });
+        previousRoute = data.urlAfterRedirects;
+      });
   }
 }
 
