@@ -2,14 +2,14 @@
   <section>
     <h2>Basic Table</h2>
     <p>Shows name, color and age data.</p>
-    <md-table [dataSource]="basicDataSource">
+    <md-table [dataSource]="basicDataSource" aria-label="Users favorite colors and age">
       <ng-container cdkColumnDef="name">
         <md-header-cell *cdkHeaderCellDef>Name</md-header-cell>
         <md-cell *cdkCellDef="let row">{{row.name}}</md-cell>
       </ng-container>
       <ng-container cdkColumnDef="color">
         <md-header-cell *cdkHeaderCellDef>Color</md-header-cell>
-        <md-cell *cdkCellDef="let row" [style.color]="row.color">{{row.color}}</md-cell>
+        <md-cell *cdkCellDef="let row">{{row.color}}</md-cell>
       </ng-container>
       <ng-container cdkColumnDef="age">
         <md-header-cell *cdkHeaderCellDef>Age</md-header-cell>
@@ -23,14 +23,17 @@
   <section>
     <h2>Sortable Table</h2>
     <p>Shows name, color and age data. Sorted ascending by age.</p>
-    <md-table [dataSource]="sortDataSource" mdSort mdSortActive="age" mdSortDirection="asc">
+    <md-table [dataSource]="sortDataSource"
+              aria-label="Users favorite colors and age"
+              mdSort mdSortActive="age"
+              mdSortDirection="asc">
       <ng-container cdkColumnDef="name">
         <md-header-cell *cdkHeaderCellDef>Name</md-header-cell>
         <md-cell *cdkCellDef="let row">{{row.name}}</md-cell>
       </ng-container>
       <ng-container cdkColumnDef="color">
         <md-header-cell *cdkHeaderCellDef>Color</md-header-cell>
-        <md-cell *cdkCellDef="let row" [style.color]="row.color">{{row.color}}</md-cell>
+        <md-cell *cdkCellDef="let row">{{row.color}}</md-cell>
       </ng-container>
       <ng-container cdkColumnDef="age">
         <md-header-cell *cdkHeaderCellDef md-sort-header>Age</md-header-cell>
@@ -44,14 +47,14 @@
   <section>
     <h2>Paginated Table</h2>
     <p>Shows name, color and age data. Shows only first 5 until paginated.</p>
-    <md-table [dataSource]="paginatedDataSource">
+    <md-table [dataSource]="paginatedDataSource" aria-label="Users favorite colors and age">
       <ng-container cdkColumnDef="name">
         <md-header-cell *cdkHeaderCellDef>Name</md-header-cell>
         <md-cell *cdkCellDef="let row">{{row.name}}</md-cell>
       </ng-container>
       <ng-container cdkColumnDef="color">
         <md-header-cell *cdkHeaderCellDef>Color</md-header-cell>
-        <md-cell *cdkCellDef="let row" [style.color]="row.color">{{row.color}}</md-cell>
+        <md-cell *cdkCellDef="let row">{{row.color}}</md-cell>
       </ng-container>
       <ng-container cdkColumnDef="age">
         <md-header-cell *cdkHeaderCellDef>Age</md-header-cell>
