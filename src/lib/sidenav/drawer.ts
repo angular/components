@@ -118,7 +118,7 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
   /** Mode of the drawer; one of 'over', 'push' or 'side'. */
   @Input() mode: 'over' | 'push' | 'side' = 'over';
 
-  /** Whether the drawer can be closed with the escape key or not. */
+  /** Whether the drawer can be closed with the escape key or by clicking on the backdrop. */
   @Input()
   get disableClose(): boolean { return this._disableClose; }
   set disableClose(value: boolean) { this._disableClose = coerceBooleanProperty(value); }
@@ -151,6 +151,9 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
 
   /** Event emitted when the drawer's position changes. */
   @Output('positionChanged') onPositionChanged = new EventEmitter<void>();
+
+  /** Event emitted when ESCAPE is pressed. */
+  @Output() escapeKeydown = new EventEmitter<void>();
 
   /** @deprecated */
   @Output('align-changed') onAlignChanged = new EventEmitter<void>();
@@ -259,9 +262,12 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
    * @docs-private
    */
   handleKeydown(event: KeyboardEvent) {
-    if (event.keyCode === ESCAPE && !this.disableClose) {
-      this.close();
-      event.stopPropagation();
+    if (event.keyCode === ESCAPE) {
+      this.escapeKeydown.emit();
+      if (!this.disableClose) {
+        this.close();
+        event.stopPropagation();
+      }
     }
   }
 

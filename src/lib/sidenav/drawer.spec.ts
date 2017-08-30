@@ -102,6 +102,18 @@ describe('MdDrawer', () => {
       expect(testComponent.backdropClickedCount).toBe(1);
     }));
 
+    it('should emit the escapeKeydown event when ESCAPE key is pressed', () => {
+      let fixture = TestBed.createComponent(BasicTestApp);
+      let testComponent: BasicTestApp = fixture.debugElement.componentInstance;
+      let drawer = fixture.debugElement.query(By.directive(MdDrawer));
+      expect(testComponent.escapeKeydownCount).toBe(0);
+
+      dispatchKeyboardEvent(drawer.nativeElement, 'keydown', ESCAPE);
+      fixture.detectChanges();
+
+      expect(testComponent.escapeKeydownCount).toBe(1);
+    });
+
     it('should close when pressing escape', fakeAsync(() => {
       let fixture = TestBed.createComponent(BasicTestApp);
 
@@ -386,7 +398,8 @@ class DrawerContainerTwoDrawerTestApp {
     <md-drawer-container (backdropClick)="backdropClicked()">
       <md-drawer #drawer position="start"
                  (open)="open()"
-                 (close)="close()">
+                 (close)="close()"
+                 (escapeKeydown)="escapeKeydown()">
         <button #drawerButton>Content.</button>
       </md-drawer>
       <button (click)="drawer.open()" class="open" #openButton></button>
@@ -397,6 +410,7 @@ class BasicTestApp {
   openCount: number = 0;
   closeCount: number = 0;
   backdropClickedCount: number = 0;
+  escapeKeydownCount: number = 0;
 
   @ViewChild('drawerButton') drawerButton: ElementRef;
   @ViewChild('openButton') openButton: ElementRef;
@@ -412,6 +426,10 @@ class BasicTestApp {
 
   backdropClicked() {
     this.backdropClickedCount++;
+  }
+
+  escapeKeydown() {
+    this.escapeKeydownCount++;
   }
 }
 
