@@ -471,7 +471,7 @@ export class MdDrawerContainer implements AfterContentInit, OnDestroy {
     if (drawer) {
       takeUntil.call(drawer._modeChanged, this._drawers.changes).subscribe(() => {
         this._updateContentMargins();
-        this._changeDetectorRef.markForCheck()
+        this._changeDetectorRef.markForCheck();
       });
     }
   }
