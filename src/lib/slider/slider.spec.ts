@@ -16,7 +16,7 @@ import {
   UP_ARROW,
   BACKSPACE
 } from '../core/keyboard/keycodes';
-import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
+import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
 
 describe('MdSlider without forms', () => {
   let gestureConfig: TestGestureConfig;
@@ -141,15 +141,13 @@ describe('MdSlider without forms', () => {
       expect(sliderNativeElement.classList).not.toContain('mat-slider-sliding');
     });
 
-    it('should remove focus after the slider is updated', () => {
-      spyOn(sliderNativeElement, 'blur');
+    it('should reset active state upon blur', () => {
+      sliderInstance._isActive = true;
 
-      expect(sliderNativeElement.blur).not.toHaveBeenCalled();
-
-      dispatchClickEventSequence(sliderNativeElement, 0.39);
+      dispatchFakeEvent(sliderNativeElement, 'blur');
       fixture.detectChanges();
 
-      expect(sliderNativeElement.blur).toHaveBeenCalled();
+      expect(sliderInstance._isActive).toBe(false);
     });
 
     it('should have thumb gap when at min value', () => {
@@ -967,6 +965,24 @@ describe('MdSlider without forms', () => {
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(30);
+    });
+
+    it('should re-render slider with updated style upon directionality change', () => {
+      testComponent.dir = 'rtl';
+      fixture.detectChanges();
+
+      let initialTrackFillStyles = sliderInstance._trackFillStyles;
+      let initialTicksContainerStyles = sliderInstance._ticksContainerStyles;
+      let initialTicksStyles = sliderInstance._ticksStyles;
+      let initialThumbContainerStyles = sliderInstance._thumbContainerStyles;
+
+      testComponent.dir = 'ltr';
+      fixture.detectChanges();
+
+      expect(initialTrackFillStyles).not.toEqual(sliderInstance._trackFillStyles);
+      expect(initialTicksContainerStyles).not.toEqual(sliderInstance._ticksContainerStyles);
+      expect(initialTicksStyles).not.toEqual(sliderInstance._ticksStyles);
+      expect(initialThumbContainerStyles).not.toEqual(sliderInstance._thumbContainerStyles);
     });
 
     it('should increment inverted slider by 1 on right arrow pressed', () => {

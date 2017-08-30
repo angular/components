@@ -413,10 +413,16 @@ export class MdSlider extends _MdSliderMixinBase
     this._focusOriginMonitor
         .monitor(this._elementRef.nativeElement, renderer, true)
         .subscribe((origin: FocusOrigin) => this._isActive = !!origin && origin !== 'keyboard');
+    if (_dir) {
+      _dir.change.subscribe(() => this._changeDetectorRef.markForCheck());
+    }
   }
 
   ngOnDestroy() {
     this._focusOriginMonitor.stopMonitoring(this._elementRef.nativeElement);
+    if (this._dir) {
+      this._dir.change.unsubscribe();
+    }
   }
 
   _onMouseenter() {
@@ -445,7 +451,6 @@ export class MdSlider extends _MdSliderMixinBase
       this._emitInputEvent();
       this._emitChangeEvent();
     }
-    this._elementRef.nativeElement.blur();
   }
 
   _onSlide(event: HammerInput) {
@@ -507,6 +512,8 @@ export class MdSlider extends _MdSliderMixinBase
 
   _onBlur() {
     this.onTouched();
+    this._isActive = false;
+    this._changeDetectorRef.markForCheck();
   }
 
   _onKeydown(event: KeyboardEvent) {
