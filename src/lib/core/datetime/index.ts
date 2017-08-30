@@ -7,8 +7,8 @@
  */
 
 import {LOCALE_ID, NgModule} from '@angular/core';
-import {DateAdapter} from './date-adapter';
-import {NativeDateAdapter, MAT_DATE_LOCALE} from './native-date-adapter';
+import {DateAdapter, MAT_DATE_LOCALE} from './date-adapter';
+import {NativeDateAdapter} from './native-date-adapter';
 import {MD_DATE_FORMATS} from './date-formats';
 import {MD_NATIVE_DATE_FORMATS} from './native-date-formats';
 

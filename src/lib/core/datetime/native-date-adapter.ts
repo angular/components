@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Inject, Injectable, Optional, InjectionToken} from '@angular/core';
-import {DateAdapter} from './date-adapter';
+import {Inject, Injectable, Optional} from '@angular/core';
+import {DateAdapter, MAT_DATE_LOCALE} from './date-adapter';
 import {extendObject} from '../util/object-extend';
 
 // TODO(mmalerba): Remove when we no longer support safari 9.
@@ -46,9 +46,6 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
   }
   return valuesArray;
 }
-
-/** InjectionToken for datepicker that can be used to override default locale code. */
-export const MAT_DATE_LOCALE = new InjectionToken<string>('MAT_DATE_LOCALE');
 
 /** Adapts the native JS Date for use with cdk-based components that work with dates. */
 @Injectable()

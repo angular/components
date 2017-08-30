@@ -116,9 +116,10 @@ three pieces via injection:
  3. The message strings used in the datepicker's UI.
 
 #### Setting the locale code
-By default `MAT_DATE_LOCALE` injection token will use the existing `LOCALE_ID` locale code from
-`@angular/core`. If you want to override it, you can provide a new value for the `MAT_DATE_LOCALE`
-token:
+By default, the `MAT_DATE_LOCALE` injection token will use the existing `LOCALE_ID` locale code
+from `@angular/core`. If you want to override it, you can provide a new value for the
+`MAT_DATE_LOCALE` token:
+
 ```ts
 @NgModule({
   providers: [
