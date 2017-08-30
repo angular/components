@@ -119,7 +119,8 @@ $mat-dense-list-icon-size: 20px;
   // This needs slightly more specificity, because it
   // can be overwritten by the typography styles.
   .mat-list &,
-  .mat-nav-list & {
+  .mat-nav-list &,
+  .mat-selection-list & {
     margin: 0;
   }
 }
