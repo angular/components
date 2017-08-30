@@ -18,7 +18,6 @@ import {
   ScrollStrategy,
   ViewportRuler,
 } from '@angular/cdk/overlay';
-import {Platform} from '@angular/cdk/platform';
 import {filter, first, startWith} from '@angular/cdk/rxjs';
 import {
   AfterContentInit,

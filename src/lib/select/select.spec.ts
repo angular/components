@@ -1,6 +1,7 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {DOWN_ARROW, END, ENTER, HOME, SPACE, TAB, UP_ARROW} from '@angular/cdk/keycodes';
 import {OverlayContainer} from '@angular/cdk/overlay';
+import {Platform} from '@angular/cdk/platform';
 import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 import {dispatchFakeEvent, dispatchKeyboardEvent, wrappedErrorMessage} from '@angular/cdk/testing';
 import {
@@ -1721,8 +1722,18 @@ describe('MdSelect', () => {
           const option = overlayContainerElement.querySelector('.cdk-overlay-pane md-option');
           const optionTop = option ? option.getBoundingClientRect().top : 0;
 
-          expect(optionTop + (menuItemHeight - triggerHeight) / 2)
-              .toBe(triggerTop, 'Expected trigger to align with the first option.');
+          // There appears to be a small rounding error on IE, so we verify that the value is close,
+          // not exact.
+          let platform = new Platform();
+          if (platform.TRIDENT) {
+            let difference =
+                Math.abs(optionTop + (menuItemHeight - triggerHeight) / 2 - triggerTop);
+            expect(difference)
+                .toBeLessThan(0.1, 'Expected trigger to align with the first option.');
+          } else {
+            expect(optionTop + (menuItemHeight - triggerHeight) / 2)
+                .toBe(triggerTop, 'Expected trigger to align with the first option.');
+          }
         });
       }));
     });
