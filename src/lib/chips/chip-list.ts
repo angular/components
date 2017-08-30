@@ -21,7 +21,7 @@ import {
 } from '@angular/core';
 
 import {MdChip} from './chip';
-import {FocusKeyManager} from '../core/a11y/focus-key-manager';
+import {FocusKeyManager} from '@angular/cdk/a11y';
 import {BACKSPACE, DELETE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '../core/keyboard/keycodes';
 import {Directionality} from '@angular/cdk/bidi';
 import {Subscription} from 'rxjs/Subscription';
@@ -76,8 +76,14 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   /** Tab index for the chip list. */
   _tabIndex = 0;
 
+  /**
+   * User defined tab index.
+   * When it is not null, use user defined tab index. Otherwise use _tabIndex
+   */
+  _userTabIndex: number | null = null;
+
   /** The FocusKeyManager which handles focus. */
-  _keyManager: FocusKeyManager;
+  _keyManager: FocusKeyManager<MdChip>;
 
   /** The chip components contained within this chip list. */
   chips: QueryList<MdChip>;
@@ -87,13 +93,13 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit(): void {
-    this._keyManager = new FocusKeyManager(this.chips).withWrap();
+    this._keyManager = new FocusKeyManager<MdChip>(this.chips).withWrap();
 
     // Prevents the chip list from capturing focus and redirecting
     // it back to the first chip when the user tabs out.
     this._tabOutSubscription = this._keyManager.tabOut.subscribe(() => {
       this._tabIndex = -1;
-      setTimeout(() => this._tabIndex = 0);
+      setTimeout(() => this._tabIndex = this._userTabIndex || 0);
     });
 
     // Go ahead and subscribe all of the initial chips
@@ -136,6 +142,12 @@ export class MdChipList implements AfterContentInit, OnDestroy {
 
   set selectable(value: boolean) {
     this._selectable = coerceBooleanProperty(value);
+  }
+
+  @Input()
+  set tabIndex(value: number) {
+    this._userTabIndex = value;
+    this._tabIndex = value;
   }
 
   /** Associates an HTML input element with this chip list. */
@@ -212,7 +224,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
    */
   protected _updateTabIndex(): void {
     // If we have 0 chips, we should not allow keyboard focus
-    this._tabIndex = (this.chips.length === 0 ? -1 : 0);
+    this._tabIndex = this._userTabIndex || (this.chips.length === 0 ? -1 : 0);
   }
 
   /**
@@ -230,7 +242,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
     }
 
     // Watch for focus events outside of the keyboard navigation
-    chip.onFocus.subscribe(() => {
+    chip._onFocus.subscribe(() => {
       let chipIndex: number = this.chips.toArray().indexOf(chip);
 
       if (this._isValidIndex(chipIndex)) {

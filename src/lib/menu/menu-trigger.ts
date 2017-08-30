@@ -31,8 +31,11 @@ import {
   OverlayRef,
   OverlayState,
   RepositionScrollStrategy,
-  ScrollStrategy,
   VerticalConnectionPos,
+  // This import is only used to define a generic type. The current TypeScript version incorrectly
+  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
+  // tslint:disable-next-line:no-unused-variable
+  ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {filter, RxChain} from '@angular/cdk/rxjs';
 import {MdMenu} from './menu-directive';
@@ -83,7 +86,7 @@ export const MENU_PANEL_TOP_PADDING = 8;
   exportAs: 'mdMenuTrigger'
 })
 export class MdMenuTrigger implements AfterViewInit, OnDestroy {
-  private _portal: TemplatePortal;
+  private _portal: TemplatePortal<any>;
   private _overlayRef: OverlayRef | null = null;
   private _menuOpen: boolean = false;
   private _closeSubscription: Subscription;
@@ -214,9 +217,10 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   /** Closes the menu. */
   closeMenu(): void {
     if (this._overlayRef && this.menuOpen) {
+      this._resetMenu();
       this._overlayRef.detach();
       this._closeSubscription.unsubscribe();
-      this._resetMenu();
+      this.menu.close.emit();
 
       if (this.menu instanceof MdMenu) {
         this.menu._resetAnimation();

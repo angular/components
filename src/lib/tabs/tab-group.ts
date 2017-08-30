@@ -22,6 +22,7 @@ import {
   AfterContentInit,
   AfterContentChecked,
   OnDestroy,
+  ViewEncapsulation,
 } from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {map} from '@angular/cdk/rxjs';
@@ -62,6 +63,7 @@ export const _MdTabGroupMixinBase = mixinColor(mixinDisableRipple(MdTabGroupBase
   selector: 'md-tab-group, mat-tab-group',
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   inputs: ['color', 'disableRipple'],
   host: {
@@ -170,6 +172,7 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
     // Setup the position for each tab and optionally setup an origin on the next selected tab.
     this._tabs.forEach((tab: MdTab, index: number) => {
       tab.position = index - indexToSelect;
+      tab.isActive = index === indexToSelect;
 
       // If there is already a selected tab, then set up an origin for the next selected tab
       // if it doesn't have one already.

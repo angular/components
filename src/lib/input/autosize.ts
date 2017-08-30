@@ -15,8 +15,8 @@ import {Platform} from '@angular/cdk/platform';
  * Directive to automatically resize a textarea to fit its content.
  */
 @Directive({
-  selector: 'textarea[md-autosize], textarea[mdTextareaAutosize],' +
-            'textarea[mat-autosize], textarea[matTextareaAutosize]',
+  selector: `textarea[md-autosize], textarea[mdTextareaAutosize],
+             textarea[mat-autosize], textarea[matTextareaAutosize]`,
   exportAs: 'mdTextareaAutosize',
   host: {
     '(input)': 'resizeToFitContent()',
@@ -47,7 +47,7 @@ export class MdTextareaAutosize implements AfterViewInit {
     this._setMaxHeight();
   }
 
-  @Input('matAutosizeMaxRows')
+  @Input('matAutosizeMinRows')
   get _matAutosizeMinRows() { return this.minRows; }
   set _matAutosizeMinRows(v) { this.minRows = v; }
 

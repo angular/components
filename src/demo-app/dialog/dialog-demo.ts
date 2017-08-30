@@ -11,7 +11,8 @@ import {MdDialog, MdDialogRef, MD_DIALOG_DATA} from '@angular/material';
 })
 export class DialogDemo {
   dialogRef: MdDialogRef<JazzDialog> | null;
-  lastCloseResult: string;
+  lastAfterClosedResult: string;
+  lastBeforeCloseResult: string;
   actionsAlignment: string;
   config = {
     disableClose: false,
@@ -51,8 +52,11 @@ export class DialogDemo {
   openJazz() {
     this.dialogRef = this.dialog.open(JazzDialog, this.config);
 
+    this.dialogRef.beforeClose().subscribe((result: string) => {
+      this.lastBeforeCloseResult = result;
+    });
     this.dialogRef.afterClosed().subscribe((result: string) => {
-      this.lastCloseResult = result;
+      this.lastAfterClosedResult = result;
       this.dialogRef = null;
     });
   }
@@ -74,9 +78,9 @@ export class DialogDemo {
   template: `
   <p>It's Jazz!</p>
 
-  <md-input-container>
+  <md-form-field>
     <input mdInput placeholder="How much?" #howMuch>
-  </md-input-container>
+  </md-form-field>
 
   <p> {{ data.message }} </p>
   <button type="button" (click)="dialogRef.close(howMuch.value)">Close dialog</button>

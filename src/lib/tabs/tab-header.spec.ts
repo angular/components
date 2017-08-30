@@ -4,9 +4,9 @@ import {
 import {Component, ViewChild, ViewContainerRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {By} from '@angular/platform-browser';
-import {ENTER, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {PortalModule} from '@angular/cdk/portal';
-import {ViewportRuler} from '@angular/cdk/overlay';
+import {ViewportRuler} from '@angular/cdk/scrolling';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {dispatchFakeEvent, dispatchKeyboardEvent, FakeViewportRuler} from '@angular/cdk/testing';
 import {MdTabHeader} from './tab-header';
@@ -120,14 +120,22 @@ describe('MdTabHeader', () => {
 
       // Select the focused index 2
       expect(appComponent.selectedIndex).toBe(0);
-      dispatchKeyboardEvent(tabListContainer, 'keydown', ENTER);
+      const enterEvent = dispatchKeyboardEvent(tabListContainer, 'keydown', ENTER);
       fixture.detectChanges();
       expect(appComponent.selectedIndex).toBe(2);
+      expect(enterEvent.defaultPrevented).toBe(true);
 
       // Move focus right to 0
       dispatchKeyboardEvent(tabListContainer, 'keydown', LEFT_ARROW);
       fixture.detectChanges();
       expect(appComponent.mdTabHeader.focusIndex).toBe(0);
+
+      // Select the focused 0 using space.
+      expect(appComponent.selectedIndex).toBe(2);
+      const spaceEvent = dispatchKeyboardEvent(tabListContainer, 'keydown', SPACE);
+      fixture.detectChanges();
+      expect(appComponent.selectedIndex).toBe(0);
+      expect(spaceEvent.defaultPrevented).toBe(true);
     });
   });
 
@@ -259,7 +267,7 @@ describe('MdTabHeader', () => {
       spyOn(inkBar, 'alignToElement');
 
       dispatchFakeEvent(window, 'resize');
-      tick(10);
+      tick(150);
       fixture.detectChanges();
 
       expect(inkBar.alignToElement).toHaveBeenCalled();
