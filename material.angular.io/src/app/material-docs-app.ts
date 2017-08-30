@@ -44,7 +44,7 @@ function isNavigationWithinComponentView(oldUrl: string, newUrl: string) {
 
 function resetScrollPosition() {
   if (typeof document === 'object' && document) {
-    const sidenavContent = document.querySelector('.mat-sidenav-content');
+    const sidenavContent = document.querySelector('.mat-drawer-content');
     if (sidenavContent) {
       sidenavContent.scrollTop = 0;
     }

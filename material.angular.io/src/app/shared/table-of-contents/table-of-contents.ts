@@ -69,7 +69,7 @@ export class TableOfContents implements OnInit {
     this._scrollSubscription = Observable
       .fromEvent(this._scrollContainer, 'scroll')
       .debounceTime(10)
-      .subscribe(this.onScroll.bind(this));
+      .subscribe(() => this.onScroll());
   }
 
   ngOnDestroy(): void {
@@ -99,7 +99,8 @@ export class TableOfContents implements OnInit {
 
   private createLinks(): Link[] {
     const links = [];
-    const headers = this._document.querySelectorAll(this.headerSelectors);
+    const headers =
+        Array.from(this._document.querySelectorAll(this.headerSelectors)) as HTMLElement[];
 
     if (headers.length) {
       for (const header of headers) {
