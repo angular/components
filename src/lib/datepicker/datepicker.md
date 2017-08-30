@@ -239,44 +239,41 @@ should have a placeholder or be given a meaningful label via `aria-label`, `aria
 #### Keyboard shortcuts
 The keyboard shortcuts to handle datepicker are:
 
-`ALT` + `DOWN_ARROR`: trigger calendar dialog
-
-`ESCAPE`: close calendar dialog
+| Shortcut             | Action                            |
+|----------------------|-----------------------------------|
+| `ALT` + `DOWN_ARROW` | Open the calendar pop-up          |
+| `ESCAPE`             | Close the calendar pop-up         |
 
 
 In month view:
 
-`LEFT_ARROW`, `RIGHT_ARROW`, `UP_ARROW`, `DOWN_ARROW`: navigate through days
-
-`HOME`: focus the first day of the month
-
-`END`: focus the last day of the month
-
-`PAGE_UP`: goes to previous month
-
-`ALT` + `PAGE_UP`: goes to previous year
-
-`PAGE_DOWN`: goes to next month
-
-`ALT` + `PAGE_DOWN`: goes to next year
-
-`ENTER`: select current focused date
+| Shortcut             | Action                            |
+|----------------------|-----------------------------------|
+| `LEFT_ARROW`         | Goes to previous day              |
+| `RIGHT_ARROW`        | Goes to next day                  |
+| `UP_ARROW`           | Goes to previous 7 days           |
+| `DOWN_ARROW`         | Goes to next 7 days               |
+| `HOME`               | Focus the first day of the month  |
+| `END`                | Focus the last day of the month   |
+| `PAGE_UP`            | Goes to previous month            |
+| `ALT` + `PAGE_UP`    | Goes to previous year             |
+| `PAGE_DOWN`          | Goes to next month                |
+| `ALT` + `PAGE_DOWN`  | Goes to next year                 |
+| `ENTER`              | Select current date               |
 
 
 In year view:
 
-`LEFT_ARROW`, `RIGHT_ARROW`, `UP_ARROW`, `DOWN_ARROW`: navigate through months
-
-`HOME`: focus the first month of the year
-
-`END`: focus the last month of the year
-
-`PAGE_UP`: goes to previous year
-
-`ALT` + `PAGE_UP`: goes to previous 10 years
-
-`PAGE_DOWN`: goes to next year
-
-`ALT` + `PAGE_DOWN`: goes to next 10 years
-
-`ENTER`: select current focused month
+| Shortcut             | Action                            |
+|----------------------|-----------------------------------|
+| `LEFT_ARROW`         | Goes to previous month            |
+| `RIGHT_ARROW`        | Goes to next month                |
+| `UP_ARROW`           | Goes to previous 6 months         |
+| `DOWN_ARROW`         | Goes to next 6 months             |
+| `HOME`               | Focus the first month of the year |
+| `END`                | Focus the last month of the year  |
+| `PAGE_UP`            | Goes to previous year             |
+| `ALT` + `PAGE_UP`    | Goes to previous 10 years         |
+| `PAGE_DOWN`          | Goes to next year                 |
+| `ALT` + `PAGE_DOWN`  | Goes to next 10 years             |
+| `ENTER`              | Select current month              |
