@@ -20,7 +20,7 @@ export const rollupRemoveLicensesPlugin = {
 
     return {
       code: newContent.toString(),
-      map:  newContent.generateMap({ hires: true })
+      map:  newContent.generateMap({hires: true})
     };
   }
 };

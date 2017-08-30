@@ -436,8 +436,8 @@ class SimpleDynamicTabsTestApp {
 })
 class BindedTabsTestApp {
   tabs = [
-    { label: 'one', content: 'one' },
-    { label: 'two', content: 'two' }
+    {label: 'one', content: 'one'},
+    {label: 'two', content: 'two'}
   ];
   selectedIndex = 0;
 
@@ -483,8 +483,8 @@ class DisabledTabsTestApp {}
 })
 class AsyncTabsTestApp {
   private _tabs = [
-    { label: 'one', content: 'one' },
-    { label: 'two', content: 'two' }
+    {label: 'one', content: 'one'},
+    {label: 'two', content: 'two'}
   ];
 
   tabs: Observable<any>;

@@ -400,7 +400,7 @@ describe('Key managers', () => {
       it('should throw if the items do not implement the getLabel method', () => {
         const invalidQueryList = new FakeQueryList();
 
-        invalidQueryList.items = [{ disabled: false }];
+        invalidQueryList.items = [{disabled: false}];
 
         const invalidManager = new ListKeyManager(invalidQueryList);
 

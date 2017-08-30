@@ -340,16 +340,16 @@ export class MdDatepicker<D> implements OnDestroy {
         {overlayX: 'start', overlayY: 'top'}
       )
       .withFallbackPosition(
-        { originX: 'start', originY: 'top' },
-        { overlayX: 'start', overlayY: 'bottom' }
+        {originX: 'start', originY: 'top'},
+        {overlayX: 'start', overlayY: 'bottom'}
       )
       .withFallbackPosition(
         {originX: 'end', originY: 'bottom'},
         {overlayX: 'end', overlayY: 'top'}
       )
       .withFallbackPosition(
-        { originX: 'end', originY: 'top' },
-        { overlayX: 'end', overlayY: 'bottom' }
+        {originX: 'end', originY: 'top'},
+        {overlayX: 'end', overlayY: 'bottom'}
       );
   }
 }

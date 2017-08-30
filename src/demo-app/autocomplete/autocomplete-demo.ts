@@ -100,11 +100,11 @@ export class AutocompleteDemo {
       let group = groups.find(g => g.letter === state.name[0]);
 
       if (!group) {
-        group = { letter: state.name[0], states: [] };
+        group = {letter: state.name[0], states: []};
         groups.push(group);
       }
 
-      group.states.push({ code: state.code, name: state.name });
+      group.states.push({code: state.code, name: state.name});
 
       return groups;
     }, [] as StateGroup[]);
@@ -121,7 +121,7 @@ export class AutocompleteDemo {
   filterStateGroups(val: string) {
     if (val) {
       return this.groupedStates
-        .map(group => ({ letter: group.letter, states: this._filter(group.states, val) }))
+        .map(group => ({letter: group.letter, states: this._filter(group.states, val)}))
         .filter(group => group.states.length > 0);
     }
 

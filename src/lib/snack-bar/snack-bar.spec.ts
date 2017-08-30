@@ -169,7 +169,7 @@ describe('MdSnackBar', () => {
   }));
 
   it('should clean itself up when the view container gets destroyed', async(() => {
-    snackBar.open(simpleMessage, undefined, { viewContainerRef: testViewContainerRef });
+    snackBar.open(simpleMessage, undefined, {viewContainerRef: testViewContainerRef});
     viewContainerFixture.detectChanges();
     expect(overlayContainerElement.childElementCount).toBeGreaterThan(0);
 
@@ -363,7 +363,7 @@ describe('MdSnackBar', () => {
   }));
 
   it('should add extra classes to the container', () => {
-    snackBar.open(simpleMessage, simpleActionLabel, { extraClasses: ['one', 'two'] });
+    snackBar.open(simpleMessage, simpleActionLabel, {extraClasses: ['one', 'two']});
     viewContainerFixture.detectChanges();
 
     let containerClasses = overlayContainerElement.querySelector('snack-bar-container')!.classList;
@@ -373,7 +373,7 @@ describe('MdSnackBar', () => {
   });
 
   it('should set the layout direction', () => {
-    snackBar.open(simpleMessage, simpleActionLabel, { direction: 'rtl' });
+    snackBar.open(simpleMessage, simpleActionLabel, {direction: 'rtl'});
     viewContainerFixture.detectChanges();
 
     let pane = overlayContainerElement.querySelector('.cdk-overlay-pane')!;

@@ -199,7 +199,7 @@ task('build-examples-module', () => {
   const matchedFiles = glob(path.join(examplesPath, '**/*.ts'));
   for (const sourcePath of matchedFiles) {
     const sourceContent = fs.readFileSync(sourcePath, 'utf-8');
-    const { primaryComponent, secondaryComponents } =
+    const {primaryComponent, secondaryComponents} =
       parseExampleMetadata(sourcePath, sourceContent);
 
     if (primaryComponent) {

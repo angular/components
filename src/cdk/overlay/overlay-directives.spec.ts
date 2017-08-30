@@ -25,7 +25,7 @@ describe('Overlay directives', () => {
           return {getContainerElement: () => overlayContainerElement};
         }},
         {provide: Directionality, useFactory: () => {
-          return dir = { value: 'ltr' };
+          return dir = {value: 'ltr'};
         }}
       ],
     });

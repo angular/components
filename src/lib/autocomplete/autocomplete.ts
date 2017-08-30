@@ -64,7 +64,7 @@ export class MdAutocomplete implements AfterContentInit {
   @ViewChild('panel') panel: ElementRef;
 
   /** @docs-private */
-  @ContentChildren(MdOption, { descendants: true }) options: QueryList<MdOption>;
+  @ContentChildren(MdOption, {descendants: true}) options: QueryList<MdOption>;
 
   /** @docs-private */
   @ContentChildren(MdOptgroup) optionGroups: QueryList<MdOptgroup>;

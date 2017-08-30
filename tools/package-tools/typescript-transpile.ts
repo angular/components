@@ -6,7 +6,7 @@ import * as chalk from 'chalk';
 /** Reads a input file and transpiles it into a new file. */
 export function transpileFile(inputPath: string, outputPath: string, options: ts.CompilerOptions) {
   const inputFile = fs.readFileSync(inputPath, 'utf-8');
-  const transpiled = ts.transpileModule(inputFile, { compilerOptions: options });
+  const transpiled = ts.transpileModule(inputFile, {compilerOptions: options});
 
   if (transpiled.diagnostics) {
     reportDiagnostics(transpiled.diagnostics);

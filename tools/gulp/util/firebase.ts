@@ -26,7 +26,7 @@ export function openFirebaseDashboardApp() {
 
 /** Opens a connection to the Firebase dashboard app with no authentication. */
 export function openFirebaseDashboardAppAsGuest() {
-  return firebase.initializeApp({ databaseURL: dashboardDatabaseUrl });
+  return firebase.initializeApp({databaseURL: dashboardDatabaseUrl});
 }
 
 /**

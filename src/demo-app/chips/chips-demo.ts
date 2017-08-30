@@ -30,19 +30,19 @@ export class ChipsDemo {
   separatorKeysCodes = [ENTER, COMMA, 186];
 
   people: Person[] = [
-    { name: 'Kara' },
-    { name: 'Jeremy' },
-    { name: 'Topher' },
-    { name: 'Elad' },
-    { name: 'Kristiyan' },
-    { name: 'Paul' }
+    {name: 'Kara'},
+    {name: 'Jeremy'},
+    {name: 'Topher'},
+    {name: 'Elad'},
+    {name: 'Kristiyan'},
+    {name: 'Paul'}
   ];
 
   availableColors: DemoColor[] = [
-    { name: 'none', color: '' },
-    { name: 'Primary', color: 'primary' },
-    { name: 'Accent', color: 'accent' },
-    { name: 'Warn', color: 'warn' }
+    {name: 'none', color: ''},
+    {name: 'Primary', color: 'primary'},
+    {name: 'Accent', color: 'accent'},
+    {name: 'Warn', color: 'warn'}
   ];
 
   displayMessage(message: string): void {
@@ -55,7 +55,7 @@ export class ChipsDemo {
 
     // Add our person
     if ((value || '').trim()) {
-      this.people.push({ name: value.trim() });
+      this.people.push({name: value.trim()});
     }
 
     // Reset the input value

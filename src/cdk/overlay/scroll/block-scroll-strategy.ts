@@ -13,7 +13,7 @@ import {ViewportRuler} from '@angular/cdk/scrolling';
  * Strategy that will prevent the user from scrolling while the overlay is visible.
  */
 export class BlockScrollStrategy implements ScrollStrategy {
-  private _previousHTMLStyles = { top: '', left: '' };
+  private _previousHTMLStyles = {top: '', left: ''};
   private _previousScrollPosition: { top: number, left: number };
   private _isEnabled = false;
 

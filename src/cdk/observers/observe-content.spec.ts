@@ -93,13 +93,13 @@ describe('Observe content', () => {
 });
 
 
-@Component({ template: `<div (cdkObserveContent)="doSomething()">{{text}}</div>` })
+@Component({template: `<div (cdkObserveContent)="doSomething()">{{text}}</div>`})
 class ComponentWithTextContent {
   text = '';
   doSomething() {}
 }
 
-@Component({ template: `<div (cdkObserveContent)="doSomething()"><div>{{text}}<div></div>` })
+@Component({template: `<div (cdkObserveContent)="doSomething()"><div>{{text}}<div></div>`})
 class ComponentWithChildTextContent {
   text = '';
   doSomething() {}

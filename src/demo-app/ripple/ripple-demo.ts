@@ -23,7 +23,7 @@ export class RippleDemo {
 
   launchRipple(persistent = false) {
     if (this.ripple) {
-      this.ripple.launch(0, 0, { centered: true, persistent });
+      this.ripple.launch(0, 0, {centered: true, persistent});
     }
   }
 

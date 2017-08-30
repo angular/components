@@ -1444,8 +1444,8 @@ function dispatchSlideEvent(sliderElement: HTMLElement, percent: number,
   let y = dimensions.top + (dimensions.height * percent);
 
   gestureConfig.emitEventForElement('slide', sliderElement, {
-    center: { x: x, y: y },
-    srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
+    center: {x: x, y: y},
+    srcEvent: {preventDefault: jasmine.createSpy('preventDefault')}
   });
 }
 
@@ -1465,8 +1465,8 @@ function dispatchSlideStartEvent(sliderElement: HTMLElement, percent: number,
   dispatchMouseenterEvent(sliderElement);
 
   gestureConfig.emitEventForElement('slidestart', sliderElement, {
-    center: { x: x, y: y },
-    srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
+    center: {x: x, y: y},
+    srcEvent: {preventDefault: jasmine.createSpy('preventDefault')}
   });
 }
 
@@ -1484,8 +1484,8 @@ function dispatchSlideEndEvent(sliderElement: HTMLElement, percent: number,
   let y = dimensions.top + (dimensions.height * percent);
 
   gestureConfig.emitEventForElement('slideend', sliderElement, {
-    center: { x: x, y: y },
-    srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
+    center: {x: x, y: y},
+    srcEvent: {preventDefault: jasmine.createSpy('preventDefault')}
   });
 }
 

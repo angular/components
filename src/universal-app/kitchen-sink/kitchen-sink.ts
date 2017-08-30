@@ -53,8 +53,8 @@ export class KitchenSink {
   /** Data source for the CDK and Material table. */
   tableDataSource: DataSource<any> = {
     connect: () => Observable.of([
-      { userId: 1 },
-      { userId: 2 }
+      {userId: 1},
+      {userId: 2}
     ]),
     disconnect: () => {}
   };

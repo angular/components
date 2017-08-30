@@ -93,7 +93,7 @@ export function execNodeTask(packageName: string, executable: string | string[],
   }
 
   return (done: (err: any) => void) => {
-    resolveBin(packageName, { executable: executable }, (err: any, binPath: string) => {
+    resolveBin(packageName, {executable: executable}, (err: any, binPath: string) => {
       if (err) {
         done(err);
       } else {
@@ -119,7 +119,7 @@ export function copyTask(srcGlobOrDir: string | string[], outRoot: string) {
 
 /** Delete files. */
 export function cleanTask(glob: string) {
-  return () => gulp.src(glob, { read: false }).pipe(gulpClean(null));
+  return () => gulp.src(glob, {read: false}).pipe(gulpClean(null));
 }
 
 
@@ -152,13 +152,13 @@ export function serverTask(packagePath: string, livereload = true) {
         return [httpRewrite.getMiddleware([
           // Rewrite the node_modules/ and dist/ folder to the real paths. This is a trick to
           // avoid that those folders will be rewritten to the specified package path.
-          { from: '^/node_modules/(.*)$', to: '/node_modules/$1' },
-          { from: '^/dist/(.*)$', to: '/dist/$1' },
+          {from: '^/node_modules/(.*)$', to: '/node_modules/$1'},
+          {from: '^/dist/(.*)$', to: '/dist/$1'},
           // Rewrite every path that doesn't point to a specific file to the index.html file.
           // This is necessary for Angular's routing using the HTML5 History API.
-          { from: '^/[^.]+$', to: `/${relativePath}/index.html`},
+          {from: '^/[^.]+$', to: `/${relativePath}/index.html`},
           // Rewrite any path that didn't match a pattern before to the specified package path.
-          { from: '^(.*)$', to: `/${relativePath}/$1` },
+          {from: '^(.*)$', to: `/${relativePath}/$1`},
         ])];
       }
     });

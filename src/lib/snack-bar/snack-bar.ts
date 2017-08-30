@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentRef, Injectable, Injector, Optional, SkipSelf } from '@angular/core';
+import {ComponentRef, Injectable, Injector, Optional, SkipSelf} from '@angular/core';
 import {Overlay, OverlayRef, OverlayState} from '@angular/cdk/overlay';
 import {ComponentPortal, ComponentType} from '@angular/cdk/portal';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
