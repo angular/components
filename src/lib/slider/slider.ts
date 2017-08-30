@@ -38,6 +38,7 @@ import {HammerInput} from '../core';
 import {FocusOrigin, FocusOriginMonitor} from '../core/style/focus-origin-monitor';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
+import {Subscription} from 'rxjs/Subscription';
 
 
 /**
@@ -276,6 +277,9 @@ export class MdSlider extends _MdSliderMixinBase
    */
   _isActive: boolean = false;
 
+  /** Subscription to changes in the user's direction. */
+  private _dirChange: Subscription | undefined;
+
   /**
    * Whether the axis of the slider is inverted.
    * (i.e. whether moving the thumb in the positive x or y direction decreases the slider's value).
@@ -413,10 +417,18 @@ export class MdSlider extends _MdSliderMixinBase
     this._focusOriginMonitor
         .monitor(this._elementRef.nativeElement, renderer, true)
         .subscribe((origin: FocusOrigin) => this._isActive = !!origin && origin !== 'keyboard');
+
+    if (_dir) {
+      this._dirChange = _dir.change.subscribe(() => _changeDetectorRef.markForCheck());
+    }
   }
 
   ngOnDestroy() {
     this._focusOriginMonitor.stopMonitoring(this._elementRef.nativeElement);
+
+    if (this._dirChange) {
+      this._dirChange.unsubscribe();
+    }
   }
 
   _onMouseenter() {

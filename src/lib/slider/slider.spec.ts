@@ -958,6 +958,23 @@ describe('MdSlider without forms', () => {
       expect(sliderInstance.value).toBe(30);
     });
 
+    it('should re-render when the direction changes', () => {
+      const thumbContainer =
+          sliderNativeElement.querySelector('.mat-slider-thumb-container')! as HTMLElement;
+
+      dispatchClickEventSequence(sliderNativeElement, 0.7);
+      fixture.detectChanges();
+
+      // Some browsers might round the decimals differently.
+      // Trim the end to normalize the expectation.
+      expect(thumbContainer.style.transform).toContain('translateX(-30');
+
+      testComponent.dir = 'rtl';
+      fixture.detectChanges();
+
+      expect(thumbContainer.style.transform).toContain('translateX(-70');
+    });
+
     it('should increment inverted slider by 1 on right arrow pressed', () => {
       testComponent.invert = true;
       fixture.detectChanges();
