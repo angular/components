@@ -13,10 +13,11 @@ $mat-tab-animation-duration: 500ms !default;
   min-width: 160px;
   text-align: center;
   display: inline-flex;
-  justify-content: center;
   align-items: center;
-  white-space: nowrap;
-
+  max-width: 264px;
+  flex-direction: column;
+  justify-content: center;
+  
   &:focus {
     outline: none;
     opacity: 1;

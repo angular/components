@@ -17,6 +17,10 @@
   position: relative;
 }
 
+.md-tab-wrap {
+  font-size: .8rem;
+}
+
 @media ($mat-xsmall) {
   .mat-tab-label {
     min-width: 72px;
