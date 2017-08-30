@@ -37,6 +37,42 @@ It is possible to set the rowspan and colspan of each `md-grid-tile` individuall
 exceed the number of `cols` in the `md-grid-list`. There is no such restriction on the `rowspan`
 however, more rows will simply be added for it the tile to fill.
 
+### Responsive number of columns, row height, and gutter size
+
+`window.matchMedia` is used to evaluate whether a given media query is true or false given the
+current device's screen / window size. The media query will be re-evaluated on resize.
+
+Grid list has pre-programmed support for media queries that match the layout breakpoints:
+
+#### Breakpoints
+| Breakpoint | mediaQuery                                  |
+|------------|---------------------------------------------|
+| xs         | (max-width: 599px)                          |
+| gt-xs	     | (min-width: 600px)                          |
+| sm	     | (min-width: 600px) and (max-width: 959px)   |
+| gt-sm	     | (min-width: 960px)                          |
+| md         | (min-width: 960px) and (max-width: 1279px)  |
+| gt-md	     | (min-width: 1280px)                         |
+| lg         | (min-width: 1280px) and (max-width: 1919px) |
+| gt-lg	     | (min-width: 1920px)                         |
+| xl         | (min-width: 1920px)                         |
+| landscape	 | landscape                                   |
+| portrait   | portrait                                    |
+| print	     | print                                       |
+
+See Material Design's Layout - [Adaptive UI][0] for more details.
+
+#### Usage
+```html
+<md-grid-list gutterSize="4px" rowHeight="4:3"
+              [responsiveGutterSize]="{'gt-md': '16px', 'gt-sm': '8px'}"
+              [responsiveCols]="{'gt-md': '12', 'xs': '3', 'gt-xs': '8'}"
+              [responsiveRowHeight]="{'gt-md': '1:1'}">
+    <md-grid-tile *ngFor="let tile of colorTiles" [style.background]="tile.color">
+    </md-grid-tile>
+</md-grid-list>
+```
+
 ### Tile headers and footers
 
 A header and footer can be added to an `md-grid-tile` using the `md-grid-tile-header` and
@@ -50,3 +86,5 @@ accessibility treatment based on the specific workflow of your application.
 
 If the grid-list is used to present a list of _non-interactive_ content items, then the grid-list
 element should be given `role="list"` and each tile should be given `role="listitem"`.
+
+ [0]: https://material.io/guidelines/layout/responsive-ui.html

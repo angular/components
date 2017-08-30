@@ -1,4 +1,5 @@
-import {async, TestBed} from '@angular/core/testing';
+import {async, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdGridList, MdGridListModule} from './index';
@@ -28,6 +29,7 @@ describe('MdGridList', () => {
         GridListWithComplexLayout,
         GridListWithFootersWithoutLines,
         GridListWithFooterContainingTwoLines,
+        GridListWithResponsiveValues,
       ],
     });
 
@@ -265,6 +267,17 @@ describe('MdGridList', () => {
     expect(firstTile.style.marginTop).toBe('0px');
     expect(firstTile.style.left).toBe('0px');
   });
+
+  it('should get correct responsive values', fakeAsync(() => {
+    let fixture = TestBed.createComponent(GridListWithResponsiveValues);
+    let gridListElement = fixture.debugElement.query(By.directive(MdGridList));
+    let gridListInstance = gridListElement.injector.get<MdGridList>(MdGridList);
+
+    fixture.detectChanges();
+
+    expect(gridListInstance.cols).toBe(3, 'Expect cols number to use md');
+    expect(gridListInstance.gutterSize).toBe('3px', 'Expect gutter size use sm');
+  }));
 });
 
 
@@ -436,3 +449,20 @@ class GridListWithFootersWithoutLines { }
       </md-grid-tile>
     </md-grid-list>`})
 class GridListWithFooterContainingTwoLines { }
+
+@Component({template: `
+    <md-grid-list [responsiveCols]="responsiveCols"
+                  [responsiveGutterSize]="responsiveGutterSize"
+                  [responsiveRowHeight]="responsiveRowHeight">
+        <md-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows"
+                      [style.background]="tile.color">
+          {{tile.text}}
+        </md-grid-tile>
+</md-grid-list>
+`})
+class GridListWithResponsiveValues {
+  responsiveCols = {'sm': 1, 'md': '3', 'lg': '8'};
+  responsiveGutterSize = {'sm': '1px', 'gt-sm': '3px', 'lg': '5px'};
+  responsiveRowHeight = {'sm': '100px', 'gt-sm': '1:1'};
+  tiles: any[];
+}

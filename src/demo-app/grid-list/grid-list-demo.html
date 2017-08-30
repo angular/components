@@ -1,91 +1,107 @@
 <div class="demo-grid-list">
-  <md-card>
-    <md-card-title>Basic grid list</md-card-title>
-    <md-card-content class="demo-basic-list">
-      <md-grid-list cols="4" [rowHeight]="basicRowHeight">
-        <md-grid-tile> One </md-grid-tile>
-        <md-grid-tile> Two </md-grid-tile>
-        <md-grid-tile> Three </md-grid-tile>
-        <md-grid-tile> Four </md-grid-tile>
-      </md-grid-list>
-    </md-card-content>
-  </md-card>
+  <div class="demo-grid-list-fixed">
+    <md-card>
+      <md-card-title>Basic grid list</md-card-title>
+      <md-card-content class="demo-basic-list">
+        <md-grid-list cols="4" [rowHeight]="basicRowHeight">
+          <md-grid-tile> One </md-grid-tile>
+          <md-grid-tile> Two </md-grid-tile>
+          <md-grid-tile> Three </md-grid-tile>
+          <md-grid-tile> Four </md-grid-tile>
+        </md-grid-list>
+      </md-card-content>
+    </md-card>
 
-  <md-card>
-    <md-card-title>Fixed-height grid list</md-card-title>
-    <md-card-content>
-      <md-grid-list [cols]="fixedCols" [rowHeight]="fixedRowHeight">
-        <md-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows"
-                      [style.background]="tile.color">
-          {{tile.text}}
+    <md-card>
+      <md-card-title>Fixed-height grid list</md-card-title>
+      <md-card-content>
+        <md-grid-list [cols]="fixedCols" [rowHeight]="fixedRowHeight">
+          <md-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows"
+                        [style.background]="tile.color">
+            {{tile.text}}
+          </md-grid-tile>
+        </md-grid-list>
+      </md-card-content>
+      <md-card-actions>
+        <p>Change list cols: <input type="number" [(ngModel)]="fixedCols"></p>
+        <p>Change row height: <input type="number" [(ngModel)]="fixedRowHeight"></p>
+        <button md-button (click)="addTileCols()" color="primary">ADD COLSPAN (THREE)</button>
+      </md-card-actions>
+    </md-card>
+
+    <md-card>
+      <md-card-title>Ratio-height grid list</md-card-title>
+      <md-card-content class="demo-ratio-list">
+        <md-grid-list cols="2" [rowHeight]="ratio" gutterSize="4px">
+          <md-grid-tile *ngFor="let tile of tiles" [style.background]="'lightblue'">
+            {{tile.text}}
+          </md-grid-tile>
+        </md-grid-list>
+      </md-card-content>
+      <md-card-actions>
+        <p>Change ratio: <input [(ngModel)]="ratio"></p>
+      </md-card-actions>
+    </md-card>
+
+    <md-card>
+      <md-card-title>Fit-height grid list</md-card-title>
+      <md-card-content class="demo-fit-list">
+        <md-grid-list cols="2" rowHeight="fit" [gutterSize]="ratioGutter"
+                      [style.height]="fitListHeight">
+          <md-grid-tile *ngFor="let tile of tiles" [style.background]="'#F1EBBA'">
+            {{tile.text}}
+          </md-grid-tile>
+        </md-grid-list>
+      </md-card-content>
+      <md-card-actions>
+        <p>Change list height: <input [(ngModel)]="fitListHeight"></p>
+        <p>Change gutter: <input type="number" [(ngModel)]="ratioGutter"></p>
+      </md-card-actions>
+    </md-card>
+
+    <md-card>
+      <md-card-title>Grid list with header</md-card-title>
+      <md-card-content>
+        <md-grid-list cols="3" rowHeight="200px">
+          <md-grid-tile *ngFor="let dog of dogs" style="background:gray">
+            <md-grid-tile-header>
+              <md-icon md-grid-avatar>info_outline</md-icon>
+              {{dog.name}}
+            </md-grid-tile-header>
+          </md-grid-tile>
+        </md-grid-list>
+      </md-card-content>
+    </md-card>
+
+    <md-card>
+      <md-card-title>Grid list with footer</md-card-title>
+      <md-card-content>
+        <md-grid-list cols="3" rowHeight="200px">
+          <md-grid-tile *ngFor="let dog of dogs">
+            <img [alt]="dog.name" src="https://material.angularjs.org/material2_assets/ngconf/{{dog.name}}.png">
+            <md-grid-tile-footer>
+              <h3 md-line>{{dog.name}}</h3>
+              <span md-line>Human: {{dog.human}}</span>
+              <md-icon>star_border</md-icon>
+            </md-grid-tile-footer>
+          </md-grid-tile>
+        </md-grid-list>
+      </md-card-content>
+    </md-card>
+
+  </div>
+
+  <div class="demo-grid-list-responsive">
+    <md-card>
+      <md-grid-list gutterSize="4px" rowHeight="4:3"
+                    [responsiveGutterSize]="{'gt-md': '16px', 'gt-sm': '8px'}"
+                    [responsiveCols]="{'gt-md': '12', 'xs': '3', 'gt-xs': '8'}"
+                    [responsiveRowHeight]="{'gt-md': '1:1'}">
+        <md-grid-tile *ngFor="let tile of colorTiles" [style.background]="tile.color"
+                      [responsiveColspan]="{'gt-md': tile.colspan, 'gt-xs': tile.smallColspan}"
+                      [responsiveRowspan]="{'gt-md': tile.rowspan, 'gt-xs': tile.smallRowspan}">
         </md-grid-tile>
       </md-grid-list>
-    </md-card-content>
-    <md-card-actions>
-      <p>Change list cols: <input type="number" [(ngModel)]="fixedCols"></p>
-      <p>Change row height: <input type="number" [(ngModel)]="fixedRowHeight"></p>
-      <button md-button (click)="addTileCols()" color="primary">ADD COLSPAN (THREE)</button>
-    </md-card-actions>
-  </md-card>
-
-  <md-card>
-    <md-card-title>Ratio-height grid list</md-card-title>
-    <md-card-content class="demo-ratio-list">
-      <md-grid-list cols="2" [rowHeight]="ratio" gutterSize="4px">
-        <md-grid-tile *ngFor="let tile of tiles" [style.background]="'lightblue'">
-          {{tile.text}}
-        </md-grid-tile>
-      </md-grid-list>
-    </md-card-content>
-    <md-card-actions>
-      <p>Change ratio: <input [(ngModel)]="ratio"></p>
-    </md-card-actions>
-  </md-card>
-
-  <md-card>
-    <md-card-title>Fit-height grid list</md-card-title>
-    <md-card-content class="demo-fit-list">
-      <md-grid-list cols="2" rowHeight="fit" [gutterSize]="ratioGutter"
-                    [style.height]="fitListHeight">
-        <md-grid-tile *ngFor="let tile of tiles" [style.background]="'#F1EBBA'">
-          {{tile.text}}
-        </md-grid-tile>
-      </md-grid-list>
-    </md-card-content>
-    <md-card-actions>
-      <p>Change list height: <input [(ngModel)]="fitListHeight"></p>
-      <p>Change gutter: <input type="number" [(ngModel)]="ratioGutter"></p>
-    </md-card-actions>
-  </md-card>
-
-  <md-card>
-    <md-card-title>Grid list with header</md-card-title>
-    <md-card-content>
-      <md-grid-list cols="3" rowHeight="200px">
-        <md-grid-tile *ngFor="let dog of dogs" style="background:gray">
-          <md-grid-tile-header>
-            <md-icon md-grid-avatar>info_outline</md-icon>
-            {{dog.name}}
-          </md-grid-tile-header>
-        </md-grid-tile>
-      </md-grid-list>
-    </md-card-content>
-  </md-card>
-
-  <md-card>
-    <md-card-title>Grid list with footer</md-card-title>
-    <md-card-content>
-      <md-grid-list cols="3" rowHeight="200px">
-        <md-grid-tile *ngFor="let dog of dogs">
-          <img [alt]="dog.name" src="https://material.angularjs.org/material2_assets/ngconf/{{dog.name}}.png">
-          <md-grid-tile-footer>
-            <h3 md-line>{{dog.name}}</h3>
-            <span md-line>Human: {{dog.human}}</span>
-            <md-icon>star_border</md-icon>
-          </md-grid-tile-footer>
-        </md-grid-tile>
-      </md-grid-list>
-    </md-card-content>
-  </md-card>
+    </md-card>
+  </div>
 </div>
-

@@ -13,13 +13,19 @@ import {
   ElementRef,
   Input,
   ContentChildren,
+  OnDestroy,
   QueryList,
   AfterContentInit,
   Directive,
   ChangeDetectionStrategy,
 } from '@angular/core';
+import {auditTime} from '@angular/cdk/rxjs';
+import {of as observableOf} from 'rxjs/observable/of';
+import {fromEvent} from 'rxjs/observable/fromEvent';
+import {Subscription} from 'rxjs/Subscription';
 import {MdLine, MdLineSetter} from '../core';
 import {coerceToNumber} from './grid-list-measure';
+import {matchedMedia, processResponsiveValues} from './grid-util';
 
 @Component({
   moduleId: module.id,
@@ -32,21 +38,71 @@ import {coerceToNumber} from './grid-list-measure';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdGridTile {
+export class MdGridTile implements OnDestroy, AfterContentInit {
   _rowspan: number = 1;
   _colspan: number = 1;
+
+  _responsiveColspan = {};
+  _responsiveRowspan = {};
+
+  _currentColspan: number = 1;
+  _currentRowspan: number = 1;
+
+  /** Subscription for window.resize event **/
+  private _resizeSubscription: Subscription;
 
   constructor(private _renderer: Renderer2, private _element: ElementRef) {}
 
   /** Amount of rows that the grid tile takes up. */
   @Input()
-  get rowspan() { return this._rowspan; }
-  set rowspan(value) { this._rowspan = coerceToNumber(value); }
+  get rowspan() { return this._currentRowspan; }
+  set rowspan(value) {
+    this._rowspan = coerceToNumber(value);
+    this._calculateRowspan();
+  }
 
   /** Amount of columns that the grid tile takes up. */
   @Input()
-  get colspan() { return this._colspan; }
-  set colspan(value) { this._colspan = coerceToNumber(value); }
+  get colspan() { return this._currentColspan; }
+  set colspan(value) {
+    this._colspan = coerceToNumber(value);
+    this._calculateColspan();
+  }
+
+  @Input()
+  set responsiveColspan(value: {}) {
+    this._responsiveColspan = processResponsiveValues(value);
+    this._calculateColspan();
+  }
+
+  @Input()
+  set responsiveRowspan(value: {}) {
+    this._responsiveRowspan = processResponsiveValues(value);
+    this._calculateRowspan();
+  }
+
+  /** Track resize event */
+  ngAfterContentInit() {
+    let resize = typeof window !== 'undefined' ?
+      auditTime.call(fromEvent(window, 'resize'), 150) :
+      observableOf(null);
+    this._resizeSubscription = resize.subscribe(() => {
+      this._onResize();
+    });
+  }
+
+  _onResize() {
+    this._calculateColspan();
+    this._calculateRowspan();
+  }
+
+
+  /** Destroy resize subscription */
+  ngOnDestroy() {
+    if (this._resizeSubscription) {
+      this._resizeSubscription.unsubscribe();
+    }
+  }
 
   /**
    * Sets the style of the grid-tile element.  Needs to be set manually to avoid
@@ -54,6 +110,14 @@ export class MdGridTile {
    */
   _setStyle(property: string, value: string): void {
     this._renderer.setStyle(this._element.nativeElement, property, value);
+  }
+
+  private _calculateRowspan() {
+    this._currentRowspan = matchedMedia(this._responsiveRowspan, this._rowspan);
+  }
+
+  private _calculateColspan() {
+    this._currentColspan = matchedMedia(this._responsiveColspan, this._colspan);
   }
 }
 
