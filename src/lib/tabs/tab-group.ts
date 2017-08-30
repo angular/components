@@ -23,7 +23,6 @@ import {
   AfterContentChecked,
   OnDestroy,
   ViewEncapsulation,
-  NgZone,
 } from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Subscription} from 'rxjs/Subscription';
@@ -130,7 +129,7 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
   private _backgroundColor: ThemePalette;
 
   /** Output to enable support for two-way binding on `[(selectedIndex)]` */
-  @Output() selectedIndexChange = new EventEmitter();
+  @Output() selectedIndexChange: EventEmitter<number> = new EventEmitter();
 
   /** Event emitted when focus has changed within a tab group. */
   @Output() focusChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>();
@@ -142,7 +141,6 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
 
   constructor(_renderer: Renderer2,
               elementRef: ElementRef,
-              private _zone: NgZone,
               private _changeDetectorRef: ChangeDetectorRef) {
     super(_renderer, elementRef);
     this._groupId = nextId++;
@@ -167,8 +165,8 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
     if (this._selectedIndex != indexToSelect && this._selectedIndex != null) {
       this.selectChange.emit(this._createChangeEvent(indexToSelect));
       // Emitting this value after change detection has run
-      // since the checked content may contain this variable
-      this._zone.run(() => this.selectedIndexChange.emit(indexToSelect));
+      // since the checked content may contain this variable'
+      Promise.resolve().then(() => this.selectedIndexChange.emit(indexToSelect));
     }
 
     // Setup the position for each tab and optionally setup an origin on the next selected tab.
