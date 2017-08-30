@@ -150,6 +150,19 @@ describe('MdSlider without forms', () => {
       expect(sliderInstance._isActive).toBe(false);
     });
 
+    it('should reset thumb gap when blurred on min value', () => {
+      sliderInstance._isActive = true;
+      sliderInstance.value = 0;
+      fixture.detectChanges();
+
+      expect(sliderInstance._thumbGap).toBe(10);
+
+      dispatchFakeEvent(sliderNativeElement, 'blur');
+      fixture.detectChanges();
+
+      expect(sliderInstance._thumbGap).toBe(7);
+    });
+
     it('should have thumb gap when at min value', () => {
       expect(trackFillElement.style.transform).toContain('translateX(-7px)');
     });

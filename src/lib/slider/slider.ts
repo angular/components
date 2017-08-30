@@ -412,7 +412,10 @@ export class MdSlider extends _MdSliderMixinBase
     super(renderer, elementRef);
     this._focusOriginMonitor
         .monitor(this._elementRef.nativeElement, renderer, true)
-        .subscribe((origin: FocusOrigin) => this._isActive = !!origin && origin !== 'keyboard');
+        .subscribe((origin: FocusOrigin) => {
+      this._isActive = !!origin && origin !== 'keyboard';
+      this._changeDetectorRef.detectChanges();
+    });
     if (_dir) {
       _dir.change.subscribe(() => this._changeDetectorRef.markForCheck());
     }
@@ -512,8 +515,6 @@ export class MdSlider extends _MdSliderMixinBase
 
   _onBlur() {
     this.onTouched();
-    this._isActive = false;
-    this._changeDetectorRef.markForCheck();
   }
 
   _onKeydown(event: KeyboardEvent) {
