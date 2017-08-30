@@ -229,5 +229,54 @@ application root module.
 export class MyApp {}
 ```
 ### Accessibility
-The input box for datepicker should have a placeholder or be given a meaningful label via
-`aria-label` or `aria-labelledby`.
+The `MdDatepickerInput` directive adds `aria-haspopup` attribute to the native input element, and it
+triggers a calendar dialog with `role="dialog"`.
+
+`MdDatepickerIntl` includes strings that are used for `aria-label`s. The datepicker input
+should have a placeholder or be given a meaningful label via `aria-label`, `aria-labelledby` or
+`MdDatepickerIntl`.
+
+#### Keyboard shortcuts
+The keyboard shortcuts to handle datepicker are:
+
+`ALT` + `DOWN_ARROR`: trigger calendar dialog
+
+`ESCAPE`: close calendar dialog
+
+
+In month view:
+
+`LEFT_ARROW`, `RIGHT_ARROW`, `UP_ARROW`, `DOWN_ARROW`: navigate through days
+
+`HOME`: focus the first day of the month
+
+`END`: focus the last day of the month
+
+`PAGE_UP`: goes to previous month
+
+`ALT` + `PAGE_UP`: goes to previous year
+
+`PAGE_DOWN`: goes to next month
+
+`ALT` + `PAGE_DOWN`: goes to next year
+
+`ENTER`: select current focused date
+
+
+In year view:
+
+`LEFT_ARROW`, `RIGHT_ARROW`, `UP_ARROW`, `DOWN_ARROW`: navigate through months
+
+`HOME`: focus the first month of the year
+
+`END`: focus the last month of the year
+
+`PAGE_UP`: goes to previous year
+
+`ALT` + `PAGE_UP`: goes to previous 10 years
+
+`PAGE_DOWN`: goes to next year
+
+`ALT` + `PAGE_DOWN`: goes to next 10 years
+
+`ENTER`: select current focused month

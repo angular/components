@@ -73,6 +73,7 @@ export class MessageArchivedComponent {
 }
 ```
 ### Accessibility
-A snack-bar automatically goes away after a short time, so you can't count on the user seeing the
-message or having a chance to press the button. For this reason, you should consider offering an
-alternate way to perform any snack-bar action.
+Snack-bar messages are announced via an `aria-live` region. Focus is not moved to
+the snack-bar element, as this would be disruptive to a user in the middle of a
+workflow. For any action offered in the snack-bar, the application should offer the
+user an alternative way to perform the action (typically via keyboard shortcut).

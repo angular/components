@@ -51,5 +51,11 @@ use a neutral background color based on the current theme (light or dark). This 
 `'primary'`, `'accent'`, or `'warn'`.  
 
 ### Accessibility
-Toolbar items without text or labels should be given a meaningful label via `aria-label` or
-`aria-labelledby`.
+By default, the toolbar assumes that it will be used in a purely decorative fashion and thus sets
+no roles, ARIA attributes, or keyboard shortcuts. This is equivalent to having a sequence of `<div>`
+elements on the page.
+
+Generally, the toolbar is used as a header where `role="header"` would be appropriate.
+
+Only if the use-case of the toolbar match that of role="toolbar", the user should add the role and
+an appropriate label via `aria-label` or `aria-labelledby`.
