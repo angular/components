@@ -388,6 +388,9 @@ export class MdSlider extends _MdSliderMixinBase
   /** The value of the slider when the slide start event fires. */
   private _valueOnSlideStart: number | null;
 
+  /** Whether the component has been initialized. */
+  private _initialized = false;
+
   /** Reference to the inner slider wrapper element. */
   @ViewChild('sliderWrapper') private _sliderWrapper: ElementRef;
 
@@ -414,10 +417,16 @@ export class MdSlider extends _MdSliderMixinBase
         .monitor(this._elementRef.nativeElement, renderer, true)
         .subscribe((origin: FocusOrigin) => {
       this._isActive = !!origin && origin !== 'keyboard';
-      this._changeDetectorRef.detectChanges();
+      if (this._initialized) {
+          this._changeDetectorRef.detectChanges();
+      }
     });
-    if (_dir) {
-      _dir.change.subscribe(() => this._changeDetectorRef.markForCheck());
+  }
+
+  ngOnInit() {
+    this._initialized = true;
+    if (this._dir) {
+      this._dir.change.subscribe(() => this._changeDetectorRef.markForCheck());
     }
   }
 
