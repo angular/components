@@ -5,10 +5,15 @@ import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
 import {ExampleViewer} from './example-viewer';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 import {DocViewerModule} from '../doc-viewer/doc-viewer-module';
-import {MdAutocompleteModule, MdInputModule} from '@angular/material';
+import {FormsModule} from '@angular/forms';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {
+  MdAutocompleteModule,
+  MdInputModule,
+  MdSlideToggleModule
+} from '@angular/material';
 
 const exampleKey = 'autocomplete-overview';
 
@@ -75,12 +80,14 @@ describe('ExampleViewer', () => {
 });
 
 
-// Create a version of ExampleModule for testing with only one component so that we odn't have
+// Create a version of ExampleModule for testing with only one component so that we don't have
 // to compile all of the examples for these tests.
 @NgModule({
   imports: [
     MdInputModule,
     MdAutocompleteModule,
+    MdSlideToggleModule,
+    FormsModule,
     CommonModule,
     ReactiveFormsModule,
     NoopAnimationsModule
