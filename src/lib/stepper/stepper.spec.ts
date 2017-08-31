@@ -8,16 +8,22 @@ import {MdStepperNext, MdStepperPrevious} from './stepper-button';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {MdStepper, MdHorizontalStepper, MdVerticalStepper} from './stepper';
+import {Directionality} from '../core';
 
-const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+const VALID_REGEX = /valid/;
 
 describe('MdHorizontalStepper', () => {
+  let dir = 'ltr';
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdStepperModule, NoopAnimationsModule, ReactiveFormsModule],
       declarations: [
         SimpleMdHorizontalStepperApp,
         LinearMdHorizontalStepperApp
+      ],
+      providers: [
+        {provide: Directionality, useFactory: () => ({value: dir})}
       ]
     });
 
@@ -68,7 +74,7 @@ describe('MdHorizontalStepper', () => {
     });
 
     it('should set the correct step position for animation', () => {
-      assertCorrectStepPosition(stepperComponent, fixture);
+      assertCorrectStepPosition(stepperComponent, fixture, dir === 'rtl');
     });
 
     it('should support keyboard events to move and select focus', () => {
@@ -90,6 +96,29 @@ describe('MdHorizontalStepper', () => {
 
     it('should set done icon if step is not editable and is completed', () => {
       assertCorrectStepIcon(stepperComponent, fixture, false, 'done');
+    });
+  });
+
+  describe('RTL', () => {
+    let fixture: ComponentFixture<SimpleMdHorizontalStepperApp>;
+    let stepperComponent: MdHorizontalStepper;
+
+    beforeEach(() => {
+      dir = 'rtl';
+      fixture = TestBed.createComponent(SimpleMdHorizontalStepperApp);
+      fixture.detectChanges();
+
+      stepperComponent = fixture.debugElement
+          .query(By.css('md-horizontal-stepper')).componentInstance;
+    });
+
+    it('should reverse arrow key focus in RTL mode', () => {
+      let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
+      assertArrowKeyInteractionInRtl(stepperComponent, fixture, stepHeaders);
+    });
+
+    it('should reverse animation in RTL mode', () => {
+      assertCorrectStepPosition(stepperComponent, fixture, dir === 'rtl');
     });
   });
 
@@ -133,12 +162,17 @@ describe('MdHorizontalStepper', () => {
 });
 
 describe('MdVerticalStepper', () => {
+  let dir = 'ltr';
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdStepperModule, NoopAnimationsModule, ReactiveFormsModule],
       declarations: [
         SimpleMdVerticalStepperApp,
         LinearMdVerticalStepperApp
+      ],
+      providers: [
+        {provide: Directionality, useFactory: () => ({value: dir})}
       ]
     });
 
@@ -190,7 +224,7 @@ describe('MdVerticalStepper', () => {
     });
 
     it('should set the correct step position for animation', () => {
-      assertCorrectStepPosition(stepperComponent, fixture);
+      assertCorrectStepPosition(stepperComponent, fixture, dir === 'rtl');
     });
 
     it('should support keyboard events to move and select focus', () => {
@@ -212,6 +246,29 @@ describe('MdVerticalStepper', () => {
 
     it('should set done icon if step is not editable and is completed', () => {
       assertCorrectStepIcon(stepperComponent, fixture, false, 'done');
+    });
+  });
+
+  describe('RTL', () => {
+    let fixture: ComponentFixture<SimpleMdVerticalStepperApp>;
+    let stepperComponent: MdHorizontalStepper;
+
+    beforeEach(() => {
+      dir = 'rtl';
+      fixture = TestBed.createComponent(SimpleMdVerticalStepperApp);
+      fixture.detectChanges();
+
+      stepperComponent = fixture.debugElement
+          .query(By.css('md-vertical-stepper')).componentInstance;
+    });
+
+    it('should reverse arrow key focus in RTL mode', () => {
+      let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
+      assertArrowKeyInteractionInRtl(stepperComponent, fixture, stepHeaders);
+    });
+
+    it('should reverse animation in RTL mode', () => {
+      assertCorrectStepPosition(stepperComponent, fixture, dir === 'rtl');
     });
   });
 
@@ -364,30 +421,47 @@ function assertPreviousStepperButtonClick(stepperComponent: MdStepper,
 }
 
 /** Asserts that step position is correct for animation. */
-function assertCorrectStepPosition(stepperComponent: MdStepper, fixture: ComponentFixture<any>) {
+function assertCorrectStepPosition(stepperComponent: MdStepper,
+                                   fixture: ComponentFixture<any>,
+                                   rtl: boolean) {
   expect(stepperComponent._getAnimationDirection(0)).toBe('current');
-  expect(stepperComponent._getAnimationDirection(1)).toBe('next');
-  expect(stepperComponent._getAnimationDirection(2)).toBe('next');
+  if (rtl) {
+    expect(stepperComponent._getAnimationDirection(1)).toBe('previous');
+    expect(stepperComponent._getAnimationDirection(2)).toBe('previous');
+  } else {
+    expect(stepperComponent._getAnimationDirection(1)).toBe('next');
+    expect(stepperComponent._getAnimationDirection(2)).toBe('next');
+  }
 
   stepperComponent.selectedIndex = 1;
   fixture.detectChanges();
 
-  expect(stepperComponent._getAnimationDirection(0)).toBe('previous');
+  if (rtl) {
+    expect(stepperComponent._getAnimationDirection(0)).toBe('next');
+    expect(stepperComponent._getAnimationDirection(2)).toBe('previous');
+  } else {
+    expect(stepperComponent._getAnimationDirection(0)).toBe('previous');
+    expect(stepperComponent._getAnimationDirection(2)).toBe('next');
+  }
   expect(stepperComponent._getAnimationDirection(1)).toBe('current');
-  expect(stepperComponent._getAnimationDirection(2)).toBe('next');
 
   stepperComponent.selectedIndex = 2;
   fixture.detectChanges();
 
-  expect(stepperComponent._getAnimationDirection(0)).toBe('previous');
-  expect(stepperComponent._getAnimationDirection(1)).toBe('previous');
+  if (rtl) {
+    expect(stepperComponent._getAnimationDirection(0)).toBe('next');
+    expect(stepperComponent._getAnimationDirection(1)).toBe('next');
+  } else {
+    expect(stepperComponent._getAnimationDirection(0)).toBe('previous');
+    expect(stepperComponent._getAnimationDirection(1)).toBe('previous');
+  }
   expect(stepperComponent._getAnimationDirection(2)).toBe('current');
 }
 
 /** Asserts that keyboard interaction works correctly. */
 function assertCorrectKeyboardInteraction(stepperComponent: MdStepper,
-                            fixture: ComponentFixture<any>,
-                            stepHeaders: DebugElement[]) {
+                                          fixture: ComponentFixture<any>,
+                                          stepHeaders: DebugElement[]) {
   expect(stepperComponent._focusIndex).toBe(0);
   expect(stepperComponent.selectedIndex).toBe(0);
 
@@ -396,7 +470,7 @@ function assertCorrectKeyboardInteraction(stepperComponent: MdStepper,
   fixture.detectChanges();
 
   expect(stepperComponent._focusIndex)
-      .toBe(1, 'Expected index of focused step to be increased by 1 after RIGHT_ARROW event.');
+      .toBe(1, 'Expected index of focused step to increase by 1 after RIGHT_ARROW event.');
   expect(stepperComponent.selectedIndex)
       .toBe(0, 'Expected index of selected step to remain unchanged after RIGHT_ARROW event.');
 
@@ -408,7 +482,7 @@ function assertCorrectKeyboardInteraction(stepperComponent: MdStepper,
       .toBe(1, 'Expected index of focused step to remain unchanged after ENTER event.');
   expect(stepperComponent.selectedIndex)
       .toBe(1,
-          'Expected index of selected step to change to index of focused step after EVENT event.');
+          'Expected index of selected step to change to index of focused step after ENTER event.');
 
   stepHeaderEl = stepHeaders[1].nativeElement;
   dispatchKeyboardEvent(stepHeaderEl, 'keydown', LEFT_ARROW);
@@ -456,6 +530,25 @@ function assertStepHeaderFocusNotCalled(stepperComponent: MdStepper,
 
   expect(stepperComponent.selectedIndex).toBe(1);
   expect(stepHeaderEl.focus).not.toHaveBeenCalled();
+}
+
+/** Asserts that arrow key direction works correctly in RTL mode. */
+function assertArrowKeyInteractionInRtl(stepperComponent: MdStepper,
+                                        fixture: ComponentFixture<any>,
+                                        stepHeaders: DebugElement[]) {
+  expect(stepperComponent._focusIndex).toBe(0);
+
+  let stepHeaderEl = stepHeaders[0].nativeElement;
+  dispatchKeyboardEvent(stepHeaderEl, 'keydown', LEFT_ARROW);
+  fixture.detectChanges();
+
+  expect(stepperComponent._focusIndex).toBe(1);
+
+  stepHeaderEl = stepHeaders[1].nativeElement;
+  dispatchKeyboardEvent(stepHeaderEl, 'keydown', RIGHT_ARROW);
+  fixture.detectChanges();
+
+  expect(stepperComponent._focusIndex).toBe(0);
 }
 
 /**
@@ -548,7 +641,7 @@ function assertOptionalStepValidity(stepperComponent: MdStepper,
   expect(stepperComponent.selectedIndex)
       .toBe(2, 'Expected selectedIndex to remain unchanged when optional step input is invalid.');
 
-  testComponent.threeGroup.get('threeCtrl')!.setValue('123@gmail.com');
+  testComponent.threeGroup.get('threeCtrl')!.setValue('valid');
   nextButtonNativeEl.click();
   fixture.detectChanges();
 
@@ -663,7 +756,7 @@ class LinearMdHorizontalStepperApp {
       twoCtrl: new FormControl('', Validators.required)
     });
     this.threeGroup = new FormGroup({
-      threeCtrl: new FormControl('', Validators.pattern(EMAIL_REGEX))
+      threeCtrl: new FormControl('', Validators.pattern(VALID_REGEX))
     });
   }
 }
@@ -759,7 +852,7 @@ class LinearMdVerticalStepperApp {
       twoCtrl: new FormControl('', Validators.required)
     });
     this.threeGroup = new FormGroup({
-      threeCtrl: new FormControl('', Validators.pattern(EMAIL_REGEX))
+      threeCtrl: new FormControl('', Validators.pattern(VALID_REGEX))
     });
   }
 }

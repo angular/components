@@ -30,7 +30,7 @@ import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '@angular/cdk/keycodes';
 import {CdkStepLabel} from './step-label';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {AbstractControl} from '@angular/forms';
-import {Directionality} from '@angular/cdk/bidi';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;
@@ -120,6 +120,8 @@ export class CdkStep {
   selector: '[cdkStepper]',
 })
 export class CdkStepper {
+  private _stepsArray: CdkStep[];
+
   /** The list of step components that the stepper is holding. */
   @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
 
@@ -137,7 +139,7 @@ export class CdkStepper {
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
     if (this._anyControlsInvalid(index)
-        || index < this._selectedIndex && !this._steps.toArray()[index].editable) {
+        || index < this._selectedIndex && !this._stepsArray[index].editable) {
       // remove focus from clicked step header if the step is not able to be selected
       this._stepHeader.toArray()[index].nativeElement.blur();
     } else if (this._selectedIndex != index) {
@@ -151,7 +153,7 @@ export class CdkStepper {
   @Input()
   get selected() { return this._steps[this.selectedIndex]; }
   set selected(step: CdkStep) {
-    let index = this._steps.toArray().indexOf(step);
+    let index = this._stepsArray.indexOf(step);
     this.selectedIndex = index;
   }
 
@@ -166,6 +168,10 @@ export class CdkStepper {
 
   constructor(@Optional() private _dir: Directionality) {
     this._groupId = nextId++;
+  }
+
+  ngAfterContentInit() {
+    this._stepsArray = this._steps.toArray();
   }
 
   /** Selects and focuses the next step in list. */
@@ -192,17 +198,16 @@ export class CdkStepper {
   _getAnimationDirection(index: number): StepContentPositionState {
     const position = index - this._selectedIndex;
     if (position < 0) {
-      return 'previous';
+      return this._layoutDirection() === 'rtl' ? 'next' : 'previous';
     } else if (position > 0) {
-      return 'next';
-    } else {
-      return 'current';
+      return this._layoutDirection() === 'rtl' ? 'previous' : 'next';
     }
+    return 'current';
   }
 
   /** Returns the type of icon to be displayed. */
   _getIndicatorType(index: number): 'number' | 'edit' | 'done' {
-    const step = this._steps.toArray()[index];
+    const step = this._stepsArray[index];
     if (!step.completed || this._selectedIndex == index) {
       return 'number';
     } else {
@@ -211,12 +216,11 @@ export class CdkStepper {
   }
 
   private _emitStepperSelectionEvent(newIndex: number): void {
-    const stepsArray = this._steps.toArray();
     this.selectionChange.emit({
       selectedIndex: newIndex,
       previouslySelectedIndex: this._selectedIndex,
-      selectedStep: stepsArray[newIndex],
-      previouslySelectedStep: stepsArray[this._selectedIndex],
+      selectedStep: this._stepsArray[newIndex],
+      previouslySelectedStep: this._stepsArray[this._selectedIndex],
     });
     this._selectedIndex = newIndex;
   }
@@ -224,14 +228,14 @@ export class CdkStepper {
   _onKeydown(event: KeyboardEvent) {
     switch (event.keyCode) {
       case RIGHT_ARROW:
-        if (this._dir && this._dir.value === 'rtl') {
+        if (this._layoutDirection() === 'rtl') {
           this._focusStep((this._focusIndex + this._steps.length - 1) % this._steps.length);
         } else {
           this._focusStep((this._focusIndex + 1) % this._steps.length);
         }
         break;
       case LEFT_ARROW:
-        if (this._dir && this._dir.value === 'rtl') {
+        if (this._layoutDirection() === 'rtl') {
           this._focusStep((this._focusIndex + 1) % this._steps.length);
         } else {
           this._focusStep((this._focusIndex + this._steps.length - 1) % this._steps.length);
@@ -254,11 +258,14 @@ export class CdkStepper {
   }
 
   private _anyControlsInvalid(index: number): boolean {
-    const stepsArray = this._steps.toArray();
-    stepsArray[this._selectedIndex].interacted = true;
+    this._stepsArray[this._selectedIndex].interacted = true;
     if (this._linear) {
-      return stepsArray.slice(0, index).some(step => step.stepControl.invalid);
+      return this._stepsArray.slice(0, index).some(step => step.stepControl.invalid);
     }
     return false;
+  }
+
+  private _layoutDirection(): Direction {
+    return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
   }
 }
