@@ -19,6 +19,7 @@ import {SlideToggleE2E} from './slide-toggle/slide-toggle-e2e';
 import {InputE2E} from './input/input-e2e';
 import {SidenavE2E} from './sidenav/sidenav-e2e';
 import {BlockScrollStrategyE2E} from './block-scroll-strategy/block-scroll-strategy-e2e';
+import {StepperE2E} from './stepper/stepper-e2e';
 import {
   MdButtonModule,
   MdCheckboxModule,
@@ -35,10 +36,12 @@ import {
   MdRadioModule,
   MdSidenavModule,
   MdSlideToggleModule,
+  MdStepperModule,
   MdTabsModule,
 } from '@angular/material';
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
 import {ExampleModule} from '@angular/material-examples';
+import {ReactiveFormsModule} from '@angular/forms';
 
 /**
  * NgModule that contains all Material modules that are required to serve the e2e-app.
@@ -59,6 +62,7 @@ import {ExampleModule} from '@angular/material-examples';
     MdRadioModule,
     MdSidenavModule,
     MdSlideToggleModule,
+    MdStepperModule,
     MdTabsModule,
     MdNativeDateModule,
   ]
@@ -72,6 +76,7 @@ export class E2eMaterialModule {}
     E2eMaterialModule,
     NoopAnimationsModule,
     ExampleModule,
+    ReactiveFormsModule
   ],
   declarations: [
     BasicTabs,
@@ -90,6 +95,7 @@ export class E2eMaterialModule {}
     SimpleCheckboxes,
     SimpleRadioButtons,
     SlideToggleE2E,
+    StepperE2E,
     TestDialog,
     TestDialogFullScreen,
     BlockScrollStrategyE2E
