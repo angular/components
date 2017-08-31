@@ -116,7 +116,13 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
   set align(value) { this.position = value; }
 
   /** Mode of the drawer; one of 'over', 'push' or 'side'. */
-  @Input() mode: 'over' | 'push' | 'side' = 'over';
+  @Input()
+  get mode() { return this._mode; }
+  set mode(value: any) {
+    this._mode = value;
+    this.onModeChanged.emit();
+  }
+  private _mode: 'over' | 'push' | 'side' = 'over';
 
   /** Whether the drawer can be closed with the escape key or not. */
   @Input()
@@ -151,6 +157,9 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
 
   /** Event emitted when the drawer's position changes. */
   @Output('positionChanged') onPositionChanged = new EventEmitter<void>();
+
+  /** Event emitted when the drawer's mode changes. */
+  @Output('modeChanged') onModeChanged = new EventEmitter<void>();
 
   /** @deprecated */
   @Output('align-changed') onAlignChanged = new EventEmitter<void>();
@@ -359,6 +368,12 @@ export class MdDrawerContainer implements AfterContentInit {
         this._watchDrawerPosition(drawer);
       });
     });
+
+    this._drawers.forEach((drawer: MdDrawer) => {
+      drawer.onModeChanged.subscribe(() => {
+        this._watchDrawerToggle(drawer);
+      });
+    });
   }
 
   /** Calls `open` of both start and end drawers */
@@ -385,10 +400,8 @@ export class MdDrawerContainer implements AfterContentInit {
       this._changeDetectorRef.markForCheck();
     });
 
-    if (drawer.mode !== 'side') {
-      takeUntil.call(merge(drawer.onOpen, drawer.onClose), this._drawers.changes).subscribe(() =>
-          this._setContainerClass(drawer.opened));
-    }
+    takeUntil.call(merge(drawer.onOpen, drawer.onClose), this._drawers.changes).subscribe(() =>
+        this._setContainerClass(drawer.opened, drawer.mode == 'side'));
   }
 
   /**
@@ -406,8 +419,8 @@ export class MdDrawerContainer implements AfterContentInit {
   }
 
   /** Toggles the 'mat-drawer-opened' class on the main 'md-drawer-container' element. */
-  private _setContainerClass(isAdd: boolean): void {
-    if (isAdd) {
+  private _setContainerClass(isAdd: boolean, sideMode: boolean): void {
+    if (isAdd && !sideMode) {
       this._renderer.addClass(this._element.nativeElement, 'mat-drawer-opened');
     } else {
       this._renderer.removeClass(this._element.nativeElement, 'mat-drawer-opened');

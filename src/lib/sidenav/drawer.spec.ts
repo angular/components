@@ -66,6 +66,40 @@ describe('MdDrawer', () => {
       expect(getComputedStyle(drawerBackdropElement.nativeElement).visibility).toBe('hidden');
     }));
 
+    it('should only add mat-drawer-opened class when not in side mode', fakeAsync(() => {
+      let fixture = TestBed.createComponent(BasicTestApp);
+
+      fixture.detectChanges();
+
+      let testComponent: BasicTestApp = fixture.debugElement.componentInstance;
+      let drawerContainerNativeElement
+          = fixture.debugElement.query(By.css('md-drawer-container')).nativeElement;
+
+      testComponent.mode = 'side';
+      fixture.debugElement.query(By.css('.open')).nativeElement.click();
+      fixture.detectChanges();
+
+      tick();
+      fixture.detectChanges();
+
+      expect(drawerContainerNativeElement.classList).not.toContain('mat-drawer-opened');
+
+      fixture.debugElement.query(By.css('.close')).nativeElement.click();
+      fixture.detectChanges();
+
+      tick();
+      fixture.detectChanges();
+
+      testComponent.mode = 'over';
+      fixture.debugElement.query(By.css('.open')).nativeElement.click();
+      fixture.detectChanges();
+
+      tick();
+      fixture.detectChanges();
+
+      expect(drawerContainerNativeElement.classList).toContain('mat-drawer-opened');
+    }));
+
     it('does not throw when created without a drawer', fakeAsync(() => {
       expect(() => {
         let fixture = TestBed.createComponent(BasicTestApp);
@@ -386,7 +420,8 @@ class DrawerContainerTwoDrawerTestApp {
     <md-drawer-container (backdropClick)="backdropClicked()">
       <md-drawer #drawer position="start"
                  (open)="open()"
-                 (close)="close()">
+                 (close)="close()"
+                 [mode]="mode">
         <button #drawerButton>Content.</button>
       </md-drawer>
       <button (click)="drawer.open()" class="open" #openButton></button>
@@ -397,6 +432,7 @@ class BasicTestApp {
   openCount: number = 0;
   closeCount: number = 0;
   backdropClickedCount: number = 0;
+  mode: string = 'over';
 
   @ViewChild('drawerButton') drawerButton: ElementRef;
   @ViewChild('openButton') openButton: ElementRef;
