@@ -126,3 +126,10 @@ that the AOT compiler knows to create the `ComponentFactory` for it.
 })
 export class AppModule() {}
 ```
+
+### Accessibility
+The dialog has `role="dialog"`, and dialog role can be overwritten to `alertdialog` in the
+appropriate context.
+
+The dialog will focus on the first tabbable element when opened,
+and restore focus to the element that was focused before the dialog opened when closed.

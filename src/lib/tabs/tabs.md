@@ -79,3 +79,7 @@ provides a tab-like UI for navigating between routes.
 The tab-nav-bar is not tied to any particular router; it works with normal `<a>` elements and uses
 the `active` property to determine which tab is currently active. The corresponding
 `<router-outlet>` can be placed anywhere in the view.
+
+### Accessibility
+`MdTabNav`s without text or labels should be given a meaningful label via `aria-label` or
+`aria-labelledby`.
