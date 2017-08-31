@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import {MdDrawer, MdDrawerContainer, MdDrawerContent} from './drawer';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 
 
 @Component({
@@ -78,19 +79,28 @@ export class MdSidenavContent extends MdDrawerContent {
 })
 export class MdSidenav extends MdDrawer {
   /** Whether the sidenav is fixed in the viewport. */
-  @Input() fixedInViewport = true;
+  @Input()
+  get fixedInViewport() { return this._fixedInViewport; }
+  set fixedInViewport(value) { this._fixedInViewport = coerceBooleanProperty(value); }
+  private _fixedInViewport = true;
 
   /**
    * The gap between the top of the sidenav and the top of the viewport when the sidenav is in fixed
    * mode.
    */
-  @Input() fixedTopGap = 0;
+  @Input()
+  get fixedTopGap() { return this._fixedTopGap; }
+  set fixedTopGap(value) { this._fixedTopGap = coerceNumberProperty(value); }
+  private _fixedTopGap = 0;
 
   /**
    * The gap between the bottom of the sidenav and the bottom of the viewport when the sidenav is in
    * fixed mode.
    */
-  @Input() fixedBottomGap = 0;
+  @Input()
+  get fixedBottomGap() { return this._fixedBottomGap; }
+  set fixedBottomGap(value) { this._fixedBottomGap = coerceNumberProperty(value); }
+  private _fixedBottomGap = 0;
 }
 
 

@@ -68,7 +68,11 @@ export class MdDrawerToggleResult {
   encapsulation: ViewEncapsulation.None,
 })
 export class MdDrawerContent implements AfterContentInit {
-  /** Margins to be applied to the content. */
+  /**
+   * Margins to be applied to the content. These are used to push / shrink the drawer content when a
+   * drawer is open. We use margin rather than transform even for push mode because transform breaks
+   * fixed position elements inside of the transformed element.
+   */
   _margins: {left: number, right: number} = {left: 0, right: 0};
 
   constructor(
@@ -77,7 +81,7 @@ export class MdDrawerContent implements AfterContentInit {
   }
 
   ngAfterContentInit() {
-    this._container._contentMargins.subscribe((margins) => {
+    this._container._contentMargins.subscribe(margins => {
       this._margins = margins;
       this._changeDetectorRef.markForCheck();
     });
@@ -200,6 +204,10 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
   /** @deprecated */
   @Output('align-changed') onAlignChanged = new EventEmitter<void>();
 
+  /**
+   * An observable that emits when the drawer mode changes. This is used by the drawer container to
+   * to know when to when the mode changes so it can adapt the margins on the content.
+   */
   _modeChanged = new Subject();
 
   get isFocusTrapEnabled() {
@@ -542,6 +550,13 @@ export class MdDrawerContainer implements AfterContentInit, OnDestroy {
    * sparingly, because it causes a reflow.
    */
   private _updateContentMargins() {
+    // 1. For drawers in `over` mode, they don't affect the content.
+    // 2. For drawers in `side` mode they should shrink the content. We do this by adding to the
+    //    left margin (for left drawer) or right margin (for right the drawer).
+    // 3. For drawers in `push` mode the should shift the content without resizing it. We do this by
+    //    adding to the left or right margin and simultaneously subtracting the same amount of
+    //    margin from the other side.
+
     let left = 0;
     let right = 0;
 
