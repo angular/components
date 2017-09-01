@@ -32,23 +32,21 @@ describe('MdHorizontalStepper', () => {
 
   describe('basic horizontal stepper', () => {
     let fixture: ComponentFixture<SimpleMdHorizontalStepperApp>;
-    let stepperComponent: MdHorizontalStepper;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleMdHorizontalStepperApp);
       fixture.detectChanges();
-
-      stepperComponent = fixture.debugElement
-          .query(By.css('md-horizontal-stepper')).componentInstance;
     });
 
     it('should default to the first step', () => {
+      let stepperComponent = fixture.debugElement
+          .query(By.css('md-horizontal-stepper')).componentInstance;
       expect(stepperComponent.selectedIndex).toBe(0);
     });
 
     it('should change selected index on header click', () => {
       let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
-      assertSelectionChangeOnHeaderClick(stepperComponent, fixture, stepHeaders);
+      assertSelectionChangeOnHeaderClick(fixture, stepHeaders);
     });
 
     it('should set the "tablist" role on stepper', () => {
@@ -58,67 +56,63 @@ describe('MdHorizontalStepper', () => {
 
     it('should set aria-expanded of content correctly', () => {
       let stepContents = fixture.debugElement.queryAll(By.css(`.mat-horizontal-stepper-content`));
-      assertCorrectAriaExpandedAttribute(stepperComponent, fixture, stepContents);
+      assertCorrectAriaExpandedAttribute(fixture, stepContents);
     });
 
     it('should display the correct label', () => {
-      assertCorrectStepLabel(stepperComponent, fixture);
+      assertCorrectStepLabel(fixture);
     });
 
     it('should go to next available step when the next button is clicked', () => {
-      assertNextStepperButtonClick(stepperComponent, fixture);
+      assertNextStepperButtonClick(fixture);
     });
 
     it('should go to previous available step when the previous button is clicked', () => {
-      assertPreviousStepperButtonClick(stepperComponent, fixture);
+      assertPreviousStepperButtonClick(fixture);
     });
 
     it('should set the correct step position for animation', () => {
-      assertCorrectStepAnimationDirection(stepperComponent, fixture);
+      assertCorrectStepAnimationDirection(fixture);
     });
 
     it('should support keyboard events to move and select focus', () => {
       let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
-      assertCorrectKeyboardInteraction(stepperComponent, fixture, stepHeaders);
+      assertCorrectKeyboardInteraction(fixture, stepHeaders);
     });
 
     it('should not set focus on header of selected step if header is not clicked', () => {
-      assertStepHeaderFocusNotCalled(stepperComponent, fixture);
+      assertStepHeaderFocusNotCalled(fixture);
     });
 
     it('should only be able to return to a previous step if it is editable', () => {
-      assertEditableStepChange(stepperComponent, fixture);
+      assertEditableStepChange(fixture);
     });
 
     it('should set create icon if step is editable and completed', () => {
-      assertCorrectStepIcon(stepperComponent, fixture, true, 'edit');
+      assertCorrectStepIcon(fixture, true, 'edit');
     });
 
     it('should set done icon if step is not editable and is completed', () => {
-      assertCorrectStepIcon(stepperComponent, fixture, false, 'done');
+      assertCorrectStepIcon(fixture, false, 'done');
     });
   });
 
   describe('RTL', () => {
     let fixture: ComponentFixture<SimpleMdHorizontalStepperApp>;
-    let stepperComponent: MdHorizontalStepper;
 
     beforeEach(() => {
       dir = 'rtl';
       fixture = TestBed.createComponent(SimpleMdHorizontalStepperApp);
       fixture.detectChanges();
-
-      stepperComponent = fixture.debugElement
-          .query(By.css('md-horizontal-stepper')).componentInstance;
     });
 
     it('should reverse arrow key focus in RTL mode', () => {
       let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
-      assertArrowKeyInteractionInRtl(stepperComponent, fixture, stepHeaders);
+      assertArrowKeyInteractionInRtl(fixture, stepHeaders);
     });
 
     it('should reverse animation in RTL mode', () => {
-      assertCorrectStepAnimationDirection(stepperComponent, fixture, 'rtl');
+      assertCorrectStepAnimationDirection(fixture, 'rtl');
     });
   });
 
@@ -148,7 +142,7 @@ describe('MdHorizontalStepper', () => {
 
       let stepHeaderEl = fixture.debugElement
           .queryAll(By.css('.mat-horizontal-stepper-header'))[1].nativeElement;
-      assertLinearStepperValidity(stepHeaderEl, stepperComponent, testComponent, fixture);
+      assertLinearStepperValidity(stepHeaderEl, testComponent, fixture);
     });
 
     it('should not focus step header upon click if it is not able to be selected', () => {
@@ -156,7 +150,7 @@ describe('MdHorizontalStepper', () => {
     });
 
     it('should be able to move to next step even when invalid if current step is optional', () => {
-      assertOptionalStepValidity(stepperComponent, testComponent, fixture);
+      assertOptionalStepValidity(testComponent, fixture);
     });
   });
 });
@@ -181,23 +175,21 @@ describe('MdVerticalStepper', () => {
 
   describe('basic vertical stepper', () => {
     let fixture: ComponentFixture<SimpleMdVerticalStepperApp>;
-    let stepperComponent: MdVerticalStepper;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleMdVerticalStepperApp);
       fixture.detectChanges();
-
-      stepperComponent = fixture.debugElement
-          .query(By.css('md-vertical-stepper')).componentInstance;
     });
 
     it('should default to the first step', () => {
+      let stepperComponent = fixture.debugElement
+          .query(By.css('md-vertical-stepper')).componentInstance;
       expect(stepperComponent.selectedIndex).toBe(0);
     });
 
     it('should change selected index on header click', () => {
       let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
-      assertSelectionChangeOnHeaderClick(stepperComponent, fixture, stepHeaders);
+      assertSelectionChangeOnHeaderClick(fixture, stepHeaders);
 
     });
 
@@ -208,67 +200,63 @@ describe('MdVerticalStepper', () => {
 
     it('should set aria-expanded of content correctly', () => {
       let stepContents = fixture.debugElement.queryAll(By.css(`.mat-vertical-stepper-content`));
-      assertCorrectAriaExpandedAttribute(stepperComponent, fixture, stepContents);
+      assertCorrectAriaExpandedAttribute(fixture, stepContents);
     });
 
     it('should display the correct label', () => {
-      assertCorrectStepLabel(stepperComponent, fixture);
+      assertCorrectStepLabel(fixture);
     });
 
     it('should go to next available step when the next button is clicked', () => {
-      assertNextStepperButtonClick(stepperComponent, fixture);
+      assertNextStepperButtonClick(fixture);
     });
 
     it('should go to previous available step when the previous button is clicked', () => {
-      assertPreviousStepperButtonClick(stepperComponent, fixture);
+      assertPreviousStepperButtonClick(fixture);
     });
 
     it('should set the correct step position for animation', () => {
-      assertCorrectStepAnimationDirection(stepperComponent, fixture);
+      assertCorrectStepAnimationDirection(fixture);
     });
 
     it('should support keyboard events to move and select focus', () => {
       let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
-      assertCorrectKeyboardInteraction(stepperComponent, fixture, stepHeaders);
+      assertCorrectKeyboardInteraction(fixture, stepHeaders);
     });
 
     it('should not set focus on header of selected step if header is not clicked', () => {
-      assertStepHeaderFocusNotCalled(stepperComponent, fixture);
+      assertStepHeaderFocusNotCalled(fixture);
     });
 
     it('should only be able to return to a previous step if it is editable', () => {
-      assertEditableStepChange(stepperComponent, fixture);
+      assertEditableStepChange(fixture);
     });
 
     it('should set create icon if step is editable and completed', () => {
-      assertCorrectStepIcon(stepperComponent, fixture, true, 'edit');
+      assertCorrectStepIcon(fixture, true, 'edit');
     });
 
     it('should set done icon if step is not editable and is completed', () => {
-      assertCorrectStepIcon(stepperComponent, fixture, false, 'done');
+      assertCorrectStepIcon(fixture, false, 'done');
     });
   });
 
   describe('RTL', () => {
     let fixture: ComponentFixture<SimpleMdVerticalStepperApp>;
-    let stepperComponent: MdHorizontalStepper;
 
     beforeEach(() => {
       dir = 'rtl';
       fixture = TestBed.createComponent(SimpleMdVerticalStepperApp);
       fixture.detectChanges();
-
-      stepperComponent = fixture.debugElement
-          .query(By.css('md-vertical-stepper')).componentInstance;
     });
 
     it('should reverse arrow key focus in RTL mode', () => {
       let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
-      assertArrowKeyInteractionInRtl(stepperComponent, fixture, stepHeaders);
+      assertArrowKeyInteractionInRtl(fixture, stepHeaders);
     });
 
     it('should reverse animation in RTL mode', () => {
-      assertCorrectStepAnimationDirection(stepperComponent, fixture, 'rtl');
+      assertCorrectStepAnimationDirection(fixture, 'rtl');
     });
   });
 
@@ -299,7 +287,7 @@ describe('MdVerticalStepper', () => {
       let stepHeaderEl = fixture.debugElement
           .queryAll(By.css('.mat-vertical-stepper-header'))[1].nativeElement;
 
-      assertLinearStepperValidity(stepHeaderEl, stepperComponent, testComponent, fixture);
+      assertLinearStepperValidity(stepHeaderEl, testComponent, fixture);
     });
 
     it('should not focus step header upon click if it is not able to be selected', () => {
@@ -307,15 +295,16 @@ describe('MdVerticalStepper', () => {
     });
 
     it('should be able to move to next step even when invalid if current step is optional', () => {
-      assertOptionalStepValidity(stepperComponent, testComponent, fixture);
+      assertOptionalStepValidity(testComponent, fixture);
     });
   });
 });
 
 /** Asserts that `selectedIndex` updates correctly when header of another step is clicked. */
-function assertSelectionChangeOnHeaderClick(stepperComponent: MdStepper,
-                                           fixture: ComponentFixture<any>,
-                                           stepHeaders: DebugElement[]) {
+function assertSelectionChangeOnHeaderClick(fixture: ComponentFixture<any>,
+                                            stepHeaders: DebugElement[]) {
+  let stepperComponent = fixture.debugElement.query(By.directive(MdStepper)).componentInstance;
+
   expect(stepperComponent.selectedIndex).toBe(0);
 
   // select the second step
@@ -334,9 +323,9 @@ function assertSelectionChangeOnHeaderClick(stepperComponent: MdStepper,
 }
 
 /** Asserts that 'aria-expanded' attribute is correct for expanded content of step. */
-function assertCorrectAriaExpandedAttribute(stepperComponent: MdStepper,
-                              fixture: ComponentFixture<any>,
-                              stepContents: DebugElement[]) {
+function assertCorrectAriaExpandedAttribute(fixture: ComponentFixture<any>,
+                                            stepContents: DebugElement[]) {
+  let stepperComponent = fixture.debugElement.query(By.directive(MdStepper)).componentInstance;
   let firstStepContentEl = stepContents[0].nativeElement;
   expect(firstStepContentEl.getAttribute('aria-expanded')).toBe('true');
 
@@ -349,7 +338,8 @@ function assertCorrectAriaExpandedAttribute(stepperComponent: MdStepper,
 }
 
 /** Asserts that step has correct label. */
-function assertCorrectStepLabel(stepperComponent: MdStepper, fixture: ComponentFixture<any>) {
+function assertCorrectStepLabel(fixture: ComponentFixture<any>) {
+  let stepperComponent = fixture.debugElement.query(By.directive(MdStepper)).componentInstance;
   let selectedLabel = fixture.nativeElement.querySelector('[aria-selected="true"]');
   expect(selectedLabel.textContent).toMatch('Step 1');
 
@@ -367,7 +357,9 @@ function assertCorrectStepLabel(stepperComponent: MdStepper, fixture: ComponentF
 }
 
 /** Asserts that clicking on MdStepperNext button updates `selectedIndex` correctly. */
-function assertNextStepperButtonClick(stepperComponent: MdStepper, fixture: ComponentFixture<any>) {
+function assertNextStepperButtonClick(fixture: ComponentFixture<any>) {
+  let stepperComponent = fixture.debugElement.query(By.directive(MdStepper)).componentInstance;
+
   expect(stepperComponent.selectedIndex).toBe(0);
 
   let nextButtonNativeEl = fixture.debugElement
@@ -393,8 +385,9 @@ function assertNextStepperButtonClick(stepperComponent: MdStepper, fixture: Comp
 }
 
 /** Asserts that clicking on MdStepperPrevious button updates `selectedIndex` correctly. */
-function assertPreviousStepperButtonClick(stepperComponent: MdStepper,
-                                          fixture: ComponentFixture<any>) {
+function assertPreviousStepperButtonClick(fixture: ComponentFixture<any>) {
+  let stepperComponent = fixture.debugElement.query(By.directive(MdStepper)).componentInstance;
+
   expect(stepperComponent.selectedIndex).toBe(0);
 
   stepperComponent.selectedIndex = 2;
@@ -421,9 +414,9 @@ function assertPreviousStepperButtonClick(stepperComponent: MdStepper,
 }
 
 /** Asserts that step position is correct for animation. */
-function assertCorrectStepAnimationDirection(stepperComponent: MdStepper,
-                                   fixture: ComponentFixture<any>,
-                                   rtl?: 'rtl') {
+function assertCorrectStepAnimationDirection(fixture: ComponentFixture<any>, rtl?: 'rtl') {
+  let stepperComponent = fixture.debugElement.query(By.directive(MdStepper)).componentInstance;
+
   expect(stepperComponent._getAnimationDirection(0)).toBe('current');
   if (rtl === 'rtl') {
     expect(stepperComponent._getAnimationDirection(1)).toBe('previous');
@@ -459,9 +452,10 @@ function assertCorrectStepAnimationDirection(stepperComponent: MdStepper,
 }
 
 /** Asserts that keyboard interaction works correctly. */
-function assertCorrectKeyboardInteraction(stepperComponent: MdStepper,
-                                          fixture: ComponentFixture<any>,
+function assertCorrectKeyboardInteraction(fixture: ComponentFixture<any>,
                                           stepHeaders: DebugElement[]) {
+  let stepperComponent = fixture.debugElement.query(By.directive(MdStepper)).componentInstance;
+
   expect(stepperComponent._focusIndex).toBe(0);
   expect(stepperComponent.selectedIndex).toBe(0);
 
@@ -518,10 +512,9 @@ function assertCorrectKeyboardInteraction(stepperComponent: MdStepper,
 }
 
 /** Asserts that step selection change using stepper buttons does not focus step header. */
-function assertStepHeaderFocusNotCalled(stepperComponent: MdStepper,
-                                        fixture: ComponentFixture<any>) {
-  let stepHeaderEl = fixture.debugElement
-      .queryAll(By.css('md-step-header'))[1].nativeElement;
+function assertStepHeaderFocusNotCalled(fixture: ComponentFixture<any>) {
+  let stepperComponent = fixture.debugElement.query(By.directive(MdStepper)).componentInstance;
+  let stepHeaderEl = fixture.debugElement.queryAll(By.css('md-step-header'))[1].nativeElement;
   let nextButtonNativeEl = fixture.debugElement
       .queryAll(By.directive(MdStepperNext))[0].nativeElement;
   spyOn(stepHeaderEl, 'focus');
@@ -533,9 +526,10 @@ function assertStepHeaderFocusNotCalled(stepperComponent: MdStepper,
 }
 
 /** Asserts that arrow key direction works correctly in RTL mode. */
-function assertArrowKeyInteractionInRtl(stepperComponent: MdStepper,
-                                        fixture: ComponentFixture<any>,
+function assertArrowKeyInteractionInRtl(fixture: ComponentFixture<any>,
                                         stepHeaders: DebugElement[]) {
+  let stepperComponent = fixture.debugElement.query(By.directive(MdStepper)).componentInstance;
+
   expect(stepperComponent._focusIndex).toBe(0);
 
   let stepHeaderEl = stepHeaders[0].nativeElement;
@@ -555,10 +549,11 @@ function assertArrowKeyInteractionInRtl(stepperComponent: MdStepper,
  * Asserts that linear stepper does not allow step selection change if current step is not valid.
  */
 function assertLinearStepperValidity(stepHeaderEl: HTMLElement,
-                                    stepperComponent: MdStepper,
-                                    testComponent:
-                                        LinearMdHorizontalStepperApp | LinearMdVerticalStepperApp,
-                                    fixture: ComponentFixture<any>) {
+                                     testComponent:
+                                         LinearMdHorizontalStepperApp | LinearMdVerticalStepperApp,
+                                     fixture: ComponentFixture<any>) {
+  let stepperComponent = fixture.debugElement.query(By.directive(MdStepper)).componentInstance;
+
   stepHeaderEl.click();
   fixture.detectChanges();
 
@@ -591,8 +586,9 @@ function assertStepHeaderBlurred(fixture: ComponentFixture<any>) {
 }
 
 /** Asserts that it is only possible to go back to a previous step if the step is editable. */
-function assertEditableStepChange(stepperComponent: MdStepper,
-                           fixture: ComponentFixture<any>) {
+function assertEditableStepChange(fixture: ComponentFixture<any>) {
+  let stepperComponent = fixture.debugElement.query(By.directive(MdStepper)).componentInstance;
+
   stepperComponent.selectedIndex = 1;
   stepperComponent._steps.toArray()[0].editable = false;
   let previousButtonNativeEl = fixture.debugElement
@@ -613,9 +609,11 @@ function assertEditableStepChange(stepperComponent: MdStepper,
  * Asserts that it is possible to skip an optional step in linear stepper if there is no input
  * or the input is valid.
  */
-function assertOptionalStepValidity(stepperComponent: MdStepper,
-                           testComponent: LinearMdHorizontalStepperApp | LinearMdVerticalStepperApp,
-                           fixture: ComponentFixture<any>) {
+function assertOptionalStepValidity(testComponent:
+                                        LinearMdHorizontalStepperApp | LinearMdVerticalStepperApp,
+                                    fixture: ComponentFixture<any>) {
+  let stepperComponent = fixture.debugElement.query(By.directive(MdStepper)).componentInstance;
+
   testComponent.oneGroup.get('oneCtrl')!.setValue('input');
   testComponent.twoGroup.get('twoCtrl')!.setValue('input');
   stepperComponent.selectedIndex = 2;
@@ -651,10 +649,10 @@ function assertOptionalStepValidity(stepperComponent: MdStepper,
 }
 
 /** Asserts that step header set the correct icon depending on the state of step. */
-function assertCorrectStepIcon(stepperComponent: MdStepper,
-                               fixture: ComponentFixture<any>,
+function assertCorrectStepIcon(fixture: ComponentFixture<any>,
                                isEditable: boolean,
                                icon: String) {
+  let stepperComponent = fixture.debugElement.query(By.directive(MdStepper)).componentInstance;
   let nextButtonNativeEl = fixture.debugElement
       .queryAll(By.directive(MdStepperNext))[0].nativeElement;
   expect(stepperComponent._getIndicatorType(0)).toBe('number');
