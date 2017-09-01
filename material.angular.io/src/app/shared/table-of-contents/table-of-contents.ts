@@ -105,7 +105,7 @@ export class TableOfContents implements OnInit {
     if (headers.length) {
       for (const header of headers) {
         // remove the 'link' icon name from the inner text
-        const name = header.innerText.replace(/^link/, '');
+        const name = header.innerText.trim().replace(/^link/, '');
         const {top} = header.getBoundingClientRect();
         links.push({
           name,
