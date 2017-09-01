@@ -18,7 +18,7 @@
   <h2>Dog breeds</h2>
   <p>Dynamic height tabs</p>
 
-  <md-tab-group class="demo-tab-group" dynamicHeight [(selectedIndex)]="activeTabIndex">
+  <md-tab-group class="demo-tab-group" dynamicHeight>
     <md-tab *ngFor="let tab of tabs" [disabled]="tab.disabled">
       <ng-template md-tab-label>{{tab.label}}</ng-template>
       <div class="tab-content">
