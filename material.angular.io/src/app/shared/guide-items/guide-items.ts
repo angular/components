@@ -32,6 +32,11 @@ const GUIDES = [
     name: `CDK data-table`,
     document: '/assets/documents/guides/cdk-table.html',
   },
+  {
+    id: 'customizing-component-styles',
+    name: 'Customizing Component Styles',
+    document: '/assets/documents/guides/customizing-component-styles.html'
+  }
 ];
 
 @Injectable()
