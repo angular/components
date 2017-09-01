@@ -94,4 +94,5 @@ export class ChipsDemo {
     this.visible = false;
   }
   selectedColors: any[] = ['Primary', 'Warn'];
+  selectedColor = 'Accent';
 }

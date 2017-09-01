@@ -64,7 +64,7 @@ export class MdChipListChange {
     '[attr.aria-required]': 'required.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': 'errorState',
-    '[attr.aria-multiselectable]': 'true',
+    '[attr.aria-multiselectable]': 'multiple',
     '[class.mat-chip-list-disabled]': 'disabled',
     '[class.mat-chip-list-invalid]': 'errorState',
     '[class.mat-chip-list-required]': 'required',
@@ -113,6 +113,9 @@ export class MdChipList implements MdFormFieldControl<any>, ControlValueAccessor
   /** Whether or not the chip is selectable. */
   protected _selectable: boolean = true;
 
+  /** Whether the component is in multiple selection mode. */
+  private _multiple: boolean = false;
+
   /** The chip input to add more chips */
   protected _chipInput: MdChipInput;
 
@@ -160,8 +163,15 @@ export class MdChipList implements MdFormFieldControl<any>, ControlValueAccessor
   private _compareWith = (o1: any, o2: any) => o1 === o2;
 
   /** The array of selected chips inside chip list. */
-  get selected(): MdChip[] {
-    return this._selectionModel.selected;
+  get selected(): MdChip[] | MdChip {
+    return this.multiple ? this._selectionModel.selected : this._selectionModel.selected[0];
+  }
+
+  /** Whether the user should be allowed to select multiple chips. */
+  @Input()
+  get multiple(): boolean { return this._multiple; }
+  set multiple(value: boolean) {
+    this._multiple = coerceBooleanProperty(value);
   }
 
   /**
@@ -324,7 +334,7 @@ export class MdChipList implements MdFormFieldControl<any>, ControlValueAccessor
   }
 
   ngOnInit() {
-    this._selectionModel = new SelectionModel<MdChip>(true, undefined, false);
+    this._selectionModel = new SelectionModel<MdChip>(this.multiple, undefined, false);
     this.stateChanges.next();
   }
 
@@ -509,10 +519,19 @@ export class MdChipList implements MdFormFieldControl<any>, ControlValueAccessor
   _setSelectionByValue(value: any, isUserInput: boolean = true) {
     this._clearSelection();
     this.chips.forEach(chip => chip.deselect());
+
     if (Array.isArray(value)) {
       value.forEach(currentValue => this._selectValue(currentValue, isUserInput));
+      this._sortValues();
+    } else {
+      const correspondingChip = this._selectValue(value, isUserInput);
+
+      // Shift focus to the active item. Note that we shouldn't do this in multiple
+      // mode, because we don't know what chip the user interacted with last.
+      if (correspondingChip) {
+        this._keyManager.setActiveItem(this.chips.toArray().indexOf(correspondingChip));
+      }
     }
-    this._sortValues();
   }
 
   /**
@@ -561,19 +580,27 @@ export class MdChipList implements MdFormFieldControl<any>, ControlValueAccessor
    * order that they have in the panel.
    */
   private _sortValues(): void {
-    this._selectionModel.clear();
+    if (this._multiple) {
+      this._selectionModel.clear();
 
-    this.chips.forEach(chip => {
-      if (chip.selected) {
-        this._selectionModel.select(chip);
-      }
-    });
-    this.stateChanges.next();
+      this.chips.forEach(chip => {
+        if (chip.selected) {
+          this._selectionModel.select(chip);
+        }
+      });
+      this.stateChanges.next();
+    }
   }
 
   /** Emits change event to set the model value. */
-  private _propagateChanges(): void {
-    let valueToEmit = this.selected.length === 0 ? null : this.selected.map(chip => chip.value);
+  private _propagateChanges(fallbackValue?: any): void {
+    let valueToEmit: any = null;
+
+    if (Array.isArray(this.selected)) {
+      valueToEmit = this.selected.map(chip => chip.value);
+    } else {
+      valueToEmit = this.selected ? this.selected.value : fallbackValue;
+    }
     this._value = valueToEmit;
     this.change.emit(new MdChipListChange(this, valueToEmit));
     this.valueChange.emit(valueToEmit);
@@ -634,6 +661,16 @@ export class MdChipList implements MdFormFieldControl<any>, ControlValueAccessor
       event.source.selected
         ? this._selectionModel.select(event.source)
         : this._selectionModel.deselect(event.source);
+
+      // For single selection chip list, make sure the deselected value is unselected.
+      if (!this.multiple) {
+        this.chips.forEach(chip => {
+          if (!this._selectionModel.isSelected(chip) && chip.selected) {
+            chip.deselect();
+          }
+        });
+      }
+
       if (event.isUserInput) {
         this._propagateChanges();
       }
