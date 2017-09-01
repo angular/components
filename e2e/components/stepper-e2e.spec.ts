@@ -6,7 +6,7 @@ import {pressKeys} from '../util/actions';
 import {Key} from 'selenium-webdriver';
 import {screenshot} from '../screenshot';
 
-fdescribe('stepper', () => {
+describe('stepper', () => {
   beforeEach(() => browser.get('/stepper'));
 
   it('should render a stepper', () => {
@@ -16,8 +16,8 @@ fdescribe('stepper', () => {
 
   describe('basic behavior', () => {
     it('should change steps correctly when stepper button is clicked', async () => {
-      let previousButton = element.all(by.buttonText('Back'));
-      let nextButton = element.all(by.buttonText('Next'));
+      const previousButton = element.all(by.buttonText('Back'));
+      const nextButton = element.all(by.buttonText('Next'));
 
       expect(element(by.css('md-step-header[aria-selected="true"]')).getText()).toBe('1\nStep one');
 

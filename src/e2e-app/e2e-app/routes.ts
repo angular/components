@@ -15,13 +15,13 @@ import {FullscreenE2E} from '../fullscreen/fullscreen-e2e';
 import {InputE2E} from '../input/input-e2e';
 import {SidenavE2E} from '../sidenav/sidenav-e2e';
 import {BlockScrollStrategyE2E} from '../block-scroll-strategy/block-scroll-strategy-e2e';
-import {StepperE2E} from '../stepper/stepper-e2e';
 import {
   CardFancyExample,
   ListOverviewExample,
   ToolbarMultirowExample,
   ButtonToggleOverviewExample,
-  ExpansionOverviewExample
+  ExpansionOverviewExample,
+  StepperOverviewExample
 } from '@angular/material-examples';
 
 export const E2E_APP_ROUTES: Routes = [
@@ -43,7 +43,7 @@ export const E2E_APP_ROUTES: Routes = [
   {path: 'radio', component: SimpleRadioButtons},
   {path: 'sidenav', component: SidenavE2E},
   {path: 'slide-toggle', component: SlideToggleE2E},
-  {path: 'stepper', component: StepperE2E},
+  {path: 'stepper', component: StepperOverviewExample},
   {path: 'tabs', component: BasicTabs},
   {path: 'cards', component: CardFancyExample},
   {path: 'toolbar', component: ToolbarMultirowExample},

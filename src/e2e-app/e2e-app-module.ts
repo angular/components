@@ -19,7 +19,6 @@ import {SlideToggleE2E} from './slide-toggle/slide-toggle-e2e';
 import {InputE2E} from './input/input-e2e';
 import {SidenavE2E} from './sidenav/sidenav-e2e';
 import {BlockScrollStrategyE2E} from './block-scroll-strategy/block-scroll-strategy-e2e';
-import {StepperE2E} from './stepper/stepper-e2e';
 import {
   MdButtonModule,
   MdCheckboxModule,
@@ -95,7 +94,6 @@ export class E2eMaterialModule {}
     SimpleCheckboxes,
     SimpleRadioButtons,
     SlideToggleE2E,
-    StepperE2E,
     TestDialog,
     TestDialogFullScreen,
     BlockScrollStrategyE2E

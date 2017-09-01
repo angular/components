@@ -1,12 +1,14 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
+/**
+ * @title Stepper overview
+ */
 @Component({
-  moduleId: module.id,
-  selector: 'stepper-e2e',
-  templateUrl: 'stepper-e2e.html',
+  selector: 'stepper-overview-example',
+  templateUrl: 'stepper-overview-example.html',
 })
-export class StepperE2E {
+export class StepperOverviewExample {
   isLinear = false;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
