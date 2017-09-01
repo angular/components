@@ -38,7 +38,7 @@ import {
 } from '@angular/material';
 import {MaterialDocsExample} from './material-docs-example';
 import {HttpModule} from '@angular/http';
-import {CdkTableModule} from '@angular/cdk';
+import {CdkTableModule} from '@angular/cdk/table';
 
 @NgModule({
   exports: [

@@ -3,7 +3,6 @@ import {MdSidenav} from '@angular/material';
 import {ComponentSidenav, ComponentSidenavModule} from './component-sidenav';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 
-
 describe('ComponentSidenav', () => {
   let fixture: ComponentFixture<ComponentSidenav>;
 
@@ -26,10 +25,11 @@ describe('ComponentSidenav', () => {
     });
 
     fixture.detectChanges();
-
-    expect(component.sidenav instanceof MdSidenav).toBeTruthy();
-    expect(component.isScreenSmall()).toBeTruthy();
-    expect(component.sidenav.opened).toBe(false);
+    async(() => {
+      expect(component.sidenav instanceof MdSidenav).toBeTruthy();
+      expect(component.isScreenSmall()).toBeTruthy();
+      expect(component.sidenav.opened).toBe(false);
+    })
   });
 
   it('should show a link for each item in doc items categories', () => {
