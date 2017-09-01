@@ -30,9 +30,15 @@
   <p>Accordion Options</p>
   <div>
     <mat-slide-toggle [(ngModel)]="multi">Allow Multi Expansion</mat-slide-toggle>
-    <mat-slide-toggle [(ngModel)]="hideToggle">Hide Indicators</mat-slide-toggle>
     <mat-slide-toggle [(ngModel)]="disabled">Disable Panel 2</mat-slide-toggle>
     <mat-slide-toggle [(ngModel)]="showPanel3">Show Panel 3</mat-slide-toggle>
+  </div>
+  <div>
+    <mat-radio-group [(ngModel)]="hideToggle">
+      <mat-radio-button value="start">Start</mat-radio-button>
+      <mat-radio-button value="end">End</mat-radio-button>
+      <mat-radio-button value="hidden">Hidden</mat-radio-button>
+    </mat-radio-group>
   </div>
   <p>Accordion Style</p>
   <mat-radio-group [(ngModel)]="displayMode">

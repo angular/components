@@ -91,7 +91,7 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,
 export class MatExpansionPanel extends _MatExpansionPanelMixinBase
     implements CanDisable, OnChanges, OnDestroy {
   /** Whether the toggle indicator should be hidden. */
-  @Input() hideToggle: boolean = false;
+  @Input() hideToggle: string = 'end';
 
   /** Stream that emits for changes in `@Input` properties. */
   _inputChanges = new Subject<SimpleChanges>();
@@ -107,11 +107,11 @@ export class MatExpansionPanel extends _MatExpansionPanelMixinBase
   }
 
   /** Whether the expansion indicator should be hidden. */
-  _getHideToggle(): boolean {
+  _getHideToggle(): string {
     if (this.accordion) {
-      return this.accordion.hideToggle;
+      return this.accordion.hideToggle ? '' : 'hidden';
     }
-    return this.hideToggle;
+    return this.hideToggle ? '' : 'hidden';
   }
 
   /** Determines whether the expansion panel should have spacing between it and its siblings. */

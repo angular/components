@@ -3,5 +3,5 @@
   <ng-content select="mat-panel-description"></ng-content>
   <ng-content></ng-content>
 </span>
-<span [@indicatorRotate]="_getExpandedState()" *ngIf="_showToggle()"
+<span [@indicatorRotate]="_getExpandedState()" *ngIf="_indicatorLocation() !== 'hidden'"
       class="mat-expansion-indicator"></span>

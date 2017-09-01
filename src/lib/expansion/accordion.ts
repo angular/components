@@ -28,9 +28,7 @@ export type MatAccordionDisplayMode = 'default' | 'flat';
 })
 export class MatAccordion extends _CdkAccordion {
   /** Whether the expansion indicator should be hidden. */
-  @Input() get hideToggle(): boolean { return this._hideToggle; }
-  set hideToggle(show: boolean) { this._hideToggle = coerceBooleanProperty(show); }
-  private  _hideToggle: boolean = false;
+  @Input() hideToggle = 'end';
 
   /**
    * The display mode used for all expansion panels in the accordion. Currently two display

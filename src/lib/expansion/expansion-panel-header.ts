@@ -132,8 +132,11 @@ export class MatExpansionPanelHeader implements OnDestroy {
   }
 
   /** Gets whether the expand indicator should be shown. */
-  _showToggle(): boolean {
-    return !this.panel.hideToggle && !this.panel.disabled;
+  _indicatorLocation(): string {
+    if (this.panel.disabled) {
+      return 'hidden';
+    }
+    return this.panel.hideToggle;
   }
 
   /** Handle keyup event calling to toggle() if appropriate. */
