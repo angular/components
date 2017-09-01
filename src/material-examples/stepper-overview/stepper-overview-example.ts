@@ -7,6 +7,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 @Component({
   selector: 'stepper-overview-example',
   templateUrl: 'stepper-overview-example.html',
+  styleUrls: ['stepper-overview-example.css']
 })
 export class StepperOverviewExample {
   isLinear = false;

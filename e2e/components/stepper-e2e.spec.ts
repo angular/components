@@ -19,12 +19,14 @@ describe('stepper', () => {
       const previousButton = element.all(by.buttonText('Back'));
       const nextButton = element.all(by.buttonText('Next'));
 
-      expect(element(by.css('md-step-header[aria-selected="true"]')).getText()).toBe('1\nStep one');
+      expect(element(by.css('md-step-header[aria-selected="true"]')).getText())
+          .toBe('1\nFill out your name');
 
       screenshot('start');
       nextButton.get(0).click();
 
-      expect(element(by.css('md-step-header[aria-selected="true"]')).getText()).toBe('2\nStep two');
+      expect(element(by.css('md-step-header[aria-selected="true"]')).getText())
+          .toBe('2\nFill out your address');
 
       await browser.wait(ExpectedConditions.not(
           ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))));
@@ -32,7 +34,8 @@ describe('stepper', () => {
 
       previousButton.get(0).click();
 
-      expect(element(by.css('md-step-header[aria-selected="true"]')).getText()).toBe('1\nStep one');
+      expect(element(by.css('md-step-header[aria-selected="true"]')).getText())
+          .toBe('1\nFill out your name');
 
       await browser.wait(ExpectedConditions.not(
           ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))));
@@ -74,7 +77,8 @@ describe('stepper', () => {
       let nextButton = element.all(by.buttonText('Next'));
       nextButton.get(0).click();
 
-      expect(element(by.css('md-step-header[aria-selected="true"]')).getText()).toBe('1\nStep one');
+      expect(element(by.css('md-step-header[aria-selected="true"]')).getText())
+          .toBe('1\nFill out your name');
     });
   });
 });
