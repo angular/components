@@ -129,13 +129,13 @@ describe('MdExpansionPanel', () => {
 
       const arrow = fixture.debugElement.query(By.css('.mat-expansion-indicator')).nativeElement;
 
-      expect(arrow.style.transform).toBe('rotate(0deg)', 'Expected no rotation.');
+      expect(arrow.style.transform).toBe('rotate(45deg)', 'Expected 45 degree rotation.');
 
       fixture.componentInstance.expanded = true;
       fixture.detectChanges();
       tick(250);
 
-      expect(arrow.style.transform).toBe('rotate(180deg)', 'Expected 180 degree rotation.');
+      expect(arrow.style.transform).toBe('rotate(225deg)', 'Expected 225 degree rotation.');
     }));
 
   describe('disabled state', () => {
