@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {DateAdapter, MD_DATE_FORMATS} from '@angular/material';
+import {DateAdapter, MAT_DATE_LOCALE_PROVIDER, MD_DATE_FORMATS} from '@angular/material';
 import {MomentDateAdapter} from './moment-date-adapter';
 import {MD_MOMENT_DATE_FORMATS} from './moment-date-formats';
 
@@ -16,7 +16,10 @@ export * from './moment-date-formats';
 
 
 @NgModule({
-  providers: [{provide: DateAdapter, useClass: MomentDateAdapter}],
+  providers: [
+    MAT_DATE_LOCALE_PROVIDER,
+    {provide: DateAdapter, useClass: MomentDateAdapter}
+  ],
 })
 export class MomentDateModule {}
 

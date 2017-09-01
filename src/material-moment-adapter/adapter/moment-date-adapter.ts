@@ -7,7 +7,7 @@
  */
 
 import {Inject, Injectable, LOCALE_ID, Optional} from '@angular/core';
-import {DateAdapter} from '@angular/material';
+import {DateAdapter, MAT_DATE_LOCALE, MAT_DATE_LOCALE_PROVIDER} from '@angular/material';
 import * as moment from 'moment';
 
 
@@ -33,9 +33,9 @@ export class MomentDateAdapter extends DateAdapter<moment.Moment> {
     narrowDaysOfWeek: string[]
   };
 
-  constructor(@Optional() @Inject(LOCALE_ID) localeId: any) {
+  constructor(@Optional() @Inject(MAT_DATE_LOCALE) dateLocale: string) {
     super();
-    this.setLocale(localeId || moment.locale());
+    this.setLocale(dateLocale || moment.locale());
   }
 
   setLocale(locale: any) {
