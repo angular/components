@@ -154,7 +154,7 @@ Here are the available global options:
 ### Accessibility
 The `mdInput` directive works with native `<input>` to provide an accessible experience.
 
-If a placeholder attributed is added to the input, or a `md-placeholder` element is added
+If a placeholder attribute is added to the input, or a `md-placeholder` element is added
 in the form field, the placeholder text will automatically be used as the label for the input.
 If there's no placeholder specified, `aria-label`, `aria-labelledby` or `<label for=...>` should be
 added.

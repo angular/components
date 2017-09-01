@@ -40,5 +40,5 @@ use a neutral background color based on the current theme (light or dark). This 
 `'primary'`, `'accent'`, or `'warn'`.
 
 ### Accessibility
-Chips have role="option", while the chip list has `role="listbox"`. The chip input should have a
-placeholder or be given a meaningful label via `aria-label` or `aria-labelledby`.
+A chip-list behaves as a `role="listbox"`, with each chip being a `role="option"`. The chip input
+should have a placeholder or be given a meaningful label via `aria-label` or `aria-labelledby`.

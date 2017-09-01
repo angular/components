@@ -48,6 +48,9 @@ and selection).
 
 ### Accessibility
 Tables without text or labels should be given a meaningful label via `aria-label` or
-`aria-labelledby`.
+`aria-labelledby`. The `aria-readonly` defaults to `true` if it's not set.
 
-Table's default role is 'grid', and it can be changed through `role` attribute.
+Table's default role is `grid`, and it can be changed to `treegrid` through `role` attribute.
+
+`md-table` does not manage any focus/keyboard interaction on its own. Users can add desired
+focus/keyboard interactions in their application.

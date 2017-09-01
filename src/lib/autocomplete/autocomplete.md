@@ -100,5 +100,5 @@ desired display value. Then bind it to the autocomplete's `displayWith` property
 The input for autocomplete without text or labels should be given a meaningful label via
 `aria-label` or `aria-labelledby`.
 
-Autocomplete trigger sets `aria-owns` to the autocomplete's id, and sets `aria-activedescendant` to
-the active option's id.
+Autocomplete trigger is given `role="combobox"`. The trigger sets `aria-owns` to the autocomplete's
+id, and sets `aria-activedescendant` to the active option's id.
