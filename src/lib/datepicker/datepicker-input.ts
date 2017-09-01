@@ -112,8 +112,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   /** The value of the input. */
   @Input()
   get value(): D | null {
-    return this._getValidDateOrNull(this._dateAdapter.parse(
-        this._elementRef.nativeElement.value, this._dateFormats.parse.dateInput));
+    return this._value;
   }
   set value(value: D | null) {
     if (value != null && !this._dateAdapter.isDateInstance(value)) {
@@ -123,12 +122,14 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
     value = this._getValidDateOrNull(value);
 
     let oldDate = this.value;
+    this._value = value;
     this._renderer.setProperty(this._elementRef.nativeElement, 'value',
         value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '');
     if (!this._dateAdapter.sameDate(oldDate, value)) {
       this._valueChange.emit(value);
     }
   }
+  private _value: D | null;
 
   /** The minimum valid date. */
   @Input()
