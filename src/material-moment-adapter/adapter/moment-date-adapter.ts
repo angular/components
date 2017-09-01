@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Inject, Injectable, LOCALE_ID, Optional} from '@angular/core';
-import {DateAdapter, MAT_DATE_LOCALE, MAT_DATE_LOCALE_PROVIDER} from '@angular/material';
+import {Inject, Injectable, Optional} from '@angular/core';
+import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
 import * as moment from 'moment';
 
 
@@ -24,7 +24,12 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
 /** Adapts Moment.js Dates for use with Angular Material. */
 @Injectable()
 export class MomentDateAdapter extends DateAdapter<moment.Moment> {
-  private _localeNames: {
+  // Note: all of the methods that accept a `moment.Moment` input parameter immediately call
+  // `this.clone` on it. This is to ensure that we're working with a `moment.Moment` that has the
+  // correct locale setting while avoiding mutating the original object passed to us.
+
+  private _localeData: {
+    firstDayOfWeek: number,
     longMonths: string[],
     shortMonths: string[],
     dates: string[],
@@ -44,84 +49,103 @@ export class MomentDateAdapter extends DateAdapter<moment.Moment> {
     // Temporarily change the global locale to get the data we need, then change it back.
     let globalLocale = moment.locale();
     moment.locale(locale);
-    this._localeNames = {
+    this._localeData = {
+      firstDayOfWeek: moment.localeData().firstDayOfWeek(),
       longMonths: moment.months(),
-      shortMonths: moment.months(),
-      dates: range(31, (i) => this.createDate(2017, 0, i).format('DD')),
-      longDaysOfWeek: moment.weekdays(true),
-      shortDaysOfWeek: moment.weekdaysShort(true),
-      narrowDaysOfWeek: moment.weekdaysMin(true),
+      shortMonths: moment.monthsShort(),
+      dates: range(31, (i) => this.createDate(2017, 0, i + 1).format('D')),
+      longDaysOfWeek: moment.weekdays(),
+      shortDaysOfWeek: moment.weekdaysShort(),
+      narrowDaysOfWeek: moment.weekdaysMin(),
     };
     moment.locale(globalLocale);
   }
 
   getYear(date: moment.Moment): number {
-    return date.year();
+    return this.clone(date).year();
   }
 
   getMonth(date: moment.Moment): number {
-    return date.month();
+    return this.clone(date).month();
   }
 
   getDate(date: moment.Moment): number {
-    return date.date();
+    return this.clone(date).date();
   }
 
   getDayOfWeek(date: moment.Moment): number {
-    return date.weekday();
+    return this.clone(date).day();
   }
 
   getMonthNames(style: 'long' | 'short' | 'narrow'): string[] {
-    return style == 'long' ? this._localeNames.longMonths : this._localeNames.shortMonths;
+    // Moment.js doesn't support narrow month names, so we just use short if narrow is requested.
+    return style == 'long' ? this._localeData.longMonths : this._localeData.shortMonths;
   }
 
   getDateNames(): string[] {
-    return this._localeNames.dates;
+    return this._localeData.dates;
   }
 
   getDayOfWeekNames(style: 'long' | 'short' | 'narrow'): string[] {
     if (style == 'long') {
-      return this._localeNames.longDaysOfWeek;
+      return this._localeData.longDaysOfWeek;
     }
     if (style == 'short') {
-      return this._localeNames.shortDaysOfWeek;
+      return this._localeData.shortDaysOfWeek;
     }
-    return this._localeNames.narrowDaysOfWeek;
+    return this._localeData.narrowDaysOfWeek;
   }
 
   getYearName(date: moment.Moment): string {
-    return date.format('YYYY');
+    return this.clone(date).format('YYYY');
   }
 
   getFirstDayOfWeek(): number {
-    // Moment's `weekday` method uses the current locale's ordering, so this will always be 0.
-    return 0;
+    return this._localeData.firstDayOfWeek;
   }
 
   getNumDaysInMonth(date: moment.Moment): number {
-    return date.daysInMonth();
+    return this.clone(date).daysInMonth();
   }
 
   clone(date: moment.Moment): moment.Moment {
-    return date.clone();
+    return date.clone().locale(this.locale);
   }
 
   createDate(year: number, month: number, date: number): moment.Moment {
-    return moment({year, month, date});
+    // Check for invalid month and date (except upper bound on date which we have to check after
+    // creating the Date).
+    if (month < 0 || month > 11) {
+      throw Error(`Invalid month index "${month}". Month index has to be between 0 and 11.`);
+    }
+
+    if (date < 1) {
+      throw Error(`Invalid date "${date}". Date has to be greater than 0.`);
+    }
+
+    let result = moment({year, month, date}).locale(this.locale);
+
+    // If the result isn't valid, the date must have been out of bounds for this month.
+    if (!result.isValid()) {
+      throw Error(`Invalid date "${date}" for month with index "${month}".`);
+    }
+
+    return result;
   }
 
   today(): moment.Moment {
-    return moment();
+    return moment().locale(this.locale);
   }
 
   parse(value: any, parseFormat: string | string[]): moment.Moment | null {
     if (typeof value == 'string') {
       return moment(value, parseFormat, this.locale);
     }
-    return value ? moment(value) : null;
+    return value ? moment(value).locale(this.locale) : null;
   }
 
   format(date: moment.Moment, displayFormat: string): string {
+    date = this.clone(date);
     if (!this.isValid(date)) {
       throw Error('MomentDateAdapter: Cannot format invalid date.');
     }
@@ -129,19 +153,19 @@ export class MomentDateAdapter extends DateAdapter<moment.Moment> {
   }
 
   addCalendarYears(date: moment.Moment, years: number): moment.Moment {
-    return date.clone().add({years});
+    return this.clone(date).add({years});
   }
 
   addCalendarMonths(date: moment.Moment, months: number): moment.Moment {
-    return date.clone().add({months});
+    return this.clone(date).add({months});
   }
 
   addCalendarDays(date: moment.Moment, days: number): moment.Moment {
-    return date.clone().add({days});
+    return this.clone(date).add({days});
   }
 
   getISODateString(date: moment.Moment): string {
-    return date.format();
+    return this.clone(date).format();
   }
 
   isDateInstance(obj: any): boolean {
@@ -149,6 +173,6 @@ export class MomentDateAdapter extends DateAdapter<moment.Moment> {
   }
 
   isValid(date: moment.Moment): boolean {
-    return date.isValid();
+    return this.clone(date).isValid();
   }
 }
