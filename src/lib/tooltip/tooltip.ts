@@ -46,6 +46,7 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {matTooltipAnimations} from './tooltip-animations';
 import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
+import {Subscription} from 'rxjs/Subscription';
 
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
@@ -188,6 +189,8 @@ export class MatTooltip implements OnDestroy {
 
   private _manualListeners = new Map<string, Function>();
 
+  private _tooltipPositionSubscription: Subscription | null;
+
   constructor(
     private _overlay: Overlay,
     private _elementRef: ElementRef,
@@ -249,6 +252,11 @@ export class MatTooltip implements OnDestroy {
         this._elementRef.nativeElement.removeEventListener(event, listener));
 
       this._manualListeners.clear();
+    }
+
+    if (this._tooltipPositionSubscription) {
+      this._tooltipPositionSubscription.unsubscribe();
+      this._tooltipPositionSubscription = null;
     }
 
     this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this.message);
@@ -429,11 +437,12 @@ export class MatTooltip implements OnDestroy {
       this._tooltipInstance.message = this.message;
       this._tooltipInstance._markForCheck();
 
-      this._ngZone.onMicrotaskEmpty.asObservable().pipe(take(1)).subscribe(() => {
-        if (this._tooltipInstance) {
-          this._overlayRef!.updatePosition();
-        }
-      });
+      this._tooltipPositionSubscription =
+          this._ngZone.onMicrotaskEmpty.asObservable().pipe(take(1)).subscribe(() => {
+            if (this._tooltipInstance) {
+              this._overlayRef!.updatePosition();
+            }
+          });
     }
   }
 
