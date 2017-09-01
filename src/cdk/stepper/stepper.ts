@@ -120,8 +120,6 @@ export class CdkStep {
   selector: '[cdkStepper]',
 })
 export class CdkStepper {
-  private _stepsArray: CdkStep[];
-
   /** The list of step components that the stepper is holding. */
   @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
 
@@ -139,7 +137,7 @@ export class CdkStepper {
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
     if (this._anyControlsInvalid(index)
-        || index < this._selectedIndex && !this._stepsArray[index].editable) {
+        || index < this._selectedIndex && !this._steps.toArray()[index].editable) {
       // remove focus from clicked step header if the step is not able to be selected
       this._stepHeader.toArray()[index].nativeElement.blur();
     } else if (this._selectedIndex != index) {
@@ -153,8 +151,7 @@ export class CdkStepper {
   @Input()
   get selected() { return this._steps[this.selectedIndex]; }
   set selected(step: CdkStep) {
-    let index = this._stepsArray.indexOf(step);
-    this.selectedIndex = index;
+    this.selectedIndex = this._steps.toArray().indexOf(step);
   }
 
   /** Event emitted when the selected step has changed. */
@@ -168,10 +165,6 @@ export class CdkStepper {
 
   constructor(@Optional() private _dir: Directionality) {
     this._groupId = nextId++;
-  }
-
-  ngAfterContentInit() {
-    this._stepsArray = this._steps.toArray();
   }
 
   /** Selects and focuses the next step in list. */
@@ -207,7 +200,7 @@ export class CdkStepper {
 
   /** Returns the type of icon to be displayed. */
   _getIndicatorType(index: number): 'number' | 'edit' | 'done' {
-    const step = this._stepsArray[index];
+    const step = this._steps.toArray()[index];
     if (!step.completed || this._selectedIndex == index) {
       return 'number';
     } else {
@@ -216,11 +209,12 @@ export class CdkStepper {
   }
 
   private _emitStepperSelectionEvent(newIndex: number): void {
+    const stepsArray = this._steps.toArray();
     this.selectionChange.emit({
       selectedIndex: newIndex,
       previouslySelectedIndex: this._selectedIndex,
-      selectedStep: this._stepsArray[newIndex],
-      previouslySelectedStep: this._stepsArray[this._selectedIndex],
+      selectedStep: stepsArray[newIndex],
+      previouslySelectedStep: stepsArray[this._selectedIndex],
     });
     this._selectedIndex = newIndex;
   }
@@ -229,16 +223,16 @@ export class CdkStepper {
     switch (event.keyCode) {
       case RIGHT_ARROW:
         if (this._layoutDirection() === 'rtl') {
-          this._focusStep((this._focusIndex + this._steps.length - 1) % this._steps.length);
+          this._focusPreviousStep();
         } else {
-          this._focusStep((this._focusIndex + 1) % this._steps.length);
+          this._focusNextStep();
         }
         break;
       case LEFT_ARROW:
         if (this._layoutDirection() === 'rtl') {
-          this._focusStep((this._focusIndex + 1) % this._steps.length);
+          this._focusNextStep();
         } else {
-          this._focusStep((this._focusIndex + this._steps.length - 1) % this._steps.length);
+          this._focusPreviousStep();
         }
         break;
       case SPACE:
@@ -252,15 +246,23 @@ export class CdkStepper {
     event.preventDefault();
   }
 
+  private _focusNextStep() {
+    this._focusStep((this._focusIndex + 1) % this._steps.length);
+  }
+
+  private _focusPreviousStep() {
+    this._focusStep((this._focusIndex + this._steps.length - 1) % this._steps.length);
+  }
+
   private _focusStep(index: number) {
     this._focusIndex = index;
     this._stepHeader.toArray()[this._focusIndex].nativeElement.focus();
   }
 
   private _anyControlsInvalid(index: number): boolean {
-    this._stepsArray[this._selectedIndex].interacted = true;
-    if (this._linear) {
-      return this._stepsArray.slice(0, index).some(step => step.stepControl.invalid);
+    this._steps.toArray()[this._selectedIndex].interacted = true;
+    if (this._linear && index >= 0) {
+      return this._steps.toArray().slice(0, index).some(step => step.stepControl.invalid);
     }
     return false;
   }

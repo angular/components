@@ -13,11 +13,6 @@
       background-color: mat-color($background, hover);
     }
 
-    .mat-step-label.mat-step-label-active {
-      color: mat-color($foreground, text);
-    }
-
-
     .mat-step-label,
     .mat-step-optional {
       color: mat-color($foreground, disabled-text);
@@ -31,6 +26,10 @@
     .mat-step-icon-not-touched {
       background-color: mat-color($foreground, disabled-text);
       color: mat-color($primary, default-contrast);
+    }
+
+    .mat-step-label.mat-step-label-active {
+      color: mat-color($foreground, text);
     }
   }
 

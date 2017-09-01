@@ -74,7 +74,7 @@ describe('MdHorizontalStepper', () => {
     });
 
     it('should set the correct step position for animation', () => {
-      assertCorrectStepPosition(stepperComponent, fixture, dir === 'rtl');
+      assertCorrectStepAnimationDirection(stepperComponent, fixture);
     });
 
     it('should support keyboard events to move and select focus', () => {
@@ -118,7 +118,7 @@ describe('MdHorizontalStepper', () => {
     });
 
     it('should reverse animation in RTL mode', () => {
-      assertCorrectStepPosition(stepperComponent, fixture, dir === 'rtl');
+      assertCorrectStepAnimationDirection(stepperComponent, fixture, 'rtl');
     });
   });
 
@@ -224,7 +224,7 @@ describe('MdVerticalStepper', () => {
     });
 
     it('should set the correct step position for animation', () => {
-      assertCorrectStepPosition(stepperComponent, fixture, dir === 'rtl');
+      assertCorrectStepAnimationDirection(stepperComponent, fixture);
     });
 
     it('should support keyboard events to move and select focus', () => {
@@ -268,7 +268,7 @@ describe('MdVerticalStepper', () => {
     });
 
     it('should reverse animation in RTL mode', () => {
-      assertCorrectStepPosition(stepperComponent, fixture, dir === 'rtl');
+      assertCorrectStepAnimationDirection(stepperComponent, fixture, 'rtl');
     });
   });
 
@@ -421,11 +421,11 @@ function assertPreviousStepperButtonClick(stepperComponent: MdStepper,
 }
 
 /** Asserts that step position is correct for animation. */
-function assertCorrectStepPosition(stepperComponent: MdStepper,
+function assertCorrectStepAnimationDirection(stepperComponent: MdStepper,
                                    fixture: ComponentFixture<any>,
-                                   rtl: boolean) {
+                                   rtl?: 'rtl') {
   expect(stepperComponent._getAnimationDirection(0)).toBe('current');
-  if (rtl) {
+  if (rtl === 'rtl') {
     expect(stepperComponent._getAnimationDirection(1)).toBe('previous');
     expect(stepperComponent._getAnimationDirection(2)).toBe('previous');
   } else {
@@ -436,7 +436,7 @@ function assertCorrectStepPosition(stepperComponent: MdStepper,
   stepperComponent.selectedIndex = 1;
   fixture.detectChanges();
 
-  if (rtl) {
+  if (rtl === 'rtl') {
     expect(stepperComponent._getAnimationDirection(0)).toBe('next');
     expect(stepperComponent._getAnimationDirection(2)).toBe('previous');
   } else {
@@ -448,7 +448,7 @@ function assertCorrectStepPosition(stepperComponent: MdStepper,
   stepperComponent.selectedIndex = 2;
   fixture.detectChanges();
 
-  if (rtl) {
+  if (rtl === 'rtl') {
     expect(stepperComponent._getAnimationDirection(0)).toBe('next');
     expect(stepperComponent._getAnimationDirection(1)).toBe('next');
   } else {
