@@ -52,8 +52,8 @@ import {getMdSortHeaderNotContainedWithinMdSortError} from './sort-errors';
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('indicatorRotate', [
-      state('asc', style({transform: 'rotate(45deg)'})),
-      state('desc', style({transform: 'rotate(225deg)'})),
+      state('asc', style({transform: 'rotate(225deg)', top: '2px'})),
+      state('desc', style({transform: 'rotate(45deg)'})),
       transition('asc <=> desc', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
     ])
   ]

@@ -29,7 +29,7 @@ $mat-sort-header-arrow-thickness: 2px;
   width: $mat-sort-header-arrow-container-size;
   position: relative;
   margin: 0 0 0 $mat-sort-header-arrow-margin;
-  transform: rotate(45deg);
+  transform: rotate(135deg);
 
   .mat-sort-header-position-before & {
     margin: 0 $mat-sort-header-arrow-margin 0 0;
