@@ -134,6 +134,9 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
   /** Event emitted when focus has changed within a tab group. */
   @Output() focusChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>();
 
+  /** Event emitted when the body animation has completed */
+  @Output() animationDone: EventEmitter<void> = new EventEmitter<void>();
+
   /** Event emitted when the tab selection has changed. */
   @Output() selectChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>(true);
 
@@ -269,5 +272,6 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
   _removeTabBodyWrapperHeight(): void {
     this._tabBodyWrapperHeight = this._tabBodyWrapper.nativeElement.clientHeight;
     this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height', '');
+    this.animationDone.emit();
   }
 }
