@@ -197,12 +197,12 @@ export class MdTooltip implements OnDestroy {
   private _leaveListener: Function;
 
   constructor(
+    renderer: Renderer2,
     private _overlay: Overlay,
     private _elementRef: ElementRef,
     private _scrollDispatcher: ScrollDispatcher,
     private _viewContainerRef: ViewContainerRef,
     private _ngZone: NgZone,
-    private _renderer: Renderer2,
     private _platform: Platform,
     @Inject(MD_TOOLTIP_SCROLL_STRATEGY) private _scrollStrategy,
     @Optional() private _dir: Directionality) {
@@ -211,9 +211,9 @@ export class MdTooltip implements OnDestroy {
     // they can prevent the first tap from firing its click event.
     if (!_platform.IOS) {
       this._enterListener =
-        _renderer.listen(_elementRef.nativeElement, 'mouseenter', () => this.show());
+        renderer.listen(_elementRef.nativeElement, 'mouseenter', () => this.show());
       this._leaveListener =
-        _renderer.listen(_elementRef.nativeElement, 'mouseleave', () => this.hide());
+        renderer.listen(_elementRef.nativeElement, 'mouseleave', () => this.hide());
     }
   }
 
@@ -279,13 +279,13 @@ export class MdTooltip implements OnDestroy {
 
   /** Create the overlay config and position strategy */
   private _createOverlay(): OverlayRef {
-    let origin = this._getOrigin();
-    let position = this._getOverlayPosition();
+    const origin = this._getOrigin();
+    const position = this._getOverlayPosition();
 
     // Create connected position strategy that listens for scroll events to reposition.
     // After position changes occur and the overlay is clipped by a parent scrollable then
     // close the tooltip.
-    let strategy = this._overlay.position().connectedTo(this._elementRef, origin, position);
+    const strategy = this._overlay.position().connectedTo(this._elementRef, origin, position);
     strategy.withScrollableContainers(this._scrollDispatcher.getScrollContainers(this._elementRef));
     strategy.onPositionChange.subscribe(change => {
       if (change.scrollableViewProperties.isOverlayClipped &&
@@ -294,12 +294,12 @@ export class MdTooltip implements OnDestroy {
       }
     });
 
-    let config = new OverlayState();
-
-    config.direction = this._dir ? this._dir.value : 'ltr';
-    config.positionStrategy = strategy;
-    config.panelClass = TOOLTIP_PANEL_CLASS;
-    config.scrollStrategy = this._scrollStrategy();
+    const config = new OverlayState({
+      direction: this._dir ? this._dir.value : 'ltr',
+      positionStrategy: strategy,
+      panelClass: TOOLTIP_PANEL_CLASS,
+      scrollStrategy: this._scrollStrategy()
+    });
 
     this._overlayRef = this._overlay.create(config);
 
