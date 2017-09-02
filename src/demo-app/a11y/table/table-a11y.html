@@ -2,7 +2,9 @@
   <section>
     <h2>Basic Table</h2>
     <p>Shows name, color and age data.</p>
-    <md-table [dataSource]="basicDataSource" aria-label="Users favorite colors and age">
+    <md-table aria-readonly="true"
+              [dataSource]="basicDataSource"
+              aria-label="Users favorite colors and age">
       <ng-container cdkColumnDef="name">
         <md-header-cell *cdkHeaderCellDef>Name</md-header-cell>
         <md-cell *cdkCellDef="let row">{{row.name}}</md-cell>
@@ -25,6 +27,7 @@
     <p>Shows name, color and age data. Sorted ascending by age.</p>
     <md-table [dataSource]="sortDataSource"
               aria-label="Users favorite colors and age"
+              aria-readonly="true"
               mdSort mdSortActive="age"
               mdSortDirection="asc">
       <ng-container cdkColumnDef="name">
@@ -47,7 +50,9 @@
   <section>
     <h2>Paginated Table</h2>
     <p>Shows name, color and age data. Shows only first 5 until paginated.</p>
-    <md-table [dataSource]="paginatedDataSource" aria-label="Users favorite colors and age">
+    <md-table [dataSource]="paginatedDataSource"
+              aria-readonly="true"
+              aria-label="Users favorite colors and age">
       <ng-container cdkColumnDef="name">
         <md-header-cell *cdkHeaderCellDef>Name</md-header-cell>
         <md-cell *cdkCellDef="let row">{{row.name}}</md-cell>
