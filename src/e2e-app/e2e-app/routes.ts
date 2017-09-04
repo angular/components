@@ -20,6 +20,7 @@ import {
   ListOverviewExample,
   ToolbarMultirowExample,
   ButtonToggleOverviewExample,
+  ExpansionOverviewExample
 } from '@angular/material-examples';
 
 export const E2E_APP_ROUTES: Routes = [
@@ -29,6 +30,7 @@ export const E2E_APP_ROUTES: Routes = [
   {path: 'button-toggle', component: ButtonToggleOverviewExample},
   {path: 'checkbox', component: SimpleCheckboxes},
   {path: 'dialog', component: DialogE2E},
+  {path: 'expansion', component: ExpansionOverviewExample},
   {path: 'fullscreen', component: FullscreenE2E},
   {path: 'grid-list', component: GridListE2E},
   {path: 'icon', component: IconE2E},
@@ -41,6 +43,6 @@ export const E2E_APP_ROUTES: Routes = [
   {path: 'sidenav', component: SidenavE2E},
   {path: 'slide-toggle', component: SlideToggleE2E},
   {path: 'tabs', component: BasicTabs},
-  {path: 'card-fancy', component: CardFancyExample},
+  {path: 'cards', component: CardFancyExample},
   {path: 'toolbar', component: ToolbarMultirowExample},
 ];

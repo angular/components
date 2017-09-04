@@ -96,15 +96,15 @@ export class MdDialog {
   constructor(
       private _overlay: Overlay,
       private _injector: Injector,
+      @Optional() location: Location,
       @Inject(MD_DIALOG_SCROLL_STRATEGY) private _scrollStrategy,
-      @Optional() private _location: Location,
       @Optional() @SkipSelf() private _parentDialog: MdDialog) {
 
     // Close all of the dialogs when the user goes forwards/backwards in history or when the
     // location hash changes. Note that this usually doesn't include clicking on links (unless
     // the user is using the `HashLocationStrategy`).
-    if (!_parentDialog && _location) {
-      _location.subscribe(() => this.closeAll());
+    if (!_parentDialog && location) {
+      location.subscribe(() => this.closeAll());
     }
   }
 
@@ -186,17 +186,19 @@ export class MdDialog {
    * @returns The overlay configuration.
    */
   private _getOverlayState(dialogConfig: MdDialogConfig): OverlayState {
-    const overlayState = new OverlayState();
-    overlayState.panelClass = dialogConfig.panelClass;
-    overlayState.hasBackdrop = dialogConfig.hasBackdrop;
-    overlayState.scrollStrategy = this._scrollStrategy();
-    overlayState.direction = dialogConfig.direction;
-    if (dialogConfig.backdropClass) {
-      overlayState.backdropClass = dialogConfig.backdropClass;
-    }
-    overlayState.positionStrategy = this._overlay.position().global();
+    const state = new OverlayState({
+      positionStrategy: this._overlay.position().global(),
+      scrollStrategy: this._scrollStrategy(),
+      panelClass: dialogConfig.panelClass,
+      hasBackdrop: dialogConfig.hasBackdrop,
+      direction: dialogConfig.direction
+    });
 
-    return overlayState;
+    if (dialogConfig.backdropClass) {
+      state.backdropClass = dialogConfig.backdropClass;
+    }
+
+    return state;
   }
 
   /**
