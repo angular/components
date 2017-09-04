@@ -30,7 +30,9 @@ import {SidenavDemo} from '../sidenav/sidenav-demo';
 import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
 import {PortalDemo, ScienceJoke} from '../portal/portal-demo';
 import {MenuDemo} from '../menu/menu-demo';
-import {FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo} from '../tabs/tabs-demo';
+import {
+  FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo, Counter
+} from '../tabs/tabs-demo';
 import {PlatformDemo} from '../platform/platform-demo';
 import {AutocompleteDemo} from '../autocomplete/autocomplete-demo';
 import {InputDemo} from '../input/input-demo';
@@ -103,6 +105,7 @@ import {TableHeaderDemo} from '../table/table-header-demo';
     SunnyTabContent,
     RainyTabContent,
     FoggyTabContent,
+    Counter,
     PlatformDemo,
     TypographyDemo,
     ExpansionDemo,

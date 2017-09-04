@@ -23,6 +23,7 @@ import {
 } from '@angular/core';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 import {MdTabLabel} from './tab-label';
+import {MdTabContent} from './tab-content';
 import {Subject} from 'rxjs/Subject';
 
 // Boilerplate for applying mixins to MdTab.
@@ -42,9 +43,10 @@ export const _MdTabMixinBase = mixinDisabled(MdTabBase);
 export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
   /** Content for the tab label given by <ng-template md-tab-label>. */
   @ContentChild(MdTabLabel) templateLabel: MdTabLabel;
+  @ContentChild(MdTabContent) templateBody: MdTabContent;
 
   /** Template inside the MdTab view that contains an <ng-content>. */
-  @ViewChild(TemplateRef) _content: TemplateRef<any>;
+  @ViewChild('bodyTemplate') _content: TemplateRef<any>;
 
   /** The plain text label for the tab, used when there is no template label. */
   @Input('label') textLabel: string = '';

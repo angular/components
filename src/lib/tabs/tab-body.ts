@@ -146,7 +146,8 @@ export class MdTabBody implements OnInit, AfterViewChecked {
    */
   ngAfterViewChecked() {
     if (this._isCenterPosition(this._position) && !this._portalHost.hasAttached()) {
-      this._portalHost.attach(this._content);
+      // Nested templates via mdTabContent templates causes expression change error
+      Promise.resolve().then(() => this._portalHost.attach(this._content));
     }
   }
 
