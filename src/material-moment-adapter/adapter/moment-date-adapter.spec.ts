@@ -10,7 +10,7 @@ import {MomentDateAdapter} from './moment-date-adapter';
 import {async, inject, TestBed} from '@angular/core/testing';
 import {MomentDateModule} from './index';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
-import * as moment from 'moment';
+import moment from 'moment';
 import {LOCALE_ID} from '@angular/core';
 
 

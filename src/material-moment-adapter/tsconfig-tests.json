@@ -4,6 +4,8 @@
 {
   "extends": "./tsconfig-build",
   "compilerOptions": {
+    // Needed for Moment.js since it doesn't have a default export.
+    "allowSyntheticDefaultImports": true,
     "importHelpers": false,
     "module": "commonjs",
     "target": "es5",

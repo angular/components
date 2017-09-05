@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE_PROVIDER, MD_DATE_FORMATS} from '@angular/material';
 import {MomentDateAdapter, MD_MOMENT_DATE_FORMATS} from '@angular/material-moment-adapter';
-import * as moment from 'moment';
+import moment from 'moment';
 
 
 @Component({

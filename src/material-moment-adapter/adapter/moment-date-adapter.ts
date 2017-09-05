@@ -8,7 +8,7 @@
 
 import {Inject, Injectable, Optional} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
-import * as moment from 'moment';
+import moment from 'moment';
 
 
 /** Creates an array and fills it with values. */
