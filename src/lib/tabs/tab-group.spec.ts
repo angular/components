@@ -230,7 +230,7 @@ describe('MdTabGroup', () => {
       dispatchSwipeEvent(body, HammerDirection.Right, gestureConfig);
       checkSelectedIndex(0, disabledFixture);
     });
-    
+
     it('should set the isActive flag on each of the tabs', () => {
       fixture.detectChanges();
 
