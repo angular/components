@@ -58,7 +58,11 @@ export class TableOfContents implements OnInit {
 
     this._fragmentSubscription = this._route.fragment.subscribe(fragment => {
       this._urlFragment = fragment;
-      this.updateScrollPosition();
+
+      const target = document.getElementById(this._urlFragment);
+      if (target) {
+        target.scrollIntoView();
+      }
     });
   }
 
