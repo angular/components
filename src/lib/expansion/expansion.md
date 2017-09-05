@@ -14,8 +14,8 @@ as the control for expanding and collapsing. This header may optionally contain 
 header to align with Material Design specifications.
 
 By default, the expansion-panel header includes a toggle icon at the end of the
-header to indicate the expansion state. This icon can be hidden via the
-`hideToggle` property.
+header to indicate the expansion state. This icon can be positioned via the
+`togglePosition` property.  It can be positioned at `start`, `end` and `hidden`.
 
 ```html
 <mat-expansion-panel>

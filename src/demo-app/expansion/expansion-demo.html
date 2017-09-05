@@ -34,7 +34,8 @@
     <mat-slide-toggle [(ngModel)]="showPanel3">Show Panel 3</mat-slide-toggle>
   </div>
   <div>
-    <mat-radio-group [(ngModel)]="hideToggle">
+    <p>Accordion Toggle Position</p>
+    <mat-radio-group [(ngModel)]="togglePosition">
       <mat-radio-button value="start">Start</mat-radio-button>
       <mat-radio-button value="end">End</mat-radio-button>
       <mat-radio-button value="hidden">Hidden</mat-radio-button>
@@ -52,17 +53,17 @@
   </div>
 </div>
 <br>
-<mat-accordion [displayMode]="displayMode" [multi]="multi"
-              class="mat-expansion-demo-width">
-  <mat-expansion-panel #panel1  [hideToggle]="hideToggle">
+<mat-accordion [displayMode]="displayMode" [multi]="multi" [togglePosition]="togglePosition"
+               class="mat-expansion-demo-width">
+  <mat-expansion-panel #panel1>
     <mat-expansion-panel-header>Section 1</mat-expansion-panel-header>
     <p>This is the content text that makes sense here.</p>
   </mat-expansion-panel>
-  <mat-expansion-panel #panel2 [hideToggle]="hideToggle" [disabled]="disabled">
+  <mat-expansion-panel #panel2 [disabled]="disabled">
     <mat-expansion-panel-header>Section 2</mat-expansion-panel-header>
     <p>This is the content text that makes sense here.</p>
   </mat-expansion-panel>
-  <mat-expansion-panel #panel3 *ngIf="showPanel3" [hideToggle]="hideToggle">
+  <mat-expansion-panel #panel3 *ngIf="showPanel3">
     <mat-expansion-panel-header>Section 3</mat-expansion-panel-header>
     <mat-checkbox #showButtons>Reveal Buttons Below</mat-checkbox>
     <mat-action-row *ngIf="showButtons.checked">

@@ -19,12 +19,14 @@ import {
   Host,
   Input,
   OnDestroy,
+  Optional,
   Renderer2,
   ViewEncapsulation,
 } from '@angular/core';
 import {merge} from 'rxjs/observable/merge';
 import {Subscription} from 'rxjs/Subscription';
 import {EXPANSION_PANEL_ANIMATION_TIMING, MatExpansionPanel} from './expansion-panel';
+import {MatAccordion} from './accordion';
 
 
 /**
@@ -62,8 +64,8 @@ import {EXPANSION_PANEL_ANIMATION_TIMING, MatExpansionPanel} from './expansion-p
   },
   animations: [
     trigger('indicatorRotate', [
-      state('collapsed', style({transform: 'rotate(0deg)'})),
-      state('expanded', style({transform: 'rotate(180deg)'})),
+      state('collapsed', style({transform: 'rotate(45deg)'})),
+      state('expanded', style({transform: 'rotate(225deg)'})),
       transition('expanded <=> collapsed', animate(EXPANSION_PANEL_ANIMATION_TIMING)),
     ]),
     trigger('expansionHeight', [
@@ -86,17 +88,25 @@ export class MatExpansionPanelHeader implements OnDestroy {
 
   constructor(
     renderer: Renderer2,
+    @Optional() accordion: MatAccordion,
     @Host() public panel: MatExpansionPanel,
     private _element: ElementRef,
     private _focusMonitor: FocusMonitor,
     private _changeDetectorRef: ChangeDetectorRef) {
 
+    let changeSubjects = [panel._inputChanges];
+    if (accordion) {
+      changeSubjects.push(accordion._inputChanges);
+    }
+
     // Since the toggle state depends on an @Input on the panel, we
-    // need to  subscribe and trigger change detection manually.
+    // need to subscribe and trigger change detection manually.
     this._parentChangeSubscription = merge(
       panel.opened,
       panel.closed,
-      filter.call(panel._inputChanges, changes => !!(changes.hideToggle || changes.disabled))
+      filter.call(merge(...changeSubjects), changes => {
+        return (changes.togglePosition || changes.disabled);
+      })
     )
     .subscribe(() => this._changeDetectorRef.markForCheck());
 
@@ -132,11 +142,13 @@ export class MatExpansionPanelHeader implements OnDestroy {
   }
 
   /** Gets whether the expand indicator should be shown. */
-  _indicatorLocation(): string {
-    if (this.panel.disabled) {
-      return 'hidden';
-    }
-    return this.panel.hideToggle;
+  _showIndicator(): boolean {
+    return !(this.panel.disabled || this.panel.togglePosition === 'hidden');
+  }
+
+  /** Gets the order value to place the expansion indicator in the correct position. */
+  _indicatorOrder(): number {
+    return this.panel.togglePosition === 'start' ? -1 : 1;
   }
 
   /** Handle keyup event calling to toggle() if appropriate. */
