@@ -108,7 +108,7 @@ export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestr
   get value(): any {
     return this._value != undefined
       ? this._value
-      : this._elementRef.nativeElement.textContent.trim();
+      : this._elementRef.nativeElement.textContent;
   }
   set value(newValue: any) { this._value = newValue; }
 
