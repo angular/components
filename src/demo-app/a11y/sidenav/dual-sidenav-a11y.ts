@@ -6,7 +6,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
   selector: 'dual-sidenav-a11y',
   templateUrl: 'dual-sidenav-a11y.html',
   styleUrls: ['shared.css'],
-  host: {'class': 'demo-sidenav-a11y'},
+  host: {'class': 'a11y-demo-sidenav-app'},
   encapsulation: ViewEncapsulation.None,
 })
 export class SidenavDualAccessibilityDemo {}

@@ -1,0 +1,24 @@
+<md-toolbar color="primary" role="header" aria-label="My app">
+  <button md-icon-button aria-label="Navigation menu" (click)="snav.toggle()">
+    <md-icon aria-hidden="true">menu</md-icon>
+  </button>
+  <span class="a11y-demo-sidenav-app-name">My App</span>
+</md-toolbar>
+
+<md-sidenav-container class="a11y-demo-sidenav-container">
+  <md-sidenav #snav mode="side">
+    <md-nav-list>
+      <a md-list-item routerLink="..">Home</a>
+      <a md-list-item routerLink="../basic">Basic sidenav example</a>
+      <a md-list-item routerLink="../mobile">Mobile sidenav example</a>
+      <a md-list-item routerLink="../dual">Dual sidenavs example</a>
+    </md-nav-list>
+  </md-sidenav>
+
+  <md-sidenav-content>
+    <button md-raised-button aria-label="Close basic sidenav example" color="primary"
+            class="a11y-demo-sidenav-close" routerLink="..">
+      Close example
+    </button>
+  </md-sidenav-content>
+</md-sidenav-container>
