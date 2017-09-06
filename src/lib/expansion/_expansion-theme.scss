@@ -15,11 +15,13 @@
     border-top-color: mat-color($foreground, divider);
   }
 
-  .mat-expansion-panel-header {
-    &.cdk-keyboard-focused,
-    &.cdk-program-focused,
-    &:hover {
-      background: mat-color($background, hover);
+  .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header {
+    &:not([aria-disabled='true']) {
+      &.cdk-keyboard-focused,
+      &.cdk-program-focused,
+      &:hover {
+        background: mat-color($background, hover);
+      }
     }
   }
 
@@ -30,6 +32,15 @@
   .mat-expansion-panel-header-description,
   .mat-expansion-indicator::after {
     color: mat-color($foreground, secondary-text);
+  }
+
+  .mat-expansion-panel-header[aria-disabled='true'] {
+    color: mat-color($foreground, disabled-button);
+
+    .mat-expansion-panel-header-title,
+    .mat-expansion-panel-header-description {
+      color: inherit;
+    }
   }
 }
 

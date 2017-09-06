@@ -32,6 +32,7 @@ export const _MdListMixinBase = mixinDisableRipple(MdListBase);
 export class MdListItemBase {}
 export const _MdListItemMixinBase = mixinDisableRipple(MdListItemBase);
 
+
 @Directive({
   selector: 'md-divider, mat-divider',
   host: {
@@ -155,8 +156,8 @@ export class MdListItem extends _MdListItemMixinBase implements AfterContentInit
   }
 
   /** Whether this list item should show a ripple effect when clicked.  */
-  isRippleEnabled() {
-    return !this.disableRipple && this._isNavList && !this._list.disableRipple;
+  _isRippleDisabled() {
+    return !this._isNavList || this.disableRipple || this._list.disableRipple;
   }
 
   _handleFocus() {

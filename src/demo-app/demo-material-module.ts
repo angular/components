@@ -6,11 +6,10 @@ import {
   MdCardModule,
   MdCheckboxModule,
   MdChipsModule,
-  MdCoreModule,
-  MdTableModule,
   MdDatepickerModule,
   MdDialogModule,
   MdExpansionModule,
+  MdFormFieldModule,
   MdGridListModule,
   MdIconModule,
   MdInputModule,
@@ -28,12 +27,20 @@ import {
   MdSlideToggleModule,
   MdSnackBarModule,
   MdSortModule,
+  MdTableModule,
   MdTabsModule,
   MdToolbarModule,
   MdTooltipModule,
-  StyleModule
+  StyleModule,
+  MdStepperModule,
 } from '@angular/material';
 import {CdkTableModule} from '@angular/cdk/table';
+import {A11yModule} from '@angular/cdk/a11y';
+import {BidiModule} from '@angular/cdk/bidi';
+import {OverlayModule} from '@angular/cdk/overlay';
+import {PlatformModule} from '@angular/cdk/platform';
+import {ObserversModule} from '@angular/cdk/observers';
+import {PortalModule} from '@angular/cdk/portal';
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.
@@ -50,12 +57,12 @@ import {CdkTableModule} from '@angular/cdk/table';
     MdDatepickerModule,
     MdDialogModule,
     MdExpansionModule,
+    MdFormFieldModule,
     MdGridListModule,
     MdIconModule,
     MdInputModule,
     MdListModule,
     MdMenuModule,
-    MdCoreModule,
     MdPaginatorModule,
     MdProgressBarModule,
     MdProgressSpinnerModule,
@@ -67,12 +74,19 @@ import {CdkTableModule} from '@angular/cdk/table';
     MdSliderModule,
     MdSnackBarModule,
     MdSortModule,
+    MdStepperModule,
     MdTabsModule,
     MdToolbarModule,
     MdTooltipModule,
     MdNativeDateModule,
     CdkTableModule,
-    StyleModule
+    StyleModule,
+    A11yModule,
+    BidiModule,
+    ObserversModule,
+    OverlayModule,
+    PlatformModule,
+    PortalModule,
   ]
 })
 export class DemoMaterialModule {}

@@ -14,7 +14,6 @@
 
 export * from './version';
 export * from './core';
-export * from './module';
 
 export * from './autocomplete/index';
 export * from './button/index';
@@ -25,6 +24,7 @@ export * from './checkbox/index';
 export * from './datepicker/index';
 export * from './dialog/index';
 export * from './expansion/index';
+export * from './form-field/index';
 export * from './grid-list/index';
 export * from './icon/index';
 export * from './input/index';
@@ -45,3 +45,4 @@ export * from './tabs/index';
 export * from './tabs/tab-nav-bar/index';
 export * from './toolbar/index';
 export * from './tooltip/index';
+export * from './stepper/index';

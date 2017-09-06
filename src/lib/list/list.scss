@@ -1,5 +1,6 @@
 @import '../core/style/variables';
 @import '../core/style/list-common';
+@import '../core/style/layout-common';
 
 
 $mat-list-side-padding: 16px;
@@ -43,12 +44,16 @@ $mat-dense-list-icon-size: 20px;
     position: relative;
   }
 
+  .mat-list-item-content-reverse {
+    display: flex;
+    align-items: center;
+    padding: 0 $mat-list-side-padding;
+    flex-direction: row-reverse;
+    justify-content: space-around;
+  }
+
   .mat-list-item-ripple {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
+    @include mat-fill;
 
     // Disable pointer events for the ripple container because the container will overlay the
     // user content and we don't want to disable mouse events on the user content.
@@ -113,7 +118,9 @@ $mat-dense-list-icon-size: 20px;
 
   // This needs slightly more specificity, because it
   // can be overwritten by the typography styles.
-  .mat-list & {
+  .mat-list &,
+  .mat-nav-list &,
+  .mat-selection-list & {
     margin: 0;
   }
 }
@@ -128,7 +135,7 @@ $mat-dense-list-icon-size: 20px;
   }
 }
 
-.mat-list, .mat-nav-list {
+.mat-list, .mat-nav-list, .mat-selection-list {
   padding-top: $mat-list-top-padding;
   display: block;
 
@@ -145,10 +152,21 @@ $mat-dense-list-icon-size: 20px;
       $mat-list-icon-size
     );
   }
+
+  .mat-list-option {
+    @include mat-list-item-base(
+      $mat-list-base-height,
+      $mat-list-avatar-height,
+      $mat-list-two-line-height,
+      $mat-list-three-line-height,
+      $mat-list-icon-size
+    );
+  }
 }
 
 
-.mat-list[dense], .mat-nav-list[dense] {
+.mat-list[dense], .mat-nav-list[dense], .mat-selection-list[dense] {
+
   padding-top: $mat-dense-top-padding;
   display: block;
 
@@ -157,6 +175,16 @@ $mat-dense-list-icon-size: 20px;
   }
 
   .mat-list-item {
+    @include mat-list-item-base(
+      $mat-dense-base-height,
+      $mat-dense-avatar-height,
+      $mat-dense-two-line-height,
+      $mat-dense-three-line-height,
+      $mat-dense-list-icon-size
+    );
+  }
+
+  .mat-list-option {
     @include mat-list-item-base(
       $mat-dense-base-height,
       $mat-dense-avatar-height,

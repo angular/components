@@ -72,6 +72,16 @@ Global default placeholder options can be specified by setting the `MD_PLACEHOLD
 })
 ```
 
+### Customizing the trigger label
+If you want to display a custom trigger label inside a select, you can use the `md-select-trigger` element:
+
+```html
+<md-select placeholder="Favorite food" #select="mdSelect">
+  <md-select-trigger>You have selected: {{ select.selected?.viewValue }}</md-select-trigger>
+  <md-option *ngFor="let food of foods" [value]="food.value">{{ food.viewValue }}</md-option>
+</md-select>
+```
+
 Here are the available global options:
 
 | Name            | Type    | Values              | Description                               |
@@ -82,3 +92,9 @@ Here are the available global options:
 - <kbd>DOWN_ARROW</kbd>: Focus next option
 - <kbd>UP_ARROW</kbd>: Focus previous option
 - <kbd>ENTER</kbd> or <kbd>SPACE</kbd>: Select focused item
+
+### Accessibility
+The select component without text or label should be given a meaningful label via
+`aria-label` or `aria-labelledby`.
+
+The select component has `role="listbox"` and options inside select have `role="option"`.

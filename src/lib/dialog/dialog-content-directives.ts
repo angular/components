@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Input, Optional, OnInit} from '@angular/core';
+import {Directive, Input, OnChanges, OnInit, Optional, SimpleChanges} from '@angular/core';
 import {MdDialogRef} from './dialog-ref';
 import {MdDialogContainer} from './dialog-container';
 
@@ -17,25 +17,35 @@ let dialogElementUid = 0;
  * Button that will close the current dialog.
  */
 @Directive({
-  selector: 'button[md-dialog-close], button[mat-dialog-close],' +
-            'button[mdDialogClose], button[matDialogClose]',
+  selector: `button[md-dialog-close], button[mat-dialog-close],
+             button[mdDialogClose], button[matDialogClose]`,
   host: {
     '(click)': 'dialogRef.close(dialogResult)',
     '[attr.aria-label]': 'ariaLabel',
     'type': 'button', // Prevents accidental form submits.
   }
 })
-export class MdDialogClose {
+export class MdDialogClose implements OnChanges {
   /** Screenreader label for the button. */
   @Input('aria-label') ariaLabel: string = 'Close dialog';
 
   /** Dialog close input. */
   @Input('md-dialog-close') dialogResult: any;
 
-  /** Dialog close input for compatibility mode. */
-  @Input('mat-dialog-close') set _matDialogClose(value: any) { this.dialogResult = value; }
+  @Input('matDialogClose') _matDialogClose: any;
+  @Input('mdDialogClose') _mdDialogClose: any;
+  @Input('mat-dialog-close') _matDialogCloseResult: any;
 
   constructor(public dialogRef: MdDialogRef<any>) { }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const proxiedChange = changes._matDialogClose || changes._mdDialogClose ||
+        changes._matDialogCloseResult;
+
+    if (proxiedChange) {
+      this.dialogResult = proxiedChange.currentValue;
+    }
+  }
 }
 
 /**
@@ -65,8 +75,8 @@ export class MdDialogTitle implements OnInit {
  * Scrollable content container of a dialog.
  */
 @Directive({
-  selector: '[md-dialog-content], md-dialog-content, [mat-dialog-content], mat-dialog-content,' +
-            '[mdDialogContent], [matDialogContent]',
+  selector: `[md-dialog-content], md-dialog-content, [mat-dialog-content], mat-dialog-content,
+             [mdDialogContent], [matDialogContent]`,
   host: {'class': 'mat-dialog-content'}
 })
 export class MdDialogContent { }
@@ -77,8 +87,8 @@ export class MdDialogContent { }
  * Stays fixed to the bottom when scrolling.
  */
 @Directive({
-  selector: '[md-dialog-actions], md-dialog-actions, [mat-dialog-actions], mat-dialog-actions,' +
-            '[mdDialogActions], [matDialogActions]',
+  selector: `[md-dialog-actions], md-dialog-actions, [mat-dialog-actions], mat-dialog-actions,
+             [mdDialogActions], [matDialogActions]`,
   host: {'class': 'mat-dialog-actions'}
 })
 export class MdDialogActions { }

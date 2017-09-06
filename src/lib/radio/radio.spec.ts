@@ -1,13 +1,11 @@
-import {async, ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
-import {NgModel, FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
+import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MdRadioGroup, MdRadioButton, MdRadioChange, MdRadioModule} from './index';
-import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
-import {FakeViewportRuler} from '../core/overlay/position/fake-viewport-ruler';
-import {dispatchFakeEvent} from '@angular/cdk/testing';
+import {ViewportRuler} from '@angular/cdk/scrolling';
+import {dispatchFakeEvent, FakeViewportRuler} from '@angular/cdk/testing';
 import {RIPPLE_FADE_IN_DURATION, RIPPLE_FADE_OUT_DURATION} from '../core/ripple/ripple-renderer';
-
+import {MdRadioButton, MdRadioChange, MdRadioGroup, MdRadioModule} from './index';
 
 describe('MdRadio', () => {
 
@@ -15,6 +13,7 @@ describe('MdRadio', () => {
     TestBed.configureTestingModule({
       imports: [MdRadioModule, FormsModule, ReactiveFormsModule],
       declarations: [
+        FocusableRadioButton,
         RadiosInsideRadioGroup,
         RadioGroupWithNgModel,
         RadioGroupWithFormControl,
@@ -640,6 +639,27 @@ describe('MdRadio', () => {
       }
     });
   });
+
+  describe('with tabindex', () => {
+    let fixture: ComponentFixture<FocusableRadioButton>;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(FocusableRadioButton);
+      fixture.detectChanges();
+    });
+
+    it('should forward focus to native input', () => {
+      let radioButtonEl = fixture.debugElement.query(By.css('.mat-radio-button')).nativeElement;
+      let inputEl = fixture.debugElement.query(By.css('.mat-radio-input')).nativeElement;
+
+      radioButtonEl.focus();
+      // Focus events don't always fire in tests, so we needc to fake it.
+      dispatchFakeEvent(radioButtonEl, 'focus');
+      fixture.detectChanges();
+
+      expect(document.activeElement).toBe(inputEl);
+    });
+  });
 });
 
 
@@ -728,3 +748,8 @@ class RadioGroupWithNgModel {
 class RadioGroupWithFormControl {
   formControl = new FormControl();
 }
+
+@Component({
+  template: `<md-radio-button tabindex="-1"></md-radio-button>`
+})
+class FocusableRadioButton {}

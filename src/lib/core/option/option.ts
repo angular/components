@@ -17,6 +17,7 @@ import {
   Optional,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  QueryList,
 } from '@angular/core';
 import {ENTER, SPACE} from '../keyboard/keycodes';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
@@ -145,7 +146,7 @@ export class MdOption {
   focus(): void {
     const element = this._getHostElement();
 
-    if ('focus' in element) {
+    if (typeof element.focus === 'function') {
       element.focus();
     }
   }
@@ -172,6 +173,11 @@ export class MdOption {
       this._active = false;
       this._changeDetectorRef.markForCheck();
     }
+  }
+
+  /** Gets the label to be used when determining whether the option should be focused. */
+  getLabel(): string {
+    return this.viewValue;
   }
 
   /** Ensures the option is selected when activated from the keyboard. */
@@ -201,7 +207,7 @@ export class MdOption {
     return this.disabled ? '-1' : '0';
   }
 
-  /** Fetches the host DOM element. */
+  /** Gets the host DOM element. */
   _getHostElement(): HTMLElement {
     return this._element.nativeElement;
   }
@@ -209,6 +215,32 @@ export class MdOption {
   /** Emits the selection change event. */
   private _emitSelectionChangeEvent(isUserInput = false): void {
     this.onSelectionChange.emit(new MdOptionSelectionChange(this, isUserInput));
+  }
+
+  /**
+   * Counts the amount of option group labels that precede the specified option.
+   * @param optionIndex Index of the option at which to start counting.
+   * @param options Flat list of all of the options.
+   * @param optionGroups Flat list of all of the option groups.
+   */
+  static countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<MdOption>,
+    optionGroups: QueryList<MdOptgroup>): number {
+
+    if (optionGroups.length) {
+      let optionsArray = options.toArray();
+      let groups = optionGroups.toArray();
+      let groupCounter = 0;
+
+      for (let i = 0; i < optionIndex + 1; i++) {
+        if (optionsArray[i].group && optionsArray[i].group === groups[groupCounter]) {
+          groupCounter++;
+        }
+      }
+
+      return groupCounter;
+    }
+
+    return 0;
   }
 
 }

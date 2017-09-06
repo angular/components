@@ -27,14 +27,15 @@ import {AnimationEvent} from '@angular/animations';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
 import {throwMdMenuInvalidPositionX, throwMdMenuInvalidPositionY} from './menu-errors';
 import {MdMenuItem} from './menu-item';
-import {FocusKeyManager} from '../core/a11y/focus-key-manager';
+import {FocusKeyManager} from '@angular/cdk/a11y';
 import {MdMenuPanel} from './menu-panel';
 import {Subscription} from 'rxjs/Subscription';
 import {transformMenu, fadeInItems} from './menu-animations';
 import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '../core/keyboard/keycodes';
 import {merge} from 'rxjs/observable/merge';
 import {Observable} from 'rxjs/Observable';
-import {Direction} from '../core';
+import {Direction} from '@angular/cdk/bidi';
+import {RxChain, startWith, switchMap} from '@angular/cdk/rxjs';
 
 /** Default `md-menu` options that can be overridden. */
 export interface MdMenuDefaultOptions {
@@ -68,13 +69,13 @@ const MD_MENU_BASE_ELEVATION = 2;
   exportAs: 'mdMenu'
 })
 export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
-  private _keyManager: FocusKeyManager;
+  private _keyManager: FocusKeyManager<MdMenuItem>;
   private _xPosition: MenuPositionX = this._defaultOptions.xPosition;
   private _yPosition: MenuPositionY = this._defaultOptions.yPosition;
   private _previousElevation: string;
 
   /** Subscription to tab events on the menu panel */
-  private _tabSubscription: Subscription;
+  private _tabSubscription = Subscription.EMPTY;
 
   /** Config object to be passed into the menu's ngClass */
   _classList: any = {};
@@ -145,22 +146,22 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
     @Inject(MD_MENU_DEFAULT_OPTIONS) private _defaultOptions: MdMenuDefaultOptions) { }
 
   ngAfterContentInit() {
-    this._keyManager = new FocusKeyManager(this.items).withWrap();
+    this._keyManager = new FocusKeyManager<MdMenuItem>(this.items).withWrap();
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close.emit('keydown'));
   }
 
   ngOnDestroy() {
-    if (this._tabSubscription) {
-      this._tabSubscription.unsubscribe();
-    }
-
+    this._tabSubscription.unsubscribe();
     this.close.emit();
     this.close.complete();
   }
 
   /** Stream that emits whenever the hovered menu item changes. */
   hover(): Observable<MdMenuItem> {
-    return merge(...this.items.map(item => item.hover));
+    return RxChain.from(this.items.changes)
+      .call(startWith, this.items)
+      .call(switchMap, (items: MdMenuItem[]) => merge(...items.map(item => item.hover)))
+      .result();
   }
 
   /** Handle a keyboard event from the menu, delegating to the appropriate action. */

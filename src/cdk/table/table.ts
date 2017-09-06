@@ -29,7 +29,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {CollectionViewer, DataSource} from './data-source';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {CdkCellOutlet, CdkCellOutletRowContext, CdkHeaderRowDef, CdkRowDef} from './row';
 import {takeUntil} from 'rxjs/operator/takeUntil';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
@@ -69,6 +69,7 @@ export const CDK_TABLE_TEMPLATE = `
  * a header row and data rows. Updates the rows when new data is provided by the data source.
  */
 @Component({
+  moduleId: module.id,
   selector: 'cdk-table',
   template: CDK_TABLE_TEMPLATE,
   host: {

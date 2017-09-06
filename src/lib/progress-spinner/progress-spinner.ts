@@ -8,7 +8,6 @@
 
 import {
   Component,
-  HostBinding,
   ChangeDetectionStrategy,
   OnDestroy,
   Input,
@@ -17,6 +16,7 @@ import {
   Renderer2,
   Directive,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 
@@ -71,13 +71,17 @@ export const _MdProgressSpinnerMixinBase = mixinColor(MdProgressSpinnerBase, 'pr
   selector: 'md-progress-spinner, mat-progress-spinner',
   host: {
     'role': 'progressbar',
+    'class': 'mat-progress-spinner',
     '[attr.aria-valuemin]': '_ariaValueMin',
-    '[attr.aria-valuemax]': '_ariaValueMax'
+    '[attr.aria-valuemax]': '_ariaValueMax',
+    '[attr.aria-valuenow]': 'value',
+    '[attr.mode]': 'mode',
   },
   inputs: ['color'],
   templateUrl: 'progress-spinner.html',
   styleUrls: ['progress-spinner.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MdProgressSpinner extends _MdProgressSpinnerMixinBase
     implements OnDestroy, CanColor {
@@ -132,7 +136,6 @@ export class MdProgressSpinner extends _MdProgressSpinnerMixinBase
 
   /** Value of the progress circle. It is bound to the host as the attribute aria-valuenow. */
   @Input()
-  @HostBinding('attr.aria-valuenow')
   get value() {
     if (this.mode == 'determinate') {
       return this._value;
@@ -154,11 +157,8 @@ export class MdProgressSpinner extends _MdProgressSpinnerMixinBase
    * Input must be one of the values from ProgressMode, defaults to 'determinate'.
    * mode is bound to the host as the attribute host.
    */
-  @HostBinding('attr.mode')
   @Input()
-  get mode() {
-    return this._mode;
-  }
+  get mode() { return this._mode; }
   set mode(mode: ProgressSpinnerMode) {
     if (mode !== this._mode) {
       if (mode === 'indeterminate') {
@@ -282,12 +282,13 @@ export class MdProgressSpinner extends _MdProgressSpinnerMixinBase
   host: {
     'role': 'progressbar',
     'mode': 'indeterminate',
-    'class': 'mat-spinner',
+    'class': 'mat-spinner mat-progress-spinner',
   },
   inputs: ['color'],
   templateUrl: 'progress-spinner.html',
   styleUrls: ['progress-spinner.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MdSpinner extends MdProgressSpinner {
   constructor(elementRef: ElementRef, ngZone: NgZone, renderer: Renderer2) {

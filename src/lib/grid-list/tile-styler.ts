@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {MdGridList} from './grid-list';
 import {MdGridTile} from './grid-tile';
 import {TileCoordinator} from './tile-coordinator';
 
@@ -51,7 +52,7 @@ export abstract class TileStyler {
     // edges, each tile only uses a fraction (gutterShare = numGutters / numCells) of the gutter
     // size. (Imagine having one gutter per tile, and then breaking up the extra gutter on the
     // edge evenly among the cells).
-    return `(${sizePercent}% - ( ${this._gutterSize} * ${gutterFraction} ))`;
+    return `(${sizePercent}% - (${this._gutterSize} * ${gutterFraction}))`;
   }
 
 
@@ -64,7 +65,7 @@ export abstract class TileStyler {
   getTilePosition(baseSize: string, offset: number): string {
     // The position comes the size of a 1x1 tile plus gutter for each previous tile in the
     // row/column (offset).
-    return calc(`(${baseSize} + ${this._gutterSize}) * ${offset}`);
+    return offset === 0 ? '0' : calc(`(${baseSize} + ${this._gutterSize}) * ${offset}`);
   }
 
 
@@ -139,6 +140,13 @@ export abstract class TileStyler {
    * @docs-private
    */
   getComputedHeight(): [string, string] | null { return null; }
+
+  /**
+   * Called when the tile styler is swapped out with a different one. To be used for cleanup.
+   * @param list Grid list that the styler was attached to.
+   * @docs-private
+   */
+  abstract reset(list: MdGridList);
 }
 
 
@@ -165,6 +173,15 @@ export class FixedTileStyler extends TileStyler {
     return [
       'height', calc(`${this.getTileSpan(this.fixedRowHeight)} + ${this.getGutterSpan()}`)
     ];
+  }
+
+  reset(list: MdGridList) {
+    list._setListStyle(['height', null]);
+
+    list._tiles.forEach(tile => {
+      tile._setStyle('top', null);
+      tile._setStyle('height', null);
+    });
   }
 }
 
@@ -203,8 +220,17 @@ export class RatioTileStyler extends TileStyler {
     ];
   }
 
+  reset(list: MdGridList) {
+    list._setListStyle(['padding-bottom', null]);
+
+    list._tiles.forEach(tile => {
+      tile._setStyle('margin-top', null);
+      tile._setStyle('padding-top', null);
+    });
+  }
+
   private _parseRatio(value: string): void {
-    let ratioParts = value.split(':');
+    const ratioParts = value.split(':');
 
     if (ratioParts.length !== 2) {
       throw Error(`md-grid-list: invalid ratio given for row-height: "${value}"`);
@@ -237,6 +263,12 @@ export class FitTileStyler extends TileStyler {
     tile._setStyle('height', calc(this.getTileSize(baseTileHeight, tile.rowspan)));
   }
 
+  reset(list: MdGridList) {
+    list._tiles.forEach(tile => {
+      tile._setStyle('top', null);
+      tile._setStyle('height', null);
+    });
+  }
 }
 
 

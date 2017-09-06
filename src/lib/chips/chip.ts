@@ -17,8 +17,8 @@ import {
   Renderer2,
   forwardRef,
 } from '@angular/core';
-
-import {Focusable} from '../core/a11y/focus-key-manager';
+import {Subject} from 'rxjs/Subject';
+import {FocusableOption} from '../core/a11y/focus-key-manager';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
@@ -68,7 +68,8 @@ export class MdBasicChip { }
     '(blur)': '_hasFocus = false',
   }
 })
-export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, CanColor, CanDisable {
+export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestroy, CanColor,
+  CanDisable {
 
   @ContentChild(forwardRef(() => MdChipRemove)) _chipRemove: MdChipRemove;
 
@@ -108,8 +109,8 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
   /** Whether the chip has focus. */
   _hasFocus: boolean = false;
 
-  /** Emitted when the chip is focused. */
-  onFocus = new EventEmitter<MdChipEvent>();
+  /** Emits when the chip is focused. */
+  _onFocus = new Subject<MdChipEvent>();
 
   /** Emitted when the chip is selected. */
   @Output() select = new EventEmitter<MdChipEvent>();
@@ -120,8 +121,8 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
   /** Emitted when the chip is destroyed. */
   @Output() destroy = new EventEmitter<MdChipEvent>();
 
-  get ariaSelected(): string {
-    return this.selectable ? this.selected.toString() : '';
+  get ariaSelected(): string | null {
+    return this.selectable ? this.selected.toString() : null;
   }
 
   constructor(renderer: Renderer2, elementRef: ElementRef) {
@@ -144,7 +145,7 @@ export class MdChip extends _MdChipMixinBase implements Focusable, OnDestroy, Ca
   /** Allows for programmatic focusing of the chip. */
   focus(): void {
     this._elementRef.nativeElement.focus();
-    this.onFocus.emit({chip: this});
+    this._onFocus.next({chip: this});
   }
 
   /**

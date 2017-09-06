@@ -6,24 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  Injectable,
-  ComponentRef,
-  Optional,
-  SkipSelf,
-  Injector,
-} from '@angular/core';
-import {
-  ComponentType,
-  ComponentPortal,
-  Overlay,
-  OverlayRef,
-  OverlayState,
-  LiveAnnouncer,
-} from '../core';
+import {ComponentRef, Injectable, Injector, Optional, SkipSelf } from '@angular/core';
+import {Overlay, OverlayRef, OverlayState} from '@angular/cdk/overlay';
+import {ComponentPortal, ComponentType} from '@angular/cdk/portal';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {PortalInjector} from '../core/portal/portal-injector';
 import {extendObject} from '../core/util/object-extend';
-import {MdSnackBarConfig, MD_SNACK_BAR_DATA} from './snack-bar-config';
+import {MD_SNACK_BAR_DATA, MdSnackBarConfig} from './snack-bar-config';
 import {MdSnackBarRef} from './snack-bar-ref';
 import {MdSnackBarContainer} from './snack-bar-container';
 import {SimpleSnackBar} from './simple-snack-bar';
@@ -164,9 +153,11 @@ export class MdSnackBar {
    * @param config The user-specified snack bar config.
    */
   private _createOverlay(config: MdSnackBarConfig): OverlayRef {
-    const state = new OverlayState();
-    state.direction = config.direction;
-    state.positionStrategy = this._overlay.position().global().centerHorizontally().bottom('0');
+    const state = new OverlayState({
+      direction: config.direction,
+      positionStrategy: this._overlay.position().global().centerHorizontally().bottom('0')
+    });
+
     return this._overlay.create(state);
   }
 

@@ -3,12 +3,14 @@ import {Component, DebugElement, QueryList} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdChipList, MdChipsModule} from './index';
-import {FocusKeyManager} from '../core/a11y/focus-key-manager';
+import {FocusKeyManager} from '@angular/cdk/a11y';
 import {createKeyboardEvent} from '@angular/cdk/testing';
 
 import {MdInputModule} from '../input/index';
 import {LEFT_ARROW, RIGHT_ARROW, BACKSPACE, DELETE, TAB} from '../core/keyboard/keycodes';
 import {Directionality} from '../core';
+import {MdFormFieldModule} from '../form-field/index';
+import {MdChip} from './chip';
 
 describe('MdChipList', () => {
   let fixture: ComponentFixture<any>;
@@ -17,15 +19,14 @@ describe('MdChipList', () => {
   let chipListInstance: MdChipList;
   let testComponent: StandardChipList;
   let chips: QueryList<any>;
-  let manager: FocusKeyManager;
-
+  let manager: FocusKeyManager<MdChip>;
   let dir = 'ltr';
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdChipsModule, MdInputModule, NoopAnimationsModule],
+      imports: [MdChipsModule, MdFormFieldModule, MdInputModule, NoopAnimationsModule],
       declarations: [
-        StandardChipList, InputContainerChipList
+        StandardChipList, FormFieldChipList
       ],
       providers: [{
         provide: Directionality, useFactory: () => {
@@ -229,11 +230,29 @@ describe('MdChipList', () => {
 
           expect(chipListInstance._tabIndex).toBe(0, 'Expected tabIndex to be reset back to 0');
         }));
+
+        it(`should use user defined tabIndex`, fakeAsync(() => {
+          chipListInstance.tabIndex = 4;
+
+          fixture.detectChanges();
+
+          expect(chipListInstance._tabIndex)
+            .toBe(4, 'Expected tabIndex to be set to user defined value 4.');
+
+          chipListInstance._keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
+
+          expect(chipListInstance._tabIndex)
+            .toBe(-1, 'Expected tabIndex to be set to -1 temporarily.');
+
+          tick();
+
+          expect(chipListInstance._tabIndex).toBe(4, 'Expected tabIndex to be reset back to 4');
+        }));
       });
     });
   });
 
-  describe('InputContainerChipList', () => {
+  describe('FormFieldChipList', () => {
 
     beforeEach(() => {
       setupInputList();
@@ -297,7 +316,7 @@ describe('MdChipList', () => {
   }
 
   function setupInputList() {
-    fixture = TestBed.createComponent(InputContainerChipList);
+    fixture = TestBed.createComponent(FormFieldChipList);
     fixture.detectChanges();
 
     chipListDebugElement = fixture.debugElement.query(By.directive(MdChipList));
@@ -311,7 +330,7 @@ describe('MdChipList', () => {
 
 @Component({
   template: `
-    <md-chip-list>
+    <md-chip-list [tabIndex]="tabIndex">
       <div *ngFor="let i of [0,1,2,3,4]">
        <div *ngIf="remove != i">
           <md-chip (select)="chipSelect(i)" (deselect)="chipDeselect(i)">
@@ -327,19 +346,20 @@ class StandardChipList {
   remove: number;
   chipSelect: (index?: number) => void = () => {};
   chipDeselect: (index?: number) => void = () => {};
+  tabIndex: number = 0;
 }
 
 @Component({
   template: `
-    <md-input-container>
+    <md-form-field>
       <md-chip-list #chipList>
         <md-chip>Chip 1</md-chip>
         <md-chip>Chip 1</md-chip>
         <md-chip>Chip 1</md-chip>
       </md-chip-list>
       <input mdInput name="test" [mdChipInputFor]="chipList"/>
-    </md-input-container>
+    </md-form-field>
   `
 })
-class InputContainerChipList {
+class FormFieldChipList {
 }

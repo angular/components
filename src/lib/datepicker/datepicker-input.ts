@@ -31,7 +31,7 @@ import {
   Validators
 } from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
-import {MdInputContainer} from '../input/input-container';
+import {MdFormField} from '../form-field/index';
 import {DOWN_ARROW} from '../core/keyboard/keycodes';
 import {DateAdapter} from '../core/datetime/index';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -171,7 +171,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   private _validatorOnChange = () => {};
 
-  private _datepickerSubscription: Subscription;
+  private _datepickerSubscription = Subscription.EMPTY;
 
   /** The form control validator for whether the input parses. */
   private _parseValidator: ValidatorFn = (): ValidationErrors | null => {
@@ -212,7 +212,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
       private _renderer: Renderer2,
       @Optional() private _dateAdapter: DateAdapter<D>,
       @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats,
-      @Optional() private _mdInputContainer: MdInputContainer) {
+      @Optional() private _mdFormField: MdFormField) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
@@ -235,9 +235,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   }
 
   ngOnDestroy() {
-    if (this._datepickerSubscription) {
-      this._datepickerSubscription.unsubscribe();
-    }
+    this._datepickerSubscription.unsubscribe();
   }
 
   registerOnValidatorChange(fn: () => void): void {
@@ -253,7 +251,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
    * @return The element to connect the popup to.
    */
   getPopupConnectionElementRef(): ElementRef {
-    return this._mdInputContainer ? this._mdInputContainer.underlineRef : this._elementRef;
+    return this._mdFormField ? this._mdFormField.underlineRef : this._elementRef;
   }
 
   // Implemented as part of ControlValueAccessor

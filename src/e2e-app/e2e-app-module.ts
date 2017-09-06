@@ -20,12 +20,27 @@ import {InputE2E} from './input/input-e2e';
 import {SidenavE2E} from './sidenav/sidenav-e2e';
 import {BlockScrollStrategyE2E} from './block-scroll-strategy/block-scroll-strategy-e2e';
 import {
-  OverlayContainer, FullscreenOverlayContainer, MdGridListModule, MdProgressBarModule,
-  MdProgressSpinnerModule, MdTabsModule, MdRadioModule, MdSlideToggleModule, MdMenuModule,
-  MdListModule, MdInputModule, MdIconModule, MdDialogModule, MdCheckboxModule, MdButtonModule,
-  MdSidenavModule, MdNativeDateModule,
+  MdButtonModule,
+  MdCheckboxModule,
+  MdDialogModule,
+  MdFormFieldModule,
+  MdGridListModule,
+  MdIconModule,
+  MdInputModule,
+  MdListModule,
+  MdMenuModule,
+  MdNativeDateModule,
+  MdProgressBarModule,
+  MdProgressSpinnerModule,
+  MdRadioModule,
+  MdSidenavModule,
+  MdSlideToggleModule,
+  MdStepperModule,
+  MdTabsModule,
 } from '@angular/material';
+import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
 import {ExampleModule} from '@angular/material-examples';
+import {ReactiveFormsModule} from '@angular/forms';
 
 /**
  * NgModule that contains all Material modules that are required to serve the e2e-app.
@@ -35,6 +50,7 @@ import {ExampleModule} from '@angular/material-examples';
     MdButtonModule,
     MdCheckboxModule,
     MdDialogModule,
+    MdFormFieldModule,
     MdGridListModule,
     MdIconModule,
     MdInputModule,
@@ -45,6 +61,7 @@ import {ExampleModule} from '@angular/material-examples';
     MdRadioModule,
     MdSidenavModule,
     MdSlideToggleModule,
+    MdStepperModule,
     MdTabsModule,
     MdNativeDateModule,
   ]
@@ -58,6 +75,7 @@ export class E2eMaterialModule {}
     E2eMaterialModule,
     NoopAnimationsModule,
     ExampleModule,
+    ReactiveFormsModule
   ],
   declarations: [
     BasicTabs,

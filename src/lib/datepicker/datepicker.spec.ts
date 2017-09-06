@@ -3,19 +3,17 @@ import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {ESCAPE} from '@angular/cdk/keycodes';
+import {dispatchFakeEvent, dispatchMouseEvent} from '@angular/cdk/testing';
 import {MdDatepickerModule, MdDatepickerIntl} from './index';
 import {MdDatepicker} from './datepicker';
 import {MdDatepickerInput} from './datepicker-input';
 import {MdInputModule} from '../input/index';
 import {MdNativeDateModule} from '../core/datetime/index';
-import {ESCAPE, OverlayContainer} from '../core';
 import {DEC, JAN} from '../core/testing/month-constants';
-import {
-  dispatchFakeEvent,
-  dispatchMouseEvent,
-  createKeyboardEvent,
-  dispatchEvent,
-} from '@angular/cdk/testing';
+import {createKeyboardEvent, dispatchEvent} from '@angular/cdk/testing';
+import {MdFormFieldModule} from '../form-field/index';
 
 describe('MdDatepicker', () => {
   afterEach(inject([OverlayContainer], (container: OverlayContainer) => {
@@ -28,6 +26,7 @@ describe('MdDatepicker', () => {
         imports: [
           FormsModule,
           MdDatepickerModule,
+          MdFormFieldModule,
           MdInputModule,
           MdNativeDateModule,
           NoopAnimationsModule,
@@ -42,7 +41,7 @@ describe('MdDatepicker', () => {
           DatepickerWithStartAt,
           DatepickerWithStartView,
           DatepickerWithToggle,
-          InputContainerDatepicker,
+          FormFieldDatepicker,
           MultiInputDatepicker,
           NoInputDatepicker,
           StandardDatepicker,
@@ -185,6 +184,30 @@ describe('MdDatepicker', () => {
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
+          expect(document.querySelector('md-dialog-container')).toBeNull();
+          expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 2));
+        });
+      });
+
+      it('clicking the currently selected date should close the calendar ' +
+          'without firing selectedChanged', () => {
+        const selectedChangedSpy =
+            spyOn(testComponent.datepicker.selectedChanged, 'emit').and.callThrough();
+        for (let changeCount = 1; changeCount < 3; changeCount++) {
+          const currentDay = changeCount;
+          testComponent.datepicker.open();
+          fixture.detectChanges();
+
+          expect(document.querySelector('md-datepicker-content')).not.toBeNull();
+          expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, currentDay));
+
+          let cells = document.querySelectorAll('.mat-calendar-body-cell');
+          dispatchMouseEvent(cells[1], 'click');
+          fixture.detectChanges();
+        }
+
+        fixture.whenStable().then(() => {
+          expect(selectedChangedSpy.calls.count()).toEqual(1);
           expect(document.querySelector('md-dialog-container')).toBeNull();
           expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 2));
         });
@@ -362,7 +385,7 @@ describe('MdDatepicker', () => {
         expect(testComponent.datepickerInput.value).toBeNull();
 
         let selected = new Date(2017, JAN, 1);
-        testComponent.datepicker._selectAndClose(selected);
+        testComponent.datepicker._select(selected);
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
@@ -389,7 +412,7 @@ describe('MdDatepicker', () => {
 
         expect(inputEl.classList).toContain('ng-pristine');
 
-        testComponent.datepicker._selectAndClose(new Date(2017, JAN, 1));
+        testComponent.datepicker._select(new Date(2017, JAN, 1));
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
@@ -435,7 +458,7 @@ describe('MdDatepicker', () => {
 
         expect(inputEl.classList).toContain('ng-untouched');
 
-        testComponent.datepicker._selectAndClose(new Date(2017, JAN, 1));
+        testComponent.datepicker._select(new Date(2017, JAN, 1));
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
@@ -479,7 +502,7 @@ describe('MdDatepicker', () => {
         expect(testComponent.datepickerInput.value).toBeNull();
 
         let selected = new Date(2017, JAN, 1);
-        testComponent.datepicker._selectAndClose(selected);
+        testComponent.datepicker._select(selected);
         fixture.detectChanges();
 
         expect(testComponent.formControl.value).toEqual(selected);
@@ -542,6 +565,11 @@ describe('MdDatepicker', () => {
         expect(toggle.getAttribute('type')).toBe('button');
       });
 
+      it('should remove the underlying SVG icon from the tab order', () => {
+        const icon = fixture.debugElement.nativeElement.querySelector('svg');
+        expect(icon.getAttribute('focusable')).toBe('false');
+      });
+
       it('should restore focus to the toggle after the calendar is closed', () => {
         let toggle = fixture.debugElement.query(By.css('button')).nativeElement;
 
@@ -571,19 +599,19 @@ describe('MdDatepicker', () => {
           const toggle = fixture.debugElement.query(By.css('button')).nativeElement;
 
           intl.openCalendarLabel = 'Open the calendar, perhaps?';
-          intl.changes.emit();
+          intl.changes.next();
           fixture.detectChanges();
 
           expect(toggle.getAttribute('aria-label')).toBe('Open the calendar, perhaps?');
         }));
     });
 
-    describe('datepicker inside input-container', () => {
-      let fixture: ComponentFixture<InputContainerDatepicker>;
-      let testComponent: InputContainerDatepicker;
+    describe('datepicker inside md-form-field', () => {
+      let fixture: ComponentFixture<FormFieldDatepicker>;
+      let testComponent: FormFieldDatepicker;
 
       beforeEach(async(() => {
-        fixture = TestBed.createComponent(InputContainerDatepicker);
+        fixture = TestBed.createComponent(FormFieldDatepicker);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
@@ -594,10 +622,10 @@ describe('MdDatepicker', () => {
         fixture.detectChanges();
       }));
 
-      it('should attach popup to input-container underline', () => {
+      it('should attach popup to md-form-field underline', () => {
         let attachToRef = testComponent.datepickerInput.getPopupConnectionElementRef();
-        expect(attachToRef.nativeElement.classList.contains('mat-input-underline'))
-            .toBe(true, 'popup should be attached to input-container underline');
+        expect(attachToRef.nativeElement.classList.contains('mat-form-field-underline'))
+            .toBe(true, 'popup should be attached to md-form-field underline');
       });
     });
 
@@ -817,6 +845,7 @@ describe('MdDatepicker', () => {
         imports: [
           FormsModule,
           MdDatepickerModule,
+          MdFormFieldModule,
           MdInputModule,
           NoopAnimationsModule,
           ReactiveFormsModule,
@@ -840,7 +869,13 @@ describe('MdDatepicker', () => {
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
-        imports: [MdDatepickerModule, MdInputModule, MdNativeDateModule, NoopAnimationsModule],
+        imports: [
+          MdDatepickerModule,
+          MdFormFieldModule,
+          MdInputModule,
+          MdNativeDateModule,
+          NoopAnimationsModule
+        ],
         declarations: [StandardDatepicker],
       }).compileComponents();
 
@@ -1005,13 +1040,13 @@ class DatepickerWithToggle {
 
 @Component({
   template: `
-      <md-input-container>
+      <md-form-field>
         <input mdInput [mdDatepicker]="d">
         <md-datepicker #d></md-datepicker>
-      </md-input-container>
+      </md-form-field>
   `,
 })
-class InputContainerDatepicker {
+class FormFieldDatepicker {
   @ViewChild('d') datepicker: MdDatepicker<Date>;
   @ViewChild(MdDatepickerInput) datepickerInput: MdDatepickerInput<Date>;
 }
