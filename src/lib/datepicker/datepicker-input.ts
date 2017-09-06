@@ -286,6 +286,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
     let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
     this._lastValueValid = !date || this._dateAdapter.isValid(date);
     date = this._getValidDateOrNull(date);
+    this._value = date;
     this._cvaOnChange(date);
     this._valueChange.emit(date);
     this.dateInput.emit(new MdDatepickerInputEvent(this, this._elementRef.nativeElement));
