@@ -70,3 +70,19 @@ html, body, material-app, md-sidenav-container, .my-content {
 ### FABs inside sidenav
 For a sidenav with a FAB (Floating Action Button) or other floating element, the recommended approach is to place the FAB
 outside of the scrollable region and absolutely position it.
+
+### Sidenav vs. Drawer
+The difference between sidenav and drawer is that the sidenav takes up fullscreen whereas drawer is a smaller element
+that takes up a subsection of the screen. `md-sidenav` has to be placed inside `md-sidenav-container` and `md-drawer`
+has to be placed inside `md-drawer-container`. More functionalities will be added to sidenav in the future.
+
+
+### Disabling closing of sidenav and drawer
+By default, sidenav and drawer can be closed either by clicking on the backdrop or by pressing <kbd>ESCAPE</kbd>.
+`disableClose` attribute can be set on `md-drawer` or `md-sidenav` to disable closing by two methods. To enable one
+of the two methods to allow closing with `disableClose` attribute set, then custom event handlers can be used as below:
+```html
+<md-drawer-container (backdropClick)="customBackdropClickHandler()">
+  <md-drawer disableClose (keydown)="customKeydownHandler($event)"></md-drawer>
+</md-drawer-container>
+```
