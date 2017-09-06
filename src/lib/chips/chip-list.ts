@@ -33,8 +33,8 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
  * Example:
  *
  *     <md-chip-list>
- *       <md-chip>Chip 1<md-chip>
- *       <md-chip>Chip 2<md-chip>
+ *       <md-chip>Chip 1</md-chip>
+ *       <md-chip>Chip 2</md-chip>
  *     </md-chip-list>
  */
 @Component({
