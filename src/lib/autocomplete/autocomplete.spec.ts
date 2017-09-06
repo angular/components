@@ -1,34 +1,35 @@
-import {TestBed, async, fakeAsync, tick, ComponentFixture} from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {
+  ChangeDetectionStrategy,
   Component,
   OnDestroy,
+  OnInit,
   QueryList,
   ViewChild,
   ViewChildren,
-  ChangeDetectionStrategy,
-  OnInit,
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {map, RxChain, startWith} from '@angular/cdk/rxjs';
+import {createKeyboardEvent, dispatchFakeEvent, typeInElement} from '@angular/cdk/testing';
 import {
+  getMdAutocompleteMissingPanelError,
+  MdAutocomplete,
   MdAutocompleteModule,
   MdAutocompleteTrigger,
-  MdAutocomplete,
-  getMdAutocompleteMissingPanelError,
+  MdAutocompleteSelectedEvent,
 } from './index';
-import {OverlayContainer} from '../core/overlay/overlay-container';
 import {MdInputModule} from '../input/index';
-import {Directionality, Direction} from '../core/bidi/index';
 import {Subscription} from 'rxjs/Subscription';
-import {ENTER, DOWN_ARROW, SPACE, UP_ARROW, ESCAPE} from '../core/keyboard/keycodes';
+import {DOWN_ARROW, ENTER, ESCAPE, SPACE, UP_ARROW} from '../core/keyboard/keycodes';
 import {MdOption} from '../core/option/option';
-import {MdInputContainer} from '../input/input-container';
+import {MdFormField, MdFormFieldModule} from '../form-field/index';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {createKeyboardEvent, dispatchFakeEvent, typeInElement} from '@angular/cdk/testing';
-import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
-import {RxChain, map, startWith} from '../core/rxjs/index';
 
 
 describe('MdAutocomplete', () => {
@@ -41,6 +42,7 @@ describe('MdAutocomplete', () => {
     TestBed.configureTestingModule({
       imports: [
         MdAutocompleteModule,
+        MdFormFieldModule,
         MdInputModule,
         FormsModule,
         ReactiveFormsModule,
@@ -55,7 +57,9 @@ describe('MdAutocomplete', () => {
         AutocompleteWithOnPushDelay,
         AutocompleteWithNativeInput,
         AutocompleteWithoutPanel,
-        AutocompleteWithFormsAndNonfloatingPlaceholder
+        AutocompleteWithFormsAndNonfloatingPlaceholder,
+        AutocompleteWithGroups,
+        AutocompleteWithSelectEvent,
       ],
       providers: [
         {provide: OverlayContainer, useFactory: () => {
@@ -275,7 +279,7 @@ describe('MdAutocomplete', () => {
 
     it('should keep the label floating until the panel closes', async(() => {
       fixture.componentInstance.trigger.openPanel();
-      expect(fixture.componentInstance.inputContainer.floatPlaceholder)
+      expect(fixture.componentInstance.formField.floatPlaceholder)
           .toEqual('always', 'Expected placeholder to float as soon as panel opens.');
 
       fixture.whenStable().then(() => {
@@ -286,7 +290,7 @@ describe('MdAutocomplete', () => {
         options[1].click();
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.inputContainer.floatPlaceholder)
+        expect(fixture.componentInstance.formField.floatPlaceholder)
             .toEqual('auto', 'Expected placeholder to return to auto state after panel closes.');
       });
     }));
@@ -308,7 +312,7 @@ describe('MdAutocomplete', () => {
       fixture.detectChanges();
 
       fixture.componentInstance.trigger.openPanel();
-      expect(fixture.componentInstance.inputContainer.floatPlaceholder)
+      expect(fixture.componentInstance.formField.floatPlaceholder)
           .toEqual('never', 'Expected placeholder to stay static.');
 
       fixture.whenStable().then(() => {
@@ -319,7 +323,7 @@ describe('MdAutocomplete', () => {
         options[1].click();
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.inputContainer.floatPlaceholder)
+        expect(fixture.componentInstance.formField.floatPlaceholder)
             .toEqual('never', 'Expected placeholder to stay in static state after close.');
       });
     }));
@@ -329,7 +333,7 @@ describe('MdAutocomplete', () => {
       fixture.detectChanges();
 
       fixture.componentInstance.trigger.openPanel();
-      expect(fixture.componentInstance.inputContainer.floatPlaceholder)
+      expect(fixture.componentInstance.formField.floatPlaceholder)
           .toEqual('always', 'Expected placeholder to stay elevated on open.');
 
       fixture.whenStable().then(() => {
@@ -340,7 +344,7 @@ describe('MdAutocomplete', () => {
         options[1].click();
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.inputContainer.floatPlaceholder)
+        expect(fixture.componentInstance.formField.floatPlaceholder)
             .toEqual('always', 'Expected placeholder to stay elevated after close.');
       });
     }));
@@ -375,6 +379,16 @@ describe('MdAutocomplete', () => {
       expect(overlayContainerElement.querySelector('.mat-autocomplete-panel')!.classList)
           .toContain('mat-autocomplete-visible', 'Expected panel to be visible.');
     }));
+
+    it('should animate the placeholder when the input is focused', () => {
+      const inputContainer = fixture.componentInstance.formField;
+
+      spyOn(inputContainer, '_animateAndLockPlaceholder');
+      expect(inputContainer._animateAndLockPlaceholder).not.toHaveBeenCalled();
+
+      dispatchFakeEvent(fixture.debugElement.query(By.css('input')).nativeElement, 'focusin');
+      expect(inputContainer._animateAndLockPlaceholder).toHaveBeenCalled();
+    });
 
   });
 
@@ -517,7 +531,7 @@ describe('MdAutocomplete', () => {
 
     it('should disable input in view when disabled programmatically', () => {
       const inputUnderline =
-          fixture.debugElement.query(By.css('.mat-input-underline')).nativeElement;
+          fixture.debugElement.query(By.css('.mat-form-field-underline')).nativeElement;
 
       expect(input.disabled)
           .toBe(false, `Expected input to start out enabled in view.`);
@@ -640,6 +654,13 @@ describe('MdAutocomplete', () => {
       tick();
       fixture.detectChanges();
 
+      expect(fixture.componentInstance.trigger.panelOpen)
+          .toBe(true, 'Expected first down press to open the pane.');
+
+      fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+      tick();
+      fixture.detectChanges();
+
       expect(fixture.componentInstance.trigger.activeOption)
           .toBe(fixture.componentInstance.options.first, 'Expected first option to be active.');
       expect(optionEls[0].classList).toContain('mat-active');
@@ -660,6 +681,13 @@ describe('MdAutocomplete', () => {
       tick();
       const optionEls =
           overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
+
+      fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
+      tick();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.trigger.panelOpen)
+          .toBe(true, 'Expected first up press to open the pane.');
 
       fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
       tick();
@@ -686,6 +714,8 @@ describe('MdAutocomplete', () => {
       fixture.detectChanges();
 
       typeInElement('o', input);
+      fixture.detectChanges();
+
       fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
       tick();
       fixture.detectChanges();
@@ -812,7 +842,7 @@ describe('MdAutocomplete', () => {
       expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
 
       // These down arrows will set the 6th option active, below the fold.
-      [1, 2, 3, 4, 5].forEach(() => {
+      [1, 2, 3, 4, 5, 6].forEach(() => {
         fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
         tick();
       });
@@ -848,7 +878,7 @@ describe('MdAutocomplete', () => {
       expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
 
       // These down arrows will set the 6th option active, below the fold.
-      [1, 2, 3, 4, 5].forEach(() => {
+      [1, 2, 3, 4, 5, 6].forEach(() => {
         fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
         tick();
       });
@@ -879,12 +909,12 @@ describe('MdAutocomplete', () => {
       expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
 
       // These down arrows will set the 7th option active, below the fold.
-      [1, 2, 3, 4, 5, 6].forEach(() => {
+      [1, 2, 3, 4, 5, 6, 7].forEach(() => {
         fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
         tick();
       });
 
-      // These up arrows will set the 2nd option active
+      // These up arrows will set the 2nd option as active
       [5, 4, 3, 2, 1].forEach(() => {
         fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
         tick();
@@ -914,6 +944,133 @@ describe('MdAutocomplete', () => {
       });
     }));
 
+    it('should reset the active option when closing with the escape key', fakeAsync(() => {
+      const trigger = fixture.componentInstance.trigger;
+
+      trigger.openPanel();
+      fixture.detectChanges();
+      tick();
+
+      expect(trigger.panelOpen).toBe(true, 'Expected panel to be open.');
+      expect(!!trigger.activeOption).toBe(false, 'Expected no active option.');
+
+      // Press the down arrow a few times.
+      [1, 2, 3].forEach(() => {
+        trigger._handleKeydown(DOWN_ARROW_EVENT);
+        tick();
+        fixture.detectChanges();
+      });
+
+      // Note that this casts to a boolean, in order to prevent Jasmine
+      // from crashing when trying to stringify the option if the test fails.
+      expect(!!trigger.activeOption).toBe(true, 'Expected to find an active option.');
+
+      trigger._handleKeydown(createKeyboardEvent('keydown', ESCAPE));
+      tick();
+
+      expect(!!trigger.activeOption).toBe(false, 'Expected no active options.');
+    }));
+
+    it('should reset the active option when closing by selecting with enter', fakeAsync(() => {
+      const trigger = fixture.componentInstance.trigger;
+
+      trigger.openPanel();
+      fixture.detectChanges();
+      tick();
+
+      expect(trigger.panelOpen).toBe(true, 'Expected panel to be open.');
+      expect(!!trigger.activeOption).toBe(false, 'Expected no active option.');
+
+      // Press the down arrow a few times.
+      [1, 2, 3].forEach(() => {
+        trigger._handleKeydown(DOWN_ARROW_EVENT);
+        tick();
+        fixture.detectChanges();
+      });
+
+      // Note that this casts to a boolean, in order to prevent Jasmine
+      // from crashing when trying to stringify the option if the test fails.
+      expect(!!trigger.activeOption).toBe(true, 'Expected to find an active option.');
+
+      trigger._handleKeydown(ENTER_EVENT);
+      tick();
+
+      expect(!!trigger.activeOption).toBe(false, 'Expected no active options.');
+    }));
+
+  });
+
+  describe('option groups', () => {
+    let fixture: ComponentFixture<AutocompleteWithGroups>;
+    let DOWN_ARROW_EVENT: KeyboardEvent;
+    let UP_ARROW_EVENT: KeyboardEvent;
+    let container: HTMLElement;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(AutocompleteWithGroups);
+      fixture.detectChanges();
+
+      DOWN_ARROW_EVENT = createKeyboardEvent('keydown', DOWN_ARROW);
+      UP_ARROW_EVENT = createKeyboardEvent('keydown', UP_ARROW);
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+      container = document.querySelector('.mat-autocomplete-panel') as HTMLElement;
+    }));
+
+    it('should scroll to active options below the fold', fakeAsync(() => {
+      fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+      tick();
+      fixture.detectChanges();
+      expect(container.scrollTop).toBe(0, 'Expected the panel not to scroll.');
+
+      // Press the down arrow five times.
+      [1, 2, 3, 4, 5].forEach(() => {
+        fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+        tick();
+      });
+
+      // <option bottom> - <panel height> + <2x group labels> = 128
+      // 288 - 256 + 96 = 128
+      expect(container.scrollTop)
+          .toBe(128, 'Expected panel to reveal the sixth option.');
+    }));
+
+    it('should scroll to active options on UP arrow', fakeAsync(() => {
+      fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
+      tick();
+      fixture.detectChanges();
+
+      // <option bottom> - <panel height> + <3x group label> = 464
+      // 576 - 256 + 144 = 464
+      expect(container.scrollTop).toBe(464, 'Expected panel to reveal last option.');
+    }));
+
+    it('should scroll to active options that are above the panel', fakeAsync(() => {
+      fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+      tick();
+      fixture.detectChanges();
+      expect(container.scrollTop).toBe(0, 'Expected panel not to scroll.');
+
+      // These down arrows will set the 7th option active, below the fold.
+      [1, 2, 3, 4, 5, 6].forEach(() => {
+        fixture.componentInstance.trigger._handleKeydown(DOWN_ARROW_EVENT);
+        tick();
+      });
+
+      // These up arrows will set the 2nd option active
+      [5, 4, 3, 2, 1].forEach(() => {
+        fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
+        tick();
+      });
+
+      // Expect to show the top of the 2nd option at the top of the panel.
+      // It is offset by 48, because there's a group label above it.
+      expect(container.scrollTop)
+          .toBe(96, 'Expected panel to scroll up when option is above panel.');
+    }));
   });
 
   describe('aria', () => {
@@ -1055,27 +1212,26 @@ describe('MdAutocomplete', () => {
   describe('Fallback positions', () => {
     let fixture: ComponentFixture<SimpleAutocomplete>;
     let input: HTMLInputElement;
+    let inputReference: HTMLInputElement;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleAutocomplete);
       fixture.detectChanges();
 
       input = fixture.debugElement.query(By.css('input')).nativeElement;
+      inputReference = fixture.debugElement.query(By.css('.mat-input-flex')).nativeElement;
     });
 
     it('should use below positioning by default', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
-      const inputBottom = input.getBoundingClientRect().bottom;
+      const inputBottom = inputReference.getBoundingClientRect().bottom;
       const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel')!;
       const panelTop = panel.getBoundingClientRect().top;
 
-      // Panel is offset by 6px in styles so that the underline has room to display.
-      expect(Math.floor(inputBottom + 6))
+      expect(Math.floor(inputBottom))
           .toEqual(Math.floor(panelTop), `Expected panel top to match input bottom by default.`);
-      expect(fixture.componentInstance.trigger.autocomplete.positionY)
-          .toEqual('below', `Expected autocomplete positionY to default to below.`);
     });
 
     it('should reposition the panel on scroll', () => {
@@ -1091,11 +1247,11 @@ describe('MdAutocomplete', () => {
       scrolledSubject.next();
       fixture.detectChanges();
 
-      const inputBottom = input.getBoundingClientRect().bottom;
+      const inputBottom = inputReference.getBoundingClientRect().bottom;
       const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel')!;
       const panelTop = panel.getBoundingClientRect().top;
 
-      expect(Math.floor(inputBottom + 6)).toEqual(Math.floor(panelTop),
+      expect(Math.floor(inputBottom)).toEqual(Math.floor(panelTop),
           'Expected panel top to match input bottom after scrolling.');
 
       document.body.removeChild(spacer);
@@ -1103,27 +1259,24 @@ describe('MdAutocomplete', () => {
 
     it('should fall back to above position if panel cannot fit below', () => {
       // Push the autocomplete trigger down so it won't have room to open "below"
-      input.style.top = '600px';
-      input.style.position = 'relative';
+      inputReference.style.top = '600px';
+      inputReference.style.position = 'relative';
 
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
-      const inputTop = input.getBoundingClientRect().top;
+      const inputTop = inputReference.getBoundingClientRect().top;
       const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel')!;
       const panelBottom = panel.getBoundingClientRect().bottom;
 
-      // Panel is offset by 24px in styles so that the label has room to display.
-      expect(Math.floor(inputTop - 24))
+      expect(Math.floor(inputTop))
           .toEqual(Math.floor(panelBottom), `Expected panel to fall back to above position.`);
-      expect(fixture.componentInstance.trigger.autocomplete.positionY)
-          .toEqual('above', `Expected autocomplete positionY to be "above" if panel won't fit.`);
     });
 
     it('should align panel properly when filtering in "above" position', async(() => {
       // Push the autocomplete trigger down so it won't have room to open "below"
-      input.style.top = '600px';
-      input.style.position = 'relative';
+      inputReference.style.top = '600px';
+      inputReference.style.position = 'relative';
 
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
@@ -1132,15 +1285,12 @@ describe('MdAutocomplete', () => {
         typeInElement('f', input);
         fixture.detectChanges();
 
-        const inputTop = input.getBoundingClientRect().top;
+        const inputTop = inputReference.getBoundingClientRect().top;
         const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel')!;
         const panelBottom = panel.getBoundingClientRect().bottom;
 
-        // Panel is offset by 24px in styles so that the label has room to display.
-        expect(Math.floor(inputTop - 24))
+        expect(Math.floor(inputTop))
             .toEqual(Math.floor(panelBottom), `Expected panel to stay aligned after filtering.`);
-        expect(fixture.componentInstance.trigger.autocomplete.positionY)
-            .toEqual('above', `Expected autocomplete positionY to be "above" if panel won't fit.`);
       });
     }));
 
@@ -1326,10 +1476,10 @@ describe('MdAutocomplete', () => {
         fixture.detectChanges();
 
         const input = fixture.nativeElement.querySelector('input');
-        const placeholder = fixture.nativeElement.querySelector('.mat-input-placeholder');
+        const placeholder = fixture.nativeElement.querySelector('.mat-form-field-placeholder');
 
         expect(input.value).toBe('California');
-        expect(placeholder.classList).not.toContain('mat-empty');
+        expect(placeholder.classList).not.toContain('mat-form-field-empty');
       }));
 
   });
@@ -1400,13 +1550,62 @@ describe('MdAutocomplete', () => {
         expect(panel.classList).toContain(visibleClass, `Expected panel to be visible.`);
       });
     }));
+
+  it('should emit an event when an option is selected', fakeAsync(() => {
+    let fixture = TestBed.createComponent(AutocompleteWithSelectEvent);
+
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openPanel();
+    tick();
+    fixture.detectChanges();
+
+    let options = overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
+    let spy = fixture.componentInstance.optionSelected;
+
+    options[1].click();
+    tick();
+    fixture.detectChanges();
+
+    expect(spy).toHaveBeenCalledTimes(1);
+
+    let event = spy.calls.mostRecent().args[0] as MdAutocompleteSelectedEvent;
+
+    expect(event.source).toBe(fixture.componentInstance.autocomplete);
+    expect(event.option.value).toBe('Washington');
+  }));
+
+  it('should emit an event when a newly-added option is selected', fakeAsync(() => {
+    let fixture = TestBed.createComponent(AutocompleteWithSelectEvent);
+
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openPanel();
+    tick();
+    fixture.detectChanges();
+
+    fixture.componentInstance.states.push('Puerto Rico');
+    fixture.detectChanges();
+
+    let options = overlayContainerElement.querySelectorAll('md-option') as NodeListOf<HTMLElement>;
+    let spy = fixture.componentInstance.optionSelected;
+
+    options[3].click();
+    tick();
+    fixture.detectChanges();
+
+    expect(spy).toHaveBeenCalledTimes(1);
+
+    let event = spy.calls.mostRecent().args[0] as MdAutocompleteSelectedEvent;
+
+    expect(event.source).toBe(fixture.componentInstance.autocomplete);
+    expect(event.option.value).toBe('Puerto Rico');
+  }));
 });
 
 @Component({
   template: `
-    <md-input-container [floatPlaceholder]="placeholder" [style.width.px]="width">
+    <md-form-field [floatPlaceholder]="placeholder" [style.width.px]="width">
       <input mdInput placeholder="State" [mdAutocomplete]="auto" [formControl]="stateCtrl">
-    </md-input-container>
+    </md-form-field>
 
     <md-autocomplete #auto="mdAutocomplete" [displayWith]="displayFn">
       <md-option *ngFor="let state of filteredStates" [value]="state">
@@ -1424,7 +1623,7 @@ class SimpleAutocomplete implements OnDestroy {
 
   @ViewChild(MdAutocompleteTrigger) trigger: MdAutocompleteTrigger;
   @ViewChild(MdAutocomplete) panel: MdAutocomplete;
-  @ViewChild(MdInputContainer) inputContainer: MdInputContainer;
+  @ViewChild(MdFormField) formField: MdFormField;
   @ViewChildren(MdOption) options: QueryList<MdOption>;
 
   states = [
@@ -1462,9 +1661,9 @@ class SimpleAutocomplete implements OnDestroy {
 
 @Component({
   template: `
-    <md-input-container *ngIf="isVisible">
+    <md-form-field *ngIf="isVisible">
       <input mdInput placeholder="Choose" [mdAutocomplete]="auto" [formControl]="optionCtrl">
-    </md-input-container>
+    </md-form-field>
 
     <md-autocomplete #auto="mdAutocomplete">
       <md-option *ngFor="let option of filteredOptions | async" [value]="option">
@@ -1496,10 +1695,10 @@ class NgIfAutocomplete {
 
 @Component({
   template: `
-    <md-input-container>
+    <md-form-field>
       <input mdInput placeholder="State" [mdAutocomplete]="auto"
       (input)="onInput($event.target?.value)">
-    </md-input-container>
+    </md-form-field>
 
     <md-autocomplete #auto="mdAutocomplete">
       <md-option *ngFor="let state of filteredStates" [value]="state">
@@ -1524,10 +1723,10 @@ class AutocompleteWithoutForms {
 
 @Component({
   template: `
-    <md-input-container>
+    <md-form-field>
       <input mdInput placeholder="State" [mdAutocomplete]="auto" [(ngModel)]="selectedState"
       (ngModelChange)="onInput($event)">
-    </md-input-container>
+    </md-form-field>
 
     <md-autocomplete #auto="mdAutocomplete">
       <md-option *ngFor="let state of filteredStates" [value]="state">
@@ -1552,9 +1751,9 @@ class AutocompleteWithNgModel {
 
 @Component({
   template: `
-    <md-input-container>
+    <md-form-field>
       <input mdInput placeholder="Number" [mdAutocomplete]="auto" [(ngModel)]="selectedNumber">
-    </md-input-container>
+    </md-form-field>
 
     <md-autocomplete #auto="mdAutocomplete">
       <md-option *ngFor="let number of numbers" [value]="number">
@@ -1571,9 +1770,9 @@ class AutocompleteWithNumbers {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <md-input-container>
+    <md-form-field>
       <input type="text" mdInput [mdAutocomplete]="auto">
-    </md-input-container>
+    </md-form-field>
 
     <md-autocomplete #auto="mdAutocomplete">
       <md-option *ngFor="let option of options" [value]="option">{{ option }}</md-option>
@@ -1631,9 +1830,9 @@ class AutocompleteWithoutPanel {
 
 @Component({
   template: `
-    <md-input-container floatPlaceholder="never">
+    <md-form-field floatPlaceholder="never">
       <input placeholder="State" mdInput [mdAutocomplete]="auto" [formControl]="formControl">
-    </md-input-container>
+    </md-form-field>
 
     <md-autocomplete #auto="mdAutocomplete">
       <md-option value="California">California</md-option>
@@ -1642,4 +1841,61 @@ class AutocompleteWithoutPanel {
 })
 class AutocompleteWithFormsAndNonfloatingPlaceholder {
   formControl = new FormControl('California');
+}
+
+
+@Component({
+  template: `
+    <md-input-container>
+      <input mdInput placeholder="State" [mdAutocomplete]="auto" [(ngModel)]="selectedState">
+    </md-input-container>
+
+    <md-autocomplete #auto="mdAutocomplete">
+      <md-optgroup *ngFor="let group of stateGroups" [label]="group.label">
+        <md-option *ngFor="let state of group.states" [value]="state">
+          <span>{{ state }}</span>
+        </md-option>
+      </md-optgroup>
+    </md-autocomplete>
+  `
+})
+class AutocompleteWithGroups {
+  @ViewChild(MdAutocompleteTrigger) trigger: MdAutocompleteTrigger;
+  selectedState: string;
+  stateGroups = [
+    {
+      title: 'One',
+      states: ['Alabama', 'California', 'Florida', 'Oregon']
+    },
+    {
+      title: 'Two',
+      states: ['Kansas', 'Massachusetts', 'New York', 'Pennsylvania']
+    },
+    {
+      title: 'Three',
+      states: ['Tennessee', 'Virginia', 'Wyoming', 'Alaska']
+    }
+  ];
+}
+
+@Component({
+  template: `
+    <md-input-container>
+      <input mdInput placeholder="State" [mdAutocomplete]="auto" [(ngModel)]="selectedState">
+    </md-input-container>
+
+    <md-autocomplete #auto="mdAutocomplete" (optionSelected)="optionSelected($event)">
+      <md-option *ngFor="let state of states" [value]="state">
+        <span>{{ state }}</span>
+      </md-option>
+    </md-autocomplete>
+  `
+})
+class AutocompleteWithSelectEvent {
+  selectedState: string;
+  states = ['New York', 'Washington', 'Oregon'];
+  optionSelected = jasmine.createSpy('optionSelected callback');
+
+  @ViewChild(MdAutocompleteTrigger) trigger: MdAutocompleteTrigger;
+  @ViewChild(MdAutocomplete) autocomplete: MdAutocomplete;
 }

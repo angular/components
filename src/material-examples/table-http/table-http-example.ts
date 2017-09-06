@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Http} from '@angular/http';
-import {DataSource} from '@angular/cdk/table';
+import {DataSource} from '@angular/cdk/collections';
 import {MdPaginator, MdSort} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
@@ -10,6 +10,9 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/switchMap';
 
+/**
+ * @title Table retrieving data through HTTP
+ */
 @Component({
   selector: 'table-http-example',
   styleUrls: ['table-http-example.css'],

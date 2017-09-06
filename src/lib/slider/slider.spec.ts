@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Component, DebugElement} from '@angular/core';
+import {Component, DebugElement, ViewChild} from '@angular/core';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MdSlider, MdSliderModule} from './index';
 import {TestGestureConfig} from './test-gesture-config';
@@ -16,7 +16,7 @@ import {
   UP_ARROW,
   BACKSPACE
 } from '../core/keyboard/keycodes';
-import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
+import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
 
 describe('MdSlider without forms', () => {
   let gestureConfig: TestGestureConfig;
@@ -139,6 +139,28 @@ describe('MdSlider without forms', () => {
       fixture.detectChanges();
 
       expect(sliderNativeElement.classList).not.toContain('mat-slider-sliding');
+    });
+
+    it('should reset active state upon blur', () => {
+      sliderInstance._isActive = true;
+
+      dispatchFakeEvent(sliderNativeElement, 'blur');
+      fixture.detectChanges();
+
+      expect(sliderInstance._isActive).toBe(false);
+    });
+
+    it('should reset thumb gap when blurred on min value', () => {
+      sliderInstance._isActive = true;
+      sliderInstance.value = 0;
+      fixture.detectChanges();
+
+      expect(sliderInstance._thumbGap).toBe(10);
+
+      dispatchFakeEvent(sliderNativeElement, 'blur');
+      fixture.detectChanges();
+
+      expect(sliderInstance._thumbGap).toBe(7);
     });
 
     it('should have thumb gap when at min value', () => {
@@ -658,6 +680,7 @@ describe('MdSlider without forms', () => {
 
       testComponent = fixture.debugElement.componentInstance;
       spyOn(testComponent, 'onChange');
+      spyOn(testComponent, 'onInput');
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MdSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
@@ -690,6 +713,30 @@ describe('MdSlider without forms', () => {
       fixture.detectChanges();
 
       expect(testComponent.onChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('should dispatch events when changing back to previously emitted value after ' +
+        'programmatically setting value', () => {
+      expect(testComponent.onChange).not.toHaveBeenCalled();
+      expect(testComponent.onInput).not.toHaveBeenCalled();
+
+      dispatchClickEventSequence(sliderNativeElement, 0.2);
+      fixture.detectChanges();
+
+      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
+      expect(testComponent.onInput).toHaveBeenCalledTimes(1);
+
+      testComponent.slider.value = 0;
+      fixture.detectChanges();
+
+      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
+      expect(testComponent.onInput).toHaveBeenCalledTimes(1);
+
+      dispatchClickEventSequence(sliderNativeElement, 0.2);
+      fixture.detectChanges();
+
+      expect(testComponent.onChange).toHaveBeenCalledTimes(2);
+      expect(testComponent.onInput).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -931,6 +978,24 @@ describe('MdSlider without forms', () => {
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(30);
+    });
+
+    it('should re-render slider with updated style upon directionality change', () => {
+      testComponent.dir = 'rtl';
+      fixture.detectChanges();
+
+      let initialTrackFillStyles = sliderInstance._trackFillStyles;
+      let initialTicksContainerStyles = sliderInstance._ticksContainerStyles;
+      let initialTicksStyles = sliderInstance._ticksStyles;
+      let initialThumbContainerStyles = sliderInstance._thumbContainerStyles;
+
+      testComponent.dir = 'ltr';
+      fixture.detectChanges();
+
+      expect(initialTrackFillStyles).not.toEqual(sliderInstance._trackFillStyles);
+      expect(initialTicksContainerStyles).not.toEqual(sliderInstance._ticksContainerStyles);
+      expect(initialTicksStyles).not.toEqual(sliderInstance._ticksStyles);
+      expect(initialThumbContainerStyles).not.toEqual(sliderInstance._thumbContainerStyles);
     });
 
     it('should increment inverted slider by 1 on right arrow pressed', () => {
@@ -1351,6 +1416,8 @@ class SliderWithValueGreaterThanMax { }
 class SliderWithChangeHandler {
   onChange() { }
   onInput() { }
+
+  @ViewChild(MdSlider) slider: MdSlider;
 }
 
 @Component({

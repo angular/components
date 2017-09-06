@@ -38,6 +38,8 @@ import {DialogContentExampleDialog,DialogContentExample} from './dialog-content/
 import {DialogDataExampleDialog,DialogDataExample} from './dialog-data/dialog-data-example';
 import {DialogElementsExampleDialog,DialogElementsExample} from './dialog-elements/dialog-elements-example';
 import {DialogOverviewExampleDialog,DialogOverviewExample} from './dialog-overview/dialog-overview-example';
+import {ExpansionOverviewExample} from './expansion-overview/expansion-overview-example';
+import {ExpansionStepsExample} from './expansion-steps/expansion-steps-example';
 import {GridListDynamicExample} from './grid-list-dynamic/grid-list-dynamic-example';
 import {GridListOverviewExample} from './grid-list-overview/grid-list-overview-example';
 import {IconOverviewExample} from './icon-overview/icon-overview-example';
@@ -73,8 +75,8 @@ import {PizzaPartyComponent,SnackBarComponentExample} from './snack-bar-componen
 import {SnackBarOverviewExample} from './snack-bar-overview/snack-bar-overview-example';
 import {SortOverviewExample} from './sort-overview/sort-overview-example';
 import {TableBasicExample} from './table-basic/table-basic-example';
-import {TableHttpExample} from './table-http/table-http-example';
 import {TableFilteringExample} from './table-filtering/table-filtering-example';
+import {TableHttpExample} from './table-http/table-http-example';
 import {TableOverviewExample} from './table-overview/table-overview-example';
 import {TablePaginationExample} from './table-pagination/table-pagination-example';
 import {TableSortingExample} from './table-sorting/table-sorting-example';
@@ -235,6 +237,18 @@ export const EXAMPLE_COMPONENTS = {
     component: DialogOverviewExample,
     additionalFiles: ["dialog-overview-example-dialog.html"],
     selectorName: 'DialogOverviewExample, DialogOverviewExampleDialog'
+  },
+  'expansion-overview': {
+    title: 'Basic expansion panel',
+    component: ExpansionOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'expansion-steps': {
+    title: 'Expansion panel as accordion',
+    component: ExpansionStepsExample,
+    additionalFiles: null,
+    selectorName: null
   },
   'grid-list-dynamic': {
     title: 'Dynamic grid-list',
@@ -446,15 +460,15 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
-  'table-http': {
-    title: 'Table retrieving data through HTTP',
-    component: TableHttpExample,
-    additionalFiles: null,
-    selectorName: null
-  },
   'table-filtering': {
     title: 'Table with filtering',
     component: TableFilteringExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'table-http': {
+    title: 'Table retrieving data through HTTP',
+    component: TableHttpExample,
     additionalFiles: null,
     selectorName: null
   },
@@ -540,6 +554,8 @@ export const EXAMPLE_LIST = [
   DialogDataExampleDialog,DialogDataExample,
   DialogElementsExampleDialog,DialogElementsExample,
   DialogOverviewExampleDialog,DialogOverviewExample,
+  ExpansionOverviewExample,
+  ExpansionStepsExample,
   GridListDynamicExample,
   GridListOverviewExample,
   IconOverviewExample,

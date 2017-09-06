@@ -18,10 +18,10 @@ import {
   InjectionToken,
   Optional,
 } from '@angular/core';
+import {ViewportRuler} from '@angular/cdk/scrolling';
+import {Platform} from '@angular/cdk/platform';
 import {RippleConfig, RippleRenderer} from './ripple-renderer';
 import {RippleRef} from './ripple-ref';
-import {ViewportRuler} from '../overlay/position/viewport-ruler';
-import {Platform} from '../platform/platform';
 
 export interface RippleGlobalOptions {
   disabled?: boolean;
@@ -82,6 +82,41 @@ export class MdRipple implements OnChanges, OnDestroy {
   /** Whether foreground ripples should be visible outside the component's bounds. */
   @Input('mdRippleUnbounded') unbounded: boolean;
 
+  // Properties with `mat-` prefix for noconflict mode.
+  @Input('matRippleTrigger')
+  get _matRippleTrigger() { return this.trigger; }
+  set _matRippleTrigger(v) { this.trigger = v; }
+
+  // Properties with `mat-` prefix for noconflict mode.
+  @Input('matRippleCentered')
+  get _matRippleCentered() { return this.centered; }
+  set _matRippleCentered(v) { this.centered = v; }
+
+  // Properties with `mat-` prefix for noconflict mode.
+  @Input('matRippleDisabled')
+  get _matRippleDisabled() { return this.disabled; }
+  set _matRippleDisabled(v) { this.disabled = v; }
+
+  // Properties with `mat-` prefix for noconflict mode.
+  @Input('matRippleRadius')
+  get _matRippleRadius() { return this.radius; }
+  set _matRippleRadius(v) { this.radius = v; }
+
+  // Properties with `mat-` prefix for noconflict mode.
+  @Input('matRippleSpeedFactor')
+  get _matRippleSpeedFactor() { return this.speedFactor; }
+  set _matRippleSpeedFactor(v) { this.speedFactor = v; }
+
+  // Properties with `mat-` prefix for noconflict mode.
+  @Input('matRippleColor')
+  get _matRippleColor() { return this.color; }
+  set _matRippleColor(v) { this.color = v; }
+
+  // Properties with `mat-` prefix for noconflict mode.
+  @Input('matRippleUnbounded')
+  get _matRippleUnbounded() { return this.unbounded; }
+  set _matRippleUnbounded(v) { this.unbounded = v; }
+
   /** Renderer for the ripple DOM manipulations. */
   private _rippleRenderer: RippleRenderer;
 
@@ -135,7 +170,7 @@ export class MdRipple implements OnChanges, OnDestroy {
   }
 
   /** Updates the ripple renderer with the latest ripple configuration. */
-  private _updateRippleRenderer() {
+  _updateRippleRenderer() {
     this._rippleRenderer.rippleDisabled = this._globalOptions.disabled || this.disabled;
     this._rippleRenderer.rippleConfig = this.rippleConfig;
   }

@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
-import {DemoApp, DemoAppOnPush, Home} from './demo-app';
+import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
 import {ProgressBarDemo} from '../progress-bar/progress-bar-demo';
 import {ContentElementDialog, DialogDemo, IFrameDialog, JazzDialog} from '../dialog/dialog-demo';
@@ -40,6 +40,7 @@ import {PeopleDatabase} from '../table/people-database';
 import {DatepickerDemo} from '../datepicker/datepicker-demo';
 import {TypographyDemo} from '../typography/typography-demo';
 import {ExpansionDemo} from '../expansion/expansion-demo';
+import {StepperDemo} from '../stepper/stepper-demo';
 import {DemoMaterialModule} from '../demo-material-module';
 import {
   FullscreenOverlayContainer,
@@ -65,7 +66,6 @@ import {TableHeaderDemo} from '../table/table-header-demo';
     CheckboxDemo,
     DatepickerDemo,
     DemoApp,
-    DemoAppOnPush,
     DialogDemo,
     GesturesDemo,
     GridListDemo,
@@ -93,6 +93,7 @@ import {TableHeaderDemo} from '../table/table-header-demo';
     SliderDemo,
     SlideToggleDemo,
     SpagettiPanel,
+    StepperDemo,
     StyleDemo,
     TableHeaderDemo,
     ToolbarDemo,

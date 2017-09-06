@@ -16,7 +16,7 @@ describe('MdSlideToggle without forms', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdSlideToggleModule],
-      declarations: [SlideToggleBasic],
+      declarations: [SlideToggleBasic, SlideToggleWithTabindexAttr],
       providers: [
         {provide: HAMMER_GESTURE_CONFIG, useFactory: () => gestureConfig = new TestGestureConfig()}
       ]
@@ -332,6 +332,18 @@ describe('MdSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(fixture.componentInstance.lastEvent).toBeFalsy();
+    }));
+
+    it('should be able to set the tabindex via the native attribute', async(() => {
+      const fixture = TestBed.createComponent(SlideToggleWithTabindexAttr);
+
+      fixture.detectChanges();
+
+      const slideToggle = fixture.debugElement
+        .query(By.directive(MdSlideToggle)).componentInstance as MdSlideToggle;
+
+      expect(slideToggle.tabIndex)
+        .toBe(5, 'Expected tabIndex property to have been set based on the native attribute');
     }));
   });
 
@@ -699,7 +711,7 @@ describe('MdSlideToggle with forms', () => {
     }));
 
     it('should prevent the form from submit when being required', () => {
-      if ('reportValidity' in inputElement === false) {
+      if (typeof (inputElement as any).reportValidity === 'undefined') {
         // If the browser does not report the validity then the tests will break.
         // e.g Safari 8 on Mobile.
         return;
@@ -789,3 +801,8 @@ class SlideToggleWithModel {
 class SlideToggleWithFormControl {
   formControl = new FormControl();
 }
+
+@Component({
+  template: `<md-slide-toggle tabindex="5"></md-slide-toggle>`
+})
+class SlideToggleWithTabindexAttr {}

@@ -16,17 +16,17 @@ import {
   Injector,
   Inject,
   ChangeDetectionStrategy,
+  TemplateRef
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
-import {MdDialogModule} from './index';
-import {MdDialog, MD_DIALOG_DATA} from './dialog';
 import {MdDialogContainer} from './dialog-container';
-import {OverlayContainer, ESCAPE} from '../core';
-import {MdDialogRef} from './dialog-ref';
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {ESCAPE} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
+import {MdDialogModule, MdDialogRef, MdDialog, MD_DIALOG_DATA} from './index';
 
 
 describe('MdDialog', () => {
@@ -78,6 +78,28 @@ describe('MdDialog', () => {
     viewContainerFixture.detectChanges();
     let dialogContainerElement = overlayContainerElement.querySelector('md-dialog-container')!;
     expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
+  });
+
+  it('should open a dialog with a template', () => {
+    const templateRefFixture = TestBed.createComponent(ComponentWithTemplateRef);
+    templateRefFixture.componentInstance.localValue = 'Bees';
+    templateRefFixture.detectChanges();
+
+    const data = {value: 'Knees'};
+
+    let dialogRef = dialog.open(templateRefFixture.componentInstance.templateRef, { data });
+
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toContain('Cheese Bees Knees');
+    expect(templateRefFixture.componentInstance.dialogRef).toBe(dialogRef);
+
+    viewContainerFixture.detectChanges();
+
+    let dialogContainerElement = overlayContainerElement.querySelector('md-dialog-container')!;
+    expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
+
+    dialogRef.close();
   });
 
   it('should use injector from viewContainerRef for DialogInjector', () => {
@@ -141,6 +163,25 @@ describe('MdDialog', () => {
     });
   }));
 
+  it('should close a dialog and get back a result before it is closed', async(() => {
+    const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+
+    // beforeClose should emit before dialog container is destroyed
+    const beforeCloseHandler = jasmine.createSpy('beforeClose callback').and.callFake(() => {
+      expect(overlayContainerElement.querySelector('md-dialog-container'))
+          .not.toBeNull('dialog container exists when beforeClose is called');
+    });
+
+    dialogRef.beforeClose().subscribe(beforeCloseHandler);
+    dialogRef.close('Bulbasaurus');
+    viewContainerFixture.detectChanges();
+
+    viewContainerFixture.whenStable().then(() => {
+      expect(beforeCloseHandler).toHaveBeenCalledWith('Bulbasaurus');
+      expect(overlayContainerElement.querySelector('md-dialog-container')).toBeNull();
+    });
+  }));
+
   it('should close a dialog via the escape key', async(() => {
     dialog.open(PizzaMsg, {
       viewContainerRef: testViewContainerRef
@@ -196,6 +237,30 @@ describe('MdDialog', () => {
     });
   }));
 
+  it('should emit the backdropClick stream when clicking on the overlay backdrop', async(() => {
+    const dialogRef = dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef
+    });
+
+    const spy = jasmine.createSpy('backdropClick spy');
+    dialogRef.backdropClick().subscribe(spy);
+
+    viewContainerFixture.detectChanges();
+
+    let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+
+    backdrop.click();
+    expect(spy).toHaveBeenCalledTimes(1);
+
+    viewContainerFixture.detectChanges();
+
+    viewContainerFixture.whenStable().then(() => {
+      // Additional clicks after the dialog has closed should not be emitted
+      backdrop.click();
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+  }));
+
   it('should notify the observers if a dialog has been opened', () => {
     dialog.afterOpen.subscribe(ref => {
       expect(dialog.open(PizzaMsg, {
@@ -205,32 +270,31 @@ describe('MdDialog', () => {
   });
 
   it('should notify the observers if all open dialogs have finished closing', async(() => {
-    const ref1 = dialog.open(PizzaMsg, {
-      viewContainerRef: testViewContainerRef
-    });
-    const ref2 = dialog.open(ContentElementDialog, {
-      viewContainerRef: testViewContainerRef
-    });
-    let allClosed = false;
+    const ref1 = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
+    const ref2 = dialog.open(ContentElementDialog, { viewContainerRef: testViewContainerRef });
+    const spy = jasmine.createSpy('afterAllClosed spy');
 
-    dialog.afterAllClosed.subscribe(() => {
-      allClosed = true;
-    });
+    dialog.afterAllClosed.subscribe(spy);
 
     ref1.close();
     viewContainerFixture.detectChanges();
 
     viewContainerFixture.whenStable().then(() => {
-      expect(allClosed).toBeFalsy();
+      expect(spy).not.toHaveBeenCalled();
 
       ref2.close();
       viewContainerFixture.detectChanges();
-
-      viewContainerFixture.whenStable().then(() => {
-        expect(allClosed).toBeTruthy();
-      });
+      viewContainerFixture.whenStable().then(() => expect(spy).toHaveBeenCalled());
     });
   }));
+
+  it('should emit the afterAllClosed stream on subscribe if there are no open dialogs', () => {
+    const spy = jasmine.createSpy('afterAllClosed spy');
+
+    dialog.afterAllClosed.subscribe(spy);
+
+    expect(spy).toHaveBeenCalled();
+  });
 
   it('should should override the width of the overlay pane', () => {
     dialog.open(PizzaMsg, {
@@ -468,6 +532,30 @@ describe('MdDialog', () => {
     });
   }));
 
+  it('should assign a unique id to each dialog', () => {
+    const one = dialog.open(PizzaMsg);
+    const two = dialog.open(PizzaMsg);
+
+    expect(one.id).toBeTruthy();
+    expect(two.id).toBeTruthy();
+    expect(one.id).not.toBe(two.id);
+  });
+
+  it('should allow for the id to be overwritten', () => {
+    const dialogRef = dialog.open(PizzaMsg, { id: 'pizza' });
+    expect(dialogRef.id).toBe('pizza');
+  });
+
+  it('should throw when trying to open a dialog with the same id as another dialog', () => {
+    dialog.open(PizzaMsg, { id: 'pizza' });
+    expect(() => dialog.open(PizzaMsg, { id: 'pizza' })).toThrowError(/must be unique/g);
+  });
+
+  it('should be able to find a dialog by id', () => {
+    const dialogRef = dialog.open(PizzaMsg, { id: 'pizza' });
+    expect(dialog.getDialogById('pizza')).toBe(dialogRef);
+  });
+
   describe('disableClose option', () => {
     it('should prevent closing via clicks on the backdrop', () => {
       dialog.open(PizzaMsg, {
@@ -657,6 +745,17 @@ describe('MdDialog', () => {
       document.body.removeChild(input);
     }));
 
+    it('should move focus to the container if there are no focusable elements in the dialog',
+      fakeAsync(() => {
+        dialog.open(DialogWithoutFocusableElements);
+
+        viewContainerFixture.detectChanges();
+        flushMicrotasks();
+
+        expect(document.activeElement.tagName)
+            .toBe('MD-DIALOG-CONTAINER', 'Expected dialog container to be focused.');
+      }));
+
   });
 
   describe('dialog content elements', () => {
@@ -835,6 +934,23 @@ class ComponentWithChildViewContainer {
   }
 }
 
+@Component({
+  selector: 'arbitrary-component-with-template-ref',
+  template: `<ng-template let-data let-dialogRef="dialogRef">
+      Cheese {{localValue}} {{data?.value}}{{setDialogRef(dialogRef)}}</ng-template>`,
+})
+class ComponentWithTemplateRef {
+  localValue: string;
+  dialogRef: MdDialogRef<any>;
+
+  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+
+  setDialogRef(dialogRef: MdDialogRef<any>): string {
+    this.dialogRef = dialogRef;
+    return '';
+  }
+}
+
 /** Simple component for testing ComponentPortal. */
 @Component({template: '<p>Pizza</p> <input> <button>Close</button>'})
 class PizzaMsg {
@@ -871,15 +987,20 @@ class DialogWithInjectedData {
   constructor(@Inject(MD_DIALOG_DATA) public data: any) { }
 }
 
+@Component({template: '<p>Pasta</p>'})
+class DialogWithoutFocusableElements {}
+
 // Create a real (non-test) NgModule as a workaround for
 // https://github.com/angular/angular/issues/10760
 const TEST_DIRECTIVES = [
   ComponentWithChildViewContainer,
+  ComponentWithTemplateRef,
   PizzaMsg,
   DirectiveWithViewContainer,
   ComponentWithOnPushViewContainer,
   ContentElementDialog,
-  DialogWithInjectedData
+  DialogWithInjectedData,
+  DialogWithoutFocusableElements
 ];
 
 @NgModule({
@@ -888,9 +1009,11 @@ const TEST_DIRECTIVES = [
   declarations: TEST_DIRECTIVES,
   entryComponents: [
     ComponentWithChildViewContainer,
+    ComponentWithTemplateRef,
     PizzaMsg,
     ContentElementDialog,
-    DialogWithInjectedData
+    DialogWithInjectedData,
+    DialogWithoutFocusableElements,
   ],
 })
 class DialogTestModule { }

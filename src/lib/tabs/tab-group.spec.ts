@@ -1,15 +1,11 @@
-import {
-    async, fakeAsync, tick, ComponentFixture, TestBed
-} from '@angular/core/testing';
-import {MdTabGroup, MdTabsModule, MdTabHeaderPosition} from './index';
-import {Component, ViewChild} from '@angular/core';
-import {NoopAnimationsModule, BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {By} from '@angular/platform-browser';
+import {ViewportRuler} from '@angular/cdk/scrolling';
+import {dispatchFakeEvent, FakeViewportRuler} from '@angular/cdk/testing';
 import {Observable} from 'rxjs/Observable';
-import {MdTab} from './tab';
-import {ViewportRuler} from '../core/overlay/position/viewport-ruler';
-import {FakeViewportRuler} from '../core/overlay/position/fake-viewport-ruler';
-import {dispatchFakeEvent} from '@angular/cdk/testing';
+import {MdTab, MdTabGroup, MdTabHeaderPosition, MdTabsModule} from './index';
 
 
 describe('MdTabGroup', () => {
@@ -72,6 +68,25 @@ describe('MdTabGroup', () => {
       fixture.whenStable().then(() => {
         expect(component.selectedIndex).toBe(1);
       });
+    }));
+
+    it('should set to correct tab on fast change', async(() => {
+      let component = fixture.componentInstance;
+      component.selectedIndex = 0;
+      fixture.detectChanges();
+
+      setTimeout(() => {
+        component.selectedIndex = 1;
+        fixture.detectChanges();
+
+        setTimeout(() => {
+          component.selectedIndex = 0;
+          fixture.detectChanges();
+          fixture.whenStable().then(() => {
+            expect(component.selectedIndex).toBe(0);
+          });
+        }, 1);
+      }, 1);
     }));
 
     it('should change tabs based on selectedIndex', fakeAsync(() => {
@@ -172,6 +187,23 @@ describe('MdTabGroup', () => {
 
       expect(testElement.querySelectorAll('.mat-ripple-element').length)
         .toBe(0, 'Expected no ripple to show up on label mousedown.');
+    });
+
+    it('should set the isActive flag on each of the tabs', () => {
+      fixture.detectChanges();
+
+      const tabs = fixture.componentInstance.tabs.toArray();
+
+      expect(tabs[0].isActive).toBe(false);
+      expect(tabs[1].isActive).toBe(true);
+      expect(tabs[2].isActive).toBe(false);
+
+      fixture.componentInstance.selectedIndex = 2;
+      fixture.detectChanges();
+
+      expect(tabs[0].isActive).toBe(false);
+      expect(tabs[1].isActive).toBe(false);
+      expect(tabs[2].isActive).toBe(true);
     });
   });
 
@@ -368,6 +400,7 @@ describe('nested MdTabGroup with enabled animations', () => {
   `
 })
 class SimpleTabsTestApp {
+  @ViewChildren(MdTab) tabs: QueryList<MdTab>;
   selectedIndex: number = 1;
   focusEvent: any;
   selectEvent: any;

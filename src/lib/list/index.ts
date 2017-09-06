@@ -7,22 +7,23 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MdLineModule, MdRippleModule, MdCommonModule} from '../core';
+import {MdCommonModule, MdLineModule, MdPseudoCheckboxModule, MdRippleModule} from '../core';
+import {CommonModule} from '@angular/common';
 import {
-  MdList,
-  MdListItem,
-  MdListDivider,
-  MdListAvatarCssMatStyler,
-  MdListIconCssMatStyler,
-  MdListCssMatStyler,
-  MdNavListCssMatStyler,
   MdDividerCssMatStyler,
+  MdList,
+  MdListAvatarCssMatStyler,
+  MdListCssMatStyler,
+  MdListDivider,
+  MdListIconCssMatStyler,
+  MdListItem,
   MdListSubheaderCssMatStyler,
+  MdNavListCssMatStyler
 } from './list';
-
+import {MdListOption, MdSelectionList} from './selection-list';
 
 @NgModule({
-  imports: [MdLineModule, MdRippleModule, MdCommonModule],
+  imports: [MdLineModule, MdRippleModule, MdCommonModule, MdPseudoCheckboxModule, CommonModule],
   exports: [
     MdList,
     MdListItem,
@@ -35,6 +36,9 @@ import {
     MdNavListCssMatStyler,
     MdDividerCssMatStyler,
     MdListSubheaderCssMatStyler,
+    MdPseudoCheckboxModule,
+    MdSelectionList,
+    MdListOption
   ],
   declarations: [
     MdList,
@@ -46,9 +50,12 @@ import {
     MdNavListCssMatStyler,
     MdDividerCssMatStyler,
     MdListSubheaderCssMatStyler,
+    MdSelectionList,
+    MdListOption
   ],
 })
 export class MdListModule {}
 
 
 export * from './list';
+export * from './selection-list';

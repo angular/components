@@ -6,12 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  Component,
-  ChangeDetectionStrategy,
-  HostBinding,
-  Input,
-} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, ViewEncapsulation} from '@angular/core';
 
 // TODO(josephperrott): Benchpress tests.
 // TODO(josephperrott): Add ARIA attributes for progressbar "for".
@@ -27,6 +22,8 @@ import {
     'role': 'progressbar',
     'aria-valuemin': '0',
     'aria-valuemax': '100',
+    '[attr.aria-valuenow]': 'value',
+    '[attr.mode]': 'mode',
     '[class.mat-primary]': 'color == "primary"',
     '[class.mat-accent]': 'color == "accent"',
     '[class.mat-warn]': 'color == "warn"',
@@ -35,6 +32,7 @@ import {
   templateUrl: 'progress-bar.html',
   styleUrls: ['progress-bar.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MdProgressBar {
   /** Color of the progress bar. */
@@ -44,7 +42,6 @@ export class MdProgressBar {
 
   /** Value of the progressbar. Defaults to zero. Mirrored to aria-valuenow. */
   @Input()
-  @HostBinding('attr.aria-valuenow')
   get value() { return this._value; }
   set value(v: number) { this._value = clamp(v || 0); }
 
@@ -62,9 +59,7 @@ export class MdProgressBar {
    * 'determinate'.
    * Mirrored to mode attribute.
    */
-  @Input()
-  @HostBinding('attr.mode')
-  mode: 'determinate' | 'indeterminate' | 'buffer' | 'query' = 'determinate';
+  @Input() mode: 'determinate' | 'indeterminate' | 'buffer' | 'query' = 'determinate';
 
   /** Gets the current transform value for the progress bar's primary indicator. */
   _primaryTransform() {

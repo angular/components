@@ -7,49 +7,43 @@
  */
 
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Directive,
-  Input,
   ElementRef,
-  ViewContainerRef,
-  NgZone,
-  Optional,
-  OnDestroy,
-  Renderer2,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  InjectionToken,
   Inject,
+  InjectionToken,
+  Input,
+  NgZone,
+  OnDestroy,
+  Optional,
+  Renderer2,
+  ViewContainerRef,
+  ViewEncapsulation,
 } from '@angular/core';
+import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
+import {ComponentPortal} from '@angular/cdk/portal';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import {Directionality} from '@angular/cdk/bidi';
+import {Platform} from '@angular/cdk/platform';
+import {first} from '@angular/cdk/rxjs';
 import {
-  style,
-  trigger,
-  state,
-  transition,
-  animate,
-  AnimationEvent,
-} from '@angular/animations';
-import {
-  Overlay,
-  OverlayState,
-  OverlayRef,
-  ComponentPortal,
-  OverlayConnectionPosition,
   OriginConnectionPosition,
+  Overlay,
+  OverlayConnectionPosition,
+  OverlayRef,
+  OverlayState,
   RepositionScrollStrategy,
   // This import is only used to define a generic type. The current TypeScript version incorrectly
   // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
   // tslint:disable-next-line:no-unused-variable
   ScrollStrategy,
-} from '../core';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
-import {Directionality} from '../core/bidi/index';
-import {Platform} from '../core/platform/index';
-import {first} from '../core/rxjs/index';
-import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
+} from '@angular/cdk/overlay';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 
@@ -72,7 +66,8 @@ export const MD_TOOLTIP_SCROLL_STRATEGY =
     new InjectionToken<() => ScrollStrategy>('md-tooltip-scroll-strategy');
 
 /** @docs-private */
-export function MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay) {
+export function MD_TOOLTIP_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
+    () => RepositionScrollStrategy {
   return () => overlay.scrollStrategies.reposition({ scrollThrottle: SCROLL_THROTTLE_MS });
 }
 
@@ -202,12 +197,12 @@ export class MdTooltip implements OnDestroy {
   private _leaveListener: Function;
 
   constructor(
+    renderer: Renderer2,
     private _overlay: Overlay,
     private _elementRef: ElementRef,
     private _scrollDispatcher: ScrollDispatcher,
     private _viewContainerRef: ViewContainerRef,
     private _ngZone: NgZone,
-    private _renderer: Renderer2,
     private _platform: Platform,
     @Inject(MD_TOOLTIP_SCROLL_STRATEGY) private _scrollStrategy,
     @Optional() private _dir: Directionality) {
@@ -216,9 +211,9 @@ export class MdTooltip implements OnDestroy {
     // they can prevent the first tap from firing its click event.
     if (!_platform.IOS) {
       this._enterListener =
-        _renderer.listen(_elementRef.nativeElement, 'mouseenter', () => this.show());
+        renderer.listen(_elementRef.nativeElement, 'mouseenter', () => this.show());
       this._leaveListener =
-        _renderer.listen(_elementRef.nativeElement, 'mouseleave', () => this.hide());
+        renderer.listen(_elementRef.nativeElement, 'mouseleave', () => this.hide());
     }
   }
 
@@ -284,13 +279,13 @@ export class MdTooltip implements OnDestroy {
 
   /** Create the overlay config and position strategy */
   private _createOverlay(): OverlayRef {
-    let origin = this._getOrigin();
-    let position = this._getOverlayPosition();
+    const origin = this._getOrigin();
+    const position = this._getOverlayPosition();
 
     // Create connected position strategy that listens for scroll events to reposition.
     // After position changes occur and the overlay is clipped by a parent scrollable then
     // close the tooltip.
-    let strategy = this._overlay.position().connectedTo(this._elementRef, origin, position);
+    const strategy = this._overlay.position().connectedTo(this._elementRef, origin, position);
     strategy.withScrollableContainers(this._scrollDispatcher.getScrollContainers(this._elementRef));
     strategy.onPositionChange.subscribe(change => {
       if (change.scrollableViewProperties.isOverlayClipped &&
@@ -299,12 +294,12 @@ export class MdTooltip implements OnDestroy {
       }
     });
 
-    let config = new OverlayState();
-
-    config.direction = this._dir ? this._dir.value : 'ltr';
-    config.positionStrategy = strategy;
-    config.panelClass = TOOLTIP_PANEL_CLASS;
-    config.scrollStrategy = this._scrollStrategy();
+    const config = new OverlayState({
+      direction: this._dir ? this._dir.value : 'ltr',
+      positionStrategy: strategy,
+      panelClass: TOOLTIP_PANEL_CLASS,
+      scrollStrategy: this._scrollStrategy()
+    });
 
     this._overlayRef = this._overlay.create(config);
 

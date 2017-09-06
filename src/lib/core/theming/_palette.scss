@@ -366,7 +366,7 @@ $mat-light-green: (
     400: $black-87-opacity,
     500: $black-87-opacity,
     600: $black-87-opacity,
-    700: $black-87-opacity,
+    700: white,
     800: white,
     900: white,
     A100: $black-87-opacity,
@@ -575,7 +575,6 @@ $mat-brown: (
 );
 
 $mat-grey: (
-  0: #ffffff,
   50: #fafafa,
   100: #f5f5f5,
   200: #eeeeee,
@@ -586,13 +585,11 @@ $mat-grey: (
   700: #616161,
   800: #424242,
   900: #212121,
-  1000: #000000,
   A100: #ffffff,
   A200: #eeeeee,
   A400: #bdbdbd,
   A700: #616161,
   contrast: (
-    0: $black-87-opacity,
     50: $black-87-opacity,
     100: $black-87-opacity,
     200: $black-87-opacity,
@@ -603,7 +600,6 @@ $mat-grey: (
     700: $white-87-opacity,
     800: $white-87-opacity,
     900: $white-87-opacity,
-    1000: $white-87-opacity,
     A100: $black-87-opacity,
     A200: $black-87-opacity,
     A400: $black-87-opacity,
@@ -660,6 +656,7 @@ $mat-light-theme-background: (
   selected-disabled-button: map_get($mat-grey, 400),
   disabled-button-toggle: map_get($mat-grey, 200),
   unselected-chip: map_get($mat-grey, 300),
+  disabled-list-option: map_get($mat-grey, 200),
 );
 
 // Background palette for dark themes.
@@ -675,8 +672,9 @@ $mat-dark-theme-background: (
   focused-button: $white-6-opacity,
   selected-button: map_get($mat-grey, 900),
   selected-disabled-button: map_get($mat-grey, 800),
-  disabled-button-toggle: map_get($mat-grey, 1000),
+  disabled-button-toggle: black,
   unselected-chip: map_get($mat-grey, 700),
+  disabled-list-option: black,
 );
 
 // Foreground palette for light themes.
