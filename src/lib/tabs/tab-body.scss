@@ -1,6 +1,7 @@
 .mat-tab-body-content {
   height: 100%;
-  overflow: auto;
+  // In MS Edge, the content is distorted after the 
+  // transition has ocurred. Ref: #4562
   overflow: unset;
 
   .mat-tab-group-dynamic-height & {
