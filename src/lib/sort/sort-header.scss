@@ -36,17 +36,6 @@ $mat-sort-header-arrow-thickness: 2px;
   }
 }
 
-.mat-sort-header-asc {
-  display: block;
-  transform: rotate(225deg);
-  top: $mat-sort-header-arrow-thickness;
-}
-
-.mat-sort-header-desc {
-  display: block;
-  transform: rotate(45deg);
-}
-
 .mat-sort-header-stem {
   background: currentColor;
   transform: rotate(135deg);
