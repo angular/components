@@ -4,7 +4,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import {MdSort, MdPaginator} from '@angular/material';
 
-interface UserData {
+export interface UserData {
   name: string;
   color: string;
   age: number;
