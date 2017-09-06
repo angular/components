@@ -82,7 +82,7 @@ export class MdSidenav extends MdDrawer {
   @Input()
   get fixedInViewport() { return this._fixedInViewport; }
   set fixedInViewport(value) { this._fixedInViewport = coerceBooleanProperty(value); }
-  private _fixedInViewport = true;
+  private _fixedInViewport = false;
 
   /**
    * The gap between the top of the sidenav and the top of the viewport when the sidenav is in fixed
