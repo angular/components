@@ -85,6 +85,8 @@ export class AriaDescriber {
 
   /** Unregisters all created message elements and removes the message container. */
   ngOnDestroy() {
+    if (!this._platform.isBrowser) { return; }
+
     const describedElements = document.querySelectorAll(`[${CDK_DESCRIBEDBY_HOST_ATTRIBUTE}]`);
     for (let i = 0; i < describedElements.length; i++) {
       removeCdkDescribedByReferenceIds(describedElements[i]);
