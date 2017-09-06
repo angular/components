@@ -50,7 +50,10 @@ export class MdDialogRef<T> {
     RxChain.from(_containerInstance._animationStateChanged)
       .call(filter, event => event.phaseName === 'done' && event.toState === 'enter')
       .call(first)
-      .subscribe(() => this._afterOpen.next());
+      .subscribe(() => {
+        this._afterOpen.next();
+        this._afterOpen.complete();
+      });
 
     // Dispose overlay when closing animation is complete
     RxChain.from(_containerInstance._animationStateChanged)
