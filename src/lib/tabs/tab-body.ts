@@ -27,9 +27,11 @@ import {
   transition,
   AnimationEvent,
 } from '@angular/animations';
-import {HammerInput} from '../core';
 import {TemplatePortal, PortalHostDirective} from '@angular/cdk/portal';
 import {Directionality, Direction} from '@angular/cdk/bidi';
+/* tslint:disable */
+import {HammerInput} from '../core';
+/* tslint:enable */
 
 /**
  * These position states are used internally as animation states for the tab body. Setting the
