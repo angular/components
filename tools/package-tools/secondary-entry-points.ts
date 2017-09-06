@@ -52,26 +52,36 @@ export function getSecondaryEntryPointsForPackage(pkg: BuildPackage) {
     .map(depName => nodeLookup.get(depName)!) || [];
   });
 
-  // Concatenate the build order for each node into one global build order.
-  // Duplicates are automatically omitted by getBuildOrder.
-  return buildNodes.reduce((order: string[], node) => {
-    return [...order, ...getBuildOrder(node)];
-  }, []);
-}
+  const buildOrder: string[][] = [];
 
-/** Gets the build order for a given node with DFS. */
-function getBuildOrder(node: BuildNode): string[] {
-  if (node.visited) {
-    return [];
-  }
+  const addNodeToLevel = (node: BuildNode, level: number): number => {
+    node.visited = true;
+    node.level = level;
 
-  let buildOrder: string[] = [];
-  for (const dep of node.deps) {
-    buildOrder = [...buildOrder, ...getBuildOrder(dep)];
-  }
+    buildOrder[level] = [...buildOrder[level] || [], node.name];
 
-  node.visited = true;
-  return [...buildOrder, node.name];
+    return level;
+  };
+
+  const sortDependencies = (node: BuildNode): number => {
+    if (node.visited) {
+      return node.level || 0;
+    } else if (!node.deps.length) {
+      return addNodeToLevel(node, 0);
+    }
+
+    const dependencyDepth = 1 + node.deps
+      .map(dep => sortDependencies(dep))
+      .sort((a, b) => a - b).slice(-1)[0];
+
+    addNodeToLevel(node, dependencyDepth);
+
+    return dependencyDepth;
+  };
+
+  buildNodes.forEach(node => sortDependencies(node));
+
+  return buildOrder;
 }
 
 /** Gets the names of all subdirectories for a given path. */
@@ -84,8 +94,8 @@ interface BuildNode {
   name: string;
   deps: BuildNode[];
   visited?: boolean;
+  level?: number;
 }
-
 
 /** Builds the command that will be executed to find all import statements for a package. */
 function buildPackageImportStatementFindCommand(searchDirectory: string, packageName: string) {

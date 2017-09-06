@@ -1,9 +1,8 @@
 import {join} from 'path';
-import {main as tsc} from '@angular/tsc-wrapped';
 import {buildConfig} from './build-config';
 import {getSecondaryEntryPointsForPackage} from './secondary-entry-points';
 import {buildPrimaryEntryPointBundles, buildSecondaryEntryPointBundles} from './build-bundles';
-
+import {main as ngc} from '@angular/tsc-wrapped';
 
 const {packagesDir, outputDir} = buildConfig;
 
@@ -31,15 +30,21 @@ export class BuildPackage {
   private tsconfigTests: string;
 
   /** Secondary entry points for the package. */
-  get secondaryEntryPoints(): string[] {
+  get secondaryEntryPoints(): string[][] {
     if (!this._secondaryEntryPoints) {
       this._secondaryEntryPoints = getSecondaryEntryPointsForPackage(this);
     }
 
     return this._secondaryEntryPoints;
   }
+  private _secondaryEntryPoints: string[][];
 
-  private _secondaryEntryPoints: string[];
+  /** Flat list of secondary entry-points for the build package. */
+  get flatSecondaryEntryPoints(): string[] {
+    return this.secondaryEntryPoints.reduce((entryPoints: string[], entryPointLevel: string[]) => {
+      return [...entryPoints, ...entryPointLevel];
+    }, []);
+  }
 
   constructor(public packageName: string, public dependencies: BuildPackage[] = []) {
     this.packageRoot = join(packagesDir, packageName);
@@ -55,9 +60,12 @@ export class BuildPackage {
   async compile() {
     await this._compileEntryPoint(buildTsconfigName);
 
-    // Walk through every secondary entry point and build the TypeScript sources sequentially.
-    for (const entryPoint of this.secondaryEntryPoints) {
-      await this._compileEntryPoint(buildTsconfigName, entryPoint);
+    // Secondary entry points are built in batches. Meaning that some packages will be built
+    // in parallel while other packages have to be built sequentially.
+    for (const entryPointsLevel of this.secondaryEntryPoints) {
+      await Promise.all(entryPointsLevel.map(entryPoint => {
+        return this._compileEntryPoint(buildTsconfigName, entryPoint);
+      }));
     }
   }
 
@@ -70,17 +78,19 @@ export class BuildPackage {
   async createBundles() {
     await buildPrimaryEntryPointBundles(this.entryFilePath, this.packageName);
 
-    for (const entryPoint of this.secondaryEntryPoints) {
-      const entryPointEntryFilePath = join(this.packageOut, entryPoint, 'index.js');
-      await buildSecondaryEntryPointBundles(entryPointEntryFilePath, this.packageName, entryPoint);
+    for (const entryPointLevel of this.secondaryEntryPoints) {
+      await Promise.all(entryPointLevel.map(entryPoint => {
+        const entryPointEntryPath = join(this.packageOut, entryPoint, 'index.js');
+        return buildSecondaryEntryPointBundles(entryPointEntryPath, this.packageName, entryPoint);
+      }));
     }
   }
 
   /** Compiles the TypeScript sources of a primary or secondary entry point. */
-  private async _compileEntryPoint(tsconfigName: string, secondaryEntryPoint?: string) {
+  private _compileEntryPoint(tsconfigName: string, secondaryEntryPoint?: string) {
     const entryPointPath = join(this.packageRoot, secondaryEntryPoint || '');
     const entryPointTsconfigPath = join(entryPointPath, tsconfigName);
 
-    await tsc(entryPointTsconfigPath, {basePath: entryPointPath});
+    return ngc(entryPointTsconfigPath, {basePath: entryPointPath});
   }
 }

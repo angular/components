@@ -5,7 +5,6 @@ import {replaceVersionPlaceholders} from './version-placeholders';
 import {inlinePackageMetadataFiles} from './metadata-inlining';
 import {createTypingsReexportFile} from './typings-reexport';
 import {createMetadataReexportFile} from './metadata-reexport';
-import {getSecondaryEntryPointsForPackage} from './secondary-entry-points';
 import {createEntryPointPackageJson} from './entry-point-package-json';
 import {buildConfig} from './build-config';
 import {BuildPackage} from './build-package';
@@ -47,7 +46,7 @@ export function composeRelease(buildPackage: BuildPackage) {
 function createFilesForSecondaryEntryPoint(buildPackage: BuildPackage, releasePath: string) {
   const {packageName, packageOut} = buildPackage;
 
-  getSecondaryEntryPointsForPackage(buildPackage).forEach(entryPointName => {
+  buildPackage.flatSecondaryEntryPoints.forEach(entryPointName => {
     // Create a directory in the root of the package for this entry point that contains
     // * A package.json that lists the different bundle locations
     // * An index.d.ts file that re-exports the index.d.ts from the typings/ directory
