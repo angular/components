@@ -43,6 +43,10 @@ module.exports = function categorizer() {
 
     decoratePublicDoc(classDoc);
 
+    // Sort members
+    classDoc.methods.sort(sortMethods);
+    classDoc.properties.sort(sortProperties);
+
     // Categorize the current visited classDoc into its Angular type.
     if (isDirective(classDoc)) {
       classDoc.isDirective = true;
@@ -93,6 +97,67 @@ module.exports = function categorizer() {
 /** Filters any duplicate classDoc members from an array */
 function filterDuplicateMembers(item, _index, array) {
   return array.filter((memberDoc, i) => memberDoc.name === item.name)[0] === item;
+}
+
+/** Sorts alphabetically by a member's name. */
+function sortByName(docA, docB) {
+  if (docA.name < docB.name) {
+    return -1;
+  }
+
+  if (docA.name > docB.name) {
+    return 1;
+  }
+
+  return 0;
+}
+
+/** Sort deprecated members to the end. */
+function sortByDeprecated(docA, docB) {
+  // Sort deprecated docs to the end
+  if (!docA.isDeprecated && docB.isDeprecated) {
+    return -1;
+  }
+
+  if (docA.isDeprecated && !docB.isDeprecated) {
+    return 1;
+  }
+
+  return 0;
+}
+
+/** Sorts methods by deprecated status and name. */
+function sortMethods(docA, docB) {
+  const deprecatedSort = sortByDeprecated(docA, docB);
+  if (!!deprecatedSort) {
+    return deprecatedSort
+  }
+
+  // Break ties by sorting alphabetically by name
+  return sortByName(docA, docB);
+}
+
+/** Sorts properties by deprecated status, decorator, and name. */
+function sortProperties(docA, docB) {
+  // Sort deprecated properties to the end
+  const deprecatedSort = sortByDeprecated(docA, docB);
+  if (!!deprecatedSort) {
+    return deprecatedSort
+  }
+
+  // Sort in the order of: Inputs, Outputs, neither
+  if ((isDirectiveInput(docA) && !isDirectiveInput(docB)) ||
+      (isDirectiveOutput(docA) && !isDirectiveInput(docB) && !isDirectiveOutput(docB))) {
+    return -1;
+  }
+
+  if ((isDirectiveInput(docB) && !isDirectiveInput(docA)) ||
+      (isDirectiveOutput(docB) && !isDirectiveInput(docA) && !isDirectiveOutput(docA))) {
+    return 1;
+  }
+
+  // Break ties by sorting alphabetically on the name
+  return sortByName(docA, docB);
 }
 
 /**
