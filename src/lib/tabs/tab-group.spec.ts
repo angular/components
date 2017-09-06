@@ -376,6 +376,34 @@ describe('nested MdTabGroup with enabled animations', () => {
 });
 
 
+describe('lazy loaded tabs', () => {
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [MdTabsModule, BrowserAnimationsModule],
+      declarations: [TemplateTabs]
+    });
+
+    TestBed.compileComponents();
+  }));
+
+  it('should lazy load the second tab', (done) => {
+    let fixture = TestBed.createComponent(TemplateTabs);
+    fixture.detectChanges();
+
+    let tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+    tabLabel.nativeElement.click();
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      let child = fixture.debugElement.query(By.css('.child'));
+      expect(child.nativeElement).toBeDefined();
+      done();
+    });
+  });
+});
+
+
 @Component({
   template: `
     <md-tab-group class="tab-group"
@@ -551,3 +579,20 @@ class TabGroupWithSimpleApi {
 })
 class NestedTabs {}
 
+
+@Component({
+  selector: 'template-tabs',
+  template: `
+    <md-tab-group>
+      <md-tab label="One">
+        Eager
+      </md-tab>
+      <md-tab label="Two">
+        <ng-template mdTabContent>
+          <div class="child">Hi</div>
+        </ng-template>
+      </md-tab>
+    </md-tab-group>
+  `,
+})
+class TemplateTabs {}
