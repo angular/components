@@ -293,23 +293,26 @@ describe('MdTabGroup', () => {
           fixture.debugElement.query(By.directive(MdTabGroup)).componentInstance as MdTabGroup;
     });
 
-    it('should support a tab-group with the simple api', () => {
-      expect(getSelectedLabel(fixture).textContent).toMatch('Junk food');
-      expect(getSelectedContent(fixture).textContent).toMatch('Pizza, fries');
+    it('should support a tab-group with the simple api', async(() => {
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+        expect(getSelectedLabel(fixture).textContent).toMatch('Junk food');
+        expect(getSelectedContent(fixture).textContent).toMatch('Pizza, fries');
 
-      tabGroup.selectedIndex = 2;
-      fixture.detectChanges();
+        tabGroup.selectedIndex = 2;
+        fixture.detectChanges();
 
-      expect(getSelectedLabel(fixture).textContent).toMatch('Fruit');
-      expect(getSelectedContent(fixture).textContent).toMatch('Apples, grapes');
+        expect(getSelectedLabel(fixture).textContent).toMatch('Fruit');
+        expect(getSelectedContent(fixture).textContent).toMatch('Apples, grapes');
 
-      fixture.componentInstance.otherLabel = 'Chips';
-      fixture.componentInstance.otherContent = 'Salt, vinegar';
-      fixture.detectChanges();
+        fixture.componentInstance.otherLabel = 'Chips';
+        fixture.componentInstance.otherContent = 'Salt, vinegar';
+        fixture.detectChanges();
 
-      expect(getSelectedLabel(fixture).textContent).toMatch('Chips');
-      expect(getSelectedContent(fixture).textContent).toMatch('Salt, vinegar');
-    });
+        expect(getSelectedLabel(fixture).textContent).toMatch('Chips');
+        expect(getSelectedContent(fixture).textContent).toMatch('Salt, vinegar');
+      });
+    }));
 
     it('should support @ViewChild in the tab content', () => {
       expect(fixture.componentInstance.legumes).toBeTruthy();

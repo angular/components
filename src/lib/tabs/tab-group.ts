@@ -187,7 +187,7 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
     }
   }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     this._subscribeToTabLabels();
 
     // Subscribe to changes in the amount of tabs, in order to be
@@ -198,7 +198,7 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._tabsSubscription.unsubscribe();
     this._tabLabelSubscription.unsubscribe();
   }
@@ -211,7 +211,7 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
     this._isInitialized = true;
   }
 
-  _focusChanged(index: number) {
+  _focusChanged(index: number): void {
     this.focusChange.emit(this._createChangeEvent(index));
   }
 

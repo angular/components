@@ -43,10 +43,12 @@ export const _MdTabMixinBase = mixinDisabled(MdTabBase);
 export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
   /** Content for the tab label given by <ng-template md-tab-label>. */
   @ContentChild(MdTabLabel) templateLabel: MdTabLabel;
-  @ContentChild(MdTabContent) templateBody: MdTabContent;
+
+  /** User provided template that we are going to use instead of implicitContent template */
+  @ContentChild(MdTabContent, {read: TemplateRef}) _explicitContent: TemplateRef<any>;
 
   /** Template inside the MdTab view that contains an <ng-content>. */
-  @ViewChild('bodyTemplate') _content: TemplateRef<any>;
+  @ViewChild(TemplateRef) _implicitContent: TemplateRef<any>;
 
   /** The plain text label for the tab, used when there is no template label. */
   @Input('label') textLabel: string = '';
@@ -79,17 +81,18 @@ export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChan
     super();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnInit(): void {
+    this._contentPortal = new TemplatePortal(
+        this._explicitContent || this._implicitContent, this._viewContainerRef);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes.hasOwnProperty('textLabel')) {
       this._labelChange.next();
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._labelChange.complete();
-  }
-
-  ngOnInit() {
-    this._contentPortal = new TemplatePortal(this._content, this._viewContainerRef);
   }
 }

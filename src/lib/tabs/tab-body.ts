@@ -15,7 +15,7 @@ import {
   OnInit,
   ElementRef,
   Optional,
-  AfterViewChecked,
+  DoCheck,
   ViewEncapsulation,
   ChangeDetectionStrategy,
 } from '@angular/core';
@@ -87,7 +87,7 @@ export type MdTabBodyOriginState = 'left' | 'right';
     ])
   ]
 })
-export class MdTabBody implements OnInit, AfterViewChecked {
+export class MdTabBody implements OnInit, DoCheck {
   /** The portal host inside of this container into which the tab body content will be loaded. */
   @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
@@ -134,7 +134,7 @@ export class MdTabBody implements OnInit, AfterViewChecked {
    * After initialized, check if the content is centered and has an origin. If so, set the
    * special position states that transition the tab from the left or right before centering.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     if (this._position == 'center' && this._origin) {
       this._position = this._origin == 'left' ? 'left-origin-center' : 'right-origin-center';
     }
@@ -144,20 +144,20 @@ export class MdTabBody implements OnInit, AfterViewChecked {
    * After the view has been set, check if the tab content is set to the center and attach the
    * content if it is not already attached.
    */
-  ngAfterViewChecked() {
+  ngDoCheck(): void {
     if (this._isCenterPosition(this._position) && !this._portalHost.hasAttached()) {
       // Nested templates via mdTabContent templates causes expression change error
-      Promise.resolve().then(() => this._portalHost.attach(this._content));
+      this._portalHost.attach(this._content);
     }
   }
 
-  _onTranslateTabStarted(e: AnimationEvent) {
+  _onTranslateTabStarted(e: AnimationEvent): void {
     if (this._isCenterPosition(e.toState)) {
       this.onCentering.emit(this._elementRef.nativeElement.clientHeight);
     }
   }
 
-  _onTranslateTabComplete(e: AnimationEvent) {
+  _onTranslateTabComplete(e: AnimationEvent): void {
     // If the end state is that the tab is not centered, then detach the content.
     if (!this._isCenterPosition(e.toState) && !this._isCenterPosition(this._position)) {
       this._portalHost.detach();
