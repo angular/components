@@ -1,5 +1,5 @@
 import {join} from 'path';
-import {main as tsc} from '@angular/tsc-wrapped';
+import {main as ngc} from '@angular/tsc-wrapped';
 import {buildConfig} from './build-config';
 import {getSecondaryEntryPointsForPackage} from './secondary-entry-points';
 import {buildPrimaryEntryPointBundles, buildSecondaryEntryPointBundles} from './build-bundles';
@@ -81,6 +81,6 @@ export class BuildPackage {
     const entryPointPath = join(this.packageRoot, secondaryEntryPoint || '');
     const entryPointTsconfigPath = join(entryPointPath, tsconfigName);
 
-    await tsc(entryPointTsconfigPath, {basePath: entryPointPath});
+    await ngc(entryPointTsconfigPath, {basePath: entryPointPath});
   }
 }

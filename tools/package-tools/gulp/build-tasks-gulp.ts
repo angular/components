@@ -6,6 +6,9 @@ import {buildScssTask} from './build-scss-task';
 import {sequenceTask} from './sequence-task';
 import {watchFiles} from './watch-files';
 import {BuildPackage} from '../build-package';
+import {createRollupBundle} from '../rollup-helpers';
+import {buildConfig} from '../build-config';
+
 
 // There are no type definitions available for these imports.
 const htmlmin = require('gulp-htmlmin');
