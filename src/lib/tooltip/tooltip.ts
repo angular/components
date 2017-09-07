@@ -372,7 +372,7 @@ export class MdTooltip implements OnDestroy {
       this._tooltipInstance.message = message;
       this._tooltipInstance._markForCheck();
 
-      first.call(this._ngZone.onMicrotaskEmpty).subscribe(() => {
+      first.call(this._ngZone.onMicrotaskEmpty.asObservable()).subscribe(() => {
         if (this._tooltipInstance) {
           this._overlayRef!.updatePosition();
         }
