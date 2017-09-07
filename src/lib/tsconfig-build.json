@@ -5,7 +5,7 @@
     "declaration": true,
     "stripInternal": false,
     "experimentalDecorators": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "strictNullChecks": true,
     "importHelpers": true,
     "newLine": "lf",
@@ -21,7 +21,8 @@
     "types": [],
     "baseUrl": ".",
     "paths": {
-      "@angular/cdk/*": ["../../dist/packages/cdk/*/public_api"]
+      "@angular/cdk/*": ["../../dist/packages/cdk/*/public_api"],
+      "@angular/material/*": ["../../dist/packages/material/*/public_api"]
     }
   },
   "files": [

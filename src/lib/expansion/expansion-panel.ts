@@ -29,7 +29,7 @@ import {
 } from '@angular/animations';
 import {MdAccordion} from './accordion';
 import {AccordionItem} from './accordion-item';
-import {UniqueSelectionDispatcher} from '../core';
+import {UniqueSelectionDispatcher} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
 
 
