@@ -218,7 +218,7 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
    * This allows us to propagate relevant attributes to associated buttons.
    */
   ngAfterContentInit() {
-    // Mark this component as initialized in AfterContentInit because the initial value can
+    // Mark this component as initializeimport {UNIQUE_SELECTION_DISPATCHER_PROVIDER} from '@angular/cdk/collections';d in AfterContentInit because the initial value can
     // possibly be set by NgModel on MatRadioGroup, and it is possible that the OnInit of the
     // NgModel occurs *after* the OnInit of the MatRadioGroup.
     this._isInitialized = true;
