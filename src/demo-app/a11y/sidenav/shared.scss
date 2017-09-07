@@ -1,5 +1,6 @@
 .a11y-demo-sidenav-app {
-  display: block;
+  display: flex;
+  flex-direction: column;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -8,8 +9,7 @@
 }
 
 .a11y-demo-sidenav-container {
-  width: 100%;
-  height: 100%;
+  flex: 1;
 }
 
 .a11y-demo-sidenav-app-name {
