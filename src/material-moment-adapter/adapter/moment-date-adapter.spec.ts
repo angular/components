@@ -10,154 +10,12 @@ import {MomentDateAdapter} from './moment-date-adapter';
 import {async, inject, TestBed} from '@angular/core/testing';
 import {MomentDateModule} from './index';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
-import * as moment from 'moment';
 import {LOCALE_ID} from '@angular/core';
+import * as moment from 'moment';
 
 
 // Month constants for more readable tests.
 const JAN = 0, FEB = 1, MAR = 2, DEC = 11;
-
-
-// Add some locales for testing. These definitions come from Moment.js's fr.js and ja.js locale
-// files. (We don't want to the version of moment that comes with locales because it's a lot of
-// extra bytes to include in our tests.)
-moment.defineLocale('fr', {
-  months: 'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre'
-      .split('_'),
-  monthsShort: 'janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.'.split('_'),
-  monthsParseExact: true,
-  weekdays: 'dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi'.split('_'),
-  weekdaysShort: 'dim._lun._mar._mer._jeu._ven._sam.'.split('_'),
-  weekdaysMin: 'Di_Lu_Ma_Me_Je_Ve_Sa'.split('_'),
-  weekdaysParseExact: true,
-  longDateFormat: {
-    LT: 'HH:mm',
-    LTS: 'HH:mm:ss',
-    L: 'DD/MM/YYYY',
-    LL: 'D MMMM YYYY',
-    LLL: 'D MMMM YYYY HH:mm',
-    LLLL: 'dddd D MMMM YYYY HH:mm'
-  },
-  calendar: {
-    sameDay: '[Aujourd’hui à] LT',
-    nextDay: '[Demain à] LT',
-    nextWeek: 'dddd [à] LT',
-    lastDay: '[Hier à] LT',
-    lastWeek: 'dddd [dernier à] LT',
-    sameElse: 'L'
-  },
-  relativeTime: {
-    future: 'dans %s',
-    past: 'il y a %s',
-    s: 'quelques secondes',
-    m: 'une minute',
-    mm: '%d minutes',
-    h: 'une heure',
-    hh: '%d heures',
-    d: 'un jour',
-    dd: '%d jours',
-    M: 'un mois',
-    MM: '%d mois',
-    y: 'un an',
-    yy: '%d ans'
-  },
-  dayOfMonthOrdinalParse: /\d{1,2}(er|)/,
-  // tslint:disable-next-line:variable-name
-  ordinal: function (number, period) {
-    switch (period) {
-        // TODO: Return 'e' when day of month > 1. Move this case inside
-        // block for masculine words below.
-        // See https://github.com/moment/moment/issues/3375
-      case 'D':
-        return number + (number === 1 ? 'er' : '');
-
-        // Words with masculine grammatical gender: mois, trimestre, jour
-      default:
-      case 'M':
-      case 'Q':
-      case 'DDD':
-      case 'd':
-        return number + (number === 1 ? 'er' : 'e');
-
-        // Words with feminine grammatical gender: semaine
-      case 'w':
-      case 'W':
-        return number + (number === 1 ? 're' : 'e');
-    }
-  },
-  week: {
-    dow: 1, // Monday is the first day of the week.
-    doy: 4  // The week that contains Jan 4th is the first week of the year.
-  }
-} as any);
-
-moment.defineLocale('ja', {
-  months: '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split('_'),
-  monthsShort: '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split('_'),
-  weekdays: '日曜日_月曜日_火曜日_水曜日_木曜日_金曜日_土曜日'.split('_'),
-  weekdaysShort: '日_月_火_水_木_金_土'.split('_'),
-  weekdaysMin: '日_月_火_水_木_金_土'.split('_'),
-  longDateFormat: {
-    LT: 'HH:mm',
-    LTS: 'HH:mm:ss',
-    L: 'YYYY/MM/DD',
-    LL: 'YYYY年M月D日',
-    LLL: 'YYYY年M月D日 HH:mm',
-    LLLL: 'YYYY年M月D日 HH:mm dddd',
-    l: 'YYYY/MM/DD',
-    ll: 'YYYY年M月D日',
-    lll: 'YYYY年M月D日 HH:mm',
-    llll: 'YYYY年M月D日 HH:mm dddd'
-  },
-  meridiemParse: /午前|午後/i,
-  isPM: function (input) {
-    return input === '午後';
-  },
-  meridiem: function (hour) {
-    if (hour < 12) {
-      return '午前';
-    } else {
-      return '午後';
-    }
-  },
-  calendar: {
-    sameDay: '[今日] LT',
-    nextDay: '[明日] LT',
-    nextWeek: '[来週]dddd LT',
-    lastDay: '[昨日] LT',
-    lastWeek: '[前週]dddd LT',
-    sameElse: 'L'
-  },
-  dayOfMonthOrdinalParse: /\d{1,2}日/,
-  // tslint:disable-next-line:variable-name
-  ordinal: function (number, period) {
-    switch (period) {
-      case 'd':
-      case 'D':
-      case 'DDD':
-        return number + '日';
-      default:
-        return number;
-    }
-  },
-  relativeTime: {
-    future: '%s後',
-    past: '%s前',
-    s: '数秒',
-    m: '1分',
-    mm: '%d分',
-    h: '1時間',
-    hh: '%d時間',
-    d: '1日',
-    dd: '%d日',
-    M: '1ヶ月',
-    MM: '%dヶ月',
-    y: '1年',
-    yy: '%d年'
-  }
-} as any);
-
-moment.locale('en');
 
 
 describe('MomentDateAdapter', () => {
@@ -170,6 +28,7 @@ describe('MomentDateAdapter', () => {
   }));
 
   beforeEach(inject([DateAdapter], (d: MomentDateAdapter) => {
+    moment.locale('en');
     adapter = d;
     adapter.setLocale('en');
   }));

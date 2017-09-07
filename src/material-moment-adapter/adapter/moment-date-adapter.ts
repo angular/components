@@ -29,9 +29,10 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
 /** Adapts Moment.js Dates for use with Angular Material. */
 @Injectable()
 export class MomentDateAdapter extends DateAdapter<Moment> {
-  // Note: all of the methods that accept a `Moment` input parameter immediately call
-  // `this.clone` on it. This is to ensure that we're working with a `Moment` that has the
-  // correct locale setting while avoiding mutating the original object passed to us.
+  // Note: all of the methods that accept a `Moment` input parameter immediately call `this.clone`
+  // on it. This is to ensure that we're working with a `Moment` that has the correct locale setting
+  // while avoiding mutating the original object passed to us. Just calling `.locale(...)` on the
+  // input would mutate the object.
 
   private _localeData: {
     firstDayOfWeek: number,
@@ -48,22 +49,19 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     this.setLocale(dateLocale || moment.locale());
   }
 
-  setLocale(locale: any) {
+  setLocale(locale: string) {
     super.setLocale(locale);
 
-    // Temporarily change the global locale to get the data we need, then change it back.
-    let globalLocale = moment.locale();
-    moment.locale(locale);
+    let momentLocaleData = moment.localeData(locale);
     this._localeData = {
-      firstDayOfWeek: moment.localeData().firstDayOfWeek(),
-      longMonths: moment.months(),
-      shortMonths: moment.monthsShort(),
+      firstDayOfWeek: momentLocaleData.firstDayOfWeek(),
+      longMonths: momentLocaleData.months(),
+      shortMonths: momentLocaleData.monthsShort(),
       dates: range(31, (i) => this.createDate(2017, 0, i + 1).format('D')),
-      longDaysOfWeek: moment.weekdays(),
-      shortDaysOfWeek: moment.weekdaysShort(),
-      narrowDaysOfWeek: moment.weekdaysMin(),
+      longDaysOfWeek: momentLocaleData.weekdays(),
+      shortDaysOfWeek: momentLocaleData.weekdaysShort(),
+      narrowDaysOfWeek: momentLocaleData.weekdaysMin(),
     };
-    moment.locale(globalLocale);
   }
 
   getYear(date: Moment): number {
@@ -118,8 +116,8 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
   }
 
   createDate(year: number, month: number, date: number): Moment {
-    // Check for invalid month and date (except upper bound on date which we have to check after
-    // creating the Date).
+    // Moment.js will create an invalid date if any of the components are out of bounds, but we
+    // explicitly check each case so we can throw more descriptive errors.
     if (month < 0 || month > 11) {
       throw Error(`Invalid month index "${month}". Month index has to be between 0 and 11.`);
     }
