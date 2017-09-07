@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from '@angular/core';
-import {DateAdapter, MAT_DATE_LOCALE_PROVIDER, MD_DATE_FORMATS} from '@angular/material';
-import {MomentDateAdapter, MD_MOMENT_DATE_FORMATS} from '@angular/material-moment-adapter';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {DateAdapter, MAT_DATE_LOCALE, MD_DATE_FORMATS} from '@angular/material';
+import {MD_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
 import * as moment from 'moment';
 
 
@@ -10,8 +10,7 @@ import * as moment from 'moment';
   templateUrl: 'moment-datepicker.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    MAT_DATE_LOCALE_PROVIDER,
-    {provide: DateAdapter, useClass: MomentDateAdapter},
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
     {provide: MD_DATE_FORMATS, useValue: MD_MOMENT_DATE_FORMATS},
   ],
 })
