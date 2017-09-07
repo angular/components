@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MdButtonModule} from '../button/index';
-import {MdSelectModule} from '../select/index';
+import {NgModule} from '@angular/core';
+import {MdButtonModule} from '@angular/material/button';
+import {MdSelectModule} from '@angular/material/select';
+import {MdTooltipModule} from '@angular/material/tooltip';
 import {MdPaginator} from './paginator';
 import {MdPaginatorIntl} from './paginator-intl';
-import {MdTooltipModule} from '../tooltip/index';
 
 
 @NgModule({

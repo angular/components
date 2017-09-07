@@ -9,7 +9,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MdSelect, MdSelectTrigger, MD_SELECT_SCROLL_STRATEGY_PROVIDER} from './select';
-import {MdCommonModule, MdOptionModule} from '../core';
+import {MdCommonModule, MdOptionModule} from '@angular/material/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 
 

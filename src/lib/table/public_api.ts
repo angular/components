@@ -12,7 +12,7 @@ import {CdkTableModule} from '@angular/cdk/table';
 import {MdCell, MdHeaderCell, MdCellDef, MdHeaderCellDef, MdColumnDef} from './cell';
 import {MdHeaderRow, MdRow, MdHeaderRowDef, MdRowDef, MatHeaderRowDef, MatRowDef} from './row';
 import {CommonModule} from '@angular/common';
-import {MdCommonModule} from '../core';
+import {MdCommonModule} from '@angular/material/core';
 
 export * from './cell';
 export * from './table';

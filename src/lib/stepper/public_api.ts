@@ -6,17 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {PortalModule} from '@angular/cdk/portal';
-import {MdButtonModule} from '../button/index';
-import {MdStep, MdStepper, MdHorizontalStepper, MdVerticalStepper} from './stepper';
 import {CdkStepperModule} from '@angular/cdk/stepper';
-import {MdCommonModule} from '../core';
-import {MdStepLabel} from './step-label';
-import {MdStepperNext, MdStepperPrevious} from './stepper-button';
-import {MdIconModule} from '../icon/index';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {MdButtonModule} from '@angular/material/button';
+import {MdCommonModule} from '@angular/material/core';
+import {MdIconModule} from '@angular/material/icon';
 import {MdStepHeader} from './step-header';
+import {MdStepLabel} from './step-label';
+import {MdHorizontalStepper, MdStep, MdStepper, MdVerticalStepper} from './stepper';
+import {MdStepperNext, MdStepperPrevious} from './stepper-button';
+
 
 @NgModule({
   imports: [

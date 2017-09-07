@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MdCommonModule} from '../core';
+import {MdCommonModule} from '@angular/material/core';
 import {MdIcon} from './icon';
 import {ICON_REGISTRY_PROVIDER} from './icon-registry';
 

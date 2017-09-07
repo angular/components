@@ -6,20 +6,20 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {PortalModule} from '@angular/cdk/portal';
 import {ObserversModule} from '@angular/cdk/observers';
+import {PortalModule} from '@angular/cdk/portal';
 import {ScrollDispatchModule, VIEWPORT_RULER_PROVIDER} from '@angular/cdk/scrolling';
-import {MdCommonModule, MdRippleModule} from '../core';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {MdCommonModule, MdRippleModule} from '@angular/material/core';
+import {MdInkBar} from './ink-bar';
 import {MdTab} from './tab';
+import {MdTabBody} from './tab-body';
 import {MdTabGroup} from './tab-group';
+import {MdTabHeader} from './tab-header';
 import {MdTabLabel} from './tab-label';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdTabLink, MdTabNav} from './tab-nav-bar/tab-nav-bar';
-import {MdInkBar} from './ink-bar';
-import {MdTabBody} from './tab-body';
-import {MdTabHeader} from './tab-header';
 
 
 @NgModule({

@@ -12,7 +12,7 @@ import {
   UNIQUE_SELECTION_DISPATCHER_PROVIDER,
   MdCommonModule,
   StyleModule,
-} from '../core';
+} from '@angular/material/core';
 
 
 @NgModule({

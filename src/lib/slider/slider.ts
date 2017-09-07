@@ -34,10 +34,10 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {HammerInput} from '../core';
-import {FocusOrigin, FocusOriginMonitor} from '../core/style/focus-origin-monitor';
-import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
-import {CanColor, mixinColor} from '../core/common-behaviors/color';
+import {HammerInput} from '@angular/material/core';
+import {FocusOrigin, FocusOriginMonitor} from '@angular/material/core';
+import {CanDisable, mixinDisabled} from '@angular/material/core';
+import {CanColor, mixinColor} from '@angular/material/core';
 
 
 /**

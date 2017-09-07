@@ -33,7 +33,7 @@ import {merge} from 'rxjs/observable/merge';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdInkBar} from './ink-bar';
-import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
+import {CanDisableRipple, mixinDisableRipple} from '@angular/material/core';
 
 /**
  * The directions that scrolling can go in when the header's tabs exceed the header width. 'After'

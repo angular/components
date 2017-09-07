@@ -29,7 +29,7 @@ import {
   ErrorOptions,
   MD_ERROR_GLOBAL_OPTIONS,
   ErrorStateMatcher
-} from '../core/error/error-options';
+} from '@angular/material/core';
 import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {MdStepHeader} from './step-header';
 import {state, style, transition, trigger, animate} from '@angular/animations';

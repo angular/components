@@ -10,8 +10,8 @@ import {NgModule} from '@angular/core';
 import {MdInput} from './input';
 import {MdTextareaAutosize} from './autosize';
 import {CommonModule} from '@angular/common';
-import {PlatformModule} from '../core/platform/index';
-import {MdFormFieldModule} from '../form-field/index';
+import {PlatformModule} from '@angular/material/core';
+import {MdFormFieldModule} from '@angular/material/form-field';
 
 
 @NgModule({

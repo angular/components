@@ -9,9 +9,9 @@
 import {NgModule} from '@angular/core';
 import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {CommonModule} from '@angular/common';
-import {MdCommonModule, GestureConfig, StyleModule} from '../core';
+import {MdCommonModule, GestureConfig, StyleModule} from '@angular/material/core';
 import {MdSlider} from './slider';
-import {BidiModule} from '../core/bidi/index';
+import {BidiModule} from '@angular/material/core';
 
 
 @NgModule({

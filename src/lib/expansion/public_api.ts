@@ -8,7 +8,7 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CompatibilityModule, StyleModule, UNIQUE_SELECTION_DISPATCHER_PROVIDER} from '../core';
+import {CompatibilityModule, StyleModule, UNIQUE_SELECTION_DISPATCHER_PROVIDER} from '@angular/material/core';
 import {
   MdExpansionPanelHeader,
   MdExpansionPanelDescription,

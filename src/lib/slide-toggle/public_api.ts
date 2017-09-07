@@ -15,7 +15,7 @@ import {
   GestureConfig,
   MdCommonModule,
   MdRippleModule,
-} from '../core';
+} from '@angular/material/core';
 
 
 @NgModule({

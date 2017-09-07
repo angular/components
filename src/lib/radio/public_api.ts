@@ -14,7 +14,7 @@ import {
   MdCommonModule,
   UNIQUE_SELECTION_DISPATCHER_PROVIDER,
   FocusOriginMonitor,
-} from '../core';
+} from '@angular/material/core';
 import {MdRadioGroup, MdRadioButton} from './radio';
 
 

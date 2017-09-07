@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MdCommonModule, MdLineModule, MdPseudoCheckboxModule, MdRippleModule} from '../core';
+import {MdCommonModule, MdLineModule, MdPseudoCheckboxModule, MdRippleModule} from '@angular/material/core';
 import {CommonModule} from '@angular/common';
 import {
   MdDividerCssMatStyler,

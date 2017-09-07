@@ -9,7 +9,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {OverlayModule} from '@angular/cdk/overlay';
-import {MdOptionModule, MdCommonModule} from '../core';
+import {MdOptionModule, MdCommonModule} from '@angular/material/core';
 import {MdAutocomplete} from './autocomplete';
 import {
   MdAutocompleteTrigger,

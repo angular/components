@@ -14,7 +14,7 @@ import {MdPlaceholder} from './placeholder';
 import {MdPrefix} from './prefix';
 import {MdSuffix} from './suffix';
 import {CommonModule} from '@angular/common';
-import {PlatformModule} from '../core/platform/index';
+import {PlatformModule} from '@angular/material/core';
 
 
 @NgModule({

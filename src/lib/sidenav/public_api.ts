@@ -10,7 +10,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {A11yModule} from '@angular/cdk/a11y';
 import {OverlayModule} from '@angular/cdk/overlay';
-import {MdCommonModule} from '../core';
+import {MdCommonModule} from '@angular/material/core';
 import {MdDrawer, MdDrawerContainer} from './drawer';
 import {MdSidenav, MdSidenavContainer} from './sidenav';
 

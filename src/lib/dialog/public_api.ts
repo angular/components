@@ -11,7 +11,7 @@ import {CommonModule} from '@angular/common';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {PortalModule} from '@angular/cdk/portal';
 import {A11yModule} from '@angular/cdk/a11y';
-import {MdCommonModule} from '../core';
+import {MdCommonModule} from '@angular/material/core';
 import {MdDialog, MD_DIALOG_SCROLL_STRATEGY_PROVIDER} from './dialog';
 import {MdDialogContainer} from './dialog-container';
 import {
