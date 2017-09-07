@@ -21,6 +21,8 @@ export class DatepickerDemo {
   date: Date;
   lastDateInput: Date | null;
   lastDateChange: Date | null;
+  locales = ['en', 'fr', 'ja'];
+  locale = 'en';
 
   dateFilter = (date: Date) => date.getMonth() % 2 == 1 && date.getDate() % 2 == 0;
 

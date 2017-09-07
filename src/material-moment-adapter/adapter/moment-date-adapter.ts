@@ -138,7 +138,7 @@ export class MomentDateAdapter extends DateAdapter<moment.Moment> {
   }
 
   parse(value: any, parseFormat: string | string[]): moment.Moment | null {
-    if (typeof value == 'string') {
+    if (value && typeof value == 'string') {
       return moment(value, parseFormat, this.locale);
     }
     return value ? moment(value).locale(this.locale) : null;

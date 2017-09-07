@@ -330,6 +330,10 @@ describe('MomentDateAdapter', () => {
     expect(parsedDate).not.toBe(date);
   });
 
+  it('should parse empty string as null', () => {
+    expect(adapter.parse('', 'MM/DD/YYYY')).toBeNull();
+  });
+
   it('should parse invalid value as invalid', () => {
     let d = adapter.parse('hello', 'MM/DD/YYYY');
     expect(d).not.toBeNull();

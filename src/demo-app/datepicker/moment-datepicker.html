@@ -1,3 +1,5 @@
-<input mdInput [mdDatepicker]="picker" [(ngModel)]="date" placeholder="Moment.js datepicker">
-<md-datepicker-toggle mdSuffix [for]="picker"></md-datepicker-toggle>
-<md-datepicker #picker></md-datepicker>
+<md-form-field>
+  <input mdInput [mdDatepicker]="picker" [(ngModel)]="date" placeholder="Moment.js datepicker">
+  <md-datepicker-toggle mdSuffix [for]="picker"></md-datepicker-toggle>
+  <md-datepicker #picker></md-datepicker>
+</md-form-field>

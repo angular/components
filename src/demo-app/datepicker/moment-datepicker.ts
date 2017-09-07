@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE_PROVIDER, MD_DATE_FORMATS} from '@angular/material';
 import {MomentDateAdapter, MD_MOMENT_DATE_FORMATS} from '@angular/material-moment-adapter';
-import moment from 'moment';
+import * as moment from 'moment';
 
 
 @Component({
@@ -16,5 +16,12 @@ import moment from 'moment';
   ],
 })
 export class DemoMomentDatepicker {
+  @Input()
+  set locale(value: string) {
+    this._dateAdapter.setLocale(value);
+  }
+
   date = moment();
+
+  constructor(private _dateAdapter: DateAdapter<any>) {}
 }
