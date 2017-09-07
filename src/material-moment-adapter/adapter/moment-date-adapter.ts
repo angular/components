@@ -8,7 +8,12 @@
 
 import {Inject, Injectable, Optional} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
-import moment from 'moment';
+
+// Depending on whether rollup is used, moment needs to be imported differently.
+// TODO(mmalerba): See if we can clean this up at some point.
+import {default as _rollupMoment, Moment} from 'moment';
+import * as _moment from 'moment';
+const moment = _rollupMoment || _moment;
 
 
 /** Creates an array and fills it with values. */
@@ -23,9 +28,9 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
 
 /** Adapts Moment.js Dates for use with Angular Material. */
 @Injectable()
-export class MomentDateAdapter extends DateAdapter<moment.Moment> {
-  // Note: all of the methods that accept a `moment.Moment` input parameter immediately call
-  // `this.clone` on it. This is to ensure that we're working with a `moment.Moment` that has the
+export class MomentDateAdapter extends DateAdapter<Moment> {
+  // Note: all of the methods that accept a `Moment` input parameter immediately call
+  // `this.clone` on it. This is to ensure that we're working with a `Moment` that has the
   // correct locale setting while avoiding mutating the original object passed to us.
 
   private _localeData: {
@@ -61,19 +66,19 @@ export class MomentDateAdapter extends DateAdapter<moment.Moment> {
     moment.locale(globalLocale);
   }
 
-  getYear(date: moment.Moment): number {
+  getYear(date: Moment): number {
     return this.clone(date).year();
   }
 
-  getMonth(date: moment.Moment): number {
+  getMonth(date: Moment): number {
     return this.clone(date).month();
   }
 
-  getDate(date: moment.Moment): number {
+  getDate(date: Moment): number {
     return this.clone(date).date();
   }
 
-  getDayOfWeek(date: moment.Moment): number {
+  getDayOfWeek(date: Moment): number {
     return this.clone(date).day();
   }
 
@@ -96,7 +101,7 @@ export class MomentDateAdapter extends DateAdapter<moment.Moment> {
     return this._localeData.narrowDaysOfWeek;
   }
 
-  getYearName(date: moment.Moment): string {
+  getYearName(date: Moment): string {
     return this.clone(date).format('YYYY');
   }
 
@@ -104,15 +109,15 @@ export class MomentDateAdapter extends DateAdapter<moment.Moment> {
     return this._localeData.firstDayOfWeek;
   }
 
-  getNumDaysInMonth(date: moment.Moment): number {
+  getNumDaysInMonth(date: Moment): number {
     return this.clone(date).daysInMonth();
   }
 
-  clone(date: moment.Moment): moment.Moment {
+  clone(date: Moment): Moment {
     return date.clone().locale(this.locale);
   }
 
-  createDate(year: number, month: number, date: number): moment.Moment {
+  createDate(year: number, month: number, date: number): Moment {
     // Check for invalid month and date (except upper bound on date which we have to check after
     // creating the Date).
     if (month < 0 || month > 11) {
@@ -133,18 +138,18 @@ export class MomentDateAdapter extends DateAdapter<moment.Moment> {
     return result;
   }
 
-  today(): moment.Moment {
+  today(): Moment {
     return moment().locale(this.locale);
   }
 
-  parse(value: any, parseFormat: string | string[]): moment.Moment | null {
+  parse(value: any, parseFormat: string | string[]): Moment | null {
     if (value && typeof value == 'string') {
       return moment(value, parseFormat, this.locale);
     }
     return value ? moment(value).locale(this.locale) : null;
   }
 
-  format(date: moment.Moment, displayFormat: string): string {
+  format(date: Moment, displayFormat: string): string {
     date = this.clone(date);
     if (!this.isValid(date)) {
       throw Error('MomentDateAdapter: Cannot format invalid date.');
@@ -152,19 +157,19 @@ export class MomentDateAdapter extends DateAdapter<moment.Moment> {
     return date.format(displayFormat);
   }
 
-  addCalendarYears(date: moment.Moment, years: number): moment.Moment {
+  addCalendarYears(date: Moment, years: number): Moment {
     return this.clone(date).add({years});
   }
 
-  addCalendarMonths(date: moment.Moment, months: number): moment.Moment {
+  addCalendarMonths(date: Moment, months: number): Moment {
     return this.clone(date).add({months});
   }
 
-  addCalendarDays(date: moment.Moment, days: number): moment.Moment {
+  addCalendarDays(date: Moment, days: number): Moment {
     return this.clone(date).add({days});
   }
 
-  getISODateString(date: moment.Moment): string {
+  getISODateString(date: Moment): string {
     return this.clone(date).format();
   }
 
@@ -172,7 +177,7 @@ export class MomentDateAdapter extends DateAdapter<moment.Moment> {
     return moment.isMoment(obj);
   }
 
-  isValid(date: moment.Moment): boolean {
+  isValid(date: Moment): boolean {
     return this.clone(date).isValid();
   }
 }
