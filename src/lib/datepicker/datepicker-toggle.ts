@@ -18,6 +18,7 @@ import {MdDatepicker} from './datepicker';
 import {MdDatepickerIntl} from './datepicker-intl';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Subscription} from 'rxjs/Subscription';
+import {MATERIAL_COMPATIBILITY_MODE} from '../core';
 
 
 @Component({
@@ -27,6 +28,9 @@ import {Subscription} from 'rxjs/Subscription';
   host: {
     'class': 'mat-datepicker-toggle',
   },
+  providers: [
+    {provide: MATERIAL_COMPATIBILITY_MODE, useValue: false}
+  ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
