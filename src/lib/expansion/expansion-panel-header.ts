@@ -75,12 +75,16 @@ import {Subscription} from 'rxjs/Subscription';
       state('collapsed', style({
         height: '{{collapsedHeight}}',
       }), {
-        params: {collapsedHeight: '48px'},
+        params: {
+          /** @export */ collapsedHeight: '48px'
+        },
       }),
       state('expanded', style({
         height: '{{expandedHeight}}'
       }), {
-        params: {expandedHeight: '64px'}
+        params: {
+          /** @export */ expandedHeight: '64px'
+        }
       }),
       transition('expanded <=> collapsed', animate(EXPANSION_PANEL_ANIMATION_TIMING)),
     ]),
