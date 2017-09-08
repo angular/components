@@ -41,4 +41,11 @@ export class MdMenuModule {}
 
 
 export * from './menu';
+export {MD_MENU_SCROLL_STRATEGY} from './menu-trigger';
 export {fadeInItems, transformMenu} from './menu-animations';
+
+
+
+// DEBUG ONLY
+export {MdMenuItemBase, _MdMenuItemMixinBase} from './menu-item';
+export {MD_MENU_SCROLL_STRATEGY_PROVIDER, MD_MENU_SCROLL_STRATEGY_PROVIDER_FACTORY} from './menu-trigger';

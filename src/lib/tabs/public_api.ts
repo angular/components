@@ -64,3 +64,10 @@ export {MdTabLabelWrapper} from './tab-label-wrapper';
 export {MdTab} from './tab';
 export {MdTabLabel} from './tab-label';
 export {MdTabNav, MdTabLink} from './tab-nav-bar/index';
+
+// DEBUG ONLY
+export {MdTabBase, _MdTabMixinBase} from './tab';
+export {MdTabHeaderBase, _MdTabHeaderMixinBase} from './tab-header';
+export {MdTabLabelWrapperBase, _MdTabLabelWrapperMixinBase} from './tab-label-wrapper';
+export {MdTabLinkBase, MdTabNavBase, _MdTabLinkMixinBase, _MdTabNavMixinBase} from './tab-nav-bar/index';
+

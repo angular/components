@@ -63,3 +63,8 @@ export {
   MdExpansionPanelDescription,
   MdExpansionPanelTitle
 } from './expansion-panel-header';
+
+
+// DEBUG ONLY
+export {_AccordionItemMixinBase, AccordionItemBase} from './accordion-item';
+export {EXPANSION_PANEL_ANIMATION_TIMING} from './expansion-panel';

@@ -41,3 +41,8 @@ export class MdGridListModule {}
 
 export * from './grid-list';
 export {MdGridTile} from './grid-tile';
+
+
+
+// DEBUG ONLY
+export {MdGridAvatarCssMatStyler, MdGridTileFooterCssMatStyler, MdGridTileHeaderCssMatStyler, MdGridTileText} from './grid-tile';
