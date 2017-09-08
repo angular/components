@@ -12,6 +12,8 @@ import {ChangeDetectorRef, Component, OnDestroy, ViewEncapsulation} from '@angul
 export class SidenavMobileAccessibilityDemo implements OnDestroy {
   mobileQuery = matchMedia('(max-width: 600px)');
 
+  filler = Array(20).fill(0);
+
   _mobileQueryListener: () => void;
 
   constructor(changeDetectorRef: ChangeDetectorRef) {

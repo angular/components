@@ -8,6 +8,7 @@
 
 <md-sidenav-container
     class="a11y-demo-sidenav-container"
+    [class.a11y-demo-sidenav-container-fixed]="mobileQuery.matches"
     [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
   <md-sidenav
       #snav
@@ -20,6 +21,7 @@
       <a md-list-item routerLink="../mobile">Responsive sidenav example</a>
       <a md-list-item routerLink="../dual">Dual sidenavs example</a>
     </md-nav-list>
+    <p class="a11y-demo-sidenav-filler" *ngFor="let f of filler">Filler content</p>
   </md-sidenav>
 
   <md-sidenav-content role="region">
@@ -27,5 +29,6 @@
             class="a11y-demo-sidenav-close" routerLink="..">
       Close example
     </button>
+    <p class="a11y-demo-sidenav-filler" *ngFor="let f of filler">Filler content</p>
   </md-sidenav-content>
 </md-sidenav-container>
