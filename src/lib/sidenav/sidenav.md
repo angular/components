@@ -18,13 +18,6 @@ A sidenav container may contain one or two `<md-sidenav>` elements. When there a
 `<md-sidenav>` elements, each must be placed on a different side of the container.
 See the section on positioning below.
 
-`<md-drawer>` is a component that is similar to `<md-sidenav>`. 
-The difference between sidenav and drawer is that the sidenav takes up fullscreen whereas drawer is a smaller element
-that takes up a subsection of the screen. `md-sidenav` has to be placed inside `md-sidenav-container` and `md-drawer`
-has to be placed inside `md-drawer-container`. Currently `md-drawer` and `md-sidenav` support all the same features.
-However, in the future we expect to add different features specific to the different use cases.
-
-
 ### Sidenav mode
 The sidenav can render in one of three different ways based on the `mode` property.
 
@@ -79,11 +72,11 @@ For a sidenav with a FAB (Floating Action Button) or other floating element, the
 outside of the scrollable region and absolutely position it.
 
 
-### Disabling closing of sidenav and drawer
-By default, sidenav and drawer can be closed either by clicking on the backdrop or by pressing <kbd>ESCAPE</kbd>.
-The `disableClose` attribute can be set on `md-drawer` or `md-sidenav` to disable automatic closing when the backdrop
+### Disabling closing of sidenav
+By default, sidenav can be closed either by clicking on the backdrop or by pressing <kbd>ESCAPE</kbd>.
+The `disableClose` attribute can be set on `md-sidenav` to disable automatic closing when the backdrop
 is clicked or <kbd>ESCAPE</kbd> is pressed. To add custom logic on backdrop click, add a `(backdropClick)` listener to
-`md-sidenav-container`. For custom <kdb>ESCAPE</kbd> logic, a standard `(keydown)` listener will suffice.
+`md-sidenav-container`. For custom <kbd>ESCAPE</kbd> logic, a standard `(keydown)` listener will suffice.
 ```html
 <md-sidenav-container (backdropClick)="customBackdropClickHandler()">
   <md-sidenav disableClose (keydown)="customKeydownHandler($event)"></md-sidenav>
