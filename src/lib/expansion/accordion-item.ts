@@ -15,9 +15,9 @@ import {
   Optional,
   ChangeDetectorRef,
 } from '@angular/core';
-import {UniqueSelectionDispatcher} from '../core';
+import {UniqueSelectionDispatcher} from '@angular/material/core';
 import {CdkAccordion} from './accordion';
-import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
+import {mixinDisabled, CanDisable} from '@angular/material/core';
 
 /** Used to generate unique ID for each expansion panel. */
 let nextId = 0;

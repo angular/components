@@ -7,9 +7,9 @@ import {FocusKeyManager} from '@angular/cdk/a11y';
 import {createKeyboardEvent} from '@angular/cdk/testing';
 
 import {MdInputModule} from '../input/index';
-import {LEFT_ARROW, RIGHT_ARROW, BACKSPACE, DELETE, TAB} from '../core/keyboard/keycodes';
-import {Directionality} from '../core';
-import {MdFormFieldModule} from '../form-field/index';
+import {LEFT_ARROW, RIGHT_ARROW, BACKSPACE, DELETE, TAB} from '@angular/material/core';
+import {Directionality} from '@angular/material/core';
+import {MdFormFieldModule} from '@angular/material/form-field';
 import {MdChip} from './chip';
 
 describe('MdChipList', () => {

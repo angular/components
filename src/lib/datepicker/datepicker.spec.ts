@@ -10,10 +10,10 @@ import {MdDatepickerModule, MdDatepickerIntl} from './index';
 import {MdDatepicker} from './datepicker';
 import {MdDatepickerInput} from './datepicker-input';
 import {MdInputModule} from '../input/index';
-import {MdNativeDateModule} from '../core/datetime/index';
-import {DEC, JAN} from '../core/testing/month-constants';
+import {MdNativeDateModule} from '@angular/material/core';
+import {DEC, JAN} from '@angular/material/core';
 import {createKeyboardEvent, dispatchEvent} from '@angular/cdk/testing';
-import {MdFormFieldModule} from '../form-field/index';
+import {MdFormFieldModule} from '@angular/material/form-field';
 
 describe('MdDatepicker', () => {
   afterEach(inject([OverlayContainer], (container: OverlayContainer) => {

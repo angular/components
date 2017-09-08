@@ -57,16 +57,16 @@ import {
   getMdSelectNonArrayValueError,
   getMdSelectNonFunctionValueError
 } from './select-errors';
-import {CanColor, mixinColor} from '../core/common-behaviors/color';
-import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
-import {MdOptgroup, MdOption, MdOptionSelectionChange} from '../core/option/index';
+import {CanColor, mixinColor} from '@angular/material/core';
+import {CanDisable, mixinDisabled} from '@angular/material/core';
+import {MdOptgroup, MdOption, MdOptionSelectionChange} from '@angular/material/core';
 import {
   FloatPlaceholderType,
   MD_PLACEHOLDER_GLOBAL_OPTIONS,
   PlaceholderOptions
-} from '../core/placeholder/placeholder-options';
+} from '@angular/material/core';
 import {Platform} from '@angular/cdk/platform';
-import {HasTabIndex, mixinTabIndex} from '../core/common-behaviors/tabindex';
+import {HasTabIndex, mixinTabIndex} from '@angular/material/core';
 
 /**
  * The following style constants are necessary to save here in order

@@ -23,10 +23,10 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {FocusOrigin, FocusOriginMonitor, MdRipple, RippleRef} from '../core';
-import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
-import {CanColor, mixinColor} from '../core/common-behaviors/color';
-import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
+import {FocusOrigin, FocusOriginMonitor, MdRipple, RippleRef} from '@angular/material/core';
+import {mixinDisabled, CanDisable} from '@angular/material/core';
+import {CanColor, mixinColor} from '@angular/material/core';
+import {CanDisableRipple, mixinDisableRipple} from '@angular/material/core';
 
 // Increasing integer for generating unique ids for checkbox components.
 let nextUniqueId = 0;
