@@ -1,4 +1,5 @@
 import {join} from 'path';
+import {readFileSync, writeFileSync, renameSync, appendFileSync} from 'fs';
 import {mkdirpSync} from 'fs-extra';
 import {copyFiles} from './copy-files';
 import {replaceVersionPlaceholders} from './version-placeholders';
@@ -40,6 +41,28 @@ export function composeRelease(buildPackage: BuildPackage) {
 
   if (buildPackage.secondaryEntryPoints.length) {
     createFilesForSecondaryEntryPoint(buildPackage, releasePath);
+  }
+
+  // wip
+  if (buildPackage.packageName === 'material') {
+    copyFiles(join(bundlesDir, packageName), '**', join(releasePath, '@angular'));
+
+    const es2015Path = join(releasePath, '@angular', 'material.js');
+    const es5Path = join(releasePath, '@angular', 'material.es5.js');
+
+    const es2015Exports = buildPackage.secondaryEntryPoints
+        .map(p => `export * from './${p}';`).join('\n');
+    const es5Exports = buildPackage.secondaryEntryPoints
+        .map(p => `export * from './${p}.es5';`).join('\n');
+
+    appendFileSync(es2015Path, '\n' + es2015Exports, 'utf-8');
+    appendFileSync(es5Path, '\n' + es5Exports, 'utf-8');
+    appendFileSync(join(releasePath, 'material.d.ts'), es2015Exports, 'utf-8');
+
+    createMetadataReexportFile(releasePath, [
+      './typings/index',
+      ...buildPackage.secondaryEntryPoints.map(p => `./${p}`)
+    ], packageName);
   }
 }
 
