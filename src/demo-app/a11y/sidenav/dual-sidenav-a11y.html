@@ -1,0 +1,41 @@
+<md-toolbar color="primary" role="header" aria-label="Dual sidenav app">
+  <button md-icon-button aria-label="Navigation menu" (click)="startSnav.toggle()">
+    <md-icon aria-hidden="true">menu</md-icon>
+  </button>
+  <h1 class="a11y-demo-sidenav-app-name">Dual Sidenav App</h1>
+  <span class="a11y-demo-sidenav-spacer" aria-hidden="true"></span>
+  <button md-icon-button aria-label="Playlist menu" (click)="endSnav.toggle()">
+    <md-icon aria-hidden="true">playlist_play</md-icon>
+  </button>
+</md-toolbar>
+
+<md-sidenav-container class="a11y-demo-sidenav-container">
+  <md-sidenav #startSnav mode="side" role="navigation">
+    <md-nav-list>
+      <a md-list-item routerLink="..">Home</a>
+      <a md-list-item routerLink="../basic">Basic sidenav example</a>
+      <a md-list-item routerLink="../mobile">Responsive sidenav example</a>
+      <a md-list-item routerLink="../dual">Dual sidenavs example</a>
+    </md-nav-list>
+  </md-sidenav>
+
+  <md-sidenav-content role="region">
+    <button md-raised-button aria-label="Close dual sidenav example" color="primary"
+            class="a11y-demo-sidenav-close" routerLink="..">
+      Close example
+    </button>
+  </md-sidenav-content>
+
+  <md-sidenav #endSnav mode="side" position="end" class="a11y-demo-sidenav-playlist" role="region">
+    <h2 class="a11y-demo-sidenav-playlist-header">Playlists</h2>
+    <button md-button aria-label="Thumbs up playlist" (click)="play('Thumbs up')">
+      Thumbs up
+    </button>
+    <button md-button aria-label="Last added playlist" (click)="play('Last added')">
+      Last added
+    </button>
+    <button md-button aria-label="Free and purchased playlist" (click)="play('Free and purchased')">
+      Free and purchased
+    </button>
+  </md-sidenav>
+</md-sidenav-container>

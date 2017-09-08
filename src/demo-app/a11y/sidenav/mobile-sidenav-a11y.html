@@ -3,7 +3,7 @@
   <button md-icon-button aria-label="Navigation menu" (click)="snav.toggle()">
     <md-icon aria-hidden="true">menu</md-icon>
   </button>
-  <span class="a11y-demo-sidenav-app-name">Responsive Sidenav App</span>
+  <h1 class="a11y-demo-sidenav-app-name">Responsive Sidenav App</h1>
 </md-toolbar>
 
 <md-sidenav-container
@@ -11,6 +11,7 @@
     [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
   <md-sidenav
       #snav
+      role="navigation"
       [mode]="mobileQuery.matches ? 'over' : 'side'"
       [fixedInViewport]="mobileQuery.matches">
     <md-nav-list>
@@ -21,7 +22,7 @@
     </md-nav-list>
   </md-sidenav>
 
-  <md-sidenav-content>
+  <md-sidenav-content role="region">
     <button md-raised-button aria-label="Close responsive sidenav example" color="primary"
             class="a11y-demo-sidenav-close" routerLink="..">
       Close example
