@@ -34,6 +34,9 @@ const FIREBASE_IMAGE = `${TEMP_FOLDER}/screenshot/images`;
 const FIREBASE_DATA_GOLDENS = `screenshot/goldens`;
 const FIREBASE_STORAGE_GOLDENS = 'goldens';
 
+const lastActionTimeout = 1000 * 60 * 6;
+const lastActionRefreshInterval = 1000 * 45;
+
 /** Task which upload screenshots generated from e2e test. */
 task('screenshots', () => {
   const prNumber = process.env['TRAVIS_PULL_REQUEST'];
@@ -45,13 +48,18 @@ task('screenshots', () => {
     const firebaseApp = connectFirebaseScreenshots();
     const database = firebaseApp.database();
 
-    // If this task hasn't completed in 8 minutes, close the firebase connection.
-    const timeoutId = setTimeout(() => {
-      console.error('Screenshot tests did not finish in 8 minutes, closing Firebase connection.');
-      return firebaseApp.delete();
-    }, 60 * 1000 * 8);
-
     let lastActionTime = Date.now();
+
+    // If this task hasn't completed in 8 minutes, close the firebase connection.
+    const timeoutId = setInterval(() => {
+      if (lastActionTime + lastActionTimeout <= Date.now()) {
+        clearTimeout(timeoutId);
+        console.error('Last action for screenshot tests did not finish in ' +
+            (lastActionTime / 1000 / 60) + ' minutes. Closing Firebase connection...');
+        return firebaseApp.delete().then(() => process.exit(1));
+      }
+    }, lastActionRefreshInterval);
+
     return uploadTravisJobInfo(database, prNumber)
       .then(() => {
         console.log(`  Downloading screenshot golds from Firebase...`);
