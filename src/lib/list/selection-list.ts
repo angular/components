@@ -33,14 +33,18 @@ import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 import {RxChain, switchMap, startWith} from '../core/rxjs/index';
 import {merge} from 'rxjs/observable/merge';
 import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
+import {MATERIAL_COMPATIBILITY_MODE} from '../core/compatibility/compatibility';
 
+
+/** @docs-private */
 export class MdSelectionListBase {}
 export const _MdSelectionListMixinBase = mixinDisableRipple(mixinDisabled(MdSelectionListBase));
 
+/** @docs-private */
 export class MdListOptionBase {}
 export const _MdListOptionMixinBase = mixinDisableRipple(MdListOptionBase);
 
-
+/** Event emitted by a selection-list whenever the state of an option is changed. */
 export interface MdSelectionListOptionEvent {
   option: MdListOption;
 }
@@ -63,19 +67,20 @@ const FOCUSED_STYLE: string = 'mat-list-item-focus';
     '(blur)': '_handleBlur()',
     '(click)': '_handleClick()',
     'tabindex': '-1',
+    '[class.mat-list-item-disabled]': 'disabled',
     '[attr.aria-selected]': 'selected.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
   },
   templateUrl: 'list-option.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: false}],
 })
 export class MdListOption extends _MdListOptionMixinBase
     implements AfterContentInit, OnDestroy, FocusableOption, CanDisableRipple {
 
   private _lineSetter: MdLineSetter;
   private _selected: boolean = false;
-  /** Whether the checkbox is disabled. */
   private _disabled: boolean = false;
   private _value: any;
 
@@ -92,10 +97,12 @@ export class MdListOption extends _MdListOptionMixinBase
   get disabled() { return (this.selectionList && this.selectionList.disabled) || this._disabled; }
   set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
 
+  /** Value of the option */
   @Input()
   get value() { return this._value; }
   set value( val: any) { this._value = coerceBooleanProperty(val); }
 
+  /** Whether the option is selected. */
   @Input()
   get selected() { return this._selected; }
   set selected( val: boolean) { this._selected = coerceBooleanProperty(val); }
@@ -132,6 +139,7 @@ export class MdListOption extends _MdListOptionMixinBase
     this.destroyed.emit({option: this});
   }
 
+  /** Toggles the selection state of the option. */
   toggle(): void {
     this.selected = !this.selected;
     this.selectionList.selectedOptions.toggle(this);
@@ -146,7 +154,7 @@ export class MdListOption extends _MdListOptionMixinBase
 
   /** Whether this list item should show a ripple effect when clicked.  */
   _isRippleDisabled() {
-    return this.disableRipple || this.selectionList.disableRipple;
+    return this.disabled || this.disableRipple || this.selectionList.disableRipple;
   }
 
   _handleClick() {
@@ -171,6 +179,9 @@ export class MdListOption extends _MdListOptionMixinBase
 }
 
 
+/**
+ * Material Design list component where each item is a selectable option. Behaves as a listbox.
+ */
 @Component({
   moduleId: module.id,
   selector: 'md-selection-list, mat-selection-list',
@@ -205,7 +216,7 @@ export class MdSelectionList extends _MdSelectionListMixinBase
   /** The option components contained within this selection-list. */
   @ContentChildren(MdListOption) options: QueryList<MdListOption>;
 
-  /** options which are selected. */
+  /** The currently selected options. */
   selectedOptions: SelectionModel<MdListOption> = new SelectionModel<MdListOption>(true);
 
   constructor(private _element: ElementRef) {
@@ -228,13 +239,12 @@ export class MdSelectionList extends _MdSelectionListMixinBase
     this._optionFocusSubscription.unsubscribe();
   }
 
+  /** Focus the selection-list. */
   focus() {
     this._element.nativeElement.focus();
   }
 
-  /**
-   * Map all the options' destroy event subscriptions and merge them into one stream.
-   */
+  /** Map all the options' destroy event subscriptions and merge them into one stream. */
   private _onDestroySubscription(): Subscription {
     return RxChain.from(this.options.changes)
       .call(startWith, this.options)
@@ -254,9 +264,7 @@ export class MdSelectionList extends _MdSelectionListMixinBase
       });
   }
 
-  /**
-   * Map all the options' onFocus event subscriptions and merge them into one stream.
-   */
+  /** Map all the options' onFocus event subscriptions and merge them into one stream. */
   private _onFocusSubscription(): Subscription {
     return RxChain.from(this.options.changes)
       .call(startWith, this.options)

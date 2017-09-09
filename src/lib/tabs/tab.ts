@@ -60,6 +60,9 @@ export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChan
   /** Emits whenever the label changes. */
   _labelChange = new Subject<void>();
 
+  /** Emits whenevfer the disable changes */
+  _disableChange = new Subject<void>();
+
   /**
    * The relatively indexed position where 0 represents the center, negative is left, and positive
    * represents the right.
@@ -90,9 +93,15 @@ export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChan
     if (changes.hasOwnProperty('textLabel')) {
       this._labelChange.next();
     }
+
+    if (changes.hasOwnProperty('disabled')) {
+      this._disableChange.next();
+    }
   }
 
   ngOnDestroy(): void {
+    this._disableChange.complete();
     this._labelChange.complete();
   }
+
 }

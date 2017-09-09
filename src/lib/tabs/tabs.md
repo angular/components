@@ -9,14 +9,12 @@ tab labels in the header.
 <!-- example(tabs-overview) -->
 
 ### Events
-
 The `selectChange` output event is emitted when the active tab changes.
 
 The `focusChange` output event is emitted when the user puts focus on any of the tab labels in
 the header, usually through keyboard navigation.
 
 ### Labels
-
 If a tab's label is only text then the simple tab-group API can be used.
 
 ```html
@@ -54,7 +52,6 @@ For more complex labels, add a template with the `md-tab-label` directive inside
 ```
 
 ### Dynamic Height
-
 By default, the tab group will not change its height to the height of the currently active tab. To
 change this, set the `dynamicHeight` input to true. The tab body will animate its height according
  to the height of the active tab.
@@ -103,3 +100,16 @@ declaring the body in a `ng-template` with the `mdTabContent` attribute.
   </md-tab>
 </md-tab-group>
 ```
+
+### Accessibility
+Tabs without text or labels should be given a meaningful label via `aria-label` or
+`aria-labelledby`. For `MdTabNav`, the `<nav>` element should have a label as well.
+
+#### Keyboard shortcuts
+
+| Shortcut             | Action                     |
+|----------------------|----------------------------|
+| `LEFT_ARROW`         | Move focus to previous tab |
+| `RIGHT_ARROW`        | Move focus to next tab     |
+| `SPACE` or 'ENTER'   | Switch to focused tab      |
+
