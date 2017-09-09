@@ -389,7 +389,7 @@ describe('lazy loaded tabs', () => {
     TestBed.compileComponents();
   }));
 
-  it('should lazy load the second tab', (done) => {
+  it('should lazy load the second tab', async () => {
     let fixture = TestBed.createComponent(TemplateTabs);
     fixture.detectChanges();
 
@@ -401,7 +401,6 @@ describe('lazy loaded tabs', () => {
       fixture.detectChanges();
       let child = fixture.debugElement.query(By.css('.child'));
       expect(child.nativeElement).toBeDefined();
-      done();
     });
   });
 });

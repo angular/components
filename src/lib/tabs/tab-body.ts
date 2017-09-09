@@ -146,7 +146,9 @@ export class MdTabBody implements OnInit, DoCheck {
    */
   ngDoCheck(): void {
     if (this._isCenterPosition(this._position) && !this._portalHost.hasAttached()) {
-      // Nested templates via mdTabContent templates causes expression change error
+      // It is important to attach the view during `DoCheck`; if an
+      // embedded view is created during change detection, it will either
+      // cause a changed-after-checked error or never be checked at all.
       this._portalHost.attach(this._content);
     }
   }
