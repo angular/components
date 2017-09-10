@@ -153,7 +153,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
     this._checkMenu();
 
     this.menu.close.subscribe(reason => {
-      this.closeMenu();
+      this._closeMenu(false);
 
       // If a click closed the menu, we should close the entire chain of nested menus.
       if (reason === 'click' && this._parentMenu) {
@@ -216,21 +216,32 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
 
   /** Closes the menu. */
   closeMenu(): void {
-    if (this._overlayRef && this.menuOpen) {
-      this._resetMenu();
-      this._overlayRef.detach();
-      this._closeSubscription.unsubscribe();
-      this.menu.close.emit();
-
-      if (this.menu instanceof MdMenu) {
-        this.menu._resetAnimation();
-      }
-    }
+    this._closeMenu(true);
   }
 
   /** Focuses the menu trigger. */
   focus() {
     this._element.nativeElement.focus();
+  }
+
+  /**
+   * Gives the option of setting emitEvent to false to avoid emitting an event
+   * when an event will already be emitted.
+   */
+  private _closeMenu(emitEvent: boolean) {
+    if (this._overlayRef && this.menuOpen) {
+      this._resetMenu();
+      this._overlayRef.detach();
+      this._closeSubscription.unsubscribe();
+
+      if (emitEvent) {
+        this.menu.close.emit();
+      }
+
+      if (this.menu instanceof MdMenu) {
+        this.menu._resetAnimation();
+      }
+    }
   }
 
   /**

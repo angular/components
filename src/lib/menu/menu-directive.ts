@@ -139,7 +139,7 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   }
 
   /** Event emitted when the menu is closed. */
-  @Output() close = new EventEmitter<void | 'click' | 'keydown'>();
+  @Output() close = new EventEmitter<void | 'click' | 'destroy' | 'keydown'>();
 
   constructor(
     private _elementRef: ElementRef,
@@ -152,7 +152,7 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
 
   ngOnDestroy() {
     this._tabSubscription.unsubscribe();
-    this.close.emit();
+    this.close.emit('destroy');
     this.close.complete();
   }
 
