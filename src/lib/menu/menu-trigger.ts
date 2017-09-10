@@ -43,7 +43,7 @@ import {MdMenuItem} from './menu-item';
 import {MdMenuPanel} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
 import {throwMdMenuMissingError} from './menu-errors';
-import {of as observableOf} from 'rxjs/observable/of';
+import {empty} from 'rxjs/observable/empty';
 import {merge} from 'rxjs/observable/merge';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -153,7 +153,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
     this._checkMenu();
 
     this.menu.close.subscribe(reason => {
-      this._closeMenu(false);
+      this._closeMenu();
 
       // If a click closed the menu, we should close the entire chain of nested menus.
       if (reason === 'click' && this._parentMenu) {
@@ -205,7 +205,9 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   openMenu(): void {
     if (!this._menuOpen) {
       this._createOverlay().attach(this._portal);
-      this._closeSubscription = this._menuClosingActions().subscribe(() => this.menu.close.emit());
+      this._closeSubscription = this._menuClosingActions().subscribe(() => {
+        this.menu.close.emit();
+      });
       this._initMenu();
 
       if (this.menu instanceof MdMenu) {
@@ -216,7 +218,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
 
   /** Closes the menu. */
   closeMenu(): void {
-    this._closeMenu(true);
+    this.menu.close.emit();
   }
 
   /** Focuses the menu trigger. */
@@ -225,18 +227,13 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Gives the option of setting emitEvent to false to avoid emitting an event
-   * when an event will already be emitted.
+   * Closes the menu and does the necessary cleanup.
    */
-  private _closeMenu(emitEvent: boolean) {
+  private _closeMenu() {
     if (this._overlayRef && this.menuOpen) {
       this._resetMenu();
       this._overlayRef.detach();
       this._closeSubscription.unsubscribe();
-
-      if (emitEvent) {
-        this.menu.close.emit();
-      }
 
       if (this.menu instanceof MdMenu) {
         this.menu._resetAnimation();
@@ -411,11 +408,11 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   /** Returns a stream that emits whenever an action that should close the menu occurs. */
   private _menuClosingActions() {
     const backdrop = this._overlayRef!.backdropClick();
-    const parentClose = this._parentMenu ? this._parentMenu.close : observableOf(null);
+    const parentClose = this._parentMenu ? this._parentMenu.close : empty();
     const hover = this._parentMenu ? RxChain.from(this._parentMenu.hover())
         .call(filter, active => active !== this._menuItemInstance)
         .call(filter, () => this._menuOpen)
-        .result() : observableOf(null);
+        .result() : empty();
 
     return merge(backdrop, parentClose, hover);
   }

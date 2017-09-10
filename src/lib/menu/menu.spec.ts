@@ -97,7 +97,7 @@ describe('MdMenu', () => {
     expect(overlayContainerElement.textContent).toBe('');
   }));
 
-  it('should close the menu when pressing escape', fakeAsync(() => {
+  it('should close the menu when pressing ESCAPE', fakeAsync(() => {
     const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
@@ -485,7 +485,6 @@ describe('MdMenu', () => {
       fixture = TestBed.createComponent(SimpleMenu);
       fixture.detectChanges();
       fixture.componentInstance.trigger.openMenu();
-      fixture.componentInstance.closeCallback.calls.reset();
     });
 
     it('should emit an event when a menu item is clicked', () => {
@@ -509,7 +508,7 @@ describe('MdMenu', () => {
       expect(fixture.componentInstance.closeCallback).toHaveBeenCalledTimes(1);
     });
 
-    it('should emit an event when escaped', () => {
+    it('should emit an event when pressing ESCAPE', () => {
       const menu = overlayContainerElement.querySelector('.mat-menu-panel') as HTMLElement;
 
       dispatchKeyboardEvent(menu, 'keydown', ESCAPE);
@@ -526,7 +525,7 @@ describe('MdMenu', () => {
       fixture.componentInstance.menu.close.subscribe(emitCallback, null, completeCallback);
       fixture.destroy();
 
-      expect(emitCallback).toHaveBeenCalledWith('destroy');
+      expect(emitCallback).toHaveBeenCalledWith(undefined);
       expect(emitCallback).toHaveBeenCalledTimes(1);
       expect(completeCallback).toHaveBeenCalled();
     });
@@ -1003,10 +1002,6 @@ describe('MdMenu', () => {
       const menus = overlay.querySelectorAll('.mat-menu-panel');
 
       expect(menus.length).toBe(3, 'Expected three open menus');
-
-      instance.rootCloseCallback.calls.reset();
-      instance.levelOneCloseCallback.calls.reset();
-      instance.levelTwoCloseCallback.calls.reset();
 
       instance.rootTrigger.closeMenu();
       fixture.detectChanges();

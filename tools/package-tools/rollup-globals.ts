@@ -51,6 +51,7 @@ export const rollupGlobals = {
   'rxjs/Observer': 'Rx',
   'rxjs/Scheduler': 'Rx',
   'rxjs/observable/combineLatest': 'Rx.Observable',
+  'rxjs/observable/empty': 'Rx.Observable',
   'rxjs/observable/forkJoin': 'Rx.Observable',
   'rxjs/observable/fromEvent': 'Rx.Observable',
   'rxjs/observable/merge': 'Rx.Observable',
