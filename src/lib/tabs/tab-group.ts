@@ -301,9 +301,8 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
    * item is disabled, it will move in the fallbackDelta direction until it either
    * finds an enabled item or encounters the end of the list.
    */
-  private _setActiveItemByIndex(index: number,
-                                fallbackDelta: number,
-                                items = this._tabs.toArray()): void {
+  private _setActiveItemByIndex(index: number, fallbackDelta: number): void {
+    const items = this._tabs.toArray();
     if (!items[index]) { return; }
     while (items[index].disabled) {
       index += fallbackDelta;
