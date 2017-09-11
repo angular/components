@@ -234,9 +234,14 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
    * binding to be updated, we need to subscribe to changes in it and trigger change detection
    * manually.
    */
-  private _subscribeToTabLabels(): void {
-    this._tabLabelSubscription.unsubscribe();
-    this._tabLabelSubscription = merge(...this._tabs.map(tab => tab._labelChange)).subscribe(() => {
+  private _subscribeToTabLabels() {
+    if (this._tabLabelSubscription) {
+      this._tabLabelSubscription.unsubscribe();
+    }
+
+    this._tabLabelSubscription = merge(
+        ...this._tabs.map(tab => tab._disableChange),
+        ...this._tabs.map(tab => tab._labelChange)).subscribe(() => {
       this._changeDetectorRef.markForCheck();
     });
   }

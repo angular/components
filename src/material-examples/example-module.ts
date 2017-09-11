@@ -52,6 +52,7 @@ import {InputOverviewExample} from './input-overview/input-overview-example';
 import {InputPrefixSuffixExample} from './input-prefix-suffix/input-prefix-suffix-example';
 import {ListOverviewExample} from './list-overview/list-overview-example';
 import {ListSectionsExample} from './list-sections/list-sections-example';
+import {ListSelectionExample} from './list-selection/list-selection-example';
 import {MenuIconsExample} from './menu-icons/menu-icons-example';
 import {MenuOverviewExample} from './menu-overview/menu-overview-example';
 import {PaginatorConfigurableExample} from './paginator-configurable/paginator-configurable-example';
@@ -74,6 +75,7 @@ import {SliderOverviewExample} from './slider-overview/slider-overview-example';
 import {PizzaPartyComponent,SnackBarComponentExample} from './snack-bar-component/snack-bar-component-example';
 import {SnackBarOverviewExample} from './snack-bar-overview/snack-bar-overview-example';
 import {SortOverviewExample} from './sort-overview/sort-overview-example';
+import {StepperOverviewExample} from './stepper-overview/stepper-overview-example';
 import {TableBasicExample} from './table-basic/table-basic-example';
 import {TableFilteringExample} from './table-filtering/table-filtering-example';
 import {TableHttpExample} from './table-http/table-http-example';
@@ -322,6 +324,12 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'list-selection': {
+    title: 'List with selection',
+    component: ListSelectionExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'menu-icons': {
     title: 'Menu with icons',
     component: MenuIconsExample,
@@ -454,6 +462,12 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'stepper-overview': {
+    title: 'Stepper overview',
+    component: StepperOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'table-basic': {
     title: 'Basic table',
     component: TableBasicExample,
@@ -497,7 +511,7 @@ export const EXAMPLE_COMPONENTS = {
     selectorName: null
   },
   'tabs-template-label': {
-    title: 'Coming soon!',
+    title: 'Complex Example',
     component: TabsTemplateLabelExample,
     additionalFiles: null,
     selectorName: null
@@ -568,6 +582,7 @@ export const EXAMPLE_LIST = [
   InputPrefixSuffixExample,
   ListOverviewExample,
   ListSectionsExample,
+  ListSelectionExample,
   MenuIconsExample,
   MenuOverviewExample,
   PaginatorConfigurableExample,
@@ -590,6 +605,7 @@ export const EXAMPLE_LIST = [
   PizzaPartyComponent,SnackBarComponentExample,
   SnackBarOverviewExample,
   SortOverviewExample,
+  StepperOverviewExample,
   TableBasicExample,
   TableFilteringExample,
   TableHttpExample,
