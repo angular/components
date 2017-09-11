@@ -105,11 +105,3 @@
                    [startView]="yearView ? 'year' : 'month'"></md-datepicker>
   </md-form-field>
 </p>
-
-<h2>Moment.js Datepicker</h2>
-<p>
-  <md-select placeholder="Locale" [(ngModel)]="locale">
-    <md-option *ngFor="let l of locales" [value]="l">{{l}}</md-option>
-  </md-select>
-</p>
-<p><demo-moment-datepicker [locale]="locale"></demo-moment-datepicker></p>

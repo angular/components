@@ -47,7 +47,6 @@ import {
   OverlayContainer,
 } from '@angular/material';
 import {TableHeaderDemo} from '../table/table-header-demo';
-import {DemoMomentDatepicker} from '../datepicker/moment-datepicker';
 
 @NgModule({
   imports: [
@@ -67,7 +66,6 @@ import {DemoMomentDatepicker} from '../datepicker/moment-datepicker';
     CheckboxDemo,
     DatepickerDemo,
     DemoApp,
-    DemoMomentDatepicker,
     DialogDemo,
     GesturesDemo,
     GridListDemo,
