@@ -144,24 +144,24 @@ export class FocusTrap {
    * @param bound The boundary to get (start or end of trapped region).
    * @returns The boundary element.
    */
-  private _getRegionBoundary(bound: 'Start' | 'End'): HTMLElement | null {
-    const old = bound.toLowerCase();
+  private _getRegionBoundary(bound: 'start' | 'end'): HTMLElement | null {
+    const name = bound.charAt(0).toUpperCase() + bound.slice(1).toLowerCase();
     // Contains the deprecated version of selector, for temporary backwards comparability.
-    let markers = this._element.querySelectorAll(`[cdk-focus-region-${old}], ` +
+    let markers = this._element.querySelectorAll(`[cdk-focus-region-${bound}], ` +
                                                  `[cdkFocusRegion${bound}], ` +
-                                                 `[cdk-focus-${old}]`) as NodeListOf<HTMLElement>;
+                                                 `[cdk-focus-${name}]`) as NodeListOf<HTMLElement>;
 
     for (let i = 0; i < markers.length; i++) {
-      if (markers[i].hasAttribute(`cdk-focus-${old}`)) {
-        console.warn(`Found use of deprecated attribute 'cdk-focus-${old}',` +
-                     ` use 'cdkFocusRegion${bound}' instead.`, markers[i]);
-      } else if (markers[i].hasAttribute(`cdk-focus-region-${old}`)) {
-        console.warn(`Found use of deprecated attribute 'cdk-focus-region-${old}',` +
-                     ` use 'cdkFocusRegion${bound}' instead.`, markers[i]);
+      if (markers[i].hasAttribute(`cdk-focus-${bound}`)) {
+        console.warn(`Found use of deprecated attribute 'cdk-focus-${bound}',` +
+                     ` use 'cdkFocusRegion${name}' instead.`, markers[i]);
+      } else if (markers[i].hasAttribute(`cdk-focus-region-${bound}`)) {
+        console.warn(`Found use of deprecated attribute 'cdk-focus-region-${bound}',` +
+                     ` use 'cdkFocusRegion${name}' instead.`, markers[i]);
       }
     }
 
-    if (bound == 'Start') {
+    if (bound == 'start') {
       return markers.length ? markers[0] : this._getFirstTabbableElement(this._element);
     }
     return markers.length ?
@@ -195,7 +195,7 @@ export class FocusTrap {
    * @returns Returns whether focus was moved successfuly.
    */
   focusFirstTabbableElement(): boolean {
-    const redirectToElement = this._getRegionBoundary('Start');
+    const redirectToElement = this._getRegionBoundary('start');
 
     if (redirectToElement) {
       redirectToElement.focus();
@@ -209,7 +209,7 @@ export class FocusTrap {
    * @returns Returns whether focus was moved successfuly.
    */
   focusLastTabbableElement(): boolean {
-    const redirectToElement = this._getRegionBoundary('End');
+    const redirectToElement = this._getRegionBoundary('end');
 
     if (redirectToElement) {
       redirectToElement.focus();
