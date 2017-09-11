@@ -65,7 +65,7 @@ export class OverlayRef implements PortalHost {
     // Update the position once the zone is stable so that the overlay will be fully rendered
     // before attempting to position it, as the position may depend on the size of the rendered
     // content.
-    first.call(this._ngZone.onStable).subscribe(() => {
+    first.call(this._ngZone.onStable.asObservable()).subscribe(() => {
       this.updatePosition();
     });
 
