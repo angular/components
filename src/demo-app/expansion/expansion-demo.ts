@@ -9,7 +9,10 @@ import {Component, ViewEncapsulation} from '@angular/core';
 })
 export class ExpansionDemo {
   displayMode: string = 'default';
-  multi: boolean = false;
-  hideToggle: boolean = false;
+  multi = false;
+  hideToggle = false;
+  disabled = false;
   showPanel3 = true;
+  expandedHeight: string;
+  collapsedHeight: string;
 }

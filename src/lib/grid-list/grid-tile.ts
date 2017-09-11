@@ -52,7 +52,7 @@ export class MdGridTile {
    * Sets the style of the grid-tile element.  Needs to be set manually to avoid
    * "Changed after checked" errors that would occur with HostBinding.
    */
-  _setStyle(property: string, value: string): void {
+  _setStyle(property: string, value: any): void {
     this._renderer.setStyle(this._element.nativeElement, property, value);
   }
 }
@@ -62,6 +62,7 @@ export class MdGridTile {
   selector: 'md-grid-tile-header, mat-grid-tile-header, md-grid-tile-footer, mat-grid-tile-footer',
   templateUrl: 'grid-tile-text.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MdGridTileText implements AfterContentInit {
   /**

@@ -86,12 +86,12 @@ export const MENU_PANEL_TOP_PADDING = 8;
   exportAs: 'mdMenuTrigger'
 })
 export class MdMenuTrigger implements AfterViewInit, OnDestroy {
-  private _portal: TemplatePortal;
+  private _portal: TemplatePortal<any>;
   private _overlayRef: OverlayRef | null = null;
   private _menuOpen: boolean = false;
-  private _closeSubscription: Subscription;
-  private _positionSubscription: Subscription;
-  private _hoverSubscription: Subscription;
+  private _closeSubscription = Subscription.EMPTY;
+  private _positionSubscription = Subscription.EMPTY;
+  private _hoverSubscription = Subscription.EMPTY;
 
   // Tracking input type is necessary so it's possible to only auto-focus
   // the first item of the list when the menu is opened via the keyboard
@@ -322,13 +322,13 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    * @returns OverlayState
    */
   private _getOverlayConfig(): OverlayState {
-    const overlayState = new OverlayState();
-    overlayState.positionStrategy = this._getPosition();
-    overlayState.hasBackdrop = !this.triggersSubmenu();
-    overlayState.backdropClass = 'cdk-overlay-transparent-backdrop';
-    overlayState.direction = this.dir;
-    overlayState.scrollStrategy = this._scrollStrategy();
-    return overlayState;
+    return new OverlayState({
+      positionStrategy: this._getPosition(),
+      hasBackdrop: !this.triggersSubmenu(),
+      backdropClass: 'cdk-overlay-transparent-backdrop',
+      direction: this.dir,
+      scrollStrategy: this._scrollStrategy()
+    });
   }
 
   /**
@@ -392,13 +392,9 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
 
   /** Cleans up the active subscriptions. */
   private _cleanUpSubscriptions(): void {
-    [
-      this._closeSubscription,
-      this._positionSubscription,
-      this._hoverSubscription
-    ]
-        .filter(subscription => !!subscription)
-        .forEach(subscription => subscription.unsubscribe());
+    this._closeSubscription.unsubscribe();
+    this._positionSubscription.unsubscribe();
+    this._hoverSubscription.unsubscribe();
   }
 
   /** Returns a stream that emits whenever an action that should close the menu occurs. */

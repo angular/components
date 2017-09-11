@@ -122,6 +122,7 @@ export class MdDatepickerContent<D> implements AfterContentInit {
   selector: 'md-datepicker, mat-datepicker',
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MdDatepicker<D> implements OnDestroy {
   /** The date to open the calendar to initially. */
@@ -199,7 +200,7 @@ export class MdDatepicker<D> implements OnDestroy {
   /** The element that was focused before the datepicker was opened. */
   private _focusedElementBeforeOpen: HTMLElement | null = null;
 
-  private _inputSubscription: Subscription;
+  private _inputSubscription = Subscription.EMPTY;
 
   constructor(private _dialog: MdDialog,
               private _overlay: Overlay,
@@ -216,11 +217,10 @@ export class MdDatepicker<D> implements OnDestroy {
 
   ngOnDestroy() {
     this.close();
+    this._inputSubscription.unsubscribe();
+
     if (this._popupRef) {
       this._popupRef.dispose();
-    }
-    if (this._inputSubscription) {
-      this._inputSubscription.unsubscribe();
     }
   }
 
@@ -321,12 +321,13 @@ export class MdDatepicker<D> implements OnDestroy {
 
   /** Create the popup. */
   private _createPopup(): void {
-    const overlayState = new OverlayState();
-    overlayState.positionStrategy = this._createPopupPositionStrategy();
-    overlayState.hasBackdrop = true;
-    overlayState.backdropClass = 'md-overlay-transparent-backdrop';
-    overlayState.direction = this._dir ? this._dir.value : 'ltr';
-    overlayState.scrollStrategy = this._scrollStrategy();
+    const overlayState = new OverlayState({
+      positionStrategy: this._createPopupPositionStrategy(),
+      hasBackdrop: true,
+      backdropClass: 'md-overlay-transparent-backdrop',
+      direction: this._dir ? this._dir.value : 'ltr',
+      scrollStrategy: this._scrollStrategy()
+    });
 
     this._popupRef = this._overlay.create(overlayState);
   }

@@ -8,8 +8,18 @@
 
 import {TemplatePortal} from '../core/portal/portal';
 import {
-  ViewContainerRef, Input, TemplateRef, ViewChild, OnInit, ContentChild,
-  Component, ChangeDetectionStrategy, OnDestroy, OnChanges, SimpleChanges,
+  ChangeDetectionStrategy,
+  Component,
+  ContentChild,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 import {MdTabLabel} from './tab-label';
@@ -26,6 +36,8 @@ export const _MdTabMixinBase = mixinDisabled(MdTabBase);
   templateUrl: 'tab.html',
   inputs: ['disabled'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  exportAs: 'mdTab',
 })
 export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
   /** Content for the tab label given by <ng-template md-tab-label>. */
@@ -38,11 +50,14 @@ export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChan
   @Input('label') textLabel: string = '';
 
   /** The portal that will be the hosted content of the tab */
-  private _contentPortal: TemplatePortal | null = null;
-  get content(): TemplatePortal | null { return this._contentPortal; }
+  private _contentPortal: TemplatePortal<any> | null = null;
+  get content(): TemplatePortal<any> | null { return this._contentPortal; }
 
   /** Emits whenever the label changes. */
   _labelChange = new Subject<void>();
+
+  /** Emits whenevfer the disable changes */
+  _disableChange = new Subject<void>();
 
   /**
    * The relatively indexed position where 0 represents the center, negative is left, and positive
@@ -56,21 +71,31 @@ export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChan
    */
   origin: number | null = null;
 
+  /**
+   * Whether the tab is currently active.
+   */
+  isActive = false;
+
   constructor(private _viewContainerRef: ViewContainerRef) {
     super();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes.hasOwnProperty('textLabel')) {
       this._labelChange.next();
     }
+
+    if (changes.hasOwnProperty('disabled')) {
+      this._disableChange.next();
+    }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
+    this._disableChange.complete();
     this._labelChange.complete();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._contentPortal = new TemplatePortal(this._content, this._viewContainerRef);
   }
 }

@@ -16,6 +16,7 @@ import {
   OnDestroy,
   Renderer2,
   ElementRef,
+  Input,
 } from '@angular/core';
 import {
   trigger,
@@ -49,13 +50,20 @@ import {Subscription} from 'rxjs/Subscription';
   host: {
     'class': 'mat-expansion-panel-header',
     'role': 'button',
-    'tabindex': '0',
+    '[attr.tabindex]': 'panel.disabled ? -1 : 0',
     '[attr.aria-controls]': '_getPanelId()',
     '[attr.aria-expanded]': '_isExpanded()',
+    '[attr.aria-disabled]': 'panel.disabled',
     '[class.mat-expanded]': '_isExpanded()',
     '(click)': '_toggle()',
     '(keyup)': '_keyup($event)',
-    '[@expansionHeight]': '_getExpandedState()',
+    '[@expansionHeight]': `{
+        value: _getExpandedState(),
+        params: {
+          collapsedHeight: collapsedHeight,
+          expandedHeight: expandedHeight
+        }
+    }`,
   },
   animations: [
     trigger('indicatorRotate', [
@@ -64,18 +72,26 @@ import {Subscription} from 'rxjs/Subscription';
       transition('expanded <=> collapsed', animate(EXPANSION_PANEL_ANIMATION_TIMING)),
     ]),
     trigger('expansionHeight', [
-      state('collapsed', style({height: '48px'})),
-      state('expanded', style({height: '64px'})),
+      state('collapsed', style({
+        height: '{{collapsedHeight}}',
+      }), {
+        params: {collapsedHeight: '48px'},
+      }),
+      state('expanded', style({
+        height: '{{expandedHeight}}'
+      }), {
+        params: {expandedHeight: '64px'}
+      }),
       transition('expanded <=> collapsed', animate(EXPANSION_PANEL_ANIMATION_TIMING)),
     ]),
   ],
 })
 export class MdExpansionPanelHeader implements OnDestroy {
-  private _parentChangeSubscription: Subscription | null = null;
+  private _parentChangeSubscription = Subscription.EMPTY;
 
   constructor(
+    renderer: Renderer2,
     @Host() public panel: MdExpansionPanel,
-    private _renderer: Renderer2,
     private _element: ElementRef,
     private _focusOriginMonitor: FocusOriginMonitor,
     private _changeDetectorRef: ChangeDetectorRef) {
@@ -85,16 +101,24 @@ export class MdExpansionPanelHeader implements OnDestroy {
     this._parentChangeSubscription = merge(
       panel.opened,
       panel.closed,
-      filter.call(panel._inputChanges, changes => !!changes.hideToggle)
+      filter.call(panel._inputChanges, changes => !!(changes.hideToggle || changes.disabled))
     )
     .subscribe(() => this._changeDetectorRef.markForCheck());
 
-    _focusOriginMonitor.monitor(_element.nativeElement, _renderer, false);
+    _focusOriginMonitor.monitor(_element.nativeElement, renderer, false);
   }
+
+  /** Height of the header while the panel is expanded. */
+  @Input() expandedHeight: string;
+
+  /** Height of the header while the panel is collapsed. */
+  @Input() collapsedHeight: string;
 
   /** Toggles the expanded state of the panel. */
   _toggle(): void {
-    this.panel.toggle();
+    if (!this.panel.disabled) {
+      this.panel.toggle();
+    }
   }
 
   /** Gets whether the panel is expanded. */
@@ -112,9 +136,9 @@ export class MdExpansionPanelHeader implements OnDestroy {
     return this.panel.id;
   }
 
-  /** Gets whether the expand indicator is hidden. */
-  _getHideToggle(): boolean {
-    return this.panel.hideToggle;
+  /** Gets whether the expand indicator should be shown. */
+  _showToggle(): boolean {
+    return !this.panel.hideToggle && !this.panel.disabled;
   }
 
   /** Handle keyup event calling to toggle() if appropriate. */
@@ -132,11 +156,7 @@ export class MdExpansionPanelHeader implements OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this._parentChangeSubscription) {
-      this._parentChangeSubscription.unsubscribe();
-      this._parentChangeSubscription = null;
-    }
-
+    this._parentChangeSubscription.unsubscribe();
     this._focusOriginMonitor.stopMonitoring(this._element.nativeElement);
   }
 }

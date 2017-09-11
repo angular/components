@@ -20,7 +20,7 @@ import {
 describe('Overlay', () => {
   let overlay: Overlay;
   let componentPortal: ComponentPortal<PizzaMsg>;
-  let templatePortal: TemplatePortal;
+  let templatePortal: TemplatePortal<any>;
   let overlayContainerElement: HTMLElement;
   let viewContainerFixture: ComponentFixture<TestComponentWithTemplatePortals>;
 
@@ -133,8 +133,7 @@ describe('Overlay', () => {
   });
 
   it('should set the direction', () => {
-    const state = new OverlayState();
-    state.direction = 'rtl';
+    const state = new OverlayState({direction: 'rtl'});
 
     overlay.create(state).attach(componentPortal);
 
@@ -153,10 +152,7 @@ describe('Overlay', () => {
   });
 
   it('should emit the attachment event after everything is added to the DOM', () => {
-    let state = new OverlayState();
-
-    state.hasBackdrop = true;
-
+    let state = new OverlayState({hasBackdrop: true});
     let overlayRef = overlay.create(state);
 
     overlayRef.attachments().subscribe(() => {
@@ -295,6 +291,22 @@ describe('Overlay', () => {
       expect(pane.style.minHeight).toEqual('500px');
     });
 
+    it('should apply the max width set in the config', () => {
+      state.maxWidth = 200;
+
+      overlay.create(state).attach(componentPortal);
+      const pane = overlayContainerElement.children[0] as HTMLElement;
+      expect(pane.style.maxWidth).toEqual('200px');
+    });
+
+
+    it('should apply the max height set in the config', () => {
+      state.maxHeight = 500;
+
+      overlay.create(state).attach(componentPortal);
+      const pane = overlayContainerElement.children[0] as HTMLElement;
+      expect(pane.style.maxHeight).toEqual('500px');
+    });
 
     it('should support zero widths and heights', () => {
       state.width = 0;
@@ -305,7 +317,6 @@ describe('Overlay', () => {
       expect(pane.style.width).toEqual('0px');
       expect(pane.style.height).toEqual('0px');
     });
-
   });
 
   describe('backdrop', () => {
@@ -400,9 +411,8 @@ describe('Overlay', () => {
 
   describe('panelClass', () => {
     it('should apply a custom overlay pane class', () => {
-      const config = new OverlayState();
+      const config = new OverlayState({panelClass: 'custom-panel-class'});
 
-      config.panelClass = 'custom-panel-class';
       overlay.create(config).attach(componentPortal);
       viewContainerFixture.detectChanges();
 
@@ -411,9 +421,8 @@ describe('Overlay', () => {
     });
 
     it('should be able to apply multiple classes', () => {
-      const config = new OverlayState();
+      const config = new OverlayState({panelClass: ['custom-class-one', 'custom-class-two']});
 
-      config.panelClass = ['custom-class-one', 'custom-class-two'];
       overlay.create(config).attach(componentPortal);
       viewContainerFixture.detectChanges();
 
@@ -430,8 +439,8 @@ describe('Overlay', () => {
     let overlayRef: OverlayRef;
 
     beforeEach(() => {
-      config = new OverlayState();
-      fakeScrollStrategy = config.scrollStrategy = new FakeScrollStrategy();
+      fakeScrollStrategy = new FakeScrollStrategy();
+      config = new OverlayState({scrollStrategy: fakeScrollStrategy});
       overlayRef = overlay.create(config);
     });
 
@@ -532,9 +541,14 @@ class OverlayTestModule { }
 class OverlayContainerThemingTestModule { }
 
 class FakePositionStrategy implements PositionStrategy {
-  apply(element: Element): Promise<null> {
-    element.classList.add('fake-positioned');
-    return Promise.resolve(null);
+  element: HTMLElement;
+
+  apply(): void {
+    this.element.classList.add('fake-positioned');
+  }
+
+  attach(overlayRef: OverlayRef) {
+    this.element = overlayRef.overlayElement;
   }
 
   dispose() {}

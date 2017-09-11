@@ -22,10 +22,9 @@ import {
   AfterContentInit,
   AfterContentChecked,
   OnDestroy,
+  ViewEncapsulation,
 } from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {map} from '@angular/cdk/rxjs';
-import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import {MdTab} from './tab';
 import {merge} from 'rxjs/observable/merge';
@@ -62,6 +61,7 @@ export const _MdTabGroupMixinBase = mixinColor(mixinDisableRipple(MdTabGroupBase
   selector: 'md-tab-group, mat-tab-group',
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   inputs: ['color', 'disableRipple'],
   host: {
@@ -87,10 +87,10 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
   private _tabBodyWrapperHeight: number = 0;
 
   /** Subscription to tabs being added/removed. */
-  private _tabsSubscription: Subscription;
+  private _tabsSubscription = Subscription.EMPTY;
 
   /** Subscription to changes in the tab labels. */
-  private _tabLabelSubscription: Subscription;
+  private _tabLabelSubscription = Subscription.EMPTY;
 
   /** Whether the tab group should grow to the size of the active tab. */
   @Input()
@@ -129,9 +129,7 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
   private _backgroundColor: ThemePalette;
 
   /** Output to enable support for two-way binding on `[(selectedIndex)]` */
-  @Output() get selectedIndexChange(): Observable<number> {
-    return map.call(this.selectChange, event => event.index);
-  }
+  @Output() selectedIndexChange: EventEmitter<number> = new EventEmitter();
 
   /** Event emitted when focus has changed within a tab group. */
   @Output() focusChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>();
@@ -155,9 +153,10 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
    * a new selected tab should transition in (from the left or right).
    */
   ngAfterContentChecked(): void {
-    // Clamp the next selected index to the bounds of 0 and the tabs length. Note the `|| 0`, which
-    // ensures that values like NaN can't get through and which would otherwise throw the
-    // component into an infinite loop (since Math.max(NaN, 0) === NaN).
+    // Clamp the next selected index to the boundsof 0 and the tabs length.
+    // Note the `|| 0`, which ensures that values like NaN can't get through
+    // and which would otherwise throw the component into an infinite loop
+    // (since Math.max(NaN, 0) === NaN).
     let indexToSelect = this._indexToSelect =
         Math.min(this._tabs.length - 1, Math.max(this._indexToSelect || 0, 0));
 
@@ -165,11 +164,15 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
     // the selected index has not yet been initialized.
     if (this._selectedIndex != indexToSelect && this._selectedIndex != null) {
       this.selectChange.emit(this._createChangeEvent(indexToSelect));
+      // Emitting this value after change detection has run
+      // since the checked content may contain this variable'
+      Promise.resolve().then(() => this.selectedIndexChange.emit(indexToSelect));
     }
 
     // Setup the position for each tab and optionally setup an origin on the next selected tab.
     this._tabs.forEach((tab: MdTab, index: number) => {
       tab.position = index - indexToSelect;
+      tab.isActive = index === indexToSelect;
 
       // If there is already a selected tab, then set up an origin for the next selected tab
       // if it doesn't have one already.
@@ -196,13 +199,8 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
   }
 
   ngOnDestroy() {
-    if (this._tabsSubscription) {
-      this._tabsSubscription.unsubscribe();
-    }
-
-    if (this._tabLabelSubscription) {
-      this._tabLabelSubscription.unsubscribe();
-    }
+    this._tabsSubscription.unsubscribe();
+    this._tabLabelSubscription.unsubscribe();
   }
 
   /**
@@ -237,7 +235,9 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
       this._tabLabelSubscription.unsubscribe();
     }
 
-    this._tabLabelSubscription = merge(...this._tabs.map(tab => tab._labelChange)).subscribe(() => {
+    this._tabLabelSubscription = merge(
+        ...this._tabs.map(tab => tab._disableChange),
+        ...this._tabs.map(tab => tab._labelChange)).subscribe(() => {
       this._changeDetectorRef.markForCheck();
     });
   }

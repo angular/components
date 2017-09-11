@@ -7,10 +7,9 @@
  */
 
 import {QueryList} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
-import {UP_ARROW, DOWN_ARROW, TAB, A, Z} from '@angular/cdk/keycodes';
+import {UP_ARROW, DOWN_ARROW, TAB, A, Z, ZERO, NINE} from '@angular/cdk/keycodes';
 import {RxChain, debounceTime, filter, map, doOperator} from '@angular/cdk/rxjs';
 
 /**
@@ -29,13 +28,19 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   private _activeItemIndex = -1;
   private _activeItem: T;
   private _wrap = false;
-  private _nonNavigationKeyStream = new Subject<number>();
-  private _typeaheadSubscription: Subscription;
+  private _letterKeyStream = new Subject<string>();
+  private _typeaheadSubscription = Subscription.EMPTY;
 
   // Buffer for the letters that the user has pressed when the typeahead option is turned on.
-  private _pressedInputKeys: number[] = [];
+  private _pressedLetters: string[] = [];
 
   constructor(private _items: QueryList<T>) { }
+
+  /**
+   * Stream that emits any time the TAB key is pressed, so components can react
+   * when focus is shifted off of the list.
+   */
+  tabOut: Subject<void> = new Subject<void>();
 
   /**
    * Turns on wrapping mode, which ensures that the active item will wrap to
@@ -55,19 +60,16 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
       throw Error('ListKeyManager items in typeahead mode must implement the `getLabel` method.');
     }
 
-    if (this._typeaheadSubscription) {
-      this._typeaheadSubscription.unsubscribe();
-    }
+    this._typeaheadSubscription.unsubscribe();
 
     // Debounce the presses of non-navigational keys, collect the ones that correspond to letters
     // and convert those letters back into a string. Afterwards find the first item that starts
     // with that string and select it.
-    this._typeaheadSubscription = RxChain.from(this._nonNavigationKeyStream)
-      .call(filter, keyCode => keyCode >= A && keyCode <= Z)
-      .call(doOperator, keyCode => this._pressedInputKeys.push(keyCode))
+    this._typeaheadSubscription = RxChain.from(this._letterKeyStream)
+      .call(doOperator, keyCode => this._pressedLetters.push(keyCode))
       .call(debounceTime, debounceInterval)
-      .call(filter, () => this._pressedInputKeys.length > 0)
-      .call(map, () => String.fromCharCode(...this._pressedInputKeys))
+      .call(filter, () => this._pressedLetters.length > 0)
+      .call(map, () => this._pressedLetters.join(''))
       .subscribe(inputString => {
         const items = this._items.toArray();
 
@@ -78,7 +80,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
           }
         }
 
-        this._pressedInputKeys = [];
+        this._pressedLetters = [];
       });
 
     return this;
@@ -101,13 +103,24 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     switch (event.keyCode) {
       case DOWN_ARROW: this.setNextItemActive(); break;
       case UP_ARROW: this.setPreviousItemActive(); break;
+      case TAB: this.tabOut.next(); return;
+      default:
+        const keyCode = event.keyCode;
 
-      // Note that we return here, in order to avoid preventing
-      // the default action of unsupported keys.
-      default: this._nonNavigationKeyStream.next(event.keyCode); return;
+        // Attempt to use the `event.key` which also maps it to the user's keyboard language,
+        // otherwise fall back to resolving alphanumeric characters via the keyCode.
+        if (event.key && event.key.length === 1) {
+          this._letterKeyStream.next(event.key.toLocaleUpperCase());
+        } else if ((keyCode >= A && keyCode <= Z) || (keyCode >= ZERO && keyCode <= NINE)) {
+          this._letterKeyStream.next(String.fromCharCode(keyCode));
+        }
+
+        // Note that we return here, in order to avoid preventing
+        // the default action of non-navigational keys.
+        return;
     }
 
-    this._pressedInputKeys = [];
+    this._pressedLetters = [];
     event.preventDefault();
   }
 
@@ -148,14 +161,6 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    */
   updateActiveItemIndex(index: number) {
     this._activeItemIndex = index;
-  }
-
-  /**
-   * Observable that emits any time the TAB key is pressed, so components can react
-   * when focus is shifted off of the list.
-   */
-  get tabOut(): Observable<void> {
-    return filter.call(this._nonNavigationKeyStream, keyCode => keyCode === TAB);
   }
 
   /**

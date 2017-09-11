@@ -15,7 +15,7 @@ import {MdInputModule} from './index';
 import {MdInput} from './input';
 import {Platform} from '../core/platform/platform';
 import {PlatformModule} from '../core/platform/index';
-import {wrappedErrorMessage, dispatchFakeEvent} from '@angular/cdk/testing';
+import {wrappedErrorMessage, dispatchFakeEvent, createFakeEvent} from '@angular/cdk/testing';
 import {
   MdFormField,
   MdFormFieldModule,
@@ -222,6 +222,18 @@ describe('MdInput without forms', function () {
 
     expect(inputElement.id).toBeTruthy();
     expect(inputElement.id).toEqual(labelElement.getAttribute('for'));
+  });
+
+  it('should add aria-owns to the label for the associated control', () => {
+    let fixture = TestBed.createComponent(MdInputTextTestController);
+    fixture.detectChanges();
+
+    const inputElement: HTMLInputElement =
+        fixture.debugElement.query(By.css('input')).nativeElement;
+    const labelElement: HTMLInputElement =
+        fixture.debugElement.query(By.css('label')).nativeElement;
+
+    expect(labelElement.getAttribute('aria-owns')).toBe(inputElement.id);
   });
 
   it('should not overwrite existing id', () => {
@@ -655,6 +667,33 @@ describe('MdInput without forms', function () {
     fixture.detectChanges();
 
     expect(container.classList).toContain('mat-focused');
+  });
+
+  it('should be able to animate the placeholder up and lock it in position', () => {
+    let fixture = TestBed.createComponent(MdInputTextTestController);
+    fixture.detectChanges();
+
+    let inputContainer = fixture.debugElement.query(By.directive(MdFormField))
+        .componentInstance as MdFormField;
+    let placeholder = fixture.debugElement.query(By.css('.mat-input-placeholder')).nativeElement;
+
+    expect(inputContainer.floatPlaceholder).toBe('auto');
+
+    inputContainer._animateAndLockPlaceholder();
+    fixture.detectChanges();
+
+    expect(inputContainer._shouldAlwaysFloat).toBe(false);
+    expect(inputContainer.floatPlaceholder).toBe('always');
+
+    const fakeEvent = Object.assign(createFakeEvent('transitionend'), {
+      propertyName: 'transform'
+    });
+
+    placeholder.dispatchEvent(fakeEvent);
+    fixture.detectChanges();
+
+    expect(inputContainer._shouldAlwaysFloat).toBe(true);
+    expect(inputContainer.floatPlaceholder).toBe('always');
   });
 });
 

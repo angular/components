@@ -29,7 +29,9 @@ export class OverlayRef implements PortalHost {
       private _state: OverlayState,
       private _ngZone: NgZone) {
 
-    _state.scrollStrategy.attach(this);
+    if (_state.scrollStrategy) {
+      _state.scrollStrategy.attach(this);
+    }
   }
 
   /** The overlay's HTML element */
@@ -45,12 +47,19 @@ export class OverlayRef implements PortalHost {
   attach(portal: Portal<any>): any {
     let attachResult = this._portalHost.attach(portal);
 
+    if (this._state.positionStrategy) {
+      this._state.positionStrategy.attach(this);
+    }
+
     // Update the pane element with the given state configuration.
     this._updateStackingOrder();
     this.updateSize();
     this.updateDirection();
     this.updatePosition();
-    this._state.scrollStrategy.enable();
+
+    if (this._state.scrollStrategy) {
+      this._state.scrollStrategy.enable();
+    }
 
     // Enable pointer events for the overlay pane element.
     this._togglePointerEvents(true);
@@ -85,7 +94,10 @@ export class OverlayRef implements PortalHost {
     // This is necessary because otherwise the pane element will cover the page and disable
     // pointer events therefore. Depends on the position strategy and the applied pane boundaries.
     this._togglePointerEvents(false);
-    this._state.scrollStrategy.disable();
+
+    if (this._state.scrollStrategy) {
+      this._state.scrollStrategy.disable();
+    }
 
     let detachmentResult = this._portalHost.detach();
 
@@ -103,7 +115,10 @@ export class OverlayRef implements PortalHost {
       this._state.positionStrategy.dispose();
     }
 
-    this._state.scrollStrategy.disable();
+    if (this._state.scrollStrategy) {
+      this._state.scrollStrategy.disable();
+    }
+
     this.detachBackdrop();
     this._portalHost.dispose();
     this._attachments.complete();
@@ -146,7 +161,7 @@ export class OverlayRef implements PortalHost {
   /** Updates the position of the overlay based on the position strategy. */
   updatePosition() {
     if (this._state.positionStrategy) {
-      this._state.positionStrategy.apply(this._pane);
+      this._state.positionStrategy.apply();
     }
   }
 
@@ -171,6 +186,14 @@ export class OverlayRef implements PortalHost {
 
     if (this._state.minHeight || this._state.minHeight === 0) {
       this._pane.style.minHeight = formatCssUnit(this._state.minHeight);
+    }
+
+    if (this._state.maxWidth || this._state.maxWidth === 0) {
+      this._pane.style.maxWidth = formatCssUnit(this._state.maxWidth);
+    }
+
+    if (this._state.maxHeight || this._state.maxHeight === 0) {
+      this._pane.style.maxHeight = formatCssUnit(this._state.maxHeight);
     }
   }
 

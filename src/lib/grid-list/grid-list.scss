@@ -1,4 +1,5 @@
 @import '../core/style/list-common';
+@import '../core/style/layout-common';
 
 
 // height of tile header or footer if it has one line
@@ -19,17 +20,12 @@ $mat-grid-list-text-padding: 16px;
   overflow: hidden;
 
   .mat-figure {
+    @include mat-fill;
     display: flex;
-    position: absolute;
 
     align-items: center;
     justify-content: center;
     height: 100%;
-
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
 
     padding: 0;
     margin: 0;

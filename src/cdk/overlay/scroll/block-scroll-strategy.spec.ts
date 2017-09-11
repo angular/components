@@ -1,15 +1,9 @@
-import {NgModule, Component} from '@angular/core';
-import {inject, TestBed, async} from '@angular/core/testing';
+import {Component, NgModule} from '@angular/core';
+import {async, inject, TestBed} from '@angular/core/testing';
 import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
 import {Platform} from '@angular/cdk/platform';
-import {
-  OverlayModule,
-  ViewportRuler,
-  OverlayState,
-  Overlay,
-  OverlayRef,
-  OverlayContainer,
-} from '../index';
+import {ViewportRuler} from '@angular/cdk/scrolling';
+import {Overlay, OverlayContainer, OverlayModule, OverlayRef, OverlayState} from '../index';
 
 
 describe('BlockScrollStrategy', () => {
@@ -29,9 +23,8 @@ describe('BlockScrollStrategy', () => {
   }));
 
   beforeEach(inject([Overlay, ViewportRuler], (overlay: Overlay, viewportRuler: ViewportRuler) => {
-    let overlayState = new OverlayState();
+    let overlayState = new OverlayState({scrollStrategy: overlay.scrollStrategies.block()});
 
-    overlayState.scrollStrategy = overlay.scrollStrategies.block();
     overlayRef = overlay.create(overlayState);
     componentPortal = new ComponentPortal(FocacciaMsg);
 

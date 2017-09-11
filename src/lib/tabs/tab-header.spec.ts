@@ -1,12 +1,12 @@
 import {
   async, ComponentFixture, TestBed, fakeAsync, tick, discardPeriodicTasks
 } from '@angular/core/testing';
-import {Component, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {By} from '@angular/platform-browser';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {PortalModule} from '@angular/cdk/portal';
-import {ViewportRuler} from '@angular/cdk/overlay';
+import {ViewportRuler} from '@angular/cdk/scrolling';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {dispatchFakeEvent, dispatchKeyboardEvent, FakeViewportRuler} from '@angular/cdk/testing';
 import {MdTabHeader} from './tab-header';
@@ -328,7 +328,7 @@ class SimpleTabHeaderApp {
 
   @ViewChild(MdTabHeader) mdTabHeader: MdTabHeader;
 
-  constructor(private _viewContainerRef: ViewContainerRef) {
+  constructor() {
     this.tabs[this.disabledTabIndex].disabled = true;
   }
 
