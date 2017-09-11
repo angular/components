@@ -56,7 +56,6 @@ export class OverlayRef implements PortalHost {
     this._updateStackingOrder();
     this.updateSize();
     this.updateDirection();
-    this.updatePosition();
 
     if (this._config.scrollStrategy) {
       this._config.scrollStrategy.enable();
