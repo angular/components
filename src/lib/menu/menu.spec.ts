@@ -29,7 +29,7 @@ import {
   dispatchMouseEvent,
   dispatchEvent,
   createKeyboardEvent,
-  dispatchFakeEvent,
+  createMouseEvent,
 } from '@angular/cdk/testing';
 
 
@@ -1020,8 +1020,13 @@ describe('MdMenu', () => {
       instance.rootTrigger.openMenu();
       fixture.detectChanges();
 
-      const event = dispatchFakeEvent(overlay.querySelector('[md-menu-item]')!, 'mousedown');
-      expect(event.defaultPrevented).toBe(true);
+      const event = createMouseEvent('mousedown');
+
+      Object.defineProperty(event, 'buttons', {get: () => 1});
+      event.preventDefault = jasmine.createSpy('preventDefault spy');
+
+      dispatchMouseEvent(overlay.querySelector('[md-menu-item]')!, 'mousedown', 0, 0, event);
+      expect(event.preventDefault).toHaveBeenCalled();
     });
 
   });
