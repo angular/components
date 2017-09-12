@@ -280,9 +280,9 @@ describe('Chips', () => {
       <div *ngIf="shouldShow">
         <md-chip [selectable]="selectable" [removable]="removable"
                  [color]="color" [selected]="selected" [disabled]="disabled"
-                 (focus)="chipFocus($event)" (destroy)="chipDestroy($event)"
-                 (select)="chipSelect($event)" (deselect)="chipDeselect($event)"
-                 (remove)="chipRemove($event)">
+                 (focus)="chipFocus($event)" (destroyed)="chipDestroy($event)"
+                 (selectionChange)="chipSelect($event)" (deselected)="chipDeselect($event)"
+                 (removed)="chipRemove($event)">
           {{name}}
         </md-chip>
       </div>

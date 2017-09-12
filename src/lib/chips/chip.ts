@@ -77,7 +77,13 @@ export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestr
   @Input() get selected(): boolean { return this._selected; }
   set selected(value: boolean) {
     this._selected = coerceBooleanProperty(value);
-    (this.selected ? this.select : this.deselect).emit({chip: this});
+    if (this.selected) {
+      this.select.emit({chip: this});
+      this.selectionChange.emit({chip: this});
+    } else {
+      this.deselect.emit({chip: this});
+      this.deselected.emit({chip: this});
+    }
   }
   protected _selected: boolean = false;
 
@@ -112,14 +118,41 @@ export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestr
   /** Emits when the chip is focused. */
   _onFocus = new Subject<MdChipEvent>();
 
-  /** Emitted when the chip is selected. */
+  /**
+   * Emitted when the chip is selected.
+   * @deprecated Use `selectionChange` instead.
+   */
   @Output() select = new EventEmitter<MdChipEvent>();
 
-  /** Emitted when the chip is deselected. */
+  /** Emitted when the chip is selected. */
+  @Output() selectionChange = new EventEmitter<MdChipEvent>();
+
+  /**
+   * Emitted when the chip is deselected.
+   * @deprecated Use `deselected` instead.
+   */
   @Output() deselect = new EventEmitter<MdChipEvent>();
 
-  /** Emitted when the chip is destroyed. */
+  /** Emitted when the chip is deselected. */
+  @Output() deselected = new EventEmitter<MdChipEvent>();
+
+  /**
+   * Emitted when the chip is destroyed.
+   * @deprecated Use `destroyed` instead.
+   */
   @Output() destroy = new EventEmitter<MdChipEvent>();
+
+  /** Emitted when the chip is destroyed. */
+  @Output() destroyed = new EventEmitter<MdChipEvent>();
+
+  /**
+   * Emitted when a chip is to be removed.
+   * @deprecated Use `removed` instead.
+   */
+  @Output('remove') onRemove = new EventEmitter<MdChipEvent>();
+
+  /** Emitted when a chip is to be removed. */
+  @Output() removed = new EventEmitter<MdChipEvent>();
 
   get ariaSelected(): string | null {
     return this.selectable ? this.selected.toString() : null;
@@ -129,11 +162,9 @@ export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestr
     super(renderer, elementRef);
   }
 
-  /** Emitted when a chip is to be removed. */
-  @Output('remove') onRemove = new EventEmitter<MdChipEvent>();
-
   ngOnDestroy(): void {
     this.destroy.emit({chip: this});
+    this.destroyed.emit({chip: this});
   }
 
   /** Toggles the current selected state of this chip. */
@@ -156,12 +187,13 @@ export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestr
    */
   remove(): void {
     if (this.removable) {
+      this.removed.emit({chip: this});
       this.onRemove.emit({chip: this});
     }
   }
 
   /** Ensures events fire properly upon click. */
-  _handleClick(event: Event) {
+  _handleClick(event: Event): void {
     // Check disabled
     if (this.disabled) {
       return;
@@ -174,7 +206,7 @@ export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestr
   }
 
   /** Handle custom key presses. */
-  _handleKeydown(event: KeyboardEvent) {
+  _handleKeydown(event: KeyboardEvent): void {
     if (this.disabled) {
       return;
     }
@@ -225,7 +257,7 @@ export class MdChipRemove {
   constructor(protected _parentChip: MdChip) {}
 
   /** Calls the parent chip's public `remove()` method if applicable. */
-  _handleClick() {
+  _handleClick(): void {
     if (this._parentChip.removable) {
       this._parentChip.remove();
     }
