@@ -1,4 +1,4 @@
-import {SelectionModel} from './selection';
+import {getMultipleValuesInSingleSelectionError, SelectionModel} from './selection';
 
 
 describe('SelectionModel', () => {
@@ -23,8 +23,7 @@ describe('SelectionModel', () => {
     });
 
     it('should throw an error if multiple values are passed to model', () => {
-      expect(() => model.select(1, 2))
-        .toThrowError(/Cannot pass multiple values into SelectionModel with single-value mode/);
+      expect(() => model.select(1, 2)).toThrow(getMultipleValuesInSingleSelectionError());
     });
 
     it('should only preselect one value', () => {

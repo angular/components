@@ -57,7 +57,7 @@ export class SelectionModel<T> {
    * Selects a value or an array of values.
    */
   select(...values: T[]): void {
-    this._warnMultipleValuesForSingleSelection(values);
+    this._verifyValueAssignment(values);
     values.forEach(value => this._markSelected(value));
     this._emitChangeEvent();
   }
@@ -66,7 +66,7 @@ export class SelectionModel<T> {
    * Deselects a value or an array of values.
    */
   deselect(...values: T[]): void {
-    this._warnMultipleValuesForSingleSelection(values);
+    this._verifyValueAssignment(values);
     values.forEach(value => this._unmarkSelected(value));
     this._emitChangeEvent();
   }
@@ -165,10 +165,13 @@ export class SelectionModel<T> {
     }
   }
 
-  /** Throws an error if multiple values are passed into a selection model with a single value. */
-  private _warnMultipleValuesForSingleSelection(values: T[]) {
+  /**
+   * Verifies the value assignment and throws an error if the specified value array is
+   * including multiple values while the selection model is not supporting multiple values.
+   */
+  private _verifyValueAssignment(values: T[]) {
     if (values.length > 1 && !this._isMulti) {
-      throwMultipleValuesInSingleSelectionError();
+      throw getMultipleValuesInSingleSelectionError();
     }
   }
 }
@@ -181,7 +184,10 @@ export class SelectionChange<T> {
   constructor(public added?: T[], public removed?: T[]) { }
 }
 
-/** Throws an error if multiple values are passed into a selection model with a single value. */
-export function throwMultipleValuesInSingleSelectionError() {
-  throw Error('Cannot pass multiple values into SelectionModel with single-value mode.');
+/**
+ * Returns an error that reports that multiple values are passed into a selection model
+ * with a single value.
+ */
+export function getMultipleValuesInSingleSelectionError() {
+  return Error('Cannot pass multiple values into SelectionModel with single-value mode.');
 }
