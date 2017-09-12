@@ -60,7 +60,9 @@ export class MdCommonModule {
       testElement.classList.add('mat-theme-loaded-marker');
       this._document.body.appendChild(testElement);
 
-      if (getComputedStyle(testElement).display !== 'none') {
+      const computedStyle = getComputedStyle(testElement);
+
+      if (computedStyle && computedStyle.display !== 'none') {
         console.warn(
           'Could not find Angular Material core theme. Most Material ' +
           'components may not work as expected. For more info refer ' +
