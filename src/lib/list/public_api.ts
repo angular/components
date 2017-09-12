@@ -6,9 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {MdCommonModule, MdLineModule, MdPseudoCheckboxModule, MdRippleModule} from '@angular/material/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {
+  MdCommonModule,
+  MdLineModule,
+  MdPseudoCheckboxModule,
+  MdRippleModule,
+} from '@angular/material/core';
 import {
   MdDividerCssMatStyler,
   MdList,
@@ -18,9 +23,10 @@ import {
   MdListIconCssMatStyler,
   MdListItem,
   MdListSubheaderCssMatStyler,
-  MdNavListCssMatStyler
+  MdNavListCssMatStyler,
 } from './list';
 import {MdListOption, MdSelectionList} from './selection-list';
+
 
 @NgModule({
   imports: [MdLineModule, MdRippleModule, MdCommonModule, MdPseudoCheckboxModule, CommonModule],

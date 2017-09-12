@@ -1,4 +1,4 @@
-import {appendFileSync, readFileSync, renameSync, writeFileSync} from 'fs';
+import {appendFileSync} from 'fs';
 import {mkdirpSync} from 'fs-extra';
 import {join} from 'path';
 import {buildConfig} from './build-config';
@@ -32,7 +32,6 @@ export function composeRelease(buildPackage: BuildPackage) {
   copyFiles(bundlesDir, `${name}?(-*).umd?(.min).js?(.map)`, join(releasePath, 'bundles'));
   copyFiles(bundlesDir, `${name}.es5.js?(.map)`, join(releasePath, 'esm5'));
   copyFiles(bundlesDir, `${name}!(.es5).js?(.map)`, join(releasePath, 'esm2015'));
-  //copyFiles(join(bundlesDir, name), '**', join(releasePath, '@angular', name));
   copyFiles(projectDir, 'LICENSE', releasePath);
   copyFiles(packagesDir, 'README.md', releasePath);
   copyFiles(sourceDir, 'package.json', releasePath);

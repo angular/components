@@ -6,22 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CompatibilityModule, StyleModule, UNIQUE_SELECTION_DISPATCHER_PROVIDER} from '@angular/material/core';
+import {NgModule} from '@angular/core';
 import {
-  MdExpansionPanelHeader,
+  CompatibilityModule,
+  StyleModule,
+  UNIQUE_SELECTION_DISPATCHER_PROVIDER,
+} from '@angular/material/core';
+import {CdkAccordion, MdAccordion} from './accordion';
+import {MdExpansionPanel, MdExpansionPanelActionRow} from './expansion-panel';
+import {
   MdExpansionPanelDescription,
-  MdExpansionPanelTitle
+  MdExpansionPanelHeader,
+  MdExpansionPanelTitle,
 } from './expansion-panel-header';
-import {
-  MdExpansionPanel,
-  MdExpansionPanelActionRow,
-} from './expansion-panel';
-import {
-  CdkAccordion,
-  MdAccordion,
-} from './accordion';
+
 
 @NgModule({
   imports: [CompatibilityModule, CommonModule, StyleModule],

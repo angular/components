@@ -1,5 +1,5 @@
 import {main as ngc} from '@angular/tsc-wrapped';
-import {appendFileSync, readFileSync, renameSync, writeFileSync} from 'fs';
+import {readFileSync, writeFileSync} from 'fs';
 import {sync as glob} from 'glob';
 import {join} from 'path';
 import {buildConfig} from './build-config';

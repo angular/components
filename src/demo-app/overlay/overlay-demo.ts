@@ -1,4 +1,4 @@
-import {Overlay, OverlayOrigin, OverlayState,} from '@angular/cdk/overlay';
+import {Overlay, OverlayOrigin, OverlayState} from '@angular/cdk/overlay';
 import {
   ComponentPortal,
   // This import is only used to define a generic type. The current TypeScript version incorrectly
