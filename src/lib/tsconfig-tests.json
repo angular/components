@@ -9,7 +9,8 @@
     "target": "es5",
     "types": ["jasmine"],
     "paths": {
-      "@angular/material/*": ["./*"]
+      "@angular/material/*": ["./*"],
+      "@angular/cdk/*": ["../../dist/packages/cdk/*/public_api"]
     }
   },
   "include": [
