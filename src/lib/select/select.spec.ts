@@ -1549,6 +1549,15 @@ describe('MatSelect', () => {
         // Scroll the select into view
         setScrollTop(1700);
 
+        // In the iOS simulator (BrowserStack & SauceLabs), adding the content to the
+        // body causes karma's iframe for the test to stretch to fit that content once we attempt to
+        // scroll the page. Setting width / height / maxWidth / maxHeight on the iframe does not
+        // successfully constrain its size. As such, skip assertions in environments where the
+        // window size has changed since the start of the test.
+        if (window.innerHeight > startingWindowHeight) {
+          return;
+        }
+
         trigger.click();
         fixture.detectChanges();
 
@@ -1567,6 +1576,15 @@ describe('MatSelect', () => {
 
         // Scroll the select into view
         setScrollTop(1700);
+
+        // In the iOS simulator (BrowserStack & SauceLabs), adding the content to the
+        // body causes karma's iframe for the test to stretch to fit that content once we attempt to
+        // scroll the page. Setting width / height / maxWidth / maxHeight on the iframe does not
+        // successfully constrain its size. As such, skip assertions in environments where the
+        // window size has changed since the start of the test.
+        if (window.innerHeight > startingWindowHeight) {
+          return;
+        }
 
         trigger.click();
         fixture.detectChanges();
@@ -1639,6 +1657,15 @@ describe('MatSelect', () => {
 
         // Scroll the select so that it has insufficient space to open above the trigger
         setScrollTop(1950);
+
+        // In the iOS simulator (BrowserStack & SauceLabs), adding the content to the
+        // body causes karma's iframe for the test to stretch to fit that content once we attempt to
+        // scroll the page. Setting width / height / maxWidth / maxHeight on the iframe does not
+        // successfully constrain its size. As such, skip assertions in environments where the
+        // window size has changed since the start of the test.
+        if (window.innerHeight > startingWindowHeight) {
+          return;
+        }
 
         trigger.click();
         fixture.detectChanges();
