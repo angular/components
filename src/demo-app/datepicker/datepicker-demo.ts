@@ -13,6 +13,7 @@ export class DatepickerDemo {
   touch: boolean;
   filterOdd: boolean;
   yearView: boolean;
+  inputDisabled: boolean;
   datepickerDisabled: boolean;
   minDate: Date;
   maxDate: Date;
