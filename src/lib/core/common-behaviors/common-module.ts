@@ -62,6 +62,9 @@ export class MdCommonModule {
 
       const computedStyle = getComputedStyle(testElement);
 
+      // In some situations, the computed style of the test element can be null. For example in
+      // Firefox, the computed style is null if an application is running inside of a hidden iframe.
+      // See: https://bugzilla.mozilla.org/show_bug.cgi?id=548397
       if (computedStyle && computedStyle.display !== 'none') {
         console.warn(
           'Could not find Angular Material core theme. Most Material ' +
