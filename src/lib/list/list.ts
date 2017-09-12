@@ -50,7 +50,7 @@ export class MatListDivider {}
     'role': 'navigation',
     'class': 'mat-nav-list'
   },
-  template: '<ng-content></ng-content>',
+  templateUrl: 'list.html',
   styleUrls: ['list.css'],
   inputs: ['disableRipple'],
   encapsulation: ViewEncapsulation.None,
@@ -63,11 +63,12 @@ export class MatNavList extends _MatListMixinBase implements CanDisableRipple {}
   moduleId: module.id,
   selector: 'mat-list',
   exportAs: 'matList',
-  template: '<ng-content></ng-content>',
+  templateUrl: 'list.html',
   host: {'class': 'mat-list'},
   styleUrls: ['list.css'],
   inputs: ['disableRipple'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatList extends _MatListMixinBase implements CanDisableRipple {}
@@ -145,15 +146,8 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
     }
   }
 
-<<<<<<< HEAD
   constructor(private _element: ElementRef,
-              @Optional() private _list: MatList,
-              @Optional() navList: MatNavListCssMatStyler) {
-=======
-  constructor(private _renderer: Renderer2,
-              private _element: ElementRef,
-              @Optional() private _navList: MdNavList) {
->>>>>>> demo(list): Add accessibility demo page for list
+              @Optional() private _navList: MatNavList) {
     super();
     this._isNavList = !!_navList;
   }
