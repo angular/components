@@ -56,16 +56,18 @@ export class SelectionModel<T> {
   /**
    * Selects a value or an array of values.
    */
-  select(value: T): void {
-    this._markSelected(value);
+  select(...values: T[]): void {
+    this._warnMultipleValuesForSingleSelection(values);
+    values.forEach(value => this._markSelected(value));
     this._emitChangeEvent();
   }
 
   /**
    * Deselects a value or an array of values.
    */
-  deselect(value: T): void {
-    this._unmarkSelected(value);
+  deselect(...values: T[]): void {
+    this._warnMultipleValuesForSingleSelection(values);
+    values.forEach(value => this._unmarkSelected(value));
     this._emitChangeEvent();
   }
 
@@ -162,6 +164,13 @@ export class SelectionModel<T> {
       this._selection.forEach(value => this._unmarkSelected(value));
     }
   }
+
+  /** Throws an error if multiple values are passed into a selection model with a single value. */
+  private _warnMultipleValuesForSingleSelection(values: T[]) {
+    if (values.length > 1 && !this._isMulti) {
+      throwMultipleValuesInSingleSelectionError();
+    }
+  }
 }
 
 /**
@@ -170,4 +179,9 @@ export class SelectionModel<T> {
  */
 export class SelectionChange<T> {
   constructor(public added?: T[], public removed?: T[]) { }
+}
+
+/** Throws an error if multiple values are passed into a selection model with a single value. */
+export function throwMultipleValuesInSingleSelectionError() {
+  throw Error('Cannot pass multiple values into SelectionModel with single-value mode.');
 }
