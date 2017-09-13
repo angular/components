@@ -90,14 +90,22 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   /** The datepicker that this input is associated with. */
   @Input()
   set mdDatepicker(value: MdDatepicker<D>) {
+    this.registerDatepicker(value);
+  }
+  _datepicker: MdDatepicker<D>;
+
+  private registerDatepicker(value: MdDatepicker<D>) {
     if (value) {
       this._datepicker = value;
       this._datepicker._registerInput(this);
     }
   }
-  _datepicker: MdDatepicker<D>;
 
-  @Input() set matDatepicker(value: MdDatepicker<D>) { this.mdDatepicker = value; }
+  @Input() set matDatepicker(value: MdDatepicker<D>) {
+    // Note that we don't set `this.mdDatepicker = value` here,
+    // because that line gets stripped by the JS compiler.
+    this.registerDatepicker(value);
+  }
 
   @Input() set mdDatepickerFilter(filter: (date: D | null) => boolean) {
     this._dateFilter = filter;
@@ -112,8 +120,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   /** The value of the input. */
   @Input()
   get value(): D | null {
-    return this._getValidDateOrNull(this._dateAdapter.parse(
-        this._elementRef.nativeElement.value, this._dateFormats.parse.dateInput));
+    return this._value;
   }
   set value(value: D | null) {
     if (value != null && !this._dateAdapter.isDateInstance(value)) {
@@ -123,12 +130,14 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
     value = this._getValidDateOrNull(value);
 
     let oldDate = this.value;
+    this._value = value;
     this._renderer.setProperty(this._elementRef.nativeElement, 'value',
         value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '');
     if (!this._dateAdapter.sameDate(oldDate, value)) {
       this._valueChange.emit(value);
     }
   }
+  private _value: D | null;
 
   /** The minimum valid date. */
   @Input()
@@ -152,7 +161,12 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   @Input()
   get disabled() { return this._disabled; }
   set disabled(value: any) {
-    this._disabled = coerceBooleanProperty(value);
+    const newValue = coerceBooleanProperty(value);
+
+    if (this._disabled !== newValue) {
+      this._disabled = newValue;
+      this._disabledChange.emit(newValue);
+    }
   }
   private _disabled: boolean;
 
@@ -165,6 +179,9 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   /** Emits when the value changes (either due to user input or programmatic change). */
   _valueChange = new EventEmitter<D|null>();
 
+  /** Emits when the disabled state has changed */
+  _disabledChange = new EventEmitter<boolean>();
+
   _onTouched = () => {};
 
   private _cvaOnChange: (value: any) => void = () => {};
@@ -172,6 +189,8 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   private _validatorOnChange = () => {};
 
   private _datepickerSubscription = Subscription.EMPTY;
+
+  private _localeSubscription = Subscription.EMPTY;
 
   /** The form control validator for whether the input parses. */
   private _parseValidator: ValidatorFn = (): ValidationErrors | null => {
@@ -219,6 +238,11 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
     if (!this._dateFormats) {
       throw createMissingDateImplError('MD_DATE_FORMATS');
     }
+
+    // Update the displayed date when the locale changes.
+    this._localeSubscription = _dateAdapter.localeChanges.subscribe(() => {
+      this.value = this.value;
+    });
   }
 
   ngAfterContentInit() {
@@ -236,6 +260,9 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   ngOnDestroy() {
     this._datepickerSubscription.unsubscribe();
+    this._localeSubscription.unsubscribe();
+    this._valueChange.complete();
+    this._disabledChange.complete();
   }
 
   registerOnValidatorChange(fn: () => void): void {
@@ -285,6 +312,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
     let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
     this._lastValueValid = !date || this._dateAdapter.isValid(date);
     date = this._getValidDateOrNull(date);
+    this._value = date;
     this._cvaOnChange(date);
     this._valueChange.emit(date);
     this.dateInput.emit(new MdDatepickerInputEvent(this, this._elementRef.nativeElement));
