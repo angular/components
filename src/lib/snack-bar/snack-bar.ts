@@ -155,7 +155,30 @@ export class MdSnackBar {
   private _createOverlay(config: MdSnackBarConfig): OverlayRef {
     const state = new OverlayState();
     state.direction = config.direction;
-    state.positionStrategy = this._overlay.position().global().centerHorizontally().bottom('0');
+
+    let positionStrategy = this._overlay.position().global();
+    // Set horizontal position.
+    const isRtl = config.direction === 'rtl';
+    const isLeft = (
+      config.horizontalPosition === 'left' ||
+      (config.horizontalPosition === 'start' && !isRtl) ||
+      (config.horizontalPosition === 'end' && isRtl));
+    const isRight = !isLeft && config.horizontalPosition !== 'center';
+    if (isLeft) {
+      positionStrategy.left('0');
+    } else if (isRight) {
+      positionStrategy.right('0');
+    } else {
+      positionStrategy.centerHorizontally();
+    }
+    // Set horizontal position.
+    if (config.verticalPosition === 'top') {
+      positionStrategy.top('0');
+    } else {
+      positionStrategy.bottom('0');
+    }
+
+    state.positionStrategy = positionStrategy;
     return this._overlay.create(state);
   }
 

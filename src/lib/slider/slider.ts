@@ -19,7 +19,7 @@ import {
   Output,
   Renderer2,
   ViewEncapsulation,
-  ViewChild,
+  ViewChild, OnInit,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
@@ -38,7 +38,7 @@ import {HammerInput} from '../core';
 import {FocusOrigin, FocusOriginMonitor} from '../core/style/focus-origin-monitor';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 import {CanColor, mixinColor} from '../core/common-behaviors/color';
-
+import {Subscription} from 'rxjs/Subscription';
 
 /**
  * Visually, a 30px separation between tick marks looks best. This is very subjective but it is
@@ -125,7 +125,7 @@ export const _MdSliderMixinBase = mixinColor(mixinDisabled(MdSliderBase), 'accen
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdSlider extends _MdSliderMixinBase
-    implements ControlValueAccessor, OnDestroy, CanDisable, CanColor {
+    implements ControlValueAccessor, OnDestroy, CanDisable, CanColor, OnInit {
   /** Whether the slider is inverted. */
   @Input()
   get invert() { return this._invert; }
@@ -385,6 +385,9 @@ export class MdSlider extends _MdSliderMixinBase
   /** Decimal places to round to, based on the step amount. */
   private _roundLabelTo: number;
 
+  /** Subscription to the Directionality change EventEmitter. */
+  private _dirChangeSubscription = Subscription.EMPTY;
+
   /** The value of the slider when the slide start event fires. */
   private _valueOnSlideStart: number | null;
 
@@ -410,13 +413,25 @@ export class MdSlider extends _MdSliderMixinBase
               private _changeDetectorRef: ChangeDetectorRef,
               @Optional() private _dir: Directionality) {
     super(renderer, elementRef);
+  }
+
+  ngOnInit() {
     this._focusOriginMonitor
-        .monitor(this._elementRef.nativeElement, renderer, true)
-        .subscribe((origin: FocusOrigin) => this._isActive = !!origin && origin !== 'keyboard');
+        .monitor(this._elementRef.nativeElement, this._renderer, true)
+        .subscribe((origin: FocusOrigin) => {
+          this._isActive = !!origin && origin !== 'keyboard';
+          this._changeDetectorRef.detectChanges();
+        });
+    if (this._dir) {
+      this._dirChangeSubscription = this._dir.change.subscribe(() => {
+        this._changeDetectorRef.markForCheck();
+      });
+    }
   }
 
   ngOnDestroy() {
     this._focusOriginMonitor.stopMonitoring(this._elementRef.nativeElement);
+    this._dirChangeSubscription.unsubscribe();
   }
 
   _onMouseenter() {

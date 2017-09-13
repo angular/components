@@ -372,7 +372,7 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    * stream every time the option list changes.
    */
   private _subscribeToClosingActions(): Subscription {
-    const firstStable = first.call(this._zone.onStable);
+    const firstStable = first.call(this._zone.onStable.asObservable());
     const optionChanges = map.call(this.autocomplete.options.changes, () =>
       this._positionStrategy.recalculateLastPosition());
 
@@ -468,12 +468,12 @@ export class MdAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   }
 
   private _getOverlayConfig(): OverlayState {
-    const overlayState = new OverlayState();
-    overlayState.positionStrategy = this._getOverlayPosition();
-    overlayState.width = this._getHostWidth();
-    overlayState.direction = this._dir ? this._dir.value : 'ltr';
-    overlayState.scrollStrategy = this._scrollStrategy();
-    return overlayState;
+    return new OverlayState({
+      positionStrategy: this._getOverlayPosition(),
+      scrollStrategy: this._scrollStrategy(),
+      width: this._getHostWidth(),
+      direction: this._dir ? this._dir.value : 'ltr'
+    });
   }
 
   private _getOverlayPosition(): PositionStrategy {

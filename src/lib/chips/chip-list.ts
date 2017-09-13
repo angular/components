@@ -45,6 +45,7 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
   host: {
     '[attr.tabindex]': '_tabIndex',
     'role': 'listbox',
+    '[attr.aria-orientation]': 'ariaOrientation',
     'class': 'mat-chip-list',
 
     '(focus)': 'focus()',
@@ -66,7 +67,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   protected _chipSet: WeakMap<MdChip, boolean> = new WeakMap();
 
   /** Subscription to tabbing out from the chip list. */
-  private _tabOutSubscription: Subscription;
+  private _tabOutSubscription = Subscription.EMPTY;
 
   /** Whether or not the chip is selectable. */
   protected _selectable: boolean = true;
@@ -87,6 +88,9 @@ export class MdChipList implements AfterContentInit, OnDestroy {
 
   /** The chip components contained within this chip list. */
   chips: QueryList<MdChip>;
+
+  /** Orientation of the chip list. */
+  @Input('aria-orientation') ariaOrientation: 'horizontal' | 'vertical' = 'horizontal';
 
   constructor(protected _renderer: Renderer2, protected _elementRef: ElementRef,
               @Optional() private _dir: Directionality) {
@@ -126,9 +130,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this._tabOutSubscription) {
-      this._tabOutSubscription.unsubscribe();
-    }
+    this._tabOutSubscription.unsubscribe();
   }
 
   /**

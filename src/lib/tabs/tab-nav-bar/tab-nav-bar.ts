@@ -28,12 +28,10 @@ import {
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {Directionality} from '@angular/cdk/bidi';
 import {Platform} from '@angular/cdk/platform';
-import {auditTime, takeUntil} from '@angular/cdk/rxjs';
+import {takeUntil} from '@angular/cdk/rxjs';
 import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
 import {of as observableOf} from 'rxjs/observable/of';
 import {merge} from 'rxjs/observable/merge';
-import {fromEvent} from 'rxjs/observable/fromEvent';
 import {CanDisableRipple, mixinDisableRipple} from '../../core/common-behaviors/disable-ripple';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {CanDisable, mixinDisabled} from '../../core/common-behaviors/disabled';
@@ -78,9 +76,6 @@ export class MdTabNav extends _MdTabNavMixinBase implements AfterContentInit, Ca
   @ContentChildren(forwardRef(() => MdTabLink), {descendants: true})
   _tabLinks: QueryList<MdTabLink>;
 
-  /** Subscription for window.resize event **/
-  private _resizeSubscription: Subscription;
-
   /** Background color of the tab nav. */
   @Input()
   get backgroundColor(): ThemePalette { return this._backgroundColor; }
@@ -109,7 +104,8 @@ export class MdTabNav extends _MdTabNavMixinBase implements AfterContentInit, Ca
               elementRef: ElementRef,
               @Optional() private _dir: Directionality,
               private _ngZone: NgZone,
-              private _changeDetectorRef: ChangeDetectorRef) {
+              private _changeDetectorRef: ChangeDetectorRef,
+              private _viewportRuler: ViewportRuler) {
     super(renderer, elementRef);
   }
 
@@ -124,15 +120,13 @@ export class MdTabNav extends _MdTabNavMixinBase implements AfterContentInit, Ca
   }
 
   ngAfterContentInit(): void {
-    this._resizeSubscription = this._ngZone.runOutsideAngular(() => {
-      let dirChange = this._dir ? this._dir.change : observableOf(null);
-      let resize = typeof window !== 'undefined' ?
-          auditTime.call(fromEvent(window, 'resize'), 10) :
-          observableOf(null);
+    this._ngZone.runOutsideAngular(() => {
+      const dirChange = this._dir ? this._dir.change : observableOf(null);
 
-      return takeUntil.call(merge(dirChange, resize), this._onDestroy)
+      return takeUntil.call(merge(dirChange, this._viewportRuler.change(10)), this._onDestroy)
           .subscribe(() => this._alignInkBar());
     });
+
     this._setLinkDisableRipple();
   }
 
@@ -146,10 +140,7 @@ export class MdTabNav extends _MdTabNavMixinBase implements AfterContentInit, Ca
 
   ngOnDestroy() {
     this._onDestroy.next();
-
-    if (this._resizeSubscription) {
-      this._resizeSubscription.unsubscribe();
-    }
+    this._onDestroy.complete();
   }
 
   /** Aligns the ink bar to the active link. */
