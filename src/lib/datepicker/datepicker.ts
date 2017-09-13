@@ -336,7 +336,7 @@ export class MdDatepicker<D> implements OnDestroy {
     const overlayState = new OverlayState({
       positionStrategy: this._createPopupPositionStrategy(),
       hasBackdrop: true,
-      backdropClass: 'md-overlay-transparent-backdrop',
+      backdropClass: 'mat-overlay-transparent-backdrop',
       direction: this._dir ? this._dir.value : 'ltr',
       scrollStrategy: this._scrollStrategy()
     });
