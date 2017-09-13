@@ -237,13 +237,12 @@ describe('MdMenu', () => {
 
   describe('fallback positions', () => {
 
-    it('should set x offset and y offset', () => {
+    it('should set x offset', () => {
       const offsetFixture = TestBed.createComponent(OffsetMenu);
       offsetFixture.detectChanges();
 
-      // set the x offset and y offset
+      // set the x offset
       offsetFixture.componentInstance.xOffset = 30;
-      offsetFixture.componentInstance.yOffset = 30;
       offsetFixture.detectChanges();
 
       const triggerOffset = offsetFixture.componentInstance.triggerEl.nativeElement;
@@ -256,19 +255,38 @@ describe('MdMenu', () => {
 
       // calculate difference between overlay and trigger positions
       const overlayRectLeftOffset = overlayRect.left - triggerRect.left;
-      const overlayRectBottomOffset = overlayRect.top -  triggerRect.top;
 
       expect(Math.floor(overlayRectLeftOffset))
         .toBe(Math.floor(30),
           `Expected x offset of the menu to be set`);
 
-      expect(Math.floor(overlayRectBottomOffset))
-        .toBe(Math.floor(30),
-          `Expected y offset of the menu to be set`);
-
       expect(typeof offsetFixture.componentInstance.xOffset)
         .toBe('number',
           'x offset is a number');
+    });
+
+    it('should set y offset', () => {
+      const offsetFixture = TestBed.createComponent(OffsetMenu);
+      offsetFixture.detectChanges();
+
+      // set the y offset
+      offsetFixture.componentInstance.yOffset = 30;
+      offsetFixture.detectChanges();
+
+      const triggerOffset = offsetFixture.componentInstance.triggerEl.nativeElement;
+      const triggerRect = triggerOffset.getBoundingClientRect();
+
+      offsetFixture.componentInstance.trigger.openMenu();
+      offsetFixture.detectChanges();
+      const overlayPane = getOverlayPane();
+      const overlayRect = overlayPane.getBoundingClientRect();
+
+      // calculate difference between overlay and trigger positions
+      const overlayRectBottomOffset = overlayRect.top -  triggerRect.top;
+
+      expect(Math.floor(overlayRectBottomOffset))
+        .toBe(Math.floor(30),
+          `Expected y offset of the menu to be set`);
 
       expect(typeof offsetFixture.componentInstance.yOffset)
         .toBe('number',

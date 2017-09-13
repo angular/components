@@ -168,7 +168,7 @@
   </div>
     <div class="menu-section">
     <p>
-      xoffset: 100 yoffset: 100
+      xoffset: 100 yoffset: 200
     </p>
     <md-toolbar>
       <button md-icon-button [md-menu-trigger-for]="posYMenuOverlay">
@@ -176,7 +176,7 @@
       </button>
     </md-toolbar>
 
-    <md-menu yOffset=100 xOffset=200 #posYMenuOverlay="mdMenu">
+    <md-menu yOffset="100" xOffset="200" #posYMenuOverlay="mdMenu">
       <button md-menu-item *ngFor="let item of items" [disabled]="item.disabled">
         {{ item.text }}
       </button>
