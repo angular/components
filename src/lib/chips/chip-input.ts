@@ -12,12 +12,7 @@ import {
   Output,
   EventEmitter,
   Input,
-  Optional,
-  Renderer2,
-  Self,
 } from '@angular/core';
-import {FormGroupDirective, NgControl, NgForm} from '@angular/forms';
-import {Platform} from '@angular/cdk/platform';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ENTER} from '@angular/material/core';
 import {MdChipList} from './chip-list';
@@ -87,19 +82,14 @@ export class MdChipInput {
   @Input() placeholder: string = '';
 
   get empty(): boolean {
-    let value: string | null = this._elementRef.nativeElement.value;
+    let value: string | null = this._inputElement.value;
     return value == null || value === '';
   }
 
   /** The native input element to which this directive is attached. */
   protected _inputElement: HTMLInputElement;
 
-  constructor(protected _elementRef: ElementRef,
-              protected _renderer: Renderer2,
-              protected _platform: Platform,
-              @Optional() @Self() public ngControl: NgControl,
-              @Optional() protected _parentForm: NgForm,
-              @Optional() protected _parentFormGroup: FormGroupDirective) {
+  constructor(protected _elementRef: ElementRef) {
     this._inputElement = this._elementRef.nativeElement as HTMLInputElement;
   }
 
@@ -140,5 +130,5 @@ export class MdChipInput {
     }
   }
 
-  focus() { this._elementRef.nativeElement.focus(); }
+  focus() { this._inputElement.focus(); }
 }
