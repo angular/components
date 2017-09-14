@@ -1,13 +1,8 @@
-<<<<<<< HEAD
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {createKeyboardEvent, dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {Component, DebugElement, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {
-  FormControl,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
   BACKSPACE,
   DELETE,

@@ -9,11 +9,9 @@
 import {FocusableOption} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
-  ContentChild,
   Directive,
   ElementRef,
   EventEmitter,
-  forwardRef,
   Input,
   OnDestroy,
   Output,
@@ -77,7 +75,7 @@ export class MdBasicChip { }
     '(click)': '_handleClick($event)',
     '(keydown)': '_handleKeydown($event)',
     '(focus)': '_hasFocus = true',
-    '(blur)': '_hasFocus = false',
+    '(blur)': '_blur()',
   },
 
 })
@@ -129,6 +127,9 @@ export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestr
 
   /** Emits when the chip is focused. */
   _onFocus = new Subject<MdChipEvent>();
+
+  /** Emits when the chip is blured. */
+  _onBlur = new Subject<MdChipEvent>();
 
   /** Emitted when the chip is selected or deselected. */
   @Output() onSelectionChange = new EventEmitter<MdChipSelectionChange>();
@@ -232,6 +233,11 @@ export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestr
         event.preventDefault();
         break;
     }
+  }
+
+  _blur() {
+    this._hasFocus = false;
+    this._onBlur.next({chip: this});
   }
 }
 

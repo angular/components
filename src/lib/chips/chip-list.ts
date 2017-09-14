@@ -104,6 +104,9 @@ export class MdChipList implements MdFormFieldControl<any>, ControlValueAccessor
   /** Subscription to focus changes in the chips. */
   private _chipFocusSubscription: Subscription|null;
 
+  /** Subscription to blur changes in the chips. */
+  private _chipBlurSubscription: Subscription|null;
+
   /** Subscription to selection changes in chips. */
   private _chipSelectionSubscription: Subscription|null;
 
@@ -275,6 +278,11 @@ export class MdChipList implements MdFormFieldControl<any>, ControlValueAccessor
   /** Combined stream of all of the child chips' focus change events. */
   get chipFocusChanges(): Observable<MdChipEvent> {
     return merge(...this.chips.map(chip => chip._onFocus));
+  }
+
+  /** Combined stream of all of the child chips' blur change events. */
+  get chipBlurChanges(): Observable<MdChipEvent> {
+    return merge(...this.chips.map(chip => chip._onBlur));
   }
 
   /** Combined stream of all of the child chips' remove change events. */
@@ -649,6 +657,11 @@ export class MdChipList implements MdFormFieldControl<any>, ControlValueAccessor
       this._chipFocusSubscription = null;
     }
 
+    if (this._chipBlurSubscription) {
+      this._chipBlurSubscription.unsubscribe();
+      this._chipBlurSubscription = null;
+    }
+
     if (this._chipSelectionSubscription) {
       this._chipSelectionSubscription.unsubscribe();
       this._chipSelectionSubscription = null;
@@ -685,6 +698,11 @@ export class MdChipList implements MdFormFieldControl<any>, ControlValueAccessor
       if (this._isValidIndex(chipIndex)) {
         this._keyManager.updateActiveItemIndex(chipIndex);
       }
+      this.stateChanges.next();
+    });
+
+    this._chipBlurSubscription = this.chipBlurChanges.subscribe(_ => {
+      this._blur();
       this.stateChanges.next();
     });
   }
