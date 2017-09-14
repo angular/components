@@ -54,6 +54,11 @@ export class PlunkerWriter {
       let exampleContents = data.exampleFiles
           .map(file => this._readFile(form, data, file, data.examplePath));
 
+      // TODO(josephperrott): Prevent including assets to be manually checked.
+      if (data.selectorName === 'icon-svg-example') {
+        this._readFile(form, data, 'assets/img/examples/thumbup-icon.svg', '');
+      }
+
       Promise.all(templateContents.concat(exampleContents)).then(() => {
         resolve(form);
       });
