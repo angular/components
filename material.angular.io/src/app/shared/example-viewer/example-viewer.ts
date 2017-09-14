@@ -1,8 +1,9 @@
 import {Component, Input} from '@angular/core';
-import {ComponentPortal} from '@angular/material';
+import {ComponentPortal, MdSnackBar} from '@angular/material';
 import 'rxjs/add/operator/first';
 
 import {EXAMPLE_COMPONENTS, LiveExample} from '@angular/material-examples';
+import {CopierService} from '../copier/copier.service';
 
 
 @Component({
@@ -21,6 +22,10 @@ export class ExampleViewer {
 
   /** Whether the source for the example is being displayed. */
   showSource = false;
+
+  constructor(
+    private snackbar: MdSnackBar,
+    private copier: CopierService) { }
 
   get example() {
     return this._example;
@@ -43,5 +48,13 @@ export class ExampleViewer {
 
   exampleFileUrl(extension: string) {
     return `/assets/examples/${this.example}-example-${extension.toLowerCase()}.html`;
+  }
+
+  copySource(text: string) {
+    if (this.copier.copyText(text)) {
+      this.snackbar.open('Code copied', '', {duration: 2500});
+    } else {
+      this.snackbar.open('Copy failed. Please try again!', '', {duration: 2500});
+    }
   }
 }

@@ -17,6 +17,16 @@
       background: rgba(mat-color($foreground, secondary-text), .03);
     }
 
+    .docs-example-source-copy {
+      color: mat-color($foreground, hint-text);
+      right: 8px;
+
+      [dir='rtl'] & {
+        right: auto;
+        left: 8px;
+      }
+    }
+
     .docs-example-source {
       border-bottom: 1px solid mat-color($foreground, divider);
     }

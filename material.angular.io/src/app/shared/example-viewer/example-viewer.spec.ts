@@ -1,5 +1,8 @@
 import {ReactiveFormsModule} from '@angular/forms';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, inject, ComponentFixture, TestBed} from '@angular/core/testing';
+import {MockBackend} from '@angular/http/testing';
+import {Response, ResponseOptions} from '@angular/http';
+import {By} from '@angular/platform-browser';
 
 import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
 import {ExampleViewer} from './example-viewer';
@@ -14,12 +17,15 @@ import {
   MdInputModule,
   MdSlideToggleModule
 } from '@angular/material';
+import {CopierService} from '../copier/copier.service';
+import {MdSnackBar} from '@angular/material';
 
 const exampleKey = 'autocomplete-overview';
 
 
 describe('ExampleViewer', () => {
   let fixture: ComponentFixture<ExampleViewer>;
+  let component: ExampleViewer;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -32,12 +38,20 @@ describe('ExampleViewer', () => {
     }).compileComponents();
   }));
 
+  beforeEach(inject([MockBackend], (mockBackend: MockBackend) => {
+    // Mock backend request that may come through the doc viewer
+    mockBackend.connections.subscribe((connection: any) => {
+      const url = connection.request.url;
+      connection.mockRespond(getFakeDocResponse(url));
+    });
+  }));
+
   beforeEach(() => {
     fixture = TestBed.createComponent(ExampleViewer);
+    component = fixture.componentInstance;
   });
 
   it('should toggle showSource boolean', () => {
-    const component = fixture.componentInstance;
     fixture.detectChanges();
     expect(component.showSource).toBe(false);
     component.toggleSourceView();
@@ -45,7 +59,6 @@ describe('ExampleViewer', () => {
   });
 
   it('should set and return example properly', () => {
-    const component = fixture.componentInstance;
     component.example = exampleKey;
     fixture.detectChanges();
     const data = component.exampleData;
@@ -54,7 +67,6 @@ describe('ExampleViewer', () => {
   });
 
   it('should log message about missing example', () => {
-    const component = fixture.componentInstance;
     spyOn(console, 'log');
     component.example = 'foobar';
     fixture.detectChanges();
@@ -64,7 +76,6 @@ describe('ExampleViewer', () => {
 
   it('should return assets path for example based on extension', () => {
     // set example
-    const component = fixture.componentInstance;
     component.example = exampleKey;
     fixture.detectChanges();
 
@@ -77,6 +88,50 @@ describe('ExampleViewer', () => {
       expect(actual).toEqual(expected);
     });
   });
+
+  describe('copy button', () => {
+    let button: HTMLElement;
+
+    beforeEach(() => {
+      // Open source view
+      component.example = exampleKey;
+      component.showSource = true;
+      fixture.detectChanges();
+
+      // Select button element
+      const btnDe = fixture.debugElement.query(By.css('.docs-example-source-copy'));
+      button = btnDe ? btnDe.nativeElement : null;
+    });
+
+    it('should call copier service when clicked', () => {
+      const copierService: CopierService = TestBed.get(CopierService);
+      const spy = spyOn(copierService, 'copyText');
+      expect(spy.calls.count()).toBe(0, 'before click');
+      button.click();
+      expect(spy.calls.count()).toBe(1, 'after click');
+      expect(spy.calls.argsFor(0)[0]).toBe('my docs page', 'click content');
+    });
+
+    it('should display a message when copy succeeds', () => {
+      const snackBar: MdSnackBar = TestBed.get(MdSnackBar);
+      const copierService: CopierService = TestBed.get(CopierService);
+      spyOn(snackBar, 'open');
+      spyOn(copierService, 'copyText').and.returnValue(true);
+      button.click();
+      expect(snackBar.open).toHaveBeenCalledWith('Code copied', '', {duration: 2500});
+    });
+
+    it('should display an error when copy fails', () => {
+      const snackBar: MdSnackBar = TestBed.get(MdSnackBar);
+      const copierService: CopierService = TestBed.get(CopierService);
+      spyOn(snackBar, 'open');
+      spyOn(copierService, 'copyText').and.returnValue(false);
+      button.click();
+      expect(snackBar.open)
+          .toHaveBeenCalledWith('Copy failed. Please try again!', '', {duration: 2500});
+    });
+  });
+
 });
 
 
@@ -96,3 +151,24 @@ describe('ExampleViewer', () => {
   entryComponents: [EXAMPLE_COMPONENTS[exampleKey].component],
 })
 class TestExampleModule { }
+
+
+const FAKE_DOCS = {
+  '/assets/examples/autocomplete-overview-example-html.html':
+      '<div>my docs page</div>',
+  '/assets/examples/autocomplete-overview-example-ts.html':
+      '<span>const a = 1;</span>',
+  '/assets/examples/autocomplete-overview-example-css.html':
+      '<pre>.class { color: black; }</pre>',
+};
+
+function getFakeDocResponse(url: string) {
+  if (url in FAKE_DOCS) {
+    return new Response(new ResponseOptions({
+      status: 200,
+      body: FAKE_DOCS[url],
+    }));
+  } else {
+    return new Response(new ResponseOptions({status: 404}));
+  }
+}
