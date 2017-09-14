@@ -3,7 +3,7 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MdSlider, MdSliderModule} from './index';
-import {TestGestureConfig} from './test-gesture-config';
+import {TestGestureConfig} from '../core/gestures/test-gesture-config';
 import {BidiModule} from '@angular/material/core';
 import {
   DOWN_ARROW,
