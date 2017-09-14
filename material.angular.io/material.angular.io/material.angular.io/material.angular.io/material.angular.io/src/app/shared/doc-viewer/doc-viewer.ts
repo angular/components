@@ -32,6 +32,9 @@ export class DocViewer implements OnDestroy {
 
   @Output() contentLoaded = new EventEmitter<void>();
 
+  /** The document text. It should not be HTML encoded. */
+  textContent = '';
+
   constructor(private _appRef: ApplicationRef,
               private _componentFactoryResolver: ComponentFactoryResolver,
               private _elementRef: ElementRef,
@@ -51,6 +54,7 @@ export class DocViewer implements OnDestroy {
           // TODO(mmalerba): Trust HTML.
           if (response.ok) {
             this._elementRef.nativeElement.innerHTML = response.text();
+            this.textContent = this._elementRef.nativeElement.textContent;
             this._loadComponents('material-docs-example', ExampleViewer);
             this._loadComponents('header-link', HeaderLink);
             this.contentLoaded.next();

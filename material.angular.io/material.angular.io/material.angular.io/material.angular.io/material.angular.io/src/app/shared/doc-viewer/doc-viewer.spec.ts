@@ -32,6 +32,14 @@ describe('DocViewer', () => {
     expect(docViewer.nativeElement.innerHTML).toBe('<div>my docs page</div>');
   });
 
+  it('should save textContent of the doc', () => {
+    let fixture = TestBed.createComponent(DocViewerTestComponent);
+    fixture.detectChanges();
+
+    let docViewer = fixture.debugElement.query(By.directive(DocViewer));
+    expect(docViewer.componentInstance.textContent).toBe('my docs page');
+  });
+
   it('should show error message when doc not found', () => {
     let fixture = TestBed.createComponent(DocViewerTestComponent);
     fixture.detectChanges();
