@@ -12,6 +12,8 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
   DEC,
   JAN,
+  JUL,
+  JUN,
   MAT_DATE_LOCALE,
   MdNativeDateModule,
   NativeDateModule,
