@@ -186,12 +186,12 @@ describe('MdSnackBar', () => {
     let snackBarRef = snackBar.open(simpleMessage, undefined, config);
 
     viewContainerFixture.detectChanges();
-    expect(snackBarRef.containerInstance.getAnimationState())
+    expect(snackBarRef.containerInstance._animationState)
         .toBe('visible-bottom', `Expected the animation state would be 'visible-bottom'.`);
     snackBarRef.dismiss();
 
     viewContainerFixture.detectChanges();
-    expect(snackBarRef.containerInstance.getAnimationState())
+    expect(snackBarRef.containerInstance._animationState)
         .toBe('hidden-bottom', `Expected the animation state would be 'hidden-bottom'.`);
   });
 
@@ -201,7 +201,7 @@ describe('MdSnackBar', () => {
     snackBarRef.dismiss();
 
     viewContainerFixture.detectChanges();
-    expect(snackBarRef.containerInstance.getAnimationState())
+    expect(snackBarRef.containerInstance._animationState)
         .toBe('hidden-bottom', `Expected the animation state would be 'hidden-bottom'.`);
   });
 
@@ -212,7 +212,7 @@ describe('MdSnackBar', () => {
     let dismissObservableCompleted = false;
 
     viewContainerFixture.detectChanges();
-    expect(snackBarRef.containerInstance.getAnimationState())
+    expect(snackBarRef.containerInstance._animationState)
         .toBe('visible-bottom', `Expected the animation state would be 'visible-bottom'.`);
 
     let config2 = {viewContainerRef: testViewContainerRef};
@@ -225,9 +225,9 @@ describe('MdSnackBar', () => {
 
     viewContainerFixture.whenStable().then(() => {
       expect(dismissObservableCompleted).toBe(true);
-      expect(snackBarRef.containerInstance.getAnimationState())
+      expect(snackBarRef.containerInstance._animationState)
           .toBe('hidden-bottom', `Expected the animation state would be 'hidden-bottom'.`);
-      expect(snackBarRef2.containerInstance.getAnimationState())
+      expect(snackBarRef2.containerInstance._animationState)
           .toBe('visible-bottom', `Expected the animation state would be 'visible-bottom'.`);
     });
   }));
@@ -248,7 +248,7 @@ describe('MdSnackBar', () => {
 
       // Wait for the snackbar open animation to finish.
       viewContainerFixture.whenStable().then(() => {
-        expect(snackBarRef.containerInstance.getAnimationState())
+        expect(snackBarRef.containerInstance._animationState)
             .toBe('visible-bottom', `Expected the animation state would be 'visible-bottom'.`);
       });
     });
