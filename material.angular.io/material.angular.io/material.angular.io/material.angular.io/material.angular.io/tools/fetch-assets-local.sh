@@ -33,6 +33,9 @@ cp -r ${baseSrcPath}/dist/releases/material-examples ./node_modules/@angular/
 # Copy Examples
 cp -r ${baseSrcPath}/dist/docs/examples ${baseTargetPath}
 
+# Copy Plunkers
+cp -r ${baseSrcPath}/dist/docs/plunker ${baseTargetPath}
+
 # Copy API Files
 cp -r ${baseSrcPath}/dist/docs/api ${baseTargetPath}/documents
 
