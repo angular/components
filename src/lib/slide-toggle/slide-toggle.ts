@@ -247,8 +247,8 @@ export class MdSlideToggle extends _MdSlideToggleMixinBase implements OnDestroy,
     let event = new MdSlideToggleChange();
     event.source = this;
     event.checked = this.checked;
-    this.change.emit(event);
     this.onChange(this.checked);
+    this.change.emit(event);
   }
 
   _onDragStart() {
