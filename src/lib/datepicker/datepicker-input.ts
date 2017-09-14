@@ -200,21 +200,24 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   /** The form control validator for the min date. */
   private _minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    return (!this.min || !control.value ||
-        this._dateAdapter.compareDate(this.min, control.value) <= 0) ?
+    const controlValue = this._coerceDateProperty(control.value);
+    return (!this.min || !controlValue ||
+        this._dateAdapter.compareDate(this.min, controlValue) <= 0) ?
         null : {'mdDatepickerMin': {'min': this.min, 'actual': control.value}};
   }
 
   /** The form control validator for the max date. */
   private _maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    return (!this.max || !control.value ||
-        this._dateAdapter.compareDate(this.max, control.value) >= 0) ?
+    const controlValue = this._coerceDateProperty(control.value);
+    return (!this.max || !controlValue ||
+        this._dateAdapter.compareDate(this.max, controlValue) >= 0) ?
         null : {'mdDatepickerMax': {'max': this.max, 'actual': control.value}};
   }
 
   /** The form control validator for the date filter. */
   private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    return !this._dateFilter || !control.value || this._dateFilter(control.value) ?
+    const controlValue = this._coerceDateProperty(control.value);
+    return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ?
         null : {'mdDatepickerFilter': true};
   }
 

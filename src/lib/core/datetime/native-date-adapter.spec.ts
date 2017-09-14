@@ -331,6 +331,14 @@ describe('NativeDateAdapter', () => {
     let d = '1/1/2017';
     expect(adapter.isDateInstance(d)).toBe(false);
   });
+
+  it('should create dates from valid ISO strings', () => {
+    expect(adapter.fromISODateString('1985-04-12T23:20:50.52Z')).not.toBeNull();
+    expect(adapter.fromISODateString('1996-12-19T16:39:57-08:00')).not.toBeNull();
+    expect(adapter.fromISODateString('1937-01-01T12:00:27.87+00:20')).not.toBeNull();
+    expect(adapter.fromISODateString('1990-13-31T23:59:00Z')).toBeNull();
+    expect(adapter.fromISODateString('1/1/2017')).toBeNull();
+  });
 });
 
 
