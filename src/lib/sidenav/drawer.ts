@@ -25,10 +25,13 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import {animate, state, style, transition, trigger, AnimationEvent} from '@angular/animations';
-import {Directionality, coerceBooleanProperty} from '../core';
+import {Directionality, coerceBooleanProperty, coerceNumberProperty} from '../core';
 import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
 import {ESCAPE} from '../core/keyboard/keycodes';
-import {first, takeUntil, startWith} from '../core/rxjs/index';
+import {first, takeUntil, startWith, auditTime} from '../core/rxjs/index';
+import {Subscription} from 'rxjs/Subscription';
+import {of as observableOf} from 'rxjs/observable/of';
+import {fromEvent} from 'rxjs/observable/fromEvent';
 import {DOCUMENT} from '@angular/platform-browser';
 import {merge} from 'rxjs/observable/merge';
 import {Subscription} from 'rxjs/Subscription';
@@ -326,6 +329,31 @@ export class MdDrawerContainer implements AfterContentInit, OnDestroy {
   /** Event emitted when the drawer backdrop is clicked. */
   @Output() backdropClick = new EventEmitter<void>();
 
+  /** Breakpoint width (in px) at which the sidenav collapses. */
+
+  @Input()
+  get breakpointWidth() { return this._breakpointWidth; }
+  set breakpointWidth(v: number) {
+    this._breakpointWidth = coerceNumberProperty(v, this._breakpointWidth);
+  }
+  private _breakpointWidth: number;
+
+  /** Whether the drawer changes modes when collapsing. */
+  @Input()
+  get breakpointChangeMode() { return this._breakpointChangeMode; }
+  set breakpointChangeMode(value: boolean) {
+    this._breakpointChangeMode = coerceBooleanProperty(value);
+  }
+  private _breakpointChangeMode = true;
+
+  /**
+   * Responsively toggle the drawer using the breakpoint.
+   * Note that this only works when the window is rezied.
+   * If you resize it some other way, call _updateDrawer().
+   */
+  private _updateDrawerSubscription: Subscription | null = null;
+  private _updateDrawer() {}
+
   /** The drawer at the start/end position, independent of direction. */
   private _start: MdDrawer | null;
   private _end: MdDrawer | null;
@@ -363,6 +391,32 @@ export class MdDrawerContainer implements AfterContentInit, OnDestroy {
         this._watchDrawerPosition(drawer);
       });
     });
+
+    const resize = typeof window !== 'undefined' ?
+      auditTime.call(fromEvent(window, 'resize'), 150) :
+      observableOf(null);
+
+    this._updateDrawer = () => {
+      if (this._element.nativeElement.offsetWidth < this.breakpointWidth) {
+        if (this.breakpointChangeMode) {
+          this._drawers.forEach(drawer => drawer.mode = 'over');
+        }
+        this.close();
+      } else {
+        if (this.breakpointChangeMode) {
+          this._drawers.forEach(drawer => drawer.mode = 'side');
+        }
+        this.open();
+      }
+    };
+    this._updateDrawerSubscription = startWith.call(resize, null).subscribe(this._updateDrawer);
+
+  }
+
+  ngOnDestroy() {
+    if (this._updateDrawerSubscription) {
+      this._updateDrawerSubscription.unsubscribe();
+    }
   }
 
   ngOnDestroy() {
