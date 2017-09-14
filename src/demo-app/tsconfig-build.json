@@ -8,6 +8,7 @@
     "noUnusedParameters": true,
     "strictNullChecks": true,
     "lib": ["es6", "es2015", "dom"],
+    "skipLibCheck": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,
@@ -22,7 +23,9 @@
     "baseUrl": ".",
     "paths": {
       "@angular/material": ["../../dist/packages/material/public_api"],
-      "@angular/cdk/*": ["../../dist/packages/cdk/*"]
+      "@angular/cdk/*": ["../../dist/packages/cdk/*"],
+      "@angular/material/*": ["../../dist/packages/material/*"],
+      "@angular/material-moment-adapter": ["../../dist/packages/material-moment-adapter"]
     }
   },
   "files": [

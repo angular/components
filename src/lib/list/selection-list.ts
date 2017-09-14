@@ -6,34 +6,42 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {SelectionModel} from '@angular/cdk/collections';
 import {
   AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
-  Input,
-  QueryList,
-  ViewEncapsulation,
-  Optional,
-  Renderer2,
   EventEmitter,
-  Output,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  OnDestroy,
   forwardRef,
   Inject,
+  Input,
+  OnDestroy,
+  Optional,
+  Output,
+  QueryList,
+  Renderer2,
+  ViewEncapsulation,
 } from '@angular/core';
-import {coerceBooleanProperty, SelectionModel, MdLine, MdLineSetter} from '../core';
-import {FocusKeyManager} from '../core/a11y/focus-key-manager';
-import {Subscription} from 'rxjs/Subscription';
-import {SPACE} from '../core/keyboard/keycodes';
-import {FocusableOption} from '../core/a11y/focus-key-manager';
-import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
-import {RxChain, switchMap, startWith} from '../core/rxjs/index';
+import {
+  CanDisable,
+  CanDisableRipple,
+  MATERIAL_COMPATIBILITY_MODE,
+  MdLine,
+  MdLineSetter,
+  mixinDisabled,
+  mixinDisableRipple,
+  RxChain,
+  SPACE,
+  startWith,
+  switchMap,
+} from '@angular/material/core';
 import {merge} from 'rxjs/observable/merge';
-import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
-import {MATERIAL_COMPATIBILITY_MODE} from '../core/compatibility/compatibility';
+import {Subscription} from 'rxjs/Subscription';
 
 
 /** @docs-private */
@@ -82,7 +90,6 @@ export class MdListOption extends _MdListOptionMixinBase
   private _lineSetter: MdLineSetter;
   private _selected: boolean = false;
   private _disabled: boolean = false;
-  private _value: any;
 
   /** Whether the option has focus. */
   _hasFocus: boolean = false;
@@ -92,20 +99,18 @@ export class MdListOption extends _MdListOptionMixinBase
   /** Whether the label should appear before or after the checkbox. Defaults to 'after' */
   @Input() checkboxPosition: 'before' | 'after' = 'after';
 
+  /** Value of the option */
+  @Input() value: any;
+
   /** Whether the option is disabled. */
   @Input()
   get disabled() { return (this.selectionList && this.selectionList.disabled) || this._disabled; }
   set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
 
-  /** Value of the option */
-  @Input()
-  get value() { return this._value; }
-  set value( val: any) { this._value = coerceBooleanProperty(val); }
-
   /** Whether the option is selected. */
   @Input()
   get selected() { return this._selected; }
-  set selected( val: boolean) { this._selected = coerceBooleanProperty(val); }
+  set selected(value: boolean) { this._selected = coerceBooleanProperty(value); }
 
   /** Emitted when the option is focused. */
   onFocus = new EventEmitter<MdSelectionListOptionEvent>();
@@ -123,7 +128,7 @@ export class MdListOption extends _MdListOptionMixinBase
               private _element: ElementRef,
               private _changeDetector: ChangeDetectorRef,
               @Optional() @Inject(forwardRef(() => MdSelectionList))
-                  public selectionList: MdSelectionList) {
+              public selectionList: MdSelectionList) {
     super();
   }
 
@@ -242,6 +247,24 @@ export class MdSelectionList extends _MdSelectionListMixinBase
   /** Focus the selection-list. */
   focus() {
     this._element.nativeElement.focus();
+  }
+
+  /** Selects all of the options. */
+  selectAll() {
+    this.options.forEach(option => {
+      if (!option.selected) {
+        option.toggle();
+      }
+    });
+  }
+
+  /** Deselects all of the options. */
+  deselectAll() {
+    this.options.forEach(option => {
+      if (option.selected) {
+        option.toggle();
+      }
+    });
   }
 
   /** Map all the options' destroy event subscriptions and merge them into one stream. */
