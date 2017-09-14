@@ -38,6 +38,15 @@ const DEFAULT_DAY_OF_WEEK_NAMES = {
 };
 
 
+/**
+ * Matches strings that have the form of a valid RFC 3339 string
+ * (https://tools.ietf.org/html/rfc3339). Note that the string may not actually be a valid date
+ * because the regex will match strings an with out of bounds month, date, etc.
+ */
+const ISO_8601_REGEX =
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|(?:(?:\+|-)\d{2}:\d{2}))$/;
+
+
 /** Creates an array and fills it with values. */
 function range<T>(length: number, valueFunction: (index: number) => T): T[] {
   const valuesArray = Array(length);
@@ -202,12 +211,22 @@ export class NativeDateAdapter extends DateAdapter<Date> {
         this.getYear(date), this.getMonth(date), this.getDate(date) + days);
   }
 
-  getISODateString(date: Date): string {
+  toISODateString(date: Date): string {
     return [
       date.getUTCFullYear(),
       this._2digit(date.getUTCMonth() + 1),
       this._2digit(date.getUTCDate())
     ].join('-');
+  }
+
+  fromISODateString(iso8601String: string): Date | null {
+    if (iso8601String.match(ISO_8601_REGEX)) {
+      let d = new Date(iso8601String);
+      if (this.isValid(d)) {
+        return d;
+      }
+    }
+    return null;
   }
 
   isDateInstance(obj: any) {

@@ -74,8 +74,8 @@ export class MdDatepickerInputEvent<D> {
   host: {
     '[attr.aria-haspopup]': 'true',
     '[attr.aria-owns]': '(_datepicker?.opened && _datepicker.id) || null',
-    '[attr.min]': 'min ? _dateAdapter.getISODateString(min) : null',
-    '[attr.max]': 'max ? _dateAdapter.getISODateString(max) : null',
+    '[attr.min]': 'min ? _dateAdapter.toISODateString(min) : null',
+    '[attr.max]': 'max ? _dateAdapter.toISODateString(max) : null',
     '[disabled]': 'disabled',
     '(input)': '_onInput($event.target.value)',
     '(change)': '_onChange()',

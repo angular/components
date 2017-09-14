@@ -342,7 +342,7 @@ describe('MomentDateAdapter', () => {
     adapter.addCalendarDays(date, 1);
     adapter.addCalendarMonths(date, 1);
     adapter.addCalendarYears(date, 1);
-    adapter.getISODateString(date);
+    adapter.toISODateString(date);
     adapter.isDateInstance(date);
     adapter.isValid(date);
     expect(date.locale()).toBe('en');
