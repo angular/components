@@ -63,19 +63,31 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
   private _intlChanges: Subscription;
 
   /** A date representing the period (month or year) to start the calendar in. */
-  @Input() startAt: D;
+  @Input()
+  get startAt(): D { return this._startAt; }
+  set startAt(value: D) { this._startAt = this._coerceDateProperty(value); }
+  private _startAt: D;
 
   /** Whether the calendar should be started in month or year view. */
   @Input() startView: 'month' | 'year' = 'month';
 
   /** The currently selected date. */
-  @Input() selected: D | null;
+  @Input()
+  get selected(): D | null { return this._selected; }
+  set selected(value: D | null) { this._selected = this._coerceDateProperty(value); }
+  private _selected: D | null;
 
   /** The minimum selectable date. */
-  @Input() minDate: D | null;
+  @Input()
+  get minDate(): D | null { return this._minDate; }
+  set minDate(value: D | null) { this._minDate = this._coerceDateProperty(value); }
+  private _minDate: D | null;
 
   /** The maximum selectable date. */
-  @Input() maxDate: D | null;
+  @Input()
+  get maxDate(): D | null { return this._maxDate; }
+  set maxDate(value: D | null) { this._maxDate = this._coerceDateProperty(value); }
+  private _maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
@@ -353,5 +365,17 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
     let increment = this._dateAdapter.getMonth(date) <= 4 ? 7 :
         (this._dateAdapter.getMonth(date) >= 7 ? 5 : 12);
     return this._dateAdapter.addCalendarMonths(date, increment);
+  }
+
+  /**
+   * Attempts to coerce a property to a date by parsing it as a ISO 8601 string. If not a valid
+   * ISO 8601 string, returns the original vlaue.
+   */
+  private _coerceDateProperty(value: any): any {
+    if (typeof value === 'string') {
+      const d = this._dateAdapter.fromISODateString(value);
+      return d || value;
+    }
+    return value;
   }
 }

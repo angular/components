@@ -129,7 +129,7 @@ export class MdDatepicker<D> implements OnDestroy {
     // selected value is.
     return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
   }
-  set startAt(date: D | null) { this._startAt = date; }
+  set startAt(date: D | null) { this._startAt = this._coerceDateProperty(date); }
   private _startAt: D | null;
 
   /** The view that the calendar should start in. */
@@ -359,5 +359,17 @@ export class MdDatepicker<D> implements OnDestroy {
         { originX: 'end', originY: 'top' },
         { overlayX: 'end', overlayY: 'bottom' }
       );
+  }
+
+  /**
+   * Attempts to coerce a property to a date by parsing it as a ISO 8601 string. If not a valid
+   * ISO 8601 string, returns the original vlaue.
+   */
+  private _coerceDateProperty(value: any): any {
+    if (typeof value === 'string') {
+      const d = this._dateAdapter.fromISODateString(value);
+      return d || value;
+    }
+    return value;
   }
 }

@@ -122,6 +122,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
     return this._value;
   }
   set value(value: D | null) {
+    value = this._coerceDateProperty(value);
     if (value != null && !this._dateAdapter.isDateInstance(value)) {
       throw Error('Datepicker: value not recognized as a date object by DateAdapter.');
     }
@@ -142,7 +143,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   @Input()
   get min(): D | null { return this._min; }
   set min(value: D | null) {
-    this._min = value;
+    this._min = this._coerceDateProperty(value);
     this._validatorOnChange();
   }
   private _min: D | null;
@@ -151,7 +152,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   @Input()
   get max(): D | null { return this._max; }
   set max(value: D | null) {
-    this._max = value;
+    this._max = this._coerceDateProperty(value);
     this._validatorOnChange();
   }
   private _max: D | null;
@@ -327,5 +328,17 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
    */
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  }
+
+  /**
+   * Attempts to coerce a property to a date by parsing it as a ISO 8601 string. If not a valid
+   * ISO 8601 string, returns the original vlaue.
+   */
+  private _coerceDateProperty(value: any): any {
+    if (typeof value === 'string') {
+      const d = this._dateAdapter.fromISODateString(value);
+      return d || value;
+    }
+    return value;
   }
 }

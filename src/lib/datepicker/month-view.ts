@@ -44,7 +44,7 @@ export class MdMonthView<D> implements AfterContentInit {
   get activeDate(): D { return this._activeDate; }
   set activeDate(value: D) {
     let oldActiveDate = this._activeDate;
-    this._activeDate = value || this._dateAdapter.today();
+    this._activeDate = this._coerceDateProperty(value) || this._dateAdapter.today();
     if (!this._hasSameMonthAndYear(oldActiveDate, this._activeDate)) {
       this._init();
     }
@@ -55,7 +55,7 @@ export class MdMonthView<D> implements AfterContentInit {
   @Input()
   get selected(): D { return this._selected; }
   set selected(value: D) {
-    this._selected = value;
+    this._selected = this._coerceDateProperty(value);
     this._selectedDate = this._getDateInCurrentMonth(this.selected);
   }
   private _selected: D;
@@ -180,5 +180,17 @@ export class MdMonthView<D> implements AfterContentInit {
   private _hasSameMonthAndYear(d1: D, d2: D): boolean {
     return !!(d1 && d2 && this._dateAdapter.getMonth(d1) == this._dateAdapter.getMonth(d2) &&
               this._dateAdapter.getYear(d1) == this._dateAdapter.getYear(d2));
+  }
+
+  /**
+   * Attempts to coerce a property to a date by parsing it as a ISO 8601 string. If not a valid
+   * ISO 8601 string, returns the original vlaue.
+   */
+  private _coerceDateProperty(value: any): any {
+    if (typeof value === 'string') {
+      const d = this._dateAdapter.fromISODateString(value);
+      return d || value;
+    }
+    return value;
   }
 }
