@@ -44,7 +44,7 @@ export function throwMdMenuInvalidPositionY() {
  */
 export function throwInvalidOffsetX() {
   throw Error(`x offset must be a number.
-      Example: <md-menu xOffset=20 #menu="mdMenu"></md-menu>`);
+      Example: <md-menu xOffset="20" #menu="mdMenu"></md-menu>`);
 }
 
 /**
@@ -53,5 +53,5 @@ export function throwInvalidOffsetX() {
  */
  export function throwInvalidOffsetY() {
   throw Error(`y offset must be a number.
-      Example: <md-menu yOffset=20 #menu="mdMenu"></md-menu>`);
+      Example: <md-menu yOffset="20" #menu="mdMenu"></md-menu>`);
 }
