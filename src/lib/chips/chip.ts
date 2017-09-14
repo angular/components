@@ -28,6 +28,11 @@ export interface MdChipEvent {
   chip: MdChip;
 }
 
+export interface MdChipSelectionEvent {
+    chip: MdChip;
+    selected: boolean;
+}
+
 // Boilerplate for applying mixins to MdChip.
 /** @docs-private */
 export class MdChipBase {
@@ -79,11 +84,10 @@ export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestr
     this._selected = coerceBooleanProperty(value);
     if (this.selected) {
       this.select.emit({chip: this});
-      this.selectionChange.emit({chip: this});
     } else {
       this.deselect.emit({chip: this});
-      this.deselected.emit({chip: this});
     }
+    this.selectionChange.emit({chip: this, selected: this.selected});
   }
   protected _selected: boolean = false;
 
@@ -125,16 +129,13 @@ export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestr
   @Output() select = new EventEmitter<MdChipEvent>();
 
   /** Emitted when the chip is selected. */
-  @Output() selectionChange = new EventEmitter<MdChipEvent>();
+  @Output() selectionChange = new EventEmitter<MdChipSelectionEvent>();
 
   /**
    * Emitted when the chip is deselected.
-   * @deprecated Use `deselected` instead.
+   * @deprecated Use `selectionChange` instead.
    */
   @Output() deselect = new EventEmitter<MdChipEvent>();
-
-  /** Emitted when the chip is deselected. */
-  @Output() deselected = new EventEmitter<MdChipEvent>();
 
   /**
    * Emitted when the chip is destroyed.
