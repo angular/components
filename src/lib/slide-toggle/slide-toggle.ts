@@ -31,12 +31,12 @@ import {
   HammerInput,
   MdRipple,
   RippleRef,
-} from '../core';
+} from '@angular/material/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
-import {CanColor, mixinColor} from '../core/common-behaviors/color';
-import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
-import {HasTabIndex, mixinTabIndex} from '../core/common-behaviors/tabindex';
+import {mixinDisabled, CanDisable} from '@angular/material/core';
+import {CanColor, mixinColor} from '@angular/material/core';
+import {CanDisableRipple, mixinDisableRipple} from '@angular/material/core';
+import {HasTabIndex, mixinTabIndex} from '@angular/material/core';
 
 // Increasing integer for generating unique ids for slide-toggle components.
 let nextUniqueId = 0;
@@ -278,6 +278,13 @@ export class MdSlideToggle extends _MdSlideToggleMixinBase implements OnDestroy,
     }
   }
 
+  /** Method being called whenever the label text changes. */
+  _onLabelTextChange() {
+    // This method is getting called whenever the label of the slide-toggle changes.
+    // Since the slide-toggle uses the OnPush strategy we need to notify it about the change
+    // that has been recognized by the cdkObserveContent directive.
+    this._changeDetectorRef.markForCheck();
+  }
 }
 
 /**

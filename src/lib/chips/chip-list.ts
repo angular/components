@@ -22,7 +22,7 @@ import {
 
 import {MdChip} from './chip';
 import {FocusKeyManager} from '@angular/cdk/a11y';
-import {BACKSPACE, DELETE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '../core/keyboard/keycodes';
+import {BACKSPACE, DELETE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {Subscription} from 'rxjs/Subscription';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
@@ -45,6 +45,7 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
   host: {
     '[attr.tabindex]': '_tabIndex',
     'role': 'listbox',
+    '[attr.aria-orientation]': 'ariaOrientation',
     'class': 'mat-chip-list',
 
     '(focus)': 'focus()',
@@ -87,6 +88,9 @@ export class MdChipList implements AfterContentInit, OnDestroy {
 
   /** The chip components contained within this chip list. */
   chips: QueryList<MdChip>;
+
+  /** Orientation of the chip list. */
+  @Input('aria-orientation') ariaOrientation: 'horizontal' | 'vertical' = 'horizontal';
 
   constructor(protected _renderer: Renderer2, protected _elementRef: ElementRef,
               @Optional() private _dir: Directionality) {

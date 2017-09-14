@@ -3,8 +3,8 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MdSlider, MdSliderModule} from './index';
-import {TestGestureConfig} from '../core/gestures/test-gesture-config';
-import {BidiModule} from '../core/bidi/index';
+import {TestGestureConfig} from './test-gesture-config';
+import {BidiModule} from '@angular/material/core';
 import {
   DOWN_ARROW,
   END,
@@ -15,7 +15,7 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
   BACKSPACE
-} from '../core/keyboard/keycodes';
+} from '@angular/material/core';
 import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
 
 describe('MdSlider without forms', () => {
