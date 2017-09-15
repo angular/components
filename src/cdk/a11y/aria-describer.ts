@@ -53,6 +53,7 @@ export class AriaDescriber {
    * message element.
    */
   describe(hostElement: Element, message: string) {
+
     if (!this._platform.isBrowser || !message.trim()) { return; }
 
     if (!messageRegistry.has(message)) {
@@ -66,6 +67,7 @@ export class AriaDescriber {
 
   /** Removes the host element's aria-describedby reference to the message element. */
   removeDescription(hostElement: Element, message: string) {
+
     if (!this._platform.isBrowser || !message.trim()) {
       return;
     }
@@ -73,6 +75,7 @@ export class AriaDescriber {
     if (isElementDescribedByMessage(hostElement, message)) {
       removeMessageReference(hostElement, message);
     }
+
 
     const registeredMessage = messageRegistry.get(message);
     if (registeredMessage && registeredMessage.referenceCount === 0) {

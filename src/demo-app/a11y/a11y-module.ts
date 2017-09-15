@@ -39,6 +39,7 @@ import {
   RainyTabContent,
   FoggyTabContent,
 } from './tabs/tabs-a11y';
+
 import {TooltipAccessibilityDemo} from './tooltip/tooltip-a11y';
 
 
@@ -92,6 +93,7 @@ export class AccessibilityRoutingModule {}
     SunnyTabContent,
     RainyTabContent,
     FoggyTabContent,
+
     TooltipAccessibilityDemo,
   ],
   entryComponents: [

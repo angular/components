@@ -41,6 +41,7 @@ import {
   switchMap,
 } from '@angular/material/core';
 import {merge} from 'rxjs/observable/merge';
+
 import {Subscription} from 'rxjs/Subscription';
 
 
@@ -248,6 +249,7 @@ export class MdSelectionList extends _MdSelectionListMixinBase
   focus() {
     this._element.nativeElement.focus();
   }
+
 
   /** Selects all of the options. */
   selectAll() {

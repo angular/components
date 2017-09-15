@@ -30,6 +30,7 @@ export function composeRelease(buildPackage: BuildPackage) {
   // Copy all d.ts and metadata files to the `typings/` directory
   copyFiles(packageOut, '**/*.+(d.ts|metadata.json)', join(releasePath, 'typings'));
 
+
   // Copy UMD bundles.
   copyFiles(bundlesDir, `${name}?(-*).umd?(.min).js?(.map)`, join(releasePath, 'bundles'));
 
