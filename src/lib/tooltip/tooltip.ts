@@ -6,6 +6,24 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
+import {AriaDescriber} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ESCAPE} from '@angular/cdk/keycodes';
+import {
+  OriginConnectionPosition,
+  Overlay,
+  OverlayConnectionPosition,
+  OverlayRef,
+  OverlayState,
+  RepositionScrollStrategy,
+  ScrollStrategy,
+} from '@angular/cdk/overlay';
+import {Platform} from '@angular/cdk/platform';
+import {ComponentPortal} from '@angular/cdk/portal';
+import {first} from '@angular/cdk/rxjs';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -22,29 +40,8 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
-import {ComponentPortal} from '@angular/cdk/portal';
-import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {Directionality} from '@angular/cdk/bidi';
-import {Platform} from '@angular/cdk/platform';
-import {first} from '@angular/cdk/rxjs';
-import {
-  OriginConnectionPosition,
-  Overlay,
-  OverlayConnectionPosition,
-  OverlayRef,
-  OverlayState,
-  RepositionScrollStrategy,
-  // This import is only used to define a generic type. The current TypeScript version incorrectly
-  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
-  // tslint:disable-next-line:no-unused-variable
-  ScrollStrategy,
-} from '@angular/cdk/overlay';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ESCAPE} from '@angular/cdk/keycodes';
-import {AriaDescriber} from '@angular/cdk/a11y';
 
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
@@ -142,17 +139,16 @@ export class MdTooltip implements OnDestroy {
   /** The default delay in ms before hiding the tooltip after hide is called */
   @Input('mdTooltipHideDelay') hideDelay = 0;
 
-  private _message: string;
+  private _message = '';
 
   /** The message to be displayed in the tooltip */
   @Input('mdTooltip') get message() { return this._message; }
   set message(value: string) {
-    if (this._message) {
-      this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this._message);
-    }
+
+    this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this._message);
 
     // If the message is not a string (e.g. number), convert it to a string and trim it.
-    this._message = value ? `${value}`.trim() : '';
+    this._message = value != null ? `${value}`.trim() : '';
     this._updateTooltipMessage();
     this._ariaDescriber.describe(this._elementRef.nativeElement, this.message);
   }
@@ -392,7 +388,7 @@ export class MdTooltip implements OnDestroy {
       this._tooltipInstance.message = this.message;
       this._tooltipInstance._markForCheck();
 
-      first.call(this._ngZone.onMicrotaskEmpty).subscribe(() => {
+      first.call(this._ngZone.onMicrotaskEmpty.asObservable()).subscribe(() => {
         if (this._tooltipInstance) {
           this._overlayRef!.updatePosition();
         }
@@ -424,10 +420,8 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('state', [
-      state('void', style({transform: 'scale(0)'})),
-      state('initial', style({transform: 'scale(0)'})),
+      state('initial, void, hidden', style({transform: 'scale(0)'})),
       state('visible', style({transform: 'scale(1)'})),
-      state('hidden', style({transform: 'scale(0)'})),
       transition('* => visible', animate('150ms cubic-bezier(0.0, 0.0, 0.2, 1)')),
       transition('* => hidden', animate('150ms cubic-bezier(0.4, 0.0, 1, 1)')),
     ])
@@ -457,7 +451,7 @@ export class TooltipComponent {
   _visibility: TooltipVisibility = 'initial';
 
   /** Whether interactions on the page should close the tooltip */
-  _closeOnInteraction: boolean = false;
+  private _closeOnInteraction: boolean = false;
 
   /** The transform origin used in the animation for showing and hiding the tooltip */
   _transformOrigin: string = 'bottom';
@@ -479,21 +473,13 @@ export class TooltipComponent {
       clearTimeout(this._hideTimeoutId);
     }
 
-    // Body interactions should cancel the tooltip if there is a delay in showing.
-    this._closeOnInteraction = true;
-
     this._setTransformOrigin(position);
     this._showTimeoutId = setTimeout(() => {
       this._visibility = 'visible';
 
-      // If this was set to true immediately, then a body click that triggers show() would
-      // trigger interaction and close the tooltip right after it was displayed.
-      this._closeOnInteraction = false;
-
       // Mark for check so if any parent component has set the
       // ChangeDetectionStrategy to OnPush it will be checked anyways
       this._markForCheck();
-      setTimeout(() => this._closeOnInteraction = true, 0);
     }, delay);
   }
 
@@ -509,7 +495,6 @@ export class TooltipComponent {
 
     this._hideTimeoutId = setTimeout(() => {
       this._visibility = 'hidden';
-      this._closeOnInteraction = false;
 
       // Mark for check so if any parent component has set the
       // ChangeDetectionStrategy to OnPush it will be checked anyways
@@ -545,9 +530,22 @@ export class TooltipComponent {
     }
   }
 
-  _afterVisibilityAnimation(e: AnimationEvent): void {
-    if (e.toState === 'hidden' && !this.isVisible()) {
+  _animationStart() {
+    this._closeOnInteraction = false;
+  }
+
+  _animationDone(event: AnimationEvent): void {
+    const toState = event.toState as TooltipVisibility;
+
+    if (toState === 'hidden' && !this.isVisible()) {
       this._onHide.next();
+    }
+
+    if (toState === 'visible' || toState === 'hidden') {
+      // Note: as of Angular 4.3, the animations module seems to fire the `start` callback before
+      // the end if animations are disabled. Make this call async to ensure that it still fires
+      // at the appropriate time.
+      Promise.resolve().then(() => this._closeOnInteraction = true);
     }
   }
 

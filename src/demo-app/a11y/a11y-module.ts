@@ -40,6 +40,8 @@ import {
   FoggyTabContent,
 } from './tabs/tabs-a11y';
 
+import {TooltipAccessibilityDemo} from './tooltip/tooltip-a11y';
+
 
 @NgModule({
   imports: [
@@ -91,6 +93,8 @@ export class AccessibilityRoutingModule {}
     SunnyTabContent,
     RainyTabContent,
     FoggyTabContent,
+
+    TooltipAccessibilityDemo,
   ],
   entryComponents: [
     DialogAccessibilityDemo,
