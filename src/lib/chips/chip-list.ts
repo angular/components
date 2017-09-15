@@ -5,7 +5,10 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-
+import {FocusKeyManager} from '@angular/cdk/a11y';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {SelectionModel} from '@angular/cdk/collections';
+import {startWith} from '@angular/cdk/rxjs';
 import {
   AfterContentInit,
   ChangeDetectorRef,
@@ -25,21 +28,23 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {ControlValueAccessor, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
+import {
+  BACKSPACE,
+  DELETE,
+  Directionality,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  UP_ARROW
+} from '@angular/material/core';
+import {MdFormFieldControl} from '@angular/material/form-field';
 
-import {FocusKeyManager} from '@angular/cdk/a11y';
-import {BACKSPACE, DELETE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '@angular/material/core';
-import {Directionality} from '@angular/cdk/bidi';
-import {SelectionModel} from '@angular/cdk/collections';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Subject} from 'rxjs/Subject';
-import {startWith} from '@angular/cdk/rxjs';
 import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
+import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 
 import {MdChip, MdChipEvent, MdChipSelectionChange} from './chip';
 import {MdChipInput} from './chip-input';
-import {MdFormFieldControl} from '../form-field/form-field-control';
 
 // Increasing integer for generating unique ids for chip-list components.
 let nextUniqueId = 0;
