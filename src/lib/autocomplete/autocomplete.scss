@@ -22,3 +22,6 @@ $mat-autocomplete-panel-max-height: 256px !default;
     visibility: hidden;
   }
 }
+input[type='search'] {
+   -webkit-appearance: textfield;
+ }
