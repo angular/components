@@ -49,6 +49,7 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
   },
   styleUrls: ['chips.css'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MdChipList implements AfterContentInit, OnDestroy {
