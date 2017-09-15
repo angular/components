@@ -108,7 +108,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         const keyCode = event.keyCode;
 
         // Attempt to use the `event.key` which also maps it to the user's keyboard language,
-        // otherwise fall back to resolving alphanumeric characters via the keyCode.
+        // otherwise fall back to resolving alphanumeric characters via the keyCode
         if (event.key && event.key.length === 1) {
           this._letterKeyStream.next(event.key.toLocaleUpperCase());
         } else if ((keyCode >= A && keyCode <= Z) || (keyCode >= ZERO && keyCode <= NINE)) {
