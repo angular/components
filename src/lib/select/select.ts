@@ -32,7 +32,16 @@ import {
   isDevMode,
 } from '@angular/core';
 import {ControlValueAccessor, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
-import {DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import {
+  DOWN_ARROW,
+  END,
+  ENTER,
+  HOME,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  SPACE,
+  UP_ARROW
+} from '@angular/cdk/keycodes';
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
@@ -591,7 +600,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       if (event.keyCode === ENTER || event.keyCode === SPACE) {
         event.preventDefault(); // prevents the page from scrolling down when pressing space
         this.open();
-      } else if (event.keyCode === UP_ARROW || event.keyCode === DOWN_ARROW) {
+      } else if (event.keyCode === UP_ARROW || event.keyCode === DOWN_ARROW ||
+                 event.keyCode === LEFT_ARROW || event.keyCode === RIGHT_ARROW) {
         this._handleArrowKey(event);
       }
     }
@@ -1166,9 +1176,16 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
       // Cycle though the select options even when the select is closed,
       // matching the behavior of the native select element.
-      // TODO(crisbeto): native selects also cycle through the options with left/right arrows,
-      // however the key manager only supports up/down at the moment.
-      this._keyManager.onKeydown(event);
+      // Update: added left/right arrows cycle to reflect the behavior
+      // of native select element. TODO(bogdancar): Move the left/right key
+      // logic to list-key-manager once implemented there.
+      if (event.keyCode === LEFT_ARROW) {
+        this._keyManager.setPreviousItemActive();
+      } else if (event.keyCode === RIGHT_ARROW) {
+        this._keyManager.setNextItemActive();
+      } else {
+        this._keyManager.onKeydown(event);
+      }
 
       const currentActiveItem = this._keyManager.activeItem as MdOption;
 

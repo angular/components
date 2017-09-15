@@ -21,7 +21,17 @@ import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {async, ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
 import {Directionality} from '@angular/cdk/bidi';
-import {DOWN_ARROW, END, ENTER, HOME, SPACE, TAB, UP_ARROW} from '@angular/cdk/keycodes';
+import {
+  DOWN_ARROW,
+  END,
+  ENTER,
+  HOME,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  SPACE,
+  TAB,
+  UP_ARROW
+} from '@angular/cdk/keycodes';
 import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {dispatchFakeEvent, dispatchKeyboardEvent, wrappedErrorMessage} from '@angular/cdk/testing';
@@ -1803,6 +1813,34 @@ describe('MdSelect', () => {
           'Expected value from second option to have been set on the model.');
       });
 
+      it('should be able to select options via the left/right arrow keys on a closed select',
+        () => {
+        const formControl = fixture.componentInstance.control;
+        const options = fixture.componentInstance.options.toArray();
+
+        expect(formControl.value).toBeFalsy('Expected no initial value.');
+
+        dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
+
+        expect(options[0].selected).toBe(true, 'Expected first option to be selected.');
+        expect(formControl.value).toBe(options[0].value,
+          'Expected value from first option to have been set on the model.');
+
+        dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
+        dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
+
+        // Note that the third option is skipped, because it is disabled.
+        expect(options[3].selected).toBe(true, 'Expected fourth option to be selected.');
+        expect(formControl.value).toBe(options[3].value,
+          'Expected value from fourth option to have been set on the model.');
+
+        dispatchKeyboardEvent(select, 'keydown', LEFT_ARROW);
+
+        expect(options[1].selected).toBe(true, 'Expected second option to be selected.');
+        expect(formControl.value).toBe(options[1].value,
+          'Expected value from second option to have been set on the model.');
+      });
+
       it('should open the panel when pressing the arrow keys on a closed multiple select', () => {
         fixture.destroy();
 
@@ -1822,6 +1860,48 @@ describe('MdSelect', () => {
         expect(instance.control.value).toBe(initialValue, 'Expected value to stay the same.');
         expect(event.defaultPrevented).toBe(true, 'Expected default to be prevented.');
       });
+
+      it('should open the panel when pressing the left_arrow keys on a closed multiple select',
+        () => {
+        fixture.destroy();
+
+        const multiFixture = TestBed.createComponent(MultiSelect);
+        const instance = multiFixture.componentInstance;
+
+        multiFixture.detectChanges();
+        select = multiFixture.debugElement.query(By.css('md-select')).nativeElement;
+
+        const initialValue = instance.control.value;
+
+        expect(instance.select.panelOpen).toBe(false, 'Expected panel to be closed.');
+
+        const event = dispatchKeyboardEvent(select, 'keydown', LEFT_ARROW);
+
+        expect(instance.select.panelOpen).toBe(true, 'Expected panel to be open.');
+        expect(instance.control.value).toBe(initialValue, 'Expected value to stay the same.');
+        expect(event.defaultPrevented).toBe(true, 'Expected default to be prevented.');
+      });
+
+      it('should open the panel when pressing the right_arrow keys on a closed multiple select',
+      () => {
+      fixture.destroy();
+
+      const multiFixture = TestBed.createComponent(MultiSelect);
+      const instance = multiFixture.componentInstance;
+
+      multiFixture.detectChanges();
+      select = multiFixture.debugElement.query(By.css('md-select')).nativeElement;
+
+      const initialValue = instance.control.value;
+
+      expect(instance.select.panelOpen).toBe(false, 'Expected panel to be closed.');
+
+      const event = dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
+
+      expect(instance.select.panelOpen).toBe(true, 'Expected panel to be open.');
+      expect(instance.control.value).toBe(initialValue, 'Expected value to stay the same.');
+      expect(event.defaultPrevented).toBe(true, 'Expected default to be prevented.');
+    });
 
       it('should do nothing if the key manager did not change the active item', () => {
         const formControl = fixture.componentInstance.control;
