@@ -14,10 +14,6 @@
   overflow: visible;
 }
 
-.example-scrolling-content {
-  overflow: auto;
-}
-
 .example-fab {
   position: absolute;
   right: 20px;
