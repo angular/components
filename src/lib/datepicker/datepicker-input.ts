@@ -34,6 +34,7 @@ import {
 import {DateAdapter, MD_DATE_FORMATS, MdDateFormats} from '@angular/material/core';
 import {MdFormField} from '@angular/material/form-field';
 import {Subscription} from 'rxjs/Subscription';
+import {coerceDateProperty} from './coerce-date-property';
 import {MdDatepicker} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
 
@@ -74,8 +75,8 @@ export class MdDatepickerInputEvent<D> {
   host: {
     '[attr.aria-haspopup]': 'true',
     '[attr.aria-owns]': '(_datepicker?.opened && _datepicker.id) || null',
-    '[attr.min]': 'min ? _dateAdapter.toISODateString(min) : null',
-    '[attr.max]': 'max ? _dateAdapter.toISODateString(max) : null',
+    '[attr.min]': 'min ? _dateAdapter.toIso8601(min) : null',
+    '[attr.max]': 'max ? _dateAdapter.toIso8601(max) : null',
     '[disabled]': 'disabled',
     '(input)': '_onInput($event.target.value)',
     '(change)': '_onChange()',
@@ -122,10 +123,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
     return this._value;
   }
   set value(value: D | null) {
-    value = this._coerceDateProperty(value);
-    if (value != null && !this._dateAdapter.isDateInstance(value)) {
-      throw Error('Datepicker: value not recognized as a date object by DateAdapter.');
-    }
+    value = coerceDateProperty(this._dateAdapter, value);
     this._lastValueValid = !value || this._dateAdapter.isValid(value);
     value = this._getValidDateOrNull(value);
 
@@ -143,7 +141,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   @Input()
   get min(): D | null { return this._min; }
   set min(value: D | null) {
-    this._min = this._coerceDateProperty(value);
+    this._min = coerceDateProperty(this._dateAdapter, value);
     this._validatorOnChange();
   }
   private _min: D | null;
@@ -152,7 +150,7 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
   @Input()
   get max(): D | null { return this._max; }
   set max(value: D | null) {
-    this._max = this._coerceDateProperty(value);
+    this._max = coerceDateProperty(this._dateAdapter, value);
     this._validatorOnChange();
   }
   private _max: D | null;
@@ -200,23 +198,23 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
 
   /** The form control validator for the min date. */
   private _minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._coerceDateProperty(control.value);
+    const controlValue = coerceDateProperty(this._dateAdapter, control.value);
     return (!this.min || !controlValue ||
         this._dateAdapter.compareDate(this.min, controlValue) <= 0) ?
-        null : {'mdDatepickerMin': {'min': this.min, 'actual': control.value}};
+        null : {'mdDatepickerMin': {'min': this.min, 'actual': controlValue}};
   }
 
   /** The form control validator for the max date. */
   private _maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._coerceDateProperty(control.value);
+    const controlValue = coerceDateProperty(this._dateAdapter, control.value);
     return (!this.max || !controlValue ||
         this._dateAdapter.compareDate(this.max, controlValue) >= 0) ?
-        null : {'mdDatepickerMax': {'max': this.max, 'actual': control.value}};
+        null : {'mdDatepickerMax': {'max': this.max, 'actual': controlValue}};
   }
 
   /** The form control validator for the date filter. */
   private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._coerceDateProperty(control.value);
+    const controlValue = coerceDateProperty(this._dateAdapter, control.value);
     return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ?
         null : {'mdDatepickerFilter': true};
   }
@@ -331,17 +329,5 @@ export class MdDatepickerInput<D> implements AfterContentInit, ControlValueAcces
    */
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
-  }
-
-  /**
-   * Attempts to coerce a property to a date by parsing it as a ISO 8601 string. If not a valid
-   * ISO 8601 string, returns the original vlaue.
-   */
-  private _coerceDateProperty(value: any): any {
-    if (typeof value === 'string') {
-      const d = this._dateAdapter.fromISODateString(value);
-      return d || value;
-    }
-    return value;
   }
 }

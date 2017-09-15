@@ -211,7 +211,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
         this.getYear(date), this.getMonth(date), this.getDate(date) + days);
   }
 
-  toISODateString(date: Date): string {
+  toIso8601(date: Date): string {
     return [
       date.getUTCFullYear(),
       this._2digit(date.getUTCMonth() + 1),
@@ -219,8 +219,10 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     ].join('-');
   }
 
-  fromISODateString(iso8601String: string): Date | null {
-    if (iso8601String.match(ISO_8601_REGEX)) {
+  fromIso8601(iso8601String: string): Date | null {
+    // The `Date` constructor accepts formats other than ISO 8601, so we need to make sure the
+    // string is the right format first.
+    if (ISO_8601_REGEX.test(iso8601String)) {
       let d = new Date(iso8601String);
       if (this.isValid(d)) {
         return d;

@@ -40,6 +40,7 @@ import {
 } from '@angular/material/core';
 import {first} from 'rxjs/operator/first';
 import {Subscription} from 'rxjs/Subscription';
+import {coerceDateProperty} from './coerce-date-property';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MdDatepickerIntl} from './datepicker-intl';
 
@@ -64,9 +65,9 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
 
   /** A date representing the period (month or year) to start the calendar in. */
   @Input()
-  get startAt(): D { return this._startAt; }
-  set startAt(value: D) { this._startAt = this._coerceDateProperty(value); }
-  private _startAt: D;
+  get startAt(): D | null { return this._startAt; }
+  set startAt(value: D | null) { this._startAt = coerceDateProperty(this._dateAdapter, value); }
+  private _startAt: D | null;
 
   /** Whether the calendar should be started in month or year view. */
   @Input() startView: 'month' | 'year' = 'month';
@@ -74,19 +75,19 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
   /** The currently selected date. */
   @Input()
   get selected(): D | null { return this._selected; }
-  set selected(value: D | null) { this._selected = this._coerceDateProperty(value); }
+  set selected(value: D | null) { this._selected = coerceDateProperty(this._dateAdapter, value); }
   private _selected: D | null;
 
   /** The minimum selectable date. */
   @Input()
   get minDate(): D | null { return this._minDate; }
-  set minDate(value: D | null) { this._minDate = this._coerceDateProperty(value); }
+  set minDate(value: D | null) { this._minDate = coerceDateProperty(this._dateAdapter, value); }
   private _minDate: D | null;
 
   /** The maximum selectable date. */
   @Input()
   get maxDate(): D | null { return this._maxDate; }
-  set maxDate(value: D | null) { this._maxDate = this._coerceDateProperty(value); }
+  set maxDate(value: D | null) { this._maxDate = coerceDateProperty(this._dateAdapter, value); }
   private _maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */
@@ -365,17 +366,5 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
     let increment = this._dateAdapter.getMonth(date) <= 4 ? 7 :
         (this._dateAdapter.getMonth(date) >= 7 ? 5 : 12);
     return this._dateAdapter.addCalendarMonths(date, increment);
-  }
-
-  /**
-   * Attempts to coerce a property to a date by parsing it as a ISO 8601 string. If not a valid
-   * ISO 8601 string, returns the original vlaue.
-   */
-  private _coerceDateProperty(value: any): any {
-    if (typeof value === 'string') {
-      const d = this._dateAdapter.fromISODateString(value);
-      return d || value;
-    }
-    return value;
   }
 }
