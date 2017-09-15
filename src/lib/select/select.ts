@@ -394,7 +394,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   @Input('aria-label') ariaLabel: string = '';
 
   /** Input that can be used to specify the `aria-labelledby` attribute. */
-  @Input('aria-labelledby') ariaLabelledby: string = '';
+  @Input('aria-labelledby') ariaLabelledby: string;
 
   /** Combined stream of all of the child options' change events. */
   get optionSelectionChanges(): Observable<MdOptionSelectionChange> {
