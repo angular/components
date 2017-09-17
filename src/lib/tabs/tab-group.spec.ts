@@ -412,7 +412,7 @@ describe('nested MdTabGroup with enabled animations', () => {
         [headerPosition]="headerPosition"
         [disableRipple]="disableRipple"
         (focusChange)="handleFocus($event)"
-        (selectChange)="handleSelection($event)">
+        (selectedTabChange)="handleSelection($event)">
       <md-tab>
         <ng-template md-tab-label>Tab One</ng-template>
         Tab one content
@@ -448,7 +448,7 @@ class SimpleTabsTestApp {
     <md-tab-group class="tab-group"
         [(selectedIndex)]="selectedIndex"
         (focusChange)="handleFocus($event)"
-        (selectChange)="handleSelection($event)">
+        (selectedTabChange)="handleSelection($event)">
       <md-tab *ngFor="let tab of tabs">
         <ng-template md-tab-label>{{tab.label}}</ng-template>
         {{tab.content}}

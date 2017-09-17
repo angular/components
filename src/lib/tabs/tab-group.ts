@@ -134,8 +134,15 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
   /** Event emitted when focus has changed within a tab group. */
   @Output() focusChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>();
 
-  /** Event emitted when the tab selection has changed. */
+  /**
+   * Event emitted when the tab selection has changed.
+   * @deprecated Use `selectedTabChange` instead.
+   */
   @Output() selectChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>(true);
+
+  /** Event emitted when the tab selection has changed. */
+  @Output() selectedTabChange: EventEmitter<MdTabChangeEvent> =
+      new EventEmitter<MdTabChangeEvent>(true);
 
   private _groupId: number;
 
@@ -163,7 +170,9 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
     // If there is a change in selected index, emit a change event. Should not trigger if
     // the selected index has not yet been initialized.
     if (this._selectedIndex != indexToSelect && this._selectedIndex != null) {
-      this.selectChange.emit(this._createChangeEvent(indexToSelect));
+      const tabChangeEvent = this._createChangeEvent(indexToSelect);
+      this.selectedTabChange.emit(tabChangeEvent);
+      this.selectChange.emit(tabChangeEvent);
       // Emitting this value after change detection has run
       // since the checked content may contain this variable'
       Promise.resolve().then(() => this.selectedIndexChange.emit(indexToSelect));
