@@ -1,19 +1,30 @@
-import {Component, ViewChild} from '@angular/core';
-import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {By} from '@angular/platform-browser';
-import {OverlayContainer} from '@angular/cdk/overlay';
 import {ESCAPE} from '@angular/cdk/keycodes';
-import {dispatchFakeEvent, dispatchMouseEvent} from '@angular/cdk/testing';
-import {MdDatepickerModule, MdDatepickerIntl} from './index';
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {
+  createKeyboardEvent,
+  dispatchEvent,
+  dispatchFakeEvent,
+  dispatchMouseEvent,
+} from '@angular/cdk/testing';
+import {Component, ViewChild} from '@angular/core';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {
+  DEC,
+  JAN,
+  MAT_DATE_LOCALE,
+  MdNativeDateModule,
+  NativeDateModule,
+  SEP,
+} from '@angular/material/core';
+import {MdFormFieldModule} from '@angular/material/form-field';
+import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MdInputModule} from '../input/index';
 import {MdDatepicker} from './datepicker';
 import {MdDatepickerInput} from './datepicker-input';
-import {MdInputModule} from '../input/index';
-import {MdNativeDateModule} from '../core/datetime/index';
-import {DEC, JAN} from '../core/testing/month-constants';
-import {createKeyboardEvent, dispatchEvent} from '@angular/cdk/testing';
-import {MdFormFieldModule} from '../form-field/index';
+import {MdDatepickerIntl, MdDatepickerModule} from './index';
+
 
 describe('MdDatepicker', () => {
   afterEach(inject([OverlayContainer], (container: OverlayContainer) => {
@@ -550,11 +561,28 @@ describe('MdDatepicker', () => {
       it('should not open calendar when toggle clicked if datepicker is disabled', () => {
         testComponent.datepicker.disabled = true;
         fixture.detectChanges();
+        const toggle = fixture.debugElement.query(By.css('button')).nativeElement;
 
+        expect(toggle.hasAttribute('disabled')).toBe(true);
         expect(document.querySelector('md-dialog-container')).toBeNull();
 
-        let toggle = fixture.debugElement.query(By.css('button'));
-        dispatchMouseEvent(toggle.nativeElement, 'click');
+        dispatchMouseEvent(toggle, 'click');
+        fixture.detectChanges();
+
+        expect(document.querySelector('md-dialog-container')).toBeNull();
+      });
+
+      it('should not open calendar when toggle clicked if input is disabled', () => {
+        expect(testComponent.datepicker.disabled).toBeUndefined();
+
+        testComponent.input.disabled = true;
+        fixture.detectChanges();
+        const toggle = fixture.debugElement.query(By.css('button')).nativeElement;
+
+        expect(toggle.hasAttribute('disabled')).toBe(true);
+        expect(document.querySelector('md-dialog-container')).toBeNull();
+
+        dispatchMouseEvent(toggle, 'click');
         fixture.detectChanges();
 
         expect(document.querySelector('md-dialog-container')).toBeNull();
@@ -943,6 +971,45 @@ describe('MdDatepicker', () => {
     });
 
   });
+
+  describe('internationalization', () => {
+    let fixture: ComponentFixture<DatepickerWithi18n>;
+    let testComponent: DatepickerWithi18n;
+    let input: HTMLInputElement;
+
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          MdDatepickerModule,
+          MdFormFieldModule,
+          MdInputModule,
+          MdNativeDateModule,
+          NoopAnimationsModule,
+          NativeDateModule,
+          FormsModule
+        ],
+        providers: [{provide: MAT_DATE_LOCALE, useValue: 'de-DE'}],
+        declarations: [DatepickerWithi18n],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(DatepickerWithi18n);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+      input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    }));
+
+    it('should have the correct input value even when inverted date format', () => {
+      let selected = new Date(2017, SEP, 1);
+      testComponent.date = selected;
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+        expect(input.value).toBe('01.09.2017');
+        expect(testComponent.datepickerInput.value).toBe(selected);
+      });
+    });
+  });
 });
 
 
@@ -1034,6 +1101,7 @@ class DatepickerWithFormControl {
 })
 class DatepickerWithToggle {
   @ViewChild('d') datepicker: MdDatepicker<Date>;
+  @ViewChild(MdDatepickerInput) input: MdDatepickerInput<Date>;
   touchUI = true;
 }
 
@@ -1098,4 +1166,16 @@ class DatepickerWithChangeAndInputEvents {
   onDateChange() {}
 
   onDateInput() {}
+}
+
+@Component({
+  template: `
+    <input [mdDatepicker]="d" [(ngModel)]="date">
+    <md-datepicker #d></md-datepicker>
+  `
+})
+class DatepickerWithi18n {
+  date: Date | null = new Date(2010, JAN, 1);
+  @ViewChild('d') datepicker: MdDatepicker<Date>;
+  @ViewChild(MdDatepickerInput) datepickerInput: MdDatepickerInput<Date>;
 }

@@ -23,12 +23,13 @@ import {
   MenuPositionY,
 } from './index';
 import {MENU_PANEL_TOP_PADDING} from './menu-trigger';
-import {extendObject} from '../core/util/object-extend';
+import {extendObject} from '@angular/material/core';
 import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
   dispatchEvent,
   createKeyboardEvent,
+  createMouseEvent,
 } from '@angular/cdk/testing';
 
 
@@ -1014,6 +1015,20 @@ describe('MdMenu', () => {
       expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(2, 'Expected two open menus');
     }));
 
+    it('should prevent the default mousedown action if the menu item opens a sub-menu', () => {
+      compileTestComponent();
+      instance.rootTrigger.openMenu();
+      fixture.detectChanges();
+
+      const event = createMouseEvent('mousedown');
+
+      Object.defineProperty(event, 'buttons', {get: () => 1});
+      event.preventDefault = jasmine.createSpy('preventDefault spy');
+
+      dispatchMouseEvent(overlay.querySelector('[md-menu-item]')!, 'mousedown', 0, 0, event);
+      expect(event.preventDefault).toHaveBeenCalled();
+    });
+
   });
 
 });
@@ -1098,7 +1113,7 @@ class OverlapMenu implements TestableMenu {
       <ng-content></ng-content>
     </ng-template>
   `,
-  exportAs: 'mdCustomMenu'
+  exportAs: 'mdCustomMenu, matCustomMenu'
 })
 class CustomMenuPanel implements MdMenuPanel {
   direction: Direction;

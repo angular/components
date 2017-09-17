@@ -6,32 +6,37 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import {
-  Component,
-  Directive,
-  Host,
-  Input,
-  ViewEncapsulation,
-  Optional,
-  forwardRef,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  SimpleChanges,
+  Component,
+  Directive,
+  forwardRef,
+  Host,
+  Input,
   OnChanges,
   OnDestroy,
+  Optional,
+  SimpleChanges,
+  ViewEncapsulation,
 } from '@angular/core';
-import {
-  trigger,
-  state,
-  style,
-  transition,
-  animate,
-} from '@angular/animations';
+import {CanDisable, mixinDisabled, UniqueSelectionDispatcher} from '@angular/material/core';
+import {Subject} from 'rxjs/Subject';
 import {MdAccordion} from './accordion';
 import {AccordionItem} from './accordion-item';
-import {UniqueSelectionDispatcher} from '../core';
-import {Subject} from 'rxjs/Subject';
 
+
+// Boilerplate for applying mixins to MdExpansionPanel.
+/** @docs-private */
+export class MdExpansionPanelBase extends AccordionItem {
+  constructor(accordion: MdAccordion,
+              _changeDetectorRef: ChangeDetectorRef,
+              _uniqueSelectionDispatcher: UniqueSelectionDispatcher) {
+    super(accordion, _changeDetectorRef, _uniqueSelectionDispatcher);
+  }
+}
+export const _MdExpansionPanelMixinBase = mixinDisabled(MdExpansionPanelBase);
 
 /** MdExpansionPanel's states. */
 export type MdExpansionPanelState = 'expanded' | 'collapsed';
@@ -54,7 +59,7 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,
   templateUrl: './expansion-panel.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  inputs: ['disabled'],
+  inputs: ['disabled', 'expanded'],
   host: {
     'class': 'mat-expansion-panel',
     '[class.mat-expanded]': 'expanded',
@@ -71,7 +76,8 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,
     ]),
   ],
 })
-export class MdExpansionPanel extends AccordionItem implements OnChanges, OnDestroy {
+export class MdExpansionPanel extends _MdExpansionPanelMixinBase
+    implements CanDisable, OnChanges, OnDestroy {
   /** Whether the toggle indicator should be hidden. */
   @Input() hideToggle: boolean = false;
 
@@ -98,7 +104,6 @@ export class MdExpansionPanel extends AccordionItem implements OnChanges, OnDest
     if (this.accordion) {
       return (this.expanded ? this.accordion.displayMode : this._getExpandedState()) === 'default';
     }
-
     return false;
   }
 
