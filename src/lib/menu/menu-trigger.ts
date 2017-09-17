@@ -128,11 +128,23 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   /** References the menu instance that the trigger is associated with. */
   @Input('mdMenuTriggerFor') menu: MdMenuPanel;
 
-  /** Event emitted when the associated menu is opened. */
+  /**
+   * Event emitted when the associated menu is opened.
+   * @deprecated Switch to `menuOpened` instead
+   */
   @Output() onMenuOpen = new EventEmitter<void>();
 
-  /** Event emitted when the associated menu is closed. */
+  /** Event emitted when the associated menu is opened. */
+  @Output() menuOpened = new EventEmitter<void>();
+
+  /**
+   * Event emitted when the associated menu is closed.
+   * @deprecated Switch to `menuClosed` instead
+   */
   @Output() onMenuClose = new EventEmitter<void>();
+
+  /** Event emitted when the associated menu is closed. */
+  @Output() menuClosed = new EventEmitter<void>();
 
   constructor(private _overlay: Overlay,
               private _element: ElementRef,
@@ -147,15 +159,16 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
     }
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this._checkMenu();
 
-    this.menu.close.subscribe(reason => {
+    this.menu.closed.subscribe(reason => {
       this.closeMenu();
 
       // If a click closed the menu, we should close the entire chain of nested menus.
       if (reason === 'click' && this._parentMenu) {
         this._parentMenu.close.emit(reason);
+        this._parentMenu.closed.emit(reason);
       }
     });
 
@@ -170,7 +183,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this._overlayRef) {
       this._overlayRef.dispose();
       this._overlayRef = null;
@@ -203,7 +216,12 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   openMenu(): void {
     if (!this._menuOpen) {
       this._createOverlay().attach(this._portal);
-      this._closeSubscription = this._menuClosingActions().subscribe(() => this.menu.close.emit());
+      this._closeSubscription = this._menuClosingActions().subscribe(() => {
+        if (this.menu.close) {
+          this.menu.close.emit();
+        }
+        this.menu.closed.emit();
+      });
       this._initMenu();
 
       if (this.menu instanceof MdMenu) {
@@ -218,7 +236,11 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
       this._resetMenu();
       this._overlayRef.detach();
       this._closeSubscription.unsubscribe();
-      this.menu.close.emit();
+      if (this.menu.close) {
+        this.menu.close.emit();
+      }
+
+      this.menu.closed.emit();
 
       if (this.menu instanceof MdMenu) {
         this.menu._resetAnimation();
@@ -227,7 +249,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   }
 
   /** Focuses the menu trigger. */
-  focus() {
+  focus(): void {
     this._element.nativeElement.focus();
   }
 
@@ -283,7 +305,14 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   // set state rather than toggle to support triggers sharing a menu
   private _setIsMenuOpen(isOpen: boolean): void {
     this._menuOpen = isOpen;
-    this._menuOpen ? this.onMenuOpen.emit() : this.onMenuClose.emit();
+
+    if (this._menuOpen) {
+      this.onMenuOpen.emit();
+      this.menuOpened.emit();
+    } else {
+      this.onMenuClose.emit();
+      this.menuClosed.emit();
+    }
 
     if (this.triggersSubmenu()) {
       this._menuItemInstance._highlighted = isOpen;
@@ -294,7 +323,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    * This method checks that a valid instance of MdMenu has been passed into
    * mdMenuTriggerFor. If not, an exception is thrown.
    */
-  private _checkMenu() {
+  private _checkMenu(): void {
     if (!this.menu) {
       throwMdMenuMissingError();
     }
@@ -398,7 +427,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   /** Returns a stream that emits whenever an action that should close the menu occurs. */
   private _menuClosingActions() {
     const backdrop = this._overlayRef!.backdropClick();
-    const parentClose = this._parentMenu ? this._parentMenu.close : observableOf(null);
+    const parentClose = this._parentMenu ? this._parentMenu.closed : observableOf(null);
     const hover = this._parentMenu ? RxChain.from(this._parentMenu.hover())
         .call(filter, active => active !== this._menuItemInstance)
         .call(filter, () => this._menuOpen)

@@ -49,8 +49,14 @@ export const _MdMenuItemMixinBase = mixinDisabled(MdMenuItemBase);
 export class MdMenuItem extends _MdMenuItemMixinBase implements FocusableOption, CanDisable,
   OnDestroy {
 
-  /** Stream that emits when the menu item is hovered. */
+  /**
+   * Stream that emits when the menu item is hovered.
+   * @deprecated Switch to `hovered` instead
+   */
   hover: Subject<MdMenuItem> = new Subject();
+
+  /** Stream that emits when the menu item is hovered. */
+  hovered: Subject<MdMenuItem> = new Subject();
 
   /** Whether the menu item is highlighted. */
   _highlighted: boolean = false;
@@ -69,6 +75,7 @@ export class MdMenuItem extends _MdMenuItemMixinBase implements FocusableOption,
 
   ngOnDestroy() {
     this.hover.complete();
+    this.hovered.complete();
   }
 
   /** Used to set the `tabindex`. */
@@ -93,6 +100,7 @@ export class MdMenuItem extends _MdMenuItemMixinBase implements FocusableOption,
   _emitHoverEvent() {
     if (!this.disabled) {
       this.hover.next(this);
+      this.hovered.next(this);
     }
   }
 

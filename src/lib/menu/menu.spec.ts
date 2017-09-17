@@ -510,7 +510,7 @@ describe('MdMenu', () => {
       let emitCallback = jasmine.createSpy('emit callback');
       let completeCallback = jasmine.createSpy('complete callback');
 
-      fixture.componentInstance.menu.close.subscribe(emitCallback, null, completeCallback);
+      fixture.componentInstance.menu.closed.subscribe(emitCallback, null, completeCallback);
       fixture.destroy();
 
       expect(emitCallback).toHaveBeenCalled();
@@ -1059,7 +1059,7 @@ describe('MdMenu default overrides', () => {
 @Component({
   template: `
     <button [mdMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
-    <md-menu class="custom-one custom-two" #menu="mdMenu" (close)="closeCallback()">
+    <md-menu class="custom-one custom-two" #menu="mdMenu" (closed)="closeCallback()">
       <button md-menu-item> Item </button>
       <button md-menu-item disabled> Disabled </button>
     </md-menu>
@@ -1123,7 +1123,7 @@ class CustomMenuPanel implements MdMenuPanel {
   parentMenu: MdMenuPanel;
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
-  @Output() close = new EventEmitter<void | 'click' | 'keydown'>();
+  @Output() closed = new EventEmitter<void | 'click' | 'keydown'>();
   focusFirstItem = () => {};
   setPositionClasses = () => {};
 }
