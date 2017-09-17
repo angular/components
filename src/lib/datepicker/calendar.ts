@@ -84,7 +84,7 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
   @Output() selectedChange = new EventEmitter<D>();
 
   /** Emits when any date is selected. */
-  @Output() userSelection = new EventEmitter<void>();
+  @Output() _userSelection = new EventEmitter<void>();
 
   /** Date filter for the month and year views. */
   _dateFilterForViews = (date: D) => {
@@ -166,7 +166,7 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
   }
 
   _userSelected(): void {
-    this.userSelection.emit();
+    this._userSelection.emit();
   }
 
   /** Handles month selection in the year view. */
