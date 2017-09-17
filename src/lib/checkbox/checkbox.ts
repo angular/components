@@ -169,7 +169,7 @@ export class MdCheckbox extends _MdCheckboxMixinBase implements ControlValueAcce
   @Output() indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** The value attribute of the native input element */
-  @Input() value: string ;
+  @Input() value: string;
 
   /** The native `<input type="checkbox"> element */
   @ViewChild('input') _inputElement: ElementRef;
