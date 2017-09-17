@@ -19,8 +19,8 @@ $mat-snack-bar-border-radius: 2px !default;
   transform: translateY(100%);
 
   /**
-   * Removes margin of snack bars which are center positioned horizontally.  This
-   * is done to align snack bars to the edge of the view vertically to match spec.
+   * Removes margin and border radii of snack bars which are center positioned horizontally. 
+   * This is done to align snack bars to the edge of the view vertically to match spec.
    */
   &.mat-snack-bar-center {
     margin: 0;
