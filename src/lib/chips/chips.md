@@ -22,35 +22,31 @@ _Hint: `<md-basic-chip>` receives the `mat-basic-chip` CSS class in addition to 
 Chips can be selected via the `selected` property. Selection can be disabled by setting
 `selectable` to `false` on the `<md-chip-list>`.
 
-Selection and deselecting emit the `(onSelectionChange)` output. The output receive a
-ChipSelectionChange object with a structure of `{ source: alteredChip, isUserInput: boolean }`.
+Whenever the selection state changes, a `ChipSelectionChange` event will be emitted via 
+`(onSelectionChange)`.
 
 ### Disabled chips
 Individual chips may be disabled by applying the `disabled` attribute to the chip. When disabled,
 chips are neither selectable nor focusable. Currently, disabled chips receive no special styling.
 
 ### Chip input
-Chip input can work with chip list to add new chips to the chip list. It implements chip-specified
-behaviors to an input element inside `<md-form-field>`. Chip input may be placed inside or outside of
-an `<md-chip-list>`.
+The `MdChipInput` directive can be used together with a chip-list to streamline the interaction
+between the two components. This directive adds chip-specific behaviors to the input element
+within `<md-form-field>` for adding and removing chips. The `<input>` with `MdChipInput` can
+be placed inside or outside the chip-list element.
+
+An exmaple of chip input placed inside the chip-list element.
+<!-- example(chips-input) -->
+
+An example of chip input placed outside the chip-list element.
 
 ```html
 <md-form-field>
   <md-chip-list #chipList>
     <md-chip>Chip 1<md-chip>
-   <md-chip>Chip 2<md-chip>
- </md-chip-list>
- <input mdChipInputFor="chipList">
-</md-form-field>
-```
-
-```html
-<md-form-field>
- <md-chip-list #chipList>
-   <md-chip>Chip 1<md-chip>
-   <md-chip>Chip 2<md-chip>
-   <input mdChipInputFor="chipList">
- </md-chip-list>
+    <md-chip>Chip 2<md-chip>
+  </md-chip-list>
+  <input mdChipInputFor="chipList">
 </md-form-field>
 ```
 

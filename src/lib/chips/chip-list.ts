@@ -62,7 +62,7 @@ export class MdChipListChange {
   moduleId: module.id,
   selector: 'md-chip-list, mat-chip-list',
   template: `<div class="mat-chip-list-wrapper"><ng-content></ng-content></div>`,
-  exportAs: 'mdChipList',
+  exportAs: 'mdChipList, matChipList',
   host: {
     '[attr.tabindex]': '_tabIndex',
     '[attr.aria-describedby]': '_ariaDescribedby || null',
