@@ -6,37 +6,53 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {SelectionModel} from '@angular/cdk/collections';
 import {
   AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
-  Input,
-  QueryList,
-  ViewEncapsulation,
-  Optional,
-  Renderer2,
   EventEmitter,
-  Output,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  OnDestroy,
   forwardRef,
   Inject,
+  Input,
+  OnDestroy,
+  Optional,
+  Output,
+  QueryList,
+  Renderer2,
+  ViewEncapsulation,
 } from '@angular/core';
-import {coerceBooleanProperty, SelectionModel, MdLine, MdLineSetter} from '../core';
-import {FocusKeyManager} from '../core/a11y/focus-key-manager';
-import {Subscription} from 'rxjs/Subscription';
-import {SPACE} from '../core/keyboard/keycodes';
-import {FocusableOption} from '../core/a11y/focus-key-manager';
-import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
-import {RxChain, switchMap, startWith} from '../core/rxjs/index';
+import {
+  CanDisable,
+  CanDisableRipple,
+  MATERIAL_COMPATIBILITY_MODE,
+  MdLine,
+  MdLineSetter,
+  mixinDisabled,
+  mixinDisableRipple,
+  RxChain,
+  SPACE,
+  startWith,
+  switchMap,
+} from '@angular/material/core';
 import {merge} from 'rxjs/observable/merge';
+import {Subscription} from 'rxjs/Subscription';
 
+
+/** @docs-private */
 export class MdSelectionListBase {}
-export const _MdSelectionListMixinBase = mixinDisabled(MdSelectionListBase);
+export const _MdSelectionListMixinBase = mixinDisableRipple(mixinDisabled(MdSelectionListBase));
 
+/** @docs-private */
+export class MdListOptionBase {}
+export const _MdListOptionMixinBase = mixinDisableRipple(MdListOptionBase);
 
+/** Event emitted by a selection-list whenever the state of an option is changed. */
 export interface MdSelectionListOptionEvent {
   option: MdListOption;
 }
@@ -51,6 +67,7 @@ const FOCUSED_STYLE: string = 'mat-list-item-focus';
 @Component({
   moduleId: module.id,
   selector: 'md-list-option, mat-list-option',
+  inputs: ['disableRipple'],
   host: {
     'role': 'option',
     'class': 'mat-list-item mat-list-option',
@@ -58,50 +75,42 @@ const FOCUSED_STYLE: string = 'mat-list-item-focus';
     '(blur)': '_handleBlur()',
     '(click)': '_handleClick()',
     'tabindex': '-1',
+    '[class.mat-list-item-disabled]': 'disabled',
     '[attr.aria-selected]': 'selected.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
   },
   templateUrl: 'list-option.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: false}],
 })
-export class MdListOption implements AfterContentInit, OnDestroy, FocusableOption {
+export class MdListOption extends _MdListOptionMixinBase
+    implements AfterContentInit, OnDestroy, FocusableOption, CanDisableRipple {
+
   private _lineSetter: MdLineSetter;
-  private _disableRipple: boolean = false;
   private _selected: boolean = false;
-  /** Whether the checkbox is disabled. */
   private _disabled: boolean = false;
-  private _value: any;
 
   /** Whether the option has focus. */
   _hasFocus: boolean = false;
-
-  /**
-   * Whether the ripple effect on click should be disabled. This applies only to list items that are
-   * part of a selection list. The value of `disableRipple` on the `md-selection-list` overrides
-   * this flag
-   */
-  @Input()
-  get disableRipple() { return this._disableRipple; }
-  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
 
   @ContentChildren(MdLine) _lines: QueryList<MdLine>;
 
   /** Whether the label should appear before or after the checkbox. Defaults to 'after' */
   @Input() checkboxPosition: 'before' | 'after' = 'after';
 
+  /** Value of the option */
+  @Input() value: any;
+
   /** Whether the option is disabled. */
   @Input()
   get disabled() { return (this.selectionList && this.selectionList.disabled) || this._disabled; }
   set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
 
-  @Input()
-  get value() { return this._value; }
-  set value( val: any) { this._value = coerceBooleanProperty(val); }
-
+  /** Whether the option is selected. */
   @Input()
   get selected() { return this._selected; }
-  set selected( val: boolean) { this._selected = coerceBooleanProperty(val); }
+  set selected(value: boolean) { this._selected = coerceBooleanProperty(value); }
 
   /** Emitted when the option is focused. */
   onFocus = new EventEmitter<MdSelectionListOptionEvent>();
@@ -119,7 +128,9 @@ export class MdListOption implements AfterContentInit, OnDestroy, FocusableOptio
               private _element: ElementRef,
               private _changeDetector: ChangeDetectorRef,
               @Optional() @Inject(forwardRef(() => MdSelectionList))
-                  public selectionList: MdSelectionList) {}
+              public selectionList: MdSelectionList) {
+    super();
+  }
 
   ngAfterContentInit() {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
@@ -133,6 +144,7 @@ export class MdListOption implements AfterContentInit, OnDestroy, FocusableOptio
     this.destroyed.emit({option: this});
   }
 
+  /** Toggles the selection state of the option. */
   toggle(): void {
     this.selected = !this.selected;
     this.selectionList.selectedOptions.toggle(this);
@@ -146,8 +158,8 @@ export class MdListOption implements AfterContentInit, OnDestroy, FocusableOptio
   }
 
   /** Whether this list item should show a ripple effect when clicked.  */
-  isRippleEnabled() {
-    return !this.disableRipple && !this.selectionList.disableRipple;
+  _isRippleDisabled() {
+    return this.disabled || this.disableRipple || this.selectionList.disableRipple;
   }
 
   _handleClick() {
@@ -172,10 +184,13 @@ export class MdListOption implements AfterContentInit, OnDestroy, FocusableOptio
 }
 
 
+/**
+ * Material Design list component where each item is a selectable option. Behaves as a listbox.
+ */
 @Component({
   moduleId: module.id,
   selector: 'md-selection-list, mat-selection-list',
-  inputs: ['disabled'],
+  inputs: ['disabled', 'disableRipple'],
   host: {
     'role': 'listbox',
     '[attr.tabindex]': '_tabIndex',
@@ -189,17 +204,16 @@ export class MdListOption implements AfterContentInit, OnDestroy, FocusableOptio
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MdSelectionList extends _MdSelectionListMixinBase
-  implements FocusableOption, CanDisable, AfterContentInit, OnDestroy {
-  private _disableRipple: boolean = false;
+    implements FocusableOption, CanDisable, CanDisableRipple, AfterContentInit, OnDestroy {
 
   /** Tab index for the selection-list. */
   _tabIndex = 0;
 
   /** Subscription to all list options' onFocus events */
-  private _optionFocusSubscription: Subscription;
+  private _optionFocusSubscription = Subscription.EMPTY;
 
   /** Subscription to all list options' destroy events  */
-  private _optionDestroyStream: Subscription;
+  private _optionDestroyStream = Subscription.EMPTY;
 
   /** The FocusKeyManager which handles focus. */
   _keyManager: FocusKeyManager<MdListOption>;
@@ -207,16 +221,8 @@ export class MdSelectionList extends _MdSelectionListMixinBase
   /** The option components contained within this selection-list. */
   @ContentChildren(MdListOption) options: QueryList<MdListOption>;
 
-  /** options which are selected. */
+  /** The currently selected options. */
   selectedOptions: SelectionModel<MdListOption> = new SelectionModel<MdListOption>(true);
-
-  /**
-   * Whether the ripple effect should be disabled on the list-items or not.
-   * This flag only has an effect for `mat-selection-list` components.
-   */
-  @Input()
-  get disableRipple() { return this._disableRipple; }
-  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
 
   constructor(private _element: ElementRef) {
     super();
@@ -234,22 +240,34 @@ export class MdSelectionList extends _MdSelectionListMixinBase
   }
 
   ngOnDestroy(): void {
-    if (this._optionDestroyStream) {
-      this._optionDestroyStream.unsubscribe();
-    }
-
-    if (this._optionFocusSubscription) {
-      this._optionFocusSubscription.unsubscribe();
-    }
+    this._optionDestroyStream.unsubscribe();
+    this._optionFocusSubscription.unsubscribe();
   }
 
+  /** Focus the selection-list. */
   focus() {
     this._element.nativeElement.focus();
   }
 
-  /**
-   * Map all the options' destroy event subscriptions and merge them into one stream.
-   */
+  /** Selects all of the options. */
+  selectAll() {
+    this.options.forEach(option => {
+      if (!option.selected) {
+        option.toggle();
+      }
+    });
+  }
+
+  /** Deselects all of the options. */
+  deselectAll() {
+    this.options.forEach(option => {
+      if (option.selected) {
+        option.toggle();
+      }
+    });
+  }
+
+  /** Map all the options' destroy event subscriptions and merge them into one stream. */
   private _onDestroySubscription(): Subscription {
     return RxChain.from(this.options.changes)
       .call(startWith, this.options)
@@ -269,9 +287,7 @@ export class MdSelectionList extends _MdSelectionListMixinBase
       });
   }
 
-  /**
-   * Map all the options' onFocus event subscriptions and merge them into one stream.
-   */
+  /** Map all the options' onFocus event subscriptions and merge them into one stream. */
   private _onFocusSubscription(): Subscription {
     return RxChain.from(this.options.changes)
       .call(startWith, this.options)

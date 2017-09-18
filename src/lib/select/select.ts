@@ -6,6 +6,20 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusKeyManager} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {SelectionModel} from '@angular/cdk/collections';
+import {DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import {
+  ConnectedOverlayDirective,
+  Overlay,
+  RepositionScrollStrategy,
+  ScrollStrategy,
+  ViewportRuler,
+} from '@angular/cdk/overlay';
+import {Platform} from '@angular/cdk/platform';
+import {filter, startWith} from '@angular/cdk/rxjs';
 import {
   AfterContentInit,
   Attribute,
@@ -14,11 +28,13 @@ import {
   Component,
   ContentChild,
   ContentChildren,
+  Directive,
   ElementRef,
   EventEmitter,
   Inject,
   InjectionToken,
   Input,
+  isDevMode,
   OnDestroy,
   OnInit,
   Optional,
@@ -28,44 +44,31 @@ import {
   Self,
   ViewChild,
   ViewEncapsulation,
-  Directive,
-  isDevMode,
 } from '@angular/core';
 import {ControlValueAccessor, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
-import {DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
-import {FocusKeyManager} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {filter, startWith} from '@angular/cdk/rxjs';
 import {
-  ConnectedOverlayDirective,
-  Overlay,
-  RepositionScrollStrategy,
-  // This import is only used to define a generic type. The current TypeScript version incorrectly
-  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
-  // tslint:disable-next-line:no-unused-variable
-  ScrollStrategy,
-  ViewportRuler
-} from '@angular/cdk/overlay';
-import {merge} from 'rxjs/observable/merge';
+  CanColor,
+  CanDisable,
+  FloatPlaceholderType,
+  HasTabIndex,
+  MD_PLACEHOLDER_GLOBAL_OPTIONS,
+  MdOptgroup,
+  MdOption,
+  MdOptionSelectionChange,
+  mixinColor,
+  mixinDisabled,
+  mixinTabIndex,
+  PlaceholderOptions,
+} from '@angular/material/core';
 import {Observable} from 'rxjs/Observable';
+import {merge} from 'rxjs/observable/merge';
 import {Subscription} from 'rxjs/Subscription';
 import {fadeInContent, transformPanel, transformPlaceholder} from './select-animations';
-import {SelectionModel} from '@angular/cdk/collections';
 import {
   getMdSelectDynamicMultipleError,
   getMdSelectNonArrayValueError,
-  getMdSelectNonFunctionValueError
+  getMdSelectNonFunctionValueError,
 } from './select-errors';
-import {CanColor, mixinColor} from '../core/common-behaviors/color';
-import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
-import {MdOptgroup, MdOption, MdOptionSelectionChange} from '../core/option/index';
-import {
-  FloatPlaceholderType,
-  MD_PLACEHOLDER_GLOBAL_OPTIONS,
-  PlaceholderOptions
-} from '../core/placeholder/placeholder-options';
-import {Platform} from '@angular/cdk/platform';
 
 /**
  * The following style constants are necessary to save here in order
@@ -155,7 +158,8 @@ export class MdSelectChange {
 export class MdSelectBase {
   constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
-export const _MdSelectMixinBase = mixinColor(mixinDisabled(MdSelectBase), 'primary');
+export const _MdSelectMixinBase =
+  mixinTabIndex(mixinColor(mixinDisabled(MdSelectBase), 'primary'));
 
 
 /**
@@ -172,7 +176,7 @@ export class MdSelectTrigger {}
   selector: 'md-select, mat-select',
   templateUrl: 'select.html',
   styleUrls: ['select.css'],
-  inputs: ['color', 'disabled'],
+  inputs: ['color', 'disabled', 'tabIndex'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -197,21 +201,21 @@ export class MdSelectTrigger {}
     transformPanel,
     fadeInContent
   ],
-  exportAs: 'mdSelect',
+  exportAs: 'mdSelect, matSelect',
 })
 export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, OnDestroy, OnInit,
-    ControlValueAccessor, CanColor, CanDisable {
+    ControlValueAccessor, CanColor, CanDisable, HasTabIndex {
   /** Whether or not the overlay panel is open. */
   private _panelOpen = false;
 
   /** Subscriptions to option events. */
-  private _optionSubscription: Subscription | null;
+  private _optionSubscription = Subscription.EMPTY;
 
   /** Subscription to changes in the option list. */
-  private _changeSubscription: Subscription;
+  private _changeSubscription = Subscription.EMPTY;
 
   /** Subscription to tab events while overlay is focused. */
-  private _tabSubscription: Subscription;
+  private _tabSubscription = Subscription.EMPTY;
 
   /** Whether filling out the select is required in the form.  */
   private _required: boolean = false;
@@ -233,9 +237,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** The animation state of the placeholder. */
   private _placeholderState = '';
-
-  /** Tab index for the element. */
-  private _tabIndex: number;
 
   /** Deals with configuring placeholder options */
   private _placeholderOptions: PlaceholderOptions;
@@ -371,15 +372,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   }
   private _floatPlaceholder: FloatPlaceholderType;
 
-  /** Tab index for the select element. */
-  @Input()
-  get tabIndex(): number { return this.disabled ? -1 : this._tabIndex; }
-  set tabIndex(value: number) {
-    if (typeof value !== 'undefined') {
-      this._tabIndex = value;
-    }
-  }
-
   /** Value of the select control. */
   @Input()
   get value() { return this._value; }
@@ -428,7 +420,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   constructor(
     private _viewportRuler: ViewportRuler,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _overlay: Overlay,
     private _platform: Platform,
     renderer: Renderer2,
     elementRef: ElementRef,
@@ -446,7 +437,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       this._control.valueAccessor = this;
     }
 
-    this._tabIndex = parseInt(tabIndex) || 0;
+    this.tabIndex = parseInt(tabIndex) || 0;
     this._placeholderOptions = placeholderOptions ? placeholderOptions : {};
     this.floatPlaceholder = this._placeholderOptions.float || 'auto';
   }
@@ -466,14 +457,8 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   ngOnDestroy() {
     this._dropSubscriptions();
-
-    if (this._changeSubscription) {
-      this._changeSubscription.unsubscribe();
-    }
-
-    if (this._tabSubscription) {
-      this._tabSubscription.unsubscribe();
-    }
+    this._changeSubscription.unsubscribe();
+    this._tabSubscription.unsubscribe();
   }
 
   /** Toggles the overlay panel open or closed. */
@@ -852,10 +837,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
   /** Unsubscribes from all option subscriptions. */
   private _dropSubscriptions(): void {
-    if (this._optionSubscription) {
-      this._optionSubscription.unsubscribe();
-      this._optionSubscription = null;
-    }
+    this._optionSubscription.unsubscribe();
   }
 
   /** Emits change event to set the model value. */

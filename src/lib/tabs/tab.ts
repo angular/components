@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TemplatePortal} from '../core/portal/portal';
+import {TemplatePortal} from '@angular/material/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -21,7 +21,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
+import {CanDisable, mixinDisabled} from '@angular/material/core';
 import {MdTabLabel} from './tab-label';
 import {Subject} from 'rxjs/Subject';
 
@@ -37,7 +37,7 @@ export const _MdTabMixinBase = mixinDisabled(MdTabBase);
   inputs: ['disabled'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'mdTab',
+  exportAs: 'mdTab, matTab',
 })
 export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
   /** Content for the tab label given by <ng-template md-tab-label>. */
@@ -55,6 +55,9 @@ export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChan
 
   /** Emits whenever the label changes. */
   _labelChange = new Subject<void>();
+
+  /** Emits whenevfer the disable changes */
+  _disableChange = new Subject<void>();
 
   /**
    * The relatively indexed position where 0 represents the center, negative is left, and positive
@@ -77,17 +80,22 @@ export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChan
     super();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes.hasOwnProperty('textLabel')) {
       this._labelChange.next();
     }
+
+    if (changes.hasOwnProperty('disabled')) {
+      this._disableChange.next();
+    }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
+    this._disableChange.complete();
     this._labelChange.complete();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._contentPortal = new TemplatePortal(this._content, this._viewContainerRef);
   }
 }

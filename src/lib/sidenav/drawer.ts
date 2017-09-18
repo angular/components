@@ -6,31 +6,32 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
+import {FocusTrap, FocusTrapFactory} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
+  EventEmitter,
+  Inject,
   Input,
+  NgZone,
+  OnDestroy,
   Optional,
   Output,
   QueryList,
-  ChangeDetectionStrategy,
-  EventEmitter,
   Renderer2,
   ViewEncapsulation,
-  NgZone,
-  OnDestroy,
-  Inject,
-  ChangeDetectorRef,
 } from '@angular/core';
-import {animate, state, style, transition, trigger, AnimationEvent} from '@angular/animations';
-import {Directionality, coerceBooleanProperty} from '../core';
-import {FocusTrapFactory, FocusTrap} from '../core/a11y/focus-trap';
-import {ESCAPE} from '../core/keyboard/keycodes';
-import {first, takeUntil, startWith} from '../core/rxjs/index';
+import {ESCAPE, first, startWith, takeUntil} from '@angular/material/core';
 import {DOCUMENT} from '@angular/platform-browser';
 import {merge} from 'rxjs/observable/merge';
+import {Subscription} from 'rxjs/Subscription';
 
 
 /** Throws an exception when two MdDrawer are matching the same position. */
@@ -118,7 +119,7 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
   /** Mode of the drawer; one of 'over', 'push' or 'side'. */
   @Input() mode: 'over' | 'push' | 'side' = 'over';
 
-  /** Whether the drawer can be closed with the escape key or not. */
+  /** Whether the drawer can be closed with the escape key or by clicking on the backdrop. */
   @Input()
   get disableClose(): boolean { return this._disableClose; }
   set disableClose(value: boolean) { this._disableClose = coerceBooleanProperty(value); }
@@ -313,7 +314,7 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MdDrawerContainer implements AfterContentInit {
+export class MdDrawerContainer implements AfterContentInit, OnDestroy {
   @ContentChildren(MdDrawer) _drawers: QueryList<MdDrawer>;
 
   /** The drawer child with the `start` position. */
@@ -338,6 +339,9 @@ export class MdDrawerContainer implements AfterContentInit {
   private _left: MdDrawer | null;
   private _right: MdDrawer | null;
 
+  /** Subscription to the Directionality change EventEmitter. */
+  private _dirChangeSubscription = Subscription.EMPTY;
+
   /** Inline styles to be applied to the container. */
   _styles: { marginLeft: string; marginRight: string; transform: string; };
 
@@ -347,7 +351,7 @@ export class MdDrawerContainer implements AfterContentInit {
     // If a `Dir` directive exists up the tree, listen direction changes and update the left/right
     // properties to point to the proper start/end.
     if (_dir != null) {
-      _dir.change.subscribe(() => this._validateDrawers());
+      this._dirChangeSubscription = _dir.change.subscribe(() => this._validateDrawers());
     }
   }
 
@@ -359,6 +363,10 @@ export class MdDrawerContainer implements AfterContentInit {
         this._watchDrawerPosition(drawer);
       });
     });
+  }
+
+  ngOnDestroy() {
+    this._dirChangeSubscription.unsubscribe();
   }
 
   /** Calls `open` of both start and end drawers */
@@ -401,8 +409,11 @@ export class MdDrawerContainer implements AfterContentInit {
     }
     // NOTE: We need to wait for the microtask queue to be empty before validating,
     // since both drawers may be swapping positions at the same time.
-    takeUntil.call(drawer.onPositionChanged, this._drawers.changes).subscribe(() =>
-        first.call(this._ngZone.onMicrotaskEmpty).subscribe(() => this._validateDrawers()));
+    takeUntil.call(drawer.onPositionChanged, this._drawers.changes).subscribe(() => {
+      first.call(this._ngZone.onMicrotaskEmpty.asObservable()).subscribe(() => {
+        this._validateDrawers();
+      });
+    });
   }
 
   /** Toggles the 'mat-drawer-opened' class on the main 'md-drawer-container' element. */

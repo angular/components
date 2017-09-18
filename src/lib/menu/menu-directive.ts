@@ -31,10 +31,11 @@ import {FocusKeyManager} from '@angular/cdk/a11y';
 import {MdMenuPanel} from './menu-panel';
 import {Subscription} from 'rxjs/Subscription';
 import {transformMenu, fadeInItems} from './menu-animations';
-import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '../core/keyboard/keycodes';
+import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/material/core';
 import {merge} from 'rxjs/observable/merge';
 import {Observable} from 'rxjs/Observable';
 import {Direction} from '@angular/cdk/bidi';
+import {RxChain, startWith, switchMap} from '@angular/cdk/rxjs';
 
 /** Default `md-menu` options that can be overridden. */
 export interface MdMenuDefaultOptions {
@@ -65,7 +66,7 @@ const MD_MENU_BASE_ELEVATION = 2;
     transformMenu,
     fadeInItems
   ],
-  exportAs: 'mdMenu'
+  exportAs: 'mdMenu, matMenu'
 })
 export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   private _keyManager: FocusKeyManager<MdMenuItem>;
@@ -74,7 +75,7 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   private _previousElevation: string;
 
   /** Subscription to tab events on the menu panel */
-  private _tabSubscription: Subscription;
+  private _tabSubscription = Subscription.EMPTY;
 
   /** Config object to be passed into the menu's ngClass */
   _classList: any = {};
@@ -150,17 +151,17 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this._tabSubscription) {
-      this._tabSubscription.unsubscribe();
-    }
-
+    this._tabSubscription.unsubscribe();
     this.close.emit();
     this.close.complete();
   }
 
   /** Stream that emits whenever the hovered menu item changes. */
   hover(): Observable<MdMenuItem> {
-    return merge(...this.items.map(item => item.hover));
+    return RxChain.from(this.items.changes)
+      .call(startWith, this.items)
+      .call(switchMap, (items: MdMenuItem[]) => merge(...items.map(item => item.hover)))
+      .result();
   }
 
   /** Handle a keyboard event from the menu, delegating to the appropriate action. */

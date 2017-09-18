@@ -26,6 +26,7 @@ module.exports = (config) => {
       {pattern: 'node_modules/zone.js/dist/fake-async-test.js', included: true, watched: false},
       {pattern: 'node_modules/hammerjs/hammer.min.js', included: true, watched: false},
       {pattern: 'node_modules/hammerjs/hammer.min.js.map', included: false, watched: false},
+      {pattern: 'node_modules/moment/min/moment-with-locales.min.js', included: true, watched: false},
 
       // Include all Angular dependencies
       {pattern: 'node_modules/@angular/**/*', included: false, watched: false},
@@ -61,12 +62,9 @@ module.exports = (config) => {
       startConnect: false,
       recordVideo: false,
       recordScreenshots: false,
-      options: {
-        'selenium-version': '2.48.2',
-        'command-timeout': 600,
-        'idle-timeout': 600,
-        'max-duration': 5400
-      }
+      idleTimeout: 600,
+      commandTimeout: 600,
+      maxDuration: 5400,
     },
 
     browserStack: {
@@ -74,7 +72,8 @@ module.exports = (config) => {
       startTunnel: false,
       retryLimit: 1,
       timeout: 600,
-      pollingTimeout: 20000
+      pollingTimeout: 20000,
+      video: false,
     },
 
     browserDisconnectTimeout: 20000,

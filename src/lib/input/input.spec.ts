@@ -13,8 +13,8 @@ import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdInputModule} from './index';
 import {MdInput} from './input';
-import {Platform} from '../core/platform/platform';
-import {PlatformModule} from '../core/platform/index';
+import {Platform} from '@angular/material/core';
+import {PlatformModule} from '@angular/material/core';
 import {wrappedErrorMessage, dispatchFakeEvent, createFakeEvent} from '@angular/cdk/testing';
 import {
   MdFormField,
@@ -22,9 +22,9 @@ import {
   getMdFormFieldDuplicatedHintError,
   getMdFormFieldMissingControlError,
   getMdFormFieldPlaceholderConflictError,
-} from '../form-field/index';
-import {MD_PLACEHOLDER_GLOBAL_OPTIONS} from '../core/placeholder/placeholder-options';
-import {MD_ERROR_GLOBAL_OPTIONS, showOnDirtyErrorStateMatcher} from '../core/error/error-options';
+} from '@angular/material/form-field';
+import {MD_PLACEHOLDER_GLOBAL_OPTIONS} from '@angular/material/core';
+import {MD_ERROR_GLOBAL_OPTIONS, showOnDirtyErrorStateMatcher} from '@angular/material/core';
 
 describe('MdInput without forms', function () {
   beforeEach(async(() => {
@@ -222,6 +222,18 @@ describe('MdInput without forms', function () {
 
     expect(inputElement.id).toBeTruthy();
     expect(inputElement.id).toEqual(labelElement.getAttribute('for'));
+  });
+
+  it('should add aria-owns to the label for the associated control', () => {
+    let fixture = TestBed.createComponent(MdInputTextTestController);
+    fixture.detectChanges();
+
+    const inputElement: HTMLInputElement =
+        fixture.debugElement.query(By.css('input')).nativeElement;
+    const labelElement: HTMLInputElement =
+        fixture.debugElement.query(By.css('label')).nativeElement;
+
+    expect(labelElement.getAttribute('aria-owns')).toBe(inputElement.id);
   });
 
   it('should not overwrite existing id', () => {

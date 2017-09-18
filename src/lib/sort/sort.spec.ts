@@ -1,6 +1,7 @@
 import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdSort, MdSortHeader, Sort, SortDirection, MdSortModule, MdSortHeaderIntl} from './index';
 import {DataSource, CollectionViewer} from '@angular/cdk/collections';
 import {CdkTableModule} from '@angular/cdk/table';
@@ -11,7 +12,7 @@ import {
   getMdSortHeaderNotContainedWithinMdSortError
 } from './sort-errors';
 import {wrappedErrorMessage, dispatchMouseEvent} from '@angular/cdk/testing';
-import {map} from '../core/rxjs/index';
+import {map} from '@angular/material/core';
 import {MdTableModule} from '../table/index';
 
 describe('MdSort', () => {
@@ -21,7 +22,7 @@ describe('MdSort', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdSortModule, MdTableModule, CdkTableModule],
+      imports: [MdSortModule, MdTableModule, CdkTableModule, NoopAnimationsModule],
       declarations: [
         SimpleMdSortApp,
         CdkTableMdSortApp,

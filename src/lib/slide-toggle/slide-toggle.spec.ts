@@ -8,7 +8,7 @@ import {NgModel, FormsModule, ReactiveFormsModule, FormControl} from '@angular/f
 import {MdSlideToggle, MdSlideToggleChange, MdSlideToggleModule} from './index';
 import {TestGestureConfig} from '../slider/test-gesture-config';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
-import {RIPPLE_FADE_IN_DURATION, RIPPLE_FADE_OUT_DURATION} from '../core/ripple/ripple-renderer';
+import {RIPPLE_FADE_IN_DURATION, RIPPLE_FADE_OUT_DURATION} from '@angular/material/core';
 
 describe('MdSlideToggle without forms', () => {
   let gestureConfig: TestGestureConfig;
@@ -16,7 +16,11 @@ describe('MdSlideToggle without forms', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdSlideToggleModule],
-      declarations: [SlideToggleBasic],
+      declarations: [
+        SlideToggleBasic,
+        SlideToggleWithTabindexAttr,
+        SlideToggleWithoutLabel
+      ],
       providers: [
         {provide: HAMMER_GESTURE_CONFIG, useFactory: () => gestureConfig = new TestGestureConfig()}
       ]
@@ -333,6 +337,18 @@ describe('MdSlideToggle without forms', () => {
 
       expect(fixture.componentInstance.lastEvent).toBeFalsy();
     }));
+
+    it('should be able to set the tabindex via the native attribute', async(() => {
+      const fixture = TestBed.createComponent(SlideToggleWithTabindexAttr);
+
+      fixture.detectChanges();
+
+      const slideToggle = fixture.debugElement
+        .query(By.directive(MdSlideToggle)).componentInstance as MdSlideToggle;
+
+      expect(slideToggle.tabIndex)
+        .toBe(5, 'Expected tabIndex property to have been set based on the native attribute');
+    }));
   });
 
   describe('with dragging', () => {
@@ -479,6 +495,62 @@ describe('MdSlideToggle without forms', () => {
       tick();
 
       expect(slideThumbContainer.classList).not.toContain('mat-dragging');
+    }));
+  });
+
+  describe('without label', () => {
+    let fixture: ComponentFixture<SlideToggleWithoutLabel>;
+    let testComponent: SlideToggleWithoutLabel;
+    let slideToggleElement: HTMLElement;
+    let slideToggleBarElement: HTMLElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SlideToggleWithoutLabel);
+
+      const slideToggleDebugEl = fixture.debugElement.query(By.directive(MdSlideToggle));
+
+      testComponent = fixture.componentInstance;
+      slideToggleElement = slideToggleDebugEl.nativeElement;
+      slideToggleBarElement = slideToggleDebugEl
+          .query(By.css('.mat-slide-toggle-bar')).nativeElement;
+    });
+
+    it('should remove margin for slide-toggle without a label', () => {
+      fixture.detectChanges();
+
+      expect(slideToggleBarElement.classList)
+        .toContain('mat-slide-toggle-bar-no-side-margin');
+    });
+
+    it('should not remove margin if initial label is set through binding', async(() => {
+      testComponent.label = 'Some content';
+      fixture.detectChanges();
+
+      expect(slideToggleBarElement.classList)
+        .not.toContain('mat-slide-toggle-bar-no-side-margin');
+    }));
+
+    it('should re-add margin if label is added asynchronously', async(() => {
+      fixture.detectChanges();
+
+      expect(slideToggleBarElement.classList)
+        .toContain('mat-slide-toggle-bar-no-side-margin');
+
+      testComponent.label = 'Some content';
+      fixture.detectChanges();
+
+      // Wait for the MutationObserver to detect the content change and for the cdkObserveContent
+      // to emit the change event to the slide-toggle.
+      setTimeout(() => {
+        // The MutationObserver from the cdkObserveContent directive detected the content change
+        // and notified the slide-toggle component. The slide-toggle then marks the component as
+        // dirty by calling `markForCheck()`. This needs to be reflected by the component template
+        // then.
+        fixture.detectChanges();
+
+        expect(slideToggleElement.classList)
+          .not.toContain('mat-slide-toggle-bar-no-side-margin');
+      }, 1);
     }));
   });
 });
@@ -788,4 +860,16 @@ class SlideToggleWithModel {
 })
 class SlideToggleWithFormControl {
   formControl = new FormControl();
+}
+
+@Component({
+  template: `<md-slide-toggle tabindex="5"></md-slide-toggle>`
+})
+class SlideToggleWithTabindexAttr {}
+
+@Component({
+  template: `<md-slide-toggle>{{label}}</md-slide-toggle>`
+})
+class SlideToggleWithoutLabel {
+  label: string;
 }

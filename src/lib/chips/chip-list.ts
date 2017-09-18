@@ -22,29 +22,23 @@ import {
 
 import {MdChip} from './chip';
 import {FocusKeyManager} from '@angular/cdk/a11y';
-import {BACKSPACE, DELETE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '../core/keyboard/keycodes';
+import {BACKSPACE, DELETE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {Subscription} from 'rxjs/Subscription';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /**
  * A material design chips component (named ChipList for it's similarity to the List component).
- *
- * Example:
- *
- *     <md-chip-list>
- *       <md-chip>Chip 1<md-chip>
- *       <md-chip>Chip 2<md-chip>
- *     </md-chip-list>
  */
 @Component({
   moduleId: module.id,
   selector: 'md-chip-list, mat-chip-list',
   template: `<div class="mat-chip-list-wrapper"><ng-content></ng-content></div>`,
-  exportAs: 'mdChipList',
+  exportAs: 'mdChipList, matChipList',
   host: {
     '[attr.tabindex]': '_tabIndex',
     'role': 'listbox',
+    '[attr.aria-orientation]': 'ariaOrientation',
     'class': 'mat-chip-list',
 
     '(focus)': 'focus()',
@@ -66,7 +60,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   protected _chipSet: WeakMap<MdChip, boolean> = new WeakMap();
 
   /** Subscription to tabbing out from the chip list. */
-  private _tabOutSubscription: Subscription;
+  private _tabOutSubscription = Subscription.EMPTY;
 
   /** Whether or not the chip is selectable. */
   protected _selectable: boolean = true;
@@ -87,6 +81,9 @@ export class MdChipList implements AfterContentInit, OnDestroy {
 
   /** The chip components contained within this chip list. */
   chips: QueryList<MdChip>;
+
+  /** Orientation of the chip list. */
+  @Input('aria-orientation') ariaOrientation: 'horizontal' | 'vertical' = 'horizontal';
 
   constructor(protected _renderer: Renderer2, protected _elementRef: ElementRef,
               @Optional() private _dir: Directionality) {
@@ -126,9 +123,7 @@ export class MdChipList implements AfterContentInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this._tabOutSubscription) {
-      this._tabOutSubscription.unsubscribe();
-    }
+    this._tabOutSubscription.unsubscribe();
   }
 
   /**

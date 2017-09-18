@@ -4,7 +4,7 @@ import {
   ElementRef,
   Renderer2,
 } from '@angular/core';
-import {OverlayContainer} from '@angular/material';
+import {OverlayContainer} from '@angular/cdk/overlay';
 
 /**
  * The entry app for demo site. Routes under `accessibility` will use AccessibilityDemo component,
@@ -72,6 +72,7 @@ export class DemoApp {
     {name: 'Slider', route: '/slider'},
     {name: 'Slide Toggle', route: '/slide-toggle'},
     {name: 'Snack Bar', route: '/snack-bar'},
+    {name: 'Stepper', route: '/stepper'},
     {name: 'Table', route: '/table'},
     {name: 'Tabs', route: '/tabs'},
     {name: 'Toolbar', route: '/toolbar'},

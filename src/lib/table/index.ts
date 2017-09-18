@@ -6,25 +6,4 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {MdTable} from './table';
-import {CdkTableModule} from '@angular/cdk/table';
-import {MdCell, MdHeaderCell, MdCellDef, MdHeaderCellDef, MdColumnDef} from './cell';
-import {MdHeaderRow, MdRow, MdHeaderRowDef, MdRowDef} from './row';
-import {CommonModule} from '@angular/common';
-import {MdCommonModule} from '../core';
-
-export * from './cell';
-export * from './table';
-export * from './row';
-
-@NgModule({
-  imports: [CdkTableModule, CommonModule, MdCommonModule],
-  exports: [MdTable, MdCellDef, MdHeaderCellDef, MdColumnDef,
-    MdHeaderRowDef, MdRowDef,
-    MdHeaderCell, MdCell, MdHeaderRow, MdRow],
-  declarations: [MdTable, MdCellDef, MdHeaderCellDef, MdColumnDef,
-    MdHeaderRowDef, MdRowDef,
-    MdHeaderCell, MdCell, MdHeaderRow, MdRow],
-})
-export class MdTableModule {}
+export * from './public_api';

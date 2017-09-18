@@ -6,6 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {isFakeMousedownFromScreenReader} from '@angular/cdk/a11y';
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {
+  ConnectedPositionStrategy,
+  HorizontalConnectionPos,
+  Overlay,
+  OverlayRef,
+  OverlayState,
+  RepositionScrollStrategy,
+  ScrollStrategy,
+  VerticalConnectionPos,
+} from '@angular/cdk/overlay';
+import {TemplatePortal} from '@angular/cdk/portal';
+import {filter, RxChain} from '@angular/cdk/rxjs';
 import {
   AfterViewInit,
   Directive,
@@ -20,32 +35,15 @@ import {
   Self,
   ViewContainerRef,
 } from '@angular/core';
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {isFakeMousedownFromScreenReader} from '@angular/cdk/a11y';
-import {TemplatePortal} from '@angular/cdk/portal';
-import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
-import {
-  ConnectedPositionStrategy,
-  HorizontalConnectionPos,
-  Overlay,
-  OverlayRef,
-  OverlayState,
-  RepositionScrollStrategy,
-  VerticalConnectionPos,
-  // This import is only used to define a generic type. The current TypeScript version incorrectly
-  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
-  // tslint:disable-next-line:no-unused-variable
-  ScrollStrategy,
-} from '@angular/cdk/overlay';
-import {filter, RxChain} from '@angular/cdk/rxjs';
+import {merge} from 'rxjs/observable/merge';
+import {of as observableOf} from 'rxjs/observable/of';
+import {Subscription} from 'rxjs/Subscription';
 import {MdMenu} from './menu-directive';
+import {throwMdMenuMissingError} from './menu-errors';
 import {MdMenuItem} from './menu-item';
 import {MdMenuPanel} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
-import {throwMdMenuMissingError} from './menu-errors';
-import {of as observableOf} from 'rxjs/observable/of';
-import {merge} from 'rxjs/observable/merge';
-import {Subscription} from 'rxjs/Subscription';
+
 
 /** Injection token that determines the scroll handling while the menu is open. */
 export const MD_MENU_SCROLL_STRATEGY =
@@ -83,15 +81,15 @@ export const MENU_PANEL_TOP_PADDING = 8;
     '(keydown)': '_handleKeydown($event)',
     '(click)': '_handleClick($event)',
   },
-  exportAs: 'mdMenuTrigger'
+  exportAs: 'mdMenuTrigger, matMenuTrigger'
 })
 export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   private _portal: TemplatePortal<any>;
   private _overlayRef: OverlayRef | null = null;
   private _menuOpen: boolean = false;
-  private _closeSubscription: Subscription;
-  private _positionSubscription: Subscription;
-  private _hoverSubscription: Subscription;
+  private _closeSubscription = Subscription.EMPTY;
+  private _positionSubscription = Subscription.EMPTY;
+  private _hoverSubscription = Subscription.EMPTY;
 
   // Tracking input type is necessary so it's possible to only auto-focus
   // the first item of the list when the menu is opened via the keyboard
@@ -322,13 +320,13 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
    * @returns OverlayState
    */
   private _getOverlayConfig(): OverlayState {
-    const overlayState = new OverlayState();
-    overlayState.positionStrategy = this._getPosition();
-    overlayState.hasBackdrop = !this.triggersSubmenu();
-    overlayState.backdropClass = 'cdk-overlay-transparent-backdrop';
-    overlayState.direction = this.dir;
-    overlayState.scrollStrategy = this._scrollStrategy();
-    return overlayState;
+    return new OverlayState({
+      positionStrategy: this._getPosition(),
+      hasBackdrop: !this.triggersSubmenu(),
+      backdropClass: 'cdk-overlay-transparent-backdrop',
+      direction: this.dir,
+      scrollStrategy: this._scrollStrategy()
+    });
   }
 
   /**
@@ -392,13 +390,9 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
 
   /** Cleans up the active subscriptions. */
   private _cleanUpSubscriptions(): void {
-    [
-      this._closeSubscription,
-      this._positionSubscription,
-      this._hoverSubscription
-    ]
-        .filter(subscription => !!subscription)
-        .forEach(subscription => subscription.unsubscribe());
+    this._closeSubscription.unsubscribe();
+    this._positionSubscription.unsubscribe();
+    this._hoverSubscription.unsubscribe();
   }
 
   /** Returns a stream that emits whenever an action that should close the menu occurs. */
@@ -417,6 +411,13 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   _handleMousedown(event: MouseEvent): void {
     if (!isFakeMousedownFromScreenReader(event)) {
       this._openedByMouse = true;
+
+      // Since clicking on the trigger won't close the menu if it opens a sub-menu,
+      // we should prevent focus from moving onto it via click to avoid the
+      // highlight from lingering on the menu item.
+      if (this.triggersSubmenu()) {
+        event.preventDefault();
+      }
     }
   }
 

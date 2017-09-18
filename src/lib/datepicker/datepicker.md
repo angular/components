@@ -116,13 +116,14 @@ three pieces via injection:
  3. The message strings used in the datepicker's UI.
 
 #### Setting the locale code
-By default the datepicker will use the locale code from the `LOCALE_ID` injection token from
-`@angular/core`. If you want to override it, you can provide a new value for the token:
+By default, the `MAT_DATE_LOCALE` injection token will use the existing `LOCALE_ID` locale code
+from `@angular/core`. If you want to override it, you can provide a new value for the
+`MAT_DATE_LOCALE` token:
 
 ```ts
 @NgModule({
   providers: [
-    {provide: LOCALE_ID, useValue: 'en-GB'},
+    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
   ],
 })
 export class MyApp {}
@@ -228,3 +229,52 @@ application root module.
 })
 export class MyApp {}
 ```
+### Accessibility
+The `MdDatepickerInput` directive adds `aria-haspopup` attribute to the native input element, and it
+triggers a calendar dialog with `role="dialog"`.
+
+`MdDatepickerIntl` includes strings that are used for `aria-label`s. The datepicker input
+should have a placeholder or be given a meaningful label via `aria-label`, `aria-labelledby` or
+`MdDatepickerIntl`.
+
+#### Keyboard shortcuts
+The keyboard shortcuts to handle datepicker are:
+
+| Shortcut             | Action                              |
+|----------------------|-------------------------------------|
+| `ALT` + `DOWN_ARROW` | Open the calendar pop-up            |
+| `ESCAPE`             | Close the calendar pop-up           |
+
+
+In month view:
+
+| Shortcut             | Action                              |
+|----------------------|-------------------------------------|
+| `LEFT_ARROW`         | Go to previous day                  |
+| `RIGHT_ARROW`        | Go to next day                      |
+| `UP_ARROW`           | Go to same day in the previous week |
+| `DOWN_ARROW`         | Go to same day in the next week     |
+| `HOME`               | Go to the first day of the month    |
+| `END`                | Go to the last day of the month     |
+| `PAGE_UP`            | Go to previous month                |
+| `ALT` + `PAGE_UP`    | Go to previous year                 |
+| `PAGE_DOWN`          | Go to next month                    |
+| `ALT` + `PAGE_DOWN`  | Go to next year                     |
+| `ENTER`              | Select current date                 |
+
+
+In year view:
+
+| Shortcut             | Action                              |
+|----------------------|-------------------------------------|
+| `LEFT_ARROW`         | Go to previous month                |
+| `RIGHT_ARROW`        | Go to next month                    |
+| `UP_ARROW`           | Go to previous 6 months             |
+| `DOWN_ARROW`         | Go to next 6 months                 |
+| `HOME`               | Go to the first month of the year   |
+| `END`                | Go to the last month of the year    |
+| `PAGE_UP`            | Go to previous year                 |
+| `ALT` + `PAGE_UP`    | Go to previous 10 years             |
+| `PAGE_DOWN`          | Go to next year                     |
+| `ALT` + `PAGE_DOWN`  | Go to next 10 years                 |
+| `ENTER`              | Select current month                |

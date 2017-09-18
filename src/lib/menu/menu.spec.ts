@@ -23,12 +23,13 @@ import {
   MenuPositionY,
 } from './index';
 import {MENU_PANEL_TOP_PADDING} from './menu-trigger';
-import {extendObject} from '../core/util/object-extend';
+import {extendObject} from '@angular/material/core';
 import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
   dispatchEvent,
   createKeyboardEvent,
+  createMouseEvent,
 } from '@angular/cdk/testing';
 
 
@@ -996,6 +997,37 @@ describe('MdMenu', () => {
       expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(0, 'Expected no open menus');
     }));
 
+    it('should toggle a nested menu when its trigger is added after init', fakeAsync(() => {
+      compileTestComponent();
+      instance.rootTriggerEl.nativeElement.click();
+      fixture.detectChanges();
+      expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(1, 'Expected one open menu');
+
+      instance.showLazy = true;
+      fixture.detectChanges();
+
+      const lazyTrigger = overlay.querySelector('#lazy-trigger')!;
+
+      dispatchMouseEvent(lazyTrigger, 'mouseenter');
+      fixture.detectChanges();
+      expect(lazyTrigger.classList)
+          .toContain('mat-menu-item-highlighted', 'Expected the trigger to be highlighted');
+      expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(2, 'Expected two open menus');
+    }));
+
+    it('should prevent the default mousedown action if the menu item opens a sub-menu', () => {
+      compileTestComponent();
+      instance.rootTrigger.openMenu();
+      fixture.detectChanges();
+
+      const event = createMouseEvent('mousedown');
+
+      Object.defineProperty(event, 'buttons', {get: () => 1});
+      event.preventDefault = jasmine.createSpy('preventDefault spy');
+
+      dispatchMouseEvent(overlay.querySelector('[md-menu-item]')!, 'mousedown', 0, 0, event);
+      expect(event.preventDefault).toHaveBeenCalled();
+    });
 
   });
 
@@ -1081,7 +1113,7 @@ class OverlapMenu implements TestableMenu {
       <ng-content></ng-content>
     </ng-template>
   `,
-  exportAs: 'mdCustomMenu'
+  exportAs: 'mdCustomMenu, matCustomMenu'
 })
 class CustomMenuPanel implements MdMenuPanel {
   direction: Direction;
@@ -1126,7 +1158,11 @@ class CustomMenu {
         [mdMenuTriggerFor]="levelOne"
         #levelOneTrigger="mdMenuTrigger">One</button>
       <button md-menu-item>Two</button>
-      <button md-menu-item>Three</button>
+      <button md-menu-item
+        *ngIf="showLazy"
+        id="lazy-trigger"
+        [mdMenuTriggerFor]="lazy"
+        #lazyTrigger="mdMenuTrigger">Three</button>
     </md-menu>
 
     <md-menu #levelOne="mdMenu">
@@ -1143,6 +1179,12 @@ class CustomMenu {
       <button md-menu-item>Eight</button>
       <button md-menu-item>Nine</button>
     </md-menu>
+
+    <md-menu #lazy="mdMenu">
+      <button md-menu-item>Ten</button>
+      <button md-menu-item>Eleven</button>
+      <button md-menu-item>Twelve</button>
+    </md-menu>
   `
 })
 class NestedMenu {
@@ -1156,6 +1198,10 @@ class NestedMenu {
 
   @ViewChild('levelTwo') levelTwoMenu: MdMenu;
   @ViewChild('levelTwoTrigger') levelTwoTrigger: MdMenuTrigger;
+
+  @ViewChild('lazy') lazyMenu: MdMenu;
+  @ViewChild('lazyTrigger') lazyTrigger: MdMenuTrigger;
+  showLazy = false;
 }
 
 @Component({

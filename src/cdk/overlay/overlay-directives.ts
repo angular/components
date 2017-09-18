@@ -95,12 +95,12 @@ export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
   private _overlayRef: OverlayRef;
   private _templatePortal: TemplatePortal<any>;
   private _hasBackdrop = false;
-  private _backdropSubscription: Subscription | null;
-  private _positionSubscription: Subscription;
+  private _backdropSubscription = Subscription.EMPTY;
+  private _positionSubscription = Subscription.EMPTY;
   private _offsetX: number = 0;
   private _offsetY: number = 0;
   private _position: ConnectedPositionStrategy;
-  private _escapeListener: Function;
+  private _escapeListener = () => {};
 
   /** Origin for the connected overlay. */
   @Input('cdkConnectedOverlayOrigin') origin: OverlayOrigin;
@@ -272,7 +272,12 @@ export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
 
   /** Builds the overlay config based on the directive's inputs */
   private _buildConfig(): OverlayState {
-    let overlayConfig = new OverlayState();
+    const positionStrategy = this._position = this._createPositionStrategy();
+    const overlayConfig = new OverlayState({
+      positionStrategy,
+      scrollStrategy: this.scrollStrategy,
+      hasBackdrop: this.hasBackdrop
+    });
 
     if (this.width || this.width === 0) {
       overlayConfig.width = this.width;
@@ -290,15 +295,9 @@ export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
       overlayConfig.minHeight = this.minHeight;
     }
 
-    overlayConfig.hasBackdrop = this.hasBackdrop;
-
     if (this.backdropClass) {
       overlayConfig.backdropClass = this.backdropClass;
     }
-
-    this._position = this._createPositionStrategy() as ConnectedPositionStrategy;
-    overlayConfig.positionStrategy = this._position;
-    overlayConfig.scrollStrategy = this.scrollStrategy;
 
     return overlayConfig;
   }
@@ -360,14 +359,8 @@ export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
       this.detach.emit();
     }
 
-    if (this._backdropSubscription) {
-      this._backdropSubscription.unsubscribe();
-      this._backdropSubscription = null;
-    }
-
-    if (this._escapeListener) {
-      this._escapeListener();
-    }
+    this._backdropSubscription.unsubscribe();
+    this._escapeListener();
   }
 
   /** Destroys the overlay created by this directive. */
@@ -376,17 +369,9 @@ export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
       this._overlayRef.dispose();
     }
 
-    if (this._backdropSubscription) {
-      this._backdropSubscription.unsubscribe();
-    }
-
-    if (this._positionSubscription) {
-      this._positionSubscription.unsubscribe();
-    }
-
-    if (this._escapeListener) {
-      this._escapeListener();
-    }
+    this._backdropSubscription.unsubscribe();
+    this._positionSubscription.unsubscribe();
+    this._escapeListener();
   }
 
   /** Sets the event listener that closes the overlay when pressing Escape. */

@@ -1,6 +1,7 @@
 `<md-menu>` is a floating panel containing list of options.
 
 <!-- example(menu-overview) -->
+<!-- example(nested-menu) -->
 
 By itself, the `<md-menu>` element does not render anything. The menu is attached to and opened
 via application of the `mdMenuTriggerFor` directive:
@@ -98,3 +99,7 @@ that should trigger the sub-menu:
 - <kbd>RIGHT_ARROW</kbd>: Opens the menu item's sub-menu
 - <kbd>LEFT_ARROW</kbd>: Closes the current menu, if it is a sub-menu.
 - <kbd>ENTER</kbd>: Activates the focused menu item
+
+### Accessibility
+Menu triggers or menu items without text or labels should be given a meaningful label via
+`aria-label` or `aria-labelledby`.

@@ -18,7 +18,7 @@ import {
   Directive,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {MdLine, MdLineSetter} from '../core';
+import {MdLine, MdLineSetter} from '@angular/material/core';
 import {coerceToNumber} from './grid-list-measure';
 
 @Component({
@@ -52,7 +52,7 @@ export class MdGridTile {
    * Sets the style of the grid-tile element.  Needs to be set manually to avoid
    * "Changed after checked" errors that would occur with HostBinding.
    */
-  _setStyle(property: string, value: string): void {
+  _setStyle(property: string, value: any): void {
     this._renderer.setStyle(this._element.nativeElement, property, value);
   }
 }

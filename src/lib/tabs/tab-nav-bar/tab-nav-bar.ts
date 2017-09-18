@@ -6,39 +6,46 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Platform} from '@angular/cdk/platform';
+import {auditTime, takeUntil} from '@angular/cdk/rxjs';
+import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ContentChildren,
   Directive,
   ElementRef,
+  forwardRef,
   Inject,
   Input,
   NgZone,
   OnDestroy,
   Optional,
+  QueryList,
   Renderer2,
   ViewChild,
   ViewEncapsulation,
-  ContentChildren,
-  QueryList,
-  forwardRef,
 } from '@angular/core';
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {Directionality} from '@angular/cdk/bidi';
-import {Platform} from '@angular/cdk/platform';
-import {auditTime, takeUntil} from '@angular/cdk/rxjs';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
-import {of as observableOf} from 'rxjs/observable/of';
-import {merge} from 'rxjs/observable/merge';
+import {
+  CanColor,
+  CanDisable,
+  CanDisableRipple,
+  MD_RIPPLE_GLOBAL_OPTIONS,
+  MdRipple,
+  mixinColor,
+  mixinDisabled,
+  mixinDisableRipple,
+  RippleGlobalOptions,
+  ThemePalette,
+} from '@angular/material/core';
 import {fromEvent} from 'rxjs/observable/fromEvent';
-import {CanDisableRipple, mixinDisableRipple} from '../../core/common-behaviors/disable-ripple';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {CanDisable, mixinDisabled} from '../../core/common-behaviors/disabled';
-import {MD_RIPPLE_GLOBAL_OPTIONS, MdRipple, RippleGlobalOptions} from '../../core';
-import {CanColor, mixinColor, ThemePalette} from '../../core/common-behaviors/color';
+import {merge} from 'rxjs/observable/merge';
+import {of as observableOf} from 'rxjs/observable/of';
+import {Subject} from 'rxjs/Subject';
 import {MdInkBar} from '../ink-bar';
 
 
@@ -77,9 +84,6 @@ export class MdTabNav extends _MdTabNavMixinBase implements AfterContentInit, Ca
   /** Query list of all tab links of the tab navigation. */
   @ContentChildren(forwardRef(() => MdTabLink), {descendants: true})
   _tabLinks: QueryList<MdTabLink>;
-
-  /** Subscription for window.resize event **/
-  private _resizeSubscription: Subscription;
 
   /** Background color of the tab nav. */
   @Input()
@@ -124,15 +128,17 @@ export class MdTabNav extends _MdTabNavMixinBase implements AfterContentInit, Ca
   }
 
   ngAfterContentInit(): void {
-    this._resizeSubscription = this._ngZone.runOutsideAngular(() => {
+    this._ngZone.runOutsideAngular(() => {
       let dirChange = this._dir ? this._dir.change : observableOf(null);
       let resize = typeof window !== 'undefined' ?
           auditTime.call(fromEvent(window, 'resize'), 10) :
           observableOf(null);
 
-      return takeUntil.call(merge(dirChange, resize), this._onDestroy)
-          .subscribe(() => this._alignInkBar());
+      return takeUntil.call(merge(dirChange, resize), this._onDestroy).subscribe(() => {
+        this._alignInkBar();
+      });
     });
+
     this._setLinkDisableRipple();
   }
 
@@ -146,10 +152,7 @@ export class MdTabNav extends _MdTabNavMixinBase implements AfterContentInit, Ca
 
   ngOnDestroy() {
     this._onDestroy.next();
-
-    if (this._resizeSubscription) {
-      this._resizeSubscription.unsubscribe();
-    }
+    this._onDestroy.complete();
   }
 
   /** Aligns the ink bar to the active link. */

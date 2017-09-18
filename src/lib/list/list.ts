@@ -19,8 +19,8 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {MdLine, MdLineSetter} from '../core';
-import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
+import {MdLine, MdLineSetter} from '@angular/material/core';
+import {CanDisableRipple, mixinDisableRipple} from '@angular/material/core';
 
 // Boilerplate for applying mixins to MdList.
 /** @docs-private */
@@ -33,6 +33,7 @@ export class MdListItemBase {}
 export const _MdListItemMixinBase = mixinDisableRipple(MdListItemBase);
 
 
+/** Divider between items within a list. */
 @Directive({
   selector: 'md-divider, mat-divider',
   host: {
@@ -42,6 +43,7 @@ export const _MdListItemMixinBase = mixinDisableRipple(MdListItemBase);
 })
 export class MdListDivider {}
 
+/** A Material Design list component. */
 @Component({
   moduleId: module.id,
   selector: 'md-list, mat-list, md-nav-list, mat-nav-list',
@@ -114,6 +116,7 @@ export class MdListIconCssMatStyler {}
 })
 export class MdListSubheaderCssMatStyler {}
 
+/** An item within a Material Design list. */
 @Component({
   moduleId: module.id,
   selector: 'md-list-item, mat-list-item, a[md-list-item], a[mat-list-item]',
@@ -156,8 +159,8 @@ export class MdListItem extends _MdListItemMixinBase implements AfterContentInit
   }
 
   /** Whether this list item should show a ripple effect when clicked.  */
-  isRippleEnabled() {
-    return !this.disableRipple && this._isNavList && !this._list.disableRipple;
+  _isRippleDisabled() {
+    return !this._isNavList || this.disableRipple || this._list.disableRipple;
   }
 
   _handleFocus() {

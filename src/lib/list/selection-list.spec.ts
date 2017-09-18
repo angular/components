@@ -3,8 +3,8 @@ import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdSelectionList, MdListOption, MdListModule} from './index';
 import {createKeyboardEvent} from '@angular/cdk/testing';
-import {UP_ARROW, DOWN_ARROW, SPACE} from '../core/keyboard/keycodes';
-import {Platform} from '../core/platform/index';
+import {UP_ARROW, DOWN_ARROW, SPACE} from '@angular/material/core';
+import {Platform} from '@angular/material/core';
 
 
 describe('MdSelectionList', () => {
@@ -46,6 +46,14 @@ describe('MdSelectionList', () => {
       listOption[0].componentInstance._handleBlur();
       fixture.detectChanges();
       expect(listItemEl.nativeElement.className).not.toContain('mat-list-item-focus');
+    });
+
+    it('should be able to set a value on a list option', () => {
+      const optionValues = ['inbox', 'starred', 'sent-mail', 'drafts'];
+
+      optionValues.forEach((optionValue, index) => {
+        expect(listOption[index].componentInstance.value).toBe(optionValue);
+      });
     });
 
     it('should be able to dispatch one selected item', () => {
@@ -181,6 +189,29 @@ describe('MdSelectionList', () => {
 
       expect(manager.activeItemIndex).toEqual(3);
     });
+
+    it('should be able to select all options', () => {
+      const list: MdSelectionList = selectionList.componentInstance;
+
+      expect(list.options.toArray().every(option => option.selected)).toBe(false);
+
+      list.selectAll();
+      fixture.detectChanges();
+
+      expect(list.options.toArray().every(option => option.selected)).toBe(true);
+    });
+
+    it('should be able to deselect all options', () => {
+      const list: MdSelectionList = selectionList.componentInstance;
+
+      list.options.forEach(option => option.toggle());
+      expect(list.options.toArray().every(option => option.selected)).toBe(true);
+
+      list.deselectAll();
+      fixture.detectChanges();
+
+      expect(list.options.toArray().every(option => option.selected)).toBe(false);
+    });
   });
 
   describe('with single option', () => {
@@ -229,6 +260,52 @@ describe('MdSelectionList', () => {
       fixture.detectChanges();
 
       expect(listItemEl.nativeElement.className).not.toContain('mat-list-item-focus');
+    });
+  });
+
+  describe('with option disabled', () => {
+    let fixture: ComponentFixture<SelectionListWithDisabledOption>;
+    let listOptionEl: HTMLElement;
+    let listOption: MdListOption;
+
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [MdListModule],
+        declarations: [SelectionListWithDisabledOption]
+      });
+
+      TestBed.compileComponents();
+    }));
+
+    beforeEach(async(() => {
+      fixture = TestBed.createComponent(SelectionListWithDisabledOption);
+
+      const listOptionDebug = fixture.debugElement.query(By.directive(MdListOption));
+
+      listOption = listOptionDebug.componentInstance;
+      listOptionEl = listOptionDebug.nativeElement;
+
+      fixture.detectChanges();
+    }));
+
+    it('should disable ripples for disabled option', () => {
+      expect(listOption._isRippleDisabled())
+        .toBe(false, 'Expected ripples to be enabled by default');
+
+      fixture.componentInstance.disableItem = true;
+      fixture.detectChanges();
+
+      expect(listOption._isRippleDisabled())
+        .toBe(true, 'Expected ripples to be disabled if option is disabled');
+    });
+
+    it('should apply the "mat-list-item-disabled" class properly', () => {
+      expect(listOptionEl.classList).not.toContain('mat-list-item-disabled');
+
+      fixture.componentInstance.disableItem = true;
+      fixture.detectChanges();
+
+      expect(listOptionEl.classList).toContain('mat-list-item-disabled');
     });
   });
 
@@ -310,17 +387,18 @@ describe('MdSelectionList', () => {
 
 
 @Component({template: `
-  <mat-selection-list id = "selection-list-1">
-    <md-list-option checkboxPosition = "before" disabled = "true">
+  <mat-selection-list id="selection-list-1">
+    <md-list-option checkboxPosition="before" disabled="true" value="inbox">
       Inbox (disabled selection-option)
     </md-list-option>
-    <md-list-option id = "testSelect" checkboxPosition = "before" class="test-native-focus">
+    <md-list-option id="testSelect" checkboxPosition="before" class="test-native-focus"
+                    value="starred">
       Starred
     </md-list-option>
-    <md-list-option checkboxPosition = "before">
+    <md-list-option checkboxPosition="before" value="sent-mail">
       Sent Mail
     </md-list-option>
-    <md-list-option checkboxPosition = "before">
+    <md-list-option checkboxPosition="before" value="drafts">
       Drafts
     </md-list-option>
   </mat-selection-list>`})
@@ -361,6 +439,15 @@ class SelectionListWithCheckboxPositionAfter {
     </md-list-option>
   </mat-selection-list>`})
 class SelectionListWithListDisabled {
+}
+
+@Component({template: `
+  <mat-selection-list>
+    <md-list-option [disabled]="disableItem">Item</md-list-option>
+  </mat-selection-list>
+  `})
+class SelectionListWithDisabledOption {
+  disableItem: boolean = false;
 }
 
 @Component({template: `
