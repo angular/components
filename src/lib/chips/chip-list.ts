@@ -22,26 +22,19 @@ import {
 
 import {MdChip} from './chip';
 import {FocusKeyManager} from '@angular/cdk/a11y';
-import {BACKSPACE, DELETE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '../core/keyboard/keycodes';
+import {BACKSPACE, DELETE, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {Subscription} from 'rxjs/Subscription';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /**
  * A material design chips component (named ChipList for it's similarity to the List component).
- *
- * Example:
- *
- *     <md-chip-list>
- *       <md-chip>Chip 1<md-chip>
- *       <md-chip>Chip 2<md-chip>
- *     </md-chip-list>
  */
 @Component({
   moduleId: module.id,
   selector: 'md-chip-list, mat-chip-list',
   template: `<div class="mat-chip-list-wrapper"><ng-content></ng-content></div>`,
-  exportAs: 'mdChipList',
+  exportAs: 'mdChipList, matChipList',
   host: {
     '[attr.tabindex]': '_tabIndex',
     'role': 'listbox',
