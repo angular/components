@@ -25,7 +25,7 @@
         <md-chip color="accent" selected="true">Selected/Colored</md-chip>
 
         <md-chip color="warn" selected="true" *ngIf="visible"
-                 (destroy)="displayMessage('chip destroyed')" (remove)="toggleVisible()">
+                 (destroyed)="displayMessage('chip destroyed')" (removed)="toggleVisible()">
           With Events
           <md-icon mdChipRemove>cancel</md-icon>
         </md-chip>
@@ -49,7 +49,7 @@
       <md-form-field>
         <md-chip-list mdPrefix #chipList1>
           <md-chip *ngFor="let person of people" [color]="color" [selectable]="selectable"
-                   [removable]="removable" (remove)="remove(person)">
+                   [removable]="removable" (removed)="remove(person)">
             {{person.name}}
             <md-icon mdChipRemove *ngIf="removable">cancel</md-icon>
           </md-chip>
@@ -70,7 +70,7 @@
 
       <md-chip-list #chipList2>
         <md-chip *ngFor="let person of people" [color]="color" [selectable]="selectable"
-                 [removable]="removable" (remove)="remove(person)">
+                 [removable]="removable" (removed)="remove(person)">
           {{person.name}}
           <md-icon mdChipRemove *ngIf="removable">cancel</md-icon>
         </md-chip>

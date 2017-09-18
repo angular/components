@@ -2,7 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement}  from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {createKeyboardEvent} from '@angular/cdk/testing';
-import {MdChipList, MdChip, MdChipEvent, MdChipsModule} from './index';
+import {MdChipList, MdChip, MdChipEvent, MdChipSelectionEvent, MdChipsModule} from './index';
 import {SPACE, DELETE, BACKSPACE} from '@angular/material/core';
 import {Directionality} from '@angular/material/core';
 
@@ -120,7 +120,7 @@ describe('Chips', () => {
         fixture.detectChanges();
 
         expect(chipNativeElement.classList).toContain('mat-chip-selected');
-        expect(testComponent.chipSelect).toHaveBeenCalledWith({chip: chipInstance});
+        expect(testComponent.chipSelect).toHaveBeenCalledWith({chip: chipInstance, selected: true});
       });
 
       it('allows removal', () => {
@@ -143,26 +143,25 @@ describe('Chips', () => {
 
         it('should selects/deselects the currently focused chip on SPACE', () => {
           const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE) as KeyboardEvent;
-          const CHIP_EVENT: MdChipEvent = {chip: chipInstance};
+          const CHIP_SELECT_EVENT: MdChipSelectionEvent = {chip: chipInstance, selected: true};
+          const CHIP_DESELECT_EVENT: MdChipSelectionEvent = {chip: chipInstance, selected: false};
 
           spyOn(testComponent, 'chipSelect');
-          spyOn(testComponent, 'chipDeselect');
 
           // Use the spacebar to select the chip
           chipInstance._handleKeydown(SPACE_EVENT);
           fixture.detectChanges();
 
           expect(chipInstance.selected).toBeTruthy();
-          expect(testComponent.chipSelect).toHaveBeenCalledTimes(1);
-          expect(testComponent.chipSelect).toHaveBeenCalledWith(CHIP_EVENT);
+          expect(testComponent.chipSelect).toHaveBeenCalledWith(CHIP_SELECT_EVENT);
 
           // Use the spacebar to deselect the chip
           chipInstance._handleKeydown(SPACE_EVENT);
           fixture.detectChanges();
 
           expect(chipInstance.selected).toBeFalsy();
-          expect(testComponent.chipDeselect).toHaveBeenCalledTimes(1);
-          expect(testComponent.chipDeselect).toHaveBeenCalledWith(CHIP_EVENT);
+          expect(testComponent.chipSelect).toHaveBeenCalledWith(CHIP_DESELECT_EVENT);
+          expect(testComponent.chipSelect).toHaveBeenCalledTimes(2);
         });
 
         it('should have correct aria-selected', () => {
@@ -280,9 +279,9 @@ describe('Chips', () => {
       <div *ngIf="shouldShow">
         <md-chip [selectable]="selectable" [removable]="removable"
                  [color]="color" [selected]="selected" [disabled]="disabled"
-                 (focus)="chipFocus($event)" (destroy)="chipDestroy($event)"
-                 (select)="chipSelect($event)" (deselect)="chipDeselect($event)"
-                 (remove)="chipRemove($event)">
+                 (focus)="chipFocus($event)" (destroyed)="chipDestroy($event)"
+                 (selectionChange)="chipSelect($event)"
+                 (removed)="chipRemove($event)">
           {{name}}
         </md-chip>
       </div>
@@ -300,7 +299,6 @@ class SingleChip {
   chipFocus: (event?: MdChipEvent) => void = () => {};
   chipDestroy: (event?: MdChipEvent) => void = () => {};
   chipSelect: (event?: MdChipEvent) => void = () => {};
-  chipDeselect: (event?: MdChipEvent) => void = () => {};
   chipRemove: (event?: MdChipEvent) => void = () => {};
 }
 
