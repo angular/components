@@ -68,8 +68,7 @@ export class MdChipInput {
   @Output('mdChipInputTokenEnd')
   chipEnd = new EventEmitter<MdChipInputEvent>();
 
-  @Output('matChipInputTokenEnd')
-  get _matChipInputTokenEnd(): EventEmitter<MdChipInputEvent> { return this.chipEnd; }
+  @Output('matChipInputTokenEnd') _matChipInputTokenEnd = this.chipEnd;
 
   @Input('matChipInputFor')
   set matChipList(value: MdChipList) { this.chipList = value; }
