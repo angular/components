@@ -20,11 +20,5 @@ describe('NavBar', () => {
     fixture.detectChanges();
   });
 
-  it('should have a link to material github', () => {
-    const githublink = 'https://github.com/angular/material2';
-    const links = fixture
-      .nativeElement.querySelectorAll('.docs-navbar .mat-button');
-    const link  = links[links.length - 1];
-    expect(link.getAttribute('href')).toEqual(githublink);
-  });
+  // Note: Add tests is logic is added to navbar class.
 });

@@ -32,7 +32,10 @@ app-component-viewer {
     top: 35px;
 
     @media (max-width: $small-breakpoint-width) {
-      display: none;
+      display: flex;
+      order: -1;
+      position: inherit;
+      width: auto;
     }
   }
 }

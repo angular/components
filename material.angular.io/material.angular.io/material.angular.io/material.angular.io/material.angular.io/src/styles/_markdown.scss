@@ -41,8 +41,9 @@
 
 .docs-markdown-pre {
   border-radius: 5px;
-  margin: 16px auto;
   display: block;
+  margin: 16px auto;
+  overflow-x: auto;
   padding: 20px;
 
   .docs-markdown-code {
