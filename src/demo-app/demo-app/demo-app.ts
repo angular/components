@@ -1,5 +1,5 @@
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {Component, ElementRef, Renderer2, ViewEncapsulation,} from '@angular/core';
+import {Component, ElementRef, Renderer2, ViewEncapsulation} from '@angular/core';
 
 /**
  * The entry app for demo site. Routes under `accessibility` will use AccessibilityDemo component,
