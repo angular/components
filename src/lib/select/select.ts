@@ -402,13 +402,31 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   }
 
   /** Event emitted when the select has been opened. */
-  @Output() onOpen: EventEmitter<void> = new EventEmitter<void>();
+  @Output() opened: EventEmitter<void> = new EventEmitter<void>();
+
+  /**
+   * Event emitted when the select has been opened.
+   * @deprecated Use `opened` instead.
+   */
+  @Output() onOpen: EventEmitter<void> = this.opened;
 
   /** Event emitted when the select has been closed. */
-  @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
+  @Output() closed: EventEmitter<void> = new EventEmitter<void>();
+
+  /**
+   * Event emitted when the select has been closed.
+   * @deprecated Use `closed` instead.
+   */
+  @Output() onClose: EventEmitter<void> = this.closed;
 
   /** Event emitted when the selected value has been changed by the user. */
-  @Output() change: EventEmitter<MdSelectChange> = new EventEmitter<MdSelectChange>();
+  @Output() selectionChange: EventEmitter<MdSelectChange> = new EventEmitter<MdSelectChange>();
+
+  /**
+   * Event emitted when the selected value has been changed by the user.
+   * @deprecated Use `selectionChange` instead.
+   */
+  @Output() change: EventEmitter<MdSelectChange> = this.selectionChange;
 
   /**
    * Event that emits whenever the raw value of the select changes. This is here primarily
@@ -617,9 +635,9 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   _onPanelDone(): void {
     if (this.panelOpen) {
       this._focusCorrectOption();
-      this.onOpen.emit();
+      this.opened.emit();
     } else {
-      this.onClose.emit();
+      this.closed.emit();
       this._panelDoneAnimating = false;
       this.overlayDir.offsetX = 0;
       this._changeDetectorRef.markForCheck();
@@ -852,7 +870,7 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
 
     this._value = valueToEmit;
     this._onChange(valueToEmit);
-    this.change.emit(new MdSelectChange(this, valueToEmit));
+    this.selectionChange.emit(new MdSelectChange(this, valueToEmit));
     this.valueChange.emit(valueToEmit);
   }
 
