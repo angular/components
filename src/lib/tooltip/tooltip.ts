@@ -270,7 +270,7 @@ export class MdTooltip implements OnDestroy {
 
   /** Handles the keydown events on the host element. */
   _handleKeydown(e: KeyboardEvent) {
-    if (this._tooltipInstance!.isVisible() && e.keyCode === ESCAPE) {
+    if (e.keyCode === ESCAPE && this._tooltipInstance && this._tooltipInstance.isVisible()) {
       e.stopPropagation();
       this.hide(0);
     }
