@@ -274,7 +274,8 @@ describe('MdDatepicker', () => {
         testComponent.date = '1/1/2017' as any;
 
         expect(() => fixture.detectChanges()).toThrowError(
-            /Datepicker: Value must be either a date object recognized by the DateAdapter or an ISO 8601 string\. Instead got: 1\/1\/2017/);
+            'Datepicker: Value must be either a date object recognized by the DateAdapter or an ' +
+            'ISO 8601 string. Instead got: 1/1/2017');
 
         testComponent.date = null;
       });
