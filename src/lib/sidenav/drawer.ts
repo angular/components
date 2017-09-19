@@ -145,10 +145,22 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
   private _currentTogglePromise: Promise<MdDrawerToggleResult> | null;
 
   /** Event emitted when the drawer is fully opened. */
-  @Output('open') onOpen = new EventEmitter<MdDrawerToggleResult | void>();
+  @Output() openChange = new EventEmitter<MdDrawerToggleResult | void>();
+
+  /**
+   * Event emitted when the drawer is fully opened.
+   * @deprecated Use `openChange` instead.
+   */
+  @Output('open') onOpen = this.openChange;
 
   /** Event emitted when the drawer is fully closed. */
-  @Output('close') onClose = new EventEmitter<MdDrawerToggleResult | void>();
+  @Output() closeChange = new EventEmitter<MdDrawerToggleResult | void>();
+
+  /**
+   * Event emitted when the drawer is fully closed.
+   * @deprecated Use `closeChange` instead.
+   */
+  @Output('close') onClose = this.closeChange;
 
   /** Event emitted when the drawer's position changes. */
   @Output('positionChanged') onPositionChanged = new EventEmitter<void>();
@@ -164,7 +176,7 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
   constructor(private _elementRef: ElementRef,
               private _focusTrapFactory: FocusTrapFactory,
               @Optional() @Inject(DOCUMENT) private _doc: any) {
-    this.onOpen.subscribe(() => {
+    this.openChange.subscribe(() => {
       if (this._doc) {
         this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
       }
@@ -174,7 +186,7 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
       }
     });
 
-    this.onClose.subscribe(() => this._restoreFocus());
+    this.closeChange.subscribe(() => this._restoreFocus());
   }
 
   /**
@@ -242,7 +254,7 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
       }
 
       this._currentTogglePromise = new Promise(resolve => {
-        first.call(isOpen ? this.onOpen : this.onClose).subscribe(resolve);
+        first.call(isOpen ? this.openChange : this.closeChange).subscribe(resolve);
       });
 
       if (this._focusTrap) {
@@ -275,9 +287,9 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
     const {fromState, toState} = event;
 
     if (toState === 'open' && fromState === 'void') {
-      this.onOpen.emit(new MdDrawerToggleResult('open', true));
+      this.openChange.emit(new MdDrawerToggleResult('open', true));
     } else if (toState === 'void' && fromState === 'open') {
-      this.onClose.emit(new MdDrawerToggleResult('close', true));
+      this.closeChange.emit(new MdDrawerToggleResult('close', true));
     }
 
     // Note: as of Angular 4.3, the animations module seems to fire the `start` callback before
@@ -355,7 +367,7 @@ export class MdDrawerContainer implements AfterContentInit, OnDestroy {
     }
   }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     startWith.call(this._drawers.changes, null).subscribe(() => {
       this._validateDrawers();
       this._drawers.forEach((drawer: MdDrawer) => {
@@ -365,7 +377,7 @@ export class MdDrawerContainer implements AfterContentInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._dirChangeSubscription.unsubscribe();
   }
 
@@ -394,8 +406,8 @@ export class MdDrawerContainer implements AfterContentInit, OnDestroy {
     });
 
     if (drawer.mode !== 'side') {
-      takeUntil.call(merge(drawer.onOpen, drawer.onClose), this._drawers.changes).subscribe(() =>
-          this._setContainerClass(drawer.opened));
+      takeUntil.call(merge(drawer.openChange, drawer.closeChange),
+          this._drawers.changes).subscribe(() => this._setContainerClass(drawer.opened));
     }
   }
 
@@ -426,7 +438,7 @@ export class MdDrawerContainer implements AfterContentInit, OnDestroy {
   }
 
   /** Validate the state of the drawer children components. */
-  private _validateDrawers() {
+  private _validateDrawers(): void {
     this._start = this._end = null;
 
     // Ensure that we have at most one start and one end drawer.
@@ -456,12 +468,12 @@ export class MdDrawerContainer implements AfterContentInit, OnDestroy {
     }
   }
 
-  _onBackdropClicked() {
+  _onBackdropClicked(): void {
     this.backdropClick.emit();
     this._closeModalDrawer();
   }
 
-  _closeModalDrawer() {
+  _closeModalDrawer(): void {
     // Close all open drawers where closing is not disabled and the mode is not `side`.
     [this._start, this._end]
       .filter(drawer => drawer && !drawer.disableClose && drawer.mode !== 'side')
@@ -491,7 +503,7 @@ export class MdDrawerContainer implements AfterContentInit, OnDestroy {
    * Recalculates and updates the inline styles. Note that this
    * should be used sparingly, because it causes a reflow.
    */
-  private _updateStyles() {
+  private _updateStyles(): void {
     const marginLeft = this._left ? this._getDrawerEffectiveWidth(this._left, 'side') : 0;
     const marginRight = this._right ? this._getDrawerEffectiveWidth(this._right, 'side') : 0;
     const leftWidth = this._left ? this._getDrawerEffectiveWidth(this._left, 'push') : 0;

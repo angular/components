@@ -385,8 +385,8 @@ class DrawerContainerTwoDrawerTestApp {
   template: `
     <md-drawer-container (backdropClick)="backdropClicked()">
       <md-drawer #drawer position="start"
-                 (open)="open()"
-                 (close)="close()">
+                 (openChange)="open()"
+                 (closeChange)="close()">
         <button #drawerButton>Content.</button>
       </md-drawer>
       <button (click)="drawer.open()" class="open" #openButton></button>
