@@ -1,3 +1,5 @@
+@import './constants';
+
 .docs-api table,
 .docs-markdown-table {
   border-collapse: collapse;
@@ -20,4 +22,22 @@
 .docs-markdown-td {
   font-weight: 400;
   padding: 8px 16px;
+}
+
+
+@media (max-width: $small-breakpoint-width) {
+  .docs-api table,
+  .docs-markdown-table {
+    margin: 0 0 32px 0;
+  }
+
+  .docs-api th,
+  .docs-markdown-th {
+    padding: 6px 16px;
+  }
+
+  .docs-api td,
+  .docs-markdown-td {
+    padding: 4px 8px;
+  }
 }

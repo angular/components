@@ -1,0 +1,8 @@
+@import '../../../styles/constants';
+
+component-overview {
+  @media (max-width: $small-breakpoint-width) {
+    display: flex;
+    flex-direction: column;
+  }
+}

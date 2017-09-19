@@ -25,6 +25,11 @@
     display: none !important;
   }
 
+  // Prevent p tags from not breaking, causing x axis overflows.
+  .docs-api > p {
+    word-break: break-word;
+  }
+
   .docs-api-class-name,
   .docs-api-module-import,
   .docs-api-class-selector-name,

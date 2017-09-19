@@ -12,6 +12,11 @@ material-docs-app > app-component-sidenav {
   flex: 1 1 auto;
 }
 
+// Target last-child as it will be the output of the router-outlet within the app's container.
+material-docs-app > :last-child {
+  overflow-y: auto;
+}
+
 app-navbar {
   position: relative;
   z-index: 10;

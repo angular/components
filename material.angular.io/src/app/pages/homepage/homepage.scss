@@ -1,14 +1,14 @@
 // The margin between two sections
 $margin-promotion-sections: 60px;
+$margin-promotion-sections-small: 15px;
 
 .docs-header-background {
-  height: 300px;
-  margin-bottom: 40px;
+  overflow: hidden;
 }
 
 .docs-header-section {
   text-align: center;
-  padding-top: 60px;
+  padding-top: $margin-promotion-sections;
 }
 
 .docs-header-headline {
@@ -16,7 +16,7 @@ $margin-promotion-sections: 60px;
     font-size: 56px;
     font-weight: 300;
     line-height: 56px;
-    margin: 15px 0 15px 0;
+    margin: 15px 5px;
   }
 
   h2 {
@@ -84,4 +84,23 @@ $margin-promotion-sections: 60px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+
+/**
+  * Rules for when the device is detected to be a small screen.
+  */
+@media (max-width: 720px) {
+  .docs-header-section {
+    padding-top: $margin-promotion-sections-small;
+  }
+
+  .docs-header-start,
+  .docs-homepage-bottom-start {
+    margin: $margin-promotion-sections-small 0;
+  }
+
+  .docs-homepage-row {
+    margin: $margin-promotion-sections-small 0;
+  }
 }

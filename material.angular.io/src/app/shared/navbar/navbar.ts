@@ -1,5 +1,6 @@
 import {Component, NgModule} from '@angular/core';
-import {MdButtonModule} from '@angular/material';
+import {DomSanitizer} from '@angular/platform-browser';
+import {MdButtonModule, MdMenuModule} from '@angular/material';
 import {RouterModule} from '@angular/router';
 import {ThemePickerModule} from '../theme-picker/theme-picker';
 
@@ -11,7 +12,7 @@ import {ThemePickerModule} from '../theme-picker/theme-picker';
 export class NavBar {}
 
 @NgModule({
-  imports: [MdButtonModule, RouterModule, ThemePickerModule],
+  imports: [MdButtonModule, MdMenuModule, RouterModule, ThemePickerModule],
   exports: [NavBar],
   declarations: [NavBar],
 })
