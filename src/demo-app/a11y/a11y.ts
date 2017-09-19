@@ -1,4 +1,5 @@
 import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
 
 @Component({
   moduleId: module.id,
@@ -15,7 +16,10 @@ export class AccessibilityHome {}
   encapsulation: ViewEncapsulation.None,
 })
 export class AccessibilityDemo {
+  currentComponent: string = '';
+
   @ViewChild('maincontent') mainContent: ElementRef;
+  @ViewChild('header') sectionHeader: ElementRef;
 
   navItems = [
     {name: 'Home', route: '.'},
@@ -43,8 +47,17 @@ export class AccessibilityDemo {
     {name: 'Tooltip', route: 'tooltip'},
   ];
 
+  constructor(private router: Router) {
+    router.events.subscribe(event => {
+      let nav = this.navItems.find(navItem => {
+        let fragments = (event as NavigationEnd).url.split('/');
+        return fragments[fragments.length - 1] === navItem.route;
+      });
+      this.currentComponent = nav ? nav.name : '';
+    });
+  }
+
   skipNavigation() {
-    this.mainContent.nativeElement.scrollIntoView();
-    this.mainContent.nativeElement.focus();
+    (this.currentComponent ? this.sectionHeader : this.mainContent).nativeElement.focus();
   }
 }
