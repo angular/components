@@ -16,7 +16,7 @@ import {MdSnackBarContainer} from './snack-bar-container';
  */
 export class MdSnackBarRef<T> {
   /** The instance of the component making up the content of the snack bar. */
-  instance: T;
+  componentInstance: T;
 
   /**
    * The instance of the component making up the content of the snack bar.
