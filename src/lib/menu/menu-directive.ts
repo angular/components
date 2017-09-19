@@ -138,14 +138,14 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
     }
   }
 
+  /** Event emitted when the menu is closed. */
+  @Output() closed = new EventEmitter<void | 'click' | 'keydown'>();
+
   /**
    * Event emitted when the menu is closed.
    * @deprecated Switch to `closed` instead
    */
-  @Output() close = new EventEmitter<void | 'click' | 'keydown'>();
-
-  /** Event emitted when the menu is closed. */
-  @Output() closed = new EventEmitter<void | 'click' | 'keydown'>();
+  @Output() close = this.closed;
 
   constructor(
     private _elementRef: ElementRef,

@@ -128,23 +128,23 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   /** References the menu instance that the trigger is associated with. */
   @Input('mdMenuTriggerFor') menu: MdMenuPanel;
 
+  /** Event emitted when the associated menu is opened. */
+  @Output() menuOpened = new EventEmitter<void>();
+
   /**
    * Event emitted when the associated menu is opened.
    * @deprecated Switch to `menuOpened` instead
    */
-  @Output() onMenuOpen = new EventEmitter<void>();
+  @Output() onMenuOpen = this.menuOpened;
 
-  /** Event emitted when the associated menu is opened. */
-  @Output() menuOpened = new EventEmitter<void>();
+  /** Event emitted when the associated menu is closed. */
+  @Output() menuClosed = new EventEmitter<void>();
 
   /**
    * Event emitted when the associated menu is closed.
    * @deprecated Switch to `menuClosed` instead
    */
-  @Output() onMenuClose = new EventEmitter<void>();
-
-  /** Event emitted when the associated menu is closed. */
-  @Output() menuClosed = new EventEmitter<void>();
+  @Output() onMenuClose = this.menuClosed;
 
   constructor(private _overlay: Overlay,
               private _element: ElementRef,
@@ -305,14 +305,7 @@ export class MdMenuTrigger implements AfterViewInit, OnDestroy {
   // set state rather than toggle to support triggers sharing a menu
   private _setIsMenuOpen(isOpen: boolean): void {
     this._menuOpen = isOpen;
-
-    if (this._menuOpen) {
-      this.onMenuOpen.emit();
-      this.menuOpened.emit();
-    } else {
-      this.onMenuClose.emit();
-      this.menuClosed.emit();
-    }
+    this._menuOpen ? this.menuOpened.emit() : this.menuClosed.emit();
 
     if (this.triggersSubmenu()) {
       this._menuItemInstance._highlighted = isOpen;
