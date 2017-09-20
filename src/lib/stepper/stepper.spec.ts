@@ -7,7 +7,7 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {MdStepperNext, MdStepperPrevious} from './stepper-button';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
-import {MdStepper, MdHorizontalStepper, MdVerticalStepper} from './stepper';
+import {MdStepper, MdHorizontalStepper, MdVerticalStepper, MdStep} from './stepper';
 import {Directionality} from '@angular/material/core';
 
 const VALID_REGEX = /valid/;
@@ -306,6 +306,7 @@ function assertSelectionChangeOnHeaderClick(fixture: ComponentFixture<any>,
   let stepperComponent = fixture.debugElement.query(By.directive(MdStepper)).componentInstance;
 
   expect(stepperComponent.selectedIndex).toBe(0);
+  expect(stepperComponent.selected instanceof MdStep).toBe(true);
 
   // select the second step
   let stepHeaderEl = stepHeaders[1].nativeElement;
@@ -313,6 +314,7 @@ function assertSelectionChangeOnHeaderClick(fixture: ComponentFixture<any>,
   fixture.detectChanges();
 
   expect(stepperComponent.selectedIndex).toBe(1);
+  expect(stepperComponent.selected instanceof MdStep).toBe(true);
 
   // select the third step
   stepHeaderEl = stepHeaders[2].nativeElement;
@@ -320,6 +322,7 @@ function assertSelectionChangeOnHeaderClick(fixture: ComponentFixture<any>,
   fixture.detectChanges();
 
   expect(stepperComponent.selectedIndex).toBe(2);
+  expect(stepperComponent.selected instanceof MdStep).toBe(true);
 }
 
 /** Asserts that 'aria-expanded' attribute is correct for expanded content of step. */
