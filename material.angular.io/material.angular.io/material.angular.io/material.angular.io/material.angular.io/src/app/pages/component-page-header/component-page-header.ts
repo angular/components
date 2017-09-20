@@ -1,6 +1,7 @@
 import {Component, EventEmitter, NgModule, Output} from '@angular/core';
 import 'rxjs/add/operator/first';
 import {ComponentPageTitle} from '../page-title/page-title';
+import {NavigationFocusModule} from '../../shared/navigation-focus/navigation-focus';
 import {MdButtonModule, MdIconModule} from '@angular/material';
 
 @Component({
@@ -9,7 +10,7 @@ import {MdButtonModule, MdIconModule} from '@angular/material';
   styleUrls: ['./component-page-header.scss']
 })
 export class ComponentPageHeader {
-  constructor(public _componentPageTitle: ComponentPageTitle) { }
+  constructor(public _componentPageTitle: ComponentPageTitle) {}
 
   @Output() toggleSidenav = new EventEmitter<void>();
 
@@ -19,7 +20,7 @@ export class ComponentPageHeader {
 }
 
 @NgModule({
-  imports: [MdButtonModule, MdIconModule],
+  imports: [MdButtonModule, MdIconModule, NavigationFocusModule],
   exports: [ComponentPageHeader],
   declarations: [ComponentPageHeader],
   providers: [ComponentPageTitle],

@@ -10,9 +10,7 @@
     "outDir": "../dist/out-tsc",
     "sourceMap": true,
     "target": "es5",
-    "typeRoots": [
-      "../node_modules/@types"
-    ]
+    "types": ["q", "selenium-driver", "jasmine"]
   },
   "exclude": [
     "assets"

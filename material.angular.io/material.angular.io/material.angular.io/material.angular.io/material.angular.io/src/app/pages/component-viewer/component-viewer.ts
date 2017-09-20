@@ -1,4 +1,4 @@
-import {Component, NgModule, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, NgModule, ElementRef, ViewEncapsulation, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router, RouterModule} from '@angular/router';
 import {DocumentationItems, DocItem} from '../../shared/documentation-items/documentation-items';
 import {ComponentPageTitle} from '../page-title/page-title';
@@ -38,8 +38,15 @@ export class ComponentViewer {
   styleUrls: ['./component-overview.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ComponentOverview {
+export class ComponentOverview implements OnInit {
+  @ViewChild('intialFocusTarget') focusTarget: ElementRef;
+
   constructor(public componentViewer: ComponentViewer) {}
+
+  ngOnInit() {
+    // 100ms timeout is used to allow the page to settle before moving focus for screen readers.
+    setTimeout(() => this.focusTarget.nativeElement.focus(), 100);
+  }
 }
 
 @Component({
@@ -62,7 +69,7 @@ export class ComponentExamples extends ComponentOverview {}
     RouterModule,
     DocViewerModule,
     CommonModule,
-    TableOfContentsModule
+    TableOfContentsModule,
   ],
   exports: [ComponentViewer],
   declarations: [ComponentViewer, ComponentOverview, ComponentApi, ComponentExamples],
