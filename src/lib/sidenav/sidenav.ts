@@ -28,6 +28,7 @@ import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
 export class MdSidenavContent extends MdDrawerContent {
   constructor(

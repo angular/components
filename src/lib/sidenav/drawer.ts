@@ -66,6 +66,7 @@ export class MdDrawerToggleResult {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
 export class MdDrawerContent implements AfterContentInit {
   /**
