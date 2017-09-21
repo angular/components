@@ -40,6 +40,7 @@ import {
 } from '@angular/material/core';
 import {first} from 'rxjs/operator/first';
 import {Subscription} from 'rxjs/Subscription';
+import {coerceDateProperty} from './coerce-date-property';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MdDatepickerIntl} from './datepicker-intl';
 
@@ -57,25 +58,39 @@ import {MdDatepickerIntl} from './datepicker-intl';
     'class': 'mat-calendar',
   },
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
 export class MdCalendar<D> implements AfterContentInit, OnDestroy {
   private _intlChanges: Subscription;
 
   /** A date representing the period (month or year) to start the calendar in. */
-  @Input() startAt: D;
+  @Input()
+  get startAt(): D | null { return this._startAt; }
+  set startAt(value: D | null) { this._startAt = coerceDateProperty(this._dateAdapter, value); }
+  private _startAt: D | null;
 
   /** Whether the calendar should be started in month or year view. */
   @Input() startView: 'month' | 'year' = 'month';
 
   /** The currently selected date. */
-  @Input() selected: D | null;
+  @Input()
+  get selected(): D | null { return this._selected; }
+  set selected(value: D | null) { this._selected = coerceDateProperty(this._dateAdapter, value); }
+  private _selected: D | null;
 
   /** The minimum selectable date. */
-  @Input() minDate: D | null;
+  @Input()
+  get minDate(): D | null { return this._minDate; }
+  set minDate(value: D | null) { this._minDate = coerceDateProperty(this._dateAdapter, value); }
+  private _minDate: D | null;
 
   /** The maximum selectable date. */
-  @Input() maxDate: D | null;
+  @Input()
+  get maxDate(): D | null { return this._maxDate; }
+  set maxDate(value: D | null) { this._maxDate = coerceDateProperty(this._dateAdapter, value); }
+  private _maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
@@ -132,7 +147,6 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
   constructor(private _elementRef: ElementRef,
               private _intl: MdDatepickerIntl,
               private _ngZone: NgZone,
-              @Optional() @Inject(MATERIAL_COMPATIBILITY_MODE) public _isCompatibilityMode: boolean,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats,
               changeDetectorRef: ChangeDetectorRef) {
