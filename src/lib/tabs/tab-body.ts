@@ -11,11 +11,12 @@ import {
   Component,
   Input,
   Output,
+  DoCheck,
   EventEmitter,
+  OnDestroy,
   OnInit,
   ElementRef,
   Optional,
-  AfterViewChecked,
   ViewEncapsulation,
   ChangeDetectionStrategy,
 } from '@angular/core';
@@ -65,7 +66,7 @@ export type MdTabBodyOriginState = 'left' | 'right';
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'mat-tab-body',
+    'class': 'mat-tab-body'
   },
   animations: [
     trigger('translateTab', [
@@ -88,7 +89,7 @@ export type MdTabBodyOriginState = 'left' | 'right';
     ])
   ]
 })
-export class MdTabBody implements OnInit, AfterViewChecked {
+export class MdTabBody implements OnInit, DoCheck, OnDestroy {
   /** The portal host inside of this container into which the tab body content will be loaded. */
   @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
@@ -128,6 +129,9 @@ export class MdTabBody implements OnInit, AfterViewChecked {
     }
   }
 
+  // Whether the tab body is currently visible.
+  _visible: boolean = false;
+
   constructor(private _elementRef: ElementRef,
               @Optional() private _dir: Directionality) { }
 
@@ -145,22 +149,35 @@ export class MdTabBody implements OnInit, AfterViewChecked {
    * After the view has been set, check if the tab content is set to the center and attach the
    * content if it is not already attached.
    */
-  ngAfterViewChecked() {
-    if (this._isCenterPosition(this._position) && !this._portalHost.hasAttached()) {
-      this._portalHost.attach(this._content);
+  ngDoCheck(): void {
+    if (this._isCenterPosition(this._position)) {
+      // It is important to attach the view and set its visibilty during `DoCheck`; if an
+      // embedded view is created/modified during change detection, it will either cause a
+      // changed-after-checked error or never be checked at all.
+      if (!this._portalHost.hasAttached()) {
+        this._portalHost.attach(this._content);
+      }
+      this._visible = true;
     }
   }
 
-  _onTranslateTabStarted(e: AnimationEvent) {
+  /**
+   * When the tab body is destroyed, the embedded view is to be detached.
+   */
+  ngOnDestroy(): void {
+    this._portalHost.detach();
+  }
+
+  _onTranslateTabStarted(e: AnimationEvent): void {
     if (this._isCenterPosition(e.toState)) {
       this.onCentering.emit(this._elementRef.nativeElement.clientHeight);
     }
   }
 
-  _onTranslateTabComplete(e: AnimationEvent) {
-    // If the end state is that the tab is not centered, then detach the content.
+  _onTranslateTabComplete(e: AnimationEvent): void {
+    // If the end state is that the tab is not centered, then hide the content.
     if (!this._isCenterPosition(e.toState) && !this._isCenterPosition(this._position)) {
-      this._portalHost.detach();
+      this._visible = false;
     }
 
     // If the transition to the center is complete, emit an event.

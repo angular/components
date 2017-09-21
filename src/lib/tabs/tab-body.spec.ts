@@ -153,18 +153,48 @@ describe('MdTabBody', () => {
       fixture = TestBed.createComponent(SimpleTabBodyApp);
     }));
 
-    it('should attach the content when centered and detach when not', fakeAsync(() => {
+    it('should attach the tab content and set as visbile when tab is centered', fakeAsync(() => {
       fixture.componentInstance.position = 1;
       fixture.detectChanges();
       expect(fixture.componentInstance.mdTabBody._portalHost.hasAttached()).toBe(false);
+      expect(fixture.componentInstance.mdTabBody._visible).toBe(false);
+
+
+      fixture.componentInstance.position = 0;
+      fixture.detectChanges();
+      expect(fixture.componentInstance.mdTabBody._portalHost.hasAttached()).toBe(true);
+      expect(fixture.componentInstance.mdTabBody._visible).toBe(true);
+
+      fixture.componentInstance.position = 1;
+      fixture.detectChanges();
+      flushMicrotasks(); // Finish animation
+      expect(fixture.componentInstance.mdTabBody._portalHost.hasAttached()).toBe(true);
+      expect(fixture.componentInstance.mdTabBody._visible).toBe(false);
+    }));
+  });
+
+  describe('on destroy', () => {
+    let fixture: ComponentFixture<SimpleTabBodyApp>;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(SimpleTabBodyApp);
+    }));
+
+    it('should detach on destroy after attaching when centered', fakeAsync(() => {
+      fixture.componentInstance.position = 1;
+      fixture.detectChanges();
+      expect(fixture.componentInstance.mdTabBody._portalHost.hasAttached()).toBe(false);
+
 
       fixture.componentInstance.position = 0;
       fixture.detectChanges();
       expect(fixture.componentInstance.mdTabBody._portalHost.hasAttached()).toBe(true);
 
+
       fixture.componentInstance.position = 1;
       fixture.detectChanges();
-      flushMicrotasks(); // Finish animation and let it detach in animation done handler
+      fixture.componentInstance.mdTabBody.ngOnDestroy();
+      flushMicrotasks(); // Finish animation
       expect(fixture.componentInstance.mdTabBody._portalHost.hasAttached()).toBe(false);
     }));
   });
