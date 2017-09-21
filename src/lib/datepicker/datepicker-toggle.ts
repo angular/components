@@ -22,6 +22,7 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Subscription} from 'rxjs/Subscription';
 import {merge} from 'rxjs/observable/merge';
 import {of as observableOf} from 'rxjs/observable/of';
+import {MATERIAL_COMPATIBILITY_MODE} from '../core';
 
 
 @Component({
@@ -31,6 +32,9 @@ import {of as observableOf} from 'rxjs/observable/of';
   host: {
     'class': 'mat-datepicker-toggle',
   },
+  providers: [
+    {provide: MATERIAL_COMPATIBILITY_MODE, useValue: false}
+  ],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
