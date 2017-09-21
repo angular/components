@@ -1517,25 +1517,6 @@ describe('MdSelect', () => {
         expect(Math.floor(firstOptionLeft)).toEqual(Math.floor(triggerLeft - 16),
             `Expected trigger to align with the selected option on the x-axis in LTR.`);
       }));
-
-      it('should align the trigger and the selected option on the x-axis in rtl', fakeAsync(() => {
-        dir.value = 'rtl';
-        fixture.detectChanges();
-
-        trigger.click();
-        tick(400);
-        fixture.detectChanges();
-
-        const triggerRight = trigger.getBoundingClientRect().right;
-        const firstOptionRight =
-            document.querySelector('.cdk-overlay-pane md-option')!.getBoundingClientRect().right;
-
-        // Each option is 32px wider than the trigger, so it must be adjusted 16px
-        // to ensure the text overlaps correctly.
-        expect(Math.floor(firstOptionRight))
-            .toEqual(Math.floor(triggerRight + 16),
-                `Expected trigger to align with the selected option on the x-axis in RTL.`);
-      }));
     });
 
     describe('x-axis positioning in multi select mode', () => {
@@ -1565,22 +1546,6 @@ describe('MdSelect', () => {
               .toEqual(Math.floor(triggerLeft - 48),
                   `Expected trigger label to align along x-axis, accounting for the checkbox.`);
         });
-      }));
-
-      it('should adjust for the checkbox in rtl', fakeAsync(() => {
-        dir.value = 'rtl';
-        trigger.click();
-        tick(400);
-        multiFixture.detectChanges();
-
-        const triggerRight = trigger.getBoundingClientRect().right;
-        const firstOptionRight =
-            document.querySelector('.cdk-overlay-pane md-option')!.getBoundingClientRect().right;
-
-        // 48px accounts for the checkbox size, margin and the panel's padding.
-        expect(Math.floor(firstOptionRight))
-            .toEqual(Math.floor(triggerRight + 48),
-                `Expected trigger label to align along x-axis, accounting for the checkbox.`);
       }));
     });
 
@@ -1613,25 +1578,6 @@ describe('MdSelect', () => {
         expect(Math.floor(selectedOptionLeft)).toEqual(Math.floor(triggerLeft - 32),
             `Expected trigger label to align along x-axis, accounting for the padding in ltr.`);
       }));
-
-      it('should adjust for the group padding in rtl', fakeAsync(() => {
-        dir.value = 'rtl';
-        groupFixture.componentInstance.control.setValue('oddish-1');
-        groupFixture.detectChanges();
-
-        trigger.click();
-        groupFixture.detectChanges();
-
-        const group = document.querySelector('.cdk-overlay-pane md-optgroup')!;
-        const triggerRight = trigger.getBoundingClientRect().right;
-        const selectedOptionRight = group.querySelector('md-option.mat-selected')!
-            .getBoundingClientRect().right;
-
-        // 32px is the 16px default padding plus 16px of padding when an option is in a group.
-        expect(Math.floor(selectedOptionRight)).toEqual(Math.floor(triggerRight + 32),
-            `Expected trigger label to align along x-axis, accounting for the padding in rtl.`);
-      }));
-
       it('should not adjust if all options are within a group, except the selected one',
         fakeAsync(() => {
           groupFixture.componentInstance.control.setValue('mime-11');

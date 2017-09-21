@@ -5,7 +5,8 @@
 @import '../core/a11y/a11y';
 
 $mat-select-trigger-height: 30px !default;
-$mat-select-trigger-min-width: 112px !default;
+$mat-select-trigger-min-width: 60px !default;
+$mat-select-trigger-max-width: 300px !default;
 $mat-select-arrow-size: 5px !default;
 $mat-select-arrow-margin: 4px !default;
 $mat-select-panel-max-height: 256px !default;
@@ -21,6 +22,7 @@ $mat-select-trigger-underline-height: 1px !default;
   align-items: center;
   height: $mat-select-trigger-height;
   min-width: $mat-select-trigger-min-width;
+  max-width: $mat-select-trigger-max-width;
   cursor: pointer;
   position: relative;
   box-sizing: border-box;
@@ -49,11 +51,9 @@ $mat-select-trigger-underline-height: 1px !default;
 }
 
 .mat-select-placeholder {
+  display: inherit;
   position: relative;
-  padding: 0 2px;
   transform-origin: left top;
-  flex-grow: 1;
-
   // These values are duplicated from animation code in order to
   // allow placeholders to sometimes float without animating,
   // for example when the value is set programmatically.
@@ -81,7 +81,7 @@ $mat-select-trigger-underline-height: 1px !default;
 }
 
 .mat-select-value {
-  position: absolute;
+  position: relative;
   max-width: calc(100% - #{($mat-select-arrow-size + $mat-select-arrow-margin) * 2});
   flex-grow: 1;
 
@@ -93,10 +93,6 @@ $mat-select-trigger-underline-height: 1px !default;
   // In the meantime, we must adjust the position to fit the top, left, and bottom edge of the
   // containing trigger element. In doing so, we can use align-items: center to allow the text to
   // correctly position itself in the middle of the container.
-  top: 0;
-  left: 0;
-  bottom: 0;
-
   display: flex;
   align-items: center;
 
@@ -112,6 +108,7 @@ $mat-select-trigger-underline-height: 1px !default;
 }
 
 .mat-select-arrow {
+  right: 0;
   width: 0;
   height: 0;
   border-left: $mat-select-arrow-size solid transparent;
