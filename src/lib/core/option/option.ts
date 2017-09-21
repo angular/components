@@ -13,7 +13,6 @@ import {
   Input,
   Output,
   ViewEncapsulation,
-  Inject,
   Optional,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
