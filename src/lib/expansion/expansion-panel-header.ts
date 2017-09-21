@@ -6,31 +6,25 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {animate, state, style, transition, trigger} from '@angular/animations';
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
+import {filter} from '@angular/cdk/rxjs';
 import {
-  Component,
-  Directive,
-  Host,
-  ViewEncapsulation,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  Component,
+  Directive,
+  ElementRef,
+  Host,
+  Input,
   OnDestroy,
   Renderer2,
-  ElementRef,
-  Input,
+  ViewEncapsulation,
 } from '@angular/core';
-import {
-  trigger,
-  state,
-  style,
-  transition,
-  animate,
-} from '@angular/animations';
-import {SPACE, ENTER} from '@angular/material/core';
-import {MdExpansionPanel, EXPANSION_PANEL_ANIMATION_TIMING} from './expansion-panel';
-import {filter} from '@angular/material/core';
-import {FocusOriginMonitor} from '@angular/material/core';
 import {merge} from 'rxjs/observable/merge';
 import {Subscription} from 'rxjs/Subscription';
+import {EXPANSION_PANEL_ANIMATION_TIMING, MdExpansionPanel} from './expansion-panel';
 
 
 /**
@@ -46,6 +40,7 @@ import {Subscription} from 'rxjs/Subscription';
   styleUrls: ['./expansion-panel-header.css'],
   templateUrl: './expansion-panel-header.html',
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'mat-expansion-panel-header',
@@ -93,7 +88,7 @@ export class MdExpansionPanelHeader implements OnDestroy {
     renderer: Renderer2,
     @Host() public panel: MdExpansionPanel,
     private _element: ElementRef,
-    private _focusOriginMonitor: FocusOriginMonitor,
+    private _focusMonitor: FocusMonitor,
     private _changeDetectorRef: ChangeDetectorRef) {
 
     // Since the toggle state depends on an @Input on the panel, we
@@ -105,7 +100,7 @@ export class MdExpansionPanelHeader implements OnDestroy {
     )
     .subscribe(() => this._changeDetectorRef.markForCheck());
 
-    _focusOriginMonitor.monitor(_element.nativeElement, renderer, false);
+    _focusMonitor.monitor(_element.nativeElement, renderer, false);
   }
 
   /** Height of the header while the panel is expanded. */
@@ -157,7 +152,7 @@ export class MdExpansionPanelHeader implements OnDestroy {
 
   ngOnDestroy() {
     this._parentChangeSubscription.unsubscribe();
-    this._focusOriginMonitor.stopMonitoring(this._element.nativeElement);
+    this._focusMonitor.stopMonitoring(this._element.nativeElement);
   }
 }
 

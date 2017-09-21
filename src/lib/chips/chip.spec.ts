@@ -1,10 +1,11 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component, DebugElement}  from '@angular/core';
-import {By} from '@angular/platform-browser';
+import {Directionality} from '@angular/cdk/bidi';
+import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/keycodes';
 import {createKeyboardEvent} from '@angular/cdk/testing';
-import {MdChipList, MdChip, MdChipEvent, MdChipsModule} from './index';
-import {SPACE, DELETE, BACKSPACE} from '@angular/material/core';
-import {Directionality} from '@angular/material/core';
+import {Component, DebugElement} from '@angular/core';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+import {MdChip, MdChipEvent, MdChipList, MdChipSelectionChange, MdChipsModule} from './index';
+
 
 describe('Chips', () => {
   let fixture: ComponentFixture<any>;
@@ -113,14 +114,15 @@ describe('Chips', () => {
       });
 
       it('allows selection', () => {
-        spyOn(testComponent, 'chipSelect');
+        spyOn(testComponent, 'chipSelectionChange');
         expect(chipNativeElement.classList).not.toContain('mat-chip-selected');
 
         testComponent.selected = true;
         fixture.detectChanges();
 
         expect(chipNativeElement.classList).toContain('mat-chip-selected');
-        expect(testComponent.chipSelect).toHaveBeenCalledWith({chip: chipInstance});
+        expect(testComponent.chipSelectionChange)
+          .toHaveBeenCalledWith({source: chipInstance, isUserInput: false, selected: true});
       });
 
       it('allows removal', () => {
@@ -143,26 +145,35 @@ describe('Chips', () => {
 
         it('should selects/deselects the currently focused chip on SPACE', () => {
           const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE) as KeyboardEvent;
-          const CHIP_EVENT: MdChipEvent = {chip: chipInstance};
+          const CHIP_SELECTED_EVENT: MdChipSelectionChange = {
+            source: chipInstance,
+            isUserInput: true,
+            selected: true
+          };
 
-          spyOn(testComponent, 'chipSelect');
-          spyOn(testComponent, 'chipDeselect');
+          const CHIP_DESELECTED_EVENT: MdChipSelectionChange = {
+            source: chipInstance,
+            isUserInput: true,
+            selected: false
+          };
+
+          spyOn(testComponent, 'chipSelectionChange');
 
           // Use the spacebar to select the chip
           chipInstance._handleKeydown(SPACE_EVENT);
           fixture.detectChanges();
 
           expect(chipInstance.selected).toBeTruthy();
-          expect(testComponent.chipSelect).toHaveBeenCalledTimes(1);
-          expect(testComponent.chipSelect).toHaveBeenCalledWith(CHIP_EVENT);
+          expect(testComponent.chipSelectionChange).toHaveBeenCalledTimes(1);
+          expect(testComponent.chipSelectionChange).toHaveBeenCalledWith(CHIP_SELECTED_EVENT);
 
           // Use the spacebar to deselect the chip
           chipInstance._handleKeydown(SPACE_EVENT);
           fixture.detectChanges();
 
           expect(chipInstance.selected).toBeFalsy();
-          expect(testComponent.chipDeselect).toHaveBeenCalledTimes(1);
-          expect(testComponent.chipDeselect).toHaveBeenCalledWith(CHIP_EVENT);
+          expect(testComponent.chipSelectionChange).toHaveBeenCalledTimes(2);
+          expect(testComponent.chipSelectionChange).toHaveBeenCalledWith(CHIP_DESELECTED_EVENT);
         });
 
         it('should have correct aria-selected', () => {
@@ -184,14 +195,14 @@ describe('Chips', () => {
         it('SPACE ignores selection', () => {
           const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE) as KeyboardEvent;
 
-          spyOn(testComponent, 'chipSelect');
+          spyOn(testComponent, 'chipSelectionChange');
 
           // Use the spacebar to attempt to select the chip
           chipInstance._handleKeydown(SPACE_EVENT);
           fixture.detectChanges();
 
           expect(chipInstance.selected).toBeFalsy();
-          expect(testComponent.chipSelect).not.toHaveBeenCalled();
+          expect(testComponent.chipSelectionChange).not.toHaveBeenCalled();
         });
 
         it('should not have the aria-selected attribute', () => {
@@ -280,9 +291,9 @@ describe('Chips', () => {
       <div *ngIf="shouldShow">
         <md-chip [selectable]="selectable" [removable]="removable"
                  [color]="color" [selected]="selected" [disabled]="disabled"
-                 (focus)="chipFocus($event)" (destroy)="chipDestroy($event)"
-                 (select)="chipSelect($event)" (deselect)="chipDeselect($event)"
-                 (remove)="chipRemove($event)">
+                 (focus)="chipFocus($event)" (destroyed)="chipDestroy($event)"
+                 (selectionChange)="chipSelectionChange($event)"
+                 (removed)="chipRemove($event)">
           {{name}}
         </md-chip>
       </div>
@@ -299,8 +310,7 @@ class SingleChip {
 
   chipFocus: (event?: MdChipEvent) => void = () => {};
   chipDestroy: (event?: MdChipEvent) => void = () => {};
-  chipSelect: (event?: MdChipEvent) => void = () => {};
-  chipDeselect: (event?: MdChipEvent) => void = () => {};
+  chipSelectionChange: (event?: MdChipSelectionChange) => void = () => {};
   chipRemove: (event?: MdChipEvent) => void = () => {};
 }
 

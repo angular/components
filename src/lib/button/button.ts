@@ -24,11 +24,12 @@ import {
   CanColor,
   CanDisable,
   CanDisableRipple,
-  FocusOriginMonitor,
+  MATERIAL_COMPATIBILITY_MODE,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple
 } from '@angular/material/core';
+import {FocusMonitor} from '@angular/cdk/a11y';
 
 
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
@@ -128,7 +129,9 @@ export const _MdButtonMixinBase = mixinColor(mixinDisabled(mixinDisableRipple(Md
   styleUrls: ['button.css'],
   inputs: ['disabled', 'disableRipple', 'color'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
 export class MdButton extends _MdButtonMixinBase
     implements OnDestroy, CanDisable, CanColor, CanDisableRipple {
@@ -142,13 +145,13 @@ export class MdButton extends _MdButtonMixinBase
   constructor(renderer: Renderer2,
               elementRef: ElementRef,
               private _platform: Platform,
-              private _focusOriginMonitor: FocusOriginMonitor) {
+              private _focusMonitor: FocusMonitor) {
     super(renderer, elementRef);
-    this._focusOriginMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
+    this._focusMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
   }
 
   ngOnDestroy() {
-    this._focusOriginMonitor.stopMonitoring(this._elementRef.nativeElement);
+    this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
   }
 
   /** Focuses the button. */
@@ -201,15 +204,16 @@ export class MdButton extends _MdButtonMixinBase
   templateUrl: 'button.html',
   styleUrls: ['button.css'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdAnchor extends MdButton {
   constructor(
       platform: Platform,
-      focusOriginMonitor: FocusOriginMonitor,
+      focusMonitor: FocusMonitor,
       elementRef: ElementRef,
       renderer: Renderer2) {
-    super(renderer, elementRef, platform, focusOriginMonitor);
+    super(renderer, elementRef, platform, focusMonitor);
   }
 
   _haltDisabledEvents(event: Event) {

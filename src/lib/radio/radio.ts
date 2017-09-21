@@ -31,14 +31,13 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 import {
   RippleRef,
   UniqueSelectionDispatcher,
-  MdRipple,
-  FocusOriginMonitor,
-  FocusOrigin,
+  MdRipple, MATERIAL_COMPATIBILITY_MODE,
 } from '@angular/material/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {mixinDisabled, CanDisable} from '@angular/material/core';
 import {CanColor, mixinColor} from '@angular/material/core';
 import {CanDisableRipple, mixinDisableRipple} from '@angular/material/core';
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 
 // Increasing integer for generating unique ids for radio components.
 let nextUniqueId = 0;
@@ -327,6 +326,7 @@ export const _MdRadioButtonMixinBase = mixinColor(mixinDisableRipple(MdRadioButt
   styleUrls: ['radio.css'],
   inputs: ['color', 'disableRipple'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   host: {
     'class': 'mat-radio-button',
     '[class.mat-radio-checked]': 'checked',
@@ -338,6 +338,7 @@ export const _MdRadioButtonMixinBase = mixinColor(mixinDisableRipple(MdRadioButt
     '(focus)': '_inputElement.nativeElement.focus()',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
 export class MdRadioButton extends _MdRadioButtonMixinBase
     implements OnInit, AfterViewInit, OnDestroy, CanColor, CanDisableRipple {
@@ -489,7 +490,7 @@ export class MdRadioButton extends _MdRadioButtonMixinBase
               elementRef: ElementRef,
               renderer: Renderer2,
               private _changeDetector: ChangeDetectorRef,
-              private _focusOriginMonitor: FocusOriginMonitor,
+              private _focusMonitor: FocusMonitor,
               private _radioDispatcher: UniqueSelectionDispatcher) {
     super(renderer, elementRef);
 
@@ -507,7 +508,7 @@ export class MdRadioButton extends _MdRadioButtonMixinBase
 
   /** Focuses the radio button. */
   focus(): void {
-    this._focusOriginMonitor.focusVia(this._inputElement.nativeElement, 'keyboard');
+    this._focusMonitor.focusVia(this._inputElement.nativeElement, 'keyboard');
   }
 
   /**
@@ -531,13 +532,13 @@ export class MdRadioButton extends _MdRadioButtonMixinBase
   }
 
   ngAfterViewInit() {
-    this._focusOriginMonitor
+    this._focusMonitor
       .monitor(this._inputElement.nativeElement, this._renderer, false)
       .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
   }
 
   ngOnDestroy() {
-    this._focusOriginMonitor.stopMonitoring(this._inputElement.nativeElement);
+    this._focusMonitor.stopMonitoring(this._inputElement.nativeElement);
     this._removeUniqueSelectionListener();
   }
 

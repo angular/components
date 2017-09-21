@@ -1,11 +1,12 @@
+import {Dir} from '@angular/cdk/bidi';
 import {Component, ViewEncapsulation} from '@angular/core';
 import {
   MdSnackBar,
   MdSnackBarConfig,
   MdSnackBarHorizontalPosition,
   MdSnackBarVerticalPosition,
-  Dir,
 } from '@angular/material';
+
 
 @Component({
   moduleId: module.id,
@@ -13,6 +14,7 @@ import {
   styleUrls: ['snack-bar-demo.css'],
   templateUrl: 'snack-bar-demo.html',
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
 export class SnackBarDemo {
   message: string = 'Snack Bar opened.';
@@ -24,7 +26,8 @@ export class SnackBarDemo {
   horizontalPosition: MdSnackBarHorizontalPosition = 'center';
   verticalPosition: MdSnackBarVerticalPosition = 'bottom';
 
-  constructor(public snackBar: MdSnackBar, private dir: Dir) { }
+  constructor(public snackBar: MdSnackBar, private dir: Dir) {
+  }
 
   open() {
     let config = new MdSnackBarConfig();

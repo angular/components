@@ -6,21 +6,20 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   Input,
-  Output,
-  ViewEncapsulation,
-  Inject,
   Optional,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
+  Output,
   QueryList,
+  ViewEncapsulation,
 } from '@angular/core';
-import {ENTER, SPACE} from '../keyboard/keycodes';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {MATERIAL_COMPATIBILITY_MODE} from '../compatibility/compatibility';
 import {MdOptgroup} from './optgroup';
 
@@ -57,7 +56,9 @@ export class MdOptionSelectionChange {
   },
   templateUrl: 'option.html',
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
 export class MdOption {
   private _selected: boolean = false;
@@ -106,8 +107,7 @@ export class MdOption {
   constructor(
     private _element: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
-    @Optional() public readonly group: MdOptgroup,
-    @Optional() @Inject(MATERIAL_COMPATIBILITY_MODE) public _isCompatibilityMode: boolean) {}
+    @Optional() public readonly group: MdOptgroup) {}
 
   /**
    * Whether or not the option is currently active and ready to be selected.

@@ -1,14 +1,15 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {Directionality} from '@angular/cdk/bidi';
+import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
+import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {Component, DebugElement} from '@angular/core';
-import {MdStepperModule} from './index';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MdStepperModule} from './index';
+import {MdHorizontalStepper, MdStepper, MdVerticalStepper} from './stepper';
 import {MdStepperNext, MdStepperPrevious} from './stepper-button';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing';
-import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
-import {MdStepper, MdHorizontalStepper, MdVerticalStepper} from './stepper';
-import {Directionality} from '@angular/material/core';
+
 
 const VALID_REGEX = /valid/;
 
@@ -514,7 +515,7 @@ function assertCorrectKeyboardInteraction(fixture: ComponentFixture<any>,
 /** Asserts that step selection change using stepper buttons does not focus step header. */
 function assertStepHeaderFocusNotCalled(fixture: ComponentFixture<any>) {
   let stepperComponent = fixture.debugElement.query(By.directive(MdStepper)).componentInstance;
-  let stepHeaderEl = fixture.debugElement.queryAll(By.css('md-step-header'))[1].nativeElement;
+  let stepHeaderEl = fixture.debugElement.queryAll(By.css('mat-step-header'))[1].nativeElement;
   let nextButtonNativeEl = fixture.debugElement
       .queryAll(By.directive(MdStepperNext))[0].nativeElement;
   spyOn(stepHeaderEl, 'focus');
@@ -577,7 +578,7 @@ function assertLinearStepperValidity(stepHeaderEl: HTMLElement,
 /** Asserts that step header focus is blurred if the step cannot be selected upon header click. */
 function assertStepHeaderBlurred(fixture: ComponentFixture<any>) {
   let stepHeaderEl = fixture.debugElement
-      .queryAll(By.css('md-step-header'))[1].nativeElement;
+      .queryAll(By.css('mat-step-header'))[1].nativeElement;
   spyOn(stepHeaderEl, 'blur');
   stepHeaderEl.click();
   fixture.detectChanges();
