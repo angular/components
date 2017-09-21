@@ -7,7 +7,7 @@
  */
 
 import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {Overlay, OverlayConfig, OverlayRef, OverlayState} from '@angular/cdk/overlay';
+import {Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {ComponentPortal, ComponentType, PortalInjector} from '@angular/cdk/portal';
 import {ComponentRef, Injectable, Injector, Optional, SkipSelf} from '@angular/core';
 import {extendObject} from '@angular/material/core';
