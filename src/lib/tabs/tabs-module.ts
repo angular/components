@@ -20,6 +20,7 @@ import {MdTabHeader} from './tab-header';
 import {MdTabLabel} from './tab-label';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
 import {MdTabLink, MdTabNav} from './tab-nav-bar/tab-nav-bar';
+import {MdTabContent} from './tab-content';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import {MdTabLink, MdTabNav} from './tab-nav-bar/tab-nav-bar';
     MdTab,
     MdTabNav,
     MdTabLink,
+    MdTabContent,
   ],
   declarations: [
     MdTabGroup,
@@ -49,7 +51,8 @@ import {MdTabLink, MdTabNav} from './tab-nav-bar/tab-nav-bar';
     MdTabNav,
     MdTabLink,
     MdTabBody,
-    MdTabHeader
+    MdTabHeader,
+    MdTabContent,
   ],
   providers: [VIEWPORT_RULER_PROVIDER],
 })
