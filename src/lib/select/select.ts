@@ -327,8 +327,12 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   set placeholder(value: string) {
     this._placeholder = value;
 
-    // Must wait to record the trigger width to ensure placeholder width is included.
-    Promise.resolve(null).then(() => this._setTriggerWidth());
+    // Only re-calculate the width if we've had a width before. This avoids issues in the
+    // cases where the width might be assigned at a later point (e.g. flex-layout).
+    if (this._triggerWidth) {
+      // Must wait to record the trigger width to ensure placeholder width is included.
+      Promise.resolve(null).then(() => this._setTriggerWidth());
+    }
   }
 
   /** Whether the component is required. */

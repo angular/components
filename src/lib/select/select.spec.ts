@@ -189,15 +189,26 @@ describe('MdSelect', () => {
       });
     }));
 
-    it('should set the width of the overlay based on the trigger', async(() => {
+    it('should set the width of the overlay based on the trigger', fakeAsync(() => {
       trigger.style.width = '200px';
 
-      fixture.whenStable().then(() => {
-        trigger.click();
-        fixture.detectChanges();
-        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-        expect(pane.style.minWidth).toBe('200px');
-      });
+      trigger.click();
+      fixture.detectChanges();
+      const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      expect(pane.style.minWidth).toBe('200px');
+    }));
+
+    it('should set the correct overlay width when the trigger width was' +
+       ' changed after the placeholder was initialized', fakeAsync(() => {
+
+      fixture.componentInstance.select.placeholder = 'Lorem ipsum dolor sit amet.';
+      tick();
+
+      trigger.style.width = '300px';
+      trigger.click();
+      fixture.detectChanges();
+      const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      expect(pane.style.minWidth).toBe('300px');
     }));
 
     it('should set the width of the overlay if the element was hidden initially', async(() => {
