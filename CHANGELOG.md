@@ -12,16 +12,13 @@ tools like webpack to more easily load _only_ the components being used in an ap
 ### Breaking changes
 
 * Angular Material now requires **Angular 4.4.3 or greater**
-* MaterialModule has been removed. (#6803) ([cf1ece0](https://github.com/angular/material2/commit/cf1ece0))
-[See the deprecation notice from beta.3 for more information](https://github.com/angular/material2/blob/master/CHANGELOG.md#200-beta3-cesium-cephalopod-2017-04-07).
-* `MdCoreModule` has been removed. Most of its functionality has been move to `@angular/cdk` over
-the last few released.
+* `MaterialModule` has been removed. ([cf1ece0](https://github.com/angular/material2/commit/cf1ece0)) (#6803)
+[See the deprecation notice from beta.3 for more information](https://github.com/angular/material2/blob/master/CHANGELOG.md#materialmodule).
+* `MdCoreModule` has been removed. Most of its functionality has been moved to `@angular/cdk` over
+the last few releases.
 * `FocusOriginMonitor` has been renamed to `FocusMonitor` and moved to `@angular/cdk`.
-* **chip-list:**  - The outputs `select` and `deselect` have been removed in favor of a single
+* **chip-list:**  The outputs `select` and `deselect` have been removed in favor of a single
   `onSelectionChange` output.
-* **viewport-ruler:** Previously the `ScrollDispatcher.scrolled` subscription would react both on
-scroll events and on window resize events. Now it only reacts to scroll events. To react to resize
-events, subscribe to the `ViewportRuler.change()` stream.
 * **overlay:** OverlayState has been renamed to OverlayConfig
 * **overlay:** Now that the Overlay is part of the cdk rather than Angular Material directly,
 the `themeClass` property has been removed. To add a class to the
@@ -29,11 +26,6 @@ overlay for theming, you can do
 ```ts
 overlayContainer.getContainerElement().classList.add('my-theme-class');
 ```
-* `FocusOriginMonitor` has been renamed to `FocusMonitor`.
-* Angular Material now requires Angular 4.4.1 or greater
-* **viewport-ruler:** Previously the `ScrollDispatcher.scrolled` subscription would react both on
-scroll events and on window resize events. Now it only reacts to scroll events. To react to
-resize events, subscribe to the `ViewportRuler.change()` stream.
 * DateAdapter method `getISODateString` has been renamed to `toIso8601` and a new method
 `fromIso8601` has been added.
 
