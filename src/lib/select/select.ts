@@ -1178,7 +1178,6 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
       if (currentActiveItem !== prevActiveItem) {
         this._clearSelection();
         this._setSelectionByValue(currentActiveItem.value, true);
-        this._propagateChanges();
       }
     }
   }
