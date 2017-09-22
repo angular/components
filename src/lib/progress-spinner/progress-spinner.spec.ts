@@ -15,6 +15,7 @@ describe('MdProgressSpinner', () => {
         ProgressSpinnerWithValueAndBoundMode,
         ProgressSpinnerWithColor,
         ProgressSpinnerCustomStrokeWidth,
+        ProgressSpinnerCustomDiameter,
         SpinnerWithColor,
       ],
     }).compileComponents();
@@ -77,6 +78,26 @@ describe('MdProgressSpinner', () => {
 
     progressComponent.value = -10;
     expect(progressComponent.value).toBe(0);
+  });
+
+  it('should allow a custom diameter', () => {
+    const fixture = TestBed.createComponent(ProgressSpinnerCustomDiameter);
+    const spinner = fixture.debugElement.query(By.css('md-progress-spinner')).nativeElement;
+    const svgElement = fixture.nativeElement.querySelector('svg');
+
+    fixture.componentInstance.diameter = 32;
+    fixture.detectChanges();
+
+    expect(parseInt(spinner.style.width))
+        .toBe(32, 'Expected the custom diameter to be applied to the host element width.');
+    expect(parseInt(spinner.style.height))
+        .toBe(32, 'Expected the custom diameter to be applied to the host element height.');
+    expect(parseInt(svgElement.style.width))
+        .toBe(32, 'Expected the custom diameter to be applied to the svg element width.');
+    expect(parseInt(svgElement.style.height))
+        .toBe(32, 'Expected the custom diameter to be applied to the svg element height.');
+    expect(svgElement.getAttribute('viewBox'))
+        .toBe('0 0 32 32', 'Expected the custom diameter to be applied to the svg viewBox.');
   });
 
   it('should allow a custom stroke width', () => {
@@ -159,6 +180,11 @@ class BasicProgressSpinner {}
 @Component({template: '<md-progress-spinner [strokeWidth]="strokeWidth"></md-progress-spinner>'})
 class ProgressSpinnerCustomStrokeWidth {
   strokeWidth: number;
+}
+
+@Component({template: '<md-progress-spinner [diameter]="diameter"></md-progress-spinner>'})
+class ProgressSpinnerCustomDiameter {
+  diameter: number;
 }
 
 @Component({template: '<md-progress-spinner mode="indeterminate"></md-progress-spinner>'})
