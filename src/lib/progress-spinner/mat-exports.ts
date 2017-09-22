@@ -9,7 +9,6 @@
 import {
   MdProgressSpinner,
   MdProgressSpinnerBase,
-  MdProgressSpinnerCssMatStyler,
   MdSpinner,
 } from './progress-spinner';
 import {MdProgressSpinnerModule} from './progress-spinner-module';
@@ -17,6 +16,5 @@ import {MdProgressSpinnerModule} from './progress-spinner-module';
 
 export {MdProgressSpinner as MatProgressSpinner};
 export {MdProgressSpinnerBase as MatProgressSpinnerBase};
-export {MdProgressSpinnerCssMatStyler as MatProgressSpinnerCssMatStyler};
 export {MdProgressSpinnerModule as MatProgressSpinnerModule};
 export {MdSpinner as MatSpinner};
