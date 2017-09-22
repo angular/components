@@ -24,6 +24,7 @@ import {
   CanColor,
   CanDisable,
   CanDisableRipple,
+  MATERIAL_COMPATIBILITY_MODE,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple
@@ -128,7 +129,9 @@ export const _MdButtonMixinBase = mixinColor(mixinDisabled(mixinDisableRipple(Md
   styleUrls: ['button.css'],
   inputs: ['disabled', 'disableRipple', 'color'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
 export class MdButton extends _MdButtonMixinBase
     implements OnDestroy, CanDisable, CanColor, CanDisableRipple {
@@ -201,6 +204,7 @@ export class MdButton extends _MdButtonMixinBase
   templateUrl: 'button.html',
   styleUrls: ['button.css'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdAnchor extends MdButton {
