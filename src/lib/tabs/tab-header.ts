@@ -27,12 +27,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {
-  CanDisableRipple,
-  MATERIAL_COMPATIBILITY_MODE,
-  mixinDisableRipple,
-} from '@angular/material/core';
-import {fromEvent} from 'rxjs/observable/fromEvent';
+import {CanDisableRipple, mixinDisableRipple} from '@angular/material/core';
 import {merge} from 'rxjs/observable/merge';
 import {of as observableOf} from 'rxjs/observable/of';
 import {Subscription} from 'rxjs/Subscription';

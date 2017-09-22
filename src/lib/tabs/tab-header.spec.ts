@@ -13,7 +13,7 @@ import {MatRippleModule} from '@angular/material/core';
 import {MatInkBar} from './ink-bar';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {Subject} from 'rxjs/Subject';
-
+import {VIEWPORT_RULER_PROVIDER} from '@angular/cdk/scrolling';
 
 
 describe('MatTabHeader', () => {
@@ -33,6 +33,7 @@ describe('MatTabHeader', () => {
         SimpleTabHeaderApp,
       ],
       providers: [
+        VIEWPORT_RULER_PROVIDER,
         {provide: Directionality, useFactory: () => ({value: dir, change: change.asObservable()})},
       ]
     });
