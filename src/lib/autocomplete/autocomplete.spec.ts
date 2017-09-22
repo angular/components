@@ -277,6 +277,19 @@ describe('MdAutocomplete', () => {
       });
     }));
 
+    it('should be able to set extra classes on the panel', () => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
+
+        const panel =
+          overlayContainerElement.querySelector('.mat-autocomplete-panel') as HTMLElement;
+
+        expect(panel.classList).toContain('custom-one');
+        expect(panel.classList).toContain('custom-two');
+      });
+    });
+
     it('should keep the label floating until the panel closes', async(() => {
       fixture.componentInstance.trigger.openPanel();
       expect(fixture.componentInstance.formField.floatPlaceholder)
@@ -1607,7 +1620,7 @@ describe('MdAutocomplete', () => {
       <input mdInput placeholder="State" [mdAutocomplete]="auto" [formControl]="stateCtrl">
     </md-form-field>
 
-    <md-autocomplete #auto="mdAutocomplete" [displayWith]="displayFn">
+    <md-autocomplete #auto="mdAutocomplete" [displayWith]="displayFn" [panelClass]="panelClass">
       <md-option *ngFor="let state of filteredStates" [value]="state">
         <span> {{ state.code }}: {{ state.name }}  </span>
       </md-option>
@@ -1620,6 +1633,7 @@ class SimpleAutocomplete implements OnDestroy {
   valueSub: Subscription;
   placeholder = 'auto';
   width: number;
+  panelClass = ['custom-one', 'custom-two'];
 
   @ViewChild(MdAutocompleteTrigger) trigger: MdAutocompleteTrigger;
   @ViewChild(MdAutocomplete) panel: MdAutocomplete;
