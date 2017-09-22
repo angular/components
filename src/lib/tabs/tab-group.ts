@@ -39,7 +39,7 @@ import {CanColor, mixinColor, ThemePalette} from '@angular/material/core';
 let nextId = 0;
 
 /** A simple change event emitted on focus or selection changes. */
-export class MdTabChangeEvent {
+export class MdTabChange {
   index: number;
   tab: MdTab;
 }
@@ -137,10 +137,10 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
   @Output() selectedIndexChange: EventEmitter<number> = new EventEmitter();
 
   /** Event emitted when focus has changed within a tab group. */
-  @Output() focusChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>();
+  @Output() focusChange: EventEmitter<MdTabChange> = new EventEmitter<MdTabChange>();
 
   /** Event emitted when the tab selection has changed. */
-  @Output() selectChange: EventEmitter<MdTabChangeEvent> = new EventEmitter<MdTabChangeEvent>(true);
+  @Output() selectChange: EventEmitter<MdTabChange> = new EventEmitter<MdTabChange>(true);
 
   private _groupId: number;
 
@@ -220,8 +220,8 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
     this.focusChange.emit(this._createChangeEvent(index));
   }
 
-  private _createChangeEvent(index: number): MdTabChangeEvent {
-    const event = new MdTabChangeEvent;
+  private _createChangeEvent(index: number): MdTabChange {
+    const event = new MdTabChange;
     event.index = index;
     if (this._tabs && this._tabs.length) {
       event.tab = this._tabs.toArray()[index];
