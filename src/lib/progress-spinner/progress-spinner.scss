@@ -5,9 +5,8 @@
 $mat-progress-spinner-stroke-rotate-fallback-duration: 10 * 1000ms !default;
 $mat-progress-spinner-stroke-rotate-fallback-ease: cubic-bezier(0.87, 0.03, 0.33, 1) !default;
 
-$_mat-progress-spinner-radius: 45px;
-$_mat-progress-spinner-circumference: $pi * $_mat-progress-spinner-radius * 2;
-
+$_mat-progress-spinner-default-radius: 45px;
+$_mat-progress-spinner-default-circumference: $pi * $_mat-progress-spinner-default-radius * 2;
 
 .mat-progress-spinner {
   display: block;
@@ -24,8 +23,6 @@ $_mat-progress-spinner-circumference: $pi * $_mat-progress-spinner-radius * 2;
 
   circle {
     fill: transparent;
-    stroke-dasharray: $_mat-progress-spinner-circumference;
-    stroke-dashoffset: $_mat-progress-spinner-circumference;
     transform-origin: center;
     transition: stroke-dashoffset 225ms linear;
   }
@@ -35,10 +32,11 @@ $_mat-progress-spinner-circumference: $pi * $_mat-progress-spinner-radius * 2;
         linear infinite;
 
     circle {
-      // Note: we multiply the duration by 8, because the animation is spread out in 8 stages.
-      animation: mat-progress-spinner-stroke-rotate $swift-ease-in-out-duration * 8
-          $ease-in-out-curve-function infinite;
       transition-property: stroke;
+      // Note: we multiply the duration by 8, because the animation is spread out in 8 stages.
+      animation-duration: $swift-ease-in-out-duration * 8;
+      animation-timing-function: $ease-in-out-curve-function;
+      animation-iteration-count: infinite;
     }
   }
 
@@ -49,7 +47,6 @@ $_mat-progress-spinner-circumference: $pi * $_mat-progress-spinner-radius * 2;
                infinite;
 
     circle {
-      stroke-dashoffset: (1 - 0.8) * $_mat-progress-spinner-circumference;
       transition-property: stroke;
     }
   }
@@ -63,11 +60,11 @@ $_mat-progress-spinner-circumference: $pi * $_mat-progress-spinner-radius * 2;
 }
 
 @at-root {
-  $start: (1 - 0.05) * $_mat-progress-spinner-circumference; // start the animation at 5%
-  $end: (1 - 0.8) * $_mat-progress-spinner-circumference; // end the animation at 80%
+  $start: (1 - 0.05) * $_mat-progress-spinner-default-circumference; // start the animation at 5%
+  $end: (1 - 0.8) * $_mat-progress-spinner-default-circumference; // end the animation at 80%
   $fallback-iterations: 4;
 
-  @keyframes mat-progress-spinner-stroke-rotate {
+  @keyframes mat-progress-spinner-stroke-rotate-100 {
     /*
       stylelint-disable declaration-block-single-line-max-declarations,
         declaration-block-semicolon-space-after
