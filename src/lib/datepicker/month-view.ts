@@ -17,8 +17,12 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import {DateAdapter, MD_DATE_FORMATS, MdDateFormats} from '@angular/material/core';
+import {
+  DateAdapter, MATERIAL_COMPATIBILITY_MODE, MD_DATE_FORMATS,
+  MdDateFormats
+} from '@angular/material/core';
 import {MdCalendarCell} from './calendar-body';
+import {coerceDateProperty} from './coerce-date-property';
 import {createMissingDateImplError} from './datepicker-errors';
 
 
@@ -34,7 +38,9 @@ const DAYS_PER_WEEK = 7;
   selector: 'md-month-view',
   templateUrl: 'month-view.html',
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
 export class MdMonthView<D> implements AfterContentInit {
   /**
@@ -44,7 +50,7 @@ export class MdMonthView<D> implements AfterContentInit {
   get activeDate(): D { return this._activeDate; }
   set activeDate(value: D) {
     let oldActiveDate = this._activeDate;
-    this._activeDate = value || this._dateAdapter.today();
+    this._activeDate = coerceDateProperty(this._dateAdapter, value) || this._dateAdapter.today();
     if (!this._hasSameMonthAndYear(oldActiveDate, this._activeDate)) {
       this._init();
     }
@@ -53,12 +59,12 @@ export class MdMonthView<D> implements AfterContentInit {
 
   /** The currently selected date. */
   @Input()
-  get selected(): D { return this._selected; }
-  set selected(value: D) {
-    this._selected = value;
-    this._selectedDate = this._getDateInCurrentMonth(this.selected);
+  get selected(): D | null { return this._selected; }
+  set selected(value: D | null) {
+    this._selected = coerceDateProperty(this._dateAdapter, value);
+    this._selectedDate = this._getDateInCurrentMonth(this._selected);
   }
-  private _selected: D;
+  private _selected: D | null;
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
@@ -171,13 +177,13 @@ export class MdMonthView<D> implements AfterContentInit {
    * Gets the date in this month that the given Date falls on.
    * Returns null if the given Date is in another month.
    */
-  private _getDateInCurrentMonth(date: D): number | null {
-    return this._hasSameMonthAndYear(date, this.activeDate) ?
+  private _getDateInCurrentMonth(date: D | null): number | null {
+    return date && this._hasSameMonthAndYear(date, this.activeDate) ?
         this._dateAdapter.getDate(date) : null;
   }
 
   /** Checks whether the 2 dates are non-null and fall within the same month of the same year. */
-  private _hasSameMonthAndYear(d1: D, d2: D): boolean {
+  private _hasSameMonthAndYear(d1: D | null, d2: D | null): boolean {
     return !!(d1 && d2 && this._dateAdapter.getMonth(d1) == this._dateAdapter.getMonth(d2) &&
               this._dateAdapter.getYear(d1) == this._dateAdapter.getYear(d2));
   }

@@ -22,7 +22,8 @@ import {MdStepLabel} from './step-label';
     'role': 'tab',
   },
   encapsulation: ViewEncapsulation.None,
-  providers: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: false}],
+  preserveWhitespaces: false,
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
 export class MdStepHeader {
   /** Icon for the given step. */

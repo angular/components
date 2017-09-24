@@ -26,17 +26,21 @@ import {Platform} from '@angular/cdk/platform';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   applyCssTransform,
-  FocusOrigin,
-  FocusOriginMonitor,
+  CanColor,
+  CanDisable,
+  CanDisableRipple,
   HammerInput,
+  HasTabIndex,
+  MATERIAL_COMPATIBILITY_MODE,
   MdRipple,
+  mixinColor,
+  mixinDisabled,
+  mixinDisableRipple,
+  mixinTabIndex,
   RippleRef,
 } from '@angular/material/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {mixinDisabled, CanDisable} from '@angular/material/core';
-import {CanColor, mixinColor} from '@angular/material/core';
-import {CanDisableRipple, mixinDisableRipple} from '@angular/material/core';
-import {HasTabIndex, mixinTabIndex} from '@angular/material/core';
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 
 // Increasing integer for generating unique ids for slide-toggle components.
 let nextUniqueId = 0;
@@ -75,9 +79,11 @@ export const _MdSlideToggleMixinBase =
   templateUrl: 'slide-toggle.html',
   styleUrls: ['slide-toggle.css'],
   providers: [MD_SLIDE_TOGGLE_VALUE_ACCESSOR],
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
   inputs: ['disabled', 'disableRipple', 'color', 'tabIndex'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  preserveWhitespaces: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdSlideToggle extends _MdSlideToggleMixinBase implements OnDestroy, AfterContentInit,
     ControlValueAccessor, CanDisable, CanColor, HasTabIndex, CanDisableRipple {
@@ -137,7 +143,7 @@ export class MdSlideToggle extends _MdSlideToggleMixinBase implements OnDestroy,
   constructor(elementRef: ElementRef,
               renderer: Renderer2,
               private _platform: Platform,
-              private _focusOriginMonitor: FocusOriginMonitor,
+              private _focusMonitor: FocusMonitor,
               private _changeDetectorRef: ChangeDetectorRef,
               @Attribute('tabindex') tabIndex: string) {
     super(renderer, elementRef);
@@ -148,13 +154,13 @@ export class MdSlideToggle extends _MdSlideToggleMixinBase implements OnDestroy,
   ngAfterContentInit() {
     this._slideRenderer = new SlideToggleRenderer(this._elementRef, this._platform);
 
-    this._focusOriginMonitor
+    this._focusMonitor
       .monitor(this._inputElement.nativeElement, this._renderer, false)
       .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
   }
 
   ngOnDestroy() {
-    this._focusOriginMonitor.stopMonitoring(this._inputElement.nativeElement);
+    this._focusMonitor.stopMonitoring(this._inputElement.nativeElement);
   }
 
   /**
@@ -216,7 +222,7 @@ export class MdSlideToggle extends _MdSlideToggleMixinBase implements OnDestroy,
 
   /** Focuses the slide-toggle. */
   focus() {
-    this._focusOriginMonitor.focusVia(this._inputElement.nativeElement, 'keyboard');
+    this._focusMonitor.focusVia(this._inputElement.nativeElement, 'keyboard');
   }
 
   /** Toggles the checked state of the slide-toggle. */

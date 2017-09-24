@@ -6,46 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {
-  CompatibilityModule,
-  StyleModule,
-  UNIQUE_SELECTION_DISPATCHER_PROVIDER,
-} from '@angular/material/core';
-import {CdkAccordion, MdAccordion} from './accordion';
-import {MdExpansionPanel, MdExpansionPanelActionRow} from './expansion-panel';
-import {
-  MdExpansionPanelDescription,
-  MdExpansionPanelHeader,
-  MdExpansionPanelTitle,
-} from './expansion-panel-header';
-
-
-@NgModule({
-  imports: [CompatibilityModule, CommonModule, StyleModule],
-  exports: [
-    CdkAccordion,
-    MdAccordion,
-    MdExpansionPanel,
-    MdExpansionPanelActionRow,
-    MdExpansionPanelHeader,
-    MdExpansionPanelTitle,
-    MdExpansionPanelDescription
-  ],
-  declarations: [
-    CdkAccordion,
-    MdAccordion,
-    MdExpansionPanel,
-    MdExpansionPanelActionRow,
-    MdExpansionPanelHeader,
-    MdExpansionPanelTitle,
-    MdExpansionPanelDescription
-  ],
-  providers: [UNIQUE_SELECTION_DISPATCHER_PROVIDER]
-})
-export class MdExpansionModule {}
-
+export * from './expansion-module';
 export {
   CdkAccordion,
   MdAccordion,
@@ -63,3 +24,4 @@ export {
   MdExpansionPanelTitle
 } from './expansion-panel-header';
 
+export * from './mat-exports';
