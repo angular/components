@@ -30,7 +30,7 @@ task(':watch:devapp', () => {
   watchFiles(join(appDir, '**/*.scss'), [':build:devapp:scss']);
   watchFiles(join(appDir, '**/*.html'), [':build:devapp:assets']);
 
-  // Custom watchers for the CDk, Material and Moment adapter package. This is necessary because
+  // Custom watchers for the CDK, Material and Moment adapter package. This is necessary because
   // we only want to build the package as a single entry-point (using the tests task).
   watchFiles(join(cdkPackage.sourceDir, '**/*'), ['cdk:build-tests']);
   watchFiles(join(momentAdapterPackage.sourceDir, '**/*'), ['material-moment-adapter:build-tests']);
