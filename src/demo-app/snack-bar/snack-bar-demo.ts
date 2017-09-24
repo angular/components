@@ -1,5 +1,12 @@
+import {Dir} from '@angular/cdk/bidi';
 import {Component, ViewEncapsulation} from '@angular/core';
-import {MdSnackBar, MdSnackBarConfig} from '@angular/material';
+import {
+  MdSnackBar,
+  MdSnackBarConfig,
+  MdSnackBarHorizontalPosition,
+  MdSnackBarVerticalPosition,
+} from '@angular/material';
+
 
 @Component({
   moduleId: module.id,
@@ -7,6 +14,7 @@ import {MdSnackBar, MdSnackBarConfig} from '@angular/material';
   styleUrls: ['snack-bar-demo.css'],
   templateUrl: 'snack-bar-demo.html',
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
 export class SnackBarDemo {
   message: string = 'Snack Bar opened.';
@@ -15,13 +23,19 @@ export class SnackBarDemo {
   setAutoHide: boolean = true;
   autoHide: number = 10000;
   addExtraClass: boolean = false;
+  horizontalPosition: MdSnackBarHorizontalPosition = 'center';
+  verticalPosition: MdSnackBarVerticalPosition = 'bottom';
 
-  constructor(public snackBar: MdSnackBar) { }
+  constructor(public snackBar: MdSnackBar, private dir: Dir) {
+  }
 
   open() {
     let config = new MdSnackBarConfig();
+    config.verticalPosition = this.verticalPosition;
+    config.horizontalPosition = this.horizontalPosition;
     config.duration = this.autoHide;
     config.extraClasses = this.addExtraClass ? ['party'] : undefined;
+    config.direction = this.dir.value;
     this.snackBar.open(this.message, this.action ? this.actionButtonLabel : undefined, config);
   }
 }

@@ -18,7 +18,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanColor, mixinColor} from '../core/common-behaviors/color';
+import {CanColor, mixinColor} from '@angular/material/core';
 
 
 // TODO(josephperrott): Benchpress tests.
@@ -82,6 +82,7 @@ export const _MdProgressSpinnerMixinBase = mixinColor(MdProgressSpinnerBase, 'pr
   styleUrls: ['progress-spinner.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
 export class MdProgressSpinner extends _MdProgressSpinnerMixinBase
     implements OnDestroy, CanColor {
@@ -289,6 +290,7 @@ export class MdProgressSpinner extends _MdProgressSpinnerMixinBase
   styleUrls: ['progress-spinner.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
 export class MdSpinner extends MdProgressSpinner {
   constructor(elementRef: ElementRef, ngZone: NgZone, renderer: Renderer2) {

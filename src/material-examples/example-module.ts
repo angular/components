@@ -26,6 +26,7 @@ import {CardOverviewExample} from './card-overview/card-overview-example';
 import {CdkTableBasicExample} from './cdk-table-basic/cdk-table-basic-example';
 import {CheckboxConfigurableExample} from './checkbox-configurable/checkbox-configurable-example';
 import {CheckboxOverviewExample} from './checkbox-overview/checkbox-overview-example';
+import {ChipsInputExample} from './chips-input/chips-input-example';
 import {ChipsOverviewExample} from './chips-overview/chips-overview-example';
 import {ChipsStackedExample} from './chips-stacked/chips-stacked-example';
 import {DatepickerApiExample} from './datepicker-api/datepicker-api-example';
@@ -55,6 +56,7 @@ import {ListSectionsExample} from './list-sections/list-sections-example';
 import {ListSelectionExample} from './list-selection/list-selection-example';
 import {MenuIconsExample} from './menu-icons/menu-icons-example';
 import {MenuOverviewExample} from './menu-overview/menu-overview-example';
+import {NestedMenuExample} from './nested-menu/nested-menu-example';
 import {PaginatorConfigurableExample} from './paginator-configurable/paginator-configurable-example';
 import {PaginatorOverviewExample} from './paginator-overview/paginator-overview-example';
 import {ProgressBarConfigurableExample} from './progress-bar-configurable/progress-bar-configurable-example';
@@ -165,6 +167,12 @@ export const EXAMPLE_COMPONENTS = {
   'checkbox-overview': {
     title: 'Basic checkboxes',
     component: CheckboxOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'chips-input': {
+    title: 'Chips with input',
+    component: ChipsInputExample,
     additionalFiles: null,
     selectorName: null
   },
@@ -342,6 +350,12 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'nested-menu': {
+    title: 'Nested menu',
+    component: NestedMenuExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'paginator-configurable': {
     title: 'Configurable paginator',
     component: PaginatorConfigurableExample,
@@ -462,11 +476,6 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
-  {
-    'table-basic': {
-    title: 'Basic table',
-    component: TableBasicExample,
-  },
   'stepper-overview': {
     title: 'Stepper overview',
     component: StepperOverviewExample,
@@ -561,6 +570,7 @@ export const EXAMPLE_LIST = [
   CdkTableBasicExample,
   CheckboxConfigurableExample,
   CheckboxOverviewExample,
+  ChipsInputExample,
   ChipsOverviewExample,
   ChipsStackedExample,
   DatepickerApiExample,
@@ -590,6 +600,7 @@ export const EXAMPLE_LIST = [
   ListSelectionExample,
   MenuIconsExample,
   MenuOverviewExample,
+  NestedMenuExample,
   PaginatorConfigurableExample,
   PaginatorOverviewExample,
   ProgressBarConfigurableExample,

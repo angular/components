@@ -1,8 +1,12 @@
-import {join} from 'path';
-import {main as tsc} from '@angular/tsc-wrapped';
+import {red} from 'chalk';
+import {spawn} from 'child_process';
+import {readFileSync, writeFileSync} from 'fs';
+import {sync as glob} from 'glob';
+import {join, resolve as resolvePath} from 'path';
+import {main as ngc} from '@angular/tsc-wrapped';
+import {PackageBundler} from './build-bundles';
 import {buildConfig} from './build-config';
 import {getSecondaryEntryPointsForPackage} from './secondary-entry-points';
-import {buildPrimaryEntryPointBundles, buildSecondaryEntryPointBundles} from './build-bundles';
 
 
 const {packagesDir, outputDir} = buildConfig;
@@ -13,74 +17,132 @@ const buildTsconfigName = 'tsconfig-build.json';
 /** Name of the tsconfig file that is responsible for building the tests. */
 const testsTsconfigName = 'tsconfig-tests.json';
 
-export class BuildPackage {
+/** Incrementing ID counter. */
+let nextId = 0;
 
+export class BuildPackage {
   /** Path to the package sources. */
-  packageRoot: string;
+  sourceDir: string;
 
   /** Path to the package output. */
-  packageOut: string;
+  outputDir: string;
+
+  /** Whether this package will re-export its secondary-entry points at the root module. */
+  exportsSecondaryEntryPointsAtRoot = false;
 
   /** Path to the entry file of the package in the output directory. */
-  private entryFilePath: string;
+  readonly entryFilePath: string;
 
   /** Path to the tsconfig file, which will be used to build the package. */
-  private tsconfigBuild: string;
+  private readonly tsconfigBuild: string;
 
   /** Path to the tsconfig file, which will be used to build the tests. */
-  private tsconfigTests: string;
+  private readonly tsconfigTests: string;
+
+  private _secondaryEntryPoints: string[];
+  private _secondaryEntryPointsByDepth: string[][];
+
+  /** Secondary entry-points partitioned by their build depth. */
+  private get secondaryEntryPointsByDepth(): string[][] {
+    this.cacheSecondaryEntryPoints();
+    return this._secondaryEntryPointsByDepth;
+  }
+
+  private readonly bundler = new PackageBundler(this);
 
   /** Secondary entry points for the package. */
   get secondaryEntryPoints(): string[] {
-    if (!this._secondaryEntryPoints) {
-      this._secondaryEntryPoints = getSecondaryEntryPointsForPackage(this);
-    }
-
+    this.cacheSecondaryEntryPoints();
     return this._secondaryEntryPoints;
   }
 
-  private _secondaryEntryPoints: string[];
+  constructor(public readonly name: string, public readonly dependencies: BuildPackage[] = []) {
+    this.sourceDir = join(packagesDir, name);
+    this.outputDir = join(outputDir, 'packages', name);
 
-  constructor(public packageName: string, public dependencies: BuildPackage[] = []) {
-    this.packageRoot = join(packagesDir, packageName);
-    this.packageOut = join(outputDir, 'packages', packageName);
+    this.tsconfigBuild = join(this.sourceDir, buildTsconfigName);
+    this.tsconfigTests = join(this.sourceDir, testsTsconfigName);
 
-    this.tsconfigBuild = join(this.packageRoot, buildTsconfigName);
-    this.tsconfigTests = join(this.packageRoot, testsTsconfigName);
-
-    this.entryFilePath = join(this.packageOut, 'index.js');
+    this.entryFilePath = join(this.outputDir, 'index.js');
   }
 
   /** Compiles the package sources with all secondary entry points. */
   async compile() {
-    await this._compileEntryPoint(buildTsconfigName);
-
-    // Walk through every secondary entry point and build the TypeScript sources sequentially.
-    for (const entryPoint of this.secondaryEntryPoints) {
-      await this._compileEntryPoint(buildTsconfigName, entryPoint);
+    // Compile all secondary entry-points with the same depth in parallel, and each separate depth
+    // group in sequence. This will look something like:
+    // Depth 0: coercion, platform, keycodes, bidi
+    // Depth 1: a11y, scrolling
+    // Depth 2: overlay
+    for (const entryPointGroup of this.secondaryEntryPointsByDepth) {
+      await Promise.all(entryPointGroup.map(p => this._compileEntryPoint(buildTsconfigName, p)));
     }
+
+    // Compile the primary entry-point.
+    await this._compileEntryPoint(buildTsconfigName);
   }
 
   /** Compiles the TypeScript test source files for the package. */
   async compileTests() {
-    await this._compileEntryPoint(testsTsconfigName);
+    await this._compileTestEntryPoint(testsTsconfigName);
   }
 
   /** Creates all bundles for the package and all associated entry points. */
   async createBundles() {
-    await buildPrimaryEntryPointBundles(this.entryFilePath, this.packageName);
-
-    for (const entryPoint of this.secondaryEntryPoints) {
-      const entryPointEntryFilePath = join(this.packageOut, entryPoint, 'index.js');
-      await buildSecondaryEntryPointBundles(entryPointEntryFilePath, this.packageName, entryPoint);
-    }
+    await this.bundler.createBundles();
   }
 
   /** Compiles the TypeScript sources of a primary or secondary entry point. */
-  private async _compileEntryPoint(tsconfigName: string, secondaryEntryPoint?: string) {
-    const entryPointPath = join(this.packageRoot, secondaryEntryPoint || '');
+  private async _compileEntryPoint(tsconfigName: string, secondaryEntryPoint = '') {
+    const entryPointPath = join(this.sourceDir, secondaryEntryPoint);
     const entryPointTsconfigPath = join(entryPointPath, tsconfigName);
 
-    await tsc(entryPointTsconfigPath, {basePath: entryPointPath});
+    return new Promise((resolve, reject) => {
+      const ngcPath = resolvePath('./node_modules/.bin/ngc');
+      const childProcess = spawn(ngcPath, ['-p', entryPointTsconfigPath], {shell: true});
+
+      // Pipe stdout and stderr from the child process.
+      childProcess.stdout.on('data', (data: any) => console.log(`${data}`));
+      childProcess.stderr.on('data', (data: any) => console.error(red(`${data}`)));
+
+      childProcess.on('exit', (exitCode: number) => exitCode === 0 ? resolve() : reject());
+    })
+    .catch(() => console.error(red(`Failed to compile ${secondaryEntryPoint}`)))
+    .then(() => this.renamePrivateReExportsToBeUnique(secondaryEntryPoint));
+  }
+
+  /** Compiles the TypeScript sources of a primary or secondary entry point. */
+  private async _compileTestEntryPoint(tsconfigName: string, secondaryEntryPoint = '') {
+    const entryPointPath = join(this.sourceDir, secondaryEntryPoint);
+    const entryPointTsconfigPath = join(entryPointPath, tsconfigName);
+
+    await ngc(entryPointTsconfigPath, {basePath: entryPointPath});
+    this.renamePrivateReExportsToBeUnique(secondaryEntryPoint);
+  }
+
+  /** Renames `ɵa`-style re-exports generated by Angular to be unique across compilation units. */
+  private renamePrivateReExportsToBeUnique(secondaryEntryPoint = '') {
+    // When we compiled the typescript sources with ngc, we do entry-point individually.
+    // If the root-level module re-exports multiple of these entry-points, the private-export
+    // identifiers (e.g., `ɵa`) generated by ngc will collide. We work around this by suffixing
+    // each of these identifiers with an ID specific to this entry point. We make this
+    // replacement in the js, d.ts, and metadata output.
+    if (this.exportsSecondaryEntryPointsAtRoot && secondaryEntryPoint) {
+      const entryPointId = nextId++;
+      const outputPath = join(this.outputDir, secondaryEntryPoint);
+      glob(join(outputPath, '**/*.+(js|d.ts|metadata.json)')).forEach(filePath => {
+        let fileContent = readFileSync(filePath, 'utf-8');
+        fileContent = fileContent.replace(/(ɵ[a-z]+)/g, `$1${entryPointId}`);
+        writeFileSync(filePath, fileContent, 'utf-8');
+      });
+    }
+  }
+
+  /** Stores the secondary entry-points for this package if they haven't been computed already. */
+  private cacheSecondaryEntryPoints() {
+    if (!this._secondaryEntryPoints) {
+      this._secondaryEntryPointsByDepth = getSecondaryEntryPointsForPackage(this);
+      this._secondaryEntryPoints =
+        this._secondaryEntryPointsByDepth.reduce((list, p) => list.concat(p), []);
+    }
   }
 }

@@ -6,34 +6,38 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
+import {auditTime, startWith} from '@angular/cdk/rxjs';
 import {
-  ViewChild,
-  Component,
-  Input,
-  QueryList,
-  ElementRef,
-  ViewEncapsulation,
-  ContentChildren,
-  Output,
-  EventEmitter,
-  Optional,
   AfterContentChecked,
   AfterContentInit,
-  OnDestroy,
-  Renderer2,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  Component,
+  ContentChildren,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Optional,
+  Output,
+  QueryList,
+  Renderer2,
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
-import {Directionality, Direction} from '@angular/cdk/bidi';
-import {RIGHT_ARROW, LEFT_ARROW, ENTER, SPACE} from '@angular/cdk/keycodes';
-import {auditTime, startWith} from '@angular/cdk/rxjs';
-import {Subscription} from 'rxjs/Subscription';
-import {of as observableOf} from 'rxjs/observable/of';
-import {merge} from 'rxjs/observable/merge';
+import {
+  CanDisableRipple, MATERIAL_COMPATIBILITY_MODE,
+  mixinDisableRipple
+} from '@angular/material/core';
 import {fromEvent} from 'rxjs/observable/fromEvent';
-import {MdTabLabelWrapper} from './tab-label-wrapper';
+import {merge} from 'rxjs/observable/merge';
+import {of as observableOf} from 'rxjs/observable/of';
+import {Subscription} from 'rxjs/Subscription';
 import {MdInkBar} from './ink-bar';
-import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
+import {MdTabLabelWrapper} from './tab-label-wrapper';
+
 
 /**
  * The directions that scrolling can go in when the header's tabs exceed the header width. 'After'
@@ -67,12 +71,14 @@ export const _MdTabHeaderMixinBase = mixinDisableRipple(MdTabHeaderBase);
   styleUrls: ['tab-header.css'],
   inputs: ['disableRipple'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'mat-tab-header',
     '[class.mat-tab-header-pagination-controls-enabled]': '_showPaginationControls',
     '[class.mat-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
-  }
+  },
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
 export class MdTabHeader extends _MdTabHeaderMixinBase
     implements AfterContentChecked, AfterContentInit, OnDestroy, CanDisableRipple {

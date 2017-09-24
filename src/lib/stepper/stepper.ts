@@ -6,14 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import {CdkStep, CdkStepper} from '@angular/cdk/stepper';
 import {
   Component,
   ContentChild,
-  ContentChildren, Directive,
-  // This import is only used to define a generic type. The current TypeScript version incorrectly
-  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
-  // tslint:disable-next-line:no-unused-variable
+  ContentChildren,
+  Directive,
   ElementRef,
   forwardRef,
   Inject,
@@ -21,18 +20,17 @@ import {
   QueryList,
   SkipSelf,
   ViewChildren,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
-import {MdStepLabel} from './step-label';
+import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {
   defaultErrorStateMatcher,
   ErrorOptions,
+  ErrorStateMatcher, MATERIAL_COMPATIBILITY_MODE,
   MD_ERROR_GLOBAL_OPTIONS,
-  ErrorStateMatcher
-} from '../core/error/error-options';
-import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
+} from '@angular/material/core';
 import {MdStepHeader} from './step-header';
-import {state, style, transition, trigger, animate} from '@angular/animations';
+import {MdStepLabel} from './step-label';
 
 /** Workaround for https://github.com/angular/angular/issues/17849 */
 export const _MdStep = CdkStep;
@@ -43,7 +41,8 @@ export const _MdStepper = CdkStepper;
   selector: 'md-step, mat-step',
   templateUrl: 'step.html',
   providers: [{provide: MD_ERROR_GLOBAL_OPTIONS, useExisting: MdStep}],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
 export class MdStep extends _MdStep implements ErrorOptions {
   /** Content for step label given by <ng-template matStepLabel> or <ng-template mdStepLabel>. */
@@ -106,7 +105,9 @@ export class MdStepper extends _MdStepper {
     ])
   ],
   providers: [{provide: MdStepper, useExisting: MdHorizontalStepper}],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
 export class MdHorizontalStepper extends MdStepper { }
 
@@ -129,6 +130,8 @@ export class MdHorizontalStepper extends MdStepper { }
     ])
   ],
   providers: [{provide: MdStepper, useExisting: MdVerticalStepper}],
-  encapsulation: ViewEncapsulation.None
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
+  encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
 export class MdVerticalStepper extends MdStepper { }

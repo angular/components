@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TemplatePortal} from '../core/portal/portal';
+import {TemplatePortal} from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -21,9 +21,10 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
-import {MdTabLabel} from './tab-label';
+import {CanDisable, mixinDisabled} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
+import {MdTabLabel} from './tab-label';
+
 
 // Boilerplate for applying mixins to MdTab.
 /** @docs-private */
@@ -37,7 +38,8 @@ export const _MdTabMixinBase = mixinDisabled(MdTabBase);
   inputs: ['disabled'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  exportAs: 'mdTab',
+  preserveWhitespaces: false,
+  exportAs: 'mdTab, matTab',
 })
 export class MdTab extends _MdTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
   /** Content for the tab label given by <ng-template md-tab-label>. */

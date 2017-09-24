@@ -21,7 +21,7 @@ import {
   EventEmitter,
   Output,
 } from '@angular/core';
-import {MdOption, MdOptgroup} from '../core';
+import {MdOption, MdOptgroup} from '@angular/material/core';
 import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 
 
@@ -43,8 +43,9 @@ export class MdAutocompleteSelectedEvent {
   templateUrl: 'autocomplete.html',
   styleUrls: ['autocomplete.css'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  exportAs: 'mdAutocomplete',
+  exportAs: 'mdAutocomplete, matAutocomplete',
   host: {
     'class': 'mat-autocomplete'
   }

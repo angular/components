@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -22,11 +23,18 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {FocusOrigin, FocusOriginMonitor, MdRipple, RippleRef} from '../core';
-import {mixinDisabled, CanDisable} from '../core/common-behaviors/disabled';
-import {CanColor, mixinColor} from '../core/common-behaviors/color';
-import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
+import {
+  CanColor,
+  CanDisable,
+  CanDisableRipple, MATERIAL_COMPATIBILITY_MODE,
+  MdRipple,
+  mixinColor,
+  mixinDisabled,
+  mixinDisableRipple,
+  RippleRef,
+} from '@angular/material/core';
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+
 
 // Increasing integer for generating unique ids for checkbox components.
 let nextUniqueId = 0;
@@ -96,8 +104,10 @@ export const _MdCheckboxMixinBase =
     '[class.mat-checkbox-label-before]': 'labelPosition == "before"',
   },
   providers: [MD_CHECKBOX_CONTROL_VALUE_ACCESSOR],
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
   inputs: ['disabled', 'disableRipple', 'color'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MdCheckbox extends _MdCheckboxMixinBase implements ControlValueAccessor, AfterViewInit,
@@ -190,18 +200,18 @@ export class MdCheckbox extends _MdCheckboxMixinBase implements ControlValueAcce
   constructor(renderer: Renderer2,
               elementRef: ElementRef,
               private _changeDetectorRef: ChangeDetectorRef,
-              private _focusOriginMonitor: FocusOriginMonitor) {
+              private _focusMonitor: FocusMonitor) {
     super(renderer, elementRef);
   }
 
   ngAfterViewInit() {
-    this._focusOriginMonitor
+    this._focusMonitor
       .monitor(this._inputElement.nativeElement, this._renderer, false)
       .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
   }
 
   ngOnDestroy() {
-    this._focusOriginMonitor.stopMonitoring(this._inputElement.nativeElement);
+    this._focusMonitor.stopMonitoring(this._inputElement.nativeElement);
   }
 
   /**
@@ -376,7 +386,7 @@ export class MdCheckbox extends _MdCheckboxMixinBase implements ControlValueAcce
 
   /** Focuses the checkbox. */
   focus(): void {
-    this._focusOriginMonitor.focusVia(this._inputElement.nativeElement, 'keyboard');
+    this._focusMonitor.focusVia(this._inputElement.nativeElement, 'keyboard');
   }
 
   _onInteractionEvent(event: Event) {

@@ -28,8 +28,11 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Subscription} from 'rxjs/Subscription';
 import {MdTab} from './tab';
 import {merge} from 'rxjs/observable/merge';
-import {CanDisableRipple, mixinDisableRipple} from '../core/common-behaviors/disable-ripple';
-import {CanColor, mixinColor, ThemePalette} from '../core/common-behaviors/color';
+import {
+  CanDisableRipple, MATERIAL_COMPATIBILITY_MODE,
+  mixinDisableRipple
+} from '@angular/material/core';
+import {CanColor, mixinColor, ThemePalette} from '@angular/material/core';
 
 
 /** Used to generate unique ID's for each tab component */
@@ -62,13 +65,15 @@ export const _MdTabGroupMixinBase = mixinColor(mixinDisableRipple(MdTabGroupBase
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   inputs: ['color', 'disableRipple'],
   host: {
     'class': 'mat-tab-group',
     '[class.mat-tab-group-dynamic-height]': 'dynamicHeight',
     '[class.mat-tab-group-inverted-header]': 'headerPosition === "below"',
-  }
+  },
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
 export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit,
     AfterContentChecked, AfterViewChecked, OnDestroy, CanColor, CanDisableRipple {

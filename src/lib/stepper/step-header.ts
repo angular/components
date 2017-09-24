@@ -6,9 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, Input, ViewEncapsulation} from '@angular/core';
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
+import {Component, Input, ViewEncapsulation} from '@angular/core';
+import {MATERIAL_COMPATIBILITY_MODE} from '@angular/material/core';
 import {MdStepLabel} from './step-label';
+
 
 @Component({
   moduleId: module.id,
@@ -19,7 +21,9 @@ import {MdStepLabel} from './step-label';
     'class': 'mat-step-header',
     'role': 'tab',
   },
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
 export class MdStepHeader {
   /** Icon for the given step. */

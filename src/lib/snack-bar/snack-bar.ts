@@ -6,16 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentRef, Injectable, Injector, Optional, SkipSelf } from '@angular/core';
-import {Overlay, OverlayRef, OverlayState} from '@angular/cdk/overlay';
-import {ComponentPortal, ComponentType} from '@angular/cdk/portal';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {PortalInjector} from '../core/portal/portal-injector';
-import {extendObject} from '../core/util/object-extend';
-import {MD_SNACK_BAR_DATA, MdSnackBarConfig} from './snack-bar-config';
-import {MdSnackBarRef} from './snack-bar-ref';
-import {MdSnackBarContainer} from './snack-bar-container';
+import {Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
+import {ComponentPortal, ComponentType, PortalInjector} from '@angular/cdk/portal';
+import {ComponentRef, Injectable, Injector, Optional, SkipSelf} from '@angular/core';
+import {extendObject} from '@angular/material/core';
 import {SimpleSnackBar} from './simple-snack-bar';
+import {MD_SNACK_BAR_DATA, MdSnackBarConfig} from './snack-bar-config';
+import {MdSnackBarContainer} from './snack-bar-container';
+import {MdSnackBarRef} from './snack-bar-ref';
 
 
 /**
@@ -153,11 +152,32 @@ export class MdSnackBar {
    * @param config The user-specified snack bar config.
    */
   private _createOverlay(config: MdSnackBarConfig): OverlayRef {
-    const state = new OverlayState({
-      direction: config.direction,
-      positionStrategy: this._overlay.position().global().centerHorizontally().bottom('0')
-    });
+    const state = new OverlayConfig();
+    state.direction = config.direction;
 
+    let positionStrategy = this._overlay.position().global();
+    // Set horizontal position.
+    const isRtl = config.direction === 'rtl';
+    const isLeft = (
+      config.horizontalPosition === 'left' ||
+      (config.horizontalPosition === 'start' && !isRtl) ||
+      (config.horizontalPosition === 'end' && isRtl));
+    const isRight = !isLeft && config.horizontalPosition !== 'center';
+    if (isLeft) {
+      positionStrategy.left('0');
+    } else if (isRight) {
+      positionStrategy.right('0');
+    } else {
+      positionStrategy.centerHorizontally();
+    }
+    // Set horizontal position.
+    if (config.verticalPosition === 'top') {
+      positionStrategy.top('0');
+    } else {
+      positionStrategy.bottom('0');
+    }
+
+    state.positionStrategy = positionStrategy;
     return this._overlay.create(state);
   }
 

@@ -6,7 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {first} from '@angular/cdk/rxjs';
 import {
+  Attribute,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -16,11 +18,9 @@ import {
   Renderer2,
   SimpleChanges,
   ViewEncapsulation,
-  Attribute,
 } from '@angular/core';
+import {CanColor, mixinColor} from '@angular/material/core';
 import {MdIconRegistry} from './icon-registry';
-import {CanColor, mixinColor} from '../core/common-behaviors/color';
-import {first} from '../core/rxjs/index';
 
 
 // Boilerplate for applying mixins to MdIcon.
@@ -69,6 +69,7 @@ export const _MdIconMixinBase = mixinColor(MdIconBase);
     'class': 'mat-icon',
   },
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdIcon extends _MdIconMixinBase implements OnChanges, OnInit, CanColor {

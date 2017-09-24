@@ -22,21 +22,53 @@ _Hint: `<md-basic-chip>` receives the `mat-basic-chip` CSS class in addition to 
 Chips can be selected via the `selected` property. Selection can be disabled by setting
 `selectable` to `false` on the `<md-chip-list>`.
 
-Selection emits the `(select)` output while deselecting emits the `(deselect)` output. Both outputs
-receive a ChipEvent object with a structure of `{ chip: alteredChip }`.
+Whenever the selection state changes, a `ChipSelectionChange` event will be emitted via 
+`(selectionChange)`.
 
 ### Disabled chips
 Individual chips may be disabled by applying the `disabled` attribute to the chip. When disabled,
 chips are neither selectable nor focusable. Currently, disabled chips receive no special styling.
 
+### Chip input
+The `MdChipInput` directive can be used together with a chip-list to streamline the interaction
+between the two components. This directive adds chip-specific behaviors to the input element
+within `<md-form-field>` for adding and removing chips. The `<input>` with `MdChipInput` can
+be placed inside or outside the chip-list element.
+
+An exmaple of chip input placed inside the chip-list element.
+<!-- example(chips-input) -->
+
+An example of chip input placed outside the chip-list element.
+
+```html
+<md-form-field>
+  <md-chip-list #chipList>
+    <md-chip>Chip 1<md-chip>
+    <md-chip>Chip 2<md-chip>
+  </md-chip-list>
+  <input mdChipInputFor="chipList">
+</md-form-field>
+```
+
 ### Keyboard interaction
 Users can move through the chips using the arrow keys and select/deselect them with the space. Chips
 also gain focus when clicked, ensuring keyboard navigation starts at the appropriate chip.
 
+### Orientation
+If you want the chips in the list to be stacked vertically, instead of horizontally, you can apply
+the `mat-chip-list-stacked` class, as well as the `aria-orientation="vertical"` attribute:
+
+```html
+<md-chip-list class="mat-chip-list-stacked" aria-orientation="vertical">
+  <md-chip>Papadum</md-chip>
+  <md-chip>Naan</md-chip>
+  <md-chip>Dal</md-chip>
+</md-chip-list>
+```
 
 ### Theming
 The selected color of an `<md-chip>` can be changed by using the `color` property. By default, chips
-use a neutral background color based on the current theme (light or dark). This can be changed to 
+use a neutral background color based on the current theme (light or dark). This can be changed to
 `'primary'`, `'accent'`, or `'warn'`.
 
 ### Accessibility

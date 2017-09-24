@@ -1,5 +1,7 @@
+import {Platform, PlatformModule} from '@angular/cdk/platform';
+import {createFakeEvent, dispatchFakeEvent, wrappedErrorMessage} from '@angular/cdk/testing';
+import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
-import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -7,24 +9,24 @@ import {
   FormsModule,
   NgForm,
   ReactiveFormsModule,
-  Validators
+  Validators,
 } from '@angular/forms';
+import {
+  MD_ERROR_GLOBAL_OPTIONS,
+  MD_PLACEHOLDER_GLOBAL_OPTIONS,
+  showOnDirtyErrorStateMatcher,
+} from '@angular/material/core';
+import {
+  getMdFormFieldDuplicatedHintError,
+  getMdFormFieldMissingControlError,
+  getMdFormFieldPlaceholderConflictError,
+  MdFormField,
+  MdFormFieldModule,
+} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MdInputModule} from './index';
 import {MdInput} from './input';
-import {Platform} from '../core/platform/platform';
-import {PlatformModule} from '../core/platform/index';
-import {wrappedErrorMessage, dispatchFakeEvent, createFakeEvent} from '@angular/cdk/testing';
-import {
-  MdFormField,
-  MdFormFieldModule,
-  getMdFormFieldDuplicatedHintError,
-  getMdFormFieldMissingControlError,
-  getMdFormFieldPlaceholderConflictError,
-} from '../form-field/index';
-import {MD_PLACEHOLDER_GLOBAL_OPTIONS} from '../core/placeholder/placeholder-options';
-import {MD_ERROR_GLOBAL_OPTIONS, showOnDirtyErrorStateMatcher} from '../core/error/error-options';
 
 describe('MdInput without forms', function () {
   beforeEach(async(() => {
@@ -527,16 +529,16 @@ describe('MdInput without forms', function () {
     fixture.detectChanges();
 
     let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
-    let labelEl = fixture.debugElement.query(By.css('label')).nativeElement;
+    let formFieldEl = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
 
-    expect(labelEl.classList).not.toContain('mat-form-field-empty');
-    expect(labelEl.classList).toContain('mat-form-field-float');
+    expect(formFieldEl.classList).toContain('mat-form-field-can-float');
+    expect(formFieldEl.classList).toContain('mat-form-field-should-float');
 
     fixture.componentInstance.shouldFloat = 'auto';
     fixture.detectChanges();
 
-    expect(labelEl.classList).toContain('mat-form-field-empty');
-    expect(labelEl.classList).toContain('mat-form-field-float');
+    expect(formFieldEl.classList).toContain('mat-form-field-can-float');
+    expect(formFieldEl.classList).not.toContain('mat-form-field-should-float');
 
     // Update the value of the input.
     inputEl.value = 'Text';
@@ -544,8 +546,8 @@ describe('MdInput without forms', function () {
     // Fake behavior of the `(input)` event which should trigger a change detection.
     fixture.detectChanges();
 
-    expect(labelEl.classList).not.toContain('mat-form-field-empty');
-    expect(labelEl.classList).toContain('mat-form-field-float');
+    expect(formFieldEl.classList).toContain('mat-form-field-can-float');
+    expect(formFieldEl.classList).toContain('mat-form-field-should-float');
   });
 
   it('should always float the placeholder when floatPlaceholder is set to true', () => {
@@ -553,10 +555,10 @@ describe('MdInput without forms', function () {
     fixture.detectChanges();
 
     let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
-    let labelEl = fixture.debugElement.query(By.css('label')).nativeElement;
+    let formFieldEl = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
 
-    expect(labelEl.classList).not.toContain('mat-form-field-empty');
-    expect(labelEl.classList).toContain('mat-form-field-float');
+    expect(formFieldEl.classList).toContain('mat-form-field-can-float');
+    expect(formFieldEl.classList).toContain('mat-form-field-should-float');
 
     fixture.detectChanges();
 
@@ -566,8 +568,8 @@ describe('MdInput without forms', function () {
     // Fake behavior of the `(input)` event which should trigger a change detection.
     fixture.detectChanges();
 
-    expect(labelEl.classList).not.toContain('mat-form-field-empty');
-    expect(labelEl.classList).toContain('mat-form-field-float');
+    expect(formFieldEl.classList).toContain('mat-form-field-can-float');
+    expect(formFieldEl.classList).toContain('mat-form-field-should-float');
   });
 
 

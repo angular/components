@@ -27,8 +27,9 @@ import {
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {UniqueSelectionDispatcher, FocusOriginMonitor} from '../core';
-import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
+import {UniqueSelectionDispatcher} from '@angular/material/core';
+import {CanDisable, mixinDisabled} from '@angular/material/core';
+import {FocusMonitor} from '@angular/cdk/a11y';
 
 /** Acceptable types for a button toggle. */
 export type ToggleType = 'checkbox' | 'radio';
@@ -69,7 +70,7 @@ export class MdButtonToggleChange {
     'class': 'mat-button-toggle-group',
     '[class.mat-button-toggle-vertical]': 'vertical'
   },
-  exportAs: 'mdButtonToggleGroup',
+  exportAs: 'mdButtonToggleGroup, matButtonToggleGroup',
 })
 export class MdButtonToggleGroup extends _MdButtonToggleGroupMixinBase
     implements ControlValueAccessor, CanDisable {
@@ -229,7 +230,7 @@ export class MdButtonToggleGroup extends _MdButtonToggleGroupMixinBase
 /** Multiple selection button-toggle group. `ngModel` is not supported in this mode. */
 @Directive({
   selector: 'md-button-toggle-group[multiple], mat-button-toggle-group[multiple]',
-  exportAs: 'mdButtonToggleGroup',
+  exportAs: 'mdButtonToggleGroup, matButtonToggleGroup',
   inputs: ['disabled'],
   host: {
     'class': 'mat-button-toggle-group',
@@ -261,6 +262,7 @@ export class MdButtonToggleGroupMultiple extends _MdButtonToggleGroupMixinBase
   templateUrl: 'button-toggle.html',
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.mat-button-toggle-standalone]': '!buttonToggleGroup && !buttonToggleGroupMultiple',
@@ -371,7 +373,7 @@ export class MdButtonToggle implements OnInit, OnDestroy {
               private _buttonToggleDispatcher: UniqueSelectionDispatcher,
               private _renderer: Renderer2,
               private _elementRef: ElementRef,
-              private _focusOriginMonitor: FocusOriginMonitor) {
+              private _focusMonitor: FocusMonitor) {
 
     this.buttonToggleGroup = toggleGroup;
     this.buttonToggleGroupMultiple = toggleGroupMultiple;
@@ -404,7 +406,7 @@ export class MdButtonToggle implements OnInit, OnDestroy {
     if (this.buttonToggleGroup && this._value == this.buttonToggleGroup.value) {
       this._checked = true;
     }
-    this._focusOriginMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
+    this._focusMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
   }
 
   /** Focuses the button. */
