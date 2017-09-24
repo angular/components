@@ -228,18 +228,16 @@ export class MdDrawer implements AfterContentInit, OnDestroy {
   constructor(private _elementRef: ElementRef,
               private _focusTrapFactory: FocusTrapFactory,
               @Optional() @Inject(DOCUMENT) private _doc: any) {
-    this.openChange.subscribe(() => {
-      if (this._doc) {
-        this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
-      }
-
-      if (this.isFocusTrapEnabled && this._focusTrap) {
-        this._focusTrap.focusInitialElementWhenReady();
-      }
-    });
-
     this.openChange.subscribe(($event) => {
-      if ($event.type === 'close') {
+      if ($event.type === 'open') {
+          if (this._doc) {
+          this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
+        }
+
+        if (this.isFocusTrapEnabled && this._focusTrap) {
+          this._focusTrap.focusInitialElementWhenReady();
+        }
+      } else {
         this._restoreFocus();
       }
     });
@@ -472,7 +470,7 @@ export class MdDrawerContainer implements AfterContentInit, OnDestroy {
     });
 
     if (drawer.mode !== 'side') {
-      takeUntil.call(merge(drawer.openChange, drawer.onClose),
+      takeUntil.call(drawer.openChange,
           this._drawers.changes).subscribe(() => this._setContainerClass(drawer.opened));
     }
   }
