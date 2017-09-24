@@ -154,7 +154,6 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   ngAfterContentInit(): void {
     this._keyManager = new FocusKeyManager<MdMenuItem>(this.items).withWrap();
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => {
-      this.close.emit('keydown');
       this.closed.emit('keydown');
     });
   }
@@ -163,8 +162,6 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
     this._tabSubscription.unsubscribe();
     this.closed.emit();
     this.closed.complete();
-    this.close.emit();
-    this.close.complete();
   }
 
   /** Stream that emits whenever the hovered menu item changes. */
@@ -179,19 +176,16 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   _handleKeydown(event: KeyboardEvent) {
     switch (event.keyCode) {
       case ESCAPE:
-        this.close.emit('keydown');
         this.closed.emit('keydown');
         event.stopPropagation();
       break;
       case LEFT_ARROW:
         if (this.parentMenu && this.direction === 'ltr') {
-          this.close.emit('keydown');
           this.closed.emit('keydown');
         }
       break;
       case RIGHT_ARROW:
         if (this.parentMenu && this.direction === 'rtl') {
-          this.close.emit('keydown');
           this.closed.emit('keydown');
         }
       break;

@@ -15,7 +15,6 @@ export interface MdMenuPanel {
   yPosition: MenuPositionY;
   overlapTrigger: boolean;
   templateRef: TemplateRef<any>;
-  close?: EventEmitter<void | 'click' | 'keydown'>;
   closed: EventEmitter<void | 'click' | 'keydown'>;
   parentMenu?: MdMenuPanel | undefined;
   direction?: Direction;
