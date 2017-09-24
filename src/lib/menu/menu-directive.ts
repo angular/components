@@ -36,6 +36,7 @@ import {throwMdMenuInvalidPositionX, throwMdMenuInvalidPositionY} from './menu-e
 import {MdMenuItem} from './menu-item';
 import {MdMenuPanel} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 
 /** Default `md-menu` options that can be overridden. */
@@ -119,7 +120,13 @@ export class MdMenu implements AfterContentInit, MdMenuPanel, OnDestroy {
   @ContentChildren(MdMenuItem) items: QueryList<MdMenuItem>;
 
   /** Whether the menu should overlap its trigger. */
-  @Input() overlapTrigger = this._defaultOptions.overlapTrigger;
+  @Input()
+  set overlapTrigger(value: any) {
+    this._defaultOptions.overlapTrigger = coerceBooleanProperty(value);
+  }
+  get overlapTrigger(): any {
+    return this._defaultOptions.overlapTrigger;
+  }
 
   /**
    * This method takes classes set on the host md-menu element and applies them on the

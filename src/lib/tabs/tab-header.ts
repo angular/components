@@ -37,6 +37,7 @@ import {of as observableOf} from 'rxjs/observable/of';
 import {Subscription} from 'rxjs/Subscription';
 import {MdInkBar} from './ink-bar';
 import {MdTabLabelWrapper} from './tab-label-wrapper';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 
 
 /**
@@ -124,6 +125,7 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
   @Input()
   get selectedIndex(): number { return this._selectedIndex; }
   set selectedIndex(value: number) {
+    value = coerceNumberProperty(value);
     this._selectedIndexChanged = this._selectedIndex != value;
     this._selectedIndex = value;
     this._focusIndex = value;

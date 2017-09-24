@@ -143,7 +143,14 @@ export class MdDatepicker<D> implements OnDestroy {
    * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather
    * than a popup and elements have more padding to allow for bigger touch targets.
    */
-  @Input() touchUi = false;
+  @Input()
+  get touchUi() {
+    return this._touchUi;
+  }
+  set touchUi(value: any) {
+    this._touchUi = coerceBooleanProperty(value);
+  }
+  private _touchUi = false;
 
   /** Whether the datepicker pop-up should be disabled. */
   @Input()
@@ -224,7 +231,7 @@ export class MdDatepicker<D> implements OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.close();
     this._inputSubscription.unsubscribe();
     this._disabledChange.complete();

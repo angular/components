@@ -125,6 +125,7 @@ export class MdSlideToggle extends _MdSlideToggleMixinBase implements OnDestroy,
   @Input()
   get checked(): boolean { return this._checked; }
   set checked(value) {
+    value = coerceBooleanProperty(value);
     this._checked = !!value;
     this._changeDetectorRef.markForCheck();
   }

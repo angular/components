@@ -25,6 +25,7 @@ import {CanDisable, mixinDisabled, UniqueSelectionDispatcher} from '@angular/mat
 import {Subject} from 'rxjs/Subject';
 import {MdAccordion} from './accordion';
 import {AccordionItem} from './accordion-item';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 
 // Boilerplate for applying mixins to MdExpansionPanel.
@@ -79,8 +80,16 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,
 })
 export class MdExpansionPanel extends _MdExpansionPanelMixinBase
     implements CanDisable, OnChanges, OnDestroy {
+
   /** Whether the toggle indicator should be hidden. */
-  @Input() hideToggle: boolean = false;
+  @Input()
+  get hideToggle(): any {
+    return this._hideToggle;
+  }
+  set hideToggle(value: any) {
+    this._hideToggle = coerceBooleanProperty(value);
+  }
+  private _hideToggle = false;
 
   /** Stream that emits for changes in `@Input` properties. */
   _inputChanges = new Subject<SimpleChanges>();

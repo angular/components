@@ -24,7 +24,7 @@ import {
   OnDestroy,
   ViewEncapsulation,
 } from '@angular/core';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {Subscription} from 'rxjs/Subscription';
 import {MdTab} from './tab';
 import {merge} from 'rxjs/observable/merge';
@@ -110,7 +110,7 @@ export class MdTabGroup extends _MdTabGroupMixinBase implements AfterContentInit
 
   /** The index of the active tab. */
   @Input()
-  set selectedIndex(value: number | null) { this._indexToSelect = value; }
+  set selectedIndex(value: number | null) { this._indexToSelect = coerceNumberProperty(value); }
   get selectedIndex(): number | null { return this._selectedIndex; }
   private _selectedIndex: number | null = null;
 
