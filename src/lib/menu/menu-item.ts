@@ -14,7 +14,7 @@ import {
   OnDestroy,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanDisable, mixinDisabled} from '@angular/material/core';
+import {CanDisable, MATERIAL_COMPATIBILITY_MODE, mixinDisabled} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
 
 // Boilerplate for applying mixins to MdMenuItem.
@@ -43,8 +43,10 @@ export const _MdMenuItemMixinBase = mixinDisabled(MdMenuItemBase);
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   templateUrl: 'menu-item.html',
   exportAs: 'mdMenuItem, matMenuItem',
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
 export class MdMenuItem extends _MdMenuItemMixinBase implements FocusableOption, CanDisable,
   OnDestroy {

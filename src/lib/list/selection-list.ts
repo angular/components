@@ -9,6 +9,8 @@
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
+import {SPACE} from '@angular/cdk/keycodes';
+import {RxChain, startWith, switchMap} from '@angular/cdk/rxjs';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -35,10 +37,6 @@ import {
   MdLineSetter,
   mixinDisabled,
   mixinDisableRipple,
-  RxChain,
-  SPACE,
-  startWith,
-  switchMap,
 } from '@angular/material/core';
 import {merge} from 'rxjs/observable/merge';
 import {Subscription} from 'rxjs/Subscription';
@@ -81,8 +79,9 @@ const FOCUSED_STYLE: string = 'mat-list-item-focus';
   },
   templateUrl: 'list-option.html',
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: false}],
+  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
 export class MdListOption extends _MdListOptionMixinBase
     implements AfterContentInit, OnDestroy, FocusableOption, CanDisableRipple {
@@ -201,6 +200,7 @@ export class MdListOption extends _MdListOptionMixinBase
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MdSelectionList extends _MdSelectionListMixinBase
