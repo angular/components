@@ -10,7 +10,6 @@ import {
   MdCardModule,
   MdCheckboxModule,
   MdChipsModule,
-  MdCoreModule,
   MdDatepickerModule,
   MdDialogModule,
   MdExpansionModule,
@@ -35,6 +34,7 @@ import {
   MdTabsModule,
   MdToolbarModule,
   MdTooltipModule,
+  MdStepperModule,
 } from '@angular/material';
 import {MaterialDocsExample} from './material-docs-example';
 import {HttpModule} from '@angular/http';
@@ -49,7 +49,7 @@ import {CdkTableModule} from '@angular/cdk/table';
     MdCardModule,
     MdCheckboxModule,
     MdChipsModule,
-    MdCoreModule,
+    MdStepperModule,
     MdDatepickerModule,
     MdDialogModule,
     MdExpansionModule,

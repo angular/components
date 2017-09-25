@@ -44,6 +44,7 @@ const DOCS = [
       {id: 'list', name: 'List', examples: ['list-sections']},
       {id: 'grid-list', name: 'Grid list', examples: ['grid-list-dynamic']},
       {id: 'card', name: 'Card', examples: ['card-fancy']},
+      {id: 'stepper', name: 'Stepper', examples: ['stepper-overview']},
       {id: 'tabs', name: 'Tabs', examples: ['tabs-template-label']},
       {id: 'expansion', name: 'Expansion Panel',
           examples: ['expansion-overview', 'expansion-steps']},
