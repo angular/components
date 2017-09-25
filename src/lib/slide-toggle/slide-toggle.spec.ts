@@ -100,6 +100,19 @@ describe('MdSlideToggle without forms', () => {
       expect(slideToggle.checked).toBe(true);
     });
 
+    fit('should update the checked value before firing an event', () => {
+      let changed: number = 0;
+      let checked: number = 0;
+
+      spyOn(slideToggle.change, 'emit').and.callFake(() => changed = performance.now());
+      spyOnProperty(slideToggle, 'checked', 'set').and.callFake(() => checked = performance.now());
+
+      labelElement.click();
+      fixture.detectChanges();
+
+      expect(checked).toBeLessThan(changed);
+    });
+
     it('should not trigger the click event multiple times', () => {
       // By default, when clicking on a label element, a generated click will be dispatched
       // on the associated input element.
