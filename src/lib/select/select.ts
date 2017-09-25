@@ -351,8 +351,10 @@ export class MdSelect extends _MdSelectMixinBase implements AfterContentInit, On
   @Input()
   get value() { return this._value; }
   set value(newValue: any) {
-    this.writeValue(newValue);
-    this._value = newValue;
+    if (newValue !== this._value) {
+      this.writeValue(newValue);
+      this._value = newValue;
+    }
   }
   private _value: any;
 
