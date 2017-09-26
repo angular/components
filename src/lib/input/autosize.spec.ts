@@ -218,14 +218,14 @@ describe('MatTextareaAutosize', () => {
     const fixtureWithForms = TestBed.createComponent(AutosizeTextareaInATab);
     fixtureWithForms.detectChanges();
     textarea = fixtureWithForms.nativeElement.querySelector('textarea');
-    expect(textarea.getBoundingClientRect().height).toBeGreaterThan(0);
+    expect(textarea.getBoundingClientRect().height).toBeGreaterThan(1);
   });
 
   it('should work in a step', () => {
     const fixtureWithForms = TestBed.createComponent(AutosizeTextareaInAStep);
     fixtureWithForms.detectChanges();
     textarea = fixtureWithForms.nativeElement.querySelector('textarea');
-    expect(textarea.getBoundingClientRect().height).toBeGreaterThan(0);
+    expect(textarea.getBoundingClientRect().height).toBeGreaterThan(1);
   });
 });
 

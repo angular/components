@@ -127,7 +127,9 @@ export class MatTextareaAutosize implements AfterViewInit, DoCheck {
   }
 
   ngDoCheck() {
-    this.resizeToFitContent();
+    if (this._platform.isBrowser) {
+      this.resizeToFitContent();
+    }
   }
 
   /** Resize the textarea to fit its content. */
