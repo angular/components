@@ -2,7 +2,7 @@ import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as gulp from 'gulp';
 import * as path from 'path';
-import {buildConfig, sequenceTask} from 'material2-build-tools';
+import {buildConfig} from 'material2-build-tools';
 
 /* Those imports lack typings. */
 const gulpClean = require('gulp-clean');
