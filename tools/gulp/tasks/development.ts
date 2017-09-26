@@ -32,10 +32,11 @@ task(':watch:devapp', () => {
 
   // Custom watchers for the CDK, Material and Moment adapter package. This is necessary because
   // we only want to build the package as a single entry-point (using the tests task).
-  watchFiles(join(cdkPackage.sourceDir, '**/*'), ['cdk:build-tests']);
-  watchFiles(join(momentAdapterPackage.sourceDir, '**/*'), ['material-moment-adapter:build-tests']);
-  watchFiles(join(materialPackage.sourceDir, '**/!(*.scss)'), ['material:build-tests']);
+  watchFiles(join(cdkPackage.sourceDir, '**/*'), ['cdk:build-no-bundles']);
+  watchFiles(join(materialPackage.sourceDir, '**/!(*.scss)'), ['material:build-no-bundles']);
   watchFiles(join(materialPackage.sourceDir, '**/*.scss'), [':build:devapp:material-with-styles']);
+  watchFiles(join(momentAdapterPackage.sourceDir, '**/*'),
+      ['material-moment-adapter:build-no-bundles']);
 });
 
 /** Path to the demo-app tsconfig file. */
@@ -49,12 +50,12 @@ task(':serve:devapp', serverTask(outDir, true));
 // The themes for the demo-app are built by using the SCSS mixins from Material.
 // Therefore when SCSS files have been changed, the custom theme needs to be rebuilt.
 task(':build:devapp:material-with-styles', sequenceTask(
-  'material:build-tests', ':build:devapp:scss'
+  'material:build-no-bundles', ':build:devapp:scss'
 ));
 
 task('build:devapp', sequenceTask(
-  ['material-moment-adapter:build-tests', ':build:devapp:scss', ':build:devapp:assets'],
-  ':build:devapp:ts'
+  ['material-moment-adapter:build-no-bundles', ':build:devapp:assets'],
+  [':build:devapp:scss', ':build:devapp:ts']
 ));
 
 task('serve:devapp', ['build:devapp'], sequenceTask([':serve:devapp', ':watch:devapp']));
