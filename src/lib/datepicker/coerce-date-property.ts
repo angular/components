@@ -8,7 +8,7 @@
 
 import {DateAdapter} from '@angular/material/core';
 
-
+export type CoerceStrategy = <D>(adapter: DateAdapter<D>, value: any) => D | null;
 /**
  * Function that attempts to coerce a value to a date using a DateAdapter. Date instances, null,
  * and undefined will be passed through. Empty strings will be coerced to null. Valid ISO 8601
