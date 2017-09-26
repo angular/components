@@ -42,7 +42,7 @@ import {DOCUMENT} from '@angular/platform-browser';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {MdCalendar} from './calendar';
-import {coerceDateProperty} from './coerce-date-property';
+import {coerceDateProperty, CoerceStrategy} from './coerce-date-property';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MdDatepickerInput} from './datepicker-input';
 
@@ -53,6 +53,9 @@ let datepickerUid = 0;
 /** Injection token that determines the scroll handling while the calendar is open. */
 export const MD_DATEPICKER_SCROLL_STRATEGY =
     new InjectionToken<() => ScrollStrategy>('md-datepicker-scroll-strategy');
+/** Injection token that determines the coerce date strategy. */
+export const MD_DATEPICKER_COERCE_STRATEGY =
+  new InjectionToken < () => CoerceStrategy > ('md-coerce-strategy');
 
 /** @docs-private */
 export function MD_DATEPICKER_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
@@ -67,7 +70,10 @@ export const MD_DATEPICKER_SCROLL_STRATEGY_PROVIDER = {
   useFactory: MD_DATEPICKER_SCROLL_STRATEGY_PROVIDER_FACTORY,
 };
 
-
+export const MD_DATEPICKER_COERCE_STRATEGY_PROVIDER = {
+  provide: MD_DATEPICKER_COERCE_STRATEGY,
+  useValue: coerceDateProperty
+};
 /**
  * Component used as the content for the datepicker dialog and popup. We use this instead of using
  * MdCalendar directly as the content so we can control the initial focus. This also gives us a
@@ -133,7 +139,7 @@ export class MdDatepicker<D> implements OnDestroy {
     // selected value is.
     return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
   }
-  set startAt(date: D | null) { this._startAt = coerceDateProperty(this._dateAdapter, date); }
+  set startAt(date: D | null) { this._startAt = this._coerceStrategy(this._dateAdapter, date); }
   private _startAt: D | null;
 
   /** The view that the calendar should start in. */
@@ -216,6 +222,7 @@ export class MdDatepicker<D> implements OnDestroy {
               private _ngZone: NgZone,
               private _viewContainerRef: ViewContainerRef,
               @Inject(MD_DATEPICKER_SCROLL_STRATEGY) private _scrollStrategy,
+              @Inject(MD_DATEPICKER_COERCE_STRATEGY) private _coerceStrategy,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
               @Optional() @Inject(DOCUMENT) private _document: any) {

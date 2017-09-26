@@ -16,6 +16,7 @@ import {MdIconModule} from '@angular/material/icon';
 import {MdCalendar} from './calendar';
 import {MdCalendarBody} from './calendar-body';
 import {
+  MD_DATEPICKER_COERCE_STRATEGY_PROVIDER,
   MD_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
   MdDatepicker,
   MdDatepickerContent,
@@ -59,6 +60,7 @@ import {MdYearView} from './year-view';
   providers: [
     MdDatepickerIntl,
     MD_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
+    MD_DATEPICKER_COERCE_STRATEGY_PROVIDER,
   ],
   entryComponents: [
     MdDatepickerContent,
