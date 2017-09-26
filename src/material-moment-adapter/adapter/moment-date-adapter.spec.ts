@@ -6,16 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MomentDateAdapter} from './moment-date-adapter';
-import {async, inject, TestBed} from '@angular/core/testing';
-import {MomentDateModule} from './index';
-import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
 import {LOCALE_ID} from '@angular/core';
+import {async, inject, TestBed} from '@angular/core/testing';
+import {DateAdapter, DEC, FEB, JAN, MAR, MAT_DATE_LOCALE} from '@angular/material/core';
 import * as moment from 'moment';
-
-
-// Month constants for more readable tests.
-const JAN = 0, FEB = 1, MAR = 2, DEC = 11;
+import {MomentDateModule} from './index';
+import {MomentDateAdapter} from './moment-date-adapter';
 
 
 describe('MomentDateAdapter', () => {
@@ -309,12 +305,18 @@ describe('MomentDateAdapter', () => {
     expect(adapter.isDateInstance(d)).toBe(false);
   });
 
-  it('should create dates from valid ISO strings', () => {
-    expect(adapter.fromIso8601('1985-04-12T23:20:50.52Z')).not.toBeNull();
-    expect(adapter.fromIso8601('1996-12-19T16:39:57-08:00')).not.toBeNull();
-    expect(adapter.fromIso8601('1937-01-01T12:00:27.87+00:20')).not.toBeNull();
-    expect(adapter.fromIso8601('1990-13-31T23:59:00Z')).toBeNull();
-    expect(adapter.fromIso8601('1/1/2017')).toBeNull();
+  it('should create valid dates from valid ISO strings', () => {
+    expect(adapter.coerceToDate('1985-04-12T23:20:50.52Z')).not.toBeNull();
+    expect(adapter.coerceToDate('1996-12-19T16:39:57-08:00')).not.toBeNull();
+    expect(adapter.coerceToDate('1937-01-01T12:00:27.87+00:20')).not.toBeNull();
+    expect(() => adapter.coerceToDate('1990-13-31T23:59:00Z')).toThrow();
+    expect(() => adapter.coerceToDate('1/1/2017')).toThrow();
+    expect(adapter.coerceToDate('')).toBeNull();
+    expect(adapter.coerceToDate(null)).toBeNull();
+    expect(adapter.coerceToDate(new Date())).not.toBeNull();
+    expect(() => adapter.coerceToDate(new Date(NaN))).toThrow();
+    expect(adapter.coerceToDate(moment())).not.toBeNull();
+    expect(() => adapter.coerceToDate(moment.invalid())).toThrow();
   });
 
   it('setLocale should not modify global moment locale', () => {

@@ -38,7 +38,6 @@ import {
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {first} from 'rxjs/operator/first';
 import {Subscription} from 'rxjs/Subscription';
-import {coerceDateProperty} from './coerce-date-property';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
@@ -67,7 +66,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   /** A date representing the period (month or year) to start the calendar in. */
   @Input()
   get startAt(): D | null { return this._startAt; }
-  set startAt(value: D | null) { this._startAt = coerceDateProperty(this._dateAdapter, value); }
+  set startAt(value: D | null) { this._startAt = this._dateAdapter.coerceToDate(value); }
   private _startAt: D | null;
 
   /** Whether the calendar should be started in month or year view. */
@@ -76,19 +75,19 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   /** The currently selected date. */
   @Input()
   get selected(): D | null { return this._selected; }
-  set selected(value: D | null) { this._selected = coerceDateProperty(this._dateAdapter, value); }
+  set selected(value: D | null) { this._selected = this._dateAdapter.coerceToDate(value); }
   private _selected: D | null;
 
   /** The minimum selectable date. */
   @Input()
   get minDate(): D | null { return this._minDate; }
-  set minDate(value: D | null) { this._minDate = coerceDateProperty(this._dateAdapter, value); }
+  set minDate(value: D | null) { this._minDate = this._dateAdapter.coerceToDate(value); }
   private _minDate: D | null;
 
   /** The maximum selectable date. */
   @Input()
   get maxDate(): D | null { return this._maxDate; }
-  set maxDate(value: D | null) { this._maxDate = coerceDateProperty(this._dateAdapter, value); }
+  set maxDate(value: D | null) { this._maxDate = this._dateAdapter.coerceToDate(value); }
   private _maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */

@@ -42,7 +42,6 @@ import {DOCUMENT} from '@angular/platform-browser';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {MatCalendar} from './calendar';
-import {coerceDateProperty} from './coerce-date-property';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerInput} from './datepicker-input';
 
@@ -133,7 +132,7 @@ export class MatDatepicker<D> implements OnDestroy {
     // selected value is.
     return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
   }
-  set startAt(date: D | null) { this._startAt = coerceDateProperty(this._dateAdapter, date); }
+  set startAt(date: D | null) { this._startAt = this._dateAdapter.coerceToDate(date); }
   private _startAt: D | null;
 
   /** The view that the calendar should start in. */

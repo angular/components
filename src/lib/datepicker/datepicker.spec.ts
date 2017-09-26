@@ -275,9 +275,8 @@ describe('MatDatepicker', () => {
       it('should throw when given wrong data type', () => {
         testComponent.date = '1/1/2017' as any;
 
-        expect(() => fixture.detectChanges()).toThrowError(
-            'Datepicker: Value must be either a date object recognized by the DateAdapter or an ' +
-            'ISO 8601 string. Instead got: 1/1/2017');
+        expect(() => fixture.detectChanges())
+            .toThrowError('Could not coerce "1/1/2017" to a valid date object.');
 
         testComponent.date = null;
       });

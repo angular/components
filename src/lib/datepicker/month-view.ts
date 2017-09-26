@@ -20,7 +20,6 @@ import {
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {MatCalendarCell} from './calendar-body';
-import {coerceDateProperty} from './coerce-date-property';
 import {createMissingDateImplError} from './datepicker-errors';
 
 
@@ -47,7 +46,7 @@ export class MatMonthView<D> implements AfterContentInit {
   get activeDate(): D { return this._activeDate; }
   set activeDate(value: D) {
     let oldActiveDate = this._activeDate;
-    this._activeDate = coerceDateProperty(this._dateAdapter, value) || this._dateAdapter.today();
+    this._activeDate = this._dateAdapter.coerceToDate(value) || this._dateAdapter.today();
     if (!this._hasSameMonthAndYear(oldActiveDate, this._activeDate)) {
       this._init();
     }
@@ -58,7 +57,7 @@ export class MatMonthView<D> implements AfterContentInit {
   @Input()
   get selected(): D | null { return this._selected; }
   set selected(value: D | null) {
-    this._selected = coerceDateProperty(this._dateAdapter, value);
+    this._selected = this._dateAdapter.coerceToDate(value);
     this._selectedDate = this._getDateInCurrentMonth(this._selected);
   }
   private _selected: D | null;

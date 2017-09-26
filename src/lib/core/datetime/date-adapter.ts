@@ -171,13 +171,6 @@ export abstract class DateAdapter<D> {
   abstract toIso8601(date: D): string;
 
   /**
-   * Creates a date from an RFC 3339 compatible string (https://tools.ietf.org/html/rfc3339).
-   * @param iso8601String The ISO date string to create a date from
-   * @returns The date created from the ISO date string.
-   */
-  abstract fromIso8601(iso8601String: string): D | null;
-
-  /**
    * Checks whether the given object is considered a date instance by this DateAdapter.
    * @param obj The object to check
    * @returns Whether the object is a date instance.
@@ -190,6 +183,23 @@ export abstract class DateAdapter<D> {
    * @returns Whether the date is valid.
    */
   abstract isValid(date: D): boolean;
+
+  /**
+   * Attempts to coerce a value to a valid date object. This is different from parsing in that it
+   * should only coerce non-ambiguous, locale-independent values (e.g. a ISO 8601 string).
+   * The default implementation does not allow any coercion, it simply checks that the given value
+   * is already a valid date object or null.
+   * @param value The value to be coerced to a date object.
+   * @returns The coerced date object, either a valid date, null if the value can be coerced to a
+   *     null date (e.g. the empty string).
+   * @throws If the given value cannot be coerced to a valid date or null.
+   */
+  coerceToDate(value: any): D | null {
+    if (value == null || this.isDateInstance(value) && this.isValid(value)) {
+      return value;
+    }
+    throw Error(`Could not coerce "${value}" to a valid date object.`);
+  }
 
   /**
    * Sets the locale used for all dates.
