@@ -118,6 +118,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   private _overlayRef: OverlayRef | null;
   private _portal: TemplatePortal<any>;
   private _panelOpen: boolean = false;
+  private _componentDestroyed = false;
 
   /** Strategy that is used to position the panel. */
   private _positionStrategy: ConnectedPositionStrategy;
@@ -150,6 +151,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
               @Optional() @Inject(DOCUMENT) private _document: any) {}
 
   ngOnDestroy() {
+    this._componentDestroyed = true;
     this._destroyPanel();
     this._escapeEventStream.complete();
   }
@@ -177,11 +179,15 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
         this._closingActionsSubscription.unsubscribe();
       }
 
-      // We need to trigger change detection manually, because
-      // `fromEvent` doesn't seem to do it at the proper time.
-      // This ensures that the label is reset when the
-      // user clicks outside.
-      this._changeDetectorRef.detectChanges();
+      // Note that in some cases this can end up being called after the component is destroyed.
+      // Add a check to ensure that we don't try to run change detection on a destroyed view.
+      if (!this._componentDestroyed) {
+        // We need to trigger change detection manually, because
+        // `fromEvent` doesn't seem to do it at the proper time.
+        // This ensures that the label is reset when the
+        // user clicks outside.
+        this._changeDetectorRef.detectChanges();
+      }
     }
   }
 
