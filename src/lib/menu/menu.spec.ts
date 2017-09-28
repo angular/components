@@ -1086,7 +1086,7 @@ describe('MatMenu default overrides', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MatMenuModule, NoopAnimationsModule],
-      declarations: [SimpleMenu],
+      declarations: [SimpleMenu, FakeIcon],
       providers: [{
         provide: MAT_MENU_DEFAULT_OPTIONS,
         useValue: {overlapTrigger: false, xPosition: 'before', yPosition: 'above'},
