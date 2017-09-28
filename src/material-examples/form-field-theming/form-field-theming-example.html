@@ -1,0 +1,14 @@
+<form class="example-container" [formGroup]="options" [style.fontSize.px]="getFontSize()">
+  <md-form-field [color]="options.value.color">
+    <md-select placeholder="Color" formControlName="color">
+      <md-option value="primary">Primary</md-option>
+      <md-option value="accent">Accent</md-option>
+      <md-option value="warn">Warn</md-option>
+    </md-select>
+  </md-form-field>
+
+  <md-form-field [color]="options.value.color">
+    <input mdInput type="number" placeholder="Font size (px)" formControlName="fontSize" min="10">
+    <md-error *ngIf="!options.get('fontSize').valid">Min size: 10px</md-error>
+  </md-form-field>
+</form>

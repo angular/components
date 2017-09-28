@@ -1,0 +1,29 @@
+<div class="example-container">
+  <form class="example-container" [formGroup]="options">
+    <md-checkbox formControlName="hideRequired">Hide required marker</md-checkbox>
+    <div>
+      <label>Float placeholder: </label>
+      <md-radio-group formControlName="floatPlaceholder">
+        <md-radio-button value="auto">Auto</md-radio-button>
+        <md-radio-button value="always">Always</md-radio-button>
+        <md-radio-button value="never">Never</md-radio-button>
+      </md-radio-group>
+    </div>
+  </form>
+
+  <md-form-field
+      [hideRequiredMarker]="options.value.hideRequired"
+      [floatPlaceholder]="options.value.floatPlaceholder">
+    <input mdInput placeholder="Simple placeholder" required>
+  </md-form-field>
+
+  <md-form-field
+      [hideRequiredMarker]="options.value.hideRequired"
+      [floatPlaceholder]="options.value.floatPlaceholder">
+    <md-select required>
+      <md-option>-- None --</md-option>
+      <md-option value="option">Option</md-option>
+    </md-select>
+    <md-placeholder><md-icon>favorite</md-icon> <b> Fancy</b> <i> placeholder</i></md-placeholder>
+  </md-form-field>
+</div>

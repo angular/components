@@ -1,0 +1,13 @@
+<div class="example-container">
+  <md-form-field hintLabel="Max 10 characters">
+    <input mdInput #input maxlength="10" placeholder="Enter some input">
+    <md-hint align="end">{{input.value?.length || 0}}/10</md-hint>
+  </md-form-field>
+
+  <md-form-field>
+    <md-select placeholder="Select me">
+      <md-option value="option">Option</md-option>
+    </md-select>
+    <md-hint align="end">Here's the dropdown arrow ^</md-hint>
+  </md-form-field>
+</div>
