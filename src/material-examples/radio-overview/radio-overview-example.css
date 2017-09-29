@@ -1,1 +1,4 @@
-/** No CSS for this example */
+.mat-radio-button:not(:last-child) {
+  /*double the label-content padding-left*/
+  padding-right: 16px;
+}
