@@ -229,28 +229,28 @@ describe('MatSelectionList', () => {
   });
 
   describe('with list option selected', () => {
-    let fixture: ComponentFixture<SelectionListWithListOptions>;
+    let fixture: ComponentFixture<SelectionListWithSelectedOption>;
     let listItemEl: DebugElement;
     let selectionList: DebugElement;
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
-        imports: [MdListModule],
-        declarations: [SelectionListWithSelecedOption],
+        imports: [MatListModule],
+        declarations: [SelectionListWithSelectedOption],
       });
 
       TestBed.compileComponents();
     }));
 
     beforeEach(async(() => {
-      fixture = TestBed.createComponent(SelectionListWithSelecedOption);
-      listItemEl = fixture.debugElement.query(By.directive(MdListOption));
-      selectionList = fixture.debugElement.query(By.directive(MdSelectionList));
+      fixture = TestBed.createComponent(SelectionListWithSelectedOption);
+      listItemEl = fixture.debugElement.query(By.directive(MatListOption));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
       fixture.detectChanges();
     }));
 
     it('should set its initial selected state in the selectedOptions', () => {
-      let optionEl = listItemEl.injector.get(MdListOption);
+      let optionEl = listItemEl.injector.get(MatListOption);
       let selectedOptions = selectionList.componentInstance.selectedOptions;
       expect(selectedOptions.isSelected(optionEl)).toBeTruthy();
     });
@@ -496,9 +496,9 @@ class SelectionListWithDisabledOption {
 
 @Component({template: `
   <mat-selection-list>
-    <md-list-option [selected]="true">Item</md-list-option>
+    <mat-list-option [selected]="true">Item</mat-list-option>
   </mat-selection-list>`})
-class SelectionListWithSelecedOption {
+class SelectionListWithSelectedOption {
 }
 
 @Component({template: `
