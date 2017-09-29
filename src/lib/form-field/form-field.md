@@ -85,7 +85,8 @@ the prefix. Similarly, adding `matSuffix` will designate it as the suffix.
 ### Custom form field controls
 In addition to the form field controls that Angular Material provides, it is possible to create
 custom form field controls that work with `<mat-form-field>` in the same way. For additional
-information on this see the guide on [Creating Custom mat-form-field Controls](TODO).
+information on this see the guide on
+[Creating Custom mat-form-field Controls](https://material.angular.io/guide/creating-a-custom-form-field-control).
 
 ### Theming
 `<mat-form-field>` has a `color` property which can be set to `primary`, `accent`, or `warn`. This
@@ -121,7 +122,7 @@ element.
 This error occurs you have added multiple hints for the same side. Keep in mind that the `hintLabel`
 property adds a hint to the start side.
 
-#### Error: md-form-field must contain a MdFormFieldControl
+#### Error: mat-form-field must contain a MatFormFieldControl
 This error occurs when you have not added a form field control to your form field. If your form
 field contains a native `<input>` or `<textarea>` element, make sure you've added the `matInput`
 directive to it. Other components that can act as a form field control include `<mat-select>`,

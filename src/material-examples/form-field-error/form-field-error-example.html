@@ -1,6 +1,6 @@
 <div class="example-container">
-  <md-form-field>
-    <input mdInput placeholder="Enter your email" [formControl]="email" required>
-    <md-error *ngIf="!email.valid">{{getErrorMessage()}}</md-error>
-  </md-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Enter your email" [formControl]="email" required>
+    <mat-error *ngIf="!email.valid">{{getErrorMessage()}}</mat-error>
+  </mat-form-field>
 </div>

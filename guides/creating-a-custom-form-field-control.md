@@ -7,7 +7,10 @@ that we want to work inside the form field. For example, a phone number input th
 parts of the number into their own inputs. (Note: this is not intended to be a robust component,
 just a starting point for us to learn.)
 
-<!-- TODO(mmalerba): Link to plunker/stackblitz with complete example code -->
+<!--
+  TODO(mmalerba): Link to Plunker/StackBlitz with complete example code after beta 12.
+  (Beta 11 is missing some of the features used in the example).
+-->
 
 ```ts
 class MyTel {
@@ -66,35 +69,35 @@ class MyTelInput {
 }
 ```
 
-### Providing our component as an MdFormFieldControl
-The first step is to provide our new component as an implementation of the `MdFormFieldControl`
-interface that the `<md-form-field>` knows how to work with. To do this we will have our class
-implement `MdFormFieldControl`, since this is a generic interface we'll need to include a type
+### Providing our component as an MatFormFieldControl
+The first step is to provide our new component as an implementation of the `MatFormFieldControl`
+interface that the `<mat-form-field>` knows how to work with. To do this we will have our class
+implement `MatFormFieldControl`, since this is a generic interface we'll need to include a type
 parameter indicating the type of data our control will work with, in this case `MyTel`. We then add
 a provider to our component so that when the form field will be able to inject it as a
-`MdFormFieldControl`.
+`MatFormFieldControl`.
 
 ```ts
 @Component({
   ...
-  providers: [{provide: MdFormFieldControl, useExisting: MyTelInput}],
+  providers: [{provide: MatFormFieldControl, useExisting: MyTelInput}],
 })
-class MyTelInput implements MdFormFieldControl<MyTel> {
+class MyTelInput implements MatFormFieldControl<MyTel> {
   ...
 }
 ```
 
-This sets up our component so it can work with `<md-form-field>`, but now we need to implement the
+This sets up our component so it can work with `<mat-form-field>`, but now we need to implement the
 various methods and properties declared by the interface we just implemented. To learn more about
-the `MdFormFieldControl` interface, see its
+the `MatFormFieldControl` interface, see its
 [definition](https://github.com/angular/material2/blob/master/src/lib/form-field/form-field-control.ts).
 (Unfortunately generated API docs are not available yet, but we'll go through the methods and
 properties in this guide.) 
 
-### Implementing the methods and properties of MdFormFieldControl
+### Implementing the methods and properties of MatFormFieldControl
 #### `value`
 This property allows someone to set or get the value of our control. Its type should be the same
-type we used for the type parameter when we implemented `MdFormFieldControl`. Since our component 
+type we used for the type parameter when we implemented `MatFormFieldControl`. Since our component 
 already has a value property we don't need to do anything for this one.
 
 #### `stateChanges`
@@ -284,7 +287,7 @@ we'll use `my-tel-input` as our control type which will result in the form field
 controlType = 'my-tel-input';
 ```
 
-#### `setAriaDescribedByIds`
+#### `setAriaDescribedByIds(ids: string[])`
 This method is used by the `<mat-form-field>` to specify the IDs that should be used for the
 `aria-describedby` attribute of your component. The method has one parameter, the list of IDs, we
 just need to apply the given IDs to our host element.
@@ -297,7 +300,7 @@ setDescribedByIds(ids: string[]) {
 }
 ```
 
-#### `onContainerClick`
+#### `onContainerClick(event: MouseEvent)`
 This method will be called when the form field is clicked on. It allows your component to hook in
 and handle that click however it wants. The method has one parameter, the `MouseEvent` for the
 click. In our case we'll just focus the first `<input>` if the user isn't about to click an
@@ -328,7 +331,7 @@ the error state).
 ```html
 <mat-form-field>
   <my-tel-input placeholder="Phone number" required></my-tel-input>
-  <md-icon mdPrefix>phone</md-icon>
-  <md-hint>Include area code</md-hint>
+  <mat-icon matPrefix>phone</mat-icon>
+  <mat-hint>Include area code</mat-hint>
 </mat-form-field>
 ```

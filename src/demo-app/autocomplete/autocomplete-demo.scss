@@ -1,0 +1,20 @@
+.demo-autocomplete {
+  display: flex;
+  flex-flow: row wrap;
+
+  .mat-card {
+    width: 400px;
+    margin: 24px;
+  }
+
+  .mat-form-field {
+    margin-top: 16px;
+    min-width: 200px;
+    max-width: 100%;
+  }
+}
+
+.demo-secondary-text {
+  color: rgba(0, 0, 0, 0.54);
+  margin-left: 8px;
+}

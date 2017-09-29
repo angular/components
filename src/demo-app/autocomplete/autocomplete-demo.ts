@@ -1,20 +1,7 @@
-import {FocusMonitor} from '@angular/cdk/a11y';
-import {
-  Component, ElementRef,
-  HostBinding,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Renderer2,
-  SimpleChanges,
-  ViewEncapsulation
-} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {MdFormFieldControl} from '@angular/material';
-import 'rxjs/add/operator/map';
+import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {FormControl, NgModel} from '@angular/forms';
 import 'rxjs/add/operator/startWith';
-import {Subject} from 'rxjs/Subject';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import 'rxjs/add/operator/map';
 
 export interface State {
   code: string;
@@ -35,147 +22,115 @@ export interface StateGroup {
   preserveWhitespaces: false,
 })
 export class AutocompleteDemo {
+  stateCtrl: FormControl;
+  currentState = '';
+  currentGroupedState = '';
+  topHeightCtrl = new FormControl(0);
 
-}
+  reactiveStates: any;
+  tdStates: any[];
 
-export class MyTel {
-  constructor(public area: string, public exchange: string, public subscriber: string) {}
-}
+  tdDisabled = false;
 
-@Component({
-  moduleId: module.id,
-  selector: 'my-tel-input',
-  template: `
-    <style>
-      div {
-        display: flex;
+  @ViewChild(NgModel) modelDir: NgModel;
+
+  groupedStates: StateGroup[];
+  filteredGroupedStates: StateGroup[];
+  states: State[] = [
+    {code: 'AL', name: 'Alabama'},
+    {code: 'AK', name: 'Alaska'},
+    {code: 'AZ', name: 'Arizona'},
+    {code: 'AR', name: 'Arkansas'},
+    {code: 'CA', name: 'California'},
+    {code: 'CO', name: 'Colorado'},
+    {code: 'CT', name: 'Connecticut'},
+    {code: 'DE', name: 'Delaware'},
+    {code: 'FL', name: 'Florida'},
+    {code: 'GA', name: 'Georgia'},
+    {code: 'HI', name: 'Hawaii'},
+    {code: 'ID', name: 'Idaho'},
+    {code: 'IL', name: 'Illinois'},
+    {code: 'IN', name: 'Indiana'},
+    {code: 'IA', name: 'Iowa'},
+    {code: 'KS', name: 'Kansas'},
+    {code: 'KY', name: 'Kentucky'},
+    {code: 'LA', name: 'Louisiana'},
+    {code: 'ME', name: 'Maine'},
+    {code: 'MD', name: 'Maryland'},
+    {code: 'MA', name: 'Massachusetts'},
+    {code: 'MI', name: 'Michigan'},
+    {code: 'MN', name: 'Minnesota'},
+    {code: 'MS', name: 'Mississippi'},
+    {code: 'MO', name: 'Missouri'},
+    {code: 'MT', name: 'Montana'},
+    {code: 'NE', name: 'Nebraska'},
+    {code: 'NV', name: 'Nevada'},
+    {code: 'NH', name: 'New Hampshire'},
+    {code: 'NJ', name: 'New Jersey'},
+    {code: 'NM', name: 'New Mexico'},
+    {code: 'NY', name: 'New York'},
+    {code: 'NC', name: 'North Carolina'},
+    {code: 'ND', name: 'North Dakota'},
+    {code: 'OH', name: 'Ohio'},
+    {code: 'OK', name: 'Oklahoma'},
+    {code: 'OR', name: 'Oregon'},
+    {code: 'PA', name: 'Pennsylvania'},
+    {code: 'RI', name: 'Rhode Island'},
+    {code: 'SC', name: 'South Carolina'},
+    {code: 'SD', name: 'South Dakota'},
+    {code: 'TN', name: 'Tennessee'},
+    {code: 'TX', name: 'Texas'},
+    {code: 'UT', name: 'Utah'},
+    {code: 'VT', name: 'Vermont'},
+    {code: 'VA', name: 'Virginia'},
+    {code: 'WA', name: 'Washington'},
+    {code: 'WV', name: 'West Virginia'},
+    {code: 'WI', name: 'Wisconsin'},
+    {code: 'WY', name: 'Wyoming'},
+  ];
+
+  constructor() {
+    this.tdStates = this.states;
+    this.stateCtrl = new FormControl({code: 'CA', name: 'California'});
+    this.reactiveStates = this.stateCtrl.valueChanges
+        .startWith(this.stateCtrl.value)
+        .map(val => this.displayFn(val))
+        .map(name => this.filterStates(name));
+
+    this.filteredGroupedStates = this.groupedStates = this.states.reduce((groups, state) => {
+      let group = groups.find(g => g.letter === state.name[0]);
+
+      if (!group) {
+        group = { letter: state.name[0], states: [] };
+        groups.push(group);
       }
-      input {
-        border: none;
-        background: none;
-        padding: 0;
-        outline: none;
-        font: inherit;
-        text-align: center;
-      }
-      span {
-        opacity: 0;
-        transition: opacity 200ms;
-      }
-      :host.floating span {
-        opacity: 1;
-      }
-    </style>
-    
-    <div [formGroup]="parts">
-      <input class="area" formControlName="area" size="3" [disabled]="disabled">
-      <span>&ndash;</span>
-      <input class="exchange" formControlName="exchange" size="3" [disabled]="disabled">
-      <span>&ndash;</span>
-      <input class="subscriber" formControlName="subscriber" size="4" [disabled]="disabled">
-    </div>
-  `,
-  providers: [{provide: MdFormFieldControl, useExisting: MyTelInput}],
-})
-export class MyTelInput implements MdFormFieldControl<MyTel>, OnDestroy {
-  static nextId = 0;
 
-  parts: FormGroup;
+      group.states.push({ code: state.code, name: state.name });
 
-  stateChanges = new Subject<void>();
-
-  focused = false;
-
-  ngControl = null;
-
-  errorState = false;
-
-  controlType = 'my-tel-input';
-
-  get empty() {
-    let n = this.parts.value;
-    return !n.area && !n.exchange && !n.subscriber;
+      return groups;
+    }, [] as StateGroup[]);
   }
 
-  @HostBinding('class.floating')
-  get shouldPlaceholderFloat() {
-    return this.focused || !this.empty;
+  displayFn(value: any): string {
+    return value && typeof value === 'object' ? value.name : value;
   }
 
-  @HostBinding() id = `my-tel-input-${MyTelInput.nextId++}`;
+  filterStates(val: string) {
+    return val ? this._filter(this.states, val) : this.states;
+  }
 
-  @HostBinding('attr.aria-describedby') describedBy = '';
-
-  @Input()
-  get placeholder() {
-    return this._placeholder;
-  }
-  set placeholder(plh) {
-    this._placeholder = plh;
-    this.stateChanges.next();
-  }
-  private _placeholder: string;
-
-  @Input()
-  get required() {
-    return this._required;
-  }
-  set required(req) {
-    this._required = coerceBooleanProperty(req);
-    this.stateChanges.next();
-  }
-  private _required = false;
-
-  @Input()
-  get disabled() {
-    return this._disabled;
-  }
-  set disabled(dis) {
-    this._disabled = coerceBooleanProperty(dis);
-    this.stateChanges.next();
-  }
-  private _disabled = false;
-
-  @Input()
-  get value(): MyTel | null {
-    let n = this.parts.value;
-    if (n.area.length == 3 && n.exchange.length == 3 && n.subscriber.length == 4) {
-      return new MyTel(n.area, n.exchange, n.subscriber);
+  filterStateGroups(val: string) {
+    if (val) {
+      return this.groupedStates
+        .map(group => ({ letter: group.letter, states: this._filter(group.states, val) }))
+        .filter(group => group.states.length > 0);
     }
-    return null;
-  }
-  set value(tel: MyTel | null) {
-    tel = tel || new MyTel('', '', '');
-    this.parts.setValue({area: tel.area, exchange: tel.exchange, subscriber: tel.subscriber});
-    this.stateChanges.next();
+
+    return this.groupedStates;
   }
 
-  constructor(fb: FormBuilder, private fm: FocusMonitor, private elRef: ElementRef,
-              renderer: Renderer2) {
-    this.parts =  fb.group({
-      'area': '',
-      'exchange': '',
-      'subscriber': '',
-    });
-
-    fm.monitor(elRef.nativeElement, renderer, true).subscribe((origin) => {
-      this.focused = !!origin;
-      this.stateChanges.next();
-    });
-  }
-
-  ngOnDestroy() {
-    this.stateChanges.complete();
-    this.fm.stopMonitoring(this.elRef.nativeElement);
-  }
-
-  setDescribedByIds(ids: string[]) {
-    this.describedBy = ids.join(' ');
-  }
-
-  onContainerClick(event: MouseEvent) {
-    if ((event.target as Element).tagName.toLowerCase() != 'input') {
-      this.elRef.nativeElement.querySelector('input').focus();
-    }
+  private _filter(states: State[], val: string) {
+    const filterValue = val.toLowerCase();
+    return states.filter(state => state.name.toLowerCase().startsWith(filterValue));
   }
 }
