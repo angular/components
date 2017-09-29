@@ -496,7 +496,7 @@ class SelectionListWithDisabledOption {
 
 @Component({template: `
   <mat-selection-list>
-    <md-list-option [selected]="true">Item</md-list-option>
+    <mat-list-option [selected]="true">Item</mat-list-option>
   </mat-selection-list>`})
 class SelectionListWithSelecedOption {
 }
