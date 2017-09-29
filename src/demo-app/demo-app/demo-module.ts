@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
-import {AutocompleteDemo, MyTelInput} from '../autocomplete/autocomplete-demo';
+import {AutocompleteDemo} from '../autocomplete/autocomplete-demo';
 import {BaselineDemo} from '../baseline/baseline-demo';
 import {ButtonToggleDemo} from '../button-toggle/button-toggle-demo';
 import {ButtonDemo} from '../button/button-demo';
@@ -109,7 +109,6 @@ import {DEMO_APP_ROUTES} from './routes';
     ToolbarDemo,
     TooltipDemo,
     TypographyDemo,
-    MyTelInput,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
