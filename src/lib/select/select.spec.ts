@@ -1639,10 +1639,12 @@ describe('MatSelect', () => {
           const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
           const triggerBottom = trigger.getBoundingClientRect().bottom;
           const overlayBottom = overlayPane.getBoundingClientRect().bottom;
+          const difference = Math.floor(overlayBottom) - Math.floor(triggerBottom);
 
-          expect(Math.floor(overlayBottom))
-              .toEqual(Math.floor(triggerBottom),
-                  `Expected trigger bottom to align with overlay bottom.`);
+          // Check that the values are within a pixel of each other. This avoids sub-pixel
+          // deviations between OS and browser versions.
+          expect(Math.abs(difference) < 2)
+              .toEqual(true, `Expected trigger bottom to align with overlay bottom.`);
         });
       }));
 
