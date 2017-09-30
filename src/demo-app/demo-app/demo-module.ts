@@ -8,7 +8,7 @@ import {BaselineDemo} from '../baseline/baseline-demo';
 import {ButtonToggleDemo} from '../button-toggle/button-toggle-demo';
 import {ButtonDemo} from '../button/button-demo';
 import {CardDemo} from '../card/card-demo';
-import {CheckboxDemo, MdCheckboxDemoNestedChecklist} from '../checkbox/checkbox-demo';
+import {CheckboxDemo, MatCheckboxDemoNestedChecklist} from '../checkbox/checkbox-demo';
 import {ChipsDemo} from '../chips/chips-demo';
 import {DatepickerDemo} from '../datepicker/datepicker-demo';
 import {DemoMaterialModule} from '../demo-material-module';
@@ -38,6 +38,8 @@ import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
 import {StepperDemo} from '../stepper/stepper-demo';
 import {PeopleDatabase} from '../table/people-database';
 import {TableDemo} from '../table/table-demo';
+import {ScreenTypeDemo} from '../screen-type/screen-type-demo';
+import {LayoutModule} from '@angular/cdk/layout';
 import {TableHeaderDemo} from '../table/table-header-demo';
 import {FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo} from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
@@ -53,6 +55,7 @@ import {DEMO_APP_ROUTES} from './routes';
     ReactiveFormsModule,
     RouterModule.forChild(DEMO_APP_ROUTES),
     DemoMaterialModule,
+    LayoutModule,
   ],
   declarations: [
     AutocompleteDemo,
@@ -79,7 +82,7 @@ import {DEMO_APP_ROUTES} from './routes';
     JazzDialog,
     ListDemo,
     LiveAnnouncerDemo,
-    MdCheckboxDemoNestedChecklist,
+    MatCheckboxDemoNestedChecklist,
     MenuDemo,
     OverlayDemo,
     PlatformDemo,
@@ -91,6 +94,7 @@ import {DEMO_APP_ROUTES} from './routes';
     RippleDemo,
     RotiniPanel,
     ScienceJoke,
+    ScreenTypeDemo,
     SelectDemo,
     SidenavDemo,
     SliderDemo,

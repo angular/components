@@ -6,9 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MdProgressBar} from './progress-bar';
-import {MdProgressBarModule} from './progress-bar-module';
-
-
-export {MdProgressBar as MatProgressBar};
-export {MdProgressBarModule as MatProgressBarModule};
+/** Wraps the provided value in an array, unless the provided value is an array. */
+export function coerceArray<T>(value: T | T[]): T[] {
+  return Array.isArray(value) ? value : [value];
+}

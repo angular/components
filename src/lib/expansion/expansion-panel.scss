@@ -3,14 +3,11 @@
 
 .mat-expansion-panel {
   @include mat-elevation-transition;
+  @include mat-overridable-elevation(2);
   box-sizing: content-box;
   display: block;
   margin: 0;
   transition: margin 225ms $mat-fast-out-slow-in-timing-function;
-
-  &:not([class*='mat-elevation-z']) {
-    @include mat-elevation(2);
-  }
 }
 
 .mat-expansion-panel-content {
@@ -18,7 +15,8 @@
 }
 
 .mat-expansion-panel-body {
-  padding: 0 24px 16px;
+  margin: 0 24px 16px;
+  overflow: auto;
 }
 
 .mat-expansion-panel-spacing {

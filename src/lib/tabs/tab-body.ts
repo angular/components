@@ -41,7 +41,7 @@ import {Directionality, Direction} from '@angular/cdk/bidi';
  * then left-origin-center or right-origin-center can be used, which will use left or right as its
  * psuedo-prior state.
  */
-export type MdTabBodyPositionState =
+export type MatTabBodyPositionState =
     'left' | 'center' | 'right' | 'left-origin-center' | 'right-origin-center';
 
 /**
@@ -50,7 +50,7 @@ export type MdTabBodyPositionState =
  * set to 1, and a new tab is created and selected at index 2, then the tab body would have an
  * origin of right because its index was greater than the prior selected index.
  */
-export type MdTabBodyOriginState = 'left' | 'right';
+export type MatTabBodyOriginState = 'left' | 'right';
 
 /**
  * Wrapper for the contents of a tab.
@@ -58,7 +58,7 @@ export type MdTabBodyOriginState = 'left' | 'right';
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-tab-body, mat-tab-body',
+  selector: 'mat-tab-body',
   templateUrl: 'tab-body.html',
   styleUrls: ['tab-body.css'],
   encapsulation: ViewEncapsulation.None,
@@ -69,11 +69,9 @@ export type MdTabBodyOriginState = 'left' | 'right';
   },
   animations: [
     trigger('translateTab', [
-      state('void', style({transform: 'translate3d(0%, 0, 0)'})),
+      // Note: transitions to `none` instead of 0, because some browsers might blur the content.
+      state('center, void, left-origin-center, right-origin-center', style({transform: 'none'})),
       state('left', style({transform: 'translate3d(-100%, 0, 0)'})),
-      state('left-origin-center', style({transform: 'translate3d(0%, 0, 0)'})),
-      state('right-origin-center', style({transform: 'translate3d(0%, 0, 0)'})),
-      state('center', style({transform: 'translate3d(0%, 0, 0)'})),
       state('right', style({transform: 'translate3d(100%, 0, 0)'})),
       transition('* => left, * => right, left => center, right => center',
           animate('500ms cubic-bezier(0.35, 0, 0.25, 1)')),
@@ -88,7 +86,7 @@ export type MdTabBodyOriginState = 'left' | 'right';
     ])
   ]
 })
-export class MdTabBody implements OnInit, AfterViewChecked {
+export class MatTabBody implements OnInit, AfterViewChecked {
   /** The portal host inside of this container into which the tab body content will be loaded. */
   @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
@@ -102,7 +100,7 @@ export class MdTabBody implements OnInit, AfterViewChecked {
   @Input('content') _content: TemplatePortal<any>;
 
   /** The shifted index position of the tab body, where zero represents the active center tab. */
-  _position: MdTabBodyPositionState;
+  _position: MatTabBodyPositionState;
   @Input('position') set position(position: number) {
     if (position < 0) {
       this._position = this._getLayoutDirection() == 'ltr' ? 'left' : 'right';
@@ -114,7 +112,7 @@ export class MdTabBody implements OnInit, AfterViewChecked {
   }
 
   /** The origin position from which this tab should appear when it is centered into view. */
-  _origin: MdTabBodyOriginState;
+  _origin: MatTabBodyOriginState;
 
   /** The origin position from which this tab should appear when it is centered into view. */
   @Input('origin') set origin(origin: number) {
@@ -175,7 +173,7 @@ export class MdTabBody implements OnInit, AfterViewChecked {
   }
 
   /** Whether the provided position state is considered center, regardless of origin. */
-  private _isCenterPosition(position: MdTabBodyPositionState|string): boolean {
+  private _isCenterPosition(position: MatTabBodyPositionState|string): boolean {
     return position == 'center' ||
         position == 'left-origin-center' ||
         position == 'right-origin-center';
