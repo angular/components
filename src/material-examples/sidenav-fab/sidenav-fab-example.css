@@ -4,21 +4,22 @@
   border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
-.example-sidenav-fab-container md-sidenav {
+.example-sidenav-fab-container mat-sidenav {
   max-width: 200px;
 }
 
 .example-sidenav-fab-container .mat-sidenav-content,
-.example-sidenav-fab-container md-sidenav {
+.example-sidenav-fab-container mat-sidenav {
   display: flex;
   overflow: visible;
 }
 
 .example-scrolling-content {
   overflow: auto;
+  height: 100%;
 }
 
-.example-fab {
+.example-fab.mat-mini-fab {
   position: absolute;
   right: 20px;
   bottom: 10px;
