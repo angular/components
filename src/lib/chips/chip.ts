@@ -8,6 +8,7 @@
 
 import {FocusableOption} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/keycodes';
 import {
   Directive,
   ElementRef,
@@ -17,33 +18,28 @@ import {
   Output,
   Renderer2,
 } from '@angular/core';
-import {
-  BACKSPACE,
-  CanColor,
-  CanDisable,
-  DELETE,
-  mixinColor,
-  mixinDisabled,
-  SPACE,
-} from '@angular/material/core';
+import {CanColor, CanDisable, mixinColor, mixinDisabled} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
 
-export interface MdChipEvent {
-  chip: MdChip;
+
+export interface MatChipEvent {
+  chip: MatChip;
 }
 
-/** Event object emitted by MdChip when selected or deselected. */
-export class MdChipSelectionChange {
-  constructor(public source: MdChip, public selected: boolean, public isUserInput = false) { }
+/** Event object emitted by MatChip when selected or deselected. */
+export class MatChipSelectionChange {
+  constructor(public source: MatChip, public selected: boolean, public isUserInput = false) { }
 }
 
 
-// Boilerplate for applying mixins to MdChip.
+// Boilerplate for applying mixins to MatChip.
 /** @docs-private */
-export class MdChipBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+export class MatChipBase {
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {
+  }
 }
-export const _MdChipMixinBase = mixinColor(mixinDisabled(MdChipBase), 'primary');
+
+export const _MatChipMixinBase = mixinColor(mixinDisabled(MatChipBase), 'primary');
 
 
 /**
@@ -51,19 +47,19 @@ export const _MdChipMixinBase = mixinColor(mixinDisabled(MdChipBase), 'primary')
  * @docs-private
  */
 @Directive({
-  selector: `md-basic-chip, [md-basic-chip], mat-basic-chip, [mat-basic-chip]`,
-  host: {'class': 'mat-basic-chip'}
+  selector: `mat-basic-chip, [mat-basic-chip]`,
+  host: {'class': 'mat-basic-chip'},
 })
-export class MdBasicChip { }
+export class MatBasicChip {
+}
 
 /**
- * Material design styled Chip component. Used inside the MdChipList component.
+ * Material design styled Chip component. Used inside the MatChipList component.
  */
 @Directive({
-  selector: `md-basic-chip, [md-basic-chip], md-chip, [md-chip],
-             mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]`,
+  selector: `mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]`,
   inputs: ['color', 'disabled'],
-  exportAs: 'mdChip, matChip',
+  exportAs: 'matChip',
   host: {
     'class': 'mat-chip',
     'tabindex': '-1',
@@ -79,8 +75,8 @@ export class MdBasicChip { }
   },
 
 })
-export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestroy, CanColor,
-  CanDisable {
+export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDestroy, CanColor,
+    CanDisable {
 
   protected _value: any;
 
@@ -95,7 +91,9 @@ export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestr
 
   /** Whether the chip is selected. */
   @Input()
-  get selected(): boolean { return this._selected; }
+  get selected(): boolean {
+    return this._selected;
+  }
   set selected(value: boolean) {
     this._selected = coerceBooleanProperty(value);
     this.selectionChange.emit({
@@ -104,42 +102,53 @@ export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestr
       selected: value
     });
   }
-
-  /** The value of the chip. Defaults to the content inside <md-chip> tags. */
+  /** The value of the chip. Defaults to the content inside <mat-chip> tags. */
   @Input()
   get value(): any {
     return this._value != undefined
       ? this._value
       : this._elementRef.nativeElement.textContent;
   }
-  set value(newValue: any) { this._value = newValue; }
+  set value(newValue: any) {
+    this._value = newValue;
+  }
 
   /**
    * Whether or not the chips are selectable. When a chip is not selectable,
    * changes to it's selected state are always ignored.
    */
-  @Input()
-  get selectable(): boolean { return this._selectable; }
-  set selectable(value: boolean) { this._selectable = coerceBooleanProperty(value); }
+  @Input() get selectable(): boolean {
+    return this._selectable;
+  }
+
+
+  set selectable(value: boolean) {
+    this._selectable = coerceBooleanProperty(value);
+  }
 
   /**
    * Determines whether or not the chip displays the remove styling and emits (remove) events.
    */
-  @Input()
-  get removable(): boolean { return this._removable; }
-  set removable(value: boolean) { this._removable = coerceBooleanProperty(value); }
+  @Input() get removable(): boolean {
+    return this._removable;
+  }
+
+
+  set removable(value: boolean) {
+    this._removable = coerceBooleanProperty(value);
+  }
 
   /** Emits when the chip is focused. */
-  _onFocus = new Subject<MdChipEvent>();
+  _onFocus = new Subject<MatChipEvent>();
 
   /** Emits when the chip is blured. */
-  _onBlur = new Subject<MdChipEvent>();
+  _onBlur = new Subject<MatChipEvent>();
 
   /** Emitted when the chip is selected or deselected. */
-  @Output() selectionChange = new EventEmitter<MdChipSelectionChange>();
+  @Output() selectionChange = new EventEmitter<MatChipSelectionChange>();
 
   /** Emitted when the chip is destroyed. */
-  @Output() destroyed = new EventEmitter<MdChipEvent>();
+  @Output() destroyed = new EventEmitter<MatChipEvent>();
 
   /**
    * Emitted when the chip is destroyed.
@@ -148,7 +157,7 @@ export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestr
   @Output() destroy = this.destroyed;
 
   /** Emitted when a chip is to be removed. */
-  @Output() removed = new EventEmitter<MdChipEvent>();
+  @Output() removed = new EventEmitter<MatChipEvent>();
 
   /**
    * Emitted when a chip is to be removed.
@@ -219,7 +228,7 @@ export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestr
   }
 
   /**
-   * Allows for programmatic removal of the chip. Called by the MdChipList when the DELETE or
+   * Allows for programmatic removal of the chip. Called by the MatChipList when the DELETE or
    * BACKSPACE keys are pressed.
    *
    * Informs any listeners of the removal request. Does not remove the chip from the DOM.
@@ -282,22 +291,23 @@ export class MdChip extends _MdChipMixinBase implements FocusableOption, OnDestr
  *
  * Example:
  *
- *     <md-chip>
- *       <md-icon mdChipRemove>cancel</md-icon>
- *     </md-chip>
+ *     <mat-chip>
+ *       <mat-icon matChipRemove>cancel</mat-icon>
+ *     </mat-chip>
  *
- * You *may* use a custom icon, but you may need to override the `md-chip-remove` positioning styles
- * to properly center the icon within the chip.
+ * You *may* use a custom icon, but you may need to override the `mat-chip-remove` positioning
+ * styles to properly center the icon within the chip.
  */
 @Directive({
-  selector: '[mdChipRemove], [matChipRemove]',
+  selector: '[matChipRemove]',
   host: {
     'class': 'mat-chip-remove',
-    '(click)': '_handleClick($event)'
-  }
+    '(click)': '_handleClick($event)',
+  },
 })
-export class MdChipRemove {
-  constructor(protected _parentChip: MdChip) {}
+export class MatChipRemove {
+  constructor(protected _parentChip: MatChip) {
+  }
 
   /** Calls the parent chip's public `remove()` method if applicable. */
   _handleClick(): void {

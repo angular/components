@@ -6,19 +6,19 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
-import {CommonModule} from '@angular/common';
-import {MdCommonModule, GestureConfig} from '@angular/material/core';
-import {MdSlider} from './slider';
-import {BidiModule} from '@angular/material/core';
 import {A11yModule} from '@angular/cdk/a11y';
+import {BidiModule} from '@angular/cdk/bidi';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {GestureConfig, MatCommonModule} from '@angular/material/core';
+import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
+import {MatSlider} from './slider';
 
 
 @NgModule({
-  imports: [CommonModule, MdCommonModule, BidiModule, A11yModule],
-  exports: [MdSlider, MdCommonModule],
-  declarations: [MdSlider],
+  imports: [CommonModule, MatCommonModule, BidiModule, A11yModule],
+  exports: [MatSlider, MatCommonModule],
+  declarations: [MatSlider],
   providers: [{provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig}]
 })
-export class MdSliderModule {}
+export class MatSliderModule {}

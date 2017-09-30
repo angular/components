@@ -8,5 +8,4 @@
 
 export * from './select-module';
 export * from './select';
-export {fadeInContent, transformPanel, transformPlaceholder} from './select-animations';
-export * from './mat-exports';
+export * from './select-animations';

@@ -5,17 +5,17 @@
   <div class="mat-radio-container">
     <div class="mat-radio-outer-circle"></div>
     <div class="mat-radio-inner-circle"></div>
-    <div md-ripple class="mat-radio-ripple"
-         [mdRippleTrigger]="label"
-         [mdRippleDisabled]="_isRippleDisabled()"
-         [mdRippleCentered]="true"></div>
+    <div mat-ripple class="mat-radio-ripple"
+         [matRippleTrigger]="label"
+         [matRippleDisabled]="_isRippleDisabled()"
+         [matRippleCentered]="true"></div>
   </div>
 
   <input #input class="mat-radio-input cdk-visually-hidden" type="radio"
          [id]="inputId"
          [checked]="checked"
          [disabled]="disabled"
-         [name]="name"
+         [attr.name]="name"
          [required]="required"
          [attr.aria-label]="ariaLabel"
          [attr.aria-labelledby]="ariaLabelledby"

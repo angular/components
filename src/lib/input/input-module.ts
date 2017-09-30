@@ -6,30 +6,30 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {MdInput} from './input';
-import {MdTextareaAutosize} from './autosize';
+import {PlatformModule} from '@angular/cdk/platform';
 import {CommonModule} from '@angular/common';
-import {PlatformModule} from '@angular/material/core';
-import {MdFormFieldModule} from '@angular/material/form-field';
+import {NgModule} from '@angular/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatTextareaAutosize} from './autosize';
+import {MatInput} from './input';
 
 
 @NgModule({
   declarations: [
-    MdInput,
-    MdTextareaAutosize,
+    MatInput,
+    MatTextareaAutosize,
   ],
   imports: [
     CommonModule,
-    MdFormFieldModule,
+    MatFormFieldModule,
     PlatformModule,
   ],
   exports: [
-    // We re-export the `MdFormFieldModule` since `MdInput` will almost always be used together with
-    // `MdFormField`.
-    MdFormFieldModule,
-    MdInput,
-    MdTextareaAutosize,
+    // We re-export the `MatFormFieldModule` since `MatInput` will almost always
+    // be used together with `MatFormField`.
+    MatFormFieldModule,
+    MatInput,
+    MatTextareaAutosize,
   ],
 })
-export class MdInputModule {}
+export class MatInputModule {}

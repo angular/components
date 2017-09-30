@@ -6,37 +6,37 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {MdError} from './error';
-import {MdFormField} from './form-field';
-import {MdHint} from './hint';
-import {MdPlaceholder} from './placeholder';
-import {MdPrefix} from './prefix';
-import {MdSuffix} from './suffix';
 import {CommonModule} from '@angular/common';
-import {PlatformModule} from '@angular/material/core';
+import {NgModule} from '@angular/core';
+import {PlatformModule} from '@angular/cdk/platform';
+import {MatError} from './error';
+import {MatFormField} from './form-field';
+import {MatHint} from './hint';
+import {MatPlaceholder} from './placeholder';
+import {MatPrefix} from './prefix';
+import {MatSuffix} from './suffix';
 
 
 @NgModule({
   declarations: [
-    MdError,
-    MdHint,
-    MdFormField,
-    MdPlaceholder,
-    MdPrefix,
-    MdSuffix,
+    MatError,
+    MatHint,
+    MatFormField,
+    MatPlaceholder,
+    MatPrefix,
+    MatSuffix,
   ],
   imports: [
     CommonModule,
     PlatformModule,
   ],
   exports: [
-    MdError,
-    MdHint,
-    MdFormField,
-    MdPlaceholder,
-    MdPrefix,
-    MdSuffix,
+    MatError,
+    MatHint,
+    MatFormField,
+    MatPlaceholder,
+    MatPrefix,
+    MatSuffix,
   ],
 })
-export class MdFormFieldModule {}
+export class MatFormFieldModule {}
