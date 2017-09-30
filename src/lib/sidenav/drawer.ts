@@ -193,17 +193,17 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
   private _currentTogglePromise: Promise<MatDrawerToggleResult> | null;
 
   /** Event emitted when the drawer is fully opened. */
-  @Output() openChange = new EventEmitter<MatDrawerToggleResult | void>();
+  @Output() openedChange = new EventEmitter<MatDrawerToggleResult | void>();
 
   /**
    * Event emitted when the drawer is fully opened.
-   * @deprecated Use `openChange` instead.
+   * @deprecated Use `openedChange` instead.
    */
-  @Output('open') onOpen = this.openChange;
+  @Output('open') onOpen = this.openedChange;
 
   /**
    * Event emitted when the drawer is fully closed.
-   * @deprecated Use `openChange` instead.
+   * @deprecated Use `openedChange` instead.
    */
   @Output('close') onClose = new EventEmitter<MatDrawerToggleResult | void>();
 
@@ -227,14 +227,17 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
   constructor(private _elementRef: ElementRef,
               private _focusTrapFactory: FocusTrapFactory,
               @Optional() @Inject(DOCUMENT) private _doc: any) {
-    this.openChange.subscribe(($event) => {
+    this.openedChange.subscribe(($event) => {
       if ($event.type === 'open') {
-          if (this._doc) {
+        if (this._doc) {
           this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
         }
 
-      if (this._isFocusTrapEnabled && this._focusTrap) {
-        this._focusTrap.focusInitialElementWhenReady();
+        if (this.isFocusTrapEnabled && this._focusTrap) {
+          this._focusTrap.focusInitialElementWhenReady();
+        }
+      } else {
+        this._restoreFocus();
       }
     });
   }
@@ -258,7 +261,7 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
 
   ngAfterContentInit(): void {
     this._focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement);
-    this._focusTrap.enabled = this._isFocusTrapEnabled;
+    this._focusTrap.enabled = this.isFocusTrapEnabled;
     this._enableAnimations = true;
   }
 
@@ -304,7 +307,7 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
       }
 
       this._currentTogglePromise = new Promise(resolve => {
-        first.call(this.openChange).subscribe(resolve);
+        first.call(this.openedChange).subscribe(resolve);
 
         if (!isOpen) {
           // add backward support
@@ -313,7 +316,7 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
       });
 
       if (this._focusTrap) {
-        this._focusTrap.enabled = this._isFocusTrapEnabled;
+        this._focusTrap.enabled = this.isFocusTrapEnabled;
       }
     }
 
@@ -342,9 +345,9 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
     const {fromState, toState} = event;
 
     if (toState === 'open' && fromState === 'void') {
-      this.openChange.emit(new MatDrawerToggleResult('open', true));
+      this.openedChange.emit(new MatDrawerToggleResult('open', true));
     } else if (toState === 'void' && fromState === 'open') {
-      this.openChange.emit(new MatDrawerToggleResult('close', true));
+      this.openedChange.emit(new MatDrawerToggleResult('close', true));
       this.onClose.emit(new MatDrawerToggleResult('close', true));
     }
 
@@ -476,7 +479,7 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
     });
 
     if (drawer.mode !== 'side') {
-      takeUntil.call(drawer.openChange,
+      takeUntil.call(drawer.openedChange,
           this._drawers.changes).subscribe(() => this._setContainerClass(drawer.opened));
     }
   }

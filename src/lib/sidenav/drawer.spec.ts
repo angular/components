@@ -439,9 +439,9 @@ class DrawerContainerTwoDrawerTestApp {
 /** Test component that contains an MatDrawerContainer and one MatDrawer. */
 @Component({
   template: `
-    <md-drawer-container (backdropClick)="backdropClicked()">
-      <md-drawer #drawer position="start"
-                 (openChange)="open($event)">
+    <mat-drawer-container (backdropClick)="backdropClicked()">
+      <mat-drawer #drawer position="start"
+                 (openedChange)="open($event)">
         <button #drawerButton>Content.</button>
       </mat-drawer>
       <button (click)="drawer.open()" class="open" #openButton></button>
@@ -483,7 +483,7 @@ class DrawerSetToOpenedFalse { }
 @Component({
   template: `
     <mat-drawer-container>
-      <mat-drawer #drawer mode="side" opened="true" (open)="openCallback()">
+      <mat-drawer #drawer mode="side" opened="true" (openedChange)="openCallback()">
         Closed Drawer.
       </mat-drawer>
     </mat-drawer-container>`,
