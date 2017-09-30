@@ -441,8 +441,8 @@ class DrawerContainerTwoDrawerTestApp {
   template: `
     <mat-drawer-container (backdropClick)="backdropClicked()">
       <mat-drawer #drawer position="start"
-                 (open)="open()"
-                 (close)="close()">
+                 (opened)="open()"
+                 (closed)="close()">
         <button #drawerButton>Content.</button>
       </mat-drawer>
       <button (click)="drawer.open()" class="open" #openButton></button>
@@ -484,7 +484,7 @@ class DrawerSetToOpenedFalse { }
 @Component({
   template: `
     <mat-drawer-container>
-      <mat-drawer #drawer mode="side" opened="true" (open)="openCallback()">
+      <mat-drawer #drawer mode="side" opened="true" (opened)="openCallback()">
         Closed Drawer.
       </mat-drawer>
     </mat-drawer-container>`,

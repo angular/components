@@ -37,6 +37,8 @@ import {first} from 'rxjs/operator/first';
 import {startWith} from 'rxjs/operator/startWith';
 import {takeUntil} from 'rxjs/operator/takeUntil';
 import {Subject} from 'rxjs/Subject';
+import {filter, map, RxChain} from '@angular/cdk/rxjs';
+import {Observable} from 'rxjs/Observable';
 
 
 /** Throws an exception when two MatDrawer are matching the same position. */
@@ -192,11 +194,38 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
    */
   private _currentTogglePromise: Promise<MatDrawerToggleResult> | null;
 
-  /** Event emitted when the drawer is fully opened. */
-  @Output('open') onOpen = new EventEmitter<MatDrawerToggleResult | void>();
+  /** Event emitted when the drawer open state is changed. */
+  @Output() openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  /** Event emitted when the drawer is fully closed. */
-  @Output('close') onClose = new EventEmitter<MatDrawerToggleResult | void>();
+  /** Event emitted when the drawer has been opened. */
+  @Output('opened')
+  get _openedStream(): Observable<void> {
+    return RxChain.from(this.openedChange)
+      .call(filter, o => o)
+      .call(map, () => {})
+      .result();
+  }
+
+  /** Event emitted when the drawer has been closed. */
+  @Output('closed')
+  get _closedStream(): Observable<void> {
+    return RxChain.from(this.openedChange)
+      .call(filter, o => !o)
+      .call(map, () => {})
+      .result();
+  }
+
+  /**
+   * Event emitted when the drawer is fully opened.
+   * @deprecated Use `openedChange` instead.
+   */
+  @Output('open') onOpen = this._openedStream;
+
+  /**
+   * Event emitted when the drawer is fully closed.
+   * @deprecated Use `openedChange` instead.
+   */
+  @Output('close') onClose = this._closedStream;
 
   /** Event emitted when the drawer's position changes. */
   @Output('positionChanged') onPositionChanged = new EventEmitter<void>();
@@ -218,17 +247,19 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
   constructor(private _elementRef: ElementRef,
               private _focusTrapFactory: FocusTrapFactory,
               @Optional() @Inject(DOCUMENT) private _doc: any) {
-    this.onOpen.subscribe(() => {
-      if (this._doc) {
-        this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
-      }
+    this.openedChange.subscribe((opened: boolean) => {
+      if (opened) {
+        if (this._doc) {
+          this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
+        }
 
-      if (this._isFocusTrapEnabled && this._focusTrap) {
-        this._focusTrap.focusInitialElementWhenReady();
+        if (this._isFocusTrapEnabled && this._focusTrap) {
+          this._focusTrap.focusInitialElementWhenReady();
+        }
+      } else {
+        this._restoreFocus();
       }
     });
-
-    this.onClose.subscribe(() => this._restoreFocus());
   }
 
   /**
@@ -296,7 +327,7 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
       }
 
       this._currentTogglePromise = new Promise(resolve => {
-        first.call(isOpen ? this.onOpen : this.onClose).subscribe(resolve);
+        first.call(this.openedChange).subscribe(resolve);
       });
 
       if (this._focusTrap) {
@@ -329,9 +360,9 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
     const {fromState, toState} = event;
 
     if (toState.indexOf('open') === 0 && fromState === 'void') {
-      this.onOpen.emit(new MatDrawerToggleResult('open', true));
+      this.openedChange.emit(true);
     } else if (toState === 'void' && fromState.indexOf('open') === 0) {
-      this.onClose.emit(new MatDrawerToggleResult('close', true));
+      this.openedChange.emit(false);
     }
 
     // Note: as of Angular 4.3, the animations module seems to fire the `start` callback before
@@ -462,7 +493,7 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
     });
 
     if (drawer.mode !== 'side') {
-      takeUntil.call(merge(drawer.onOpen, drawer.onClose), this._drawers.changes).subscribe(() =>
+      takeUntil.call(drawer.openedChange, this._drawers.changes).subscribe(() =>
           this._setContainerClass(drawer.opened));
     }
   }
