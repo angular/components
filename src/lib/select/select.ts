@@ -860,7 +860,6 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     this._value = valueToEmit;
     this._onChange(valueToEmit);
     this.selectionChange.emit(new MatSelectChange(this, valueToEmit));
-    this.change.emit(new MatSelectChange(this, valueToEmit));
     this.valueChange.emit(valueToEmit);
     this._changeDetectorRef.markForCheck();
   }
