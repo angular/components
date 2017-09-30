@@ -167,17 +167,17 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   }
 
   /** Stream that emits whenever the hovered menu item changes. */
-  hover(): Observable<MatMenuItem> {
+  _hovered(): Observable<MatMenuItem> {
     if (this.items) {
       return RxChain.from(this.items.changes)
         .call(startWith, this.items)
-        .call(switchMap, (items: MatMenuItem[]) => merge(...items.map(item => item.hovered)))
+        .call(switchMap, (items: MatMenuItem[]) => merge(...items.map(item => item._hovered)))
         .result();
     }
 
     return RxChain.from(this._ngZone.onStable.asObservable())
       .call(first)
-      .call(switchMap, () => this.hover())
+      .call(switchMap, () => this._hovered())
       .result();
   }
 

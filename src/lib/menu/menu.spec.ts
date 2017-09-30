@@ -590,7 +590,7 @@ describe('MatMenu', () => {
       fixture.detectChanges();
 
       const spy = jasmine.createSpy('hover spy');
-      const subscription = instance.rootMenu.hover().subscribe(spy);
+      const subscription = instance.rootMenu._hovered().subscribe(spy);
       const menuItems = overlay.querySelectorAll('[mat-menu-item]');
 
       dispatchMouseEvent(menuItems[0], 'mouseenter');
