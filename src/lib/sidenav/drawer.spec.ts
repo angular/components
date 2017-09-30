@@ -441,8 +441,7 @@ class DrawerContainerTwoDrawerTestApp {
   template: `
     <mat-drawer-container (backdropClick)="backdropClicked()">
       <mat-drawer #drawer position="start"
-                 (open)="open()"
-                 (close)="close()">
+                 (openedChange)="open($event)">
         <button #drawerButton>Content.</button>
       </mat-drawer>
       <button (click)="drawer.open()" class="open" #openButton></button>
@@ -458,12 +457,12 @@ class BasicTestApp {
   @ViewChild('openButton') openButton: ElementRef;
   @ViewChild('closeButton') closeButton: ElementRef;
 
-  open() {
-    this.openCount++;
-  }
-
-  close() {
-    this.closeCount++;
+  open($event) {
+    if ($event.type === 'open') {
+      this.openCount++;
+    } else {
+      this.closeCount++;
+    }
   }
 
   backdropClicked() {
@@ -484,7 +483,7 @@ class DrawerSetToOpenedFalse { }
 @Component({
   template: `
     <mat-drawer-container>
-      <mat-drawer #drawer mode="side" opened="true" (open)="openCallback()">
+      <mat-drawer #drawer mode="side" opened="true" (openedChange)="openCallback()">
         Closed Drawer.
       </mat-drawer>
     </mat-drawer-container>`,

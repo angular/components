@@ -63,7 +63,7 @@ Here's a simple example of using the sidenav:
 ```html
 <app>
   <mat-sidenav-container>
-    <mat-sidenav #start (open)="closeStartButton.focus()">
+    <mat-sidenav #start (openedChange)="closeStartButton.focus()">
       Start Sidenav.
       <br>
       <button mat-button #closeStartButton (click)="start.close()">Close</button>

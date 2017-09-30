@@ -193,9 +193,18 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
   private _currentTogglePromise: Promise<MatDrawerToggleResult> | null;
 
   /** Event emitted when the drawer is fully opened. */
-  @Output('open') onOpen = new EventEmitter<MatDrawerToggleResult | void>();
+  @Output() openedChange = new EventEmitter<MatDrawerToggleResult | void>();
 
-  /** Event emitted when the drawer is fully closed. */
+  /**
+   * Event emitted when the drawer is fully opened.
+   * @deprecated Use `openedChange` instead.
+   */
+  @Output('open') onOpen = this.openedChange;
+
+  /**
+   * Event emitted when the drawer is fully closed.
+   * @deprecated Use `openedChange` instead.
+   */
   @Output('close') onClose = new EventEmitter<MatDrawerToggleResult | void>();
 
   /** Event emitted when the drawer's position changes. */
@@ -210,7 +219,7 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
    */
   _modeChanged = new Subject();
 
-  get _isFocusTrapEnabled() {
+  get isFocusTrapEnabled(): boolean {
     // The focus trap is only enabled when the drawer is open in any mode other than side.
     return this.opened && this.mode !== 'side';
   }
@@ -218,24 +227,26 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
   constructor(private _elementRef: ElementRef,
               private _focusTrapFactory: FocusTrapFactory,
               @Optional() @Inject(DOCUMENT) private _doc: any) {
-    this.onOpen.subscribe(() => {
-      if (this._doc) {
-        this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
-      }
+    this.openedChange.subscribe(($event) => {
+      if ($event.type === 'open') {
+        if (this._doc) {
+          this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
+        }
 
-      if (this._isFocusTrapEnabled && this._focusTrap) {
-        this._focusTrap.focusInitialElementWhenReady();
+        if (this.isFocusTrapEnabled && this._focusTrap) {
+          this._focusTrap.focusInitialElementWhenReady();
+        }
+      } else {
+        this._restoreFocus();
       }
     });
-
-    this.onClose.subscribe(() => this._restoreFocus());
   }
 
   /**
    * If focus is currently inside the drawer, restores it to where it was before the drawer
    * opened.
    */
-  private _restoreFocus() {
+  private _restoreFocus(): void {
     let activeEl = this._doc && this._doc.activeElement;
     if (activeEl && this._elementRef.nativeElement.contains(activeEl)) {
       if (this._elementFocusedBeforeDrawerWasOpened instanceof HTMLElement) {
@@ -248,13 +259,13 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
     this._elementFocusedBeforeDrawerWasOpened = null;
   }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     this._focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement);
-    this._focusTrap.enabled = this._isFocusTrapEnabled;
+    this._focusTrap.enabled = this.isFocusTrapEnabled;
     this._enableAnimations = true;
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this._focusTrap) {
       this._focusTrap.destroy();
     }
@@ -296,11 +307,16 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
       }
 
       this._currentTogglePromise = new Promise(resolve => {
-        first.call(isOpen ? this.onOpen : this.onClose).subscribe(resolve);
+        first.call(this.openedChange).subscribe(resolve);
+
+        if (!isOpen) {
+          // add backward support
+          first.call(this.onClose).subscribe(resolve);
+        }
       });
 
       if (this._focusTrap) {
-        this._focusTrap.enabled = this._isFocusTrapEnabled;
+        this._focusTrap.enabled = this.isFocusTrapEnabled;
       }
     }
 
@@ -313,24 +329,25 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
    * Handles the keyboard events.
    * @docs-private
    */
-  handleKeydown(event: KeyboardEvent) {
+  handleKeydown(event: KeyboardEvent): void {
     if (event.keyCode === ESCAPE && !this.disableClose) {
       this.close();
       event.stopPropagation();
     }
   }
 
-  _onAnimationStart() {
+  _onAnimationStart(): void {
     this._isAnimating = true;
     this._animationStarted.emit();
   }
 
-  _onAnimationEnd(event: AnimationEvent) {
+  _onAnimationEnd(event: AnimationEvent): void {
     const {fromState, toState} = event;
 
-    if (toState.indexOf('open') === 0 && fromState === 'void') {
-      this.onOpen.emit(new MatDrawerToggleResult('open', true));
-    } else if (toState === 'void' && fromState.indexOf('open') === 0) {
+    if (toState === 'open' && fromState === 'void') {
+      this.openedChange.emit(new MatDrawerToggleResult('open', true));
+    } else if (toState === 'void' && fromState === 'open') {
+      this.openedChange.emit(new MatDrawerToggleResult('close', true));
       this.onClose.emit(new MatDrawerToggleResult('close', true));
     }
 
@@ -343,7 +360,7 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
     });
   }
 
-  get _width() {
+  get _width(): number {
     return this._elementRef.nativeElement ? (this._elementRef.nativeElement.offsetWidth || 0) : 0;
   }
 }
@@ -412,7 +429,7 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
     }
   }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     startWith.call(this._drawers.changes, null).subscribe(() => {
       this._validateDrawers();
 
@@ -462,8 +479,8 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
     });
 
     if (drawer.mode !== 'side') {
-      takeUntil.call(merge(drawer.onOpen, drawer.onClose), this._drawers.changes).subscribe(() =>
-          this._setContainerClass(drawer.opened));
+      takeUntil.call(drawer.openedChange,
+          this._drawers.changes).subscribe(() => this._setContainerClass(drawer.opened));
     }
   }
 
@@ -505,7 +522,7 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
   }
 
   /** Validate the state of the drawer children components. */
-  private _validateDrawers() {
+  private _validateDrawers(): void {
     this._start = this._end = null;
 
     // Ensure that we have at most one start and one end drawer.
@@ -535,12 +552,12 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
     }
   }
 
-  _onBackdropClicked() {
+  _onBackdropClicked(): void {
     this.backdropClick.emit();
     this._closeModalDrawer();
   }
 
-  _closeModalDrawer() {
+  _closeModalDrawer(): void {
     // Close all open drawers where closing is not disabled and the mode is not `side`.
     [this._start, this._end]
       .filter(drawer => drawer && !drawer.disableClose && drawer.mode !== 'side')
