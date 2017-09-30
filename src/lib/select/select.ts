@@ -18,7 +18,7 @@ import {
   ScrollStrategy,
   ViewportRuler,
 } from '@angular/cdk/overlay';
-import {filter, first, startWith} from '@angular/cdk/rxjs';
+import {filter, first, map, startWith, RxChain} from '@angular/cdk/rxjs';
 import {
   AfterContentInit,
   Attribute,
@@ -388,22 +388,37 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   }
 
   /** Event emitted when the select has been opened. */
-  @Output() opened: EventEmitter<void> = new EventEmitter<void>();
+  @Output() openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  /** Event emitted when the select has been opened. */
+  @Output('opened')
+  get _openedStream(): Observable<void> {
+    return RxChain.from(this.openedChange)
+      .call(filter, o => o)
+      .call(map, () => {})
+      .result();
+  }
+
+  /** Event emitted when the select has been closed. */
+  @Output('closed')
+  get _closedStream(): Observable<void> {
+    return RxChain.from(this.openedChange)
+      .call(filter, o => !o)
+      .call(map, () => {})
+      .result();
+  }
 
   /**
    * Event emitted when the select has been opened.
-   * @deprecated Use `opened` instead.
+   * @deprecated Use `openedChange` instead.
    */
-  @Output() onOpen: EventEmitter<void> = this.opened;
-
-  /** Event emitted when the select has been closed. */
-  @Output() closed: EventEmitter<void> = new EventEmitter<void>();
+  @Output() onOpen: Observable<void> = this._openedStream;
 
   /**
    * Event emitted when the select has been closed.
-   * @deprecated Use `closed` instead.
+   * @deprecated Use `openedChange` instead.
    */
-  @Output() onClose: EventEmitter<void> = this.closed;
+  @Output() onClose: Observable<void> = this._closedStream;
 
   /** Event emitted when the selected value has been changed by the user. */
   @Output() selectionChange: EventEmitter<MatSelectChange> = new EventEmitter<MatSelectChange>();
@@ -616,9 +631,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   _onPanelDone(): void {
     if (this.panelOpen) {
       this._focusCorrectOption();
-      this.opened.emit();
+      this.openedChange.emit(true);
     } else {
-      this.closed.emit();
+      this.openedChange.emit(false);
       this._panelDoneAnimating = false;
       this.overlayDir.offsetX = 0;
       this._changeDetectorRef.markForCheck();
