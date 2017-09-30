@@ -206,7 +206,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /** Closes the menu. */
   closeMenu(): void {
-    this.menu.close.emit();
+    this.menu.closed.emit();
   }
 
   /** Focuses the menu trigger. */
