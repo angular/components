@@ -6,15 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor} from '@angular/cdk/a11y';
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
-import {Component, Input, ViewEncapsulation} from '@angular/core';
-import {MATERIAL_COMPATIBILITY_MODE} from '@angular/material/core';
-import {MdStepLabel} from './step-label';
+import {Component, Input, ViewEncapsulation, ElementRef, OnDestroy, Renderer2} from '@angular/core';
+import {MatStepLabel} from './step-label';
 
 
 @Component({
   moduleId: module.id,
-  selector: 'md-step-header, mat-step-header',
+  selector: 'mat-step-header',
   templateUrl: 'step-header.html',
   styleUrls: ['step-header.css'],
   host: {
@@ -22,14 +22,14 @@ import {MdStepLabel} from './step-label';
     'role': 'tab',
   },
   encapsulation: ViewEncapsulation.None,
-  providers: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: false}],
+  preserveWhitespaces: false,
 })
-export class MdStepHeader {
+export class MatStepHeader implements OnDestroy {
   /** Icon for the given step. */
   @Input() icon: string;
 
   /** Label of the given step. */
-  @Input() label: MdStepLabel | string;
+  @Input() label: MatStepLabel | string;
 
   /** Index of the given step. */
   @Input()
@@ -63,13 +63,29 @@ export class MdStepHeader {
   }
   private _optional: boolean;
 
-  /** Returns string label of given step if it is a text label. */
-  _stringLabel(): string | null {
-    return this.label instanceof MdStepLabel ? null : this.label;
+  constructor(
+    private _focusMonitor: FocusMonitor,
+    private _element: ElementRef,
+    renderer: Renderer2) {
+    _focusMonitor.monitor(_element.nativeElement, renderer, true);
   }
 
-  /** Returns MdStepLabel if the label of given step is a template label. */
-  _templateLabel(): MdStepLabel | null {
-    return this.label instanceof MdStepLabel ? this.label : null;
+  ngOnDestroy() {
+    this._focusMonitor.stopMonitoring(this._element.nativeElement);
+  }
+
+  /** Returns string label of given step if it is a text label. */
+  _stringLabel(): string | null {
+    return this.label instanceof MatStepLabel ? null : this.label;
+  }
+
+  /** Returns MatStepLabel if the label of given step is a template label. */
+  _templateLabel(): MatStepLabel | null {
+    return this.label instanceof MatStepLabel ? this.label : null;
+  }
+
+  /** Returns the host HTML element. */
+  _getHostElement() {
+    return this._element.nativeElement;
   }
 }

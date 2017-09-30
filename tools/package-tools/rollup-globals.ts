@@ -42,7 +42,8 @@ export const rollupGlobals = {
   '@angular/common/testing': 'ng.common.testing',
   '@angular/http/testing': 'ng.http.testing',
 
-
+  // Some packages are not really needed for the UMD bundles, but for the missingRollupGlobals rule.
+  '@angular/material-examples': 'ng.materialExamples',
   '@angular/material': 'ng.material',
   '@angular/cdk': 'ng.cdk',
 
@@ -50,20 +51,17 @@ export const rollupGlobals = {
   ...rollupCdkEntryPoints,
   ...rollupMatEntryPoints,
 
-  // Some packages are not really needed for the UMD bundles, but for the missingRollupGlobals rule.
-  // TODO(devversion): remove by adding minimatch and better globbing to rules
-  '@angular/cdk/testing': 'ng.cdk.testing',
-  '@angular/material-examples': 'ng.materialExamples',
-
   'rxjs/BehaviorSubject': 'Rx',
   'rxjs/Observable': 'Rx',
   'rxjs/Subject': 'Rx',
   'rxjs/Subscription': 'Rx',
   'rxjs/Observer': 'Rx',
+  'rxjs/Subscriber': 'Rx',
   'rxjs/Scheduler': 'Rx',
   'rxjs/observable/combineLatest': 'Rx.Observable',
   'rxjs/observable/forkJoin': 'Rx.Observable',
   'rxjs/observable/fromEvent': 'Rx.Observable',
+  'rxjs/observable/fromEventPattern': 'Rx.Observable',
   'rxjs/observable/merge': 'Rx.Observable',
   'rxjs/observable/of': 'Rx.Observable',
   'rxjs/observable/throw': 'Rx.Observable',
@@ -87,6 +85,7 @@ export const rollupGlobals = {
   'rxjs/add/observable/fromEvent': 'Rx.Observable',
   'rxjs/add/observable/of': 'Rx.Observable',
   'rxjs/add/observable/interval': 'Rx.Observable',
+  'rxjs/add/observable/combineLatest': 'Rx.Observable',
   'rxjs/add/operator/startWith': 'Rx.Observable.prototype',
   'rxjs/add/operator/map': 'Rx.Observable.prototype',
   'rxjs/add/operator/debounceTime': 'Rx.Observable.prototype',

@@ -1,23 +1,24 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component, DebugElement}  from '@angular/core';
-import {By} from '@angular/platform-browser';
+import {Directionality} from '@angular/cdk/bidi';
+import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/keycodes';
 import {createKeyboardEvent} from '@angular/cdk/testing';
-import {MdChipList, MdChip, MdChipEvent, MdChipsModule, MdChipSelectionChange} from './index';
-import {SPACE, DELETE, BACKSPACE} from '@angular/material/core';
-import {Directionality} from '@angular/material/core';
+import {Component, DebugElement} from '@angular/core';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+import {MatChip, MatChipEvent, MatChipList, MatChipSelectionChange, MatChipsModule} from './index';
+
 
 describe('Chips', () => {
   let fixture: ComponentFixture<any>;
   let chipDebugElement: DebugElement;
   let chipListNativeElement: HTMLElement;
   let chipNativeElement: HTMLElement;
-  let chipInstance: MdChip;
+  let chipInstance: MatChip;
 
   let dir = 'ltr';
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdChipsModule],
+      imports: [MatChipsModule],
       declarations: [
         BasicChip, SingleChip
       ],
@@ -31,15 +32,15 @@ describe('Chips', () => {
     TestBed.compileComponents();
   }));
 
-  describe('MdBasicChip', () => {
+  describe('MatBasicChip', () => {
 
     beforeEach(() => {
       fixture = TestBed.createComponent(BasicChip);
       fixture.detectChanges();
 
-      chipDebugElement = fixture.debugElement.query(By.directive(MdChip));
+      chipDebugElement = fixture.debugElement.query(By.directive(MatChip));
       chipNativeElement = chipDebugElement.nativeElement;
-      chipInstance = chipDebugElement.injector.get(MdChip);
+      chipInstance = chipDebugElement.injector.get(MatChip);
 
       document.body.appendChild(chipNativeElement);
     });
@@ -54,17 +55,17 @@ describe('Chips', () => {
     });
   });
 
-  describe('MdChip', () => {
+  describe('MatChip', () => {
     let testComponent: SingleChip;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SingleChip);
       fixture.detectChanges();
 
-      chipDebugElement = fixture.debugElement.query(By.directive(MdChip));
-      chipListNativeElement = fixture.debugElement.query(By.directive(MdChipList)).nativeElement;
+      chipDebugElement = fixture.debugElement.query(By.directive(MatChip));
+      chipListNativeElement = fixture.debugElement.query(By.directive(MatChipList)).nativeElement;
       chipNativeElement = chipDebugElement.nativeElement;
-      chipInstance = chipDebugElement.injector.get(MdChip);
+      chipInstance = chipDebugElement.injector.get(MatChip);
       testComponent = fixture.debugElement.componentInstance;
 
       document.body.appendChild(chipNativeElement);
@@ -76,7 +77,7 @@ describe('Chips', () => {
 
     describe('basic behaviors', () => {
 
-      it('adds the `md-chip` class', () => {
+      it('adds the `mat-chip` class', () => {
         expect(chipNativeElement.classList).toContain('mat-chip');
       });
 
@@ -121,7 +122,7 @@ describe('Chips', () => {
 
         expect(chipNativeElement.classList).toContain('mat-chip-selected');
         expect(testComponent.chipSelectionChange)
-          .toHaveBeenCalledWith({source: chipInstance, isUserInput: false});
+            .toHaveBeenCalledWith({source: chipInstance, isUserInput: false, selected: true});
       });
 
       it('allows removal', () => {
@@ -144,7 +145,17 @@ describe('Chips', () => {
 
         it('should selects/deselects the currently focused chip on SPACE', () => {
           const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE) as KeyboardEvent;
-          const CHIP_EVENT: MdChipSelectionChange = {source: chipInstance, isUserInput: true};
+          const CHIP_SELECTED_EVENT: MatChipSelectionChange = {
+            source: chipInstance,
+            isUserInput: true,
+            selected: true
+          };
+
+          const CHIP_DESELECTED_EVENT: MatChipSelectionChange = {
+            source: chipInstance,
+            isUserInput: true,
+            selected: false
+          };
 
           spyOn(testComponent, 'chipSelectionChange');
 
@@ -154,7 +165,7 @@ describe('Chips', () => {
 
           expect(chipInstance.selected).toBeTruthy();
           expect(testComponent.chipSelectionChange).toHaveBeenCalledTimes(1);
-          expect(testComponent.chipSelectionChange).toHaveBeenCalledWith(CHIP_EVENT);
+          expect(testComponent.chipSelectionChange).toHaveBeenCalledWith(CHIP_SELECTED_EVENT);
 
           // Use the spacebar to deselect the chip
           chipInstance._handleKeydown(SPACE_EVENT);
@@ -162,7 +173,7 @@ describe('Chips', () => {
 
           expect(chipInstance.selected).toBeFalsy();
           expect(testComponent.chipSelectionChange).toHaveBeenCalledTimes(2);
-          expect(testComponent.chipSelectionChange).toHaveBeenCalledWith(CHIP_EVENT);
+          expect(testComponent.chipSelectionChange).toHaveBeenCalledWith(CHIP_DESELECTED_EVENT);
         });
 
         it('should have correct aria-selected', () => {
@@ -276,17 +287,17 @@ describe('Chips', () => {
 
 @Component({
   template: `
-    <md-chip-list>
+    <mat-chip-list>
       <div *ngIf="shouldShow">
-        <md-chip [selectable]="selectable" [removable]="removable"
+        <mat-chip [selectable]="selectable" [removable]="removable"
                  [color]="color" [selected]="selected" [disabled]="disabled"
-                 (focus)="chipFocus($event)" (destroy)="chipDestroy($event)"
-                 (onSelectionChange)="chipSelectionChange($event)"
-                 (remove)="chipRemove($event)">
+                 (focus)="chipFocus($event)" (destroyed)="chipDestroy($event)"
+                 (selectionChange)="chipSelectionChange($event)"
+                 (removed)="chipRemove($event)">
           {{name}}
-        </md-chip>
+        </mat-chip>
       </div>
-    </md-chip-list>`
+    </mat-chip-list>`
 })
 class SingleChip {
   disabled: boolean = false;
@@ -297,14 +308,14 @@ class SingleChip {
   removable: boolean = true;
   shouldShow: boolean = true;
 
-  chipFocus: (event?: MdChipEvent) => void = () => {};
-  chipDestroy: (event?: MdChipEvent) => void = () => {};
-  chipSelectionChange: (event?: MdChipSelectionChange) => void = () => {};
-  chipRemove: (event?: MdChipEvent) => void = () => {};
+  chipFocus: (event?: MatChipEvent) => void = () => {};
+  chipDestroy: (event?: MatChipEvent) => void = () => {};
+  chipSelectionChange: (event?: MatChipSelectionChange) => void = () => {};
+  chipRemove: (event?: MatChipEvent) => void = () => {};
 }
 
 @Component({
-  template: `<md-basic-chip>{{name}}</md-basic-chip>`
+  template: `<mat-basic-chip>{{name}}</mat-basic-chip>`
 })
 class BasicChip {
 }

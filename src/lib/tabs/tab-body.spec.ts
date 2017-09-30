@@ -1,23 +1,22 @@
-import {Component, ViewChild, TemplateRef, ViewContainerRef} from '@angular/core';
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {PortalModule, TemplatePortal} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
-import {PortalModule} from '@angular/cdk/portal';
-import {async, ComponentFixture, TestBed, flushMicrotasks, fakeAsync} from '@angular/core/testing';
+import {Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {async, ComponentFixture, fakeAsync, flushMicrotasks, TestBed} from '@angular/core/testing';
+import {MatRippleModule} from '@angular/material/core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {Direction, Directionality} from '@angular/material/core';
-import {TemplatePortal} from '@angular/material/core';
-import {MdTabBody} from './tab-body';
-import {MdRippleModule} from '@angular/material/core';
+import {MatTabBody} from './tab-body';
 
 
-describe('MdTabBody', () => {
+describe('MatTabBody', () => {
   let dir: Direction = 'ltr';
 
   beforeEach(async(() => {
     dir = 'ltr';
     TestBed.configureTestingModule({
-      imports: [CommonModule, PortalModule, MdRippleModule, NoopAnimationsModule],
+      imports: [CommonModule, PortalModule, MatRippleModule, NoopAnimationsModule],
       declarations: [
-        MdTabBody,
+        MatTabBody,
         SimpleTabBodyApp,
       ],
       providers: [
@@ -41,7 +40,7 @@ describe('MdTabBody', () => {
         fixture.componentInstance.position = 0;
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.mdTabBody._position).toBe('center');
+        expect(fixture.componentInstance.tabBody._position).toBe('center');
       });
 
       it('should be left-origin-center position with negative or zero origin', () => {
@@ -49,7 +48,7 @@ describe('MdTabBody', () => {
         fixture.componentInstance.origin = 0;
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.mdTabBody._position).toBe('left-origin-center');
+        expect(fixture.componentInstance.tabBody._position).toBe('left-origin-center');
       });
 
       it('should be right-origin-center position with positive nonzero origin', () => {
@@ -57,7 +56,7 @@ describe('MdTabBody', () => {
         fixture.componentInstance.origin = 1;
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.mdTabBody._position).toBe('right-origin-center');
+        expect(fixture.componentInstance.tabBody._position).toBe('right-origin-center');
       });
     });
 
@@ -72,7 +71,7 @@ describe('MdTabBody', () => {
         fixture.componentInstance.origin = 0;
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.mdTabBody._position).toBe('right-origin-center');
+        expect(fixture.componentInstance.tabBody._position).toBe('right-origin-center');
       });
 
       it('should be left-origin-center position with positive nonzero origin', () => {
@@ -80,7 +79,7 @@ describe('MdTabBody', () => {
         fixture.componentInstance.origin = 1;
         fixture.detectChanges();
 
-        expect(fixture.componentInstance.mdTabBody._position).toBe('left-origin-center');
+        expect(fixture.componentInstance.tabBody._position).toBe('left-origin-center');
       });
     });
   });
@@ -98,21 +97,21 @@ describe('MdTabBody', () => {
       fixture.componentInstance.position = -1;
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.mdTabBody._position).toBe('left');
+      expect(fixture.componentInstance.tabBody._position).toBe('left');
     });
 
     it('to be center position with zero position', () => {
       fixture.componentInstance.position = 0;
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.mdTabBody._position).toBe('center');
+      expect(fixture.componentInstance.tabBody._position).toBe('center');
     });
 
     it('to be left position with positive position', () => {
       fixture.componentInstance.position = 1;
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.mdTabBody._position).toBe('right');
+      expect(fixture.componentInstance.tabBody._position).toBe('right');
     });
   });
 
@@ -129,21 +128,21 @@ describe('MdTabBody', () => {
       fixture.componentInstance.position = -1;
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.mdTabBody._position).toBe('right');
+      expect(fixture.componentInstance.tabBody._position).toBe('right');
     });
 
     it('to be center position with zero position', () => {
       fixture.componentInstance.position = 0;
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.mdTabBody._position).toBe('center');
+      expect(fixture.componentInstance.tabBody._position).toBe('center');
     });
 
     it('to be left position with positive position', () => {
       fixture.componentInstance.position = 1;
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.mdTabBody._position).toBe('left');
+      expect(fixture.componentInstance.tabBody._position).toBe('left');
     });
   });
 
@@ -157,16 +156,16 @@ describe('MdTabBody', () => {
     it('should attach the content when centered and detach when not', fakeAsync(() => {
       fixture.componentInstance.position = 1;
       fixture.detectChanges();
-      expect(fixture.componentInstance.mdTabBody._portalHost.hasAttached()).toBe(false);
+      expect(fixture.componentInstance.tabBody._portalHost.hasAttached()).toBe(false);
 
       fixture.componentInstance.position = 0;
       fixture.detectChanges();
-      expect(fixture.componentInstance.mdTabBody._portalHost.hasAttached()).toBe(true);
+      expect(fixture.componentInstance.tabBody._portalHost.hasAttached()).toBe(true);
 
       fixture.componentInstance.position = 1;
       fixture.detectChanges();
       flushMicrotasks(); // Finish animation and let it detach in animation done handler
-      expect(fixture.componentInstance.mdTabBody._portalHost.hasAttached()).toBe(false);
+      expect(fixture.componentInstance.tabBody._portalHost.hasAttached()).toBe(false);
     }));
   });
 
@@ -176,7 +175,7 @@ describe('MdTabBody', () => {
 @Component({
   template: `
     <ng-template>Tab Body Content</ng-template>
-    <md-tab-body [content]="content" [position]="position" [origin]="origin"></md-tab-body>
+    <mat-tab-body [content]="content" [position]="position" [origin]="origin"></mat-tab-body>
   `
 })
 class SimpleTabBodyApp {
@@ -184,7 +183,7 @@ class SimpleTabBodyApp {
   position: number;
   origin: number;
 
-  @ViewChild(MdTabBody) mdTabBody: MdTabBody;
+  @ViewChild(MatTabBody) tabBody: MatTabBody;
   @ViewChild(TemplateRef) template: TemplateRef<any>;
 
   constructor(private _viewContainerRef: ViewContainerRef) { }

@@ -11,7 +11,7 @@ import {Overlay} from './overlay';
 import {ScrollDispatchModule, VIEWPORT_RULER_PROVIDER} from '@angular/cdk/scrolling';
 import {
   ConnectedOverlayDirective,
-  MD_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER,
+  MAT_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER,
   OverlayOrigin,
 } from './overlay-directives';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
@@ -24,7 +24,7 @@ export const OVERLAY_PROVIDERS: Provider[] = [
   OverlayPositionBuilder,
   VIEWPORT_RULER_PROVIDER,
   OVERLAY_CONTAINER_PROVIDER,
-  MD_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER,
+  MAT_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER,
 ];
 
 @NgModule({
@@ -36,11 +36,11 @@ export const OVERLAY_PROVIDERS: Provider[] = [
 export class OverlayModule {}
 
 
+export * from './overlay-config';
 export {Overlay} from './overlay';
 export {OverlayContainer} from './overlay-container';
 export {FullscreenOverlayContainer} from './fullscreen-overlay-container';
 export {OverlayRef} from './overlay-ref';
-export {OverlayState} from './overlay-state';
 export {ConnectedOverlayDirective, OverlayOrigin} from './overlay-directives';
 export {ViewportRuler} from '@angular/cdk/scrolling';
 export {ComponentType} from '@angular/cdk/portal';
