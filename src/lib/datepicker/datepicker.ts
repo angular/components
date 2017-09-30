@@ -144,6 +144,9 @@ export class MatDatepicker<D> implements OnDestroy {
    */
   @Input() touchUi = false;
 
+    /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
+@Input() panelClass: string|string[]|Set<string>|{[key: string]: any};
+
   /** Whether the datepicker pop-up should be disabled. */
   @Input()
   get disabled() {

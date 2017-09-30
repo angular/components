@@ -11,6 +11,7 @@ import {PortalHost, Portal} from '@angular/cdk/portal';
 import {OverlayConfig} from './overlay-config';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
+import {parseAndGetClassList} from '@angular/cdk/css';
 
 
 /**
@@ -70,11 +71,7 @@ export class OverlayRef implements PortalHost {
 
     if (this._config.panelClass) {
       // We can't do a spread here, because IE doesn't support setting multiple classes.
-      if (Array.isArray(this._config.panelClass)) {
-        this._config.panelClass.forEach(cls => this._pane.classList.add(cls));
-      } else {
-        this._pane.classList.add(this._config.panelClass);
-      }
+      parseAndGetClassList(this._config.panelClass).forEach(cls => this._pane.classList.add(cls));
     }
 
     // Only emit the `attachments` event once all other setup is done.

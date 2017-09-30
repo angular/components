@@ -34,8 +34,14 @@ export class MatSnackBarConfig {
   /** The length of time in milliseconds to wait before automatically dismissing the snack bar. */
   duration?: number = 0;
 
-  /** Extra CSS classes to be added to the snack bar container. */
+  /**
+   * Extra CSS classes to be added to the snack bar container.
+   * @deprecated Use `panelClass` instead.
+   */
   extraClasses?: string[];
+
+  /** Extra CSS classes to be added to the snack bar container.  */
+  panelClass?: string|string[]|Set<string>|{[klass: string]: any};
 
   /** Text layout direction for the snack bar. */
   direction?: Direction = 'ltr';
