@@ -201,18 +201,18 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
   @Output('opened')
   get _openedStream(): Observable<void> {
     return RxChain.from(this.openedChange)
-      .call(filter, o => o)
-      .call(map, () => {})
-      .result();
+        .call(filter, o => o)
+        .call(map, () => {})
+        .result();
   }
 
   /** Event emitted when the drawer has been closed. */
   @Output('closed')
   get _closedStream(): Observable<void> {
     return RxChain.from(this.openedChange)
-      .call(filter, o => !o)
-      .call(map, () => {})
-      .result();
+        .call(filter, o => !o)
+        .call(map, () => {})
+        .result();
   }
 
   /**

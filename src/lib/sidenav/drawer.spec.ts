@@ -20,6 +20,7 @@ describe('MatDrawer', () => {
         DrawerSetToOpenedTrue,
         DrawerDynamicPosition,
         DrawerWitFocusableElements,
+        DrawerOpenBinding,
       ],
     });
 
@@ -266,6 +267,20 @@ describe('MatDrawer', () => {
 
       expect(() => fixture.detectChanges()).not.toThrow();
     });
+
+    it('should bind 2-way bind on opened property', fakeAsync(() => {
+      const fixture = TestBed.createComponent(DrawerOpenBinding);
+      fixture.detectChanges();
+
+      let drawer: MatDrawer = fixture.debugElement
+          .query(By.directive(MatDrawer)).componentInstance;
+
+      drawer.open();
+      fixture.detectChanges();
+      tick();
+
+      expect(fixture.componentInstance.isOpen).toBe(true);
+    }));
   });
 
   describe('focus trapping behavior', () => {
@@ -491,6 +506,18 @@ class DrawerSetToOpenedFalse { }
 })
 class DrawerSetToOpenedTrue {
   openCallback = jasmine.createSpy('open callback');
+}
+
+@Component({
+  template: `
+    <mat-drawer-container>
+      <mat-drawer #drawer mode="side" [(opened)]="isOpen">
+        Closed Drawer.
+      </mat-drawer>
+    </mat-drawer-container>`,
+})
+class DrawerOpenBinding {
+  isOpen = false;
 }
 
 @Component({
