@@ -52,6 +52,7 @@ export class ComponentOverview implements OnInit {
 @Component({
   selector: 'component-api',
   templateUrl: './component-api.html',
+  styleUrls: ['./component-api.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class ComponentApi extends ComponentOverview {}
