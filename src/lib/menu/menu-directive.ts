@@ -122,12 +122,13 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
   /** Whether the menu should overlap its trigger. */
   @Input()
-  set overlapTrigger(value: any) {
-    this._defaultOptions.overlapTrigger = coerceBooleanProperty(value);
+  set overlapTrigger(value: boolean) {
+    this._overlapTrigger = coerceBooleanProperty(value);
   }
-  get overlapTrigger(): any {
-    return this._defaultOptions.overlapTrigger;
+  get overlapTrigger(): boolean {
+    return this._overlapTrigger;
   }
+  private _overlapTrigger: boolean = this._defaultOptions.overlapTrigger;
 
   /**
    * This method takes classes set on the host mat-menu element and applies them on the

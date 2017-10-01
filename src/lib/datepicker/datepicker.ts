@@ -143,21 +143,21 @@ export class MatDatepicker<D> implements OnDestroy {
    * than a popup and elements have more padding to allow for bigger touch targets.
    */
   @Input()
-  get touchUi() {
+  get touchUi(): boolean {
     return this._touchUi;
   }
-  set touchUi(value: any) {
+  set touchUi(value: boolean) {
     this._touchUi = coerceBooleanProperty(value);
   }
   private _touchUi = false;
 
   /** Whether the datepicker pop-up should be disabled. */
   @Input()
-  get disabled() {
+  get disabled(): boolean {
     return this._disabled === undefined && this._datepickerInput ?
         this._datepickerInput.disabled : this._disabled;
   }
-  set disabled(value: any) {
+  set disabled(value: boolean) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._disabled) {
