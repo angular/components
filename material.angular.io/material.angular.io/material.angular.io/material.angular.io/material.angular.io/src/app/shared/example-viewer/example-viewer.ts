@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {ComponentPortal, MdSnackBar} from '@angular/material';
+import {ComponentPortal, MatSnackBar} from '@angular/material';
 import 'rxjs/add/operator/first';
 
 import {EXAMPLE_COMPONENTS, LiveExample} from '@angular/material-examples';
@@ -24,7 +24,7 @@ export class ExampleViewer {
   showSource = false;
 
   constructor(
-    private snackbar: MdSnackBar,
+    private snackbar: MatSnackBar,
     private copier: CopierService) { }
 
   get example() {

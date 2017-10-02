@@ -1,5 +1,5 @@
 import {Component, NgModule} from '@angular/core';
-import {MdCardModule} from '@angular/material';
+import {MatCardModule} from '@angular/material';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
@@ -22,7 +22,7 @@ export class ComponentCategoryList {
 }
 
 @NgModule({
-  imports: [SvgViewerModule, MdCardModule, CommonModule, RouterModule],
+  imports: [SvgViewerModule, MatCardModule, CommonModule, RouterModule],
   exports: [ComponentCategoryList],
   declarations: [ComponentCategoryList],
   providers: [DocumentationItems, ComponentPageTitle],

@@ -2,7 +2,7 @@ import {Component, OnInit, NgModule, ElementRef, ViewEncapsulation, ViewChild} f
 import {ActivatedRoute, Router, RouterModule} from '@angular/router';
 import {DocumentationItems, DocItem} from '../../shared/documentation-items/documentation-items';
 import {ComponentPageTitle} from '../page-title/page-title';
-import {MdTabsModule} from '@angular/material';
+import {MatTabsModule} from '@angular/material';
 import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
 import {CommonModule} from '@angular/common';
 import {TableOfContentsModule} from '../../shared/table-of-contents/table-of-contents.module';
@@ -66,7 +66,7 @@ export class ComponentExamples extends ComponentOverview {}
 
 @NgModule({
   imports: [
-    MdTabsModule,
+    MatTabsModule,
     RouterModule,
     DocViewerModule,
     CommonModule,

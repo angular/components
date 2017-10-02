@@ -2,34 +2,34 @@
   <div class="docs-example-viewer-title">
     <div class="docs-example-viewer-title-spacer">{{exampleData?.title}}</div>
 
-    <button md-icon-button type="button" (click)="toggleSourceView()"
-            [mdTooltip]="'View source'">
-      <md-icon>
+    <button mat-icon-button type="button" (click)="toggleSourceView()"
+            [matTooltip]="'View source'">
+      <mat-icon>
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fit="" preserveAspectRatio="xMidYMid meet" focusable="false">
           <path fill="none" d="M0 0h24v24H0V0z"></path>
           <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"></path>
         </svg>
-      </md-icon>
+      </mat-icon>
     </button>
 
   <plunker-button [example]="example"></plunker-button>
 </div>
 
   <div class="docs-example-viewer-source" *ngIf="showSource">
-    <md-tab-group>
+    <mat-tab-group>
       <!-- TODO(jelbourn): don't hard-code the html + ts + css structure -->
-      <md-tab *ngFor="let extension of ['HTML', 'TS', 'CSS']" [label]="extension">
+      <mat-tab *ngFor="let extension of ['HTML', 'TS', 'CSS']" [label]="extension">
         <div class="docs-example-source-wrapper">
-          <button md-icon-button type="button" class="docs-example-source-copy"
+          <button mat-icon-button type="button" class="docs-example-source-copy"
                   title="Copy example source" aria-label="Copy example source to clipboard"
                   (click)="copySource(viewer.textContent)">
-            <md-icon>content_copy</md-icon>
+            <mat-icon>content_copy</mat-icon>
           </button>
           <pre class="docs-example-source"><doc-viewer
               #viewer [documentUrl]="exampleFileUrl(extension)"></doc-viewer></pre>
         </div>
-      </md-tab>
-    </md-tab-group>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 
   <div class="docs-example-viewer-body">

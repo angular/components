@@ -1,5 +1,5 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {MdSidenav} from '@angular/material';
+import {MatSidenav} from '@angular/material';
 import {ComponentSidenav, ComponentSidenavModule} from './component-sidenav';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 
@@ -26,7 +26,7 @@ describe('ComponentSidenav', () => {
 
     fixture.detectChanges();
     async(() => {
-      expect(component.sidenav instanceof MdSidenav).toBeTruthy();
+      expect(component.sidenav instanceof MatSidenav).toBeTruthy();
       expect(component.isScreenSmall()).toBeTruthy();
       expect(component.sidenav.opened).toBe(false);
     })

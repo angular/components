@@ -2,8 +2,8 @@
   <a *ngFor="let category of docItems.getItemsInCategories()"
     class="docs-component-category-list-item"
     [routerLink]="['/categories/', category.id]">
-    <md-card class="docs-component-category-list-card">
-      <md-card-title>{{category.name}}</md-card-title>
-    </md-card>
+    <mat-card class="docs-component-category-list-card">
+      <mat-card-title>{{category.name}}</mat-card-title>
+    </mat-card>
   </a>
 </div>

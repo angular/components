@@ -1,6 +1,6 @@
 import {Component, NgZone, ViewEncapsulation, ViewChild, OnInit, NgModule} from '@angular/core';
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
-import {MdSidenav, MdSidenavModule} from '@angular/material';
+import {MatSidenav, MatSidenavModule} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Router, RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
@@ -25,7 +25,7 @@ export class ComponentSidenav implements OnInit {
     this.mediaMatcher.addListener(mql => zone.run(() => this.mediaMatcher = mql));
   }
 
-  @ViewChild(MdSidenav) sidenav: MdSidenav;
+  @ViewChild(MatSidenav) sidenav: MatSidenav;
 
   ngOnInit() {
     this._router.events.subscribe(() => {
@@ -43,7 +43,7 @@ export class ComponentSidenav implements OnInit {
 
 @NgModule({
   imports: [
-    MdSidenavModule,
+    MatSidenavModule,
     RouterModule,
     CommonModule,
     ComponentHeaderModule,

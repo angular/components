@@ -1,6 +1,6 @@
 import {Component, NgModule, OnInit} from '@angular/core';
 import {GuideItems} from '../../shared/guide-items/guide-items';
-import {MdListModule} from '@angular/material';
+import {MatListModule} from '@angular/material';
 import {RouterModule} from '@angular/router';
 import {FooterModule} from '../../shared/footer/footer';
 import {CommonModule} from '@angular/common';
@@ -21,7 +21,7 @@ export class GuideList implements OnInit {
 
 
 @NgModule({
-  imports: [MdListModule, RouterModule, FooterModule, CommonModule],
+  imports: [MatListModule, RouterModule, FooterModule, CommonModule],
   exports: [GuideList],
   declarations: [GuideList],
   providers: [GuideItems, ComponentPageTitle],

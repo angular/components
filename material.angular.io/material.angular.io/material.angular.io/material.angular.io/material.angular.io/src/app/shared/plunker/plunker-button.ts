@@ -1,7 +1,7 @@
 import {Component, Input, NgModule} from '@angular/core';
 import {PlunkerWriter} from './plunker-writer';
 import {ExampleData} from '@angular/material-examples';
-import {MdButtonModule, MdIconModule, MdTooltipModule} from '@angular/material';
+import {MatButtonModule, MatIconModule, MatTooltipModule} from '@angular/material';
 
 @Component({
   selector: 'plunker-button',
@@ -45,7 +45,7 @@ export class PlunkerButton {
 }
 
 @NgModule({
-  imports: [MdTooltipModule, MdButtonModule, MdIconModule],
+  imports: [MatTooltipModule, MatButtonModule, MatIconModule],
   exports: [PlunkerButton],
   declarations: [PlunkerButton],
   providers: [PlunkerWriter],

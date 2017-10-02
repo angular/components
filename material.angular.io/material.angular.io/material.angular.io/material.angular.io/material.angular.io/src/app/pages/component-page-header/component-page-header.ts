@@ -2,7 +2,7 @@ import {Component, EventEmitter, NgModule, Output} from '@angular/core';
 import 'rxjs/add/operator/first';
 import {ComponentPageTitle} from '../page-title/page-title';
 import {NavigationFocusModule} from '../../shared/navigation-focus/navigation-focus';
-import {MdButtonModule, MdIconModule} from '@angular/material';
+import {MatButtonModule, MatIconModule} from '@angular/material';
 
 @Component({
   selector: 'component-page-header',
@@ -20,7 +20,7 @@ export class ComponentPageHeader {
 }
 
 @NgModule({
-  imports: [MdButtonModule, MdIconModule, NavigationFocusModule],
+  imports: [MatButtonModule, MatIconModule, NavigationFocusModule],
   exports: [ComponentPageHeader],
   declarations: [ComponentPageHeader],
   providers: [ComponentPageTitle],

@@ -6,11 +6,11 @@ $theme-picker-accent-stripe-size: 6px;
 
 
 .docs-theme-picker-menu {
-  .md-menu-content {
+  .mat-menu-content {
     padding: $theme-picker-menu-padding;
   }
 
-  [md-menu-item] {
+  [mat-menu-item] {
     flex: 0 0 auto;
     padding: 0;
     overflow: hidden;

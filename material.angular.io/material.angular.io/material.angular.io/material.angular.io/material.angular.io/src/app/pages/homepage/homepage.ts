@@ -1,6 +1,6 @@
 import {Component, NgModule, OnInit} from '@angular/core';
 import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
-import {MdButtonModule} from '@angular/material';
+import {MatButtonModule} from '@angular/material';
 import {FooterModule} from '../../shared/footer/footer';
 import {RouterModule} from '@angular/router';
 import {ComponentPageTitle} from '../page-title/page-title';
@@ -19,7 +19,7 @@ export class Homepage implements OnInit {
 }
 
 @NgModule({
-  imports: [SvgViewerModule, MdButtonModule, FooterModule, RouterModule],
+  imports: [SvgViewerModule, MatButtonModule, FooterModule, RouterModule],
   exports: [Homepage],
   declarations: [Homepage],
 })
