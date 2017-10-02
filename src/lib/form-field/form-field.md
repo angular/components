@@ -2,7 +2,7 @@
 [Text field](https://material.io/guidelines/components/text-fields.html) styles such as the
 underline, floating label, and hint messages.
 
-In this document "form field" refers to the wrapper component `<mat-form-field>` and
+In this document, "form field" refers to the wrapper component `<mat-form-field>` and
 "form field control" refers to the component that the `<mat-form-field>` is wrapping
 (e.g. the input, textarea, select, etc.)
 
@@ -52,7 +52,7 @@ in RTL), and one end-aligned.
 
 Hint labels are specified in one of two ways: either by using the `hintLabel` property of
 `<mat-form-field>`, or by adding a `<mat-hint>` element inside the form field. When adding a hint
-via the `hintLabel` property it will be treated as the start hint. Hints added via the
+via the `hintLabel` property, it will be treated as the start hint. Hints added via the
 `<mat-hint>` hint element can be added to either side by setting the `align` property on
 `<mat-hint>` to either `start` or `end`. Attempting to add multiple hints to the same side will
 raise an error.
@@ -105,8 +105,8 @@ mat-form-field.mat-form-field {
 <!-- example(form-field-theming) -->
 
 ### Accessibility
-If a floating placeholder is specified it will be automatically used as the label for the form field
-control. If no floating placeholder is specified the user should label the form field control
+If a floating placeholder is specified, it will be automatically used as the label for the form field
+control. If no floating placeholder is specified, the user should label the form field control
 themselves using `aria-label`, `aria-labelledby` or `<label for=...>`.
 
 Any errors and hints added to the form field are automatically added to the form field control's
@@ -119,8 +119,8 @@ included both a `placeholder` property on your form field control and a `<mat-pl
 element.
 
 #### Error: A hint was already declared for align="..."
-This error occurs you have added multiple hints for the same side. Keep in mind that the `hintLabel`
-property adds a hint to the start side.
+This error occurs if you have added multiple hints for the same side. Keep in mind that the
+`hintLabel` property adds a hint to the start side.
 
 #### Error: mat-form-field must contain a MatFormFieldControl
 This error occurs when you have not added a form field control to your form field. If your form

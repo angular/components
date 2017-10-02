@@ -1,8 +1,8 @@
 It is possible to create custom form field controls that can be used inside `<mat-form-field>`. This
-can be useful if you need to create a components that shares a lot of common behavior with a form
+can be useful if you need to create a component that shares a lot of common behavior with a form
 field, but adds some additional logic.
 
-In order to learn how to build custom form field controls, lets start with a simple input component
+In order to learn how to build custom form field controls, let's start with a simple input component
 that we want to work inside the form field. For example, a phone number input that segments the
 parts of the number into their own inputs. (Note: this is not intended to be a robust component,
 just a starting point for us to learn.)
@@ -69,12 +69,12 @@ class MyTelInput {
 }
 ```
 
-### Providing our component as an MatFormFieldControl
+### Providing our component as a MatFormFieldControl
 The first step is to provide our new component as an implementation of the `MatFormFieldControl`
-interface that the `<mat-form-field>` knows how to work with. To do this we will have our class
-implement `MatFormFieldControl`, since this is a generic interface we'll need to include a type
+interface that the `<mat-form-field>` knows how to work with. To do this, we will have our class
+implement `MatFormFieldControl`. Since this is a generic interface, we'll need to include a type
 parameter indicating the type of data our control will work with, in this case `MyTel`. We then add
-a provider to our component so that when the form field will be able to inject it as a
+a provider to our component so that the form field will be able to inject it as a
 `MatFormFieldControl`.
 
 ```ts
@@ -98,7 +98,7 @@ properties in this guide.)
 #### `value`
 This property allows someone to set or get the value of our control. Its type should be the same
 type we used for the type parameter when we implemented `MatFormFieldControl`. Since our component 
-already has a value property we don't need to do anything for this one.
+already has a value property, we don't need to do anything for this one.
 
 #### `stateChanges`
 Because the `<mat-form-field>` used the `OnPush` change detection strategy, we need to let it know
@@ -106,7 +106,7 @@ when something happens in the form field control that may require the form field
 detection. We do this via the `stateChanges` property. So far the only thing the form field needs to
 know about is when the value changes. We'll need to emit on the stateChanges stream when that
 happens, and as we continue flushing out these properties we'll likely find more places we need to
-emit. We should also make sure to complete `stateChanges` when our component is destroyed
+emit. We should also make sure to complete `stateChanges` when our component is destroyed.
 
 ```ts
 stateChanges = new Subject<void>();
@@ -123,7 +123,7 @@ ngOnDestory() {
 
 #### `id`
 This property should return the ID of an element in the component's template that we want the
-`<mat-form-field>` to associate all of its labels and hints with. In this case we'll use the host
+`<mat-form-field>` to associate all of its labels and hints with. In this case, we'll use the host
 element and just generate a unique ID for it.
 
 ```ts
@@ -153,8 +153,8 @@ private _placeholder: string;
 
 #### `ngControl`
 This property allows the form field control to specify the `@angular/forms` control that is bound to
-this component. Since we haven't set up our component to act as a `ControlValueAccessor` we'll just
-set this to `null` in our component. In any real component you would probably want to implement
+this component. Since we haven't set up our component to act as a `ControlValueAccessor`, we'll just
+set this to `null` in our component. In any real component, you would probably want to implement
 `ControlValueAccessor` so that your component can work with `formControl` and `ngModel`.
 
 ```ts
@@ -171,7 +171,7 @@ constructor(..., @Optional() @Self() public ngControl: NgControl) { ... }
 
 #### `focused`
 This property indicates whether or not the form field control should be considered to be in a
-focused state. When it is in a focused state the form field is displayed with a solid color
+focused state. When it is in a focused state, the form field is displayed with a solid color
 underline. For the purposes of our component, we want to consider it focused if any of the part
 inputs are focused. We can use the `FocusMonitor` from `@angular/cdk` to easily check this. We also
 need to remember to emit on the `stateChanges` stream so change detection can happen.
@@ -195,7 +195,7 @@ ngOnDestroy() {
 ```
 
 #### `empty`
-This property indicates whether the form field control is empty. For our control we'll consider it
+This property indicates whether the form field control is empty. For our control, we'll consider it
 empty if all of the parts are empty.
 
 ```ts
@@ -208,8 +208,8 @@ get empty() {
 #### `shouldPlaceholderFloat`
 This property is used to indicate whether the placeholder should be in the floating position. We'll
 use the same logic as `matInput` and float the placeholder when the input is focused or non-empty.
-Since the placeholder will be overlapping our control when when its not floating, we should hide the
-`–` characters when its not floating.
+Since the placeholder will be overlapping our control when when it's not floating, we should hide
+the `–` characters when it's not floating.
 
 ```ts
 @HostBinding('class.floating')
@@ -270,7 +270,7 @@ private _disabled = false;
 
 #### `errorState`
 This property indicates whether the associated `NgControl` is in an error state. Since we're not
-using an `NgControl` in this example we don't need to do anything other than just set it to `false`.
+using an `NgControl` in this example, we don't need to do anything other than just set it to `false`.
 
 ```ts
 errorState = false;
@@ -316,7 +316,7 @@ onContainerClick(event: MouseEvent) {
 
 ### Trying it out
 Now that we've fully implemented the interface, we're ready to try our component out! All we need to
-do is place it inside of a `<mat-form-filed>`
+do is place it inside of a `<mat-form-field>`
 
 ```html
 <mat-form-field>
