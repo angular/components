@@ -1,0 +1,84 @@
+<div class="badge-demo">
+
+  <h3>Icons</h3>
+  <mat-badge [content]="badgeContent">
+    <mat-icon color="accent">home</mat-icon>
+  </mat-badge>
+
+  <mat-badge content="1" overlap="false">
+    <mat-icon color="primary">home</mat-icon>
+  </mat-badge>
+
+  <br />
+  <br />
+  <br />
+
+  <h3>Buttons</h3>
+  <mat-badge content="22">
+    <button mat-raised-button>
+      <mat-icon color="primary">home</mat-icon>
+    </button>
+  </mat-badge>
+
+  <mat-badge content="1">
+    <button mat-raised-button>
+      Email
+    </button>
+  </mat-badge>
+
+  <br />
+  <br />
+  <br />
+
+  <h3>Text</h3>
+  <mat-badge [overlap]="false" content="22">
+    Email
+  </mat-badge>
+
+  <mat-badge overlap="false" content="John">
+    Email
+  </mat-badge>
+
+  <br />
+  <br />
+  <br />
+
+  <h3>Text Directions</h3>
+  <mat-badge overlap="false" direction="above before" content="22" color="primary">
+    Email
+  </mat-badge>
+
+  <mat-badge overlap="false" direction="above after" content="22" color="accent">
+    Email
+  </mat-badge>
+
+  <mat-badge overlap="false" direction="bottom before" content="22" color="warn">
+    Email
+  </mat-badge>
+
+  <mat-badge overlap="false" direction="bottom after" content="22">
+    Email
+  </mat-badge>
+
+  <br />
+  <br />
+  <br />
+
+  <h3>Icon Directions</h3>
+  <mat-badge direction="above before" content="22">
+    <mat-icon color="primary">home</mat-icon>
+  </mat-badge>
+
+  <mat-badge direction="above after" content="22">
+    <mat-icon color="primary">home</mat-icon>
+  </mat-badge>
+
+  <mat-badge direction="bottom before" content="22">
+    <mat-icon color="primary">home</mat-icon>
+  </mat-badge>
+
+  <mat-badge direction="bottom after" content="22">
+    <mat-icon color="primary">home</mat-icon>
+  </mat-badge>
+
+</div>

@@ -1,0 +1,32 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+@import '../core/typography/typography-utils';
+
+@mixin _mat-badge-color($palette) {
+  background: mat-color($palette);
+  color: mat-color($palette, default-contrast);
+}
+
+@mixin mat-badge-theme($theme) {
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $primary: map-get($theme, primary);
+  
+  .mat-badge {
+    .mat-badge-content {
+      @include _mat-badge-color($primary);
+    }
+
+    &.mat-accent {
+      .mat-badge-content {
+        @include _mat-toolbar-color($accent);
+      }
+    }
+  
+    &.mat-warn {
+      .mat-badge-content {
+        @include _mat-toolbar-color($warn);
+      }
+    }
+  }
+}

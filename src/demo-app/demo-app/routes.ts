@@ -41,11 +41,13 @@ import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
 import {TypographyDemo} from '../typography/typography-demo';
 import {DemoApp, Home} from './demo-app';
+import {BadgeDemo} from '../badge/badge-demo';
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: DemoApp, children: [
     {path: '', component: Home},
     {path: 'autocomplete', component: AutocompleteDemo},
+    {path: 'badge', component: BadgeDemo},
     {path: 'baseline', component: BaselineDemo},
     {path: 'button', component: ButtonDemo},
     {path: 'button-toggle', component: ButtonToggleDemo},

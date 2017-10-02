@@ -1,0 +1,66 @@
+$mat-badge-size: 22px !default;
+
+.mat-badge {
+  position: relative;
+  display: inline-block;
+
+  &.mat-badge-above {
+    .mat-badge-content {
+      top: -$mat-badge-size / 2;
+    }
+  }
+  
+  &.mat-badge-below {
+    .mat-badge-content {
+      bottom: -$mat-badge-size / 2;
+    }
+  }
+
+  &.mat-badge-before {
+    margin-left: $mat-badge-size;
+    .mat-badge-content {
+      left: -$mat-badge-size;
+    }
+  }
+
+  &.mat-badge-after {
+    margin-right: $mat-badge-size;
+    .mat-badge-content {
+      right: -$mat-badge-size;
+    }
+  }
+
+  &.mat-badge-overlap {
+    &.mat-badge-before {
+      margin-left: $mat-badge-size / 2;
+      .mat-badge-content {
+        left: -$mat-badge-size / 2;
+      }
+    }
+  
+    &.mat-badge-after {
+      margin-right: $mat-badge-size / 2;
+      .mat-badge-content {
+        right: -$mat-badge-size / 2;
+      }
+    }
+  }
+
+  .mat-badge-content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    position: absolute;
+    font-weight: 600;
+    font-size: 12px;
+    width: $mat-badge-size;
+    height: $mat-badge-size;
+    border-radius: 50%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}

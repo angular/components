@@ -47,6 +47,7 @@ import {TooltipDemo} from '../tooltip/tooltip-demo';
 import {TypographyDemo} from '../typography/typography-demo';
 import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
+import {BadgeDemo} from '../badge/badge-demo';
 
 @NgModule({
   imports: [
@@ -59,6 +60,7 @@ import {DEMO_APP_ROUTES} from './routes';
   ],
   declarations: [
     AutocompleteDemo,
+    BadgeDemo,
     BaselineDemo,
     ButtonDemo,
     ButtonToggleDemo,
