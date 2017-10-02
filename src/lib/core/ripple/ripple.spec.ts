@@ -2,14 +2,14 @@ import {TestBed, ComponentFixture, fakeAsync, tick, inject} from '@angular/core/
 import {Component, ViewChild} from '@angular/core';
 import {Platform} from '@angular/cdk/platform';
 import {ViewportRuler} from '@angular/cdk/scrolling';
-import {dispatchMouseEvent} from '@angular/cdk/testing';
+import {dispatchMouseEvent, dispatchTouchEvent} from '@angular/cdk/testing';
 import {RIPPLE_FADE_OUT_DURATION, RIPPLE_FADE_IN_DURATION} from './ripple-renderer';
 import {
-  MdRipple, MdRippleModule, MD_RIPPLE_GLOBAL_OPTIONS, RippleState, RippleGlobalOptions
+  MatRipple, MatRippleModule, MAT_RIPPLE_GLOBAL_OPTIONS, RippleState, RippleGlobalOptions
 } from './index';
 
 
-describe('MdRipple', () => {
+describe('MatRipple', () => {
   let fixture: ComponentFixture<any>;
   let rippleTarget: HTMLElement;
   let originalBodyMargin: string | null;
@@ -23,7 +23,7 @@ describe('MdRipple', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MdRippleModule],
+      imports: [MatRippleModule],
       declarations: [
         BasicRippleContainer,
         RippleContainerWithInputBindings,
@@ -47,7 +47,7 @@ describe('MdRipple', () => {
   });
 
   describe('basic ripple', () => {
-    let rippleDirective: MdRipple;
+    let rippleDirective: MatRipple;
 
     const TARGET_HEIGHT = 200;
     const TARGET_WIDTH = 300;
@@ -106,6 +106,20 @@ describe('MdRipple', () => {
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(2);
     });
+
+    it('should launch ripples on touchstart', fakeAsync(() => {
+      dispatchTouchEvent(rippleTarget, 'touchstart');
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
+
+      tick(RIPPLE_FADE_IN_DURATION);
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
+
+      dispatchTouchEvent(rippleTarget, 'touchend');
+
+      tick(RIPPLE_FADE_OUT_DURATION);
+
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+    }));
 
     it('removes ripple after timeout', fakeAsync(() => {
       dispatchMouseEvent(rippleTarget, 'mousedown');
@@ -285,7 +299,7 @@ describe('MdRipple', () => {
   });
 
   describe('manual ripples', () => {
-    let rippleDirective: MdRipple;
+    let rippleDirective: MatRipple;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(BasicRippleContainer);
@@ -359,7 +373,7 @@ describe('MdRipple', () => {
   });
 
   describe('global ripple options', () => {
-    let rippleDirective: MdRipple;
+    let rippleDirective: MatRipple;
 
     function createTestComponent(rippleConfig: RippleGlobalOptions,
                                  testComponent: any = BasicRippleContainer) {
@@ -367,9 +381,9 @@ describe('MdRipple', () => {
       // The testing module has been initialized in the root describe group for the ripples.
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [MdRippleModule],
+        imports: [MatRippleModule],
         declarations: [testComponent],
-        providers: [{ provide: MD_RIPPLE_GLOBAL_OPTIONS, useValue: rippleConfig }]
+        providers: [{ provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: rippleConfig }]
       });
 
       fixture = TestBed.createComponent(testComponent);
@@ -456,7 +470,7 @@ describe('MdRipple', () => {
 
   describe('configuring behavior', () => {
     let controller: RippleContainerWithInputBindings;
-    let rippleComponent: MdRipple;
+    let rippleComponent: MatRipple;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(RippleContainerWithInputBindings);
@@ -570,25 +584,25 @@ describe('MdRipple', () => {
 
 @Component({
   template: `
-    <div id="container" #ripple="mdRipple" mat-ripple [mdRippleSpeedFactor]="0"
+    <div id="container" #ripple="matRipple" mat-ripple [matRippleSpeedFactor]="0"
          style="position: relative; width:300px; height:200px;">
     </div>
   `,
 })
 class BasicRippleContainer {
-  @ViewChild('ripple') ripple: MdRipple;
+  @ViewChild('ripple') ripple: MatRipple;
 }
 
 @Component({
   template: `
     <div id="container" style="position: relative; width:300px; height:200px;"
       mat-ripple
-      [mdRippleSpeedFactor]="0"
-      [mdRippleTrigger]="trigger"
-      [mdRippleCentered]="centered"
-      [mdRippleRadius]="radius"
-      [mdRippleDisabled]="disabled"
-      [mdRippleColor]="color">
+      [matRippleSpeedFactor]="0"
+      [matRippleTrigger]="trigger"
+      [matRippleCentered]="centered"
+      [matRippleRadius]="radius"
+      [matRippleDisabled]="disabled"
+      [matRippleColor]="color">
     </div>
     <div class="alternateTrigger"></div>
   `,
@@ -599,17 +613,17 @@ class RippleContainerWithInputBindings {
   disabled = false;
   radius = 0;
   color = '';
-  @ViewChild(MdRipple) ripple: MdRipple;
+  @ViewChild(MatRipple) ripple: MatRipple;
 }
 
 @Component({
-  template: `<div id="container" #ripple="mdRipple" mat-ripple></div>`,
+  template: `<div id="container" #ripple="matRipple" mat-ripple></div>`,
 })
 class RippleContainerWithoutBindings {}
 
-@Component({ template: `<div id="container" mat-ripple [mdRippleSpeedFactor]="0"
+@Component({ template: `<div id="container" mat-ripple [matRippleSpeedFactor]="0"
                              *ngIf="!isDestroyed"></div>` })
 class RippleContainerWithNgIf {
-  @ViewChild(MdRipple) ripple: MdRipple;
+  @ViewChild(MatRipple) ripple: MatRipple;
   isDestroyed = false;
 }

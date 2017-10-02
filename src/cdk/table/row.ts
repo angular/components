@@ -21,7 +21,7 @@ import {
 import {CdkCellDef} from './cell';
 
 /**
- * The row template that can be used by the md-table. Should not be used outside of the
+ * The row template that can be used by the mat-table. Should not be used outside of the
  * material library.
  */
 export const CDK_ROW_TEMPLATE = `<ng-container cdkCellOutlet></ng-container>`;
@@ -42,9 +42,9 @@ export abstract class BaseRowDef {
 
   ngOnChanges(changes: SimpleChanges): void {
     // Create a new columns differ if one does not yet exist. Initialize it based on initial value
-    // of the columns property.
-    const columns = changes['columns'].currentValue;
-    if (!this._columnsDiffer && columns) {
+    // of the columns property or an empty array if none is provided.
+    const columns = changes['columns'].currentValue || [];
+    if (!this._columnsDiffer) {
       this._columnsDiffer = this._differs.find(columns).create();
       this._columnsDiffer.diff(columns);
     }
@@ -150,6 +150,7 @@ export class CdkCellOutlet {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
 export class CdkHeaderRow { }
 
@@ -164,5 +165,6 @@ export class CdkHeaderRow { }
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
 export class CdkRow { }

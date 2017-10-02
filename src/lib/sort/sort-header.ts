@@ -20,28 +20,32 @@ import {
   state,
   style,
   animate,
-  transition
+  transition,
+  keyframes,
 } from '@angular/animations';
 import {CdkColumnDef} from '@angular/cdk/table';
 import {Subscription} from 'rxjs/Subscription';
 import {merge} from 'rxjs/observable/merge';
-import {MdSort, MdSortable} from './sort';
-import {MdSortHeaderIntl} from './sort-header-intl';
-import {getMdSortHeaderNotContainedWithinMdSortError} from './sort-errors';
+import {MatSort, MatSortable} from './sort';
+import {MatSortHeaderIntl} from './sort-header-intl';
+import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
+import {AnimationCurves, AnimationDurations} from '@angular/material/core';
 
+const SORT_ANIMATION_TRANSITION =
+    AnimationDurations.ENTERING + ' ' + AnimationCurves.STANDARD_CURVE;
 
 /**
  * Applies sorting behavior (click to change sort) and styles to an element, including an
  * arrow to display the current sort direction.
  *
- * Must be provided with an id and contained within a parent MdSort directive.
+ * Must be provided with an id and contained within a parent MatSort directive.
  *
  * If used on header cells in a CdkTable, it will automatically default its id from its containing
  * column definition.
  */
 @Component({
   moduleId: module.id,
-  selector: '[md-sort-header], [mat-sort-header]',
+  selector: '[mat-sort-header]',
   templateUrl: 'sort-header.html',
   styleUrls: ['sort-header.css'],
   host: {
@@ -49,31 +53,61 @@ import {getMdSortHeaderNotContainedWithinMdSortError} from './sort-errors';
     '[class.mat-sort-header-sorted]': '_isSorted()',
   },
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger('indicatorRotate', [
+    trigger('indicator', [
+      state('asc', style({transform: 'translateY(0px)'})),
+      // 10px is the height of the sort indicator, minus the width of the pointers
+      state('desc', style({transform: 'translateY(10px)'})),
+      transition('asc <=> desc', animate(SORT_ANIMATION_TRANSITION))
+    ]),
+    trigger('leftPointer', [
+      state('asc', style({transform: 'rotate(-45deg)'})),
+      state('desc', style({transform: 'rotate(45deg)'})),
+      transition('asc <=> desc', animate(SORT_ANIMATION_TRANSITION))
+    ]),
+    trigger('rightPointer', [
       state('asc', style({transform: 'rotate(45deg)'})),
-      state('desc', style({transform: 'rotate(225deg)'})),
-      transition('asc <=> desc', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
+      state('desc', style({transform: 'rotate(-45deg)'})),
+      transition('asc <=> desc', animate(SORT_ANIMATION_TRANSITION))
+    ]),
+    trigger('indicatorToggle', [
+      transition('void => asc', animate(SORT_ANIMATION_TRANSITION, keyframes([
+        style({transform: 'translateY(25%)', opacity: 0}),
+        style({transform: 'none', opacity: 1})
+      ]))),
+      transition('asc => void', animate(SORT_ANIMATION_TRANSITION, keyframes([
+        style({transform: 'none', opacity: 1}),
+        style({transform: 'translateY(-25%)', opacity: 0})
+      ]))),
+      transition('void => desc', animate(SORT_ANIMATION_TRANSITION, keyframes([
+        style({transform: 'translateY(-25%)', opacity: 0}),
+        style({transform: 'none', opacity: 1})
+      ]))),
+      transition('desc => void', animate(SORT_ANIMATION_TRANSITION, keyframes([
+        style({transform: 'none', opacity: 1}),
+        style({transform: 'translateY(25%)', opacity: 0})
+      ]))),
     ])
   ]
 })
-export class MdSortHeader implements MdSortable {
+export class MatSortHeader implements MatSortable {
   private _rerenderSubscription: Subscription;
 
   /**
    * ID of this sort header. If used within the context of a CdkColumnDef, this will default to
    * the column's name.
    */
-  @Input('md-sort-header') id: string;
+  @Input('mat-sort-header') id: string;
 
   /** Sets the position of the arrow that displays when sorted. */
   @Input() arrowPosition: 'before' | 'after' = 'after';
 
-  /** Overrides the sort start value of the containing MdSort for this MdSortable. */
+  /** Overrides the sort start value of the containing MatSort for this MatSortable. */
   @Input('start') start: 'asc' | 'desc';
 
-  /** Overrides the disable clear value of the containing MdSort for this MdSortable. */
+  /** Overrides the disable clear value of the containing MatSort for this MatSortable. */
   @Input()
   get disableClear() { return this._disableClear; }
   set disableClear(v) { this._disableClear = coerceBooleanProperty(v); }
@@ -83,15 +117,15 @@ export class MdSortHeader implements MdSortable {
   get _id() { return this.id; }
   set _id(v: string) { this.id = v; }
 
-  constructor(public _intl: MdSortHeaderIntl,
+  constructor(public _intl: MatSortHeaderIntl,
               changeDetectorRef: ChangeDetectorRef,
-              @Optional() public _sort: MdSort,
+              @Optional() public _sort: MatSort,
               @Optional() public _cdkColumnDef: CdkColumnDef) {
     if (!_sort) {
-      throw getMdSortHeaderNotContainedWithinMdSortError();
+      throw getSortHeaderNotContainedWithinSortError();
     }
 
-    this._rerenderSubscription = merge(_sort.mdSortChange, _intl.changes).subscribe(() => {
+    this._rerenderSubscription = merge(_sort.sortChange, _intl.changes).subscribe(() => {
       changeDetectorRef.markForCheck();
     });
   }
@@ -109,8 +143,9 @@ export class MdSortHeader implements MdSortable {
     this._rerenderSubscription.unsubscribe();
   }
 
-  /** Whether this MdSortHeader is currently sorted in either ascending or descending order. */
+  /** Whether this MatSortHeader is currently sorted in either ascending or descending order. */
   _isSorted() {
-    return this._sort.active == this.id && this._sort.direction;
+    return this._sort.active == this.id &&
+        (this._sort.direction === 'asc' || this._sort.direction === 'desc');
   }
 }

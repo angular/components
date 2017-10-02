@@ -23,8 +23,8 @@ task('payload', ['material:clean-build'], async () => {
     // Material bundles
     material_umd: getBundleSize('material.umd.js'),
     material_umd_minified_uglify: getBundleSize('material.umd.min.js'),
-    material_fesm_2015: getBundleSize('material.js'),
-    material_fesm_2014: getBundleSize('material.es5.js'),
+    material_fesm_2015: getBundleSize('material.js') + getBundleSize('material/!(*.es5).js'),
+    material_fesm_2014: getBundleSize('material.es5.js') + getBundleSize('material/*.es5.js'),
     // CDK bundles
     cdk_umd: getBundleSize('cdk*.umd.js'),
     cdk_umd_minified_uglify: getBundleSize('cdk*.umd.min.js'),
@@ -93,10 +93,10 @@ async function calculatePayloadDiff(database: firebaseAdmin.database.Database, c
 
   // Calculate the payload diffs by subtracting the previous size of the FESM ES2015 bundles.
   const cdkFullSize = currentPayload.cdk_fesm_2015;
-  const cdkDiff = cdkFullSize - previousPayload.cdk_fesm_2015;
+  const cdkDiff = roundFileSize(cdkFullSize - previousPayload.cdk_fesm_2015);
 
   const materialFullSize = currentPayload.material_fesm_2015;
-  const materialDiff = materialFullSize - previousPayload.material_fesm_2015;
+  const materialDiff = roundFileSize(materialFullSize - previousPayload.material_fesm_2015);
 
   // Set the Github statuses for the packages by sending a HTTP request to the dashboard functions.
   await Promise.all([
@@ -173,4 +173,9 @@ function getCommitFromPreviousPayloadUpload(): string {
     // by just loading the SHA of the most recent commit in the target branch.
     return spawnSync('git', ['rev-parse', process.env['TRAVIS_BRANCH']]).stdout.toString().trim();
   }
+}
+
+/** Rounds the specified file size to two decimal places. */
+function roundFileSize(fileSize: number) {
+  return Math.round(fileSize * 100) / 100;
 }

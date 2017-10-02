@@ -7,15 +7,15 @@
  */
 
 /**
- * Throws an exception for the case when menu trigger doesn't have a valid md-menu instance
+ * Throws an exception for the case when menu trigger doesn't have a valid mat-menu instance
  * @docs-private
  */
-export function throwMdMenuMissingError() {
-  throw Error(`md-menu-trigger: must pass in an md-menu instance.
+export function throwMatMenuMissingError() {
+  throw Error(`mat-menu-trigger: must pass in an mat-menu instance.
 
     Example:
-      <md-menu #menu="mdMenu"></md-menu>
-      <button [mdMenuTriggerFor]="menu"></button>`);
+      <mat-menu #menu="matMenu"></mat-menu>
+      <button [matMenuTriggerFor]="menu"></button>`);
 }
 
 /**
@@ -23,9 +23,9 @@ export function throwMdMenuMissingError() {
  * In other words, it doesn't match 'before' or 'after'.
  * @docs-private
  */
-export function throwMdMenuInvalidPositionX() {
+export function throwMatMenuInvalidPositionX() {
   throw Error(`x-position value must be either 'before' or after'.
-      Example: <md-menu x-position="before" #menu="mdMenu"></md-menu>`);
+      Example: <mat-menu x-position="before" #menu="matMenu"></mat-menu>`);
 }
 
 /**
@@ -33,16 +33,16 @@ export function throwMdMenuInvalidPositionX() {
  * In other words, it doesn't match 'above' or 'below'.
  * @docs-private
  */
-export function throwMdMenuInvalidPositionY() {
+export function throwMatMenuInvalidPositionY() {
   throw Error(`y-position value must be either 'above' or below'.
-      Example: <md-menu y-position="above" #menu="mdMenu"></md-menu>`);
+      Example: <mat-menu y-position="above" #menu="matMenu"></mat-menu>`);
 }
 
 /**
  * Throws an exception for the case when menu's x offset is not a number.
  * @docs-private
  */
-export function throwInvalidOffsetX() {
+export function throwMatMenuInvalidOffsetX() {
   throw Error(`x offset must be a number.
       Example: <md-menu xOffset="20" #menu="mdMenu"></md-menu>`);
 }
@@ -51,7 +51,7 @@ export function throwInvalidOffsetX() {
  * Throws an exception for the case when menu's y offset is not a number.
  * @docs-private
  */
- export function throwInvalidOffsetY() {
+ export function throwMatMenuInvalidOffsetY() {
   throw Error(`y offset must be a number.
       Example: <md-menu yOffset="20" #menu="mdMenu"></md-menu>`);
 }
