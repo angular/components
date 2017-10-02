@@ -13,12 +13,12 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
-  MdAutocompleteModule,
-  MdInputModule,
-  MdSlideToggleModule
+  MatAutocompleteModule,
+  MatInputModule,
+  MatSlideToggleModule
 } from '@angular/material';
 import {CopierService} from '../copier/copier.service';
-import {MdSnackBar} from '@angular/material';
+import {MatSnackBar} from '@angular/material';
 
 const exampleKey = 'autocomplete-overview';
 
@@ -113,7 +113,7 @@ describe('ExampleViewer', () => {
     });
 
     it('should display a message when copy succeeds', () => {
-      const snackBar: MdSnackBar = TestBed.get(MdSnackBar);
+      const snackBar: MatSnackBar = TestBed.get(MatSnackBar);
       const copierService: CopierService = TestBed.get(CopierService);
       spyOn(snackBar, 'open');
       spyOn(copierService, 'copyText').and.returnValue(true);
@@ -122,7 +122,7 @@ describe('ExampleViewer', () => {
     });
 
     it('should display an error when copy fails', () => {
-      const snackBar: MdSnackBar = TestBed.get(MdSnackBar);
+      const snackBar: MatSnackBar = TestBed.get(MatSnackBar);
       const copierService: CopierService = TestBed.get(CopierService);
       spyOn(snackBar, 'open');
       spyOn(copierService, 'copyText').and.returnValue(false);
@@ -139,9 +139,9 @@ describe('ExampleViewer', () => {
 // to compile all of the examples for these tests.
 @NgModule({
   imports: [
-    MdInputModule,
-    MdAutocompleteModule,
-    MdSlideToggleModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatSlideToggleModule,
     FormsModule,
     CommonModule,
     ReactiveFormsModule,

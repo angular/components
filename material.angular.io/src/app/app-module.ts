@@ -5,7 +5,7 @@ import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {RouterModule} from '@angular/router';
-import {MdNativeDateModule} from '@angular/material';
+import {MatNativeDateModule, MATERIAL_COMPATIBILITY_MODE} from '@angular/material';
 import {ExampleModule} from '@angular/material-examples';
 
 import {MaterialDocsApp} from './material-docs-app';
@@ -37,7 +37,7 @@ import {DocViewerModule} from './shared/doc-viewer/doc-viewer-module';
     ExampleModule,
     FormsModule,
     HttpModule,
-    MdNativeDateModule,
+    MatNativeDateModule,
     RouterModule.forRoot(MATERIAL_DOCS_ROUTES),
 
     ComponentCategoryListModule,
@@ -63,6 +63,7 @@ import {DocViewerModule} from './shared/doc-viewer/doc-viewer-module';
     StyleManager,
     ThemeStorage,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
+    {provide: MATERIAL_COMPATIBILITY_MODE, useValue: true},
   ],
   bootstrap: [MaterialDocsApp],
 })

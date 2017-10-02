@@ -5,7 +5,7 @@ import {ComponentViewer, ComponentViewerModule} from './component-viewer';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 
 import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
-import {MdButtonModule} from '@angular/material';
+import {MatButtonModule} from '@angular/material';
 import {NgModule} from '@angular/core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -52,7 +52,7 @@ describe('ComponentViewer', () => {
 // to compile all of the examples for these tests.
 @NgModule({
   imports: [
-    MdButtonModule,
+    MatButtonModule,
     NoopAnimationsModule,
   ],
   declarations: [EXAMPLE_COMPONENTS[exampleKey].component],

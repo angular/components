@@ -1,5 +1,5 @@
-<md-sidenav-container class="docs-component-viewer-sidenav-container">
-  <md-sidenav #sidenav class="docs-component-viewer-sidenav"
+<mat-sidenav-container class="docs-component-viewer-sidenav-container">
+  <mat-sidenav #sidenav class="docs-component-viewer-sidenav"
               [opened]="!isScreenSmall()"
               [mode]="isScreenSmall() ? 'over' : 'side'">
     <nav *ngFor="let category of docItems.getItemsInCategories()">
@@ -13,11 +13,11 @@
         </li>
       </ul>
     </nav>
-  </md-sidenav>
+  </mat-sidenav>
 
   <div class="docs-component-sidenav-content">
     <component-page-header (toggleSidenav)="sidenav.toggle()"></component-page-header>
     <router-outlet></router-outlet>
     <app-footer></app-footer>
   </div>
-</md-sidenav-container>
+</mat-sidenav-container>

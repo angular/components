@@ -23,7 +23,7 @@ import {Router} from '@angular/router';
       class="docs-markdown-a docs-header-link"
       aria-label="Link to this heading"
       [href]="url">
-      <md-icon>link</md-icon>
+      <mat-icon>link</mat-icon>
     </a>
   `
 })

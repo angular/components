@@ -2,11 +2,11 @@ import {DocViewer} from './doc-viewer';
 import {ExampleViewer} from '../example-viewer/example-viewer';
 import {PlunkerButtonModule} from '../plunker/plunker-button';
 import {
-  MdButtonModule,
-  MdIconModule,
-  MdTabsModule,
-  MdTooltipModule,
-  MdSnackBarModule,
+  MatButtonModule,
+  MatIconModule,
+  MatTabsModule,
+  MatTooltipModule,
+  MatSnackBarModule,
   PortalModule
 } from '@angular/material';
 import {CommonModule} from '@angular/common';
@@ -18,11 +18,11 @@ import {CopierService} from '../copier/copier.service';
 // ExampleViewer is included in the DocViewerModule because they have a circular dependency.
 @NgModule({
   imports: [
-    MdButtonModule,
-    MdIconModule,
-    MdTooltipModule,
-    MdSnackBarModule,
-    MdTabsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatSnackBarModule,
+    MatTabsModule,
     CommonModule,
     PortalModule,
     PlunkerButtonModule
