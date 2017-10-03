@@ -1162,20 +1162,22 @@ describe('MatSelect', () => {
         fixture.componentInstance.control.setValue('chips-4');
         fixture.detectChanges();
 
-        trigger.click();
-        fixture.detectChanges();
-
-        const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
-
         fixture.whenStable().then(() => {
-          // The selected option should be scrolled to the center of the panel.
-          // This will be its original offset from the scrollTop - half the panel height + half the
-          // option height. 4 (index) * 48 (option height) = 192px offset from scrollTop
-          // 192 - 256/2 + 48/2 = 88px
-          expect(scrollContainer.scrollTop)
-            .toEqual(88, `Expected overlay panel to be scrolled to center the selected option.`);
+          trigger.click();
+          fixture.detectChanges();
 
-          checkTriggerAlignedWithOption(4);
+          const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
+
+          fixture.whenStable().then(() => {
+            // The selected option should be scrolled to the center of the panel.
+            // This will be its original offset from the scrollTop - half the panel height + half
+            // the option height. 4 (index) * 48 (option height) = 192px offset from scrollTop
+            // 192 - 256/2 + 48/2 = 88px
+            expect(scrollContainer.scrollTop)
+              .toEqual(88, `Expected overlay panel to be scrolled to center the selected option.`);
+
+            checkTriggerAlignedWithOption(4);
+          });
         });
       }));
 
@@ -1184,19 +1186,21 @@ describe('MatSelect', () => {
         fixture.componentInstance.control.setValue('sushi-7');
         fixture.detectChanges();
 
-        trigger.click();
-        fixture.detectChanges();
-
-        const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
-
         fixture.whenStable().then(() => {
-          // The selected option should be scrolled to the max scroll position.
-          // This will be the height of the scrollContainer - the panel height.
-          // 8 options * 48px = 384 scrollContainer height, 384 - 256 = 128px max scroll
-          expect(scrollContainer.scrollTop)
-              .toEqual(128, `Expected overlay panel to be scrolled to its maximum position.`);
+          trigger.click();
+          fixture.detectChanges();
 
-          checkTriggerAlignedWithOption(7);
+          const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
+
+          fixture.whenStable().then(() => {
+            // The selected option should be scrolled to the max scroll position.
+            // This will be the height of the scrollContainer - the panel height.
+            // 8 options * 48px = 384 scrollContainer height, 384 - 256 = 128px max scroll
+            expect(scrollContainer.scrollTop)
+                .toEqual(128, `Expected overlay panel to be scrolled to its maximum position.`);
+
+            checkTriggerAlignedWithOption(7);
+          });
         });
       }));
 
@@ -1279,17 +1283,19 @@ describe('MatSelect', () => {
         fixture.componentInstance.control.setValue('chips-4');
         fixture.detectChanges();
 
-        trigger.click();
-        fixture.detectChanges();
-
-        const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
-
         fixture.whenStable().then(() => {
-          expect(Math.ceil(scrollContainer.scrollTop))
-              .toEqual(Math.ceil(idealScrollTop + 5),
-                  `Expected panel to adjust scroll position to fit in viewport.`);
+          trigger.click();
+          fixture.detectChanges();
 
-          checkTriggerAlignedWithOption(4);
+          const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
+
+          fixture.whenStable().then(() => {
+            expect(Math.ceil(scrollContainer.scrollTop))
+                .toEqual(Math.ceil(idealScrollTop + 5),
+                    `Expected panel to adjust scroll position to fit in viewport.`);
+
+            checkTriggerAlignedWithOption(4);
+          });
         });
       }));
 
@@ -1402,23 +1408,25 @@ describe('MatSelect', () => {
         fixture.componentInstance.control.setValue('sushi-7');
         fixture.detectChanges();
 
-        trigger.click();
-        fixture.detectChanges();
-
         fixture.whenStable().then(() => {
-          const overlayPane = document.querySelector('.cdk-overlay-pane')!;
-          const triggerTop = trigger.getBoundingClientRect().top;
-          const overlayTop = overlayPane.getBoundingClientRect().top;
-          const scrollContainer = overlayPane.querySelector('.mat-select-panel')!;
+          trigger.click();
+          fixture.detectChanges();
 
-          // Expect scroll to remain at the max scroll position
-          expect(scrollContainer.scrollTop).toEqual(128, `Expected panel to be at max scroll.`);
+          fixture.whenStable().then(() => {
+            const overlayPane = document.querySelector('.cdk-overlay-pane')!;
+            const triggerTop = trigger.getBoundingClientRect().top;
+            const overlayTop = overlayPane.getBoundingClientRect().top;
+            const scrollContainer = overlayPane.querySelector('.mat-select-panel')!;
 
-          expect(Math.floor(overlayTop))
-              .toEqual(Math.floor(triggerTop), `Expected trigger top to align with overlay top.`);
+            // Expect scroll to remain at the max scroll position
+            expect(scrollContainer.scrollTop).toEqual(128, `Expected panel to be at max scroll.`);
 
-          expect(fixture.componentInstance.select._transformOrigin)
-              .toContain(`top`, `Expected panel animation to originate at the top.`);
+            expect(Math.floor(overlayTop))
+                .toEqual(Math.floor(triggerTop), `Expected trigger top to align with overlay top.`);
+
+            expect(fixture.componentInstance.select._transformOrigin)
+                .toContain(`top`, `Expected panel animation to originate at the top.`);
+          });
         });
       }));
 
@@ -1574,23 +1582,25 @@ describe('MatSelect', () => {
         fixture.componentInstance.control.setValue('chips-4');
         fixture.detectChanges();
 
-        // Scroll the select into view
-        setScrollTop(1700);
-
-        // In the iOS simulator (BrowserStack & SauceLabs), adding the content to the
-        // body causes karma's iframe for the test to stretch to fit that content once we attempt to
-        // scroll the page. Setting width / height / maxWidth / maxHeight on the iframe does not
-        // successfully constrain its size. As such, skip assertions in environments where the
-        // window size has changed since the start of the test.
-        if (window.innerHeight > startingWindowHeight) {
-          return;
-        }
-
-        trigger.click();
-        fixture.detectChanges();
-
         fixture.whenStable().then(() => {
-          checkTriggerAlignedWithOption(4);
+          // Scroll the select into view
+          setScrollTop(1700);
+
+          // In the iOS simulator (BrowserStack & SauceLabs), adding the content to the
+          // body causes karma's iframe for the test to stretch to fit that content once we attempt
+          // to scroll the page. Setting width / height / maxWidth / maxHeight on the iframe does
+          // not successfully constrain its size. As such, skip assertions in environments where the
+          // window size has changed since the start of the test.
+          if (window.innerHeight > startingWindowHeight) {
+            return;
+          }
+
+          trigger.click();
+          fixture.detectChanges();
+
+          fixture.whenStable().then(() => {
+            checkTriggerAlignedWithOption(4);
+          });
         });
       }));
 
@@ -1601,15 +1611,17 @@ describe('MatSelect', () => {
           fixture.componentInstance.control.setValue('chips-4');
           fixture.detectChanges();
 
-          trigger.click();
-          fixture.detectChanges();
-
           fixture.whenStable().then(() => {
-            setScrollTop(100);
-            scrolledSubject.next();
+            trigger.click();
             fixture.detectChanges();
 
-            checkTriggerAlignedWithOption(4);
+            fixture.whenStable().then(() => {
+              setScrollTop(100);
+              scrolledSubject.next();
+              fixture.detectChanges();
+
+              checkTriggerAlignedWithOption(4);
+            });
           });
         }));
 
