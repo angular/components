@@ -19,6 +19,16 @@ $mat-chip-input-margin: 3px;
   align-items: baseline;
 }
 
+.mat-form-field-type-mat-chip-list {
+  .mat-form-field-flex {
+    flex-wrap: wrap;
+  }
+  .mat-form-field-prefix, 
+  .mat-form-field-suffix {
+    max-width: 100%;
+  }
+}
+
 .mat-chip:not(.mat-basic-chip) {
   @include mat-elevation-transition;
   display: inline-flex;
