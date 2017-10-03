@@ -1,5 +1,5 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {MdSnackBar} from '@angular/material';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Component({
@@ -9,9 +9,10 @@ import {MdSnackBar} from '@angular/material';
   styleUrls: ['shared.css', 'dual-sidenav-a11y.css'],
   host: {'class': 'a11y-demo-sidenav-app'},
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
 export class SidenavDualAccessibilityDemo {
-  constructor(private _snackbar: MdSnackBar) {}
+  constructor(private _snackbar: MatSnackBar) {}
 
   play(list: string) {
     this._snackbar.open(`Playing "${list}"`, '', {duration: 1000});

@@ -70,7 +70,6 @@ export class DemoApp {
     {name: 'Screen Type', route: '/screen-type'},
     {name: 'Select', route: '/select'},
     {name: 'Sidenav', route: '/sidenav'},
-    {name: 'Slider', route: '/slider'},
     {name: 'Slide Toggle', route: '/slide-toggle'},
     {name: 'Slider', route: '/slider'},
     {name: 'Snack Bar', route: '/snack-bar'},

@@ -8,5 +8,6 @@ import {Component, ViewEncapsulation} from '@angular/core';
   styleUrls: ['shared.css'],
   host: {'class': 'a11y-demo-sidenav-app'},
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
 export class SidenavBasicAccessibilityDemo {}

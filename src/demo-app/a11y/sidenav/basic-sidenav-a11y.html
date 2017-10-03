@@ -1,24 +1,24 @@
-<md-toolbar color="primary" role="header" aria-label="Basic sidenav app">
-  <button md-icon-button aria-label="Navigation menu" (click)="snav.toggle()">
-    <md-icon aria-hidden="true">menu</md-icon>
+<mat-toolbar color="primary" role="header" aria-label="Basic sidenav app">
+  <button mat-icon-button aria-label="Navigation menu" (click)="snav.toggle()">
+    <mat-icon aria-hidden="true">menu</mat-icon>
   </button>
   <h1 class="a11y-demo-sidenav-app-name">Basic Sidenav App</h1>
-</md-toolbar>
+</mat-toolbar>
 
-<md-sidenav-container class="a11y-demo-sidenav-container">
-  <md-sidenav #snav mode="side" role="navigation">
-    <md-nav-list>
-      <a md-list-item routerLink="..">Home</a>
-      <a md-list-item routerLink="../basic">Basic sidenav example</a>
-      <a md-list-item routerLink="../mobile">Responsive sidenav example</a>
-      <a md-list-item routerLink="../dual">Dual sidenavs example</a>
-    </md-nav-list>
-  </md-sidenav>
+<mat-sidenav-container class="a11y-demo-sidenav-container">
+  <mat-sidenav #snav mode="side" role="navigation">
+    <mat-nav-list>
+      <a mat-list-item routerLink="..">Home</a>
+      <a mat-list-item routerLink="../basic">Basic sidenav example</a>
+      <a mat-list-item routerLink="../mobile">Responsive sidenav example</a>
+      <a mat-list-item routerLink="../dual">Dual sidenavs example</a>
+    </mat-nav-list>
+  </mat-sidenav>
 
-  <md-sidenav-content role="region">
-    <button md-raised-button aria-label="Close basic sidenav example" color="primary"
+  <mat-sidenav-content role="region">
+    <button mat-raised-button aria-label="Close basic sidenav example" color="primary"
             class="a11y-demo-sidenav-close" routerLink="..">
       Close example
     </button>
-  </md-sidenav-content>
-</md-sidenav-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>
