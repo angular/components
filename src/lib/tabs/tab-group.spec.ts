@@ -7,11 +7,11 @@ import {dispatchFakeEvent, FakeViewportRuler} from '@angular/cdk/testing';
 import {Observable} from 'rxjs/Observable';
 import {TestGestureConfig} from '../core/gestures/test-gesture-config';
 import {MatTab, MatTabGroup, MatTabHeaderPosition, MatTabsModule} from './index';
-
+import {HammerDirection} from '@angular/material/core';
 
 describe('MatTabGroup', () => {
   let gestureConfig: TestGestureConfig;
-  
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MatTabsModule, NoopAnimationsModule],

@@ -223,15 +223,15 @@ describe('MatTabHeader', () => {
         appComponent.addTabsForScrolling();
         fixture.detectChanges();
 
-        expect(appComponent.mdTabHeader.scrollDistance).toBe(0);
+        expect(appComponent.tabHeader.scrollDistance).toBe(0);
 
-        let tabListContainer = appComponent.mdTabHeader._tabListContainer.nativeElement;
+        let tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
 
         dispatchSwipeEvent(tabListContainer, 100, gestureConfig);
         fixture.detectChanges();
 
-        expect(appComponent.mdTabHeader.scrollDistance)
-          .toBe(appComponent.mdTabHeader._getMaxScrollDistance());
+        expect(appComponent.tabHeader.scrollDistance)
+          .toBe(appComponent.tabHeader._getMaxScrollDistance());
       });
 
     });
