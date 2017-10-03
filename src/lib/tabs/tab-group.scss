@@ -19,11 +19,17 @@
 
 @media ($mat-xsmall) {
   .mat-tab-label {
-    min-width: 72px;
+    padding: 0 12px;
   }
 }
 
-.mat-tab-group[md-stretch-tabs] .mat-tab-label,
+@media ($mat-small) {
+  .mat-tab-label {
+    padding: 0 12px;
+  }
+}
+
+.mat-tab-group[mat-stretch-tabs] .mat-tab-label,
 .mat-tab-group[mat-stretch-tabs] .mat-tab-label {
   flex-basis: 0;
   flex-grow: 1;

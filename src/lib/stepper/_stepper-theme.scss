@@ -1,0 +1,68 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+@import '../core/typography/typography-utils';
+
+@mixin mat-stepper-theme($theme) {
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+  $primary: map-get($theme, primary);
+
+  .mat-step-header {
+    &.cdk-keyboard-focused,
+    &.cdk-program-focused,
+    &:hover {
+      background-color: mat-color($background, hover);
+    }
+
+    .mat-step-label,
+    .mat-step-optional {
+      color: mat-color($foreground, disabled-text);
+    }
+
+    .mat-step-icon {
+      background-color: mat-color($primary);
+      color: mat-color($primary, default-contrast);
+    }
+
+    .mat-step-icon-not-touched {
+      background-color: mat-color($foreground, disabled-text);
+      color: mat-color($primary, default-contrast);
+    }
+
+    .mat-step-label.mat-step-label-active {
+      color: mat-color($foreground, text);
+    }
+  }
+
+  .mat-stepper-horizontal, .mat-stepper-vertical {
+    background-color: mat-color($background, card);
+  }
+
+  .mat-stepper-vertical-line::before {
+    border-left-color: mat-color($foreground, divider);
+  }
+
+  .mat-stepper-horizontal-line {
+    border-top-color: mat-color($foreground, divider);
+  }
+}
+
+@mixin mat-stepper-typography($config) {
+  .mat-stepper-vertical, .mat-stepper-horizontal {
+    font-family: mat-font-family($config);
+  }
+
+  .mat-step-label {
+    font: {
+      size: mat-font-size($config, body-1);
+      weight: mat-font-weight($config, body-1);
+    };
+  }
+
+  .mat-step-label-selected {
+    font: {
+      size: mat-font-size($config, body-2);
+      weight: mat-font-weight($config, body-2);
+    };
+  }
+}

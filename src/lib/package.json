@@ -3,8 +3,8 @@
   "version": "0.0.0-PLACEHOLDER",
   "description": "Angular Material",
   "main": "./bundles/material.umd.js",
-  "module": "./@angular/material.es5.js",
-  "es2015": "./@angular/material.js",
+  "module": "./esm5/material.es5.js",
+  "es2015": "./esm2015/material.js",
   "typings": "./material.d.ts",
   "repository": {
     "type": "git",
@@ -23,8 +23,8 @@
   "homepage": "https://github.com/angular/material2#readme",
   "peerDependencies": {
     "@angular/cdk": "0.0.0-PLACEHOLDER",
-    "@angular/core": "^4.3.0",
-    "@angular/common": "^4.3.0"
+    "@angular/core": "0.0.0-NG",
+    "@angular/common": "0.0.0-NG"
   },
   "dependencies": {
     "tslib": "^1.7.1"

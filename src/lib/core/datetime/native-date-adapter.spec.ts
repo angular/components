@@ -1,8 +1,8 @@
-import {TestBed, async, inject} from '@angular/core/testing';
+import {Platform} from '@angular/cdk/platform';
 import {LOCALE_ID} from '@angular/core';
-import {NativeDateAdapter, NativeDateModule, DateAdapter} from './index';
-import {Platform} from '../platform/index';
+import {async, inject, TestBed} from '@angular/core/testing';
 import {DEC, FEB, JAN, MAR} from '../testing/month-constants';
+import {DateAdapter, MAT_DATE_LOCALE, NativeDateAdapter, NativeDateModule} from './index';
 
 const SUPPORTS_INTL = typeof Intl != 'undefined';
 
@@ -331,8 +331,43 @@ describe('NativeDateAdapter', () => {
     let d = '1/1/2017';
     expect(adapter.isDateInstance(d)).toBe(false);
   });
+
+  it('should create dates from valid ISO strings', () => {
+    expect(adapter.fromIso8601('1985-04-12T23:20:50.52Z')).not.toBeNull();
+    expect(adapter.fromIso8601('1996-12-19T16:39:57-08:00')).not.toBeNull();
+    expect(adapter.fromIso8601('1937-01-01T12:00:27.87+00:20')).not.toBeNull();
+    expect(adapter.fromIso8601('2017-01-01')).not.toBeNull();
+    expect(adapter.fromIso8601('2017-01-01T00:00:00')).not.toBeNull();
+    expect(adapter.fromIso8601('1990-13-31T23:59:00Z')).toBeNull();
+    expect(adapter.fromIso8601('1/1/2017')).toBeNull();
+    expect(adapter.fromIso8601('2017-01-01T')).toBeNull();
+  });
 });
 
+
+describe('NativeDateAdapter with MAT_DATE_LOCALE override', () => {
+  let adapter: NativeDateAdapter;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [NativeDateModule],
+      providers: [{provide: MAT_DATE_LOCALE, useValue: 'da-DK'}]
+    }).compileComponents();
+  }));
+
+  beforeEach(inject([DateAdapter], (d: NativeDateAdapter) => {
+    adapter = d;
+  }));
+
+  it('should take the default locale id from the MAT_DATE_LOCALE injection token', () => {
+    const expectedValue = SUPPORTS_INTL ?
+        ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'] :
+        ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    expect(adapter.getDayOfWeekNames('long')).toEqual(expectedValue);
+  });
+
+});
 
 describe('NativeDateAdapter with LOCALE_ID override', () => {
   let adapter: NativeDateAdapter;
@@ -348,7 +383,7 @@ describe('NativeDateAdapter with LOCALE_ID override', () => {
     adapter = d;
   }));
 
-  it('should take the default locale id from the LOCALE_ID injection token', () => {
+  it('should cascade locale id from the LOCALE_ID injection token to MAT_DATE_LOCALE', () => {
     const expectedValue = SUPPORTS_INTL ?
         ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'] :
         ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];

@@ -1,0 +1,26 @@
+{
+  "name": "@angular/material-moment-adapter",
+  "version": "0.0.0-PLACEHOLDER",
+  "description": "Angular Material Moment Adapter",
+  "main": "./bundles/material-moment-adapter.umd.js",
+  "module": "./esm5/material-moment-adapter.es5.js",
+  "es2015": "./esm2015/material-moment-adapter.js",
+  "typings": "./material-moment-adapter.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angular/material2.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/angular/material2/issues"
+  },
+  "homepage": "https://github.com/angular/material2#readme",
+  "peerDependencies": {
+    "@angular/material": "0.0.0-PLACEHOLDER",
+    "@angular/core": "0.0.0-NG",
+    "moment": "^2.18.1"
+  },
+  "dependencies": {
+    "tslib": "^1.7.1"
+  }
+}

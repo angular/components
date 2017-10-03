@@ -1,4 +1,4 @@
-import {MdPaginator, MdSort} from '@angular/material';
+import {MatPaginator, MatSort} from '@angular/material';
 import {DataSource} from '@angular/cdk/collections';
 import {Observable} from 'rxjs/Observable';
 import {PeopleDatabase, UserData} from './people-database';
@@ -7,15 +7,15 @@ import 'rxjs/add/operator/map';
 
 export class PersonDataSource extends DataSource<any> {
   constructor(private _peopleDatabase: PeopleDatabase,
-              private _paginator: MdPaginator,
-              private _sort: MdSort) {
+              private _paginator: MatPaginator,
+              private _sort: MatSort) {
     super();
   }
 
   connect(): Observable<UserData[]> {
     const displayDataChanges = [
       this._paginator.page,
-      this._sort.mdSortChange,
+      this._sort.sortChange,
       this._peopleDatabase.dataChange
     ];
     return Observable.merge(...displayDataChanges).map(() => {

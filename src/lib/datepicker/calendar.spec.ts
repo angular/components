@@ -1,11 +1,3 @@
-import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
-import {Component} from '@angular/core';
-import {MdCalendar} from './calendar';
-import {By} from '@angular/platform-browser';
-import {MdMonthView} from './month-view';
-import {MdYearView} from './year-view';
-import {MdCalendarBody} from './calendar-body';
-import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
 import {
   DOWN_ARROW,
   END,
@@ -15,26 +7,45 @@ import {
   PAGE_DOWN,
   PAGE_UP,
   RIGHT_ARROW,
-  UP_ARROW
-} from '../core/keyboard/keycodes';
-import {MdDatepickerIntl} from './datepicker-intl';
-import {MdNativeDateModule} from '../core/datetime/index';
-import {NoConflictStyleCompatibilityMode} from '../core';
-import {MdButtonModule} from '../button/index';
-import {AUG, DEC, FEB, JAN, JUL, NOV, MAR, MAY, JUN, SEP} from '../core/testing/month-constants';
+  UP_ARROW,
+} from '@angular/cdk/keycodes';
+import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
+import {Component} from '@angular/core';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {
+  AUG,
+  DEC,
+  FEB,
+  JAN,
+  JUL,
+  JUN,
+  MAR,
+  MAY,
+  MatNativeDateModule,
+  NOV,
+  SEP,
+} from '@angular/material/core';
+import {By} from '@angular/platform-browser';
+import {MatButtonModule} from '../button/index';
+import {MatCalendar} from './calendar';
+import {MatCalendarBody} from './calendar-body';
+import {MatDatepickerIntl} from './datepicker-intl';
+import {MatMonthView} from './month-view';
+import {MatYearView} from './year-view';
 
-describe('MdCalendar', () => {
+
+describe('MatCalendar', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        MdButtonModule,
-        MdNativeDateModule,
+        MatButtonModule,
+        MatNativeDateModule,
       ],
       declarations: [
-        MdCalendar,
-        MdCalendarBody,
-        MdMonthView,
-        MdYearView,
+        MatCalendar,
+        MatCalendarBody,
+        MatMonthView,
+        MatYearView,
 
         // Test components.
         StandardCalendar,
@@ -42,7 +53,7 @@ describe('MdCalendar', () => {
         CalendarWithDateFilter,
       ],
       providers: [
-        MdDatepickerIntl,
+        MatDatepickerIntl,
       ],
     });
 
@@ -56,13 +67,13 @@ describe('MdCalendar', () => {
     let periodButton: HTMLElement;
     let prevButton: HTMLElement;
     let nextButton: HTMLElement;
-    let calendarInstance: MdCalendar<Date>;
+    let calendarInstance: MatCalendar<Date>;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(StandardCalendar);
       fixture.detectChanges();
 
-      let calendarDebugElement = fixture.debugElement.query(By.directive(MdCalendar));
+      let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar));
       calendarElement = calendarDebugElement.nativeElement;
       periodButton = calendarElement.querySelector('.mat-calendar-period-button') as HTMLElement;
       prevButton = calendarElement.querySelector('.mat-calendar-previous-button') as HTMLElement;
@@ -149,7 +160,7 @@ describe('MdCalendar', () => {
     });
 
     it('should re-render when the i18n labels have changed',
-      inject([MdDatepickerIntl], (intl: MdDatepickerIntl) => {
+      inject([MatDatepickerIntl], (intl: MatDatepickerIntl) => {
         const button = fixture.debugElement.nativeElement
             .querySelector('.mat-calendar-period-button');
 
@@ -449,12 +460,12 @@ describe('MdCalendar', () => {
     let fixture: ComponentFixture<CalendarWithMinMax>;
     let testComponent: CalendarWithMinMax;
     let calendarElement: HTMLElement;
-    let calendarInstance: MdCalendar<Date>;
+    let calendarInstance: MatCalendar<Date>;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(CalendarWithMinMax);
 
-      let calendarDebugElement = fixture.debugElement.query(By.directive(MdCalendar));
+      let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar));
       calendarElement = calendarDebugElement.nativeElement;
       calendarInstance = calendarDebugElement.componentInstance;
       testComponent = fixture.componentInstance;
@@ -517,19 +528,70 @@ describe('MdCalendar', () => {
 
       expect(calendarInstance._activeDate).toEqual(new Date(2018, JAN, 1));
     });
+
+    it('should re-render the month view when the minDate changes', () => {
+      fixture.detectChanges();
+      spyOn(calendarInstance.monthView, '_init').and.callThrough();
+
+      testComponent.minDate = new Date(2017, NOV, 1);
+      fixture.detectChanges();
+
+      expect(calendarInstance.monthView._init).toHaveBeenCalled();
+    });
+
+    it('should re-render the month view when the maxDate changes', () => {
+      fixture.detectChanges();
+      spyOn(calendarInstance.monthView, '_init').and.callThrough();
+
+      testComponent.maxDate = new Date(2017, DEC, 1);
+      fixture.detectChanges();
+
+      expect(calendarInstance.monthView._init).toHaveBeenCalled();
+    });
+
+    it('should re-render the year view when the minDate changes', () => {
+      fixture.detectChanges();
+      const periodButton =
+          calendarElement.querySelector('.mat-calendar-period-button') as HTMLElement;
+      periodButton.click();
+      fixture.detectChanges();
+
+      spyOn(calendarInstance.yearView, '_init').and.callThrough();
+
+      testComponent.minDate = new Date(2017, NOV, 1);
+      fixture.detectChanges();
+
+      expect(calendarInstance.yearView._init).toHaveBeenCalled();
+    });
+
+    it('should re-render the year view when the maxDate changes', () => {
+      fixture.detectChanges();
+      const periodButton =
+          calendarElement.querySelector('.mat-calendar-period-button') as HTMLElement;
+      periodButton.click();
+      fixture.detectChanges();
+
+      spyOn(calendarInstance.yearView, '_init').and.callThrough();
+
+      testComponent.maxDate = new Date(2017, DEC, 1);
+      fixture.detectChanges();
+
+      expect(calendarInstance.yearView._init).toHaveBeenCalled();
+    });
+
   });
 
   describe('calendar with date filter', () => {
     let fixture: ComponentFixture<CalendarWithDateFilter>;
     let testComponent: CalendarWithDateFilter;
     let calendarElement: HTMLElement;
-    let calendarInstance: MdCalendar<Date>;
+    let calendarInstance: MatCalendar<Date>;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(CalendarWithDateFilter);
       fixture.detectChanges();
 
-      let calendarDebugElement = fixture.debugElement.query(By.directive(MdCalendar));
+      let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar));
       calendarElement = calendarDebugElement.nativeElement;
       calendarInstance = calendarDebugElement.componentInstance;
       testComponent = fixture.componentInstance;
@@ -590,40 +652,9 @@ describe('MdCalendar', () => {
   });
 });
 
-describe('MdCalendar in compatibility mode', () => {
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        MdButtonModule,
-        MdNativeDateModule,
-        NoConflictStyleCompatibilityMode,
-      ],
-      declarations: [
-        MdCalendar,
-        MdCalendarBody,
-        MdMonthView,
-        MdYearView,
-
-        // Test components.
-        StandardCalendar,
-      ],
-      providers: [
-        MdDatepickerIntl,
-      ],
-    });
-
-    TestBed.compileComponents();
-  }));
-
-  it('should not throw on creation', () => {
-    let fixture = TestBed.createComponent(StandardCalendar);
-    expect(() => fixture.detectChanges()).not.toThrow();
-  });
-});
-
 
 @Component({
-  template: `<md-calendar [startAt]="startDate" [(selected)]="selected"></md-calendar>`
+  template: `<mat-calendar [startAt]="startDate" [(selected)]="selected"></mat-calendar>`
 })
 class StandardCalendar {
   selected: Date;
@@ -633,7 +664,7 @@ class StandardCalendar {
 
 @Component({
   template: `
-    <md-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate"></md-calendar>
+    <mat-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate"></mat-calendar>
   `
 })
 class CalendarWithMinMax {
@@ -645,8 +676,8 @@ class CalendarWithMinMax {
 
 @Component({
   template: `
-    <md-calendar [startAt]="startDate" [(selected)]="selected" [dateFilter]="dateFilter">
-    </md-calendar>
+    <mat-calendar [startAt]="startDate" [(selected)]="selected" [dateFilter]="dateFilter">
+    </mat-calendar>
   `
 })
 class CalendarWithDateFilter {

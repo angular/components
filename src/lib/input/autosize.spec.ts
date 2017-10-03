@@ -2,18 +2,18 @@ import {Component, ViewChild} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {ComponentFixture, TestBed, async, fakeAsync, flushMicrotasks} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {MdInputModule} from './index';
-import {MdTextareaAutosize} from './autosize';
+import {MatInputModule} from './index';
+import {MatTextareaAutosize} from './autosize';
 
 
-describe('MdTextareaAutosize', () => {
+describe('MatTextareaAutosize', () => {
   let fixture: ComponentFixture<AutosizeTextAreaWithContent>;
   let textarea: HTMLTextAreaElement;
-  let autosize: MdTextareaAutosize;
+  let autosize: MatTextareaAutosize;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdInputModule, FormsModule],
+      imports: [MatInputModule, FormsModule],
       declarations: [
         AutosizeTextAreaWithContent,
         AutosizeTextAreaWithValue,
@@ -30,7 +30,7 @@ describe('MdTextareaAutosize', () => {
 
     textarea = fixture.nativeElement.querySelector('textarea');
     autosize = fixture.debugElement.query(
-        By.directive(MdTextareaAutosize)).injector.get<MdTextareaAutosize>(MdTextareaAutosize);
+        By.directive(MatTextareaAutosize)).injector.get<MatTextareaAutosize>(MatTextareaAutosize);
   });
 
   it('should resize the textarea based on its content', () => {
@@ -103,7 +103,7 @@ describe('MdTextareaAutosize', () => {
         .toBeGreaterThan(previousMaxHeight, 'Expected increased max-height with maxRows increase.');
   });
 
-  it('should export the mdAutosize reference', () => {
+  it('should export the matAutosize reference', () => {
     expect(fixture.componentInstance.autosize).toBeTruthy();
     expect(fixture.componentInstance.autosize.resizeToFitContent).toBeTruthy();
   });
@@ -150,7 +150,7 @@ describe('MdTextareaAutosize', () => {
     // detection should be triggered after a multiline content is set.
     fixture = TestBed.createComponent(AutosizeTextAreaWithContent);
     textarea = fixture.nativeElement.querySelector('textarea');
-    autosize = fixture.debugElement.query(By.css('textarea')).injector.get(MdTextareaAutosize);
+    autosize = fixture.debugElement.query(By.css('textarea')).injector.get(MatTextareaAutosize);
 
     fixture.componentInstance.content = `
       Line
@@ -170,7 +170,7 @@ describe('MdTextareaAutosize', () => {
     textarea = fixtureWithForms.nativeElement.querySelector('textarea');
     fixtureWithForms.detectChanges();
 
-    const previousHeight =  textarea.clientHeight;
+    const previousHeight = textarea.clientHeight;
 
     fixtureWithForms.componentInstance.model = `
         And the silken, sad, uncertain rustling of each purple curtain
@@ -181,9 +181,26 @@ describe('MdTextareaAutosize', () => {
                 This it is and nothing more.” `;
     fixtureWithForms.detectChanges();
     flushMicrotasks();
+    fixtureWithForms.detectChanges();
 
     expect(textarea.clientHeight)
         .toBeGreaterThan(previousHeight, 'Expected increased height when ngModel is updated.');
+  }));
+
+  it('should resize when the textarea value is changed programmatically', fakeAsync(() => {
+    const previousHeight = textarea.clientHeight;
+
+    textarea.value = `
+      How much wood would a woodchuck chuck
+      if a woodchuck could chuck wood?
+    `;
+
+    fixture.detectChanges();
+    flushMicrotasks();
+    fixture.detectChanges();
+
+    expect(textarea.clientHeight)
+        .toBeGreaterThan(previousHeight, 'Expected the textarea height to have increased.');
   }));
 });
 
@@ -198,21 +215,21 @@ const textareaStyleReset = `
 
 @Component({
   template: `
-    <textarea mdTextareaAutosize [mdAutosizeMinRows]="minRows" [mdAutosizeMaxRows]="maxRows"
-        #autosize="mdTextareaAutosize">
+    <textarea matTextareaAutosize [matAutosizeMinRows]="minRows" [matAutosizeMaxRows]="maxRows"
+        #autosize="matTextareaAutosize">
       {{content}}
     </textarea>`,
   styles: [textareaStyleReset],
 })
 class AutosizeTextAreaWithContent {
-  @ViewChild('autosize') autosize: MdTextareaAutosize;
+  @ViewChild('autosize') autosize: MatTextareaAutosize;
   minRows: number | null = null;
   maxRows: number | null = null;
   content: string = '';
 }
 
 @Component({
-  template: `<textarea mdTextareaAutosize [value]="value"></textarea>`,
+  template: `<textarea matTextareaAutosize [value]="value"></textarea>`,
   styles: [textareaStyleReset],
 })
 class AutosizeTextAreaWithValue {
@@ -220,7 +237,7 @@ class AutosizeTextAreaWithValue {
 }
 
 @Component({
-  template: `<textarea mdTextareaAutosize [(ngModel)]="model"></textarea>`,
+  template: `<textarea matTextareaAutosize [(ngModel)]="model"></textarea>`,
   styles: [textareaStyleReset],
 })
 class AutosizeTextareaWithNgModel {

@@ -26,6 +26,7 @@ import {CardOverviewExample} from './card-overview/card-overview-example';
 import {CdkTableBasicExample} from './cdk-table-basic/cdk-table-basic-example';
 import {CheckboxConfigurableExample} from './checkbox-configurable/checkbox-configurable-example';
 import {CheckboxOverviewExample} from './checkbox-overview/checkbox-overview-example';
+import {ChipsInputExample} from './chips-input/chips-input-example';
 import {ChipsOverviewExample} from './chips-overview/chips-overview-example';
 import {ChipsStackedExample} from './chips-stacked/chips-stacked-example';
 import {DatepickerApiExample} from './datepicker-api/datepicker-api-example';
@@ -38,6 +39,8 @@ import {DialogContentExampleDialog,DialogContentExample} from './dialog-content/
 import {DialogDataExampleDialog,DialogDataExample} from './dialog-data/dialog-data-example';
 import {DialogElementsExampleDialog,DialogElementsExample} from './dialog-elements/dialog-elements-example';
 import {DialogOverviewExampleDialog,DialogOverviewExample} from './dialog-overview/dialog-overview-example';
+import {ExpansionOverviewExample} from './expansion-overview/expansion-overview-example';
+import {ExpansionStepsExample} from './expansion-steps/expansion-steps-example';
 import {GridListDynamicExample} from './grid-list-dynamic/grid-list-dynamic-example';
 import {GridListOverviewExample} from './grid-list-overview/grid-list-overview-example';
 import {IconOverviewExample} from './icon-overview/icon-overview-example';
@@ -50,8 +53,10 @@ import {InputOverviewExample} from './input-overview/input-overview-example';
 import {InputPrefixSuffixExample} from './input-prefix-suffix/input-prefix-suffix-example';
 import {ListOverviewExample} from './list-overview/list-overview-example';
 import {ListSectionsExample} from './list-sections/list-sections-example';
+import {ListSelectionExample} from './list-selection/list-selection-example';
 import {MenuIconsExample} from './menu-icons/menu-icons-example';
 import {MenuOverviewExample} from './menu-overview/menu-overview-example';
+import {NestedMenuExample} from './nested-menu/nested-menu-example';
 import {PaginatorConfigurableExample} from './paginator-configurable/paginator-configurable-example';
 import {PaginatorOverviewExample} from './paginator-overview/paginator-overview-example';
 import {ProgressBarConfigurableExample} from './progress-bar-configurable/progress-bar-configurable-example';
@@ -72,6 +77,7 @@ import {SliderOverviewExample} from './slider-overview/slider-overview-example';
 import {PizzaPartyComponent,SnackBarComponentExample} from './snack-bar-component/snack-bar-component-example';
 import {SnackBarOverviewExample} from './snack-bar-overview/snack-bar-overview-example';
 import {SortOverviewExample} from './sort-overview/sort-overview-example';
+import {StepperOverviewExample} from './stepper-overview/stepper-overview-example';
 import {TableBasicExample} from './table-basic/table-basic-example';
 import {TableFilteringExample} from './table-filtering/table-filtering-example';
 import {TableHttpExample} from './table-http/table-http-example';
@@ -164,6 +170,12 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'chips-input': {
+    title: 'Chips with input',
+    component: ChipsInputExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'chips-overview': {
     title: 'Basic chips',
     component: ChipsOverviewExample,
@@ -235,6 +247,18 @@ export const EXAMPLE_COMPONENTS = {
     component: DialogOverviewExample,
     additionalFiles: ["dialog-overview-example-dialog.html"],
     selectorName: 'DialogOverviewExample, DialogOverviewExampleDialog'
+  },
+  'expansion-overview': {
+    title: 'Basic expansion panel',
+    component: ExpansionOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'expansion-steps': {
+    title: 'Expansion panel as accordion',
+    component: ExpansionStepsExample,
+    additionalFiles: null,
+    selectorName: null
   },
   'grid-list-dynamic': {
     title: 'Dynamic grid-list',
@@ -308,6 +332,12 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'list-selection': {
+    title: 'List with selection',
+    component: ListSelectionExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'menu-icons': {
     title: 'Menu with icons',
     component: MenuIconsExample,
@@ -317,6 +347,12 @@ export const EXAMPLE_COMPONENTS = {
   'menu-overview': {
     title: 'Basic menu',
     component: MenuOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'nested-menu': {
+    title: 'Nested menu',
+    component: NestedMenuExample,
     additionalFiles: null,
     selectorName: null
   },
@@ -440,6 +476,12 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'stepper-overview': {
+    title: 'Stepper overview',
+    component: StepperOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'table-basic': {
     title: 'Basic table',
     component: TableBasicExample,
@@ -483,7 +525,7 @@ export const EXAMPLE_COMPONENTS = {
     selectorName: null
   },
   'tabs-template-label': {
-    title: 'Coming soon!',
+    title: 'Complex Example',
     component: TabsTemplateLabelExample,
     additionalFiles: null,
     selectorName: null
@@ -528,6 +570,7 @@ export const EXAMPLE_LIST = [
   CdkTableBasicExample,
   CheckboxConfigurableExample,
   CheckboxOverviewExample,
+  ChipsInputExample,
   ChipsOverviewExample,
   ChipsStackedExample,
   DatepickerApiExample,
@@ -540,6 +583,8 @@ export const EXAMPLE_LIST = [
   DialogDataExampleDialog,DialogDataExample,
   DialogElementsExampleDialog,DialogElementsExample,
   DialogOverviewExampleDialog,DialogOverviewExample,
+  ExpansionOverviewExample,
+  ExpansionStepsExample,
   GridListDynamicExample,
   GridListOverviewExample,
   IconOverviewExample,
@@ -552,8 +597,10 @@ export const EXAMPLE_LIST = [
   InputPrefixSuffixExample,
   ListOverviewExample,
   ListSectionsExample,
+  ListSelectionExample,
   MenuIconsExample,
   MenuOverviewExample,
+  NestedMenuExample,
   PaginatorConfigurableExample,
   PaginatorOverviewExample,
   ProgressBarConfigurableExample,
@@ -574,6 +621,7 @@ export const EXAMPLE_LIST = [
   PizzaPartyComponent,SnackBarComponentExample,
   SnackBarOverviewExample,
   SortOverviewExample,
+  StepperOverviewExample,
   TableBasicExample,
   TableFilteringExample,
   TableHttpExample,

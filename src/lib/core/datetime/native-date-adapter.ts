@@ -6,10 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Inject, Injectable, Optional, LOCALE_ID} from '@angular/core';
-import {DateAdapter} from './date-adapter';
+import {Inject, Injectable, Optional} from '@angular/core';
+import {DateAdapter, MAT_DATE_LOCALE} from './date-adapter';
 import {extendObject} from '../util/object-extend';
-
 
 // TODO(mmalerba): Remove when we no longer support safari 9.
 /** Whether the browser supports the Intl API. */
@@ -39,6 +38,15 @@ const DEFAULT_DAY_OF_WEEK_NAMES = {
 };
 
 
+/**
+ * Matches strings that have the form of a valid RFC 3339 string
+ * (https://tools.ietf.org/html/rfc3339). Note that the string may not actually be a valid date
+ * because the regex will match strings an with out of bounds month, date, etc.
+ */
+const ISO_8601_REGEX =
+    /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|(?:(?:\+|-)\d{2}:\d{2}))?)?$/;
+
+
 /** Creates an array and fills it with values. */
 function range<T>(length: number, valueFunction: (index: number) => T): T[] {
   const valuesArray = Array(length);
@@ -48,13 +56,12 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
   return valuesArray;
 }
 
-
 /** Adapts the native JS Date for use with cdk-based components that work with dates. */
 @Injectable()
 export class NativeDateAdapter extends DateAdapter<Date> {
-  constructor(@Optional() @Inject(LOCALE_ID) localeId: any) {
+  constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string) {
     super();
-    super.setLocale(localeId);
+    super.setLocale(matDateLocale);
   }
 
   /**
@@ -204,12 +211,24 @@ export class NativeDateAdapter extends DateAdapter<Date> {
         this.getYear(date), this.getMonth(date), this.getDate(date) + days);
   }
 
-  getISODateString(date: Date): string {
+  toIso8601(date: Date): string {
     return [
       date.getUTCFullYear(),
       this._2digit(date.getUTCMonth() + 1),
       this._2digit(date.getUTCDate())
     ].join('-');
+  }
+
+  fromIso8601(iso8601String: string): Date | null {
+    // The `Date` constructor accepts formats other than ISO 8601, so we need to make sure the
+    // string is the right format first.
+    if (ISO_8601_REGEX.test(iso8601String)) {
+      let d = new Date(iso8601String);
+      if (this.isValid(d)) {
+        return d;
+      }
+    }
+    return null;
   }
 
   isDateInstance(obj: any) {

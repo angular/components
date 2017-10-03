@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MdGridTile} from './grid-tile';
+import {MatGridList} from './grid-list';
+import {MatGridTile} from './grid-tile';
 import {TileCoordinator} from './tile-coordinator';
 
 /**
@@ -51,7 +52,7 @@ export abstract class TileStyler {
     // edges, each tile only uses a fraction (gutterShare = numGutters / numCells) of the gutter
     // size. (Imagine having one gutter per tile, and then breaking up the extra gutter on the
     // edge evenly among the cells).
-    return `(${sizePercent}% - ( ${this._gutterSize} * ${gutterFraction} ))`;
+    return `(${sizePercent}% - (${this._gutterSize} * ${gutterFraction}))`;
   }
 
 
@@ -64,7 +65,7 @@ export abstract class TileStyler {
   getTilePosition(baseSize: string, offset: number): string {
     // The position comes the size of a 1x1 tile plus gutter for each previous tile in the
     // row/column (offset).
-    return calc(`(${baseSize} + ${this._gutterSize}) * ${offset}`);
+    return offset === 0 ? '0' : calc(`(${baseSize} + ${this._gutterSize}) * ${offset}`);
   }
 
 
@@ -85,7 +86,7 @@ export abstract class TileStyler {
    * @param rowIndex Index of the tile's row.
    * @param colIndex Index of the tile's column.
    */
-  setStyle(tile: MdGridTile, rowIndex: number, colIndex: number): void {
+  setStyle(tile: MatGridTile, rowIndex: number, colIndex: number): void {
     // Percent of the available horizontal space that one column takes up.
     let percentWidthPerTile = 100 / this._cols;
 
@@ -98,7 +99,7 @@ export abstract class TileStyler {
   }
 
   /** Sets the horizontal placement of the tile in the list. */
-  setColStyles(tile: MdGridTile, colIndex: number, percentWidth: number,
+  setColStyles(tile: MatGridTile, colIndex: number, percentWidth: number,
                gutterWidth: number) {
     // Base horizontal size of a column.
     let baseTileWidth = this.getBaseTileSize(percentWidth, gutterWidth);
@@ -130,7 +131,7 @@ export abstract class TileStyler {
    * This method will be implemented by each type of TileStyler.
    * @docs-private
    */
-  abstract setRowStyles(tile: MdGridTile, rowIndex: number, percentWidth: number,
+  abstract setRowStyles(tile: MatGridTile, rowIndex: number, percentWidth: number,
                         gutterWidth: number);
 
   /**
@@ -139,12 +140,19 @@ export abstract class TileStyler {
    * @docs-private
    */
   getComputedHeight(): [string, string] | null { return null; }
+
+  /**
+   * Called when the tile styler is swapped out with a different one. To be used for cleanup.
+   * @param list Grid list that the styler was attached to.
+   * @docs-private
+   */
+  abstract reset(list: MatGridList);
 }
 
 
 /**
  * This type of styler is instantiated when the user passes in a fixed row height.
- * Example <md-grid-list cols="3" rowHeight="100px">
+ * Example <mat-grid-list cols="3" rowHeight="100px">
  * @docs-private
  */
 export class FixedTileStyler extends TileStyler {
@@ -156,7 +164,7 @@ export class FixedTileStyler extends TileStyler {
     this.fixedRowHeight = normalizeUnits(this.fixedRowHeight);
   }
 
-  setRowStyles(tile: MdGridTile, rowIndex: number): void {
+  setRowStyles(tile: MatGridTile, rowIndex: number): void {
     tile._setStyle('top', this.getTilePosition(this.fixedRowHeight, rowIndex));
     tile._setStyle('height', calc(this.getTileSize(this.fixedRowHeight, tile.rowspan)));
   }
@@ -166,12 +174,21 @@ export class FixedTileStyler extends TileStyler {
       'height', calc(`${this.getTileSpan(this.fixedRowHeight)} + ${this.getGutterSpan()}`)
     ];
   }
+
+  reset(list: MatGridList) {
+    list._setListStyle(['height', null]);
+
+    list._tiles.forEach(tile => {
+      tile._setStyle('top', null);
+      tile._setStyle('height', null);
+    });
+  }
 }
 
 
 /**
  * This type of styler is instantiated when the user passes in a width:height ratio
- * for the row height.  Example <md-grid-list cols="3" rowHeight="3:1">
+ * for the row height.  Example <mat-grid-list cols="3" rowHeight="3:1">
  * @docs-private
  */
 export class RatioTileStyler extends TileStyler {
@@ -185,7 +202,7 @@ export class RatioTileStyler extends TileStyler {
     this._parseRatio(value);
   }
 
-  setRowStyles(tile: MdGridTile, rowIndex: number, percentWidth: number,
+  setRowStyles(tile: MatGridTile, rowIndex: number, percentWidth: number,
                gutterWidth: number): void {
     let percentHeightPerTile = percentWidth / this.rowHeightRatio;
     this.baseTileHeight = this.getBaseTileSize(percentHeightPerTile, gutterWidth);
@@ -203,11 +220,20 @@ export class RatioTileStyler extends TileStyler {
     ];
   }
 
+  reset(list: MatGridList) {
+    list._setListStyle(['padding-bottom', null]);
+
+    list._tiles.forEach(tile => {
+      tile._setStyle('margin-top', null);
+      tile._setStyle('padding-top', null);
+    });
+  }
+
   private _parseRatio(value: string): void {
-    let ratioParts = value.split(':');
+    const ratioParts = value.split(':');
 
     if (ratioParts.length !== 2) {
-      throw Error(`md-grid-list: invalid ratio given for row-height: "${value}"`);
+      throw Error(`mat-grid-list: invalid ratio given for row-height: "${value}"`);
     }
 
     this.rowHeightRatio = parseFloat(ratioParts[0]) / parseFloat(ratioParts[1]);
@@ -217,13 +243,13 @@ export class RatioTileStyler extends TileStyler {
 /**
  * This type of styler is instantiated when the user selects a "fit" row height mode.
  * In other words, the row height will reflect the total height of the container divided
- * by the number of rows.  Example <md-grid-list cols="3" rowHeight="fit">
+ * by the number of rows.  Example <mat-grid-list cols="3" rowHeight="fit">
  *
  * @docs-private
  */
 export class FitTileStyler extends TileStyler {
 
-  setRowStyles(tile: MdGridTile, rowIndex: number): void {
+  setRowStyles(tile: MatGridTile, rowIndex: number): void {
     // Percent of the available vertical space that one row takes up.
     let percentHeightPerTile = 100 / this._rowspan;
 
@@ -237,6 +263,12 @@ export class FitTileStyler extends TileStyler {
     tile._setStyle('height', calc(this.getTileSize(baseTileHeight, tile.rowspan)));
   }
 
+  reset(list: MatGridList) {
+    list._tiles.forEach(tile => {
+      tile._setStyle('top', null);
+      tile._setStyle('height', null);
+    });
+  }
 }
 
 

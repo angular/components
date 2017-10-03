@@ -6,41 +6,46 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import {
-  Component,
-  Directive,
-  Host,
-  Input,
-  ViewEncapsulation,
-  Optional,
-  forwardRef,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  SimpleChanges,
+  Component,
+  Directive,
+  forwardRef,
+  Host,
+  Input,
   OnChanges,
   OnDestroy,
+  Optional,
+  SimpleChanges,
+  ViewEncapsulation,
 } from '@angular/core';
-import {
-  trigger,
-  state,
-  style,
-  transition,
-  animate,
-} from '@angular/animations';
-import {MdAccordion} from './accordion';
-import {AccordionItem} from './accordion-item';
-import {UniqueSelectionDispatcher} from '../core';
+import {CanDisable, mixinDisabled, UniqueSelectionDispatcher} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
+import {MatAccordion} from './accordion';
+import {AccordionItem} from './accordion-item';
 
 
-/** MdExpansionPanel's states. */
-export type MdExpansionPanelState = 'expanded' | 'collapsed';
+// Boilerplate for applying mixins to MatExpansionPanel.
+/** @docs-private */
+export class MatExpansionPanelBase extends AccordionItem {
+  constructor(accordion: MatAccordion,
+              _changeDetectorRef: ChangeDetectorRef,
+              _uniqueSelectionDispatcher: UniqueSelectionDispatcher) {
+    super(accordion, _changeDetectorRef, _uniqueSelectionDispatcher);
+  }
+}
+export const _MatExpansionPanelMixinBase = mixinDisabled(MatExpansionPanelBase);
+
+/** MatExpansionPanel's states. */
+export type MatExpansionPanelState = 'expanded' | 'collapsed';
 
 /** Time and timing curve for expansion panel animations. */
 export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,1)';
 
 /**
- * <md-expansion-panel> component.
+ * <mat-expansion-panel> component.
  *
  * This component can be used as a single element to show expandable content, or as one of
  * multiple children of an element with the CdkAccordion directive attached.
@@ -50,18 +55,19 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,
 @Component({
   moduleId: module.id,
   styleUrls: ['./expansion-panel.css'],
-  selector: 'md-expansion-panel, mat-expansion-panel',
+  selector: 'mat-expansion-panel',
   templateUrl: './expansion-panel.html',
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  inputs: ['disabled'],
+  inputs: ['disabled', 'expanded'],
   host: {
     'class': 'mat-expansion-panel',
     '[class.mat-expanded]': 'expanded',
     '[class.mat-expansion-panel-spacing]': '_hasSpacing()',
   },
   providers: [
-    {provide: AccordionItem, useExisting: forwardRef(() => MdExpansionPanel)}
+    {provide: AccordionItem, useExisting: forwardRef(() => MatExpansionPanel)}
   ],
   animations: [
     trigger('bodyExpansion', [
@@ -71,14 +77,15 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,
     ]),
   ],
 })
-export class MdExpansionPanel extends AccordionItem implements OnChanges, OnDestroy {
+export class MatExpansionPanel extends _MatExpansionPanelMixinBase
+    implements CanDisable, OnChanges, OnDestroy {
   /** Whether the toggle indicator should be hidden. */
   @Input() hideToggle: boolean = false;
 
   /** Stream that emits for changes in `@Input` properties. */
   _inputChanges = new Subject<SimpleChanges>();
 
-  constructor(@Optional() @Host() accordion: MdAccordion,
+  constructor(@Optional() @Host() accordion: MatAccordion,
               _changeDetectorRef: ChangeDetectorRef,
               _uniqueSelectionDispatcher: UniqueSelectionDispatcher) {
     super(accordion, _changeDetectorRef, _uniqueSelectionDispatcher);
@@ -98,12 +105,11 @@ export class MdExpansionPanel extends AccordionItem implements OnChanges, OnDest
     if (this.accordion) {
       return (this.expanded ? this.accordion.displayMode : this._getExpandedState()) === 'default';
     }
-
     return false;
   }
 
   /** Gets the expanded state string. */
-  _getExpandedState(): MdExpansionPanelState {
+  _getExpandedState(): MatExpansionPanelState {
     return this.expanded ? 'expanded' : 'collapsed';
   }
 
@@ -117,9 +123,9 @@ export class MdExpansionPanel extends AccordionItem implements OnChanges, OnDest
 }
 
 @Directive({
-  selector: 'mat-action-row, md-action-row',
+  selector: 'mat-action-row',
   host: {
     class: 'mat-action-row'
   }
 })
-export class MdExpansionPanelActionRow {}
+export class MatExpansionPanelActionRow {}

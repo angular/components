@@ -7,8 +7,8 @@
  */
 
 import {Component, ViewEncapsulation, Inject, ChangeDetectionStrategy} from '@angular/core';
-import {MdSnackBarRef} from './snack-bar-ref';
-import {MD_SNACK_BAR_DATA} from './snack-bar-config';
+import {MatSnackBarRef} from './snack-bar-ref';
+import {MAT_SNACK_BAR_DATA} from './snack-bar-config';
 
 
 /**
@@ -21,6 +21,7 @@ import {MD_SNACK_BAR_DATA} from './snack-bar-config';
   templateUrl: 'simple-snack-bar.html',
   styleUrls: ['simple-snack-bar.css'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'mat-simple-snackbar',
@@ -31,8 +32,8 @@ export class SimpleSnackBar {
   data: { message: string, action: string };
 
   constructor(
-    public snackBarRef: MdSnackBarRef<SimpleSnackBar>,
-    @Inject(MD_SNACK_BAR_DATA) data: any) {
+    public snackBarRef: MatSnackBarRef<SimpleSnackBar>,
+    @Inject(MAT_SNACK_BAR_DATA) data: any) {
     this.data = data;
   }
 

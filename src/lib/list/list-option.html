@@ -1,10 +1,16 @@
-<div class="mat-list-item-content"  [class.mat-list-item-content-reverse]="checkboxPosition == 'after'" [class.mat-list-item-disabled]="disabled">
-  <div class="mat-list-item-ripple" md-ripple
-       [mdRippleTrigger]="_getHostElement()"
-       [mdRippleDisabled]="!isRippleEnabled()">
-  </div>
+<div class="mat-list-item-content"
+  [class.mat-list-item-content-reverse]="checkboxPosition == 'after'"
+  [class.mat-list-item-disabled]="disabled">
 
-  <md-pseudo-checkbox [state]="selected ? 'checked' : 'unchecked'" #autocheckbox [disabled]="disabled"></md-pseudo-checkbox>
+  <div mat-ripple
+    class="mat-list-item-ripple"
+    [matRippleTrigger]="_getHostElement()"
+    [matRippleDisabled]="_isRippleDisabled()"></div>
+
+  <mat-pseudo-checkbox #autocheckbox
+    [state]="selected ? 'checked' : 'unchecked'"
+    [disabled]="disabled"></mat-pseudo-checkbox>
+
   <div class="mat-list-text"><ng-content></ng-content></div>
 
 </div>

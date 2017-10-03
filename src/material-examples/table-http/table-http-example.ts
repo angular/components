@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Http} from '@angular/http';
 import {DataSource} from '@angular/cdk/collections';
-import {MdPaginator, MdSort} from '@angular/material';
+import {MatPaginator, MatSort} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/of';
@@ -23,8 +23,8 @@ export class TableHttpExample implements OnInit {
   exampleDatabase: ExampleHttpDao | null;
   dataSource: ExampleDataSource | null;
 
-  @ViewChild(MdPaginator) paginator: MdPaginator;
-  @ViewChild(MdSort) sort: MdSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private http: Http) {}
 
@@ -75,20 +75,20 @@ export class ExampleDataSource extends DataSource<GithubIssue> {
   isRateLimitReached = false;
 
   constructor(private exampleDatabase: ExampleHttpDao,
-              private paginator: MdPaginator,
-              private sort: MdSort) {
+              private paginator: MatPaginator,
+              private sort: MatSort) {
     super();
   }
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
   connect(): Observable<GithubIssue[]> {
     const displayDataChanges = [
-      this.sort.mdSortChange,
+      this.sort.sortChange,
       this.paginator.page
     ];
 
     // If the user changes the sort order, reset back to the first page.
-    this.sort.mdSortChange.subscribe(() => this.paginator.pageIndex = 0);
+    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
     return Observable.merge(...displayDataChanges)
       .startWith(null)
@@ -109,7 +109,7 @@ export class ExampleDataSource extends DataSource<GithubIssue> {
         this.isLoadingResults = false;
         // Catch if the GitHub API has reached its rate limit. Return empty data.
         this.isRateLimitReached = true;
-        return Observable.of(null);
+        return Observable.of([]);
       });
   }
 

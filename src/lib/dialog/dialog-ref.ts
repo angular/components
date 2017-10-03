@@ -11,39 +11,51 @@ import {filter, first, RxChain} from '@angular/cdk/rxjs';
 import {DialogPosition} from './dialog-config';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {MdDialogContainer} from './dialog-container';
+import {MatDialogContainer} from './dialog-container';
 
 
 // TODO(jelbourn): resizing
-// TODO(jelbourn): afterOpen
 
 // Counter for unique dialog ids.
 let uniqueId = 0;
 
 /**
- * Reference to a dialog opened via the MdDialog service.
+ * Reference to a dialog opened via the MatDialog service.
  */
-export class MdDialogRef<T> {
+export class MatDialogRef<T> {
   /** The instance of component opened into the dialog. */
   componentInstance: T;
 
   /** Whether the user is allowed to close the dialog. */
   disableClose = this._containerInstance._config.disableClose;
 
+  /** Subject for notifying the user that the dialog has finished opening. */
+  private _afterOpen = new Subject<void>();
+
   /** Subject for notifying the user that the dialog has finished closing. */
-  private _afterClosed: Subject<any> = new Subject();
+  private _afterClosed = new Subject<any>();
 
   /** Subject for notifying the user that the dialog has started closing. */
-  private _beforeClose: Subject<any> = new Subject();
+  private _beforeClose = new Subject<any>();
 
   /** Result to be passed to afterClosed. */
   private _result: any;
 
   constructor(
     private _overlayRef: OverlayRef,
-    private _containerInstance: MdDialogContainer,
-    public readonly id: string = `md-dialog-${uniqueId++}`) {
+    private _containerInstance: MatDialogContainer,
+    public readonly id: string = `mat-dialog-${uniqueId++}`) {
 
+    // Emit when opening animation completes
+    RxChain.from(_containerInstance._animationStateChanged)
+      .call(filter, event => event.phaseName === 'done' && event.toState === 'enter')
+      .call(first)
+      .subscribe(() => {
+        this._afterOpen.next();
+        this._afterOpen.complete();
+      });
+
+    // Dispose overlay when closing animation is complete
     RxChain.from(_containerInstance._animationStateChanged)
       .call(filter, event => event.phaseName === 'done' && event.toState === 'exit')
       .call(first)
@@ -73,6 +85,13 @@ export class MdDialogRef<T> {
       });
 
     this._containerInstance._startExitAnimation();
+  }
+
+  /**
+   * Gets an observable that is notified when the dialog is finished opening.
+   */
+  afterOpen(): Observable<void> {
+    return this._afterOpen.asObservable();
   }
 
   /**
@@ -138,6 +157,6 @@ export class MdDialogRef<T> {
 
   /** Fetches the position strategy object from the overlay ref. */
   private _getPositionStrategy(): GlobalPositionStrategy {
-    return this._overlayRef.getState().positionStrategy as GlobalPositionStrategy;
+    return this._overlayRef.getConfig().positionStrategy as GlobalPositionStrategy;
   }
 }

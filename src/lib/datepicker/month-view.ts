@@ -15,12 +15,13 @@ import {
   Input,
   Optional,
   Output,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ChangeDetectorRef,
 } from '@angular/core';
-import {MdCalendarCell} from './calendar-body';
-import {DateAdapter} from '../core/datetime/index';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {MatCalendarCell} from './calendar-body';
+import {coerceDateProperty} from './coerce-date-property';
 import {createMissingDateImplError} from './datepicker-errors';
-import {MD_DATE_FORMATS, MdDateFormats} from '../core/datetime/date-formats';
 
 
 const DAYS_PER_WEEK = 7;
@@ -32,12 +33,13 @@ const DAYS_PER_WEEK = 7;
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-month-view',
+  selector: 'mat-month-view',
   templateUrl: 'month-view.html',
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdMonthView<D> implements AfterContentInit {
+export class MatMonthView<D> implements AfterContentInit {
   /**
    * The date to display in this month view (everything other than the month and year is ignored).
    */
@@ -45,7 +47,7 @@ export class MdMonthView<D> implements AfterContentInit {
   get activeDate(): D { return this._activeDate; }
   set activeDate(value: D) {
     let oldActiveDate = this._activeDate;
-    this._activeDate = value || this._dateAdapter.today();
+    this._activeDate = coerceDateProperty(this._dateAdapter, value) || this._dateAdapter.today();
     if (!this._hasSameMonthAndYear(oldActiveDate, this._activeDate)) {
       this._init();
     }
@@ -54,12 +56,12 @@ export class MdMonthView<D> implements AfterContentInit {
 
   /** The currently selected date. */
   @Input()
-  get selected(): D { return this._selected; }
-  set selected(value: D) {
-    this._selected = value;
-    this._selectedDate = this._getDateInCurrentMonth(this.selected);
+  get selected(): D | null { return this._selected; }
+  set selected(value: D | null) {
+    this._selected = coerceDateProperty(this._dateAdapter, value);
+    this._selectedDate = this._getDateInCurrentMonth(this._selected);
   }
-  private _selected: D;
+  private _selected: D | null;
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
@@ -74,7 +76,7 @@ export class MdMonthView<D> implements AfterContentInit {
   _monthLabel: string;
 
   /** Grid of calendar cells representing the dates of the month. */
-  _weeks: MdCalendarCell[][];
+  _weeks: MatCalendarCell[][];
 
   /** The number of blank cells in the first row before the 1st of the month. */
   _firstWeekOffset: number;
@@ -92,12 +94,13 @@ export class MdMonthView<D> implements AfterContentInit {
   _weekdays: {long: string, narrow: string}[];
 
   constructor(@Optional() public _dateAdapter: DateAdapter<D>,
-              @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats) {
+              @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
+              private _changeDetectorRef: ChangeDetectorRef) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
     if (!this._dateFormats) {
-      throw createMissingDateImplError('MD_DATE_FORMATS');
+      throw createMissingDateImplError('MAT_DATE_FORMATS');
     }
 
     const firstDayOfWeek = this._dateAdapter.getFirstDayOfWeek();
@@ -131,7 +134,7 @@ export class MdMonthView<D> implements AfterContentInit {
   }
 
   /** Initializes this month view. */
-  private _init() {
+  _init() {
     this._selectedDate = this._getDateInCurrentMonth(this.selected);
     this._todayDate = this._getDateInCurrentMonth(this._dateAdapter.today());
     this._monthLabel =
@@ -145,9 +148,10 @@ export class MdMonthView<D> implements AfterContentInit {
          this._dateAdapter.getFirstDayOfWeek()) % DAYS_PER_WEEK;
 
     this._createWeekCells();
+    this._changeDetectorRef.markForCheck();
   }
 
-  /** Creates MdCalendarCells for the dates in this month. */
+  /** Creates MatCalendarCells for the dates in this month. */
   private _createWeekCells() {
     let daysInMonth = this._dateAdapter.getNumDaysInMonth(this.activeDate);
     let dateNames = this._dateAdapter.getDateNames();
@@ -164,7 +168,7 @@ export class MdMonthView<D> implements AfterContentInit {
           this.dateFilter(date);
       let ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
       this._weeks[this._weeks.length - 1]
-          .push(new MdCalendarCell(i + 1, dateNames[i], ariaLabel, enabled));
+          .push(new MatCalendarCell(i + 1, dateNames[i], ariaLabel, enabled));
     }
   }
 
@@ -172,13 +176,13 @@ export class MdMonthView<D> implements AfterContentInit {
    * Gets the date in this month that the given Date falls on.
    * Returns null if the given Date is in another month.
    */
-  private _getDateInCurrentMonth(date: D): number | null {
-    return this._hasSameMonthAndYear(date, this.activeDate) ?
+  private _getDateInCurrentMonth(date: D | null): number | null {
+    return date && this._hasSameMonthAndYear(date, this.activeDate) ?
         this._dateAdapter.getDate(date) : null;
   }
 
   /** Checks whether the 2 dates are non-null and fall within the same month of the same year. */
-  private _hasSameMonthAndYear(d1: D, d2: D): boolean {
+  private _hasSameMonthAndYear(d1: D | null, d2: D | null): boolean {
     return !!(d1 && d2 && this._dateAdapter.getMonth(d1) == this._dateAdapter.getMonth(d2) &&
               this._dateAdapter.getYear(d1) == this._dateAdapter.getYear(d2));
   }

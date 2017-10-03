@@ -1,9 +1,13 @@
 <h1>Accessibility Demo</h1>
 
 <nav>
-  <a *ngFor="let navItem of navItems" [routerLink]="[navItem.route]">
+  <a (click)="skipNavigation()" href="javascript:void(0)">Skip navigation</a>
+  <a *ngFor="let navItem of navItems" [routerLink]="[navItem.route]" (click)="skipNavigation()">
     {{navItem.name}}
   </a>
 </nav>
 
-<router-outlet></router-outlet>
+<div #maincontent tabindex="-1">
+  <h1 #header tabindex="-1" *ngIf="!!currentComponent">{{currentComponent}} Demo</h1>
+  <router-outlet></router-outlet>
+</div>

@@ -29,7 +29,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   private _activeItem: T;
   private _wrap = false;
   private _letterKeyStream = new Subject<string>();
-  private _typeaheadSubscription: Subscription;
+  private _typeaheadSubscription = Subscription.EMPTY;
 
   // Buffer for the letters that the user has pressed when the typeahead option is turned on.
   private _pressedLetters: string[] = [];
@@ -60,9 +60,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
       throw Error('ListKeyManager items in typeahead mode must implement the `getLabel` method.');
     }
 
-    if (this._typeaheadSubscription) {
-      this._typeaheadSubscription.unsubscribe();
-    }
+    this._typeaheadSubscription.unsubscribe();
 
     // Debounce the presses of non-navigational keys, collect the ones that correspond to letters
     // and convert those letters back into a string. Afterwards find the first item that starts
@@ -76,7 +74,9 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         const items = this._items.toArray();
 
         for (let i = 0; i < items.length; i++) {
-          if (items[i].getLabel!().toUpperCase().trim().indexOf(inputString) === 0) {
+          let item = items[i];
+
+          if (!item.disabled && item.getLabel!().toUpperCase().trim().indexOf(inputString) === 0) {
             this.setActiveItem(i);
             break;
           }

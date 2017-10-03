@@ -1,0 +1,40 @@
+// TypeScript config file that is used to compile the moment-adapter package into ES2015.
+{
+  "compilerOptions": {
+    // Needed for Moment.js since it doesn't have a default export.
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "declaration": true,
+    "stripInternal": false,
+    "experimentalDecorators": true,
+    "noUnusedParameters": true,
+    "strictNullChecks": true,
+    "importHelpers": true,
+    "newLine": "lf",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "outDir": "../../dist/packages/material-moment-adapter",
+    "rootDir": ".",
+    "sourceMap": true,
+    "inlineSources": true,
+    "target": "es2015",
+    "lib": ["es2015", "dom"],
+    "skipLibCheck": true,
+    "types": [],
+    "paths": {
+      "@angular/material/*": ["../../dist/packages/material/*/public-api"],
+      "@angular/material": ["../../dist/packages/material/public-api"],
+      "@angular/cdk/*": ["../../dist/packages/cdk/*/public-api"]
+    }
+  },
+  "files": [
+    "public-api.ts"
+  ],
+  "angularCompilerOptions": {
+    "annotateForClosureCompiler": true,
+    "strictMetadataEmit": true,
+    "flatModuleOutFile": "index.js",
+    "flatModuleId": "@angular/material-moment-adapter",
+    "skipTemplateCodegen": true
+  }
+}
