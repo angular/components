@@ -6,8 +6,6 @@
     </div>
 
     <div class="mat-input-infix mat-form-field-infix">
-      <ng-content></ng-content>
-
       <span class="mat-input-placeholder-wrapper mat-form-field-placeholder-wrapper">
         <!-- We add aria-owns as a workaround for an issue in JAWS & NVDA where the label isn't
              read if it comes before the control in the DOM. -->
@@ -28,6 +26,8 @@
             *ngIf="!hideRequiredMarker && _control.required">*</span>
         </label>
       </span>
+
+      <ng-content></ng-content>
     </div>
 
     <div class="mat-input-suffix mat-form-field-suffix" *ngIf="_suffixChildren.length">

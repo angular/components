@@ -28,7 +28,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatInputModule} from './index';
 import {MatInput} from './input';
 
-describe('MatInput without forms', function () {
+describe('MatInput without forms', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -713,6 +713,17 @@ describe('MatInput without forms', function () {
     expect(input.focused).toBe(false);
     expect(container.classList).not.toContain('mat-focused');
   });
+
+  it('should render the label before the input', () => {
+    const fixture = TestBed.createComponent(MatInputWithId);
+    fixture.detectChanges();
+
+    const elements = fixture.debugElement.nativeElement.querySelectorAll('label, input');
+
+    expect(elements[0].nodeName).toBe('LABEL', 'Expected label to come first.');
+    expect(elements[1].nodeName).toBe('INPUT', 'Expected input to come after label.');
+  });
+
 });
 
 describe('MatInput with forms', () => {
