@@ -2,6 +2,9 @@
 @import '../core/theming/theming';
 @import '../core/typography/typography-utils';
 
+$mat-badge-font-size: 12px;
+$mat-badge-font-weight: 600;
+
 @mixin _mat-badge-color($palette) {
   background: mat-color($palette);
   color: mat-color($palette, default-contrast);
@@ -28,5 +31,12 @@
         @include _mat-toolbar-color($warn);
       }
     }
+  }
+}
+
+@mixin mat-badge-typography($config) {
+  .mat-badge-content {
+    font-weight: $mat-badge-font-weight;
+    font-size: $mat-badge-font-size;
   }
 }
