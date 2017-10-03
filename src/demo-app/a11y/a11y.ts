@@ -65,7 +65,9 @@ export class AccessibilityDemo implements OnDestroy {
         this.currentComponent = nav ? nav.name : '';
 
         let routerState = router.routerState.root;
-        while (routerState.children.length) routerState = routerState.children[0];
+        while (routerState.children.length) {
+          routerState = routerState.children[0];
+        }
         this.fullscreen = !!routerState.snapshot.data.fullscreen;
       }
     });
