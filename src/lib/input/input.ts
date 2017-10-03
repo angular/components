@@ -21,18 +21,18 @@ import {
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {FormControl, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
 import {Platform, getSupportedInputTypes} from '@angular/cdk/platform';
-import {getMdInputUnsupportedTypeError} from './input-errors';
+import {getMatInputUnsupportedTypeError} from './input-errors';
 import {
   defaultErrorStateMatcher,
   ErrorOptions,
   ErrorStateMatcher,
-  MD_ERROR_GLOBAL_OPTIONS
+  MAT_ERROR_GLOBAL_OPTIONS
 } from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
-import {MdFormFieldControl} from '@angular/material/form-field';
+import {MatFormFieldControl} from '@angular/material/form-field';
 
-// Invalid input type. Using one of these will throw an MdInputUnsupportedTypeError.
-const MD_INPUT_INVALID_TYPES = [
+// Invalid input type. Using one of these will throw an MatInputUnsupportedTypeError.
+const MAT_INPUT_INVALID_TYPES = [
   'button',
   'checkbox',
   'color',
@@ -48,34 +48,36 @@ const MD_INPUT_INVALID_TYPES = [
 let nextUniqueId = 0;
 
 
-/** Directive that allows a native input to work inside a `MdFormField`. */
+/** Directive that allows a native input to work inside a `MatFormField`. */
 @Directive({
-  selector: `input[mdInput], textarea[mdInput], input[matInput], textarea[matInput]`,
+  selector: `input[matInput], textarea[matInput]`,
   host: {
-    'class': 'mat-input-element',
+    'class': 'mat-input-element mat-form-field-autofill-control',
     // Native input properties that are overwritten by Angular inputs need to be synced with
     // the native input element. Otherwise property bindings for those don't work.
-    '[id]': 'id',
+    '[attr.id]': 'id',
     '[placeholder]': 'placeholder',
     '[disabled]': 'disabled',
     '[required]': 'required',
+    '[readonly]': 'readonly',
     '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-invalid]': 'errorState',
     '(blur)': '_focusChanged(false)',
     '(focus)': '_focusChanged(true)',
     '(input)': '_onInput()',
   },
-  providers: [{provide: MdFormFieldControl, useExisting: MdInput}],
+  providers: [{provide: MatFormFieldControl, useExisting: MatInput}],
 })
-export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, DoCheck {
+export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy, DoCheck {
   /** Variables used as cache for getters and setters. */
-  private _type = 'text';
-  private _disabled = false;
-  private _required = false;
-  private _id: string;
-  private _uid = `md-input-${nextUniqueId++}`;
-  private _errorOptions: ErrorOptions;
-  private _previousNativeValue = this.value;
+  protected _type = 'text';
+  protected _disabled = false;
+  protected _required = false;
+  protected _id: string;
+  protected _uid = `mat-input-${nextUniqueId++}`;
+  protected _errorOptions: ErrorOptions;
+  protected _previousNativeValue = this.value;
+  private _readonly = false;
 
   /** Whether the input is focused. */
   focused = false;
@@ -87,10 +89,13 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
   _ariaDescribedby: string;
 
   /**
-   * Stream that emits whenever the state of the input changes such that the wrapping `MdFormField`
+   * Stream that emits whenever the state of the input changes such that the wrapping `MatFormField`
    * needs to run change detection.
    */
   stateChanges = new Subject<void>();
+
+  /** A name for this control that can be used by `mat-form-field`. */
+  controlType = 'mat-input';
 
   /** Whether the element is disabled. */
   @Input()
@@ -129,6 +134,7 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
   @Input() errorStateMatcher: ErrorStateMatcher;
 
   /** The input element's value. */
+  @Input()
   get value() { return this._elementRef.nativeElement.value; }
   set value(value: string) {
     if (value !== this.value) {
@@ -137,7 +143,12 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
     }
   }
 
-  private _neverEmptyInputTypes = [
+  /** Whether the element is readonly. */
+  @Input()
+  get readonly() { return this._readonly; }
+  set readonly(value: any) { this._readonly = coerceBooleanProperty(value); }
+
+  protected _neverEmptyInputTypes = [
     'date',
     'datetime',
     'datetime-local',
@@ -146,13 +157,13 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
     'week'
   ].filter(t => getSupportedInputTypes().has(t));
 
-  constructor(private _elementRef: ElementRef,
-              private _renderer: Renderer2,
-              private _platform: Platform,
+  constructor(protected _elementRef: ElementRef,
+              protected _renderer: Renderer2,
+              protected _platform: Platform,
               @Optional() @Self() public ngControl: NgControl,
-              @Optional() private _parentForm: NgForm,
-              @Optional() private _parentFormGroup: FormGroupDirective,
-              @Optional() @Inject(MD_ERROR_GLOBAL_OPTIONS) errorOptions: ErrorOptions) {
+              @Optional() protected _parentForm: NgForm,
+              @Optional() protected _parentFormGroup: FormGroupDirective,
+              @Optional() @Inject(MAT_ERROR_GLOBAL_OPTIONS) errorOptions: ErrorOptions) {
 
     // Force setter to be called in case id was not specified.
     this.id = this.id;
@@ -197,9 +208,11 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
     }
   }
 
+  focus() { this._elementRef.nativeElement.focus(); }
+
   /** Callback for the cases where the focused state of the input changes. */
   _focusChanged(isFocused: boolean) {
-    if (isFocused !== this.focused) {
+    if (isFocused !== this.focused && !this.readonly) {
       this.focused = isFocused;
       this.stateChanges.next();
     }
@@ -216,7 +229,7 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
   }
 
   /** Re-evaluates the error state. This is only relevant with @angular/forms. */
-  private _updateErrorState() {
+  protected _updateErrorState() {
     const oldState = this.errorState;
     const ngControl = this.ngControl;
     const parent = this._parentFormGroup || this._parentForm;
@@ -229,7 +242,7 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
   }
 
   /** Does some manual dirty checking on the native input `value` property. */
-  private _dirtyCheckNativeValue() {
+  protected _dirtyCheckNativeValue() {
     const newValue = this.value;
 
     if (this._previousNativeValue !== newValue) {
@@ -239,26 +252,26 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
   }
 
   /** Make sure the input is a supported type. */
-  private _validateType() {
-    if (MD_INPUT_INVALID_TYPES.indexOf(this._type) > -1) {
-      throw getMdInputUnsupportedTypeError(this._type);
+  protected _validateType() {
+    if (MAT_INPUT_INVALID_TYPES.indexOf(this._type) > -1) {
+      throw getMatInputUnsupportedTypeError(this._type);
     }
   }
 
   /** Checks whether the input type is one of the types that are never empty. */
-  private _isNeverEmpty() {
+  protected _isNeverEmpty() {
     return this._neverEmptyInputTypes.indexOf(this._type) > -1;
   }
 
   /** Checks whether the input is invalid based on the native validation. */
-  private _isBadInput() {
+  protected _isBadInput() {
     // The `validity` property won't be present on platform-server.
     let validity = (this._elementRef.nativeElement as HTMLInputElement).validity;
     return validity && validity.badInput;
   }
 
   /** Determines if the component host is a textarea. If not recognizable it returns false. */
-  private _isTextarea() {
+  protected _isTextarea() {
     let nativeElement = this._elementRef.nativeElement;
 
     // In Universal, we don't have access to `nodeName`, but the same can be achieved with `name`.
@@ -268,7 +281,7 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
     return nodeName ? nodeName.toLowerCase() === 'textarea' : false;
   }
 
-  // Implemented as part of MdFormFieldControl.
+  // Implemented as part of MatFormFieldControl.
   get empty(): boolean {
     return !this._isNeverEmpty() &&
         (this.value == null || this.value === '') &&
@@ -278,9 +291,12 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
         !this._isBadInput();
   }
 
-  // Implemented as part of MdFormFieldControl.
+  // Implemented as part of MatFormFieldControl.
+  get shouldPlaceholderFloat(): boolean { return this.focused || !this.empty; }
+
+  // Implemented as part of MatFormFieldControl.
   setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
 
-  // Implemented as part of MdFormFieldControl.
-  focus() { this._elementRef.nativeElement.focus(); }
+  // Implemented as part of MatFormFieldControl.
+  onContainerClick() { this.focus(); }
 }

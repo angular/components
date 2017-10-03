@@ -6,41 +6,47 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Output, EventEmitter, ElementRef, Input} from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ENTER} from '@angular/material/core';
-import {MdChipList} from './chip-list';
+import {ENTER} from '@angular/cdk/keycodes';
+import {Directive, ElementRef, EventEmitter, Input, Output} from '@angular/core';
+import {MatChipList} from './chip-list';
 
-export interface MdChipInputEvent {
+
+export interface MatChipInputEvent {
   input: HTMLInputElement;
   value: string;
 }
 
+/**
+ * Directive that adds chip-specific behaviors to an input element inside <mat-form-field>.
+ * May be placed inside or outside of an <mat-chip-list>.
+ */
 @Directive({
-  selector: 'input[mdChipInputFor], input[matChipInputFor]',
+  selector: 'input[matChipInputFor]',
   host: {
-    'class': 'mat-chip-input',
+    'class': 'mat-chip-input mat-input-element',
     '(keydown)': '_keydown($event)',
-    '(blur)': '_blur()'
+    '(blur)': '_blur()',
+    '(focus)': '_focus()',
   }
 })
-export class MdChipInput {
-
-  _chipList: MdChipList;
+export class MatChipInput {
+  focused: boolean = false;
+  _chipList: MatChipList;
 
   /** Register input for chip list */
-  @Input('mdChipInputFor')
-  set chipList(value: MdChipList) {
+  @Input('matChipInputFor')
+  set chipList(value: MatChipList) {
     if (value) {
       this._chipList = value;
-      this._chipList.registerInput(this._inputElement);
+      this._chipList.registerInput(this);
     }
   }
 
   /**
    * Whether or not the chipEnd event will be emitted when the input is blurred.
    */
-  @Input('mdChipInputAddOnBlur')
+  @Input('matChipInputAddOnBlur')
   get addOnBlur() { return this._addOnBlur; }
   set addOnBlur(value) { this._addOnBlur = coerceBooleanProperty(value); }
   _addOnBlur: boolean = false;
@@ -51,22 +57,18 @@ export class MdChipInput {
    * Defaults to `[ENTER]`.
    */
   // TODO(tinayuangao): Support Set here
-  @Input('mdChipInputSeparatorKeyCodes') separatorKeyCodes: number[] = [ENTER];
+  @Input('matChipInputSeparatorKeyCodes') separatorKeyCodes: number[] = [ENTER];
 
   /** Emitted when a chip is to be added. */
-  @Output('mdChipInputTokenEnd')
-  chipEnd = new EventEmitter<MdChipInputEvent>();
+  @Output('matChipInputTokenEnd')
+  chipEnd = new EventEmitter<MatChipInputEvent>();
 
-  @Input('matChipInputFor')
-  set matChipList(value: MdChipList) { this.chipList = value; }
+  @Input() placeholder: string = '';
 
-  @Input('matChipInputAddOnBlur')
-  get matAddOnBlur() { return this._addOnBlur; }
-  set matAddOnBlur(value) { this.addOnBlur = value; }
-
-  @Input('matChipInputSeparatorKeyCodes')
-  get matSeparatorKeyCodes() { return this.separatorKeyCodes; }
-  set matSeparatorKeyCodes(v: number[]) { this.separatorKeyCodes = v; }
+  get empty(): boolean {
+    let value: string | null = this._inputElement.value;
+    return value == null || value === '';
+  }
 
   /** The native input element to which this directive is attached. */
   protected _inputElement: HTMLInputElement;
@@ -85,6 +87,17 @@ export class MdChipInput {
     if (this.addOnBlur) {
       this._emitChipEnd();
     }
+    this.focused = false;
+    // Blur the chip list if it is not focused
+    if (!this._chipList.focused) {
+      this._chipList._blur();
+    }
+    this._chipList.stateChanges.next();
+  }
+
+  _focus() {
+    this.focused = true;
+    this._chipList.stateChanges.next();
   }
 
   /** Checks to see if the (chipEnd) event needs to be emitted. */
@@ -100,4 +113,6 @@ export class MdChipInput {
       }
     }
   }
+
+  focus() { this._inputElement.focus(); }
 }

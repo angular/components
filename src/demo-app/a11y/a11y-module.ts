@@ -19,7 +19,7 @@ import {
   DialogNeptuneIFrameDialog,
   DialogWelcomeExampleDialog
 } from './dialog/dialog-a11y';
-
+import {ExpansionPanelAccessibilityDemo} from './expansion/expansion-a11y';
 import {GridListAccessibilityDemo} from './grid-list/grid-list-a11y';
 import {RadioAccessibilityDemo} from './radio/radio-a11y';
 import {ToolbarAccessibilityDemo} from './toolbar/toolbar-a11y';
@@ -39,6 +39,7 @@ import {
   RainyTabContent,
   FoggyTabContent,
 } from './tabs/tabs-a11y';
+import {TooltipAccessibilityDemo} from './tooltip/tooltip-a11y';
 
 
 @NgModule({
@@ -75,6 +76,7 @@ export class AccessibilityRoutingModule {}
     DialogNeptuneExampleDialog,
     DialogNeptuneIFrameDialog,
     DialogWelcomeExampleDialog,
+    ExpansionPanelAccessibilityDemo,
     GridListAccessibilityDemo,
     IconAccessibilityDemo,
     InputAccessibilityDemo,
@@ -91,6 +93,7 @@ export class AccessibilityRoutingModule {}
     SunnyTabContent,
     RainyTabContent,
     FoggyTabContent,
+    TooltipAccessibilityDemo,
   ],
   entryComponents: [
     DialogAccessibilityDemo,

@@ -1,5 +1,6 @@
+import {Platform} from '@angular/cdk/platform';
 import {InteractivityChecker} from './interactivity-checker';
-import {Platform} from '../platform/platform';
+
 
 describe('InteractivityChecker', () => {
   let testContainerElement: HTMLElement;
@@ -20,7 +21,7 @@ describe('InteractivityChecker', () => {
 
   describe('isDisabled', () => {
     it('should return true for disabled elements', () => {
-      let elements = createElements('input', 'textarea', 'select', 'button', 'md-checkbox');
+      let elements = createElements('input', 'textarea', 'select', 'button', 'mat-checkbox');
       elements.forEach(el => el.setAttribute('disabled', ''));
       appendElements(elements);
 
@@ -31,7 +32,7 @@ describe('InteractivityChecker', () => {
     });
 
     it('should return false for elements without disabled', () => {
-      let elements = createElements('input', 'textarea', 'select', 'button', 'md-checkbox');
+      let elements = createElements('input', 'textarea', 'select', 'button', 'mat-checkbox');
       appendElements(elements);
 
       elements.forEach(el => {

@@ -33,8 +33,8 @@ import {fromEvent} from 'rxjs/observable/fromEvent';
 import {merge} from 'rxjs/observable/merge';
 import {of as observableOf} from 'rxjs/observable/of';
 import {Subscription} from 'rxjs/Subscription';
-import {MdInkBar} from './ink-bar';
-import {MdTabLabelWrapper} from './tab-label-wrapper';
+import {MatInkBar} from './ink-bar';
+import {MatTabLabelWrapper} from './tab-label-wrapper';
 
 
 /**
@@ -50,10 +50,10 @@ export type ScrollDirection = 'after' | 'before';
  */
 const EXAGGERATED_OVERSCROLL = 60;
 
-// Boilerplate for applying mixins to MdTabHeader.
+// Boilerplate for applying mixins to MatTabHeader.
 /** @docs-private */
-export class MdTabHeaderBase {}
-export const _MdTabHeaderMixinBase = mixinDisableRipple(MdTabHeaderBase);
+export class MatTabHeaderBase {}
+export const _MatTabHeaderMixinBase = mixinDisableRipple(MatTabHeaderBase);
 
 /**
  * The header of the tab group which displays a list of all the tabs in the tab group. Includes
@@ -64,23 +64,24 @@ export const _MdTabHeaderMixinBase = mixinDisableRipple(MdTabHeaderBase);
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-tab-header, mat-tab-header',
+  selector: 'mat-tab-header',
   templateUrl: 'tab-header.html',
   styleUrls: ['tab-header.css'],
   inputs: ['disableRipple'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'mat-tab-header',
     '[class.mat-tab-header-pagination-controls-enabled]': '_showPaginationControls',
     '[class.mat-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
-  }
+  },
 })
-export class MdTabHeader extends _MdTabHeaderMixinBase
+export class MatTabHeader extends _MatTabHeaderMixinBase
     implements AfterContentChecked, AfterContentInit, OnDestroy, CanDisableRipple {
 
-  @ContentChildren(MdTabLabelWrapper) _labelWrappers: QueryList<MdTabLabelWrapper>;
-  @ViewChild(MdInkBar) _inkBar: MdInkBar;
+  @ContentChildren(MatTabLabelWrapper) _labelWrappers: QueryList<MatTabLabelWrapper>;
+  @ViewChild(MatInkBar) _inkBar: MatInkBar;
   @ViewChild('tabListContainer') _tabListContainer: ElementRef;
   @ViewChild('tabList') _tabList: ElementRef;
 
@@ -273,7 +274,7 @@ export class MdTabHeader extends _MdTabHeaderMixinBase
    */
   _moveFocus(offset: number) {
     if (this._labelWrappers) {
-      const tabs: MdTabLabelWrapper[] = this._labelWrappers.toArray();
+      const tabs: MatTabLabelWrapper[] = this._labelWrappers.toArray();
 
       for (let i = this.focusIndex + offset; i < tabs.length && i >= 0; i += offset) {
         if (this._isValidIndex(i)) {

@@ -26,8 +26,8 @@ const LOCAL_GOLDENS = path.join(SCREENSHOT_DIR, `golds`);
 const LOCAL_DIFFS = path.join(SCREENSHOT_DIR, `diff`);
 
 // Directory to which untrusted screenshot results are temporarily written
-//   (without authentication required) before they are verified and copied to
-//   the final storage location.
+// (without authentication required) before they are verified and copied to
+// the final storage location.
 const TEMP_FOLDER = 'untrustedInbox';
 const FIREBASE_REPORT = `${TEMP_FOLDER}/screenshot/reports`;
 const FIREBASE_IMAGE = `${TEMP_FOLDER}/screenshot/images`;
@@ -44,14 +44,10 @@ task('screenshots', () => {
   } else if (prNumber) {
     const firebaseApp = connectFirebaseScreenshots();
     const database = firebaseApp.database();
-
-    // If this task hasn't completed in 8 minutes, close the firebase connection.
-    const timeoutId = setTimeout(() => {
-      console.error('Screenshot tests did not finish in 8 minutes, closing Firebase connection.');
-      return firebaseApp.delete();
-    }, 60 * 1000 * 8);
-
     let lastActionTime = Date.now();
+
+    console.log(`  Starting screenshots task with results from e2e task...`);
+
     return uploadTravisJobInfo(database, prNumber)
       .then(() => {
         console.log(`  Downloading screenshot golds from Firebase...`);
@@ -77,13 +73,11 @@ task('screenshots', () => {
       .then(() => {
         console.log(`  Uploading results done (took ${Date.now() - lastActionTime}ms)`);
         firebaseApp.delete();
-        clearTimeout(timeoutId);
       })
       .catch((err: any) => {
         console.error(`  Screenshot tests encountered an error!`);
         console.error(err);
         firebaseApp.delete();
-        clearTimeout(timeoutId);
       });
   }
 });
