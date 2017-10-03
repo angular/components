@@ -6,14 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import {CdkStep, CdkStepper} from '@angular/cdk/stepper';
 import {
   Component,
   ContentChild,
-  ContentChildren, Directive,
-  // This import is only used to define a generic type. The current TypeScript version incorrectly
-  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
-  // tslint:disable-next-line:no-unused-variable
+  ContentChildren,
+  Directive,
   ElementRef,
   forwardRef,
   Inject,
@@ -21,43 +20,46 @@ import {
   QueryList,
   SkipSelf,
   ViewChildren,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
-import {MdStepLabel} from './step-label';
+import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {
   defaultErrorStateMatcher,
   ErrorOptions,
-  MD_ERROR_GLOBAL_OPTIONS,
-  ErrorStateMatcher
-} from '../core/error/error-options';
-import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
-import {MdStepHeader} from './step-header';
-import {state, style, transition, trigger, animate} from '@angular/animations';
+  ErrorStateMatcher,
+  MAT_ERROR_GLOBAL_OPTIONS,
+} from '@angular/material/core';
+import {MatStepHeader} from './step-header';
+import {MatStepLabel} from './step-label';
 
 /** Workaround for https://github.com/angular/angular/issues/17849 */
-export const _MdStep = CdkStep;
-export const _MdStepper = CdkStepper;
+export const _MatStep = CdkStep;
+export const _MatStepper = CdkStepper;
 
 @Component({
   moduleId: module.id,
-  selector: 'md-step, mat-step',
+  selector: 'mat-step',
   templateUrl: 'step.html',
-  providers: [{provide: MD_ERROR_GLOBAL_OPTIONS, useExisting: MdStep}],
-  encapsulation: ViewEncapsulation.None
+  providers: [{provide: MAT_ERROR_GLOBAL_OPTIONS, useExisting: MatStep}],
+  encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
-export class MdStep extends _MdStep implements ErrorOptions {
-  /** Content for step label given by <ng-template matStepLabel> or <ng-template mdStepLabel>. */
-  @ContentChild(MdStepLabel) stepLabel: MdStepLabel;
+export class MatStep extends _MatStep implements ErrorOptions {
+  /** Content for step label given by <ng-template matStepLabel>. */
+  @ContentChild(MatStepLabel) stepLabel: MatStepLabel;
 
   /** Original ErrorStateMatcher that checks the validity of form control. */
   private _originalErrorStateMatcher: ErrorStateMatcher;
 
-  constructor(@Inject(forwardRef(() => MdStepper)) mdStepper: MdStepper,
-              @Optional() @SkipSelf() @Inject(MD_ERROR_GLOBAL_OPTIONS) errorOptions: ErrorOptions) {
-    super(mdStepper);
-    this._originalErrorStateMatcher =
-        errorOptions ? errorOptions.errorStateMatcher || defaultErrorStateMatcher
-            : defaultErrorStateMatcher;
+  constructor(@Inject(forwardRef(() => MatStepper)) stepper: MatStepper,
+              @Optional() @SkipSelf() @Inject(MAT_ERROR_GLOBAL_OPTIONS)
+                  errorOptions: ErrorOptions) {
+    super(stepper);
+    if (errorOptions && errorOptions.errorStateMatcher) {
+      this._originalErrorStateMatcher = errorOptions.errorStateMatcher;
+    } else {
+      this._originalErrorStateMatcher = defaultErrorStateMatcher;
+    }
   }
 
   /** Custom error state matcher that additionally checks for validity of interacted form. */
@@ -74,19 +76,19 @@ export class MdStep extends _MdStep implements ErrorOptions {
 }
 
 @Directive({
-  selector: '[mdStepper]'
+  selector: '[matStepper]'
 })
-export class MdStepper extends _MdStepper {
+export class MatStepper extends _MatStepper {
   /** The list of step headers of the steps in the stepper. */
-  @ViewChildren(MdStepHeader, {read: ElementRef}) _stepHeader: QueryList<ElementRef>;
+  @ViewChildren(MatStepHeader, {read: ElementRef}) _stepHeader: QueryList<ElementRef>;
 
   /** Steps that the stepper holds. */
-  @ContentChildren(MdStep) _steps: QueryList<MdStep>;
+  @ContentChildren(MatStep) _steps: QueryList<MatStep>;
 }
 
 @Component({
   moduleId: module.id,
-  selector: 'md-horizontal-stepper, mat-horizontal-stepper',
+  selector: 'mat-horizontal-stepper',
   templateUrl: 'stepper-horizontal.html',
   styleUrls: ['stepper.css'],
   inputs: ['selectedIndex'],
@@ -97,20 +99,20 @@ export class MdStepper extends _MdStepper {
   animations: [
     trigger('stepTransition', [
       state('previous', style({transform: 'translate3d(-100%, 0, 0)', visibility: 'hidden'})),
-      state('current', style({transform: 'translate3d(0%, 0, 0)', visibility: 'visible'})),
+      state('current', style({transform: 'none', visibility: 'visible'})),
       state('next', style({transform: 'translate3d(100%, 0, 0)', visibility: 'hidden'})),
-      transition('* => *',
-          animate('500ms cubic-bezier(0.35, 0, 0.25, 1)'))
+      transition('* => *', animate('500ms cubic-bezier(0.35, 0, 0.25, 1)'))
     ])
   ],
-  providers: [{provide: MdStepper, useExisting: MdHorizontalStepper}],
-  encapsulation: ViewEncapsulation.None
+  providers: [{provide: MatStepper, useExisting: MatHorizontalStepper}],
+  encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
-export class MdHorizontalStepper extends MdStepper { }
+export class MatHorizontalStepper extends MatStepper { }
 
 @Component({
   moduleId: module.id,
-  selector: 'md-vertical-stepper, mat-vertical-stepper',
+  selector: 'mat-vertical-stepper',
   templateUrl: 'stepper-vertical.html',
   styleUrls: ['stepper.css'],
   inputs: ['selectedIndex'],
@@ -126,7 +128,8 @@ export class MdHorizontalStepper extends MdStepper { }
       transition('* <=> current', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
     ])
   ],
-  providers: [{provide: MdStepper, useExisting: MdVerticalStepper}],
-  encapsulation: ViewEncapsulation.None
+  providers: [{provide: MatStepper, useExisting: MatVerticalStepper}],
+  encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
-export class MdVerticalStepper extends MdStepper { }
+export class MatVerticalStepper extends MatStepper { }

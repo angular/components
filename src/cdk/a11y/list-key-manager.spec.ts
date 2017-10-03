@@ -1,11 +1,11 @@
+import {DOWN_ARROW, TAB, UP_ARROW} from '@angular/cdk/keycodes';
+import {first} from '@angular/cdk/rxjs';
 import {QueryList} from '@angular/core';
 import {fakeAsync, tick} from '@angular/core/testing';
-import {FocusKeyManager} from './focus-key-manager';
-import {DOWN_ARROW, UP_ARROW, TAB} from '../keycodes/keycodes';
-import {ListKeyManager} from './list-key-manager';
-import {ActiveDescendantKeyManager} from './activedescendant-key-manager';
 import {createKeyboardEvent} from '../testing/event-objects';
-import {first} from '../rxjs/index';
+import {ActiveDescendantKeyManager} from './activedescendant-key-manager';
+import {FocusKeyManager} from './focus-key-manager';
+import {ListKeyManager} from './list-key-manager';
 
 
 class FakeFocusable {
@@ -479,6 +479,16 @@ describe('Key managers', () => {
         keyManager.onKeydown(createKeyboardEvent('keydown', 219, undefined, '[')); // types "["
         tick(debounceInterval);
         expect(keyManager.activeItem).toBe(itemList.items[0]);
+      }));
+
+      it('should not focus disabled items', fakeAsync(() => {
+        expect(keyManager.activeItem).toBeFalsy();
+
+        itemList.items[0].disabled = true;
+        keyManager.onKeydown(createKeyboardEvent('keydown', 79, undefined, 'o')); // types "o"
+        tick(debounceInterval);
+
+        expect(keyManager.activeItem).toBeFalsy();
       }));
 
     });

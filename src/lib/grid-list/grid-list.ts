@@ -19,7 +19,7 @@ import {
   Optional,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {MdGridTile} from './grid-tile';
+import {MatGridTile} from './grid-tile';
 import {TileCoordinator} from './tile-coordinator';
 import {TileStyler, FitTileStyler, RatioTileStyler, FixedTileStyler} from './tile-styler';
 import {Directionality} from '@angular/cdk/bidi';
@@ -33,11 +33,11 @@ import {
 // TODO(kara): Re-layout on window resize / media change (debounced).
 // TODO(kara): gridTileHeader and gridTileFooter.
 
-const MD_FIT_MODE = 'fit';
+const MAT_FIT_MODE = 'fit';
 
 @Component({
   moduleId: module.id,
-  selector: 'md-grid-list, mat-grid-list',
+  selector: 'mat-grid-list',
   templateUrl: 'grid-list.html',
   styleUrls: ['grid-list.css'],
   host: {
@@ -45,8 +45,9 @@ const MD_FIT_MODE = 'fit';
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
 })
-export class MdGridList implements OnInit, AfterContentChecked {
+export class MatGridList implements OnInit, AfterContentChecked {
   /** Number of columns being rendered. */
   private _cols: number;
 
@@ -65,7 +66,7 @@ export class MdGridList implements OnInit, AfterContentChecked {
   private _tileStyler: TileStyler;
 
   /** Query list of tiles that are being rendered. */
-  @ContentChildren(MdGridTile) _tiles: QueryList<MdGridTile>;
+  @ContentChildren(MatGridTile) _tiles: QueryList<MatGridTile>;
 
   constructor(
       private _renderer: Renderer2,
@@ -85,8 +86,12 @@ export class MdGridList implements OnInit, AfterContentChecked {
   /** Set internal representation of row height from the user-provided value. */
   @Input()
   set rowHeight(value: string | number) {
-    this._rowHeight = coerceToString(value);
-    this._setTileStyler();
+    const newValue = coerceToString(value);
+
+    if (newValue !== this._rowHeight) {
+      this._rowHeight = newValue;
+      this._setTileStyler(this._rowHeight);
+    }
   }
 
   ngOnInit() {
@@ -105,37 +110,41 @@ export class MdGridList implements OnInit, AfterContentChecked {
   /** Throw a friendly error if cols property is missing */
   private _checkCols() {
     if (!this.cols) {
-      throw Error(`md-grid-list: must pass in number of columns. ` +
-                      `Example: <md-grid-list cols="3">`);
+      throw Error(`mat-grid-list: must pass in number of columns. ` +
+                  `Example: <mat-grid-list cols="3">`);
     }
   }
 
   /** Default to equal width:height if rowHeight property is missing */
   private _checkRowHeight(): void {
     if (!this._rowHeight) {
-      this._tileStyler = new RatioTileStyler('1:1');
+      this._setTileStyler('1:1');
     }
   }
 
   /** Creates correct Tile Styler subtype based on rowHeight passed in by user */
-  private _setTileStyler(): void {
-    if (this._rowHeight === MD_FIT_MODE) {
+  private _setTileStyler(rowHeight: string): void {
+    if (this._tileStyler) {
+      this._tileStyler.reset(this);
+    }
+
+    if (rowHeight === MAT_FIT_MODE) {
       this._tileStyler = new FitTileStyler();
-    } else if (this._rowHeight && this._rowHeight.indexOf(':') > -1) {
-      this._tileStyler = new RatioTileStyler(this._rowHeight);
+    } else if (rowHeight && rowHeight.indexOf(':') > -1) {
+      this._tileStyler = new RatioTileStyler(rowHeight);
     } else {
-      this._tileStyler = new FixedTileStyler(this._rowHeight);
+      this._tileStyler = new FixedTileStyler(rowHeight);
     }
   }
 
   /** Computes and applies the size and position for all children grid tiles. */
   private _layoutTiles(): void {
-    let tracker = new TileCoordinator(this.cols, this._tiles);
-    let direction = this._dir ? this._dir.value : 'ltr';
+    const tracker = new TileCoordinator(this.cols, this._tiles);
+    const direction = this._dir ? this._dir.value : 'ltr';
     this._tileStyler.init(this.gutterSize, tracker, this.cols, direction);
 
     this._tiles.forEach((tile, index) => {
-      let pos = tracker.positions[index];
+      const pos = tracker.positions[index];
       this._tileStyler.setStyle(tile, pos.row, pos.col);
     });
 
@@ -143,7 +152,7 @@ export class MdGridList implements OnInit, AfterContentChecked {
   }
 
   /** Sets style on the main grid-list element, given the style name and value. */
-  _setListStyle(style: [string, string] | null): void {
+  _setListStyle(style: [string, string | null] | null): void {
     if (style) {
       this._renderer.setStyle(this._element.nativeElement, style[0], style[1]);
     }

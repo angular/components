@@ -1,8 +1,8 @@
-import {TestBed, async, inject} from '@angular/core/testing';
-import {NativeDateAdapter, NativeDateModule, DateAdapter, MAT_DATE_LOCALE} from './index';
-import {Platform} from '../platform/index';
-import {DEC, FEB, JAN, MAR} from '../testing/month-constants';
+import {Platform} from '@angular/cdk/platform';
 import {LOCALE_ID} from '@angular/core';
+import {async, inject, TestBed} from '@angular/core/testing';
+import {DEC, FEB, JAN, MAR} from '../testing/month-constants';
+import {DateAdapter, MAT_DATE_LOCALE, NativeDateAdapter, NativeDateModule} from './index';
 
 const SUPPORTS_INTL = typeof Intl != 'undefined';
 
@@ -330,6 +330,17 @@ describe('NativeDateAdapter', () => {
   it('should count a string as not a date instance', () => {
     let d = '1/1/2017';
     expect(adapter.isDateInstance(d)).toBe(false);
+  });
+
+  it('should create dates from valid ISO strings', () => {
+    expect(adapter.fromIso8601('1985-04-12T23:20:50.52Z')).not.toBeNull();
+    expect(adapter.fromIso8601('1996-12-19T16:39:57-08:00')).not.toBeNull();
+    expect(adapter.fromIso8601('1937-01-01T12:00:27.87+00:20')).not.toBeNull();
+    expect(adapter.fromIso8601('2017-01-01')).not.toBeNull();
+    expect(adapter.fromIso8601('2017-01-01T00:00:00')).not.toBeNull();
+    expect(adapter.fromIso8601('1990-13-31T23:59:00Z')).toBeNull();
+    expect(adapter.fromIso8601('1/1/2017')).toBeNull();
+    expect(adapter.fromIso8601('2017-01-01T')).toBeNull();
   });
 });
 

@@ -6,24 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  forwardRef,
-  Input,
-  OnDestroy,
-  Optional,
-  Output,
-  Renderer2,
-  ViewEncapsulation,
-  ViewChild, OnInit,
-} from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {Directionality} from '@angular/cdk/bidi';
+import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {
   DOWN_ARROW,
   END,
@@ -34,11 +18,32 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {HammerInput} from '../core';
-import {FocusOrigin, FocusOriginMonitor} from '../core/style/focus-origin-monitor';
-import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
-import {CanColor, mixinColor} from '../core/common-behaviors/color';
-
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  Optional,
+  Output,
+  Renderer2,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {
+  CanColor,
+  CanDisable,
+  HammerInput,
+  mixinColor,
+  mixinDisabled,
+} from '@angular/material/core';
+import {FocusOrigin, FocusMonitor} from '@angular/cdk/a11y';
+import {Subscription} from 'rxjs/Subscription';
 
 /**
  * Visually, a 30px separation between tick marks looks best. This is very subjective but it is
@@ -56,31 +61,31 @@ const MIN_VALUE_NONACTIVE_THUMB_GAP = 7;
 const MIN_VALUE_ACTIVE_THUMB_GAP = 10;
 
 /**
- * Provider Expression that allows md-slider to register as a ControlValueAccessor.
+ * Provider Expression that allows mat-slider to register as a ControlValueAccessor.
  * This allows it to support [(ngModel)] and [formControl].
  */
-export const MD_SLIDER_VALUE_ACCESSOR: any = {
+export const MAT_SLIDER_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdSlider),
+  useExisting: forwardRef(() => MatSlider),
   multi: true
 };
 
-/** A simple change event emitted by the MdSlider component. */
-export class MdSliderChange {
-  /** The MdSlider that changed. */
-  source: MdSlider;
+/** A simple change event emitted by the MatSlider component. */
+export class MatSliderChange {
+  /** The MatSlider that changed. */
+  source: MatSlider;
 
   /** The new value of the source slider. */
   value: number | null;
 }
 
 
-// Boilerplate for applying mixins to MdSlider.
+// Boilerplate for applying mixins to MatSlider.
 /** @docs-private */
-export class MdSliderBase {
+export class MatSliderBase {
   constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
-export const _MdSliderMixinBase = mixinColor(mixinDisabled(MdSliderBase), 'accent');
+export const _MatSliderMixinBase = mixinColor(mixinDisabled(MatSliderBase), 'accent');
 
 /**
  * Allows users to select from a range of values by moving the slider thumb. It is similar in
@@ -88,8 +93,8 @@ export const _MdSliderMixinBase = mixinColor(mixinDisabled(MdSliderBase), 'accen
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-slider, mat-slider',
-  providers: [MD_SLIDER_VALUE_ACCESSOR],
+  selector: 'mat-slider',
+  providers: [MAT_SLIDER_VALUE_ACCESSOR],
   host: {
     '(focus)': '_onFocus()',
     '(blur)': '_onBlur()',
@@ -122,9 +127,10 @@ export const _MdSliderMixinBase = mixinColor(mixinDisabled(MdSliderBase), 'accen
   styleUrls: ['slider.css'],
   inputs: ['disabled', 'color'],
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdSlider extends _MdSliderMixinBase
+export class MatSlider extends _MatSliderMixinBase
     implements ControlValueAccessor, OnDestroy, CanDisable, CanColor, OnInit {
   /** Whether the slider is inverted. */
   @Input()
@@ -240,10 +246,10 @@ export class MdSlider extends _MdSliderMixinBase
   private _vertical = false;
 
   /** Event emitted when the slider value has changed. */
-  @Output() change = new EventEmitter<MdSliderChange>();
+  @Output() change = new EventEmitter<MatSliderChange>();
 
   /** Event emitted when the slider thumb moves. */
-  @Output() input = new EventEmitter<MdSliderChange>();
+  @Output() input = new EventEmitter<MatSliderChange>();
 
   /** The value to be used for display purposes. */
   get displayValue(): string | number {
@@ -385,6 +391,9 @@ export class MdSlider extends _MdSliderMixinBase
   /** Decimal places to round to, based on the step amount. */
   private _roundLabelTo: number;
 
+  /** Subscription to the Directionality change EventEmitter. */
+  private _dirChangeSubscription = Subscription.EMPTY;
+
   /** The value of the slider when the slide start event fires. */
   private _valueOnSlideStart: number | null;
 
@@ -406,29 +415,29 @@ export class MdSlider extends _MdSliderMixinBase
 
   constructor(renderer: Renderer2,
               elementRef: ElementRef,
-              private _focusOriginMonitor: FocusOriginMonitor,
+              private _focusMonitor: FocusMonitor,
               private _changeDetectorRef: ChangeDetectorRef,
               @Optional() private _dir: Directionality) {
     super(renderer, elementRef);
   }
 
   ngOnInit() {
-    this._focusOriginMonitor
+    this._focusMonitor
         .monitor(this._elementRef.nativeElement, this._renderer, true)
         .subscribe((origin: FocusOrigin) => {
           this._isActive = !!origin && origin !== 'keyboard';
           this._changeDetectorRef.detectChanges();
         });
     if (this._dir) {
-      this._dir.change.subscribe(() => this._changeDetectorRef.markForCheck());
+      this._dirChangeSubscription = this._dir.change.subscribe(() => {
+        this._changeDetectorRef.markForCheck();
+      });
     }
   }
 
   ngOnDestroy() {
-    this._focusOriginMonitor.stopMonitoring(this._elementRef.nativeElement);
-    if (this._dir) {
-      this._dir.change.unsubscribe();
-    }
+    this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
+    this._dirChangeSubscription.unsubscribe();
   }
 
   _onMouseenter() {
@@ -483,7 +492,7 @@ export class MdSlider extends _MdSliderMixinBase
   }
 
   _onSlideStart(event: HammerInput | null) {
-    if (this.disabled) {
+    if (this.disabled || this._isSliding) {
       return;
     }
 
@@ -635,8 +644,8 @@ export class MdSlider extends _MdSliderMixinBase
   }
 
   /** Creates a slider change object from the specified value. */
-  private _createChangeEvent(value = this.value): MdSliderChange {
-    let event = new MdSliderChange();
+  private _createChangeEvent(value = this.value): MatSliderChange {
+    let event = new MatSliderChange();
 
     event.source = this;
     event.value = value;

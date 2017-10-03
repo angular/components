@@ -6,6 +6,7 @@ import {CardAccessibilityDemo} from './card/card-a11y';
 import {CheckboxAccessibilityDemo} from './checkbox/checkbox-a11y';
 import {ChipsAccessibilityDemo} from './chips/chips-a11y';
 import {DialogAccessibilityDemo} from './dialog/dialog-a11y';
+import {ExpansionPanelAccessibilityDemo} from './expansion/expansion-a11y';
 import {GridListAccessibilityDemo} from './grid-list/grid-list-a11y';
 import {RadioAccessibilityDemo} from './radio/radio-a11y';
 import {AccessibilityHome} from './a11y';
@@ -20,6 +21,9 @@ import {SliderAccessibilityDemo} from './slider/slider-a11y';
 import {SlideToggleAccessibilityDemo} from './slide-toggle/slide-toggle-a11y';
 import {SnackBarAccessibilityDemo} from './snack-bar/snack-bar-a11y';
 import {SelectAccessibilityDemo} from './select/select-a11y';
+import {TabsAccessibilityDemo} from './tabs/tabs-a11y';
+import {TABS_DEMO_ROUTES} from './tabs/routes';
+import {TooltipAccessibilityDemo} from './tooltip/tooltip-a11y';
 
 export const ACCESSIBILITY_DEMO_ROUTES: Routes = [
   {path: '', component: AccessibilityHome},
@@ -31,6 +35,7 @@ export const ACCESSIBILITY_DEMO_ROUTES: Routes = [
   {path: 'chips', component: ChipsAccessibilityDemo},
   {path: 'datepicker', component: DatepickerAccessibilityDemo},
   {path: 'dialog', component: DialogAccessibilityDemo},
+  {path: 'expansion', component: ExpansionPanelAccessibilityDemo},
   {path: 'grid-list', component: GridListAccessibilityDemo},
   {path: 'icon', component: IconAccessibilityDemo},
   {path: 'input', component: InputAccessibilityDemo},
@@ -42,5 +47,7 @@ export const ACCESSIBILITY_DEMO_ROUTES: Routes = [
   {path: 'slide-toggle', component: SlideToggleAccessibilityDemo},
   {path: 'snack-bar', component: SnackBarAccessibilityDemo},
   {path: 'select', component: SelectAccessibilityDemo},
+  {path: 'tabs', component: TabsAccessibilityDemo, children: TABS_DEMO_ROUTES},
   {path: 'toolbar', component: ToolbarAccessibilityDemo},
+  {path: 'tooltip', component: TooltipAccessibilityDemo},
 ];

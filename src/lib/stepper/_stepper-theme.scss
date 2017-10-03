@@ -8,16 +8,13 @@
   $primary: map-get($theme, primary);
 
   .mat-step-header {
-    &:focus,
+    &.cdk-keyboard-focused,
+    &.cdk-program-focused,
     &:hover {
       background-color: mat-color($background, hover);
     }
 
-    .mat-step-label-active {
-      color: mat-color($foreground, text);
-    }
-
-    .mat-step-label-inactive,
+    .mat-step-label,
     .mat-step-optional {
       color: mat-color($foreground, disabled-text);
     }
@@ -30,6 +27,10 @@
     .mat-step-icon-not-touched {
       background-color: mat-color($foreground, disabled-text);
       color: mat-color($primary, default-contrast);
+    }
+
+    .mat-step-label.mat-step-label-active {
+      color: mat-color($foreground, text);
     }
   }
 
@@ -49,5 +50,19 @@
 @mixin mat-stepper-typography($config) {
   .mat-stepper-vertical, .mat-stepper-horizontal {
     font-family: mat-font-family($config);
+  }
+
+  .mat-step-label {
+    font: {
+      size: mat-font-size($config, body-1);
+      weight: mat-font-weight($config, body-1);
+    };
+  }
+
+  .mat-step-label-selected {
+    font: {
+      size: mat-font-size($config, body-2);
+      weight: mat-font-weight($config, body-2);
+    };
   }
 }

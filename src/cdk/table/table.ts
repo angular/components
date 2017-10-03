@@ -57,7 +57,7 @@ export class HeaderRowPlaceholder {
 }
 
 /**
- * The table template that can be used by the md-table. Should not be used outside of the
+ * The table template that can be used by the mat-table. Should not be used outside of the
  * material library.
  */
 export const CDK_TABLE_TEMPLATE = `
@@ -69,12 +69,14 @@ export const CDK_TABLE_TEMPLATE = `
  * a header row and data rows. Updates the rows when new data is provided by the data source.
  */
 @Component({
+  moduleId: module.id,
   selector: 'cdk-table',
   template: CDK_TABLE_TEMPLATE,
   host: {
     'class': 'cdk-table',
   },
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkTable<T> implements CollectionViewer {

@@ -1,27 +1,28 @@
-import {async, TestBed, ComponentFixture} from '@angular/core/testing';
-import {MdChipsModule} from './index';
-import {Component, DebugElement} from '@angular/core';
-import {MdChipInput, MdChipInputEvent} from './chip-input';
-import {By} from '@angular/platform-browser';
-import {Directionality} from '../core';
+import {Directionality} from '@angular/cdk/bidi';
+import {ENTER} from '@angular/cdk/keycodes';
+import {PlatformModule} from '@angular/cdk/platform';
 import {createKeyboardEvent} from '@angular/cdk/testing';
+import {Component, DebugElement} from '@angular/core';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+import {MatChipInput, MatChipInputEvent} from './chip-input';
+import {MatChipsModule} from './index';
 
-import {ENTER} from '../core/keyboard/keycodes';
 
 const COMMA = 188;
 
-describe('MdChipInput', () => {
+describe('MatChipInput', () => {
   let fixture: ComponentFixture<any>;
   let testChipInput: TestChipInput;
   let inputDebugElement: DebugElement;
   let inputNativeElement: HTMLElement;
-  let chipInputDirective: MdChipInput;
+  let chipInputDirective: MatChipInput;
 
   let dir = 'ltr';
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdChipsModule],
+      imports: [MatChipsModule, PlatformModule],
       declarations: [TestChipInput],
       providers: [{
         provide: Directionality, useFactory: () => {
@@ -38,8 +39,8 @@ describe('MdChipInput', () => {
     testChipInput = fixture.debugElement.componentInstance;
     fixture.detectChanges();
 
-    inputDebugElement = fixture.debugElement.query(By.directive(MdChipInput));
-    chipInputDirective = inputDebugElement.injector.get(MdChipInput) as MdChipInput;
+    inputDebugElement = fixture.debugElement.query(By.directive(MatChipInput));
+    chipInputDirective = inputDebugElement.injector.get(MatChipInput) as MatChipInput;
     inputNativeElement = inputDebugElement.nativeElement;
   }));
 
@@ -103,18 +104,18 @@ describe('MdChipInput', () => {
 
 @Component({
   template: `
-    <md-chip-list #chipList>
-    </md-chip-list>
-    <input mdInput [mdChipInputFor]="chipList"
-              [mdChipInputAddOnBlur]="addOnBlur"
-              [mdChipInputSeparatorKeyCodes]="separatorKeys"
-              (mdChipInputTokenEnd)="add($event)" />
+    <mat-chip-list #chipList>
+    </mat-chip-list>
+    <input matInput [matChipInputFor]="chipList"
+              [matChipInputAddOnBlur]="addOnBlur"
+              [matChipInputSeparatorKeyCodes]="separatorKeys"
+              (matChipInputTokenEnd)="add($event)" />
   `
 })
 class TestChipInput {
   addOnBlur: boolean = false;
   separatorKeys: number[] = [ENTER];
 
-  add(_: MdChipInputEvent) {
+  add(_: MatChipInputEvent) {
   }
 }

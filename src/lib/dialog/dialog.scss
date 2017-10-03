@@ -1,5 +1,6 @@
 @import '../core/style/elevation';
-@import '../core/a11y/a11y';
+@import '../core/style/vendor-prefixes';
+@import '../../cdk/a11y/a11y';
 
 
 $mat-dialog-padding: 24px !default;
@@ -35,6 +36,9 @@ $mat-dialog-button-margin: 8px !default;
   max-height: $mat-dialog-max-height;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
+
+  // Promote the content to a new GPU layer to avoid repaints on scroll.
+  @include backface-visibility(hidden);
 }
 
 .mat-dialog-title {
