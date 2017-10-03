@@ -1,7 +1,21 @@
 import {Component, Inject, ViewChild, TemplateRef} from '@angular/core';
 import {DOCUMENT} from '@angular/platform-browser';
-import {MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {
+  DialogPosition,
+  MatDialog,
+  MatDialogConfig,
+  MatDialogRef,
+  MAT_DIALOG_DATA
+} from '@angular/material';
 
+/**
+ * Appeases the AOT type checker for the template by extending `MatDialogConfig`
+ * to disallow `position` from being undefined, given that it’s optional.
+ * Guards cannot be set on the template because the values are bound to NgModel.
+ */
+interface MatDemoDialogConfig extends MatDialogConfig {
+  position: DialogPosition;
+}
 
 @Component({
   moduleId: module.id,
@@ -14,7 +28,7 @@ export class DialogDemo {
   lastAfterClosedResult: string;
   lastBeforeCloseResult: string;
   actionsAlignment: string;
-  config: Partial<MatDialogConfig> = {
+  config: MatDemoDialogConfig = {
     disableClose: false,
     panelClass: 'custom-overlay-pane-class',
     hasBackdrop: true,
