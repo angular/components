@@ -6,7 +6,7 @@
 const SELECTOR_BLACKLIST  = new Set([
   '[portal]',
   '[portalHost]',
-  'textarea[md-autosize]',
+  'textarea[mat-autosize]',
   '[overlay-origin]',
   '[connected-overlay]',
 ]);
@@ -220,10 +220,11 @@ function getDirectiveOutputAlias(doc) {
 function getDirectiveSelectors(classDoc) {
   const directiveSelectors = getMetadataProperty(classDoc, 'selector');
 
+
   if (directiveSelectors) {
     // Filter blacklisted selectors and remove line-breaks in resolved selectors.
     return directiveSelectors.replace(/[\r\n]/g, '').split(/\s*,\s*/)
-      .filter(s => s !== '' && !s.includes('mat') && !SELECTOR_BLACKLIST.has(s));
+      .filter(s => s !== '' && !s.includes('md') && !SELECTOR_BLACKLIST.has(s));
   }
 }
 

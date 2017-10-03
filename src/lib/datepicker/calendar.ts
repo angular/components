@@ -31,18 +31,18 @@ import {
   Optional,
   Output,
   ViewEncapsulation,
+  ViewChild,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
-import {
-  DateAdapter,
-  MATERIAL_COMPATIBILITY_MODE,
-  MD_DATE_FORMATS,
-  MdDateFormats,
-} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {first} from 'rxjs/operator/first';
 import {Subscription} from 'rxjs/Subscription';
 import {coerceDateProperty} from './coerce-date-property';
 import {createMissingDateImplError} from './datepicker-errors';
-import {MdDatepickerIntl} from './datepicker-intl';
+import {MatDatepickerIntl} from './datepicker-intl';
+import {MatMonthView} from './month-view';
+import {MatYearView} from './year-view';
 
 
 /**
@@ -51,7 +51,7 @@ import {MdDatepickerIntl} from './datepicker-intl';
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-calendar, mat-calendar',
+  selector: 'mat-calendar',
   templateUrl: 'calendar.html',
   styleUrls: ['calendar.css'],
   host: {
@@ -60,9 +60,8 @@ import {MdDatepickerIntl} from './datepicker-intl';
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
-export class MdCalendar<D> implements AfterContentInit, OnDestroy {
+export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   private _intlChanges: Subscription;
 
   /** A date representing the period (month or year) to start the calendar in. */
@@ -100,6 +99,12 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
 
   /** Emits when any date is selected. */
   @Output() userSelection = new EventEmitter<void>();
+
+  /** Reference to the current month view component. */
+  @ViewChild(MatMonthView) monthView: MatMonthView<D>;
+
+  /** Reference to the current year view component. */
+  @ViewChild(MatYearView) yearView: MatYearView<D>;
 
   /** Date filter for the month and year views. */
   _dateFilterForViews = (date: D) => {
@@ -145,10 +150,10 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
   }
 
   constructor(private _elementRef: ElementRef,
-              private _intl: MdDatepickerIntl,
+              private _intl: MatDatepickerIntl,
               private _ngZone: NgZone,
               @Optional() private _dateAdapter: DateAdapter<D>,
-              @Optional() @Inject(MD_DATE_FORMATS) private _dateFormats: MdDateFormats,
+              @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               changeDetectorRef: ChangeDetectorRef) {
 
     if (!this._dateAdapter) {
@@ -156,7 +161,7 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
     }
 
     if (!this._dateFormats) {
-      throw createMissingDateImplError('MD_DATE_FORMATS');
+      throw createMissingDateImplError('MAT_DATE_FORMATS');
     }
 
     this._intlChanges = _intl.changes.subscribe(() => changeDetectorRef.markForCheck());
@@ -170,6 +175,18 @@ export class MdCalendar<D> implements AfterContentInit, OnDestroy {
 
   ngOnDestroy() {
     this._intlChanges.unsubscribe();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const change = changes.minDate || changes.maxDate || changes.dateFilter;
+
+    if (change && !change.firstChange) {
+      const view = this.monthView || this.yearView;
+
+      if (view) {
+        view._init();
+      }
+    }
   }
 
   /** Handles date selection in the month view. */
