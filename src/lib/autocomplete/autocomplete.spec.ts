@@ -893,24 +893,27 @@ describe('MatAutocomplete', () => {
           .toEqual(48, `Expected panel to scroll up when option is above panel.`);
     });
 
-    it('should close the panel when pressing escape', () => {
+    it('should close the panel when pressing escape', async(() => {
       const trigger = fixture.componentInstance.trigger;
       const escapeEvent = createKeyboardEvent('keydown', ESCAPE);
       const stopPropagationSpy = spyOn(escapeEvent, 'stopPropagation').and.callThrough();
 
       input.focus();
-      fixture.detectChanges();
 
-      expect(document.activeElement).toBe(input, 'Expected input to be focused.');
-      expect(trigger.panelOpen).toBe(true, 'Expected panel to be open.');
+      fixture.whenStable().then(() => {
+        fixture.detectChanges();
 
-      trigger._handleKeydown(escapeEvent);
-      fixture.detectChanges();
+        expect(document.activeElement).toBe(input, 'Expected input to be focused.');
+        expect(trigger.panelOpen).toBe(true, 'Expected panel to be open.');
 
-      expect(document.activeElement).toBe(input, 'Expected input to continue to be focused.');
-      expect(trigger.panelOpen).toBe(false, 'Expected panel to be closed.');
-      expect(stopPropagationSpy).toHaveBeenCalled();
-    });
+        trigger._handleKeydown(escapeEvent);
+        fixture.detectChanges();
+
+        expect(document.activeElement).toBe(input, 'Expected input to continue to be focused.');
+        expect(trigger.panelOpen).toBe(false, 'Expected panel to be closed.');
+        expect(stopPropagationSpy).toHaveBeenCalled();
+      });
+    }));
 
     it('should close the panel when tabbing away from a trigger without results', async(() => {
       fixture.componentInstance.states = [];
