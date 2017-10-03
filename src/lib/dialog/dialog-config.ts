@@ -58,16 +58,16 @@ export class MatDialogConfig {
   height?: string = '';
 
   /** Min-width of the dialog. */
-  minWidth?: string = '';
+  minWidth?: string;
 
   /** Min-height of the dialog */
-  minHeight?: string = '';
+  minHeight?: string;
 
   /** Max-width of the dialog. */
   maxWidth?: string = '80vw';
 
   /** Max-height of the dialog */
-  maxHeight?: string = '';
+  maxHeight?: string;
 
   /** Position overrides. */
   position?: DialogPosition;
