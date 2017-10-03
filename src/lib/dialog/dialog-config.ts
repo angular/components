@@ -31,43 +31,43 @@ export class MatDialogConfig {
    * component instantiated inside of the dialog. This does not affect where the dialog
    * content will be rendered.
    */
-  viewContainerRef?: ViewContainerRef;
+  viewContainerRef: ViewContainerRef;
 
   /** ID for the dialog. If omitted, a unique one will be generated. */
-  id?: string;
+  id: string;
 
   /** The ARIA role of the dialog element. */
-  role?: DialogRole = 'dialog';
+  role: DialogRole = 'dialog';
 
   /** Custom class for the overlay pane. */
-  panelClass?: string | string[] = '';
+  panelClass: string | string[] = '';
 
   /** Whether the dialog has a backdrop. */
-  hasBackdrop?: boolean = true;
+  hasBackdrop: boolean = true;
 
   /** Custom class for the backdrop, */
-  backdropClass?: string = '';
+  backdropClass: string = '';
 
   /** Whether the user can use escape or clicking outside to close a modal. */
-  disableClose?: boolean = false;
+  disableClose: boolean = false;
 
   /** Width of the dialog. */
-  width?: string = '';
+  width: string = '';
 
   /** Height of the dialog. */
-  height?: string = '';
+  height: string = '';
 
   /** Position overrides. */
-  position?: DialogPosition;
+  position: DialogPosition;
 
   /** Data being injected into the child component. */
-  data?: any = null;
+  data: any = null;
 
   /** Layout direction for the dialog's content. */
-  direction?: Direction = 'ltr';
+  direction: Direction = 'ltr';
 
   /** ID of the element that describes the dialog.  */
-  ariaDescribedBy?: string | null = null;
+  ariaDescribedBy: string | null = null;
 
 
   // TODO(jelbourn): add configuration for lifecycle hooks, ARIA labelling.
