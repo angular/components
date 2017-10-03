@@ -101,7 +101,7 @@ type we used for the type parameter when we implemented `MatFormFieldControl`. S
 already has a value property, we don't need to do anything for this one.
 
 #### `stateChanges`
-Because the `<mat-form-field>` used the `OnPush` change detection strategy, we need to let it know
+Because the `<mat-form-field>` uses the `OnPush` change detection strategy, we need to let it know
 when something happens in the form field control that may require the form field to run change
 detection. We do this via the `stateChanges` property. So far the only thing the form field needs to
 know about is when the value changes. We'll need to emit on the stateChanges stream when that
@@ -113,11 +113,11 @@ stateChanges = new Subject<void>();
 
 set value(tel: MyTel | null) {
   ...
-  stateChanges.next();
+  this.stateChanges.next();
 }
 
-ngOnDestory() {
-  stateChanges.destroy();
+ngOnDestroy() {
+  this.stateChanges.complete();
 }
 ```
 
