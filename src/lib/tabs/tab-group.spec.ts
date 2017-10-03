@@ -205,6 +205,18 @@ describe('MatTabGroup', () => {
       expect(tabs[1].isActive).toBe(false);
       expect(tabs[2].isActive).toBe(true);
     });
+
+    fit('should fire animation done event', fakeAsync(() => {
+      fixture.detectChanges();
+
+      spyOn(fixture.componentInstance, 'animationDone');
+      let tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+      tabLabel.nativeElement.click();
+      fixture.detectChanges();
+      tick();
+
+      expect(fixture.componentInstance.animationDone).toHaveBeenCalled();
+    }));
   });
 
   describe('disable tabs', () => {
@@ -411,6 +423,7 @@ describe('nested MatTabGroup with enabled animations', () => {
         [(selectedIndex)]="selectedIndex"
         [headerPosition]="headerPosition"
         [disableRipple]="disableRipple"
+        (animationDone)="animationDone()"
         (focusChange)="handleFocus($event)"
         (selectChange)="handleSelection($event)">
       <mat-tab>
@@ -441,6 +454,7 @@ class SimpleTabsTestApp {
   handleSelection(event: any) {
     this.selectEvent = event;
   }
+  animationDone() { }
 }
 
 @Component({
