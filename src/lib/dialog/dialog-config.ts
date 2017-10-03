@@ -57,6 +57,26 @@ export class MatDialogConfig {
   /** Height of the dialog. */
   height?: string = '';
 
+  /** Min-width of the dialog. */
+  minWidth?: string = '';
+
+  /**
+   * Min-height of the dialog.
+   * For this value to be effectively applied, `height` may also need to be defined.
+   * See https://www.w3.org/TR/CSS2/visudet.html#min-max-widths
+   */
+  minHeight?: string = '';
+
+  /** Max-width of the dialog. */
+  maxWidth?: string = '80vw';
+
+  /**
+   * Max-height of the dialog.
+   * For this value to be effectively applied, `height` may also need to be defined.
+   * See https://www.w3.org/TR/CSS2/visudet.html#min-max-widths
+   */
+  maxHeight?: string = '';
+
   /** Position overrides. */
   position?: DialogPosition;
 
