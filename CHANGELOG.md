@@ -28,7 +28,7 @@ overlayContainer.getContainerElement().classList.add('my-theme-class');
 ```
 * DateAdapter method `getISODateString` has been renamed to `toIso8601` and a new method
 `fromIso8601` has been added.
-
+* **sort:** The sort-change stream `mdSortChange` has been renamed to `sortChange`.
 
 ### Deprecation of "md" prefix.
 
@@ -64,6 +64,10 @@ We explored this option early on (before creating compatibility mode). We found 
 library's styles such that they wouldn't affect the Angular Material components would increase
 the specificity. This would have been a significant breaking change, as it would have potentially
 broken countless custom styles that relied on a particular specificity working.
+
+### Other deprecations
+* `StyleModule` is deprecated. `FocusOriginMonitor` (the only thing it contained) has been renamed
+to `FocusMonitor` and moved to `@angular/cdk/a11y` (`A11yModule`).
 
 
 ### Bug Fixes

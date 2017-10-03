@@ -1,4 +1,5 @@
 import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
 
 @Component({
   moduleId: module.id,
@@ -16,7 +17,10 @@ export class AccessibilityHome {}
   preserveWhitespaces: false,
 })
 export class AccessibilityDemo {
+  currentComponent: string = '';
+
   @ViewChild('maincontent') mainContent: ElementRef;
+  @ViewChild('header') sectionHeader: ElementRef;
 
   navItems = [
     {name: 'Home', route: '.'},
@@ -28,6 +32,7 @@ export class AccessibilityDemo {
     {name: 'Chips', route: 'chips'},
     {name: 'Datepicker', route: 'datepicker'},
     {name: 'Dialog', route: 'dialog'},
+    {name: 'Expansion panel', route: 'expansion'},
     {name: 'Grid list', route: 'grid-list'},
     {name: 'Icon', route: 'icon'},
     {name: 'Input', route: 'input'},
@@ -44,8 +49,17 @@ export class AccessibilityDemo {
     {name: 'Tooltip', route: 'tooltip'},
   ];
 
+  constructor(router: Router) {
+    router.events.subscribe(event => {
+      let nav = this.navItems.find(navItem => {
+        let fragments = (event as NavigationEnd).url.split('/');
+        return fragments[fragments.length - 1] === navItem.route;
+      });
+      this.currentComponent = nav ? nav.name : '';
+    });
+  }
+
   skipNavigation() {
-    this.mainContent.nativeElement.scrollIntoView();
-    this.mainContent.nativeElement.focus();
+    (this.currentComponent ? this.sectionHeader : this.mainContent).nativeElement.focus();
   }
 }

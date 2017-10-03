@@ -1,13 +1,13 @@
 import {DOWN_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
-import {createKeyboardEvent} from '@angular/cdk/testing';
+import {createKeyboardEvent, dispatchFakeEvent} from '@angular/cdk/testing';
 import {Component, DebugElement} from '@angular/core';
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {MdListModule, MdListOption, MdSelectionList} from './index';
+import {MatListModule, MatListOption, MatSelectionList} from './index';
 
 
-describe('MdSelectionList', () => {
+describe('MatSelectionList', () => {
   describe('with list option', () => {
     let fixture: ComponentFixture<SelectionListWithListOptions>;
     let listOption: DebugElement[];
@@ -16,7 +16,7 @@ describe('MdSelectionList', () => {
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
-        imports: [MdListModule],
+        imports: [MatListModule],
         declarations: [
           SelectionListWithListOptions,
           SelectionListWithCheckboxPositionAfter,
@@ -28,24 +28,29 @@ describe('MdSelectionList', () => {
       TestBed.compileComponents();
     }));
 
+
     beforeEach(async(() => {
       fixture = TestBed.createComponent(SelectionListWithListOptions);
-      listOption = fixture.debugElement.queryAll(By.directive(MdListOption));
-      listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
-      selectionList = fixture.debugElement.query(By.directive(MdSelectionList));
       fixture.detectChanges();
+
+      listOption = fixture.debugElement.queryAll(By.directive(MatListOption));
+      listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
     }));
 
     it('should add and remove focus class on focus/blur', () => {
-      expect(listItemEl.nativeElement.classList).not.toContain('mat-list-item-focus');
+      // Use the second list item, because the first one is always disabled.
+      const listItem = listOption[1].nativeElement;
 
-      listOption[0].componentInstance._handleFocus();
-      fixture.detectChanges();
-      expect(listItemEl.nativeElement.className).toContain('mat-list-item-focus');
+      expect(listItem.classList).not.toContain('mat-list-item-focus');
 
-      listOption[0].componentInstance._handleBlur();
+      dispatchFakeEvent(listItem, 'focus');
       fixture.detectChanges();
-      expect(listItemEl.nativeElement.className).not.toContain('mat-list-item-focus');
+      expect(listItem.className).toContain('mat-list-item-focus');
+
+      dispatchFakeEvent(listItem, 'blur');
+      fixture.detectChanges();
+      expect(listItem.className).not.toContain('mat-list-item-focus');
     });
 
     it('should be able to set a value on a list option', () => {
@@ -57,8 +62,9 @@ describe('MdSelectionList', () => {
     });
 
     it('should be able to dispatch one selected item', () => {
-      let testListItem = listOption[2].injector.get<MdListOption>(MdListOption);
-      let selectList = selectionList.injector.get<MdSelectionList>(MdSelectionList).selectedOptions;
+      let testListItem = listOption[2].injector.get<MatListOption>(MatListOption);
+      let selectList =
+          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
       expect(selectList.selected.length).toBe(0);
       expect(listOption[2].nativeElement.getAttribute('aria-selected')).toBe('false');
@@ -72,9 +78,10 @@ describe('MdSelectionList', () => {
     });
 
     it('should be able to dispatch multiple selected items', () => {
-      let testListItem = listOption[2].injector.get<MdListOption>(MdListOption);
-      let testListItem2 = listOption[1].injector.get<MdListOption>(MdListOption);
-      let selectList = selectionList.injector.get<MdSelectionList>(MdSelectionList).selectedOptions;
+      let testListItem = listOption[2].injector.get<MatListOption>(MatListOption);
+      let testListItem2 = listOption[1].injector.get<MatListOption>(MatListOption);
+      let selectList =
+          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
       expect(selectList.selected.length).toBe(0);
       expect(listOption[2].nativeElement.getAttribute('aria-selected')).toBe('false');
@@ -94,8 +101,9 @@ describe('MdSelectionList', () => {
     });
 
     it('should be able to deselect an option', () => {
-      let testListItem = listOption[2].injector.get<MdListOption>(MdListOption);
-      let selectList = selectionList.injector.get<MdSelectionList>(MdSelectionList).selectedOptions;
+      let testListItem = listOption[2].injector.get<MatListOption>(MatListOption);
+      let selectList =
+          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
       expect(selectList.selected.length).toBe(0);
 
@@ -111,8 +119,9 @@ describe('MdSelectionList', () => {
     });
 
     it('should not allow selection of disabled items', () => {
-      let testListItem = listOption[0].injector.get<MdListOption>(MdListOption);
-      let selectList = selectionList.injector.get<MdSelectionList>(MdSelectionList).selectedOptions;
+      let testListItem = listOption[0].injector.get<MatListOption>(MatListOption);
+      let selectList =
+          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
       expect(selectList.selected.length).toBe(0);
       expect(listOption[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
@@ -124,7 +133,7 @@ describe('MdSelectionList', () => {
     });
 
     it('should be able to un-disable disabled items', () => {
-      let testListItem = listOption[0].injector.get<MdListOption>(MdListOption);
+      let testListItem = listOption[0].injector.get<MatListOption>(MatListOption);
 
       expect(listOption[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
 
@@ -138,13 +147,11 @@ describe('MdSelectionList', () => {
       let testListItem = listOption[1].nativeElement as HTMLElement;
       let SPACE_EVENT: KeyboardEvent =
         createKeyboardEvent('keydown', SPACE, testListItem);
-      let selectList = selectionList.injector.get<MdSelectionList>(MdSelectionList).selectedOptions;
-      let options = selectionList.componentInstance.options;
-      let array = options.toArray();
-      let focusItem = array[1];
+      let selectList =
+          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
       expect(selectList.selected.length).toBe(0);
 
-      focusItem.focus();
+      dispatchFakeEvent(testListItem, 'focus');
       selectionList.componentInstance._keydown(SPACE_EVENT);
 
       fixture.detectChanges();
@@ -152,16 +159,26 @@ describe('MdSelectionList', () => {
       expect(selectList.selected.length).toBe(1);
     });
 
+    it('should restore focus if active option is destroyed', () => {
+      const manager = selectionList.componentInstance._keyManager;
+
+      listOption[3].componentInstance._handleFocus();
+
+      expect(manager.activeItemIndex).toBe(3);
+
+      fixture.componentInstance.showLastOption = false;
+      fixture.detectChanges();
+
+      expect(manager.activeItemIndex).toBe(2);
+    });
+
     it('should focus previous item when press UP ARROW', () => {
       let testListItem = listOption[2].nativeElement as HTMLElement;
       let UP_EVENT: KeyboardEvent =
         createKeyboardEvent('keydown', UP_ARROW, testListItem);
-      let options = selectionList.componentInstance.options;
-      let array = options.toArray();
-      let focusItem = array[2];
       let manager = selectionList.componentInstance._keyManager;
 
-      focusItem.focus();
+      dispatchFakeEvent(listOption[2].nativeElement, 'focus');
       expect(manager.activeItemIndex).toEqual(2);
 
       selectionList.componentInstance._keydown(UP_EVENT);
@@ -175,12 +192,9 @@ describe('MdSelectionList', () => {
       let testListItem = listOption[2].nativeElement as HTMLElement;
       let DOWN_EVENT: KeyboardEvent =
         createKeyboardEvent('keydown', DOWN_ARROW, testListItem);
-      let options = selectionList.componentInstance.options;
-      let array = options.toArray();
-      let focusItem = array[2];
       let manager = selectionList.componentInstance._keyManager;
 
-      focusItem.focus();
+      dispatchFakeEvent(listOption[2].nativeElement, 'focus');
       expect(manager.activeItemIndex).toEqual(2);
 
       selectionList.componentInstance._keydown(DOWN_EVENT);
@@ -191,7 +205,7 @@ describe('MdSelectionList', () => {
     });
 
     it('should be able to select all options', () => {
-      const list: MdSelectionList = selectionList.componentInstance;
+      const list: MatSelectionList = selectionList.componentInstance;
 
       expect(list.options.toArray().every(option => option.selected)).toBe(false);
 
@@ -202,7 +216,7 @@ describe('MdSelectionList', () => {
     });
 
     it('should be able to deselect all options', () => {
-      const list: MdSelectionList = selectionList.componentInstance;
+      const list: MatSelectionList = selectionList.componentInstance;
 
       list.options.forEach(option => option.toggle());
       expect(list.options.toArray().every(option => option.selected)).toBe(true);
@@ -211,6 +225,34 @@ describe('MdSelectionList', () => {
       fixture.detectChanges();
 
       expect(list.options.toArray().every(option => option.selected)).toBe(false);
+    });
+  });
+
+  describe('with list option selected', () => {
+    let fixture: ComponentFixture<SelectionListWithSelectedOption>;
+    let listItemEl: DebugElement;
+    let selectionList: DebugElement;
+
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [SelectionListWithSelectedOption],
+      });
+
+      TestBed.compileComponents();
+    }));
+
+    beforeEach(async(() => {
+      fixture = TestBed.createComponent(SelectionListWithSelectedOption);
+      listItemEl = fixture.debugElement.query(By.directive(MatListOption));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
+      fixture.detectChanges();
+    }));
+
+    it('should set its initial selected state in the selectedOptions', () => {
+      let optionEl = listItemEl.injector.get(MatListOption);
+      let selectedOptions = selectionList.componentInstance.selectedOptions;
+      expect(selectedOptions.isSelected(optionEl)).toBeTruthy();
     });
   });
 
@@ -223,7 +265,7 @@ describe('MdSelectionList', () => {
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
-        imports: [MdListModule],
+        imports: [MatListModule],
         declarations: [
           SelectionListWithListOptions,
           SelectionListWithCheckboxPositionAfter,
@@ -237,9 +279,9 @@ describe('MdSelectionList', () => {
 
     beforeEach(async(() => {
       fixture = TestBed.createComponent(SelectionListWithOnlyOneOption);
-      listOption = fixture.debugElement.query(By.directive(MdListOption));
+      listOption = fixture.debugElement.query(By.directive(MatListOption));
       listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
-      selectionList = fixture.debugElement.query(By.directive(MdSelectionList));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
       fixture.detectChanges();
     }));
 
@@ -266,11 +308,11 @@ describe('MdSelectionList', () => {
   describe('with option disabled', () => {
     let fixture: ComponentFixture<SelectionListWithDisabledOption>;
     let listOptionEl: HTMLElement;
-    let listOption: MdListOption;
+    let listOption: MatListOption;
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
-        imports: [MdListModule],
+        imports: [MatListModule],
         declarations: [SelectionListWithDisabledOption]
       });
 
@@ -280,7 +322,7 @@ describe('MdSelectionList', () => {
     beforeEach(async(() => {
       fixture = TestBed.createComponent(SelectionListWithDisabledOption);
 
-      const listOptionDebug = fixture.debugElement.query(By.directive(MdListOption));
+      const listOptionDebug = fixture.debugElement.query(By.directive(MatListOption));
 
       listOption = listOptionDebug.componentInstance;
       listOptionEl = listOptionDebug.nativeElement;
@@ -317,7 +359,7 @@ describe('MdSelectionList', () => {
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
-        imports: [MdListModule],
+        imports: [MatListModule],
         declarations: [
           SelectionListWithListOptions,
           SelectionListWithCheckboxPositionAfter,
@@ -331,15 +373,16 @@ describe('MdSelectionList', () => {
 
     beforeEach(async(() => {
       fixture = TestBed.createComponent(SelectionListWithListDisabled);
-      listOption = fixture.debugElement.queryAll(By.directive(MdListOption));
+      listOption = fixture.debugElement.queryAll(By.directive(MatListOption));
       listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
-      selectionList = fixture.debugElement.query(By.directive(MdSelectionList));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
       fixture.detectChanges();
     }));
 
     it('should not allow selection on disabled selection-list', () => {
-      let testListItem = listOption[2].injector.get<MdListOption>(MdListOption);
-      let selectList = selectionList.injector.get<MdSelectionList>(MdSelectionList).selectedOptions;
+      let testListItem = listOption[2].injector.get<MatListOption>(MatListOption);
+      let selectList =
+          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
       expect(selectList.selected.length).toBe(0);
 
@@ -358,7 +401,7 @@ describe('MdSelectionList', () => {
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
-        imports: [MdListModule],
+        imports: [MatListModule],
         declarations: [
           SelectionListWithListOptions,
           SelectionListWithCheckboxPositionAfter,
@@ -372,9 +415,9 @@ describe('MdSelectionList', () => {
 
     beforeEach(async(() => {
       fixture = TestBed.createComponent(SelectionListWithCheckboxPositionAfter);
-      listOption = fixture.debugElement.queryAll(By.directive(MdListOption));
+      listOption = fixture.debugElement.queryAll(By.directive(MatListOption));
       listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
-      selectionList = fixture.debugElement.query(By.directive(MdSelectionList));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
       fixture.detectChanges();
     }));
 
@@ -388,62 +431,63 @@ describe('MdSelectionList', () => {
 
 @Component({template: `
   <mat-selection-list id="selection-list-1">
-    <md-list-option checkboxPosition="before" disabled="true" value="inbox">
+    <mat-list-option checkboxPosition="before" disabled="true" value="inbox">
       Inbox (disabled selection-option)
-    </md-list-option>
-    <md-list-option id="testSelect" checkboxPosition="before" class="test-native-focus"
+    </mat-list-option>
+    <mat-list-option id="testSelect" checkboxPosition="before" class="test-native-focus"
                     value="starred">
       Starred
-    </md-list-option>
-    <md-list-option checkboxPosition="before" value="sent-mail">
+    </mat-list-option>
+    <mat-list-option checkboxPosition="before" value="sent-mail">
       Sent Mail
-    </md-list-option>
-    <md-list-option checkboxPosition="before" value="drafts">
+    </mat-list-option>
+    <mat-list-option checkboxPosition="before" value="drafts" *ngIf="showLastOption">
       Drafts
-    </md-list-option>
+    </mat-list-option>
   </mat-selection-list>`})
 class SelectionListWithListOptions {
+  showLastOption: boolean = true;
 }
 
 @Component({template: `
   <mat-selection-list id = "selection-list-2">
-    <md-list-option checkboxPosition = "after">
+    <mat-list-option checkboxPosition = "after">
       Inbox (disabled selection-option)
-    </md-list-option>
-    <md-list-option id = "testSelect" checkboxPosition = "after">
+    </mat-list-option>
+    <mat-list-option id = "testSelect" checkboxPosition = "after">
       Starred
-    </md-list-option>
-    <md-list-option checkboxPosition = "after">
+    </mat-list-option>
+    <mat-list-option checkboxPosition = "after">
       Sent Mail
-    </md-list-option>
-    <md-list-option checkboxPosition = "after">
+    </mat-list-option>
+    <mat-list-option checkboxPosition = "after">
       Drafts
-    </md-list-option>
+    </mat-list-option>
   </mat-selection-list>`})
 class SelectionListWithCheckboxPositionAfter {
 }
 
 @Component({template: `
   <mat-selection-list id = "selection-list-3" [disabled] = true>
-    <md-list-option checkboxPosition = "after">
+    <mat-list-option checkboxPosition = "after">
       Inbox (disabled selection-option)
-    </md-list-option>
-    <md-list-option id = "testSelect" checkboxPosition = "after">
+    </mat-list-option>
+    <mat-list-option id = "testSelect" checkboxPosition = "after">
       Starred
-    </md-list-option>
-    <md-list-option checkboxPosition = "after">
+    </mat-list-option>
+    <mat-list-option checkboxPosition = "after">
       Sent Mail
-    </md-list-option>
-    <md-list-option checkboxPosition = "after">
+    </mat-list-option>
+    <mat-list-option checkboxPosition = "after">
       Drafts
-    </md-list-option>
+    </mat-list-option>
   </mat-selection-list>`})
 class SelectionListWithListDisabled {
 }
 
 @Component({template: `
   <mat-selection-list>
-    <md-list-option [disabled]="disableItem">Item</md-list-option>
+    <mat-list-option [disabled]="disableItem">Item</mat-list-option>
   </mat-selection-list>
   `})
 class SelectionListWithDisabledOption {
@@ -451,10 +495,17 @@ class SelectionListWithDisabledOption {
 }
 
 @Component({template: `
+  <mat-selection-list>
+    <mat-list-option [selected]="true">Item</mat-list-option>
+  </mat-selection-list>`})
+class SelectionListWithSelectedOption {
+}
+
+@Component({template: `
   <mat-selection-list id = "selection-list-4">
-    <md-list-option checkboxPosition = "after" class="test-focus" id="123">
+    <mat-list-option checkboxPosition = "after" class="test-focus" id="123">
       Inbox
-    </md-list-option>
+    </mat-list-option>
   </mat-selection-list>`})
 class SelectionListWithOnlyOneOption {
 }
