@@ -1,6 +1,6 @@
 import {Component, Inject, ViewChild, TemplateRef} from '@angular/core';
 import {DOCUMENT} from '@angular/platform-browser';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 
 @Component({
@@ -14,7 +14,7 @@ export class DialogDemo {
   lastAfterClosedResult: string;
   lastBeforeCloseResult: string;
   actionsAlignment: string;
-  config = {
+  config: Partial<MatDialogConfig> = {
     disableClose: false,
     panelClass: 'custom-overlay-pane-class',
     hasBackdrop: true,
