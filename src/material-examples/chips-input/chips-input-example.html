@@ -5,10 +5,10 @@
       {{fruit.name}}
       <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
     </mat-chip>
-    <input matInput placeholder="New fruit..."
-         [matChipInputFor]="chipList"
-         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-         [matChipInputAddOnBlur]="addOnBlur"
-         (matChipInputTokenEnd)="add($event)" />
+    <input placeholder="New fruit..."
+           [matChipInputFor]="chipList"
+           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           [matChipInputAddOnBlur]="addOnBlur"
+           (matChipInputTokenEnd)="add($event)" />
   </mat-chip-list>
 </mat-form-field>
