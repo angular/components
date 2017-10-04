@@ -42,6 +42,7 @@ export const _MatStepper = CdkStepper;
   templateUrl: 'step.html',
   providers: [{provide: MAT_ERROR_GLOBAL_OPTIONS, useExisting: MatStep}],
   encapsulation: ViewEncapsulation.None,
+  exportAs: 'matStep',
   preserveWhitespaces: false,
 })
 export class MatStep extends _MatStep implements ErrorOptions {
@@ -89,6 +90,7 @@ export class MatStepper extends _MatStepper {
 @Component({
   moduleId: module.id,
   selector: 'mat-horizontal-stepper',
+  exportAs: 'matHorizontalStepper',
   templateUrl: 'stepper-horizontal.html',
   styleUrls: ['stepper.css'],
   inputs: ['selectedIndex'],
@@ -113,6 +115,7 @@ export class MatHorizontalStepper extends MatStepper { }
 @Component({
   moduleId: module.id,
   selector: 'mat-vertical-stepper',
+  exportAs: 'matVerticalStepper',
   templateUrl: 'stepper-vertical.html',
   styleUrls: ['stepper.css'],
   inputs: ['selectedIndex'],
