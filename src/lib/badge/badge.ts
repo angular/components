@@ -27,8 +27,8 @@ export const _MatBadgeMixinBase = mixinColor(MatBadgeBase);
     'class': 'mat-badge',
     '[class.mat-badge-overlap]': 'overlap',
     '[class.mat-badge-above]': '_isAbove',
-    '[class.mat-badge-below]': '_isBelow',
-    '[class.mat-badge-before]': '_isBefore',
+    '[class.mat-badge-below]': '!_isAbove',
+    '[class.mat-badge-before]': '!_isAfter',
     '[class.mat-badge-after]': '_isAfter',
   },
   encapsulation: ViewEncapsulation.None,
@@ -54,21 +54,8 @@ export class MatBadge extends _MatBadgeMixinBase implements CanColor {
   @Input()
   set direction(val: string) {
     this._direction = val;
-    if (val.indexOf('above') > -1) {
-      this._isAbove = true;
-      this._isBelow = false;
-    } else if (val.indexOf('below') > -1) {
-      this._isAbove = false;
-      this._isBelow = true;
-    }
-
-    if (val.indexOf('before') > -1) {
-      this._isBefore = true;
-      this._isAfter = false;
-    } else if (val.indexOf('after') > -1) {
-      this._isAfter = true;
-      this._isBefore = false;
-    }
+    this._isAbove = val.indexOf('below') === -1;
+    this._isAfter = val.indexOf('before') === -1;
   }
   get direction(): string {
     return this._direction;
