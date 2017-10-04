@@ -20,6 +20,19 @@ const DOCS = [
       {id: 'autocomplete', name: 'Autocomplete', examples: ['autocomplete-overview']},
       {id: 'checkbox', name: 'Checkbox', examples: ['checkbox-configurable']},
       {id: 'datepicker', name: 'Datepicker', examples: ['datepicker-overview']},
+      {
+        id: 'form-field',
+        name: 'Form field',
+        examples: [
+          'form-field-overview',
+          'form-field-placeholder',
+          'form-field-hint',
+          'form-field-error',
+          'form-field-prefix-suffix',
+          'form-field-theming',
+          'form-field-custom-control',
+        ]
+      },
       {id: 'input', name: 'Input', examples: ['input-form']},
       {id: 'radio', name: 'Radio button', examples: ['radio-ng-model']},
       {id: 'select', name: 'Select', examples: ['select-form']},

@@ -34,9 +34,14 @@ const GUIDES = [
   },
   {
     id: 'customizing-component-styles',
-    name: 'Customizing Component Styles',
+    name: 'Customizing component styles',
     document: '/assets/documents/guides/customizing-component-styles.html'
-  }
+  },
+  {
+    id: 'creating-a-custom-form-field-control',
+    name: 'Creating a custom form field control',
+    document: '/assets/documents/guides/creating-a-custom-form-field-control.html'
+  },
 ];
 
 @Injectable()
