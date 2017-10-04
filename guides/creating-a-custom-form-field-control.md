@@ -21,20 +21,6 @@ class MyTel {
 @Component({
   selector: 'my-tel-input',
   template: `
-    <style>
-      div {
-        display: flex;
-      }
-      input {
-        border: none;
-        background: none;
-        padding: 0;
-        outline: none;
-        font: inherit;
-        text-align: center;
-      }
-    </style>
-    
     <div [formGroup]="parts">
       <input class="area" formControlName="area" size="3">
       <span>&ndash;</span>
@@ -43,6 +29,19 @@ class MyTel {
       <input class="subscriber" formControlName="subscriber" size="4">
     </div>
   `,
+  styles: [`
+    div {
+      display: flex;
+    }
+    input {
+      border: none;
+      background: none;
+      padding: 0;
+      outline: none;
+      font: inherit;
+      text-align: center;
+    }
+  `],
 })
 class MyTelInput {
   parts: FormGroup;
