@@ -2,15 +2,16 @@ It is possible to create custom form field controls that can be used inside `<ma
 can be useful if you need to create a component that shares a lot of common behavior with a form
 field, but adds some additional logic.
 
+For example in this guide we'll learn how to create a custom input for inputting US telephone
+numbers and hook it up to work with `<mat-form-field>`. Here is what we'll build by the end of this
+guide:
+
+<!-- example(form-field-custom-control) -->
+
 In order to learn how to build custom form field controls, let's start with a simple input component
 that we want to work inside the form field. For example, a phone number input that segments the
 parts of the number into their own inputs. (Note: this is not intended to be a robust component,
 just a starting point for us to learn.)
-
-<!--
-  TODO(mmalerba): Link to Plunker/StackBlitz with complete example code after beta 12.
-  (Beta 11 is missing some of the features used in the example).
--->
 
 ```ts
 class MyTel {
