@@ -14,11 +14,11 @@ The following Angular Material components are designed to work inside a `<mat-fo
 <!-- example(form-field-overview) -->
 
 ### Floating placeholder
-The floating placeholder is an indicative text label displayed on top of the form field control when
+The floating placeholder is a text label displayed on top of the form field control when
 the control does not contain any text. By default, when text is present the floating placeholder
 floats above the form field control.
 
-The placeholder text can be specified using the `placeholder` property on the form field control, or
+Placeholder text can be specified using the `placeholder` property on the form field control, or
 by adding a `<mat-placeholder>` element inside the form field. Only one of these options should be
 used, specifying both will raise an error.
 
@@ -65,7 +65,7 @@ form field. Errors are hidden initially and will be displayed on invalid form fi
 has interacted with the element or the parent form has been submitted. Since the errors occupy the
 same space as the hints, the hints are hidden when the errors are shown.
 
-If an form field can have more than one error state, it is up to the consumer to toggle which
+If a form field can have more than one error state, it is up to the consumer to toggle which
 messages should be displayed. This can be done with CSS, `ngIf` or `ngSwitch`. Multiple error
 messages can be shown at the same time if desired, but the `<mat-form-field>` only reserves enough
 space to display one error message at a time. Ensuring that enough space is available to display
@@ -74,8 +74,8 @@ multiple errors is up to the user.
 <!-- example(form-field-error) -->
 
 ### Prefix & suffix
-HTML can be included before and after the input tag, as a prefix or suffix. It will be underlined
-as per the Material specification.
+Custom content can be included before and after the input tag, as a prefix or suffix. It will be
+included within the visual container that wraps the form control as per the Material specification.
 
 Adding the `matPrefix` directive to an element inside the `<mat-form-field>` will designate it as
 the prefix. Similarly, adding `matSuffix` will designate it as the suffix.
@@ -90,7 +90,7 @@ information on this see the guide on
 
 ### Theming
 `<mat-form-field>` has a `color` property which can be set to `primary`, `accent`, or `warn`. This
-will set the color ofr the form field underline and floating placeholder based on the theme colors
+will set the color of the form field underline and floating placeholder based on the theme colors
 of your app.
 
 `<mat-form-field>` inherits its `font-size` from its parent element. This can be overridden to an
