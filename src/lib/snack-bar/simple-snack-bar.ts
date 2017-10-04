@@ -8,6 +8,7 @@
 
 import {Component, ViewEncapsulation, Inject, ChangeDetectionStrategy} from '@angular/core';
 import {trigger, state, style, transition, animate} from '@angular/animations';
+import {AnimationCurves, AnimationDurations} from '@angular/material/core';
 import {MatSnackBarRef} from './snack-bar-ref';
 import {MAT_SNACK_BAR_DATA} from './snack-bar-config';
 
@@ -26,13 +27,14 @@ import {MAT_SNACK_BAR_DATA} from './snack-bar-config';
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('contentFade', [
-      state('void', style({opacity: '0'})),
-      state('visible', style({opacity: '1'})),
-      transition('void => visible', animate('350ms linear'))
+      transition(':enter', [
+        style({opacity: '0'}),
+        animate(`${AnimationDurations.COMPLEX} ${AnimationCurves.STANDARD_CURVE}`)
+      ])
     ])
   ],
   host: {
-    '[@contentFade]': '"visible"',
+    '[@contentFade]': '',
     'class': 'mat-simple-snackbar',
   }
 })
