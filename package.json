@@ -1,5 +1,5 @@
 {
-  "name": "material2-srcs",
+  "name": "uiux-srcs",
   "description": "Material Design components for Angular",
   "homepage": "https://github.com/angular/material2",
   "bugs": "https://github.com/angular/material2/issues",
@@ -19,7 +19,7 @@
     "docs": "gulp docs",
     "api": "gulp api-docs"
   },
-  "version": "2.0.0-beta.11",
+  "version": "1.19.2-test",
   "license": "MIT",
   "engines": {
     "node": ">= 5.4.1"

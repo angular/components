@@ -1,5 +1,5 @@
 {
-  "name": "@angular/material-examples",
+  "name": "@uiux/material-examples",
   "version": "0.0.0-PLACEHOLDER",
   "description": "Angular Material Examples",
   "main": "./bundles/material-examples.umd.js",
