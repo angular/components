@@ -63,7 +63,7 @@ describe('MatBadge', () => {
 
     it('should update the badge based on attribute', () => {
       let badgeContentDebugElement =
-          badgeDebugElement.nativeElement.querySelector('.mat-badge-content');
+          badgeDebugElement.nativeElement.querySelector('.mat-badge-text');
 
       expect(badgeContentDebugElement.innerHTML).toContain('1');
 
@@ -71,7 +71,7 @@ describe('MatBadge', () => {
       fixture.detectChanges();
 
       badgeContentDebugElement =
-          badgeDebugElement.nativeElement.querySelector('.mat-badge-content');
+          badgeDebugElement.nativeElement.querySelector('.mat-badge-text');
       expect(badgeContentDebugElement.innerHTML).toContain('22');
     });
 

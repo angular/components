@@ -12,7 +12,7 @@ $mat-badge-size: 22px !default;
 
 .mat-badge:after,
 .mat-badge-icon,
-.mat-badge-content,
+.mat-badge-text,
 .mat-badge-svg-icon {
   position: absolute;
   text-align: center;
@@ -32,7 +32,7 @@ $mat-badge-size: 22px !default;
   z-index: 1;
 }
 
-.mat-badge-content,
+.mat-badge-text,
 .mat-badge .mat-badge-icon {
   z-index: 2;
   font-size: 16px;
@@ -51,7 +51,7 @@ $mat-badge-size: 22px !default;
 .mat-badge-above {
   .mat-badge-svg-icon,
   .mat-badge-icon,
-  .mat-badge-content,
+  .mat-badge-text,
   &:after {
     top: -$mat-badge-size / 2;
   }
@@ -60,7 +60,7 @@ $mat-badge-size: 22px !default;
 .mat-badge-below {
   .mat-badge-svg-icon,
   .mat-badge-icon,
-  .mat-badge-content,
+  .mat-badge-text,
   &:after {
     bottom: -$mat-badge-size / 2;
   }
@@ -71,7 +71,7 @@ $mat-badge-size: 22px !default;
 
   .mat-badge-svg-icon,
   .mat-badge-icon,
-  .mat-badge-content,
+  .mat-badge-text,
   &:after {
     left: -$mat-badge-size;
   }
@@ -82,7 +82,7 @@ $mat-badge-size: 22px !default;
 
   .mat-badge-svg-icon,
   .mat-badge-icon,
-  .mat-badge-content,
+  .mat-badge-text,
   &:after {
     right: -$mat-badge-size;
   }
@@ -94,7 +94,7 @@ $mat-badge-size: 22px !default;
 
     .mat-badge-svg-icon,
     .mat-badge-icon,
-    .mat-badge-content,
+    .mat-badge-text,
     &:after {
       left: -$mat-badge-size / 2;
     }
@@ -105,7 +105,7 @@ $mat-badge-size: 22px !default;
 
     .mat-badge-svg-icon,
     .mat-badge-icon,
-    .mat-badge-content,
+    .mat-badge-text,
     &:after {
       right: -$mat-badge-size / 2;
     }
@@ -122,7 +122,7 @@ $mat-badge-size: 22px !default;
       fill: mat-color($primary, default-contrast);
     }
 
-    .mat-badge-content,
+    .mat-badge-text,
     .mat-badge-icon {
       color: mat-color($primary, default-contrast);
     }
@@ -136,7 +136,7 @@ $mat-badge-size: 22px !default;
         fill: mat-color($accent, default-contrast);
       }
   
-      .mat-badge-content,
+      .mat-badge-text,
       .mat-badge-icon {
         color: mat-color($accent, default-contrast);
       }
@@ -151,7 +151,7 @@ $mat-badge-size: 22px !default;
         fill: mat-color($warn, default-contrast);
       }
   
-      .mat-badge-content,
+      .mat-badge-text,
       .mat-badge-icon {
         color: mat-color($warn, default-contrast);
       }
@@ -166,12 +166,12 @@ $mat-badge-size: 22px !default;
 @mixin mat-badge-typography($config) {
   .mat-badge-svg-icon,
   .mat-badge-icon,
-  .mat-badge-content {
+  .mat-badge-text {
     font-weight: $mat-badge-font-weight;
     font-size: $mat-badge-font-size;
   }
 
-  .mat-badge-content {
+  .mat-badge-text {
     font-family: mat-font-family($config);
   }
 }

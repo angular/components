@@ -103,7 +103,7 @@ export class MatBadge extends MatBadgeBase {
   private _setContent(): void {
     let pane = document.createElement('span');
     pane.setAttribute('id', `badge-content-${this._id}`);
-    pane.classList.add('mat-badge-content');
+    pane.classList.add('mat-badge-text');
     pane.innerText = this.content;
     this._elementRef.nativeElement.appendChild(pane);
   }
