@@ -1,84 +1,84 @@
 <div class="badge-demo">
 
-  <h3>Icons</h3>
-  <mat-badge [content]="badgeContent">
-    <mat-icon color="accent">home</mat-icon>
-  </mat-badge>
+  <h3>Text</h3>
+  <span [matBadge]="badgeContent" matBadgeOverlap="false">
+    Hello
+  </span>
 
-  <mat-badge content="1" overlap="false">
-    <mat-icon color="primary">home</mat-icon>
-  </mat-badge>
+  <span matBadge="22" matBadgeOverlap="false" matBadgePosition="below after" matBadgeColor="accent">
+    Hello
+  </span>
+
+  <span matBadge="22" matBadgeOverlap="false" matBadgePosition="above before" matBadgeColor="warn">
+    Hello
+  </span>
+
+  <span matBadge="⚡️" matBadgeOverlap="false" matBadgePosition="below before">
+    Hello
+  </span>
+
+  <input type="text" [(ngModel)]="badgeContent" />
 
   <br />
   <br />
   <br />
 
   <h3>Buttons</h3>
-  <mat-badge content="22">
-    <button mat-raised-button>
-      <mat-icon color="primary">home</mat-icon>
-    </button>
-  </mat-badge>
-
-  <mat-badge content="1">
-    <button mat-raised-button>
-      Email
-    </button>
-  </mat-badge>
-
-  <br />
-  <br />
-  <br />
-
-  <h3>Text</h3>
-  <mat-badge [overlap]="false" content="22">
-    Email
-  </mat-badge>
-
-  <mat-badge overlap="false" content="John">
-    Email
-  </mat-badge>
-
-  <br />
-  <br />
-  <br />
-
-  <h3>Text Directions</h3>
-  <mat-badge overlap="false" direction="above before" content="22" color="primary">
-    Email
-  </mat-badge>
-
-  <mat-badge overlap="false" direction="above after" content="22" color="accent">
-    Email
-  </mat-badge>
-
-  <mat-badge overlap="false" direction="below before" content="22" color="warn">
-    Email
-  </mat-badge>
-
-  <mat-badge overlap="false" direction="below after" content="22">
-    Email
-  </mat-badge>
-
-  <br />
-  <br />
-  <br />
-
-  <h3>Icon Directions</h3>
-  <mat-badge direction="above before" content="22">
+  <button mat-raised-button [matBadge]="badgeContent">
     <mat-icon color="primary">home</mat-icon>
-  </mat-badge>
+  </button>
 
-  <mat-badge direction="above after" content="22">
-    <mat-icon color="primary">home</mat-icon>
-  </mat-badge>
+  <button mat-raised-button matBadge="22" matBadgePosition="below after" color="primary" matBadgeColor="accent">
+    <mat-icon color="primary" color="accent">home</mat-icon>
+  </button>
 
-  <mat-badge direction="below before" content="22">
+  <button mat-raised-button matBadge="22" matBadgePosition="above before">
     <mat-icon color="primary">home</mat-icon>
-  </mat-badge>
+  </button>
 
-  <mat-badge direction="below after" content="22">
+  <button mat-raised-button matBadge="22" matBadgePosition="below before">
     <mat-icon color="primary">home</mat-icon>
-  </mat-badge>
+  </button>
+
+  <button mat-raised-button>
+    <mat-icon color="primary" matBadge="22" color="accent">home</mat-icon>
+  </button>
+
+  <br />
+  <br />
+  <br />
+
+  <h3>Icons</h3>
+  <mat-icon color="primary" [matBadge]="badgeContent">
+    home
+  </mat-icon>
+
+  <mat-icon color="primary" matBadge="22" matBadgePosition="below after" matBadgeColor="accent">
+    home
+  </mat-icon>
+
+  <mat-icon color="primary" matBadge="22" matBadgePosition="above before" matBadgeColor="warn">
+    home
+  </mat-icon>
+
+  <mat-icon color="primary" matBadge="22" matBadgePosition="below before">
+    home
+  </mat-icon>
+
+  <br />
+  <br />
+  <br />
+
+  <h3>Font Icons</h3>
+  <span matIconBadge="home" matBadgeOverlap="false">Home</span> is where you live
+
+  <br />
+  <br />
+  <br />
+
+  <h3>SVG Icons</h3>
+  <span [matSvgIconBadge]="svgIcon" matBadgeOverlap="false">Home</span> is where I live
+
+  <button mat-button (click)="svgIcon = 'home'">Change Icon</button>
 
 </div>

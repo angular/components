@@ -8,15 +8,21 @@
 
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
-import {MatBadge} from './badge';
+import {MatBadge, MatSvgIconBadge, MatIconBadge} from './badge';
 
 
 @NgModule({
   imports: [MatCommonModule],
   exports: [
     MatBadge,
+    MatIconBadge,
+    MatSvgIconBadge,
     MatCommonModule,
   ],
-  declarations: [MatBadge],
+  declarations: [
+    MatBadge,
+    MatIconBadge,
+    MatSvgIconBadge,
+  ],
 })
 export class MatBadgeModule {}

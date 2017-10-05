@@ -4,10 +4,112 @@
 
 $mat-badge-font-size: 12px;
 $mat-badge-font-weight: 600;
+$mat-badge-size: 22px !default;
 
-@mixin _mat-badge-color($palette) {
-  background: mat-color($palette);
-  color: mat-color($palette, default-contrast);
+.mat-badge {
+  position: relative;
+}
+
+.mat-badge:after,
+.mat-badge-icon,
+.mat-badge-content,
+.mat-badge-svg-icon {
+  position: absolute;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+
+.mat-badge:after {
+  width: $mat-badge-size;
+  height: $mat-badge-size;
+  border-radius: 50%;
+  content: '';
+  z-index: 1;
+}
+
+.mat-badge-content,
+.mat-badge .mat-badge-icon {
+  z-index: 2;
+  font-size: 16px;
+  width: $mat-badge-size;
+  height: $mat-badge-size;
+}
+
+.mat-badge-svg-icon {
+  z-index: 2;
+  width: 12px;
+  height: 12px;
+  z-index: 2;
+  transform: translate(-5px, 5px);
+}
+
+.mat-badge-above {
+  .mat-badge-svg-icon,
+  .mat-badge-icon,
+  .mat-badge-content,
+  &:after {
+    top: -$mat-badge-size / 2;
+  }
+}
+
+.mat-badge-below {
+  .mat-badge-svg-icon,
+  .mat-badge-icon,
+  .mat-badge-content,
+  &:after {
+    bottom: -$mat-badge-size / 2;
+  }
+}
+
+.mat-badge-before {
+  margin-left: $mat-badge-size;
+
+  .mat-badge-svg-icon,
+  .mat-badge-icon,
+  .mat-badge-content,
+  &:after {
+    left: -$mat-badge-size;
+  }
+}
+
+.mat-badge-after {
+  margin-right: $mat-badge-size;
+
+  .mat-badge-svg-icon,
+  .mat-badge-icon,
+  .mat-badge-content,
+  &:after {
+    right: -$mat-badge-size;
+  }
+}
+
+.mat-badge-overlap {
+  &.mat-badge-before {
+    margin-left: $mat-badge-size / 2;
+
+    .mat-badge-svg-icon,
+    .mat-badge-icon,
+    .mat-badge-content,
+    &:after {
+      left: -$mat-badge-size / 2;
+    }
+  }
+
+  &.mat-badge-after {
+    margin-right: $mat-badge-size / 2;
+
+    .mat-badge-svg-icon,
+    .mat-badge-icon,
+    .mat-badge-content,
+    &:after {
+      right: -$mat-badge-size / 2;
+    }
+  }
 }
 
 @mixin mat-badge-theme($theme) {
@@ -16,27 +118,60 @@ $mat-badge-font-weight: 600;
   $primary: map-get($theme, primary);
   
   .mat-badge {
-    .mat-badge-content {
-      @include _mat-badge-color($primary);
+    .mat-badge-svg-icon {
+      fill: mat-color($primary, default-contrast);
     }
 
-    &.mat-accent {
-      .mat-badge-content {
-        @include _mat-toolbar-color($accent);
+    .mat-badge-content,
+    .mat-badge-icon {
+      color: mat-color($primary, default-contrast);
+    }
+
+    &:after {
+      background: mat-color($primary);
+    }
+
+    &.mat-badge-accent {
+      .mat-badge-svg-icon {
+        fill: mat-color($accent, default-contrast);
+      }
+  
+      .mat-badge-content,
+      .mat-badge-icon {
+        color: mat-color($accent, default-contrast);
+      }
+
+      &:after {
+        background: mat-color($accent);
       }
     }
   
-    &.mat-warn {
-      .mat-badge-content {
-        @include _mat-toolbar-color($warn);
+    &.mat-badge-warn {
+      .mat-badge-svg-icon {
+        fill: mat-color($warn, default-contrast);
+      }
+  
+      .mat-badge-content,
+      .mat-badge-icon {
+        color: mat-color($warn, default-contrast);
+      }
+
+      &:after {
+        background: mat-color($warn);
       }
     }
   }
 }
 
 @mixin mat-badge-typography($config) {
+  .mat-badge-svg-icon,
+  .mat-badge-icon,
   .mat-badge-content {
     font-weight: $mat-badge-font-weight;
     font-size: $mat-badge-font-size;
+  }
+
+  .mat-badge-content {
+    font-family: mat-font-family($config);
   }
 }
