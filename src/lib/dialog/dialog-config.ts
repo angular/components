@@ -57,17 +57,17 @@ export class MatDialogConfig {
   /** Height of the dialog. */
   height?: string = '';
 
-  /** Min-width of the dialog. */
-  minWidth?: string;
+  /** Min-width of the dialog. If a number is provided, pixel units are assumed. */
+  minWidth?: number | string;
 
-  /** Min-height of the dialog */
-  minHeight?: string;
+  /** Min-height of the dialog. If a number is provided, pixel units are assumed. */
+  minHeight?: number | string;
 
-  /** Max-width of the dialog. */
-  maxWidth?: string = '80vw';
+  /** Max-width of the dialog. If a number is provided, pixel units are assumed. Defaults to 80vw */
+  maxWidth?: number | string = '80vw';
 
-  /** Max-height of the dialog */
-  maxHeight?: string;
+  /** Max-height of the dialog. If a number is provided, pixel units are assumed. */
+  maxHeight?: number | string;
 
   /** Position overrides. */
   position?: DialogPosition;
