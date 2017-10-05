@@ -56,8 +56,6 @@ export class MatBadgeBase {
 
   _id: number = nextId++;
   _isAbove: boolean = true;
-  _isBelow: boolean = false;
-  _isBefore: boolean = false;
   _isAfter: boolean = true;
 
   constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
@@ -101,11 +99,11 @@ export class MatBadge extends MatBadgeBase {
 
   /** Injects a span element into the DOM with the content. */
   private _setContent(): void {
-    let pane = document.createElement('span');
-    pane.setAttribute('id', `badge-content-${this._id}`);
-    pane.classList.add('mat-badge-text');
-    pane.innerText = this.content;
-    this._elementRef.nativeElement.appendChild(pane);
+    const content = document.createElement('span');
+    content.setAttribute('id', `badge-content-${this._id}`);
+    content.classList.add('mat-badge-text');
+    content.innerText = this.content;
+    this._elementRef.nativeElement.appendChild(content);
   }
 }
 
@@ -154,12 +152,12 @@ export class MatIconBadge extends MatBadgeBase {
    * Gets the font icon from the icon registery and injects it into the document.
    */
   private _setFontIcon(): void {
-    let pane = document.createElement('span');
-    pane.setAttribute('id', `badge-content-${this._id}`);
-    pane.classList.add(this._getFontSet());
-    pane.classList.add('mat-badge-icon');
-    pane.innerText = this.icon;
-    this._elementRef.nativeElement.appendChild(pane);
+    const icon = document.createElement('span');
+    icon.setAttribute('id', `badge-content-${this._id}`);
+    icon.classList.add(this._getFontSet());
+    icon.classList.add('mat-badge-icon');
+    icon.innerText = this.icon;
+    this._elementRef.nativeElement.appendChild(icon);
   }
 }
 

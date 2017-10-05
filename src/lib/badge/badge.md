@@ -2,10 +2,10 @@ Badges are small status descriptors for UI elements. A badge consists of a small
 typically containing a number or other short set of characters, that appears in proximity to another object.
 
 ### Icons
-Badges can contain text or font icons and SVGs registered with the `MdIconRegistry`
+Badges can contain text or font icons and SVGs registered with the `MdIconRegistry`.
 
 #### Font Icons
-Badges using font icons are delcared with the `matIconBadge` tag and its content being
+Badges using font icons are declared with the `matIconBadge` tag and its content being
 the name of the icon you wish to use.
 
 ```html
