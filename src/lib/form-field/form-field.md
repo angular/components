@@ -7,9 +7,9 @@ In this document, "form field" refers to the wrapper component `<mat-form-field>
 (e.g. the input, textarea, select, etc.)
 
 The following Angular Material components are designed to work inside a `<mat-form-field>`:
-* [&lt;input matInput&gt; &amp; &lt;textarea matInput&gt;](https://material.angular.io/components/input/overview)
-* [&lt;mat-select&gt;](https://material.angular.io/components/select/overview)
-* [&lt;mat-chip-list&gt;](https://material.angular.io/components/chips/overview)
+* [`<input matInput>` &amp; `<textarea matInput>`](https://material.angular.io/components/input/overview)
+* [`<mat-select>`](https://material.angular.io/components/select/overview)
+* [`<mat-chip-list>`](https://material.angular.io/components/chips/overview)
 
 <!-- example(form-field-overview) -->
 
@@ -105,8 +105,8 @@ mat-form-field.mat-form-field {
 <!-- example(form-field-theming) -->
 
 ### Accessibility
-If a floating placeholder is specified, it will be automatically used as the label for the form field
-control. If no floating placeholder is specified, the user should label the form field control
+If a floating placeholder is specified, it will be automatically used as the label for the form
+field control. If no floating placeholder is specified, the user should label the form field control
 themselves using `aria-label`, `aria-labelledby` or `<label for=...>`.
 
 Any errors and hints added to the form field are automatically added to the form field control's

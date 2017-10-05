@@ -89,8 +89,8 @@ class MyTelInput implements MatFormFieldControl<MyTel> {
 
 This sets up our component so it can work with `<mat-form-field>`, but now we need to implement the
 various methods and properties declared by the interface we just implemented. To learn more about
-the `MatFormFieldControl` interface, see its
-[definition](https://github.com/angular/material2/blob/master/src/lib/form-field/form-field-control.ts).
+the `MatFormFieldControl` interface, see the
+[form field API documentation](https://material.angular.io/components/form-field/api).
 (Unfortunately generated API docs are not available yet, but we'll go through the methods and
 properties in this guide.) 
 
