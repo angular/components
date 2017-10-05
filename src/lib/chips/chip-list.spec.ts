@@ -353,9 +353,9 @@ describe('MatChipList', () => {
 
     });
 
-    it('should not float placeholder if no chip is selected', () => {
+    fit('should float placeholder if chip is selected', () => {
       expect(formField.classList.contains('mat-form-field-should-float'))
-        .toBe(false, 'placeholder should not be floating');
+        .toBe(true, 'placeholder should be floating');
     });
 
     it('should remove selection if chip has been removed', async(() => {
