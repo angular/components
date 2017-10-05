@@ -150,7 +150,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
     @Inject(MAT_MENU_DEFAULT_OPTIONS) private _defaultOptions: MatMenuDefaultOptions) { }
 
   ngAfterContentInit() {
-    this._keyManager = new FocusKeyManager<MatMenuItem>(this.items).withWrap();
+    this._keyManager = new FocusKeyManager<MatMenuItem>(this.items).withWrap().withTypeAhead();
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close.emit('keydown'));
   }
 
@@ -209,7 +209,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
    * It's necessary to set position-based classes to ensure the menu panel animation
    * folds out from the correct direction.
    */
-  setPositionClasses(posX = this.xPosition, posY = this.yPosition): void {
+  setPositionClasses(posX: MenuPositionX = this.xPosition, posY: MenuPositionY = this.yPosition) {
     this._classList['mat-menu-before'] = posX === 'before';
     this._classList['mat-menu-after'] = posX === 'after';
     this._classList['mat-menu-above'] = posY === 'above';

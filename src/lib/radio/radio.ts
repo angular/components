@@ -37,9 +37,9 @@ import {
   mixinDisabled,
   mixinDisableRipple,
   RippleRef,
-  UniqueSelectionDispatcher,
 } from '@angular/material/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 
 // Increasing integer for generating unique ids for radio components.
@@ -75,6 +75,7 @@ export const _MatRadioGroupMixinBase = mixinDisabled(MatRadioGroupBase);
  */
 @Directive({
   selector: 'mat-radio-group',
+  exportAs: 'matRadioGroup',
   providers: [MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR],
   host: {
     'role': 'radiogroup',
@@ -155,7 +156,7 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
 
   /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
   @Input()
-  get labelPosition() {
+  get labelPosition(): 'before' | 'after' {
     return this._labelPosition;
   }
 
@@ -331,6 +332,7 @@ export const _MatRadioButtonMixinBase =
   inputs: ['color', 'disableRipple'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
+  exportAs: 'matRadioButton',
   host: {
     'class': 'mat-radio-button',
     '[class.mat-radio-checked]': 'checked',

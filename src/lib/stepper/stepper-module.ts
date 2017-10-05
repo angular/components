@@ -12,12 +12,13 @@ import {CdkStepperModule} from '@angular/cdk/stepper';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import {MatCommonModule, MatRippleModule} from '@angular/material/core';
+import {MatCommonModule, MatRippleModule, ErrorStateMatcher} from '@angular/material/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
 import {MatHorizontalStepper, MatStep, MatStepper, MatVerticalStepper} from './stepper';
 import {MatStepperNext, MatStepperPrevious} from './stepper-button';
+import {MatStepperIntl} from './stepper-intl';
 
 
 @NgModule({
@@ -44,5 +45,6 @@ import {MatStepperNext, MatStepperPrevious} from './stepper-button';
   ],
   declarations: [MatHorizontalStepper, MatVerticalStepper, MatStep, MatStepLabel, MatStepper,
     MatStepperNext, MatStepperPrevious, MatStepHeader],
+  providers: [MatStepperIntl, ErrorStateMatcher],
 })
 export class MatStepperModule {}

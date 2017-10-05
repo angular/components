@@ -9,7 +9,7 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
-import {auditTime, takeUntil} from '@angular/cdk/rxjs';
+import {takeUntil} from '@angular/cdk/rxjs';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentInit,
@@ -42,7 +42,6 @@ import {
   RippleGlobalOptions,
   ThemePalette,
 } from '@angular/material/core';
-import {fromEvent} from 'rxjs/observable/fromEvent';
 import {merge} from 'rxjs/observable/merge';
 import {of as observableOf} from 'rxjs/observable/of';
 import {Subject} from 'rxjs/Subject';
@@ -63,6 +62,7 @@ export const _MatTabNavMixinBase = mixinDisableRipple(mixinColor(MatTabNavBase, 
 @Component({
   moduleId: module.id,
   selector: '[mat-tab-nav-bar]',
+  exportAs: 'matTabNavBar, matTabNav',
   inputs: ['color', 'disableRipple'],
   templateUrl: 'tab-nav-bar.html',
   styleUrls: ['tab-nav-bar.css'],
@@ -114,7 +114,8 @@ export class MatTabNav extends _MatTabNavMixinBase implements AfterContentInit, 
               elementRef: ElementRef,
               @Optional() private _dir: Directionality,
               private _ngZone: NgZone,
-              private _changeDetectorRef: ChangeDetectorRef) {
+              private _changeDetectorRef: ChangeDetectorRef,
+              private _viewportRuler: ViewportRuler) {
     super(renderer, elementRef);
   }
 
@@ -130,14 +131,10 @@ export class MatTabNav extends _MatTabNavMixinBase implements AfterContentInit, 
 
   ngAfterContentInit(): void {
     this._ngZone.runOutsideAngular(() => {
-      let dirChange = this._dir ? this._dir.change : observableOf(null);
-      let resize = typeof window !== 'undefined' ?
-          auditTime.call(fromEvent(window, 'resize'), 10) :
-          observableOf(null);
+      const dirChange = this._dir ? this._dir.change : observableOf(null);
 
-      return takeUntil.call(merge(dirChange, resize), this._onDestroy).subscribe(() => {
-        this._alignInkBar();
-      });
+      return takeUntil.call(merge(dirChange, this._viewportRuler.change(10)), this._onDestroy)
+          .subscribe(() => this._alignInkBar());
     });
 
     this._setLinkDisableRipple();
@@ -181,12 +178,14 @@ export const _MatTabLinkMixinBase = mixinDisabled(MatTabLinkBase);
  */
 @Directive({
   selector: '[mat-tab-link], [matTabLink]',
+  exportAs: 'matTabLink',
   inputs: ['disabled'],
   host: {
     'class': 'mat-tab-link',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.tabindex]': 'tabIndex',
-    '[class.mat-tab-disabled]': 'disabled'
+    '[class.mat-tab-disabled]': 'disabled',
+    '[class.mat-tab-label-active]': 'active',
   }
 })
 export class MatTabLink extends _MatTabLinkMixinBase implements OnDestroy, CanDisable {
@@ -225,14 +224,13 @@ export class MatTabLink extends _MatTabLinkMixinBase implements OnDestroy, CanDi
   constructor(private _tabNavBar: MatTabNav,
               private _elementRef: ElementRef,
               ngZone: NgZone,
-              ruler: ViewportRuler,
               platform: Platform,
               @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalOptions: RippleGlobalOptions) {
     super();
 
     // Manually create a ripple instance that uses the tab link element as trigger element.
     // Notice that the lifecycle hooks for the ripple config won't be called anymore.
-    this._tabLinkRipple = new MatRipple(_elementRef, ngZone, ruler, platform, globalOptions);
+    this._tabLinkRipple = new MatRipple(_elementRef, ngZone, platform, globalOptions);
   }
 
   ngOnDestroy() {

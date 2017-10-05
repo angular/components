@@ -1,6 +1,6 @@
 import {inject, TestBed, async, fakeAsync, ComponentFixture, tick} from '@angular/core/testing';
 import {NgModule, Component, ViewChild, ElementRef} from '@angular/core';
-import {Scrollable, ScrollDispatcher, ScrollDispatchModule} from './public_api';
+import {Scrollable, ScrollDispatcher, ScrollDispatchModule} from './public-api';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 
 describe('Scroll Dispatcher', () => {
@@ -72,7 +72,6 @@ describe('Scroll Dispatcher', () => {
 
       scroll.scrolled(0, () => {});
       dispatchFakeEvent(document, 'scroll');
-      dispatchFakeEvent(window, 'resize');
 
       expect(spy).not.toHaveBeenCalled();
       subscription.unsubscribe();

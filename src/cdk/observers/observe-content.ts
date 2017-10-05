@@ -27,7 +27,7 @@ import {RxChain, debounceTime} from '@angular/cdk/rxjs';
  */
 @Injectable()
 export class MatMutationObserverFactory {
-  create(callback): MutationObserver | null {
+  create(callback: MutationCallback): MutationObserver | null {
     return typeof MutationObserver === 'undefined' ? null : new MutationObserver(callback);
   }
 }
@@ -37,7 +37,8 @@ export class MatMutationObserverFactory {
  * its associated element has changed.
  */
 @Directive({
-  selector: '[cdkObserveContent]'
+  selector: '[cdkObserveContent]',
+  exportAs: 'cdkObserveContent',
 })
 export class ObserveContent implements AfterContentInit, OnDestroy {
   private _observer: MutationObserver | null;

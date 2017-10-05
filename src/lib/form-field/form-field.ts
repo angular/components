@@ -53,6 +53,7 @@ let nextUniqueId = 0;
   moduleId: module.id,
   // TODO(mmalerba): the input-container selectors and classes are deprecated and will be removed.
   selector: 'mat-input-container, mat-form-field',
+  exportAs: 'matFormField',
   templateUrl: 'form-field.html',
   // MatInput is a directive and can't have styles, so we need to include its styles here.
   // The MatInput styles are fairly minimal so it shouldn't be a big deal for people who
@@ -99,7 +100,7 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
 
   /** @deprecated Use `color` instead. */
   @Input()
-  get dividerColor() { return this.color; }
+  get dividerColor(): 'primary' | 'accent' | 'warn' { return this.color; }
   set dividerColor(value) { this.color = value; }
 
   /** Whether the required marker should be hidden. */

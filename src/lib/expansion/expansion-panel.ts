@@ -21,7 +21,8 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanDisable, mixinDisabled, UniqueSelectionDispatcher} from '@angular/material/core';
+import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
+import {CanDisable, mixinDisabled} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
 import {MatAccordion} from './accordion';
 import {AccordionItem} from './accordion-item';
@@ -56,6 +57,7 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,
   moduleId: module.id,
   styleUrls: ['./expansion-panel.css'],
   selector: 'mat-expansion-panel',
+  exportAs: 'matExpansionPanel',
   templateUrl: './expansion-panel.html',
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,

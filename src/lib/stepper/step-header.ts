@@ -8,8 +8,19 @@
 
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
-import {Component, Input, ViewEncapsulation, ElementRef, OnDestroy, Renderer2} from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewEncapsulation,
+  ChangeDetectorRef,
+  OnDestroy,
+  ElementRef,
+  Renderer2,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {MatStepLabel} from './step-label';
+import {MatStepperIntl} from './stepper-intl';
+import {Subscription} from 'rxjs/Subscription';
 
 
 @Component({
@@ -23,8 +34,11 @@ import {MatStepLabel} from './step-label';
   },
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatStepHeader implements OnDestroy {
+  private _intlSubscription: Subscription;
+
   /** Icon for the given step. */
   @Input() icon: string;
 
@@ -64,13 +78,17 @@ export class MatStepHeader implements OnDestroy {
   private _optional: boolean;
 
   constructor(
+    public _intl: MatStepperIntl,
     private _focusMonitor: FocusMonitor,
     private _element: ElementRef,
-    renderer: Renderer2) {
+    renderer: Renderer2,
+    changeDetectorRef: ChangeDetectorRef) {
     _focusMonitor.monitor(_element.nativeElement, renderer, true);
+    this._intlSubscription = _intl.changes.subscribe(() => changeDetectorRef.markForCheck());
   }
 
   ngOnDestroy() {
+    this._intlSubscription.unsubscribe();
     this._focusMonitor.stopMonitoring(this._element.nativeElement);
   }
 

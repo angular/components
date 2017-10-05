@@ -37,6 +37,7 @@ describe('MatDrawer', () => {
       let drawer = fixture.debugElement.query(By.directive(MatDrawer));
       let drawerBackdropElement = fixture.debugElement.query(By.css('.mat-drawer-backdrop'));
 
+      drawerBackdropElement.nativeElement.style.transition = 'none';
       fixture.debugElement.query(By.css('.open')).nativeElement.click();
       fixture.detectChanges();
 
@@ -341,6 +342,7 @@ describe('MatDrawerContainer', () => {
       declarations: [
         DrawerContainerTwoDrawerTestApp,
         DrawerDelayed,
+        DrawerSetToOpenedTrue,
         DrawerContainerStateChangesTestApp,
       ],
     });
@@ -430,6 +432,17 @@ describe('MatDrawerContainer', () => {
     fixture.detectChanges();
 
     expect(parseInt(contentElement.style.marginLeft)).toBeLessThan(initialMargin);
+  }));
+
+  it('should not animate when the sidenav is open on load ', fakeAsync(() => {
+    const fixture = TestBed.createComponent(DrawerSetToOpenedTrue);
+
+    fixture.detectChanges();
+    tick();
+
+    const container = fixture.debugElement.nativeElement.querySelector('.mat-drawer-container');
+
+    expect(container.classList).not.toContain('mat-drawer-transition');
   }));
 
 });

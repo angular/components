@@ -42,6 +42,7 @@ export class MatSidenavContent extends MatDrawerContent {
 @Component({
   moduleId: module.id,
   selector: 'mat-sidenav',
+  exportAs: 'matSidenav',
   template: '<ng-content></ng-content>',
   animations: [
     trigger('transform', [
@@ -61,7 +62,7 @@ export class MatSidenavContent extends MatDrawerContent {
     'class': 'mat-drawer mat-sidenav',
     'tabIndex': '-1',
     '[@transform]': '_animationState',
-    '(@transform.start)': '_onAnimationStart()',
+    '(@transform.start)': '_onAnimationStart($event)',
     '(@transform.done)': '_onAnimationEnd($event)',
     '(keydown)': 'handleKeydown($event)',
     // must prevent the browser from aligning text based on value
@@ -81,7 +82,7 @@ export class MatSidenavContent extends MatDrawerContent {
 export class MatSidenav extends MatDrawer {
   /** Whether the sidenav is fixed in the viewport. */
   @Input()
-  get fixedInViewport() { return this._fixedInViewport; }
+  get fixedInViewport(): boolean { return this._fixedInViewport; }
   set fixedInViewport(value) { this._fixedInViewport = coerceBooleanProperty(value); }
   private _fixedInViewport = false;
 
@@ -90,7 +91,7 @@ export class MatSidenav extends MatDrawer {
    * mode.
    */
   @Input()
-  get fixedTopGap() { return this._fixedTopGap; }
+  get fixedTopGap(): number { return this._fixedTopGap; }
   set fixedTopGap(value) { this._fixedTopGap = coerceNumberProperty(value); }
   private _fixedTopGap = 0;
 
@@ -99,7 +100,7 @@ export class MatSidenav extends MatDrawer {
    * fixed mode.
    */
   @Input()
-  get fixedBottomGap() { return this._fixedBottomGap; }
+  get fixedBottomGap(): number { return this._fixedBottomGap; }
   set fixedBottomGap(value) { this._fixedBottomGap = coerceNumberProperty(value); }
   private _fixedBottomGap = 0;
 }
@@ -108,11 +109,9 @@ export class MatSidenav extends MatDrawer {
 @Component({
   moduleId: module.id,
   selector: 'mat-sidenav-container',
+  exportAs: 'matSidenavContainer',
   templateUrl: 'sidenav-container.html',
-  styleUrls: [
-    'drawer.css',
-    'drawer-transitions.css',
-  ],
+  styleUrls: ['drawer.css'],
   host: {
     'class': 'mat-drawer-container mat-sidenav-container',
   },

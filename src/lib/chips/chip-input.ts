@@ -23,6 +23,7 @@ export interface MatChipInputEvent {
  */
 @Directive({
   selector: 'input[matChipInputFor]',
+  exportAs: 'matChipInput, matChipInputFor',
   host: {
     'class': 'mat-chip-input mat-input-element',
     '(keydown)': '_keydown($event)',
@@ -48,7 +49,7 @@ export class MatChipInput {
    */
   @Input('matChipInputAddOnBlur')
   get addOnBlur() { return this._addOnBlur; }
-  set addOnBlur(value) { this._addOnBlur = coerceBooleanProperty(value); }
+  set addOnBlur(value: boolean) { this._addOnBlur = coerceBooleanProperty(value); }
   _addOnBlur: boolean = false;
 
   /**
@@ -62,17 +63,6 @@ export class MatChipInput {
   /** Emitted when a chip is to be added. */
   @Output('matChipInputTokenEnd')
   chipEnd = new EventEmitter<MatChipInputEvent>();
-
-  @Input('matChipInputFor')
-  set matChipList(value: MatChipList) { this.chipList = value; }
-
-  @Input('matChipInputAddOnBlur')
-  get matAddOnBlur() { return this._addOnBlur; }
-  set matAddOnBlur(value) { this.addOnBlur = value; }
-
-  @Input('matChipInputSeparatorKeyCodes')
-  get matSeparatorKeyCodes() { return this.separatorKeyCodes; }
-  set matSeparatorKeyCodes(v: number[]) { this.separatorKeyCodes = v; }
 
   @Input() placeholder: string = '';
 

@@ -94,6 +94,7 @@ export const _MatSliderMixinBase = mixinColor(mixinDisabled(MatSliderBase), 'acc
 @Component({
   moduleId: module.id,
   selector: 'mat-slider',
+  exportAs: 'matSlider',
   providers: [MAT_SLIDER_VALUE_ACCESSOR],
   host: {
     '(focus)': '_onFocus()',
@@ -172,7 +173,7 @@ export class MatSlider extends _MatSliderMixinBase
   /** The values at which the thumb will snap. */
   @Input()
   get step() { return this._step; }
-  set step(v) {
+  set step(v: number) {
     this._step = coerceNumberProperty(v, this._step);
 
     if (this._step % 1 !== 0) {
@@ -201,7 +202,7 @@ export class MatSlider extends _MatSliderMixinBase
    */
   @Input()
   get tickInterval() { return this._tickInterval; }
-  set tickInterval(value) {
+  set tickInterval(value: 'auto' | number) {
     if (value === 'auto') {
       this._tickInterval = 'auto';
     } else if (typeof value === 'number' || typeof value === 'string') {
@@ -267,7 +268,7 @@ export class MatSlider extends _MatSliderMixinBase
   onTouched: () => any = () => {};
 
   /** The percentage of the slider that coincides with the value. */
-  get percent() { return this._clamp(this._percent); }
+  get percent(): number { return this._clamp(this._percent); }
   private _percent: number = 0;
 
   /**

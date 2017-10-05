@@ -33,12 +33,9 @@ import {
 } from '@angular/core';
 import {DOCUMENT} from '@angular/platform-browser';
 import {merge} from 'rxjs/observable/merge';
-import {first} from 'rxjs/operator/first';
-import {startWith} from 'rxjs/operator/startWith';
-import {takeUntil} from 'rxjs/operator/takeUntil';
 import {Subject} from 'rxjs/Subject';
-import {filter, map, RxChain} from '@angular/cdk/rxjs';
 import {Observable} from 'rxjs/Observable';
+import {RxChain, filter, map, first, startWith, takeUntil} from '@angular/cdk/rxjs';
 
 
 /** Throws an exception when two MatDrawer are matching the same position. */
@@ -92,15 +89,12 @@ export class MatDrawerContent implements AfterContentInit {
 
 
 /**
- * <mat-drawer> component.
- *
  * This component corresponds to a drawer that can be opened on the drawer container.
- *
- * Please refer to README.md for examples on how to use it.
  */
 @Component({
   moduleId: module.id,
   selector: 'mat-drawer',
+  exportAs: 'matDrawer',
   template: '<ng-content></ng-content>',
   animations: [
     trigger('transform', [
@@ -119,7 +113,7 @@ export class MatDrawerContent implements AfterContentInit {
   host: {
     'class': 'mat-drawer',
     '[@transform]': '_animationState',
-    '(@transform.start)': '_onAnimationStart()',
+    '(@transform.start)': '_onAnimationStart($event)',
     '(@transform.done)': '_onAnimationEnd($event)',
     '(keydown)': 'handleKeydown($event)',
     // must prevent the browser from aligning text based on value
@@ -143,7 +137,7 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
 
   /** The side that the drawer is attached to. */
   @Input()
-  get position() { return this._position; }
+  get position(): 'start' | 'end' { return this._position; }
   set position(value) {
     // Make sure we have a valid value.
     value = value === 'end' ? 'end' : 'start';
@@ -157,12 +151,12 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
 
   /** @deprecated */
   @Input()
-  get align() { return this.position; }
+  get align(): 'start' | 'end' { return this.position; }
   set align(value) { this.position = value; }
 
   /** Mode of the drawer; one of 'over', 'push' or 'side'. */
   @Input()
-  get mode() { return this._mode; }
+  get mode(): 'over' | 'push' | 'side' { return this._mode; }
   set mode(value) {
     this._mode = value;
     this._modeChanged.next();
@@ -179,7 +173,7 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
   private _opened: boolean = false;
 
   /** Emits whenever the drawer has started animating. */
-  _animationStarted = new EventEmitter<void>();
+  _animationStarted = new EventEmitter<AnimationEvent>();
 
   /** Whether the drawer is animating. Used to prevent overlapping animations. */
   _isAnimating = false;
@@ -239,7 +233,7 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
    */
   _modeChanged = new Subject();
 
-  get _isFocusTrapEnabled() {
+  get _isFocusTrapEnabled(): boolean {
     // The focus trap is only enabled when the drawer is open in any mode other than side.
     return this.opened && this.mode !== 'side';
   }
@@ -351,9 +345,9 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
     }
   }
 
-  _onAnimationStart() {
+  _onAnimationStart(event: AnimationEvent) {
     this._isAnimating = true;
-    this._animationStarted.emit();
+    this._animationStarted.emit(event);
   }
 
   _onAnimationEnd(event: AnimationEvent) {
@@ -389,11 +383,9 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
 @Component({
   moduleId: module.id,
   selector: 'mat-drawer-container',
+  exportAs: 'matDrawerContainer',
   templateUrl: 'drawer-container.html',
-  styleUrls: [
-    'drawer.css',
-    'drawer-transitions.css',
-  ],
+  styleUrls: ['drawer.css'],
   host: {
     'class': 'mat-drawer-container',
   },
@@ -407,10 +399,10 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
   @ContentChild(MatDrawerContent) _content: MatDrawerContent;
 
   /** The drawer child with the `start` position. */
-  get start() { return this._start; }
+  get start(): MatDrawer | null { return this._start; }
 
   /** The drawer child with the `end` position. */
-  get end() { return this._end; }
+  get end(): MatDrawer | null { return this._end; }
 
   /** Event emitted when the drawer backdrop is clicked. */
   @Output() backdropClick = new EventEmitter<void>();
@@ -484,13 +476,19 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
    * is properly hidden.
    */
   private _watchDrawerToggle(drawer: MatDrawer): void {
-    takeUntil.call(drawer._animationStarted, this._drawers.changes).subscribe(() => {
-      // Set the transition class on the container so that the animations occur. This should not
-      // be set initially because animations should only be triggered via a change in state.
-      this._renderer.addClass(this._element.nativeElement, 'mat-drawer-transition');
-      this._updateContentMargins();
-      this._changeDetectorRef.markForCheck();
-    });
+    RxChain.from(drawer._animationStarted)
+      .call(takeUntil, this._drawers.changes)
+      .call(filter, (event: AnimationEvent) => event.fromState !== event.toState)
+      .subscribe((event: AnimationEvent) => {
+        // Set the transition class on the container so that the animations occur. This should not
+        // be set initially because animations should only be triggered via a change in state.
+        if (event.toState !== 'open-instant') {
+          this._renderer.addClass(this._element.nativeElement, 'mat-drawer-transition');
+        }
+
+        this._updateContentMargins();
+        this._changeDetectorRef.markForCheck();
+      });
 
     if (drawer.mode !== 'side') {
       takeUntil.call(drawer.openedChange, this._drawers.changes).subscribe(() =>
@@ -499,8 +497,8 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
   }
 
   /**
-   * Subscribes to drawer onPositionChanged event in order to re-validate drawers when the position
-   * changes.
+   * Subscribes to drawer onPositionChanged event in order to
+   * re-validate drawers when the position changes.
    */
   private _watchDrawerPosition(drawer: MatDrawer): void {
     if (!drawer) {

@@ -27,9 +27,9 @@ import {
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {UniqueSelectionDispatcher} from '@angular/material/core';
 import {CanDisable, mixinDisabled} from '@angular/material/core';
 import {FocusMonitor} from '@angular/cdk/a11y';
+import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 
 /** Acceptable types for a button toggle. */
 export type ToggleType = 'checkbox' | 'radio';
@@ -94,7 +94,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
   _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
   /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
-  onTouched: () => any = () => {};
+  _onTouched: () => any = () => {};
 
   /** Child button toggle buttons. */
   @ContentChildren(forwardRef(() => MatButtonToggle)) _buttonToggles: QueryList<MatButtonToggle>;
@@ -215,7 +215,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
    * @param fn On touch callback function.
    */
   registerOnTouched(fn: any) {
-    this.onTouched = fn;
+    this._onTouched = fn;
   }
 
   /**
@@ -270,6 +270,7 @@ export class MatButtonToggleGroupMultiple extends _MatButtonToggleGroupMixinBase
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
+  exportAs: 'matButtonToggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.mat-button-toggle-standalone]': '!buttonToggleGroup && !buttonToggleGroupMultiple',
@@ -436,7 +437,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
       let groupValueChanged = this.buttonToggleGroup.selected != this;
       this.checked = true;
       this.buttonToggleGroup.selected = this;
-      this.buttonToggleGroup.onTouched();
+      this.buttonToggleGroup._onTouched();
       if (groupValueChanged) {
         this.buttonToggleGroup._emitChangeEvent();
       }
