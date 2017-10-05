@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
-import {ComponentPortal, MatSnackBar} from '@angular/material';
+import {MatSnackBar} from '@angular/material';
+import {ComponentPortal} from '@angular/cdk/portal';
 import 'rxjs/add/operator/first';
 
 import {EXAMPLE_COMPONENTS, LiveExample} from '@angular/material-examples';
