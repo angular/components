@@ -353,7 +353,7 @@ describe('MatChipList', () => {
 
     });
 
-    fit('should float placeholder if chip is selected', () => {
+    it('should float placeholder if chip is selected', () => {
       expect(formField.classList.contains('mat-form-field-should-float'))
         .toBe(true, 'placeholder should be floating');
     });
