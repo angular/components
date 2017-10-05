@@ -52,7 +52,9 @@ import {GridListDynamicExample} from './grid-list-dynamic/grid-list-dynamic-exam
 import {GridListOverviewExample} from './grid-list-overview/grid-list-overview-example';
 import {IconOverviewExample} from './icon-overview/icon-overview-example';
 import {IconSvgExample} from './icon-svg-example/icon-svg-example';
+import {InputAutosizeTextareaExample} from './input-autosize-textarea/input-autosize-textarea-example';
 import {InputClearableExample} from './input-clearable/input-clearable-example';
+import {InputErrorStateMatcherExample} from './input-error-state-matcher/input-error-state-matcher-example';
 import {InputErrorsExample} from './input-errors/input-errors-example';
 import {InputFormExample} from './input-form/input-form-example';
 import {InputHintExample} from './input-hint/input-hint-example';
@@ -333,14 +335,26 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'input-autosize-textarea': {
+    title: 'Auto-resizing textarea',
+    component: InputAutosizeTextareaExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'input-clearable': {
-    title: 'Input Clearable',
+    title: 'Input with a clear button',
     component: InputClearableExample,
     additionalFiles: null,
     selectorName: null
   },
+  'input-error-state-matcher': {
+    title: 'Input with a custom ErrorStateMatcher',
+    component: InputErrorStateMatcherExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'input-errors': {
-    title: 'Input Errors',
+    title: 'Input with error messages',
     component: InputErrorsExample,
     additionalFiles: null,
     selectorName: null
@@ -352,7 +366,7 @@ export const EXAMPLE_COMPONENTS = {
     selectorName: null
   },
   'input-hint': {
-    title: 'Input hints',
+    title: 'Input with hints',
     component: InputHintExample,
     additionalFiles: null,
     selectorName: null
@@ -364,7 +378,7 @@ export const EXAMPLE_COMPONENTS = {
     selectorName: null
   },
   'input-prefix-suffix': {
-    title: 'Input Prefixes and Suffixes',
+    title: 'Inputs with prefixes and suffixes',
     component: InputPrefixSuffixExample,
     additionalFiles: null,
     selectorName: null
@@ -645,7 +659,9 @@ export const EXAMPLE_LIST = [
   GridListOverviewExample,
   IconOverviewExample,
   IconSvgExample,
+  InputAutosizeTextareaExample,
   InputClearableExample,
+  InputErrorStateMatcherExample,
   InputErrorsExample,
   InputFormExample,
   InputHintExample,

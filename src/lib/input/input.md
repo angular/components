@@ -54,7 +54,7 @@ must implement a single method `isErrorState` which takes the `FormControl` for 
 well as the parent form and returns a boolean indicating whether errors should be shown. (`true`
 indicating that they should be shown, and `false` indicating that they should not.)
 
-<!-- TODO(mmalerba): examplify -->
+<!-- example(input-error-state-matcher-example) -->
 
 ```html
 <mat-form-field>
@@ -91,7 +91,7 @@ globally cause input errors to show when the input is dirty and invalid.
 native `<textarea>` elements. The min and max size of the textarea can be specified in rows, using
 the `matAutosizeMinRows` and `matAutosizeMaxRows` properties respectively.
 
-<!-- TODO(mmalerba): example -->
+<!-- example(input-autosize-textarea-example) -->
 
 ### Accessibility
 The `matInput` directive works with native `<input>` to provide an accessible experience.
