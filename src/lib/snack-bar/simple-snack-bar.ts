@@ -7,7 +7,7 @@
  */
 
 import {Component, ViewEncapsulation, Inject, ChangeDetectionStrategy} from '@angular/core';
-import {trigger, state, style, transition, animate} from '@angular/animations';
+import {trigger, style, transition, animate} from '@angular/animations';
 import {AnimationCurves, AnimationDurations} from '@angular/material/core';
 import {MatSnackBarRef} from './snack-bar-ref';
 import {MAT_SNACK_BAR_DATA} from './snack-bar-config';
