@@ -30,7 +30,7 @@ $mat-paginator-button-increment-icon-margin: 16px;
 .mat-paginator-page-size {
   display: flex;
   align-items: baseline;
-  margin-right: 8px;
+  margin-right: $mat-paginator-page-size-margin-right;
 }
 
 .mat-paginator-page-size-label {
