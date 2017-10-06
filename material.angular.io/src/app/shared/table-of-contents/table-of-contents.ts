@@ -67,13 +67,17 @@ export class TableOfContents implements OnInit {
   }
 
   ngOnInit(): void {
-    this._scrollContainer = this.container ?
-      this._document.querySelectorAll(this.container)[0] : window;
+    // On init, the sidenav content element doesn't yet exist, so it's not possible
+    // to subscribe to its scroll event until next tick (when it does exist).
+    Promise.resolve().then(() => {
+      this._scrollContainer = this.container ?
+        this._document.querySelectorAll(this.container)[0] : window;
 
-    this._scrollSubscription = Observable
-      .fromEvent(this._scrollContainer, 'scroll')
-      .debounceTime(10)
-      .subscribe(() => this.onScroll());
+      this._scrollSubscription = Observable
+        .fromEvent(this._scrollContainer, 'scroll')
+        .debounceTime(10)
+        .subscribe(() => this.onScroll());
+    });
   }
 
   ngOnDestroy(): void {
