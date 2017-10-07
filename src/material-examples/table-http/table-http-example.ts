@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Http} from '@angular/http';
 import {DataSource} from '@uiux/cdk/collections';
-import {MatPaginator, MatSort} from '@angular/material';
+import {MatPaginator, MatSort} from '@uiux/material';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/of';

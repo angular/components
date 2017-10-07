@@ -24,7 +24,7 @@ include all of the styles for core (styles common to all components), so you onl
 single css file for Angular Material in your app.
 
 You can include a theme file directly into your application from
-`@angular/material/prebuilt-themes`
+`@uiux/material/prebuilt-themes`
 
 Available pre-built themes:
 * `deeppurple-amber.css`
@@ -35,12 +35,12 @@ Available pre-built themes:
 If you're using Angular CLI, this is as simple as including one line
 in your `styles.css`  file:
 ```css
-@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~@uiux/material/prebuilt-themes/deeppurple-amber.css';
 ```
 
 Alternatively, you can just reference the file directly. This would look something like:
 ```html
-<link href="node_modules/@angular/material/prebuilt-themes/indigo-pink.css" rel="stylesheet">
+<link href="node_modules/@uiux/material/prebuilt-themes/indigo-pink.css" rel="stylesheet">
 ```
 The actual path will depend on your server setup.
 
@@ -65,7 +65,7 @@ corresponding styles for the theme.
 
 A typical theme file will look something like this:
 ```scss
-@import '~@angular/material/theming';
+@import '~@uiux/material/theming';
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -124,7 +124,7 @@ theme.
 
 ##### Example of defining multiple themes:
 ```scss
-@import '~@angular/material/theming';
+@import '~@uiux/material/theming';
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -172,7 +172,7 @@ an additional step is required for those components to be affected by the theme'
 To do this, you can add the appropriate class to the global overlay container. For the example above,
 this would look like:
 ```ts
-import {OverlayContainer} from '@angular/material';
+import {OverlayContainer} from '@uiux/cdk/overlay';
 
 @NgModule({
   // ...
@@ -192,7 +192,7 @@ the `mat-core-theme` mixin as well, which contains theme-specific styles for com
 (such as ripples).
 
  ```scss
-@import '~@angular/material/theming';
+@import '~@uiux/material/theming';
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only

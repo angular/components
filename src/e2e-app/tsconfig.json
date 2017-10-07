@@ -7,8 +7,8 @@
     "paths": {
       "@uiux/cdk/*": ["../cdk/*"],
       "@uiux/material/*": ["../lib/*"],
-      "@uiux/material": ["../lib/public_api.ts"],
-      "@uiux/material-examples": ["../material-examples/public_api.ts"]
+      "@uiux/material": ["../lib/public-api.ts"],
+      "@uiux/material-examples": ["../material-examples/public-api.ts"]
     }
   },
   "include": ["./**/*.ts"]

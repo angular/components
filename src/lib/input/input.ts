@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -10,7 +10,6 @@ import {
   Directive,
   DoCheck,
   ElementRef,
-  Inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -19,15 +18,10 @@ import {
   Self,
 } from '@angular/core';
 import {coerceBooleanProperty} from '@uiux/cdk/coercion';
-import {FormControl, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
+import {FormGroupDirective, NgControl, NgForm, FormControl} from '@angular/forms';
 import {Platform, getSupportedInputTypes} from '@uiux/cdk/platform';
 import {getMatInputUnsupportedTypeError} from './input-errors';
-import {
-  defaultErrorStateMatcher,
-  ErrorOptions,
-  ErrorStateMatcher,
-  MAT_ERROR_GLOBAL_OPTIONS
-} from '@uiux/material/core';
+import {ErrorStateMatcher} from '@uiux/material/core';
 import {Subject} from 'rxjs/Subject';
 import {MatFormFieldControl} from '@uiux/material/form-field';
 
@@ -51,6 +45,7 @@ let nextUniqueId = 0;
 /** Directive that allows a native input to work inside a `MatFormField`. */
 @Directive({
   selector: `input[matInput], textarea[matInput]`,
+  exportAs: 'matInput',
   host: {
     'class': 'mat-input-element mat-form-field-autofill-control',
     // Native input properties that are overwritten by Angular inputs need to be synced with
@@ -59,6 +54,7 @@ let nextUniqueId = 0;
     '[placeholder]': 'placeholder',
     '[disabled]': 'disabled',
     '[required]': 'required',
+    '[readonly]': 'readonly',
     '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-invalid]': 'errorState',
     '(blur)': '_focusChanged(false)',
@@ -74,7 +70,6 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
   protected _required = false;
   protected _id: string;
   protected _uid = `mat-input-${nextUniqueId++}`;
-  protected _errorOptions: ErrorOptions;
   protected _previousNativeValue = this.value;
   private _readonly = false;
 
@@ -129,7 +124,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
     }
   }
 
-  /** A function used to control when error messages are shown. */
+  /** An object used to control when error messages are shown. */
   @Input() errorStateMatcher: ErrorStateMatcher;
 
   /** The input element's value. */
@@ -162,12 +157,10 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
               @Optional() @Self() public ngControl: NgControl,
               @Optional() protected _parentForm: NgForm,
               @Optional() protected _parentFormGroup: FormGroupDirective,
-              @Optional() @Inject(MAT_ERROR_GLOBAL_OPTIONS) errorOptions: ErrorOptions) {
+              private _defaultErrorStateMatcher: ErrorStateMatcher) {
 
     // Force setter to be called in case id was not specified.
     this.id = this.id;
-    this._errorOptions = errorOptions ? errorOptions : {};
-    this.errorStateMatcher = this._errorOptions.errorStateMatcher || defaultErrorStateMatcher;
 
     // On some versions of iOS the caret gets stuck in the wrong place when holding down the delete
     // key. In order to get around this we need to "jiggle" the caret loose. Since this bug only
@@ -230,9 +223,10 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
   /** Re-evaluates the error state. This is only relevant with @angular/forms. */
   protected _updateErrorState() {
     const oldState = this.errorState;
-    const ngControl = this.ngControl;
     const parent = this._parentFormGroup || this._parentForm;
-    const newState = ngControl && this.errorStateMatcher(ngControl.control as FormControl, parent);
+    const matcher = this.errorStateMatcher || this._defaultErrorStateMatcher;
+    const control = this.ngControl ? this.ngControl.control as FormControl : null;
+    const newState = matcher.isErrorState(control, parent);
 
     if (newState !== oldState) {
       this.errorState = newState;

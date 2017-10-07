@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -70,7 +70,7 @@ export class MatMonthView<D> implements AfterContentInit {
   @Output() selectedChange = new EventEmitter<D | null>();
 
   /** Emits when any date is selected. */
-  @Output() userSelection = new EventEmitter<void>();
+  @Output() _userSelection = new EventEmitter<void>();
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
@@ -130,7 +130,7 @@ export class MatMonthView<D> implements AfterContentInit {
       this.selectedChange.emit(selectedDate);
     }
 
-    this.userSelection.emit();
+    this._userSelection.emit();
   }
 
   /** Initializes this month view. */

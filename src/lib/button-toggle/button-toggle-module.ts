@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -8,7 +8,8 @@
 
 import {NgModule} from '@angular/core';
 import {MatButtonToggleGroup, MatButtonToggleGroupMultiple, MatButtonToggle} from './button-toggle';
-import {UNIQUE_SELECTION_DISPATCHER_PROVIDER, MatCommonModule} from '@uiux/material/core';
+import {MatCommonModule} from '@uiux/material/core';
+import {UNIQUE_SELECTION_DISPATCHER_PROVIDER} from '@uiux/cdk/collections';
 import {A11yModule} from '@uiux/cdk/a11y';
 
 

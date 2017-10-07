@@ -28,7 +28,7 @@ System.config({
       'node:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
 
     // TODO(devversion): replace once the index.ts file for the Material package has been added.
-    '@angular/material': 'dist/packages/material/public_api.js',
+    '@uiux/material': 'dist/packages/material/public-api.js',
     '@uiux/cdk': 'dist/packages/cdk/index.js',
     '@uiux/cdk/a11y': 'dist/packages/cdk/a11y/index.js',
     '@uiux/cdk/bidi': 'dist/packages/cdk/bidi/index.js',

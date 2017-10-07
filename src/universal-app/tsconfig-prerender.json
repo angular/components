@@ -18,7 +18,7 @@
     "types": [],
     "baseUrl": ".",
     "paths": {
-      "@angular/material": ["./material"],
+      "@uiux/material": ["./material"],
       "@uiux/cdk/*": ["./cdk/*"],
       "@uiux/material/*": ["./material/*"]
     }

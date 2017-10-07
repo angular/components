@@ -1,4 +1,4 @@
-import {MatPaginator, MatSort} from '@angular/material';
+import {MatPaginator, MatSort} from '@uiux/material';
 import {DataSource} from '@uiux/cdk/collections';
 import {Observable} from 'rxjs/Observable';
 import {PeopleDatabase, UserData} from './people-database';

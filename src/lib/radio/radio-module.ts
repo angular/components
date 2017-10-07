@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -12,9 +12,9 @@ import {VIEWPORT_RULER_PROVIDER} from '@uiux/cdk/overlay';
 import {
   MatRippleModule,
   MatCommonModule,
-  UNIQUE_SELECTION_DISPATCHER_PROVIDER,
 } from '@uiux/material/core';
 import {MatRadioGroup, MatRadioButton} from './radio';
+import {UNIQUE_SELECTION_DISPATCHER_PROVIDER} from '@uiux/cdk/collections';
 import {A11yModule} from '@uiux/cdk/a11y';
 
 @NgModule({

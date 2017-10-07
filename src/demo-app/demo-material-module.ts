@@ -30,8 +30,8 @@ import {
   MatToolbarModule,
   MatTooltipModule,
   MatStepperModule,
-} from '@angular/material';
-import {MatNativeDateModule, MatRippleModule} from '@angular/material';
+} from '@uiux/material';
+import {MatNativeDateModule, MatRippleModule} from '@uiux/material';
 import {CdkTableModule} from '@uiux/cdk/table';
 import {A11yModule} from '@uiux/cdk/a11y';
 import {BidiModule} from '@uiux/cdk/bidi';

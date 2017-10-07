@@ -32,7 +32,7 @@ export function getSecondaryEntryPointsForPackage(pkg: BuildPackage) {
   }, new Map<string, BuildNode>());
 
   // Regex used to extract entry-point name from an import statement referencing that entry-point.
-  // E.g., extract "portal" from "from '@angular/cdk/portal';".
+  // E.g., extract "portal" from "from '@uiux/cdk/portal';".
   const importRegex = new RegExp(`${packageName}/(.+)';`);
 
   // Update the deps for each node to point to the appropriate BuildNodes.

@@ -25,9 +25,13 @@ const rollupMatEntryPoints = matSecondaryEntryPoints.reduce((globals: any, entry
 
 /** Map of globals that are used inside of the different packages. */
 export const rollupGlobals = {
+  // deps
   'tslib': 'tslib',
   'moment': 'moment',
+  '@angular/cdk': '@angular/cdk',
+  '@angular/material': '@angular/material',
 
+  // angular
   '@angular/animations': 'ng.animations',
   '@angular/core': 'ng.core',
   '@angular/common': 'ng.common',
@@ -80,6 +84,7 @@ export const rollupGlobals = {
   'rxjs/operator/switchMap': 'Rx.Observable.prototype',
   'rxjs/operator/takeUntil': 'Rx.Observable.prototype',
   'rxjs/operator/toPromise': 'Rx.Observable.prototype',
+  'rxjs/operator/delay': 'Rx.Observable.prototype',
 
   'rxjs/add/observable/merge': 'Rx.Observable',
   'rxjs/add/observable/fromEvent': 'Rx.Observable',

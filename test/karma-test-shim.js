@@ -48,7 +48,7 @@ System.config({
 
     // Path mappings for local packages that can be imported inside of tests.
     // TODO(devversion): replace once the index.ts file for the Material package has been added.
-    '@uiux/material': 'dist/packages/material/public_api.js',
+    '@uiux/material': 'dist/packages/material/public-api.js',
     '@uiux/cdk': 'dist/packages/cdk/index.js',
     '@uiux/cdk/a11y': 'dist/packages/cdk/a11y/index.js',
     '@uiux/cdk/bidi': 'dist/packages/cdk/bidi/index.js',

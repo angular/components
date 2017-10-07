@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -8,7 +8,6 @@
 
 import {ElementRef, NgZone} from '@angular/core';
 import {Platform} from '@uiux/cdk/platform';
-import {ViewportRuler} from '@uiux/cdk/scrolling';
 import {RippleRef, RippleState} from './ripple-ref';
 
 
@@ -41,8 +40,8 @@ export class RippleRenderer {
   /** Element which triggers the ripple elements on mouse events. */
   private _triggerElement: HTMLElement | null;
 
-  /** Whether the pointer is currently being held on the trigger or not. */
-  private _isPointerDown: boolean = false;
+  /** Whether the mouse is currently down or not. */
+  private _isMousedown: boolean = false;
 
   /** Events to be registered on the trigger element. */
   private _triggerEvents = new Map<string, any>();
@@ -56,50 +55,41 @@ export class RippleRenderer {
   /** Whether mouse ripples should be created or not. */
   rippleDisabled: boolean = false;
 
-  constructor(
-      elementRef: ElementRef,
-      private _ngZone: NgZone,
-      private _ruler: ViewportRuler,
-      platform: Platform) {
+  constructor(elementRef: ElementRef, private _ngZone: NgZone, platform: Platform) {
     // Only do anything if we're on the browser.
     if (platform.isBrowser) {
       this._containerElement = elementRef.nativeElement;
 
       // Specify events which need to be registered on the trigger.
       this._triggerEvents.set('mousedown', this.onMousedown.bind(this));
-      this._triggerEvents.set('touchstart', this.onTouchstart.bind(this));
-
-      this._triggerEvents.set('mouseup', this.onPointerUp.bind(this));
-      this._triggerEvents.set('touchend', this.onPointerUp.bind(this));
-
-      this._triggerEvents.set('mouseleave', this.onPointerLeave.bind(this));
+      this._triggerEvents.set('mouseup', this.onMouseup.bind(this));
+      this._triggerEvents.set('mouseleave', this.onMouseup.bind(this));
 
       // By default use the host element as trigger element.
       this.setTriggerElement(this._containerElement);
     }
   }
 
-  /** Fades in a ripple at the given coordinates. */
-  fadeInRipple(pageX: number, pageY: number, config: RippleConfig = {}): RippleRef {
-    let containerRect = this._containerElement.getBoundingClientRect();
+  /**
+   * Fades in a ripple at the given coordinates.
+   * @param x Coordinate within the element, along the X axis at which to start the ripple.
+   * @param y Coordinate within the element, along the Y axis at which to start the ripple.
+   * @param config Extra ripple options.
+   */
+  fadeInRipple(x: number, y: number, config: RippleConfig = {}): RippleRef {
+    const containerRect = this._containerElement.getBoundingClientRect();
 
     if (config.centered) {
-      pageX = containerRect.left + containerRect.width / 2;
-      pageY = containerRect.top + containerRect.height / 2;
-    } else {
-      // Subtract scroll values from the coordinates because calculations below
-      // are always relative to the viewport rectangle.
-      let scrollPosition = this._ruler.getViewportScrollPosition();
-      pageX -= scrollPosition.left;
-      pageY -= scrollPosition.top;
+      x = containerRect.left + containerRect.width / 2;
+      y = containerRect.top + containerRect.height / 2;
     }
 
-    let radius = config.radius || distanceToFurthestCorner(pageX, pageY, containerRect);
-    let duration = RIPPLE_FADE_IN_DURATION * (1 / (config.speedFactor || 1));
-    let offsetX = pageX - containerRect.left;
-    let offsetY = pageY - containerRect.top;
+    const radius = config.radius || distanceToFurthestCorner(x, y, containerRect);
+    const duration = RIPPLE_FADE_IN_DURATION * (1 / (config.speedFactor || 1));
+    const offsetX = x - containerRect.left;
+    const offsetY = y - containerRect.top;
 
-    let ripple = document.createElement('div');
+    const ripple = document.createElement('div');
     ripple.classList.add('mat-ripple-element');
 
     ripple.style.left = `${offsetX - radius}px`;
@@ -132,7 +122,7 @@ export class RippleRenderer {
     this.runTimeoutOutsideZone(() => {
       rippleRef.state = RippleState.VISIBLE;
 
-      if (!config.persistent && !this._isPointerDown) {
+      if (!config.persistent && !this._isMousedown) {
         rippleRef.fadeOut();
       }
     }, duration);
@@ -188,14 +178,18 @@ export class RippleRenderer {
   /** Function being called whenever the trigger is being pressed. */
   private onMousedown(event: MouseEvent) {
     if (!this.rippleDisabled) {
-      this._isPointerDown = true;
-      this.fadeInRipple(event.pageX, event.pageY, this.rippleConfig);
+      this._isMousedown = true;
+      this.fadeInRipple(event.clientX, event.clientY, this.rippleConfig);
     }
   }
 
-  /** Function being called whenever the pointer is being released. */
-  private onPointerUp() {
-    this._isPointerDown = false;
+  /** Function being called whenever the trigger is being released. */
+  private onMouseup() {
+    if (!this._isMousedown) {
+      return;
+    }
+
+    this._isMousedown = false;
 
     // Fade-out all ripples that are completely visible and not persistent.
     this._activeRipples.forEach(ripple => {
@@ -203,22 +197,6 @@ export class RippleRenderer {
         ripple.fadeOut();
       }
     });
-  }
-
-  /** Function being called whenever the pointer leaves the trigger. */
-  private onPointerLeave() {
-    if (this._isPointerDown) {
-      this.onPointerUp();
-    }
-  }
-
-  /** Function being called whenever the trigger is being touched. */
-  private onTouchstart(event: TouchEvent) {
-    if (!this.rippleDisabled) {
-      const {pageX, pageY} = event.touches[0];
-      this._isPointerDown = true;
-      this.fadeInRipple(pageX, pageY, this.rippleConfig);
-    }
   }
 
   /** Runs a timeout outside of the Angular zone to avoid triggering the change detection. */

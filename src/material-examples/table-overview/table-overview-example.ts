@@ -1,6 +1,6 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {DataSource} from '@uiux/cdk/collections';
-import {MatPaginator, MatSort} from '@angular/material';
+import {MatPaginator, MatSort} from '@uiux/material';
 import {SelectionModel} from '@uiux/cdk/collections';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';

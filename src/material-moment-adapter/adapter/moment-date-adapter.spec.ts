@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -9,7 +9,7 @@
 import {MomentDateAdapter} from './moment-date-adapter';
 import {async, inject, TestBed} from '@angular/core/testing';
 import {MomentDateModule} from './index';
-import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
+import {DateAdapter, MAT_DATE_LOCALE} from '@uiux/material';
 import {LOCALE_ID} from '@angular/core';
 import * as moment from 'moment';
 

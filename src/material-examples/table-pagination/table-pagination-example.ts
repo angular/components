@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {DataSource} from '@uiux/cdk/collections';
-import {MatPaginator} from '@angular/material';
+import {MatPaginator} from '@uiux/material';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/startWith';

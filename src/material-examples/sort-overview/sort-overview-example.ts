@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Sort} from '@angular/material';
+import {Sort} from '@uiux/material';
 
 /**
  * @title Sorting overview

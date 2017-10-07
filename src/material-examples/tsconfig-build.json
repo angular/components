@@ -20,13 +20,13 @@
     "types": [],
     "baseUrl": ".",
     "paths": {
-      "@uiux/material/*": ["../../dist/packages/material/*/public_api"],
-      "@uiux/material": ["../../dist/packages/material/public_api"],
-      "@uiux/cdk/*": ["../../dist/packages/cdk/*/public_api"]
+      "@uiux/material/*": ["../../dist/packages/material/*/public-api"],
+      "@uiux/material": ["../../dist/packages/material/public-api"],
+      "@uiux/cdk/*": ["../../dist/packages/cdk/*/public-api"]
     }
   },
   "files": [
-    "public_api.ts"
+    "public-api.ts"
   ],
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,

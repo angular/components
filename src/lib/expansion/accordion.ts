@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -20,6 +20,7 @@ let nextId = 0;
  */
 @Directive({
   selector: 'cdk-accordion, [cdk-accordion]',
+  exportAs: 'cdkAccordion',
 })
 export class CdkAccordion {
   /** A readonly id value to use for unique selection coordination. */
@@ -51,6 +52,7 @@ export class CdkAccordion {
  */
 @Directive({
   selector: 'mat-accordion',
+  exportAs: 'matAccordion',
   host: {
     class: 'mat-accordion'
   }

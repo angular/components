@@ -1,8 +1,7 @@
 import {TestBed, ComponentFixture, fakeAsync, tick, inject} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 import {Platform} from '@uiux/cdk/platform';
-import {ViewportRuler} from '@uiux/cdk/scrolling';
-import {dispatchMouseEvent, dispatchTouchEvent} from '@uiux/cdk/testing';
+import {dispatchMouseEvent} from '@uiux/cdk/testing';
 import {RIPPLE_FADE_OUT_DURATION, RIPPLE_FADE_IN_DURATION} from './ripple-renderer';
 import {
   MatRipple, MatRippleModule, MAT_RIPPLE_GLOBAL_OPTIONS, RippleState, RippleGlobalOptions
@@ -13,7 +12,6 @@ describe('MatRipple', () => {
   let fixture: ComponentFixture<any>;
   let rippleTarget: HTMLElement;
   let originalBodyMargin: string | null;
-  let viewportRuler: ViewportRuler;
   let platform: Platform;
 
   /** Extracts the numeric value of a pixel size string like '123px'.  */
@@ -33,8 +31,7 @@ describe('MatRipple', () => {
     });
   });
 
-  beforeEach(inject([ViewportRuler, Platform], (ruler: ViewportRuler, p: Platform) => {
-    viewportRuler = ruler;
+  beforeEach(inject([Platform], (p: Platform) => {
     platform = p;
 
     // Set body margin to 0 during tests so it doesn't mess up position calculations.
@@ -106,20 +103,6 @@ describe('MatRipple', () => {
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(2);
     });
-
-    it('should launch ripples on touchstart', fakeAsync(() => {
-      dispatchTouchEvent(rippleTarget, 'touchstart');
-      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
-
-      tick(RIPPLE_FADE_IN_DURATION);
-      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
-
-      dispatchTouchEvent(rippleTarget, 'touchend');
-
-      tick(RIPPLE_FADE_OUT_DURATION);
-
-      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
-    }));
 
     it('removes ripple after timeout', fakeAsync(() => {
       dispatchMouseEvent(rippleTarget, 'mousedown');
@@ -238,9 +221,6 @@ describe('MatRipple', () => {
 
         // Mobile safari
         window.scrollTo(pageScrollLeft, pageScrollTop);
-        // Force an update of the cached viewport geometries because IE11 emits the
-        // scroll event later.
-        viewportRuler._cacheViewportGeometry();
       });
 
       afterEach(() => {
@@ -254,9 +234,6 @@ describe('MatRipple', () => {
 
         // Mobile safari
         window.scrollTo(0, 0);
-        // Force an update of the cached viewport geometries because IE11 emits the
-        // scroll event later.
-        viewportRuler._cacheViewportGeometry();
       });
 
       it('create ripple with correct position', () => {

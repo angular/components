@@ -22,7 +22,7 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@uiux/material": ["../../dist/packages/material/public_api"],
+      "@uiux/material": ["../../dist/packages/material/public-api"],
       "@uiux/cdk/*": ["../../dist/packages/cdk/*"],
       "@uiux/material/*": ["../../dist/packages/material/*"],
       "@uiux/material-moment-adapter": ["../../dist/packages/material-moment-adapter"]

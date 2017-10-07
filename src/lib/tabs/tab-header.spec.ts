@@ -6,15 +6,14 @@ import {CommonModule} from '@angular/common';
 import {By} from '@angular/platform-browser';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@uiux/cdk/keycodes';
 import {PortalModule} from '@uiux/cdk/portal';
-import {ViewportRuler} from '@uiux/cdk/scrolling';
 import {Direction, Directionality} from '@uiux/cdk/bidi';
-import {dispatchFakeEvent, dispatchKeyboardEvent, FakeViewportRuler} from '@uiux/cdk/testing';
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '@uiux/cdk/testing';
 import {MatTabHeader} from './tab-header';
 import {MatRippleModule} from '@uiux/material/core';
 import {MatInkBar} from './ink-bar';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {Subject} from 'rxjs/Subject';
-
+import {VIEWPORT_RULER_PROVIDER, ScrollDispatchModule} from '@uiux/cdk/scrolling';
 
 
 describe('MatTabHeader', () => {
@@ -26,7 +25,7 @@ describe('MatTabHeader', () => {
   beforeEach(async(() => {
     dir = 'ltr';
     TestBed.configureTestingModule({
-      imports: [CommonModule, PortalModule, MatRippleModule],
+      imports: [CommonModule, PortalModule, MatRippleModule, ScrollDispatchModule],
       declarations: [
         MatTabHeader,
         MatInkBar,
@@ -34,8 +33,8 @@ describe('MatTabHeader', () => {
         SimpleTabHeaderApp,
       ],
       providers: [
+        VIEWPORT_RULER_PROVIDER,
         {provide: Directionality, useFactory: () => ({value: dir, change: change.asObservable()})},
-        {provide: ViewportRuler, useClass: FakeViewportRuler},
       ]
     });
 

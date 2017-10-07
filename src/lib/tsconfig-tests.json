@@ -10,7 +10,7 @@
     "types": ["jasmine"],
     "paths": {
       "@uiux/material/*": ["./*"],
-      "@uiux/cdk/*": ["../../dist/packages/cdk/*/public_api"]
+      "@uiux/cdk/*": ["../../dist/packages/cdk/*/public-api"]
     }
   },
   "include": [

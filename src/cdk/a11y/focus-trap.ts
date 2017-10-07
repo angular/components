@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -279,7 +279,7 @@ export class FocusTrapFactory {
       private _platform: Platform,
       private _ngZone: NgZone) { }
 
-  create(element: HTMLElement, deferAnchors = false): FocusTrap {
+  create(element: HTMLElement, deferAnchors: boolean = false): FocusTrap {
     return new FocusTrap(element, this._platform, this._checker, this._ngZone, deferAnchors);
   }
 }

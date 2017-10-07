@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {DataSource} from '@uiux/cdk/collections';
-import {MatSort} from '@angular/material';
+import {MatSort} from '@uiux/material';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/startWith';

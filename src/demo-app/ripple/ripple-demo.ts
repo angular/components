@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {MatRipple} from '@angular/material';
+import {MatRipple} from '@uiux/material';
 
 
 @Component({

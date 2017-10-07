@@ -132,7 +132,7 @@ export class MyApp {}
 It's also possible to set the locale at runtime using the `setLocale` method of the `DateAdapter`.
 
 ```ts
-import { DateAdapter, NativeDateAdapter } from '@angular/material';
+import { DateAdapter, NativeDateAdapter } from '@uiux/material';
 
 @Component({
   selector:    'foo',

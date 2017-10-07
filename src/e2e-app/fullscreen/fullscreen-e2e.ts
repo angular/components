@@ -1,5 +1,5 @@
 import {Component, ElementRef, Output, EventEmitter} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material';
+import {MatDialog, MatDialogRef} from '@uiux/material';
 
 @Component({
   moduleId: module.id,

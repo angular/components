@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -87,6 +87,7 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY_PROVIDER = {
  */
 @Directive({
   selector: '[mat-tooltip], [matTooltip]',
+  exportAs: 'matTooltip',
   host: {
     '(longpress)': 'show()',
     '(focus)': 'show()',
@@ -94,7 +95,6 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY_PROVIDER = {
     '(keydown)': '_handleKeydown($event)',
     '(touchend)': 'hide(' + TOUCHEND_HIDE_DELAY + ')',
   },
-  exportAs: 'matTooltip',
 })
 export class MatTooltip implements OnDestroy {
   _overlayRef: OverlayRef | null;

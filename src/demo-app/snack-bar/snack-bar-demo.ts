@@ -5,7 +5,7 @@ import {
   MatSnackBarConfig,
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
-} from '@angular/material';
+} from '@uiux/material';
 
 
 @Component({
@@ -33,7 +33,7 @@ export class SnackBarDemo {
     let config = new MatSnackBarConfig();
     config.verticalPosition = this.verticalPosition;
     config.horizontalPosition = this.horizontalPosition;
-    config.duration = this.autoHide;
+    config.duration = this.setAutoHide ? this.autoHide : 0;
     config.extraClasses = this.addExtraClass ? ['party'] : undefined;
     config.direction = this.dir.value;
     this.snackBar.open(this.message, this.action ? this.actionButtonLabel : undefined, config);

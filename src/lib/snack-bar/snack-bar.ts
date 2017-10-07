@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -15,6 +15,8 @@ import {SimpleSnackBar} from './simple-snack-bar';
 import {MAT_SNACK_BAR_DATA, MatSnackBarConfig} from './snack-bar-config';
 import {MatSnackBarContainer} from './snack-bar-container';
 import {MatSnackBarRef} from './snack-bar-ref';
+import {BreakpointObserver, Breakpoints} from '@uiux/cdk/layout';
+import {RxChain, takeUntil, first} from '@uiux/cdk/rxjs';
 
 
 /**
@@ -47,6 +49,7 @@ export class MatSnackBar {
       private _overlay: Overlay,
       private _live: LiveAnnouncer,
       private _injector: Injector,
+      private _breakpointObserver: BreakpointObserver,
       @Optional() @SkipSelf() private _parentSnackBar: MatSnackBar) {}
 
   /**
@@ -99,7 +102,8 @@ export class MatSnackBar {
    * @param action The label for the snackbar action.
    * @param config Additional configuration options for the snackbar.
    */
-  open(message: string, action = '', config?: MatSnackBarConfig): MatSnackBarRef<SimpleSnackBar> {
+  open(message: string, action: string = '', config?: MatSnackBarConfig):
+      MatSnackBarRef<SimpleSnackBar> {
     const _config = _applyConfigDefaults(config);
 
     // Since the user doesn't have access to the component, we can
@@ -143,6 +147,19 @@ export class MatSnackBar {
 
     // We can't pass this via the injector, because the injector is created earlier.
     snackBarRef.instance = contentRef.instance;
+
+    // Subscribe to the breakpoint observer and attach the mat-snack-bar-handset class as
+    // appropriate. This class is applied to the overlay element because the overlay must expand to
+    // fill the width of the screen for full width snackbars.
+    RxChain.from(this._breakpointObserver.observe(Breakpoints.Handset))
+      .call(takeUntil, first.call(overlayRef.detachments()))
+      .subscribe(state => {
+        if (state.matches) {
+          overlayRef.overlayElement.classList.add('mat-snack-bar-handset');
+        } else {
+          overlayRef.overlayElement.classList.remove('mat-snack-bar-handset');
+        }
+      });
 
     return snackBarRef;
   }

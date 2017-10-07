@@ -1,1 +1,1 @@
-Core library code for other `@angular/material` components.
+Core library code for other `@uiux/material` components.

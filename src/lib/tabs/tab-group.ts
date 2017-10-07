@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -9,7 +9,6 @@
 import {
   AfterContentChecked,
   AfterContentInit,
-  AfterViewChecked,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -64,6 +63,7 @@ export const _MatTabGroupMixinBase = mixinColor(mixinDisableRipple(MatTabGroupBa
 @Component({
   moduleId: module.id,
   selector: 'mat-tab-group',
+  exportAs: 'matTabGroup',
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
   encapsulation: ViewEncapsulation.None,
@@ -77,14 +77,11 @@ export const _MatTabGroupMixinBase = mixinColor(mixinDisableRipple(MatTabGroupBa
   },
 })
 export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentInit,
-    AfterContentChecked, AfterViewChecked, OnDestroy, CanColor, CanDisableRipple {
+    AfterContentChecked, OnDestroy, CanColor, CanDisableRipple {
 
   @ContentChildren(MatTab) _tabs: QueryList<MatTab>;
 
   @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
-
-  /** Whether this component has been initialized. */
-  private _isInitialized: boolean = false;
 
   /** The tab index that should be selected after the content has been checked. */
   private _indexToSelect: number | null = 0;
@@ -141,8 +138,14 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   @Output() focusChange: EventEmitter<MatTabChangeEvent> = new EventEmitter<MatTabChangeEvent>();
 
   /** Event emitted when the tab selection has changed. */
-  @Output() selectChange: EventEmitter<MatTabChangeEvent> =
+  @Output() selectedTabChange: EventEmitter<MatTabChangeEvent> =
       new EventEmitter<MatTabChangeEvent>(true);
+
+  /**
+   * Event emitted when the tab selection has changed.
+   * @deprecated Use `selectedTabChange` instead.
+   */
+  @Output() selectChange: EventEmitter<MatTabChangeEvent> = this.selectedTabChange;
 
   private _groupId: number;
 
@@ -170,7 +173,8 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
     // If there is a change in selected index, emit a change event. Should not trigger if
     // the selected index has not yet been initialized.
     if (this._selectedIndex != indexToSelect && this._selectedIndex != null) {
-      this.selectChange.emit(this._createChangeEvent(indexToSelect));
+      const tabChangeEvent = this._createChangeEvent(indexToSelect);
+      this.selectedTabChange.emit(tabChangeEvent);
       // Emitting this value after change detection has run
       // since the checked content may contain this variable'
       Promise.resolve().then(() => this.selectedIndexChange.emit(indexToSelect));
@@ -208,14 +212,6 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   ngOnDestroy() {
     this._tabsSubscription.unsubscribe();
     this._tabLabelSubscription.unsubscribe();
-  }
-
-  /**
-   * Waits one frame for the view to update, then updates the ink bar
-   * Note: This must be run outside of the zone or it will create an infinite change detection loop.
-   */
-  ngAfterViewChecked(): void {
-    this._isInitialized = true;
   }
 
   _focusChanged(index: number) {

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -24,6 +24,7 @@ import {coerceToNumber} from './grid-list-measure';
 @Component({
   moduleId: module.id,
   selector: 'mat-grid-tile',
+  exportAs: 'matGridTile',
   host: {
     'class': 'mat-grid-tile',
   },
@@ -41,12 +42,12 @@ export class MatGridTile {
 
   /** Amount of rows that the grid tile takes up. */
   @Input()
-  get rowspan() { return this._rowspan; }
+  get rowspan(): number { return this._rowspan; }
   set rowspan(value) { this._rowspan = coerceToNumber(value); }
 
   /** Amount of columns that the grid tile takes up. */
   @Input()
-  get colspan() { return this._colspan; }
+  get colspan(): number { return this._colspan; }
   set colspan(value) { this._colspan = coerceToNumber(value); }
 
   /**

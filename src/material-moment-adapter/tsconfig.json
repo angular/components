@@ -2,11 +2,15 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    // Needed for Moment.js since it doesn't have a default export.
+    "allowSyntheticDefaultImports": true,
     "rootDir": "..",
     "baseUrl": ".",
     "paths": {
       "@uiux/cdk/*": ["../cdk/*"],
-      "@uiux/material/*": ["../lib/*"]
+      "@uiux/material/*": ["../lib/*"],
+      "@uiux/material": ["../lib/public-api.ts"],
+      "@angular/material": ["../../node_modules/@angular/material"]
     }
   },
   "include": ["./**/*.ts"]
