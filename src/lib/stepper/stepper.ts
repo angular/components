@@ -7,7 +7,7 @@
  */
 
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {CdkStep, CdkStepper} from '@angular/cdk/stepper';
+import {CdkStep, CdkStepper} from '@uiux/cdk/stepper';
 import {
   Component,
   ContentChild,
@@ -28,7 +28,7 @@ import {
   ErrorOptions,
   ErrorStateMatcher,
   MAT_ERROR_GLOBAL_OPTIONS,
-} from '@angular/material/core';
+} from '@uiux/material/core';
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
 

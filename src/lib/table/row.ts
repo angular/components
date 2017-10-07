@@ -13,7 +13,7 @@ import {
   CDK_ROW_TEMPLATE,
   CdkRowDef,
   CdkHeaderRowDef,
-} from '@angular/cdk/table';
+} from '@uiux/cdk/table';
 
 /** Workaround for https://github.com/angular/angular/issues/17849 */
 export const _MatHeaderRowDef = CdkHeaderRowDef;

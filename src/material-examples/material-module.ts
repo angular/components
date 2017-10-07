@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 
-import {CdkTableModule} from '@angular/cdk/table';
+import {CdkTableModule} from '@uiux/cdk/table';
 import {
   MatAutocompleteModule, MatButtonModule, MatButtonToggleModule, MatPaginatorModule,
   MatCardModule, MatCheckboxModule, MatChipsModule, MatDatepickerModule,
@@ -9,7 +9,7 @@ import {
   MatRadioModule, MatSelectModule, MatSidenavModule, MatSliderModule, MatSortModule,
   MatSlideToggleModule, MatSnackBarModule, MatTableModule, MatTabsModule, MatToolbarModule,
   MatTooltipModule, MatFormFieldModule, MatExpansionModule, MatStepperModule
-} from '@angular/material';
+} from '@uiux/material';
 
 @NgModule({
   exports: [

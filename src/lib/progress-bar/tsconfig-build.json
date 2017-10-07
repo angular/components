@@ -8,7 +8,7 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/material/progress-bar",
+    "flatModuleId": "@uiux/material/progress-bar",
     "skipTemplateCodegen": true
   }
 }

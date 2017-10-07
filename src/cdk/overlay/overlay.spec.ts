@@ -5,7 +5,7 @@ import {
   PortalModule,
   TemplatePortal,
   TemplatePortalDirective
-} from '@angular/cdk/portal';
+} from '@uiux/cdk/portal';
 import {
   Overlay,
   OverlayContainer,

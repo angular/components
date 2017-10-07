@@ -19,7 +19,7 @@ import {
   Renderer2,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanDisableRipple, MatLine, MatLineSetter, mixinDisableRipple} from '@angular/material/core';
+import {CanDisableRipple, MatLine, MatLineSetter, mixinDisableRipple} from '@uiux/material/core';
 
 // Boilerplate for applying mixins to MatList.
 /** @docs-private */

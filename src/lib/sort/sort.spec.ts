@@ -1,6 +1,6 @@
-import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {CdkTableModule} from '@angular/cdk/table';
-import {dispatchMouseEvent, wrappedErrorMessage} from '@angular/cdk/testing';
+import {CollectionViewer, DataSource} from '@uiux/cdk/collections';
+import {CdkTableModule} from '@uiux/cdk/table';
+import {dispatchMouseEvent, wrappedErrorMessage} from '@uiux/cdk/testing';
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';

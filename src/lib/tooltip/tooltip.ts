@@ -7,10 +7,10 @@
  */
 
 import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
-import {AriaDescriber} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ESCAPE} from '@angular/cdk/keycodes';
+import {AriaDescriber} from '@uiux/cdk/a11y';
+import {Directionality} from '@uiux/cdk/bidi';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
+import {ESCAPE} from '@uiux/cdk/keycodes';
 import {
   OriginConnectionPosition,
   Overlay,
@@ -22,11 +22,11 @@ import {
   ConnectionPositionPair,
   HorizontalConnectionPos,
   VerticalConnectionPos,
-} from '@angular/cdk/overlay';
-import {Platform} from '@angular/cdk/platform';
-import {ComponentPortal} from '@angular/cdk/portal';
-import {first} from '@angular/cdk/rxjs';
-import {ScrollDispatcher} from '@angular/cdk/scrolling';
+} from '@uiux/cdk/overlay';
+import {Platform} from '@uiux/cdk/platform';
+import {ComponentPortal} from '@uiux/cdk/portal';
+import {first} from '@uiux/cdk/rxjs';
+import {ScrollDispatcher} from '@uiux/cdk/scrolling';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,

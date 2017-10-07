@@ -22,11 +22,11 @@ import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
-import {Directionality} from '@angular/cdk/bidi';
+import {Directionality} from '@uiux/cdk/bidi';
 import {MatDialogContainer} from './dialog-container';
-import {OverlayContainer} from '@angular/cdk/overlay';
-import {ESCAPE} from '@angular/cdk/keycodes';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing';
+import {OverlayContainer} from '@uiux/cdk/overlay';
+import {ESCAPE} from '@uiux/cdk/keycodes';
+import {dispatchKeyboardEvent} from '@uiux/cdk/testing';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from './index';
 
 

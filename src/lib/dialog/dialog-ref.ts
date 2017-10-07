@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {OverlayRef, GlobalPositionStrategy} from '@angular/cdk/overlay';
-import {filter, first, RxChain} from '@angular/cdk/rxjs';
+import {OverlayRef, GlobalPositionStrategy} from '@uiux/cdk/overlay';
+import {filter, first, RxChain} from '@uiux/cdk/rxjs';
 import {DialogPosition} from './dialog-config';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';

@@ -1,14 +1,14 @@
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {DOWN_ARROW, ENTER, ESCAPE, SPACE, UP_ARROW, TAB} from '@angular/cdk/keycodes';
-import {OverlayContainer} from '@angular/cdk/overlay';
-import {map, RxChain, startWith} from '@angular/cdk/rxjs';
-import {ScrollDispatcher} from '@angular/cdk/scrolling';
+import {Direction, Directionality} from '@uiux/cdk/bidi';
+import {DOWN_ARROW, ENTER, ESCAPE, SPACE, UP_ARROW, TAB} from '@uiux/cdk/keycodes';
+import {OverlayContainer} from '@uiux/cdk/overlay';
+import {map, RxChain, startWith} from '@uiux/cdk/rxjs';
+import {ScrollDispatcher} from '@uiux/cdk/scrolling';
 import {
   createKeyboardEvent,
   dispatchKeyboardEvent,
   dispatchFakeEvent,
   typeInElement,
-} from '@angular/cdk/testing';
+} from '@uiux/cdk/testing';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -20,8 +20,8 @@ import {
 } from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatOption} from '@angular/material/core';
-import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
+import {MatOption} from '@uiux/material/core';
+import {MatFormField, MatFormFieldModule} from '@uiux/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Observable} from 'rxjs/Observable';

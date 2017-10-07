@@ -31,8 +31,8 @@ import {
   BasePortalHost,
   ComponentPortal,
   PortalHostDirective,
-} from '@angular/cdk/portal';
-import {first} from '@angular/cdk/rxjs';
+} from '@uiux/cdk/portal';
+import {first} from '@uiux/cdk/rxjs';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {MatSnackBarConfig} from './snack-bar-config';

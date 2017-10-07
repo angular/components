@@ -16,11 +16,11 @@ import {
 import {AnimationEvent} from '@angular/animations';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {OverlayContainer, OverlayModule, Scrollable} from '@angular/cdk/overlay';
-import {Platform} from '@angular/cdk/platform';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing';
-import {ESCAPE} from '@angular/cdk/keycodes';
+import {Direction, Directionality} from '@uiux/cdk/bidi';
+import {OverlayContainer, OverlayModule, Scrollable} from '@uiux/cdk/overlay';
+import {Platform} from '@uiux/cdk/platform';
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '@uiux/cdk/testing';
+import {ESCAPE} from '@uiux/cdk/keycodes';
 import {
   MatTooltip,
   MatTooltipModule,

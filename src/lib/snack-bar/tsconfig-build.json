@@ -8,7 +8,7 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/material/snack-bar",
+    "flatModuleId": "@uiux/material/snack-bar",
     "skipTemplateCodegen": true
   }
 }

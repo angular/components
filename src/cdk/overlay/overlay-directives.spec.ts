@@ -1,9 +1,9 @@
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {ComponentFixture, TestBed, async} from '@angular/core/testing';
-import {Directionality} from '@angular/cdk/bidi';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing';
-import {ESCAPE} from '@angular/cdk/keycodes';
+import {Directionality} from '@uiux/cdk/bidi';
+import {dispatchKeyboardEvent} from '@uiux/cdk/testing';
+import {ESCAPE} from '@uiux/cdk/keycodes';
 import {ConnectedOverlayDirective, OverlayModule, OverlayOrigin} from './index';
 import {OverlayContainer} from './overlay-container';
 import {ConnectedPositionStrategy} from './position/connected-position-strategy';

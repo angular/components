@@ -7,7 +7,7 @@
  */
 
 import {Directive, TemplateRef, ViewContainerRef} from '@angular/core';
-import {TemplatePortalDirective} from '@angular/cdk/portal';
+import {TemplatePortalDirective} from '@uiux/cdk/portal';
 
 /** Workaround for https://github.com/angular/angular/issues/17849 */
 export const _MatTabLabelBaseClass = TemplatePortalDirective;

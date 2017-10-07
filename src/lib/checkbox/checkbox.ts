@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
 import {
   AfterViewInit,
   Attribute,
@@ -35,8 +35,8 @@ import {
   mixinDisableRipple,
   mixinTabIndex,
   RippleRef,
-} from '@angular/material/core';
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+} from '@uiux/material/core';
+import {FocusMonitor, FocusOrigin} from '@uiux/cdk/a11y';
 
 
 // Increasing integer for generating unique ids for checkbox components.

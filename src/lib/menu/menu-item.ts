@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusableOption} from '@angular/cdk/a11y';
+import {FocusableOption} from '@uiux/cdk/a11y';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -14,7 +14,7 @@ import {
   OnDestroy,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanDisable, mixinDisabled} from '@angular/material/core';
+import {CanDisable, mixinDisabled} from '@uiux/material/core';
 import {Subject} from 'rxjs/Subject';
 
 // Boilerplate for applying mixins to MatMenuItem.

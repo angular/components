@@ -7,7 +7,7 @@
  */
 
 import {Injectable, Optional, SkipSelf} from '@angular/core';
-import {Platform} from '@angular/cdk/platform';
+import {Platform} from '@uiux/cdk/platform';
 import {addAriaReferencedId, getAriaReferenceIds, removeAriaReferencedId} from './aria-reference';
 
 /**

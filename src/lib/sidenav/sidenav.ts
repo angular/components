@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import {MatDrawer, MatDrawerContainer, MatDrawerContent} from './drawer';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty, coerceNumberProperty} from '@uiux/cdk/coercion';
 
 
 @Component({

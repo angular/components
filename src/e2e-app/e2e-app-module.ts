@@ -37,9 +37,9 @@ import {
   MatSlideToggleModule,
   MatStepperModule,
   MatTabsModule,
-} from '@angular/material';
-import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
-import {ExampleModule} from '@angular/material-examples';
+} from '@uiux/material';
+import {FullscreenOverlayContainer, OverlayContainer} from '@uiux/cdk/overlay';
+import {ExampleModule} from '@uiux/material-examples';
 import {ReactiveFormsModule} from '@angular/forms';
 
 /**

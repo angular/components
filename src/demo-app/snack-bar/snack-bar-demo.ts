@@ -1,4 +1,4 @@
-import {Dir} from '@angular/cdk/bidi';
+import {Dir} from '@uiux/cdk/bidi';
 import {Component, ViewEncapsulation} from '@angular/core';
 import {
   MatSnackBar,

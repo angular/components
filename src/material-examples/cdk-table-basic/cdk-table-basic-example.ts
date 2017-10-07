@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {DataSource} from '@angular/cdk/collections';
+import {DataSource} from '@uiux/cdk/collections';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/startWith';

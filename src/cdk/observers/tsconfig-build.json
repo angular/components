@@ -7,7 +7,7 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/cdk/observers",
+    "flatModuleId": "@uiux/cdk/observers",
     "skipTemplateCodegen": true
   }
 }

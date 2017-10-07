@@ -22,8 +22,8 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import {Platform} from '@angular/cdk/platform';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Platform} from '@uiux/cdk/platform';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
 import {
   applyCssTransform,
   CanColor,
@@ -37,9 +37,9 @@ import {
   mixinDisableRipple,
   mixinTabIndex,
   RippleRef,
-} from '@angular/material/core';
+} from '@uiux/material/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {FocusMonitor, FocusOrigin} from '@uiux/cdk/a11y';
 
 // Increasing integer for generating unique ids for slide-toggle components.
 let nextUniqueId = 0;

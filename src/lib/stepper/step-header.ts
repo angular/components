@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusMonitor} from '@angular/cdk/a11y';
-import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
+import {FocusMonitor} from '@uiux/cdk/a11y';
+import {coerceBooleanProperty, coerceNumberProperty} from '@uiux/cdk/coercion';
 import {Component, Input, ViewEncapsulation, ElementRef, OnDestroy, Renderer2} from '@angular/core';
 import {MatStepLabel} from './step-label';
 

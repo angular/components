@@ -8,7 +8,7 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/material/chips",
+    "flatModuleId": "@uiux/material/chips",
     "skipTemplateCodegen": true
   }
 }

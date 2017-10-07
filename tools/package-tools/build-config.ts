@@ -1,6 +1,8 @@
 import {findBuildConfig} from './find-build-config';
 
 export interface BuildConfig {
+  /** Required Material version for the project. */
+  materialVersion: string;
   /** Current version of the project. */
   projectVersion: string;
   /** Required Angular version for the project. */

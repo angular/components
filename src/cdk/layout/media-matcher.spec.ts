@@ -8,7 +8,7 @@
 import {LayoutModule, BreakpointObserver} from './index';
 import {MediaMatcher} from './media-matcher';
 import {async, TestBed, inject} from '@angular/core/testing';
-import {Platform} from '@angular/cdk/platform';
+import {Platform} from '@uiux/cdk/platform';
 
 describe('MediaMatcher', () => {
   let breakpointManager: BreakpointObserver;

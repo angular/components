@@ -7,7 +7,7 @@
  */
 
 import {NgModule, InjectionToken, Optional, Inject, isDevMode} from '@angular/core';
-import {BidiModule} from '@angular/cdk/bidi';
+import {BidiModule} from '@uiux/cdk/bidi';
 import {CompatibilityModule} from '../compatibility/compatibility';
 
 

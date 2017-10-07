@@ -9,8 +9,8 @@
 import {QueryList} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
-import {UP_ARROW, DOWN_ARROW, TAB, A, Z, ZERO, NINE} from '@angular/cdk/keycodes';
-import {RxChain, debounceTime, filter, map, doOperator} from '@angular/cdk/rxjs';
+import {UP_ARROW, DOWN_ARROW, TAB, A, Z, ZERO, NINE} from '@uiux/cdk/keycodes';
+import {RxChain, debounceTime, filter, map, doOperator} from '@uiux/cdk/rxjs';
 
 /**
  * This interface is for items that can be passed to a ListKeyManager.

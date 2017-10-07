@@ -8,8 +8,8 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {OverlayModule} from '@angular/cdk/overlay';
-import {MatOptionModule, MatCommonModule} from '@angular/material/core';
+import {OverlayModule} from '@uiux/cdk/overlay';
+import {MatOptionModule, MatCommonModule} from '@uiux/material/core';
 import {MatAutocomplete} from './autocomplete';
 import {
   MatAutocompleteTrigger,

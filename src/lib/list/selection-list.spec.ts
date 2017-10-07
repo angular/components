@@ -1,6 +1,6 @@
-import {DOWN_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
-import {Platform} from '@angular/cdk/platform';
-import {createKeyboardEvent, dispatchFakeEvent} from '@angular/cdk/testing';
+import {DOWN_ARROW, SPACE, UP_ARROW} from '@uiux/cdk/keycodes';
+import {Platform} from '@uiux/cdk/platform';
+import {createKeyboardEvent, dispatchFakeEvent} from '@uiux/cdk/testing';
 import {Component, DebugElement} from '@angular/core';
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';

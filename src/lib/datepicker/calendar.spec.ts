@@ -8,8 +8,8 @@ import {
   PAGE_UP,
   RIGHT_ARROW,
   UP_ARROW,
-} from '@angular/cdk/keycodes';
-import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
+} from '@uiux/cdk/keycodes';
+import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@uiux/cdk/testing';
 import {Component} from '@angular/core';
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {
@@ -24,7 +24,7 @@ import {
   MatNativeDateModule,
   NOV,
   SEP,
-} from '@angular/material/core';
+} from '@uiux/material/core';
 import {By} from '@angular/platform-browser';
 import {MatButtonModule} from '../button/index';
 import {MatCalendar} from './calendar';

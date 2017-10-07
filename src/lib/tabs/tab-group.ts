@@ -24,7 +24,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
 import {Subscription} from 'rxjs/Subscription';
 import {MatTab} from './tab';
 import {merge} from 'rxjs/observable/merge';
@@ -34,7 +34,7 @@ import {
   mixinColor,
   mixinDisableRipple,
   ThemePalette
-} from '@angular/material/core';
+} from '@uiux/material/core';
 
 
 /** Used to generate unique ID's for each tab component */

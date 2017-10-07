@@ -8,7 +8,7 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/material/autocomplete",
+    "flatModuleId": "@uiux/material/autocomplete",
     "skipTemplateCodegen": true
   }
 }

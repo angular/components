@@ -147,10 +147,10 @@ export class PackageBundler {
       // secondary entry-points from the rollup globals because we want the UMD for this package
       // to include *all* of the sources for those entry-points.
       if (this.buildPackage.exportsSecondaryEntryPointsAtRoot) {
-        const importRegex = new RegExp(`@angular/${this.buildPackage.name}/.+`);
+        const importRegex = new RegExp(`@uiux/${this.buildPackage.name}/.+`);
         external = external.filter(e => !importRegex.test(e));
 
-        // Use the rollup-alias plugin to map imports of the form `@angular/material/button`
+        // Use the rollup-alias plugin to map imports of the form `@uiux/material/button`
         // to the actual file location so that rollup can resolve the imports (otherwise they
         // will be treated as external dependencies and not included in the bundle).
         bundleOptions.plugins.push(
@@ -164,14 +164,14 @@ export class PackageBundler {
   }
 
   /**
-   * Gets mapping of import aliases (e.g. `@angular/material/button`) to the path of the es5
+   * Gets mapping of import aliases (e.g. `@uiux/material/button`) to the path of the es5
    * bundle output.
    * @param bundleOutputDir Path to the bundle output directory.
    * @returns Map of alias to resolved path.
    */
   private getResolvedSecondaryEntryPointImportPaths(bundleOutputDir: string) {
     return this.buildPackage.secondaryEntryPoints.reduce((map, p) => {
-      map[`@angular/${this.buildPackage.name}/${p}`] =
+      map[`@uiux/${this.buildPackage.name}/${p}`] =
           join(dirname(bundleOutputDir), this.buildPackage.name, `${p}.es5.js`);
       return map;
     }, {} as {[key: string]: string});

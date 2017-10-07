@@ -18,8 +18,8 @@ import {
   InjectionToken,
   Optional,
 } from '@angular/core';
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {Platform} from '@angular/cdk/platform';
+import {ViewportRuler} from '@uiux/cdk/scrolling';
+import {Platform} from '@uiux/cdk/platform';
 import {RippleConfig, RippleRenderer} from './ripple-renderer';
 import {RippleRef} from './ripple-ref';
 

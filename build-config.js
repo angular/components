@@ -12,6 +12,9 @@ const buildVersion = package.version;
 /** Required Angular version for the project. */
 const angularVersion = package.dependencies['@angular/core'];
 
+/** Required Angular version for the project. */
+const materialVersion = package.dependencies['@angular/material'];
+
 /** License that will be placed inside of all created bundles. */
 const buildLicense = `/**
  * @license
@@ -24,6 +27,7 @@ const buildLicense = `/**
 module.exports = {
   projectVersion: buildVersion,
   angularVersion: angularVersion,
+  materialVersion: materialVersion,
   projectDir: __dirname,
   packagesDir: join(__dirname, 'src'),
   outputDir: join(__dirname, 'dist'),

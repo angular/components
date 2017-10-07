@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ObserversModule} from '@angular/cdk/observers';
-import {PortalModule} from '@angular/cdk/portal';
-import {ScrollDispatchModule, VIEWPORT_RULER_PROVIDER} from '@angular/cdk/scrolling';
+import {ObserversModule} from '@uiux/cdk/observers';
+import {PortalModule} from '@uiux/cdk/portal';
+import {ScrollDispatchModule, VIEWPORT_RULER_PROVIDER} from '@uiux/cdk/scrolling';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {MatCommonModule, MatRippleModule} from '@angular/material/core';
+import {MatCommonModule, MatRippleModule} from '@uiux/material/core';
 import {MatInkBar} from './ink-bar';
 import {MatTab} from './tab';
 import {MatTabBody} from './tab-body';

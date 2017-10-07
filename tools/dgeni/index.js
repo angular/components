@@ -96,7 +96,7 @@ let apiDocsPackage = new DgeniPackage('material2-api-docs', dgeniPackageDeps)
     'cdk/scrolling/index.ts',
     'cdk/table/index.ts',
 
-    // @angular/material
+    // @uiux/material
     'lib/autocomplete/index.ts',
     'lib/button/index.ts',
     'lib/button-toggle/index.ts',

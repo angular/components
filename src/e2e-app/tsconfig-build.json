@@ -24,10 +24,10 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@angular/cdk/*": ["./cdk/*"],
-      "@angular/material": ["./material"],
-      "@angular/material/*": ["./material/*"],
-      "@angular/material-examples": ["./material-examples"]
+      "@uiux/cdk/*": ["./cdk/*"],
+      "@uiux/material": ["./material"],
+      "@uiux/material/*": ["./material/*"],
+      "@uiux/material-examples": ["./material-examples"]
     }
   },
   "files": [

@@ -27,8 +27,8 @@ import {
   transition,
   AnimationEvent,
 } from '@angular/animations';
-import {TemplatePortal, PortalHostDirective} from '@angular/cdk/portal';
-import {Directionality, Direction} from '@angular/cdk/bidi';
+import {TemplatePortal, PortalHostDirective} from '@uiux/cdk/portal';
+import {Directionality, Direction} from '@uiux/cdk/bidi';
 
 
 /**

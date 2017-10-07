@@ -40,7 +40,9 @@
     "zone.js": "^0.8.12"
   },
   "devDependencies": {
+    "@angular/cdk": "^2.0.0-beta.12",
     "@angular/compiler-cli": "~4.4.3",
+    "@angular/material": "^2.0.0-beta.12",
     "@angular/platform-browser-dynamic": "~4.4.3",
     "@angular/platform-server": "~4.4.3",
     "@angular/router": "~4.4.3",

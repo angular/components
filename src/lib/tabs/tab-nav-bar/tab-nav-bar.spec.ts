@@ -1,9 +1,9 @@
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {dispatchFakeEvent, dispatchMouseEvent, FakeViewportRuler} from '@angular/cdk/testing';
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {ViewportRuler} from '@uiux/cdk/scrolling';
+import {dispatchFakeEvent, dispatchMouseEvent, FakeViewportRuler} from '@uiux/cdk/testing';
+import {Direction, Directionality} from '@uiux/cdk/bidi';
 import {Subject} from 'rxjs/Subject';
 import {MatTabNav, MatTabsModule, MatTabLink} from '../index';
 

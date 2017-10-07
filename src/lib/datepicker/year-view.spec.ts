@@ -3,8 +3,8 @@ import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatYearView} from './year-view';
 import {MatCalendarBody} from './calendar-body';
-import {MatNativeDateModule} from '@angular/material/core';
-import {FEB, JAN, JUL, JUN, MAR} from '@angular/material/core';
+import {MatNativeDateModule} from '@uiux/material/core';
+import {FEB, JAN, JUL, JUN, MAR} from '@uiux/material/core';
 
 describe('MatYearView', () => {
   beforeEach(async(() => {

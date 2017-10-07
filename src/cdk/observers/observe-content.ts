@@ -19,7 +19,7 @@ import {
   NgZone,
 } from '@angular/core';
 import {Subject} from 'rxjs/Subject';
-import {RxChain, debounceTime} from '@angular/cdk/rxjs';
+import {RxChain, debounceTime} from '@uiux/cdk/rxjs';
 
 /**
  * Factory that creates a new MutationObserver and allows us to stub it out in unit tests.

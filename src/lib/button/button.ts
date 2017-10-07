@@ -19,7 +19,7 @@ import {
   Self,
   ViewEncapsulation,
 } from '@angular/core';
-import {Platform} from '@angular/cdk/platform';
+import {Platform} from '@uiux/cdk/platform';
 import {
   CanColor,
   CanDisable,
@@ -27,8 +27,8 @@ import {
   mixinColor,
   mixinDisabled,
   mixinDisableRipple
-} from '@angular/material/core';
-import {FocusMonitor} from '@angular/cdk/a11y';
+} from '@uiux/material/core';
+import {FocusMonitor} from '@uiux/cdk/a11y';
 
 
 // TODO(kara): Convert attribute selectors to classes when attr maps become available

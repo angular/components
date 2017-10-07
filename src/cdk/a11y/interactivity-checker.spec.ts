@@ -1,4 +1,4 @@
-import {Platform} from '@angular/cdk/platform';
+import {Platform} from '@uiux/cdk/platform';
 import {InteractivityChecker} from './interactivity-checker';
 
 

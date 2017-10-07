@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FocusMonitor} from '@angular/cdk/a11y';
+import {FocusMonitor} from '@uiux/cdk/a11y';
 
 
 @Component({

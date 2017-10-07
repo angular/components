@@ -7,7 +7,7 @@
  */
 
 import {Directive, EventEmitter, Input, isDevMode, Output} from '@angular/core';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
 import {SortDirection} from './sort-direction';
 import {
   getSortInvalidDirectionError,

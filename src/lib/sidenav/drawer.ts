@@ -7,10 +7,10 @@
  */
 
 import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
-import {FocusTrap, FocusTrapFactory} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ESCAPE} from '@angular/cdk/keycodes';
+import {FocusTrap, FocusTrapFactory} from '@uiux/cdk/a11y';
+import {Directionality} from '@uiux/cdk/bidi';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
+import {ESCAPE} from '@uiux/cdk/keycodes';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,

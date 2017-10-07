@@ -7,10 +7,10 @@
  */
 
 import {AnimationEvent} from '@angular/animations';
-import {FocusKeyManager} from '@angular/cdk/a11y';
-import {Direction} from '@angular/cdk/bidi';
-import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
-import {RxChain, startWith, switchMap, first} from '@angular/cdk/rxjs';
+import {FocusKeyManager} from '@uiux/cdk/a11y';
+import {Direction} from '@uiux/cdk/bidi';
+import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@uiux/cdk/keycodes';
+import {RxChain, startWith, switchMap, first} from '@uiux/cdk/rxjs';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,

@@ -8,14 +8,14 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {VIEWPORT_RULER_PROVIDER} from '@angular/cdk/overlay';
+import {VIEWPORT_RULER_PROVIDER} from '@uiux/cdk/overlay';
 import {
   MatRippleModule,
   MatCommonModule,
   UNIQUE_SELECTION_DISPATCHER_PROVIDER,
-} from '@angular/material/core';
+} from '@uiux/material/core';
 import {MatRadioGroup, MatRadioButton} from './radio';
-import {A11yModule} from '@angular/cdk/a11y';
+import {A11yModule} from '@uiux/cdk/a11y';
 
 @NgModule({
   imports: [CommonModule, MatRippleModule, MatCommonModule, A11yModule],

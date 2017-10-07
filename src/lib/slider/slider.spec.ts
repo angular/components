@@ -1,4 +1,4 @@
-import {BidiModule} from '@angular/cdk/bidi';
+import {BidiModule} from '@uiux/cdk/bidi';
 import {
   BACKSPACE,
   DOWN_ARROW,
@@ -9,8 +9,8 @@ import {
   PAGE_UP,
   RIGHT_ARROW,
   UP_ARROW,
-} from '@angular/cdk/keycodes';
-import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
+} from '@uiux/cdk/keycodes';
+import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@uiux/cdk/testing';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';

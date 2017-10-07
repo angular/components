@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Platform} from '@angular/cdk/platform';
-import {auditTime, takeUntil} from '@angular/cdk/rxjs';
-import {ViewportRuler} from '@angular/cdk/scrolling';
+import {Directionality} from '@uiux/cdk/bidi';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
+import {Platform} from '@uiux/cdk/platform';
+import {auditTime, takeUntil} from '@uiux/cdk/rxjs';
+import {ViewportRuler} from '@uiux/cdk/scrolling';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -41,7 +41,7 @@ import {
   mixinDisableRipple,
   RippleGlobalOptions,
   ThemePalette,
-} from '@angular/material/core';
+} from '@uiux/material/core';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {merge} from 'rxjs/observable/merge';
 import {of as observableOf} from 'rxjs/observable/of';

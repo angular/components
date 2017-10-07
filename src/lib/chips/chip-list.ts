@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusKeyManager} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {SelectionModel} from '@angular/cdk/collections';
-import {BACKSPACE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
-import {startWith} from '@angular/cdk/rxjs';
+import {FocusKeyManager} from '@uiux/cdk/a11y';
+import {Directionality} from '@uiux/cdk/bidi';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
+import {SelectionModel} from '@uiux/cdk/collections';
+import {BACKSPACE, LEFT_ARROW, RIGHT_ARROW} from '@uiux/cdk/keycodes';
+import {startWith} from '@uiux/cdk/rxjs';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -31,7 +31,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {ControlValueAccessor, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
-import {MatFormFieldControl} from '@angular/material/form-field';
+import {MatFormFieldControl} from '@uiux/material/form-field';
 import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
 import {Subject} from 'rxjs/Subject';

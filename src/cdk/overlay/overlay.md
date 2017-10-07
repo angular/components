@@ -64,7 +64,7 @@ application.
 
 
 A custom scroll strategy can be created by implementing the `ScrollStrategy` interface. Each
-strategy will typically inject `ScrollDispatcher` (from `@angular/cdk/scrolling`) to be notified
+strategy will typically inject `ScrollDispatcher` (from `@uiux/cdk/scrolling`) to be notified
 of when scrolling takes place. See the documentation for `ScrollDispatcher` for more information
 on how scroll events are detected and dispatched.
 

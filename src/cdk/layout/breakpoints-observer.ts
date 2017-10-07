@@ -9,8 +9,8 @@ import {Injectable, NgZone, OnDestroy} from '@angular/core';
 import {MediaMatcher} from './media-matcher';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {RxChain, map, startWith, takeUntil} from '@angular/cdk/rxjs';
-import {coerceArray} from '@angular/cdk/coercion';
+import {RxChain, map, startWith, takeUntil} from '@uiux/cdk/rxjs';
+import {coerceArray} from '@uiux/cdk/coercion';
 import {combineLatest} from 'rxjs/observable/combineLatest';
 import {fromEventPattern} from 'rxjs/observable/fromEventPattern';
 

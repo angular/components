@@ -13,7 +13,7 @@ import {
   Injector,
   NgZone,
 } from '@angular/core';
-import {DomPortalHost} from '@angular/cdk/portal';
+import {DomPortalHost} from '@uiux/cdk/portal';
 import {OverlayConfig} from './overlay-config';
 import {OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';

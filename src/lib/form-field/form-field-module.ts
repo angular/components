@@ -8,7 +8,7 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {PlatformModule} from '@angular/cdk/platform';
+import {PlatformModule} from '@uiux/cdk/platform';
 import {MatError} from './error';
 import {MatFormField} from './form-field';
 import {MatHint} from './hint';

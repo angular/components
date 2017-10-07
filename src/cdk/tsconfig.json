@@ -5,7 +5,7 @@
     "rootDir": "..",
     "baseUrl": ".",
     "paths": {
-      "@angular/cdk/*": ["./*"]
+      "@uiux/cdk/*": ["./*"]
     }
   },
   "include": ["./**/*.ts"]

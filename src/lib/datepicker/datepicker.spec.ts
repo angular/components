@@ -1,11 +1,11 @@
-import {ESCAPE} from '@angular/cdk/keycodes';
-import {OverlayContainer} from '@angular/cdk/overlay';
+import {ESCAPE} from '@uiux/cdk/keycodes';
+import {OverlayContainer} from '@uiux/cdk/overlay';
 import {
   createKeyboardEvent,
   dispatchEvent,
   dispatchFakeEvent,
   dispatchMouseEvent,
-} from '@angular/cdk/testing';
+} from '@uiux/cdk/testing';
 import {Component, ViewChild} from '@angular/core';
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -18,8 +18,8 @@ import {
   MatNativeDateModule,
   NativeDateModule,
   SEP,
-} from '@angular/material/core';
-import {MatFormFieldModule} from '@angular/material/form-field';
+} from '@uiux/material/core';
+import {MatFormFieldModule} from '@uiux/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatInputModule} from '../input/index';

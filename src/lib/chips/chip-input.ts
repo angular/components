@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ENTER} from '@angular/cdk/keycodes';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
+import {ENTER} from '@uiux/cdk/keycodes';
 import {Directive, ElementRef, EventEmitter, Input, Output} from '@angular/core';
 import {MatChipList} from './chip-list';
 

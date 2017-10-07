@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {first} from '@angular/cdk/rxjs';
+import {first} from '@uiux/cdk/rxjs';
 import {
   Attribute,
   ChangeDetectionStrategy,
@@ -19,7 +19,7 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanColor, mixinColor} from '@angular/material/core';
+import {CanColor, mixinColor} from '@uiux/material/core';
 import {MatIconRegistry} from './icon-registry';
 
 

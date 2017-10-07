@@ -18,18 +18,18 @@ import {
   Renderer2,
   Self,
 } from '@angular/core';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
 import {FormControl, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
-import {Platform, getSupportedInputTypes} from '@angular/cdk/platform';
+import {Platform, getSupportedInputTypes} from '@uiux/cdk/platform';
 import {getMatInputUnsupportedTypeError} from './input-errors';
 import {
   defaultErrorStateMatcher,
   ErrorOptions,
   ErrorStateMatcher,
   MAT_ERROR_GLOBAL_OPTIONS
-} from '@angular/material/core';
+} from '@uiux/material/core';
 import {Subject} from 'rxjs/Subject';
-import {MatFormFieldControl} from '@angular/material/form-field';
+import {MatFormFieldControl} from '@uiux/material/form-field';
 
 // Invalid input type. Using one of these will throw an MatInputUnsupportedTypeError.
 const MAT_INPUT_INVALID_TYPES = [

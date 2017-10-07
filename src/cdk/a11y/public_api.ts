@@ -11,7 +11,7 @@ import {FocusTrapDeprecatedDirective, FocusTrapDirective, FocusTrapFactory} from
 import {LIVE_ANNOUNCER_PROVIDER} from './live-announcer';
 import {InteractivityChecker} from './interactivity-checker';
 import {CommonModule} from '@angular/common';
-import {PlatformModule} from '@angular/cdk/platform';
+import {PlatformModule} from '@uiux/cdk/platform';
 import {AriaDescriber, ARIA_DESCRIBER_PROVIDER} from './aria-describer';
 import {CdkMonitorFocus, FOCUS_MONITOR_PROVIDER} from './focus-monitor';
 

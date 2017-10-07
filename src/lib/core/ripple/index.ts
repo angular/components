@@ -7,8 +7,8 @@
  */
 
 import {NgModule} from '@angular/core';
-import {ScrollDispatchModule, VIEWPORT_RULER_PROVIDER} from '@angular/cdk/scrolling';
-import {PlatformModule} from '@angular/cdk/platform';
+import {ScrollDispatchModule, VIEWPORT_RULER_PROVIDER} from '@uiux/cdk/scrolling';
+import {PlatformModule} from '@uiux/cdk/platform';
 import {MatCommonModule} from '../common-behaviors/common-module';
 import {MatRipple} from './ripple';
 

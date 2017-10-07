@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {SelectionModel} from '@angular/cdk/collections';
-import {SPACE} from '@angular/cdk/keycodes';
+import {FocusableOption, FocusKeyManager} from '@uiux/cdk/a11y';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
+import {SelectionModel} from '@uiux/cdk/collections';
+import {SPACE} from '@uiux/cdk/keycodes';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -36,7 +36,7 @@ import {
   MatLineSetter,
   mixinDisabled,
   mixinDisableRipple,
-} from '@angular/material/core';
+} from '@uiux/material/core';
 
 
 /** @docs-private */

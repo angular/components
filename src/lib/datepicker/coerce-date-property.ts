@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {DateAdapter} from '@angular/material/core';
+import {DateAdapter} from '@uiux/material/core';
 
 
 /**

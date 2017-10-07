@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {isFakeMousedownFromScreenReader} from '@angular/cdk/a11y';
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {isFakeMousedownFromScreenReader} from '@uiux/cdk/a11y';
+import {Direction, Directionality} from '@uiux/cdk/bidi';
+import {LEFT_ARROW, RIGHT_ARROW} from '@uiux/cdk/keycodes';
 import {
   ConnectedPositionStrategy,
   HorizontalConnectionPos,
@@ -18,9 +18,9 @@ import {
   RepositionScrollStrategy,
   ScrollStrategy,
   VerticalConnectionPos,
-} from '@angular/cdk/overlay';
-import {TemplatePortal} from '@angular/cdk/portal';
-import {filter, RxChain} from '@angular/cdk/rxjs';
+} from '@uiux/cdk/overlay';
+import {TemplatePortal} from '@uiux/cdk/portal';
+import {filter, RxChain} from '@uiux/cdk/rxjs';
 import {
   AfterContentInit,
   Directive,

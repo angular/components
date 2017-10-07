@@ -26,11 +26,11 @@ import {
   Inject,
   forwardRef
 } from '@angular/core';
-import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '@angular/cdk/keycodes';
+import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '@uiux/cdk/keycodes';
 import {CdkStepLabel} from './step-label';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
 import {AbstractControl} from '@angular/forms';
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Direction, Directionality} from '@uiux/cdk/bidi';
 
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;

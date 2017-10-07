@@ -18,7 +18,7 @@ import {
   Directive,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {MatLine, MatLineSetter} from '@angular/material/core';
+import {MatLine, MatLineSetter} from '@uiux/material/core';
 import {coerceToNumber} from './grid-list-measure';
 
 @Component({

@@ -21,8 +21,8 @@
     "types": [],
     "baseUrl": ".",
     "paths": {
-      "@angular/cdk/*": ["../../dist/packages/cdk/*/public_api"],
-      "@angular/material/*": ["../../dist/packages/material/*/public_api"]
+      "@uiux/cdk/*": ["../../dist/packages/cdk/*/public_api"],
+      "@uiux/material/*": ["../../dist/packages/material/*/public_api"]
     }
   },
   "files": [
@@ -33,7 +33,7 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/material",
+    "flatModuleId": "@uiux/material",
     "skipTemplateCodegen": true
   }
 }

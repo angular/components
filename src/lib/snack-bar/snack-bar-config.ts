@@ -7,8 +7,8 @@
  */
 
 import {ViewContainerRef, InjectionToken} from '@angular/core';
-import {AriaLivePoliteness} from '@angular/cdk/a11y';
-import {Direction} from '@angular/cdk/bidi';
+import {AriaLivePoliteness} from '@uiux/cdk/a11y';
+import {Direction} from '@uiux/cdk/bidi';
 
 export const MAT_SNACK_BAR_DATA = new InjectionToken<any>('MatSnackBarData');
 

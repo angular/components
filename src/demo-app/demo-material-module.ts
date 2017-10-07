@@ -32,13 +32,13 @@ import {
   MatStepperModule,
 } from '@angular/material';
 import {MatNativeDateModule, MatRippleModule} from '@angular/material';
-import {CdkTableModule} from '@angular/cdk/table';
-import {A11yModule} from '@angular/cdk/a11y';
-import {BidiModule} from '@angular/cdk/bidi';
-import {OverlayModule} from '@angular/cdk/overlay';
-import {PlatformModule} from '@angular/cdk/platform';
-import {ObserversModule} from '@angular/cdk/observers';
-import {PortalModule} from '@angular/cdk/portal';
+import {CdkTableModule} from '@uiux/cdk/table';
+import {A11yModule} from '@uiux/cdk/a11y';
+import {BidiModule} from '@uiux/cdk/bidi';
+import {OverlayModule} from '@uiux/cdk/overlay';
+import {PlatformModule} from '@uiux/cdk/platform';
+import {ObserversModule} from '@uiux/cdk/observers';
+import {PortalModule} from '@uiux/cdk/portal';
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.

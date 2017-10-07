@@ -1,5 +1,5 @@
-import {Platform, PlatformModule} from '@angular/cdk/platform';
-import {createFakeEvent, dispatchFakeEvent, wrappedErrorMessage} from '@angular/cdk/testing';
+import {Platform, PlatformModule} from '@uiux/cdk/platform';
+import {createFakeEvent, dispatchFakeEvent, wrappedErrorMessage} from '@uiux/cdk/testing';
 import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {
@@ -15,14 +15,14 @@ import {
   MAT_ERROR_GLOBAL_OPTIONS,
   MAT_PLACEHOLDER_GLOBAL_OPTIONS,
   showOnDirtyErrorStateMatcher,
-} from '@angular/material/core';
+} from '@uiux/material/core';
 import {
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
   getMatFormFieldPlaceholderConflictError,
   MatFormField,
   MatFormFieldModule,
-} from '@angular/material/form-field';
+} from '@uiux/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatInputModule} from './index';

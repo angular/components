@@ -8,10 +8,10 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {OverlayModule} from '@angular/cdk/overlay';
-import {PortalModule} from '@angular/cdk/portal';
-import {LIVE_ANNOUNCER_PROVIDER} from '@angular/cdk/a11y';
-import {MatCommonModule} from '@angular/material/core';
+import {OverlayModule} from '@uiux/cdk/overlay';
+import {PortalModule} from '@uiux/cdk/portal';
+import {LIVE_ANNOUNCER_PROVIDER} from '@uiux/cdk/a11y';
+import {MatCommonModule} from '@uiux/material/core';
 import {MatSnackBar} from './snack-bar';
 import {MatSnackBarContainer} from './snack-bar-container';
 import {SimpleSnackBar} from './simple-snack-bar';

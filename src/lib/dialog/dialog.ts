@@ -6,16 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ESCAPE} from '@angular/cdk/keycodes';
+import {ESCAPE} from '@uiux/cdk/keycodes';
 import {
   BlockScrollStrategy,
   Overlay,
   OverlayRef,
   OverlayConfig,
   ScrollStrategy,
-} from '@angular/cdk/overlay';
-import {ComponentPortal, ComponentType, PortalInjector, TemplatePortal} from '@angular/cdk/portal';
-import {startWith} from '@angular/cdk/rxjs';
+} from '@uiux/cdk/overlay';
+import {ComponentPortal, ComponentType, PortalInjector, TemplatePortal} from '@uiux/cdk/portal';
+import {startWith} from '@uiux/cdk/rxjs';
 import {Location} from '@angular/common';
 import {
   ComponentRef,
@@ -27,8 +27,8 @@ import {
   SkipSelf,
   TemplateRef,
 } from '@angular/core';
-import {extendObject} from '@angular/material/core';
-import {Directionality} from '@angular/cdk/bidi';
+import {extendObject} from '@uiux/material/core';
+import {Directionality} from '@uiux/cdk/bidi';
 import {Observable} from 'rxjs/Observable';
 import {defer} from 'rxjs/observable/defer';
 import {Subject} from 'rxjs/Subject';

@@ -1,10 +1,10 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {FakeViewportRuler} from '@angular/cdk/testing';
+import {ViewportRuler} from '@uiux/cdk/scrolling';
+import {FakeViewportRuler} from '@uiux/cdk/testing';
 import {MatButtonModule} from './index';
-import {MatRipple} from '@angular/material/core';
+import {MatRipple} from '@uiux/material/core';
 
 
 describe('MatButton', () => {

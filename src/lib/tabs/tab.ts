@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TemplatePortal} from '@angular/cdk/portal';
+import {TemplatePortal} from '@uiux/cdk/portal';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -21,7 +21,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanDisable, mixinDisabled} from '@angular/material/core';
+import {CanDisable, mixinDisabled} from '@uiux/material/core';
 import {Subject} from 'rxjs/Subject';
 import {MatTabLabel} from './tab-label';
 

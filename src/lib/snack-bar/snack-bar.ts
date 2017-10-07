@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
-import {ComponentPortal, ComponentType, PortalInjector} from '@angular/cdk/portal';
+import {LiveAnnouncer} from '@uiux/cdk/a11y';
+import {Overlay, OverlayConfig, OverlayRef} from '@uiux/cdk/overlay';
+import {ComponentPortal, ComponentType, PortalInjector} from '@uiux/cdk/portal';
 import {ComponentRef, Injectable, Injector, Optional, SkipSelf} from '@angular/core';
-import {extendObject} from '@angular/material/core';
+import {extendObject} from '@uiux/material/core';
 import {SimpleSnackBar} from './simple-snack-bar';
 import {MAT_SNACK_BAR_DATA, MatSnackBarConfig} from './snack-bar-config';
 import {MatSnackBarContainer} from './snack-bar-container';

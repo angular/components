@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {catchOperator, doOperator, finallyOperator, map, RxChain, share} from '@angular/cdk/rxjs';
+import {catchOperator, doOperator, finallyOperator, map, RxChain, share} from '@uiux/cdk/rxjs';
 import {Injectable, Optional, SecurityContext, SkipSelf} from '@angular/core';
 import {Http} from '@angular/http';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';

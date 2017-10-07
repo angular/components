@@ -22,7 +22,7 @@ import {
   ButtonToggleOverviewExample,
   ExpansionOverviewExample,
   StepperOverviewExample
-} from '@angular/material-examples';
+} from '@uiux/material-examples';
 
 export const E2E_APP_ROUTES: Routes = [
   {path: '', component: Home},

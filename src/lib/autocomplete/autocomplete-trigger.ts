@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
-import {DOWN_ARROW, ENTER, ESCAPE, UP_ARROW, TAB} from '@angular/cdk/keycodes';
+import {Directionality} from '@uiux/cdk/bidi';
+import {DOWN_ARROW, ENTER, ESCAPE, UP_ARROW, TAB} from '@uiux/cdk/keycodes';
 import {
   ConnectedPositionStrategy,
   Overlay,
@@ -16,9 +16,9 @@ import {
   PositionStrategy,
   RepositionScrollStrategy,
   ScrollStrategy,
-} from '@angular/cdk/overlay';
-import {TemplatePortal} from '@angular/cdk/portal';
-import {filter, first, map, RxChain, switchMap} from '@angular/cdk/rxjs';
+} from '@uiux/cdk/overlay';
+import {TemplatePortal} from '@uiux/cdk/portal';
+import {filter, first, map, RxChain, switchMap} from '@uiux/cdk/rxjs';
 import {
   ChangeDetectorRef,
   Directive,
@@ -34,8 +34,8 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {MatOption, MatOptionSelectionChange} from '@angular/material/core';
-import {MatFormField} from '@angular/material/form-field';
+import {MatOption, MatOptionSelectionChange} from '@uiux/material/core';
+import {MatFormField} from '@uiux/material/form-field';
 import {DOCUMENT} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
 import {fromEvent} from 'rxjs/observable/fromEvent';

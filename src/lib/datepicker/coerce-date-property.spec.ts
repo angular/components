@@ -1,5 +1,5 @@
 import {async, inject, TestBed} from '@angular/core/testing';
-import {DateAdapter, JAN, MatNativeDateModule} from '@angular/material/core';
+import {DateAdapter, JAN, MatNativeDateModule} from '@uiux/material/core';
 import {coerceDateProperty} from './index';
 
 

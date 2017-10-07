@@ -7,9 +7,9 @@
  */
 
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {FocusMonitor} from '@angular/cdk/a11y';
-import {ENTER, SPACE} from '@angular/cdk/keycodes';
-import {filter} from '@angular/cdk/rxjs';
+import {FocusMonitor} from '@uiux/cdk/a11y';
+import {ENTER, SPACE} from '@uiux/cdk/keycodes';
+import {filter} from '@uiux/cdk/rxjs';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,

@@ -8,8 +8,8 @@
 
 import {NgModule} from '@angular/core';
 import {MatButtonToggleGroup, MatButtonToggleGroupMultiple, MatButtonToggle} from './button-toggle';
-import {UNIQUE_SELECTION_DISPATCHER_PROVIDER, MatCommonModule} from '@angular/material/core';
-import {A11yModule} from '@angular/cdk/a11y';
+import {UNIQUE_SELECTION_DISPATCHER_PROVIDER, MatCommonModule} from '@uiux/material/core';
+import {A11yModule} from '@uiux/cdk/a11y';
 
 
 @NgModule({

@@ -10,10 +10,10 @@
     "strictNullChecks": true,
     "outDir": ".",
     "paths": {
-      "@angular/cdk/*": ["./cdk/*"],
-      "@angular/material": ["./material"],
-      "@angular/material/*": ["./material/*"],
-      "@angular/material-moment-adapter": ["./material-moment-adapter"]
+      "@uiux/cdk/*": ["./cdk/*"],
+      "@uiux/material": ["./material"],
+      "@uiux/material/*": ["./material/*"],
+      "@uiux/material-moment-adapter": ["./material-moment-adapter"]
     }
   },
   "files": [

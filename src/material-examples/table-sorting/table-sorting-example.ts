@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {DataSource} from '@angular/cdk/collections';
+import {DataSource} from '@uiux/cdk/collections';
 import {MatSort} from '@angular/material';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';

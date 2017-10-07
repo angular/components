@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {PlatformModule} from '@angular/cdk/platform';
+import {PlatformModule} from '@uiux/cdk/platform';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatFormFieldModule} from '@uiux/material/form-field';
 import {MatTextareaAutosize} from './autosize';
 import {MatInput} from './input';
 

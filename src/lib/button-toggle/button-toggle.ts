@@ -26,10 +26,10 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {UniqueSelectionDispatcher} from '@angular/material/core';
-import {CanDisable, mixinDisabled} from '@angular/material/core';
-import {FocusMonitor} from '@angular/cdk/a11y';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
+import {UniqueSelectionDispatcher} from '@uiux/material/core';
+import {CanDisable, mixinDisabled} from '@uiux/material/core';
+import {FocusMonitor} from '@uiux/cdk/a11y';
 
 /** Acceptable types for a button toggle. */
 export type ToggleType = 'checkbox' | 'radio';

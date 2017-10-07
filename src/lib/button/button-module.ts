@@ -8,8 +8,8 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MatCommonModule, MatRippleModule} from '@angular/material/core';
-import {A11yModule} from '@angular/cdk/a11y';
+import {MatCommonModule, MatRippleModule} from '@uiux/material/core';
+import {A11yModule} from '@uiux/cdk/a11y';
 import {
   MatAnchor,
   MatButton,

@@ -14,7 +14,7 @@ import {
   Optional,
   ViewEncapsulation
 } from '@angular/core';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
 import {
   trigger,
   state,
@@ -23,13 +23,13 @@ import {
   transition,
   keyframes,
 } from '@angular/animations';
-import {CdkColumnDef} from '@angular/cdk/table';
+import {CdkColumnDef} from '@uiux/cdk/table';
 import {Subscription} from 'rxjs/Subscription';
 import {merge} from 'rxjs/observable/merge';
 import {MatSort, MatSortable} from './sort';
 import {MatSortHeaderIntl} from './sort-header-intl';
 import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
-import {AnimationCurves, AnimationDurations} from '@angular/material/core';
+import {AnimationCurves, AnimationDurations} from '@uiux/material/core';
 
 const SORT_ANIMATION_TRANSITION =
     AnimationDurations.ENTERING + ' ' + AnimationCurves.STANDARD_CURVE;

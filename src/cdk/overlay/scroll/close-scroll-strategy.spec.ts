@@ -1,8 +1,8 @@
 import {inject, TestBed, async} from '@angular/core/testing';
 import {NgModule, Component} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
-import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
-import {ScrollDispatcher} from '@angular/cdk/scrolling';
+import {ComponentPortal, PortalModule} from '@uiux/cdk/portal';
+import {ScrollDispatcher} from '@uiux/cdk/scrolling';
 import {
   Overlay,
   OverlayConfig,

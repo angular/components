@@ -1,9 +1,9 @@
-import {Directionality} from '@angular/cdk/bidi';
-import {DOWN_ARROW, END, ENTER, HOME, SPACE, TAB, UP_ARROW} from '@angular/cdk/keycodes';
-import {OverlayContainer} from '@angular/cdk/overlay';
-import {Platform} from '@angular/cdk/platform';
-import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
-import {dispatchFakeEvent, dispatchKeyboardEvent, wrappedErrorMessage} from '@angular/cdk/testing';
+import {Directionality} from '@uiux/cdk/bidi';
+import {DOWN_ARROW, END, ENTER, HOME, SPACE, TAB, UP_ARROW} from '@uiux/cdk/keycodes';
+import {OverlayContainer} from '@uiux/cdk/overlay';
+import {Platform} from '@uiux/cdk/platform';
+import {ScrollDispatcher, ViewportRuler} from '@uiux/cdk/scrolling';
+import {dispatchFakeEvent, dispatchKeyboardEvent, wrappedErrorMessage} from '@uiux/cdk/testing';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,8 +29,8 @@ import {
   FloatPlaceholderType,
   MAT_PLACEHOLDER_GLOBAL_OPTIONS,
   MatOption
-} from '@angular/material/core';
-import {MatFormFieldModule} from '@angular/material/form-field';
+} from '@uiux/material/core';
+import {MatFormFieldModule} from '@uiux/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {map} from 'rxjs/operator/map';

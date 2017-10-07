@@ -7,8 +7,8 @@
  */
 
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {first, startWith} from '@angular/cdk/rxjs';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
+import {first, startWith} from '@uiux/cdk/rxjs';
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -30,7 +30,7 @@ import {
   FloatPlaceholderType,
   MAT_PLACEHOLDER_GLOBAL_OPTIONS,
   PlaceholderOptions,
-} from '@angular/material/core';
+} from '@uiux/material/core';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {MatError} from './error';
 import {MatFormFieldControl} from './form-field-control';

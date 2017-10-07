@@ -5,7 +5,7 @@ Commonly used keycode constants.
 #### Example
 ```ts
 import {Directive} from '@angular/core';
-import {UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW} from '@uiux/cdk/keycodes';
 
 @Directive({
   selector: '[count-arrows]'

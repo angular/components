@@ -1,4 +1,4 @@
-import {ENTER} from '@angular/cdk/keycodes';
+import {ENTER} from '@uiux/cdk/keycodes';
 import {Component} from '@angular/core';
 import {MatChipInputEvent} from '@angular/material';
 

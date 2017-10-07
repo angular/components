@@ -4,7 +4,7 @@ import {MatPaginator, PageEvent} from './paginator';
 import {Component, ViewChild} from '@angular/core';
 import {MatPaginatorIntl} from './paginator-intl';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {dispatchMouseEvent} from '@angular/cdk/testing';
+import {dispatchMouseEvent} from '@uiux/cdk/testing';
 
 
 describe('MatPaginator', () => {

@@ -1,9 +1,9 @@
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {PortalModule, TemplatePortal} from '@angular/cdk/portal';
+import {Direction, Directionality} from '@uiux/cdk/bidi';
+import {PortalModule, TemplatePortal} from '@uiux/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {async, ComponentFixture, fakeAsync, flushMicrotasks, TestBed} from '@angular/core/testing';
-import {MatRippleModule} from '@angular/material/core';
+import {MatRippleModule} from '@uiux/material/core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTabBody} from './tab-body';
 

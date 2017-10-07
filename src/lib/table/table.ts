@@ -7,7 +7,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {CDK_TABLE_TEMPLATE, CdkTable} from '@angular/cdk/table';
+import {CDK_TABLE_TEMPLATE, CdkTable} from '@uiux/cdk/table';
 
 /** Workaround for https://github.com/angular/angular/issues/17849 */
 export const _MatTable = CdkTable;

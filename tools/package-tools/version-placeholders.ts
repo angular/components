@@ -3,6 +3,9 @@ import {platform} from 'os';
 import {buildConfig} from './build-config';
 import {spawnSync} from 'child_process';
 
+/** Placeholder that will be replaced with the required Material and CDK version. */
+const matVersionPlaceholderText = '0.0.0-MATERIAL';
+
 /** Variable that is set to the string for version placeholders. */
 const versionPlaceholderText = '0.0.0-PLACEHOLDER';
 
@@ -29,7 +32,8 @@ export function replaceVersionPlaceholders(packageDir: string) {
   files.forEach(filePath => {
     const fileContent = readFileSync(filePath, 'utf-8')
       .replace(ngVersionPlaceholderRegex, buildConfig.angularVersion)
-      .replace(versionPlaceholderRegex, buildConfig.projectVersion);
+      .replace(versionPlaceholderRegex, buildConfig.projectVersion)
+      .replace(matVersionPlaceholderText, buildConfig.materialVersion);
 
     writeFileSync(filePath, fileContent);
   });
@@ -49,12 +53,12 @@ function buildPlaceholderFindCommand(packageDir: string) {
   if (platform() === 'win32') {
     return {
       binary: 'findstr',
-      args: ['/msi', `"${ngVersionPlaceholderText} ${versionPlaceholderText}"`, `${packageDir}\\*`]
+      args: ['/msi', `"${ngVersionPlaceholderText} ${versionPlaceholderText} ${matVersionPlaceholderText}"`, `${packageDir}\\*`]
     };
   } else {
     return {
       binary: 'grep',
-      args: ['-ril', `"${ngVersionPlaceholderText}\\|${versionPlaceholderText}"`, packageDir]
+      args: ['-ril', `"${ngVersionPlaceholderText}\\|${versionPlaceholderText}\\|${matVersionPlaceholderText}"`, packageDir]
     };
   }
 }

@@ -7,8 +7,8 @@ import {
 import {NgModel, FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
 import {MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule} from './index';
 import {TestGestureConfig} from '../slider/test-gesture-config';
-import {dispatchFakeEvent} from '@angular/cdk/testing';
-import {RIPPLE_FADE_IN_DURATION, RIPPLE_FADE_OUT_DURATION} from '@angular/material/core';
+import {dispatchFakeEvent} from '@uiux/cdk/testing';
+import {RIPPLE_FADE_IN_DURATION, RIPPLE_FADE_OUT_DURATION} from '@uiux/material/core';
 
 describe('MatSlideToggle without forms', () => {
   let gestureConfig: TestGestureConfig;

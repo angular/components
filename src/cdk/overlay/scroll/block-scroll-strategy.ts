@@ -7,7 +7,7 @@
  */
 
 import {ScrollStrategy} from './scroll-strategy';
-import {ViewportRuler} from '@angular/cdk/scrolling';
+import {ViewportRuler} from '@uiux/cdk/scrolling';
 
 /**
  * Strategy that will prevent the user from scrolling while the overlay is visible.

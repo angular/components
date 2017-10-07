@@ -8,12 +8,12 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MatCommonModule} from '@angular/material/core';
-import {OverlayModule} from '@angular/cdk/overlay';
+import {MatCommonModule} from '@uiux/material/core';
+import {OverlayModule} from '@uiux/cdk/overlay';
 import {MatMenu, MAT_MENU_DEFAULT_OPTIONS} from './menu-directive';
 import {MatMenuItem} from './menu-item';
 import {MatMenuTrigger, MAT_MENU_SCROLL_STRATEGY_PROVIDER} from './menu-trigger';
-import {MatRippleModule} from '@angular/material/core';
+import {MatRippleModule} from '@uiux/material/core';
 
 
 @NgModule({

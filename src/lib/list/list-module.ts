@@ -13,7 +13,7 @@ import {
   MatLineModule,
   MatPseudoCheckboxModule,
   MatRippleModule,
-} from '@angular/material/core';
+} from '@uiux/material/core';
 import {
   MatDividerCssMatStyler,
   MatList,

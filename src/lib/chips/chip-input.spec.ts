@@ -1,7 +1,7 @@
-import {Directionality} from '@angular/cdk/bidi';
-import {ENTER} from '@angular/cdk/keycodes';
-import {PlatformModule} from '@angular/cdk/platform';
-import {createKeyboardEvent} from '@angular/cdk/testing';
+import {Directionality} from '@uiux/cdk/bidi';
+import {ENTER} from '@uiux/cdk/keycodes';
+import {PlatformModule} from '@uiux/cdk/platform';
+import {createKeyboardEvent} from '@uiux/cdk/testing';
 import {Component, DebugElement} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';

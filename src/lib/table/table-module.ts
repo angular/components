@@ -8,11 +8,11 @@
 
 import {NgModule} from '@angular/core';
 import {MatTable} from './table';
-import {CdkTableModule} from '@angular/cdk/table';
+import {CdkTableModule} from '@uiux/cdk/table';
 import {MatCell, MatHeaderCell, MatCellDef, MatHeaderCellDef, MatColumnDef} from './cell';
 import {MatHeaderRow, MatRow, MatHeaderRowDef, MatRowDef} from './row';
 import {CommonModule} from '@angular/common';
-import {MatCommonModule} from '@angular/material/core';
+import {MatCommonModule} from '@uiux/material/core';
 
 @NgModule({
   imports: [CdkTableModule, CommonModule, MatCommonModule],

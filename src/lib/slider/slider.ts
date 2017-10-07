@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
+import {Directionality} from '@uiux/cdk/bidi';
+import {coerceBooleanProperty, coerceNumberProperty} from '@uiux/cdk/coercion';
 import {
   DOWN_ARROW,
   END,
@@ -17,7 +17,7 @@ import {
   PAGE_UP,
   RIGHT_ARROW,
   UP_ARROW,
-} from '@angular/cdk/keycodes';
+} from '@uiux/cdk/keycodes';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -41,8 +41,8 @@ import {
   HammerInput,
   mixinColor,
   mixinDisabled,
-} from '@angular/material/core';
-import {FocusOrigin, FocusMonitor} from '@angular/cdk/a11y';
+} from '@uiux/material/core';
+import {FocusOrigin, FocusMonitor} from '@uiux/cdk/a11y';
 import {Subscription} from 'rxjs/Subscription';
 
 /**

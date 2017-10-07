@@ -21,7 +21,7 @@
     "skipLibCheck": true,
     "types": [],
     "paths": {
-      "@angular/cdk/*": ["../../dist/packages/cdk/*/public_api"]
+      "@uiux/cdk/*": ["../../dist/packages/cdk/*/public_api"]
     }
   },
   "files": [
@@ -32,7 +32,7 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/cdk",
+    "flatModuleId": "@uiux/cdk",
     "skipTemplateCodegen": true
   }
 }

@@ -23,9 +23,7 @@
     "skipLibCheck": true,
     "types": [],
     "paths": {
-      "@angular/material/*": ["../../dist/packages/material/*/public_api"],
-      "@angular/material": ["../../dist/packages/material/public_api"],
-      "@angular/cdk/*": ["../../dist/packages/cdk/*/public_api"]
+      "@uiux/material/*": ["../../dist/packages/material/*/public_api"]
     }
   },
   "files": [
@@ -35,7 +33,7 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/material-moment-adapter",
+    "flatModuleId": "@uiux/material-moment-adapter",
     "skipTemplateCodegen": true
   }
 }

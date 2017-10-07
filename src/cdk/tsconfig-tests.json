@@ -10,7 +10,7 @@
     "types": ["jasmine"],
     "experimentalDecorators": true,
     "paths": {
-      "@angular/cdk/*": ["./*"]
+      "@uiux/cdk/*": ["./*"]
     }
   },
   "files": [

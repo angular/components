@@ -1,5 +1,5 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {BreakpointObserver, BreakpointState, Breakpoints} from '@angular/cdk/layout';
+import {BreakpointObserver, BreakpointState, Breakpoints} from '@uiux/cdk/layout';
 import {Observable} from 'rxjs/Observable';
 
 @Component({

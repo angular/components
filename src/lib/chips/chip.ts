@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusableOption} from '@angular/cdk/a11y';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/keycodes';
+import {FocusableOption} from '@uiux/cdk/a11y';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
+import {BACKSPACE, DELETE, SPACE} from '@uiux/cdk/keycodes';
 import {
   Directive,
   ElementRef,
@@ -18,7 +18,7 @@ import {
   Output,
   Renderer2,
 } from '@angular/core';
-import {CanColor, CanDisable, mixinColor, mixinDisabled} from '@angular/material/core';
+import {CanColor, CanDisable, mixinColor, mixinDisabled} from '@uiux/material/core';
 import {Subject} from 'rxjs/Subject';
 
 

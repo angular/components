@@ -6,19 +6,19 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusKeyManager} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {SelectionModel} from '@angular/cdk/collections';
-import {DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import {FocusKeyManager} from '@uiux/cdk/a11y';
+import {Directionality} from '@uiux/cdk/bidi';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
+import {SelectionModel} from '@uiux/cdk/collections';
+import {DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW} from '@uiux/cdk/keycodes';
 import {
   ConnectedOverlayDirective,
   Overlay,
   RepositionScrollStrategy,
   ScrollStrategy,
   ViewportRuler,
-} from '@angular/cdk/overlay';
-import {filter, first, startWith} from '@angular/cdk/rxjs';
+} from '@uiux/cdk/overlay';
+import {filter, first, startWith} from '@uiux/cdk/rxjs';
 import {
   AfterContentInit,
   Attribute,
@@ -54,8 +54,8 @@ import {
   MatOptionSelectionChange,
   mixinDisabled,
   mixinTabIndex,
-} from '@angular/material/core';
-import {MatFormField, MatFormFieldControl} from '@angular/material/form-field';
+} from '@uiux/material/core';
+import {MatFormField, MatFormFieldControl} from '@uiux/material/form-field';
 import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
 import {Subject} from 'rxjs/Subject';

@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {A11yModule, ARIA_DESCRIBER_PROVIDER} from '@angular/cdk/a11y';
-import {OverlayModule} from '@angular/cdk/overlay';
-import {PlatformModule} from '@angular/cdk/platform';
+import {A11yModule, ARIA_DESCRIBER_PROVIDER} from '@uiux/cdk/a11y';
+import {OverlayModule} from '@uiux/cdk/overlay';
+import {PlatformModule} from '@uiux/cdk/platform';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '@angular/material/core';
+import {MatCommonModule} from '@uiux/material/core';
 import {MAT_TOOLTIP_SCROLL_STRATEGY_PROVIDER, MatTooltip, TooltipComponent} from './tooltip';
 
 

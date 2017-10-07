@@ -10,9 +10,9 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {OverlayContainer} from '@angular/cdk/overlay';
-import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {Direction, Directionality} from '@uiux/cdk/bidi';
+import {OverlayContainer} from '@uiux/cdk/overlay';
+import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@uiux/cdk/keycodes';
 import {
   MAT_MENU_DEFAULT_OPTIONS,
   MatMenu,
@@ -23,14 +23,14 @@ import {
   MenuPositionY,
 } from './index';
 import {MENU_PANEL_TOP_PADDING} from './menu-trigger';
-import {extendObject} from '@angular/material/core';
+import {extendObject} from '@uiux/material/core';
 import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
   dispatchEvent,
   createKeyboardEvent,
   createMouseEvent,
-} from '@angular/cdk/testing';
+} from '@uiux/cdk/testing';
 
 
 describe('MatMenu', () => {

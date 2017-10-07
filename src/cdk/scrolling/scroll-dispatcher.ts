@@ -7,7 +7,7 @@
  */
 
 import {ElementRef, Injectable, NgZone, Optional, SkipSelf} from '@angular/core';
-import {Platform} from '@angular/cdk/platform';
+import {Platform} from '@uiux/cdk/platform';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {fromEvent} from 'rxjs/observable/fromEvent';

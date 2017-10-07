@@ -4,7 +4,7 @@ import {AngularFireDatabaseModule} from 'angularfire2/database';
 import {NgModule} from '@angular/core';
 import {DashboardApp} from './dashboard-app';
 import {environment} from '../environments/environment';
-import {MatCardModule, MatProgressSpinnerModule, MatToolbarModule} from '@angular/material';
+import {MatCardModule, MatProgressSpinnerModule, MatToolbarModule} from '@uiux/material';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {PayloadChart} from './payload-chart/payload-chart';

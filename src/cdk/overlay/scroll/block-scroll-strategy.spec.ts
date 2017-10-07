@@ -1,8 +1,8 @@
 import {Component, NgModule} from '@angular/core';
 import {async, inject, TestBed} from '@angular/core/testing';
-import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
-import {Platform} from '@angular/cdk/platform';
-import {ViewportRuler} from '@angular/cdk/scrolling';
+import {ComponentPortal, PortalModule} from '@uiux/cdk/portal';
+import {Platform} from '@uiux/cdk/platform';
+import {ViewportRuler} from '@uiux/cdk/scrolling';
 import {Overlay, OverlayContainer, OverlayModule, OverlayRef, OverlayConfig} from '../index';
 
 

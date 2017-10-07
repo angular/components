@@ -3,10 +3,10 @@ import {Component, ElementRef, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDrawer, MatSidenavModule, MatDrawerContainer} from './index';
-import {A11yModule} from '@angular/cdk/a11y';
-import {PlatformModule} from '@angular/cdk/platform';
-import {ESCAPE} from '@angular/cdk/keycodes';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing';
+import {A11yModule} from '@uiux/cdk/a11y';
+import {PlatformModule} from '@uiux/cdk/platform';
+import {ESCAPE} from '@uiux/cdk/keycodes';
+import {dispatchKeyboardEvent} from '@uiux/cdk/testing';
 
 
 describe('MatDrawer', () => {

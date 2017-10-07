@@ -8,7 +8,7 @@ import {routing} from './routes';
 import {
   MatToolbarModule, MatButtonModule, MatCardModule, MatButtonToggleModule, MatIconModule,
   MatSnackBarModule, MatTooltipModule
-} from '@angular/material';
+} from '@uiux/material';
 
 import {PixactoDashboardComponent} from './pixacto.dashboard.component';
 import {ViewerComponent} from './viewer/viewer.component';

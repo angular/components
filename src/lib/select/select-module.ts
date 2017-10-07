@@ -9,8 +9,8 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatSelect, MatSelectTrigger, MAT_SELECT_SCROLL_STRATEGY_PROVIDER} from './select';
-import {MatCommonModule, MatOptionModule} from '@angular/material/core';
-import {OverlayModule} from '@angular/cdk/overlay';
+import {MatCommonModule, MatOptionModule} from '@uiux/material/core';
+import {OverlayModule} from '@uiux/cdk/overlay';
 
 
 @NgModule({

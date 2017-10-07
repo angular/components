@@ -21,8 +21,8 @@ import {
   EventEmitter,
   Output,
 } from '@angular/core';
-import {MatOption, MatOptgroup} from '@angular/material/core';
-import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
+import {MatOption, MatOptgroup} from '@uiux/material/core';
+import {ActiveDescendantKeyManager} from '@uiux/cdk/a11y';
 
 
 /**

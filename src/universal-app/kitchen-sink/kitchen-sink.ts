@@ -36,7 +36,7 @@ import {
 import {
   CdkTableModule,
   DataSource
-} from '@angular/cdk/table';
+} from '@uiux/cdk/table';
 
 import 'rxjs/add/observable/of';
 

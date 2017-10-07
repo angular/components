@@ -7,7 +7,7 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/cdk/rxjs",
+    "flatModuleId": "@uiux/cdk/rxjs",
     "skipTemplateCodegen": true
   }
 }

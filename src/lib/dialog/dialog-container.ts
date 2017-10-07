@@ -25,8 +25,8 @@ import {
   ComponentPortal,
   PortalHostDirective,
   TemplatePortal
-} from '@angular/cdk/portal';
-import {FocusTrap, FocusTrapFactory} from '@angular/cdk/a11y';
+} from '@uiux/cdk/portal';
+import {FocusTrap, FocusTrapFactory} from '@uiux/cdk/a11y';
 import {MatDialogConfig} from './dialog-config';
 
 

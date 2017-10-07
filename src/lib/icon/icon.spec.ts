@@ -6,7 +6,7 @@ import {Component} from '@angular/core';
 import {MatIconModule} from './index';
 import {MatIconRegistry, getMatIconNoHttpProviderError} from './icon-registry';
 import {getFakeSvgHttpResponse} from './fake-svgs';
-import {wrappedErrorMessage} from '@angular/cdk/testing';
+import {wrappedErrorMessage} from '@uiux/cdk/testing';
 
 
 /** Returns the CSS classes assigned to an element as a sorted array. */

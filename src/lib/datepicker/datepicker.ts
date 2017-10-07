@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ESCAPE} from '@angular/cdk/keycodes';
+import {Directionality} from '@uiux/cdk/bidi';
+import {coerceBooleanProperty} from '@uiux/cdk/coercion';
+import {ESCAPE} from '@uiux/cdk/keycodes';
 import {
   Overlay,
   OverlayConfig,
@@ -16,9 +16,9 @@ import {
   PositionStrategy,
   RepositionScrollStrategy,
   ScrollStrategy,
-} from '@angular/cdk/overlay';
-import {ComponentPortal} from '@angular/cdk/portal';
-import {first} from '@angular/cdk/rxjs';
+} from '@uiux/cdk/overlay';
+import {ComponentPortal} from '@uiux/cdk/portal';
+import {first} from '@uiux/cdk/rxjs';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -36,8 +36,8 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {DateAdapter} from '@angular/material/core';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {DateAdapter} from '@uiux/material/core';
+import {MatDialog, MatDialogRef} from '@uiux/material/dialog';
 import {DOCUMENT} from '@angular/platform-browser';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';

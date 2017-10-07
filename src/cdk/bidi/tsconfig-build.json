@@ -7,7 +7,7 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/cdk/bidi",
+    "flatModuleId": "@uiux/cdk/bidi",
     "skipTemplateCodegen": true
   }
 }

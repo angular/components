@@ -13,13 +13,13 @@ const matSecondaryEntryPoints = getSubdirectoryNames(join(buildConfig.packagesDi
 
 /** Object with all cdk entry points in the format of Rollup globals. */
 const rollupCdkEntryPoints = cdkSecondaryEntryPoints.reduce((globals: any, entryPoint: string) => {
-  globals[`@angular/cdk/${entryPoint}`] = `ng.cdk.${dashCaseToCamelCase(entryPoint)}`;
+  globals[`@uiux/cdk/${entryPoint}`] = `ng.cdk.${dashCaseToCamelCase(entryPoint)}`;
   return globals;
 }, {});
 
 /** Object with all material entry points in the format of Rollup globals. */
 const rollupMatEntryPoints = matSecondaryEntryPoints.reduce((globals: any, entryPoint: string) => {
-  globals[`@angular/material/${entryPoint}`] = `ng.material.${dashCaseToCamelCase(entryPoint)}`;
+  globals[`@uiux/material/${entryPoint}`] = `ng.material.${dashCaseToCamelCase(entryPoint)}`;
   return globals;
 }, {});
 
@@ -43,9 +43,9 @@ export const rollupGlobals = {
   '@angular/http/testing': 'ng.http.testing',
 
   // Some packages are not really needed for the UMD bundles, but for the missingRollupGlobals rule.
-  '@angular/material-examples': 'ng.materialExamples',
-  '@angular/material': 'ng.material',
-  '@angular/cdk': 'ng.cdk',
+  '@uiux/material-examples': 'ng.materialExamples',
+  '@uiux/material': 'ng.material',
+  '@uiux/cdk': 'ng.cdk',
 
   // Include secondary entry-points of the cdk and material packages
   ...rollupCdkEntryPoints,

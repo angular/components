@@ -8,10 +8,10 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {OverlayModule} from '@angular/cdk/overlay';
-import {PortalModule} from '@angular/cdk/portal';
-import {A11yModule} from '@angular/cdk/a11y';
-import {MatCommonModule} from '@angular/material/core';
+import {OverlayModule} from '@uiux/cdk/overlay';
+import {PortalModule} from '@uiux/cdk/portal';
+import {A11yModule} from '@uiux/cdk/a11y';
+import {MatCommonModule} from '@uiux/material/core';
 import {MatDialog, MAT_DIALOG_SCROLL_STRATEGY_PROVIDER} from './dialog';
 import {MatDialogContainer} from './dialog-container';
 import {
