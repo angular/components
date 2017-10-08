@@ -24,8 +24,7 @@
     "paths": {
       "@uiux/material/*": ["../../dist/packages/material/*/public-api"],
       "@uiux/material": ["../../dist/packages/material/public-api"],
-      "@uiux/cdk/*": ["../../dist/packages/cdk/*/public-api"],
-      "@angular/material": ["../../node_modules/@angular/material"]
+      "@uiux/cdk/*": ["../../dist/packages/cdk/*/public-api"]
     }
   },
   "files": [

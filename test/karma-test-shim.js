@@ -46,6 +46,40 @@ System.config({
     '@angular/platform-browser-dynamic/testing':
       'node:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic-testing.umd.js',
 
+    // Angular material
+    '@angular/material':
+        'node:@angular/material/bundles/material.umd.js',
+    '@angular/cdk':
+        'node:@angular/cdk/bundles/cdk.umd.js',
+    '@angular/cdk/bidi':
+        'node:@angular/cdk/bundles/cdk-bidi.umd.js',
+    '@angular/cdk/platform':
+        'node:@angular/cdk/bundles/cdk-platform.umd.js',
+    '@angular/cdk/collections':
+        'node:@angular/cdk/bundles/cdk-collections.umd.js',
+    '@angular/cdk/coercion':
+        'node:@angular/cdk/bundles/cdk-coercion.umd.js',
+    '@angular/cdk/observers':
+        'node:@angular/cdk/bundles/cdk-observers.umd.js',
+    '@angular/cdk/keycodes':
+        'node:@angular/cdk/bundles/cdk-keycodes.umd.js',
+    '@angular/cdk/a11y':
+        'node:@angular/cdk/bundles/cdk-a11y.umd.js',
+    '@angular/cdk/overlay':
+        'node:@angular/cdk/bundles/cdk-overlay.umd.js',
+    '@angular/cdk/portal':
+        'node:@angular/cdk/bundles/cdk-portal.umd.js',
+    '@angular/cdk/rxjs':
+        'node:@angular/cdk/bundles/cdk-rxjs.umd.js',
+    '@angular/cdk/scrolling':
+        'node:@angular/cdk/bundles/cdk-scrolling.umd.js',
+    '@angular/cdk/stepper':
+        'node:@angular/cdk/bundles/cdk-stepper.umd.js',
+    '@angular/cdk/table':
+        'node:@angular/cdk/bundles/cdk-table.umd.js',
+    '@angular/cdk/testing':
+        'node:@angular/cdk/bundles/cdk-testing.umd.js',
+
     // Path mappings for local packages that can be imported inside of tests.
     // TODO(devversion): replace once the index.ts file for the Material package has been added.
     '@uiux/material': 'dist/packages/material/public-api.js',

@@ -9,8 +9,7 @@
     "paths": {
       "@uiux/cdk/*": ["../cdk/*"],
       "@uiux/material/*": ["../lib/*"],
-      "@uiux/material": ["../lib/public-api.ts"],
-      "@angular/material": ["../../node_modules/@angular/material"]
+      "@uiux/material": ["../lib/public-api.ts"]
     }
   },
   "include": ["./**/*.ts"]
