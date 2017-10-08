@@ -9,7 +9,11 @@ const versionPlaceholderText = '0.0.0-PLACEHOLDER';
 /** Placeholder that will be replaced with the required Angular version. */
 const ngVersionPlaceholderText = '0.0.0-NG';
 
+/** Placeholder that will be replaced with the required Material version. */
 const materialVersionPlaceholderText = '0.0.0-MATERIAL';
+
+/** Placeholder that will be replaced with the required Lodash version. */
+const lodashVersionPlaceholderText = '0.0.0-LODASH';
 
 /** RegExp that matches version placeholders inside of a file. */
 const ngVersionPlaceholderRegex = new RegExp(ngVersionPlaceholderText, 'g');
@@ -17,7 +21,11 @@ const ngVersionPlaceholderRegex = new RegExp(ngVersionPlaceholderText, 'g');
 /** Expression that matches Angular version placeholders within a file. */
 const versionPlaceholderRegex = new RegExp(versionPlaceholderText, 'g');
 
+/** Expression that matches Material version placeholders within a file. */
 const materialVersionPlaceholderRegex = new RegExp(materialVersionPlaceholderText, 'g');
+
+/** Expression that matches Lodash version placeholders within a file. */
+const lodashVersionPlaceholderRegex = new RegExp(lodashVersionPlaceholderText, 'g');
 
 /**
  * Walks through every file in a directory and replaces the version placeholders with the current
@@ -34,7 +42,8 @@ export function replaceVersionPlaceholders(packageDir: string) {
     const fileContent = readFileSync(filePath, 'utf-8')
       .replace(ngVersionPlaceholderRegex, buildConfig.angularVersion)
       .replace(versionPlaceholderRegex, buildConfig.projectVersion)
-      .replace(materialVersionPlaceholderRegex, buildConfig.materialVersion);
+      .replace(materialVersionPlaceholderRegex, buildConfig.materialVersion)
+      .replace(lodashVersionPlaceholderRegex, buildConfig.lodashVersion);
 
     writeFileSync(filePath, fileContent);
   });
@@ -54,12 +63,14 @@ function buildPlaceholderFindCommand(packageDir: string) {
   if (platform() === 'win32') {
     return {
       binary: 'findstr',
-      args: ['/msi', `${ngVersionPlaceholderText} ${versionPlaceholderText} ${materialVersionPlaceholderText}`, `${packageDir}\\*`]
+      args: ['/msi', `${ngVersionPlaceholderText} ${versionPlaceholderText} 
+      ${materialVersionPlaceholderText} ${lodashVersionPlaceholderText}`, `${packageDir}\\*`]
     };
   } else {
     return {
       binary: 'grep',
-      args: ['-ril', `${ngVersionPlaceholderText}\\|${versionPlaceholderText}\\|${materialVersionPlaceholderText}`, packageDir]
+      args: ['-ril', `${ngVersionPlaceholderText}\\|${versionPlaceholderText}
+      \\|${materialVersionPlaceholderText}\\|${lodashVersionPlaceholderText}`, packageDir]
     };
   }
 }

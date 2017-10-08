@@ -15,6 +15,9 @@ const angularVersion = package.dependencies['@angular/core'];
 /** Required Angular material version for the project */
 const materialVersion = package.devDependencies['@angular/material'];
 
+/** Required Angular material version for the project */
+const lodashVersion = package.devDependencies['lodash'];
+
 /** License that will be placed inside of all created bundles. */
 const buildLicense = `/**
  * @license
@@ -28,6 +31,7 @@ module.exports = {
   projectVersion: buildVersion,
   angularVersion: angularVersion,
   materialVersion: materialVersion,
+  lodashVersion: lodashVersion,
   projectDir: __dirname,
   packagesDir: join(__dirname, 'src'),
   outputDir: join(__dirname, 'dist'),
