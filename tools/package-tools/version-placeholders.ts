@@ -9,11 +9,15 @@ const versionPlaceholderText = '0.0.0-PLACEHOLDER';
 /** Placeholder that will be replaced with the required Angular version. */
 const ngVersionPlaceholderText = '0.0.0-NG';
 
+const materialVersionPlaceholderText = '0.0.0-MATERIAL';
+
 /** RegExp that matches version placeholders inside of a file. */
 const ngVersionPlaceholderRegex = new RegExp(ngVersionPlaceholderText, 'g');
 
 /** Expression that matches Angular version placeholders within a file. */
 const versionPlaceholderRegex = new RegExp(versionPlaceholderText, 'g');
+
+const materialVersionPlaceholderRegex = new RegExp(materialVersionPlaceholderText, 'g');
 
 /**
  * Walks through every file in a directory and replaces the version placeholders with the current
@@ -29,7 +33,8 @@ export function replaceVersionPlaceholders(packageDir: string) {
   files.forEach(filePath => {
     const fileContent = readFileSync(filePath, 'utf-8')
       .replace(ngVersionPlaceholderRegex, buildConfig.angularVersion)
-      .replace(versionPlaceholderRegex, buildConfig.projectVersion);
+      .replace(versionPlaceholderRegex, buildConfig.projectVersion)
+      .replace(materialVersionPlaceholderRegex, buildConfig.materialVersion);
 
     writeFileSync(filePath, fileContent);
   });
@@ -49,12 +54,12 @@ function buildPlaceholderFindCommand(packageDir: string) {
   if (platform() === 'win32') {
     return {
       binary: 'findstr',
-      args: ['/msi', `${ngVersionPlaceholderText} ${versionPlaceholderText}`, `${packageDir}\\*`]
+      args: ['/msi', `${ngVersionPlaceholderText} ${versionPlaceholderText} ${materialVersionPlaceholderText}`, `${packageDir}\\*`]
     };
   } else {
     return {
       binary: 'grep',
-      args: ['-ril', `${ngVersionPlaceholderText}\\|${versionPlaceholderText}`, packageDir]
+      args: ['-ril', `${ngVersionPlaceholderText}\\|${versionPlaceholderText}\\|${materialVersionPlaceholderText}`, packageDir]
     };
   }
 }
