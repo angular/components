@@ -197,7 +197,7 @@ async function uploadGoldenScreenshots() {
   // Deleting every golden screenshot may also work, but will likely cause flakiness if multiple
   // screenshot tasks run.
   const deleteOutdatedGoldenFiles = Promise.all(storageGoldenFiles
-    .filter((file: any) => localScreenshots.indexOf(path.basename(file.name)) === -1)
+    .filter((file: any) => !localScreenshots.includes(path.basename(file.name)))
     .map((file: any) => file.delete()));
 
   const uploadNewGoldenImages = Promise.all(localScreenshots.map(fileName => {
