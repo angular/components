@@ -206,7 +206,7 @@ describe('MatTabGroup', () => {
       expect(tabs[2].isActive).toBe(true);
     });
 
-    fit('should fire animation done event', fakeAsync(() => {
+    it('should fire animation done event', fakeAsync(() => {
       fixture.detectChanges();
 
       spyOn(fixture.componentInstance, 'animationDone');
