@@ -1,4 +1,6 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
+import {Router} from '@angular/router';
+import {Observable} from 'rxjs/Observable'
 import {ComponentCategoryList, ComponentCategoryListModule} from './component-category-list';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 
@@ -16,18 +18,21 @@ describe('ComponentCategoryList', () => {
     fixture = TestBed.createComponent(ComponentCategoryList);
   });
 
-  it('should set page title on init', () => {
+  it('should set set up base param observable on init', () => {
     const component = fixture.componentInstance;
     spyOn(component, 'ngOnInit').and.callThrough();
     fixture.detectChanges();
     expect(component.ngOnInit).toHaveBeenCalled();
-    expect(component._componentPageTitle.title).toEqual('Component Categories');
+    expect(component.params).toBeDefined();
   });
 
   it('should render a card for every category', () => {
-    const component = fixture.componentInstance;
     fixture.detectChanges();
-    const categories = component.docItems.getItemsInCategories();
+    // Params is replaced after ngOnit runs since params is set on init.
+    fixture.componentInstance.params = Observable.of({'section': 'components'});
+    fixture.detectChanges();
+    const component = fixture.componentInstance;
+    const categories = component.docItems.getCategories('components');
     const cards = fixture
       .nativeElement.querySelectorAll('.docs-component-category-list-card');
     expect(cards.length).toEqual(categories.length);

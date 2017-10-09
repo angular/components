@@ -1,6 +1,7 @@
 import {TestBed, inject, async} from '@angular/core/testing';
 import {DocumentationItems} from './documentation-items';
 
+const COMPONENTS = 'components';
 
 describe('DocViewer', () => {
   let docsItems: DocumentationItems;
@@ -16,9 +17,9 @@ describe('DocViewer', () => {
   }));
 
   it('get a list of categories', () => {
-    expect(docsItems.getItemsInCategories()).toBeDefined();
-    expect(docsItems.getItemsInCategories().length).toBeGreaterThan(0);
-    for (const category of docsItems.getItemsInCategories()) {
+    expect(docsItems.getCategories(COMPONENTS)).toBeDefined();
+    expect(docsItems.getCategories(COMPONENTS).length).toBeGreaterThan(0);
+    for (const category of docsItems.getCategories(COMPONENTS)) {
       expect(category.id).toBeDefined();
       expect(category.name).toBeDefined();
       expect(category.items).toBeDefined();
@@ -27,9 +28,9 @@ describe('DocViewer', () => {
   });
 
   it('should get a list of all doc items', () => {
-    expect(docsItems.getAllItems()).toBeDefined();
-    expect(docsItems.getAllItems().length).toBeGreaterThan(0);
-    for (const item of docsItems.getAllItems()) {
+    expect(docsItems.getItems(COMPONENTS)).toBeDefined();
+    expect(docsItems.getItems(COMPONENTS).length).toBeGreaterThan(0);
+    for (const item of docsItems.getItems(COMPONENTS)) {
       expect(item.id).toBeDefined();
       expect(item.name).toBeDefined();
     }

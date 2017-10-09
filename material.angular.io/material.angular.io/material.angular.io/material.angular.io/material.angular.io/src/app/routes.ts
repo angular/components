@@ -10,25 +10,31 @@ import {
 } from './pages/component-viewer/component-viewer';
 import {ComponentCategoryList} from './pages/component-category-list/component-category-list';
 import {ComponentSidenav} from './pages/component-sidenav/component-sidenav';
+import {
+  CanActivateComponentSidenav
+} from './pages/component-sidenav/component-sidenav-can-load-guard';
 import {GuideViewer} from './pages/guide-viewer/guide-viewer';
 
 export const MATERIAL_DOCS_ROUTES: Routes = [
-  {path: '', component: Homepage, pathMatch: 'full'},
+  {path: '', component: Homepage, pathMatch: 'full', data: {}},
+  {path: 'categories', redirectTo: '/components/categories'},
+  {path: 'guides', component: GuideList, data: {}},
+  {path: 'guide/:id', component: GuideViewer, data: {}},
   {
-    path: 'categories',
+    path: ':section',
+    canActivate: [CanActivateComponentSidenav],
     component: ComponentSidenav,
     children: [
-      {path: '', component: ComponentCategoryList},
-      {path: ':id', component: ComponentList},
-    ],
-  },
-  {
-    path: 'components',
-    component: ComponentSidenav,
-    children: [
-      {path: '', component: ComponentCategoryList},
+      {path: '', redirectTo: 'categories', pathMatch: 'full'},
       {path: 'component/:id', redirectTo: ':id', pathMatch: 'full'},
       {path: 'category/:id', redirectTo: '/categories/:id', pathMatch: 'full'},
+      {
+        path: 'categories',
+        children: [
+          {path: '', component: ComponentCategoryList},
+          {path: ':id', component: ComponentList},
+        ],
+      },
       {
         path: ':id',
         component: ComponentViewer,
@@ -42,7 +48,5 @@ export const MATERIAL_DOCS_ROUTES: Routes = [
       },
     ],
   },
-  {path: 'guides', component: GuideList},
-  {path: 'guide/:id', component: GuideViewer},
   {path: '**', redirectTo: ''},
 ];

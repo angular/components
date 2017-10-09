@@ -37,7 +37,7 @@ describe('ComponentSidenav', () => {
 
     fixture.detectChanges();
 
-    const totalItems = component.docItems.getAllItems().length;
+    const totalItems = component.docItems.getItems('categories').length;
     const totalLinks = fixture
       .nativeElement
       .querySelectorAll('.docs-component-viewer-sidenav li a')

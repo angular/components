@@ -16,6 +16,8 @@ import {TableOfContentsModule} from '../../shared/table-of-contents/table-of-con
 export class ComponentViewer {
   componentDocItem: DocItem;
 
+  sections: Set<string> = new Set(['overview', 'api']);
+
   constructor(private _route: ActivatedRoute,
               private router: Router,
               public _componentPageTitle: ComponentPageTitle,
@@ -25,6 +27,10 @@ export class ComponentViewer {
 
       if (this.componentDocItem) {
         this._componentPageTitle.title = `${this.componentDocItem.name}`;
+        this.componentDocItem.examples.length ?
+          this.sections.add('examples') :
+          this.sections.delete('examples');
+
       } else {
         this.router.navigate(['/components']);
       }
