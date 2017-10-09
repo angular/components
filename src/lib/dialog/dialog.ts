@@ -115,7 +115,7 @@ export class MatDialog {
    * @returns Reference to the newly-opened dialog.
    */
   open<T>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
-          config?: MatDialogConfig): MatDialogRef<T> {
+          config?: Partial<MatDialogConfig>): MatDialogRef<T> {
 
     const inProgressDialog = this.openDialogs.find(dialog => dialog._isAnimating());
 
@@ -124,16 +124,16 @@ export class MatDialog {
       return inProgressDialog;
     }
 
-    config = _applyConfigDefaults(config);
+    const _config = _applyConfigDefaults(config);
 
-    if (config.id && this.getDialogById(config.id)) {
-      throw Error(`Dialog with id "${config.id}" exists already. The dialog id must be unique.`);
+    if (_config.id && this.getDialogById(_config.id)) {
+      throw Error(`Dialog with id "${_config.id}" exists already. The dialog id must be unique.`);
     }
 
-    const overlayRef = this._createOverlay(config);
-    const dialogContainer = this._attachDialogContainer(overlayRef, config);
+    const overlayRef = this._createOverlay(_config);
+    const dialogContainer = this._attachDialogContainer(overlayRef, _config);
     const dialogRef =
-        this._attachDialogContent(componentOrTemplateRef, dialogContainer, overlayRef, config);
+        this._attachDialogContent(componentOrTemplateRef, dialogContainer, overlayRef, _config);
 
     if (!this.openDialogs.length) {
       document.addEventListener('keydown', this._boundKeydown);
@@ -181,20 +181,20 @@ export class MatDialog {
 
   /**
    * Creates an overlay config from a dialog config.
-   * @param dialogConfig The dialog configuration.
+   * @param config The dialog configuration.
    * @returns The overlay configuration.
    */
-  private _getOverlayConfig(dialogConfig: MatDialogConfig): OverlayConfig {
+  private _getOverlayConfig(config: MatDialogConfig): OverlayConfig {
     const state = new OverlayConfig({
       positionStrategy: this._overlay.position().global(),
       scrollStrategy: this._scrollStrategy(),
-      panelClass: dialogConfig.panelClass,
-      hasBackdrop: dialogConfig.hasBackdrop,
-      direction: dialogConfig.direction
+      panelClass: config.panelClass,
+      hasBackdrop: config.hasBackdrop,
+      direction: config.direction
     });
 
-    if (dialogConfig.backdropClass) {
-      state.backdropClass = dialogConfig.backdropClass;
+    if (config.backdropClass) {
+      state.backdropClass = config.backdropClass;
     }
 
     return state;
@@ -207,8 +207,8 @@ export class MatDialog {
    * @returns A promise resolving to a ComponentRef for the attached container.
    */
   private _attachDialogContainer(overlay: OverlayRef, config: MatDialogConfig): MatDialogContainer {
-    let containerPortal = new ComponentPortal(MatDialogContainer, config.viewContainerRef);
-    let containerRef: ComponentRef<MatDialogContainer> = overlay.attach(containerPortal);
+    const containerPortal = new ComponentPortal(MatDialogContainer, config.viewContainerRef);
+    const containerRef: ComponentRef<MatDialogContainer> = overlay.attach(containerPortal);
     containerRef.instance._config = config;
 
     return containerRef.instance;
@@ -324,6 +324,6 @@ export class MatDialog {
  * @param config Config to be modified.
  * @returns The new configuration object.
  */
-function _applyConfigDefaults(config?: MatDialogConfig): MatDialogConfig {
+function _applyConfigDefaults(config?: Partial<MatDialogConfig>): MatDialogConfig {
   return extendObject(new MatDialogConfig(), config);
 }
