@@ -26,15 +26,17 @@
     </button>
   </mat-sidenav-content>
 
-  <mat-sidenav #endSnav mode="side" position="end" class="a11y-demo-sidenav-playlist" role="region">
+  <mat-sidenav #endSnav mode="side" position="end" class="a11y-demo-sidenav-playlist" role="region"
+               (open)="playlist1.focus()">
     <h2 class="a11y-demo-sidenav-playlist-header">Playlists</h2>
-    <button mat-button aria-label="Thumbs up playlist" (click)="play('Thumbs up')">
+    <button #playlist1 mat-button aria-label="Thumbs up playlist" (click)="play('Thumbs up')">
       Thumbs up
     </button>
     <button mat-button aria-label="Last added playlist" (click)="play('Last added')">
       Last added
     </button>
-    <button mat-button aria-label="Free and purchased playlist" (click)="play('Free and purchased')">
+    <button mat-button aria-label="Free and purchased playlist"
+            (click)="play('Free and purchased')">
       Free and purchased
     </button>
   </mat-sidenav>
