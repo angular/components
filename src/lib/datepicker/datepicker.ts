@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -149,7 +149,7 @@ export class MatDatepicker<D> implements OnDestroy {
   @Input()
   get disabled() {
     return this._disabled === undefined && this._datepickerInput ?
-        this._datepickerInput.disabled : this._disabled;
+        this._datepickerInput.disabled : !!this._disabled;
   }
   set disabled(value: any) {
     const newValue = coerceBooleanProperty(value);

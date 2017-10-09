@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -92,7 +92,10 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   _elementSize = this._baseSize;
 
   /** Tracks diameters of existing instances to de-dupe generated styles (default d = 100) */
-  static diameters = new Set<number>([100]);
+  private static diameters = new Set<number>([100]);
+
+  /** Used for storing all of the generated keyframe animations. */
+  private static styleTag: HTMLStyleElement;
 
   /** The diameter of the progress spinner (will set width and height of svg). */
   @Input()
@@ -130,9 +133,8 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
 
     // On IE and Edge, we can't animate the `stroke-dashoffset`
     // reliably so we fall back to a non-spec animation.
-    const animationClass = this._fallbackAnimation ?
-      'mat-progress-spinner-indeterminate-fallback-animation' :
-      'mat-progress-spinner-indeterminate-animation';
+    const animationClass =
+      `mat-progress-spinner-indeterminate${this._fallbackAnimation ? '-fallback' : ''}-animation`;
 
     _renderer.addClass(_elementRef.nativeElement, animationClass);
   }
@@ -165,6 +167,11 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
       return this._strokeCircumference * (100 - this._value) / 100;
     }
 
+    // In fallback mode set the circle to 80% and rotate it with CSS.
+    if (this._fallbackAnimation && this.mode === 'indeterminate') {
+      return this._strokeCircumference * 0.2;
+    }
+
     return null;
   }
 
@@ -178,9 +185,18 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
 
   /** Dynamically generates a style tag containing the correct animation for this diameter. */
   private _attachStyleNode(): void {
-    const styleTag = this._renderer.createElement('style');
-    styleTag.textContent = this._getAnimationText();
-    this._renderer.appendChild(this._document.head, styleTag);
+    let styleTag = MatProgressSpinner.styleTag;
+
+    if (!styleTag) {
+      styleTag = this._renderer.createElement('style');
+      this._renderer.appendChild(this._document.head, styleTag);
+      MatProgressSpinner.styleTag = styleTag;
+    }
+
+    if (styleTag.sheet) {
+      (styleTag.sheet as CSSStyleSheet).insertRule(this._getAnimationText());
+    }
+
     MatProgressSpinner.diameters.add(this.diameter);
   }
 

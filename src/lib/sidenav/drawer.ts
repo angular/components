@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -175,18 +175,8 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
   /** Emits whenever the drawer has started animating. */
   _animationStarted = new EventEmitter<AnimationEvent>();
 
-  /** Whether the drawer is animating. Used to prevent overlapping animations. */
-  _isAnimating = false;
-
   /** Current state of the sidenav animation. */
   _animationState: 'open-instant' | 'open' | 'void' = 'void';
-
-  /**
-   * Promise that resolves when the open/close animation completes. It is here for backwards
-   * compatibility and should be removed next time we do drawer breaking changes.
-   * @deprecated
-   */
-  private _currentTogglePromise: Promise<MatDrawerToggleResult> | null;
 
   /** Event emitted when the drawer open state is changed. */
   @Output() openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -311,27 +301,23 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
    * @param isOpen Whether the drawer should be open.
    */
   toggle(isOpen: boolean = !this.opened): Promise<MatDrawerToggleResult> {
-    if (!this._isAnimating) {
-      this._opened = isOpen;
+    this._opened = isOpen;
 
-      if (isOpen) {
-        this._animationState = this._enableAnimations ? 'open' : 'open-instant';
-      } else {
-        this._animationState = 'void';
-      }
+    if (isOpen) {
+      this._animationState = this._enableAnimations ? 'open' : 'open-instant';
+    } else {
+      this._animationState = 'void';
+    }
 
-      this._currentTogglePromise = new Promise(resolve => {
-        first.call(this.openedChange).subscribe(resolve);
-      });
-
-      if (this._focusTrap) {
-        this._focusTrap.enabled = this._isFocusTrapEnabled;
-      }
+    if (this._focusTrap) {
+      this._focusTrap.enabled = this._isFocusTrapEnabled;
     }
 
     // TODO(crisbeto): This promise is here for backwards-compatibility.
     // It should be removed next time we do breaking changes in the drawer.
-    return this._currentTogglePromise!;
+    return new Promise(resolve => {
+      first.call(isOpen ? this.onOpen : this.onClose).subscribe(resolve);
+    });
   }
 
   /**
@@ -346,7 +332,6 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
   }
 
   _onAnimationStart(event: AnimationEvent) {
-    this._isAnimating = true;
     this._animationStarted.emit(event);
   }
 
@@ -358,14 +343,6 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
     } else if (toState === 'void' && fromState.indexOf('open') === 0) {
       this.openedChange.emit(false);
     }
-
-    // Note: as of Angular 4.3, the animations module seems to fire the `start` callback before
-    // the end if animations are disabled. Make this call async to ensure that it still fires
-    // at the appropriate time.
-    Promise.resolve().then(() => {
-      this._isAnimating = false;
-      this._currentTogglePromise = null;
-    });
   }
 
   get _width() {
