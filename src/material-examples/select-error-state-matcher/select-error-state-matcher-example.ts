@@ -10,16 +10,15 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
-/** @title Input with a custom ErrorStateMatcher */
+/** @title Select with a custom ErrorStateMatcher */
 @Component({
-  selector: 'input-error-state-matcher-example',
-  templateUrl: './input-error-state-matcher-example.html',
-  styleUrls: ['./input-error-state-matcher-example.css'],
+  selector: 'select-error-state-matcher-example',
+  templateUrl: 'select-error-state-matcher-example.html',
 })
-export class InputErrorStateMatcherExample {
-  emailFormControl = new FormControl('', [
+export class SelectErrorStateMatcherExample {
+  selected = new FormControl('valid', [
     Validators.required,
-    Validators.email,
+    Validators.pattern('valid'),
   ]);
 
   matcher = new MyErrorStateMatcher();

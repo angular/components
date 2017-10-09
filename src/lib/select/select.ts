@@ -34,14 +34,14 @@ import {
   InjectionToken,
   Input,
   isDevMode,
-  NgZone,
+  NgZone, OnChanges,
   OnDestroy,
   OnInit,
   Optional,
   Output,
   QueryList,
   Renderer2,
-  Self,
+  Self, SimpleChanges,
   ViewChild,
   ViewEncapsulation,
   DoCheck,
@@ -187,8 +187,9 @@ export class MatSelectTrigger {}
   ],
   providers: [{provide: MatFormFieldControl, useExisting: MatSelect}],
 })
-export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnDestroy, OnInit,
-    DoCheck, ControlValueAccessor, CanDisable, HasTabIndex, MatFormFieldControl<any> {
+export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnChanges,
+    OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex,
+    MatFormFieldControl<any> {
   /** Whether or not the overlay panel is open. */
   private _panelOpen = false;
 
@@ -458,6 +459,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   ngDoCheck() {
     if (this.ngControl) {
       this._updateErrorState();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.disabled) {
+      this.stateChanges.next();
     }
   }
 
