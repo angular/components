@@ -119,12 +119,43 @@ globally cause input errors to show when the input is dirty and invalid.
 ```
 
 ### Keyboard interaction
+
 - <kbd>DOWN_ARROW</kbd>: Focus next option
 - <kbd>UP_ARROW</kbd>: Focus previous option
 - <kbd>ENTER</kbd> or <kbd>SPACE</kbd>: Select focused item
 
 ### Accessibility
+
 The select component without text or label should be given a meaningful label via
 `aria-label` or `aria-labelledby`.
 
 The select component has `role="listbox"` and options inside select have `role="option"`.
+
+### Troubleshooting
+
+#### Error: Cannot change `multiple` mode of select after initialization
+
+This error is thrown if you attempt to bind the `multiple` property on `<mat-select>` to a dynamic
+value. (e.g. `[multiple]="isMultiple"` where the value of `isMultiple` changes over the course of
+the component's lifetime). If you need to change this dynamically, use `ngIf` or `ngSwitch` instead:
+
+```html
+<mat-select *ngIf="isMultiple" multiple>
+  ...
+</mat-select>
+<mat-select *ngIf="!isMultiple">
+  ...
+</mat-select>
+```
+
+#### Error: Cannot assign truthy non-array value to select in `multiple` mode
+
+This error is thrown if you attempt to assign a value other than `null`, `undefined`, or an array to
+a `<mat-select multiple>`. For example, something like `mySelect.value = 'option1'`. What you likely
+meant to do was `mySelect.value = ['option1']`.
+
+#### Error: Cannot assign a non-function value to `compareWith`
+
+This error occurs if you attempt to assign something other than a function to the `compareWith`
+property. For more information on proper usage of `compareWith` see the
+[angular forms documentation](https://angular.io/api/forms/SelectControlValueAccessor#caveat-option-selection)).

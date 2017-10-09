@@ -18,7 +18,7 @@ import {
   ScrollStrategy,
   ViewportRuler,
 } from '@angular/cdk/overlay';
-import {filter, first, startWith, takeUntil, RxChain} from '@angular/cdk/rxjs';
+import {filter, first, RxChain, startWith, takeUntil} from '@angular/cdk/rxjs';
 import {
   AfterContentInit,
   Attribute,
@@ -28,40 +28,42 @@ import {
   ContentChild,
   ContentChildren,
   Directive,
+  DoCheck,
   ElementRef,
   EventEmitter,
   Inject,
   InjectionToken,
   Input,
   isDevMode,
-  NgZone, OnChanges,
+  NgZone,
+  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
   Output,
   QueryList,
   Renderer2,
-  Self, SimpleChanges,
+  Self,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
-  DoCheck,
 } from '@angular/core';
 import {
   ControlValueAccessor,
+  FormControl,
   FormGroupDirective,
   NgControl,
-  NgForm,
-  FormControl
+  NgForm
 } from '@angular/forms';
 import {
   CanDisable,
+  ErrorStateMatcher,
   HasTabIndex,
   MatOptgroup,
   MatOption,
   MatOptionSelectionChange,
   mixinDisabled,
   mixinTabIndex,
-  ErrorStateMatcher,
 } from '@angular/material/core';
 import {MatFormField, MatFormFieldControl} from '@angular/material/form-field';
 import {Observable} from 'rxjs/Observable';
