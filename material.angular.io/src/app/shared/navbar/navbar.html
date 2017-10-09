@@ -6,7 +6,9 @@
          alt="angular">
     <span>Material</span>
   </a>
-  <a mat-button class="docs-navbar-hide-small docs-button" routerLink="components">Components</a>
+  <a mat-button class="docs-navbar-hide-small docs-button"
+     *ngFor="let key of sectionKeys"
+     [routerLink]="key">{{sections[key]}}</a>
   <a mat-button class="docs-navbar-hide-small docs-button" routerLink="guides">Guides</a>
   <div class="flex-spacer"></div>
   <theme-picker></theme-picker>
@@ -25,6 +27,8 @@
   </a>
 </nav>
 <nav class="docs-navbar docs-navbar-show-small">
-  <a mat-button class="docs-navbar-link" routerLink="components">Components</a>
+  <a mat-button class="docs-navbar-link"
+    *ngFor="let key of sectionKeys"
+    [routerLink]="key">{{sections[key]}}</a>
   <a mat-button class="docs-navbar-link" routerLink="guides">Guides</a>
 </nav>

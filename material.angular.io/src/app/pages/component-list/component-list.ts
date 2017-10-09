@@ -8,6 +8,8 @@ import {ComponentPageTitle} from '../page-title/page-title';
 import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
 import {CommonModule} from '@angular/common';
 import {MatCardModule} from '@angular/material';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
 
 @Component({
   selector: 'app-components',
@@ -16,20 +18,24 @@ import {MatCardModule} from '@angular/material';
 })
 export class ComponentList {
   category: DocCategory;
+  section: string;
 
   constructor(public docItems: DocumentationItems,
               private _componentPageTitle: ComponentPageTitle,
               private _route: ActivatedRoute,
-              private router: Router) {
-    _route.params.subscribe(p => {
-      this.category = docItems.getCategoryById(p['id']);
+              public router: Router) {
+    Observable
+      .combineLatest(_route.pathFromRoot.map(route => route.params), Object.assign)
+      .subscribe(p => {
+        this.category = docItems.getCategoryById(p['id']);
+        this.section = p['section'];
 
-      if (this.category) {
-        this._componentPageTitle.title = this.category.name;
-      } else {
-        this.router.navigate(['/categories']);
-      }
-    });
+        if (this.category) {
+          this._componentPageTitle.title = this.category.name;
+        } else {
+          this.router.navigate(['../'], {relativeTo: this._route});
+        }
+      });
   }
 }
 

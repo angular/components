@@ -29,6 +29,9 @@ import {DocumentationItems} from './shared/documentation-items/documentation-ite
 import {GuideListModule} from './pages/guide-list/guide-list';
 import {GuideViewerModule} from './pages/guide-viewer/guide-viewer';
 import {DocViewerModule} from './shared/doc-viewer/doc-viewer-module';
+import {
+  CanActivateComponentSidenav
+} from './pages/component-sidenav/component-sidenav-can-load-guard';
 
 @NgModule({
   imports: [
@@ -62,6 +65,7 @@ import {DocViewerModule} from './shared/doc-viewer/doc-viewer-module';
     GuideItems,
     StyleManager,
     ThemeStorage,
+    CanActivateComponentSidenav,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
     {provide: MATERIAL_COMPATIBILITY_MODE, useValue: true},
   ],

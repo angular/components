@@ -6,8 +6,13 @@ import {DocsAppTestingModule} from '../../testing/testing-module';
 
 const CATEGORY_ID = 'forms';
 const mockActivatedRoute = {
-  params: Observable.create(observer => {
-    observer.next({id: CATEGORY_ID});
+  pathFromRoot: Observable.create(observer => {
+    observer.next({
+      params: {
+        section: 'components',
+        id: CATEGORY_ID,
+      }
+    });
     observer.complete();
   })
 };

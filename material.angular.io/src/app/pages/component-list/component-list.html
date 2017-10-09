@@ -1,7 +1,7 @@
 <div class="docs-component-list-category">
   <a *ngFor="let component of category.items"
     class="docs-component-list-item"
-    [routerLink]="['/components/', component.id]">
+    [routerLink]="'/' + section + '/' + component.id">
     <mat-card class="docs-component-list-card">
       <mat-card-title class="docs-component-list-card-title">{{component.name}}</mat-card-title>
       <div class="docs-component-list-icon-spacer"></div>

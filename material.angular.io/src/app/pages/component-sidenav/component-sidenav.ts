@@ -2,10 +2,11 @@ import {Component, NgZone, ViewEncapsulation, ViewChild, OnInit, NgModule} from 
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
 import {MatSidenav, MatSidenavModule} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {Router, RouterModule} from '@angular/router';
+import {ActivatedRoute, Params, Router, RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {ComponentHeaderModule} from '../component-page-header/component-page-header';
 import {FooterModule} from '../../shared/footer/footer';
+import {Observable} from 'rxjs/Observable';
 
 const SMALL_WIDTH_BREAKPOINT = 840;
 
@@ -18,7 +19,10 @@ const SMALL_WIDTH_BREAKPOINT = 840;
 export class ComponentSidenav implements OnInit {
   private mediaMatcher: MediaQueryList = matchMedia(`(max-width: ${SMALL_WIDTH_BREAKPOINT}px)`);
 
+  params: Observable<Params>;
+
   constructor(public docItems: DocumentationItems,
+              private _route: ActivatedRoute,
               private _router: Router,
               zone: NgZone) {
     // TODO(josephperrott): Move to CDK breakpoint management once available.
@@ -33,6 +37,10 @@ export class ComponentSidenav implements OnInit {
         this.sidenav.close();
       }
     });
+    // Combine params from all of the path into a single object.
+    this.params = Observable.combineLatest(
+      this._route.pathFromRoot.map(route => route.params),
+      Object.assign);
   }
 
   isScreenSmall(): boolean {

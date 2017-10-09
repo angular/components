@@ -2,11 +2,11 @@
   <mat-sidenav #sidenav class="docs-component-viewer-sidenav"
               [opened]="!isScreenSmall()"
               [mode]="isScreenSmall() ? 'over' : 'side'">
-    <nav *ngFor="let category of docItems.getItemsInCategories()">
+    <nav *ngFor="let category of docItems.getCategories((params | async)?.section)">
       <h3>{{category.name}}</h3>
       <ul>
         <li *ngFor="let component of category.items">
-          <a [routerLink]="['/components/', component.id]"
+          <a [routerLink]="'/' + (params | async)?.section+ '/' + component.id"
              routerLinkActive="docs-component-viewer-sidenav-item-selected">
             {{component.name}}
           </a>
