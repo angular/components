@@ -5,12 +5,13 @@
 $mat-badge-font-size: 12px;
 $mat-badge-font-weight: 600;
 $mat-badge-size: 22px !default;
+$mat-badge-svg-size: 12px;
 
 .mat-badge {
   position: relative;
 }
 
-.mat-badge:after,
+.mat-badge::after,
 .mat-badge-icon,
 .mat-badge-text,
 .mat-badge-svg-icon {
@@ -24,7 +25,7 @@ $mat-badge-size: 22px !default;
   align-items: center;
 }
 
-.mat-badge:after {
+.mat-badge::after {
   width: $mat-badge-size;
   height: $mat-badge-size;
   border-radius: 50%;
@@ -35,15 +36,14 @@ $mat-badge-size: 22px !default;
 .mat-badge-text,
 .mat-badge .mat-badge-icon {
   z-index: 2;
-  font-size: 16px;
   width: $mat-badge-size;
   height: $mat-badge-size;
 }
 
 .mat-badge-svg-icon {
   z-index: 2;
-  width: 12px;
-  height: 12px;
+  width: $mat-badge-svg-size;
+  height: $mat-badge-svg-size;
   z-index: 2;
   transform: translate(-5px, 5px);
 }
@@ -52,7 +52,7 @@ $mat-badge-size: 22px !default;
   .mat-badge-svg-icon,
   .mat-badge-icon,
   .mat-badge-text,
-  &:after {
+  &::after {
     top: -$mat-badge-size / 2;
   }
 }
@@ -61,7 +61,7 @@ $mat-badge-size: 22px !default;
   .mat-badge-svg-icon,
   .mat-badge-icon,
   .mat-badge-text,
-  &:after {
+  &::after {
     bottom: -$mat-badge-size / 2;
   }
 }
@@ -72,7 +72,7 @@ $mat-badge-size: 22px !default;
   .mat-badge-svg-icon,
   .mat-badge-icon,
   .mat-badge-text,
-  &:after {
+  &::after {
     left: -$mat-badge-size;
   }
 }
@@ -83,7 +83,7 @@ $mat-badge-size: 22px !default;
   .mat-badge-svg-icon,
   .mat-badge-icon,
   .mat-badge-text,
-  &:after {
+  &::after {
     right: -$mat-badge-size;
   }
 }
@@ -95,7 +95,7 @@ $mat-badge-size: 22px !default;
     .mat-badge-svg-icon,
     .mat-badge-icon,
     .mat-badge-text,
-    &:after {
+    &::after {
       left: -$mat-badge-size / 2;
     }
   }
@@ -106,7 +106,7 @@ $mat-badge-size: 22px !default;
     .mat-badge-svg-icon,
     .mat-badge-icon,
     .mat-badge-text,
-    &:after {
+    &::after {
       right: -$mat-badge-size / 2;
     }
   }
@@ -127,7 +127,7 @@ $mat-badge-size: 22px !default;
       color: mat-color($primary, default-contrast);
     }
 
-    &:after {
+    &::after {
       background: mat-color($primary);
     }
 
@@ -141,7 +141,7 @@ $mat-badge-size: 22px !default;
         color: mat-color($accent, default-contrast);
       }
 
-      &:after {
+      &::after {
         background: mat-color($accent);
       }
     }
@@ -156,7 +156,7 @@ $mat-badge-size: 22px !default;
         color: mat-color($warn, default-contrast);
       }
 
-      &:after {
+      &::after {
         background: mat-color($warn);
       }
     }
@@ -173,5 +173,11 @@ $mat-badge-size: 22px !default;
 
   .mat-badge-text {
     font-family: mat-font-family($config);
+  }
+
+
+  .mat-badge-text,
+  .mat-badge .mat-badge-icon {
+    font-size: 16px;
   }
 }
