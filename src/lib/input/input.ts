@@ -74,10 +74,10 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
   private _readonly = false;
 
   /** Whether the input is focused. */
-  focused = false;
+  focused: boolean = false;
 
   /** Whether the input is in an error state. */
-  errorState = false;
+  errorState: boolean = false;
 
   /** The aria-describedby attribute on the input for improved a11y. */
   _ariaDescribedby: string;
@@ -86,15 +86,20 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
    * Stream that emits whenever the state of the input changes such that the wrapping `MatFormField`
    * needs to run change detection.
    */
-  stateChanges = new Subject<void>();
+  stateChanges: Subject<void> = new Subject<void>();
 
   /** A name for this control that can be used by `mat-form-field`. */
-  controlType = 'mat-input';
+  controlType: string = 'mat-input';
 
   /** Whether the element is disabled. */
   @Input()
-  get disabled() { return this.ngControl ? this.ngControl.disabled : this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  get disabled(): boolean {
+    if (this.ngControl) {
+      return this.ngControl.disabled || false;
+    }
+    return this._disabled;
+  }
+  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
 
   /** Unique id of the element. */
   @Input()
@@ -106,12 +111,12 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
 
   /** Whether the element is required. */
   @Input()
-  get required() { return this._required; }
-  set required(value: any) { this._required = coerceBooleanProperty(value); }
+  get required(): boolean { return this._required; }
+  set required(value: boolean) { this._required = coerceBooleanProperty(value); }
 
   /** Input type of the element. */
   @Input()
-  get type() { return this._type; }
+  get type(): string { return this._type; }
   set type(value: string) {
     this._type = value || 'text';
     this._validateType();
@@ -129,7 +134,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
 
   /** The input element's value. */
   @Input()
-  get value() { return this._elementRef.nativeElement.value; }
+  get value(): string { return this._elementRef.nativeElement.value; }
   set value(value: string) {
     if (value !== this.value) {
       this._elementRef.nativeElement.value = value;
@@ -139,8 +144,8 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
 
   /** Whether the element is readonly. */
   @Input()
-  get readonly() { return this._readonly; }
-  set readonly(value: any) { this._readonly = coerceBooleanProperty(value); }
+  get readonly(): boolean { return this._readonly; }
+  set readonly(value: boolean) { this._readonly = coerceBooleanProperty(value); }
 
   protected _neverEmptyInputTypes = [
     'date',
@@ -179,15 +184,15 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     this.stateChanges.next();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.stateChanges.complete();
   }
 
-  ngDoCheck() {
+  ngDoCheck(): void {
     if (this.ngControl) {
       // We need to re-evaluate this on every change detection cycle, because there are some
       // error triggers that we can't subscribe to (e.g. parent form submissions). This means
@@ -200,17 +205,18 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
     }
   }
 
-  focus() { this._elementRef.nativeElement.focus(); }
+  /** Focuses the input */
+  focus(): void { this._elementRef.nativeElement.focus(); }
 
   /** Callback for the cases where the focused state of the input changes. */
-  _focusChanged(isFocused: boolean) {
+  _focusChanged(isFocused: boolean): void {
     if (isFocused !== this.focused && !this.readonly) {
       this.focused = isFocused;
       this.stateChanges.next();
     }
   }
 
-  _onInput() {
+  _onInput(): void {
     // This is a noop function and is used to let Angular know whenever the value changes.
     // Angular will run a new change detection each time the `input` event has been dispatched.
     // It's necessary that Angular recognizes the value change, because when floatingLabel
@@ -221,7 +227,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
   }
 
   /** Re-evaluates the error state. This is only relevant with @angular/forms. */
-  protected _updateErrorState() {
+  protected _updateErrorState(): void {
     const oldState = this.errorState;
     const parent = this._parentFormGroup || this._parentForm;
     const matcher = this.errorStateMatcher || this._defaultErrorStateMatcher;
@@ -235,7 +241,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
   }
 
   /** Does some manual dirty checking on the native input `value` property. */
-  protected _dirtyCheckNativeValue() {
+  protected _dirtyCheckNativeValue(): void {
     const newValue = this.value;
 
     if (this._previousNativeValue !== newValue) {
@@ -245,26 +251,26 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
   }
 
   /** Make sure the input is a supported type. */
-  protected _validateType() {
+  protected _validateType(): void {
     if (MAT_INPUT_INVALID_TYPES.indexOf(this._type) > -1) {
       throw getMatInputUnsupportedTypeError(this._type);
     }
   }
 
   /** Checks whether the input type is one of the types that are never empty. */
-  protected _isNeverEmpty() {
+  protected _isNeverEmpty(): boolean {
     return this._neverEmptyInputTypes.indexOf(this._type) > -1;
   }
 
   /** Checks whether the input is invalid based on the native validation. */
-  protected _isBadInput() {
+  protected _isBadInput(): boolean {
     // The `validity` property won't be present on platform-server.
     let validity = (this._elementRef.nativeElement as HTMLInputElement).validity;
     return validity && validity.badInput;
   }
 
   /** Determines if the component host is a textarea. If not recognizable it returns false. */
-  protected _isTextarea() {
+  protected _isTextarea(): boolean {
     let nativeElement = this._elementRef.nativeElement;
 
     // In Universal, we don't have access to `nodeName`, but the same can be achieved with `name`.
@@ -274,7 +280,10 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
     return nodeName ? nodeName.toLowerCase() === 'textarea' : false;
   }
 
-  // Implemented as part of MatFormFieldControl.
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   get empty(): boolean {
     return !this._isNeverEmpty() &&
         (this.value == null || this.value === '') &&
@@ -284,12 +293,21 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
         !this._isBadInput();
   }
 
-  // Implemented as part of MatFormFieldControl.
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   get shouldPlaceholderFloat(): boolean { return this.focused || !this.empty; }
 
-  // Implemented as part of MatFormFieldControl.
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
 
-  // Implemented as part of MatFormFieldControl.
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   onContainerClick() { this.focus(); }
 }

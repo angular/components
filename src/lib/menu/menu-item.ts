@@ -51,7 +51,7 @@ export class MatMenuItem extends _MatMenuItemMixinBase implements FocusableOptio
   OnDestroy {
 
   /** Stream that emits when the menu item is hovered. */
-  hover: Subject<MatMenuItem> = new Subject();
+  hover: Subject<MatMenuItem> = new Subject<MatMenuItem>();
 
   /** Whether the menu item is highlighted. */
   _highlighted: boolean = false;
@@ -68,7 +68,7 @@ export class MatMenuItem extends _MatMenuItemMixinBase implements FocusableOptio
     this._getHostElement().focus();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void  {
     this.hover.complete();
   }
 
@@ -91,7 +91,7 @@ export class MatMenuItem extends _MatMenuItemMixinBase implements FocusableOptio
   }
 
   /** Emits to the hover stream. */
-  _emitHoverEvent() {
+  _emitHoverEvent(): void  {
     if (!this.disabled) {
       this.hover.next(this);
     }

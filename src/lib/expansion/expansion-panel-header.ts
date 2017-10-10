@@ -28,11 +28,9 @@ import {EXPANSION_PANEL_ANIMATION_TIMING, MatExpansionPanel} from './expansion-p
 
 
 /**
- * <mat-expansion-panel-header> component.
+ * <mat-expansion-panel-header>
  *
  * This component corresponds to the header element of an <mat-expansion-panel>.
- *
- * Please refer to README.md for examples on how to use it.
  */
 @Component({
   moduleId: module.id,
@@ -86,7 +84,7 @@ export class MatExpansionPanelHeader implements OnDestroy {
 
   constructor(
     renderer: Renderer2,
-    @Host() public panel: MatExpansionPanel,
+    @Host() private panel: MatExpansionPanel,
     private _element: ElementRef,
     private _focusMonitor: FocusMonitor,
     private _changeDetectorRef: ChangeDetectorRef) {
@@ -137,7 +135,7 @@ export class MatExpansionPanelHeader implements OnDestroy {
   }
 
   /** Handle keyup event calling to toggle() if appropriate. */
-  _keyup(event: KeyboardEvent) {
+  _keyup(event: KeyboardEvent): void {
     switch (event.keyCode) {
       // Toggle for space and enter keys.
       case SPACE:
@@ -150,14 +148,14 @@ export class MatExpansionPanelHeader implements OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._parentChangeSubscription.unsubscribe();
     this._focusMonitor.stopMonitoring(this._element.nativeElement);
   }
 }
 
 /**
- * <mat-panel-description> directive.
+ * <mat-panel-description>
  *
  * This direction is to be used inside of the MatExpansionPanelHeader component.
  */
@@ -170,7 +168,7 @@ export class MatExpansionPanelHeader implements OnDestroy {
 export class MatExpansionPanelDescription {}
 
 /**
- * <mat-panel-title> directive.
+ * <mat-panel-title>
  *
  * This direction is to be used inside of the MatExpansionPanelHeader component.
  */

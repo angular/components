@@ -126,7 +126,7 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Can
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     // Only update the inline SVG icon if the inputs changed, to avoid unnecessary DOM operations.
     if (changes.svgIcon) {
       if (this.svgIcon) {
@@ -145,7 +145,7 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Can
     }
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     // Update font classes because ngOnChanges won't be called if none of the inputs are present,
     // e.g. <mat-icon>arrow</mat-icon> In this case we need to add a CSS class for the default font.
     if (this._usingFontIcon()) {
@@ -157,12 +157,12 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Can
     return !this.svgIcon;
   }
 
-  private _setSvgElement(svg: SVGElement) {
+  private _setSvgElement(svg: SVGElement): void {
     this._clearSvgElement();
     this._renderer.appendChild(this._elementRef.nativeElement, svg);
   }
 
-  private _clearSvgElement() {
+  private _clearSvgElement(): void {
     const layoutElement = this._elementRef.nativeElement;
     const childCount = layoutElement.childNodes.length;
 
@@ -173,7 +173,7 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Can
     }
   }
 
-  private _updateFontIconClasses() {
+  private _updateFontIconClasses(): void {
     if (!this._usingFontIcon()) {
       return;
     }

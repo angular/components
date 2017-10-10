@@ -127,7 +127,7 @@ export class MatSortHeader implements MatSortable {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (!this.id && this._cdkColumnDef) {
       this.id = this._cdkColumnDef.name;
     }
@@ -135,13 +135,13 @@ export class MatSortHeader implements MatSortable {
     this._sort.register(this);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._sort.deregister(this);
     this._rerenderSubscription.unsubscribe();
   }
 
   /** Whether this MatSortHeader is currently sorted in either ascending or descending order. */
-  _isSorted() {
+  _isSorted(): boolean {
     return this._sort.active == this.id &&
         (this._sort.direction === 'asc' || this._sort.direction === 'desc');
   }

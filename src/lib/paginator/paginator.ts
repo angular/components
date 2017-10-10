@@ -107,36 +107,36 @@ export class MatPaginator implements OnInit, OnDestroy {
     this._intlChanges = _intl.changes.subscribe(() => this._changeDetectorRef.markForCheck());
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._initialized = true;
     this._updateDisplayedPageSizeOptions();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._intlChanges.unsubscribe();
   }
 
   /** Advances to the next page if it exists. */
-  nextPage() {
+  nextPage(): void {
     if (!this.hasNextPage()) { return; }
     this.pageIndex++;
     this._emitPageEvent();
   }
 
   /** Move back to the previous page if it exists. */
-  previousPage() {
+  previousPage(): void {
     if (!this.hasPreviousPage()) { return; }
     this.pageIndex--;
     this._emitPageEvent();
   }
 
   /** Whether there is a previous page. */
-  hasPreviousPage() {
+  hasPreviousPage(): boolean {
     return this.pageIndex >= 1 && this.pageSize != 0;
   }
 
   /** Whether there is a next page. */
-  hasNextPage() {
+  hasNextPage(): boolean {
     const numberOfPages = Math.ceil(this.length / this.pageSize) - 1;
     return this.pageIndex < numberOfPages && this.pageSize != 0;
   }
@@ -149,7 +149,7 @@ export class MatPaginator implements OnInit, OnDestroy {
    * switching so that the page size is 5 will set the third page as the current page so
    * that the 10th item will still be displayed.
    */
-  _changePageSize(pageSize: number) {
+  _changePageSize(pageSize: number): void {
     // Current page needs to be updated to reflect the new page size. Navigate to the page
     // containing the previous page's first item.
     const startIndex = this.pageIndex * this.pageSize;
@@ -163,7 +163,7 @@ export class MatPaginator implements OnInit, OnDestroy {
    * Updates the list of page size options to display to the user. Includes making sure that
    * the page size is an option and that the list is sorted.
    */
-  private _updateDisplayedPageSizeOptions() {
+  private _updateDisplayedPageSizeOptions(): void {
     if (!this._initialized) { return; }
 
     // If no page size is provided, use the first page size option or the default page size.
@@ -185,7 +185,7 @@ export class MatPaginator implements OnInit, OnDestroy {
   }
 
   /** Emits an event notifying that a change of the paginator's properties has been triggered. */
-  private _emitPageEvent() {
+  private _emitPageEvent(): void {
     this.page.next({
       pageIndex: this.pageIndex,
       pageSize: this.pageSize,

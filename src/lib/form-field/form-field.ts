@@ -105,8 +105,8 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
 
   /** Whether the required marker should be hidden. */
   @Input()
-  get hideRequiredMarker() { return this._hideRequiredMarker; }
-  set hideRequiredMarker(value: any) {
+  get hideRequiredMarker(): boolean { return this._hideRequiredMarker; }
+  set hideRequiredMarker(value: boolean) {
     this._hideRequiredMarker = coerceBooleanProperty(value);
   }
   private _hideRequiredMarker: boolean;
@@ -115,19 +115,19 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
   private _showAlwaysAnimate = false;
 
   /** Whether the floating label should always float or not. */
-  get _shouldAlwaysFloat() {
+  get _shouldAlwaysFloat(): boolean {
     return this._floatPlaceholder === 'always' && !this._showAlwaysAnimate;
   }
 
   /** Whether the placeholder can float or not. */
-  get _canPlaceholderFloat() { return this._floatPlaceholder !== 'never'; }
+  get _canPlaceholderFloat(): boolean { return this._floatPlaceholder !== 'never'; }
 
   /** State of the mat-hint and mat-error animations. */
   _subscriptAnimationState: string = '';
 
   /** Text for the form field hint. */
   @Input()
-  get hintLabel() { return this._hintLabel; }
+  get hintLabel(): string { return this._hintLabel; }
   set hintLabel(value: string) {
     this._hintLabel = value;
     this._processHints();
@@ -139,7 +139,7 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
 
   /** Whether the placeholder should always float, never float or float as the user types. */
   @Input()
-  get floatPlaceholder() { return this._floatPlaceholder; }
+  get floatPlaceholder(): FloatPlaceholderType { return this._floatPlaceholder; }
   set floatPlaceholder(value: FloatPlaceholderType) {
     if (value !== this._floatPlaceholder) {
       this._floatPlaceholder = value || this._placeholderOptions.float || 'auto';
@@ -168,7 +168,7 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
     this.floatPlaceholder = this._placeholderOptions.float || 'auto';
   }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     this._validateControlChild();
     if (this._control.controlType) {
       this._renderer.addClass(
@@ -202,11 +202,11 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
     });
   }
 
-  ngAfterContentChecked() {
+  ngAfterContentChecked(): void {
     this._validateControlChild();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     // Avoid animations on load.
     this._subscriptAnimationState = 'enter';
     this._changeDetectorRef.detectChanges();
@@ -219,7 +219,7 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
   }
 
   /** Whether the form field has a placeholder. */
-  _hasPlaceholder() {
+  _hasPlaceholder(): boolean {
     return !!(this._control.placeholder || this._placeholderChild);
   }
 
@@ -247,14 +247,14 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
    * Ensure that there is only one placeholder (either `placeholder` attribute on the child control
    * or child element with the `mat-placeholder` directive).
    */
-  private _validatePlaceholders() {
+  private _validatePlaceholders(): void {
     if (this._control.placeholder && this._placeholderChild) {
       throw getMatFormFieldPlaceholderConflictError();
     }
   }
 
   /** Does any extra processing that is required when handling the hints. */
-  private _processHints() {
+  private _processHints(): void {
     this._validateHints();
     this._syncDescribedByIds();
   }
@@ -263,7 +263,7 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
    * Ensure that there is a maximum of one of each `<mat-hint>` alignment specified, with the
    * attribute being considered as `align="start"`.
    */
-  private _validateHints() {
+  private _validateHints(): void {
     if (this._hintChildren) {
       let startHint: MatHint;
       let endHint: MatHint;
@@ -287,7 +287,7 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
    * Sets the list of element IDs that describe the child control. This allows the control to update
    * its `aria-describedby` attribute accordingly.
    */
-  private _syncDescribedByIds() {
+  private _syncDescribedByIds(): void {
     if (this._control) {
       let ids: string[] = [];
 
@@ -315,7 +315,7 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
   }
 
   /** Throws an error if the form field's control is missing. */
-  protected _validateControlChild() {
+  protected _validateControlChild(): void {
     if (!this._control) {
       throw getMatFormFieldMissingControlError();
     }

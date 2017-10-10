@@ -85,31 +85,31 @@ export class CdkStep implements OnChanges {
   @Input() label: string;
 
   @Input()
-  get editable() { return this._editable; }
-  set editable(value: any) {
+  get editable(): boolean { return this._editable; }
+  set editable(value: boolean) {
     this._editable = coerceBooleanProperty(value);
   }
   private _editable = true;
 
   /** Whether the completion of step is optional or not. */
   @Input()
-  get optional() { return this._optional; }
-  set optional(value: any) {
+  get optional(): boolean { return this._optional; }
+  set optional(value: boolean) {
     this._optional = coerceBooleanProperty(value);
   }
   private _optional = false;
 
   /** Return whether step is completed or not. */
   @Input()
-  get completed() {
+  get completed(): boolean {
     return this._customCompleted == null ? this._defaultCompleted : this._customCompleted;
   }
-  set completed(value: any) {
+  set completed(value: boolean) {
     this._customCompleted = coerceBooleanProperty(value);
   }
   private _customCompleted: boolean | null = null;
 
-  private get _defaultCompleted() {
+  private get _defaultCompleted(): boolean {
     return this.stepControl ? this.stepControl.valid && this.interacted : this.interacted;
   }
 
@@ -120,7 +120,7 @@ export class CdkStep implements OnChanges {
     this._stepper.selected = this;
   }
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     // Since basically all inputs of the MdStep get proxied through the view down to the
     // underlying MdStepHeader, we have to make sure that change detection runs correctly.
     this._stepper._stateChanged();
@@ -140,13 +140,13 @@ export class CdkStepper {
 
   /** Whether the validity of previous steps should be checked or not. */
   @Input()
-  get linear() { return this._linear; }
-  set linear(value: any) { this._linear = coerceBooleanProperty(value); }
+  get linear(): boolean { return this._linear; }
+  set linear(value: boolean) { this._linear = coerceBooleanProperty(value); }
   private _linear = false;
 
   /** The index of the selected step. */
   @Input()
-  get selectedIndex() { return this._selectedIndex; }
+  get selectedIndex(): number { return this._selectedIndex; }
   set selectedIndex(index: number) {
     if (this._anyControlsInvalid(index)
         || index < this._selectedIndex && !this._steps.toArray()[index].editable) {
@@ -161,13 +161,14 @@ export class CdkStepper {
 
   /** The step that is selected. */
   @Input()
-  get selected() { return this._steps.toArray()[this.selectedIndex]; }
+  get selected(): CdkStep { return this._steps.toArray()[this.selectedIndex]; }
   set selected(step: CdkStep) {
     this.selectedIndex = this._steps.toArray().indexOf(step);
   }
 
   /** Event emitted when the selected step has changed. */
-  @Output() selectionChange = new EventEmitter<StepperSelectionEvent>();
+  @Output() selectionChange: EventEmitter<StepperSelectionEvent>
+      = new EventEmitter<StepperSelectionEvent>();
 
   /** The index of the step that the focus can be set. */
   _focusIndex: number = 0;

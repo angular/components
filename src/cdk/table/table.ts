@@ -140,7 +140,7 @@ export class CdkTable<T> implements CollectionViewer {
    * Stream containing the latest information on what rows are being displayed on screen.
    * Can be used by the data source to as a heuristic of what data should be provided.
    */
-  viewChange =
+  viewChange: BehaviorSubject<{start: number, end: number}> =
       new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
 
   // Placeholders within the table's template where the header and data rows will be inserted.
@@ -169,18 +169,18 @@ export class CdkTable<T> implements CollectionViewer {
     }
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     // TODO(andrewseguin): Setup a listener for scrolling, emit the calculated view to viewChange
     this._dataDiffer = this._differs.find([]).create(this._trackByFn);
   }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     this._cacheColumnDefsByName();
     this._columnDefs.changes.subscribe(() => this._cacheColumnDefsByName());
     this._renderHeaderRow();
   }
 
-  ngAfterContentChecked() {
+  ngAfterContentChecked(): void {
     this._renderUpdatedColumns();
 
     const defaultRowDefs = this._rowDefs.filter(def => !def.when);
@@ -192,7 +192,7 @@ export class CdkTable<T> implements CollectionViewer {
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._rowPlaceholder.viewContainer.clear();
     this._headerRowPlaceholder.viewContainer.clear();
     this._onDestroy.next();
@@ -204,7 +204,7 @@ export class CdkTable<T> implements CollectionViewer {
   }
 
   /** Update the map containing the content's column definitions. */
-  private _cacheColumnDefsByName() {
+  private _cacheColumnDefsByName(): void {
     this._columnDefsByName.clear();
     this._columnDefs.forEach(columnDef => {
       if (this._columnDefsByName.has(columnDef.name)) {
@@ -218,7 +218,7 @@ export class CdkTable<T> implements CollectionViewer {
    * Check if the header or rows have changed what columns they want to display. If there is a diff,
    * then re-render that section.
    */
-  private _renderUpdatedColumns() {
+  private _renderUpdatedColumns(): void {
     // Re-render the rows when the row definition columns change.
     this._rowDefs.forEach(def => {
       if (!!def.getColumnsDiff()) {
@@ -242,7 +242,7 @@ export class CdkTable<T> implements CollectionViewer {
    * render change subscription if one exists. If the data source is null, interpret this by
    * clearing the row placeholder. Otherwise start listening for new data.
    */
-  private _switchDataSource(dataSource: DataSource<T>) {
+  private _switchDataSource(dataSource: DataSource<T>): void {
     this._data = [];
 
     if (this.dataSource) {
@@ -264,7 +264,7 @@ export class CdkTable<T> implements CollectionViewer {
   }
 
   /** Set up a subscription for the data provided by the data source. */
-  private _observeRenderChanges() {
+  private _observeRenderChanges(): void {
     this._renderChangeSubscription = takeUntil.call(this.dataSource.connect(this), this._onDestroy)
       .subscribe(data => {
         this._data = data;
@@ -275,7 +275,7 @@ export class CdkTable<T> implements CollectionViewer {
   /**
    * Create the embedded view for the header template and place it in the header row view container.
    */
-  private _renderHeaderRow() {
+  private _renderHeaderRow(): void {
     const cells = this._getHeaderCellTemplatesForRow(this._headerDef);
     if (!cells.length) { return; }
 
@@ -293,7 +293,7 @@ export class CdkTable<T> implements CollectionViewer {
   }
 
   /** Check for changes made in the data and render each change (row added/removed/moved). */
-  private _renderRowChanges() {
+  private _renderRowChanges(): void {
     const changes = this._dataDiffer.diff(this._data);
     if (!changes) { return; }
 
@@ -332,7 +332,7 @@ export class CdkTable<T> implements CollectionViewer {
    * Create the embedded view for the data row template and place it in the correct index location
    * within the data row view container.
    */
-  private _insertRow(rowData: T, index: number) {
+  private _insertRow(rowData: T, index: number): void {
     const row = this._getRowDef(rowData, index);
 
     // Row context that will be provided to both the created embedded row view and its cells.
@@ -357,7 +357,7 @@ export class CdkTable<T> implements CollectionViewer {
    * rows to be added, removed, or moved. The view container contains the same context
    * that was provided to each of its cells.
    */
-  private _updateRowContext() {
+  private _updateRowContext(): void {
     const viewContainer = this._rowPlaceholder.viewContainer;
     for (let index = 0, count = viewContainer.length; index < count; index++) {
       const viewRef = viewContainer.get(index) as EmbeddedViewRef<CdkCellOutletRowContext<T>>;

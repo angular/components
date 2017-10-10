@@ -46,7 +46,7 @@ export type MatExpansionPanelState = 'expanded' | 'collapsed';
 export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,1)';
 
 /**
- * <mat-expansion-panel> component.
+ * <mat-expansion-panel>
  *
  * This component can be used as a single element to show expandable content, or as one of
  * multiple children of an element with the CdkAccordion directive attached.
@@ -85,7 +85,7 @@ export class MatExpansionPanel extends _MatExpansionPanelMixinBase
   @Input() hideToggle: boolean = false;
 
   /** Stream that emits for changes in `@Input` properties. */
-  _inputChanges = new Subject<SimpleChanges>();
+  _inputChanges: Subject<SimpleChanges> = new Subject<SimpleChanges>();
 
   constructor(@Optional() @Host() accordion: MatAccordion,
               _changeDetectorRef: ChangeDetectorRef,
@@ -115,11 +115,11 @@ export class MatExpansionPanel extends _MatExpansionPanelMixinBase
     return this.expanded ? 'expanded' : 'collapsed';
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     this._inputChanges.next(changes);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._inputChanges.complete();
   }
 }

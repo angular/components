@@ -102,12 +102,14 @@ export class MatListOption extends _MatListOptionMixinBase
 
   /** Whether the option is disabled. */
   @Input()
-  get disabled() { return (this.selectionList && this.selectionList.disabled) || this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  get disabled(): boolean {
+    return (this.selectionList && this.selectionList.disabled) || this._disabled;
+  }
+  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
 
   /** Whether the option is selected. */
   @Input()
-  get selected() { return this._selected; }
+  get selected(): boolean { return this._selected; }
   set selected(value: boolean) {
     const isSelected = coerceBooleanProperty(value);
 
@@ -121,10 +123,12 @@ export class MatListOption extends _MatListOptionMixinBase
   }
 
   /** Emitted when the option is selected. */
-  @Output() selectChange = new EventEmitter<MatSelectionListOptionEvent>();
+  @Output() selectChange: EventEmitter<MatSelectionListOptionEvent>
+      = new EventEmitter<MatSelectionListOptionEvent>();
 
   /** Emitted when the option is deselected. */
-  @Output() deselected = new EventEmitter<MatSelectionListOptionEvent>();
+  @Output() deselected: EventEmitter<MatSelectionListOptionEvent>
+      = new EventEmitter<MatSelectionListOptionEvent>();
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
@@ -134,13 +138,13 @@ export class MatListOption extends _MatListOptionMixinBase
     super();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.selected) {
       this.selectionList.selectedOptions.select(this);
     }
   }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     this._lineSetter = new MatLineSetter(this._lines, this._renderer, this._element);
   }
 
@@ -159,17 +163,17 @@ export class MatListOption extends _MatListOptionMixinBase
   }
 
   /** Whether this list item should show a ripple effect when clicked.  */
-  _isRippleDisabled() {
+  _isRippleDisabled(): boolean {
     return this.disabled || this.disableRipple || this.selectionList.disableRipple;
   }
 
-  _handleClick() {
+  _handleClick(): void {
     if (!this.disabled) {
       this.toggle();
     }
   }
 
-  _handleFocus() {
+  _handleFocus(): void {
     this._hasFocus = true;
     this.selectionList._setFocusedOption(this);
   }
@@ -225,12 +229,12 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   }
 
   /** Focus the selection-list. */
-  focus() {
+  focus(): void {
     this._element.nativeElement.focus();
   }
 
   /** Selects all of the options. */
-  selectAll() {
+  selectAll(): void {
     this.options.forEach(option => {
       if (!option.selected) {
         option.toggle();
@@ -239,7 +243,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   }
 
   /** Deselects all of the options. */
-  deselectAll() {
+  deselectAll(): void {
     this.options.forEach(option => {
       if (option.selected) {
         option.toggle();
@@ -248,12 +252,12 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   }
 
   /** Sets the focused option of the selection-list. */
-  _setFocusedOption(option: MatListOption) {
+  _setFocusedOption(option: MatListOption): void {
     this._keyManager.updateActiveItemIndex(this._getOptionIndex(option));
   }
 
   /** Removes an option from the selection list and updates the active item. */
-  _removeOptionFromList(option: MatListOption) {
+  _removeOptionFromList(option: MatListOption): void {
     if (option._hasFocus) {
       const optionIndex = this._getOptionIndex(option);
 
@@ -267,7 +271,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   }
 
   /** Passes relevant key presses to our key manager. */
-  _keydown(event: KeyboardEvent) {
+  _keydown(event: KeyboardEvent): void {
     switch (event.keyCode) {
       case SPACE:
         this._toggleSelectOnFocusedOption();

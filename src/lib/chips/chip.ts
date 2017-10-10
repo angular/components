@@ -139,31 +139,32 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
   }
 
   /** Emits when the chip is focused. */
-  _onFocus = new Subject<MatChipEvent>();
+  _onFocus: Subject<MatChipEvent> = new Subject<MatChipEvent>();
 
   /** Emits when the chip is blured. */
-  _onBlur = new Subject<MatChipEvent>();
+  _onBlur: Subject<MatChipEvent> = new Subject<MatChipEvent>();
 
   /** Emitted when the chip is selected or deselected. */
-  @Output() selectionChange = new EventEmitter<MatChipSelectionChange>();
+  @Output() selectionChange: EventEmitter<MatChipSelectionChange>
+      = new EventEmitter<MatChipSelectionChange>();
 
   /** Emitted when the chip is destroyed. */
-  @Output() destroyed = new EventEmitter<MatChipEvent>();
+  @Output() destroyed: EventEmitter<MatChipEvent> = new EventEmitter<MatChipEvent>();
 
   /**
    * Emitted when the chip is destroyed.
    * @deprecated Use 'destroyed' instead.
    */
-  @Output() destroy = this.destroyed;
+  @Output() destroy: EventEmitter<MatChipEvent> = this.destroyed;
 
   /** Emitted when a chip is to be removed. */
-  @Output() removed = new EventEmitter<MatChipEvent>();
+  @Output() removed: EventEmitter<MatChipEvent> = new EventEmitter<MatChipEvent>();
 
   /**
    * Emitted when a chip is to be removed.
    * @deprecated Use `removed` instead.
    */
-  @Output('remove') onRemove = this.removed;
+  @Output('remove') onRemove: EventEmitter<MatChipEvent> = this.removed;
 
   get ariaSelected(): string | null {
     return this.selectable ? this.selected.toString() : null;
@@ -240,7 +241,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
   }
 
   /** Ensures events fire properly upon click. */
-  _handleClick(event: Event) {
+  _handleClick(event: Event): void {
     // Check disabled
     if (this.disabled) {
       return;

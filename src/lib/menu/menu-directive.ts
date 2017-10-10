@@ -94,7 +94,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
   /** Position of the menu in the X axis. */
   @Input()
-  get xPosition() { return this._xPosition; }
+  get xPosition(): MenuPositionX { return this._xPosition; }
   set xPosition(value: MenuPositionX) {
     if (value !== 'before' && value !== 'after') {
       throwMatMenuInvalidPositionX();
@@ -105,7 +105,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
   /** Position of the menu in the Y axis. */
   @Input()
-  get yPosition() { return this._yPosition; }
+  get yPosition(): MenuPositionY { return this._yPosition; }
   set yPosition(value: MenuPositionY) {
     if (value !== 'above' && value !== 'below') {
       throwMatMenuInvalidPositionY();
@@ -114,13 +114,14 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
     this.setPositionClasses();
   }
 
+  /** @docs-private */
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
 
   /** List of the items inside of a menu. */
   @ContentChildren(MatMenuItem) items: QueryList<MatMenuItem>;
 
   /** Whether the menu should overlap its trigger. */
-  @Input() overlapTrigger = this._defaultOptions.overlapTrigger;
+  @Input() overlapTrigger: boolean = this._defaultOptions.overlapTrigger;
 
   /**
    * This method takes classes set on the host mat-menu element and applies them on the
@@ -142,19 +143,20 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   }
 
   /** Event emitted when the menu is closed. */
-  @Output() close = new EventEmitter<void | 'click' | 'keydown'>();
+  @Output() close: EventEmitter<void | 'click' | 'keydown'>
+      = new EventEmitter<void | 'click' | 'keydown'>();
 
   constructor(
     private _elementRef: ElementRef,
     private _ngZone: NgZone,
     @Inject(MAT_MENU_DEFAULT_OPTIONS) private _defaultOptions: MatMenuDefaultOptions) { }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     this._keyManager = new FocusKeyManager<MatMenuItem>(this.items).withWrap().withTypeAhead();
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close.emit('keydown'));
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._tabSubscription.unsubscribe();
     this.close.emit();
     this.close.complete();
@@ -176,7 +178,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   }
 
   /** Handle a keyboard event from the menu, delegating to the appropriate action. */
-  _handleKeydown(event: KeyboardEvent) {
+  _handleKeydown(event: KeyboardEvent): void {
     switch (event.keyCode) {
       case ESCAPE:
         this.close.emit('keydown');
@@ -201,7 +203,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
    * Focus the first item in the menu. This method is used by the menu trigger
    * to focus the first item when the menu is opened by the ENTER key.
    */
-  focusFirstItem() {
+  focusFirstItem(): void {
     this._keyManager.setFirstItemActive();
   }
 
@@ -209,7 +211,8 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
    * It's necessary to set position-based classes to ensure the menu panel animation
    * folds out from the correct direction.
    */
-  setPositionClasses(posX: MenuPositionX = this.xPosition, posY: MenuPositionY = this.yPosition) {
+  setPositionClasses(posX: MenuPositionX = this.xPosition,
+                     posY: MenuPositionY = this.yPosition): void {
     this._classList['mat-menu-before'] = posX === 'before';
     this._classList['mat-menu-after'] = posX === 'after';
     this._classList['mat-menu-above'] = posY === 'above';
@@ -236,17 +239,17 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   }
 
   /** Starts the enter animation. */
-  _startAnimation() {
+  _startAnimation(): void {
     this._panelAnimationState = 'enter-start';
   }
 
   /** Resets the panel animation to its initial state. */
-  _resetAnimation() {
+  _resetAnimation(): void {
     this._panelAnimationState = 'void';
   }
 
   /** Callback that is invoked when the panel animation completes. */
-  _onAnimationDone(event: AnimationEvent) {
+  _onAnimationDone(event: AnimationEvent): void {
     // After the initial expansion is done, trigger the second phase of the enter animation.
     if (event.toState === 'enter-start') {
       this._panelAnimationState = 'enter';

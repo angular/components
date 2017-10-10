@@ -87,7 +87,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
    * Stream that emits whenever the state of the input changes such that the wrapping `MatFormField`
    * needs to run change detection.
    */
-  stateChanges = new Subject<void>();
+  stateChanges: Subject<void> = new Subject<void>();
 
   /** When a chip is destroyed, we track the index so we can focus the appropriate next chip. */
   protected _lastDestroyedIndex: number|null = null;
@@ -214,11 +214,11 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
 
   /** Required for FormFieldControl. Whether the chip list is required. */
   @Input()
-  set required(value: any) {
+  set required(value: boolean) {
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
-  get required() {
+  get required(): boolean {
     return this._required;
   }
 
@@ -228,7 +228,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
     this._placeholder = value;
     this.stateChanges.next();
   }
-  get placeholder() {
+  get placeholder(): string {
     return this._chipInput ? this._chipInput.placeholder : this._placeholder;
   }
 
@@ -243,6 +243,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
     return (!this._chipInput || this._chipInput.empty) && this.chips.length === 0;
   }
 
+  /** @docs-private */
   get shouldPlaceholderFloat(): boolean {
     return this.empty;
   }
@@ -306,7 +307,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
    * to facilitate the two-way binding for the `value` input.
    * @docs-private
    */
-  @Output() valueChange = new EventEmitter<any>();
+  @Output() valueChange: EventEmitter<any> = new EventEmitter<any>();
 
   /** The chip components contained within this chip list. */
   @ContentChildren(MatChip) chips: QueryList<MatChip>;
@@ -324,7 +325,6 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
   }
 
   ngAfterContentInit(): void {
-
     this._keyManager = new FocusKeyManager<MatChip>(this.chips).withWrap();
 
     // Prevents the chip list from capturing focus and redirecting
@@ -349,7 +349,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._selectionModel = new SelectionModel<MatChip>(this.multiple, undefined, false);
     this.stateChanges.next();
   }
@@ -364,39 +364,58 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
   }
 
 
-  /** Associates an HTML input element with this chip list. */
-  registerInput(inputElement: MatChipInput) {
+  /**
+   * Associates an HTML input element with this chip list.
+   * @docs-private
+   */
+  registerInput(inputElement: MatChipInput): void {
     this._chipInput = inputElement;
   }
 
-  // Implemented as part of MatFormFieldControl.
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
 
-  // Implemented as part of ControlValueAccessor
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   writeValue(value: any): void {
     if (this.chips) {
       this._setSelectionByValue(value, false);
     }
   }
 
-  // Implemented as part of ControlValueAccessor
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   registerOnChange(fn: (value: any) => void): void {
     this._onChange = fn;
   }
 
-  // Implemented as part of ControlValueAccessor
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   registerOnTouched(fn: () => void): void {
     this._onTouched = fn;
   }
 
-  // Implemented as part of ControlValueAccessor
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   setDisabledState(disabled: boolean): void {
     this.disabled = disabled;
     this._renderer.setProperty(this._elementRef.nativeElement, 'disabled', disabled);
     this.stateChanges.next();
   }
 
-  onContainerClick() {
+  /** @docs-private */
+  onContainerClick(): void {
     this.focus();
   }
 
@@ -404,7 +423,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
    * Focuses the the first non-disabled chip in this chip list, or the associated input when there
    * are no eligible chips.
    */
-  focus() {
+  focus(): void {
     // TODO: ARIA says this should focus the first `selected` chip if any are selected.
     // Focus on first element if there's no chipInput inside chip-list
     if (this._chipInput && this._chipInput.focused) {
@@ -419,7 +438,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
   }
 
   /** Attempt to focus an input if we have one. */
-  _focusInput() {
+  _focusInput(): void {
     if (this._chipInput) {
       this._chipInput.focus();
     }
@@ -428,7 +447,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
   /**
    * Pass events to the keyboard manager. Available here for tests.
    */
-  _keydown(event: KeyboardEvent) {
+  _keydown(event: KeyboardEvent): void {
     let code = event.keyCode;
     let target = event.target as HTMLElement;
     let isInputEmpty = this._isInputEmpty(target);
@@ -475,7 +494,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
    * Otherwise focus the next chip in the list.
    * Save `_lastDestroyedIndex` so we can set the correct focus.
    */
-  protected _updateKeyManager(chip: MatChip) {
+  protected _updateKeyManager(chip: MatChip): void {
     let chipIndex: number = this.chips.toArray().indexOf(chip);
     if (this._isValidIndex(chipIndex)) {
       if (chip._hasFocus) {
@@ -496,7 +515,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
    * Checks to see if a focus chip was recently destroyed so that we can refocus the next closest
    * one.
    */
-  protected _updateFocusForDestroyedChips() {
+  protected _updateFocusForDestroyedChips(): void {
     let chipsArray = this.chips;
 
     if (this._lastDestroyedIndex != null && chipsArray.length > 0) {
@@ -534,7 +553,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
     return false;
   }
 
-  _setSelectionByValue(value: any, isUserInput: boolean = true) {
+  _setSelectionByValue(value: any, isUserInput: boolean = true): void {
     this._clearSelection();
     this.chips.forEach(chip => chip.deselect());
 
@@ -557,7 +576,6 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
    * @returns Chip that has the corresponding value.
    */
   private _selectValue(value: any, isUserInput: boolean = true): MatChip | undefined {
-
     const correspondingChip = this.chips.find(chip => {
       return chip.value != null && this._compareWith(chip.value,  value);
     });
@@ -629,7 +647,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
   }
 
   /** When blurred, mark the field as touched when focus moved outside the chip list. */
-  _blur() {
+  _blur(): void {
     if (!this.disabled) {
       if (this._chipInput) {
         // If there's a chip input, we should check whether the focus moved to chip input.
@@ -649,21 +667,20 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
   }
 
   /** Mark the field as touched */
-  _markAsTouched() {
+  _markAsTouched(): void {
     this._onTouched();
     this._changeDetectorRef.markForCheck();
     this.stateChanges.next();
   }
 
-  private _resetChips() {
+  private _resetChips(): void {
     this._dropSubscriptions();
     this._listenToChipsFocus();
     this._listenToChipsSelection();
     this._listenToChipsRemoved();
   }
 
-
-  private _dropSubscriptions() {
+  private _dropSubscriptions(): void {
     if (this._chipFocusSubscription) {
       this._chipFocusSubscription.unsubscribe();
       this._chipFocusSubscription = null;

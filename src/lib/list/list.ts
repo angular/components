@@ -158,20 +158,20 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
     this._isNavList = !!navList;
   }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     this._lineSetter = new MatLineSetter(this._lines, this._renderer, this._element);
   }
 
   /** Whether this list item should show a ripple effect when clicked.  */
-  _isRippleDisabled() {
+  _isRippleDisabled(): boolean {
     return !this._isNavList || this.disableRipple || this._list.disableRipple;
   }
 
-  _handleFocus() {
+  _handleFocus(): void {
     this._renderer.addClass(this._element.nativeElement, 'mat-list-item-focus');
   }
 
-  _handleBlur() {
+  _handleBlur(): void {
     this._renderer.removeClass(this._element.nativeElement, 'mat-list-item-focus');
   }
 

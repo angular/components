@@ -107,10 +107,10 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   @Input('matMenuTriggerFor') menu: MatMenuPanel;
 
   /** Event emitted when the associated menu is opened. */
-  @Output() onMenuOpen = new EventEmitter<void>();
+  @Output() onMenuOpen: EventEmitter<void> = new EventEmitter<void>();
 
   /** Event emitted when the associated menu is closed. */
-  @Output() onMenuClose = new EventEmitter<void>();
+  @Output() onMenuClose: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private _overlay: Overlay,
               private _element: ElementRef,
@@ -125,7 +125,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     }
   }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     this._checkMenu();
 
     this.menu.close.subscribe(reason => {
@@ -148,7 +148,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this._overlayRef) {
       this._overlayRef.dispose();
       this._overlayRef = null;
@@ -198,12 +198,12 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   }
 
   /** Focuses the menu trigger. */
-  focus() {
+  focus(): void {
     this._element.nativeElement.focus();
   }
 
   /** Closes the menu and does the necessary cleanup. */
-  private _destroyMenu() {
+  private _destroyMenu(): void {
     if (this._overlayRef && this.menuOpen) {
       this._resetMenu();
       this._overlayRef.detach();
@@ -278,7 +278,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * This method checks that a valid instance of MatMenu has been passed into
    * matMenuTriggerFor. If not, an exception is thrown.
    */
-  private _checkMenu() {
+  private _checkMenu(): void {
     if (!this.menu) {
       throwMatMenuMissingError();
     }
