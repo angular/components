@@ -139,7 +139,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
     _renderer.addClass(_elementRef.nativeElement, animationClass);
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes.strokeWidth || changes.diameter) {
       this._elementSize =
           this._diameter + Math.max(this.strokeWidth - this._baseStrokeWidth, 0);
@@ -147,12 +147,12 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   }
 
   /** The radius of the spinner, adjusted for stroke width. */
-  get _circleRadius() {
+  get _circleRadius(): number {
     return (this.diameter - this._baseStrokeWidth) / 2;
   }
 
   /** The view box of the spinner's svg element. */
-  get _viewBox() {
+  get _viewBox(): string {
     return `0 0 ${this._elementSize} ${this._elementSize}`;
   }
 
@@ -162,7 +162,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   }
 
   /** The dash offset of the svg circle. */
-  get _strokeDashOffset() {
+  get _strokeDashOffset(): number | null {
     if (this.mode === 'determinate') {
       return this._strokeCircumference * (100 - this._value) / 100;
     }

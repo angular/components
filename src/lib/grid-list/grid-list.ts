@@ -76,13 +76,13 @@ export class MatGridList implements OnInit, AfterContentChecked {
 
   /** Amount of columns in the grid list. */
   @Input()
-  get cols() { return this._cols; }
-  set cols(value: any) { this._cols = coerceToNumber(value); }
+  get cols(): number { return this._cols; }
+  set cols(value: number) { this._cols = coerceToNumber(value); }
 
   /** Size of the grid list's gutter in pixels. */
   @Input()
-  get gutterSize() { return this._gutter; }
-  set gutterSize(value: any) { this._gutter = coerceToString(value); }
+  get gutterSize(): string { return this._gutter; }
+  set gutterSize(value: string) { this._gutter = coerceToString(value); }
 
   /** Set internal representation of row height from the user-provided value. */
   @Input()
@@ -95,7 +95,7 @@ export class MatGridList implements OnInit, AfterContentChecked {
     }
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._checkCols();
     this._checkRowHeight();
   }
@@ -104,12 +104,12 @@ export class MatGridList implements OnInit, AfterContentChecked {
    * The layout calculation is fairly cheap if nothing changes, so there's little cost
    * to run it frequently.
    */
-  ngAfterContentChecked() {
+  ngAfterContentChecked(): void {
     this._layoutTiles();
   }
 
   /** Throw a friendly error if cols property is missing */
-  private _checkCols() {
+  private _checkCols(): void {
     if (!this.cols) {
       throw Error(`mat-grid-list: must pass in number of columns. ` +
                   `Example: <mat-grid-list cols="3">`);

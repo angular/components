@@ -55,9 +55,15 @@ export abstract class MatFormFieldControl<T> {
    */
   readonly controlType?: string;
 
-  /** Sets the list of element IDs that currently describe this control. */
+  /**
+   * Sets the list of element IDs that currently describe this control.
+   * @docs-private
+   */
   abstract setDescribedByIds(ids: string[]): void;
 
-  /** Handles a click on the control's container. */
+  /**
+   * Handles a click on the control's container.
+   * @docs-private
+   */
   abstract onContainerClick(event: MouseEvent): void;
 }

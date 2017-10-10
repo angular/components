@@ -27,7 +27,7 @@ export class MatDialogRef<T> {
   componentInstance: T;
 
   /** Whether the user is allowed to close the dialog. */
-  disableClose = this._containerInstance._config.disableClose;
+  disableClose: boolean | undefined = this._containerInstance._config.disableClose;
 
   /** Subject for notifying the user that the dialog has finished opening. */
   private _afterOpen = new Subject<void>();

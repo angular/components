@@ -48,7 +48,7 @@ export class MatChipInput {
    * Whether or not the chipEnd event will be emitted when the input is blurred.
    */
   @Input('matChipInputAddOnBlur')
-  get addOnBlur() { return this._addOnBlur; }
+  get addOnBlur(): boolean { return this._addOnBlur; }
   set addOnBlur(value: boolean) { this._addOnBlur = coerceBooleanProperty(value); }
   _addOnBlur: boolean = false;
 
@@ -79,12 +79,12 @@ export class MatChipInput {
   }
 
   /** Utility method to make host definition/tests more clear. */
-  _keydown(event?: KeyboardEvent) {
+  _keydown(event?: KeyboardEvent): void {
     this._emitChipEnd(event);
   }
 
   /** Checks to see if the blur should emit the (chipEnd) event. */
-  _blur() {
+  _blur(): void {
     if (this.addOnBlur) {
       this._emitChipEnd();
     }
@@ -96,13 +96,13 @@ export class MatChipInput {
     this._chipList.stateChanges.next();
   }
 
-  _focus() {
+  _focus(): void {
     this.focused = true;
     this._chipList.stateChanges.next();
   }
 
   /** Checks to see if the (chipEnd) event needs to be emitted. */
-  _emitChipEnd(event?: KeyboardEvent) {
+  _emitChipEnd(event?: KeyboardEvent): void {
     if (!this._inputElement.value && !!event) {
       this._chipList._keydown(event);
     }
@@ -115,5 +115,6 @@ export class MatChipInput {
     }
   }
 
-  focus() { this._inputElement.focus(); }
+  /** Focuses the input. */
+  focus(): void { this._inputElement.focus(); }
 }

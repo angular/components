@@ -51,7 +51,7 @@ export class MatProgressBar {
 
   /** Buffer value of the progress bar. Defaults to zero. */
   @Input()
-  get bufferValue() { return this._bufferValue; }
+  get bufferValue(): number { return this._bufferValue; }
   set bufferValue(v: number) { this._bufferValue = clamp(v || 0); }
 
   /**

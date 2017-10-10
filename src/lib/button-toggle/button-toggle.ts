@@ -116,7 +116,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
     return this._vertical;
   }
 
-  set vertical(value) {
+  set vertical(value: boolean) {
     this._vertical = coerceBooleanProperty(value);
   }
 
@@ -135,7 +135,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
 
   /** Whether the toggle group is selected. */
   @Input()
-  get selected() {
+  get selected(): MatButtonToggle | null {
     return this._selected;
   }
 
@@ -195,7 +195,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
    * Sets the model value. Implemented as part of ControlValueAccessor.
    * @param value Value to be set to the model.
    */
-  writeValue(value: any) {
+  writeValue(value: any): void {
     this.value = value;
     this._changeDetector.markForCheck();
   }
@@ -205,7 +205,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
    * Implemented as part of ControlValueAccessor.
    * @param fn On change callback function.
    */
-  registerOnChange(fn: (value: any) => void) {
+  registerOnChange(fn: (value: any) => void): void {
     this._controlValueAccessorChangeFn = fn;
   }
 
@@ -214,7 +214,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
    * Implemented as part of ControlValueAccessor.
    * @param fn On touch callback function.
    */
-  registerOnTouched(fn: any) {
+  registerOnTouched(fn: any): void {
     this._onTouched = fn;
   }
 
@@ -227,7 +227,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
     this._markButtonTogglesForCheck();
   }
 
-  private _markButtonTogglesForCheck() {
+  private _markButtonTogglesForCheck(): void {
     if (this._buttonToggles) {
       this._buttonToggles.forEach((toggle) => toggle._markForCheck());
     }
@@ -257,7 +257,7 @@ export class MatButtonToggleGroupMultiple extends _MatButtonToggleGroupMixinBase
     return this._vertical;
   }
 
-  set vertical(value) {
+  set vertical(value: boolean) {
     this._vertical = coerceBooleanProperty(value);
   }
 }
@@ -406,7 +406,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.id == null) {
       this.id = `mat-button-toggle-${_uniqueIdCounter++}`;
     }
@@ -418,7 +418,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
   }
 
   /** Focuses the button. */
-  focus() {
+  focus(): void {
     this._inputElement.nativeElement.focus();
   }
 
@@ -428,7 +428,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
   }
 
   /** Checks the button toggle due to an interaction with the underlying native input. */
-  _onInputChange(event: Event) {
+  _onInputChange(event: Event): void {
     event.stopPropagation();
 
     if (this._isSingleSelector) {
@@ -478,7 +478,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
    * This method is exposed because the parent button toggle group will directly
    * update bound properties of the radio button.
    */
-  _markForCheck() {
+  _markForCheck(): void {
     // When group value changes, the button will not be notified. Use `markForCheck` to explicit
     // update button toggle's status
     this._changeDetectorRef.markForCheck();

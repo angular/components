@@ -278,13 +278,13 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    * Stream that emits whenever the state of the select changes such that the wrapping
    * `MatFormField` needs to run change detection.
    */
-  stateChanges = new Subject<void>();
+  stateChanges: Subject<void> = new Subject<void>();
 
   /** Whether the select is focused. */
-  focused = false;
+  focused: boolean = false;
 
   /** A name for this control that can be used by `mat-form-field`. */
-  controlType = 'mat-select';
+  controlType: string = 'mat-select';
 
   /** Trigger that opens the select. */
   @ViewChild('trigger') trigger: ElementRef;
@@ -309,7 +309,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** Placeholder to be shown if no value has been selected. */
   @Input()
-  get placeholder() { return this._placeholder; }
+  get placeholder(): string { return this._placeholder; }
   set placeholder(value: string) {
     this._placeholder = value;
     this.stateChanges.next();
@@ -317,8 +317,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** Whether the component is required. */
   @Input()
-  get required() { return this._required; }
-  set required(value: any) {
+  get required(): boolean { return this._required; }
+  set required(value: boolean) {
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
@@ -383,7 +383,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** Unique id of the element. */
   @Input()
-  get id() { return this._id; }
+  get id(): string { return this._id; }
   set id(value: string) {
     this._id = value || this._uid;
     this.stateChanges.next();
@@ -409,7 +409,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    * to facilitate the two-way binding for the `value` input.
    * @docs-private
    */
-  @Output() valueChange = new EventEmitter<any>();
+  @Output() valueChange: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(
     private _viewportRuler: ViewportRuler,
@@ -438,12 +438,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     this.id = this.id;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._selectionModel = new SelectionModel<MatOption>(this.multiple, undefined, false);
     this.stateChanges.next();
   }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     this._initKeyManager();
 
     RxChain.from(this.options.changes)
@@ -455,13 +455,13 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       });
   }
 
-  ngDoCheck() {
+  ngDoCheck(): void {
     if (this.ngControl) {
       this._updateErrorState();
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._destroy.next();
     this._destroy.complete();
   }
@@ -645,7 +645,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     this._changeDetectorRef.markForCheck();
   }
 
-  _onFocus() {
+  _onFocus(): void {
     if (!this.disabled) {
       this.focused = true;
       this.stateChanges.next();
@@ -656,7 +656,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    * Calls the touched callback only if the panel is closed. Otherwise, the trigger will
    * "blur" to the panel when it opens, causing a false positive.
    */
-  _onBlur() {
+  _onBlur(): void {
     if (!this.disabled && !this.panelOpen) {
       this.focused = false;
       this._onTouched();
@@ -766,7 +766,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   }
 
   /** Sets up a key manager to listen to keyboard events on the overlay panel. */
-  private _initKeyManager() {
+  private _initKeyManager(): void {
     this._keyManager = new ActiveDescendantKeyManager<MatOption>(this.options).withTypeAhead();
 
     takeUntil.call(this._keyManager.tabOut, this._destroy)
@@ -865,7 +865,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    * Sets the `multiple` property on each option. The promise is necessary
    * in order to avoid Angular errors when modifying the property after init.
    */
-  private _setOptionMultiple() {
+  private _setOptionMultiple(): void {
     if (this.multiple) {
       Promise.resolve(null).then(() => {
         this.options.forEach(option => option.multiple = this.multiple);
@@ -874,7 +874,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   }
 
   /** Sets the `disableRipple` property on each option. */
-  private _setOptionDisableRipple() {
+  private _setOptionDisableRipple(): void {
     if (this.options) {
       this.options.forEach(option => option.disableRipple = this.disableRipple);
     }
@@ -1100,7 +1100,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   }
 
   /** Adjusts the overlay panel up to fit in the viewport. */
-  private _adjustPanelUp(panelHeightBottom: number, bottomSpaceAvailable: number) {
+  private _adjustPanelUp(panelHeightBottom: number, bottomSpaceAvailable: number): void {
     // Browsers ignore fractional scroll offsets, so we need to round.
     const distanceBelowViewport = Math.round(panelHeightBottom - bottomSpaceAvailable);
 
@@ -1122,7 +1122,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** Adjusts the overlay panel down to fit in the viewport. */
   private _adjustPanelDown(panelHeightTop: number, topSpaceAvailable: number,
-                           maxScroll: number) {
+                           maxScroll: number): void {
     // Browsers ignore fractional scroll offsets, so we need to round.
     const distanceAboveViewport = Math.round(panelHeightTop - topSpaceAvailable);
 
@@ -1201,18 +1201,27 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     }
   }
 
-  // Implemented as part of MatFormFieldControl.
-  setDescribedByIds(ids: string[]) {
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
+  setDescribedByIds(ids: string[]): void {
     this._ariaDescribedby = ids.join(' ');
   }
 
-  // Implemented as part of MatFormFieldControl.
-  onContainerClick() {
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
+  onContainerClick(): void {
     this.focus();
     this.open();
   }
 
-  // Implemented as part of MatFormFieldControl.
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   get shouldPlaceholderFloat(): boolean {
     return this._panelOpen || !this.empty;
   }

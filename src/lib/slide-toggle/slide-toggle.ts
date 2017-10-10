@@ -150,7 +150,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
     this.tabIndex = parseInt(tabIndex) || 0;
   }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     this._slideRenderer = new SlideToggleRenderer(this._elementRef, this._platform);
 
     this._focusMonitor
@@ -158,14 +158,14 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
       .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._focusMonitor.stopMonitoring(this._inputElement.nativeElement);
   }
 
   /**
    * This function will called if the underlying input changed its value through user interaction.
    */
-  _onChangeEvent(event: Event) {
+  _onChangeEvent(event: Event): void {
     // We always have to stop propagation on the change event.
     // Otherwise the change event, from the input element, will bubble up and
     // emit its event object to the component's `change` output.
@@ -180,7 +180,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
     this._emitChangeEvent();
   }
 
-  _onInputClick(event: Event) {
+  _onInputClick(event: Event): void {
     // In some situations the user will release the mouse on the label element. The label element
     // redirects the click to the underlying input element and will result in a value change.
     // Prevent the default behavior if dragging, because the value will be set after drag.
@@ -220,17 +220,17 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   }
 
   /** Focuses the slide-toggle. */
-  focus() {
+  focus(): void {
     this._focusMonitor.focusVia(this._inputElement.nativeElement, 'keyboard');
   }
 
   /** Toggles the checked state of the slide-toggle. */
-  toggle() {
+  toggle(): void {
     this.checked = !this.checked;
   }
 
   /** Function is called whenever the focus changes for the input element. */
-  private _onInputFocusChange(focusOrigin: FocusOrigin) {
+  private _onInputFocusChange(focusOrigin: FocusOrigin): void {
     if (!this._focusRipple && focusOrigin === 'keyboard') {
       // For keyboard focus show a persistent ripple as focus indicator.
       this._focusRipple = this._ripple.launch(0, 0, {persistent: true, centered: true});
@@ -248,7 +248,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   /**
    * Emits a change event on the `change` output. Also notifies the FormControl about the change.
    */
-  private _emitChangeEvent() {
+  private _emitChangeEvent(): void {
     let event = new MatSlideToggleChange();
     event.source = this;
     event.checked = this.checked;
@@ -256,19 +256,19 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
     this.change.emit(event);
   }
 
-  _onDragStart() {
+  _onDragStart(): void {
     if (!this.disabled) {
       this._slideRenderer.startThumbDrag(this.checked);
     }
   }
 
-  _onDrag(event: HammerInput) {
+  _onDrag(event: HammerInput): void {
     if (this._slideRenderer.dragging) {
       this._slideRenderer.updateThumbPosition(event.deltaX);
     }
   }
 
-  _onDragEnd() {
+  _onDragEnd(): void {
     if (this._slideRenderer.dragging) {
       let _previousChecked = this.checked;
       this.checked = this._slideRenderer.dragPercentage > 50;
@@ -284,7 +284,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   }
 
   /** Method being called whenever the label text changes. */
-  _onLabelTextChange() {
+  _onLabelTextChange(): void {
     // This method is getting called whenever the label of the slide-toggle changes.
     // Since the slide-toggle uses the OnPush strategy we need to notify it about the change
     // that has been recognized by the cdkObserveContent directive.
@@ -325,7 +325,7 @@ class SlideToggleRenderer {
   }
 
   /** Initializes the drag of the slide-toggle. */
-  startThumbDrag(checked: boolean) {
+  startThumbDrag(checked: boolean): void {
     if (this.dragging) { return; }
 
     this._thumbBarWidth = this._thumbBarEl.clientWidth - this._thumbEl.clientWidth;
@@ -349,7 +349,7 @@ class SlideToggleRenderer {
   }
 
   /** Updates the thumb containers position from the specified distance. */
-  updateThumbPosition(distance: number) {
+  updateThumbPosition(distance: number): void {
     this.dragPercentage = this._getDragPercentage(distance);
     // Calculate the moved distance based on the thumb bar width.
     let dragX = (this.dragPercentage / 100) * this._thumbBarWidth;
@@ -357,7 +357,7 @@ class SlideToggleRenderer {
   }
 
   /** Retrieves the percentage of thumb from the moved distance. Percentage as fraction of 100. */
-  private _getDragPercentage(distance: number) {
+  private _getDragPercentage(distance: number): number {
     let percentage = (distance / this._thumbBarWidth) * 100;
 
     // When the toggle was initially checked, then we have to start the drag at the end.

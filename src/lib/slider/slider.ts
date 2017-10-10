@@ -135,15 +135,15 @@ export class MatSlider extends _MatSliderMixinBase
     implements ControlValueAccessor, OnDestroy, CanDisable, CanColor, OnInit {
   /** Whether the slider is inverted. */
   @Input()
-  get invert() { return this._invert; }
-  set invert(value: any) {
+  get invert(): boolean { return this._invert; }
+  set invert(value: boolean) {
     this._invert = coerceBooleanProperty(value);
   }
   private _invert = false;
 
   /** The maximum value that the slider can have. */
   @Input()
-  get max() { return this._max; }
+  get max(): number { return this._max; }
   set max(v: number) {
     this._max = coerceNumberProperty(v, this._max);
     this._percent = this._calculatePercentage(this._value);
@@ -155,7 +155,7 @@ export class MatSlider extends _MatSliderMixinBase
 
   /** The minimum value that the slider can have. */
   @Input()
-  get min() { return this._min; }
+  get min(): number { return this._min; }
   set min(v: number) {
     this._min = coerceNumberProperty(v, this._min);
 
@@ -172,7 +172,7 @@ export class MatSlider extends _MatSliderMixinBase
 
   /** The values at which the thumb will snap. */
   @Input()
-  get step() { return this._step; }
+  get step(): number { return this._step; }
   set step(v: number) {
     this._step = coerceNumberProperty(v, this._step);
 
@@ -188,20 +188,20 @@ export class MatSlider extends _MatSliderMixinBase
   /** Whether or not to show the thumb label. */
   @Input()
   get thumbLabel(): boolean { return this._thumbLabel; }
-  set thumbLabel(value) { this._thumbLabel = coerceBooleanProperty(value); }
+  set thumbLabel(value: boolean) { this._thumbLabel = coerceBooleanProperty(value); }
   private _thumbLabel: boolean = false;
 
   /** @deprecated */
   @Input('thumb-label')
   get _thumbLabelDeprecated(): boolean { return this._thumbLabel; }
-  set _thumbLabelDeprecated(value) { this._thumbLabel = value; }
+  set _thumbLabelDeprecated(value: boolean) { this._thumbLabel = value; }
 
   /**
    * How often to show ticks. Relative to the step so that a tick always appears on a step.
    * Ex: Tick interval of 4 with a step of 3 will draw a tick every 4 steps (every 12 values).
    */
   @Input()
-  get tickInterval() { return this._tickInterval; }
+  get tickInterval(): 'auto' | number { return this._tickInterval; }
   set tickInterval(value: 'auto' | number) {
     if (value === 'auto') {
       this._tickInterval = 'auto';
@@ -220,7 +220,7 @@ export class MatSlider extends _MatSliderMixinBase
 
   /** Value of the slider. */
   @Input()
-  get value() {
+  get value(): number | null {
     // If the value needs to be read and it is still uninitialized, initialize it to the min.
     if (this._value === null) {
       this.value = this._min;
@@ -240,17 +240,17 @@ export class MatSlider extends _MatSliderMixinBase
 
   /** Whether the slider is vertical. */
   @Input()
-  get vertical() { return this._vertical; }
-  set vertical(value: any) {
+  get vertical(): boolean { return this._vertical; }
+  set vertical(value: boolean) {
     this._vertical = coerceBooleanProperty(value);
   }
-  private _vertical = false;
+  private _vertical: boolean = false;
 
   /** Event emitted when the slider value has changed. */
-  @Output() change = new EventEmitter<MatSliderChange>();
+  @Output() change: EventEmitter<MatSliderChange> = new EventEmitter<MatSliderChange>();
 
   /** Event emitted when the slider thumb moves. */
-  @Output() input = new EventEmitter<MatSliderChange>();
+  @Output() input: EventEmitter<MatSliderChange> = new EventEmitter<MatSliderChange>();
 
   /** The value to be used for display purposes. */
   get displayValue(): string | number {
@@ -287,7 +287,7 @@ export class MatSlider extends _MatSliderMixinBase
    * Whether the axis of the slider is inverted.
    * (i.e. whether moving the thumb in the positive x or y direction decreases the slider's value).
    */
-  get _invertAxis() {
+  get _invertAxis(): boolean {
     // Standard non-inverted mode for a vertical slider should be dragging the thumb from bottom to
     // top. However from a y-axis standpoint this is inverted.
     return this.vertical ? !this.invert : this.invert;
@@ -295,7 +295,7 @@ export class MatSlider extends _MatSliderMixinBase
 
 
   /** Whether the slider is at its minimum value. */
-  get _isMinValue() {
+  get _isMinValue(): boolean {
     return this.percent === 0;
   }
 
@@ -303,7 +303,7 @@ export class MatSlider extends _MatSliderMixinBase
    * The amount of space to leave between the slider thumb and the track fill & track background
    * elements.
    */
-  get _thumbGap() {
+  get _thumbGap(): number {
     if (this.disabled) {
       return DISABLED_THUMB_GAP;
     }
@@ -405,12 +405,12 @@ export class MatSlider extends _MatSliderMixinBase
    * Whether mouse events should be converted to a slider position by calculating their distance
    * from the right or bottom edge of the slider as opposed to the top or left.
    */
-  private get _invertMouseCoords() {
+  private get _invertMouseCoords(): boolean {
     return (this._direction == 'rtl' && !this.vertical) ? !this._invertAxis : this._invertAxis;
   }
 
   /** The language direction for this slider element. */
-  private get _direction() {
+  private get _direction(): 'rtl' | 'ltr' {
     return (this._dir && this._dir.value == 'rtl') ? 'rtl' : 'ltr';
   }
 
@@ -422,7 +422,7 @@ export class MatSlider extends _MatSliderMixinBase
     super(renderer, elementRef);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._focusMonitor
         .monitor(this._elementRef.nativeElement, this._renderer, true)
         .subscribe((origin: FocusOrigin) => {
@@ -436,12 +436,12 @@ export class MatSlider extends _MatSliderMixinBase
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
     this._dirChangeSubscription.unsubscribe();
   }
 
-  _onMouseenter() {
+  _onMouseenter(): void {
     if (this.disabled) {
       return;
     }
@@ -452,7 +452,7 @@ export class MatSlider extends _MatSliderMixinBase
     this._updateTickIntervalPercent();
   }
 
-  _onClick(event: MouseEvent) {
+  _onClick(event: MouseEvent): void {
     if (this.disabled) {
       return;
     }
@@ -469,7 +469,7 @@ export class MatSlider extends _MatSliderMixinBase
     }
   }
 
-  _onSlide(event: HammerInput) {
+  _onSlide(event: HammerInput): void {
     if (this.disabled) {
       return;
     }
@@ -492,7 +492,7 @@ export class MatSlider extends _MatSliderMixinBase
     }
   }
 
-  _onSlideStart(event: HammerInput | null) {
+  _onSlideStart(event: HammerInput | null): void {
     if (this.disabled || this._isSliding) {
       return;
     }
@@ -510,7 +510,7 @@ export class MatSlider extends _MatSliderMixinBase
     }
   }
 
-  _onSlideEnd() {
+  _onSlideEnd(): void {
     this._isSliding = false;
 
     if (this._valueOnSlideStart != this.value) {
@@ -519,18 +519,18 @@ export class MatSlider extends _MatSliderMixinBase
     this._valueOnSlideStart = null;
   }
 
-  _onFocus() {
+  _onFocus(): void {
     // We save the dimensions of the slider here so we can use them to update the spacing of the
     // ticks and determine where on the slider click and slide events happen.
     this._sliderDimensions = this._getSliderDimensions();
     this._updateTickIntervalPercent();
   }
 
-  _onBlur() {
+  _onBlur(): void {
     this.onTouched();
   }
 
-  _onKeydown(event: KeyboardEvent) {
+  _onKeydown(event: KeyboardEvent): void {
     if (this.disabled) { return; }
 
     let oldValue = this.value;
@@ -588,12 +588,12 @@ export class MatSlider extends _MatSliderMixinBase
   }
 
   /** Increments the slider by the given number of steps (negative number decrements). */
-  private _increment(numSteps: number) {
+  private _increment(numSteps: number): void {
     this.value = this._clamp((this.value || 0) + this.step * numSteps, this.min, this.max);
   }
 
   /** Calculate the new value from the new physical location. The value will always be snapped. */
-  private _updateValueFromPosition(pos: {x: number, y: number}) {
+  private _updateValueFromPosition(pos: {x: number, y: number}): void {
     if (!this._sliderDimensions) {
       return;
     }
@@ -617,18 +617,18 @@ export class MatSlider extends _MatSliderMixinBase
   }
 
   /** Emits a change event if the current value is different from the last emitted value. */
-  private _emitChangeEvent() {
+  private _emitChangeEvent(): void {
     this._controlValueAccessorChangeFn(this.value);
     this.change.emit(this._createChangeEvent());
   }
 
   /** Emits an input event when the current value is different from the last emitted value. */
-  private _emitInputEvent() {
+  private _emitInputEvent(): void {
     this.input.emit(this._createChangeEvent());
   }
 
   /** Updates the amount of space between ticks as a percentage of the width of the slider. */
-  private _updateTickIntervalPercent() {
+  private _updateTickIntervalPercent(): void {
     if (!this.tickInterval || !this._sliderDimensions) {
       return;
     }
@@ -655,17 +655,17 @@ export class MatSlider extends _MatSliderMixinBase
   }
 
   /** Calculates the percentage of the slider that a value is. */
-  private _calculatePercentage(value: number | null) {
+  private _calculatePercentage(value: number | null): number {
     return ((value || 0) - this.min) / (this.max - this.min);
   }
 
   /** Calculates the value a percentage of the slider corresponds to. */
-  private _calculateValue(percentage: number) {
+  private _calculateValue(percentage: number): number {
     return this.min + percentage * (this.max - this.min);
   }
 
   /** Return a number between two numbers. */
-  private _clamp(value: number, min = 0, max = 1) {
+  private _clamp(value: number, min = 0, max = 1): number {
     return Math.max(min, Math.min(value, max));
   }
 
@@ -682,7 +682,7 @@ export class MatSlider extends _MatSliderMixinBase
    * Focuses the native element.
    * Currently only used to allow a blur event to fire but will be used with keyboard input later.
    */
-  private _focusHostElement() {
+  private _focusHostElement(): void {
     this._elementRef.nativeElement.focus();
   }
 
@@ -690,7 +690,7 @@ export class MatSlider extends _MatSliderMixinBase
    * Sets the model value. Implemented as part of ControlValueAccessor.
    * @param value
    */
-  writeValue(value: any) {
+  writeValue(value: any): void {
     this.value = value;
   }
 
@@ -699,7 +699,7 @@ export class MatSlider extends _MatSliderMixinBase
    * Implemented as part of ControlValueAccessor.
    * @param fn Callback to be registered.
    */
-  registerOnChange(fn: (value: any) => void) {
+  registerOnChange(fn: (value: any) => void): void {
     this._controlValueAccessorChangeFn = fn;
   }
 
@@ -708,7 +708,7 @@ export class MatSlider extends _MatSliderMixinBase
    * Implemented as part of ControlValueAccessor.
    * @param fn Callback to be registered.
    */
-  registerOnTouched(fn: any) {
+  registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
 
@@ -717,7 +717,7 @@ export class MatSlider extends _MatSliderMixinBase
    * Implemented as part of ControlValueAccessor.
    * @param isDisabled
    */
-  setDisabledState(isDisabled: boolean) {
+  setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
 }

@@ -33,7 +33,7 @@ export interface Sort {
 })
 export class MatSort {
   /** Collection of all registered sortables that this directive manages. */
-  sortables = new Map<string, MatSortable>();
+  sortables: Map<string, MatSortable> = new Map<string, MatSortable>();
 
   /** The id of the most recently sorted MatSortable. */
   @Input('matSortActive') active: string;
@@ -65,13 +65,13 @@ export class MatSort {
   private _disableClear: boolean;
 
   /** Event emitted when the user changes either the active sort or sort direction. */
-  @Output('matSortChange') readonly sortChange = new EventEmitter<Sort>();
+  @Output('matSortChange') readonly sortChange: EventEmitter<Sort> = new EventEmitter<Sort>();
 
   /**
    * Register function to be used by the contained MatSortables. Adds the MatSortable to the
    * collection of MatSortables.
    */
-  register(sortable: MatSortable) {
+  register(sortable: MatSortable): void {
     if (!sortable.id) {
       throw getSortHeaderMissingIdError();
     }
@@ -86,12 +86,12 @@ export class MatSort {
    * Unregister function to be used by the contained MatSortables. Removes the MatSortable from the
    * collection of contained MatSortables.
    */
-  deregister(sortable: MatSortable) {
+  deregister(sortable: MatSortable): void {
     this.sortables.delete(sortable.id);
   }
 
   /** Sets the active sort id and determines the new sort direction. */
-  sort(sortable: MatSortable) {
+  sort(sortable: MatSortable): void {
     if (this.active != sortable.id) {
       this.active = sortable.id;
       this.direction = sortable.start ? sortable.start : this.start;

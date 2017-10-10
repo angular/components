@@ -144,7 +144,7 @@ export class MatButton extends _MatButtonMixinBase
     this._focusMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
   }
 
@@ -157,12 +157,12 @@ export class MatButton extends _MatButtonMixinBase
     return this._elementRef.nativeElement;
   }
 
-  _isRippleDisabled() {
+  _isRippleDisabled(): boolean {
     return this.disableRipple || this.disabled;
   }
 
   /** Gets whether the button has one of the given attributes with a 'mat-' prefix. */
-  _hasAttributeWithPrefix(...unprefixedAttributeNames: string[]) {
+  _hasAttributeWithPrefix(...unprefixedAttributeNames: string[]): boolean {
     // If not on the browser, say that there are none of the attributes present.
     // Since these only affect how the ripple displays (and ripples only happen on the client),
     // detecting these attributes isn't necessary when not on the browser.
@@ -205,7 +205,7 @@ export class MatAnchor extends MatButton {
     super(renderer, elementRef, platform, focusMonitor);
   }
 
-  _haltDisabledEvents(event: Event) {
+  _haltDisabledEvents(event: Event): void {
     // A disabled button shouldn't apply any actions
     if (this.disabled) {
       event.preventDefault();

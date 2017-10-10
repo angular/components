@@ -79,7 +79,7 @@ export class MatDrawerContent implements AfterContentInit {
       @Inject(forwardRef(() => MatDrawerContainer)) private _container: MatDrawerContainer) {
   }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     this._container._contentMargins.subscribe(margins => {
       this._margins = margins;
       this._changeDetectorRef.markForCheck();
@@ -138,7 +138,7 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
   /** The side that the drawer is attached to. */
   @Input()
   get position(): 'start' | 'end' { return this._position; }
-  set position(value) {
+  set position(value: 'start' | 'end') {
     // Make sure we have a valid value.
     value = value === 'end' ? 'end' : 'start';
     if (value != this._position) {
@@ -152,12 +152,12 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
   /** @deprecated */
   @Input()
   get align(): 'start' | 'end' { return this.position; }
-  set align(value) { this.position = value; }
+  set align(value: 'start' | 'end') { this.position = value; }
 
   /** Mode of the drawer; one of 'over', 'push' or 'side'. */
   @Input()
   get mode(): 'over' | 'push' | 'side' { return this._mode; }
-  set mode(value) {
+  set mode(value: 'over' | 'push' | 'side') {
     this._mode = value;
     this._modeChanged.next();
   }
@@ -203,25 +203,25 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
    * Event emitted when the drawer is fully opened.
    * @deprecated Use `openedChange` instead.
    */
-  @Output('open') onOpen = this._openedStream;
+  @Output('open') onOpen: Observable<void> = this._openedStream;
 
   /**
    * Event emitted when the drawer is fully closed.
    * @deprecated Use `openedChange` instead.
    */
-  @Output('close') onClose = this._closedStream;
+  @Output('close') onClose: Observable<void> = this._closedStream;
 
   /** Event emitted when the drawer's position changes. */
-  @Output('positionChanged') onPositionChanged = new EventEmitter<void>();
+  @Output('positionChanged') onPositionChanged: EventEmitter<void> = new EventEmitter<void>();
 
   /** @deprecated */
-  @Output('align-changed') onAlignChanged = new EventEmitter<void>();
+  @Output('align-changed') onAlignChanged: EventEmitter<void> = new EventEmitter<void>();
 
   /**
    * An observable that emits when the drawer mode changes. This is used by the drawer container to
    * to know when to when the mode changes so it can adapt the margins on the content.
    */
-  _modeChanged = new Subject();
+  _modeChanged: Subject<any> = new Subject();
 
   get _isFocusTrapEnabled(): boolean {
     // The focus trap is only enabled when the drawer is open in any mode other than side.
@@ -250,7 +250,7 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
    * If focus is currently inside the drawer, restores it to where it was before the drawer
    * opened.
    */
-  private _restoreFocus() {
+  private _restoreFocus(): void {
     let activeEl = this._doc && this._doc.activeElement;
     if (activeEl && this._elementRef.nativeElement.contains(activeEl)) {
       if (this._elementFocusedBeforeDrawerWasOpened instanceof HTMLElement) {
@@ -263,13 +263,13 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
     this._elementFocusedBeforeDrawerWasOpened = null;
   }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     this._focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement);
     this._focusTrap.enabled = this._isFocusTrapEnabled;
     this._enableAnimations = true;
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this._focusTrap) {
       this._focusTrap.destroy();
     }
@@ -324,18 +324,18 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
    * Handles the keyboard events.
    * @docs-private
    */
-  handleKeydown(event: KeyboardEvent) {
+  handleKeydown(event: KeyboardEvent): void {
     if (event.keyCode === ESCAPE && !this.disableClose) {
       this.close();
       event.stopPropagation();
     }
   }
 
-  _onAnimationStart(event: AnimationEvent) {
+  _onAnimationStart(event: AnimationEvent): void {
     this._animationStarted.emit(event);
   }
 
-  _onAnimationEnd(event: AnimationEvent) {
+  _onAnimationEnd(event: AnimationEvent): void {
     const {fromState, toState} = event;
 
     if (toState.indexOf('open') === 0 && fromState === 'void') {
@@ -345,7 +345,7 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
     }
   }
 
-  get _width() {
+  get _width(): number {
     return this._elementRef.nativeElement ? (this._elementRef.nativeElement.offsetWidth || 0) : 0;
   }
 }
