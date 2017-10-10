@@ -4,6 +4,7 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'select-reset-example',
   templateUrl: 'select-reset-example.html',
+  styleUrls: ['select-reset-example.css'],
 })
 export class SelectResetExample {
   states = [

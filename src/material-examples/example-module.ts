@@ -85,6 +85,7 @@ import {SelectOptgroupExample} from './select-optgroup/select-optgroup-example';
 import {SelectOverviewExample} from './select-overview/select-overview-example';
 import {SelectPanelClassExample} from './select-panel-class/select-panel-class-example';
 import {SelectResetExample} from './select-reset/select-reset-example';
+import {SelectValueBindingExample} from './select-vlaue-binding/select-value-binding-example';
 import {SidenavFabExample} from './sidenav-fab/sidenav-fab-example';
 import {SidenavOverviewExample} from './sidenav-overview/sidenav-overview-example';
 import {SlideToggleConfigurableExample} from './slide-toggle-configurable/slide-toggle-configurable-example';
@@ -542,6 +543,12 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'select-value-binding': {
+    title: 'Select with 2-way value binding ',
+    component: SelectValueBindingExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'sidenav-fab': {
     title: 'Sidenav with a FAB',
     component: SidenavFabExample,
@@ -755,6 +762,7 @@ export const EXAMPLE_LIST = [
   SelectOverviewExample,
   SelectPanelClassExample,
   SelectResetExample,
+  SelectValueBindingExample,
   SidenavFabExample,
   SidenavOverviewExample,
   SlideToggleConfigurableExample,

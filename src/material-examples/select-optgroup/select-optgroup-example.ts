@@ -5,6 +5,7 @@ import {FormControl} from '@angular/forms';
 @Component({
   selector: 'select-optgroup-example',
   templateUrl: 'select-optgroup-example.html',
+  styleUrls: ['select-optgroup-example.css'],
 })
 export class SelectOptgroupExample {
   pokemonControl = new FormControl();

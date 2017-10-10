@@ -7,6 +7,7 @@ import {FormControl} from '@angular/forms';
 @Component({
   selector: 'select-panel-class-example',
   templateUrl: 'select-panel-class-example.html',
+  styleUrls: ['select-panel-class-example.css'],
 })
 export class SelectPanelClassExample {
   panelColor = new FormControl('red');

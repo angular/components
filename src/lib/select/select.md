@@ -16,9 +16,14 @@ The select component is set up as a custom value accessor, so you can manipulate
 using any of the form directives from the core `FormsModule` or `ReactiveFormsModule`: `ngModel`,
 `formControl`, etc. As with native `<select>`, `<mat-select>` also supports a `compareWith`
 function. (Additional information about using a custom `compareWith` function can be found in the
-[angular forms documentation](https://angular.io/api/forms/SelectControlValueAccessor#caveat-option-selection)).
+[Angular forms documentation](https://angular.io/api/forms/SelectControlValueAccessor#caveat-option-selection)).
 
 <!-- example(select-form) -->
+
+`<mat-select>` also supports 2-way binding to the `value` property without the need for Angular
+forms.
+
+<!-- example(select-value-binding) -->
 
 ### Form field features
 
@@ -62,8 +67,8 @@ on the group.
 
 ### Selecting multiple options
 
-By default the `<mat-select>` only supports selecting a single option at a time. However you can use
-the `multiple` property to allow the user to select multiple values at once. When using the
+By default, the `<mat-select>` only supports selecting a single option at a time. However, you can 
+use the `multiple` property to allow the user to select multiple values at once. When using the
 `<mat-select>` in multiple selection mode, its value will be a sorted list of all selected values
 rather than a single value.
 
@@ -78,7 +83,7 @@ If you want to display a custom trigger label inside a select, you can use the
 
 ### Disabling the ripple effect
 
-By default when a user clicks on a `<mat-option>` a ripple animation is shown. This can be disabled
+By default, when a user clicks on a `<mat-option>`, a ripple animation is shown. This can be disabled
 by setting the `disableRipple` property on `<mat-select>`.
 
 <!-- example(select-no-ripple) -->
@@ -158,4 +163,4 @@ meant to do was `mySelect.value = ['option1']`.
 
 This error occurs if you attempt to assign something other than a function to the `compareWith`
 property. For more information on proper usage of `compareWith` see the
-[angular forms documentation](https://angular.io/api/forms/SelectControlValueAccessor#caveat-option-selection)).
+[Angular forms documentation](https://angular.io/api/forms/SelectControlValueAccessor#caveat-option-selection)).
