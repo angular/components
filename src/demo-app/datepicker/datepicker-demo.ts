@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {MatDatepickerInputEvent} from '@uiux/material/datepicker';
+import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 
 
 @Component({

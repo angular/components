@@ -1,11 +1,11 @@
-import {Dir} from '@uiux/cdk/bidi';
+import {Dir} from '@angular/cdk/bidi';
 import {Component, ViewEncapsulation} from '@angular/core';
 import {
   MatSnackBar,
   MatSnackBarConfig,
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
-} from '@uiux/material';
+} from '@angular/material';
 
 
 @Component({

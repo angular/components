@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {MatSelectChange} from '@uiux/material';
+import {MatSelectChange} from '@angular/material';
 
 @Component({
     moduleId: module.id,

@@ -1,6 +1,6 @@
 import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
-import {ErrorStateMatcher} from '@uiux/material';
+import {ErrorStateMatcher} from '@angular/material';
 
 
 let max = 5;

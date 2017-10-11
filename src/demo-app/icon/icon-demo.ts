@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
-import {MatIconRegistry} from '@uiux/material';
+import {MatIconRegistry} from '@angular/material';
 
 @Component({
   moduleId: module.id,

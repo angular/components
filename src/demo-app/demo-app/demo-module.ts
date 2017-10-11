@@ -1,4 +1,4 @@
-import {FullscreenOverlayContainer, OverlayContainer} from '@uiux/cdk/overlay';
+import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -39,7 +39,7 @@ import {StepperDemo} from '../stepper/stepper-demo';
 import {PeopleDatabase} from '../table/people-database';
 import {TableDemo} from '../table/table-demo';
 import {ScreenTypeDemo} from '../screen-type/screen-type-demo';
-import {LayoutModule} from '@uiux/cdk/layout';
+import {LayoutModule} from '@angular/cdk/layout';
 import {TableHeaderDemo} from '../table/table-header-demo';
 import {FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo} from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';

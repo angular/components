@@ -1,4 +1,4 @@
-import {ComponentPortal, Portal, TemplatePortalDirective} from '@uiux/cdk/portal';
+import {ComponentPortal, Portal, TemplatePortalDirective} from '@angular/cdk/portal';
 import {Component, QueryList, ViewChildren} from '@angular/core';
 
 

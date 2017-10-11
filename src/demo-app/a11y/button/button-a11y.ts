@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatSnackBar} from '@uiux/material';
+import {MatSnackBar} from '@angular/material';
 
 @Component({
   moduleId: module.id,

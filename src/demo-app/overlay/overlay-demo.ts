@@ -1,4 +1,4 @@
-import {Overlay, OverlayOrigin, OverlayConfig} from '@uiux/cdk/overlay';
+import {Overlay, OverlayOrigin, OverlayConfig} from '@angular/cdk/overlay';
 import {
   ComponentPortal,
   // This import is only used to define a generic type. The current TypeScript version incorrectly
@@ -6,7 +6,7 @@ import {
   // tslint:disable-next-line:no-unused-variable
   Portal,
   TemplatePortalDirective
-} from '@uiux/cdk/portal';
+} from '@angular/cdk/portal';
 import {
   Component,
   QueryList,

@@ -1,4 +1,4 @@
-import {OverlayContainer} from '@uiux/cdk/overlay';
+import {OverlayContainer} from '@angular/cdk/overlay';
 import {Component, ElementRef, Renderer2, ViewEncapsulation} from '@angular/core';
 
 /**

@@ -12,8 +12,7 @@
     "paths": {
       "@uiux/cdk/*": ["./cdk/*"],
       "@uiux/material": ["./material"],
-      "@uiux/material/*": ["./material/*"],
-      "@uiux/material-moment-adapter": ["./material-moment-adapter"]
+      "@uiux/material/*": ["./material/*"]
     }
   },
   "files": [

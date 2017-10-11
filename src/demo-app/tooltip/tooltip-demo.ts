@@ -1,5 +1,5 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {TooltipPosition} from '@uiux/material';
+import {TooltipPosition} from '@angular/material';
 
 
 @Component({

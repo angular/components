@@ -1,4 +1,4 @@
-import {DataSource} from '@uiux/cdk/collections';
+import {DataSource} from '@angular/cdk/collections';
 import {Observable} from 'rxjs/Observable';
 import {UserData} from './people-database';
 import 'rxjs/add/observable/merge';

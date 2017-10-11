@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatChipInputEvent, MatSnackBar} from '@uiux/material';
+import {MatChipInputEvent, MatSnackBar} from '@angular/material';
 
 
 export interface Person {

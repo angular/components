@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatDialog} from '@uiux/material';
+import {MatDialog} from '@angular/material';
 
 
 @Component({
