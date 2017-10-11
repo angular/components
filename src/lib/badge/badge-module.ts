@@ -17,7 +17,6 @@ import {MatBadge, MatSvgIconBadge, MatIconBadge} from './badge';
     MatBadge,
     MatIconBadge,
     MatSvgIconBadge,
-    MatCommonModule,
   ],
   declarations: [
     MatBadge,
