@@ -102,12 +102,14 @@ export class MatListOption extends _MatListOptionMixinBase
 
   /** Whether the option is disabled. */
   @Input()
-  get disabled() { return (this.selectionList && this.selectionList.disabled) || this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  get disabled(): boolean {
+    return (this.selectionList && this.selectionList.disabled) || this._disabled;
+  }
+  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
 
   /** Whether the option is selected. */
   @Input()
-  get selected() { return this._selected; }
+  get selected(): boolean { return this._selected; }
   set selected(value: boolean) {
     const isSelected = coerceBooleanProperty(value);
 
@@ -121,10 +123,12 @@ export class MatListOption extends _MatListOptionMixinBase
   }
 
   /** Emitted when the option is selected. */
-  @Output() selectChange = new EventEmitter<MatSelectionListOptionEvent>();
+  @Output() selectChange: EventEmitter<MatSelectionListOptionEvent>
+      = new EventEmitter<MatSelectionListOptionEvent>();
 
   /** Emitted when the option is deselected. */
-  @Output() deselected = new EventEmitter<MatSelectionListOptionEvent>();
+  @Output() deselected: EventEmitter<MatSelectionListOptionEvent>
+      = new EventEmitter<MatSelectionListOptionEvent>();
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,

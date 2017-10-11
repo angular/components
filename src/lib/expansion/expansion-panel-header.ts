@@ -28,11 +28,9 @@ import {EXPANSION_PANEL_ANIMATION_TIMING, MatExpansionPanel} from './expansion-p
 
 
 /**
- * <mat-expansion-panel-header> component.
+ * <mat-expansion-panel-header>
  *
  * This component corresponds to the header element of an <mat-expansion-panel>.
- *
- * Please refer to README.md for examples on how to use it.
  */
 @Component({
   moduleId: module.id,
@@ -157,7 +155,7 @@ export class MatExpansionPanelHeader implements OnDestroy {
 }
 
 /**
- * <mat-panel-description> directive.
+ * <mat-panel-description>
  *
  * This direction is to be used inside of the MatExpansionPanelHeader component.
  */
@@ -170,7 +168,7 @@ export class MatExpansionPanelHeader implements OnDestroy {
 export class MatExpansionPanelDescription {}
 
 /**
- * <mat-panel-title> directive.
+ * <mat-panel-title>
  *
  * This direction is to be used inside of the MatExpansionPanelHeader component.
  */

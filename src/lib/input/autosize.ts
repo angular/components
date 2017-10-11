@@ -30,7 +30,7 @@ export class MatTextareaAutosize implements AfterViewInit, DoCheck {
   private _maxRows: number;
 
   @Input('matAutosizeMinRows')
-  get minRows() { return this._minRows; }
+  get minRows(): number { return this._minRows; }
 
   set minRows(value: number) {
     this._minRows = value;
@@ -38,7 +38,7 @@ export class MatTextareaAutosize implements AfterViewInit, DoCheck {
   }
 
   @Input('matAutosizeMaxRows')
-  get maxRows() { return this._maxRows; }
+  get maxRows(): number { return this._maxRows; }
   set maxRows(value: number) {
     this._maxRows = value;
     this._setMaxHeight();
@@ -133,7 +133,7 @@ export class MatTextareaAutosize implements AfterViewInit, DoCheck {
   }
 
   /** Resize the textarea to fit its content. */
-  resizeToFitContent() {
+  resizeToFitContent(): void {
     this._cacheTextareaLineHeight();
 
     // If we haven't determined the line-height yet, we know we're still hidden and there's no point

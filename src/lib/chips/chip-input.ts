@@ -48,7 +48,7 @@ export class MatChipInput {
    * Whether or not the chipEnd event will be emitted when the input is blurred.
    */
   @Input('matChipInputAddOnBlur')
-  get addOnBlur() { return this._addOnBlur; }
+  get addOnBlur(): boolean { return this._addOnBlur; }
   set addOnBlur(value: boolean) { this._addOnBlur = coerceBooleanProperty(value); }
   _addOnBlur: boolean = false;
 
@@ -62,7 +62,7 @@ export class MatChipInput {
 
   /** Emitted when a chip is to be added. */
   @Output('matChipInputTokenEnd')
-  chipEnd = new EventEmitter<MatChipInputEvent>();
+  chipEnd: EventEmitter<MatChipInputEvent> = new EventEmitter<MatChipInputEvent>();
 
   @Input() placeholder: string = '';
 
@@ -115,5 +115,5 @@ export class MatChipInput {
     }
   }
 
-  focus() { this._inputElement.focus(); }
+  focus(): void { this._inputElement.focus(); }
 }

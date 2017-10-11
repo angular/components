@@ -105,8 +105,8 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
 
   /** Whether the required marker should be hidden. */
   @Input()
-  get hideRequiredMarker() { return this._hideRequiredMarker; }
-  set hideRequiredMarker(value: any) {
+  get hideRequiredMarker(): boolean { return this._hideRequiredMarker; }
+  set hideRequiredMarker(value: boolean) {
     this._hideRequiredMarker = coerceBooleanProperty(value);
   }
   private _hideRequiredMarker: boolean;
@@ -127,7 +127,7 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
 
   /** Text for the form field hint. */
   @Input()
-  get hintLabel() { return this._hintLabel; }
+  get hintLabel(): string { return this._hintLabel; }
   set hintLabel(value: string) {
     this._hintLabel = value;
     this._processHints();
@@ -139,7 +139,7 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
 
   /** Whether the placeholder should always float, never float or float as the user types. */
   @Input()
-  get floatPlaceholder() { return this._floatPlaceholder; }
+  get floatPlaceholder(): FloatPlaceholderType { return this._floatPlaceholder; }
   set floatPlaceholder(value: FloatPlaceholderType) {
     if (value !== this._floatPlaceholder) {
       this._floatPlaceholder = value || this._placeholderOptions.float || 'auto';

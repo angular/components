@@ -116,7 +116,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
     return this._vertical;
   }
 
-  set vertical(value) {
+  set vertical(value: boolean) {
     this._vertical = coerceBooleanProperty(value);
   }
 
@@ -135,7 +135,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
 
   /** Whether the toggle group is selected. */
   @Input()
-  get selected() {
+  get selected(): MatButtonToggle | null {
     return this._selected;
   }
 

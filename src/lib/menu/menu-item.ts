@@ -51,7 +51,7 @@ export class MatMenuItem extends _MatMenuItemMixinBase implements FocusableOptio
   OnDestroy {
 
   /** Stream that emits when the menu item is hovered. */
-  hover: Subject<MatMenuItem> = new Subject();
+  hover: Subject<MatMenuItem> = new Subject<MatMenuItem>();
 
   /** Whether the menu item is highlighted. */
   _highlighted: boolean = false;

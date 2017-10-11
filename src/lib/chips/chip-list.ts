@@ -210,15 +210,15 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
     this._id = value;
     this.stateChanges.next();
   }
-  get id() { return this._id || this._uid; }
+  get id(): string { return this._id || this._uid; }
 
   /** Required for FormFieldControl. Whether the chip list is required. */
   @Input()
-  set required(value: any) {
+  set required(value: boolean) {
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
-  get required() {
+  get required(): boolean {
     return this._required;
   }
 
@@ -228,7 +228,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
     this._placeholder = value;
     this.stateChanges.next();
   }
-  get placeholder() {
+  get placeholder(): string {
     return this._chipInput ? this._chipInput.placeholder : this._placeholder;
   }
 
@@ -306,7 +306,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
    * to facilitate the two-way binding for the `value` input.
    * @docs-private
    */
-  @Output() valueChange = new EventEmitter<any>();
+  @Output() valueChange: EventEmitter<any> = new EventEmitter<any>();
 
   /** The chip components contained within this chip list. */
   @ContentChildren(MatChip) chips: QueryList<MatChip>;
@@ -396,6 +396,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
     this.stateChanges.next();
   }
 
+  /** @docs-private */
   onContainerClick() {
     this.focus();
   }
@@ -404,7 +405,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
    * Focuses the the first non-disabled chip in this chip list, or the associated input when there
    * are no eligible chips.
    */
-  focus() {
+  focus(): void {
     // TODO: ARIA says this should focus the first `selected` chip if any are selected.
     // Focus on first element if there's no chipInput inside chip-list
     if (this._chipInput && this._chipInput.focused) {

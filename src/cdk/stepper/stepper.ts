@@ -85,8 +85,8 @@ export class CdkStep implements OnChanges {
   @Input() label: string;
 
   @Input()
-  get editable() { return this._editable; }
-  set editable(value: any) {
+  get editable(): boolean { return this._editable; }
+  set editable(value: boolean) {
     this._editable = coerceBooleanProperty(value);
   }
   private _editable = true;
@@ -101,10 +101,10 @@ export class CdkStep implements OnChanges {
 
   /** Return whether step is completed or not. */
   @Input()
-  get completed() {
+  get completed(): boolean {
     return this._customCompleted == null ? this._defaultCompleted : this._customCompleted;
   }
-  set completed(value: any) {
+  set completed(value: boolean) {
     this._customCompleted = coerceBooleanProperty(value);
   }
   private _customCompleted: boolean | null = null;
@@ -140,8 +140,8 @@ export class CdkStepper {
 
   /** Whether the validity of previous steps should be checked or not. */
   @Input()
-  get linear() { return this._linear; }
-  set linear(value: any) { this._linear = coerceBooleanProperty(value); }
+  get linear(): boolean { return this._linear; }
+  set linear(value: boolean) { this._linear = coerceBooleanProperty(value); }
   private _linear = false;
 
   /** The index of the selected step. */
@@ -161,13 +161,14 @@ export class CdkStepper {
 
   /** The step that is selected. */
   @Input()
-  get selected() { return this._steps.toArray()[this.selectedIndex]; }
+  get selected(): CdkStep { return this._steps.toArray()[this.selectedIndex]; }
   set selected(step: CdkStep) {
     this.selectedIndex = this._steps.toArray().indexOf(step);
   }
 
   /** Event emitted when the selected step has changed. */
-  @Output() selectionChange = new EventEmitter<StepperSelectionEvent>();
+  @Output() selectionChange: EventEmitter<StepperSelectionEvent>
+      = new EventEmitter<StepperSelectionEvent>();
 
   /** The index of the step that the focus can be set. */
   _focusIndex: number = 0;

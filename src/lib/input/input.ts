@@ -93,12 +93,17 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
 
   /** Whether the element is disabled. */
   @Input()
-  get disabled() { return this.ngControl ? this.ngControl.disabled : this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  get disabled(): boolean {
+    if (this.ngControl) {
+      return this.ngControl.disabled || false;
+    }
+    return this._disabled;
+  }
+  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
 
   /** Unique id of the element. */
   @Input()
-  get id() { return this._id; }
+  get id(): string { return this._id; }
   set id(value: string) { this._id = value || this._uid; }
 
   /** Placeholder attribute of the element. */
@@ -106,12 +111,12 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
 
   /** Whether the element is required. */
   @Input()
-  get required() { return this._required; }
-  set required(value: any) { this._required = coerceBooleanProperty(value); }
+  get required(): boolean { return this._required; }
+  set required(value: boolean) { this._required = coerceBooleanProperty(value); }
 
   /** Input type of the element. */
   @Input()
-  get type() { return this._type; }
+  get type(): string { return this._type; }
   set type(value: string) {
     this._type = value || 'text';
     this._validateType();
@@ -129,7 +134,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
 
   /** The input element's value. */
   @Input()
-  get value() { return this._elementRef.nativeElement.value; }
+  get value(): string { return this._elementRef.nativeElement.value; }
   set value(value: string) {
     if (value !== this.value) {
       this._elementRef.nativeElement.value = value;
@@ -139,8 +144,8 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
 
   /** Whether the element is readonly. */
   @Input()
-  get readonly() { return this._readonly; }
-  set readonly(value: any) { this._readonly = coerceBooleanProperty(value); }
+  get readonly(): boolean { return this._readonly; }
+  set readonly(value: boolean) { this._readonly = coerceBooleanProperty(value); }
 
   protected _neverEmptyInputTypes = [
     'date',

@@ -46,12 +46,10 @@ export type MatExpansionPanelState = 'expanded' | 'collapsed';
 export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,1)';
 
 /**
- * <mat-expansion-panel> component.
+ * <mat-expansion-panel>
  *
  * This component can be used as a single element to show expandable content, or as one of
  * multiple children of an element with the CdkAccordion directive attached.
- *
- * Please refer to README.md for examples on how to use it.
  */
 @Component({
   moduleId: module.id,

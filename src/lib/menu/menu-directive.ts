@@ -94,7 +94,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
   /** Position of the menu in the X axis. */
   @Input()
-  get xPosition() { return this._xPosition; }
+  get xPosition(): MenuPositionX { return this._xPosition; }
   set xPosition(value: MenuPositionX) {
     if (value !== 'before' && value !== 'after') {
       throwMatMenuInvalidPositionX();
@@ -105,7 +105,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
   /** Position of the menu in the Y axis. */
   @Input()
-  get yPosition() { return this._yPosition; }
+  get yPosition(): MenuPositionY { return this._yPosition; }
   set yPosition(value: MenuPositionY) {
     if (value !== 'above' && value !== 'below') {
       throwMatMenuInvalidPositionY();
@@ -120,7 +120,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   @ContentChildren(MatMenuItem) items: QueryList<MatMenuItem>;
 
   /** Whether the menu should overlap its trigger. */
-  @Input() overlapTrigger = this._defaultOptions.overlapTrigger;
+  @Input() overlapTrigger: boolean = this._defaultOptions.overlapTrigger;
 
   /**
    * This method takes classes set on the host mat-menu element and applies them on the
@@ -142,7 +142,8 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   }
 
   /** Event emitted when the menu is closed. */
-  @Output() close = new EventEmitter<void | 'click' | 'keydown'>();
+  @Output() close: EventEmitter<void | 'click' | 'keydown'>
+      = new EventEmitter<void | 'click' | 'keydown'>();
 
   constructor(
     private _elementRef: ElementRef,
@@ -201,7 +202,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
    * Focus the first item in the menu. This method is used by the menu trigger
    * to focus the first item when the menu is opened by the ENTER key.
    */
-  focusFirstItem() {
+  focusFirstItem(): void {
     this._keyManager.setFirstItemActive();
   }
 

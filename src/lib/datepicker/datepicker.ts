@@ -143,15 +143,15 @@ export class MatDatepicker<D> implements OnDestroy {
    * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather
    * than a popup and elements have more padding to allow for bigger touch targets.
    */
-  @Input() touchUi = false;
+  @Input() touchUi: boolean = false;
 
   /** Whether the datepicker pop-up should be disabled. */
   @Input()
-  get disabled() {
+  get disabled(): boolean {
     return this._disabled === undefined && this._datepickerInput ?
         this._datepickerInput.disabled : !!this._disabled;
   }
-  set disabled(value: any) {
+  set disabled(value: boolean) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._disabled) {
@@ -165,13 +165,13 @@ export class MatDatepicker<D> implements OnDestroy {
    * Emits new selected date when selected date changes.
    * @deprecated Switch to the `dateChange` and `dateInput` binding on the input element.
    */
-  @Output() selectedChanged = new EventEmitter<D>();
+  @Output() selectedChanged: EventEmitter<D> = new EventEmitter<D>();
 
   /** Whether the calendar is open. */
-  opened = false;
+  opened: boolean = false;
 
   /** The id for the datepicker calendar. */
-  id = `mat-datepicker-${datepickerUid++}`;
+  id: string = `mat-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
   get _selected(): D | null { return this._validSelected; }
