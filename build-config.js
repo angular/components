@@ -7,7 +7,7 @@ const {join} = require('path');
 const package = require('./package.json');
 
 /** Current version of the project*/
-const buildVersion = package.version;
+const buildVersion = package.uiuxVersion;
 
 /** Required Angular version for the project. */
 const angularVersion = package.dependencies['@angular/core'];
