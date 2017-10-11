@@ -1,0 +1,36 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+@import '../core/typography/typography-utils';
+
+@mixin uiux-sample-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .ix-component-sample {
+    background: mat-color($background, card);
+    color: mat-color($foreground, text);
+  }
+
+  .ix-component-sample-subtitle {
+    color: mat-color($foreground, secondary-text);
+  }
+}
+
+@mixin uiux-sample-typography($config) {
+  .ix-component-sample {
+    font-family: mat-font-family($config);
+  }
+
+  .ix-component-sample {
+    font: {
+      size: mat-font-size($config, headline);
+      weight: mat-font-weight($config, headline);
+    }
+  }
+
+  .ix-component-sample-subtitle,
+  .ix-component-sample-content,
+  .ix-component-sample-header .mat-card-title {
+    font-size: mat-font-size($config, body-1);
+  }
+}

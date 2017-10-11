@@ -7,6 +7,9 @@
  */
 
 export * from './version';
+
+export * from '@uiux/material/component-sample';
+
 export * from '@uiux/material/autocomplete';
 export * from '@uiux/material/button';
 export * from '@uiux/material/button-toggle';

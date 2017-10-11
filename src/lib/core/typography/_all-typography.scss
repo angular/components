@@ -1,4 +1,7 @@
 @import './typography';
+
+@import '../../component-sample/component-sample.component.theme';
+
 @import '../../autocomplete/autocomplete-theme';
 @import '../../button/button-theme';
 @import '../../button-toggle/button-toggle-theme';
@@ -33,10 +36,12 @@
 
 
 // Includes all of the typographic styles.
-@mixin angular-material-typography($config: null) {
+@mixin uiux-material-typography($config: null) {
   @if $config == null {
     $config: mat-typography-config();
   }
+
+  @include uiux-sample-typography($config);
 
   @include mat-base-typography($config);
   @include mat-autocomplete-typography($config);

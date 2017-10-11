@@ -1,5 +1,8 @@
 // Import all the theming functionality.
 @import '../core';
+
+@import '../../component-sample/component-sample.component.theme';
+
 @import '../../autocomplete/autocomplete-theme';
 @import '../../button/button-theme';
 @import '../../button-toggle/button-toggle-theme';
@@ -32,7 +35,10 @@
 
 
 // Create a theme.
-@mixin angular-material-theme($theme) {
+@mixin uiux-material-theme($theme) {
+
+  @include uiux-sample-theme($theme);
+
   @include mat-core-theme($theme);
   @include mat-autocomplete-theme($theme);
   @include mat-button-theme($theme);

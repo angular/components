@@ -24,7 +24,7 @@
     }
   }
 
-  @include angular-material-typography($typography-config);
+  @include uiux-material-typography($typography-config);
   @include mat-ripple();
   @include mat-option();
   @include mat-optgroup();

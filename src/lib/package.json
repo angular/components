@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/angular/material2#readme",
   "peerDependencies": {
-    "@uiux/cdk": "0.0.0-PLACEHOLDER",
     "@angular/core": "0.0.0-NG",
     "@angular/common": "0.0.0-NG",
     "@uiux/cdk": "0.0.0-MATERIAL",
