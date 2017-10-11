@@ -7,6 +7,9 @@ System.config({
     'node:*': 'node_modules/*'
   },
   map: {
+
+    '@uiux/material/component-sample': 'dist/packages/material/component-sample/index.js',
+
     'rxjs': 'node:rxjs',
     'main': 'main.js',
     'moment': 'node:moment/min/moment-with-locales.min.js',
@@ -26,6 +29,10 @@ System.config({
       'node:@angular/platform-browser/bundles/platform-browser.umd.js',
     '@angular/platform-browser-dynamic':
       'node:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
+
+
+    '@angular/material':
+       'node:@angular/material/bundles/material.umd.js',
 
     // TODO(devversion): replace once the index.ts file for the Material package has been added.
     '@uiux/material': 'dist/packages/material/public-api.js',
