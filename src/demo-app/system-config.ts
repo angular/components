@@ -37,7 +37,7 @@ System.config({
 
     // TODO(devversion): replace once the index.ts file for the Material package has been added.
     // '@angular/cdk': 'node:@angular/cdk/bundles/index.js',
-    '@angular/cdk/a11y': 'node:@angular/cdk/bundles/cdk-a11y.umd.js', // TODO <-- refactor to this
+    '@angular/cdk/a11y': 'node:@angular/cdk/bundles/cdk-a11y.umd.js',
     '@angular/cdk/bidi': 'node:@angular/cdk/bundles/cdk-bidi.umd.js',
     '@angular/cdk/coercion': 'node:@angular/cdk/bundles/cdk-coercion.umd.js',
     '@angular/cdk/collections': 'node:@angular/cdk/bundles/cdk-collections.umd.js',
