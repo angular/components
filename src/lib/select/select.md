@@ -12,18 +12,18 @@ this option. The content of the `<mat-option>` is what will be shown to the user
 
 ### Getting and setting the select value
 
-The select component is set up as a custom value accessor, so you can manipulate the select's value
-using any of the form directives from the core `FormsModule` or `ReactiveFormsModule`: `ngModel`,
-`formControl`, etc. As with native `<select>`, `<mat-select>` also supports a `compareWith`
-function. (Additional information about using a custom `compareWith` function can be found in the
-[Angular forms documentation](https://angular.io/api/forms/SelectControlValueAccessor#caveat-option-selection)).
-
-<!-- example(select-form) -->
-
-`<mat-select>` also supports 2-way binding to the `value` property without the need for Angular
+The `<mat-select>` supports 2-way binding to the `value` property without the need for Angular
 forms.
 
 <!-- example(select-value-binding) -->
+
+The `<mat-select>` also supports all of the form directives from the core `FormsModule` and
+`ReactiveFormsModule` (`ngModel`, `formControl`, etc.) As with native `<select>`, `<mat-select>`
+also supports a `compareWith` function. (Additional information about using a custom `compareWith`
+function can be found in the
+[Angular forms documentation](https://angular.io/api/forms/SelectControlValueAccessor#caveat-option-selection)).
+
+<!-- example(select-form) -->
 
 ### Form field features
 
@@ -65,12 +65,12 @@ on the group.
 
 <!-- example(select-optgroup) -->
 
-### Selecting multiple options
+### Multiple selection
 
-By default, the `<mat-select>` only supports selecting a single option at a time. However, you can 
-use the `multiple` property to allow the user to select multiple values at once. When using the
-`<mat-select>` in multiple selection mode, its value will be a sorted list of all selected values
-rather than a single value.
+`<mat-select>` defaults to single-selection mode, but can be configured to allow multiple selection 
+by setting the `multiple` property. This will allow the user to select multiple values at once. When
+using the `<mat-select>` in multiple selection mode, its value will be a sorted list of all selected
+values rather than a single value.
 
 <!-- example(select-multiple) -->
 
@@ -153,13 +153,13 @@ the component's lifetime). If you need to change this dynamically, use `ngIf` or
 </mat-select>
 ```
 
-#### Error: Cannot assign truthy non-array value to select in `multiple` mode
+#### Error: Value must be an array in multiple-selection mode
 
 This error is thrown if you attempt to assign a value other than `null`, `undefined`, or an array to
 a `<mat-select multiple>`. For example, something like `mySelect.value = 'option1'`. What you likely
 meant to do was `mySelect.value = ['option1']`.
 
-#### Error: Cannot assign a non-function value to `compareWith`
+#### Error: `compareWith` must be a function
 
 This error occurs if you attempt to assign something other than a function to the `compareWith`
 property. For more information on proper usage of `compareWith` see the
