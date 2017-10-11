@@ -118,7 +118,7 @@ export abstract class DateAdapter<D> {
   abstract today(): D;
 
   /**
-   * Parses a date from a value.
+   * Parses a date from a user-inputted value.
    * @param value The value to parse.
    * @param parseFormat The expected format of the value being parsed
    *     (type is implementation-dependent).
@@ -127,7 +127,7 @@ export abstract class DateAdapter<D> {
   abstract parse(value: any, parseFormat: any): D | null;
 
   /**
-   * Formats a date as a string.
+   * Formats a date as a string according to the given format.
    * @param date The value to format.
    * @param displayFormat The format to use to display the date as a string.
    * @returns The formatted date string.
@@ -165,6 +165,8 @@ export abstract class DateAdapter<D> {
 
   /**
    * Gets the RFC 3339 compatible string (https://tools.ietf.org/html/rfc3339) for the given date.
+   * This method is used to generate date strings that are compatible with native HTML attributes
+   * such as the `min` or `max` attribute of an `<input>`.
    * @param date The date to get the ISO date string for.
    * @returns The ISO date string date string.
    */
@@ -185,20 +187,23 @@ export abstract class DateAdapter<D> {
   abstract isValid(date: D): boolean;
 
   /**
-   * Attempts to coerce a value to a valid date object. This is different from parsing in that it
-   * should only coerce non-ambiguous, locale-independent values (e.g. a ISO 8601 string).
-   * The default implementation does not allow any coercion, it simply checks that the given value
-   * is already a valid date object or null.
-   * @param value The value to be coerced to a date object.
-   * @returns The coerced date object, either a valid date, null if the value can be coerced to a
-   *     null date (e.g. the empty string).
-   * @throws If the given value cannot be coerced to a valid date or null.
+   * Attempts to deserialize a value to a valid date object. This is different from parsing in that
+   * deserialize should only accept non-ambiguous, locale-independent values (e.g. a ISO 8601
+   * string). The default implementation does not allow any deserialization, it simply checks that
+   * the given value is already a valid date object or null. The `<mat-datepicker>` will call this
+   * method on all of it's `@Input()` properties that accept dates. It is therefore possible to
+   * support passing your wire format directly to these properties by overriding this method to
+   * also deserialize your wire format.
+   * @param value The value to be deserialized into a date object.
+   * @returns The deserialized date object, either a valid date, null if the value can be
+   *     deserialized into a null date (e.g. the empty string).
+   * @throws If the given value cannot be deserialized into a valid date or null.
    */
-  coerceToDate(value: any): D | null {
+  deserialize(value: any): D | null {
     if (value == null || this.isDateInstance(value) && this.isValid(value)) {
       return value;
     }
-    throw Error(`Could not coerce "${value}" to a valid date object.`);
+    throw Error(`Could not deserialize "${value}" into a valid date object.`);
   }
 
   /**

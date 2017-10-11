@@ -276,7 +276,7 @@ describe('MatDatepicker', () => {
         testComponent.date = '1/1/2017' as any;
 
         expect(() => fixture.detectChanges())
-            .toThrowError('Could not coerce "1/1/2017" to a valid date object.');
+            .toThrowError('Could not deserialize "1/1/2017" into a valid date object.');
 
         testComponent.date = null;
       });

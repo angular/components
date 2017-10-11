@@ -175,11 +175,11 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
   }
 
   /**
-   * Returns the given value if given a valid Moment or null. Coerces valid ISO 8601 strings
-   * (https://www.ietf.org/rfc/rfc3339.txt) and valid Date objects to valid Moments and empty string
-   * to null. Throws on all other values.
+   * Returns the given value if given a valid Moment or null. Deserializes valid ISO 8601 strings
+   * (https://www.ietf.org/rfc/rfc3339.txt) and valid Date objects into valid Moments and empty
+   * string into null. Throws on all other values.
    */
-  coerceToDate(value: any): Moment | null {
+  deserialize(value: any): Moment | null {
     let date;
     if (value instanceof Date) {
       date = moment(value);
@@ -193,7 +193,7 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     if (date && this.isValid(date)) {
       return date;
     }
-    return super.coerceToDate(value);
+    return super.deserialize(value);
   }
 
   isDateInstance(obj: any): boolean {

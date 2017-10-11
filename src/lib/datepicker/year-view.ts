@@ -41,7 +41,7 @@ export class MatYearView<D> implements AfterContentInit {
   get activeDate(): D { return this._activeDate; }
   set activeDate(value: D) {
     let oldActiveDate = this._activeDate;
-    this._activeDate = this._dateAdapter.coerceToDate(value) || this._dateAdapter.today();
+    this._activeDate = this._dateAdapter.deserialize(value) || this._dateAdapter.today();
     if (this._dateAdapter.getYear(oldActiveDate) != this._dateAdapter.getYear(this._activeDate)) {
       this._init();
     }
@@ -52,7 +52,7 @@ export class MatYearView<D> implements AfterContentInit {
   @Input()
   get selected(): D | null { return this._selected; }
   set selected(value: D | null) {
-    this._selected = this._dateAdapter.coerceToDate(value);
+    this._selected = this._dateAdapter.deserialize(value);
     this._selectedMonth = this._getMonthInCurrentYear(this._selected);
   }
   private _selected: D | null;

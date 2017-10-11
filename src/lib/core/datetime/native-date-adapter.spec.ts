@@ -334,18 +334,18 @@ describe('NativeDateAdapter', () => {
   });
 
   it('should create dates from valid ISO strings', () => {
-    expect(adapter.coerceToDate('1985-04-12T23:20:50.52Z')).not.toBeNull();
-    expect(adapter.coerceToDate('1996-12-19T16:39:57-08:00')).not.toBeNull();
-    expect(adapter.coerceToDate('1937-01-01T12:00:27.87+00:20')).not.toBeNull();
-    expect(adapter.coerceToDate('2017-01-01')).not.toBeNull();
-    expect(adapter.coerceToDate('2017-01-01T00:00:00')).not.toBeNull();
-    expect(() => adapter.coerceToDate('1990-13-31T23:59:00Z')).toThrow();
-    expect(() => adapter.coerceToDate('1/1/2017')).toThrow();
-    expect(() => adapter.coerceToDate('2017-01-01T')).toThrow();
-    expect(adapter.coerceToDate('')).toBeNull();
-    expect(adapter.coerceToDate(null)).toBeNull();
-    expect(adapter.coerceToDate(new Date())).not.toBeNull();
-    expect(() => adapter.coerceToDate(new Date(NaN))).toThrow();
+    expect(adapter.deserialize('1985-04-12T23:20:50.52Z')).not.toBeNull();
+    expect(adapter.deserialize('1996-12-19T16:39:57-08:00')).not.toBeNull();
+    expect(adapter.deserialize('1937-01-01T12:00:27.87+00:20')).not.toBeNull();
+    expect(adapter.deserialize('2017-01-01')).not.toBeNull();
+    expect(adapter.deserialize('2017-01-01T00:00:00')).not.toBeNull();
+    expect(() => adapter.deserialize('1990-13-31T23:59:00Z')).toThrow();
+    expect(() => adapter.deserialize('1/1/2017')).toThrow();
+    expect(() => adapter.deserialize('2017-01-01T')).toThrow();
+    expect(adapter.deserialize('')).toBeNull();
+    expect(adapter.deserialize(null)).toBeNull();
+    expect(adapter.deserialize(new Date())).not.toBeNull();
+    expect(() => adapter.deserialize(new Date(NaN))).toThrow();
   });
 });
 

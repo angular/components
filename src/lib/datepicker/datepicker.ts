@@ -132,7 +132,7 @@ export class MatDatepicker<D> implements OnDestroy {
     // selected value is.
     return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
   }
-  set startAt(date: D | null) { this._startAt = this._dateAdapter.coerceToDate(date); }
+  set startAt(date: D | null) { this._startAt = this._dateAdapter.deserialize(date); }
   private _startAt: D | null;
 
   /** The view that the calendar should start in. */

@@ -66,7 +66,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   /** A date representing the period (month or year) to start the calendar in. */
   @Input()
   get startAt(): D | null { return this._startAt; }
-  set startAt(value: D | null) { this._startAt = this._dateAdapter.coerceToDate(value); }
+  set startAt(value: D | null) { this._startAt = this._dateAdapter.deserialize(value); }
   private _startAt: D | null;
 
   /** Whether the calendar should be started in month or year view. */
@@ -75,19 +75,19 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   /** The currently selected date. */
   @Input()
   get selected(): D | null { return this._selected; }
-  set selected(value: D | null) { this._selected = this._dateAdapter.coerceToDate(value); }
+  set selected(value: D | null) { this._selected = this._dateAdapter.deserialize(value); }
   private _selected: D | null;
 
   /** The minimum selectable date. */
   @Input()
   get minDate(): D | null { return this._minDate; }
-  set minDate(value: D | null) { this._minDate = this._dateAdapter.coerceToDate(value); }
+  set minDate(value: D | null) { this._minDate = this._dateAdapter.deserialize(value); }
   private _minDate: D | null;
 
   /** The maximum selectable date. */
   @Input()
   get maxDate(): D | null { return this._maxDate; }
-  set maxDate(value: D | null) { this._maxDate = this._dateAdapter.coerceToDate(value); }
+  set maxDate(value: D | null) { this._maxDate = this._dateAdapter.deserialize(value); }
   private _maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */

@@ -221,11 +221,11 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   }
 
   /**
-   * Returns the given value if given a valid Date or null. Coerces valid ISO 8601 strings
-   * (https://www.ietf.org/rfc/rfc3339.txt) to valid Dates and empty string to null. Throws on all
-   * other values.
+   * Returns the given value if given a valid Date or null. Deserializes valid ISO 8601 strings
+   * (https://www.ietf.org/rfc/rfc3339.txt) into valid Dates and empty string into null. Throws on
+   * all other values.
    */
-  coerceToDate(value: any): Date | null {
+  deserialize(value: any): Date | null {
     if (typeof value === 'string') {
       if (!value) {
         return null;
@@ -239,7 +239,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
         }
       }
     }
-    return super.coerceToDate(value);
+    return super.deserialize(value);
   }
 
   isDateInstance(obj: any) {
