@@ -10,6 +10,7 @@
   "scripts": {
     "build": "gulp :publish:build-releases",
     "demo-app": "gulp serve:devapp",
+    "start": "demo-app",
     "test": "gulp test",
     "tslint": "gulp lint",
     "stylelint": "gulp lint",
