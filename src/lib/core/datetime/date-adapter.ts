@@ -118,7 +118,7 @@ export abstract class DateAdapter<D> {
   abstract today(): D;
 
   /**
-   * Parses a date from a user-inputted value.
+   * Parses a date from a user-provided value.
    * @param value The value to parse.
    * @param parseFormat The expected format of the value being parsed
    *     (type is implementation-dependent).
@@ -188,12 +188,12 @@ export abstract class DateAdapter<D> {
 
   /**
    * Attempts to deserialize a value to a valid date object. This is different from parsing in that
-   * deserialize should only accept non-ambiguous, locale-independent values (e.g. a ISO 8601
+   * deserialize should only accept non-ambiguous, locale-independent formats (e.g. a ISO 8601
    * string). The default implementation does not allow any deserialization, it simply checks that
    * the given value is already a valid date object or null. The `<mat-datepicker>` will call this
    * method on all of it's `@Input()` properties that accept dates. It is therefore possible to
-   * support passing your wire format directly to these properties by overriding this method to
-   * also deserialize your wire format.
+   * support passing values from your backend directly to these properties by overriding this method
+   * to also deserialize the format used by your backend.
    * @param value The value to be deserialized into a date object.
    * @returns The deserialized date object, either a valid date, null if the value can be
    *     deserialized into a null date (e.g. the empty string).
