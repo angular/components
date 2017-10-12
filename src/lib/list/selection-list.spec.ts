@@ -4,7 +4,7 @@ import {createKeyboardEvent, dispatchFakeEvent} from '@angular/cdk/testing';
 import {Component, DebugElement} from '@angular/core';
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {MatListModule, MatListOption, MatSelectionList, MatSelectionListOptionEvent} from './index';
+import {MatListModule, MatListOption, MatSelectionList, MatListOptionChange} from './index';
 
 
 describe('MatSelectionList', () => {
@@ -548,7 +548,7 @@ describe('MatSelectionList', () => {
       let selected: boolean = false;
 
       spyOn(testComponent, 'onOptionSelectionChange')
-        .and.callFake((event: MatSelectionListOptionEvent) => {
+        .and.callFake((event: MatListOptionChange) => {
           selected = event.selected;
         });
 
@@ -681,5 +681,5 @@ class SelectionListWithMultipleValues {
   </mat-list-option>
 </mat-selection-list>`})
 class SelectionListWithOptionEvents {
-  onOptionSelectionChange: (event?: MatSelectionListOptionEvent) => void = () => {};
+  onOptionSelectionChange: (event?: MatListOptionChange) => void = () => {};
 }

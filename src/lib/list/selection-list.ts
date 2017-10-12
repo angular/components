@@ -52,7 +52,7 @@ export class MatListOptionBase {}
 export const _MatListOptionMixinBase = mixinDisableRipple(MatListOptionBase);
 
 /** Change event object emitted by MatListOption */
-export class MatSelectionListOptionEvent {
+export class MatListOptionChange {
   /** The source MatListOption of the event. */
   source: MatListOption;
   /** The new `selected` value of the option. */
@@ -101,8 +101,10 @@ export class MatListOption extends _MatListOptionMixinBase
 
   /** Whether the option is disabled. */
   @Input()
-  get disabled() { return (this.selectionList && this.selectionList.disabled) || this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  get disabled(): boolean {
+    return (this.selectionList && this.selectionList.disabled) || this._disabled;
+  }
+  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
 
   /** Value of the option */
   @Input() value: any;
@@ -121,7 +123,7 @@ export class MatListOption extends _MatListOptionMixinBase
   }
 
   /** Emitted when the option is selected or deselected. */
-  @Output() selectionChange = new EventEmitter<MatSelectionListOptionEvent>();
+  @Output() selectionChange = new EventEmitter<MatListOptionChange>();
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
@@ -172,8 +174,8 @@ export class MatListOption extends _MatListOptionMixinBase
   }
 
   /** Creates a selection event object from the specified option. */
-  private _createChangeEvent(option: MatListOption = this): MatSelectionListOptionEvent {
-    const event = new MatSelectionListOptionEvent();
+  private _createChangeEvent(option: MatListOption = this): MatListOptionChange {
+    const event = new MatListOptionChange();
 
     event.source = option;
     event.selected = option.selected;
