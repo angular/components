@@ -11,7 +11,6 @@
     "build": "gulp :publish:build-releases",
     "demo-app": "gulp serve:devapp",
     "start": "gulp build:devapp :serve:devapp",
-    "postinstall": "npm run build",
     "test": "gulp test",
     "tslint": "gulp lint",
     "stylelint": "gulp lint",
