@@ -44,6 +44,10 @@ The sidenav panel.
 | `close(): Promise<void>` | Close the sidenav. Equivalent to `opened = false`. Returns a promise that will resolve when the animation completes, or be rejected if the animation was cancelled. |
 | `toggle(): Promise<void>` | Toggle the sidenav. This is equivalent to `opened = !opened`. Returns a promise that will resolve when the animation completes, or be rejected if the animation was cancelled. |
 
+
+
+
+
 ### Notes
 
 The `<mat-sidenav>` will resize based on its content. You can also set its width in CSS, like so:

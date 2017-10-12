@@ -1,44 +1,131 @@
-`<mat-sidenav>` is a panel that can be placed next to or above some primary content. A sidenav is
-typically used for navigation, but can contain any content.
+Angular Material provides two sets of components designed to add collapsible side content (often
+navigation, though it can be any content) alongside some primary content. These are the sidenav and
+drawer components.
 
-<!-- example(sidenav-overview) -->
+The sidenav components are designed to add side content to a fullscreen app. To set up a sidenav we
+use three components: `<mat-sidenav-container>` which acts as a structural container for our content
+and sidenav, `<mat-sidenav-content>` which represents the main content, and `<mat-sidenav>` which
+represents the added side content.
 
-The sidenav and its associated content live inside of an `<mat-sidenav-container>`:
+<!-- TODO(mmalerba): sidenav example -->
+
+There are also drawer components, `<mat-drawer-container>`, `<mat-drawer-content>`, and
+`<mat-drawer>`,  which are analogous to their sidenav equivalents. Rather than adding side content
+to the app as a whole, these are designed to add side content to a small section of your app. They
+support almost all of the same features, but do not support fixed positioning.
+
+<!-- TODO(mmalerba): drawer example -->
+
+### Specifying the main and side content
+
+Both the main and side content should be placed inside of the `<mat-sidenav-container>`, content
+that you don't want to be affected by the sidenav, such as a header or footer, can be placed outside
+of the container.
+
+The side content should be wrapped in a `<mat-sidenav>` element. The `position` property can be used
+to specify which end of the main content to place the side content on. `position` can be either
+`start` or `end` which places the side content on the left or right respectively in left-to-right
+languages. If the `position` is not set, the `start` end will be assumed. A
+`<mat-sidenav-container>` can have up to two `<mat-sidenav>` elements total, but only one for any
+given side.
+
+The main content should be wrapped in a `<mat-sidenav-content>`. If no `<mat-sidenav-content>` is
+specified for a `<mat-sidenav-container>`, one will be created implicitly and all of the content
+inside the `<mat-sidenav-container>` other than the `<mat-sidenav>` elements will be placed inside
+of it. 
+
+The following are examples of valid sidenav layouts:
+
 ```html
 <mat-sidenav-container>
-  <mat-sidenav>
-    <!-- sidenav content -->
-  </mat-sidenav>
-
-  <!-- primary content -->
+  <mat-sidenav>Start</mat-sidenav>
+  <mat-sidenav-content>Main</mat-sidenav-content>
 </mat-sidenav-container>
 ```
 
-A sidenav container may contain one or two `<mat-sidenav>` elements. When there are two 
-`<mat-sidenav>` elements, each must be placed on a different side of the container.
-See the section on positioning below.
+```html
+<mat-sidenav-container>
+  <mat-sidenav>Start</mat-sidenav>
+  <mat-sidenav position="end">End</mat-sidenav>
+  <section>Main</section>
+</mat-sidenav-container>
+```
 
-### Sidenav mode
-The sidenav can render in one of three different ways based on the `mode` property.
+```html
+<mat-sidenav-container></mat-sidenav-container>
+```
 
-| Mode | Description                                                                               |
-|------|-------------------------------------------------------------------------------------------|
-| over | Sidenav floats _over_ the primary content, which is covered by a backdrop                 |
-| push | Sidenav _pushes_ the primary content out of its way, also covering it with a backdrop     |
-| side | Sidenav appears _side-by-side_ with the primary content                                   |
+Anf these are examples of invalid sidenav layouts:
 
-Using the `side` mode on mobile devices can affect the performance and is also not recommended by the
-[Material Design specification](https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-behavior).
+```html
+<mat-sidenav-container>
+  <mat-sidenav>Start</mat-sidenav>
+  <mat-sidenav position="start">Start 2</mat-sidenav>
+</mat-sidenav-container>
+```
 
-### Positioning the sidenav
-The `position` property determines whether the sidenav appears at the `"start"` or `"end"` of the
-container. This is affected by the current text direction ("ltr" or "rtl"). By default, the sidenav
-appears at the start of the container.
+```html
+<mat-sidenav-container>
+  <mat-sidenav-content>Main</mat-sidenav-content>
+  <mat-sidenav-content>Main 2</mat-sidenav-content>
+</mat-sidenav-container>
+```
 
+```html
+<mat-sidenav-container></mat-sidenav-container>
+<mat-sidenav></mat-sidenav>
+```
 
-### Sizing the sidenav
-The `<mat-sidenav>` will, by default, fit the size of its content. The width can be explicitly set
-via CSS:
+These same rules all apply to the drawer components as well.
+
+### Opening and closing a sidenav
+
+A `<mat-sidenav>` can be opened or closed using the `open()`, `close()` and `toggle()` methods. Each
+of these methods returns a `Promise<boolean>` that will be resolved with `true` when the sidenav
+finishes opening or `false` when it finishes closing.
+
+The opened state can also be set via a property binding in the template using the `opened` property.
+The property supports 2-way binding.
+
+`<mat-sidenav>` also supports output properties for just open and just close events, The `(opened)`
+and `(closed)` properties respectively.
+
+<!-- TODO(mmalerba): open/close example -->
+
+All of these properties and methods work on `<mat-drawer>` as well.
+
+### Changing the sidenav's behavior
+
+The `<mat-sidenav>` can render in one of three different ways based on the `mode` property.
+
+| Mode   | Description                                                                             |
+|--------|-----------------------------------------------------------------------------------------|
+| `over` | Sidenav floats _over_ the primary content, which is covered by a backdrop               |
+| `push` | Sidenav _pushes_ the primary content out of its way, also covering it with a backdrop   |
+| `side` | Sidenav appears _side-by-side_ with the main content, shrinking the main content's width to make space for the sidenav. |
+
+If no `mode` is specified, `over` is used by default.
+
+<!-- TODO(mmalerba): modes example -->
+
+`<mat-drawer>` also supports all of these same modes.
+
+### Disabling automatic close
+
+Clicking on the backdrop or pressing the <kbd>Esc</kbd> key will normally close an open sidenav.
+However, this automatic closing behavior can be disabled by setting the `disableClose` property on
+the `<mat-sidenav>` or `<mat-drawer>` that you want to disable the behavior for.
+
+Custom handling for <kbd>Esc</kbd> can be done by adding a keydown listener to the `<mat-sidenav>`.
+Custom handling for backdrop clicks can be done via the `(backdropClick)` output property on
+`<mat-sidenav-container>`.
+
+<!-- TODO(mmalerba): autoclose example -->
+
+### Setting the sidenav's size
+
+The `<mat-sidenav>` and `<mat-drawer>` will, by default, fit the size of its content. The width can
+be explicitly set via CSS:
 
 ```css
 mat-sidenav {
@@ -48,37 +135,28 @@ mat-sidenav {
 
 Try to avoid percent based width as `resize` events are not (yet) supported.
 
-For a fullscreen sidenav, the recommended approach is set up the DOM such that the
-`<mat-sidenav-container>` can naturally take up the full space:
+### Fixed position sidenavs
 
-```html
-<app>
-  <mat-sidenav-container>
-    <mat-sidenav mode="side" opened="true">Drawer content</mat-sidenav>
-    <div class="my-content">Main content</div>
-  </mat-sidenav-container>
-</app>
-```
-```css
-html, body, material-app, mat-sidenav-container, .my-content {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-}
-```
+For `<mat-sidenav>` only (not `<mat-drawer>`) fixed positioning is supported. It can be enabled by
+setting the `fixedInViewport` property. Additionally, top and bottom space can be set via the
+`fixedTopGap` and `fixedBottomGap`. These properties accept a pixel value amount of space to add at
+the top or bottom.
 
-### FABs inside sidenav
-For a sidenav with a FAB (Floating Action Button) or other floating element, the recommended approach is to place the FAB
-outside of the scrollable region and absolutely position it.
+<!-- TODO(mmalerba): fixed example -->
 
+### Common layout patterns
 
-### Disabling closing of sidenav
-By default, sidenav can be closed either by clicking on the backdrop or by pressing <kbd>ESCAPE</kbd>.
-The `disableClose` attribute can be set on `mat-sidenav` to disable automatic closing when the backdrop
-is clicked or <kbd>ESCAPE</kbd> is pressed. To add custom logic on backdrop click, add a `(backdropClick)` listener to
-`mat-sidenav-container`. For custom <kbd>ESCAPE</kbd> logic, a standard `(keydown)` listener will suffice.
-```html
-<mat-sidenav-container (backdropClick)="customBackdropClickHandler()">
-  <mat-sidenav disableClose (keydown)="customKeydownHandler($event)"></mat-sidenav>
-</mat-sidenav-container>
-```
+<!-- TODO(mmalerba): fill out -->
+
+#### Full-height sidenav
+#### Sidenav under toolbar
+#### Mobile sidenav
+#### Responsive sidenav
+
+### Accessibility
+
+<!-- TODO(mmalerba): fill out -->
+
+### Troubleshooting
+
+<!-- TODO(mmalerba): fill out -->
