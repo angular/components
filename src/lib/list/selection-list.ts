@@ -111,7 +111,7 @@ export class MatListOption extends _MatListOptionMixinBase
   @Input()
   get selected(): boolean { return this.selectionList.selectedOptions.isSelected(this); }
   set selected(value: boolean) {
-    const isSelected = coerceBooleanProperty(value);
+    const isSelected: boolean = coerceBooleanProperty(value);
 
     if (isSelected !== this.selected) {
       this.selectionList.selectedOptions.toggle(this);
