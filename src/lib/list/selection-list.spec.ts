@@ -586,17 +586,17 @@ class SelectionListWithListOptions {
 }
 
 @Component({template: `
-  <mat-selection-list id = "selection-list-2">
-    <mat-list-option checkboxPosition = "after">
+  <mat-selection-list id="selection-list-2">
+    <mat-list-option checkboxPosition="after">
       Inbox (disabled selection-option)
     </mat-list-option>
-    <mat-list-option id = "testSelect" checkboxPosition = "after">
+    <mat-list-option id="testSelect" checkboxPosition="after">
       Starred
     </mat-list-option>
-    <mat-list-option checkboxPosition = "after">
+    <mat-list-option checkboxPosition="after">
       Sent Mail
     </mat-list-option>
-    <mat-list-option checkboxPosition = "after">
+    <mat-list-option checkboxPosition="after">
       Drafts
     </mat-list-option>
   </mat-selection-list>`})
@@ -604,17 +604,17 @@ class SelectionListWithCheckboxPositionAfter {
 }
 
 @Component({template: `
-  <mat-selection-list id = "selection-list-3" [disabled] = true>
-    <mat-list-option checkboxPosition = "after">
+  <mat-selection-list id="selection-list-3" [disabled]=true>
+    <mat-list-option checkboxPosition="after">
       Inbox (disabled selection-option)
     </mat-list-option>
-    <mat-list-option id = "testSelect" checkboxPosition = "after">
+    <mat-list-option id="testSelect" checkboxPosition="after">
       Starred
     </mat-list-option>
-    <mat-list-option checkboxPosition = "after">
+    <mat-list-option checkboxPosition="after">
       Sent Mail
     </mat-list-option>
-    <mat-list-option checkboxPosition = "after">
+    <mat-list-option checkboxPosition="after">
       Drafts
     </mat-list-option>
   </mat-selection-list>`})
@@ -638,8 +638,8 @@ class SelectionListWithSelectedOption {
 }
 
 @Component({template: `
-  <mat-selection-list id = "selection-list-4">
-    <mat-list-option checkboxPosition = "after" class="test-focus" id="123">
+  <mat-selection-list id="selection-list-4">
+    <mat-list-option checkboxPosition="after" class="test-focus" id="123">
       Inbox
     </mat-list-option>
   </mat-selection-list>`})
@@ -660,7 +660,7 @@ class SelectionListWithTabindexBinding {
 }
 
 @Component({template: `
-<mat-selection-list id = "selection-list-5">
+<mat-selection-list id="selection-list-5">
   <mat-list-option [value]="1" checkboxPosition="after">
     1
   </mat-list-option>
@@ -675,7 +675,7 @@ class SelectionListWithMultipleValues {
 }
 
 @Component({template: `
-<mat-selection-list id = "selection-list-6">
+<mat-selection-list id="selection-list-6">
   <mat-list-option (selectionChange)="onOptionSelectionChange($event)">
     Inbox
   </mat-list-option>

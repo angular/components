@@ -51,16 +51,18 @@ export const _MatSelectionListMixinBase =
 export class MatListOptionBase {}
 export const _MatListOptionMixinBase = mixinDisableRipple(MatListOptionBase);
 
-/** Event emitted by a selection-list whenever the state of an option is changed. */
+/** Change event object emitted by MatListOption */
 export class MatSelectionListOptionEvent {
-  option: MatListOption;
+  /** The source MatListOption of the event. */
+  source: MatListOption;
+  /** The new `selected` value of the option. */
   selected: boolean;
 }
 
 /**
  * Component for list-options of selection-list. Each list-option can automatically
  * generate a checkbox and can put current item into the selectionModel of selection-list
- * if the current item is checked.
+ * if the current item is selected.
  */
 @Component({
   moduleId: module.id,
@@ -107,7 +109,7 @@ export class MatListOption extends _MatListOptionMixinBase
 
   /** Whether the option is selected. */
   @Input()
-  get selected() { return this.selectionList.selectedOptions.isSelected(this); }
+  get selected(): boolean { return this.selectionList.selectedOptions.isSelected(this); }
   set selected(value: boolean) {
     const isSelected = coerceBooleanProperty(value);
 
@@ -171,9 +173,9 @@ export class MatListOption extends _MatListOptionMixinBase
 
   /** Creates a selection event object from the specified option. */
   private _createChangeEvent(option: MatListOption = this): MatSelectionListOptionEvent {
-    let event = new MatSelectionListOptionEvent();
+    const event = new MatSelectionListOptionEvent();
 
-    event.option = option;
+    event.source = option;
     event.selected = option.selected;
 
     return event;
