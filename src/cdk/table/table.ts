@@ -183,7 +183,7 @@ export class CdkTable<T> implements CollectionViewer {
   }
 
   ngAfterContentInit() {
-    if (!this._headerDef && this._rowDefs.length == 0) {
+    if (!this._headerDef && !this._rowDefs.length) {
       throw getTableMissingRowDefsError();
     }
 
