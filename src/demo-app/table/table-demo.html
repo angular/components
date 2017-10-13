@@ -65,7 +65,7 @@
     <!-- Column Definition: ID -->
     <ng-container cdkColumnDef="userId">
       <cdk-header-cell *cdkHeaderCellDef
-                       mat-sort-header arrowPosition="before">
+                       mat-sort-header arrowPosition="before" disabled>
         ID
       </cdk-header-cell>
       <cdk-cell *cdkCellDef="let row"> {{row.id}} </cdk-cell>
@@ -228,7 +228,7 @@
 
     <!-- Column Definition: ID -->
     <ng-container cdkColumnDef="userId">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header disabled> ID </mat-header-cell>
       <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
     </ng-container>
 

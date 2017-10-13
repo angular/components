@@ -15,24 +15,27 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition,
-  keyframes,
-} from '@angular/animations';
+import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 import {CdkColumnDef} from '@angular/cdk/table';
 import {Subscription} from 'rxjs/Subscription';
 import {merge} from 'rxjs/observable/merge';
 import {MatSort, MatSortable} from './sort';
 import {MatSortHeaderIntl} from './sort-header-intl';
 import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
-import {AnimationCurves, AnimationDurations} from '@angular/material/core';
+import {
+  AnimationCurves,
+  AnimationDurations,
+  CanDisable,
+  mixinDisabled
+} from '@angular/material/core';
 
 const SORT_ANIMATION_TRANSITION =
     AnimationDurations.ENTERING + ' ' + AnimationCurves.STANDARD_CURVE;
+
+// Boilerplate for applying mixins to MatSortHeader.
+/** @docs-private */
+export class MatSortHeaderBase { }
+export const _MatSortHeaderMixinBase = mixinDisabled(MatSortHeaderBase);
 
 /**
  * Applies sorting behavior (click to change sort) and styles to an element, including an
@@ -49,8 +52,9 @@ const SORT_ANIMATION_TRANSITION =
   exportAs: 'matSortHeader',
   templateUrl: 'sort-header.html',
   styleUrls: ['sort-header.css'],
+  inputs: ['disabled'],
   host: {
-    '(click)': '_sort.sort(this)',
+    '(click)': '_handleClick()',
     '[class.mat-sort-header-sorted]': '_isSorted()',
   },
   encapsulation: ViewEncapsulation.None,
@@ -93,7 +97,7 @@ const SORT_ANIMATION_TRANSITION =
     ])
   ]
 })
-export class MatSortHeader implements MatSortable {
+export class MatSortHeader extends _MatSortHeaderMixinBase implements MatSortable, CanDisable {
   private _rerenderSubscription: Subscription;
 
   /**
@@ -118,6 +122,8 @@ export class MatSortHeader implements MatSortable {
               changeDetectorRef: ChangeDetectorRef,
               @Optional() public _sort: MatSort,
               @Optional() public _cdkColumnDef: CdkColumnDef) {
+    super();
+
     if (!_sort) {
       throw getSortHeaderNotContainedWithinSortError();
     }
@@ -138,6 +144,13 @@ export class MatSortHeader implements MatSortable {
   ngOnDestroy() {
     this._sort.deregister(this);
     this._rerenderSubscription.unsubscribe();
+  }
+
+  /** Triggers the sort on this sort header if it is not disabled. */
+  _handleClick() {
+    if (!this.disabled) {
+      this._sort.sort(this);
+    }
   }
 
   /** Whether this MatSortHeader is currently sorted in either ascending or descending order. */

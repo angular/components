@@ -52,7 +52,7 @@ describe('MatSort', () => {
 
   it('should have the sort headers register and deregister themselves', () => {
     const sortables = component.matSort.sortables;
-    expect(sortables.size).toBe(4);
+    expect(sortables.size).toBe(5);
     expect(sortables.get('defaultSortHeaderA')).toBe(component.matSortHeaderDefaultA);
     expect(sortables.get('defaultSortHeaderB')).toBe(component.matSortHeaderDefaultB);
 
@@ -60,11 +60,26 @@ describe('MatSort', () => {
     expect(sortables.size).toBe(0);
   });
 
+  it('should be able to disable a sort header', () => {
+    // With it disabled, it should not set to active
+    fixture.componentInstance.sort('sortF');
+    fixture.detectChanges();
+    expect(component.matSort.active).toBe(undefined);
+
+    // Set disabled to false
+    fixture.componentInstance.disableSortF = false;
+    fixture.detectChanges();
+
+    // Sort should work
+    fixture.componentInstance.sort('sortF');
+    fixture.detectChanges();
+    expect(component.matSort.active).toBe('sortF');
+  });
+
   it('should use the column definition if used within a cdk table', () => {
     let cdkTableMatSortAppFixture = TestBed.createComponent(CdkTableMatSortApp);
     let cdkTableMatSortAppComponent = cdkTableMatSortAppFixture.componentInstance;
 
-    cdkTableMatSortAppFixture.detectChanges();
     cdkTableMatSortAppFixture.detectChanges();
 
     const sortables = cdkTableMatSortAppComponent.matSort.sortables;
@@ -78,7 +93,6 @@ describe('MatSort', () => {
     let matTableMatSortAppFixture = TestBed.createComponent(MatTableMatSortApp);
     let matTableMatSortAppComponent = matTableMatSortAppFixture.componentInstance;
 
-    matTableMatSortAppFixture.detectChanges();
     matTableMatSortAppFixture.detectChanges();
 
     const sortables = matTableMatSortAppComponent.matSort.sortables;
@@ -223,6 +237,7 @@ function testSingleColumnSortDirectionSequence(fixture: ComponentFixture<SimpleM
       </div>
       <div id="overrideStart" mat-sort-header="overrideStart" start="desc"> D </div>
       <div id="overrideDisableClear" mat-sort-header="overrideDisableClear" disableClear> E </div>
+      <div id="sortF" mat-sort-header="sortF" [disabled]="disableSortF"> F </div>
     </div>
   `
 })
@@ -232,6 +247,7 @@ class SimpleMatSortApp {
   active: string;
   start: SortDirection = 'asc';
   direction: SortDirection = '';
+  disableSortF = true;
   disableClear: boolean;
 
   @ViewChild(MatSort) matSort: MatSort;
@@ -245,7 +261,6 @@ class SimpleMatSortApp {
     dispatchMouseEvent(sortElement, 'click');
   }
 }
-
 
 class FakeDataSource extends DataSource<any> {
   connect(collectionViewer: CollectionViewer): Observable<any[]> {
