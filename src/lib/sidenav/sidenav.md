@@ -7,14 +7,14 @@ use three components: `<mat-sidenav-container>` which acts as a structural conta
 and sidenav, `<mat-sidenav-content>` which represents the main content, and `<mat-sidenav>` which
 represents the added side content.
 
-<!-- TODO(mmalerba): sidenav example -->
+<!-- example(sidenav-overview) -->
 
 There are also drawer components, `<mat-drawer-container>`, `<mat-drawer-content>`, and
 `<mat-drawer>`,  which are analogous to their sidenav equivalents. Rather than adding side content
 to the app as a whole, these are designed to add side content to a small section of your app. They
 support almost all of the same features, but do not support fixed positioning.
 
-<!-- TODO(mmalerba): drawer example -->
+<!-- example(sidenav-drawer-overview) -->
 
 ### Specifying the main and side content
 
@@ -32,7 +32,9 @@ given side.
 The main content should be wrapped in a `<mat-sidenav-content>`. If no `<mat-sidenav-content>` is
 specified for a `<mat-sidenav-container>`, one will be created implicitly and all of the content
 inside the `<mat-sidenav-container>` other than the `<mat-sidenav>` elements will be placed inside
-of it. 
+of it.
+
+<!-- example(sidenav-position) -->
 
 The following are examples of valid sidenav layouts:
 
@@ -55,7 +57,7 @@ The following are examples of valid sidenav layouts:
 <mat-sidenav-container></mat-sidenav-container>
 ```
 
-Anf these are examples of invalid sidenav layouts:
+And these are examples of invalid sidenav layouts:
 
 ```html
 <mat-sidenav-container>
@@ -90,7 +92,7 @@ The property supports 2-way binding.
 `<mat-sidenav>` also supports output properties for just open and just close events, The `(opened)`
 and `(closed)` properties respectively.
 
-<!-- TODO(mmalerba): open/close example -->
+<!-- example(sidenav-open-close) -->
 
 All of these properties and methods work on `<mat-drawer>` as well.
 
@@ -100,13 +102,13 @@ The `<mat-sidenav>` can render in one of three different ways based on the `mode
 
 | Mode   | Description                                                                             |
 |--------|-----------------------------------------------------------------------------------------|
-| `over` | Sidenav floats _over_ the primary content, which is covered by a backdrop               |
-| `push` | Sidenav _pushes_ the primary content out of its way, also covering it with a backdrop   |
-| `side` | Sidenav appears _side-by-side_ with the main content, shrinking the main content's width to make space for the sidenav. |
+| `over` | Sidenav floats over the primary content, which is covered by a backdrop               |
+| `push` | Sidenav pushes the primary content out of its way, also covering it with a backdrop   |
+| `side` | Sidenav appears side-by-side with the main content, shrinking the main content's width to make space for the sidenav. |
 
 If no `mode` is specified, `over` is used by default.
 
-<!-- TODO(mmalerba): modes example -->
+<!-- example(sidenav-mode) -->
 
 `<mat-drawer>` also supports all of these same modes.
 
@@ -120,7 +122,7 @@ Custom handling for <kbd>Esc</kbd> can be done by adding a keydown listener to t
 Custom handling for backdrop clicks can be done via the `(backdropClick)` output property on
 `<mat-sidenav-container>`.
 
-<!-- TODO(mmalerba): autoclose example -->
+<!-- example(sidenav-disable-close) -->
 
 ### Setting the sidenav's size
 
@@ -142,21 +144,35 @@ setting the `fixedInViewport` property. Additionally, top and bottom space can b
 `fixedTopGap` and `fixedBottomGap`. These properties accept a pixel value amount of space to add at
 the top or bottom.
 
-<!-- TODO(mmalerba): fixed example -->
+<!-- example(sidenav-fixed) -->
 
-### Common layout patterns
+### Creating a responsive layout for mobile & desktop
 
-<!-- TODO(mmalerba): fill out -->
+A sidenav often needs to behave differently on a mobile vs a desktop display. On a desktop, it may
+make sense to have just the content section scroll. However, on mobile you often want the body to be
+the element that scrolls; this allows the address bar to auto-hide. The sidenav can be styled with
+CSS to adjust to either type of device. 
 
-#### Full-height sidenav
-#### Sidenav under toolbar
-#### Mobile sidenav
-#### Responsive sidenav
+<!-- example(sidenav-responsive) -->
 
 ### Accessibility
 
-<!-- TODO(mmalerba): fill out -->
+The `<mat-sidenav>` an `<mat-sidenav-content>` should each be given an appropriate `role` attribute
+depending on the context in which they are used.
+
+For example, a `<mat-sidenav>` that contains links
+to other pages might be marked `role="navigation"`, whereas one that contains a table of
+contents about might be marked as `role="directory"`. If there is no more specific role that
+describes your sidenav, `role="region"` is recommended.
+
+Similarly, the `<mat-sidenav-contnet>` should be given a role based on what it contains. If it
+represents the primary content of the page, it may make sense to mark it `role="main"`. If no more
+specific role makes sense, `role="region"` is again a good fallback. 
 
 ### Troubleshooting
 
-<!-- TODO(mmalerba): fill out -->
+#### Error: A drawer was already declared for 'position="..."'
+
+This error is thrown if you have more than one sidenav or drawer in a given container with the same
+`position`. The `position` property defaults to `start`, so the issue may just be that you forgot to
+mark the `end` sidenav with `position="end"`.
