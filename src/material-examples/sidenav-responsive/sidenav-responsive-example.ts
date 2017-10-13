@@ -10,7 +10,7 @@ import {ChangeDetectorRef, Component} from '@angular/core';
 export class SidenavResponsiveExample {
   mobileQuery: MediaQueryList;
 
-  fillerNav = Array(50).fill(0).map((_, i) => `Nav Item ${i+1}`);
+  fillerNav = Array(50).fill(0).map((_, i) => `Nav Item ${i + 1}`);
 
   fillerContent = Array(50).fill(0).map(() =>
       `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
