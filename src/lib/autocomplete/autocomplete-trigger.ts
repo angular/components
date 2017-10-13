@@ -18,7 +18,7 @@ import {
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
-import {filter, take, switchMap, delay, tap, map} from 'rxjs/operators';
+import {delay, filter, map, share, switchMap, take, tap} from 'rxjs/operators';
 import {
   ChangeDetectorRef,
   Directive,
@@ -138,6 +138,9 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   /** Stream of keyboard events that can close the panel. */
   private readonly _closeKeyEventStream = new Subject<void>();
 
+  /**  The current model value. */
+  private _value: any;
+
   /** `View -> model callback called when value changes` */
   _onChange: (value: any) => void = () => {};
 
@@ -145,7 +148,25 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   _onTouched = () => {};
 
   /** The autocomplete panel to be attached to this trigger. */
-  @Input('matAutocomplete') autocomplete: MatAutocomplete;
+  @Input('matAutocomplete')
+  get autocomplete(): MatAutocomplete {
+    return this._autocomplete;
+  }
+  set autocomplete(value: MatAutocomplete) {
+    this._autocomplete = value;
+    this._displayWithSubscription.unsubscribe();
+    if (this.autocomplete) {
+      this._displayWithSubscription = this.autocomplete._displayWithChange
+        .subscribe(() => {
+          this.writeValue(this._value);
+        });
+    }
+  }
+  private _autocomplete: MatAutocomplete;
+  private _displayWithSubscription = Subscription.EMPTY;
+
+  /** Stream of clicks outside of the autocomplete panel. */
+  private readonly _outsideClickStream: Observable<any>;
 
   /**
    * Reference relative to which to position the autocomplete panel.
@@ -170,15 +191,18 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
               @Inject(MAT_AUTOCOMPLETE_SCROLL_STRATEGY) private _scrollStrategy,
               @Optional() private _dir: Directionality,
               @Optional() @Host() private _formField: MatFormField,
-              @Optional() @Inject(DOCUMENT) private _document: any,
+              @Optional() @Inject(DOCUMENT) _document: any,
               // @deletion-target 7.0.0 Make `_viewportRuler` required.
-              private _viewportRuler?: ViewportRuler) {}
+              private _viewportRuler?: ViewportRuler) {
+    this._outsideClickStream = this._getOutsideClickStream(_document);
+  }
 
   ngOnDestroy() {
     this._viewportSubscription.unsubscribe();
     this._componentDestroyed = true;
     this._destroyPanel();
     this._closeKeyEventStream.complete();
+    this._displayWithSubscription.unsubscribe();
   }
 
   /** Whether or not the autocomplete panel is open. */
@@ -265,31 +289,10 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     return null;
   }
 
-  /** Stream of clicks outside of the autocomplete panel. */
-  private get _outsideClickStream(): Observable<any> {
-    if (!this._document) {
-      return observableOf(null);
-    }
-
-    return merge(
-      fromEvent(this._document, 'click'),
-      fromEvent(this._document, 'touchend')
-    )
-    .pipe(filter((event: MouseEvent | TouchEvent) => {
-      const clickTarget = event.target as HTMLElement;
-      const formField = this._formField ?
-          this._formField._elementRef.nativeElement : null;
-
-      return this._overlayAttached &&
-              clickTarget !== this._element.nativeElement &&
-              (!formField || !formField.contains(clickTarget)) &&
-              (!!this._overlayRef && !this._overlayRef.overlayElement.contains(clickTarget));
-    }));
-  }
-
   // Implemented as part of ControlValueAccessor.
   writeValue(value: any): void {
-    Promise.resolve(null).then(() => this._setTriggerValue(value));
+    this._setTriggerValue(value);
+    this._changeDetectorRef.markForCheck();
   }
 
   // Implemented as part of ControlValueAccessor.
@@ -466,6 +469,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   }
 
   private _setTriggerValue(value: any): void {
+    this._value = value;
     const toDisplay = this.autocomplete && this.autocomplete.displayWith ?
       this.autocomplete.displayWith(value) :
       value;
@@ -547,6 +551,28 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     if (this.panelOpen && wasOpen !== this.panelOpen) {
       this.autocomplete.opened.emit();
     }
+  }
+
+  /** Returns a stream of click events from outside of the autocomplete panel. */
+  private _getOutsideClickStream(document: Document): Observable<any> {
+    if (!document) {
+      return observableOf();
+    }
+
+    return merge(
+      fromEvent(document, 'click'),
+      fromEvent(document, 'touchend')
+    )
+    .pipe(filter((event: MouseEvent | TouchEvent) => {
+      const clickTarget = event.target as HTMLElement;
+      const formField = this._formField ?
+          this._formField._elementRef.nativeElement : null;
+
+      return this._overlayAttached &&
+              clickTarget !== this._element.nativeElement &&
+              (!formField || !formField.contains(clickTarget)) &&
+              (!!this._overlayRef && !this._overlayRef.overlayElement.contains(clickTarget));
+    }), share());
   }
 
   private _getOverlayConfig(): OverlayConfig {

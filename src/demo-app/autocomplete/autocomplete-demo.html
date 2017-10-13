@@ -9,7 +9,8 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <mat-form-field floatLabel="never">
       <mat-label>State</mat-label>
       <input matInput [matAutocomplete]="reactiveAuto" [formControl]="stateCtrl">
-      <mat-autocomplete #reactiveAuto="matAutocomplete" [displayWith]="displayFn">
+      <mat-autocomplete #reactiveAuto="matAutocomplete"
+                        [displayWith]="displayName ? displayNameFn : displayCodeFn">
         <mat-option *ngFor="let state of tempStates" [value]="state">
           <span>{{ state.name }}</span>
           <span class="demo-secondary-text"> ({{ state.code }}) </span>
@@ -22,6 +23,11 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <button mat-button (click)="stateCtrl.setValue(states[10])">SET VALUE</button>
       <button mat-button (click)="stateCtrl.enabled ? stateCtrl.disable() : stateCtrl.enable()">
         TOGGLE DISABLED
+      </button>
+      <button mat-button (click)="displayName = !displayName"
+              [ngSwitch]="displayName">
+        <ng-container *ngSwitchCase="true">DISPLAY CODE</ng-container>
+        <ng-container *ngSwitchCase="false">DISPLAY NAME</ng-container>
       </button>
     </mat-card-actions>
 

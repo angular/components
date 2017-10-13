@@ -31,6 +31,7 @@ import {
 } from '@angular/material/core';
 import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Subject} from 'rxjs';
 
 
 /**
@@ -113,7 +114,16 @@ export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterC
   @ContentChildren(MatOptgroup) optionGroups: QueryList<MatOptgroup>;
 
   /** Function that maps an option's control value to its display value in the trigger. */
-  @Input() displayWith: ((value: any) => string) | null = null;
+  @Input()
+  get displayWith() {
+    return this._displayWith;
+  }
+  set displayWith(value: any) {
+    this._displayWith = typeof value === 'function' ? value : null;
+    this._displayWithChange.next();
+  }
+  private _displayWith: ((value: any) => string) | null = null;
+  readonly _displayWithChange = new Subject<void>();
 
   /**
    * Whether the first option should be highlighted when the autocomplete panel is opened.

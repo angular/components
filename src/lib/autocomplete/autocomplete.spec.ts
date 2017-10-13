@@ -180,6 +180,15 @@ describe('MatAutocomplete', () => {
           .toBe(false, `Expected clicking outside the panel to set its state to closed.`);
       expect(overlayContainerElement.textContent)
           .toEqual('', `Expected clicking outside the panel to close the panel.`);
+
+      // Make sure that it works twice.
+      dispatchFakeEvent(input, 'focusin');
+      fixture.detectChanges();
+      expect(fixture.componentInstance.trigger.panelOpen).toBe(true);
+
+      zone.simulateZoneExit();
+      dispatchFakeEvent(document, 'click');
+      expect(fixture.componentInstance.trigger.panelOpen).toBe(false);
     }));
 
     it('should close the panel when the user taps away on a touch device', fakeAsync(() => {
@@ -727,6 +736,23 @@ describe('MatAutocomplete', () => {
       plainFixture.detectChanges();
 
       expect(input.disabled).toBe(true);
+    });
+
+    it('should update the display synchronously when set programmatically', () => {
+      fixture.componentInstance.stateCtrl.setValue(
+        fixture.componentInstance.states.find((state) => state.code === 'AL'));
+      fixture.detectChanges();
+      expect(input.value).toBe('Alabama');
+
+      fixture.componentInstance.stateCtrl.setValue(
+        fixture.componentInstance.states.find((state) => state.code === 'PA'));
+      fixture.detectChanges();
+      expect(input.value).toBe('Pennsylvania');
+
+      fixture.componentInstance.stateCtrl.setValue(
+        fixture.componentInstance.states.find((state) => state.code === 'CA'));
+      fixture.detectChanges();
+      expect(input.value).toBe('California');
     });
 
   });
@@ -1306,7 +1332,6 @@ describe('MatAutocomplete', () => {
     it('should set aria-owns based on the attached autocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
-
       const panel = fixture.debugElement.query(By.css('.mat-autocomplete-panel')).nativeElement;
 
       expect(input.getAttribute('aria-owns'))
@@ -1625,11 +1650,20 @@ describe('MatAutocomplete', () => {
       closingActionsSub.unsubscribe();
     });
 
-    it('should emit panel close event when clicking away', () => {
+    it('should emit panel close event when clicking away', fakeAsync(() => {
       expect(closingActionSpy).not.toHaveBeenCalled();
       dispatchFakeEvent(document, 'click');
+
       expect(closingActionSpy).toHaveBeenCalledWith(null);
-    });
+      expect(closingActionSpy).toHaveBeenCalledTimes(1);
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      flush();
+
+      dispatchFakeEvent(document, 'click');
+      expect(closingActionSpy).toHaveBeenCalledTimes(2);
+    }));
 
     it('should emit panel close event when tabbing out', () => {
       const tabEvent = createKeyboardEvent('keydown', TAB);
@@ -2008,6 +2042,25 @@ describe('MatAutocomplete', () => {
     expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.bottom),
         'Expected autocomplete panel to align with the bottom of the new origin.');
   });
+
+  it('should should update the display when displayWith changes', () => {
+    const fixture = createComponent(SimpleAutocomplete);
+    fixture.componentInstance.stateCtrl.setValue(
+      fixture.componentInstance.states.find((state) => state.code === 'NY'));
+    fixture.detectChanges();
+
+    const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(input.value).toBe('New York');
+
+    fixture.componentInstance.displayFn = (value: any) => value.code;
+    fixture.detectChanges();
+    expect(input.value).toBe('NY');
+
+    fixture.componentInstance.displayFn = (value: any) => value.name;
+    fixture.detectChanges();
+    expect(input.value).toBe('New York');
+  });
+
 });
 
 @Component({
@@ -2059,6 +2112,7 @@ class SimpleAutocomplete implements OnDestroy {
     {code: 'WY', name: 'Wyoming'},
   ];
 
+  displayFn: (value: any) => string = (value) => value ? value.name : value;
 
   constructor() {
     this.filteredStates = this.states;
@@ -2066,10 +2120,6 @@ class SimpleAutocomplete implements OnDestroy {
       this.filteredStates = val ? this.states.filter((s) => s.name.match(new RegExp(val, 'gi')))
                                 : this.states;
     });
-  }
-
-  displayFn(value: any): string {
-    return value ? value.name : value;
   }
 
   ngOnDestroy() {
