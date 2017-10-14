@@ -11,6 +11,9 @@ const cdkSecondaryEntryPoints = getSubdirectoryNames(join(buildConfig.packagesDi
 /** List of potential secondary entry-points for the material package. */
 const matSecondaryEntryPoints = getSubdirectoryNames(join(buildConfig.packagesDir, 'lib'));
 
+/** List of potential secondary entry-points for the material package. */
+const viewSecondaryEntryPoints = getSubdirectoryNames(join(buildConfig.packagesDir, 'view'));
+
 /** Object with all cdk entry points in the format of Rollup globals. */
 const rollupCdkEntryPoints = cdkSecondaryEntryPoints.reduce((globals: any, entryPoint: string) => {
   globals[`@uiux/cdk/${entryPoint}`] = `ng.cdk.${dashCaseToCamelCase(entryPoint)}`;
@@ -20,6 +23,12 @@ const rollupCdkEntryPoints = cdkSecondaryEntryPoints.reduce((globals: any, entry
 /** Object with all material entry points in the format of Rollup globals. */
 const rollupMatEntryPoints = matSecondaryEntryPoints.reduce((globals: any, entryPoint: string) => {
   globals[`@uiux/material/${entryPoint}`] = `ng.material.${dashCaseToCamelCase(entryPoint)}`;
+  return globals;
+}, {});
+
+/** Object with all view entry points in the format of Rollup globals. */
+const rollupViewEntryPoints = viewSecondaryEntryPoints.reduce((globals: any, entryPoint: string) => {
+  globals[`@uiux/view/${entryPoint}`] = `ng.view.${dashCaseToCamelCase(entryPoint)}`;
   return globals;
 }, {});
 
@@ -50,10 +59,12 @@ export const rollupGlobals = {
   '@uiux/material-examples': 'ng.materialExamples',
   '@uiux/material': 'ng.material',
   '@uiux/cdk': 'ng.cdk',
+  '@uiux/view': 'ng.view',
 
   // Include secondary entry-points of the cdk and material packages
   ...rollupCdkEntryPoints,
   ...rollupMatEntryPoints,
+  ...rollupViewEntryPoints,
 
   'rxjs/BehaviorSubject': 'Rx',
   'rxjs/Observable': 'Rx',

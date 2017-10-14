@@ -1,0 +1,16 @@
+// Configuration for IDEs only.
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "baseUrl": ".",
+    "paths": {
+      "@uiux/cdk/*": ["../cdk/*"],
+      "@uiux/view/*": ["./*"],
+      "@uiux/service/*": ["../service/*"],
+      "@uiux/data-service/*": ["../data-service/*"],
+      "@uiux/material/*": ["../lib/*"]
+    }
+  },
+  "include": ["./**/*.ts"]
+}

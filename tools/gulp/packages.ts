@@ -5,6 +5,7 @@ export const cdkPackage = new BuildPackage('cdk');
 export const materialPackage = new BuildPackage('material', [cdkPackage]);
 export const examplesPackage = new BuildPackage('material-examples', [materialPackage, cdkPackage]);
 export const momentAdapterPackage = new BuildPackage('material-moment-adapter', [materialPackage]);
+export const viewPackage = new BuildPackage('view', [materialPackage, cdkPackage]);
 
 // The material package re-exports its secondary entry-points at the root so that all of the
 // components can still be imported through `@uiux/material`.

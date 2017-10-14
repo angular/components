@@ -11,7 +11,8 @@ import * as minimist from 'minimist';
 export const releasePackages = [
   'cdk',
   'material',
-  'material-moment-adapter'
+  'material-moment-adapter',
+  'view'
 ];
 
 /** Parse command-line arguments for release task. */
