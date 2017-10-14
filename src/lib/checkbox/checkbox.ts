@@ -22,6 +22,7 @@ import {
   Renderer2,
   ViewChild,
   ViewEncapsulation,
+  HostListener,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -349,12 +350,13 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   }
 
   /**
-   * Event handler for checkbox input element.
+   * Event handler for checkbox element.
    * Toggles checked state if element is not disabled.
    * Do not toggle on (change) event since IE doesn't fire change event when
    *   indeterminate checkbox is clicked.
    * @param event
    */
+  @HostListener('click', ['$event'])
   _onInputClick(event: Event) {
     // We have to stop propagation for click events on the visual hidden input element.
     // By default, when a user clicks on a label element, a generated click event will be
