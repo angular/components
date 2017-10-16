@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -39,6 +39,7 @@ export class MatOptionSelectionChange {
 @Component({
   moduleId: module.id,
   selector: 'mat-option',
+  exportAs: 'matOption',
   host: {
     'role': 'option',
     '[attr.tabindex]': '_getTabIndex()',
@@ -79,7 +80,7 @@ export class MatOption {
   }
 
   /** The unique ID of the option. */
-  get id() { return this._id; }
+  get id(): string { return this._id; }
 
   /** Whether or not the option is currently selected. */
   get selected(): boolean { return this._selected; }

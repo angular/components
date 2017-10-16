@@ -25,6 +25,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatInputModule} from '../input/index';
 import {MatDatepicker} from './datepicker';
 import {MatDatepickerInput} from './datepicker-input';
+import {MatDatepickerToggle} from './datepicker-toggle';
 import {MatDatepickerIntl, MatDatepickerModule} from './index';
 
 
@@ -82,24 +83,25 @@ describe('MatDatepicker', () => {
       }));
 
       it('open non-touch should open popup', () => {
-        expect(document.querySelector('.cdk-overlay-pane')).toBeNull();
+        expect(document.querySelector('.cdk-overlay-pane.mat-datepicker-popup')).toBeNull();
 
         testComponent.datepicker.open();
         fixture.detectChanges();
 
-        expect(document.querySelector('.cdk-overlay-pane')).not.toBeNull();
+        expect(document.querySelector('.cdk-overlay-pane.mat-datepicker-popup')).not.toBeNull();
       });
 
       it('open touch should open dialog', () => {
         testComponent.touch = true;
         fixture.detectChanges();
 
-        expect(document.querySelector('mat-dialog-container')).toBeNull();
+        expect(document.querySelector('.mat-datepicker-dialog mat-dialog-container')).toBeNull();
 
         testComponent.datepicker.open();
         fixture.detectChanges();
 
-        expect(document.querySelector('mat-dialog-container')).not.toBeNull();
+        expect(document.querySelector('.mat-datepicker-dialog mat-dialog-container'))
+            .not.toBeNull();
       });
 
       it('open in disabled mode should not open the calendar', () => {
@@ -538,6 +540,15 @@ describe('MatDatepicker', () => {
 
         expect(inputEl.disabled).toBe(true);
       });
+
+      it('should disable toggle when form control disabled', () => {
+        expect(testComponent.datepickerToggle.disabled).toBe(false);
+
+        testComponent.formControl.disable();
+        fixture.detectChanges();
+
+        expect(testComponent.datepickerToggle.disabled).toBe(true);
+      });
     });
 
     describe('datepicker with mat-datepicker-toggle', () => {
@@ -581,7 +592,7 @@ describe('MatDatepicker', () => {
       });
 
       it('should not open calendar when toggle clicked if input is disabled', () => {
-        expect(testComponent.datepicker.disabled).toBeUndefined();
+        expect(testComponent.datepicker.disabled).toBe(false);
 
         testComponent.input.disabled = true;
         fixture.detectChanges();
@@ -1119,6 +1130,7 @@ class DatepickerWithNgModel {
 @Component({
   template: `
     <input [formControl]="formControl" [matDatepicker]="d">
+    <mat-datepicker-toggle [for]="d"></mat-datepicker-toggle>
     <mat-datepicker #d></mat-datepicker>
   `,
 })
@@ -1126,6 +1138,7 @@ class DatepickerWithFormControl {
   formControl = new FormControl();
   @ViewChild('d') datepicker: MatDatepicker<Date>;
   @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+  @ViewChild(MatDatepickerToggle) datepickerToggle: MatDatepickerToggle<Date>;
 }
 
 

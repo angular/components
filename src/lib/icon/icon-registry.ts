@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -148,7 +148,7 @@ export class MatIconRegistry {
    * @param alias Alias for the font.
    * @param className Class name override to be used instead of the alias.
    */
-  registerFontClassAlias(alias: string, className = alias): this {
+  registerFontClassAlias(alias: string, className: string = alias): this {
     this._fontCssClassesByAlias.set(alias, className);
     return this;
   }
@@ -201,7 +201,7 @@ export class MatIconRegistry {
       return observableOf(cloneSvg(cachedIcon));
     }
 
-    return RxChain.from(this._loadSvgIconFromConfig(new SvgIconConfig(url)))
+    return RxChain.from(this._loadSvgIconFromConfig(new SvgIconConfig(safeUrl)))
       .call(doOperator, svg => this._cachedIconsByUrl.set(url!, svg))
       .call(map, svg => cloneSvg(svg))
       .result();
@@ -215,7 +215,7 @@ export class MatIconRegistry {
    * @param name Name of the icon to be retrieved.
    * @param namespace Namespace in which to look for the icon.
    */
-  getNamedSvgIcon(name: string, namespace = ''): Observable<SVGElement> {
+  getNamedSvgIcon(name: string, namespace: string = ''): Observable<SVGElement> {
     // Return (copy of) cached icon if possible.
     const key = iconKey(namespace, name);
     const config = this._svgIconConfigs.get(key);
