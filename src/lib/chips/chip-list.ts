@@ -243,6 +243,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
     return (!this._chipInput || this._chipInput.empty) && this.chips.length === 0;
   }
 
+  /** @docs-private */
   get shouldPlaceholderFloat(): boolean {
     return !this.empty || this.focused;
   }
@@ -369,7 +370,10 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
     this._chipInput = inputElement;
   }
 
-  // Implemented as part of MatFormFieldControl.
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
 
   // Implemented as part of ControlValueAccessor

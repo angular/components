@@ -258,6 +258,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this._disabledChange.complete();
   }
 
+  /** @docs-private */
   registerOnValidatorChange(fn: () => void): void {
     this._validatorOnChange = fn;
   }

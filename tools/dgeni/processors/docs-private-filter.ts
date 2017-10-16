@@ -19,10 +19,6 @@ const INTERNAL_METHODS = [
   'registerOnChange',
   'registerOnTouched',
   'setDisabledState',
-  'setDescribedByIds',
-  'registerOnValidatorChange',
-  'onContainerClick',
-  'shouldPlaceholderFloat',
 
   // Don't ever need to document constructors
   'constructor',
