@@ -140,6 +140,31 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     </mat-card-content>
   </mat-card>
 
+  <mat-card>
+    <mat-card-subtitle>Select header</mat-card-subtitle>
+
+    <mat-card-content>
+      <mat-form-field>
+        <mat-select placeholder="Drink" [(ngModel)]="currentDrink" #selectWitHeader="matSelect">
+          <mat-select-header>
+            <input
+              type="search"
+              role="combobox"
+              class="mat-select-header-input"
+              [(ngModel)]="searchTerm"
+              [attr.aria-owns]="selectWitHeader.panelId"
+              (ngModelChange)="filterDrinks()"
+              placeholder="Search for a drink"/>
+          </mat-select-header>
+
+          <mat-option *ngFor="let drink of filteredDrinks" [value]="drink.value" [disabled]="drink.disabled">
+            {{ drink.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+
   <div *ngIf="showSelect">
     <mat-card>
       <mat-card-subtitle>formControl</mat-card-subtitle>

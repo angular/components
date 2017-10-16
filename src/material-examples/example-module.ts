@@ -96,6 +96,7 @@ import {SelectOverviewExample} from './select-overview/select-overview-example';
 import {SelectPanelClassExample} from './select-panel-class/select-panel-class-example';
 import {SelectResetExample} from './select-reset/select-reset-example';
 import {SelectValueBindingExample} from './select-value-binding/select-value-binding-example';
+import {SelectHeaderExample} from './select-header/select-header-example';
 import {SidenavFabExample} from './sidenav-fab/sidenav-fab-example';
 import {SidenavOverviewExample} from './sidenav-overview/sidenav-overview-example';
 import {SlideToggleConfigurableExample} from './slide-toggle-configurable/slide-toggle-configurable-example';
@@ -619,6 +620,12 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'select-header': {
+    title: 'Select header filtering',
+    component: SelectHeaderExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'sidenav-fab': {
     title: 'Sidenav with a FAB',
     component: SidenavFabExample,
@@ -843,6 +850,7 @@ export const EXAMPLE_LIST = [
   SelectPanelClassExample,
   SelectResetExample,
   SelectValueBindingExample,
+  SelectHeaderExample,
   SidenavFabExample,
   SidenavOverviewExample,
   SlideToggleConfigurableExample,

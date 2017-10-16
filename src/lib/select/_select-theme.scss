@@ -31,6 +31,10 @@
     }
   }
 
+  .mat-select-header {
+    color: mat-color($foreground, divider);
+  }
+
   .mat-form-field {
     &.mat-focused {
       &.mat-primary .mat-select-arrow {

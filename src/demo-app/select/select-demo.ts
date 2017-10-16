@@ -20,6 +20,7 @@ export class SelectDemo {
   currentPokemon: string[];
   currentPokemonFromGroup: string;
   currentDigimon: string;
+  searchTerm: string;
   latestChangeEvent: MatSelectChange;
   floatPlaceholder: string = 'auto';
   foodControl = new FormControl('pizza-1');
@@ -46,6 +47,8 @@ export class SelectDemo {
     {value: 'wine-7', viewValue: 'Wine'},
     {value: 'milk-8', viewValue: 'Milk'},
   ];
+
+  filteredDrinks = this.drinks.slice();
 
   pokemon = [
     {value: 'bulbasaur-0', viewValue: 'Bulbasaur'},
@@ -125,5 +128,11 @@ export class SelectDemo {
 
   compareByReference(o1: any, o2: any) {
     return o1 === o2;
+  }
+
+  filterDrinks() {
+    this.filteredDrinks = this.searchTerm ? this.drinks.filter(item => {
+      return item.viewValue.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1;
+    }) : this.drinks.slice();
   }
 }

@@ -61,9 +61,8 @@ export const transformPanel: AnimationTriggerMetadata = trigger('transformPanel'
  * panel has transformed in.
  */
 export const fadeInContent: AnimationTriggerMetadata = trigger('fadeInContent', [
+  state('void', style({opacity: 0})),
   state('showing', style({opacity: 1})),
-  transition('void => showing', [
-    style({opacity: 0}),
-    animate('150ms 100ms cubic-bezier(0.55, 0, 0.55, 0.2)')
-  ])
+  transition('void => showing', animate('150ms 100ms cubic-bezier(0.55, 0, 0.55, 0.2)')),
+  transition('showing => void', animate('150ms cubic-bezier(0.55, 0, 0.55, 0.2)'))
 ]);

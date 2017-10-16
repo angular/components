@@ -67,7 +67,7 @@ on the group.
 
 ### Multiple selection
 
-`<mat-select>` defaults to single-selection mode, but can be configured to allow multiple selection 
+`<mat-select>` defaults to single-selection mode, but can be configured to allow multiple selection
 by setting the `multiple` property. This will allow the user to select multiple values at once. When
 using the `<mat-select>` in multiple selection mode, its value will be a sorted list of all selected
 values rather than a single value.
@@ -80,6 +80,15 @@ If you want to display a custom trigger label inside a select, you can use the
 `<mat-select-trigger>` element.
 
 <!-- example(select-custom-trigger) -->
+
+### Adding a header
+
+You can add an extra header that will stay fixed on top of the select's option as the user scrolls.
+The header can be used as a filter bar or as an extra title. Note that the accessibility of the
+header content is up to the consumer. For example when using it as a filter bar, the `input` element
+should have a `role="combobox"` and an `[attr.aria-owns]="select.panelId"`.
+
+<!-- example(select-header) -->
 
 ### Disabling the ripple effect
 

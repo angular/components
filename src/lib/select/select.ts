@@ -75,6 +75,7 @@ import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
 import {Subject} from 'rxjs/Subject';
 import {fadeInContent, transformPanel} from './select-animations';
+import {MatSelectHeader} from './select-header';
 import {
   getMatSelectDynamicMultipleError,
   getMatSelectNonArrayValueError,
@@ -146,7 +147,6 @@ export class MatSelectBase {
   constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
 export const _MatSelectMixinBase = mixinTabIndex(mixinDisabled(MatSelectBase));
-
 
 /**
  * Allows the user to customize the trigger that is displayed when the select has a value.
@@ -297,6 +297,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   /** A name for this control that can be used by `mat-form-field`. */
   controlType = 'mat-select';
 
+  /** Unique ID for the panel element. Useful for a11y in projected content (e.g. the header). */
+  panelId: string = 'mat-select-panel-' + nextUniqueId++;
+
   /** Trigger that opens the select. */
   @ViewChild('trigger') trigger: ElementRef;
 
@@ -317,6 +320,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** User-supplied override of the trigger element. */
   @ContentChild(MatSelectTrigger) customTrigger: MatSelectTrigger;
+
+  /** The select's header, if specified. */
+  @ContentChild(MatSelectHeader) header: MatSelectHeader;
 
   /** Placeholder to be shown if no value has been selected. */
   @Input()
@@ -673,6 +679,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     if (this.panelOpen) {
       this._scrollTop = 0;
       this.openedChange.emit(true);
+
+      if (this.header) {
+        // Move focus into the header, if we have one,
+        // otherwise it'll be left on the select trigger.
+        this.header._trapFocus();
+      }
     } else {
       this.openedChange.emit(false);
       this._panelDoneAnimating = false;
@@ -964,8 +976,15 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     let selectedOptionOffset =
         this.empty ? 0 : this._getOptionIndex(this._selectionModel.selected[0])!;
 
+    // Add the amount of groups that come before the option to the offset.
     selectedOptionOffset += MatOption.countGroupLabelsBeforeOption(selectedOptionOffset,
         this.options, this.optionGroups);
+
+    // If we have a header, we need to add one to the offset, because
+    // the header will push the option down by one.
+    if (this.header) {
+      selectedOptionOffset += 1;
+    }
 
     // We must maintain a scroll buffer so the selected option will be scrolled to the
     // center of the overlay panel rather than the top.

@@ -1,0 +1,12 @@
+<mat-select placeholder="Favorite food" [(ngModel)]="selectedValue" name="food" #select="matSelect">
+  <mat-select-header>
+    <input type="search" role="combobox" [attr.aria-owns]="select.panelId"
+      [(ngModel)]="searchString" (ngModelChange)="filterFoods()" placeholder="Search for food"/>
+  </mat-select-header>
+
+  <mat-option *ngFor="let food of foods" [value]="food.value">
+    {{food.viewValue}}
+  </mat-option>
+</mat-select>
+
+<p> Selected value: {{selectedValue}} </p>
