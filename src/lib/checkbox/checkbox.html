@@ -14,7 +14,7 @@
            [attr.aria-label]="ariaLabel"
            [attr.aria-labelledby]="ariaLabelledby"
            (change)="_onInteractionEvent($event)"
-           (click)="_onInputClick($event)">
+           (click)="_onInteractionEvent($event)">
     <div matRipple class="mat-checkbox-ripple"
          [matRippleTrigger]="label"
          [matRippleDisabled]="_isRippleDisabled()"

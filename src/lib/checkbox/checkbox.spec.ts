@@ -103,7 +103,7 @@ describe('MatCheckbox', () => {
       expect(inputElement.indeterminate).toBe(false);
     });
 
-    it('should set indeterminate to false when input clicked', fakeAsync(() => {
+    it('should set indeterminate to false when checkbox clicked', fakeAsync(() => {
       testComponent.isIndeterminate = true;
       fixture.detectChanges();
 
@@ -111,7 +111,7 @@ describe('MatCheckbox', () => {
       expect(inputElement.indeterminate).toBe(true);
       expect(testComponent.isIndeterminate).toBe(true);
 
-      inputElement.click();
+      checkboxNativeElement.click();
       fixture.detectChanges();
 
       // Flush the microtasks because the forms module updates the model state asynchronously.
@@ -134,7 +134,7 @@ describe('MatCheckbox', () => {
       expect(inputElement.checked).toBe(true);
       expect(testComponent.isIndeterminate).toBe(true);
 
-      inputElement.click();
+      checkboxNativeElement.click();
       fixture.detectChanges();
 
       // Flush the microtasks because the forms module updates the model state asynchronously.
@@ -255,7 +255,7 @@ describe('MatCheckbox', () => {
       testComponent.isIndeterminate = true;
       fixture.detectChanges();
 
-      inputElement.click();
+      checkboxNativeElement.click();
       fixture.detectChanges();
 
       // Flush the microtasks because the indeterminate state will be updated in the next tick.
@@ -488,11 +488,11 @@ describe('MatCheckbox', () => {
 
     describe('state transition css classes', () => {
       it('should transition unchecked -> checked -> unchecked', () => {
-        inputElement.click();
+        checkboxNativeElement.click();
         fixture.detectChanges();
         expect(checkboxNativeElement.classList).toContain('mat-checkbox-anim-unchecked-checked');
 
-        inputElement.click();
+        checkboxNativeElement.click();
         fixture.detectChanges();
         expect(checkboxNativeElement.classList)
             .not.toContain('mat-checkbox-anim-unchecked-checked');
@@ -520,7 +520,7 @@ describe('MatCheckbox', () => {
         testComponent.isIndeterminate = true;
         fixture.detectChanges();
 
-        inputElement.click();
+        checkboxNativeElement.click();
         fixture.detectChanges();
 
         expect(checkboxNativeElement.classList).not.toContain(
@@ -586,7 +586,7 @@ describe('MatCheckbox', () => {
 
       // Trigger the click on the inputElement, because the input will probably
       // emit a DOM event to the change output.
-      inputElement.click();
+      checkboxNativeElement.click();
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {
@@ -742,12 +742,12 @@ describe('MatCheckbox', () => {
     it('should toggle checked state on click', () => {
       expect(checkboxInstance.checked).toBe(false);
 
-      inputElement.click();
+      checkboxNativeElement.click();
       fixture.detectChanges();
 
       expect(checkboxInstance.checked).toBe(true);
 
-      inputElement.click();
+      checkboxNativeElement.click();
       fixture.detectChanges();
 
       expect(checkboxInstance.checked).toBe(false);
@@ -758,13 +758,14 @@ describe('MatCheckbox', () => {
     let checkboxInstance: MatCheckbox;
     let inputElement: HTMLInputElement;
     let testComponent: CheckboxWithNgModel;
+    let checkboxNativeElement;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(CheckboxWithNgModel);
       fixture.detectChanges();
 
       let checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox));
-      let checkboxNativeElement = checkboxDebugElement.nativeElement;
+      checkboxNativeElement = checkboxDebugElement.nativeElement;
       testComponent = fixture.debugElement.componentInstance;
       checkboxInstance = checkboxDebugElement.componentInstance;
       inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
@@ -775,13 +776,13 @@ describe('MatCheckbox', () => {
       let ngModel = checkboxElement.injector.get<NgModel>(NgModel);
 
       testComponent.isRequired = true;
-      inputElement.click();
+      checkboxNativeElement.click();
       fixture.detectChanges();
 
       expect(checkboxInstance.checked).toBe(true);
       expect(ngModel.valid).toBe(true);
 
-      inputElement.click();
+      checkboxNativeElement.click();
       fixture.detectChanges();
 
       expect(checkboxInstance.checked).toBe(false);
