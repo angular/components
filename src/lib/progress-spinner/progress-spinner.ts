@@ -153,7 +153,8 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
 
   /** The view box of the spinner's svg element. */
   get _viewBox() {
-    return `0 0 ${this._elementSize} ${this._elementSize}`;
+    const viewBox = this._circleRadius * 2 + this.strokeWidth;
+    return `0 0 ${viewBox} ${viewBox}`;
   }
 
   /** The stroke circumference of the svg circle. */
@@ -173,6 +174,11 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
     }
 
     return null;
+  }
+
+  /** Stroke width of the circle in percent. */
+  get _circleStrokeWidth() {
+    return this.strokeWidth / this._elementSize * 100;
   }
 
   /** Sets the diameter and adds diameter-specific styles if necessary. */

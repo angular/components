@@ -7,21 +7,8 @@
  */
 
 export * from './expansion-module';
-export {
-  CdkAccordion,
-  MatAccordion,
-  MatAccordionDisplayMode
-} from './accordion';
-export {AccordionItem} from './accordion-item';
-export {
-  MatExpansionPanel,
-  MatExpansionPanelState,
-  MatExpansionPanelActionRow
-} from './expansion-panel';
-export {
-  MatExpansionPanelHeader,
-  MatExpansionPanelDescription,
-  MatExpansionPanelTitle
-} from './expansion-panel-header';
+export * from './accordion';
+export * from './expansion-panel';
+export * from './expansion-panel-header';
 
 

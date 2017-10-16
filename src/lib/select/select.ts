@@ -18,7 +18,7 @@ import {
   ScrollStrategy,
   ViewportRuler,
 } from '@angular/cdk/overlay';
-import {filter, first, startWith, takeUntil, RxChain} from '@angular/cdk/rxjs';
+import {filter, first, RxChain, startWith, takeUntil} from '@angular/cdk/rxjs';
 import {
   AfterContentInit,
   Attribute,
@@ -28,6 +28,7 @@ import {
   ContentChild,
   ContentChildren,
   Directive,
+  DoCheck,
   ElementRef,
   EventEmitter,
   Inject,
@@ -35,6 +36,7 @@ import {
   Input,
   isDevMode,
   NgZone,
+  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
@@ -42,26 +44,26 @@ import {
   QueryList,
   Renderer2,
   Self,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
-  DoCheck,
 } from '@angular/core';
 import {
   ControlValueAccessor,
+  FormControl,
   FormGroupDirective,
   NgControl,
-  NgForm,
-  FormControl
+  NgForm
 } from '@angular/forms';
 import {
   CanDisable,
+  ErrorStateMatcher,
   HasTabIndex,
   MatOptgroup,
   MatOption,
   MatOptionSelectionChange,
   mixinDisabled,
   mixinTabIndex,
-  ErrorStateMatcher,
 } from '@angular/material/core';
 import {MatFormField, MatFormFieldControl} from '@angular/material/form-field';
 import {Observable} from 'rxjs/Observable';
@@ -187,8 +189,9 @@ export class MatSelectTrigger {}
   ],
   providers: [{provide: MatFormFieldControl, useExisting: MatSelect}],
 })
-export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnDestroy, OnInit,
-    DoCheck, ControlValueAccessor, CanDisable, HasTabIndex, MatFormFieldControl<any> {
+export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnChanges,
+    OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex,
+    MatFormFieldControl<any> {
   /** Whether or not the overlay panel is open. */
   private _panelOpen = false;
 
@@ -461,6 +464,14 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     }
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    // Updating the disabled state is handled by `mixinDisabled`, but we need to additionally let
+    // the parent form field know to run change detection when the disabled state changes.
+    if (changes.disabled) {
+      this.stateChanges.next();
+    }
+  }
+
   ngOnDestroy() {
     this._destroy.next();
     this._destroy.complete();
@@ -641,7 +652,6 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    */
   _onFadeInDone(): void {
     this._panelDoneAnimating = this.panelOpen;
-    this.panel.nativeElement.focus();
     this._changeDetectorRef.markForCheck();
   }
 
@@ -669,9 +679,11 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    * Callback that is invoked when the overlay panel has been attached.
    */
   _onAttached(): void {
-    this._changeDetectorRef.detectChanges();
-    this._calculateOverlayOffsetX();
-    this.panel.nativeElement.scrollTop = this._scrollTop;
+    first.call(this.overlayDir.positionChange).subscribe(() => {
+      this._changeDetectorRef.detectChanges();
+      this._calculateOverlayOffsetX();
+      this.panel.nativeElement.scrollTop = this._scrollTop;
+    });
   }
 
   /** Returns the theme to be used on the panel. */
@@ -1165,15 +1177,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       // however the key manager only supports up/down at the moment.
       this._keyManager.onKeydown(event);
 
-      // TODO(crisbeto): get rid of the Promise.resolve when #6441 gets in.
-      Promise.resolve().then(() => {
-        const currentActiveItem = this._keyManager.activeItem;
+      const currentActiveItem = this._keyManager.activeItem;
 
-        if (currentActiveItem && currentActiveItem !== prevActiveItem) {
-          this._clearSelection();
-          this._setSelectionByValue(currentActiveItem.value, true);
-        }
-      });
+      if (currentActiveItem && currentActiveItem !== prevActiveItem) {
+        this._clearSelection();
+        this._setSelectionByValue(currentActiveItem.value, true);
+      }
     }
   }
 
