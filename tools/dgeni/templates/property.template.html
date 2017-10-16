@@ -26,8 +26,10 @@
       {$ property.name $}
     </p>
   </td>
-  <td class="docs-api-property-type">
-    <code>{$ property.type $}</code>
+  <td class="docs-api-property-description">
+    <div class="docs-api-property-type">
+      Type: <code>{$ property.type $}</code>
+    </div>
+    {$ property.description | marked | safe $}
   </td>
-  <td class="docs-api-property-description">{$ property.description | marked | safe $}</td>
 </tr>
