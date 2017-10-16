@@ -232,7 +232,7 @@ export class MatDatepicker<D> implements OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.close();
     this._inputSubscription.unsubscribe();
     this._disabledChange.complete();
