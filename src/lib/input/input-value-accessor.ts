@@ -6,10 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {InjectionToken} from '@angular/core';
 
-export * from './input-module';
-export * from './autosize';
-export * from './input';
-export * from './input-errors';
-export * from './input-value-accessor';
 
+export const MAT_INPUT_VALUE_ACCESSOR =
+    new InjectionToken<{value: any}>('MAT_INPIUT_VALUE_ACCESSOR');

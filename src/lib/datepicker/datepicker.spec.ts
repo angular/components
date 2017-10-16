@@ -82,6 +82,10 @@ describe('MatDatepicker', () => {
         fixture.detectChanges();
       }));
 
+      it('should initialize with correct value shown in input', () => {
+        expect(fixture.nativeElement.querySelector('input').value).toBe('1/1/2020');
+      });
+
       it('open non-touch should open popup', () => {
         expect(document.querySelector('.cdk-overlay-pane.mat-datepicker-popup')).toBeNull();
 
