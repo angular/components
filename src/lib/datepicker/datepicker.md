@@ -49,10 +49,10 @@ containing the `startAt` date.
 ### Setting the selected date
 
 The type of values that the datepicker expects actually depends on the particular `DateAdapter` that
-you're using in your app. For example when using the `NativeDateAdapter` the datepicker expects
+you're using in your app. For example, when using the `NativeDateAdapter` the datepicker expects
 `Date` objects, and when using the `MomentDateAdapter` it expects `Moment` objects. You can also
 create your own `DateAdapter` that works with whatever date type you want. (For more information
-about this see the section on
+about this, see the section on
 [choosing a date implementation](#choosing-a-date-implementation-and-date-format-settings)).
 
 Depending on the `DateAdapter` you're using, the datepicker may automatically deserialize certain
@@ -67,7 +67,7 @@ code.
 As with other types of `<input>`, the datepicker works with `@angular/forms` directives such as
 `formGroup`, `formControl`, `ngModel`, etc.
 
-<!-- TODO - example -->
+<!-- example(datepicker-value) -->
 
 ### Date validation
 
@@ -111,22 +111,17 @@ The `(dateInput)` event will fire whenever the value changes due to the user typ
 date from the calendar. The `(dateChange)` event will fire whenever the user finishes typing input
 (on `<input>` blur), or when the user chooses a date from the calendar.
 
-<!-- TODO - example -->
-  
-```html
-<input [matDatepicker]="d" (dateInput)="onInput($event)" (dateChange)="onChange($event)">
-<mat-datepicker #d></mat-datepicker>
-```
+<!-- example(datepicker-events) -->
 
 ### Disabling parts of the datepicker
 
 As with any standard `<input>`, it is possible to disable the datepicker input by adding the
-`disabled` property. By default the `<mat-datepicker>` and `<mat-datepicker-toggle>` will inherit
+`disabled` property. By default, the `<mat-datepicker>` and `<mat-datepicker-toggle>` will inherit
 their disabled state from the `<input>`, but this can be overridden by setting the `disabled`
 property on the datepicker or toggle elements. This can be useful if you want to disable text input
 but allow selection via the calendar or vice-versa.
 
-<!-- TODO example -->
+<!-- example(datepicker-disabled) -->
 
 ### Touch UI mode
 
@@ -169,21 +164,7 @@ export class MyApp {}
 
 It's also possible to set the locale at runtime using the `setLocale` method of the `DateAdapter`.
 
-```ts
-import { DateAdapter, NativeDateAdapter } from '@angular/material';
-
-@Component({
-  selector:    'foo',
-  template: ''
-})
-export class FooComponent {
-  constructor(dateAdapter: DateAdapter<NativeDateAdapter>) {
-    dateAdapter.setLocale('de-DE');
-  }
-}
-```
-
-<!-- TODO - example -->
+<!-- example(datepicker-locale) -->
 
 #### Choosing a date implementation and date format settings
 
@@ -224,9 +205,11 @@ the native `Date` object is the inability to set the parse format. We highly rec
 `MomentDateAdapter` or a custom `DateAdapter` that works with the formatting/parsing library of your
 choice.*
 
-<!-- TODO - example -->
+<!-- example(datepicker-moment) -->
 
 #### Customizing the date implementation
+
+<!-- TODO(mmalerba): Add a guide about this -->
 
 The datepicker does all of its interaction with date objects via the `DateAdapter`. Making the
 datepicker work with a different date implementation is as easy as extending `DateAdapter`, and
@@ -244,27 +227,28 @@ provided in your app are formats that can be understood by your date implementat
 export class MyApp {}
 ```
 
-<!-- TODO guide -->
-
 #### Customizing the parse and display formats
 
 The `MAT_DATE_FORMATS` object is just a collection of formats that the datepicker uses when parsing
 and displaying dates. These formats are passed through to the `DateAdapter` so you will want to make
 sure that the format objects you're using are compatible with the `DateAdapter` used in your app.
-This example shows how to use the `NativeDateAdapter`, but with custom formats.
+
+If you want use one of the `DateAdapters` that ships with Angular Material, but use your own
+`MAT_DATE_FORMATS`, you can import the `NativeDateModule` or `MomentDateModule`. These modules are
+identical to the "Mat"-prefixed versions (`MatNativeDateModule` and `MatMomentDateModule`) except
+they do not include the default formats. For example:
 
 ```ts
 @NgModule({
-  imports: [MatDatepickerModule],
+  imports: [MatDatepickerModule, NativeDateModule],
   providers: [
-    {provide: DateAdapter, useClass: NativeDateAdapter},
     {provide: MAT_DATE_FORMATS, useValue: MY_NATIVE_DATE_FORMATS},
   ],
 })
 export class MyApp {}
 ```
 
-<!-- TODO example -->
+<!-- example(datepicker-formats) -->
 
 #### Localizing labels and messages
 
@@ -281,8 +265,6 @@ application root module.
 })
 export class MyApp {}
 ```
-
-<!-- TODO example -->
 
 ### Accessibility
 
@@ -349,4 +331,27 @@ will be added in future iterations, including:
 
 ### Troubleshooting
 
-<!-- TODO: fill in this section -->
+#### Error: MatDatepicker: No provider found for DateAdapter/MAT_DATE_FORMATS
+
+This error is thrown if you have not provided all of the injectables the datepicker needs to work.
+The easiest way to resolve this is to import the `MatNativeDateModule` or `MatMomentDateModule` in
+your application's root module. See the section on
+[choosing a date implementation](#choosing-a-date-implementation-and-date-format-settings)) for more
+information.
+
+#### Error: A MatDatepicker can only be associated with a single input
+
+This error is thrown if more than one `<input>` tries to claim ownership over the same
+`<mat-datepicker>` (via the `matDatepicker` attribute on the input). A datepicker can only be
+associated with a single input.
+
+#### Error: Attempted to open an MatDatepicker with no associated input.
+
+This error occurs if your `<mat-datepicker>` is not associated with any `<input>`. To associate an
+input with your datepicker, create a template reference for the datepicker and assign it to the
+`matDatepicker` attribute on the input:
+
+```html
+<input [matDatepicker]="picker">
+<mat-datepicker #picker></mat-datepicker>
+```
