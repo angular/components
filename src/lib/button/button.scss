@@ -24,11 +24,12 @@
 }
 
 .mat-fab {
-  @include mat-fab($mat-fab-size, $mat-fab-padding);
+  @include mat-fab($mat-fab-size);
 }
 
 .mat-mini-fab {
-  @include mat-fab($mat-mini-fab-size, $mat-mini-fab-padding);
+  @include mat-fab($mat-mini-fab-size);
+  font-size: 80%;
 }
 
 .mat-icon-button {

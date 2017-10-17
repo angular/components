@@ -20,10 +20,8 @@ $mat-icon-button-line-height: 24px !default;
 // Fab standards
 $mat-fab-border-radius: 50% !default;
 $mat-fab-size: 56px !default;
-$mat-fab-padding: 16px !default;
 
 $mat-mini-fab-size: 40px !default;
-$mat-mini-fab-padding: 8px !default;
 
 // Applies base styles to all button types.
 %mat-button-base {
@@ -85,7 +83,7 @@ $mat-mini-fab-padding: 8px !default;
 }
 
 // Applies styles to fab and mini-fab button types only
-@mixin mat-fab($size, $padding) {
+@mixin mat-fab($size) {
   @extend %mat-raised-button;
 
   @include mat-overridable-elevation(6);
@@ -96,7 +94,6 @@ $mat-mini-fab-padding: 8px !default;
   border-radius: $mat-fab-border-radius;
   width: $size;
   height: $size;
-  padding: 0;
 
   flex-shrink: 0;
 
@@ -105,8 +102,12 @@ $mat-mini-fab-padding: 8px !default;
   }
 
   .mat-button-wrapper {
-    padding: $padding 0;
+    padding: 0;
     display: inline-block;
-    line-height: $mat-icon-button-line-height;
+    line-height: $size;
+  }
+
+  .mat-icon {
+    vertical-align: middle;
   }
 }
