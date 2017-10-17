@@ -68,8 +68,11 @@ import {MenuOverviewExample} from './menu-overview/menu-overview-example';
 import {NestedMenuExample} from './nested-menu/nested-menu-example';
 import {PaginatorConfigurableExample} from './paginator-configurable/paginator-configurable-example';
 import {PaginatorOverviewExample} from './paginator-overview/paginator-overview-example';
+import {ProgressBarBufferExample} from './progress-bar-buffer/progress-bar-buffer-example';
 import {ProgressBarConfigurableExample} from './progress-bar-configurable/progress-bar-configurable-example';
-import {ProgressBarOverviewExample} from './progress-bar-overview/progress-bar-overview-example';
+import {ProgressBarDeterminateExample} from './progress-bar-determinate/progress-bar-determinate-example';
+import {ProgressBarIndeterminateExample} from './progress-bar-indeterminate/progress-bar-indeterminate-example';
+import {ProgressBarQueryExample} from './progress-bar-query/progress-bar-query-example';
 import {ProgressSpinnerConfigurableExample} from './progress-spinner-configurable/progress-spinner-configurable-example';
 import {ProgressSpinnerOverviewExample} from './progress-spinner-overview/progress-spinner-overview-example';
 import {RadioNgModelExample} from './radio-ng-model/radio-ng-model-example';
@@ -441,15 +444,33 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'progress-bar-buffer': {
+    title: 'Buffer progress-bar',
+    component: ProgressBarBufferExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'progress-bar-configurable': {
     title: 'Configurable progress-bar',
     component: ProgressBarConfigurableExample,
     additionalFiles: null,
     selectorName: null
   },
-  'progress-bar-overview': {
-    title: 'Basic progress-bar',
-    component: ProgressBarOverviewExample,
+  'progress-bar-determinate': {
+    title: 'Determinate progress-bar',
+    component: ProgressBarDeterminateExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'progress-bar-indeterminate': {
+    title: 'Indeterminate progress-bar',
+    component: ProgressBarIndeterminateExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'progress-bar-query': {
+    title: 'Query progress-bar',
+    component: ProgressBarQueryExample,
     additionalFiles: null,
     selectorName: null
   },
@@ -514,7 +535,7 @@ export const EXAMPLE_COMPONENTS = {
     selectorName: null
   },
   'select-no-ripple': {
-    title: 'Select with cno option ripple ',
+    title: 'Select with no option ripple ',
     component: SelectNoRippleExample,
     additionalFiles: null,
     selectorName: null
@@ -745,8 +766,11 @@ export const EXAMPLE_LIST = [
   NestedMenuExample,
   PaginatorConfigurableExample,
   PaginatorOverviewExample,
+  ProgressBarBufferExample,
   ProgressBarConfigurableExample,
-  ProgressBarOverviewExample,
+  ProgressBarDeterminateExample,
+  ProgressBarIndeterminateExample,
+  ProgressBarQueryExample,
   ProgressSpinnerConfigurableExample,
   ProgressSpinnerOverviewExample,
   RadioNgModelExample,
