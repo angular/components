@@ -27,7 +27,8 @@ jobs:
     # - env: "MODE=closure-compiler"
     - env: "MODE=e2e"
     - env: "MODE=saucelabs_required"
-    - env: "MODE=browserstack_required"
+    # Browserstack failed #7886. Make it temporarily disabled.
+    # - env: "MODE=browserstack_required"
     - env: "MODE=travis_required"
     - stage: Deploy
       env: "DEPLOY_MODE=build-artifacts"
