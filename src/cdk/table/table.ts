@@ -286,7 +286,9 @@ export class CdkTable<T> implements CollectionViewer {
         .createEmbeddedView(this._headerDef.template, {cells});
 
     cells.forEach(cell => {
-      CdkCellOutlet.mostRecentCellOutlet._viewContainer.createEmbeddedView(cell.template, {});
+      if (CdkCellOutlet.mostRecentCellOutlet) {
+        CdkCellOutlet.mostRecentCellOutlet._viewContainer.createEmbeddedView(cell.template, {});
+      }
     });
 
     this._changeDetectorRef.markForCheck();
@@ -346,7 +348,10 @@ export class CdkTable<T> implements CollectionViewer {
     const cells = rowData ? this._getCellTemplatesForRow(row) : [];
 
     cells.forEach(cell => {
-      CdkCellOutlet.mostRecentCellOutlet._viewContainer.createEmbeddedView(cell.template, context);
+      if (CdkCellOutlet.mostRecentCellOutlet) {
+        CdkCellOutlet.mostRecentCellOutlet._viewContainer
+            .createEmbeddedView(cell.template, context);
+      }
     });
 
     this._changeDetectorRef.markForCheck();

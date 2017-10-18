@@ -65,12 +65,12 @@
   </mat-table>
 
   <div class="example-no-results"
-       [style.display]="dataSource.renderedData.length == 0 ? '' : 'none'">
+       [style.display]="dataSource?.renderedData.length == 0 ? '' : 'none'">
     No users found matching filter.
   </div>
 
   <mat-paginator #paginator
-                [length]="dataSource.filteredData.length"
+                [length]="dataSource?.filteredData.length"
                 [pageIndex]="0"
                 [pageSize]="25"
                 [pageSizeOptions]="[5, 10, 25, 100]">
