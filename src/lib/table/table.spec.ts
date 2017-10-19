@@ -102,16 +102,19 @@ describe('MatTable', () => {
       // Change filter to a_1, should match one row
       dataSource.filter = 'a_1';
       fixture.detectChanges();
+      expect(dataSource.filteredData.length).toBe(1);
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['a_1', 'b_1', 'c_1'],
       ]);
+
       flushMicrotasks();  // Resolve promise that updates paginator's length
       expect(dataSource.paginator!.length).toBe(1);
 
       // Change filter to '  A_2  ', should match one row (ignores case and whitespace)
       dataSource.filter = '  A_2  ';
       fixture.detectChanges();
+      expect(dataSource.filteredData.length).toBe(1);
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['a_2', 'b_2', 'c_2'],
@@ -120,6 +123,7 @@ describe('MatTable', () => {
       // Change filter to empty string, should match all rows
       dataSource.filter = '';
       fixture.detectChanges();
+      expect(dataSource.filteredData.length).toBe(3);
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['a_1', 'b_1', 'c_1'],
