@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -10,7 +10,6 @@ import {
   Directive,
   DoCheck,
   ElementRef,
-  Inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -19,20 +18,15 @@ import {
   Self,
 } from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {FormControl, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
+import {FormGroupDirective, NgControl, NgForm, FormControl} from '@angular/forms';
 import {Platform, getSupportedInputTypes} from '@angular/cdk/platform';
-import {getMdInputUnsupportedTypeError} from './input-errors';
-import {
-  defaultErrorStateMatcher,
-  ErrorOptions,
-  ErrorStateMatcher,
-  MD_ERROR_GLOBAL_OPTIONS
-} from '@angular/material/core';
+import {getMatInputUnsupportedTypeError} from './input-errors';
+import {ErrorStateMatcher} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
-import {MdFormFieldControl} from '@angular/material/form-field';
+import {MatFormFieldControl} from '@angular/material/form-field';
 
-// Invalid input type. Using one of these will throw an MdInputUnsupportedTypeError.
-const MD_INPUT_INVALID_TYPES = [
+// Invalid input type. Using one of these will throw an MatInputUnsupportedTypeError.
+const MAT_INPUT_INVALID_TYPES = [
   'button',
   'checkbox',
   'color',
@@ -48,9 +42,10 @@ const MD_INPUT_INVALID_TYPES = [
 let nextUniqueId = 0;
 
 
-/** Directive that allows a native input to work inside a `MdFormField`. */
+/** Directive that allows a native input to work inside a `MatFormField`. */
 @Directive({
-  selector: `input[mdInput], textarea[mdInput], input[matInput], textarea[matInput]`,
+  selector: `input[matInput], textarea[matInput]`,
+  exportAs: 'matInput',
   host: {
     'class': 'mat-input-element mat-form-field-autofill-control',
     // Native input properties that are overwritten by Angular inputs need to be synced with
@@ -59,23 +54,24 @@ let nextUniqueId = 0;
     '[placeholder]': 'placeholder',
     '[disabled]': 'disabled',
     '[required]': 'required',
+    '[readonly]': 'readonly',
     '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-invalid]': 'errorState',
     '(blur)': '_focusChanged(false)',
     '(focus)': '_focusChanged(true)',
     '(input)': '_onInput()',
   },
-  providers: [{provide: MdFormFieldControl, useExisting: MdInput}],
+  providers: [{provide: MatFormFieldControl, useExisting: MatInput}],
 })
-export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, DoCheck {
+export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy, DoCheck {
   /** Variables used as cache for getters and setters. */
   protected _type = 'text';
   protected _disabled = false;
   protected _required = false;
   protected _id: string;
-  protected _uid = `md-input-${nextUniqueId++}`;
-  protected _errorOptions: ErrorOptions;
+  protected _uid = `mat-input-${nextUniqueId++}`;
   protected _previousNativeValue = this.value;
+  private _readonly = false;
 
   /** Whether the input is focused. */
   focused = false;
@@ -87,12 +83,12 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
   _ariaDescribedby: string;
 
   /**
-   * Stream that emits whenever the state of the input changes such that the wrapping `MdFormField`
+   * Stream that emits whenever the state of the input changes such that the wrapping `MatFormField`
    * needs to run change detection.
    */
   stateChanges = new Subject<void>();
 
-  /** A name for this control that can be used by `md-form-field`. */
+  /** A name for this control that can be used by `mat-form-field`. */
   controlType = 'mat-input';
 
   /** Whether the element is disabled. */
@@ -128,7 +124,7 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
     }
   }
 
-  /** A function used to control when error messages are shown. */
+  /** An object used to control when error messages are shown. */
   @Input() errorStateMatcher: ErrorStateMatcher;
 
   /** The input element's value. */
@@ -140,6 +136,11 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
       this.stateChanges.next();
     }
   }
+
+  /** Whether the element is readonly. */
+  @Input()
+  get readonly() { return this._readonly; }
+  set readonly(value: any) { this._readonly = coerceBooleanProperty(value); }
 
   protected _neverEmptyInputTypes = [
     'date',
@@ -156,12 +157,10 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
               @Optional() @Self() public ngControl: NgControl,
               @Optional() protected _parentForm: NgForm,
               @Optional() protected _parentFormGroup: FormGroupDirective,
-              @Optional() @Inject(MD_ERROR_GLOBAL_OPTIONS) errorOptions: ErrorOptions) {
+              private _defaultErrorStateMatcher: ErrorStateMatcher) {
 
     // Force setter to be called in case id was not specified.
     this.id = this.id;
-    this._errorOptions = errorOptions ? errorOptions : {};
-    this.errorStateMatcher = this._errorOptions.errorStateMatcher || defaultErrorStateMatcher;
 
     // On some versions of iOS the caret gets stuck in the wrong place when holding down the delete
     // key. In order to get around this we need to "jiggle" the caret loose. Since this bug only
@@ -205,7 +204,7 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
 
   /** Callback for the cases where the focused state of the input changes. */
   _focusChanged(isFocused: boolean) {
-    if (isFocused !== this.focused) {
+    if (isFocused !== this.focused && !this.readonly) {
       this.focused = isFocused;
       this.stateChanges.next();
     }
@@ -224,9 +223,10 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
   /** Re-evaluates the error state. This is only relevant with @angular/forms. */
   protected _updateErrorState() {
     const oldState = this.errorState;
-    const ngControl = this.ngControl;
     const parent = this._parentFormGroup || this._parentForm;
-    const newState = ngControl && this.errorStateMatcher(ngControl.control as FormControl, parent);
+    const matcher = this.errorStateMatcher || this._defaultErrorStateMatcher;
+    const control = this.ngControl ? this.ngControl.control as FormControl : null;
+    const newState = matcher.isErrorState(control, parent);
 
     if (newState !== oldState) {
       this.errorState = newState;
@@ -246,8 +246,8 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
 
   /** Make sure the input is a supported type. */
   protected _validateType() {
-    if (MD_INPUT_INVALID_TYPES.indexOf(this._type) > -1) {
-      throw getMdInputUnsupportedTypeError(this._type);
+    if (MAT_INPUT_INVALID_TYPES.indexOf(this._type) > -1) {
+      throw getMatInputUnsupportedTypeError(this._type);
     }
   }
 
@@ -274,7 +274,7 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
     return nodeName ? nodeName.toLowerCase() === 'textarea' : false;
   }
 
-  // Implemented as part of MdFormFieldControl.
+  // Implemented as part of MatFormFieldControl.
   get empty(): boolean {
     return !this._isNeverEmpty() &&
         (this.value == null || this.value === '') &&
@@ -284,12 +284,12 @@ export class MdInput implements MdFormFieldControl<any>, OnChanges, OnDestroy, D
         !this._isBadInput();
   }
 
-  // Implemented as part of MdFormFieldControl.
+  // Implemented as part of MatFormFieldControl.
   get shouldPlaceholderFloat(): boolean { return this.focused || !this.empty; }
 
-  // Implemented as part of MdFormFieldControl.
+  // Implemented as part of MatFormFieldControl.
   setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
 
-  // Implemented as part of MdFormFieldControl.
+  // Implemented as part of MatFormFieldControl.
   onContainerClick() { this.focus(); }
 }

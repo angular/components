@@ -19,7 +19,7 @@ import {
   DialogNeptuneIFrameDialog,
   DialogWelcomeExampleDialog
 } from './dialog/dialog-a11y';
-
+import {ExpansionPanelAccessibilityDemo} from './expansion/expansion-a11y';
 import {GridListAccessibilityDemo} from './grid-list/grid-list-a11y';
 import {RadioAccessibilityDemo} from './radio/radio-a11y';
 import {ToolbarAccessibilityDemo} from './toolbar/toolbar-a11y';
@@ -40,6 +40,10 @@ import {
   FoggyTabContent,
 } from './tabs/tabs-a11y';
 import {TooltipAccessibilityDemo} from './tooltip/tooltip-a11y';
+import {SidenavAccessibilityDemo} from './sidenav/sidenav-a11y';
+import {SidenavBasicAccessibilityDemo} from './sidenav/basic-sidenav-a11y';
+import {SidenavDualAccessibilityDemo} from './sidenav/dual-sidenav-a11y';
+import {SidenavMobileAccessibilityDemo} from './sidenav/mobile-sidenav-a11y';
 
 
 @NgModule({
@@ -76,6 +80,8 @@ export class AccessibilityRoutingModule {}
     DialogNeptuneExampleDialog,
     DialogNeptuneIFrameDialog,
     DialogWelcomeExampleDialog,
+    ExpansionPanelAccessibilityDemo,
+    FoggyTabContent,
     GridListAccessibilityDemo,
     IconAccessibilityDemo,
     InputAccessibilityDemo,
@@ -83,15 +89,18 @@ export class AccessibilityRoutingModule {}
     ProgressBarAccessibilityDemo,
     ProgressSpinnerAccessibilityDemo,
     RadioAccessibilityDemo,
-    ToolbarAccessibilityDemo,
+    RainyTabContent,
+    SelectAccessibilityDemo,
+    SidenavAccessibilityDemo,
+    SidenavBasicAccessibilityDemo,
+    SidenavDualAccessibilityDemo,
+    SidenavMobileAccessibilityDemo,
     SliderAccessibilityDemo,
     SlideToggleAccessibilityDemo,
     SnackBarAccessibilityDemo,
-    SelectAccessibilityDemo,
-    TabsAccessibilityDemo,
     SunnyTabContent,
-    RainyTabContent,
-    FoggyTabContent,
+    TabsAccessibilityDemo,
+    ToolbarAccessibilityDemo,
     TooltipAccessibilityDemo,
   ],
   entryComponents: [
@@ -101,9 +110,9 @@ export class AccessibilityRoutingModule {}
     DialogNeptuneExampleDialog,
     DialogNeptuneIFrameDialog,
     DialogWelcomeExampleDialog,
-    SunnyTabContent,
-    RainyTabContent,
     FoggyTabContent,
+    RainyTabContent,
+    SunnyTabContent,
   ]
 })
 export class AccessibilityDemoModule {}

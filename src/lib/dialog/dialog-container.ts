@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -17,6 +17,7 @@ import {
   ChangeDetectorRef,
   ViewChild,
   ViewEncapsulation,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
 import {DOCUMENT} from '@angular/platform-browser';
@@ -27,7 +28,7 @@ import {
   TemplatePortal
 } from '@angular/cdk/portal';
 import {FocusTrap, FocusTrapFactory} from '@angular/cdk/a11y';
-import {MdDialogConfig} from './dialog-config';
+import {MatDialogConfig} from './dialog-config';
 
 
 /**
@@ -35,7 +36,7 @@ import {MdDialogConfig} from './dialog-config';
  * attached to a DomPortalHost without an origin.
  * @docs-private
  */
-export function throwMdDialogContentAlreadyAttachedError() {
+export function throwMatDialogContentAlreadyAttachedError() {
   throw Error('Attempting to attach dialog content after content is already attached');
 }
 
@@ -46,11 +47,14 @@ export function throwMdDialogContentAlreadyAttachedError() {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-dialog-container, mat-dialog-container',
+  selector: 'mat-dialog-container',
   templateUrl: 'dialog-container.html',
   styleUrls: ['dialog.css'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
+  // Using OnPush for dialogs caused some G3 sync issues. Disabled until we can track them down.
+  // tslint:disable-next-line:validate-decorators
+  changeDetection: ChangeDetectionStrategy.Default,
   animations: [
     trigger('slideDialog', [
       // Note: The `enter` animation doesn't transition to something like `translate3d(0, 0, 0)
@@ -74,7 +78,7 @@ export function throwMdDialogContentAlreadyAttachedError() {
     '(@slideDialog.done)': '_onAnimationDone($event)',
   },
 })
-export class MdDialogContainer extends BasePortalHost {
+export class MatDialogContainer extends BasePortalHost {
   /** The portal host inside of this container into which the dialog content will be loaded. */
   @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
@@ -85,7 +89,7 @@ export class MdDialogContainer extends BasePortalHost {
   private _elementFocusedBeforeDialogWasOpened: HTMLElement | null = null;
 
   /** The dialog configuration. */
-  _config: MdDialogConfig;
+  _config: MatDialogConfig;
 
   /** State of the dialog animation. */
   _state: 'void' | 'enter' | 'exit' = 'enter';
@@ -114,7 +118,7 @@ export class MdDialogContainer extends BasePortalHost {
    */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
     if (this._portalHost.hasAttached()) {
-      throwMdDialogContentAlreadyAttachedError();
+      throwMatDialogContentAlreadyAttachedError();
     }
 
     this._savePreviouslyFocusedElement();
@@ -127,7 +131,7 @@ export class MdDialogContainer extends BasePortalHost {
    */
   attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C> {
     if (this._portalHost.hasAttached()) {
-      throwMdDialogContentAlreadyAttachedError();
+      throwMatDialogContentAlreadyAttachedError();
     }
 
     this._savePreviouslyFocusedElement();

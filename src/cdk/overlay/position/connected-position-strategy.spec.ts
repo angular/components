@@ -4,7 +4,7 @@ import {ConnectedPositionStrategy} from './connected-position-strategy';
 import {ViewportRuler, VIEWPORT_RULER_PROVIDER} from '@angular/cdk/scrolling';
 import {OverlayPositionBuilder} from './overlay-position-builder';
 import {ConnectedOverlayPositionChange} from './connected-position';
-import {Scrollable} from '@angular/cdk/scrolling';
+import {CdkScrollable} from '@angular/cdk/scrolling';
 import {Subscription} from 'rxjs/Subscription';
 import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 import {OverlayRef} from '../overlay-ref';
@@ -326,6 +326,30 @@ describe('ConnectedPositionStrategy', () => {
         expect(Math.floor(overlayRect.left)).toBe(Math.floor(originRect.left));
       });
 
+      it('should allow for the fallback positions to specify their own offsets', () => {
+        originElement.style.bottom = '0';
+        originElement.style.left = '50%';
+        originElement.style.position = 'fixed';
+        originRect = originElement.getBoundingClientRect();
+        strategy = positionBuilder
+          .connectedTo(
+            fakeElementRef,
+            {originX: 'start', originY: 'top'},
+            {overlayX: 'start', overlayY: 'top'})
+          .withFallbackPosition(
+            {originX: 'start', originY: 'top'},
+            {overlayX: 'start', overlayY: 'bottom'},
+            -100, -100);
+
+        strategy.withOffsetY(50).withOffsetY(50);
+        strategy.attach(fakeOverlayRef(overlayElement));
+        strategy.apply();
+
+        let overlayRect = overlayElement.getBoundingClientRect();
+        expect(Math.floor(overlayRect.bottom)).toBe(Math.floor(originRect.top - 100));
+        expect(Math.floor(overlayRect.left)).toBe(Math.floor(originRect.left - 100));
+      });
+
     });
 
     it('should emit onPositionChange event when position changes', () => {
@@ -545,7 +569,7 @@ describe('ConnectedPositionStrategy', () => {
           {overlayX: 'start', overlayY: 'top'});
 
       strategy.withScrollableContainers([
-          new Scrollable(new FakeElementRef(scrollable), null!, null!, null!)]);
+          new CdkScrollable(new FakeElementRef(scrollable), null!, null!, null!)]);
       strategy.attach(fakeOverlayRef(overlayElement));
       positionChangeHandler = jasmine.createSpy('positionChangeHandler');
       onPositionChangeSubscription = strategy.onPositionChange.subscribe(positionChangeHandler);

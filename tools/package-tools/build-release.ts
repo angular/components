@@ -24,6 +24,7 @@ export function composeRelease(buildPackage: BuildPackage) {
   const {name, sourceDir} = buildPackage;
   const packageOut = buildPackage.outputDir;
   const releasePath = join(outputDir, 'releases', name);
+  const importAsName = `@angular/${name}`;
 
   inlinePackageMetadataFiles(packageOut);
 
@@ -48,10 +49,14 @@ export function composeRelease(buildPackage: BuildPackage) {
 
   replaceVersionPlaceholders(releasePath);
   createTypingsReexportFile(releasePath, './typings/index', name);
-  createMetadataReexportFile(releasePath, './typings/index', name);
+  createMetadataReexportFile(releasePath, './typings/index', name, importAsName);
 
   if (buildPackage.secondaryEntryPoints.length) {
     createFilesForSecondaryEntryPoint(buildPackage, releasePath);
+  }
+
+  if (buildPackage.copySecondaryEntryPointStylesToRoot) {
+    copySecondaryEntryPointStylesheets(buildPackage, releasePath);
   }
 
   if (buildPackage.exportsSecondaryEntryPointsAtRoot) {
@@ -65,8 +70,9 @@ export function composeRelease(buildPackage: BuildPackage) {
     // re-exports everything.
     createMetadataReexportFile(
         releasePath,
-        buildPackage.secondaryEntryPoints.map(p => `./${p}`),
-        name);
+        buildPackage.secondaryEntryPoints.concat(['typings/index']).map(p => `./${p}`),
+        name,
+        importAsName);
   }
 }
 
@@ -81,6 +87,7 @@ function createFilesForSecondaryEntryPoint(buildPackage: BuildPackage, releasePa
     // * An index.d.ts file that re-exports the index.d.ts from the typings/ directory
     // * A metadata.json re-export for this entry-point's metadata.
     const entryPointDir = join(releasePath, entryPointName);
+    const importAsName = `@angular/${name}/${entryPointName}`;
 
     mkdirpSync(entryPointDir);
     createEntryPointPackageJson(entryPointDir, name, entryPointName);
@@ -94,11 +101,22 @@ function createFilesForSecondaryEntryPoint(buildPackage: BuildPackage, releasePa
     // Create a typings and a metadata re-export within the entry-point to point to the
     // typings we just copied.
     createTypingsReexportFile(entryPointDir, `./typings/index`, 'index');
-    createMetadataReexportFile(entryPointDir, `./typings/index`, 'index');
+    createMetadataReexportFile(entryPointDir, `./typings/index`, 'index', importAsName);
 
     // Finally, create both a d.ts and metadata file for this entry-point in the root of
     // the package that re-exports from the entry-point's directory.
     createTypingsReexportFile(releasePath, `./${entryPointName}/index`, entryPointName);
-    createMetadataReexportFile(releasePath, `./${entryPointName}/index`, entryPointName);
+    createMetadataReexportFile(releasePath, `./${entryPointName}/index`, entryPointName,
+        importAsName);
+  });
+}
+
+/** Copies the stylesheets for secondary entry-points that generate one to the release output. */
+function copySecondaryEntryPointStylesheets(buildPackage: BuildPackage, releasePath: string) {
+  buildPackage.secondaryEntryPoints.forEach(entryPointName => {
+    const entryPointDir = join(buildPackage.outputDir, entryPointName);
+
+    copyFiles(entryPointDir, `_${entryPointName}.scss`, releasePath);
+    copyFiles(entryPointDir, `${entryPointName}-prebuilt.css`, releasePath);
   });
 }

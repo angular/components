@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -33,7 +33,12 @@ export class ConnectionPositionPair {
   overlayX: HorizontalConnectionPos;
   overlayY: VerticalConnectionPos;
 
-  constructor(origin: OriginConnectionPosition, overlay: OverlayConnectionPosition) {
+  constructor(
+    origin: OriginConnectionPosition,
+    overlay: OverlayConnectionPosition,
+    public offsetX?: number,
+    public offsetY?: number) {
+
     this.originX = origin.originX;
     this.originY = origin.originY;
     this.overlayX = overlay.overlayX;

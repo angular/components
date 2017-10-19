@@ -9,10 +9,10 @@
       TODO(mmalerba): &nbsp; is currently broken in components with preserveWhitespace: false, so we
       evaluate it as a JS string binding instead. Change back to &nbsp; once it works again.
     -->
-    <ng-container *ngIf="empty">{{'\xa0'}}</ng-container>
+    <ng-container *ngIf="empty">&nbsp;</ng-container>
     <span class="mat-select-value-text" *ngIf="!empty" [ngSwitch]="!!customTrigger">
       <span *ngSwitchDefault>{{ triggerValue }}</span>
-      <ng-content select="md-select-trigger, mat-select-trigger" *ngSwitchCase="true"></ng-content>
+      <ng-content select="mat-select-trigger" *ngSwitchCase="true"></ng-content>
     </span>
   </div>
 
@@ -34,16 +34,19 @@
   (detach)="close()">
 
   <div
-    class="mat-select-panel {{ 'mat-' + color }}"
+    #panel
+    class="mat-select-panel {{ _getPanelTheme() }}"
     [ngClass]="panelClass"
     [@transformPanel]="multiple ? 'showing-multiple' : 'showing'"
     (@transformPanel.done)="_onPanelDone()"
-    (keydown)="_handlePanelKeydown($event)"
     [style.transformOrigin]="_transformOrigin"
     [class.mat-select-panel-done-animating]="_panelDoneAnimating"
     [style.font-size.px]="_triggerFontSize">
 
-    <div class="mat-select-content" [@fadeInContent]="'showing'" (@fadeInContent.done)="_onFadeInDone()">
+    <div
+      class="mat-select-content"
+      [@fadeInContent]="'showing'"
+      (@fadeInContent.done)="_onFadeInDone()">
       <ng-content></ng-content>
     </div>
   </div>

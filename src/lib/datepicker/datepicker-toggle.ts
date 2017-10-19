@@ -1,33 +1,33 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
+  AfterContentInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
-  ViewEncapsulation,
-  OnDestroy,
   OnChanges,
+  OnDestroy,
   SimpleChanges,
-  ChangeDetectorRef,
+  ViewEncapsulation,
 } from '@angular/core';
-import {MdDatepicker} from './datepicker';
-import {MdDatepickerIntl} from './datepicker-intl';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Subscription} from 'rxjs/Subscription';
 import {merge} from 'rxjs/observable/merge';
 import {of as observableOf} from 'rxjs/observable/of';
-import {MATERIAL_COMPATIBILITY_MODE} from '@angular/material/core';
+import {Subscription} from 'rxjs/Subscription';
+import {MatDatepicker} from './datepicker';
+import {MatDatepickerIntl} from './datepicker-intl';
 
 
 @Component({
   moduleId: module.id,
-  selector: 'md-datepicker-toggle, mat-datepicker-toggle',
+  selector: 'mat-datepicker-toggle',
   templateUrl: 'datepicker-toggle.html',
   host: {
     'class': 'mat-datepicker-toggle',
@@ -35,39 +35,28 @@ import {MATERIAL_COMPATIBILITY_MODE} from '@angular/material/core';
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
-export class MdDatepickerToggle<D> implements OnChanges, OnDestroy {
+export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {
   private _stateChanges = Subscription.EMPTY;
 
   /** Datepicker instance that the button will toggle. */
-  @Input('for') datepicker: MdDatepicker<D>;
+  @Input('for') datepicker: MatDatepicker<D>;
 
   /** Whether the toggle button is disabled. */
   @Input()
-  get disabled() {
-    return this._disabled === undefined ? this.datepicker.disabled : this._disabled;
+  get disabled(): boolean {
+    return this._disabled === undefined ? this.datepicker.disabled : !!this._disabled;
   }
-  set disabled(value) {
+  set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
   }
   private _disabled: boolean;
 
-  constructor(
-    public _intl: MdDatepickerIntl,
-    private _changeDetectorRef: ChangeDetectorRef) {}
+  constructor(public _intl: MatDatepickerIntl, private _changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.datepicker) {
-      const datepicker: MdDatepicker<D> = changes.datepicker.currentValue;
-      const datepickerDisabled = datepicker ? datepicker._disabledChange : observableOf();
-      const inputDisabled = datepicker && datepicker._datepickerInput ?
-        datepicker._datepickerInput._disabledChange :
-        observableOf();
-
-      this._stateChanges.unsubscribe();
-      this._stateChanges = merge(this._intl.changes, datepickerDisabled, inputDisabled)
-        .subscribe(() => this._changeDetectorRef.markForCheck());
+      this._watchStateChanges();
     }
   }
 
@@ -75,10 +64,24 @@ export class MdDatepickerToggle<D> implements OnChanges, OnDestroy {
     this._stateChanges.unsubscribe();
   }
 
+  ngAfterContentInit() {
+    this._watchStateChanges();
+  }
+
   _open(event: Event): void {
     if (this.datepicker && !this.disabled) {
       this.datepicker.open();
       event.stopPropagation();
     }
+  }
+
+  private _watchStateChanges() {
+    const datepickerDisabled = this.datepicker ? this.datepicker._disabledChange : observableOf();
+    const inputDisabled = this.datepicker && this.datepicker._datepickerInput ?
+        this.datepicker._datepickerInput._disabledChange : observableOf();
+
+    this._stateChanges.unsubscribe();
+    this._stateChanges = merge(this._intl.changes, datepickerDisabled, inputDisabled)
+        .subscribe(() => this._changeDetectorRef.markForCheck());
   }
 }

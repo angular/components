@@ -6,6 +6,10 @@
 $mat-form-field-hint-min-space: 1em !default;
 // The height of the underline.
 $mat-form-field-underline-height: 1px !default;
+// Infix stretches to fit the container, but naturally wants to be this wide. We set this in order
+// to have a a consistent natural size for the various types of controls that can go in a form
+// field.
+$mat-form-field-default-infix-width: 180px !default;
 
 
 .mat-form-field {
@@ -60,6 +64,7 @@ $mat-form-field-underline-height: 1px !default;
   position: relative;
   flex: auto;
   min-width: 0;
+  width: $mat-form-field-default-infix-width;
 }
 
 // Used to hide the placeholder overflow on IE, since IE doesn't take transform into account when
@@ -118,7 +123,7 @@ $mat-form-field-underline-height: 1px !default;
 
 // Pseudo-class for Chrome and Safari auto-fill to move the placeholder to the floating position.
 // This is necessary because these browsers do not actually fire any events when a form auto-fill is
-// occurring. Once the autofill is committed, a change event happen and the regular md-form-field
+// occurring. Once the autofill is committed, a change event happen and the regular mat-form-field
 // classes take over to fulfill this behaviour.
 .mat-form-field-autofill-control:-webkit-autofill + .mat-form-field-placeholder-wrapper
     .mat-form-field-placeholder {
@@ -145,8 +150,10 @@ $mat-form-field-underline-height: 1px !default;
   position: absolute;
   height: $mat-form-field-underline-height;
   width: 100%;
+  // Prevents underline from disappearing at lower zoom levels.
+  transform: perspective(1px);
 
-  &.mat-disabled {
+  .mat-form-field-disabled & {
     background-position: 0;
     background-color: transparent;
   }

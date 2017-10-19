@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -26,8 +26,8 @@ import {RxChain, debounceTime} from '@angular/cdk/rxjs';
  * @docs-private
  */
 @Injectable()
-export class MdMutationObserverFactory {
-  create(callback): MutationObserver | null {
+export class MatMutationObserverFactory {
+  create(callback: MutationCallback): MutationObserver | null {
     return typeof MutationObserver === 'undefined' ? null : new MutationObserver(callback);
   }
 }
@@ -37,7 +37,8 @@ export class MdMutationObserverFactory {
  * its associated element has changed.
  */
 @Directive({
-  selector: '[cdkObserveContent]'
+  selector: '[cdkObserveContent]',
+  exportAs: 'cdkObserveContent',
 })
 export class ObserveContent implements AfterContentInit, OnDestroy {
   private _observer: MutationObserver | null;
@@ -52,7 +53,7 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
   @Input() debounce: number;
 
   constructor(
-    private _mutationObserverFactory: MdMutationObserverFactory,
+    private _mutationObserverFactory: MatMutationObserverFactory,
     private _elementRef: ElementRef,
     private _ngZone: NgZone) { }
 
@@ -95,6 +96,6 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
 @NgModule({
   exports: [ObserveContent],
   declarations: [ObserveContent],
-  providers: [MdMutationObserverFactory]
+  providers: [MatMutationObserverFactory]
 })
 export class ObserversModule {}

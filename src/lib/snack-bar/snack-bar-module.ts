@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -11,9 +11,10 @@ import {CommonModule} from '@angular/common';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {PortalModule} from '@angular/cdk/portal';
 import {LIVE_ANNOUNCER_PROVIDER} from '@angular/cdk/a11y';
-import {MdCommonModule} from '@angular/material/core';
-import {MdSnackBar} from './snack-bar';
-import {MdSnackBarContainer} from './snack-bar-container';
+import {LayoutModule} from '@angular/cdk/layout';
+import {MatCommonModule} from '@angular/material/core';
+import {MatSnackBar} from './snack-bar';
+import {MatSnackBarContainer} from './snack-bar-container';
 import {SimpleSnackBar} from './simple-snack-bar';
 
 
@@ -22,11 +23,12 @@ import {SimpleSnackBar} from './simple-snack-bar';
     OverlayModule,
     PortalModule,
     CommonModule,
-    MdCommonModule,
+    MatCommonModule,
+    LayoutModule,
   ],
-  exports: [MdSnackBarContainer, MdCommonModule],
-  declarations: [MdSnackBarContainer, SimpleSnackBar],
-  entryComponents: [MdSnackBarContainer, SimpleSnackBar],
-  providers: [MdSnackBar, LIVE_ANNOUNCER_PROVIDER]
+  exports: [MatSnackBarContainer, MatCommonModule],
+  declarations: [MatSnackBarContainer, SimpleSnackBar],
+  entryComponents: [MatSnackBarContainer, SimpleSnackBar],
+  providers: [MatSnackBar, LIVE_ANNOUNCER_PROVIDER]
 })
-export class MdSnackBarModule {}
+export class MatSnackBarModule {}

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -8,28 +8,25 @@
 
 import {Directive, Input} from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {CdkAccordion} from '@angular/cdk/accordion';
 
-/** MdAccordion's display modes. */
-export type MdAccordionDisplayMode = 'default' | 'flat';
+/** Workaround for https://github.com/angular/angular/issues/17849 */
+export const _CdkAccordion = CdkAccordion;
 
-/** Unique ID counter */
-let nextId = 0;
+/** MatAccordion's display modes. */
+export type MatAccordionDisplayMode = 'default' | 'flat';
 
 /**
- * Directive whose purpose is to manage the expanded state of CdkAccordionItem children.
+ * Directive for a Material Design Accordion.
  */
 @Directive({
-  selector: 'cdk-accordion, [cdk-accordion]',
+  selector: 'mat-accordion',
+  exportAs: 'matAccordion',
+  host: {
+    class: 'mat-accordion'
+  }
 })
-export class CdkAccordion {
-  /** A readonly id value to use for unique selection coordination. */
-  readonly id = `cdk-accordion-${nextId++}`;
-
-  /** Whether the accordion should allow multiple expanded accordion items simulateously. */
-  @Input() get multi(): boolean { return this._multi; }
-  set multi(multi: boolean) { this._multi = coerceBooleanProperty(multi); }
-  private  _multi: boolean = false;
-
+export class MatAccordion extends _CdkAccordion {
   /** Whether the expansion indicator should be hidden. */
   @Input() get hideToggle(): boolean { return this._hideToggle; }
   set hideToggle(show: boolean) { this._hideToggle = coerceBooleanProperty(show); }
@@ -43,16 +40,5 @@ export class CdkAccordion {
    *  flat - no spacing is placed around expanded panels, showing all panels at the same
    *     elevation.
    */
-  @Input() displayMode: MdAccordionDisplayMode = 'default';
+  @Input() displayMode: MatAccordionDisplayMode = 'default';
 }
-
-/**
- * Directive for a Material Design Accordion.
- */
-@Directive({
-  selector: 'mat-accordion, md-accordion',
-  host: {
-    class: 'mat-accordion'
-  }
-})
-export class MdAccordion extends CdkAccordion {}

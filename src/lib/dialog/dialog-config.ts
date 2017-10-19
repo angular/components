@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -21,9 +21,9 @@ export interface DialogPosition {
 }
 
 /**
- * Configuration for opening a modal dialog with the MdDialog service.
+ * Configuration for opening a modal dialog with the MatDialog service.
  */
-export class MdDialogConfig {
+export class MatDialogConfig<D = any> {
 
   /**
    * Where the attached component should live in Angular's *logical* component tree.
@@ -57,11 +57,23 @@ export class MdDialogConfig {
   /** Height of the dialog. */
   height?: string = '';
 
+  /** Min-width of the dialog. If a number is provided, pixel units are assumed. */
+  minWidth?: number | string;
+
+  /** Min-height of the dialog. If a number is provided, pixel units are assumed. */
+  minHeight?: number | string;
+
+  /** Max-width of the dialog. If a number is provided, pixel units are assumed. Defaults to 80vw */
+  maxWidth?: number | string = '80vw';
+
+  /** Max-height of the dialog. If a number is provided, pixel units are assumed. */
+  maxHeight?: number | string;
+
   /** Position overrides. */
   position?: DialogPosition;
 
   /** Data being injected into the child component. */
-  data?: any = null;
+  data?: D | null = null;
 
   /** Layout direction for the dialog's content. */
   direction?: Direction = 'ltr';

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -21,17 +21,17 @@ import {_throw as observableThrow} from 'rxjs/observable/throw';
  * load an icon with a name that cannot be found.
  * @docs-private
  */
-export function getMdIconNameNotFoundError(iconName: string): Error {
+export function getMatIconNameNotFoundError(iconName: string): Error {
   return Error(`Unable to find icon with the name "${iconName}"`);
 }
 
 
 /**
  * Returns an exception to be thrown when the consumer attempts to use
- * `<md-icon>` without including @angular/http.
+ * `<mat-icon>` without including @angular/http.
  * @docs-private
  */
-export function getMdIconNoHttpProviderError(): Error {
+export function getMatIconNoHttpProviderError(): Error {
   return Error('Could not find Http provider for use with Angular Material icons. ' +
                'Please include the HttpModule from @angular/http in your app imports.');
 }
@@ -42,8 +42,8 @@ export function getMdIconNoHttpProviderError(): Error {
  * @param url URL that was attempted to be sanitized.
  * @docs-private
  */
-export function getMdIconFailedToSanitizeError(url: SafeResourceUrl): Error {
-  return Error(`The URL provided to MdIconRegistry was not trusted as a resource URL ` +
+export function getMatIconFailedToSanitizeError(url: SafeResourceUrl): Error {
+  return Error(`The URL provided to MatIconRegistry was not trusted as a resource URL ` +
                `via Angular's DomSanitizer. Attempted URL was "${url}".`);
 }
 
@@ -57,14 +57,14 @@ class SvgIconConfig {
 }
 
 /**
- * Service to register and display icons used by the <md-icon> component.
+ * Service to register and display icons used by the <mat-icon> component.
  * - Registers icon URLs by namespace and name.
  * - Registers icon set URLs by namespace.
  * - Registers aliases for CSS classes, for use with icon fonts.
  * - Loads icons from URLs and extracts individual icons from icon sets.
  */
 @Injectable()
-export class MdIconRegistry {
+export class MatIconRegistry {
   /**
    * URLs and cached SVG elements for individual icons. Keys are of the format "[namespace]:[icon]".
    */
@@ -86,7 +86,7 @@ export class MdIconRegistry {
   private _fontCssClassesByAlias = new Map<string, string>();
 
   /**
-   * The CSS class to apply when an <md-icon> component has no icon name, url, or font specified.
+   * The CSS class to apply when an <mat-icon> component has no icon name, url, or font specified.
    * The default 'material-icons' value assumes that the material icon font has been loaded as
    * described at http://google.github.io/material-design-icons/#icon-font-for-the-web
    */
@@ -141,14 +141,14 @@ export class MdIconRegistry {
   }
 
   /**
-   * Defines an alias for a CSS class name to be used for icon fonts. Creating an mdIcon
+   * Defines an alias for a CSS class name to be used for icon fonts. Creating an matIcon
    * component with the alias as the fontSet input will cause the class name to be applied
-   * to the <md-icon> element.
+   * to the <mat-icon> element.
    *
    * @param alias Alias for the font.
    * @param className Class name override to be used instead of the alias.
    */
-  registerFontClassAlias(alias: string, className = alias): this {
+  registerFontClassAlias(alias: string, className: string = alias): this {
     this._fontCssClassesByAlias.set(alias, className);
     return this;
   }
@@ -162,7 +162,7 @@ export class MdIconRegistry {
   }
 
   /**
-   * Sets the CSS class name to be used for icon fonts when an <md-icon> component does not
+   * Sets the CSS class name to be used for icon fonts when an <mat-icon> component does not
    * have a fontSet input value, and is not loading an icon by name or URL.
    *
    * @param className
@@ -173,7 +173,7 @@ export class MdIconRegistry {
   }
 
   /**
-   * Returns the CSS class name to be used for icon fonts when an <md-icon> component does not
+   * Returns the CSS class name to be used for icon fonts when an <mat-icon> component does not
    * have a fontSet input value, and is not loading an icon by name or URL.
    */
   getDefaultFontSetClass(): string {
@@ -181,7 +181,7 @@ export class MdIconRegistry {
   }
 
   /**
-   * Returns an Observable that produces the icon (as an <svg> DOM element) from the given URL.
+   * Returns an Observable that produces the icon (as an `<svg>` DOM element) from the given URL.
    * The response from the URL may be cached so this will not always cause an HTTP request, but
    * the produced element will always be a new copy of the originally fetched icon. (That is,
    * it will not contain any modifications made to elements previously returned).
@@ -192,7 +192,7 @@ export class MdIconRegistry {
     let url = this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, safeUrl);
 
     if (!url) {
-      throw getMdIconFailedToSanitizeError(safeUrl);
+      throw getMatIconFailedToSanitizeError(safeUrl);
     }
 
     let cachedIcon = this._cachedIconsByUrl.get(url);
@@ -201,21 +201,21 @@ export class MdIconRegistry {
       return observableOf(cloneSvg(cachedIcon));
     }
 
-    return RxChain.from(this._loadSvgIconFromConfig(new SvgIconConfig(url)))
+    return RxChain.from(this._loadSvgIconFromConfig(new SvgIconConfig(safeUrl)))
       .call(doOperator, svg => this._cachedIconsByUrl.set(url!, svg))
       .call(map, svg => cloneSvg(svg))
       .result();
   }
 
   /**
-   * Returns an Observable that produces the icon (as an <svg> DOM element) with the given name
+   * Returns an Observable that produces the icon (as an `<svg>` DOM element) with the given name
    * and namespace. The icon must have been previously registered with addIcon or addIconSet;
    * if not, the Observable will throw an error.
    *
    * @param name Name of the icon to be retrieved.
    * @param namespace Namespace in which to look for the icon.
    */
-  getNamedSvgIcon(name: string, namespace = ''): Observable<SVGElement> {
+  getNamedSvgIcon(name: string, namespace: string = ''): Observable<SVGElement> {
     // Return (copy of) cached icon if possible.
     const key = iconKey(namespace, name);
     const config = this._svgIconConfigs.get(key);
@@ -231,7 +231,7 @@ export class MdIconRegistry {
       return this._getSvgFromIconSetConfigs(name, iconSetConfigs);
     }
 
-    return observableThrow(getMdIconNameNotFoundError(key));
+    return observableThrow(getMatIconNameNotFoundError(key));
   }
 
   /**
@@ -300,7 +300,7 @@ export class MdIconRegistry {
       const foundIcon = this._extractIconWithNameFromAnySet(name, iconSetConfigs);
 
       if (!foundIcon) {
-        throw getMdIconNameNotFoundError(name);
+        throw getMatIconNameNotFoundError(name);
       }
 
       return foundIcon;
@@ -443,13 +443,13 @@ export class MdIconRegistry {
    */
   private _fetchUrl(safeUrl: SafeResourceUrl): Observable<string> {
     if (!this._http) {
-      throw getMdIconNoHttpProviderError();
+      throw getMatIconNoHttpProviderError();
     }
 
     const url = this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, safeUrl);
 
     if (!url) {
-      throw getMdIconFailedToSanitizeError(safeUrl);
+      throw getMatIconFailedToSanitizeError(safeUrl);
     }
 
     // Store in-progress fetches to avoid sending a duplicate request for a URL when there is
@@ -476,15 +476,15 @@ export class MdIconRegistry {
 
 /** @docs-private */
 export function ICON_REGISTRY_PROVIDER_FACTORY(
-    parentRegistry: MdIconRegistry, http: Http, sanitizer: DomSanitizer) {
-  return parentRegistry || new MdIconRegistry(http, sanitizer);
+    parentRegistry: MatIconRegistry, http: Http, sanitizer: DomSanitizer) {
+  return parentRegistry || new MatIconRegistry(http, sanitizer);
 }
 
 /** @docs-private */
 export const ICON_REGISTRY_PROVIDER = {
-  // If there is already an MdIconRegistry available, use that. Otherwise, provide a new one.
-  provide: MdIconRegistry,
-  deps: [[new Optional(), new SkipSelf(), MdIconRegistry], [new Optional(), Http], DomSanitizer],
+  // If there is already an MatIconRegistry available, use that. Otherwise, provide a new one.
+  provide: MatIconRegistry,
+  deps: [[new Optional(), new SkipSelf(), MatIconRegistry], [new Optional(), Http], DomSanitizer],
   useFactory: ICON_REGISTRY_PROVIDER_FACTORY
 };
 

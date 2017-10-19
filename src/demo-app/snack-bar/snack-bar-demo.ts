@@ -1,10 +1,10 @@
 import {Dir} from '@angular/cdk/bidi';
 import {Component, ViewEncapsulation} from '@angular/core';
 import {
-  MdSnackBar,
-  MdSnackBarConfig,
-  MdSnackBarHorizontalPosition,
-  MdSnackBarVerticalPosition,
+  MatSnackBar,
+  MatSnackBarConfig,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
 } from '@angular/material';
 
 
@@ -23,17 +23,17 @@ export class SnackBarDemo {
   setAutoHide: boolean = true;
   autoHide: number = 10000;
   addExtraClass: boolean = false;
-  horizontalPosition: MdSnackBarHorizontalPosition = 'center';
-  verticalPosition: MdSnackBarVerticalPosition = 'bottom';
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
-  constructor(public snackBar: MdSnackBar, private dir: Dir) {
+  constructor(public snackBar: MatSnackBar, private dir: Dir) {
   }
 
   open() {
-    let config = new MdSnackBarConfig();
+    let config = new MatSnackBarConfig();
     config.verticalPosition = this.verticalPosition;
     config.horizontalPosition = this.horizontalPosition;
-    config.duration = this.autoHide;
+    config.duration = this.setAutoHide ? this.autoHide : 0;
     config.extraClasses = this.addExtraClass ? ['party'] : undefined;
     config.direction = this.dir.value;
     this.snackBar.open(this.message, this.action ? this.actionButtonLabel : undefined, config);

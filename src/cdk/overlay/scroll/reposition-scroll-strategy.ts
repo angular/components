@@ -1,13 +1,13 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
 import {Subscription} from 'rxjs/Subscription';
-import {ScrollStrategy, getMdScrollStrategyAlreadyAttachedError} from './scroll-strategy';
+import {ScrollStrategy, getMatScrollStrategyAlreadyAttachedError} from './scroll-strategy';
 import {OverlayRef} from '../overlay-ref';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 
@@ -31,7 +31,7 @@ export class RepositionScrollStrategy implements ScrollStrategy {
 
   attach(overlayRef: OverlayRef) {
     if (this._overlayRef) {
-      throw getMdScrollStrategyAlreadyAttachedError();
+      throw getMatScrollStrategyAlreadyAttachedError();
     }
 
     this._overlayRef = overlayRef;
@@ -41,7 +41,7 @@ export class RepositionScrollStrategy implements ScrollStrategy {
     if (!this._scrollSubscription) {
       let throttle = this._config ? this._config.scrollThrottle : 0;
 
-      this._scrollSubscription = this._scrollDispatcher.scrolled(throttle, () => {
+      this._scrollSubscription = this._scrollDispatcher.scrolled(throttle).subscribe(() => {
         this._overlayRef.updatePosition();
       });
     }

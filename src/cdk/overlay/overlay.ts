@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -24,8 +24,8 @@ import {ScrollStrategyOptions} from './scroll/index';
 /** Next overlay unique ID. */
 let nextUniqueId = 0;
 
-/** The default state for newly created overlays. */
-let defaultState = new OverlayConfig();
+/** The default config for newly created overlays. */
+let defaultConfig = new OverlayConfig();
 
 
 /**
@@ -48,13 +48,13 @@ export class Overlay {
 
   /**
    * Creates an overlay.
-   * @param state State to apply to the overlay.
+   * @param config Config to apply to the overlay.
    * @returns Reference to the created overlay.
    */
-  create(state: OverlayConfig = defaultState): OverlayRef {
+  create(config: OverlayConfig = defaultConfig): OverlayRef {
     const pane = this._createPaneElement();
     const portalHost = this._createPortalHost(pane);
-    return new OverlayRef(portalHost, pane, state, this._ngZone);
+    return new OverlayRef(portalHost, pane, config, this._ngZone);
   }
 
   /**

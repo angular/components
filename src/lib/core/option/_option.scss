@@ -1,7 +1,7 @@
 @import '../style/menu-common';
 @import '../style/vendor-prefixes';
-@import '../../../cdk/a11y/a11y';
 @import '../style/layout-common';
+@import '../../../cdk/a11y/a11y';
 
 /**
  * This mixin contains shared option styles between the select and
@@ -30,9 +30,9 @@
   }
 
   // Collapses unwanted whitespace created by newlines in code like the following:
-  // <md-option>
+  // <mat-option>
   //   {{value}}
-  // </md-option>
+  // </mat-option>
   .mat-option-text {
     display: inline-block;
   }
