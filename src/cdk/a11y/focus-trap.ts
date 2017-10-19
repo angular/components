@@ -32,6 +32,7 @@ import {InteractivityChecker} from './interactivity-checker';
 export class FocusTrap {
   private _startAnchor: HTMLElement | null;
   private _endAnchor: HTMLElement | null;
+  private _previousFocusElement: HTMLElement;
 
   /** Whether the focus trap is active. */
   get enabled(): boolean { return this._enabled; }
@@ -49,10 +50,15 @@ export class FocusTrap {
     private _platform: Platform,
     private _checker: InteractivityChecker,
     private _ngZone: NgZone,
-    deferAnchors = false) {
+    deferAnchors = false,
+    _returnFocusOnDestroy = false) {
 
     if (!deferAnchors) {
       this.attachAnchors();
+    }
+
+    if (_returnFocusOnDestroy) {
+      this._previousFocusElement = document.activeElement as HTMLElement;
     }
   }
 
@@ -67,6 +73,11 @@ export class FocusTrap {
     }
 
     this._startAnchor = this._endAnchor = null;
+
+    // We need the extra check, because IE can set the `activeElement` to null in some cases.
+    if (this._previousFocusElement && typeof this._previousFocusElement.focus === 'function') {
+      this._previousFocusElement.focus();
+    }
   }
 
   /**
@@ -287,8 +298,22 @@ export class FocusTrapFactory {
       private _platform: Platform,
       private _ngZone: NgZone) { }
 
-  create(element: HTMLElement, deferAnchors: boolean = false): FocusTrap {
-    return new FocusTrap(element, this._platform, this._checker, this._ngZone, deferAnchors);
+  /**
+    * Creates a focus-trapped region around the given element.
+    * @param element The element around which focus will be trapped.
+    * @param deferCaptureElements Defers the creation of focus-capturing elements to be done
+    *     manually by the user.
+    * @param returnFocusOnDestroy Returns focus to the element focused before creation of the focus
+    *     trap.
+    * @returns The created focus trap instance.
+    */
+  create(
+    element: HTMLElement,
+    deferCaptureElements: boolean = false,
+    returnFocusOnDestroy: boolean = false): FocusTrap {
+    return new FocusTrap(
+      element, this._platform, this._checker, this._ngZone, deferCaptureElements,
+      returnFocusOnDestroy);
   }
 }
 

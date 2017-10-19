@@ -1,5 +1,5 @@
 import {Platform} from '@angular/cdk/platform';
-import {Component, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {FocusTrap, FocusTrapDirective, FocusTrapFactory} from './focus-trap';
 import {InteractivityChecker} from './interactivity-checker';
@@ -16,6 +16,7 @@ describe('FocusTrap', () => {
         FocusTrapTargets,
         FocusTrapWithSvg,
         FocusTrapWithoutFocusableElements,
+        FocusTrapWithoutSiblingElement,
       ],
       providers: [InteractivityChecker, Platform, FocusTrapFactory]
     });
@@ -154,6 +155,44 @@ describe('FocusTrap', () => {
       expect(() => focusTrapInstance.focusLastTabbableElement()).not.toThrow();
     });
   });
+
+
+  describe('with sibling focusable item', () => {
+    let fixture: ComponentFixture<FocusTrapWithoutSiblingElement>;
+    let firstElement: HTMLInputElement;
+    let firstFocusable: HTMLInputElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(FocusTrapWithoutSiblingElement);
+      fixture.detectChanges();
+      firstFocusable = fixture.componentInstance.firstFocusable.nativeElement;
+      firstElement = fixture.componentInstance.firstElement.nativeElement;
+    });
+
+    it('returns focus on destruction of focus trap ', () => {
+      firstElement.focus();
+      fixture.componentInstance.setupFocusTrap(true);
+      expect(document.activeElement.id).toBe(firstElement.id);
+
+      fixture.componentInstance.focusTrap.focusFirstTabbableElement();
+      expect(document.activeElement.id).toBe(firstFocusable.id);
+
+      fixture.componentInstance.focusTrap.destroy();
+      expect(document.activeElement.id).toBe(firstElement.id);
+    });
+
+    it('does not modify focus on destruction of focus trap ', () => {
+      firstElement.focus();
+      fixture.componentInstance.setupFocusTrap(false);
+      expect(document.activeElement.id).toBe(firstElement.id);
+
+      fixture.componentInstance.focusTrap.focusFirstTabbableElement();
+      expect(document.activeElement.id).toBe(firstFocusable.id);
+
+      fixture.componentInstance.focusTrap.destroy();
+      expect(document.activeElement.id).not.toBe(firstElement.id);
+    });
+  });
 });
 
 
@@ -225,4 +264,26 @@ class FocusTrapWithSvg {
 })
 class FocusTrapWithoutFocusableElements {
   @ViewChild(FocusTrapDirective) focusTrapDirective: FocusTrapDirective;
+}
+
+@Component({
+  template: `
+    <input #firstElement id="originalFocus">
+    <div #trappableElement>
+      <input #firstFocusable id="firstFocusable">Hello
+    </div>
+    `
+})
+class FocusTrapWithoutSiblingElement {
+  @ViewChild('firstElement') firstElement: ElementRef;
+  @ViewChild('trappableElement') trappableElement: ElementRef;
+  @ViewChild('firstFocusable') firstFocusable: ElementRef;
+  focusTrap: FocusTrap;
+
+  constructor(private _focusTrapFactory: FocusTrapFactory) {}
+
+  setupFocusTrap(returnFocus: boolean) {
+    this.focusTrap = this._focusTrapFactory.create(
+      this.trappableElement.nativeElement, false, returnFocus);
+  }
 }
