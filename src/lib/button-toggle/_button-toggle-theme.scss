@@ -10,7 +10,7 @@
 
   .mat-button-toggle-standalone,
   .mat-button-toggle-group {
-    @include _mat-theme-elevation(2, $theme);
+    @include _mat-theme-overridable-elevation(2, $theme);
   }
 
   .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
