@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -17,8 +17,9 @@ import {
   ScrollingVisibility,
 } from './connected-position';
 import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
-import {Scrollable} from '@angular/cdk/scrolling';
+import {CdkScrollable} from '@angular/cdk/scrolling';
 import {isElementScrolledOutsideView, isElementClippedByScrolling} from './scroll-clip';
 import {OverlayRef} from '../overlay-ref';
 
@@ -35,6 +36,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   /** The overlay to which this strategy is attached. */
   private _overlayRef: OverlayRef;
 
+  /** Layout direction of the position strategy. */
   private _dir = 'ltr';
 
   /** The offset in pixels for the overlay connection point on the x-axis */
@@ -44,7 +46,10 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   private _offsetY: number = 0;
 
   /** The Scrollable containers used to check scrollable view properties on position change. */
-  private scrollables: Scrollable[] = [];
+  private scrollables: CdkScrollable[] = [];
+
+  /** Subscription to viewport resize events. */
+  private _resizeSubscription = Subscription.EMPTY;
 
   /** Whether the we're dealing with an RTL context */
   get _isRtl() {
@@ -81,17 +86,26 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Ordered list of preferred positions, from most to least desirable. */
-  get positions() {
+  get positions(): ConnectionPositionPair[] {
     return this._preferredPositions;
   }
 
   attach(overlayRef: OverlayRef): void {
     this._overlayRef = overlayRef;
     this._pane = overlayRef.overlayElement;
+    this._resizeSubscription.unsubscribe();
+    this._resizeSubscription = this._viewportRuler.change().subscribe(() => this.apply());
   }
 
   /** Performs any cleanup after the element is destroyed. */
-  dispose() { }
+  dispose() {
+    this._resizeSubscription.unsubscribe();
+  }
+
+  /** @docs-private */
+  detach() {
+    this._resizeSubscription.unsubscribe();
+  }
 
   /**
    * Updates the position of the overlay element, using whichever preferred position relative
@@ -147,6 +161,11 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * allows one to re-align the panel without changing the orientation of the panel.
    */
   recalculateLastPosition(): void {
+    // If the overlay has never been positioned before, do nothing.
+    if (!this._lastConnectedPosition) {
+      return;
+    }
+
     const originRect = this._origin.getBoundingClientRect();
     const overlayRect = this._pane.getBoundingClientRect();
     const viewportRect = this._viewportRuler.getViewportRect();
@@ -162,7 +181,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * on reposition we can evaluate if it or the overlay has been clipped or outside view. Every
    * Scrollable must be an ancestor element of the strategy's origin element.
    */
-  withScrollableContainers(scrollables: Scrollable[]) {
+  withScrollableContainers(scrollables: CdkScrollable[]) {
     this.scrollables = scrollables;
   }
 
@@ -173,8 +192,12 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    */
   withFallbackPosition(
       originPos: OriginConnectionPosition,
-      overlayPos: OverlayConnectionPosition): this {
-    this._preferredPositions.push(new ConnectionPositionPair(originPos, overlayPos));
+      overlayPos: OverlayConnectionPosition,
+      offsetX?: number,
+      offsetY?: number): this {
+
+    const position = new ConnectionPositionPair(originPos, overlayPos, offsetX, offsetY);
+    this._preferredPositions.push(position);
     return this;
   }
 
@@ -277,9 +300,13 @@ export class ConnectedPositionStrategy implements PositionStrategy {
       overlayStartY = pos.overlayY == 'top' ? 0 : -overlayRect.height;
     }
 
+    // The (x, y) offsets of the overlay based on the current position.
+    let offsetX = typeof pos.offsetX === 'undefined' ? this._offsetX : pos.offsetX;
+    let offsetY = typeof pos.offsetY === 'undefined' ? this._offsetY : pos.offsetY;
+
     // The (x, y) coordinates of the overlay.
-    let x = originPoint.x + overlayStartX + this._offsetX;
-    let y = originPoint.y + overlayStartY + this._offsetY;
+    let x = originPoint.x + overlayStartX + offsetX;
+    let y = originPoint.y + overlayStartY + offsetY;
 
     // How much the overlay would overflow at this position, on each side.
     let leftOverflow = 0 - x;

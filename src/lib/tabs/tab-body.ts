@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -92,10 +92,10 @@ export class MatTabBody implements OnInit, AfterViewChecked {
   @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
   /** Event emitted when the tab begins to animate towards the center as the active tab. */
-  @Output() onCentering: EventEmitter<number> = new EventEmitter<number>();
+  @Output() _onCentering: EventEmitter<number> = new EventEmitter<number>();
 
   /** Event emitted when the tab completes its animation towards the center. */
-  @Output() onCentered: EventEmitter<void> = new EventEmitter<void>(true);
+  @Output() _onCentered: EventEmitter<void> = new EventEmitter<void>(true);
 
   /** Event emitted when the tab body is swiped left/right */
   @Output() onSwipe: EventEmitter<HammerInput> = new EventEmitter<HammerInput>();
@@ -155,7 +155,7 @@ export class MatTabBody implements OnInit, AfterViewChecked {
 
   _onTranslateTabStarted(e: AnimationEvent) {
     if (this._isCenterPosition(e.toState)) {
-      this.onCentering.emit(this._elementRef.nativeElement.clientHeight);
+      this._onCentering.emit(this._elementRef.nativeElement.clientHeight);
     }
   }
 
@@ -167,7 +167,7 @@ export class MatTabBody implements OnInit, AfterViewChecked {
 
     // If the transition to the center is complete, emit an event.
     if (this._isCenterPosition(e.toState) && this._isCenterPosition(this._position)) {
-      this.onCentered.emit();
+      this._onCentered.emit();
     }
   }
 

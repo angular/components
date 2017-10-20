@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -26,15 +26,13 @@ export class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable 
    * styles from the previously active item.
    */
   setActiveItem(index: number): void {
-    Promise.resolve().then(() => {
-      if (this.activeItem) {
-        this.activeItem.setInactiveStyles();
-      }
-      super.setActiveItem(index);
-      if (this.activeItem) {
-        this.activeItem.setActiveStyles();
-      }
-    });
+    if (this.activeItem) {
+      this.activeItem.setInactiveStyles();
+    }
+    super.setActiveItem(index);
+    if (this.activeItem) {
+      this.activeItem.setActiveStyles();
+    }
   }
 
 }

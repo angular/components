@@ -3,7 +3,7 @@ import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {ViewportRuler} from '@angular/cdk/scrolling';
-import {dispatchFakeEvent, FakeViewportRuler} from '@angular/cdk/testing';
+import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {Observable} from 'rxjs/Observable';
 import {TestGestureConfig} from '../core/gestures/test-gesture-config';
 import {MatTab, MatTabGroup, MatTabHeaderPosition, MatTabsModule} from './index';
@@ -24,7 +24,6 @@ describe('MatTabGroup', () => {
         TabGroupWithSimpleApi,
       ],
       providers: [
-        {provide: ViewportRuler, useClass: FakeViewportRuler},
         {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
           gestureConfig = new TestGestureConfig();
           return gestureConfig;
@@ -464,7 +463,7 @@ describe('nested MatTabGroup with enabled animations', () => {
         [headerPosition]="headerPosition"
         [disableRipple]="disableRipple"
         (focusChange)="handleFocus($event)"
-        (selectChange)="handleSelection($event)">
+        (selectedTabChange)="handleSelection($event)">
       <mat-tab>
         <ng-template mat-tab-label>Tab One</ng-template>
         Tab one content
@@ -500,7 +499,7 @@ class SimpleTabsTestApp {
     <mat-tab-group class="tab-group"
         [(selectedIndex)]="selectedIndex"
         (focusChange)="handleFocus($event)"
-        (selectChange)="handleSelection($event)">
+        (selectedTabChange)="handleSelection($event)">
       <mat-tab *ngFor="let tab of tabs">
         <ng-template mat-tab-label>{{tab.label}}</ng-template>
         {{tab.content}}

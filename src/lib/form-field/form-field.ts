@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -53,6 +53,7 @@ let nextUniqueId = 0;
   moduleId: module.id,
   // TODO(mmalerba): the input-container selectors and classes are deprecated and will be removed.
   selector: 'mat-input-container, mat-form-field',
+  exportAs: 'matFormField',
   templateUrl: 'form-field.html',
   // MatInput is a directive and can't have styles, so we need to include its styles here.
   // The MatInput styles are fairly minimal so it shouldn't be a big deal for people who
@@ -74,6 +75,7 @@ let nextUniqueId = 0;
     '[class.mat-form-field-invalid]': '_control.errorState',
     '[class.mat-form-field-can-float]': '_canPlaceholderFloat',
     '[class.mat-form-field-should-float]': '_control.shouldPlaceholderFloat || _shouldAlwaysFloat',
+    '[class.mat-form-field-disabled]': '_control.disabled',
     '[class.mat-focused]': '_control.focused',
     '[class.mat-primary]': 'color == "primary"',
     '[class.mat-accent]': 'color == "accent"',
@@ -99,7 +101,7 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
 
   /** @deprecated Use `color` instead. */
   @Input()
-  get dividerColor() { return this.color; }
+  get dividerColor(): 'primary' | 'accent' | 'warn' { return this.color; }
   set dividerColor(value) { this.color = value; }
 
   /** Whether the required marker should be hidden. */

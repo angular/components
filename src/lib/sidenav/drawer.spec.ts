@@ -20,6 +20,7 @@ describe('MatDrawer', () => {
         DrawerSetToOpenedTrue,
         DrawerDynamicPosition,
         DrawerWitFocusableElements,
+        DrawerOpenBinding,
       ],
     });
 
@@ -36,6 +37,7 @@ describe('MatDrawer', () => {
       let drawer = fixture.debugElement.query(By.directive(MatDrawer));
       let drawerBackdropElement = fixture.debugElement.query(By.css('.mat-drawer-backdrop'));
 
+      drawerBackdropElement.nativeElement.style.transition = 'none';
       fixture.debugElement.query(By.css('.open')).nativeElement.click();
       fixture.detectChanges();
 
@@ -45,7 +47,6 @@ describe('MatDrawer', () => {
       tick();
       fixture.detectChanges();
 
-      expect(drawer.componentInstance._isAnimating).toBe(false);
       expect(testComponent.openCount).toBe(1);
       expect(testComponent.closeCount).toBe(0);
       expect(getComputedStyle(drawer.nativeElement).visibility).toBe('visible');
@@ -64,6 +65,27 @@ describe('MatDrawer', () => {
       expect(testComponent.closeCount).toBe(1);
       expect(getComputedStyle(drawer.nativeElement).visibility).toBe('hidden');
       expect(getComputedStyle(drawerBackdropElement.nativeElement).visibility).toBe('hidden');
+    }));
+
+    it('should be able to close while the open animation is running', fakeAsync(() => {
+      const fixture = TestBed.createComponent(BasicTestApp);
+      fixture.detectChanges();
+
+      const testComponent: BasicTestApp = fixture.debugElement.componentInstance;
+      fixture.debugElement.query(By.css('.open')).nativeElement.click();
+      fixture.detectChanges();
+
+      expect(testComponent.openCount).toBe(0);
+      expect(testComponent.closeCount).toBe(0);
+
+      fixture.debugElement.query(By.css('.close')).nativeElement.click();
+      fixture.detectChanges();
+
+      tick();
+      fixture.detectChanges();
+
+      expect(testComponent.openCount).toBe(1);
+      expect(testComponent.closeCount).toBe(1);
     }));
 
     it('does not throw when created without a drawer', fakeAsync(() => {
@@ -266,6 +288,20 @@ describe('MatDrawer', () => {
 
       expect(() => fixture.detectChanges()).not.toThrow();
     });
+
+    it('should bind 2-way bind on opened property', fakeAsync(() => {
+      const fixture = TestBed.createComponent(DrawerOpenBinding);
+      fixture.detectChanges();
+
+      let drawer: MatDrawer = fixture.debugElement
+          .query(By.directive(MatDrawer)).componentInstance;
+
+      drawer.open();
+      fixture.detectChanges();
+      tick();
+
+      expect(fixture.componentInstance.isOpen).toBe(true);
+    }));
   });
 
   describe('focus trapping behavior', () => {
@@ -326,6 +362,7 @@ describe('MatDrawerContainer', () => {
       declarations: [
         DrawerContainerTwoDrawerTestApp,
         DrawerDelayed,
+        DrawerSetToOpenedTrue,
         DrawerContainerStateChangesTestApp,
       ],
     });
@@ -417,6 +454,17 @@ describe('MatDrawerContainer', () => {
     expect(parseInt(contentElement.style.marginLeft)).toBeLessThan(initialMargin);
   }));
 
+  it('should not animate when the sidenav is open on load ', fakeAsync(() => {
+    const fixture = TestBed.createComponent(DrawerSetToOpenedTrue);
+
+    fixture.detectChanges();
+    tick();
+
+    const container = fixture.debugElement.nativeElement.querySelector('.mat-drawer-container');
+
+    expect(container.classList).not.toContain('mat-drawer-transition');
+  }));
+
 });
 
 
@@ -441,8 +489,8 @@ class DrawerContainerTwoDrawerTestApp {
   template: `
     <mat-drawer-container (backdropClick)="backdropClicked()">
       <mat-drawer #drawer position="start"
-                 (open)="open()"
-                 (close)="close()">
+                 (opened)="open()"
+                 (closed)="close()">
         <button #drawerButton>Content.</button>
       </mat-drawer>
       <button (click)="drawer.open()" class="open" #openButton></button>
@@ -484,13 +532,25 @@ class DrawerSetToOpenedFalse { }
 @Component({
   template: `
     <mat-drawer-container>
-      <mat-drawer #drawer mode="side" opened="true" (open)="openCallback()">
+      <mat-drawer #drawer mode="side" opened="true" (opened)="openCallback()">
         Closed Drawer.
       </mat-drawer>
     </mat-drawer-container>`,
 })
 class DrawerSetToOpenedTrue {
   openCallback = jasmine.createSpy('open callback');
+}
+
+@Component({
+  template: `
+    <mat-drawer-container>
+      <mat-drawer #drawer mode="side" [(opened)]="isOpen">
+        Closed Drawer.
+      </mat-drawer>
+    </mat-drawer-container>`,
+})
+class DrawerOpenBinding {
+  isOpen = false;
 }
 
 @Component({
