@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -49,6 +49,7 @@ export class TemplatePortalDirective extends TemplatePortal<any> {
  */
 @Directive({
   selector: '[cdkPortalHost], [portalHost]',
+  exportAs: 'cdkPortalHost',
   inputs: ['portal: cdkPortalHost']
 })
 export class PortalHostDirective extends BasePortalHost implements OnDestroy {

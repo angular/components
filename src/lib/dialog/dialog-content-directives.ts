@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -18,6 +18,7 @@ let dialogElementUid = 0;
  */
 @Directive({
   selector: `button[mat-dialog-close], button[matDialogClose]`,
+  exportAs: 'matDialogClose',
   host: {
     '(click)': 'dialogRef.close(dialogResult)',
     '[attr.aria-label]': 'ariaLabel',
@@ -49,6 +50,7 @@ export class MatDialogClose implements OnChanges {
  */
 @Directive({
   selector: '[mat-dialog-title], [matDialogTitle]',
+  exportAs: 'matDialogTitle',
   host: {
     'class': 'mat-dialog-title',
     '[id]': 'id',

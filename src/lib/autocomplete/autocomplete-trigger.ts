@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -18,7 +18,7 @@ import {
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
-import {filter, first, map, RxChain, switchMap} from '@angular/cdk/rxjs';
+import {filter, first, RxChain, switchMap, doOperator, delay} from '@angular/cdk/rxjs';
 import {
   ChangeDetectorRef,
   Directive,
@@ -38,6 +38,7 @@ import {MatOption, MatOptionSelectionChange} from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
 import {DOCUMENT} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {merge} from 'rxjs/observable/merge';
 import {of as observableOf} from 'rxjs/observable/of';
@@ -125,6 +126,9 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   /** The subscription for closing actions (some are bound to document). */
   private _closingActionsSubscription: Subscription;
 
+  /** Stream of escape keyboard events. */
+  private _escapeEventStream = new Subject<void>();
+
   /** View -> model callback called when value changes */
   _onChange: (value: any) => void = () => {};
 
@@ -145,6 +149,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   ngOnDestroy() {
     this._destroyPanel();
+    this._escapeEventStream.complete();
   }
 
   /* Whether or not the autocomplete panel is open. */
@@ -186,6 +191,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     return merge(
       this.optionSelections,
       this.autocomplete._keyManager.tabOut,
+      this._escapeEventStream,
       this._outsideClickStream
     );
   }
@@ -262,7 +268,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
     if (keyCode === ESCAPE && this.panelOpen) {
       this._resetActiveItem();
-      this.closePanel();
+      this._escapeEventStream.next();
       event.stopPropagation();
     } else if (this.activeOption && keyCode === ENTER && this.panelOpen) {
       this.activeOption._selectViaInteraction();
@@ -278,11 +284,9 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
         this.openPanel();
       }
 
-      Promise.resolve().then(() => {
-        if (isArrowKey || this.autocomplete._keyManager.activeItem !== prevActiveItem) {
-          this._scrollToOption();
-        }
-      });
+      if (isArrowKey || this.autocomplete._keyManager.activeItem !== prevActiveItem) {
+        this._scrollToOption();
+      }
     }
   }
 
@@ -350,9 +354,8 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this.autocomplete._setScrollTop(optionOffset);
     } else if (optionOffset + AUTOCOMPLETE_OPTION_HEIGHT > panelTop + AUTOCOMPLETE_PANEL_HEIGHT) {
       // Scroll down to reveal selected option scrolled below the panel bottom
-      const newScrollTop =
-          Math.max(0, optionOffset - AUTOCOMPLETE_PANEL_HEIGHT + AUTOCOMPLETE_OPTION_HEIGHT);
-      this.autocomplete._setScrollTop(newScrollTop);
+      const newScrollTop = optionOffset - AUTOCOMPLETE_PANEL_HEIGHT + AUTOCOMPLETE_OPTION_HEIGHT;
+      this.autocomplete._setScrollTop(Math.max(0, newScrollTop));
     }
   }
 
@@ -362,8 +365,12 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    */
   private _subscribeToClosingActions(): Subscription {
     const firstStable = first.call(this._zone.onStable.asObservable());
-    const optionChanges = map.call(this.autocomplete.options.changes, () =>
-      this._positionStrategy.recalculateLastPosition());
+    const optionChanges = RxChain.from(this.autocomplete.options.changes)
+      .call(doOperator, () => this._positionStrategy.recalculateLastPosition())
+      // Defer emitting to the stream until the next tick, because changing
+      // bindings in here will cause "changed after checked" errors.
+      .call(delay, 0)
+      .result();
 
     // When the zone is stable initially, and when the option list changes...
     return RxChain.from(merge(firstStable, optionChanges))

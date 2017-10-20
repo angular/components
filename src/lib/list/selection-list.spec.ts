@@ -4,13 +4,13 @@ import {createKeyboardEvent, dispatchFakeEvent} from '@angular/cdk/testing';
 import {Component, DebugElement} from '@angular/core';
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {MatListModule, MatListOption, MatSelectionList} from './index';
+import {MatListModule, MatListOption, MatSelectionList, MatListOptionChange} from './index';
 
 
 describe('MatSelectionList', () => {
   describe('with list option', () => {
     let fixture: ComponentFixture<SelectionListWithListOptions>;
-    let listOption: DebugElement[];
+    let listOptions: DebugElement[];
     let listItemEl: DebugElement;
     let selectionList: DebugElement;
 
@@ -33,14 +33,14 @@ describe('MatSelectionList', () => {
       fixture = TestBed.createComponent(SelectionListWithListOptions);
       fixture.detectChanges();
 
-      listOption = fixture.debugElement.queryAll(By.directive(MatListOption));
+      listOptions = fixture.debugElement.queryAll(By.directive(MatListOption));
       listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
       selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
     }));
 
     it('should add and remove focus class on focus/blur', () => {
       // Use the second list item, because the first one is always disabled.
-      const listItem = listOption[1].nativeElement;
+      const listItem = listOptions[1].nativeElement;
 
       expect(listItem.classList).not.toContain('mat-list-item-focus');
 
@@ -57,35 +57,35 @@ describe('MatSelectionList', () => {
       const optionValues = ['inbox', 'starred', 'sent-mail', 'drafts'];
 
       optionValues.forEach((optionValue, index) => {
-        expect(listOption[index].componentInstance.value).toBe(optionValue);
+        expect(listOptions[index].componentInstance.value).toBe(optionValue);
       });
     });
 
     it('should be able to dispatch one selected item', () => {
-      let testListItem = listOption[2].injector.get<MatListOption>(MatListOption);
+      let testListItem = listOptions[2].injector.get<MatListOption>(MatListOption);
       let selectList =
           selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
       expect(selectList.selected.length).toBe(0);
-      expect(listOption[2].nativeElement.getAttribute('aria-selected')).toBe('false');
+      expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('false');
 
       testListItem.toggle();
       fixture.detectChanges();
 
-      expect(listOption[2].nativeElement.getAttribute('aria-selected')).toBe('true');
-      expect(listOption[2].nativeElement.getAttribute('aria-disabled')).toBe('false');
+      expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('true');
+      expect(listOptions[2].nativeElement.getAttribute('aria-disabled')).toBe('false');
       expect(selectList.selected.length).toBe(1);
     });
 
     it('should be able to dispatch multiple selected items', () => {
-      let testListItem = listOption[2].injector.get<MatListOption>(MatListOption);
-      let testListItem2 = listOption[1].injector.get<MatListOption>(MatListOption);
+      let testListItem = listOptions[2].injector.get<MatListOption>(MatListOption);
+      let testListItem2 = listOptions[1].injector.get<MatListOption>(MatListOption);
       let selectList =
           selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
       expect(selectList.selected.length).toBe(0);
-      expect(listOption[2].nativeElement.getAttribute('aria-selected')).toBe('false');
-      expect(listOption[1].nativeElement.getAttribute('aria-selected')).toBe('false');
+      expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('false');
+      expect(listOptions[1].nativeElement.getAttribute('aria-selected')).toBe('false');
 
       testListItem.toggle();
       fixture.detectChanges();
@@ -94,14 +94,14 @@ describe('MatSelectionList', () => {
       fixture.detectChanges();
 
       expect(selectList.selected.length).toBe(2);
-      expect(listOption[2].nativeElement.getAttribute('aria-selected')).toBe('true');
-      expect(listOption[1].nativeElement.getAttribute('aria-selected')).toBe('true');
-      expect(listOption[1].nativeElement.getAttribute('aria-disabled')).toBe('false');
-      expect(listOption[2].nativeElement.getAttribute('aria-disabled')).toBe('false');
+      expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('true');
+      expect(listOptions[1].nativeElement.getAttribute('aria-selected')).toBe('true');
+      expect(listOptions[1].nativeElement.getAttribute('aria-disabled')).toBe('false');
+      expect(listOptions[2].nativeElement.getAttribute('aria-disabled')).toBe('false');
     });
 
     it('should be able to deselect an option', () => {
-      let testListItem = listOption[2].injector.get<MatListOption>(MatListOption);
+      let testListItem = listOptions[2].injector.get<MatListOption>(MatListOption);
       let selectList =
           selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
@@ -119,12 +119,12 @@ describe('MatSelectionList', () => {
     });
 
     it('should not allow selection of disabled items', () => {
-      let testListItem = listOption[0].injector.get<MatListOption>(MatListOption);
+      let testListItem = listOptions[0].injector.get<MatListOption>(MatListOption);
       let selectList =
           selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
       expect(selectList.selected.length).toBe(0);
-      expect(listOption[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
+      expect(listOptions[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
 
       testListItem._handleClick();
       fixture.detectChanges();
@@ -133,18 +133,18 @@ describe('MatSelectionList', () => {
     });
 
     it('should be able to un-disable disabled items', () => {
-      let testListItem = listOption[0].injector.get<MatListOption>(MatListOption);
+      let testListItem = listOptions[0].injector.get<MatListOption>(MatListOption);
 
-      expect(listOption[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
+      expect(listOptions[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
 
       testListItem.disabled = false;
       fixture.detectChanges();
 
-      expect(listOption[0].nativeElement.getAttribute('aria-disabled')).toBe('false');
+      expect(listOptions[0].nativeElement.getAttribute('aria-disabled')).toBe('false');
     });
 
     it('should be able to use keyboard select with SPACE', () => {
-      let testListItem = listOption[1].nativeElement as HTMLElement;
+      let testListItem = listOptions[1].nativeElement as HTMLElement;
       let SPACE_EVENT: KeyboardEvent =
         createKeyboardEvent('keydown', SPACE, testListItem);
       let selectList =
@@ -162,7 +162,7 @@ describe('MatSelectionList', () => {
     it('should restore focus if active option is destroyed', () => {
       const manager = selectionList.componentInstance._keyManager;
 
-      listOption[3].componentInstance._handleFocus();
+      listOptions[3].componentInstance._handleFocus();
 
       expect(manager.activeItemIndex).toBe(3);
 
@@ -173,12 +173,12 @@ describe('MatSelectionList', () => {
     });
 
     it('should focus previous item when press UP ARROW', () => {
-      let testListItem = listOption[2].nativeElement as HTMLElement;
+      let testListItem = listOptions[2].nativeElement as HTMLElement;
       let UP_EVENT: KeyboardEvent =
         createKeyboardEvent('keydown', UP_ARROW, testListItem);
       let manager = selectionList.componentInstance._keyManager;
 
-      dispatchFakeEvent(listOption[2].nativeElement, 'focus');
+      dispatchFakeEvent(listOptions[2].nativeElement, 'focus');
       expect(manager.activeItemIndex).toEqual(2);
 
       selectionList.componentInstance._keydown(UP_EVENT);
@@ -189,12 +189,12 @@ describe('MatSelectionList', () => {
     });
 
     it('should focus next item when press DOWN ARROW', () => {
-      let testListItem = listOption[2].nativeElement as HTMLElement;
+      let testListItem = listOptions[2].nativeElement as HTMLElement;
       let DOWN_EVENT: KeyboardEvent =
         createKeyboardEvent('keydown', DOWN_ARROW, testListItem);
       let manager = selectionList.componentInstance._keyManager;
 
-      dispatchFakeEvent(listOption[2].nativeElement, 'focus');
+      dispatchFakeEvent(listOptions[2].nativeElement, 'focus');
       expect(manager.activeItemIndex).toEqual(2);
 
       selectionList.componentInstance._keydown(DOWN_EVENT);
@@ -226,6 +226,20 @@ describe('MatSelectionList', () => {
 
       expect(list.options.toArray().every(option => option.selected)).toBe(false);
     });
+
+    it('should update the list value when an item is selected programmatically', () => {
+      const list: MatSelectionList = selectionList.componentInstance;
+
+      expect(list.selectedOptions.isEmpty()).toBe(true);
+
+      listOptions[0].componentInstance.selected = true;
+      listOptions[2].componentInstance.selected = true;
+      fixture.detectChanges();
+
+      expect(list.selectedOptions.isEmpty()).toBe(false);
+      expect(list.selectedOptions.isSelected(listOptions[0].componentInstance)).toBe(true);
+      expect(list.selectedOptions.isSelected(listOptions[2].componentInstance)).toBe(true);
+    });
   });
 
   describe('with list option selected', () => {
@@ -253,6 +267,49 @@ describe('MatSelectionList', () => {
       let optionEl = listItemEl.injector.get(MatListOption);
       let selectedOptions = selectionList.componentInstance.selectedOptions;
       expect(selectedOptions.isSelected(optionEl)).toBeTruthy();
+    });
+  });
+
+  describe('with tabindex', () => {
+
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [
+          SelectionListWithTabindexAttr,
+          SelectionListWithTabindexBinding,
+        ]
+      });
+
+      TestBed.compileComponents();
+    }));
+
+    it('should properly handle native tabindex attribute', () => {
+      const fixture = TestBed.createComponent(SelectionListWithTabindexAttr);
+      const selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
+
+      expect(selectionList.componentInstance.tabIndex)
+        .toBe(5, 'Expected the selection-list tabindex to be set to the attribute value.');
+    });
+
+    it('should support changing the tabIndex through binding', () => {
+      const fixture = TestBed.createComponent(SelectionListWithTabindexBinding);
+      const selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
+
+      expect(selectionList.componentInstance.tabIndex)
+        .toBe(0, 'Expected the tabIndex to be set to "0" by default.');
+
+      fixture.componentInstance.tabIndex = 3;
+      fixture.detectChanges();
+
+      expect(selectionList.componentInstance.tabIndex)
+        .toBe(3, 'Expected the tabIndex to updated through binding.');
+
+      fixture.componentInstance.disabled = true;
+      fixture.detectChanges();
+
+      expect(selectionList.componentInstance.tabIndex)
+        .toBe(-1, 'Expected the tabIndex to be set to "-1" if selection list is disabled.');
     });
   });
 
@@ -290,15 +347,12 @@ describe('MatSelectionList', () => {
     }));
 
     it('should be focused when focus on nativeElements', () => {
-      listOption.nativeElement.focus();
+      dispatchFakeEvent(listOption.nativeElement, 'focus');
       fixture.detectChanges();
 
-      expect(listItemEl.nativeElement).toBe(document.activeElement);
-      if (platform.SAFARI || platform.FIREFOX) {
-        expect(listItemEl.nativeElement.className).toContain('mat-list-item-focus');
-      }
+      expect(listItemEl.nativeElement.className).toContain('mat-list-item-focus');
 
-      listOption.nativeElement.blur();
+      dispatchFakeEvent(listOption.nativeElement, 'blur');
       fixture.detectChanges();
 
       expect(listItemEl.nativeElement.className).not.toContain('mat-list-item-focus');
@@ -426,8 +480,87 @@ describe('MatSelectionList', () => {
       expect(listItemContent.nativeElement.classList).toContain('mat-list-item-content-reverse');
     });
   });
-});
 
+
+  describe('with multiple values', () => {
+    let fixture: ComponentFixture<SelectionListWithMultipleValues>;
+    let listOption: DebugElement[];
+    let listItemEl: DebugElement;
+    let selectionList: DebugElement;
+
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [
+          SelectionListWithMultipleValues
+        ],
+      });
+
+      TestBed.compileComponents();
+    }));
+
+    beforeEach(async(() => {
+      fixture = TestBed.createComponent(SelectionListWithMultipleValues);
+      listOption = fixture.debugElement.queryAll(By.directive(MatListOption));
+      listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
+      fixture.detectChanges();
+    }));
+
+    it('should have a value for each item', () => {
+      expect(listOption[0].componentInstance.value).toBe(1);
+      expect(listOption[1].componentInstance.value).toBe('a');
+      expect(listOption[2].componentInstance.value).toBe(true);
+    });
+
+  });
+
+  describe('with option selected events', () => {
+    let fixture: ComponentFixture<SelectionListWithOptionEvents>;
+    let testComponent: SelectionListWithOptionEvents;
+    let listOption: DebugElement[];
+    let selectionList: DebugElement;
+
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [
+          SelectionListWithOptionEvents
+        ],
+      });
+
+      TestBed.compileComponents();
+    }));
+
+    beforeEach(async(() => {
+      fixture = TestBed.createComponent(SelectionListWithOptionEvents);
+      testComponent = fixture.debugElement.componentInstance;
+      listOption = fixture.debugElement.queryAll(By.directive(MatListOption));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
+      fixture.detectChanges();
+    }));
+
+    it('should trigger the selected and deselected events when clicked in succession.', () => {
+
+      let selected: boolean = false;
+
+      spyOn(testComponent, 'onOptionSelectionChange')
+        .and.callFake((event: MatListOptionChange) => {
+          selected = event.selected;
+        });
+
+      listOption[0].nativeElement.click();
+      expect(testComponent.onOptionSelectionChange).toHaveBeenCalledTimes(1);
+      expect(selected).toBe(true);
+
+      listOption[0].nativeElement.click();
+      expect(testComponent.onOptionSelectionChange).toHaveBeenCalledTimes(2);
+      expect(selected).toBe(false);
+    });
+
+  });
+
+});
 
 @Component({template: `
   <mat-selection-list id="selection-list-1">
@@ -450,17 +583,17 @@ class SelectionListWithListOptions {
 }
 
 @Component({template: `
-  <mat-selection-list id = "selection-list-2">
-    <mat-list-option checkboxPosition = "after">
+  <mat-selection-list id="selection-list-2">
+    <mat-list-option checkboxPosition="after">
       Inbox (disabled selection-option)
     </mat-list-option>
-    <mat-list-option id = "testSelect" checkboxPosition = "after">
+    <mat-list-option id="testSelect" checkboxPosition="after">
       Starred
     </mat-list-option>
-    <mat-list-option checkboxPosition = "after">
+    <mat-list-option checkboxPosition="after">
       Sent Mail
     </mat-list-option>
-    <mat-list-option checkboxPosition = "after">
+    <mat-list-option checkboxPosition="after">
       Drafts
     </mat-list-option>
   </mat-selection-list>`})
@@ -468,17 +601,17 @@ class SelectionListWithCheckboxPositionAfter {
 }
 
 @Component({template: `
-  <mat-selection-list id = "selection-list-3" [disabled] = true>
-    <mat-list-option checkboxPosition = "after">
+  <mat-selection-list id="selection-list-3" [disabled]=true>
+    <mat-list-option checkboxPosition="after">
       Inbox (disabled selection-option)
     </mat-list-option>
-    <mat-list-option id = "testSelect" checkboxPosition = "after">
+    <mat-list-option id="testSelect" checkboxPosition="after">
       Starred
     </mat-list-option>
-    <mat-list-option checkboxPosition = "after">
+    <mat-list-option checkboxPosition="after">
       Sent Mail
     </mat-list-option>
-    <mat-list-option checkboxPosition = "after">
+    <mat-list-option checkboxPosition="after">
       Drafts
     </mat-list-option>
   </mat-selection-list>`})
@@ -502,10 +635,48 @@ class SelectionListWithSelectedOption {
 }
 
 @Component({template: `
-  <mat-selection-list id = "selection-list-4">
-    <mat-list-option checkboxPosition = "after" class="test-focus" id="123">
+  <mat-selection-list id="selection-list-4">
+    <mat-list-option checkboxPosition="after" class="test-focus" id="123">
       Inbox
     </mat-list-option>
   </mat-selection-list>`})
 class SelectionListWithOnlyOneOption {
+}
+
+@Component({
+  template: `<mat-selection-list tabindex="5"></mat-selection-list>`
+})
+class SelectionListWithTabindexAttr {}
+
+@Component({
+  template: `<mat-selection-list [tabIndex]="tabIndex" [disabled]="disabled"></mat-selection-list>`
+})
+class SelectionListWithTabindexBinding {
+  tabIndex: number;
+  disabled: boolean;
+}
+
+@Component({template: `
+<mat-selection-list id="selection-list-5">
+  <mat-list-option [value]="1" checkboxPosition="after">
+    1
+  </mat-list-option>
+  <mat-list-option value="a" checkboxPosition="after">
+    a
+  </mat-list-option>
+  <mat-list-option [value]="true" checkboxPosition="after">
+    true
+  </mat-list-option>
+</mat-selection-list>`})
+class SelectionListWithMultipleValues {
+}
+
+@Component({template: `
+<mat-selection-list id="selection-list-6">
+  <mat-list-option (selectionChange)="onOptionSelectionChange($event)">
+    Inbox
+  </mat-list-option>
+</mat-selection-list>`})
+class SelectionListWithOptionEvents {
+  onOptionSelectionChange: (event?: MatListOptionChange) => void = () => {};
 }
