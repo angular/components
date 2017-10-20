@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -18,6 +18,7 @@ export const _MatTable = CdkTable;
 @Component({
   moduleId: module.id,
   selector: 'mat-table',
+  exportAs: 'matTable',
   template: CDK_TABLE_TEMPLATE,
   styleUrls: ['table.css'],
   host: {

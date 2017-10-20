@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -148,7 +148,7 @@ export class MatIconRegistry {
    * @param alias Alias for the font.
    * @param className Class name override to be used instead of the alias.
    */
-  registerFontClassAlias(alias: string, className = alias): this {
+  registerFontClassAlias(alias: string, className: string = alias): this {
     this._fontCssClassesByAlias.set(alias, className);
     return this;
   }
@@ -181,7 +181,7 @@ export class MatIconRegistry {
   }
 
   /**
-   * Returns an Observable that produces the icon (as an <svg> DOM element) from the given URL.
+   * Returns an Observable that produces the icon (as an `<svg>` DOM element) from the given URL.
    * The response from the URL may be cached so this will not always cause an HTTP request, but
    * the produced element will always be a new copy of the originally fetched icon. (That is,
    * it will not contain any modifications made to elements previously returned).
@@ -201,21 +201,21 @@ export class MatIconRegistry {
       return observableOf(cloneSvg(cachedIcon));
     }
 
-    return RxChain.from(this._loadSvgIconFromConfig(new SvgIconConfig(url)))
+    return RxChain.from(this._loadSvgIconFromConfig(new SvgIconConfig(safeUrl)))
       .call(doOperator, svg => this._cachedIconsByUrl.set(url!, svg))
       .call(map, svg => cloneSvg(svg))
       .result();
   }
 
   /**
-   * Returns an Observable that produces the icon (as an <svg> DOM element) with the given name
+   * Returns an Observable that produces the icon (as an `<svg>` DOM element) with the given name
    * and namespace. The icon must have been previously registered with addIcon or addIconSet;
    * if not, the Observable will throw an error.
    *
    * @param name Name of the icon to be retrieved.
    * @param namespace Namespace in which to look for the icon.
    */
-  getNamedSvgIcon(name: string, namespace = ''): Observable<SVGElement> {
+  getNamedSvgIcon(name: string, namespace: string = ''): Observable<SVGElement> {
     // Return (copy of) cached icon if possible.
     const key = iconKey(namespace, name);
     const config = this._svgIconConfigs.get(key);

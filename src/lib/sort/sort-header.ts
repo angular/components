@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -46,6 +46,7 @@ const SORT_ANIMATION_TRANSITION =
 @Component({
   moduleId: module.id,
   selector: '[mat-sort-header]',
+  exportAs: 'matSortHeader',
   templateUrl: 'sort-header.html',
   styleUrls: ['sort-header.css'],
   host: {
@@ -109,13 +110,9 @@ export class MatSortHeader implements MatSortable {
 
   /** Overrides the disable clear value of the containing MatSort for this MatSortable. */
   @Input()
-  get disableClear() { return this._disableClear; }
+  get disableClear(): boolean { return this._disableClear; }
   set disableClear(v) { this._disableClear = coerceBooleanProperty(v); }
   private _disableClear: boolean;
-
-  @Input('mat-sort-header')
-  get _id() { return this.id; }
-  set _id(v: string) { this.id = v; }
 
   constructor(public _intl: MatSortHeaderIntl,
               changeDetectorRef: ChangeDetectorRef,

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -237,10 +237,16 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     this._setMenuElevation();
     this._setIsMenuOpen(true);
 
-    // Should only set focus if opened via the keyboard, so keyboard users can
-    // can easily navigate menu items. According to spec, mouse users should not
-    // see the focus style.
-    if (!this._openedByMouse) {
+    // If the menu was opened by mouse, we focus the root node, which allows for the keyboard
+    // interactions to work. Otherwise, if the menu was opened by keyboard, we focus the first item.
+    if (this._openedByMouse) {
+      let rootNode = this._overlayRef!.overlayElement.firstElementChild as HTMLElement;
+
+      if (rootNode) {
+        this.menu.resetActiveItem();
+        rootNode.focus();
+      }
+    } else {
       this.menu.focusFirstItem();
     }
   }
@@ -360,9 +366,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       // to the edges of the trigger, instead of overlapping it.
       overlayFallbackX = originX = this.menu.xPosition === 'before' ? 'start' : 'end';
       originFallbackX = overlayX = originX === 'end' ? 'start' : 'end';
-
-      // TODO(crisbeto): this should be a function, once the overlay supports it.
-      // Right now it will be wrong for the fallback positions.
       offsetY = overlayY === 'bottom' ? MENU_PANEL_TOP_PADDING : -MENU_PANEL_TOP_PADDING;
     } else if (!this.menu.overlapTrigger) {
       originY = overlayY === 'top' ? 'bottom' : 'top';
@@ -378,10 +381,12 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
             {overlayX: overlayFallbackX, overlayY})
         .withFallbackPosition(
             {originX, originY: originFallbackY},
-            {overlayX, overlayY: overlayFallbackY})
+            {overlayX, overlayY: overlayFallbackY},
+            undefined, -offsetY)
         .withFallbackPosition(
             {originX: originFallbackX, originY: originFallbackY},
-            {overlayX: overlayFallbackX, overlayY: overlayFallbackY});
+            {overlayX: overlayFallbackX, overlayY: overlayFallbackY},
+            undefined, -offsetY);
   }
 
   /** Cleans up the active subscriptions. */
