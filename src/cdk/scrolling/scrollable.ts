@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -20,7 +20,7 @@ import {ScrollDispatcher} from './scroll-dispatcher';
 @Directive({
   selector: '[cdk-scrollable], [cdkScrollable]'
 })
-export class Scrollable implements OnInit, OnDestroy {
+export class CdkScrollable implements OnInit, OnDestroy {
   private _elementScrolled: Subject<Event> = new Subject();
   private _scrollListener: Function | null;
 

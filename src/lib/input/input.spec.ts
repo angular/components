@@ -12,9 +12,9 @@ import {
   Validators,
 } from '@angular/forms';
 import {
-  MAT_ERROR_GLOBAL_OPTIONS,
   MAT_PLACEHOLDER_GLOBAL_OPTIONS,
-  showOnDirtyErrorStateMatcher,
+  ShowOnDirtyErrorStateMatcher,
+  ErrorStateMatcher,
 } from '@angular/material/core';
 import {
   getMatFormFieldDuplicatedHintError,
@@ -423,19 +423,19 @@ describe('MatInput without forms', function () {
     const fixture = TestBed.createComponent(MatInputWithDisabled);
     fixture.detectChanges();
 
-    const underlineEl =
-        fixture.debugElement.query(By.css('.mat-form-field-underline')).nativeElement;
+    const formFieldEl =
+        fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
     const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
-    expect(underlineEl.classList.contains('mat-disabled'))
-        .toBe(false, `Expected underline not to start out disabled.`);
+    expect(formFieldEl.classList.contains('mat-form-field-disabled'))
+        .toBe(false, `Expected form field not to start out disabled.`);
     expect(inputEl.disabled).toBe(false);
 
     fixture.componentInstance.disabled = true;
     fixture.detectChanges();
 
-    expect(underlineEl.classList.contains('mat-disabled'))
-        .toBe(true, `Expected underline to look disabled after property is set.`);
+    expect(formFieldEl.classList.contains('mat-form-field-disabled'))
+        .toBe(true, `Expected form field to look disabled after property is set.`);
     expect(inputEl.disabled).toBe(true);
   }));
 
@@ -926,12 +926,6 @@ describe('MatInput with forms', () => {
     });
 
     it('should display an error message when global error matcher returns true', () => {
-
-      // Global error state matcher that will always cause errors to show
-      function globalErrorStateMatcher() {
-        return true;
-      }
-
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         imports: [
@@ -944,11 +938,7 @@ describe('MatInput with forms', () => {
         declarations: [
           MatInputWithFormErrorMessages
         ],
-        providers: [
-          {
-            provide: MAT_ERROR_GLOBAL_OPTIONS,
-            useValue: { errorStateMatcher: globalErrorStateMatcher } }
-        ]
+        providers: [{provide: ErrorStateMatcher, useValue: {isErrorState: () => true}}]
       });
 
       let fixture = TestBed.createComponent(MatInputWithFormErrorMessages);
@@ -963,7 +953,7 @@ describe('MatInput with forms', () => {
       expect(containerEl.querySelectorAll('mat-error').length).toBe(1, 'Expected an error message');
     });
 
-    it('should display an error message when using showOnDirtyErrorStateMatcher', async(() => {
+    it('should display an error message when using ShowOnDirtyErrorStateMatcher', async(() => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         imports: [
@@ -976,12 +966,7 @@ describe('MatInput with forms', () => {
         declarations: [
           MatInputWithFormErrorMessages
         ],
-        providers: [
-          {
-            provide: MAT_ERROR_GLOBAL_OPTIONS,
-            useValue: { errorStateMatcher: showOnDirtyErrorStateMatcher }
-          }
-        ]
+        providers: [{provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}]
       });
 
       let fixture = TestBed.createComponent(MatInputWithFormErrorMessages);
@@ -1025,19 +1010,19 @@ describe('MatInput with forms', () => {
     const fixture = TestBed.createComponent(MatInputWithFormControl);
     fixture.detectChanges();
 
-    const underlineEl =
-        fixture.debugElement.query(By.css('.mat-form-field-underline')).nativeElement;
+    const formFieldEl =
+        fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
     const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
-    expect(underlineEl.classList)
-      .not.toContain('mat-disabled', `Expected underline not to start out disabled.`);
+    expect(formFieldEl.classList)
+      .not.toContain('mat-form-field-disabled', `Expected form field not to start out disabled.`);
     expect(inputEl.disabled).toBe(false);
 
     fixture.componentInstance.formControl.disable();
     fixture.detectChanges();
 
-    expect(underlineEl.classList).toContain('mat-disabled',
-      `Expected underline to look disabled after disable() is called.`);
+    expect(formFieldEl.classList).toContain('mat-form-field-disabled',
+      `Expected form field to look disabled after disable() is called.`);
     expect(inputEl.disabled).toBe(true);
   });
 
@@ -1298,7 +1283,7 @@ class MatInputWithFormErrorMessages {
       <mat-form-field>
         <input matInput
             formControlName="name"
-            [errorStateMatcher]="customErrorStateMatcher.bind(this)">
+            [errorStateMatcher]="customErrorStateMatcher">
         <mat-hint>Please type something</mat-hint>
         <mat-error>This field is required</mat-error>
       </mat-form-field>
@@ -1312,9 +1297,9 @@ class MatInputWithCustomErrorStateMatcher {
 
   errorState = false;
 
-  customErrorStateMatcher(): boolean {
-    return this.errorState;
-  }
+  customErrorStateMatcher = {
+    isErrorState: () => this.errorState
+  };
 }
 
 @Component({

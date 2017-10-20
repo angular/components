@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -39,7 +39,7 @@ export class UniqueSelectionDispatcher {
   /**
    * Listen for future changes to item selection.
    * @return Function used to deregister listener
-   **/
+   */
   listen(listener: UniqueSelectionDispatcherListener): () => void {
     this._listeners.push(listener);
     return () => {

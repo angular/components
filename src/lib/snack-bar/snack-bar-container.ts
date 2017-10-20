@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -33,15 +33,16 @@ import {
   PortalHostDirective,
 } from '@angular/cdk/portal';
 import {first} from '@angular/cdk/rxjs';
+import {AnimationCurves, AnimationDurations} from '@angular/material/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {MatSnackBarConfig} from './snack-bar-config';
 
 
-// TODO(jelbourn): we can't use constants from animation.ts here because you can't use
-// a text interpolation in anything that is analyzed statically with ngc (for AoT compile).
-export const SHOW_ANIMATION = '225ms cubic-bezier(0.4,0.0,1,1)';
-export const HIDE_ANIMATION = '195ms cubic-bezier(0.0,0.0,0.2,1)';
+export const SHOW_ANIMATION =
+    `${AnimationDurations.ENTERING} ${AnimationCurves.DECELERATION_CURVE}`;
+export const HIDE_ANIMATION =
+    `${AnimationDurations.EXITING} ${AnimationCurves.ACCELERATION_CURVE}`;
 
 /**
  * Internal component that wraps user-provided snack bar content.
@@ -63,17 +64,10 @@ export const HIDE_ANIMATION = '195ms cubic-bezier(0.0,0.0,0.2,1)';
   },
   animations: [
     trigger('state', [
-      // Animation from top.
-      state('visible-top', style({transform: 'translateY(0%)'})),
-      state('hidden-top', style({transform: 'translateY(-100%)'})),
-      transition('visible-top => hidden-top', animate(HIDE_ANIMATION)),
-      transition('void => visible-top', animate(SHOW_ANIMATION)),
-      // Animation from bottom.
-      state('visible-bottom', style({transform: 'translateY(0%)'})),
-      state('hidden-bottom', style({transform: 'translateY(100%)'})),
-      transition('visible-bottom => hidden-bottom', animate(HIDE_ANIMATION)),
-      transition('void => visible-bottom',
-        animate(SHOW_ANIMATION)),
+      state('visible-top, visible-bottom', style({transform: 'translateY(0%)'})),
+      transition('visible-top => hidden-top, visible-bottom => hidden-bottom',
+        animate(HIDE_ANIMATION)),
+      transition('void => visible-top, void => visible-bottom', animate(SHOW_ANIMATION)),
     ])
   ],
 })

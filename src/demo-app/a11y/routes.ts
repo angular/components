@@ -25,6 +25,10 @@ import {TableAccessibilityDemo} from './table/table-a11y';
 import {TabsAccessibilityDemo} from './tabs/tabs-a11y';
 import {TABS_DEMO_ROUTES} from './tabs/routes';
 import {TooltipAccessibilityDemo} from './tooltip/tooltip-a11y';
+import {SidenavAccessibilityDemo} from './sidenav/sidenav-a11y';
+import {SidenavBasicAccessibilityDemo} from './sidenav/basic-sidenav-a11y';
+import {SidenavDualAccessibilityDemo} from './sidenav/dual-sidenav-a11y';
+import {SidenavMobileAccessibilityDemo} from './sidenav/mobile-sidenav-a11y';
 
 export const ACCESSIBILITY_DEMO_ROUTES: Routes = [
   {path: '', component: AccessibilityHome},
@@ -44,10 +48,14 @@ export const ACCESSIBILITY_DEMO_ROUTES: Routes = [
   {path: 'progress-bar', component: ProgressBarAccessibilityDemo},
   {path: 'progress-spinner', component: ProgressSpinnerAccessibilityDemo},
   {path: 'radio', component: RadioAccessibilityDemo},
-  {path: 'slider', component: SliderAccessibilityDemo},
-  {path: 'slide-toggle', component: SlideToggleAccessibilityDemo},
-  {path: 'snack-bar', component: SnackBarAccessibilityDemo},
   {path: 'select', component: SelectAccessibilityDemo},
+  {path: 'sidenav', component: SidenavAccessibilityDemo},
+  {path: 'sidenav/basic', component: SidenavBasicAccessibilityDemo, data: {fullscreen: true}},
+  {path: 'sidenav/dual', component: SidenavDualAccessibilityDemo, data: {fullscreen: true}},
+  {path: 'sidenav/mobile', component: SidenavMobileAccessibilityDemo, data: {fullscreen: true}},
+  {path: 'slide-toggle', component: SlideToggleAccessibilityDemo},
+  {path: 'slider', component: SliderAccessibilityDemo},
+  {path: 'snack-bar', component: SnackBarAccessibilityDemo},
   {path: 'tabs', component: TabsAccessibilityDemo, children: TABS_DEMO_ROUTES},
   {path: 'toolbar', component: ToolbarAccessibilityDemo},
   {path: 'table', component: TableAccessibilityDemo},

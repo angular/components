@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -18,6 +18,7 @@ import {Component, ChangeDetectionStrategy, Input, ViewEncapsulation} from '@ang
 @Component({
   moduleId: module.id,
   selector: 'mat-progress-bar',
+  exportAs: 'matProgressBar',
   host: {
     'role': 'progressbar',
     'aria-valuemin': '0',
