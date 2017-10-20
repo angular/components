@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -145,6 +145,10 @@ export class FocusTrap {
    * @returns The boundary element.
    */
   private _getRegionBoundary(bound: 'start' | 'end'): HTMLElement | null {
+    if (!this._platform.isBrowser) {
+      return null;
+    }
+
     // Contains the deprecated version of selector, for temporary backwards comparability.
     let markers = this._element.querySelectorAll(`[cdk-focus-region-${bound}], ` +
                                                  `[cdk-focus-${bound}]`) as NodeListOf<HTMLElement>;
@@ -168,6 +172,10 @@ export class FocusTrap {
    * @returns Returns whether focus was moved successfuly.
    */
   focusInitialElement(): boolean {
+    if (!this._platform.isBrowser) {
+      return false;
+    }
+
     const redirectToElement = this._element.querySelector('[cdk-focus-initial]') as HTMLElement;
 
     if (redirectToElement) {
@@ -279,7 +287,7 @@ export class FocusTrapFactory {
       private _platform: Platform,
       private _ngZone: NgZone) { }
 
-  create(element: HTMLElement, deferAnchors = false): FocusTrap {
+  create(element: HTMLElement, deferAnchors: boolean = false): FocusTrap {
     return new FocusTrap(element, this._platform, this._checker, this._ngZone, deferAnchors);
   }
 }

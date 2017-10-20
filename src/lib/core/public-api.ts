@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -9,7 +9,6 @@
 export * from './animation/animation';
 export * from './common-behaviors/index';
 export * from './compatibility/compatibility';
-export * from './coordination/unique-selection-dispatcher';
 export * from './datetime/index';
 export * from './error/error-options';
 export * from './gestures/gesture-annotations';

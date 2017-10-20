@@ -17,7 +17,7 @@ import {AnimationEvent} from '@angular/animations';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {OverlayContainer, OverlayModule, Scrollable} from '@angular/cdk/overlay';
+import {OverlayContainer, OverlayModule, CdkScrollable} from '@angular/cdk/overlay';
 import {Platform} from '@angular/cdk/platform';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {ESCAPE} from '@angular/cdk/keycodes';
@@ -485,7 +485,21 @@ describe('MatTooltip', () => {
         dispatchKeyboardEvent(buttonElement, 'keydown', ESCAPE);
         fixture.detectChanges();
       }).not.toThrow();
+
+      tick(0);
     }));
+
+    it('should not show the tooltip on progammatic focus', fakeAsync(() => {
+      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+
+      buttonElement.focus();
+      tick(0);
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlayContainerElement.querySelector('.mat-tooltip')).toBeNull();
+    }));
+
 
   });
 
@@ -672,7 +686,7 @@ class ScrollableTooltipDemo {
  message: string = initialTooltipMessage;
  showButton: boolean = true;
 
- @ViewChild(Scrollable) scrollingContainer: Scrollable;
+ @ViewChild(CdkScrollable) scrollingContainer: CdkScrollable;
 
  scrollDown() {
      const scrollingContainerEl = this.scrollingContainer.getElementRef().nativeElement;
