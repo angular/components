@@ -7,8 +7,10 @@ Orginal Style from https://github.com/Kelbster/highlightjs-material-dark-theme  
   padding: 1em;
   background: #2B2B2D;
   color: #CDD3D8;
-  font-family: "Roboto Mono", monospace;
-  font-size: 1em;
+  -webkit-font-smoothing: antialiased;
+  text-size-adjust: 100%;
+  font: 300 100%/1 Roboto Mono,monospace;
+  font-size: 14px;
 }
 
 .hljs > *::selection {
@@ -26,7 +28,7 @@ Orginal Style from https://github.com/Kelbster/highlightjs-material-dark-theme  
 
 .hljs-string,
 .hljs-subst {
-  color: #C3E88D;
+  color: #9ccc65;
 }
 
 .hljs-number,
@@ -43,10 +45,10 @@ Orginal Style from https://github.com/Kelbster/highlightjs-material-dark-theme  
   color: #75A5FF;
 }
 .hljs-tag {
-  color: #abb2bf;
+  color: #ce93d8;
 }
 .hljs-name {
-  color: #e06c75;
+  color: #4dd0e1;
 }
 .hljs-type {
   color: #da4939;
