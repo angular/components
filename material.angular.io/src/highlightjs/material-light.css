@@ -4,9 +4,11 @@
   overflow-x: auto;
   padding: 1em;
   background: #FAFAFA;
-  color: #607D8B;
-  font-family: "Roboto Mono", monospace;
-  font-size: 1em;
+  color: #37474f;
+  -webkit-font-smoothing: antialiased;
+  text-size-adjust: 100%;
+  font: 300 100%/1 Roboto Mono,monospace;
+  font-size: 14px;
 }
 
 .hljs > *::selection,
@@ -23,12 +25,12 @@
 .hljs-selector-tag,
 .hljs-regexp,
 .hljs-meta {
-  color: #39ADB5;
+  color: #9c27b0;
 }
 
 .hljs-string,
 .hljs-subst {
-  color: #91B859;
+  color: #0d904f;
 }
 
 .hljs-number,
@@ -41,7 +43,7 @@
 .hljs-keyword,
 .hljs-type,
 .hljs-attribute {
-  color: #7C4DFF;
+  color: #3b78e7;
 }
 
 .hljs-title,
@@ -55,11 +57,11 @@
 }
 
 .hljs-params {
-  color: #F76D47;
+  color: #d81b60;
 }
 
 .hljs-addition {
-  color: #7C4DFF;
+  color: #3b78e7;
   display: inline-block;
   width: 100%;
 }
