@@ -1,0 +1,102 @@
+# matRipple
+
+Connect user input to screen reactions by using ripples to both indicate the point of touch, and to
+confirm that touch input was received. For touch or mouse, this occurs at the point of contact.
+
+The `matRipple` attribute directive defines an area in which a ripple animates on user interaction.
+
+```html
+<div matRipple [matRippleColor]="myColor">
+  <ng-content></ng-content>
+</div>
+```
+
+By default, a ripple is activated when the host element of the `matRipple` directive receives
+mouse or touch events. Once element is being pressed, a ripple starts fading in from the point
+of contact and expands circularly to cover the full host element.
+
+As long as the user does not release the element, the ripples will not fade out. Releasing the
+element, will make the present ripples fade out.
+
+Ripples can also be triggered programmatically by getting a reference to the MatRipple directive
+and calling its `launch` method.
+
+
+### Ripple trigger
+
+As mentioned previously, by default ripples will fade in on interaction with the directive's
+host element.
+
+In some situations, developers may want to show ripples on interaction with *another* element, 
+but still want to have the ripples placed in another location.
+
+This can be done by specifying the `matRippleTrigger` option that expects a reference to a
+`HTMLElement`.
+
+```html
+<div>
+  <div matRipple [matRippleTrigger]="trigger" class="my-ripple-container">
+    <!-- This is the ripple container, but not the trigger element for ripples. -->
+  </div>
+  
+  <div #trigger></div>
+</div>
+```
+
+### Manual ripples
+
+Ripples can be shown programmatically by getting a reference to the `MatRipple` directive.
+
+```ts
+class MyComponent {
+
+  /** Reference to the directive instance of the ripple. */
+  @ViewChild(MatRipple) ripple: MatRipple;
+  
+  /** Shows a centered and persistent ripple. */
+  launchRipple() {
+    const rippleRef = this.ripple.launch(0, 0, {
+      persistent: true,
+      centered: true
+    });
+    
+    // Fade out the ripple later.
+    rippleRef.fadeOut();
+  }
+}
+```
+
+In the example above, the `x` and `y` parameters will be ignored, because the `centered`
+ripple option has been set to `true`.
+
+Ripples that are being dispatched programmatically can be launched with the `persistent` option.
+This means that the ripples will not fade out automatically, and need to be faded out using
+the `RippleRef` (*useful for focus indicators*).
+
+### Global options
+
+Developers are able to specify options for all ripples inside of their application.
+
+The speed of the ripples can be adjusted and the ripples can be disabled globally as well.
+
+Global ripple options can be specified by setting the `MAT_RIPPLE_GLOBAL_OPTIONS` provider.
+
+```ts
+const globalRippleConfig: RippleGlobalOptions = {
+  disabled: true,
+  baseSpeedFactor: 1.5 // Ripples will animate 50% faster than before.
+}
+
+@NgModule({
+  providers: [
+    {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig} 
+  ]
+})
+```
+
+All currently available global options are shown here:
+
+| Name            | Type    | Description                               |
+| --------------- | ------- | ----------------------------------------- |
+| disabled        | boolean | Whether ripples should show or not.       |
+| baseSpeedFactor | number  | Factor to adjust ripple speed.            |
