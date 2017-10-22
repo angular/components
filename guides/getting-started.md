@@ -134,6 +134,8 @@ For more information on using Material Icons, check out the
 
 Note that `mat-icon` supports any font or svg icons; using Material Icons is one of many options.
 
+For more information on using `mat-icon` component for both font and svg icons, check out the 
+[Material Design components for Angular]("https://material.angular.io/components/icon/overview").
 
 ### Appendix: Configuring SystemJS
 
