@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 
 /**
- * @title Basic icons
+ * @title Font icons
  */
 @Component({
   selector: 'icon-overview-example',
