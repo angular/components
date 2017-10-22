@@ -379,7 +379,7 @@ export const EXAMPLE_COMPONENTS = {
     selectorName: null
   },
   'icon-overview': {
-    title: 'Basic icons',
+    title: 'Font icons',
     component: IconOverviewExample,
     additionalFiles: null,
     selectorName: null
