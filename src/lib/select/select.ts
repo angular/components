@@ -987,7 +987,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    */
   private _calculateOverlayOffsetX(): void {
     const overlayRect = this.overlayDir.overlayRef.overlayElement.getBoundingClientRect();
-    const viewportRect = this._viewportRuler.getViewportRect();
+    const viewportSize = this._viewportRuler.getViewportSize();
     const isRtl = this._isRtl();
     const paddingWidth = this.multiple ? SELECT_MULTIPLE_PANEL_PADDING_X + SELECT_PANEL_PADDING_X :
                                          SELECT_PANEL_PADDING_X * 2;
@@ -1008,7 +1008,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
     // Determine how much the select overflows on each side.
     const leftOverflow = 0 - (overlayRect.left + offsetX - (isRtl ? paddingWidth : 0));
-    const rightOverflow = overlayRect.right + offsetX - viewportRect.width
+    const rightOverflow = overlayRect.right + offsetX - viewportSize.width
                           + (isRtl ? 0 : paddingWidth);
 
     // If the element overflows on either side, reduce the offset to allow it to fit.
@@ -1073,11 +1073,11 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    */
   private _checkOverlayWithinViewport(maxScroll: number): void {
     const itemHeight = this._getItemHeight();
-    const viewportRect = this._viewportRuler.getViewportRect();
+    const viewportSize = this._viewportRuler.getViewportSize();
 
     const topSpaceAvailable = this._triggerRect.top - SELECT_PANEL_VIEWPORT_PADDING;
     const bottomSpaceAvailable =
-        viewportRect.height - this._triggerRect.bottom - SELECT_PANEL_VIEWPORT_PADDING;
+        viewportSize.height - this._triggerRect.bottom - SELECT_PANEL_VIEWPORT_PADDING;
 
     const panelHeightTop = Math.abs(this._offsetY);
     const totalPanelHeight =
