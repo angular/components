@@ -154,6 +154,12 @@ be part of the user-facing API. This typically applies to symbols used in templa
 Additionally, the `@docs-private` JsDoc annotation can be used to hide any symbol from the public
 API docs.
 
+
+#### Getters and Setters
+* Always use a `readonly` property instead of a getter (with no setter) when possible.
+* Avoid long getters and setters. If the logic of an accessor would take more than three lines,
+introduce a new method to contain the logic.
+
 #### JsDoc comments
 
 All public APIs must have user-facing comments. These are extracted and shown in the documentation
