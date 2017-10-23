@@ -37,7 +37,8 @@ import {Subscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
 import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
 import {
-  getTableDuplicateColumnNameError, getTableMissingMatchingRowDefError,
+  getTableDuplicateColumnNameError,
+  getTableMissingMatchingRowDefError,
   getTableMultipleDefaultRowDefsError,
   getTableUnknownColumnError
 } from './table-errors';
