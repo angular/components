@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ElementRef} from '@angular/core';
 import {MatChipInputEvent, MatAutocompleteSelectedEvent} from '@angular/material';
 import {ENTER} from '@angular/cdk/keycodes';
 import {FormControl} from '@angular/forms';
@@ -40,7 +40,7 @@ export class ChipsAutocompleteExample {
     'Apple',
   ];
 
-  @ViewChild('fruitInput') fruitInput;
+  @ViewChild('fruitInput') fruitInput: ElementRef;
 
   constructor() {
     this.filteredFruits = this.fruitCtrl.valueChanges
@@ -52,7 +52,7 @@ export class ChipsAutocompleteExample {
     let input = event.input;
     let value = event.value;
 
-    // Add our person
+    // Add our fruit
     if ((value || '').trim()) {
       this.fruits.push({ name: value.trim() });
     }
