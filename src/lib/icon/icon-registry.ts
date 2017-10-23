@@ -413,6 +413,11 @@ export class MatIconRegistry {
   private _toSvgElement(element: Element): SVGElement {
     let svg = this._svgElementFromString('<svg></svg>');
 
+    let viewBox = element.getAttribute('viewBox');
+    if (viewBox !== null) {
+      svg.setAttribute('viewBox', viewBox);
+    }
+
     for (let i = 0; i < element.childNodes.length; i++) {
       if (element.childNodes[i].nodeType === Node.ELEMENT_NODE) {
         svg.appendChild(element.childNodes[i].cloneNode(true));

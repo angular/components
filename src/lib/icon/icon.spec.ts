@@ -275,6 +275,26 @@ describe('MatIcon', () => {
       expect((firstChild as HTMLElement).getAttribute('id')).toBe('quack');
     });
 
+    it('should keep viewBox value is set<symbol> nodes', () => {
+      mdIconRegistry.addSvgIconSetInNamespace('farm', trust('farm-set-4.svg'));
+
+      const fixture = TestBed.createComponent(IconFromSvgName);
+      const testComponent = fixture.componentInstance;
+      const mdIconElement = fixture.debugElement.nativeElement.querySelector('md-icon');
+
+      testComponent.iconName = 'farm:donkey';
+      fixture.detectChanges();
+
+      const svgElement = verifyAndGetSingleSvgChild(mdIconElement);
+      const firstChild = svgElement.childNodes[0];
+
+      expect(svgElement.querySelector('symbol')).toBeFalsy();
+      expect(svgElement.childNodes.length).toBe(1);
+      expect(firstChild.nodeName.toLowerCase()).toBe('path');
+      expect((firstChild as HTMLElement).getAttribute('id')).toBe('bray');
+      expect(svgElement.getAttribute('viewBox')).toBe('0 0 48 48');
+    });
+
     it('should not wrap <svg> elements in icon sets in another svg tag', () => {
       iconRegistry.addSvgIconSet(trust('arrow-set.svg'));
 
