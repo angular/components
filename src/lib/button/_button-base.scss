@@ -94,7 +94,8 @@ $mat-mini-fab-size: 40px !default;
   border-radius: $mat-fab-border-radius;
   width: $size;
   height: $size;
-
+  padding: 0;
+  
   flex-shrink: 0;
 
   &:not([disabled]):active {
@@ -102,7 +103,6 @@ $mat-mini-fab-size: 40px !default;
   }
 
   .mat-button-wrapper {
-    padding: 0;
     display: inline-block;
     line-height: $size;
   }
