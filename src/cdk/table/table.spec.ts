@@ -109,10 +109,10 @@ describe('CdkTable', () => {
   });
 
   it('should render cells even if row data is falsy', () => {
-    const evenSimplerCdkTableAppFixture = TestBed.createComponent(EvenSimplerCdkTableApp);
+    const booleanRowCdkTableAppFixture = TestBed.createComponent(EvenSimplerCdkTableApp);
     const evenSimplerCdkTableElement =
-        evenSimplerCdkTableAppFixture.nativeElement.querySelector('cdk-table');
-    evenSimplerCdkTableAppFixture.detectChanges();
+        booleanRowCdkTableAppFixture.nativeElement.querySelector('cdk-table');
+    booleanRowCdkTableAppFixture.detectChanges();
 
     expectTableToMatchContent(evenSimplerCdkTableElement, [
       [''], // Header row
