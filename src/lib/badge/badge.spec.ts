@@ -3,18 +3,19 @@ import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatBadge, MatBadgeModule} from './index';
 
-fdescribe('MatBadge', () => {
+describe('MatBadge', () => {
   let fixture: ComponentFixture<any>;
-  let testComponent: TestApp;
+  let testComponent: BadgeWithTextContent;
+  let badgeNativeElement;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatBadgeModule],
-      declarations: [TestApp],
+      declarations: [BadgeWithTextContent],
     });
 
     TestBed.compileComponents();
-    fixture = TestBed.createComponent(TestApp);
+    fixture = TestBed.createComponent(BadgeWithTextContent);
     testComponent = fixture.debugElement.componentInstance;
     fixture.detectChanges();
   });
@@ -24,51 +25,50 @@ fdescribe('MatBadge', () => {
 
     beforeEach(() => {
       badgeDebugElement = fixture.debugElement.query(By.directive(MatBadge));
+      badgeNativeElement = badgeDebugElement.nativeElement;
       fixture.detectChanges();
     });
 
     it('should update the badge based on attribute', () => {
-      let badgeContentDebugElement =
-          badgeDebugElement.nativeElement.querySelector('.mat-badge-content');
+      let badgeContentDebugElement = badgeNativeElement.querySelector('.mat-badge-content');
 
-      expect(badgeContentDebugElement.innerHTML).toContain('1');
+      expect(badgeContentDebugElement.textContent).toContain('1');
 
       testComponent.badgeContent = '22';
       fixture.detectChanges();
 
-      badgeContentDebugElement =
-          badgeDebugElement.nativeElement.querySelector('.mat-badge-content');
-      expect(badgeContentDebugElement.innerHTML).toContain('22');
+      badgeContentDebugElement = badgeNativeElement.querySelector('.mat-badge-content');
+      expect(badgeContentDebugElement.textContent).toContain('22');
     });
 
     it('should apply class based on color attribute', () => {
       testComponent.badgeColor = 'primary';
       fixture.detectChanges();
-      expect(badgeDebugElement.nativeElement.classList.contains('mat-badge-primary')).toBe(true);
+      expect(badgeNativeElement.classList.contains('mat-badge-primary')).toBe(true);
 
       testComponent.badgeColor = 'accent';
       fixture.detectChanges();
-      expect(badgeDebugElement.nativeElement.classList.contains('mat-badge-accent')).toBe(true);
+      expect(badgeNativeElement.classList.contains('mat-badge-accent')).toBe(true);
 
       testComponent.badgeColor = 'warn';
       fixture.detectChanges();
-      expect(badgeDebugElement.nativeElement.classList.contains('mat-badge-warn')).toBe(true);
+      expect(badgeNativeElement.classList.contains('mat-badge-warn')).toBe(true);
 
       testComponent.badgeColor = null;
       fixture.detectChanges();
 
-      expect(badgeDebugElement.nativeElement.classList).not.toContain('mat-badge-accent');
+      expect(badgeNativeElement.classList).not.toContain('mat-badge-accent');
     });
 
     it('should update the badget position on direction change', () => {
-      expect(badgeDebugElement.nativeElement.classList.contains('mat-badge-above')).toBe(true);
-      expect(badgeDebugElement.nativeElement.classList.contains('mat-badge-after')).toBe(true);
+      expect(badgeNativeElement.classList.contains('mat-badge-above')).toBe(true);
+      expect(badgeNativeElement.classList.contains('mat-badge-after')).toBe(true);
 
       testComponent.badgeDirection = 'below before';
       fixture.detectChanges();
 
-      expect(badgeDebugElement.nativeElement.classList.contains('mat-badge-below')).toBe(true);
-      expect(badgeDebugElement.nativeElement.classList.contains('mat-badge-before')).toBe(true);
+      expect(badgeNativeElement.classList.contains('mat-badge-below')).toBe(true);
+      expect(badgeNativeElement.classList.contains('mat-badge-before')).toBe(true);
     });
   });
 
@@ -85,7 +85,7 @@ fdescribe('MatBadge', () => {
     </span>
   `
 })
-class TestApp {
+class BadgeWithTextContent {
   badgeColor;
   badgeContent = '1';
   badgeDirection = 'above after';

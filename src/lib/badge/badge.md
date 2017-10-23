@@ -1,27 +1,6 @@
 Badges are small status descriptors for UI elements. A badge consists of a small circle, 
 typically containing a number or other short set of characters, that appears in proximity to another object.
 
-### Icons
-Badges can contain text or font icons and SVGs registered with the `MdIconRegistry`.
-
-#### Font Icons
-Badges using font icons are declared with the `matIconBadge` tag and its content being
-the name of the icon you wish to use.
-
-```html
-<span matIconBadge="home">Home</span> is where I live.
-```
-
-You can also pass a custom font set using the `matBadgeFontSet` tag.
-
-#### SVG Icons
-Badges using SVG icons are declared with the `matSvgIconBadge` and its content being
-the name of the icon you wish to use.
-
-```html
-<span matSvgIconBadge="home">Home</span> is where I live.
-```
-
 ### Badge position
 By default, the badge will be placed `above after`. The direction can be changed by defining
 the attribute `matBadgePosition` follow by `above|below` and `before|after`.

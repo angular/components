@@ -4,11 +4,12 @@
 
 $mat-badge-font-size: 12px;
 $mat-badge-font-weight: 600;
-$mat-badge-size: 22px !default;
-$mat-badge-small-size: $mat-badge-size - 6;
-$mat-badge-large-size: $mat-badge-size + 6;
+$mat-badge-default-size: 22px !default;
+$mat-badge-small-size: $mat-badge-default-size - 6;
+$mat-badge-large-size: $mat-badge-default-size + 6;
 
-@mixin mat-badge-size($size) {
+// Mixin for building offset given different sizes
+@mixin _mat-badge-size($size) {
   .mat-badge-content {
     width: $size;
     height: $size;
@@ -30,6 +31,11 @@ $mat-badge-large-size: $mat-badge-size + 6;
   &.mat-badge-before {
     margin-left: $size;
 
+    &[dir='rtl'] {
+      margin-left: 0;
+      margin-right: $size;
+    }
+
     .mat-badge-content {
       left: -$size;
     }
@@ -37,6 +43,11 @@ $mat-badge-large-size: $mat-badge-size + 6;
 
   &.mat-badge-after {
     margin-right: $size;
+
+    &[dir='rtl'] {
+      margin-right: 0;
+      margin-left: $size;
+    }
 
     .mat-badge-content {
       right: -$size;
@@ -47,6 +58,11 @@ $mat-badge-large-size: $mat-badge-size + 6;
     &.mat-badge-before {
       margin-left: $size / 2;
 
+      &[dir='rtl'] {
+        margin-left: 0;
+        margin-right: $size / 2;
+      }
+
       .mat-badge-content {
         left: -$size / 2;
       }
@@ -54,6 +70,11 @@ $mat-badge-large-size: $mat-badge-size + 6;
 
     &.mat-badge-after {
       margin-right: $size / 2;
+      
+      &[dir='rtl'] {
+        margin-right: 0;
+        margin-left: $size;
+      }
 
       .mat-badge-content {
         right: -$size / 2;
@@ -67,13 +88,13 @@ $mat-badge-large-size: $mat-badge-size + 6;
   $warn: map-get($theme, warn);
   $primary: map-get($theme, primary);
   
-  .mat-badge {
     .mat-badge-content {
       color: mat-color($primary, default-contrast);
       background: mat-color($primary);
     }
 
-    &.mat-badge-accent {
+    .mat-badge {
+      &.mat-badge-accent {
       .mat-badge-content {
         background: mat-color($accent);
         color: mat-color($accent, default-contrast);
@@ -107,11 +128,11 @@ $mat-badge-large-size: $mat-badge-size + 6;
 
 .mat-badge {
   position: relative;
+}
 
-  &.mat-badge-hidden {
-    .mat-badge-content {
-      visibility: hidden;
-    }
+.mat-badge-hidden {
+  .mat-badge-content {
+    display: none;
   }
 }
 
@@ -128,16 +149,18 @@ $mat-badge-large-size: $mat-badge-size + 6;
   pointer-events: none;
 }
 
-.mat-badge-active.mat-badge-content {
+// The active class is added after the element is added
+// so it can animate scale to default
+.mat-badge-content.mat-badge-active {
   transform: scale(1);
 }
 
 .mat-badge-small {
-  @include mat-badge-size($mat-badge-small-size);
+  @include _mat-badge-size($mat-badge-small-size);
 }
 .mat-badge-medium {
-  @include mat-badge-size($mat-badge-size);
+  @include _mat-badge-size($mat-badge-default-size);
 }
 .mat-badge-large {
-  @include mat-badge-size($mat-badge-large-size);
+  @include _mat-badge-size($mat-badge-large-size);
 }
