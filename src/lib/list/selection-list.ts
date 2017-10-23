@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -12,6 +12,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {SPACE} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
+  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -32,34 +33,41 @@ import {
 import {
   CanDisable,
   CanDisableRipple,
+  HasTabIndex,
   MatLine,
   MatLineSetter,
   mixinDisabled,
   mixinDisableRipple,
+  mixinTabIndex,
 } from '@angular/material/core';
 
 
 /** @docs-private */
 export class MatSelectionListBase {}
-export const _MatSelectionListMixinBase = mixinDisableRipple(mixinDisabled(MatSelectionListBase));
+export const _MatSelectionListMixinBase =
+  mixinTabIndex(mixinDisableRipple(mixinDisabled(MatSelectionListBase)));
 
 /** @docs-private */
 export class MatListOptionBase {}
 export const _MatListOptionMixinBase = mixinDisableRipple(MatListOptionBase);
 
-/** Event emitted by a selection-list whenever the state of an option is changed. */
-export interface MatSelectionListOptionEvent {
-  option: MatListOption;
+/** Change event object emitted by MatListOption */
+export class MatListOptionChange {
+  /** The source MatListOption of the event. */
+  source: MatListOption;
+  /** The new `selected` value of the option. */
+  selected: boolean;
 }
 
 /**
  * Component for list-options of selection-list. Each list-option can automatically
  * generate a checkbox and can put current item into the selectionModel of selection-list
- * if the current item is checked.
+ * if the current item is selected.
  */
 @Component({
   moduleId: module.id,
   selector: 'mat-list-option',
+  exportAs: 'matListOption',
   inputs: ['disableRipple'],
   host: {
     'role': 'option',
@@ -81,7 +89,6 @@ export interface MatSelectionListOptionEvent {
 export class MatListOption extends _MatListOptionMixinBase
     implements AfterContentInit, OnInit, OnDestroy, FocusableOption, CanDisableRipple {
   private _lineSetter: MatLineSetter;
-  private _selected: boolean = false;
   private _disabled: boolean = false;
 
   /** Whether the option has focus. */
@@ -92,34 +99,31 @@ export class MatListOption extends _MatListOptionMixinBase
   /** Whether the label should appear before or after the checkbox. Defaults to 'after' */
   @Input() checkboxPosition: 'before' | 'after' = 'after';
 
+  /** Whether the option is disabled. */
+  @Input()
+  get disabled(): boolean {
+    return (this.selectionList && this.selectionList.disabled) || this._disabled;
+  }
+  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+
   /** Value of the option */
   @Input() value: any;
 
-  /** Whether the option is disabled. */
-  @Input()
-  get disabled() { return (this.selectionList && this.selectionList.disabled) || this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
-
   /** Whether the option is selected. */
   @Input()
-  get selected() { return this._selected; }
+  get selected(): boolean { return this.selectionList.selectedOptions.isSelected(this); }
   set selected(value: boolean) {
     const isSelected = coerceBooleanProperty(value);
 
-    if (isSelected !== this._selected) {
-      const selectionModel = this.selectionList.selectedOptions;
-
-      this._selected = isSelected;
-      isSelected ? selectionModel.select(this) : selectionModel.deselect(this);
+    if (isSelected !== this.selected) {
+      this.selectionList.selectedOptions.toggle(this);
       this._changeDetector.markForCheck();
+      this.selectionChange.emit(this._createChangeEvent());
     }
   }
 
-  /** Emitted when the option is selected. */
-  @Output() selectChange = new EventEmitter<MatSelectionListOptionEvent>();
-
-  /** Emitted when the option is deselected. */
-  @Output() deselected = new EventEmitter<MatSelectionListOptionEvent>();
+  /** Emitted when the option is selected or deselected. */
+  @Output() selectionChange = new EventEmitter<MatListOptionChange>();
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
@@ -137,10 +141,6 @@ export class MatListOption extends _MatListOptionMixinBase
 
   ngAfterContentInit() {
     this._lineSetter = new MatLineSetter(this._lines, this._renderer, this._element);
-
-    if (this.selectionList.disabled) {
-      this.disabled = true;
-    }
   }
 
   ngOnDestroy(): void {
@@ -173,6 +173,16 @@ export class MatListOption extends _MatListOptionMixinBase
     this.selectionList._setFocusedOption(this);
   }
 
+  /** Creates a selection event object from the specified option. */
+  private _createChangeEvent(option: MatListOption = this): MatListOptionChange {
+    const event = new MatListOptionChange();
+
+    event.source = option;
+    event.selected = option.selected;
+
+    return event;
+  }
+
   /** Retrieves the DOM element of the component host. */
   _getHostElement(): HTMLElement {
     return this._element.nativeElement;
@@ -186,10 +196,11 @@ export class MatListOption extends _MatListOptionMixinBase
 @Component({
   moduleId: module.id,
   selector: 'mat-selection-list',
-  inputs: ['disabled', 'disableRipple'],
+  exportAs: 'matSelectionList',
+  inputs: ['disabled', 'disableRipple', 'tabIndex'],
   host: {
     'role': 'listbox',
-    '[attr.tabindex]': '_tabIndex',
+    '[tabIndex]': 'tabIndex',
     'class': 'mat-selection-list',
     '(focus)': 'focus()',
     '(keydown)': '_keydown($event)',
@@ -200,11 +211,8 @@ export class MatListOption extends _MatListOptionMixinBase
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MatSelectionList extends _MatSelectionListMixinBase
-    implements FocusableOption, CanDisable, CanDisableRipple, AfterContentInit {
-
-  /** Tab index for the selection-list. */
-  _tabIndex = 0;
+export class MatSelectionList extends _MatSelectionListMixinBase implements FocusableOption,
+    CanDisable, CanDisableRipple, HasTabIndex, AfterContentInit {
 
   /** The FocusKeyManager which handles focus. */
   _keyManager: FocusKeyManager<MatListOption>;
@@ -215,16 +223,14 @@ export class MatSelectionList extends _MatSelectionListMixinBase
   /** The currently selected options. */
   selectedOptions: SelectionModel<MatListOption> = new SelectionModel<MatListOption>(true);
 
-  constructor(private _element: ElementRef) {
+  constructor(private _element: ElementRef, @Attribute('tabindex') tabIndex: string) {
     super();
+
+    this.tabIndex = parseInt(tabIndex) || 0;
   }
 
   ngAfterContentInit(): void {
     this._keyManager = new FocusKeyManager<MatListOption>(this.options).withWrap();
-
-    if (this.disabled) {
-      this._tabIndex = -1;
-    }
   }
 
   /** Focus the selection-list. */

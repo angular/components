@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -56,6 +56,7 @@ export class MatRowDef<T> extends _MatCdkRowDef<T> {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  exportAs: 'matHeaderRow',
   preserveWhitespaces: false,
 })
 export class MatHeaderRow extends _MatHeaderRow { }
@@ -71,6 +72,7 @@ export class MatHeaderRow extends _MatHeaderRow { }
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  exportAs: 'matRow',
   preserveWhitespaces: false,
 })
 export class MatRow extends _MatRow { }

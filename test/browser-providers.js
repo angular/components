@@ -6,7 +6,7 @@
  */
 const browserConfig = {
   'ChromeHeadless_CI': { unitTest: {target: 'TC', required: true  }},
-  'Firefox':           { unitTest: {target: 'BS', required: true  }},
+  'FirefoxHeadless':   { unitTest: {target: 'TC', required: true  }},
   'ChromeBeta':        { unitTest: {target: null, required: false }},
   'FirefoxBeta':       { unitTest: {target: null, required: false }},
   'ChromeDev':         { unitTest: {target: null, required: true  }},
@@ -26,7 +26,8 @@ const browserConfig = {
   'Safari10':          { unitTest: {target: 'BS', required: true  }},
   'iOS7':              { unitTest: {target: null, required: false }},
   'iOS8':              { unitTest: {target: null, required: false }},
-  'iOS9':              { unitTest: {target: 'BS', required: true  }},
+  'iOS9':              { unitTest: {target: null, required: false }},
+  'iOS10':             { unitTest: {target: 'BS', required: true  }},
   'WindowsPhone':      { unitTest: {target: null, required: false }}
 };
 

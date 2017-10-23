@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -9,7 +9,6 @@
 import {
   AfterContentChecked,
   AfterContentInit,
-  AfterViewChecked,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -27,6 +26,7 @@ import {
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Subscription} from 'rxjs/Subscription';
 import {MatTab} from './tab';
+import {MatTabHeader} from './tab-header';
 import {merge} from 'rxjs/observable/merge';
 import {
   CanColor,
@@ -64,6 +64,7 @@ export const _MatTabGroupMixinBase = mixinColor(mixinDisableRipple(MatTabGroupBa
 @Component({
   moduleId: module.id,
   selector: 'mat-tab-group',
+  exportAs: 'matTabGroup',
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
   encapsulation: ViewEncapsulation.None,
@@ -77,14 +78,11 @@ export const _MatTabGroupMixinBase = mixinColor(mixinDisableRipple(MatTabGroupBa
   },
 })
 export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentInit,
-    AfterContentChecked, AfterViewChecked, OnDestroy, CanColor, CanDisableRipple {
+    AfterContentChecked, OnDestroy, CanColor, CanDisableRipple {
 
   @ContentChildren(MatTab) _tabs: QueryList<MatTab>;
 
   @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
-
-  /** Whether this component has been initialized. */
-  private _isInitialized: boolean = false;
 
   /** The tab index that should be selected after the content has been checked. */
   private _indexToSelect: number | null = 0;
@@ -217,14 +215,6 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
     this._tabLabelSubscription.unsubscribe();
   }
 
-  /**
-   * Waits one frame for the view to update, then updates the ink bar
-   * Note: This must be run outside of the zone or it will create an infinite change detection loop.
-   */
-  ngAfterViewChecked(): void {
-    this._isInitialized = true;
-  }
-
   _focusChanged(index: number) {
     this.focusChange.emit(this._createChangeEvent(index));
   }
@@ -288,5 +278,20 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   _removeTabBodyWrapperHeight(): void {
     this._tabBodyWrapperHeight = this._tabBodyWrapper.nativeElement.clientHeight;
     this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height', '');
+  }
+
+  /** Handle click events, setting new selected index if appropriate. */
+  _handleClick(tab: MatTab, tabHeader: MatTabHeader, idx: number) {
+    if (!tab.disabled) {
+      this.selectedIndex = tabHeader.focusIndex = idx;
+    }
+  }
+
+  /** Retrieves the tabindex for the tab. */
+  _getTabIndex(tab: MatTab, idx: number): number | null {
+    if (tab.disabled) {
+      return null;
+    }
+    return this.selectedIndex === idx ? 0 : -1;
   }
 }

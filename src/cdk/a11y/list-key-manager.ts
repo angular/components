@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -42,6 +42,9 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    */
   tabOut: Subject<void> = new Subject<void>();
 
+  /** Stream that emits whenever the active item of the list manager changes. */
+  change = new Subject<number>();
+
   /**
    * Turns on wrapping mode, which ensures that the active item will wrap to
    * the other end of list when there are no more items in the given direction.
@@ -55,7 +58,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * Turns on typeahead mode which allows users to set the active item by typing.
    * @param debounceInterval Time to wait after the last keystroke before setting the active item.
    */
-  withTypeAhead(debounceInterval = 200): this {
+  withTypeAhead(debounceInterval: number = 200): this {
     if (this._items.length && this._items.some(item => typeof item.getLabel !== 'function')) {
       throw Error('ListKeyManager items in typeahead mode must implement the `getLabel` method.');
     }
@@ -98,6 +101,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   setActiveItem(index: number): void {
     this._activeItemIndex = index;
     this._activeItem = this._items.toArray()[index];
+    this.change.next(index);
   }
 
   /**

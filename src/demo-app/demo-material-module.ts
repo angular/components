@@ -34,6 +34,7 @@ import {
 } from '@angular/material';
 import {MatNativeDateModule, MatRippleModule} from '@angular/material';
 import {CdkTableModule} from '@angular/cdk/table';
+import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {A11yModule} from '@angular/cdk/a11y';
 import {BidiModule} from '@angular/cdk/bidi';
 import {OverlayModule} from '@angular/cdk/overlay';
@@ -82,6 +83,7 @@ import {PortalModule} from '@angular/cdk/portal';
     CdkTableModule,
     A11yModule,
     BidiModule,
+    CdkAccordionModule,
     ObserversModule,
     OverlayModule,
     PlatformModule,

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -12,7 +12,7 @@ import {CdkStepperModule} from '@angular/cdk/stepper';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import {MatCommonModule, MatRippleModule} from '@angular/material/core';
+import {MatCommonModule, MatRippleModule, ErrorStateMatcher} from '@angular/material/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
@@ -45,6 +45,6 @@ import {MatStepperIntl} from './stepper-intl';
   ],
   declarations: [MatHorizontalStepper, MatVerticalStepper, MatStep, MatStepLabel, MatStepper,
     MatStepperNext, MatStepperPrevious, MatStepHeader],
-  providers: [MatStepperIntl],
+  providers: [MatStepperIntl, ErrorStateMatcher],
 })
 export class MatStepperModule {}

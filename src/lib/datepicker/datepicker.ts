@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -120,6 +120,7 @@ export class MatDatepickerContent<D> implements AfterContentInit {
   moduleId: module.id,
   selector: 'mat-datepicker',
   template: '',
+  exportAs: 'matDatepicker',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
@@ -148,7 +149,7 @@ export class MatDatepicker<D> implements OnDestroy {
   @Input()
   get disabled() {
     return this._disabled === undefined && this._datepickerInput ?
-        this._datepickerInput.disabled : this._disabled;
+        this._datepickerInput.disabled : !!this._disabled;
   }
   set disabled(value: any) {
     const newValue = coerceBooleanProperty(value);
@@ -249,7 +250,7 @@ export class MatDatepicker<D> implements OnDestroy {
    */
   _registerInput(input: MatDatepickerInput<D>): void {
     if (this._datepickerInput) {
-      throw Error('An MatDatepicker can only be associated with a single input.');
+      throw Error('A MatDatepicker can only be associated with a single input.');
     }
     this._datepickerInput = input;
     this._inputSubscription =

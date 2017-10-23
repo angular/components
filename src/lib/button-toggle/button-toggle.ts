@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -94,7 +94,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
   _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
   /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
-  onTouched: () => any = () => {};
+  _onTouched: () => any = () => {};
 
   /** Child button toggle buttons. */
   @ContentChildren(forwardRef(() => MatButtonToggle)) _buttonToggles: QueryList<MatButtonToggle>;
@@ -215,7 +215,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
    * @param fn On touch callback function.
    */
   registerOnTouched(fn: any) {
-    this.onTouched = fn;
+    this._onTouched = fn;
   }
 
   /**
@@ -270,6 +270,7 @@ export class MatButtonToggleGroupMultiple extends _MatButtonToggleGroupMixinBase
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
+  exportAs: 'matButtonToggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.mat-button-toggle-standalone]': '!buttonToggleGroup && !buttonToggleGroupMultiple',
@@ -436,7 +437,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
       let groupValueChanged = this.buttonToggleGroup.selected != this;
       this.checked = true;
       this.buttonToggleGroup.selected = this;
-      this.buttonToggleGroup.onTouched();
+      this.buttonToggleGroup._onTouched();
       if (groupValueChanged) {
         this.buttonToggleGroup._emitChangeEvent();
       }

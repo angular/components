@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -63,10 +63,10 @@ export class MatChipListChange {
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': 'errorState',
     '[attr.aria-multiselectable]': 'multiple',
+    '[attr.role]': 'role',
     '[class.mat-chip-list-disabled]': 'disabled',
     '[class.mat-chip-list-invalid]': 'errorState',
     '[class.mat-chip-list-required]': 'required',
-    'role': 'listbox',
     '[attr.aria-orientation]': 'ariaOrientation',
     'class': 'mat-chip-list',
     '(focus)': 'focus()',
@@ -170,6 +170,10 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
     return this.multiple ? this._selectionModel.selected : this._selectionModel.selected[0];
   }
 
+  get role(): string|null {
+    return this.empty ? null : 'listbox';
+  }
+
   /** Whether the user should be allowed to select multiple chips. */
   @Input()
   get multiple(): boolean { return this._multiple; }
@@ -229,7 +233,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
   }
 
   /** Whether any chips or the matChipInput inside of this chip-list has focus. */
-  get focused() {
+  get focused(): boolean {
     return this.chips.some(chip => chip._hasFocus) ||
       (this._chipInput && this._chipInput.focused);
   }
@@ -240,7 +244,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
   }
 
   get shouldPlaceholderFloat(): boolean {
-    return this.empty;
+    return !this.empty || this.focused;
   }
 
   /** Whether this chip-list is disabled. */

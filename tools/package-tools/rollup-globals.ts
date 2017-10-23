@@ -45,6 +45,7 @@ export const rollupGlobals = {
   // Some packages are not really needed for the UMD bundles, but for the missingRollupGlobals rule.
   '@angular/material-examples': 'ng.materialExamples',
   '@angular/material': 'ng.material',
+  '@angular/material-moment-adapter': 'ng.materialMomentAdapter',
   '@angular/cdk': 'ng.cdk',
 
   // Include secondary entry-points of the cdk and material packages
@@ -64,10 +65,12 @@ export const rollupGlobals = {
   'rxjs/observable/fromEventPattern': 'Rx.Observable',
   'rxjs/observable/merge': 'Rx.Observable',
   'rxjs/observable/of': 'Rx.Observable',
+  'rxjs/observable/empty': 'Rx.Observable',
   'rxjs/observable/throw': 'Rx.Observable',
   'rxjs/observable/defer': 'Rx.Observable',
   'rxjs/operator/auditTime': 'Rx.Observable.prototype',
   'rxjs/operator/catch': 'Rx.Observable.prototype',
+  'rxjs/operator/combineLatest': 'Rx.Observable.prototype',
   'rxjs/operator/debounceTime': 'Rx.Observable.prototype',
   'rxjs/operator/do': 'Rx.Observable.prototype',
   'rxjs/operator/filter': 'Rx.Observable.prototype',
