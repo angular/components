@@ -103,6 +103,7 @@ describe('MatTable', () => {
       dataSource.filter = 'a_1';
       fixture.detectChanges();
       expect(dataSource.filteredData.length).toBe(1);
+      expect(dataSource.filteredData[0]).toBe(dataSource.data[0]);
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['a_1', 'b_1', 'c_1'],
@@ -115,6 +116,7 @@ describe('MatTable', () => {
       dataSource.filter = '  A_2  ';
       fixture.detectChanges();
       expect(dataSource.filteredData.length).toBe(1);
+      expect(dataSource.filteredData[0]).toBe(dataSource.data[1]);
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['a_2', 'b_2', 'c_2'],
@@ -124,6 +126,9 @@ describe('MatTable', () => {
       dataSource.filter = '';
       fixture.detectChanges();
       expect(dataSource.filteredData.length).toBe(3);
+      expect(dataSource.filteredData[0]).toBe(dataSource.data[0]);
+      expect(dataSource.filteredData[1]).toBe(dataSource.data[1]);
+      expect(dataSource.filteredData[2]).toBe(dataSource.data[2]);
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['a_1', 'b_1', 'c_1'],
