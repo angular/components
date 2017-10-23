@@ -48,9 +48,8 @@ export class MatPaginatorIntl {
 }
 
 /** @docs-private */
-export function parentIntl(
-    parentMatPaginatorIntl: MatPaginatorIntl) {
-  return parentMatPaginatorIntl || new MatPaginatorIntl();
+export function MAT_PAGINATOR_INTL_PROVIDER_FACTORY(parentIntl: MatPaginatorIntl) {
+  return parentIntl || new MatPaginatorIntl();
 }
 
 /** @docs-private */
@@ -58,5 +57,5 @@ export const MAT_PAGINATOR_INTL_PROVIDER = {
   // If there is already an MatPaginatorIntl available, use that. Otherwise, provide a new one.
   provide: MatPaginatorIntl,
   deps: [[new Optional(), new SkipSelf(), MatPaginatorIntl]],
-  useFactory: parentIntl
+  useFactory: MAT_PAGINATOR_INTL_PROVIDER_FACTORY
 };
