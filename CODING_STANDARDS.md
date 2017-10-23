@@ -156,9 +156,21 @@ API docs.
 
 
 #### Getters and Setters
+* Avoid long or complex getters and setters. If the logic of an accessor would take more than
+three lines, introduce a new method to contain the logic.
+* A getter should immediately precede its corresponding setter.
+* Decorators such as `@Input` should be applied to the getter and not the setter.
 * Always use a `readonly` property instead of a getter (with no setter) when possible.
-* Avoid long getters and setters. If the logic of an accessor would take more than three lines,
-introduce a new method to contain the logic.
+  ```ts
+  /** YES */
+  readonly active: boolean;
+
+  /** NO */
+  get active(): boolean {
+    // Using a getter solely to make the property read-only.
+    return this._active;
+  }
+  ```
 
 #### JsDoc comments
 
