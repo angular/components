@@ -1,6 +1,7 @@
 import {red} from 'chalk';
 import {readdirSync, readFileSync, statSync} from 'fs';
 import {task} from 'gulp';
+import {colors, log} from 'gulp-util';
 import {buildConfig} from 'material2-build-tools';
 import {IMinimatch, Minimatch} from 'minimatch';
 import {join} from 'path';
@@ -24,8 +25,8 @@ const cdkOutPath = join(buildConfig.outputDir, 'packages', 'cdk');
 /** Path for the Github owners file. */
 const ownersFilePath = '.github/CODEOWNERS';
 
-/** Paths that should be ignored when checking for owners coverage. */
-const ignoreOwners = ['/node_modules/**', '/dist/**', '/.git/**', '/.idea/**'];
+/** Path for the .gitignore file. */
+const gitIgnorePath = '.gitignore';
 
 task('lint', ['tslint', 'stylelint', 'madge', 'ownerslint']);
 
@@ -62,20 +63,31 @@ task('ownerslint', () => {
       .map(line => line.trim())
       // Remove empty lines and comments.
       .filter(line => line && !line.startsWith('#'))
-      // Split off just the path glob and turn it into a regex.
-      .map(line => new Minimatch(line.split(/\s+/)[0], {dot: true, matchBase: true}))
-      // Add in the paths we're ignoring.
-      .concat(ignoreOwners.map(path => new Minimatch(path, {dot: true, matchBase: true})));
+      // Split off just the path glob.
+      .map(line => line.split(/\s+/)[0])
+      // Turn paths into Minimatch objects.
+      .map(path => new Minimatch(path, {dot: true, matchBase: true}));
+
+  let ignoredPaths = readFileSync(gitIgnorePath, 'utf8').split('\n')
+      // Trim lines.
+      .map(line => line.trim())
+      // Remove empty lines and comments.
+      .filter(line => line && !line.startsWith('#'))
+      // Turn paths into Minimatch objects.
+      .map(path => new Minimatch(path, {dot: true, matchBase: true}));
 
   for (let paths = getChildPaths('.'); paths.length;) {
     paths = Array.prototype.concat(...paths
+        // Remove ignored paths
+        .filter(path => !ignoredPaths.reduce(
+            (isIgnored, ignoredPath) => isIgnored || ignoredPath.match('/' + path), false))
         // Remove paths that match an owned path.
         .filter(path => !ownedPaths.reduce(
             (isOwned, ownedPath) => isOwned || isOwnedBy(path, ownedPath), false))
         // Report an error for any files that didn't match any owned paths.
         .filter(path => {
           if (statSync(path).isFile()) {
-            console.error(red(`No code owner found for "${path}".`));
+            log(colors.red(`No code owner found for "${path}".`));
             errors++;
             return false;
           }
@@ -93,7 +105,7 @@ task('ownerslint', () => {
 /** Check if the given path is owned by the given owned path matcher. */
 function isOwnedBy(path: string, ownedPath: IMinimatch) {
   // If the owned path ends with `**` its safe to eliminate whole directories.
-  if (statSync(path).isFile() || ownedPath.pattern.endsWith('**')) {
+  if (ownedPath.pattern.endsWith('**') || statSync(path).isFile()) {
     return ownedPath.match('/' + path);
   }
   return false;
