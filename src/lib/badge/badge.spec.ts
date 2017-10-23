@@ -1,69 +1,35 @@
-import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
-import {HttpModule, XHRBackend} from '@angular/http';
-import {MockBackend} from '@angular/http/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MatBadge, MatIconBadge, MatSvgIconBadge, MatBadgeModule} from './index';
-import {MatIconRegistry} from '../icon/icon-registry';
-import {SafeResourceUrl, DomSanitizer} from '@angular/platform-browser';
-import {getFakeSvgHttpResponse} from '../icon/fake-svgs';
+import {MatBadge, MatBadgeModule} from './index';
 
-describe('MatBadge', () => {
+fdescribe('MatBadge', () => {
   let fixture: ComponentFixture<any>;
   let testComponent: TestApp;
-  let iconRegistry: MatIconRegistry;
-  let sanitizer: DomSanitizer;
-  let httpRequestUrls: string[];
 
-  function trust(iconUrl: string): SafeResourceUrl {
-    return sanitizer.bypassSecurityTrustResourceUrl(iconUrl);
-  }
-
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatBadgeModule, HttpModule],
+      imports: [MatBadgeModule],
       declarations: [TestApp],
-      providers: [
-        MatIconRegistry,
-        MockBackend,
-        {provide: XHRBackend, useExisting: MockBackend},
-      ]
     });
 
     TestBed.compileComponents();
-  }));
-
-  let deps = [MatIconRegistry, MockBackend, DomSanitizer];
-  beforeEach(inject(deps, (mir: MatIconRegistry, mockBackend: MockBackend, ds: DomSanitizer) => {
-    iconRegistry = mir;
-    sanitizer = ds;
-    httpRequestUrls = [];
-
-    mockBackend.connections.subscribe((connection: any) => {
-      const url = connection.request.url;
-      httpRequestUrls.push(url);
-      connection.mockRespond(getFakeSvgHttpResponse(url));
-    });
-
-    iconRegistry.addSvgIcon('fluffy', trust('cat.svg'));
-    iconRegistry.addSvgIcon('fido', trust('dog.svg'));
-
     fixture = TestBed.createComponent(TestApp);
     testComponent = fixture.debugElement.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   describe('MatBadge Text', () => {
     let badgeDebugElement: DebugElement;
 
-    beforeEach(async(() => {
+    beforeEach(() => {
       badgeDebugElement = fixture.debugElement.query(By.directive(MatBadge));
       fixture.detectChanges();
-    }));
+    });
 
     it('should update the badge based on attribute', () => {
       let badgeContentDebugElement =
-          badgeDebugElement.nativeElement.querySelector('.mat-badge-text');
+          badgeDebugElement.nativeElement.querySelector('.mat-badge-content');
 
       expect(badgeContentDebugElement.innerHTML).toContain('1');
 
@@ -71,7 +37,7 @@ describe('MatBadge', () => {
       fixture.detectChanges();
 
       badgeContentDebugElement =
-          badgeDebugElement.nativeElement.querySelector('.mat-badge-text');
+          badgeDebugElement.nativeElement.querySelector('.mat-badge-content');
       expect(badgeContentDebugElement.innerHTML).toContain('22');
     });
 
@@ -106,77 +72,21 @@ describe('MatBadge', () => {
     });
   });
 
-  describe('MatBadge Font Icon', () => {
-    let badgeDebugElement: DebugElement;
-
-    beforeEach(async(() => {
-      badgeDebugElement = fixture.debugElement.query(By.directive(MatIconBadge));
-      fixture.detectChanges();
-    }));
-
-    it('should update the badge icon based on attribute', () => {
-      let badgeContentDebugElement =
-          badgeDebugElement.nativeElement.querySelector('.mat-badge-icon');
-
-      expect(badgeContentDebugElement.innerHTML).toContain('home');
-
-      testComponent.badgeIcon = 'phone';
-      fixture.detectChanges();
-
-      badgeContentDebugElement =
-          badgeDebugElement.nativeElement.querySelector('.mat-badge-icon');
-
-      expect(badgeContentDebugElement.innerHTML).toContain('phone');
-    });
-  });
-
-  describe('MatBadge SVG Icon', () => {
-    let badgeDebugElement: DebugElement;
-
-    beforeEach(() => {
-      badgeDebugElement = fixture.debugElement.query(By.directive(MatSvgIconBadge));
-      fixture.detectChanges();
-    });
-
-    it('should update the badge svg based on attribute', async() => {
-      let badgeContentDebugElement =
-          badgeDebugElement.nativeElement.querySelector('.mat-badge-svg-icon');
-
-      expect(badgeContentDebugElement.innerHTML).toContain('<path id="meow"></path>');
-
-      testComponent.badgeSvg = 'fido';
-      fixture.detectChanges();
-
-      badgeContentDebugElement =
-          badgeDebugElement.nativeElement.querySelector('.mat-badge-svg-icon');
-
-      expect(badgeContentDebugElement.innerHTML).toContain('<path id="woof"></path>');
-    });
-  });
-
 });
 
 /** Test component that contains an MatBadge. */
 @Component({
   selector: 'test-app',
   template: `
-    <mat-icon [matBadge]="badgeContent"
-              [matBadgeColor]="badgeColor"
-              [matBadgePosition]="badgeDirection">
+    <span [matBadge]="badgeContent"
+          [matBadgeColor]="badgeColor"
+          [matBadgePosition]="badgeDirection">
       home
-    </mat-icon>
-    <span [matIconBadge]="badgeIcon">
-      Hello
-    </span>
-    <span [matSvgIconBadge]="badgeSvg">
-      Hello
     </span>
   `
 })
 class TestApp {
   badgeColor;
   badgeContent = '1';
-  badgeIcon = 'home';
-  badgeSvg = 'fluffy';
   badgeDirection = 'above after';
 }

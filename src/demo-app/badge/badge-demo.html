@@ -6,6 +6,10 @@
       Hello
     </span>
 
+    <span [matBadge]="11111" matBadgeOverlap="false">
+      Hello
+    </span>
+
     <span matBadge="22" matBadgeOverlap="false" matBadgePosition="below after" matBadgeColor="accent">
       Hello
     </span>
@@ -16,6 +20,14 @@
 
     <span matBadge="⚡️" matBadgeOverlap="false" matBadgePosition="below before">
       Hello
+    </span>
+
+    <span [matBadge]="badgeContent" matBadgeDescription="I've got {{badgeContent}} problems">
+      Aria
+    </span>
+
+    <span [matBadge]="badgeContent" matBadgeHidden="true">
+      Hidden
     </span>
 
     <input type="text" [(ngModel)]="badgeContent" />
@@ -46,7 +58,7 @@
 
   <div class="badge-examples">
     <h3>Icons</h3>
-    <mat-icon color="primary" [matBadge]="badgeContent">
+    <mat-icon [matBadge]="badgeContent">
       home
     </mat-icon>
 
@@ -63,16 +75,15 @@
     </mat-icon>
   </div>
 
+   <div class="badge-examples">
+    <h3>Size</h3>
+    <mat-icon [matBadge]="badgeContent" matBadgeSize="small">
+      home
+    </mat-icon>
+    <mat-icon [matBadge]="badgeContent" matBadgeSize="large">
+      home
+    </mat-icon>
 
-  <div class="badge-examples">
-    <h3>Font Icons</h3>
-    <span matIconBadge="home" matBadgeOverlap="false">Home</span> is where you live
-  </div>
-
-  <div class="badge-examples">
-    <h3>SVG Icons</h3>
-    <span [matSvgIconBadge]="svgIcon" matBadgeOverlap="false">Home</span> is where I live
-    <button mat-button (click)="svgIcon = 'home'">Change Icon</button>
   </div>
 
 </div>

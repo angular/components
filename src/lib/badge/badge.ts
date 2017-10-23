@@ -1,26 +1,41 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
 import {Directive, Input, Renderer2, ElementRef} from '@angular/core';
-import {MatIconRegistry} from '@angular/material/icon';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ThemePalette} from '@angular/material/core';
 
 let nextId = 0;
 
- /** @docs-private */
-export class MatBadgeBase {
+/** Directive to display a text badge. */
+@Directive({
+  selector: '[matBadge]',
+  inputs: ['matBadgeColor', 'matBadgeOverlap', 'matBadgePosition'],
+  host: {
+    'class': 'mat-badge',
+    '[class.mat-badge-overlap]': '_overlap',
+    '[class.mat-badge-above]': '_isAbove',
+    '[class.mat-badge-below]': '!_isAbove',
+    '[class.mat-badge-before]': '!_isAfter',
+    '[class.mat-badge-after]': '_isAfter',
+    '[class.mat-badge-small]': 'matBadgeSize === "small"',
+    '[class.mat-badge-medium]': 'matBadgeSize === "medium"',
+    '[class.mat-badge-large]': 'matBadgeSize === "large"',
+    '[class.mat-badge-hidden]': 'matBadgeHidden',
+  },
+})
+export class MatBadge {
 
   /** Theme for the badge */
+  @Input()
   get matBadgeColor(): ThemePalette { return this._color; }
   set matBadgeColor(value: ThemePalette) {
     const colorPalette = value;
-
     if (colorPalette !== this._color) {
       if (this._color) {
         this._renderer.removeClass(this._elementRef.nativeElement, `mat-badge-${this._color}`);
@@ -35,6 +50,7 @@ export class MatBadgeBase {
   private _color: ThemePalette = 'primary';
 
   /** Whether the badge should overlap its contents or not */
+  @Input()
   set matBadgeOverlap(val: boolean) {
     this._overlap = coerceBooleanProperty(val);
   }
@@ -44,6 +60,7 @@ export class MatBadgeBase {
   private _overlap: boolean = true;
 
   /** Position the badge should reside; 'above|below before|after' */
+  @Input()
   set matBadgePosition(val: string) {
     this._position = val;
     this._isAbove = val.indexOf('below') === -1;
@@ -54,168 +71,76 @@ export class MatBadgeBase {
   }
   private _position: string = 'above after';
 
-  _id: number = nextId++;
-  _isAbove: boolean = true;
-  _isAfter: boolean = true;
-
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
-
-  /** Clears the previous badge content */
-  _clearContents(): void {
-    const contents = document.getElementById(`badge-content-${this._id}`);
-    if (contents) {
-      this._renderer.removeChild(this._elementRef.nativeElement, contents);
-    }
-  }
-}
-
-/** Directive to display a text badge. */
-@Directive({
-  selector: '[matBadge]',
-  inputs: ['matBadgeColor', 'matBadgeOverlap', 'matBadgePosition'],
-  host: {
-    'class': 'mat-badge',
-    '[class.mat-badge-overlap]': '_overlap',
-    '[class.mat-badge-above]': '_isAbove',
-    '[class.mat-badge-below]': '!_isAbove',
-    '[class.mat-badge-before]': '!_isAfter',
-    '[class.mat-badge-after]': '_isAfter',
-  },
-})
-export class MatBadge extends MatBadgeBase {
-
   @Input('matBadge')
   set content(val: string) {
     this._content = val;
-    this._clearContents();
     this._setContent();
   }
   get content(): string { return this._content; }
   private _content: string;
 
-  constructor(_renderer: Renderer2, _elementRef: ElementRef) {
-    super(_renderer, _elementRef);
+  /** Aria description */
+  @Input()
+  set matBadgeDescription(val: string) {
+    this._description = val;
+    this._setLabel();
   }
+  get matBadgeDescription(): string { return this._description; }
+  private _description: string;
+
+  /** Size of the badge */
+  @Input() matBadgeSize: string = 'medium';
+
+  @Input()
+  set matBadgeHidden(val: boolean) {
+    this._hidden = coerceBooleanProperty(val);
+  }
+  get matBadgeHidden(): boolean {
+    return this._hidden;
+  }
+  private _hidden: boolean;
+
+  _id: number = nextId++;
+  _isAbove: boolean = true;
+  _isAfter: boolean = true;
+
+  constructor(private _renderer: Renderer2, private _elementRef: ElementRef) {}
 
   /** Injects a span element into the DOM with the content. */
-  private _setContent(): void {
-    const content = document.createElement('span');
-    content.setAttribute('id', `badge-content-${this._id}`);
-    content.classList.add('mat-badge-text');
-    content.innerText = this.content;
-    this._elementRef.nativeElement.appendChild(content);
-  }
-}
+  private _setContent(): HTMLSpanElement {
+    let content = document.getElementById(`badge-content-${this._id}`);
 
-/** Directive to display a font icon badge. */
-@Directive({
-  selector: '[matIconBadge]',
-  inputs: ['matBadgeColor', 'matBadgeOverlap', 'matBadgePosition'],
-  host: {
-    'class': 'mat-badge',
-    '[class.mat-badge-overlap]': '_overlap',
-    '[class.mat-badge-above]': '_isAbove',
-    '[class.mat-badge-below]': '!_isAbove',
-    '[class.mat-badge-before]': '!_isAfter',
-    '[class.mat-badge-after]': '_isAfter',
-  },
-})
-export class MatIconBadge extends MatBadgeBase {
+    if (!content) {
+      content = document.createElement('span');
+      content.setAttribute('id', `badge-content-${this._id}`);
+      content.classList.add('mat-badge-content');
+      content.textContent = this.content;
 
-  @Input('matIconBadge')
-  set icon(val: string) {
-    this._icon = val;
-    this._clearContents();
-    this._setFontIcon();
-  }
-  get icon(): string { return this._icon; }
-  private _icon: string;
+      if (this.matBadgeDescription) {
+        content.setAttribute('aria-label', this.matBadgeDescription);
+      }
 
-  /** Font set to use for the icon */
-  @Input() matBadgeFontSet: string;
+      this._elementRef.nativeElement.appendChild(content);
 
-  constructor(
-      private _iconRegistry: MatIconRegistry,
-      _elementRef: ElementRef,
-      _renderer: Renderer2) {
-    super(_renderer, _elementRef);
-  }
-
-  /**  Gets the font icon set to use. */
-  private _getFontSet(): string {
-    return this.matBadgeFontSet ?
-        this._iconRegistry.classNameForFontAlias(this.matBadgeFontSet) :
-        this._iconRegistry.getDefaultFontSetClass();
-  }
-
-  /**
-   * Gets the font icon from the icon registery and injects it into the document.
-   */
-  private _setFontIcon(): void {
-    const icon = document.createElement('span');
-    icon.setAttribute('id', `badge-content-${this._id}`);
-    icon.classList.add(this._getFontSet());
-    icon.classList.add('mat-badge-icon');
-    icon.innerText = this.icon;
-    this._elementRef.nativeElement.appendChild(icon);
-  }
-}
-
-/**  Directive to display a SVG icon badge. */
-@Directive({
-  selector: '[matSvgIconBadge]',
-  inputs: ['matBadgeColor', 'matBadgeOverlap', 'matBadgePosition'],
-  host: {
-    'class': 'mat-badge',
-    '[class.mat-badge-overlap]': '_overlap',
-    '[class.mat-badge-above]': '_isAbove',
-    '[class.mat-badge-below]': '!_isAbove',
-    '[class.mat-badge-before]': '!_isAfter',
-    '[class.mat-badge-after]': '_isAfter',
-  },
-})
-export class MatSvgIconBadge extends MatBadgeBase {
-
-  @Input('matSvgIconBadge')
-  set icon(val: string) {
-    this._icon = val;
-    this._clearContents();
-    this._setSvgIcon();
-  }
-  get icon(): string { return this._icon; }
-  private _icon: string;
-
-  constructor(
-      private _iconRegistry: MatIconRegistry,
-      _elementRef: ElementRef,
-      _renderer: Renderer2) {
-    super(_renderer, _elementRef);
-  }
-
-  /**
-   * Splits an svgIcon binding value into its icon set and icon name components.
-   */
-  private _splitIconName(iconName: string): [string, string] {
-    if (!iconName) {
-      return ['', ''];
+      // animate in after insertion
+      setTimeout(() => {
+        // ensure content available
+        if (content !== null) {
+          content.classList.add('mat-badge-active');
+        }
+      }, 100);
+    } else if (content.textContent !== this.content) {
+      content.textContent = this.content;
     }
-    const parts = iconName.split(':');
-    switch (parts.length) {
-      case 1: return ['', parts[0]]; // Use default namespace.
-      case 2: return <[string, string]>parts;
-      default: throw Error(`Invalid icon name: "${iconName}"`);
-    }
+
+    return content;
   }
 
-  /**
-   * Gets the icon from the icon registery and injects it into the document.
-   */
-  private _setSvgIcon(): void {
-    const [namespace, iconName] = this._splitIconName(this.icon);
-    this._iconRegistry.getNamedSvgIcon(iconName, namespace).subscribe((svg) => {
-      svg.setAttribute('id', `badge-content-${this._id}`);
-      svg.classList.add('mat-badge-svg-icon');
-      this._elementRef.nativeElement.appendChild(svg);
-    });
+  /** Sets the aria-label property on the element */
+  private _setLabel(): void {
+    // ensure content available before setting label
+    const content = this._setContent();
+    content.setAttribute('aria-label', this.matBadgeDescription);
   }
+
 }
