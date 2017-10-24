@@ -32,7 +32,7 @@ let nextId = 0;
 })
 export class MatBadge {
 
-  /** Theme for the badge */
+  /** The color of the badge. Can be `primary`, `accent`, or `warn`. */
   @Input('matBadgeColor')
   get color(): ThemePalette { return this._color; }
   set color(value: ThemePalette) {
@@ -82,6 +82,7 @@ export class MatBadge {
   /** Size of the badge. 'small' | 'medium' | 'large' */
   @Input() matBadgeSize: string = 'medium';
 
+  /** Toggle the visibility of the badge on the host element. */
   @Input()
   set matBadgeHidden(val: boolean) {
     this._hidden = coerceBooleanProperty(val);

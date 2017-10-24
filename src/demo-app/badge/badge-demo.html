@@ -2,7 +2,7 @@
 
   <div class="badge-examples">
     <h3>Text</h3>
-    <span [matBadge]="badgeContent" matBadgeOverlap="false">
+    <span [matBadge]="badgeContent" matBadgeOverlap="false" *ngIf="visible">
       Hello
     </span>
 
@@ -31,6 +31,7 @@
     </span>
 
     <input type="text" [(ngModel)]="badgeContent" />
+    <button (click)="visibile = !visible">Toggle</button>
   </div>
 
   <div class="badge-examples">
