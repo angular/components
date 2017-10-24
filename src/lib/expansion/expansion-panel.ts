@@ -25,7 +25,7 @@ import {CdkAccordionItem} from '@angular/cdk/accordion';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {CanDisable, mixinDisabled} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
-import {MatAccordion} from './accordion';
+import {MatAccordion, MatAccordionTogglePosition} from './accordion';
 
 /** Workaround for https://github.com/angular/angular/issues/17849 */
 export const _CdkAccordionItem = CdkAccordionItem;
@@ -90,8 +90,15 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,
 })
 export class MatExpansionPanel extends _MatExpansionPanelMixinBase
     implements CanDisable, OnChanges, OnDestroy {
-  /** Whether the toggle indicator should be hidden. */
-  @Input() hideToggle: boolean = false;
+  /** The positioning of the expansion indicator. */
+  @Input()
+  get togglePosition(): MatAccordionTogglePosition {
+    return this.accordion ? this.accordion.togglePosition : this._togglePosition;
+  }
+  set togglePosition(position: MatAccordionTogglePosition) {
+    this._togglePosition = position;
+  }
+  private _togglePosition: MatAccordionTogglePosition = 'end';
 
   /** Stream that emits for changes in `@Input` properties. */
   _inputChanges = new Subject<SimpleChanges>();
@@ -104,14 +111,6 @@ export class MatExpansionPanel extends _MatExpansionPanelMixinBase
               _uniqueSelectionDispatcher: UniqueSelectionDispatcher) {
     super(accordion, _changeDetectorRef, _uniqueSelectionDispatcher);
     this.accordion = accordion;
-  }
-
-  /** Whether the expansion indicator should be hidden. */
-  _getHideToggle(): boolean {
-    if (this.accordion) {
-      return this.accordion.hideToggle;
-    }
-    return this.hideToggle;
   }
 
   /** Determines whether the expansion panel should have spacing between it and its siblings. */

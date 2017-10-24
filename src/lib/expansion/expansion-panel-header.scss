@@ -1,9 +1,8 @@
-
 .mat-expansion-panel-header {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0 24px;
+  padding: 0 16px;
 
   &:focus,
   &:hover {
@@ -25,6 +24,7 @@
   flex: 1;
   flex-direction: row;
   overflow: hidden;
+  padding: 0 8px;
 }
 
 .mat-expansion-panel-header-title,
@@ -43,16 +43,18 @@
   flex-grow: 2;
 }
 
-/**
- * Creates the expansion indicator arrow. Done using ::after rather than having
- * additional nodes in the template.
- */
-.mat-expansion-indicator::after {
+.mat-expansion-indicator-container {
+  // An offset is required to offset the entire expansion indicator against its border width.  It is
+  // calculated as sqrt(2 * (border-width)).
+  margin-bottom: 2.83px;
+  padding: 0 8px;
+  width: 8px;
+}
+
+.mat-expansion-indicator {
   border-style: solid;
   border-width: 0 2px 2px 0;
-  content: '';
   display: inline-block;
   padding: 3px;
   transform: rotate(45deg);
-  vertical-align: middle;
 }

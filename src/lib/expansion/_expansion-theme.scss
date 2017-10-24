@@ -29,9 +29,12 @@
     color: mat-color($foreground, text);
   }
 
-  .mat-expansion-panel-header-description,
-  .mat-expansion-indicator::after {
+  .mat-expansion-panel-header-description {
     color: mat-color($foreground, secondary-text);
+  }
+  
+  .mat-expansion-indicator {
+    border-color: mat-color($foreground, secondary-text);
   }
 
   .mat-expansion-panel-header[aria-disabled='true'] {

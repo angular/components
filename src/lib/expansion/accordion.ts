@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Input} from '@angular/core';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Directive, Input, SimpleChanges, OnChanges, OnDestroy} from '@angular/core';
 import {CdkAccordion} from '@angular/cdk/accordion';
+import {Subject} from 'rxjs/Subject';
 
 /** Workaround for https://github.com/angular/angular/issues/17849 */
 export const _CdkAccordion = CdkAccordion;
@@ -16,21 +16,32 @@ export const _CdkAccordion = CdkAccordion;
 /** MatAccordion's display modes. */
 export type MatAccordionDisplayMode = 'default' | 'flat';
 
+/** MdAccordion's display modes. */
+export type MatAccordionTogglePosition = 'start' | 'end' | 'hidden';
+
+/** Unique ID counter */
+let nextId = 0;
+
 /**
  * Directive for a Material Design Accordion.
  */
 @Directive({
   selector: 'mat-accordion',
+  inputs: ['multi'],
   exportAs: 'matAccordion',
   host: {
     class: 'mat-accordion'
   }
 })
-export class MatAccordion extends _CdkAccordion {
-  /** Whether the expansion indicator should be hidden. */
-  @Input() get hideToggle(): boolean { return this._hideToggle; }
-  set hideToggle(show: boolean) { this._hideToggle = coerceBooleanProperty(show); }
-  private  _hideToggle: boolean = false;
+export class MatAccordion extends _CdkAccordion implements OnChanges, OnDestroy {
+  /** A readonly id value to use for unique selection coordination. */
+  readonly id = `cdk-accordion-${nextId++}`;
+
+  /** Stream that emits for changes in `@Input` properties. */
+  _inputChanges = new Subject<SimpleChanges>();
+
+  /** The positioning of the expansion indicator. */
+  @Input() togglePosition: MatAccordionTogglePosition = 'end';
 
   /**
    * The display mode used for all expansion panels in the accordion. Currently two display
@@ -41,4 +52,12 @@ export class MatAccordion extends _CdkAccordion {
    *     elevation.
    */
   @Input() displayMode: MatAccordionDisplayMode = 'default';
+
+  ngOnChanges(changes: SimpleChanges) {
+    this._inputChanges.next(changes);
+  }
+
+  ngOnDestroy() {
+    this._inputChanges.complete();
+  }
 }
