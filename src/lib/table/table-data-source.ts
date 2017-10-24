@@ -90,7 +90,9 @@ export class MatTableDataSource<T> implements DataSource<T> {
 
     // If the value is a string and only whitespace, return the value.
     // Otherwise +value will convert it to 0.
-    if (typeof value === 'string' && !value.trim()) { return value; }
+    if (typeof value === 'string' && !value.trim()) {
+      return value;
+    }
 
     return isNaN(+value) ? value : +value;
   }
