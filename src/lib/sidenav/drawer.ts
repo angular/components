@@ -116,12 +116,12 @@ export class MatDrawerContent implements AfterContentInit {
     '(@transform.start)': '_onAnimationStart($event)',
     '(@transform.done)': '_onAnimationEnd($event)',
     '(keydown)': 'handleKeydown($event)',
-    // must prevent the browser from aligning text based on value
-    '[attr.align]': 'null',
+    '[attr.align]': 'null', // must prevent the browser from aligning text based on value
     '[class.mat-drawer-end]': 'position === "end"',
     '[class.mat-drawer-over]': 'mode === "over"',
     '[class.mat-drawer-push]': 'mode === "push"',
     '[class.mat-drawer-side]': 'mode === "side"',
+    '[class.mat-drawer-opened]': 'opened',
     'tabIndex': '-1',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,

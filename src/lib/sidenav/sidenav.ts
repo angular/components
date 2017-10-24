@@ -65,13 +65,13 @@ export class MatSidenavContent extends MatDrawerContent {
     '(@transform.start)': '_onAnimationStart($event)',
     '(@transform.done)': '_onAnimationEnd($event)',
     '(keydown)': 'handleKeydown($event)',
-    // must prevent the browser from aligning text based on value
-    '[attr.align]': 'null',
+    '[attr.align]': 'null', // must prevent the browser from aligning text based on value
     '[class.mat-drawer-end]': 'position === "end"',
     '[class.mat-drawer-over]': 'mode === "over"',
     '[class.mat-drawer-push]': 'mode === "push"',
     '[class.mat-drawer-side]': 'mode === "side"',
     '[class.mat-sidenav-fixed]': 'fixedInViewport',
+    '[class.mat-sidenav-opened]': 'opened',
     '[style.top.px]': 'fixedInViewport ? fixedTopGap : null',
     '[style.bottom.px]': 'fixedInViewport ? fixedBottomGap : null',
   },
