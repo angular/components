@@ -142,7 +142,13 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   }
 
   /** Event emitted when the menu is closed. */
-  @Output() close = new EventEmitter<void | 'click' | 'keydown'>();
+  @Output() closed = new EventEmitter<void | 'click' | 'keydown'>();
+
+  /**
+   * Event emitted when the menu is closed.
+   * @deprecated Switch to `closed` instead
+   */
+  @Output() close = this.closed;
 
   constructor(
     private _elementRef: ElementRef,
@@ -154,24 +160,24 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close.emit('keydown'));
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._tabSubscription.unsubscribe();
-    this.close.emit();
-    this.close.complete();
+    this.closed.emit();
+    this.closed.complete();
   }
 
   /** Stream that emits whenever the hovered menu item changes. */
-  hover(): Observable<MatMenuItem> {
+  _hovered(): Observable<MatMenuItem> {
     if (this.items) {
       return RxChain.from(this.items.changes)
         .call(startWith, this.items)
-        .call(switchMap, (items: MatMenuItem[]) => merge(...items.map(item => item.hover)))
+        .call(switchMap, (items: MatMenuItem[]) => merge(...items.map(item => item._hovered)))
         .result();
     }
 
     return RxChain.from(this._ngZone.onStable.asObservable())
       .call(first)
-      .call(switchMap, () => this.hover())
+      .call(switchMap, () => this._hovered())
       .result();
   }
 
@@ -179,17 +185,17 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   _handleKeydown(event: KeyboardEvent) {
     switch (event.keyCode) {
       case ESCAPE:
-        this.close.emit('keydown');
+        this.closed.emit('keydown');
         event.stopPropagation();
       break;
       case LEFT_ARROW:
         if (this.parentMenu && this.direction === 'ltr') {
-          this.close.emit('keydown');
+          this.closed.emit('keydown');
         }
       break;
       case RIGHT_ARROW:
         if (this.parentMenu && this.direction === 'rtl') {
-          this.close.emit('keydown');
+          this.closed.emit('keydown');
         }
       break;
       default:

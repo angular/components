@@ -15,7 +15,7 @@ export interface MatMenuPanel {
   yPosition: MenuPositionY;
   overlapTrigger: boolean;
   templateRef: TemplateRef<any>;
-  close: EventEmitter<void | 'click' | 'keydown'>;
+  closed: EventEmitter<void | 'click' | 'keydown'>;
   parentMenu?: MatMenuPanel | undefined;
   direction?: Direction;
   focusFirstItem: () => void;
