@@ -39,7 +39,7 @@ describe('CdkTable', () => {
         WhenRowCdkTableApp,
         WhenRowWithoutDefaultCdkTableApp,
         WhenRowMultipleDefaultsCdkTableApp,
-        EvenSimplerCdkTableApp
+        BooleanRowCdkTableApp
       ],
     }).compileComponents();
   }));
@@ -109,12 +109,12 @@ describe('CdkTable', () => {
   });
 
   it('should render cells even if row data is falsy', () => {
-    const booleanRowCdkTableAppFixture = TestBed.createComponent(EvenSimplerCdkTableApp);
-    const evenSimplerCdkTableElement =
+    const booleanRowCdkTableAppFixture = TestBed.createComponent(BooleanRowCdkTableApp);
+    const booleanRowCdkTableElement =
         booleanRowCdkTableAppFixture.nativeElement.querySelector('cdk-table');
     booleanRowCdkTableAppFixture.detectChanges();
 
-    expectTableToMatchContent(evenSimplerCdkTableElement, [
+    expectTableToMatchContent(booleanRowCdkTableElement, [
       [''], // Header row
       ['false'], // Data rows
       ['true'],
@@ -690,7 +690,7 @@ class SimpleCdkTableApp {
     </cdk-table>
   `
 })
-class EvenSimplerCdkTableApp {
+class BooleanRowCdkTableApp {
   dataSource = new BooleanDataSource();
 }
 
