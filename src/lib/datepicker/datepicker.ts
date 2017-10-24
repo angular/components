@@ -145,6 +145,12 @@ export class MatDatepicker<D> implements OnDestroy {
    */
   @Input() touchUi = false;
 
+  /** Event emitted when the datepicker has been opened. */
+  @Output() onOpen: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Event emitted when the datepicker has been closed. */
+  @Output() onClose: EventEmitter<void> = new EventEmitter<void>();  
+  
   /** Whether the datepicker pop-up should be disabled. */
   @Input()
   get disabled() {
@@ -271,6 +277,7 @@ export class MatDatepicker<D> implements OnDestroy {
 
     this.touchUi ? this._openAsDialog() : this._openAsPopup();
     this.opened = true;
+    this.onOpen.emit();
   }
 
   /** Close the calendar. */
@@ -296,6 +303,7 @@ export class MatDatepicker<D> implements OnDestroy {
     }
 
     this.opened = false;
+    this.onClose.emit();
   }
 
   /** Open the calendar as a dialog. */
