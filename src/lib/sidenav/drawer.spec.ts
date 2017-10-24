@@ -50,6 +50,7 @@ describe('MatDrawer', () => {
       expect(testComponent.openCount).toBe(1);
       expect(testComponent.closeCount).toBe(0);
       expect(getComputedStyle(drawer.nativeElement).visibility).toBe('visible');
+      expect(drawer.nativeElement.classList).toContain('mat-drawer-opened');
       expect(getComputedStyle(drawerBackdropElement.nativeElement).visibility).toBe('visible');
 
       fixture.debugElement.query(By.css('.close')).nativeElement.click();
@@ -64,6 +65,7 @@ describe('MatDrawer', () => {
       expect(testComponent.openCount).toBe(1);
       expect(testComponent.closeCount).toBe(1);
       expect(getComputedStyle(drawer.nativeElement).visibility).toBe('hidden');
+      expect(drawer.nativeElement.classList).not.toContain('mat-drawer-opened');
       expect(getComputedStyle(drawerBackdropElement.nativeElement).visibility).toBe('hidden');
     }));
 
