@@ -402,7 +402,7 @@ describe('CdkTable', () => {
       // Change each item reference to show that the trackby is checking the index.
       // Otherwise this would cause them all to be removed/added.
       trackByComponent.dataSource.data = trackByComponent.dataSource.data
-          .map(item => { return {a: item.a, b: item.b, c: item.c}; });
+          .map(item => ({a: item.a, b: item.b, c: item.c}));
 
       // Expect the rows were given the right implicit data even though the rows were not moved.
       trackByFixture.detectChanges();
