@@ -149,7 +149,7 @@ export class MatDatepicker<D> implements OnDestroy {
   @Output() onOpen: EventEmitter<void> = new EventEmitter<void>();
 
   /** Event emitted when the datepicker has been closed. */
-  @Output() onClose: EventEmitter<void> = new EventEmitter<void>();  
+  @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
   
   /** Whether the datepicker pop-up should be disabled. */
   @Input()
