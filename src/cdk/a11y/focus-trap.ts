@@ -148,19 +148,19 @@ export class FocusTrap {
     if (!this._platform.isBrowser) {
       return null;
     }
-    
+
     // Contains the deprecated version of selector, for temporary backwards comparability.
     let markers = this._element.querySelectorAll(`[cdk-focus-region-${bound}], ` +
                                                  `[cdkFocusRegion${bound}], ` +
-                                                 `[cdk-focus-${name}]`) as NodeListOf<HTMLElement>;
+                                                 `[cdk-focus-${bound}]`) as NodeListOf<HTMLElement>;
 
     for (let i = 0; i < markers.length; i++) {
       if (markers[i].hasAttribute(`cdk-focus-${bound}`)) {
         console.warn(`Found use of deprecated attribute 'cdk-focus-${bound}',` +
-                     ` use 'cdkFocusRegion${name}' instead.`, markers[i]);
+                     ` use 'cdkFocusRegion${bound}' instead.`, markers[i]);
       } else if (markers[i].hasAttribute(`cdk-focus-region-${bound}`)) {
         console.warn(`Found use of deprecated attribute 'cdk-focus-region-${bound}',` +
-                     ` use 'cdkFocusRegion${name}' instead.`, markers[i]);
+                     ` use 'cdkFocusRegion${bound}' instead.`, markers[i]);
       }
     }
 
@@ -179,7 +179,7 @@ export class FocusTrap {
     if (!this._platform.isBrowser) {
       return false;
     }
-    
+
     // Contains the deprecated version of selector, for temporary backwards comparability.
     const redirectToElement = this._element.querySelector(`[cdk-focus-initial], ` +
                                                           `[cdkFocusInitial]`) as HTMLElement;
