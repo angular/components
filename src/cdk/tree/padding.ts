@@ -1,40 +1,54 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Input} from '@angular/core';
+import {Directionality} from '@angular/cdk/bidi';
+import {Directive, Input, Optional} from '@angular/core';
 import {CdkTreeNode} from './node';
-import {FlatNode} from './tree-data';
+import {CdkTree} from './tree';
 
 /**
  * Indent for the children tree nodes.
  * This directive will add left-padding to the node to show hierarchy.
  */
 @Directive({
-  selector: '[cdkNodePadding]',
+  selector: '[cdkTreeNodePadding]',
   host: {
-    '[style.padding-left]': 'paddingIndent',
+    '[style.padding-left]': 'paddingIndentLeft()',
+    '[style.padding-right]': 'paddingIndentRight()',
   }
 })
-export class CdkNodePadding<T extends FlatNode> {
+export class CdkTreeNodePadding<T> {
   /** The level of depth of the tree node. The padding will be `level * indent` pixels. */
-  @Input('cdkNodePadding') level: number;
+  @Input('cdkTreeNodePadding') level: number;
 
-  /** The indent for each level. Default value is 28px. */
-  @Input('cdkNodePaddingIndex') indent: number = 28;
+  /** The indent for each level. */
+  @Input('cdkTreeNodePaddingIndent') indent: number;
 
-  get paddingIndent() {
-    const nodeLevel = (this._treeNode.data && this._treeNode.data.level)
-      ? this._treeNode.data.level
+  constructor(private _treeNode: CdkTreeNode<T>,
+              private _tree: CdkTree<T>,
+              @Optional() private _dir: Directionality) {}
+
+  /** The padding indent value for the tree node. Returns a string with px numbers if not null. */
+  _paddingIndent(): string|null {
+    const nodeLevel = (this._treeNode.data && this._tree.treeControl.getLevel)
+      ? this._tree.treeControl.getLevel(this._treeNode.data)
       : null;
     const level = this.level || nodeLevel;
-
-    return level ? `${level * this.indent}px` : '';
+    return level ? `${level * this.indent}px` : null;
   }
 
-  constructor(private _treeNode: CdkTreeNode<T>) {}
+  /** The left padding indent value for the tree node. */
+  paddingIndentLeft(): string|null {
+    return this._dir && this._dir.value === 'rtl' ? null : this._paddingIndent();
+  }
+
+  /** The right padding indent value for the tree node. */
+  paddingIndentRight(): string|null {
+    return this._dir && this._dir.value === 'rtl' ? this._paddingIndent() : null;
+  }
 }

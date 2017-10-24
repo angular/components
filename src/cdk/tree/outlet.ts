@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -10,14 +10,13 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
-
 /**
- * Placeholder for nested CdkNode. Put `[cdkNodePlaceholder]` on a tag to place children nodes
- * inside the placeholder.
+ * Outlet for nested CdkNode. Put `[cdkNodeOutlet]` on a tag to place children nodes
+ * inside the outlet.
  */
 @Directive({
-  selector: '[cdkNodePlaceholder]'
+  selector: '[nodeOutlet]'
 })
-export class CdkNodePlaceholder {
+export class NodeOutlet {
   constructor(public viewContainer: ViewContainerRef) { }
 }

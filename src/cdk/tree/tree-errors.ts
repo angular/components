@@ -21,3 +21,19 @@ export function getTreeMultipleDefaultNodeDefsError() {
 export function getTreeMissingMatchingNodeDefError() {
   return Error(`cdk-tree: Could not find a matching node definition for the provided node data.`);
 }
+
+/**
+ * Returns an error to be thrown when there are tree control.
+ * @docs-private
+ */
+export function getTreeControlMissingError() {
+  return Error(`cdk-tree: Could not find a tree control for the tree.`);
+}
+
+/**
+ * Returns an error to be thrown when tree control did not implement functions for flat/nested node.
+ * @docs-private
+ */
+export function getTreeControlFunctionsMissingError() {
+  return Error(`cdk-tree: Could not find functions for nested/flat tree in tree control.`);
+}

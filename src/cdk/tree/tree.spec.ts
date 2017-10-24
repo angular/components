@@ -1,13 +1,16 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
-import {CdkTree} from './tree';
-import {FlatNode, NestedNode} from './tree-data';
+
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import {combineLatest} from 'rxjs/observable/combineLatest';
-import {CdkTreeModule} from './index';
 import {map} from 'rxjs/operator/map';
+
+import {TreeControl} from './control/tree-control';
+import {FlatTreeControl} from './control/flat-tree-control';
+import {CdkTreeModule} from './index';
+import {CdkTree} from './tree';
 
 
 describe('CdkTree', () => {
@@ -23,9 +26,10 @@ describe('CdkTree', () => {
       imports: [CdkTreeModule],
       declarations: [
         SimpleCdkTreeApp,
-        // DynamicDataSourceCdkTreeApp,
-        // NodeContextCdkTreeApp,
-        // WhenNodeCdkTreeApp
+        // TODO(tinayuangao): Add more test cases with the cdk-tree
+        //   DynamicDataSourceCdkTreeApp,
+        //   NodeContextCdkTreeApp,
+        //   WhenNodeCdkTreeApp
       ],
     }).compileComponents();
   }));
@@ -61,24 +65,49 @@ describe('CdkTree', () => {
         expect(node.getAttribute('role')).toBe('treeitem');
       });
     });
+
+    it('with the right data', () => {
+      expect(dataSource.data.length).toBe(3);
+
+      const paddingLeft = '28px';
+      let data = dataSource.data;
+      expectFlatTreeToMatchContent(treeElement,
+          [
+            `${data[0].a} - ${data[0].b} + ${data[0].c}`,
+            `${data[1].a} - ${data[1].b} + ${data[1].c}`,
+            `${data[2].a} - ${data[2].b} + ${data[2].c}`
+          ],
+          [1, 1, 1]);
+
+      dataSource.addData(2);
+      fixture.detectChanges();
+
+      data = dataSource.data;
+      expect(data.length).toBe(4);
+      expectFlatTreeToMatchContent(treeElement,
+        [
+          `${data[0].a} - ${data[0].b} + ${data[0].c}`,
+          `${data[1].a} - ${data[1].b} + ${data[1].c}`,
+          `${data[2].a} - ${data[2].b} + ${data[2].c}`,
+          `${data[3].a} - ${data[3].b} + ${data[3].c}`
+        ],
+        [1, 1, 1, 2]);
+    })
   });
 });
 
-export class TestData implements FlatNode {
+export class TestData {
   a: string;
   b: string;
   c: string;
-  children: TestData[];
   level: number;
-  get expandable(): boolean {
-    return !!this.children && this.children.length > 0;
-  }
+  children: TestData[];
 
-  constructor(a: string, b: string, c: string) {
+  constructor(a: string, b: string, c: string, level: number = 1) {
     this.a = a;
     this.b = b;
     this.c = c;
-    this.level = 1;
+    this.level = level;
     this.children = [];
   }
 }
@@ -105,11 +134,11 @@ class FakeDataSource extends DataSource<TestData> {
     this.isConnected = false;
   }
 
-  addData() {
+  addData(level: number = 1) {
     const nextIndex = this.data.length + 1;
 
     let copiedData = this.data.slice();
-    copiedData.push(new TestData(`a_${nextIndex}`, `b_${nextIndex}`, `c_${nextIndex}`));
+    copiedData.push(new TestData(`a_${nextIndex}`, `b_${nextIndex}`, `c_${nextIndex}`, level));
 
     this.data = copiedData;
   }
@@ -117,26 +146,32 @@ class FakeDataSource extends DataSource<TestData> {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataSource">
-      <cdk-tree-node *cdkNodeDef="let node" class="customNodeClass"></cdk-tree-node>
+    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
+      <cdk-tree-node *cdkNodeDef="let node" class="customNodeClass" [cdkTreeNode]="node"
+                     cdkTreeNodePadding [cdkTreeNodePaddingIndent]="28">
+                     {{node.a}} - {{node.b}} + {{node.c}}
+      </cdk-tree-node>
     </cdk-tree>
   `
 })
 class SimpleCdkTreeApp {
+  getLevel = (node: TestData) => node.level;
+  isExpandable = (node: TestData) => node.children.length > 0;
+
   dataSource: FakeDataSource | null = new FakeDataSource();
+  treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
-}
-
-function getElements(element: Element, query: string): Element[] {
-  return [].slice.call(element.querySelectorAll(query));
 }
 
 function getNodes(treeElement: Element): Element[] {
   return [].slice.call(treeElement.querySelectorAll('.cdk-tree-node'))!;
 }
 
-function expectTreeToMatchContent(treeElement: Element, expectedTreeContent: any[]) {
+// TODO(tinayuangao): Add expectedNestedTreeToMatchContent
+function expectFlatTreeToMatchContent(treeElement: Element, expectedTreeContent: any[],
+                                      expectedLevels: number[]) {
+  const paddingIndent = 28;
   const missedExpectations: string[] = [];
   function checkNodeContent(node: Element, expectedTextContent: string) {
     const actualTextContent = node.textContent!.trim();
@@ -146,14 +181,20 @@ function expectTreeToMatchContent(treeElement: Element, expectedTreeContent: any
     }
   }
 
-  // Check nodes
-  const expectedNodeContent = expectedTreeContent.shift();
   getNodes(treeElement).forEach((node, index) => {
-    const expected = expectedNodeContent ?
-      expectedNodeContent[index] :
+    const expected = expectedTreeContent ?
+      expectedTreeContent[index] :
       null;
     checkNodeContent(node, expected);
+    const actualLevel = (node as HTMLElement).style.paddingLeft;
+    const expectedLevel = `${expectedLevels[index] * paddingIndent}px`;
+    if (actualLevel != expectedLevel) {
+      missedExpectations.push(
+        `Expected node level to be ${expectedLevel} but was ${actualLevel}`);
+    }
   });
+
+
 
   if (missedExpectations.length) {
     fail(missedExpectations.join('\n'));
