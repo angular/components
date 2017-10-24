@@ -46,6 +46,15 @@ export class MatDialogRef<T> {
     private _containerInstance: MatDialogContainer,
     readonly id: string = `mat-dialog-${uniqueId++}`) {
 
+    // If the dialog has a backdrop, handle clicks from the backdrop.
+    if (_containerInstance._config.hasBackdrop) {
+      _overlayRef.backdropClick().subscribe(() => {
+        if (!this.disableClose) {
+          this.close();
+        }
+      });
+    }
+
     // Emit when opening animation completes
     RxChain.from(_containerInstance._animationStateChanged)
       .call(filter, event => event.phaseName === 'done' && event.toState === 'enter')
