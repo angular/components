@@ -19,7 +19,7 @@ const imageDiff = require('image-diff');
 const travisSecureToken = getSecureToken();
 
 /** Git SHA of the current Pull Request being checked by Travis. */
-const pullRequestSha = process.env['TRAVIS_PULL_REQUEST_SHA'];
+const pullRequestSha = process.env['TRAVIS_PULL_REQUEST_SHA']!;
 
 const SCREENSHOT_DIR = './screenshots';
 const LOCAL_GOLDENS = path.join(SCREENSHOT_DIR, `golds`);
