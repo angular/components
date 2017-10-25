@@ -185,26 +185,14 @@ describe('MatTextareaAutosize', () => {
     autosize = fixtureWithPlaceholder.debugElement.query(
       By.directive(MatTextareaAutosize)).injector.get<MatTextareaAutosize>(MatTextareaAutosize);
 
-    // To be able to trigger a new calculation of the height with a long placeholder, the textarea
-    // value needs to be changed.
-    textarea.value = '1';
-    autosize.resizeToFitContent();
-
-    textarea.value = '';
-    autosize.resizeToFitContent();
+    triggerTextareaResize();
 
     const heightWithLongPlaceholder = textarea.clientHeight;
 
     fixtureWithPlaceholder.componentInstance.placeholder = 'Short';
     fixtureWithPlaceholder.detectChanges();
 
-    // To be able to trigger a new calculation of the height with a short placeholder, the
-    // textarea value needs to be changed.
-    textarea.value = '1';
-    autosize.resizeToFitContent();
-
-    textarea.value = '';
-    autosize.resizeToFitContent();
+    triggerTextareaResize();
 
     expect(textarea.clientHeight).toBe(heightWithLongPlaceholder,
         'Expected the textarea height to be the same with a long placeholder.');
@@ -261,8 +249,18 @@ describe('MatTextareaAutosize', () => {
     textarea = fixtureWithForms.nativeElement.querySelector('textarea');
     expect(textarea.getBoundingClientRect().height).toBeGreaterThan(1);
   });
-});
 
+  /** Triggers a textarea resize to fit the content. */
+  function triggerTextareaResize() {
+    // To be able to trigger a new calculation of the height with a short placeholder, the
+    // textarea value needs to be changed.
+    textarea.value = '1';
+    autosize.resizeToFitContent();
+
+    textarea.value = '';
+    autosize.resizeToFitContent();
+  }
+});
 
 // Styles to reset padding and border to make measurement comparisons easier.
 const textareaStyleReset = `
