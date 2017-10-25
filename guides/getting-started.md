@@ -162,6 +162,33 @@ System.config({
 });
 ```
 
+### Appendix: Configuring Webpack
+
+If your project is using Webpack for module loading, you will need to add `@angular/material` and your
+desired CSS to your webpack.config.vendor.js configuration.  For example, you would add the following
+if you are using the Deep Purple theme:
+
+```js
+  ... other config ...
+  entry: {
+    vendor: [
+      ... other modules ...
+      '@angular/material',
+      '@angular/material/prebuilt-themes/deeppurple-amber.css',
+      ... other modules ...
+    ],
+  },
+  ... other config ...
+```
+
+Don't forget to rebuild your webpack after making this change! E.g. webpack --config webpack.config.vendor.js
+
+### Appendix: Configuring ASP.NET Core Web Applications from the Visual Studio template
+
+Module loading in ASP.NET Core is split up into browser, server and shared parts which are conditionally
+combined according to where rendering is occurring. These are represented in app.module.browser.ts, 
+app.module.server.ts and app.module.shared.ts respectively.  In order for the Material modules to work
+properly they must be imported in the app.module.shared.ts module.
 
 ### Example Angular Material projects
 - [material.angular.io](https://material.angular.io) -
