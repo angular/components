@@ -26,8 +26,8 @@ export class TableOverviewExample {
   }
 
   /**
-   * Set the paginator and sort after the view has been initialized so
-   * that the components are completely set up for the data source to access.
+   * Set the paginator and sort after the view init since this component will
+   * be able to query its view for the initialized paginator and sort.
    */
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;

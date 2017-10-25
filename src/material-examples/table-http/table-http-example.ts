@@ -37,7 +37,7 @@ export class TableHttpExample {
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
-    Observable.merge(...[this.sort.sortChange, this.paginator.page])
+    Observable.merge(this.sort.sortChange, this.paginator.page)
         .startWith(null)
         .switchMap(() => {
           this.isLoadingResults = true;
@@ -48,7 +48,7 @@ export class TableHttpExample {
           // Flip flag to show that loading has finished.
           this.isLoadingResults = false;
           this.isRateLimitReached = false;
-          this.resultsLength = data.total_count
+          this.resultsLength = data.total_count;
 
           return data.items;
         })
