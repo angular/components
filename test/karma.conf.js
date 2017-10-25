@@ -17,6 +17,7 @@ module.exports = (config) => {
     ],
     files: [
       {pattern: 'node_modules/core-js/client/core.js', included: true, watched: false},
+      {pattern: 'node_modules/tslib/tslib.js', included: true, watched: false},
       {pattern: 'node_modules/systemjs/dist/system.src.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/zone.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/proxy.js', included: true, watched: false},
@@ -100,7 +101,7 @@ module.exports = (config) => {
     const buildId = `TRAVIS #${process.env.TRAVIS_BUILD_NUMBER} (${process.env.TRAVIS_BUILD_ID})`;
 
     if (process.env['TRAVIS_PULL_REQUEST'] === 'false' &&
-        process.env['MODE'] === "browserstack_required") {
+        process.env['MODE'] === "travis_required") {
 
       config.preprocessors['dist/packages/**/!(*+(.|-)spec).js'] = ['coverage'];
       config.reporters.push('coverage');
