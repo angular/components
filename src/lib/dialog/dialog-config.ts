@@ -40,7 +40,7 @@ export class MatDialogConfig<D = any> {
   role?: DialogRole = 'dialog';
 
   /** Custom class for the overlay pane. */
-  panelClass?: string | string[] = '';
+  panelClass?: string|string[]|Set<string>|{[klass: string]: any} = '';
 
   /** Whether the dialog has a backdrop. */
   hasBackdrop?: boolean = true;

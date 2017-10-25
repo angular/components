@@ -37,6 +37,7 @@ import {AnimationCurves, AnimationDurations} from '@angular/material/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {MatSnackBarConfig} from './snack-bar-config';
+import {parseAndGetClassList} from '@angular/cdk/css';
 
 
 export const SHOW_ANIMATION =
@@ -104,12 +105,10 @@ export class MatSnackBarContainer extends BasePortalHost implements OnDestroy {
       throw Error('Attempting to attach snack bar content after content is already attached');
     }
 
-    if (this.snackBarConfig.extraClasses) {
-      // Not the most efficient way of adding classes, but the renderer doesn't allow us
-      // to pass in an array or a space-separated list.
-      for (let cssClass of this.snackBarConfig.extraClasses) {
-        this._renderer.addClass(this._elementRef.nativeElement, cssClass);
-      }
+    if (this.snackBarConfig.extraClasses || this.snackBarConfig.panelClass) {
+      const klasses = this.snackBarConfig.extraClasses || this.snackBarConfig.panelClass;
+      parseAndGetClassList(klasses)
+          .forEach(klass => this._renderer.addClass(this._elementRef.nativeElement, klass));
     }
 
     if (this.snackBarConfig.horizontalPosition === 'center') {

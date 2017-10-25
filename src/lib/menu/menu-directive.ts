@@ -37,6 +37,7 @@ import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu
 import {MatMenuItem} from './menu-item';
 import {MatMenuPanel} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
+import {parseClassList} from '@angular/cdk/css';
 
 
 /** Default `mat-menu` options that can be overridden. */
@@ -127,15 +128,20 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
    * menu template that displays in the overlay container.  Otherwise, it's difficult
    * to style the containing menu from outside the component.
    * @param classes list of class names
+   * @deprecated Use `panelClass` instead.
    */
-  @Input('class')
-  set classList(classes: string) {
-    if (classes && classes.length) {
-      this._classList = classes.split(' ').reduce((obj: any, className: string) => {
-        obj[className] = true;
-        return obj;
-      }, {});
+  @Input('class') classList = this.panelClass;
 
+  /**
+   * This method takes classes set on the host mat-menu element and applies them on the
+   * menu template that displays in the overlay container.  Otherwise, it's difficult
+   * to style the containing menu from outside the component.
+   * @param classes list of class names
+   */
+  @Input()
+  set panelClass(classList: string|string[]|Set<string>|{[klass: string]: any}) {
+    if (classList) {
+      this._classList = parseClassList(classList);
       this._elementRef.nativeElement.className = '';
       this.setPositionClasses();
     }
