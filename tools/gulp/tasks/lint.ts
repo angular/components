@@ -1,7 +1,7 @@
 import {red} from 'chalk';
 import {readdirSync, readFileSync, statSync} from 'fs';
 import {task} from 'gulp';
-import {colors, log} from 'gulp-util';
+import {log} from 'gulp-util';
 import {buildConfig} from 'material2-build-tools';
 import {IMinimatch, Minimatch} from 'minimatch';
 import {join} from 'path';
@@ -87,7 +87,7 @@ task('ownerslint', () => {
         // Report an error for any files that didn't match any owned paths.
         .filter(path => {
           if (statSync(path).isFile()) {
-            log(colors.red(`No code owner found for "${path}".`));
+            log(red(`No code owner found for "${path}".`));
             errors++;
             return false;
           }
