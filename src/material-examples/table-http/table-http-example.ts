@@ -83,7 +83,6 @@ export class ExampleHttpDao {
     const requestUrl =
         `${href}?q=repo:angular/material2&sort=${sort}&order=${order}&page=${page + 1}`;
 
-    return this.http.get(requestUrl)
-        .map(response => response as GithubApi);
+    return this.http.get<GithubApi>(requestUrl);
   }
 }
