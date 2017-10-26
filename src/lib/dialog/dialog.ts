@@ -117,13 +117,6 @@ export class MatDialog {
   open<T, D = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
           config?: MatDialogConfig<D>): MatDialogRef<T> {
 
-    const inProgressDialog = this.openDialogs.find(dialog => dialog._isAnimating());
-
-    // If there's a dialog that is in the process of being opened, return it instead.
-    if (inProgressDialog) {
-      return inProgressDialog;
-    }
-
     config = _applyConfigDefaults(config);
 
     if (config.id && this.getDialogById(config.id)) {
@@ -133,7 +126,7 @@ export class MatDialog {
     const overlayRef = this._createOverlay(config);
     const dialogContainer = this._attachDialogContainer(overlayRef, config);
     const dialogRef =
-        this._attachDialogContent(componentOrTemplateRef, dialogContainer, overlayRef, config);
+        this._attachDialogContent<T>(componentOrTemplateRef, dialogContainer, overlayRef, config);
 
     if (!this.openDialogs.length) {
       document.addEventListener('keydown', this._boundKeydown);
@@ -252,7 +245,7 @@ export class MatDialog {
           <any>{ $implicit: config.data, dialogRef }));
     } else {
       const injector = this._createInjector<T>(config, dialogRef, dialogContainer);
-      const contentRef = dialogContainer.attachComponentPortal(
+      const contentRef = dialogContainer.attachComponentPortal<T>(
           new ComponentPortal(componentOrTemplateRef, undefined, injector));
       dialogRef.componentInstance = contentRef.instance;
     }
