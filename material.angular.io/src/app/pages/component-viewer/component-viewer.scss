@@ -28,11 +28,9 @@ app-component-viewer {
   min-height: 500px;
 
   table-of-contents {
-    display: inline-flex;
     top: 35px;
 
     @media (max-width: $small-breakpoint-width) {
-      display: flex;
       order: -1;
       position: inherit;
       width: auto;
@@ -41,7 +39,6 @@ app-component-viewer {
 }
 
 .docs-component-view-text-content {
-  display: inline-flex;
   flex-grow: 1;
 }
 

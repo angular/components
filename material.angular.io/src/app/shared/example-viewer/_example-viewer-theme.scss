@@ -29,6 +29,7 @@
 
     .docs-example-source {
       border-bottom: 1px solid mat-color($foreground, divider);
+      overflow-x: scroll;
     }
   }
 }
