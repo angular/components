@@ -114,8 +114,8 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   }
   set value(value: D | null) {
     value = coerceDateProperty(this._dateAdapter, value);
-    this._lastValueValid = !value || this._dateAdapter.isValid(value);
     value = this._getValidDateOrNull(value);
+    this._setLastValueValidity(value);
 
     let oldDate = this.value;
     this._value = value;
@@ -301,8 +301,8 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   _onInput(value: string) {
     let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-    this._lastValueValid = !date || this._dateAdapter.isValid(date);
     date = this._getValidDateOrNull(date);
+    this._setLastValueValidity(date);
     this._value = date;
     this._cvaOnChange(date);
     this._valueChange.emit(date);
@@ -319,5 +319,13 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
    */
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  }
+
+  /**
+   * Sets whether the last value entered in the input was valid
+   * @param lastValue The last value set on the input.
+   */
+  private _setLastValueValidity(lastValue: D | null): void {
+    this._lastValueValid = lastValue !== null;
   }
 }

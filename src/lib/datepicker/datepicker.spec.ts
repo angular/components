@@ -49,6 +49,7 @@ describe('MatDatepicker', () => {
         declarations: [
           DatepickerWithChangeAndInputEvents,
           DatepickerWithFilterAndValidation,
+          DatepickerWithInputParseValidation,
           DatepickerWithFormControl,
           DatepickerWithISOStrings,
           DatepickerWithMinAndMaxValidation,
@@ -549,6 +550,52 @@ describe('MatDatepicker', () => {
 
         expect(testComponent.datepickerToggle.disabled).toBe(true);
       });
+    });
+
+    describe('datepicker with input parse validation', () => {
+      let fixture: ComponentFixture<DatepickerWithInputParseValidation>;
+      let testComponent: DatepickerWithInputParseValidation;
+
+      beforeEach(async(() => {
+        fixture = TestBed.createComponent(DatepickerWithInputParseValidation);
+        fixture.detectChanges();
+
+        testComponent = fixture.componentInstance;
+      }));
+
+      afterEach(async(() => {
+        testComponent.datepicker.close();
+        fixture.detectChanges();
+      }));
+
+      it('should mark input invalid when input string is invalid', async(() => {
+        const validDateString = '2017-01-02';
+        const invalidDateString = '2017-99-99';
+        testComponent.dateinput._onInput(validDateString);
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          fixture.detectChanges();
+
+          expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+              .toContain('ng-valid');
+          expect(testComponent.formControl.errors).toBeNull();
+
+          testComponent.dateinput._onInput(invalidDateString);
+          fixture.detectChanges();
+
+          fixture.whenStable().then(() => {
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+                .toContain('ng-invalid');
+            expect(testComponent.formControl.errors).toBeDefined();
+            expect(testComponent.formControl.errors !== null ?
+                    testComponent.formControl.errors['matDatepickerParse'] :
+                    undefined).toBeDefined();
+          });
+        });
+      }));
     });
 
     describe('datepicker with mat-datepicker-toggle', () => {
@@ -1196,6 +1243,21 @@ class DatepickerWithFilterAndValidation {
   @ViewChild('d') datepicker: MatDatepicker<Date>;
   date: Date;
   filter = (date: Date) => date.getDate() != 1;
+}
+
+
+@Component({
+  template: `
+    <input [formControl]="formControl" [matDatepicker]="d" [(ngModel)]="date">
+    <mat-datepicker-toggle [for]="d"></mat-datepicker-toggle>
+    <mat-datepicker #d [touchUi]="true"></mat-datepicker>
+  `,
+})
+class DatepickerWithInputParseValidation {
+  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput) dateinput: MatDatepickerInput<Date>;
+  formControl = new FormControl();
+  date: Date;
 }
 
 
