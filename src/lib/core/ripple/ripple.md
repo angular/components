@@ -12,11 +12,8 @@ The `matRipple` attribute directive defines an area in which a ripple animates o
 ```
 
 By default, a ripple is activated when the host element of the `matRipple` directive receives
-mouse or touch events. Once element is being pressed, a ripple starts fading in from the point
-of contact and expands circularly to cover the full host element.
-
-As long as the user does not release the element, the ripples will not fade out. Releasing the
-element, will make the present ripples fade out.
+mouse or touch events. Upon being pressed, a ripple will begin fading in from the point of contact,
+radiating to cover the host element. Each ripple will fade out only upon release of the mouse or touch.
 
 Ripples can also be triggered programmatically by getting a reference to the MatRipple directive
 and calling its `launch` method.
@@ -24,14 +21,10 @@ and calling its `launch` method.
 
 ### Ripple trigger
 
-As mentioned previously, by default ripples will fade in on interaction with the directive's
-host element.
-
-In some situations, developers may want to show ripples on interaction with *another* element, 
-but still want to have the ripples placed in another location.
-
-This can be done by specifying the `matRippleTrigger` option that expects a reference to a
-`HTMLElement`.
+By default ripples will fade in on interaction with the directive's host element.
+In some situations, developers may want to show ripples on interaction with *some other* element, 
+but still want to have the ripples placed in another location. This can be done by specifying
+the `matRippleTrigger` option that expects a reference to an `HTMLElement`.
 
 ```html
 <div>
