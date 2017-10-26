@@ -1,0 +1,11 @@
+<mat-select placeholder="Favorite food" [(ngModel)]="selectedValue" name="food">
+  <mat-select-header>
+      <mat-select-search [filterMatchFactory]="startsWithFilter" placeholder="Type to search your food.."></mat-select-search>
+  </mat-select-header>
+
+  <mat-option *ngFor="let food of foods" [value]="food.value">
+    {{food.viewValue}}
+  </mat-option>
+</mat-select>
+
+<p> Selected value: {{selectedValue}} </p>

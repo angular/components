@@ -10,7 +10,7 @@ import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
-import {DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import { DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW, TAB } from '@angular/cdk/keycodes';
 import {
   ConnectedOverlayDirective,
   Overlay,
@@ -71,6 +71,8 @@ import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
 import {Subject} from 'rxjs/Subject';
 import {fadeInContent, transformPanel} from './select-animations';
+import {MatSelectHeader} from './select-header';
+import {MatSelectSearch} from './select-search';
 import {
   getMatSelectDynamicMultipleError,
   getMatSelectNonArrayValueError,
@@ -293,6 +295,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   /** A name for this control that can be used by `mat-form-field`. */
   controlType = 'mat-select';
 
+  /** Unique ID for the panel element. Useful for a11y in projected content (e.g. the header). */
+  panelId: string = 'mat-select-panel-' + nextUniqueId++;
+
   /** Trigger that opens the select. */
   @ViewChild('trigger') trigger: ElementRef;
 
@@ -313,6 +318,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** User-supplied override of the trigger element. */
   @ContentChild(MatSelectTrigger) customTrigger: MatSelectTrigger;
+
+  /** The select's header, if specified. */
+  @ContentChild(MatSelectHeader) header: MatSelectHeader;
+
+  /** The select's search, if specified */
+  @ContentChild(MatSelectSearch) search: MatSelectSearch;
 
   /** Placeholder to be shown if no value has been selected. */
   @Input()
@@ -451,6 +462,11 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   ngAfterContentInit() {
     this._initKeyManager();
+    if (this.search) {
+      this.search.onSearch.subscribe((searchTerms) => {
+        this._excludeOptions(searchTerms);
+      });
+    }
 
     RxChain.from(this.options.changes)
       .call(startWith, null)
@@ -487,7 +503,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** Opens the overlay panel. */
   open(): void {
-    if (this.disabled || !this.options.length) {
+    if (this.disabled || !this.options.length && !this.search) {
       return;
     }
 
@@ -619,6 +635,10 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** Handles keyboard events when the selected is open. */
   private _handleOpenKeydown(event: KeyboardEvent): void {
+    if (this.search && this.search.focused) {
+      this._handleSearchKeydown(event);
+      return;
+    }
     const keyCode = event.keyCode;
 
     if (keyCode === HOME || keyCode === END) {
@@ -633,6 +653,37 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     }
   }
 
+  /** Handles keyboard events when select search is focused. */
+  private _handleSearchKeydown(event: KeyboardEvent): void {
+    const keyCode = event.keyCode;
+    const keyManager = this._keyManager;
+
+    if (keyCode === ENTER && keyManager.activeItem) {
+      event.preventDefault();
+      keyManager.activeItem._selectViaInteraction();
+    } else {
+      switch (keyCode) {
+        case DOWN_ARROW: keyManager.setNextItemActive(); break;
+        case UP_ARROW: keyManager.setPreviousItemActive(); break;
+        case TAB: keyManager.tabOut.next();
+        default: return;
+      }
+      event.preventDefault();
+    }
+  }
+
+  /** Handles search using select-search */
+  private _excludeOptions(searchTerms: string) {
+    if (this.search.remoteSearch) {
+      return;
+    }
+    const matcher = this.search.filterMatchFactory(searchTerms);
+    this.options.forEach(o => o.setExcludeStyles(!matcher(o.getLabel())));
+    if (this.panelOpen) {
+      this._keyManager.setFirstItemActive();
+    }
+  }
+
   /**
    * When the panel element is finished transforming in (though not fading in), it
    * emits an event and focuses an option if the panel is open.
@@ -641,11 +692,19 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     if (this.panelOpen) {
       this._scrollTop = 0;
       this.onOpen.emit();
+
+      if (this.header) {
+        this.header._trapFocus();
+      }
     } else {
       this.onClose.emit();
       this._panelDoneAnimating = false;
       this.overlayDir.offsetX = 0;
       this._changeDetectorRef.markForCheck();
+
+      if (this.search) {
+        this.search.resetSearch();
+      }
     }
   }
 
@@ -807,6 +866,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       });
 
     this._setOptionIds();
+
+    if (this._panelOpen) {
+      if (this.options.length) {
+        this._keyManager.setFirstItemActive();
+      }
+    }
   }
 
   /** Invoked when an option is clicked. */
@@ -930,7 +995,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
         this.empty ? 0 : this._getOptionIndex(this._selectionModel.selected[0])!;
 
     selectedOptionOffset += MatOption.countGroupLabelsBeforeOption(selectedOptionOffset,
-        this.options, this.optionGroups);
+        this.options, this.optionGroups) + (this.header ? 1 : 0);
 
     // We must maintain a scroll buffer so the selected option will be scrolled to the
     // center of the overlay panel rather than the top.
