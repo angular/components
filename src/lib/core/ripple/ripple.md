@@ -1,5 +1,3 @@
-# matRipple
-
 Connect user input to screen reactions by using ripples to both indicate the point of touch, and to
 confirm that touch input was received. For touch or mouse, this occurs at the point of contact.
 
