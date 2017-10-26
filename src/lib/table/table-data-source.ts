@@ -43,11 +43,8 @@ export class MatTableDataSource<T> implements DataSource<T> {
   get data() { return this._data.value; }
 
   /**
-   * Filter term that should be used to filter out objects from the data array. Will be transformed
-   * by the filterTransformer function, which by default will transform the filter into lowercase
-   * and remove surrounding whitespace. To override this behavior, provide a custom function on the
-   * filterTransformer. To override how data objects are converted to strings to match again,
-   * provide a custom function on filterTermAccessor.
+   * Filter term that should be used to filter out objects from the data array. To override how
+   * data objects match to this filter string, provide a custom function for filterMatcher.
    */
   set filter(filter: string) { this._filter.next(filter); }
   get filter(): string { return this._filter.value; }

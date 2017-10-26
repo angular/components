@@ -98,7 +98,7 @@ describe('MatTable', () => {
       ]);
     });
 
-    fit('should be able to filter the table contents', fakeAsync(() => {
+    it('should be able to filter the table contents', fakeAsync(() => {
       // Change filter to a_1, should match one row
       dataSource.filter = 'a_1';
       fixture.detectChanges();
