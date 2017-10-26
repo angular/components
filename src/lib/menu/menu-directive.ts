@@ -129,7 +129,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
    * @param classes list of class names
    */
   @Input('class')
-  set classList(classes: string) {
+  set panelClass(classes: string) {
     if (classes && classes.length) {
       this._classList = classes.split(' ').reduce((obj: any, className: string) => {
         obj[className] = true;
@@ -140,6 +140,15 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
       this.setPositionClasses();
     }
   }
+
+  /**
+   * This method takes classes set on the host mat-menu element and applies them on the
+   * menu template that displays in the overlay container.  Otherwise, it's difficult
+   * to style the containing menu from outside the component.
+   * @deprecated Use `panelClass` instead.
+   * @param classes list of class names
+   */
+  @Input() classList = this.panelClass;
 
   /** Event emitted when the menu is closed. */
   @Output() close = new EventEmitter<void | 'click' | 'keydown'>();

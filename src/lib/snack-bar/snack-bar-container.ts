@@ -104,10 +104,10 @@ export class MatSnackBarContainer extends BasePortalHost implements OnDestroy {
       throw Error('Attempting to attach snack bar content after content is already attached');
     }
 
-    if (this.snackBarConfig.extraClasses) {
+    if (this.snackBarConfig.panelClass) {
       // Not the most efficient way of adding classes, but the renderer doesn't allow us
       // to pass in an array or a space-separated list.
-      for (let cssClass of this.snackBarConfig.extraClasses) {
+      for (let cssClass of this.snackBarConfig.panelClass) {
         this._renderer.addClass(this._elementRef.nativeElement, cssClass);
       }
     }
