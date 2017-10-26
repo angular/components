@@ -98,7 +98,7 @@ describe('MatTable', () => {
       ]);
     });
 
-    it('should be able to filter the table contents', fakeAsync(() => {
+    fit('should be able to filter the table contents', fakeAsync(() => {
       // Change filter to a_1, should match one row
       dataSource.filter = 'a_1';
       fixture.detectChanges();
@@ -109,8 +109,8 @@ describe('MatTable', () => {
       flushMicrotasks();  // Resolve promise that updates paginator's length
       expect(dataSource.paginator!.length).toBe(1);
 
-      // Change filter to a_2, should match one row
-      dataSource.filter = 'a_2';
+      // Change filter to '  A_2  ', should match one row (ignores case and whitespace)
+      dataSource.filter = '  A_2  ';
       fixture.detectChanges();
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
@@ -127,14 +127,17 @@ describe('MatTable', () => {
         ['a_3', 'b_3', 'c_3'],
       ]);
 
-      // Change filter function and filter, should match to rows.
-      dataSource.filterTermAccessor = data => {
+      // Change filter function and filter, should match to rows with zebra.
+      dataSource.filterMatcher = (data, filter) => {
+        let dataStr;
         switch (data.a) {
-          case 'a_1': return 'elephant';
-          case 'a_2': return 'zebra';
-          case 'a_3': return 'monkey';
-          default: return '';
+          case 'a_1': dataStr = 'elephant'; break;
+          case 'a_2': dataStr = 'zebra'; break;
+          case 'a_3': dataStr = 'monkey'; break;
+          default: dataStr = '';
         }
+
+        return dataStr.indexOf(filter) != -1;
       };
       dataSource.filter = 'zebra';
       fixture.detectChanges();
