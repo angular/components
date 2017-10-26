@@ -10,7 +10,7 @@ import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
-import {DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import {DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW, ESCAPE} from '@angular/cdk/keycodes';
 import {
   ConnectedOverlayDirective,
   Overlay,
@@ -628,6 +628,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     } else if ((keyCode === ENTER || keyCode === SPACE) && this._keyManager.activeItem) {
       event.preventDefault();
       this._keyManager.activeItem._selectViaInteraction();
+    } else if (keyCode === ESCAPE) {
+      event.stopPropagation();
+      this.close();
     } else {
       this._keyManager.onKeydown(event);
     }

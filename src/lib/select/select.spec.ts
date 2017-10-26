@@ -1,5 +1,5 @@
 import {Directionality} from '@angular/cdk/bidi';
-import {DOWN_ARROW, END, ENTER, HOME, SPACE, TAB, UP_ARROW} from '@angular/cdk/keycodes';
+import {DOWN_ARROW, END, ENTER, HOME, SPACE, TAB, UP_ARROW, ESCAPE} from '@angular/cdk/keycodes';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {Platform} from '@angular/cdk/platform';
 import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
@@ -269,6 +269,19 @@ describe('MatSelect', () => {
       expect(fixture.componentInstance.select.panelOpen).toBe(true);
 
       dispatchKeyboardEvent(trigger, 'keydown', TAB);
+      fixture.detectChanges();
+      tick(SELECT_CLOSE_ANIMATION);
+
+      expect(fixture.componentInstance.select.panelOpen).toBe(false);
+    }));
+
+    it('should close the panel when pressing escape', fakeAsync(() => {
+      trigger.click();
+      fixture.detectChanges();
+      tick(SELECT_OPEN_ANIMATION);
+      expect(fixture.componentInstance.select.panelOpen).toBe(true);
+
+      dispatchKeyboardEvent(trigger, 'keydown', ESCAPE);
       fixture.detectChanges();
       tick(SELECT_CLOSE_ANIMATION);
 
