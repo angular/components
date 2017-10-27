@@ -94,7 +94,7 @@ export class MatTableDataSource<T> implements DataSource<T> {
    * Checks if a data object matches the data source's filter string. By default, each data object
    * is converted to a string of its properties and returns true if the filter has
    * at least one occurrence in that string. By default, the filter string has its whitespace
-   * removed and the match is case-insensitive. May be overriden for a custom implementation of
+   * trimmed and the match is case-insensitive. May be overriden for a custom implementation of
    * filter matching.
    * @param data Data object used to check against the filter.
    * @param filter Filter string that has been set on the data source.
