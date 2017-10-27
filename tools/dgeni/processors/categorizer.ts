@@ -19,6 +19,7 @@ import {
   isProperty,
   isService
 } from '../common/decorators';
+import {ClassLikeExportDoc} from 'dgeni-packages/typescript/api-doc-types/ClassLikeExportDoc';
 import {MethodMemberDoc} from 'dgeni-packages/typescript/api-doc-types/MethodMemberDoc';
 import {sortCategorizedMembers} from '../common/sort-members';
 
@@ -31,6 +32,7 @@ export interface CategorizedClassDoc extends ClassExportDoc {
   isDeprecated: boolean;
   directiveExportAs?: string | null;
   directiveSelectors?: string[];
+  extendedDocs: ClassLikeExportDoc[];
 }
 
 export interface CategorizedPropertyMemberDoc extends PropertyMemberDoc {
@@ -87,6 +89,12 @@ export class Categorizer implements Processor {
     // Sort members
     classDoc.methods.sort(sortCategorizedMembers);
     classDoc.properties.sort(sortCategorizedMembers);
+
+    // Filter the extends clauses for clauses with an associated Dgeni document. Clauses without
+    // a document are unknown and should not be mentioned in the documentation for this class.
+    classDoc.extendedDocs = classDoc.extendsClauses
+      .filter(clause => clause.doc)
+      .map(clause => clause.doc!);
 
     // Categorize the current visited classDoc into its Angular type.
     if (isDirective(classDoc)) {

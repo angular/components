@@ -6,6 +6,15 @@
 <p class="docs-api-class-description">{$ class.description | safe $}</p>
 {%- endif -%}
 
+{% if class.extendedDocs.length %}
+<p class="docs-api-class-extends-clauses">
+  <span class="docs-api-class-extends-label">Extends:</span>
+  {% for extendedDoc in class.extendedDocs %}
+    <span class="docs-api-class-extends-type">{$ extendedDoc.name $}</span>
+  {% endfor %}
+</p>
+{% endif %}
+
 {%- if class.directiveSelectors -%}
 <p class="docs-api-directive-selectors">
   <span class="docs-api-class-selector-label">Selector:</span>
