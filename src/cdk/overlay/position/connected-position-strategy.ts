@@ -358,7 +358,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     // from the bottom of the viewport rather than the top.
     let y = verticalStyleProperty === 'top' ?
         overlayPoint.y :
-        window.innerHeight - (overlayPoint.y + overlayRect.height);
+        document.querySelector('.cdk-overlay-container').clientHeight - (overlayPoint.y + overlayRect.height);
 
     // We want to set either `left` or `right` based on whether the overlay wants to appear "before"
     // or "after" the origin, which determines the direction in which the element will expand.
@@ -375,7 +375,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     // from the right edge of the viewport rather than the left edge.
     let x = horizontalStyleProperty === 'left' ?
       overlayPoint.x :
-      window.innerWidth - (overlayPoint.x + overlayRect.width);
+      document.querySelector('.cdk-overlay-container').clientWidth - (overlayPoint.x + overlayRect.width);
 
 
     // Reset any existing styles. This is necessary in case the preferred position has
