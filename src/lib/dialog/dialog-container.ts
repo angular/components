@@ -185,8 +185,13 @@ export class MatDialogContainer extends BasePortalHost {
       this._restoreFocus();
     }
 
-    this._animationStateChanged.emit(event);
-    this._isAnimating = false;
+    // Note: as of Angular 4.3, the animations module seems to fire the `start` callback before
+    // the end if animations are disabled. Make this call async to ensure that it still fires
+    // at the appropriate time.
+    Promise.resolve().then(() => {
+      this._animationStateChanged.emit(event);
+      this._isAnimating = false;
+    });
   }
 
   /** Callback, invoked when an animation on the host starts. */

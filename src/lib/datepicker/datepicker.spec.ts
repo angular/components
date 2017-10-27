@@ -7,7 +7,7 @@ import {
   dispatchMouseEvent,
 } from '@angular/cdk/testing';
 import {Component, ViewChild} from '@angular/core';
-import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, inject, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
   DEC,
@@ -168,7 +168,7 @@ describe('MatDatepicker', () => {
             .toBe(true, 'Expected default ESCAPE action to be prevented.');
       });
 
-      it('close should close dialog', () => {
+      it('close should close dialog', fakeAsync(() => {
         testComponent.touch = true;
         fixture.detectChanges();
 
@@ -179,13 +179,13 @@ describe('MatDatepicker', () => {
 
         testComponent.datepicker.close();
         fixture.detectChanges();
+        flush();
 
-        fixture.whenStable().then(() => {
-          expect(document.querySelector('mat-dialog-container')).toBeNull();
-        });
-      });
+        expect(document.querySelector('mat-dialog-container')).toBeNull();
+        flush();
+      }));
 
-      it('setting selected should update input and close calendar', () => {
+      it('setting selected should update input and close calendar', fakeAsync(() => {
         testComponent.touch = true;
         fixture.detectChanges();
 
@@ -198,12 +198,12 @@ describe('MatDatepicker', () => {
         let cells = document.querySelectorAll('.mat-calendar-body-cell');
         dispatchMouseEvent(cells[1], 'click');
         fixture.detectChanges();
+        flush();
 
-        fixture.whenStable().then(() => {
-          expect(document.querySelector('mat-dialog-container')).toBeNull();
-          expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 2));
-        });
-      });
+        expect(document.querySelector('mat-dialog-container')).toBeNull();
+        expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 2));
+        flush();
+      }));
 
       it('clicking the currently selected date should close the calendar ' +
           'without firing selectedChanged', () => {
