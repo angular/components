@@ -9,27 +9,27 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {NodeOutlet} from './outlet';
+import {TreeNodeOutlet} from './outlet';
 import {CdkTreeNodePadding} from './padding';
 import {CdkTreeNodeTrigger} from './trigger';
 import {CdkTree} from './tree';
-import {CdkNodeDef, CdkTreeNode} from './node';
+import {CdkTreeNodeDef, CdkTreeNode} from './node';
 import {CdkNestedTreeNode} from './nested-node';
 
-const TREE_DIRECTIVES = [
+const EXPORTED_DECLARATIONS = [
   CdkNestedTreeNode,
-  CdkNodeDef,
+  CdkTreeNodeDef,
   CdkTreeNodePadding,
   CdkTreeNodeTrigger,
   CdkTree,
   CdkTreeNode,
-  NodeOutlet,
+  TreeNodeOutlet,
 ];
 
 @NgModule({
   imports: [CommonModule],
-  exports: TREE_DIRECTIVES,
-  declarations: TREE_DIRECTIVES,
-  providers: [FocusMonitor]
+  exports: EXPORTED_DECLARATIONS,
+  declarations: EXPORTED_DECLARATIONS,
+  providers: [FocusMonitor, CdkTreeNodeDef]
 })
 export class CdkTreeModule {}

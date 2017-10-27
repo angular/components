@@ -7,7 +7,9 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {Directive, Input, Optional} from '@angular/core';
+import {Directive, ElementRef, Input, OnDestroy, Optional, Renderer2} from '@angular/core';
+import {takeUntil} from 'rxjs/operator/takeUntil';
+import {Subject} from 'rxjs/Subject';
 import {CdkTreeNode} from './node';
 import {CdkTree} from './tree';
 
@@ -17,38 +19,56 @@ import {CdkTree} from './tree';
  */
 @Directive({
   selector: '[cdkTreeNodePadding]',
-  host: {
-    '[style.padding-left]': 'paddingIndentLeft()',
-    '[style.padding-right]': 'paddingIndentRight()',
-  }
 })
-export class CdkTreeNodePadding<T> {
-  /** The level of depth of the tree node. The padding will be `level * indent` pixels. */
-  @Input('cdkTreeNodePadding') level: number;
+export class CdkTreeNodePadding<T> implements OnDestroy {
+  /** Subject that emits when the component has been destroyed. */
+  private _destroyed = new Subject<void>();
 
-  /** The indent for each level. */
-  @Input('cdkTreeNodePaddingIndent') indent: number;
+  /** The level of depth of the tree node. The padding will be `level * indent` pixels. */
+  @Input('cdkTreeNodePadding')
+  set level(value: number) {
+    this._level = value;
+    this._setPadding();
+  }
+  _level: number;
+
+  /** The indent for each level. Default number 40px from material design menu sub-menu spec. */
+  @Input('cdkTreeNodePaddingIndent')
+  set indent(value: number) {
+    this._indent = value;
+    this._setPadding();
+  }
+  _indent: number = 40;
 
   constructor(private _treeNode: CdkTreeNode<T>,
               private _tree: CdkTree<T>,
-              @Optional() private _dir: Directionality) {}
+              private _renderer: Renderer2,
+              private _element: ElementRef,
+              @Optional() private _dir: Directionality) {
+    this._setPadding();
+    if (this._dir) {
+      takeUntil.call(this._dir.change, this._destroyed).subscribe(() => this._setPadding());
+    }
+  }
+
+  ngOnDestroy() {
+    this._destroyed.next();
+    this._destroyed.complete();
+  }
 
   /** The padding indent value for the tree node. Returns a string with px numbers if not null. */
   _paddingIndent(): string|null {
     const nodeLevel = (this._treeNode.data && this._tree.treeControl.getLevel)
       ? this._tree.treeControl.getLevel(this._treeNode.data)
       : null;
-    const level = this.level || nodeLevel;
-    return level ? `${level * this.indent}px` : null;
+    const level = this._level || nodeLevel;
+    return level ? `${level * this._indent}px` : null;
   }
 
-  /** The left padding indent value for the tree node. */
-  paddingIndentLeft(): string|null {
-    return this._dir && this._dir.value === 'rtl' ? null : this._paddingIndent();
-  }
+  _setPadding() {
+    const padding = this._paddingIndent();
+    const paddingProp = this._dir && this._dir.value === 'rtl' ? 'padding-right' : 'padding-left';
 
-  /** The right padding indent value for the tree node. */
-  paddingIndentRight(): string|null {
-    return this._dir && this._dir.value === 'rtl' ? this._paddingIndent() : null;
+    this._renderer.setStyle(this._element.nativeElement, paddingProp, padding);
   }
 }

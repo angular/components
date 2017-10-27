@@ -15,8 +15,8 @@ import {
  * inside the outlet.
  */
 @Directive({
-  selector: '[nodeOutlet]'
+  selector: '[treeNodeOutlet]'
 })
-export class NodeOutlet {
-  constructor(public viewContainer: ViewContainerRef) { }
+export class TreeNodeOutlet {
+  constructor(public viewContainer: ViewContainerRef) {}
 }

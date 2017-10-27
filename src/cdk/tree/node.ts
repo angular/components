@@ -7,31 +7,49 @@
  */
 import {FocusableOption} from '@angular/cdk/a11y';
 import {
-  ChangeDetectionStrategy,
-  Component,
   Directive,
   ElementRef,
   Input,
   OnDestroy,
-  TemplateRef,
-  ViewEncapsulation
+  TemplateRef
 } from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
+import {takeUntil} from 'rxjs/operator/takeUntil';
+import {Subject} from 'rxjs/Subject';
 import {CdkTree} from './tree';
 import {getTreeControlFunctionsMissingError} from './tree-errors';
 
+
+/** Context provided to the ndoes */
+export class CdkTreeNodeOutletContext<T> {
+
+  static mostRecentContextData: any;
+
+  /** Data for the node. */
+  $implicit: T;
+
+  /** Index location of the node. */
+  index?: number;
+
+  /** Length of the number of total nodes. */
+  count?: number;
+
+  constructor(data: T) {
+    this.$implicit = data;
+    CdkTreeNodeOutletContext.mostRecentContextData = data;
+  }
+}
 
 /**
  * Data node definition for the CdkTree.
  * Captures the node's template and a when predicate that describes when this node should be used.
  */
 @Directive({
-  selector: '[cdkNodeDef]',
+  selector: '[cdkTreeNodeDef]',
   inputs: [
-    'when: cdkNodeDefWhen'
+    'when: cdkTreeNodeDefWhen'
   ],
 })
-export class CdkNodeDef<T> {
+export class CdkTreeNodeDef<T> {
   /**
    * Function that should return true if this node template should be used for the provided node
    * data and index. If left undefined, this node will be considered the default node template to
@@ -49,48 +67,22 @@ export class CdkNodeDef<T> {
 /**
  * Tree node for CdkTree. It contains the data in the tree node.
  */
-@Component({
+@Directive({
   selector: 'cdk-tree-node',
   exportAs: 'cdkTreeNode',
-  template: `<ng-content></ng-content>`,
   host: {
     '[attr.role]': 'role',
     'class': 'cdk-tree-node',
     'tabindex': '0',
   },
-  encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
+  /** Subject that emits when the component has been destroyed. */
+  private _destroyed = new Subject<void>();
 
-  private _treeChildrenSubscription: Subscription;
-
-  /** The tree node data */
-  @Input('cdkTreeNode')
-  set data(v: T) {
-    this._data = v;
-    this.setRoleFromData();
-  }
+  /** The tree node's data. */
   get data(): T { return this._data; }
   private _data: T;
-
-  private setRoleFromData(): void {
-    if (this._tree.treeControl.isExpandable) {
-      this.role = this._tree.treeControl.isExpandable(this._data) ? 'group' : 'treeitem';
-    } else {
-      if (!this._tree.treeControl.getChildren) {
-        throw getTreeControlFunctionsMissingError();
-      }
-      if (this._treeChildrenSubscription) {
-        this._treeChildrenSubscription.unsubscribe();
-      }
-      this._treeChildrenSubscription = this._tree.treeControl.getChildren(this._data)
-        .subscribe(children => {
-          this.role = children ? 'group' : 'treeitem';
-        });
-    }
-  }
 
   /**
    * The role of the node should be 'group' if it's an internal node,
@@ -99,16 +91,33 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
   @Input() role: 'treeitem' | 'group' = 'treeitem';
 
   constructor(private _elementRef: ElementRef,
-              private _tree: CdkTree<T>) {}
+              private _tree: CdkTree<T>) {
+
+    this._data = CdkTreeNodeOutletContext.mostRecentContextData;
+    this._setRoleFromData();
+  }
 
   ngOnDestroy() {
-    if (this._treeChildrenSubscription) {
-      this._treeChildrenSubscription.unsubscribe();
-    }
+    this._destroyed.next();
+    this._destroyed.complete();
   }
 
   /** Focuses the menu item. Implements for FocusableOption. */
   focus(): void {
     this._elementRef.nativeElement.focus();
+  }
+
+  private _setRoleFromData(): void {
+    if (this._tree.treeControl.isExpandable) {
+      this.role = this._tree.treeControl.isExpandable(this._data) ? 'group' : 'treeitem';
+    } else {
+      if (!this._tree.treeControl.getChildren) {
+        throw getTreeControlFunctionsMissingError();
+      }
+      takeUntil.call(this._tree.treeControl.getChildren(this._data), this._destroyed)
+        .subscribe(children => {
+          this.role = children ? 'group' : 'treeitem';
+        });
+    }
   }
 }

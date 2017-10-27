@@ -5,11 +5,8 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {FocusKeyManager} from '@angular/cdk/a11y';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {UP_ARROW, DOWN_ARROW, RIGHT_ARROW, LEFT_ARROW} from '@angular/cdk/keycodes';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -17,7 +14,6 @@ import {
   Input,
   IterableDiffers,
   IterableDiffer,
-  NgIterable,
   IterableChangeRecord,
   OnDestroy,
   OnInit,
@@ -29,8 +25,8 @@ import {
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {takeUntil} from 'rxjs/operator/takeUntil';
 import {Subject} from 'rxjs/Subject';
-import {CdkNodeDef, CdkTreeNode} from './node';
-import {NodeOutlet} from './outlet';
+import {CdkTreeNodeDef, CdkTreeNode, CdkTreeNodeOutletContext} from './node';
+import {TreeNodeOutlet} from './outlet';
 import {TreeControl} from './control/tree-control';
 import {
   getTreeControlMissingError,
@@ -46,35 +42,27 @@ import {
 @Component({
   selector: 'cdk-tree',
   exportAs: 'cdkTree',
-  template: `<ng-container nodeOutlet></ng-container>`,
+  template: `<ng-container treeNodeOutlet></ng-container>`,
   host: {
     'class': 'cdk-tree',
     'role': 'tree',
-    '(focus)': 'focus()',
-    '(keydown)': 'handleKeydown($event)'
   },
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CdkTree<T> implements CollectionViewer, AfterViewInit, OnInit, OnDestroy {
+export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
   /** Subject that emits when the component has been destroyed. */
   private _destroyed = new Subject<void>();
 
   /** Latest data provided by the data source through the connect interface. */
-  private _data: NgIterable<T> = [];
+  private _data: Array<T> = [];
 
   /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<T>;
 
   /** Stores the node definition that does not have a when predicate. */
-  private _defaultNodeDef: CdkNodeDef<T> | null;
-
-  /** Focus related key manager */
-  _keyManager: FocusKeyManager<CdkTreeNode<T>>;
-
-  /** For focus, ordered nodes */
-  orderedNodes: QueryList<CdkTreeNode<T>> = new QueryList<CdkTreeNode<T>>();
+  private _defaultNodeDef: CdkTreeNodeDef<T> | null;
 
   /**
    * Provides a stream containing the latest data array to render. Influenced by the tree's
@@ -102,10 +90,10 @@ export class CdkTree<T> implements CollectionViewer, AfterViewInit, OnInit, OnDe
     new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
 
   // Outlets within the tree's template where the nodes will be inserted.
-  @ViewChild(NodeOutlet) _nodeOutlet: NodeOutlet;
+  @ViewChild(TreeNodeOutlet) _nodeOutlet: TreeNodeOutlet;
 
   /** The tree node template for the tree */
-  @ContentChildren(CdkNodeDef) _nodeDefs: QueryList<CdkNodeDef<T>>;
+  @ContentChildren(CdkTreeNodeDef) _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
 
   /** The tree node inside the tree */
   @ContentChildren(CdkTreeNode, {descendants: true}) items: QueryList<CdkTreeNode<T>>;
@@ -141,48 +129,8 @@ export class CdkTree<T> implements CollectionViewer, AfterViewInit, OnInit, OnDe
     }
   }
 
-  ngAfterViewInit() {
-    // For key traversal in correct order
-    takeUntil.call(this.items.changes, this._destroyed).subscribe(items => {
-      this.orderedNodes = items.toArray();
-
-      const activeItem = this._keyManager ? this._keyManager.activeItem : null;
-      this._keyManager = new FocusKeyManager(this.orderedNodes);
-      if (activeItem instanceof CdkTreeNode) {
-        this._updateFocusedNode(activeItem);
-      }
-      this._changeDetectorRef.detectChanges();
-    });
-  }
-
-  /** Keyboard actions. */
   // TODO(tinayuangao): Work on keyboard traversal and actions, make sure it's working for RTL
   //     and nested trees.
-  handleKeydown(event: KeyboardEvent) {
-    if (event.keyCode == RIGHT_ARROW) {
-      const activeNode = this._keyManager.activeItem;
-      if (activeNode instanceof CdkTreeNode) {
-        this.treeControl.expand(activeNode.data);
-        this._changeDetectorRef.detectChanges();
-      }
-    } else if (event.keyCode == LEFT_ARROW) {
-      const activeNode = this._keyManager.activeItem;
-      if (activeNode instanceof CdkTreeNode) {
-        this.treeControl.collapse(activeNode.data);
-        this._changeDetectorRef.detectChanges();
-      }
-    } else {
-      this._keyManager.onKeydown(event);
-    }
-  }
-
-  /** Update focused node in keymanager */
-  _updateFocusedNode(node: CdkTreeNode<T>) {
-    const index = this.orderedNodes.toArray().indexOf(node);
-    if (this._keyManager && index > -1) {
-      this._keyManager.setActiveItem(Math.min(this.orderedNodes.length -1, index));
-    }
-  }
 
   /**
    * Switch to the provided data source by resetting the data and unsubscribing from the current
@@ -238,11 +186,11 @@ export class CdkTree<T> implements CollectionViewer, AfterViewInit, OnInit, OnDe
    * predicate that returns true with the data. If none return true, return the default node
    * definition.
    */
-  _getNodeDef(data: T, i: number): CdkNodeDef<T> {
+  _getNodeDef(data: T, i: number): CdkTreeNodeDef<T> {
     if (this._nodeDefs.length == 1) { return this._nodeDefs.first; }
 
     const nodeDef =
-        this._nodeDefs.find(def => def.when && def.when(data, i)) || this._defaultNodeDef;
+      this._nodeDefs.find(def => def.when && def.when(data, i)) || this._defaultNodeDef;
     if (!nodeDef) { throw getTreeMissingMatchingNodeDefError(); }
 
     return nodeDef;
@@ -256,7 +204,7 @@ export class CdkTree<T> implements CollectionViewer, AfterViewInit, OnInit, OnDe
     const node = this._getNodeDef(nodeData, index);
 
     // Node context that will be provided to created embedded view
-    const context = {$implicit: nodeData};
+    const context: CdkTreeNodeOutletContext<T> = new CdkTreeNodeOutletContext<T>(nodeData);
 
     // Use default tree nodeOutlet, or nested node's nodeOutlet
     const container = viewContainer ? viewContainer : this._nodeOutlet.viewContainer;

@@ -147,7 +147,7 @@ class FakeDataSource extends DataSource<TestData> {
 @Component({
   template: `
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
-      <cdk-tree-node *cdkNodeDef="let node" class="customNodeClass" [cdkTreeNode]="node"
+      <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
                      cdkTreeNodePadding [cdkTreeNodePaddingIndent]="28">
                      {{node.a}} - {{node.b}} + {{node.c}}
       </cdk-tree-node>
