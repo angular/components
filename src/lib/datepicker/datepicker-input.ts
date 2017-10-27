@@ -115,7 +115,6 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     value = this._dateAdapter.deserialize(value);
     this._lastValueValid = !value || this._dateAdapter.isValid(value);
     value = this._getValidDateOrNull(value);
-
     let oldDate = this.value;
     this._value = value;
     this._renderer.setProperty(this._elementRef.nativeElement, 'value',
@@ -130,7 +129,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   @Input()
   get min(): D | null { return this._min; }
   set min(value: D | null) {
-    this._min = this._dateAdapter.deserialize(value);
+    this._min = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._validatorOnChange();
   }
   private _min: D | null;
@@ -139,7 +138,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   @Input()
   get max(): D | null { return this._max; }
   set max(value: D | null) {
-    this._max = this._dateAdapter.deserialize(value);
+    this._max = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._validatorOnChange();
   }
   private _max: D | null;
@@ -187,7 +186,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** The form control validator for the min date. */
   private _minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._dateAdapter.deserialize(control.value);
+    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
     return (!this.min || !controlValue ||
         this._dateAdapter.compareDate(this.min, controlValue) <= 0) ?
         null : {'matDatepickerMin': {'min': this.min, 'actual': controlValue}};
@@ -195,7 +194,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** The form control validator for the max date. */
   private _maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._dateAdapter.deserialize(control.value);
+    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
     return (!this.max || !controlValue ||
         this._dateAdapter.compareDate(this.max, controlValue) >= 0) ?
         null : {'matDatepickerMax': {'max': this.max, 'actual': controlValue}};
@@ -203,7 +202,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** The form control validator for the date filter. */
   private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._dateAdapter.deserialize(control.value);
+    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
     return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ?
         null : {'matDatepickerFilter': true};
   }

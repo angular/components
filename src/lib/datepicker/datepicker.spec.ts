@@ -272,13 +272,10 @@ describe('MatDatepicker', () => {
         expect((ownedElement as Element).tagName.toLowerCase()).toBe('mat-calendar');
       });
 
-      it('should throw when given wrong data type', () => {
+      it('should not throw when given wrong data type', () => {
         testComponent.date = '1/1/2017' as any;
 
-        expect(() => fixture.detectChanges())
-            .toThrowError('Could not deserialize "1/1/2017" into a valid date object.');
-
-        testComponent.date = null;
+        expect(() => fixture.detectChanges()).not.toThrow();
       });
     });
 

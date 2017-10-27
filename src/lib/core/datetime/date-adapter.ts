@@ -187,6 +187,12 @@ export abstract class DateAdapter<D> {
   abstract isValid(date: D): boolean;
 
   /**
+   * Gets date instance that is not valid.
+   * @returns An invalid date.
+   */
+  abstract invalid(): D;
+
+  /**
    * Attempts to deserialize a value to a valid date object. This is different from parsing in that
    * deserialize should only accept non-ambiguous, locale-independent formats (e.g. a ISO 8601
    * string). The default implementation does not allow any deserialization, it simply checks that
@@ -196,14 +202,13 @@ export abstract class DateAdapter<D> {
    * to also deserialize the format used by your backend.
    * @param value The value to be deserialized into a date object.
    * @returns The deserialized date object, either a valid date, null if the value can be
-   *     deserialized into a null date (e.g. the empty string).
-   * @throws If the given value cannot be deserialized into a valid date or null.
+   *     deserialized into a null date (e.g. the empty string), or an invalid date.
    */
   deserialize(value: any): D | null {
     if (value == null || this.isDateInstance(value) && this.isValid(value)) {
       return value;
     }
-    throw Error(`Could not deserialize "${value}" into a valid date object.`);
+    return this.invalid();
   }
 
   /**
@@ -236,7 +241,15 @@ export abstract class DateAdapter<D> {
    *     Null dates are considered equal to other null dates.
    */
   sameDate(first: D | null, second: D | null): boolean {
-    return first && second ? !this.compareDate(first, second) : first == second;
+    if (first && second) {
+      let firstValid = this.isValid(first);
+      let secondValid = this.isValid(second);
+      if (firstValid && secondValid) {
+        return !this.compareDate(first, second)
+      }
+      return firstValid == secondValid;
+    }
+    return first == second;
   }
 
   /**

@@ -66,7 +66,9 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   /** A date representing the period (month or year) to start the calendar in. */
   @Input()
   get startAt(): D | null { return this._startAt; }
-  set startAt(value: D | null) { this._startAt = this._dateAdapter.deserialize(value); }
+  set startAt(value: D | null) {
+    this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
   private _startAt: D | null;
 
   /** Whether the calendar should be started in month or year view. */
@@ -75,19 +77,25 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   /** The currently selected date. */
   @Input()
   get selected(): D | null { return this._selected; }
-  set selected(value: D | null) { this._selected = this._dateAdapter.deserialize(value); }
+  set selected(value: D | null) {
+    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
   private _selected: D | null;
 
   /** The minimum selectable date. */
   @Input()
   get minDate(): D | null { return this._minDate; }
-  set minDate(value: D | null) { this._minDate = this._dateAdapter.deserialize(value); }
+  set minDate(value: D | null) {
+    this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
   private _minDate: D | null;
 
   /** The maximum selectable date. */
   @Input()
   get maxDate(): D | null { return this._maxDate; }
-  set maxDate(value: D | null) { this._maxDate = this._dateAdapter.deserialize(value); }
+  set maxDate(value: D | null) {
+    this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
   private _maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */
@@ -383,5 +391,13 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     let increment = this._dateAdapter.getMonth(date) <= 4 ? 7 :
         (this._dateAdapter.getMonth(date) >= 7 ? 5 : 12);
     return this._dateAdapter.addCalendarMonths(date, increment);
+  }
+
+  /**
+   * @param obj The object to check.
+   * @returns The given object if it is both a date instance and valid, otherwise null.
+   */
+  private _getValidDateOrNull(obj: any): D | null {
+    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
   }
 }

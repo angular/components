@@ -222,8 +222,8 @@ export class NativeDateAdapter extends DateAdapter<Date> {
 
   /**
    * Returns the given value if given a valid Date or null. Deserializes valid ISO 8601 strings
-   * (https://www.ietf.org/rfc/rfc3339.txt) into valid Dates and empty string into null. Throws on
-   * all other values.
+   * (https://www.ietf.org/rfc/rfc3339.txt) into valid Dates and empty string into null. Returns an
+   * invalid date for all other values.
    */
   deserialize(value: any): Date | null {
     if (typeof value === 'string') {
@@ -248,6 +248,10 @@ export class NativeDateAdapter extends DateAdapter<Date> {
 
   isValid(date: Date) {
     return !isNaN(date.getTime());
+  }
+
+  invalid(): Date {
+    return new Date(NaN);
   }
 
   /** Creates a date but allows the month and date to overflow. */

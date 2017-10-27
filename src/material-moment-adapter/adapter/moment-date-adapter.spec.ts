@@ -16,6 +16,7 @@ import {MomentDateAdapter} from './moment-date-adapter';
 
 describe('MomentDateAdapter', () => {
   let adapter: MomentDateAdapter;
+  let assertValidDate: (d: moment.Moment | null, valid: boolean) => void;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -27,6 +28,13 @@ describe('MomentDateAdapter', () => {
     moment.locale('en');
     adapter = d;
     adapter.setLocale('en');
+
+    assertValidDate = (d: moment.Moment | null, valid: boolean) => {
+      expect(adapter.isDateInstance(d)).not.toBeNull(`Expected ${d} to be a date instance`);
+      expect(adapter.isValid(d!)).toBe(valid,
+          `Expected ${d} to be ${valid ? 'valid' : 'invalid'},` +
+          ` but was ${valid ? 'invalid' : 'valid'}`);
+    }
   }));
 
   it('should get year', () => {
@@ -306,17 +314,17 @@ describe('MomentDateAdapter', () => {
   });
 
   it('should create valid dates from valid ISO strings', () => {
-    expect(adapter.deserialize('1985-04-12T23:20:50.52Z')).not.toBeNull();
-    expect(adapter.deserialize('1996-12-19T16:39:57-08:00')).not.toBeNull();
-    expect(adapter.deserialize('1937-01-01T12:00:27.87+00:20')).not.toBeNull();
-    expect(() => adapter.deserialize('1990-13-31T23:59:00Z')).toThrow();
-    expect(() => adapter.deserialize('1/1/2017')).toThrow();
+    assertValidDate(adapter.deserialize('1985-04-12T23:20:50.52Z'), true);
+    assertValidDate(adapter.deserialize('1996-12-19T16:39:57-08:00'), true);
+    assertValidDate(adapter.deserialize('1937-01-01T12:00:27.87+00:20'), true);
+    assertValidDate(adapter.deserialize('1990-13-31T23:59:00Z'), false);
+    assertValidDate(adapter.deserialize('1/1/2017'), false);
     expect(adapter.deserialize('')).toBeNull();
     expect(adapter.deserialize(null)).toBeNull();
-    expect(adapter.deserialize(new Date())).not.toBeNull();
-    expect(() => adapter.deserialize(new Date(NaN))).toThrow();
-    expect(adapter.deserialize(moment())).not.toBeNull();
-    expect(() => adapter.deserialize(moment.invalid())).toThrow();
+    assertValidDate(adapter.deserialize(new Date()), true);
+    assertValidDate(adapter.deserialize(new Date(NaN)), false);
+    assertValidDate(adapter.deserialize(moment()), true);
+    assertValidDate(adapter.deserialize(moment.invalid()), false);
   });
 
   it('setLocale should not modify global moment locale', () => {
@@ -356,6 +364,10 @@ describe('MomentDateAdapter', () => {
     adapter.isDateInstance(date);
     adapter.isValid(date);
     expect(date.locale()).toBe('en');
+  });
+
+  it('should create invalid date', () => {
+    assertValidDate(adapter.invalid(), false);
   });
 });
 
