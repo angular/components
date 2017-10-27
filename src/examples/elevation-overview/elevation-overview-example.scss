@@ -1,0 +1,21 @@
+@import '~@angular/material/theming';
+
+div {
+    width: auto;
+    display: block;
+    text-align: center;
+    height: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: lightblue;
+    margin-top: 10px;
+}
+
+
+.dynamic {
+    @include mat-elevation(2);
+
+    &:hover {
+        @include mat-elevation(8);
+    }
+}
