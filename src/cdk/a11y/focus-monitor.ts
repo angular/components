@@ -65,22 +65,7 @@ export class FocusMonitor {
   private _unregisterGlobalListeners = () => {};
 
   /** The number of elements currently being monitored. */
-  private get _monitoredElementCount() {
-    return this._monitoredElementCountGetterSetterBacking;
-  }
-  private set _monitoredElementCount(n) {
-    // Register global listeners when first element is monitored.
-    if (!this._monitoredElementCountGetterSetterBacking && n) {
-      this._registerGlobalListeners();
-    }
-    // Unregister global listeners when last element is unmonitored.
-    else if (this._monitoredElementCountGetterSetterBacking && !n) {
-      this._unregisterGlobalListeners();
-      this._unregisterGlobalListeners = () => {};
-    }
-    this._monitoredElementCountGetterSetterBacking = n;
-  }
-  private _monitoredElementCountGetterSetterBacking = 0;
+  private _monitoredElementCount = 0;
 
   constructor(private _ngZone: NgZone, private _platform: Platform) {}
 
@@ -126,7 +111,7 @@ export class FocusMonitor {
       subject: new Subject<FocusOrigin>()
     };
     this._elementInfo.set(element, info);
-    this._monitoredElementCount++;
+    this._incrementMonitoredElementCount();
 
     // Start listening. We need to listen in capture phase since focus events don't bubble.
     let focusListener = (event: FocusEvent) => this._onFocus(event, element);
@@ -158,7 +143,7 @@ export class FocusMonitor {
 
       this._setClasses(element);
       this._elementInfo.delete(element);
-      this._monitoredElementCount--;
+      this._decrementMonitoredElementCount();
     }
   }
 
@@ -350,6 +335,22 @@ export class FocusMonitor {
     this._setClasses(element);
     elementInfo.subject.next(null);
   }
+
+  private _incrementMonitoredElementCount() {
+    // Register global listeners when first element is monitored.
+    if (++this._monitoredElementCount == 1) {
+      this._registerGlobalListeners();
+    }
+  }
+
+  private _decrementMonitoredElementCount() {
+    // Unregister global listeners when last element is unmonitored.
+    if (!--this._monitoredElementCount) {
+      this._unregisterGlobalListeners();
+      this._unregisterGlobalListeners = () => {};
+    }
+  }
+
 }
 
 
