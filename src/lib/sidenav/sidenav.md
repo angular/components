@@ -9,10 +9,11 @@ represents the added side content.
 
 <!-- example(sidenav-overview) -->
 
-There are also drawer components, `<mat-drawer-container>`, `<mat-drawer-content>`, and
-`<mat-drawer>`,  which are analogous to their sidenav equivalents. Rather than adding side content
-to the app as a whole, these are designed to add side content to a small section of your app. They
-support almost all of the same features, but do not support fixed positioning.
+The drawer component is designed to add side content to a small section of your app. This is
+accomplished using the `<mat-drawer-container>`, `<mat-drawer-content>`, and `<mat-drawer>`
+components, which are analogous to their sidenav equivalents. Rather than adding side content to the
+app as a whole, these are designed to add side content to a small section of your app. They support
+almost all of the same features, but do not support fixed positioning.
 
 <!-- example(sidenav-drawer-overview) -->
 
@@ -25,7 +26,7 @@ of the container.
 The side content should be wrapped in a `<mat-sidenav>` element. The `position` property can be used
 to specify which end of the main content to place the side content on. `position` can be either
 `start` or `end` which places the side content on the left or right respectively in left-to-right
-languages. If the `position` is not set, the `start` end will be assumed. A
+languages. If the `position` is not set, the default value of `start` will be assumed. A
 `<mat-sidenav-container>` can have up to two `<mat-sidenav>` elements total, but only one for any
 given side.
 
@@ -39,6 +40,7 @@ of it.
 The following are examples of valid sidenav layouts:
 
 ```html
+<!-- Creates a layout with a left-positioned sidenav and explicit content. -->
 <mat-sidenav-container>
   <mat-sidenav>Start</mat-sidenav>
   <mat-sidenav-content>Main</mat-sidenav-content>
@@ -46,6 +48,7 @@ The following are examples of valid sidenav layouts:
 ```
 
 ```html
+<!-- Creates a layout with a left and right sidenav and implicit content. -->
 <mat-sidenav-container>
   <mat-sidenav>Start</mat-sidenav>
   <mat-sidenav position="end">End</mat-sidenav>
@@ -54,12 +57,14 @@ The following are examples of valid sidenav layouts:
 ```
 
 ```html
+<!-- Creates an empty sidenav container with no sidenavs and implicit empty content. -->
 <mat-sidenav-container></mat-sidenav-container>
 ```
 
 And these are examples of invalid sidenav layouts:
 
 ```html
+<!-- Invalid because there are two `start` position sidenavs. -->
 <mat-sidenav-container>
   <mat-sidenav>Start</mat-sidenav>
   <mat-sidenav position="start">Start 2</mat-sidenav>
@@ -67,6 +72,7 @@ And these are examples of invalid sidenav layouts:
 ```
 
 ```html
+<!-- Invalid because there are multiple `<mat-sidenav-content>` elements. -->
 <mat-sidenav-container>
   <mat-sidenav-content>Main</mat-sidenav-content>
   <mat-sidenav-content>Main 2</mat-sidenav-content>
@@ -74,6 +80,7 @@ And these are examples of invalid sidenav layouts:
 ```
 
 ```html
+<!-- Invalid because the `<mat-sidenav>` is outside of the `<mat-sidenav-container>`. -->
 <mat-sidenav-container></mat-sidenav-container>
 <mat-sidenav></mat-sidenav>
 ```
