@@ -128,7 +128,7 @@ describe('MatTable', () => {
       ]);
 
       // Change filter function and filter, should match to rows with zebra.
-      dataSource.filterMatcher = (data, filter) => {
+      dataSource.filterPredicate = (data, filter) => {
         let dataStr;
         switch (data.a) {
           case 'a_1': dataStr = 'elephant'; break;

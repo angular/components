@@ -60,7 +60,7 @@ export class TableDemo {
         default: return '';
       }
     };
-    this.matTableDataSource.filterMatcher =
+    this.matTableDataSource.filterPredicate =
         (data: UserData, filter: string) => data.name.indexOf(filter) != -1;
     this.filter.valueChanges.subscribe(filter => this.matTableDataSource!.filter = filter);
   }

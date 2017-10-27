@@ -44,7 +44,7 @@ export class MatTableDataSource<T> implements DataSource<T> {
 
   /**
    * Filter term that should be used to filter out objects from the data array. To override how
-   * data objects match to this filter string, provide a custom function for filterMatcher.
+   * data objects match to this filter string, provide a custom function for filterPredicate.
    */
   set filter(filter: string) { this._filter.next(filter); }
   get filter(): string { return this._filter.value; }
@@ -100,7 +100,7 @@ export class MatTableDataSource<T> implements DataSource<T> {
    * @param filter Filter string that has been set on the data source.
    * @returns Whether the filter matches against the data
    */
-  filterMatcher: ((data: T, filter: string) => boolean) = (data: T, filter: string): boolean => {
+  filterPredicate: ((data: T, filter: string) => boolean) = (data: T, filter: string): boolean => {
     // Transform the data into a lowercase string of all property values.
     const accumulator = (currentTerm, key) => currentTerm + data[key];
     const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
@@ -152,7 +152,7 @@ export class MatTableDataSource<T> implements DataSource<T> {
     // Each data object is converted to a string using the function defined by filterTermAccessor.
     // May be overriden for customization.
     const filteredData =
-        !this.filter ? data : data.filter(obj => this.filterMatcher(obj, this.filter));
+        !this.filter ? data : data.filter(obj => this.filterPredicate(obj, this.filter));
 
     if (this.paginator) { this._updatePaginator(filteredData.length); }
 
