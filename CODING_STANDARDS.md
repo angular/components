@@ -152,7 +152,7 @@ someObservable.filter(...).map(...).do(...);
 RxChain.from(someObservable).call(filter, ...).call(map, ...).call(do, ...).subscribe(...);
 ```
 Note that not all operators are available via the `RxChain`. If the operator that you need isn't
-declared, you can add it to `/core/rxjs/rx-operators.ts`.
+declared, you can add it to `/cdk/rxjs/rx-operators.ts`.
 
 #### Access modifiers
 * Omit the `public` keyword as it is the default behavior.
