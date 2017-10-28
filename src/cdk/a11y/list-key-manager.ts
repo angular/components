@@ -15,6 +15,7 @@ import {RxChain, debounceTime, filter, map, doOperator} from '@angular/cdk/rxjs'
 /** This interface is for items that can be passed to a ListKeyManager. */
 export interface ListKeyManagerOption {
   disabled?: boolean;
+  excluded?: boolean;
   getLabel?(): string;
 }
 
@@ -80,7 +81,11 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
           const index = (this._activeItemIndex + i) % items.length;
           const item = items[index];
 
-          if (!item.disabled && item.getLabel!().toUpperCase().trim().indexOf(inputString) === 0) {
+          if (
+            !item.disabled &&
+            !item.excluded &&
+            item.getLabel!().toUpperCase().trim().indexOf(inputString) === 0
+          ) {
             this.setActiveItem(index);
             break;
           }
@@ -182,7 +187,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
   /**
    * Sets the active item properly given "wrap" mode. In other words, it will continue to move
-   * down the list until it finds an item that is not disabled, and it will wrap if it
+   * down the list until it finds an item that is not disabled or excluded, and it will wrap if it
    * encounters either end of the list.
    */
   private _setActiveInWrapMode(delta: number, items: T[]): void {
@@ -190,8 +195,8 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     this._activeItemIndex =
       (this._activeItemIndex + delta + items.length) % items.length;
 
-    // skip all disabled menu items recursively until an enabled one is reached
-    if (items[this._activeItemIndex].disabled) {
+    // skip all disabled and excluded menu items recursively until an enabled one is reached
+    if (items[this._activeItemIndex].disabled || items[this._activeItemIndex].excluded) {
       this._setActiveInWrapMode(delta, items);
     } else {
       this.setActiveItem(this._activeItemIndex);
@@ -209,13 +214,13 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
   /**
    * Sets the active item to the first enabled item starting at the index specified. If the
-   * item is disabled, it will move in the fallbackDelta direction until it either
+   * item is disabled or excluded, it will move in the fallbackDelta direction until it either
    * finds an enabled item or encounters the end of the list.
    */
   private _setActiveItemByIndex(index: number, fallbackDelta: number,
                                   items = this._items.toArray()): void {
     if (!items[index]) { return; }
-    while (items[index].disabled) {
+    while (items[index].disabled || items[index].excluded) {
       index += fallbackDelta;
       if (!items[index]) { return; }
     }

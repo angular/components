@@ -1,0 +1,10 @@
+<input
+    #search
+    type="search"
+    role="combobox"
+    class="mat-select-header-input"
+    (input)="_handleInput($event.target.value)"
+    (focus)="_handleFocus(true)"
+    (blur)="_handleFocus(false)"
+    [attr.aria-owns]="panelId"
+    [placeholder]="placeholder"/>

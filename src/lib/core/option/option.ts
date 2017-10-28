@@ -43,6 +43,7 @@ export class MatOptionSelectionChange {
 export interface MatOptionParentComponent {
   disableRipple?: boolean;
   multiple?: boolean;
+  panelId?: string;
 }
 
 /**
@@ -68,6 +69,7 @@ export const MAT_OPTION_PARENT_COMPONENT =
     '[attr.aria-selected]': 'selected.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[class.mat-option-disabled]': 'disabled',
+    '[class.mat-option-excluded]': 'excluded',
     '(click)': '_selectViaInteraction()',
     '(keydown)': '_handleKeydown($event)',
     'class': 'mat-option',
@@ -81,7 +83,13 @@ export class MatOption {
   private _selected = false;
   private _active = false;
   private _disabled = false;
+  private _excluded = false;
   private _id = `mat-option-${_uniqueIdCounter++}`;
+
+  /** Wether the option does not match the search filter */
+  get excluded(): boolean {
+    return this._excluded;
+  }
 
   /** Whether the wrapping component is in multiple selection mode. */
   get multiple() { return this._parent && this._parent.multiple; }
@@ -174,6 +182,17 @@ export class MatOption {
   setInactiveStyles(): void {
     if (this._active) {
       this._active = false;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  /**
+   * Sets excluded status and styles (used by select-search logic)
+   * @param excluded
+   */
+  setExcludeStyles(excluded: boolean): void {
+    if (this._excluded != excluded) {
+      this._excluded = excluded;
       this._changeDetectorRef.markForCheck();
     }
   }

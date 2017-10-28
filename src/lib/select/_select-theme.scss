@@ -31,6 +31,14 @@
     }
   }
 
+  .mat-select-header {
+    border-color: mat-color($foreground, divider);
+  }
+
+  .mat-select-header-input {
+    color: mat-color($foreground, text);
+  }
+
   .mat-form-field {
     &.mat-focused {
       &.mat-primary .mat-select-arrow {

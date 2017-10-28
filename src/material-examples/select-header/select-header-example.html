@@ -1,0 +1,12 @@
+<mat-select placeholder="Favorite food" [(ngModel)]="selectedValue" name="food">
+  <mat-select-header>
+      <mat-checkbox [(ngModel)]="withWater" name="water_cb">with water please!</mat-checkbox>
+  </mat-select-header>
+
+  <mat-option *ngFor="let food of foods" [value]="food.value">
+    {{food.viewValue}}
+  </mat-option>
+</mat-select>
+<span [hidden]="!withWater">with water!</span>
+
+<p> Selected value: {{selectedValue}} </p>

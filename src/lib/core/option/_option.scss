@@ -29,6 +29,10 @@
     }
   }
 
+  .mat-option-excluded {
+    display: none;
+  }
+
   // Collapses unwanted whitespace created by newlines in code like the following:
   // <mat-option>
   //   {{value}}

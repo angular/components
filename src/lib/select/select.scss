@@ -55,10 +55,8 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
   margin: 0 $mat-select-arrow-margin;
 }
 
-.mat-select-panel {
-  @include mat-menu-base(8);
-  padding-top: 0;
-  padding-bottom: 0;
+.mat-select-content {
+  @include mat-menu-scrollable();
   max-height: $mat-select-panel-max-height;
   min-width: 100%; // prevents some animation twitching and test inconsistencies in IE11
 
@@ -67,10 +65,34 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
   }
 }
 
+.mat-select-panel {
+  @include mat-menu-base(8);
+  border: none;
+}
+
+.mat-select-header {
+  @include mat-menu-item-base();
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  box-sizing: border-box;
+}
+
+// Opt-in header input styling.
+.mat-select-header-input {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  padding: 0;
+  background: transparent;
+}
+
 // Override optgroup and option to scale based on font-size of the trigger.
 .mat-select-panel {
   .mat-optgroup-label,
-  .mat-option {
+  .mat-option,
+  .mat-select-search {
     font-size: inherit;
     line-height: $mat-select-item-height;
     height: $mat-select-item-height;

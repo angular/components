@@ -1,4 +1,5 @@
-Space above cards: <input type="number" [formControl]="topHeightCtrl">
+Space above cards:
+<input type="number" [formControl]="topHeightCtrl">
 <button mat-button (click)="showSelect=!showSelect">SHOW SELECT</button>
 <div [style.height.px]="topHeightCtrl.value"></div>
 
@@ -7,8 +8,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <mat-card-subtitle>ngModel</mat-card-subtitle>
 
     <mat-form-field [floatPlaceholder]="floatPlaceholder" [color]="drinksTheme">
-      <mat-select placeholder="Drink" [(ngModel)]="currentDrink" [required]="drinksRequired"
-        [disabled]="drinksDisabled" #drinkControl="ngModel">
+      <mat-select placeholder="Drink" [(ngModel)]="currentDrink" [required]="drinksRequired" [disabled]="drinksDisabled" #drinkControl="ngModel">
         <mat-option>None</mat-option>
         <mat-option *ngFor="let drink of drinks" [value]="drink.value" [disabled]="drink.disabled">
           {{ drink.viewValue }}
@@ -50,8 +50,8 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
 
     <mat-card-content>
       <mat-form-field [color]="pokemonTheme">
-        <mat-select multiple placeholder="Pokemon" [(ngModel)]="currentPokemon"
-          [required]="pokemonRequired" [disabled]="pokemonDisabled" #pokemonControl="ngModel">
+        <mat-select multiple placeholder="Pokemon" [(ngModel)]="currentPokemon" [required]="pokemonRequired" [disabled]="pokemonDisabled"
+          #pokemonControl="ngModel">
           <mat-option *ngFor="let creature of pokemon" [value]="creature.value">
             {{ creature.viewValue }}
           </mat-option>
@@ -98,8 +98,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <mat-card-content>
       <mat-form-field>
         <mat-select placeholder="Pokemon" [(ngModel)]="currentPokemonFromGroup">
-          <mat-optgroup *ngFor="let group of pokemonGroups" [label]="group.name"
-            [disabled]="group.disabled">
+          <mat-optgroup *ngFor="let group of pokemonGroups" [label]="group.name" [disabled]="group.disabled">
             <mat-option *ngFor="let creature of group.pokemon" [value]="creature.value">
               {{ creature.viewValue }}
             </mat-option>
@@ -114,11 +113,8 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <mat-card-subtitle>compareWith</mat-card-subtitle>
     <mat-card-content>
       <mat-form-field [color]="drinksTheme">
-        <mat-select placeholder="Drink"
-                   [(ngModel)]="currentDrinkObject"
-                   [required]="drinkObjectRequired"
-                   [compareWith]="compareByValue ? compareDrinkObjectsByValue : compareByReference"
-                   #drinkObjectControl="ngModel">
+        <mat-select placeholder="Drink" [(ngModel)]="currentDrinkObject" [required]="drinkObjectRequired" [compareWith]="compareByValue ? compareDrinkObjectsByValue : compareByReference"
+          #drinkObjectControl="ngModel">
           <mat-option *ngFor="let drink of drinks" [value]="drink" [disabled]="drink.disabled">
             {{ drink.viewValue }}
           </mat-option>
@@ -130,13 +126,68 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <p> Status: {{ drinkObjectControl.control?.status }} </p>
       <p> Comparison Mode: {{ compareByValue ? 'VALUE' : 'REFERENCE' }} </p>
 
-      <button mat-button (click)="reassignDrinkByCopy()"
-              matTooltip="This action should clear the display value when comparing by reference.">
+      <button mat-button (click)="reassignDrinkByCopy()" matTooltip="This action should clear the display value when comparing by reference.">
         REASSIGN DRINK BY COPY
       </button>
       <button mat-button (click)="drinkObjectRequired=!drinkObjectRequired">TOGGLE REQUIRED</button>
       <button mat-button (click)="compareByValue=!compareByValue">TOGGLE COMPARE BY VALUE</button>
       <button mat-button (click)="drinkObjectControl.reset()">RESET</button>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-subtitle>Select Header (with Search)</mat-card-subtitle>
+    <mat-card-content>
+      <p>Single Selection with header</p>
+      <mat-form-field>
+        <mat-select placeholder="Drink" [(ngModel)]="currentDrink">
+          <mat-select-header class="demo-select-header-auto">
+              <mat-checkbox [(ngModel)]="withPizza" name="pizza_cb">with pizza please!</mat-checkbox>
+          </mat-select-header>
+          <mat-option *ngFor="let drink of drinks" [value]="drink.value" [disabled]="drink.disabled">
+            {{ drink.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span [hidden]="!withPizza">with pizza</span>
+
+      <p>Single Selection with search</p>
+      <mat-form-field>
+        <mat-select placeholder="Drink" [(ngModel)]="currentDrink">
+          <mat-select-header>
+            <mat-select-search placeholder="Type to search your drink.."></mat-select-search>
+          </mat-select-header>
+          <mat-option *ngFor="let drink of drinks" [value]="drink.value" [disabled]="drink.disabled">
+            {{ drink.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <p>Multiple Selection with "starts with" custom search</p>
+      <mat-form-field [color]="pokemonTheme">
+        <mat-select multiple placeholder="Pokemon" [(ngModel)]="currentPokemon" [required]="pokemonRequired" [disabled]="pokemonDisabled"
+          #pokemonControl="ngModel">
+          <mat-select-header>
+            <mat-select-search [filterMatchFactory]="startsWithFilter" placeholder="Type to search your pokemon.."></mat-select-search>
+          </mat-select-header>
+          <mat-option *ngFor="let creature of pokemon" [value]="creature.value">
+            {{ creature.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <p>Remote Search Multiple Selection</p>
+      <mat-form-field [color]="pokemonTheme">
+        <mat-select multiple placeholder="Pokemon" [(ngModel)]="currentAsyncPokemons" [required]="pokemonRequired" [disabled]="pokemonDisabled"
+          #pokemonControl="ngModel">
+          <mat-select-header>
+            <mat-select-search (onSearch)="searchRemotePokemons($event, currentAsyncPokemons)" [remoteSearch]="true" placeholder="Type to search your pokemon.."></mat-select-search>
+          </mat-select-header>
+          <mat-option *ngFor="let creature of remotePokemons | async" [value]="creature.value">
+            {{ creature.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </mat-card-content>
   </mat-card>
 

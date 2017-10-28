@@ -1,12 +1,15 @@
-import {Component} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {MatSelectChange} from '@angular/material';
+import { Component } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatSelectChange } from '@angular/material';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
-    moduleId: module.id,
-    selector: 'select-demo',
-    templateUrl: 'select-demo.html',
-    styleUrls: ['select-demo.css'],
+  moduleId: module.id,
+  selector: 'select-demo',
+  templateUrl: 'select-demo.html',
+  styleUrls: ['select-demo.css'],
 })
 export class SelectDemo {
   drinksRequired = false;
@@ -15,9 +18,11 @@ export class SelectDemo {
   drinksDisabled = false;
   pokemonDisabled = false;
   showSelect = false;
+  withPizza = false;
   currentDrink: string;
-  currentDrinkObject: {}|undefined = {value: 'tea-5', viewValue: 'Tea'};
+  currentDrinkObject: {} | undefined = { value: 'tea-5', viewValue: 'Tea' };
   currentPokemon: string[];
+  currentAsyncPokemons: string[];
   currentPokemonFromGroup: string;
   currentDigimon: string;
   latestChangeEvent: MatSelectChange;
@@ -29,38 +34,38 @@ export class SelectDemo {
   compareByValue = true;
 
   foods = [
-    {value: null, viewValue: 'None'},
-    {value: 'steak-0', viewValue: 'Steak'},
-    {value: 'pizza-1', viewValue: 'Pizza'},
-    {value: 'tacos-2', viewValue: 'Tacos'}
+    { value: null, viewValue: 'None' },
+    { value: 'steak-0', viewValue: 'Steak' },
+    { value: 'pizza-1', viewValue: 'Pizza' },
+    { value: 'tacos-2', viewValue: 'Tacos' }
   ];
 
   drinks = [
-    {value: 'coke-0', viewValue: 'Coke'},
-    {value: 'long-name-1', viewValue: 'Decaf Chocolate Brownie Vanilla Gingerbread Frappuccino'},
-    {value: 'water-2', viewValue: 'Water'},
-    {value: 'pepper-3', viewValue: 'Dr. Pepper'},
-    {value: 'coffee-4', viewValue: 'Coffee'},
-    {value: 'tea-5', viewValue: 'Tea'},
-    {value: 'juice-6', viewValue: 'Orange juice'},
-    {value: 'wine-7', viewValue: 'Wine'},
-    {value: 'milk-8', viewValue: 'Milk'},
+    { value: 'coke-0', viewValue: 'Coke' },
+    { value: 'long-name-1', viewValue: 'Decaf Chocolate Brownie Vanilla Gingerbread Frappuccino' },
+    { value: 'water-2', viewValue: 'Water' },
+    { value: 'pepper-3', viewValue: 'Dr. Pepper' },
+    { value: 'coffee-4', viewValue: 'Coffee' },
+    { value: 'tea-5', viewValue: 'Tea' },
+    { value: 'juice-6', viewValue: 'Orange juice' },
+    { value: 'wine-7', viewValue: 'Wine' },
+    { value: 'milk-8', viewValue: 'Milk' },
   ];
 
   pokemon = [
-    {value: 'bulbasaur-0', viewValue: 'Bulbasaur'},
-    {value: 'charizard-1', viewValue: 'Charizard'},
-    {value: 'squirtle-2', viewValue: 'Squirtle'},
-    {value: 'pikachu-3', viewValue: 'Pikachu'},
-    {value: 'eevee-4', viewValue: 'Eevee'},
-    {value: 'ditto-5', viewValue: 'Ditto'},
-    {value: 'psyduck-6', viewValue: 'Psyduck'},
+    { value: 'bulbasaur-0', viewValue: 'Bulbasaur' },
+    { value: 'charizard-1', viewValue: 'Charizard' },
+    { value: 'squirtle-2', viewValue: 'Squirtle' },
+    { value: 'pikachu-3', viewValue: 'Pikachu' },
+    { value: 'eevee-4', viewValue: 'Eevee' },
+    { value: 'ditto-5', viewValue: 'Ditto' },
+    { value: 'psyduck-6', viewValue: 'Psyduck' },
   ];
 
   availableThemes = [
-    {value: 'primary', name: 'Primary' },
-    {value: 'accent', name: 'Accent' },
-    {value: 'warn', name: 'Warn' }
+    { value: 'primary', name: 'Primary' },
+    { value: 'accent', name: 'Accent' },
+    { value: 'warn', name: 'Warn' }
   ];
 
   pokemonGroups = [
@@ -116,14 +121,35 @@ export class SelectDemo {
   }
 
   reassignDrinkByCopy() {
-    this.currentDrinkObject = {...this.currentDrinkObject};
+    this.currentDrinkObject = { ...this.currentDrinkObject };
   }
 
-  compareDrinkObjectsByValue(d1: {value: string}, d2: {value: string}) {
+  compareDrinkObjectsByValue(d1: { value: string }, d2: { value: string }) {
     return d1 && d2 && d1.value === d2.value;
   }
 
   compareByReference(o1: any, o2: any) {
     return o1 === o2;
+  }
+
+  remotePokemons: Subject<any> = new Subject<any>();
+
+  startsWithFilter(search: string) {
+    return (l: string) => {
+      return l.toLowerCase().indexOf(search.toLowerCase()) === 0;
+    };
+  }
+
+  searchRemotePokemons(search: string, selectedValues: string[]) {
+    setTimeout(() => {
+      this.remotePokemons.next(
+        this.pokemon.filter(p =>
+          (
+            search && p.viewValue.toLowerCase().startsWith(search.toLowerCase()) ||
+            selectedValues && selectedValues.indexOf(p.value) >= 0
+          )
+        )
+      );
+    }, 250);
   }
 }
