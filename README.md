@@ -81,7 +81,7 @@ High level stuff planned for Q4 2017 (October - December):
 | theming          |                                                        |  [Guide][20] |
 | typography       |                                                        |  [Guide][27] |
 | layout           |                      See [angular/flex-layout][lay_rp] |  [Wiki][0]   |
-| cdk              |                    Launched, documentation in-progress |              |
+| cdk              |                                                        |   [Docs][34] |
 
 
 #### In progress, planned, and non-planned features
@@ -130,6 +130,7 @@ High level stuff planned for Q4 2017 (October - December):
 [31]: https://tina-material-tree.firebaseapp.com/simple-tree
 [32]: https://material.angular.io/components/expansion/overview
 [33]: https://material.angular.io/components/stepper/overview
+[34]: https://material.angular.io/cdk/categories
 
 [0107]: https://github.com/angular/material2/issues/107
 [0119]: https://github.com/angular/material2/issues/119
