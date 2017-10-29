@@ -30,9 +30,14 @@ System.config({
     '@angular/platform-browser-dynamic': 'https://unpkg.com/@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
     '@angular/animations/browser': 'https://unpkg.com/@angular/animations/bundles/animations-browser.umd.js',
     '@angular/platform-browser/animations': 'https://unpkg.com/@angular/platform-browser/bundles/platform-browser-animations.umd.js',
+
+    // Angular Material and Angular CDK primary bundles.
     '@angular/material': 'https://unpkg.com/@angular/material/bundles/material.umd.js',
     '@angular/cdk': 'https://unpkg.com/@angular/cdk/bundles/cdk.umd.js',
+
+    // CDK Secondary entry points
     '@angular/cdk/a11y': 'https://unpkg.com/@angular/cdk/bundles/cdk-a11y.umd.js',
+    '@angular/cdk/accordion': 'https://unpkg.com/@angular/cdk/bundles/cdk-accordion.umd.js',
     '@angular/cdk/bidi': 'https://unpkg.com/@angular/cdk/bundles/cdk-bidi.umd.js',
     '@angular/cdk/coercion': 'https://unpkg.com/@angular/cdk/bundles/cdk-coercion.umd.js',
     '@angular/cdk/collections': 'https://unpkg.com/@angular/cdk/bundles/cdk-collections.umd.js',
@@ -45,6 +50,7 @@ System.config({
     '@angular/cdk/scrolling': 'https://unpkg.com/@angular/cdk/bundles/cdk-scrolling.umd.js',
     '@angular/cdk/table': 'https://unpkg.com/@angular/cdk/bundles/cdk-table.umd.js',
     '@angular/cdk/stepper': 'https://unpkg.com/@angular/cdk/bundles/cdk-stepper.umd.js',
+    '@angular/cdk/layout': 'https://unpkg.com/@angular/cdk/bundles/cdk-layout.umd.js',
 
     // Rxjs mapping
     'rxjs': 'https://unpkg.com/rxjs',
