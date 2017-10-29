@@ -73,6 +73,7 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
      */
     'class': 'mat-input-element mat-form-field-autofill-control',
     '[class.mat-input-server]': '_isServer',
+    '[class.mat-input-safari]': '_isSafari',
     // Native input properties that are overwritten by Angular inputs need to be synced with
     // the native input element. Otherwise property bindings for those don't work.
     '[attr.id]': 'id',
@@ -96,6 +97,9 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
   private _inputValueAccessor: {value: any};
   /** The aria-describedby attribute on the input for improved a11y. */
   _ariaDescribedby: string;
+
+  /** Whether the component is being rendered in Safari. */
+  _isSafari = false;
 
   /** Whether the component is being rendered on the server. */
   _isServer = false;
@@ -265,6 +269,7 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
       });
     }
 
+    this._isSafari = this._platform.SAFARI;
     this._isServer = !this._platform.isBrowser;
     this._isNativeSelect = element.nodeName.toLowerCase() === 'select';
 

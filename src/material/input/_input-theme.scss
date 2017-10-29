@@ -69,5 +69,11 @@
   // be misaligned w.r.t. the placeholder. Adding this margin corrects it.
   input.mat-input-element {
     margin-top: -$line-spacing * 1em;
+    height: $line-height * 1em;
+  }
+
+  input.mat-input-safari::first-line {
+    // Hack for 1px input content clipping on Safari:
+    line-height: $line-height * 1em;
   }
 }

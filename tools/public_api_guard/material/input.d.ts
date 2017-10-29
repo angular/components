@@ -10,6 +10,7 @@ export declare class MatInput extends _MatInputMixinBase implements MatFormField
     protected _elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
     protected _id: string;
     _isNativeSelect: boolean;
+    _isSafari: boolean;
     _isServer: boolean;
     protected _neverEmptyInputTypes: string[];
     protected _platform: Platform;
