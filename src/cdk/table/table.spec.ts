@@ -6,6 +6,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {combineLatest} from 'rxjs/observable/combineLatest';
 import {CdkTableModule} from './index';
 import {map} from 'rxjs/operators';
+import {Observable} from 'rxjs/Observable';
 import {
   getTableDuplicateColumnNameError,
   getTableMissingMatchingRowDefError,
