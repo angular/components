@@ -85,12 +85,8 @@ export class DocViewer implements OnDestroy {
 
     Array.prototype.slice.call(exampleElements).forEach((element: Element) => {
       let example = element.getAttribute(componentName);
-
-      let exampleContainer = document.createElement('div');
-      element.appendChild(exampleContainer);
-
       let portalHost = new DomPortalHost(
-          exampleContainer, this._componentFactoryResolver, this._appRef, this._injector);
+          element, this._componentFactoryResolver, this._appRef, this._injector);
       let examplePortal = new ComponentPortal(componentClass, this._viewContainerRef);
       let exampleViewer = portalHost.attach(examplePortal);
       exampleViewer.instance.example = example;

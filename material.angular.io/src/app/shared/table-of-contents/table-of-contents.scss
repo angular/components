@@ -1,12 +1,15 @@
 :host {
   font-size: 13px;
-  width: 15%;
+  width: 19%;
   position: sticky;
   top: 0;
+  padding-left: 20px;
+  box-sizing: border-box;
 }
 
 .docs-toc-container {
   padding: 5px 0 10px 12px;
+  width: 100%;
 }
 
 .docs-toc-heading {
@@ -22,6 +25,9 @@ a {
   position: relative;
   text-decoration: none;
   display: block;
+  text-overflow: ellipsis;
+  width: 100%;
+  overflow: hidden;
 }
 
 .docs-level-h4 {

@@ -40,11 +40,12 @@ app-component-viewer {
 
 .docs-component-view-text-content {
   flex-grow: 1;
+  width: 100%;
 }
 
+.docs-component-api,
 .docs-component-overview {
   width: 80%;
-  margin-right: 20px;
 
   @media (max-width: $small-breakpoint-width) {
     width: 100%;

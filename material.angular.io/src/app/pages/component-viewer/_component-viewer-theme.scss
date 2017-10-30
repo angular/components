@@ -14,6 +14,9 @@
     .mat-tab-label:focus {
       color: mat-color($foreground, text);
     }
+  }
 
+  .docs-api-h3 {
+    border-bottom: 1px solid mat-color($foreground, divider);
   }
 }
