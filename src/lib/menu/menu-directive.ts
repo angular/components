@@ -146,7 +146,6 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
    * menu template that displays in the overlay container.  Otherwise, it's difficult
    * to style the containing menu from outside the component.
    * @deprecated Use `panelClass` instead.
-   * @param classes list of class names
    */
   @Input()
   set classList(classes: string) { this.panelClass = classes; }
