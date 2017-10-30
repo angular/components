@@ -9,7 +9,7 @@ import {Injectable, NgZone, OnDestroy} from '@angular/core';
 import {MediaMatcher} from './media-matcher';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {RxChain, map, startWith, takeUntil} from '@angular/cdk/rxjs';
+import {map, startWith, takeUntil} from 'rxjs/operators';
 import {coerceArray} from '@angular/cdk/coercion';
 import {combineLatest} from 'rxjs/observable/combineLatest';
 import {fromEventPattern} from 'rxjs/observable/fromEventPattern';
@@ -24,9 +24,7 @@ interface Query {
   mql: MediaQueryList;
 }
 
-/**
- * Utility for checking the matching state of @media queries.
- */
+/** Utility for checking the matching state of @media queries. */
 @Injectable()
 export class BreakpointObserver implements OnDestroy {
   /**  A map of all media queries currently being listened for. */
@@ -42,7 +40,11 @@ export class BreakpointObserver implements OnDestroy {
     this._destroySubject.complete();
   }
 
-  /** Whether the query currently is matched. */
+  /**
+   * Whether one or more media queries match the current viewport size.
+   * @param value One or more media queries to check.
+   * @returns Whether any of the media queries match.
+   */
   isMatched(value: string | string[]): boolean {
     let queries = coerceArray(value);
     return queries.some(mediaQuery => this._registerQuery(mediaQuery).mql.matches);
@@ -51,6 +53,7 @@ export class BreakpointObserver implements OnDestroy {
   /**
    * Gets an observable of results for the given queries that will emit new results for any changes
    * in matching of the given queries.
+   * @returns A stream of matches for the given queries.
    */
   observe(value: string | string[]): Observable<BreakpointState> {
     let queries = coerceArray(value);
@@ -72,7 +75,7 @@ export class BreakpointObserver implements OnDestroy {
 
     let mql: MediaQueryList = this.mediaMatcher.matchMedia(query);
     // Create callback for match changes and add it is as a listener.
-    let queryObservable = RxChain.from(fromEventPattern(
+    let queryObservable = fromEventPattern(
       // Listener callback methods are wrapped to be placed back in ngZone. Callbacks must be placed
       // back into the zone because matchMedia is only included in Zone.js by loading the
       // webapis-media-query.js file alongside the zone.js file.  Additionally, some browsers do not
@@ -83,11 +86,12 @@ export class BreakpointObserver implements OnDestroy {
       },
       (listener: MediaQueryListListener) => {
         mql.removeListener((e: MediaQueryList) => this.zone.run(() => listener(e)));
-      }))
-      .call(takeUntil, this._destroySubject)
-      .call(startWith, mql)
-      .call(map, (nextMql: MediaQueryList) => ({matches: nextMql.matches}))
-      .result();
+      })
+      .pipe(
+        takeUntil(this._destroySubject),
+        startWith(mql),
+        map((nextMql: MediaQueryList) => ({matches: nextMql.matches}))
+      );
 
     // Add the MediaQueryList to the set of queries.
     let output = {observable: queryObservable, mql: mql};

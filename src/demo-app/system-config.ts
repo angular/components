@@ -9,13 +9,14 @@ System.config({
   map: {
     'rxjs': 'node:rxjs',
     'main': 'main.js',
+    'tslib': 'node:tslib/tslib.js',
     'moment': 'node:moment/min/moment-with-locales.min.js',
 
     // Angular specific mappings.
     '@angular/core': 'node:@angular/core/bundles/core.umd.js',
     '@angular/common': 'node:@angular/common/bundles/common.umd.js',
+    '@angular/common/http': 'node:@angular/common/bundles/common-http.umd.js',
     '@angular/compiler': 'node:@angular/compiler/bundles/compiler.umd.js',
-    '@angular/http': 'node:@angular/http/bundles/http.umd.js',
     '@angular/forms': 'node:@angular/forms/bundles/forms.umd.js',
     '@angular/animations': 'node:@angular/animations/bundles/animations.umd.js',
     '@angular/router': 'node:@angular/router/bundles/router.umd.js',
@@ -29,6 +30,7 @@ System.config({
 
     // TODO(devversion): replace once the index.ts file for the Material package has been added.
     '@angular/material': 'dist/packages/material/public-api.js',
+    '@angular/material-moment-adapter': 'dist/packages/material-moment-adapter/public-api.js',
     '@angular/cdk': 'dist/packages/cdk/index.js',
     '@angular/cdk/a11y': 'dist/packages/cdk/a11y/index.js',
     '@angular/cdk/accordion': 'dist/packages/cdk/accordion/index.js',
@@ -41,7 +43,6 @@ System.config({
     '@angular/cdk/overlay': 'dist/packages/cdk/overlay/index.js',
     '@angular/cdk/platform': 'dist/packages/cdk/platform/index.js',
     '@angular/cdk/portal': 'dist/packages/cdk/portal/index.js',
-    '@angular/cdk/rxjs': 'dist/packages/cdk/rxjs/index.js',
     '@angular/cdk/scrolling': 'dist/packages/cdk/scrolling/index.js',
     '@angular/cdk/stepper': 'dist/packages/cdk/stepper/index.js',
     '@angular/cdk/table': 'dist/packages/cdk/table/index.js',
@@ -81,6 +82,7 @@ System.config({
   packages: {
     // Thirdparty barrels.
     'rxjs': {main: 'index'},
+    'rxjs/operators': {main: 'index'},
 
     // Set the default extension for the root package, because otherwise the demo-app can't
     // be built within the production mode. Due to missing file extensions.

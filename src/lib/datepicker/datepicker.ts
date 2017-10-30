@@ -18,7 +18,7 @@ import {
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
-import {first} from '@angular/cdk/rxjs';
+import {first} from 'rxjs/operators';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -250,7 +250,7 @@ export class MatDatepicker<D> implements OnDestroy {
    */
   _registerInput(input: MatDatepickerInput<D>): void {
     if (this._datepickerInput) {
-      throw Error('An MatDatepicker can only be associated with a single input.');
+      throw Error('A MatDatepicker can only be associated with a single input.');
     }
     this._datepickerInput = input;
     this._inputSubscription =
@@ -325,7 +325,7 @@ export class MatDatepicker<D> implements OnDestroy {
       componentRef.instance.datepicker = this;
 
       // Update the position once the calendar has rendered.
-      first.call(this._ngZone.onStable.asObservable()).subscribe(() => {
+      this._ngZone.onStable.asObservable().pipe(first()).subscribe(() => {
         this._popupRef.updatePosition();
       });
     }
