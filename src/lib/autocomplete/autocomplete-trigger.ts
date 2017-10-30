@@ -387,14 +387,18 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     const labelCount = _countGroupLabelsBeforeOption(index,
         this.autocomplete.options, this.autocomplete.optionGroups);
 
-    const newScrollPosition = _getOptionScrollPosition(
-      index + labelCount,
-      AUTOCOMPLETE_OPTION_HEIGHT,
-      this.autocomplete._getScrollTop(),
-      AUTOCOMPLETE_PANEL_HEIGHT
-    );
+    if (index === 0 && labelCount === 1) {
+      this.autocomplete._setScrollTop(0);
+    } else {
+      const newScrollPosition = _getOptionScrollPosition(
+        index + labelCount,
+        AUTOCOMPLETE_OPTION_HEIGHT,
+        this.autocomplete._getScrollTop(),
+        AUTOCOMPLETE_PANEL_HEIGHT
+      );
 
-    this.autocomplete._setScrollTop(newScrollPosition);
+      this.autocomplete._setScrollTop(newScrollPosition);
+    }
   }
 
   /**
