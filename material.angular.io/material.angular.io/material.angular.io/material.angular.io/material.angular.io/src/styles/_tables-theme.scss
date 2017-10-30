@@ -8,7 +8,8 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
   $is-dark-theme: map-get($theme, is-dark);
-
+  $tableBorderOpacity: if($is-dark-theme, 0.08, 0.03);
+  
   .docs-api table,
   .docs-markdown-table {
     color: mat-color($foreground, text);
@@ -21,6 +22,6 @@
 
   .docs-api td,
   .docs-markdown-td {
-    border: 1px solid rgba(mat-color($foreground, secondary-text), .03);
+    border: 1px solid rgba(mat-color($foreground, secondary-text), $tableBorderOpacity);
   }
 }
