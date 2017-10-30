@@ -140,7 +140,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   ngAfterContentInit() {
     this._checkMenu();
 
-    this.menu.closed.subscribe(reason => {
+    this.menu.close.subscribe(reason => {
       this._destroyMenu();
 
       // If a click closed the menu, we should close the entire chain of nested menus.
@@ -194,7 +194,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     if (!this._menuOpen) {
       this._createOverlay().attach(this._portal);
       this._closeSubscription = this._menuClosingActions().subscribe(() => {
-        this.menu.closed.emit();
+        this.menu.close.emit();
       });
       this._initMenu();
 
@@ -206,7 +206,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /** Closes the menu. */
   closeMenu(): void {
-    this.menu.closed.emit();
+    this.menu.close.emit();
   }
 
   /** Focuses the menu trigger. */

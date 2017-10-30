@@ -1181,7 +1181,7 @@ class CustomMenuPanel implements MatMenuPanel {
   parentMenu: MatMenuPanel;
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
-  @Output() closed = new EventEmitter<void | 'click' | 'keydown'>();
+  @Output() close = new EventEmitter<void | 'click' | 'keydown'>();
   focusFirstItem = () => {};
   resetActiveItem = () => {};
   setPositionClasses = () => {};
