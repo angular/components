@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {SelectionModel} from '@angular/cdk/collections';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 
 /**

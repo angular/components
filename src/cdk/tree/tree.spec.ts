@@ -69,7 +69,6 @@ describe('CdkTree', () => {
     it('with the right data', () => {
       expect(dataSource.data.length).toBe(3);
 
-      const paddingLeft = '28px';
       let data = dataSource.data;
       expectFlatTreeToMatchContent(treeElement,
           [
@@ -92,7 +91,7 @@ describe('CdkTree', () => {
           `${data[3].a} - ${data[3].b} + ${data[3].c}`
         ],
         [1, 1, 1, 2]);
-    })
+    });
   });
 });
 

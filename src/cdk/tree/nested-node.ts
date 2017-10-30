@@ -16,7 +16,7 @@ import {Subject} from 'rxjs/Subject';
 import {takeUntil} from '@angular/cdk/rxjs';
 import {CdkTree} from './tree';
 import {TreeNodeOutlet} from './outlet';
-import {CdkTreeNode, CdkTreeNodeDef} from './node';
+import {CdkTreeNode} from './node';
 
 /**
  * Nested node is a child of `<cdk-tree>`. It works with nested tree.

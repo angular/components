@@ -75,7 +75,7 @@ describe('CdkFlatTreeControl', () => {
           expect(treeControl.getLevel(nodes[i].children[j]))
             .toBe(2, `Expect node[${i}]'s child[${j}] to be not expandable`);
 
-          for (let k = 0; k< numGrandChildren; k++) {
+          for (let k = 0; k < numGrandChildren; k++) {
             expect(treeControl.getLevel(nodes[i].children[j].children[k]))
               .toBe(3, `Expect node[${i}]'s child[${j}] to be not expandable`);
           }
@@ -177,9 +177,7 @@ function flatten(nodes: TestData[], data: TestData[]) {
     data.push(node);
 
     if (node.children && node.children.length > 0) {
-      for (let child of node.children) {
-        flatten(node.children, data)
-      }
+      flatten(node.children, data);
     }
   }
 }

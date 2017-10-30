@@ -40,6 +40,7 @@ import {
  * nodes with hierarchy. Updates the nodes when new data is provided by the data source.
  */
 @Component({
+  moduleId: module.id,
   selector: 'cdk-tree',
   exportAs: 'cdkTree',
   template: `<ng-container treeNodeOutlet></ng-container>`,
