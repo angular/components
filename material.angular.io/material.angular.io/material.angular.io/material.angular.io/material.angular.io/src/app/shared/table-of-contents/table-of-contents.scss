@@ -1,15 +1,12 @@
 :host {
   font-size: 13px;
-  // Width is container width minus content width
-  width: 19%;
+  width: 15%;
   position: sticky;
   top: 0;
-  padding-left: 25px;
-  box-sizing: border-box;
 }
 
 .docs-toc-container {
-  padding: 5px 0 10px 10px;
+  padding: 5px 0 10px 12px;
 }
 
 .docs-toc-heading {

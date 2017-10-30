@@ -2,9 +2,7 @@
 
 app-component-viewer {
   font-weight: 400;
-
-  // spacing for the component viewer
-  padding: 20px 50px 50px 20px;
+  padding: 20px $content-padding-side 50px;
 
   @media ($mat-xsmall) {
     padding-left: $content-padding-side-xs;
@@ -12,12 +10,17 @@ app-component-viewer {
   }
 }
 
+.docs-component-viewer {
+  margin: 0 auto;
+  max-width: 940px;
+}
+
 .docs-component-viewer-section-tab {
   text-transform: uppercase;
 }
 
 .docs-component-viewer-tabbed-content {
-  margin-bottom: 25px;
+  margin-bottom: 50px;
 }
 
 .docs-component-viewer-content {
@@ -41,6 +44,7 @@ app-component-viewer {
 
 .docs-component-overview {
   width: 80%;
+  margin-right: 20px;
 
   @media (max-width: $small-breakpoint-width) {
     width: 100%;
