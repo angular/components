@@ -3,16 +3,11 @@ $sidenav-width: 240px;
 
 app-component-sidenav {
   display: flex;
+  flex-direction: column;
 }
 
 .docs-component-viewer-sidenav-container {
-  width: 100%;
-
-  .mat-drawer-content {
-    position: absolute;
-    right: 0;
-    left: 0;
-  }
+  flex: 1;
 }
 
 .docs-component-viewer-sidenav {
@@ -84,5 +79,11 @@ app-component-sidenav {
   // The rule will match the element following the router-outlet which will be the routed component.
   router-outlet + * {
     flex-grow: 1;
+  }
+}
+
+@media (max-width: 720px) {
+  .docs-component-viewer-sidenav-container {
+    flex: 1 0 auto;
   }
 }

@@ -8,7 +8,7 @@ import {ComponentHeaderModule} from '../component-page-header/component-page-hea
 import {FooterModule} from '../../shared/footer/footer';
 import {Observable} from 'rxjs/Observable';
 
-const SMALL_WIDTH_BREAKPOINT = 840;
+const SMALL_WIDTH_BREAKPOINT = 720;
 
 @Component({
   selector: 'app-component-sidenav',
