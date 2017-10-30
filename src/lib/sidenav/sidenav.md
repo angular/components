@@ -172,7 +172,7 @@ to other pages might be marked `role="navigation"`, whereas one that contains a 
 contents about might be marked as `role="directory"`. If there is no more specific role that
 describes your sidenav, `role="region"` is recommended.
 
-Similarly, the `<mat-sidenav-contnet>` should be given a role based on what it contains. If it
+Similarly, the `<mat-sidenav-content>` should be given a role based on what it contains. If it
 represents the primary content of the page, it may make sense to mark it `role="main"`. If no more
 specific role makes sense, `role="region"` is again a good fallback. 
 
