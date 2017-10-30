@@ -17,6 +17,7 @@ import {DomPortalHost} from '@angular/cdk/portal';
 import {OverlayConfig} from './overlay-config';
 import {OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
+import {OverlayKeyboardDispatcher} from './keyboard/overlay-keyboard-dispatcher';
 import {OverlayContainer} from './overlay-container';
 import {ScrollStrategyOptions} from './scroll/index';
 
@@ -38,28 +39,32 @@ let defaultConfig = new OverlayConfig();
  */
 @Injectable()
 export class Overlay {
-  constructor(public scrollStrategies: ScrollStrategyOptions,
+  constructor(
+              /** Scrolling strategies that can be used when creating an overlay. */
+              public scrollStrategies: ScrollStrategyOptions,
               private _overlayContainer: OverlayContainer,
               private _componentFactoryResolver: ComponentFactoryResolver,
               private _positionBuilder: OverlayPositionBuilder,
+              private _keyboardDispatcher: OverlayKeyboardDispatcher,
               private _appRef: ApplicationRef,
               private _injector: Injector,
               private _ngZone: NgZone) { }
 
   /**
    * Creates an overlay.
-   * @param config Config to apply to the overlay.
+   * @param config Configuration applied to the overlay.
    * @returns Reference to the created overlay.
    */
   create(config: OverlayConfig = defaultConfig): OverlayRef {
     const pane = this._createPaneElement();
     const portalHost = this._createPortalHost(pane);
-    return new OverlayRef(portalHost, pane, config, this._ngZone);
+    return new OverlayRef(portalHost, pane, config, this._ngZone, this._keyboardDispatcher);
   }
 
   /**
-   * Returns a position builder that can be used, via fluent API,
+   * Gets a position builder that can be used, via fluent API,
    * to construct and configure a position strategy.
+   * @returns An overlay position builder.
    */
   position(): OverlayPositionBuilder {
     return this._positionBuilder;
@@ -87,4 +92,5 @@ export class Overlay {
   private _createPortalHost(pane: HTMLElement): DomPortalHost {
     return new DomPortalHost(pane, this._componentFactoryResolver, this._appRef, this._injector);
   }
+
 }

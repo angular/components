@@ -20,7 +20,7 @@ import {
   VerticalConnectionPos,
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
-import {filter, RxChain} from '@angular/cdk/rxjs';
+import {filter} from 'rxjs/operators';
 import {
   AfterContentInit,
   Directive,
@@ -151,8 +151,8 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
     if (this.triggersSubmenu()) {
       // Subscribe to changes in the hovered item in order to toggle the panel.
-      this._hoverSubscription = filter
-          .call(this._parentMenu._hovered(), active => active === this._menuItemInstance)
+      this._hoverSubscription = this._parentMenu._hovered()
+          .pipe(filter(active => active === this._menuItemInstance))
           .subscribe(() => {
             this._openedByMouse = true;
             this.openMenu();
@@ -399,11 +399,11 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /** Returns a stream that emits whenever an action that should close the menu occurs. */
   private _menuClosingActions() {
     const backdrop = this._overlayRef!.backdropClick();
-    const parentClose = this._parentMenu ? this._parentMenu.closed : observableOf();
-    const hover = this._parentMenu ? RxChain.from(this._parentMenu._hovered())
-        .call(filter, active => active !== this._menuItemInstance)
-        .call(filter, () => this._menuOpen)
-        .result() : observableOf();
+    const parentClose = this._parentMenu ? this._parentMenu.close : observableOf();
+    const hover = this._parentMenu ? this._parentMenu._hovered().pipe(
+      filter(active => active !== this._menuItemInstance),
+      filter(() => this._menuOpen)
+    ) : observableOf();
 
     return merge(backdrop, parentClose, hover);
   }
