@@ -1,88 +1,149 @@
-$sidenav-spacing-unit: 8px;
+@import '../../../styles/constants';
+
 $sidenav-width: 240px;
 
-app-component-sidenav {
-  display: flex;
-}
-
 .docs-component-viewer-sidenav-container {
-  width: 100%;
-
-  .mat-drawer-content {
-    position: absolute;
-    right: 0;
-    left: 0;
-  }
+  box-sizing: border-box;
 }
 
 .docs-component-viewer-sidenav {
-  box-shadow: 3px 0 6px rgba(0, 0, 0, .24);
-  padding-bottom: 72px;
-  width: $sidenav-width;
-  bottom: 0;
   overflow: auto;
-  height: 100%;
+}
 
-  &.mat-sidenav-opened {
-    box-shadow: 3px 0 6px rgba(0, 0, 0, .24);
+.docs-component-sidenav-inner-content {
+  display: flex;
+  flex-direction: row;
+
+  // The rule will match the element following the router-outlet which will be the routed component.
+  router-outlet + * {
+    flex-grow: 1;
   }
+}
 
-  // Section divider
-  h3 {
-    border: none;
-    font-size: 10px;
-    letter-spacing: 1px;
-    line-height: $sidenav-spacing-unit * 3;
-    text-transform: uppercase;
-    font-weight: 400;
-    margin: 0;
-    padding: 0 ($sidenav-spacing-unit * 2);
+.mat-drawer {
+  &::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
   }
+}
 
-  ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
+.docs-component-viewer-nav {
+  position: sticky;
+  top: 25px;
 
-  // Sidenav navigation item
-  li {
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    margin: 0;
-    padding: 0;
+  .docs-component-viewer-nav-content {
+    margin: 25px;
+    width: $sidenav-width;
+    max-height: 75vh;
+    overflow: auto;
 
-
-    // Hide the border on the last item
-    &:last-child {
-      border-color: transparent;
+    &::-webkit-scrollbar {
+      height: 4px;
+      width: 4px;
     }
 
-    > a {
-      box-sizing: border-box;
-      display: block;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: ($sidenav-spacing-unit * 6) - 1;
-      text-decoration: none;
-      transition: all .3s;
-      padding: 0 ($sidenav-spacing-unit * 2);
+    button {
+      padding: 10px 15px;
+      font-weight: 700;
+      line-height: 16px;
+      margin: 0;
+      font-size: 13px;
+      cursor: pointer;
       position: relative;
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
 
-      &.docs-component-viewer-sidenav-item-selected {
-        font-weight: 600;
+      &:focus {
+        outline: none;
       }
+
+      .mat-icon {
+        position: absolute;
+        right: 5px;
+        font-size: 18px;
+      }
+    }
+
+    hr {
+      padding: 0;
+      margin: 0;
+    }
+
+    ul {
+      list-style-type: none;
+      margin: -5px 0 5px 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    li {
+      font-size: 13px;
+      line-height: 16px;
+      margin: 0;
+      padding: 5px 15px 5px 20px;
+    }
+
+    a {
+      display: block;
+      text-decoration: none;
     }
   }
 }
 
 .docs-component-sidenav-content {
-  min-height: 100%;
   display: flex;
   flex-direction: column;
+}
 
-  // The rule will match the element following the router-outlet which will be the routed component.
-  router-outlet + * {
-    flex-grow: 1;
+// Add specific rule to prevent default rule conflict
+.docs-component-viewer-sidenav-container.mat-drawer-container{
+  display: block;
+  overflow: hidden;
+  position: absolute;
+  // Offset the top by the toolbar height
+  top: 50px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.docs-component-sidenav-inner-content {
+  display: flex; 
+  flex-direction: column;
+}
+
+.docs-component-sidenav-body-content {
+  display: flex;
+  // footer should always reside at the bottom of the screen.
+  // if container not 100vh, push min height to that minus
+  // the offset of the top bar and the footer height
+  min-height: calc(100vh - 264px);
+}
+
+@media (max-width: $small-breakpoint-width) {
+  // Add specific rule to prevent default rule conflict
+  .docs-component-viewer-sidenav-container .docs-component-viewer-sidenav {
+    // offset the top by the header + tabs on a small screen
+    top: 42px;
+  }
+
+  .mat-sidenav-content {
+    // offset the top by the header + tabs on a small screen
+    margin-top: 42px;
+  }
+
+  .docs-component-viewer-nav {
+    position: relative;
+    top: 0;
+
+    .docs-component-viewer-nav-content {
+      box-sizing: border-box;
+      margin: 0;
+      max-height: initial;
+      box-sizing: border-box;
+    }
   }
 }

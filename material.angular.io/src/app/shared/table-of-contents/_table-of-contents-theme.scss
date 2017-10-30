@@ -10,6 +10,7 @@
 
     .docs-link {
       color: mat-color($foreground, secondary-text);
+      transition: color 100ms;
 
       &:hover,
       &.docs-active {
