@@ -1,7 +1,9 @@
 <mat-sidenav-container class="docs-component-viewer-sidenav-container">
   <mat-sidenav #sidenav class="docs-component-viewer-sidenav"
               [opened]="!isScreenSmall()"
-              [mode]="isScreenSmall() ? 'over' : 'side'">
+              [mode]="isScreenSmall() ? 'over' : 'side'"
+              [fixedInViewport]="isScreenSmall()"
+              fixedTopGap="92">
     <nav *ngFor="let category of docItems.getCategories((params | async)?.section)">
       <h3>{{category.name}}</h3>
       <ul>
