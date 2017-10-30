@@ -171,7 +171,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
     if (this.items) {
       return this.items.changes.pipe(
         startWith(this.items),
-        switchMap(items => merge(...items.map(item => item.hover)))
+        switchMap(items => merge(...items.map(item => item._hovered)))
       );
     }
 
