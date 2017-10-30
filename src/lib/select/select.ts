@@ -18,7 +18,7 @@ import {
   ScrollStrategy,
   ViewportRuler,
 } from '@angular/cdk/overlay';
-import {filter, first, map, RxChain, startWith, takeUntil} from '@angular/cdk/rxjs';
+import {filter, first, map, startWith, takeUntil} from 'rxjs/operators';
 import {
   AfterContentInit,
   Attribute,
@@ -407,19 +407,13 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    /** Event emitted when the select has been opened. */
    @Output('opened')
    get _openedStream(): Observable<void> {
-     return RxChain.from(this.openedChange)
-        .call(filter, o => o)
-        .call(map, () => {})
-        .result();
+    return this.openedChange.pipe(filter(o => o), map(() => {}));
   }
 
   /** Event emitted when the select has been closed. */
   @Output('closed')
   get _closedStream(): Observable<void> {
-    return RxChain.from(this.openedChange)
-        .call(filter, o => !o)
-        .call(map, () => {})
-        .result();
+    return this.openedChange.pipe(filter(o => !o), map(() => {}));
   }
 
   /**
@@ -485,13 +479,10 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   ngAfterContentInit() {
     this._initKeyManager();
 
-    RxChain.from(this.options.changes)
-      .call(startWith, null)
-      .call(takeUntil, this._destroy)
-      .subscribe(() => {
-        this._resetOptions();
-        this._initializeSelection();
-      });
+    this.options.changes.pipe(startWith(null), takeUntil(this._destroy)).subscribe(() => {
+      this._resetOptions();
+      this._initializeSelection();
+    });
   }
 
   ngDoCheck() {
@@ -535,7 +526,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     this._changeDetectorRef.markForCheck();
 
     // Set the font size on the panel element once it exists.
-    first.call(this._ngZone.onStable.asObservable()).subscribe(() => {
+    this._ngZone.onStable.asObservable().pipe(first()).subscribe(() => {
       if (this._triggerFontSize && this.overlayDir.overlayRef &&
           this.overlayDir.overlayRef.overlayElement) {
         this.overlayDir.overlayRef.overlayElement.style.fontSize = `${this._triggerFontSize}px`;
@@ -715,7 +706,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    * Callback that is invoked when the overlay panel has been attached.
    */
   _onAttached(): void {
-    first.call(this.overlayDir.positionChange).subscribe(() => {
+    this.overlayDir.positionChange.pipe(first()).subscribe(() => {
       this._changeDetectorRef.detectChanges();
       this._calculateOverlayOffsetX();
       this.panel.nativeElement.scrollTop = this._scrollTop;
@@ -816,28 +807,26 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   /** Sets up a key manager to listen to keyboard events on the overlay panel. */
   private _initKeyManager() {
     this._keyManager = new ActiveDescendantKeyManager<MatOption>(this.options).withTypeAhead();
+    this._keyManager.tabOut.pipe(takeUntil(this._destroy)).subscribe(() => this.close());
 
-    takeUntil.call(this._keyManager.tabOut, this._destroy)
-      .subscribe(() => this.close());
-
-    RxChain.from(this._keyManager.change)
-      .call(takeUntil, this._destroy)
-      .call(filter, () => this._panelOpen && !!this.panel)
-      .subscribe(() => this._scrollActiveOptionIntoView());
+    this._keyManager.change.pipe(
+      takeUntil(this._destroy),
+      filter(() => this._panelOpen && !!this.panel)
+    ).subscribe(() => this._scrollActiveOptionIntoView());
   }
 
   /** Drops current option subscriptions and IDs and resets from scratch. */
   private _resetOptions(): void {
-    RxChain.from(this.optionSelectionChanges)
-      .call(takeUntil, merge(this._destroy, this.options.changes))
-      .call(filter, event => event.isUserInput)
-      .subscribe(event => {
-        this._onSelect(event.source);
+    this.optionSelectionChanges.pipe(
+      takeUntil(merge(this._destroy, this.options.changes)),
+      filter(event => event.isUserInput)
+    ).subscribe(event => {
+      this._onSelect(event.source);
 
-        if (!this.multiple) {
-          this.close();
-        }
-      });
+      if (!this.multiple) {
+        this.close();
+      }
+    });
 
     this._setOptionIds();
   }

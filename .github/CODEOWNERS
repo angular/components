@@ -35,7 +35,6 @@
 /src/lib/core/*                                    @jelbourn
 /src/lib/core/animation/**                         @jelbourn
 /src/lib/core/common-behaviors/**                  @jelbourn
-/src/lib/core/compatibility/**                     @jelbourn
 /src/lib/core/datetime/**                          @mmalerba
 /src/lib/core/error/**                             @crisbeto @mmalerba
 /src/lib/core/gestures/**                          @jelbourn
@@ -64,7 +63,6 @@
 /src/cdk/overlay/**                                @jelbourn @crisbeto
 /src/cdk/platform/**                               @jelbourn @devversion
 /src/cdk/portal/**                                 @jelbourn
-/src/cdk/rxjs/**                                   @jelbourn
 /src/cdk/scrolling/**                              @andrewseguin @crisbeto
 /src/cdk/stepper/**                                @mmalerba
 /src/cdk/table/**                                  @andrewseguin

@@ -13,16 +13,14 @@ import {
   ApplicationRef,
   Injector,
 } from '@angular/core';
-import {BasePortalHost, ComponentPortal, TemplatePortal} from './portal';
+import {BasePortalOutlet, ComponentPortal, TemplatePortal} from './portal';
 
 
 /**
- * A PortalHost for attaching portals to an arbitrary DOM element outside of the Angular
+ * A PortalOutlet for attaching portals to an arbitrary DOM element outside of the Angular
  * application context.
- *
- * This is the only part of the portal core that directly touches the DOM.
  */
-export class DomPortalHost extends BasePortalHost {
+export class DomPortalOutlet extends BasePortalOutlet {
   constructor(
       private _hostDomElement: Element,
       private _componentFactoryResolver: ComponentFactoryResolver,
@@ -34,6 +32,7 @@ export class DomPortalHost extends BasePortalHost {
   /**
    * Attach the given ComponentPortal to DOM element using the ComponentFactoryResolver.
    * @param portal Portal to be attached
+   * @returns Reference to the created component.
    */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
     let componentFactory = this._componentFactoryResolver.resolveComponentFactory(portal.component);
@@ -68,6 +67,7 @@ export class DomPortalHost extends BasePortalHost {
   /**
    * Attaches a template portal to the DOM as an embedded view.
    * @param portal Portal to be attached.
+   * @returns Reference to the created embedded view.
    */
   attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C> {
     let viewContainer = portal.viewContainerRef;
@@ -75,8 +75,9 @@ export class DomPortalHost extends BasePortalHost {
     viewRef.detectChanges();
 
     // The method `createEmbeddedView` will add the view as a child of the viewContainer.
-    // But for the DomPortalHost the view can be added everywhere in the DOM (e.g Overlay Container)
-    // To move the view to the specified host element. We just re-append the existing root nodes.
+    // But for the DomPortalOutlet the view can be added everywhere in the DOM
+    // (e.g Overlay Container) To move the view to the specified host element. We just
+    // re-append the existing root nodes.
     viewRef.rootNodes.forEach(rootNode => this._hostDomElement.appendChild(rootNode));
 
     this.setDisposeFn((() => {

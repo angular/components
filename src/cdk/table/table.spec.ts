@@ -3,10 +3,9 @@ import {Component, ViewChild} from '@angular/core';
 import {CdkTable} from './table';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
 import {combineLatest} from 'rxjs/observable/combineLatest';
 import {CdkTableModule} from './index';
-import {map} from 'rxjs/operator/map';
+import {map} from 'rxjs/operators';
 import {
   getTableDuplicateColumnNameError,
   getTableMissingMatchingRowDefError,
@@ -38,7 +37,8 @@ describe('CdkTable', () => {
         UndefinedColumnsCdkTableApp,
         WhenRowCdkTableApp,
         WhenRowWithoutDefaultCdkTableApp,
-        WhenRowMultipleDefaultsCdkTableApp
+        WhenRowMultipleDefaultsCdkTableApp,
+        BooleanRowCdkTableApp
       ],
     }).compileComponents();
   }));
@@ -105,6 +105,21 @@ describe('CdkTable', () => {
         });
       });
     });
+  });
+
+  it('should render cells even if row data is falsy', () => {
+    const booleanRowCdkTableAppFixture = TestBed.createComponent(BooleanRowCdkTableApp);
+    const booleanRowCdkTableElement =
+        booleanRowCdkTableAppFixture.nativeElement.querySelector('cdk-table');
+    booleanRowCdkTableAppFixture.detectChanges();
+
+    expectTableToMatchContent(booleanRowCdkTableElement, [
+      [''], // Header row
+      ['false'], // Data rows
+      ['true'],
+      ['false'],
+      ['true'],
+    ]);
   });
 
   it('should be able to apply class-friendly css class names for the column cells', () => {
@@ -391,6 +406,24 @@ describe('CdkTable', () => {
       expect(changedRows[1].getAttribute('initialIndex')).toBe('1');
       expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
     });
+
+    it('should change row implicit data even when trackBy finds no changes', () => {
+      createTestComponentWithTrackyByTable('index');
+      const firstRow = getRows(tableElement)[0];
+      expect(firstRow.textContent!.trim()).toBe('a_1 b_1');
+      expect(firstRow.getAttribute('initialIndex')).toBe('0');
+      mutateData();
+
+      // Change each item reference to show that the trackby is checking the index.
+      // Otherwise this would cause them all to be removed/added.
+      trackByComponent.dataSource.data = trackByComponent.dataSource.data
+          .map(item => ({a: item.a, b: item.b, c: item.c}));
+
+      // Expect the rows were given the right implicit data even though the rows were not moved.
+      trackByFixture.detectChanges();
+      expect(firstRow.textContent!.trim()).toBe('a_2 b_2');
+      expect(firstRow.getAttribute('initialIndex')).toBe('0');
+    });
   });
 
   it('should match the right table content with dynamic data', () => {
@@ -595,10 +628,10 @@ class FakeDataSource extends DataSource<TestData> {
     for (let i = 0; i < 3; i++) { this.addData(); }
   }
 
-  connect(collectionViewer: CollectionViewer): Observable<TestData[]> {
+  connect(collectionViewer: CollectionViewer) {
     this.isConnected = true;
     const streams = [this._dataChange, collectionViewer.viewChange];
-    return map.call(combineLatest(streams), ([data]) => data);
+    return combineLatest<TestData[]>(streams).pipe(map(([data]) => data));
   }
 
   disconnect() {
@@ -617,6 +650,16 @@ class FakeDataSource extends DataSource<TestData> {
 
     this.data = copiedData;
   }
+}
+
+class BooleanDataSource extends DataSource<boolean> {
+  _dataChange = new BehaviorSubject<boolean[]>([false, true, false, true]);
+
+  connect(): Observable<boolean[]> {
+    return this._dataChange;
+  }
+
+  disconnect() { }
 }
 
 @Component({
@@ -649,6 +692,23 @@ class SimpleCdkTableApp {
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
+}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_a">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let data"> {{data}} </cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="['column_a']"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: ['column_a']"></cdk-row>
+    </cdk-table>
+  `
+})
+class BooleanRowCdkTableApp {
+  dataSource = new BooleanDataSource();
 }
 
 @Component({
