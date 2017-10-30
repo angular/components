@@ -2,7 +2,7 @@ import {Component, ViewChild} from '@angular/core';
 import {DataSource} from '@angular/cdk/table';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
-import {MdSort, MdPaginator} from '@angular/material';
+import {MatSort, MatPaginator} from '@angular/material';
 
 export interface UserData {
   name: string;
@@ -26,8 +26,8 @@ const exampleData = [
   styleUrls: ['table-a11y.css'],
 })
 export class TableAccessibilityDemo {
-  @ViewChild(MdSort) sort: MdSort;
-  @ViewChild(MdPaginator) pager: MdPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) pager: MatPaginator;
 
   displayedColumns = ['name', 'color', 'age'];
   basicDataSource: BasicDataSource;
@@ -59,7 +59,7 @@ export class BasicDataSource extends DataSource<UserData> {
 export class SortDataSource extends DataSource<UserData> {
   dataChange: BehaviorSubject<UserData[]> = new BehaviorSubject<UserData[]>([]);
 
-  constructor(private _sort: MdSort) {
+  constructor(private _sort: MatSort) {
     super();
     this.dataChange.next(exampleData);
   }
@@ -67,7 +67,7 @@ export class SortDataSource extends DataSource<UserData> {
   connect(): Observable<UserData[]> {
     const displayDataChanges = [
       this.dataChange,
-      this._sort.mdSortChange,
+      this._sort.sortChange,
     ];
 
     return Observable.merge(...displayDataChanges).map(() => {
@@ -92,7 +92,7 @@ export class SortDataSource extends DataSource<UserData> {
 export class PaginatedDataSource extends DataSource<UserData> {
   dataChange: BehaviorSubject<UserData[]> = new BehaviorSubject<UserData[]>([]);
 
-  constructor(private _paginator: MdPaginator) {
+  constructor(private _paginator: MatPaginator) {
     super();
     this.dataChange.next(exampleData);
   }
