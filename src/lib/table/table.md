@@ -131,7 +131,8 @@ this.selection = new SelectionModel<MyDataType>(allowMultiSelect, initialSelecti
 ```
 
 Add a column definition for displaying the row checkboxes, including a master toggle checkbox for 
-the header. The column name should be added to the list of displayed columns provided to the `mat-header-row` and `mat-row`.
+the header. The column name should be added to the list of displayed columns provided to the 
+`<mat-header-row>` and `<mat-row>`.
 
 ```html
 <ng-container matColumnDef="select">
