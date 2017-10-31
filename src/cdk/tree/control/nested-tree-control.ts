@@ -5,42 +5,42 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {first} from '@angular/cdk/rxjs';
-import {BaseTreeControl} from './base-tree-control';
 import {Observable} from 'rxjs/Observable';
-
+import {first} from 'rxjs/operators';
+import {BaseTreeControl} from './base-tree-control';
 
 /** Nested tree control. Able to expand/collapse a subtree recursively for NestedNode type. */
 export class NestedTreeControl<T> extends BaseTreeControl<T> {
 
   /** Construct with nested tree function getChildren. */
-  constructor(public getChildren: (node: T) => Observable<T[]>) {
+  constructor(public getChildren: (dataNode: T) => Observable<T[]>) {
     super();
   }
 
   /**
-   * Expands all nodes in the tree.
+   * Expands all dataNodes in the tree.
    *
-   * To make this working, the `nodes` of the TreeControl must be set correctly.
+   * To make this working, the `dataNodes` variable of the TreeControl must be set to all root level
+   * data nodes of the tree.
    */
   expandAll(): void {
     this.expansionModel.clear();
     let toBeExpanded = <any>[];
-    this.nodes.forEach(node => toBeExpanded.push(...this.getDescendants(node)));
+    this.dataNodes.forEach(dataNode => toBeExpanded.push(...this.getDescendants(dataNode)));
     this.expansionModel.select(...toBeExpanded);
   }
 
-  /** Gets a list of descendant nodes of a subtree rooted at given `node` recursively. */
-  getDescendants(node: T): T[] {
+  /** Gets a list of descendant dataNodes of a subtree rooted at given data node recursively. */
+  getDescendants(dataNode: T): T[] {
     const descendants = [];
-    this._getDescendants(descendants, node);
+    this._getDescendants(descendants, dataNode);
     return descendants;
   }
 
   /** A helper function to get descendants recursively. */
-  protected _getDescendants(descendants: T[], node: T): void {
-    descendants.push(node);
-    first.call(this.getChildren(node)).subscribe(children => {
+  protected _getDescendants(descendants: T[], dataNode: T): void {
+    descendants.push(dataNode);
+    first.call(this.getChildren(dataNode)).subscribe(children => {
       if (children && children.length > 0) {
         children.forEach((child: T) => this._getDescendants(descendants, child));
       }

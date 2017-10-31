@@ -7,14 +7,15 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {Directive, ElementRef, Input, OnDestroy, Optional, Renderer2} from '@angular/core';
-import {takeUntil} from 'rxjs/operator/takeUntil';
+import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs/Subject';
 import {CdkTreeNode} from './node';
 import {CdkTree} from './tree';
 
 /**
- * Indent for the children tree nodes.
+ * Indent for the children tree dataNodes.
  * This directive will add left-padding to the node to show hierarchy.
  */
 @Directive({
@@ -27,15 +28,16 @@ export class CdkTreeNodePadding<T> implements OnDestroy {
   /** The level of depth of the tree node. The padding will be `level * indent` pixels. */
   @Input('cdkTreeNodePadding')
   set level(value: number) {
-    this._level = value;
+    this._level = coerceNumberProperty(value);
     this._setPadding();
   }
   _level: number;
 
   /** The indent for each level. Default number 40px from material design menu sub-menu spec. */
+  // TODO(tinayuangao): Make indent working with a string with unit, e.g. 10em
   @Input('cdkTreeNodePaddingIndent')
   set indent(value: number) {
-    this._indent = value;
+    this._indent = coerceNumberProperty(value);
     this._setPadding();
   }
   _indent: number = 40;

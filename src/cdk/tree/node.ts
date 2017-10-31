@@ -13,29 +13,25 @@ import {
   OnDestroy,
   TemplateRef
 } from '@angular/core';
-import {takeUntil} from 'rxjs/operator/takeUntil';
+import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs/Subject';
 import {CdkTree} from './tree';
 import {getTreeControlFunctionsMissingError} from './tree-errors';
 
 
-/** Context provided to the ndoes */
+/** Context provided to the tree node component. */
 export class CdkTreeNodeOutletContext<T> {
-
-  static mostRecentContextData: any;
-
   /** Data for the node. */
   $implicit: T;
 
   /** Index location of the node. */
   index?: number;
 
-  /** Length of the number of total nodes. */
+  /** Length of the number of total dataNodes. */
   count?: number;
 
   constructor(data: T) {
     this.$implicit = data;
-    CdkTreeNodeOutletContext.mostRecentContextData = data;
   }
 }
 
@@ -77,12 +73,22 @@ export class CdkTreeNodeDef<T> {
   },
 })
 export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
+  /**
+   * The most recently created `CdkTreeNode`. We save it in static variable so we can retrieve it
+   * in `CdkTree` and set the data to it.
+   */
+  static mostRecentTreeNode: CdkTreeNode<any>;
+
   /** Subject that emits when the component has been destroyed. */
-  private _destroyed = new Subject<void>();
+  protected _destroyed = new Subject<void>();
 
   /** The tree node's data. */
   get data(): T { return this._data; }
-  private _data: T;
+  set data(value: T) {
+    this._data = value;
+    this._setRoleFromData();
+  }
+  protected _data: T;
 
   /**
    * The role of the node should be 'group' if it's an internal node,
@@ -90,11 +96,9 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
    */
   @Input() role: 'treeitem' | 'group' = 'treeitem';
 
-  constructor(private _elementRef: ElementRef,
-              private _tree: CdkTree<T>) {
-
-    this._data = CdkTreeNodeOutletContext.mostRecentContextData;
-    this._setRoleFromData();
+  constructor(protected _elementRef: ElementRef,
+              protected _tree: CdkTree<T>) {
+    CdkTreeNode.mostRecentTreeNode = this;
   }
 
   ngOnDestroy() {

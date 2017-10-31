@@ -11,12 +11,12 @@ import {
 } from '@angular/core';
 
 /**
- * Outlet for nested CdkNode. Put `[cdkNodeOutlet]` on a tag to place children nodes
+ * Outlet for nested CdkNode. Put `[cdkTreeNodeOutlet]` on a tag to place children dataNodes
  * inside the outlet.
  */
 @Directive({
-  selector: '[treeNodeOutlet]'
+  selector: '[cdkTreeNodeOutlet]'
 })
-export class TreeNodeOutlet {
+export class CdkTreeNodeOutlet {
   constructor(public viewContainer: ViewContainerRef) {}
 }

@@ -9,53 +9,56 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {Observable} from 'rxjs/Observable';
 
 /**
- * Tree control interface. User can implement TreeControl to expand/collapse nodes in the tree.
+ * Tree control interface. User can implement TreeControl to expand/collapse dataNodes in the tree.
  * The CDKTree will use this TreeControl to expand/collapse a node.
  * User can also use it outside the `<cdk-tree>` to control the expansion status of the tree.
  */
 export interface TreeControl<T> {
   /** The saved tree nodes data for `expandAll` action. */
-  nodes: T[];
+  dataNodes: T[];
 
   /** The expansion model */
   expansionModel: SelectionModel<T>;
 
-  /** Whether the node is expanded or collapsed. Return true if it's expanded. */
-  isExpanded(node: T): boolean;
+  /** Whether the data node is expanded or collapsed. Return true if it's expanded. */
+  isExpanded(dataNode: T): boolean;
 
-  /** Get all descendants of a node */
-  getDescendants(node: T): any[];
+  /** Get all descendants of a data node */
+  getDescendants(dataNode: T): any[];
 
-  /** Expand or collapse node */
-  toggle(node: T): void;
+  /** Expand or collapse data node */
+  toggle(dataNode: T): void;
 
-  /** Expand one node */
-  expand(node: T): void;
+  /** Expand one data node */
+  expand(dataNode: T): void;
 
-  /** Collapse one node */
-  collapse(node: T): void;
+  /** Collapse one data node */
+  collapse(dataNode: T): void;
 
-  /** Expand all the nodes in the tree */
+  /** Expand all the dataNodes in the tree */
   expandAll(): void;
 
-  /** Collapse all the nodes in the tree */
+  /** Collapse all the dataNodes in the tree */
   collapseAll(): void;
 
-  /** Toggle a node by expand/collapse it and all its descendants */
-  toggleDescendants(node: T): void;
+  /** Toggle a data node by expand/collapse it and all its descendants */
+  toggleDescendants(dataNode: T): void;
 
-  /** Expand a node and all its descendants */
-  expandDescendants(node: T): void;
+  /** Expand a data node and all its descendants */
+  expandDescendants(dataNode: T): void;
 
-  /** Collapse a ndoe and all its descendants */
-  collapseDescendants(node: T): void;
+  /** Collapse a data node and all its descendants */
+  collapseDescendants(dataNode: T): void;
 
-  /** Get depth of a given node, return the level number. This is for flat tree node. */
-  readonly getLevel: (node: T) => number;
+  /** Get depth of a given data node, return the level number. This is for flat tree node. */
+  readonly getLevel: (dataNode: T) => number;
 
-  /** Whether the node is expandable. Returns true if expandable. This is for flat tree node. */
-  readonly isExpandable: (node: T) => boolean;
+  /**
+   * Whether the data node is expandable. Returns true if expandable.
+   * This is for flat tree node.
+   */
+  readonly isExpandable: (dataNode: T) => boolean;
 
-  /** Gets a stream that emits whenever the given node's children change. */
-  readonly getChildren: (node: T) => Observable<T[]>;
+  /** Gets a stream that emits whenever the given data node's children change. */
+  readonly getChildren: (dataNode: T) => Observable<T[]>;
 }

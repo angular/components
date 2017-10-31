@@ -5,7 +5,7 @@ import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import {combineLatest} from 'rxjs/observable/combineLatest';
-import {map} from 'rxjs/operator/map';
+import {map} from 'rxjs/operators';
 
 import {TreeControl} from './control/tree-control';
 import {FlatTreeControl} from './control/flat-tree-control';
@@ -51,7 +51,7 @@ describe('CdkTree', () => {
       expect(dataSource.isConnected).toBe(true);
     });
 
-    it('with rendered nodes', () => {
+    it('with rendered dataNodes', () => {
       const nodes = getNodes(treeElement);
 
       expect(nodes).not.toBe(undefined);
@@ -72,9 +72,9 @@ describe('CdkTree', () => {
       let data = dataSource.data;
       expectFlatTreeToMatchContent(treeElement,
           [
-            `${data[0].a} - ${data[0].b} + ${data[0].c}`,
-            `${data[1].a} - ${data[1].b} + ${data[1].c}`,
-            `${data[2].a} - ${data[2].b} + ${data[2].c}`
+            `${data[0].pizzaTopping} - ${data[0].pizzaCheese} + ${data[0].pizzaBase}`,
+            `${data[1].pizzaTopping} - ${data[1].pizzaCheese} + ${data[1].pizzaBase}`,
+            `${data[2].pizzaTopping} - ${data[2].pizzaCheese} + ${data[2].pizzaBase}`
           ],
           [1, 1, 1]);
 
@@ -85,10 +85,10 @@ describe('CdkTree', () => {
       expect(data.length).toBe(4);
       expectFlatTreeToMatchContent(treeElement,
         [
-          `${data[0].a} - ${data[0].b} + ${data[0].c}`,
-          `${data[1].a} - ${data[1].b} + ${data[1].c}`,
-          `${data[2].a} - ${data[2].b} + ${data[2].c}`,
-          `${data[3].a} - ${data[3].b} + ${data[3].c}`
+          `${data[0].pizzaTopping} - ${data[0].pizzaCheese} + ${data[0].pizzaBase}`,
+          `${data[1].pizzaTopping} - ${data[1].pizzaCheese} + ${data[1].pizzaBase}`,
+          `${data[2].pizzaTopping} - ${data[2].pizzaCheese} + ${data[2].pizzaBase}`,
+          `${data[3].pizzaTopping} - ${data[3].pizzaCheese} + ${data[3].pizzaBase}`
         ],
         [1, 1, 1, 2]);
     });
@@ -96,16 +96,16 @@ describe('CdkTree', () => {
 });
 
 export class TestData {
-  a: string;
-  b: string;
-  c: string;
+  pizzaTopping: string;
+  pizzaCheese: string;
+  pizzaBase: string;
   level: number;
   children: TestData[];
 
-  constructor(a: string, b: string, c: string, level: number = 1) {
-    this.a = a;
-    this.b = b;
-    this.c = c;
+  constructor(pizzaTopping: string, pizzaCheese: string, pizzaBase: string, level: number = 1) {
+    this.pizzaTopping = pizzaTopping;
+    this.pizzaCheese = pizzaCheese;
+    this.pizzaBase = pizzaBase;
     this.level = level;
     this.children = [];
   }
@@ -120,7 +120,9 @@ class FakeDataSource extends DataSource<TestData> {
 
   constructor() {
     super();
-    for (let i = 0; i < 3; i++) { this.addData(); }
+    for (let i = 0; i < 3; i++) {
+      this.addData();
+    }
   }
 
   connect(collectionViewer: CollectionViewer): Observable<TestData[]> {
@@ -137,7 +139,8 @@ class FakeDataSource extends DataSource<TestData> {
     const nextIndex = this.data.length + 1;
 
     let copiedData = this.data.slice();
-    copiedData.push(new TestData(`a_${nextIndex}`, `b_${nextIndex}`, `c_${nextIndex}`, level));
+    copiedData.push(
+        new TestData(`topping_${nextIndex}`, `cheese_${nextIndex}`, `base_${nextIndex}`, level));
 
     this.data = copiedData;
   }
@@ -148,7 +151,7 @@ class FakeDataSource extends DataSource<TestData> {
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
                      cdkTreeNodePadding [cdkTreeNodePaddingIndent]="28">
-                     {{node.a}} - {{node.b}} + {{node.c}}
+                     {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
       </cdk-tree-node>
     </cdk-tree>
   `
@@ -192,8 +195,6 @@ function expectFlatTreeToMatchContent(treeElement: Element, expectedTreeContent:
         `Expected node level to be ${expectedLevel} but was ${actualLevel}`);
     }
   });
-
-
 
   if (missedExpectations.length) {
     fail(missedExpectations.join('\n'));

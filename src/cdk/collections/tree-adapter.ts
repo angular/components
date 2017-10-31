@@ -13,11 +13,11 @@ import {SelectionModel} from './selection';
  * Tree Adapter to change any structured data type to flattened tree data.
  * To be implemented by tree users.
  */
-export interface TreeAdapter<T> {
+export interface TreeDataNodeFlattener<T> {
   /** Flatten structured data to an array of data. */
   flattenNodes(structuredData: any[]): T[];
 
-  /** Expand flattened target nodes with expansion model. */
+  /** Expand flattened target dataNodes with expansion model. */
   expandFlattenedNodes(nodes: T[], expansionModel: SelectionModel<T>): T[];
 
   /**

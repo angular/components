@@ -9,71 +9,77 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {Observable} from 'rxjs/Observable';
 import {TreeControl} from './tree-control';
 
-/** Base tree control. It has basic toggle/expand/collapse operations on a single node. */
+/** Base tree control. It has basic toggle/expand/collapse operations on a single data node. */
 export abstract class BaseTreeControl<T> implements TreeControl<T> {
-  /** Saved node for `expandAll` action. */
-  nodes: T[];
+  /** Saved data node for `expandAll` action. */
+  dataNodes: T[];
   /** A selection model with multi-selection to track expansion status. */
   expansionModel: SelectionModel<T> = new SelectionModel<T>(true);
 
-  /** Toggles one single node. Expands a collapsed node or collapse an expanded node. */
-  toggle(node: T): void {
-    this.expansionModel.toggle(node);
+  /**
+   * Toggles one single data node.
+   * Expands a collapsed data node or collapse an expanded data node.
+   */
+  toggle(dataNode: T): void {
+    this.expansionModel.toggle(dataNode);
   }
 
-  /** Expands one single node. */
-  expand(node: T): void {
-    this.expansionModel.select(node);
+  /** Expands one single data node. */
+  expand(dataNode: T): void {
+    this.expansionModel.select(dataNode);
   }
 
-  /** Collapses one single node. */
-  collapse(node: T): void {
-    this.expansionModel.deselect(node);
+  /** Collapses one single data node. */
+  collapse(dataNode: T): void {
+    this.expansionModel.deselect(dataNode);
   }
 
-  /** Whether a given node is expanded or not. Returns true if the node is expanded. */
-  isExpanded(node: T): boolean {
-    return this.expansionModel.isSelected(node);
+  /** Whether a given data node is expanded or not. Returns true if the data node is expanded. */
+  isExpanded(dataNode: T): boolean {
+    return this.expansionModel.isSelected(dataNode);
   }
 
   /** Toggles a subtree rooted at `node` recursively. */
-  toggleDescendants(node: T): void {
-    this.expansionModel.isSelected(node)
-        ? this.collapseDescendants(node)
-        : this.expandDescendants(node);
+  toggleDescendants(dataNode: T): void {
+    this.expansionModel.isSelected(dataNode)
+        ? this.collapseDescendants(dataNode)
+        : this.expandDescendants(dataNode);
   }
 
-  /** Collapse all nodes in the tree. */
+  /** Collapse all dataNodes in the tree. */
   collapseAll(): void {
     this.expansionModel.clear();
   }
 
-  /** Expands a subtree rooted at given `node` recursively. */
-  expandDescendants(node: T): void {
-    let toBeProcessed = [node];
-    toBeProcessed.push(...this.getDescendants(node));
+  /** Expands a subtree rooted at given data node recursively. */
+  expandDescendants(dataNode: T): void {
+    let toBeProcessed = [dataNode];
+    toBeProcessed.push(...this.getDescendants(dataNode));
     this.expansionModel.select(...toBeProcessed);
   }
 
-  /** Collapses a subtree rooted at given `node` recursively. */
-  collapseDescendants(node: T): void {
-    let toBeProcessed = [node];
-    toBeProcessed.push(...this.getDescendants(node));
+  /** Collapses a subtree rooted at given data node recursively. */
+  collapseDescendants(dataNode: T): void {
+    let toBeProcessed = [dataNode];
+    toBeProcessed.push(...this.getDescendants(dataNode));
     this.expansionModel.deselect(...toBeProcessed);
   }
 
-  /** Gets a list of descendent nodes of a subtree rooted at given `node` recursively. */
-  abstract getDescendants(node: T): T[];
+  /** Gets a list of descendent data nodes of a subtree rooted at given data node recursively. */
+  abstract getDescendants(dataNode: T): T[];
 
-  /** Expands all nodes in the tree. */
+  /** Expands all data nodes in the tree. */
   abstract expandAll(): void;
 
-  /** Get depth of a given node, return the level number. This is for flat tree node. */
-  getLevel: (node: T) => number;
+  /** Get depth of a given data node, return the level number. This is for flat tree node. */
+  getLevel: (dataNode: T) => number;
 
-  /** Whether the node is expandable. Returns true if expandable. This is for flat tree node. */
-  isExpandable: (node: T) => boolean;
+  /**
+   * Whether the data node is expandable. Returns true if expandable.
+   * This is for flat tree node.
+   */
+  isExpandable: (dataNode: T) => boolean;
 
-  /** Gets a stream that emits whenever the given node's children change. */
-  getChildren: (node: T) => Observable<T[]>;
+  /** Gets a stream that emits whenever the given data node's children change. */
+  getChildren: (dataNode: T) => Observable<T[]>;
 }

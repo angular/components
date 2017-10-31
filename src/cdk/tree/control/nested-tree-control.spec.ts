@@ -11,11 +11,11 @@ describe('CdkNestedTreeControl', () => {
   });
 
   describe('base tree control actions', () => {
-    it('should be able to expand and collapse nodes', () => {
+    it('should be able to expand and collapse dataNodes', () => {
       const nodes = generateData(10, 4);
       const node = nodes[1];
       const sixthNode = nodes[5];
-      treeControl.nodes = nodes;
+      treeControl.dataNodes = nodes;
 
       treeControl.expand(node);
 
@@ -34,7 +34,7 @@ describe('CdkNestedTreeControl', () => {
       expect(treeControl.expansionModel.selected)
         .toContain(node, 'Expect second node in expansionModel');
       expect(treeControl.expansionModel.selected.length)
-        .toBe(2, 'Expect two nodes in expansionModel');
+        .toBe(2, 'Expect two dataNodes in expansionModel');
 
       treeControl.collapse(node);
 
@@ -51,7 +51,7 @@ describe('CdkNestedTreeControl', () => {
       const numChildren = 4;
       const numGrandChildren = 2;
       const nodes = generateData(numNodes, numChildren, numGrandChildren);
-      treeControl.nodes = nodes;
+      treeControl.dataNodes = nodes;
 
       treeControl.expandDescendants(nodes[1]);
 
@@ -71,12 +71,12 @@ describe('CdkNestedTreeControl', () => {
       }
     });
 
-    it('should be able to expand/collapse all the nodes', () => {
+    it('should be able to expand/collapse all the dataNodes', () => {
       const numNodes = 10;
       const numChildren = 4;
       const numGrandChildren = 2;
       const nodes = generateData(numNodes, numChildren, numGrandChildren);
-      treeControl.nodes = nodes;
+      treeControl.dataNodes = nodes;
 
       treeControl.expandDescendants(nodes[1]);
 

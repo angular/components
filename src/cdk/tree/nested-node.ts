@@ -9,55 +9,58 @@ import {
   AfterContentInit,
   ContentChildren,
   Directive,
+  ElementRef,
   OnDestroy,
   QueryList,
 } from '@angular/core';
-import {Subject} from 'rxjs/Subject';
-import {takeUntil} from '@angular/cdk/rxjs';
+import {takeUntil} from 'rxjs/operators';
 import {CdkTree} from './tree';
-import {TreeNodeOutlet} from './outlet';
+import {CdkTreeNodeOutlet} from './outlet';
 import {CdkTreeNode} from './node';
 
 /**
  * Nested node is a child of `<cdk-tree>`. It works with nested tree.
- * By adding `cdkNestedTreeNode` to the tree node template, children of the parent node will be
- * added in the `nodeOutlet` in tree node template.
+ * By using `cdk-nested-tree-node` component in tree node template, children of the parent node will
+ * be added in the `cdkTreeNodeOutlet` in tree node template.
  * For example:
- *   <cdk-tree-node cdkNestedTreeNode [cdkNode]="node">
- *     tree node data: {{node.name}}
- *     <ng-template nodeOutlet> </ng-template>
+ *   <cdk-mested-tree-node>
+ *     {{node.name}}
+ *     <ng-template cdkTreeNodeOutlet></ng-template>
  *   </cdk-tree-node>
- * The children of node will be automatically added to `cdkNodeOutlet`, the result dom will be like
- * this:
- *   <cdk-tree-node cdkNestedTreeNode [cdkNode]="node">
- *     tree node data: {{node.name}}
- *     <ng-template cdkNodeOutlet>
- *       <cdk-tree-node cdKNestedTreeNode [cdkNode]="child1"></cdk-tree-node>
- *       <cdk-tree-node cdKNestedTreeNode [cdkNode]="child2"></cdk-tree-node>
- *     </ng-template>
+ * The children of node will be automatically added to `cdkTreeNodeOutlet`, the result dom will be
+ * like this:
+ *   <cdk-nested-tree-node>
+ *     {{node.name}}
+*      <cdk-nested-tree-node>{{child1.name}}</cdk-tree-node>
+*      <cdk-nested-tree-node>{{child2.name}}</cdk-tree-node>
  *   </cdk-tree-node>
  */
 @Directive({
-  selector: '[cdkNestedTreeNode]'
+  selector: 'cdk-nested-tree-node',
+  exportAs: 'cdkNestedTreeNode',
+  host: {
+    '[attr.role]': 'role',
+    'class': 'cdk-tree-node cdk-nested-tree-node',
+    'tabindex': '0',
+  },
 })
-export class CdkNestedTreeNode<T> implements AfterContentInit, OnDestroy {
+export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContentInit, OnDestroy {
 
-  /** Emits when the component is destroyed. */
-  private _destroyed = new Subject<void>();
-
-  /** The children data nodes of current NestedNode They will be placed in `TreeNodeOutlet`. */
+  /** The children data dataNodes of current node. They will be placed in `CdkTreeNodeOutlet`. */
   protected _children: T[];
 
   /** The children node placeholder. */
-  @ContentChildren(TreeNodeOutlet) nodeOutlet: QueryList<TreeNodeOutlet>;
+  @ContentChildren(CdkTreeNodeOutlet) nodeOutlet: QueryList<CdkTreeNodeOutlet>;
 
-  constructor(private tree: CdkTree<T>,
-              public treeNode: CdkTreeNode<T>) {}
+  constructor(protected _elementRef: ElementRef,
+              protected _tree: CdkTree<T>) {
+    super(_elementRef, _tree);
+  }
 
   ngAfterContentInit() {
-    takeUntil.call(this.tree.treeControl.getChildren(this.treeNode.data), this._destroyed)
+    takeUntil.call(this._tree.treeControl.getChildren(this.data), this._destroyed)
       .subscribe(result => {
-        // In case when nodePlacholder is not in the DOM when children changes, save it in the node
+        // In case when nodeOutlet is not in the DOM when children changes, save it in the node
         // and add to nodeOutlet when it's available.
         this._children = result as T[];
         this._addChildrenNodes();
@@ -72,17 +75,17 @@ export class CdkNestedTreeNode<T> implements AfterContentInit, OnDestroy {
     this._destroyed.complete();
   }
 
-  /** Add children nodes to the NodePlacholder */
+  /** Add children dataNodes to the NodeOutlet */
   protected _addChildrenNodes(): void {
     this._clear();
     if (this.nodeOutlet.length && this._children) {
       this._children.forEach((child, index) => {
-        this.tree.insertNode(child, index, this.nodeOutlet.first.viewContainer);
+        this._tree.insertNode(child, index, this.nodeOutlet.first.viewContainer);
       });
     }
   }
 
-  /** Clear the children nodes. */
+  /** Clear the children dataNodes. */
   protected _clear(): void {
     if (this.nodeOutlet.first) {
       this.nodeOutlet.first.viewContainer.clear();

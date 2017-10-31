@@ -10,11 +10,11 @@ describe('CdkFlatTreeControl', () => {
   });
 
   describe('base tree control actions', () => {
-    it('should be able to expand and collapse nodes', () => {
+    it('should be able to expand and collapse dataNodes', () => {
       const nodes = generateData(10, 4);
       const node = nodes[1];
       const sixthNode = nodes[5];
-      treeControl.nodes = nodes;
+      treeControl.dataNodes = nodes;
 
       treeControl.expand(node);
 
@@ -33,7 +33,7 @@ describe('CdkFlatTreeControl', () => {
       expect(treeControl.expansionModel.selected)
         .toContain(node, 'Expect second node in expansionModel');
       expect(treeControl.expansionModel.selected.length)
-        .toBe(2, 'Expect two nodes in expansionModel');
+        .toBe(2, 'Expect two dataNodes in expansionModel');
 
       treeControl.collapse(node);
 
@@ -47,7 +47,7 @@ describe('CdkFlatTreeControl', () => {
 
     it('should return correct expandable values', () => {
       const nodes = generateData(10, 4);
-      treeControl.nodes = nodes;
+      treeControl.dataNodes = nodes;
 
       for (let i = 0; i < 10; i++) {
         expect(treeControl.isExpandable(nodes[i]))
@@ -65,7 +65,7 @@ describe('CdkFlatTreeControl', () => {
       const numChildren = 4;
       const numGrandChildren = 2;
       const nodes = generateData(numNodes, numChildren, numGrandChildren);
-      treeControl.nodes = nodes;
+      treeControl.dataNodes = nodes;
 
       for (let i = 0; i < numNodes; i++) {
         expect(treeControl.getLevel(nodes[i]))
@@ -91,7 +91,7 @@ describe('CdkFlatTreeControl', () => {
 
       let data = [];
       flatten(nodes, data);
-      treeControl.nodes = data;
+      treeControl.dataNodes = data;
 
       treeControl.expandDescendants(nodes[1]);
 
@@ -112,14 +112,14 @@ describe('CdkFlatTreeControl', () => {
 
     });
 
-    it('should be able to expand/collapse all the nodes', () => {
+    it('should be able to expand/collapse all the dataNodes', () => {
       const numNodes = 10;
       const numChildren = 4;
       const numGrandChildren = 2;
       const nodes = generateData(numNodes, numChildren, numGrandChildren);
       let data = [];
       flatten(nodes, data);
-      treeControl.nodes = data;
+      treeControl.dataNodes = data;
 
       treeControl.expandDescendants(nodes[1]);
 

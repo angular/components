@@ -23,10 +23,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {takeUntil} from 'rxjs/operator/takeUntil';
+import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs/Subject';
 import {CdkTreeNodeDef, CdkTreeNode, CdkTreeNodeOutletContext} from './node';
-import {TreeNodeOutlet} from './outlet';
+import {CdkTreeNodeOutlet} from './outlet';
 import {TreeControl} from './control/tree-control';
 import {
   getTreeControlMissingError,
@@ -37,13 +37,13 @@ import {
 
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
- * nodes with hierarchy. Updates the nodes when new data is provided by the data source.
+ * dataNodes with hierarchy. Updates the dataNodes when new data is provided by the data source.
  */
 @Component({
   moduleId: module.id,
   selector: 'cdk-tree',
   exportAs: 'cdkTree',
-  template: `<ng-container treeNodeOutlet></ng-container>`,
+  template: `<ng-container cdkTreeNodeOutlet></ng-container>`,
   host: {
     'class': 'cdk-tree',
     'role': 'tree',
@@ -57,7 +57,7 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
   private _destroyed = new Subject<void>();
 
   /** Latest data provided by the data source through the connect interface. */
-  private _data: Array<T> = [];
+  private _data: Array<T> = new Array<T>();
 
   /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<T>;
@@ -67,7 +67,7 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
 
   /**
    * Provides a stream containing the latest data array to render. Influenced by the tree's
-   * stream of view window (what nodes are currently on screen).
+   * stream of view window (what dataNodes are currently on screen).
    */
   @Input()
   get dataSource(): DataSource<T> { return this._dataSource; }
@@ -81,17 +81,8 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
   /** The tree controller */
   @Input() treeControl: TreeControl<T>;
 
-  // TODO(andrewseguin): Remove max value as the end index
-  //   and instead calculate the view on init and scroll.
-  /**
-   * Stream containing the latest information on what nodes are being displayed on screen.
-   * Can be used by the data source to as a heuristic of what data should be provided.
-   */
-  viewChange =
-    new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
-
-  // Outlets within the tree's template where the nodes will be inserted.
-  @ViewChild(TreeNodeOutlet) _nodeOutlet: TreeNodeOutlet;
+  // Outlets within the tree's template where the dataNodes will be inserted.
+  @ViewChild(CdkTreeNodeOutlet) _nodeOutlet: CdkTreeNodeOutlet;
 
   /** The tree node template for the tree */
   @ContentChildren(CdkTreeNodeDef) _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
@@ -99,10 +90,20 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
   /** The tree node inside the tree */
   @ContentChildren(CdkTreeNode, {descendants: true}) items: QueryList<CdkTreeNode<T>>;
 
+  // TODO(tinayuangao): Setup a listener for scrolling, emit the calculated view to viewChange.
+  //     Remove the MAX_VALUE in viewChange
+  /**
+   * Stream containing the latest information on what rows are being displayed on screen.
+   * Can be used by the data source to as a heuristic of what data should be provided.
+   */
+  viewChange =
+    new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
+
   constructor(private _differs: IterableDiffers,
               private _changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit() {
+
     this._dataDiffer = this._differs.find([]).create();
     if (!this.treeControl) {
       throw getTreeControlMissingError();
@@ -139,13 +140,13 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
    * clearing the node outlet. Otherwise start listening for new data.
    */
   private _switchDataSource(dataSource: DataSource<T>) {
-    this._data = [];
+    this._data = new Array<T>();;
 
     if (this.dataSource) {
       this.dataSource.disconnect(this);
     }
 
-    // Remove the all nodes if there is now no data source
+    // Remove the all dataNodes if there is now no data source
     if (!dataSource) {
       this._nodeOutlet.viewContainer.clear();
     }
@@ -210,6 +211,11 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
     // Use default tree nodeOutlet, or nested node's nodeOutlet
     const container = viewContainer ? viewContainer : this._nodeOutlet.viewContainer;
     container.createEmbeddedView(node.template, context, index);
+
+    // Set the data to just created `CdkTreeNode`.
+    // The `CdkTreeNode` created from `createEmbeddedView` will be saved in static variable
+    //     `mostRecentTreeNode`. We get it from static variable and pass the node data to it.
+    CdkTreeNode.mostRecentTreeNode.data = nodeData;
 
     this._changeDetectorRef.detectChanges();
   }

@@ -9,7 +9,7 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {TreeNodeOutlet} from './outlet';
+import {CdkTreeNodeOutlet} from './outlet';
 import {CdkTreeNodePadding} from './padding';
 import {CdkTreeNodeTrigger} from './trigger';
 import {CdkTree} from './tree';
@@ -23,7 +23,7 @@ const EXPORTED_DECLARATIONS = [
   CdkTreeNodeTrigger,
   CdkTree,
   CdkTreeNode,
-  TreeNodeOutlet,
+  CdkTreeNodeOutlet,
 ];
 
 @NgModule({
