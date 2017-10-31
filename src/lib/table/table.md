@@ -26,8 +26,8 @@ Here’s a simple column definition with the name `’userName’`. The header c
 After you define all your columns, you’ll need to provide the header and data row templates that will be rendered out by the table. Each template should be given an ordered list of columns that will let the table know what columns each row should render.
 
 ```html
-<mat-header-row *matHeaderRowDef="[‘name’, ‘age’]"></mat-header-row>
-<mat-row *matRowDef="let myRowData; columns: [‘name’, ‘age’]"></mat-row>
+<mat-header-row *matHeaderRowDef="[‘userName’, ‘age’]"></mat-header-row>
+<mat-row *matRowDef="let myRowData; columns: [‘userName’, ‘age’]"></mat-row>
 ```
 
 Once your template is set up, the final step is to provide data to the table. This must be done through a `DataSource`, which uses an Observable stream that emits an array of data that the table should render. 
