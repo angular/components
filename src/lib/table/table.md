@@ -8,7 +8,7 @@ This table builds on the foundation of the CDK data-table and uses a similar int
 data source input and template, except that its element and attribute selectors will be prefixed 
 with `mat-` instead of `cdk-`. For detailed information on the interface and how it works, see the [guide covering the CDK data-table](https://material.angular.io/guide/cdk-table).
 
-Getting Started
+### Getting Started
 
 <!-- example(table-basic) -->
 
@@ -45,16 +45,17 @@ myDataSource.data = dataToRender;
 </mat-table>
 ```
 
-Features
+### Features
 
-Pagination
+#### Pagination
 
 To paginate the table’s data, add a `<mat-paginator>` after the `<mat-table>` and provide the `MatPaginator` to the `MatTableDataSource`. The data source will automatically listen for page changes made by the user and send the right paged data to the table.
 
 For more information on using and configuring the `<mat-paginator>`, check out the [mat-paginator docs](https://material.angular.io/components/paginator/overview).
 
 <!-- example(table-pagination) -->
-Sorting
+
+#### Sorting
 
 To add sorting behavior to the table, add the `matSort` directive to the `<mat-table>` and add `mat-sort-header` to each column header cell that should trigger sorting. Provide the `MatSort` directive to the `MatTableDataSource` and it will automatically listen for sorting changes and change the order of data rendered by the table.
 
@@ -74,7 +75,7 @@ If the data properties do not match the column names, or if a more complex data 
 
 For more information on using and configuring the sorting behavior, check out the [matSort docs](https://material.angular.io/components/sort/overview).
 
-Filtering
+#### Filtering
 
 To remove filtered rows from the table’s data, simply provide the filter string to the `MatTableDataSource`. The data source will reduce each row data to a serialized form and will filter out the row if it does not contain the filter string. By default, the row data reducing function will concatenate all the object values and convert them to lowercase.
 
@@ -84,7 +85,7 @@ To override the default filtering behavior, a custom `filterPredicate` function 
 
 <!--- example(table-filtering) -->
 
-Selection
+#### Selection
 
 To add row selection to the table, first set up a `SelectionModel` from `@angular/cdk/collections` that will maintain the selection state.
 
