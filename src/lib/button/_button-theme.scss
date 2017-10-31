@@ -82,7 +82,7 @@
     @include _mat-button-theme-color($theme, 'color');
   }
 
-  .mat-raised-button, .mat-fab, .mat-mini-fab {
+  .mat-raised-button {
     // Default properties when not using any [color] value.
     color: mat-color($foreground, text);
     background-color: mat-color($background, raised-button);
@@ -107,7 +107,7 @@
 }
 
 @mixin mat-button-typography($config) {
-  .mat-button, .mat-raised-button, .mat-icon-button, .mat-fab, .mat-mini-fab {
+  .mat-button, .mat-raised-button, .mat-icon-button {
     font: {
       family: mat-font-family($config, button);
       size: mat-font-size($config, button);

@@ -58,6 +58,7 @@ System.config({
     '@angular/material/datepicker': 'dist/bundles/material-datepicker.umd.js',
     '@angular/material/dialog': 'dist/bundles/material-dialog.umd.js',
     '@angular/material/expansion': 'dist/bundles/material-expansion.umd.js',
+    '@angular/material/fab': 'dist/packages/material/fab/index.js',
     '@angular/material/form-field': 'dist/bundles/material-form-field.umd.js',
     '@angular/material/grid-list': 'dist/bundles/material-grid-list.umd.js',
     '@angular/material/icon': 'dist/bundles/material-icon.umd.js',

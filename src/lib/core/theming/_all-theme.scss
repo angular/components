@@ -29,6 +29,7 @@
 @import '../../tooltip/tooltip-theme';
 @import '../../snack-bar/snack-bar-theme';
 @import '../../form-field/form-field-theme';
+@import '../../fab/fab-theme';
 
 
 // Create a theme.
@@ -63,4 +64,5 @@
   @include mat-toolbar-theme($theme);
   @include mat-tooltip-theme($theme);
   @include mat-snack-bar-theme($theme);
+  @include mat-fab-theme($theme);
 }

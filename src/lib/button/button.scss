@@ -13,7 +13,7 @@
   }
 }
 
-// Only flat buttons (not raised, FABs or icon buttons) have a hover style.
+// Only flat buttons (not raised or icon buttons) have a hover style.
 // Use the same visual treatment for hover as for focus.
 .mat-button:hover .mat-button-focus-overlay {
   opacity: 1;
@@ -21,14 +21,6 @@
 
 .mat-raised-button {
   @extend %mat-raised-button;
-}
-
-.mat-fab {
-  @include mat-fab($mat-fab-size, $mat-fab-padding);
-}
-
-.mat-mini-fab {
-  @include mat-fab($mat-mini-fab-size, $mat-mini-fab-padding);
 }
 
 .mat-icon-button {
@@ -70,7 +62,7 @@
 
 // Element that overlays the button to show focus and hover effects.
 .mat-button-focus-overlay {
-  // The button spec calls for focus on raised buttons (and FABs) to be indicated with a
+  // The button spec calls for focus on raised buttons to be indicated with a
   // black, 12% opacity shade over the normal color (for both light and dark themes).
   background-color: rgba(black, 0.12);
   border-radius: inherit;
@@ -96,7 +88,7 @@
 
 // Add an outline to make it more visible in high contrast mode.
 @include cdk-high-contrast {
-  .mat-button, .mat-raised-button, .mat-icon-button, .mat-fab, .mat-mini-fab {
+  .mat-button, .mat-raised-button, .mat-icon-button {
     outline: solid 1px;
   }
 }

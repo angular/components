@@ -17,6 +17,7 @@ export * from '@angular/material/core';
 export * from '@angular/material/datepicker';
 export * from '@angular/material/dialog';
 export * from '@angular/material/expansion';
+export * from '@angular/material/fab';
 export * from '@angular/material/form-field';
 export * from '@angular/material/grid-list';
 export * from '@angular/material/icon';

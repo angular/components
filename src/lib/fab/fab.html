@@ -1,0 +1,13 @@
+<span class="mat-fab-wrapper"  [@extendContent]="_isExtended()">
+  <span class="mat-fab-content">
+    <ng-content></ng-content>
+  </span>
+  <span class="mat-fab-label" *ngIf="_isExtended()"
+        [style.order]="labelLocation === 'before' ? -1 : 1">
+    <ng-container *ngTemplateOutlet="label"></ng-container>
+  </span>
+</span>
+<div matRipple class="mat-fab-ripple"
+     [matRippleDisabled]="_isRippleDisabled()"
+     [matRippleTrigger]="_getHostElement()"></div>
+<div class="mat-fab-focus-overlay"></div>

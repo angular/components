@@ -1,114 +1,98 @@
 <div class="demo-button">
-  <section>
-    <button mat-button>flat</button>
-    <button mat-raised-button>raised</button>
-    <button mat-fab>
-      <mat-icon>check</mat-icon>
-    </button>
-    <button mat-fab>Btn</button>
-    <a mat-fab routerLink=".">Link</a>
-    <a mat-fab routerLink="."><mat-icon>check</mat-icon></a>
-    <button mat-mini-fab>
-      <mat-icon>check</mat-icon>
-    </button>
-    <button mat-mini-fab>Btn</button>
-    <a mat-mini-fab routerLink=".">Link</a>
-  </section>
-
-  <section>
-    <a href="http://www.google.com" mat-button color="primary">SEARCH</a>
-    <a href="http://www.google.com" mat-raised-button>SEARCH</a>
-    <a href="http://www.google.com" mat-fab>
-      <mat-icon>check</mat-icon>
-    </a>
-    <a href="http://www.google.com" mat-mini-fab>
-      <mat-icon>check</mat-icon>
-    </a>
-  </section>
-
-  <section>
+  <section class="outlined">
+    <label>Flat</label>
+    <button mat-button>default</button>
     <button mat-button color="primary">primary</button>
     <button mat-button color="accent">accent</button>
     <button mat-button color="warn">warn</button>
   </section>
 
-  <section>
+  <section class="outlined">
+    <label>Raised</label>
+    <button mat-raised-button>default</button>
     <button mat-raised-button color="primary">primary</button>
     <button mat-raised-button color="accent">accent</button>
     <button mat-raised-button color="warn">warn</button>
   </section>
 
-  <section>
-    <button mat-fab color="primary">
-      <mat-icon>home</mat-icon>
-    </button>
-    <button mat-fab color="accent">
-      <mat-icon>favorite</mat-icon>
-    </button>
-    <button mat-fab color="warn">
-      <mat-icon>feedback</mat-icon>
-    </button>
+  <section class="outlined">
+    <label>Icon</label>
+    <button mat-icon-button><mat-icon>home</mat-icon></button>
+    <button mat-icon-button color="primary"><mat-icon>home</mat-icon></button>
+    <button mat-icon-button color="accent"><mat-icon>favorite</mat-icon></button>
+    <button mat-icon-button color="warn"><mat-icon>feedback</mat-icon></button>
   </section>
 
-  <section>
-    <button mat-icon-button color="primary">
-      <mat-icon>menu</mat-icon>
-    </button>
-
-    <button mat-icon-button color="accent">
-      <mat-icon>favorite</mat-icon>
-    </button>
-
-    <button mat-icon-button>
-      <mat-icon>more_vert</mat-icon>
-    </button>
-  </section>
-
-  <section>
-    <div>
-      <p>isDisabled: {{isDisabled}}, clickCounter: <span>{{clickCounter}}</span></p>
-      <button mat-raised-button (click)="isDisabled=!isDisabled">
-        Disable buttons
+  <section class="outlined">
+    <label>FABs</label>
+    <section>
+      <mat-slide-toggle [(ngModel)]="extendOnHover">Extend On Hover</mat-slide-toggle>
+      <mat-slide-toggle [(ngModel)]="extendOnFocus">Extend On Focus</mat-slide-toggle>
+      <mat-slide-toggle [(ngModel)]="hasLabel">Has Label</mat-slide-toggle>
+      <mat-form-field [style.display]="hasLabel ? 'inline-block' : 'none'" floatPlaceholder="never">
+        <input matInput type="text" [(ngModel)]="labelText">
+      </mat-form-field>
+    </section>
+    <section>
+      <button mat-fab color="primary"
+              [extendOnHover]="extendOnHover" [extendOnFocus]="extendOnFocus">
+        <mat-icon>check</mat-icon>
+        <ng-template #label *ngIf="hasLabel">{{labelText}}</ng-template>
       </button>
+      <button mat-fab color="accent"
+              [extendOnHover]="extendOnHover" [extendOnFocus]="extendOnFocus">
+        <mat-icon>check</mat-icon>
+        <ng-template #label *ngIf="hasLabel">{{labelText}}</ng-template>
+      </button>
+      <button mat-fab color="warn"
+              [extendOnHover]="extendOnHover" [extendOnFocus]="extendOnFocus">
+        <mat-icon>check</mat-icon>
+        <ng-template #label *ngIf="hasLabel">{{labelText}}</ng-template>
+      </button>
+      <button mat-mini-fab color="primary"
+              [extendOnHover]="extendOnHover" [extendOnFocus]="extendOnFocus">
+        <mat-icon>check</mat-icon>
+        <ng-template #label *ngIf="hasLabel">{{labelText}}</ng-template>
+      </button>
+      <button mat-mini-fab color="accent"
+              [extendOnHover]="extendOnHover" [extendOnFocus]="extendOnFocus">
+        <mat-icon>check</mat-icon>
+        <ng-template #label *ngIf="hasLabel">{{labelText}}</ng-template>
+      </button>
+      <button mat-mini-fab color="warn"
+              [extendOnHover]="extendOnHover" [extendOnFocus]="extendOnFocus">
+        <mat-icon>check</mat-icon>
+        <ng-template #label *ngIf="hasLabel">{{labelText}}</ng-template>
+      </button>
+    </section>
+  </section>
+
+
+  <section class="outlined">
+    <label>Anchors</label>
+    <a href="http://www.google.com" mat-button color="primary">SEARCH</a>
+    <a href="http://www.google.com" mat-raised-button>SEARCH</a>
+    <a href="http://www.google.com" mat-fab><mat-icon>check</mat-icon></a>
+    <a href="http://www.google.com" mat-mini-fab><mat-icon>check</mat-icon></a>
+    <a href="http://www.google.com" mat-icon-button><mat-icon>check</mat-icon></a>
+  </section>
+
+  <section class="outlined">
+    <label>Disable and Focus</label>
+    <section>
+      <button mat-raised-button (click)="isDisabled=!isDisabled">Disable all</button>
       <button mat-raised-button (click)="button1.focus()">Focus 1</button>
       <button mat-raised-button (click)="button2.focus()">Focus 2</button>
       <button mat-raised-button (click)="button3.focus()">Focus 3</button>
       <button mat-raised-button (click)="button4.focus()">Focus 4</button>
-    </div>
-    <button mat-button #button1 [disabled]="isDisabled" (click)="clickCounter=clickCounter+1">off</button>
-    <button mat-button #button2 color="primary" [disabled]="isDisabled">off</button>
-    <a href="http://www.google.com" #button3 mat-button color="accent" [disabled]="isDisabled">off</a>
-    <button mat-raised-button #button4 color="primary" [disabled]="isDisabled">off</button>
-    <button mat-mini-fab [disabled]="isDisabled">
-      <mat-icon>check</mat-icon>
-    </button>
-
-    <button mat-icon-button color="accent" [disabled]="isDisabled">
-      <mat-icon>favorite</mat-icon>
-    </button>
-  </section>
-  <section>
-    <a href="http://www.google.com" mat-button color="primary">SEARCH</a>
-    <button mat-button>DANCE</button>
-  </section>
-  <section>
-    <a href="http://www.google.com" mat-raised-button color="primary">SEARCH</a>
-    <button mat-raised-button>DANCE</button>
-  </section>
-  <section>
-    <button mat-raised-button>More<mat-icon>more_vert</mat-icon></button>
-    <button mat-raised-button>Check<mat-icon>check</mat-icon></button>
-    <button mat-raised-button>Check<mat-icon>favorite</mat-icon></button>
-    <button mat-raised-button>Last<mat-icon>navigate_before</mat-icon></button>
-  </section>
-  <section>
-    <button mat-button>More<mat-icon>more_vert</mat-icon></button>
-    <button mat-button>Check<mat-icon>check</mat-icon></button>
-    <button mat-button>Check<mat-icon>favorite</mat-icon></button>
-    <button mat-button>Last<mat-icon>navigate_before</mat-icon></button>
-  </section>
-  <section>
-    <button mat-raised-button [disabled]="toggleDisable" (click)="toggleDisable = true">Disable</button>
-    <button mat-button [disabled]="!toggleDisable" (click)="toggleDisable = false">Disable</button>
+      <button mat-raised-button (click)="button5.focus()">Focus 5</button>
+    </section>
+    <section>
+      <button #button1 mat-button color="primary" [disabled]="isDisabled">1</button>
+      <button #button2 mat-raised-button color="accent" [disabled]="isDisabled">2</button>
+      <button #button3 mat-fab color="warn" [disabled]="isDisabled">3</button>
+      <button #button4 mat-mini-fab color="primary" [disabled]="isDisabled">4</button>
+      <button #button5 mat-icon-button color="accent" [disabled]="isDisabled">5</button>
+    </section>
   </section>
 </div>

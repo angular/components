@@ -1,0 +1,68 @@
+@import '../core/theming/theming';
+@import '../core/typography/typography-utils';
+
+@mixin mat-fab-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .mat-fab {
+    // Default properties when not using any [color] value.
+    color: mat-color($primary, default-contrast);
+    background-color: mat-color($primary, 1);
+
+    &.mat-primary {
+      color: mat-color($primary, default-contrast);
+      background-color: mat-color($primary, 1);
+
+      .mat-ripple-element {
+        background-color: mat-color($primary, default-contrast, 0.2);
+      }
+    }
+
+    &.mat-accent {
+      color: mat-color($accent, default-contrast);
+      background-color: mat-color($accent, 1);
+
+      .mat-ripple-element {
+        background-color: mat-color($accent, default-contrast, 0.2);
+      }
+    }
+
+    &.mat-warn {
+      color: mat-color($warn, default-contrast);
+      background-color: mat-color($warn, 1);
+
+      .mat-ripple-element {
+        background-color: mat-color($warn, default-contrast, 0.2);
+      }
+    }
+
+    &.mat-primary, &.mat-accent, &.mat-warn, &[disabled] {
+      &[disabled] {
+        // color: rgba(white, 0.62);
+        color: mat-color($foreground, disabled-button);
+        background-color: mat-color($background, disabled-button);
+
+        .mat-fab-focus-overlay {
+          background-color: transparent;
+        }
+        .mat-ripple-element {
+          background-color: transparent;
+        }
+      }
+    }
+  }
+}
+
+@mixin mat-fab-typography($config) {
+  .mat-fab {
+    font: {
+      family: mat-font-family($config, button);
+      size: mat-font-size($config, button);
+      weight: mat-font-weight($config, button);
+    }
+  }
+}
