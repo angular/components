@@ -24,7 +24,7 @@ Start by writing your table's column definitions. Each column definition should 
 name and contain the content definitions for its header and row cells.
 
 Here's a simple column definition with the name `'userName'`. The header cell contains the text 
-‘Name' and each row cell will render the `name` property of each row's data.
+"Name" and each row cell will render the `name` property of each row's data.
 
 ```html
 <ng-container matColumnDef="userName">
@@ -38,8 +38,8 @@ will be rendered out by the table. Each template should be given an ordered list
 will let the table know what columns each row should render.
 
 ```html
-<mat-header-row *matHeaderRowDef="[‘userName', ‘age']"></mat-header-row>
-<mat-row *matRowDef="let myRowData; columns: [‘userName', ‘age']"></mat-row>
+<mat-header-row *matHeaderRowDef="['userName', 'age']"></mat-header-row>
+<mat-row *matRowDef="let myRowData; columns: ['userName', 'age']"></mat-row>
 ```
 
 Once your template is set up, the final step is to provide data to the table. This must be done 
@@ -109,7 +109,7 @@ To remove filtered rows from the table's data, simply provide the filter string 
 filter out the row if it does not contain the filter string. By default, the row data reducing 
 function will concatenate all the object values and convert them to lowercase.
 
-For example, the data object `{id: 123, name: ‘Mr. Smith', favoriteColor: ‘blue'}` will be 
+For example, the data object `{id: 123, name: 'Mr. Smith', favoriteColor: 'blue'}` will be 
 reduced to `123mr. smithblue`. If your filter string was `blue` then it would be considered a match 
 because it is contained in the reduced string, and the row would be displayed in the table.
 
