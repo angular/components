@@ -1,3 +1,5 @@
+@import '../../../styles/constants';
+
 :host {
   display: flex;
   flex-direction: column;
@@ -5,8 +7,12 @@
 }
 
 .docs-guide-list {
-  margin: 50px;
   flex-grow: 1;
+  margin: $content-padding-side;
+
+  @media (max-width: $small-breakpoint-width) {
+    margin: 0;
+  }
 }
 
 .docs-guide-item, .docs-guide-item:hover {
