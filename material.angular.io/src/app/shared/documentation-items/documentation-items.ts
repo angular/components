@@ -137,7 +137,6 @@ const DOCS: {[key: string]: DocCategory[]} = {
         {id: 'collections', name: 'Collections', examples: []},
         {id: 'keycodes', name: 'Keycodes', examples: []},
         {id: 'platform', name: 'Platform', examples: []},
-        {id: 'rxjs', name: 'RxJS', examples: []},
       ]
     },
     {
