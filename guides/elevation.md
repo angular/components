@@ -48,5 +48,3 @@ elevation changes:
   }
 }
 ```
-
-
