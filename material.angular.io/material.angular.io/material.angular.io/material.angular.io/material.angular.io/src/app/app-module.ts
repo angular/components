@@ -5,7 +5,7 @@ import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {RouterModule} from '@angular/router';
-import {MatNativeDateModule, MATERIAL_COMPATIBILITY_MODE} from '@angular/material';
+import {MatNativeDateModule} from '@angular/material';
 import {ExampleModule} from '@angular/material-examples';
 
 import {MaterialDocsApp} from './material-docs-app';
@@ -67,7 +67,6 @@ import {
     ThemeStorage,
     CanActivateComponentSidenav,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
-    {provide: MATERIAL_COMPATIBILITY_MODE, useValue: true},
   ],
   bootstrap: [MaterialDocsApp],
 })
