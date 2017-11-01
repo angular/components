@@ -5,6 +5,7 @@
   "angular-cli": {},
   "scripts": {
     "start": "npm run build-themes && ng serve --aot --sourcemaps=false",
+    "start-jit": "npm run build-themes && ng serve --sourcemaps=false",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test",
     "pree2e": "webdriver-manager update",
@@ -19,19 +20,21 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^4.4.4",
-    "@angular/cdk": "2.0.0-beta.12",
+    "@angular/cdk": "github:angular/cdk-builds",
     "@angular/common": "^4.4.4",
     "@angular/compiler": "^4.4.4",
     "@angular/core": "^4.4.4",
     "@angular/forms": "^4.4.4",
     "@angular/http": "^4.4.4",
-    "@angular/material": "2.0.0-beta.12",
+    "@angular/material": "github:angular/material2-builds",
+    "@angular/material-moment-adapter": "github:angular/material2-moment-adapter-builds",
     "@angular/platform-browser": "^4.4.4",
     "@angular/platform-browser-dynamic": "^4.4.4",
     "@angular/router": "^4.4.4",
     "@angular/service-worker": "^1.0.0-beta.16",
     "core-js": "^2.4.1",
-    "rxjs": "^5.1.0",
+    "moment": "^2.19.1",
+    "rxjs": "^5.5.0",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
@@ -53,6 +56,6 @@
     "protractor": "^5.1.1",
     "ts-node": "^2.0.0",
     "tslint": "^4.4.2",
-    "typescript": "~2.2.0"
+    "typescript": "~2.4.0"
   }
 }
