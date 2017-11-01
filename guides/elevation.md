@@ -33,7 +33,7 @@ indicating the elevation of the element. In order to use the mixin, you must imp
 }
 ```
 
-For convenience, you can use the `mat-elevation-transition` mixin to add a transition between
+For convenience, you can use the `mat-elevation-transition` mixin to add a transition when the
 elevation changes:
 
 ```scss
