@@ -33,31 +33,29 @@ class NoUnescapedHtmlTagWalker extends Lint.RuleWalker {
   /** Gets whether the comment's HTML, if any, is properly escaped */
   parseForHtml(fullText) {
     const matches = new RegExp(/[<>]/);
-
     const backtickCount = fullText.split('`').length - 1;
-    if ((backtickCount === 1) || ((backtickCount === 0) && matches.test(fullText))) {
+
+    // An odd number of backticks or html without backticks is invalid
+    if ((backtickCount % 2) || ((backtickCount === 0) && matches.test(fullText))) {
       return false;
     }
 
-    // if there are no backticks and no [<>], there's no need for any more checks
-    if ((backtickCount > 1) && matches.test(fullText)) {
-      // if there are backticks there should be an even number of them
-      if (backtickCount % 2) {
+    // Text without html is valid
+    if (!matches.test(fullText)) {
+      return true;
+    }
+
+    // < and > must always be between two matching backticks.
+    const fullTextArray = fullText.split('');
+
+    // Whether an opening backtick has been found without a closing pair
+    let openBacktick = false;
+
+    for (let i = 0; i < fullTextArray.length; i++) {
+      if (fullTextArray[i] === '`') {
+        openBacktick = !openBacktick;
+      } else if (matches.test(fullTextArray[i]) && !openBacktick) {
         return false;
-      } else {
-        // < and > must always be between two matching backticks.
-        const fullTextArray = fullText.split('');
-
-        // Whether an opening backtick has been found without a closing pair
-        let openBacktick = false;
-
-        for (let i = 0; i < fullTextArray.length; i++) {
-          if (fullTextArray[i] === '`') {
-            openBacktick = !openBacktick;
-          } else if (matches.test(fullTextArray[i]) && !openBacktick) {
-            return false;
-          }
-        }
       }
     }
 
