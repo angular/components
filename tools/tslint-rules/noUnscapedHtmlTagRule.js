@@ -22,45 +22,46 @@ class NoUnescapedHtmlTagWalker extends Lint.RuleWalker {
   visitSourceFile(sourceFile) {
     utils.forEachComment(sourceFile, (fullText, commentRange) => {
 
-      let isEscapedHtmlTag = true;
-      const matches = new RegExp(/[<>]/);
+      const htmlIsEscaped = parseForHtml(fullText);
 
-      const numberOfBackticks = fullText.split('`').length - 1;
-      if ((numberOfBackticks === 1) || ((numberOfBackticks === 0) && matches.test(fullText))) {
-        isEscapedHtmlTag = false;
-      }
-
-      // if there are no backticks and [<>], there's no need for any more checks
-      if ((numberOfBackticks > 1) && matches.test(fullText)) {
-        // if there are backticks there should be an even number of them
-        if (!!(numberOfBackticks % 2)) {
-          isEscapedHtmlTag = false;
-        } else {
-          /** 
-           * This logic behaves like a stack structure. isBacktickWithoutMatch plays
-           * the stack role: it is set to true whenever, during a comment scan, an 'open' 
-           * backtick is found in the string, and it is set back to false when the next matching
-           * (closing) backtick is found. Every backtick must have a matching. < and >
-           * must always be between two matching backticks.
-           */
-          const splitedFullText = fullText.split('');
-          let isBacktickWithoutMatch = false;
-
-          for (var i = 0; i < splitedFullText.length; i++) {
-            if (splitedFullText[i] === '`') {
-              isBacktickWithoutMatch = !isBacktickWithoutMatch;
-            } else if (matches.test(splitedFullText[i]) && !isBacktickWithoutMatch) {
-              isEscapedHtmlTag = false;
-              break;
-            }
-          }
-        }
-      }
-
-      if (commentRange.kind === ts.SyntaxKind.MultiLineCommentTrivia && !isEscapedHtmlTag) {
+      if (commentRange.kind === ts.SyntaxKind.MultiLineCommentTrivia && !htmlIsEscaped) {
         this.addFailureAt(commentRange.pos, commentRange.end - commentRange.pos, ERROR_MESSAGE);
       }
     });
+  }
+
+  /** Gets whether the comment's HTML, if any, is properly escaped */
+  parseForHtml(fullText) {
+    const matches = new RegExp(/[<>]/);
+
+    const backtickCount = fullText.split('`').length - 1;
+    if ((backtickCount === 1) || ((backtickCount === 0) && matches.test(fullText))) {
+      return false;
+    }
+
+    // if there are no backticks and no [<>], there's no need for any more checks
+    if ((backtickCount > 1) && matches.test(fullText)) {
+      // if there are backticks there should be an even number of them
+      if (backtickCount % 2) {
+        return false;
+      } else {
+        // < and > must always be between two matching backticks.
+        const fullTextArray = fullText.split('');
+
+        // Whether an opening backtick has been found without a closing pair
+        let openBacktick = false;
+
+        for (let i = 0; i < fullTextArray.length; i++) {
+          if (fullTextArray[i] === '`') {
+            openBacktick = !openBacktick;
+          } else if (matches.test(fullTextArray[i]) && !openBacktick) {
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
   }
 }
 
