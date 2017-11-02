@@ -42,6 +42,11 @@ const GUIDES = [
     name: 'Creating a custom form field control',
     document: '/assets/documents/guides/creating-a-custom-form-field-control.html'
   },
+  {
+    id: 'elevation',
+    name: 'Using elevation helpers',
+    document: '/assets/documents/guides/material-elevation.html'
+  },
 ];
 
 @Injectable()
