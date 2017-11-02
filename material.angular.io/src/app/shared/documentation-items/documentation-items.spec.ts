@@ -37,6 +37,6 @@ describe('DocViewer', () => {
   });
 
   it('should get a doc item by id', () => {
-    expect(docsItems.getItemById('button')).toBeDefined();
+    expect(docsItems.getItemById('button', 'material')).toBeDefined();
   });
 });

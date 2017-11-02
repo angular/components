@@ -1,11 +1,13 @@
 import {Component, OnInit, NgModule, ElementRef, ViewEncapsulation, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router, RouterModule} from '@angular/router';
+import {ActivatedRoute, Params, Router, RouterModule} from '@angular/router';
 import {DocumentationItems, DocItem} from '../../shared/documentation-items/documentation-items';
 import {ComponentPageTitle} from '../page-title/page-title';
 import {MatTabsModule} from '@angular/material';
 import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
 import {CommonModule} from '@angular/common';
 import {TableOfContentsModule} from '../../shared/table-of-contents/table-of-contents.module';
+import {Observable} from 'rxjs/Observable';
+
 
 @Component({
   selector: 'app-component-viewer',
@@ -22,19 +24,23 @@ export class ComponentViewer {
               private router: Router,
               public _componentPageTitle: ComponentPageTitle,
               public docItems: DocumentationItems) {
-    this._route.params.subscribe(params => {
-      this.componentDocItem = docItems.getItemById(params['id']);
+    // Listen to changes on the current route for the doc id (e.g. button/checkbox) and the
+    // parent route for the section (material/cdk).
+    Observable.combineLatest(_route.params, _route.parent.params)
+        .map((p: [Params, Params]) => ({id: p[0]['id'], section: p[1]['section']}))
+        .map(p => docItems.getItemById(p.id, p.section))
+        .subscribe(d => {
+          this.componentDocItem = d;
+          if (this.componentDocItem) {
+            this._componentPageTitle.title = `${this.componentDocItem.name}`;
+            this.componentDocItem.examples.length ?
+              this.sections.add('examples') :
+              this.sections.delete('examples');
 
-      if (this.componentDocItem) {
-        this._componentPageTitle.title = `${this.componentDocItem.name}`;
-        this.componentDocItem.examples.length ?
-          this.sections.add('examples') :
-          this.sections.delete('examples');
-
-      } else {
-        this.router.navigate(['/components']);
-      }
-    });
+          } else {
+            this.router.navigate(['/components']);
+          }
+        });
   }
 }
 

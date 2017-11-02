@@ -1,10 +1,11 @@
-import {Component, Input, Inject, ElementRef, OnInit} from '@angular/core';
+import {Component, ElementRef, Inject, Input, OnInit} from '@angular/core';
 import {DOCUMENT} from '@angular/platform-browser';
-import {Router, ActivatedRoute, NavigationEnd} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/takeUntil';
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
 
 interface Link {
   /* id of the section*/
@@ -36,9 +37,7 @@ export class TableOfContents implements OnInit {
 
   _rootUrl: string;
   private _scrollContainer: any;
-  private _scrollSubscription: Subscription;
-  private _routeSubscription: Subscription;
-  private _fragmentSubscription: Subscription;
+  private _destroyed = new Subject();
   private _urlFragment = '';
 
   constructor(private _router: Router,
@@ -46,7 +45,7 @@ export class TableOfContents implements OnInit {
               private _element: ElementRef,
               @Inject(DOCUMENT) private _document: Document) {
 
-    this._routeSubscription = this._router.events.subscribe((event) => {
+    this._router.events.takeUntil(this._destroyed).subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const rootUrl = _router.url.split('#')[0];
         if (rootUrl !== this._rootUrl) {
@@ -56,7 +55,7 @@ export class TableOfContents implements OnInit {
       }
     });
 
-    this._fragmentSubscription = this._route.fragment.subscribe(fragment => {
+    this._route.fragment.takeUntil(this._destroyed).subscribe(fragment => {
       this._urlFragment = fragment;
 
       const target = document.getElementById(this._urlFragment);
@@ -73,17 +72,15 @@ export class TableOfContents implements OnInit {
       this._scrollContainer = this.container ?
         this._document.querySelectorAll(this.container)[0] : window;
 
-      this._scrollSubscription = Observable
-        .fromEvent(this._scrollContainer, 'scroll')
+      Observable.fromEvent(this._scrollContainer, 'scroll')
+        .takeUntil(this._destroyed)
         .debounceTime(10)
         .subscribe(() => this.onScroll());
     });
   }
 
   ngOnDestroy(): void {
-    this._routeSubscription.unsubscribe();
-    this._scrollSubscription.unsubscribe();
-    this._fragmentSubscription.unsubscribe();
+    this._destroyed.next();
   }
 
   updateScrollPosition(): void {

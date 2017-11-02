@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 export interface DocItem {
   id: string;
   name: string;
+  packageName?: string;
   examples?: string[];
 }
 
@@ -108,6 +109,19 @@ const DOCS: {[key: string]: DocCategory[]} = {
   ],
   [CDK] : [
     {
+      id: 'component-composition',
+      name: 'Common Behaviors',
+      items: [
+        {id: 'a11y', name: 'Accessibility', examples: []},
+        {id: 'observers', name: 'Observers', examples: []},
+        {id: 'layout', name: 'Layout', examples: []},
+        {id: 'overlay', name: 'Overlay', examples: []},
+        {id: 'portal', name: 'Portal', examples: []},
+        {id: 'bidi', name: 'Bidirectionality', examples: []},
+        {id: 'scrolling', name: 'Scrolling', examples: []},
+      ]
+    },
+    {
       id: 'components',
       name: 'Components',
       items: [
@@ -116,42 +130,25 @@ const DOCS: {[key: string]: DocCategory[]} = {
 
       ]
     },
-    {
-      id: 'component-composition',
-      name: 'Component Composition',
-      items: [
-        {id: 'observers', name: 'Observers', examples: []},
-        {id: 'layout', name: 'Layout', examples: []},
-        {id: 'overlay', name: 'Overlay', examples: []},
-        {id: 'portal', name: 'Portal', examples: []},
-        {id: 'bidi', name: 'Bidirectionality', examples: []},
-        {id: 'scrolling', name: 'Scrolling', examples: []},
-        {id: 'viewport', name: 'Viewport', examples: []},
-      ]
-    },
-    {
-      id: 'utilities',
-      name: 'Utilities',
-      items: [
-        {id: 'coercion', name: 'Coercion', examples: []},
-        {id: 'collections', name: 'Collections', examples: []},
-        {id: 'keycodes', name: 'Keycodes', examples: []},
-        {id: 'platform', name: 'Platform', examples: []},
-      ]
-    },
-    {
-      id: 'accessibility',
-      name: 'Accessibility',
-      items: [
-        {id: 'focus-key-manager', name: 'Focus Key Manager', examples: []},
-        {id: 'focus-trap', name: 'Focus Trap', examples: []},
-        {id: 'interactivity-checker', name: 'Interactivity Checker', examples: []},
-        {id: 'list-key-manager', name: 'List Key Manager', examples: []},
-        {id: 'live-announcer', name: 'Live Announcer', examples: []},
-      ]
-    },
+    // TODO(jelbourn): re-add utilities and a11y as top-level categories once we can generate
+    // their API docs with dgeni. Currently our setup doesn't generate API docs for constants
+    // and standalone functions (much of the utilities) and we have no way of generating API
+    // docs more granularly than directory-level (within a11y) (same for viewport).
   ]
 };
+
+for (let category of DOCS[COMPONENTS]) {
+  for (let doc of category.items) {
+    doc.packageName = 'material';
+  }
+}
+
+for (let category of DOCS[CDK]) {
+  for (let doc of category.items) {
+    doc.packageName = 'cdk';
+  }
+}
+
 const ALL_COMPONENTS = DOCS[COMPONENTS].reduce(
   (result, category) => result.concat(category.items), []);
 const ALL_CDK = DOCS[CDK].reduce((result, cdk) => result.concat(cdk.items), []);
@@ -174,8 +171,9 @@ export class DocumentationItems {
     return [];
   }
 
-  getItemById(id: string): DocItem {
-    return ALL_DOCS.find(i => i.id === id);
+  getItemById(id: string, section: string): DocItem {
+    const sectionLookup = section == 'cdk' ? 'cdk' : 'material';
+    return ALL_DOCS.find(doc => doc.id === id && doc.packageName == sectionLookup);
   }
 
   getCategoryById(id: string): DocCategory {
