@@ -1,12 +1,10 @@
-### Overlay
-
-The `Overlay` service provides a way to open floating panels on the screen.
+The `overlay` package provides a way to open floating panels on the screen.
 
 ### Creating overlays
 Calling `overlay.create()` will return an `OverlayRef` instance. This instance is a handle for
 managing that specific overlay.
 
-The `OverlayRef` _is_ a `PortalHost`- once created, content can be added by attaching a `Portal`.
+The `OverlayRef` _is_ a `PortalOutlet`- once created, content can be added by attaching a `Portal`.
 See the documentation on portals for further information.
 ```ts
 const overlayRef = overlay.create();

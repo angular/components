@@ -18,7 +18,7 @@ import {
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
-import {first} from '@angular/cdk/rxjs';
+import {first} from 'rxjs/operators/first';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -42,7 +42,6 @@ import {DOCUMENT} from '@angular/platform-browser';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {MatCalendar} from './calendar';
-import {coerceDateProperty} from './coerce-date-property';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerInput} from './datepicker-input';
 
@@ -133,7 +132,9 @@ export class MatDatepicker<D> implements OnDestroy {
     // selected value is.
     return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
   }
-  set startAt(date: D | null) { this._startAt = coerceDateProperty(this._dateAdapter, date); }
+  set startAt(date: D | null) {
+    this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(date));
+  }
   private _startAt: D | null;
 
   /** The view that the calendar should start in. */
@@ -166,6 +167,9 @@ export class MatDatepicker<D> implements OnDestroy {
    * @deprecated Switch to the `dateChange` and `dateInput` binding on the input element.
    */
   @Output() selectedChanged = new EventEmitter<D>();
+
+  /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
+  @Input() panelClass: string | string[];
 
   /** Whether the calendar is open. */
   opened = false;
@@ -325,7 +329,7 @@ export class MatDatepicker<D> implements OnDestroy {
       componentRef.instance.datepicker = this;
 
       // Update the position once the calendar has rendered.
-      first.call(this._ngZone.onStable.asObservable()).subscribe(() => {
+      this._ngZone.onStable.asObservable().pipe(first()).subscribe(() => {
         this._popupRef.updatePosition();
       });
     }
@@ -366,5 +370,13 @@ export class MatDatepicker<D> implements OnDestroy {
         { originX: 'end', originY: 'top' },
         { overlayX: 'end', overlayY: 'bottom' }
       );
+  }
+
+  /**
+   * @param obj The object to check.
+   * @returns The given object if it is both a date instance and valid, otherwise null.
+   */
+  private _getValidDateOrNull(obj: any): D | null {
+    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
   }
 }

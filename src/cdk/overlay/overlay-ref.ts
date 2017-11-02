@@ -7,28 +7,33 @@
  */
 
 import {NgZone} from '@angular/core';
-import {PortalHost, Portal} from '@angular/cdk/portal';
+import {PortalOutlet, Portal} from '@angular/cdk/portal';
 import {OverlayConfig} from './overlay-config';
+import {OverlayKeyboardDispatcher} from './keyboard/overlay-keyboard-dispatcher';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {first} from 'rxjs/operator/first';
+import {first} from 'rxjs/operators/first';
 
 
 /**
  * Reference to an overlay that has been created with the Overlay service.
  * Used to manipulate or dispose of said overlay.
  */
-export class OverlayRef implements PortalHost {
+export class OverlayRef implements PortalOutlet {
   private _backdropElement: HTMLElement | null = null;
   private _backdropClick: Subject<any> = new Subject();
   private _attachments = new Subject<void>();
   private _detachments = new Subject<void>();
 
+  /** Stream of keydown events dispatched to this overlay. */
+  _keydownEvents = new Subject<KeyboardEvent>();
+
   constructor(
-      private _portalHost: PortalHost,
+      private _portalOutlet: PortalOutlet,
       private _pane: HTMLElement,
       private _config: OverlayConfig,
-      private _ngZone: NgZone) {
+      private _ngZone: NgZone,
+      private _keyboardDispatcher: OverlayKeyboardDispatcher) {
 
     if (_config.scrollStrategy) {
       _config.scrollStrategy.attach(this);
@@ -46,7 +51,7 @@ export class OverlayRef implements PortalHost {
    * @returns The portal attachment result.
    */
   attach(portal: Portal<any>): any {
-    let attachResult = this._portalHost.attach(portal);
+    let attachResult = this._portalOutlet.attach(portal);
 
     if (this._config.positionStrategy) {
       this._config.positionStrategy.attach(this);
@@ -64,7 +69,7 @@ export class OverlayRef implements PortalHost {
     // Update the position once the zone is stable so that the overlay will be fully rendered
     // before attempting to position it, as the position may depend on the size of the rendered
     // content.
-    first.call(this._ngZone.onStable.asObservable()).subscribe(() => {
+    this._ngZone.onStable.asObservable().pipe(first()).subscribe(() => {
       this.updatePosition();
     });
 
@@ -87,6 +92,9 @@ export class OverlayRef implements PortalHost {
     // Only emit the `attachments` event once all other setup is done.
     this._attachments.next();
 
+    // Track this overlay by the keyboard dispatcher
+    this._keyboardDispatcher.add(this);
+
     return attachResult;
   }
 
@@ -95,6 +103,10 @@ export class OverlayRef implements PortalHost {
    * @returns The portal detachment result.
    */
   detach(): any {
+    if (!this.hasAttached()) {
+      return;
+    }
+
     this.detachBackdrop();
 
     // When the overlay is detached, the pane element should disable pointer events.
@@ -110,10 +122,13 @@ export class OverlayRef implements PortalHost {
       this._config.scrollStrategy.disable();
     }
 
-    const detachmentResult = this._portalHost.detach();
+    const detachmentResult = this._portalOutlet.detach();
 
     // Only emit after everything is detached.
     this._detachments.next();
+
+    // Remove this overlay from keyboard dispatcher tracking
+    this._keyboardDispatcher.remove(this);
 
     return detachmentResult;
   }
@@ -122,6 +137,8 @@ export class OverlayRef implements PortalHost {
    * Cleans up the overlay from the DOM.
    */
   dispose(): void {
+    const isAttached = this.hasAttached();
+
     if (this._config.positionStrategy) {
       this._config.positionStrategy.dispose();
     }
@@ -131,10 +148,14 @@ export class OverlayRef implements PortalHost {
     }
 
     this.detachBackdrop();
-    this._portalHost.dispose();
+    this._portalOutlet.dispose();
     this._attachments.complete();
     this._backdropClick.complete();
-    this._detachments.next();
+
+    if (isAttached) {
+      this._detachments.next();
+    }
+
     this._detachments.complete();
   }
 
@@ -142,24 +163,29 @@ export class OverlayRef implements PortalHost {
    * Checks whether the overlay has been attached.
    */
   hasAttached(): boolean {
-    return this._portalHost.hasAttached();
+    return this._portalOutlet.hasAttached();
   }
 
   /**
-   * Returns an observable that emits when the backdrop has been clicked.
+   * Gets an observable that emits when the backdrop has been clicked.
    */
   backdropClick(): Observable<void> {
     return this._backdropClick.asObservable();
   }
 
-  /** Returns an observable that emits when the overlay has been attached. */
+  /** Gets an observable that emits when the overlay has been attached. */
   attachments(): Observable<void> {
     return this._attachments.asObservable();
   }
 
-  /** Returns an observable that emits when the overlay has been detached. */
+  /** Gets an observable that emits when the overlay has been detached. */
   detachments(): Observable<void> {
     return this._detachments.asObservable();
+  }
+
+  /** Gets an observable of keydown events targeted to this overlay. */
+  keydownEvents(): Observable<KeyboardEvent> {
+    return this._keydownEvents.asObservable();
   }
 
   /**

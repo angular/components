@@ -1,11 +1,11 @@
-import {Overlay, OverlayOrigin, OverlayConfig} from '@angular/cdk/overlay';
+import {Overlay, CdkOverlayOrigin, OverlayConfig} from '@angular/cdk/overlay';
 import {
   ComponentPortal,
   // This import is only used to define a generic type. The current TypeScript version incorrectly
   // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
   // tslint:disable-next-line:no-unused-variable
   Portal,
-  TemplatePortalDirective
+  CdkPortal
 } from '@angular/cdk/portal';
 import {
   Component,
@@ -15,6 +15,8 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/do';
 
 
 @Component({
@@ -30,10 +32,10 @@ export class OverlayDemo {
   isMenuOpen: boolean = false;
   tortelliniFillings = ['cheese and spinach', 'mushroom and broccoli'];
 
-  @ViewChildren(TemplatePortalDirective) templatePortals: QueryList<Portal<any>>;
-  @ViewChild(OverlayOrigin) _overlayOrigin: OverlayOrigin;
-  @ViewChild('tortelliniOrigin') tortelliniOrigin: OverlayOrigin;
-  @ViewChild('tortelliniTemplate') tortelliniTemplate: TemplatePortalDirective;
+  @ViewChildren(CdkPortal) templatePortals: QueryList<Portal<any>>;
+  @ViewChild(CdkOverlayOrigin) _overlayOrigin: CdkOverlayOrigin;
+  @ViewChild('tortelliniOrigin') tortelliniOrigin: CdkOverlayOrigin;
+  @ViewChild('tortelliniTemplate') tortelliniTemplate: CdkPortal;
 
   constructor(public overlay: Overlay, public viewContainerRef: ViewContainerRef) { }
 
@@ -104,6 +106,26 @@ export class OverlayDemo {
     overlayRef.backdropClick().subscribe(() => overlayRef.detach());
   }
 
+  openKeyboardTracking() {
+    let config = new OverlayConfig();
+
+    config.positionStrategy = this.overlay.position()
+      .global()
+      .centerHorizontally()
+      .top(`${this.nextPosition}px`);
+
+    this.nextPosition += 30;
+
+    let overlayRef = this.overlay.create(config);
+    const componentRef = overlayRef
+        .attach(new ComponentPortal(KeyboardTrackingPanel, this.viewContainerRef));
+
+    overlayRef.keydownEvents()
+      .do(e => componentRef.instance.lastKeydown = e.key)
+      .filter(e => e.key === 'Escape')
+      .subscribe(() => overlayRef.detach());
+  }
+
 }
 
 /** Simple component to load into an overlay */
@@ -123,4 +145,13 @@ export class RotiniPanel {
 })
 export class SpagettiPanel {
   value: string = 'Omega';
+}
+
+/** Simple component to load into an overlay */
+@Component({
+  selector: 'keyboard-panel',
+  template: '<div class="demo-keyboard">Last Keydown: {{ lastKeydown }}</div>'
+})
+export class KeyboardTrackingPanel {
+  lastKeydown = '';
 }

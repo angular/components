@@ -15,7 +15,8 @@ import {
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {ComponentPortal, ComponentType, PortalInjector, TemplatePortal} from '@angular/cdk/portal';
-import {startWith} from '@angular/cdk/rxjs';
+import {filter} from 'rxjs/operators/filter';
+import {startWith} from 'rxjs/operators/startWith';
 import {Location} from '@angular/common';
 import {
   ComponentRef,
@@ -67,7 +68,6 @@ export class MatDialog {
   private _openDialogsAtThisLevel: MatDialogRef<any>[] = [];
   private _afterAllClosedAtThisLevel = new Subject<void>();
   private _afterOpenAtThisLevel = new Subject<MatDialogRef<any>>();
-  private _boundKeydown = this._handleKeydown.bind(this);
 
   /** Keeps track of the currently-open dialogs. */
   get openDialogs(): MatDialogRef<any>[] {
@@ -90,7 +90,7 @@ export class MatDialog {
    */
   afterAllClosed: Observable<void> = defer<void>(() => this.openDialogs.length ?
       this._afterAllClosed :
-      startWith.call(this._afterAllClosed, undefined));
+      this._afterAllClosed.pipe(startWith(undefined)));
 
   constructor(
       private _overlay: Overlay,
@@ -117,13 +117,6 @@ export class MatDialog {
   open<T, D = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
           config?: MatDialogConfig<D>): MatDialogRef<T> {
 
-    const inProgressDialog = this.openDialogs.find(dialog => dialog._isAnimating());
-
-    // If there's a dialog that is in the process of being opened, return it instead.
-    if (inProgressDialog) {
-      return inProgressDialog;
-    }
-
     config = _applyConfigDefaults(config);
 
     if (config.id && this.getDialogById(config.id)) {
@@ -133,11 +126,7 @@ export class MatDialog {
     const overlayRef = this._createOverlay(config);
     const dialogContainer = this._attachDialogContainer(overlayRef, config);
     const dialogRef =
-        this._attachDialogContent(componentOrTemplateRef, dialogContainer, overlayRef, config);
-
-    if (!this.openDialogs.length) {
-      document.addEventListener('keydown', this._boundKeydown);
-    }
+        this._attachDialogContent<T>(componentOrTemplateRef, dialogContainer, overlayRef, config);
 
     this.openDialogs.push(dialogRef);
     dialogRef.afterClosed().subscribe(() => this._removeOpenDialog(dialogRef));
@@ -246,13 +235,18 @@ export class MatDialog {
       });
     }
 
+    // Close when escape keydown event occurs
+    overlayRef.keydownEvents().pipe(
+      filter(event => event.keyCode === ESCAPE && !dialogRef.disableClose)
+    ).subscribe(() => dialogRef.close());
+
     if (componentOrTemplateRef instanceof TemplateRef) {
       dialogContainer.attachTemplatePortal(
         new TemplatePortal<T>(componentOrTemplateRef, null!,
           <any>{ $implicit: config.data, dialogRef }));
     } else {
       const injector = this._createInjector<T>(config, dialogRef, dialogContainer);
-      const contentRef = dialogContainer.attachComponentPortal(
+      const contentRef = dialogContainer.attachComponentPortal<T>(
           new ComponentPortal(componentOrTemplateRef, undefined, injector));
       dialogRef.componentInstance = contentRef.instance;
     }
@@ -281,6 +275,10 @@ export class MatDialog {
     const injectionTokens = new WeakMap();
 
     injectionTokens.set(MatDialogRef, dialogRef);
+    // The MatDialogContainer is injected in the portal as the MatDialogContainer and the dialog's
+    // content are created out of the same ViewContainerRef and as such, are siblings for injector
+    // purposes.  To allow the hierarchy that is expected, the MatDialogContainer is explicitly
+    // added to the injection tokens.
     injectionTokens.set(MatDialogContainer, dialogContainer);
     injectionTokens.set(MAT_DIALOG_DATA, config.data);
     injectionTokens.set(Directionality, {
@@ -304,21 +302,7 @@ export class MatDialog {
       // no open dialogs are left, call next on afterAllClosed Subject
       if (!this.openDialogs.length) {
         this._afterAllClosed.next();
-        document.removeEventListener('keydown', this._boundKeydown);
       }
-    }
-  }
-
-  /**
-   * Handles global key presses while there are open dialogs. Closes the
-   * top dialog when the user presses escape.
-   */
-  private _handleKeydown(event: KeyboardEvent): void {
-    const topDialog = this.openDialogs[this.openDialogs.length - 1];
-    const canClose = topDialog ? !topDialog.disableClose : false;
-
-    if (event.keyCode === ESCAPE && canClose) {
-      topDialog.close();
     }
   }
 }

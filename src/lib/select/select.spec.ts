@@ -40,7 +40,7 @@ import {
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {map} from 'rxjs/operator/map';
+import {map} from 'rxjs/operators/map';
 import {Subject} from 'rxjs/Subject';
 import {MatSelectModule} from './index';
 import {MatSelect} from './select';
@@ -2066,6 +2066,27 @@ describe('MatSelect', () => {
           'Expected value from second option to have been set on the model.');
       }));
 
+      it('should be able to select options by typing on a closed select', fakeAsync(() => {
+        const formControl = fixture.componentInstance.control;
+        const options = fixture.componentInstance.options.toArray();
+
+        expect(formControl.value).toBeFalsy('Expected no initial value.');
+
+        dispatchEvent(select, createKeyboardEvent('keydown', 80, undefined, 'p'));
+        tick(200);
+
+        expect(options[1].selected).toBe(true, 'Expected second option to be selected.');
+        expect(formControl.value).toBe(options[1].value,
+          'Expected value from second option to have been set on the model.');
+
+        dispatchEvent(select, createKeyboardEvent('keydown', 69, undefined, 'e'));
+        tick(200);
+
+        expect(options[5].selected).toBe(true, 'Expected sixth option to be selected.');
+        expect(formControl.value).toBe(options[5].value,
+          'Expected value from sixth option to have been set on the model.');
+      }));
+
       it('should open the panel when pressing the arrow keys on a closed multiple select', () => {
         fixture.destroy();
 
@@ -2084,6 +2105,25 @@ describe('MatSelect', () => {
         expect(instance.select.panelOpen).toBe(true, 'Expected panel to be open.');
         expect(instance.control.value).toBe(initialValue, 'Expected value to stay the same.');
         expect(event.defaultPrevented).toBe(true, 'Expected default to be prevented.');
+      });
+
+      it('should do nothing when typing on a closed multi-select', () => {
+        fixture.destroy();
+
+        const multiFixture = TestBed.createComponent(MultiSelect);
+        const instance = multiFixture.componentInstance;
+
+        multiFixture.detectChanges();
+        select = multiFixture.debugElement.query(By.css('mat-select')).nativeElement;
+
+        const initialValue = instance.control.value;
+
+        expect(instance.select.panelOpen).toBe(false, 'Expected panel to be closed.');
+
+        dispatchEvent(select, createKeyboardEvent('keydown', 80, undefined, 'p'));
+
+        expect(instance.select.panelOpen).toBe(false, 'Expected panel to stay closed.');
+        expect(instance.control.value).toBe(initialValue, 'Expected value to stay the same.');
       });
 
       it('should do nothing if the key manager did not change the active item', fakeAsync(() => {
@@ -2185,7 +2225,7 @@ describe('MatSelect', () => {
       it('should consider the selection a result of a user action when closed', fakeAsync(() => {
         const option = fixture.componentInstance.options.first;
         const spy = jasmine.createSpy('option selection spy');
-        const subscription = map.call(option.onSelectionChange, e => e.isUserInput).subscribe(spy);
+        const subscription = option.onSelectionChange.pipe(map(e => e.isUserInput)).subscribe(spy);
 
         dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
         expect(spy).toHaveBeenCalledWith(true);
@@ -3390,7 +3430,7 @@ class NgIfSelect {
   selector: 'select-with-change-event',
   template: `
     <mat-form-field>
-      <mat-select (change)="changeListener($event)">
+      <mat-select (selectionChange)="changeListener($event)">
         <mat-option *ngFor="let food of foods" [value]="food">{{ food }}</mat-option>
       </mat-select>
     </mat-form-field>
@@ -3487,7 +3527,7 @@ class SelectWithErrorSibling {
   selector: 'throws-error-on-init',
   template: ''
 })
-export class ThrowsErrorOnInit implements OnInit {
+class ThrowsErrorOnInit implements OnInit {
   ngOnInit() {
     throw Error('Oh no!');
   }
