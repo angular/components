@@ -28,7 +28,6 @@
     "no-unused-expression": true,
     "no-var-keyword": true,
     "member-access": [true, "no-public"],
-    "no-unescaped-html-tag": true,
     "no-debugger": true,
     "no-unused-variable": true,
     "one-line": [
@@ -119,7 +118,8 @@
     "missing-rollup-globals": [
       true,
       "./tools/package-tools/rollup-globals.ts",
-      "src/+(lib|cdk|material-examples|material-experimental|cdk-experimental)/**/*.ts"
-    ]
+      "src/+(lib|cdk|material-examples)/**/*.ts"
+    ],
+    "no-unescaped-html-tag": true
   }
 }
