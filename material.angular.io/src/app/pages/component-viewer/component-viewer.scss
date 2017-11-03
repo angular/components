@@ -27,13 +27,27 @@ app-component-viewer {
   position: relative;
   min-height: 500px;
 
+  // Display outlet components with toc as flex and switch to
+  // vertical direction on small screens
+  component-overview, component-api {
+    display: flex;
+    align-items: flex-start;
+
+    @media (max-width: $small-breakpoint-width) {
+      flex-direction: column;
+    }
+  }
+
   table-of-contents {
     top: 35px;
 
+    // Reposition on top of content on small screens and remove
+    // sticky positioning
     @media (max-width: $small-breakpoint-width) {
       order: -1;
       position: inherit;
       width: auto;
+      padding-left: 0;
     }
   }
 }

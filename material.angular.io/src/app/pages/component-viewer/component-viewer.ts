@@ -47,7 +47,6 @@ export class ComponentViewer {
 @Component({
   selector: 'component-overview',
   templateUrl: './component-overview.html',
-  styleUrls: ['./component-overview.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class ComponentOverview implements OnInit {

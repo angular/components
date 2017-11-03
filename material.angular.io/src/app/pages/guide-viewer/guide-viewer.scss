@@ -23,15 +23,20 @@ $guide-content-margin-side-xs: 15px;
 }
 
 .docs-guide-toc-and-content {
-  display: block;
+  display: flex;
+  align-items: flex-start;
+
   text-align: left;
   max-width: 940px;
   margin: 0 auto;
+
+  @media (max-width: $small-breakpoint-width) {
+    flex-direction: column;
+  }
 }
 
 .docs-guide-content {
-  display: block;
-  float: left;
+  flex-grow: 1;
   width: 80%;
 
   @media (max-width: $small-breakpoint-width) {
@@ -41,10 +46,13 @@ $guide-content-margin-side-xs: 15px;
 
 table-of-contents {
   top: 35px;
-  float: right;
-  width: 15%;
 
+  // Reposition on top of content on small screens and remove
+  // sticky positioning
   @media (max-width: $small-breakpoint-width) {
-    display: none;
+    order: -1;
+    position: inherit;
+    width: auto;
+    padding-left: 0;
   }
 }
