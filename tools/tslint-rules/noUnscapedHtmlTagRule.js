@@ -32,11 +32,11 @@ class NoUnescapedHtmlTagWalker extends Lint.RuleWalker {
 
   /** Gets whether the comment's HTML, if any, is properly escaped */
   parseForHtml(fullText) {
-    const matches = new RegExp(/[<>]/);
+    const matches = /[<>]/;
     const backtickCount = fullText.split('`').length - 1;
 
     // An odd number of backticks or html without backticks is invalid
-    if ((backtickCount % 2) || ((backtickCount === 0) && matches.test(fullText))) {
+    if (backtickCount % 2 || (!backtickCount && matches.test(fullText))) {
       return false;
     }
 
@@ -46,15 +46,14 @@ class NoUnescapedHtmlTagWalker extends Lint.RuleWalker {
     }
 
     // < and > must always be between two matching backticks.
-    const fullTextArray = fullText.split('');
-
+    
     // Whether an opening backtick has been found without a closing pair
     let openBacktick = false;
 
-    for (let i = 0; i < fullTextArray.length; i++) {
-      if (fullTextArray[i] === '`') {
+    for (const char of fullText) {
+      if (char === '`') {
         openBacktick = !openBacktick;
-      } else if (matches.test(fullTextArray[i]) && !openBacktick) {
+      } else if (matches.test(char) && !openBacktick) {
         return false;
       }
     }
