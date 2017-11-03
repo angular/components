@@ -30,7 +30,25 @@ const DOCS: {[key: string]: DocCategory[]} = {
       items: [
         {id: 'autocomplete', name: 'Autocomplete', examples: ['autocomplete-overview']},
         {id: 'checkbox', name: 'Checkbox', examples: ['checkbox-configurable']},
-        {id: 'datepicker', name: 'Datepicker', examples: ['datepicker-overview']},
+        {
+          id: 'datepicker',
+          name: 'Datepicker',
+          examples: [
+            'datepicker-overview',
+            'datepicker-start-view',
+            'datepicker-value',
+            'datepicker-min-max',
+            'datepicker-filter',
+            'datepicker-events',
+            'datepicker-disabled',
+            'datepicker-touch',
+            'datepicker-api',
+            'datepicker-locale',
+            'datepicker-moment',
+            'datepicker-formats',
+
+          ]
+        },
         {
           id: 'form-field',
           name: 'Form field',
@@ -44,9 +62,39 @@ const DOCS: {[key: string]: DocCategory[]} = {
             'form-field-custom-control',
           ]
         },
-        {id: 'input', name: 'Input', examples: ['input-form']},
+        {
+          id: 'input',
+          name: 'Input',
+          examples: [
+            'input-overview',
+            'input-error-state-matcher',
+            'input-autosize-textarea',
+            'input-clearable',
+            'input-errors',
+            'input-form',
+            'input-hint',
+            'input-prefix-suffix',
+          ]
+        },
         {id: 'radio', name: 'Radio button', examples: ['radio-ng-model']},
-        {id: 'select', name: 'Select', examples: ['select-form']},
+        {
+          id: 'select',
+          name: 'Select',
+          examples: [
+            'select-overview',
+            'select-value-binding',
+            'select-form',
+            'select-hint-error',
+            'select-disabled',
+            'select-reset',
+            'select-optgroup',
+            'select-multiple',
+            'select-custom-trigger',
+            'select-no-ripple',
+            'select-panel-class',
+            'select-error-state-matcher',
+          ]
+        },
         {id: 'slider', name: 'Slider', examples: ['slider-configurable']},
         {id: 'slide-toggle', name: 'Slide toggle', examples: ['slide-toggle-configurable']},
       ]
