@@ -148,8 +148,13 @@ const DOCS: {[key: string]: DocCategory[]} = {
       id: 'tables',
       name: 'Data table',
       items: [
-        {id: 'table', name: 'Table',
-            examples: ['table-filtering', 'table-pagination', 'table-sorting']},
+        {id: 'table', name: 'Table', examples: [
+          'table-filtering', 
+          'table-pagination', 
+          'table-sorting',
+          'table-http',
+          'table-overview',
+        ]},
         {id: 'sort', name: 'Sort header', examples: ['sort-overview']},
         {id: 'paginator', name: 'Paginator', examples: ['paginator-configurable']},
       ]
