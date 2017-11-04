@@ -300,7 +300,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
   }
 
   // Implemented as part of MatFormFieldControl.
-  get shouldPlaceholderFloat(): boolean { return this.focused || !this.empty; }
+  get shouldLabelFloat(): boolean { return this.focused || !this.empty; }
 
   // Implemented as part of MatFormFieldControl.
   setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
