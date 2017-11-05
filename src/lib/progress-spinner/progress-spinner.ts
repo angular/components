@@ -83,7 +83,7 @@ const INDETERMINATE_ANIMATION_TEMPLATE = `
 export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements CanColor,
   OnChanges {
 
-  private _value: number;
+  private _value: number = 0;
   private readonly _baseSize = 100;
   private readonly _baseStrokeWidth = 10;
   private _fallbackAnimation = false;
@@ -94,8 +94,11 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   /** Tracks diameters of existing instances to de-dupe generated styles (default d = 100) */
   private static diameters = new Set<number>([100]);
 
-  /** Used for storing all of the generated keyframe animations. */
-  private static styleTag: HTMLStyleElement;
+  /**
+   * Used for storing all of the generated keyframe animations.
+   * @dynamic
+   */
+  private static styleTag: HTMLStyleElement|null = null;
 
   /** The diameter of the progress spinner (will set width and height of svg). */
   @Input()
@@ -116,7 +119,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
 
   /** Value of the progress circle. */
   @Input()
-  get value() {
+  get value(): number {
     return this.mode === 'determinate' ? this._value : 0;
   }
   set value(newValue: number) {
@@ -199,8 +202,8 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
       MatProgressSpinner.styleTag = styleTag;
     }
 
-    if (styleTag.sheet) {
-      (styleTag.sheet as CSSStyleSheet).insertRule(this._getAnimationText());
+    if (styleTag && styleTag.sheet) {
+      (styleTag.sheet as CSSStyleSheet).insertRule(this._getAnimationText(), 0);
     }
 
     MatProgressSpinner.diameters.add(this.diameter);

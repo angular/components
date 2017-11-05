@@ -21,6 +21,7 @@ describe('MatHorizontalStepper', () => {
       imports: [MatStepperModule, NoopAnimationsModule, ReactiveFormsModule],
       declarations: [
         SimpleMatHorizontalStepperApp,
+        SimplePreselectedMatHorizontalStepperApp,
         LinearMatHorizontalStepperApp
       ],
       providers: [
@@ -167,6 +168,18 @@ describe('MatHorizontalStepper', () => {
 
     it('should be able to move to next step even when invalid if current step is optional', () => {
       assertOptionalStepValidity(testComponent, fixture);
+    });
+
+    it('should not throw when there is a pre-defined selectedIndex', () => {
+      fixture.destroy();
+
+      let preselectedFixture = TestBed.createComponent(SimplePreselectedMatHorizontalStepperApp);
+      let debugElement = preselectedFixture.debugElement;
+
+      expect(() => preselectedFixture.detectChanges()).not.toThrow();
+
+      let stepHeaders = debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
+      assertSelectionChangeOnHeaderClick(preselectedFixture, stepHeaders);
     });
   });
 });
@@ -722,9 +735,7 @@ class SimpleMatHorizontalStepperApp {
       <mat-step [stepControl]="oneGroup">
         <form [formGroup]="oneGroup">
           <ng-template matStepLabel>Step one</ng-template>
-          <mat-form-field>
-            <input matInput formControlName="oneCtrl" required>
-          </mat-form-field>
+          <input formControlName="oneCtrl" required>
           <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button matStepperNext>Next</button>
@@ -734,9 +745,7 @@ class SimpleMatHorizontalStepperApp {
       <mat-step [stepControl]="twoGroup">
         <form [formGroup]="twoGroup">
           <ng-template matStepLabel>Step two</ng-template>
-          <mat-form-field>
-            <input matInput formControlName="twoCtrl" required>
-          </mat-form-field>
+          <input formControlName="twoCtrl" required>
           <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button matStepperNext>Next</button>
@@ -746,9 +755,7 @@ class SimpleMatHorizontalStepperApp {
       <mat-step [stepControl]="threeGroup" optional>
         <form [formGroup]="threeGroup">
           <ng-template matStepLabel>Step two</ng-template>
-          <mat-form-field>
-            <input matInput formControlName="threeCtrl">
-          </mat-form-field>
+          <input formControlName="threeCtrl">
           <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button matStepperNext>Next</button>
@@ -818,9 +825,7 @@ class SimpleMatVerticalStepperApp {
       <mat-step [stepControl]="oneGroup">
         <form [formGroup]="oneGroup">
           <ng-template matStepLabel>Step one</ng-template>
-          <mat-form-field>
-            <input matInput formControlName="oneCtrl" required>
-          </mat-form-field>
+          <input formControlName="oneCtrl" required>
           <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button matStepperNext>Next</button>
@@ -830,9 +835,7 @@ class SimpleMatVerticalStepperApp {
       <mat-step [stepControl]="twoGroup">
         <form [formGroup]="twoGroup">
           <ng-template matStepLabel>Step two</ng-template>
-          <mat-form-field>
-            <input matInput formControlName="twoCtrl" required>
-          </mat-form-field>
+          <input formControlName="twoCtrl" required>
           <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button matStepperNext>Next</button>
@@ -842,9 +845,7 @@ class SimpleMatVerticalStepperApp {
       <mat-step [stepControl]="threeGroup" optional>
         <form [formGroup]="threeGroup">
           <ng-template matStepLabel>Step two</ng-template>
-          <mat-form-field>
-            <input matInput formControlName="threeCtrl">
-          </mat-form-field>
+          <input formControlName="threeCtrl">
           <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button matStepperNext>Next</button>
@@ -873,4 +874,17 @@ class LinearMatVerticalStepperApp {
       threeCtrl: new FormControl('', Validators.pattern(VALID_REGEX))
     });
   }
+}
+
+@Component({
+  template: `
+    <mat-horizontal-stepper [linear]="true" [selectedIndex]="index">
+      <mat-step label="One"></mat-step>
+      <mat-step label="Two"></mat-step>
+      <mat-step label="Three"></mat-step>
+    </mat-horizontal-stepper>
+  `
+})
+class SimplePreselectedMatHorizontalStepperApp {
+  index = 0;
 }

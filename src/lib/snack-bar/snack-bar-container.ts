@@ -28,11 +28,11 @@ import {
   AnimationEvent,
 } from '@angular/animations';
 import {
-  BasePortalHost,
+  BasePortalOutlet,
   ComponentPortal,
-  PortalHostDirective,
+  CdkPortalOutlet,
 } from '@angular/cdk/portal';
-import {first} from '@angular/cdk/rxjs';
+import {first} from 'rxjs/operators/first';
 import {AnimationCurves, AnimationDurations} from '@angular/material/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
@@ -71,12 +71,12 @@ export const HIDE_ANIMATION =
     ])
   ],
 })
-export class MatSnackBarContainer extends BasePortalHost implements OnDestroy {
+export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy {
   /** Whether the component has been destroyed. */
   private _destroyed = false;
 
-  /** The portal host inside of this container into which the snack bar content will be loaded. */
-  @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
+  /** The portal outlet inside of this container into which the snack bar content will be loaded. */
+  @ViewChild(CdkPortalOutlet) _portalOutlet: CdkPortalOutlet;
 
   /** Subject for notifying that the snack bar has exited from view. */
   _onExit: Subject<any> = new Subject();
@@ -100,14 +100,18 @@ export class MatSnackBarContainer extends BasePortalHost implements OnDestroy {
 
   /** Attach a component portal as content to this snack bar container. */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
-    if (this._portalHost.hasAttached()) {
+    if (this._portalOutlet.hasAttached()) {
       throw Error('Attempting to attach snack bar content after content is already attached');
     }
 
-    if (this.snackBarConfig.extraClasses) {
+    if (this.snackBarConfig.panelClass || this.snackBarConfig.extraClasses) {
+      const classes = [
+        ...this._getCssClasses(this.snackBarConfig.panelClass),
+        ...this._getCssClasses(this.snackBarConfig.extraClasses)
+      ];
       // Not the most efficient way of adding classes, but the renderer doesn't allow us
       // to pass in an array or a space-separated list.
-      for (let cssClass of this.snackBarConfig.extraClasses) {
+      for (let cssClass of classes) {
         this._renderer.addClass(this._elementRef.nativeElement, cssClass);
       }
     }
@@ -120,7 +124,7 @@ export class MatSnackBarContainer extends BasePortalHost implements OnDestroy {
       this._renderer.addClass(this._elementRef.nativeElement, 'mat-snack-bar-top');
     }
 
-    return this._portalHost.attachComponentPortal(portal);
+    return this._portalOutlet.attachComponentPortal(portal);
   }
 
   /** Attach a template portal as content to this snack bar container. */
@@ -173,9 +177,21 @@ export class MatSnackBarContainer extends BasePortalHost implements OnDestroy {
    * errors where we end up removing an element which is in the middle of an animation.
    */
   private _completeExit() {
-    first.call(this._ngZone.onMicrotaskEmpty.asObservable()).subscribe(() => {
+    this._ngZone.onMicrotaskEmpty.asObservable().pipe(first()).subscribe(() => {
       this._onExit.next();
       this._onExit.complete();
     });
+  }
+
+  /** Convert the class list to a array of classes it can apply to the dom */
+  private _getCssClasses(classList: undefined | string | string[]) {
+    if (classList) {
+      if (Array.isArray(classList)) {
+        return classList;
+      } else {
+        return [classList];
+      }
+    }
+    return [];
   }
 }

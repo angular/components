@@ -20,7 +20,7 @@ import {
   VerticalConnectionPos,
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
-import {filter, RxChain} from '@angular/cdk/rxjs';
+import {filter} from 'rxjs/operators/filter';
 import {
   AfterContentInit,
   Directive,
@@ -107,10 +107,22 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   @Input('matMenuTriggerFor') menu: MatMenuPanel;
 
   /** Event emitted when the associated menu is opened. */
-  @Output() onMenuOpen: EventEmitter<void> = new EventEmitter<void>();
+  @Output() menuOpened: EventEmitter<void> = new EventEmitter<void>();
+
+  /**
+   * Event emitted when the associated menu is opened.
+   * @deprecated Switch to `menuOpened` instead
+   */
+  @Output() onMenuOpen: EventEmitter<void> = this.menuOpened;
 
   /** Event emitted when the associated menu is closed. */
-  @Output() onMenuClose: EventEmitter<void> = new EventEmitter<void>();
+  @Output() menuClosed: EventEmitter<void> = new EventEmitter<void>();
+
+  /**
+   * Event emitted when the associated menu is closed.
+   * @deprecated Switch to `menuClosed` instead
+   */
+  @Output() onMenuClose: EventEmitter<void> = this.menuClosed;
 
   constructor(private _overlay: Overlay,
               private _element: ElementRef,
@@ -133,14 +145,14 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
       // If a click closed the menu, we should close the entire chain of nested menus.
       if (reason === 'click' && this._parentMenu) {
-        this._parentMenu.close.emit(reason);
+        this._parentMenu.closed.emit(reason);
       }
     });
 
     if (this.triggersSubmenu()) {
       // Subscribe to changes in the hovered item in order to toggle the panel.
-      this._hoverSubscription = filter
-          .call(this._parentMenu.hover(), active => active === this._menuItemInstance)
+      this._hoverSubscription = this._parentMenu._hovered()
+          .pipe(filter(active => active === this._menuItemInstance))
           .subscribe(() => {
             this._openedByMouse = true;
             this.openMenu();
@@ -273,7 +285,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   // set state rather than toggle to support triggers sharing a menu
   private _setIsMenuOpen(isOpen: boolean): void {
     this._menuOpen = isOpen;
-    this._menuOpen ? this.onMenuOpen.emit() : this.onMenuClose.emit();
+    this._menuOpen ? this.menuOpened.emit() : this.menuClosed.emit();
 
     if (this.triggersSubmenu()) {
       this._menuItemInstance._highlighted = isOpen;
@@ -388,10 +400,10 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _menuClosingActions() {
     const backdrop = this._overlayRef!.backdropClick();
     const parentClose = this._parentMenu ? this._parentMenu.close : observableOf();
-    const hover = this._parentMenu ? RxChain.from(this._parentMenu.hover())
-        .call(filter, active => active !== this._menuItemInstance)
-        .call(filter, () => this._menuOpen)
-        .result() : observableOf();
+    const hover = this._parentMenu ? this._parentMenu._hovered().pipe(
+      filter(active => active !== this._menuItemInstance),
+      filter(() => this._menuOpen)
+    ) : observableOf();
 
     return merge(backdrop, parentClose, hover);
   }

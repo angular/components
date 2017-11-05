@@ -1,5 +1,5 @@
 import {DOWN_ARROW, TAB, UP_ARROW} from '@angular/cdk/keycodes';
-import {first} from '@angular/cdk/rxjs';
+import {first} from 'rxjs/operators/first';
 import {QueryList} from '@angular/core';
 import {fakeAsync, tick} from '@angular/core/testing';
 import {createKeyboardEvent} from '../testing/event-objects';
@@ -196,7 +196,7 @@ describe('Key managers', () => {
 
       it('should emit tabOut when the tab key is pressed', () => {
         let spy = jasmine.createSpy('tabOut spy');
-        first.call(keyManager.tabOut).subscribe(spy);
+        keyManager.tabOut.pipe(first()).subscribe(spy);
         keyManager.onKeydown(fakeKeyEvents.tab);
 
         expect(spy).toHaveBeenCalled();
@@ -251,6 +251,18 @@ describe('Key managers', () => {
 
         keyManager.onKeydown(fakeKeyEvents.upArrow);
         expect(spy).toHaveBeenCalledTimes(2);
+
+        subscription.unsubscribe();
+      });
+
+      it('should not emit an event if the item did not change', () => {
+        const spy = jasmine.createSpy('change spy');
+        const subscription = keyManager.change.subscribe(spy);
+
+        keyManager.setActiveItem(2);
+        keyManager.setActiveItem(2);
+
+        expect(spy).toHaveBeenCalledTimes(1);
 
         subscription.unsubscribe();
       });

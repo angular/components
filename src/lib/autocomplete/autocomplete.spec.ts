@@ -1,7 +1,8 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {DOWN_ARROW, ENTER, ESCAPE, SPACE, UP_ARROW, TAB} from '@angular/cdk/keycodes';
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {map, RxChain, startWith} from '@angular/cdk/rxjs';
+import {map} from 'rxjs/operators/map';
+import {startWith} from 'rxjs/operators/startWith';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
   createKeyboardEvent,
@@ -1229,8 +1230,8 @@ describe('MatAutocomplete', () => {
 
     it('should fall back to above position if panel cannot fit below', async(() => {
       // Push the autocomplete trigger down so it won't have room to open "below"
-      inputReference.style.top = '600px';
-      inputReference.style.position = 'relative';
+      inputReference.style.bottom = '0';
+      inputReference.style.position = 'fixed';
 
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
@@ -1247,8 +1248,8 @@ describe('MatAutocomplete', () => {
 
     it('should align panel properly when filtering in "above" position', async(() => {
       // Push the autocomplete trigger down so it won't have room to open "below"
-      inputReference.style.top = '600px';
-      inputReference.style.position = 'relative';
+      inputReference.style.bottom = '0';
+      inputReference.style.position = 'fixed';
 
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
@@ -1737,13 +1738,12 @@ class NgIfAutocomplete {
   @ViewChildren(MatOption) matOptions: QueryList<MatOption>;
 
   constructor() {
-    this.filteredOptions = RxChain.from(this.optionCtrl.valueChanges)
-      .call(startWith, null)
-      .call(map, (val: string) => {
+    this.filteredOptions = this.optionCtrl.valueChanges.pipe(
+      startWith(null),
+      map((val: string) => {
         return val ? this.options.filter(option => new RegExp(val, 'gi').test(option))
-                   : this.options.slice();
-      })
-      .result();
+                    : this.options.slice();
+      }));
   }
 }
 
@@ -1864,13 +1864,12 @@ class AutocompleteWithNativeInput {
   @ViewChildren(MatOption) matOptions: QueryList<MatOption>;
 
   constructor() {
-    this.filteredOptions = RxChain.from(this.optionCtrl.valueChanges)
-      .call(startWith, null)
-      .call(map, (val: string) => {
+    this.filteredOptions = this.optionCtrl.valueChanges.pipe(
+      startWith(null),
+      map((val: string) => {
         return val ? this.options.filter(option => new RegExp(val, 'gi').test(option))
-                   : this.options.slice();
-      })
-      .result();
+                    : this.options.slice();
+      }));
   }
 }
 

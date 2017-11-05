@@ -84,6 +84,7 @@ export class CdkStep implements OnChanges {
   /** Label of the step. */
   @Input() label: string;
 
+  /** Whether the user can return to this step once it has been marked as complted. */
   @Input()
   get editable(): boolean { return this._editable; }
   set editable(value: boolean) {
@@ -91,15 +92,15 @@ export class CdkStep implements OnChanges {
   }
   private _editable = true;
 
-  /** Whether the completion of step is optional or not. */
+  /** Whether the completion of step is optional. */
   @Input()
-  get optional() { return this._optional; }
-  set optional(value: any) {
+  get optional(): boolean { return this._optional; }
+  set optional(value: boolean) {
     this._optional = coerceBooleanProperty(value);
   }
   private _optional = false;
 
-  /** Return whether step is completed or not. */
+  /** Whether step is marked as completed. */
   @Input()
   get completed(): boolean {
     return this._customCompleted == null ? this._defaultCompleted : this._customCompleted;
@@ -148,13 +149,17 @@ export class CdkStepper {
   @Input()
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
-    if (this._anyControlsInvalid(index)
-        || index < this._selectedIndex && !this._steps.toArray()[index].editable) {
-      // remove focus from clicked step header if the step is not able to be selected
-      this._stepHeader.toArray()[index].nativeElement.blur();
-    } else if (this._selectedIndex != index) {
-      this._emitStepperSelectionEvent(index);
-      this._focusIndex = this._selectedIndex;
+    if (this._steps) {
+      if (this._anyControlsInvalid(index) || index < this._selectedIndex &&
+          !this._steps.toArray()[index].editable) {
+        // remove focus from clicked step header if the step is not able to be selected
+        this._stepHeader.toArray()[index].nativeElement.blur();
+      } else if (this._selectedIndex != index) {
+        this._emitStepperSelectionEvent(index);
+        this._focusIndex = this._selectedIndex;
+      }
+    } else {
+      this._selectedIndex = this._focusIndex = index;
     }
   }
   private _selectedIndex: number = 0;
@@ -194,12 +199,12 @@ export class CdkStepper {
 
   /** Returns a unique id for each step label element. */
   _getStepLabelId(i: number): string {
-    return `mat-step-label-${this._groupId}-${i}`;
+    return `cdk-step-label-${this._groupId}-${i}`;
   }
 
   /** Returns unique id for each step content element. */
   _getStepContentId(i: number): string {
-    return `mat-step-content-${this._groupId}-${i}`;
+    return `cdk-step-content-${this._groupId}-${i}`;
   }
 
   /** Marks the component to be change detected. */
@@ -281,9 +286,12 @@ export class CdkStepper {
   }
 
   private _anyControlsInvalid(index: number): boolean {
-    this._steps.toArray()[this._selectedIndex].interacted = true;
+    const steps = this._steps.toArray();
+
+    steps[this._selectedIndex].interacted = true;
+
     if (this._linear && index >= 0) {
-      return this._steps.toArray().slice(0, index).some(step => step.stepControl.invalid);
+      return steps.slice(0, index).some(step => step.stepControl && step.stepControl.invalid);
     }
     return false;
   }

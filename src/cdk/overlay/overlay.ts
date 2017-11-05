@@ -13,10 +13,11 @@ import {
   Injector,
   NgZone,
 } from '@angular/core';
-import {DomPortalHost} from '@angular/cdk/portal';
+import {DomPortalOutlet} from '@angular/cdk/portal';
 import {OverlayConfig} from './overlay-config';
 import {OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
+import {OverlayKeyboardDispatcher} from './keyboard/overlay-keyboard-dispatcher';
 import {OverlayContainer} from './overlay-container';
 import {ScrollStrategyOptions} from './scroll/index';
 
@@ -34,32 +35,36 @@ let defaultConfig = new OverlayConfig();
  * selects, etc. can all be built using overlays. The service should primarily be used by authors
  * of re-usable components rather than developers building end-user applications.
  *
- * An overlay *is* a PortalHost, so any kind of Portal can be loaded into one.
+ * An overlay *is* a PortalOutlet, so any kind of Portal can be loaded into one.
  */
 @Injectable()
 export class Overlay {
-  constructor(public scrollStrategies: ScrollStrategyOptions,
+  constructor(
+              /** Scrolling strategies that can be used when creating an overlay. */
+              public scrollStrategies: ScrollStrategyOptions,
               private _overlayContainer: OverlayContainer,
               private _componentFactoryResolver: ComponentFactoryResolver,
               private _positionBuilder: OverlayPositionBuilder,
+              private _keyboardDispatcher: OverlayKeyboardDispatcher,
               private _appRef: ApplicationRef,
               private _injector: Injector,
               private _ngZone: NgZone) { }
 
   /**
    * Creates an overlay.
-   * @param config Config to apply to the overlay.
+   * @param config Configuration applied to the overlay.
    * @returns Reference to the created overlay.
    */
   create(config: OverlayConfig = defaultConfig): OverlayRef {
     const pane = this._createPaneElement();
-    const portalHost = this._createPortalHost(pane);
-    return new OverlayRef(portalHost, pane, config, this._ngZone);
+    const portalOutlet = this._createPortalOutlet(pane);
+    return new OverlayRef(portalOutlet, pane, config, this._ngZone, this._keyboardDispatcher);
   }
 
   /**
-   * Returns a position builder that can be used, via fluent API,
+   * Gets a position builder that can be used, via fluent API,
    * to construct and configure a position strategy.
+   * @returns An overlay position builder.
    */
   position(): OverlayPositionBuilder {
     return this._positionBuilder;
@@ -80,11 +85,12 @@ export class Overlay {
   }
 
   /**
-   * Create a DomPortalHost into which the overlay content can be loaded.
-   * @param pane The DOM element to turn into a portal host.
-   * @returns A portal host for the given DOM element.
+   * Create a DomPortalOutlet into which the overlay content can be loaded.
+   * @param pane The DOM element to turn into a portal outlet.
+   * @returns A portal outlet for the given DOM element.
    */
-  private _createPortalHost(pane: HTMLElement): DomPortalHost {
-    return new DomPortalHost(pane, this._componentFactoryResolver, this._appRef, this._injector);
+  private _createPortalOutlet(pane: HTMLElement): DomPortalOutlet {
+    return new DomPortalOutlet(pane, this._componentFactoryResolver, this._appRef, this._injector);
   }
+
 }
