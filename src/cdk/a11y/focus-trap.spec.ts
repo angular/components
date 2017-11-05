@@ -25,12 +25,12 @@ describe('FocusTrap', () => {
 
   describe('with default element', () => {
     let fixture: ComponentFixture<SimpleFocusTrap>;
-    let focusTrapInstance: FocusTrap;
+    let focusTrapInstance: FocusTrapDirective;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleFocusTrap);
       fixture.detectChanges();
-      focusTrapInstance = fixture.componentInstance.focusTrapDirective.focusTrap;
+      focusTrapInstance = fixture.componentInstance.focusTrapDirective;
     });
 
     it('wrap focus from end to start', () => {
@@ -63,7 +63,7 @@ describe('FocusTrap', () => {
       const newFixture = TestBed.createComponent(FocusTrapWithoutFocusableElements);
       newFixture.detectChanges();
 
-      const focusTrap = newFixture.componentInstance.focusTrapDirective.focusTrap;
+      const focusTrap = newFixture.componentInstance.focusTrapDirective;
       const result = focusTrap.focusFirstTabbableElement();
 
       expect(result).toBe(false);
@@ -77,12 +77,12 @@ describe('FocusTrap', () => {
 
   describe('with bindings', () => {
     let fixture: ComponentFixture<FocusTrapWithBindings>;
-    let focusTrapInstance: FocusTrap;
+    let focusTrapInstance: FocusTrapDirective;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(FocusTrapWithBindings);
       fixture.detectChanges();
-      focusTrapInstance = fixture.componentInstance.focusTrapDirective.focusTrap;
+      focusTrapInstance = fixture.componentInstance.focusTrapDirective;
     });
 
     it('should clean up its anchor sibling elements on destroy', () => {
@@ -112,12 +112,12 @@ describe('FocusTrap', () => {
 
   describe('with focus targets', () => {
     let fixture: ComponentFixture<FocusTrapTargets>;
-    let focusTrapInstance: FocusTrap;
+    let focusTrapInstance: FocusTrapDirective;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(FocusTrapTargets);
       fixture.detectChanges();
-      focusTrapInstance = fixture.componentInstance.focusTrapDirective.focusTrap;
+      focusTrapInstance = fixture.componentInstance.focusTrapDirective;
     });
 
     it('should be able to set initial focus target', () => {
@@ -148,7 +148,7 @@ describe('FocusTrap', () => {
 
       fixture.detectChanges();
 
-      let focusTrapInstance = fixture.componentInstance.focusTrapDirective.focusTrap;
+      let focusTrapInstance = fixture.componentInstance.focusTrapDirective;
 
       expect(() => focusTrapInstance.focusFirstTabbableElement()).not.toThrow();
       expect(() => focusTrapInstance.focusLastTabbableElement()).not.toThrow();
