@@ -16,7 +16,6 @@ import {
   Input,
   OnDestroy,
   Output,
-  Renderer2,
 } from '@angular/core';
 import {CanColor, CanDisable, mixinColor, mixinDisabled} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
@@ -35,8 +34,7 @@ export class MatChipSelectionChange {
 // Boilerplate for applying mixins to MatChip.
 /** @docs-private */
 export class MatChipBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {
-  }
+  constructor(public _elementRef: ElementRef) {}
 }
 
 export const _MatChipMixinBase = mixinColor(mixinDisabled(MatChipBase), 'primary');
@@ -169,8 +167,8 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
     return this.selectable ? this.selected.toString() : null;
   }
 
-  constructor(renderer: Renderer2, public _elementRef: ElementRef) {
-    super(renderer, _elementRef);
+  constructor(public _elementRef: ElementRef) {
+    super(_elementRef);
   }
 
   ngOnDestroy(): void {
