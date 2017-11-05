@@ -350,7 +350,7 @@ export class FocusTrapDeprecatedDirective implements OnDestroy, AfterContentInit
 })
 export class FocusTrapDirective implements OnDestroy, AfterContentInit {
   /** Underlying FocusTrap instance. */
-  focusTrap: FocusTrap;
+  private focusTrap: FocusTrap;
 
   /** Whether the focus trap is active. */
   @Input('cdkTrapFocus')
@@ -360,6 +360,15 @@ export class FocusTrapDirective implements OnDestroy, AfterContentInit {
   constructor(private _elementRef: ElementRef, private _focusTrapFactory: FocusTrapFactory) {
     this.focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement, true);
   }
+
+  /** Focuses the element that should be focused when the focus trap is initialized. */
+  focusInitialElement() { return this.focusTrap.focusInitialElement(); }
+
+  /** Focuses the first tabbable element within the focus trap region. */
+  focusFirstTabbableElement() { return this.focusTrap.focusFirstTabbableElement(); }
+
+  /** Focuses the last tabbable element within the focus trap region. */
+  focusLastTabbableElement() { return this.focusTrap.focusLastTabbableElement(); }
 
   ngOnDestroy() {
     this.focusTrap.destroy();
