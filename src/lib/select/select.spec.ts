@@ -1870,7 +1870,6 @@ describe('MatSelect', () => {
 
         // There appears to be a small rounding error on IE, so we verify that the value is close,
         // not exact.
-        let platform = new Platform();
         if (platform.TRIDENT) {
           let difference =
               Math.abs(optionTop + (menuItemHeight - triggerHeight) / 2 - triggerTop);
@@ -2512,6 +2511,11 @@ describe('MatSelect', () => {
       expect(label.textContent).toContain('azziP',
           'Expected the displayed text to be "Pizza" in reverse.');
     }));
+
+    it('should not throw when attempting to open too early', () => {
+      const fixture = TestBed.createComponent(BasicSelect);
+      expect(() => fixture.componentInstance.select.open()).not.toThrow();
+    });
   });
 
   describe('change event', () => {
