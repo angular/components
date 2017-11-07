@@ -34,7 +34,13 @@ export class SelectionModel<T> {
   }
 
   /** Event emitted when the value has changed. */
-  onChange: Subject<SelectionChange<T>> | null = this._emitChanges ? new Subject() : null;
+  changed: Subject<SelectionChange<T>> | null = this._emitChanges ? new Subject() : null;
+
+  /**
+   * Event emitted when the value has changed.
+   * @deprecated Use `changed` instead.
+   */
+  onChange: Subject<SelectionChange<T>> | null = this.changed;
 
   constructor(
     private _isMulti = false,
@@ -121,8 +127,8 @@ export class SelectionModel<T> {
     if (this._selectedToEmit.length || this._deselectedToEmit.length) {
       let eventData = new SelectionChange(this._selectedToEmit, this._deselectedToEmit);
 
-      if (this.onChange) {
-        this.onChange.next(eventData);
+      if (this.changed) {
+        this.changed.next(eventData);
       }
 
       this._deselectedToEmit = [];

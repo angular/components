@@ -43,7 +43,7 @@ describe('SelectionModel', () => {
     it('should be able to select multiple options', () => {
       const onChangeSpy = jasmine.createSpy('onChange spy');
 
-      model.onChange!.subscribe(onChangeSpy);
+      model.changed!.subscribe(onChangeSpy);
       model.select(1);
       model.select(2);
 
@@ -56,7 +56,7 @@ describe('SelectionModel', () => {
     it('should be able to select multiple options at the same time', () => {
       const onChangeSpy = jasmine.createSpy('onChange spy');
 
-      model.onChange!.subscribe(onChangeSpy);
+      model.changed!.subscribe(onChangeSpy);
       model.select(1, 2);
 
       expect(model.selected.length).toBe(2);
@@ -91,7 +91,7 @@ describe('SelectionModel', () => {
 
       model.select(1);
 
-      model.onChange!.subscribe(spy);
+      model.changed!.subscribe(spy);
 
       model.select(2);
 
@@ -110,7 +110,7 @@ describe('SelectionModel', () => {
         model = new SelectionModel(true);
         spy = jasmine.createSpy('SelectionModel change event');
 
-        model.onChange!.subscribe(spy);
+        model.changed!.subscribe(spy);
       });
 
       it('should emit an event when a value is selected', () => {
@@ -133,7 +133,7 @@ describe('SelectionModel', () => {
       it('should not emit an event when preselecting values', () => {
         model = new SelectionModel(false, [1]);
         spy = jasmine.createSpy('SelectionModel initial change event');
-        model.onChange!.subscribe(spy);
+        model.changed!.subscribe(spy);
 
         expect(spy).not.toHaveBeenCalled();
       });
@@ -147,7 +147,7 @@ describe('SelectionModel', () => {
         model = new SelectionModel(true, [1, 2, 3]);
         spy = jasmine.createSpy('SelectionModel change event');
 
-        model.onChange!.subscribe(spy);
+        model.changed!.subscribe(spy);
       });
 
       it('should emit an event when a value is deselected', () => {
@@ -184,7 +184,7 @@ describe('SelectionModel', () => {
     });
 
     it('should not have an onChange stream if change events are disabled', () => {
-      expect(model.onChange).toBeFalsy();
+      expect(model.changed).toBeFalsy();
     });
 
     it('should still update the select value', () => {
