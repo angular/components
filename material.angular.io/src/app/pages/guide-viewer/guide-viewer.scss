@@ -46,6 +46,7 @@ $guide-content-margin-side-xs: 15px;
 
 table-of-contents {
   top: 35px;
+  position: sticky;
 
   // Reposition on top of content on small screens and remove
   // sticky positioning
