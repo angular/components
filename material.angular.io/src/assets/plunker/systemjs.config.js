@@ -22,6 +22,7 @@ System.config({
     '@angular/core': 'https://unpkg.com/@angular/core/bundles/core.umd.js',
     '@angular/animations': 'https://unpkg.com/@angular/animations/bundles/animations.umd.js',
     '@angular/common': 'https://unpkg.com/@angular/common/bundles/common.umd.js',
+    '@angular/common/http': 'https://unpkg.com/@angular/common/bundles/common-http.umd.js',
     '@angular/compiler': 'https://unpkg.com/@angular/compiler/bundles/compiler.umd.js',
     '@angular/http': 'https://unpkg.com/@angular/http/bundles/http.umd.js',
     '@angular/forms': 'https://unpkg.com/@angular/forms/bundles/forms.umd.js',
@@ -53,6 +54,9 @@ System.config({
 
     // Rxjs mapping
     'rxjs': 'https://unpkg.com/rxjs',
+
+    // TODO(josephperrott): Determine why this is needed and get it removed.
+    'tslib': 'https://unpkg.com/tslib/tslib.js'
   },
   packages: {
     // Thirdparty barrels.
