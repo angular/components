@@ -40,7 +40,7 @@ export class MatCommonModule {
   constructor(@Optional() @Inject(MATERIAL_SANITY_CHECKS) private _sanityChecksEnabled: boolean) {
     if (this._areChecksEnabled() && !this._hasDoneGlobalChecks) {
       this._checkDoctypeIsDefined();
-      this._checkThemeIsPresent();
+      setTimeout(() => this._checkThemeIsPresent(), 20);
       this._hasDoneGlobalChecks = true;
     }
   }
