@@ -40,6 +40,7 @@ app-component-viewer {
 
   table-of-contents {
     top: 35px;
+    position: sticky;
 
     // Reposition on top of content on small screens and remove
     // sticky positioning

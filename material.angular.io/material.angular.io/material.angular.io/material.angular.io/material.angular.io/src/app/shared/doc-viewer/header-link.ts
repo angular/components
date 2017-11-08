@@ -20,7 +20,7 @@ import {Router} from '@angular/router';
     <a
       title="Link to this heading"
       [attr.aria-describedby]="example"
-      class="docs-markdown-a docs-header-link"
+      class="docs-markdown-a"
       aria-label="Link to this heading"
       [href]="url">
       <mat-icon>link</mat-icon>
