@@ -191,9 +191,9 @@ export class RippleRenderer {
 
     this._isMousedown = false;
 
-    // Fade-out all ripples that are not persistent.
+    // Fade-out all ripples that are completely visible and not persistent.
     this._activeRipples.forEach(ripple => {
-      if (!ripple.config.persistent) {
+      if (!ripple.config.persistent && ripple.state === RippleState.VISIBLE) {
         ripple.fadeOut();
       }
     });
