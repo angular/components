@@ -168,7 +168,7 @@ describe('MatRadio', () => {
       const spies = radioInstances
         .map((radio, index) => jasmine.createSpy(`onChangeSpy ${index} for ${radio.name}`));
 
-      spies.forEach((spy, index) => radioInstances[index].change.subscribe(spy));
+      spies.forEach((spy, index) => radioInstances[index].selectionChange.subscribe(spy));
 
       radioLabelElements[0].click();
       fixture.detectChanges();
