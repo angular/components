@@ -6,9 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -26,6 +23,7 @@ import {
   Optional,
   Output,
   QueryList,
+  Renderer2,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -40,6 +38,9 @@ import {
   mixinDisableRipple,
   RippleRef,
 } from '@angular/material/core';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 
 // Increasing integer for generating unique ids for radio components.
 let nextUniqueId = 0;
@@ -124,7 +125,16 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
    * Change events are only emitted when the value changes due to user interaction with
    * a radio button (the same behavior as `<input type-"radio">`).
    */
-  @Output() change: EventEmitter<MatRadioChange> = new EventEmitter<MatRadioChange>();
+  @Output() selectionChange: EventEmitter<MatRadioChange> = new EventEmitter<MatRadioChange>();
+
+  /**
+   * Event emitted when the group value changes.
+   * Change events are only emitted when the value changes due to user interaction with
+   * a radio button (the same behavior as `<input type-"radio">`).
+   * @deprecated use `selectionChange` instead.
+   */
+  @Output() change: EventEmitter<MatRadioChange> = this.selectionChange;
+
 
   /** Child radio buttons. */
   @ContentChildren(forwardRef(() => MatRadioButton), { descendants: true })
@@ -314,7 +324,7 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
 // Boilerplate for applying mixins to MatRadioButton.
 /** @docs-private */
 export class MatRadioButtonBase {
-  constructor(public _elementRef: ElementRef) {}
+  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
 }
 // As per Material design specifications the selection control radio should use the accent color
 // palette by default. https://material.io/guidelines/components/selection-controls.html
@@ -493,10 +503,11 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
 
   constructor(@Optional() radioGroup: MatRadioGroup,
               elementRef: ElementRef,
+              renderer: Renderer2,
               private _changeDetector: ChangeDetectorRef,
               private _focusMonitor: FocusMonitor,
               private _radioDispatcher: UniqueSelectionDispatcher) {
-    super(elementRef);
+    super(renderer, elementRef);
 
     // Assertions. Ideally these should be stripped out by the compiler.
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
@@ -537,7 +548,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
 
   ngAfterViewInit() {
     this._focusMonitor
-      .monitor(this._inputElement.nativeElement, false)
+      .monitor(this._inputElement.nativeElement, this._renderer, false)
       .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
   }
 
