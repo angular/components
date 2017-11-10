@@ -168,7 +168,7 @@ describe('MatRadio', () => {
       const spies = radioInstances
         .map((radio, index) => jasmine.createSpy(`onChangeSpy ${index} for ${radio.name}`));
 
-      spies.forEach((spy, index) => radioInstances[index].change.subscribe(spy));
+      spies.forEach((spy, index) => radioInstances[index].selectionChange.subscribe(spy));
 
       radioLabelElements[0].click();
       fixture.detectChanges();
@@ -189,7 +189,7 @@ describe('MatRadio', () => {
       expect(groupInstance.value).toBeFalsy();
 
       const changeSpy = jasmine.createSpy('radio-group change listener');
-      groupInstance.change.subscribe(changeSpy);
+      groupInstance.selectionChange.subscribe(changeSpy);
 
       radioLabelElements[0].click();
       fixture.detectChanges();
@@ -296,7 +296,7 @@ describe('MatRadio', () => {
     it(`should update the group's selected radio to null when unchecking that radio
         programmatically`, () => {
       const changeSpy = jasmine.createSpy('radio-group change listener');
-      groupInstance.change.subscribe(changeSpy);
+      groupInstance.selectionChange.subscribe(changeSpy);
       radioInstances[0].checked = true;
 
       fixture.detectChanges();
@@ -316,7 +316,7 @@ describe('MatRadio', () => {
 
     it('should not fire a change event from the group when a radio checked state changes', () => {
       const changeSpy = jasmine.createSpy('radio-group change listener');
-      groupInstance.change.subscribe(changeSpy);
+      groupInstance.selectionChange.subscribe(changeSpy);
       radioInstances[0].checked = true;
 
       fixture.detectChanges();
@@ -335,7 +335,7 @@ describe('MatRadio', () => {
 
     it(`should update checked status if changed value to radio group's value`, () => {
       const changeSpy = jasmine.createSpy('radio-group change listener');
-      groupInstance.change.subscribe(changeSpy);
+      groupInstance.selectionChange.subscribe(changeSpy);
       groupInstance.value = 'apple';
 
       expect(changeSpy).not.toHaveBeenCalled();
