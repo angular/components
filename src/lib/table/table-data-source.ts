@@ -129,8 +129,12 @@ export class MatTableDataSource<T> implements DataSource<T> {
     return dataStr.indexOf(transformedFilter) != -1;
   }
 
-  constructor(initialData: T[] = []) {
-    this._data = new BehaviorSubject<T[]>(initialData);
+  constructor(initialData: T[]|BehaviorSubject<T[]> = []) {
+    if (initialData instanceof BehaviorSubject) {
+      this._data = initialData;
+    } else {
+      this._data = new BehaviorSubject<T[]>(initialData);
+    }
     this._updateChangeSubscription();
   }
 
