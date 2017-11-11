@@ -274,7 +274,7 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
       const event = new MatRadioChange();
       event.source = this._selected;
       event.value = this._value;
-      this.change.emit(event);
+      this.selectionChange.emit(event);
     }
   }
 
