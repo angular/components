@@ -26,10 +26,7 @@ export class OverlayKeyboardDispatcher implements OnDestroy {
   private _keydownEventSubscription: Subscription | null;
 
   ngOnDestroy() {
-    if (this._keydownEventSubscription) {
-      this._keydownEventSubscription.unsubscribe();
-      this._keydownEventSubscription = null;
-    }
+    this._unsubscribeFromKeydownEvents();
   }
 
   /** Add a new overlay to the list of attached overlay refs. */
@@ -45,8 +42,14 @@ export class OverlayKeyboardDispatcher implements OnDestroy {
   /** Remove an overlay from the list of attached overlay refs. */
   remove(overlayRef: OverlayRef): void {
     const index = this._attachedOverlays.indexOf(overlayRef);
+
     if (index > -1) {
       this._attachedOverlays.splice(index, 1);
+    }
+
+    // Remove the global listener once there are no more overlays.
+    if (this._attachedOverlays.length === 0) {
+      this._unsubscribeFromKeydownEvents();
     }
   }
 
@@ -63,6 +66,14 @@ export class OverlayKeyboardDispatcher implements OnDestroy {
       // Dispatch keydown event to correct overlay reference
       this._selectOverlayFromEvent(event)._keydownEvents.next(event);
     });
+  }
+
+  /** Removes the global keydown subscription. */
+  private _unsubscribeFromKeydownEvents(): void {
+    if (this._keydownEventSubscription) {
+      this._keydownEventSubscription.unsubscribe();
+      this._keydownEventSubscription = null;
+    }
   }
 
   /** Select the appropriate overlay from a keydown event. */
