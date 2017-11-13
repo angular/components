@@ -30,7 +30,8 @@ describe('MatHorizontalStepper', () => {
         SimplePreselectedMatHorizontalStepperApp,
         LinearMatHorizontalStepperApp,
         SimpleStepperWithoutStepControl,
-        SimpleStepperWithStepControlAndCompletedBinding
+        SimpleStepperWithStepControlAndCompletedBinding,
+        IconOverridesStepper,
       ],
       providers: [
         {provide: Directionality, useFactory: () => ({value: dir})}
@@ -143,6 +144,41 @@ describe('MatHorizontalStepper', () => {
 
     it('should reverse animation in RTL mode', () => {
       assertCorrectStepAnimationDirection(fixture, 'rtl');
+    });
+  });
+
+  describe('icon overrides', () => {
+    let fixture: ComponentFixture<IconOverridesStepper>;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(IconOverridesStepper);
+      fixture.detectChanges();
+    });
+
+    it('should allow for the `edit` icon to be overridden', () => {
+      const stepperDebugElement = fixture.debugElement.query(By.directive(MatStepper));
+      const stepperComponent: MatStepper = stepperDebugElement.componentInstance;
+
+      stepperComponent._steps.toArray()[0].editable = true;
+      stepperComponent.next();
+      fixture.detectChanges();
+
+      const header = stepperDebugElement.nativeElement.querySelector('mat-step-header');
+
+      expect(header.textContent).toContain('Custom edit');
+    });
+
+    it('should allow for the `done` icon to be overridden', () => {
+      const stepperDebugElement = fixture.debugElement.query(By.directive(MatStepper));
+      const stepperComponent: MatStepper = stepperDebugElement.componentInstance;
+
+      stepperComponent._steps.toArray()[0].editable = false;
+      stepperComponent.next();
+      fixture.detectChanges();
+
+      const header = stepperDebugElement.nativeElement.querySelector('mat-step-header');
+
+      expect(header.textContent).toContain('Custom done');
     });
   });
 
@@ -1083,3 +1119,17 @@ class SimpleStepperWithStepControlAndCompletedBinding {
     {label: 'Three', completed: false, control: new FormControl()}
   ];
 }
+
+@Component({
+  template: `
+    <mat-horizontal-stepper>
+      <ng-template matStepperIcon="edit">Custom edit</ng-template>
+      <ng-template matStepperIcon="done">Custom done</ng-template>
+
+      <mat-step>Content 1</mat-step>
+      <mat-step>Content 2</mat-step>
+      <mat-step>Content 3</mat-step>
+    </mat-horizontal-stepper>
+`
+})
+class IconOverridesStepper {}
