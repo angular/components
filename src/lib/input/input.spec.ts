@@ -120,8 +120,8 @@ describe('MatInput without forms', function () {
         }
       }));
 
-  // Firefox, Safari Desktop and IE don't support type="date" and fallback to type="text".
-  it('should be treated as empty if type is date on Firefox and IE',
+  // Safari Desktop and IE don't support type="date" and fallback to type="text".
+  it('should be treated as empty if type is date in Safari Desktop or IE',
       inject([Platform], (platform: Platform) => {
         if (platform.TRIDENT || (platform.SAFARI && !platform.IOS)) {
           let fixture = TestBed.createComponent(MatInputDateTestController);
