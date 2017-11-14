@@ -19,21 +19,21 @@ branches:
 
 jobs:
   include:
-    - env: "MODE=lint"
-    - env: "MODE=aot"
-    - env: "MODE=payload"
-    - env: "MODE=prerender"
+    # - env: "MODE=lint"
+    # - env: "MODE=aot"
+    # - env: "MODE=payload"
+    # - env: "MODE=prerender"
     # Closure Compiler CI check is temporarily disabled until a new version of
     # the tool is released with https://github.com/google/closure-compiler/pull/2600
     # - env: "MODE=closure-compiler"
-    - env: "MODE=e2e"
+    # - env: "MODE=e2e"
     - env: "MODE=saucelabs_required"
-    - env: "MODE=browserstack_required"
-    - env: "MODE=travis_required"
-      env: "DEPLOY_MODE=build-artifacts"
-    - env: "DEPLOY_MODE=docs-content"
-    - env: "DEPLOY_MODE=screenshot-tool"
-    - env: "DEPLOY_MODE=dashboard"
+    # - env: "MODE=browserstack_required"
+    # - env: "MODE=travis_required"
+    #   env: "DEPLOY_MODE=build-artifacts"
+    # - env: "DEPLOY_MODE=docs-content"
+    # - env: "DEPLOY_MODE=screenshot-tool"
+    # - env: "DEPLOY_MODE=dashboard"
 env:
   global:
   - LOGS_DIR=/tmp/angular-material2-build/logs

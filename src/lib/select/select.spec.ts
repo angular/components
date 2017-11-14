@@ -56,7 +56,7 @@ const LETTER_KEY_DEBOUNCE_INTERVAL = 200;
 const platform = new Platform();
 
 
-describe('MatSelect', () => {
+fdescribe('MatSelect', () => {
   let overlayContainerElement: HTMLElement;
   let dir: {value: 'ltr'|'rtl'};
   let scrolledSubject = new Subject();

@@ -51,6 +51,7 @@ module.exports = (config) => {
 
     reporters: ['dots'],
     autoWatch: false,
+    reportSlowerThan: 25,
 
     coverageReporter: {
       type : 'json-summary',
