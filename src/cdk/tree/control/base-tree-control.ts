@@ -11,15 +11,32 @@ import {TreeControl} from './tree-control';
 
 /** Base tree control. It has basic toggle/expand/collapse operations on a single data node. */
 export abstract class BaseTreeControl<T> implements TreeControl<T> {
+
+  /** Gets a list of descendent data nodes of a subtree rooted at given data node recursively. */
+  abstract getDescendants(dataNode: T): T[];
+
+  /** Expands all data nodes in the tree. */
+  abstract expandAll(): void;
+
   /** Saved data node for `expandAll` action. */
   dataNodes: T[];
+
   /** A selection model with multi-selection to track expansion status. */
   expansionModel: SelectionModel<T> = new SelectionModel<T>(true);
 
+  /** Get depth of a given data node, return the level number. This is for flat tree node. */
+  getLevel: (dataNode: T) => number;
+
   /**
-   * Toggles one single data node.
-   * Expands a collapsed data node or collapse an expanded data node.
+   * Whether the data node is expandable. Returns true if expandable.
+   * This is for flat tree node.
    */
+  isExpandable: (dataNode: T) => boolean;
+
+  /** Gets a stream that emits whenever the given data node's children change. */
+  getChildren: (dataNode: T) => Observable<T[]>;
+
+  /** Toggles one single data node's expanded/collapsed state. */
   toggle(dataNode: T): void {
     this.expansionModel.toggle(dataNode);
   }
@@ -64,22 +81,4 @@ export abstract class BaseTreeControl<T> implements TreeControl<T> {
     toBeProcessed.push(...this.getDescendants(dataNode));
     this.expansionModel.deselect(...toBeProcessed);
   }
-
-  /** Gets a list of descendent data nodes of a subtree rooted at given data node recursively. */
-  abstract getDescendants(dataNode: T): T[];
-
-  /** Expands all data nodes in the tree. */
-  abstract expandAll(): void;
-
-  /** Get depth of a given data node, return the level number. This is for flat tree node. */
-  getLevel: (dataNode: T) => number;
-
-  /**
-   * Whether the data node is expandable. Returns true if expandable.
-   * This is for flat tree node.
-   */
-  isExpandable: (dataNode: T) => boolean;
-
-  /** Gets a stream that emits whenever the given data node's children change. */
-  getChildren: (dataNode: T) => Observable<T[]>;
 }

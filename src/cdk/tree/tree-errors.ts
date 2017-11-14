@@ -11,7 +11,7 @@
  * @docs-private
  */
 export function getTreeMultipleDefaultNodeDefsError() {
-  return Error(`cdk-tree: There can only be one default row without a when predicate function.`);
+  return Error(`There can only be one default row without a when predicate function.`);
 }
 
 /**
@@ -19,7 +19,7 @@ export function getTreeMultipleDefaultNodeDefsError() {
  * @docs-private
  */
 export function getTreeMissingMatchingNodeDefError() {
-  return Error(`cdk-tree: Could not find a matching node definition for the provided node data.`);
+  return Error(`Could not find a matching node definition for the provided node data.`);
 }
 
 /**
@@ -27,7 +27,7 @@ export function getTreeMissingMatchingNodeDefError() {
  * @docs-private
  */
 export function getTreeControlMissingError() {
-  return Error(`cdk-tree: Could not find a tree control for the tree.`);
+  return Error(`Could not find a tree control for the tree.`);
 }
 
 /**
@@ -35,5 +35,5 @@ export function getTreeControlMissingError() {
  * @docs-private
  */
 export function getTreeControlFunctionsMissingError() {
-  return Error(`cdk-tree: Could not find functions for nested/flat tree in tree control.`);
+  return Error(`Could not find functions for nested/flat tree in tree control.`);
 }

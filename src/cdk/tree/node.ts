@@ -53,7 +53,7 @@ export class CdkTreeNodeDef<T> {
    * For every node, there must be at least one when function that passes or an undefined to
    * default.
    */
-  when: (nodeData: T, index: number) => boolean;
+  when: (index: number, nodeData: T) => boolean;
 
   /** @docs-private */
   constructor(public template: TemplateRef<any>) {}

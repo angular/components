@@ -103,7 +103,6 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
               private _changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit() {
-
     this._dataDiffer = this._differs.find([]).create();
     if (!this.treeControl) {
       throw getTreeControlMissingError();

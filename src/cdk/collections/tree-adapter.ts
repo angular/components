@@ -10,14 +10,17 @@ import {SelectionModel} from './selection';
 
 
 /**
- * Tree Adapter to change any structured data type to flattened tree data.
- * To be implemented by tree users.
+ * Interface for a class that can flatten hierarchical structured data and re-expand the flattened
+ * data back into its original structure. Should be used in conjunction with the cdk-tree.
  */
 export interface TreeDataNodeFlattener<T> {
-  /** Flatten structured data to an array of data. */
+  /** Transforms a set of hierarchical structured data into a flattened data array. */
   flattenNodes(structuredData: any[]): T[];
 
-  /** Expand flattened target dataNodes with expansion model. */
+  /**
+   * Expands a flattened array of data into its hierarchical form using the provided expansion
+   * model.
+   */
   expandFlattenedNodes(nodes: T[], expansionModel: SelectionModel<T>): T[];
 
   /**

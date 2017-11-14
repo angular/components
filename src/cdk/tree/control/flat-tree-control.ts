@@ -8,7 +8,7 @@
 
 import {BaseTreeControl} from './base-tree-control';
 
-/** Flat tree control. Able to expand/collapse a subtree recursively for FlatNode type. */
+/** Flat tree control. Able to expand/collapse a subtree recursively for flattened tree. */
 export class FlatTreeControl<T> extends BaseTreeControl<T> {
 
   /** Construct with flat tree data node functions getLevel and isExpandable. */
@@ -18,16 +18,22 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
   }
 
   /**
-   * Gets a list of descendent data nodes of a subtree rooted at given data node recursively.
+   * Gets a list of the data node's subtree of descendent data nodes.
    *
-   * To make this working, the `dataNodes` of the TreeControl must be set correctly.
+   * To make this working, the `dataNodes` of the TreeControl must be flattened tree nodes
+   * with correct levels.
    */
   getDescendants(dataNode: T): T[] {
     const startIndex = this.dataNodes.indexOf(dataNode);
     const results: T[] = [];
-    let i = startIndex + 1;
 
-    for (;
+    // Goes through flattened tree nodes in the `dataNodes` array, and get all descendants.
+    // The level of descendants of a tree node must be greater than the level of the given
+    // tree node. 
+    // If we reach a node whose level is equal to the level of the tree node, we hit a sibling.
+    // If we reach a node whose level is greater than the level of the tree node, we hit a 
+    // sibling of an ancestor. 
+    for (let i = startIndex + 1;
         i < this.dataNodes.length && this.getLevel(dataNode) < this.getLevel(this.dataNodes[i]);
         i++) {
       results.push(this.dataNodes[i]);

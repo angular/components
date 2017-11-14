@@ -12,37 +12,42 @@ describe('CdkFlatTreeControl', () => {
   describe('base tree control actions', () => {
     it('should be able to expand and collapse dataNodes', () => {
       const nodes = generateData(10, 4);
-      const node = nodes[1];
+      const secondNode = nodes[1];
       const sixthNode = nodes[5];
       treeControl.dataNodes = nodes;
 
-      treeControl.expand(node);
+      treeControl.expand(secondNode);
 
 
-      expect(treeControl.isExpanded(node)).toBeTruthy('Expect second node to be expanded');
+      expect(treeControl.isExpanded(secondNode))
+          .toBeTruthy('Expect second node to be expanded');
       expect(treeControl.expansionModel.selected)
-          .toContain(node, 'Expect second node in expansionModel');
+          .toContain(secondNode, 'Expect second node in expansionModel');
       expect(treeControl.expansionModel.selected.length)
           .toBe(1, 'Expect only second node in expansionModel');
 
       treeControl.toggle(sixthNode);
 
-      expect(treeControl.isExpanded(node)).toBeTruthy('Expect second node to stay expanded');
+      expect(treeControl.isExpanded(secondNode))
+          .toBeTruthy('Expect second node to stay expanded');
+      expect(treeControl.isExpanded(sixthNode))
+          .toBeTruthy('Expect sixth node to be expanded');
       expect(treeControl.expansionModel.selected)
-        .toContain(sixthNode, 'Expect sixth node in expansionModel');
+          .toContain(sixthNode, 'Expect sixth node in expansionModel');
       expect(treeControl.expansionModel.selected)
-        .toContain(node, 'Expect second node in expansionModel');
+          .toContain(secondNode, 'Expect second node in expansionModel');
       expect(treeControl.expansionModel.selected.length)
-        .toBe(2, 'Expect two dataNodes in expansionModel');
+          .toBe(2, 'Expect two dataNodes in expansionModel');
 
-      treeControl.collapse(node);
+      treeControl.collapse(seconNode);
 
-      expect(treeControl.isExpanded(node)).toBeFalsy('Expect second node to be collapsed');
+      expect(treeControl.isExpanded(secondNode))
+          .toBeFalsy('Expect second node to be collapsed');
       expect(treeControl.expansionModel.selected.length)
-        .toBe(1, 'Expect one node in expansionModel');
+          .toBe(1, 'Expect one node in expansionModel');
       expect(treeControl.isExpanded(sixthNode)).toBeTruthy('Expect sixth node to stay expanded');
       expect(treeControl.expansionModel.selected)
-        .toContain(sixthNode, 'Expect sixth node in expansionModel');
+          .toContain(sixthNode, 'Expect sixth node in expansionModel');
     });
 
     it('should return correct expandable values', () => {
