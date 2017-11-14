@@ -9,7 +9,7 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {CdkStep, CdkStepper} from '@angular/cdk/stepper';
 import {
-  AfterViewInit,
+  AfterContentInit,
   Component,
   ContentChild,
   ContentChildren,
@@ -69,7 +69,7 @@ export class MatStep extends _MatStep implements ErrorStateMatcher {
 @Directive({
   selector: '[matStepper]'
 })
-export class MatStepper extends _MatStepper implements AfterViewInit, OnDestroy {
+export class MatStepper extends _MatStepper implements AfterContentInit, OnDestroy {
   /** The list of step headers of the steps in the stepper. */
   @ViewChildren(MatStepHeader, {read: ElementRef}) _stepHeader: QueryList<ElementRef>;
 
@@ -78,7 +78,7 @@ export class MatStepper extends _MatStepper implements AfterViewInit, OnDestroy 
   
   /** Workaround for https://github.com/angular/material2/issues/8397 */
   _stepChangesSubscription: Subscription;
-  ngAfterViewInit() {
+  ngAfterContentInit() {
     this._stepChangesSubscription = this._steps.changes.subscribe(() => this._stateChanged());
   }
   ngOnDestroy() {
