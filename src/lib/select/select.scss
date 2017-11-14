@@ -89,7 +89,16 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
 }
 
 .mat-select-placeholder {
+  // Delay the transition until the label has animated about a third of the way through, in
+  // order to prevent the placeholder from overlapping for a split second.
+  transition: color $swift-ease-out-duration $swift-ease-out-duration / 3
+      $swift-ease-out-timing-function;
+
   .mat-form-field-hide-placeholder & {
     color: transparent;
+
+    // Remove the transition to prevent the placeholder
+    // from overlapping when the label comes back down.
+    transition: none;
   }
 }

@@ -8,10 +8,19 @@
     <div class="mat-input-infix mat-form-field-infix">
       <ng-content></ng-content>
 
-      <span class="mat-form-field-label-wrapper">
+      <!--
+        TODO: remove `mat-input-placeholder-wrapper` and `mat-form-field-placeholder-wrapper`
+        next time we do breaking changes.
+      -->
+      <span class="mat-form-field-label-wrapper mat-input-placeholder-wrapper mat-form-field-placeholder-wrapper">
         <!-- We add aria-owns as a workaround for an issue in JAWS & NVDA where the label isn't
              read if it comes before the control in the DOM. -->
-        <label class="mat-form-field-label"
+
+        <!--
+          TODO: remove `mat-input-placeholder` and `mat-form-field-placeholder`
+          next time we do breaking changes.
+        -->
+        <label class="mat-form-field-label mat-input-placeholder mat-form-field-placeholder"
                [attr.for]="_control.id"
                [attr.aria-owns]="_control.id"
                [class.mat-empty]="_control.empty && !_shouldAlwaysFloat"
