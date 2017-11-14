@@ -202,7 +202,7 @@ describe('MatExpansionPanel', () => {
 
       fixture.componentInstance.expanded = true;
       fixture.detectChanges();
-      
+
       expect(fixture.componentInstance.panel.expanded).toBe(true);
       expect(header.classList).toContain('mat-expanded');
     });
@@ -227,7 +227,7 @@ class PanelWithContent {
   expanded = false;
   hideToggle = false;
   disabled = false;
-  openCallback =  jasmine.createSpy('openCallback');
+  openCallback = jasmine.createSpy('openCallback');
   closeCallback = jasmine.createSpy('closeCallback');
   @ViewChild(MatExpansionPanel) panel: MatExpansionPanel;
 }
