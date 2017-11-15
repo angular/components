@@ -75,8 +75,8 @@ export class MatStepper extends _MatStepper implements AfterContentInit {
   /** Steps that the stepper holds. */
   @ContentChildren(MatStep) _steps: QueryList<MatStep>;
   
-  /** Mark the component for change detection whenever the content children query changes */
   ngAfterContentInit() {
+    // Mark the component for change detection whenever the content children query changes
     this._steps.changes.pipe(takeUntil(this._destroyed)).subscribe(() => this._stateChanged());
   }
 }
