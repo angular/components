@@ -17,7 +17,6 @@ import {
   ElementRef,
   forwardRef,
   Inject,
-  OnDestroy,
   QueryList,
   SkipSelf,
   ViewChildren,
@@ -69,7 +68,7 @@ export class MatStep extends _MatStep implements ErrorStateMatcher {
 @Directive({
   selector: '[matStepper]'
 })
-export class MatStepper extends _MatStepper implements AfterContentInit, OnDestroy {
+export class MatStepper extends _MatStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */
   @ViewChildren(MatStepHeader, {read: ElementRef}) _stepHeader: QueryList<ElementRef>;
 
@@ -77,14 +76,8 @@ export class MatStepper extends _MatStepper implements AfterContentInit, OnDestr
   @ContentChildren(MatStep) _steps: QueryList<MatStep>;
   
   /** Workaround for https://github.com/angular/material2/issues/8397 */
-  _stepChangesSubscription: Subscription;
   ngAfterContentInit() {
-    this._stepChangesSubscription = this._steps.changes.subscribe(() => this._stateChanged());
-  }
-  ngOnDestroy() {
-    if(this._stepChangesSubscription instanceof Subscription) {
-      this._stepChangesSubscription.unsubscribe();
-    }
+    this._steps.changes.pipe(takeUntil(this._destroyed)).subscribe(() => this._stateChanged());
   }
 }
 
