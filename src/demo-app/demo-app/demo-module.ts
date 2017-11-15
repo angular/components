@@ -57,6 +57,8 @@ import {TableHeaderDemo} from '../table/table-header-demo';
 import {FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo} from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
+import {TreeDemo} from '../tree/tree-demo';
+import {JsonDatabase} from '../tree/json-database';
 import {TypographyDemo} from '../typography/typography-demo';
 import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
@@ -122,11 +124,13 @@ import {DEMO_APP_ROUTES} from './routes';
     TabsDemo,
     ToolbarDemo,
     TooltipDemo,
+    TreeDemo,
     TypographyDemo,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
-    PeopleDatabase
+    PeopleDatabase,
+    JsonDatabase
   ],
   entryComponents: [
     ContentElementDialog,
