@@ -27,6 +27,7 @@ import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
+import {takeUntil} from 'rxjs/operators/takeUntil';
 
 /** Workaround for https://github.com/angular/angular/issues/17849 */
 export const _MatStep = CdkStep;
@@ -74,7 +75,7 @@ export class MatStepper extends _MatStepper implements AfterContentInit {
   /** Steps that the stepper holds. */
   @ContentChildren(MatStep) _steps: QueryList<MatStep>;
   
-  /** Workaround for https://github.com/angular/material2/issues/8397 */
+  /** Mark the component for change detection whenever the content children query changes */
   ngAfterContentInit() {
     this._steps.changes.pipe(takeUntil(this._destroyed)).subscribe(() => this._stateChanged());
   }
