@@ -39,7 +39,7 @@ describe('CdkFlatTreeControl', () => {
       expect(treeControl.expansionModel.selected.length)
           .toBe(2, 'Expect two dataNodes in expansionModel');
 
-      treeControl.collapse(seconNode);
+      treeControl.collapse(secondNode);
 
       expect(treeControl.isExpanded(secondNode))
           .toBeFalsy('Expect second node to be collapsed');
