@@ -27,7 +27,6 @@ import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
-import {Subscription} from 'rxjs/Subscription';
 
 /** Workaround for https://github.com/angular/angular/issues/17849 */
 export const _MatStep = CdkStep;
