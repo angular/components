@@ -1,11 +1,10 @@
-import 'reflect-metadata';
-import 'zone.js';
-
 import {enableProdMode} from '@angular/core';
 import {renderModuleFactory} from '@angular/platform-server';
-import {join} from 'path';
 import {readFileSync, writeFileSync} from 'fs-extra';
 import {log} from 'gulp-util';
+import {join} from 'path';
+import 'reflect-metadata';
+import 'zone.js';
 import {KitchenSinkServerModuleNgFactory} from './kitchen-sink/kitchen-sink.ngfactory';
 
 enableProdMode();
