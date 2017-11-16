@@ -16,7 +16,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  Optional,
+  Optional, PLATFORM_ID,
   Renderer2,
   Self
 } from '@angular/core';
@@ -26,6 +26,8 @@ import {MatFormFieldControl} from '@angular/material/form-field';
 import {Subject} from 'rxjs/Subject';
 import {getMatInputUnsupportedTypeError} from './input-errors';
 import {MAT_INPUT_VALUE_ACCESSOR} from './input-value-accessor';
+import {isPlatformServer} from '@angular/common';
+
 
 // Invalid input type. Using one of these will throw an MatInputUnsupportedTypeError.
 const MAT_INPUT_INVALID_TYPES = [
@@ -50,6 +52,7 @@ let nextUniqueId = 0;
   exportAs: 'matInput',
   host: {
     'class': 'mat-input-element mat-form-field-autofill-control',
+    '[class.mat-input-server]': '_isServer',
     // Native input properties that are overwritten by Angular inputs need to be synced with
     // the native input element. Otherwise property bindings for those don't work.
     '[attr.id]': 'id',
@@ -85,6 +88,9 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
 
   /** The aria-describedby attribute on the input for improved a11y. */
   _ariaDescribedby: string;
+
+  /** Whether the component is being rendered on the server. */
+  _isServer = false;
 
   /**
    * Stream that emits whenever the state of the input changes such that the wrapping `MatFormField`
@@ -162,7 +168,8 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
               @Optional() protected _parentForm: NgForm,
               @Optional() protected _parentFormGroup: FormGroupDirective,
               private _defaultErrorStateMatcher: ErrorStateMatcher,
-              @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any) {
+              @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
+              @Optional() @Inject(PLATFORM_ID) platformId?: Object) {
     // If no input value accessor was explicitly specified, use the element as the input value
     // accessor.
     this._inputValueAccessor = inputValueAccessor || this._elementRef.nativeElement;
@@ -187,6 +194,8 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
         }
       });
     }
+
+    this._isServer = !!(platformId && isPlatformServer(platformId));
   }
 
   ngOnChanges() {
