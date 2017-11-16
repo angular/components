@@ -61,7 +61,7 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
   padding-bottom: 0;
   max-height: $mat-select-panel-max-height;
   min-width: 100%; // prevents some animation twitching and test inconsistencies in IE11
-  margin-top: 10px; //makes floating label visible by moving dropdown panel 10px lower
+  margin-top: 10px; //makes floating label visible by moving dropdown panel 10px lower 
 
   @include cdk-high-contrast {
     outline: solid 1px;
