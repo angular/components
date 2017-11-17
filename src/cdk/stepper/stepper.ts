@@ -190,7 +190,7 @@ export class CdkStepper implements OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef) {
     this._groupId = nextId++;
   }
-  
+
   ngOnDestroy() {
     this._destroyed.next();
     this._destroyed.complete();
