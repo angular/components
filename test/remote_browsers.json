@@ -180,6 +180,13 @@
     "os": "OS X",
     "os_version": "Sierra"
   },
+  "BS_SAFARI11": {
+    "base": "BrowserStack",
+    "browser": "safari",
+    "browser_version": "11",
+    "os": "OS X",
+    "os_version": "High Sierra"
+  },
   "BS_IOS7": {
     "base": "BrowserStack",
     "device": "iPhone 5S",
