@@ -16,7 +16,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  Optional, PLATFORM_ID,
+  Optional,
   Renderer2,
   Self
 } from '@angular/core';
@@ -26,7 +26,6 @@ import {MatFormFieldControl} from '@angular/material/form-field';
 import {Subject} from 'rxjs/Subject';
 import {getMatInputUnsupportedTypeError} from './input-errors';
 import {MAT_INPUT_VALUE_ACCESSOR} from './input-value-accessor';
-import {isPlatformServer} from '@angular/common';
 
 
 // Invalid input type. Using one of these will throw an MatInputUnsupportedTypeError.
@@ -168,8 +167,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
               @Optional() protected _parentForm: NgForm,
               @Optional() protected _parentFormGroup: FormGroupDirective,
               private _defaultErrorStateMatcher: ErrorStateMatcher,
-              @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
-              @Optional() @Inject(PLATFORM_ID) platformId?: Object) {
+              @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any) {
     // If no input value accessor was explicitly specified, use the element as the input value
     // accessor.
     this._inputValueAccessor = inputValueAccessor || this._elementRef.nativeElement;
@@ -195,7 +193,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
       });
     }
 
-    this._isServer = !!(platformId && isPlatformServer(platformId));
+    this._isServer = !this._platform.isBrowser;
   }
 
   ngOnChanges() {
