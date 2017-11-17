@@ -137,7 +137,7 @@ export class CdkStep implements OnChanges {
 export class CdkStepper implements OnDestroy {
   /** Emits when the component is destroyed. */
   protected _destroyed = new Subject<void>();
-  
+
   /** The list of step components that the stepper is holding. */
   @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
 
