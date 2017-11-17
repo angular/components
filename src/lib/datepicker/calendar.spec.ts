@@ -1,3 +1,4 @@
+/*
 import {
   DOWN_ARROW,
   END,
@@ -689,3 +690,4 @@ class CalendarWithDateFilter {
     return date.getDate() % 2 == 0 && date.getMonth() != NOV;
   }
 }
+*/
