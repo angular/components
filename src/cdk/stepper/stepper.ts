@@ -35,6 +35,7 @@ import {CdkStepLabel} from './step-label';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {AbstractControl} from '@angular/forms';
 import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Subject} from 'rxjs/Subject';
 
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;
