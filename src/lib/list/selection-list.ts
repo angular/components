@@ -92,6 +92,7 @@ export class MatSelectionListChange {
 })
 export class MatListOption extends _MatListOptionMixinBase
     implements AfterContentInit, OnDestroy, OnInit, FocusableOption, CanDisableRipple {
+
   private _lineSetter: MatLineSetter;
   private _selected: boolean = false;
   private _disabled: boolean = false;
@@ -130,6 +131,13 @@ export class MatListOption extends _MatListOptionMixinBase
       this.selectionList._reportValueChange();
     }
   }
+
+  /**
+   * Emits a change event whenever the selected state of an option changes.
+   * @deprecated Use the `selectionChange` event on the `<mat-selection-list>` instead.
+   */
+  @Output() selectionChange: EventEmitter<MatSelectionListChange> =
+    new EventEmitter<MatSelectionListChange>();
 
   constructor(private _element: ElementRef,
               private _changeDetector: ChangeDetectorRef,
@@ -178,6 +186,9 @@ export class MatListOption extends _MatListOptionMixinBase
 
       // Emit a change event if the selected state of the option changed through user interaction.
       this.selectionList._emitChangeEvent(this);
+
+      // TODO: the `selectionChange` event on the option is deprecated. Remove that in the future.
+      this._emitDeprecatedChangeEvent();
     }
   }
 
@@ -211,6 +222,12 @@ export class MatListOption extends _MatListOptionMixinBase
     }
 
     this._changeDetector.markForCheck();
+  }
+
+  /** Emits a selectionChange event for this option. */
+  _emitDeprecatedChangeEvent() {
+    // TODO: the `selectionChange` event on the option is deprecated. Remove that in the future.
+    this.selectionChange.emit(new MatSelectionListChange(this.selectionList, this));
   }
 }
 
@@ -248,7 +265,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   @ContentChildren(MatListOption) options: QueryList<MatListOption>;
 
   /** Emits a change event whenever the selected state of an option changes. */
-  @Output() change: EventEmitter<MatSelectionListChange> =
+  @Output() selectionChange: EventEmitter<MatSelectionListChange> =
       new EventEmitter<MatSelectionListChange>();
 
   /** The currently selected options. */
@@ -328,7 +345,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
 
   /** Emits a change event if the selected state of an option changed. */
   _emitChangeEvent(option: MatListOption) {
-    this.change.emit(new MatSelectionListChange(this, option));
+    this.selectionChange.emit(new MatSelectionListChange(this, option));
   }
 
   /** Implemented as part of ControlValueAccessor. */
@@ -388,6 +405,9 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
         // Emit a change event because the focused option changed its state through user
         // interaction.
         this._emitChangeEvent(focusedOption);
+
+        // TODO: the `selectionChange` event on the option is deprecated. Remove that in the future.
+        focusedOption._emitDeprecatedChangeEvent();
       }
     }
   }

@@ -61,7 +61,7 @@ describe('MatSelectionList without forms', () => {
       });
     });
 
-    it('should not emit a change event if an option changed programmatically', () => {
+    it('should not emit a selectionChange event if an option changed programmatically', () => {
       spyOn(fixture.componentInstance, 'onValueChange');
 
       expect(fixture.componentInstance.onValueChange).toHaveBeenCalledTimes(0);
@@ -72,7 +72,7 @@ describe('MatSelectionList without forms', () => {
       expect(fixture.componentInstance.onValueChange).toHaveBeenCalledTimes(0);
     });
 
-    it('should not emit a change event if an option got clicked', () => {
+    it('should emit a selectionChange event if an option got clicked', () => {
       spyOn(fixture.componentInstance, 'onValueChange');
 
       expect(fixture.componentInstance.onValueChange).toHaveBeenCalledTimes(0);
@@ -81,6 +81,20 @@ describe('MatSelectionList without forms', () => {
       fixture.detectChanges();
 
       expect(fixture.componentInstance.onValueChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('should emit a deprecated selectionChange event on the list option that got clicked', () => {
+      const optionInstance = listOptions[2].componentInstance as MatListOption;
+      const selectionChangeSpy = jasmine.createSpy('selectionChange spy');
+
+      optionInstance.selectionChange.subscribe(selectionChangeSpy);
+
+      expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+
+      dispatchFakeEvent(listOptions[2].nativeElement, 'click');
+      fixture.detectChanges();
+
+      expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should be able to dispatch one selected item', () => {
@@ -662,7 +676,7 @@ describe('MatSelectionList with forms', () => {
 
 
 @Component({template: `
-  <mat-selection-list id="selection-list-1" (change)="onValueChange($event)">
+  <mat-selection-list id="selection-list-1" (selectionChange)="onValueChange($event)">
     <mat-list-option checkboxPosition="before" disabled="true" value="inbox">
       Inbox (disabled selection-option)
     </mat-list-option>
