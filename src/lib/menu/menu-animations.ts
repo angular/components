@@ -39,15 +39,10 @@ export const transformMenu: AnimationTriggerMetadata = trigger('transformMenu', 
     // as of 4.2, which causes the animation to be skipped if it starts from 0.
     transform: 'scale(0.01, 0.01)'
   })),
-  state('enter-start', style({
-    opacity: 1,
-    transform: 'scale(1, 0.5)'
-  })),
-  state('enter', style({
-    transform: 'scale(1, 1)'
-  })),
-  transition('void => enter-start', animate('100ms linear')),
-  transition('enter-start => enter', animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)')),
+  transition('void => enter', [
+    animate('100ms linear', style({opacity: 1, transform: 'scale(1, 0.5)'})),
+    animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({transform: 'scale(1, 1)'}))
+  ]),
   transition('* => void', animate('150ms 50ms linear', style({opacity: 0})))
 ]);
 
