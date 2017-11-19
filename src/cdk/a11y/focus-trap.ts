@@ -350,7 +350,7 @@ export class FocusTrapDeprecatedDirective implements OnDestroy, AfterContentInit
 })
 export class FocusTrapDirective implements OnDestroy, AfterContentInit {
   /** Underlying FocusTrap instance. */
-  private focusTrap: FocusTrap;
+  focusTrap: FocusTrap;
 
   /** Whether the focus trap is active. */
   @Input('cdkTrapFocus')
