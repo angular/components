@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -33,6 +41,7 @@ import {SliderAccessibilityDemo} from './slider/slider-a11y';
 import {SlideToggleAccessibilityDemo} from './slide-toggle/slide-toggle-a11y';
 import {SnackBarAccessibilityDemo} from './snack-bar/snack-bar-a11y';
 import {SelectAccessibilityDemo} from './select/select-a11y';
+import {TableAccessibilityDemo} from './table/table-a11y';
 import {
   TabsAccessibilityDemo,
   SunnyTabContent,
@@ -44,7 +53,6 @@ import {SidenavAccessibilityDemo} from './sidenav/sidenav-a11y';
 import {SidenavBasicAccessibilityDemo} from './sidenav/basic-sidenav-a11y';
 import {SidenavDualAccessibilityDemo} from './sidenav/dual-sidenav-a11y';
 import {SidenavMobileAccessibilityDemo} from './sidenav/mobile-sidenav-a11y';
-
 
 @NgModule({
   imports: [
@@ -98,6 +106,7 @@ export class AccessibilityRoutingModule {}
     SliderAccessibilityDemo,
     SlideToggleAccessibilityDemo,
     SnackBarAccessibilityDemo,
+    TableAccessibilityDemo,
     SunnyTabContent,
     TabsAccessibilityDemo,
     ToolbarAccessibilityDemo,

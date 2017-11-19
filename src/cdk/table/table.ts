@@ -31,13 +31,15 @@ import {
 } from '@angular/core';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {CdkCellOutlet, CdkCellOutletRowContext, CdkHeaderRowDef, CdkRowDef} from './row';
-import {takeUntil} from 'rxjs/operator/takeUntil';
+import {takeUntil} from 'rxjs/operators/takeUntil';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subscription} from 'rxjs/Subscription';
 import {Subject} from 'rxjs/Subject';
 import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
 import {
-  getTableDuplicateColumnNameError, getTableMissingMatchingRowDefError,
+  getTableDuplicateColumnNameError,
+  getTableMissingMatchingRowDefError,
+  getTableMissingRowDefsError,
   getTableMultipleDefaultRowDefsError,
   getTableUnknownColumnError
 } from './table-errors';
@@ -67,6 +69,12 @@ export class HeaderRowPlaceholder {
 export const CDK_TABLE_TEMPLATE = `
   <ng-container headerRowPlaceholder></ng-container>
   <ng-container rowPlaceholder></ng-container>`;
+
+/**
+ * Class used to conveniently type the embedded view ref for rows with a context.
+ * @docs-private
+ */
+abstract class RowViewRef<T> extends EmbeddedViewRef<CdkCellOutletRowContext<T>> { }
 
 /**
  * A data table that connects with a data source to retrieve data of type `T` and renders
@@ -110,6 +118,7 @@ export class CdkTable<T> implements CollectionViewer {
    * Accepts a function that takes two parameters, `index` and `item`.
    */
   @Input()
+  get trackBy(): TrackByFunction<T> { return this._trackByFn; }
   set trackBy(fn: TrackByFunction<T>) {
     if (isDevMode() &&
         fn != null && typeof fn !== 'function' &&
@@ -118,7 +127,6 @@ export class CdkTable<T> implements CollectionViewer {
     }
     this._trackByFn = fn;
   }
-  get trackBy(): TrackByFunction<T> { return this._trackByFn; }
   private _trackByFn: TrackByFunction<T>;
 
   /**
@@ -175,6 +183,10 @@ export class CdkTable<T> implements CollectionViewer {
   }
 
   ngAfterContentInit() {
+    if (!this._headerDef && !this._rowDefs.length) {
+      throw getTableMissingRowDefsError();
+    }
+
     this._cacheColumnDefsByName();
     this._columnDefs.changes.subscribe(() => this._cacheColumnDefsByName());
     this._renderHeaderRow();
@@ -265,7 +277,7 @@ export class CdkTable<T> implements CollectionViewer {
 
   /** Set up a subscription for the data provided by the data source. */
   private _observeRenderChanges() {
-    this._renderChangeSubscription = takeUntil.call(this.dataSource.connect(this), this._onDestroy)
+    this._renderChangeSubscription = this.dataSource.connect(this).pipe(takeUntil(this._onDestroy))
       .subscribe(data => {
         this._data = data;
         this._renderRowChanges();
@@ -286,31 +298,44 @@ export class CdkTable<T> implements CollectionViewer {
         .createEmbeddedView(this._headerDef.template, {cells});
 
     cells.forEach(cell => {
-      CdkCellOutlet.mostRecentCellOutlet._viewContainer.createEmbeddedView(cell.template, {});
+      if (CdkCellOutlet.mostRecentCellOutlet) {
+        CdkCellOutlet.mostRecentCellOutlet._viewContainer.createEmbeddedView(cell.template, {});
+      }
     });
 
     this._changeDetectorRef.markForCheck();
   }
 
-  /** Check for changes made in the data and render each change (row added/removed/moved). */
+  /**
+   * Check for changes made in the data and render each change (row added/removed/moved) and update
+   * row contexts.
+   */
   private _renderRowChanges() {
     const changes = this._dataDiffer.diff(this._data);
     if (!changes) { return; }
 
     const viewContainer = this._rowPlaceholder.viewContainer;
     changes.forEachOperation(
-        (item: IterableChangeRecord<any>, adjustedPreviousIndex: number, currentIndex: number) => {
-          if (item.previousIndex == null) {
-            this._insertRow(this._data[currentIndex], currentIndex);
+        (record: IterableChangeRecord<T>, adjustedPreviousIndex: number, currentIndex: number) => {
+          if (record.previousIndex == null) {
+            this._insertRow(record.item, currentIndex);
           } else if (currentIndex == null) {
             viewContainer.remove(adjustedPreviousIndex);
           } else {
-            const view = viewContainer.get(adjustedPreviousIndex);
+            const view = <RowViewRef<T>>viewContainer.get(adjustedPreviousIndex);
             viewContainer.move(view!, currentIndex);
           }
         });
 
-    this._updateRowContext();
+    // Update the meta context of a row's context data (index, count, first, last, ...)
+    this._updateRowIndexContext();
+
+    // Update rows that did not get added/removed/moved but may have had their identity changed,
+    // e.g. if trackBy matched data on some property but the actual data reference changed.
+    changes.forEachIdentityChange((record: IterableChangeRecord<T>) => {
+      const rowView = <RowViewRef<T>>viewContainer.get(record.currentIndex!);
+      rowView.context.$implicit = record.item;
+    });
   }
 
   /**
@@ -322,7 +347,7 @@ export class CdkTable<T> implements CollectionViewer {
   _getRowDef(data: T, i: number): CdkRowDef<T> {
     if (this._rowDefs.length == 1) { return this._rowDefs.first; }
 
-    let rowDef = this._rowDefs.find(def => def.when && def.when(data, i)) || this._defaultRowDef;
+    let rowDef = this._rowDefs.find(def => def.when && def.when(i, data)) || this._defaultRowDef;
     if (!rowDef) { throw getTableMissingMatchingRowDefError(); }
 
     return rowDef;
@@ -342,25 +367,24 @@ export class CdkTable<T> implements CollectionViewer {
     //   CdkCellOutlet was instantiated as a result  of `createEmbeddedView`.
     this._rowPlaceholder.viewContainer.createEmbeddedView(row.template, context, index);
 
-    // Insert empty cells if there is no data to improve rendering time.
-    const cells = rowData ? this._getCellTemplatesForRow(row) : [];
-
-    cells.forEach(cell => {
-      CdkCellOutlet.mostRecentCellOutlet._viewContainer.createEmbeddedView(cell.template, context);
+    this._getCellTemplatesForRow(row).forEach(cell => {
+      if (CdkCellOutlet.mostRecentCellOutlet) {
+        CdkCellOutlet.mostRecentCellOutlet._viewContainer
+            .createEmbeddedView(cell.template, context);
+      }
     });
 
     this._changeDetectorRef.markForCheck();
   }
 
   /**
-   * Updates the context for each row to reflect any data changes that may have caused
-   * rows to be added, removed, or moved. The view container contains the same context
-   * that was provided to each of its cells.
+   * Updates the index-related context for each row to reflect any changes in the index of the rows,
+   * e.g. first/last/even/odd.
    */
-  private _updateRowContext() {
+  private _updateRowIndexContext() {
     const viewContainer = this._rowPlaceholder.viewContainer;
     for (let index = 0, count = viewContainer.length; index < count; index++) {
-      const viewRef = viewContainer.get(index) as EmbeddedViewRef<CdkCellOutletRowContext<T>>;
+      const viewRef = viewContainer.get(index) as RowViewRef<T>;
       viewRef.context.index = index;
       viewRef.context.count = count;
       viewRef.context.first = index === 0;
@@ -404,4 +428,3 @@ export class CdkTable<T> implements CollectionViewer {
     });
   }
 }
-

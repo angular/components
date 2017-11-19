@@ -11,20 +11,21 @@ import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {
-  OriginConnectionPosition,
-  Overlay,
-  OverlayConnectionPosition,
-  OverlayRef,
-  OverlayConfig,
-  RepositionScrollStrategy,
-  ScrollStrategy,
   ConnectionPositionPair,
   HorizontalConnectionPos,
+  OriginConnectionPosition,
+  Overlay,
+  OverlayConfig,
+  OverlayConnectionPosition,
+  OverlayRef,
+  RepositionScrollStrategy,
+  ScrollStrategy,
   VerticalConnectionPos,
 } from '@angular/cdk/overlay';
 import {Platform} from '@angular/cdk/platform';
 import {ComponentPortal} from '@angular/cdk/portal';
-import {first} from '@angular/cdk/rxjs';
+import {first} from 'rxjs/operators/first';
+import {merge} from 'rxjs/observable/merge';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
   ChangeDetectionStrategy,
@@ -187,7 +188,7 @@ export class MatTooltip implements OnDestroy {
         renderer.listen(_elementRef.nativeElement, 'mouseleave', () => this.hide());
     }
 
-    _focusMonitor.monitor(_elementRef.nativeElement, renderer, false).subscribe(origin => {
+    _focusMonitor.monitor(_elementRef.nativeElement, false).subscribe(origin => {
       // Note that the focus monitor runs outside the Angular zone.
       if (!origin) {
         _ngZone.run(() => this.hide(0));
@@ -255,13 +256,13 @@ export class MatTooltip implements OnDestroy {
 
   /** Create the tooltip to display */
   private _createTooltip(): void {
-    let overlayRef = this._createOverlay();
-    let portal = new ComponentPortal(TooltipComponent, this._viewContainerRef);
+    const overlayRef = this._createOverlay();
+    const portal = new ComponentPortal(TooltipComponent, this._viewContainerRef);
 
     this._tooltipInstance = overlayRef.attach(portal).instance;
 
-    // Dispose the overlay when finished the shown tooltip.
-    this._tooltipInstance!.afterHidden().subscribe(() => {
+    // Dispose of the tooltip when the overlay is detached.
+    merge(this._tooltipInstance!.afterHidden(), overlayRef.detachments()).subscribe(() => {
       // Check first if the tooltip has already been removed through this components destroy.
       if (this._tooltipInstance) {
         this._disposeTooltip();
@@ -387,7 +388,7 @@ export class MatTooltip implements OnDestroy {
       this._tooltipInstance.message = this.message;
       this._tooltipInstance._markForCheck();
 
-      first.call(this._ngZone.onMicrotaskEmpty.asObservable()).subscribe(() => {
+      this._ngZone.onMicrotaskEmpty.asObservable().pipe(first()).subscribe(() => {
         if (this._tooltipInstance) {
           this._overlayRef!.updatePosition();
         }

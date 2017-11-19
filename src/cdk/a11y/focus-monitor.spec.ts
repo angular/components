@@ -10,7 +10,6 @@ import {A11yModule} from './index';
 describe('FocusMonitor', () => {
   let fixture: ComponentFixture<PlainButton>;
   let buttonElement: HTMLElement;
-  let buttonRenderer: Renderer2;
   let focusMonitor: FocusMonitor;
   let changeHandler: (origin: FocusOrigin) => void;
 
@@ -28,11 +27,10 @@ describe('FocusMonitor', () => {
     fixture.detectChanges();
 
     buttonElement = fixture.debugElement.query(By.css('button')).nativeElement;
-    buttonRenderer = fixture.componentInstance.renderer;
     focusMonitor = fm;
 
     changeHandler = jasmine.createSpy('focus origin change handler');
-    focusMonitor.monitor(buttonElement, buttonRenderer, false).subscribe(changeHandler);
+    focusMonitor.monitor(buttonElement, false).subscribe(changeHandler);
     patchElementFocus(buttonElement);
   }));
 
@@ -80,7 +78,7 @@ describe('FocusMonitor', () => {
 
   it('should detect focus via touch', fakeAsync(() => {
     // Simulate focus via touch.
-    dispatchMouseEvent(buttonElement, 'touchstart');
+    dispatchFakeEvent(buttonElement, 'touchstart');
     buttonElement.focus();
     fixture.detectChanges();
     tick(TOUCH_BUFFER_MS);
@@ -262,7 +260,7 @@ describe('cdkMonitorFocus', () => {
 
     it('should detect focus via touch', fakeAsync(() => {
       // Simulate focus via touch.
-      dispatchMouseEvent(buttonElement, 'touchstart');
+      dispatchFakeEvent(buttonElement, 'touchstart');
       buttonElement.focus();
       fixture.detectChanges();
       tick(TOUCH_BUFFER_MS);

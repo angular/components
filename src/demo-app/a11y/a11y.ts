@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
@@ -50,6 +58,7 @@ export class AccessibilityDemo implements OnDestroy {
     {name: 'Slide toggle', route: 'slide-toggle'},
     {name: 'Slider', route: 'slider'},
     {name: 'Snack bar', route: 'snack-bar'},
+    {name: 'Table', route: 'table'},
     {name: 'Tabs', route: 'tabs'},
     {name: 'Toolbar', route: 'toolbar'},
     {name: 'Tooltip', route: 'tooltip'},

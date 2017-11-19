@@ -19,7 +19,7 @@ import {
   OnDestroy,
   Optional,
   Output,
-  Renderer2,
+  Renderer2
 } from '@angular/core';
 import {
   AbstractControl,
@@ -29,12 +29,12 @@ import {
   ValidationErrors,
   Validator,
   ValidatorFn,
-  Validators,
+  Validators
 } from '@angular/forms';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
+import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs/Subscription';
-import {coerceDateProperty} from './coerce-date-property';
 import {MatDatepicker} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
 
@@ -71,7 +71,11 @@ export class MatDatepickerInputEvent<D> {
 /** Directive used to connect an input to a MatDatepicker. */
 @Directive({
   selector: 'input[matDatepicker]',
-  providers: [MAT_DATEPICKER_VALUE_ACCESSOR, MAT_DATEPICKER_VALIDATORS],
+  providers: [
+    MAT_DATEPICKER_VALUE_ACCESSOR,
+    MAT_DATEPICKER_VALIDATORS,
+    {provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: MatDatepickerInput},
+  ],
   host: {
     '[attr.aria-haspopup]': 'true',
     '[attr.aria-owns]': '(_datepicker?.opened && _datepicker.id) || null',
@@ -113,10 +117,9 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     return this._value;
   }
   set value(value: D | null) {
-    value = coerceDateProperty(this._dateAdapter, value);
+    value = this._dateAdapter.deserialize(value);
     this._lastValueValid = !value || this._dateAdapter.isValid(value);
     value = this._getValidDateOrNull(value);
-
     let oldDate = this.value;
     this._value = value;
     this._renderer.setProperty(this._elementRef.nativeElement, 'value',
@@ -131,7 +134,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   @Input()
   get min(): D | null { return this._min; }
   set min(value: D | null) {
-    this._min = coerceDateProperty(this._dateAdapter, value);
+    this._min = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._validatorOnChange();
   }
   private _min: D | null;
@@ -140,7 +143,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   @Input()
   get max(): D | null { return this._max; }
   set max(value: D | null) {
-    this._max = coerceDateProperty(this._dateAdapter, value);
+    this._max = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._validatorOnChange();
   }
   private _max: D | null;
@@ -188,7 +191,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** The form control validator for the min date. */
   private _minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = coerceDateProperty(this._dateAdapter, control.value);
+    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
     return (!this.min || !controlValue ||
         this._dateAdapter.compareDate(this.min, controlValue) <= 0) ?
         null : {'matDatepickerMin': {'min': this.min, 'actual': controlValue}};
@@ -196,7 +199,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** The form control validator for the max date. */
   private _maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = coerceDateProperty(this._dateAdapter, control.value);
+    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
     return (!this.max || !controlValue ||
         this._dateAdapter.compareDate(this.max, controlValue) >= 0) ?
         null : {'matDatepickerMax': {'max': this.max, 'actual': controlValue}};
@@ -204,7 +207,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** The form control validator for the date filter. */
   private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = coerceDateProperty(this._dateAdapter, control.value);
+    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
     return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ?
         null : {'matDatepickerFilter': true};
   }

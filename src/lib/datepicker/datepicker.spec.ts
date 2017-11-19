@@ -30,6 +30,8 @@ import {MatDatepickerIntl, MatDatepickerModule} from './index';
 
 
 describe('MatDatepicker', () => {
+  const SUPPORTS_INTL = typeof Intl != 'undefined';
+
   afterEach(inject([OverlayContainer], (container: OverlayContainer) => {
     container.getContainerElement().parentNode!.removeChild(container.getContainerElement());
   }));
@@ -60,6 +62,7 @@ describe('MatDatepicker', () => {
           MultiInputDatepicker,
           NoInputDatepicker,
           StandardDatepicker,
+          DatepickerWithEvents,
         ],
       });
 
@@ -81,6 +84,12 @@ describe('MatDatepicker', () => {
         testComponent.datepicker.close();
         fixture.detectChanges();
       }));
+
+      it('should initialize with correct value shown in input', () => {
+        if (SUPPORTS_INTL) {
+          expect(fixture.nativeElement.querySelector('input').value).toBe('1/1/2020');
+        }
+      });
 
       it('open non-touch should open popup', () => {
         expect(document.querySelector('.cdk-overlay-pane.mat-datepicker-popup')).toBeNull();
@@ -272,14 +281,10 @@ describe('MatDatepicker', () => {
         expect((ownedElement as Element).tagName.toLowerCase()).toBe('mat-calendar');
       });
 
-      it('should throw when given wrong data type', () => {
+      it('should not throw when given wrong data type', () => {
         testComponent.date = '1/1/2017' as any;
 
-        expect(() => fixture.detectChanges()).toThrowError(
-            'Datepicker: Value must be either a date object recognized by the DateAdapter or an ' +
-            'ISO 8601 string. Instead got: 1/1/2017');
-
-        testComponent.date = null;
+        expect(() => fixture.detectChanges()).not.toThrow();
       });
     });
 
@@ -910,6 +915,36 @@ describe('MatDatepicker', () => {
         });
       }));
     });
+
+    describe('with events', () => {
+      let fixture: ComponentFixture<DatepickerWithEvents>;
+      let testComponent: DatepickerWithEvents;
+
+      beforeEach(async(() => {
+        fixture = TestBed.createComponent(DatepickerWithEvents);
+        fixture.detectChanges();
+        testComponent = fixture.componentInstance;
+      }));
+
+      it('should dispatch an event when a datepicker is opened', () => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+
+        expect(testComponent.openedSpy).toHaveBeenCalled();
+      });
+
+      it('should dispatch an event when a datepicker is closed', () => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+
+        testComponent.datepicker.close();
+        fixture.detectChanges();
+
+        expect(testComponent.closedSpy).toHaveBeenCalled();
+      });
+
+    });
+
   });
 
   describe('with missing DateAdapter and MAT_DATE_FORMATS', () => {
@@ -1243,4 +1278,17 @@ class DatepickerWithISOStrings {
   startAt = new Date(2017, JUL, 1).toISOString();
   @ViewChild('d') datepicker: MatDatepicker<Date>;
   @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+}
+
+@Component({
+  template: `
+    <input [(ngModel)]="selected" [matDatepicker]="d">
+    <mat-datepicker (opened)="openedSpy()" (closed)="closedSpy()" #d></mat-datepicker>
+  `,
+})
+class DatepickerWithEvents {
+  selected: Date | null = null;
+  openedSpy = jasmine.createSpy('opened spy');
+  closedSpy = jasmine.createSpy('closed spy');
+  @ViewChild('d') datepicker: MatDatepicker<Date>;
 }

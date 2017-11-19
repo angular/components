@@ -8,7 +8,7 @@
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
-import {startWith} from '@angular/cdk/rxjs';
+import {startWith} from 'rxjs/operators/startWith';
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -32,6 +32,7 @@ import {CanDisableRipple, mixinDisableRipple} from '@angular/material/core';
 import {merge} from 'rxjs/observable/merge';
 import {of as observableOf} from 'rxjs/observable/of';
 import {Subscription} from 'rxjs/Subscription';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {MatInkBar} from './ink-bar';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {ViewportRuler} from '@angular/cdk/scrolling';
@@ -121,6 +122,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   @Input()
   get selectedIndex(): number { return this._selectedIndex; }
   set selectedIndex(value: number) {
+    value = coerceNumberProperty(value);
     this._selectedIndexChanged = this._selectedIndex != value;
     this._selectedIndex = value;
     this._focusIndex = value;
@@ -190,7 +192,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     const dirChange = this._dir ? this._dir.change : observableOf(null);
     const resize = this._viewportRuler.change(150);
 
-    this._realignInkBar = startWith.call(merge(dirChange, resize), null).subscribe(() => {
+    this._realignInkBar = merge(dirChange, resize).pipe(startWith(null)).subscribe(() => {
       this._updatePagination();
       this._alignInkBarToSelectedTab();
     });

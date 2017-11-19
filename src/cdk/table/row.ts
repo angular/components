@@ -37,7 +37,7 @@ export abstract class BaseRowDef {
   /** Differ used to check if any changes were made to the columns. */
   protected _columnsDiffer: IterableDiffer<any>;
 
-  constructor(public template: TemplateRef<any>,
+  constructor(/** @docs-private */ public template: TemplateRef<any>,
               protected _differs: IterableDiffers) { }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -84,12 +84,12 @@ export class CdkHeaderRowDef extends BaseRowDef {
 })
 export class CdkRowDef<T> extends BaseRowDef {
   /**
-   * Function that should return true if this row template should be used for the provided row data
-   * and index. If left undefined, this row will be considered the default row template to use when
-   * no other when functions return true for the data.
+   * Function that should return true if this row template should be used for the provided index
+   * and row data. If left undefined, this row will be considered the default row template to use
+   * when no other when functions return true for the data.
    * For every row, there must be at least one when function that passes or an undefined to default.
    */
-  when: (rowData: T, index: number) => boolean;
+  when: (index: number, rowData: T) => boolean;
 
   // TODO(andrewseguin): Add an input for providing a switch function to determine
   //   if this template should be used.
@@ -141,7 +141,7 @@ export class CdkCellOutlet {
    * a handle to provide that component's cells and context. After init, the CdkCellOutlet will
    * construct the cells with the provided context.
    */
-  static mostRecentCellOutlet: CdkCellOutlet;
+  static mostRecentCellOutlet: CdkCellOutlet | null = null;
 
   constructor(public _viewContainer: ViewContainerRef) {
     CdkCellOutlet.mostRecentCellOutlet = this;

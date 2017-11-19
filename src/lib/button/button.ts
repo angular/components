@@ -6,6 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {Platform} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -19,7 +21,6 @@ import {
   Self,
   ViewEncapsulation,
 } from '@angular/core';
-import {Platform} from '@angular/cdk/platform';
 import {
   CanColor,
   CanDisable,
@@ -28,7 +29,6 @@ import {
   mixinDisabled,
   mixinDisableRipple
 } from '@angular/material/core';
-import {FocusMonitor} from '@angular/cdk/a11y';
 
 
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
@@ -131,17 +131,17 @@ export class MatButton extends _MatButtonMixinBase
     implements OnDestroy, CanDisable, CanColor, CanDisableRipple {
 
   /** Whether the button is round. */
-  _isRoundButton: boolean = this._hasAttributeWithPrefix('fab', 'mini-fab');
+  _isRoundButton: boolean = this._hasHostAttributes('mat-fab', 'mat-mini-fab');
 
   /** Whether the button is icon button. */
-  _isIconButton: boolean = this._hasAttributeWithPrefix('icon-button');
+  _isIconButton: boolean = this._hasHostAttributes('mat-icon-button');
 
   constructor(renderer: Renderer2,
               elementRef: ElementRef,
               private _platform: Platform,
               private _focusMonitor: FocusMonitor) {
     super(renderer, elementRef);
-    this._focusMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
+    this._focusMonitor.monitor(this._elementRef.nativeElement, true);
   }
 
   ngOnDestroy() {
@@ -161,8 +161,8 @@ export class MatButton extends _MatButtonMixinBase
     return this.disableRipple || this.disabled;
   }
 
-  /** Gets whether the button has one of the given attributes with a 'mat-' prefix. */
-  _hasAttributeWithPrefix(...unprefixedAttributeNames: string[]) {
+  /** Gets whether the button has one of the given attributes. */
+  _hasHostAttributes(...attributes: string[]) {
     // If not on the browser, say that there are none of the attributes present.
     // Since these only affect how the ripple displays (and ripples only happen on the client),
     // detecting these attributes isn't necessary when not on the browser.
@@ -170,9 +170,7 @@ export class MatButton extends _MatButtonMixinBase
       return false;
     }
 
-    return unprefixedAttributeNames.some(suffix => {
-      return this._getHostElement().hasAttribute('mat-' + suffix);
-    });
+    return attributes.some(attribute => this._getHostElement().hasAttribute(attribute));
   }
 }
 

@@ -26,9 +26,13 @@ import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {CanDisable, mixinDisabled} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
 import {MatAccordion} from './accordion';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /** Workaround for https://github.com/angular/angular/issues/17849 */
 export const _CdkAccordionItem = CdkAccordionItem;
+
+/** Time and timing curve for expansion panel animations. */
+export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,1)';
 
 // Boilerplate for applying mixins to MatExpansionPanel.
 /** @docs-private */
@@ -51,9 +55,6 @@ export const _MatExpansionPanelMixinBase = mixinDisabled(MatExpansionPanelBase);
 /** MatExpansionPanel's states. */
 export type MatExpansionPanelState = 'expanded' | 'collapsed';
 
-/** Time and timing curve for expansion panel animations. */
-export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,1)';
-
 /**
  * <mat-expansion-panel> component.
  *
@@ -72,6 +73,7 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   inputs: ['disabled', 'expanded'],
+  outputs: ['opened', 'closed'],
   host: {
     'class': 'mat-expansion-panel',
     '[class.mat-expanded]': 'expanded',
@@ -90,8 +92,16 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,
 })
 export class MatExpansionPanel extends _MatExpansionPanelMixinBase
     implements CanDisable, OnChanges, OnDestroy {
+
   /** Whether the toggle indicator should be hidden. */
-  @Input() hideToggle: boolean = false;
+  @Input()
+  get hideToggle(): boolean {
+    return this._hideToggle;
+  }
+  set hideToggle(value: boolean) {
+    this._hideToggle = coerceBooleanProperty(value);
+  }
+  private _hideToggle = false;
 
   /** Stream that emits for changes in `@Input` properties. */
   _inputChanges = new Subject<SimpleChanges>();

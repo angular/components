@@ -39,12 +39,12 @@ describe('BlockScrollStrategy', () => {
   afterEach(inject([OverlayContainer], (container: OverlayContainer) => {
     overlayRef.dispose();
     document.body.removeChild(forceScrollElement);
-    setScrollPosition(0, 0);
+    window.scroll(0, 0);
     container.getContainerElement().parentNode!.removeChild(container.getContainerElement());
   }));
 
   it('should toggle scroll blocking along the y axis', skipIOS(() => {
-    setScrollPosition(0, 100);
+    window.scroll(0, 100);
     expect(viewport.getViewportScrollPosition().top)
         .toBe(100, 'Expected viewport to be scrollable initially.');
 
@@ -52,7 +52,7 @@ describe('BlockScrollStrategy', () => {
     expect(document.documentElement.style.top)
         .toBe('-100px', 'Expected <html> element to be offset by the previous scroll amount.');
 
-    setScrollPosition(0, 300);
+    window.scroll(0, 300);
     expect(viewport.getViewportScrollPosition().top)
         .toBe(100, 'Expected the viewport not to scroll.');
 
@@ -60,7 +60,7 @@ describe('BlockScrollStrategy', () => {
     expect(viewport.getViewportScrollPosition().top)
         .toBe(100, 'Expected old scroll position to have bee restored after disabling.');
 
-    setScrollPosition(0, 300);
+    window.scroll(0, 300);
     expect(viewport.getViewportScrollPosition().top)
         .toBe(300, 'Expected user to be able to scroll after disabling.');
   }));
@@ -70,7 +70,7 @@ describe('BlockScrollStrategy', () => {
     forceScrollElement.style.height = '100px';
     forceScrollElement.style.width = '3000px';
 
-    setScrollPosition(100, 0);
+    window.scroll(100, 0);
     expect(viewport.getViewportScrollPosition().left)
         .toBe(100, 'Expected viewport to be scrollable initially.');
 
@@ -78,7 +78,7 @@ describe('BlockScrollStrategy', () => {
     expect(document.documentElement.style.left)
         .toBe('-100px', 'Expected <html> element to be offset by the previous scroll amount.');
 
-    setScrollPosition(300, 0);
+    window.scroll(300, 0);
     expect(viewport.getViewportScrollPosition().left)
         .toBe(100, 'Expected the viewport not to scroll.');
 
@@ -86,7 +86,7 @@ describe('BlockScrollStrategy', () => {
     expect(viewport.getViewportScrollPosition().left)
         .toBe(100, 'Expected old scroll position to have bee restored after disabling.');
 
-    setScrollPosition(300, 0);
+    window.scroll(300, 0);
     expect(viewport.getViewportScrollPosition().left)
         .toBe(300, 'Expected user to be able to scroll after disabling.');
   }));
@@ -136,13 +136,33 @@ describe('BlockScrollStrategy', () => {
     expect(document.documentElement.getBoundingClientRect().width).toBe(previousContentWidth);
   });
 
+  it('should not clobber user-defined scroll-behavior', skipIOS(() => {
+    const root = document.documentElement;
+    const body = document.body;
+
+    root.style['scrollBehavior'] = body.style['scrollBehavior'] = 'smooth';
+
+    // Get the value via the style declaration in order to
+    // handle browsers that don't support the property yet.
+    const initialRootValue = root.style['scrollBehavior'];
+    const initialBodyValue = root.style['scrollBehavior'];
+
+    overlayRef.attach(componentPortal);
+    overlayRef.detach();
+
+    expect(root.style['scrollBehavior']).toBe(initialRootValue);
+    expect(body.style['scrollBehavior']).toBe(initialBodyValue);
+
+    // Avoid bleeding styles into other tests.
+    root.style['scrollBehavior'] = body.style['scrollBehavior'] = '';
+  }));
+
   /**
    * Skips the specified test, if it is being executed on iOS. This is necessary, because
    * programmatic scrolling inside the Karma iframe doesn't work on iOS, which renders these
    * tests unusable. For example, something as basic as the following won't work:
    * ```
    * window.scroll(0, 100);
-   * viewport._cacheViewportGeometry();
    * expect(viewport.getViewportScrollPosition().top).toBe(100);
    * ```
    * @param spec Test to be executed or skipped.
@@ -153,16 +173,6 @@ describe('BlockScrollStrategy', () => {
         spec();
       }
     };
-  }
-
-  /**
-   * Scrolls the viewport and clears the cache.
-   * @param x Amount to scroll along the x axis.
-   * @param y Amount to scroll along the y axis.
-   */
-  function setScrollPosition(x: number, y: number) {
-    window.scroll(x, y);
-    viewport._cacheViewportGeometry();
   }
 
 });

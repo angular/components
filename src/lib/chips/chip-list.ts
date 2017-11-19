@@ -11,7 +11,7 @@ import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {BACKSPACE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
-import {startWith} from '@angular/cdk/rxjs';
+import {startWith} from 'rxjs/operators/startWith';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -335,7 +335,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
     });
 
     // When the list changes, re-subscribe
-    this._changeSubscription = startWith.call(this.chips.changes, null).subscribe(() => {
+    this._changeSubscription = this.chips.changes.pipe(startWith(null)).subscribe(() => {
       this._resetChips();
 
       // Reset chips selected/deselected status
@@ -527,7 +527,6 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
   private _isInputEmpty(element: HTMLElement): boolean {
     if (element && element.nodeName.toLowerCase() === 'input') {
       let input = element as HTMLInputElement;
-
       return !input.value;
     }
 
@@ -547,7 +546,14 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
       // Shift focus to the active item. Note that we shouldn't do this in multiple
       // mode, because we don't know what chip the user interacted with last.
       if (correspondingChip) {
-        this._keyManager.setActiveItem(this.chips.toArray().indexOf(correspondingChip));
+        const correspondingChipIndex = this.chips.toArray().indexOf(correspondingChip);
+
+        if (isUserInput) {
+          this._keyManager.setActiveItem(correspondingChipIndex);
+        } else {
+          this._keyManager.updateActiveItemIndex(correspondingChipIndex);
+        }
+
       }
     }
   }

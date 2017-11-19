@@ -26,7 +26,7 @@ import {
 } from '@angular/core';
 import {HammerInput, HammerDirection} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {Subscription} from 'rxjs/Subscription';
 import {MatTab} from './tab';
 import {MatTabHeader} from './tab-header';
@@ -112,7 +112,9 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
 
   /** The index of the active tab. */
   @Input()
-  set selectedIndex(value: number | null) { this._indexToSelect = value; }
+  set selectedIndex(value: number | null) {
+    this._indexToSelect = coerceNumberProperty(value, null);
+  }
   get selectedIndex(): number | null { return this._selectedIndex; }
   private _selectedIndex: number | null = null;
 

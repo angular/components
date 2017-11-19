@@ -9,7 +9,7 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
-import {filter} from '@angular/cdk/rxjs';
+import {filter} from 'rxjs/operators/filter';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -19,7 +19,6 @@ import {
   Host,
   Input,
   OnDestroy,
-  Renderer2,
   ViewEncapsulation,
 } from '@angular/core';
 import {merge} from 'rxjs/observable/merge';
@@ -85,7 +84,6 @@ export class MatExpansionPanelHeader implements OnDestroy {
   private _parentChangeSubscription = Subscription.EMPTY;
 
   constructor(
-    renderer: Renderer2,
     @Host() public panel: MatExpansionPanel,
     private _element: ElementRef,
     private _focusMonitor: FocusMonitor,
@@ -96,11 +94,11 @@ export class MatExpansionPanelHeader implements OnDestroy {
     this._parentChangeSubscription = merge(
       panel.opened,
       panel.closed,
-      filter.call(panel._inputChanges, changes => !!(changes.hideToggle || changes.disabled))
+      panel._inputChanges.pipe(filter(changes => !!(changes.hideToggle || changes.disabled)))
     )
     .subscribe(() => this._changeDetectorRef.markForCheck());
 
-    _focusMonitor.monitor(_element.nativeElement, renderer, false);
+    _focusMonitor.monitor(_element.nativeElement, false);
   }
 
   /** Height of the header while the panel is expanded. */

@@ -7,7 +7,8 @@
  */
 
 import {OverlayRef, GlobalPositionStrategy} from '@angular/cdk/overlay';
-import {filter, first, RxChain} from '@angular/cdk/rxjs';
+import {filter} from 'rxjs/operators/filter';
+import {first} from 'rxjs/operators/first';
 import {DialogPosition} from './dialog-config';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
@@ -44,27 +45,29 @@ export class MatDialogRef<T> {
   constructor(
     private _overlayRef: OverlayRef,
     private _containerInstance: MatDialogContainer,
-    public readonly id: string = `mat-dialog-${uniqueId++}`) {
+    readonly id: string = `mat-dialog-${uniqueId++}`) {
 
     // Emit when opening animation completes
-    RxChain.from(_containerInstance._animationStateChanged)
-      .call(filter, event => event.phaseName === 'done' && event.toState === 'enter')
-      .call(first)
-      .subscribe(() => {
-        this._afterOpen.next();
-        this._afterOpen.complete();
-      });
+    _containerInstance._animationStateChanged.pipe(
+      filter(event => event.phaseName === 'done' && event.toState === 'enter'),
+      first()
+    )
+    .subscribe(() => {
+      this._afterOpen.next();
+      this._afterOpen.complete();
+    });
 
     // Dispose overlay when closing animation is complete
-    RxChain.from(_containerInstance._animationStateChanged)
-      .call(filter, event => event.phaseName === 'done' && event.toState === 'exit')
-      .call(first)
-      .subscribe(() => {
-        this._overlayRef.dispose();
-        this._afterClosed.next(this._result);
-        this._afterClosed.complete();
-        this.componentInstance = null!;
-      });
+    _containerInstance._animationStateChanged.pipe(
+      filter(event => event.phaseName === 'done' && event.toState === 'exit'),
+      first()
+    )
+    .subscribe(() => {
+      this._overlayRef.dispose();
+      this._afterClosed.next(this._result);
+      this._afterClosed.complete();
+      this.componentInstance = null!;
+    });
   }
 
   /**
@@ -75,14 +78,15 @@ export class MatDialogRef<T> {
     this._result = dialogResult;
 
     // Transition the backdrop in parallel to the dialog.
-    RxChain.from(this._containerInstance._animationStateChanged)
-      .call(filter, event => event.phaseName === 'start')
-      .call(first)
-      .subscribe(() => {
-        this._beforeClose.next(dialogResult);
-        this._beforeClose.complete();
-        this._overlayRef.detachBackdrop();
-      });
+    this._containerInstance._animationStateChanged.pipe(
+      filter(event => event.phaseName === 'start'),
+      first()
+    )
+    .subscribe(() => {
+      this._beforeClose.next(dialogResult);
+      this._beforeClose.complete();
+      this._overlayRef.detachBackdrop();
+    });
 
     this._containerInstance._startExitAnimation();
   }
@@ -113,6 +117,13 @@ export class MatDialogRef<T> {
    */
   backdropClick(): Observable<void> {
     return this._overlayRef.backdropClick();
+  }
+
+  /**
+   * Gets an observable that emits when keydown events are targeted on the overlay.
+   */
+  keydownEvents(): Observable<KeyboardEvent> {
+    return this._overlayRef.keydownEvents();
   }
 
   /**
@@ -148,11 +159,6 @@ export class MatDialogRef<T> {
     this._getPositionStrategy().width(width).height(height);
     this._overlayRef.updatePosition();
     return this;
-  }
-
-  /** Returns whether the dialog is animating. */
-  _isAnimating(): boolean {
-    return this._containerInstance._isAnimating;
   }
 
   /** Fetches the position strategy object from the overlay ref. */
