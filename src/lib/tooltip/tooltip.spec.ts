@@ -53,7 +53,7 @@ describe('MatTooltip', () => {
           return {getContainerElement: () => overlayContainerElement};
         }},
         {provide: Directionality, useFactory: () => {
-          return dir = { value: 'ltr' };
+          return dir = {value: 'ltr'};
         }}
       ]
     });
@@ -80,7 +80,7 @@ describe('MatTooltip', () => {
     });
 
     it('should show and hide the tooltip', fakeAsync(() => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.show();
       tick(0); // Tick for the show delay (default is 0)
@@ -110,11 +110,31 @@ describe('MatTooltip', () => {
 
       // On animation complete, should expect that the tooltip has been detached.
       flushMicrotasks();
-      expect(tooltipDirective._tooltipInstance).toBeNull();
+      assertTooltipInstance(tooltipDirective, false);
     }));
 
+    it('should be able to re-open a tooltip if it was closed by detaching the overlay',
+      fakeAsync(() => {
+        tooltipDirective.show();
+        tick(0);
+        expect(tooltipDirective._isTooltipVisible()).toBe(true);
+        fixture.detectChanges();
+        tick(500);
+
+        tooltipDirective._overlayRef!.detach();
+        tick(0);
+        fixture.detectChanges();
+        expect(tooltipDirective._isTooltipVisible()).toBe(false);
+        flushMicrotasks();
+        assertTooltipInstance(tooltipDirective, false);
+
+        tooltipDirective.show();
+        tick(0);
+        expect(tooltipDirective._isTooltipVisible()).toBe(true);
+      }));
+
     it('should show with delay', fakeAsync(() => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      assertTooltipInstance(tooltipDirective, false);
 
       const tooltipDelay = 1000;
       tooltipDirective.show(tooltipDelay);
@@ -172,7 +192,7 @@ describe('MatTooltip', () => {
     }));
 
     it('should not show if hide is called before delay finishes', async(() => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      assertTooltipInstance(tooltipDirective, false);
 
       const tooltipDelay = 1000;
 
@@ -189,27 +209,27 @@ describe('MatTooltip', () => {
     }));
 
     it('should not show tooltip if message is not present or empty', () => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.message = undefined!;
       fixture.detectChanges();
       tooltipDirective.show();
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.message = null!;
       fixture.detectChanges();
       tooltipDirective.show();
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.message = '';
       fixture.detectChanges();
       tooltipDirective.show();
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.message = '   ';
       fixture.detectChanges();
       tooltipDirective.show();
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      assertTooltipInstance(tooltipDirective, false);
     });
 
     it('should not follow through with hide if show is called after', fakeAsync(() => {
@@ -232,7 +252,7 @@ describe('MatTooltip', () => {
       const initialPosition: TooltipPosition = 'below';
       const changedPosition: TooltipPosition = 'above';
 
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.position = initialPosition;
       tooltipDirective.show();
@@ -244,12 +264,12 @@ describe('MatTooltip', () => {
 
       // Different position value should destroy the tooltip
       tooltipDirective.position = changedPosition;
-      expect(tooltipDirective._tooltipInstance).toBeNull();
+      assertTooltipInstance(tooltipDirective, false);
       expect(tooltipDirective._overlayRef).toBeNull();
     });
 
     it('should be able to modify the tooltip message', fakeAsync(() => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.show();
       tick(0); // Tick for the show delay (default is 0)
@@ -266,7 +286,7 @@ describe('MatTooltip', () => {
     }));
 
     it('should allow extra classes to be set on the tooltip', fakeAsync(() => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.show();
       tick(0); // Tick for the show delay (default is 0)
@@ -490,7 +510,7 @@ describe('MatTooltip', () => {
     }));
 
     it('should not show the tooltip on progammatic focus', fakeAsync(() => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      assertTooltipInstance(tooltipDirective, false);
 
       buttonElement.focus();
       tick(0);
@@ -565,7 +585,7 @@ describe('MatTooltip', () => {
     });
 
     it('should hide tooltip if clipped after changing positions', fakeAsync(() => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      assertTooltipInstance(tooltipDirective, false);
 
       // Show the tooltip and tick for the show delay (default is 0)
       tooltipDirective.show();
@@ -606,7 +626,7 @@ describe('MatTooltip', () => {
     });
 
     it('should show and hide the tooltip', fakeAsync(() => {
-      expect(tooltipDirective._tooltipInstance).toBeUndefined();
+      assertTooltipInstance(tooltipDirective, false);
 
       tooltipDirective.show();
       tick(0); // Tick for the show delay (default is 0)
@@ -634,7 +654,7 @@ describe('MatTooltip', () => {
 
       // On animation complete, should expect that the tooltip has been detached.
       flushMicrotasks();
-      expect(tooltipDirective._tooltipInstance).toBeNull();
+      assertTooltipInstance(tooltipDirective, false);
     }));
 
     it('should have rendered the tooltip text on init', fakeAsync(() => {
@@ -730,4 +750,12 @@ class DynamicTooltipsDemo {
   getButtons() {
     return this._elementRef.nativeElement.querySelectorAll('button');
   }
+}
+
+/** Asserts whether a tooltip directive has a tooltip instance. */
+function assertTooltipInstance(tooltip: MatTooltip, shouldExist: boolean): void {
+  // Note that we have to cast this to a boolean, because Jasmine will go into an infinite loop
+  // if it tries to stringify the `_tooltipInstance` when an assertion fails. The infinite loop
+  // happens due to the `_tooltipInstance` having a circular structure.
+  expect(!!tooltip._tooltipInstance).toBe(shouldExist);
 }

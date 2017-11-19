@@ -110,7 +110,7 @@ describe('MatInput without forms', function () {
 
   it('should not be treated as empty if type is date',
       inject([Platform], (platform: Platform) => {
-        if (!(platform.TRIDENT || platform.FIREFOX || (platform.SAFARI && !platform.IOS))) {
+        if (!(platform.TRIDENT || (platform.SAFARI && !platform.IOS))) {
           let fixture = TestBed.createComponent(MatInputDateTestController);
           fixture.detectChanges();
 
@@ -120,10 +120,10 @@ describe('MatInput without forms', function () {
         }
       }));
 
-  // Firefox, Safari Desktop and IE don't support type="date" and fallback to type="text".
-  it('should be treated as empty if type is date on Firefox and IE',
+  // Safari Desktop and IE don't support type="date" and fallback to type="text".
+  it('should be treated as empty if type is date in Safari Desktop or IE',
       inject([Platform], (platform: Platform) => {
-        if (platform.TRIDENT || platform.FIREFOX || (platform.SAFARI && !platform.IOS)) {
+        if (platform.TRIDENT || (platform.SAFARI && !platform.IOS)) {
           let fixture = TestBed.createComponent(MatInputDateTestController);
           fixture.detectChanges();
 
@@ -223,7 +223,7 @@ describe('MatInput without forms', function () {
         fixture.debugElement.query(By.css('label')).nativeElement;
 
     expect(inputElement.id).toBeTruthy();
-    expect(inputElement.id).toEqual(labelElement.getAttribute('for'));
+    expect(inputElement.id).toEqual(labelElement.getAttribute('for')!);
   });
 
   it('should add aria-owns to the label for the associated control', () => {
@@ -236,6 +236,23 @@ describe('MatInput without forms', function () {
         fixture.debugElement.query(By.css('label')).nativeElement;
 
     expect(labelElement.getAttribute('aria-owns')).toBe(inputElement.id);
+  });
+
+  it('should add aria-required reflecting the required state', () => {
+    const fixture = TestBed.createComponent(MatInputWithRequired);
+    fixture.detectChanges();
+
+    const inputElement: HTMLInputElement =
+        fixture.debugElement.query(By.css('input')).nativeElement;
+
+    expect(inputElement.getAttribute('aria-required'))
+        .toBe('false', 'Expected aria-required to reflect required state of false');
+
+    fixture.componentInstance.required = true;
+    fixture.detectChanges();
+
+    expect(inputElement.getAttribute('aria-required'))
+        .toBe('true', 'Expected aria-required to reflect required state of true');
   });
 
   it('should not overwrite existing id', () => {

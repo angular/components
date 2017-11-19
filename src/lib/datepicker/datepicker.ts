@@ -84,6 +84,7 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER = {
     '[class.mat-datepicker-content-touch]': 'datepicker.touchUi',
     '(keydown)': '_handleKeydown($event)',
   },
+  exportAs: 'matDatepickerContent',
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -144,7 +145,14 @@ export class MatDatepicker<D> implements OnDestroy {
    * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather
    * than a popup and elements have more padding to allow for bigger touch targets.
    */
-  @Input() touchUi: boolean = false;
+  @Input()
+  get touchUi(): boolean {
+    return this._touchUi;
+  }
+  set touchUi(value: boolean) {
+    this._touchUi = coerceBooleanProperty(value);
+  }
+  private _touchUi = false;
 
   /** Whether the datepicker pop-up should be disabled. */
   @Input()
@@ -170,6 +178,12 @@ export class MatDatepicker<D> implements OnDestroy {
 
   /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
   @Input() panelClass: string | string[];
+
+  /** Emits when the datepicker has been opened. */
+  @Output('opened') openedStream: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Emits when the datepicker has been closed. */
+  @Output('closed') closedStream: EventEmitter<void> = new EventEmitter<void>();
 
   /** Whether the calendar is open. */
   opened: boolean = false;
@@ -275,6 +289,7 @@ export class MatDatepicker<D> implements OnDestroy {
 
     this.touchUi ? this._openAsDialog() : this._openAsPopup();
     this.opened = true;
+    this.openedStream.emit();
   }
 
   /** Close the calendar. */
@@ -300,6 +315,7 @@ export class MatDatepicker<D> implements OnDestroy {
     }
 
     this.opened = false;
+    this.closedStream.emit();
   }
 
   /** Open the calendar as a dialog. */
