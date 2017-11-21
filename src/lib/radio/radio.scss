@@ -5,6 +5,13 @@
 $mat-radio-size: $mat-toggle-size !default;
 $mat-radio-ripple-radius: 25px;
 
+.mat-radio-group {
+  &:focus,
+  &:hover {
+    outline: none;
+  }
+}
+
 // Top-level host container.
 .mat-radio-button {
   display: inline-block;

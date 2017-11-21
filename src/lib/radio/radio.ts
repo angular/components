@@ -12,6 +12,7 @@ import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
   AfterContentInit,
   AfterViewInit,
+  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -34,10 +35,12 @@ import {
   CanColor,
   CanDisable,
   CanDisableRipple,
+  HasTabIndex,
   MatRipple,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple,
+  mixinTabIndex,
   RippleConfig,
   RippleRef,
 } from '@angular/material/core';
@@ -68,7 +71,7 @@ export class MatRadioChange {
 // Boilerplate for applying mixins to MatRadioGroup.
 /** @docs-private */
 export class MatRadioGroupBase { }
-export const _MatRadioGroupMixinBase = mixinDisabled(MatRadioGroupBase);
+export const _MatRadioGroupMixinBase = mixinTabIndex(mixinDisabled(MatRadioGroupBase));
 
 /**
  * A group of radio buttons. May contain one or more `<mat-radio-button>` elements.
@@ -80,11 +83,12 @@ export const _MatRadioGroupMixinBase = mixinDisabled(MatRadioGroupBase);
   host: {
     'role': 'radiogroup',
     'class': 'mat-radio-group',
+    '[attr.tabIndex]': 'tabIndex',
   },
-  inputs: ['disabled'],
+  inputs: ['disabled', 'tabIndex'],
 })
 export class MatRadioGroup extends _MatRadioGroupMixinBase
-    implements AfterContentInit, ControlValueAccessor, CanDisable {
+    implements AfterContentInit, ControlValueAccessor, CanDisable, HasTabIndex {
   /**
    * Selected value for group. Should equal the value of the selected radio button if there *is*
    * a corresponding radio button with a matching value. If there is *not* such a corresponding
@@ -210,8 +214,9 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
     this._markRadiosForCheck();
   }
 
-  constructor(private _changeDetector: ChangeDetectorRef) {
+  constructor(private _changeDetector: ChangeDetectorRef, @Attribute('tabindex') tabIndex: string) {
     super();
+    this.tabIndex = parseInt(tabIndex) || 0;
   }
 
   /**
@@ -422,6 +427,10 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
 
   set align(v) {
     this.labelPosition = (v == 'start') ? 'after' : 'before';
+  }
+
+  get parentTabIndex() {
+    return this.radioGroup ? this.radioGroup.tabIndex : 0;
   }
 
   private _labelPosition: 'before' | 'after';
