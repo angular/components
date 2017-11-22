@@ -1,4 +1,4 @@
-import {DOWN_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import {DOWN_ARROW, SPACE, ENTER, UP_ARROW} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
 import {createKeyboardEvent, dispatchFakeEvent} from '@angular/cdk/testing';
 import {Component, DebugElement} from '@angular/core';
@@ -144,10 +144,9 @@ describe('MatSelectionList', () => {
     });
 
     it('should be able to use keyboard select with SPACE', () => {
-      let testListItem = listOptions[1].nativeElement as HTMLElement;
-      let SPACE_EVENT: KeyboardEvent =
-        createKeyboardEvent('keydown', SPACE, testListItem);
-      let selectList =
+      const testListItem = listOptions[1].nativeElement as HTMLElement;
+      const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE, testListItem);
+      const selectList =
           selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
       expect(selectList.selected.length).toBe(0);
 
@@ -157,6 +156,23 @@ describe('MatSelectionList', () => {
       fixture.detectChanges();
 
       expect(selectList.selected.length).toBe(1);
+      expect(SPACE_EVENT.defaultPrevented).toBe(true);
+    });
+
+    it('should be able to select an item using ENTER', () => {
+      const testListItem = listOptions[1].nativeElement as HTMLElement;
+      const ENTER_EVENT: KeyboardEvent = createKeyboardEvent('keydown', ENTER, testListItem);
+      const selectList =
+          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+      expect(selectList.selected.length).toBe(0);
+
+      dispatchFakeEvent(testListItem, 'focus');
+      selectionList.componentInstance._keydown(ENTER_EVENT);
+
+      fixture.detectChanges();
+
+      expect(selectList.selected.length).toBe(1);
+      expect(ENTER_EVENT.defaultPrevented).toBe(true);
     });
 
     it('should restore focus if active option is destroyed', () => {
