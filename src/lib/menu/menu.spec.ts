@@ -225,7 +225,7 @@ describe('MatMenu', () => {
     expect(fixture.componentInstance.items.first.getLabel()).toBe('Item');
   });
 
-  it('should have an icon with the default theme color if mat-icon has no color attribute set', 
+  it('should have an icon with the default theme color if mat-icon has no color attribute set',
   () => {
     const fixture = TestBed.createComponent(ItemIconColorsMenu);
     fixture.detectChanges();
@@ -233,7 +233,7 @@ describe('MatMenu', () => {
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
 
-    const matIconElement = 
+    const matIconElement =
           overlayContainerElement.querySelector('mat-icon:not([color])') as HTMLElement;
     const computedIconStyle = window.getComputedStyle(matIconElement);
     expect(computedIconStyle.color).toBe('rgba(0, 0, 0, 0.54)');
@@ -1413,8 +1413,8 @@ class NestedMenuRepeater {
     <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
     <mat-menu #menu="matMenu">
       <button mat-menu-item> <mat-icon>notifications_off</mat-icon> Disable alerts </button>
-      <button mat-menu-item disabled> 
-        <mat-icon color="accent">bookmark</mat-icon> Bookmark 
+      <button mat-menu-item disabled>
+        <mat-icon color="accent">bookmark</mat-icon> Bookmark
       </button>
     </mat-menu>
   `
