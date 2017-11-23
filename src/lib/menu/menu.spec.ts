@@ -1411,7 +1411,7 @@ class NestedMenuRepeater {
     <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
     <mat-menu #menu="matMenu">
       <button mat-menu-item> <mat-icon>notifications_off</mat-icon> Disable alerts </button>
-      <button mat-menu-item disabled> <mat-icon color="accent">notifications_off</mat-icon> Disable alerts </button>
+      <button mat-menu-item disabled> <mat-icon color="accent">bookmark</mat-icon> Bookmark </button>
     </mat-menu>
   `
 })
