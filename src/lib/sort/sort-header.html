@@ -1,6 +1,9 @@
 <div class="mat-sort-header-container"
+     [class.mat-sort-header-disabled]="disabled"
      [class.mat-sort-header-position-before]="arrowPosition == 'before'">
+
   <button class="mat-sort-header-button" type="button"
+          [disabled]="disabled"
           [attr.aria-label]="_intl.sortButtonLabel(id)">
     <ng-content></ng-content>
   </button>
