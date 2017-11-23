@@ -25,6 +25,7 @@ import {
   MenuPositionY,
   MatMenuItem,
 } from './index';
+import { MatIconModule } from "../icon/index";
 import {MENU_PANEL_TOP_PADDING} from './menu-trigger';
 import {MatRipple} from '@angular/material/core';
 import {
@@ -44,7 +45,7 @@ describe('MatMenu', () => {
   beforeEach(async(() => {
     dir = 'ltr';
     TestBed.configureTestingModule({
-      imports: [MatMenuModule, NoopAnimationsModule],
+      imports: [MatIconModule, MatMenuModule, NoopAnimationsModule],
       declarations: [
         SimpleMenu,
         PositionedMenu,
@@ -54,6 +55,7 @@ describe('MatMenu', () => {
         NestedMenu,
         NestedMenuCustomElevation,
         NestedMenuRepeater,
+        ItemIconColorsMenu,
         FakeIcon
       ],
       providers: [
@@ -221,6 +223,30 @@ describe('MatMenu', () => {
     const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     expect(fixture.componentInstance.items.first.getLabel()).toBe('Item');
+  });
+
+  it('should have an icon with the default theme color if mat-icon has no color attribute set', () => {
+    const fixture = TestBed.createComponent(ItemIconColorsMenu);
+    fixture.detectChanges();
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const matIconElement = overlayContainerElement.querySelector("mat-icon:not([color])") as HTMLElement;
+    const computedIconStyle = window.getComputedStyle(matIconElement);
+    expect(computedIconStyle.color).toBe("rgba(0, 0, 0, 0.54)");
+  });
+
+  it('should have an icon with the provided color if mat-icon has the color attribute set', () => {
+    const fixture = TestBed.createComponent(ItemIconColorsMenu);
+    fixture.detectChanges();
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const matIconElement = overlayContainerElement.querySelector("mat-icon[color]") as HTMLElement;
+    const computedIconStyle = window.getComputedStyle(matIconElement);
+    expect(computedIconStyle.color).toBe("rgb(255, 64, 129)");
   });
 
   it('should filter out non-text nodes when figuring out the label', () => {
@@ -1378,6 +1404,22 @@ class NestedMenuRepeater {
   @ViewChild('levelOneTrigger') levelOneTrigger: MatMenuTrigger;
 
   items = ['one', 'two', 'three'];
+}
+
+@Component({
+  template: `
+    <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item> <mat-icon>notifications_off</mat-icon> Disable alerts </button>
+      <button mat-menu-item disabled> <mat-icon color="accent">notifications_off</mat-icon> Disable alerts </button>
+    </mat-menu>
+  `
+})
+class ItemIconColorsMenu {
+  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+  @ViewChild('triggerEl') triggerEl: ElementRef;
+  @ViewChild(MatMenu) menu: MatMenu;
+  @ViewChildren(MatMenuItem) items: QueryList<MatMenuItem>;
 }
 
 @Component({
