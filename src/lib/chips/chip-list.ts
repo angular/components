@@ -359,6 +359,7 @@ export class MatChipList implements MatFormFieldControl<any>, ControlValueAccess
       this._changeSubscription.unsubscribe();
     }
     this._dropSubscriptions();
+    this.stateChanges.complete();
   }
 
 
