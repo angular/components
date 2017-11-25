@@ -184,7 +184,7 @@ describe('MatRadio', () => {
       expect(spies[1]).toHaveBeenCalledTimes(1);
     });
 
-    it(`should not emit a change event from the radio group when change group value
+    it(`should not emit a selectionChange event from the radio group when change group value
         programmatically`, () => {
       expect(groupInstance.value).toBeFalsy();
 
@@ -314,7 +314,8 @@ describe('MatRadio', () => {
       expect(groupInstance.selected).toBeNull();
     });
 
-    it('should not fire a change event from the group when a radio checked state changes', () => {
+    it(`should not fire a selectionChange event from the group when a radio 
+        checked state changes`, () => {
       const changeSpy = jasmine.createSpy('radio-group change listener');
       groupInstance.selectionChange.subscribe(changeSpy);
       radioInstances[0].checked = true;
