@@ -1,1 +1,16 @@
-/** No CSS for this example */
+.example-button-row {
+  background: #f3f3f3;
+  padding: 16px;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+}
+
+.example-button-row .mat-button,
+.example-button-row .mat-raised-button,
+.example-button-row .mat-icon-button,
+.example-button-row .mat-fab,
+.example-button-row .mat-mini-fab {
+  text-transform: uppercase;
+  margin: 0 8px;
+}
