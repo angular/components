@@ -308,7 +308,9 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * OverlayRef so that it can be attached to the DOM when openMenu is called.
    */
   private _createOverlay(): OverlayRef {
-    if (!this._overlayRef) {
+    if (this._overlayRef) {
+      this._overlayRef.getConfig().positionStrategy = this._getPosition();
+    } else {
       this._portal = new TemplatePortal(this.menu.templateRef, this._viewContainerRef);
       const config = this._getOverlayConfig();
       this._subscribeToPositions(config.positionStrategy as ConnectedPositionStrategy);
