@@ -1,0 +1,14 @@
+.example-menu-positions-container {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 16px;
+}
+
+.example-radio-group {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.example-radio-group .mat-radio-button {
+  margin-bottom: 8px;
+}
