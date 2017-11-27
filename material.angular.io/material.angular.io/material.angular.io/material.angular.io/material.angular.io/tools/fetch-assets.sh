@@ -9,7 +9,7 @@ docAssetsPath=./src/assets/documents/
 # Dir where live-example assets will be copied
 exampleAssetsPath=./src/assets/
 
-plunkerExampleAssetsPath=./src/assets/plunker/
+stackblitzxampleAssetsPath=./src/assets/stackblitz/
 
 # Dir where published assets will temporarily copied to (using `git clone`).
 tmpAssetClonePath=/tmp/material-assets
@@ -24,7 +24,7 @@ apiPath=${tmpAssetClonePath}/api
 guidesPath=${tmpAssetClonePath}/guides
 overviewPath=${tmpAssetClonePath}/overview
 examplesPath=${tmpAssetClonePath}/examples
-plunkerExamplesPath=${tmpAssetClonePath}/plunker/examples
+stackblitzExamplesPath=${tmpAssetClonePath}/stackblitz/examples
 
 # Create folders into which to copy content and assets.
 mkdir -p ${tmpAssetClonePath}
@@ -36,7 +36,7 @@ git clone ${docsContentRepo} ${tmpAssetClonePath} --depth 1
 # Copy files over to their proper place in src/assets
 cp -R ${apiPath} ${overviewPath} ${guidesPath} ${docAssetsPath}
 cp -R ${examplesPath} ${exampleAssetsPath}
-cp -R ${plunkerExamplesPath} ${plunkerExampleAssetsPath}
+cp -R ${stackblitzExamplesPath} ${stackblitzExampleAssetsPath}
 
 # Install the live examples component library
 mkdir -p ./node_modules/@angular/material-examples

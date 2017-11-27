@@ -2,50 +2,82 @@ import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 import {ExampleData} from '@angular/material-examples';
 import 'rxjs/add/operator/toPromise';
+import {VERSION} from '@angular/material';
 
-const PLUNKER_URL = 'https://plnkr.co/edit/?p=preview';
+const STACKBLITZ_URL = 'https://run.stackblitz.com/api/angular/v1/';
 
 const COPYRIGHT =
   `Copyright 2017 Google Inc. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at http://angular.io/license`;
 
-const TEMPLATE_PATH = '/assets/plunker/';
-const TEMPLATE_FILES = ['index.html', 'systemjs.config.js', 'main.ts'];
+const TEMPLATE_PATH = '/assets/stackblitz/';
+const TEMPLATE_FILES = [
+  'index.html',
+  'styles.scss',
+  'polyfills.ts',
+  '.angular-cli.json',
+  'main.ts'
+];
 
 const TAGS: string[] = ['angular', 'material', 'example'];
+const angularVersion = '^5.0.0';
+const materialVersion = '^5.0.0-rc.1';
+
+const dependencies = {
+  '@angular/cdk': materialVersion,
+  '@angular/material': materialVersion,
+  '@angular/animations': angularVersion,
+  '@angular/common': angularVersion,
+  '@angular/compiler': angularVersion,
+  '@angular/core': angularVersion,
+  '@angular/forms': angularVersion,
+  '@angular/http': angularVersion,
+  '@angular/platform-browser': angularVersion,
+  '@angular/platform-browser-dynamic': angularVersion,
+  '@angular/router': angularVersion,
+  'angular-in-memory-web-api': '~0.5.0',
+  'core-js': '^2.4.1',
+  'rxjs': '^5.5.2',
+  'web-animations-js': '^2.3.1',
+  'zone.js': '^0.8.14',
+  'hammerjs': '^2.0.8'
+};
 
 /**
- * Plunker writer, write example files to Plunker
+ * Stackblitz writer, write example files to stackblitz
  *
- * Plunker API
- * URL: http://plnkr.co/edit/?p=preview
+ * StackBlitz API
+ * URL: https://run.stackblitz.com/api/aio/v1/
  * data: {
  *   // File name, directory and content of files
  *   files[file-name1]: file-content1,
  *   files[directory-name/file-name2]: file-content2,
  *   // Can add multiple tags
  *   tags[0]: tag-0,
- *   // Description of plunker
+ *   // Description of stackblitz
  *   description: description,
  *   // Private or not
  *   private: true
+ *  // Dependencies
+ *  dependencies: dependencies
  * }
  */
 @Injectable()
-export class PlunkerWriter {
+export class StackblitzWriter {
   constructor(private _http: Http) {}
 
   /**
-   * Returns an HTMLFormElement that will open a new plunker template with the example data when
+   * Returns an HTMLFormElement that will open a new stackblitz template with the example data when
    * called with submit().
    */
-  constructPlunkerForm(data: ExampleData): Promise<HTMLFormElement> {
+  constructStackblitzForm(data: ExampleData): Promise<HTMLFormElement> {
     let form = this._createFormElement();
 
     TAGS.forEach((tag, i) => this._appendFormInput(form, `tags[${i}]`, tag));
     this._appendFormInput(form, 'private', 'true');
     this._appendFormInput(form, 'description', data.description);
+    this._appendFormInput(form, 'dependencies', JSON.stringify(dependencies));
 
     return new Promise(resolve => {
       let templateContents = TEMPLATE_FILES
@@ -65,10 +97,10 @@ export class PlunkerWriter {
     });
   }
 
-  /** Constructs a new form element that will navigate to the plunker url. */
+  /** Constructs a new form element that will navigate to the stackblitz url. */
   _createFormElement(): HTMLFormElement {
     const form = document.createElement('form');
-    form.action = PLUNKER_URL;
+    form.action = STACKBLITZ_URL;
     form.method = 'post';
     form.target = '_blank';
     return form;
@@ -98,12 +130,14 @@ export class PlunkerWriter {
                  path: string) {
     if (path == TEMPLATE_PATH) {
       content = this._replaceExamplePlaceholderNames(data, filename, content);
+    } else {
+      filename = 'app/' + filename;
     }
     this._appendFormInput(form, `files[${filename}]`, this._appendCopyright(filename, content));
   }
 
   /**
-   * The Plunker template assets contain placeholder names for the examples:
+   * The stackblitz template assets contain placeholder names for the examples:
    * "<material-docs-example>" and "MaterialDocsExample".
    * This will replace those placeholders with the names from the example metadata,
    * e.g. "<basic-button-example>" and "BasicButtonExample"
@@ -116,6 +150,7 @@ export class PlunkerWriter {
       // For example, <material-docs-example></material-docs-example> will be replaced as
       // <button-demo></button-demo>
       fileContent = fileContent.replace(/material-docs-example/g, data.selectorName);
+      fileContent = fileContent.replace(/{{version}}/g, VERSION.full);
     } else if (fileName == 'main.ts') {
       // Replace the component name in `main.ts`.
       // For example, `import {MaterialDocsExample} from 'material-docs-example'`
