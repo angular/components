@@ -1,6 +1,6 @@
 import {DocViewer} from './doc-viewer';
 import {ExampleViewer} from '../example-viewer/example-viewer';
-import {PlunkerButtonModule} from '../plunker/plunker-button';
+import {StackblitzButtonModule} from '../stackblitz/stackblitz-button';
 import {
   MatButtonModule,
   MatIconModule,
@@ -25,7 +25,7 @@ import {CopierService} from '../copier/copier.service';
     MatTabsModule,
     CommonModule,
     PortalModule,
-    PlunkerButtonModule
+    StackblitzButtonModule
   ],
   providers: [CopierService],
   declarations: [DocViewer, ExampleViewer, HeaderLink],

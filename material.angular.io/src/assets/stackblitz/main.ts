@@ -1,3 +1,4 @@
+import './polyfills';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -36,7 +37,7 @@ import {
   MatTooltipModule,
   MatStepperModule,
 } from '@angular/material';
-import {MaterialDocsExample} from './material-docs-example';
+import {MaterialDocsExample} from './app/material-docs-example';
 import {HttpModule} from '@angular/http';
 import {CdkTableModule} from '@angular/cdk/table';
 
@@ -76,7 +77,7 @@ import {CdkTableModule} from '@angular/cdk/table';
     MatTooltipModule,
   ]
 })
-export class PlunkerMaterialModule {}
+export class DemoMaterialModule {}
 
 @NgModule({
 
@@ -85,7 +86,7 @@ export class PlunkerMaterialModule {}
     BrowserAnimationsModule,
     FormsModule,
     HttpModule,
-    PlunkerMaterialModule,
+    DemoMaterialModule,
     MatNativeDateModule,
     ReactiveFormsModule,
   ],
@@ -94,6 +95,6 @@ export class PlunkerMaterialModule {}
   bootstrap: [MaterialDocsExample],
   providers: []
 })
-export class PlunkerAppModule {}
+export class AppModule {}
 
-platformBrowserDynamic().bootstrapModule(PlunkerAppModule);
+platformBrowserDynamic().bootstrapModule(AppModule);

@@ -4,19 +4,19 @@ import {
   BaseRequestOptions, Http, HttpModule, Response, ResponseOptions,
   XHRBackend
 } from '@angular/http';
-import {PlunkerWriter} from './plunker-writer';
+import {StackblitzWriter} from './stackblitz-writer';
 import {ExampleData} from '@angular/material-examples';
 
 
-describe('PlunkerWriter', () => {
-  let plunkerWriter: PlunkerWriter;
+describe('StackblitzWriter', () => {
+  let stackblitzWriter: StackblitzWriter;
   let data: ExampleData;
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpModule],
       declarations: [],
       providers: [
-        PlunkerWriter,
+        StackblitzWriter,
         BaseRequestOptions,
         MockBackend,
         {provide: XHRBackend, useExisting: MockBackend},
@@ -30,20 +30,20 @@ describe('PlunkerWriter', () => {
       connection.mockRespond(getFakeDocResponse(url));
     });
 
-    plunkerWriter = TestBed.get(PlunkerWriter);
+    stackblitzWriter = TestBed.get(StackblitzWriter);
     data = new ExampleData('');
     data.examplePath = 'http://material.angular.io/';
     data.exampleFiles = ['test.ts', 'test.html', 'src/detail.ts'];
   }));
 
   it('should append correct copyright', () => {
-    expect(plunkerWriter._appendCopyright('test.ts', 'NoContent')).toBe(`NoContent
+    expect(stackblitzWriter._appendCopyright('test.ts', 'NoContent')).toBe(`NoContent
 
 /**  Copyright 2017 Google Inc. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at http://angular.io/license */`);
 
-    expect(plunkerWriter._appendCopyright('test.html', 'NoContent')).toBe(`NoContent
+    expect(stackblitzWriter._appendCopyright('test.html', 'NoContent')).toBe(`NoContent
 
 <!-- Copyright 2017 Google Inc. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
@@ -52,16 +52,16 @@ describe('PlunkerWriter', () => {
   });
 
   it('should create form element', () => {
-    expect(plunkerWriter._createFormElement().outerHTML).toBe(
+    expect(stackblitzWriter._createFormElement().outerHTML).toBe(
       `<form action="https://plnkr.co/edit/?p=preview" method="post" target="_blank"></form>`);
   });
 
   it('should add files to form input', () => {
-    let form = plunkerWriter._createFormElement();
+    let form = stackblitzWriter._createFormElement();
 
-    plunkerWriter._addFileToForm(form, data, 'NoContent', 'test.ts', 'path/to/file');
-    plunkerWriter._addFileToForm(form, data, 'Test', 'test.html', 'path/to/file');
-    plunkerWriter._addFileToForm(form, data, 'Detail', 'src/detail.ts', 'path/to/file');
+    stackblitzWriter._addFileToForm(form, data, 'NoContent', 'test.ts', 'path/to/file');
+    stackblitzWriter._addFileToForm(form, data, 'Test', 'test.html', 'path/to/file');
+    stackblitzWriter._addFileToForm(form, data, 'Detail', 'src/detail.ts', 'path/to/file');
 
     expect(form.elements.length).toBe(3);
     expect(form.elements[0].getAttribute('name')).toBe('files[test.ts]');
@@ -69,9 +69,9 @@ describe('PlunkerWriter', () => {
     expect(form.elements[2].getAttribute('name')).toBe('files[src/detail.ts]');
   });
 
-  it('should open a new window with plunker url', fakeAsync(() => {
+  it('should open a new window with stackblitz url', fakeAsync(() => {
     let form;
-    plunkerWriter.constructPlunkerForm(data).then(result => form = result);
+    stackblitzWriter.constructStackblitzForm(data).then(result => form = result);
     flushMicrotasks();
 
     expect(form.elements.length).toBe(11);
