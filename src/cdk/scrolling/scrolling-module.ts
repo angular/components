@@ -15,4 +15,4 @@ import {CdkScrollable} from './scrollable';
   exports: [CdkScrollable],
   declarations: [CdkScrollable],
 })
-export class ScrollDispatchModule {}
+export class ScrollingModule {}

@@ -1,5 +1,5 @@
 import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
-import {CdkScrollable, ScrollDispatchModule} from '@angular/cdk/scrolling';
+import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
 import {MockNgZone} from '@angular/cdk/testing';
 import {Component, ElementRef, NgModule, NgZone} from '@angular/core';
 import {inject, TestBed} from '@angular/core/testing';
@@ -32,7 +32,7 @@ describe('ConnectedPositionStrategy', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ScrollDispatchModule, OverlayModule, OverlayTestModule],
+      imports: [ScrollingModule, OverlayModule, OverlayTestModule],
       providers: [{provide: NgZone, useFactory: () => zone = new MockNgZone()}]
     });
 
