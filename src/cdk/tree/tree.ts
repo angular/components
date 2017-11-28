@@ -23,7 +23,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators/takeUntil';
 import {Subject} from 'rxjs/Subject';
 import {CdkTreeNodeDef, CdkTreeNode, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
@@ -155,7 +155,7 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
 
   /** Set up a subscription for the data provided by the data source. */
   private _observeRenderChanges() {
-    takeUntil.call(this.dataSource.connect(this), this._destroyed)
+    this.dataSource.connect(this).pipe(takeUntil(this._destroyed))
       .subscribe(data => {
         this._data = data;
         this._renderNodeChanges(data);
@@ -191,7 +191,7 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
     if (this._nodeDefs.length == 1) { return this._nodeDefs.first; }
 
     const nodeDef =
-      this._nodeDefs.find(def => def.when && def.when(data, i)) || this._defaultNodeDef;
+      this._nodeDefs.find(def => def.when && def.when(i, data)) || this._defaultNodeDef;
     if (!nodeDef) { throw getTreeMissingMatchingNodeDefError(); }
 
     return nodeDef;
@@ -214,7 +214,9 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
     // Set the data to just created `CdkTreeNode`.
     // The `CdkTreeNode` created from `createEmbeddedView` will be saved in static variable
     //     `mostRecentTreeNode`. We get it from static variable and pass the node data to it.
-    CdkTreeNode.mostRecentTreeNode.data = nodeData;
+    if (CdkTreeNode.mostRecentTreeNode) {
+      CdkTreeNode.mostRecentTreeNode.data = nodeData;
+    }
 
     this._changeDetectorRef.detectChanges();
   }

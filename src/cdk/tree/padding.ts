@@ -9,7 +9,7 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {Directive, ElementRef, Input, OnDestroy, Optional, Renderer2} from '@angular/core';
-import {takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators/takeUntil';
 import {Subject} from 'rxjs/Subject';
 import {CdkTreeNode} from './node';
 import {CdkTree} from './tree';
@@ -49,7 +49,7 @@ export class CdkTreeNodePadding<T> implements OnDestroy {
               @Optional() private _dir: Directionality) {
     this._setPadding();
     if (this._dir) {
-      takeUntil.call(this._dir.change, this._destroyed).subscribe(() => this._setPadding());
+      this._dir.change.pipe(takeUntil(this._destroyed)).subscribe(() => this._setPadding());
     }
   }
 
