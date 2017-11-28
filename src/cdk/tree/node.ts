@@ -13,7 +13,7 @@ import {
   OnDestroy,
   TemplateRef
 } from '@angular/core';
-import {takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators/takeUntil';
 import {Subject} from 'rxjs/Subject';
 import {CdkTree} from './tree';
 import {getTreeControlFunctionsMissingError} from './tree-errors';
@@ -69,7 +69,6 @@ export class CdkTreeNodeDef<T> {
   host: {
     '[attr.role]': 'role',
     'class': 'cdk-tree-node',
-    'tabindex': '0',
   },
 })
 export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
@@ -77,7 +76,7 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
    * The most recently created `CdkTreeNode`. We save it in static variable so we can retrieve it
    * in `CdkTree` and set the data to it.
    */
-  static mostRecentTreeNode: CdkTreeNode<any>;
+  static mostRecentTreeNode: CdkTreeNode<any> | null = null;
 
   /** Subject that emits when the component has been destroyed. */
   protected _destroyed = new Subject<void>();
@@ -118,7 +117,7 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
       if (!this._tree.treeControl.getChildren) {
         throw getTreeControlFunctionsMissingError();
       }
-      takeUntil.call(this._tree.treeControl.getChildren(this._data), this._destroyed)
+      this._tree.treeControl.getChildren(this._data).pipe(takeUntil(this._destroyed))
         .subscribe(children => {
           this.role = children ? 'group' : 'treeitem';
         });
