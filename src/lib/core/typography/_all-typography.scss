@@ -26,6 +26,7 @@
 @import '../../tabs/tabs-theme';
 @import '../../toolbar/toolbar-theme';
 @import '../../tooltip/tooltip-theme';
+@import '../../tree/tree-theme';
 @import '../../snack-bar/snack-bar-theme';
 @import '../option/option-theme';
 @import '../option/optgroup-theme';
@@ -66,6 +67,7 @@
   @include mat-tabs-typography($config);
   @include mat-toolbar-typography($config);
   @include mat-tooltip-typography($config);
+  @include mat-tree-typography($config);
   @include mat-list-typography($config);
   @include mat-option-typography($config);
   @include mat-optgroup-typography($config);

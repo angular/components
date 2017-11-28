@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig-es5",
+  "extends": "../tsconfig-build",
   "files": [
     "public-api.ts",
     "../typings.d.ts"
@@ -8,7 +8,7 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/cdk/tree",
+    "flatModuleId": "@angular/material/tree",
     "skipTemplateCodegen": true
   }
 }
