@@ -50,7 +50,10 @@ import {
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
+  MatStepperModule,
 } from '@angular/material';
+import {CdkTreeModule} from '@angular/cdk-experimental/tree';
+import {MatTreeModule} from '@angular/material-experimental/tree';
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.
@@ -90,8 +93,10 @@ import {
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
+    MatTreeModule,
     MatNativeDateModule,
     CdkTableModule,
+    CdkTreeModule,
     A11yModule,
     BidiModule,
     CdkAccordionModule,

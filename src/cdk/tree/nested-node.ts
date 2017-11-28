@@ -13,7 +13,7 @@ import {
   OnDestroy,
   QueryList,
 } from '@angular/core';
-import {takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators/takeUntil';
 import {CdkTree} from './tree';
 import {CdkTreeNodeOutlet} from './outlet';
 import {CdkTreeNode} from './node';
@@ -58,14 +58,14 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
   }
 
   ngAfterContentInit() {
-    takeUntil.call(this._tree.treeControl.getChildren(this.data), this._destroyed)
+    this._tree.treeControl.getChildren(this.data).pipe(takeUntil(this._destroyed))
       .subscribe(result => {
         // In case when nodeOutlet is not in the DOM when children changes, save it in the node
         // and add to nodeOutlet when it's available.
         this._children = result as T[];
         this._addChildrenNodes();
       });
-    takeUntil.call(this.nodeOutlet.changes, this._destroyed)
+    this.nodeOutlet.changes.pipe(takeUntil(this._destroyed))
       .subscribe((_) => this._addChildrenNodes());
   }
 
