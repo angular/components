@@ -5,42 +5,41 @@ import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import {combineLatest} from 'rxjs/observable/combineLatest';
-import {map} from 'rxjs/operators/map';
+import {map} from 'rxjs/operators';
 
-import {TreeControl} from './control/tree-control';
-import {FlatTreeControl} from './control/flat-tree-control';
-import {CdkTreeModule} from './index';
-import {CdkTree} from './tree';
+import {TreeControl, FlatTreeControl} from '@angular/cdk/tree';
+import {MatTreeModule} from './index';
+import {MatTree} from './tree';
 
 
-describe('CdkTree', () => {
-  let fixture: ComponentFixture<SimpleCdkTreeApp>;
+describe('MatTree', () => {
+  let fixture: ComponentFixture<SimpleMatTreeApp>;
 
-  let component: SimpleCdkTreeApp;
+  let component: SimpleMatTreeApp;
   let dataSource: FakeDataSource;
-  let tree: CdkTree<any>;
+  let tree: MatTree<any>;
   let treeElement: HTMLElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [CdkTreeModule],
+      imports: [MatTreeModule],
       declarations: [
-        SimpleCdkTreeApp,
-        // TODO(tinayuangao): Add more test cases with the cdk-tree
-        //   DynamicDataSourceCdkTreeApp,
-        //   NodeContextCdkTreeApp,
-        //   WhenNodeCdkTreeApp
+        SimpleMatTreeApp,
+        // TODO(tinayuangao): Add more test cases with the mat-tree
+        //   DynamicDataSourceMatTreeApp,
+        //   NodeContextMatTreeApp,
+        //   WhenNodeMatTreeApp
       ],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SimpleCdkTreeApp);
+    fixture = TestBed.createComponent(SimpleMatTreeApp);
 
     component = fixture.componentInstance;
     dataSource = component.dataSource as FakeDataSource;
     tree = component.tree;
-    treeElement = fixture.nativeElement.querySelector('cdk-tree');
+    treeElement = fixture.nativeElement.querySelector('mat-tree');
 
     fixture.detectChanges();
   });
@@ -71,12 +70,12 @@ describe('CdkTree', () => {
 
       let data = dataSource.data;
       expectFlatTreeToMatchContent(treeElement,
-          [
-            `${data[0].pizzaTopping} - ${data[0].pizzaCheese} + ${data[0].pizzaBase}`,
-            `${data[1].pizzaTopping} - ${data[1].pizzaCheese} + ${data[1].pizzaBase}`,
-            `${data[2].pizzaTopping} - ${data[2].pizzaCheese} + ${data[2].pizzaBase}`
-          ],
-          [1, 1, 1]);
+        [
+          `${data[0].pizzaTopping} - ${data[0].pizzaCheese} + ${data[0].pizzaBase}`,
+          `${data[1].pizzaTopping} - ${data[1].pizzaCheese} + ${data[1].pizzaBase}`,
+          `${data[2].pizzaTopping} - ${data[2].pizzaCheese} + ${data[2].pizzaBase}`
+        ],
+        [1, 1, 1]);
 
       dataSource.addData(2);
       fixture.detectChanges();
@@ -140,7 +139,7 @@ class FakeDataSource extends DataSource<TestData> {
 
     let copiedData = this.data.slice();
     copiedData.push(
-        new TestData(`topping_${nextIndex}`, `cheese_${nextIndex}`, `base_${nextIndex}`, level));
+      new TestData(`topping_${nextIndex}`, `cheese_${nextIndex}`, `base_${nextIndex}`, level));
 
     this.data = copiedData;
   }
@@ -148,26 +147,26 @@ class FakeDataSource extends DataSource<TestData> {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
-      <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
-                     cdkTreeNodePadding [cdkTreeNodePaddingIndent]="28">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+      <mat-tree-node *matTreeNodeDef="let node" class="customNodeClass"
+                     matTreeNodePadding [matTreeNodePaddingIndent]="28">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
-      </cdk-tree-node>
-    </cdk-tree>
+      </mat-tree-node>
+    </mat-tree>
   `
 })
-class SimpleCdkTreeApp {
+class SimpleMatTreeApp {
   getLevel = (node: TestData) => node.level;
   isExpandable = (node: TestData) => node.children.length > 0;
 
   dataSource: FakeDataSource | null = new FakeDataSource();
   treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
 
-  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChild(MatTree) tree: MatTree<TestData>;
 }
 
 function getNodes(treeElement: Element): Element[] {
-  return [].slice.call(treeElement.querySelectorAll('.cdk-tree-node'))!;
+  return [].slice.call(treeElement.querySelectorAll('.mat-tree-node'))!;
 }
 
 // TODO(tinayuangao): Add expectedNestedTreeToMatchContent

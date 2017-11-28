@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {Observable} from 'rxjs/Observable';
-import {first} from 'rxjs/operators';
+import {take} from 'rxjs/operators/take';
 import {BaseTreeControl} from './base-tree-control';
 
 /** Nested tree control. Able to expand/collapse a subtree recursively for NestedNode type. */
@@ -40,7 +40,7 @@ export class NestedTreeControl<T> extends BaseTreeControl<T> {
   /** A helper function to get descendants recursively. */
   protected _getDescendants(descendants: T[], dataNode: T): void {
     descendants.push(dataNode);
-    first.call(this.getChildren(dataNode)).subscribe(children => {
+    this.getChildren(dataNode).pipe(take(1)).subscribe(children => {
       if (children && children.length > 0) {
         children.forEach((child: T) => this._getDescendants(descendants, child));
       }
