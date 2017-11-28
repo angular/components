@@ -1,12 +1,13 @@
-import {Component, OnInit, NgModule, ElementRef, ViewEncapsulation, ViewChild} from '@angular/core';
-import {ActivatedRoute, Params, Router, RouterModule} from '@angular/router';
-import {DocumentationItems, DocItem} from '../../shared/documentation-items/documentation-items';
-import {ComponentPageTitle} from '../page-title/page-title';
-import {MatTabsModule} from '@angular/material';
-import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
 import {CommonModule} from '@angular/common';
-import {TableOfContentsModule} from '../../shared/table-of-contents/table-of-contents.module';
+import {Component, ElementRef, NgModule, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {MatTabsModule} from '@angular/material';
+import {ActivatedRoute, Params, Router, RouterModule} from '@angular/router';
+import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
+import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
+import {DocItem, DocumentationItems} from '../../shared/documentation-items/documentation-items';
+import {TableOfContentsModule} from '../../shared/table-of-contents/table-of-contents.module';
+import {ComponentPageTitle} from '../page-title/page-title';
 
 
 @Component({
@@ -34,8 +35,8 @@ export class ComponentViewer {
           if (this.componentDocItem) {
             this._componentPageTitle.title = `${this.componentDocItem.name}`;
             this.componentDocItem.examples.length ?
-              this.sections.add('examples') :
-              this.sections.delete('examples');
+                this.sections.add('examples') :
+                this.sections.delete('examples');
 
           } else {
             this.router.navigate(['/components']);

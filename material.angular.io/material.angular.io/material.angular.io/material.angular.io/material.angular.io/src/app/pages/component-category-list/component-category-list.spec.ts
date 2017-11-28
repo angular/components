@@ -1,8 +1,7 @@
-import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
-import {Router} from '@angular/router';
-import {Observable} from 'rxjs/Observable'
-import {ComponentCategoryList, ComponentCategoryListModule} from './component-category-list';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {of as observableOf} from 'rxjs/observable/of';
 import {DocsAppTestingModule} from '../../testing/testing-module';
+import {ComponentCategoryList, ComponentCategoryListModule} from './component-category-list';
 
 
 describe('ComponentCategoryList', () => {
@@ -29,12 +28,12 @@ describe('ComponentCategoryList', () => {
   it('should render a card for every category', () => {
     fixture.detectChanges();
     // Params is replaced after ngOnit runs since params is set on init.
-    fixture.componentInstance.params = Observable.of({'section': 'components'});
+    fixture.componentInstance.params = observableOf({'section': 'components'});
     fixture.detectChanges();
     const component = fixture.componentInstance;
     const categories = component.docItems.getCategories('components');
     const cards = fixture
-      .nativeElement.querySelectorAll('.docs-component-category-list-card');
+        .nativeElement.querySelectorAll('.docs-component-category-list-card');
     expect(cards.length).toEqual(categories.length);
   });
 });
