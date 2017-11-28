@@ -1,0 +1,8 @@
+<div #contentWrapper class="cdk-virtual-scroll-content-wrapper"
+     [style.transform]="_renderedContentTransform">
+  <ng-content></ng-content>
+</div>
+<div class="cdk-virtual-scroll-spacer"
+     [style.height.px]="orientation === 'horizontal' ? 1 : totalContentSize"
+     [style.width.px]="orientation === 'horizontal' ? totalContentSize : 1">
+</div>

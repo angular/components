@@ -6,15 +6,28 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {SCROLL_DISPATCHER_PROVIDER} from './scroll-dispatcher';
-import {CdkScrollable} from  './scrollable';
 import {PlatformModule} from '@angular/cdk/platform';
+import {NgModule} from '@angular/core';
+import {CdkForOf} from './for-of';
+import {SCROLL_DISPATCHER_PROVIDER} from './scroll-dispatcher';
+import {CdkScrollable} from './scrollable';
+import {CdkVirtualScrollFixedSize} from './virtual-scroll-fixed-size';
+import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
 @NgModule({
   imports: [PlatformModule],
-  exports: [CdkScrollable],
-  declarations: [CdkScrollable],
+  exports: [
+    CdkForOf,
+    CdkScrollable,
+    CdkVirtualScrollFixedSize,
+    CdkVirtualScrollViewport,
+  ],
+  declarations: [
+    CdkForOf,
+    CdkScrollable,
+    CdkVirtualScrollFixedSize,
+    CdkVirtualScrollViewport,
+  ],
   providers: [SCROLL_DISPATCHER_PROVIDER],
 })
 export class ScrollDispatchModule {}

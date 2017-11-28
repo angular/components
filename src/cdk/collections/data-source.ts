@@ -7,7 +7,9 @@
  */
 
 import {Observable} from 'rxjs/Observable';
+import {of} from 'rxjs/observable/of';
 import {CollectionViewer} from './collection-viewer';
+
 
 export abstract class DataSource<T> {
   /**
@@ -28,4 +30,16 @@ export abstract class DataSource<T> {
    *     data source.
    */
   abstract disconnect(collectionViewer: CollectionViewer): void;
+}
+
+
+/** DataSource wrapper for a native array. */
+export class ArrayDataSource<T> implements DataSource<T> {
+  constructor(private _data: T[]) {}
+
+  connect(): Observable<T[]> {
+    return of(this._data);
+  }
+
+  disconnect() {}
 }

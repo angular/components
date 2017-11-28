@@ -88,7 +88,8 @@ export class DemoApp {
     {name: 'Tabs', route: '/tabs'},
     {name: 'Toolbar', route: '/toolbar'},
     {name: 'Tooltip', route: '/tooltip'},
-    {name: 'Typography', route: '/typography'}
+    {name: 'Typography', route: '/typography'},
+    {name: 'Virtual Scrolling', route: '/virtual-scroll'},
   ];
 
   constructor(

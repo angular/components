@@ -1,0 +1,20 @@
+cdk-virtual-scroll-viewport {
+  display: block;
+  position: relative;
+  overflow: auto;
+}
+
+cdk-virtual-scroll-sentinel, cdk-virtual-scroll-probe {
+  position: absolute;
+}
+
+.cdk-virtual-scroll-content-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: contents, transform;
+}
+
+.cdk-virtual-scroll-spacer {
+  will-change: height, width;
+}
