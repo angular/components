@@ -9,7 +9,6 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {
-  BlockScrollStrategy,
   Overlay,
   OverlayConfig,
   OverlayRef,
@@ -47,7 +46,7 @@ export const MAT_DIALOG_SCROLL_STRATEGY =
 
 /** @docs-private */
 export function MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
-    () => BlockScrollStrategy {
+    () => ScrollStrategy {
   return () => overlay.scrollStrategies.block();
 }
 
@@ -175,7 +174,7 @@ export class MatDialog {
   private _getOverlayConfig(dialogConfig: MatDialogConfig): OverlayConfig {
     const state = new OverlayConfig({
       positionStrategy: this._overlay.position().global(),
-      scrollStrategy: this._scrollStrategy(),
+      scrollStrategy: dialogConfig.scrollStrategy || this._scrollStrategy(),
       panelClass: dialogConfig.panelClass,
       hasBackdrop: dialogConfig.hasBackdrop,
       direction: dialogConfig.direction,
