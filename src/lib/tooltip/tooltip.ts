@@ -142,14 +142,20 @@ export class MatTooltip implements OnDestroy {
   private _message = '';
 
   /** The message to be displayed in the tooltip */
-  @Input('matTooltip') get message() { return this._message; }
+  @Input('matTooltip')
+  get message() { return this._message; }
   set message(value: string) {
     this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this._message);
 
     // If the message is not a string (e.g. number), convert it to a string and trim it.
     this._message = value != null ? `${value}`.trim() : '';
-    this._updateTooltipMessage();
-    this._ariaDescriber.describe(this._elementRef.nativeElement, this.message);
+
+    if (!this._message && this._isTooltipVisible()) {
+      this.hide(0);
+    } else {
+      this._updateTooltipMessage();
+      this._ariaDescriber.describe(this._elementRef.nativeElement, this.message);
+    }
   }
 
   /** Classes to be passed to the tooltip. Supports the same syntax as `ngClass`. */
@@ -176,6 +182,8 @@ export class MatTooltip implements OnDestroy {
     @Inject(MAT_TOOLTIP_SCROLL_STRATEGY) private _scrollStrategy,
     @Optional() private _dir: Directionality) {
 
+    const element: HTMLElement = _elementRef.nativeElement;
+
     // The mouse events shouldn't be bound on iOS devices, because
     // they can prevent the first tap from firing its click event.
     if (!_platform.IOS) {
@@ -184,9 +192,16 @@ export class MatTooltip implements OnDestroy {
 
       this._manualListeners
         .forEach((listener, event) => _elementRef.nativeElement.addEventListener(event, listener));
+    } else if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
+      // When we bind a gesture event on an element (in this case `longpress`), HammerJS
+      // will add some inline styles by default, including `user-select: none`. This is
+      // problematic on iOS, because it will prevent users from typing in inputs. If
+      // we're on iOS and the tooltip is attached on an input or textarea, we clear
+      // the `user-select` to avoid these issues.
+      element.style.webkitUserSelect = element.style.userSelect = '';
     }
 
-    _focusMonitor.monitor(_elementRef.nativeElement, false).subscribe(origin => {
+    _focusMonitor.monitor(element, false).subscribe(origin => {
       // Note that the focus monitor runs outside the Angular zone.
       if (!origin) {
         _ngZone.run(() => this.hide(0));

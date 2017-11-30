@@ -36,6 +36,7 @@ import {
   mixinDisabled,
   mixinDisableRipple,
   mixinTabIndex,
+  RippleConfig,
   RippleRef,
 } from '@angular/material/core';
 import {MAT_CHECKBOX_CLICK_ACTION, MatCheckboxClickAction} from './checkbox-config';
@@ -179,6 +180,9 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
   /** Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor. */
   @ViewChild(MatRipple) _ripple: MatRipple;
+
+  /** Ripple configuration for the mouse ripples and focus indicators. */
+  _rippleConfig: RippleConfig = {centered: true, radius: 25, speedFactor: 1.5};
 
   /**
    * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
@@ -342,7 +346,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   /** Function is called whenever the focus changes for the input element. */
   private _onInputFocusChange(focusOrigin: FocusOrigin) {
     if (!this._focusRipple && focusOrigin === 'keyboard') {
-      this._focusRipple = this._ripple.launch(0, 0, {persistent: true, centered: true});
+      this._focusRipple = this._ripple.launch(0, 0, {persistent: true, ...this._rippleConfig});
     } else if (!focusOrigin) {
       this._removeFocusRipple();
       this.onTouched();
@@ -370,8 +374,6 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     // This will lead to multiple click events.
     // Preventing bubbling for the second event will solve that issue.
     event.stopPropagation();
-
-    this._removeFocusRipple();
 
     // If resetIndeterminate is false, and the current state is indeterminate, do nothing on click
     if (!this.disabled && this._clickAction !== 'noop') {

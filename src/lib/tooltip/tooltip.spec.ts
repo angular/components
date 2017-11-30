@@ -3,6 +3,7 @@ import {
   ComponentFixture,
   fakeAsync,
   flushMicrotasks,
+  inject,
   TestBed,
   tick
 } from '@angular/core/testing';
@@ -33,6 +34,7 @@ import {
 const initialTooltipMessage = 'initial tooltip message';
 
 describe('MatTooltip', () => {
+  let overlayContainer: OverlayContainer;
   let overlayContainerElement: HTMLElement;
   let dir: {value: Direction};
 
@@ -43,15 +45,11 @@ describe('MatTooltip', () => {
         BasicTooltipDemo,
         ScrollableTooltipDemo,
         OnPushTooltipDemo,
-        DynamicTooltipsDemo
+        DynamicTooltipsDemo,
+        TooltipOnTextFields
       ],
       providers: [
         {provide: Platform, useValue: {IOS: false, isBrowser: true}},
-        {provide: OverlayContainer, useFactory: () => {
-          overlayContainerElement = document.createElement('div');
-          document.body.appendChild(overlayContainerElement);
-          return {getContainerElement: () => overlayContainerElement};
-        }},
         {provide: Directionality, useFactory: () => {
           return dir = {value: 'ltr'};
         }}
@@ -59,10 +57,15 @@ describe('MatTooltip', () => {
     });
 
     TestBed.compileComponents();
+
+    inject([OverlayContainer], (oc: OverlayContainer) => {
+      overlayContainer = oc;
+      overlayContainerElement = oc.getContainerElement();
+    })();
   }));
 
   afterEach(() => {
-    document.body.removeChild(overlayContainerElement);
+    overlayContainer.ngOnDestroy();
   });
 
   describe('basic usage', () => {
@@ -187,6 +190,18 @@ describe('MatTooltip', () => {
 
       // Set tooltip to be disabled and verify that the tooltip hides.
       tooltipDirective.disabled = true;
+      tick(0);
+      expect(tooltipDirective._isTooltipVisible()).toBe(false);
+    }));
+
+    it('should hide if the message is cleared while the tooltip is open', fakeAsync(() => {
+      tooltipDirective.show();
+      fixture.detectChanges();
+      tick(0);
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+
+      fixture.componentInstance.message = '';
+      fixture.detectChanges();
       tick(0);
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
     }));
@@ -667,6 +682,25 @@ describe('MatTooltip', () => {
     }));
   });
 
+  describe('special cases', () => {
+    it('should clear the `user-select` when a tooltip is set on a text field in iOS', () => {
+      TestBed.overrideProvider(Platform, {
+        useValue: {IOS: true, isBrowser: true}
+      });
+
+      const fixture = TestBed.createComponent(TooltipOnTextFields);
+      const instance = fixture.componentInstance;
+
+      fixture.detectChanges();
+
+      expect(instance.input.nativeElement.style.userSelect).toBeFalsy();
+      expect(instance.input.nativeElement.style.webkitUserSelect).toBeFalsy();
+
+      expect(instance.textarea.nativeElement.style.userSelect).toBeFalsy();
+      expect(instance.textarea.nativeElement.style.webkitUserSelect).toBeFalsy();
+    });
+  });
+
 });
 
 @Component({
@@ -750,6 +784,24 @@ class DynamicTooltipsDemo {
   getButtons() {
     return this._elementRef.nativeElement.querySelectorAll('button');
   }
+}
+
+@Component({
+  template: `
+    <input
+      #input
+      style="user-select: none; -webkit-user-select: none"
+      matTooltip="Something">
+
+    <textarea
+      #textarea
+      style="user-select: none; -webkit-user-select: none"
+      matTooltip="Another thing"></textarea>
+  `,
+})
+class TooltipOnTextFields {
+  @ViewChild('input') input: ElementRef;
+  @ViewChild('textarea') textarea: ElementRef;
 }
 
 /** Asserts whether a tooltip directive has a tooltip instance. */
