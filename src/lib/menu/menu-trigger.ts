@@ -351,6 +351,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * to the trigger.
    * @returns ConnectedPositionStrategy
    */
+
   private _getPosition(): ConnectedPositionStrategy {
     let [originX, originFallbackX]: HorizontalConnectionPos[] =
         this.menu.xPosition === 'before' ? ['end', 'start'] : ['start', 'end'];
@@ -361,6 +362,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     let [originY, originFallbackY] = [overlayY, overlayFallbackY];
     let [overlayX, overlayFallbackX] = [originX, originFallbackX];
     let offsetY = 0;
+    let offsetX = 0;
 
     if (this.triggersSubmenu()) {
       // When the menu is a sub-menu, it should always align itself
@@ -373,10 +375,19 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       originFallbackY = overlayFallbackY === 'top' ? 'bottom' : 'top';
     }
 
+    if (!this.triggersSubmenu() && this.menu.xOffset) {
+      offsetX = this.menu.xOffset;
+    }
+
+    if (!this.triggersSubmenu() && this.menu.yOffset) {
+      offsetY = this.menu.yOffset;
+    }
+
     return this._overlay.position()
         .connectedTo(this._element, {originX, originY}, {overlayX, overlayY})
         .withDirection(this.dir)
         .withOffsetY(offsetY)
+        .withOffsetX(offsetX)
         .withFallbackPosition(
             {originX: originFallbackX, originY},
             {overlayX: overlayFallbackX, overlayY})

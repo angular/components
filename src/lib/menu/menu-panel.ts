@@ -17,6 +17,8 @@ import {Direction} from '@angular/cdk/bidi';
 export interface MatMenuPanel {
   xPosition: MenuPositionX;
   yPosition: MenuPositionY;
+  xOffset: number;
+  yOffset: number;
   overlapTrigger: boolean;
   templateRef: TemplateRef<any>;
   close: EventEmitter<void | 'click' | 'keydown'>;

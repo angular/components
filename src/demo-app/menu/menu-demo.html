@@ -166,6 +166,22 @@
       </button>
     </mat-menu>
   </div>
+    <div class="menu-section">
+    <p>
+      xoffset: 100 yoffset: 200
+    </p>
+    <mat-toolbar>
+      <button mat-icon-button [mat-menu-trigger-for]="posYMenuOverlay">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <mat-menu yOffset="100" xOffset="200" #posYMenuOverlay="matMenu">
+      <button mat-menu-item *ngFor="let item of items" [disabled]="item.disabled">
+        {{ item.text }}
+      </button>
+    </mat-menu>
+  </div>
 </div>
 
 <div style="height: 500px">This div is for testing scrolled menus.</div>

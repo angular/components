@@ -35,7 +35,12 @@ import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
 import {Subscription} from 'rxjs/Subscription';
 import {fadeInItems, transformMenu} from './menu-animations';
-import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
+import {
+  throwMatMenuInvalidPositionX,
+  throwMatMenuInvalidPositionY,
+  throwMatMenuInvalidOffsetX,
+  throwMatMenuInvalidOffsetY
+} from './menu-errors';
 import {MatMenuItem} from './menu-item';
 import {MatMenuPanel} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
@@ -79,11 +84,15 @@ const MAT_MENU_BASE_ELEVATION = 2;
   ],
   exportAs: 'matMenu'
 })
+
+
 export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   private _keyManager: FocusKeyManager<MatMenuItem>;
   private _xPosition: MenuPositionX = this._defaultOptions.xPosition;
   private _yPosition: MenuPositionY = this._defaultOptions.yPosition;
   private _previousElevation: string;
+  private _xOffset: number;
+  private _yOffset: number;
 
   /** Subscription to tab events on the menu panel */
   private _tabSubscription = Subscription.EMPTY;
@@ -120,6 +129,28 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
     }
     this._yPosition = value;
     this.setPositionClasses();
+  }
+
+  /** Units in pixels to be set in x offset of the menu. */
+  @Input()
+  get xOffset() { return this._xOffset; }
+  set xOffset(value: number) {
+    let offset = +value;
+    if (isNaN(offset)) {
+      throwMatMenuInvalidOffsetX();
+    }
+    this._xOffset = offset;
+  }
+
+    /** Units in pixels to be set in y offset of the menu. */
+  @Input()
+  get yOffset() { return this._yOffset; }
+  set yOffset(value: number) {
+    let offset = +value;
+    if (isNaN(offset)) {
+      throwMatMenuInvalidOffsetY();
+    }
+    this._yOffset = offset;
   }
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;

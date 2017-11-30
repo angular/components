@@ -37,3 +37,21 @@ export function throwMatMenuInvalidPositionY() {
   throw Error(`y-position value must be either 'above' or below'.
       Example: <mat-menu y-position="above" #menu="matMenu"></mat-menu>`);
 }
+
+/**
+ * Throws an exception for the case when menu's x offset is not a number.
+ * @docs-private
+ */
+export function throwMatMenuInvalidOffsetX() {
+  throw Error(`x offset must be a number.
+      Example: <md-menu xOffset="20" #menu="mdMenu"></md-menu>`);
+}
+
+/**
+ * Throws an exception for the case when menu's y offset is not a number.
+ * @docs-private
+ */
+ export function throwMatMenuInvalidOffsetY() {
+  throw Error(`y offset must be a number.
+      Example: <md-menu yOffset="20" #menu="mdMenu"></md-menu>`);
+}
