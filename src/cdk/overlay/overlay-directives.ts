@@ -283,6 +283,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       overlayConfig.backdropClass = this.backdropClass;
     }
 
+    this._configureSize(overlayConfig);
+
     this._position = this._createPositionStrategy() as ConnectedPositionStrategy;
     overlayConfig.positionStrategy = this._position;
     overlayConfig.scrollStrategy = this.scrollStrategy;
@@ -307,6 +309,9 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     if (this.minHeight || this.minHeight === 0) {
       overlayConfig.minHeight = this.minHeight;
     }
+
+    overlayConfig.hasBackdrop = this.hasBackdrop;
+
     if (this.backdropClass) {
       overlayConfig.backdropClass = this.backdropClass;
     }
