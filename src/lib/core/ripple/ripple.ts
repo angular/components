@@ -22,8 +22,19 @@ import {Platform} from '@angular/cdk/platform';
 import {RippleConfig, RippleRenderer} from './ripple-renderer';
 import {RippleRef} from './ripple-ref';
 
+/** Configurable options for `matRipple`. */
 export interface RippleGlobalOptions {
+  /**
+   * Whether ripples should be disabled. Ripples can be still launched manually by using
+   * the `launch()` method. Therefore focus indicators will still show up.
+   */
   disabled?: boolean;
+
+  /**
+   * If set, the default duration of the fade-in animation is divided by this value. For example,
+   * setting it to 0.5 will cause the ripple fade-in animation to take twice as long.
+   * A changed speedFactor will not affect the fade-out duration of the ripples.
+   */
   baseSpeedFactor?: number;
 }
 
@@ -100,7 +111,7 @@ export class MatRipple implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if ((changes['trigger'] || changes['_matRippleTrigger']) && this.trigger) {
+    if (changes['trigger'] && this.trigger) {
       this._rippleRenderer.setTriggerElement(this.trigger);
     }
 

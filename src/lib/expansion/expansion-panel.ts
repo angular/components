@@ -26,9 +26,7 @@ import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {CanDisable, mixinDisabled} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
 import {MatAccordion} from './accordion';
-
-/** Workaround for https://github.com/angular/angular/issues/17849 */
-export const _CdkAccordionItem = CdkAccordionItem;
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /** Time and timing curve for expansion panel animations. */
 export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,1)';
@@ -42,7 +40,7 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatExpansionPanelBase extends _CdkAccordionItem {
+export class MatExpansionPanelBase extends CdkAccordionItem {
   constructor(accordion: MatAccordion,
               _changeDetectorRef: ChangeDetectorRef,
               _uniqueSelectionDispatcher: UniqueSelectionDispatcher) {
@@ -72,6 +70,7 @@ export type MatExpansionPanelState = 'expanded' | 'collapsed';
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   inputs: ['disabled', 'expanded'],
+  outputs: ['opened', 'closed'],
   host: {
     'class': 'mat-expansion-panel',
     '[class.mat-expanded]': 'expanded',
@@ -90,8 +89,16 @@ export type MatExpansionPanelState = 'expanded' | 'collapsed';
 })
 export class MatExpansionPanel extends _MatExpansionPanelMixinBase
     implements CanDisable, OnChanges, OnDestroy {
+
   /** Whether the toggle indicator should be hidden. */
-  @Input() hideToggle: boolean = false;
+  @Input()
+  get hideToggle(): boolean {
+    return this._hideToggle;
+  }
+  set hideToggle(value: boolean) {
+    this._hideToggle = coerceBooleanProperty(value);
+  }
+  private _hideToggle = false;
 
   /** Stream that emits for changes in `@Input` properties. */
   _inputChanges = new Subject<SimpleChanges>();
@@ -132,6 +139,7 @@ export class MatExpansionPanel extends _MatExpansionPanelMixinBase
   }
 
   ngOnDestroy() {
+    super.ngOnDestroy();
     this._inputChanges.complete();
   }
 }

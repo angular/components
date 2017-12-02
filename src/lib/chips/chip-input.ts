@@ -12,8 +12,12 @@ import {Directive, ElementRef, EventEmitter, Input, Output} from '@angular/core'
 import {MatChipList} from './chip-list';
 
 
+/** Represents an input event on a `matChipInput`. */
 export interface MatChipInputEvent {
+  /** The native `<input>` element that the event is being fired for. */
   input: HTMLInputElement;
+
+  /** The value of the input. */
   value: string;
 }
 
@@ -29,6 +33,7 @@ export interface MatChipInputEvent {
     '(keydown)': '_keydown($event)',
     '(blur)': '_blur()',
     '(focus)': '_focus()',
+    '(input)': '_onInput()',
   }
 })
 export class MatChipInput {
@@ -68,7 +73,7 @@ export class MatChipInput {
 
   get empty(): boolean {
     let value: string | null = this._inputElement.value;
-    return value == null || value === '';
+    return (value == null || value === '');
   }
 
   /** The native input element to which this directive is attached. */
@@ -113,6 +118,11 @@ export class MatChipInput {
         event.preventDefault();
       }
     }
+  }
+
+  _onInput() {
+    // Let chip list know whenever the value changes.
+    this._chipList.stateChanges.next();
   }
 
   focus() { this._inputElement.focus(); }

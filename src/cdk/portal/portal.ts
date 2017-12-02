@@ -23,7 +23,7 @@ import {
     throwUnknownPortalTypeError
 } from './portal-errors';
 
-
+/** Interface that can be used to generically type a class. */
 export interface ComponentType<T> {
   new (...args: any[]): T;
 }
@@ -146,16 +146,18 @@ export class TemplatePortal<C> extends Portal<C> {
 }
 
 
-/**
- * A `PortalOutlet` is an space that can contain a single `Portal`.
- */
+/** A `PortalOutlet` is an space that can contain a single `Portal`. */
 export interface PortalOutlet {
+  /** Attaches a portal to this outlet. */
   attach(portal: Portal<any>): any;
 
+  /** Detaches the currently attached portal from this outlet. */
   detach(): any;
 
+  /** Performs cleanup before the outlet is destroyed. */
   dispose(): void;
 
+  /** Whether there is currently a portal attached to this outlet. */
   hasAttached(): boolean;
 }
 
@@ -178,6 +180,10 @@ export abstract class BasePortalOutlet implements PortalOutlet {
   hasAttached(): boolean {
     return !!this._attachedPortal;
   }
+
+  attach<T>(portal: ComponentPortal<T>): ComponentRef<T>;
+  attach<T>(portal: TemplatePortal<T>): EmbeddedViewRef<T>;
+  attach(portal: any): any;
 
   /** Attaches a portal. */
   attach(portal: Portal<any>): any {

@@ -1,7 +1,7 @@
 import {Platform, PlatformModule} from '@angular/cdk/platform';
 import {createFakeEvent, dispatchFakeEvent, wrappedErrorMessage} from '@angular/cdk/testing';
 import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
-import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {ComponentFixture, inject, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {
   FormControl,
   FormGroup,
@@ -12,9 +12,10 @@ import {
   Validators,
 } from '@angular/forms';
 import {
-  MAT_PLACEHOLDER_GLOBAL_OPTIONS,
+  MAT_LABEL_GLOBAL_OPTIONS,
   ShowOnDirtyErrorStateMatcher,
   ErrorStateMatcher,
+  FloatLabelType,
 } from '@angular/material/core';
 import {
   getMatFormFieldDuplicatedHintError,
@@ -28,8 +29,8 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatInputModule} from './index';
 import {MatInput} from './input';
 
-describe('MatInput without forms', function () {
-  beforeEach(async(() => {
+describe('MatInput without forms', () => {
+  beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
@@ -57,34 +58,35 @@ describe('MatInput without forms', function () {
         MatInputPlaceholderRequiredTestComponent,
         MatInputTextTestController,
         MatInputWithDisabled,
-        MatInputWithDynamicPlaceholder,
+        MatInputWithDynamicLabel,
         MatInputWithId,
         MatInputWithPrefixAndSuffix,
         MatInputWithRequired,
-        MatInputWithStaticPlaceholder,
+        MatInputWithStaticLabel,
         MatInputWithType,
         MatInputWithValueBinding,
         MatInputTextareaWithBindings,
         MatInputWithNgIf,
         MatInputOnPush,
         MatInputWithReadonlyInput,
+        MatInputWithLabelAndPlaceholder,
       ],
     });
 
     TestBed.compileComponents();
   }));
 
-  it('should default to floating placeholders', () => {
+  it('should default to floating labels', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputWithId);
     fixture.detectChanges();
 
     let formField = fixture.debugElement.query(By.directive(MatFormField))
         .componentInstance as MatFormField;
-    expect(formField.floatPlaceholder).toBe('auto',
+    expect(formField.floatLabel).toBe('auto',
         'Expected MatInput to set floatingLabel to auto by default.');
-  });
+  }));
 
-  it('should default to global floating placeholder type', () => {
+  it('should default to global floating label type', fakeAsync(() => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [
@@ -96,7 +98,7 @@ describe('MatInput without forms', function () {
       declarations: [
         MatInputWithId
       ],
-      providers: [{ provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: { float: 'always' } }]
+      providers: [{ provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } }]
     });
 
     let fixture = TestBed.createComponent(MatInputWithId);
@@ -104,13 +106,13 @@ describe('MatInput without forms', function () {
 
     let formField = fixture.debugElement.query(By.directive(MatFormField))
         .componentInstance as MatFormField;
-    expect(formField.floatPlaceholder).toBe('always',
-        'Expected MatInput to set floatingLabel to always from global option.');
-  });
+    expect(formField.floatLabel).toBe('always',
+      'Expected MatInput to set floatingLabel to always from global option.');
+  }));
 
   it('should not be treated as empty if type is date',
-      inject([Platform], (platform: Platform) => {
-        if (!(platform.TRIDENT || platform.FIREFOX || (platform.SAFARI && !platform.IOS))) {
+      fakeAsync(inject([Platform], (platform: Platform) => {
+        if (!(platform.TRIDENT || (platform.SAFARI && !platform.IOS))) {
           let fixture = TestBed.createComponent(MatInputDateTestController);
           fixture.detectChanges();
 
@@ -118,12 +120,12 @@ describe('MatInput without forms', function () {
           expect(el).not.toBeNull();
           expect(el.classList.contains('mat-form-field-empty')).toBe(false);
         }
-      }));
+      })));
 
-  // Firefox, Safari Desktop and IE don't support type="date" and fallback to type="text".
-  it('should be treated as empty if type is date on Firefox and IE',
-      inject([Platform], (platform: Platform) => {
-        if (platform.TRIDENT || platform.FIREFOX || (platform.SAFARI && !platform.IOS)) {
+  // Safari Desktop and IE don't support type="date" and fallback to type="text".
+  it('should be treated as empty if type is date in Safari Desktop or IE',
+      fakeAsync(inject([Platform], (platform: Platform) => {
+        if (platform.TRIDENT || (platform.SAFARI && !platform.IOS)) {
           let fixture = TestBed.createComponent(MatInputDateTestController);
           fixture.detectChanges();
 
@@ -131,36 +133,36 @@ describe('MatInput without forms', function () {
           expect(el).not.toBeNull();
           expect(el.classList.contains('mat-form-field-empty')).toBe(true);
         }
-      }));
+      })));
 
-  it('should treat text input type as empty at init', () => {
+  it('should treat text input type as empty at init', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputTextTestController);
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label')).nativeElement;
     expect(el).not.toBeNull();
     expect(el.classList.contains('mat-form-field-empty')).toBe(true);
-  });
+  }));
 
-  it('should treat password input type as empty at init', () => {
+  it('should treat password input type as empty at init', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputPasswordTestController);
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label')).nativeElement;
     expect(el).not.toBeNull();
     expect(el.classList.contains('mat-form-field-empty')).toBe(true);
-  });
+  }));
 
-  it('should treat number input type as empty at init', () => {
+  it('should treat number input type as empty at init', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputNumberTestController);
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label')).nativeElement;
     expect(el).not.toBeNull();
     expect(el.classList.contains('mat-form-field-empty')).toBe(true);
-  });
+  }));
 
-  it('should not be empty after input entered', async(() => {
+  it('should not be empty after input entered', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputTextTestController);
     fixture.detectChanges();
 
@@ -178,8 +180,8 @@ describe('MatInput without forms', function () {
     expect(el.classList.contains('mat-form-field-empty')).toBe(false, 'should not be empty');
   }));
 
-  it('should update the placeholder when input entered', async(() => {
-    let fixture = TestBed.createComponent(MatInputWithStaticPlaceholder);
+  it('should update the placeholder when input entered', fakeAsync(() => {
+    let fixture = TestBed.createComponent(MatInputWithStaticLabel);
     fixture.detectChanges();
 
     let inputEl = fixture.debugElement.query(By.css('input'));
@@ -198,22 +200,20 @@ describe('MatInput without forms', function () {
     expect(labelEl.classList).not.toContain('mat-form-field-float');
   }));
 
-  it('should not be empty when the value set before view init', async(() => {
+  it('should not be empty when the value set before view init', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputWithValueBinding);
     fixture.detectChanges();
+    let labelEl = fixture.debugElement.query(By.css('.mat-form-field-label')).nativeElement;
 
-    let placeholderEl =
-        fixture.debugElement.query(By.css('.mat-form-field-placeholder')).nativeElement;
-
-    expect(placeholderEl.classList).not.toContain('mat-form-field-empty');
+    expect(labelEl.classList).not.toContain('mat-form-field-empty');
 
     fixture.componentInstance.value = '';
     fixture.detectChanges();
 
-    expect(placeholderEl.classList).toContain('mat-form-field-empty');
+    expect(labelEl.classList).toContain('mat-form-field-empty');
   }));
 
-  it('should add id', () => {
+  it('should add id', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputTextTestController);
     fixture.detectChanges();
 
@@ -223,10 +223,10 @@ describe('MatInput without forms', function () {
         fixture.debugElement.query(By.css('label')).nativeElement;
 
     expect(inputElement.id).toBeTruthy();
-    expect(inputElement.id).toEqual(labelElement.getAttribute('for'));
-  });
+    expect(inputElement.id).toEqual(labelElement.getAttribute('for')!);
+  }));
 
-  it('should add aria-owns to the label for the associated control', () => {
+  it('should add aria-owns to the label for the associated control', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputTextTestController);
     fixture.detectChanges();
 
@@ -236,9 +236,26 @@ describe('MatInput without forms', function () {
         fixture.debugElement.query(By.css('label')).nativeElement;
 
     expect(labelElement.getAttribute('aria-owns')).toBe(inputElement.id);
-  });
+  }));
 
-  it('should not overwrite existing id', () => {
+  it('should add aria-required reflecting the required state', fakeAsync(() => {
+    const fixture = TestBed.createComponent(MatInputWithRequired);
+    fixture.detectChanges();
+
+    const inputElement: HTMLInputElement =
+        fixture.debugElement.query(By.css('input')).nativeElement;
+
+    expect(inputElement.getAttribute('aria-required'))
+        .toBe('false', 'Expected aria-required to reflect required state of false');
+
+    fixture.componentInstance.required = true;
+    fixture.detectChanges();
+
+    expect(inputElement.getAttribute('aria-required'))
+        .toBe('true', 'Expected aria-required to reflect required state of true');
+  }));
+
+  it('should not overwrite existing id', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputWithId);
     fixture.detectChanges();
 
@@ -249,37 +266,37 @@ describe('MatInput without forms', function () {
 
     expect(inputElement.id).toBe('test-id');
     expect(labelElement.getAttribute('for')).toBe('test-id');
-  });
+  }));
 
-  it('validates there\'s only one hint label per side', () => {
+  it('validates there\'s only one hint label per side', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputInvalidHintTestController);
 
     expect(() => fixture.detectChanges()).toThrowError(
         wrappedErrorMessage(getMatFormFieldDuplicatedHintError('start')));
-  });
+  }));
 
-  it('validates there\'s only one hint label per side (attribute)', () => {
+  it('validates there\'s only one hint label per side (attribute)', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputInvalidHint2TestController);
 
     expect(() => fixture.detectChanges()).toThrowError(
         wrappedErrorMessage(getMatFormFieldDuplicatedHintError('start')));
-  });
+  }));
 
-  it('validates there\'s only one placeholder', () => {
+  it('validates there\'s only one placeholder', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputInvalidPlaceholderTestController);
 
     expect(() => fixture.detectChanges()).toThrowError(
         wrappedErrorMessage(getMatFormFieldPlaceholderConflictError()));
-  });
+  }));
 
-  it('validates that matInput child is present', () => {
+  it('validates that matInput child is present', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputMissingMatInputTestController);
 
     expect(() => fixture.detectChanges()).toThrowError(
         wrappedErrorMessage(getMatFormFieldMissingControlError()));
-  });
+  }));
 
-  it('validates that matInput child is present after initialization', async(() => {
+  it('validates that matInput child is present after initialization', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputWithNgIf);
 
     expect(() => fixture.detectChanges()).not.toThrowError(
@@ -291,7 +308,7 @@ describe('MatInput without forms', function () {
         wrappedErrorMessage(getMatFormFieldMissingControlError()));
   }));
 
-  it('validates the type', () => {
+  it('validates the type', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputInvalidTypeTestController);
 
     // Technically this throws during the OnChanges detection phase,
@@ -300,9 +317,9 @@ describe('MatInput without forms', function () {
     // We just check for any exception in this case.
     expect(() => fixture.detectChanges()).toThrow(
         /* new MatInputUnsupportedTypeError('file') */);
-  });
+  }));
 
-  it('supports hint labels attribute', () => {
+  it('supports hint labels attribute', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputHintLabelTestController);
     fixture.detectChanges();
 
@@ -312,9 +329,9 @@ describe('MatInput without forms', function () {
     fixture.componentInstance.label = 'label';
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('.mat-hint'))).not.toBeNull();
-  });
+  }));
 
-  it('sets an id on hint labels', () => {
+  it('sets an id on hint labels', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputHintLabelTestController);
 
     fixture.componentInstance.label = 'label';
@@ -323,9 +340,9 @@ describe('MatInput without forms', function () {
     let hint = fixture.debugElement.query(By.css('.mat-hint')).nativeElement;
 
     expect(hint.getAttribute('id')).toBeTruthy();
-  });
+  }));
 
-  it('supports hint labels elements', () => {
+  it('supports hint labels elements', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputHintLabel2TestController);
     fixture.detectChanges();
 
@@ -337,9 +354,9 @@ describe('MatInput without forms', function () {
     fixture.detectChanges();
     el = fixture.debugElement.query(By.css('mat-hint')).nativeElement;
     expect(el.textContent).toBe('label');
-  });
+  }));
 
-  it('sets an id on the hint element', () => {
+  it('sets an id on the hint element', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputHintLabel2TestController);
 
     fixture.componentInstance.label = 'label';
@@ -348,9 +365,9 @@ describe('MatInput without forms', function () {
     let hint = fixture.debugElement.query(By.css('mat-hint')).nativeElement;
 
     expect(hint.getAttribute('id')).toBeTruthy();
-  });
+  }));
 
-  it('supports placeholder attribute', async(() => {
+  it('supports placeholder attribute', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputPlaceholderAttrTestComponent);
     fixture.detectChanges();
 
@@ -370,7 +387,7 @@ describe('MatInput without forms', function () {
     expect(labelEl.nativeElement.textContent).not.toMatch(/\*/g);
   }));
 
-  it('supports placeholder element', async(() => {
+  it('supports placeholder element', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputPlaceholderElementTestComponent);
     fixture.detectChanges();
 
@@ -387,25 +404,25 @@ describe('MatInput without forms', function () {
     expect(el.nativeElement.textContent).not.toMatch(/\*/g);
   }));
 
-  it('supports placeholder required star', () => {
+  it('supports placeholder required star', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputPlaceholderRequiredTestComponent);
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('label'));
     expect(el).not.toBeNull();
     expect(el.nativeElement.textContent).toMatch(/hello\s+\*/g);
-  });
+  }));
 
-  it('should hide the required star from screen readers', () => {
+  it('should hide the required star from screen readers', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputPlaceholderRequiredTestComponent);
     fixture.detectChanges();
 
     let el = fixture.debugElement.query(By.css('.mat-form-field-required-marker')).nativeElement;
 
     expect(el.getAttribute('aria-hidden')).toBe('true');
-  });
+  }));
 
-  it('hide placeholder required star when set to hide the required marker', () => {
+  it('hide placeholder required star when set to hide the required marker', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputPlaceholderRequiredTestComponent);
     fixture.detectChanges();
 
@@ -417,9 +434,9 @@ describe('MatInput without forms', function () {
     fixture.detectChanges();
 
     expect(el.nativeElement.textContent).toMatch(/hello/g);
-  });
+  }));
 
-  it('supports the disabled attribute as binding', async(() => {
+  it('supports the disabled attribute as binding', fakeAsync(() => {
     const fixture = TestBed.createComponent(MatInputWithDisabled);
     fixture.detectChanges();
 
@@ -439,7 +456,7 @@ describe('MatInput without forms', function () {
     expect(inputEl.disabled).toBe(true);
   }));
 
-  it('supports the required attribute as binding', async(() => {
+  it('supports the required attribute as binding', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputWithRequired);
     fixture.detectChanges();
 
@@ -453,7 +470,7 @@ describe('MatInput without forms', function () {
     expect(inputEl.required).toBe(true);
   }));
 
-  it('supports the type attribute as binding', async(() => {
+  it('supports the type attribute as binding', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputWithType);
     fixture.detectChanges();
 
@@ -467,15 +484,15 @@ describe('MatInput without forms', function () {
     expect(inputEl.type).toBe('password');
   }));
 
-  it('supports textarea', () => {
+  it('supports textarea', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputTextareaWithBindings);
     fixture.detectChanges();
 
     const textarea: HTMLTextAreaElement = fixture.nativeElement.querySelector('textarea');
     expect(textarea).not.toBeNull();
-  });
+  }));
 
-  it('sets the aria-describedby when a hintLabel is set', () => {
+  it('sets the aria-describedby when a hintLabel is set', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputHintLabelTestController);
 
     fixture.componentInstance.label = 'label';
@@ -485,9 +502,9 @@ describe('MatInput without forms', function () {
     let input = fixture.debugElement.query(By.css('input')).nativeElement;
 
     expect(input.getAttribute('aria-describedby')).toBe(hint.getAttribute('id'));
-  });
+  }));
 
-  it('sets the aria-describedby to the id of the mat-hint', () => {
+  it('sets the aria-describedby to the id of the mat-hint', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputHintLabel2TestController);
 
     fixture.componentInstance.label = 'label';
@@ -497,9 +514,9 @@ describe('MatInput without forms', function () {
     let input = fixture.debugElement.query(By.css('input')).nativeElement;
 
     expect(input.getAttribute('aria-describedby')).toBe(hint.getAttribute('id'));
-  });
+  }));
 
-  it('sets the aria-describedby with multiple mat-hint instances', () => {
+  it('sets the aria-describedby with multiple mat-hint instances', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputMultipleHintTestController);
 
     fixture.componentInstance.startId = 'start';
@@ -509,23 +526,24 @@ describe('MatInput without forms', function () {
     let input = fixture.debugElement.query(By.css('input')).nativeElement;
 
     expect(input.getAttribute('aria-describedby')).toBe('start end');
-  });
+  }));
 
-  it('sets the aria-describedby when a hintLabel is set, in addition to a mat-hint', () => {
-    let fixture = TestBed.createComponent(MatInputMultipleHintMixedTestController);
+  it('sets the aria-describedby when a hintLabel is set, in addition to a mat-hint',
+    fakeAsync(() => {
+      let fixture = TestBed.createComponent(MatInputMultipleHintMixedTestController);
 
-    fixture.detectChanges();
+      fixture.detectChanges();
 
-    let hintLabel = fixture.debugElement.query(By.css('.mat-hint:not(.mat-right)')).nativeElement;
-    let endLabel = fixture.debugElement.query(By.css('.mat-hint.mat-right')).nativeElement;
-    let input = fixture.debugElement.query(By.css('input')).nativeElement;
-    let ariaValue = input.getAttribute('aria-describedby');
+      let hintLabel = fixture.debugElement.query(By.css('.mat-hint:not(.mat-right)')).nativeElement;
+      let endLabel = fixture.debugElement.query(By.css('.mat-hint.mat-right')).nativeElement;
+      let input = fixture.debugElement.query(By.css('input')).nativeElement;
+      let ariaValue = input.getAttribute('aria-describedby');
 
-    expect(ariaValue).toBe(`${hintLabel.getAttribute('id')} ${endLabel.getAttribute('id')}`);
-  });
+      expect(ariaValue).toBe(`${hintLabel.getAttribute('id')} ${endLabel.getAttribute('id')}`);
+    }));
 
-  it('should float when floatPlaceholder is set to default and text is entered', () => {
-    let fixture = TestBed.createComponent(MatInputWithDynamicPlaceholder);
+  it('should float when floatLabel is set to default and text is entered', fakeAsync(() => {
+    let fixture = TestBed.createComponent(MatInputWithDynamicLabel);
     fixture.detectChanges();
 
     let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
@@ -548,10 +566,10 @@ describe('MatInput without forms', function () {
 
     expect(formFieldEl.classList).toContain('mat-form-field-can-float');
     expect(formFieldEl.classList).toContain('mat-form-field-should-float');
-  });
+  }));
 
-  it('should always float the placeholder when floatPlaceholder is set to true', () => {
-    let fixture = TestBed.createComponent(MatInputWithDynamicPlaceholder);
+  it('should always float the label when floatLabel is set to true', fakeAsync(() => {
+    let fixture = TestBed.createComponent(MatInputWithDynamicLabel);
     fixture.detectChanges();
 
     let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
@@ -570,11 +588,11 @@ describe('MatInput without forms', function () {
 
     expect(formFieldEl.classList).toContain('mat-form-field-can-float');
     expect(formFieldEl.classList).toContain('mat-form-field-should-float');
-  });
+  }));
 
 
-  it('should never float the placeholder when floatPlaceholder is set to false', () => {
-    let fixture = TestBed.createComponent(MatInputWithDynamicPlaceholder);
+  it('should never float the label when floatLabel is set to false', fakeAsync(() => {
+    let fixture = TestBed.createComponent(MatInputWithDynamicLabel);
 
     fixture.componentInstance.shouldFloat = 'never';
     fixture.detectChanges();
@@ -593,29 +611,29 @@ describe('MatInput without forms', function () {
 
     expect(labelEl.classList).not.toContain('mat-form-field-empty');
     expect(labelEl.classList).not.toContain('mat-form-field-float');
-  });
+  }));
 
-  it('should be able to toggle the floating placeholder programmatically', () => {
+  it('should be able to toggle the floating label programmatically', fakeAsync(() => {
     const fixture = TestBed.createComponent(MatInputWithId);
 
     fixture.detectChanges();
 
     const formField = fixture.debugElement.query(By.directive(MatFormField));
     const containerInstance = formField.componentInstance as MatFormField;
-    const placeholder = formField.nativeElement.querySelector('.mat-form-field-placeholder');
+    const label = formField.nativeElement.querySelector('.mat-form-field-label');
 
-    expect(containerInstance.floatPlaceholder).toBe('auto');
-    expect(placeholder.classList)
+    expect(containerInstance.floatLabel).toBe('auto');
+    expect(label.classList)
         .toContain('mat-form-field-empty', 'Expected input to be considered empty.');
 
-    containerInstance.floatPlaceholder = 'always';
+    containerInstance.floatLabel = 'always';
     fixture.detectChanges();
 
-    expect(placeholder.classList)
+    expect(label.classList)
         .not.toContain('mat-form-field-empty', 'Expected input to be considered not empty.');
-  });
+  }));
 
-  it('should not have prefix and suffix elements when none are specified', () => {
+  it('should not have prefix and suffix elements when none are specified', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputWithId);
     fixture.detectChanges();
 
@@ -624,38 +642,37 @@ describe('MatInput without forms', function () {
 
     expect(prefixEl).toBeNull();
     expect(suffixEl).toBeNull();
-  });
+  }));
 
-  it('should add prefix and suffix elements when specified', () => {
-    let fixture = TestBed.createComponent(MatInputWithPrefixAndSuffix);
+  it('should add prefix and suffix elements when specified', fakeAsync(() => {
+    const fixture = TestBed.createComponent(MatInputWithPrefixAndSuffix);
     fixture.detectChanges();
 
-    let prefixEl = fixture.debugElement.query(By.css('.mat-form-field-prefix'));
-    let suffixEl = fixture.debugElement.query(By.css('.mat-form-field-suffix'));
+    const prefixEl = fixture.debugElement.query(By.css('.mat-form-field-prefix'));
+    const suffixEl = fixture.debugElement.query(By.css('.mat-form-field-suffix'));
 
     expect(prefixEl).not.toBeNull();
     expect(suffixEl).not.toBeNull();
     expect(prefixEl.nativeElement.innerText.trim()).toEqual('Prefix');
     expect(suffixEl.nativeElement.innerText.trim()).toEqual('Suffix');
-  });
+  }));
 
-  it('should update empty class when value changes programmatically and OnPush', () => {
+  it('should update empty class when value changes programmatically and OnPush', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputOnPush);
     fixture.detectChanges();
 
     let component = fixture.componentInstance;
-    let placeholder =
-        fixture.debugElement.query(By.css('.mat-form-field-placeholder')).nativeElement;
+    let label = fixture.debugElement.query(By.css('.mat-form-field-label')).nativeElement;
 
-    expect(placeholder.classList).toContain('mat-form-field-empty', 'Input initially empty');
+    expect(label.classList).toContain('mat-form-field-empty', 'Input initially empty');
 
     component.formControl.setValue('something');
     fixture.detectChanges();
 
-    expect(placeholder.classList).not.toContain('mat-form-field-empty', 'Input no longer empty');
-  });
+    expect(label.classList).not.toContain('mat-form-field-empty', 'Input no longer empty');
+  }));
 
-  it('should set the focused class when the input is focused', () => {
+  it('should set the focused class when the input is focused', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputTextTestController);
     fixture.detectChanges();
 
@@ -669,36 +686,55 @@ describe('MatInput without forms', function () {
     fixture.detectChanges();
 
     expect(container.classList).toContain('mat-focused');
-  });
+  }));
 
-  it('should be able to animate the placeholder up and lock it in position', () => {
+  it('should remove the focused class if the input becomes disabled while focused',
+    fakeAsync(() => {
+      const fixture = TestBed.createComponent(MatInputTextTestController);
+      fixture.detectChanges();
+
+      const input = fixture.debugElement.query(By.directive(MatInput)).injector.get(MatInput);
+      const container = fixture.debugElement.query(By.css('mat-form-field')).nativeElement;
+
+      // Call the focus handler directly to avoid flakyness where
+      // browsers don't focus elements if the window is minimized.
+      input._focusChanged(true);
+      fixture.detectChanges();
+
+      expect(container.classList).toContain('mat-focused');
+
+      input.disabled = true;
+      fixture.detectChanges();
+
+      expect(container.classList).not.toContain('mat-focused');
+    }));
+
+  it('should be able to animate the label up and lock it in position', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputTextTestController);
     fixture.detectChanges();
 
     let inputContainer = fixture.debugElement.query(By.directive(MatFormField))
         .componentInstance as MatFormField;
-    let placeholder = fixture.debugElement.query(By.css('.mat-input-placeholder')).nativeElement;
+    let label = fixture.debugElement.query(By.css('.mat-form-field-label')).nativeElement;
 
-    expect(inputContainer.floatPlaceholder).toBe('auto');
+    expect(inputContainer.floatLabel).toBe('auto');
 
-    inputContainer._animateAndLockPlaceholder();
+    inputContainer._animateAndLockLabel();
     fixture.detectChanges();
 
     expect(inputContainer._shouldAlwaysFloat).toBe(false);
-    expect(inputContainer.floatPlaceholder).toBe('always');
+    expect(inputContainer.floatLabel).toBe('always');
 
-    const fakeEvent = Object.assign(createFakeEvent('transitionend'), {
-      propertyName: 'transform'
-    });
+    const fakeEvent = Object.assign(createFakeEvent('transitionend'), {propertyName: 'transform'});
 
-    placeholder.dispatchEvent(fakeEvent);
+    label.dispatchEvent(fakeEvent);
     fixture.detectChanges();
 
     expect(inputContainer._shouldAlwaysFloat).toBe(true);
-    expect(inputContainer.floatPlaceholder).toBe('always');
-  });
+    expect(inputContainer.floatLabel).toBe('always');
+  }));
 
-  it('should not highlight when focusing a readonly input', () => {
+  it('should not highlight when focusing a readonly input', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputWithReadonlyInput);
     fixture.detectChanges();
 
@@ -712,12 +748,63 @@ describe('MatInput without forms', function () {
 
     expect(input.focused).toBe(false);
     expect(container.classList).not.toContain('mat-focused');
+  }));
+
+  it('should only show the native placeholder, when there is a label, on focus', () => {
+    const fixture = TestBed.createComponent(MatInputWithLabelAndPlaceholder);
+    fixture.detectChanges();
+
+    const container = fixture.debugElement.query(By.css('mat-form-field')).nativeElement;
+    const label = fixture.debugElement.query(By.css('.mat-form-field-label')).nativeElement;
+    const input = fixture.debugElement.query(By.css('input')).nativeElement;
+
+    expect(container.classList).toContain('mat-form-field-hide-placeholder');
+    expect(container.classList).not.toContain('mat-form-field-should-float');
+    expect(label.textContent.trim()).toBe('Label');
+    expect(input.getAttribute('placeholder')).toBe('Placeholder');
+
+    input.value = 'Value';
+    fixture.detectChanges();
+
+    expect(container.classList).not.toContain('mat-form-field-hide-placeholder');
+    expect(container.classList).toContain('mat-form-field-should-float');
   });
+
+  it('should always show the native placeholder when floatLabel is set to "always"', () => {
+    const fixture = TestBed.createComponent(MatInputWithLabelAndPlaceholder);
+
+    fixture.componentInstance.floatLabel = 'always';
+    fixture.detectChanges();
+
+    const container = fixture.debugElement.query(By.css('mat-form-field')).nativeElement;
+
+    expect(container.classList).not.toContain('mat-form-field-hide-placeholder');
+  });
+
+  it('should not show the native placeholder when floatLabel is set to "never"', () => {
+    const fixture = TestBed.createComponent(MatInputWithLabelAndPlaceholder);
+
+    fixture.componentInstance.floatLabel = 'never';
+    fixture.detectChanges();
+
+    const container = fixture.debugElement.query(By.css('mat-form-field')).nativeElement;
+    const input = fixture.debugElement.query(By.css('input')).nativeElement;
+
+    expect(container.classList).toContain('mat-form-field-hide-placeholder');
+    expect(container.classList).not.toContain('mat-form-field-should-float');
+
+    input.value = 'Value';
+    fixture.detectChanges();
+
+    expect(container.classList).toContain('mat-form-field-hide-placeholder');
+    expect(container.classList).not.toContain('mat-form-field-should-float');
+  });
+
 });
 
 describe('MatInput with forms', () => {
 
-  beforeEach(async(() => {
+  beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
@@ -745,58 +832,56 @@ describe('MatInput with forms', () => {
     let containerEl: HTMLElement;
     let inputEl: HTMLElement;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(MatInputWithFormErrorMessages);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       containerEl = fixture.debugElement.query(By.css('mat-form-field')).nativeElement;
       inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
-    });
+    }));
 
-    it('should not show any errors if the user has not interacted', () => {
+    it('should not show any errors if the user has not interacted', fakeAsync(() => {
       expect(testComponent.formControl.untouched).toBe(true, 'Expected untouched form control');
       expect(containerEl.querySelectorAll('mat-error').length).toBe(0, 'Expected no error message');
       expect(inputEl.getAttribute('aria-invalid'))
         .toBe('false', 'Expected aria-invalid to be set to "false".');
-    });
+    }));
 
-    it('should display an error message when the input is touched and invalid', async(() => {
+    it('should display an error message when the input is touched and invalid', fakeAsync(() => {
       expect(testComponent.formControl.invalid).toBe(true, 'Expected form control to be invalid');
       expect(containerEl.querySelectorAll('mat-error').length).toBe(0, 'Expected no error message');
 
       testComponent.formControl.markAsTouched();
       fixture.detectChanges();
+      flush();
 
-      fixture.whenStable().then(() => {
-        expect(containerEl.classList)
-          .toContain('mat-form-field-invalid', 'Expected container to have the invalid CSS class.');
-        expect(containerEl.querySelectorAll('mat-error').length)
-          .toBe(1, 'Expected one error message to have been rendered.');
-        expect(inputEl.getAttribute('aria-invalid'))
-          .toBe('true', 'Expected aria-invalid to be set to "true".');
-      });
+      expect(containerEl.classList)
+        .toContain('mat-form-field-invalid', 'Expected container to have the invalid CSS class.');
+      expect(containerEl.querySelectorAll('mat-error').length)
+        .toBe(1, 'Expected one error message to have been rendered.');
+      expect(inputEl.getAttribute('aria-invalid'))
+        .toBe('true', 'Expected aria-invalid to be set to "true".');
     }));
 
-    it('should display an error message when the parent form is submitted', async(() => {
+    it('should display an error message when the parent form is submitted', fakeAsync(() => {
       expect(testComponent.form.submitted).toBe(false, 'Expected form not to have been submitted');
       expect(testComponent.formControl.invalid).toBe(true, 'Expected form control to be invalid');
       expect(containerEl.querySelectorAll('mat-error').length).toBe(0, 'Expected no error message');
 
       dispatchFakeEvent(fixture.debugElement.query(By.css('form')).nativeElement, 'submit');
       fixture.detectChanges();
+      flush();
 
-      fixture.whenStable().then(() => {
-        expect(testComponent.form.submitted).toBe(true, 'Expected form to have been submitted');
-        expect(containerEl.classList)
-          .toContain('mat-form-field-invalid', 'Expected container to have the invalid CSS class.');
-        expect(containerEl.querySelectorAll('mat-error').length)
-          .toBe(1, 'Expected one error message to have been rendered.');
-        expect(inputEl.getAttribute('aria-invalid'))
-          .toBe('true', 'Expected aria-invalid to be set to "true".');
-      });
+      expect(testComponent.form.submitted).toBe(true, 'Expected form to have been submitted');
+      expect(containerEl.classList)
+        .toContain('mat-form-field-invalid', 'Expected container to have the invalid CSS class.');
+      expect(containerEl.querySelectorAll('mat-error').length)
+        .toBe(1, 'Expected one error message to have been rendered.');
+      expect(inputEl.getAttribute('aria-invalid'))
+        .toBe('true', 'Expected aria-invalid to be set to "true".');
     }));
 
-    it('should display an error message when the parent form group is submitted', async(() => {
+    it('should display an error message when the parent form group is submitted', fakeAsync(() => {
       fixture.destroy();
 
       let groupFixture = TestBed.createComponent(MatInputWithFormGroupErrorMessages);
@@ -816,46 +901,43 @@ describe('MatInput with forms', () => {
 
       dispatchFakeEvent(groupFixture.debugElement.query(By.css('form')).nativeElement, 'submit');
       groupFixture.detectChanges();
+      flush();
 
-      groupFixture.whenStable().then(() => {
-        expect(component.formGroupDirective.submitted)
-          .toBe(true, 'Expected form to have been submitted');
-        expect(containerEl.classList)
-          .toContain('mat-form-field-invalid', 'Expected container to have the invalid CSS class.');
-        expect(containerEl.querySelectorAll('mat-error').length)
-          .toBe(1, 'Expected one error message to have been rendered.');
-        expect(inputEl.getAttribute('aria-invalid'))
-          .toBe('true', 'Expected aria-invalid to be set to "true".');
-      });
+      expect(component.formGroupDirective.submitted)
+        .toBe(true, 'Expected form to have been submitted');
+      expect(containerEl.classList)
+        .toContain('mat-form-field-invalid', 'Expected container to have the invalid CSS class.');
+      expect(containerEl.querySelectorAll('mat-error').length)
+        .toBe(1, 'Expected one error message to have been rendered.');
+      expect(inputEl.getAttribute('aria-invalid'))
+        .toBe('true', 'Expected aria-invalid to be set to "true".');
     }));
 
-    it('should hide the errors and show the hints once the input becomes valid', async(() => {
+    it('should hide the errors and show the hints once the input becomes valid', fakeAsync(() => {
       testComponent.formControl.markAsTouched();
       fixture.detectChanges();
+      flush();
 
-      fixture.whenStable().then(() => {
-        expect(containerEl.classList)
-          .toContain('mat-form-field-invalid', 'Expected container to have the invalid CSS class.');
-        expect(containerEl.querySelectorAll('mat-error').length)
-          .toBe(1, 'Expected one error message to have been rendered.');
-        expect(containerEl.querySelectorAll('mat-hint').length)
-          .toBe(0, 'Expected no hints to be shown.');
+      expect(containerEl.classList)
+        .toContain('mat-form-field-invalid', 'Expected container to have the invalid CSS class.');
+      expect(containerEl.querySelectorAll('mat-error').length)
+        .toBe(1, 'Expected one error message to have been rendered.');
+      expect(containerEl.querySelectorAll('mat-hint').length)
+        .toBe(0, 'Expected no hints to be shown.');
 
-        testComponent.formControl.setValue('something');
-        fixture.detectChanges();
+      testComponent.formControl.setValue('something');
+      fixture.detectChanges();
+      flush();
 
-        fixture.whenStable().then(() => {
-          expect(containerEl.classList).not.toContain('mat-form-field-invalid',
-            'Expected container not to have the invalid class when valid.');
-          expect(containerEl.querySelectorAll('mat-error').length)
-            .toBe(0, 'Expected no error messages when the input is valid.');
-          expect(containerEl.querySelectorAll('mat-hint').length)
-            .toBe(1, 'Expected one hint to be shown once the input is valid.');
-        });
-      });
+      expect(containerEl.classList).not.toContain('mat-form-field-invalid',
+        'Expected container not to have the invalid class when valid.');
+      expect(containerEl.querySelectorAll('mat-error').length)
+        .toBe(0, 'Expected no error messages when the input is valid.');
+      expect(containerEl.querySelectorAll('mat-hint').length)
+        .toBe(1, 'Expected one hint to be shown once the input is valid.');
     }));
 
-    it('should not hide the hint if there are no error messages', async(() => {
+    it('should not hide the hint if there are no error messages', fakeAsync(() => {
       testComponent.renderError = false;
       fixture.detectChanges();
 
@@ -864,21 +946,20 @@ describe('MatInput with forms', () => {
 
       testComponent.formControl.markAsTouched();
       fixture.detectChanges();
+      flush();
 
-      fixture.whenStable().then(() => {
-        expect(containerEl.querySelectorAll('mat-hint').length)
-          .toBe(1, 'Expected one hint to still be shown.');
-      });
+      expect(containerEl.querySelectorAll('mat-hint').length)
+        .toBe(1, 'Expected one hint to still be shown.');
     }));
 
-    it('should set the proper role on the error messages', () => {
+    it('should set the proper role on the error messages', fakeAsync(() => {
       testComponent.formControl.markAsTouched();
       fixture.detectChanges();
 
       expect(containerEl.querySelector('mat-error')!.getAttribute('role')).toBe('alert');
-    });
+    }));
 
-    it('sets the aria-describedby to reference errors when in error state', () => {
+    it('sets the aria-describedby to reference errors when in error state', fakeAsync(() => {
       let hintId = fixture.debugElement.query(By.css('.mat-hint')).nativeElement.getAttribute('id');
       let describedBy = inputEl.getAttribute('aria-describedby');
 
@@ -894,12 +975,12 @@ describe('MatInput with forms', () => {
 
       expect(errorIds).toBeTruthy('errors should be shown');
       expect(describedBy).toBe(errorIds);
-    });
+    }));
   });
 
   describe('custom error behavior', () => {
 
-    it('should display an error message when a custom error matcher returns true', () => {
+    it('should display an error message when a custom error matcher returns true', fakeAsync(() => {
       let fixture = TestBed.createComponent(MatInputWithCustomErrorStateMatcher);
       fixture.detectChanges();
 
@@ -923,9 +1004,9 @@ describe('MatInput with forms', () => {
 
       expect(containerEl.querySelectorAll('mat-error').length)
         .toBe(1, 'Expected one error messages to have been rendered.');
-    });
+    }));
 
-    it('should display an error message when global error matcher returns true', () => {
+    it('should display an error message when global error matcher returns true', fakeAsync(() => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         imports: [
@@ -951,9 +1032,9 @@ describe('MatInput with forms', () => {
       // Expect the control to still be untouched but the error to show due to the global setting
       expect(testComponent.formControl.untouched).toBe(true, 'Expected untouched form control');
       expect(containerEl.querySelectorAll('mat-error').length).toBe(1, 'Expected an error message');
-    });
+    }));
 
-    it('should display an error message when using ShowOnDirtyErrorStateMatcher', async(() => {
+    it('should display an error message when using ShowOnDirtyErrorStateMatcher', fakeAsync(() => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         imports: [
@@ -992,7 +1073,7 @@ describe('MatInput with forms', () => {
     }));
   });
 
-  it('should update the value when using FormControl.setValue', () => {
+  it('should update the value when using FormControl.setValue', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputWithFormControl);
     fixture.detectChanges();
 
@@ -1004,9 +1085,9 @@ describe('MatInput with forms', () => {
     fixture.componentInstance.formControl.setValue('something');
 
     expect(input.value).toBe('something');
-  });
+  }));
 
-  it('should display disabled styles when using FormControl.disable()', () => {
+  it('should display disabled styles when using FormControl.disable()', fakeAsync(() => {
     const fixture = TestBed.createComponent(MatInputWithFormControl);
     fixture.detectChanges();
 
@@ -1024,19 +1105,18 @@ describe('MatInput with forms', () => {
     expect(formFieldEl.classList).toContain('mat-form-field-disabled',
       `Expected form field to look disabled after disable() is called.`);
     expect(inputEl.disabled).toBe(true);
-  });
+  }));
 
-  it('should not treat the number 0 as empty', async(() => {
+  it('should not treat the number 0 as empty', fakeAsync(() => {
     let fixture = TestBed.createComponent(MatInputZeroTestController);
     fixture.detectChanges();
+    flush();
 
-    fixture.whenStable().then(() => {
-      fixture.detectChanges();
+    fixture.detectChanges();
 
-      let el = fixture.debugElement.query(By.css('label')).nativeElement;
-      expect(el).not.toBeNull();
-      expect(el.classList.contains('mat-form-field-empty')).toBe(false);
-    });
+    let el = fixture.debugElement.query(By.css('label')).nativeElement;
+    expect(el).not.toBeNull();
+    expect(el.classList.contains('mat-form-field-empty')).toBe(false);
   }));
 });
 
@@ -1226,20 +1306,20 @@ class MatInputWithValueBinding {
 
 @Component({
   template: `
-    <mat-form-field floatPlaceholder="never">
+    <mat-form-field floatLabel="never">
       <input matInput placeholder="Label">
     </mat-form-field>
   `
 })
-class MatInputWithStaticPlaceholder {}
+class MatInputWithStaticLabel {}
 
 @Component({
   template: `
-    <mat-form-field [floatPlaceholder]="shouldFloat">
+    <mat-form-field [floatLabel]="shouldFloat">
       <input matInput placeholder="Label">
     </mat-form-field>`
 })
-class MatInputWithDynamicPlaceholder {
+class MatInputWithDynamicLabel {
   shouldFloat: string = 'always';
 }
 
@@ -1362,3 +1442,15 @@ class MatInputOnPush {
   `
 })
 class MatInputWithReadonlyInput {}
+
+@Component({
+  template: `
+    <mat-form-field [floatLabel]="floatLabel">
+      <mat-label>Label</mat-label>
+      <input matInput placeholder="Placeholder">
+    </mat-form-field>
+  `
+})
+class MatInputWithLabelAndPlaceholder {
+  floatLabel: FloatLabelType;
+}

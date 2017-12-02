@@ -30,7 +30,7 @@ jobs:
     - env: "MODE=saucelabs_required"
     - env: "MODE=browserstack_required"
     - env: "MODE=travis_required"
-      env: "DEPLOY_MODE=build-artifacts"
+    - env: "DEPLOY_MODE=build-artifacts"
     - env: "DEPLOY_MODE=docs-content"
     - env: "DEPLOY_MODE=screenshot-tool"
     - env: "DEPLOY_MODE=dashboard"
@@ -58,3 +58,8 @@ script:
 cache:
   directories:
     - ./node_modules/
+
+notifications:
+  webhooks:
+    urls:
+      - https://us-central1-test-jperrott.cloudfunctions.net/travisCi

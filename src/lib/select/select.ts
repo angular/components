@@ -19,7 +19,7 @@ import {
   ViewportRuler,
 } from '@angular/cdk/overlay';
 import {filter} from 'rxjs/operators/filter';
-import {first} from 'rxjs/operators/first';
+import {take} from 'rxjs/operators/take';
 import {map} from 'rxjs/operators/map';
 import {startWith} from 'rxjs/operators/startWith';
 import {takeUntil} from 'rxjs/operators/takeUntil';
@@ -46,7 +46,6 @@ import {
   Optional,
   Output,
   QueryList,
-  Renderer2,
   Self,
   SimpleChanges,
   ViewChild,
@@ -54,7 +53,6 @@ import {
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  FormControl,
   FormGroupDirective,
   NgControl,
   NgForm
@@ -62,6 +60,8 @@ import {
 import {
   CanDisable,
   ErrorStateMatcher,
+  CanUpdateErrorState,
+  mixinErrorState,
   HasTabIndex,
   MatOptgroup,
   MatOption,
@@ -143,9 +143,13 @@ export class MatSelectChange {
 // Boilerplate for applying mixins to MatSelect.
 /** @docs-private */
 export class MatSelectBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  constructor(public _elementRef: ElementRef,
+              public _defaultErrorStateMatcher: ErrorStateMatcher,
+              public _parentForm: NgForm,
+              public _parentFormGroup: FormGroupDirective,
+              public ngControl: NgControl) {}
 }
-export const _MatSelectMixinBase = mixinTabIndex(mixinDisabled(MatSelectBase));
+export const _MatSelectMixinBase = mixinTabIndex(mixinDisabled(mixinErrorState(MatSelectBase)));
 
 
 /**
@@ -199,7 +203,7 @@ export class MatSelectTrigger {}
 })
 export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnChanges,
     OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex,
-    MatFormFieldControl<any> {
+    MatFormFieldControl<any>, CanUpdateErrorState {
   /** Whether or not the overlay panel is open. */
   private _panelOpen = false;
 
@@ -284,12 +288,6 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       overlayY: 'bottom',
     },
   ];
-
-  /**
-   * Stream that emits whenever the state of the select changes such that the wrapping
-   * `MatFormField` needs to run change detection.
-   */
-  stateChanges = new Subject<void>();
 
   /** Whether the select is focused. */
   focused = false;
@@ -452,18 +450,17 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     private _viewportRuler: ViewportRuler,
     private _changeDetectorRef: ChangeDetectorRef,
     private _ngZone: NgZone,
-    private _defaultErrorStateMatcher: ErrorStateMatcher,
-    renderer: Renderer2,
+    _defaultErrorStateMatcher: ErrorStateMatcher,
     elementRef: ElementRef,
     @Optional() private _dir: Directionality,
-    @Optional() private _parentForm: NgForm,
-    @Optional() private _parentFormGroup: FormGroupDirective,
+    @Optional() _parentForm: NgForm,
+    @Optional() _parentFormGroup: FormGroupDirective,
     @Optional() private _parentFormField: MatFormField,
     @Self() @Optional() public ngControl: NgControl,
     @Attribute('tabindex') tabIndex: string,
     @Inject(MAT_SELECT_SCROLL_STRATEGY) private _scrollStrategyFactory) {
-
-    super(renderer, elementRef);
+    super(elementRef, _defaultErrorStateMatcher, _parentForm,
+          _parentFormGroup, ngControl);
 
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
@@ -491,7 +488,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   ngDoCheck() {
     if (this.ngControl) {
-      this._updateErrorState();
+      this.updateErrorState();
     }
   }
 
@@ -515,7 +512,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** Opens the overlay panel. */
   open(): void {
-    if (this.disabled || !this.options.length) {
+    if (this.disabled || !this.options || !this.options.length) {
       return;
     }
 
@@ -530,7 +527,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     this._changeDetectorRef.markForCheck();
 
     // Set the font size on the panel element once it exists.
-    this._ngZone.onStable.asObservable().pipe(first()).subscribe(() => {
+    this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
       if (this._triggerFontSize && this.overlayDir.overlayRef &&
           this.overlayDir.overlayRef.overlayElement) {
         this.overlayDir.overlayRef.overlayElement.style.fontSize = `${this._triggerFontSize}px`;
@@ -605,7 +602,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** The value displayed in the trigger. */
   get triggerValue(): string {
-    if (!this._selectionModel || this._selectionModel.isEmpty()) {
+    if (this.empty) {
       return '';
     }
 
@@ -714,7 +711,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    * Callback that is invoked when the overlay panel has been attached.
    */
   _onAttached(): void {
-    this.overlayDir.positionChange.pipe(first()).subscribe(() => {
+    this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
       this._changeDetectorRef.detectChanges();
       this._calculateOverlayOffsetX();
       this.panel.nativeElement.scrollTop = this._scrollTop;
@@ -730,9 +727,6 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   get empty(): boolean {
     return !this._selectionModel || this._selectionModel.isEmpty();
   }
-
-  /** Whether the select is in an error state. */
-  errorState: boolean;
 
   private _initializeSelection(): void {
     // Defer setting the value in order to avoid the "Expression
@@ -912,10 +906,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    * the first item instead.
    */
   private _highlightCorrectOption(): void {
-    if (this._selectionModel.isEmpty()) {
-      this._keyManager.setFirstItemActive();
-    } else {
-      this._keyManager.setActiveItem(this._getOptionIndex(this._selectionModel.selected[0])!);
+    if (this._keyManager) {
+      if (this.empty) {
+        this._keyManager.setFirstItemActive();
+      } else {
+        this._keyManager.setActiveItem(this._getOptionIndex(this._selectionModel.selected[0])!);
+      }
     }
   }
 
@@ -1188,20 +1184,6 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     return this._triggerFontSize * SELECT_ITEM_HEIGHT_EM;
   }
 
-  /** Updates the select's error state. Only relevant when used with @angular/forms. */
-  private _updateErrorState() {
-    const oldState = this.errorState;
-    const parent = this._parentFormGroup || this._parentForm;
-    const matcher = this.errorStateMatcher || this._defaultErrorStateMatcher;
-    const control = this.ngControl ? this.ngControl.control as FormControl : null;
-    const newState = matcher.isErrorState(control, parent);
-
-    if (newState !== oldState) {
-      this.errorState = newState;
-      this.stateChanges.next();
-    }
-  }
-
   // Implemented as part of MatFormFieldControl.
   setDescribedByIds(ids: string[]) {
     this._ariaDescribedby = ids.join(' ');
@@ -1214,7 +1196,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   }
 
   // Implemented as part of MatFormFieldControl.
-  get shouldPlaceholderFloat(): boolean {
+  get shouldLabelFloat(): boolean {
     return this._panelOpen || !this.empty;
   }
 }

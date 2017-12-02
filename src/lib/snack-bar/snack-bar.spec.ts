@@ -1,10 +1,10 @@
 import {
   inject,
-  async,
   ComponentFixture,
   TestBed,
   fakeAsync,
   tick,
+  flush,
 } from '@angular/core/testing';
 import {NgModule, Component, Directive, ViewChild, ViewContainerRef, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
@@ -32,11 +32,10 @@ describe('MatSnackBar', () => {
   let simpleMessage = 'Burritos are here!';
   let simpleActionLabel = 'pickup';
 
-  beforeEach(async(() => {
+  beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatSnackBarModule, SnackBarTestModule, NoopAnimationsModule],
-    });
-    TestBed.compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(inject([MatSnackBar, LiveAnnouncer, OverlayContainer],
@@ -67,21 +66,20 @@ describe('MatSnackBar', () => {
         .toBe('alert', 'Expected snack bar container to have role="alert"');
    });
 
-   it('should open and close a snackbar without a ViewContainerRef', async(() => {
-     let snackBarRef = snackBar.open('Snack time!', 'Chew');
-     viewContainerFixture.detectChanges();
+   it('should open and close a snackbar without a ViewContainerRef', fakeAsync(() => {
+      let snackBarRef = snackBar.open('Snack time!', 'Chew');
+      viewContainerFixture.detectChanges();
 
-     let messageElement = overlayContainerElement.querySelector('snack-bar-container')!;
-     expect(messageElement.textContent).toContain('Snack time!',
+      let messageElement = overlayContainerElement.querySelector('snack-bar-container')!;
+      expect(messageElement.textContent).toContain('Snack time!',
          'Expected snack bar to show a message without a ViewContainerRef');
 
-     snackBarRef.dismiss();
-     viewContainerFixture.detectChanges();
+      snackBarRef.dismiss();
+      viewContainerFixture.detectChanges();
+      flush();
 
-     viewContainerFixture.whenStable().then(() => {
-       expect(overlayContainerElement.childNodes.length)
+      expect(overlayContainerElement.childNodes.length)
           .toBe(0, 'Expected snack bar to be dismissed without a ViewContainerRef');
-     });
    }));
 
   it('should open a simple message with a button', () => {
@@ -126,54 +124,49 @@ describe('MatSnackBar', () => {
         .toBeNull('Expected the query selection for action label to be null');
   });
 
-  it('should dismiss the snack bar and remove itself from the view', async(() => {
+  it('should dismiss the snack bar and remove itself from the view', fakeAsync(() => {
     let config: MatSnackBarConfig = {viewContainerRef: testViewContainerRef};
-    let dismissObservableCompleted = false;
+    let dismissCompleteSpy = jasmine.createSpy('dismiss complete spy');
 
     let snackBarRef = snackBar.open(simpleMessage, undefined, config);
     viewContainerFixture.detectChanges();
     expect(overlayContainerElement.childElementCount)
         .toBeGreaterThan(0, 'Expected overlay container element to have at least one child');
 
-    snackBarRef.afterDismissed().subscribe(undefined, undefined, () => {
-      dismissObservableCompleted = true;
-    });
+    snackBarRef.afterDismissed().subscribe(undefined, undefined, dismissCompleteSpy);
 
     snackBarRef.dismiss();
     viewContainerFixture.detectChanges();  // Run through animations for dismissal
+    flush();
 
-    viewContainerFixture.whenStable().then(() => {
-      expect(dismissObservableCompleted).toBeTruthy('Expected the snack bar to be dismissed');
-      expect(overlayContainerElement.childElementCount)
-          .toBe(0, 'Expected the overlay container element to have no child elements');
-    });
+    expect(dismissCompleteSpy).toHaveBeenCalled();
+    expect(overlayContainerElement.childElementCount)
+        .toBe(0, 'Expected the overlay container element to have no child elements');
   }));
 
-  it('should be able to get dismissed through the service', async(() => {
+  it('should be able to get dismissed through the service', fakeAsync(() => {
     snackBar.open(simpleMessage);
     viewContainerFixture.detectChanges();
     expect(overlayContainerElement.childElementCount).toBeGreaterThan(0);
 
     snackBar.dismiss();
     viewContainerFixture.detectChanges();
+    flush();
 
-    viewContainerFixture.whenStable().then(() => {
-      expect(overlayContainerElement.childElementCount).toBe(0);
-    });
+    expect(overlayContainerElement.childElementCount).toBe(0);
   }));
 
-  it('should clean itself up when the view container gets destroyed', async(() => {
+  it('should clean itself up when the view container gets destroyed', fakeAsync(() => {
     snackBar.open(simpleMessage, undefined, { viewContainerRef: testViewContainerRef });
     viewContainerFixture.detectChanges();
     expect(overlayContainerElement.childElementCount).toBeGreaterThan(0);
 
     viewContainerFixture.componentInstance.childComponentExists = false;
     viewContainerFixture.detectChanges();
+    flush();
 
-    viewContainerFixture.whenStable().then(() => {
-      expect(overlayContainerElement.childElementCount)
-          .toBe(0, 'Expected snack bar to be removed after the view container was destroyed');
-    });
+    expect(overlayContainerElement.childElementCount)
+        .toBe(0, 'Expected snack bar to be removed after the view container was destroyed');
   }));
 
   it('should set the animation state to visible on entry', () => {
@@ -201,10 +194,10 @@ describe('MatSnackBar', () => {
   });
 
   it(`should set the old snack bar animation state to complete and the new snack bar animation
-      state to visible on entry of new snack bar`, async(() => {
+      state to visible on entry of new snack bar`, fakeAsync(() => {
     let config: MatSnackBarConfig = {viewContainerRef: testViewContainerRef};
     let snackBarRef = snackBar.open(simpleMessage, undefined, config);
-    let dismissObservableCompleted = false;
+    let dismissCompleteSpy = jasmine.createSpy('dismiss complete spy');
 
     viewContainerFixture.detectChanges();
     expect(snackBarRef.containerInstance._animationState)
@@ -214,20 +207,17 @@ describe('MatSnackBar', () => {
     let snackBarRef2 = snackBar.open(simpleMessage, undefined, config2);
 
     viewContainerFixture.detectChanges();
-    snackBarRef.afterDismissed().subscribe(undefined, undefined, () => {
-      dismissObservableCompleted = true;
-    });
+    snackBarRef.afterDismissed().subscribe(undefined, undefined, dismissCompleteSpy);
+    flush();
 
-    viewContainerFixture.whenStable().then(() => {
-      expect(dismissObservableCompleted).toBe(true);
-      expect(snackBarRef.containerInstance._animationState)
-          .toBe('hidden-bottom', `Expected the animation state would be 'hidden-bottom'.`);
-      expect(snackBarRef2.containerInstance._animationState)
-          .toBe('visible-bottom', `Expected the animation state would be 'visible-bottom'.`);
-    });
+    expect(dismissCompleteSpy).toHaveBeenCalled();
+    expect(snackBarRef.containerInstance._animationState)
+        .toBe('hidden-bottom', `Expected the animation state would be 'hidden-bottom'.`);
+    expect(snackBarRef2.containerInstance._animationState)
+        .toBe('visible-bottom', `Expected the animation state would be 'visible-bottom'.`);
   }));
 
-  it('should open a new snackbar after dismissing a previous snackbar', async(() => {
+  it('should open a new snackbar after dismissing a previous snackbar', fakeAsync(() => {
     let config: MatSnackBarConfig = {viewContainerRef: testViewContainerRef};
     let snackBarRef = snackBar.open(simpleMessage, 'Dismiss', config);
 
@@ -237,33 +227,29 @@ describe('MatSnackBar', () => {
     viewContainerFixture.detectChanges();
 
     // Wait for the snackbar dismiss animation to finish.
-    viewContainerFixture.whenStable().then(() => {
-      snackBarRef = snackBar.open('Second snackbar', 'Dismiss', config);
-      viewContainerFixture.detectChanges();
+    flush();
+    snackBarRef = snackBar.open('Second snackbar', 'Dismiss', config);
+    viewContainerFixture.detectChanges();
 
-      // Wait for the snackbar open animation to finish.
-      viewContainerFixture.whenStable().then(() => {
-        expect(snackBarRef.containerInstance._animationState)
-            .toBe('visible-bottom', `Expected the animation state would be 'visible-bottom'.`);
-      });
-    });
+    // Wait for the snackbar open animation to finish.
+    flush();
+    expect(snackBarRef.containerInstance._animationState)
+        .toBe('visible-bottom', `Expected the animation state would be 'visible-bottom'.`);
   }));
 
-  it('should remove past snackbars when opening new snackbars', async(() => {
+  it('should remove past snackbars when opening new snackbars', fakeAsync(() => {
     snackBar.open('First snackbar');
     viewContainerFixture.detectChanges();
 
     snackBar.open('Second snackbar');
     viewContainerFixture.detectChanges();
+    flush();
 
-    viewContainerFixture.whenStable().then(() => {
-      snackBar.open('Third snackbar');
-      viewContainerFixture.detectChanges();
+    snackBar.open('Third snackbar');
+    viewContainerFixture.detectChanges();
+    flush();
 
-      viewContainerFixture.whenStable().then(() => {
-        expect(overlayContainerElement.textContent!.trim()).toBe('Third snackbar');
-      });
-    });
+    expect(overlayContainerElement.textContent!.trim()).toBe('Third snackbar');
   }));
 
   it('should remove snackbar if another is shown while its still animating open', fakeAsync(() => {
@@ -282,70 +268,75 @@ describe('MatSnackBar', () => {
 
   it('should dismiss the snackbar when the action is called, notifying of both action and dismiss',
      fakeAsync(() => {
-       let dismissObservableCompleted = false;
-       let actionObservableCompleted = false;
-       let snackBarRef = snackBar.open('Some content', 'Dismiss');
-       viewContainerFixture.detectChanges();
+      const dismissCompleteSpy = jasmine.createSpy('dismiss complete spy');
+      const actionCompleteSpy = jasmine.createSpy('action complete spy');
+      const snackBarRef = snackBar.open('Some content', 'Dismiss');
+      viewContainerFixture.detectChanges();
 
-       snackBarRef.afterDismissed().subscribe(undefined, undefined, () => {
-         dismissObservableCompleted = true;
-       });
-       snackBarRef.onAction().subscribe(undefined, undefined, () => {
-         actionObservableCompleted = true;
-      });
+      snackBarRef.afterDismissed().subscribe(undefined, undefined, dismissCompleteSpy);
+      snackBarRef.onAction().subscribe(undefined, undefined, actionCompleteSpy);
 
-      let actionButton =
+      const actionButton =
         overlayContainerElement.querySelector('.mat-simple-snackbar-action') as HTMLButtonElement;
       actionButton.click();
       viewContainerFixture.detectChanges();
       tick();
 
-      expect(dismissObservableCompleted).toBeTruthy('Expected the snack bar to be dismissed');
-      expect(actionObservableCompleted).toBeTruthy('Expected the snack bar to notify of action');
+      expect(dismissCompleteSpy).toHaveBeenCalled();
+      expect(actionCompleteSpy).toHaveBeenCalled();
 
       tick(500);
     }));
 
   it('should allow manually closing with an action', fakeAsync(() => {
-    let dismissObservableCompleted = false;
-    let actionObservableCompleted = false;
-    let snackBarRef = snackBar.open('Some content');
+    const dismissCompleteSpy = jasmine.createSpy('dismiss complete spy');
+    const actionCompleteSpy = jasmine.createSpy('action complete spy');
+    const snackBarRef = snackBar.open('Some content');
     viewContainerFixture.detectChanges();
 
-    snackBarRef.afterDismissed().subscribe(undefined, undefined, () => {
-      dismissObservableCompleted = true;
-    });
-    snackBarRef.onAction().subscribe(undefined, undefined, () => {
-      actionObservableCompleted = true;
-    });
+    snackBarRef.afterDismissed().subscribe(undefined, undefined, dismissCompleteSpy);
+    snackBarRef.onAction().subscribe(undefined, undefined, actionCompleteSpy);
 
     snackBarRef.closeWithAction();
     viewContainerFixture.detectChanges();
     tick();
 
-    expect(dismissObservableCompleted).toBeTruthy('Expected the snack bar to be dismissed');
-    expect(actionObservableCompleted).toBeTruthy('Expected the snack bar to notify of action');
+    expect(dismissCompleteSpy).toHaveBeenCalled();
+    expect(actionCompleteSpy).toHaveBeenCalled();
+
+    tick(500);
+  }));
+
+  it('should complete the onAction stream when not closing via an action', fakeAsync(() => {
+    const actionCompleteSpy = jasmine.createSpy('action complete spy');
+    const snackBarRef = snackBar.open('Some content');
+    viewContainerFixture.detectChanges();
+
+    snackBarRef.onAction().subscribe(undefined, undefined, actionCompleteSpy);
+    snackBarRef.dismiss();
+    viewContainerFixture.detectChanges();
+    tick();
+
+    expect(actionCompleteSpy).toHaveBeenCalled();
 
     tick(500);
   }));
 
   it('should dismiss automatically after a specified timeout', fakeAsync(() => {
-    let dismissObservableCompleted = false;
     let config = new MatSnackBarConfig();
     config.duration = 250;
     let snackBarRef = snackBar.open('content', 'test', config);
-    snackBarRef.afterDismissed().subscribe(() => {
-      dismissObservableCompleted = true;
-    });
+    let afterDismissSpy = jasmine.createSpy('after dismiss spy');
+    snackBarRef.afterDismissed().subscribe(afterDismissSpy);
 
     viewContainerFixture.detectChanges();
     tick();
-    expect(dismissObservableCompleted).toBeFalsy('Expected the snack bar not to be dismissed');
+    expect(afterDismissSpy).not.toHaveBeenCalled();
 
     tick(1000);
     viewContainerFixture.detectChanges();
     tick();
-    expect(dismissObservableCompleted).toBeTruthy('Expected the snack bar to be dismissed');
+    expect(afterDismissSpy).toHaveBeenCalled();
   }));
 
   it('should clear the dismiss timeout when dismissed before timeout expiration', fakeAsync(() => {
@@ -411,24 +402,20 @@ describe('MatSnackBar', () => {
     });
 
     it('should allow manually closing with an action', fakeAsync(() => {
-      let dismissObservableCompleted = false;
-      let actionObservableCompleted = false;
+      const dismissCompleteSpy = jasmine.createSpy('dismiss complete spy');
+      const actionCompleteSpy = jasmine.createSpy('action complete spy');
       const snackBarRef = snackBar.openFromComponent(BurritosNotification);
       viewContainerFixture.detectChanges();
 
-      snackBarRef.afterDismissed().subscribe(undefined, undefined, () => {
-        dismissObservableCompleted = true;
-      });
-      snackBarRef.onAction().subscribe(undefined, undefined, () => {
-        actionObservableCompleted = true;
-      });
+      snackBarRef.afterDismissed().subscribe(undefined, undefined, dismissCompleteSpy);
+      snackBarRef.onAction().subscribe(undefined, undefined, actionCompleteSpy);
 
       snackBarRef.closeWithAction();
       viewContainerFixture.detectChanges();
       tick();
 
-      expect(dismissObservableCompleted).toBeTruthy('Expected the snack bar to be dismissed');
-      expect(actionObservableCompleted).toBeTruthy('Expected the snack bar to notify of action');
+      expect(dismissCompleteSpy).toHaveBeenCalled();
+      expect(actionCompleteSpy).toHaveBeenCalled();
 
       tick(500);
     }));
@@ -445,13 +432,11 @@ describe('MatSnackBar with parent MatSnackBar', () => {
   let fixture: ComponentFixture<ComponentThatProvidesMatSnackBar>;
   let liveAnnouncer: LiveAnnouncer;
 
-  beforeEach(async(() => {
+  beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatSnackBarModule, SnackBarTestModule, NoopAnimationsModule],
       declarations: [ComponentThatProvidesMatSnackBar],
-    });
-
-    TestBed.compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(inject([MatSnackBar, LiveAnnouncer, OverlayContainer],
@@ -517,11 +502,10 @@ describe('MatSnackBar Positioning', () => {
   let simpleMessage = 'Burritos are here!';
   let simpleActionLabel = 'pickup';
 
-  beforeEach(async(() => {
+  beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatSnackBarModule, SnackBarTestModule, NoopAnimationsModule],
-    });
-    TestBed.compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(inject([MatSnackBar, LiveAnnouncer, OverlayContainer],
@@ -543,145 +527,145 @@ describe('MatSnackBar Positioning', () => {
     testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
   });
 
-  it('should default to bottom center', async(() => {
+  it('should default to bottom center', fakeAsync(() => {
     snackBar.open(simpleMessage, simpleActionLabel);
 
     viewContainerFixture.detectChanges();
-    viewContainerFixture.whenStable().then(() => {
-      const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
-      const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+    flush();
 
-      expect(containerEl.classList.contains('mat-snack-bar-center')).toBeTruthy();
-      expect(containerEl.classList.contains('mat-snack-bar-top')).toBeFalsy();
+    const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
+    const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-      expect(overlayPaneEl.style.marginBottom).toBe('0px', 'Expected margin-bottom to be "0px"');
-      expect(overlayPaneEl.style.marginTop).toBe('', 'Expected margin-top to be ""');
-      expect(overlayPaneEl.style.marginRight).toBe('', 'Expected margin-right to be ""');
-      expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
-    });
+    expect(containerEl.classList.contains('mat-snack-bar-center')).toBeTruthy();
+    expect(containerEl.classList.contains('mat-snack-bar-top')).toBeFalsy();
+
+    expect(overlayPaneEl.style.marginBottom).toBe('0px', 'Expected margin-bottom to be "0px"');
+    expect(overlayPaneEl.style.marginTop).toBe('', 'Expected margin-top to be ""');
+    expect(overlayPaneEl.style.marginRight).toBe('', 'Expected margin-right to be ""');
+    expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
   }));
 
-  it('should be in the bottom left corner', async(() => {
+  it('should be in the bottom left corner', fakeAsync(() => {
     snackBar.open(simpleMessage, simpleActionLabel, {
       verticalPosition: 'bottom',
       horizontalPosition: 'left'
     });
 
     viewContainerFixture.detectChanges();
-    viewContainerFixture.whenStable().then(() => {
-      const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
-      const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+    flush();
 
-      expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
-      expect(containerEl.classList.contains('mat-snack-bar-top')).toBeFalsy();
-      expect(overlayPaneEl.style.marginBottom).toBe('0px', 'Expected margin-bottom to be "0px"');
-      expect(overlayPaneEl.style.marginTop).toBe('', 'Expected margin-top to be ""');
-      expect(overlayPaneEl.style.marginRight).toBe('', 'Expected margin-right to be ""');
-      expect(overlayPaneEl.style.marginLeft).toBe('0px', 'Expected margin-left  to be "0px"');
-    });
+    const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
+    const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
+    expect(containerEl.classList.contains('mat-snack-bar-top')).toBeFalsy();
+    expect(overlayPaneEl.style.marginBottom).toBe('0px', 'Expected margin-bottom to be "0px"');
+    expect(overlayPaneEl.style.marginTop).toBe('', 'Expected margin-top to be ""');
+    expect(overlayPaneEl.style.marginRight).toBe('', 'Expected margin-right to be ""');
+    expect(overlayPaneEl.style.marginLeft).toBe('0px', 'Expected margin-left  to be "0px"');
    }));
 
-   it('should be in the bottom right corner', async(() => {
+   it('should be in the bottom right corner', fakeAsync(() => {
     snackBar.open(simpleMessage, simpleActionLabel, {
       verticalPosition: 'bottom',
       horizontalPosition: 'right'
     });
 
     viewContainerFixture.detectChanges();
-    viewContainerFixture.whenStable().then(() => {
-      const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
-      const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+    flush();
 
-      expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
-      expect(containerEl.classList.contains('mat-snack-bar-top')).toBeFalsy();
-      expect(overlayPaneEl.style.marginBottom).toBe('0px', 'Expected margin-bottom to be "0px"');
-      expect(overlayPaneEl.style.marginTop).toBe('', 'Expected margin-top to be ""');
-      expect(overlayPaneEl.style.marginRight).toBe('0px', 'Expected margin-right to be "0px"');
-      expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
-    });
+    const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
+    const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
+    expect(containerEl.classList.contains('mat-snack-bar-top')).toBeFalsy();
+    expect(overlayPaneEl.style.marginBottom).toBe('0px', 'Expected margin-bottom to be "0px"');
+    expect(overlayPaneEl.style.marginTop).toBe('', 'Expected margin-top to be ""');
+    expect(overlayPaneEl.style.marginRight).toBe('0px', 'Expected margin-right to be "0px"');
+    expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
    }));
 
-   it('should be in the bottom center', async(() => {
+   it('should be in the bottom center', fakeAsync(() => {
     snackBar.open(simpleMessage, simpleActionLabel, {
       verticalPosition: 'bottom',
       horizontalPosition: 'center'
     });
 
     viewContainerFixture.detectChanges();
-    viewContainerFixture.whenStable().then(() => {
-      const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
-      const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+    flush();
 
-      expect(containerEl.classList.contains('mat-snack-bar-center')).toBeTruthy();
-      expect(containerEl.classList.contains('mat-snack-bar-top')).toBeFalsy();
-      expect(overlayPaneEl.style.marginBottom).toBe('0px', 'Expected margin-bottom to be "0px"');
-      expect(overlayPaneEl.style.marginTop).toBe('', 'Expected margin-top to be ""');
-      expect(overlayPaneEl.style.marginRight).toBe('', 'Expected margin-right to be ""');
-      expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
-    });
+    const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
+    const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(containerEl.classList.contains('mat-snack-bar-center')).toBeTruthy();
+    expect(containerEl.classList.contains('mat-snack-bar-top')).toBeFalsy();
+    expect(overlayPaneEl.style.marginBottom).toBe('0px', 'Expected margin-bottom to be "0px"');
+    expect(overlayPaneEl.style.marginTop).toBe('', 'Expected margin-top to be ""');
+    expect(overlayPaneEl.style.marginRight).toBe('', 'Expected margin-right to be ""');
+    expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
    }));
 
-   it('should be in the top left corner', async(() => {
+   it('should be in the top left corner', fakeAsync(() => {
     snackBar.open(simpleMessage, simpleActionLabel, {
       verticalPosition: 'top',
       horizontalPosition: 'left'
     });
 
     viewContainerFixture.detectChanges();
-    viewContainerFixture.whenStable().then(() => {
-      const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
-      const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+    flush();
 
-      expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
-      expect(containerEl.classList.contains('mat-snack-bar-top')).toBeTruthy();
-      expect(overlayPaneEl.style.marginBottom).toBe('', 'Expected margin-bottom to be ""');
-      expect(overlayPaneEl.style.marginTop).toBe('0px', 'Expected margin-top to be "0px"');
-      expect(overlayPaneEl.style.marginRight).toBe('', 'Expected margin-right to be ""');
-      expect(overlayPaneEl.style.marginLeft).toBe('0px', 'Expected margin-left  to be "0px"');
-    });
+    const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
+    const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
+    expect(containerEl.classList.contains('mat-snack-bar-top')).toBeTruthy();
+    expect(overlayPaneEl.style.marginBottom).toBe('', 'Expected margin-bottom to be ""');
+    expect(overlayPaneEl.style.marginTop).toBe('0px', 'Expected margin-top to be "0px"');
+    expect(overlayPaneEl.style.marginRight).toBe('', 'Expected margin-right to be ""');
+    expect(overlayPaneEl.style.marginLeft).toBe('0px', 'Expected margin-left  to be "0px"');
    }));
 
-   it('should be in the top right corner', async(() => {
+   it('should be in the top right corner', fakeAsync(() => {
     snackBar.open(simpleMessage, simpleActionLabel, {
       verticalPosition: 'top',
       horizontalPosition: 'right'
     });
 
     viewContainerFixture.detectChanges();
-    viewContainerFixture.whenStable().then(() => {
-      const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
-      const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+    flush();
 
-      expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
-      expect(containerEl.classList.contains('mat-snack-bar-top')).toBeTruthy();
-      expect(overlayPaneEl.style.marginBottom).toBe('', 'Expected margin-bottom to be ""');
-      expect(overlayPaneEl.style.marginTop).toBe('0px', 'Expected margin-top to be "0px"');
-      expect(overlayPaneEl.style.marginRight).toBe('0px', 'Expected margin-right to be "0px"');
-      expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
-    });
+    const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
+    const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
+    expect(containerEl.classList.contains('mat-snack-bar-top')).toBeTruthy();
+    expect(overlayPaneEl.style.marginBottom).toBe('', 'Expected margin-bottom to be ""');
+    expect(overlayPaneEl.style.marginTop).toBe('0px', 'Expected margin-top to be "0px"');
+    expect(overlayPaneEl.style.marginRight).toBe('0px', 'Expected margin-right to be "0px"');
+    expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
    }));
 
-   it('should be in the top center', async(() => {
+   it('should be in the top center', fakeAsync(() => {
     snackBar.open(simpleMessage, simpleActionLabel, {
       verticalPosition: 'top',
       horizontalPosition: 'center'
     });
 
     viewContainerFixture.detectChanges();
-    viewContainerFixture.whenStable().then(() => {
-      const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
-      const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+    flush();
 
-      expect(containerEl.classList.contains('mat-snack-bar-center')).toBeTruthy();
-      expect(containerEl.classList.contains('mat-snack-bar-top')).toBeTruthy();
-      expect(overlayPaneEl.style.marginBottom).toBe('', 'Expected margin-bottom to be ""');
-      expect(overlayPaneEl.style.marginTop).toBe('0px', 'Expected margin-top to be "0px"');
-      expect(overlayPaneEl.style.marginRight).toBe('', 'Expected margin-right to be ""');
-      expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
-    });
+    const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
+    const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(containerEl.classList.contains('mat-snack-bar-center')).toBeTruthy();
+    expect(containerEl.classList.contains('mat-snack-bar-top')).toBeTruthy();
+    expect(overlayPaneEl.style.marginBottom).toBe('', 'Expected margin-bottom to be ""');
+    expect(overlayPaneEl.style.marginTop).toBe('0px', 'Expected margin-top to be "0px"');
+    expect(overlayPaneEl.style.marginRight).toBe('', 'Expected margin-right to be ""');
+    expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
    }));
 
-   it('should handle start based on direction (rtl)', async(() => {
+   it('should handle start based on direction (rtl)', fakeAsync(() => {
     snackBar.open(simpleMessage, simpleActionLabel, {
       verticalPosition: 'top',
       horizontalPosition: 'start',
@@ -689,20 +673,20 @@ describe('MatSnackBar Positioning', () => {
     });
 
     viewContainerFixture.detectChanges();
-    viewContainerFixture.whenStable().then(() => {
-      const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
-      const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+    flush();
 
-      expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
-      expect(containerEl.classList.contains('mat-snack-bar-top')).toBeTruthy();
-      expect(overlayPaneEl.style.marginBottom).toBe('', 'Expected margin-bottom to be ""');
-      expect(overlayPaneEl.style.marginTop).toBe('0px', 'Expected margin-top to be "0px"');
-      expect(overlayPaneEl.style.marginRight).toBe('0px', 'Expected margin-right to be "0px"');
-      expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
-    });
+    const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
+    const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
+    expect(containerEl.classList.contains('mat-snack-bar-top')).toBeTruthy();
+    expect(overlayPaneEl.style.marginBottom).toBe('', 'Expected margin-bottom to be ""');
+    expect(overlayPaneEl.style.marginTop).toBe('0px', 'Expected margin-top to be "0px"');
+    expect(overlayPaneEl.style.marginRight).toBe('0px', 'Expected margin-right to be "0px"');
+    expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
   }));
 
-  it('should handle start based on direction (ltr)', async(() => {
+  it('should handle start based on direction (ltr)', fakeAsync(() => {
     snackBar.open(simpleMessage, simpleActionLabel, {
       verticalPosition: 'top',
       horizontalPosition: 'start',
@@ -710,20 +694,20 @@ describe('MatSnackBar Positioning', () => {
     });
 
     viewContainerFixture.detectChanges();
-    viewContainerFixture.whenStable().then(() => {
-      const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
-      const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+    flush();
 
-      expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
-      expect(containerEl.classList.contains('mat-snack-bar-top')).toBeTruthy();
-      expect(overlayPaneEl.style.marginBottom).toBe('', 'Expected margin-bottom to be ""');
-      expect(overlayPaneEl.style.marginTop).toBe('0px', 'Expected margin-top to be "0px"');
-      expect(overlayPaneEl.style.marginRight).toBe('', 'Expected margin-right to be ""');
-      expect(overlayPaneEl.style.marginLeft).toBe('0px', 'Expected margin-left  to be "0px"');
-    });
+    const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
+    const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
+    expect(containerEl.classList.contains('mat-snack-bar-top')).toBeTruthy();
+    expect(overlayPaneEl.style.marginBottom).toBe('', 'Expected margin-bottom to be ""');
+    expect(overlayPaneEl.style.marginTop).toBe('0px', 'Expected margin-top to be "0px"');
+    expect(overlayPaneEl.style.marginRight).toBe('', 'Expected margin-right to be ""');
+    expect(overlayPaneEl.style.marginLeft).toBe('0px', 'Expected margin-left  to be "0px"');
   }));
 
-  it('should handle end based on direction (rtl)', async(() => {
+  it('should handle end based on direction (rtl)', fakeAsync(() => {
     snackBar.open(simpleMessage, simpleActionLabel, {
       verticalPosition: 'top',
       horizontalPosition: 'end',
@@ -731,20 +715,20 @@ describe('MatSnackBar Positioning', () => {
     });
 
     viewContainerFixture.detectChanges();
-    viewContainerFixture.whenStable().then(() => {
-      const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
-      const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+    flush();
 
-      expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
-      expect(containerEl.classList.contains('mat-snack-bar-top')).toBeTruthy();
-      expect(overlayPaneEl.style.marginBottom).toBe('', 'Expected margin-bottom to be ""');
-      expect(overlayPaneEl.style.marginTop).toBe('0px', 'Expected margin-top to be "0px"');
-      expect(overlayPaneEl.style.marginRight).toBe('', 'Expected margin-right to be ""');
-      expect(overlayPaneEl.style.marginLeft).toBe('0px', 'Expected margin-left  to be "0px"');
-    });
+    const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
+    const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
+    expect(containerEl.classList.contains('mat-snack-bar-top')).toBeTruthy();
+    expect(overlayPaneEl.style.marginBottom).toBe('', 'Expected margin-bottom to be ""');
+    expect(overlayPaneEl.style.marginTop).toBe('0px', 'Expected margin-top to be "0px"');
+    expect(overlayPaneEl.style.marginRight).toBe('', 'Expected margin-right to be ""');
+    expect(overlayPaneEl.style.marginLeft).toBe('0px', 'Expected margin-left  to be "0px"');
   }));
 
-  it('should handle end based on direction (ltr)', async(() => {
+  it('should handle end based on direction (ltr)', fakeAsync(() => {
     snackBar.open(simpleMessage, simpleActionLabel, {
       verticalPosition: 'top',
       horizontalPosition: 'end',
@@ -752,17 +736,17 @@ describe('MatSnackBar Positioning', () => {
     });
 
     viewContainerFixture.detectChanges();
-    viewContainerFixture.whenStable().then(() => {
-      const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
-      const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+    flush();
 
-      expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
-      expect(containerEl.classList.contains('mat-snack-bar-top')).toBeTruthy();
-      expect(overlayPaneEl.style.marginBottom).toBe('', 'Expected margin-bottom to be ""');
-      expect(overlayPaneEl.style.marginTop).toBe('0px', 'Expected margin-top to be "0px"');
-      expect(overlayPaneEl.style.marginRight).toBe('0px', 'Expected margin-right to be "0px"');
-      expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
-    });
+    const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
+    const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(containerEl.classList.contains('mat-snack-bar-center')).toBeFalsy();
+    expect(containerEl.classList.contains('mat-snack-bar-top')).toBeTruthy();
+    expect(overlayPaneEl.style.marginBottom).toBe('', 'Expected margin-bottom to be ""');
+    expect(overlayPaneEl.style.marginTop).toBe('0px', 'Expected margin-top to be "0px"');
+    expect(overlayPaneEl.style.marginRight).toBe('0px', 'Expected margin-right to be "0px"');
+    expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
   }));
 
 });

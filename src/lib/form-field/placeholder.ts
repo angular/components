@@ -9,7 +9,7 @@
 import {Directive} from '@angular/core';
 
 
-/** The floating placeholder for an `MatFormField`. */
+/** The placeholder text for an `MatFormField`. */
 @Directive({
   selector: 'mat-placeholder'
 })

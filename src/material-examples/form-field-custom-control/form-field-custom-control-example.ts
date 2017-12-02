@@ -1,6 +1,6 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Component, ElementRef, Input, OnDestroy, Renderer2} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {MatFormFieldControl} from '@angular/material/form-field';
 import {Subject} from 'rxjs/Subject';
@@ -19,7 +19,7 @@ export class MyTel {
   styleUrls: ['form-field-custom-control-example.css'],
   providers: [{provide: MatFormFieldControl, useExisting: MyTelInput}],
   host: {
-    '[class.floating]': 'shouldPlaceholderFloat',
+    '[class.floating]': 'shouldLabelFloat',
     '[id]': 'id',
     '[attr.aria-describedby]': 'describedBy',
   }
@@ -44,7 +44,7 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, OnDestroy {
     return !n.area && !n.exchange && !n.subscriber;
   }
 
-  get shouldPlaceholderFloat() {
+  get shouldLabelFloat() {
     return this.focused || !this.empty;
   }
 
@@ -96,15 +96,14 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, OnDestroy {
     this.stateChanges.next();
   }
 
-  constructor(fb: FormBuilder, private fm: FocusMonitor, private elRef: ElementRef,
-              renderer: Renderer2) {
+  constructor(fb: FormBuilder, private fm: FocusMonitor, private elRef: ElementRef) {
     this.parts =  fb.group({
       'area': '',
       'exchange': '',
       'subscriber': '',
     });
 
-    fm.monitor(elRef.nativeElement, renderer, true).subscribe((origin) => {
+    fm.monitor(elRef.nativeElement, true).subscribe((origin) => {
       this.focused = !!origin;
       this.stateChanges.next();
     });

@@ -18,7 +18,7 @@ import {
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
-import {first} from 'rxjs/operators/first';
+import {take} from 'rxjs/operators/take';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -38,7 +38,7 @@ import {
 } from '@angular/core';
 import {DateAdapter} from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {DOCUMENT} from '@angular/platform-browser';
+import {DOCUMENT} from '@angular/common';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {MatCalendar} from './calendar';
@@ -84,6 +84,7 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER = {
     '[class.mat-datepicker-content-touch]': 'datepicker.touchUi',
     '(keydown)': '_handleKeydown($event)',
   },
+  exportAs: 'matDatepickerContent',
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -144,15 +145,22 @@ export class MatDatepicker<D> implements OnDestroy {
    * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather
    * than a popup and elements have more padding to allow for bigger touch targets.
    */
-  @Input() touchUi = false;
+  @Input()
+  get touchUi(): boolean {
+    return this._touchUi;
+  }
+  set touchUi(value: boolean) {
+    this._touchUi = coerceBooleanProperty(value);
+  }
+  private _touchUi = false;
 
   /** Whether the datepicker pop-up should be disabled. */
   @Input()
-  get disabled() {
+  get disabled(): boolean {
     return this._disabled === undefined && this._datepickerInput ?
         this._datepickerInput.disabled : !!this._disabled;
   }
-  set disabled(value: any) {
+  set disabled(value: boolean) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._disabled) {
@@ -171,8 +179,17 @@ export class MatDatepicker<D> implements OnDestroy {
   /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
   @Input() panelClass: string | string[];
 
+  /** Emits when the datepicker has been opened. */
+  @Output('opened') openedStream: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Emits when the datepicker has been closed. */
+  @Output('closed') closedStream: EventEmitter<void> = new EventEmitter<void>();
+
   /** Whether the calendar is open. */
-  opened = false;
+  @Input()
+  get opened(): boolean { return this._opened; }
+  set opened(shouldOpen: boolean) { shouldOpen ? this.open() : this.close(); }
+  private _opened = false;
 
   /** The id for the datepicker calendar. */
   id = `mat-datepicker-${datepickerUid++}`;
@@ -263,7 +280,7 @@ export class MatDatepicker<D> implements OnDestroy {
 
   /** Open the calendar. */
   open(): void {
-    if (this.opened || this.disabled) {
+    if (this._opened || this.disabled) {
       return;
     }
     if (!this._datepickerInput) {
@@ -274,12 +291,13 @@ export class MatDatepicker<D> implements OnDestroy {
     }
 
     this.touchUi ? this._openAsDialog() : this._openAsPopup();
-    this.opened = true;
+    this._opened = true;
+    this.openedStream.emit();
   }
 
   /** Close the calendar. */
   close(): void {
-    if (!this.opened) {
+    if (!this._opened) {
       return;
     }
     if (this._popupRef && this._popupRef.hasAttached()) {
@@ -299,7 +317,8 @@ export class MatDatepicker<D> implements OnDestroy {
       this._focusedElementBeforeOpen = null;
     }
 
-    this.opened = false;
+    this._opened = false;
+    this.closedStream.emit();
   }
 
   /** Open the calendar as a dialog. */
@@ -329,7 +348,7 @@ export class MatDatepicker<D> implements OnDestroy {
       componentRef.instance.datepicker = this;
 
       // Update the position once the calendar has rendered.
-      this._ngZone.onStable.asObservable().pipe(first()).subscribe(() => {
+      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
         this._popupRef.updatePosition();
       });
     }
@@ -353,22 +372,28 @@ export class MatDatepicker<D> implements OnDestroy {
 
   /** Create the popup PositionStrategy. */
   private _createPopupPositionStrategy(): PositionStrategy {
+    const fallbackOffset = this._datepickerInput._getPopupFallbackOffset();
+
     return this._overlay.position()
       .connectedTo(this._datepickerInput.getPopupConnectionElementRef(),
         {originX: 'start', originY: 'bottom'},
         {overlayX: 'start', overlayY: 'top'}
       )
       .withFallbackPosition(
-        { originX: 'start', originY: 'top' },
-        { overlayX: 'start', overlayY: 'bottom' }
+        {originX: 'start', originY: 'top'},
+        {overlayX: 'start', overlayY: 'bottom'},
+        undefined,
+        fallbackOffset
       )
       .withFallbackPosition(
         {originX: 'end', originY: 'bottom'},
         {overlayX: 'end', overlayY: 'top'}
       )
       .withFallbackPosition(
-        { originX: 'end', originY: 'top' },
-        { overlayX: 'end', overlayY: 'bottom' }
+        {originX: 'end', originY: 'top'},
+        {overlayX: 'end', overlayY: 'bottom'},
+        undefined,
+        fallbackOffset
       );
   }
 

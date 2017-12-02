@@ -12,7 +12,7 @@ import {Direction} from '@angular/cdk/bidi';
 import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {startWith} from 'rxjs/operators/startWith';
 import {switchMap} from 'rxjs/operators/switchMap';
-import {first} from 'rxjs/operators/first';
+import {take} from 'rxjs/operators/take';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -39,12 +39,18 @@ import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu
 import {MatMenuItem} from './menu-item';
 import {MatMenuPanel} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 
 /** Default `mat-menu` options that can be overridden. */
 export interface MatMenuDefaultOptions {
+  /** The x-axis position of the menu. */
   xPosition: MenuPositionX;
+
+  /** The y-axis position of the menu. */
   yPosition: MenuPositionY;
+
+  /** Whether the menu should overlap the menu trigger. */
   overlapTrigger: boolean;
 }
 
@@ -122,7 +128,14 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   @ContentChildren(MatMenuItem) items: QueryList<MatMenuItem>;
 
   /** Whether the menu should overlap its trigger. */
-  @Input() overlapTrigger = this._defaultOptions.overlapTrigger;
+  @Input()
+  set overlapTrigger(value: boolean) {
+    this._overlapTrigger = coerceBooleanProperty(value);
+  }
+  get overlapTrigger(): boolean {
+    return this._overlapTrigger;
+  }
+  private _overlapTrigger: boolean = this._defaultOptions.overlapTrigger;
 
   /**
    * This method takes classes set on the host mat-menu element and applies them on the
@@ -174,7 +187,6 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
   ngOnDestroy() {
     this._tabSubscription.unsubscribe();
-    this.closed.emit();
     this.closed.complete();
   }
 
@@ -189,7 +201,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
     return this._ngZone.onStable
       .asObservable()
-      .pipe(first(), switchMap(() => this._hovered()));
+      .pipe(take(1), switchMap(() => this._hovered()));
   }
 
   /** Handle a keyboard event from the menu, delegating to the appropriate action. */

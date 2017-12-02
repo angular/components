@@ -1,6 +1,6 @@
 import {TAB} from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
-import {Component, Renderer2} from '@angular/core';
+import {Component} from '@angular/core';
 import {ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {FocusMonitor, FocusOrigin, TOUCH_BUFFER_MS} from './focus-monitor';
@@ -10,7 +10,6 @@ import {A11yModule} from './index';
 describe('FocusMonitor', () => {
   let fixture: ComponentFixture<PlainButton>;
   let buttonElement: HTMLElement;
-  let buttonRenderer: Renderer2;
   let focusMonitor: FocusMonitor;
   let changeHandler: (origin: FocusOrigin) => void;
 
@@ -28,11 +27,10 @@ describe('FocusMonitor', () => {
     fixture.detectChanges();
 
     buttonElement = fixture.debugElement.query(By.css('button')).nativeElement;
-    buttonRenderer = fixture.componentInstance.renderer;
     focusMonitor = fm;
 
     changeHandler = jasmine.createSpy('focus origin change handler');
-    focusMonitor.monitor(buttonElement, buttonRenderer, false).subscribe(changeHandler);
+    focusMonitor.monitor(buttonElement, false).subscribe(changeHandler);
     patchElementFocus(buttonElement);
   }));
 
@@ -380,9 +378,7 @@ describe('cdkMonitorFocus', () => {
 @Component({
   template: `<button>focus me!</button>`
 })
-class PlainButton {
-  constructor(public renderer: Renderer2) {}
-}
+class PlainButton {}
 
 
 @Component({

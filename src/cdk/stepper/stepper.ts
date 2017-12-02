@@ -13,9 +13,6 @@ import {
   Output,
   QueryList,
   Directive,
-  // This import is only used to define a generic type. The current TypeScript version incorrectly
-  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
-  // tslint:disable-next-line:no-unused-variable
   ElementRef,
   Component,
   ContentChild,
@@ -28,12 +25,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   OnChanges,
+  OnDestroy
 } from '@angular/core';
 import {LEFT_ARROW, RIGHT_ARROW, ENTER, SPACE} from '@angular/cdk/keycodes';
 import {CdkStepLabel} from './step-label';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {AbstractControl} from '@angular/forms';
 import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Subject} from 'rxjs/Subject';
 
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;
@@ -132,7 +131,10 @@ export class CdkStep implements OnChanges {
   selector: '[cdkStepper]',
   exportAs: 'cdkStepper',
 })
-export class CdkStepper {
+export class CdkStepper implements OnDestroy {
+  /** Emits when the component is destroyed. */
+  protected _destroyed = new Subject<void>();
+
   /** The list of step components that the stepper is holding. */
   @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
 
@@ -150,7 +152,7 @@ export class CdkStepper {
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
     if (this._steps) {
-      if (this._anyControlsInvalid(index) || index < this._selectedIndex &&
+      if (this._anyControlsInvalidOrPending(index) || index < this._selectedIndex &&
           !this._steps.toArray()[index].editable) {
         // remove focus from clicked step header if the step is not able to be selected
         this._stepHeader.toArray()[index].nativeElement.blur();
@@ -184,6 +186,11 @@ export class CdkStepper {
     @Optional() private _dir: Directionality,
     private _changeDetectorRef: ChangeDetectorRef) {
     this._groupId = nextId++;
+  }
+
+  ngOnDestroy() {
+    this._destroyed.next();
+    this._destroyed.complete();
   }
 
   /** Selects and focuses the next step in list. */
@@ -284,13 +291,15 @@ export class CdkStepper {
     this._stepHeader.toArray()[this._focusIndex].nativeElement.focus();
   }
 
-  private _anyControlsInvalid(index: number): boolean {
+  private _anyControlsInvalidOrPending(index: number): boolean {
     const steps = this._steps.toArray();
 
     steps[this._selectedIndex].interacted = true;
 
     if (this._linear && index >= 0) {
-      return steps.slice(0, index).some(step => step.stepControl && step.stepControl.invalid);
+      return steps.slice(0, index).some(step =>
+        step.stepControl && (step.stepControl.invalid || step.stepControl.pending)
+      );
     }
     return false;
   }

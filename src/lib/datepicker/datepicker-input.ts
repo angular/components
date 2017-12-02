@@ -19,7 +19,6 @@ import {
   OnDestroy,
   Optional,
   Output,
-  Renderer2,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -29,10 +28,11 @@ import {
   ValidationErrors,
   Validator,
   ValidatorFn,
-  Validators,
+  Validators
 } from '@angular/forms';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
+import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs/Subscription';
 import {MatDatepicker} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -70,7 +70,11 @@ export class MatDatepickerInputEvent<D> {
 /** Directive used to connect an input to a MatDatepicker. */
 @Directive({
   selector: 'input[matDatepicker]',
-  providers: [MAT_DATEPICKER_VALUE_ACCESSOR, MAT_DATEPICKER_VALIDATORS],
+  providers: [
+    MAT_DATEPICKER_VALUE_ACCESSOR,
+    MAT_DATEPICKER_VALIDATORS,
+    {provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: MatDatepickerInput},
+  ],
   host: {
     '[attr.aria-haspopup]': 'true',
     '[attr.aria-owns]': '(_datepicker?.opened && _datepicker.id) || null',
@@ -117,8 +121,8 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     value = this._getValidDateOrNull(value);
     let oldDate = this.value;
     this._value = value;
-    this._renderer.setProperty(this._elementRef.nativeElement, 'value',
-        value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '');
+    this._elementRef.nativeElement.value =
+        value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
     if (!this._dateAdapter.sameDate(oldDate, value)) {
       this._valueChange.emit(value);
     }
@@ -217,7 +221,6 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   constructor(
       private _elementRef: ElementRef,
-      private _renderer: Renderer2,
       @Optional() private _dateAdapter: DateAdapter<D>,
       @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
       @Optional() private _formField: MatFormField) {
@@ -268,6 +271,14 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
    */
   getPopupConnectionElementRef(): ElementRef {
     return this._formField ? this._formField.underlineRef : this._elementRef;
+  }
+
+  /**
+   * Determines the offset to be used when the calendar goes into a fallback position.
+   * Primarily used to prevent the calendar from overlapping the input.
+   */
+  _getPopupFallbackOffset(): number {
+    return this._formField ? -this._formField._inputContainerRef.nativeElement.clientHeight : 0;
   }
 
   // Implemented as part of ControlValueAccessor
