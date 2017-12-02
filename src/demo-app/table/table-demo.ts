@@ -13,10 +13,9 @@ import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {DetailRow, PersonDetailDataSource} from './person-detail-data-source';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {SelectionModel} from '@angular/cdk/collections';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/observable/fromEvent';
+import {distinctUntilChanged} from 'rxjs/operators/distinctUntilChanged';
+import {debounceTime} from 'rxjs/operators/debounceTime';
+import {fromEvent} from 'rxjs/observable/fromEvent';
 
 export type UserProperties = 'userId' | 'userName' | 'progress' | 'color' | undefined;
 
@@ -44,6 +43,7 @@ export class TableDemo {
   displayedColumns: UserProperties[] = [];
   trackByStrategy: TrackByStrategy = 'reference';
   changeReferences = false;
+  progressSortingDisabled = false;
   highlights = new Set<string>();
   wasExpanded = new Set<UserData>();
 
@@ -88,13 +88,14 @@ export class TableDemo {
 
   ngOnInit() {
     this.connect();
-    Observable.fromEvent(this.filter.nativeElement, 'keyup')
-        .debounceTime(150)
-        .distinctUntilChanged()
-        .subscribe(() => {
-          this.paginatorForDataSource.pageIndex = 0;
-          this.matTableDataSource.filter = this.filter.nativeElement.value;
-        });
+    fromEvent(this.filter.nativeElement, 'keyup')
+      .pipe(
+        debounceTime(150),
+        distinctUntilChanged()
+      ).subscribe(() => {
+        this.paginatorForDataSource.pageIndex = 0;
+        this.matTableDataSource.filter = this.filter.nativeElement.value;
+      });
   }
 
   /** Whether all filtered rows are selected. */

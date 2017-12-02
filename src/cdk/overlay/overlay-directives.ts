@@ -6,6 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ESCAPE} from '@angular/cdk/keycodes';
+import {TemplatePortal} from '@angular/cdk/portal';
 import {
   Directive,
   ElementRef,
@@ -17,28 +21,21 @@ import {
   OnDestroy,
   Optional,
   Output,
-  Renderer2,
   SimpleChanges,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ESCAPE} from '@angular/cdk/keycodes';
-import {TemplatePortal} from '@angular/cdk/portal';
+import {Subscription} from 'rxjs/Subscription';
 import {Overlay} from './overlay';
-import {OverlayRef} from './overlay-ref';
 import {OverlayConfig} from './overlay-config';
+import {OverlayRef} from './overlay-ref';
 import {
-  // This import is only used to define a generic type. The current TypeScript version incorrectly
-  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
-  // tslint:disable-next-line:no-unused-variable
   ConnectedOverlayPositionChange,
   ConnectionPositionPair,
 } from './position/connected-position';
 import {ConnectedPositionStrategy} from './position/connected-position-strategy';
 import {RepositionScrollStrategy, ScrollStrategy} from './scroll/index';
-import {Subscription} from 'rxjs/Subscription';
+import {DOCUMENT} from '@angular/common';
 
 
 /** Default set of positions for the overlay. Follows the behavior of a dropdown. */
@@ -49,6 +46,12 @@ const defaultPositionList = [
   new ConnectionPositionPair(
       {originX: 'start', originY: 'top'},
       {overlayX: 'start', overlayY: 'bottom'}),
+  new ConnectionPositionPair(
+    {originX: 'end', originY: 'top'},
+    {overlayX: 'end', overlayY: 'bottom'}),
+  new ConnectionPositionPair(
+    {originX: 'end', originY: 'bottom'},
+    {overlayX: 'end', overlayY: 'top'}),
 ];
 
 /** Injection token that determines the scroll handling while the connected overlay is open. */
@@ -100,7 +103,6 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _offsetX: number = 0;
   private _offsetY: number = 0;
   private _position: ConnectedPositionStrategy;
-  private _escapeListener = () => {};
 
   /** Origin for the connected overlay. */
   @Input('cdkConnectedOverlayOrigin') origin: CdkOverlayOrigin;
@@ -233,11 +235,11 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   constructor(
       private _overlay: Overlay,
-      private _renderer: Renderer2,
       templateRef: TemplateRef<any>,
       viewContainerRef: ViewContainerRef,
       @Inject(CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY) private _scrollStrategy,
-      @Optional() private _dir: Directionality) {
+      @Optional() private _dir: Directionality,
+      @Optional() @Inject(DOCUMENT) private _document: any) {
     this._templatePortal = new TemplatePortal(templateRef, viewContainerRef);
   }
 
@@ -337,8 +339,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     }
 
     this._position.withDirection(this.dir);
-    this._overlayRef.getConfig().direction = this.dir;
-    this._initEscapeListener();
+    this._overlayRef.setDirection(this.dir);
+    this._document.addEventListener('keydown', this._escapeListener);
 
     if (!this._overlayRef.hasAttached()) {
       this._overlayRef.attach(this._templatePortal);
@@ -360,7 +362,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     }
 
     this._backdropSubscription.unsubscribe();
-    this._escapeListener();
+    this._document.removeEventListener('keydown', this._escapeListener);
   }
 
   /** Destroys the overlay created by this directive. */
@@ -371,15 +373,13 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
     this._backdropSubscription.unsubscribe();
     this._positionSubscription.unsubscribe();
-    this._escapeListener();
+    this._document.removeEventListener('keydown', this._escapeListener);
   }
 
-  /** Sets the event listener that closes the overlay when pressing Escape. */
-  private _initEscapeListener() {
-    this._escapeListener = this._renderer.listen('document', 'keydown', (event: KeyboardEvent) => {
-      if (event.keyCode === ESCAPE) {
-        this._detachOverlay();
-      }
-    });
+  /** Event listener that will close the overlay when the user presses escape. */
+  private _escapeListener = (event: KeyboardEvent) => {
+    if (event.keyCode === ESCAPE) {
+      this._detachOverlay();
+    }
   }
 }

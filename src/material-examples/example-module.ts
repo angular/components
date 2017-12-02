@@ -52,7 +52,7 @@ import {MyTelInput,FormFieldCustomControlExample} from './form-field-custom-cont
 import {FormFieldErrorExample} from './form-field-error/form-field-error-example';
 import {FormFieldHintExample} from './form-field-hint/form-field-hint-example';
 import {FormFieldOverviewExample} from './form-field-overview/form-field-overview-example';
-import {FormFieldPlaceholderExample} from './form-field-placeholder/form-field-placeholder-example';
+import {FormFieldLabelExample} from './form-field-label/form-field-label-example';
 import {FormFieldPrefixSuffixExample} from './form-field-prefix-suffix/form-field-prefix-suffix-example';
 import {FormFieldThemingExample} from './form-field-theming/form-field-theming-example';
 import {GridListDynamicExample} from './grid-list-dynamic/grid-list-dynamic-example';
@@ -96,8 +96,14 @@ import {SelectOverviewExample} from './select-overview/select-overview-example';
 import {SelectPanelClassExample} from './select-panel-class/select-panel-class-example';
 import {SelectResetExample} from './select-reset/select-reset-example';
 import {SelectValueBindingExample} from './select-value-binding/select-value-binding-example';
-import {SidenavFabExample} from './sidenav-fab/sidenav-fab-example';
+import {SidenavDisableCloseExample} from './sidenav-disable-close/sidenav-disable-close-example';
+import {SidenavDrawerOverviewExample} from './sidenav-drawer-overview/sidenav-drawer-overview-example';
+import {SidenavFixedExample} from './sidenav-fixed/sidenav-fixed-example';
+import {SidenavModeExample} from './sidenav-mode/sidenav-mode-example';
+import {SidenavOpenCloseExample} from './sidenav-open-close/sidenav-open-close-example';
 import {SidenavOverviewExample} from './sidenav-overview/sidenav-overview-example';
+import {SidenavPositionExample} from './sidenav-position/sidenav-position-example';
+import {SidenavResponsiveExample} from './sidenav-responsive/sidenav-responsive-example';
 import {SlideToggleConfigurableExample} from './slide-toggle-configurable/slide-toggle-configurable-example';
 import {SlideToggleFormsExample} from './slide-toggle-forms/slide-toggle-forms-example';
 import {SlideToggleOverviewExample} from './slide-toggle-overview/slide-toggle-overview-example';
@@ -112,6 +118,7 @@ import {TableFilteringExample} from './table-filtering/table-filtering-example';
 import {TableHttpExample} from './table-http/table-http-example';
 import {TableOverviewExample} from './table-overview/table-overview-example';
 import {TablePaginationExample} from './table-pagination/table-pagination-example';
+import {TableSelectionExample} from './table-selection/table-selection-example';
 import {TableSortingExample} from './table-sorting/table-sorting-example';
 import {TabsOverviewExample} from './tabs-overview/tabs-overview-example';
 import {TabsTemplateLabelExample} from './tabs-template-label/tabs-template-label-example';
@@ -355,9 +362,9 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
-  'form-field-placeholder': {
-    title: 'Form field with placeholder ',
-    component: FormFieldPlaceholderExample,
+  'form-field-label': {
+    title: 'Form field with label ',
+    component: FormFieldLabelExample,
     additionalFiles: null,
     selectorName: null
   },
@@ -619,15 +626,51 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
-  'sidenav-fab': {
-    title: 'Sidenav with a FAB',
-    component: SidenavFabExample,
+  'sidenav-disable-close': {
+    title: 'Sidenav with custom escape and backdrop click behavior ',
+    component: SidenavDisableCloseExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'sidenav-drawer-overview': {
+    title: 'Basic drawer ',
+    component: SidenavDrawerOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'sidenav-fixed': {
+    title: 'Fixed sidenav ',
+    component: SidenavFixedExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'sidenav-mode': {
+    title: 'Sidenav with configurable mode ',
+    component: SidenavModeExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'sidenav-open-close': {
+    title: 'Sidenav open & close behavior ',
+    component: SidenavOpenCloseExample,
     additionalFiles: null,
     selectorName: null
   },
   'sidenav-overview': {
-    title: 'Basic sidenav',
+    title: 'Basic sidenav ',
     component: SidenavOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'sidenav-position': {
+    title: 'Implicit main content with two sidenavs ',
+    component: SidenavPositionExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'sidenav-responsive': {
+    title: 'Responsive sidenav ',
+    component: SidenavResponsiveExample,
     additionalFiles: null,
     selectorName: null
   },
@@ -715,6 +758,12 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'table-selection': {
+    title: 'Table with selection',
+    component: TableSelectionExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'table-sorting': {
     title: 'Table with sorting',
     component: TableSortingExample,
@@ -799,7 +848,7 @@ export const EXAMPLE_LIST = [
   FormFieldErrorExample,
   FormFieldHintExample,
   FormFieldOverviewExample,
-  FormFieldPlaceholderExample,
+  FormFieldLabelExample,
   FormFieldPrefixSuffixExample,
   FormFieldThemingExample,
   GridListDynamicExample,
@@ -843,8 +892,14 @@ export const EXAMPLE_LIST = [
   SelectPanelClassExample,
   SelectResetExample,
   SelectValueBindingExample,
-  SidenavFabExample,
+  SidenavDisableCloseExample,
+  SidenavDrawerOverviewExample,
+  SidenavFixedExample,
+  SidenavModeExample,
+  SidenavOpenCloseExample,
   SidenavOverviewExample,
+  SidenavPositionExample,
+  SidenavResponsiveExample,
   SlideToggleConfigurableExample,
   SlideToggleFormsExample,
   SlideToggleOverviewExample,
@@ -859,6 +914,7 @@ export const EXAMPLE_LIST = [
   TableHttpExample,
   TableOverviewExample,
   TablePaginationExample,
+  TableSelectionExample,
   TableSortingExample,
   TabsOverviewExample,
   TabsTemplateLabelExample,

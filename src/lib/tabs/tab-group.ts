@@ -19,7 +19,6 @@ import {
   OnDestroy,
   Output,
   QueryList,
-  Renderer2,
   Optional,
   ViewChild,
   ViewEncapsulation,
@@ -55,7 +54,7 @@ export type MatTabHeaderPosition = 'above' | 'below';
 // Boilerplate for applying mixins to MatTabGroup.
 /** @docs-private */
 export class MatTabGroupBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  constructor(public _elementRef: ElementRef) {}
 }
 export const _MatTabGroupMixinBase = mixinColor(mixinDisableRipple(MatTabGroupBase), 'primary');
 
@@ -125,12 +124,12 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   @Input()
   get backgroundColor(): ThemePalette { return this._backgroundColor; }
   set backgroundColor(value: ThemePalette) {
-    let nativeElement = this._elementRef.nativeElement;
+    const nativeElement: HTMLElement = this._elementRef.nativeElement;
 
-    this._renderer.removeClass(nativeElement, `mat-background-${this.backgroundColor}`);
+    nativeElement.classList.remove(`mat-background-${this.backgroundColor}`);
 
     if (value) {
-      this._renderer.addClass(nativeElement, `mat-background-${value}`);
+      nativeElement.classList.add(`mat-background-${value}`);
     }
 
     this._backgroundColor = value;
@@ -155,11 +154,10 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
 
   private _groupId: number;
 
-  constructor(_renderer: Renderer2,
-              elementRef: ElementRef,
-              private _changeDetectorRef: ChangeDetectorRef,
-              @Optional() private _dir: Directionality) {
-    super(_renderer, elementRef);
+  constructor(elementRef: ElementRef,
+              @Optional() private _dir: Directionality,
+              private _changeDetectorRef: ChangeDetectorRef) {
+    super(elementRef);
     this._groupId = nextId++;
   }
 
@@ -269,21 +267,21 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   _setTabBodyWrapperHeight(tabHeight: number): void {
     if (!this._dynamicHeight || !this._tabBodyWrapperHeight) { return; }
 
-    this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height',
-        this._tabBodyWrapperHeight + 'px');
+    const wrapper: HTMLElement = this._tabBodyWrapper.nativeElement;
+
+    wrapper.style.height = this._tabBodyWrapperHeight + 'px';
 
     // This conditional forces the browser to paint the height so that
     // the animation to the new height can have an origin.
     if (this._tabBodyWrapper.nativeElement.offsetHeight) {
-      this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height',
-          tabHeight + 'px');
+      wrapper.style.height = tabHeight + 'px';
     }
   }
 
   /** Removes the height of the tab body wrapper. */
   _removeTabBodyWrapperHeight(): void {
     this._tabBodyWrapperHeight = this._tabBodyWrapper.nativeElement.clientHeight;
-    this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height', '');
+    this._tabBodyWrapper.nativeElement.style.height = '';
   }
 
   /** Body content was swiped left/right */

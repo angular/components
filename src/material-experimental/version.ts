@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export interface ComponentType<T> {
-  new (...args: any[]): T;
-}
+import {Version} from '@angular/core';
+
+/** Current version of the Material experimental package. */
+export const VERSION = new Version('0.0.0-PLACEHOLDER');

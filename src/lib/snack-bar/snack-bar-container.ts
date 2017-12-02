@@ -13,7 +13,6 @@ import {
   ViewChild,
   NgZone,
   OnDestroy,
-  Renderer2,
   ElementRef,
   ChangeDetectionStrategy,
   ViewEncapsulation,
@@ -32,7 +31,7 @@ import {
   ComponentPortal,
   CdkPortalOutlet,
 } from '@angular/cdk/portal';
-import {first} from 'rxjs/operators/first';
+import {take} from 'rxjs/operators/take';
 import {AnimationCurves, AnimationDurations} from '@angular/material/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
@@ -92,7 +91,6 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
 
   constructor(
     private _ngZone: NgZone,
-    private _renderer: Renderer2,
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef) {
     super();
@@ -104,24 +102,19 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
       throw Error('Attempting to attach snack bar content after content is already attached');
     }
 
+    const element: HTMLElement = this._elementRef.nativeElement;
+
     if (this.snackBarConfig.panelClass || this.snackBarConfig.extraClasses) {
-      const classes = [
-        ...this._getCssClasses(this.snackBarConfig.panelClass),
-        ...this._getCssClasses(this.snackBarConfig.extraClasses)
-      ];
-      // Not the most efficient way of adding classes, but the renderer doesn't allow us
-      // to pass in an array or a space-separated list.
-      for (let cssClass of classes) {
-        this._renderer.addClass(this._elementRef.nativeElement, cssClass);
-      }
+      this._setCssClasses(this.snackBarConfig.panelClass);
+      this._setCssClasses(this.snackBarConfig.extraClasses);
     }
 
     if (this.snackBarConfig.horizontalPosition === 'center') {
-      this._renderer.addClass(this._elementRef.nativeElement, 'mat-snack-bar-center');
+      element.classList.add('mat-snack-bar-center');
     }
 
     if (this.snackBarConfig.verticalPosition === 'top') {
-      this._renderer.addClass(this._elementRef.nativeElement, 'mat-snack-bar-top');
+      element.classList.add('mat-snack-bar-top');
     }
 
     return this._portalOutlet.attachComponentPortal(portal);
@@ -177,21 +170,25 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
    * errors where we end up removing an element which is in the middle of an animation.
    */
   private _completeExit() {
-    this._ngZone.onMicrotaskEmpty.asObservable().pipe(first()).subscribe(() => {
+    this._ngZone.onMicrotaskEmpty.asObservable().pipe(take(1)).subscribe(() => {
       this._onExit.next();
       this._onExit.complete();
     });
   }
 
-  /** Convert the class list to a array of classes it can apply to the dom */
-  private _getCssClasses(classList: undefined | string | string[]) {
-    if (classList) {
-      if (Array.isArray(classList)) {
-        return classList;
-      } else {
-        return [classList];
-      }
+  /** Applies the user-specified list of CSS classes to the element. */
+  private _setCssClasses(classList: undefined|string|string[]) {
+    if (!classList) {
+      return;
     }
-    return [];
+
+    const element = this._elementRef.nativeElement;
+
+    if (Array.isArray(classList)) {
+      // Note that we can't use a spread here, because IE doesn't support multiple arguments.
+      classList.forEach(cssClass => element.classList.add(cssClass));
+    } else {
+      element.classList.add(classList);
+    }
   }
 }
