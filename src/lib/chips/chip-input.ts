@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -12,8 +12,12 @@ import {Directive, ElementRef, EventEmitter, Input, Output} from '@angular/core'
 import {MatChipList} from './chip-list';
 
 
+/** Represents an input event on a `matChipInput`. */
 export interface MatChipInputEvent {
+  /** The native `<input>` element that the event is being fired for. */
   input: HTMLInputElement;
+
+  /** The value of the input. */
   value: string;
 }
 
@@ -23,11 +27,13 @@ export interface MatChipInputEvent {
  */
 @Directive({
   selector: 'input[matChipInputFor]',
+  exportAs: 'matChipInput, matChipInputFor',
   host: {
     'class': 'mat-chip-input mat-input-element',
     '(keydown)': '_keydown($event)',
     '(blur)': '_blur()',
     '(focus)': '_focus()',
+    '(input)': '_onInput()',
   }
 })
 export class MatChipInput {
@@ -48,7 +54,7 @@ export class MatChipInput {
    */
   @Input('matChipInputAddOnBlur')
   get addOnBlur() { return this._addOnBlur; }
-  set addOnBlur(value) { this._addOnBlur = coerceBooleanProperty(value); }
+  set addOnBlur(value: boolean) { this._addOnBlur = coerceBooleanProperty(value); }
   _addOnBlur: boolean = false;
 
   /**
@@ -67,7 +73,7 @@ export class MatChipInput {
 
   get empty(): boolean {
     let value: string | null = this._inputElement.value;
-    return value == null || value === '';
+    return (value == null || value === '');
   }
 
   /** The native input element to which this directive is attached. */
@@ -112,6 +118,11 @@ export class MatChipInput {
         event.preventDefault();
       }
     }
+  }
+
+  _onInput() {
+    // Let chip list know whenever the value changes.
+    this._chipList.stateChanges.next();
   }
 
   focus() { this._inputElement.focus(); }

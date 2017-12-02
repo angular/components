@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -79,6 +79,11 @@ export class MatSnackBarRef<T> {
   /** Cleans up the DOM after closing. */
   private _finishDismiss(): void {
     this._overlayRef.dispose();
+
+    if (!this._onAction.closed) {
+      this._onAction.complete();
+    }
+
     this._afterClosed.next();
     this._afterClosed.complete();
   }

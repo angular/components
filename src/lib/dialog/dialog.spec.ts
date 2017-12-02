@@ -1,11 +1,11 @@
 import {
-  async,
   ComponentFixture,
   fakeAsync,
   flushMicrotasks,
   inject,
   TestBed,
   tick,
+  flush,
 } from '@angular/core/testing';
 import {
   ChangeDetectionStrategy,
@@ -25,27 +25,24 @@ import {SpyLocation} from '@angular/common/testing';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatDialogContainer} from './dialog-container';
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {ESCAPE} from '@angular/cdk/keycodes';
+import {A, ESCAPE} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from './index';
 
 
 describe('MatDialog', () => {
   let dialog: MatDialog;
+  let overlayContainer: OverlayContainer;
   let overlayContainerElement: HTMLElement;
 
   let testViewContainerRef: ViewContainerRef;
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
   let mockLocation: SpyLocation;
 
-  beforeEach(async(() => {
+  beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatDialogModule, DialogTestModule],
       providers: [
-        {provide: OverlayContainer, useFactory: () => {
-          overlayContainerElement = document.createElement('div');
-          return {getContainerElement: () => overlayContainerElement};
-        }},
         {provide: Location, useClass: SpyLocation}
       ],
     });
@@ -53,10 +50,17 @@ describe('MatDialog', () => {
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([MatDialog, Location], (d: MatDialog, l: Location) => {
-    dialog = d;
-    mockLocation = l as SpyLocation;
-  }));
+  beforeEach(inject([MatDialog, Location, OverlayContainer],
+    (d: MatDialog, l: Location, oc: OverlayContainer) => {
+      dialog = d;
+      mockLocation = l as SpyLocation;
+      overlayContainer = oc;
+      overlayContainerElement = oc.getContainerElement();
+    }));
+
+  afterEach(() => {
+    overlayContainer.ngOnDestroy();
+  });
 
   beforeEach(() => {
     viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
@@ -165,22 +169,24 @@ describe('MatDialog', () => {
     expect(dialogContainerElement.getAttribute('aria-describedby')).toBe('description-element');
   });
 
-  it('should close a dialog and get back a result', async(() => {
+  it('should close a dialog and get back a result', fakeAsync(() => {
     let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
     let afterCloseCallback = jasmine.createSpy('afterClose callback');
 
     dialogRef.afterClosed().subscribe(afterCloseCallback);
     dialogRef.close('Charmander');
     viewContainerFixture.detectChanges();
+    flush();
 
-    viewContainerFixture.whenStable().then(() => {
-      expect(afterCloseCallback).toHaveBeenCalledWith('Charmander');
-      expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
-    });
+    expect(afterCloseCallback).toHaveBeenCalledWith('Charmander');
+    expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
   }));
 
-  it('should close a dialog and get back a result before it is closed', async(() => {
+  it('should close a dialog and get back a result before it is closed', fakeAsync(() => {
     const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+
+    flush();
+    viewContainerFixture.detectChanges();
 
     // beforeClose should emit before dialog container is destroyed
     const beforeCloseHandler = jasmine.createSpy('beforeClose callback').and.callFake(() => {
@@ -189,26 +195,24 @@ describe('MatDialog', () => {
     });
 
     dialogRef.beforeClose().subscribe(beforeCloseHandler);
-    dialogRef.close('Bulbasaurus');
+    dialogRef.close('Bulbasaur');
     viewContainerFixture.detectChanges();
+    flush();
 
-    viewContainerFixture.whenStable().then(() => {
-      expect(beforeCloseHandler).toHaveBeenCalledWith('Bulbasaurus');
-      expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
-    });
+    expect(beforeCloseHandler).toHaveBeenCalledWith('Bulbasaur');
+    expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
   }));
 
-  it('should close a dialog via the escape key', async(() => {
+  it('should close a dialog via the escape key', fakeAsync(() => {
     dialog.open(PizzaMsg, {
       viewContainerRef: testViewContainerRef
     });
 
-    dispatchKeyboardEvent(document, 'keydown', ESCAPE);
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
     viewContainerFixture.detectChanges();
+    flush();
 
-    viewContainerFixture.whenStable().then(() => {
-      expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
-    });
+    expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
   }));
 
   it('should close from a ViewContainerRef with OnPush change detection', fakeAsync(() => {
@@ -236,7 +240,7 @@ describe('MatDialog', () => {
         .toBe(0, 'Expected no open dialogs.');
   }));
 
-  it('should close when clicking on the overlay backdrop', async(() => {
+  it('should close when clicking on the overlay backdrop', fakeAsync(() => {
     dialog.open(PizzaMsg, {
       viewContainerRef: testViewContainerRef
     });
@@ -247,13 +251,12 @@ describe('MatDialog', () => {
 
     backdrop.click();
     viewContainerFixture.detectChanges();
+    flush();
 
-    viewContainerFixture.whenStable().then(() => {
-      expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeFalsy();
-    });
+    expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeFalsy();
   }));
 
-  it('should emit the backdropClick stream when clicking on the overlay backdrop', async(() => {
+  it('should emit the backdropClick stream when clicking on the overlay backdrop', fakeAsync(() => {
     const dialogRef = dialog.open(PizzaMsg, {
       viewContainerRef: testViewContainerRef
     });
@@ -269,12 +272,28 @@ describe('MatDialog', () => {
     expect(spy).toHaveBeenCalledTimes(1);
 
     viewContainerFixture.detectChanges();
+    flush();
 
-    viewContainerFixture.whenStable().then(() => {
-      // Additional clicks after the dialog has closed should not be emitted
-      backdrop.click();
-      expect(spy).toHaveBeenCalledTimes(1);
-    });
+    // Additional clicks after the dialog has closed should not be emitted
+    backdrop.click();
+    expect(spy).toHaveBeenCalledTimes(1);
+  }));
+
+  it('should emit the keyboardEvent stream when key events target the overlay', fakeAsync(() => {
+    const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+
+    const spy = jasmine.createSpy('keyboardEvent spy');
+    dialogRef.keydownEvents().subscribe(spy);
+
+    viewContainerFixture.detectChanges();
+
+    let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+    let container = overlayContainerElement.querySelector('mat-dialog-container') as HTMLElement;
+    dispatchKeyboardEvent(document.body, 'keydown', A);
+    dispatchKeyboardEvent(document.body, 'keydown', A, backdrop);
+    dispatchKeyboardEvent(document.body, 'keydown', A, container);
+
+    expect(spy).toHaveBeenCalledTimes(3);
   }));
 
   it('should notify the observers if a dialog has been opened', () => {
@@ -285,7 +304,7 @@ describe('MatDialog', () => {
     });
   });
 
-  it('should notify the observers if all open dialogs have finished closing', async(() => {
+  it('should notify the observers if all open dialogs have finished closing', fakeAsync(() => {
     const ref1 = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
     const ref2 = dialog.open(ContentElementDialog, { viewContainerRef: testViewContainerRef });
     const spy = jasmine.createSpy('afterAllClosed spy');
@@ -294,14 +313,14 @@ describe('MatDialog', () => {
 
     ref1.close();
     viewContainerFixture.detectChanges();
+    flush();
 
-    viewContainerFixture.whenStable().then(() => {
-      expect(spy).not.toHaveBeenCalled();
+    expect(spy).not.toHaveBeenCalled();
 
-      ref2.close();
-      viewContainerFixture.detectChanges();
-      viewContainerFixture.whenStable().then(() => expect(spy).toHaveBeenCalled());
-    });
+    ref2.close();
+    viewContainerFixture.detectChanges();
+    flush();
+    expect(spy).toHaveBeenCalled();
   }));
 
   it('should emit the afterAllClosed stream on subscribe if there are no open dialogs', () => {
@@ -334,6 +353,69 @@ describe('MatDialog', () => {
     let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
     expect(overlayPane.style.height).toBe('100px');
+  });
+
+  it('should should override the min-width of the overlay pane', () => {
+    dialog.open(PizzaMsg, {
+      minWidth: '500px'
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.minWidth).toBe('500px');
+  });
+
+  it('should should override the max-width of the overlay pane', fakeAsync(() => {
+    let dialogRef = dialog.open(PizzaMsg);
+
+    viewContainerFixture.detectChanges();
+
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.maxWidth).toBe('80vw',
+      'Expected dialog to set a default max-width on overlay pane');
+
+    dialogRef.close();
+
+    tick(500);
+    viewContainerFixture.detectChanges();
+    flushMicrotasks();
+
+    dialogRef = dialog.open(PizzaMsg, {
+      maxWidth: '100px'
+    });
+
+    viewContainerFixture.detectChanges();
+
+    overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.maxWidth).toBe('100px');
+  }));
+
+  it('should should override the min-height of the overlay pane', () => {
+    dialog.open(PizzaMsg, {
+      minHeight: '300px'
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.minHeight).toBe('300px');
+  });
+
+  it('should should override the max-height of the overlay pane', () => {
+    dialog.open(PizzaMsg, {
+      maxHeight: '100px'
+    });
+
+    viewContainerFixture.detectChanges();
+
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.maxHeight).toBe('100px');
   });
 
   it('should should override the top offset of the overlay pane', () => {
@@ -442,7 +524,7 @@ describe('MatDialog', () => {
     expect(dialogRef.componentInstance.directionality.value).toBe('rtl');
   });
 
-  it('should close all of the dialogs', async(() => {
+  it('should close all of the dialogs', fakeAsync(() => {
     dialog.open(PizzaMsg);
     dialog.open(PizzaMsg);
     dialog.open(PizzaMsg);
@@ -451,10 +533,9 @@ describe('MatDialog', () => {
 
     dialog.closeAll();
     viewContainerFixture.detectChanges();
+    flush();
 
-    viewContainerFixture.whenStable().then(() => {
-      expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(0);
-    });
+    expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(0);
   }));
 
   it('should set the proper animation states', () => {
@@ -469,7 +550,7 @@ describe('MatDialog', () => {
     expect(dialogContainer._state).toBe('exit');
   });
 
-  it('should close all dialogs when the user goes forwards/backwards in history', async(() => {
+  it('should close all dialogs when the user goes forwards/backwards in history', fakeAsync(() => {
     dialog.open(PizzaMsg);
     dialog.open(PizzaMsg);
 
@@ -477,13 +558,12 @@ describe('MatDialog', () => {
 
     mockLocation.simulateUrlPop('');
     viewContainerFixture.detectChanges();
+    flush();
 
-    viewContainerFixture.whenStable().then(() => {
-      expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(0);
-    });
+    expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(0);
   }));
 
-  it('should close all open dialogs when the location hash changes', async(() => {
+  it('should close all open dialogs when the location hash changes', fakeAsync(() => {
     dialog.open(PizzaMsg);
     dialog.open(PizzaMsg);
 
@@ -491,10 +571,9 @@ describe('MatDialog', () => {
 
     mockLocation.simulateHashChange('');
     viewContainerFixture.detectChanges();
+    flush();
 
-    viewContainerFixture.whenStable().then(() => {
-      expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(0);
-    });
+    expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(0);
   }));
 
   it('should have the componentInstance available in the afterClosed callback', fakeAsync(() => {
@@ -543,17 +622,16 @@ describe('MatDialog', () => {
     });
   });
 
-  it('should not keep a reference to the component after the dialog is closed', async(() => {
+  it('should not keep a reference to the component after the dialog is closed', fakeAsync(() => {
     let dialogRef = dialog.open(PizzaMsg);
 
     expect(dialogRef.componentInstance).toBeTruthy();
 
     dialogRef.close();
     viewContainerFixture.detectChanges();
+    flush();
 
-    viewContainerFixture.whenStable().then(() => {
-      expect(dialogRef.componentInstance).toBeFalsy('Expected reference to have been cleared.');
-    });
+    expect(dialogRef.componentInstance).toBeFalsy('Expected reference to have been cleared.');
   }));
 
   it('should assign a unique id to each dialog', () => {
@@ -602,12 +680,12 @@ describe('MatDialog', () => {
       });
 
       viewContainerFixture.detectChanges();
-      dispatchKeyboardEvent(document, 'keydown', ESCAPE);
+      dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
 
       expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeTruthy();
     });
 
-    it('should allow for the disableClose option to be updated while open', async(() => {
+    it('should allow for the disableClose option to be updated while open', fakeAsync(() => {
       let dialogRef = dialog.open(PizzaMsg, {
         disableClose: true,
         viewContainerRef: testViewContainerRef
@@ -622,11 +700,10 @@ describe('MatDialog', () => {
 
       dialogRef.disableClose = false;
       backdrop.click();
-
       viewContainerFixture.detectChanges();
-      viewContainerFixture.whenStable().then(() => {
-        expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeFalsy();
-      });
+      flush();
+
+      expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeFalsy();
     }));
   });
 
@@ -708,6 +785,18 @@ describe('MatDialog', () => {
           .toBe('INPUT', 'Expected first tabbable element (input) in the dialog to be focused.');
     }));
 
+    it('should allow disabling focus of the first tabbable element', fakeAsync(() => {
+      dialog.open(PizzaMsg, {
+        viewContainerRef: testViewContainerRef,
+        autoFocus: false
+      });
+
+      viewContainerFixture.detectChanges();
+      flushMicrotasks();
+
+      expect(document.activeElement.tagName).not.toBe('INPUT');
+    }));
+
     it('should re-focus trigger element when dialog closes', fakeAsync(() => {
       // Create a element that has focus before the dialog is opened.
       let button = document.createElement('button');
@@ -785,20 +874,20 @@ describe('MatDialog', () => {
   describe('dialog content elements', () => {
     let dialogRef: MatDialogRef<ContentElementDialog>;
 
-    beforeEach(() => {
-      dialogRef = dialog.open(ContentElementDialog);
+    beforeEach(fakeAsync(() => {
+      dialogRef = dialog.open(ContentElementDialog, {viewContainerRef: testViewContainerRef});
       viewContainerFixture.detectChanges();
-    });
+      flush();
+    }));
 
-    it('should close the dialog when clicking on the close button', async(() => {
+    it('should close the dialog when clicking on the close button', fakeAsync(() => {
       expect(overlayContainerElement.querySelectorAll('.mat-dialog-container').length).toBe(1);
 
       (overlayContainerElement.querySelector('button[mat-dialog-close]') as HTMLElement).click();
       viewContainerFixture.detectChanges();
+      flush();
 
-      viewContainerFixture.whenStable().then(() => {
-        expect(overlayContainerElement.querySelectorAll('.mat-dialog-container').length).toBe(0);
-      });
+      expect(overlayContainerElement.querySelectorAll('.mat-dialog-container').length).toBe(0);
     }));
 
     it('should not close the dialog if [mat-dialog-close] is applied on a non-button node', () => {
@@ -809,15 +898,14 @@ describe('MatDialog', () => {
       expect(overlayContainerElement.querySelectorAll('.mat-dialog-container').length).toBe(1);
     });
 
-    it('should allow for a user-specified aria-label on the close button', async(() => {
+    it('should allow for a user-specified aria-label on the close button', fakeAsync(() => {
       let button = overlayContainerElement.querySelector('button[mat-dialog-close]')!;
 
       dialogRef.componentInstance.closeButtonAriaLabel = 'Best close button ever';
       viewContainerFixture.detectChanges();
+      flush();
 
-      viewContainerFixture.whenStable().then(() => {
-        expect(button.getAttribute('aria-label')).toBe('Best close button ever');
-      });
+      expect(button.getAttribute('aria-label')).toBe('Best close button ever');
     }));
 
     it('should override the "type" attribute of the close button', () => {
@@ -826,29 +914,56 @@ describe('MatDialog', () => {
       expect(button.getAttribute('type')).toBe('button');
     });
 
-    it('should return the [mat-dialog-close] result when clicking the close button', async(() => {
-      let afterCloseCallback = jasmine.createSpy('afterClose callback');
-      dialogRef.afterClosed().subscribe(afterCloseCallback);
+    it('should return the [mat-dialog-close] result when clicking the close button',
+      fakeAsync(() => {
+        let afterCloseCallback = jasmine.createSpy('afterClose callback');
+        dialogRef.afterClosed().subscribe(afterCloseCallback);
 
-      (overlayContainerElement.querySelector('button.close-with-true') as HTMLElement).click();
-      viewContainerFixture.detectChanges();
+        (overlayContainerElement.querySelector('button.close-with-true') as HTMLElement).click();
+        viewContainerFixture.detectChanges();
+        flush();
 
-      viewContainerFixture.whenStable().then(() => {
         expect(afterCloseCallback).toHaveBeenCalledWith(true);
-      });
-    }));
+      }));
 
-    it('should set the aria-labelledby attribute to the id of the title', async(() => {
+    it('should set the aria-labelledby attribute to the id of the title', fakeAsync(() => {
       let title = overlayContainerElement.querySelector('[mat-dialog-title]')!;
       let container = overlayContainerElement.querySelector('mat-dialog-container')!;
 
-      viewContainerFixture.whenStable().then(() => {
-        expect(title.id).toBeTruthy('Expected title element to have an id.');
-        expect(container.getAttribute('aria-labelledby'))
-            .toBe(title.id, 'Expected the aria-labelledby to match the title id.');
-      });
+      flush();
+      viewContainerFixture.detectChanges();
+
+      expect(title.id).toBeTruthy('Expected title element to have an id.');
+      expect(container.getAttribute('aria-labelledby'))
+          .toBe(title.id, 'Expected the aria-labelledby to match the title id.');
     }));
 
+  });
+
+  describe('aria-label', () => {
+    it('should be able to set a custom aria-label', () => {
+      dialog.open(PizzaMsg, {
+        ariaLabel: 'Hello there',
+        viewContainerRef: testViewContainerRef
+      });
+      viewContainerFixture.detectChanges();
+
+      const container = overlayContainerElement.querySelector('mat-dialog-container')!;
+      expect(container.getAttribute('aria-label')).toBe('Hello there');
+    });
+
+    it('should not set the aria-labelledby automatically if it has an aria-label', fakeAsync(() => {
+      dialog.open(ContentElementDialog, {
+        ariaLabel: 'Hello there',
+        viewContainerRef: testViewContainerRef
+      });
+      viewContainerFixture.detectChanges();
+      tick();
+      viewContainerFixture.detectChanges();
+
+      const container = overlayContainerElement.querySelector('mat-dialog-container')!;
+      expect(container.hasAttribute('aria-labelledby')).toBe(false);
+    }));
   });
 });
 
@@ -858,7 +973,7 @@ describe('MatDialog with a parent MatDialog', () => {
   let overlayContainerElement: HTMLElement;
   let fixture: ComponentFixture<ComponentThatProvidesMatDialog>;
 
-  beforeEach(async(() => {
+  beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatDialogModule, DialogTestModule],
       declarations: [ComponentThatProvidesMatDialog],
@@ -887,24 +1002,24 @@ describe('MatDialog with a parent MatDialog', () => {
   });
 
   it('should close dialogs opened by a parent when calling closeAll on a child MatDialog',
-    async(() => {
+    fakeAsync(() => {
       parentDialog.open(PizzaMsg);
       fixture.detectChanges();
+      flush();
 
       expect(overlayContainerElement.textContent)
           .toContain('Pizza', 'Expected a dialog to be opened');
 
       childDialog.closeAll();
       fixture.detectChanges();
+      flush();
 
-      fixture.whenStable().then(() => {
-        expect(overlayContainerElement.textContent!.trim())
-            .toBe('', 'Expected closeAll on child MatDialog to close dialog opened by parent');
-      });
+      expect(overlayContainerElement.textContent!.trim())
+          .toBe('', 'Expected closeAll on child MatDialog to close dialog opened by parent');
     }));
 
   it('should close dialogs opened by a child when calling closeAll on a parent MatDialog',
-    async(() => {
+    fakeAsync(() => {
       childDialog.open(PizzaMsg);
       fixture.detectChanges();
 
@@ -913,22 +1028,20 @@ describe('MatDialog with a parent MatDialog', () => {
 
       parentDialog.closeAll();
       fixture.detectChanges();
+      flush();
 
-      fixture.whenStable().then(() => {
-        expect(overlayContainerElement.textContent!.trim())
-            .toBe('', 'Expected closeAll on parent MatDialog to close dialog opened by child');
-      });
+      expect(overlayContainerElement.textContent!.trim())
+          .toBe('', 'Expected closeAll on parent MatDialog to close dialog opened by child');
     }));
 
-  it('should close the top dialog via the escape key', async(() => {
+  it('should close the top dialog via the escape key', fakeAsync(() => {
     childDialog.open(PizzaMsg);
 
-    dispatchKeyboardEvent(document, 'keydown', ESCAPE);
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
     fixture.detectChanges();
+    flush();
 
-    fixture.whenStable().then(() => {
-      expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
-    });
+    expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
   }));
 });
 

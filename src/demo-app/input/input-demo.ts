@@ -1,5 +1,14 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
+import {ErrorStateMatcher} from '@angular/material';
 
 
 let max = 5;
@@ -20,6 +29,7 @@ export class InputDemo {
   hideRequiredMarker: boolean;
   ctrlDisabled = false;
   textareaNgModelValue: string;
+  placeholderTestControl = new FormControl('', Validators.required);
 
   name: string;
   errorMessageExample1: string;
@@ -52,10 +62,26 @@ export class InputDemo {
     }
   }
 
-  customErrorStateMatcher(c: FormControl): boolean {
-    const hasInteraction = c.dirty || c.touched;
-    const isInvalid = c.invalid;
+  customErrorStateMatcher: ErrorStateMatcher = {
+    isErrorState: (control: FormControl | null) => {
+      if (control) {
+        const hasInteraction = control.dirty || control.touched;
+        const isInvalid = control.invalid;
 
-    return !!(hasInteraction && isInvalid);
+        return !!(hasInteraction && isInvalid);
+      }
+
+      return false;
+    }
+  };
+
+  togglePlaceholderTestValue() {
+    this.placeholderTestControl.setValue(this.placeholderTestControl.value === '' ? 'Value' : '');
+  }
+
+  togglePlaceholderTestTouched() {
+    this.placeholderTestControl.touched ?
+      this.placeholderTestControl.markAsUntouched() :
+      this.placeholderTestControl.markAsTouched();
   }
 }

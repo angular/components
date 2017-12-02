@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -36,9 +36,8 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
-import {first} from 'rxjs/operator/first';
+import {take} from 'rxjs/operators/take';
 import {Subscription} from 'rxjs/Subscription';
-import {coerceDateProperty} from './coerce-date-property';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
@@ -57,6 +56,7 @@ import {MatYearView} from './year-view';
   host: {
     'class': 'mat-calendar',
   },
+  exportAs: 'matCalendar',
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,7 +67,9 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   /** A date representing the period (month or year) to start the calendar in. */
   @Input()
   get startAt(): D | null { return this._startAt; }
-  set startAt(value: D | null) { this._startAt = coerceDateProperty(this._dateAdapter, value); }
+  set startAt(value: D | null) {
+    this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
   private _startAt: D | null;
 
   /** Whether the calendar should be started in month or year view. */
@@ -76,19 +78,25 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   /** The currently selected date. */
   @Input()
   get selected(): D | null { return this._selected; }
-  set selected(value: D | null) { this._selected = coerceDateProperty(this._dateAdapter, value); }
+  set selected(value: D | null) {
+    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
   private _selected: D | null;
 
   /** The minimum selectable date. */
   @Input()
   get minDate(): D | null { return this._minDate; }
-  set minDate(value: D | null) { this._minDate = coerceDateProperty(this._dateAdapter, value); }
+  set minDate(value: D | null) {
+    this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
   private _minDate: D | null;
 
   /** The maximum selectable date. */
   @Input()
   get maxDate(): D | null { return this._maxDate; }
-  set maxDate(value: D | null) { this._maxDate = coerceDateProperty(this._dateAdapter, value); }
+  set maxDate(value: D | null) {
+    this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
   private _maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */
@@ -98,7 +106,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   @Output() selectedChange = new EventEmitter<D>();
 
   /** Emits when any date is selected. */
-  @Output() userSelection = new EventEmitter<void>();
+  @Output() _userSelection = new EventEmitter<void>();
 
   /** Reference to the current month view component. */
   @ViewChild(MatMonthView) monthView: MatMonthView<D>;
@@ -197,7 +205,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   }
 
   _userSelected(): void {
-    this.userSelection.emit();
+    this._userSelection.emit();
   }
 
   /** Handles month selection in the year view. */
@@ -253,7 +261,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   /** Focuses the active cell after the microtask queue is empty. */
   _focusActiveCell() {
     this._ngZone.runOutsideAngular(() => {
-      first.call(this._ngZone.onStable.asObservable()).subscribe(() => {
+      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
         this._elementRef.nativeElement.querySelector('.mat-calendar-body-active').focus();
       });
     });
@@ -384,5 +392,13 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     let increment = this._dateAdapter.getMonth(date) <= 4 ? 7 :
         (this._dateAdapter.getMonth(date) >= 7 ? 5 : 12);
     return this._dateAdapter.addCalendarMonths(date, increment);
+  }
+
+  /**
+   * @param obj The object to check.
+   * @returns The given object if it is both a date instance and valid, otherwise null.
+   */
+  private _getValidDateOrNull(obj: any): D | null {
+    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
   }
 }

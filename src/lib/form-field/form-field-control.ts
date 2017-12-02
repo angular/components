@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -13,7 +13,7 @@ import {NgControl} from '@angular/forms';
 /** An interface which allows a control to work inside of a `MatFormField`. */
 export abstract class MatFormFieldControl<T> {
   /** The value of the control. */
-  value: T;
+  value: T | null;
 
   /**
    * Stream that emits whenever the state of the control changes such that the parent `MatFormField`
@@ -37,7 +37,13 @@ export abstract class MatFormFieldControl<T> {
   readonly empty: boolean;
 
   /** Whether the `MatFormField` label should try to float. */
-  readonly shouldPlaceholderFloat: boolean;
+  readonly shouldLabelFloat?: boolean;
+
+  /**
+   * Whether the `MatFormField` placeholder should try to float.
+   * @deprecated Use `shouldLabelFloat` instead.
+   */
+  readonly shouldPlaceholderFloat?: boolean;
 
   /** Whether the control is required. */
   readonly required: boolean;

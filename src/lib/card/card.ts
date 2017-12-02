@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -55,6 +55,7 @@ export class MatCardSubtitle {}
  */
 @Directive({
   selector: 'mat-card-actions',
+  exportAs: 'matCardActions',
   host: {
     'class': 'mat-card-actions',
     '[class.mat-card-actions-align-end]': 'align === "end"',
@@ -150,6 +151,7 @@ export class MatCardAvatar {}
 @Component({
   moduleId: module.id,
   selector: 'mat-card',
+  exportAs: 'matCard',
   templateUrl: 'card.html',
   styleUrls: ['card.css'],
   encapsulation: ViewEncapsulation.None,

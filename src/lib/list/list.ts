@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -16,7 +16,6 @@ import {
   ElementRef,
   Optional,
   QueryList,
-  Renderer2,
   ViewEncapsulation,
 } from '@angular/core';
 import {CanDisableRipple, MatLine, MatLineSetter, mixinDisableRipple} from '@angular/material/core';
@@ -45,9 +44,27 @@ export class MatListDivider {}
 /** A Material Design list component. */
 @Component({
   moduleId: module.id,
-  selector: 'mat-list, mat-nav-list',
-  host: {'role': 'list'},
-  template: '<ng-content></ng-content>',
+  selector: 'mat-nav-list',
+  exportAs: 'matNavList',
+  host: {
+    'role': 'navigation',
+    'class': 'mat-nav-list'
+  },
+  templateUrl: 'list.html',
+  styleUrls: ['list.css'],
+  inputs: ['disableRipple'],
+  encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MatNavList extends _MatListMixinBase implements CanDisableRipple {}
+
+@Component({
+  moduleId: module.id,
+  selector: 'mat-list',
+  exportAs: 'matList',
+  templateUrl: 'list.html',
+  host: {'class': 'mat-list'},
   styleUrls: ['list.css'],
   inputs: ['disableRipple'],
   encapsulation: ViewEncapsulation.None,
@@ -55,26 +72,6 @@ export class MatListDivider {}
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatList extends _MatListMixinBase implements CanDisableRipple {}
-
-/**
- * Directive whose purpose is to add the mat- CSS styling to this selector.
- * @docs-private
- */
-@Directive({
-  selector: 'mat-list',
-  host: {'class': 'mat-list'}
-})
-export class MatListCssMatStyler {}
-
-/**
- * Directive whose purpose is to add the mat- CSS styling to this selector.
- * @docs-private
- */
-@Directive({
-  selector: 'mat-nav-list',
-  host: {'class': 'mat-nav-list'}
-})
-export class MatNavListCssMatStyler {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
@@ -120,6 +117,7 @@ export class MatListSubheaderCssMatStyler {}
 @Component({
   moduleId: module.id,
   selector: 'mat-list-item, a[mat-list-item]',
+  exportAs: 'matListItem',
   host: {
     'role': 'listitem',
     'class': 'mat-list-item',
@@ -142,35 +140,33 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
   @ContentChild(MatListAvatarCssMatStyler)
   set _hasAvatar(avatar: MatListAvatarCssMatStyler) {
     if (avatar != null) {
-      this._renderer.addClass(this._element.nativeElement, 'mat-list-item-avatar');
+      this._element.nativeElement.classList.add('mat-list-item-avatar');
     } else {
-      this._renderer.removeClass(this._element.nativeElement, 'mat-list-item-avatar');
+      this._element.nativeElement.classList.remove('mat-list-item-avatar');
     }
   }
 
-  constructor(private _renderer: Renderer2,
-              private _element: ElementRef,
-              @Optional() private _list: MatList,
-              @Optional() navList: MatNavListCssMatStyler) {
+  constructor(private _element: ElementRef,
+              @Optional() private _navList: MatNavList) {
     super();
-    this._isNavList = !!navList;
+    this._isNavList = !!_navList;
   }
 
   ngAfterContentInit() {
-    this._lineSetter = new MatLineSetter(this._lines, this._renderer, this._element);
+    this._lineSetter = new MatLineSetter(this._lines, this._element);
   }
 
   /** Whether this list item should show a ripple effect when clicked.  */
   _isRippleDisabled() {
-    return !this._isNavList || this.disableRipple || this._list.disableRipple;
+    return !this._isNavList || this.disableRipple || this._navList.disableRipple;
   }
 
   _handleFocus() {
-    this._renderer.addClass(this._element.nativeElement, 'mat-list-item-focus');
+    this._element.nativeElement.classList.add('mat-list-item-focus');
   }
 
   _handleBlur() {
-    this._renderer.removeClass(this._element.nativeElement, 'mat-list-item-focus');
+    this._element.nativeElement.classList.remove('mat-list-item-focus');
   }
 
   /** Retrieves the DOM element of the component host. */

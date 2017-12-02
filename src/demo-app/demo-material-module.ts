@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {NgModule} from '@angular/core';
 import {
   MatAutocompleteModule,
@@ -33,6 +41,7 @@ import {
 } from '@angular/material';
 import {MatNativeDateModule, MatRippleModule} from '@angular/material';
 import {CdkTableModule} from '@angular/cdk/table';
+import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {A11yModule} from '@angular/cdk/a11y';
 import {BidiModule} from '@angular/cdk/bidi';
 import {OverlayModule} from '@angular/cdk/overlay';
@@ -80,6 +89,7 @@ import {PortalModule} from '@angular/cdk/portal';
     CdkTableModule,
     A11yModule,
     BidiModule,
+    CdkAccordionModule,
     ObserversModule,
     OverlayModule,
     PlatformModule,

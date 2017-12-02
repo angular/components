@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -18,13 +18,23 @@ import {
   InjectionToken,
   Optional,
 } from '@angular/core';
-import {ViewportRuler} from '@angular/cdk/scrolling';
 import {Platform} from '@angular/cdk/platform';
 import {RippleConfig, RippleRenderer} from './ripple-renderer';
 import {RippleRef} from './ripple-ref';
 
+/** Configurable options for `matRipple`. */
 export interface RippleGlobalOptions {
+  /**
+   * Whether ripples should be disabled. Ripples can be still launched manually by using
+   * the `launch()` method. Therefore focus indicators will still show up.
+   */
   disabled?: boolean;
+
+  /**
+   * If set, the default duration of the fade-in animation is divided by this value. For example,
+   * setting it to 0.5 will cause the ripple fade-in animation to take twice as long.
+   * A changed speedFactor will not affect the fade-out duration of the ripples.
+   */
   baseSpeedFactor?: number;
 }
 
@@ -91,18 +101,17 @@ export class MatRipple implements OnChanges, OnDestroy {
   constructor(
     elementRef: ElementRef,
     ngZone: NgZone,
-    ruler: ViewportRuler,
     platform: Platform,
     @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalOptions: RippleGlobalOptions
   ) {
-    this._rippleRenderer = new RippleRenderer(elementRef, ngZone, ruler, platform);
+    this._rippleRenderer = new RippleRenderer(elementRef, ngZone, platform);
     this._globalOptions = globalOptions ? globalOptions : {};
 
     this._updateRippleRenderer();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if ((changes['trigger'] || changes['_matRippleTrigger']) && this.trigger) {
+    if (changes['trigger'] && this.trigger) {
       this._rippleRenderer.setTriggerElement(this.trigger);
     }
 
@@ -115,8 +124,8 @@ export class MatRipple implements OnChanges, OnDestroy {
   }
 
   /** Launches a manual ripple at the specified position. */
-  launch(pageX: number, pageY: number, config = this.rippleConfig): RippleRef {
-    return this._rippleRenderer.fadeInRipple(pageX, pageY, config);
+  launch(x: number, y: number, config: RippleConfig = this.rippleConfig): RippleRef {
+    return this._rippleRenderer.fadeInRipple(x, y, config);
   }
 
   /** Fades out all currently showing ripple elements. */

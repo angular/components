@@ -1,5 +1,6 @@
-import {join} from 'path';
-import {main as ngc} from '@angular/tsc-wrapped';
+import {join, resolve as resolvePath} from 'path';
+import {spawn} from 'child_process';
+import {red} from 'chalk';
 import {PackageBundler} from './build-bundles';
 import {buildConfig} from './build-config';
 import {getSecondaryEntryPointsForPackage} from './secondary-entry-points';
@@ -9,9 +10,6 @@ const {packagesDir, outputDir} = buildConfig;
 
 /** Name of the tsconfig file that is responsible for building an ES2015 package. */
 const buildTsconfigName = 'tsconfig-build.json';
-
-/** Name of the tsconfig file that is responsible for building an ES5 package. */
-const es5TsconfigName = 'tsconfig-es5.json';
 
 /** Name of the tsconfig file that is responsible for building the tests. */
 const testsTsconfigName = 'tsconfig-tests.json';
@@ -58,7 +56,7 @@ export class BuildPackage {
   }
   private _secondaryEntryPoints: string[];
 
-  constructor(public readonly name: string, public readonly dependencies: BuildPackage[] = []) {
+  constructor(readonly name: string, readonly dependencies: BuildPackage[] = []) {
     this.sourceDir = join(packagesDir, name);
     this.outputDir = join(outputDir, 'packages', name);
     this.esm5OutputDir = join(outputDir, 'packages', name, 'esm5');
@@ -97,17 +95,29 @@ export class BuildPackage {
   /** Compiles TS into both ES2015 and ES5, then updates exports. */
   private async _compileBothTargets(p = '') {
     return compileEntryPoint(this, buildTsconfigName, p)
-        .then(() => compileEntryPoint(this, es5TsconfigName, p))
-        .then(() => renamePrivateReExportsToBeUnique(this, p));
+      .then(() => compileEntryPoint(this, buildTsconfigName, p, this.esm5OutputDir))
+      .then(() => renamePrivateReExportsToBeUnique(this, p));
   }
 
   /** Compiles the TypeScript sources of a primary or secondary entry point. */
-  private async _compileTestEntryPoint(tsconfigName: string, secondaryEntryPoint = '') {
+  private _compileTestEntryPoint(tsconfigName: string, secondaryEntryPoint = ''): Promise<any> {
     const entryPointPath = join(this.sourceDir, secondaryEntryPoint);
     const entryPointTsconfigPath = join(entryPointPath, tsconfigName);
 
-    await ngc(entryPointTsconfigPath, {basePath: entryPointPath});
-    renamePrivateReExportsToBeUnique(this, secondaryEntryPoint);
+    return new Promise((resolve, reject) => {
+      const ngcPath = resolvePath('./node_modules/.bin/ngc');
+      const childProcess = spawn(ngcPath, ['-p', entryPointTsconfigPath], {shell: true});
+
+      // Pipe stdout and stderr from the child process.
+      childProcess.stdout.on('data', (data: any) => console.log(`${data}`));
+      childProcess.stderr.on('data', (data: any) => console.error(red(`${data}`)));
+
+      childProcess.on('exit', (exitCode: number) => exitCode === 0 ? resolve() : reject());
+    })
+    .catch(() => {
+      const error = red(`Failed to compile ${secondaryEntryPoint} using ${entryPointTsconfigPath}`);
+      console.error(error);
+    });
   }
 
   /** Stores the secondary entry-points for this package if they haven't been computed already. */

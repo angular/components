@@ -1,11 +1,12 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {
@@ -19,6 +20,7 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
+  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -30,7 +32,6 @@ import {
   OnInit,
   Optional,
   Output,
-  Renderer2,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -39,10 +40,11 @@ import {
   CanColor,
   CanDisable,
   HammerInput,
+  HasTabIndex,
   mixinColor,
   mixinDisabled,
+  mixinTabIndex,
 } from '@angular/material/core';
-import {FocusOrigin, FocusMonitor} from '@angular/cdk/a11y';
 import {Subscription} from 'rxjs/Subscription';
 
 /**
@@ -83,9 +85,10 @@ export class MatSliderChange {
 // Boilerplate for applying mixins to MatSlider.
 /** @docs-private */
 export class MatSliderBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  constructor(public _elementRef: ElementRef) {}
 }
-export const _MatSliderMixinBase = mixinColor(mixinDisabled(MatSliderBase), 'accent');
+export const _MatSliderMixinBase =
+  mixinTabIndex(mixinColor(mixinDisabled(MatSliderBase), 'accent'));
 
 /**
  * Allows users to select from a range of values by moving the slider thumb. It is similar in
@@ -94,6 +97,7 @@ export const _MatSliderMixinBase = mixinColor(mixinDisabled(MatSliderBase), 'acc
 @Component({
   moduleId: module.id,
   selector: 'mat-slider',
+  exportAs: 'matSlider',
   providers: [MAT_SLIDER_VALUE_ACCESSOR],
   host: {
     '(focus)': '_onFocus()',
@@ -107,7 +111,7 @@ export const _MatSliderMixinBase = mixinColor(mixinDisabled(MatSliderBase), 'acc
     '(slidestart)': '_onSlideStart($event)',
     'class': 'mat-slider',
     'role': 'slider',
-    'tabindex': '0',
+    '[tabIndex]': 'tabIndex',
     '[attr.aria-disabled]': 'disabled',
     '[attr.aria-valuemax]': 'max',
     '[attr.aria-valuemin]': 'min',
@@ -125,13 +129,13 @@ export const _MatSliderMixinBase = mixinColor(mixinDisabled(MatSliderBase), 'acc
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
-  inputs: ['disabled', 'color'],
+  inputs: ['disabled', 'color', 'tabIndex'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatSlider extends _MatSliderMixinBase
-    implements ControlValueAccessor, OnDestroy, CanDisable, CanColor, OnInit {
+    implements ControlValueAccessor, OnDestroy, CanDisable, CanColor, OnInit, HasTabIndex {
   /** Whether the slider is inverted. */
   @Input()
   get invert() { return this._invert; }
@@ -172,7 +176,7 @@ export class MatSlider extends _MatSliderMixinBase
   /** The values at which the thumb will snap. */
   @Input()
   get step() { return this._step; }
-  set step(v) {
+  set step(v: number) {
     this._step = coerceNumberProperty(v, this._step);
 
     if (this._step % 1 !== 0) {
@@ -201,7 +205,7 @@ export class MatSlider extends _MatSliderMixinBase
    */
   @Input()
   get tickInterval() { return this._tickInterval; }
-  set tickInterval(value) {
+  set tickInterval(value: 'auto' | number) {
     if (value === 'auto') {
       this._tickInterval = 'auto';
     } else if (typeof value === 'number' || typeof value === 'string') {
@@ -267,7 +271,7 @@ export class MatSlider extends _MatSliderMixinBase
   onTouched: () => any = () => {};
 
   /** The percentage of the slider that coincides with the value. */
-  get percent() { return this._clamp(this._percent); }
+  get percent(): number { return this._clamp(this._percent); }
   private _percent: number = 0;
 
   /**
@@ -413,17 +417,19 @@ export class MatSlider extends _MatSliderMixinBase
     return (this._dir && this._dir.value == 'rtl') ? 'rtl' : 'ltr';
   }
 
-  constructor(renderer: Renderer2,
-              elementRef: ElementRef,
+  constructor(elementRef: ElementRef,
               private _focusMonitor: FocusMonitor,
               private _changeDetectorRef: ChangeDetectorRef,
-              @Optional() private _dir: Directionality) {
-    super(renderer, elementRef);
+              @Optional() private _dir: Directionality,
+              @Attribute('tabindex') tabIndex: string) {
+    super(elementRef);
+
+    this.tabIndex = parseInt(tabIndex) || 0;
   }
 
   ngOnInit() {
     this._focusMonitor
-        .monitor(this._elementRef.nativeElement, this._renderer, true)
+        .monitor(this._elementRef.nativeElement, true)
         .subscribe((origin: FocusOrigin) => {
           this._isActive = !!origin && origin !== 'keyboard';
           this._changeDetectorRef.detectChanges();

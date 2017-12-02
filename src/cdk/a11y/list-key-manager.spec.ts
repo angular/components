@@ -1,5 +1,5 @@
 import {DOWN_ARROW, TAB, UP_ARROW} from '@angular/cdk/keycodes';
-import {first} from '@angular/cdk/rxjs';
+import {take} from 'rxjs/operators/take';
 import {QueryList} from '@angular/core';
 import {fakeAsync, tick} from '@angular/core/testing';
 import {createKeyboardEvent} from '../testing/event-objects';
@@ -196,7 +196,7 @@ describe('Key managers', () => {
 
       it('should emit tabOut when the tab key is pressed', () => {
         let spy = jasmine.createSpy('tabOut spy');
-        first.call(keyManager.tabOut).subscribe(spy);
+        keyManager.tabOut.pipe(take(1)).subscribe(spy);
         keyManager.onKeydown(fakeKeyEvents.tab);
 
         expect(spy).toHaveBeenCalled();
@@ -240,6 +240,31 @@ describe('Key managers', () => {
         keyManager.onKeydown(fakeKeyEvents.downArrow);
 
         expect(keyManager.activeItemIndex).toBe(0, 'Expected first item to become active.');
+      });
+
+      it('should emit an event whenever the active item changes', () => {
+        const spy = jasmine.createSpy('change spy');
+        const subscription = keyManager.change.subscribe(spy);
+
+        keyManager.onKeydown(fakeKeyEvents.downArrow);
+        expect(spy).toHaveBeenCalledTimes(1);
+
+        keyManager.onKeydown(fakeKeyEvents.upArrow);
+        expect(spy).toHaveBeenCalledTimes(2);
+
+        subscription.unsubscribe();
+      });
+
+      it('should not emit an event if the item did not change', () => {
+        const spy = jasmine.createSpy('change spy');
+        const subscription = keyManager.change.subscribe(spy);
+
+        keyManager.setActiveItem(2);
+        keyManager.setActiveItem(2);
+
+        expect(spy).toHaveBeenCalledTimes(1);
+
+        subscription.unsubscribe();
       });
 
     });
@@ -491,6 +516,62 @@ describe('Key managers', () => {
         expect(keyManager.activeItem).toBeFalsy();
       }));
 
+      it('should start looking for matches after the active item', fakeAsync(() => {
+        itemList.items = [
+          new FakeFocusable('Bilbo'),
+          new FakeFocusable('Frodo'),
+          new FakeFocusable('Pippin'),
+          new FakeFocusable('Boromir'),
+          new FakeFocusable('Aragorn')
+        ];
+
+        keyManager.setActiveItem(1);
+        keyManager.onKeydown(createKeyboardEvent('keydown', 66, undefined, 'b'));
+        tick(debounceInterval);
+
+        expect(keyManager.activeItem).toBe(itemList.items[3]);
+      }));
+
+      it('should wrap back around if there were no matches after the active item', fakeAsync(() => {
+        itemList.items = [
+          new FakeFocusable('Bilbo'),
+          new FakeFocusable('Frodo'),
+          new FakeFocusable('Pippin'),
+          new FakeFocusable('Boromir'),
+          new FakeFocusable('Aragorn')
+        ];
+
+        keyManager.setActiveItem(3);
+        keyManager.onKeydown(createKeyboardEvent('keydown', 66, undefined, 'b'));
+        tick(debounceInterval);
+
+        expect(keyManager.activeItem).toBe(itemList.items[0]);
+      }));
+
+      it('should wrap back around if the last item is active', fakeAsync(() => {
+        keyManager.setActiveItem(2);
+        keyManager.onKeydown(createKeyboardEvent('keydown', 79, undefined, 'o'));
+        tick(debounceInterval);
+
+        expect(keyManager.activeItem).toBe(itemList.items[0]);
+      }));
+
+      it('should be able to select the first item', fakeAsync(() => {
+        keyManager.setActiveItem(-1);
+        keyManager.onKeydown(createKeyboardEvent('keydown', 79, undefined, 'o'));
+        tick(debounceInterval);
+
+        expect(keyManager.activeItem).toBe(itemList.items[0]);
+      }));
+
+      it('should not do anything if there is no match', fakeAsync(() => {
+        keyManager.setActiveItem(1);
+        keyManager.onKeydown(createKeyboardEvent('keydown', 87, undefined, 'w'));
+        tick(debounceInterval);
+
+        expect(keyManager.activeItem).toBe(itemList.items[1]);
+      }));
+
     });
 
   });
@@ -550,13 +631,12 @@ describe('Key managers', () => {
   describe('ActiveDescendantKeyManager', () => {
     let keyManager: ActiveDescendantKeyManager<FakeHighlightable>;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(() => {
       itemList.items = [new FakeHighlightable(), new FakeHighlightable(), new FakeHighlightable()];
       keyManager = new ActiveDescendantKeyManager<FakeHighlightable>(itemList);
 
       // first item is already focused
       keyManager.setFirstItemActive();
-      tick();
 
       spyOn(itemList.items[0], 'setActiveStyles');
       spyOn(itemList.items[1], 'setActiveStyles');
@@ -565,44 +645,38 @@ describe('Key managers', () => {
       spyOn(itemList.items[0], 'setInactiveStyles');
       spyOn(itemList.items[1], 'setInactiveStyles');
       spyOn(itemList.items[2], 'setInactiveStyles');
-    }));
+    });
 
-    it('should set subsequent items as active with the DOWN arrow', fakeAsync(() => {
+    it('should set subsequent items as active with the DOWN arrow', () => {
       keyManager.onKeydown(fakeKeyEvents.downArrow);
-      tick();
 
       expect(itemList.items[1].setActiveStyles).toHaveBeenCalled();
       expect(itemList.items[2].setActiveStyles).not.toHaveBeenCalled();
 
       keyManager.onKeydown(fakeKeyEvents.downArrow);
-      tick();
 
       expect(itemList.items[2].setActiveStyles).toHaveBeenCalled();
-    }));
+    });
 
-    it('should set previous items as active with the UP arrow', fakeAsync(() => {
+    it('should set previous items as active with the UP arrow', () => {
       keyManager.setLastItemActive();
-      tick();
-
       keyManager.onKeydown(fakeKeyEvents.upArrow);
-      tick();
+
       expect(itemList.items[1].setActiveStyles).toHaveBeenCalled();
       expect(itemList.items[0].setActiveStyles).not.toHaveBeenCalled();
 
       keyManager.onKeydown(fakeKeyEvents.upArrow);
-      tick();
-      expect(itemList.items[0].setActiveStyles).toHaveBeenCalled();
-    }));
 
-    it('should set inactive styles on previously active items', fakeAsync(() => {
+      expect(itemList.items[0].setActiveStyles).toHaveBeenCalled();
+    });
+
+    it('should set inactive styles on previously active items', () => {
       keyManager.onKeydown(fakeKeyEvents.downArrow);
-      tick();
       expect(itemList.items[0].setInactiveStyles).toHaveBeenCalled();
 
       keyManager.onKeydown(fakeKeyEvents.upArrow);
-      tick();
       expect(itemList.items[1].setInactiveStyles).toHaveBeenCalled();
-    }));
+    });
 
   });
 

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -9,7 +9,6 @@
 import {
   AfterContentChecked,
   AfterContentInit,
-  AfterViewChecked,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -20,13 +19,13 @@ import {
   OnDestroy,
   Output,
   QueryList,
-  Renderer2,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {Subscription} from 'rxjs/Subscription';
 import {MatTab} from './tab';
+import {MatTabHeader} from './tab-header';
 import {merge} from 'rxjs/observable/merge';
 import {
   CanColor,
@@ -52,7 +51,7 @@ export type MatTabHeaderPosition = 'above' | 'below';
 // Boilerplate for applying mixins to MatTabGroup.
 /** @docs-private */
 export class MatTabGroupBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  constructor(public _elementRef: ElementRef) {}
 }
 export const _MatTabGroupMixinBase = mixinColor(mixinDisableRipple(MatTabGroupBase), 'primary');
 
@@ -64,6 +63,7 @@ export const _MatTabGroupMixinBase = mixinColor(mixinDisableRipple(MatTabGroupBa
 @Component({
   moduleId: module.id,
   selector: 'mat-tab-group',
+  exportAs: 'matTabGroup',
   templateUrl: 'tab-group.html',
   styleUrls: ['tab-group.css'],
   encapsulation: ViewEncapsulation.None,
@@ -77,14 +77,11 @@ export const _MatTabGroupMixinBase = mixinColor(mixinDisableRipple(MatTabGroupBa
   },
 })
 export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentInit,
-    AfterContentChecked, AfterViewChecked, OnDestroy, CanColor, CanDisableRipple {
+    AfterContentChecked, OnDestroy, CanColor, CanDisableRipple {
 
   @ContentChildren(MatTab) _tabs: QueryList<MatTab>;
 
   @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
-
-  /** Whether this component has been initialized. */
-  private _isInitialized: boolean = false;
 
   /** The tab index that should be selected after the content has been checked. */
   private _indexToSelect: number | null = 0;
@@ -111,7 +108,9 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
 
   /** The index of the active tab. */
   @Input()
-  set selectedIndex(value: number | null) { this._indexToSelect = value; }
+  set selectedIndex(value: number | null) {
+    this._indexToSelect = coerceNumberProperty(value, null);
+  }
   get selectedIndex(): number | null { return this._selectedIndex; }
   private _selectedIndex: number | null = null;
 
@@ -122,12 +121,12 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   @Input()
   get backgroundColor(): ThemePalette { return this._backgroundColor; }
   set backgroundColor(value: ThemePalette) {
-    let nativeElement = this._elementRef.nativeElement;
+    const nativeElement: HTMLElement = this._elementRef.nativeElement;
 
-    this._renderer.removeClass(nativeElement, `mat-background-${this.backgroundColor}`);
+    nativeElement.classList.remove(`mat-background-${this.backgroundColor}`);
 
     if (value) {
-      this._renderer.addClass(nativeElement, `mat-background-${value}`);
+      nativeElement.classList.add(`mat-background-${value}`);
     }
 
     this._backgroundColor = value;
@@ -144,15 +143,20 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   @Output() animationDone: EventEmitter<void> = new EventEmitter<void>();
 
   /** Event emitted when the tab selection has changed. */
-  @Output() selectChange: EventEmitter<MatTabChangeEvent> =
+  @Output() selectedTabChange: EventEmitter<MatTabChangeEvent> =
       new EventEmitter<MatTabChangeEvent>(true);
+
+  /**
+   * Event emitted when the tab selection has changed.
+   * @deprecated Use `selectedTabChange` instead.
+   */
+  @Output() selectChange: EventEmitter<MatTabChangeEvent> = this.selectedTabChange;
 
   private _groupId: number;
 
-  constructor(_renderer: Renderer2,
-              elementRef: ElementRef,
+  constructor(elementRef: ElementRef,
               private _changeDetectorRef: ChangeDetectorRef) {
-    super(_renderer, elementRef);
+    super(elementRef);
     this._groupId = nextId++;
   }
 
@@ -173,7 +177,8 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
     // If there is a change in selected index, emit a change event. Should not trigger if
     // the selected index has not yet been initialized.
     if (this._selectedIndex != indexToSelect && this._selectedIndex != null) {
-      this.selectChange.emit(this._createChangeEvent(indexToSelect));
+      const tabChangeEvent = this._createChangeEvent(indexToSelect);
+      this.selectedTabChange.emit(tabChangeEvent);
       // Emitting this value after change detection has run
       // since the checked content may contain this variable'
       Promise.resolve().then(() => this.selectedIndexChange.emit(indexToSelect));
@@ -211,14 +216,6 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   ngOnDestroy() {
     this._tabsSubscription.unsubscribe();
     this._tabLabelSubscription.unsubscribe();
-  }
-
-  /**
-   * Waits one frame for the view to update, then updates the ink bar
-   * Note: This must be run outside of the zone or it will create an infinite change detection loop.
-   */
-  ngAfterViewChecked(): void {
-    this._isInitialized = true;
   }
 
   _focusChanged(index: number) {
@@ -269,21 +266,36 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   _setTabBodyWrapperHeight(tabHeight: number): void {
     if (!this._dynamicHeight || !this._tabBodyWrapperHeight) { return; }
 
-    this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height',
-        this._tabBodyWrapperHeight + 'px');
+    const wrapper: HTMLElement = this._tabBodyWrapper.nativeElement;
+
+    wrapper.style.height = this._tabBodyWrapperHeight + 'px';
 
     // This conditional forces the browser to paint the height so that
     // the animation to the new height can have an origin.
     if (this._tabBodyWrapper.nativeElement.offsetHeight) {
-      this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height',
-          tabHeight + 'px');
+      wrapper.style.height = tabHeight + 'px';
     }
   }
 
   /** Removes the height of the tab body wrapper. */
   _removeTabBodyWrapperHeight(): void {
     this._tabBodyWrapperHeight = this._tabBodyWrapper.nativeElement.clientHeight;
-    this._renderer.setStyle(this._tabBodyWrapper.nativeElement, 'height', '');
+    this._tabBodyWrapper.nativeElement.style.height = '';
     this.animationDone.emit();
+  }
+
+  /** Handle click events, setting new selected index if appropriate. */
+  _handleClick(tab: MatTab, tabHeader: MatTabHeader, idx: number) {
+    if (!tab.disabled) {
+      this.selectedIndex = tabHeader.focusIndex = idx;
+    }
+  }
+
+  /** Retrieves the tabindex for the tab. */
+  _getTabIndex(tab: MatTab, idx: number): number | null {
+    if (tab.disabled) {
+      return null;
+    }
+    return this.selectedIndex === idx ? 0 : -1;
   }
 }

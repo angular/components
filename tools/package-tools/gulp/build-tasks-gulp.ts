@@ -45,7 +45,8 @@ export function createPackageBuildTasks(buildPackage: BuildPackage) {
     // Build all required packages before building.
     ...dependencyNames.map(pkgName => `${pkgName}:build`),
     // Build ESM and assets output.
-    [`${taskName}:build:esm`, `${taskName}:assets`],
+    `${taskName}:assets`,
+    `${taskName}:build:esm`,
     // Inline assets into ESM output.
     `${taskName}:assets:inline`,
     // Build bundles on top of inlined ESM output.
@@ -53,8 +54,6 @@ export function createPackageBuildTasks(buildPackage: BuildPackage) {
   ));
 
   task(`${taskName}:build-no-bundles`, sequenceTask(
-    // Build all required tests before building.
-    ...dependencyNames.map(pkgName => `${pkgName}:build-no-bundles`),
     // Build the ESM output that includes all test files. Also build assets for the package.
     [`${taskName}:build:esm:tests`, `${taskName}:assets`],
     // Inline assets into ESM output.

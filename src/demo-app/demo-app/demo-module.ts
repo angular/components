@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
@@ -23,7 +31,12 @@ import {InputDemo} from '../input/input-demo';
 import {ListDemo} from '../list/list-demo';
 import {LiveAnnouncerDemo} from '../live-announcer/live-announcer-demo';
 import {MenuDemo} from '../menu/menu-demo';
-import {OverlayDemo, RotiniPanel, SpagettiPanel} from '../overlay/overlay-demo';
+import {
+  OverlayDemo,
+  RotiniPanel,
+  SpagettiPanel,
+  KeyboardTrackingPanel
+} from '../overlay/overlay-demo';
 import {PlatformDemo} from '../platform/platform-demo';
 import {PortalDemo, ScienceJoke} from '../portal/portal-demo';
 import {ProgressBarDemo} from '../progress-bar/progress-bar-demo';
@@ -80,6 +93,7 @@ import {DEMO_APP_ROUTES} from './routes';
     IFrameDialog,
     InputDemo,
     JazzDialog,
+    KeyboardTrackingPanel,
     ListDemo,
     LiveAnnouncerDemo,
     MatCheckboxDemoNestedChecklist,
@@ -119,6 +133,7 @@ import {DEMO_APP_ROUTES} from './routes';
     DemoApp,
     IFrameDialog,
     JazzDialog,
+    KeyboardTrackingPanel,
     RotiniPanel,
     ScienceJoke,
     SpagettiPanel,

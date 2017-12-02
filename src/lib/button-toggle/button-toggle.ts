@@ -1,35 +1,34 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   Directive,
   ElementRef,
-  Renderer2,
   EventEmitter,
+  forwardRef,
   Input,
-  OnInit,
   OnDestroy,
+  OnInit,
   Optional,
   Output,
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  forwardRef,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
 } from '@angular/core';
-import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {UniqueSelectionDispatcher} from '@angular/material/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {CanDisable, mixinDisabled} from '@angular/material/core';
-import {FocusMonitor} from '@angular/cdk/a11y';
 
 /** Acceptable types for a button toggle. */
 export type ToggleType = 'checkbox' | 'radio';
@@ -94,7 +93,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
   _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
   /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
-  onTouched: () => any = () => {};
+  _onTouched: () => any = () => {};
 
   /** Child button toggle buttons. */
   @ContentChildren(forwardRef(() => MatButtonToggle)) _buttonToggles: QueryList<MatButtonToggle>;
@@ -128,10 +127,17 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
   set value(newValue: any) {
     if (this._value != newValue) {
       this._value = newValue;
-
+      this.valueChange.emit(newValue);
       this._updateSelectedButtonToggleFromValue();
     }
   }
+
+  /**
+   * Event that emits whenever the value of the group changes.
+   * Used to facilitate two-way data binding.
+   * @docs-private
+   */
+  @Output() valueChange = new EventEmitter<any>();
 
   /** Whether the toggle group is selected. */
   @Input()
@@ -215,7 +221,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
    * @param fn On touch callback function.
    */
   registerOnTouched(fn: any) {
-    this.onTouched = fn;
+    this._onTouched = fn;
   }
 
   /**
@@ -270,6 +276,7 @@ export class MatButtonToggleGroupMultiple extends _MatButtonToggleGroupMixinBase
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
+  exportAs: 'matButtonToggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.mat-button-toggle-standalone]': '!buttonToggleGroup && !buttonToggleGroupMultiple',
@@ -378,7 +385,6 @@ export class MatButtonToggle implements OnInit, OnDestroy {
               @Optional() toggleGroupMultiple: MatButtonToggleGroupMultiple,
               private _changeDetectorRef: ChangeDetectorRef,
               private _buttonToggleDispatcher: UniqueSelectionDispatcher,
-              private _renderer: Renderer2,
               private _elementRef: ElementRef,
               private _focusMonitor: FocusMonitor) {
 
@@ -413,7 +419,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
     if (this.buttonToggleGroup && this._value == this.buttonToggleGroup.value) {
       this._checked = true;
     }
-    this._focusMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
+    this._focusMonitor.monitor(this._elementRef.nativeElement, true);
   }
 
   /** Focuses the button. */
@@ -436,7 +442,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
       let groupValueChanged = this.buttonToggleGroup.selected != this;
       this.checked = true;
       this.buttonToggleGroup.selected = this;
-      this.buttonToggleGroup.onTouched();
+      this.buttonToggleGroup._onTouched();
       if (groupValueChanged) {
         this.buttonToggleGroup._emitChangeEvent();
       }

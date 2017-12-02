@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -8,8 +8,18 @@
 
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
-import {Component, Input, ViewEncapsulation, ElementRef, OnDestroy, Renderer2} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  ViewEncapsulation,
+} from '@angular/core';
+import {Subscription} from 'rxjs/Subscription';
 import {MatStepLabel} from './step-label';
+import {MatStepperIntl} from './stepper-intl';
 
 
 @Component({
@@ -23,8 +33,11 @@ import {MatStepLabel} from './step-label';
   },
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatStepHeader implements OnDestroy {
+  private _intlSubscription: Subscription;
+
   /** Icon for the given step. */
   @Input() icon: string;
 
@@ -64,13 +77,16 @@ export class MatStepHeader implements OnDestroy {
   private _optional: boolean;
 
   constructor(
+    public _intl: MatStepperIntl,
     private _focusMonitor: FocusMonitor,
     private _element: ElementRef,
-    renderer: Renderer2) {
-    _focusMonitor.monitor(_element.nativeElement, renderer, true);
+    changeDetectorRef: ChangeDetectorRef) {
+    _focusMonitor.monitor(_element.nativeElement, true);
+    this._intlSubscription = _intl.changes.subscribe(() => changeDetectorRef.markForCheck());
   }
 
   ngOnDestroy() {
+    this._intlSubscription.unsubscribe();
     this._focusMonitor.stopMonitoring(this._element.nativeElement);
   }
 

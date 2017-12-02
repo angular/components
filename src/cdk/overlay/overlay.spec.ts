@@ -1,10 +1,10 @@
-import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {async, fakeAsync, tick, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {Component, NgModule, ViewChild, ViewContainerRef} from '@angular/core';
 import {
   ComponentPortal,
   PortalModule,
   TemplatePortal,
-  TemplatePortalDirective
+  CdkPortal
 } from '@angular/cdk/portal';
 import {
   Overlay,
@@ -22,23 +22,19 @@ describe('Overlay', () => {
   let componentPortal: ComponentPortal<PizzaMsg>;
   let templatePortal: TemplatePortal<any>;
   let overlayContainerElement: HTMLElement;
+  let overlayContainer: OverlayContainer;
   let viewContainerFixture: ComponentFixture<TestComponentWithTemplatePortals>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule, PortalModule, OverlayTestModule],
-      providers: [{
-        provide: OverlayContainer,
-        useFactory: () => {
-          overlayContainerElement = document.createElement('div');
-          return {getContainerElement: () => overlayContainerElement};
-        }
-      }]
+      imports: [OverlayModule, PortalModule, OverlayTestModule]
     }).compileComponents();
   }));
 
-  beforeEach(inject([Overlay], (o: Overlay) => {
+  beforeEach(inject([Overlay, OverlayContainer], (o: Overlay, oc: OverlayContainer) => {
     overlay = o;
+    overlayContainer = oc;
+    overlayContainerElement = oc.getContainerElement();
 
     let fixture = TestBed.createComponent(TestComponentWithTemplatePortals);
     fixture.detectChanges();
@@ -46,6 +42,10 @@ describe('Overlay', () => {
     componentPortal = new ComponentPortal(PizzaMsg, fixture.componentInstance.viewContainerRef);
     viewContainerFixture = fixture;
   }));
+
+  afterEach(() => {
+    overlayContainer.ngOnDestroy();
+  });
 
   it('should load a component into an overlay', () => {
     let overlayRef = overlay.create();
@@ -107,7 +107,7 @@ describe('Overlay', () => {
     expect(overlayContainerElement.textContent).toBe('');
   });
 
-  it('should ensure that the most-recently-attached overlay is on top', () => {
+  it('should ensure that the most-recently-attached overlay is on top', (() => {
     let pizzaOverlayRef = overlay.create();
     let cakeOverlayRef = overlay.create();
 
@@ -130,7 +130,7 @@ describe('Overlay', () => {
         .toBeTruthy('Expected pizza to still be on the bottom.');
     expect(cakeOverlayRef.overlayElement.nextSibling)
         .toBeFalsy('Expected cake to still be on top.');
-  });
+  }));
 
   it('should set the direction', () => {
     const config = new OverlayConfig({direction: 'rtl'});
@@ -175,6 +175,26 @@ describe('Overlay', () => {
     overlayRef.detach();
 
     expect(spy).toHaveBeenCalled();
+  });
+
+  it('should not emit to the detach stream if the overlay has not been attached', () => {
+    let overlayRef = overlay.create();
+    let spy = jasmine.createSpy('detachments spy');
+
+    overlayRef.detachments().subscribe(spy);
+    overlayRef.detach();
+
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('should not emit to the detach stream on dispose if the overlay was not attached', () => {
+    let overlayRef = overlay.create();
+    let spy = jasmine.createSpy('detachments spy');
+
+    overlayRef.detachments().subscribe(spy);
+    overlayRef.dispose();
+
+    expect(spy).not.toHaveBeenCalled();
   });
 
   it('should emit the detachment event after the overlay is removed from the DOM', () => {
@@ -226,13 +246,15 @@ describe('Overlay', () => {
       config = new OverlayConfig();
     });
 
-    it('should apply the positioning strategy', () => {
+    it('should apply the positioning strategy', fakeAsync(() => {
       config.positionStrategy = new FakePositionStrategy();
 
       overlay.create(config).attach(componentPortal);
+      viewContainerFixture.detectChanges();
+      tick();
 
       expect(overlayContainerElement.querySelectorAll('.fake-positioned').length).toBe(1);
-    });
+    }));
   });
 
   describe('size', () => {
@@ -480,7 +502,7 @@ class PizzaMsg { }
 /** Test-bed component that contains a TempatePortal and an ElementRef. */
 @Component({template: `<ng-template cdk-portal>Cake</ng-template>`})
 class TestComponentWithTemplatePortals {
-  @ViewChild(TemplatePortalDirective) templatePortal: TemplatePortalDirective;
+  @ViewChild(CdkPortal) templatePortal: CdkPortal;
 
   constructor(public viewContainerRef: ViewContainerRef) { }
 }

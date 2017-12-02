@@ -1,10 +1,31 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+
+/** Cached result of whether the user's browser supports passive event listeners. */
+let supportsPassiveEvents: boolean;
+
+/**
+ * Checks whether the user's browser supports passive event listeners.
+ * See: https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
+ */
+export function supportsPassiveEventListeners(): boolean {
+  if (supportsPassiveEvents == null) {
+    try {
+      window.addEventListener('test', null!, Object.defineProperty({}, 'passive', {
+        get: () => supportsPassiveEvents = true
+      }));
+    } finally {
+      supportsPassiveEvents = supportsPassiveEvents || false;
+    }
+  }
+
+  return supportsPassiveEvents;
+}
 
 /** Cached result Set of input types support by the current browser. */
 let supportedInputTypes: Set<string>;

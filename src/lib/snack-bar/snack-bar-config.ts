@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -35,7 +35,13 @@ export class MatSnackBarConfig {
   duration?: number = 0;
 
   /** Extra CSS classes to be added to the snack bar container. */
-  extraClasses?: string[];
+  panelClass?: string | string[];
+
+  /**
+   * Extra CSS classes to be added to the snack bar container.
+   * @deprecated Use `panelClass` instead.
+   */
+ extraClasses?: string | string[];
 
   /** Text layout direction for the snack bar. */
   direction?: Direction = 'ltr';

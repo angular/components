@@ -1,11 +1,12 @@
 import {Component, NgModule} from '@angular/core';
 import {ServerModule} from '@angular/platform-server';
 import {BrowserModule} from '@angular/platform-browser';
-import {Observable} from 'rxjs/Observable';
 import {
   MatAutocompleteModule,
   MatButtonModule,
+  MatButtonToggleModule,
   MatCardModule,
+  MatCheckboxModule,
   MatChipsModule,
   MatDatepickerModule,
   MatDialogModule,
@@ -32,13 +33,15 @@ import {
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
+  MatStepperModule,
+  MatSnackBar,
 } from '@angular/material';
 import {
   CdkTableModule,
   DataSource
 } from '@angular/cdk/table';
 
-import 'rxjs/add/observable/of';
+import {of as observableOf} from 'rxjs/observable/of';
 
 @Component({
   selector: 'kitchen-sink',
@@ -52,12 +55,14 @@ export class KitchenSink {
 
   /** Data source for the CDK and Material table. */
   tableDataSource: DataSource<any> = {
-    connect: () => Observable.of([
-      { userId: 1 },
-      { userId: 2 }
-    ]),
+    connect: () => observableOf([{userId: 1}, {userId: 2}]),
     disconnect: () => {}
   };
+
+  constructor(snackBar: MatSnackBar) {
+    // Open a snack bar to do a basic sanity check of the overlays.
+    snackBar.open('Hello there');
+  }
 
 }
 
@@ -67,10 +72,9 @@ export class KitchenSink {
     BrowserModule.withServerTransition({appId: 'kitchen-sink'}),
     MatAutocompleteModule,
     MatButtonModule,
-    // Button toggle and checkbox can't work due to https://github.com/angular/angular/issues/17050
-    // MatButtonToggleModule,
+    MatButtonToggleModule,
     MatCardModule,
-    // MatCheckboxModule,
+    MatCheckboxModule,
     MatChipsModule,
     MatDatepickerModule,
     MatDialogModule,
@@ -97,6 +101,7 @@ export class KitchenSink {
     MatExpansionModule,
     MatSortModule,
     MatTableModule,
+    MatStepperModule,
 
     // CDK Modules
     CdkTableModule

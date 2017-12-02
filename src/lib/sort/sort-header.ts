@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -30,9 +30,17 @@ import {MatSort, MatSortable} from './sort';
 import {MatSortHeaderIntl} from './sort-header-intl';
 import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
 import {AnimationCurves, AnimationDurations} from '@angular/material/core';
+import {CanDisable, mixinDisabled} from '@angular/material/core';
+
 
 const SORT_ANIMATION_TRANSITION =
     AnimationDurations.ENTERING + ' ' + AnimationCurves.STANDARD_CURVE;
+
+// Boilerplate for applying mixins to the sort header.
+/** @docs-private */
+export class MatSortHeaderBase {}
+export const _MatSortHeaderMixinBase = mixinDisabled(MatSortHeaderBase);
+
 
 /**
  * Applies sorting behavior (click to change sort) and styles to an element, including an
@@ -46,15 +54,18 @@ const SORT_ANIMATION_TRANSITION =
 @Component({
   moduleId: module.id,
   selector: '[mat-sort-header]',
+  exportAs: 'matSortHeader',
   templateUrl: 'sort-header.html',
   styleUrls: ['sort-header.css'],
   host: {
-    '(click)': '_sort.sort(this)',
+    '(click)': '_handleClick()',
     '[class.mat-sort-header-sorted]': '_isSorted()',
+    '[class.mat-sort-header-disabled]': '_isDisabled()',
   },
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  inputs: ['disabled'],
   animations: [
     trigger('indicator', [
       state('asc', style({transform: 'translateY(0px)'})),
@@ -92,7 +103,7 @@ const SORT_ANIMATION_TRANSITION =
     ])
   ]
 })
-export class MatSortHeader implements MatSortable {
+export class MatSortHeader extends _MatSortHeaderMixinBase implements MatSortable, CanDisable {
   private _rerenderSubscription: Subscription;
 
   /**
@@ -109,7 +120,7 @@ export class MatSortHeader implements MatSortable {
 
   /** Overrides the disable clear value of the containing MatSort for this MatSortable. */
   @Input()
-  get disableClear() { return this._disableClear; }
+  get disableClear(): boolean { return this._disableClear; }
   set disableClear(v) { this._disableClear = coerceBooleanProperty(v); }
   private _disableClear: boolean;
 
@@ -117,13 +128,15 @@ export class MatSortHeader implements MatSortable {
               changeDetectorRef: ChangeDetectorRef,
               @Optional() public _sort: MatSort,
               @Optional() public _cdkColumnDef: CdkColumnDef) {
+
+    super();
+
     if (!_sort) {
       throw getSortHeaderNotContainedWithinSortError();
     }
 
-    this._rerenderSubscription = merge(_sort.sortChange, _intl.changes).subscribe(() => {
-      changeDetectorRef.markForCheck();
-    });
+    this._rerenderSubscription = merge(_sort.sortChange, _sort._stateChanges, _intl.changes)
+      .subscribe(() => changeDetectorRef.markForCheck());
   }
 
   ngOnInit() {
@@ -139,9 +152,20 @@ export class MatSortHeader implements MatSortable {
     this._rerenderSubscription.unsubscribe();
   }
 
+  /** Handles click events on the header. */
+  _handleClick() {
+    if (!this._isDisabled()) {
+      this._sort.sort(this);
+    }
+  }
+
   /** Whether this MatSortHeader is currently sorted in either ascending or descending order. */
   _isSorted() {
     return this._sort.active == this.id &&
         (this._sort.direction === 'asc' || this._sort.direction === 'desc');
+  }
+
+  _isDisabled() {
+    return this._sort.disabled || this.disabled;
   }
 }

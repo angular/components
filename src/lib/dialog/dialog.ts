@@ -1,21 +1,21 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {
   BlockScrollStrategy,
   Overlay,
-  OverlayRef,
   OverlayConfig,
+  OverlayRef,
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {ComponentPortal, ComponentType, PortalInjector, TemplatePortal} from '@angular/cdk/portal';
-import {startWith} from '@angular/cdk/rxjs';
 import {Location} from '@angular/common';
 import {
   ComponentRef,
@@ -27,15 +27,15 @@ import {
   SkipSelf,
   TemplateRef,
 } from '@angular/core';
-import {extendObject} from '@angular/material/core';
-import {Directionality} from '@angular/cdk/bidi';
 import {Observable} from 'rxjs/Observable';
 import {defer} from 'rxjs/observable/defer';
+import {of as observableOf} from 'rxjs/observable/of';
+import {filter} from 'rxjs/operators/filter';
+import {startWith} from 'rxjs/operators/startWith';
 import {Subject} from 'rxjs/Subject';
 import {MatDialogConfig} from './dialog-config';
 import {MatDialogContainer} from './dialog-container';
 import {MatDialogRef} from './dialog-ref';
-import {of as observableOf} from 'rxjs/observable/of';
 
 
 export const MAT_DIALOG_DATA = new InjectionToken<any>('MatDialogData');
@@ -67,7 +67,6 @@ export class MatDialog {
   private _openDialogsAtThisLevel: MatDialogRef<any>[] = [];
   private _afterAllClosedAtThisLevel = new Subject<void>();
   private _afterOpenAtThisLevel = new Subject<MatDialogRef<any>>();
-  private _boundKeydown = this._handleKeydown.bind(this);
 
   /** Keeps track of the currently-open dialogs. */
   get openDialogs(): MatDialogRef<any>[] {
@@ -90,7 +89,7 @@ export class MatDialog {
    */
   afterAllClosed: Observable<void> = defer<void>(() => this.openDialogs.length ?
       this._afterAllClosed :
-      startWith.call(this._afterAllClosed, undefined));
+      this._afterAllClosed.pipe(startWith(undefined)));
 
   constructor(
       private _overlay: Overlay,
@@ -114,15 +113,8 @@ export class MatDialog {
    * @param config Extra configuration options.
    * @returns Reference to the newly-opened dialog.
    */
-  open<T>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
-          config?: MatDialogConfig): MatDialogRef<T> {
-
-    const inProgressDialog = this.openDialogs.find(dialog => dialog._isAnimating());
-
-    // If there's a dialog that is in the process of being opened, return it instead.
-    if (inProgressDialog) {
-      return inProgressDialog;
-    }
+  open<T, D = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
+          config?: MatDialogConfig<D>): MatDialogRef<T> {
 
     config = _applyConfigDefaults(config);
 
@@ -133,11 +125,7 @@ export class MatDialog {
     const overlayRef = this._createOverlay(config);
     const dialogContainer = this._attachDialogContainer(overlayRef, config);
     const dialogRef =
-        this._attachDialogContent(componentOrTemplateRef, dialogContainer, overlayRef, config);
-
-    if (!this.openDialogs.length) {
-      document.addEventListener('keydown', this._boundKeydown);
-    }
+        this._attachDialogContent<T>(componentOrTemplateRef, dialogContainer, overlayRef, config);
 
     this.openDialogs.push(dialogRef);
     dialogRef.afterClosed().subscribe(() => this._removeOpenDialog(dialogRef));
@@ -190,7 +178,11 @@ export class MatDialog {
       scrollStrategy: this._scrollStrategy(),
       panelClass: dialogConfig.panelClass,
       hasBackdrop: dialogConfig.hasBackdrop,
-      direction: dialogConfig.direction
+      direction: dialogConfig.direction,
+      minWidth: dialogConfig.minWidth,
+      minHeight: dialogConfig.minHeight,
+      maxWidth: dialogConfig.maxWidth,
+      maxHeight: dialogConfig.maxHeight
     });
 
     if (dialogConfig.backdropClass) {
@@ -242,13 +234,18 @@ export class MatDialog {
       });
     }
 
+    // Close when escape keydown event occurs
+    overlayRef.keydownEvents().pipe(
+      filter(event => event.keyCode === ESCAPE && !dialogRef.disableClose)
+    ).subscribe(() => dialogRef.close());
+
     if (componentOrTemplateRef instanceof TemplateRef) {
       dialogContainer.attachTemplatePortal(
         new TemplatePortal<T>(componentOrTemplateRef, null!,
           <any>{ $implicit: config.data, dialogRef }));
     } else {
       const injector = this._createInjector<T>(config, dialogRef, dialogContainer);
-      const contentRef = dialogContainer.attachComponentPortal(
+      const contentRef = dialogContainer.attachComponentPortal<T>(
           new ComponentPortal(componentOrTemplateRef, undefined, injector));
       dialogRef.componentInstance = contentRef.instance;
     }
@@ -277,6 +274,10 @@ export class MatDialog {
     const injectionTokens = new WeakMap();
 
     injectionTokens.set(MatDialogRef, dialogRef);
+    // The MatDialogContainer is injected in the portal as the MatDialogContainer and the dialog's
+    // content are created out of the same ViewContainerRef and as such, are siblings for injector
+    // purposes.  To allow the hierarchy that is expected, the MatDialogContainer is explicitly
+    // added to the injection tokens.
     injectionTokens.set(MatDialogContainer, dialogContainer);
     injectionTokens.set(MAT_DIALOG_DATA, config.data);
     injectionTokens.set(Directionality, {
@@ -300,21 +301,7 @@ export class MatDialog {
       // no open dialogs are left, call next on afterAllClosed Subject
       if (!this.openDialogs.length) {
         this._afterAllClosed.next();
-        document.removeEventListener('keydown', this._boundKeydown);
       }
-    }
-  }
-
-  /**
-   * Handles global key presses while there are open dialogs. Closes the
-   * top dialog when the user presses escape.
-   */
-  private _handleKeydown(event: KeyboardEvent): void {
-    const topDialog = this.openDialogs[this.openDialogs.length - 1];
-    const canClose = topDialog ? !topDialog.disableClose : false;
-
-    if (event.keyCode === ESCAPE && canClose) {
-      topDialog.close();
     }
   }
 }
@@ -325,5 +312,5 @@ export class MatDialog {
  * @returns The new configuration object.
  */
 function _applyConfigDefaults(config?: MatDialogConfig): MatDialogConfig {
-  return extendObject(new MatDialogConfig(), config);
+  return {...new MatDialogConfig(), ...config};
 }

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -19,8 +19,10 @@ export class BlockScrollStrategy implements ScrollStrategy {
 
   constructor(private _viewportRuler: ViewportRuler) { }
 
+  /** Attaches this scroll strategy to an overlay. */
   attach() { }
 
+  /** Blocks page-level scroll while the attached overlay is open. */
   enable() {
     if (this._canBeEnabled()) {
       const root = document.documentElement;
@@ -40,13 +42,28 @@ export class BlockScrollStrategy implements ScrollStrategy {
     }
   }
 
+  /** Unblocks page-level scroll while the attached overlay is open. */
   disable() {
     if (this._isEnabled) {
+      const html = document.documentElement;
+      const body = document.body;
+      const previousHtmlScrollBehavior = html.style['scrollBehavior'] || '';
+      const previousBodyScrollBehavior = body.style['scrollBehavior'] || '';
+
       this._isEnabled = false;
-      document.documentElement.style.left = this._previousHTMLStyles.left;
-      document.documentElement.style.top = this._previousHTMLStyles.top;
-      document.documentElement.classList.remove('cdk-global-scrollblock');
+
+      html.style.left = this._previousHTMLStyles.left;
+      html.style.top = this._previousHTMLStyles.top;
+      html.classList.remove('cdk-global-scrollblock');
+
+      // Disable user-defined smooth scrolling temporarily while we restore the scroll position.
+      // See https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-behavior
+      html.style['scrollBehavior'] = body.style['scrollBehavior'] = 'auto';
+
       window.scroll(this._previousScrollPosition.left, this._previousScrollPosition.top);
+
+      html.style['scrollBehavior'] = previousHtmlScrollBehavior;
+      body.style['scrollBehavior'] = previousBodyScrollBehavior;
     }
   }
 
@@ -59,7 +76,7 @@ export class BlockScrollStrategy implements ScrollStrategy {
     }
 
     const body = document.body;
-    const viewport = this._viewportRuler.getViewportRect();
+    const viewport = this._viewportRuler.getViewportSize();
     return body.scrollHeight > viewport.height || body.scrollWidth > viewport.width;
   }
 }

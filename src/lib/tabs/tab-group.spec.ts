@@ -2,8 +2,7 @@ import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/t
 import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {By} from '@angular/platform-browser';
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {dispatchFakeEvent, FakeViewportRuler} from '@angular/cdk/testing';
+import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {Observable} from 'rxjs/Observable';
 import {MatTab, MatTabGroup, MatTabHeaderPosition, MatTabsModule} from './index';
 
@@ -20,9 +19,6 @@ describe('MatTabGroup', () => {
         DisabledTabsTestApp,
         TabGroupWithSimpleApi,
       ],
-      providers: [
-        {provide: ViewportRuler, useClass: FakeViewportRuler},
-      ]
     });
 
     TestBed.compileComponents();
@@ -30,13 +26,20 @@ describe('MatTabGroup', () => {
 
   describe('basic behavior', () => {
     let fixture: ComponentFixture<SimpleTabsTestApp>;
+    let element: HTMLElement;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleTabsTestApp);
+      element = fixture.nativeElement;
     });
 
     it('should default to the first tab', () => {
       checkSelectedIndex(1, fixture);
+    });
+
+    it('will properly load content on first change detection pass', () => {
+      fixture.detectChanges();
+      expect(element.querySelectorAll('.mat-tab-body')[1].querySelectorAll('span').length).toBe(3);
     });
 
     it('should change selected index on click', () => {
@@ -334,27 +337,43 @@ describe('MatTabGroup', () => {
           fixture.debugElement.query(By.directive(MatTabGroup)).componentInstance as MatTabGroup;
     });
 
-    it('should support a tab-group with the simple api', () => {
+    it('should support a tab-group with the simple api', async(() => {
       expect(getSelectedLabel(fixture).textContent).toMatch('Junk food');
       expect(getSelectedContent(fixture).textContent).toMatch('Pizza, fries');
 
       tabGroup.selectedIndex = 2;
       fixture.detectChanges();
+      // Use whenStable to wait for async observables and change detection to run in content.
+      fixture.whenStable().then(() => {
 
-      expect(getSelectedLabel(fixture).textContent).toMatch('Fruit');
-      expect(getSelectedContent(fixture).textContent).toMatch('Apples, grapes');
+        expect(getSelectedLabel(fixture).textContent).toMatch('Fruit');
+        expect(getSelectedContent(fixture).textContent).toMatch('Apples, grapes');
 
-      fixture.componentInstance.otherLabel = 'Chips';
-      fixture.componentInstance.otherContent = 'Salt, vinegar';
-      fixture.detectChanges();
+        fixture.componentInstance.otherLabel = 'Chips';
+        fixture.componentInstance.otherContent = 'Salt, vinegar';
+        fixture.detectChanges();
 
-      expect(getSelectedLabel(fixture).textContent).toMatch('Chips');
-      expect(getSelectedContent(fixture).textContent).toMatch('Salt, vinegar');
-    });
+        expect(getSelectedLabel(fixture).textContent).toMatch('Chips');
+        expect(getSelectedContent(fixture).textContent).toMatch('Salt, vinegar');
+      });
+    }));
 
     it('should support @ViewChild in the tab content', () => {
       expect(fixture.componentInstance.legumes).toBeTruthy();
     });
+
+    it('should only have the active tab in the DOM', async(() => {
+      expect(fixture.nativeElement.textContent).toContain('Pizza, fries');
+      expect(fixture.nativeElement.textContent).not.toContain('Peanuts');
+
+      tabGroup.selectedIndex = 3;
+      fixture.detectChanges();
+      // Use whenStable to wait for async observables and change detection to run in content.
+      fixture.whenStable().then(() => {
+        expect(fixture.nativeElement.textContent).not.toContain('Pizza, fries');
+        expect(fixture.nativeElement.textContent).toContain('Peanuts');
+      });
+    }));
 
     it('should support setting the header position', () => {
       let tabGroupNode = fixture.debugElement.query(By.css('mat-tab-group')).nativeElement;
@@ -425,14 +444,14 @@ describe('nested MatTabGroup with enabled animations', () => {
         [disableRipple]="disableRipple"
         (animationDone)="animationDone()"
         (focusChange)="handleFocus($event)"
-        (selectChange)="handleSelection($event)">
+        (selectedTabChange)="handleSelection($event)">
       <mat-tab>
         <ng-template mat-tab-label>Tab One</ng-template>
         Tab one content
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>Tab Two</ng-template>
-        Tab two content
+        <span>Tab </span><span>two</span><span>content</span>
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>Tab Three</ng-template>
@@ -462,7 +481,7 @@ class SimpleTabsTestApp {
     <mat-tab-group class="tab-group"
         [(selectedIndex)]="selectedIndex"
         (focusChange)="handleFocus($event)"
-        (selectChange)="handleSelection($event)">
+        (selectedTabChange)="handleSelection($event)">
       <mat-tab *ngFor="let tab of tabs">
         <ng-template mat-tab-label>{{tab.label}}</ng-template>
         {{tab.content}}

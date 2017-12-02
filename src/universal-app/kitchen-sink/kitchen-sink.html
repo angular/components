@@ -103,6 +103,10 @@
 
 <h2>Input</h2>
 
+<mat-form-field floatPlaceholder="never">
+  <input matInput placeholder="name">
+</mat-form-field>
+
 <mat-form-field>
   <input type="number" matInput placeholder="amount">
   <span matPrefix>$&nbsp;</span>
@@ -142,6 +146,10 @@
 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 <mat-progress-bar mode="query"></mat-progress-bar>
 
+<h2>Progress spinner</h2>
+
+<mat-progress-spinner mode="indeterminate" [diameter]="32"></mat-progress-spinner>
+<mat-progress-spinner mode="determinate" [value]="60"></mat-progress-spinner>
 
 <h2>Radio buttons</h2>
 
@@ -169,8 +177,9 @@
 
 <h2>Sidenav</h2>
 <mat-sidenav-container>
-  <mat-sidenav>On the side</mat-sidenav>
+  <mat-sidenav opened>On the side</mat-sidenav>
   Main content
+  <button>Click me</button>
 </mat-sidenav-container>
 
 <h2>Slide-toggle</h2>
@@ -281,3 +290,36 @@
   <mat-list-option value="bananas">Bananas</mat-list-option>
   <mat-list-option value="oranges">Oranges</mat-list-option>
 </mat-selection-list>
+
+<h2>Vertical Stepper</h2>
+
+<mat-vertical-stepper>
+  <mat-step label="Step 1">Content 1</mat-step>
+  <mat-step label="Step 1">Content 2</mat-step>
+</mat-vertical-stepper>
+
+<h2>Vertical Stepper (with label template)</h2>
+
+<mat-vertical-stepper>
+  <mat-step>
+    <ng-template matStepLabel>NgTemplate Label #1</ng-template>
+    Content 1
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>NgTemplate Label #2</ng-template>
+    Content 2
+  </mat-step>
+</mat-vertical-stepper>
+
+<h2>Horizontal Stepper</h2>
+
+<mat-horizontal-stepper>
+  <mat-step label="Step 1">Content 1</mat-step>
+  <mat-step label="Step 2">Content 2</mat-step>
+</mat-horizontal-stepper>
+
+<h2>Focus trap</h2>
+
+<div cdkTrapFocus cdkTrapFocusAutoCapture>
+  <button>Oh no, I'm trapped!</button>
+</div>

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -15,8 +15,6 @@ import {
   CheckboxRequiredValidator,
   NG_VALIDATORS,
 } from '@angular/forms';
-
-export const _MatCheckboxRequiredValidator = CheckboxRequiredValidator;
 
 export const MAT_CHECKBOX_REQUIRED_VALIDATOR: Provider = {
   provide: NG_VALIDATORS,
@@ -35,4 +33,4 @@ export const MAT_CHECKBOX_REQUIRED_VALIDATOR: Provider = {
   providers: [MAT_CHECKBOX_REQUIRED_VALIDATOR],
   host: {'[attr.required]': 'required ? "" : null'}
 })
-export class MatCheckboxRequiredValidator extends _MatCheckboxRequiredValidator {}
+export class MatCheckboxRequiredValidator extends CheckboxRequiredValidator {}

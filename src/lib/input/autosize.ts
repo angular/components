@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -71,7 +71,6 @@ export class MatTextareaAutosize implements AfterViewInit, DoCheck {
 
   ngAfterViewInit() {
     if (this._platform.isBrowser) {
-      this._cacheTextareaLineHeight();
       this.resizeToFitContent();
     }
   }
@@ -83,13 +82,17 @@ export class MatTextareaAutosize implements AfterViewInit, DoCheck {
   }
 
   /**
-   * Cache the height of a single-row textarea.
+   * Cache the height of a single-row textarea if it has not already been cached.
    *
    * We need to know how large a single "row" of a textarea is in order to apply minRows and
    * maxRows. For the initial version, we will assume that the height of a single line in the
    * textarea does not ever change.
    */
   private _cacheTextareaLineHeight(): void {
+    if (this._cachedLineHeight) {
+      return;
+    }
+
     let textarea = this._elementRef.nativeElement as HTMLTextAreaElement;
 
     // Use a clone element because we have to override some styles.
@@ -124,11 +127,21 @@ export class MatTextareaAutosize implements AfterViewInit, DoCheck {
   }
 
   ngDoCheck() {
-    this.resizeToFitContent();
+    if (this._platform.isBrowser) {
+      this.resizeToFitContent();
+    }
   }
 
   /** Resize the textarea to fit its content. */
   resizeToFitContent() {
+    this._cacheTextareaLineHeight();
+
+    // If we haven't determined the line-height yet, we know we're still hidden and there's no point
+    // in checking the height of the textarea.
+    if (!this._cachedLineHeight) {
+      return;
+    }
+
     const textarea = this._elementRef.nativeElement as HTMLTextAreaElement;
     const value = textarea.value;
 
@@ -137,14 +150,21 @@ export class MatTextareaAutosize implements AfterViewInit, DoCheck {
       return;
     }
 
+    const placeholderText = textarea.placeholder;
+
     // Reset the textarea height to auto in order to shrink back to its default size.
     // Also temporarily force overflow:hidden, so scroll bars do not interfere with calculations.
+    // Long placeholders that are wider than the textarea width may lead to a bigger scrollHeight
+    // value. To ensure that the scrollHeight is not bigger than the content, the placeholders
+    // need to be removed temporarily.
     textarea.style.height = 'auto';
     textarea.style.overflow = 'hidden';
+    textarea.placeholder = '';
 
     // Use the scrollHeight to know how large the textarea *would* be if fit its entire value.
     textarea.style.height = `${textarea.scrollHeight}px`;
     textarea.style.overflow = '';
+    textarea.placeholder = placeholderText;
 
     this._previousValue = value;
   }

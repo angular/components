@@ -3,9 +3,10 @@
     class="mat-menu-panel"
     [ngClass]="_classList"
     (keydown)="_handleKeydown($event)"
-    (click)="close.emit('click')"
+    (click)="closed.emit('click')"
     [@transformMenu]="_panelAnimationState"
     (@transformMenu.done)="_onAnimationDone($event)"
+    tabindex="-1"
     role="menu">
     <div class="mat-menu-content" [@fadeInItems]="'showing'">
       <ng-content></ng-content>

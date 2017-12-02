@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatSelectChange} from '@angular/material';
@@ -21,7 +29,7 @@ export class SelectDemo {
   currentPokemonFromGroup: string;
   currentDigimon: string;
   latestChangeEvent: MatSelectChange;
-  floatPlaceholder: string = 'auto';
+  floatLabel: string = 'auto';
   foodControl = new FormControl('pizza-1');
   topHeightCtrl = new FormControl(0);
   drinksTheme = 'primary';
@@ -52,7 +60,7 @@ export class SelectDemo {
     {value: 'charizard-1', viewValue: 'Charizard'},
     {value: 'squirtle-2', viewValue: 'Squirtle'},
     {value: 'pikachu-3', viewValue: 'Pikachu'},
-    {value: 'eevee-4', viewValue: 'Eevee'},
+    {value: 'jigglypuff-4', viewValue: 'Jigglypuff with a really long name that will truncate'},
     {value: 'ditto-5', viewValue: 'Ditto'},
     {value: 'psyduck-6', viewValue: 'Psyduck'},
   ];
@@ -112,7 +120,7 @@ export class SelectDemo {
   }
 
   setPokemonValue() {
-    this.currentPokemon = ['eevee-4', 'psyduck-6'];
+    this.currentPokemon = ['jigglypuff-4', 'psyduck-6'];
   }
 
   reassignDrinkByCopy() {

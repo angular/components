@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -8,7 +8,6 @@
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
-import {auditTime, startWith} from '@angular/cdk/rxjs';
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -23,17 +22,17 @@ import {
   Optional,
   Output,
   QueryList,
-  Renderer2,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {CanDisableRipple, mixinDisableRipple} from '@angular/material/core';
-import {fromEvent} from 'rxjs/observable/fromEvent';
 import {merge} from 'rxjs/observable/merge';
 import {of as observableOf} from 'rxjs/observable/of';
 import {Subscription} from 'rxjs/Subscription';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {MatInkBar} from './ink-bar';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
+import {ViewportRuler} from '@angular/cdk/scrolling';
 
 
 /**
@@ -120,6 +119,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   @Input()
   get selectedIndex(): number { return this._selectedIndex; }
   set selectedIndex(value: number) {
+    value = coerceNumberProperty(value);
     this._selectedIndexChanged = this._selectedIndex != value;
     this._selectedIndex = value;
     this._focusIndex = value;
@@ -132,8 +132,8 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   @Output() indexFocused = new EventEmitter();
 
   constructor(private _elementRef: ElementRef,
-              private _renderer: Renderer2,
               private _changeDetectorRef: ChangeDetectorRef,
+              private _viewportRuler: ViewportRuler,
               @Optional() private _dir: Directionality) {
     super();
   }
@@ -186,14 +186,16 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
    */
   ngAfterContentInit() {
     const dirChange = this._dir ? this._dir.change : observableOf(null);
-    const resize = typeof window !== 'undefined' ?
-        auditTime.call(fromEvent(window, 'resize'), 150) :
-        observableOf(null);
-
-    this._realignInkBar = startWith.call(merge(dirChange, resize), null).subscribe(() => {
+    const resize = this._viewportRuler.change(150);
+    const realign = () => {
       this._updatePagination();
       this._alignInkBarToSelectedTab();
-    });
+    };
+
+    // Defer the first call in order to allow for slower browsers to lay out the elements.
+    // This helps in cases where the user lands directly on a page with paginated tabs.
+    typeof requestAnimationFrame !== 'undefined' ? requestAnimationFrame(realign) : realign();
+    this._realignInkBar = merge(dirChange, resize).subscribe(realign);
   }
 
   ngOnDestroy() {
@@ -304,8 +306,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     const scrollDistance = this.scrollDistance;
     const translateX = this._getLayoutDirection() === 'ltr' ? -scrollDistance : scrollDistance;
 
-    this._renderer.setStyle(this._tabList.nativeElement, 'transform',
-        `translate3d(${translateX}px, 0, 0)`);
+    this._tabList.nativeElement.style.transform = `translate3d(${translateX}px, 0, 0)`;
   }
 
   /** Sets the distance in pixels that the tab header should be transformed in the X-axis. */
