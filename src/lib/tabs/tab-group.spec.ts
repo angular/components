@@ -2,6 +2,7 @@ import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/t
 import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
+// tslint:disable-next-line:no-unused-variable
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {Observable} from 'rxjs/Observable';

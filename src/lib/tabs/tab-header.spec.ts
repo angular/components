@@ -14,6 +14,7 @@ import {MatInkBar} from './ink-bar';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {Subject} from 'rxjs/Subject';
 import {TestGestureConfig} from '../core/gestures/test-gesture-config';
+// tslint:disable-next-line:no-unused-variable
 import {VIEWPORT_RULER_PROVIDER, ViewportRuler, ScrollDispatchModule} from '@angular/cdk/scrolling';
 
 describe('MatTabHeader', () => {

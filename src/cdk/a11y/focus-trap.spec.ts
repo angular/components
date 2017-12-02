@@ -1,7 +1,7 @@
 import {Platform} from '@angular/cdk/platform';
 import {Component, ViewChild} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {FocusTrap, CdkTrapFocus, FocusTrapFactory} from './focus-trap';
+import {FocusTrap, FocusTrapFactory} from './focus-trap';
 import {InteractivityChecker} from './interactivity-checker';
 
 
