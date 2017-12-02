@@ -19,7 +19,6 @@ import {
   OnDestroy,
   Optional,
   Output,
-  Renderer2
 } from '@angular/core';
 import {
   AbstractControl,
@@ -122,8 +121,8 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     value = this._getValidDateOrNull(value);
     let oldDate = this.value;
     this._value = value;
-    this._renderer.setProperty(this._elementRef.nativeElement, 'value',
-        value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '');
+    this._elementRef.nativeElement.value =
+        value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
     if (!this._dateAdapter.sameDate(oldDate, value)) {
       this._valueChange.emit(value);
     }
@@ -224,7 +223,6 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   constructor(
       private _elementRef: ElementRef,
-      private _renderer: Renderer2,
       @Optional() private _dateAdapter: DateAdapter<D>,
       @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
       @Optional() private _formField: MatFormField) {
@@ -276,6 +274,14 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
    */
   getPopupConnectionElementRef(): ElementRef {
     return this._formField ? this._formField.underlineRef : this._elementRef;
+  }
+
+  /**
+   * Determines the offset to be used when the calendar goes into a fallback position.
+   * Primarily used to prevent the calendar from overlapping the input.
+   */
+  _getPopupFallbackOffset(): number {
+    return this._formField ? -this._formField._inputContainerRef.nativeElement.clientHeight : 0;
   }
 
   // Implemented as part of ControlValueAccessor

@@ -11,7 +11,6 @@ import {
   ChangeDetectionStrategy,
   Input,
   ElementRef,
-  Renderer2,
   SimpleChanges,
   OnChanges,
   ViewEncapsulation,
@@ -41,7 +40,7 @@ const BASE_STROKE_WIDTH = 10;
 // Boilerplate for applying mixins to MatProgressSpinner.
 /** @docs-private */
 export class MatProgressSpinnerBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  constructor(public _elementRef: ElementRef) {}
 }
 export const _MatProgressSpinnerMixinBase = mixinColor(MatProgressSpinnerBase, 'primary');
 
@@ -146,15 +145,14 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
     return this.mode === 'determinate' ? this._value : 0;
   }
   set value(newValue: number) {
-    if (newValue != null && this.mode === 'determinate') {
-      this._value = Math.max(0, Math.min(100, coerceNumberProperty(newValue)));
-    }
+    this._value = Math.max(0, Math.min(100, coerceNumberProperty(newValue)));
   }
 
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef,
-              platform: Platform, @Optional() @Inject(DOCUMENT) private _document: any) {
-    super(_renderer, _elementRef);
+  constructor(public _elementRef: ElementRef,
+              platform: Platform,
+              @Optional() @Inject(DOCUMENT) private _document: any) {
 
+    super(_elementRef);
     this._fallbackAnimation = platform.EDGE || platform.TRIDENT;
 
     // On IE and Edge, we can't animate the `stroke-dashoffset`
@@ -162,7 +160,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
     const animationClass =
       `mat-progress-spinner-indeterminate${this._fallbackAnimation ? '-fallback' : ''}-animation`;
 
-    _renderer.addClass(_elementRef.nativeElement, animationClass);
+    _elementRef.nativeElement.classList.add(animationClass);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -211,8 +209,8 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
     let styleTag = MatProgressSpinner.styleTag;
 
     if (!styleTag) {
-      styleTag = this._renderer.createElement('style');
-      this._renderer.appendChild(this._document.head, styleTag);
+      styleTag = this._document.createElement('style');
+      this._document.head.appendChild(styleTag);
       MatProgressSpinner.styleTag = styleTag;
     }
 
@@ -258,9 +256,9 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   preserveWhitespaces: false,
 })
 export class MatSpinner extends MatProgressSpinner {
-  constructor(renderer: Renderer2, elementRef: ElementRef, platform: Platform,
+  constructor(elementRef: ElementRef, platform: Platform,
               @Optional() @Inject(DOCUMENT) document: any) {
-    super(renderer, elementRef, platform, document);
+    super(elementRef, platform, document);
     this.mode = 'indeterminate';
   }
 }

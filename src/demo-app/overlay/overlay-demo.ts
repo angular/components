@@ -6,15 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Overlay, CdkOverlayOrigin, OverlayConfig} from '@angular/cdk/overlay';
-import {
-  ComponentPortal,
-  // This import is only used to define a generic type. The current TypeScript version incorrectly
-  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
-  // tslint:disable-next-line:no-unused-variable
-  Portal,
-  CdkPortal
-} from '@angular/cdk/portal';
+import {CdkOverlayOrigin, Overlay, OverlayConfig} from '@angular/cdk/overlay';
+import {CdkPortal, ComponentPortal, Portal} from '@angular/cdk/portal';
 import {
   Component,
   QueryList,
@@ -23,8 +16,8 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/do';
+import {filter} from 'rxjs/operators/filter';
+import {tap} from 'rxjs/operators/tap';
 
 
 @Component({
@@ -129,9 +122,10 @@ export class OverlayDemo {
         .attach(new ComponentPortal(KeyboardTrackingPanel, this.viewContainerRef));
 
     overlayRef.keydownEvents()
-      .do(e => componentRef.instance.lastKeydown = e.key)
-      .filter(e => e.key === 'Escape')
-      .subscribe(() => overlayRef.detach());
+      .pipe(
+        tap(e => componentRef.instance.lastKeydown = e.key),
+        filter(e => e.key === 'Escape')
+      ).subscribe(() => overlayRef.detach());
   }
 
 }

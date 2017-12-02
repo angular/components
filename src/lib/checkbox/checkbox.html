@@ -13,12 +13,16 @@
            [indeterminate]="indeterminate"
            [attr.aria-label]="ariaLabel"
            [attr.aria-labelledby]="ariaLabelledby"
+           [attr.aria-checked]="_getAriaChecked()"
            (change)="_onInteractionEvent($event)"
            (click)="_onInputClick($event)">
     <div matRipple class="mat-checkbox-ripple"
          [matRippleTrigger]="label"
          [matRippleDisabled]="_isRippleDisabled()"
-         [matRippleCentered]="true"></div>
+         [matRippleRadius]="_rippleConfig.radius"
+         [matRippleSpeedFactor]="_rippleConfig.speedFactor"
+         [matRippleCentered]="_rippleConfig.centered">
+    </div>
     <div class="mat-checkbox-frame"></div>
     <div class="mat-checkbox-background">
       <svg version="1.1"

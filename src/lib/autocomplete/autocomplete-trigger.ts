@@ -18,7 +18,7 @@ import {
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {filter} from 'rxjs/operators/filter';
-import {first} from 'rxjs/operators/first';
+import {take} from 'rxjs/operators/take';
 import {switchMap} from 'rxjs/operators/switchMap';
 import {tap} from 'rxjs/operators/tap';
 import {delay} from 'rxjs/operators/delay';
@@ -39,7 +39,7 @@ import {
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {MatOption, MatOptionSelectionChange} from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
-import {DOCUMENT} from '@angular/platform-browser';
+import {DOCUMENT} from '@angular/common';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {fromEvent} from 'rxjs/observable/fromEvent';
@@ -123,8 +123,8 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   /** Strategy that is used to position the panel. */
   private _positionStrategy: ConnectedPositionStrategy;
 
-  /** Whether or not the placeholder state is being overridden. */
-  private _manuallyFloatingPlaceholder = false;
+  /** Whether or not the label state is being overridden. */
+  private _manuallyFloatingLabel = false;
 
   /** The subscription for closing actions (some are bound to document). */
   private _closingActionsSubscription: Subscription;
@@ -163,7 +163,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   /** Opens the autocomplete suggestion panel. */
   openPanel(): void {
     this._attachOverlay();
-    this._floatPlaceholder();
+    this._floatLabel();
   }
 
   /** Closes the autocomplete suggestion panel. */
@@ -173,14 +173,14 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this._closingActionsSubscription.unsubscribe();
     }
 
-    this._resetPlaceholder();
+    this._resetLabel();
 
     if (this._panelOpen) {
       this.autocomplete._isOpen = this._panelOpen = false;
 
       // We need to trigger change detection manually, because
       // `fromEvent` doesn't seem to do it at the proper time.
-      // This ensures that the placeholder is reset when the
+      // This ensures that the label is reset when the
       // user clicks outside.
       this._changeDetectorRef.detectChanges();
     }
@@ -307,33 +307,33 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   _handleFocus(): void {
     if (!this._element.nativeElement.readOnly) {
       this._attachOverlay();
-      this._floatPlaceholder(true);
+      this._floatLabel(true);
     }
   }
 
   /**
-   * In "auto" mode, the placeholder will animate down as soon as focus is lost.
+   * In "auto" mode, the label will animate down as soon as focus is lost.
    * This causes the value to jump when selecting an option with the mouse.
-   * This method manually floats the placeholder until the panel can be closed.
-   * @param shouldAnimate Whether the placeholder should be animated when it is floated.
+   * This method manually floats the label until the panel can be closed.
+   * @param shouldAnimate Whether the label should be animated when it is floated.
    */
-  private _floatPlaceholder(shouldAnimate = false): void {
-    if (this._formField && this._formField.floatPlaceholder === 'auto') {
+  private _floatLabel(shouldAnimate = false): void {
+    if (this._formField && this._formField.floatLabel === 'auto') {
       if (shouldAnimate) {
-        this._formField._animateAndLockPlaceholder();
+        this._formField._animateAndLockLabel();
       } else {
-        this._formField.floatPlaceholder = 'always';
+        this._formField.floatLabel = 'always';
       }
 
-      this._manuallyFloatingPlaceholder = true;
+      this._manuallyFloatingLabel = true;
     }
   }
 
-  /** If the placeholder has been manually elevated, return it to its normal state. */
-  private _resetPlaceholder(): void  {
-    if (this._manuallyFloatingPlaceholder) {
-      this._formField.floatPlaceholder = 'auto';
-      this._manuallyFloatingPlaceholder = false;
+  /** If the label has been manually elevated, return it to its normal state. */
+  private _resetLabel(): void  {
+    if (this._manuallyFloatingLabel) {
+      this._formField.floatLabel = 'auto';
+      this._manuallyFloatingLabel = false;
     }
   }
 
@@ -368,7 +368,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    * stream every time the option list changes.
    */
   private _subscribeToClosingActions(): Subscription {
-    const firstStable = this._zone.onStable.asObservable().pipe(first());
+    const firstStable = this._zone.onStable.asObservable().pipe(take(1));
     const optionChanges = this.autocomplete.options.changes.pipe(
       tap(() => this._positionStrategy.recalculateLastPosition()),
       // Defer emitting to the stream until the next tick, because changing
@@ -387,7 +387,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
           return this.panelClosingActions;
         }),
         // when the first closing event occurs...
-        first()
+        take(1)
       )
       // set the value, close the panel, and complete.
       .subscribe(event => this._setValueAndClose(event));
@@ -458,8 +458,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this._overlayRef = this._overlay.create(this._getOverlayConfig());
     } else {
       /** Update the panel width, in case the host width has changed */
-      this._overlayRef.getConfig().width = this._getHostWidth();
-      this._overlayRef.updateSize();
+      this._overlayRef.updateSize({width: this._getHostWidth()});
     }
 
     if (this._overlayRef && !this._overlayRef.hasAttached()) {

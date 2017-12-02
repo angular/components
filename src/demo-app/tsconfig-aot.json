@@ -1,21 +1,26 @@
 // TypeScript config that extends the demo-app tsconfig file. This config compiles the
-// "main-aot.ts" file and also enables templage code generation / AOT. All paths need
-// to be relative to the output directory.
+// "main-aot.ts" file and also enables templage code generation / AOT.
 {
   "extends": "./tsconfig-build",
   "compilerOptions": {
     // Needed for Moment.js since it doesn't have a default export.
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    // TODO(paul): Remove once Angular has been upgraded and supports noUnusedParameters in AOT.
-    "noUnusedParameters": false,
+    "noUnusedParameters": true,
     "strictNullChecks": true,
-    "outDir": ".",
+    "outDir": "../../dist/packages/demo-app",
+    "rootDirs": [
+      ".",
+      "../../dist/packages/demo-app"
+    ],
     "paths": {
-      "@angular/cdk/*": ["./cdk/*"],
-      "@angular/material": ["./material"],
-      "@angular/material/*": ["./material/*"],
-      "@angular/material-moment-adapter": ["./material-moment-adapter"]
+      "@angular/material/*": ["../../dist/releases/material/*"],
+      "@angular/material": ["../../dist/releases/material"],
+      "@angular/cdk/*": ["../../dist/releases/cdk/*"],
+      "@angular/cdk": ["../../dist/releases/cdk"],
+      "@angular/material-experimental/*": ["../../dist/releases/material-experimental/*"],
+      "@angular/material-experimental": ["../../dist/releases/material-experimental"],
+      "@angular/material-moment-adapter": ["../../dist/releases/material-moment-adapter"]
     }
   },
   "files": [

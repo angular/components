@@ -8,7 +8,6 @@
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
-import {startWith} from 'rxjs/operators/startWith';
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -23,7 +22,6 @@ import {
   Optional,
   Output,
   QueryList,
-  Renderer2,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -134,7 +132,6 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   @Output() indexFocused = new EventEmitter();
 
   constructor(private _elementRef: ElementRef,
-              private _renderer: Renderer2,
               private _changeDetectorRef: ChangeDetectorRef,
               private _viewportRuler: ViewportRuler,
               @Optional() private _dir: Directionality) {
@@ -190,11 +187,15 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   ngAfterContentInit() {
     const dirChange = this._dir ? this._dir.change : observableOf(null);
     const resize = this._viewportRuler.change(150);
-
-    this._realignInkBar = merge(dirChange, resize).pipe(startWith(null)).subscribe(() => {
+    const realign = () => {
       this._updatePagination();
       this._alignInkBarToSelectedTab();
-    });
+    };
+
+    // Defer the first call in order to allow for slower browsers to lay out the elements.
+    // This helps in cases where the user lands directly on a page with paginated tabs.
+    typeof requestAnimationFrame !== 'undefined' ? requestAnimationFrame(realign) : realign();
+    this._realignInkBar = merge(dirChange, resize).subscribe(realign);
   }
 
   ngOnDestroy() {
@@ -305,8 +306,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     const scrollDistance = this.scrollDistance;
     const translateX = this._getLayoutDirection() === 'ltr' ? -scrollDistance : scrollDistance;
 
-    this._renderer.setStyle(this._tabList.nativeElement, 'transform',
-        `translate3d(${translateX}px, 0, 0)`);
+    this._tabList.nativeElement.style.transform = `translate3d(${translateX}px, 0, 0)`;
   }
 
   /** Sets the distance in pixels that the tab header should be transformed in the X-axis. */

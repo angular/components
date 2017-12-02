@@ -27,13 +27,12 @@ import {
   Optional,
   Output,
   QueryList,
-  Renderer2,
   ViewEncapsulation,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/platform-browser';
+import {DOCUMENT} from '@angular/common';
 import {merge} from 'rxjs/observable/merge';
 import {filter} from 'rxjs/operators/filter';
-import {first} from 'rxjs/operators/first';
+import {take} from 'rxjs/operators/take';
 import {startWith} from 'rxjs/operators/startWith';
 import {takeUntil} from 'rxjs/operators/takeUntil';
 import {map} from 'rxjs/operators/map';
@@ -62,8 +61,8 @@ export class MatDrawerToggleResult {
   template: '<ng-content></ng-content>',
   host: {
     'class': 'mat-drawer-content',
-    '[style.marginLeft.px]': '_margins.left',
-    '[style.marginRight.px]': '_margins.right',
+    '[style.margin-left.px]': '_margins.left',
+    '[style.margin-right.px]': '_margins.right',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -346,7 +345,7 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
     // TODO(crisbeto): This promise is here for backwards-compatibility.
     // It should be removed next time we do breaking changes in the drawer.
     return new Promise<any>(resolve => {
-      this.openedChange.pipe(first()).subscribe(open => {
+      this.openedChange.pipe(take(1)).subscribe(open => {
         resolve(new MatDrawerToggleResult(open ? 'open' : 'close', true));
       });
     });
@@ -435,8 +434,7 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
   _contentMargins = new Subject<{left: number, right: number}>();
 
   constructor(@Optional() private _dir: Directionality, private _element: ElementRef,
-              private _renderer: Renderer2, private _ngZone: NgZone,
-              private _changeDetectorRef: ChangeDetectorRef) {
+              private _ngZone: NgZone, private _changeDetectorRef: ChangeDetectorRef) {
     // If a `Dir` directive exists up the tree, listen direction changes and update the left/right
     // properties to point to the proper start/end.
     if (_dir != null) {
@@ -493,7 +491,7 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
       // Set the transition class on the container so that the animations occur. This should not
       // be set initially because animations should only be triggered via a change in state.
       if (event.toState !== 'open-instant') {
-        this._renderer.addClass(this._element.nativeElement, 'mat-drawer-transition');
+        this._element.nativeElement.classList.add('mat-drawer-transition');
       }
 
       this._updateContentMargins();
@@ -517,7 +515,7 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
     // NOTE: We need to wait for the microtask queue to be empty before validating,
     // since both drawers may be swapping positions at the same time.
     drawer.onPositionChanged.pipe(takeUntil(this._drawers.changes)).subscribe(() => {
-      this._ngZone.onMicrotaskEmpty.asObservable().pipe(first()).subscribe(() => {
+      this._ngZone.onMicrotaskEmpty.asObservable().pipe(take(1)).subscribe(() => {
         this._validateDrawers();
       });
     });
@@ -537,9 +535,9 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
   /** Toggles the 'mat-drawer-opened' class on the main 'mat-drawer-container' element. */
   private _setContainerClass(isAdd: boolean): void {
     if (isAdd) {
-      this._renderer.addClass(this._element.nativeElement, 'mat-drawer-opened');
+      this._element.nativeElement.classList.add('mat-drawer-opened');
     } else {
-      this._renderer.removeClass(this._element.nativeElement, 'mat-drawer-opened');
+      this._element.nativeElement.classList.remove('mat-drawer-opened');
     }
   }
 

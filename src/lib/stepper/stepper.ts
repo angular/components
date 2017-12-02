@@ -9,6 +9,7 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {CdkStep, CdkStepper} from '@angular/cdk/stepper';
 import {
+  AfterContentInit,
   Component,
   ContentChild,
   ContentChildren,
@@ -26,10 +27,7 @@ import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
-
-/** Workaround for https://github.com/angular/angular/issues/17849 */
-export const _MatStep = CdkStep;
-export const _MatStepper = CdkStepper;
+import {takeUntil} from 'rxjs/operators/takeUntil';
 
 @Component({
   moduleId: module.id,
@@ -41,7 +39,7 @@ export const _MatStepper = CdkStepper;
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatStep extends _MatStep implements ErrorStateMatcher {
+export class MatStep extends CdkStep implements ErrorStateMatcher {
   /** Content for step label given by <ng-template matStepLabel>. */
   @ContentChild(MatStepLabel) stepLabel: MatStepLabel;
 
@@ -66,12 +64,17 @@ export class MatStep extends _MatStep implements ErrorStateMatcher {
 @Directive({
   selector: '[matStepper]'
 })
-export class MatStepper extends _MatStepper {
+export class MatStepper extends CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */
   @ViewChildren(MatStepHeader, {read: ElementRef}) _stepHeader: QueryList<ElementRef>;
 
   /** Steps that the stepper holds. */
   @ContentChildren(MatStep) _steps: QueryList<MatStep>;
+
+  ngAfterContentInit() {
+    // Mark the component for change detection whenever the content children query changes
+    this._steps.changes.pipe(takeUntil(this._destroyed)).subscribe(() => this._stateChanged());
+  }
 }
 
 @Component({
@@ -83,6 +86,7 @@ export class MatStepper extends _MatStepper {
   inputs: ['selectedIndex'],
   host: {
     'class': 'mat-stepper-horizontal',
+    'aria-orientation': 'horizontal',
     'role': 'tablist',
   },
   animations: [
@@ -109,6 +113,7 @@ export class MatHorizontalStepper extends MatStepper { }
   inputs: ['selectedIndex'],
   host: {
     'class': 'mat-stepper-vertical',
+    'aria-orientation': 'vertical',
     'role': 'tablist',
   },
   animations: [

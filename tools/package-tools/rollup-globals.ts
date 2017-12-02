@@ -3,7 +3,8 @@ import {getSubdirectoryNames} from './secondary-entry-points';
 import {buildConfig} from './build-config';
 
 /** Method that converts dash-case strings to a camel-based string. */
-const dashCaseToCamelCase = (str: string) => str.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+export const dashCaseToCamelCase =
+  (str: string) => str.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
 
 /** List of potential secondary entry-points for the cdk package. */
 const cdkSecondaryEntryPoints = getSubdirectoryNames(join(buildConfig.packagesDir, 'cdk'));
@@ -70,30 +71,19 @@ export const rollupGlobals = {
   'rxjs/observable/fromEventPattern': 'Rx.Observable',
   'rxjs/observable/empty': 'Rx.Observable',
 
-  'rxjs/operators/debounceTime': 'Rx.Observable',
-  'rxjs/operators/takeUntil': 'Rx.Observable',
-  'rxjs/operators/first': 'Rx.Observable',
-  'rxjs/operators/filter': 'Rx.Observable',
-  'rxjs/operators/map': 'Rx.Observable',
-  'rxjs/operators/tap': 'Rx.Observable',
-  'rxjs/operators/startWith': 'Rx.Observable',
-  'rxjs/operators/auditTime': 'Rx.Observable',
-  'rxjs/operators/switchMap': 'Rx.Observable',
-  'rxjs/operators/finalize': 'Rx.Observable',
-  'rxjs/operators/catchError': 'Rx.Observable',
-  'rxjs/operators/share': 'Rx.Observable',
-  'rxjs/operators/delay': 'Rx.Observable',
-  'rxjs/operators/combineLatest': 'Rx.Observable',
-
-  'rxjs/add/observable/merge': 'Rx.Observable',
-  'rxjs/add/observable/fromEvent': 'Rx.Observable',
-  'rxjs/add/observable/of': 'Rx.Observable',
-  'rxjs/add/observable/interval': 'Rx.Observable',
-  'rxjs/add/operator/startWith': 'Rx.Observable.prototype',
-  'rxjs/add/operator/map': 'Rx.Observable.prototype',
-  'rxjs/add/operator/debounceTime': 'Rx.Observable.prototype',
-  'rxjs/add/operator/distinctUntilChanged': 'Rx.Observable.prototype',
-  'rxjs/add/operator/first': 'Rx.Observable.prototype',
-  'rxjs/add/operator/catch': 'Rx.Observable.prototype',
-  'rxjs/add/operator/switchMap': 'Rx.Observable.prototype'
+  'rxjs/operators/debounceTime': 'Rx.operators',
+  'rxjs/operators/takeUntil': 'Rx.operators',
+  'rxjs/operators/take': 'Rx.operators',
+  'rxjs/operators/first': 'Rx.operators',
+  'rxjs/operators/filter': 'Rx.operators',
+  'rxjs/operators/map': 'Rx.operators',
+  'rxjs/operators/tap': 'Rx.operators',
+  'rxjs/operators/startWith': 'Rx.operators',
+  'rxjs/operators/auditTime': 'Rx.operators',
+  'rxjs/operators/switchMap': 'Rx.operators',
+  'rxjs/operators/finalize': 'Rx.operators',
+  'rxjs/operators/catchError': 'Rx.operators',
+  'rxjs/operators/share': 'Rx.operators',
+  'rxjs/operators/delay': 'Rx.operators',
+  'rxjs/operators/combineLatest': 'Rx.operators',
 };

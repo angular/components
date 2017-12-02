@@ -17,15 +17,15 @@ import {
   OnChanges,
   OnDestroy,
   Optional,
-  Renderer2,
-  Self
+  Self,
 } from '@angular/core';
-import {FormControl, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
-import {ErrorStateMatcher} from '@angular/material/core';
+import {FormGroupDirective, NgControl, NgForm} from '@angular/forms';
+import {ErrorStateMatcher, mixinErrorState, CanUpdateErrorState} from '@angular/material/core';
 import {MatFormFieldControl} from '@angular/material/form-field';
 import {Subject} from 'rxjs/Subject';
 import {getMatInputUnsupportedTypeError} from './input-errors';
 import {MAT_INPUT_VALUE_ACCESSOR} from './input-value-accessor';
+
 
 // Invalid input type. Using one of these will throw an MatInputUnsupportedTypeError.
 const MAT_INPUT_INVALID_TYPES = [
@@ -43,6 +43,15 @@ const MAT_INPUT_INVALID_TYPES = [
 
 let nextUniqueId = 0;
 
+// Boilerplate for applying mixins to MatInput.
+/** @docs-private */
+export class MatInputBase {
+  constructor(public _defaultErrorStateMatcher: ErrorStateMatcher,
+              public _parentForm: NgForm,
+              public _parentFormGroup: FormGroupDirective,
+              public ngControl: NgControl) {}
+}
+export const _MatInputMixinBase = mixinErrorState(MatInputBase);
 
 /** Directive that allows a native input to work inside a `MatFormField`. */
 @Directive({
@@ -50,6 +59,7 @@ let nextUniqueId = 0;
   exportAs: 'matInput',
   host: {
     'class': 'mat-input-element mat-form-field-autofill-control',
+    '[class.mat-input-server]': '_isServer',
     // Native input properties that are overwritten by Angular inputs need to be synced with
     // the native input element. Otherwise property bindings for those don't work.
     '[attr.id]': 'id',
@@ -66,7 +76,8 @@ let nextUniqueId = 0;
   },
   providers: [{provide: MatFormFieldControl, useExisting: MatInput}],
 })
-export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy, DoCheck {
+export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<any>, OnChanges,
+    OnDestroy, DoCheck, CanUpdateErrorState {
   /** Variables used as cache for getters and setters. */
   protected _type = 'text';
   protected _disabled = false;
@@ -80,11 +91,11 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
   /** Whether the input is focused. */
   focused = false;
 
-  /** Whether the input is in an error state. */
-  errorState = false;
-
   /** The aria-describedby attribute on the input for improved a11y. */
   _ariaDescribedby: string;
+
+  /** Whether the component is being rendered on the server. */
+  _isServer = false;
 
   /**
    * Stream that emits whenever the state of the input changes such that the wrapping `MatFormField`
@@ -97,13 +108,17 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
 
   /** Whether the element is disabled. */
   @Input()
-  get disabled(): boolean {
-    if (this.ngControl) {
-      return this.ngControl.disabled || false;
+  get disabled(): boolean { return this.ngControl ? this.ngControl.disabled : this._disabled; }
+  set disabled(value: boolean) {
+    this._disabled = coerceBooleanProperty(value);
+
+    // Browsers may not fire the blur event if the input is disabled too quickly.
+    // Reset from here to ensure that the element doesn't become stuck.
+    if (this.focused) {
+      this.focused = false;
+      this.stateChanges.next();
     }
-    return this._disabled;
   }
-  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
 
   /** Unique id of the element. */
   @Input()
@@ -129,7 +144,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
     // input element. To ensure that bindings for `type` work, we need to sync the setter
     // with the native property. Textarea elements don't support the type property or attribute.
     if (!this._isTextarea() && getSupportedInputTypes().has(this._type)) {
-      this._renderer.setProperty(this._elementRef.nativeElement, 'type', this._type);
+      this._elementRef.nativeElement.type = this._type;
     }
   }
 
@@ -161,13 +176,13 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
   ].filter(t => getSupportedInputTypes().has(t));
 
   constructor(protected _elementRef: ElementRef,
-              protected _renderer: Renderer2,
               protected _platform: Platform,
               @Optional() @Self() public ngControl: NgControl,
-              @Optional() protected _parentForm: NgForm,
-              @Optional() protected _parentFormGroup: FormGroupDirective,
-              private _defaultErrorStateMatcher: ErrorStateMatcher,
+              @Optional() _parentForm: NgForm,
+              @Optional() _parentFormGroup: FormGroupDirective,
+              _defaultErrorStateMatcher: ErrorStateMatcher,
               @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any) {
+    super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
     // If no input value accessor was explicitly specified, use the element as the input value
     // accessor.
     this._inputValueAccessor = inputValueAccessor || this._elementRef.nativeElement;
@@ -181,7 +196,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
     // key. In order to get around this we need to "jiggle" the caret loose. Since this bug only
     // exists on iOS, we only bother to install the listener on iOS.
     if (_platform.IOS) {
-      _renderer.listen(_elementRef.nativeElement, 'keyup', (event: Event) => {
+      _elementRef.nativeElement.addEventListener('keyup', (event: Event) => {
         let el = event.target as HTMLInputElement;
         if (!el.value && !el.selectionStart && !el.selectionEnd) {
           // Note: Just setting `0, 0` doesn't fix the issue. Setting `1, 1` fixes it for the first
@@ -192,6 +207,8 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
         }
       });
     }
+
+    this._isServer = !this._platform.isBrowser;
   }
 
   ngOnChanges() {
@@ -207,7 +224,7 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
       // We need to re-evaluate this on every change detection cycle, because there are some
       // error triggers that we can't subscribe to (e.g. parent form submissions). This means
       // that whatever logic is in here has to be super lean or we risk destroying the performance.
-      this._updateErrorState();
+      this.updateErrorState();
     } else {
       // When the input isn't used together with `@angular/forms`, we need to check manually for
       // changes to the native `value` property in order to update the floating label.
@@ -233,20 +250,6 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
     // value changes and will not disappear.
     // Listening to the input event wouldn't be necessary when the input is using the
     // FormsModule or ReactiveFormsModule, because Angular forms also listens to input events.
-  }
-
-  /** Re-evaluates the error state. This is only relevant with @angular/forms. */
-  protected _updateErrorState() {
-    const oldState = this.errorState;
-    const parent = this._parentFormGroup || this._parentForm;
-    const matcher = this.errorStateMatcher || this._defaultErrorStateMatcher;
-    const control = this.ngControl ? this.ngControl.control as FormControl : null;
-    const newState = matcher.isErrorState(control, parent);
-
-    if (newState !== oldState) {
-      this.errorState = newState;
-      this.stateChanges.next();
-    }
   }
 
   /** Does some manual dirty checking on the native input `value` property. */
@@ -291,19 +294,14 @@ export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy,
 
   // Implemented as part of MatFormFieldControl.
   get empty(): boolean {
-    return !this._isNeverEmpty() &&
-        (this.value == null || this.value === '') &&
-        // Check if the input contains bad input. If so, we know that it only appears empty because
-        // the value failed to parse. From the user's perspective it is not empty.
-        // TODO(mmalerba): Add e2e test for bad input case.
-        !this._isBadInput();
+    return !this._isNeverEmpty() && !this._elementRef.nativeElement.value && !this._isBadInput();
   }
 
   /**
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  get shouldPlaceholderFloat(): boolean { return this.focused || !this.empty; }
+  get shouldLabelFloat(): boolean { return this.focused || !this.empty; }
 
   /**
    * Implemented as part of MatFormFieldControl.

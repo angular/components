@@ -193,9 +193,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   openMenu(): void {
     if (!this._menuOpen) {
       this._createOverlay().attach(this._portal);
-      this._closeSubscription = this._menuClosingActions().subscribe(() => {
-        this.menu.close.emit();
-      });
+      this._closeSubscription = this._menuClosingActions().subscribe(() => this.closeMenu());
       this._initMenu();
 
       if (this.menu instanceof MatMenu) {
@@ -218,8 +216,8 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _destroyMenu() {
     if (this._overlayRef && this.menuOpen) {
       this._resetMenu();
-      this._overlayRef.detach();
       this._closeSubscription.unsubscribe();
+      this._overlayRef.detach();
 
       if (this.menu instanceof MatMenu) {
         this.menu._resetAnimation();
@@ -273,9 +271,10 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _resetMenu(): void {
     this._setIsMenuOpen(false);
 
-    // Focus only needs to be reset to the host element if the menu was opened
-    // by the keyboard and manually shifted to the first menu item.
-    if (!this._openedByMouse) {
+    // We should reset focus if the user is navigating using a keyboard or
+    // if we have a top-level trigger which might cause focus to be lost
+    // when clicking on the backdrop.
+    if (!this._openedByMouse || !this.triggersSubmenu()) {
       this.focus();
     }
 
@@ -399,13 +398,14 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /** Returns a stream that emits whenever an action that should close the menu occurs. */
   private _menuClosingActions() {
     const backdrop = this._overlayRef!.backdropClick();
+    const detachments = this._overlayRef!.detachments();
     const parentClose = this._parentMenu ? this._parentMenu.close : observableOf();
     const hover = this._parentMenu ? this._parentMenu._hovered().pipe(
       filter(active => active !== this._menuItemInstance),
       filter(() => this._menuOpen)
     ) : observableOf();
 
-    return merge(backdrop, parentClose, hover);
+    return merge(backdrop, parentClose, hover, detachments);
   }
 
   /** Handles mouse presses on the trigger. */

@@ -12,7 +12,7 @@ import {Direction} from '@angular/cdk/bidi';
 import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {startWith} from 'rxjs/operators/startWith';
 import {switchMap} from 'rxjs/operators/switchMap';
-import {first} from 'rxjs/operators/first';
+import {take} from 'rxjs/operators/take';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -44,8 +44,13 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /** Default `mat-menu` options that can be overridden. */
 export interface MatMenuDefaultOptions {
+  /** The x-axis position of the menu. */
   xPosition: MenuPositionX;
+
+  /** The y-axis position of the menu. */
   yPosition: MenuPositionY;
+
+  /** Whether the menu should overlap the menu trigger. */
   overlapTrigger: boolean;
 }
 
@@ -183,7 +188,6 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
   ngOnDestroy() {
     this._tabSubscription.unsubscribe();
-    this.closed.emit();
     this.closed.complete();
   }
 
@@ -198,7 +202,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
     return this._ngZone.onStable
       .asObservable()
-      .pipe(first(), switchMap(() => this._hovered()));
+      .pipe(take(1), switchMap(() => this._hovered()));
   }
 
   /** Handle a keyboard event from the menu, delegating to the appropriate action. */
