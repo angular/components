@@ -249,6 +249,7 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
               private _focusTrapFactory: FocusTrapFactory,
               private _focusMonitor: FocusMonitor,
               @Optional() @Inject(DOCUMENT) private _doc: any) {
+
     this.openedChange.subscribe((opened: boolean) => {
       if (opened) {
         if (this._doc) {
@@ -256,10 +257,21 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
         }
 
         if (this._isFocusTrapEnabled && this._focusTrap) {
-          this._focusTrap.focusInitialElementWhenReady();
+          this._trapFocus();
         }
       } else {
         this._restoreFocus();
+      }
+    });
+  }
+
+  /** Traps focus inside the drawer. */
+  private _trapFocus() {
+    this._focusTrap.focusInitialElementWhenReady().then(hasMovedFocus => {
+      // If there were no focusable elements, focus the sidenav itself so the keyboard navigation
+      // still works. We need to check that `focus` is a function due to Universal.
+      if (!hasMovedFocus && typeof this._elementRef.nativeElement.focus === 'function') {
+        this._elementRef.nativeElement.focus();
       }
     });
   }
