@@ -540,6 +540,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     if (this._panelOpen) {
       this._panelOpen = false;
       this._changeDetectorRef.markForCheck();
+      this._onTouched();
       this.focus();
     }
   }
