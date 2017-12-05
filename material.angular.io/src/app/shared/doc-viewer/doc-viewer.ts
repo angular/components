@@ -92,7 +92,7 @@ export class DocViewer implements OnDestroy {
           element, this._componentFactoryResolver, this._appRef, this._injector);
       let examplePortal = new ComponentPortal(componentClass, this._viewContainerRef);
       let exampleViewer = portalHost.attach(examplePortal);
-      exampleViewer.instance.example = example;
+      (exampleViewer.instance as ExampleViewer).example = example;
 
       this._portalHosts.push(portalHost);
     });
