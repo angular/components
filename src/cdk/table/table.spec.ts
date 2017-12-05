@@ -639,7 +639,7 @@ class FakeDataSource extends DataSource<TestData> {
   connect(collectionViewer: CollectionViewer) {
     this.isConnected = true;
     const streams = [this._dataChange, collectionViewer.viewChange];
-    return combineLatest<TestData[]>(streams).pipe(map(([data]) => data));
+    return combineLatest(streams, (data, _) => data);
   }
 
   disconnect() {
