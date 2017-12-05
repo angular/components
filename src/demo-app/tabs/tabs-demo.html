@@ -288,3 +288,41 @@
     </div>
   </mat-tab>
 </mat-tab-group>
+
+<h1>Tabs with expansion panel</h1>
+<mat-tab-group>
+  <mat-tab isActive="true" label="">
+      <ng-template mat-tab-label>
+          Tab 1
+      </ng-template>
+      <mat-accordion multi="true">
+
+          <mat-expansion-panel [expanded]="true">
+              <mat-expansion-panel-header [expandedHeight]="'48px'" [collapsedHeight]="'48px'">
+                  Expanded
+              </mat-expansion-panel-header>
+
+              This content is expanded.
+
+          </mat-expansion-panel>
+
+      </mat-accordion>
+
+  </mat-tab>
+  <mat-tab label="">
+      <ng-template mat-tab-label>
+          Tab 2
+      </ng-template>
+      <mat-accordion multi="true">
+
+          <mat-expansion-panel>
+              <mat-expansion-panel-header [expandedHeight]="'48px'" [collapsedHeight]="'48px'">
+                  Collapsed
+              </mat-expansion-panel-header>
+
+              This content is collapsed.
+
+          </mat-expansion-panel>
+      </mat-accordion>
+  </mat-tab>
+</mat-tab-group>
