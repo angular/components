@@ -4,7 +4,13 @@ import {createKeyboardEvent, dispatchFakeEvent} from '@angular/cdk/testing';
 import {Component, DebugElement} from '@angular/core';
 import {async, ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {MatListModule, MatListOption, MatSelectionList, MatSelectionListChange} from './index';
+import {
+  MatListModule,
+  MatListOption,
+  MatListOptionChange,
+  MatSelectionList,
+  MatSelectionListChange
+} from './index';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 
 describe('MatSelectionList without forms', () => {
@@ -85,16 +91,18 @@ describe('MatSelectionList without forms', () => {
 
     it('should emit a deprecated selectionChange event on the list option that got clicked', () => {
       const optionInstance = listOptions[2].componentInstance as MatListOption;
-      const selectionChangeSpy = jasmine.createSpy('selectionChange spy');
+      let lastChangeEvent: MatListOptionChange | null = null;
 
-      optionInstance.selectionChange.subscribe(selectionChangeSpy);
+      optionInstance.selectionChange.subscribe(ev => lastChangeEvent = ev);
 
-      expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+      expect(lastChangeEvent).toBeNull();
 
       dispatchFakeEvent(listOptions[2].nativeElement, 'click');
       fixture.detectChanges();
 
-      expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+      expect(lastChangeEvent).not.toBeNull();
+      expect(lastChangeEvent!.source).toBe(optionInstance);
+      expect(lastChangeEvent!.selected).toBe(true);
     });
 
     it('should be able to dispatch one selected item', () => {

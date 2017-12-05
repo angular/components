@@ -58,9 +58,25 @@ export const MAT_SELECTION_LIST_VALUE_ACCESSOR: any = {
   multi: true
 };
 
+/**
+ * Change event object emitted by MatListOption whenever the selected state changes.
+ * @deprecated Use the `MatSelectionListChange` event on the selection list instead.
+ */
+export class MatListOptionChange {
+  constructor(
+    /** Reference to the list option that changed. */
+    public source: MatListOption,
+    /** The new selected state of the option. */
+    public selected: boolean) {}
+}
+
 /** Change event that is being fired whenever the selected state of an option changes. */
 export class MatSelectionListChange {
-  constructor(public source: MatSelectionList, public option: MatListOption) {}
+  constructor(
+    /** Reference to the selection list that emitted the event. */
+    public source: MatSelectionList,
+    /** Reference to the option that has been changed. */
+    public option: MatListOption) {}
 }
 
 /**
@@ -136,8 +152,8 @@ export class MatListOption extends _MatListOptionMixinBase
    * Emits a change event whenever the selected state of an option changes.
    * @deprecated Use the `selectionChange` event on the `<mat-selection-list>` instead.
    */
-  @Output() selectionChange: EventEmitter<MatSelectionListChange> =
-    new EventEmitter<MatSelectionListChange>();
+  @Output() selectionChange: EventEmitter<MatListOptionChange> =
+    new EventEmitter<MatListOptionChange>();
 
   constructor(private _element: ElementRef,
               private _changeDetector: ChangeDetectorRef,
@@ -227,7 +243,7 @@ export class MatListOption extends _MatListOptionMixinBase
   /** Emits a selectionChange event for this option. */
   _emitDeprecatedChangeEvent() {
     // TODO: the `selectionChange` event on the option is deprecated. Remove that in the future.
-    this.selectionChange.emit(new MatSelectionListChange(this.selectionList, this));
+    this.selectionChange.emit(new MatListOptionChange(this, this.selected));
   }
 }
 
