@@ -78,7 +78,7 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
 
   /** Set initial visibility or set up subscription for changing visibility. */
   ngOnInit(): void {
-    if (this._host._isCenterPosition(this._host._position)) {
+    if (!this.hasAttached()) {
       this.attach(this._host._content);
     }
     this._centeringSub = this._host._beforeCentering.subscribe((isCentering: boolean) => {
