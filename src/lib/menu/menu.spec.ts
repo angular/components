@@ -1,42 +1,42 @@
-import {async, ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
+import {
+  createKeyboardEvent,
+  createMouseEvent,
+  dispatchEvent,
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
+  dispatchMouseEvent,
+} from '@angular/cdk/testing';
 import {
   Component,
   ElementRef,
   EventEmitter,
   Input,
   Output,
+  QueryList,
   TemplateRef,
   ViewChild,
   ViewChildren,
-  QueryList,
 } from '@angular/core';
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {OverlayContainer, Overlay} from '@angular/cdk/overlay';
-import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {async, ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
+import {MatRipple} from '@angular/material/core';
+import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {Subject} from 'rxjs/Subject';
 import {
   MAT_MENU_DEFAULT_OPTIONS,
   MatMenu,
+  MatMenuItem,
   MatMenuModule,
   MatMenuPanel,
   MatMenuTrigger,
   MenuPositionX,
   MenuPositionY,
-  MatMenuItem,
 } from './index';
-import {MENU_PANEL_TOP_PADDING, MAT_MENU_SCROLL_STRATEGY} from './menu-trigger';
-import {MatRipple} from '@angular/material/core';
-import {
-  dispatchKeyboardEvent,
-  dispatchMouseEvent,
-  dispatchEvent,
-  createKeyboardEvent,
-  createMouseEvent,
-  dispatchFakeEvent,
-} from '@angular/cdk/testing';
-import {Subject} from 'rxjs/Subject';
-import {ScrollDispatcher} from '@angular/cdk/scrolling';
+import {MAT_MENU_SCROLL_STRATEGY, MENU_PANEL_TOP_PADDING} from './menu-trigger';
 
 
 describe('MatMenu', () => {
@@ -563,10 +563,10 @@ describe('MatMenu', () => {
 
       fixture.componentInstance.trigger.openMenu();
 
-      const item = fixture.debugElement.query(By.css('.mat-menu-item'));
-      const ripple = item.query(By.css('.mat-ripple')).injector.get<MatRipple>(MatRipple);
+      // The first menu item in the `SimpleMenu` component should have ripples enabled by default.
+      const items = fixture.debugElement.queryAll(By.css('.mat-menu-item'));
 
-      expect(ripple.disabled).toBe(false);
+      expect(items[0].query(By.directive(MatRipple))).not.toBeNull();
     });
 
     it('should disable ripples on disabled items', () => {
@@ -577,9 +577,8 @@ describe('MatMenu', () => {
 
       // The second menu item in the `SimpleMenu` component is disabled.
       const items = fixture.debugElement.queryAll(By.css('.mat-menu-item'));
-      const ripple = items[1].query(By.css('.mat-ripple')).injector.get<MatRipple>(MatRipple);
 
-      expect(ripple.disabled).toBe(true);
+      expect(items[1].query(By.directive(MatRipple))).toBeNull();
     });
 
     it('should disable ripples if disableRipple is set', () => {
@@ -590,9 +589,8 @@ describe('MatMenu', () => {
 
       // The third menu item in the `SimpleMenu` component has ripples disabled.
       const items = fixture.debugElement.queryAll(By.css('.mat-menu-item'));
-      const ripple = items[2].query(By.css('.mat-ripple')).injector.get<MatRipple>(MatRipple);
 
-      expect(ripple.disabled).toBe(true);
+      expect(items[2].query(By.directive(MatRipple))).toBeNull();
     });
   });
 

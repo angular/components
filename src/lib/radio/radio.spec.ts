@@ -271,7 +271,7 @@ describe('MatRadio', () => {
         .toBe(1, 'Expected an enabled radio button to show ripples');
     });
 
-    it('should not show ripples if matRippleDisabled input is set', () => {
+    it('should not show ripples if disableRipple input is set', () => {
       testComponent.disableRipple = true;
       fixture.detectChanges();
 

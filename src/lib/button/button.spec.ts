@@ -187,11 +187,7 @@ describe('MatButton', () => {
     let fixture: ComponentFixture<TestApp>;
     let testComponent: TestApp;
     let buttonDebugElement: DebugElement;
-    let buttonRippleDebugElement: DebugElement;
-    let buttonRippleInstance: MatRipple;
     let anchorDebugElement: DebugElement;
-    let anchorRippleDebugElement: DebugElement;
-    let anchorRippleInstance: MatRipple;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(TestApp);
@@ -200,38 +196,34 @@ describe('MatButton', () => {
       testComponent = fixture.componentInstance;
 
       buttonDebugElement = fixture.debugElement.query(By.css('button[mat-button]'));
-      buttonRippleDebugElement = buttonDebugElement.query(By.directive(MatRipple));
-      buttonRippleInstance = buttonRippleDebugElement.injector.get<MatRipple>(MatRipple);
 
       anchorDebugElement = fixture.debugElement.query(By.css('a[mat-button]'));
-      anchorRippleDebugElement = anchorDebugElement.query(By.directive(MatRipple));
-      anchorRippleInstance = anchorRippleDebugElement.injector.get<MatRipple>(MatRipple);
     });
 
     it('should disable the ripple if matRippleDisabled input is set', () => {
-      expect(buttonRippleInstance.disabled).toBeFalsy();
+      expect(buttonDebugElement.query(By.directive(MatRipple))).not.toBeNull();
 
       testComponent.rippleDisabled = true;
       fixture.detectChanges();
 
-      expect(buttonRippleInstance.disabled).toBeTruthy();
+      expect(buttonDebugElement.query(By.directive(MatRipple))).toBeNull();
     });
 
     it('should disable the ripple when the button is disabled', () => {
-      expect(buttonRippleInstance.disabled).toBeFalsy(
+      expect(buttonDebugElement.query(By.directive(MatRipple))).not.toBeNull(
         'Expected an enabled button[mat-button] to have an enabled ripple'
       );
-      expect(anchorRippleInstance.disabled).toBeFalsy(
+      expect(anchorDebugElement.query(By.directive(MatRipple))).not.toBeNull(
         'Expected an enabled a[mat-button] to have an enabled ripple'
       );
 
       testComponent.isDisabled = true;
       fixture.detectChanges();
 
-      expect(buttonRippleInstance.disabled).toBeTruthy(
+      expect(buttonDebugElement.query(By.directive(MatRipple))).toBeNull(
         'Expected a disabled button[mat-button] not to have an enabled ripple'
       );
-      expect(anchorRippleInstance.disabled).toBeTruthy(
+      expect(anchorDebugElement.query(By.directive(MatRipple))).toBeNull(
         'Expected a disabled a[mat-button] not to have an enabled ripple'
       );
     });

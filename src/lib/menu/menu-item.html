@@ -1,5 +1,4 @@
 <ng-content></ng-content>
-<div class="mat-menu-ripple" matRipple
-     [matRippleDisabled]="disableRipple || disabled"
+<div matRipple class="mat-menu-ripple" *ngIf="!disabled && !disableRipple"
      [matRippleTrigger]="_getHostElement()">
 </div>

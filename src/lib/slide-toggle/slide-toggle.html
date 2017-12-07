@@ -22,9 +22,8 @@
 
       <div class="mat-slide-toggle-thumb"></div>
 
-      <div class="mat-slide-toggle-ripple" mat-ripple
+      <div matRipple class="mat-slide-toggle-ripple" *ngIf="!disabled && !disableRipple"
            [matRippleTrigger]="label"
-           [matRippleDisabled]="disableRipple || disabled"
            [matRippleCentered]="_rippleConfig.centered"
            [matRippleRadius]="_rippleConfig.radius"
            [matRippleSpeedFactor]="_rippleConfig.speedFactor">
