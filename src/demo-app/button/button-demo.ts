@@ -19,4 +19,9 @@ export class ButtonDemo {
   isDisabled: boolean = false;
   clickCounter: number = 0;
   toggleDisable: boolean = false;
+
+  extendOnHover = true;
+  extendOnFocus = false;
+  hasLabel = true;
+  labelText = 'Check this off!';
 }

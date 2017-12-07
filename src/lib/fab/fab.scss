@@ -1,0 +1,106 @@
+
+@import '../core/style/elevation';
+@import '../core/style/button-common';
+@import '../../cdk/a11y/a11y';
+
+$mat-fab-height: 56px;
+$mat-mini-fab-height: 48px;
+$mat-fab-icon-height: 24px;
+$mat-fab-focus-transition: opacity 200ms $swift-ease-in-out-timing-function,
+                           background-color 200ms $swift-ease-in-out-timing-function !default;
+
+@mixin fab-sizing($size) {
+  border-radius: $size / 2;
+  height: $size;
+  min-width: $size;
+
+  .mat-fab-wrapper {
+    line-height: $size;
+    min-width: $size;
+    padding: 0 (($size - $mat-fab-icon-height) / 2);
+  }
+}
+
+.mat-fab {
+  // Reset browser <button> styles.
+  @include mat-button-reset();
+  @include mat-overridable-elevation(6);
+  @include fab-sizing($mat-fab-height);
+
+  display: inline-block;
+  position: relative;
+  border: none;
+  overflow: hidden;
+  background: white;
+  text-align: start;
+  padding: 0;
+  text-decoration: none;
+  vertical-align: bottom;
+
+  &.mat-mini-fab {
+    @include fab-sizing($mat-mini-fab-height);
+  }
+
+  .mat-fab-wrapper {
+    display: flex;
+    margin: 0;
+    white-space: nowrap;
+    height: 100%;
+    box-sizing: border-box;
+    align-items: center;
+  }
+
+  .mat-fab-content {
+    vertical-align: middle;
+    display: inline-block;
+    line-height: 1;
+    width: 100%;
+    text-align: center;
+  }
+
+  .mat-fab-label {
+    margin: 0 8px;
+    vertical-align: middle;
+    display: inline-block;
+  }
+
+  .mat-fab-focus-overlay,
+  .mat-fab-ripple {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+  }
+
+  &.mat-fab-focused {
+    .mat-fab-focus-overlay {
+      opacity: 1;
+    }
+  }
+
+  .mat-fab-focus-overlay {
+    // The button spec calls for focus on FABs to be indicated with a black, 12% opacity shade over
+    // the normal color (for both light and dark themes).
+    background-color: rgba(black, 0.12);
+    border-radius: inherit;
+    opacity: 0;
+
+    transition: $mat-fab-focus-transition;
+
+    @include cdk-high-contrast {
+      // Note that IE will render this in the same way, no matter whether the theme is light or
+      // dark. This helps with the readability of focused buttons.
+      background-color: rgba(white, 0.5);
+    }
+  }
+
+  &[disabled] {
+    cursor: default;
+  }
+
+  &:not([disabled]):active {
+    @include mat-overridable-elevation(12);
+  }
+}

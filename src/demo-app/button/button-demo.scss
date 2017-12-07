@@ -6,9 +6,25 @@
   }
 
   section {
-    display: flex;
     align-items: center;
-    margin: 8px;
+    position: relative;
+
+    &.outlined {
+      border: 2px solid lightgray;
+      border-radius: 10px;
+      margin-top: 20px;
+      padding: 15px 5px 5px;
+    }
+
+    & > label {
+      position: absolute;
+      top: calc(-0.5em + -2px);
+      left: 1.5em;
+      border: 2px solid lightgray;
+      border-radius: 6px;
+      padding: 0 4px;
+      background: #fafafa;
+    }
   }
 
   p {

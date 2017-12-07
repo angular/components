@@ -67,30 +67,6 @@ describe('MatButton', () => {
     expect(buttonDebugElement.nativeElement.classList.contains('custom-class')).toBe(true);
   });
 
-  describe('button[mat-fab]', () => {
-    it('should have accent palette by default', () => {
-      const fixture = TestBed.createComponent(TestApp);
-      const fabButtonDebugEl = fixture.debugElement.query(By.css('button[mat-fab]'));
-
-      fixture.detectChanges();
-
-      expect(fabButtonDebugEl.nativeElement.classList)
-        .toContain('mat-accent', 'Expected fab buttons to use accent palette by default');
-    });
-  });
-
-  describe('button[mat-mini-fab]', () => {
-    it('should have accent palette by default', () => {
-      const fixture = TestBed.createComponent(TestApp);
-      const miniFabButtonDebugEl = fixture.debugElement.query(By.css('button[mat-mini-fab]'));
-
-      fixture.detectChanges();
-
-      expect(miniFabButtonDebugEl.nativeElement.classList)
-        .toContain('mat-accent', 'Expected mini-fab buttons to use accent palette by default');
-    });
-  });
-
   // Regular button tests
   describe('button[mat-button]', () => {
     it('should handle a click on the button', () => {
@@ -249,8 +225,6 @@ describe('MatButton', () => {
     <a href="http://www.google.com" mat-button [disabled]="isDisabled" [color]="buttonColor">
       Link
     </a>
-    <button mat-fab>Fab Button</button>
-    <button mat-mini-fab>Mini Fab Button</button>
   `
 })
 class TestApp {

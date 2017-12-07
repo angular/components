@@ -10,14 +10,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatCommonModule, MatRippleModule} from '@angular/material/core';
 import {A11yModule} from '@angular/cdk/a11y';
-import {MatFabModule} from '@angular/material/fab';
-import {
-  MatAnchor,
-  MatButton,
-  MatButtonCssMatStyler,
-  MatIconButtonCssMatStyler,
-  MatRaisedButtonCssMatStyler
-} from './button';
+import {MatFab, MatFabMini} from './fab';
 
 
 @NgModule({
@@ -25,24 +18,16 @@ import {
     CommonModule,
     MatRippleModule,
     MatCommonModule,
-    MatFabModule,
     A11yModule,
   ],
   exports: [
-    MatButton,
-    MatAnchor,
+    MatFab,
     MatCommonModule,
-    MatFabModule,
-    MatButtonCssMatStyler,
-    MatRaisedButtonCssMatStyler,
-    MatIconButtonCssMatStyler,
+    MatFabMini,
   ],
   declarations: [
-    MatButton,
-    MatAnchor,
-    MatButtonCssMatStyler,
-    MatRaisedButtonCssMatStyler,
-    MatIconButtonCssMatStyler,
+    MatFab,
+    MatFabMini,
   ],
 })
-export class MatButtonModule {}
+export class MatFabModule {}

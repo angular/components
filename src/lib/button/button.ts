@@ -13,8 +13,6 @@ import {
   Component,
   Directive,
   ElementRef,
-  forwardRef,
-  Inject,
   OnDestroy,
   Optional,
   Self,
@@ -31,9 +29,6 @@ import {
 
 
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
-
-/** Default color palette for round buttons (mat-fab and mat-mini-fab) */
-const DEFAULT_ROUND_BUTTON_COLOR = 'accent';
 
 
 /**
@@ -66,39 +61,6 @@ export class MatRaisedButtonCssMatStyler {}
 })
 export class MatIconButtonCssMatStyler {}
 
-/**
- * Directive whose purpose is to add the mat- CSS styling to this selector.
- * @docs-private
- */
-@Directive({
-  selector: 'button[mat-fab], a[mat-fab]',
-  host: {'class': 'mat-fab'}
-})
-export class MatFab {
-  constructor(@Self() @Optional() @Inject(forwardRef(() => MatButton)) button: MatButton,
-              @Self() @Optional() @Inject(forwardRef(() => MatAnchor)) anchor: MatAnchor) {
-    // Set the default color palette for the mat-fab components.
-    (button || anchor).color = DEFAULT_ROUND_BUTTON_COLOR;
-  }
-}
-
-/**
- * Directive that targets mini-fab buttons and anchors. It's used to apply the `mat-` class
- * to all mini-fab buttons and also is responsible for setting the default color palette.
- * @docs-private
- */
-@Directive({
-  selector: 'button[mat-mini-fab], a[mat-mini-fab]',
-  host: {'class': 'mat-mini-fab'}
-})
-export class MatMiniFab {
-  constructor(@Self() @Optional() @Inject(forwardRef(() => MatButton)) button: MatButton,
-              @Self() @Optional() @Inject(forwardRef(() => MatAnchor)) anchor: MatAnchor) {
-    // Set the default color palette for the mat-mini-fab components.
-    (button || anchor).color = DEFAULT_ROUND_BUTTON_COLOR;
-  }
-}
-
 
 // Boilerplate for applying mixins to MatButton.
 /** @docs-private */
@@ -113,8 +75,7 @@ export const _MatButtonMixinBase = mixinColor(mixinDisabled(mixinDisableRipple(M
  */
 @Component({
   moduleId: module.id,
-  selector: `button[mat-button], button[mat-raised-button], button[mat-icon-button],
-             button[mat-fab], button[mat-mini-fab]`,
+  selector: `button[mat-button], button[mat-raised-button], button[mat-icon-button]`,
   exportAs: 'matButton',
   host: {
     '[disabled]': 'disabled || null',
@@ -128,9 +89,6 @@ export const _MatButtonMixinBase = mixinColor(mixinDisabled(mixinDisableRipple(M
 })
 export class MatButton extends _MatButtonMixinBase
     implements OnDestroy, CanDisable, CanColor, CanDisableRipple {
-
-  /** Whether the button is round. */
-  _isRoundButton: boolean = this._hasHostAttributes('mat-fab', 'mat-mini-fab');
 
   /** Whether the button is icon button. */
   _isIconButton: boolean = this._hasHostAttributes('mat-icon-button');
@@ -177,7 +135,7 @@ export class MatButton extends _MatButtonMixinBase
  */
 @Component({
   moduleId: module.id,
-  selector: `a[mat-button], a[mat-raised-button], a[mat-icon-button], a[mat-fab], a[mat-mini-fab]`,
+  selector: `a[mat-button], a[mat-raised-button], a[mat-icon-button]`,
   exportAs: 'matButton, matAnchor',
   host: {
     '[attr.tabindex]': 'disabled ? -1 : 0',
