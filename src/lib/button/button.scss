@@ -59,7 +59,7 @@
 
   flex-shrink: 0;
 
-  line-height: $mat-icon-button-size;
+  line-height: $mat-icon-button-line-height;
   border-radius: $mat-icon-button-border-radius;
 
   i, .mat-icon {
@@ -85,6 +85,13 @@
   color: currentColor;
   .mat-button-wrapper > * {
     vertical-align: middle;
+  }
+}
+
+.mat-icon-button, .mat-fab, .mat-mini-fab {
+  .mat-button-wrapper {
+    vertical-align: middle;
+    display: inline-flex;
   }
 }
 
