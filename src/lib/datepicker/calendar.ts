@@ -148,12 +148,12 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     if (this._currentView == 'year') {
       return this._dateAdapter.getYearName(this._activeDate);
     }
-    let curYear = this._dateAdapter.getYear(this._activeDate);
-    let firstYear = this._dateAdapter.getYearName(
-        this._dateAdapter.createDate(curYear - curYear % 24, 0, 1));
-    let lastYear = this._dateAdapter.getYearName(
-        this._dateAdapter.createDate(curYear + yearsPerPage - 1 - curYear % 24, 0, 1));
-    return `${firstYear} \u2013 ${lastYear}`;
+    const activeYear = this._dateAdapter.getYear(this._activeDate);
+    const firstYearInView = this._dateAdapter.getYearName(
+        this._dateAdapter.createDate(activeYear - activeYear % 24, 0, 1));
+    const lastYearInView = this._dateAdapter.getYearName(
+        this._dateAdapter.createDate(activeYear + yearsPerPage - 1 - activeYear % 24, 0, 1));
+    return `${firstYearInView} \u2013 ${lastYearInView}`;
   }
 
   get _periodButtonLabel(): string {
@@ -231,15 +231,9 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   }
 
   /** Handles month selection in the multi-year view. */
-  _yearSelected(year: D): void {
-    this._activeDate = year;
-    this._currentView = 'year';
-  }
-
-  /** Handles month selection in the year view. */
-  _monthSelected(month: D): void {
-    this._activeDate = month;
-    this._currentView = 'month';
+  _goToDateInView(date: D, view: 'month' | 'year' | 'multi-year'): void {
+    this._activeDate = date;
+    this._currentView = view;
   }
 
   /** Handles user clicks on the period label. */
@@ -308,6 +302,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     if (this._currentView == 'year') {
       return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2);
     }
+    // Otherwise we are in 'multi-year' view.
     return Math.floor(this._dateAdapter.getYear(date1) / yearsPerPage) ==
         Math.floor(this._dateAdapter.getYear(date2) / yearsPerPage);
   }
@@ -396,7 +391,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
             this._dateAdapter.addCalendarYears(this._activeDate, event.altKey ? 10 : 1);
         break;
       case ENTER:
-        this._monthSelected(this._activeDate);
+        this._goToDateInView(this._activeDate, 'month');
         break;
       default:
         // Don't prevent default or focus active cell on keys that we don't explicitly handle.
@@ -442,7 +437,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
                 this._activeDate, event.altKey ? yearsPerPage * 10 : yearsPerPage);
         break;
       case ENTER:
-        this._yearSelected(this._activeDate);
+        this._goToDateInView(this._activeDate, 'year');
         break;
       default:
         // Don't prevent default or focus active cell on keys that we don't explicitly handle.

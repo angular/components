@@ -36,7 +36,7 @@
       [activeDate]="_activeDate"
       [selected]="selected"
       [dateFilter]="_dateFilterForViews"
-      (selectedChange)="_monthSelected($event)">
+      (selectedChange)="_goToDateInView($event, 'month')">
   </mat-year-view>
 
   <mat-multi-year-view
@@ -44,6 +44,6 @@
       [activeDate]="_activeDate"
       [selected]="selected"
       [dateFilter]="_dateFilterForViews"
-      (selectedChange)="_yearSelected($event)">
+      (selectedChange)="_goToDateInView($event, 'year')">
   </mat-multi-year-view>
 </div>
