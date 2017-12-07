@@ -2,10 +2,9 @@
   [class.mat-list-item-content-reverse]="checkboxPosition == 'after'"
   [class.mat-list-item-disabled]="disabled">
 
-  <div mat-ripple
-    class="mat-list-item-ripple"
-    [matRippleTrigger]="_getHostElement()"
-    [matRippleDisabled]="_isRippleDisabled()"></div>
+  <div matRipple class="mat-list-item-ripple" *ngIf="!_isRippleDisabled()"
+       [matRippleTrigger]="_getHostElement()">
+  </div>
 
   <mat-pseudo-checkbox #autocheckbox
     [state]="selected ? 'checked' : 'unchecked'"

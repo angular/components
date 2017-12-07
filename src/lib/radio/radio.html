@@ -5,9 +5,8 @@
   <div class="mat-radio-container">
     <div class="mat-radio-outer-circle"></div>
     <div class="mat-radio-inner-circle"></div>
-    <div mat-ripple class="mat-radio-ripple"
+    <div matRipple class="mat-radio-ripple" *ngIf="!_isRippleDisabled()"
          [matRippleTrigger]="label"
-         [matRippleDisabled]="_isRippleDisabled()"
          [matRippleCentered]="_rippleConfig.centered"
          [matRippleRadius]="_rippleConfig.radius"
          [matRippleSpeedFactor]="_rippleConfig.speedFactor">

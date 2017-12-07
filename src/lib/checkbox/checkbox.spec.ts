@@ -440,7 +440,7 @@ describe('MatCheckbox', () => {
         expect(checkboxNativeElement.querySelectorAll('.mat-ripple-element').length).toBe(1);
       });
 
-      it('should remove ripple if matRippleDisabled input is set', () => {
+      it('should remove ripple if disableRipple input is set', () => {
         testComponent.disableRipple = true;
         fixture.detectChanges();
 
