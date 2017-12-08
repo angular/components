@@ -215,7 +215,6 @@ export class MatTabLink extends _MatTabLinkMixinBase
   set disableRipple(value: boolean) {
     this._disableRipple = value;
     this._tabLinkRipple.disabled = this.disableRipple;
-    this._tabLinkRipple._updateRippleRenderer();
   }
 
   constructor(private _tabNavBar: MatTabNav,
@@ -229,6 +228,7 @@ export class MatTabLink extends _MatTabLinkMixinBase
     // Manually create a ripple instance that uses the tab link element as trigger element.
     // Notice that the lifecycle hooks for the ripple config won't be called anymore.
     this._tabLinkRipple = new MatRipple(_elementRef, ngZone, platform, globalOptions);
+    this._tabLinkRipple.ngOnInit();
 
     this.tabIndex = parseInt(tabIndex) || 0;
   }

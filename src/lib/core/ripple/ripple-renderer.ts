@@ -7,8 +7,8 @@
  */
 import {ElementRef, NgZone} from '@angular/core';
 import {Platform, supportsPassiveEventListeners} from '@angular/cdk/platform';
+import {MatRipple} from './ripple';
 import {RippleRef, RippleState} from './ripple-ref';
-
 
 /** Fade-in duration for the ripples. Can be modified with the speedFactor option. */
 export const RIPPLE_FADE_IN_DURATION = 450;
@@ -60,13 +60,11 @@ export class RippleRenderer {
   /** Options that apply to all the event listeners that are bound by the renderer. */
   private _eventOptions = supportsPassiveEventListeners() ? ({passive: true} as any) : false;
 
-  /** Ripple config for all ripples created by events. */
-  rippleConfig: RippleConfig = {};
+  constructor(private _ripple: MatRipple,
+              private _ngZone: NgZone,
+              elementRef: ElementRef,
+              platform: Platform) {
 
-  /** Whether mouse ripples should be created or not. */
-  rippleDisabled: boolean = false;
-
-  constructor(elementRef: ElementRef, private _ngZone: NgZone, platform: Platform) {
     // Only do anything if we're on the browser.
     if (platform.isBrowser) {
       this._containerElement = elementRef.nativeElement;
@@ -78,9 +76,6 @@ export class RippleRenderer {
 
       this._triggerEvents.set('touchstart', this.onTouchStart);
       this._triggerEvents.set('touchend', this.onPointerUp);
-
-      // By default use the host element as trigger element.
-      this.setTriggerElement(this._containerElement);
     }
   }
 
@@ -170,22 +165,19 @@ export class RippleRenderer {
     this._activeRipples.forEach(ripple => ripple.fadeOut());
   }
 
-  /** Sets the trigger element and registers the mouse events. */
-  setTriggerElement(element: HTMLElement | null) {
-    // Remove all previously register event listeners from the trigger element.
-    if (this._triggerElement) {
-      this._triggerEvents.forEach((fn, type) => {
-        this._triggerElement!.removeEventListener(type, fn, this._eventOptions);
-      });
+  /** Sets up the trigger event listeners */
+  setupTriggerEvents(element: HTMLElement) {
+    if (!element || element === this._triggerElement) {
+      return;
     }
 
-    if (element) {
-      // If the element is not null, register all event listeners on the trigger element.
-      this._ngZone.runOutsideAngular(() => {
-        this._triggerEvents.forEach((fn, type) =>
-            element.addEventListener(type, fn, this._eventOptions));
-      });
-    }
+    // Remove all previously registered event listeners from the trigger element.
+    this._removeTriggerListeners();
+
+    this._ngZone.runOutsideAngular(() => {
+      this._triggerEvents.forEach((fn, type) =>
+          element.addEventListener(type, fn, this._eventOptions));
+    });
 
     this._triggerElement = element;
   }
@@ -195,22 +187,23 @@ export class RippleRenderer {
     const isSyntheticEvent = this._lastTouchStartEvent &&
         Date.now() < this._lastTouchStartEvent + IGNORE_MOUSE_EVENTS_TIMEOUT;
 
-    if (!this.rippleDisabled && !isSyntheticEvent) {
+    if (!this._ripple.disabled && !isSyntheticEvent) {
       this._isPointerDown = true;
-      this.fadeInRipple(event.clientX, event.clientY, this.rippleConfig);
+      this.fadeInRipple(event.clientX, event.clientY, this._ripple.rippleConfig);
     }
   }
 
   /** Function being called whenever the trigger is being pressed using touch. */
   private onTouchStart = (event: TouchEvent) => {
-    if (!this.rippleDisabled) {
+    if (!this._ripple.disabled) {
       // Some browsers fire mouse events after a `touchstart` event. Those synthetic mouse
       // events will launch a second ripple if we don't ignore mouse events for a specific
       // time after a touchstart event.
       this._lastTouchStartEvent = Date.now();
       this._isPointerDown = true;
 
-      this.fadeInRipple(event.touches[0].clientX, event.touches[0].clientY, this.rippleConfig);
+      this.fadeInRipple(
+          event.touches[0].clientX, event.touches[0].clientY, this._ripple.rippleConfig);
     }
   }
 
@@ -235,10 +228,17 @@ export class RippleRenderer {
     this._ngZone.runOutsideAngular(() => setTimeout(fn, delay));
   }
 
+  /** Removes previously registered event listeners from the trigger element. */
+  _removeTriggerListeners() {
+    if (this._triggerElement) {
+      this._triggerEvents.forEach((fn, type) => {
+        this._triggerElement!.removeEventListener(type, fn, this._eventOptions);
+      });
+    }
+  }
 }
 
 /** Enforces a style recalculation of a DOM element by computing its styles. */
-// TODO(devversion): Move into global utility function.
 function enforceStyleRecalculation(element: HTMLElement) {
   // Enforce a style recalculation by calling `getComputedStyle` and accessing any property.
   // Calling `getPropertyValue` is important to let optimizers know that this is not a noop.
