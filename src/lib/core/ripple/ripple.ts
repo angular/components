@@ -19,7 +19,7 @@ import {
   Optional,
 } from '@angular/core';
 import {RippleRef} from './ripple-ref';
-import {RippleConfig, RippleRenderer} from './ripple-renderer';
+import {RippleConfig, RippleRenderer, RippleTarget} from './ripple-renderer';
 
 /** Configurable options for `matRipple`. */
 export interface RippleGlobalOptions {
@@ -49,7 +49,7 @@ export const MAT_RIPPLE_GLOBAL_OPTIONS =
     '[class.mat-ripple-unbounded]': 'unbounded'
   }
 })
-export class MatRipple implements OnInit, OnDestroy {
+export class MatRipple implements OnInit, OnDestroy, RippleTarget {
 
   /** Custom color for all ripples. */
   @Input('matRippleColor') color: string;
@@ -82,7 +82,7 @@ export class MatRipple implements OnInit, OnDestroy {
    * by using the `launch()` method.
    */
   @Input('matRippleDisabled')
-  get disabled() { return this._disabled || !!this._globalOptions.disabled; }
+  get disabled() { return this._disabled; }
   set disabled(value: boolean) {
     this._disabled = value;
     this._setupTriggerEventsIfEnabled();
@@ -125,7 +125,7 @@ export class MatRipple implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._rippleRenderer._removeTriggerListeners();
+    this._rippleRenderer._removeTriggerEvents();
   }
 
   /** Launches a manual ripple at the specified position. */
@@ -146,6 +146,11 @@ export class MatRipple implements OnInit, OnDestroy {
       radius: this.radius,
       color: this.color
     };
+  }
+
+  /** Whether ripples on pointer-down are  disabled or not. */
+  get rippleDisabled(): boolean {
+    return this.disabled || !!this._globalOptions.disabled;
   }
 
   /** Sets up the the trigger event listeners if ripples are enabled. */
