@@ -80,6 +80,30 @@ The `tab-nav-bar` is not tied to any particular router; it works with normal `<a
 the `active` property to determine which tab is currently active. The corresponding
 `<router-outlet>` can be placed anywhere in the view.
 
+## Lazy Loading
+By default, the tab contents are eagerly loaded. Eagerly loaded tabs
+will initalize the child components but not inject them into the DOM
+until the tab is activated.
+
+If the tab contains several complex child components, it is advised
+to lazy load the tab's content. Tab contents can be lazy loaded by
+declaring the body in a `ng-template` with the `matTabContent` attribute.
+
+```html
+<md-tab-group>
+  <md-tab label="First">
+    <ng-template matTabContent>
+      The First Content
+    </ng-template>
+  </md-tab>
+  <md-tab label="Second">
+    <ng-template matTabContent>
+      The Second Content
+    </ng-template>
+  </md-tab>
+</md-tab-group>
+```
+
 ### Accessibility
 Tabs without text or labels should be given a meaningful label via `aria-label` or
 `aria-labelledby`. For `MatTabNav`, the `<nav>` element should have a label as well.

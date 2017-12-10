@@ -24,6 +24,7 @@ import {
 import {CanDisable, mixinDisabled} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
 import {MatTabLabel} from './tab-label';
+import { MdTabContent } from './tab-content';
 
 
 // Boilerplate for applying mixins to MatTab.
@@ -45,8 +46,11 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
   /** Content for the tab label given by <ng-template mat-tab-label>. */
   @ContentChild(MatTabLabel) templateLabel: MatTabLabel;
 
+  /** User provided template that we are going to use instead of implicitContent template */
+  @ContentChild(MdTabContent, {read: TemplateRef}) _explicitContent: TemplateRef<any>;
+
   /** Template inside the MatTab view that contains an <ng-content>. */
-  @ViewChild(TemplateRef) _content: TemplateRef<any>;
+  @ViewChild(TemplateRef) _implicitContent: TemplateRef<any>;
 
   /** The plain text label for the tab, used when there is no template label. */
   @Input('label') textLabel: string = '';
@@ -102,6 +106,7 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
   }
 
   ngOnInit(): void {
-    this._contentPortal = new TemplatePortal(this._content, this._viewContainerRef);
+    this._contentPortal = new TemplatePortal(
+        this._explicitContent || this._implicitContent, this._viewContainerRef);
   }
 }

@@ -22,6 +22,7 @@ import {
   ComponentFactoryResolver,
   ViewContainerRef,
   forwardRef,
+  ViewChild,
 } from '@angular/core';
 import {
   trigger,
@@ -31,7 +32,7 @@ import {
   transition,
   AnimationEvent,
 } from '@angular/animations';
-import {TemplatePortal, CdkPortalOutlet} from '@angular/cdk/portal';
+import {TemplatePortal, CdkPortalOutlet, PortalHostDirective} from '@angular/cdk/portal';
 import {Directionality, Direction} from '@angular/cdk/bidi';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -152,6 +153,9 @@ export class MatTabBody implements OnInit {
 
   /** Event emitted when the tab completes its animation towards the center. */
   @Output() _onCentered: EventEmitter<void> = new EventEmitter<void>(true);
+
+   /** The portal host inside of this container into which the tab body content will be loaded. */
+  @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
   /** The tab body content to display. */
   @Input('content') _content: TemplatePortal<any>;
