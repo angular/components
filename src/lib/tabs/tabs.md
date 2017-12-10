@@ -9,14 +9,12 @@ tab labels in the header.
 <!-- example(tabs-overview) -->
 
 ### Events
-
 The `selectedTabChange` output event is emitted when the active tab changes.
 
 The `focusChange` output event is emitted when the user puts focus on any of the tab labels in
 the header, usually through keyboard navigation.
 
 ### Labels
-
 If a tab's label is only text then the simple tab-group API can be used.
 
 ```html
@@ -54,7 +52,6 @@ For more complex labels, add a template with the `mat-tab-label` directive insid
 ```
 
 ### Dynamic Height
-
 By default, the tab group will not change its height to the height of the currently active tab. To
 change this, set the `dynamicHeight` input to true. The tab body will animate its height according
  to the height of the active tab.
@@ -80,10 +77,33 @@ The `tab-nav-bar` is not tied to any particular router; it works with normal `<a
 the `active` property to determine which tab is currently active. The corresponding
 `<router-outlet>` can be placed anywhere in the view.
 
+## Lazy Loading
+By default, the tab contents are eagerly loaded. Eagerly loaded tabs
+will initalize the child components but not inject them into the DOM
+until the tab is activated.
+
+If the tab contains several complex child components, it is advised
+to lazy load the tab's content. Tab contents can be lazy loaded by
+declaring the body in a `ng-template` with the `mdTabContent` attribute.
+
+```html
+<md-tab-group>
+  <md-tab label="First">
+    <ng-template mdTabContent>
+      The First Content
+    </ng-template>
+  </md-tab>
+  <md-tab label="Second">
+    <ng-template mdTabContent>
+      The Second Content
+    </ng-template>
+  </md-tab>
+</md-tab-group>
+```
+
 ### Accessibility
 Tabs without text or labels should be given a meaningful label via `aria-label` or
 `aria-labelledby`. For `MatTabNav`, the `<nav>` element should have a label as well.
-
 
 #### Keyboard shortcuts
 

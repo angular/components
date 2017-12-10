@@ -133,3 +133,17 @@ export class RainyTabContent {}
   template: 'This is the routed body of the foggy tab.',
 })
 export class FoggyTabContent {}
+
+
+@Component({
+  moduleId: module.id,
+  selector: 'counter',
+  template: `<span>{{count}}</span>`
+})
+export class Counter {
+  count = 0;
+  ngOnInit() {
+    this.count++;
+    console.log('Counting...', this.count);
+  }
+}

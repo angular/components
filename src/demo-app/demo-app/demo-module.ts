@@ -54,7 +54,9 @@ import {TableDemo} from '../table/table-demo';
 import {ScreenTypeDemo} from '../screen-type/screen-type-demo';
 import {LayoutModule} from '@angular/cdk/layout';
 import {TableHeaderDemo} from '../table/table-header-demo';
-import {FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo} from '../tabs/tabs-demo';
+import {
+  FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo, Counter
+} from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
 import {TypographyDemo} from '../typography/typography-demo';
@@ -123,6 +125,7 @@ import {DEMO_APP_ROUTES} from './routes';
     ToolbarDemo,
     TooltipDemo,
     TypographyDemo,
+    Counter,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},

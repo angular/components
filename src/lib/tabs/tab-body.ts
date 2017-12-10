@@ -140,7 +140,10 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
     ])
   ]
 })
-export class MatTabBody implements OnInit {
+export class MdTabBody implements OnInit {
+  /** The portal host inside of this container into which the tab body content will be loaded. */
+  @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
+
   /** Event emitted when the tab begins to animate towards the center as the active tab. */
   @Output() _onCentering: EventEmitter<number> = new EventEmitter<number>();
 
@@ -190,7 +193,7 @@ export class MatTabBody implements OnInit {
    * After initialized, check if the content is centered and has an origin. If so, set the
    * special position states that transition the tab from the left or right before centering.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     if (this._position == 'center' && this._origin) {
       this._position = this._origin == 'left' ? 'left-origin-center' : 'right-origin-center';
     }

@@ -275,8 +275,22 @@
     <div class="tab-content">
       This tab is about combustion!
     </div>
-  </mat-tab>
-</mat-tab-group>
+  </md-tab>
+</md-tab-group>
+
+<h1>Lazy Loaded Tabs</h1>
+<md-tab-group>
+  <md-tab label="First">
+    <ng-template mdTabContent>
+      <counter></counter>
+    </ng-template>
+  </md-tab>
+  <md-tab label="Second">
+    <ng-template mdTabContent>
+      <counter></counter>
+    </ng-template>
+  </md-tab>
+</md-tab-group>
 
 <h1>Tabs with autosize textarea</h1>
 <mat-tab-group class="demo-tab-group">
