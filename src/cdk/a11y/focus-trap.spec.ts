@@ -1,7 +1,7 @@
 import {Platform} from '@angular/cdk/platform';
 import {Component, ViewChild} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {FocusTrapDirective, FocusTrapFactory} from './focus-trap';
+import {CdkTrapFocus, FocusTrapFactory} from './focus-trap';
 import {InteractivityChecker} from './interactivity-checker';
 
 
@@ -26,7 +26,7 @@ describe('FocusTrap', () => {
 
   describe('with default element', () => {
     let fixture: ComponentFixture<SimpleFocusTrap>;
-    let focusTrapInstance: FocusTrapDirective;
+    let focusTrapInstance: CdkTrapFocus;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleFocusTrap);
@@ -78,7 +78,7 @@ describe('FocusTrap', () => {
 
   describe('with bindings', () => {
     let fixture: ComponentFixture<FocusTrapWithBindings>;
-    let focusTrapInstance: FocusTrapDirective;
+    let focusTrapInstance: CdkTrapFocus;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(FocusTrapWithBindings);
@@ -113,7 +113,7 @@ describe('FocusTrap', () => {
 
   describe('with focus targets', () => {
     let fixture: ComponentFixture<FocusTrapTargets>;
-    let focusTrapInstance: FocusTrapDirective;
+    let focusTrapInstance: CdkTrapFocus;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(FocusTrapTargets);
