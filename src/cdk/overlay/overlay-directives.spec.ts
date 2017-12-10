@@ -1,16 +1,17 @@
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {ComponentFixture, TestBed, async} from '@angular/core/testing';
+import {ComponentFixture, TestBed, async, inject} from '@angular/core/testing';
 import {Directionality} from '@angular/cdk/bidi';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {ESCAPE} from '@angular/cdk/keycodes';
-import {ConnectedOverlayDirective, OverlayModule, OverlayOrigin} from './index';
+import {CdkConnectedOverlay, OverlayModule, CdkOverlayOrigin} from './index';
 import {OverlayContainer} from './overlay-container';
 import {ConnectedPositionStrategy} from './position/connected-position-strategy';
 import {ConnectedOverlayPositionChange} from './position/connected-position';
 
 
 describe('Overlay directives', () => {
+  let overlayContainer: OverlayContainer;
   let overlayContainerElement: HTMLElement;
   let fixture: ComponentFixture<ConnectedOverlayDirectiveTest>;
   let dir: {value: string};
@@ -20,12 +21,8 @@ describe('Overlay directives', () => {
       imports: [OverlayModule],
       declarations: [ConnectedOverlayDirectiveTest, ConnectedOverlayPropertyInitOrder],
       providers: [
-        {provide: OverlayContainer, useFactory: () => {
-          overlayContainerElement = document.createElement('div');
-          return {getContainerElement: () => overlayContainerElement};
-        }},
         {provide: Directionality, useFactory: () => {
-          return dir = { value: 'ltr' };
+          return dir = {value: 'ltr'};
         }}
       ],
     });
@@ -34,6 +31,15 @@ describe('Overlay directives', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ConnectedOverlayDirectiveTest);
     fixture.detectChanges();
+  });
+
+  beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
+    overlayContainer = oc;
+    overlayContainerElement = oc.getContainerElement();
+  }));
+
+  afterEach(() => {
+    overlayContainer.ngOnDestroy();
   });
 
   /** Returns the current open overlay pane element. */
@@ -76,7 +82,7 @@ describe('Overlay directives', () => {
     let overlayDirective = testComponent.connectedOverlayDirective;
 
     let strategy =
-        <ConnectedPositionStrategy> overlayDirective.overlayRef.getState().positionStrategy;
+        <ConnectedPositionStrategy> overlayDirective.overlayRef.getConfig().positionStrategy;
     expect(strategy instanceof ConnectedPositionStrategy).toBe(true);
 
     let positions = strategy.positions;
@@ -324,7 +330,7 @@ class ConnectedOverlayDirectiveTest {
   detachHandler = jasmine.createSpy('detachHandler');
   attachResult: HTMLElement;
 
-  @ViewChild(ConnectedOverlayDirective) connectedOverlayDirective: ConnectedOverlayDirective;
+  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective: CdkConnectedOverlay;
 }
 
 @Component({
@@ -333,7 +339,7 @@ class ConnectedOverlayDirectiveTest {
   <ng-template cdk-connected-overlay>Menu content</ng-template>`,
 })
 class ConnectedOverlayPropertyInitOrder {
-  @ViewChild(ConnectedOverlayDirective) connectedOverlayDirective: ConnectedOverlayDirective;
-  @ViewChild('trigger') trigger: OverlayOrigin;
+  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective: CdkConnectedOverlay;
+  @ViewChild('trigger') trigger: CdkOverlayOrigin;
 }
 

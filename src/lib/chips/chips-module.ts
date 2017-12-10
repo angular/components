@@ -1,20 +1,22 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
 import {NgModule} from '@angular/core';
-import {MdChipList} from './chip-list';
-import {MdBasicChip, MdChip, MdChipRemove} from './chip';
-import {MdChipInput} from './chip-input';
+import {ErrorStateMatcher} from '@angular/material/core';
+import {MatChipList} from './chip-list';
+import {MatBasicChip, MatChip, MatChipRemove} from './chip';
+import {MatChipInput} from './chip-input';
 
 
 @NgModule({
   imports: [],
-  exports: [MdChipList, MdChip, MdChipInput, MdChipRemove, MdChipRemove, MdBasicChip],
-  declarations: [MdChipList, MdChip, MdChipInput, MdChipRemove,  MdChipRemove, MdBasicChip]
+  exports: [MatChipList, MatChip, MatChipInput, MatChipRemove, MatChipRemove, MatBasicChip],
+  declarations: [MatChipList, MatChip, MatChipInput, MatChipRemove,  MatChipRemove, MatBasicChip],
+  providers: [ErrorStateMatcher]
 })
-export class MdChipsModule {}
+export class MatChipsModule {}

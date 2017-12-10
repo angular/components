@@ -1,15 +1,15 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MdDateFormats} from '@angular/material';
+import {MatDateFormats} from '@angular/material';
 
 
-export const MD_MOMENT_DATE_FORMATS: MdDateFormats = {
+export const MAT_MOMENT_DATE_FORMATS: MatDateFormats = {
   parse: {
     dateInput: 'l',
   },

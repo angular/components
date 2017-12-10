@@ -1,25 +1,38 @@
-`<md-toolbar>` is a container for headers, titles, or actions.
+`<mat-toolbar>` is a container for headers, titles, or actions.
 
 <!-- example(toolbar-overview) -->
 
-### Multiple rows
-Toolbars can have multiple rows using `<md-toolbar-row>` elements. Any content outside of an 
-`<md-toolbar-row>` element are automatically placed inside of one at the beginning of the toolbar.
-Each toolbar row is a `display: flex` container.
+### Single row
+
+In the most situations, a toolbar will be placed at the top of your application and will only 
+have a single row that includes the title of your application.
 
 ```html
-<md-toolbar>
-  <span>First Row</span>
-  
-  <md-toolbar-row>
-    <span>Second Row</span>
-  </md-toolbar-row>
-  
-  <md-toolbar-row>
-    <span>Third Row</span>
-  </md-toolbar-row>
-</md-toolbar>
+<mat-toolbar>
+  <span>My Application</span>
+</mat-toolbar>
 ```
+
+### Multiple rows
+
+The Material Design specifications describe that toolbars can also have multiple rows. Creating
+toolbars with multiple rows in Angular Material can be done by placing `<mat-toolbar-row>` elements
+inside of a `<mat-toolbar>`.
+
+```html
+<mat-toolbar>  
+  <mat-toolbar-row>
+    <span>First Row</span>
+  </mat-toolbar-row>
+  
+  <mat-toolbar-row>
+    <span>Second Row</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+```
+
+**Note**: Placing content outside of a `<mat-toolbar-row>` when multiple rows are specified is not
+supported.
 
 ### Positioning toolbar content
 The toolbar does not perform any positioning of its content. This gives the user full power to 
@@ -28,14 +41,14 @@ position the content as it suits their application.
 A common pattern is to position a title on the left with some actions on the right. This can be
 easily accomplished with `display: flex`:
 ```html
-<md-toolbar color="primary">
+<mat-toolbar color="primary">
   <span>Application Title</span>
   
   <!-- This fills the remaining space of the current row -->
   <span class="example-fill-remaining-space"></span>
   
   <span>Right Aligned Text</span>
-</md-toolbar>
+</mat-toolbar>
 ```
 ```scss
 .example-fill-remaining-space {
@@ -46,7 +59,7 @@ easily accomplished with `display: flex`:
 ```
 
 ### Theming
-The color of a `<md-toolbar>` can be changed by using the `color` property. By default, toolbars
+The color of a `<mat-toolbar>` can be changed by using the `color` property. By default, toolbars
 use a neutral background color based on the current theme (light or dark). This can be changed to 
 `'primary'`, `'accent'`, or `'warn'`.  
 

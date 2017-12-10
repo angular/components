@@ -1,5 +1,13 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Component} from '@angular/core';
-import {MdSnackBar} from '@angular/material';
+import {MatSnackBar} from '@angular/material';
 
 @Component({
   moduleId: module.id,
@@ -7,7 +15,7 @@ import {MdSnackBar} from '@angular/material';
   templateUrl: 'snack-bar-a11y.html',
 })
 export class SnackBarAccessibilityDemo {
-  constructor(private snackBar: MdSnackBar) {}
+  constructor(private snackBar: MatSnackBar) {}
 
   openDiscoPartySnackBar() {
     this.snackBar.open('Disco party!', 'Dismiss', {duration: 5000});

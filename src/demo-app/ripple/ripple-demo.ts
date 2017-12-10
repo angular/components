@@ -1,5 +1,13 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Component, ViewChild} from '@angular/core';
-import {MdRipple} from '@angular/material';
+import {MatRipple} from '@angular/material';
 
 
 @Component({
@@ -9,7 +17,7 @@ import {MdRipple} from '@angular/material';
   styleUrls: ['ripple-demo.css'],
 })
 export class RippleDemo {
-  @ViewChild(MdRipple) ripple: MdRipple;
+  @ViewChild(MatRipple) ripple: MatRipple;
 
   centered = false;
   disabled = false;

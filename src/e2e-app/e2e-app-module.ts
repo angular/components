@@ -13,30 +13,30 @@ import {DialogE2E, TestDialog} from './dialog/dialog-e2e';
 import {GridListE2E} from './grid-list/grid-list-e2e';
 import {ProgressBarE2E} from './progress-bar/progress-bar-e2e';
 import {ProgressSpinnerE2E} from './progress-spinner/progress-spinner-e2e';
-import {FullscreenE2E, TestDialog as TestDialogFullScreen} from './fullscreen/fullscreen-e2e';
+import {FullscreenE2E, TestDialogFullScreen} from './fullscreen/fullscreen-e2e';
 import {E2E_APP_ROUTES} from './e2e-app/routes';
 import {SlideToggleE2E} from './slide-toggle/slide-toggle-e2e';
 import {InputE2E} from './input/input-e2e';
 import {SidenavE2E} from './sidenav/sidenav-e2e';
 import {BlockScrollStrategyE2E} from './block-scroll-strategy/block-scroll-strategy-e2e';
 import {
-  MdButtonModule,
-  MdCheckboxModule,
-  MdDialogModule,
-  MdFormFieldModule,
-  MdGridListModule,
-  MdIconModule,
-  MdInputModule,
-  MdListModule,
-  MdMenuModule,
-  MdNativeDateModule,
-  MdProgressBarModule,
-  MdProgressSpinnerModule,
-  MdRadioModule,
-  MdSidenavModule,
-  MdSlideToggleModule,
-  MdStepperModule,
-  MdTabsModule,
+  MatButtonModule,
+  MatCheckboxModule,
+  MatDialogModule,
+  MatFormFieldModule,
+  MatGridListModule,
+  MatIconModule,
+  MatInputModule,
+  MatListModule,
+  MatMenuModule,
+  MatNativeDateModule,
+  MatProgressBarModule,
+  MatProgressSpinnerModule,
+  MatRadioModule,
+  MatSidenavModule,
+  MatSlideToggleModule,
+  MatStepperModule,
+  MatTabsModule,
 } from '@angular/material';
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
 import {ExampleModule} from '@angular/material-examples';
@@ -47,23 +47,23 @@ import {ReactiveFormsModule} from '@angular/forms';
  */
 @NgModule({
   exports: [
-    MdButtonModule,
-    MdCheckboxModule,
-    MdDialogModule,
-    MdFormFieldModule,
-    MdGridListModule,
-    MdIconModule,
-    MdInputModule,
-    MdListModule,
-    MdMenuModule,
-    MdProgressBarModule,
-    MdProgressSpinnerModule,
-    MdRadioModule,
-    MdSidenavModule,
-    MdSlideToggleModule,
-    MdStepperModule,
-    MdTabsModule,
-    MdNativeDateModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatGridListModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatRadioModule,
+    MatSidenavModule,
+    MatSlideToggleModule,
+    MatStepperModule,
+    MatTabsModule,
+    MatNativeDateModule,
   ]
 })
 export class E2eMaterialModule {}

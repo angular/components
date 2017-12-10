@@ -24,13 +24,25 @@
 
 .demo-table-card {
   margin: 24px 0;
-  max-height: 200px;
+  max-height: 450px;
   overflow: auto;
 
   h3 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+}
+
+.user-row {
+  cursor: pointer;
+  position: relative; // For mdRipple
+
+  &:hover {
+    background: #f5f5f5;
+  }
+  &:active {
+    background: #eaeaea;
   }
 }
 
@@ -61,13 +73,13 @@
   }
 }
 
-  /* Structure so that the table is contained on a card */
+/* Structure so that the table is contained on a card */
 .demo-table-container {
   max-height: 800px;
   display: flex;
   flex-direction: column;
 
-  md-table {
+  mat-table {
     overflow: auto;
   }
 }
@@ -75,7 +87,6 @@
 /* Column max widths */
 .cdk-column-userId {
   max-width: 32px;
-  text-align: right;
   justify-content: flex-end;
 }
 
@@ -85,6 +96,11 @@
 
 .cdk-column-color {
   max-width: 160px;
+}
+
+.mat-column-select {
+  max-width: 48px;
+  overflow: inherit;
 }
 
 /* Progress bar styling */
@@ -106,5 +122,22 @@
       border-radius: 8px;
       height: 8px;
     }
+  }
+}
+
+.example-selection-header {
+  height: 64px;
+  background: white;
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+}
+
+.mat-table-selectable {
+  .mat-row:hover {
+    background: #eeeeee;
+  }
+  .mat-row.selected {
+    background: #f5f5f5;
   }
 }

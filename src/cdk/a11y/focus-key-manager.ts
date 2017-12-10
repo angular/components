@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -14,6 +14,7 @@ import {ListKeyManager, ListKeyManagerOption} from './list-key-manager';
  * and be able to supply it's label.
  */
 export interface FocusableOption extends ListKeyManagerOption {
+  /** Focuses the `FocusableOption`. */
   focus(): void;
 }
 

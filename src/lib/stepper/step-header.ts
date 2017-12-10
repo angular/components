@@ -1,20 +1,30 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor} from '@angular/cdk/a11y';
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
-import {Component, Input, ViewEncapsulation} from '@angular/core';
-import {MATERIAL_COMPATIBILITY_MODE} from '@angular/material/core';
-import {MdStepLabel} from './step-label';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  ViewEncapsulation,
+} from '@angular/core';
+import {Subscription} from 'rxjs/Subscription';
+import {MatStepLabel} from './step-label';
+import {MatStepperIntl} from './stepper-intl';
 
 
 @Component({
   moduleId: module.id,
-  selector: 'md-step-header, mat-step-header',
+  selector: 'mat-step-header',
   templateUrl: 'step-header.html',
   styleUrls: ['step-header.css'],
   host: {
@@ -23,14 +33,16 @@ import {MdStepLabel} from './step-label';
   },
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
-  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdStepHeader {
+export class MatStepHeader implements OnDestroy {
+  private _intlSubscription: Subscription;
+
   /** Icon for the given step. */
   @Input() icon: string;
 
   /** Label of the given step. */
-  @Input() label: MdStepLabel | string;
+  @Input() label: MatStepLabel | string;
 
   /** Index of the given step. */
   @Input()
@@ -64,13 +76,32 @@ export class MdStepHeader {
   }
   private _optional: boolean;
 
-  /** Returns string label of given step if it is a text label. */
-  _stringLabel(): string | null {
-    return this.label instanceof MdStepLabel ? null : this.label;
+  constructor(
+    public _intl: MatStepperIntl,
+    private _focusMonitor: FocusMonitor,
+    private _element: ElementRef,
+    changeDetectorRef: ChangeDetectorRef) {
+    _focusMonitor.monitor(_element.nativeElement, true);
+    this._intlSubscription = _intl.changes.subscribe(() => changeDetectorRef.markForCheck());
   }
 
-  /** Returns MdStepLabel if the label of given step is a template label. */
-  _templateLabel(): MdStepLabel | null {
-    return this.label instanceof MdStepLabel ? this.label : null;
+  ngOnDestroy() {
+    this._intlSubscription.unsubscribe();
+    this._focusMonitor.stopMonitoring(this._element.nativeElement);
+  }
+
+  /** Returns string label of given step if it is a text label. */
+  _stringLabel(): string | null {
+    return this.label instanceof MatStepLabel ? null : this.label;
+  }
+
+  /** Returns MatStepLabel if the label of given step is a template label. */
+  _templateLabel(): MatStepLabel | null {
+    return this.label instanceof MatStepLabel ? this.label : null;
+  }
+
+  /** Returns the host HTML element. */
+  _getHostElement() {
+    return this._element.nativeElement;
   }
 }

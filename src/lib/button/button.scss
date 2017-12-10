@@ -1,8 +1,8 @@
 // TODO(jelbourn): Measure perf benefits for translate3d and will-change.
 // TODO(jelbourn): Figure out if anchor hover underline actually happens in any browser.
 @import 'button-base';
-@import '../../cdk/a11y/a11y';
 @import '../core/style/layout-common';
+@import '../../cdk/a11y/a11y';
 
 .mat-button, .mat-icon-button {
   @extend %mat-button-base;
@@ -51,7 +51,7 @@
 }
 
 // The text and icon should be vertical aligned inside a button
-.mat-button, .mat-raised-button, .mat-icon-button {
+.mat-button, .mat-raised-button, .mat-icon-button, .mat-fab, .mat-mini-fab {
   color: currentColor;
   .mat-button-wrapper > * {
     vertical-align: middle;

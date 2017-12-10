@@ -1,5 +1,13 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Component} from '@angular/core';
-import {MdDialog} from '@angular/material';
+import {MatDialog} from '@angular/material';
 
 
 @Component({
@@ -11,7 +19,7 @@ import {MdDialog} from '@angular/material';
 export class DialogAccessibilityDemo {
   fruitSelectedOption: string = '';
 
-  constructor(public dialog: MdDialog) {}
+  constructor(public dialog: MatDialog) {}
 
   openFruitDialog() {
     let dialogRef = this.dialog.open(DialogFruitExampleDialog);
@@ -53,7 +61,7 @@ export class DialogWelcomeExampleDialog {}
   templateUrl: './dialog-neptune-a11y.html'
 })
 export class DialogNeptuneExampleDialog {
-  constructor(public dialog: MdDialog) { }
+  constructor(public dialog: MatDialog) { }
 
   showInStackedDialog() {
     this.dialog.open(DialogNeptuneIFrameDialog);

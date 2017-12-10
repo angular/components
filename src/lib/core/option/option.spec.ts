@@ -2,13 +2,13 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
-import {MdOption, MdOptionModule} from './index';
+import {MatOption, MatOptionModule} from './index';
 
-describe('MdOption component', () => {
+describe('MatOption component', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MdOptionModule],
+      imports: [MatOptionModule],
       declarations: [OptionWithDisable]
     }).compileComponents();
   }));
@@ -17,19 +17,19 @@ describe('MdOption component', () => {
     let fixture: ComponentFixture<OptionWithDisable>;
     let optionDebugElement: DebugElement;
     let optionNativeElement: HTMLElement;
-    let optionInstance: MdOption;
+    let optionInstance: MatOption;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(OptionWithDisable);
       fixture.detectChanges();
 
-      optionDebugElement = fixture.debugElement.query(By.directive(MdOption));
+      optionDebugElement = fixture.debugElement.query(By.directive(MatOption));
       optionNativeElement = optionDebugElement.nativeElement;
       optionInstance = optionDebugElement.componentInstance;
     });
 
     it('should show ripples by default', () => {
-      expect(optionInstance.disableRipple).toBe(false, 'Expected ripples to be enabled by default');
+      expect(optionInstance.disableRipple).toBeFalsy('Expected ripples to be enabled by default');
       expect(optionNativeElement.querySelectorAll('.mat-ripple-element').length)
         .toBe(0, 'Expected no ripples to show up initially');
 
@@ -54,27 +54,13 @@ describe('MdOption component', () => {
         .toBe(0, 'Expected no ripples to show up after click on a disabled option.');
     });
 
-    it('should not show ripples if the ripples are disabled using disableRipple', () => {
-      expect(optionNativeElement.querySelectorAll('.mat-ripple-element').length)
-        .toBe(0, 'Expected no ripples to show up initially');
-
-      optionInstance.disableRipple = true;
-      fixture.detectChanges();
-
-      dispatchFakeEvent(optionNativeElement, 'mousedown');
-      dispatchFakeEvent(optionNativeElement, 'mouseup');
-
-      expect(optionNativeElement.querySelectorAll('.mat-ripple-element').length)
-        .toBe(0, 'Expected no ripples to show up after click when ripples are disabled.');
-    });
-
   });
 
 });
 
 @Component({
-  template: `<md-option [disabled]="disabled"></md-option>`
+  template: `<mat-option [disabled]="disabled"></mat-option>`
 })
-export class OptionWithDisable {
+class OptionWithDisable {
   disabled: boolean;
 }

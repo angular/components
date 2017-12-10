@@ -45,16 +45,15 @@ export function createPackageBuildTasks(buildPackage: BuildPackage) {
     // Build all required packages before building.
     ...dependencyNames.map(pkgName => `${pkgName}:build`),
     // Build ESM and assets output.
-    [`${taskName}:build:esm`, `${taskName}:assets`],
+    `${taskName}:assets`,
+    `${taskName}:build:esm`,
     // Inline assets into ESM output.
     `${taskName}:assets:inline`,
     // Build bundles on top of inlined ESM output.
     `${taskName}:build:bundles`,
   ));
 
-  task(`${taskName}:build-tests`, sequenceTask(
-    // Build all required tests before building.
-    ...dependencyNames.map(pkgName => `${pkgName}:build-tests`),
+  task(`${taskName}:build-no-bundles`, sequenceTask(
     // Build the ESM output that includes all test files. Also build assets for the package.
     [`${taskName}:build:esm:tests`, `${taskName}:assets`],
     // Inline assets into ESM output.
@@ -82,6 +81,7 @@ export function createPackageBuildTasks(buildPackage: BuildPackage) {
    */
   task(`${taskName}:assets`, [
     `${taskName}:assets:scss`,
+    `${taskName}:assets:es5-scss`,
     `${taskName}:assets:copy-styles`,
     `${taskName}:assets:html`
   ]);
@@ -90,11 +90,19 @@ export function createPackageBuildTasks(buildPackage: BuildPackage) {
     buildPackage.outputDir, buildPackage.sourceDir, true)
   );
 
+  task(`${taskName}:assets:es5-scss`, buildScssTask(
+      buildPackage.esm5OutputDir, buildPackage.sourceDir, true)
+  );
+
   task(`${taskName}:assets:copy-styles`, () => {
-    return src(stylesGlob).pipe(dest(buildPackage.outputDir));
+    return src(stylesGlob)
+        .pipe(dest(buildPackage.outputDir))
+        .pipe(dest(buildPackage.esm5OutputDir));
   });
   task(`${taskName}:assets:html`, () => {
-    return src(htmlGlob).pipe(htmlmin(htmlMinifierOptions)).pipe(dest(buildPackage.outputDir));
+    return src(htmlGlob).pipe(htmlmin(htmlMinifierOptions))
+        .pipe(dest(buildPackage.outputDir))
+        .pipe(dest(buildPackage.esm5OutputDir));
   });
 
   task(`${taskName}:assets:inline`, () => inlineResourcesForDirectory(buildPackage.outputDir));

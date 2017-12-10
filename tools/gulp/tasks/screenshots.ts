@@ -34,15 +34,9 @@ const FIREBASE_IMAGE = `${TEMP_FOLDER}/screenshot/images`;
 const FIREBASE_DATA_GOLDENS = `screenshot/goldens`;
 const FIREBASE_STORAGE_GOLDENS = 'goldens';
 
-/** Time in ms until the process will be exited if the last action took too long (6 minutes). */
-const lastActionTimeout = 1000 * 60 * 6;
-
-/** Time in ms that specifies how often the last action should be checked (45 seconds). */
-const lastActionRefreshInterval = 1000 * 45;
-
 /** Task which upload screenshots generated from e2e test. */
 task('screenshots', () => {
-  const prNumber = process.env['TRAVIS_PULL_REQUEST'];
+  const prNumber = process.env['TRAVIS_PULL_REQUEST']!;
 
   if (isTravisMasterBuild()) {
     // Only update goldens for master build
@@ -51,16 +45,6 @@ task('screenshots', () => {
     const firebaseApp = connectFirebaseScreenshots();
     const database = firebaseApp.database();
     let lastActionTime = Date.now();
-
-    // If the last action of the task takes longer than 6 minutes, close the firebase connection.
-    const timeoutId = setInterval(() => {
-      if (lastActionTime + lastActionTimeout <= Date.now()) {
-        clearTimeout(timeoutId);
-        console.error('Last action for screenshot tests did not finish in ' +
-            (lastActionTimeout / 1000 / 60) + ' minutes. Closing Firebase connection...');
-        return firebaseApp.delete().then(() => process.exit(1));
-      }
-    }, lastActionRefreshInterval);
 
     console.log(`  Starting screenshots task with results from e2e task...`);
 
@@ -89,13 +73,11 @@ task('screenshots', () => {
       .then(() => {
         console.log(`  Uploading results done (took ${Date.now() - lastActionTime}ms)`);
         firebaseApp.delete();
-        clearTimeout(timeoutId);
       })
       .catch((err: any) => {
         console.error(`  Screenshot tests encountered an error!`);
         console.error(err);
         firebaseApp.delete();
-        clearTimeout(timeoutId);
       });
   }
 });
@@ -206,15 +188,26 @@ function compareScreenshotFile(fileName: string, database: Database, prNumber: s
 }
 
 /** Uploads golden screenshots to the Google Cloud Storage bucket for the screenshots. */
-function uploadGoldenScreenshots() {
+async function uploadGoldenScreenshots() {
   const bucket = openScreenshotsBucket();
+  const localScreenshots = getLocalScreenshotFiles(SCREENSHOT_DIR);
+  const storageGoldenFiles = (await bucket.getFiles({prefix: FIREBASE_STORAGE_GOLDENS}))[0];
 
-  return Promise.all(getLocalScreenshotFiles(SCREENSHOT_DIR).map(fileName => {
+  // Only delete golden images that are outdated to avoid collisions with other screenshot diffs.
+  // Deleting every golden screenshot may also work, but will likely cause flakiness if multiple
+  // screenshot tasks run.
+  const deleteOutdatedGoldenFiles = Promise.all(storageGoldenFiles
+    .filter((file: any) => !localScreenshots.includes(path.basename(file.name)))
+    .map((file: any) => file.delete()));
+
+  const uploadNewGoldenImages = Promise.all(localScreenshots.map(fileName => {
     const filePath = path.join(SCREENSHOT_DIR, fileName);
     const storageDestination = `${FIREBASE_STORAGE_GOLDENS}/${fileName}`;
 
     return bucket.upload(filePath, { destination: storageDestination });
   }));
+
+  await Promise.all([deleteOutdatedGoldenFiles, uploadNewGoldenImages]);
 }
 
 /**

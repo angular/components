@@ -1,12 +1,6 @@
-<md-sidenav-container class="example-container">
-  <md-sidenav #sidenav class="example-sidenav">
-    Jolly good!
-  </md-sidenav>
+<mat-sidenav-container class="example-container" *ngIf="shouldRun">
+  <mat-sidenav mode="side" opened="true">Sidenav content</mat-sidenav>
+  <mat-sidenav-content>Main content</mat-sidenav-content>
+</mat-sidenav-container>
 
-  <div class="example-sidenav-content">
-    <button type="button" md-button (click)="sidenav.open()">
-      Open sidenav
-    </button>
-  </div>
-
-</md-sidenav-container>
+<div *ngIf="!shouldRun">Please open on Stackblitz to see result</div>

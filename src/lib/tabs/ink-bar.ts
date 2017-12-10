@@ -1,12 +1,12 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Renderer2, ElementRef, NgZone} from '@angular/core';
+import {Directive, ElementRef, NgZone} from '@angular/core';
 
 
 /**
@@ -14,14 +14,13 @@ import {Directive, Renderer2, ElementRef, NgZone} from '@angular/core';
  * @docs-private
  */
 @Directive({
-  selector: 'md-ink-bar, mat-ink-bar',
+  selector: 'mat-ink-bar',
   host: {
     'class': 'mat-ink-bar',
   },
 })
-export class MdInkBar {
+export class MatInkBar {
   constructor(
-    private _renderer: Renderer2,
     private _elementRef: ElementRef,
     private _ngZone: NgZone) {}
 
@@ -44,12 +43,12 @@ export class MdInkBar {
 
   /** Shows the ink bar. */
   show(): void {
-    this._renderer.setStyle(this._elementRef.nativeElement, 'visibility', 'visible');
+    this._elementRef.nativeElement.style.visibility = 'visible';
   }
 
   /** Hides the ink bar. */
   hide(): void {
-    this._renderer.setStyle(this._elementRef.nativeElement, 'visibility', 'hidden');
+    this._elementRef.nativeElement.style.visibility = 'hidden';
   }
 
   /**
@@ -57,10 +56,9 @@ export class MdInkBar {
    * @param element
    */
   private _setStyles(element: HTMLElement) {
-    const left = element ? (element.offsetLeft || 0) + 'px' : '0';
-    const width = element ? (element.offsetWidth || 0) + 'px' : '0';
+    const inkBar: HTMLElement = this._elementRef.nativeElement;
 
-    this._renderer.setStyle(this._elementRef.nativeElement, 'left', left);
-    this._renderer.setStyle(this._elementRef.nativeElement, 'width', width);
+    inkBar.style.left = element ? (element.offsetLeft || 0) + 'px' : '0';
+    inkBar.style.width = element ? (element.offsetWidth || 0) + 'px' : '0';
   }
 }

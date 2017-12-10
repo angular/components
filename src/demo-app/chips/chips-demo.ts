@@ -1,8 +1,14 @@
-import {ENTER} from '@angular/cdk/keycodes';
-import {Component} from '@angular/core';
-import {MdChipInputEvent} from '@angular/material';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 
-const COMMA = 188;
+import {ENTER, COMMA} from '@angular/cdk/keycodes';
+import {Component} from '@angular/core';
+import {MatChipInputEvent} from '@angular/material';
 
 export interface Person {
   name: string;
@@ -53,7 +59,7 @@ export class ChipsDemo {
     this.message = message;
   }
 
-  add(event: MdChipInputEvent): void {
+  add(event: MatChipInputEvent): void {
     let input = event.input;
     let value = event.value;
 

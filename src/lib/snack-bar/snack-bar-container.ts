@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -13,7 +13,6 @@ import {
   ViewChild,
   NgZone,
   OnDestroy,
-  Renderer2,
   ElementRef,
   ChangeDetectionStrategy,
   ViewEncapsulation,
@@ -28,22 +27,21 @@ import {
   AnimationEvent,
 } from '@angular/animations';
 import {
-  BasePortalHost,
+  BasePortalOutlet,
   ComponentPortal,
-  PortalHostDirective,
+  CdkPortalOutlet,
 } from '@angular/cdk/portal';
-import {first} from '@angular/cdk/rxjs';
+import {take} from 'rxjs/operators/take';
+import {AnimationCurves, AnimationDurations} from '@angular/material/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {MdSnackBarConfig} from './snack-bar-config';
+import {MatSnackBarConfig} from './snack-bar-config';
 
 
-export type SnackBarState = 'visible' | 'hidden' | 'void';
-
-// TODO(jelbourn): we can't use constants from animation.ts here because you can't use
-// a text interpolation in anything that is analyzed statically with ngc (for AoT compile).
-export const SHOW_ANIMATION = '225ms cubic-bezier(0.4,0.0,1,1)';
-export const HIDE_ANIMATION = '195ms cubic-bezier(0.0,0.0,0.2,1)';
+export const SHOW_ANIMATION =
+    `${AnimationDurations.ENTERING} ${AnimationCurves.DECELERATION_CURVE}`;
+export const HIDE_ANIMATION =
+    `${AnimationDurations.EXITING} ${AnimationCurves.ACCELERATION_CURVE}`;
 
 /**
  * Internal component that wraps user-provided snack bar content.
@@ -60,31 +58,24 @@ export const HIDE_ANIMATION = '195ms cubic-bezier(0.0,0.0,0.2,1)';
   host: {
     'role': 'alert',
     'class': 'mat-snack-bar-container',
-    '[@state]': 'getAnimationState()',
+    '[@state]': '_animationState',
     '(@state.done)': 'onAnimationEnd($event)'
   },
   animations: [
     trigger('state', [
-      // Animation from top.
-      state('visible-top', style({transform: 'translateY(0%)'})),
-      state('hidden-top', style({transform: 'translateY(-100%)'})),
-      transition('visible-top => hidden-top', animate(HIDE_ANIMATION)),
-      transition('void => visible-top', animate(SHOW_ANIMATION)),
-      // Animation from bottom.
-      state('visible-bottom', style({transform: 'translateY(0%)'})),
-      state('hidden-bottom', style({transform: 'translateY(100%)'})),
-      transition('visible-bottom => hidden-bottom', animate(HIDE_ANIMATION)),
-      transition('void => visible-bottom',
-        animate(SHOW_ANIMATION)),
+      state('visible-top, visible-bottom', style({transform: 'translateY(0%)'})),
+      transition('visible-top => hidden-top, visible-bottom => hidden-bottom',
+        animate(HIDE_ANIMATION)),
+      transition('void => visible-top, void => visible-bottom', animate(SHOW_ANIMATION)),
     ])
   ],
 })
-export class MdSnackBarContainer extends BasePortalHost implements OnDestroy {
+export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy {
   /** Whether the component has been destroyed. */
   private _destroyed = false;
 
-  /** The portal host inside of this container into which the snack bar content will be loaded. */
-  @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
+  /** The portal outlet inside of this container into which the snack bar content will be loaded. */
+  @ViewChild(CdkPortalOutlet) _portalOutlet: CdkPortalOutlet;
 
   /** Subject for notifying that the snack bar has exited from view. */
   _onExit: Subject<any> = new Subject();
@@ -93,50 +84,40 @@ export class MdSnackBarContainer extends BasePortalHost implements OnDestroy {
   _onEnter: Subject<any> = new Subject();
 
   /** The state of the snack bar animations. */
-  private _animationState: SnackBarState;
+  _animationState = 'void';
 
   /** The snack bar configuration. */
-  snackBarConfig: MdSnackBarConfig;
+  snackBarConfig: MatSnackBarConfig;
 
   constructor(
     private _ngZone: NgZone,
-    private _renderer: Renderer2,
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef) {
     super();
   }
 
-  /**
-   * Gets the current animation state both combining one of the possibilities from
-   * SnackBarState and the vertical location.
-   */
-  getAnimationState(): string {
-    return `${this._animationState}-${this.snackBarConfig.verticalPosition}`;
-  }
-
   /** Attach a component portal as content to this snack bar container. */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
-    if (this._portalHost.hasAttached()) {
+    if (this._portalOutlet.hasAttached()) {
       throw Error('Attempting to attach snack bar content after content is already attached');
     }
 
-    if (this.snackBarConfig.extraClasses) {
-      // Not the most efficient way of adding classes, but the renderer doesn't allow us
-      // to pass in an array or a space-separated list.
-      for (let cssClass of this.snackBarConfig.extraClasses) {
-        this._renderer.addClass(this._elementRef.nativeElement, cssClass);
-      }
+    const element: HTMLElement = this._elementRef.nativeElement;
+
+    if (this.snackBarConfig.panelClass || this.snackBarConfig.extraClasses) {
+      this._setCssClasses(this.snackBarConfig.panelClass);
+      this._setCssClasses(this.snackBarConfig.extraClasses);
     }
 
     if (this.snackBarConfig.horizontalPosition === 'center') {
-      this._renderer.addClass(this._elementRef.nativeElement, 'mat-snack-bar-center');
+      element.classList.add('mat-snack-bar-center');
     }
 
     if (this.snackBarConfig.verticalPosition === 'top') {
-      this._renderer.addClass(this._elementRef.nativeElement, 'mat-snack-bar-top');
+      element.classList.add('mat-snack-bar-top');
     }
 
-    return this._portalHost.attachComponentPortal(portal);
+    return this._portalOutlet.attachComponentPortal(portal);
   }
 
   /** Attach a template portal as content to this snack bar container. */
@@ -146,11 +127,13 @@ export class MdSnackBarContainer extends BasePortalHost implements OnDestroy {
 
   /** Handle end of animations, updating the state of the snackbar. */
   onAnimationEnd(event: AnimationEvent) {
-    if (event.toState === 'void' || event.toState.startsWith('hidden')) {
+    const {fromState, toState} = event;
+
+    if ((toState === 'void' && fromState !== 'void') || toState.startsWith('hidden')) {
       this._completeExit();
     }
 
-    if (event.toState.startsWith('visible')) {
+    if (toState.startsWith('visible')) {
       // Note: we shouldn't use `this` inside the zone callback,
       // because it can cause a memory leak.
       const onEnter = this._onEnter;
@@ -165,14 +148,14 @@ export class MdSnackBarContainer extends BasePortalHost implements OnDestroy {
   /** Begin animation of snack bar entrance into view. */
   enter(): void {
     if (!this._destroyed) {
-      this._animationState = 'visible';
+      this._animationState = `visible-${this.snackBarConfig.verticalPosition}`;
       this._changeDetectorRef.detectChanges();
     }
   }
 
   /** Begin animation of the snack bar exiting from view. */
   exit(): Observable<void> {
-    this._animationState = 'hidden';
+    this._animationState = `hidden-${this.snackBarConfig.verticalPosition}`;
     return this._onExit;
   }
 
@@ -187,9 +170,25 @@ export class MdSnackBarContainer extends BasePortalHost implements OnDestroy {
    * errors where we end up removing an element which is in the middle of an animation.
    */
   private _completeExit() {
-    first.call(this._ngZone.onMicrotaskEmpty.asObservable()).subscribe(() => {
+    this._ngZone.onMicrotaskEmpty.asObservable().pipe(take(1)).subscribe(() => {
       this._onExit.next();
       this._onExit.complete();
     });
+  }
+
+  /** Applies the user-specified list of CSS classes to the element. */
+  private _setCssClasses(classList: undefined|string|string[]) {
+    if (!classList) {
+      return;
+    }
+
+    const element = this._elementRef.nativeElement;
+
+    if (Array.isArray(classList)) {
+      // Note that we can't use a spread here, because IE doesn't support multiple arguments.
+      classList.forEach(cssClass => element.classList.add(cssClass));
+    } else {
+      element.classList.add(classList);
+    }
   }
 }

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -56,16 +56,18 @@ export class SelectionModel<T> {
   /**
    * Selects a value or an array of values.
    */
-  select(value: T): void {
-    this._markSelected(value);
+  select(...values: T[]): void {
+    this._verifyValueAssignment(values);
+    values.forEach(value => this._markSelected(value));
     this._emitChangeEvent();
   }
 
   /**
    * Deselects a value or an array of values.
    */
-  deselect(value: T): void {
-    this._unmarkSelected(value);
+  deselect(...values: T[]): void {
+    this._verifyValueAssignment(values);
+    values.forEach(value => this._unmarkSelected(value));
     this._emitChangeEvent();
   }
 
@@ -116,8 +118,11 @@ export class SelectionModel<T> {
 
   /** Emits a change event and clears the records of selected and deselected values. */
   private _emitChangeEvent() {
+    // Clear the selected values so they can be re-cached.
+    this._selected = null;
+
     if (this._selectedToEmit.length || this._deselectedToEmit.length) {
-      let eventData = new SelectionChange(this._selectedToEmit, this._deselectedToEmit);
+      const eventData = new SelectionChange(this._selectedToEmit, this._deselectedToEmit);
 
       if (this.onChange) {
         this.onChange.next(eventData);
@@ -126,8 +131,6 @@ export class SelectionModel<T> {
       this._deselectedToEmit = [];
       this._selectedToEmit = [];
     }
-
-    this._selected = null;
   }
 
   /** Selects a value. */
@@ -162,12 +165,30 @@ export class SelectionModel<T> {
       this._selection.forEach(value => this._unmarkSelected(value));
     }
   }
+
+  /**
+   * Verifies the value assignment and throws an error if the specified value array is
+   * including multiple values while the selection model is not supporting multiple values.
+   */
+  private _verifyValueAssignment(values: T[]) {
+    if (values.length > 1 && !this._isMulti) {
+      throw getMultipleValuesInSingleSelectionError();
+    }
+  }
 }
 
 /**
- * Describes an event emitted when the value of a MdSelectionModel has changed.
+ * Describes an event emitted when the value of a MatSelectionModel has changed.
  * @docs-private
  */
 export class SelectionChange<T> {
   constructor(public added?: T[], public removed?: T[]) { }
+}
+
+/**
+ * Returns an error that reports that multiple values are passed into a selection model
+ * with a single value.
+ */
+export function getMultipleValuesInSingleSelectionError() {
+  return Error('Cannot pass multiple values into SelectionModel with single-value mode.');
 }

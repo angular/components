@@ -1,5 +1,13 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Component} from '@angular/core';
-import {MdChipInputEvent, MdSnackBar} from '@angular/material';
+import {MatChipInputEvent, MatSnackBar} from '@angular/material';
 
 
 export interface Person {
@@ -36,13 +44,13 @@ export class ChipsAccessibilityDemo {
     { name: 'Warn', color: 'warn' }
   ];
 
-  constructor(public snackBar: MdSnackBar) {}
+  constructor(public snackBar: MatSnackBar) {}
 
   displayMessage(message: string): void {
     this.message = message;
   }
 
-  add(event: MdChipInputEvent): void {
+  add(event: MatChipInputEvent): void {
     let input = event.input;
     let value = event.value;
 

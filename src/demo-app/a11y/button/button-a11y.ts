@@ -1,5 +1,13 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Component} from '@angular/core';
-import {MdSnackBar} from '@angular/material';
+import {MatSnackBar} from '@angular/material';
 
 @Component({
   moduleId: module.id,
@@ -10,7 +18,7 @@ import {MdSnackBar} from '@angular/material';
 export class ButtonAccessibilityDemo {
   counter: number = 0;
 
-  constructor(public snackBar: MdSnackBar) {}
+  constructor(public snackBar: MatSnackBar) {}
 
   openSnackBar(message: string) {
     this.snackBar.open(message,  '',  {

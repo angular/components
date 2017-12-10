@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -21,7 +21,7 @@ import {
 import {CdkCellDef} from './cell';
 
 /**
- * The row template that can be used by the md-table. Should not be used outside of the
+ * The row template that can be used by the mat-table. Should not be used outside of the
  * material library.
  */
 export const CDK_ROW_TEMPLATE = `<ng-container cdkCellOutlet></ng-container>`;
@@ -37,14 +37,14 @@ export abstract class BaseRowDef {
   /** Differ used to check if any changes were made to the columns. */
   protected _columnsDiffer: IterableDiffer<any>;
 
-  constructor(public template: TemplateRef<any>,
+  constructor(/** @docs-private */ public template: TemplateRef<any>,
               protected _differs: IterableDiffers) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     // Create a new columns differ if one does not yet exist. Initialize it based on initial value
     // of the columns property or an empty array if none is provided.
     const columns = changes['columns'].currentValue || [];
-    if (!this._columnsDiffer && columns) {
+    if (!this._columnsDiffer) {
       this._columnsDiffer = this._differs.find(columns).create();
       this._columnsDiffer.diff(columns);
     }
@@ -75,13 +75,22 @@ export class CdkHeaderRowDef extends BaseRowDef {
 
 /**
  * Data row definition for the CDK table.
- * Captures the header row's template and other row properties such as the columns to display.
+ * Captures the header row's template and other row properties such as the columns to display and
+ * a when predicate that describes when this row should be used.
  */
 @Directive({
   selector: '[cdkRowDef]',
-  inputs: ['columns: cdkRowDefColumns'],
+  inputs: ['columns: cdkRowDefColumns', 'when: cdkRowDefWhen'],
 })
-export class CdkRowDef extends BaseRowDef {
+export class CdkRowDef<T> extends BaseRowDef {
+  /**
+   * Function that should return true if this row template should be used for the provided index
+   * and row data. If left undefined, this row will be considered the default row template to use
+   * when no other when functions return true for the data.
+   * For every row, there must be at least one when function that passes or an undefined to default.
+   */
+  when: (index: number, rowData: T) => boolean;
+
   // TODO(andrewseguin): Add an input for providing a switch function to determine
   //   if this template should be used.
   constructor(template: TemplateRef<any>, _differs: IterableDiffers) {
@@ -132,7 +141,7 @@ export class CdkCellOutlet {
    * a handle to provide that component's cells and context. After init, the CdkCellOutlet will
    * construct the cells with the provided context.
    */
-  static mostRecentCellOutlet: CdkCellOutlet;
+  static mostRecentCellOutlet: CdkCellOutlet | null = null;
 
   constructor(public _viewContainer: ViewContainerRef) {
     CdkCellOutlet.mostRecentCellOutlet = this;

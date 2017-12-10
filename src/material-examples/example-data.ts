@@ -19,13 +19,20 @@ export class ExampleData {
 
   constructor(example: string) {
     if (example && EXAMPLE_COMPONENTS[example]) {
-      this.examplePath = `/assets/plunker/examples/${example}/`;
+      this.examplePath = `/assets/stackblitz/examples/${example}/`;
+
       // TODO(tinayuangao): Do not hard-code extensions
       this.exampleFiles = ['html', 'ts', 'css']
-        .map((extension) => `${example}-example.${extension}`);
+          .map((extension) => `${example}-example.${extension}`);
+      let exampleFilesSet = new Set(
+          ['html', 'ts', 'css'].map((extension) => `${example}-example.${extension}`));
       if (EXAMPLE_COMPONENTS[example].additionalFiles) {
-        this.exampleFiles = this.exampleFiles.concat(EXAMPLE_COMPONENTS[example].additionalFiles);
+        for (let file of EXAMPLE_COMPONENTS[example].additionalFiles) {
+          exampleFilesSet.add(file);
+        }
       }
+      this.exampleFiles = Array.from(exampleFilesSet.values());
+
       this.selectorName = this.indexFilename = `${example}-example`;
 
       let exampleName = example.replace(/(?:^\w|\b\w)/g, letter => letter.toUpperCase());

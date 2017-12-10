@@ -1,42 +1,36 @@
 <div class="example-container mat-elevation-z8">
+  <mat-table #table [dataSource]="dataSource">
 
-  <md-table #table [dataSource]="dataSource">
-
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
-
-    <!-- ID Column -->
-    <ng-container mdColumnDef="userId">
-      <md-header-cell *mdHeaderCellDef> ID </md-header-cell>
-      <md-cell *mdCellDef="let row"> {{row.id}} </md-cell>
-    </ng-container>
-
-    <!-- Progress Column -->
-    <ng-container mdColumnDef="progress">
-      <md-header-cell *mdHeaderCellDef> Progress </md-header-cell>
-      <md-cell *mdCellDef="let row"> {{row.progress}}% </md-cell>
+    <!-- Position Column -->
+    <ng-container matColumnDef="position">
+      <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.position}} </mat-cell>
     </ng-container>
 
     <!-- Name Column -->
-    <ng-container mdColumnDef="userName">
-      <md-header-cell *mdHeaderCellDef> Name </md-header-cell>
-      <md-cell *mdCellDef="let row"> {{row.name}} </md-cell>
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
     </ng-container>
 
-    <!-- Color Column -->
-    <ng-container mdColumnDef="color">
-      <md-header-cell *mdHeaderCellDef> Color </md-header-cell>
-      <md-cell *mdCellDef="let row" [style.color]="row.color"> {{row.color}} </md-cell>
+    <!-- Weight Column -->
+    <ng-container matColumnDef="weight">
+      <mat-header-cell *matHeaderCellDef> Weight </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.weight}} </mat-cell>
     </ng-container>
 
-    <md-header-row *mdHeaderRowDef="displayedColumns"></md-header-row>
-    <md-row *mdRowDef="let row; columns: displayedColumns;"></md-row>
-  </md-table>
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="symbol">
+      <mat-header-cell *matHeaderCellDef> Symbol </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.symbol}} </mat-cell>
+    </ng-container>
 
-  <md-paginator #paginator
-                [length]="exampleDatabase.data.length"
-                [pageIndex]="0"
-                [pageSize]="25"
-                [pageSizeOptions]="[5, 10, 25, 100]">
-  </md-paginator>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <mat-paginator #paginator
+                 [pageSize]="10"
+                 [pageSizeOptions]="[5, 10, 20]">
+  </mat-paginator>
 </div>

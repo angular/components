@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Routes} from '@angular/router';
 import {AccessibilityDemo} from '../a11y/a11y';
 import {ACCESSIBILITY_DEMO_ROUTES} from '../a11y/routes';
@@ -27,6 +35,7 @@ import {ProgressBarDemo} from '../progress-bar/progress-bar-demo';
 import {ProgressSpinnerDemo} from '../progress-spinner/progress-spinner-demo';
 import {RadioDemo} from '../radio/radio-demo';
 import {RippleDemo} from '../ripple/ripple-demo';
+import {ScreenTypeDemo} from '../screen-type/screen-type-demo';
 import {SelectDemo} from '../select/select-demo';
 import {SidenavDemo} from '../sidenav/sidenav-demo';
 import {SlideToggleDemo} from '../slide-toggle/slide-toggle-demo';
@@ -81,6 +90,9 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'toolbar', component: ToolbarDemo},
     {path: 'tooltip', component: TooltipDemo},
     {path: 'typography', component: TypographyDemo},
+    {path: 'expansion', component: ExpansionDemo},
+    {path: 'stepper', component: StepperDemo},
+    {path: 'screen-type', component: ScreenTypeDemo},
   ]}
 ];
 

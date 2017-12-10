@@ -1,24 +1,27 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterViewInit,
+  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   forwardRef,
+  Inject,
   Input,
   OnDestroy,
+  Optional,
   Output,
-  Renderer2,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -26,27 +29,30 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   CanColor,
   CanDisable,
-  CanDisableRipple, MATERIAL_COMPATIBILITY_MODE,
-  MdRipple,
+  CanDisableRipple,
+  HasTabIndex,
+  MatRipple,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple,
+  mixinTabIndex,
+  RippleConfig,
   RippleRef,
 } from '@angular/material/core';
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {MAT_CHECKBOX_CLICK_ACTION, MatCheckboxClickAction} from './checkbox-config';
 
 
 // Increasing integer for generating unique ids for checkbox components.
 let nextUniqueId = 0;
 
 /**
- * Provider Expression that allows md-checkbox to register as a ControlValueAccessor.
+ * Provider Expression that allows mat-checkbox to register as a ControlValueAccessor.
  * This allows it to support [(ngModel)].
  * @docs-private
  */
-export const MD_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
+export const MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MdCheckbox),
+  useExisting: forwardRef(() => MatCheckbox),
   multi: true
 };
 
@@ -65,26 +71,26 @@ export enum TransitionCheckState {
   Indeterminate
 }
 
-/** Change event object emitted by MdCheckbox. */
-export class MdCheckboxChange {
-  /** The source MdCheckbox of the event. */
-  source: MdCheckbox;
+/** Change event object emitted by MatCheckbox. */
+export class MatCheckboxChange {
+  /** The source MatCheckbox of the event. */
+  source: MatCheckbox;
   /** The new `checked` value of the checkbox. */
   checked: boolean;
 }
 
-// Boilerplate for applying mixins to MdCheckbox.
+// Boilerplate for applying mixins to MatCheckbox.
 /** @docs-private */
-export class MdCheckboxBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+export class MatCheckboxBase {
+  constructor(public _elementRef: ElementRef) {}
 }
-export const _MdCheckboxMixinBase =
-  mixinColor(mixinDisableRipple(mixinDisabled(MdCheckboxBase)), 'accent');
+export const _MatCheckboxMixinBase =
+  mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatCheckboxBase)), 'accent'));
 
 
 /**
  * A material design checkbox component. Supports all of the functionality of an HTML5 checkbox,
- * and exposes a similar API. A MdCheckbox can be either checked, unchecked, indeterminate, or
+ * and exposes a similar API. A MatCheckbox can be either checked, unchecked, indeterminate, or
  * disabled. Note that all additional accessibility attributes are taken care of by the component,
  * so there is no need to provide them yourself. However, if you want to omit a label and still
  * have the checkbox be accessible, you may supply an [aria-label] input.
@@ -92,9 +98,10 @@ export const _MdCheckboxMixinBase =
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-checkbox, mat-checkbox',
+  selector: 'mat-checkbox',
   templateUrl: 'checkbox.html',
   styleUrls: ['checkbox.css'],
+  exportAs: 'matCheckbox',
   host: {
     'class': 'mat-checkbox',
     '[id]': 'id',
@@ -103,15 +110,14 @@ export const _MdCheckboxMixinBase =
     '[class.mat-checkbox-disabled]': 'disabled',
     '[class.mat-checkbox-label-before]': 'labelPosition == "before"',
   },
-  providers: [MD_CHECKBOX_CONTROL_VALUE_ACCESSOR],
-  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
-  inputs: ['disabled', 'disableRipple', 'color'],
+  providers: [MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR],
+  inputs: ['disabled', 'disableRipple', 'color', 'tabIndex'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MdCheckbox extends _MdCheckboxMixinBase implements ControlValueAccessor, AfterViewInit,
-    OnDestroy, CanColor, CanDisable, CanDisableRipple {
+export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAccessor,
+    AfterViewInit, OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple {
 
   /**
    * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
@@ -124,7 +130,7 @@ export class MdCheckbox extends _MdCheckboxMixinBase implements ControlValueAcce
    */
   @Input('aria-labelledby') ariaLabelledby: string | null = null;
 
-  private _uniqueId: string = `md-checkbox-${++nextUniqueId}`;
+  private _uniqueId: string = `mat-checkbox-${++nextUniqueId}`;
 
   /** A unique id for the checkbox input. If none is supplied, it will be auto-generated. */
   @Input() id: string = this._uniqueId;
@@ -157,26 +163,26 @@ export class MdCheckbox extends _MdCheckboxMixinBase implements ControlValueAcce
   /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
   @Input() labelPosition: 'before' | 'after' = 'after';
 
-  /** Tabindex value that is passed to the underlying input element. */
-  @Input() tabIndex: number = 0;
-
   /** Name value will be applied to the input element if present */
   @Input() name: string | null = null;
 
   /** Event emitted when the checkbox's `checked` value changes. */
-  @Output() change: EventEmitter<MdCheckboxChange> = new EventEmitter<MdCheckboxChange>();
+  @Output() change: EventEmitter<MatCheckboxChange> = new EventEmitter<MatCheckboxChange>();
 
   /** Event emitted when the checkbox's `indeterminate` value changes. */
   @Output() indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** The value attribute of the native input element */
-  @Input() value: string ;
+  @Input() value: string;
 
   /** The native `<input type="checkbox"> element */
   @ViewChild('input') _inputElement: ElementRef;
 
   /** Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor. */
-  @ViewChild(MdRipple) _ripple: MdRipple;
+  @ViewChild(MatRipple) _ripple: MatRipple;
+
+  /** Ripple configuration for the mouse ripples and focus indicators. */
+  _rippleConfig: RippleConfig = {centered: true, radius: 25, speedFactor: 1.5};
 
   /**
    * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
@@ -197,16 +203,20 @@ export class MdCheckbox extends _MdCheckboxMixinBase implements ControlValueAcce
   /** Reference to the focused state ripple. */
   private _focusRipple: RippleRef | null;
 
-  constructor(renderer: Renderer2,
-              elementRef: ElementRef,
+  constructor(elementRef: ElementRef,
               private _changeDetectorRef: ChangeDetectorRef,
-              private _focusMonitor: FocusMonitor) {
-    super(renderer, elementRef);
+              private _focusMonitor: FocusMonitor,
+              @Attribute('tabindex') tabIndex: string,
+              @Optional() @Inject(MAT_CHECKBOX_CLICK_ACTION)
+                  private _clickAction: MatCheckboxClickAction) {
+    super(elementRef);
+
+    this.tabIndex = parseInt(tabIndex) || 0;
   }
 
   ngAfterViewInit() {
     this._focusMonitor
-      .monitor(this._inputElement.nativeElement, this._renderer, false)
+      .monitor(this._inputElement.nativeElement, false)
       .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
   }
 
@@ -300,16 +310,19 @@ export class MdCheckbox extends _MdCheckboxMixinBase implements ControlValueAcce
     this._changeDetectorRef.markForCheck();
   }
 
+  _getAriaChecked(): 'true' | 'false' | 'mixed' {
+    return this.checked ? 'true' : (this.indeterminate ? 'mixed' : 'false');
+  }
+
   private _transitionCheckState(newState: TransitionCheckState) {
     let oldState = this._currentCheckState;
-    let renderer = this._renderer;
-    let elementRef = this._elementRef;
+    let element: HTMLElement = this._elementRef.nativeElement;
 
     if (oldState === newState) {
       return;
     }
     if (this._currentAnimationClass.length > 0) {
-      renderer.removeClass(elementRef.nativeElement, this._currentAnimationClass);
+      element.classList.remove(this._currentAnimationClass);
     }
 
     this._currentAnimationClass = this._getAnimationClassForCheckStateTransition(
@@ -317,12 +330,12 @@ export class MdCheckbox extends _MdCheckboxMixinBase implements ControlValueAcce
     this._currentCheckState = newState;
 
     if (this._currentAnimationClass.length > 0) {
-      renderer.addClass(elementRef.nativeElement, this._currentAnimationClass);
+      element.classList.add(this._currentAnimationClass);
     }
   }
 
   private _emitChangeEvent() {
-    let event = new MdCheckboxChange();
+    let event = new MatCheckboxChange();
     event.source = this;
     event.checked = this.checked;
 
@@ -333,7 +346,7 @@ export class MdCheckbox extends _MdCheckboxMixinBase implements ControlValueAcce
   /** Function is called whenever the focus changes for the input element. */
   private _onInputFocusChange(focusOrigin: FocusOrigin) {
     if (!this._focusRipple && focusOrigin === 'keyboard') {
-      this._focusRipple = this._ripple.launch(0, 0, {persistent: true, centered: true});
+      this._focusRipple = this._ripple.launch(0, 0, {persistent: true, ...this._rippleConfig});
     } else if (!focusOrigin) {
       this._removeFocusRipple();
       this.onTouched();
@@ -362,11 +375,11 @@ export class MdCheckbox extends _MdCheckboxMixinBase implements ControlValueAcce
     // Preventing bubbling for the second event will solve that issue.
     event.stopPropagation();
 
-    this._removeFocusRipple();
-
-    if (!this.disabled) {
+    // If resetIndeterminate is false, and the current state is indeterminate, do nothing on click
+    if (!this.disabled && this._clickAction !== 'noop') {
       // When user manually click on the checkbox, `indeterminate` is set to false.
-      if (this._indeterminate) {
+      if (this.indeterminate && this._clickAction !== 'check') {
+
         Promise.resolve().then(() => {
           this._indeterminate = false;
           this.indeterminateChange.emit(this._indeterminate);
@@ -375,12 +388,17 @@ export class MdCheckbox extends _MdCheckboxMixinBase implements ControlValueAcce
 
       this.toggle();
       this._transitionCheckState(
-        this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
+          this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
 
       // Emit our custom change event if the native input emitted one.
       // It is important to only emit it, if the native input triggered one, because
       // we don't want to trigger a change event, when the `checked` variable changes for example.
       this._emitChangeEvent();
+    } else if (!this.disabled && this._clickAction === 'noop') {
+      // Reset native input when clicked with noop. The native checkbox becomes checked after
+      // click, reset it to be align with `checked` value of `mat-checkbox`.
+      this._inputElement.nativeElement.checked = this.checked;
+      this._inputElement.nativeElement.indeterminate = this.indeterminate;
     }
   }
 

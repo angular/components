@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Component} from '@angular/core';
 
 
@@ -9,7 +17,7 @@ export interface Task {
 
 @Component({
   moduleId: module.id,
-  selector: 'md-checkbox-demo-nested-checklist',
+  selector: 'mat-checkbox-demo-nested-checklist',
   styles: [`
     li {
       margin-bottom: 4px;
@@ -17,7 +25,7 @@ export interface Task {
   `],
   templateUrl: 'nested-checklist.html',
 })
-export class MdCheckboxDemoNestedChecklist {
+export class MatCheckboxDemoNestedChecklist {
   tasks: Task[] = [
     {
       name: 'Reminders',
@@ -63,7 +71,7 @@ export class MdCheckboxDemoNestedChecklist {
 
 @Component({
   moduleId: module.id,
-  selector: 'md-checkbox-demo',
+  selector: 'mat-checkbox-demo',
   templateUrl: 'checkbox-demo.html',
   styleUrls: ['checkbox-demo.css'],
 })

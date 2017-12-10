@@ -1,54 +1,54 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
 import {NgModule} from '@angular/core';
-import {MdCommonModule} from '@angular/material/core';
+import {MatCommonModule} from '@angular/material/core';
 import {
-  MdCard,
-  MdCardHeader,
-  MdCardTitleGroup,
-  MdCardContent,
-  MdCardTitle,
-  MdCardSubtitle,
-  MdCardActions,
-  MdCardFooter,
-  MdCardSmImage,
-  MdCardMdImage,
-  MdCardLgImage,
-  MdCardImage,
-  MdCardXlImage,
-  MdCardAvatar,
+  MatCard,
+  MatCardHeader,
+  MatCardTitleGroup,
+  MatCardContent,
+  MatCardTitle,
+  MatCardSubtitle,
+  MatCardActions,
+  MatCardFooter,
+  MatCardSmImage,
+  MatCardMdImage,
+  MatCardLgImage,
+  MatCardImage,
+  MatCardXlImage,
+  MatCardAvatar,
 } from './card';
 
 
 @NgModule({
-  imports: [MdCommonModule],
+  imports: [MatCommonModule],
   exports: [
-    MdCard,
-    MdCardHeader,
-    MdCardTitleGroup,
-    MdCardContent,
-    MdCardTitle,
-    MdCardSubtitle,
-    MdCardActions,
-    MdCardFooter,
-    MdCardSmImage,
-    MdCardMdImage,
-    MdCardLgImage,
-    MdCardImage,
-    MdCardXlImage,
-    MdCardAvatar,
-    MdCommonModule,
+    MatCard,
+    MatCardHeader,
+    MatCardTitleGroup,
+    MatCardContent,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatCardActions,
+    MatCardFooter,
+    MatCardSmImage,
+    MatCardMdImage,
+    MatCardLgImage,
+    MatCardImage,
+    MatCardXlImage,
+    MatCardAvatar,
+    MatCommonModule,
   ],
   declarations: [
-    MdCard, MdCardHeader, MdCardTitleGroup, MdCardContent, MdCardTitle, MdCardSubtitle,
-    MdCardActions, MdCardFooter, MdCardSmImage, MdCardMdImage, MdCardLgImage, MdCardImage,
-    MdCardXlImage, MdCardAvatar,
+    MatCard, MatCardHeader, MatCardTitleGroup, MatCardContent, MatCardTitle, MatCardSubtitle,
+    MatCardActions, MatCardFooter, MatCardSmImage, MatCardMdImage, MatCardLgImage, MatCardImage,
+    MatCardXlImage, MatCardAvatar,
   ],
 })
-export class MdCardModule {}
+export class MatCardModule {}

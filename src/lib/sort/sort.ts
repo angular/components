@@ -1,107 +1,126 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, EventEmitter, Input, Output} from '@angular/core';
+import {
+  Directive,
+  EventEmitter,
+  Input,
+  isDevMode,
+  Output,
+  OnChanges,
+  OnDestroy,
+} from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {CanDisable, mixinDisabled} from '@angular/material/core';
 import {SortDirection} from './sort-direction';
-import {getMdSortDuplicateMdSortableIdError, getMdSortHeaderMissingIdError} from './sort-errors';
+import {
+  getSortInvalidDirectionError,
+  getSortDuplicateSortableIdError,
+  getSortHeaderMissingIdError
+} from './sort-errors';
+import {Subject} from 'rxjs/Subject';
 
-export interface MdSortable {
+/** Interface for a directive that holds sorting state consumed by `MatSortHeader`. */
+export interface MatSortable {
+  /** The id of the column being sorted. */
   id: string;
+
+  /** Starting sort direction. */
   start: 'asc' | 'desc';
+
+  /** Whether to disable clearing the sorting state. */
   disableClear: boolean;
 }
 
+/** The current sort state. */
 export interface Sort {
+  /** The id of the column being sorted. */
   active: string;
+
+  /** The sort direction. */
   direction: SortDirection;
 }
 
-/** Container for MdSortables to manage the sort state and provide default sort parameters. */
-@Directive({
-  selector: '[mdSort], [matSort]',
-})
-export class MdSort {
-  /** Collection of all registered sortables that this directive manages. */
-  sortables = new Map<string, MdSortable>();
+// Boilerplate for applying mixins to MatSort.
+/** @docs-private */
+export class MatSortBase {}
+export const _MatSortMixinBase = mixinDisabled(MatSortBase);
 
-  /** The id of the most recently sorted MdSortable. */
-  @Input('mdSortActive') active: string;
+/** Container for MatSortables to manage the sort state and provide default sort parameters. */
+@Directive({
+  selector: '[matSort]',
+  exportAs: 'matSort',
+  inputs: ['disabled: matSortDisabled']
+})
+export class MatSort extends _MatSortMixinBase implements CanDisable, OnChanges, OnDestroy {
+  /** Collection of all registered sortables that this directive manages. */
+  sortables = new Map<string, MatSortable>();
+
+  /** Used to notify any child components listening to state changes. */
+  _stateChanges = new Subject<void>();
+
+  /** The id of the most recently sorted MatSortable. */
+  @Input('matSortActive') active: string;
 
   /**
-   * The direction to set when an MdSortable is initially sorted.
-   * May be overriden by the MdSortable's sort start.
+   * The direction to set when an MatSortable is initially sorted.
+   * May be overriden by the MatSortable's sort start.
    */
-  @Input('mdSortStart') start: 'asc' | 'desc' = 'asc';
+  @Input('matSortStart') start: 'asc' | 'desc' = 'asc';
 
-  /** The sort direction of the currently active MdSortable. */
-  @Input('mdSortDirection') direction: SortDirection = '';
+  /** The sort direction of the currently active MatSortable. */
+  @Input('matSortDirection')
+  set direction(direction: SortDirection) {
+    if (isDevMode() && direction && direction !== 'asc' && direction !== 'desc') {
+      throw getSortInvalidDirectionError(direction);
+    }
+    this._direction = direction;
+  }
+  get direction(): SortDirection { return this._direction; }
+  private _direction: SortDirection = '';
 
   /**
    * Whether to disable the user from clearing the sort by finishing the sort direction cycle.
-   * May be overriden by the MdSortable's disable clear input.
+   * May be overriden by the MatSortable's disable clear input.
    */
-  @Input('mdSortDisableClear')
+  @Input('matSortDisableClear')
   get disableClear() { return this._disableClear; }
-  set disableClear(v) { this._disableClear = coerceBooleanProperty(v); }
+  set disableClear(v: boolean) { this._disableClear = coerceBooleanProperty(v); }
   private _disableClear: boolean;
 
-  // Properties with `mat-` prefix for noconflict mode.
-  @Input('matSortActive')
-  get _matSortActive() { return this.active; }
-  set _matSortActive(v) { this.active = v; }
-
-  // Properties with `mat-` prefix for noconflict mode.
-  @Input('matSortStart')
-  get _matSortStart() { return this.start; }
-  set _matSortStart(v) { this.start = v; }
-
-  // Properties with `mat-` prefix for noconflict mode.
-  @Input('matSortDirection')
-  get _matSortDirection() { return this.direction; }
-  set _matSortDirection(v) { this.direction = v; }
-
-  // Properties with `mat-` prefix for noconflict mode.
-  @Input('matSortDisableClear')
-  get _matSortDisableClear() { return this.disableClear; }
-  set _matSortDisableClear(v) { this.disableClear = v; }
-
   /** Event emitted when the user changes either the active sort or sort direction. */
-  @Output('mdSortChange') readonly sortChange = new EventEmitter<Sort>();
-
-  @Output('matSortChange')
-  get _matSortChange(): EventEmitter<Sort> { return this.sortChange; }
+  @Output('matSortChange') readonly sortChange = new EventEmitter<Sort>();
 
   /**
-   * Register function to be used by the contained MdSortables. Adds the MdSortable to the
-   * collection of MdSortables.
+   * Register function to be used by the contained MatSortables. Adds the MatSortable to the
+   * collection of MatSortables.
    */
-  register(sortable: MdSortable) {
+  register(sortable: MatSortable) {
     if (!sortable.id) {
-      throw getMdSortHeaderMissingIdError();
+      throw getSortHeaderMissingIdError();
     }
 
     if (this.sortables.has(sortable.id)) {
-      throw getMdSortDuplicateMdSortableIdError(sortable.id);
+      throw getSortDuplicateSortableIdError(sortable.id);
     }
     this.sortables.set(sortable.id, sortable);
   }
 
   /**
-   * Unregister function to be used by the contained MdSortables. Removes the MdSortable from the
-   * collection of contained MdSortables.
+   * Unregister function to be used by the contained MatSortables. Removes the MatSortable from the
+   * collection of contained MatSortables.
    */
-  deregister(sortable: MdSortable) {
+  deregister(sortable: MatSortable) {
     this.sortables.delete(sortable.id);
   }
 
   /** Sets the active sort id and determines the new sort direction. */
-  sort(sortable: MdSortable) {
+  sort(sortable: MatSortable) {
     if (this.active != sortable.id) {
       this.active = sortable.id;
       this.direction = sortable.start ? sortable.start : this.start;
@@ -113,7 +132,7 @@ export class MdSort {
   }
 
   /** Returns the next sort direction of the active sortable, checking for potential overrides. */
-  getNextSortDirection(sortable: MdSortable): SortDirection {
+  getNextSortDirection(sortable: MatSortable): SortDirection {
     if (!sortable) { return ''; }
 
     // Get the sort direction cycle with the potential sortable overrides.
@@ -124,6 +143,14 @@ export class MdSort {
     let nextDirectionIndex = sortDirectionCycle.indexOf(this.direction) + 1;
     if (nextDirectionIndex >= sortDirectionCycle.length) { nextDirectionIndex = 0; }
     return sortDirectionCycle[nextDirectionIndex];
+  }
+
+  ngOnChanges() {
+    this._stateChanges.next();
+  }
+
+  ngOnDestroy() {
+    this._stateChanges.complete();
   }
 }
 

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -8,6 +8,7 @@
 
 import {
   AfterContentInit,
+  ChangeDetectionStrategy,
   Component,
   ContentChild,
   ContentChildren,
@@ -15,114 +16,109 @@ import {
   ElementRef,
   Optional,
   QueryList,
-  Renderer2,
   ViewEncapsulation,
-  ChangeDetectionStrategy,
 } from '@angular/core';
-import {MATERIAL_COMPATIBILITY_MODE, MdLine, MdLineSetter} from '@angular/material/core';
-import {CanDisableRipple, mixinDisableRipple} from '@angular/material/core';
+import {CanDisableRipple, MatLine, MatLineSetter, mixinDisableRipple} from '@angular/material/core';
 
-// Boilerplate for applying mixins to MdList.
+// Boilerplate for applying mixins to MatList.
 /** @docs-private */
-export class MdListBase {}
-export const _MdListMixinBase = mixinDisableRipple(MdListBase);
+export class MatListBase {}
+export const _MatListMixinBase = mixinDisableRipple(MatListBase);
 
-// Boilerplate for applying mixins to MdListItem.
+// Boilerplate for applying mixins to MatListItem.
 /** @docs-private */
-export class MdListItemBase {}
-export const _MdListItemMixinBase = mixinDisableRipple(MdListItemBase);
+export class MatListItemBase {}
+export const _MatListItemMixinBase = mixinDisableRipple(MatListItemBase);
 
 
 /** Divider between items within a list. */
 @Directive({
-  selector: 'md-divider, mat-divider',
+  selector: 'mat-divider',
   host: {
     'role': 'separator',
     'aria-orientation': 'horizontal'
   }
 })
-export class MdListDivider {}
+export class MatListDivider {}
 
 /** A Material Design list component. */
 @Component({
   moduleId: module.id,
-  selector: 'md-list, mat-list, md-nav-list, mat-nav-list',
-  host: {'role': 'list'},
-  template: '<ng-content></ng-content>',
+  selector: 'mat-nav-list',
+  exportAs: 'matNavList',
+  host: {
+    'role': 'navigation',
+    'class': 'mat-nav-list'
+  },
+  templateUrl: 'list.html',
   styleUrls: ['list.css'],
   inputs: ['disableRipple'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdList extends _MdListMixinBase implements CanDisableRipple {}
+export class MatNavList extends _MatListMixinBase implements CanDisableRipple {}
 
-/**
- * Directive whose purpose is to add the mat- CSS styling to this selector.
- * @docs-private
- */
-@Directive({
-  selector: 'md-list, mat-list',
-  host: {'class': 'mat-list'}
+@Component({
+  moduleId: module.id,
+  selector: 'mat-list',
+  exportAs: 'matList',
+  templateUrl: 'list.html',
+  host: {'class': 'mat-list'},
+  styleUrls: ['list.css'],
+  inputs: ['disableRipple'],
+  encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdListCssMatStyler {}
+export class MatList extends _MatListMixinBase implements CanDisableRipple {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  * @docs-private
  */
 @Directive({
-  selector: 'md-nav-list, mat-nav-list',
-  host: {'class': 'mat-nav-list'}
-})
-export class MdNavListCssMatStyler {}
-
-/**
- * Directive whose purpose is to add the mat- CSS styling to this selector.
- * @docs-private
- */
-@Directive({
-  selector: 'md-divider, mat-divider',
+  selector: 'mat-divider',
   host: {'class': 'mat-divider'}
 })
-export class MdDividerCssMatStyler {}
+export class MatDividerCssMatStyler {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  * @docs-private
  */
 @Directive({
-  selector: '[md-list-avatar], [mat-list-avatar], [mdListAvatar], [matListAvatar]',
+  selector: '[mat-list-avatar], [matListAvatar]',
   host: {'class': 'mat-list-avatar'}
 })
-export class MdListAvatarCssMatStyler {}
+export class MatListAvatarCssMatStyler {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  * @docs-private
  */
 @Directive({
-  selector: '[md-list-icon], [mat-list-icon], [mdListIcon], [matListIcon]',
+  selector: '[mat-list-icon], [matListIcon]',
   host: {'class': 'mat-list-icon'}
 })
-export class MdListIconCssMatStyler {}
+export class MatListIconCssMatStyler {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  * @docs-private
  */
 @Directive({
-  selector: '[md-subheader], [mat-subheader], [mdSubheader], [matSubheader]',
+  selector: '[mat-subheader], [matSubheader]',
   host: {'class': 'mat-subheader'}
 })
-export class MdListSubheaderCssMatStyler {}
+export class MatListSubheaderCssMatStyler {}
 
 /** An item within a Material Design list. */
 @Component({
   moduleId: module.id,
-  selector: 'md-list-item, mat-list-item, a[md-list-item], a[mat-list-item]',
+  selector: 'mat-list-item, a[mat-list-item]',
+  exportAs: 'matListItem',
   host: {
-    'role': 'listitem',
     'class': 'mat-list-item',
     '(focus)': '_handleFocus()',
     '(blur)': '_handleBlur()',
@@ -132,46 +128,44 @@ export class MdListSubheaderCssMatStyler {}
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  viewProviders: [{provide: MATERIAL_COMPATIBILITY_MODE, useValue: true}],
 })
-export class MdListItem extends _MdListItemMixinBase implements AfterContentInit, CanDisableRipple {
-  private _lineSetter: MdLineSetter;
+export class MatListItem extends _MatListItemMixinBase implements AfterContentInit,
+    CanDisableRipple {
+  private _lineSetter: MatLineSetter;
   private _isNavList: boolean = false;
 
-  @ContentChildren(MdLine) _lines: QueryList<MdLine>;
+  @ContentChildren(MatLine) _lines: QueryList<MatLine>;
 
-  @ContentChild(MdListAvatarCssMatStyler)
-  set _hasAvatar(avatar: MdListAvatarCssMatStyler) {
+  @ContentChild(MatListAvatarCssMatStyler)
+  set _hasAvatar(avatar: MatListAvatarCssMatStyler) {
     if (avatar != null) {
-      this._renderer.addClass(this._element.nativeElement, 'mat-list-item-avatar');
+      this._element.nativeElement.classList.add('mat-list-item-avatar');
     } else {
-      this._renderer.removeClass(this._element.nativeElement, 'mat-list-item-avatar');
+      this._element.nativeElement.classList.remove('mat-list-item-avatar');
     }
   }
 
-  constructor(private _renderer: Renderer2,
-              private _element: ElementRef,
-              @Optional() private _list: MdList,
-              @Optional() navList: MdNavListCssMatStyler) {
+  constructor(private _element: ElementRef,
+              @Optional() private _navList: MatNavList) {
     super();
-    this._isNavList = !!navList;
+    this._isNavList = !!_navList;
   }
 
   ngAfterContentInit() {
-    this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
+    this._lineSetter = new MatLineSetter(this._lines, this._element);
   }
 
   /** Whether this list item should show a ripple effect when clicked.  */
   _isRippleDisabled() {
-    return !this._isNavList || this.disableRipple || this._list.disableRipple;
+    return !this._isNavList || this.disableRipple || this._navList.disableRipple;
   }
 
   _handleFocus() {
-    this._renderer.addClass(this._element.nativeElement, 'mat-list-item-focus');
+    this._element.nativeElement.classList.add('mat-list-item-focus');
   }
 
   _handleBlur() {
-    this._renderer.removeClass(this._element.nativeElement, 'mat-list-item-focus');
+    this._element.nativeElement.classList.remove('mat-list-item-focus');
   }
 
   /** Retrieves the DOM element of the component host. */

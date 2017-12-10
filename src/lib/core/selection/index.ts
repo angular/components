@@ -1,20 +1,20 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
 import {NgModule} from '@angular/core';
-import {MdPseudoCheckbox} from './pseudo-checkbox/pseudo-checkbox';
+import {MatPseudoCheckbox} from './pseudo-checkbox/pseudo-checkbox';
 
 
 @NgModule({
-  exports: [MdPseudoCheckbox],
-  declarations: [MdPseudoCheckbox]
+  exports: [MatPseudoCheckbox],
+  declarations: [MatPseudoCheckbox]
 })
-export class MdPseudoCheckboxModule { }
+export class MatPseudoCheckboxModule { }
 
 
 export * from './pseudo-checkbox/pseudo-checkbox';

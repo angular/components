@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
@@ -8,7 +16,7 @@ import {BaselineDemo} from '../baseline/baseline-demo';
 import {ButtonToggleDemo} from '../button-toggle/button-toggle-demo';
 import {ButtonDemo} from '../button/button-demo';
 import {CardDemo} from '../card/card-demo';
-import {CheckboxDemo, MdCheckboxDemoNestedChecklist} from '../checkbox/checkbox-demo';
+import {CheckboxDemo, MatCheckboxDemoNestedChecklist} from '../checkbox/checkbox-demo';
 import {ChipsDemo} from '../chips/chips-demo';
 import {DatepickerDemo} from '../datepicker/datepicker-demo';
 import {DemoMaterialModule} from '../demo-material-module';
@@ -23,7 +31,12 @@ import {InputDemo} from '../input/input-demo';
 import {ListDemo} from '../list/list-demo';
 import {LiveAnnouncerDemo} from '../live-announcer/live-announcer-demo';
 import {MenuDemo} from '../menu/menu-demo';
-import {OverlayDemo, RotiniPanel, SpagettiPanel} from '../overlay/overlay-demo';
+import {
+  OverlayDemo,
+  RotiniPanel,
+  SpagettiPanel,
+  KeyboardTrackingPanel
+} from '../overlay/overlay-demo';
 import {PlatformDemo} from '../platform/platform-demo';
 import {PortalDemo, ScienceJoke} from '../portal/portal-demo';
 import {ProgressBarDemo} from '../progress-bar/progress-bar-demo';
@@ -38,6 +51,8 @@ import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
 import {StepperDemo} from '../stepper/stepper-demo';
 import {PeopleDatabase} from '../table/people-database';
 import {TableDemo} from '../table/table-demo';
+import {ScreenTypeDemo} from '../screen-type/screen-type-demo';
+import {LayoutModule} from '@angular/cdk/layout';
 import {TableHeaderDemo} from '../table/table-header-demo';
 import {
   FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo, Counter
@@ -55,6 +70,7 @@ import {DEMO_APP_ROUTES} from './routes';
     ReactiveFormsModule,
     RouterModule.forChild(DEMO_APP_ROUTES),
     DemoMaterialModule,
+    LayoutModule,
   ],
   declarations: [
     AutocompleteDemo,
@@ -79,9 +95,10 @@ import {DEMO_APP_ROUTES} from './routes';
     IFrameDialog,
     InputDemo,
     JazzDialog,
+    KeyboardTrackingPanel,
     ListDemo,
     LiveAnnouncerDemo,
-    MdCheckboxDemoNestedChecklist,
+    MatCheckboxDemoNestedChecklist,
     MenuDemo,
     OverlayDemo,
     PlatformDemo,
@@ -93,6 +110,7 @@ import {DEMO_APP_ROUTES} from './routes';
     RippleDemo,
     RotiniPanel,
     ScienceJoke,
+    ScreenTypeDemo,
     SelectDemo,
     SidenavDemo,
     SliderDemo,
@@ -118,6 +136,7 @@ import {DEMO_APP_ROUTES} from './routes';
     DemoApp,
     IFrameDialog,
     JazzDialog,
+    KeyboardTrackingPanel,
     RotiniPanel,
     ScienceJoke,
     SpagettiPanel,

@@ -30,22 +30,38 @@ import {ChipsInputExample} from './chips-input/chips-input-example';
 import {ChipsOverviewExample} from './chips-overview/chips-overview-example';
 import {ChipsStackedExample} from './chips-stacked/chips-stacked-example';
 import {DatepickerApiExample} from './datepicker-api/datepicker-api-example';
+import {DatepickerDisabledExample} from './datepicker-disabled/datepicker-disabled-example';
+import {DatepickerEventsExample} from './datepicker-events/datepicker-events-example';
 import {DatepickerFilterExample} from './datepicker-filter/datepicker-filter-example';
+import {DatepickerFormatsExample} from './datepicker-formats/datepicker-formats-example';
+import {DatepickerLocaleExample} from './datepicker-locale/datepicker-locale-example';
 import {DatepickerMinMaxExample} from './datepicker-min-max/datepicker-min-max-example';
+import {DatepickerMomentExample} from './datepicker-moment/datepicker-moment-example';
 import {DatepickerOverviewExample} from './datepicker-overview/datepicker-overview-example';
 import {DatepickerStartViewExample} from './datepicker-start-view/datepicker-start-view-example';
 import {DatepickerTouchExample} from './datepicker-touch/datepicker-touch-example';
+import {DatepickerValueExample} from './datepicker-value/datepicker-value-example';
 import {DialogContentExampleDialog,DialogContentExample} from './dialog-content/dialog-content-example';
 import {DialogDataExampleDialog,DialogDataExample} from './dialog-data/dialog-data-example';
 import {DialogElementsExampleDialog,DialogElementsExample} from './dialog-elements/dialog-elements-example';
 import {DialogOverviewExampleDialog,DialogOverviewExample} from './dialog-overview/dialog-overview-example';
+import {ElevationOverviewExample} from './elevation-overview/elevation-overview-example';
 import {ExpansionOverviewExample} from './expansion-overview/expansion-overview-example';
 import {ExpansionStepsExample} from './expansion-steps/expansion-steps-example';
+import {MyTelInput,FormFieldCustomControlExample} from './form-field-custom-control/form-field-custom-control-example';
+import {FormFieldErrorExample} from './form-field-error/form-field-error-example';
+import {FormFieldHintExample} from './form-field-hint/form-field-hint-example';
+import {FormFieldLabelExample} from './form-field-label/form-field-label-example';
+import {FormFieldOverviewExample} from './form-field-overview/form-field-overview-example';
+import {FormFieldPrefixSuffixExample} from './form-field-prefix-suffix/form-field-prefix-suffix-example';
+import {FormFieldThemingExample} from './form-field-theming/form-field-theming-example';
 import {GridListDynamicExample} from './grid-list-dynamic/grid-list-dynamic-example';
 import {GridListOverviewExample} from './grid-list-overview/grid-list-overview-example';
 import {IconOverviewExample} from './icon-overview/icon-overview-example';
 import {IconSvgExample} from './icon-svg-example/icon-svg-example';
+import {InputAutosizeTextareaExample} from './input-autosize-textarea/input-autosize-textarea-example';
 import {InputClearableExample} from './input-clearable/input-clearable-example';
+import {InputErrorStateMatcherExample} from './input-error-state-matcher/input-error-state-matcher-example';
 import {InputErrorsExample} from './input-errors/input-errors-example';
 import {InputFormExample} from './input-form/input-form-example';
 import {InputHintExample} from './input-hint/input-hint-example';
@@ -59,16 +75,36 @@ import {MenuOverviewExample} from './menu-overview/menu-overview-example';
 import {NestedMenuExample} from './nested-menu/nested-menu-example';
 import {PaginatorConfigurableExample} from './paginator-configurable/paginator-configurable-example';
 import {PaginatorOverviewExample} from './paginator-overview/paginator-overview-example';
+import {ProgressBarBufferExample} from './progress-bar-buffer/progress-bar-buffer-example';
 import {ProgressBarConfigurableExample} from './progress-bar-configurable/progress-bar-configurable-example';
-import {ProgressBarOverviewExample} from './progress-bar-overview/progress-bar-overview-example';
+import {ProgressBarDeterminateExample} from './progress-bar-determinate/progress-bar-determinate-example';
+import {ProgressBarIndeterminateExample} from './progress-bar-indeterminate/progress-bar-indeterminate-example';
+import {ProgressBarQueryExample} from './progress-bar-query/progress-bar-query-example';
 import {ProgressSpinnerConfigurableExample} from './progress-spinner-configurable/progress-spinner-configurable-example';
 import {ProgressSpinnerOverviewExample} from './progress-spinner-overview/progress-spinner-overview-example';
 import {RadioNgModelExample} from './radio-ng-model/radio-ng-model-example';
 import {RadioOverviewExample} from './radio-overview/radio-overview-example';
+import {SelectCustomTriggerExample} from './select-custom-trigger/select-custom-trigger-example';
+import {SelectDisabledExample} from './select-disabled/select-disabled-example';
+import {SelectErrorStateMatcherExample} from './select-error-state-matcher/select-error-state-matcher-example';
 import {SelectFormExample} from './select-form/select-form-example';
+import {SelectHintErrorExample} from './select-hint-error/select-hint-error-example';
+import {SelectMultipleExample} from './select-multiple/select-multiple-example';
+import {SelectNoRippleExample} from './select-no-ripple/select-no-ripple-example';
+import {SelectOptgroupExample} from './select-optgroup/select-optgroup-example';
 import {SelectOverviewExample} from './select-overview/select-overview-example';
-import {SidenavFabExample} from './sidenav-fab/sidenav-fab-example';
+import {SelectPanelClassExample} from './select-panel-class/select-panel-class-example';
+import {SelectResetExample} from './select-reset/select-reset-example';
+import {SelectValueBindingExample} from './select-value-binding/select-value-binding-example';
+import {SidenavAutosizeExample} from './sidenav-autosize/sidenav-autosize-example';
+import {SidenavDisableCloseExample} from './sidenav-disable-close/sidenav-disable-close-example';
+import {SidenavDrawerOverviewExample} from './sidenav-drawer-overview/sidenav-drawer-overview-example';
+import {SidenavFixedExample} from './sidenav-fixed/sidenav-fixed-example';
+import {SidenavModeExample} from './sidenav-mode/sidenav-mode-example';
+import {SidenavOpenCloseExample} from './sidenav-open-close/sidenav-open-close-example';
 import {SidenavOverviewExample} from './sidenav-overview/sidenav-overview-example';
+import {SidenavPositionExample} from './sidenav-position/sidenav-position-example';
+import {SidenavResponsiveExample} from './sidenav-responsive/sidenav-responsive-example';
 import {SlideToggleConfigurableExample} from './slide-toggle-configurable/slide-toggle-configurable-example';
 import {SlideToggleFormsExample} from './slide-toggle-forms/slide-toggle-forms-example';
 import {SlideToggleOverviewExample} from './slide-toggle-overview/slide-toggle-overview-example';
@@ -83,6 +119,7 @@ import {TableFilteringExample} from './table-filtering/table-filtering-example';
 import {TableHttpExample} from './table-http/table-http-example';
 import {TableOverviewExample} from './table-overview/table-overview-example';
 import {TablePaginationExample} from './table-pagination/table-pagination-example';
+import {TableSelectionExample} from './table-selection/table-selection-example';
 import {TableSortingExample} from './table-sorting/table-sorting-example';
 import {TabsOverviewExample} from './tabs-overview/tabs-overview-example';
 import {TabsTemplateLabelExample} from './tabs-template-label/tabs-template-label-example';
@@ -189,38 +226,74 @@ export const EXAMPLE_COMPONENTS = {
     selectorName: null
   },
   'datepicker-api': {
-    title: 'Datepicker API',
+    title: 'Datepicker open method ',
     component: DatepickerApiExample,
     additionalFiles: null,
     selectorName: null
   },
+  'datepicker-disabled': {
+    title: 'Disabled datepicker ',
+    component: DatepickerDisabledExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'datepicker-events': {
+    title: 'Datepicker input and change events ',
+    component: DatepickerEventsExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'datepicker-filter': {
-    title: 'Datepicker Filter',
+    title: 'Datepicker with filter validation ',
     component: DatepickerFilterExample,
     additionalFiles: null,
     selectorName: null
   },
+  'datepicker-formats': {
+    title: 'Datepicker with custom formats ',
+    component: DatepickerFormatsExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'datepicker-locale': {
+    title: 'Datepicker with different locale ',
+    component: DatepickerLocaleExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'datepicker-min-max': {
-    title: 'Datepicker Min Max',
+    title: 'Datepicker with min & max validation ',
     component: DatepickerMinMaxExample,
     additionalFiles: null,
     selectorName: null
   },
+  'datepicker-moment': {
+    title: 'Datepicker that uses Moment.js dates ',
+    component: DatepickerMomentExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'datepicker-overview': {
-    title: 'Basic datepicker',
+    title: 'Basic datepicker ',
     component: DatepickerOverviewExample,
     additionalFiles: null,
     selectorName: null
   },
   'datepicker-start-view': {
-    title: 'Datepicker start date',
+    title: 'Datepicker start date ',
     component: DatepickerStartViewExample,
     additionalFiles: null,
     selectorName: null
   },
   'datepicker-touch': {
-    title: 'Datepicker Touch',
+    title: 'Datepicker touch UI ',
     component: DatepickerTouchExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'datepicker-value': {
+    title: 'Datepicker selected value ',
+    component: DatepickerValueExample,
     additionalFiles: null,
     selectorName: null
   },
@@ -248,6 +321,12 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: ["dialog-overview-example-dialog.html"],
     selectorName: 'DialogOverviewExample, DialogOverviewExampleDialog'
   },
+  'elevation-overview': {
+    title: 'Elevation CSS classes',
+    component: ElevationOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'expansion-overview': {
     title: 'Basic expansion panel',
     component: ExpansionOverviewExample,
@@ -257,6 +336,48 @@ export const EXAMPLE_COMPONENTS = {
   'expansion-steps': {
     title: 'Expansion panel as accordion',
     component: ExpansionStepsExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'form-field-custom-control': {
+    title: 'Form field with custom telephone number input control. ',
+    component: FormFieldCustomControlExample,
+    additionalFiles: ["form-field-custom-control-example.html"],
+    selectorName: 'FormFieldCustomControlExample, MyTelInput'
+  },
+  'form-field-error': {
+    title: 'Form field with error messages ',
+    component: FormFieldErrorExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'form-field-hint': {
+    title: 'Form field with hints ',
+    component: FormFieldHintExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'form-field-label': {
+    title: 'Form field with label ',
+    component: FormFieldLabelExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'form-field-overview': {
+    title: 'Simple form field ',
+    component: FormFieldOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'form-field-prefix-suffix': {
+    title: 'Form field with prefix & suffix ',
+    component: FormFieldPrefixSuffixExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'form-field-theming': {
+    title: 'Form field theming ',
+    component: FormFieldThemingExample,
     additionalFiles: null,
     selectorName: null
   },
@@ -284,14 +405,26 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'input-autosize-textarea': {
+    title: 'Auto-resizing textarea ',
+    component: InputAutosizeTextareaExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'input-clearable': {
-    title: 'Input Clearable',
+    title: 'Input with a clear button',
     component: InputClearableExample,
     additionalFiles: null,
     selectorName: null
   },
+  'input-error-state-matcher': {
+    title: 'Input with a custom ErrorStateMatcher ',
+    component: InputErrorStateMatcherExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'input-errors': {
-    title: 'Input Errors',
+    title: 'Input with error messages',
     component: InputErrorsExample,
     additionalFiles: null,
     selectorName: null
@@ -303,7 +436,7 @@ export const EXAMPLE_COMPONENTS = {
     selectorName: null
   },
   'input-hint': {
-    title: 'Input hints',
+    title: 'Input with hints',
     component: InputHintExample,
     additionalFiles: null,
     selectorName: null
@@ -315,7 +448,7 @@ export const EXAMPLE_COMPONENTS = {
     selectorName: null
   },
   'input-prefix-suffix': {
-    title: 'Input Prefixes and Suffixes',
+    title: 'Inputs with prefixes and suffixes',
     component: InputPrefixSuffixExample,
     additionalFiles: null,
     selectorName: null
@@ -368,15 +501,33 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'progress-bar-buffer': {
+    title: 'Buffer progress-bar',
+    component: ProgressBarBufferExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'progress-bar-configurable': {
     title: 'Configurable progress-bar',
     component: ProgressBarConfigurableExample,
     additionalFiles: null,
     selectorName: null
   },
-  'progress-bar-overview': {
-    title: 'Basic progress-bar',
-    component: ProgressBarOverviewExample,
+  'progress-bar-determinate': {
+    title: 'Determinate progress-bar',
+    component: ProgressBarDeterminateExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'progress-bar-indeterminate': {
+    title: 'Indeterminate progress-bar',
+    component: ProgressBarIndeterminateExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'progress-bar-query': {
+    title: 'Query progress-bar',
+    component: ProgressBarQueryExample,
     additionalFiles: null,
     selectorName: null
   },
@@ -404,9 +555,51 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
+  'select-custom-trigger': {
+    title: 'Select with custom trigger text ',
+    component: SelectCustomTriggerExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'select-disabled': {
+    title: 'Disabled select ',
+    component: SelectDisabledExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'select-error-state-matcher': {
+    title: 'Select with a custom ErrorStateMatcher ',
+    component: SelectErrorStateMatcherExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'select-form': {
     title: 'Select in a form',
     component: SelectFormExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'select-hint-error': {
+    title: 'Select with form field features ',
+    component: SelectHintErrorExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'select-multiple': {
+    title: 'Select with multiple selection ',
+    component: SelectMultipleExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'select-no-ripple': {
+    title: 'Select with no option ripple ',
+    component: SelectNoRippleExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'select-optgroup': {
+    title: 'Select with option groups ',
+    component: SelectOptgroupExample,
     additionalFiles: null,
     selectorName: null
   },
@@ -416,15 +609,75 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
-  'sidenav-fab': {
-    title: 'Sidenav with a FAB',
-    component: SidenavFabExample,
+  'select-panel-class': {
+    title: 'Select with custom panel styling',
+    component: SelectPanelClassExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'select-reset': {
+    title: 'Select with reset option ',
+    component: SelectResetExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'select-value-binding': {
+    title: 'Select with 2-way value binding ',
+    component: SelectValueBindingExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'sidenav-autosize': {
+    title: 'Autosize sidenav',
+    component: SidenavAutosizeExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'sidenav-disable-close': {
+    title: 'Sidenav with custom escape and backdrop click behavior ',
+    component: SidenavDisableCloseExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'sidenav-drawer-overview': {
+    title: 'Basic drawer ',
+    component: SidenavDrawerOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'sidenav-fixed': {
+    title: 'Fixed sidenav ',
+    component: SidenavFixedExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'sidenav-mode': {
+    title: 'Sidenav with configurable mode ',
+    component: SidenavModeExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'sidenav-open-close': {
+    title: 'Sidenav open & close behavior ',
+    component: SidenavOpenCloseExample,
     additionalFiles: null,
     selectorName: null
   },
   'sidenav-overview': {
-    title: 'Basic sidenav',
+    title: 'Basic sidenav ',
     component: SidenavOverviewExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'sidenav-position': {
+    title: 'Implicit main content with two sidenavs ',
+    component: SidenavPositionExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'sidenav-responsive': {
+    title: 'Responsive sidenav ',
+    component: SidenavResponsiveExample,
     additionalFiles: null,
     selectorName: null
   },
@@ -501,7 +754,7 @@ export const EXAMPLE_COMPONENTS = {
     selectorName: null
   },
   'table-overview': {
-    title: 'Feature-rich data table',
+    title: 'Data table with sorting, pagination, and filtering.',
     component: TableOverviewExample,
     additionalFiles: null,
     selectorName: null
@@ -509,6 +762,12 @@ export const EXAMPLE_COMPONENTS = {
   'table-pagination': {
     title: 'Table with pagination',
     component: TablePaginationExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'table-selection': {
+    title: 'Table with selection',
+    component: TableSelectionExample,
     additionalFiles: null,
     selectorName: null
   },
@@ -574,22 +833,38 @@ export const EXAMPLE_LIST = [
   ChipsOverviewExample,
   ChipsStackedExample,
   DatepickerApiExample,
+  DatepickerDisabledExample,
+  DatepickerEventsExample,
   DatepickerFilterExample,
+  DatepickerFormatsExample,
+  DatepickerLocaleExample,
   DatepickerMinMaxExample,
+  DatepickerMomentExample,
   DatepickerOverviewExample,
   DatepickerStartViewExample,
   DatepickerTouchExample,
+  DatepickerValueExample,
   DialogContentExampleDialog,DialogContentExample,
   DialogDataExampleDialog,DialogDataExample,
   DialogElementsExampleDialog,DialogElementsExample,
   DialogOverviewExampleDialog,DialogOverviewExample,
+  ElevationOverviewExample,
   ExpansionOverviewExample,
   ExpansionStepsExample,
+  MyTelInput,FormFieldCustomControlExample,
+  FormFieldErrorExample,
+  FormFieldHintExample,
+  FormFieldLabelExample,
+  FormFieldOverviewExample,
+  FormFieldPrefixSuffixExample,
+  FormFieldThemingExample,
   GridListDynamicExample,
   GridListOverviewExample,
   IconOverviewExample,
   IconSvgExample,
+  InputAutosizeTextareaExample,
   InputClearableExample,
+  InputErrorStateMatcherExample,
   InputErrorsExample,
   InputFormExample,
   InputHintExample,
@@ -603,16 +878,36 @@ export const EXAMPLE_LIST = [
   NestedMenuExample,
   PaginatorConfigurableExample,
   PaginatorOverviewExample,
+  ProgressBarBufferExample,
   ProgressBarConfigurableExample,
-  ProgressBarOverviewExample,
+  ProgressBarDeterminateExample,
+  ProgressBarIndeterminateExample,
+  ProgressBarQueryExample,
   ProgressSpinnerConfigurableExample,
   ProgressSpinnerOverviewExample,
   RadioNgModelExample,
   RadioOverviewExample,
+  SelectCustomTriggerExample,
+  SelectDisabledExample,
+  SelectErrorStateMatcherExample,
   SelectFormExample,
+  SelectHintErrorExample,
+  SelectMultipleExample,
+  SelectNoRippleExample,
+  SelectOptgroupExample,
   SelectOverviewExample,
-  SidenavFabExample,
+  SelectPanelClassExample,
+  SelectResetExample,
+  SelectValueBindingExample,
+  SidenavAutosizeExample,
+  SidenavDisableCloseExample,
+  SidenavDrawerOverviewExample,
+  SidenavFixedExample,
+  SidenavModeExample,
+  SidenavOpenCloseExample,
   SidenavOverviewExample,
+  SidenavPositionExample,
+  SidenavResponsiveExample,
   SlideToggleConfigurableExample,
   SlideToggleFormsExample,
   SlideToggleOverviewExample,
@@ -627,6 +922,7 @@ export const EXAMPLE_LIST = [
   TableHttpExample,
   TableOverviewExample,
   TablePaginationExample,
+  TableSelectionExample,
   TableSortingExample,
   TabsOverviewExample,
   TabsTemplateLabelExample,

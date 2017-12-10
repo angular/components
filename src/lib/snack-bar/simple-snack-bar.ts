@@ -1,14 +1,16 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
 import {Component, ViewEncapsulation, Inject, ChangeDetectionStrategy} from '@angular/core';
-import {MdSnackBarRef} from './snack-bar-ref';
-import {MD_SNACK_BAR_DATA} from './snack-bar-config';
+import {trigger, style, transition, animate} from '@angular/animations';
+import {AnimationCurves, AnimationDurations} from '@angular/material/core';
+import {MatSnackBarRef} from './snack-bar-ref';
+import {MAT_SNACK_BAR_DATA} from './snack-bar-config';
 
 
 /**
@@ -23,7 +25,16 @@ import {MD_SNACK_BAR_DATA} from './snack-bar-config';
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('contentFade', [
+      transition(':enter', [
+        style({opacity: '0'}),
+        animate(`${AnimationDurations.COMPLEX} ${AnimationCurves.STANDARD_CURVE}`)
+      ])
+    ])
+  ],
   host: {
+    '[@contentFade]': '',
     'class': 'mat-simple-snackbar',
   }
 })
@@ -32,8 +43,8 @@ export class SimpleSnackBar {
   data: { message: string, action: string };
 
   constructor(
-    public snackBarRef: MdSnackBarRef<SimpleSnackBar>,
-    @Inject(MD_SNACK_BAR_DATA) data: any) {
+    public snackBarRef: MatSnackBarRef<SimpleSnackBar>,
+    @Inject(MAT_SNACK_BAR_DATA) data: any) {
     this.data = data;
   }
 

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -8,37 +8,41 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {CompatibilityModule, UNIQUE_SELECTION_DISPATCHER_PROVIDER} from '@angular/material/core';
+import {UNIQUE_SELECTION_DISPATCHER_PROVIDER} from '@angular/cdk/collections';
+import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {A11yModule} from '@angular/cdk/a11y';
-import {CdkAccordion, MdAccordion} from './accordion';
-import {MdExpansionPanel, MdExpansionPanelActionRow} from './expansion-panel';
+import {MatAccordion} from './accordion';
 import {
-  MdExpansionPanelDescription,
-  MdExpansionPanelHeader,
-  MdExpansionPanelTitle,
+  MatExpansionPanel,
+  MatExpansionPanelActionRow,
+  MatExpansionPanelBase
+} from './expansion-panel';
+import {
+  MatExpansionPanelDescription,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
 } from './expansion-panel-header';
 
 
 @NgModule({
-  imports: [CompatibilityModule, CommonModule, A11yModule],
+  imports: [CommonModule, A11yModule, CdkAccordionModule],
   exports: [
-    CdkAccordion,
-    MdAccordion,
-    MdExpansionPanel,
-    MdExpansionPanelActionRow,
-    MdExpansionPanelHeader,
-    MdExpansionPanelTitle,
-    MdExpansionPanelDescription
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelActionRow,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription
   ],
   declarations: [
-    CdkAccordion,
-    MdAccordion,
-    MdExpansionPanel,
-    MdExpansionPanelActionRow,
-    MdExpansionPanelHeader,
-    MdExpansionPanelTitle,
-    MdExpansionPanelDescription
+    MatExpansionPanelBase,
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelActionRow,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription
   ],
   providers: [UNIQUE_SELECTION_DISPATCHER_PROVIDER]
 })
-export class MdExpansionModule {}
+export class MatExpansionModule {}

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -13,11 +13,12 @@ import {Component, ChangeDetectionStrategy, Input, ViewEncapsulation} from '@ang
 
 
 /**
- * <md-progress-bar> component.
+ * <mat-progress-bar> component.
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-progress-bar, mat-progress-bar',
+  selector: 'mat-progress-bar',
+  exportAs: 'matProgressBar',
   host: {
     'role': 'progressbar',
     'aria-valuemin': '0',
@@ -35,7 +36,7 @@ import {Component, ChangeDetectionStrategy, Input, ViewEncapsulation} from '@ang
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
 })
-export class MdProgressBar {
+export class MatProgressBar {
   /** Color of the progress bar. */
   @Input() color: 'primary' | 'accent' | 'warn' = 'primary';
 

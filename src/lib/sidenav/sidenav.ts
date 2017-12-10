@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -12,28 +12,28 @@ import {
   ContentChildren, forwardRef, Inject, Input,
   ViewEncapsulation
 } from '@angular/core';
-import {MdDrawer, MdDrawerContainer, MdDrawerContent} from './drawer';
+import {MatDrawer, MatDrawerContainer, MatDrawerContent} from './drawer';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 
 
 @Component({
   moduleId: module.id,
-  selector: 'md-sidenav-content, mat-sidenav-content',
+  selector: 'mat-sidenav-content',
   template: '<ng-content></ng-content>',
   host: {
     'class': 'mat-drawer-content mat-sidenav-content',
-    '[style.marginLeft.px]': '_margins.left',
-    '[style.marginRight.px]': '_margins.right',
+    '[style.margin-left.px]': '_margins.left',
+    '[style.margin-right.px]': '_margins.right',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
 })
-export class MdSidenavContent extends MdDrawerContent {
+export class MatSidenavContent extends MatDrawerContent {
   constructor(
       changeDetectorRef: ChangeDetectorRef,
-      @Inject(forwardRef(() => MdSidenavContainer)) container: MdSidenavContainer) {
+      @Inject(forwardRef(() => MatSidenavContainer)) container: MatSidenavContainer) {
     super(changeDetectorRef, container);
   }
 }
@@ -41,7 +41,8 @@ export class MdSidenavContent extends MdDrawerContent {
 
 @Component({
   moduleId: module.id,
-  selector: 'md-sidenav, mat-sidenav',
+  selector: 'mat-sidenav',
+  exportAs: 'matSidenav',
   template: '<ng-content></ng-content>',
   animations: [
     trigger('transform', [
@@ -61,7 +62,7 @@ export class MdSidenavContent extends MdDrawerContent {
     'class': 'mat-drawer mat-sidenav',
     'tabIndex': '-1',
     '[@transform]': '_animationState',
-    '(@transform.start)': '_onAnimationStart()',
+    '(@transform.start)': '_onAnimationStart($event)',
     '(@transform.done)': '_onAnimationEnd($event)',
     '(keydown)': 'handleKeydown($event)',
     // must prevent the browser from aligning text based on value
@@ -78,10 +79,10 @@ export class MdSidenavContent extends MdDrawerContent {
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
 })
-export class MdSidenav extends MdDrawer {
+export class MatSidenav extends MatDrawer {
   /** Whether the sidenav is fixed in the viewport. */
   @Input()
-  get fixedInViewport() { return this._fixedInViewport; }
+  get fixedInViewport(): boolean { return this._fixedInViewport; }
   set fixedInViewport(value) { this._fixedInViewport = coerceBooleanProperty(value); }
   private _fixedInViewport = false;
 
@@ -90,7 +91,7 @@ export class MdSidenav extends MdDrawer {
    * mode.
    */
   @Input()
-  get fixedTopGap() { return this._fixedTopGap; }
+  get fixedTopGap(): number { return this._fixedTopGap; }
   set fixedTopGap(value) { this._fixedTopGap = coerceNumberProperty(value); }
   private _fixedTopGap = 0;
 
@@ -99,7 +100,7 @@ export class MdSidenav extends MdDrawer {
    * fixed mode.
    */
   @Input()
-  get fixedBottomGap() { return this._fixedBottomGap; }
+  get fixedBottomGap(): number { return this._fixedBottomGap; }
   set fixedBottomGap(value) { this._fixedBottomGap = coerceNumberProperty(value); }
   private _fixedBottomGap = 0;
 }
@@ -107,12 +108,10 @@ export class MdSidenav extends MdDrawer {
 
 @Component({
   moduleId: module.id,
-  selector: 'md-sidenav-container, mat-sidenav-container',
+  selector: 'mat-sidenav-container',
+  exportAs: 'matSidenavContainer',
   templateUrl: 'sidenav-container.html',
-  styleUrls: [
-    'drawer.css',
-    'drawer-transitions.css',
-  ],
+  styleUrls: ['drawer.css'],
   host: {
     'class': 'mat-drawer-container mat-sidenav-container',
   },
@@ -120,8 +119,8 @@ export class MdSidenav extends MdDrawer {
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
 })
-export class MdSidenavContainer extends MdDrawerContainer {
-  @ContentChildren(MdSidenav) _drawers;
+export class MatSidenavContainer extends MatDrawerContainer {
+  @ContentChildren(MatSidenav) _drawers;
 
-  @ContentChild(MdSidenavContent) _content;
+  @ContentChild(MatSidenavContent) _content;
 }

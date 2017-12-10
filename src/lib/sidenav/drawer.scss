@@ -1,6 +1,7 @@
 @import '../core/style/variables';
 @import '../core/style/elevation';
 @import '../core/style/layout-common';
+@import '../core/style/vendor-prefixes';
 @import '../../cdk/a11y/a11y';
 
 $mat-drawer-content-z-index: 1;
@@ -22,7 +23,7 @@ $mat-drawer-over-drawer-z-index: 4;
 
 .mat-drawer-container {
   // We need a stacking context here so that the backdrop and drawers are clipped to the
-  // MdDrawerContainer. This creates a new z-index stack so we use low numbered z-indices.
+  // MatDrawerContainer. This creates a new z-index stack so we use low numbered z-indices.
   // We create another stacking context in the '.mat-drawer-content' and in each drawer so that
   // the application content does not get messed up with our own CSS.
   @include mat-drawer-stacking-context();
@@ -65,17 +66,36 @@ $mat-drawer-over-drawer-z-index: 4;
     visibility: visible;
   }
 
+  .mat-drawer-transition & {
+    transition: {
+      duration: $swift-ease-out-duration;
+      timing-function: $swift-ease-out-timing-function;
+      property: background-color, visibility;
+    }
+  }
+
   @include cdk-high-contrast {
     opacity: 0.5;
   }
 }
 
 .mat-drawer-content {
+  // `backface-visibility` prevents the element from repainting on scroll. This is the
+  // equivalent of using `translateZ(0)`, but it doesn't create a new stacking context.
+  @include backface-visibility(hidden);
   @include mat-drawer-stacking-context($mat-drawer-content-z-index);
 
   display: block;
   height: 100%;
   overflow: auto;
+
+  .mat-drawer-transition & {
+    transition: {
+      duration: $swift-ease-out-duration;
+      timing-function: $swift-ease-out-timing-function;
+      property: transform, margin-left, margin-right;
+    }
+  }
 }
 
 .mat-drawer {
@@ -86,7 +106,6 @@ $mat-drawer-over-drawer-z-index: 4;
   top: 0;
   bottom: 0;
   z-index: 3;
-  min-width: 5vw;
   outline: 0;
   box-sizing: border-box;
   overflow-y: auto; // TODO(kara): revisit scrolling behavior for drawers
@@ -111,12 +130,10 @@ $mat-drawer-over-drawer-z-index: 4;
     }
   }
 
-  &.mat-drawer-opening, &.mat-drawer-opened {
-    &:not(.mat-drawer-side) {
-      // The elevation of z-16 is noted in the design specifications.
-      // See https://material.io/guidelines/patterns/navigation-drawer.html#
-      @include mat-elevation(16);
-    }
+  &:not(.mat-drawer-side) {
+    // The elevation of z-16 is noted in the design specifications.
+    // See https://material.io/guidelines/patterns/navigation-drawer.html#
+    @include mat-elevation(16);
   }
 }
 

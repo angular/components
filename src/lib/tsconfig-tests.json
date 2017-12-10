@@ -10,8 +10,13 @@
     "types": ["jasmine"],
     "paths": {
       "@angular/material/*": ["./*"],
-      "@angular/cdk/*": ["../../dist/packages/cdk/*/public_api"]
+      "@angular/cdk/*": ["../../dist/packages/cdk/*/public-api"]
     }
+  },
+  "angularCompilerOptions": {
+    "strictMetadataEmit": true,
+    "skipTemplateCodegen": true,
+    "emitDecoratorMetadata": true
   },
   "include": [
     "**/*.spec.ts",

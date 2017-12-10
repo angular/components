@@ -1,20 +1,20 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, SkipSelf, Optional } from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 
 /**
- * To modify the labels and text displayed, create a new instance of MdPaginatorIntl and
+ * To modify the labels and text displayed, create a new instance of MatPaginatorIntl and
  * include it in a custom provider
  */
 @Injectable()
-export class MdPaginatorIntl {
+export class MatPaginatorIntl {
   /**
    * Stream that emits whenever the labels here are changed. Use this to notify
    * components if the labels have changed after initialization.
@@ -46,3 +46,16 @@ export class MdPaginatorIntl {
     return `${startIndex + 1} - ${endIndex} of ${length}`;
   }
 }
+
+/** @docs-private */
+export function MAT_PAGINATOR_INTL_PROVIDER_FACTORY(parentIntl: MatPaginatorIntl) {
+  return parentIntl || new MatPaginatorIntl();
+}
+
+/** @docs-private */
+export const MAT_PAGINATOR_INTL_PROVIDER = {
+  // If there is already an MatPaginatorIntl available, use that. Otherwise, provide a new one.
+  provide: MatPaginatorIntl,
+  deps: [[new Optional(), new SkipSelf(), MatPaginatorIntl]],
+  useFactory: MAT_PAGINATOR_INTL_PROVIDER_FACTORY
+};

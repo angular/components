@@ -1,5 +1,14 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {MdDatepickerInputEvent} from '@angular/material';
+import {FormControl} from '@angular/forms';
+import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 
 
 @Component({
@@ -24,6 +33,8 @@ export class DatepickerDemo {
 
   dateFilter = (date: Date) => date.getMonth() % 2 == 1 && date.getDate() % 2 == 0;
 
-  onDateInput = (e: MdDatepickerInputEvent<Date>) => this.lastDateInput = e.value;
-  onDateChange = (e: MdDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
+  onDateInput = (e: MatDatepickerInputEvent<Date>) => this.lastDateInput = e.value;
+  onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
+
+  dateCtrl = new FormControl();
 }
