@@ -24,7 +24,7 @@ import {
 import {CanDisable, mixinDisabled} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
 import {MatTabLabel} from './tab-label';
-import { MdTabContent } from './tab-content';
+import {MdTabContent} from './tab-content';
 
 
 // Boilerplate for applying mixins to MatTab.
