@@ -8,7 +8,7 @@
 
 import {NgModule} from '@angular/core';
 import {TableDemo} from './table-demo';
-import {TableHeaderDemo} from './table/table-header-demo';
+import {TableHeaderDemo} from './table-header-demo';
 import {PeopleDatabase} from './people-database';
 import {TableDemoPage} from './table-demo-page';
 import {CustomTableDemo} from './custom-table/custom-table';
