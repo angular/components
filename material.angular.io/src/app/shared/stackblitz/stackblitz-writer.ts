@@ -14,7 +14,7 @@ const COPYRIGHT =
 const TEMPLATE_PATH = '/assets/stackblitz/';
 const TEMPLATE_FILES = [
   'index.html',
-  'styles.scss',
+  'styles.css',
   'polyfills.ts',
   '.angular-cli.json',
   'main.ts'

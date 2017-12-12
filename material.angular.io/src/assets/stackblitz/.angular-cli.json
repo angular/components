@@ -1,7 +1,7 @@
 {
   "apps": [{
     "styles": [
-      "styles.scss"
+      "styles.css"
       ]
   }]
 }
