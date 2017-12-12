@@ -57,7 +57,7 @@ import {TooltipDemo} from '../tooltip/tooltip-demo';
 import {TypographyDemo} from '../typography/typography-demo';
 import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
-import {TableDemoModule} from 'table/table-demo-module';
+import {TableDemoModule} from '../table/table-demo-module';
 
 @NgModule({
   imports: [

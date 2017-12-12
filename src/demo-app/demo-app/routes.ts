@@ -48,8 +48,8 @@ import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
 import {TypographyDemo} from '../typography/typography-demo';
 import {DemoApp, Home} from './demo-app';
-import {TableDemoPage} from 'table/table-demo-page';
-import {TABLE_DEMO_ROUTES} from 'table/routes';
+import {TableDemoPage} from '../table/table-demo-page';
+import {TABLE_DEMO_ROUTES} from '../table/routes';
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: DemoApp, children: [

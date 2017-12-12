@@ -7,8 +7,8 @@
  */
 
 import {Routes} from '@angular/router';
-import {TableDemo} from 'table/table-demo';
-import {CustomTableDemo} from 'table/custom-table/custom-table';
+import {TableDemo} from './table-demo';
+import {CustomTableDemo} from './custom-table/custom-table';
 
 export const TABLE_DEMO_ROUTES: Routes = [
   {path: '', redirectTo: 'main-demo', pathMatch: 'full'},

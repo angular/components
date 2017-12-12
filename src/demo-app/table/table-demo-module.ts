@@ -7,11 +7,11 @@
  */
 
 import {NgModule} from '@angular/core';
-import {TableDemo} from 'table/table-demo';
-import {TableHeaderDemo} from 'table/table-header-demo';
-import {PeopleDatabase} from 'table/people-database';
-import {TableDemoPage} from 'table/table-demo-page';
-import {CustomTableDemo} from 'table/custom-table/custom-table';
+import {TableDemo} from './table-demo';
+import {TableHeaderDemo} from './table/table-header-demo';
+import {PeopleDatabase} from './people-database';
+import {TableDemoPage} from './table-demo-page';
+import {CustomTableDemo} from './custom-table/custom-table';
 import {
   MatButtonModule,
   MatCardModule,
@@ -27,8 +27,8 @@ import {FormsModule} from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
-import {WrapperTable} from 'table/custom-table/wrapper-table';
-import {SimpleColumn} from 'table/custom-table/simple-column';
+import {WrapperTable} from './custom-table/wrapper-table';
+import {SimpleColumn} from './custom-table/simple-column';
 
 @NgModule({
   imports: [

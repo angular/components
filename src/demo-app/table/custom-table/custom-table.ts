@@ -8,7 +8,7 @@
 
 import {Component, ViewChild} from '@angular/core';
 import {MatSort, MatTableDataSource} from '@angular/material';
-import {Element, ELEMENT_DATA} from 'table/element-data';
+import {Element, ELEMENT_DATA} from '../element-data';
 
 @Component({
   moduleId: module.id,
