@@ -7,6 +7,8 @@ import {MatRippleModule} from '@angular/material/core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTabBody, MatTabBodyPortal} from './tab-body';
 import {Subject} from 'rxjs';
+import {ScrollDispatchModule, CdkScrollable} from '@angular/cdk/scrolling';
+import {By} from '@angular/platform-browser';
 
 
 describe('MatTabBody', () => {
@@ -177,6 +179,33 @@ describe('MatTabBody', () => {
     fixture.detectChanges();
 
     expect(fixture.componentInstance.tabBody._position).toBe('left');
+  });
+
+  it('should mark the tab body content as a scrollable container', () => {
+    TestBed
+      .resetTestingModule()
+      .configureTestingModule({
+        imports: [
+          CommonModule,
+          PortalModule,
+          MatRippleModule,
+          NoopAnimationsModule,
+          ScrollDispatchModule
+        ],
+        declarations: [
+          MatTabBody,
+          MatTabBodyPortal,
+          SimpleTabBodyApp,
+        ]
+      })
+      .compileComponents();
+
+    const fixture = TestBed.createComponent(SimpleTabBodyApp);
+    const tabBodyContent = fixture.nativeElement.querySelector('.mat-tab-body-content');
+    const scrollable = fixture.debugElement.query(By.directive(CdkScrollable));
+
+    expect(scrollable).toBeTruthy();
+    expect(scrollable.nativeElement).toBe(tabBodyContent);
   });
 });
 
