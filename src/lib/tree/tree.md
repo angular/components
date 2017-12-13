@@ -2,7 +2,7 @@ The `mat-tree` provides a Material Design styled tree that can be used to displa
 data.
 
 This tree builds on the foundation of the CDK tree and uses a similar interface for its
-data source input and template, except that its element and attribute selectors will be prefixed 
+data source input and template, except that its element and attribute selectors will be prefixed
 with `mat-` instead of `cdk-`.
 
 There are two types of trees: Flat tree and Nested Tree. The DOM structures are different for these
@@ -61,19 +61,19 @@ The `TreeControl` controls the expand/collapse state of tree nodes. Users can ex
 node recursively through tree control. For nested tree node, `getChildren` function need to pass to
 the `NestedTreeControl` to make it work recursively. For flattened tree node, `getLevel` and
 `isExpandable` functions need to pass to the `FlatTreeControl` to make it work recursively.
- 
+
 ### Trigger
 
 A `matTreeNodeTrigger` can be added in the tree node template to expand/collapse the tree node. The
-trigger triggers the expand/collapse functions in `TreeControl` and is able to expand/collapse a 
-tree node recursively by setting `[matTreeNodeTriggerRecursive]` to `true`. 
+trigger triggers the expand/collapse functions in `TreeControl` and is able to expand/collapse a
+tree node recursively by setting `[matTreeNodeTriggerRecursive]` to `true`.
 
-The trigger can be placed anywhere in the tree node, and is only triggered by `click` action. 
+The trigger can be placed anywhere in the tree node, and is only triggered by `click` action.
 
 
 ### Padding (Flat tree only)
 
-The `matTreeNodePadding` can be placed in a flat tree's node template to display the `level` 
+The `matTreeNodePadding` can be placed in a flat tree's node template to display the `level`
 information of a flat tree node.
 
 Nested tree does not need this padding since padding can be easily added to the hierarchy

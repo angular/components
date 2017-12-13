@@ -54,6 +54,8 @@ import {LayoutModule} from '@angular/cdk/layout';
 import {FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo} from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
+import {TreeDemo} from '../tree/tree-demo';
+import {JsonDatabase} from '../tree/json-database';
 import {TypographyDemo} from '../typography/typography-demo';
 import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
@@ -119,10 +121,13 @@ import {TableDemoModule} from '../table/table-demo-module';
     TabsDemo,
     ToolbarDemo,
     TooltipDemo,
+    TreeDemo,
     TypographyDemo,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
+    PeopleDatabase,
+    JsonDatabase
   ],
   entryComponents: [
     ContentElementDialog,
