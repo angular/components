@@ -87,6 +87,7 @@ export class DemoApp {
     {name: 'Tabs', route: '/tabs'},
     {name: 'Toolbar', route: '/toolbar'},
     {name: 'Tooltip', route: '/tooltip'},
+    {name: 'Tree', route: '/tree'},
     {name: 'Typography', route: '/typography'}
   ];
 
