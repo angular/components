@@ -1,0 +1,47 @@
+<div class="demo-tree-container">
+  <mat-card>
+    <mat-card-header>Flattened tree</mat-card-header>
+
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodeTrigger matTreeNodePadding>
+          {{node.key}} : {{node.value}}
+      </mat-tree-node>
+
+      <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+          <mat-icon matTreeNodeTrigger>
+            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+          {{node.key}} : {{node.value}}
+      </mat-tree-node>
+    </mat-tree>
+
+  </mat-card>
+
+
+
+  <mat-card>
+    <mat-card-header>Nested tree</mat-card-header>
+
+    <mat-tree [dataSource]="nestedDataSource" [treeControl]="nestedTreeControl">
+      <mat-tree-node *matTreeNodeDef="let node" role="treeitem" matTreeNodeTrigger>
+        <li>
+          <div>{{node.key}}:  {{node.value}}</div>
+        </li>
+      </mat-tree-node>
+
+      <mat-nested-tree-node *matTreeNodeDef="let node; when: hasNestedChild" role="group">
+        <li>
+          <div class="mat-tree-node">
+            <mat-icon matTreeNodeTrigger>
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+            {{node.key}}
+          </div>
+          <ul [class]="nestedTreeControl.isExpanded(node) ? '' : 'tree-demo-invisible'">
+            <ng-container matTreeNodeOutlet></ng-container>
+          </ul>
+        </li>
+      </mat-nested-tree-node>
+    </mat-tree>
+  </mat-card>
+</div>
