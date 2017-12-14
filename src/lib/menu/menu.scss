@@ -36,7 +36,7 @@ $mat-menu-submenu-indicator-size: 10px !default;
 .mat-menu-item {
   @include mat-button-reset();
   @include mat-menu-item-base();
-  position: relative;
+  position: initial;
 
   .mat-icon {
     vertical-align: middle;
