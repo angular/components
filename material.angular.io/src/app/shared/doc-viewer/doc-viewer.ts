@@ -115,8 +115,10 @@ export class DocViewer implements OnDestroy {
     const anchorElements =
       [].slice.call(this._elementRef.nativeElement.querySelectorAll('a')) as HTMLAnchorElement[];
 
+    // Update hash links that are referring to the same page and host. Links that are referring
+    // to a different destination shouldn't be updated. For example the Google Fonts URL.
     anchorElements
-      .filter(anchorEl => anchorEl.hash)
+      .filter(anchorEl => anchorEl.hash && anchorEl.host === location.host)
       .forEach(anchorEl => anchorEl.href = `${baseUrl}${anchorEl.hash}`);
   }
 
