@@ -20,7 +20,7 @@ import {
   QueryList,
   ViewChild,
   ViewContainerRef,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {takeUntil} from 'rxjs/operators/takeUntil';
@@ -54,7 +54,7 @@ import {
 })
 export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
   /** Subject that emits when the component has been destroyed. */
-  private _destroyed = new Subject<void>();
+  private _onDestroy = new Subject<void>();
 
   /** Latest data provided by the data source through the connect interface. */
   private _data: Array<T> = new Array<T>();
@@ -112,8 +112,8 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
   ngOnDestroy() {
     this._nodeOutlet.viewContainer.clear();
 
-    this._destroyed.next();
-    this._destroyed.complete();
+    this._onDestroy.next();
+    this._onDestroy.complete();
 
     if (this.dataSource) {
       this.dataSource.disconnect(this);
@@ -155,7 +155,7 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
 
   /** Set up a subscription for the data provided by the data source. */
   private _observeRenderChanges() {
-    this.dataSource.connect(this).pipe(takeUntil(this._destroyed))
+    this.dataSource.connect(this).pipe(takeUntil(this._onDestroy))
       .subscribe(data => {
         this._data = data;
         this._renderNodeChanges(data);

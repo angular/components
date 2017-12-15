@@ -14,6 +14,7 @@ import {
   QueryList,
 } from '@angular/core';
 import {takeUntil} from 'rxjs/operators/takeUntil';
+
 import {CdkTree} from './tree';
 import {CdkTreeNodeOutlet} from './outlet';
 import {CdkTreeNode} from './node';
@@ -43,9 +44,9 @@ import {CdkTreeNode} from './node';
     'class': 'cdk-tree-node cdk-nested-tree-node',
     'tabindex': '0',
   },
+  providers: [{provide: CdkTreeNode, useExisting: CdkNestedTreeNode}]
 })
 export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContentInit, OnDestroy {
-
   /** The children data dataNodes of current node. They will be placed in `CdkTreeNodeOutlet`. */
   protected _children: T[];
 
@@ -59,14 +60,16 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
 
   ngAfterContentInit() {
     this._tree.treeControl.getChildren(this.data).pipe(takeUntil(this._destroyed))
-      .subscribe(result => {
-        // In case when nodeOutlet is not in the DOM when children changes, save it in the node
-        // and add to nodeOutlet when it's available.
-        this._children = result as T[];
-        this._addChildrenNodes();
-      });
+        .subscribe(result => {
+          if (result && result.length) {
+            // In case when nodeOutlet is not in the DOM when children changes, save it in the node
+            // and add to nodeOutlet when it's available.
+            this._children = result as T[];
+            this._addChildrenNodes();
+          }
+        });
     this.nodeOutlet.changes.pipe(takeUntil(this._destroyed))
-      .subscribe((_) => this._addChildrenNodes());
+        .subscribe((_) => this._addChildrenNodes());
   }
 
   ngOnDestroy() {
@@ -78,7 +81,7 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
   /** Add children dataNodes to the NodeOutlet */
   protected _addChildrenNodes(): void {
     this._clear();
-    if (this.nodeOutlet.length && this._children) {
+    if (this.nodeOutlet.length && this._children && this._children.length) {
       this._children.forEach((child, index) => {
         this._tree.insertNode(child, index, this.nodeOutlet.first.viewContainer);
       });
@@ -87,7 +90,7 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
 
   /** Clear the children dataNodes. */
   protected _clear(): void {
-    if (this.nodeOutlet.first) {
+    if (this.nodeOutlet && this.nodeOutlet.first) {
       this.nodeOutlet.first.viewContainer.clear();
     }
   }
