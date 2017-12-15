@@ -119,7 +119,7 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
       }
       this._tree.treeControl.getChildren(this._data).pipe(takeUntil(this._destroyed))
         .subscribe(children => {
-          this.role = children ? 'group' : 'treeitem';
+          this.role = children && children.length ? 'group' : 'treeitem';
         });
     }
   }
