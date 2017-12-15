@@ -5,7 +5,7 @@ import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import {combineLatest} from 'rxjs/observable/combineLatest';
-import {map} from 'rxjs/operators';
+import {map} from 'rxjs/operators/map';
 
 import {TreeControl, FlatTreeControl} from '@angular/cdk/tree';
 import {MatTreeModule} from './index';
@@ -127,7 +127,7 @@ class FakeDataSource extends DataSource<TestData> {
   connect(collectionViewer: CollectionViewer): Observable<TestData[]> {
     this.isConnected = true;
     const streams = [this._dataChange, collectionViewer.viewChange];
-    return map.call(combineLatest(streams), ([data]) => data);
+    return combineLatest<TestData[]>(streams).pipe(map(([data]) => data));
   }
 
   disconnect() {
