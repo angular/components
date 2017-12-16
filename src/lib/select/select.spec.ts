@@ -43,12 +43,14 @@ import {
   FloatLabelType,
   MAT_LABEL_GLOBAL_OPTIONS,
   MatOption,
+  MatOptionSelectionChange,
 } from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {map} from 'rxjs/operators/map';
 import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs/Subscription';
 import {MatSelectModule} from './index';
 import {MatSelect} from './select';
 import {
@@ -249,6 +251,36 @@ describe('MatSelect', () => {
           expect(options[1].selected).toBe(true, 'Expected second option to be selected.');
           expect(formControl.value).toBe(options[1].value,
               'Expected value from second option to have been set on the model.');
+        }));
+
+        it('should open a single-selection select using ALT + DOWN_ARROW', fakeAsync(() => {
+          const {control: formControl, select: selectInstance} = fixture.componentInstance;
+
+          expect(selectInstance.panelOpen).toBe(false, 'Expected select to be closed.');
+          expect(formControl.value).toBeFalsy('Expected no initial value.');
+
+          const event = createKeyboardEvent('keydown', DOWN_ARROW);
+          Object.defineProperty(event, 'altKey', {get: () => true});
+
+          dispatchEvent(select, event);
+
+          expect(selectInstance.panelOpen).toBe(true, 'Expected select to be open.');
+          expect(formControl.value).toBeFalsy('Expected value not to have changed.');
+        }));
+
+        it('should open a single-selection select using ALT + UP_ARROW', fakeAsync(() => {
+          const {control: formControl, select: selectInstance} = fixture.componentInstance;
+
+          expect(selectInstance.panelOpen).toBe(false, 'Expected select to be closed.');
+          expect(formControl.value).toBeFalsy('Expected no initial value.');
+
+          const event = createKeyboardEvent('keydown', UP_ARROW);
+          Object.defineProperty(event, 'altKey', {get: () => true});
+
+          dispatchEvent(select, event);
+
+          expect(selectInstance.panelOpen).toBe(true, 'Expected select to be open.');
+          expect(formControl.value).toBeFalsy('Expected value not to have changed.');
         }));
 
         it('should be able to select options by typing on a closed select', fakeAsync(() => {
@@ -1001,6 +1033,54 @@ describe('MatSelect', () => {
       it('should not throw if triggerValue accessed with no selected value', fakeAsync(() => {
         expect(() => fixture.componentInstance.select.triggerValue).not.toThrow();
       }));
+
+      it('should emit to `optionSelectionChanges` when an option is selected', fakeAsync(() => {
+        trigger.click();
+        fixture.detectChanges();
+        flush();
+
+        const spy = jasmine.createSpy('option selection spy');
+        const subscription = fixture.componentInstance.select.optionSelectionChanges.subscribe(spy);
+        const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
+        option.click();
+        fixture.detectChanges();
+        flush();
+
+        expect(spy).toHaveBeenCalledWith(jasmine.any(MatOptionSelectionChange));
+
+        subscription.unsubscribe();
+      }));
+
+      it('should handle accessing `optionSelectionChanges` before the options are initialized',
+        fakeAsync(() => {
+          fixture.destroy();
+          fixture = TestBed.createComponent(BasicSelect);
+
+          let spy = jasmine.createSpy('option selection spy');
+          let subscription: Subscription;
+
+          expect(fixture.componentInstance.select.options).toBeFalsy();
+          expect(() => {
+            subscription = fixture.componentInstance.select.optionSelectionChanges.subscribe(spy);
+          }).not.toThrow();
+
+          fixture.detectChanges();
+          trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
+
+          trigger.click();
+          fixture.detectChanges();
+          flush();
+
+          const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
+          option.click();
+          fixture.detectChanges();
+          flush();
+
+          expect(spy).toHaveBeenCalledWith(jasmine.any(MatOptionSelectionChange));
+
+          subscription!.unsubscribe();
+        }));
+
     });
 
     describe('forms integration', () => {
@@ -1698,6 +1778,25 @@ describe('MatSelect', () => {
     }));
   });
 
+  describe('change events', () => {
+    beforeEach(async(() => configureMatSelectTestingModule([SelectWithPlainTabindex])));
+
+    it('should complete the stateChanges stream on destroy', () => {
+      const fixture = TestBed.createComponent(SelectWithPlainTabindex);
+      fixture.detectChanges();
+
+      const debugElement = fixture.debugElement.query(By.directive(MatSelect));
+      const select = debugElement.componentInstance;
+
+      const spy = jasmine.createSpy('stateChanges complete');
+      const subscription = select.stateChanges.subscribe(undefined, undefined, spy);
+
+      fixture.destroy();
+      expect(spy).toHaveBeenCalled();
+      subscription.unsubscribe();
+    });
+  });
+
   describe('when initially hidden', () => {
     beforeEach(async(() => configureMatSelectTestingModule([BasicSelectInitiallyHidden])));
 
@@ -2321,6 +2420,29 @@ describe('MatSelect', () => {
 
       expect(document.activeElement).toBe(select, 'Expected trigger to be focused.');
     }));
+
+    it('should update the data binding before emitting the change event', fakeAsync(() => {
+      const fixture = TestBed.createComponent(BasicSelectWithoutForms);
+      const instance = fixture.componentInstance;
+      const spy = jasmine.createSpy('change spy');
+
+      fixture.detectChanges();
+      instance.select.change.subscribe(() => spy(instance.selectedFood));
+
+      expect(instance.selectedFood).toBeFalsy();
+
+      fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement.click();
+      fixture.detectChanges();
+      flush();
+
+      (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+      fixture.detectChanges();
+      flush();
+
+      expect(instance.selectedFood).toBe('steak-0');
+      expect(spy).toHaveBeenCalledWith('steak-0');
+    }));
+
   });
 
   describe('positioning', () => {
