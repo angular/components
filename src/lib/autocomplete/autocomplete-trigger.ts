@@ -13,7 +13,6 @@ import {
   OverlayRef,
   OverlayConfig,
   PositionStrategy,
-  RepositionScrollStrategy,
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
@@ -67,7 +66,7 @@ export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY =
 
 /** @docs-private */
 export function MAT_AUTOCOMPLETE_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
-    () => RepositionScrollStrategy {
+    () => ScrollStrategy {
   return () => overlay.scrollStrategies.reposition();
 }
 
@@ -193,9 +192,10 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   get panelClosingActions(): Observable<MatOptionSelectionChange> {
     return merge(
       this.optionSelections,
-      this.autocomplete._keyManager.tabOut,
+      this.autocomplete._keyManager.tabOut.pipe(filter(() => this._panelOpen)),
       this._escapeEventStream,
-      this._outsideClickStream
+      this._outsideClickStream,
+      this._overlayRef ? this._overlayRef.detachments() : observableOf()
     );
   }
 
@@ -265,6 +265,14 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    */
   registerOnTouched(fn: () => {}) {
     this._onTouched = fn;
+  }
+
+  /**
+   * Disables the input. Implemented as a part of `ControlValueAccessor`.
+   * @param isDisabled Whether the component should be disabled.
+   */
+  setDisabledState(isDisabled: boolean) {
+    this._element.nativeElement.disabled = isDisabled;
   }
 
   _handleKeydown(event: KeyboardEvent): void {

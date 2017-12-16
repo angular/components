@@ -1,6 +1,6 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {DOWN_ARROW, ENTER, ESCAPE, SPACE, UP_ARROW, TAB} from '@angular/cdk/keycodes';
-import {OverlayContainer} from '@angular/cdk/overlay';
+import {OverlayContainer, Overlay} from '@angular/cdk/overlay';
 import {map} from 'rxjs/operators/map';
 import {startWith} from 'rxjs/operators/startWith';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
@@ -45,6 +45,7 @@ import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
   MatAutocompleteTrigger,
+  MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
 } from './index';
 
 
@@ -594,6 +595,22 @@ describe('MatAutocomplete', () => {
 
       expect(fixture.componentInstance.stateCtrl.touched)
           .toBe(true, `Expected control to become touched on blur.`);
+    });
+
+    it('should disable the input when used with a value accessor and without `matInput`', () => {
+      fixture.destroy();
+      TestBed.resetTestingModule();
+
+      const plainFixture = createComponent(PlainAutocompleteInputWithFormControl);
+      plainFixture.detectChanges();
+      input = plainFixture.nativeElement.querySelector('input');
+
+      expect(input.disabled).toBe(false);
+
+      plainFixture.componentInstance.formControl.disable();
+      plainFixture.detectChanges();
+
+      expect(input.disabled).toBe(true);
     });
 
   });
@@ -1333,6 +1350,23 @@ describe('MatAutocomplete', () => {
       expect(closingActionSpy).toHaveBeenCalled();
     });
 
+    it('should not emit when tabbing away from a closed panel', () => {
+      const tabEvent = createKeyboardEvent('keydown', TAB);
+
+      input.focus();
+      zone.simulateZoneExit();
+
+      trigger._handleKeydown(tabEvent);
+
+      // Ensure that it emitted once while the panel was open.
+      expect(closingActionSpy).toHaveBeenCalledTimes(1);
+
+      trigger._handleKeydown(tabEvent);
+
+      // Ensure that it didn't emit again when tabbing out again.
+      expect(closingActionSpy).toHaveBeenCalledTimes(1);
+    });
+
     it('should emit panel close event when selecting an option', () => {
       const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
 
@@ -1485,6 +1519,29 @@ describe('MatAutocomplete', () => {
       expect(panel.classList).toContain('class-two');
     }));
 
+
+    it('should reset correctly when closed programmatically', async(() => {
+      TestBed.overrideProvider(MAT_AUTOCOMPLETE_SCROLL_STRATEGY, {
+        useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close(),
+        deps: [Overlay]
+      });
+
+      const fixture = TestBed.createComponent(SimpleAutocomplete);
+      fixture.detectChanges();
+      const trigger = fixture.componentInstance.trigger;
+
+      trigger.openPanel();
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        expect(trigger.panelOpen).toBe(true, 'Expected panel to be open.');
+
+        scrolledSubject.next();
+        fixture.detectChanges();
+
+        expect(trigger.panelOpen).toBe(false, 'Expected panel to be closed.');
+      });
+    }));
 
   });
 
@@ -1905,4 +1962,15 @@ class AutocompleteWithSelectEvent {
 
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
   @ViewChild(MatAutocomplete) autocomplete: MatAutocomplete;
+}
+
+
+@Component({
+  template: `
+    <input [formControl]="formControl" [matAutocomplete]="auto"/>
+    <mat-autocomplete #auto="matAutocomplete"></mat-autocomplete>
+  `
+})
+export class PlainAutocompleteInputWithFormControl {
+  formControl = new FormControl();
 }
