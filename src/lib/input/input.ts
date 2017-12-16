@@ -107,10 +107,13 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
 
   /** Whether the element is disabled. */
   @Input()
-  get disabled(): boolean | null {
-    return this.ngControl ? this.ngControl.disabled : this._disabled;
+  get disabled(): boolean {
+    if (this.ngControl && this.ngControl.disabled !== null) {
+      return this.ngControl.disabled;
+    }
+    return this._disabled;
   }
-  set disabled(value: boolean | null) {
+  set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
 
     // Browsers may not fire the blur event if the input is disabled too quickly.
