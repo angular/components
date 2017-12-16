@@ -20,6 +20,6 @@
     that supports Google's largest applications.</p>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close tabindex="-1">Cancel</button>
-  <button mat-button [mat-dialog-close]="true" tabindex="1">Install</button>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="true" cdk-focus-initial>Install</button>
 </mat-dialog-actions>
