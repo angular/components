@@ -381,8 +381,8 @@ describe('MatTabGroup', () => {
       let fixture = TestBed.createComponent(TemplateTabs);
       fixture.detectChanges();
 
-      let tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
-      tabLabel.nativeElement.click();
+      let secondLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+      secondLabel.nativeElement.click();
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {

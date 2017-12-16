@@ -20,7 +20,7 @@ import {MatTabHeader} from './tab-header';
 import {MatTabLabel} from './tab-label';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {MatTabLink, MatTabNav} from './tab-nav-bar/tab-nav-bar';
-import {MdTabContent} from './tab-content';
+import {MatTabContent} from './tab-content';
 
 
 @NgModule({
@@ -40,7 +40,7 @@ import {MdTabContent} from './tab-content';
     MatTab,
     MatTabNav,
     MatTabLink,
-    MdTabContent,
+    MatTabContent,
   ],
   declarations: [
     MatTabGroup,
@@ -53,7 +53,7 @@ import {MdTabContent} from './tab-content';
     MatTabBody,
     MatTabBodyPortal,
     MatTabHeader,
-    MdTabContent,
+    MatTabContent,
   ],
   providers: [VIEWPORT_RULER_PROVIDER],
 })

@@ -143,6 +143,6 @@ export class FoggyTabContent {}
   count = 0;
   ngOnInit() {
     this.count++;
-    console.log('Counting...', this.count);
+    console.log('Tab Load Count:', this.count);
   }
  }

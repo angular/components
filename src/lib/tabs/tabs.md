@@ -83,25 +83,26 @@ the `active` property to determine which tab is currently active. The correspond
 ## Lazy Loading
 By default, the tab contents are eagerly loaded. Eagerly loaded tabs
 will initalize the child components but not inject them into the DOM
-until the tab is activated.
+until the tab is activated. 
 
-If the tab contains several complex child components, it is advised
+If the tab contains several complex child components or the tab's contents
+rely on DOM calculations during initialization, it is advised
 to lazy load the tab's content. Tab contents can be lazy loaded by
 declaring the body in a `ng-template` with the `matTabContent` attribute.
 
 ```html
-<md-tab-group>
-  <md-tab label="First">
+<mat-tab-group>
+  <mat-tab label="First">
     <ng-template matTabContent>
       The First Content
     </ng-template>
-  </md-tab>
-  <md-tab label="Second">
+  </mat-tab>
+  <mat-tab label="Second">
     <ng-template matTabContent>
       The Second Content
     </ng-template>
-  </md-tab>
-</md-tab-group>
+  </mat-tab>
+</mat-tab-group>
 ```
 
 ### Accessibility
