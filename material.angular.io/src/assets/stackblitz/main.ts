@@ -80,7 +80,6 @@ import {CdkTableModule} from '@angular/cdk/table';
 export class DemoMaterialModule {}
 
 @NgModule({
-
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -90,7 +89,7 @@ export class DemoMaterialModule {}
     MatNativeDateModule,
     ReactiveFormsModule,
   ],
-
+  entryComponents: [MaterialDocsExample],
   declarations: [MaterialDocsExample],
   bootstrap: [MaterialDocsExample],
   providers: []
