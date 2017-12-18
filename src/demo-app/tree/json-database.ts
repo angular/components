@@ -15,7 +15,7 @@ export class JsonNode {
   value: any;
 }
 
-const TREE_DATA = `{"Tina": 
+const TREE_DATA = `{"Tina":
   {
     "Documents": {
       "angular": {
@@ -37,7 +37,7 @@ const TREE_DATA = `{"Tina":
         "November": "pdf",
         "October": "pdf"
     },
-    "Pictures": { 
+    "Pictures": {
         "Sun": "png",
         "Woods": "jpg",
         "Photo Booth Library": {
@@ -50,8 +50,7 @@ const TREE_DATA = `{"Tina":
         "Calendar": "app",
         "Webstorm": "app"
     }
-}}    
-`;
+}}`;
 
 @Injectable()
 export class JsonDatabase {
@@ -86,5 +85,4 @@ export class JsonDatabase {
     }
     return data;
   }
-
 }
