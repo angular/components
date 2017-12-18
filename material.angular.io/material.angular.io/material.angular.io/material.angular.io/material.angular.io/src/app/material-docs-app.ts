@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {Router, NavigationEnd} from '@angular/router';
-import 'rxjs/add/operator/filter';
+import {filter} from 'rxjs/operators/filter';
 
 
 @Component({
@@ -15,7 +15,7 @@ export class MaterialDocsApp {
     let previousRoute = router.routerState.snapshot.url;
 
     router.events
-      .filter(event => event instanceof NavigationEnd )
+      .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((data: NavigationEnd) => {
         // We want to reset the scroll position on navigation except when navigating within
         // the documentation for a single component.

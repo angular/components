@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 import {ExampleData} from '@angular/material-examples';
-import 'rxjs/add/operator/toPromise';
 import {VERSION} from '@angular/material';
 
 const STACKBLITZ_URL = 'https://run.stackblitz.com/api/angular/v1/';

@@ -9,7 +9,7 @@ import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
 import {CommonModule} from '@angular/common';
 import {MatCardModule} from '@angular/material';
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
+import {combineLatest} from 'rxjs/observable/combineLatest';
 
 @Component({
   selector: 'app-components',
@@ -24,8 +24,7 @@ export class ComponentList {
               private _componentPageTitle: ComponentPageTitle,
               private _route: ActivatedRoute,
               public router: Router) {
-    Observable
-      .combineLatest(_route.pathFromRoot.map(route => route.params), Object.assign)
+    combineLatest(_route.pathFromRoot.map(route => route.params), Object.assign)
       .subscribe(p => {
         this.category = docItems.getCategoryById(p['id']);
         this.section = p['section'];

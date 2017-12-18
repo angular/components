@@ -1,5 +1,4 @@
 import {Component, EventEmitter, NgModule, Output} from '@angular/core';
-import 'rxjs/add/operator/first';
 import {ComponentPageTitle} from '../page-title/page-title';
 import {NavigationFocusModule} from '../../shared/navigation-focus/navigation-focus';
 import {MatButtonModule, MatIconModule} from '@angular/material';

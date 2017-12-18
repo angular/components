@@ -6,7 +6,7 @@ import {DocumentationItems, SECTIONS} from '../../shared/documentation-items/doc
 import {ComponentPageTitle} from '../page-title/page-title';
 import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
+import {combineLatest} from 'rxjs/observable/combineLatest';
 import {Subscription} from 'rxjs/Subscription';
 
 
@@ -25,7 +25,7 @@ export class ComponentCategoryList implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Combine params from all of the path into a single object.
-    this.params = Observable.combineLatest(
+    this.params = combineLatest(
       this._route.pathFromRoot.map(route => route.params),
       Object.assign);
 

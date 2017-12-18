@@ -7,6 +7,7 @@ import {CommonModule} from '@angular/common';
 import {ComponentHeaderModule} from '../component-page-header/component-page-header';
 import {FooterModule} from '../../shared/footer/footer';
 import {Observable} from 'rxjs/Observable';
+import {combineLatest} from 'rxjs/observable/combineLatest';
 
 const SMALL_WIDTH_BREAKPOINT = 720;
 
@@ -39,7 +40,7 @@ export class ComponentSidenav implements OnInit {
     });
 
     // Combine params from all of the path into a single object.
-    this.params = Observable.combineLatest(
+    this.params = combineLatest(
       this._route.pathFromRoot.map(route => route.params),
       Object.assign);
   }

@@ -2,13 +2,12 @@ import {CommonModule} from '@angular/common';
 import {Component, ElementRef, NgModule, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {MatTabsModule} from '@angular/material';
 import {ActivatedRoute, Params, Router, RouterModule} from '@angular/router';
-import 'rxjs/add/operator/map';
-import {Observable} from 'rxjs/Observable';
 import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
 import {DocItem, DocumentationItems} from '../../shared/documentation-items/documentation-items';
 import {TableOfContentsModule} from '../../shared/table-of-contents/table-of-contents.module';
 import {ComponentPageTitle} from '../page-title/page-title';
-
+import {combineLatest} from 'rxjs/observable/combineLatest';
+import {map} from 'rxjs/operators/map';
 
 @Component({
   selector: 'app-component-viewer',
@@ -27,10 +26,9 @@ export class ComponentViewer {
               public docItems: DocumentationItems) {
     // Listen to changes on the current route for the doc id (e.g. button/checkbox) and the
     // parent route for the section (material/cdk).
-    Observable.combineLatest(_route.params, _route.parent.params)
-        .map((p: [Params, Params]) => ({id: p[0]['id'], section: p[1]['section']}))
-        .map(p => docItems.getItemById(p.id, p.section))
-        .subscribe(d => {
+    combineLatest(_route.params, _route.parent.params).pipe(
+        map((p: [Params, Params]) => ({id: p[0]['id'], section: p[1]['section']})),
+        map(p => docItems.getItemById(p.id, p.section))).subscribe(d => {
           this.componentDocItem = d;
           if (this.componentDocItem) {
             this._componentPageTitle.title = `${this.componentDocItem.name}`;
