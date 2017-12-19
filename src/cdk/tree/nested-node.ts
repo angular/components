@@ -42,7 +42,6 @@ import {CdkTreeNode} from './node';
   host: {
     '[attr.role]': 'role',
     'class': 'cdk-tree-node cdk-nested-tree-node',
-    'tabindex': '0',
   },
   providers: [{provide: CdkTreeNode, useExisting: CdkNestedTreeNode}]
 })
