@@ -29,10 +29,10 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
 
     // Goes through flattened tree nodes in the `dataNodes` array, and get all descendants.
     // The level of descendants of a tree node must be greater than the level of the given
-    // tree node. 
+    // tree node.
     // If we reach a node whose level is equal to the level of the tree node, we hit a sibling.
-    // If we reach a node whose level is greater than the level of the tree node, we hit a 
-    // sibling of an ancestor. 
+    // If we reach a node whose level is greater than the level of the tree node, we hit a
+    // sibling of an ancestor.
     for (let i = startIndex + 1;
         i < this.dataNodes.length && this.getLevel(dataNode) < this.getLevel(this.dataNodes[i]);
         i++) {
