@@ -139,7 +139,7 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
    * clearing the node outlet. Otherwise start listening for new data.
    */
   private _switchDataSource(dataSource: DataSource<T>) {
-    this._data = new Array<T>();;
+    this._data = new Array<T>();
 
     if (this.dataSource) {
       this.dataSource.disconnect(this);
