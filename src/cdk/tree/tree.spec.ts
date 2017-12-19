@@ -1,4 +1,11 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
@@ -269,7 +276,7 @@ describe('CdkTree', () => {
           [`topping_1 - cheese_1 + base_1`],
           [`topping_2 - cheese_2 + base_2`],
           [_, `topping_4 - cheese_4 + base_4`],
-          [`topping_3 - cheese_3 + base_3`])
+          [`topping_3 - cheese_3 + base_3`]);
       });
 
       it('with nested child data', () => {
@@ -427,7 +434,7 @@ describe('CdkTree', () => {
           [`topping_2 - cheese_2 + base_2`],
           [`topping_3 - cheese_3 + base_3`]);
       });
-    })
+    });
   });
 });
 
