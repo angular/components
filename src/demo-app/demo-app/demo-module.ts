@@ -134,7 +134,6 @@ import {BadgeDemo} from '../badge/badge-demo';
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
-    PeopleDatabase,
     JsonDatabase
   ],
   entryComponents: [

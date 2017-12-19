@@ -44,13 +44,13 @@ export class TreeDemo {
     this.nestedDataSource = new JsonNestedDataSource(database);
   }
 
-  getLevel = (node: JsonFlatNode) => { return node.level };
+  getLevel = (node: JsonFlatNode) => { return node.level; };
 
-  isExpandable = (node: JsonFlatNode) => { return node.expandable; }
+  isExpandable = (node: JsonFlatNode) => { return node.expandable; };
 
-  getChildren = (node: JsonNode) => { return ofObservable(node.children); }
+  getChildren = (node: JsonNode) => { return ofObservable(node.children); };
 
-  hasChild = (_: number, _nodeData: JsonFlatNode) => { return _nodeData.expandable; }
+  hasChild = (_: number, _nodeData: JsonFlatNode) => { return _nodeData.expandable; };
 
-  hasNestedChild = (_: number, nodeData: JsonNode) => {return !(nodeData.value); }
+  hasNestedChild = (_: number, nodeData: JsonNode) => {return !(nodeData.value); };
 }
