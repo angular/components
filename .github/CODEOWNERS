@@ -75,6 +75,9 @@
 # Material experimental package
 /src/material-experimental/**                      @jelbourn
 
+# CDK experimental package
+/src/cdk-experimental/**                           @jelbourn
+
 # Docs examples & guides
 /guides/**                                         @amcdnl @jelbourn
 /src/material-examples/**                          @amcdnl @jelbourn
