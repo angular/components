@@ -426,7 +426,7 @@ describe('MatDrawer', () => {
       fixture.detectChanges();
       tick();
 
-      expect(document.activeElement).toBe(firstFocusableElement);
+      expect(document.activeElement.outerHTML).toBe(firstFocusableElement.outerHTML);
     }));
 
     it('should trap focus when opened in "push" mode', fakeAsync(() => {
@@ -437,7 +437,7 @@ describe('MatDrawer', () => {
       fixture.detectChanges();
       tick();
 
-      expect(document.activeElement).toBe(firstFocusableElement);
+      expect(document.activeElement.outerHTML).toBe(firstFocusableElement.outerHTML);
     }));
 
     it('should not trap focus when opened in "side" mode', fakeAsync(() => {
