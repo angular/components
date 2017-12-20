@@ -1,0 +1,11 @@
+<section>
+  <mat-form-field>
+    <input id="autocomplete-input" matInput placeholder="Choose" [matAutocomplete]="auto" [formControl]="optionCtrl">
+  </mat-form-field>
+
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+      {{option}}
+    </mat-option>
+  </mat-autocomplete>
+</section>

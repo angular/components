@@ -19,7 +19,9 @@ import {SlideToggleE2E} from './slide-toggle/slide-toggle-e2e';
 import {InputE2E} from './input/input-e2e';
 import {SidenavE2E} from './sidenav/sidenav-e2e';
 import {BlockScrollStrategyE2E} from './block-scroll-strategy/block-scroll-strategy-e2e';
+import {AutocompleteE2E} from './autocomplete/autocomplete-e2e';
 import {
+  MatAutocompleteModule,
   MatButtonModule,
   MatCheckboxModule,
   MatDialogModule,
@@ -47,6 +49,7 @@ import {ReactiveFormsModule} from '@angular/forms';
  */
 @NgModule({
   exports: [
+    MatAutocompleteModule,
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,
@@ -78,8 +81,10 @@ export class E2eMaterialModule {}
     ReactiveFormsModule
   ],
   declarations: [
+    AutocompleteE2E,
     BasicTabs,
     ButtonE2E,
+    BlockScrollStrategyE2E,
     DialogE2E,
     E2EApp,
     FullscreenE2E,
@@ -95,8 +100,7 @@ export class E2eMaterialModule {}
     SimpleRadioButtons,
     SlideToggleE2E,
     TestDialog,
-    TestDialogFullScreen,
-    BlockScrollStrategyE2E
+    TestDialogFullScreen
   ],
   bootstrap: [E2EApp],
   providers: [
