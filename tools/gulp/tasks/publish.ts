@@ -11,6 +11,7 @@ import * as minimist from 'minimist';
 export const releasePackages = [
   'cdk',
   'material',
+  'cdk-experimental',
   'material-experimental',
   'material-moment-adapter'
 ];

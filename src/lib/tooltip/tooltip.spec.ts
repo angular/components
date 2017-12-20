@@ -12,7 +12,8 @@ import {
   Component,
   DebugElement,
   ElementRef,
-  ViewChild
+  ViewChild,
+  NgZone,
 } from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
 import {By} from '@angular/platform-browser';
@@ -27,7 +28,8 @@ import {
   MatTooltipModule,
   SCROLL_THROTTLE_MS,
   TOOLTIP_PANEL_CLASS,
-  TooltipPosition
+  TooltipPosition,
+  MAT_TOOLTIP_DEFAULT_OPTIONS,
 } from './index';
 
 
@@ -153,6 +155,40 @@ describe('MatTooltip', () => {
       tick(tooltipDelay);
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
       expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
+    }));
+
+    it('should be able to override the default show and hide delays', fakeAsync(() => {
+      TestBed
+        .resetTestingModule()
+        .configureTestingModule({
+          imports: [MatTooltipModule, OverlayModule, NoopAnimationsModule],
+          declarations: [BasicTooltipDemo],
+          providers: [{
+            provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+            useValue: {showDelay: 1337, hideDelay: 7331}
+          }]
+        })
+        .compileComponents();
+
+      fixture = TestBed.createComponent(BasicTooltipDemo);
+      fixture.detectChanges();
+      tooltipDirective = fixture.debugElement.query(By.css('button')).injector.get(MatTooltip);
+
+      tooltipDirective.show();
+      fixture.detectChanges();
+      tick();
+
+      expect(tooltipDirective._isTooltipVisible()).toBe(false);
+      tick(1337);
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+
+      tooltipDirective.hide();
+      fixture.detectChanges();
+      tick();
+
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+      tick(7331);
+      expect(tooltipDirective._isTooltipVisible()).toBe(false);
     }));
 
     it('should set a css class on the overlay panel element', fakeAsync(() => {
@@ -628,6 +664,26 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._isTooltipVisible())
           .toBe(false, 'Expected tooltip hidden when scrolled out of view, after throttle limit');
     }));
+
+    it('should execute the `hide` call, after scrolling away, inside the NgZone', fakeAsync(() => {
+      const inZoneSpy = jasmine.createSpy('in zone spy');
+
+      tooltipDirective.show();
+      fixture.detectChanges();
+      tick(0);
+
+      spyOn(tooltipDirective._tooltipInstance!, 'hide').and.callFake(() => {
+        inZoneSpy(NgZone.isInAngularZone());
+      });
+
+      fixture.componentInstance.scrollDown();
+      tick(100);
+      fixture.detectChanges();
+
+      expect(inZoneSpy).toHaveBeenCalled();
+      expect(inZoneSpy).toHaveBeenCalledWith(true);
+    }));
+
   });
 
   describe('with OnPush', () => {

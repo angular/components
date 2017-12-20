@@ -5,7 +5,6 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-
 import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
@@ -21,6 +20,7 @@ import {
 import {filter} from 'rxjs/operators/filter';
 import {take} from 'rxjs/operators/take';
 import {map} from 'rxjs/operators/map';
+import {switchMap} from 'rxjs/operators/switchMap';
 import {startWith} from 'rxjs/operators/startWith';
 import {takeUntil} from 'rxjs/operators/takeUntil';
 import {
@@ -69,11 +69,14 @@ import {
   mixinDisabled,
   mixinTabIndex,
   MAT_OPTION_PARENT_COMPONENT,
+  mixinDisableRipple,
+  CanDisableRipple,
 } from '@angular/material/core';
 import {MatFormField, MatFormFieldControl} from '@angular/material/form-field';
 import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
 import {Subject} from 'rxjs/Subject';
+import {defer} from 'rxjs/observable/defer';
 import {fadeInContent, transformPanel} from './select-animations';
 import {
   getMatSelectDynamicMultipleError,
@@ -153,7 +156,8 @@ export class MatSelectBase {
               public _parentFormGroup: FormGroupDirective,
               public ngControl: NgControl) {}
 }
-export const _MatSelectMixinBase = mixinTabIndex(mixinDisabled(mixinErrorState(MatSelectBase)));
+export const _MatSelectMixinBase = mixinDisableRipple(
+    mixinTabIndex(mixinDisabled(mixinErrorState(MatSelectBase))));
 
 
 /**
@@ -171,7 +175,7 @@ export class MatSelectTrigger {}
   exportAs: 'matSelect',
   templateUrl: 'select.html',
   styleUrls: ['select.css'],
-  inputs: ['disabled', 'tabIndex'],
+  inputs: ['disabled', 'disableRipple', 'tabIndex'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -207,7 +211,7 @@ export class MatSelectTrigger {}
 })
 export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnChanges,
     OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex,
-    MatFormFieldControl<any>, CanUpdateErrorState {
+    MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
   /** Whether or not the overlay panel is open. */
   private _panelOpen = false;
 
@@ -376,14 +380,6 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   }
   private _value: any;
 
-  /** Whether ripples for all options in the select are disabled. */
-  @Input()
-  get disableRipple(): boolean { return this._disableRipple; }
-  set disableRipple(value: boolean) {
-    this._disableRipple = coerceBooleanProperty(value);
-  }
-  private _disableRipple: boolean = false;
-
   /** Aria label of the select. If not specified, the placeholder will be used as label. */
   @Input('aria-label') ariaLabel: string = '';
 
@@ -403,9 +399,15 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   private _id: string;
 
   /** Combined stream of all of the child options' change events. */
-  get optionSelectionChanges(): Observable<MatOptionSelectionChange> {
-    return merge(...this.options.map(option => option.onSelectionChange));
-  }
+  optionSelectionChanges: Observable<MatOptionSelectionChange> = defer(() => {
+    if (this.options) {
+      return merge(...this.options.map(option => option.onSelectionChange));
+    }
+
+    return this._ngZone.onStable
+      .asObservable()
+      .pipe(take(1), switchMap(() => this.optionSelectionChanges));
+  });
 
    /** Event emitted when the select has been opened. */
    @Output() openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -507,6 +509,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   ngOnDestroy() {
     this._destroy.next();
     this._destroy.complete();
+    this.stateChanges.complete();
   }
 
   /** Toggles the overlay panel open or closed. */
@@ -642,7 +645,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
     const isOpenKey = keyCode === ENTER || keyCode === SPACE;
 
-    if (isOpenKey || (this.multiple && isArrowKey)) {
+    if (isOpenKey || ((this.multiple || event.altKey) && isArrowKey)) {
       event.preventDefault(); // prevents the page from scrolling down when pressing space
       this.open();
     } else if (!this.multiple) {
@@ -894,9 +897,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     }
 
     this._value = valueToEmit;
+    this.valueChange.emit(valueToEmit);
     this._onChange(valueToEmit);
     this.selectionChange.emit(new MatSelectChange(this, valueToEmit));
-    this.valueChange.emit(valueToEmit);
     this._changeDetectorRef.markForCheck();
   }
 
