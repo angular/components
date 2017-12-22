@@ -4015,6 +4015,84 @@ describe('MatSelect', () => {
     });
 
   });
+
+  describe('value propagation when options are added/removed', () => {
+    let fixture: ComponentFixture<BasicSelectWithoutFormsMultiple>;
+    let testComponent: BasicSelectWithoutFormsMultiple;
+
+    beforeEach(fakeAsync(() => {
+      configureMatSelectTestingModule([BasicSelectWithoutFormsMultiple]);
+      fixture = TestBed.createComponent(BasicSelectWithoutFormsMultiple);
+      testComponent = fixture.componentInstance;
+      fixture.detectChanges();
+    }));
+
+    it('should propagate the changes when a selected option is removed', fakeAsync(() => {
+      testComponent.selectedFoods = ['steak-0', 'pizza-1'];
+      fixture.detectChanges();
+      flush();
+
+      expect(testComponent.select.value).toEqual(['steak-0', 'pizza-1']);
+      testComponent.selectionChange.calls.reset();
+
+      testComponent.foods.shift();
+      fixture.detectChanges();
+      flush();
+
+      expect(testComponent.selectionChange).toHaveBeenCalledTimes(1);
+      expect(testComponent.select.value).toEqual(['pizza-1']);
+      expect(testComponent.selectedFoods).toEqual(['pizza-1']);
+    }));
+
+    it('should propagate the changes when a selected option is added', fakeAsync(() => {
+      testComponent.selectedFoods = ['steak-0'];
+      fixture.detectChanges();
+      flush();
+
+      expect(testComponent.select.value).toEqual(['steak-0']);
+      testComponent.selectionChange.calls.reset();
+
+      testComponent.foods.push({value: 'pasta-4', viewValue: 'Pasta'});
+      testComponent.selectedFoods.push('pasta-4');
+      fixture.detectChanges();
+      flush();
+
+      expect(testComponent.selectionChange).toHaveBeenCalledTimes(1);
+      expect(testComponent.select.value).toEqual(['steak-0', 'pasta-4']);
+      expect(testComponent.selectedFoods).toEqual(['steak-0', 'pasta-4']);
+    }));
+
+    it('should not propagate changes when a non-selected option is removed', fakeAsync(() => {
+      testComponent.selectedFoods = ['steak-0'];
+      fixture.detectChanges();
+      flush();
+
+      testComponent.selectionChange.calls.reset();
+      testComponent.foods.pop();
+      fixture.detectChanges();
+      flush();
+
+      expect(testComponent.selectionChange).not.toHaveBeenCalled();
+      expect(testComponent.select.value).toEqual(['steak-0']);
+      expect(testComponent.selectedFoods).toEqual(['steak-0']);
+    }));
+
+    it('should not propagate changes when a non-selected option is added', fakeAsync(() => {
+      testComponent.selectedFoods = ['steak-0'];
+      fixture.detectChanges();
+      flush();
+
+      testComponent.selectionChange.calls.reset();
+      testComponent.foods.push({value: 'pasta-4', viewValue: 'Pasta'});
+      fixture.detectChanges();
+      flush();
+
+      expect(testComponent.selectionChange).not.toHaveBeenCalled();
+      expect(testComponent.select.value).toEqual(['steak-0']);
+      expect(testComponent.selectedFoods).toEqual(['steak-0']);
+    }));
+
+  });
 });
 
 
@@ -4601,7 +4679,8 @@ class BasicSelectWithoutFormsPreselected {
 @Component({
   template: `
     <mat-form-field>
-      <mat-select placeholder="Food" [(value)]="selectedFoods" multiple>
+      <mat-select multiple placeholder="Food" [(value)]="selectedFoods"
+        (selectionChange)="selectionChange()">
         <mat-option *ngFor="let food of foods" [value]="food.value">
           {{ food.viewValue }}
         </mat-option>
@@ -4611,6 +4690,7 @@ class BasicSelectWithoutFormsPreselected {
 })
 class BasicSelectWithoutFormsMultiple {
   selectedFoods: string[];
+  selectionChange = jasmine.createSpy('selectionChange spy');
   foods: any[] = [
     { value: 'steak-0', viewValue: 'Steak' },
     { value: 'pizza-1', viewValue: 'Pizza' },
