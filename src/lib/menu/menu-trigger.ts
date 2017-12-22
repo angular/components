@@ -197,7 +197,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       this._initMenu();
 
       if (this.menu instanceof MatMenu) {
-        this.menu._startAnimation();
+        this.menu._toggleAnimation(true);
       }
     }
   }
@@ -220,7 +220,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       this._overlayRef.detach();
 
       if (this.menu instanceof MatMenu) {
-        this.menu._resetAnimation();
+        this.menu._toggleAnimation(false);
       }
     }
   }
