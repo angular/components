@@ -1,3 +1,4 @@
+@import '../core/style/variables';
 @import '../core/theming/palette';
 @import '../core/theming/theming';
 @import '../core/typography/typography-utils';
@@ -6,6 +7,7 @@
 // and the width/height appear to be off from the spec.
 $mat-tooltip-target-height: 22px;
 $mat-tooltip-font-size: 10px;
+$mat-tooltip-mobile-font-size: 14px;
 $mat-tooltip-vertical-padding: ($mat-tooltip-target-height - $mat-tooltip-font-size) / 2;
 
 @mixin mat-tooltip-theme($theme) {
@@ -20,5 +22,11 @@ $mat-tooltip-vertical-padding: ($mat-tooltip-target-height - $mat-tooltip-font-s
     font-size: $mat-tooltip-font-size;
     padding-top: $mat-tooltip-vertical-padding;
     padding-bottom: $mat-tooltip-vertical-padding;
+  }
+
+  @media ($mat-xsmall) {
+    .mat-tooltip {
+      font-size: $mat-tooltip-mobile-font-size;
+    }
   }
 }
