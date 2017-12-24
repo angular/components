@@ -972,85 +972,6 @@ describe('MatDialog', () => {
     }));
   });
 
-  describe('default dialog options', () => {
-    it('should adhere to set options in default options', () => {
-      overlayContainer.ngOnDestroy();
-
-      const defaultConfig = {
-        hasBackdrop: false,
-        disableClose: true,
-        width: '100px',
-        height: '100px',
-        minWidth: '50px',
-        minHeight: '50px',
-        maxWidth: '150px',
-        maxHeight: '150px',
-        autoFocus: false,
-      };
-
-      TestBed.resetTestingModule();
-      TestBed.configureTestingModule({
-        imports: [MatDialogModule, DialogTestModule],
-        providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig}]
-      });
-
-      viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
-      viewContainerFixture.detectChanges();
-      testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
-
-      dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
-
-      viewContainerFixture.detectChanges();
-
-      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
-
-      dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
-      expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeTruthy();
-
-      expect(document.activeElement.tagName).not.toBe('INPUT');
-
-      let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-      expect(overlayPane.style.width).toBe('100px');
-      expect(overlayPane.style.height).toBe('100px');
-      expect(overlayPane.style.minWidth).toBe('50px');
-      expect(overlayPane.style.minHeight).toBe('50px');
-      expect(overlayPane.style.maxWidth).toBe('150px');
-      expect(overlayPane.style.maxHeight).toBe('150px');
-    });
-
-    it('should be overridable by open() options', () => {
-      overlayContainer.ngOnDestroy();
-
-      const defaultConfig = {
-        hasBackdrop: false,
-        disableClose: true
-      };
-
-      TestBed.resetTestingModule();
-      TestBed.configureTestingModule({
-        imports: [MatDialogModule, DialogTestModule],
-        providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig}]
-      });
-
-      viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
-      viewContainerFixture.detectChanges();
-      testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
-
-      dialog.open(PizzaMsg, {
-        hasBackdrop: true,
-        disableClose: false,
-        viewContainerRef: testViewContainerRef
-      });
-
-      viewContainerFixture.detectChanges();
-
-      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
-
-      dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
-      expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeFalsy();
-    });
-
-  });
 });
 
 describe('MatDialog with a parent MatDialog', () => {
@@ -1183,7 +1104,7 @@ describe('MatDialog with default options', () => {
     testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
   });
 
-  it('should adhere to set options in default options', () => {
+  it('should be set correctly', () => {
     dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
 
     viewContainerFixture.detectChanges();
@@ -1216,6 +1137,9 @@ describe('MatDialog with default options', () => {
     expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
 
     dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+    viewContainerFixture.detectChanges();
+    flush();
+
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeFalsy();
   });
 

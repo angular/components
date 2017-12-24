@@ -56,6 +56,7 @@ export const MAT_DIALOG_DEFAULT_OPTIONS_PROVIDER = {
     width: '',
     height: '',
     maxWidth: '80vw',
+    data: null,
     direction: 'ltr',
     ariaDescribedBy: null,
     ariaLabel: null,
