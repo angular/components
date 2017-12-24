@@ -1131,6 +1131,96 @@ describe('MatDialog with a parent MatDialog', () => {
   }));
 });
 
+describe('MatDialog with default options', () => {
+  let dialog: MatDialog;
+  let overlayContainer: OverlayContainer;
+  let overlayContainerElement: HTMLElement;
+
+  let testViewContainerRef: ViewContainerRef;
+  let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
+  let mockLocation: SpyLocation;
+
+  beforeEach(fakeAsync(() => {
+    const defaultConfig = {
+      hasBackdrop: false,
+      disableClose: true,
+      width: '100px',
+      height: '100px',
+      minWidth: '50px',
+      minHeight: '50px',
+      maxWidth: '150px',
+      maxHeight: '150px',
+      autoFocus: false,
+    };
+
+    TestBed.configureTestingModule({
+      imports: [MatDialogModule, DialogTestModule],
+      providers: [
+        {provide: Location, useClass: SpyLocation},
+        {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig},
+      ],
+    });
+
+    TestBed.compileComponents();
+  }));
+
+  beforeEach(inject([MatDialog, Location, OverlayContainer],
+    (d: MatDialog, l: Location, oc: OverlayContainer) => {
+      dialog = d;
+      mockLocation = l as SpyLocation;
+      overlayContainer = oc;
+      overlayContainerElement = oc.getContainerElement();
+    }));
+
+  afterEach(() => {
+    overlayContainer.ngOnDestroy();
+  });
+
+  beforeEach(() => {
+    viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
+
+    viewContainerFixture.detectChanges();
+    testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
+  });
+
+  it('should adhere to set options in default options', () => {
+    dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
+
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+    expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeTruthy();
+
+    expect(document.activeElement.tagName).not.toBe('INPUT');
+
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+    expect(overlayPane.style.width).toBe('100px');
+    expect(overlayPane.style.height).toBe('100px');
+    expect(overlayPane.style.minWidth).toBe('50px');
+    expect(overlayPane.style.minHeight).toBe('50px');
+    expect(overlayPane.style.maxWidth).toBe('150px');
+    expect(overlayPane.style.maxHeight).toBe('150px');
+  });
+
+  it('should be overridable by open() options', () => {
+    dialog.open(PizzaMsg, {
+      hasBackdrop: true,
+      disableClose: false,
+      viewContainerRef: testViewContainerRef
+    });
+
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
+
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+    expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeFalsy();
+  });
+
+});
+
 
 @Directive({selector: 'dir-with-view-container'})
 class DirectiveWithViewContainer {
