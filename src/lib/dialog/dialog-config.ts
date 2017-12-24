@@ -27,36 +27,6 @@ export interface DialogPosition {
   right?: string;
 }
 
-/** Configurable options for `mat-dialog-container`. */
-export interface DialogGlobalOptions {
-  /** Whether dialogs have a background. */
-  hasBackdrop?: boolean;
-
-  /** Whether dialogs can be closed by user interaction. */
-  disableClose?: boolean;
-
-  /** The width of the dialogs. */
-  width?: string;
-
-  /** The height of the dialogs. */
-  height?: string;
-
-  /** The minimum width of the dialogs. */
-  minWidth?: string | number;
-
-  /** The minimum height of the dialogs. */
-  minHeight?: string | number;
-
-  /** The maximum width of the dialogs. */
-  maxWidth?: string | number;
-
-  /** The maximum height of the dialogs. */
-  maxHeight?: string | number;
-
-  /** Whether dialogs should focus the first focusable element on open. */
-  autoFocus?: boolean;
-}
-
 /**
  * Configuration for opening a modal dialog with the MatDialog service.
  */

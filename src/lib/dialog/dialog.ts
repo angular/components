@@ -33,16 +33,22 @@ import {of as observableOf} from 'rxjs/observable/of';
 import {filter} from 'rxjs/operators/filter';
 import {startWith} from 'rxjs/operators/startWith';
 import {Subject} from 'rxjs/Subject';
-import {MatDialogConfig, DialogGlobalOptions} from './dialog-config';
+import {MatDialogConfig} from './dialog-config';
 import {MatDialogContainer} from './dialog-container';
 import {MatDialogRef} from './dialog-ref';
 
 
 export const MAT_DIALOG_DATA = new InjectionToken<any>('MatDialogData');
 
-/** Injection token that can be used to specify global dialog options. */
-export const MAT_DIALOG_GLOBAL_OPTIONS =
-    new InjectionToken<DialogGlobalOptions>('mat-dialog-global-options');
+/** Injection token that can be used to specify default dialog options. */
+export const MAT_DIALOG_DEFAULT_OPTIONS =
+    new InjectionToken<MatDialogConfig>('mat-dialog-default-options');
+
+/** @docs-private */
+export const MAT_DIALOG_DEFAULT_OPTIONS_PROVIDER = {
+  provide: MAT_DIALOG_DEFAULT_OPTIONS,
+  useValue: new MatDialogConfig(),
+};
 
 /** Injection token that determines the scroll handling while the dialog is open. */
 export const MAT_DIALOG_SCROLL_STRATEGY =
@@ -98,8 +104,8 @@ export class MatDialog {
       private _overlay: Overlay,
       private _injector: Injector,
       @Optional() location: Location,
+      @Inject(MAT_DIALOG_DEFAULT_OPTIONS) private _defaultOptions,
       @Inject(MAT_DIALOG_SCROLL_STRATEGY) private _scrollStrategy,
-      @Optional() @Inject(MAT_DIALOG_GLOBAL_OPTIONS) private _options,
       @Optional() @SkipSelf() private _parentDialog: MatDialog) {
 
     // Close all of the dialogs when the user goes forwards/backwards in history or when the
@@ -120,7 +126,7 @@ export class MatDialog {
   open<T, D = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
           config?: MatDialogConfig<D>): MatDialogRef<T> {
 
-    config = _applyConfigDefaults(config, this._options);
+    config = _applyConfigDefaults(config, this._defaultOptions);
 
     if (config.id && this.getDialogById(config.id)) {
       throw Error(`Dialog with id "${config.id}" exists already. The dialog id must be unique.`);
@@ -313,10 +319,10 @@ export class MatDialog {
 /**
  * Applies default options to the dialog config.
  * @param config Config to be modified.
- * @param globalOptions Global options provided.
+ * @param defaultOptions Default options provided.
  * @returns The new configuration object.
  */
 function _applyConfigDefaults(
-    config?: MatDialogConfig, globalOptions?: DialogGlobalOptions): MatDialogConfig {
-  return {...new MatDialogConfig(), ...globalOptions, ...config};
+    config?: MatDialogConfig, defaultOptions?: MatDialogConfig): MatDialogConfig {
+  return {...defaultOptions, ...config};
 }
