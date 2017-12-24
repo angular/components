@@ -47,7 +47,7 @@ export const MAT_DIALOG_DEFAULT_OPTIONS =
 /** @docs-private */
 export const MAT_DIALOG_DEFAULT_OPTIONS_PROVIDER = {
   provide: MAT_DIALOG_DEFAULT_OPTIONS,
-  useValue: new MatDialogConfig(),
+  useClass: MatDialogConfig,
 };
 
 /** Injection token that determines the scroll handling while the dialog is open. */
