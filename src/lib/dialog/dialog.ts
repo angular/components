@@ -47,7 +47,20 @@ export const MAT_DIALOG_DEFAULT_OPTIONS =
 /** @docs-private */
 export const MAT_DIALOG_DEFAULT_OPTIONS_PROVIDER = {
   provide: MAT_DIALOG_DEFAULT_OPTIONS,
-  useClass: MatDialogConfig,
+  useValue: {
+    role: 'dialog',
+    panelClass: '',
+    hasBackdrop: true,
+    backdropClass: '',
+    disableClose: false,
+    width: '',
+    height: '',
+    maxWidth: '80vw',
+    direction: 'ltr',
+    ariaDescribedBy: null,
+    ariaLabel: null,
+    autoFocus: true,
+  },
 };
 
 /** Injection token that determines the scroll handling while the dialog is open. */
