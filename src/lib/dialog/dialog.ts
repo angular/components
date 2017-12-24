@@ -129,7 +129,7 @@ export class MatDialog {
     const overlayRef = this._createOverlay(config);
     const dialogContainer = this._attachDialogContainer(overlayRef, config);
     const dialogRef =
-      this._attachDialogContent<T>(componentOrTemplateRef, dialogContainer, overlayRef, config);
+        this._attachDialogContent<T>(componentOrTemplateRef, dialogContainer, overlayRef, config);
 
     this.openDialogs.push(dialogRef);
     dialogRef.afterClosed().subscribe(() => this._removeOpenDialog(dialogRef));
