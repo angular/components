@@ -1094,7 +1094,7 @@ describe('MatDialog with a parent MatDialog', () => {
       flush();
 
       expect(overlayContainerElement.textContent)
-        .toContain('Pizza', 'Expected a dialog to be opened');
+          .toContain('Pizza', 'Expected a dialog to be opened');
 
       childDialog.closeAll();
       fixture.detectChanges();
