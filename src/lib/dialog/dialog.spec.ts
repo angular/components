@@ -997,6 +997,7 @@ describe('MatDialog', () => {
 
       viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
       viewContainerFixture.detectChanges();
+      testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
 
       dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
 
@@ -1035,6 +1036,7 @@ describe('MatDialog', () => {
 
       viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
       viewContainerFixture.detectChanges();
+      testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
 
       dialog.open(PizzaMsg, {
         hasBackdrop: true,
