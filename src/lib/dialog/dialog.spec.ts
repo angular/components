@@ -990,7 +990,7 @@ describe('MatDialog', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [MatDialogModule],
+        imports: [MatDialogModule, DialogTestModule],
         declarations: [PizzaMsg],
         providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig}]
       });
@@ -1029,7 +1029,7 @@ describe('MatDialog', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [MatDialogModule],
+        imports: [MatDialogModule, DialogTestModule],
         declarations: [PizzaMsg],
         providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig}]
       });
