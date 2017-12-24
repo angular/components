@@ -1125,7 +1125,7 @@ describe('MatDialog with default options', () => {
     expect(overlayPane.style.maxHeight).toBe('150px');
   });
 
-  it('should be overridable by open() options', () => {
+  it('should be overridable by open() options', fakeAsync(() => {
     dialog.open(PizzaMsg, {
       hasBackdrop: true,
       disableClose: false,
@@ -1141,7 +1141,7 @@ describe('MatDialog with default options', () => {
     flush();
 
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeFalsy();
-  });
+  }));
 
 });
 
