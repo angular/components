@@ -995,6 +995,9 @@ describe('MatDialog', () => {
         providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig}]
       });
 
+      viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
+      viewContainerFixture.detectChanges();
+
       dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
 
       viewContainerFixture.detectChanges();
@@ -1029,6 +1032,9 @@ describe('MatDialog', () => {
         declarations: [PizzaMsg],
         providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig}]
       });
+
+      viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
+      viewContainerFixture.detectChanges();
 
       dialog.open(PizzaMsg, {
         hasBackdrop: true,
