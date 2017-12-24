@@ -32,7 +32,6 @@ import {
   MatDialog,
   MatDialogModule,
   MatDialogRef,
-  MatDialogConfig,
   MAT_DIALOG_DEFAULT_OPTIONS
 } from './index';
 

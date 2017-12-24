@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ViewContainerRef,InjectionToken} from '@angular/core';
+import {ViewContainerRef} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 
 /** Valid ARIA roles for a dialog element. */
