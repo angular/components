@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ViewContainerRef} from '@angular/core';
+import {ViewContainerRef,InjectionToken} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 
 /** Valid ARIA roles for a dialog element. */
@@ -25,6 +25,36 @@ export interface DialogPosition {
 
   /** Override for the dialog's right position. */
   right?: string;
+}
+
+/** Configurable options for `mat-dialog-container`. */
+export interface DialogGlobalOptions {
+  /** Whether dialogs should have a background. */
+  hasBackdrop?: boolean;
+
+  /** Whether dialogs can be closed by user interaction. */
+  disableClose?: boolean;
+
+  /** The width of the dialogs. */
+  width?: string;
+
+  /** The height of the dialogs. */
+  height?: string;
+
+  /** The minimum width of the dialogs. */
+  minWidth?: string | number;
+
+  /** The minimum height of the dialogs. */
+  minHeight?: string | number;
+
+  /** The maximum width of the dialogs. */
+  maxWidth?: string | number;
+
+  /** The maximum height of the dialogs. */
+  maxHeight?: string | number;
+
+  /** Whether dialogs should focus the first focusable element on open. */
+  autoFocus?: boolean;
 }
 
 /**
@@ -49,7 +79,7 @@ export class MatDialogConfig<D = any> {
   /** Custom class for the overlay pane. */
   panelClass?: string | string[] = '';
 
-  /** Whether the dialog has a backdrop. */
+  /** Whether the dialog should have a backdrop. */
   hasBackdrop?: boolean = true;
 
   /** Custom class for the backdrop, */

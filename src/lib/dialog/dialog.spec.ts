@@ -27,7 +27,15 @@ import {MatDialogContainer} from './dialog-container';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {A, ESCAPE} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from './index';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef,
+  MatDialogConfig,
+  MAT_DIALOG_GLOBAL_OPTIONS,
+  DialogGlobalOptions
+} from './index';
 
 
 describe('MatDialog', () => {
@@ -964,6 +972,73 @@ describe('MatDialog', () => {
       const container = overlayContainerElement.querySelector('mat-dialog-container')!;
       expect(container.hasAttribute('aria-labelledby')).toBe(false);
     }));
+  });
+
+  describe('global dialog options', () => {
+    function createTestComponent(openConfig: MatDialogConfig, globalConfig: DialogGlobalOptions) {
+      // Reset the previously configured testing module to be able set new providers.
+      // The testing module has been initialized in the root describe group for the dialogs.
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [MatDialogModule],
+        declarations: [PizzaMsg],
+        providers: [{ provide: MAT_DIALOG_GLOBAL_OPTIONS, useValue: globalConfig }]
+      });
+
+      dialog.open(PizzaMsg, {
+        ...openConfig,
+        viewContainerRef: testViewContainerRef
+      });
+    }
+
+    it('should adhere to options in global options', () => {
+      createTestComponent({}, {
+        hasBackdrop: false,
+        disableClose: true,
+        width: '100px',
+        height: '100px',
+        minWidth: '50px',
+        minHeight: '50px',
+        maxWidth: '150px',
+        maxHeight: '150px',
+        autoFocus: false,
+      });
+
+      viewContainerFixture.detectChanges();
+
+      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
+
+      dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+      expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeTruthy();
+
+      expect(document.activeElement.tagName).not.toBe('INPUT');
+
+      let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      expect(overlayPane.style.width).toBe('100px');
+      expect(overlayPane.style.height).toBe('100px');
+      expect(overlayPane.style.minWidth).toBe('50px');
+      expect(overlayPane.style.minHeight).toBe('50px');
+      expect(overlayPane.style.maxWidth).toBe('150px');
+      expect(overlayPane.style.maxHeight).toBe('150px');
+    });
+
+    it('should be overridable by open() options', () => {
+      createTestComponent({
+        hasBackdrop: true,
+        disableClose: false
+      }, {
+        hasBackdrop: false,
+        disableClose: true
+      });
+
+      viewContainerFixture.detectChanges();
+
+      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
+
+      dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+      expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeFalsy();
+    });
+
   });
 });
 

@@ -33,21 +33,24 @@ import {of as observableOf} from 'rxjs/observable/of';
 import {filter} from 'rxjs/operators/filter';
 import {startWith} from 'rxjs/operators/startWith';
 import {Subject} from 'rxjs/Subject';
-import {MatDialogConfig} from './dialog-config';
+import {MatDialogConfig, DialogGlobalOptions} from './dialog-config';
 import {MatDialogContainer} from './dialog-container';
 import {MatDialogRef} from './dialog-ref';
 
 
 export const MAT_DIALOG_DATA = new InjectionToken<any>('MatDialogData');
 
+/** Injection token that can be used to specify global dialog options. */
+export const MAT_DIALOG_GLOBAL_OPTIONS =
+    new InjectionToken<DialogGlobalOptions>('mat-dialog-global-options');
 
 /** Injection token that determines the scroll handling while the dialog is open. */
 export const MAT_DIALOG_SCROLL_STRATEGY =
-    new InjectionToken<() => ScrollStrategy>('mat-dialog-scroll-strategy');
+  new InjectionToken<() => ScrollStrategy>('mat-dialog-scroll-strategy');
 
 /** @docs-private */
 export function MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
-    () => BlockScrollStrategy {
+  () => BlockScrollStrategy {
   return () => overlay.scrollStrategies.block();
 }
 
@@ -88,15 +91,16 @@ export class MatDialog {
    * Will emit on subscribe if there are no open dialogs to begin with.
    */
   afterAllClosed: Observable<void> = defer<void>(() => this.openDialogs.length ?
-      this._afterAllClosed :
-      this._afterAllClosed.pipe(startWith(undefined)));
+    this._afterAllClosed :
+    this._afterAllClosed.pipe(startWith(undefined)));
 
   constructor(
-      private _overlay: Overlay,
-      private _injector: Injector,
-      @Optional() location: Location,
-      @Inject(MAT_DIALOG_SCROLL_STRATEGY) private _scrollStrategy,
-      @Optional() @SkipSelf() private _parentDialog: MatDialog) {
+    private _overlay: Overlay,
+    private _injector: Injector,
+    @Optional() location: Location,
+    @Inject(MAT_DIALOG_SCROLL_STRATEGY) private _scrollStrategy,
+    @Optional() @Inject(MAT_DIALOG_GLOBAL_OPTIONS) private _options,
+    @Optional() @SkipSelf() private _parentDialog: MatDialog) {
 
     // Close all of the dialogs when the user goes forwards/backwards in history or when the
     // location hash changes. Note that this usually doesn't include clicking on links (unless
@@ -114,9 +118,9 @@ export class MatDialog {
    * @returns Reference to the newly-opened dialog.
    */
   open<T, D = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
-          config?: MatDialogConfig<D>): MatDialogRef<T> {
+    config?: MatDialogConfig<D>): MatDialogRef<T> {
 
-    config = _applyConfigDefaults(config);
+    config = _applyConfigDefaults(config, this._options);
 
     if (config.id && this.getDialogById(config.id)) {
       throw Error(`Dialog with id "${config.id}" exists already. The dialog id must be unique.`);
@@ -125,7 +129,7 @@ export class MatDialog {
     const overlayRef = this._createOverlay(config);
     const dialogContainer = this._attachDialogContainer(overlayRef, config);
     const dialogRef =
-        this._attachDialogContent<T>(componentOrTemplateRef, dialogContainer, overlayRef, config);
+      this._attachDialogContent<T>(componentOrTemplateRef, dialogContainer, overlayRef, config);
 
     this.openDialogs.push(dialogRef);
     dialogRef.afterClosed().subscribe(() => this._removeOpenDialog(dialogRef));
@@ -216,10 +220,10 @@ export class MatDialog {
    * @returns A promise resolving to the MatDialogRef that should be returned to the user.
    */
   private _attachDialogContent<T>(
-      componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
-      dialogContainer: MatDialogContainer,
-      overlayRef: OverlayRef,
-      config: MatDialogConfig): MatDialogRef<T> {
+    componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
+    dialogContainer: MatDialogContainer,
+    overlayRef: OverlayRef,
+    config: MatDialogConfig): MatDialogRef<T> {
 
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
@@ -246,7 +250,7 @@ export class MatDialog {
     } else {
       const injector = this._createInjector<T>(config, dialogRef, dialogContainer);
       const contentRef = dialogContainer.attachComponentPortal<T>(
-          new ComponentPortal(componentOrTemplateRef, undefined, injector));
+        new ComponentPortal(componentOrTemplateRef, undefined, injector));
       dialogRef.componentInstance = contentRef.instance;
     }
 
@@ -266,9 +270,9 @@ export class MatDialog {
    * @returns The custom injector that can be used inside the dialog.
    */
   private _createInjector<T>(
-      config: MatDialogConfig,
-      dialogRef: MatDialogRef<T>,
-      dialogContainer: MatDialogContainer): PortalInjector {
+    config: MatDialogConfig,
+    dialogRef: MatDialogRef<T>,
+    dialogContainer: MatDialogContainer): PortalInjector {
 
     const userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
     const injectionTokens = new WeakMap();
@@ -309,8 +313,10 @@ export class MatDialog {
 /**
  * Applies default options to the dialog config.
  * @param config Config to be modified.
+ * @param globalOptions Global options provided.
  * @returns The new configuration object.
  */
-function _applyConfigDefaults(config?: MatDialogConfig): MatDialogConfig {
-  return {...new MatDialogConfig(), ...config};
+function _applyConfigDefaults(
+  config?: MatDialogConfig, globalOptions?: DialogGlobalOptions): MatDialogConfig {
+  return {...new MatDialogConfig(), ...globalOptions, ...config};
 }
