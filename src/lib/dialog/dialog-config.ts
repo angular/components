@@ -29,7 +29,7 @@ export interface DialogPosition {
 
 /** Configurable options for `mat-dialog-container`. */
 export interface DialogGlobalOptions {
-  /** Whether dialogs should have a background. */
+  /** Whether dialogs have a background. */
   hasBackdrop?: boolean;
 
   /** Whether dialogs can be closed by user interaction. */
@@ -79,7 +79,7 @@ export class MatDialogConfig<D = any> {
   /** Custom class for the overlay pane. */
   panelClass?: string | string[] = '';
 
-  /** Whether the dialog should have a backdrop. */
+  /** Whether the dialog has a backdrop. */
   hasBackdrop?: boolean = true;
 
   /** Custom class for the backdrop, */
