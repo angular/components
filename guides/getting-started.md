@@ -43,7 +43,7 @@ npm install --save @angular/animations
 
 #### Yarn
 ```bash
-yarn install @angular/animationa
+yarn install @angular/animations
 ```
 
 **Note:** `@angular/animations` uses the WebAnimation API that isn't supported by all browsers yet.
