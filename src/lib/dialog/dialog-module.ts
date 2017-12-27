@@ -14,7 +14,6 @@ import {A11yModule} from '@angular/cdk/a11y';
 import {MatCommonModule} from '@angular/material/core';
 import {
   MatDialog,
-  MAT_DIALOG_DEFAULT_OPTIONS_PROVIDER,
   MAT_DIALOG_SCROLL_STRATEGY_PROVIDER
 } from './dialog';
 import {MatDialogContainer} from './dialog-container';
@@ -51,7 +50,6 @@ import {
   ],
   providers: [
     MatDialog,
-    MAT_DIALOG_DEFAULT_OPTIONS_PROVIDER,
     MAT_DIALOG_SCROLL_STRATEGY_PROVIDER,
   ],
   entryComponents: [MatDialogContainer],

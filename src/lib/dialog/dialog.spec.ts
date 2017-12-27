@@ -1142,7 +1142,6 @@ describe('MatDialog with default options', () => {
 
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeFalsy();
   }));
-
 });
 
 

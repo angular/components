@@ -44,26 +44,6 @@ export const MAT_DIALOG_DATA = new InjectionToken<any>('MatDialogData');
 export const MAT_DIALOG_DEFAULT_OPTIONS =
     new InjectionToken<MatDialogConfig>('mat-dialog-default-options');
 
-/** @docs-private */
-export const MAT_DIALOG_DEFAULT_OPTIONS_PROVIDER = {
-  provide: MAT_DIALOG_DEFAULT_OPTIONS,
-  useValue: {
-    role: 'dialog',
-    panelClass: '',
-    hasBackdrop: true,
-    backdropClass: '',
-    disableClose: false,
-    width: '',
-    height: '',
-    maxWidth: '80vw',
-    data: null,
-    direction: 'ltr',
-    ariaDescribedBy: null,
-    ariaLabel: null,
-    autoFocus: true,
-  },
-};
-
 /** Injection token that determines the scroll handling while the dialog is open. */
 export const MAT_DIALOG_SCROLL_STRATEGY =
     new InjectionToken<() => ScrollStrategy>('mat-dialog-scroll-strategy');
@@ -118,7 +98,7 @@ export class MatDialog {
       private _overlay: Overlay,
       private _injector: Injector,
       @Optional() location: Location,
-      @Inject(MAT_DIALOG_DEFAULT_OPTIONS) private _defaultOptions,
+      @Optional() @Inject(MAT_DIALOG_DEFAULT_OPTIONS) private _defaultOptions,
       @Inject(MAT_DIALOG_SCROLL_STRATEGY) private _scrollStrategy,
       @Optional() @SkipSelf() private _parentDialog: MatDialog) {
 
@@ -140,7 +120,7 @@ export class MatDialog {
   open<T, D = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
           config?: MatDialogConfig<D>): MatDialogRef<T> {
 
-    config = _applyConfigDefaults(config, this._defaultOptions);
+    config = _applyConfigDefaults(config, this._defaultOptions || new MatDialogConfig());
 
     if (config.id && this.getDialogById(config.id)) {
       throw Error(`Dialog with id "${config.id}" exists already. The dialog id must be unique.`);
