@@ -5,17 +5,29 @@ For existing apps, follow these steps to begin using Angular Material.
 
 ### Step 1: Install Angular Material and Angular CDK
 
+#### NPM
 ```bash
 npm install --save @angular/material @angular/cdk
 ```
+#### Yarn
+```bash
+yarn add @angular/material @angular/cdk
+```
+
 
 #### Alternative: Snapshot Build
 
 A snapshot build with the latest changes from master is also available. Note that this snapshot
 build should not be considered stable and may break between releases.
 
+#### NPM
 ```bash
 npm install --save angular/material2-builds angular/cdk-builds
+```
+
+#### Yarn
+```bash
+yarn add angular/material2-builds angular/cdk-builds
 ```
 
 ### Step 2: Animations
@@ -24,8 +36,14 @@ Some Material components depend on the Angular animations module in order to be 
 more advanced transitions. If you want these animations to work in your app, you have to
 install the `@angular/animations` module and include the `BrowserAnimationsModule` in your app.
 
+#### NPM
 ```bash
 npm install --save @angular/animations
+```
+
+#### Yarn
+```bash
+yarn install @angular/animationa
 ```
 
 **Note:** `@angular/animations` uses the WebAnimation API that isn't supported by all browsers yet.
