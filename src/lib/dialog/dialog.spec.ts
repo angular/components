@@ -1077,7 +1077,6 @@ describe('MatDialog with default options', () => {
     TestBed.configureTestingModule({
       imports: [MatDialogModule, DialogTestModule],
       providers: [
-        {provide: Location, useClass: SpyLocation},
         {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig},
       ],
     });
@@ -1104,7 +1103,7 @@ describe('MatDialog with default options', () => {
     testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
   });
 
-  it('should be set correctly', () => {
+  it('should use the provided defaults', () => {
     dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
 
     viewContainerFixture.detectChanges();
