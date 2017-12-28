@@ -1059,7 +1059,6 @@ describe('MatDialog with default options', () => {
 
   let testViewContainerRef: ViewContainerRef;
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
-  let mockLocation: SpyLocation;
 
   beforeEach(fakeAsync(() => {
     const defaultConfig = {
@@ -1084,10 +1083,9 @@ describe('MatDialog with default options', () => {
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([MatDialog, Location, OverlayContainer],
-    (d: MatDialog, l: Location, oc: OverlayContainer) => {
+  beforeEach(inject([OverlayContainer],
+    (d: MatDialog, oc: OverlayContainer) => {
       dialog = d;
-      mockLocation = l as SpyLocation;
       overlayContainer = oc;
       overlayContainerElement = oc.getContainerElement();
     }));
