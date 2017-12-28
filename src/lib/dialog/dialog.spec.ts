@@ -1083,7 +1083,7 @@ describe('MatDialog with default options', () => {
     TestBed.compileComponents();
   }));
 
-  beforeEach(inject([OverlayContainer],
+  beforeEach(inject([MatDialog, OverlayContainer],
     (d: MatDialog, oc: OverlayContainer) => {
       dialog = d;
       overlayContainer = oc;
