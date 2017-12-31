@@ -60,6 +60,9 @@ export const _MatExpansionPanelMixinBase = mixinDisabled(MatExpansionPanelBase);
 /** MatExpansionPanel's states. */
 export type MatExpansionPanelState = 'expanded' | 'collapsed';
 
+/** Counter for generating unique element ids. */
+let uniqueId = 0;
+
 /**
  * <mat-expansion-panel> component.
  *
@@ -119,6 +122,9 @@ export class MatExpansionPanel extends _MatExpansionPanelMixinBase
 
   /** Portal holding the user's content. */
   _portal: TemplatePortal<any>;
+
+  /** ID for the associated header element. Used for a11y labelling. */
+  _headerId = `mat-expansion-panel-header-${uniqueId++}`;
 
   constructor(@Optional() @Host() accordion: MatAccordion,
               _changeDetectorRef: ChangeDetectorRef,
