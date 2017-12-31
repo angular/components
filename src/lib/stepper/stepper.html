@@ -1,0 +1,59 @@
+<ng-container [ngSwitch]="orientation">
+  <!-- Horizontal stepper -->
+  <ng-container *ngSwitchCase="'horizontal'">
+    <div class="mat-horizontal-stepper-header-container">
+      <ng-container *ngFor="let step of _steps; let i = index; let isLast = last">
+        <ng-container *ngTemplateOutlet="stepTemplate; context: {$implicit: step, i: i}"></ng-container>
+        <div *ngIf="!isLast" class="mat-stepper-horizontal-line"></div>
+      </ng-container>
+    </div>
+
+    <div class="mat-horizontal-content-container">
+      <div *ngFor="let step of _steps; let i = index"
+           class="mat-horizontal-stepper-content" role="tabpanel"
+           [@horizontalStepTransition]="_getAnimationDirection(i)"
+           [id]="_getStepContentId(i)"
+           [attr.aria-labelledby]="_getStepLabelId(i)"
+           [attr.aria-expanded]="selectedIndex === i">
+        <ng-container [ngTemplateOutlet]="step.content"></ng-container>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Vertical stepper -->
+  <ng-container *ngSwitchDefault>
+    <div class="mat-step" *ngFor="let step of _steps; let i = index; let isLast = last">
+      <ng-container *ngTemplateOutlet="stepTemplate; context: {$implicit: step, i: i}"></ng-container>
+
+      <div class="mat-vertical-content-container" [class.mat-stepper-vertical-line]="!isLast">
+        <div class="mat-vertical-stepper-content" role="tabpanel"
+             [@verticalStepTransition]="_getAnimationDirection(i)"
+             [id]="_getStepContentId(i)"
+             [attr.aria-labelledby]="_getStepLabelId(i)"
+             [attr.aria-expanded]="selectedIndex === i">
+          <div class="mat-vertical-content">
+            <ng-container [ngTemplateOutlet]="step.content"></ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+
+<!-- Common step templating -->
+<ng-template let-step let-i="i" #stepTemplate>
+  <mat-step-header [ngClass]="'mat-' + orientation + '-stepper-header'"
+    (click)="step.select()"
+    (keydown)="_onKeydown($event)"
+    [tabIndex]="_focusIndex == i ? 0 : -1"
+    [id]="_getStepLabelId(i)"
+    [attr.aria-controls]="_getStepContentId(i)"
+    [attr.aria-selected]="selectedIndex === i"
+    [index]="i"
+    [icon]="_getIndicatorType(i)"
+    [label]="step.stepLabel || step.label"
+    [selected]="selectedIndex === i"
+    [active]="step.completed || selectedIndex === i || !linear"
+    [optional]="step.optional">
+  </mat-step-header>
+</ng-template>

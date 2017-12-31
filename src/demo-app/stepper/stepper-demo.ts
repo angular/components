@@ -18,6 +18,7 @@ export class StepperDemo {
   formGroup: FormGroup;
   isNonLinear = false;
   isNonEditable = false;
+  isVertical = true;
 
   nameFormGroup: FormGroup;
   emailFormGroup: FormGroup;

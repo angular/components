@@ -6,28 +6,32 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {animate, state, style, transition, trigger} from '@angular/animations';
 import {CdkStep, CdkStepper} from '@angular/cdk/stepper';
 import {
   AfterContentInit,
   Component,
   ContentChild,
   ContentChildren,
-  Directive,
   ElementRef,
   forwardRef,
   Inject,
+  Input,
   QueryList,
   SkipSelf,
   ViewChildren,
   ViewEncapsulation,
   ChangeDetectionStrategy,
+  OnInit,
 } from '@angular/core';
 import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
+import {matStepperAnimations} from './stepper-animations';
 import {takeUntil} from 'rxjs/operators/takeUntil';
+
+/** Possible orientations for the Material stepper. */
+export type MatStepperOrientation = 'horizontal' | 'vertical';
 
 @Component({
   moduleId: module.id,
@@ -61,8 +65,23 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
   }
 }
 
-@Directive({
-  selector: '[matStepper]'
+@Component({
+  moduleId: module.id,
+  selector: 'mat-stepper, [matStepper]',
+  templateUrl: 'stepper.html',
+  styleUrls: ['stepper.css'],
+  inputs: ['selectedIndex'],
+  exportAs: 'matStepper',
+  encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: matStepperAnimations,
+  host: {
+    '[class.mat-stepper-horizontal]': 'orientation === "horizontal"',
+    '[class.mat-stepper-vertical]': 'orientation === "vertical"',
+    '[attr.aria-orientation]': 'orientation',
+    'role': 'tablist',
+  },
 })
 export class MatStepper extends CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */
@@ -70,6 +89,9 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
 
   /** Steps that the stepper holds. */
   @ContentChildren(MatStep) _steps: QueryList<MatStep>;
+
+  /** Orientation of the stepper. */
+  @Input() orientation: MatStepperOrientation = 'vertical';
 
   ngAfterContentInit() {
     // Mark the component for change detection whenever the content children query changes
@@ -79,54 +101,46 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
 
 @Component({
   moduleId: module.id,
+  encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: 'stepper.html',
+  styleUrls: ['stepper.css'],
   selector: 'mat-horizontal-stepper',
   exportAs: 'matHorizontalStepper',
-  templateUrl: 'stepper-horizontal.html',
-  styleUrls: ['stepper.css'],
-  inputs: ['selectedIndex'],
+  animations: matStepperAnimations,
+  providers: [{provide: MatStepper, useExisting: MatHorizontalStepper}],
   host: {
     'class': 'mat-stepper-horizontal',
     'aria-orientation': 'horizontal',
     'role': 'tablist',
   },
-  animations: [
-    trigger('stepTransition', [
-      state('previous', style({transform: 'translate3d(-100%, 0, 0)', visibility: 'hidden'})),
-      state('current', style({transform: 'none', visibility: 'visible'})),
-      state('next', style({transform: 'translate3d(100%, 0, 0)', visibility: 'hidden'})),
-      transition('* => *', animate('500ms cubic-bezier(0.35, 0, 0.25, 1)'))
-    ])
-  ],
-  providers: [{provide: MatStepper, useExisting: MatHorizontalStepper}],
-  encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatHorizontalStepper extends MatStepper { }
+export class MatHorizontalStepper extends MatStepper implements OnInit {
+  ngOnInit() {
+    this.orientation = 'horizontal';
+  }
+}
 
 @Component({
   moduleId: module.id,
+  encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: 'stepper.html',
+  styleUrls: ['stepper.css'],
   selector: 'mat-vertical-stepper',
   exportAs: 'matVerticalStepper',
-  templateUrl: 'stepper-vertical.html',
-  styleUrls: ['stepper.css'],
-  inputs: ['selectedIndex'],
+  providers: [{provide: MatStepper, useExisting: MatVerticalStepper}],
+  animations: matStepperAnimations,
   host: {
     'class': 'mat-stepper-vertical',
     'aria-orientation': 'vertical',
     'role': 'tablist',
   },
-  animations: [
-    trigger('stepTransition', [
-      state('previous', style({height: '0px', visibility: 'hidden'})),
-      state('next', style({height: '0px', visibility: 'hidden'})),
-      state('current', style({height: '*', visibility: 'visible'})),
-      transition('* <=> current', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
-    ])
-  ],
-  providers: [{provide: MatStepper, useExisting: MatVerticalStepper}],
-  encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatVerticalStepper extends MatStepper { }
+export class MatVerticalStepper extends MatStepper implements OnInit {
+  ngOnInit() {
+    this.orientation = 'vertical';
+  }
+}
