@@ -5,6 +5,8 @@ For existing apps, follow these steps to begin using Angular Material.
 
 ### Step 1: Install Angular Material and Angular CDK
 
+You can use either the npm or yarn command-line tool to install packages. Use whichever is appropriate for your project in the examples below.
+
 #### NPM
 ```bash
 npm install --save @angular/material @angular/cdk
