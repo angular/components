@@ -27,6 +27,7 @@ import {
   SEP,
 } from '@angular/material/core';
 import {By} from '@angular/platform-browser';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {MatButtonModule} from '../button/index';
 import {MatCalendar} from './calendar';
 import {MatCalendarBody} from './calendar-body';
@@ -36,6 +37,8 @@ import {MatYearView} from './year-view';
 
 
 describe('MatCalendar', () => {
+  let dir: {value: Direction};
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -55,6 +58,7 @@ describe('MatCalendar', () => {
       ],
       providers: [
         MatDatepickerIntl,
+        {provide: Directionality, useFactory: () => dir = {value: 'ltr'}}
       ],
     });
 
@@ -204,6 +208,20 @@ describe('MatCalendar', () => {
             expect(calendarInstance._activeDate).toEqual(new Date(2016, DEC, 31));
           });
 
+          it('should increment date on left arrow press in rtl', () => {
+            dir.value = 'rtl';
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2017, FEB, 1));
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2017, FEB, 2));
+          });
+
           it('should increment date on right arrow press', () => {
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
             fixture.detectChanges();
@@ -214,6 +232,23 @@ describe('MatCalendar', () => {
             fixture.detectChanges();
 
             expect(calendarInstance._activeDate).toEqual(new Date(2017, FEB, 2));
+          });
+
+          it('should decrement date on right arrow press in rtl', () => {
+            dir.value = 'rtl';
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 30));
+
+            calendarInstance._activeDate = new Date(2017, JAN, 1);
+            fixture.detectChanges();
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2016, DEC, 31));
           });
 
           it('should go up a row on up arrow press', () => {
@@ -326,6 +361,20 @@ describe('MatCalendar', () => {
             expect(calendarInstance._activeDate).toEqual(new Date(2016, NOV, 30));
           });
 
+          it('should increment month on left arrow press in rtl', () => {
+            dir.value = 'rtl';
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2017, FEB, 28));
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2017, MAR, 28));
+          });
+
           it('should increment month on right arrow press', () => {
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
             fixture.detectChanges();
@@ -336,6 +385,20 @@ describe('MatCalendar', () => {
             fixture.detectChanges();
 
             expect(calendarInstance._activeDate).toEqual(new Date(2017, MAR, 28));
+          });
+
+          it('should decrement month on right arrow press in rtl', () => {
+            dir.value = 'rtl';
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2016, DEC, 31));
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2016, NOV, 30));
           });
 
           it('should go up a row on up arrow press', () => {
