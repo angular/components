@@ -125,6 +125,9 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     this._focusIndex = value;
   }
 
+  /** Disable tab pagination */
+  @Input() disablePagination: boolean;
+
   /** Event emitted when the option is selected. */
   @Output() selectFocusedIndex = new EventEmitter();
 
@@ -379,7 +382,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
    * should be called sparingly.
    */
   _checkPaginationEnabled() {
-    const isEnabled =
+    const isEnabled = this.disablePagination ? !this.disablePagination :
         this._tabList.nativeElement.scrollWidth > this._elementRef.nativeElement.offsetWidth;
 
     if (!isEnabled) {
