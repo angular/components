@@ -39,6 +39,9 @@ import {MatTabLink, MatTabNav} from './tab-nav-bar/tab-nav-bar';
     MatTab,
     MatTabNav,
     MatTabLink,
+    MatTabLabelWrapper, 
+    MatTabHeader,
+    MatTabBody
   ],
   declarations: [
     MatTabGroup,
