@@ -1,46 +1,51 @@
 #!/bin/bash
 
-# Fetch material2 assets from material2-docs-content repo.
+#
+# Script that fetches material2 assets from the material2-docs-content repo.
+#
 
+cd $(dirname ${0})/../
 
-# Dir where documentation assets will be copied (overviews, api docs)
-docAssetsPath=./src/assets/documents/
+# Directory where documentation assets should be copied to (overviews, api docs)
+documentsDestination=./src/assets/documents/
 
-# Dir where live-example assets will be copied
-exampleAssetsPath=./src/assets/
+# Directory where the live example assets will be copied to.
+examplesDestination=./src/assets/
 
-stackblitzxampleAssetsPath=./src/assets/stackblitz/
+# Path to the directory where the Stackblitz examples should be copied to.
+stackblitzDestination=./src/assets/stackblitz/
 
-# Dir where published assets will temporarily copied to (using `git clone`).
-tmpAssetClonePath=/tmp/material-assets
+# Path to the @angular/material-examples package in the node modules.
+materialExamplesDestination=./node_modules/@angular/material-examples
 
-# GitHub repo which contains snapshots of the docs content from angular/material2.
-docsContentRepo=https://github.com/angular/material2-docs-content
+# Git HTTP clone URL for the material2-docs-content repository.
+docsContentRepoUrl="https://github.com/angular/material2-docs-content"
 
-# Dirs for each of api docs, guides, overviews, and live-examples within the
-# cloned content repo. The absense of the trailing slash here is significant if
-# someone is running on a Mac.
-apiPath=${tmpAssetClonePath}/api
-guidesPath=${tmpAssetClonePath}/guides
-overviewPath=${tmpAssetClonePath}/overview
-examplesPath=${tmpAssetClonePath}/examples
-stackblitzExamplesPath=${tmpAssetClonePath}/stackblitz/examples
+# Path to the directory where the docs-content will be cloned.
+docsContentPath=/tmp/material2-docs-content
 
-# Create folders into which to copy content and assets.
-mkdir -p ${tmpAssetClonePath}
-mkdir -p ${exampleAssetsPath} ${docAssetsPath}
+# Create all necessary directories if they don't exist.
+mkdir -p ${documentsDestination}
+mkdir -p ${examplesDestination}
+mkdir -p ${stackblitzDestination}
+mkdir -p ${materialExamplesDestination}
 
-# Clone the assets from Github but only fetch the last commit to download less unused data.
-git clone ${docsContentRepo} ${tmpAssetClonePath} --depth 1
+# Remove previous repository if directory is present.
+rm -Rf ${docsContentPath}
 
-# Copy files over to their proper place in src/assets
-cp -R ${apiPath} ${overviewPath} ${guidesPath} ${docAssetsPath}
-cp -R ${examplesPath} ${exampleAssetsPath}
-cp -R ${stackblitzExamplesPath} ${stackblitzExampleAssetsPath}
+# Clone the docs-content repository.
+git clone ${docsContentRepoUrl} ${docsContentPath} --depth 1
 
-# Install the live examples component library
-mkdir -p ./node_modules/@angular/material-examples
-cp -R ${tmpAssetClonePath}/examples-package/* ./node_modules/@angular/material-examples
+# Copy all document assets (API, overview and guides).
+cp -R ${docsContentPath}/api ${documentsDestination}
+cp -R ${docsContentPath}/overview ${documentsDestination}
+cp -R ${docsContentPath}/guides ${documentsDestination}
 
-# Remove temporary directory
-rm -rf ${tmpAssetClonePath}
+# Copy the example assets to the docs.
+cp -R ${docsContentPath}/examples ${examplesDestination}
+
+# Copy the StackBlitz examples to the docs.
+cp -R ${docsContentPath}/stackblitz/examples ${stackblitzDestination}
+
+# Manually install the @angular/material-examples package from the docs-content.
+cp -R ${docsContentPath}/examples-package/* ${materialExamplesDestination}
