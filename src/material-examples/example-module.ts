@@ -20,7 +20,8 @@ import {AutocompleteSimpleExample} from './autocomplete-simple/autocomplete-simp
 import {ButtonOverviewExample} from './button-overview/button-overview-example';
 import {ButtonToggleExclusiveExample} from './button-toggle-exclusive/button-toggle-exclusive-example';
 import {ButtonToggleOverviewExample} from './button-toggle-overview/button-toggle-overview-example';
-import {ButtonTypesExample} from './button-types/button-types-example';
+import {ButtonCardExample} from "./button-card/button-card-example";
+import {ButtonToolbarExample} from "./button-toolbar/button-toolbar-example";
 import {CardFancyExample} from './card-fancy/card-fancy-example';
 import {CardOverviewExample} from './card-overview/card-overview-example';
 import {CdkTableBasicExample} from './cdk-table-basic/cdk-table-basic-example';
@@ -172,9 +173,15 @@ export const EXAMPLE_COMPONENTS = {
     additionalFiles: null,
     selectorName: null
   },
-  'button-types': {
-    title: 'Button varieties',
-    component: ButtonTypesExample,
+  'button-card': {
+    title: 'Button usage in cards',
+    component: ButtonCardExample,
+    additionalFiles: null,
+    selectorName: null
+  },
+  'button-toolbar': {
+    title: 'Icon button usage in toolbar',
+    component: ButtonToolbarExample,
     additionalFiles: null,
     selectorName: null
   },
@@ -830,7 +837,8 @@ export const EXAMPLE_LIST = [
   ButtonOverviewExample,
   ButtonToggleExclusiveExample,
   ButtonToggleOverviewExample,
-  ButtonTypesExample,
+  ButtonCardExample,
+  ButtonToolbarExample,
   CardFancyExample,
   CardOverviewExample,
   CdkTableBasicExample,
