@@ -81,7 +81,7 @@ For example:
 <mat-dialog-content>Are you sure?</mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>No</button>
-  <!-- Optionally, a result can be provided for the closing dialog. -->
+  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
   <button mat-button [mat-dialog-close]="true">Yes</button>
 </mat-dialog-actions>
 ```
