@@ -117,6 +117,7 @@ export class BuildPackage {
     .catch(() => {
       const error = red(`Failed to compile ${secondaryEntryPoint} using ${entryPointTsconfigPath}`);
       console.error(error);
+      return Promise.reject(error);
     });
   }
 
