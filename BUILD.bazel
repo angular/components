@@ -26,6 +26,7 @@ filegroup(
     "reflect-metadata",
     "minimist",
     "moment",
+    "source-map",
   ] for ext in [
     "*.js",
     "*.json",
