@@ -126,7 +126,7 @@ describe('MatCalendar', () => {
       expect(calendarInstance._currentView).toBe('multi-year');
       expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 31));
 
-      (<HTMLElement>calendarElement.querySelector('.mat-calendar-body-active')).click();
+      (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
       fixture.detectChanges();
 
       expect(calendarInstance._currentView).toBe('year');
@@ -168,7 +168,7 @@ describe('MatCalendar', () => {
       expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 31));
 
       let yearCells = calendarElement.querySelectorAll('.mat-calendar-body-cell');
-      (<HTMLElement>yearCells[0]).click();
+      (yearCells[0] as HTMLElement).click();
       fixture.detectChanges();
 
       expect(calendarInstance._currentView).toBe('year');
@@ -345,7 +345,7 @@ describe('MatCalendar', () => {
 
             expect(calendarInstance._currentView).toBe('multi-year');
 
-            (<HTMLElement>calendarBodyEl.querySelector('.mat-calendar-body-active')).click();
+            (calendarBodyEl.querySelector('.mat-calendar-body-active') as HTMLElement).click();
             fixture.detectChanges();
 
             expect(calendarInstance._currentView).toBe('year');
@@ -713,7 +713,7 @@ describe('MatCalendar', () => {
       periodButton.click();
       fixture.detectChanges();
 
-      (<HTMLElement>calendarElement.querySelector('.mat-calendar-body-active')).click();
+      (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
       fixture.detectChanges();
 
       spyOn(calendarInstance.yearView, '_init').and.callThrough();
@@ -731,7 +731,7 @@ describe('MatCalendar', () => {
       periodButton.click();
       fixture.detectChanges();
 
-      (<HTMLElement>calendarElement.querySelector('.mat-calendar-body-active')).click();
+      (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
       fixture.detectChanges();
 
       spyOn(calendarInstance.yearView, '_init').and.callThrough();
@@ -829,7 +829,7 @@ describe('MatCalendar', () => {
         dispatchMouseEvent(periodButton, 'click');
         fixture.detectChanges();
 
-        (<HTMLElement>calendarElement.querySelector('.mat-calendar-body-active')).click();
+        (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
         fixture.detectChanges();
 
         calendarInstance._activeDate = new Date(2017, NOV, 1);

@@ -297,7 +297,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   private _isSameView(date1: D, date2: D): boolean {
     if (this._currentView == 'month') {
       return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2) &&
-          this._dateAdapter.getMonth(date1) == this._dateAdapter.getMonth(date2)
+          this._dateAdapter.getMonth(date1) == this._dateAdapter.getMonth(date2);
     }
     if (this._currentView == 'year') {
       return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2);
@@ -447,24 +447,6 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     this._focusActiveCell();
     // Prevent unexpected default actions such as form submission.
     event.preventDefault();
-  }
-
-  /**
-   * Determine the date for the month that comes before the given month in the same column in the
-   * calendar table.
-   */
-  private _prevMonthInSameCol(date: D): D {
-    // Decrement by 4 since there are 4 months per row.
-    return this._dateAdapter.addCalendarMonths(date, -4);
-  }
-
-  /**
-   * Determine the date for the month that comes after the given month in the same column in the
-   * calendar table.
-   */
-  private _nextMonthInSameCol(date: D): D {
-    // Increment by 4 since there are 4 months per row.
-    return this._dateAdapter.addCalendarMonths(date, 4);
   }
 
   /**
