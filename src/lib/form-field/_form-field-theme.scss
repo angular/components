@@ -19,6 +19,7 @@
 
   // Underline colors.
   $underline-color: mat-color($foreground, divider, if($is-dark-theme, 0.7, 0.42));
+  $underline-color-base: mat-color($foreground, divider, if($is-dark-theme, 1, 0.87));
   $underline-color-accent: mat-color($accent);
   $underline-color-warn: mat-color($warn);
   $underline-focused-color: mat-color($primary);
@@ -56,21 +57,27 @@
   }
 
   .mat-form-field-ripple {
-    background-color: $underline-focused-color;
+    background-color: $underline-color-base;
+  }
 
-    &.mat-accent {
-      background-color: $underline-color-accent;
-    }
+  .mat-form-field.mat-focused {
+    .mat-form-field-ripple {
+      background-color: $underline-focused-color;
 
-    &.mat-warn {
-      background-color: $underline-color-warn;
+      &.mat-accent {
+        background-color: $underline-color-accent;
+      }
+
+      &.mat-warn {
+        background-color: $underline-color-warn;
+      }
     }
   }
 
   // Styling for the error state of the form field. Note that while the same can be
   // achieved with the ng-* classes, we use this approach in order to ensure that the same
   // logic is used to style the error state and to show the error messages.
-  .mat-form-field-invalid {
+  .mat-form-field.mat-form-field-invalid {
     .mat-form-field-label {
       color: $underline-color-warn;
 
