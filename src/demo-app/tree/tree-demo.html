@@ -8,9 +8,12 @@
       </mat-tree-node>
 
       <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
-          <mat-icon matTreeNodeTrigger>
-            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-          </mat-icon>
+          <button mat-icon-button matTreeNodeTrigger
+                  [attr.aria-label]="'toggle ' + node.key">
+            <mat-icon>
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+          </button>
           {{node.key}} : {{node.value}}
       </mat-tree-node>
     </mat-tree>
@@ -23,18 +26,21 @@
     <mat-card-header>Nested tree</mat-card-header>
 
     <mat-tree [dataSource]="nestedDataSource" [treeControl]="nestedTreeControl">
-      <mat-tree-node *matTreeNodeDef="let node" role="treeitem" matTreeNodeTrigger>
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodeTrigger>
         <li>
           <div>{{node.key}}:  {{node.value}}</div>
         </li>
       </mat-tree-node>
 
-      <mat-nested-tree-node *matTreeNodeDef="let node; when: hasNestedChild" role="group">
+      <mat-nested-tree-node *matTreeNodeDef="let node; when: hasNestedChild">
         <li>
           <div class="mat-tree-node">
-            <mat-icon matTreeNodeTrigger>
-              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-            </mat-icon>
+            <button mat-icon-button matTreeNodeTrigger
+                    [attr.aria-label]="'toggle ' + node.key">
+              <mat-icon>
+                {{nestedTreeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+              </mat-icon>
+            </button>
             {{node.key}}
           </div>
           <ul [class]="nestedTreeControl.isExpanded(node) ? '' : 'tree-demo-invisible'">
