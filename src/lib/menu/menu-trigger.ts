@@ -106,6 +106,10 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /** References the menu instance that the trigger is associated with. */
   @Input('matMenuTriggerFor') menu: MatMenuPanel;
 
+  /** Disables auto-closing the menu when the user clicks inside the panel */
+  @Input() disableClose: boolean = false;
+
+  
   /** Event emitted when the associated menu is opened. */
   @Output() menuOpened = new EventEmitter<void>();
 
@@ -186,7 +190,16 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /** Toggles the menu between the open and closed states. */
   toggleMenu(): void {
-    return this._menuOpen ? this.closeMenu() : this.openMenu();
+    if (this.disableClose) {
+      if (this._menuOpen && !this._element.nativeElement.contains(event.target)) {
+        this.closeMenu();
+      } else {
+        this.openMenu();
+      }
+    } else {
+      this._menuOpen ? this.closeMenu() : this.openMenu();
+    }
+    this._menuOpen ? this.closeMenu() : this.openMenu();
   }
 
   /** Opens the menu. */
