@@ -146,7 +146,7 @@ export class MatSnackBar {
     const contentRef = container.attachComponentPortal(portal);
 
     // We can't pass this via the injector, because the injector is created earlier.
-    snackBarRef.instance = contentRef.instance;
+    snackBarRef.componentInstance = contentRef.instance;
 
     // Subscribe to the breakpoint observer and attach the mat-snack-bar-handset class as
     // appropriate. This class is applied to the overlay element because the overlay must expand to
