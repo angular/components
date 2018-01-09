@@ -382,7 +382,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
    * should be called sparingly.
    */
   _checkPaginationEnabled() {
-    const isEnabled = this.disablePagination ? !this.disablePagination :
+    const isEnabled = this.disablePagination ? false :
         this._tabList.nativeElement.scrollWidth > this._elementRef.nativeElement.offsetWidth;
 
     if (!isEnabled) {
