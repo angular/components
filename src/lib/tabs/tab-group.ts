@@ -120,7 +120,10 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   @Input() headerPosition: MatTabHeaderPosition = 'above';
 
   /** Disable tab pagination */
-  @Input() disablePagination: boolean;
+  @Input()
+  get disablePagination(): boolean { return this._disablePagination; }
+  set disablePaignation(value: boolean) { this._disablePagination = coerceBooleanProperty(value); }
+  private _disablePagination: boolean = false;
 
   /** Background color of the tab group. */
   @Input()
