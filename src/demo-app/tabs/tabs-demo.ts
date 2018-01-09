@@ -51,6 +51,7 @@ export class TabsDemo {
   addTabPosition = 0;
   gotoNewTabAfterAdding = false;
   createWithLongContent = false;
+  disablePagination = false;
   dynamicTabs = [
     {
       label: 'Tab 1',

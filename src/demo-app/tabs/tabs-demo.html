@@ -39,6 +39,9 @@
       <mat-checkbox [(ngModel)]="gotoNewTabAfterAdding">
         Select after adding
       </mat-checkbox>
+      <mat-checkbox [(ngModel)]="disablePagination">
+        Disable pagination
+      </mat-checkbox>
       <div>
         Position:
         <mat-form-field>
@@ -52,7 +55,8 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-tab-group class="demo-tab-group" dynamicHeight [(selectedIndex)]="activeTabIndex">
+  <mat-tab-group class="demo-tab-group" dynamicHeight [(selectedIndex)]="activeTabIndex"
+                [disablePagination]="disablePagination">
     <mat-tab *ngFor="let tab of dynamicTabs" [disabled]="tab.disabled">
       <ng-template mat-tab-label>{{tab.label}}</ng-template>
       <div class="tab-content">
