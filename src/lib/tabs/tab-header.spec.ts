@@ -159,6 +159,18 @@ describe('MatTabHeader', () => {
         expect(appComponent.tabHeader._showPaginationControls).toBe(true);
       });
 
+      it('should hide width when tab list width exceeds container', () => {
+        fixture.detectChanges();
+        expect(appComponent.tabHeader._showPaginationControls).toBe(false);
+
+        // Add enough tabs that it will obviously exceed the width
+        appComponent.addTabsForScrolling();
+        appComponent.tabHeader.disablePagination = true;
+        fixture.detectChanges();
+
+        expect(appComponent.tabHeader._showPaginationControls).toBe(false);
+      });
+
       it('should scroll to show the focused tab label', () => {
         appComponent.addTabsForScrolling();
         fixture.detectChanges();
@@ -301,6 +313,7 @@ interface Tab {
   template: `
   <div [dir]="dir">
     <mat-tab-header [selectedIndex]="selectedIndex" [disableRipple]="disableRipple"
+               [disablePagination]="disablePagination"
                (indexFocused)="focusedIndex = $event"
                (selectFocusedIndex)="selectedIndex = $event">
       <div matTabLabelWrapper style="min-width: 30px; width: 30px"
@@ -320,6 +333,7 @@ interface Tab {
 })
 class SimpleTabHeaderApp {
   disableRipple: boolean = false;
+  disablePagination: boolean = false;
   selectedIndex: number = 0;
   focusedIndex: number;
   disabledTabIndex = 1;
