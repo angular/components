@@ -1004,53 +1004,6 @@ describe('MatDatepicker', () => {
       }));
 
     });
-
-    describe('datepicker that opens on focus', () => {
-      let fixture: ComponentFixture<DatepickerOpeningOnFocus>;
-      let testComponent: DatepickerOpeningOnFocus;
-      let input: HTMLInputElement;
-
-      beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerOpeningOnFocus, [MatNativeDateModule]);
-        fixture.detectChanges();
-        testComponent = fixture.componentInstance;
-        input = fixture.debugElement.query(By.css('input')).nativeElement;
-      }));
-
-      it('should not reopen if the browser fires the focus event asynchronously', fakeAsync(() => {
-        // Stub out the real focus method so we can call it reliably.
-        spyOn(input, 'focus').and.callFake(() => {
-          // Dispatch the event handler async to simulate the IE11 behavior.
-          Promise.resolve().then(() => dispatchFakeEvent(input, 'focus'));
-        });
-
-        // Open initially by focusing.
-        input.focus();
-        fixture.detectChanges();
-        flush();
-
-        // Due to some browser limitations we can't install a stub on `document.activeElement`
-        // so instead we have to override the previously-focused element manually.
-        (fixture.componentInstance.datepicker as any)._focusedElementBeforeOpen = input;
-
-        // Ensure that the datepicker is actually open.
-        expect(testComponent.datepicker.opened).toBe(true, 'Expected datepicker to be open.');
-
-        // Close the datepicker.
-        testComponent.datepicker.close();
-        fixture.detectChanges();
-
-        // Schedule the input to be focused asynchronously.
-        input.focus();
-        fixture.detectChanges();
-
-        // Flush out the scheduled tasks.
-        flush();
-
-        expect(testComponent.datepicker.opened).toBe(false, 'Expected datepicker to be closed.');
-      }));
-    });
-
   });
 
   describe('with missing DateAdapter and MAT_DATE_FORMATS', () => {
@@ -1365,15 +1318,4 @@ class DatepickerWithEvents {
   openedSpy = jasmine.createSpy('opened spy');
   closedSpy = jasmine.createSpy('closed spy');
   @ViewChild('d') datepicker: MatDatepicker<Date>;
-}
-
-
-@Component({
-  template: `
-    <input (focus)="d.open()" [matDatepicker]="d">
-    <mat-datepicker #d="matDatepicker"></mat-datepicker>
-  `,
-})
-class DatepickerOpeningOnFocus {
-  @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;
 }
