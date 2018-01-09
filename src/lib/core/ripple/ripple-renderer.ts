@@ -75,9 +75,6 @@ export class RippleRenderer {
   /** Ripple config for all ripples created by events. */
   rippleConfig: RippleConfig = {};
 
-  /** Options that apply to all the event listeners that are bound by the renderer. */
-  private _eventOptions = supportsPassiveEventListeners() ? ({passive: true} as any) : false;
-
   constructor(private _target: RippleTarget,
               private _ngZone: NgZone,
               elementRef: ElementRef,
