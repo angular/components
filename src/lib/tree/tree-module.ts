@@ -13,7 +13,7 @@ import {CommonModule} from '@angular/common';
 import {MatCommonModule} from '@angular/material/core';
 import {MatNestedTreeNode, MatTreeNodeDef, MatTreeNode} from './node';
 import {MatTree} from './tree';
-import {MatTreeNodeTrigger} from './trigger';
+import {MatTreeNodeToggle} from './toggle';
 import {MatTreeNodeOutlet} from './outlet';
 import {MatTreeNodePadding} from './padding';
 
@@ -21,7 +21,7 @@ const MAT_TREE_DIRECTIVES = [
   MatNestedTreeNode,
   MatTreeNodeDef,
   MatTreeNodePadding,
-  MatTreeNodeTrigger,
+  MatTreeNodeToggle,
   MatTree,
   MatTreeNode,
   MatTreeNodeOutlet,

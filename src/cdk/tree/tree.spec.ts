@@ -94,13 +94,13 @@ describe('CdkTree', () => {
       });
     });
 
-    describe('with trigger', () => {
-      let fixture: ComponentFixture<CdkTreeAppWithTrigger>;
-      let component: CdkTreeAppWithTrigger;
+    describe('with toggle', () => {
+      let fixture: ComponentFixture<CdkTreeAppWithToggle>;
+      let component: CdkTreeAppWithToggle;
 
       beforeEach(() => {
-        configureCdkTreeTestingModule([CdkTreeAppWithTrigger]);
-        fixture = TestBed.createComponent(CdkTreeAppWithTrigger);
+        configureCdkTreeTestingModule([CdkTreeAppWithToggle]);
+        fixture = TestBed.createComponent(CdkTreeAppWithToggle);
 
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
@@ -116,7 +116,7 @@ describe('CdkTree', () => {
         expect(component.treeControl.expansionModel.selected.length)
           .toBe(0, `Expect no expanded node`);
 
-        component.triggerRecursively = false;
+        component.toggleRecursively = false;
         let data = dataSource.data;
         dataSource.addChild(data[2]);
         fixture.detectChanges();
@@ -348,13 +348,13 @@ describe('CdkTree', () => {
       });
     });
 
-    describe('with trigger', () => {
-      let fixture: ComponentFixture<NestedCdkTreeAppWithTrigger>;
-      let component: NestedCdkTreeAppWithTrigger;
+    describe('with toggle', () => {
+      let fixture: ComponentFixture<NestedCdkTreeAppWithToggle>;
+      let component: NestedCdkTreeAppWithToggle;
 
       beforeEach(() => {
-        configureCdkTreeTestingModule([NestedCdkTreeAppWithTrigger]);
-        fixture = TestBed.createComponent(NestedCdkTreeAppWithTrigger);
+        configureCdkTreeTestingModule([NestedCdkTreeAppWithToggle]);
+        fixture = TestBed.createComponent(NestedCdkTreeAppWithToggle);
 
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
@@ -365,7 +365,7 @@ describe('CdkTree', () => {
       });
 
       it('should expand/collapse the node', () => {
-        component.triggerRecursively = false;
+        component.toggleRecursively = false;
         let data = dataSource.data;
         const child = dataSource.addChild(data[1], false);
         dataSource.addChild(child, false);
@@ -600,7 +600,7 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
                      cdkTreeNodePadding [cdkTreeNodePaddingIndent]="28"
-                     cdkTreeNodeTrigger>
+                     cdkTreeNodeToggle>
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
       </cdk-tree-node>
     </cdk-tree>
@@ -670,14 +670,14 @@ class WhenNodeNestedCdkTreeApp {
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
                      cdkTreeNodePadding
-                     cdkTreeNodeTrigger [cdkTreeNodeTriggerRecursive]="triggerRecursively">
+                     cdkTreeNodeToggle [cdkTreeNodeToggleRecursive]="toggleRecursively">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
       </cdk-tree-node>
     </cdk-tree>
   `
 })
-class CdkTreeAppWithTrigger {
-  triggerRecursively: boolean = true;
+class CdkTreeAppWithToggle {
+  toggleRecursively: boolean = true;
 
   getLevel = (node: TestData) => node.level;
   isExpandable = (node: TestData) => node.children.length > 0;
@@ -692,7 +692,7 @@ class CdkTreeAppWithTrigger {
   template: `
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
-                            cdkTreeNodeTrigger [cdkTreeNodeTriggerRecursive]="triggerRecursively">
+                            cdkTreeNodeToggle [cdkTreeNodeToggleRecursive]="toggleRecursively">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
         <div *ngIf="treeControl.isExpanded(node)">
           <ng-template cdkTreeNodeOutlet></ng-template>
@@ -701,8 +701,8 @@ class CdkTreeAppWithTrigger {
     </cdk-tree>
   `
 })
-class NestedCdkTreeAppWithTrigger {
-  triggerRecursively: boolean = true;
+class NestedCdkTreeAppWithToggle {
+  toggleRecursively: boolean = true;
 
   getChildren = (node: TestData) => node.observableChildren;
 
@@ -717,12 +717,12 @@ class NestedCdkTreeAppWithTrigger {
     <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
                      cdkTreeNodePadding [cdkTreeNodePaddingIndent]="28"
-                     cdkTreeNodeTrigger>
+                     cdkTreeNodeToggle>
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
       </cdk-tree-node>
        <cdk-tree-node *cdkTreeNodeDef="let node; when: isOddNode" class="customNodeClass"
                      cdkTreeNodePadding [cdkTreeNodePaddingIndent]="28"
-                     cdkTreeNodeTrigger>
+                     cdkTreeNodeToggle>
                      [{{node.pizzaTopping}}] - [{{node.pizzaCheese}}] + [{{node.pizzaBase}}]
       </cdk-tree-node>
     </cdk-tree>
