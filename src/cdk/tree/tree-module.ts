@@ -11,7 +11,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {CdkTreeNodeOutlet} from './outlet';
 import {CdkTreeNodePadding} from './padding';
-import {CdkTreeNodeTrigger} from './trigger';
+import {CdkTreeNodeToggle} from './toggle';
 import {CdkTree} from './tree';
 import {CdkTreeNodeDef, CdkTreeNode} from './node';
 import {CdkNestedTreeNode} from './nested-node';
@@ -20,7 +20,7 @@ const EXPORTED_DECLARATIONS = [
   CdkNestedTreeNode,
   CdkTreeNodeDef,
   CdkTreeNodePadding,
-  CdkTreeNodeTrigger,
+  CdkTreeNodeToggle,
   CdkTree,
   CdkTreeNode,
   CdkTreeNodeOutlet,
