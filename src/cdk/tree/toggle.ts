@@ -15,17 +15,17 @@ import {CdkTree} from './tree';
 import {CdkTreeNode} from './node';
 
 /**
- * Node trigger to expand/collapse the node.
+ * Node toggle to expand/collapse the node.
  */
 @Directive({
-  selector: '[cdkTreeNodeTrigger]',
+  selector: '[cdkTreeNodeToggle]',
   host: {
-    '(click)': '_trigger($event)',
+    '(click)': '_toggle($event)',
   }
 })
-export class CdkTreeNodeTrigger<T> {
+export class CdkTreeNodeToggle<T> {
   /** Whether expand/collapse the node recursively. */
-  @Input('cdkTreeNodeTriggerRecursive')
+  @Input('cdkTreeNodeToggleRecursive')
   get recursive(): boolean { return this._recursive; }
   set recursive(value: boolean) { this._recursive = coerceBooleanProperty(value); }
   protected _recursive = true;
@@ -33,7 +33,7 @@ export class CdkTreeNodeTrigger<T> {
   constructor(protected _tree: CdkTree<T>,
               protected _treeNode: CdkTreeNode<T>) {}
 
-  _trigger(event: Event): void {
+  _toggle(event: Event): void {
     this.recursive
       ? this._tree.treeControl.toggleDescendants(this._treeNode.data)
       : this._tree.treeControl.toggle(this._treeNode.data);

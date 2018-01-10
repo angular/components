@@ -52,7 +52,7 @@ represented in ways that would be difficult to accomplish with flat nodes.
 
 The `<mat-tree>` itself only deals with the rendering of a tree structure.
 Additional features can be built on top of the tree by adding behavior inside node templates
-(e.g., padding and trigger). Interactions that affect the
+(e.g., padding and toggle). Interactions that affect the
 rendered data (such as expand/collapse) should be propagated through the table's data source.
 
 ### TreeControl
@@ -62,13 +62,13 @@ node recursively through tree control. For nested tree node, `getChildren` funct
 the `NestedTreeControl` to make it work recursively. For flattened tree node, `getLevel` and
 `isExpandable` functions need to pass to the `FlatTreeControl` to make it work recursively.
 
-### Trigger
+### Toggle
 
-A `matTreeNodeTrigger` can be added in the tree node template to expand/collapse the tree node. The
-trigger triggers the expand/collapse functions in `TreeControl` and is able to expand/collapse a
-tree node recursively by setting `[matTreeNodeTriggerRecursive]` to `true`.
+A `matTreeNodeToggle` can be added in the tree node template to expand/collapse the tree node. The
+toggle toggles the expand/collapse functions in `TreeControl` and is able to expand/collapse a
+tree node recursively by setting `[matTreeNodeToggleRecursive]` to `true`.
 
-The trigger can be placed anywhere in the tree node, and is only triggered by `click` action.
+The toggle can be placed anywhere in the tree node, and is only toggled by `click` action.
 
 
 ### Padding (Flat tree only)

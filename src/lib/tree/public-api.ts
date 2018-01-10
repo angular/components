@@ -11,4 +11,4 @@ export * from './node';
 export * from './padding';
 export * from './tree';
 export * from './tree-module';
-export * from './trigger';
+export * from './toggle';

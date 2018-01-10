@@ -17,4 +17,4 @@ export * from './outlet';
 export * from './tree';
 export * from './tree-errors';
 export * from './tree-module';
-export * from './trigger';
+export * from './toggle';
