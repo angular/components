@@ -35,6 +35,8 @@ export const _MatNestedTreeNodeMixinBase = mixinTabIndex(mixinDisabled(CdkNested
   exportAs: 'matTreeNode',
   inputs: ['disabled', 'tabIndex'],
   host: {
+    '[attr.aria-expanded]': 'isExpanded',
+    '[attr.aria-level]': 'level',
     '[attr.role]': 'role',
     'class': 'mat-tree-node'
   },
@@ -73,6 +75,7 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   selector: 'mat-nested-tree-node',
   exportAs: 'matNestedTreeNode',
   host: {
+    '[attr.aria-expanded]': 'isExpanded',
     '[attr.role]': 'role',
     'class': 'mat-nested-tree-node',
   },

@@ -40,6 +40,7 @@ import {CdkTreeNode} from './node';
   selector: 'cdk-nested-tree-node',
   exportAs: 'cdkNestedTreeNode',
   host: {
+    '[attr.aria-expanded]': 'isExpanded',
     '[attr.role]': 'role',
     'class': 'cdk-tree-node cdk-nested-tree-node',
   },

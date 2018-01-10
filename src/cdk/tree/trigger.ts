@@ -28,10 +28,10 @@ export class CdkTreeNodeTrigger<T> {
   @Input('cdkTreeNodeTriggerRecursive')
   get recursive(): boolean { return this._recursive; }
   set recursive(value: boolean) { this._recursive = coerceBooleanProperty(value); }
-  private _recursive = true;
+  protected _recursive = true;
 
-  constructor(private _tree: CdkTree<T>,
-              private _treeNode: CdkTreeNode<T>) {}
+  constructor(protected _tree: CdkTree<T>,
+              protected _treeNode: CdkTreeNode<T>) {}
 
   _trigger(event: Event): void {
     this.recursive
