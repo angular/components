@@ -39,6 +39,16 @@ export class YourDialog {
 }
 ```
 
+Default dialog options can be specified by providing an instance of `MatDialogConfig` for MAT_DIALOG_DEFAULT_OPTIONS in your application's root module.
+
+```ts
+@NgModule({
+  providers: [
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
+  ]
+})
+```
+
 ### Sharing data with the Dialog component.
 If you want to share data with your dialog, you can use the `data` option to pass information to the dialog component.
 
