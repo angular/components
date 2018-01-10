@@ -67,6 +67,8 @@ export class CdkTreeNodeDef<T> {
   selector: 'cdk-tree-node',
   exportAs: 'cdkTreeNode',
   host: {
+    '[attr.aria-expanded]': 'isExpanded',
+    '[attr.aria-level]': 'level',
     '[attr.role]': 'role',
     'class': 'cdk-tree-node',
   },
@@ -88,6 +90,14 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
     this._setRoleFromData();
   }
   protected _data: T;
+
+  get isExpanded(): boolean {
+    return this._tree.treeControl.isExpanded(this._data);
+  }
+
+  get level(): number {
+    return this._tree.treeControl.getLevel ? this._tree.treeControl.getLevel(this._data) : 0;
+  }
 
   /**
    * The role of the node should be 'group' if it's an internal node,
