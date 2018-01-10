@@ -8,6 +8,12 @@
 // PascalCase is being used as Breakpoints is used like an enum.
 // tslint:disable-next-line:variable-name
 export const Breakpoints = {
+  WindowXSmall: '(max-width: 599px)',
+  WindowSmall: '(min-width: 600px) and (max-width: 959px)',
+  WindowMedium: '(min-width: 960px) and (max-width: 1279px)',
+  WindowLarge: '(min-width: 1280px) and (max-width: 1919px)',
+  WindowXLarge: '(min-width: 1920px)',
+
   Handset: '(max-width: 599px) and (orientation: portrait), ' +
            '(max-width: 959px) and (orientation: landscape)',
   Tablet: '(min-width: 600px) and (max-width: 839px) and (orientation: portrait), ' +
