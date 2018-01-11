@@ -7,6 +7,7 @@
  */
 
 
+export * from './navigator';
 export * from './node';
 export * from './padding';
 export * from './tree';

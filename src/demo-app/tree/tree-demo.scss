@@ -20,4 +20,9 @@
   .mat-card {
     margin: 16px;
   }
+
+  .mat-tree-navigator .cdk-keyboard-focused > * > .mat-tree-node,
+  .mat-tree-navigator .cdk-keyboard-focused > .mat-tree-node {
+    background: #eee;
+  }
 }

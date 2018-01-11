@@ -11,6 +11,7 @@ import {NgModule} from '@angular/core';
 import {CdkTreeModule} from '@angular/cdk/tree';
 import {CommonModule} from '@angular/common';
 import {MatCommonModule} from '@angular/material/core';
+import {MatTreeNavigator} from './navigator';
 import {MatNestedTreeNode, MatTreeNodeDef, MatTreeNode} from './node';
 import {MatTree} from './tree';
 import {MatTreeNodeToggle} from './toggle';
@@ -19,6 +20,7 @@ import {MatTreeNodePadding} from './padding';
 
 const MAT_TREE_DIRECTIVES = [
   MatNestedTreeNode,
+  MatTreeNavigator,
   MatTreeNodeDef,
   MatTreeNodePadding,
   MatTreeNodeToggle,

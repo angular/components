@@ -5,13 +5,15 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {FocusableOption} from '@angular/cdk/a11y';
+import {FocusMonitor, FocusableOption} from '@angular/cdk/a11y';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {
   AfterContentChecked,
+  AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ContentChild,
   ContentChildren,
   Directive,
   ElementRef,
@@ -21,6 +23,7 @@ import {
   IterableDiffers,
   OnDestroy,
   OnInit,
+  Optional,
   QueryList,
   ViewChild,
   ViewContainerRef,
@@ -39,6 +42,7 @@ import {
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError
 } from './tree-errors';
+import {CdkTreeNavigator} from './navigator';
 
 /**
  * Tree node for CdkTree. It contains the data in the tree node.
@@ -47,10 +51,12 @@ import {
   selector: 'cdk-tree-node',
   exportAs: 'cdkTreeNode',
   host: {
+    '[attr.tabindex]': '_treeNavigator ? -1 : null',
     '[attr.aria-expanded]': 'isExpanded',
     '[attr.aria-level]': 'role === "treeitem" ? level : null',
     '[attr.role]': 'role',
     'class': 'cdk-tree-node',
+    '(focus)': '_focus()'
   },
 })
 export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
@@ -86,11 +92,15 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
   @Input() role: 'treeitem' | 'group' = 'treeitem';
 
   constructor(protected _elementRef: ElementRef,
-              protected _tree: CdkTree<T>) {
+              protected _tree: CdkTree<T>,
+              protected _focusMonitor: FocusMonitor,
+              @Optional() protected treeNavigator: CdkTreeNavigator<T>) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T>;
+    this._focusMonitor.monitor(this._elementRef.nativeElement);
   }
 
   ngOnDestroy() {
+    this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
     this._destroyed.next();
     this._destroyed.complete();
   }
@@ -98,6 +108,13 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
   /** Focuses the menu item. Implements for FocusableOption. */
   focus(): void {
     this._elementRef.nativeElement.focus();
+  }
+
+  /** Update the focused data in tree navigator */
+  _focus(): void {
+    if (this._tree._treeNavigator) {
+      this._tree._treeNavigator.updateFocusedData(this._data);
+    }
   }
 
   private _setRoleFromData(): void {
@@ -115,7 +132,6 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
   }
 }
 
-
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
  * dataNodes with hierarchy. Updates the dataNodes when new data is provided by the data source.
@@ -128,12 +144,14 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
   host: {
     'class': 'cdk-tree',
     'role': 'tree',
+    '[attr.tabindex]': '_tabIndex',
+    '(focus)': 'focus()',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CdkTree<T>
-    implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
+    implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit {
   /** Subject that emits when the component has been destroyed. */
   private _onDestroy = new Subject<void>();
 
@@ -148,6 +166,21 @@ export class CdkTree<T>
 
   /** Level of nodes */
   private _levels: Map<T, number> = new Map<T, number>();
+
+  /** Tab index for the tree. */
+  _tabIndex = 0;
+
+  /**
+   * User defined tab index.
+   * When it is not null, use user defined tab index. Otherwise use _tabIndex
+   */
+  _userTabIndex: number | null = null;
+
+  @Input()
+  set tabIndex(value: number) {
+    this._userTabIndex = value;
+    this._tabIndex = value;
+  }
 
   /**
    * Provides a stream containing the latest data array to render. Influenced by the tree's
@@ -176,6 +209,8 @@ export class CdkTree<T>
 
   // Outlets within the tree's template where the dataNodes will be inserted.
   @ViewChild(CdkTreeNodeOutlet) _nodeOutlet: CdkTreeNodeOutlet;
+
+  @ContentChild(CdkTreeNavigator) _treeNavigator: CdkTreeNavigator<T>;
 
   /** The tree node template for the tree */
   @ContentChildren(CdkTreeNodeDef) _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
@@ -227,9 +262,24 @@ export class CdkTree<T>
     }
   }
 
+  ngAfterContentInit() {
+    if (this._treeNavigator) {
+      this._treeNavigator.treeControl = this.treeControl;
 
-  // TODO(tinayuangao): Work on keyboard traversal and actions, make sure it's working for RTL
-  //     and nested trees.
+      // Prevents the tree from capturing focus and redirecting
+      // it back to the first node when the user tabs out.
+      this._treeNavigator.tabOut.pipe(takeUntil(this._onDestroy)).subscribe(() => {
+        this._tabIndex = -1;
+        setTimeout(() => this._tabIndex = this._userTabIndex || 0);
+      });
+    }
+  }
+
+  focus() {
+    if (this._treeNavigator) {
+      this._treeNavigator.focusFirst();
+    }
+  }
 
   /**
    * Switch to the provided data source by resetting the data and unsubscribing from the current
@@ -293,9 +343,15 @@ export class CdkTree<T>
         } else if (currentIndex == null) {
           viewContainer.remove(adjustedPreviousIndex);
           this._levels.delete(item.item);
+          if (this._treeNavigator) {
+            this._treeNavigator.remove(adjustedPreviousIndex, parentData);
+          }
         } else {
           const view = viewContainer.get(adjustedPreviousIndex);
           viewContainer.move(view!, currentIndex);
+          if (this._treeNavigator) {
+            this._treeNavigator.move(adjustedPreviousIndex, currentIndex, parentData);
+          }
         }
       });
 
@@ -347,7 +403,12 @@ export class CdkTree<T>
     // The `CdkTreeNode` created from `createEmbeddedView` will be saved in static variable
     //     `mostRecentTreeNode`. We get it from static variable and pass the node data to it.
     if (CdkTreeNode.mostRecentTreeNode) {
-      CdkTreeNode.mostRecentTreeNode.data = nodeData;
+      (CdkTreeNode.mostRecentTreeNode as CdkTreeNode<T>).data = nodeData;
+
+      if (this._treeNavigator) {
+        this._treeNavigator.insert(index, nodeData,
+            CdkTreeNode.mostRecentTreeNode as CdkTreeNode<T>, parentData);
+      }
     }
   }
 }

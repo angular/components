@@ -21,6 +21,8 @@ import {MatTreeNodeOutlet} from './outlet';
   host: {
     'class': 'mat-tree',
     'role': 'tree',
+    '[attr.tabindex]': '_tabIndex',
+    '(focus)': 'focus()',
   },
   styleUrls: ['tree.css'],
   encapsulation: ViewEncapsulation.None,

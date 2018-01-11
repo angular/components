@@ -12,6 +12,12 @@
 
   .mat-tree-node {
     color: mat-color($foreground, text);
+
+    &.cdk-keyboard-focused,
+    &.cdk-program-focused,
+    &:hover {
+      background: mat-color($background, hover);
+    }
   }
 }
 

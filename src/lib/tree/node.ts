@@ -6,9 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor} from '@angular/cdk/a11y';
 import {
   CdkNestedTreeNode,
   CdkTree,
+  CdkTreeNavigator,
   CdkTreeNode,
   CdkTreeNodeDef,
 } from '@angular/cdk/tree';
@@ -21,6 +23,7 @@ import {
   Input,
   IterableDiffers,
   OnDestroy,
+  Optional,
   QueryList
 } from '@angular/core';
 import {CanDisable, HasTabIndex, mixinDisabled, mixinTabIndex} from '@angular/material/core';
@@ -38,10 +41,12 @@ export const _MatNestedTreeNodeMixinBase = mixinTabIndex(mixinDisabled(CdkNested
   exportAs: 'matTreeNode',
   inputs: ['disabled', 'tabIndex'],
   host: {
+    '[attr.tabindex]': 'tabIndex',
     '[attr.aria-expanded]': 'isExpanded',
     '[attr.aria-level]': 'role === "treeitem" ? level : null',
     '[attr.role]': 'role',
-    'class': 'mat-tree-node'
+    'class': 'mat-tree-node',
+    '(focus)': '_focus()',
   },
   providers: [{provide: CdkTreeNode, useExisting: MatTreeNode}]
 })
@@ -51,10 +56,12 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
 
   constructor(protected _elementRef: ElementRef,
               protected _tree: CdkTree<T>,
+              protected _focusMonitor: FocusMonitor,
+              @Optional() protected _treeNavigator: CdkTreeNavigator<T>,
               @Attribute('tabindex') tabIndex: string) {
-    super(_elementRef, _tree);
+    super(_elementRef, _tree, _focusMonitor, _treeNavigator);
 
-    this.tabIndex = Number(tabIndex) || 0;
+    this.tabIndex = Number(tabIndex) || (_treeNavigator ? -1 : 0);
   }
 }
 
@@ -79,9 +86,11 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   selector: 'mat-nested-tree-node',
   exportAs: 'matNestedTreeNode',
   host: {
+    '[attr.tabindex]': 'tabIndex',
     '[attr.aria-expanded]': 'isExpanded',
     '[attr.role]': 'role',
     'class': 'mat-nested-tree-node',
+    '(focus)': '_focus()',
   },
   inputs: ['disabled', 'tabIndex'],
   providers: [
@@ -98,11 +107,13 @@ export class MatNestedTreeNode<T> extends _MatNestedTreeNodeMixinBase<T>
 
   constructor(protected _elementRef: ElementRef,
               protected _tree: CdkTree<T>,
+              protected _focusMonitor: FocusMonitor,
+              @Optional() protected _treeNavigator: CdkTreeNavigator<T>,
               protected _differs: IterableDiffers,
               @Attribute('tabindex') tabIndex: string) {
-    super(_elementRef, _tree, _differs);
+    super(_elementRef, _tree, _focusMonitor, _treeNavigator, _differs);
 
-    this.tabIndex = Number(tabIndex) || 0;
+    this.tabIndex = Number(tabIndex) || (_treeNavigator ? -1 : 0);
   }
 
   // This is a workaround for https://github.com/angular/angular/issues/23091

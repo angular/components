@@ -13,10 +13,13 @@ import {
   IterableDiffers,
   IterableDiffer,
   OnDestroy,
+  Optional,
   QueryList,
 } from '@angular/core';
+import {FocusMonitor} from '@angular/cdk/a11y';
 import {takeUntil} from 'rxjs/operators';
 
+import {CdkTreeNavigator} from './navigator';
 import {CdkTree, CdkTreeNode} from './tree';
 import {CdkTreeNodeOutlet} from './outlet';
 import {getTreeControlFunctionsMissingError} from './tree-errors';
@@ -46,9 +49,11 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
   selector: 'cdk-nested-tree-node',
   exportAs: 'cdkNestedTreeNode',
   host: {
+    '[attr.tabindex]': '_treeNavigator ? -1 : null',
     '[attr.aria-expanded]': 'isExpanded',
     '[attr.role]': 'role',
     'class': 'cdk-tree-node cdk-nested-tree-node',
+    '(focus)': '_focus()',
   },
   providers: [{provide: CdkTreeNode, useExisting: CdkNestedTreeNode}]
 })
@@ -64,8 +69,10 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
 
   constructor(protected _elementRef: ElementRef,
               protected _tree: CdkTree<T>,
+              protected _focusMonitor: FocusMonitor,
+              @Optional() protected treeNavigator: CdkTreeNavigator<T>,
               protected _differs: IterableDiffers) {
-    super(_elementRef, _tree);
+    super(_elementRef, _tree, _focusMonitor, treeNavigator);
   }
 
   ngAfterContentInit() {

@@ -1,3 +1,4 @@
+@import '../core/style/elevation';
 $mat-node-height: 48px;
 
 .mat-tree {
@@ -11,8 +12,14 @@ $mat-node-height: 48px;
   flex: 1;
   overflow: hidden;
   word-wrap: break-word;
+
+  &:focus {
+    outline: none;
+  }
 }
 
-.mat-nested-tree-ndoe {
-  border-bottom-width: 0;
+.mat-nested-tree-node {
+  &:focus {
+    outline: none;
+  }
 }

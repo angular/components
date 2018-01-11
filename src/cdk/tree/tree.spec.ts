@@ -9,6 +9,8 @@ import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing
 import {Component, ViewChild, TrackByFunction} from '@angular/core';
 
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {HOME, END, UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {combineLatest, BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
@@ -18,6 +20,7 @@ import {FlatTreeControl} from './control/flat-tree-control';
 import {NestedTreeControl} from './control/nested-tree-control';
 import {CdkTreeModule} from './index';
 import {CdkTree} from './tree';
+import {CdkTreeNavigator} from './navigator';
 import {getTreeControlFunctionsMissingError} from './tree-errors';
 
 
@@ -385,6 +388,94 @@ describe('CdkTree', () => {
         expect(changedNodes[0].getAttribute('initialIndex')).toBe('0');
         expect(changedNodes[1].getAttribute('initialIndex')).toBe('1');
         expect(changedNodes[2].getAttribute('initialIndex')).toBe(null);
+      });
+    });
+
+    describe('with navigator', () => {
+      let fixture: ComponentFixture<FlatCdkNavigationTreeApp>;
+      let component: FlatCdkNavigationTreeApp;
+      let navigator: CdkTreeNavigator<TestData>;
+
+      beforeEach(() => {
+        configureCdkTreeTestingModule([FlatCdkNavigationTreeApp]);
+        fixture = TestBed.createComponent(FlatCdkNavigationTreeApp);
+
+        component = fixture.componentInstance;
+        dataSource = component.dataSource as FakeDataSource;
+        tree = component.tree;
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+        navigator = tree._treeNavigator;
+        fixture.detectChanges();
+      });
+
+      it('should focus on first data on HOME', () => {
+        expect(navigator.focusedData).toBeFalsy();
+
+        dispatchKeyboardEvent(treeElement, 'keydown', HOME);
+        expect(navigator.focusedData.pizzaTopping).toBe(`topping_1`);
+      });
+
+      it('should focus on the last data on END', () => {
+        expect(navigator.focusedData).toBeFalsy();
+
+        dispatchKeyboardEvent(treeElement, 'keydown', END);
+        // The collapsed last node is topping_3
+        expect(navigator.focusedData.pizzaTopping).toBe(`topping_3`);
+      });
+
+      it('should focus on next data on DOWN_ARROW', () => {
+        expect(navigator.focusedData).toBeFalsy();
+
+        for (let i = 1; i <= 3; i++) {
+          dispatchKeyboardEvent(treeElement, 'keydown', DOWN_ARROW);
+          expect(navigator.focusedData.pizzaTopping).toBe(`topping_${i}`);
+        }
+      });
+
+      it('should focus on previous data on UP_ARROW', () => {
+        expect(navigator.focusedData).toBeFalsy();
+
+        for (let i = 3; i >= 1; i--) {
+          dispatchKeyboardEvent(treeElement, 'keydown', UP_ARROW);
+          expect(navigator.focusedData.pizzaTopping).toBe(`topping_${i}`);
+        }
+      });
+
+      it('should expand focused node on RIGHT_ARROW, and collapse on LEFT_ARROW', () => {
+        expect(navigator.focusedData).toBeFalsy();
+
+        dispatchKeyboardEvent(treeElement, 'keydown', HOME);
+        expect(navigator.focusedData.pizzaTopping).toBe(`topping_1`);
+
+        let data = dataSource.data;
+        dataSource.addChild(data[0]);
+        dataSource.addChild(data[0]);
+        fixture.detectChanges();
+
+        // Expand the node
+        dispatchKeyboardEvent(treeElement, 'keydown', RIGHT_ARROW);
+        fixture.detectChanges();
+
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+        // Focus first child, node 5 is inserted before node 4
+        dispatchKeyboardEvent(treeElement, 'keydown', DOWN_ARROW);
+        expect(navigator.focusedData.pizzaTopping).toBe(`topping_5`);
+
+        // Focus second child
+        dispatchKeyboardEvent(treeElement, 'keydown', DOWN_ARROW);
+        expect(navigator.focusedData.pizzaTopping).toBe(`topping_4`);
+
+        // Focus parent
+        dispatchKeyboardEvent(treeElement, 'keydown', LEFT_ARROW);
+        expect(navigator.focusedData.pizzaTopping).toBe(`topping_1`);
+        expect(component.treeControl.expansionModel.selected.length).toBe(1, '1 node expanded');
+
+        // Collapse parent
+        dispatchKeyboardEvent(treeElement, 'keydown', LEFT_ARROW);
+        fixture.detectChanges();
+        expect(navigator.focusedData.pizzaTopping).toBe(`topping_1`);
+
+        expect(component.treeControl.expansionModel.selected.length).toBe(0, 'no node expanded');
       });
     });
   });
@@ -837,6 +928,93 @@ describe('CdkTree', () => {
         }
       }).toThrowError(getTreeControlFunctionsMissingError().message);
     }));
+
+    describe('with navigator', () => {
+      let fixture: ComponentFixture<NestedCdkNavigationTreeApp>;
+      let component: NestedCdkNavigationTreeApp;
+      let navigator: CdkTreeNavigator<TestData>;
+
+      beforeEach(() => {
+        configureCdkTreeTestingModule([NestedCdkNavigationTreeApp]);
+        fixture = TestBed.createComponent(NestedCdkNavigationTreeApp);
+
+        component = fixture.componentInstance;
+        dataSource = component.dataSource as FakeDataSource;
+        tree = component.tree;
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+        navigator = tree._treeNavigator;
+        fixture.detectChanges();
+      });
+
+      it('should focus on first data on HOME', () => {
+        expect(navigator.focusedData).toBeFalsy();
+
+        dispatchKeyboardEvent(treeElement, 'keydown', HOME);
+        expect(navigator.focusedData.pizzaTopping).toBe(`topping_1`);
+      });
+
+      it('should focus on the last data on END', () => {
+        expect(navigator.focusedData).toBeFalsy();
+
+        dispatchKeyboardEvent(treeElement, 'keydown', END);
+        // The collapsed last node is topping_3
+        expect(navigator.focusedData.pizzaTopping).toBe(`topping_3`);
+      });
+
+      it('should focus on next data on DOWN_ARROW', () => {
+        expect(navigator.focusedData).toBeFalsy();
+
+        for (let i = 1; i <= 3; i++) {
+          dispatchKeyboardEvent(treeElement, 'keydown', DOWN_ARROW);
+          expect(navigator.focusedData.pizzaTopping).toBe(`topping_${i}`);
+        }
+      });
+
+      it('should focus on previous data on UP_ARROW', () => {
+        expect(navigator.focusedData).toBeFalsy();
+
+        for (let i = 3; i >= 1; i--) {
+          dispatchKeyboardEvent(treeElement, 'keydown', UP_ARROW);
+          expect(navigator.focusedData.pizzaTopping).toBe(`topping_${i}`);
+        }
+      });
+
+      it('should expand focused node on RIGHT_ARROW, and collapse on LEFT_ARROW', () => {
+        expect(navigator.focusedData).toBeFalsy();
+
+        dispatchKeyboardEvent(treeElement, 'keydown', HOME);
+        expect(navigator.focusedData.pizzaTopping).toBe(`topping_1`);
+
+        let data = dataSource.data;
+        dataSource.addChild(data[0], false);
+        dataSource.addChild(data[0], false);
+        fixture.detectChanges();
+
+        // Expand the node
+        dispatchKeyboardEvent(treeElement, 'keydown', RIGHT_ARROW);
+        fixture.detectChanges();
+
+        // Focus first child
+        dispatchKeyboardEvent(treeElement, 'keydown', DOWN_ARROW);
+        expect(navigator.focusedData.pizzaTopping).toBe(`topping_4`);
+
+        // Focus second child
+        dispatchKeyboardEvent(treeElement, 'keydown', DOWN_ARROW);
+        expect(navigator.focusedData.pizzaTopping).toBe(`topping_5`);
+
+        // Focus parent
+        dispatchKeyboardEvent(treeElement, 'keydown', LEFT_ARROW);
+        expect(navigator.focusedData.pizzaTopping).toBe(`topping_1`);
+
+        // Collapse parent
+        dispatchKeyboardEvent(treeElement, 'keydown', LEFT_ARROW);
+        expect(navigator.focusedData.pizzaTopping).toBe(`topping_1`);
+
+        // Focus next node
+        dispatchKeyboardEvent(treeElement, 'keydown', DOWN_ARROW);
+        expect(navigator.focusedData.pizzaTopping).toBe(`topping_2`);
+      });
+    });
   });
 
   describe('with depth', () => {
@@ -1377,7 +1555,25 @@ class CdkTreeAppWithTrackBy {
       case 'index': return index;
     }
   }
+  getLevel = (node: TestData) => node.level;
+  isExpandable = (node: TestData) => node.children.length > 0;
 
+  treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
+  dataSource: FakeDataSource = new FakeDataSource(this.treeControl);
+
+  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+}
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" cdkTreeNavigator>
+      <cdk-tree-node *cdkTreeNodeDef="let node">
+                     {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
+      </cdk-tree-node>
+    </cdk-tree>
+  `
+})
+class FlatCdkNavigationTreeApp {
   getLevel = (node: TestData) => node.level;
   isExpandable = (node: TestData) => node.children.length > 0;
 
@@ -1420,3 +1616,25 @@ class NestedCdkTreeAppWithTrackBy {
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" cdkTreeNavigator>
+      <cdk-nested-tree-node *cdkTreeNodeDef="let node">
+                     {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
+        <div *ngIf="treeControl.isExpanded(node)">
+          <ng-template cdkTreeNodeOutlet></ng-template>
+        </div>
+      </cdk-nested-tree-node>
+    </cdk-tree>
+  `
+})
+class NestedCdkNavigationTreeApp {
+  getChildren = (node: TestData) => node.observableChildren;
+
+  treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
+  dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
+
+  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+}
+
