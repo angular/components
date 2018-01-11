@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 
@@ -7,7 +14,7 @@ import {Observable} from 'rxjs/Observable';
 import {combineLatest} from 'rxjs/observable/combineLatest';
 import {map} from 'rxjs/operators/map';
 
-import {TreeControl, FlatTreeControl} from '@angular/cdk/tree';
+import {TreeControl, FlatTreeControl} from '@angular/cdk-experimental/tree';
 import {MatTreeModule} from './index';
 import {MatTree} from './tree';
 
