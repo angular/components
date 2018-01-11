@@ -56,10 +56,18 @@ let nextUniqueId = 0;
   // MatInput is a directive and can't have styles, so we need to include its styles here.
   // The MatInput styles are fairly minimal so it shouldn't be a big deal for people who
   // aren't using MatInput.
-  styleUrls: ['form-field.css', '../input/input.css'],
+  styleUrls: [
+    'form-field.css',
+    'form-field-box.css',
+    'form-field-standard.css',
+    '../input/input.css',
+  ],
   animations: [matFormFieldAnimations.transitionMessages],
   host: {
     'class': 'mat-input-container mat-form-field',
+    '[class.mat-form-field-variant-standard]': 'variant == "standard"',
+    '[class.mat-form-field-variant-box]': 'variant == "box"',
+    '[class.mat-form-field-variant-outline]': 'variant == "outline"',
     '[class.mat-input-invalid]': '_control.errorState',
     '[class.mat-form-field-invalid]': '_control.errorState',
     '[class.mat-form-field-can-float]': '_canLabelFloat',
@@ -85,6 +93,9 @@ let nextUniqueId = 0;
 
 export class MatFormField implements AfterViewInit, AfterContentInit, AfterContentChecked {
   private _labelOptions: LabelOptions;
+
+  /** The form-field style variant. */
+  @Input() variant: 'standard' | 'box' | 'outline' = 'box';
 
   /** Color of the form field underline, based on the theme. */
   @Input() color: 'primary' | 'accent' | 'warn' = 'primary';

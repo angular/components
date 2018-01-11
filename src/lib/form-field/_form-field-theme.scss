@@ -2,6 +2,8 @@
 @import '../core/theming/theming';
 @import '../core/style/form-common';
 @import '../core/typography/typography-utils';
+@import 'form-field-box-theme.scss';
+@import 'form-field-standard-theme.scss';
 
 
 @mixin mat-form-field-theme($theme) {
@@ -95,6 +97,9 @@
   .mat-error {
     color: $underline-color-warn;
   }
+
+  @include mat-form-field-standard-theme($theme);
+  @include mat-form-field-box-theme($theme);
 }
 
 // Used to make instances of the _mat-form-field-label-floating mixin negligibly different,

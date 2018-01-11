@@ -1,0 +1,15 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+@import '../core/style/form-common';
+@import '../core/typography/typography-utils';
+
+
+// Theme styles that only apply to the standard variant of the form-field.
+
+@mixin mat-form-field-standard-theme($theme) {
+
+}
+
+@mixin mat-form-field-standard-typography($config) {
+
+}

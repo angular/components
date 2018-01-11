@@ -1,0 +1,14 @@
+@import '../core/style/variables';
+@import '../core/style/vendor-prefixes';
+
+
+// Styles that only apply to the standard variant of the form-field.
+
+$mat-form-field-box-border-radius: 4px;
+
+
+.mat-form-field-variant-box {
+  .mat-form-field-flex {
+    border-radius: $mat-form-field-box-border-radius;
+  }
+}
