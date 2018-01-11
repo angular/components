@@ -18,3 +18,4 @@ export * from './tree';
 export * from './tree-errors';
 export * from './tree-module';
 export * from './toggle';
+export * from './navigator';

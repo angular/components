@@ -65,6 +65,9 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
   /** Stores the node definition that does not have a when predicate. */
   private _defaultNodeDef: CdkTreeNodeDef<T> | null;
 
+  /** The node map map data nodes to CdkTreeNodes */
+  nodeMap: Map<T, CdkTreeNode<T>> = new Map<T, CdkTreeNode<T>>();
+
   /**
    * Provides a stream containing the latest data array to render. Influenced by the tree's
    * stream of view window (what dataNodes are currently on screen).
@@ -86,9 +89,6 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
 
   /** The tree node template for the tree */
   @ContentChildren(CdkTreeNodeDef) _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
-
-  /** The tree node inside the tree */
-  @ContentChildren(CdkTreeNode, {descendants: true}) items: QueryList<CdkTreeNode<T>>;
 
   // TODO(tinayuangao): Setup a listener for scrolling, emit the calculated view to viewChange.
   //     Remove the MAX_VALUE in viewChange
@@ -129,9 +129,6 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
       this._observeRenderChanges();
     }
   }
-
-  // TODO(tinayuangao): Work on keyboard traversal and actions, make sure it's working for RTL
-  //     and nested trees.
 
   /**
    * Switch to the provided data source by resetting the data and unsubscribing from the current
@@ -216,6 +213,7 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
     //     `mostRecentTreeNode`. We get it from static variable and pass the node data to it.
     if (CdkTreeNode.mostRecentTreeNode) {
       CdkTreeNode.mostRecentTreeNode.data = nodeData;
+      this.nodeMap.set(nodeData, CdkTreeNode.mostRecentTreeNode);
     }
 
     this._changeDetectorRef.detectChanges();

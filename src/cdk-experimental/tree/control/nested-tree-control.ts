@@ -12,6 +12,8 @@ import {BaseTreeControl} from './base-tree-control';
 /** Nested tree control. Able to expand/collapse a subtree recursively for NestedNode type. */
 export class NestedTreeControl<T> extends BaseTreeControl<T> {
 
+  flattenedNodes: T[] = [];
+
   /** Construct with nested tree function getChildren. */
   constructor(public getChildren: (dataNode: T) => Observable<T[]>) {
     super();
@@ -42,8 +44,70 @@ export class NestedTreeControl<T> extends BaseTreeControl<T> {
     descendants.push(dataNode);
     this.getChildren(dataNode).pipe(take(1)).subscribe(children => {
       if (children && children.length > 0) {
-        children.forEach((child: T) => this._getDescendants(descendants, child));
+        children.forEach((child: T) => {
+          this.parentMap.set(child, dataNode);
+          this._getDescendants(descendants, child);
+        });
       }
     });
   }
+
+  getAllVisibleNodes() {
+    this.flattenedNodes = [];
+    this.dataNodes.forEach(dataNode => this._getVisibleDescendants(dataNode));
+  }
+
+  _getVisibleDescendants(dataNode: T) {
+    this.flattenedNodes.push(dataNode);
+
+    if (this.isExpanded(dataNode)) {
+      this.getChildren(dataNode).pipe(take(1)).subscribe(children => {
+        if (children && children.length > 0) {
+          children.forEach((child: T) => {
+            this._getVisibleDescendants(child);
+          });
+        }
+      });
+    }
+  }
+
+  getFirstChild(dataNode: T): T | undefined {
+    let result;
+    if (this.isExpanded(dataNode)) {
+      this.getChildren(dataNode).pipe(take(1)).subscribe(children => {
+        if (children && children.length > 0) {
+          result = children[0];
+        }
+      });
+    }
+    return result;
+  }
+
+  /** Get the previous visible node of a given node */
+  getPrevious(dataNode: T): T | undefined {
+    this.getAllVisibleNodes();
+    const index = this.flattenedNodes.indexOf(dataNode);
+    if (index > 0) {
+      return this.flattenedNodes[index - 1];
+    }
+  }
+
+  /** Get the next visible node of a given node */
+  getNext(dataNode: T): T | undefined {
+    this.getAllVisibleNodes();
+    const index = this.flattenedNodes.indexOf(dataNode);
+    if (index < this.flattenedNodes.length - 1) {
+      return this.flattenedNodes[index + 1];
+    }
+  }
+
+  getFirstNode(): T | undefined {
+    return this.dataNodes[0];
+  }
+
+  getLastNode(): T | undefined {
+    this.getAllVisibleNodes();
+    return this.flattenedNodes[this.flattenedNodes.length - 1];
+  }
+
 }

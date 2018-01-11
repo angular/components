@@ -15,6 +15,7 @@ import {CdkTreeNodeToggle} from './toggle';
 import {CdkTree} from './tree';
 import {CdkTreeNodeDef, CdkTreeNode} from './node';
 import {CdkNestedTreeNode} from './nested-node';
+import {CdkTreeNavigator} from './navigator';
 
 const EXPORTED_DECLARATIONS = [
   CdkNestedTreeNode,
@@ -24,6 +25,7 @@ const EXPORTED_DECLARATIONS = [
   CdkTree,
   CdkTreeNode,
   CdkTreeNodeOutlet,
+  CdkTreeNavigator,
 ];
 
 @NgModule({

@@ -12,6 +12,7 @@ import {
   Directive,
   ElementRef,
   Input,
+  Optional,
   QueryList
 } from '@angular/core';
 import {
@@ -19,6 +20,7 @@ import {
   CdkTree,
   CdkTreeNodeDef,
   CdkTreeNode,
+  CdkTreeNavigator
 } from '@angular/cdk-experimental/tree';
 import {MatTreeNodeOutlet} from './outlet';
 import {mixinTabIndex, mixinDisabled, CanDisable, HasTabIndex} from '@angular/material/core';
@@ -38,17 +40,20 @@ export const _MatNestedTreeNodeMixinBase = mixinTabIndex(mixinDisabled(CdkNested
     '[attr.aria-expanded]': 'isExpanded',
     '[attr.aria-level]': 'level',
     '[attr.role]': 'role',
-    'class': 'mat-tree-node'
+    'class': 'mat-tree-node',
+    '(focus)': 'focus()',
+    '(blur)': 'blur()'
   },
   providers: [{provide: CdkTreeNode, useExisting: MatTreeNode}]
 })
 export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T> implements HasTabIndex, CanDisable {
   @Input() role: 'treeitem' | 'group' = 'treeitem';
 
-  constructor(protected _elementRef: ElementRef,
+  constructor(public _elementRef: ElementRef,
               protected _tree: CdkTree<T>,
+              @Optional() protected _treeNavigator: CdkTreeNavigator<T>,
               @Attribute('tabindex') tabIndex: string) {
-    super(_elementRef, _tree);
+    super(_elementRef, _tree, _treeNavigator);
 
     this.tabIndex = Number(tabIndex) || 0;
   }
@@ -78,6 +83,8 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
     '[attr.aria-expanded]': 'isExpanded',
     '[attr.role]': 'role',
     'class': 'mat-nested-tree-node',
+    '(focus)': 'focus()',
+    '(blur)': 'blur()'
   },
   inputs: ['disabled', 'tabIndex'],
   providers: [
@@ -92,10 +99,11 @@ export class MatNestedTreeNode<T> extends _MatNestedTreeNodeMixinBase<T>
 
   @ContentChildren(MatTreeNodeOutlet) nodeOutlet: QueryList<MatTreeNodeOutlet>;
 
-  constructor(protected _elementRef: ElementRef,
+  constructor(public _elementRef: ElementRef,
               protected _tree: CdkTree<T>,
+              @Optional() protected _treeNavigator: CdkTreeNavigator<T>,
               @Attribute('tabindex') tabIndex: string) {
-    super(_elementRef, _tree);
+    super(_elementRef, _tree, _treeNavigator);
 
     this.tabIndex = Number(tabIndex) || 0;
   }

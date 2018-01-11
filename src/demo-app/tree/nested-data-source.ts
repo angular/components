@@ -7,6 +7,7 @@
  */
 
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {NestedTreeControl, TreeControl} from '@angular/cdk-experimental/tree';
 import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
 import {map} from 'rxjs/operators/map';
@@ -18,12 +19,13 @@ export class JsonNestedDataSource implements DataSource<any> {
   _renderedData = new BehaviorSubject<JsonNode[]>([]);
   get renderedData(): JsonNode[] { return this._renderedData.value; }
 
-  constructor(private database: JsonDatabase) {}
+  constructor(private database: JsonDatabase, private _treeControl: NestedTreeControl<JsonNode>) {}
 
   connect(collectionViewer: CollectionViewer): Observable<JsonNode[]> {
     return merge([collectionViewer.viewChange, this.database.dataChange])
       .pipe(map(() => {
         this._renderedData.next(this.database.data);
+        this._treeControl.dataNodes = this.database.data;
         return this.renderedData;
       }));
   }

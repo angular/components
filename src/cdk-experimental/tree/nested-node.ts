@@ -11,6 +11,7 @@ import {
   Directive,
   ElementRef,
   OnDestroy,
+  Optional,
   QueryList,
 } from '@angular/core';
 import {takeUntil} from 'rxjs/operators/takeUntil';
@@ -18,6 +19,7 @@ import {takeUntil} from 'rxjs/operators/takeUntil';
 import {CdkTree} from './tree';
 import {CdkTreeNodeOutlet} from './outlet';
 import {CdkTreeNode} from './node';
+import {CdkTreeNavigator} from './navigator';
 
 /**
  * Nested node is a child of `<cdk-tree>`. It works with nested tree.
@@ -43,6 +45,8 @@ import {CdkTreeNode} from './node';
     '[attr.aria-expanded]': 'isExpanded',
     '[attr.role]': 'role',
     'class': 'cdk-tree-node cdk-nested-tree-node',
+    '(focus)': 'focus()',
+    '(blur)': 'blur()'
   },
   providers: [{provide: CdkTreeNode, useExisting: CdkNestedTreeNode}]
 })
@@ -53,9 +57,10 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
   /** The children node placeholder. */
   @ContentChildren(CdkTreeNodeOutlet) nodeOutlet: QueryList<CdkTreeNodeOutlet>;
 
-  constructor(protected _elementRef: ElementRef,
-              protected _tree: CdkTree<T>) {
-    super(_elementRef, _tree);
+  constructor(public _elementRef: ElementRef,
+              protected _tree: CdkTree<T>,
+              @Optional() protected _treeNavigator: CdkTreeNavigator<T>) {
+    super(_elementRef, _tree, _treeNavigator);
   }
 
   ngAfterContentInit() {
