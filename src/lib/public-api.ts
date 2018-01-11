@@ -40,4 +40,3 @@ export * from '@angular/material/table';
 export * from '@angular/material/tabs';
 export * from '@angular/material/toolbar';
 export * from '@angular/material/tooltip';
-export * from '@angular/material/tree';
