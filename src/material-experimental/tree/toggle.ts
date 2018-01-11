@@ -7,7 +7,7 @@
  */
 
 import {Directive, Input} from '@angular/core';
-import {CdkTreeNodeToggle} from '@angular/cdk/tree';
+import {CdkTreeNodeToggle} from '@angular/cdk-experimental/tree';
 
 /**
  * Wrapper for the CdkTree's toggle with Material design styles.

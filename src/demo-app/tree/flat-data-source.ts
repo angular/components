@@ -7,7 +7,7 @@
  */
 
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {FlatTreeControl, TreeControl} from '@angular/cdk/tree';
+import {FlatTreeControl, TreeControl} from '@angular/cdk-experimental/tree';
 import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
 import {map} from 'rxjs/operators/map';

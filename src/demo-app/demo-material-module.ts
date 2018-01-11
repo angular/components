@@ -38,7 +38,6 @@ import {
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
-  MatTreeModule,
   MatStepperModule,
 } from '@angular/material';
 import {MatNativeDateModule, MatRippleModule} from '@angular/material';
@@ -50,7 +49,8 @@ import {PlatformModule} from '@angular/cdk/platform';
 import {ObserversModule} from '@angular/cdk/observers';
 import {PortalModule} from '@angular/cdk/portal';
 import {CdkTableModule} from '@angular/cdk/table';
-import {CdkTreeModule} from '@angular/cdk/tree';
+import {CdkTreeModule} from '@angular/cdk-experimental/tree';
+import {MatTreeModule} from '@angular/material-experimental/tree';
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.
