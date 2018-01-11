@@ -19,7 +19,7 @@ import {
   CdkTree,
   CdkTreeNodeDef,
   CdkTreeNode,
-} from '@angular/cdk/tree';
+} from '@angular/cdk-experimental/tree';
 import {MatTreeNodeOutlet} from './outlet';
 import {mixinTabIndex, mixinDisabled, CanDisable, HasTabIndex} from '@angular/material/core';
 
