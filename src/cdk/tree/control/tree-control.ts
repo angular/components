@@ -50,6 +50,22 @@ export interface TreeControl<T> {
   /** Collapse a data node and all its descendants */
   collapseDescendants(dataNode: T): void;
 
+  /** Get parent data node of a given child node */
+  getParent(dataNode: T): T | undefined;
+
+  /** Get the previous visible node of a given node */
+  getPrevious(dataNode: T): T | undefined;
+
+  /** Get the next visible node of a given node */
+  getNext(dataNode: T): T | undefined;
+
+  /** Get the first child of a given node. Return undefined if no children */
+  getFirstChild(dataNode: T): T | undefined;
+
+  getFirstNode(): T | undefined;
+
+  getLastNode(): T | undefined;
+
   /** Get depth of a given data node, return the level number. This is for flat tree node. */
   readonly getLevel: (dataNode: T) => number;
 

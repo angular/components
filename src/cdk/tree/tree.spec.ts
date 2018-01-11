@@ -1038,6 +1038,37 @@ class FakeTreeControl extends BaseTreeControl<TestData> {
   expandAll(): void {
     // No op
   }
+
+  /** Get the previous visible node of a given node */
+  getPrevious(dataNode: TestData): TestData | undefined {
+    const index = this.dataNodes.indexOf(dataNode);
+    if (index > 0) {
+      return this.dataNodes[index - 1];
+    }
+  }
+
+  /** Get the next visible node of a given node */
+  getNext(dataNode: TestData): TestData | undefined {
+    const index = this.dataNodes.indexOf(dataNode);
+    if (index < this.dataNodes.length - 1) {
+      return this.dataNodes[index + 1];
+    }
+  }
+
+  /** Get the first child of a given node. Return undefined if no children */
+  getFirstChild(dataNode: TestData): TestData | undefined {
+    if (this.isExpanded(dataNode)) {
+      return this.getNext(dataNode);
+    }
+  }
+
+  getFirstNode(): TestData | undefined {
+    return this.dataNodes[0];
+  }
+
+  getLastNode(): TestData | undefined {
+    return this.dataNodes[this.dataNodes.length - 1];
+  }
 }
 @Component({
   template: `

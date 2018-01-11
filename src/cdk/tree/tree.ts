@@ -20,6 +20,7 @@ import {
   IterableChangeRecord,
   OnDestroy,
   OnInit,
+  Optional,
   QueryList,
   ViewChild,
   ViewContainerRef,
@@ -41,6 +42,7 @@ import {
   getTreeControlFunctionsMissingError,
   getTreeNoValidDataSourceError
 } from './tree-errors';
+import {CdkTreeNavigator} from './navigator';
 
 /**
  * Tree node for CdkTree. It contains the data in the tree node.
@@ -88,7 +90,8 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
   @Input() role: 'treeitem' | 'group' = 'treeitem';
 
   constructor(protected _elementRef: ElementRef,
-              protected _tree: CdkTree<T>) {
+              protected _tree: CdkTree<T>,
+              @Optional() protected _treeNavigator: CdkTreeNavigator<T>) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T>;
   }
 
@@ -100,6 +103,9 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
   /** Focuses the menu item. Implements for FocusableOption. */
   focus(): void {
     this._elementRef.nativeElement.focus();
+    if (this._treeNavigator) {
+      this._treeNavigator.updateFocusedNode(this);
+    }
   }
 
   private _setRoleFromData(): void {
@@ -146,6 +152,9 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
 
   /** Data subscription */
   private _dataSubscription: Subscription | null;
+
+  /** The node map map data nodes to CdkTreeNodes */
+  nodeMap: Map<T, CdkTreeNode<T>> = new Map<T, CdkTreeNode<T>>();
 
   /**
    * Provides a stream containing the latest data array to render. Influenced by the tree's
@@ -216,10 +225,6 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
       this._observeRenderChanges();
     }
   }
-
-
-  // TODO(tinayuangao): Work on keyboard traversal and actions, make sure it's working for RTL
-  //     and nested trees.
 
   /**
    * Switch to the provided data source by resetting the data and unsubscribing from the current
@@ -322,7 +327,8 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
     // The `CdkTreeNode` created from `createEmbeddedView` will be saved in static variable
     //     `mostRecentTreeNode`. We get it from static variable and pass the node data to it.
     if (CdkTreeNode.mostRecentTreeNode) {
-      CdkTreeNode.mostRecentTreeNode.data = nodeData;
+      (CdkTreeNode.mostRecentTreeNode as CdkTreeNode<T>).data = nodeData;
+      this.nodeMap.set(nodeData, CdkTreeNode.mostRecentTreeNode as CdkTreeNode<T>);
     }
 
     this._changeDetectorRef.detectChanges();

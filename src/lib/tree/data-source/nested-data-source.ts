@@ -7,6 +7,7 @@
  */
 
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {NestedTreeControl, TreeControl} from '@angular/cdk/tree';
 import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
 import {map} from 'rxjs/operators/map';
@@ -21,6 +22,10 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 export class MatTreeNestedDataSource<T> extends DataSource<T> {
   _data = new BehaviorSubject<T[]>([]);
 
+  constructor(protected treeControl: NestedTreeControl<T>) {
+    super();
+  }
+
   /**
    * Data for the nested treee
    */
@@ -30,6 +35,7 @@ export class MatTreeNestedDataSource<T> extends DataSource<T> {
   connect(collectionViewer: CollectionViewer): Observable<T[]> {
     return merge(...[collectionViewer.viewChange, this._data])
       .pipe(map(() => {
+        this.treeControl.dataNodes = this.data;
         return this.data;
       }));
   }

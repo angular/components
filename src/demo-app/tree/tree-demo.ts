@@ -49,7 +49,7 @@ export class TreeDemo {
 
     // For nested tree
     this.nestedTreeControl = new NestedTreeControl<FileNode>(this.getChildren);
-    this.nestedDataSource = new MatTreeNestedDataSource();
+    this.nestedDataSource = new MatTreeNestedDataSource(this.nestedTreeControl);
 
     database.dataChange.subscribe(data => {
       this.dataSource.data = data;
