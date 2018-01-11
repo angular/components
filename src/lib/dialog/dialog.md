@@ -39,7 +39,9 @@ export class YourDialog {
 }
 ```
 
-Default dialog options can be specified by providing an instance of `MatDialogConfig` for MAT_DIALOG_DEFAULT_OPTIONS in your application's root module.
+### Specifying global configuration defaults
+Default dialog options can be specified by providing an instance of `MatDialogConfig` for
+MAT_DIALOG_DEFAULT_OPTIONS in your application's root module.
 
 ```ts
 @NgModule({
