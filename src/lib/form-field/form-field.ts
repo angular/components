@@ -59,6 +59,7 @@ let nextUniqueId = 0;
   styleUrls: [
     'form-field.css',
     'form-field-box.css',
+    'form-field-legacy.css',
     'form-field-standard.css',
     '../input/input.css',
   ],
@@ -67,7 +68,7 @@ let nextUniqueId = 0;
     'class': 'mat-input-container mat-form-field',
     '[class.mat-form-field-variant-standard]': 'variant == "standard"',
     '[class.mat-form-field-variant-box]': 'variant == "box"',
-    '[class.mat-form-field-variant-outline]': 'variant == "outline"',
+    '[class.mat-form-field-variant-legacy]': 'variant == "legacy"',
     '[class.mat-input-invalid]': '_control.errorState',
     '[class.mat-form-field-invalid]': '_control.errorState',
     '[class.mat-form-field-can-float]': '_canLabelFloat',
@@ -95,7 +96,7 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
   private _labelOptions: LabelOptions;
 
   /** The form-field style variant. */
-  @Input() variant: 'standard' | 'box' | 'outline' = 'box';
+  @Input() variant: 'legacy' | 'standard' | 'box' = 'standard';
 
   /** Color of the form field underline, based on the theme. */
   @Input() color: 'primary' | 'accent' | 'warn' = 'primary';

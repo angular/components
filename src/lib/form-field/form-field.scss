@@ -159,6 +159,8 @@ $mat-form-field-default-infix-width: 180px !default;
 .mat-form-field-underline {
   position: absolute;
   width: 100%;
+  // Need this so that the underline doesn't block the hover effect.
+  pointer-events: none;
 }
 
 .mat-form-field-ripple {
@@ -184,7 +186,7 @@ $mat-form-field-default-infix-width: 180px !default;
 
 // Note that we need this specific of a selector because we don't want
 // the hover effect to show when the user hovers over the hints.
-.mat-form-field:not(.mat-form-field-disabled) .mat-input-flex:hover ~ .mat-input-underline {
+.mat-form-field:not(.mat-form-field-disabled) .mat-form-field-flex:hover ~ .mat-form-field-underline {
   .mat-form-field-ripple {
     opacity: 1;
     transform: none;

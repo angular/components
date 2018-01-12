@@ -5,27 +5,33 @@
 // Styles that only apply to the standard variant of the form-field.
 
 // The height of the underline.
-$mat-form-field-underline-height: 1px !default;
+$mat-form-field-standard-underline-height: 1px !default;
+// The bottom margin of the underline (used to push it up to align with box variant underline).
+$mat-form-field-standard-underline-margin-bottom: 1px !default;
+// The padding between the top of the form field and the label text (used to align the standard
+// form field with the box variant).
+$mat-form-field-standard-padding-top: .5em !default;
 
 
 .mat-form-field-variant-standard {
+  .mat-form-field-flex {
+    padding-top: $mat-form-field-standard-padding-top;
+  }
+
   // The underline is what's shown under the control, its prefix and its suffix.
   // The ripple is the blue animation coming on top of it.
   .mat-form-field-underline {
-    height: $mat-form-field-underline-height;
+    height: $mat-form-field-standard-underline-height;
+    margin-bottom: $mat-form-field-standard-underline-margin-bottom;
   }
 
   .mat-form-field-ripple {
     top: 0;
-    height: $mat-form-field-underline-height * 2;
+    height: $mat-form-field-standard-underline-height * 2;
   }
 
   &.mat-form-field-disabled .mat-form-field-underline {
     background-position: 0;
     background-color: transparent;
-  }
-
-  &.mat-form-field-invalid:not(.mat-focused) .mat-form-field-ripple {
-    height: $mat-form-field-underline-height;
   }
 }
