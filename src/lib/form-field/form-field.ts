@@ -96,7 +96,7 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
   private _labelOptions: LabelOptions;
 
   /** The form-field style variant. */
-  @Input() variant: 'legacy' | 'standard' | 'box' = 'standard';
+  @Input() variant: 'legacy' | 'standard' | 'box' = 'legacy';
 
   /** Color of the form field underline, based on the theme. */
   @Input() color: 'primary' | 'accent' | 'warn' = 'primary';

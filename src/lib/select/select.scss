@@ -105,5 +105,7 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
     // Remove the transition to prevent the placeholder
     // from overlapping when the label comes back down.
     transition: none;
+    // Prevents the '...' from showing on the parent element.
+    display: block;
   }
 }
