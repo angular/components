@@ -109,6 +109,7 @@ $mat-dense-list-icon-size: 20px;
   }
 
   .mat-list-icon {
+    flex-shrink: 0;
     width: $icon-size;
     height: $icon-size;
     font-size: $icon-size;
