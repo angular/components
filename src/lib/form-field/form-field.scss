@@ -179,10 +179,6 @@ $mat-form-field-default-infix-width: 180px !default;
     opacity: 0;
     transition: background-color $swift-ease-in-duration $swift-ease-in-timing-function;
 
-    .mat-form-field-invalid:not(.mat-focused) & {
-      height: $mat-form-field-underline-height;
-    }
-
     .mat-focused &,
     .mat-form-field-invalid & {
       visibility: visible;
@@ -192,6 +188,17 @@ $mat-form-field-default-infix-width: 180px !default;
         opacity 100ms $swift-ease-out-timing-function,
         background-color 300ms $swift-ease-out-timing-function;
     }
+  }
+}
+
+// Note that we need this specific of a selector because we don't want
+// the hover effect to show when the user hovers over the hints.
+.mat-form-field:not(.mat-form-field-disabled) .mat-input-flex:hover ~ .mat-input-underline {
+  .mat-form-field-ripple {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition: opacity 600ms $swift-ease-out-timing-function;
   }
 }
 
