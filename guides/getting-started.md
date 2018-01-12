@@ -166,8 +166,8 @@ import {MatButtonModule, MatCheckboxModule, MatIconModule} from '@angular/materi
 export class PizzaPartyAppModule { }
 ```
 
-For more information on using Material Icons, check out the
-[Material Icons Guide](https://google.github.io/material-design-icons/).
+For more information on using Material Icons, check out the [Material Icons Guide](https://google.github.io/material-design-icons/) 
+and the official documentation of [MatIconModule](https://material.angular.io/components/icon).
 
 Note that `mat-icon` supports any font or svg icons; using Material Icons is one of many options.
 
