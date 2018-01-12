@@ -2,6 +2,8 @@
 @import '../core/style/vendor-prefixes';
 
 
+// Styles that apply to all variants of the form-field.
+
 // Min amount of space between start and end hint.
 $mat-form-field-hint-min-space: 1em !default;
 // Infix stretches to fit the container, but naturally wants to be this wide. We set this in order
@@ -33,6 +35,7 @@ $mat-form-field-default-infix-width: 180px !default;
 .mat-form-field-flex {
   display: inline-flex;
   align-items: baseline;
+  box-sizing: border-box;
   width: 100%;
 }
 
@@ -192,6 +195,7 @@ $mat-form-field-default-infix-width: 180px !default;
 // Wrapper for the hints and error messages.
 .mat-form-field-subscript-wrapper {
   position: absolute;
+  box-sizing: border-box;
   width: 100%;
   overflow: hidden; // prevents multi-line errors from overlapping the control
 }

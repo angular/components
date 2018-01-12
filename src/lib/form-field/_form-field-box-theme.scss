@@ -11,11 +11,16 @@
   $is-dark-theme: map-get($theme, is-dark);
 
   $box-background: mat-color($foreground, base, if($is-dark-theme, 0.1, 0.06));
+  $box-disabled-background: mat-color($foreground, base, if($is-dark-theme, 0.05, 0.03));
   $underline-color: mat-color($foreground, divider, if($is-dark-theme, 0.7, 0.42));
 
   .mat-form-field-variant-box {
     .mat-form-field-flex {
       background-color: $box-background;
+    }
+
+    &.mat-form-field-disabled .mat-form-field-flex {
+      background-color: $box-disabled-background;
     }
 
     .mat-form-field-underline::before {

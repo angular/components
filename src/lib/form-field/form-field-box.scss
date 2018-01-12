@@ -4,13 +4,33 @@
 
 // Styles that only apply to the standard variant of the form-field.
 
-$mat-form-field-box-border-radius: 4px;
-$mat-form-field-box-underline-height: 2px;
+// The border radius for the form field box.
+$mat-form-field-box-border-radius: 4px !default;
+// The height of the underline at the bottom of the form field box.
+$mat-form-field-box-underline-height: 2px !default;
+// The horizontal padding between the edge of the form field box and the start of the text.
+$mat-form-field-box-side-padding: 1em !default;
+// The vertical padding between the edge of the form field box and the start of the text as well as
+// between the floating label and the value.
+$mat-form-field-box-line-spacing: 0.5em !default;
+// The scale of the subscript and floating label text w.r.t the value text.
+$mat-form-field-box-subscript-font-scale: .75 !default;
+// The horizontal padding between the edge of the subscript box and the start of the subscript text.
+$mat-form-field-box-subscript-padding:
+    $mat-form-field-box-side-padding / $mat-form-field-box-subscript-font-scale;
 
 
 .mat-form-field-variant-box {
   .mat-form-field-flex {
     border-radius: $mat-form-field-box-border-radius;
+    padding: $mat-form-field-box-line-spacing $mat-form-field-box-side-padding 0
+             $mat-form-field-box-side-padding;
+  }
+
+  .mat-form-field-label {
+    // The perspective helps smooth out animations on Chrome and Firefox but isn't needed on IE.
+    transform: translateY(-50%) perspective(100px);
+    -ms-transform: translateY(-50%);
   }
 
   .mat-form-field-underline {
@@ -31,5 +51,9 @@ $mat-form-field-box-underline-height: 2px;
   .mat-form-field-ripple {
     bottom: 0;
     height: $mat-form-field-box-underline-height;
+  }
+
+  .mat-form-field-subscript-wrapper {
+    padding: 0 $mat-form-field-box-subscript-padding;
   }
 }

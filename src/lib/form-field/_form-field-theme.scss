@@ -6,6 +6,8 @@
 @import 'form-field-standard-theme.scss';
 
 
+// Theme styles that apply to all variants of the form-field.
+
 @mixin mat-form-field-theme($theme) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
@@ -130,7 +132,7 @@ $dedupe: 0;
   $line-spacing: ($line-height - 1) / 2;
   // The padding on the infix. Mocks show half of the text size, but seem to measure from the edge
   // of the text itself, not the edge of the line; therefore we subtract off the line spacing.
-  $infix-padding: 0.5em - $line-spacing;
+  $infix-padding: 0.5em;
   // The margin applied to the form-field-infix to reserve space for the floating label.
   $infix-margin-top: 1em * $line-height * $subscript-font-scale;
   // Font size to use for the label and subscript text.
@@ -142,7 +144,7 @@ $dedupe: 0;
   // text font size, so we need to divide by the scale factor to make it half of the original text
   // size. We again need to subtract off the line spacing since the mocks measure to the edge of the
   // text, not the  edge of the line.
-  $subscript-margin-top: 0.5em / $subscript-font-scale - ($line-spacing * 2);
+  $subscript-margin-top: 0.5em / $subscript-font-scale;
   // The padding applied to the form-field-wrapper to reserve space for the subscript, since it's
   // absolutely positioned. This is a combination of the subscript's margin and line-height, but we
   // need to multiply by the subscript font scale factor since the wrapper has a larger font size.
@@ -230,4 +232,7 @@ $dedupe: 0;
     // so we move it up by the padding amount (adjusted for the smaller font size);
     top: calc(100% - #{$wrapper-padding-bottom / $subscript-font-scale});
   }
+
+  @include mat-form-field-standard-typography($config);
+  @include mat-form-field-box-typography($config);
 }
