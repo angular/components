@@ -153,6 +153,19 @@ If you want to use the `mat-icon` component with the official
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 ```
 
+Additionally you have to import `MatIconModule` to your project.
+
+```ts
+import {MatButtonModule, MatCheckboxModule, MatIconModule} from '@angular/material';
+
+@NgModule({
+  ...
+  imports: [MatButtonModule, MatCheckboxModule, MatIconModule],
+  ...
+})
+export class PizzaPartyAppModule { }
+```
+
 For more information on using Material Icons, check out the
 [Material Icons Guide](https://google.github.io/material-design-icons/).
 
