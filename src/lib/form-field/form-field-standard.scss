@@ -37,7 +37,7 @@ $mat-form-field-standard-padding-top: .5em !default;
 
   // Note that we need this specific of a selector because we don't want
   // the hover effect to show when the user hovers over the hints.
-  .mat-form-field:not(.mat-form-field-disabled) .mat-form-field-flex:hover ~ .mat-form-field-underline {
+  &:not(.mat-form-field-disabled) .mat-form-field-flex:hover ~ .mat-form-field-underline {
     .mat-form-field-ripple {
       opacity: 1;
       transform: none;

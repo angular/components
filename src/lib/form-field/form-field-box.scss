@@ -53,6 +53,16 @@ $mat-form-field-box-subscript-padding:
     height: $mat-form-field-box-underline-height;
   }
 
+  // Note that we need this specific of a selector because we don't want
+  // the hover effect to show when the user hovers over the hints.
+  &:not(.mat-form-field-disabled) .mat-form-field-flex:hover ~ .mat-form-field-underline {
+    .mat-form-field-ripple {
+      opacity: 1;
+      transform: none;
+      transition: opacity 600ms $swift-ease-out-timing-function;
+    }
+  }
+
   .mat-form-field-subscript-wrapper {
     padding: 0 $mat-form-field-box-subscript-padding;
   }

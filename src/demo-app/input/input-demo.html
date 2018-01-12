@@ -526,3 +526,50 @@
     </label>
   </mat-card-content>
 </mat-card>
+
+<mat-card class="demo-card demo-basic">
+  <mat-toolbar color="primary">Variants</mat-toolbar>
+  <mat-card-content>
+    <mat-form-field variant="legacy">
+      <input matInput placeholder="example" [(ngModel)]="legacyVariant" required>
+      <mat-error>This field is required</mat-error>
+      <mat-hint>Please type something here</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field variant="standard">
+      <input matInput placeholder="example" [(ngModel)]="standardVariant" required>
+      <mat-error>This field is required</mat-error>
+      <mat-hint>Please type something here</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field variant="box">
+      <input matInput placeholder="example" [(ngModel)]="boxVariant" required>
+      <mat-error>This field is required</mat-error>
+      <mat-hint>Please type something here</mat-hint>
+    </mat-form-field>
+
+    <table style="width: 100%" cellspacing="0"><tr>
+      <td>
+        <mat-form-field variant="legacy" style="width: 100%">
+          <input matInput placeholder="example" [(ngModel)]="legacyVariant" required>
+          <mat-error>This field is required</mat-error>
+          <mat-hint>Please type something here</mat-hint>
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field variant="standard" style="width: 100%">
+          <input matInput placeholder="example" [(ngModel)]="standardVariant" required>
+          <mat-error>This field is required</mat-error>
+          <mat-hint>Please type something here</mat-hint>
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field variant="box" style="width: 100%">
+          <input matInput placeholder="example" [(ngModel)]="boxVariant" required>
+          <mat-error>This field is required</mat-error>
+          <mat-hint>Please type something here</mat-hint>
+        </mat-form-field>
+      </td>
+    </tr></table>
+  </mat-card-content>
+</mat-card>
