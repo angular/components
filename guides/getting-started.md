@@ -153,11 +153,23 @@ If you want to use the `mat-icon` component with the official
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 ```
 
-For more information on using Material Icons, check out the
-[Material Icons Guide](https://google.github.io/material-design-icons/).
+Additionally you have to import `MatIconModule` to your project.
 
-Note that `mat-icon` supports any font or svg icons; using Material Icons is one of many options.
+```ts
+import {MatButtonModule, MatCheckboxModule, MatIconModule} from '@angular/material';
 
+@NgModule({
+  ...
+  imports: [MatButtonModule, MatCheckboxModule, MatIconModule],
+  ...
+})
+export class PizzaPartyAppModule { }
+```
+
+Note that `mat-icon` supports any font or svg icons; using Material Icons is one of many
+options. You can get more details in its [official documentation page](https://material.angular.io/components/icon/api).
+
+For more information on using Material Icons, check out the [Material Icons Guide](https://google.github.io/material-design-icons/). 
 
 ### Appendix: Configuring SystemJS
 
