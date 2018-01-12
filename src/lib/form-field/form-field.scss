@@ -153,6 +153,42 @@ $mat-form-field-default-infix-width: 180px !default;
   transition: none;
 }
 
+.mat-form-field-underline {
+  position: absolute;
+  width: 100%;
+}
+
+.mat-form-field-ripple {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  transform-origin: 50%;
+  transform: scaleX(0.5);
+  opacity: 0;
+  transition: background-color $swift-ease-in-duration $swift-ease-in-timing-function;
+}
+
+.mat-form-field.mat-focused,
+.mat-form-field.mat-form-field-invalid {
+  .mat-form-field-ripple {
+    opacity: 1;
+    transform: scaleX(1);
+    transition: transform 300ms $swift-ease-out-timing-function,
+    opacity 100ms $swift-ease-out-timing-function,
+    background-color 300ms $swift-ease-out-timing-function;
+  }
+}
+
+// Note that we need this specific of a selector because we don't want
+// the hover effect to show when the user hovers over the hints.
+.mat-form-field:not(.mat-form-field-disabled) .mat-input-flex:hover ~ .mat-input-underline {
+  .mat-form-field-ripple {
+    opacity: 1;
+    transform: none;
+    transition: opacity 600ms $swift-ease-out-timing-function;
+  }
+}
+
 // Wrapper for the hints and error messages.
 .mat-form-field-subscript-wrapper {
   position: absolute;

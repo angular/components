@@ -5,10 +5,31 @@
 // Styles that only apply to the standard variant of the form-field.
 
 $mat-form-field-box-border-radius: 4px;
+$mat-form-field-box-underline-height: 2px;
 
 
 .mat-form-field-variant-box {
   .mat-form-field-flex {
     border-radius: $mat-form-field-box-border-radius;
+  }
+
+  .mat-form-field-underline {
+    height: $mat-form-field-box-border-radius;
+    border-radius: 0 0 $mat-form-field-box-border-radius $mat-form-field-box-border-radius;
+    overflow: hidden;
+  }
+
+  .mat-form-field-underline::before {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    height: $mat-form-field-box-underline-height;
+    width: 100%;
+  }
+
+  .mat-form-field-ripple {
+    bottom: 0;
+    height: $mat-form-field-box-underline-height;
   }
 }

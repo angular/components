@@ -20,7 +20,6 @@
   $required-label-color: mat-color($accent);
 
   // Underline colors.
-  $underline-color: mat-color($foreground, divider, if($is-dark-theme, 0.7, 0.42));
   $underline-color-base: mat-color($foreground, divider, if($is-dark-theme, 1, 0.87));
   $underline-color-accent: mat-color($accent);
   $underline-color-warn: mat-color($warn);
@@ -48,14 +47,6 @@
 
   .mat-focused .mat-form-field-required-marker {
     color: $required-label-color;
-  }
-
-  .mat-form-field-underline {
-    background-color: $underline-color;
-  }
-
-  .mat-form-field-disabled .mat-form-field-underline {
-    @include mat-control-disabled-underline($underline-color);
   }
 
   .mat-form-field-ripple {

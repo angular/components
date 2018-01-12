@@ -6,10 +6,22 @@
 
 // Theme styles that only apply to the standard variant of the form-field.
 
+
 @mixin mat-form-field-standard-theme($theme) {
+  $foreground: map-get($theme, foreground);
+  $is-dark-theme: map-get($theme, is-dark);
 
+  $underline-color: mat-color($foreground, divider, if($is-dark-theme, 0.7, 0.42));
+
+  .mat-form-field-variant-standard {
+    .mat-form-field-underline {
+      background-color: $underline-color;
+    }
+
+    .mat-form-field-disabled .mat-form-field-underline {
+      @include mat-control-disabled-underline($underline-color);
+    }
+  }
 }
 
-@mixin mat-form-field-standard-typography($config) {
-
-}
+@mixin mat-form-field-standard-typography($config) {}
