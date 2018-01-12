@@ -98,7 +98,11 @@
         "encapsulation": "\\.None$",
         "moduleId": "^module\\.id$",
         "preserveWhitespaces": "false$",
-        "changeDetection": "\\.OnPush$"
+        "changeDetection": "\\.OnPush$",
+        "!host": "\\[class\\]"
+      },
+      "Directive": {
+        "!host": "\\[class\\]"
       }
     }, "src/+(lib|cdk|material-experimental|cdk-experimental)/**/!(*.spec).ts"],
     "require-license-banner": [
