@@ -12,7 +12,8 @@
     ]
   },
   "ChromeHeadlessCI": {
-    "base": "ChromeHeadlessLocal"
+    "base": "ChromeHeadlessLocal",
+    "flags": ["--no-sandbox"]
   },
   "SL_CHROME": {
     "base": "SauceLabs",
