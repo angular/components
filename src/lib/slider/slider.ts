@@ -272,6 +272,7 @@ export class MatSlider extends _MatSliderMixinBase
     this._focusHostElement();
   }
 
+  /** blur the host element */
   blur() {
     this._blurHostElement();
   }
@@ -700,9 +701,7 @@ export class MatSlider extends _MatSliderMixinBase
     this._elementRef.nativeElement.focus();
   }
 
-  /**
-   * Blurs the native element.
-   */
+  /** Blurs the native element. */
   private _blurHostElement() {
     this._elementRef.nativeElement.blur();
   }
