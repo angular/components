@@ -1,6 +1,7 @@
 import {ClassExportDoc} from 'dgeni-packages/typescript/api-doc-types/ClassExportDoc';
 import {ClassLikeExportDoc} from 'dgeni-packages/typescript/api-doc-types/ClassLikeExportDoc';
 import {PropertyMemberDoc} from 'dgeni-packages/typescript/api-doc-types/PropertyMemberDoc';
+import {DirectiveMetadata} from './directive-metadata';
 import {NormalizedMethodMemberDoc} from './normalize-method-parameters';
 
 /** Extended Dgeni class-like document that includes separated class members. */
@@ -17,6 +18,7 @@ export interface CategorizedClassDoc extends ClassExportDoc, CategorizedClassLik
   isNgModule: boolean;
   directiveExportAs?: string | null;
   directiveSelectors?: string[];
+  directiveMetadata: DirectiveMetadata | null;
   extendedDoc: ClassLikeExportDoc | null;
 }
 
