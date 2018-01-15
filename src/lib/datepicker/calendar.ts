@@ -43,6 +43,7 @@ import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
 import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
 import {MatYearView} from './year-view';
+import {MatDatePickerRangeValue} from './datepicker-input';
 
 
 /**
@@ -100,6 +101,25 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   }
   private _maxDate: D | null;
 
+ /** Beginning of date range. */
+  @Input()
+  get beginDate(): D | null { return this._beginDate; }
+  set beginDate(value: D | null) {
+    this._beginDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _beginDate: D | null;
+
+ /** Date range end. */
+  @Input()
+  get endDate(): D | null { return this._endDate; }
+  set endDate(value: D | null) {
+    this._endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _endDate: D | null;
+
+  /** Whenever datepicker is for selecting range of dates. */
+  @Input() rangeMode = false;
+
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
 
@@ -108,6 +128,9 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
   /** Emits when any date is selected. */
   @Output() _userSelection = new EventEmitter<void>();
+
+  /** Emits when new pair of dates selected. */
+  @Output() dateRangesChange = new EventEmitter<MatDatePickerRangeValue<D>>();
 
   /** Reference to the current month view component. */
   @ViewChild(MatMonthView) monthView: MatMonthView<D>;
@@ -223,6 +246,13 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   _dateSelected(date: D): void {
     if (!this._dateAdapter.sameDate(date, this.selected)) {
       this.selectedChange.emit(date);
+    }
+  }
+  /** Handles range of dates selected in month view. */
+  _dateRangeSelected(dates: MatDatePickerRangeValue<D>): void {
+    if (!this._dateAdapter.sameDate(dates.begin, this.beginDate) ||
+        !this._dateAdapter.sameDate(dates.end, this.endDate)) {
+      this.dateRangesChange.emit(dates);
     }
   }
 

@@ -21,6 +21,7 @@ import {
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
+import {MatDatePickerRangeValue} from './datepicker-input';
 
 
 const DAYS_PER_WEEK = 7;
@@ -64,6 +65,27 @@ export class MatMonthView<D> implements AfterContentInit {
   }
   private _selected: D | null;
 
+ /** Current start of interval. */
+  @Input()
+  get beginDate(): D | null { return this._beginDate; }
+  set beginDate(value: D | null) {
+    this._beginDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    this._beginDateNumber = this._getDateInCurrentMonth(this._beginDate);
+  }
+  private _beginDate: D | null;
+
+ /** Current end of interval. */
+  @Input()
+  get endDate(): D | null { return this._endDate; }
+  set endDate(value: D | null) {
+    this._endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    this._endDateNumber = this._getDateInCurrentMonth(this._endDate);
+  }
+  private _endDate: D | null;
+
+  /** Allow selecting range of dates. */
+  @Input() rangeMode = false;
+
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
 
@@ -72,6 +94,9 @@ export class MatMonthView<D> implements AfterContentInit {
 
   /** Emits when any date is selected. */
   @Output() _userSelection = new EventEmitter<void>();
+
+  /** Emits when new range of dates selected. */
+  @Output() dateRangesChange = new EventEmitter<MatDatePickerRangeValue<D>>();
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
@@ -87,6 +112,18 @@ export class MatMonthView<D> implements AfterContentInit {
    * Null if the currently selected Date is in another month.
    */
   _selectedDate: number | null;
+
+  /** First day of interval. */
+  _beginDateNumber: number | null;
+
+  /* Last day of interval. */
+  _endDateNumber: number | null;
+
+  /** Whenever full month is inside dates interval. */
+  _rangeFull: boolean | null = false;
+
+  /** Whenever user already selected start of dates interval. */
+  _beginDateSelected = false;
 
   /** The date of the month that today falls on. Null if today is in another month. */
   _todayDate: number | null;
@@ -121,21 +158,41 @@ export class MatMonthView<D> implements AfterContentInit {
     this._init();
   }
 
-  /** Handles when a new date is selected. */
-  _dateSelected(date: number) {
-    if (this._selectedDate != date) {
+  _getDateInstanceFromSelectedDate(date: number) {
       const selectedYear = this._dateAdapter.getYear(this.activeDate);
       const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
-      const selectedDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
+      return this._dateAdapter.createDate(selectedYear, selectedMonth, date);
+  }
 
+  /** Handles when a new date is selected. */
+  _dateSelected(date: number) {
+    const selectedDate = this._getDateInstanceFromSelectedDate(date);
+    if (this.rangeMode) {
+      if (!this._beginDateSelected) { // At first click emit the same start and end of interval
+        this.dateRangesChange.emit({begin: selectedDate, end: selectedDate});
+        this._beginDateSelected = true;
+      } else {
+        if(<D>this.beginDate <= selectedDate) { // swap start and end of interval if necessary
+          this.dateRangesChange.emit({begin: <D>this.beginDate, end: selectedDate});
+        } else {
+          this.dateRangesChange.emit({begin: selectedDate, end: <D>this.beginDate});
+        }
+        this._beginDateSelected = false;
+        this._userSelection.emit();
+      }
+    } else if (this._selectedDate != date) {
       this.selectedChange.emit(selectedDate);
-    }
-
     this._userSelection.emit();
+    }
   }
 
   /** Initializes this month view. */
   _init() {
+    this._beginDateNumber = this._getDateInCurrentMonth(this._beginDate);
+    this._endDateNumber = this._getDateInCurrentMonth(this._endDate);
+    this._rangeFull = this.beginDate && this.endDate && !this._beginDateNumber &&
+        !this._endDateNumber && this.activeDate >= this.beginDate &&
+        this.activeDate <= this.endDate;
     this._selectedDate = this._getDateInCurrentMonth(this.selected);
     this._todayDate = this._getDateInCurrentMonth(this._dateAdapter.today());
     this._monthLabel =
