@@ -132,7 +132,19 @@ export class MatDatepicker<D> implements OnDestroy {
   private _startAt: D | null;
 
   /** Whenever datepicker is for selecting range of dates. */
-  @Input() rangeMode = false;
+  @Input()
+  get rangeMode(): boolean {
+    return this._rangeMode;
+  }
+  set rangeMode(mode: boolean) {
+    this._rangeMode = mode;
+    if (this.rangeMode) {
+      this._selected = null;
+    } else {
+      this._beginDate = this._endDate = null;
+    }
+  }
+  private _rangeMode;
 
   /** The view that the calendar should start in. */
   @Input() startView: 'month' | 'year' = 'month';
@@ -192,14 +204,17 @@ export class MatDatepicker<D> implements OnDestroy {
 
   /** The currently selected date. */
   get _selected(): D | null { return this._validSelected; }
-  set _selected(value: D | null) { this._validSelected = value; }
+  set _selected(value: D | null) {
+    this._beginDate = this._endDate = null;
+    this._validSelected = value;
+  }
   private _validSelected: D | null = null;
 
  /** Start of dates interval. */
   @Input()
   get beginDate(): D | null { return this._beginDate; }
   set beginDate(value: D | null) {
-      //todo check before getvalid if one of the date is null
+    this._selected = null;
     this._beginDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
   _beginDate: D | null;
@@ -208,6 +223,7 @@ export class MatDatepicker<D> implements OnDestroy {
   @Input()
   get endDate(): D | null { return this._endDate; }
   set endDate(value: D | null) {
+    this._selected = null;
     this._endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
   _endDate: D | null;

@@ -120,8 +120,11 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this._validatorOnChange();
   }
   _dateFilter: (date: MatDatePickerRangeValue<D> | D | null) => boolean;
+
+  /** Whenever datepicker is for selecting range of dates. */
   @Input()
   rangeMode = false;
+
   /** The value of the input. */
   @Input()
   get value(): MatDatePickerRangeValue<D> | D | null {

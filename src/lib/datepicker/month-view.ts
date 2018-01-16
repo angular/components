@@ -70,7 +70,7 @@ export class MatMonthView<D> implements AfterContentInit {
   get beginDate(): D | null { return this._beginDate; }
   set beginDate(value: D | null) {
     this._beginDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._beginDateNumber = this._getDateInCurrentMonth(this._beginDate);
+    this.updateRangeSpecificValues();
   }
   private _beginDate: D | null;
 
@@ -79,7 +79,7 @@ export class MatMonthView<D> implements AfterContentInit {
   get endDate(): D | null { return this._endDate; }
   set endDate(value: D | null) {
     this._endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._endDateNumber = this._getDateInCurrentMonth(this._endDate);
+    this.updateRangeSpecificValues();
   }
   private _endDate: D | null;
 
@@ -181,11 +181,7 @@ export class MatMonthView<D> implements AfterContentInit {
 
   /** Initializes this month view. */
   _init() {
-    this._beginDateNumber = this._getDateInCurrentMonth(this._beginDate);
-    this._endDateNumber = this._getDateInCurrentMonth(this._endDate);
-    this._rangeFull = this.beginDate && this.endDate && !this._beginDateNumber &&
-        !this._endDateNumber && this.activeDate >= this.beginDate &&
-        this.activeDate <= this.endDate;
+    this.updateRangeSpecificValues();
     this._selectedDate = this._getDateInCurrentMonth(this.selected);
     this._todayDate = this._getDateInCurrentMonth(this._dateAdapter.today());
     this._monthLabel =
@@ -244,5 +240,22 @@ export class MatMonthView<D> implements AfterContentInit {
    */
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  }
+
+  /** Updates range full parameter on each begin or end of interval update.
+   * Necessary to display calendar-body correctly
+   */
+  private updateRangeSpecificValues(): void {
+    if (this.rangeMode) {
+    this._beginDateNumber = this._getDateInCurrentMonth(this._beginDate);
+      this._endDateNumber = this._getDateInCurrentMonth(this._endDate);
+      this._rangeFull = this.beginDate && this.endDate && !this._beginDateNumber &&
+          !this._endDateNumber &&
+          this._dateAdapter.compareDate(this.beginDate, this.activeDate) <= 0 &&
+          this._dateAdapter.compareDate(this.activeDate, this.endDate) <= 0;
+    } else {
+      this._beginDateNumber = this._endDateNumber = null;
+      this._rangeFull = false;
+    }
   }
 }
