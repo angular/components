@@ -7,8 +7,6 @@
  */
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {take} from 'rxjs/operators/take';
-import {startWith} from 'rxjs/operators/startWith';
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -26,9 +24,12 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {FloatLabelType, MAT_LABEL_GLOBAL_OPTIONS, LabelOptions} from '@angular/material/core';
+import {FloatLabelType, LabelOptions, MAT_LABEL_GLOBAL_OPTIONS} from '@angular/material/core';
 import {fromEvent} from 'rxjs/observable/fromEvent';
+import {startWith} from 'rxjs/operators/startWith';
+import {take} from 'rxjs/operators/take';
 import {MatError} from './error';
+import {matFormFieldAnimations} from './form-field-animations';
 import {MatFormFieldControl} from './form-field-control';
 import {
   getMatFormFieldDuplicatedHintError,
@@ -36,14 +37,16 @@ import {
   getMatFormFieldPlaceholderConflictError,
 } from './form-field-errors';
 import {MatHint} from './hint';
-import {MatPlaceholder} from './placeholder';
 import {MatLabel} from './label';
+import {MatPlaceholder} from './placeholder';
 import {MatPrefix} from './prefix';
 import {MatSuffix} from './suffix';
-import {matFormFieldAnimations} from './form-field-animations';
 
 
 let nextUniqueId = 0;
+
+
+export type MatFormFieldVariant = 'legacy' | 'standard' | 'box';
 
 
 /** Container for form controls that applies Material Design styling and behavior. */
@@ -96,7 +99,7 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
   private _labelOptions: LabelOptions;
 
   /** The form-field style variant. */
-  @Input() variant: 'legacy' | 'standard' | 'box' = 'legacy';
+  @Input() variant: MatFormFieldVariant = 'legacy';
 
   /** Color of the form field underline, based on the theme. */
   @Input() color: 'primary' | 'accent' | 'warn' = 'primary';
