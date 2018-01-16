@@ -4,10 +4,6 @@ cdk-virtual-scroll-viewport {
   overflow: auto;
 }
 
-cdk-virtual-scroll-sentinel, cdk-virtual-scroll-probe {
-  position: absolute;
-}
-
 .cdk-virtual-scroll-content-wrapper {
   position: absolute;
   top: 0;

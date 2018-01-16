@@ -8,7 +8,7 @@
 
 import {PlatformModule} from '@angular/cdk/platform';
 import {NgModule} from '@angular/core';
-import {CdkForOf} from './for-of';
+import {CdkVirtualForOf} from './virtual-for-of';
 import {SCROLL_DISPATCHER_PROVIDER} from './scroll-dispatcher';
 import {CdkScrollable} from './scrollable';
 import {CdkVirtualScrollFixedSize} from './virtual-scroll-fixed-size';
@@ -17,13 +17,13 @@ import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 @NgModule({
   imports: [PlatformModule],
   exports: [
-    CdkForOf,
+    CdkVirtualForOf,
     CdkScrollable,
     CdkVirtualScrollFixedSize,
     CdkVirtualScrollViewport,
   ],
   declarations: [
-    CdkForOf,
+    CdkVirtualForOf,
     CdkScrollable,
     CdkVirtualScrollFixedSize,
     CdkVirtualScrollViewport,

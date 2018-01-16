@@ -7,7 +7,7 @@
  */
 
 import {Range} from '@angular/cdk/collections';
-import {CdkForOf} from '@angular/cdk/scrolling/for-of';
+import {CdkVirtualForOf} from '@angular/cdk/scrolling/virtual-for-of';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -29,7 +29,7 @@ import {Observable} from 'rxjs/Observable';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 
 
-/** A viewport that virtualizes it's scrolling with the help of `CdkForOf`. */
+/** A viewport that virtualizes it's scrolling with the help of `CdkVirtualForOf`. */
 @Component({
   moduleId: module.id,
   selector: 'cdk-virtual-scroll-viewport',
@@ -78,8 +78,8 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
   private _renderedRange: Range = {start: 0, end: 0};
 
   /** The offset of the rendered portion of the data from the start. */
-  get renderedContentOffset() { return this._renderedContentOffset; }
-  set renderedContentOffset(offset) {
+  get renderedContentOffset(): number { return this._renderedContentOffset; }
+  set renderedContentOffset(offset: number) {
     if (this._renderedContentOffset != offset) {
       this._ngZone.run(() => {
         this._renderedContentOffset = offset;
@@ -114,8 +114,8 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
               private _ngZone: NgZone,
               @Inject(VIRTUAL_SCROLL_STRATEGY) private _scrollStrategy: VirtualScrollStrategy) {}
 
-  /** Connect a `CdkForOf` to this viewport. */
-  connect(forOf: CdkForOf<any>) {
+  /** Connect a `CdkVirtualForOf` to this viewport. */
+  connect(forOf: CdkVirtualForOf<any>) {
     if (this._connected) {
       throw Error('CdkVirtualScrollViewport is already connected.');
     }
@@ -132,7 +132,7 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
     });
   }
 
-  /** Disconnect the current `CdkForOf`. */
+  /** Disconnect the current `CdkVirtualForOf`. */
   disconnect() {
     this._connected = false;
     this._disconnectSubject.next();
@@ -148,8 +148,10 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
     Promise.resolve().then(() => {
       this._viewportSize = this.orientation === 'horizontal' ?
           this.elementRef.nativeElement.clientWidth : this.elementRef.nativeElement.clientHeight;
-      fromEvent(this.elementRef.nativeElement, 'scroll').subscribe(() => {
-        this._markScrolled();
+      this._ngZone.runOutsideAngular(() => {
+        fromEvent(this.elementRef.nativeElement, 'scroll').subscribe(() => {
+          this._markScrolled();
+        });
       });
       this._scrollStrategy.init(this);
       this._scrollStrategyInited = true;
