@@ -80,7 +80,7 @@ export class FlatDataSource implements DataSource<any> {
   constructor(database: JsonDatabase, private treeControl: FlatTreeControl<JsonFlatNode>) {
     database.dataChange.subscribe((tree) => {
       this._flattenedData.next(flattenNodes(tree));
-      this.treeControl.dataNodes = this.flattenedData;
+
     });
   }
 
@@ -92,6 +92,7 @@ export class FlatDataSource implements DataSource<any> {
       .pipe(map(() => {
         this._expandedData.next(
             expandFlattenedNodes(this.flattenedData, this.treeControl));
+        this.treeControl.dataNodes = this.expandedData;
         return this.expandedData;
       }));
   }

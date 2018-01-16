@@ -41,7 +41,7 @@ export class TreeDemo {
 
     // For nested tree
     this.nestedTreeControl = new NestedTreeControl<JsonNode>(this.getChildren);
-    this.nestedDataSource = new JsonNestedDataSource(database);
+    this.nestedDataSource = new JsonNestedDataSource(database, this.nestedTreeControl);
   }
 
   getLevel = (node: JsonFlatNode) => { return node.level; };

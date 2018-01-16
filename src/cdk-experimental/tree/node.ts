@@ -11,12 +11,14 @@ import {
   ElementRef,
   Input,
   OnDestroy,
+  Optional,
   TemplateRef
 } from '@angular/core';
 import {takeUntil} from 'rxjs/operators/takeUntil';
 import {Subject} from 'rxjs/Subject';
 import {CdkTree} from './tree';
 import {getTreeControlFunctionsMissingError} from './tree-errors';
+import {CdkTreeNavigator} from './navigator';
 
 
 /** Context provided to the tree node component. */
@@ -71,6 +73,8 @@ export class CdkTreeNodeDef<T> {
     '[attr.aria-level]': 'level',
     '[attr.role]': 'role',
     'class': 'cdk-tree-node',
+    '(focus)': 'focus()',
+    '(blur)': 'blur()'
   },
 })
 export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
@@ -91,6 +95,9 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
   }
   protected _data: T;
 
+  // Focus state
+  focused: boolean = false;
+
   get isExpanded(): boolean {
     return this._tree.treeControl.isExpanded(this._data);
   }
@@ -105,8 +112,9 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
    */
   @Input() role: 'treeitem' | 'group' = 'treeitem';
 
-  constructor(protected _elementRef: ElementRef,
-              protected _tree: CdkTree<T>) {
+  constructor(public _elementRef: ElementRef,
+              protected _tree: CdkTree<T>,
+              @Optional() protected _treeNavigator: CdkTreeNavigator<T>) {
     CdkTreeNode.mostRecentTreeNode = this;
   }
 
@@ -118,6 +126,15 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
   /** Focuses the menu item. Implements for FocusableOption. */
   focus(): void {
     this._elementRef.nativeElement.focus();
+    this.focused = true;
+
+    if (this._treeNavigator) {
+      this._treeNavigator.updateFocusedNode(this);
+    }
+  }
+
+  blur() {
+    this.focused = false;
   }
 
   private _setRoleFromData(): void {

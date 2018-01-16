@@ -2,12 +2,12 @@
   <mat-card>
     <mat-card-header>Flattened tree</mat-card-header>
 
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-      <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" matTreeNavigator>
+      <mat-tree-node tabindex="0" *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
           {{node.key}} : {{node.value}}
       </mat-tree-node>
 
-      <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+      <mat-tree-node tabindex="0" *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
           <button mat-icon-button matTreeNodeToggle
                   [attr.aria-label]="'toggle ' + node.key">
             <mat-icon>
@@ -17,7 +17,6 @@
           {{node.key}} : {{node.value}}
       </mat-tree-node>
     </mat-tree>
-
   </mat-card>
 
 
@@ -25,14 +24,14 @@
   <mat-card>
     <mat-card-header>Nested tree</mat-card-header>
 
-    <mat-tree [dataSource]="nestedDataSource" [treeControl]="nestedTreeControl">
-      <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+    <mat-tree [dataSource]="nestedDataSource" [treeControl]="nestedTreeControl" matTreeNavigator>
+      <mat-tree-node tabindex="0" *matTreeNodeDef="let node" matTreeNodeToggle>
         <li>
           <div>{{node.key}}:  {{node.value}}</div>
         </li>
       </mat-tree-node>
 
-      <mat-nested-tree-node *matTreeNodeDef="let node; when: hasNestedChild">
+      <mat-nested-tree-node tabindex="0" *matTreeNodeDef="let node; when: hasNestedChild">
         <li>
           <div class="mat-tree-node">
             <button mat-icon-button matTreeNodeToggle
@@ -43,7 +42,7 @@
             </button>
             {{node.key}}
           </div>
-          <ul [class]="nestedTreeControl.isExpanded(node) ? '' : 'tree-demo-invisible'">
+          <ul *ngIf="nestedTreeControl.isExpanded(node)" [class]="nestedTreeControl.isExpanded(node) ? '' : 'tree-demo-invisible'">
             <ng-container matTreeNodeOutlet></ng-container>
           </ul>
         </li>

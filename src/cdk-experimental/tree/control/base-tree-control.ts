@@ -12,6 +12,8 @@ import {TreeControl} from './tree-control';
 /** Base tree control. It has basic toggle/expand/collapse operations on a single data node. */
 export abstract class BaseTreeControl<T> implements TreeControl<T> {
 
+  parentMap: Map<T, T> = new Map<T, T>();
+
   /** Gets a list of descendent data nodes of a subtree rooted at given data node recursively. */
   abstract getDescendants(dataNode: T): T[];
 
@@ -81,4 +83,23 @@ export abstract class BaseTreeControl<T> implements TreeControl<T> {
     toBeProcessed.push(...this.getDescendants(dataNode));
     this.expansionModel.deselect(...toBeProcessed);
   }
+
+  /** Get parent data node of a given child node */
+  getParent(dataNode: T): T | undefined {
+    return this.parentMap.get(dataNode);
+  }
+
+
+  /** Get the previous visible node of a given node */
+  abstract getPrevious(dataNode: T): T | undefined;
+
+  /** Get the next visible node of a given node */
+  abstract getNext(dataNode: T): T | undefined;
+
+  /** Get the first child of a given node. Return undefined if no children */
+  abstract getFirstChild(dataNode: T): T | undefined;
+
+  abstract getFirstNode(): T | undefined;
+
+  abstract getLastNode(): T | undefined;
 }
