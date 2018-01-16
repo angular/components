@@ -95,9 +95,6 @@ export class MatMonthView<D> implements AfterContentInit {
   /** Emits when any date is selected. */
   @Output() _userSelection = new EventEmitter<void>();
 
-  /** Emits when new range of dates selected. */
-  @Output() dateRangesChange = new EventEmitter<MatDatePickerRangeValue<D>>();
-
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
 
@@ -123,7 +120,7 @@ export class MatMonthView<D> implements AfterContentInit {
   _rangeFull: boolean | null = false;
 
   /** Whenever user already selected start of dates interval. */
-  _beginDateSelected = false;
+  private _beginDateSelected = false;
 
   /** The date of the month that today falls on. Null if today is in another month. */
   _todayDate: number | null;
@@ -169,20 +166,16 @@ export class MatMonthView<D> implements AfterContentInit {
     const selectedDate = this._getDateInstanceFromSelectedDate(date);
     if (this.rangeMode) {
       if (!this._beginDateSelected) { // At first click emit the same start and end of interval
-        this.dateRangesChange.emit({begin: selectedDate, end: selectedDate});
         this._beginDateSelected = true;
+        this.selectedChange.emit(selectedDate);
       } else {
-        if(<D>this.beginDate <= selectedDate) { // swap start and end of interval if necessary
-          this.dateRangesChange.emit({begin: <D>this.beginDate, end: selectedDate});
-        } else {
-          this.dateRangesChange.emit({begin: selectedDate, end: <D>this.beginDate});
-        }
         this._beginDateSelected = false;
+        this.selectedChange.emit(selectedDate);
         this._userSelection.emit();
       }
     } else if (this._selectedDate != date) {
       this.selectedChange.emit(selectedDate);
-    this._userSelection.emit();
+      this._userSelection.emit();
     }
   }
 
