@@ -1035,11 +1035,11 @@ describe('MatMenu', () => {
       const menus = overlay.querySelectorAll('.mat-menu-panel');
 
       expect(menus[0].classList)
-          .toContain('mat-elevation-z2', 'Expected root menu to have base elevation.');
+          .toContain('mat-elevation-z8', 'Expected root menu to have base elevation.');
       expect(menus[1].classList)
-          .toContain('mat-elevation-z3', 'Expected first sub-menu to have base elevation + 1.');
+          .toContain('mat-elevation-z9', 'Expected first sub-menu to have base elevation + 1.');
       expect(menus[2].classList)
-          .toContain('mat-elevation-z4', 'Expected second sub-menu to have base elevation + 2.');
+          .toContain('mat-elevation-z10', 'Expected second sub-menu to have base elevation + 2.');
     });
 
     it('should update the elevation when the same menu is opened at a different depth',
@@ -1057,7 +1057,7 @@ describe('MatMenu', () => {
         let lastMenu = overlay.querySelectorAll('.mat-menu-panel')[2];
 
         expect(lastMenu.classList)
-            .toContain('mat-elevation-z4', 'Expected menu to have the base elevation plus two.');
+            .toContain('mat-elevation-z10', 'Expected menu to have the base elevation plus two.');
 
         (overlay.querySelector('.cdk-overlay-backdrop')! as HTMLElement).click();
         fixture.detectChanges();
@@ -1072,9 +1072,9 @@ describe('MatMenu', () => {
         lastMenu = overlay.querySelector('.mat-menu-panel') as HTMLElement;
 
         expect(lastMenu.classList)
-            .not.toContain('mat-elevation-z4', 'Expected menu not to maintain old elevation.');
+            .not.toContain('mat-elevation-z10', 'Expected menu not to maintain old elevation.');
         expect(lastMenu.classList)
-            .toContain('mat-elevation-z2', 'Expected menu to have the proper updated elevation.');
+            .toContain('mat-elevation-z8', 'Expected menu to have the proper updated elevation.');
       }));
 
     it('should not increase the elevation if the user specified a custom one', () => {
@@ -1092,7 +1092,7 @@ describe('MatMenu', () => {
       expect(menuClasses)
           .toContain('mat-elevation-z24', 'Expected user elevation to be maintained');
       expect(menuClasses)
-          .not.toContain('mat-elevation-z3', 'Expected no stacked elevation.');
+          .not.toContain('mat-elevation-z9', 'Expected no stacked elevation.');
     });
 
     it('should close all of the menus when the root is closed programmatically', fakeAsync(() => {

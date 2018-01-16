@@ -62,7 +62,7 @@ export const MAT_MENU_DEFAULT_OPTIONS =
  * Start elevation for the menu panel.
  * @docs-private
  */
-const MAT_MENU_BASE_ELEVATION = 2;
+const MAT_MENU_BASE_ELEVATION = 8;
 
 
 @Component({
