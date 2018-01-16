@@ -9,6 +9,17 @@ $mat-form-field-legacy-underline-height: 1px !default;
 
 
 .mat-form-field-variant-legacy {
+  .mat-form-field-label-wrapper {
+    filter: initial;
+  }
+
+  .mat-form-field-label {
+    backface-visibility: initial;
+
+    transform: perspective(100px);
+    -ms-transform: none;
+  }
+
   // The underline is what's shown under the control, its prefix and its suffix.
   // The ripple is the blue animation coming on top of it.
   .mat-form-field-underline {

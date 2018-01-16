@@ -2,7 +2,7 @@
 @import '../core/style/vendor-prefixes';
 
 
-// Styles that only apply to the standard variant of the form-field.
+// Styles that only apply to the box variant of the form-field.
 
 // The border radius for the form field box.
 $mat-form-field-box-border-radius: 4px !default;
@@ -28,9 +28,7 @@ $mat-form-field-box-subscript-padding:
   }
 
   .mat-form-field-label {
-    // The perspective helps smooth out animations on Chrome and Firefox but isn't needed on IE.
-    transform: translateY(-50%) perspective(100px);
-    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
   }
 
   .mat-form-field-underline {

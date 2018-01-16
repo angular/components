@@ -78,6 +78,9 @@ $mat-form-field-default-infix-width: 180px !default;
   height: 100%;
   overflow: hidden;
   pointer-events: none;  // We shouldn't catch mouse events (let them through).
+
+  // Helps prevent text jumpiness when transforming the label.
+  filter: blur(0);
 }
 
 // The label itself. This is invisible unless it is. The logic to show it is
@@ -97,10 +100,6 @@ $mat-form-field-default-infix-width: 180px !default;
   text-overflow: ellipsis;
   overflow: hidden;
 
-  // The perspective helps smooth out animations on Chrome and Firefox but isn't needed on IE.
-  transform: perspective(100px);
-  -ms-transform: none;
-
   transform-origin: 0 0;
   transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
   color $swift-ease-out-duration $swift-ease-out-timing-function,
@@ -108,6 +107,9 @@ $mat-form-field-default-infix-width: 180px !default;
 
   // Hide the label initially, and only show it when it's floating or the control is empty.
   display: none;
+
+  // Helps prevent text jumpiness when transforming the label.
+  backface-visibility: hidden;
 
   [dir='rtl'] & {
     transform-origin: 100% 0;

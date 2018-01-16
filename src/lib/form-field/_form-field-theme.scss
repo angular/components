@@ -105,18 +105,12 @@ $mat-form-field-dedupe: 0;
 
 // Applies a floating label above the form field control itself.
 @mixin _mat-form-field-label-floating($font-scale, $infix-padding, $infix-margin-top) {
-  // We use perspective to fix the text blurriness as described here:
-  // http://www.useragentman.com/blog/2014/05/04/fixing-typography-inside-of-2-d-css-transforms/
-  // This results in a small jitter after the label floats on Firefox, which the
-  // translateZ fixes.
-  transform: translateY(-$infix-margin-top - $infix-padding) scale($font-scale) perspective(100px)
-             translateZ(0.001px + $mat-form-field-dedupe);
-  // The tricks above used to smooth out the animation on chrome and firefox actually make things
-  // worse on IE, so we don't include them in the IE version.
-  -ms-transform: translateY(-$infix-margin-top - $infix-padding + $mat-form-field-dedupe)
-                 scale($font-scale);
-
+  transform: translateY(-$infix-margin-top - $infix-padding + $mat-form-field-dedupe)
+             scale($font-scale);
   width: 100% / $font-scale + $mat-form-field-dedupe;
+
+  // Prevent text bluriness when label is floating.
+  backface-visibility: initial;
 
   $mat-form-field-dedupe: $mat-form-field-dedupe + 0.00001 !global;
 }
