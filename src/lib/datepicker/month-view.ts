@@ -64,6 +64,27 @@ export class MatMonthView<D> implements AfterContentInit {
   }
   private _selected: D | null;
 
+ /** Current start of interval. */
+  @Input()
+  get beginDate(): D | null { return this._beginDate; }
+  set beginDate(value: D | null) {
+    this._beginDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    this.updateRangeSpecificValues();
+  }
+  private _beginDate: D | null;
+
+ /** Current end of interval. */
+  @Input()
+  get endDate(): D | null { return this._endDate; }
+  set endDate(value: D | null) {
+    this._endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    this.updateRangeSpecificValues();
+  }
+  private _endDate: D | null;
+
+  /** Allow selecting range of dates. */
+  @Input() rangeMode = false;
+
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
 
@@ -87,6 +108,18 @@ export class MatMonthView<D> implements AfterContentInit {
    * Null if the currently selected Date is in another month.
    */
   _selectedDate: number | null;
+
+  /** First day of interval. */
+  _beginDateNumber: number | null;
+
+  /* Last day of interval. */
+  _endDateNumber: number | null;
+
+  /** Whenever full month is inside dates interval. */
+  _rangeFull: boolean | null = false;
+
+  /** Whenever user already selected start of dates interval. */
+  private _beginDateSelected = false;
 
   /** The date of the month that today falls on. Null if today is in another month. */
   _todayDate: number | null;
@@ -121,21 +154,33 @@ export class MatMonthView<D> implements AfterContentInit {
     this._init();
   }
 
-  /** Handles when a new date is selected. */
-  _dateSelected(date: number) {
-    if (this._selectedDate != date) {
+  _getDateInstanceFromSelectedDate(date: number) {
       const selectedYear = this._dateAdapter.getYear(this.activeDate);
       const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
-      const selectedDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
+      return this._dateAdapter.createDate(selectedYear, selectedMonth, date);
+  }
 
+  /** Handles when a new date is selected. */
+  _dateSelected(date: number) {
+    const selectedDate = this._getDateInstanceFromSelectedDate(date);
+    if (this.rangeMode) {
+      if (!this._beginDateSelected) { // At first click emit the same start and end of interval
+        this._beginDateSelected = true;
+        this.selectedChange.emit(selectedDate);
+      } else {
+        this._beginDateSelected = false;
+        this.selectedChange.emit(selectedDate);
+        this._userSelection.emit();
+      }
+    } else if (this._selectedDate != date) {
       this.selectedChange.emit(selectedDate);
+      this._userSelection.emit();
     }
-
-    this._userSelection.emit();
   }
 
   /** Initializes this month view. */
   _init() {
+    this.updateRangeSpecificValues();
     this._selectedDate = this._getDateInCurrentMonth(this.selected);
     this._todayDate = this._getDateInCurrentMonth(this._dateAdapter.today());
     this._monthLabel =
@@ -194,5 +239,22 @@ export class MatMonthView<D> implements AfterContentInit {
    */
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  }
+
+  /** Updates range full parameter on each begin or end of interval update.
+   * Necessary to display calendar-body correctly
+   */
+  private updateRangeSpecificValues(): void {
+    if (this.rangeMode) {
+    this._beginDateNumber = this._getDateInCurrentMonth(this._beginDate);
+      this._endDateNumber = this._getDateInCurrentMonth(this._endDate);
+      this._rangeFull = this.beginDate && this.endDate && !this._beginDateNumber &&
+          !this._endDateNumber &&
+          this._dateAdapter.compareDate(this.beginDate, this.activeDate) <= 0 &&
+          this._dateAdapter.compareDate(this.activeDate, this.endDate) <= 0;
+    } else {
+      this._beginDateNumber = this._endDateNumber = null;
+      this._rangeFull = false;
+    }
   }
 }

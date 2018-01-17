@@ -5,6 +5,7 @@
   <mat-checkbox [(ngModel)]="yearView">Start in year view</mat-checkbox>
   <mat-checkbox [(ngModel)]="datepickerDisabled">Disable datepicker</mat-checkbox>
   <mat-checkbox [(ngModel)]="inputDisabled">Disable input</mat-checkbox>
+  <mat-checkbox [(ngModel)]="rangeEnabled">Range selecting</mat-checkbox>
 </p>
 <p>
   <mat-form-field>
@@ -49,6 +50,7 @@
         #resultPicker
         [touchUi]="touch"
         [disabled]="datepickerDisabled"
+        [rangeMode]="rangeEnabled"
         [startAt]="startAt"
         [startView]="yearView ? 'year' : 'month'">
     </mat-datepicker>
@@ -58,10 +60,15 @@
     <mat-error *ngIf="resultPickerModel.hasError('matDatepickerMin')">Too early!</mat-error>
     <mat-error *ngIf="resultPickerModel.hasError('matDatepickerMax')">Too late!</mat-error>
     <mat-error *ngIf="resultPickerModel.hasError('matDatepickerFilter')">Date unavailable!</mat-error>
+    <mat-error *ngIf="resultPickerModel.hasError('matDatepickerRange')">Begin date is later then end date!</mat-error>
   </mat-form-field>
 </p>
-<p>Last input: {{lastDateInput}}</p>
-<p>Last change: {{lastDateChange}}</p>
+<p>Last input: {{lastDateInput ?
+        (lastDateInput.begin ? 'from ' + lastDateInput.begin+' to ' + lastDateInput.end : lastDateInput) :
+        lastDateInput}}</p>
+<p>Last input: {{lastDateChange ?
+        (lastDateChange.begin ? 'from ' + lastDateChange.begin+' to ' + lastDateChange.end : lastDateChange) :
+        lastDateChange}}</p>
 <br>
 <p>
   <input #resultPickerModel2
@@ -77,6 +84,7 @@
       #resultPicker2
       [touchUi]="touch"
       [disabled]="datepickerDisabled"
+      [rangeMode]="rangeEnabled"
       [startAt]="startAt"
       [startView]="yearView ? 'year' : 'month'">
   </mat-datepicker>

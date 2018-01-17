@@ -26,6 +26,9 @@
       *ngSwitchCase="'month'"
       [activeDate]="_activeDate"
       [selected]="selected"
+      [beginDate]="beginDate"
+      [endDate]="endDate"
+      [rangeMode]="rangeMode"
       [dateFilter]="_dateFilterForViews"
       (selectedChange)="_dateSelected($event)"
       (_userSelection)="_userSelected()">

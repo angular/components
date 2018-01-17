@@ -36,6 +36,7 @@ import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs/Subscription';
 import {MatDatepicker} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
+import {MatDatePickerRangeValue} from './datepicker-input';
 
 
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -51,6 +52,13 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
   multi: true
 };
 
+/**
+ * Special interface to input and output dates interval.
+ */
+export interface MatDatePickerRangeValue<D> {
+  begin: D | null;
+  end: D | null;
+}
 
 /**
  * An event used for datepicker input and change events. We don't always have access to a native
@@ -59,7 +67,7 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
  */
 export class MatDatepickerInputEvent<D> {
   /** The new value for the target datepicker input. */
-  value: D | null;
+  value: MatDatePickerRangeValue<D> | D | null;
 
   constructor(
     /** Reference to the datepicker input component that emitted the event. */
@@ -114,26 +122,58 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this._dateFilter = filter;
     this._validatorOnChange();
   }
-  _dateFilter: (date: D | null) => boolean;
+  _dateFilter: (date: MatDatePickerRangeValue<D> | D | null) => boolean;
 
   /** The value of the input. */
   @Input()
-  get value(): D | null {
+  get value(): MatDatePickerRangeValue<D> | D | null {
     return this._value;
   }
-  set value(value: D | null) {
-    value = this._dateAdapter.deserialize(value);
-    this._lastValueValid = !value || this._dateAdapter.isValid(value);
-    value = this._getValidDateOrNull(value);
-    let oldDate = this.value;
-    this._value = value;
-    this._elementRef.nativeElement.value =
-        value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
-    if (!this._dateAdapter.sameDate(oldDate, value)) {
-      this._valueChange.emit(value);
+  set value(value:  MatDatePickerRangeValue<D> | D | null) {
+    if (value && value.hasOwnProperty('begin') && value.hasOwnProperty('end')) {
+      /** Range mode */
+      const rangeValue = <MatDatePickerRangeValue<D>>value;
+      rangeValue.begin = this._dateAdapter.deserialize(rangeValue.begin);
+      rangeValue.end = this._dateAdapter.deserialize(rangeValue.end);
+      this._lastValueValid = !rangeValue.begin || !rangeValue.end ||
+          this._dateAdapter.isValid(rangeValue.begin) && this._dateAdapter.isValid(rangeValue.end);
+      rangeValue.begin = this._getValidDateOrNull(rangeValue.begin);
+      rangeValue.end = this._getValidDateOrNull(rangeValue.end);
+      let oldDate = <MatDatePickerRangeValue<D> | null>this.value;
+      this._elementRef.nativeElement.value =
+          rangeValue && rangeValue.begin && rangeValue.end
+              ? this._dateAdapter.format(rangeValue.begin, this._dateFormats.display.dateInput) +
+                ' - ' +
+                this._dateAdapter.format(rangeValue.end, this._dateFormats.display.dateInput)
+              : '';
+      if (oldDate == null && rangeValue != null || oldDate != null && rangeValue == null ||
+          !this._dateAdapter.sameDate((<MatDatePickerRangeValue<D>>oldDate).begin,
+              rangeValue.begin) ||
+          !this._dateAdapter.sameDate((<MatDatePickerRangeValue<D>>oldDate).end,
+              rangeValue.end)) {
+        if (rangeValue.end && rangeValue.begin &&
+            this._dateAdapter
+                .compareDate(rangeValue.begin, rangeValue.end ) > 0) { // if begin > end
+          value = null;
+        }
+        this._value = value;
+        this._valueChange.emit(value);
+      }
+    } else {
+      /** Not range mode */
+      value = this._dateAdapter.deserialize(value);
+      this._lastValueValid = !value || this._dateAdapter.isValid(value);
+      value = this._getValidDateOrNull(value);
+      let oldDate = this.value;
+      this._value = value;
+      this._elementRef.nativeElement.value =
+          value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
+      if (!this._dateAdapter.sameDate(<D>oldDate, value)) {
+        this._valueChange.emit(value);
+      }
     }
   }
-  private _value: D | null;
+  private _value: MatDatePickerRangeValue<D> | D | null;
 
   /** The minimum valid date. */
   @Input()
@@ -173,7 +213,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   @Output() dateInput = new EventEmitter<MatDatepickerInputEvent<D>>();
 
   /** Emits when the value changes (either due to user input or programmatic change). */
-  _valueChange = new EventEmitter<D|null>();
+  _valueChange = new EventEmitter<MatDatePickerRangeValue<D>|D|null>();
 
   /** Emits when the disabled state has changed */
   _disabledChange = new EventEmitter<boolean>();
@@ -196,6 +236,21 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** The form control validator for the min date. */
   private _minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    if (this._datepicker.rangeMode && control.value) {
+      const beginDate =
+          this._getValidDateOrNull(this._dateAdapter.deserialize(control.value.begin));
+      const endDate =
+          this._getValidDateOrNull(this._dateAdapter.deserialize(control.value.end));
+      if (this.min) {
+        if (beginDate && this._dateAdapter.compareDate(this.min, beginDate) > 0) {
+          return {'matDatepickerMin': {'min': this.min, 'actual': beginDate}};
+        }
+        if (endDate && this._dateAdapter.compareDate(this.min, endDate) > 0) {
+          return {'matDatepickerMin': {'min': this.min, 'actual': endDate}};
+        }
+      }
+      return null;
+    }
     const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
     return (!this.min || !controlValue ||
         this._dateAdapter.compareDate(this.min, controlValue) <= 0) ?
@@ -204,6 +259,20 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** The form control validator for the max date. */
   private _maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    if (this._datepicker.rangeMode && control.value) {
+      const beginDate =
+          this._getValidDateOrNull(this._dateAdapter.deserialize(control.value.begin));
+      const endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value.end));
+      if (this.max) {
+        if (beginDate && this._dateAdapter.compareDate(this.max, beginDate) < 0 ) {
+          return {'matDatepickerMax': {'max': this.max, 'actual': beginDate}};
+        }
+        if (endDate && this._dateAdapter.compareDate(this.max, endDate) < 0) {
+          return {'matDatepickerMax': {'max': this.max, 'actual': endDate}};
+        }
+      }
+      return null;
+    }
     const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
     return (!this.max || !controlValue ||
         this._dateAdapter.compareDate(this.max, controlValue) >= 0) ?
@@ -212,15 +281,36 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** The form control validator for the date filter. */
   private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    if (this._datepicker.rangeMode && control.value) {
+      const beginDate =
+          this._getValidDateOrNull(this._dateAdapter.deserialize(control.value.begin));
+      const endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value.end));
+      return !this._dateFilter || !beginDate && !endDate ||
+          this._dateFilter(beginDate) && this._dateFilter(endDate) ?
+        null : {'matDatepickerFilter': true};
+    }
     const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
     return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ?
         null : {'matDatepickerFilter': true};
   }
 
+  /** The form control validator for the date filter. */
+  private _rangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    if (this._datepicker.rangeMode && control.value) {
+      const beginDate =
+          this._getValidDateOrNull(this._dateAdapter.deserialize(control.value.begin));
+      const endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value.end));
+      return !beginDate || !endDate || this._dateAdapter.compareDate(beginDate, endDate) <= 0 ?
+        null : {'matDatepickerRange': true};
+    }
+    return null;
+  }
+
   /** The combined form control validator for this input. */
   private _validator: ValidatorFn | null =
       Validators.compose(
-          [this._parseValidator, this._minValidator, this._maxValidator, this._filterValidator]);
+          [this._parseValidator, this._minValidator, this._maxValidator,
+            this._filterValidator, this._rangeValidator]);
 
   /** Whether the last value set on the input was valid. */
   private _lastValueValid = false;
@@ -246,7 +336,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   ngAfterContentInit() {
     if (this._datepicker) {
       this._datepickerSubscription =
-          this._datepicker.selectedChanged.subscribe((selected: D) => {
+          this._datepicker.selectedChanged.subscribe((selected: MatDatePickerRangeValue<D> | D) => {
             this.value = selected;
             this._cvaOnChange(selected);
             this._onTouched();
@@ -288,7 +378,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   }
 
   // Implemented as part of ControlValueAccessor
-  writeValue(value: D): void {
+  writeValue(value: MatDatePickerRangeValue<D> | D): void {
     this.value = value;
   }
 
@@ -315,9 +405,29 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   }
 
   _onInput(value: string) {
-    let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-    this._lastValueValid = !date || this._dateAdapter.isValid(date);
-    date = this._getValidDateOrNull(date);
+    let date: MatDatePickerRangeValue<D>|D|null = null;
+    if (this._datepicker.rangeMode) {
+      let parts = value.split('-');
+      if (parts.length > 1) {
+          const position = Math.floor(parts.length / 2);
+          const beginDateString = parts.slice(0, position).join('-');
+          const endDateString = parts.slice(position).join('-');
+          let beginDate = this._dateAdapter.parse(beginDateString,
+              this._dateFormats.parse.dateInput);
+          let endDate = this._dateAdapter.parse(endDateString, this._dateFormats.parse.dateInput);
+          this._lastValueValid = !beginDate || !endDate || this._dateAdapter.isValid(beginDate) &&
+                                                           this._dateAdapter.isValid(endDate);
+          beginDate = this._getValidDateOrNull(beginDate);
+          endDate = this._getValidDateOrNull(endDate);
+          if (beginDate && endDate) {
+            date = <MatDatePickerRangeValue<D>>{begin: beginDate, end: endDate};
+          }
+      }
+    } else {
+      date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
+      this._lastValueValid = !date || this._dateAdapter.isValid(date);
+      date = this._getValidDateOrNull(date);
+    }
     this._value = date;
     this._cvaOnChange(date);
     this._valueChange.emit(date);

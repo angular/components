@@ -99,7 +99,8 @@ Each validation property has a different error that can be checked:
  * A value that violates the `min` property will have a `matDatepickerMin` error.
  * A value that violates the `max` property will have a `matDatepickerMax` error.
  * A value that violates the `matDatepickerFilter` property will have a `matDatepickerFilter` error.
- 
+ * If a datepicker in range mode have `value.begin > value.end` the value will have a `matDatepickerRange` error.
+
 ### Input and change events
 
 The input's native `(input)` and `(change)` events will only trigger due to user interaction with
@@ -138,6 +139,15 @@ The calendar popup can be programmatically controlled using the `open` and `clos
 `<mat-datepicker>`. It also has an `opened` property that reflects the status of the popup.
 
 <!-- example(datepicker-api) -->
+
+### Range datepicker
+
+The datepicker is also might be used to select interval of dates. In that case you should add `[rangeMode]="true"`
+ to `<mat-datepicker>`. The value passed to `<input>` should implement interface `MatDatePickerRangeValue<D>`.
+ Entered string with dates interval will be separated by `-`, for example: `01/01/2001 - 01/10/2010` (or on some 
+ locales: `01-01-2001 - 01-10-2010`). Dates, around `-` can be in any format accepted by `DateAdapter.parse()`.
+  
+<!-- example(datepicker-range) -->
 
 ### Internationalization
 
