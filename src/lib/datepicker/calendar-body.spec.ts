@@ -12,6 +12,7 @@ describe('MatCalendarBody', () => {
 
         // Test components.
         StandardCalendarBody,
+        RangeCalendarBody,
         CalendarBodyWithDisabledCells,
       ],
     });
@@ -123,6 +124,85 @@ describe('MatCalendarBody', () => {
       expect(testComponent.selected).toBe(1);
     });
   });
+
+  describe('range calendar body', () => {
+    let fixture: ComponentFixture<RangeCalendarBody>;
+    let testComponent: RangeCalendarBody;
+    let calendarBodyNativeElement: Element;
+    let rowEls: NodeListOf<Element>;
+    let labelEls: NodeListOf<Element>;
+    let cellEls: NodeListOf<Element>;
+
+    let refreshElementLists = () => {
+      rowEls = calendarBodyNativeElement.querySelectorAll('tr');
+      labelEls = calendarBodyNativeElement.querySelectorAll('.mat-calendar-body-label');
+      cellEls = calendarBodyNativeElement.querySelectorAll('.mat-calendar-body-cell');
+    };
+    let fullRangeSelectedModeOn = () => {
+      testComponent.beginValue = null;
+      testComponent.endValue = null;
+      testComponent.rangeFull = true;
+      fixture.detectChanges();
+    };
+    beforeEach(() => {
+      fixture = TestBed.createComponent(RangeCalendarBody);
+      fixture.detectChanges();
+
+      let calendarBodyDebugElement = fixture.debugElement.query(By.directive(MatCalendarBody));
+      calendarBodyNativeElement = calendarBodyDebugElement.nativeElement;
+      testComponent = fixture.componentInstance;
+
+      refreshElementLists();
+    });
+
+    it('start and end of interval should be marked as selected', () => {
+      let selectedCells = calendarBodyNativeElement
+          .querySelectorAll('.mat-calendar-body-selected')!;
+      expect(selectedCells.length).toBe(2);
+      expect(selectedCells[0].innerHTML.trim()).toBe('4');
+      expect(selectedCells[1].innerHTML.trim()).toBe('7');
+    });
+
+    it('dates in interval should be marked as semi-selected', () => {
+      let semiSelectedCells = calendarBodyNativeElement
+          .querySelectorAll('.mat-calendar-body-semi-selected')!;
+      expect(semiSelectedCells.length).toBe(2);
+      expect(semiSelectedCells[0].innerHTML.trim()).toBe('5');
+      expect(semiSelectedCells[1].innerHTML.trim()).toBe('6');
+    });
+
+    it('start of interval should be marked as selected without end', () => {
+      testComponent.endValue = null;
+      fixture.detectChanges();
+      let selectedCells = calendarBodyNativeElement
+          .querySelectorAll('.mat-calendar-body-selected')!;
+      expect(selectedCells.length).toBe(1);
+      expect(selectedCells[0].innerHTML.trim()).toBe('4');
+    });
+
+    it('end of interval should be marked as selected without start', () => {
+      testComponent.beginValue = null;
+      fixture.detectChanges();
+      let selectedCells = calendarBodyNativeElement
+          .querySelectorAll('.mat-calendar-body-selected')!;
+      expect(selectedCells.length).toBe(1);
+      expect(selectedCells[0].innerHTML.trim()).toBe('7');
+    });
+
+    it('all cells should be marked as semi-selected', () => {
+      fullRangeSelectedModeOn();
+      let semiSelectedCells = calendarBodyNativeElement
+          .querySelectorAll('.mat-calendar-body-semi-selected')!;
+      expect(semiSelectedCells.length).toBe(14);
+    });
+
+    it('no selected cells if full body  inside interval', () => {
+      fullRangeSelectedModeOn();
+      let selectedCells = calendarBodyNativeElement
+          .querySelectorAll('.mat-calendar-body-selected')!;
+      expect(selectedCells.length).toBe(0);
+    });
+  });
 });
 
 
@@ -172,4 +252,22 @@ class CalendarBodyWithDisabledCells {
 
 function createCell(value: number) {
   return new MatCalendarCell(value, `${value}`, `${value}-label`, true);
+}
+
+
+@Component({
+  template: `<table mat-calendar-body
+                    [rows]="rows"
+                    [rangeMode]="true"
+                    [rangeFull]="rangeFull"
+                    [begin]="beginValue"
+                    [end]="endValue">
+             </table>`,
+})
+class RangeCalendarBody {
+  label = 'Jan 2017';
+  rows = [[1, 2, 3, 4, 5, 6, 7], [8, 9, 10, 11, 12, 13, 14]].map(r => r.map(createCell));
+  beginValue: number|null = 4;
+  endValue: number|null = 7;
+  rangeFull = false;
 }

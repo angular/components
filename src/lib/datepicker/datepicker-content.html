@@ -6,7 +6,11 @@
     [minDate]="datepicker._minDate"
     [maxDate]="datepicker._maxDate"
     [dateFilter]="datepicker._dateFilter"
+    [beginDate]="datepicker._beginDate"
+    [endDate]="datepicker._endDate"
+    [rangeMode]="datepicker.rangeMode"
     [selected]="datepicker._selected"
     (selectedChange)="datepicker._select($event)"
+    (dateRangesChange)="datepicker._selectRange($event)"
     (_userSelection)="datepicker.close()">
 </mat-calendar>

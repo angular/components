@@ -8,7 +8,7 @@
 
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import {MatDatepickerInputEvent, MatDatePickerRangeValue} from '@angular/material/datepicker';
 
 
 @Component({
@@ -24,17 +24,17 @@ export class DatepickerDemo {
   yearView: boolean;
   inputDisabled: boolean;
   datepickerDisabled: boolean;
+  rangeEnabled: boolean;
   minDate: Date;
   maxDate: Date;
   startAt: Date;
   date: Date;
-  lastDateInput: Date | null;
-  lastDateChange: Date | null;
-
+  lastDateInput: MatDatePickerRangeValue<Date>|Date | null;
+  lastDateChange: MatDatePickerRangeValue<Date>|Date | null;
   dateFilter = (date: Date) => date.getMonth() % 2 == 1 && date.getDate() % 2 == 0;
 
-  onDateInput = (e: MatDatepickerInputEvent<Date>) => this.lastDateInput = e.value;
-  onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
+  onDateInput = (e: MatDatepickerInputEvent<Date>) => this.lastDateInput = <Date>e.value;
+  onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = <Date>e.value;
 
   dateCtrl = new FormControl();
 }

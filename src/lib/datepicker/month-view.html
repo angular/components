@@ -8,6 +8,10 @@
          [rows]="_weeks"
          [todayValue]="_todayDate"
          [selectedValue]="_selectedDate"
+         [begin]="_beginDateNumber"
+         [end]="_endDateNumber"
+         [rangeFull]="_rangeFull"
+         [rangeMode]="rangeMode"
          [labelMinRequiredCells]="3"
          [activeCell]="_dateAdapter.getDate(activeDate) - 1"
          (selectedValueChange)="_dateSelected($event)">

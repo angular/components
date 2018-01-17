@@ -43,6 +43,7 @@ import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
 import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
 import {MatYearView} from './year-view';
+import {MatDatePickerRangeValue} from './datepicker-input';
 
 
 /**
@@ -100,6 +101,25 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   }
   private _maxDate: D | null;
 
+ /** Beginning of date range. */
+  @Input()
+  get beginDate(): D | null { return this._beginDate; }
+  set beginDate(value: D | null) {
+    this._beginDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _beginDate: D | null;
+
+ /** Date range end. */
+  @Input()
+  get endDate(): D | null { return this._endDate; }
+  set endDate(value: D | null) {
+    this._endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _endDate: D | null;
+
+  /** Whenever datepicker is for selecting range of dates. */
+  @Input() rangeMode = false;
+
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
 
@@ -109,6 +129,9 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   /** Emits when any date is selected. */
   @Output() _userSelection = new EventEmitter<void>();
 
+  /** Emits when new pair of dates selected. */
+  @Output() dateRangesChange = new EventEmitter<MatDatePickerRangeValue<D>>();
+
   /** Reference to the current month view component. */
   @ViewChild(MatMonthView) monthView: MatMonthView<D>;
 
@@ -117,6 +140,9 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
   /** Reference to the current multi-year view component. */
   @ViewChild(MatMultiYearView) multiYearView: MatMultiYearView<D>;
+
+  /** Whenever user already selected start of dates interval. */
+  private _beginDateSelected = false;
 
   /** Date filter for the month, year, and multi-year views. */
   _dateFilterForViews = (date: D) => {
@@ -221,7 +247,22 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
   /** Handles date selection in the month view. */
   _dateSelected(date: D): void {
-    if (!this._dateAdapter.sameDate(date, this.selected)) {
+    if (this.rangeMode) {
+      if (!this._dateAdapter.sameDate(this.beginDate, date) ||
+          !this._dateAdapter.sameDate(this.endDate, date)) {
+        if (!this._beginDateSelected) {
+          this._beginDateSelected = true;
+          this.dateRangesChange.emit({begin: date, end: date});
+        } else {
+          this._beginDateSelected = false;
+          if (this._dateAdapter.compareDate(<D>this.beginDate, date) <= 0) {
+            this.dateRangesChange.emit({begin: <D>this.beginDate, end: date});
+          } else {
+            this.dateRangesChange.emit({begin: date, end: <D>this.beginDate});
+          }
+        }
+      }
+    } else if (!this._dateAdapter.sameDate(date, this.selected)) {
       this.selectedChange.emit(date);
     }
   }
@@ -344,7 +385,9 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
       case ENTER:
         if (this._dateFilterForViews(this._activeDate)) {
           this._dateSelected(this._activeDate);
-          this._userSelected();
+          if (this.rangeMode && ! this._beginDateSelected) { // emit only after second date selected
+            this._userSelected();
+          }
           // Prevent unexpected default actions such as form submission.
           event.preventDefault();
         }
