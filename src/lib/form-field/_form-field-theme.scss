@@ -124,9 +124,6 @@ $mat-form-field-dedupe: 0;
   // The amount to scale the font for the prefix and suffix icons.
   $prefix-suffix-icon-font-scale: 1.5;
 
-  // The amount of space between the top of the line and the top of the actual text
-  // (as a fraction of the font-size).
-  $line-spacing: ($line-height - 1) / 2;
   // The padding on the infix. Mocks show half of the text size.
   $infix-padding: 0.5em;
   // The margin applied to the form-field-infix to reserve space for the floating label.

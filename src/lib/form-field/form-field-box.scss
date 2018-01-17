@@ -27,10 +27,6 @@ $mat-form-field-box-subscript-padding:
              $mat-form-field-box-side-padding;
   }
 
-  .mat-form-field-label {
-    transform: translateY(-50%);
-  }
-
   .mat-form-field-underline {
     height: $mat-form-field-box-border-radius;
     border-radius: 0 0 $mat-form-field-box-border-radius $mat-form-field-box-border-radius;
