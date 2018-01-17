@@ -122,11 +122,11 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
 
   /** Whether the floating label should always float or not. */
   get _shouldAlwaysFloat() {
-    return this._floatLabel === 'always' && !this._showAlwaysAnimate;
+    return this.floatLabel === 'always' && !this._showAlwaysAnimate;
   }
 
   /** Whether the label can float or not. */
-  get _canLabelFloat() { return this._floatLabel !== 'never'; }
+  get _canLabelFloat() { return this.floatLabel !== 'never'; }
 
   /** State of the mat-hint and mat-error animations. */
   _subscriptAnimationState: string = '';
@@ -148,12 +148,21 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
    * @deprecated Use floatLabel instead.
    */
   @Input()
-  get floatPlaceholder(): FloatLabelType { return this._floatLabel; }
+  get floatPlaceholder(): FloatLabelType { return this.floatLabel; }
   set floatPlaceholder(value: FloatLabelType) { this.floatLabel = value; }
 
-  /** Whether the label should always float, never float or float as the user types. */
+  /**
+   * Whether the label should always float, never float or float as the user types.
+   *
+   * Note: only the legacy variant supports the `never` option. `never` was originally added as a
+   * way to make the floating label emulate the behavior of a standard input placeholder. However
+   * the form field now supports both floating labels and placeholders. Therefore in the non-legacy
+   * variants the `never` option has been disabled in favor of just using the placeholder.
+   */
   @Input()
-  get floatLabel(): FloatLabelType { return this._floatLabel; }
+  get floatLabel(): FloatLabelType {
+    return this.variant !== 'legacy' && this._floatLabel === 'never' ? 'auto' : this._floatLabel;
+  }
   set floatLabel(value: FloatLabelType) {
     if (value !== this._floatLabel) {
       this._floatLabel = value || this._labelOptions.float || 'auto';
@@ -247,11 +256,14 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
   }
 
   _hideControlPlaceholder() {
-    return !this._hasLabel() || !this._shouldLabelFloat();
+    // In the legacy variant the placeholder is promoted to a label if no label is given.
+    return this.variant === 'legacy' && !this._hasLabel() ||
+        this._hasLabel() && !this._shouldLabelFloat();
   }
 
   _hasFloatingLabel() {
-    return this._hasLabel() || this._hasPlaceholder();
+    // In the legacy variant the placeholder is promoted to a label if no label is given.
+    return this._hasLabel() || this.variant === 'legacy' && this._hasPlaceholder();
   }
 
   /** Determines whether to display hints or errors. */
@@ -264,7 +276,7 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
   _animateAndLockLabel(): void {
     if (this._hasFloatingLabel() && this._canLabelFloat) {
       this._showAlwaysAnimate = true;
-      this._floatLabel = 'always';
+      this.floatLabel = 'always';
 
       fromEvent(this._label.nativeElement, 'transitionend').pipe(take(1)).subscribe(() => {
         this._showAlwaysAnimate = false;
