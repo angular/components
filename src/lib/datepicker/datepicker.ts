@@ -45,7 +45,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {merge} from 'rxjs/observable/merge';
 import {MatCalendar} from './calendar';
 import {createMissingDateImplError} from './datepicker-errors';
-import {MatDatepickerInput} from './datepicker-input';
+import {MatDatepickerInput, MatDatePickerRangeValue} from './datepicker-input';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -119,13 +119,32 @@ export class MatDatepicker<D> implements OnDestroy {
   @Input()
   get startAt(): D | null {
     // If an explicit startAt is set we start there, otherwise we start at whatever the currently
-    // selected value is.
-    return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
+    // selected value is or, in range mode, start from beginning of interval.
+    if (this.rangeMode) {
+      return this._startAt || (this._datepickerInput && this._datepickerInput.value ?
+                            (<MatDatePickerRangeValue<D>>this._datepickerInput.value).begin : null);
+    }
+    return this._startAt || (this._datepickerInput ? <D|null>this._datepickerInput.value : null);
   }
   set startAt(date: D | null) {
     this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(date));
   }
   private _startAt: D | null;
+
+  /** Whenever datepicker is for selecting range of dates. */
+  @Input()
+  get rangeMode(): boolean {
+    return this._rangeMode;
+  }
+  set rangeMode(mode: boolean) {
+    this._rangeMode = mode;
+    if (this.rangeMode) {
+      this._validSelected = null;
+    } else {
+      this._beginDate = this._endDate = null;
+    }
+  }
+  private _rangeMode;
 
   /** The view that the calendar should start in. */
   @Input() startView: 'month' | 'year' = 'month';
@@ -163,7 +182,7 @@ export class MatDatepicker<D> implements OnDestroy {
    * Emits new selected date when selected date changes.
    * @deprecated Switch to the `dateChange` and `dateInput` binding on the input element.
    */
-  @Output() selectedChanged = new EventEmitter<D>();
+  @Output() selectedChanged = new EventEmitter<MatDatePickerRangeValue<D>|D>();
 
   /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
   @Input() panelClass: string | string[];
@@ -185,8 +204,29 @@ export class MatDatepicker<D> implements OnDestroy {
 
   /** The currently selected date. */
   get _selected(): D | null { return this._validSelected; }
-  set _selected(value: D | null) { this._validSelected = value; }
+  set _selected(value: D | null) {
+    this._beginDate = this._endDate = null;
+    this._validSelected = value;
+  }
   private _validSelected: D | null = null;
+
+ /** Start of dates interval. */
+  @Input()
+  get beginDate(): D | null { return this._beginDate; }
+  set beginDate(value: D | null) {
+    this._validSelected = null;
+    this._beginDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  _beginDate: D | null;
+
+ /** End of dates interval. */
+  @Input()
+  get endDate(): D | null { return this._endDate; }
+  set endDate(value: D | null) {
+    this._validSelected = null;
+    this._endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  _endDate: D | null;
 
   /** The minimum selectable date. */
   get _minDate(): D | null {
@@ -254,6 +294,16 @@ export class MatDatepicker<D> implements OnDestroy {
     }
   }
 
+  /** Selects the given date range */
+  _selectRange(dates: MatDatePickerRangeValue<D>): void {
+    if (!this._dateAdapter.sameDate(dates.begin, this.beginDate) ||
+        !this._dateAdapter.sameDate(dates.end, this.endDate)) {
+      this.selectedChanged.emit(dates);
+    }
+    this._beginDate = dates.begin;
+    this._endDate = dates.end;
+  }
+
   /**
    * Register an input with this datepicker.
    * @param input The datepicker input to register with this datepicker.
@@ -264,7 +314,25 @@ export class MatDatepicker<D> implements OnDestroy {
     }
     this._datepickerInput = input;
     this._inputSubscription =
-        this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
+        this._datepickerInput._valueChange
+            .subscribe((value: MatDatePickerRangeValue<D> | D | null) => {
+              if (value === null) {
+                this.beginDate = this.endDate = this._selected = null;
+                return;
+              }
+              if (this.rangeMode) {
+                value = <MatDatePickerRangeValue<D>>value;
+                if (value.begin && value.end &&
+                    this._dateAdapter.compareDate(value.begin, value.end) <= 0) {
+                  this.beginDate = value.begin;
+                  this.endDate = value.end;
+                } else {
+                  this.beginDate = this.endDate = null;
+                }
+              } else {
+                this._selected = <D>value;
+              }
+            });
   }
 
   /** Open the calendar. */

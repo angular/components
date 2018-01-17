@@ -34,6 +34,7 @@ import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
 import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
 import {MatYearView} from './year-view';
+import {MatDatePickerRangeValue} from './datepicker-input';
 
 
 describe('MatCalendar', () => {
@@ -54,6 +55,7 @@ describe('MatCalendar', () => {
         StandardCalendar,
         CalendarWithMinMax,
         CalendarWithDateFilter,
+        RangeCalendar,
       ],
       providers: [
         MatDatepickerIntl,
@@ -845,6 +847,51 @@ describe('MatCalendar', () => {
       });
     });
   });
+
+  describe('range calendar', () => {
+    let fixture: ComponentFixture<RangeCalendar>;
+    let testComponent: RangeCalendar;
+    let calendarElement: HTMLElement;
+    let periodButton: HTMLElement;
+    let prevButton: HTMLElement;
+    let nextButton: HTMLElement;
+    let calendarInstance: MatCalendar<Date>;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(RangeCalendar);
+      fixture.detectChanges();
+
+      let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar));
+      calendarElement = calendarDebugElement.nativeElement;
+      periodButton = calendarElement.querySelector('.mat-calendar-period-button') as HTMLElement;
+      prevButton = calendarElement.querySelector('.mat-calendar-previous-button') as HTMLElement;
+      nextButton = calendarElement.querySelector('.mat-calendar-next-button') as HTMLElement;
+
+      calendarInstance = calendarDebugElement.componentInstance;
+      testComponent = fixture.componentInstance;
+    });
+
+    it('should receive date range on clicks', () => {
+      let monthCells = calendarElement.querySelectorAll('.mat-calendar-body-cell');
+      (monthCells[monthCells.length - 1] as HTMLElement).click();
+      fixture.detectChanges();
+      (monthCells[monthCells.length - 2] as HTMLElement).click();
+      fixture.detectChanges();
+      expect(testComponent.beginDate).toEqual(new Date(2017, JAN, 30));
+      expect(testComponent.endDate).toEqual(new Date(2017, JAN, 31));
+    });
+
+    it('should receive date range on reverse clicks', () => {
+      let monthCells = calendarElement.querySelectorAll('.mat-calendar-body-cell');
+      (monthCells[monthCells.length - 2] as HTMLElement).click();
+      fixture.detectChanges();
+      (monthCells[monthCells.length - 1] as HTMLElement).click();
+      fixture.detectChanges();
+      expect(testComponent.beginDate).toEqual(new Date(2017, JAN, 30));
+      expect(testComponent.endDate).toEqual(new Date(2017, JAN, 31));
+    });
+  });
+
 });
 
 
@@ -881,5 +928,30 @@ class CalendarWithDateFilter {
 
   dateFilter (date: Date) {
     return date.getDate() % 2 == 0 && date.getMonth() != NOV;
+  }
+}
+
+
+@Component({
+  template: `
+      <mat-calendar
+              [startAt]="startAt"
+              [beginDate]="beginDate"
+              [endDate]="endDate"
+              [rangeMode]="true"
+              (dateRangesChange)="dateSelected($event)">
+      </mat-calendar>`
+})
+class RangeCalendar {
+  startAt = new Date(2017, JAN, 31);
+
+  beginDate = new Date(2017, JAN, 5);
+  endDate = new Date(2017, JAN, 15);
+
+  selected: MatDatePickerRangeValue<Date>;
+
+  dateSelected(date: MatDatePickerRangeValue<Date>) {
+    this.beginDate = date.begin!;
+    this.endDate = date.end!;
   }
 }
