@@ -175,8 +175,8 @@ $mat-form-field-default-infix-width: 180px !default;
     opacity: 1;
     transform: scaleX(1);
     transition: transform 300ms $swift-ease-out-timing-function,
-    opacity 100ms $swift-ease-out-timing-function,
-    background-color 300ms $swift-ease-out-timing-function;
+                opacity 100ms $swift-ease-out-timing-function,
+                background-color 300ms $swift-ease-out-timing-function;
   }
 }
 
