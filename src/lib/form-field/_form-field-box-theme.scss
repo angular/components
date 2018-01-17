@@ -45,9 +45,6 @@ $mat-form-field-box-dedupe: 0;
              scale($font-scale);
   width: 100% / $font-scale + $mat-form-field-box-dedupe;
 
-  // Prevent text bluriness when label is floating.
-  backface-visibility: initial;
-
   $mat-form-field-box-dedupe: $mat-form-field-box-dedupe + 0.00001 !global;
 }
 

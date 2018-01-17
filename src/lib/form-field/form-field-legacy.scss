@@ -9,13 +9,7 @@ $mat-form-field-legacy-underline-height: 1px !default;
 
 
 .mat-form-field-variant-legacy {
-  .mat-form-field-label-wrapper {
-    filter: initial;
-  }
-
   .mat-form-field-label {
-    backface-visibility: initial;
-
     transform: perspective(100px);
     -ms-transform: none;
   }
