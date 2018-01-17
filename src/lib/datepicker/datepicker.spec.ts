@@ -19,7 +19,7 @@ import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatInputModule} from '../input/index';
 import {MatDatepicker} from './datepicker';
-import {MatDatepickerInput} from './datepicker-input';
+import {MatDatepickerInput, MatDatePickerRangeValue} from './datepicker-input';
 import {MatDatepickerToggle} from './datepicker-toggle';
 import {MatDatepickerIntl, MatDatepickerModule, MAT_DATEPICKER_SCROLL_STRATEGY} from './index';
 import {Subject} from 'rxjs/Subject';
@@ -51,7 +51,8 @@ describe('MatDatepicker', () => {
   afterEach(inject([OverlayContainer], (container: OverlayContainer) => {
     container.getContainerElement().parentNode!.removeChild(container.getContainerElement());
   }));
-
+  describe('with MatNativeDateModule', () => {
+    });
   describe('with MatNativeDateModule', () => {
     describe('standard datepicker', () => {
       let fixture: ComponentFixture<StandardDatepicker>;
@@ -1076,6 +1077,318 @@ describe('MatDatepicker', () => {
       }));
     });
 
+    describe('range datepicker', () => {
+      let fixture: ComponentFixture<RangeDatepicker>;
+      let testComponent: RangeDatepicker;
+
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(RangeDatepicker, [MatNativeDateModule]);
+        fixture.detectChanges();
+
+        testComponent = fixture.componentInstance;
+      }));
+
+      afterEach(fakeAsync(() => {
+        testComponent.datepicker.close();
+        fixture.detectChanges();
+        flush();
+      }));
+
+      it('should initialize with correct value shown in input', () => {
+        if (SUPPORTS_INTL) {
+          expect(fixture.nativeElement.querySelector('input').value).toBe('1/1/2020 - 1/31/2020');
+        }
+      });
+
+      it('setting selected via clicks should update input and close calendar', fakeAsync(() => {
+        testComponent.touch = true;
+        fixture.detectChanges();
+
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+
+        expect(document.querySelector('mat-dialog-container')).not.toBeNull();
+        expect(testComponent.datepickerInput.value).toEqual({
+          begin: new Date(2020, JAN, 1),
+          end: new Date(2020, JAN, 31)
+        });
+
+        let cells = document.querySelectorAll('.mat-calendar-body-cell');
+        dispatchMouseEvent(cells[1], 'click');
+        fixture.detectChanges();
+        dispatchMouseEvent(cells[1], 'click');
+        fixture.detectChanges();
+        flush();
+
+        expect(document.querySelector('mat-dialog-container')).toBeNull();
+        expect(testComponent.datepickerInput.value).toEqual({
+          begin: new Date(2020, JAN, 2),
+          end: new Date(2020, JAN, 2)
+        });
+      }));
+
+      it('setting selected via two enter press should update input and close calendar', () => {
+        testComponent.touch = true;
+        fixture.detectChanges();
+
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+
+        expect(document.querySelector('mat-dialog-container')).not.toBeNull();
+        expect(testComponent.datepickerInput.value).toEqual({
+          begin: new Date(2020, JAN, 1),
+          end: new Date(2020, JAN, 31)
+        });
+
+        let calendarBodyEl = document.querySelector('.mat-calendar-content') as HTMLElement;
+
+        dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
+        fixture.detectChanges();
+        dispatchKeyboardEvent(calendarBodyEl, 'keydown', ENTER);
+        fixture.detectChanges();
+        dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
+        fixture.detectChanges();
+        dispatchKeyboardEvent(calendarBodyEl, 'keydown', ENTER);
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          expect(document.querySelector('mat-dialog-container')).toBeNull();
+          expect(testComponent.datepickerInput.value).toEqual({
+            begin: new Date(2020, JAN, 2),
+            end: new Date(2020, JAN, 3)
+          });
+        });
+      });
+
+      it('startAt should fallback to input value', () => {
+        expect(testComponent.datepicker.startAt).toEqual(new Date(2020, JAN, 1));
+      });
+
+      it('should not throw when given wrong data type', () => {
+        testComponent.date = '1/1/2017' as any;
+
+        expect(() => fixture.detectChanges()).not.toThrow();
+      });
+    });
+    describe('range datepicker with ngModel', () => {
+      let fixture: ComponentFixture<RangeDatepickerWithNgModel>;
+      let testComponent: RangeDatepickerWithNgModel;
+
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(RangeDatepickerWithNgModel, [MatNativeDateModule]);
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          fixture.detectChanges();
+
+          testComponent = fixture.componentInstance;
+        });
+      }));
+
+      afterEach(fakeAsync(() => {
+        testComponent.datepicker.close();
+        fixture.detectChanges();
+      }));
+
+      it('should update datepicker when model changes', fakeAsync(() => {
+        expect(testComponent.datepickerInput.value).toBeNull();
+        expect(testComponent.datepicker._selected).toBeNull();
+        let begin = new Date(2010, JAN, 10);
+        let end = new Date(2010, JAN, 15);
+        testComponent.selected = {begin: begin, end: end};
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+        expect(testComponent.datepickerInput.value).toEqual({begin: begin, end: end});
+        expect(testComponent.datepicker.beginDate).toEqual(begin);
+        expect(testComponent.datepicker.endDate).toEqual(end);
+      }));
+
+      it('should update model when date is selected', fakeAsync(() => {
+        expect(testComponent.selected).toBeNull();
+        expect(testComponent.datepickerInput.value).toBeNull();
+
+        let selected = {begin: new Date(2010, JAN, 10), end: new Date(2010, JAN, 15)};
+        testComponent.datepicker._selectRange(selected);
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(testComponent.selected).toEqual(selected);
+        expect(testComponent.datepickerInput.value).toEqual(selected);
+      }));
+
+    });
+
+    describe('range datepicker with formControl', () => {
+      let fixture: ComponentFixture<RangeDatepickerWithFormControl>;
+      let testComponent: RangeDatepickerWithFormControl;
+
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(RangeDatepickerWithFormControl, [MatNativeDateModule]);
+        fixture.detectChanges();
+
+        testComponent = fixture.componentInstance;
+      }));
+
+      afterEach(fakeAsync(() => {
+        testComponent.datepicker.close();
+        fixture.detectChanges();
+      }));
+
+      it('should update datepicker when formControl changes', () => {
+        expect(testComponent.datepickerInput.value).toBeNull();
+        expect(testComponent.datepicker._selected).toBeNull();
+
+        let selected = {begin: new Date(2010, JAN, 10), end: new Date(2010, JAN, 15)};
+        testComponent.formControl.setValue(selected);
+        fixture.detectChanges();
+
+        expect(testComponent.datepickerInput.value).toEqual(selected);
+        expect(testComponent.datepicker._beginDate).toEqual(selected.begin);
+        expect(testComponent.datepicker._endDate).toEqual(selected.end);
+      });
+
+      it('should update formControl when date is selected', () => {
+        expect(testComponent.formControl.value).toBeNull();
+        expect(testComponent.datepickerInput.value).toBeNull();
+
+        let selected = {begin: new Date(2010, JAN, 10), end: new Date(2010, JAN, 15)};
+        testComponent.datepicker._selectRange(selected);
+        fixture.detectChanges();
+
+        expect(testComponent.formControl.value).toEqual(selected);
+        expect(testComponent.datepickerInput.value).toEqual(selected);
+      });
+    });
+
+    describe('range datepicker inside mat-form-field', () => {
+      let fixture: ComponentFixture<RangeFormFieldDatepicker>;
+      let testComponent: RangeFormFieldDatepicker;
+
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(RangeFormFieldDatepicker, [MatNativeDateModule]);
+        fixture.detectChanges();
+
+        testComponent = fixture.componentInstance;
+      }));
+
+      afterEach(fakeAsync(() => {
+        testComponent.datepicker.close();
+        fixture.detectChanges();
+      }));
+
+      it('should float the placeholder when an invalid value is entered', () => {
+        testComponent.datepickerInput.value = '10-10-2010' as any;
+        fixture.debugElement.nativeElement.querySelector('input').value = '10-10-2010';
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.nativeElement.querySelector('mat-form-field').classList)
+          .toContain('mat-form-field-should-float');
+      });
+
+    });
+
+    describe('range datepicker with min and max dates and validation', () => {
+      let fixture: ComponentFixture<RangeDatepickerWithMinAndMaxValidation>;
+      let testComponent: RangeDatepickerWithMinAndMaxValidation;
+
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(RangeDatepickerWithMinAndMaxValidation, [MatNativeDateModule]);
+        fixture.detectChanges();
+
+        testComponent = fixture.componentInstance;
+      }));
+
+      afterEach(fakeAsync(() => {
+        testComponent.datepicker.close();
+        fixture.detectChanges();
+      }));
+
+      it('should use min and max dates specified by the input', () => {
+        expect(testComponent.datepicker._minDate).toEqual(new Date(2010, JAN, 1));
+        expect(testComponent.datepicker._maxDate).toEqual(new Date(2020, JAN, 1));
+      });
+
+      it('should mark invalid when value is before min', fakeAsync(() => {
+        testComponent.dates = {begin: new Date(1910, JAN, 10), end: new Date(2010, JAN, 15)};
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+            .toContain('ng-invalid');
+      }));
+
+      it('should mark invalid when value is after max', fakeAsync(() => {
+        testComponent.dates = {begin: new Date(2010, JAN, 10), end: new Date(2020, JAN, 15)};
+        fixture.detectChanges();
+        flush();
+
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+            .toContain('ng-invalid');
+      }));
+
+      it('should mark invalid when start date after end date', fakeAsync(() => {
+        testComponent.dates = {begin: new Date(2010, JAN, 30), end: new Date(2020, JAN, 15)};
+        fixture.detectChanges();
+        flush();
+
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+            .toContain('ng-invalid');
+      }));
+
+      it('should not mark invalid when start date equals to end date', fakeAsync(() => {
+        testComponent.dates = {begin: new Date(2010, JAN, 15), end: new Date(2010, JAN, 15)};
+        fixture.detectChanges();
+        flush();
+
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+            .not.toContain('ng-invalid');
+      }));
+
+      it('should not mark invalid when value equals min', fakeAsync(() => {
+        testComponent.dates = {
+          begin: testComponent.datepicker._maxDate,
+          end: testComponent.datepicker._maxDate
+        };
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+            .not.toContain('ng-invalid');
+      }));
+
+      it('should not mark invalid when value equals max', fakeAsync(() => {
+        testComponent.dates = {
+          begin: testComponent.datepicker._maxDate,
+          end: testComponent.datepicker._maxDate
+        };
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+            .not.toContain('ng-invalid');
+      }));
+
+      it('should not mark invalid when value is between min and max', fakeAsync(() => {
+        testComponent.dates = {begin: new Date(2010, JAN, 10), end: new Date(2010, JAN, 15)};
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+            .not.toContain('ng-invalid');
+      }));
+    });
   });
 
   describe('with missing DateAdapter and MAT_DATE_FORMATS', () => {
@@ -1401,4 +1714,85 @@ class DatepickerWithEvents {
 })
 class DatepickerOpeningOnFocus {
   @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;
+}
+
+
+@Component({
+  template: `
+      <input [matDatepicker]="d" [value]="date">
+      <mat-datepicker #d
+              [touchUi]="touch"
+              [disabled]="disabled"
+              [opened]="opened"
+              [rangeMode]="true">
+      </mat-datepicker>
+  `,
+})
+class RangeDatepicker {
+  opened = false;
+  touch = false;
+  disabled = false;
+  date: MatDatePickerRangeValue<Date> | null = {
+    begin: new Date(2020, JAN, 1),
+    end: new Date(2020, JAN, 31)
+  };
+  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+}
+
+
+@Component({
+  template: `
+    <input [(ngModel)]="selected" [matDatepicker]="d">
+    <mat-datepicker #d [rangeMode]="true"></mat-datepicker>
+  `,
+})
+class RangeDatepickerWithNgModel {
+  selected: MatDatePickerRangeValue<Date> | null = null;
+  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+}
+
+
+@Component({
+  template: `
+    <input [formControl]="formControl" [matDatepicker]="d">
+    <mat-datepicker-toggle [for]="d"></mat-datepicker-toggle>
+    <mat-datepicker #d [rangeMode]="true"></mat-datepicker>
+  `,
+})
+class RangeDatepickerWithFormControl {
+  formControl = new FormControl();
+  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+  @ViewChild(MatDatepickerToggle) datepickerToggle: MatDatepickerToggle<Date>;
+}
+
+
+@Component({
+  template: `
+      <mat-form-field>
+        <input matInput [matDatepicker]="d">
+        <mat-datepicker #d [rangeMode]="true"></mat-datepicker>
+      </mat-form-field>
+  `,
+})
+class RangeFormFieldDatepicker {
+  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+}
+
+
+@Component({
+  template: `
+    <input [matDatepicker]="d" [(ngModel)]="dates" [min]="minDate" [max]="maxDate">
+    <mat-datepicker-toggle [for]="d"></mat-datepicker-toggle>
+    <mat-datepicker #d [rangeMode]="true"></mat-datepicker>
+  `,
+})
+class RangeDatepickerWithMinAndMaxValidation {
+  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  dates: MatDatePickerRangeValue<Date> | null = null;
+  minDate = new Date(2010, JAN, 1);
+  maxDate = new Date(2020, JAN, 1);
 }

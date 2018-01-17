@@ -1,0 +1,5 @@
+<mat-form-field class="example-full-width">
+  <input matInput [matDatepicker]="picker" placeholder="Choose a dates interval">
+  <mat-datepicker #picker [rangeMode]="true"></mat-datepicker>
+</mat-form-field>
+<button mat-raised-button (click)="picker.open()">Open</button>

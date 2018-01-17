@@ -31,14 +31,10 @@ export class DatepickerDemo {
   date: Date;
   lastDateInput: MatDatePickerRangeValue<Date>|Date | null;
   lastDateChange: MatDatePickerRangeValue<Date>|Date | null;
-  dateRange: MatDatePickerRangeValue<Date>;
   dateFilter = (date: Date) => date.getMonth() % 2 == 1 && date.getDate() % 2 == 0;
 
   onDateInput = (e: MatDatepickerInputEvent<Date>) => this.lastDateInput = <Date>e.value;
   onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = <Date>e.value;
 
   dateCtrl = new FormControl();
-  changeRange(dates: MatDatePickerRangeValue<Date>) {
-    this.dateRange = dates;
-  }
 }

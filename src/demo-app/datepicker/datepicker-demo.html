@@ -40,7 +40,6 @@
            [(ngModel)]="date"
            [min]="minDate"
            [max]="maxDate"
-           [rangeMode]="rangeEnabled"
            [matDatepickerFilter]="filterOdd ? dateFilter : null"
            [disabled]="inputDisabled"
            placeholder="Pick a date"
@@ -74,7 +73,6 @@
   <input #resultPickerModel2
          [matDatepicker]="resultPicker2"
          [(ngModel)]="date"
-         [rangeMode]="rangeEnabled"
          [min]="minDate"
          [max]="maxDate"
          [disabled]="inputDisabled"

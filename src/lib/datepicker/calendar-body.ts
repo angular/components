@@ -98,7 +98,7 @@ export class MatCalendarBody {
   @Output() selectedValueChange = new EventEmitter<number>();
 
   _cellClicked(cell: MatCalendarCell): void {
-    if (!this.allowDisabledSelection && !cell.enabled && !this.rangeMode) {
+    if (!this.allowDisabledSelection && !cell.enabled) {
       return;
     }
     this.selectedValueChange.emit(cell.value);
@@ -136,7 +136,7 @@ export class MatCalendarBody {
     if (this.begin && !this.end) {
         return date > this.begin;
     }
-    if(this.end && !this.begin) {
+    if (this.end && !this.begin) {
       return date < this.end;
     }
     return date > <number>this.begin && date < <number>this.end;

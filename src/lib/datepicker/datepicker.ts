@@ -139,7 +139,7 @@ export class MatDatepicker<D> implements OnDestroy {
   set rangeMode(mode: boolean) {
     this._rangeMode = mode;
     if (this.rangeMode) {
-      this._selected = null;
+      this._validSelected = null;
     } else {
       this._beginDate = this._endDate = null;
     }
@@ -214,7 +214,7 @@ export class MatDatepicker<D> implements OnDestroy {
   @Input()
   get beginDate(): D | null { return this._beginDate; }
   set beginDate(value: D | null) {
-    this._selected = null;
+    this._validSelected = null;
     this._beginDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
   _beginDate: D | null;
@@ -223,7 +223,7 @@ export class MatDatepicker<D> implements OnDestroy {
   @Input()
   get endDate(): D | null { return this._endDate; }
   set endDate(value: D | null) {
-    this._selected = null;
+    this._validSelected = null;
     this._endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
   _endDate: D | null;
@@ -322,7 +322,8 @@ export class MatDatepicker<D> implements OnDestroy {
               }
               if (this.rangeMode) {
                 value = <MatDatePickerRangeValue<D>>value;
-                if (value.begin && value.end && value.begin <= value.end) {
+                if (value.begin && value.end &&
+                    this._dateAdapter.compareDate(value.begin, value.end) <= 0) {
                   this.beginDate = value.begin;
                   this.endDate = value.end;
                 } else {

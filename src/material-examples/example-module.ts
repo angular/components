@@ -30,6 +30,7 @@ import {DatepickerLocaleExample} from './datepicker-locale/datepicker-locale-exa
 import {DatepickerMinMaxExample} from './datepicker-min-max/datepicker-min-max-example';
 import {DatepickerMomentExample} from './datepicker-moment/datepicker-moment-example';
 import {DatepickerOverviewExample} from './datepicker-overview/datepicker-overview-example';
+import {DatepickerRangeExample} from "./datepicker-range/datepicker-range-example";
 import {DatepickerStartViewExample} from './datepicker-start-view/datepicker-start-view-example';
 import {DatepickerTouchExample} from './datepicker-touch/datepicker-touch-example';
 import {DatepickerValueExample} from './datepicker-value/datepicker-value-example';
@@ -228,6 +229,10 @@ export const EXAMPLE_COMPONENTS: {[key: string]: LiveExample} = {
   'datepicker-overview': {
     title: 'Basic datepicker',
     component: DatepickerOverviewExample
+  },
+  'datepicker-range': {
+    title: 'Range datepicker',
+    component: DatepickerRangeExample
   },
   'datepicker-start-view': {
     title: 'Datepicker start date',

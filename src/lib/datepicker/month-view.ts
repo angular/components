@@ -21,7 +21,6 @@ import {
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
-import {MatDatePickerRangeValue} from './datepicker-input';
 
 
 const DAYS_PER_WEEK = 7;
