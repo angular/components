@@ -1,3 +1,20 @@
+<a name="5.0.5"></a>
+## [5.0.5](https://github.com/angular/material2/compare/5.0.4...5.0.5) (2018-01-17)
+
+
+### Bug Fixes
+
+* **form-field:** hide required asterisk if control is disabled ([#8799](https://github.com/angular/material2/issues/8799)) ([2d56386](https://github.com/angular/material2/commit/2d56386)), closes [#8251](https://github.com/angular/material2/issues/8251)
+* **list:** incorrect padding for list-items with avatars, icons ([#9163](https://github.com/angular/material2/issues/9163)) ([1550502](https://github.com/angular/material2/commit/1550502)), closes [#9156](https://github.com/angular/material2/issues/9156)
+* **list:** prevent list icon shrinking ([#9211](https://github.com/angular/material2/issues/9211)) ([c3bd509](https://github.com/angular/material2/commit/c3bd509)), closes [#8699](https://github.com/angular/material2/issues/8699)
+* **table:** inaccurate row height ([#8303](https://github.com/angular/material2/issues/8303)) ([1254353](https://github.com/angular/material2/commit/1254353)), closes [#8299](https://github.com/angular/material2/issues/8299)
+* **table:** row content not centered in IE ([#6820](https://github.com/angular/material2/issues/6820)) ([85ab289](https://github.com/angular/material2/commit/85ab289)), closes [#6813](https://github.com/angular/material2/issues/6813)
+* **table:** set height of mat-header-row to 56px ([#8215](https://github.com/angular/material2/issues/8215)) ([9777cab](https://github.com/angular/material2/commit/9777cab))
+* **theming:** light text on colored backgrounds should be opaque ([#7421](https://github.com/angular/material2/issues/7421)) ([7c7db09](https://github.com/angular/material2/commit/7c7db09))
+* too strict peer dependency of angular ([#9355](https://github.com/angular/material2/issues/9355)) ([aac5508](https://github.com/angular/material2/commit/aac5508)), closes [#9328](https://github.com/angular/material2/issues/9328)
+
+
+
 <a name="5.0.4"></a>
 ## [5.0.4 linoleum-wormhole](https://github.com/angular/material2/compare/5.0.3...5.0.4) (2018-01-09)
 
