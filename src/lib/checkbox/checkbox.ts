@@ -72,7 +72,7 @@ export enum TransitionCheckState {
 }
 
 /** Change event object emitted by MatCheckbox. */
-export class MatCheckboxChange {
+export interface MatCheckboxChange {
   /** The source MatCheckbox of the event. */
   source: MatCheckbox;
   /** The new `checked` value of the checkbox. */
@@ -335,12 +335,8 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   }
 
   private _emitChangeEvent() {
-    let event = new MatCheckboxChange();
-    event.source = this;
-    event.checked = this.checked;
-
     this._controlValueAccessorChangeFn(this.checked);
-    this.change.emit(event);
+    this.change.emit({source: this, checked: this.checked});
   }
 
   /** Function is called whenever the focus changes for the input element. */

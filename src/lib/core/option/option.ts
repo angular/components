@@ -31,12 +31,11 @@ import {MatOptgroup} from './optgroup';
 let _uniqueIdCounter = 0;
 
 /** Event object emitted by MatOption when selected or deselected. */
-export class MatOptionSelectionChange {
-  constructor(
-    /** Reference to the option that emitted the event. */
-    public source: MatOption,
-    /** Whether the change in the option's value was a result of a user action. */
-    public isUserInput = false) { }
+export interface MatOptionSelectionChange {
+  /** Reference to the option that emitted the event. */
+  source: MatOption;
+  /** Whether the change in the option's value was a result of a user action. */
+  isUserInput: boolean;
 }
 
 /**
@@ -221,7 +220,7 @@ export class MatOption {
 
   /** Emits the selection change event. */
   private _emitSelectionChangeEvent(isUserInput = false): void {
-    this.onSelectionChange.emit(new MatOptionSelectionChange(this, isUserInput));
+    this.onSelectionChange.emit({source: this, isUserInput});
   }
 
   /**

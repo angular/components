@@ -7,7 +7,6 @@ import {ESCAPE} from '@angular/cdk/keycodes';
 import {CdkConnectedOverlay, OverlayModule, CdkOverlayOrigin} from './index';
 import {OverlayContainer} from './overlay-container';
 import {ConnectedPositionStrategy} from './position/connected-position-strategy';
-import {ConnectedOverlayPositionChange} from './position/connected-position';
 
 
 describe('Overlay directives', () => {
@@ -272,11 +271,6 @@ describe('Overlay directives', () => {
       fixture.detectChanges();
 
       expect(fixture.componentInstance.positionChangeHandler).toHaveBeenCalled();
-
-      const latestCall = fixture.componentInstance.positionChangeHandler.calls.mostRecent();
-
-      expect(latestCall.args[0] instanceof ConnectedOverlayPositionChange)
-          .toBe(true, `Expected directive to emit an instance of ConnectedOverlayPositionChange.`);
     });
 
     it('should emit attach and detach appropriately', () => {

@@ -366,11 +366,7 @@ describe('ConnectedPositionStrategy', () => {
       strategy.attach(fakeOverlayRef(overlayElement));
       strategy.apply();
 
-      const latestCall = positionChangeHandler.calls.mostRecent();
-
       expect(positionChangeHandler).toHaveBeenCalled();
-      expect(latestCall.args[0] instanceof ConnectedOverlayPositionChange)
-          .toBe(true, `Expected strategy to emit an instance of ConnectedOverlayPositionChange.`);
 
       // If the strategy is re-applied and the initial position would now fit,
       // the position change event should be emitted again.

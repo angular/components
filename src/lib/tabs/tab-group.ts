@@ -40,7 +40,7 @@ import {
 let nextId = 0;
 
 /** A simple change event emitted on focus or selection changes. */
-export class MatTabChangeEvent {
+export interface MatTabChangeEvent {
   /** Index of the currently-selected tab. */
   index: number;
   /** Reference to the currently-selected tab. */
@@ -58,7 +58,7 @@ export class MatTabGroupBase {
 export const _MatTabGroupMixinBase = mixinColor(mixinDisableRipple(MatTabGroupBase), 'primary');
 
 /**
- * Material design tab-group component.  Supports basic tab pairs (label + content) and includes
+ * Material design tab-group component. Supports basic tab pairs (label + content) and includes
  * animated ink-bar, keyboard navigation, and screen reader.
  * See: https://www.google.com/design/spec/components/tabs.html
  */
@@ -225,12 +225,13 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   }
 
   private _createChangeEvent(index: number): MatTabChangeEvent {
-    const event = new MatTabChangeEvent;
-    event.index = index;
+    let tab;
+
     if (this._tabs && this._tabs.length) {
-      event.tab = this._tabs.toArray()[index];
+      tab = this._tabs.toArray()[index];
     }
-    return event;
+
+    return {index, tab};
   }
 
   /**

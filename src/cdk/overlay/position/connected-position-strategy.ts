@@ -423,9 +423,10 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     element.style[horizontalStyleProperty] = `${x}px`;
 
     // Notify that the position has been changed along with its change properties.
-    const scrollableViewProperties = this._getScrollVisibility(element);
-    const positionChange = new ConnectedOverlayPositionChange(pos, scrollableViewProperties);
-    this._onPositionChange.next(positionChange);
+    this._onPositionChange.next({
+      connectionPair: pos,
+      scrollableViewProperties: this._getScrollVisibility(element)
+    });
   }
 
   /**

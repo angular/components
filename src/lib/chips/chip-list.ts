@@ -59,12 +59,11 @@ export const _MatChipListMixinBase = mixinErrorState(MatChipListBase);
 let nextUniqueId = 0;
 
 /** Change event object that is emitted when the chip list value has changed. */
-export class MatChipListChange {
-  constructor(
-    /** Chip list that emitted the event. */
-    public source: MatChipList,
-    /** Value of the chip list when the event was emitted. */
-    public value: any) { }
+export interface MatChipListChange {
+  /** Chip list that emitted the event. */
+  source: MatChipList;
+  /** Value of the chip list when the event was emitted. */
+  value: any;
 }
 
 
@@ -648,7 +647,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
       valueToEmit = this.selected ? this.selected.value : fallbackValue;
     }
     this._value = valueToEmit;
-    this.change.emit(new MatChipListChange(this, valueToEmit));
+    this.change.emit({source: this, value: valueToEmit});
     this.valueChange.emit(valueToEmit);
     this._onChange(valueToEmit);
     this._changeDetectorRef.markForCheck();

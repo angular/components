@@ -51,7 +51,7 @@ export const MAT_SLIDE_TOGGLE_VALUE_ACCESSOR: any = {
 };
 
 /** Change event object emitted by a MatSlideToggle. */
-export class MatSlideToggleChange {
+export interface MatSlideToggleChange {
   source: MatSlideToggle;
   checked: boolean;
 }
@@ -250,9 +250,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
    * Emits a change event on the `change` output. Also notifies the FormControl about the change.
    */
   private _emitChangeEvent() {
-    let event = new MatSlideToggleChange();
-    event.source = this;
-    event.checked = this.checked;
+    const event: MatSlideToggleChange = {source: this, checked: this.checked};
     this.onChange(this.checked);
     this.change.emit(event);
   }

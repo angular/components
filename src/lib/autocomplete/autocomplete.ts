@@ -37,12 +37,12 @@ import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 let _uniqueAutocompleteIdCounter = 0;
 
 /** Event object that is emitted when an autocomplete option is selected */
-export class MatAutocompleteSelectedEvent {
-  constructor(
-    /** Reference to the autocomplete panel that emitted the event. */
-    public source: MatAutocomplete,
-    /** Option that was selected. */
-    public option: MatOption) { }
+export interface MatAutocompleteSelectedEvent {
+  /** Reference to the autocomplete panel that emitted the event. */
+  source: MatAutocomplete;
+
+  /** Option that was selected. */
+  option: MatOption;
 }
 
 // Boilerplate for applying mixins to MatAutocomplete.
@@ -153,8 +153,7 @@ export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterC
 
   /** Emits the `select` event. */
   _emitSelectEvent(option: MatOption): void {
-    const event = new MatAutocompleteSelectedEvent(this, option);
-    this.optionSelected.emit(event);
+    this.optionSelected.emit({source: this, option});
   }
 }
 

@@ -43,7 +43,6 @@ import {
   FloatLabelType,
   MAT_LABEL_GLOBAL_OPTIONS,
   MatOption,
-  MatOptionSelectionChange,
 } from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
@@ -1108,7 +1107,10 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        expect(spy).toHaveBeenCalledWith(jasmine.any(MatOptionSelectionChange));
+        expect(spy).toHaveBeenCalledWith(jasmine.objectContaining({
+          source: fixture.componentInstance.options.first,
+          isUserInput: true
+        }));
 
         subscription.unsubscribe();
       }));
@@ -1138,7 +1140,10 @@ describe('MatSelect', () => {
           fixture.detectChanges();
           flush();
 
-          expect(spy).toHaveBeenCalledWith(jasmine.any(MatOptionSelectionChange));
+          expect(spy).toHaveBeenCalledWith(jasmine.objectContaining({
+            source: fixture.componentInstance.options.first,
+            isUserInput: true
+          }));
 
           subscription!.unsubscribe();
         }));

@@ -139,12 +139,11 @@ export const MAT_SELECT_SCROLL_STRATEGY_PROVIDER = {
 };
 
 /** Change event object that is emitted when the select value has changed. */
-export class MatSelectChange {
-  constructor(
-    /** Reference to the select that emitted the change event. */
-    public source: MatSelect,
-    /** Current value of the select that emitted the event. */
-    public value: any) { }
+export interface MatSelectChange {
+  /** Reference to the select that emitted the change event. */
+  source: MatSelect;
+  /** Current value of the select that emitted the event. */
+  value: any;
 }
 
 // Boilerplate for applying mixins to MatSelect.
@@ -909,7 +908,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     this._value = valueToEmit;
     this.valueChange.emit(valueToEmit);
     this._onChange(valueToEmit);
-    this.selectionChange.emit(new MatSelectChange(this, valueToEmit));
+    this.selectionChange.emit({source: this, value: valueToEmit});
     this._changeDetectorRef.markForCheck();
   }
 

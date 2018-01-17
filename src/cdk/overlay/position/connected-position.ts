@@ -7,7 +7,6 @@
  */
 
 /** Horizontal dimension of a connection point on the perimeter of the origin or overlay element. */
-import {Optional} from '@angular/core';
 export type HorizontalConnectionPos = 'start' | 'center' | 'end';
 
 /** Vertical dimension of a connection point on the perimeter of the origin or overlay element. */
@@ -83,10 +82,10 @@ export class ScrollingVisibility {
 }
 
 /** The change event emitted by the strategy when a fallback position is used. */
-export class ConnectedOverlayPositionChange {
-  constructor(
-      /** The position used as a result of this change. */
-      public connectionPair: ConnectionPositionPair,
-      /** @docs-private */
-      @Optional() public scrollableViewProperties: ScrollingVisibility) {}
+export interface ConnectedOverlayPositionChange {
+  /** The position used as a result of this change. */
+  connectionPair: ConnectionPositionPair;
+
+  /** @docs-private */
+  scrollableViewProperties: ScrollingVisibility;
 }

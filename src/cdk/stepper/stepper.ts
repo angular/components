@@ -47,7 +47,7 @@ export type StepContentPositionState = 'previous' | 'current' | 'next';
 export type StepperOrientation = 'horizontal' | 'vertical';
 
 /** Change event emitted on selection changes. */
-export class StepperSelectionEvent {
+export interface StepperSelectionEvent {
   /** Index of the step now selected. */
   selectedIndex: number;
 

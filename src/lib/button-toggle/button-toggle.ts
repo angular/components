@@ -52,7 +52,7 @@ export const MAT_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any = {
 let _uniqueIdCounter = 0;
 
 /** Change event object emitted by MatButtonToggle. */
-export class MatButtonToggleChange {
+export interface MatButtonToggleChange {
   /** The MatButtonToggle that emits the event. */
   source: MatButtonToggle | null;
   /** The value assigned to the MatButtonToggle. */
@@ -190,9 +190,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
 
   /** Dispatch change event with current selection and group value. */
   _emitChangeEvent(): void {
-    let event = new MatButtonToggleChange();
-    event.source = this._selected;
-    event.value = this._value;
+    const event: MatButtonToggleChange = {source: this._selected, value: this._value};
     this._controlValueAccessorChangeFn(event.value);
     this.change.emit(event);
   }
@@ -467,10 +465,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
 
   /** Dispatch change event with current value. */
   private _emitChangeEvent(): void {
-    let event = new MatButtonToggleChange();
-    event.source = this;
-    event.value = this._value;
-    this.change.emit(event);
+    this.change.emit({source: this, value: this._value});
   }
 
   // Unregister buttonToggleDispatcherListener on destroy

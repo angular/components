@@ -28,7 +28,7 @@ const DEFAULT_PAGE_SIZE = 50;
  * Change event object that is emitted when the user selects a
  * different page size or navigates to another page.
  */
-export class PageEvent {
+export interface PageEvent {
   /** The current page index. */
   pageIndex: number;
 

@@ -73,10 +73,9 @@ export const MAT_SLIDER_VALUE_ACCESSOR: any = {
 };
 
 /** A simple change event emitted by the MatSlider component. */
-export class MatSliderChange {
+export interface MatSliderChange {
   /** The MatSlider that changed. */
   source: MatSlider;
-
   /** The new value of the source slider. */
   value: number | null;
 }
@@ -624,12 +623,12 @@ export class MatSlider extends _MatSliderMixinBase
   /** Emits a change event if the current value is different from the last emitted value. */
   private _emitChangeEvent() {
     this._controlValueAccessorChangeFn(this.value);
-    this.change.emit(this._createChangeEvent());
+    this.change.emit({source: this, value: this.value});
   }
 
   /** Emits an input event when the current value is different from the last emitted value. */
   private _emitInputEvent() {
-    this.input.emit(this._createChangeEvent());
+    this.input.emit({source: this, value: this.value});
   }
 
   /** Updates the amount of space between ticks as a percentage of the width of the slider. */
@@ -647,16 +646,6 @@ export class MatSlider extends _MatSliderMixinBase
     } else {
       this._tickIntervalPercent = this.tickInterval * this.step / (this.max - this.min);
     }
-  }
-
-  /** Creates a slider change object from the specified value. */
-  private _createChangeEvent(value = this.value): MatSliderChange {
-    let event = new MatSliderChange();
-
-    event.source = this;
-    event.value = value;
-
-    return event;
   }
 
   /** Calculates the percentage of the slider that a value is. */

@@ -66,8 +66,7 @@ export class MatChipInput {
   @Input('matChipInputSeparatorKeyCodes') separatorKeyCodes: number[] = [ENTER];
 
   /** Emitted when a chip is to be added. */
-  @Output('matChipInputTokenEnd')
-  chipEnd = new EventEmitter<MatChipInputEvent>();
+  @Output('matChipInputTokenEnd') chipEnd = new EventEmitter<MatChipInputEvent>();
 
   /** The input's placeholder text. */
   @Input() placeholder: string = '';

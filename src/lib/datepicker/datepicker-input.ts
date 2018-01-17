@@ -57,17 +57,13 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
  * input or change event because the event may have been triggered by the user clicking on the
  * calendar popup. For consistency, we always use MatDatepickerInputEvent instead.
  */
-export class MatDatepickerInputEvent<D> {
+export interface MatDatepickerInputEvent<D> {
   /** The new value for the target datepicker input. */
   value: D | null;
-
-  constructor(
-    /** Reference to the datepicker input component that emitted the event. */
-    public target: MatDatepickerInput<D>,
-    /** Reference to the native input element associated with the datepicker input. */
-    public targetElement: HTMLElement) {
-    this.value = this.target.value;
-  }
+  /** Reference to the datepicker input component that emitted the event. */
+  target: MatDatepickerInput<D>;
+  /** Reference to the native input element associated with the datepicker input. */
+  targetElement: HTMLElement;
 }
 
 
@@ -250,8 +246,10 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
             this.value = selected;
             this._cvaOnChange(selected);
             this._onTouched();
-            this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-            this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+
+            const event = this._getChangeEvent();
+            this.dateInput.emit(event);
+            this.dateChange.emit(event);
           });
     }
   }
@@ -321,11 +319,11 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this._value = date;
     this._cvaOnChange(date);
     this._valueChange.emit(date);
-    this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+    this.dateInput.emit(this._getChangeEvent());
   }
 
   _onChange() {
-    this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+    this.dateChange.emit(this._getChangeEvent());
   }
 
   /**
@@ -334,5 +332,16 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
    */
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  }
+
+  /**
+   * Creates a change event object that can be emitted to the consumer.
+   */
+  private _getChangeEvent(): MatDatepickerInputEvent<D> {
+    return {
+      value: this.value,
+      target: this,
+      targetElement: this._elementRef.nativeElement
+    };
   }
 }
