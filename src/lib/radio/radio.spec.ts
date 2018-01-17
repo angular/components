@@ -16,6 +16,8 @@ describe('MatRadio', () => {
         FocusableRadioButton,
         RadiosInsideRadioGroup,
         RadioGroupWithNgModel,
+        RadioGroupWithNativeTabIndexAttr,
+        RadioGroupWithTabIndexBinding,
         RadioGroupWithFormControl,
         StandaloneRadioButtons,
         InterleavedRadioGroup,
@@ -493,6 +495,61 @@ describe('MatRadio', () => {
     });
   });
 
+  describe('group with provided tabIndex', () => {
+    let fixture: ComponentFixture<RadioGroupWithTabIndexBinding>;
+    let groupDebugElement: DebugElement;
+    let groupInstance: MatRadioGroup;
+    let testComponent: RadioGroupWithTabIndexBinding;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(RadioGroupWithTabIndexBinding);
+      fixture.detectChanges();
+
+      testComponent = fixture.debugElement.componentInstance;
+      groupDebugElement = fixture.debugElement.query(By.directive(MatRadioGroup));
+      groupInstance = groupDebugElement.injector.get<MatRadioGroup>(MatRadioGroup);
+    });
+
+    it('should preserve any given tabIndex', () => {
+      expect(groupInstance.tabIndex).toBe(7);
+    });
+
+    it('should preserve given tabIndex when the option group is disabled then enabled', () => {
+      testComponent.isDisabled = true;
+      fixture.detectChanges();
+
+      testComponent.customTabIndex = 13;
+      fixture.detectChanges();
+
+      testComponent.isDisabled = false;
+      fixture.detectChanges();
+
+      expect(groupInstance.tabIndex).toBe(13);
+    });
+
+  });
+
+  describe('group with native tabIndex', () => {
+    let fixture: ComponentFixture<RadioGroupWithNativeTabIndexAttr>;
+    let groupDebugElement: DebugElement;
+    let groupInstance: MatRadioGroup;
+    let testComponent: RadioGroupWithNativeTabIndexAttr;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(RadioGroupWithNativeTabIndexAttr);
+      fixture.detectChanges();
+
+      testComponent = fixture.debugElement.componentInstance;
+      groupDebugElement = fixture.debugElement.query(By.directive(MatRadioGroup));
+      groupInstance = groupDebugElement.injector.get<MatRadioGroup>(MatRadioGroup);
+    });
+
+    it('should properly detect native tabindex attribute', async(() => {
+      expect(groupInstance.tabIndex)
+        .toBe(5, 'Expected tabIndex property to have been set based on the native attribute');
+    }));
+  });
+
   describe('group with FormControl', () => {
     let fixture: ComponentFixture<RadioGroupWithFormControl>;
     let groupDebugElement: DebugElement;
@@ -767,6 +824,27 @@ class RadioGroupWithNgModel {
     {label: 'Strawberry', value: 'strawberry'},
   ];
   lastEvent: MatRadioChange;
+}
+
+@Component({
+  template: `
+  <mat-radio-group tabindex="5">
+      <mat-radio-button value="1">One</mat-radio-button>
+  </mat-radio-group>
+  `
+})
+class RadioGroupWithNativeTabIndexAttr {}
+
+@Component({
+  template: `
+  <mat-radio-group [tabIndex]="customTabIndex">
+      <mat-radio-button value="1">One</mat-radio-button>
+  </mat-radio-group>
+  `
+})
+class RadioGroupWithTabIndexBinding {
+  customTabIndex: number = 7;
+  isDisabled: boolean = false;
 }
 
 @Component({
