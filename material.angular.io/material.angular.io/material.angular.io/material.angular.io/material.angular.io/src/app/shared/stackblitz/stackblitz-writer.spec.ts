@@ -39,13 +39,13 @@ describe('StackblitzWriter', () => {
   it('should append correct copyright', () => {
     expect(stackblitzWriter._appendCopyright('test.ts', 'NoContent')).toBe(`NoContent
 
-/**  Copyright 2017 Google Inc. All Rights Reserved.
+/**  Copyright 2018 Google Inc. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at http://angular.io/license */`);
 
     expect(stackblitzWriter._appendCopyright('test.html', 'NoContent')).toBe(`NoContent
 
-<!-- Copyright 2017 Google Inc. All Rights Reserved.
+<!-- Copyright 2018 Google Inc. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at http://angular.io/license -->`);
 
