@@ -1,5 +1,4 @@
-import {NgModule, Injectable, OnInit, Directive, Input, ElementRef, Renderer2} from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
+import {NgModule, OnInit, Directive, ElementRef} from '@angular/core';
 
 /** The timeout id of the previous focus change. */
 let lastTimeoutId = -1;

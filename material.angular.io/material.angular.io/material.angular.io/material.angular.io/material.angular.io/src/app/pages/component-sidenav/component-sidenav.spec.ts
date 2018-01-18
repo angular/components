@@ -29,7 +29,7 @@ describe('ComponentSidenav', () => {
       expect(component.sidenav instanceof MatSidenav).toBeTruthy();
       expect(component.isScreenSmall()).toBeTruthy();
       expect(component.sidenav.opened).toBe(false);
-    })
+    });
   });
 
   it('should show a link for each item in doc items categories', () => {
