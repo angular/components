@@ -1,11 +1,11 @@
-import { SchematicsException } from '@angular-devkit/schematics';
-import { Tree } from '@angular-devkit/schematics';
+import {SchematicsException} from '@angular-devkit/schematics';
+import {Tree} from '@angular-devkit/schematics';
 import * as ts from 'typescript';
-import { addImportToModule } from './devkit-utils/ast-utils';
-import { getAppModulePath } from './devkit-utils/ng-ast-utils';
-import { InsertChange } from './devkit-utils/change';
-import { getConfig, getAppFromConfig } from './devkit-utils/config';
-import { normalize } from '@angular-devkit/core';
+import {addImportToModule} from './devkit-utils/ast-utils';
+import {getAppModulePath} from './devkit-utils/ng-ast-utils';
+import {InsertChange} from './devkit-utils/change';
+import {getConfig, getAppFromConfig} from './devkit-utils/config';
+import {normalize} from '@angular-devkit/core';
 
 /**
  * Reads file given path and returns TypeScript source file.
@@ -27,13 +27,14 @@ export function addToRootModule(host: Tree, moduleName: string, src: string) {
   const config = getConfig(host);
   const app = getAppFromConfig(config, '0');
   const modulePath = getAppModulePath(host, app);
-  addToModule(host, modulePath, moduleName, src);
+  addModuleImportToModule(host, modulePath, moduleName, src);
 }
 
 /**
  * Import and add module to specific module path.
  */
-export function addToModule(host: Tree, modulePath: string, moduleName: string, src: string) {
+export function addModuleImportToModule(
+    host: Tree, modulePath: string, moduleName: string, src: string) {
   const moduleSource = getSourceFile(host, modulePath);
   const changes = addImportToModule(moduleSource, modulePath, moduleName, src);
   const recorder = host.beginUpdate(modulePath);
@@ -50,7 +51,7 @@ export function addToModule(host: Tree, modulePath: string, moduleName: string, 
 /**
  * Gets the app index.html file
  */
-export function getIndexPath(host: Tree) {
+export function getIndexHtmlPath(host: Tree) {
   const config = getConfig(host);
   const app = getAppFromConfig(config, '0');
   return normalize(`/${app.root}/${app.index}`);

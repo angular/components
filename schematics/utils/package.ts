@@ -1,4 +1,4 @@
-import { Tree } from '@angular-devkit/schematics';
+import {Tree} from '@angular-devkit/schematics';
 
 /**
  * Adds a package to the package.json

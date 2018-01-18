@@ -1,7 +1,7 @@
-import { Tree, SchematicsException } from '@angular-devkit/schematics';
+import {Tree, SchematicsException} from '@angular-devkit/schematics';
 import * as parse5 from 'parse5';
-import { getIndexPath } from './ast';
-import { InsertChange } from './devkit-utils/change';
+import {getIndexPath} from './ast';
+import {InsertChange} from './devkit-utils/change';
 
 /**
  * Parses the index.html file to get the HEAD tag position.
