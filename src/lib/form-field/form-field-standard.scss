@@ -2,18 +2,18 @@
 @import '../core/style/vendor-prefixes';
 
 
-// Styles that only apply to the standard variant of the form-field.
+// Styles that only apply to the standard appearance of the form-field.
 
 // The height of the underline.
 $mat-form-field-standard-underline-height: 1px !default;
-// The bottom margin of the underline (used to push it up to align with box variant underline).
+// The bottom margin of the underline (used to push it up to align with box appearance underline).
 $mat-form-field-standard-underline-margin-bottom: 1px !default;
 // The padding between the top of the form field and the label text (used to align the standard
-// form field with the box variant).
-$mat-form-field-standard-padding-top: .5em !default;
+// form field with the box appearance).
+$mat-form-field-standard-padding-top: 0.5em !default;
 
 
-.mat-form-field-variant-standard {
+.mat-form-field-appearance-standard {
   .mat-form-field-flex {
     padding-top: $mat-form-field-standard-padding-top;
   }

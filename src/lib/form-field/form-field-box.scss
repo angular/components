@@ -2,7 +2,7 @@
 @import '../core/style/vendor-prefixes';
 
 
-// Styles that only apply to the box variant of the form-field.
+// Styles that only apply to the box appearance of the form-field.
 
 // The border radius for the form field box.
 $mat-form-field-box-border-radius: 4px !default;
@@ -14,13 +14,13 @@ $mat-form-field-box-side-padding: 1em !default;
 // between the floating label and the value.
 $mat-form-field-box-line-spacing: 0.5em !default;
 // The scale of the subscript and floating label text w.r.t the value text.
-$mat-form-field-box-subscript-font-scale: .75 !default;
+$mat-form-field-box-subscript-font-scale: 0.75 !default;
 // The horizontal padding between the edge of the subscript box and the start of the subscript text.
 $mat-form-field-box-subscript-padding:
     $mat-form-field-box-side-padding / $mat-form-field-box-subscript-font-scale;
 
 
-.mat-form-field-variant-box {
+.mat-form-field-appearance-box {
   .mat-form-field-flex {
     border-radius: $mat-form-field-box-border-radius;
     padding: $mat-form-field-box-line-spacing $mat-form-field-box-side-padding 0

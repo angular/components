@@ -7,7 +7,7 @@
 @import 'form-field-standard-theme.scss';
 
 
-// Theme styles that apply to all variants of the form-field.
+// Theme styles that apply to all appearances of the form-field.
 
 @mixin mat-form-field-theme($theme) {
   $primary: map-get($theme, primary);

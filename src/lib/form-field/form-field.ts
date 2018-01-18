@@ -46,7 +46,7 @@ import {MatSuffix} from './suffix';
 let nextUniqueId = 0;
 
 
-export type MatFormFieldVariant = 'legacy' | 'standard' | 'box';
+export type MatFormFieldAppearance = 'legacy' | 'standard' | 'box';
 
 
 /** Container for form controls that applies Material Design styling and behavior. */
@@ -69,9 +69,9 @@ export type MatFormFieldVariant = 'legacy' | 'standard' | 'box';
   animations: [matFormFieldAnimations.transitionMessages],
   host: {
     'class': 'mat-input-container mat-form-field',
-    '[class.mat-form-field-variant-standard]': 'variant == "standard"',
-    '[class.mat-form-field-variant-box]': 'variant == "box"',
-    '[class.mat-form-field-variant-legacy]': 'variant == "legacy"',
+    '[class.mat-form-field-appearance-standard]': 'appearance == "standard"',
+    '[class.mat-form-field-appearance-box]': 'appearance == "box"',
+    '[class.mat-form-field-appearance-legacy]': 'appearance == "legacy"',
     '[class.mat-input-invalid]': '_control.errorState',
     '[class.mat-form-field-invalid]': '_control.errorState',
     '[class.mat-form-field-can-float]': '_canLabelFloat',
@@ -98,8 +98,8 @@ export type MatFormFieldVariant = 'legacy' | 'standard' | 'box';
 export class MatFormField implements AfterViewInit, AfterContentInit, AfterContentChecked {
   private _labelOptions: LabelOptions;
 
-  /** The form-field style variant. */
-  @Input() variant: MatFormFieldVariant = 'legacy';
+  /** The form-field appearance style. */
+  @Input() appearance: MatFormFieldAppearance = 'legacy';
 
   /** Color of the form field underline, based on the theme. */
   @Input() color: 'primary' | 'accent' | 'warn' = 'primary';
@@ -154,14 +154,14 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
   /**
    * Whether the label should always float, never float or float as the user types.
    *
-   * Note: only the legacy variant supports the `never` option. `never` was originally added as a
+   * Note: only the legacy appearance supports the `never` option. `never` was originally added as a
    * way to make the floating label emulate the behavior of a standard input placeholder. However
    * the form field now supports both floating labels and placeholders. Therefore in the non-legacy
-   * variants the `never` option has been disabled in favor of just using the placeholder.
+   * appearances the `never` option has been disabled in favor of just using the placeholder.
    */
   @Input()
   get floatLabel(): FloatLabelType {
-    return this.variant !== 'legacy' && this._floatLabel === 'never' ? 'auto' : this._floatLabel;
+    return this.appearance !== 'legacy' && this._floatLabel === 'never' ? 'auto' : this._floatLabel;
   }
   set floatLabel(value: FloatLabelType) {
     if (value !== this._floatLabel) {
@@ -256,14 +256,14 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
   }
 
   _hideControlPlaceholder() {
-    // In the legacy variant the placeholder is promoted to a label if no label is given.
-    return this.variant === 'legacy' && !this._hasLabel() ||
+    // In the legacy appearance the placeholder is promoted to a label if no label is given.
+    return this.appearance === 'legacy' && !this._hasLabel() ||
         this._hasLabel() && !this._shouldLabelFloat();
   }
 
   _hasFloatingLabel() {
-    // In the legacy variant the placeholder is promoted to a label if no label is given.
-    return this._hasLabel() || this.variant === 'legacy' && this._hasPlaceholder();
+    // In the legacy appearance the placeholder is promoted to a label if no label is given.
+    return this._hasLabel() || this.appearance === 'legacy' && this._hasPlaceholder();
   }
 
   /** Determines whether to display hints or errors. */

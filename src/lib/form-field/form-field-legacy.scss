@@ -2,13 +2,13 @@
 @import '../core/style/vendor-prefixes';
 
 
-// Styles that only apply to the legacy variant of the form-field.
+// Styles that only apply to the legacy appearance of the form-field.
 
 // The height of the underline.
 $mat-form-field-legacy-underline-height: 1px !default;
 
 
-.mat-form-field-variant-legacy {
+.mat-form-field-appearance-legacy {
   .mat-form-field-label {
     transform: perspective(100px);
     -ms-transform: none;
