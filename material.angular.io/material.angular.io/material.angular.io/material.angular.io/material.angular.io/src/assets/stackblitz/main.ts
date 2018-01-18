@@ -39,6 +39,7 @@ import {
 } from '@angular/material';
 import {MaterialDocsExample} from './app/material-docs-example';
 import {HttpModule} from '@angular/http';
+import {HttpClientModule} from '@angular/common/http';
 import {CdkTableModule} from '@angular/cdk/table';
 
 @NgModule({
@@ -85,6 +86,7 @@ export class DemoMaterialModule {}
     BrowserAnimationsModule,
     FormsModule,
     HttpModule,
+    HttpClientModule,
     DemoMaterialModule,
     MatNativeDateModule,
     ReactiveFormsModule,
