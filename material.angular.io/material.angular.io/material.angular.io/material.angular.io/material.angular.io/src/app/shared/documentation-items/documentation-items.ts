@@ -127,13 +127,14 @@ const DOCS: {[key: string]: DocCategory[]} = {
       id: 'layout',
       name: 'Layout',
       items: [
-        {id: 'list', name: 'List', examples: ['list-sections']},
-        {id: 'grid-list', name: 'Grid list', examples: ['grid-list-dynamic']},
         {id: 'card', name: 'Card', examples: ['card-fancy']},
-        {id: 'stepper', name: 'Stepper', examples: ['stepper-overview']},
-        {id: 'tabs', name: 'Tabs', examples: ['tabs-template-label']},
+        {id: 'divider', name: 'Divider', examples: ['divider-overview']},
         {id: 'expansion', name: 'Expansion Panel',
             examples: ['expansion-overview', 'expansion-steps']},
+        {id: 'grid-list', name: 'Grid list', examples: ['grid-list-dynamic']},
+        {id: 'list', name: 'List', examples: ['list-sections']},
+        {id: 'stepper', name: 'Stepper', examples: ['stepper-overview']},
+        {id: 'tabs', name: 'Tabs', examples: ['tabs-template-label']},
       ]
     },
     {
@@ -154,14 +155,16 @@ const DOCS: {[key: string]: DocCategory[]} = {
       name: 'Popups & Modals',
       items: [
         {id: 'dialog', name: 'Dialog', examples: ['dialog-overview']},
-        {id: 'tooltip', name: 'Tooltip', examples: ['tooltip-position']},
         {id: 'snack-bar', name: 'Snackbar', examples: ['snack-bar-component']},
+        {id: 'tooltip', name: 'Tooltip', examples: ['tooltip-position']},
       ]
     },
     {
       id: 'tables',
       name: 'Data table',
       items: [
+        {id: 'paginator', name: 'Paginator', examples: ['paginator-configurable']},
+        {id: 'sort', name: 'Sort header', examples: ['sort-overview']},
         {id: 'table', name: 'Table', examples: [
           'table-filtering',
           'table-pagination',
@@ -169,8 +172,6 @@ const DOCS: {[key: string]: DocCategory[]} = {
           'table-http',
           'table-overview',
         ]},
-        {id: 'sort', name: 'Sort header', examples: ['sort-overview']},
-        {id: 'paginator', name: 'Paginator', examples: ['paginator-configurable']},
       ]
     }
   ],
@@ -180,11 +181,11 @@ const DOCS: {[key: string]: DocCategory[]} = {
       name: 'Common Behaviors',
       items: [
         {id: 'a11y', name: 'Accessibility', examples: []},
-        {id: 'observers', name: 'Observers', examples: []},
+        {id: 'bidi', name: 'Bidirectionality', examples: []},
         {id: 'layout', name: 'Layout', examples: []},
+        {id: 'observers', name: 'Observers', examples: []},
         {id: 'overlay', name: 'Overlay', examples: []},
         {id: 'portal', name: 'Portal', examples: []},
-        {id: 'bidi', name: 'Bidirectionality', examples: []},
         {id: 'scrolling', name: 'Scrolling', examples: []},
       ]
     },
@@ -192,8 +193,8 @@ const DOCS: {[key: string]: DocCategory[]} = {
       id: 'components',
       name: 'Components',
       items: [
-        {id: 'table', name: 'Table', examples: []},
         {id: 'stepper', name: 'Stepper', examples: []},
+        {id: 'table', name: 'Table', examples: []},
 
       ]
     },
