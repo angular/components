@@ -11,25 +11,39 @@
   padding: 8px;
 }
 
+.docs-footer-logo {
+  flex: 1;
+}
+
 .docs-footer-angular-logo {
   height: 50px;
+}
+
+.docs-footer-version {
+  flex: 1;
+  text-align: center;
 }
 
 .docs-footer-copyright {
   display: flex;
   flex: 1;
   justify-content: flex-end;
+  flex-direction: column;
+  min-width: 225px;
+  text-align: center;
 }
 
-.docs-footer-links ul {
-  list-style: none;
+.docs-footer-logo span {
+  display: inline-block;
+  line-height: 50px;
   margin: 0 40px;
-  padding: 0;
+  vertical-align: bottom;
 
   a {
     font-size: 16px;
     padding: 0;
     text-decoration: none;
+    color: inherit;
 
     &:hover {
       text-decoration: underline;
