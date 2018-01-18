@@ -1,7 +1,7 @@
 import {Platform, PlatformModule} from '@angular/cdk/platform';
 import {createFakeEvent, dispatchFakeEvent, wrappedErrorMessage} from '@angular/cdk/testing';
 import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
-import {ComponentFixture, inject, TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, inject, TestBed} from '@angular/core/testing';
 import {
   FormControl,
   FormGroup,
@@ -12,16 +12,17 @@ import {
   Validators,
 } from '@angular/forms';
 import {
-  MAT_LABEL_GLOBAL_OPTIONS,
-  ShowOnDirtyErrorStateMatcher,
   ErrorStateMatcher,
   FloatLabelType,
+  MAT_LABEL_GLOBAL_OPTIONS,
+  ShowOnDirtyErrorStateMatcher,
 } from '@angular/material/core';
 import {
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
   getMatFormFieldPlaceholderConflictError,
-  MatFormField, MatFormFieldAppearance,
+  MatFormField,
+  MatFormFieldAppearance,
   MatFormFieldModule,
 } from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
