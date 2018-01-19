@@ -37,11 +37,11 @@ $mat-chip-remove-font-size: 18px;
   $unselected-foreground: mat-color($foreground, text);
 
 
-  .mat-chip:not(.mat-basic-chip) {
+  .mat-chip.mat-standard-chip {
     @include mat-chips-color($unselected-foreground, $unselected-background);
   }
 
-  .mat-chip.mat-chip-selected {
+  .mat-chip.mat-standard-chip.mat-chip-selected {
 
     &.mat-primary {
       @include mat-chips-theme-color($primary);

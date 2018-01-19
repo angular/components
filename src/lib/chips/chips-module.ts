@@ -9,14 +9,24 @@
 import {NgModule} from '@angular/core';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MatChipList} from './chip-list';
-import {MatBasicChip, MatChip, MatChipRemove} from './chip';
+import {MatBasicChip, MatChip, MatChipRemove, MatChipAvatar, MatChipTrailingIcon, MatStandardChip } from './chip';
 import {MatChipInput} from './chip-input';
 
+const CHIP_DECLARATIONS = [
+  MatChipList,
+  MatChip,
+  MatChipInput,
+  MatChipRemove,
+  MatBasicChip,
+  MatChipAvatar,
+  MatChipTrailingIcon,
+  MatStandardChip
+];
 
 @NgModule({
   imports: [],
-  exports: [MatChipList, MatChip, MatChipInput, MatChipRemove, MatChipRemove, MatBasicChip],
-  declarations: [MatChipList, MatChip, MatChipInput, MatChipRemove,  MatChipRemove, MatBasicChip],
+  exports: CHIP_DECLARATIONS,
+  declarations: CHIP_DECLARATIONS,
   providers: [ErrorStateMatcher]
 })
 export class MatChipsModule {}

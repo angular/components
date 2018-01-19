@@ -21,6 +21,7 @@ import {
   DoCheck,
   ElementRef,
   EventEmitter,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
@@ -752,3 +753,4 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     });
   }
 }
+

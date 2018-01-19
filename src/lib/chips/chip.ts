@@ -10,9 +10,11 @@ import {FocusableOption} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/keycodes';
 import {
+  ContentChild,
   Directive,
   ElementRef,
   EventEmitter,
+  forwardRef,
   Input,
   OnDestroy,
   Output,
@@ -47,7 +49,6 @@ export class MatChipBase {
 
 export const _MatChipMixinBase = mixinColor(mixinDisabled(MatChipBase), 'primary');
 
-
 /**
  * Dummy directive to add CSS class to basic chips.
  * @docs-private
@@ -56,8 +57,37 @@ export const _MatChipMixinBase = mixinColor(mixinDisabled(MatChipBase), 'primary
   selector: `mat-basic-chip, [mat-basic-chip]`,
   host: {'class': 'mat-basic-chip'},
 })
-export class MatBasicChip {
-}
+export class MatBasicChip {}
+
+/**
+ * Dummy directive to add CSS class to standard chips.
+ * @docs-private
+ */
+@Directive({
+  selector: `mat-chip, [mat-chip]`,
+  host: {'class': 'mat-standard-chip'},
+})
+export class MatStandardChip {}
+
+/**
+ * Dummy directive to add CSS class to chip avatar.
+ * @docs-private
+ */
+@Directive({
+  selector: 'mat-chip-avatar, [matChipAvatar]',
+  host: {'class': 'mat-chip-avatar'}
+})
+export class MatChipAvatar {}
+
+/**
+ * Dummy directive to add CSS class to chip trailing icon.
+ * @docs-private
+ */
+@Directive({
+  selector: 'mat-chip-trailing-icon, [matChipTrailingIcon]',
+  host: {'class': 'mat-chip-trailing-icon'}
+})
+export class MatChipTrailingIcon {}
 
 /**
  * Material design styled Chip component. Used inside the MatChipList component.
@@ -71,6 +101,8 @@ export class MatBasicChip {
     '[attr.tabindex]': 'disabled ? null : -1',
     'role': 'option',
     '[class.mat-chip-selected]': 'selected',
+    '[class.mat-chip-with-avatar]': 'avatar',
+    '[class.mat-chip-with-trailing-icon]': 'hasTrailingIcon',
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-selected]': 'ariaSelected',
@@ -94,6 +126,16 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
   /** Whether the chip has focus. */
   _hasFocus: boolean = false;
+
+  /** The chip avatar */
+  @ContentChild(MatChipAvatar) avatar: MatChipAvatar;
+
+  /** The chip remove toggler */
+  @ContentChild(MatChipTrailingIcon) trailingIcon: MatChipTrailingIcon;
+
+  @ContentChild(forwardRef(() => MatChipRemove)) removeIcon: Element;
+
+  get hasTrailingIcon() { return this.removeIcon || this.trailingIcon; }
 
   /** Whether the chip is selected. */
   @Input()
