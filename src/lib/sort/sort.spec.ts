@@ -6,7 +6,7 @@ import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Observable} from 'rxjs/Observable';
-import {map} from 'rxjs/operator/map';
+import {map} from 'rxjs/operators/map';
 import {MatTableModule} from '../table/index';
 import {
   MatSort,
@@ -107,6 +107,43 @@ describe('MatSort', () => {
   it('should be able to cycle desc -> asc -> [none]', () => {
     component.start = 'desc';
     testSingleColumnSortDirectionSequence(fixture, ['desc', 'asc', '']);
+  });
+
+  it('should allow for the cycling the sort direction to be disabled per column', () => {
+    const button = fixture.nativeElement.querySelector('#defaultSortHeaderA button');
+
+    component.sort('defaultSortHeaderA');
+    expect(component.matSort.direction).toBe('asc');
+    expect(button.getAttribute('disabled')).toBeFalsy();
+
+    component.disabledColumnSort = true;
+    fixture.detectChanges();
+
+    component.sort('defaultSortHeaderA');
+    expect(component.matSort.direction).toBe('asc');
+    expect(button.getAttribute('disabled')).toBe('true');
+  });
+
+  it('should allow for the cycling the sort direction to be disabled for all columns', () => {
+    const button = fixture.nativeElement.querySelector('#defaultSortHeaderA button');
+
+    component.sort('defaultSortHeaderA');
+    expect(component.matSort.active).toBe('defaultSortHeaderA');
+    expect(component.matSort.direction).toBe('asc');
+    expect(button.getAttribute('disabled')).toBeFalsy();
+
+    component.disableAllSort = true;
+    fixture.detectChanges();
+
+    component.sort('defaultSortHeaderA');
+    expect(component.matSort.active).toBe('defaultSortHeaderA');
+    expect(component.matSort.direction).toBe('asc');
+    expect(button.getAttribute('disabled')).toBe('true');
+
+    component.sort('defaultSortHeaderB');
+    expect(component.matSort.active).toBe('defaultSortHeaderA');
+    expect(component.matSort.direction).toBe('asc');
+    expect(button.getAttribute('disabled')).toBe('true');
   });
 
   it('should reset sort direction when a different column is sorted', () => {
@@ -211,11 +248,16 @@ function testSingleColumnSortDirectionSequence(fixture: ComponentFixture<SimpleM
   template: `
     <div matSort
          [matSortActive]="active"
+         [matSortDisabled]="disableAllSort"
          [matSortStart]="start"
          [matSortDirection]="direction"
          [matSortDisableClear]="disableClear"
          (matSortChange)="latestSortEvent = $event">
-      <div id="defaultSortHeaderA" #defaultSortHeaderA mat-sort-header="defaultSortHeaderA">
+      <div
+        id="defaultSortHeaderA"
+        #defaultSortHeaderA
+        mat-sort-header="defaultSortHeaderA"
+        [disabled]="disabledColumnSort">
         A
       </div>
       <div id="defaultSortHeaderB" #defaultSortHeaderB mat-sort-header="defaultSortHeaderB">
@@ -233,6 +275,8 @@ class SimpleMatSortApp {
   start: SortDirection = 'asc';
   direction: SortDirection = '';
   disableClear: boolean;
+  disabledColumnSort = false;
+  disableAllSort = false;
 
   @ViewChild(MatSort) matSort: MatSort;
   @ViewChild('defaultSortHeaderA') matSortHeaderDefaultA: MatSortHeader;
@@ -249,7 +293,7 @@ class SimpleMatSortApp {
 
 class FakeDataSource extends DataSource<any> {
   connect(collectionViewer: CollectionViewer): Observable<any[]> {
-    return map.call(collectionViewer.viewChange, () => []);
+    return collectionViewer.viewChange.pipe(map(() => []));
   }
   disconnect() {}
 }

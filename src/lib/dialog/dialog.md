@@ -1,9 +1,9 @@
-The `MatDialog` service can be used to open modal dialogs with Material Design styling and 
+The `MatDialog` service can be used to open modal dialogs with Material Design styling and
 animations.
 
 <!-- example(dialog-overview) -->
 
-A dialog is opened by calling the `open` method with a component to be loaded and an optional 
+A dialog is opened by calling the `open` method with a component to be loaded and an optional
 config object. The `open` method will return an instance of `MatDialogRef`:
 
 ```ts
@@ -26,17 +26,29 @@ dialogRef.close('Pizza!');
 
 Components created via `MatDialog` can _inject_ `MatDialogRef` and use it to close the dialog
 in which they are contained. When closing, an optional result value can be provided. This result
-value is forwarded as the result of the `afterClosed` promise. 
+value is forwarded as the result of the `afterClosed` promise.
 
 ```ts
 @Component({/* ... */})
 export class YourDialog {
   constructor(public dialogRef: MatDialogRef<YourDialog>) { }
-  
+
   closeDialog() {
     this.dialogRef.close('Pizza!');
   }
 }
+```
+
+### Specifying global configuration defaults
+Default dialog options can be specified by providing an instance of `MatDialogConfig` for
+MAT_DIALOG_DEFAULT_OPTIONS in your application's root module.
+
+```ts
+@NgModule({
+  providers: [
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
+  ]
+})
 ```
 
 ### Sharing data with the Dialog component.
@@ -81,7 +93,7 @@ For example:
 <mat-dialog-content>Are you sure?</mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>No</button>
-  <!-- Can optionally provide a result for the closing dialog. -->
+  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
   <button mat-button [mat-dialog-close]="true">Yes</button>
 </mat-dialog-actions>
 ```
@@ -96,14 +108,14 @@ You can control which elements are tab stops with the `tabindex` attribute
 
 <!-- example(dialog-content) -->
 
-### AOT Compilation
+### Configuring dialog content via `entryComponents`
 
-Due to the dynamic nature of the `MatDialog`, and its usage of `ViewContainerRef#createComponent()`
-to create the component on the fly, the AOT compiler will not know to create the proper
-`ComponentFactory` for your dialog component by default.
+Because `MatDialog` instantiates components at run-time, the Angular compiler needs extra
+information to create the necessary `ComponentFactory` for your dialog content component.
 
-You must include your dialog class in the list of `entryComponents` in your module definition so
-that the AOT compiler knows to create the `ComponentFactory` for it.
+For any component loaded into a dialog, you must include your component class in the list of
+`entryComponents` in your NgModule definition so that the Angular compiler knows to create
+the `ComponentFactory` for it.
 
 ```ts
 @NgModule({
@@ -124,7 +136,7 @@ that the AOT compiler knows to create the `ComponentFactory` for it.
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule() {}
+export class AppModule {}
 ```
 
 ### Accessibility
@@ -135,8 +147,15 @@ The `aria-label`, `aria-labelledby`, and `aria-describedby` attributes can all b
 dialog element via the `MatDialogConfig` as well. Each dialog should typically have a label
 set via `aria-label` or `aria-labelledby`.
 
+When a dialog is opened, it will move focus to the first focusable element that it can find. In
+order to prevent users from tabbing into elements in the background, the Material dialog uses
+a [focus trap](https://material.angular.io/cdk/a11y/overview#focustrap) to contain focus
+within itself. Once a dialog is closed, it will return focus to the element that was focused
+before the dialog was opened.
+
 #### Focus management
-By default, the first tabbable element within the dialog will receive focus upon open.
+By default, the first tabbable element within the dialog will receive focus upon open. This can
+be configured by setting the `cdkFocusInitial` attribute on another focusable element.
 
 Tabbing through the elements of the dialog will keep focus inside of the dialog element,
 wrapping back to the first tabbable element when reaching the end of the tab sequence.

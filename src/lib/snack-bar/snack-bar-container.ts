@@ -13,36 +13,22 @@ import {
   ViewChild,
   NgZone,
   OnDestroy,
-  Renderer2,
   ElementRef,
   ChangeDetectionStrategy,
   ViewEncapsulation,
   ChangeDetectorRef,
 } from '@angular/core';
+import {AnimationEvent} from '@angular/animations';
 import {
-  trigger,
-  state,
-  style,
-  transition,
-  animate,
-  AnimationEvent,
-} from '@angular/animations';
-import {
-  BasePortalHost,
+  BasePortalOutlet,
   ComponentPortal,
-  PortalHostDirective,
+  CdkPortalOutlet,
 } from '@angular/cdk/portal';
-import {first} from '@angular/cdk/rxjs';
-import {AnimationCurves, AnimationDurations} from '@angular/material/core';
+import {take} from 'rxjs/operators/take';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {MatSnackBarConfig} from './snack-bar-config';
-
-
-export const SHOW_ANIMATION =
-    `${AnimationDurations.ENTERING} ${AnimationCurves.DECELERATION_CURVE}`;
-export const HIDE_ANIMATION =
-    `${AnimationDurations.EXITING} ${AnimationCurves.ACCELERATION_CURVE}`;
+import {matSnackBarAnimations} from './snack-bar-animations';
 
 /**
  * Internal component that wraps user-provided snack bar content.
@@ -56,27 +42,20 @@ export const HIDE_ANIMATION =
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
+  animations: [matSnackBarAnimations.snackBarState],
   host: {
     'role': 'alert',
     'class': 'mat-snack-bar-container',
     '[@state]': '_animationState',
     '(@state.done)': 'onAnimationEnd($event)'
   },
-  animations: [
-    trigger('state', [
-      state('visible-top, visible-bottom', style({transform: 'translateY(0%)'})),
-      transition('visible-top => hidden-top, visible-bottom => hidden-bottom',
-        animate(HIDE_ANIMATION)),
-      transition('void => visible-top, void => visible-bottom', animate(SHOW_ANIMATION)),
-    ])
-  ],
 })
-export class MatSnackBarContainer extends BasePortalHost implements OnDestroy {
+export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy {
   /** Whether the component has been destroyed. */
   private _destroyed = false;
 
-  /** The portal host inside of this container into which the snack bar content will be loaded. */
-  @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
+  /** The portal outlet inside of this container into which the snack bar content will be loaded. */
+  @ViewChild(CdkPortalOutlet) _portalOutlet: CdkPortalOutlet;
 
   /** Subject for notifying that the snack bar has exited from view. */
   _onExit: Subject<any> = new Subject();
@@ -92,7 +71,6 @@ export class MatSnackBarContainer extends BasePortalHost implements OnDestroy {
 
   constructor(
     private _ngZone: NgZone,
-    private _renderer: Renderer2,
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef) {
     super();
@@ -100,27 +78,26 @@ export class MatSnackBarContainer extends BasePortalHost implements OnDestroy {
 
   /** Attach a component portal as content to this snack bar container. */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
-    if (this._portalHost.hasAttached()) {
+    if (this._portalOutlet.hasAttached()) {
       throw Error('Attempting to attach snack bar content after content is already attached');
     }
 
-    if (this.snackBarConfig.extraClasses) {
-      // Not the most efficient way of adding classes, but the renderer doesn't allow us
-      // to pass in an array or a space-separated list.
-      for (let cssClass of this.snackBarConfig.extraClasses) {
-        this._renderer.addClass(this._elementRef.nativeElement, cssClass);
-      }
+    const element: HTMLElement = this._elementRef.nativeElement;
+
+    if (this.snackBarConfig.panelClass || this.snackBarConfig.extraClasses) {
+      this._setCssClasses(this.snackBarConfig.panelClass);
+      this._setCssClasses(this.snackBarConfig.extraClasses);
     }
 
     if (this.snackBarConfig.horizontalPosition === 'center') {
-      this._renderer.addClass(this._elementRef.nativeElement, 'mat-snack-bar-center');
+      element.classList.add('mat-snack-bar-center');
     }
 
     if (this.snackBarConfig.verticalPosition === 'top') {
-      this._renderer.addClass(this._elementRef.nativeElement, 'mat-snack-bar-top');
+      element.classList.add('mat-snack-bar-top');
     }
 
-    return this._portalHost.attachComponentPortal(portal);
+    return this._portalOutlet.attachComponentPortal(portal);
   }
 
   /** Attach a template portal as content to this snack bar container. */
@@ -173,9 +150,25 @@ export class MatSnackBarContainer extends BasePortalHost implements OnDestroy {
    * errors where we end up removing an element which is in the middle of an animation.
    */
   private _completeExit() {
-    first.call(this._ngZone.onMicrotaskEmpty.asObservable()).subscribe(() => {
+    this._ngZone.onMicrotaskEmpty.asObservable().pipe(take(1)).subscribe(() => {
       this._onExit.next();
       this._onExit.complete();
     });
+  }
+
+  /** Applies the user-specified list of CSS classes to the element. */
+  private _setCssClasses(classList: undefined|string|string[]) {
+    if (!classList) {
+      return;
+    }
+
+    const element = this._elementRef.nativeElement;
+
+    if (Array.isArray(classList)) {
+      // Note that we can't use a spread here, because IE doesn't support multiple arguments.
+      classList.forEach(cssClass => element.classList.add(cssClass));
+    } else {
+      element.classList.add(classList);
+    }
   }
 }

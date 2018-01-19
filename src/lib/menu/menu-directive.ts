@@ -10,7 +10,9 @@ import {AnimationEvent} from '@angular/animations';
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
 import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
-import {RxChain, startWith, switchMap, first} from '@angular/cdk/rxjs';
+import {startWith} from 'rxjs/operators/startWith';
+import {switchMap} from 'rxjs/operators/switchMap';
+import {take} from 'rxjs/operators/take';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -32,17 +34,23 @@ import {
 import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
 import {Subscription} from 'rxjs/Subscription';
-import {fadeInItems, transformMenu} from './menu-animations';
+import {matMenuAnimations} from './menu-animations';
 import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
 import {MatMenuItem} from './menu-item';
 import {MatMenuPanel} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 
 /** Default `mat-menu` options that can be overridden. */
 export interface MatMenuDefaultOptions {
+  /** The x-axis position of the menu. */
   xPosition: MenuPositionX;
+
+  /** The y-axis position of the menu. */
   yPosition: MenuPositionY;
+
+  /** Whether the menu should overlap the menu trigger. */
   overlapTrigger: boolean;
 }
 
@@ -66,8 +74,8 @@ const MAT_MENU_BASE_ELEVATION = 2;
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   animations: [
-    transformMenu,
-    fadeInItems
+    matMenuAnimations.transformMenu,
+    matMenuAnimations.fadeInItems
   ],
   exportAs: 'matMenu'
 })
@@ -114,13 +122,21 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
     this.setPositionClasses();
   }
 
+  /** @docs-private */
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
 
   /** List of the items inside of a menu. */
   @ContentChildren(MatMenuItem) items: QueryList<MatMenuItem>;
 
   /** Whether the menu should overlap its trigger. */
-  @Input() overlapTrigger = this._defaultOptions.overlapTrigger;
+  @Input()
+  set overlapTrigger(value: boolean) {
+    this._overlapTrigger = coerceBooleanProperty(value);
+  }
+  get overlapTrigger(): boolean {
+    return this._overlapTrigger;
+  }
+  private _overlapTrigger: boolean = this._defaultOptions.overlapTrigger;
 
   /**
    * This method takes classes set on the host mat-menu element and applies them on the
@@ -129,7 +145,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
    * @param classes list of class names
    */
   @Input('class')
-  set classList(classes: string) {
+  set panelClass(classes: string) {
     if (classes && classes.length) {
       this._classList = classes.split(' ').reduce((obj: any, className: string) => {
         obj[className] = true;
@@ -141,8 +157,24 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
     }
   }
 
+  /**
+   * This method takes classes set on the host mat-menu element and applies them on the
+   * menu template that displays in the overlay container.  Otherwise, it's difficult
+   * to style the containing menu from outside the component.
+   * @deprecated Use `panelClass` instead.
+   */
+  @Input()
+  set classList(classes: string) { this.panelClass = classes; }
+  get classList(): string { return this.panelClass; }
+
   /** Event emitted when the menu is closed. */
-  @Output() close = new EventEmitter<void | 'click' | 'keydown'>();
+  @Output() closed = new EventEmitter<void | 'click' | 'keydown'>();
+
+  /**
+   * Event emitted when the menu is closed.
+   * @deprecated Switch to `closed` instead
+   */
+  @Output() close = this.closed;
 
   constructor(
     private _elementRef: ElementRef,
@@ -156,40 +188,38 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
   ngOnDestroy() {
     this._tabSubscription.unsubscribe();
-    this.close.emit();
-    this.close.complete();
+    this.closed.complete();
   }
 
   /** Stream that emits whenever the hovered menu item changes. */
-  hover(): Observable<MatMenuItem> {
+  _hovered(): Observable<MatMenuItem> {
     if (this.items) {
-      return RxChain.from(this.items.changes)
-        .call(startWith, this.items)
-        .call(switchMap, (items: MatMenuItem[]) => merge(...items.map(item => item.hover)))
-        .result();
+      return this.items.changes.pipe(
+        startWith(this.items),
+        switchMap(items => merge(...items.map(item => item._hovered)))
+      );
     }
 
-    return RxChain.from(this._ngZone.onStable.asObservable())
-      .call(first)
-      .call(switchMap, () => this.hover())
-      .result();
+    return this._ngZone.onStable
+      .asObservable()
+      .pipe(take(1), switchMap(() => this._hovered()));
   }
 
   /** Handle a keyboard event from the menu, delegating to the appropriate action. */
   _handleKeydown(event: KeyboardEvent) {
     switch (event.keyCode) {
       case ESCAPE:
-        this.close.emit('keydown');
+        this.closed.emit('keydown');
         event.stopPropagation();
       break;
       case LEFT_ARROW:
         if (this.parentMenu && this.direction === 'ltr') {
-          this.close.emit('keydown');
+          this.closed.emit('keydown');
         }
       break;
       case RIGHT_ARROW:
         if (this.parentMenu && this.direction === 'rtl') {
-          this.close.emit('keydown');
+          this.closed.emit('keydown');
         }
       break;
       default:

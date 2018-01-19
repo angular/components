@@ -16,27 +16,33 @@ import {
   Input,
   OnDestroy,
   Output,
-  Renderer2,
 } from '@angular/core';
 import {CanColor, CanDisable, mixinColor, mixinDisabled} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
 
 
+/** Represents an event fired on an individual `mat-chip`. */
 export interface MatChipEvent {
+  /** The chip the event was fired on. */
   chip: MatChip;
 }
 
 /** Event object emitted by MatChip when selected or deselected. */
 export class MatChipSelectionChange {
-  constructor(public source: MatChip, public selected: boolean, public isUserInput = false) { }
+  constructor(
+    /** Reference to the chip that emitted the event. */
+    public source: MatChip,
+    /** Whether the chip that emitted the event is selected. */
+    public selected: boolean,
+    /** Whether the selection change was a result of a user interaction. */
+    public isUserInput = false) { }
 }
 
 
 // Boilerplate for applying mixins to MatChip.
 /** @docs-private */
 export class MatChipBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {
-  }
+  constructor(public _elementRef: ElementRef) {}
 }
 
 export const _MatChipMixinBase = mixinColor(mixinDisabled(MatChipBase), 'primary');
@@ -62,7 +68,7 @@ export class MatBasicChip {
   exportAs: 'matChip',
   host: {
     'class': 'mat-chip',
-    'tabindex': '-1',
+    '[attr.tabindex]': 'disabled ? null : -1',
     'role': 'option',
     '[class.mat-chip-selected]': 'selected',
     '[attr.disabled]': 'disabled || null',
@@ -169,8 +175,8 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
     return this.selectable ? this.selected.toString() : null;
   }
 
-  constructor(renderer: Renderer2, public _elementRef: ElementRef) {
-    super(renderer, _elementRef);
+  constructor(public _elementRef: ElementRef) {
+    super(_elementRef);
   }
 
   ngOnDestroy(): void {
@@ -302,8 +308,8 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
   selector: '[matChipRemove]',
   host: {
     'class': 'mat-chip-remove',
-    '(click)': '_handleClick($event)',
-  },
+    '(click)': '_handleClick()',
+  }
 })
 export class MatChipRemove {
   constructor(protected _parentChip: MatChip) {

@@ -4,7 +4,7 @@ import {ComponentFixture, TestBed, async, inject} from '@angular/core/testing';
 import {Directionality} from '@angular/cdk/bidi';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {ESCAPE} from '@angular/cdk/keycodes';
-import {ConnectedOverlayDirective, OverlayModule, OverlayOrigin} from './index';
+import {CdkConnectedOverlay, OverlayModule, CdkOverlayOrigin} from './index';
 import {OverlayContainer} from './overlay-container';
 import {ConnectedPositionStrategy} from './position/connected-position-strategy';
 import {ConnectedOverlayPositionChange} from './position/connected-position';
@@ -110,7 +110,7 @@ describe('Overlay directives', () => {
     fixture.componentInstance.isOpen = true;
     fixture.detectChanges();
 
-    dispatchKeyboardEvent(document, 'keydown', ESCAPE);
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent!.trim()).toBe('',
@@ -330,7 +330,7 @@ class ConnectedOverlayDirectiveTest {
   detachHandler = jasmine.createSpy('detachHandler');
   attachResult: HTMLElement;
 
-  @ViewChild(ConnectedOverlayDirective) connectedOverlayDirective: ConnectedOverlayDirective;
+  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective: CdkConnectedOverlay;
 }
 
 @Component({
@@ -339,7 +339,6 @@ class ConnectedOverlayDirectiveTest {
   <ng-template cdk-connected-overlay>Menu content</ng-template>`,
 })
 class ConnectedOverlayPropertyInitOrder {
-  @ViewChild(ConnectedOverlayDirective) connectedOverlayDirective: ConnectedOverlayDirective;
-  @ViewChild('trigger') trigger: OverlayOrigin;
+  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective: CdkConnectedOverlay;
+  @ViewChild('trigger') trigger: CdkOverlayOrigin;
 }
-

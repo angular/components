@@ -20,6 +20,7 @@ System.config({
   map: {
     'rxjs': 'node:rxjs',
     'main': 'main.js',
+    'tslib': 'node:tslib/tslib.js',
     'moment': 'node:moment/min/moment-with-locales.min.js',
 
     // Angular specific mappings.
@@ -27,10 +28,10 @@ System.config({
     '@angular/core/testing': 'node:@angular/core/bundles/core-testing.umd.js',
     '@angular/common': 'node:@angular/common/bundles/common.umd.js',
     '@angular/common/testing': 'node:@angular/common/bundles/common-testing.umd.js',
+    '@angular/common/http': 'node:@angular/common/bundles/common-http.umd.js',
+    '@angular/common/http/testing': 'node:@angular/common/bundles/common-http-testing.umd.js',
     '@angular/compiler': 'node:@angular/compiler/bundles/compiler.umd.js',
     '@angular/compiler/testing': 'node:@angular/compiler/bundles/compiler-testing.umd.js',
-    '@angular/http': 'node:@angular/http/bundles/http.umd.js',
-    '@angular/http/testing': 'node:@angular/http/bundles/http-testing.umd.js',
     '@angular/forms': 'node:@angular/forms/bundles/forms.umd.js',
     '@angular/forms/testing': 'node:@angular/forms/bundles/forms-testing.umd.js',
     '@angular/animations': 'node:@angular/animations/bundles/animations.umd.js',
@@ -49,6 +50,9 @@ System.config({
     // Path mappings for local packages that can be imported inside of tests.
     // TODO(devversion): replace once the index.ts file for the Material package has been added.
     '@angular/material': 'dist/packages/material/public-api.js',
+    '@angular/material-experimental': 'dist/packages/material-experimental/index.js',
+    '@angular/cdk-experimental': 'dist/packages/cdk-experimental/index.js',
+
     '@angular/cdk': 'dist/packages/cdk/index.js',
     '@angular/cdk/a11y': 'dist/packages/cdk/a11y/index.js',
     '@angular/cdk/accordion': 'dist/packages/cdk/accordion/index.js',
@@ -61,7 +65,6 @@ System.config({
     '@angular/cdk/overlay': 'dist/packages/cdk/overlay/index.js',
     '@angular/cdk/platform': 'dist/packages/cdk/platform/index.js',
     '@angular/cdk/portal': 'dist/packages/cdk/portal/index.js',
-    '@angular/cdk/rxjs': 'dist/packages/cdk/rxjs/index.js',
     '@angular/cdk/scrolling': 'dist/packages/cdk/scrolling/index.js',
     '@angular/cdk/stepper': 'dist/packages/cdk/stepper/index.js',
     '@angular/cdk/table': 'dist/packages/cdk/table/index.js',
@@ -77,6 +80,7 @@ System.config({
     '@angular/material/core': 'dist/packages/material/core/index.js',
     '@angular/material/datepicker': 'dist/packages/material/datepicker/index.js',
     '@angular/material/dialog': 'dist/packages/material/dialog/index.js',
+    '@angular/material/divider': 'dist/packages/material/divider/index.js',
     '@angular/material/expansion': 'dist/packages/material/expansion/index.js',
     '@angular/material/form-field': 'dist/packages/material/form-field/index.js',
     '@angular/material/grid-list': 'dist/packages/material/grid-list/index.js',

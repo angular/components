@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Dir} from '@angular/cdk/bidi';
 import {Component, ViewEncapsulation} from '@angular/core';
 import {
@@ -34,7 +42,7 @@ export class SnackBarDemo {
     config.verticalPosition = this.verticalPosition;
     config.horizontalPosition = this.horizontalPosition;
     config.duration = this.setAutoHide ? this.autoHide : 0;
-    config.extraClasses = this.addExtraClass ? ['party'] : undefined;
+    config.panelClass = this.addExtraClass ? ['party'] : undefined;
     config.direction = this.dir.value;
     this.snackBar.open(this.message, this.action ? this.actionButtonLabel : undefined, config);
   }

@@ -1,20 +1,33 @@
-import {GlobalPositionStrategy} from './global-position-strategy';
-import {OverlayRef} from '../overlay-ref';
+import {TestBed, inject} from '@angular/core/testing';
+import {OverlayModule, Overlay, OverlayRef, GlobalPositionStrategy} from '../index';
 
 
 describe('GlobalPositonStrategy', () => {
   let element: HTMLElement;
   let strategy: GlobalPositionStrategy;
+  let hasOverlayAttached: boolean;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({imports: [OverlayModule]});
+
+    inject([Overlay], (overlay: Overlay) => {
+      strategy = overlay.position().global();
+    })();
+
     element = document.createElement('div');
-    strategy = new GlobalPositionStrategy();
     document.body.appendChild(element);
-    strategy.attach({overlayElement: element} as OverlayRef);
+    hasOverlayAttached = true;
+    strategy.attach({
+      overlayElement: element,
+      hasAttached: () => hasOverlayAttached
+    } as OverlayRef);
   });
 
   afterEach(() => {
-    element.parentNode!.removeChild(element);
+    if (element.parentNode) {
+      element.parentNode.removeChild(element);
+    }
+
     strategy.dispose();
   });
 
@@ -145,5 +158,13 @@ describe('GlobalPositonStrategy', () => {
 
     expect(element.style.marginTop).toBe('0px');
     expect((element.parentNode as HTMLElement).style.alignItems).toBe('flex-start');
+  });
+
+  it('should not throw when attempting to apply after the overlay has been disposed', () => {
+    strategy.dispose();
+    element.parentNode!.removeChild(element);
+    hasOverlayAttached = false;
+
+    expect(() => strategy.apply()).not.toThrow();
   });
 });

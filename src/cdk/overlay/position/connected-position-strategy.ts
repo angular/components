@@ -68,8 +68,13 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   /** The last position to have been calculated as the best fit position. */
   private _lastConnectedPosition: ConnectionPositionPair;
 
-  _onPositionChange:
-      Subject<ConnectedOverlayPositionChange> = new Subject<ConnectedOverlayPositionChange>();
+  /** Whether the position strategy is applied currently. */
+  private _applied = false;
+
+  /** Whether the overlay position is locked. */
+  private _positionLocked = false;
+
+  private _onPositionChange = new Subject<ConnectedOverlayPositionChange>();
 
   /** Emits an event when the connection point changes. */
   get onPositionChange(): Observable<ConnectedOverlayPositionChange> {
@@ -80,7 +85,8 @@ export class ConnectedPositionStrategy implements PositionStrategy {
       originPos: OriginConnectionPosition,
       overlayPos: OverlayConnectionPosition,
       private _connectedTo: ElementRef,
-      private _viewportRuler: ViewportRuler) {
+      private _viewportRuler: ViewportRuler,
+      private _document: any) {
     this._origin = this._connectedTo.nativeElement;
     this.withFallbackPosition(originPos, overlayPos);
   }
@@ -90,6 +96,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     return this._preferredPositions;
   }
 
+  /** Attach this position strategy to an overlay. */
   attach(overlayRef: OverlayRef): void {
     this._overlayRef = overlayRef;
     this._pane = overlayRef.overlayElement;
@@ -97,13 +104,15 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     this._resizeSubscription = this._viewportRuler.change().subscribe(() => this.apply());
   }
 
-  /** Performs any cleanup after the element is destroyed. */
+  /** Disposes all resources used by the position strategy. */
   dispose() {
+    this._applied = false;
     this._resizeSubscription.unsubscribe();
   }
 
   /** @docs-private */
   detach() {
+    this._applied = false;
     this._resizeSubscription.unsubscribe();
   }
 
@@ -111,18 +120,26 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * Updates the position of the overlay element, using whichever preferred position relative
    * to the origin fits on-screen.
    * @docs-private
-   *
-   * @returns Resolves when the styles have been applied.
    */
   apply(): void {
+    // If the position has been applied already (e.g. when the overlay was opened) and the
+    // consumer opted into locking in the position, re-use the  old position, in order to
+    // prevent the overlay from jumping around.
+    if (this._applied && this._positionLocked && this._lastConnectedPosition) {
+      this.recalculateLastPosition();
+      return;
+    }
+
+    this._applied = true;
+
     // We need the bounding rects for the origin and the overlay to determine how to position
     // the overlay relative to the origin.
     const element = this._pane;
     const originRect = this._origin.getBoundingClientRect();
     const overlayRect = element.getBoundingClientRect();
 
-    // We use the viewport rect to determine whether a position would go off-screen.
-    const viewportRect = this._viewportRuler.getViewportRect();
+    // We use the viewport size to determine whether a position would go off-screen.
+    const viewportSize = this._viewportRuler.getViewportSize();
 
     // Fallback point if none of the fallbacks fit into the viewport.
     let fallbackPoint: OverlayPoint | undefined;
@@ -134,7 +151,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
       // Get the (x, y) point of connection on the origin, and then use that to get the
       // (top, left) coordinate for the overlay at `pos`.
       let originPoint = this._getOriginConnectionPoint(originRect, pos);
-      let overlayPoint = this._getOverlayPoint(originPoint, overlayRect, viewportRect, pos);
+      let overlayPoint = this._getOverlayPoint(originPoint, overlayRect, viewportSize, pos);
 
       // If the overlay in the calculated position fits on-screen, put it there and we're done.
       if (overlayPoint.fitsInViewport) {
@@ -156,7 +173,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   }
 
   /**
-   * This re-aligns the overlay element with the trigger in its last calculated position,
+   * Re-positions the overlay element with the trigger in its last calculated position,
    * even if a position higher in the "preferred positions" list would now fit. This
    * allows one to re-align the panel without changing the orientation of the panel.
    */
@@ -168,11 +185,11 @@ export class ConnectedPositionStrategy implements PositionStrategy {
 
     const originRect = this._origin.getBoundingClientRect();
     const overlayRect = this._pane.getBoundingClientRect();
-    const viewportRect = this._viewportRuler.getViewportRect();
+    const viewportSize = this._viewportRuler.getViewportSize();
     const lastPosition = this._lastConnectedPosition || this._preferredPositions[0];
 
     let originPoint = this._getOriginConnectionPoint(originRect, lastPosition);
-    let overlayPoint = this._getOverlayPoint(originPoint, overlayRect, viewportRect, lastPosition);
+    let overlayPoint = this._getOverlayPoint(originPoint, overlayRect, viewportSize, lastPosition);
     this._setElementPosition(this._pane, overlayRect, overlayPoint, lastPosition);
   }
 
@@ -229,6 +246,26 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   }
 
   /**
+   * Sets whether the overlay's position should be locked in after it is positioned
+   * initially. When an overlay is locked in, it won't attempt to reposition itself
+   * when the position is re-applied (e.g. when the user scrolls away).
+   * @param isLocked Whether the overlay should locked in.
+   */
+  withLockedPosition(isLocked: boolean): this {
+    this._positionLocked = isLocked;
+    return this;
+  }
+
+  /**
+   * Overwrites the current set of positions with an array of new ones.
+   * @param positions Position pairs to be set on the strategy.
+   */
+  withPositions(positions: ConnectionPositionPair[]): this {
+    this._preferredPositions = positions.slice();
+    return this;
+  }
+
+  /**
    * Gets the horizontal (x) "start" dimension based on whether the overlay is in an RTL context.
    * @param rect
    */
@@ -280,7 +317,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   private _getOverlayPoint(
       originPoint: Point,
       overlayRect: ClientRect,
-      viewportRect: ClientRect,
+      viewportSize: {width: number; height: number},
       pos: ConnectionPositionPair): OverlayPoint {
     // Calculate the (overlayStartX, overlayStartY), the start of the potential overlay position
     // relative to the origin point.
@@ -310,9 +347,9 @@ export class ConnectedPositionStrategy implements PositionStrategy {
 
     // How much the overlay would overflow at this position, on each side.
     let leftOverflow = 0 - x;
-    let rightOverflow = (x + overlayRect.width) - viewportRect.width;
+    let rightOverflow = (x + overlayRect.width) - viewportSize.width;
     let topOverflow = 0 - y;
-    let bottomOverflow = (y + overlayRect.height) - viewportRect.height;
+    let bottomOverflow = (y + overlayRect.height) - viewportSize.height;
 
     // Visible parts of the element on each axis.
     let visibleWidth = this._subtractOverflows(overlayRect.width, leftOverflow, rightOverflow);
@@ -358,7 +395,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     // from the bottom of the viewport rather than the top.
     let y = verticalStyleProperty === 'top' ?
         overlayPoint.y :
-        document.documentElement.clientHeight - (overlayPoint.y + overlayRect.height);
+        this._document.documentElement.clientHeight - (overlayPoint.y + overlayRect.height);
 
     // We want to set either `left` or `right` based on whether the overlay wants to appear "before"
     // or "after" the origin, which determines the direction in which the element will expand.
@@ -375,7 +412,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     // from the right edge of the viewport rather than the left edge.
     let x = horizontalStyleProperty === 'left' ?
       overlayPoint.x :
-      document.documentElement.clientWidth - (overlayPoint.x + overlayRect.width);
+      this._document.documentElement.clientWidth - (overlayPoint.x + overlayRect.width);
 
 
     // Reset any existing styles. This is necessary in case the preferred position has

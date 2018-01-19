@@ -13,6 +13,10 @@
     "moduleResolution": "node",
     "outDir": "../../dist/packages/cdk",
     "rootDir": ".",
+    "rootDirs": [
+      ".",
+      "../../dist/packages/material"
+    ],
     "sourceMap": true,
     "inlineSources": true,
     "target": "es2015",
@@ -20,7 +24,7 @@
     "skipLibCheck": true,
     "types": [],
     "paths": {
-      "@angular/cdk/*": ["../../dist/packages/cdk/*/public-api"]
+      "@angular/cdk/*": ["../../dist/packages/cdk/*"]
     }
   },
   "files": [
@@ -32,6 +36,7 @@
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
     "flatModuleId": "@angular/cdk",
-    "skipTemplateCodegen": true
+    "skipTemplateCodegen": true,
+    "fullTemplateTypeCheck": true
   }
 }

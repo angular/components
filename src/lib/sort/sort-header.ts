@@ -15,24 +15,20 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition,
-  keyframes,
-} from '@angular/animations';
 import {CdkColumnDef} from '@angular/cdk/table';
 import {Subscription} from 'rxjs/Subscription';
 import {merge} from 'rxjs/observable/merge';
 import {MatSort, MatSortable} from './sort';
 import {MatSortHeaderIntl} from './sort-header-intl';
 import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
-import {AnimationCurves, AnimationDurations} from '@angular/material/core';
+import {CanDisable, mixinDisabled} from '@angular/material/core';
+import {matSortAnimations} from './sort-animations';
 
-const SORT_ANIMATION_TRANSITION =
-    AnimationDurations.ENTERING + ' ' + AnimationCurves.STANDARD_CURVE;
+// Boilerplate for applying mixins to the sort header.
+/** @docs-private */
+export class MatSortHeaderBase {}
+export const _MatSortHeaderMixinBase = mixinDisabled(MatSortHeaderBase);
+
 
 /**
  * Applies sorting behavior (click to change sort) and styles to an element, including an
@@ -50,50 +46,22 @@ const SORT_ANIMATION_TRANSITION =
   templateUrl: 'sort-header.html',
   styleUrls: ['sort-header.css'],
   host: {
-    '(click)': '_sort.sort(this)',
+    '(click)': '_handleClick()',
     '[class.mat-sort-header-sorted]': '_isSorted()',
+    '[class.mat-sort-header-disabled]': '_isDisabled()',
   },
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  inputs: ['disabled'],
   animations: [
-    trigger('indicator', [
-      state('asc', style({transform: 'translateY(0px)'})),
-      // 10px is the height of the sort indicator, minus the width of the pointers
-      state('desc', style({transform: 'translateY(10px)'})),
-      transition('asc <=> desc', animate(SORT_ANIMATION_TRANSITION))
-    ]),
-    trigger('leftPointer', [
-      state('asc', style({transform: 'rotate(-45deg)'})),
-      state('desc', style({transform: 'rotate(45deg)'})),
-      transition('asc <=> desc', animate(SORT_ANIMATION_TRANSITION))
-    ]),
-    trigger('rightPointer', [
-      state('asc', style({transform: 'rotate(45deg)'})),
-      state('desc', style({transform: 'rotate(-45deg)'})),
-      transition('asc <=> desc', animate(SORT_ANIMATION_TRANSITION))
-    ]),
-    trigger('indicatorToggle', [
-      transition('void => asc', animate(SORT_ANIMATION_TRANSITION, keyframes([
-        style({transform: 'translateY(25%)', opacity: 0}),
-        style({transform: 'none', opacity: 1})
-      ]))),
-      transition('asc => void', animate(SORT_ANIMATION_TRANSITION, keyframes([
-        style({transform: 'none', opacity: 1}),
-        style({transform: 'translateY(-25%)', opacity: 0})
-      ]))),
-      transition('void => desc', animate(SORT_ANIMATION_TRANSITION, keyframes([
-        style({transform: 'translateY(-25%)', opacity: 0}),
-        style({transform: 'none', opacity: 1})
-      ]))),
-      transition('desc => void', animate(SORT_ANIMATION_TRANSITION, keyframes([
-        style({transform: 'none', opacity: 1}),
-        style({transform: 'translateY(25%)', opacity: 0})
-      ]))),
-    ])
+    matSortAnimations.indicator,
+    matSortAnimations.leftPointer,
+    matSortAnimations.rightPointer,
+    matSortAnimations.indicatorToggle
   ]
 })
-export class MatSortHeader implements MatSortable {
+export class MatSortHeader extends _MatSortHeaderMixinBase implements MatSortable, CanDisable {
   private _rerenderSubscription: Subscription;
 
   /**
@@ -118,13 +86,15 @@ export class MatSortHeader implements MatSortable {
               changeDetectorRef: ChangeDetectorRef,
               @Optional() public _sort: MatSort,
               @Optional() public _cdkColumnDef: CdkColumnDef) {
+
+    super();
+
     if (!_sort) {
       throw getSortHeaderNotContainedWithinSortError();
     }
 
-    this._rerenderSubscription = merge(_sort.sortChange, _intl.changes).subscribe(() => {
-      changeDetectorRef.markForCheck();
-    });
+    this._rerenderSubscription = merge(_sort.sortChange, _sort._stateChanges, _intl.changes)
+      .subscribe(() => changeDetectorRef.markForCheck());
   }
 
   ngOnInit() {
@@ -140,9 +110,20 @@ export class MatSortHeader implements MatSortable {
     this._rerenderSubscription.unsubscribe();
   }
 
+  /** Handles click events on the header. */
+  _handleClick() {
+    if (!this._isDisabled()) {
+      this._sort.sort(this);
+    }
+  }
+
   /** Whether this MatSortHeader is currently sorted in either ascending or descending order. */
   _isSorted() {
     return this._sort.active == this.id &&
         (this._sort.direction === 'asc' || this._sort.direction === 'desc');
+  }
+
+  _isDisabled() {
+    return this._sort.disabled || this.disabled;
   }
 }

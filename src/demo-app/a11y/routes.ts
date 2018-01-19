@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Routes} from '@angular/router';
 import {AutocompleteAccessibilityDemo} from './autocomplete/autocomplete-a11y';
 import {ButtonAccessibilityDemo} from './button/button-a11y';
@@ -14,6 +22,7 @@ import {ToolbarAccessibilityDemo} from './toolbar/toolbar-a11y';
 import {DatepickerAccessibilityDemo} from './datepicker/datepicker-a11y';
 import {IconAccessibilityDemo} from './icon/icon-a11y';
 import {InputAccessibilityDemo} from './input/input-a11y';
+import {ListAccessibilityDemo} from './list/list-a11y';
 import {MenuAccessibilityDemo} from './menu/menu-a11y';
 import {ProgressBarAccessibilityDemo} from './progress-bar/progress-bar-a11y';
 import {ProgressSpinnerAccessibilityDemo} from './progress-spinner/progress-spinner-a11y';
@@ -21,6 +30,7 @@ import {SliderAccessibilityDemo} from './slider/slider-a11y';
 import {SlideToggleAccessibilityDemo} from './slide-toggle/slide-toggle-a11y';
 import {SnackBarAccessibilityDemo} from './snack-bar/snack-bar-a11y';
 import {SelectAccessibilityDemo} from './select/select-a11y';
+import {TableAccessibilityDemo} from './table/table-a11y';
 import {TabsAccessibilityDemo} from './tabs/tabs-a11y';
 import {TABS_DEMO_ROUTES} from './tabs/routes';
 import {TooltipAccessibilityDemo} from './tooltip/tooltip-a11y';
@@ -43,6 +53,7 @@ export const ACCESSIBILITY_DEMO_ROUTES: Routes = [
   {path: 'grid-list', component: GridListAccessibilityDemo},
   {path: 'icon', component: IconAccessibilityDemo},
   {path: 'input', component: InputAccessibilityDemo},
+  {path: 'list', component: ListAccessibilityDemo},
   {path: 'menu', component: MenuAccessibilityDemo},
   {path: 'progress-bar', component: ProgressBarAccessibilityDemo},
   {path: 'progress-spinner', component: ProgressSpinnerAccessibilityDemo},
@@ -57,5 +68,6 @@ export const ACCESSIBILITY_DEMO_ROUTES: Routes = [
   {path: 'snack-bar', component: SnackBarAccessibilityDemo},
   {path: 'tabs', component: TabsAccessibilityDemo, children: TABS_DEMO_ROUTES},
   {path: 'toolbar', component: ToolbarAccessibilityDemo},
+  {path: 'table', component: TableAccessibilityDemo},
   {path: 'tooltip', component: TooltipAccessibilityDemo},
 ];

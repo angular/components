@@ -15,6 +15,7 @@ $mat-list-avatar-height: 56px;
 // spec requires two- and three-line lists be taller
 $mat-list-two-line-height: 72px;
 $mat-list-three-line-height: 88px;
+$mat-list-multi-line-padding: 16px;
 $mat-list-icon-size: 24px;
 
 // Dense list variables
@@ -23,25 +24,29 @@ $mat-dense-base-height: 40px;
 $mat-dense-avatar-height: 48px;
 $mat-dense-two-line-height: 60px;
 $mat-dense-three-line-height: 76px;
+$mat-dense-multi-line-padding: 16px;
 $mat-dense-list-icon-size: 20px;
+
+$mat-list-item-inset-divider-offset: 72px;
 
 // This mixin provides all list-item styles, changing font size and height
 // based on whether the list is in dense mode.
-@mixin mat-list-item-base($base-height, $avatar-height,
-  $two-line-height, $three-line-height, $icon-size) {
+@mixin mat-list-item-base($base-height, $avatar-height, $two-line-height,
+  $three-line-height, $multi-line-padding, $icon-size) {
 
   // Prevents the wrapper `mat-list-item-content` from collapsing due to it
   // being `inline` by default.
   display: block;
+  height: $base-height;
 
   .mat-list-item-content {
     display: flex;
     flex-direction: row;
     align-items: center;
     box-sizing: border-box;
-    height: $base-height;
     padding: 0 $mat-list-side-padding;
     position: relative;
+    height: inherit;
   }
 
   .mat-list-item-content-reverse {
@@ -61,24 +66,28 @@ $mat-dense-list-icon-size: 20px;
     pointer-events: none;
   }
 
-  &.mat-list-item-avatar .mat-list-item-content {
+  &.mat-list-item-avatar {
     height: $avatar-height;
   }
 
-  &.mat-2-line .mat-list-item-content {
+  &.mat-2-line {
     height: $two-line-height;
   }
 
 
-  &.mat-3-line .mat-list-item-content {
+  &.mat-3-line {
     height: $three-line-height;
   }
 
   // list items with more than 3 lines should expand to match
   // the height of its contained text
-  &.mat-multi-line .mat-list-item-content {
-    height: 100%;
-    padding: 8px $mat-list-side-padding;
+  &.mat-multi-line {
+    height: auto;
+
+    .mat-list-item-content {
+      padding-top: $multi-line-padding;
+      padding-bottom: $multi-line-padding;
+    }
   }
 
   .mat-list-text {
@@ -102,12 +111,36 @@ $mat-dense-list-icon-size: 20px;
   }
 
   .mat-list-icon {
+    flex-shrink: 0;
     width: $icon-size;
     height: $icon-size;
     font-size: $icon-size;
     box-sizing: content-box;
     border-radius: 50%;
     padding: 4px;
+  }
+
+  .mat-divider {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+
+    [dir='rtl'] & {
+      left: auto;
+      right: 0;
+    }
+
+    &.mat-divider-inset {
+      left: $mat-list-item-inset-divider-offset;
+      width: calc(100% - #{$mat-list-item-inset-divider-offset});
+      margin: 0;
+
+      [dir='rtl'] & {
+        left: auto;
+        right: $mat-list-item-inset-divider-offset;
+      }
+    }
   }
 }
 
@@ -144,22 +177,13 @@ $mat-dense-list-icon-size: 20px;
     @include mat-subheader-spacing($mat-list-top-padding, $mat-list-base-height);
   }
 
-  .mat-list-item {
+  .mat-list-item, .mat-list-option {
     @include mat-list-item-base(
       $mat-list-base-height,
       $mat-list-avatar-height,
       $mat-list-two-line-height,
       $mat-list-three-line-height,
-      $mat-list-icon-size
-    );
-  }
-
-  .mat-list-option {
-    @include mat-list-item-base(
-      $mat-list-base-height,
-      $mat-list-avatar-height,
-      $mat-list-two-line-height,
-      $mat-list-three-line-height,
+      $mat-list-multi-line-padding,
       $mat-list-icon-size
     );
   }
@@ -175,33 +199,18 @@ $mat-dense-list-icon-size: 20px;
     @include mat-subheader-spacing($mat-dense-top-padding, $mat-dense-base-height);
   }
 
-  .mat-list-item {
+  .mat-list-item, .mat-list-option {
     @include mat-list-item-base(
       $mat-dense-base-height,
       $mat-dense-avatar-height,
       $mat-dense-two-line-height,
       $mat-dense-three-line-height,
-      $mat-dense-list-icon-size
-    );
-  }
-
-  .mat-list-option {
-    @include mat-list-item-base(
-      $mat-dense-base-height,
-      $mat-dense-avatar-height,
-      $mat-dense-two-line-height,
-      $mat-dense-three-line-height,
+      $mat-dense-multi-line-padding,
       $mat-dense-list-icon-size
     );
   }
 }
 
-.mat-divider {
-  display: block;
-  border-top-style: solid;
-  border-top-width: 1px;
-  margin: 0;
-}
 
 .mat-nav-list {
   a {

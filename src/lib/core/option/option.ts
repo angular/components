@@ -32,7 +32,11 @@ let _uniqueIdCounter = 0;
 
 /** Event object emitted by MatOption when selected or deselected. */
 export class MatOptionSelectionChange {
-  constructor(public source: MatOption, public isUserInput = false) { }
+  constructor(
+    /** Reference to the option that emitted the event. */
+    public source: MatOption,
+    /** Whether the change in the option's value was a result of a user action. */
+    public isUserInput = false) { }
 }
 
 /**
@@ -110,7 +114,7 @@ export class MatOption {
     private _element: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
     @Optional() @Inject(MAT_OPTION_PARENT_COMPONENT) private _parent: MatOptionParentComponent,
-    @Optional() public readonly group: MatOptgroup) {}
+    @Optional() readonly group: MatOptgroup) {}
 
   /**
    * Whether or not the option is currently active and ready to be selected.

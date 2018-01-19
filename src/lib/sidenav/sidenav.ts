@@ -13,7 +13,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {MatDrawer, MatDrawerContainer, MatDrawerContent} from './drawer';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import {matDrawerAnimations} from './drawer-animations';
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 
 
@@ -23,8 +23,8 @@ import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion
   template: '<ng-content></ng-content>',
   host: {
     'class': 'mat-drawer-content mat-sidenav-content',
-    '[style.marginLeft.px]': '_margins.left',
-    '[style.marginRight.px]': '_margins.right',
+    '[style.margin-left.px]': '_margins.left',
+    '[style.margin-right.px]': '_margins.right',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -44,20 +44,7 @@ export class MatSidenavContent extends MatDrawerContent {
   selector: 'mat-sidenav',
   exportAs: 'matSidenav',
   template: '<ng-content></ng-content>',
-  animations: [
-    trigger('transform', [
-      state('open, open-instant', style({
-        transform: 'translate3d(0, 0, 0)',
-        visibility: 'visible',
-      })),
-      state('void', style({
-        visibility: 'hidden',
-      })),
-      transition('void => open-instant', animate('0ms')),
-      transition('void <=> open, open-instant => void',
-        animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)'))
-    ])
-  ],
+  animations: [matDrawerAnimations.transformDrawer],
   host: {
     'class': 'mat-drawer mat-sidenav',
     'tabIndex': '-1',

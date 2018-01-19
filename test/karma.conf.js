@@ -17,6 +17,7 @@ module.exports = (config) => {
     ],
     files: [
       {pattern: 'node_modules/core-js/client/core.js', included: true, watched: false},
+      {pattern: 'node_modules/tslib/tslib.js', included: true, watched: false},
       {pattern: 'node_modules/systemjs/dist/system.src.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/zone.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/proxy.js', included: true, watched: false},
@@ -79,7 +80,7 @@ module.exports = (config) => {
     browserDisconnectTimeout: 20000,
     browserNoActivityTimeout: 240000,
     captureTimeout: 120000,
-    browsers: ['Chrome_1024x768'],
+    browsers: ['ChromeHeadlessLocal'],
 
     singleRun: false,
 

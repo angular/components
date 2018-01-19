@@ -10,12 +10,13 @@ System.config({
     'rxjs': 'node:rxjs',
     'main': 'main.js',
     'moment': 'node:moment/min/moment-with-locales.min.js',
+    'tslib': 'node:tslib/tslib.js',
 
     // Angular specific mappings.
     '@angular/core': 'node:@angular/core/bundles/core.umd.js',
     '@angular/common': 'node:@angular/common/bundles/common.umd.js',
+    '@angular/common/http': 'node:@angular/common/bundles/common-http.umd.js',
     '@angular/compiler': 'node:@angular/compiler/bundles/compiler.umd.js',
-    '@angular/http': 'node:@angular/http/bundles/http.umd.js',
     '@angular/forms': 'node:@angular/forms/bundles/forms.umd.js',
     '@angular/router': 'node:@angular/router/bundles/router.umd.js',
     '@angular/animations': 'node:@angular/animations/bundles/animations.umd.js',
@@ -27,8 +28,11 @@ System.config({
       'node:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
 
     '@angular/material': 'dist/bundles/material.umd.js',
+    '@angular/material-experimental': 'dist/bundles/material-experimental.umd.js',
     '@angular/material-moment-adapter': 'dist/bundles/material-moment-adapter.umd.js',
     '@angular/cdk': 'dist/bundles/cdk.umd.js',
+    '@angular/cdk-experimental': 'dist/bundles/cdk-experimental.umd.js',
+
     '@angular/cdk/a11y': 'dist/bundles/cdk-a11y.umd.js',
     '@angular/cdk/accordion': 'dist/bundles/cdk-accordion.umd.js',
     '@angular/cdk/bidi': 'dist/bundles/cdk-bidi.umd.js',
@@ -40,7 +44,6 @@ System.config({
     '@angular/cdk/overlay': 'dist/bundles/cdk-overlay.umd.js',
     '@angular/cdk/platform': 'dist/bundles/cdk-platform.umd.js',
     '@angular/cdk/portal': 'dist/bundles/cdk-portal.umd.js',
-    '@angular/cdk/rxjs': 'dist/bundles/cdk-rxjs.umd.js',
     '@angular/cdk/scrolling': 'dist/bundles/cdk-scrolling.umd.js',
     '@angular/cdk/stepper': 'dist/bundles/cdk-stepper.umd.js',
     '@angular/cdk/table': 'dist/bundles/cdk-table.umd.js',
@@ -56,6 +59,7 @@ System.config({
     '@angular/material/core': 'dist/bundles/material-core.umd.js',
     '@angular/material/datepicker': 'dist/bundles/material-datepicker.umd.js',
     '@angular/material/dialog': 'dist/bundles/material-dialog.umd.js',
+    '@angular/material/divider': 'dist/bundles/material-divider.umd.js',
     '@angular/material/expansion': 'dist/bundles/material-expansion.umd.js',
     '@angular/material/form-field': 'dist/bundles/material-form-field.umd.js',
     '@angular/material/grid-list': 'dist/bundles/material-grid-list.umd.js',
@@ -81,7 +85,8 @@ System.config({
   },
   packages: {
     // Thirdparty barrels.
-    'rxjs': { main: 'index' },
+    'rxjs': {main: 'index'},
+
     // Set the default extension for the root package, because otherwise the demo-app can't
     // be built within the production mode. Due to missing file extensions.
     '.': {

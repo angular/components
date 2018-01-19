@@ -19,14 +19,14 @@ import {
   NgZone,
 } from '@angular/core';
 import {Subject} from 'rxjs/Subject';
-import {RxChain, debounceTime} from '@angular/cdk/rxjs';
+import {debounceTime} from 'rxjs/operators/debounceTime';
 
 /**
  * Factory that creates a new MutationObserver and allows us to stub it out in unit tests.
  * @docs-private
  */
 @Injectable()
-export class MatMutationObserverFactory {
+export class MutationObserverFactory {
   create(callback: MutationCallback): MutationObserver | null {
     return typeof MutationObserver === 'undefined' ? null : new MutationObserver(callback);
   }
@@ -40,7 +40,7 @@ export class MatMutationObserverFactory {
   selector: '[cdkObserveContent]',
   exportAs: 'cdkObserveContent',
 })
-export class ObserveContent implements AfterContentInit, OnDestroy {
+export class CdkObserveContent implements AfterContentInit, OnDestroy {
   private _observer: MutationObserver | null;
 
   /** Event emitted for each change in the element's content. */
@@ -53,16 +53,15 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
   @Input() debounce: number;
 
   constructor(
-    private _mutationObserverFactory: MatMutationObserverFactory,
+    private _mutationObserverFactory: MutationObserverFactory,
     private _elementRef: ElementRef,
     private _ngZone: NgZone) { }
 
   ngAfterContentInit() {
     if (this.debounce > 0) {
       this._ngZone.runOutsideAngular(() => {
-        RxChain.from(this._debouncer)
-          .call(debounceTime, this.debounce)
-          .subscribe((mutations: MutationRecord[]) => this.event.emit(mutations));
+        this._debouncer.pipe(debounceTime(this.debounce))
+            .subscribe((mutations: MutationRecord[]) => this.event.emit(mutations));
       });
     } else {
       this._debouncer.subscribe(mutations => this.event.emit(mutations));
@@ -76,9 +75,9 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
 
     if (this._observer) {
       this._observer.observe(this._elementRef.nativeElement, {
-        characterData: true,
-        childList: true,
-        subtree: true
+        'characterData': true,
+        'childList': true,
+        'subtree': true
       });
     }
   }
@@ -94,8 +93,8 @@ export class ObserveContent implements AfterContentInit, OnDestroy {
 
 
 @NgModule({
-  exports: [ObserveContent],
-  declarations: [ObserveContent],
-  providers: [MatMutationObserverFactory]
+  exports: [CdkObserveContent],
+  declarations: [CdkObserveContent],
+  providers: [MutationObserverFactory]
 })
 export class ObserversModule {}
