@@ -2,6 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatBadge, MatBadgeModule} from './index';
+import {ThemePalette} from '@angular/material/core';
 
 describe('MatBadge', () => {
   let fixture: ComponentFixture<any>;
@@ -86,7 +87,7 @@ describe('MatBadge', () => {
   `
 })
 class BadgeWithTextContent {
-  badgeColor;
+  badgeColor: ThemePalette;
   badgeContent = '1';
   badgeDirection = 'above after';
 }

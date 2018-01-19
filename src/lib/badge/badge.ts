@@ -6,12 +6,24 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Input, Renderer2, ElementRef} from '@angular/core';
+import {Directive, Input, ElementRef, Inject, Optional, NgZone} from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ThemePalette} from '@angular/material/core';
 import {AriaDescriber} from '@angular/cdk/a11y';
+import {DOCUMENT} from '@angular/common';
 
 let nextId = 0;
+
+export type PositionTypes =
+  'above after' |
+  'below after' |
+  'above before' |
+  'above after';
+
+export type BadgeSize =
+  'small' |
+  'medium' |
+  'large';
 
 /** Directive to display a text badge. */
 @Directive({
@@ -54,14 +66,15 @@ export class MatBadge {
    * Accepts any combination of 'above'|'below' and 'before'|'after'
    */
   @Input('matBadgePosition')
-  get position(): string { return this._position; }
-  set position(val: string) {
+  get position(): PositionTypes { return this._position; }
+  set position(val: PositionTypes) {
     this._position = val;
     this._isAbove = val.indexOf('below') === -1;
     this._isAfter = val.indexOf('before') === -1;
   }
-  private _position: string = 'above after';
+  private _position: PositionTypes = 'above after';
 
+  /** The content for the badge */
   @Input('matBadge')
   get content(): string { return this._content; }
   set content(val: string) {
@@ -71,18 +84,18 @@ export class MatBadge {
   private _content: string;
 
   /** Message used to describe the decorated element via aria-describedby */
-  @Input('matBadgePosition')
+  @Input('matBadgeDescription')
   get description(): string { return this._description; }
   set description(val: string) {
-    this._setLabel(val, this._description);
+    this._updateHostAriaDescription(val, this._description);
     this._description = val;
   }
   private _description: string;
 
-  /** Size of the badge. 'small' | 'medium' | 'large' */
-  @Input() matBadgeSize: string = 'medium';
+  /** Size of the badge. Can be 'small' , 'medium', or 'large'. */
+  @Input() matBadgeSize: BadgeSize = 'medium';
 
-  /** Toggle the visibility of the badge on the host element. */
+  /** Whether the badge is hidden. */
   @Input()
   set matBadgeHidden(val: boolean) {
     this._hidden = coerceBooleanProperty(val);
@@ -101,45 +114,50 @@ export class MatBadge {
   /** Whether the badge is after the host or not */
   _isAfter: boolean = true;
 
+  private _badgeElement: HTMLElement;
+
   constructor(
-      private _renderer: Renderer2,
+      @Optional() @Inject(DOCUMENT) private _document: any,
+      private _ngZone: NgZone,
       private _elementRef: ElementRef,
       private _ariaDescriber: AriaDescriber) {}
 
   /** Injects a span element into the DOM with the content. */
   private _updateTextContent(): HTMLSpanElement {
-    let content = document.getElementById(`mat-badge-content-${this._id}`);
+    if (!this._badgeElement) {
+      this._badgeElement = this._createBadgeElement();
+    } else {
+      this._badgeElement.textContent = this.content;
+    }
+    return this._badgeElement;
+  }
 
-    if (!content) {
-      content = this._renderer.createElement('span');
+  /** Creates the badge element */
+  private _createBadgeElement(): HTMLElement {
+    let badgeElement = this._document.createElement('span');
+    badgeElement.setAttribute('id', `mat-badge-content-${this._id}`);
+    badgeElement.classList.add('mat-badge-content');
+    badgeElement.textContent = this.content;
 
-      content = document.createElement('span');
-      content.setAttribute('id', `mat-badge-content-${this._id}`);
-      content.classList.add('mat-badge-content');
-      content.textContent = this.content;
-
-      if (this.description) {
-        content.setAttribute('aria-label', this.description);
-      }
-
-      this._renderer.appendChild(this._elementRef.nativeElement, content);
-
-      // animate in after insertion
-      setTimeout(() => {
-        // ensure content available
-        if (content !== null) {
-          content.classList.add('mat-badge-active');
-        }
-      }, 100);
-    } else if (content.textContent !== this.content) {
-      content.textContent = this.content;
+    if (this.description) {
+      badgeElement.setAttribute('aria-label', this.description);
     }
 
-    return content;
+    this._elementRef.nativeElement.appendChild(badgeElement);
+
+    // animate in after insertion
+    this._ngZone.runOutsideAngular(() => requestAnimationFrame(() => {
+      // ensure content available
+      if (badgeElement) {
+        badgeElement.classList.add('mat-badge-active');
+      }
+    });
+
+    return badgeElement;
   }
 
   /** Sets the aria-label property on the element */
-  private _setLabel(val: string, prevVal: string): void {
+  private _updateHostAriaDescription(val: string, prevVal: string): void {
     // ensure content available before setting label
     const content = this._updateTextContent();
     this._ariaDescriber.removeDescription(content, prevVal);
@@ -151,10 +169,10 @@ export class MatBadge {
     const colorPalette = value;
     if (colorPalette !== this._color) {
       if (this._color) {
-        this._renderer.removeClass(this._elementRef.nativeElement, `mat-badge-${this._color}`);
+        this._elementRef.nativeElement.removeClass(`mat-badge-${this._color}`);
       }
       if (colorPalette) {
-        this._renderer.addClass(this._elementRef.nativeElement, `mat-badge-${colorPalette}`);
+        this._elementRef.nativeElement.addClass(`mat-badge-${colorPalette}`);
       }
     }
   }

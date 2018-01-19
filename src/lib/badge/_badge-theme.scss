@@ -93,8 +93,7 @@ $mat-badge-large-size: $mat-badge-default-size + 6;
       background: mat-color($primary);
     }
 
-    .mat-badge {
-      &.mat-badge-accent {
+    &.mat-badge-accent {
       .mat-badge-content {
         background: mat-color($accent);
         color: mat-color($accent, default-contrast);

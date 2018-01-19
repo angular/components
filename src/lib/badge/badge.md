@@ -30,4 +30,4 @@ background color to `primary`, `accent`, or `warn`.
 ```
 
 ### Accessibility
-Badges should be given a meaningful label via `aria-label` or `aria-labelledby` attributes.
+Badges should be given a meaningful label via `aria-describedby` attributes to augment the host element.
