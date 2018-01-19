@@ -35,6 +35,7 @@ import {
   DoCheck,
   ElementRef,
   EventEmitter,
+  forwardRef,
   Inject,
   InjectionToken,
   Input,
@@ -52,6 +53,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
+  NG_VALUE_ACCESSOR,
   ControlValueAccessor,
   FormGroupDirective,
   NgControl,
@@ -138,6 +140,13 @@ export const MAT_SELECT_SCROLL_STRATEGY_PROVIDER = {
   useFactory: MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY,
 };
 
+/** @docs-private */
+export const MAT_SELECT_VALUE_ACCESSOR: any = {
+  provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => MatSelect),
+  multi: true
+};
+
 /** Change event object that is emitted when the select value has changed. */
 export class MatSelectChange {
   constructor(
@@ -205,6 +214,7 @@ export class MatSelectTrigger {}
     matSelectAnimations.fadeInContent
   ],
   providers: [
+    MAT_SELECT_VALUE_ACCESSOR,
     {provide: MatFormFieldControl, useExisting: MatSelect},
     {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatSelect}
   ],
