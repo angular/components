@@ -138,7 +138,10 @@ export class MatTooltip implements OnDestroy {
     }
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('tooltip-position')
   get _positionDeprecated(): TooltipPosition { return this._position; }
   set _positionDeprecated(value: TooltipPosition) { this._position = value; }
