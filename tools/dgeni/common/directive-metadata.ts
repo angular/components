@@ -7,13 +7,12 @@ import {
   StringLiteral, SyntaxKind
 } from 'typescript';
 
-export type DirectiveMetadata = Map<string, any>;
-
 /**
  * Determines the component or directive metadata from the specified Dgeni class doc. The resolved
  * directive metadata will be stored in a Map.
  *
- * Currently only string literal assignments and array literal assignments are supported.
+ * Currently only string literal assignments and array literal assignments are supported. Other
+ * value types are not necessary because they are not needed for any user-facing documentation.
  *
  * ```ts
  * @Component({
@@ -23,7 +22,7 @@ export type DirectiveMetadata = Map<string, any>;
  * export class MyComponent {}
  * ```
  */
-export function getDirectiveMetadata(classDoc: CategorizedClassDoc): DirectiveMetadata | null {
+export function getDirectiveMetadata(classDoc: CategorizedClassDoc): Map<string, any> | null {
   const declaration = classDoc.symbol.valueDeclaration;
 
   if (!declaration || !declaration.decorators) {
