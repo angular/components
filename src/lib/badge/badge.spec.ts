@@ -72,6 +72,38 @@ describe('MatBadge', () => {
       expect(badgeNativeElement.classList.contains('mat-badge-below')).toBe(true);
       expect(badgeNativeElement.classList.contains('mat-badge-before')).toBe(true);
     });
+
+    it('should change visibility to hidden', () => {
+      expect(badgeNativeElement.classList.contains('mat-badge-hidden')).toBe(false);
+
+      testComponent.badgeHidden = true;
+      fixture.detectChanges();
+
+      expect(badgeNativeElement.classList.contains('mat-badge-hidden')).toBe(true);
+    });
+
+    it('should change badge sizes', () => {
+      expect(badgeNativeElement.classList.contains('mat-badge-medium')).toBe(true);
+
+      testComponent.badgeSize = 'small';
+      fixture.detectChanges();
+
+      expect(badgeNativeElement.classList.contains('mat-badge-small')).toBe(true);
+
+      testComponent.badgeSize = 'large';
+      fixture.detectChanges();
+
+      expect(badgeNativeElement.classList.contains('mat-badge-large')).toBe(true);
+    });
+
+    it('should change badge overlap', () => {
+      expect(badgeNativeElement.classList.contains('mat-badge-overlap')).toBe(false);
+
+      testComponent.badgeOverlap = true;
+      fixture.detectChanges();
+
+      expect(badgeNativeElement.classList.contains('mat-badge-overlap')).toBe(true);
+    });
   });
 
 });
@@ -82,7 +114,10 @@ describe('MatBadge', () => {
   template: `
     <span [matBadge]="badgeContent"
           [matBadgeColor]="badgeColor"
-          [matBadgePosition]="badgeDirection">
+          [matBadgePosition]="badgeDirection"
+          [matBadgeHidden]="badgeHidden"
+          [matBadgeSize]="badgeSize"
+          [matBadgeOverlap]="badgeOverlap">
       home
     </span>
   `
@@ -91,4 +126,7 @@ class BadgeWithTextContent {
   badgeColor: ThemePalette;
   badgeContent = '1';
   badgeDirection = 'above after';
+  badgeHidden = false;
+  badgeSize = 'medium';
+  badgeOverlap = false;
 }

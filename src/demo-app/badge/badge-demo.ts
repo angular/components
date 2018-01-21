@@ -15,6 +15,6 @@ import {Component} from '@angular/core';
   styleUrls: ['badge-demo.css'],
 })
 export class BadgeDemo {
-  visibile = true;
+  visible = true;
   badgeContent = '0';
 }

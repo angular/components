@@ -14,7 +14,7 @@ import {DOCUMENT} from '@angular/common';
 
 let nextId = 0;
 
-export type MatBadgePosition = 'above after' | 'below after' | 'above before' | 'above after';
+export type MatBadgePosition = 'above after' | 'above before' | 'below before' | 'below after';
 export type MatBadgeSize = 'small' | 'medium' | 'large';
 
 /** Directive to display a text badge. */
@@ -39,8 +39,8 @@ export class MatBadge {
   @Input('matBadgeColor')
   get color(): ThemePalette { return this._color; }
   set color(value: ThemePalette) {
-    this._color = value;
     this._setColor(value);
+    this._color = value;
   }
   private _color: ThemePalette = 'primary';
 
@@ -122,7 +122,7 @@ export class MatBadge {
 
   /** Creates the badge element */
   private _createBadgeElement(): HTMLElement {
-    let badgeElement = this._document.createElement('span');
+    const badgeElement = this._document.createElement('span');
     badgeElement.setAttribute('id', `mat-badge-content-${this._id}`);
     badgeElement.classList.add('mat-badge-content');
     badgeElement.textContent = this.content;
@@ -153,14 +153,13 @@ export class MatBadge {
   }
 
   /** Adds css theme class given the color to the component host */
-  private _setColor(value: ThemePalette) {
-    const colorPalette = value;
+  private _setColor(colorPalette: ThemePalette) {
     if (colorPalette !== this._color) {
       if (this._color) {
-        this._elementRef.nativeElement.removeClass(`mat-badge-${this._color}`);
+        this._elementRef.nativeElement.classList.remove(`mat-badge-${this._color}`);
       }
       if (colorPalette) {
-        this._elementRef.nativeElement.addClass(`mat-badge-${colorPalette}`);
+        this._elementRef.nativeElement.classList.add(`mat-badge-${colorPalette}`);
       }
     }
   }
