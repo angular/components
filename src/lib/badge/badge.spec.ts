@@ -1,4 +1,4 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, async} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatBadge, MatBadgeModule} from './index';
@@ -9,13 +9,14 @@ describe('MatBadge', () => {
   let testComponent: BadgeWithTextContent;
   let badgeNativeElement;
 
-  beforeEach(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MatBadgeModule],
       declarations: [BadgeWithTextContent],
-    });
+    }).compileComponents();
+  }));
 
-    TestBed.compileComponents();
+  beforeEach(() => {
     fixture = TestBed.createComponent(BadgeWithTextContent);
     testComponent = fixture.debugElement.componentInstance;
     fixture.detectChanges();
@@ -55,13 +56,13 @@ describe('MatBadge', () => {
       fixture.detectChanges();
       expect(badgeNativeElement.classList.contains('mat-badge-warn')).toBe(true);
 
-      testComponent.badgeColor = null;
+      testComponent.badgeColor = undefined;
       fixture.detectChanges();
 
       expect(badgeNativeElement.classList).not.toContain('mat-badge-accent');
     });
 
-    it('should update the badget position on direction change', () => {
+    it('should update the badge position on direction change', () => {
       expect(badgeNativeElement.classList.contains('mat-badge-above')).toBe(true);
       expect(badgeNativeElement.classList.contains('mat-badge-after')).toBe(true);
 
@@ -75,7 +76,7 @@ describe('MatBadge', () => {
 
 });
 
-/** Test component that contains an MatBadge. */
+/** Test component that contains a MatBadge. */
 @Component({
   selector: 'test-app',
   template: `

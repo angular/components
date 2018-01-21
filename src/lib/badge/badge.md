@@ -19,6 +19,25 @@ a text phrase. By default it will overlap.
 </h1>
 ```
 
+### Badge sizing
+The badge has 3 sizes: `small`, `medium` and `large`. By default, the badge is set to `medium`.
+You can change the size by adding `matBadgeSize` to the host element.
+
+```html
+<h1 matBadge="11" matBadgeSize="large">
+  Email
+</h1>
+```
+
+### Badge visibility
+The badge visibility can be toggled programmatically by defining `matBadgeHidden`.
+
+```html
+<h1 matBadge="11" [matBadgeHidden]="!visible">
+  Email
+</h1>
+```
+
 ### Theming
 Badges can be colored in terms of the current theme using the `matBadgeColor` property to set the
 background color to `primary`, `accent`, or `warn`.
@@ -30,4 +49,5 @@ background color to `primary`, `accent`, or `warn`.
 ```
 
 ### Accessibility
-Badges should be given a meaningful label via `aria-describedby` attributes to augment the host element.
+Badges should be given a meaningful description via `matBadgeDescription`. This description will be
+applied, via `aria-describedby` to the element decorated by `matBadge`.

@@ -1,3 +1,6 @@
+// This contains all of the styles for the badge
+// rather than just the color/theme because of
+// no style sheet support for directives.
 @import '../core/theming/palette';
 @import '../core/theming/theming';
 @import '../core/typography/typography-utils';
@@ -88,23 +91,22 @@ $mat-badge-large-size: $mat-badge-default-size + 6;
   $warn: map-get($theme, warn);
   $primary: map-get($theme, primary);
   
-    .mat-badge-content {
-      color: mat-color($primary, default-contrast);
-      background: mat-color($primary);
-    }
+  .mat-badge-content {
+    color: mat-color($primary, default-contrast);
+    background: mat-color($primary);
+  }
 
-    &.mat-badge-accent {
-      .mat-badge-content {
-        background: mat-color($accent);
-        color: mat-color($accent, default-contrast);
-      }
+  &.mat-badge-accent {
+    .mat-badge-content {
+      background: mat-color($accent);
+      color: mat-color($accent, default-contrast);
     }
-  
-    &.mat-badge-warn {
-      .mat-badge-content {
-        color: mat-color($warn, default-contrast);
-        background: mat-color($warn);
-      }
+  }
+
+  &.mat-badge-warn {
+    .mat-badge-content {
+      color: mat-color($warn, default-contrast);
+      background: mat-color($warn);
     }
   }
 }

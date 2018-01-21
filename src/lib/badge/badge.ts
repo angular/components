@@ -14,32 +14,23 @@ import {DOCUMENT} from '@angular/common';
 
 let nextId = 0;
 
-export type PositionTypes =
-  'above after' |
-  'below after' |
-  'above before' |
-  'above after';
-
-export type BadgeSize =
-  'small' |
-  'medium' |
-  'large';
+export type MatBadgePosition = 'above after' | 'below after' | 'above before' | 'above after';
+export type MatBadgeSize = 'small' | 'medium' | 'large';
 
 /** Directive to display a text badge. */
 @Directive({
   selector: '[matBadge]',
-  inputs: ['matBadgeColor', 'matBadgeOverlap', 'matBadgePosition'],
   host: {
     'class': 'mat-badge',
     '[class.mat-badge-overlap]': '_overlap',
-    '[class.mat-badge-above]': '_isAbove',
-    '[class.mat-badge-below]': '!_isAbove',
-    '[class.mat-badge-before]': '!_isAfter',
-    '[class.mat-badge-after]': '_isAfter',
-    '[class.mat-badge-small]': 'matBadgeSize === "small"',
-    '[class.mat-badge-medium]': 'matBadgeSize === "medium"',
-    '[class.mat-badge-large]': 'matBadgeSize === "large"',
-    '[class.mat-badge-hidden]': 'matBadgeHidden',
+    '[class.mat-badge-above]': 'isAbove()',
+    '[class.mat-badge-below]': '!isAbove()',
+    '[class.mat-badge-before]': '!isAfter()',
+    '[class.mat-badge-after]': 'isAfter()',
+    '[class.mat-badge-small]': 'size === "small"',
+    '[class.mat-badge-medium]': 'size === "medium"',
+    '[class.mat-badge-large]': 'size === "large"',
+    '[class.mat-badge-hidden]': 'hidden',
   },
 })
 export class MatBadge {
@@ -65,14 +56,7 @@ export class MatBadge {
    * Position the badge should reside.
    * Accepts any combination of 'above'|'below' and 'before'|'after'
    */
-  @Input('matBadgePosition')
-  get position(): PositionTypes { return this._position; }
-  set position(val: PositionTypes) {
-    this._position = val;
-    this._isAbove = val.indexOf('below') === -1;
-    this._isAfter = val.indexOf('before') === -1;
-  }
-  private _position: PositionTypes = 'above after';
+  @Input('matBadgePosition') position: MatBadgePosition = 'above after';
 
   /** The content for the badge */
   @Input('matBadge')
@@ -87,32 +71,26 @@ export class MatBadge {
   @Input('matBadgeDescription')
   get description(): string { return this._description; }
   set description(val: string) {
-    this._updateHostAriaDescription(val, this._description);
+    if (this._description) {
+      this._updateHostAriaDescription(val, this._description);
+    }
     this._description = val;
   }
   private _description: string;
 
-  /** Size of the badge. Can be 'small' , 'medium', or 'large'. */
-  @Input() matBadgeSize: BadgeSize = 'medium';
+  /** Size of the badge. Can be 'small', 'medium', or 'large'. */
+  @Input('matBadgeSize') size: MatBadgeSize = 'medium';
 
   /** Whether the badge is hidden. */
-  @Input()
-  set matBadgeHidden(val: boolean) {
+  @Input('matBadgeHidden')
+  get hidden(): boolean { return this._hidden; }
+  set hidden(val: boolean) {
     this._hidden = coerceBooleanProperty(val);
-  }
-  get matBadgeHidden(): boolean {
-    return this._hidden;
   }
   private _hidden: boolean;
 
   /** Unique id for the badge */
   _id: number = nextId++;
-
-  /** Whether the badge is above the host or not */
-  _isAbove: boolean = true;
-
-  /** Whether the badge is after the host or not */
-  _isAfter: boolean = true;
 
   private _badgeElement: HTMLElement;
 
@@ -121,6 +99,16 @@ export class MatBadge {
       private _ngZone: NgZone,
       private _elementRef: ElementRef,
       private _ariaDescriber: AriaDescriber) {}
+
+  /** Whether the badge is above the host or not */
+  isAbove(): boolean {
+    return this.position.indexOf('below') === -1;
+  }
+
+  /** Whether the badge is after the host or not */
+  isAfter(): boolean {
+    return this.position.indexOf('before') === -1;
+  }
 
   /** Injects a span element into the DOM with the content. */
   private _updateTextContent(): HTMLSpanElement {
@@ -151,7 +139,7 @@ export class MatBadge {
       if (badgeElement) {
         badgeElement.classList.add('mat-badge-active');
       }
-    });
+    }));
 
     return badgeElement;
   }
