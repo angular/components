@@ -77,7 +77,7 @@ import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
 import {Subject} from 'rxjs/Subject';
 import {defer} from 'rxjs/observable/defer';
-import {fadeInContent, transformPanel} from './select-animations';
+import {matSelectAnimations} from './select-animations';
 import {
   getMatSelectDynamicMultipleError,
   getMatSelectNonArrayValueError,
@@ -188,7 +188,7 @@ export class MatSelectTrigger {}
     '[attr.aria-required]': 'required.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': 'errorState',
-    '[attr.aria-owns]': '_optionIds',
+    '[attr.aria-owns]': 'panelOpen ? _optionIds : null',
     '[attr.aria-multiselectable]': 'multiple',
     '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-activedescendant]': '_getAriaActiveDescendant()',
@@ -201,8 +201,8 @@ export class MatSelectTrigger {}
     '(blur)': '_onBlur()',
   },
   animations: [
-    transformPanel,
-    fadeInContent
+    matSelectAnimations.transformPanel,
+    matSelectAnimations.fadeInContent
   ],
   providers: [
     {provide: MatFormFieldControl, useExisting: MatSelect},
@@ -547,6 +547,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     if (this._panelOpen) {
       this._panelOpen = false;
       this._changeDetectorRef.markForCheck();
+      this._onTouched();
       this.focus();
     }
   }
@@ -665,7 +666,15 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       event.preventDefault();
       this._keyManager.activeItem._selectViaInteraction();
     } else {
+      const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
+      const previouslyFocusedIndex = this._keyManager.activeItemIndex;
+
       this._keyManager.onKeydown(event);
+
+      if (this._multiple && isArrowKey && event.shiftKey && this._keyManager.activeItem &&
+          this._keyManager.activeItemIndex !== previouslyFocusedIndex) {
+        this._keyManager.activeItem._selectViaInteraction();
+      }
     }
   }
 
@@ -852,6 +861,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       this._selectionModel.toggle(option);
       this.stateChanges.next();
       wasSelected ? option.deselect() : option.select();
+      this._keyManager.setActiveItem(this._getOptionIndex(option)!);
       this._sortValues();
     } else {
       this._clearSelection(option.value == null ? undefined : option);

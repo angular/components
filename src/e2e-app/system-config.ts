@@ -31,6 +31,8 @@ System.config({
     '@angular/material-experimental': 'dist/bundles/material-experimental.umd.js',
     '@angular/material-moment-adapter': 'dist/bundles/material-moment-adapter.umd.js',
     '@angular/cdk': 'dist/bundles/cdk.umd.js',
+    '@angular/cdk-experimental': 'dist/bundles/cdk-experimental.umd.js',
+
     '@angular/cdk/a11y': 'dist/bundles/cdk-a11y.umd.js',
     '@angular/cdk/accordion': 'dist/bundles/cdk-accordion.umd.js',
     '@angular/cdk/bidi': 'dist/bundles/cdk-bidi.umd.js',
@@ -57,6 +59,7 @@ System.config({
     '@angular/material/core': 'dist/bundles/material-core.umd.js',
     '@angular/material/datepicker': 'dist/bundles/material-datepicker.umd.js',
     '@angular/material/dialog': 'dist/bundles/material-dialog.umd.js',
+    '@angular/material/divider': 'dist/bundles/material-divider.umd.js',
     '@angular/material/expansion': 'dist/bundles/material-expansion.umd.js',
     '@angular/material/form-field': 'dist/bundles/material-form-field.umd.js',
     '@angular/material/grid-list': 'dist/bundles/material-grid-list.umd.js',

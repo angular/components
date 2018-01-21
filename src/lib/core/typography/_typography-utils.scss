@@ -26,7 +26,7 @@
     $font-family: _mat-get-type-value($config, $level, font-family);
   }
 
-  @return unquote($font-family);
+  @return if($font-family == null, $font-family, unquote($font-family));
 }
 
 // Converts a typography level into CSS styles.
@@ -41,7 +41,11 @@
   @if ($font-size == inherit or
        $font-weight == inherit or
        $line-height == inherit or
-       $font-family == inherit) {
+       $font-family == inherit or
+       $font-size == null or
+       $font-weight == null or
+       $line-height == null or
+       $font-family == null) {
 
     font-size: $font-size;
     font-weight: $font-weight;
@@ -51,7 +55,7 @@
   @else {
     // Otherwise use the shorthand `font` to represent a typography level, because it's the the
     // least amount of bytes. Note that we need to use interpolation for `font-size/line-height`
-    // in order to prevent SASS from dividing the two values.
+    // in order to prevent Sass from dividing the two values.
     font: $font-weight #{$font-size}/#{$line-height} $font-family;
   }
 }

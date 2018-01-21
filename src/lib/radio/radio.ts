@@ -323,7 +323,7 @@ export const _MatRadioButtonMixinBase =
     mixinColor(mixinDisableRipple(MatRadioButtonBase), 'accent');
 
 /**
- * A radio-button. May be inside of
+ * A Material design radio-button. Typically placed inside of `<mat-radio-group>` elements.
  */
 @Component({
   moduleId: module.id,
@@ -476,7 +476,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   /** Whether this radio is required. */
   private _required: boolean;
 
-  /** Value assigned to this radio.*/
+  /** Value assigned to this radio. */
   private _value: any = null;
 
   /** The child ripple instance. */
@@ -488,7 +488,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   /** Reference to the current focus ripple. */
   private _focusRipple: RippleRef | null;
 
-  /** Unregister function for _radioDispatcher **/
+  /** Unregister function for _radioDispatcher */
   private _removeUniqueSelectionListener: () => void = () => {};
 
   /** The native `<input type=radio>` element */

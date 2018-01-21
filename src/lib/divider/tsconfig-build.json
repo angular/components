@@ -8,7 +8,8 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/material-experimental/dialog",
-    "skipTemplateCodegen": true
+    "flatModuleId": "@angular/material/divider",
+    "skipTemplateCodegen": true,
+    "fullTemplateTypeCheck": true
   }
 }

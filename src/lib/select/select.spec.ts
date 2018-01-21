@@ -435,6 +435,68 @@ describe('MatSelect', () => {
               .toBe(false, 'Expected panel to stay closed.');
         }));
 
+        it('should toggle the next option when pressing shift + DOWN_ARROW on a multi-select',
+          fakeAsync(() => {
+            fixture.destroy();
+
+            const multiFixture = TestBed.createComponent(MultiSelect);
+            const event = createKeyboardEvent('keydown', DOWN_ARROW);
+            Object.defineProperty(event, 'shiftKey', {get: () => true});
+
+            multiFixture.detectChanges();
+            select = multiFixture.debugElement.query(By.css('mat-select')).nativeElement;
+
+            multiFixture.componentInstance.select.open();
+            multiFixture.detectChanges();
+            flush();
+
+            expect(multiFixture.componentInstance.select.value).toBeFalsy();
+
+            dispatchEvent(select, event);
+            multiFixture.detectChanges();
+
+            expect(multiFixture.componentInstance.select.value).toEqual(['pizza-1']);
+
+            dispatchEvent(select, event);
+            multiFixture.detectChanges();
+
+            expect(multiFixture.componentInstance.select.value).toEqual(['pizza-1', 'tacos-2']);
+          }));
+
+        it('should toggle the previous option when pressing shift + UP_ARROW on a multi-select',
+          fakeAsync(() => {
+            fixture.destroy();
+
+            const multiFixture = TestBed.createComponent(MultiSelect);
+            const event = createKeyboardEvent('keydown', UP_ARROW);
+            Object.defineProperty(event, 'shiftKey', {get: () => true});
+
+            multiFixture.detectChanges();
+            select = multiFixture.debugElement.query(By.css('mat-select')).nativeElement;
+
+            multiFixture.componentInstance.select.open();
+            multiFixture.detectChanges();
+            flush();
+
+            // Move focus down first.
+            for (let i = 0; i < 5; i++) {
+              dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+              multiFixture.detectChanges();
+            }
+
+            expect(multiFixture.componentInstance.select.value).toBeFalsy();
+
+            dispatchEvent(select, event);
+            multiFixture.detectChanges();
+
+            expect(multiFixture.componentInstance.select.value).toEqual(['chips-4']);
+
+            dispatchEvent(select, event);
+            multiFixture.detectChanges();
+
+            expect(multiFixture.componentInstance.select.value).toEqual(['sandwich-3', 'chips-4']);
+          }));
+
         it('should prevent the default action when pressing space', fakeAsync(() => {
           const event = dispatchKeyboardEvent(select, 'keydown', SPACE);
           expect(event.defaultPrevented).toBe(true);
@@ -1198,7 +1260,7 @@ describe('MatSelect', () => {
             .not.toContain('mat-selected', `Expected option w/ the old value not to be selected.`);
       }));
 
-      it('should set the control to touched when the select is touched', fakeAsync(() => {
+      it('should set the control to touched when the select is blurred', fakeAsync(() => {
         expect(fixture.componentInstance.control.touched)
             .toEqual(false, `Expected the control to start off as untouched.`);
 
@@ -1219,6 +1281,26 @@ describe('MatSelect', () => {
 
         expect(fixture.componentInstance.control.touched)
             .toEqual(true, `Expected the control to be touched as soon as focus left the select.`);
+      }));
+
+      it('should set the control to touched when the panel is closed', fakeAsync(() => {
+        expect(fixture.componentInstance.control.touched)
+            .toBe(false, 'Expected the control to start off as untouched.');
+
+        trigger.click();
+        dispatchFakeEvent(trigger, 'blur');
+        fixture.detectChanges();
+        flush();
+
+        expect(fixture.componentInstance.control.touched)
+            .toBe(false, 'Expected the control to stay untouched when menu opened.');
+
+        fixture.componentInstance.select.close();
+        fixture.detectChanges();
+        flush();
+
+        expect(fixture.componentInstance.control.touched)
+            .toBe(true, 'Expected the control to be touched when the panel was closed.');
       }));
 
       it('should not set touched when a disabled select is touched', fakeAsync(() => {
@@ -1655,6 +1737,22 @@ describe('MatSelect', () => {
             .toContain(options[0].id, `Expected aria-owns to contain IDs of its child options.`);
         expect(selects[1].nativeElement.getAttribute('aria-owns'))
             .toContain(options[1].id, `Expected aria-owns to contain IDs of its child options.`);
+      }));
+
+      it('should remove aria-owns when the options are not visible', fakeAsync(() => {
+        const select = fixture.debugElement.query(By.css('mat-select'));
+
+        expect(select.nativeElement.hasAttribute('aria-owns'))
+            .toBe(true, 'Expected select to have aria-owns while open.');
+
+        const backdrop =
+            overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+        backdrop.click();
+        fixture.detectChanges();
+        flush();
+
+        expect(select.nativeElement.hasAttribute('aria-owns'))
+            .toBe(false, 'Expected select not to have aria-owns when closed.');
       }));
 
       it('should set the option id properly', fakeAsync(() => {
@@ -3456,6 +3554,22 @@ describe('MatSelect', () => {
 
       expect(testInstance.options.toArray().every(option => !!option.multiple)).toBe(true,
           'Expected `multiple` to have been set on dynamically-added option.');
+    }));
+
+    it('should update the active item index on click', fakeAsync(() => {
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      expect(fixture.componentInstance.select._keyManager.activeItemIndex).toBe(0);
+
+      const options = overlayContainerElement.querySelectorAll('mat-option') as
+          NodeListOf<HTMLElement>;
+
+      options[2].click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.select._keyManager.activeItemIndex).toBe(2);
     }));
 
   });

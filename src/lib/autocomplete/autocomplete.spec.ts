@@ -89,11 +89,12 @@ describe('MatAutocomplete', () => {
     return TestBed.createComponent(component);
   }
 
-  afterEach(() => {
-    if (overlayContainer) {
-      overlayContainer.ngOnDestroy();
-    }
-  });
+  afterEach(inject([OverlayContainer], (currentOverlayContainer: OverlayContainer) => {
+    // Since we're resetting the testing module in some of the tests,
+    // we can potentially have multiple overlay containers.
+    currentOverlayContainer.ngOnDestroy();
+    overlayContainer.ngOnDestroy();
+  }));
 
   describe('panel toggling', () => {
     let fixture: ComponentFixture<SimpleAutocomplete>;
@@ -598,6 +599,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should disable the input when used with a value accessor and without `matInput`', () => {
+      overlayContainer.ngOnDestroy();
       fixture.destroy();
       TestBed.resetTestingModule();
 
@@ -1519,28 +1521,26 @@ describe('MatAutocomplete', () => {
       expect(panel.classList).toContain('class-two');
     }));
 
-
-    it('should reset correctly when closed programmatically', async(() => {
+    it('should reset correctly when closed programmatically', fakeAsync(() => {
       TestBed.overrideProvider(MAT_AUTOCOMPLETE_SCROLL_STRATEGY, {
         useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close(),
         deps: [Overlay]
       });
 
-      const fixture = TestBed.createComponent(SimpleAutocomplete);
+      const fixture = createComponent(SimpleAutocomplete);
       fixture.detectChanges();
       const trigger = fixture.componentInstance.trigger;
 
       trigger.openPanel();
       fixture.detectChanges();
+      zone.simulateZoneExit();
 
-      fixture.whenStable().then(() => {
-        expect(trigger.panelOpen).toBe(true, 'Expected panel to be open.');
+      expect(trigger.panelOpen).toBe(true, 'Expected panel to be open.');
 
-        scrolledSubject.next();
-        fixture.detectChanges();
+      scrolledSubject.next();
+      fixture.detectChanges();
 
-        expect(trigger.panelOpen).toBe(false, 'Expected panel to be closed.');
-      });
+      expect(trigger.panelOpen).toBe(false, 'Expected panel to be closed.');
     }));
 
   });
@@ -1672,7 +1672,8 @@ describe('MatAutocomplete', () => {
       <input matInput placeholder="State" [matAutocomplete]="auto" [formControl]="stateCtrl">
     </mat-form-field>
 
-    <mat-autocomplete class="class-one class-two" #auto="matAutocomplete" [displayWith]="displayFn">
+    <mat-autocomplete class="class-one class-two" #auto="matAutocomplete"
+      [displayWith]="displayFn" [disableRipple]="disableRipple">
       <mat-option *ngFor="let state of filteredStates" [value]="state">
         <span> {{ state.code }}: {{ state.name }}  </span>
       </mat-option>
@@ -1685,6 +1686,7 @@ class SimpleAutocomplete implements OnDestroy {
   valueSub: Subscription;
   floatLabel = 'auto';
   width: number;
+  disableRipple = false;
 
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
   @ViewChild(MatAutocomplete) panel: MatAutocomplete;
@@ -1971,6 +1973,6 @@ class AutocompleteWithSelectEvent {
     <mat-autocomplete #auto="matAutocomplete"></mat-autocomplete>
   `
 })
-export class PlainAutocompleteInputWithFormControl {
+class PlainAutocompleteInputWithFormControl {
   formControl = new FormControl();
 }
