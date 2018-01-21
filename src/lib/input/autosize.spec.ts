@@ -1,12 +1,13 @@
 import {Component, ViewChild} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {ComponentFixture, TestBed, async, fakeAsync, flushMicrotasks} from '@angular/core/testing';
+import {ComponentFixture, TestBed, async, fakeAsync, flush, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatInputModule} from './index';
 import {MatTextareaAutosize} from './autosize';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatTabsModule} from '@angular/material/tabs';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {dispatchFakeEvent} from '@angular/cdk/testing';
 
 
 describe('MatTextareaAutosize', () => {
@@ -28,7 +29,8 @@ describe('MatTextareaAutosize', () => {
         AutosizeTextareaInATab,
         AutosizeTextAreaWithContent,
         AutosizeTextAreaWithValue,
-        AutosizeTextareaWithNgModel
+        AutosizeTextareaWithNgModel,
+        AutosizeTextareaWithLongPlaceholder
       ],
     });
 
@@ -176,6 +178,27 @@ describe('MatTextareaAutosize', () => {
       .toBe(textarea.scrollHeight, 'Expected textarea height to match its scrollHeight');
   });
 
+  it('should not calculate wrong content height due to long placeholders', () => {
+    const fixtureWithPlaceholder = TestBed.createComponent(AutosizeTextareaWithLongPlaceholder);
+    fixtureWithPlaceholder.detectChanges();
+
+    textarea = fixtureWithPlaceholder.nativeElement.querySelector('textarea');
+    autosize = fixtureWithPlaceholder.debugElement.query(
+      By.directive(MatTextareaAutosize)).injector.get<MatTextareaAutosize>(MatTextareaAutosize);
+
+    autosize.resizeToFitContent(true);
+
+    const heightWithLongPlaceholder = textarea.clientHeight;
+
+    fixtureWithPlaceholder.componentInstance.placeholder = 'Short';
+    fixtureWithPlaceholder.detectChanges();
+
+    autosize.resizeToFitContent(true);
+
+    expect(textarea.clientHeight).toBe(heightWithLongPlaceholder,
+        'Expected the textarea height to be the same with a long placeholder.');
+  });
+
   it('should resize when an associated form control value changes', fakeAsync(() => {
     const fixtureWithForms = TestBed.createComponent(AutosizeTextareaWithNgModel);
     textarea = fixtureWithForms.nativeElement.querySelector('textarea');
@@ -191,7 +214,7 @@ describe('MatTextareaAutosize', () => {
     Some late visitor entreating entrance at my chamber door;—
                 This it is and nothing more.” `;
     fixtureWithForms.detectChanges();
-    flushMicrotasks();
+    flush();
     fixtureWithForms.detectChanges();
 
     expect(textarea.clientHeight)
@@ -207,7 +230,7 @@ describe('MatTextareaAutosize', () => {
     `;
 
     fixture.detectChanges();
-    flushMicrotasks();
+    flush();
     fixture.detectChanges();
 
     expect(textarea.clientHeight)
@@ -227,8 +250,16 @@ describe('MatTextareaAutosize', () => {
     textarea = fixtureWithForms.nativeElement.querySelector('textarea');
     expect(textarea.getBoundingClientRect().height).toBeGreaterThan(1);
   });
-});
 
+  it('should trigger a resize when the window is resized', fakeAsync(() => {
+    spyOn(autosize, 'resizeToFitContent');
+
+    dispatchFakeEvent(window, 'resize');
+    tick(16);
+
+    expect(autosize.resizeToFitContent).toHaveBeenCalled();
+  }));
+});
 
 // Styles to reset padding and border to make measurement comparisons easier.
 const textareaStyleReset = `
@@ -267,6 +298,17 @@ class AutosizeTextAreaWithValue {
 })
 class AutosizeTextareaWithNgModel {
   model = '';
+}
+
+@Component({
+  template: `
+    <mat-form-field style="width: 100px">
+      <textarea matInput matTextareaAutosize [placeholder]="placeholder"></textarea>
+    </mat-form-field>`,
+  styles: [textareaStyleReset],
+})
+class AutosizeTextareaWithLongPlaceholder {
+  placeholder = 'Long Long Long Long Long Long Long Long Placeholder';
 }
 
 @Component({

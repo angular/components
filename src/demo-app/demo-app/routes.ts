@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Routes} from '@angular/router';
 import {AccessibilityDemo} from '../a11y/a11y';
 import {ACCESSIBILITY_DEMO_ROUTES} from '../a11y/routes';
@@ -34,13 +42,14 @@ import {SlideToggleDemo} from '../slide-toggle/slide-toggle-demo';
 import {SliderDemo} from '../slider/slider-demo';
 import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
 import {StepperDemo} from '../stepper/stepper-demo';
-import {TableDemo} from '../table/table-demo';
 import {TABS_DEMO_ROUTES} from '../tabs/routes';
 import {TabsDemo} from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
 import {TypographyDemo} from '../typography/typography-demo';
 import {DemoApp, Home} from './demo-app';
+import {TableDemoPage} from '../table/table-demo-page';
+import {TABLE_DEMO_ROUTES} from '../table/routes';
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: DemoApp, children: [
@@ -77,7 +86,7 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'slider', component: SliderDemo},
     {path: 'snack-bar', component: SnackBarDemo},
     {path: 'stepper', component: StepperDemo},
-    {path: 'table', component: TableDemo},
+    {path: 'table', component: TableDemoPage, children: TABLE_DEMO_ROUTES},
     {path: 'tabs', component: TabsDemo, children: TABS_DEMO_ROUTES},
     {path: 'toolbar', component: ToolbarDemo},
     {path: 'tooltip', component: TooltipDemo},

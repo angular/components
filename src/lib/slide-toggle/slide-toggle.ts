@@ -6,6 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Platform} from '@angular/cdk/platform';
 import {
   AfterContentInit,
   Attribute,
@@ -18,12 +21,10 @@ import {
   Input,
   OnDestroy,
   Output,
-  Renderer2,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import {Platform} from '@angular/cdk/platform';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   applyCssTransform,
   CanColor,
@@ -36,10 +37,9 @@ import {
   mixinDisabled,
   mixinDisableRipple,
   mixinTabIndex,
+  RippleConfig,
   RippleRef,
 } from '@angular/material/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 
 // Increasing integer for generating unique ids for slide-toggle components.
 let nextUniqueId = 0;
@@ -59,7 +59,7 @@ export class MatSlideToggleChange {
 // Boilerplate for applying mixins to MatSlideToggle.
 /** @docs-private */
 export class MatSlideToggleBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  constructor(public _elementRef: ElementRef) {}
 }
 export const _MatSlideToggleMixinBase =
   mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatSlideToggleBase)), 'accent'));
@@ -124,7 +124,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   @Input()
   get checked(): boolean { return this._checked; }
   set checked(value) {
-    this._checked = !!value;
+    this._checked = coerceBooleanProperty(value);
     this._changeDetectorRef.markForCheck();
   }
   /** An event will be dispatched each time the slide-toggle changes its value. */
@@ -139,14 +139,16 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   /** Reference to the ripple directive on the thumb container. */
   @ViewChild(MatRipple) _ripple: MatRipple;
 
+  /** Ripple configuration for the mouse ripples and focus indicators. */
+  _rippleConfig: RippleConfig = {centered: true, radius: 23, speedFactor: 1.5};
+
   constructor(elementRef: ElementRef,
-              renderer: Renderer2,
               private _platform: Platform,
               private _focusMonitor: FocusMonitor,
               private _changeDetectorRef: ChangeDetectorRef,
               @Attribute('tabindex') tabIndex: string) {
-    super(renderer, elementRef);
 
+    super(elementRef);
     this.tabIndex = parseInt(tabIndex) || 0;
   }
 
@@ -154,7 +156,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
     this._slideRenderer = new SlideToggleRenderer(this._elementRef, this._platform);
 
     this._focusMonitor
-      .monitor(this._inputElement.nativeElement, this._renderer, false)
+      .monitor(this._inputElement.nativeElement, false)
       .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
   }
 
@@ -162,32 +164,31 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
     this._focusMonitor.stopMonitoring(this._inputElement.nativeElement);
   }
 
-  /**
-   * This function will called if the underlying input changed its value through user interaction.
-   */
+  /** Method being called whenever the underlying input emits a change event. */
   _onChangeEvent(event: Event) {
     // We always have to stop propagation on the change event.
     // Otherwise the change event, from the input element, will bubble up and
     // emit its event object to the component's `change` output.
     event.stopPropagation();
 
-    // Sync the value from the underlying input element with the slide-toggle component.
+    // Releasing the pointer over the `<label>` element while dragging triggers another
+    // click event on the `<label>` element. This means that the checked state of the underlying
+    // input changed unintentionally and needs to be changed back.
+    if (this._slideRenderer.dragging) {
+      this._inputElement.nativeElement.checked = this.checked;
+      return;
+    }
+
+    // Sync the value from the underlying input element with the component instance.
     this.checked = this._inputElement.nativeElement.checked;
 
-    // Emit our custom change event if the native input emitted one.
-    // It is important to only emit it, if the native input triggered one, because we don't want
-    // to trigger a change event, when the `checked` variable changes programmatically.
+    // Emit our custom change event only if the underlying input emitted one. This ensures that
+    // there is no change event, when the checked state changes programmatically.
     this._emitChangeEvent();
   }
 
+  /** Method being called whenever the slide-toggle has been clicked. */
   _onInputClick(event: Event) {
-    // In some situations the user will release the mouse on the label element. The label element
-    // redirects the click to the underlying input element and will result in a value change.
-    // Prevent the default behavior if dragging, because the value will be set after drag.
-    if (this._slideRenderer.dragging) {
-      event.preventDefault();
-    }
-
     // We have to stop propagation for click events on the visual hidden input element.
     // By default, when a user clicks on a label element, a generated click event will be
     // dispatched on the associated input element. Since we are using a label element as our
@@ -233,7 +234,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   private _onInputFocusChange(focusOrigin: FocusOrigin) {
     if (!this._focusRipple && focusOrigin === 'keyboard') {
       // For keyboard focus show a persistent ripple as focus indicator.
-      this._focusRipple = this._ripple.launch(0, 0, {persistent: true, centered: true});
+      this._focusRipple = this._ripple.launch(0, 0, {persistent: true, ...this._rippleConfig});
     } else if (!focusOrigin) {
       this.onTouched();
 
@@ -270,10 +271,10 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
 
   _onDragEnd() {
     if (this._slideRenderer.dragging) {
-      let _previousChecked = this.checked;
-      this.checked = this._slideRenderer.dragPercentage > 50;
+      const newCheckedValue = this._slideRenderer.dragPercentage > 50;
 
-      if (_previousChecked !== this.checked) {
+      if (newCheckedValue !== this.checked) {
+        this.checked = newCheckedValue;
         this._emitChangeEvent();
       }
 

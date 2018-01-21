@@ -14,13 +14,18 @@ import {
   OnDestroy,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanDisable, mixinDisabled} from '@angular/material/core';
+import {
+  CanDisable,
+  CanDisableRipple,
+  mixinDisabled,
+  mixinDisableRipple
+} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
 
 // Boilerplate for applying mixins to MatMenuItem.
 /** @docs-private */
 export class MatMenuItemBase {}
-export const _MatMenuItemMixinBase = mixinDisabled(MatMenuItemBase);
+export const _MatMenuItemMixinBase = mixinDisableRipple(mixinDisabled(MatMenuItemBase));
 
 /**
  * This directive is intended to be used inside an mat-menu tag.
@@ -30,7 +35,7 @@ export const _MatMenuItemMixinBase = mixinDisabled(MatMenuItemBase);
   moduleId: module.id,
   selector: '[mat-menu-item]',
   exportAs: 'matMenuItem',
-  inputs: ['disabled'],
+  inputs: ['disabled', 'disableRipple'],
   host: {
     'role': 'menuitem',
     'class': 'mat-menu-item',
@@ -47,11 +52,11 @@ export const _MatMenuItemMixinBase = mixinDisabled(MatMenuItemBase);
   preserveWhitespaces: false,
   templateUrl: 'menu-item.html',
 })
-export class MatMenuItem extends _MatMenuItemMixinBase implements FocusableOption, CanDisable,
-  OnDestroy {
+export class MatMenuItem extends _MatMenuItemMixinBase
+    implements FocusableOption, CanDisable, CanDisableRipple, OnDestroy {
 
   /** Stream that emits when the menu item is hovered. */
-  hover: Subject<MatMenuItem> = new Subject();
+  _hovered: Subject<MatMenuItem> = new Subject();
 
   /** Whether the menu item is highlighted. */
   _highlighted: boolean = false;
@@ -69,7 +74,7 @@ export class MatMenuItem extends _MatMenuItemMixinBase implements FocusableOptio
   }
 
   ngOnDestroy() {
-    this.hover.complete();
+    this._hovered.complete();
   }
 
   /** Used to set the `tabindex`. */
@@ -93,7 +98,7 @@ export class MatMenuItem extends _MatMenuItemMixinBase implements FocusableOptio
   /** Emits to the hover stream. */
   _emitHoverEvent() {
     if (!this.disabled) {
-      this.hover.next(this);
+      this._hovered.next(this);
     }
   }
 

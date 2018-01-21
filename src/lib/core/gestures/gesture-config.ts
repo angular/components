@@ -6,16 +6,29 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, isDevMode} from '@angular/core';
+import {Injectable, InjectionToken, Inject, Optional} from '@angular/core';
 import {HammerGestureConfig} from '@angular/platform-browser';
-import {HammerStatic, HammerInstance, Recognizer, RecognizerStatic} from './gesture-annotations';
+import {MatCommonModule} from '../common-behaviors/common-module';
+import {
+  HammerStatic,
+  HammerInstance,
+  Recognizer,
+  RecognizerStatic,
+  HammerOptions,
+} from './gesture-annotations';
 
-/* Adjusts configuration of our gesture library, Hammer. */
+/**
+ * Injection token that can be used to provide options to the Hammerjs instance.
+ * More info at http://hammerjs.github.io/api/.
+ */
+export const MAT_HAMMER_OPTIONS = new InjectionToken<HammerOptions>('MAT_HAMMER_OPTIONS');
+
+/** Adjusts configuration of our gesture library, Hammer. */
 @Injectable()
 export class GestureConfig extends HammerGestureConfig {
   private _hammer: HammerStatic = typeof window !== 'undefined' ? (window as any).Hammer : null;
 
-  /* List of new event names to add to the gesture support list */
+  /** List of new event names to add to the gesture support list */
   events: string[] = this._hammer ? [
     'longpress',
     'slide',
@@ -25,14 +38,12 @@ export class GestureConfig extends HammerGestureConfig {
     'slideleft'
   ] : [];
 
-  constructor() {
+  constructor(
+    @Optional() @Inject(MAT_HAMMER_OPTIONS) private _hammerOptions?: HammerOptions,
+    @Optional() commonModule?: MatCommonModule) {
     super();
-
-    if (!this._hammer && isDevMode()) {
-      console.warn(
-        'Could not find HammerJS. Certain Angular Material ' +
-        'components may not work correctly.'
-      );
+    if (commonModule) {
+      commonModule._checkHammerIsAvailable();
     }
   }
 
@@ -50,18 +61,18 @@ export class GestureConfig extends HammerGestureConfig {
    * @returns Newly-created HammerJS instance.
    */
   buildHammer(element: HTMLElement): HammerInstance {
-    const mc = new this._hammer(element);
+    const mc = new this._hammer(element, this._hammerOptions || undefined);
 
     // Default Hammer Recognizers.
-    let pan = new this._hammer.Pan();
-    let swipe = new this._hammer.Swipe();
-    let press = new this._hammer.Press();
+    const pan = new this._hammer.Pan();
+    const swipe = new this._hammer.Swipe();
+    const press = new this._hammer.Press();
 
     // Notice that a HammerJS recognizer can only depend on one other recognizer once.
     // Otherwise the previous `recognizeWith` will be dropped.
     // TODO: Confirm threshold numbers with Material Design UX Team
-    let slide = this._createRecognizer(pan, {event: 'slide', threshold: 0}, swipe);
-    let longpress = this._createRecognizer(press, {event: 'longpress', time: 500});
+    const slide = this._createRecognizer(pan, {event: 'slide', threshold: 0}, swipe);
+    const longpress = this._createRecognizer(press, {event: 'longpress', time: 500});
 
     // Overwrite the default `pan` event to use the swipe event.
     pan.recognizeWith(swipe);

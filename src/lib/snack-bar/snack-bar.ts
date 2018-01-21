@@ -7,16 +7,16 @@
  */
 
 import {LiveAnnouncer} from '@angular/cdk/a11y';
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {ComponentPortal, ComponentType, PortalInjector} from '@angular/cdk/portal';
 import {ComponentRef, Injectable, Injector, Optional, SkipSelf} from '@angular/core';
-import {extendObject} from '@angular/material/core';
+import {take} from 'rxjs/operators/take';
+import {takeUntil} from 'rxjs/operators/takeUntil';
 import {SimpleSnackBar} from './simple-snack-bar';
 import {MAT_SNACK_BAR_DATA, MatSnackBarConfig} from './snack-bar-config';
 import {MatSnackBarContainer} from './snack-bar-container';
 import {MatSnackBarRef} from './snack-bar-ref';
-import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {RxChain, takeUntil, first} from '@angular/cdk/rxjs';
 
 
 /**
@@ -151,15 +151,15 @@ export class MatSnackBar {
     // Subscribe to the breakpoint observer and attach the mat-snack-bar-handset class as
     // appropriate. This class is applied to the overlay element because the overlay must expand to
     // fill the width of the screen for full width snackbars.
-    RxChain.from(this._breakpointObserver.observe(Breakpoints.Handset))
-      .call(takeUntil, first.call(overlayRef.detachments()))
-      .subscribe(state => {
-        if (state.matches) {
-          overlayRef.overlayElement.classList.add('mat-snack-bar-handset');
-        } else {
-          overlayRef.overlayElement.classList.remove('mat-snack-bar-handset');
-        }
-      });
+    this._breakpointObserver.observe(Breakpoints.Handset).pipe(
+      takeUntil(overlayRef.detachments().pipe(take(1)))
+    ).subscribe(state => {
+      if (state.matches) {
+        overlayRef.overlayElement.classList.add('mat-snack-bar-handset');
+      } else {
+        overlayRef.overlayElement.classList.remove('mat-snack-bar-handset');
+      }
+    });
 
     return snackBarRef;
   }
@@ -223,5 +223,5 @@ export class MatSnackBar {
  * @returns The new configuration object with defaults applied.
  */
 function _applyConfigDefaults(config?: MatSnackBarConfig): MatSnackBarConfig {
-  return extendObject(new MatSnackBarConfig(), config);
+  return {...new MatSnackBarConfig(), ...config};
 }

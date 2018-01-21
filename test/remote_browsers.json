@@ -1,15 +1,18 @@
 {
-  "ChromeHeadless_CI": {
+  "ChromeHeadlessLocal": {
     "base": "ChromeHeadless",
     "flags": [
       "--window-size=1024,768"
     ]
   },
-  "Chrome_1024x768": {
-    "base": "Chrome",
+  "FirefoxHeadless": {
+    "base": "Firefox",
     "flags": [
-      "--window-size=1024,768"
+      "-headless"
     ]
+  },
+  "ChromeHeadlessCI": {
+    "base": "ChromeHeadlessLocal"
   },
   "SL_CHROME": {
     "base": "SauceLabs",

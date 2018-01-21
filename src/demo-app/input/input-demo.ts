@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material';
@@ -21,6 +29,7 @@ export class InputDemo {
   hideRequiredMarker: boolean;
   ctrlDisabled = false;
   textareaNgModelValue: string;
+  placeholderTestControl = new FormControl('', Validators.required);
 
   name: string;
   errorMessageExample1: string;
@@ -65,4 +74,14 @@ export class InputDemo {
       return false;
     }
   };
+
+  togglePlaceholderTestValue() {
+    this.placeholderTestControl.setValue(this.placeholderTestControl.value === '' ? 'Value' : '');
+  }
+
+  togglePlaceholderTestTouched() {
+    this.placeholderTestControl.touched ?
+      this.placeholderTestControl.markAsUntouched() :
+      this.placeholderTestControl.markAsTouched();
+  }
 }

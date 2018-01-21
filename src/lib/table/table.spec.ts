@@ -102,16 +102,21 @@ describe('MatTable', () => {
       // Change filter to a_1, should match one row
       dataSource.filter = 'a_1';
       fixture.detectChanges();
+      expect(dataSource.filteredData.length).toBe(1);
+      expect(dataSource.filteredData[0]).toBe(dataSource.data[0]);
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['a_1', 'b_1', 'c_1'],
       ]);
+
       flushMicrotasks();  // Resolve promise that updates paginator's length
       expect(dataSource.paginator!.length).toBe(1);
 
-      // Change filter to a_2, should match one row
-      dataSource.filter = 'a_2';
+      // Change filter to '  A_2  ', should match one row (ignores case and whitespace)
+      dataSource.filter = '  A_2  ';
       fixture.detectChanges();
+      expect(dataSource.filteredData.length).toBe(1);
+      expect(dataSource.filteredData[0]).toBe(dataSource.data[1]);
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['a_2', 'b_2', 'c_2'],
@@ -120,6 +125,10 @@ describe('MatTable', () => {
       // Change filter to empty string, should match all rows
       dataSource.filter = '';
       fixture.detectChanges();
+      expect(dataSource.filteredData.length).toBe(3);
+      expect(dataSource.filteredData[0]).toBe(dataSource.data[0]);
+      expect(dataSource.filteredData[1]).toBe(dataSource.data[1]);
+      expect(dataSource.filteredData[2]).toBe(dataSource.data[2]);
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['a_1', 'b_1', 'c_1'],
@@ -127,14 +136,17 @@ describe('MatTable', () => {
         ['a_3', 'b_3', 'c_3'],
       ]);
 
-      // Change filter function and filter, should match to rows.
-      dataSource.filterTermAccessor = data => {
+      // Change filter function and filter, should match to rows with zebra.
+      dataSource.filterPredicate = (data, filter) => {
+        let dataStr;
         switch (data.a) {
-          case 'a_1': return 'elephant';
-          case 'a_2': return 'zebra';
-          case 'a_3': return 'monkey';
-          default: return '';
+          case 'a_1': dataStr = 'elephant'; break;
+          case 'a_2': dataStr = 'zebra'; break;
+          case 'a_3': dataStr = 'monkey'; break;
+          default: dataStr = '';
         }
+
+        return dataStr.indexOf(filter) != -1;
       };
       dataSource.filter = 'zebra';
       fixture.detectChanges();
@@ -181,6 +193,21 @@ describe('MatTable', () => {
         ['a_1', 'b_1', 'c_1'],
         ['a_3', 'b_3', 'c_3'],
         ['a_2', 'b_2', 'c_2'],
+      ]);
+    });
+
+    it('should by default correctly sort an empty string', () => {
+      // Activate column A sort
+      dataSource.data[0].a = ' ';
+      component.sort.sort(component.sortHeader);
+      fixture.detectChanges();
+
+      // Expect that empty string row comes before the other values
+      expectTableToMatchContent(tableElement, [
+        ['Column A\xa0Sorted by a ascending', 'Column B', 'Column C'],
+        ['', 'b_1', 'c_1'],
+        ['a_2', 'b_2', 'c_2'],
+        ['a_3', 'b_3', 'c_3'],
       ]);
     });
 
@@ -282,7 +309,7 @@ class FakeDataSource extends DataSource<TestData> {
 class MatTableApp {
   dataSource: FakeDataSource | null = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
-  isFourthRow = (_rowData: TestData, i: number) => i == 3;
+  isFourthRow = (i: number, _rowData: TestData) => i == 3;
 
   @ViewChild(MatTable) table: MatTable<TestData>;
 }
@@ -308,7 +335,7 @@ class MatTableApp {
 })
 class MatTableWithWhenRowApp {
   dataSource: FakeDataSource | null = new FakeDataSource();
-  isFourthRow = (_rowData: TestData, i: number) => i == 3;
+  isFourthRow = (i: number, _rowData: TestData) => i == 3;
 
   @ViewChild(MatTable) table: MatTable<TestData>;
 }

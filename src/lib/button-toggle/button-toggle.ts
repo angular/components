@@ -6,30 +6,29 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   Directive,
   ElementRef,
-  Renderer2,
   EventEmitter,
+  forwardRef,
   Input,
-  OnInit,
   OnDestroy,
+  OnInit,
   Optional,
   Output,
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  forwardRef,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
 } from '@angular/core';
-import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {CanDisable, mixinDisabled} from '@angular/material/core';
-import {FocusMonitor} from '@angular/cdk/a11y';
-import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 
 /** Acceptable types for a button toggle. */
 export type ToggleType = 'checkbox' | 'radio';
@@ -128,10 +127,17 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
   set value(newValue: any) {
     if (this._value != newValue) {
       this._value = newValue;
-
+      this.valueChange.emit(newValue);
       this._updateSelectedButtonToggleFromValue();
     }
   }
+
+  /**
+   * Event that emits whenever the value of the group changes.
+   * Used to facilitate two-way data binding.
+   * @docs-private
+   */
+  @Output() valueChange = new EventEmitter<any>();
 
   /** Whether the toggle group is selected. */
   @Input()
@@ -307,7 +313,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
   /** Whether or not the button toggle is a single selection. */
   private _isSingleSelector: boolean = false;
 
-  /** Unregister function for _buttonToggleDispatcher **/
+  /** Unregister function for _buttonToggleDispatcher */
   private _removeUniqueSelectionListener: () => void = () => {};
 
   @ViewChild('input') _inputElement: ElementRef;
@@ -379,7 +385,6 @@ export class MatButtonToggle implements OnInit, OnDestroy {
               @Optional() toggleGroupMultiple: MatButtonToggleGroupMultiple,
               private _changeDetectorRef: ChangeDetectorRef,
               private _buttonToggleDispatcher: UniqueSelectionDispatcher,
-              private _renderer: Renderer2,
               private _elementRef: ElementRef,
               private _focusMonitor: FocusMonitor) {
 
@@ -414,7 +419,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
     if (this.buttonToggleGroup && this._value == this.buttonToggleGroup.value) {
       this._checked = true;
     }
-    this._focusMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
+    this._focusMonitor.monitor(this._elementRef.nativeElement, true);
   }
 
   /** Focuses the button. */

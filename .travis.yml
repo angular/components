@@ -1,9 +1,16 @@
 language: node_js
-sudo: false
 dist: trusty
 
+# Temporary set sudo to required, because in normal container-based Travis jobs, the Chrome
+# binaries seem to be owned by root, and therefore can't be accessed by Karma. To workaround
+# the issue we temporary grant the CI sudo permissions.
+# https://github.com/travis-ci/travis-ci/issues/8836#issuecomment-356362524.
+sudo: required
+
 node_js:
-  - '8'
+  # Use the explicit NodeJS LTS version 8.9.4 to avoid any automatic upgrade of the version.
+  # This ensures that all Travis jobs run consistently and don't have different Node versions.
+  - '8.9.4'
 
 addons:
   jwt:
@@ -11,6 +18,7 @@ addons:
     # we alias FIREBASE_ACCESS_TOKEN to $SAUCE_ACCESS_KEY in env.sh and set the SAUCE_ACCESS_KEY there
     - secure: "PKts/IbxuJRWWOEeiGbl8Z9zds0M+hIdCH/g/E4WbQ9yzSvSbdwzfmRfFccQFjxjsrY7+SJMVjsURZy+xUyBpzqgWYHUItnSVqjZb8DlyAU2IXyg8TM9BVLkGGe6k5k4PIFVmfMMMzQwWMM0X0W9w3oYmfHL5egxwSHvf9HIqLolLNXg8sqamIdS5d5KoCXf1c+oRjN/IMBktzNBR6N4OFOZQXVoepXNiIvTWAcTtOPBvFWdKP2n7RVioHKdm4a85aCUpDJp+LYGaLqiQZoRzmzfVTnAhTAPdd4ao5w/+jojrfZIHV55bqYF9rLnQMTneKsiyVNVYJzOLuxmARa/EEKfZld+J3rX4/o4cogrU38YSZF+T7J9g/7CTsnIZ3F6W6m+8iJbIBh55nGOQi5PVe458Q/nGb3fgQd2Z4+6lK9k479H4Ssh/Y7hbVQbepqEVIXzZKqWX6/ZE4iWoR/Q2dm0hySFmmB/R2etixX5JxhnHvgobTYIQ+1liJVp/3YFW1ru64Yg6yz/V291Bhh9g31znmTROCJ/usAmZZaLUqW1TDKnLIMP+M74MF9XERqcWKywXRFwxP4E5uDnx/vAyN49gL+SDfrBUxUtXrTkKZAlglwo9SgA7cOYEPWrionvKcGm87gCBYHFUmXZNQVzh212fpuJYXb/vy0sPDj8La4="
   chrome: stable
+  firefox: latest
 
 branches:
   only:
@@ -29,8 +37,7 @@ jobs:
     - env: "MODE=saucelabs_required"
     - env: "MODE=browserstack_required"
     - env: "MODE=travis_required"
-    - stage: Deploy
-      env: "DEPLOY_MODE=build-artifacts"
+    - env: "DEPLOY_MODE=build-artifacts"
     - env: "DEPLOY_MODE=docs-content"
     - env: "DEPLOY_MODE=screenshot-tool"
     - env: "DEPLOY_MODE=dashboard"
@@ -58,3 +65,13 @@ script:
 cache:
   directories:
     - ./node_modules/
+
+notifications:
+  webhooks:
+    urls:
+      - https://us-central1-test-jperrott.cloudfunctions.net/travisCi
+    on_success: always
+    on_failure: always
+    on_start: always
+    on_cancel: always
+    on_error: always

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
@@ -23,7 +31,12 @@ import {InputDemo} from '../input/input-demo';
 import {ListDemo} from '../list/list-demo';
 import {LiveAnnouncerDemo} from '../live-announcer/live-announcer-demo';
 import {MenuDemo} from '../menu/menu-demo';
-import {OverlayDemo, RotiniPanel, SpagettiPanel} from '../overlay/overlay-demo';
+import {
+  KeyboardTrackingPanel,
+  OverlayDemo,
+  RotiniPanel,
+  SpagettiPanel
+} from '../overlay/overlay-demo';
 import {PlatformDemo} from '../platform/platform-demo';
 import {PortalDemo, ScienceJoke} from '../portal/portal-demo';
 import {ProgressBarDemo} from '../progress-bar/progress-bar-demo';
@@ -36,17 +49,15 @@ import {SlideToggleDemo} from '../slide-toggle/slide-toggle-demo';
 import {SliderDemo} from '../slider/slider-demo';
 import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
 import {StepperDemo} from '../stepper/stepper-demo';
-import {PeopleDatabase} from '../table/people-database';
-import {TableDemo} from '../table/table-demo';
 import {ScreenTypeDemo} from '../screen-type/screen-type-demo';
 import {LayoutModule} from '@angular/cdk/layout';
-import {TableHeaderDemo} from '../table/table-header-demo';
 import {FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo} from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
 import {TypographyDemo} from '../typography/typography-demo';
 import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
+import {TableDemoModule} from '../table/table-demo-module';
 
 @NgModule({
   imports: [
@@ -56,6 +67,7 @@ import {DEMO_APP_ROUTES} from './routes';
     RouterModule.forChild(DEMO_APP_ROUTES),
     DemoMaterialModule,
     LayoutModule,
+    TableDemoModule,
   ],
   declarations: [
     AutocompleteDemo,
@@ -80,6 +92,7 @@ import {DEMO_APP_ROUTES} from './routes';
     IFrameDialog,
     InputDemo,
     JazzDialog,
+    KeyboardTrackingPanel,
     ListDemo,
     LiveAnnouncerDemo,
     MatCheckboxDemoNestedChecklist,
@@ -103,8 +116,6 @@ import {DEMO_APP_ROUTES} from './routes';
     SpagettiPanel,
     StepperDemo,
     SunnyTabContent,
-    TableDemo,
-    TableHeaderDemo,
     TabsDemo,
     ToolbarDemo,
     TooltipDemo,
@@ -112,13 +123,13 @@ import {DEMO_APP_ROUTES} from './routes';
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
-    PeopleDatabase
   ],
   entryComponents: [
     ContentElementDialog,
     DemoApp,
     IFrameDialog,
     JazzDialog,
+    KeyboardTrackingPanel,
     RotiniPanel,
     ScienceJoke,
     SpagettiPanel,

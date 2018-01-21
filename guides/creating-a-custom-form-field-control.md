@@ -58,7 +58,7 @@ class MyTelInput {
     tel = tel || new MyTel('', '', '');
     this.parts.setValue({area: tel.area, exchange: tel.exchange, subscriber: tel.subscriber});
   }
-  
+
   constructor(fb: FormBuilder) {
     this.parts =  fb.group({
       'area': '',
@@ -98,7 +98,7 @@ the `MatFormFieldControl` interface, see the
 #### `value`
 
 This property allows someone to set or get the value of our control. Its type should be the same
-type we used for the type parameter when we implemented `MatFormFieldControl`. Since our component 
+type we used for the type parameter when we implemented `MatFormFieldControl`. Since our component
 already has a value property, we don't need to do anything for this one.
 
 #### `stateChanges`
@@ -185,10 +185,9 @@ need to remember to emit on the `stateChanges` stream so change detection can ha
 ```ts
 focused = false;
 
-constructor(fb: FormBuilder, private fm: FocusMonitor, private elRef: ElementRef,
-            renderer: Renderer2) {
+constructor(fb: FormBuilder, private fm: FocusMonitor, private elRef: ElementRef) {
   ...
-  fm.monitor(elRef.nativeElement, renderer, true).subscribe(origin => {
+  fm.monitor(elRef.nativeElement, true).subscribe(origin => {
     this.focused = !!origin;
     this.stateChanges.next();
   });
@@ -212,16 +211,16 @@ get empty() {
 }
 ```
 
-#### `shouldPlaceholderFloat`
+#### `shouldLabelFloat`
 
-This property is used to indicate whether the placeholder should be in the floating position. We'll
+This property is used to indicate whether the label should be in the floating position. We'll
 use the same logic as `matInput` and float the placeholder when the input is focused or non-empty.
 Since the placeholder will be overlapping our control when when it's not floating, we should hide
 the `–` characters when it's not floating.
 
 ```ts
 @HostBinding('class.floating')
-get shouldPlaceholderFloat() {
+get shouldLabelFloat() {
   return this.focused || !this.empty;
 }
 ```
@@ -299,7 +298,7 @@ we'll use `my-tel-input` as our control type which will result in the form field
 controlType = 'my-tel-input';
 ```
 
-#### `setAriaDescribedByIds(ids: string[])`
+#### `setDescribedByIds(ids: string[])`
 
 This method is used by the `<mat-form-field>` to specify the IDs that should be used for the
 `aria-describedby` attribute of your component. The method has one parameter, the list of IDs, we
@@ -307,7 +306,7 @@ just need to apply the given IDs to our host element.
 
 ```ts
 @HostBinding('attr.aria-describedby') describedBy = '';
-  
+
 setDescribedByIds(ids: string[]) {
   this.describedBy = ids.join(' ');
 }

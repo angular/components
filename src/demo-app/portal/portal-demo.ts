@@ -1,4 +1,12 @@
-import {ComponentPortal, Portal, TemplatePortalDirective} from '@angular/cdk/portal';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {ComponentPortal, Portal, CdkPortal} from '@angular/cdk/portal';
 import {Component, QueryList, ViewChildren} from '@angular/core';
 
 
@@ -9,7 +17,7 @@ import {Component, QueryList, ViewChildren} from '@angular/core';
   styleUrls: ['portal-demo.css'],
 })
 export class PortalDemo {
-  @ViewChildren(TemplatePortalDirective) templatePortals: QueryList<Portal<any>>;
+  @ViewChildren(CdkPortal) templatePortals: QueryList<Portal<any>>;
 
   selectedPortal: Portal<any>;
 

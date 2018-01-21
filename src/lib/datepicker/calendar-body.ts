@@ -39,7 +39,10 @@ export class MatCalendarCell {
   styleUrls: ['calendar-body.css'],
   host: {
     'class': 'mat-calendar-body',
+    'role': 'grid',
+    'attr.aria-readonly': 'true'
   },
+  exportAs: 'matCalendarBody',
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,

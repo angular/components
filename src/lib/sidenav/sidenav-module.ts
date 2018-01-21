@@ -12,8 +12,14 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
 import {ScrollDispatchModule} from '@angular/cdk/scrolling';
-import {MatDrawer, MatDrawerContainer, MatDrawerContent} from './drawer';
+import {PlatformModule} from '@angular/cdk/platform';
 import {MatSidenav, MatSidenavContainer, MatSidenavContent} from './sidenav';
+import {
+  MatDrawer,
+  MatDrawerContainer,
+  MatDrawerContent,
+  MAT_DRAWER_DEFAULT_AUTOSIZE,
+} from './drawer';
 
 
 @NgModule({
@@ -23,6 +29,7 @@ import {MatSidenav, MatSidenavContainer, MatSidenavContent} from './sidenav';
     A11yModule,
     OverlayModule,
     ScrollDispatchModule,
+    PlatformModule,
   ],
   exports: [
     MatCommonModule,
@@ -41,5 +48,8 @@ import {MatSidenav, MatSidenavContainer, MatSidenavContent} from './sidenav';
     MatSidenavContainer,
     MatSidenavContent,
   ],
+  providers: [
+    {provide: MAT_DRAWER_DEFAULT_AUTOSIZE, useValue: false}
+  ]
 })
 export class MatSidenavModule {}

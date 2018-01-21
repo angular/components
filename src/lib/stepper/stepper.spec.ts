@@ -1,11 +1,17 @@
 import {Directionality} from '@angular/cdk/bidi';
-import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
+import {ENTER, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {Component, DebugElement} from '@angular/core';
 import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ReactiveFormsModule,
+  ValidationErrors, Validators} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {StepperOrientation} from '@angular/cdk/stepper';
+import {map} from 'rxjs/operators/map';
+import {take} from 'rxjs/operators/take';
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
 import {MatStepperModule} from './index';
 import {MatHorizontalStepper, MatStep, MatStepper, MatVerticalStepper} from './stepper';
 import {MatStepperNext, MatStepperPrevious} from './stepper-button';
@@ -21,7 +27,10 @@ describe('MatHorizontalStepper', () => {
       imports: [MatStepperModule, NoopAnimationsModule, ReactiveFormsModule],
       declarations: [
         SimpleMatHorizontalStepperApp,
-        LinearMatHorizontalStepperApp
+        SimplePreselectedMatHorizontalStepperApp,
+        LinearMatHorizontalStepperApp,
+        SimpleStepperWithoutStepControl,
+        SimpleStepperWithStepControlAndCompletedBinding
       ],
       providers: [
         {provide: Directionality, useFactory: () => ({value: dir})}
@@ -55,6 +64,11 @@ describe('MatHorizontalStepper', () => {
       expect(stepperEl.getAttribute('role')).toBe('tablist');
     });
 
+    it('should set the proper "aria-orientation"', () => {
+      let stepperEl = fixture.debugElement.query(By.css('mat-horizontal-stepper')).nativeElement;
+      expect(stepperEl.getAttribute('aria-orientation')).toBe('horizontal');
+    });
+
     it('should set aria-expanded of content correctly', () => {
       let stepContents = fixture.debugElement.queryAll(By.css(`.mat-horizontal-stepper-content`));
       assertCorrectAriaExpandedAttribute(fixture, stepContents);
@@ -76,9 +90,9 @@ describe('MatHorizontalStepper', () => {
       assertCorrectStepAnimationDirection(fixture);
     });
 
-    it('should support keyboard events to move and select focus', () => {
+    it('should support using the left/right arrows to move focus', () => {
       let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
-      assertCorrectKeyboardInteraction(fixture, stepHeaders);
+      assertCorrectKeyboardInteraction(fixture, stepHeaders, 'horizontal');
     });
 
     it('should not set focus on header of selected step if header is not clicked', () => {
@@ -150,15 +164,23 @@ describe('MatHorizontalStepper', () => {
       expect(stepperComponent.linear).toBe(true);
     });
 
-    it('should not move to next step if current step is not valid', () => {
+    it('should not move to next step if current step is invalid', () => {
       expect(testComponent.oneGroup.get('oneCtrl')!.value).toBe('');
       expect(testComponent.oneGroup.get('oneCtrl')!.valid).toBe(false);
       expect(testComponent.oneGroup.valid).toBe(false);
+      expect(testComponent.oneGroup.invalid).toBe(true);
       expect(stepperComponent.selectedIndex).toBe(0);
 
       let stepHeaderEl = fixture.debugElement
           .queryAll(By.css('.mat-horizontal-stepper-header'))[1].nativeElement;
       assertLinearStepperValidity(stepHeaderEl, testComponent, fixture);
+    });
+
+    it('should not move to next step if current step is pending', () => {
+      let stepHeaderEl = fixture.debugElement
+          .queryAll(By.css('.mat-horizontal-stepper-header'))[2].nativeElement;
+
+      assertLinearStepperPending(stepHeaderEl, testComponent, fixture);
     });
 
     it('should not focus step header upon click if it is not able to be selected', () => {
@@ -168,6 +190,66 @@ describe('MatHorizontalStepper', () => {
     it('should be able to move to next step even when invalid if current step is optional', () => {
       assertOptionalStepValidity(testComponent, fixture);
     });
+
+    it('should not throw when there is a pre-defined selectedIndex', () => {
+      fixture.destroy();
+
+      let preselectedFixture = TestBed.createComponent(SimplePreselectedMatHorizontalStepperApp);
+      let debugElement = preselectedFixture.debugElement;
+
+      expect(() => preselectedFixture.detectChanges()).not.toThrow();
+
+      let stepHeaders = debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
+      assertSelectionChangeOnHeaderClick(preselectedFixture, stepHeaders);
+    });
+
+    it('should not move to the next step if the current one is not completed ' +
+      'and there is no `stepControl`', () => {
+        fixture.destroy();
+
+        const noStepControlFixture = TestBed.createComponent(SimpleStepperWithoutStepControl);
+
+        noStepControlFixture.detectChanges();
+
+        const stepper: MatHorizontalStepper = noStepControlFixture.debugElement
+            .query(By.directive(MatHorizontalStepper)).componentInstance;
+
+        const headers = noStepControlFixture.debugElement
+            .queryAll(By.css('.mat-horizontal-stepper-header'));
+
+        expect(stepper.selectedIndex).toBe(0);
+
+        headers[1].nativeElement.click();
+        noStepControlFixture.detectChanges();
+
+        expect(stepper.selectedIndex).toBe(0);
+      });
+
+      it('should have the `stepControl` take precedence when both `completed` and ' +
+        '`stepControl` are set', () => {
+          fixture.destroy();
+
+          const controlAndBindingFixture =
+              TestBed.createComponent(SimpleStepperWithStepControlAndCompletedBinding);
+
+          controlAndBindingFixture.detectChanges();
+
+          expect(controlAndBindingFixture.componentInstance.steps[0].control.valid).toBe(true);
+          expect(controlAndBindingFixture.componentInstance.steps[0].completed).toBe(false);
+
+          const stepper: MatHorizontalStepper = controlAndBindingFixture.debugElement
+              .query(By.directive(MatHorizontalStepper)).componentInstance;
+
+          const headers = controlAndBindingFixture.debugElement
+              .queryAll(By.css('.mat-horizontal-stepper-header'));
+
+          expect(stepper.selectedIndex).toBe(0);
+
+          headers[1].nativeElement.click();
+          controlAndBindingFixture.detectChanges();
+
+          expect(stepper.selectedIndex).toBe(1);
+        });
   });
 });
 
@@ -214,6 +296,11 @@ describe('MatVerticalStepper', () => {
       expect(stepperEl.getAttribute('role')).toBe('tablist');
     });
 
+    it('should set the proper "aria-orientation"', () => {
+      let stepperEl = fixture.debugElement.query(By.css('mat-vertical-stepper')).nativeElement;
+      expect(stepperEl.getAttribute('aria-orientation')).toBe('vertical');
+    });
+
     it('should set aria-expanded of content correctly', () => {
       let stepContents = fixture.debugElement.queryAll(By.css(`.mat-vertical-stepper-content`));
       assertCorrectAriaExpandedAttribute(fixture, stepContents);
@@ -235,9 +322,14 @@ describe('MatVerticalStepper', () => {
       assertCorrectStepAnimationDirection(fixture);
     });
 
-    it('should support keyboard events to move and select focus', () => {
+    it('should support using the left/right arrows to move focus', () => {
       let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
-      assertCorrectKeyboardInteraction(fixture, stepHeaders);
+      assertCorrectKeyboardInteraction(fixture, stepHeaders, 'horizontal');
+    });
+
+    it('should support using the up/down arrows to move focus', () => {
+      let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
+      assertCorrectKeyboardInteraction(fixture, stepHeaders, 'vertical');
     });
 
     it('should not set focus on header of selected step if header is not clicked', () => {
@@ -294,16 +386,24 @@ describe('MatVerticalStepper', () => {
       expect(stepperComponent.linear).toBe(true);
     });
 
-    it('should not move to next step if current step is not valid', () => {
+    it('should not move to next step if current step is invalid', () => {
       expect(testComponent.oneGroup.get('oneCtrl')!.value).toBe('');
       expect(testComponent.oneGroup.get('oneCtrl')!.valid).toBe(false);
       expect(testComponent.oneGroup.valid).toBe(false);
+      expect(testComponent.oneGroup.invalid).toBe(true);
       expect(stepperComponent.selectedIndex).toBe(0);
 
       let stepHeaderEl = fixture.debugElement
           .queryAll(By.css('.mat-vertical-stepper-header'))[1].nativeElement;
 
       assertLinearStepperValidity(stepHeaderEl, testComponent, fixture);
+    });
+
+    it('should not move to next step if current step is pending', () => {
+      let stepHeaderEl = fixture.debugElement
+          .queryAll(By.css('.mat-vertical-stepper-header'))[2].nativeElement;
+
+      assertLinearStepperPending(stepHeaderEl, testComponent, fixture);
     });
 
     it('should not focus step header upon click if it is not able to be selected', () => {
@@ -472,20 +572,23 @@ function assertCorrectStepAnimationDirection(fixture: ComponentFixture<any>, rtl
 
 /** Asserts that keyboard interaction works correctly. */
 function assertCorrectKeyboardInteraction(fixture: ComponentFixture<any>,
-                                          stepHeaders: DebugElement[]) {
+                                          stepHeaders: DebugElement[],
+                                          orientation: StepperOrientation) {
   let stepperComponent = fixture.debugElement.query(By.directive(MatStepper)).componentInstance;
+  let nextKey = orientation === 'vertical' ? DOWN_ARROW : RIGHT_ARROW;
+  let prevKey = orientation === 'vertical' ? UP_ARROW : LEFT_ARROW;
 
   expect(stepperComponent._focusIndex).toBe(0);
   expect(stepperComponent.selectedIndex).toBe(0);
 
   let stepHeaderEl = stepHeaders[0].nativeElement;
-  dispatchKeyboardEvent(stepHeaderEl, 'keydown', RIGHT_ARROW);
+  dispatchKeyboardEvent(stepHeaderEl, 'keydown', nextKey);
   fixture.detectChanges();
 
   expect(stepperComponent._focusIndex)
-      .toBe(1, 'Expected index of focused step to increase by 1 after RIGHT_ARROW event.');
+      .toBe(1, 'Expected index of focused step to increase by 1 after pressing the next key.');
   expect(stepperComponent.selectedIndex)
-      .toBe(0, 'Expected index of selected step to remain unchanged after RIGHT_ARROW event.');
+      .toBe(0, 'Expected index of selected step to remain unchanged after pressing the next key.');
 
   stepHeaderEl = stepHeaders[1].nativeElement;
   dispatchKeyboardEvent(stepHeaderEl, 'keydown', ENTER);
@@ -498,26 +601,25 @@ function assertCorrectKeyboardInteraction(fixture: ComponentFixture<any>,
           'Expected index of selected step to change to index of focused step after ENTER event.');
 
   stepHeaderEl = stepHeaders[1].nativeElement;
-  dispatchKeyboardEvent(stepHeaderEl, 'keydown', LEFT_ARROW);
+  dispatchKeyboardEvent(stepHeaderEl, 'keydown', prevKey);
   fixture.detectChanges();
 
   expect(stepperComponent._focusIndex)
-      .toBe(0, 'Expected index of focused step to decrease by 1 after LEFT_ARROW event.');
-  expect(stepperComponent.selectedIndex)
-      .toBe(1, 'Expected index of selected step to remain unchanged after LEFT_ARROW event.');
+      .toBe(0, 'Expected index of focused step to decrease by 1 after pressing the previous key.');
+  expect(stepperComponent.selectedIndex).toBe(1,
+      'Expected index of selected step to remain unchanged after pressing the previous key.');
 
   // When the focus is on the last step and right arrow key is pressed, the focus should cycle
   // through to the first step.
   stepperComponent._focusIndex = 2;
   stepHeaderEl = stepHeaders[2].nativeElement;
-  dispatchKeyboardEvent(stepHeaderEl, 'keydown', RIGHT_ARROW);
+  dispatchKeyboardEvent(stepHeaderEl, 'keydown', nextKey);
   fixture.detectChanges();
 
-  expect(stepperComponent._focusIndex)
-      .toBe(0,
-          'Expected index of focused step to cycle through to index 0 after RIGHT_ARROW event.');
+  expect(stepperComponent._focusIndex).toBe(0,
+      'Expected index of focused step to cycle through to index 0 after pressing the next key.');
   expect(stepperComponent.selectedIndex)
-      .toBe(1, 'Expected index of selected step to remain unchanged after RIGHT_ARROW event.');
+      .toBe(1, 'Expected index of selected step to remain unchanged after pressing the next key.');
 
   stepHeaderEl = stepHeaders[0].nativeElement;
   dispatchKeyboardEvent(stepHeaderEl, 'keydown', SPACE);
@@ -594,6 +696,58 @@ function assertLinearStepperValidity(stepHeaderEl: HTMLElement,
   expect(stepperComponent.selectedIndex).toBe(1);
 }
 
+/** Asserts that linear stepper does not allow step selection change if current step is pending. */
+function assertLinearStepperPending(stepHeaderEl: HTMLElement,
+                                    testComponent:
+                                        LinearMatHorizontalStepperApp |
+                                        LinearMatVerticalStepperApp,
+                                    fixture: ComponentFixture<any>) {
+  let stepperComponent = fixture.debugElement.query(By.directive(MatStepper)).componentInstance;
+  let nextButtonNativeEl = fixture.debugElement
+      .queryAll(By.directive(MatStepperNext))[1].nativeElement;
+
+  testComponent.oneGroup.get('oneCtrl')!.setValue('input');
+  testComponent.twoGroup.get('twoCtrl')!.setValue('input');
+  stepperComponent.selectedIndex = 1;
+  fixture.detectChanges();
+  expect(stepperComponent.selectedIndex).toBe(1);
+
+  // Step status = PENDING
+  // Assert that linear stepper does not allow step selection change
+  expect(testComponent.twoGroup.pending).toBe(true);
+
+  stepHeaderEl.click();
+  fixture.detectChanges();
+
+  expect(stepperComponent.selectedIndex).toBe(1);
+
+  nextButtonNativeEl.click();
+  fixture.detectChanges();
+
+  expect(stepperComponent.selectedIndex).toBe(1);
+
+  // Trigger asynchronous validation
+  testComponent.validationTrigger.next();
+  // Asynchronous validation completed:
+  // Step status = VALID
+  expect(testComponent.twoGroup.pending).toBe(false);
+  expect(testComponent.twoGroup.valid).toBe(true);
+
+  stepHeaderEl.click();
+  fixture.detectChanges();
+
+  expect(stepperComponent.selectedIndex).toBe(2);
+
+  stepperComponent.selectedIndex = 1;
+  fixture.detectChanges();
+  expect(stepperComponent.selectedIndex).toBe(1);
+
+  nextButtonNativeEl.click();
+  fixture.detectChanges();
+
+  expect(stepperComponent.selectedIndex).toBe(2);
+}
+
 /** Asserts that step header focus is blurred if the step cannot be selected upon header click. */
 function assertStepHeaderBlurred(fixture: ComponentFixture<any>) {
   let stepHeaderEl = fixture.debugElement
@@ -636,6 +790,7 @@ function assertOptionalStepValidity(testComponent:
 
   testComponent.oneGroup.get('oneCtrl')!.setValue('input');
   testComponent.twoGroup.get('twoCtrl')!.setValue('input');
+  testComponent.validationTrigger.next();
   stepperComponent.selectedIndex = 2;
   fixture.detectChanges();
 
@@ -683,6 +838,18 @@ function assertCorrectStepIcon(fixture: ComponentFixture<any>,
   expect(stepperComponent._getIndicatorType(0)).toBe(icon);
 }
 
+function asyncValidator(minLength: number, validationTrigger: Observable<any>): AsyncValidatorFn {
+  return (control: AbstractControl): Observable<ValidationErrors | null> => {
+    return validationTrigger.pipe(
+      map(() =>  {
+        const success = control.value && control.value.length >= minLength;
+        return success ? null : { 'asyncValidation': {}};
+      }),
+      take(1)
+    );
+  };
+}
+
 @Component({
   template: `
     <mat-horizontal-stepper>
@@ -722,9 +889,7 @@ class SimpleMatHorizontalStepperApp {
       <mat-step [stepControl]="oneGroup">
         <form [formGroup]="oneGroup">
           <ng-template matStepLabel>Step one</ng-template>
-          <mat-form-field>
-            <input matInput formControlName="oneCtrl" required>
-          </mat-form-field>
+          <input formControlName="oneCtrl" required>
           <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button matStepperNext>Next</button>
@@ -734,9 +899,7 @@ class SimpleMatHorizontalStepperApp {
       <mat-step [stepControl]="twoGroup">
         <form [formGroup]="twoGroup">
           <ng-template matStepLabel>Step two</ng-template>
-          <mat-form-field>
-            <input matInput formControlName="twoCtrl" required>
-          </mat-form-field>
+          <input formControlName="twoCtrl" required>
           <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button matStepperNext>Next</button>
@@ -746,9 +909,7 @@ class SimpleMatHorizontalStepperApp {
       <mat-step [stepControl]="threeGroup" optional>
         <form [formGroup]="threeGroup">
           <ng-template matStepLabel>Step two</ng-template>
-          <mat-form-field>
-            <input matInput formControlName="threeCtrl">
-          </mat-form-field>
+          <input formControlName="threeCtrl">
           <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button matStepperNext>Next</button>
@@ -766,12 +927,14 @@ class LinearMatHorizontalStepperApp {
   twoGroup: FormGroup;
   threeGroup: FormGroup;
 
+  validationTrigger: Subject<any> = new Subject();
+
   ngOnInit() {
     this.oneGroup = new FormGroup({
       oneCtrl: new FormControl('', Validators.required)
     });
     this.twoGroup = new FormGroup({
-      twoCtrl: new FormControl('', Validators.required)
+      twoCtrl: new FormControl('', Validators.required, asyncValidator(3, this.validationTrigger))
     });
     this.threeGroup = new FormGroup({
       threeCtrl: new FormControl('', Validators.pattern(VALID_REGEX))
@@ -818,9 +981,7 @@ class SimpleMatVerticalStepperApp {
       <mat-step [stepControl]="oneGroup">
         <form [formGroup]="oneGroup">
           <ng-template matStepLabel>Step one</ng-template>
-          <mat-form-field>
-            <input matInput formControlName="oneCtrl" required>
-          </mat-form-field>
+          <input formControlName="oneCtrl" required>
           <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button matStepperNext>Next</button>
@@ -830,9 +991,7 @@ class SimpleMatVerticalStepperApp {
       <mat-step [stepControl]="twoGroup">
         <form [formGroup]="twoGroup">
           <ng-template matStepLabel>Step two</ng-template>
-          <mat-form-field>
-            <input matInput formControlName="twoCtrl" required>
-          </mat-form-field>
+          <input formControlName="twoCtrl" required>
           <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button matStepperNext>Next</button>
@@ -842,9 +1001,7 @@ class SimpleMatVerticalStepperApp {
       <mat-step [stepControl]="threeGroup" optional>
         <form [formGroup]="threeGroup">
           <ng-template matStepLabel>Step two</ng-template>
-          <mat-form-field>
-            <input matInput formControlName="threeCtrl">
-          </mat-form-field>
+          <input formControlName="threeCtrl">
           <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button matStepperNext>Next</button>
@@ -862,15 +1019,67 @@ class LinearMatVerticalStepperApp {
   twoGroup: FormGroup;
   threeGroup: FormGroup;
 
+  validationTrigger: Subject<any> = new Subject();
+
   ngOnInit() {
     this.oneGroup = new FormGroup({
       oneCtrl: new FormControl('', Validators.required)
     });
     this.twoGroup = new FormGroup({
-      twoCtrl: new FormControl('', Validators.required)
+      twoCtrl: new FormControl('', Validators.required, asyncValidator(3, this.validationTrigger))
     });
     this.threeGroup = new FormGroup({
       threeCtrl: new FormControl('', Validators.pattern(VALID_REGEX))
     });
   }
+}
+
+@Component({
+  template: `
+    <mat-horizontal-stepper [linear]="true" [selectedIndex]="index">
+      <mat-step label="One"></mat-step>
+      <mat-step label="Two"></mat-step>
+      <mat-step label="Three"></mat-step>
+    </mat-horizontal-stepper>
+  `
+})
+class SimplePreselectedMatHorizontalStepperApp {
+  index = 0;
+}
+
+@Component({
+  template: `
+    <mat-horizontal-stepper linear>
+      <mat-step
+        *ngFor="let step of steps"
+        [label]="step.label"
+        [completed]="step.completed"></mat-step>
+    </mat-horizontal-stepper>
+  `
+})
+class SimpleStepperWithoutStepControl {
+  steps = [
+    {label: 'One', completed: false},
+    {label: 'Two', completed: false},
+    {label: 'Three', completed: false}
+  ];
+}
+
+@Component({
+  template: `
+    <mat-horizontal-stepper linear>
+      <mat-step
+        *ngFor="let step of steps"
+        [label]="step.label"
+        [stepControl]="step.control"
+        [completed]="step.completed"></mat-step>
+    </mat-horizontal-stepper>
+  `
+})
+class SimpleStepperWithStepControlAndCompletedBinding {
+  steps = [
+    {label: 'One', completed: false, control: new FormControl()},
+    {label: 'Two', completed: false, control: new FormControl()},
+    {label: 'Three', completed: false, control: new FormControl()}
+  ];
 }

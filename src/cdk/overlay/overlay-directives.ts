@@ -6,6 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ESCAPE} from '@angular/cdk/keycodes';
+import {TemplatePortal} from '@angular/cdk/portal';
 import {
   Directive,
   ElementRef,
@@ -17,28 +21,20 @@ import {
   OnDestroy,
   Optional,
   Output,
-  Renderer2,
   SimpleChanges,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ESCAPE} from '@angular/cdk/keycodes';
-import {TemplatePortal} from '@angular/cdk/portal';
+import {Subscription} from 'rxjs/Subscription';
 import {Overlay} from './overlay';
-import {OverlayRef} from './overlay-ref';
 import {OverlayConfig} from './overlay-config';
+import {OverlayRef} from './overlay-ref';
 import {
-  // This import is only used to define a generic type. The current TypeScript version incorrectly
-  // considers such imports as unused (https://github.com/Microsoft/TypeScript/issues/14953)
-  // tslint:disable-next-line:no-unused-variable
   ConnectedOverlayPositionChange,
   ConnectionPositionPair,
 } from './position/connected-position';
 import {ConnectedPositionStrategy} from './position/connected-position-strategy';
 import {RepositionScrollStrategy, ScrollStrategy} from './scroll/index';
-import {Subscription} from 'rxjs/Subscription';
 
 
 /** Default set of positions for the overlay. Follows the behavior of a dropdown. */
@@ -49,25 +45,30 @@ const defaultPositionList = [
   new ConnectionPositionPair(
       {originX: 'start', originY: 'top'},
       {overlayX: 'start', overlayY: 'bottom'}),
+  new ConnectionPositionPair(
+    {originX: 'end', originY: 'top'},
+    {overlayX: 'end', overlayY: 'bottom'}),
+  new ConnectionPositionPair(
+    {originX: 'end', originY: 'bottom'},
+    {overlayX: 'end', overlayY: 'top'}),
 ];
 
 /** Injection token that determines the scroll handling while the connected overlay is open. */
-export const MAT_CONNECTED_OVERLAY_SCROLL_STRATEGY =
-    new InjectionToken<() => ScrollStrategy>('mat-connected-overlay-scroll-strategy');
+export const CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY =
+    new InjectionToken<() => ScrollStrategy>('cdk-connected-overlay-scroll-strategy');
 
 /** @docs-private */
-export function MAT_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
+export function CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
     () => RepositionScrollStrategy {
   return () => overlay.scrollStrategies.reposition();
 }
 
 /** @docs-private */
-export const MAT_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER = {
-  provide: MAT_CONNECTED_OVERLAY_SCROLL_STRATEGY,
+export const CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER = {
+  provide: CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY,
   deps: [Overlay],
-  useFactory: MAT_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY,
+  useFactory: CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY,
 };
-
 
 
 /**
@@ -78,10 +79,11 @@ export const MAT_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER = {
   selector: '[cdk-overlay-origin], [overlay-origin], [cdkOverlayOrigin]',
   exportAs: 'cdkOverlayOrigin',
 })
-export class OverlayOrigin {
-  constructor(public elementRef: ElementRef) { }
+export class CdkOverlayOrigin {
+  constructor(
+      /** Reference to the element on which the directive is applied. */
+      public elementRef: ElementRef) { }
 }
-
 
 
 /**
@@ -91,7 +93,7 @@ export class OverlayOrigin {
   selector: '[cdk-connected-overlay], [connected-overlay], [cdkConnectedOverlay]',
   exportAs: 'cdkConnectedOverlay'
 })
-export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
+export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _overlayRef: OverlayRef;
   private _templatePortal: TemplatePortal<any>;
   private _hasBackdrop = false;
@@ -100,10 +102,9 @@ export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
   private _offsetX: number = 0;
   private _offsetY: number = 0;
   private _position: ConnectedPositionStrategy;
-  private _escapeListener = () => {};
 
   /** Origin for the connected overlay. */
-  @Input('cdkConnectedOverlayOrigin') origin: OverlayOrigin;
+  @Input('cdkConnectedOverlayOrigin') origin: CdkOverlayOrigin;
 
   /** Registered connected position pairs. */
   @Input('cdkConnectedOverlayPositions') positions: ConnectionPositionPair[];
@@ -157,8 +158,8 @@ export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
 
   /** @deprecated */
   @Input('origin')
-  get _deprecatedOrigin(): OverlayOrigin { return this.origin; }
-  set _deprecatedOrigin(_origin: OverlayOrigin) { this.origin = _origin; }
+  get _deprecatedOrigin(): CdkOverlayOrigin { return this.origin; }
+  set _deprecatedOrigin(_origin: CdkOverlayOrigin) { this.origin = _origin; }
 
   /** @deprecated */
   @Input('positions')
@@ -233,10 +234,9 @@ export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
 
   constructor(
       private _overlay: Overlay,
-      private _renderer: Renderer2,
       templateRef: TemplateRef<any>,
       viewContainerRef: ViewContainerRef,
-      @Inject(MAT_CONNECTED_OVERLAY_SCROLL_STRATEGY) private _scrollStrategy,
+      @Inject(CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY) private _scrollStrategy,
       @Optional() private _dir: Directionality) {
     this._templatePortal = new TemplatePortal(templateRef, viewContainerRef);
   }
@@ -334,11 +334,16 @@ export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
   private _attachOverlay() {
     if (!this._overlayRef) {
       this._createOverlay();
+
+      this._overlayRef!.keydownEvents().subscribe((event: KeyboardEvent) => {
+        if (event.keyCode === ESCAPE) {
+          this._detachOverlay();
+        }
+      });
     }
 
     this._position.withDirection(this.dir);
-    this._overlayRef.getConfig().direction = this.dir;
-    this._initEscapeListener();
+    this._overlayRef.setDirection(this.dir);
 
     if (!this._overlayRef.hasAttached()) {
       this._overlayRef.attach(this._templatePortal);
@@ -360,7 +365,6 @@ export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
     }
 
     this._backdropSubscription.unsubscribe();
-    this._escapeListener();
   }
 
   /** Destroys the overlay created by this directive. */
@@ -371,15 +375,5 @@ export class ConnectedOverlayDirective implements OnDestroy, OnChanges {
 
     this._backdropSubscription.unsubscribe();
     this._positionSubscription.unsubscribe();
-    this._escapeListener();
-  }
-
-  /** Sets the event listener that closes the overlay when pressing Escape. */
-  private _initEscapeListener() {
-    this._escapeListener = this._renderer.listen('document', 'keydown', (event: KeyboardEvent) => {
-      if (event.keyCode === ESCAPE) {
-        this._detachOverlay();
-      }
-    });
   }
 }

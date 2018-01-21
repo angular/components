@@ -11,7 +11,9 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {Subscription} from 'rxjs/Subscription';
-import {combineLatest, map, RxChain, startWith} from '@angular/cdk/rxjs';
+import {combineLatest} from 'rxjs/operators/combineLatest';
+import {map} from 'rxjs/operators/map';
+import {startWith} from 'rxjs/operators/startWith';
 import {empty} from 'rxjs/observable/empty';
 
 /**
@@ -38,13 +40,21 @@ export class MatTableDataSource<T> implements DataSource<T> {
    */
   _renderChangesSubscription: Subscription;
 
+  /**
+   * The filtered set of data that has been matched by the filter string, or all the data if there
+   * is no filter. Useful for knowing the set of data the table represents.
+   * For example, a 'selectAll()' function would likely want to select the set of filtered data
+   * shown to the user rather than all the data.
+   */
+  filteredData: T[];
+
   /** Array of data that should be rendered by the table, where each object represents one row. */
   set data(data: T[]) { this._data.next(data); }
   get data() { return this._data.value; }
 
   /**
    * Filter term that should be used to filter out objects from the data array. To override how
-   * the filter matches data objects, provide a custom function on filterTermAccessor.
+   * data objects match to this filter string, provide a custom function for filterPredicate.
    */
   set filter(filter: string) { this._filter.next(filter); }
   get filter(): string { return this._filter.value; }
@@ -85,20 +95,38 @@ export class MatTableDataSource<T> implements DataSource<T> {
    * @param data Data object that is being accessed.
    * @param sortHeaderId The name of the column that represents the data.
    */
-  sortingDataAccessor = (data: T, sortHeaderId: string): string|number => {
-    const value: number|string = data[sortHeaderId];
+  sortingDataAccessor: ((data: T, sortHeaderId: string) => string|number) =
+      (data: T, sortHeaderId: string): string|number => {
+    const value: any = data[sortHeaderId];
+
+    // If the value is a string and only whitespace, return the value.
+    // Otherwise +value will convert it to 0.
+    if (typeof value === 'string' && !value.trim()) {
+      return value;
+    }
+
     return isNaN(+value) ? value : +value;
   }
 
   /**
-   * Transforms data objects into a filter term that will be used to check against the filter if
-   * a filter is set. By default, the function will iterate over the values of the data object
-   * and convert them to a lowercase string.
-   * @param data Data object to convert to a string that checked for containing the filter term.
+   * Checks if a data object matches the data source's filter string. By default, each data object
+   * is converted to a string of its properties and returns true if the filter has
+   * at least one occurrence in that string. By default, the filter string has its whitespace
+   * trimmed and the match is case-insensitive. May be overriden for a custom implementation of
+   * filter matching.
+   * @param data Data object used to check against the filter.
+   * @param filter Filter string that has been set on the data source.
+   * @returns Whether the filter matches against the data
    */
-  filterTermAccessor: ((data: T) => string) = (data: T): string => {
+  filterPredicate: ((data: T, filter: string) => boolean) = (data: T, filter: string): boolean => {
+    // Transform the data into a lowercase string of all property values.
     const accumulator = (currentTerm, key) => currentTerm + data[key];
-    return Object.keys(data).reduce(accumulator, '').toLowerCase();
+    const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
+
+    // Transform the filter by converting it to lowercase and removing whitespace.
+    const transformedFilter = filter.trim().toLowerCase();
+
+    return dataStr.indexOf(transformedFilter) != -1;
   }
 
   constructor(initialData: T[] = []) {
@@ -117,19 +145,23 @@ export class MatTableDataSource<T> implements DataSource<T> {
     const sortChange = this._sort ? this._sort.sortChange : empty();
     const pageChange = this._paginator ? this._paginator.page : empty();
 
-    if (this._renderChangesSubscription) { this._renderChangesSubscription.unsubscribe(); }
-    this._renderChangesSubscription = RxChain.from(this._data)
+    if (this._renderChangesSubscription) {
+      this._renderChangesSubscription.unsubscribe();
+    }
+
     // Watch for base data or filter changes to provide a filtered set of data.
-        .call(combineLatest, this._filter)
-        .call(map, ([data]) => this._filterData(data))
-        // Watch for filtered data or sort changes to provide an ordered set of data.
-        .call(combineLatest, startWith.call(sortChange, null))
-        .call(map, ([data]) => this._orderData(data))
-        // Watch for ordered data or page changes to provide a paged set of data.
-        .call(combineLatest, startWith.call(pageChange, null))
-        .call(map, ([data]) => this._pageData(data))
-        // Watched for paged data changes and send the result to the table to render.
-        .subscribe(data => this._renderData.next(data));
+    this._renderChangesSubscription = this._data.pipe(
+      combineLatest(this._filter),
+      map(([data]) => this._filterData(data)),
+      // Watch for filtered data or sort changes to provide an ordered set of data.
+      combineLatest(sortChange.pipe(startWith(null!))),
+      map(([data]) => this._orderData(data)),
+      // Watch for ordered data or page changes to provide a paged set of data.
+      combineLatest(pageChange.pipe(startWith(null!))),
+      map(([data]) => this._pageData(data))
+    )
+    // Watched for paged data changes and send the result to the table to render.
+    .subscribe(data => this._renderData.next(data));
   }
 
   /**
@@ -141,13 +173,12 @@ export class MatTableDataSource<T> implements DataSource<T> {
     // If there is a filter string, filter out data that does not contain it.
     // Each data object is converted to a string using the function defined by filterTermAccessor.
     // May be overriden for customization.
-    const filteredData = !this.filter ? data : data.filter(obj => {
-      return this.filterTermAccessor(obj).indexOf(this.filter) != -1;
-    });
+    this.filteredData =
+        !this.filter ? data : data.filter(obj => this.filterPredicate(obj, this.filter));
 
-    if (this.paginator) { this._updatePaginator(filteredData.length); }
+    if (this.paginator) { this._updatePaginator(this.filteredData.length); }
 
-    return filteredData;
+    return this.filteredData;
   }
 
   /**

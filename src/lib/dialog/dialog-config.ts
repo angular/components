@@ -8,15 +8,23 @@
 
 import {ViewContainerRef} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
+import {ScrollStrategy} from '@angular/cdk/overlay';
 
 /** Valid ARIA roles for a dialog element. */
 export type DialogRole = 'dialog' | 'alertdialog';
 
 /** Possible overrides for a dialog's position. */
 export interface DialogPosition {
+  /** Override for the dialog's top position. */
   top?: string;
+
+  /** Override for the dialog's bottom position. */
   bottom?: string;
+
+  /** Override for the dialog's left position. */
   left?: string;
+
+  /** Override for the dialog's right position. */
   right?: string;
 }
 
@@ -81,6 +89,17 @@ export class MatDialogConfig<D = any> {
   /** ID of the element that describes the dialog.  */
   ariaDescribedBy?: string | null = null;
 
+  /** Aria label to assign to the dialog element */
+  ariaLabel?: string | null = null;
+
+  /** Whether the dialog should focus the first focusable element on open. */
+  autoFocus?: boolean = true;
+
+  /** Scroll strategy to be used for the dialog. */
+  scrollStrategy?: ScrollStrategy;
+
+  /** Whether the dialog should close when the user goes backwards/forwards in history. */
+  closeOnNavigation?: boolean = true;
 
   // TODO(jelbourn): add configuration for lifecycle hooks, ARIA labelling.
 }

@@ -1,10 +1,21 @@
-import {Component, ViewChild} from '@angular/core';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {PeopleDatabase, UserData} from './people-database';
 import {PersonDataSource} from './person-data-source';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {DetailRow, PersonDetailDataSource} from './person-detail-data-source';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {FormControl} from '@angular/forms';
+import {SelectionModel} from '@angular/cdk/collections';
+import {distinctUntilChanged} from 'rxjs/operators/distinctUntilChanged';
+import {debounceTime} from 'rxjs/operators/debounceTime';
+import {fromEvent} from 'rxjs/observable/fromEvent';
 
 export type UserProperties = 'userId' | 'userName' | 'progress' | 'color' | undefined;
 
@@ -32,10 +43,14 @@ export class TableDemo {
   displayedColumns: UserProperties[] = [];
   trackByStrategy: TrackByStrategy = 'reference';
   changeReferences = false;
+  progressSortingDisabled = false;
   highlights = new Set<string>();
   wasExpanded = new Set<UserData>();
 
-  filter = new FormControl();
+  matTableDataSourceColumns = ['select', 'userId', 'userName', 'progress', 'color'];
+  selection = new SelectionModel<UserData>(true, []);
+
+  @ViewChild('filter') filter: ElementRef;
 
   dynamicColumnDefs: any[] = [];
   dynamicColumnIds: string[] = [];
@@ -45,7 +60,7 @@ export class TableDemo {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  isDetailRow = (row: DetailRow|UserData) => row.hasOwnProperty('detailRow');
+  isDetailRow = (_index: number, row: DetailRow|UserData) => row.hasOwnProperty('detailRow');
 
   @ViewChild('paginatorForDataSource') paginatorForDataSource: MatPaginator;
   @ViewChild('sortForDataSource') sortForDataSource: MatSort;
@@ -60,8 +75,8 @@ export class TableDemo {
         default: return '';
       }
     };
-    this.matTableDataSource.filterTermAccessor = (data: UserData) => data.name;
-    this.filter.valueChanges.subscribe(filter => this.matTableDataSource!.filter = filter);
+    this.matTableDataSource.filterPredicate =
+        (data: UserData, filter: string) => data.name.indexOf(filter) != -1;
   }
 
   ngAfterViewInit() {
@@ -73,6 +88,44 @@ export class TableDemo {
 
   ngOnInit() {
     this.connect();
+    fromEvent(this.filter.nativeElement, 'keyup')
+      .pipe(
+        debounceTime(150),
+        distinctUntilChanged()
+      ).subscribe(() => {
+        this.paginatorForDataSource.pageIndex = 0;
+        this.matTableDataSource.filter = this.filter.nativeElement.value;
+      });
+  }
+
+  /** Whether all filtered rows are selected. */
+  isAllFilteredRowsSelected() {
+    return this.matTableDataSource.filteredData.every(data => this.selection.isSelected(data));
+  }
+
+  /** Whether the selection it totally matches the filtered rows. */
+  isMasterToggleChecked() {
+    return this.selection.hasValue() &&
+        this.isAllFilteredRowsSelected() &&
+        this.selection.selected.length >= this.matTableDataSource.filteredData.length;
+  }
+
+  /**
+   * Whether there is a selection that doesn't capture all the
+   * filtered rows there are no filtered rows displayed.
+   */
+  isMasterToggleIndeterminate() {
+    return this.selection.hasValue() &&
+        (!this.isAllFilteredRowsSelected() || !this.matTableDataSource.filteredData.length);
+  }
+
+  /** Selects all filtered rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    if (this.isMasterToggleChecked()) {
+      this.selection.clear();
+    } else {
+      this.matTableDataSource.filteredData.forEach(data => this.selection.select(data));
+    }
   }
 
   addDynamicColumnDef() {
