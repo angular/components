@@ -5,10 +5,12 @@ import {InsertChange} from './devkit-utils/change';
 
 /**
  * Parses the index.html file to get the HEAD tag position.
+ * @param host the tree we are traversing
+ * @param src the src path of the html file to parse
  */
 export function getHeadTag(host: Tree, src: string) {
   const document = parse5.parse(src,
-    { locationInfo: true }) as parse5.AST.Default.Document;
+    {locationInfo: true}) as parse5.AST.Default.Document;
 
   let head;
   const visit = (nodes: parse5.AST.Default.Node[]) => {
@@ -36,7 +38,10 @@ export function getHeadTag(host: Tree, src: string) {
 }
 
 /**
- * Adds a link to the index.html head tag
+ * Adds a link to the index.html head tag Example:
+ * `<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">`
+ * @param host the tree we are updating
+ * @param link html element string we are inserting.
  */
 export function addHeadLink(host: Tree, link: string) {
   const indexPath = getIndexPath(host);
@@ -48,9 +53,9 @@ export function addHeadLink(host: Tree, link: string) {
   const src = buffer.toString();
   if (src.indexOf(link) === -1) {
     const node = getHeadTag(host, src);
-    const chng = new InsertChange(indexPath, node.position, link);
+    const insertion = new InsertChange(indexPath, node.position, link);
     const recorder = host.beginUpdate(indexPath);
-    recorder.insertLeft(chng.pos, chng.toAdd);
+    recorder.insertLeft(insertion.pos, insertion.toAdd);
     host.commitUpdate(recorder);
   }
 }

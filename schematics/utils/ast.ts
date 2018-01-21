@@ -23,7 +23,7 @@ export function getSourceFile(host: Tree, path: string): ts.SourceFile {
 /**
  * Import and add module to root app module.
  */
-export function addToRootModule(host: Tree, moduleName: string, src: string) {
+export function addModuleImportToRootModule(host: Tree, moduleName: string, src: string) {
   const config = getConfig(host);
   const app = getAppFromConfig(config, '0');
   const modulePath = getAppModulePath(host, app);
@@ -32,6 +32,10 @@ export function addToRootModule(host: Tree, moduleName: string, src: string) {
 
 /**
  * Import and add module to specific module path.
+ * @param host the tree we are updating
+ * @param modulePath src location of the module
+ * @param moduleName name of module to import
+ * @param src src location to import
  */
 export function addModuleImportToModule(
     host: Tree, modulePath: string, moduleName: string, src: string) {
