@@ -137,7 +137,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   /** View -> model callback called when autocomplete has been touched */
   _onTouched = () => {};
 
-  /* The autocomplete panel to be attached to this trigger. */
+  /** The autocomplete panel to be attached to this trigger. */
   @Input('matAutocomplete') autocomplete: MatAutocomplete;
 
   constructor(private _element: ElementRef, private _overlay: Overlay,
@@ -154,7 +154,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     this._escapeEventStream.complete();
   }
 
-  /* Whether or not the autocomplete panel is open. */
+  /** Whether or not the autocomplete panel is open. */
   get panelOpen(): boolean {
     return this._panelOpen && this.autocomplete.showPanel;
   }
@@ -167,15 +167,15 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   /** Closes the autocomplete suggestion panel. */
   closePanel(): void {
-    if (this._overlayRef && this._overlayRef.hasAttached()) {
-      this._overlayRef.detach();
-      this._closingActionsSubscription.unsubscribe();
-    }
-
     this._resetLabel();
 
     if (this._panelOpen) {
       this.autocomplete._isOpen = this._panelOpen = false;
+
+      if (this._overlayRef && this._overlayRef.hasAttached()) {
+        this._overlayRef.detach();
+        this._closingActionsSubscription.unsubscribe();
+      }
 
       // We need to trigger change detection manually, because
       // `fromEvent` doesn't seem to do it at the proper time.
@@ -195,7 +195,9 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this.autocomplete._keyManager.tabOut.pipe(filter(() => this._panelOpen)),
       this._escapeEventStream,
       this._outsideClickStream,
-      this._overlayRef ? this._overlayRef.detachments() : observableOf()
+      this._overlayRef ?
+          this._overlayRef.detachments().pipe(filter(() => this._panelOpen)) :
+          observableOf()
     );
   }
 
@@ -428,7 +430,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     }
   }
 
-   /**
+  /**
    * This method closes the panel, and if a value is specified, also sets the associated
    * control to that value. It will also mark the control as dirty if this interaction
    * stemmed from the user.
@@ -506,7 +508,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     return this._getConnectedElement().nativeElement.getBoundingClientRect().width;
   }
 
-  /** Reset active item to -1 so arrow events will activate the correct options.*/
+  /** Reset active item to -1 so arrow events will activate the correct options. */
   private _resetActiveItem(): void {
     this.autocomplete._keyManager.setActiveItem(-1);
   }

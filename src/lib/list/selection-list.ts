@@ -9,7 +9,7 @@
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
-import {SPACE, ENTER} from '@angular/cdk/keycodes';
+import {SPACE, ENTER, HOME, END} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   Attribute,
@@ -27,6 +27,7 @@ import {
   Optional,
   Output,
   QueryList,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {
@@ -118,6 +119,9 @@ export class MatListOption extends _MatListOptionMixinBase
 
   @ContentChildren(MatLine) _lines: QueryList<MatLine>;
 
+  /** DOM element containing the item's text. */
+  @ViewChild('text') _text: ElementRef;
+
   /** Whether the label should appear before or after the checkbox. Defaults to 'after' */
   @Input() checkboxPosition: 'before' | 'after' = 'after';
 
@@ -163,13 +167,13 @@ export class MatListOption extends _MatListOptionMixinBase
   }
 
   ngOnInit() {
-    if (this.selected) {
+    if (this._selected) {
       // List options that are selected at initialization can't be reported properly to the form
       // control. This is because it takes some time until the selection-list knows about all
       // available options. Also it can happen that the ControlValueAccessor has an initial value
       // that should be used instead. Deferring the value change report to the next tick ensures
       // that the form control value is not being overwritten.
-      Promise.resolve(() => this.selected && this.selectionList._reportValueChange());
+      Promise.resolve().then(() => this.selected = true);
     }
   }
 
@@ -178,6 +182,12 @@ export class MatListOption extends _MatListOptionMixinBase
   }
 
   ngOnDestroy(): void {
+    if (this.selected) {
+      // We have to delay this until the next tick in order
+      // to avoid changed after checked errors.
+      Promise.resolve().then(() => this.selected = false);
+    }
+
     this.selectionList._removeOptionFromList(this);
   }
 
@@ -189,6 +199,14 @@ export class MatListOption extends _MatListOptionMixinBase
   /** Allows for programmatic focusing of the option. */
   focus(): void {
     this._element.nativeElement.focus();
+  }
+
+  /**
+   * Returns the list item's text label. Implemented as a part of the FocusKeyManager.
+   * @docs-private
+   */
+  getLabel() {
+    return this._text ? this._text.nativeElement.textContent : '';
   }
 
   /** Whether this list item should show a ripple effect when clicked.  */
@@ -290,6 +308,9 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   /** View to model callback that should be called whenever the selected options change. */
   private _onChange: (value: any) => void = (_: any) => {};
 
+  /** Used for storing the values that were assigned before the options were initialized. */
+  private _tempValues: string[]|null;
+
   /** View to model callback that should be called if the list or its options lost focus. */
   onTouched: () => void = () => {};
 
@@ -300,7 +321,12 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   }
 
   ngAfterContentInit(): void {
-    this._keyManager = new FocusKeyManager<MatListOption>(this.options).withWrap();
+    this._keyManager = new FocusKeyManager<MatListOption>(this.options).withWrap().withTypeAhead();
+
+    if (this._tempValues) {
+      this._setOptionsFromValues(this._tempValues);
+      this._tempValues = null;
+    }
   }
 
   /** Focus the selection-list. */
@@ -348,6 +374,12 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
         // Always prevent space from scrolling the page since the list has focus
         event.preventDefault();
         break;
+      case HOME:
+      case END:
+        event.keyCode === HOME ? this._keyManager.setFirstItemActive() :
+                                 this._keyManager.setLastItemActive();
+        event.preventDefault();
+        break;
       default:
         this._keyManager.onKeydown(event);
     }
@@ -369,6 +401,8 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   writeValue(values: string[]): void {
     if (this.options) {
       this._setOptionsFromValues(values || []);
+    } else {
+      this._tempValues = values;
     }
   }
 

@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
+import {AnimationEvent} from '@angular/animations';
 import {FocusTrap, FocusTrapFactory, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
@@ -42,6 +42,7 @@ import {debounceTime} from 'rxjs/operators/debounceTime';
 import {map} from 'rxjs/operators/map';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
+import {matDrawerAnimations} from './drawer-animations';
 
 
 /** Throws an exception when two MatDrawer are matching the same position. */
@@ -109,20 +110,7 @@ export class MatDrawerContent implements AfterContentInit {
   selector: 'mat-drawer',
   exportAs: 'matDrawer',
   template: '<ng-content></ng-content>',
-  animations: [
-    trigger('transform', [
-      state('open, open-instant', style({
-        transform: 'translate3d(0, 0, 0)',
-        visibility: 'visible',
-      })),
-      state('void', style({
-        visibility: 'hidden',
-      })),
-      transition('void => open-instant', animate('0ms')),
-      transition('void <=> open, open-instant => void',
-          animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)'))
-    ])
-  ],
+  animations: [matDrawerAnimations.transformDrawer],
   host: {
     'class': 'mat-drawer',
     '[@transform]': '_animationState',
@@ -487,10 +475,14 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
               private _ngZone: NgZone,
               private _changeDetectorRef: ChangeDetectorRef,
               @Inject(MAT_DRAWER_DEFAULT_AUTOSIZE) defaultAutosize = false) {
-    // If a `Dir` directive exists up the tree, listen direction changes and update the left/right
-    // properties to point to the proper start/end.
-    if (_dir != null) {
-      _dir.change.pipe(takeUntil(this._destroyed)).subscribe(() => this._validateDrawers());
+
+    // If a `Dir` directive exists up the tree, listen direction changes
+    // and update the left/right properties to point to the proper start/end.
+    if (_dir) {
+      _dir.change.pipe(takeUntil(this._destroyed)).subscribe(() => {
+        this._validateDrawers();
+        this._updateContentMargins();
+      });
     }
 
     this._autosize = defaultAutosize;
@@ -631,7 +623,7 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
     this._right = this._left = null;
 
     // Detect if we're LTR or RTL.
-    if (this._dir == null || this._dir.value == 'ltr') {
+    if (!this._dir || this._dir.value == 'ltr') {
       this._left = this._start;
       this._right = this._end;
     } else {

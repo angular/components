@@ -41,6 +41,8 @@ System.config({
     '@angular/material-experimental': 'dist/packages/material-experimental/index.js',
     '@angular/material-moment-adapter': 'dist/packages/material-moment-adapter/index.js',
     '@angular/cdk': 'dist/packages/cdk/index.js',
+    '@angular/cdk-experimental': 'dist/packages/cdk-experimental/index.js',
+
     '@angular/cdk/a11y': 'dist/packages/cdk/a11y/index.js',
     '@angular/cdk/accordion': 'dist/packages/cdk/accordion/index.js',
     '@angular/cdk/bidi': 'dist/packages/cdk/bidi/index.js',
@@ -65,6 +67,7 @@ System.config({
     '@angular/material/core': 'dist/packages/material/core/index.js',
     '@angular/material/datepicker': 'dist/packages/material/datepicker/index.js',
     '@angular/material/dialog': 'dist/packages/material/dialog/index.js',
+    '@angular/material/divider': 'dist/packages/material/divider/index.js',
     '@angular/material/expansion': 'dist/packages/material/expansion/index.js',
     '@angular/material/form-field': 'dist/packages/material/form-field/index.js',
     '@angular/material/grid-list': 'dist/packages/material/grid-list/index.js',

@@ -23,7 +23,9 @@
       "@angular/material/*": ["../../dist/packages/material/*"],
       "@angular/material": ["../../dist/packages/material/public-api"],
       "@angular/cdk/*": ["../../dist/packages/cdk/*"],
-      "@angular/cdk": ["../../dist/packages/cdk"]
+      "@angular/cdk": ["../../dist/packages/cdk"],
+      "@angular/cdk-experimental/*": ["../../dist/packages/cdk-experimental/*"],
+      "@angular/cdk-experimental": ["../../dist/packages/cdk-experimental"]
     }
   },
   "files": [
@@ -35,6 +37,7 @@
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
     "flatModuleId": "@angular/material-experimental",
-    "skipTemplateCodegen": true
+    "skipTemplateCodegen": true,
+    "fullTemplateTypeCheck": true
   }
 }

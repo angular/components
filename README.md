@@ -17,10 +17,6 @@ This is the home for the Angular team's Material Design components built for and
 See our [Getting Started Guide][getting-started]
 if you're building your first project with Angular Material.
 
-### Project status
-Angular Material is currently in beta and under active development.
-During beta, new features will be added regularly and APIs will evolve based on user feedback.
-
 Check out our [directory of design documents](https://github.com/angular/material2/wiki/Design-doc-directory)
 for more insight into our process.
 
@@ -30,16 +26,15 @@ and which pieces are blocked) and make a comment.
 Also see our [`Good for community contribution`](https://github.com/angular/material2/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+for+community+contribution%22)
 label.
 
-High level stuff planned for Q4 2017 (October - December):
-* RC and stable release
+High level stuff planned for Q1 2018 (January - March):
 * Research and prototyping for virtual-scroll
 * Research and exploration for data visualization
 * cdkTree and matTree
-* Expanded cdkTable features
-* cdk/svg
 * cdk/dialog
 * Switch build to bazel
 * Overlay positioning improvements
+* Research and prototyping for future Material Design updates
+* Research and prototyping drag/drop features for the CDK
 
 
 #### Available features
@@ -51,15 +46,15 @@ High level stuff planned for Q4 2017 (October - December):
 | button-toggle    |                                                        |   [Docs][15] |
 | cards            |                                                        |   [Docs][2]  |
 | checkbox         |                                                        |   [Docs][3]  |
-| chips            |        Chip-remove, integration with input in-progress |   [Docs][26] |
-| data-table       | Sticky headers & incremental row rendering in-progress |   [Docs][28] |
+| chips            |                                                        |   [Docs][26] |
+| data-table       |                           More features coming in 2018 |   [Docs][28] |
 | datepicker       |                                                        |   [Docs][25] |
 | dialog           |                                                        |   [Docs][22] |
 | expansion-panel  |                                                        |   [Docs][32] |
 | grid-list        |                                                        |   [Docs][9]  |
 | icon             |                                                        |   [Docs][10] |
 | input            |                                                        |   [Docs][5]  |
-| list             |                   Selection and action list planned Q3 |   [Docs][8]  |
+| list             |                               Action list planned 2018 |   [Docs][8]  |
 | menu             |                                                        |   [Docs][17] |
 | paginator        |                                                        |   [Docs][29] |
 | progress-bar     |                                                        |   [Docs][12] |
@@ -89,8 +84,9 @@ High level stuff planned for Q4 2017 (October - December):
 | Feature          | Status                              | Docs         | Issue          |
 |------------------|-------------------------------------|--------------|----------------|
 | tree             |      In-progress ([sneak peek][31]) |           -  |  [#3175][3175] |
-| sticky-header    |        In-progress, planned Q3 2017 |           -  |   [#474][0474] |
-| virtual-repeat   |        Not started, planned Q4 2017 |           -  |   [#823][0823] |
+| sticky-header    |        In-progress, planned Q2 2018 |           -  |   [#474][0474] |
+| virtual-repeat   |        Prototyping, planned Q1 2018 |           -  |   [#823][0823] |
+| badge            |        In-progress, planned Q1 2018 |           -  |  [#3085][3058] |
 | fab speed-dial   |            Not started, not planned |           -  |   [#860][0860] |
 | fab toolbar      |            Not started, not planned |           -  |              - |
 | bottom-sheet     |            Not started, not planned |           -  |  [#8113][8113] |
@@ -153,6 +149,7 @@ High level stuff planned for Q4 2017 (October - December):
 [0995]: https://github.com/angular/material2/pull/995
 [0474]: https://github.com/angular/material2/pull/474
 [8113]: https://github.com/angular/material2/issues/8113
+[3058]: https://github.com/angular/material2/issues/3058
 
 [aio]: https://material.angular.io
 [getting-started]: https://material.angular.io/guide/getting-started

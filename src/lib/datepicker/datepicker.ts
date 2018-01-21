@@ -19,6 +19,7 @@ import {
 } from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {take} from 'rxjs/operators/take';
+import {filter} from 'rxjs/operators/filter';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -41,6 +42,7 @@ import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {DOCUMENT} from '@angular/common';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
+import {merge} from 'rxjs/observable/merge';
 import {MatCalendar} from './calendar';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerInput} from './datepicker-input';
@@ -82,7 +84,6 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER = {
   host: {
     'class': 'mat-datepicker-content',
     '[class.mat-datepicker-content-touch]': 'datepicker.touchUi',
-    '(keydown)': '_handleKeydown($event)',
   },
   exportAs: 'matDatepickerContent',
   encapsulation: ViewEncapsulation.None,
@@ -96,18 +97,6 @@ export class MatDatepickerContent<D> implements AfterContentInit {
 
   ngAfterContentInit() {
     this._calendar._focusActiveCell();
-  }
-
-  /**
-   * Handles keydown event on datepicker content.
-   * @param event The event.
-   */
-  _handleKeydown(event: KeyboardEvent): void {
-    if (event.keyCode === ESCAPE) {
-      this.datepicker.close();
-      event.preventDefault();
-      event.stopPropagation();
-    }
   }
 }
 
@@ -312,9 +301,13 @@ export class MatDatepicker<D> implements OnDestroy {
     }
 
     const completeClose = () => {
-      this._opened = false;
-      this.closedStream.emit();
-      this._focusedElementBeforeOpen = null;
+      // The `_opened` could've been reset already if
+      // we got two events in quick succession.
+      if (this._opened) {
+        this._opened = false;
+        this.closedStream.emit();
+        this._focusedElementBeforeOpen = null;
+      }
     };
 
     if (this._focusedElementBeforeOpen &&
@@ -376,7 +369,12 @@ export class MatDatepicker<D> implements OnDestroy {
     });
 
     this._popupRef = this._overlay.create(overlayConfig);
-    this._popupRef.backdropClick().subscribe(() => this.close());
+
+    merge(
+      this._popupRef.backdropClick(),
+      this._popupRef.detachments(),
+      this._popupRef.keydownEvents().pipe(filter(event => event.keyCode === ESCAPE))
+    ).subscribe(() => this.close());
   }
 
   /** Create the popup PositionStrategy. */

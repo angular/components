@@ -7,13 +7,12 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {ESCAPE} from '@angular/cdk/keycodes';
 import {
-  BlockScrollStrategy,
   Overlay,
   OverlayConfig,
   OverlayRef,
   ScrollStrategy,
+  OverlayContainer,
 } from '@angular/cdk/overlay';
 import {ComponentPortal, ComponentType, PortalInjector, TemplatePortal} from '@angular/cdk/portal';
 import {Location} from '@angular/common';
@@ -30,7 +29,6 @@ import {
 import {Observable} from 'rxjs/Observable';
 import {defer} from 'rxjs/observable/defer';
 import {of as observableOf} from 'rxjs/observable/of';
-import {filter} from 'rxjs/operators/filter';
 import {startWith} from 'rxjs/operators/startWith';
 import {Subject} from 'rxjs/Subject';
 import {MatDialogConfig} from './dialog-config';
@@ -40,6 +38,9 @@ import {MatDialogRef} from './dialog-ref';
 
 export const MAT_DIALOG_DATA = new InjectionToken<any>('MatDialogData');
 
+/** Injection token that can be used to specify default dialog options. */
+export const MAT_DIALOG_DEFAULT_OPTIONS =
+    new InjectionToken<MatDialogConfig>('mat-dialog-default-options');
 
 /** Injection token that determines the scroll handling while the dialog is open. */
 export const MAT_DIALOG_SCROLL_STRATEGY =
@@ -47,7 +48,7 @@ export const MAT_DIALOG_SCROLL_STRATEGY =
 
 /** @docs-private */
 export function MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
-    () => BlockScrollStrategy {
+    () => ScrollStrategy {
   return () => overlay.scrollStrategies.block();
 }
 
@@ -67,6 +68,7 @@ export class MatDialog {
   private _openDialogsAtThisLevel: MatDialogRef<any>[] = [];
   private _afterAllClosedAtThisLevel = new Subject<void>();
   private _afterOpenAtThisLevel = new Subject<MatDialogRef<any>>();
+  private _ariaHiddenElements = new Map<Element, string|null>();
 
   /** Keeps track of the currently-open dialogs. */
   get openDialogs(): MatDialogRef<any>[] {
@@ -94,17 +96,11 @@ export class MatDialog {
   constructor(
       private _overlay: Overlay,
       private _injector: Injector,
-      @Optional() location: Location,
+      @Optional() private _location: Location,
+      @Optional() @Inject(MAT_DIALOG_DEFAULT_OPTIONS) private _defaultOptions,
       @Inject(MAT_DIALOG_SCROLL_STRATEGY) private _scrollStrategy,
-      @Optional() @SkipSelf() private _parentDialog: MatDialog) {
-
-    // Close all of the dialogs when the user goes forwards/backwards in history or when the
-    // location hash changes. Note that this usually doesn't include clicking on links (unless
-    // the user is using the `HashLocationStrategy`).
-    if (!_parentDialog && location) {
-      location.subscribe(() => this.closeAll());
-    }
-  }
+      @Optional() @SkipSelf() private _parentDialog: MatDialog,
+      private _overlayContainer: OverlayContainer) {}
 
   /**
    * Opens a modal dialog containing the given component.
@@ -116,7 +112,7 @@ export class MatDialog {
   open<T, D = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
           config?: MatDialogConfig<D>): MatDialogRef<T> {
 
-    config = _applyConfigDefaults(config);
+    config = _applyConfigDefaults(config, this._defaultOptions || new MatDialogConfig());
 
     if (config.id && this.getDialogById(config.id)) {
       throw Error(`Dialog with id "${config.id}" exists already. The dialog id must be unique.`);
@@ -126,6 +122,11 @@ export class MatDialog {
     const dialogContainer = this._attachDialogContainer(overlayRef, config);
     const dialogRef =
         this._attachDialogContent<T>(componentOrTemplateRef, dialogContainer, overlayRef, config);
+
+    // If this is the first dialog that we're opening, hide all the non-overlay content.
+    if (!this.openDialogs.length) {
+      this._hideNonDialogContentFromAssistiveTechnology();
+    }
 
     this.openDialogs.push(dialogRef);
     dialogRef.afterClosed().subscribe(() => this._removeOpenDialog(dialogRef));
@@ -175,7 +176,7 @@ export class MatDialog {
   private _getOverlayConfig(dialogConfig: MatDialogConfig): OverlayConfig {
     const state = new OverlayConfig({
       positionStrategy: this._overlay.position().global(),
-      scrollStrategy: this._scrollStrategy(),
+      scrollStrategy: dialogConfig.scrollStrategy || this._scrollStrategy(),
       panelClass: dialogConfig.panelClass,
       hasBackdrop: dialogConfig.hasBackdrop,
       direction: dialogConfig.direction,
@@ -223,7 +224,7 @@ export class MatDialog {
 
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
-    const dialogRef = new MatDialogRef<T>(overlayRef, dialogContainer, config.id);
+    const dialogRef = new MatDialogRef<T>(overlayRef, dialogContainer, this._location, config.id);
 
     // When the dialog backdrop is clicked, we want to close it.
     if (config.hasBackdrop) {
@@ -233,11 +234,6 @@ export class MatDialog {
         }
       });
     }
-
-    // Close when escape keydown event occurs
-    overlayRef.keydownEvents().pipe(
-      filter(event => event.keyCode === ESCAPE && !dialogRef.disableClose)
-    ).subscribe(() => dialogRef.close());
 
     if (componentOrTemplateRef instanceof TemplateRef) {
       dialogContainer.attachTemplatePortal(
@@ -298,19 +294,58 @@ export class MatDialog {
     if (index > -1) {
       this.openDialogs.splice(index, 1);
 
-      // no open dialogs are left, call next on afterAllClosed Subject
+      // If all the dialogs were closed, remove/restore the `aria-hidden`
+      // to a the siblings and emit to the `afterAllClosed` stream.
       if (!this.openDialogs.length) {
+        this._ariaHiddenElements.forEach((previousValue, element) => {
+          if (previousValue) {
+            element.setAttribute('aria-hidden', previousValue);
+          } else {
+            element.removeAttribute('aria-hidden');
+          }
+        });
+
+        this._ariaHiddenElements.clear();
         this._afterAllClosed.next();
       }
     }
   }
+
+  /**
+   * Hides all of the content that isn't an overlay from assistive technology.
+   */
+  private _hideNonDialogContentFromAssistiveTechnology() {
+    const overlayContainer = this._overlayContainer.getContainerElement();
+
+    // Ensure that the overlay container is attached to the DOM.
+    if (overlayContainer.parentElement) {
+      const siblings = overlayContainer.parentElement.children;
+
+      for (let i = siblings.length - 1; i > -1; i--) {
+        let sibling = siblings[i];
+
+        if (sibling !== overlayContainer &&
+          sibling.nodeName !== 'SCRIPT' &&
+          sibling.nodeName !== 'STYLE' &&
+          !sibling.hasAttribute('aria-live')) {
+
+          this._ariaHiddenElements.set(sibling, sibling.getAttribute('aria-hidden'));
+          sibling.setAttribute('aria-hidden', 'true');
+        }
+      }
+    }
+
+  }
+
 }
 
 /**
  * Applies default options to the dialog config.
  * @param config Config to be modified.
+ * @param defaultOptions Default options provided.
  * @returns The new configuration object.
  */
-function _applyConfigDefaults(config?: MatDialogConfig): MatDialogConfig {
-  return {...new MatDialogConfig(), ...config};
+function _applyConfigDefaults(
+    config?: MatDialogConfig, defaultOptions?: MatDialogConfig): MatDialogConfig {
+  return {...defaultOptions, ...config};
 }
