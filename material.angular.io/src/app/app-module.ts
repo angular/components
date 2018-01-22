@@ -33,6 +33,8 @@ import {
   CanActivateComponentSidenav
 } from './pages/component-sidenav/component-sidenav-can-load-guard';
 import {HttpClientModule} from '@angular/common/http';
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {environment} from '../environments/environment';
 
 @NgModule({
   imports: [
@@ -44,7 +46,7 @@ import {HttpClientModule} from '@angular/common/http';
     HttpClientModule,
     MatNativeDateModule,
     RouterModule.forRoot(MATERIAL_DOCS_ROUTES),
-
+    ServiceWorkerModule.register('/ngsw-worker.js', {enabled: environment.production}),
     ComponentCategoryListModule,
     ComponentHeaderModule,
     ComponentListModule,
