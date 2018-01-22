@@ -1,0 +1,38 @@
+{
+  "index": "/index.html",
+  "assetGroups": [{
+    "name": "app",
+    "installMode": "prefetch",
+    "resources": {
+      "files": [
+        "/favicon.ico",
+        "/index.html"
+      ],
+      "versionedFiles": [
+        "/*.bundle.css",
+        "/*.bundle.js",
+        "/*.chunk.js"
+      ]
+    }
+  }, {
+    "name": "assets",
+    "installMode": "prefetch",
+    "resources": {
+      "files": [
+        "/assets/**"
+      ]
+    }
+  }, {
+    "name": "static-assets",
+    "installMode": "lazy",
+    "updateMode": "prefetch",
+    "resources": {
+      "urls":  [
+        "https://fonts.googleapis.com/icon?family=Material+Icons",
+        "https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono",
+        "https://ajax.googleapis.com/ajax/libs/hammerjs/2.0.8/hammer.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.5/web-animations.min.js"
+      ]
+    }
+  }]
+}
