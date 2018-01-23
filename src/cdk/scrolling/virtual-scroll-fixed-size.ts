@@ -68,7 +68,7 @@ export class VirtualScrollFixedSizeStrategy implements VirtualScrollStrategy {
       return;
     }
 
-    this._viewport.totalContentSize = this._viewport.dataLength * this._itemSize;
+    this._viewport.setTotalContentSize(this._viewport.getDataLength() * this._itemSize);
   };
 
   /** Update the viewport's rendered range. */
@@ -82,9 +82,9 @@ export class VirtualScrollFixedSizeStrategy implements VirtualScrollStrategy {
     const range = this._expandRange(
         {start: firstVisibleIndex, end: firstVisibleIndex},
         this._bufferSize,
-        Math.ceil(this._viewport.viewportSize / this._itemSize) + this._bufferSize);
-    this._viewport.renderedRange = range;
-    this._viewport.renderedContentOffset = this._itemSize * range.start;
+        Math.ceil(this._viewport.getViewportSize() / this._itemSize) + this._bufferSize);
+    this._viewport.setRenderedRange(range);
+    this._viewport.setRenderedContentOffset(this._itemSize * range.start);
   }
 
   /**
@@ -100,7 +100,7 @@ export class VirtualScrollFixedSizeStrategy implements VirtualScrollStrategy {
     }
 
     const start = Math.max(0, range.start - expandStart);
-    const end = Math.min(this._viewport.dataLength, range.end + expandEnd);
+    const end = Math.min(this._viewport.getDataLength(), range.end + expandEnd);
     return {start, end};
   }
 }
@@ -127,10 +127,10 @@ export function _virtualScrollFixedSizeStrategyFactory(fixedSizeDir: CdkVirtualS
   }],
 })
 export class CdkVirtualScrollFixedSize implements OnChanges {
-  /** The size of the items in the list. */
+  /** The size of the items in the list (in pixels). */
   @Input() itemSize = 20;
 
-  /** The number of extra elements to render on either side of the viewport. */
+  /** The number of extra elements to render on either side of the scrolling viewport. */
   @Input() bufferSize = 5;
 
   /** The scroll strategy used by this directive. */

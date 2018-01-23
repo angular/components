@@ -43,8 +43,10 @@ import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-s
   preserveWhitespaces: false,
 })
 export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
-  private _disconnectSubject = new Subject<void>();
+  /** Emits when the viewport is detached from a CdkVirtualForOf. */
+  private _detachedSubject = new Subject<void>();
 
+  /** Emits when the rendered range changes. */
   private _renderedRangeSubject = new Subject<Range>();
 
   /** The direction the viewport scrolls. */
@@ -53,73 +55,101 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
   /** The element that wraps the rendered content. */
   @ViewChild('contentWrapper') _contentWrapper: ElementRef;
 
-  /** The total size of all content, including content that is not currently rendered. */
-  get totalContentSize() { return this._totalContentSize; }
-  set totalContentSize(size: number) {
-    if (this._totalContentSize != size) {
-      this._ngZone.run(() => {
-        this._totalContentSize = size;
-        this._changeDetectorRef.markForCheck();
-      });
-    }
-  }
-  private _totalContentSize = 0;
-
-  /** The currently rendered range of indices. */
-  get renderedRange() { return this._renderedRange; }
-  set renderedRange(range: Range) {
-    if (!this._rangesEqual(this._renderedRange, range)) {
-      this._ngZone.run(() => {
-        this._renderedRangeSubject.next(this._renderedRange = range);
-        this._changeDetectorRef.markForCheck();
-      });
-    }
-  }
-  private _renderedRange: Range = {start: 0, end: 0};
-
-  /** The offset of the rendered portion of the data from the start. */
-  get renderedContentOffset(): number { return this._renderedContentOffset; }
-  set renderedContentOffset(offset: number) {
-    if (this._renderedContentOffset != offset) {
-      this._ngZone.run(() => {
-        this._renderedContentOffset = offset;
-        this._renderedContentTransform = this.orientation === 'horizontal' ?
-            `translateX(${offset}px)`: `translateY(${offset}px)`;
-        this._changeDetectorRef.markForCheck();
-      });
-    }
-  }
-  private _renderedContentOffset = 0;
-
-  /** The length of the data connected to this viewport. */
-  get dataLength() { return this._dataLength; }
-  private _dataLength = 0;
-
-  /** The size of the viewport. */
-  get viewportSize() { return this._viewportSize; }
-  private _viewportSize = 0;
-
   /** A stream that emits whenever the rendered range changes. */
   renderedRangeStream: Observable<Range> = this._renderedRangeSubject.asObservable();
 
+  /**
+   * The total size of all content (in pixels), including content that is not currently rendered.
+   */
+  _totalContentSize = 0;
+
+  /** The transform used to offset the rendered content wrapper element. */
   _renderedContentTransform: string;
 
-  private _connected = false;
+  /** The currently rendered range of indices. */
+  private _renderedRange: Range = {start: 0, end: 0};
 
+  /** The length of the data bound to this viewport (in number of items). */
+  private _dataLength = 0;
+
+  /** The size of the viewport (in pixels). */
+  private _viewportSize = 0;
+
+  /** Whether this viewport is attached to a CdkVirtualForOf. */
+  private _isAttached = false;
+
+  /**
+   * The scroll handling status.
+   * needed - The scroll state needs to be updated, but a check hasn't yet been scheduled.
+   * pending - The scroll state needs to be updated, and an update has already been scheduled.
+   * done - The scroll state does not need to be updated.
+   */
   private _scrollHandledStatus: 'needed' | 'pending' | 'done' = 'done';
 
   constructor(public elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef,
               private _ngZone: NgZone,
               @Inject(VIRTUAL_SCROLL_STRATEGY) private _scrollStrategy: VirtualScrollStrategy) {}
 
-  /** Connect a `CdkVirtualForOf` to this viewport. */
-  connect(forOf: CdkVirtualForOf<any>) {
-    if (this._connected) {
-      throw Error('CdkVirtualScrollViewport is already connected.');
+  /** Gets the length of the data bound to this viewport (in number of items). */
+  getDataLength(): number {
+    return this._dataLength;
+  }
+
+  /** Gets the size of the viewport (in pixels). */
+  getViewportSize(): number {
+    return this._viewportSize;
+  }
+
+  // TODO(mmalebra): Consider calling `detectChanges()` directly rather than the methods below.
+
+  /**
+   * Sets the total size of all content (in pixels), including content that is not currently
+   * rendered.
+   */
+  setTotalContentSize(size: number) {
+    if (this._totalContentSize != size) {
+      // Re-enter the Angular zone so we can mark for change detection.
+      this._ngZone.run(() => {
+        this._totalContentSize = size;
+        this._changeDetectorRef.markForCheck();
+      });
+    }
+  }
+
+  /** Sets the currently rendered range of indices. */
+  setRenderedRange(range: Range) {
+    if (!this._rangesEqual(this._renderedRange, range)) {
+      // Re-enter the Angular zone so we can mark for change detection.
+      this._ngZone.run(() => {
+        this._renderedRangeSubject.next(this._renderedRange = range);
+        this._changeDetectorRef.markForCheck();
+      });
+    }
+  }
+
+  /** Sets the offset of the rendered portion of the data from the start (in pixels). */
+  setRenderedContentOffset(offset: number) {
+    const transform =
+        this.orientation === 'horizontal' ? `translateX(${offset}px)`: `translateY(${offset}px)`;
+    if (this._renderedContentTransform != transform) {
+      // Re-enter the Angular zone so we can mark for change detection.
+      this._ngZone.run(() => {
+        this._renderedContentTransform = transform;
+        this._changeDetectorRef.markForCheck();
+      });
+    }
+  }
+
+  /** Attaches a `CdkVirtualForOf` to this viewport. */
+  attach(forOf: CdkVirtualForOf<any>) {
+    if (this._isAttached) {
+      throw Error('CdkVirtualScrollViewport is already attached.');
     }
 
-    this._connected = true;
-    forOf.dataStream.pipe(takeUntil(this._disconnectSubject)).subscribe(data => {
+    this._isAttached = true;
+    // Subscribe to the data stream of the CdkVirtualForOf to keep track of when the data length
+    // changes.
+    forOf.dataStream.pipe(takeUntil(this._detachedSubject)).subscribe(data => {
       const len = data.length;
       if (len != this._dataLength) {
         this._dataLength = len;
@@ -128,13 +158,13 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
     });
   }
 
-  /** Disconnect the current `CdkVirtualForOf`. */
-  disconnect() {
-    this._connected = false;
-    this._disconnectSubject.next();
+  /** Detaches the current `CdkVirtualForOf`. */
+  detach() {
+    this._isAttached = false;
+    this._detachedSubject.next();
   }
 
-  /** Gets the current scroll offset of the viewport. */
+  /** Gets the current scroll offset of the viewport (in pixels). */
   measureScrollOffset() {
     return this.orientation === 'horizontal' ?
         this.elementRef.nativeElement.scrollLeft : this.elementRef.nativeElement.scrollTop;
@@ -164,16 +194,18 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.disconnect();
+    this.detach();
     this._scrollStrategy.detach();
 
     // Complete all subjects
-    this._disconnectSubject.complete();
+    this._detachedSubject.complete();
     this._renderedRangeSubject.complete();
   }
 
+  /** Marks that a scroll event happened and that the scroll state should be checked. */
   private _markScrolled() {
     if (this._scrollHandledStatus === 'done') {
+      // Re-enter the Angular zone so we can mark for change detection.
       this._ngZone.run(() => {
         this._scrollHandledStatus = 'needed';
         this._changeDetectorRef.markForCheck();
@@ -181,6 +213,7 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
     }
   }
 
+  /** Checks if the given ranges are equal. */
   private _rangesEqual(r1: Range, r2: Range): boolean {
     return r1.start == r2.start && r1.end == r2.end;
   }

@@ -148,7 +148,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
       @SkipSelf() private _viewport: CdkVirtualScrollViewport) {
     this.dataStream.subscribe(data => this._data = data);
     this._viewport.renderedRangeStream.subscribe(range => this._onRenderedRangeChange(range));
-    this._viewport.connect(this);
+    this._viewport.attach(this);
   }
 
   /**
@@ -197,6 +197,9 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
 
   ngDoCheck() {
     if (this._differ && this._needsUpdate) {
+      // TODO(mmalerba): We should differentiate needs update due to scrolling and a new portion of
+      // this list being rendered (can use simpler algorithm) vs needs update due to data actually
+      // changing (need to do this diff).
       const changes = this._differ.diff(this._renderedItems);
       if (!changes) {
         this._updateContext();
@@ -208,7 +211,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   }
 
   ngOnDestroy() {
-    this._viewport.disconnect();
+    this._viewport.detach();
 
     this._dataSourceChanges.complete();
     this.viewChange.complete();
@@ -240,10 +243,12 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
 
   /** Update the `CdkVirtualForOfContext` for all views. */
   private _updateContext() {
-    for (let i = 0, len = this._viewContainerRef.length; i < len; i++) {
+    const count = this._data.length;
+    let i = this._viewContainerRef.length;
+    while(i--) {
       let view = this._viewContainerRef.get(i) as EmbeddedViewRef<CdkVirtualForOfContext<T>>;
       view.context.index = this._renderedRange.start + i;
-      view.context.count = this._data.length;
+      view.context.count = count;
       this._updateComputedContextProperties(view.context);
       view.detectChanges();
     }
@@ -251,9 +256,14 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
 
   /** Apply changes to the DOM. */
   private _applyChanges(changes: IterableChanges<T>) {
+    // TODO(mmalerba): Currently we remove every view and then re-insert it in the correct place.
+    // It would be better to generate the minimal set of remove & inserts to get to the new list
+    // instead.
+
     // Detach all of the views and add them into an array to preserve their original order.
     const previousViews: (EmbeddedViewRef<CdkVirtualForOfContext<T>> | null)[] = [];
-    for (let i = 0, len = this._viewContainerRef.length; i < len; i++) {
+    let i = this._viewContainerRef.length;
+    while (i--) {
       previousViews.unshift(
           this._viewContainerRef.detach()! as EmbeddedViewRef<CdkVirtualForOfContext<T>>);
     }
@@ -278,7 +288,8 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
 
     // We have nulled-out all of the views that were removed or moved from previousViews. What is
     // left is the unchanged items that we queue up to be re-inserted.
-    for (let i = 0, len = previousViews.length; i < len; i++) {
+    i = previousViews.length;
+    while(i--) {
       if (previousViews[i]) {
         insertTuples[i] = {record: null, view: previousViews[i]!};
       }
@@ -290,8 +301,12 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
 
   /** Insert the RecordViewTuples into the container element. */
   private _insertViews(insertTuples: RecordViewTuple<T>[]) {
-    for (let i = 0, len = insertTuples.length; i < len; i++) {
-      let {view, record} = insertTuples[i];
+    const count = this._data.length;
+    let i = insertTuples.length;
+    const lastIndex = i - 1;
+    while (i--) {
+      const index = lastIndex - i;
+      let {view, record} = insertTuples[index];
       if (view) {
         this._viewContainerRef.insert(view);
       } else {
@@ -310,8 +325,8 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
       if (record) {
         view.context.$implicit = record.item as T;
       }
-      view.context.index = this._renderedRange.start + i;
-      view.context.count = this._data.length;
+      view.context.index = this._renderedRange.start + index;
+      view.context.count = count;
       this._updateComputedContextProperties(view.context);
       view.detectChanges();
     }
