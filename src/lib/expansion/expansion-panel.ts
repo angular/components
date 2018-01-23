@@ -109,7 +109,7 @@ export class MatExpansionPanel extends _MatExpansionPanelMixinBase
   @ContentChild(MatExpansionPanelContent) _lazyContent: MatExpansionPanelContent;
 
   /** Portal holding the user's content. */
-  _portal: TemplatePortal<any>;
+  _portal: TemplatePortal;
 
   constructor(@Optional() @Host() accordion: MatAccordion,
               _changeDetectorRef: ChangeDetectorRef,
@@ -148,7 +148,7 @@ export class MatExpansionPanel extends _MatExpansionPanelMixinBase
         filter(() => this.expanded && !this._portal),
         take(1)
       ).subscribe(() => {
-        this._portal = new TemplatePortal<any>(this._lazyContent._template, this._viewContainerRef);
+        this._portal = new TemplatePortal(this._lazyContent._template, this._viewContainerRef);
       });
     }
   }
