@@ -24,6 +24,8 @@ used to style the node such that it is indented to the appropriate level.
 </mat-tree>
 ```
 
+<!-- example(tree-flat-overview) -->
+
 Flat trees are generally easier to style and inspect. They are also more friendly to
 scrolling variations, such as infinite or virtual scrolling
 
@@ -42,6 +44,8 @@ outlet to keep all the children nodes.
    </mat-nested-tree-node>
 </mat-tree>
 ```
+
+<!-- example(tree-nested-overview) -->
 
 Nested trees are easier to work with when hierarchical relationships are visually
 represented in ways that would be difficult to accomplish with flat nodes.

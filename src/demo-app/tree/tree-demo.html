@@ -4,17 +4,17 @@
 
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
-          {{node.key}} : {{node.value}}
+          {{node.filename}} : {{node.type}}
       </mat-tree-node>
 
       <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
           <button mat-icon-button matTreeNodeToggle
-                  [attr.aria-label]="'toggle ' + node.key">
+                  [attr.aria-label]="'toggle ' + node.filename">
             <mat-icon>
               {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
             </mat-icon>
           </button>
-          {{node.key}} : {{node.value}}
+          {{node.filename}} : {{node.type}}
       </mat-tree-node>
     </mat-tree>
 
@@ -28,7 +28,7 @@
     <mat-tree [dataSource]="nestedDataSource" [treeControl]="nestedTreeControl">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
         <li>
-          <div>{{node.key}}:  {{node.value}}</div>
+          <div>{{node.filename}}:  {{node.type}}</div>
         </li>
       </mat-tree-node>
 
@@ -36,14 +36,14 @@
         <li>
           <div class="mat-tree-node">
             <button mat-icon-button matTreeNodeToggle
-                    [attr.aria-label]="'toggle ' + node.key">
+                    [attr.aria-label]="'toggle ' + node.filename">
               <mat-icon>
                 {{nestedTreeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
               </mat-icon>
             </button>
-            {{node.key}}
+            {{node.filename}}
           </div>
-          <ul [class]="nestedTreeControl.isExpanded(node) ? '' : 'tree-demo-invisible'">
+          <ul [class.tree-demo-invisible]="!nestedTreeControl.isExpanded(node)">
             <ng-container matTreeNodeOutlet></ng-container>
           </ul>
         </li>
