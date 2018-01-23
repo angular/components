@@ -9,8 +9,14 @@ export const VIRTUAL_SCROLL_STRATEGY =
 
 /** A strategy that dictates which items should be rendered in the viewport. */
 export interface VirtualScrollStrategy {
-  /** Called after the viewport is initialized. */
-  init(viewport: CdkVirtualScrollViewport): void;
+  /**
+   * Attaches this scroll strategy to a viewport.
+   * @param viewport The viewport to attach this strategy to.
+   */
+  attach(viewport: CdkVirtualScrollViewport): void;
+
+  /** Detaches this scroll strategy from the currently attached viewport. */
+  detach(): void;
 
   /** Called when the viewport is scrolled (debounced using requestAnimationFrame). */
   onContentScrolled();

@@ -108,8 +108,6 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
 
   private _scrollHandledStatus: 'needed' | 'pending' | 'done' = 'done';
 
-  private _scrollStrategyInited = false;
-
   constructor(public elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef,
               private _ngZone: NgZone,
               @Inject(VIRTUAL_SCROLL_STRATEGY) private _scrollStrategy: VirtualScrollStrategy) {}
@@ -125,9 +123,7 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
       const len = data.length;
       if (len != this._dataLength) {
         this._dataLength = len;
-        if (this._scrollStrategyInited) {
-          this._scrollStrategy.onDataLengthChanged();
-        }
+        this._scrollStrategy.onDataLengthChanged();
       }
     });
   }
@@ -153,8 +149,7 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
           this._markScrolled();
         });
       });
-      this._scrollStrategy.init(this);
-      this._scrollStrategyInited = true;
+      this._scrollStrategy.attach(this);
     });
   }
 
@@ -170,6 +165,7 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
 
   ngOnDestroy() {
     this.disconnect();
+    this._scrollStrategy.detach();
 
     // Complete all subjects
     this._disconnectSubject.complete();

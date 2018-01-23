@@ -252,7 +252,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   /** Apply changes to the DOM. */
   private _applyChanges(changes: IterableChanges<T>) {
     // Detach all of the views and add them into an array to preserve their original order.
-    const previousViews: EmbeddedViewRef<CdkVirtualForOfContext<T>>[] = [];
+    const previousViews: (EmbeddedViewRef<CdkVirtualForOfContext<T>> | null)[] = [];
     for (let i = 0, len = this._viewContainerRef.length; i < len; i++) {
       previousViews.unshift(
           this._viewContainerRef.detach()! as EmbeddedViewRef<CdkVirtualForOfContext<T>>);
@@ -260,8 +260,8 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
 
     // Mark the removed indices so we can recycle their views.
     changes.forEachRemovedItem(record => {
-      this._templateCache.push(previousViews[record.previousIndex!]);
-      delete previousViews[record.previousIndex!];
+      this._templateCache.push(previousViews[record.previousIndex!]!);
+      previousViews[record.previousIndex!] = null;
     });
 
     // Queue up the newly added items to be inserted, recycling views from the cache if possible.
@@ -272,15 +272,15 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
 
     // Queue up moved items to be re-inserted.
     changes.forEachMovedItem(record => {
-      insertTuples[record.currentIndex!] = {record, view: previousViews[record.previousIndex!]};
-      delete previousViews[record.previousIndex!];
+      insertTuples[record.currentIndex!] = {record, view: previousViews[record.previousIndex!]!};
+      previousViews[record.previousIndex!] = null;
     });
 
-    // We have deleted all of the views that were removed or moved from previousViews. What is left
-    // is the unchanged items that we queue up to be re-inserted.
+    // We have nulled-out all of the views that were removed or moved from previousViews. What is
+    // left is the unchanged items that we queue up to be re-inserted.
     for (let i = 0, len = previousViews.length; i < len; i++) {
       if (previousViews[i]) {
-        insertTuples[i] = {record: null, view: previousViews[i]};
+        insertTuples[i] = {record: null, view: previousViews[i]!};
       }
     }
 
