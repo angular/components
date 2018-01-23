@@ -8,11 +8,11 @@
 
 import {Component} from '@angular/core';
 import {FlatTreeControl, NestedTreeControl} from '@angular/cdk-experimental/tree';
+import {MatTreeFlattener, MatTreeFlatDataSource, MatTreeNestedDataSource} from '@angular/material-experimental/tree';
 import {of as ofObservable} from 'rxjs/observable/of';
 
 import {JsonNode, JsonDatabase} from './json-database';
-import {FlatDataSource, JsonFlatNode} from './flat-data-source';
-import {JsonNestedDataSource} from './nested-data-source';
+import {JsonFlatNode} from './flat-data-source';
 
 
 @Component({
@@ -28,21 +28,40 @@ export class TreeDemo {
   // Nested tree control
   nestedTreeControl: NestedTreeControl<JsonNode>;
 
+  treeFlattener: MatTreeFlattener<JsonNode, JsonFlatNode>;
+
   // Flat tree data source
-  dataSource: FlatDataSource;
+  dataSource: MatTreeFlatDataSource<JsonNode, JsonFlatNode>;
 
   // Nested tree data source
-  nestedDataSource: JsonNestedDataSource;
+  nestedDataSource: MatTreeNestedDataSource<JsonNode>;
 
   constructor(database: JsonDatabase) {
+    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
+                                              this.isExpandable, this.getChildren);
     // For flat tree
     this.treeControl = new FlatTreeControl<JsonFlatNode>(this.getLevel, this.isExpandable);
-    this.dataSource = new FlatDataSource(database, this.treeControl);
+    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
     // For nested tree
     this.nestedTreeControl = new NestedTreeControl<JsonNode>(this.getChildren);
-    this.nestedDataSource = new JsonNestedDataSource(database);
+    this.nestedDataSource = new MatTreeNestedDataSource();
+
+    database.dataChange.subscribe(data => {
+      console.log(`datachanges in demo`)
+      this.dataSource.data = data;
+      this.nestedDataSource.data = data;
+    })
   }
+
+  transformer = (node: JsonNode, level: number) => {
+    let flatNode = new JsonFlatNode();
+    flatNode.key = node.key;
+    flatNode.value = node.value;
+    flatNode.level = level;
+    flatNode.expandable = !!node.children;
+    return flatNode;
+  };
 
   getLevel = (node: JsonFlatNode) => { return node.level; };
 
