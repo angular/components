@@ -24,7 +24,7 @@ const MAT_TREE_DIRECTIVES = [
   MatTreeNodeToggle,
   MatTree,
   MatTreeNode,
-  MatTreeNodeOutlet,
+  MatTreeNodeOutlet
 ];
 
 @NgModule({
