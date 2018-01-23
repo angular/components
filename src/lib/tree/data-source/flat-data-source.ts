@@ -116,7 +116,7 @@ export class MatTreeFlattener<T, F> {
  * The nested tree nodes of type `T` are flattened through `MatTreeFlattener`, and converted
  * to type `F` for `MatTree` to consume.
  */
-export class MatTreeFlatDataSource<T, F> implements DataSource<F> {
+export class MatTreeFlatDataSource<T, F> extends DataSource<F> {
   _flattenedData = new BehaviorSubject<F[]>([]);
 
   _expandedData = new BehaviorSubject<F[]>([]);
@@ -132,6 +132,7 @@ export class MatTreeFlatDataSource<T, F> implements DataSource<F> {
   constructor(private treeControl: FlatTreeControl<F>,
               private treeFlattener: MatTreeFlattener<T, F>,
               initialData: T[] = []) {
+    super();
     this._data = new BehaviorSubject<T[]>(initialData);
   }
 

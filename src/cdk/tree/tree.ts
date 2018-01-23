@@ -27,6 +27,8 @@ import {
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {takeUntil} from 'rxjs/operators/takeUntil';
+import {Observable} from 'rxjs/Observable';
+import {of} from 'rxjs/observable/of';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
@@ -36,7 +38,8 @@ import {
   getTreeControlMissingError,
   getTreeMissingMatchingNodeDefError,
   getTreeMultipleDefaultNodeDefsError,
-  getTreeControlFunctionsMissingError
+  getTreeControlFunctionsMissingError,
+  getTreeNoValidDataSourceError
 } from './tree-errors';
 
 /**
@@ -151,15 +154,16 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
   /**
    * Provides a stream containing the latest data array to render. Influenced by the tree's
    * stream of view window (what dataNodes are currently on screen).
+   * Data source can be an observable of data array, or a dara array to render.
    */
   @Input()
-  get dataSource(): DataSource<T> { return this._dataSource; }
-  set dataSource(dataSource: DataSource<T>) {
+  get dataSource(): DataSource<T> | Observable<T[]> | T[] { return this._dataSource; }
+  set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
     if (this._dataSource !== dataSource) {
       this._switchDataSource(dataSource);
     }
   }
-  private _dataSource: DataSource<T>;
+  private _dataSource: DataSource<T> | Observable<T[]> | T[];
 
   /** The tree controller */
   @Input() treeControl: TreeControl<T>;
@@ -195,8 +199,8 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
     this._onDestroy.next();
     this._onDestroy.complete();
 
-    if (this.dataSource) {
-      this.dataSource.disconnect(this);
+    if (this._dataSource && typeof (this._dataSource as DataSource<T>).disconnect === 'function') {
+      (this.dataSource as DataSource<T>).disconnect(this);
     }
 
     if (this._dataSubscription) {
@@ -207,13 +211,16 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
 
   ngAfterContentChecked() {
     const defaultNodeDefs = this._nodeDefs.filter(def => !def.when);
-    if (defaultNodeDefs.length > 1) { throw getTreeMultipleDefaultNodeDefsError(); }
+    if (defaultNodeDefs.length > 1) {
+      throw getTreeMultipleDefaultNodeDefsError();
+    }
     this._defaultNodeDef = defaultNodeDefs[0];
 
     if (this.dataSource && this._nodeDefs && !this._dataSubscription) {
       this._observeRenderChanges();
     }
   }
+
 
   // TODO(tinayuangao): Work on keyboard traversal and actions, make sure it's working for RTL
   //     and nested trees.
@@ -223,11 +230,11 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
    * render change subscription if one exists. If the data source is null, interpret this by
    * clearing the node outlet. Otherwise start listening for new data.
    */
-  private _switchDataSource(dataSource: DataSource<T>) {
+  private _switchDataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
     this._data = new Array<T>();
 
-    if (this.dataSource) {
-      this.dataSource.disconnect(this);
+    if (this._dataSource && typeof (this._dataSource as DataSource<T>).disconnect === 'function') {
+      (this.dataSource as DataSource<T>).disconnect(this);
     }
 
     if (this._dataSubscription) {
@@ -241,15 +248,34 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
     }
 
     this._dataSource = dataSource;
+    if (this._nodeDefs) {
+      this._observeRenderChanges();
+    }
   }
 
   /** Set up a subscription for the data provided by the data source. */
   private _observeRenderChanges() {
-    this._dataSubscription = this.dataSource.connect(this).pipe(takeUntil(this._onDestroy))
-      .subscribe(data => {
-        this._data = data;
-        this._renderNodeChanges(data);
-      });
+    let dataStream: Observable<T[]> | undefined;
+
+    // Cannot use `instanceof DataSource` since the data source could be a literal with
+    // `connect` function and may not extends DataSource.
+    if (typeof (this._dataSource as DataSource<T>).connect === 'function') {
+      dataStream = (this._dataSource as DataSource<T>).connect(this);
+    } else if (this._dataSource instanceof Observable) {
+      dataStream = this._dataSource;
+    } else if (Array.isArray(this._dataSource)) {
+      dataStream = of(this._dataSource);
+    }
+
+    if (dataStream) {
+      this._dataSubscription = dataStream.pipe(takeUntil(this._onDestroy))
+        .subscribe(data => {
+          this._data = data;
+          this._renderNodeChanges(data);
+        });
+    } else {
+      throw getTreeNoValidDataSourceError();
+    }
   }
 
   /** Check for changes made in the data and render each change (node added/removed/moved). */

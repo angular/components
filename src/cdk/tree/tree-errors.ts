@@ -7,6 +7,14 @@
  */
 
 /**
+ * Returns an error to be thrown when there is no usable data.
+ * @docs-private
+ */
+export function getTreeNoValidDataSourceError() {
+  return Error(`A valid data source must be provided.`);
+}
+
+/**
  * Returns an error to be thrown when there are multiple nodes that are missing a when function.
  * @docs-private
  */

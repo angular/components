@@ -18,7 +18,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
  * The data source for nested tree doesn't have to consider node flattener, or the way to expand
  * or collapse. The expansion/collapsion will be handled by TreeControl and each non-leaf node.
  */
-export class MatTreeNestedDataSource<T> implements DataSource<T> {
+export class MatTreeNestedDataSource<T> extends DataSource<T> {
   _data = new BehaviorSubject<T[]>([]);
 
   /**
