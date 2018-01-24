@@ -49,7 +49,7 @@ export class MatMultiYearView<D> implements AfterContentInit {
     this._activeDate =
         this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
     if (Math.floor(this._dateAdapter.getYear(oldActiveDate) / yearsPerPage) !=
-      Math.floor(this._dateAdapter.getYear(this._activeDate) / yearsPerPage)) {
+        Math.floor(this._dateAdapter.getYear(this._activeDate) / yearsPerPage)) {
       this._init();
     }
   }
@@ -114,7 +114,7 @@ export class MatMultiYearView<D> implements AfterContentInit {
     let daysInMonth =
         this._dateAdapter.getNumDaysInMonth(this._dateAdapter.createDate(year, month, 1));
     this.selectedChange.emit(this._dateAdapter.createDate(year, month,
-      Math.min(this._dateAdapter.getDate(this.activeDate), daysInMonth)));
+        Math.min(this._dateAdapter.getDate(this.activeDate), daysInMonth)));
   }
 
   _getActiveCell(): number {
