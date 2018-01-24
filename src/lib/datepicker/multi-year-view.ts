@@ -17,9 +17,9 @@ import {
   Output,
   ViewEncapsulation
 } from '@angular/core';
-import {DateAdapter} from '@angular/material/core';
-import {MatCalendarCell} from './calendar-body';
-import {createMissingDateImplError} from './datepicker-errors';
+import { DateAdapter } from '@angular/material/core';
+import { MatCalendarCell } from './calendar-body';
+import { createMissingDateImplError } from './datepicker-errors';
 
 
 export const yearsPerPage = 24;
@@ -47,9 +47,9 @@ export class MatMultiYearView<D> implements AfterContentInit {
   set activeDate(value: D) {
     let oldActiveDate = this._activeDate;
     this._activeDate =
-        this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
+      this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
     if (Math.floor(this._dateAdapter.getYear(oldActiveDate) / yearsPerPage) !=
-        Math.floor(this._dateAdapter.getYear(this._activeDate) / yearsPerPage)) {
+      Math.floor(this._dateAdapter.getYear(this._activeDate) / yearsPerPage)) {
       this._init();
     }
   }
@@ -79,8 +79,8 @@ export class MatMultiYearView<D> implements AfterContentInit {
   /** The year of the selected date. Null if the selected date is null. */
   _selectedYear: number | null;
 
-  constructor(@Optional() public _dateAdapter: DateAdapter<D>,
-              private _changeDetectorRef: ChangeDetectorRef) {
+  constructor( @Optional() public _dateAdapter: DateAdapter<D>,
+    private _changeDetectorRef: ChangeDetectorRef) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
@@ -112,9 +112,9 @@ export class MatMultiYearView<D> implements AfterContentInit {
   _yearSelected(year: number) {
     let month = this._dateAdapter.getMonth(this.activeDate);
     let daysInMonth =
-        this._dateAdapter.getNumDaysInMonth(this._dateAdapter.createDate(year, month, 1));
+      this._dateAdapter.getNumDaysInMonth(this._dateAdapter.createDate(year, month, 1));
     this.selectedChange.emit(this._dateAdapter.createDate(year, month,
-        Math.min(this._dateAdapter.getDate(this.activeDate), daysInMonth)));
+      Math.min(this._dateAdapter.getDate(this.activeDate), daysInMonth)));
   }
 
   _getActiveCell(): number {
@@ -124,7 +124,26 @@ export class MatMultiYearView<D> implements AfterContentInit {
   /** Creates an MatCalendarCell for the given year. */
   private _createCellForYear(year: number) {
     let yearName = this._dateAdapter.getYearName(this._dateAdapter.createDate(year, 0, 1));
-    return new MatCalendarCell(year, yearName, yearName, true);
+    return new MatCalendarCell(year, yearName, yearName, this._isYearEnabled(year));
+  }
+
+  /** Whether the given year is enabled. */
+  private _isYearEnabled(year: number) {
+    if (!this.dateFilter) {
+      return true;
+    }
+    
+    let firstOfYear = this._dateAdapter.createDate(year, 0, 1);
+
+    // If any date in the year is enabled count the year as enabled.
+    for (let date = firstOfYear; this._dateAdapter.getYear(date) == year;
+      date = this._dateAdapter.addCalendarDays(date, 1)) {
+      if (this.dateFilter(date)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**

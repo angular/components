@@ -18,6 +18,7 @@ describe('MatMultiYearView', () => {
 
         // Test components.
         StandardMultiYearView,
+        MultiYearViewWithDateFilter,
       ],
     });
 
@@ -71,6 +72,27 @@ describe('MatMultiYearView', () => {
       expect(cellEls[1].classList).toContain('mat-calendar-body-active');
     });
   });
+
+  describe('multi year view with date filter', () => {
+    let fixture: ComponentFixture<MultiYearViewWithDateFilter>;
+    let testComponent: MultiYearViewWithDateFilter;
+    let multiYearViewNativeElement: Element;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(MultiYearViewWithDateFilter);
+      fixture.detectChanges();
+
+      let multiYearViewDebugElement = fixture.debugElement.query(By.directive(MatMultiYearView));
+      multiYearViewNativeElement = multiYearViewDebugElement.nativeElement;
+      testComponent = fixture.componentInstance;
+    });
+
+    it('should disabled years with no enabled days', () => {
+      let cells = multiYearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+      expect(cells[0].classList).not.toContain('mat-calendar-body-disabled');
+      expect(cells[1].classList).toContain('mat-calendar-body-disabled');
+    });
+  });
 });
 
 
@@ -83,4 +105,17 @@ class StandardMultiYearView {
   selected = new Date(2020, JAN, 1);
 
   @ViewChild(MatYearView) yearView: MatYearView<Date>;
+}
+
+@Component({
+  template: `<mat-multi-year-view [activeDate]="activeDate" [dateFilter]="dateFilter"></mat-multi-year-view>`
+})
+class MultiYearViewWithDateFilter {
+  activeDate = new Date(2017, JAN, 1);
+  dateFilter(date: Date) {
+    if (date.getFullYear() == 2017) {
+      return false;
+    }
+    return true;
+  }
 }
