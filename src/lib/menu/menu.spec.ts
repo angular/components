@@ -378,6 +378,24 @@ describe('MatMenu', () => {
       expect(panel.classList).toContain('mat-menu-after');
     });
 
+    it('should update menu position on every open', fakeAsync(() => {
+      const {top: beforeTop, left: beforeLeft} = panel.getBoundingClientRect();
+
+      fixture.componentInstance.trigger.closeMenu();
+      fixture.componentInstance.xPosition = 'after';
+      fixture.componentInstance.yPosition = 'below';
+      fixture.detectChanges();
+      tick(500);
+
+      fixture.componentInstance.trigger.openMenu();
+      fixture.detectChanges();
+
+      const newPanel = overlayContainerElement.querySelector('.mat-menu-panel') as HTMLElement;
+      const {top: afterTop, left: afterLeft} = newPanel.getBoundingClientRect();
+
+      expect(beforeLeft).toBeLessThan(afterLeft);
+      expect(beforeTop).toBeLessThan(afterTop);
+    }));
   });
 
   describe('fallback positions', () => {
