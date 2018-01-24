@@ -75,6 +75,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 })
 export class PizzaPartyAppModule { }
 ```
+If you are using Angular Universal the animation modules need to be imported in your browser specific code path such as browser.module.ts, not the main app.module.ts
 
 ### Step 3: Import the component modules
 
