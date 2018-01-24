@@ -32,7 +32,7 @@ delay of 1500ms. The longpress behavior requires HammerJS to be loaded on the pa
 about adding HammerJS to your app, check out the Gesture Support section of the Getting Started 
 guide.
 
-#### Show/Hide Delay
+#### Show and hide delays
 
 To add a delay before showing or hiding the tooltip, you can use the inputs `matTooltipShowDelay` 
 and `matTooltipHideDelay` to provide a delay time in milliseconds.
@@ -58,8 +58,8 @@ which both accept a number in milliseconds to delay before applying the display 
 
 #### Disabling the tooltip from showing
 
-To turn off the tooltip and prevent it from showing to the user, set the `matTooltipDisabled` input
-flag to true.
+To completely disable a tooltip, set `matTooltipDisabled`. While disabled, a tooltip will never be 
+shown.
 
 ### Accessibility
 
