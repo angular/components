@@ -25,6 +25,7 @@ import {
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {takeUntil} from 'rxjs/operators/takeUntil';
 import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs/Subscription';
 import {CdkTreeNodeDef, CdkTreeNode, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
 import {TreeControl} from './control/tree-control';
@@ -64,6 +65,9 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
 
   /** Stores the node definition that does not have a when predicate. */
   private _defaultNodeDef: CdkTreeNodeDef<T> | null;
+
+  /** Data subscription */
+  private _dataSubscription : Subscription | null;
 
   /**
    * Provides a stream containing the latest data array to render. Influenced by the tree's
@@ -118,6 +122,11 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
     if (this.dataSource) {
       this.dataSource.disconnect(this);
     }
+
+    if (this._dataSubscription) {
+      this._dataSubscription.unsubscribe();
+      this._dataSubscription = null;
+    }
   }
 
   ngAfterContentChecked() {
@@ -125,7 +134,7 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
     if (defaultNodeDefs.length > 1) { throw getTreeMultipleDefaultNodeDefsError(); }
     this._defaultNodeDef = defaultNodeDefs[0];
 
-    if (this.dataSource) {
+    if (this.dataSource && this._nodeDefs && !this._dataSubscription) {
       this._observeRenderChanges();
     }
   }
@@ -145,6 +154,11 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
       this.dataSource.disconnect(this);
     }
 
+    if (this._dataSubscription) {
+      this._dataSubscription.unsubscribe();
+      this._dataSubscription = null;
+    }
+
     // Remove the all dataNodes if there is now no data source
     if (!dataSource) {
       this._nodeOutlet.viewContainer.clear();
@@ -155,7 +169,7 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
 
   /** Set up a subscription for the data provided by the data source. */
   private _observeRenderChanges() {
-    this.dataSource.connect(this).pipe(takeUntil(this._onDestroy))
+    this._dataSubscription = this.dataSource.connect(this).pipe(takeUntil(this._onDestroy))
       .subscribe(data => {
         this._data = data;
         this._renderNodeChanges(data);
