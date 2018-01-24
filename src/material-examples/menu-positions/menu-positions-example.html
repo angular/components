@@ -1,0 +1,28 @@
+<mat-card class="mat-typography">
+  <div class="example-menu-positions-container">
+    <div>
+      <h3>xPosition</h3>
+      <mat-radio-group [(ngModel)]="xPosition" class="example-radio-group">
+        <mat-radio-button value="before">before</mat-radio-button>
+        <mat-radio-button value="after">after</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div>
+      <h3>YPosition</h3>
+      <mat-radio-group [(ngModel)]="yPosition" class="example-radio-group">
+        <mat-radio-button value="above">above</mat-radio-button>
+        <mat-radio-button value="below">below</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div>
+      <h3>overlapTrigger</h3>
+      <mat-checkbox [(ngModel)]="overlapTrigger">overlap trigger?</mat-checkbox>
+    </div>
+  </div>
+  <button mat-button [matMenuTriggerFor]="menu">Menu</button>
+  <mat-menu #menu [yPosition]="yPosition" [xPosition]="xPosition" [overlapTrigger]="overlapTrigger">
+    <button mat-menu-item>Item 1</button>
+    <button mat-menu-item>Item 2</button>
+    <button mat-menu-item>Item 3</button>
+  </mat-menu>
+</mat-card>

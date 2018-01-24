@@ -66,6 +66,7 @@ import {ListSectionsExample} from './list-sections/list-sections-example';
 import {ListSelectionExample} from './list-selection/list-selection-example';
 import {MenuIconsExample} from './menu-icons/menu-icons-example';
 import {MenuOverviewExample} from './menu-overview/menu-overview-example';
+import {MenuPositionsExample} from './menu-positions/menu-positions-example';
 import {NestedMenuExample} from './nested-menu/nested-menu-example';
 import {PaginatorConfigurableExample} from './paginator-configurable/paginator-configurable-example';
 import {PaginatorOverviewExample} from './paginator-overview/paginator-overview-example';
@@ -387,6 +388,12 @@ export const EXAMPLE_COMPONENTS: {[key: string]: LiveExample} = {
     title: 'Basic menu',
     component: MenuOverviewExample
   },
+  'menu-positions': {
+    title: 'Menu positions',
+    component: MenuPositionsExample,
+    additionalFiles: null,
+    selectorName: null
+  },
   'nested-menu': {
     title: 'Nested menu',
     component: NestedMenuExample
@@ -685,6 +692,7 @@ export const EXAMPLE_LIST = [
   ListSelectionExample,
   MenuIconsExample,
   MenuOverviewExample,
+  MenuPositionsExample,
   NestedMenuExample,
   PaginatorConfigurableExample,
   PaginatorOverviewExample,
