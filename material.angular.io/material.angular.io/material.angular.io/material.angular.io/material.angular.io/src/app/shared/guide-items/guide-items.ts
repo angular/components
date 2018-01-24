@@ -28,11 +28,6 @@ const GUIDES = [
     document: '/assets/documents/guides/material-typography.html',
   },
   {
-    id: 'cdk-table',
-    name: `CDK data-table`,
-    document: '/assets/documents/guides/material-cdk-table.html',
-  },
-  {
     id: 'customizing-component-styles',
     name: 'Customizing component styles',
     document: '/assets/documents/guides/material-customizing-component-styles.html'
