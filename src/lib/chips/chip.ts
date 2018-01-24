@@ -49,25 +49,7 @@ export class MatChipBase {
 
 export const _MatChipMixinBase = mixinColor(mixinDisabled(MatChipBase), 'primary');
 
-/**
- * Dummy directive to add CSS class to basic chips.
- * @docs-private
- */
-@Directive({
-  selector: `mat-basic-chip, [mat-basic-chip]`,
-  host: {'class': 'mat-basic-chip'},
-})
-export class MatBasicChip {}
-
-/**
- * Dummy directive to add CSS class to standard chips.
- * @docs-private
- */
-@Directive({
-  selector: `mat-chip, [mat-chip]`,
-  host: {'class': 'mat-standard-chip'},
-})
-export class MatStandardChip {}
+const CHIP_ATTRIBUTE_NAMES = ['mat-basic-chip'];
 
 /**
  * Dummy directive to add CSS class to chip avatar.
@@ -102,7 +84,7 @@ export class MatChipTrailingIcon {}
     'role': 'option',
     '[class.mat-chip-selected]': 'selected',
     '[class.mat-chip-with-avatar]': 'avatar',
-    '[class.mat-chip-with-trailing-icon]': 'hasTrailingIcon',
+    '[class.mat-chip-with-trailing-icon]': 'trailingIcon',
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-selected]': 'ariaSelected',
@@ -130,12 +112,8 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
   /** The chip avatar */
   @ContentChild(MatChipAvatar) avatar: MatChipAvatar;
 
-  /** The chip remove toggler */
+  /** The chip's trailing icon. */
   @ContentChild(MatChipTrailingIcon) trailingIcon: MatChipTrailingIcon;
-
-  @ContentChild(forwardRef(() => MatChipRemove)) removeIcon: Element;
-
-  get hasTrailingIcon() { return this.removeIcon || this.trailingIcon; }
 
   /** Whether the chip is selected. */
   @Input()
@@ -212,6 +190,20 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
   constructor(public _elementRef: ElementRef) {
     super(_elementRef);
+
+    this._addHostClassName();
+  }
+
+  _addHostClassName() {
+    // Add class for the different chips
+    for (const attr of CHIP_ATTRIBUTE_NAMES) {
+      if (this._elementRef.nativeElement.hasAttribute(attr) ||
+        this._elementRef.nativeElement.tagName.toLowerCase() === attr) {
+        (this._elementRef.nativeElement as HTMLElement).classList.add(attr);
+        return;
+      }
+    }
+    (this._elementRef.nativeElement as HTMLElement).classList.add('mat-standard-chip');
   }
 
   ngOnDestroy(): void {
