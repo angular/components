@@ -87,7 +87,7 @@ describe('MatMultiYearView', () => {
       testComponent = fixture.componentInstance;
     });
 
-    it('should disabled years with no enabled days', () => {
+    it('should disable years with no enabled days', () => {
       let cells = multiYearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
       expect(cells[0].classList).not.toContain('mat-calendar-body-disabled');
       expect(cells[1].classList).toContain('mat-calendar-body-disabled');

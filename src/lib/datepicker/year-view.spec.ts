@@ -102,7 +102,7 @@ describe('MatYearView', () => {
       testComponent = fixture.componentInstance;
     });
 
-    it('should disabled months with no enabled days', () => {
+    it('should disable months with no enabled days', () => {
       let cells = yearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
       expect(cells[0].classList).not.toContain('mat-calendar-body-disabled');
       expect(cells[1].classList).toContain('mat-calendar-body-disabled');
