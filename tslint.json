@@ -118,7 +118,7 @@
     "missing-rollup-globals": [
       true,
       "./tools/package-tools/rollup-globals.ts",
-      "src/+(lib|cdk|material-examples)/**/*.ts"
+      "src/+(lib|cdk|material-examples|material-experimental|cdk-experimental)/**/*.ts"
     ],
     "no-unescaped-html-tag": true
   }
