@@ -50,7 +50,7 @@ Finally, if your app's content **is not** placed inside of a `mat-sidenav-contai
 need to add the `mat-app-background` class to your wrapper element (for example the `body`). This
 ensures that the proper theme background is applied to your page.
 
-### Defining a custom theme
+### Step 1: Defining a custom theme
 When you want more customization than a pre-built theme offers, you can create your own theme file.
 
 A custom theme file does two things:
@@ -93,6 +93,7 @@ $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-
 
 You only need this single Sass file; you do not need to use Sass to style the rest of your app.
 
+### Step 2: Importing your theme
 If you are using the Angular CLI, support for compiling Sass to css is built-in; you only have to
 add a new entry to the `"styles"` list in `angular-cli.json` pointing to the theme
 file (e.g., `unicorn-app-theme.scss`).
