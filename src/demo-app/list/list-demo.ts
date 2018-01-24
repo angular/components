@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Component} from '@angular/core';
 
 
@@ -51,4 +59,13 @@ export class ListDemo {
 
   thirdLine: boolean = false;
   infoClicked: boolean = false;
+
+  selectedOptions: string[] = ['apples'];
+  changeEventCount: number = 0;
+  modelChangeEventCount: number = 0;
+
+  onSelectedOptionsChange(values: string[]) {
+    this.selectedOptions = values;
+    this.modelChangeEventCount++;
+  }
 }

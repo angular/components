@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -12,7 +12,10 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {PortalModule} from '@angular/cdk/portal';
 import {A11yModule} from '@angular/cdk/a11y';
 import {MatCommonModule} from '@angular/material/core';
-import {MatDialog, MAT_DIALOG_SCROLL_STRATEGY_PROVIDER} from './dialog';
+import {
+  MatDialog,
+  MAT_DIALOG_SCROLL_STRATEGY_PROVIDER
+} from './dialog';
 import {MatDialogContainer} from './dialog-container';
 import {
   MatDialogClose,

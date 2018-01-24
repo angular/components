@@ -1,31 +1,31 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
 import {Constructor} from './constructor';
-import {ElementRef, Renderer2} from '@angular/core';
+import {ElementRef} from '@angular/core';
 
 /** @docs-private */
 export interface CanColor {
+  /** Theme color palette for the component. */
   color: ThemePalette;
 }
 
 /** @docs-private */
-export interface HasRenderer {
-  _renderer: Renderer2;
+export interface HasElementRef {
   _elementRef: ElementRef;
 }
 
-/** Possible color palette values.  */
+/** Possible color palette values. */
 export type ThemePalette = 'primary' | 'accent' | 'warn' | undefined;
 
 /** Mixin to augment a directive with a `color` property. */
-export function mixinColor<T extends Constructor<HasRenderer>>(base: T, defaultColor?: ThemePalette)
-    : Constructor<CanColor> & T {
+export function mixinColor<T extends Constructor<HasElementRef>>(base: T,
+    defaultColor?: ThemePalette): Constructor<CanColor> & T {
   return class extends base {
     private _color: ThemePalette;
 
@@ -35,10 +35,10 @@ export function mixinColor<T extends Constructor<HasRenderer>>(base: T, defaultC
 
       if (colorPalette !== this._color) {
         if (this._color) {
-          this._renderer.removeClass(this._elementRef.nativeElement, `mat-${this._color}`);
+          this._elementRef.nativeElement.classList.remove(`mat-${this._color}`);
         }
         if (colorPalette) {
-          this._renderer.addClass(this._elementRef.nativeElement, `mat-${colorPalette}`);
+          this._elementRef.nativeElement.classList.add(`mat-${colorPalette}`);
         }
 
         this._color = colorPalette;

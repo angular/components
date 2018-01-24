@@ -5,15 +5,31 @@ For existing apps, follow these steps to begin using Angular Material.
 
 ### Step 1: Install Angular Material and Angular CDK
 
+You can use either the npm or yarn command-line tool to install packages. Use whichever is appropriate for your project in the examples below.
+
+#### NPM
 ```bash
 npm install --save @angular/material @angular/cdk
 ```
+#### Yarn
+```bash
+yarn add @angular/material @angular/cdk
+```
+
+
+#### Alternative: Snapshot Build
 
 A snapshot build with the latest changes from master is also available. Note that this snapshot
 build should not be considered stable and may break between releases.
 
+#### NPM
 ```bash
 npm install --save angular/material2-builds angular/cdk-builds
+```
+
+#### Yarn
+```bash
+yarn add angular/material2-builds angular/cdk-builds
 ```
 
 ### Step 2: Animations
@@ -22,9 +38,19 @@ Some Material components depend on the Angular animations module in order to be 
 more advanced transitions. If you want these animations to work in your app, you have to
 install the `@angular/animations` module and include the `BrowserAnimationsModule` in your app.
 
+#### NPM
 ```bash
 npm install --save @angular/animations
 ```
+
+#### Yarn
+```bash
+yarn add @angular/animations
+```
+
+**Note:** `@angular/animations` uses the WebAnimation API that isn't supported by all browsers yet.
+If you want to support Material component animations in these browsers, you'll have to
+[include a polyfill](https://github.com/web-animations/web-animations-js).
 
 ```ts
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -52,7 +78,7 @@ export class PizzaPartyAppModule { }
 
 ### Step 3: Import the component modules
 
-Import the NgModule for each component you want to use: 
+Import the NgModule for each component you want to use:
 
 ```ts
 import {MatButtonModule, MatCheckboxModule} from '@angular/material';
@@ -65,7 +91,7 @@ import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 export class PizzaPartyAppModule { }
 ```
 
-Alternatively, you can create a separate NgModule that imports all of the 
+Alternatively, you can create a separate NgModule that imports all of the
 Angular Material components that you will use in your application. You can then
 include this module wherever you'd like to use the components.
 
@@ -79,7 +105,7 @@ import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 export class MyOwnCustomMaterialModule { }
 ```
 
-Whichever approach you use, be sure to import the Angular Material modules _after_ Angular's 
+Whichever approach you use, be sure to import the Angular Material modules _after_ Angular's
 `BrowserModule`, as the import order matters for NgModules.
 
 ### Step 4: Include a theme
@@ -109,8 +135,15 @@ You can add HammerJS to your application via [npm](https://www.npmjs.com/package
 directly from your app.
 
 To install via npm, use the following command:
+
+#### NPM
 ```bash
 npm install --save hammerjs
+```
+
+#### Yarn
+```bash
+yarn add hammerjs
 ```
 
 After installing, import it on your app's entry point (e.g. `src/main.ts`).
@@ -120,7 +153,7 @@ import 'hammerjs';
 
 ### Step 6 (Optional): Add Material Icons
 
-If you want to use the `mat-icon` component with the official 
+If you want to use the `mat-icon` component with the official
 [Material Design Icons](https://material.io/icons/), load the icon font in your `index.html`.
 
 ```html
@@ -138,10 +171,10 @@ Note that `mat-icon` supports any font or svg icons; using Material Icons is one
 If your project is using SystemJS for module loading, you will need to add `@angular/material` and
 `@angular/cdk` to the SystemJS configuration.
 
-The `@angular/cdk` package is organized of multiple entry-points. 
+The `@angular/cdk` package is organized of multiple entry-points.
 Each of these entry-points must be registered individually with SystemJS.
 
-Here is a example configuration where `@angular/material`, `@angular/cdk/platform` and 
+Here is a example configuration where `@angular/material`, `@angular/cdk/platform` and
 `@angular/cdk/a11y` are used:
 
 
@@ -151,7 +184,7 @@ System.config({
   map: {
     // ...
     '@angular/material': 'npm:@angular/material/bundles/material.umd.js',
-    
+
     // CDK individual packages
     '@angular/cdk/platform': 'npm:@angular/cdk/bundles/cdk-platform.umd.js',
     '@angular/cdk/a11y': 'npm:@angular/cdk/bundles/cdk-a11y.umd.js',

@@ -1,31 +1,31 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-
-import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
-import {AriaDescriber} from '@angular/cdk/a11y';
+import {AnimationEvent} from '@angular/animations';
+import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {
-  OriginConnectionPosition,
-  Overlay,
-  OverlayConnectionPosition,
-  OverlayRef,
-  OverlayConfig,
-  RepositionScrollStrategy,
-  ScrollStrategy,
   ConnectionPositionPair,
   HorizontalConnectionPos,
+  OriginConnectionPosition,
+  Overlay,
+  OverlayConfig,
+  OverlayConnectionPosition,
+  OverlayRef,
+  RepositionScrollStrategy,
+  ScrollStrategy,
   VerticalConnectionPos,
 } from '@angular/cdk/overlay';
 import {Platform} from '@angular/cdk/platform';
 import {ComponentPortal} from '@angular/cdk/portal';
-import {first} from '@angular/cdk/rxjs';
+import {take} from 'rxjs/operators/take';
+import {merge} from 'rxjs/observable/merge';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
   ChangeDetectionStrategy,
@@ -39,18 +39,15 @@ import {
   NgZone,
   OnDestroy,
   Optional,
-  Renderer2,
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
+import {matTooltipAnimations} from './tooltip-animations';
 
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
-
-/** Time in ms to delay before changing the tooltip visibility to hidden */
-export const TOUCHEND_HIDE_DELAY = 1500;
 
 /** Time in ms to throttle repositioning after scroll events. */
 export const SCROLL_THROTTLE_MS = 20;
@@ -79,6 +76,18 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY_PROVIDER = {
   deps: [Overlay],
   useFactory: MAT_TOOLTIP_SCROLL_STRATEGY_PROVIDER_FACTORY
 };
+
+/** Default `matTooltip` options that can be overridden. */
+export interface MatTooltipDefaultOptions {
+  showDelay: number;
+  hideDelay: number;
+  touchendHideDelay: number;
+}
+
+/** Injection token to be used to override the default options for `matTooltip`. */
+export const MAT_TOOLTIP_DEFAULT_OPTIONS =
+    new InjectionToken<MatTooltipDefaultOptions>('mat-tooltip-default-options');
+
 /**
  * Directive that attaches a material design tooltip to the host element. Animates the showing and
  * hiding of a tooltip provided position (defaults to below the element).
@@ -86,15 +95,13 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY_PROVIDER = {
  * https://material.google.com/components/tooltips.html
  */
 @Directive({
-  selector: '[mat-tooltip], [matTooltip]',
+  selector: '[matTooltip]',
+  exportAs: 'matTooltip',
   host: {
     '(longpress)': 'show()',
-    '(focus)': 'show()',
-    '(blur)': 'hide(0)',
     '(keydown)': '_handleKeydown($event)',
-    '(touchend)': 'hide(' + TOUCHEND_HIDE_DELAY + ')',
+    '(touchend)': '_handleTouchend()',
   },
-  exportAs: 'matTooltip',
 })
 export class MatTooltip implements OnDestroy {
   _overlayRef: OverlayRef | null;
@@ -137,22 +144,30 @@ export class MatTooltip implements OnDestroy {
   set _positionDeprecated(value: TooltipPosition) { this._position = value; }
 
   /** The default delay in ms before showing the tooltip after show is called */
-  @Input('matTooltipShowDelay') showDelay = 0;
+  @Input('matTooltipShowDelay') showDelay =
+      this._defaultOptions ? this._defaultOptions.showDelay : 0;
 
   /** The default delay in ms before hiding the tooltip after hide is called */
-  @Input('matTooltipHideDelay') hideDelay = 0;
+  @Input('matTooltipHideDelay') hideDelay =
+      this._defaultOptions ? this._defaultOptions.hideDelay : 0;
 
   private _message = '';
 
   /** The message to be displayed in the tooltip */
-  @Input('matTooltip') get message() { return this._message; }
+  @Input('matTooltip')
+  get message() { return this._message; }
   set message(value: string) {
     this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this._message);
 
     // If the message is not a string (e.g. number), convert it to a string and trim it.
     this._message = value != null ? `${value}`.trim() : '';
-    this._updateTooltipMessage();
-    this._ariaDescriber.describe(this._elementRef.nativeElement, this.message);
+
+    if (!this._message && this._isTooltipVisible()) {
+      this.hide(0);
+    } else {
+      this._updateTooltipMessage();
+      this._ariaDescriber.describe(this._elementRef.nativeElement, this.message);
+    }
   }
 
   /** Classes to be passed to the tooltip. Supports the same syntax as `ngClass`. */
@@ -165,11 +180,9 @@ export class MatTooltip implements OnDestroy {
     }
   }
 
-  private _enterListener: Function;
-  private _leaveListener: Function;
+  private _manualListeners = new Map<string, Function>();
 
   constructor(
-    renderer: Renderer2,
     private _overlay: Overlay,
     private _elementRef: ElementRef,
     private _scrollDispatcher: ScrollDispatcher,
@@ -177,17 +190,41 @@ export class MatTooltip implements OnDestroy {
     private _ngZone: NgZone,
     private _platform: Platform,
     private _ariaDescriber: AriaDescriber,
+    private _focusMonitor: FocusMonitor,
     @Inject(MAT_TOOLTIP_SCROLL_STRATEGY) private _scrollStrategy,
-    @Optional() private _dir: Directionality) {
+    @Optional() private _dir: Directionality,
+    @Optional() @Inject(MAT_TOOLTIP_DEFAULT_OPTIONS)
+      private _defaultOptions?: MatTooltipDefaultOptions) {
+
+    // TODO(crisbeto): make the `_defaultOptions` a required param next time we do breaking changes.
+
+    const element: HTMLElement = _elementRef.nativeElement;
 
     // The mouse events shouldn't be bound on iOS devices, because
     // they can prevent the first tap from firing its click event.
     if (!_platform.IOS) {
-      this._enterListener =
-        renderer.listen(_elementRef.nativeElement, 'mouseenter', () => this.show());
-      this._leaveListener =
-        renderer.listen(_elementRef.nativeElement, 'mouseleave', () => this.hide());
+      this._manualListeners.set('mouseenter', () => this.show());
+      this._manualListeners.set('mouseleave', () => this.hide());
+
+      this._manualListeners
+        .forEach((listener, event) => _elementRef.nativeElement.addEventListener(event, listener));
+    } else if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
+      // When we bind a gesture event on an element (in this case `longpress`), HammerJS
+      // will add some inline styles by default, including `user-select: none`. This is
+      // problematic on iOS, because it will prevent users from typing in inputs. If
+      // we're on iOS and the tooltip is attached on an input or textarea, we clear
+      // the `user-select` to avoid these issues.
+      element.style.webkitUserSelect = element.style.userSelect = '';
     }
+
+    _focusMonitor.monitor(element).subscribe(origin => {
+      // Note that the focus monitor runs outside the Angular zone.
+      if (!origin) {
+        _ngZone.run(() => this.hide(0));
+      } else if (origin !== 'program') {
+        _ngZone.run(() => this.show());
+      }
+    });
   }
 
   /**
@@ -197,13 +234,18 @@ export class MatTooltip implements OnDestroy {
     if (this._tooltipInstance) {
       this._disposeTooltip();
     }
+
     // Clean up the event listeners set in the constructor
     if (!this._platform.IOS) {
-      this._enterListener();
-      this._leaveListener();
+      this._manualListeners.forEach((listener, event) => {
+        this._elementRef.nativeElement.removeEventListener(event, listener);
+      });
+
+      this._manualListeners.clear();
     }
 
     this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this.message);
+    this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
   }
 
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */
@@ -244,15 +286,20 @@ export class MatTooltip implements OnDestroy {
     }
   }
 
+  /** Handles the touchend events on the host element. */
+  _handleTouchend() {
+    this.hide(this._defaultOptions ? this._defaultOptions.touchendHideDelay : 1500);
+  }
+
   /** Create the tooltip to display */
   private _createTooltip(): void {
-    let overlayRef = this._createOverlay();
-    let portal = new ComponentPortal(TooltipComponent, this._viewContainerRef);
+    const overlayRef = this._createOverlay();
+    const portal = new ComponentPortal(TooltipComponent, this._viewContainerRef);
 
     this._tooltipInstance = overlayRef.attach(portal).instance;
 
-    // Dispose the overlay when finished the shown tooltip.
-    this._tooltipInstance!.afterHidden().subscribe(() => {
+    // Dispose of the tooltip when the overlay is detached.
+    merge(this._tooltipInstance!.afterHidden(), overlayRef.detachments()).subscribe(() => {
       // Check first if the tooltip has already been removed through this components destroy.
       if (this._tooltipInstance) {
         this._disposeTooltip();
@@ -271,13 +318,17 @@ export class MatTooltip implements OnDestroy {
       .connectedTo(this._elementRef, origin.main, overlay.main)
       .withFallbackPosition(origin.fallback, overlay.fallback);
 
-    strategy.withScrollableContainers(this._scrollDispatcher.getScrollContainers(this._elementRef));
+    const scrollableAncestors = this._scrollDispatcher
+      .getAncestorScrollContainers(this._elementRef);
+
+    strategy.withScrollableContainers(scrollableAncestors);
+
     strategy.onPositionChange.subscribe(change => {
       if (this._tooltipInstance) {
         if (change.scrollableViewProperties.isOverlayClipped && this._tooltipInstance.isVisible()) {
           // After position changes occur and the overlay is clipped by
           // a parent scrollable then close the tooltip.
-          this.hide(0);
+          this._ngZone.run(() => this.hide(0));
         } else {
           // Otherwise recalculate the origin based on the new position.
           this._tooltipInstance._setTransformOrigin(change.connectionPair);
@@ -374,7 +425,7 @@ export class MatTooltip implements OnDestroy {
       this._tooltipInstance.message = this.message;
       this._tooltipInstance._markForCheck();
 
-      first.call(this._ngZone.onMicrotaskEmpty.asObservable()).subscribe(() => {
+      this._ngZone.onMicrotaskEmpty.asObservable().pipe(take(1)).subscribe(() => {
         if (this._tooltipInstance) {
           this._overlayRef!.updatePosition();
         }
@@ -424,14 +475,7 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    trigger('state', [
-      state('initial, void, hidden', style({transform: 'scale(0)'})),
-      state('visible', style({transform: 'scale(1)'})),
-      transition('* => visible', animate('150ms cubic-bezier(0.0, 0.0, 0.2, 1)')),
-      transition('* => hidden', animate('150ms cubic-bezier(0.4, 0.0, 1, 1)')),
-    ])
-  ],
+  animations: [matTooltipAnimations.tooltipState],
   host: {
     // Forces the element to have a layout in IE and Edge. This fixes issues where the element
     // won't be rendered if the animations are disabled or there is no web animations polyfill.

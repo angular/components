@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -30,8 +30,10 @@ export class GlobalPositionStrategy implements PositionStrategy {
   private _width: string = '';
   private _height: string = '';
 
-  /* A lazily-created wrapper for the overlay element that is used as a flex container.  */
+  /** A lazily-created wrapper for the overlay element that is used as a flex container. */
   private _wrapper: HTMLElement | null = null;
+
+  constructor(private _document: any) {}
 
   attach(overlayRef: OverlayRef): void {
     this._overlayRef = overlayRef;
@@ -41,7 +43,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Sets the top position of the overlay. Clears any previously set vertical position.
    * @param value New top offset.
    */
-  top(value = ''): this {
+  top(value: string = ''): this {
     this._bottomOffset = '';
     this._topOffset = value;
     this._alignItems = 'flex-start';
@@ -52,7 +54,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Sets the left position of the overlay. Clears any previously set horizontal position.
    * @param value New left offset.
    */
-  left(value = ''): this {
+  left(value: string = ''): this {
     this._rightOffset = '';
     this._leftOffset = value;
     this._justifyContent = 'flex-start';
@@ -63,7 +65,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Sets the bottom position of the overlay. Clears any previously set vertical position.
    * @param value New bottom offset.
    */
-  bottom(value = ''): this {
+  bottom(value: string = ''): this {
     this._topOffset = '';
     this._bottomOffset = value;
     this._alignItems = 'flex-end';
@@ -74,7 +76,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Sets the right position of the overlay. Clears any previously set horizontal position.
    * @param value New right offset.
    */
-  right(value = ''): this {
+  right(value: string = ''): this {
     this._leftOffset = '';
     this._rightOffset = value;
     this._justifyContent = 'flex-end';
@@ -85,7 +87,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Sets the overlay width and clears any previously set width.
    * @param value New width for the overlay
    */
-  width(value = ''): this {
+  width(value: string = ''): this {
     this._width = value;
 
     // When the width is 100%, we should reset the `left` and the offset,
@@ -101,7 +103,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Sets the overlay height and clears any previously set height.
    * @param value New height for the overlay
    */
-  height(value = ''): this {
+  height(value: string = ''): this {
     this._height = value;
 
     // When the height is 100%, we should reset the `top` and the offset,
@@ -119,7 +121,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    *
    * @param offset Overlay offset from the horizontal center.
    */
-  centerHorizontally(offset = ''): this {
+  centerHorizontally(offset: string = ''): this {
     this.left(offset);
     this._justifyContent = 'center';
     return this;
@@ -131,7 +133,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    *
    * @param offset Overlay offset from the vertical center.
    */
-  centerVertically(offset = ''): this {
+  centerVertically(offset: string = ''): this {
     this.top(offset);
     this._alignItems = 'center';
     return this;
@@ -144,13 +146,20 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * @returns Resolved when the styles have been applied.
    */
   apply(): void {
+    // Since the overlay ref applies the strategy asynchronously, it could
+    // have been disposed before it ends up being applied. If that is the
+    // case, we shouldn't do anything.
+    if (!this._overlayRef.hasAttached()) {
+      return;
+    }
+
     const element = this._overlayRef.overlayElement;
 
     if (!this._wrapper && element.parentNode) {
-      this._wrapper = document.createElement('div');
-      this._wrapper.classList.add('cdk-global-overlay-wrapper');
-      element.parentNode.insertBefore(this._wrapper, element);
-      this._wrapper.appendChild(element);
+      this._wrapper = this._document.createElement('div');
+      this._wrapper!.classList.add('cdk-global-overlay-wrapper');
+      element.parentNode.insertBefore(this._wrapper!, element);
+      this._wrapper!.appendChild(element);
     }
 
     let styles = element.style;

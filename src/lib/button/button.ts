@@ -1,34 +1,31 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {Platform} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
   Component,
   Directive,
   ElementRef,
-  forwardRef,
-  Inject,
   OnDestroy,
-  Optional,
-  Renderer2,
-  Self,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {Platform} from '@angular/cdk/platform';
 import {
   CanColor,
   CanDisable,
   CanDisableRipple,
+  MatRipple,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple
 } from '@angular/material/core';
-import {FocusMonitor} from '@angular/cdk/a11y';
 
 
 // TODO(kara): Convert attribute selectors to classes when attr maps become available
@@ -75,36 +72,23 @@ export class MatIconButtonCssMatStyler {}
   selector: 'button[mat-fab], a[mat-fab]',
   host: {'class': 'mat-fab'}
 })
-export class MatFab {
-  constructor(@Self() @Optional() @Inject(forwardRef(() => MatButton)) button: MatButton,
-              @Self() @Optional() @Inject(forwardRef(() => MatAnchor)) anchor: MatAnchor) {
-    // Set the default color palette for the mat-fab components.
-    (button || anchor).color = DEFAULT_ROUND_BUTTON_COLOR;
-  }
-}
+export class MatFab {}
 
 /**
- * Directive that targets mini-fab buttons and anchors. It's used to apply the `mat-` class
- * to all mini-fab buttons and also is responsible for setting the default color palette.
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
  * @docs-private
  */
 @Directive({
   selector: 'button[mat-mini-fab], a[mat-mini-fab]',
   host: {'class': 'mat-mini-fab'}
 })
-export class MatMiniFab {
-  constructor(@Self() @Optional() @Inject(forwardRef(() => MatButton)) button: MatButton,
-              @Self() @Optional() @Inject(forwardRef(() => MatAnchor)) anchor: MatAnchor) {
-    // Set the default color palette for the mat-mini-fab components.
-    (button || anchor).color = DEFAULT_ROUND_BUTTON_COLOR;
-  }
-}
+export class MatMiniFab {}
 
 
 // Boilerplate for applying mixins to MatButton.
 /** @docs-private */
 export class MatButtonBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  constructor(public _elementRef: ElementRef) {}
 }
 export const _MatButtonMixinBase = mixinColor(mixinDisabled(mixinDisableRipple(MatButtonBase)));
 
@@ -116,6 +100,7 @@ export const _MatButtonMixinBase = mixinColor(mixinDisabled(mixinDisableRipple(M
   moduleId: module.id,
   selector: `button[mat-button], button[mat-raised-button], button[mat-icon-button],
              button[mat-fab], button[mat-mini-fab]`,
+  exportAs: 'matButton',
   host: {
     '[disabled]': 'disabled || null',
   },
@@ -130,17 +115,24 @@ export class MatButton extends _MatButtonMixinBase
     implements OnDestroy, CanDisable, CanColor, CanDisableRipple {
 
   /** Whether the button is round. */
-  _isRoundButton: boolean = this._hasAttributeWithPrefix('fab', 'mini-fab');
+  _isRoundButton: boolean = this._hasHostAttributes('mat-fab', 'mat-mini-fab');
 
   /** Whether the button is icon button. */
-  _isIconButton: boolean = this._hasAttributeWithPrefix('icon-button');
+  _isIconButton: boolean = this._hasHostAttributes('mat-icon-button');
 
-  constructor(renderer: Renderer2,
-              elementRef: ElementRef,
+  /** Reference to the MatRipple instance of the button. */
+  @ViewChild(MatRipple) ripple: MatRipple;
+
+  constructor(elementRef: ElementRef,
               private _platform: Platform,
               private _focusMonitor: FocusMonitor) {
-    super(renderer, elementRef);
-    this._focusMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
+    super(elementRef);
+
+    this._focusMonitor.monitor(this._elementRef.nativeElement, true);
+
+    if (this._isRoundButton) {
+      this.color = DEFAULT_ROUND_BUTTON_COLOR;
+    }
   }
 
   ngOnDestroy() {
@@ -160,8 +152,8 @@ export class MatButton extends _MatButtonMixinBase
     return this.disableRipple || this.disabled;
   }
 
-  /** Gets whether the button has one of the given attributes with a 'mat-' prefix. */
-  _hasAttributeWithPrefix(...unprefixedAttributeNames: string[]) {
+  /** Gets whether the button has one of the given attributes. */
+  _hasHostAttributes(...attributes: string[]) {
     // If not on the browser, say that there are none of the attributes present.
     // Since these only affect how the ripple displays (and ripples only happen on the client),
     // detecting these attributes isn't necessary when not on the browser.
@@ -169,9 +161,7 @@ export class MatButton extends _MatButtonMixinBase
       return false;
     }
 
-    return unprefixedAttributeNames.some(suffix => {
-      return this._getHostElement().hasAttribute('mat-' + suffix);
-    });
+    return attributes.some(attribute => this._getHostElement().hasAttribute(attribute));
   }
 }
 
@@ -181,6 +171,7 @@ export class MatButton extends _MatButtonMixinBase
 @Component({
   moduleId: module.id,
   selector: `a[mat-button], a[mat-raised-button], a[mat-icon-button], a[mat-fab], a[mat-mini-fab]`,
+  exportAs: 'matButton, matAnchor',
   host: {
     '[attr.tabindex]': 'disabled ? -1 : 0',
     '[attr.disabled]': 'disabled || null',
@@ -198,9 +189,8 @@ export class MatAnchor extends MatButton {
   constructor(
       platform: Platform,
       focusMonitor: FocusMonitor,
-      elementRef: ElementRef,
-      renderer: Renderer2) {
-    super(renderer, elementRef, platform, focusMonitor);
+      elementRef: ElementRef) {
+    super(elementRef, platform, focusMonitor);
   }
 
   _haltDisabledEvents(event: Event) {

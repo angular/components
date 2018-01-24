@@ -2,6 +2,8 @@
 // ES2015 since the build process will create FESM bundles using rollup.
 {
   "compilerOptions": {
+    // Needed for Moment.js since it doesn't have a default export.
+    "allowSyntheticDefaultImports": true,
     "declaration": true,
     "stripInternal": false,
     "experimentalDecorators": true,
@@ -20,19 +22,22 @@
     "types": [],
     "baseUrl": ".",
     "paths": {
-      "@angular/material/*": ["../../dist/packages/material/*/public_api"],
-      "@angular/material": ["../../dist/packages/material/public_api"],
-      "@angular/cdk/*": ["../../dist/packages/cdk/*/public_api"]
+      "@angular/material/*": ["../../dist/packages/material/*"],
+      "@angular/material": ["../../dist/packages/material/public-api"],
+      "@angular/material-moment-adapter": ["../../dist/packages/material-moment-adapter"],
+      "@angular/cdk/*": ["../../dist/packages/cdk/*"]
     }
   },
   "files": [
-    "public_api.ts"
+    "public-api.ts"
   ],
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
     "flatModuleId": "@angular/material-examples",
-    "skipTemplateCodegen": true
+    "skipTemplateCodegen": true,
+    // TODO: disabled for now due to @angular/forms
+    "fullTemplateTypeCheck": false
   }
 }

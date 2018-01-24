@@ -1,13 +1,14 @@
 import {join} from 'path';
-import {main as ngc} from '@angular/tsc-wrapped';
+import {red} from 'chalk';
 import {PackageBundler} from './build-bundles';
 import {buildConfig} from './build-config';
 import {getSecondaryEntryPointsForPackage} from './secondary-entry-points';
 import {compileEntryPoint, renamePrivateReExportsToBeUnique} from './compile-entry-point';
+import {ngcCompile} from './ngc-compile';
 
 const {packagesDir, outputDir} = buildConfig;
 
-/** Name of the tsconfig file that is responsible for building a package. */
+/** Name of the tsconfig file that is responsible for building an ES2015 package. */
 const buildTsconfigName = 'tsconfig-build.json';
 
 /** Name of the tsconfig file that is responsible for building the tests. */
@@ -17,8 +18,11 @@ export class BuildPackage {
   /** Path to the package sources. */
   sourceDir: string;
 
-  /** Path to the package output. */
+  /** Path to the ES2015 package output. */
   outputDir: string;
+
+  /** Path to the ES5 package output. */
+  esm5OutputDir: string;
 
   /** Whether this package will re-export its secondary-entry points at the root module. */
   exportsSecondaryEntryPointsAtRoot = false;
@@ -52,9 +56,10 @@ export class BuildPackage {
   }
   private _secondaryEntryPoints: string[];
 
-  constructor(public readonly name: string, public readonly dependencies: BuildPackage[] = []) {
+  constructor(readonly name: string, readonly dependencies: BuildPackage[] = []) {
     this.sourceDir = join(packagesDir, name);
     this.outputDir = join(outputDir, 'packages', name);
+    this.esm5OutputDir = join(outputDir, 'packages', name, 'esm5');
 
     this.tsconfigBuild = join(this.sourceDir, buildTsconfigName);
     this.tsconfigTests = join(this.sourceDir, testsTsconfigName);
@@ -70,11 +75,11 @@ export class BuildPackage {
     // Depth 1: a11y, scrolling
     // Depth 2: overlay
     for (const entryPointGroup of this.secondaryEntryPointsByDepth) {
-      await Promise.all(entryPointGroup.map(p => compileEntryPoint(this, buildTsconfigName, p)));
+      await Promise.all(entryPointGroup.map(p => this._compileBothTargets(p)));
     }
 
     // Compile the primary entry-point.
-    await compileEntryPoint(this, buildTsconfigName);
+    await this._compileBothTargets();
   }
 
   /** Compiles the TypeScript test source files for the package. */
@@ -87,13 +92,23 @@ export class BuildPackage {
     await this.bundler.createBundles();
   }
 
+  /** Compiles TS into both ES2015 and ES5, then updates exports. */
+  private async _compileBothTargets(p = '') {
+    return compileEntryPoint(this, buildTsconfigName, p)
+      .then(() => compileEntryPoint(this, buildTsconfigName, p, this.esm5OutputDir))
+      .then(() => renamePrivateReExportsToBeUnique(this, p));
+  }
+
   /** Compiles the TypeScript sources of a primary or secondary entry point. */
-  private async _compileTestEntryPoint(tsconfigName: string, secondaryEntryPoint = '') {
+  private _compileTestEntryPoint(tsconfigName: string, secondaryEntryPoint = ''): Promise<any> {
     const entryPointPath = join(this.sourceDir, secondaryEntryPoint);
     const entryPointTsconfigPath = join(entryPointPath, tsconfigName);
 
-    await ngc(entryPointTsconfigPath, {basePath: entryPointPath});
-    renamePrivateReExportsToBeUnique(this, secondaryEntryPoint);
+    return ngcCompile(['-p', entryPointTsconfigPath]).catch(() => {
+      const error = red(`Failed to compile ${secondaryEntryPoint} using ${entryPointTsconfigPath}`);
+      console.error(error);
+      return Promise.reject(error);
+    });
   }
 
   /** Stores the secondary entry-points for this package if they haven't been computed already. */

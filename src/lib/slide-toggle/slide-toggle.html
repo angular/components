@@ -24,8 +24,10 @@
 
       <div class="mat-slide-toggle-ripple" mat-ripple
            [matRippleTrigger]="label"
+           [matRippleDisabled]="disableRipple || disabled"
            [matRippleCentered]="true"
-           [matRippleDisabled]="disableRipple || disabled">
+           [matRippleRadius]="23"
+           [matRippleAnimation]="{enterDuration: 300}">
       </div>
 
     </div>

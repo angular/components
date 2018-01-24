@@ -93,7 +93,8 @@ $mat-slider-focus-ring-size: 30px !default;
               background-color $swift-ease-out-duration $swift-ease-out-timing-function,
               opacity $swift-ease-out-duration $swift-ease-out-timing-function;
 
-  .cdk-keyboard-focused & {
+  .cdk-keyboard-focused &,
+  .cdk-program-focused & {
     transform: scale(1);
     opacity: 1;
   }
@@ -390,6 +391,10 @@ $mat-slider-focus-ring-size: 30px !default;
     height: 100%;
     width: 0;
     left: 50%;
+  }
+
+  .mat-slider-thumb {
+    @include backface-visibility(hidden);
   }
 
   .mat-slider-thumb-label {

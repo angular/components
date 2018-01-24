@@ -1,5 +1,13 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {Component, ElementRef, Renderer2, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, ViewEncapsulation} from '@angular/core';
 
 /**
  * The entry app for demo site. Routes under `accessibility` will use AccessibilityDemo component,
@@ -83,7 +91,6 @@ export class DemoApp {
 
   constructor(
     private _element: ElementRef,
-    private _renderer: Renderer2,
     private _overlayContainer: OverlayContainer) {}
 
   toggleFullscreen() {
@@ -105,10 +112,10 @@ export class DemoApp {
     this.dark = !this.dark;
 
     if (this.dark) {
-      this._renderer.addClass(this._element.nativeElement, darkThemeClass);
+      this._element.nativeElement.classList.add(darkThemeClass);
       this._overlayContainer.getContainerElement().classList.add(darkThemeClass);
     } else {
-      this._renderer.removeClass(this._element.nativeElement, darkThemeClass);
+      this._element.nativeElement.classList.remove(darkThemeClass);
       this._overlayContainer.getContainerElement().classList.remove(darkThemeClass);
     }
   }

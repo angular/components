@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -9,6 +9,7 @@
 import {Component, ViewEncapsulation, Inject, ChangeDetectionStrategy} from '@angular/core';
 import {MatSnackBarRef} from './snack-bar-ref';
 import {MAT_SNACK_BAR_DATA} from './snack-bar-config';
+import {matSnackBarAnimations} from './snack-bar-animations';
 
 
 /**
@@ -23,7 +24,9 @@ import {MAT_SNACK_BAR_DATA} from './snack-bar-config';
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [matSnackBarAnimations.contentFade],
   host: {
+    '[@contentFade]': '',
     'class': 'mat-simple-snackbar',
   }
 })
@@ -39,7 +42,7 @@ export class SimpleSnackBar {
 
   /** Performs the action on the snack bar. */
   action(): void {
-    this.snackBarRef.closeWithAction();
+    this.snackBarRef.dismissWithAction();
   }
 
   /** If the action button should be shown. */

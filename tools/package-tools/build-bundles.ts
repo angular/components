@@ -1,12 +1,10 @@
 import {join, dirname} from 'path';
-import {ScriptTarget, ModuleKind, NewLineKind} from 'typescript';
 import {uglifyJsFile} from './minify-sources';
-import {remapSourcemap} from './sourcemap-remap';
-import {transpileFile} from './typescript-transpile';
 import {buildConfig} from './build-config';
 import {BuildPackage} from './build-package';
 import {rollupRemoveLicensesPlugin} from './rollup-remove-licenses';
-import {rollupGlobals} from './rollup-globals';
+import {rollupGlobals, dashCaseToCamelCase} from './rollup-globals';
+import {remapSourcemap} from './sourcemap-remap';
 
 // There are no type definitions available for these imports.
 const rollup = require('rollup');
@@ -36,6 +34,7 @@ export class PackageBundler {
 
     return this.bundleEntryPoint({
       entryFile: this.buildPackage.entryFilePath,
+      esm5EntryFile: join(this.buildPackage.esm5OutputDir, 'index.js'),
       moduleName: `ng.${this.buildPackage.name}`,
       esm2015Dest: join(bundlesDir, `${packageName}.js`),
       esm5Dest: join(bundlesDir, `${packageName}.es5.js`),
@@ -48,10 +47,12 @@ export class PackageBundler {
   private async bundleSecondaryEntryPoint(entryPoint: string) {
     const packageName = this.buildPackage.name;
     const entryFile = join(this.buildPackage.outputDir, entryPoint, 'index.js');
+    const esm5EntryFile = join(this.buildPackage.esm5OutputDir, entryPoint, 'index.js');
 
     return this.bundleEntryPoint({
       entryFile,
-      moduleName: `ng.${packageName}.${entryPoint}`,
+      esm5EntryFile,
+      moduleName: `ng.${packageName}.${dashCaseToCamelCase(entryPoint)}`,
       esm2015Dest: join(bundlesDir, `${packageName}`, `${entryPoint}.js`),
       esm5Dest: join(bundlesDir, `${packageName}`, `${entryPoint}.es5.js`),
       umdDest: join(bundlesDir, `${packageName}-${entryPoint}.umd.js`),
@@ -73,18 +74,13 @@ export class PackageBundler {
       format: 'es',
     });
 
-    await remapSourcemap(config.esm2015Dest);
-
-    // Downlevel ES2015 bundle to ES5.
-    transpileFile(config.esm2015Dest, config.esm5Dest, {
-      importHelpers: true,
-      target: ScriptTarget.ES5,
-      module: ModuleKind.ES2015,
-      allowJs: true,
-      newLine: NewLineKind.LineFeed
+    // Build FESM-5 bundle file.
+    await this.createRollupBundle({
+      moduleName: config.moduleName,
+      entry: config.esm5EntryFile,
+      dest: config.esm5Dest,
+      format: 'es',
     });
-
-    await remapSourcemap(config.esm5Dest);
 
     // Create UMD bundle of ES5 output.
     await this.createRollupBundle({
@@ -94,15 +90,17 @@ export class PackageBundler {
       format: 'umd'
     });
 
-    await remapSourcemap(config.umdDest);
-
     // Create a minified UMD bundle using UglifyJS
     uglifyJsFile(config.umdDest, config.umdMinDest);
 
+    // Remaps the sourcemaps to be based on top of the original TypeScript source files.
+    await remapSourcemap(config.esm2015Dest);
+    await remapSourcemap(config.esm5Dest);
+    await remapSourcemap(config.umdDest);
     await remapSourcemap(config.umdMinDest);
   }
 
-  /** Creates a rollup bundle of a specified JavaScript file.*/
+  /** Creates a rollup bundle of a specified JavaScript file. */
   private async createRollupBundle(config: RollupBundleConfig) {
     const bundleOptions = {
       context: 'this',
@@ -143,10 +141,12 @@ export class PackageBundler {
       let external = Object.keys(rollupGlobals);
       external.splice(external.indexOf('tslib'), 1);
 
-      // If each secondary entry-point is re-exported at the root, we want to exlclude those
-      // secondary entry-points from the rollup globals because we want the UMD for this package
-      // to include *all* of the sources for those entry-points.
-      if (this.buildPackage.exportsSecondaryEntryPointsAtRoot) {
+      // If each secondary entry-point is re-exported at the root, we want to exclude those
+      // secondary entry-points from the rollup globals because we want the UMD for the
+      // primary entry-point to include *all* of the sources for those entry-points.
+      if (this.buildPackage.exportsSecondaryEntryPointsAtRoot &&
+          config.moduleName === `ng.${this.buildPackage.name}`) {
+
         const importRegex = new RegExp(`@angular/${this.buildPackage.name}/.+`);
         external = external.filter(e => !importRegex.test(e));
 
@@ -182,6 +182,7 @@ export class PackageBundler {
 /** Configuration for creating library bundles. */
 interface BundlesConfig {
   entryFile: string;
+  esm5EntryFile: string;
   moduleName: string;
   esm2015Dest: string;
   esm5Dest: string;

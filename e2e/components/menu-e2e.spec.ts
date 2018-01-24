@@ -18,12 +18,12 @@ describe('menu', () => {
 
   beforeEach(() => page = new MenuPage());
 
-  it('should open menu when the trigger is clicked', () => {
+  it('should open menu when the trigger is clicked', async () => {
     expectToExist(menuSelector, false);
     page.trigger().click();
 
     expectToExist(menuSelector);
-    expect(page.menu().getText()).toEqual('One\nTwo\nThree\nFour');
+    expect(await page.menu().getText()).toEqual('One\nTwo\nThree\nFour');
     screenshot();
   });
 
@@ -34,29 +34,29 @@ describe('menu', () => {
     screenshot();
   });
 
-  it('should run click handlers on regular menu items', () => {
+  it('should run click handlers on regular menu items', async () => {
     page.trigger().click();
     page.items(0).click();
-    expect(page.getResultText()).toEqual('one');
+    expect(await page.getResultText()).toEqual('one');
     screenshot('one');
 
     page.trigger().click();
     page.items(1).click();
-    expect(page.getResultText()).toEqual('two');
+    expect(await page.getResultText()).toEqual('two');
     screenshot('two');
   });
 
-  it('should run not run click handlers on disabled menu items', () => {
+  it('should run not run click handlers on disabled menu items', async () => {
     page.trigger().click();
     page.items(2).click();
-    expect(page.getResultText()).toEqual('');
+    expect(await page.getResultText()).toEqual('');
     screenshot();
   });
 
   it('should support multiple triggers opening the same menu', async () => {
     page.triggerTwo().click();
 
-    expect(page.menu().getText()).toEqual('One\nTwo\nThree\nFour');
+    expect(await page.menu().getText()).toEqual('One\nTwo\nThree\nFour');
     expectAlignedWith(page.menu(), '#trigger-two');
 
     page.backdrop().click();
@@ -65,7 +65,7 @@ describe('menu', () => {
 
     page.trigger().click();
 
-    expect(page.menu().getText()).toEqual('One\nTwo\nThree\nFour');
+    expect(await page.menu().getText()).toEqual('One\nTwo\nThree\nFour');
     expectAlignedWith(page.menu(), '#trigger');
 
     page.backdrop().click();
@@ -97,9 +97,9 @@ describe('menu', () => {
       expectFocusOn(page.items(0));
     });
 
-    it('should not focus the first item when opened with mouse', () => {
+    it('should focus the first item when opened by mouse', () => {
       page.trigger().click();
-      expectFocusOn(page.trigger());
+      expectFocusOn(page.items(0));
     });
 
     it('should focus subsequent items when down arrow is pressed', () => {
@@ -168,7 +168,7 @@ describe('menu', () => {
       const trigger = await page.beforeTrigger().getLocation();
 
       // the menu's right corner must be attached to the trigger's right corner.
-      // menu = 112px wide. trigger = 60px wide.  112 - 60 =  52px of menu to the left of trigger.
+      // menu = 112px wide. trigger = 60px wide. 112 - 60 = 52px of menu to the left of trigger.
       // trigger.x (left corner) - 52px (menu left of trigger) = expected menu.x (left corner)
       // menu.y should equal trigger.y because only x position has changed.
       expectLocation(page.beforeMenu(), {x: trigger.x - 52, y: trigger.y});

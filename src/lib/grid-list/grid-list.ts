@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -14,7 +14,6 @@ import {
   Input,
   ContentChildren,
   QueryList,
-  Renderer2,
   ElementRef,
   Optional,
   ChangeDetectionStrategy,
@@ -38,6 +37,7 @@ const MAT_FIT_MODE = 'fit';
 @Component({
   moduleId: module.id,
   selector: 'mat-grid-list',
+  exportAs: 'matGridList',
   templateUrl: 'grid-list.html',
   styleUrls: ['grid-list.css'],
   host: {
@@ -68,20 +68,17 @@ export class MatGridList implements OnInit, AfterContentChecked {
   /** Query list of tiles that are being rendered. */
   @ContentChildren(MatGridTile) _tiles: QueryList<MatGridTile>;
 
-  constructor(
-      private _renderer: Renderer2,
-      private _element: ElementRef,
-      @Optional() private _dir: Directionality) {}
+  constructor(private _element: ElementRef, @Optional() private _dir: Directionality) {}
 
   /** Amount of columns in the grid list. */
   @Input()
-  get cols() { return this._cols; }
-  set cols(value: any) { this._cols = coerceToNumber(value); }
+  get cols(): number { return this._cols; }
+  set cols(value: number) { this._cols = coerceToNumber(value); }
 
   /** Size of the grid list's gutter in pixels. */
   @Input()
-  get gutterSize() { return this._gutter; }
-  set gutterSize(value: any) { this._gutter = coerceToString(value); }
+  get gutterSize(): string { return this._gutter; }
+  set gutterSize(value: string) { this._gutter = coerceToString(value); }
 
   /** Set internal representation of row height from the user-provided value. */
   @Input()
@@ -154,7 +151,7 @@ export class MatGridList implements OnInit, AfterContentChecked {
   /** Sets style on the main grid-list element, given the style name and value. */
   _setListStyle(style: [string, string | null] | null): void {
     if (style) {
-      this._renderer.setStyle(this._element.nativeElement, style[0], style[1]);
+      this._element.nativeElement.style[style[0]] = style[1];
     }
   }
 }

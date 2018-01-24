@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -8,7 +8,6 @@
 
 import {Inject, Injectable, Optional} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from './date-adapter';
-import {extendObject} from '../util/object-extend';
 
 // TODO(mmalerba): Remove when we no longer support safari 9.
 /** Whether the browser supports the Intl API. */
@@ -59,10 +58,8 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
 /** Adapts the native JS Date for use with cdk-based components that work with dates. */
 @Injectable()
 export class NativeDateAdapter extends DateAdapter<Date> {
-  constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string) {
-    super();
-    super.setLocale(matDateLocale);
-  }
+  /** Whether to clamp the date between 1 and 9999 to avoid IE and Edge errors. */
+  private readonly _clampDate: boolean;
 
   /**
    * Whether to use `timeZone: 'utc'` with `Intl.DateTimeFormat` when formatting dates.
@@ -70,7 +67,21 @@ export class NativeDateAdapter extends DateAdapter<Date> {
    * the result. (e.g. in the en-US locale `new Date(1800, 7, 14).toLocaleDateString()`
    * will produce `'8/13/1800'`.
    */
-  useUtcForDisplay = true;
+  useUtcForDisplay: boolean;
+
+  constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string) {
+    super();
+    super.setLocale(matDateLocale);
+
+    // IE does its own time zone correction, so we disable this on IE.
+    // TODO(mmalerba): replace with checks from PLATFORM, logic currently duplicated to avoid
+    // breaking change from injecting the Platform.
+    const isBrowser = typeof document === 'object' && !!document;
+    const isIE = isBrowser && /(msie|trident)/i.test(navigator.userAgent);
+
+    this.useUtcForDisplay = !isIE;
+    this._clampDate = isIE || (isBrowser && /(edge)/i.test(navigator.userAgent));
+  }
 
   getYear(date: Date): number {
     return date.getFullYear();
@@ -174,14 +185,23 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     if (!this.isValid(date)) {
       throw Error('NativeDateAdapter: Cannot format invalid date.');
     }
+
     if (SUPPORTS_INTL_API) {
+      // On IE and Edge the i18n API will throw a hard error that can crash the entire app
+      // if we attempt to format a date whose year is less than 1 or greater than 9999.
+      if (this._clampDate && (date.getFullYear() < 1 || date.getFullYear() > 9999)) {
+        date = this.clone(date);
+        date.setFullYear(Math.max(1, Math.min(9999, date.getFullYear())));
+      }
+
       if (this.useUtcForDisplay) {
         date = new Date(Date.UTC(
             date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(),
             date.getMinutes(), date.getSeconds(), date.getMilliseconds()));
-        displayFormat = extendObject({}, displayFormat, {timeZone: 'utc'});
+        displayFormat = {...displayFormat, timeZone: 'utc'};
       }
-      let dtf = new Intl.DateTimeFormat(this.locale, displayFormat);
+
+      const dtf = new Intl.DateTimeFormat(this.locale, displayFormat);
       return this._stripDirectionalityCharacters(dtf.format(date));
     }
     return this._stripDirectionalityCharacters(date.toDateString());
@@ -219,16 +239,26 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     ].join('-');
   }
 
-  fromIso8601(iso8601String: string): Date | null {
-    // The `Date` constructor accepts formats other than ISO 8601, so we need to make sure the
-    // string is the right format first.
-    if (ISO_8601_REGEX.test(iso8601String)) {
-      let d = new Date(iso8601String);
-      if (this.isValid(d)) {
-        return d;
+  /**
+   * Returns the given value if given a valid Date or null. Deserializes valid ISO 8601 strings
+   * (https://www.ietf.org/rfc/rfc3339.txt) into valid Dates and empty string into null. Returns an
+   * invalid date for all other values.
+   */
+  deserialize(value: any): Date | null {
+    if (typeof value === 'string') {
+      if (!value) {
+        return null;
+      }
+      // The `Date` constructor accepts formats other than ISO 8601, so we need to make sure the
+      // string is the right format first.
+      if (ISO_8601_REGEX.test(value)) {
+        let date = new Date(value);
+        if (this.isValid(date)) {
+          return date;
+        }
       }
     }
-    return null;
+    return super.deserialize(value);
   }
 
   isDateInstance(obj: any) {
@@ -237,6 +267,10 @@ export class NativeDateAdapter extends DateAdapter<Date> {
 
   isValid(date: Date) {
     return !isNaN(date.getTime());
+  }
+
+  invalid(): Date {
+    return new Date(NaN);
   }
 
   /** Creates a date but allows the month and date to overflow. */

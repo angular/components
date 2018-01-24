@@ -1,13 +1,12 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-
-import {Injectable} from '@angular/core';
-import {CloseScrollStrategy} from './close-scroll-strategy';
+import {Injectable, NgZone} from '@angular/core';
+import {CloseScrollStrategy, CloseScrollStrategyConfig} from './close-scroll-strategy';
 import {NoopScrollStrategy} from './noop-scroll-strategy';
 import {BlockScrollStrategy} from './block-scroll-strategy';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
@@ -28,13 +27,18 @@ import {
 export class ScrollStrategyOptions {
   constructor(
     private _scrollDispatcher: ScrollDispatcher,
-    private _viewportRuler: ViewportRuler) { }
+    private _viewportRuler: ViewportRuler,
+    private _ngZone: NgZone) { }
 
   /** Do nothing on scroll. */
   noop = () => new NoopScrollStrategy();
 
-  /** Close the overlay as soon as the user scrolls. */
-  close = () => new CloseScrollStrategy(this._scrollDispatcher);
+  /**
+   * Close the overlay as soon as the user scrolls.
+   * @param config Configuration to be used inside the scroll strategy.
+   */
+  close = (config?: CloseScrollStrategyConfig) => new CloseScrollStrategy(this._scrollDispatcher,
+      this._ngZone, this._viewportRuler, config)
 
   /** Block scrolling. */
   block = () => new BlockScrollStrategy(this._viewportRuler);
@@ -44,6 +48,6 @@ export class ScrollStrategyOptions {
    * @param config Configuration to be used inside the scroll strategy.
    * Allows debouncing the reposition calls.
    */
-  reposition = (config?: RepositionScrollStrategyConfig) =>
-      new RepositionScrollStrategy(this._scrollDispatcher, config)
+  reposition = (config?: RepositionScrollStrategyConfig) => new RepositionScrollStrategy(
+      this._scrollDispatcher, this._viewportRuler, this._ngZone, config)
 }

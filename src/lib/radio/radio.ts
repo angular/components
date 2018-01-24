@@ -1,11 +1,14 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -23,7 +26,6 @@ import {
   Optional,
   Output,
   QueryList,
-  Renderer2,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -32,15 +34,14 @@ import {
   CanColor,
   CanDisable,
   CanDisableRipple,
+  HasTabIndex,
   MatRipple,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple,
+  mixinTabIndex,
   RippleRef,
-  UniqueSelectionDispatcher,
 } from '@angular/material/core';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 
 // Increasing integer for generating unique ids for radio components.
 let nextUniqueId = 0;
@@ -75,6 +76,7 @@ export const _MatRadioGroupMixinBase = mixinDisabled(MatRadioGroupBase);
  */
 @Directive({
   selector: 'mat-radio-group',
+  exportAs: 'matRadioGroup',
   providers: [MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR],
   host: {
     'role': 'radiogroup',
@@ -127,7 +129,8 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
   @Output() change: EventEmitter<MatRadioChange> = new EventEmitter<MatRadioChange>();
 
   /** Child radio buttons. */
-  @ContentChildren(forwardRef(() => MatRadioButton)) _radios: QueryList<MatRadioButton>;
+  @ContentChildren(forwardRef(() => MatRadioButton), { descendants: true })
+  _radios: QueryList<MatRadioButton>;
 
   /** Name of the radio button group. All radio buttons inside this group will use this name. */
   @Input()
@@ -147,7 +150,6 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
     // label relative to the checkbox. As such, they are inverted.
     return this.labelPosition == 'after' ? 'start' : 'end';
   }
-
   set align(v) {
     this.labelPosition = (v == 'start') ? 'after' : 'before';
   }
@@ -155,10 +157,9 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
 
   /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
   @Input()
-  get labelPosition() {
+  get labelPosition(): 'before' | 'after' {
     return this._labelPosition;
   }
-
   set labelPosition(v) {
     this._labelPosition = (v == 'before') ? 'before' : 'after';
     this._markRadiosForCheck();
@@ -313,24 +314,30 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
 // Boilerplate for applying mixins to MatRadioButton.
 /** @docs-private */
 export class MatRadioButtonBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  // Since the disabled property is manually defined for the MatRadioButton and isn't set up in
+  // the mixin base class. To be able to use the tabindex mixin, a disabled property must be
+  // defined to properly work.
+  disabled: boolean;
+
+  constructor(public _elementRef: ElementRef) {}
 }
 // As per Material design specifications the selection control radio should use the accent color
 // palette by default. https://material.io/guidelines/components/selection-controls.html
 export const _MatRadioButtonMixinBase =
-    mixinColor(mixinDisableRipple(MatRadioButtonBase), 'accent');
+    mixinColor(mixinDisableRipple(mixinTabIndex(MatRadioButtonBase)), 'accent');
 
 /**
- * A radio-button. May be inside of
+ * A Material design radio-button. Typically placed inside of `<mat-radio-group>` elements.
  */
 @Component({
   moduleId: module.id,
   selector: 'mat-radio-button',
   templateUrl: 'radio.html',
   styleUrls: ['radio.css'],
-  inputs: ['color', 'disableRipple'],
+  inputs: ['color', 'disableRipple', 'tabIndex'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
+  exportAs: 'matRadioButton',
   host: {
     'class': 'mat-radio-button',
     '[class.mat-radio-checked]': 'checked',
@@ -344,7 +351,7 @@ export const _MatRadioButtonMixinBase =
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatRadioButton extends _MatRadioButtonMixinBase
-    implements OnInit, AfterViewInit, OnDestroy, CanColor, CanDisableRipple {
+    implements OnInit, AfterViewInit, OnDestroy, CanColor, CanDisableRipple, HasTabIndex {
 
   private _uniqueId: string = `mat-radio-${++nextUniqueId}`;
 
@@ -362,11 +369,10 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
 
   /** Whether this radio button is checked. */
   @Input()
-  get checked(): boolean {
-    return this._checked;
-  }
+  get checked(): boolean { return this._checked; }
+  set checked(value: boolean) {
+    const newCheckedState = coerceBooleanProperty(value);
 
-  set checked(newCheckedState: boolean) {
     if (this._checked != newCheckedState) {
       this._checked = newCheckedState;
 
@@ -388,10 +394,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
 
   /** The value of this radio button. */
   @Input()
-  get value(): any {
-    return this._value;
-  }
-
+  get value(): any { return this._value; }
   set value(value: any) {
     if (this._value != value) {
       this._value = value;
@@ -417,7 +420,6 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
     // label relative to the checkbox. As such, they are inverted.
     return this.labelPosition == 'after' ? 'start' : 'end';
   }
-
   set align(v) {
     this.labelPosition = (v == 'start') ? 'after' : 'before';
   }
@@ -429,7 +431,6 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   get labelPosition(): 'before' | 'after' {
     return this._labelPosition || (this.radioGroup && this.radioGroup.labelPosition) || 'after';
   }
-
   set labelPosition(value) {
     this._labelPosition = value;
   }
@@ -474,7 +475,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   /** Whether this radio is required. */
   private _required: boolean;
 
-  /** Value assigned to this radio.*/
+  /** Value assigned to this radio. */
   private _value: any = null;
 
   /** The child ripple instance. */
@@ -483,7 +484,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   /** Reference to the current focus ripple. */
   private _focusRipple: RippleRef | null;
 
-  /** Unregister function for _radioDispatcher **/
+  /** Unregister function for _radioDispatcher */
   private _removeUniqueSelectionListener: () => void = () => {};
 
   /** The native `<input type=radio>` element */
@@ -491,11 +492,10 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
 
   constructor(@Optional() radioGroup: MatRadioGroup,
               elementRef: ElementRef,
-              renderer: Renderer2,
               private _changeDetector: ChangeDetectorRef,
               private _focusMonitor: FocusMonitor,
               private _radioDispatcher: UniqueSelectionDispatcher) {
-    super(renderer, elementRef);
+    super(elementRef);
 
     // Assertions. Ideally these should be stripped out by the compiler.
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
@@ -536,7 +536,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
 
   ngAfterViewInit() {
     this._focusMonitor
-      .monitor(this._inputElement.nativeElement, this._renderer, false)
+      .monitor(this._inputElement.nativeElement)
       .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
   }
 
@@ -594,7 +594,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   /** Function is called whenever the focus changes for the input element. */
   private _onInputFocusChange(focusOrigin: FocusOrigin) {
     if (!this._focusRipple && focusOrigin === 'keyboard') {
-      this._focusRipple = this._ripple.launch(0, 0, {persistent: true, centered: true});
+      this._focusRipple = this._ripple.launch(0, 0, {persistent: true});
     } else if (!focusOrigin) {
       if (this.radioGroup) {
         this.radioGroup._touch();

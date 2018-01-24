@@ -1,35 +1,34 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   Directive,
   ElementRef,
-  Renderer2,
   EventEmitter,
+  forwardRef,
   Input,
-  OnInit,
   OnDestroy,
+  OnInit,
   Optional,
   Output,
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  forwardRef,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
 } from '@angular/core';
-import {NG_VALUE_ACCESSOR, ControlValueAccessor} from '@angular/forms';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {UniqueSelectionDispatcher} from '@angular/material/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {CanDisable, mixinDisabled} from '@angular/material/core';
-import {FocusMonitor} from '@angular/cdk/a11y';
 
 /** Acceptable types for a button toggle. */
 export type ToggleType = 'checkbox' | 'radio';
@@ -94,17 +93,14 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
   _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
   /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
-  onTouched: () => any = () => {};
+  _onTouched: () => any = () => {};
 
   /** Child button toggle buttons. */
   @ContentChildren(forwardRef(() => MatButtonToggle)) _buttonToggles: QueryList<MatButtonToggle>;
 
   /** `name` attribute for the underlying `input` element. */
   @Input()
-  get name(): string {
-    return this._name;
-  }
-
+  get name(): string { return this._name; }
   set name(value: string) {
     this._name = value;
     this._updateButtonToggleNames();
@@ -112,33 +108,30 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
 
   /** Whether the toggle group is vertical. */
   @Input()
-  get vertical(): boolean {
-    return this._vertical;
-  }
-
-  set vertical(value) {
-    this._vertical = coerceBooleanProperty(value);
-  }
+  get vertical(): boolean { return this._vertical; }
+  set vertical(value: boolean) { this._vertical = coerceBooleanProperty(value); }
 
   /** Value of the toggle group. */
   @Input()
-  get value(): any {
-    return this._value;
-  }
+  get value(): any { return this._value; }
   set value(newValue: any) {
     if (this._value != newValue) {
       this._value = newValue;
-
+      this.valueChange.emit(newValue);
       this._updateSelectedButtonToggleFromValue();
     }
   }
 
+  /**
+   * Event that emits whenever the value of the group changes.
+   * Used to facilitate two-way data binding.
+   * @docs-private
+   */
+  @Output() valueChange = new EventEmitter<any>();
+
   /** Whether the toggle group is selected. */
   @Input()
-  get selected() {
-    return this._selected;
-  }
-
+  get selected(): MatButtonToggle | null { return this._selected; }
   set selected(selected: MatButtonToggle | null) {
     this._selected = selected;
     this.value = selected ? selected.value : null;
@@ -215,7 +208,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase
    * @param fn On touch callback function.
    */
   registerOnTouched(fn: any) {
-    this.onTouched = fn;
+    this._onTouched = fn;
   }
 
   /**
@@ -253,10 +246,7 @@ export class MatButtonToggleGroupMultiple extends _MatButtonToggleGroupMixinBase
 
   /** Whether the toggle group is vertical. */
   @Input()
-  get vertical(): boolean {
-    return this._vertical;
-  }
-
+  get vertical(): boolean { return this._vertical; }
   set vertical(value) {
     this._vertical = coerceBooleanProperty(value);
   }
@@ -270,6 +260,7 @@ export class MatButtonToggleGroupMultiple extends _MatButtonToggleGroupMixinBase
   styleUrls: ['button-toggle.css'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
+  exportAs: 'matButtonToggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.mat-button-toggle-standalone]': '!buttonToggleGroup && !buttonToggleGroupMultiple',
@@ -306,7 +297,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
   /** Whether or not the button toggle is a single selection. */
   private _isSingleSelector: boolean = false;
 
-  /** Unregister function for _buttonToggleDispatcher **/
+  /** Unregister function for _buttonToggleDispatcher */
   private _removeUniqueSelectionListener: () => void = () => {};
 
   @ViewChild('input') _inputElement: ElementRef;
@@ -318,9 +309,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
   buttonToggleGroupMultiple: MatButtonToggleGroupMultiple;
 
   /** Unique ID for the underlying `input` element. */
-  get inputId(): string {
-    return `${this.id}-input`;
-  }
+  get inputId(): string { return `${this.id}-input`; }
 
   /** The unique ID for this button toggle. */
   @Input() id: string;
@@ -347,10 +336,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
 
   /** MatButtonToggleGroup reads this to assign its own value. */
   @Input()
-  get value(): any {
-    return this._value;
-  }
-
+  get value(): any { return this._value; }
   set value(value: any) {
     if (this._value != value) {
       if (this.buttonToggleGroup != null && this.checked) {
@@ -366,7 +352,6 @@ export class MatButtonToggle implements OnInit, OnDestroy {
     return this._disabled || (this.buttonToggleGroup != null && this.buttonToggleGroup.disabled) ||
         (this.buttonToggleGroupMultiple != null && this.buttonToggleGroupMultiple.disabled);
   }
-
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
   }
@@ -378,7 +363,6 @@ export class MatButtonToggle implements OnInit, OnDestroy {
               @Optional() toggleGroupMultiple: MatButtonToggleGroupMultiple,
               private _changeDetectorRef: ChangeDetectorRef,
               private _buttonToggleDispatcher: UniqueSelectionDispatcher,
-              private _renderer: Renderer2,
               private _elementRef: ElementRef,
               private _focusMonitor: FocusMonitor) {
 
@@ -413,7 +397,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
     if (this.buttonToggleGroup && this._value == this.buttonToggleGroup.value) {
       this._checked = true;
     }
-    this._focusMonitor.monitor(this._elementRef.nativeElement, this._renderer, true);
+    this._focusMonitor.monitor(this._elementRef.nativeElement, true);
   }
 
   /** Focuses the button. */
@@ -436,7 +420,7 @@ export class MatButtonToggle implements OnInit, OnDestroy {
       let groupValueChanged = this.buttonToggleGroup.selected != this;
       this.checked = true;
       this.buttonToggleGroup.selected = this;
-      this.buttonToggleGroup.onTouched();
+      this.buttonToggleGroup._onTouched();
       if (groupValueChanged) {
         this.buttonToggleGroup._emitChangeEvent();
       }

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -10,7 +10,9 @@ import {
   Directive,
   Output,
   Input,
-  EventEmitter
+  EventEmitter,
+  AfterContentInit,
+  OnDestroy,
 } from '@angular/core';
 
 import {Direction, Directionality} from './directionality';
@@ -18,7 +20,8 @@ import {Direction, Directionality} from './directionality';
 /**
  * Directive to listen for changes of direction of part of the DOM.
  *
- * Would provide itself in case a component looks for the Directionality service
+ * Provides itself as Directionality such that descendant directives only need to ever inject
+ * Directionality to get the closest direction.
  */
 @Directive({
   selector: '[dir]',
@@ -26,27 +29,23 @@ import {Direction, Directionality} from './directionality';
   host: {'[dir]': 'dir'},
   exportAs: 'dir',
 })
-export class Dir implements Directionality {
-  /** Layout direction of the element. */
+export class Dir implements Directionality, AfterContentInit, OnDestroy {
   _dir: Direction = 'ltr';
 
   /** Whether the `value` has been set to its initial value. */
   private _isInitialized: boolean = false;
 
   /** Event emitted when the direction changes. */
-  @Output('dirChange') change = new EventEmitter<void>();
+  @Output('dirChange') change = new EventEmitter<Direction>();
 
   /** @docs-private */
-  @Input('dir')
-  get dir(): Direction {
-    return this._dir;
-  }
-
+  @Input()
+  get dir(): Direction { return this._dir; }
   set dir(v: Direction) {
-    let old = this._dir;
+    const old = this._dir;
     this._dir = v;
     if (old !== this._dir && this._isInitialized) {
-      this.change.emit();
+      this.change.emit(this._dir);
     }
   }
 
@@ -56,6 +55,10 @@ export class Dir implements Directionality {
   /** Initialize once default value has been set. */
   ngAfterContentInit() {
     this._isInitialized = true;
+  }
+
+  ngOnDestroy() {
+    this.change.complete();
   }
 }
 

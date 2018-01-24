@@ -1,11 +1,12 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterViewInit,
@@ -16,10 +17,11 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  Inject,
   Input,
   OnDestroy,
+  Optional,
   Output,
-  Renderer2,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -36,7 +38,7 @@ import {
   mixinTabIndex,
   RippleRef,
 } from '@angular/material/core';
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {MAT_CHECKBOX_CLICK_ACTION, MatCheckboxClickAction} from './checkbox-config';
 
 
 // Increasing integer for generating unique ids for checkbox components.
@@ -79,7 +81,7 @@ export class MatCheckboxChange {
 // Boilerplate for applying mixins to MatCheckbox.
 /** @docs-private */
 export class MatCheckboxBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  constructor(public _elementRef: ElementRef) {}
 }
 export const _MatCheckboxMixinBase =
   mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatCheckboxBase)), 'accent'));
@@ -98,6 +100,7 @@ export const _MatCheckboxMixinBase =
   selector: 'mat-checkbox',
   templateUrl: 'checkbox.html',
   styleUrls: ['checkbox.css'],
+  exportAs: 'matCheckbox',
   host: {
     'class': 'mat-checkbox',
     '[id]': 'id',
@@ -151,7 +154,6 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     // label relative to the checkbox. As such, they are inverted.
     return this.labelPosition == 'after' ? 'start' : 'end';
   }
-
   set align(v) {
     this.labelPosition = (v == 'start') ? 'after' : 'before';
   }
@@ -174,8 +176,8 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   /** The native `<input type="checkbox"> element */
   @ViewChild('input') _inputElement: ElementRef;
 
-  /** Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor. */
-  @ViewChild(MatRipple) _ripple: MatRipple;
+  /** Reference to the ripple instance of the checkbox. */
+  @ViewChild(MatRipple) ripple: MatRipple;
 
   /**
    * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
@@ -196,19 +198,20 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   /** Reference to the focused state ripple. */
   private _focusRipple: RippleRef | null;
 
-  constructor(renderer: Renderer2,
-              elementRef: ElementRef,
+  constructor(elementRef: ElementRef,
               private _changeDetectorRef: ChangeDetectorRef,
               private _focusMonitor: FocusMonitor,
-              @Attribute('tabindex') tabIndex: string) {
-    super(renderer, elementRef);
+              @Attribute('tabindex') tabIndex: string,
+              @Optional() @Inject(MAT_CHECKBOX_CLICK_ACTION)
+                  private _clickAction: MatCheckboxClickAction) {
+    super(elementRef);
 
     this.tabIndex = parseInt(tabIndex) || 0;
   }
 
   ngAfterViewInit() {
     this._focusMonitor
-      .monitor(this._inputElement.nativeElement, this._renderer, false)
+      .monitor(this._inputElement.nativeElement)
       .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
   }
 
@@ -219,10 +222,8 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   /**
    * Whether the checkbox is checked.
    */
-  @Input() get checked() {
-    return this._checked;
-  }
-
+  @Input()
+  get checked() { return this._checked; }
   set checked(checked: boolean) {
     if (checked != this.checked) {
       this._checked = checked;
@@ -236,10 +237,8 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
    * checkable items. Note that whenever checkbox is manually clicked, indeterminate is immediately
    * set to false.
    */
-  @Input() get indeterminate() {
-    return this._indeterminate;
-  }
-
+  @Input()
+  get indeterminate() { return this._indeterminate; }
   set indeterminate(indeterminate: boolean) {
     let changed =  indeterminate != this._indeterminate;
     this._indeterminate = indeterminate;
@@ -302,16 +301,19 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     this._changeDetectorRef.markForCheck();
   }
 
+  _getAriaChecked(): 'true' | 'false' | 'mixed' {
+    return this.checked ? 'true' : (this.indeterminate ? 'mixed' : 'false');
+  }
+
   private _transitionCheckState(newState: TransitionCheckState) {
     let oldState = this._currentCheckState;
-    let renderer = this._renderer;
-    let elementRef = this._elementRef;
+    let element: HTMLElement = this._elementRef.nativeElement;
 
     if (oldState === newState) {
       return;
     }
     if (this._currentAnimationClass.length > 0) {
-      renderer.removeClass(elementRef.nativeElement, this._currentAnimationClass);
+      element.classList.remove(this._currentAnimationClass);
     }
 
     this._currentAnimationClass = this._getAnimationClassForCheckStateTransition(
@@ -319,7 +321,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     this._currentCheckState = newState;
 
     if (this._currentAnimationClass.length > 0) {
-      renderer.addClass(elementRef.nativeElement, this._currentAnimationClass);
+      element.classList.add(this._currentAnimationClass);
     }
   }
 
@@ -335,7 +337,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   /** Function is called whenever the focus changes for the input element. */
   private _onInputFocusChange(focusOrigin: FocusOrigin) {
     if (!this._focusRipple && focusOrigin === 'keyboard') {
-      this._focusRipple = this._ripple.launch(0, 0, {persistent: true, centered: true});
+      this._focusRipple = this.ripple.launch(0, 0, {persistent: true});
     } else if (!focusOrigin) {
       this._removeFocusRipple();
       this.onTouched();
@@ -364,11 +366,11 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     // Preventing bubbling for the second event will solve that issue.
     event.stopPropagation();
 
-    this._removeFocusRipple();
-
-    if (!this.disabled) {
+    // If resetIndeterminate is false, and the current state is indeterminate, do nothing on click
+    if (!this.disabled && this._clickAction !== 'noop') {
       // When user manually click on the checkbox, `indeterminate` is set to false.
-      if (this._indeterminate) {
+      if (this.indeterminate && this._clickAction !== 'check') {
+
         Promise.resolve().then(() => {
           this._indeterminate = false;
           this.indeterminateChange.emit(this._indeterminate);
@@ -377,12 +379,17 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
       this.toggle();
       this._transitionCheckState(
-        this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
+          this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
 
       // Emit our custom change event if the native input emitted one.
       // It is important to only emit it, if the native input triggered one, because
       // we don't want to trigger a change event, when the `checked` variable changes for example.
       this._emitChangeEvent();
+    } else if (!this.disabled && this._clickAction === 'noop') {
+      // Reset native input when clicked with noop. The native checkbox becomes checked after
+      // click, reset it to be align with `checked` value of `mat-checkbox`.
+      this._inputElement.nativeElement.checked = this.checked;
+      this._inputElement.nativeElement.indeterminate = this.indeterminate;
     }
   }
 

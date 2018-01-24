@@ -1,11 +1,10 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-
 import {
   AfterContentInit,
   Component,
@@ -21,7 +20,13 @@ import {
   EventEmitter,
   Output,
 } from '@angular/core';
-import {MatOption, MatOptgroup} from '@angular/material/core';
+import {
+  MatOption,
+  MatOptgroup,
+  MAT_OPTION_PARENT_COMPONENT,
+  mixinDisableRipple,
+  CanDisableRipple,
+} from '@angular/material/core';
 import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 
 
@@ -33,8 +38,17 @@ let _uniqueAutocompleteIdCounter = 0;
 
 /** Event object that is emitted when an autocomplete option is selected. */
 export class MatAutocompleteSelectedEvent {
-  constructor(public source: MatAutocomplete, public option: MatOption) { }
+  constructor(
+    /** Reference to the autocomplete panel that emitted the event. */
+    public source: MatAutocomplete,
+    /** Option that was selected. */
+    public option: MatOption) { }
 }
+
+// Boilerplate for applying mixins to MatAutocomplete.
+/** @docs-private */
+export class MatAutocompleteBase {}
+export const _MatAutocompleteMixinBase = mixinDisableRipple(MatAutocompleteBase);
 
 
 @Component({
@@ -46,11 +60,16 @@ export class MatAutocompleteSelectedEvent {
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   exportAs: 'matAutocomplete',
+  inputs: ['disableRipple'],
   host: {
     'class': 'mat-autocomplete'
-  }
+  },
+  providers: [
+    {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatAutocomplete}
+  ]
 })
-export class MatAutocomplete implements AfterContentInit {
+export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterContentInit,
+  CanDisableRipple {
 
   /** Manages active item in option list based on key events. */
   _keyManager: ActiveDescendantKeyManager<MatOption>;
@@ -84,7 +103,7 @@ export class MatAutocomplete implements AfterContentInit {
       new EventEmitter<MatAutocompleteSelectedEvent>();
 
   /**
-   * Takes classes set on the host md-autocomplete element and applies them to the panel
+   * Takes classes set on the host mat-autocomplete element and applies them to the panel
    * inside the overlay container to allow for easy styling.
    */
   @Input('class')
@@ -99,7 +118,9 @@ export class MatAutocomplete implements AfterContentInit {
   /** Unique ID to be used by autocomplete trigger's "aria-owns" property. */
   id: string = `mat-autocomplete-${_uniqueAutocompleteIdCounter++}`;
 
-  constructor(private _changeDetectorRef: ChangeDetectorRef, private _elementRef: ElementRef) { }
+  constructor(private _changeDetectorRef: ChangeDetectorRef, private _elementRef: ElementRef) {
+    super();
+  }
 
   ngAfterContentInit() {
     this._keyManager = new ActiveDescendantKeyManager<MatOption>(this.options).withWrap();
@@ -123,14 +144,12 @@ export class MatAutocomplete implements AfterContentInit {
   }
 
   /** Panel should hide itself when the option list is empty. */
-  _setVisibility(): void {
-    Promise.resolve().then(() => {
-      this.showPanel = !!this.options.length;
-      this._classList['mat-autocomplete-visible'] = this.showPanel;
-      this._classList['mat-autocomplete-hidden'] = !this.showPanel;
-      this._changeDetectorRef.markForCheck();
-    });
-  }
+  _setVisibility() {
+    this.showPanel = !!this.options.length;
+    this._classList['mat-autocomplete-visible'] = this.showPanel;
+    this._classList['mat-autocomplete-hidden'] = !this.showPanel;
+    this._changeDetectorRef.markForCheck();
+}
 
   /** Emits the `select` event. */
   _emitSelectEvent(option: MatOption): void {

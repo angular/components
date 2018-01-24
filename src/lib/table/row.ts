@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -8,18 +8,12 @@
 
 import {ChangeDetectionStrategy, Component, Directive, ViewEncapsulation} from '@angular/core';
 import {
-  CdkHeaderRow,
-  CdkRow,
   CDK_ROW_TEMPLATE,
-  CdkRowDef,
+  CdkHeaderRow,
   CdkHeaderRowDef,
+  CdkRow,
+  CdkRowDef,
 } from '@angular/cdk/table';
-
-/** Workaround for https://github.com/angular/angular/issues/17849 */
-export const _MatHeaderRowDef = CdkHeaderRowDef;
-export const _MatCdkRowDef = CdkRowDef;
-export const _MatHeaderRow = CdkHeaderRow;
-export const _MatRow = CdkRow;
 
 /**
  * Header row definition for the mat-table.
@@ -30,18 +24,20 @@ export const _MatRow = CdkRow;
   providers: [{provide: CdkHeaderRowDef, useExisting: MatHeaderRowDef}],
   inputs: ['columns: matHeaderRowDef'],
 })
-export class MatHeaderRowDef extends _MatHeaderRowDef { }
+export class MatHeaderRowDef extends CdkHeaderRowDef { }
 
 /**
  * Data row definition for the mat-table.
- * Captures the header row's template and other row properties such as the columns to display.
+ * Captures the header row's template and other row properties such as the columns to display and
+ * a when predicate that describes when this row should be used.
  */
 @Directive({
   selector: '[matRowDef]',
   providers: [{provide: CdkRowDef, useExisting: MatRowDef}],
-  inputs: ['columns: matRowDefColumns'],
+  inputs: ['columns: matRowDefColumns', 'when: matRowDefWhen'],
 })
-export class MatRowDef extends _MatCdkRowDef { }
+export class MatRowDef<T> extends CdkRowDef<T> {
+}
 
 /** Header template container that contains the cell outlet. Adds the right class and role. */
 @Component({
@@ -54,9 +50,10 @@ export class MatRowDef extends _MatCdkRowDef { }
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  exportAs: 'matHeaderRow',
   preserveWhitespaces: false,
 })
-export class MatHeaderRow extends _MatHeaderRow { }
+export class MatHeaderRow extends CdkHeaderRow { }
 
 /** Data row template container that contains the cell outlet. Adds the right class and role. */
 @Component({
@@ -69,6 +66,7 @@ export class MatHeaderRow extends _MatHeaderRow { }
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  exportAs: 'matRow',
   preserveWhitespaces: false,
 })
-export class MatRow extends _MatRow { }
+export class MatRow extends CdkRow { }

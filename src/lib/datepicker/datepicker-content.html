@@ -1,5 +1,6 @@
 <mat-calendar cdkTrapFocus
     [id]="datepicker.id"
+    [ngClass]="datepicker.panelClass"
     [startAt]="datepicker.startAt"
     [startView]="datepicker.startView"
     [minDate]="datepicker._minDate"
@@ -7,5 +8,5 @@
     [dateFilter]="datepicker._dateFilter"
     [selected]="datepicker._selected"
     (selectedChange)="datepicker._select($event)"
-    (userSelection)="datepicker.close()">
+    (_userSelection)="datepicker.close()">
 </mat-calendar>

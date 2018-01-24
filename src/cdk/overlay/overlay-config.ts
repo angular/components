@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -12,7 +12,7 @@ import {ScrollStrategy} from './scroll/scroll-strategy';
 import {NoopScrollStrategy} from './scroll/noop-scroll-strategy';
 
 
-/** OverlayConfig captures the initial configuration used when opening an overlay. */
+/** Initial configuration used when creating an overlay. */
 export class OverlayConfig {
   /** Strategy with which to position the overlay. */
   positionStrategy?: PositionStrategy;
@@ -52,7 +52,9 @@ export class OverlayConfig {
 
   constructor(config?: OverlayConfig) {
     if (config) {
-      Object.keys(config).forEach(key => this[key] = config[key]);
+      Object.keys(config)
+        .filter(key => typeof config[key] !== 'undefined')
+        .forEach(key => this[key] = config[key]);
     }
   }
 }

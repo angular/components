@@ -14,6 +14,7 @@ $mat-menu-submenu-indicator-size: 10px !default;
   @include mat-menu-positions();
   max-height: calc(100vh - #{$mat-menu-item-height});
   border-radius: $mat-menu-border-radius;
+  outline: 0;
 
   // Prevent the user from interacting while the panel is still animating.
   // This avoids issues where the user could accidentally open a sub-menu,
@@ -64,7 +65,7 @@ $mat-menu-submenu-indicator-size: 10px !default;
   }
 
   [dir='rtl'] & {
-    padding-right: $mat-menu-side-padding / 2;
+    padding-right: $mat-menu-side-padding;
     padding-left: $mat-menu-side-padding * 2;
 
     &::after {
@@ -81,4 +82,10 @@ button.mat-menu-item {
 
 .mat-menu-ripple {
   @include mat-fill;
+
+  // Prevent any pointer events on the ripple container for a menu item. The ripple container is
+  // not the trigger element for the ripples and can be therefore disabled like that. Disabling
+  // the pointer events ensures that there is no `click` event that can bubble up and cause
+  // the menu panel to close.
+  pointer-events: none;
 }

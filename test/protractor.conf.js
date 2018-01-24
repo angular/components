@@ -37,12 +37,12 @@ const config = {
 
 if (process.env['TRAVIS']) {
   const key = require('../scripts/saucelabs/sauce_config');
+
   config.sauceUser = process.env['SAUCE_USERNAME'];
   config.sauceKey = key;
   config.capabilities = {
     'browserName': 'chrome',
     'version': 'latest',
-    'chromedriverVersion': '2.28',
     'tunnel-identifier': process.env['TRAVIS_JOB_ID'],
     'build': process.env['TRAVIS_JOB_ID'],
     'name': 'Material E2E Tests',

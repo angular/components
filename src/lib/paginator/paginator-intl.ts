@@ -1,12 +1,12 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, SkipSelf, Optional } from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 
 /**
@@ -22,13 +22,13 @@ export class MatPaginatorIntl {
   changes: Subject<void> = new Subject<void>();
 
   /** A label for the page size selector. */
-  itemsPerPageLabel = 'Items per page:';
+  itemsPerPageLabel: string = 'Items per page:';
 
   /** A label for the button that increments the current page. */
-  nextPageLabel = 'Next page';
+  nextPageLabel: string = 'Next page';
 
   /** A label for the button that decrements the current page. */
-  previousPageLabel = 'Previous page';
+  previousPageLabel: string = 'Previous page';
 
   /** A label for the range of items within the current page and the length of the whole list. */
   getRangeLabel = (page: number, pageSize: number, length: number) => {
@@ -46,3 +46,16 @@ export class MatPaginatorIntl {
     return `${startIndex + 1} - ${endIndex} of ${length}`;
   }
 }
+
+/** @docs-private */
+export function MAT_PAGINATOR_INTL_PROVIDER_FACTORY(parentIntl: MatPaginatorIntl) {
+  return parentIntl || new MatPaginatorIntl();
+}
+
+/** @docs-private */
+export const MAT_PAGINATOR_INTL_PROVIDER = {
+  // If there is already an MatPaginatorIntl available, use that. Otherwise, provide a new one.
+  provide: MatPaginatorIntl,
+  deps: [[new Optional(), new SkipSelf(), MatPaginatorIntl]],
+  useFactory: MAT_PAGINATOR_INTL_PROVIDER_FACTORY
+};

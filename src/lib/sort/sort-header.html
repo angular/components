@@ -1,7 +1,8 @@
 <div class="mat-sort-header-container"
      [class.mat-sort-header-position-before]="arrowPosition == 'before'">
   <button class="mat-sort-header-button" type="button"
-          [attr.aria-label]="_intl.sortButtonLabel(id)">
+          [attr.aria-label]="_intl.sortButtonLabel(id)"
+          [attr.disabled]="_isDisabled() || null">
     <ng-content></ng-content>
   </button>
 
@@ -16,5 +17,5 @@
 </div>
 
 <span class="cdk-visually-hidden" *ngIf="_isSorted()">
-  {{_intl.sortDescriptionLabel(id, _sort.direction)}}
+  &nbsp;{{_intl.sortDescriptionLabel(id, _sort.direction)}}
 </span>

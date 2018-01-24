@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -14,7 +14,7 @@ import {NgModule} from '@angular/core';
 import {MatCommonModule, MatRippleModule} from '@angular/material/core';
 import {MatInkBar} from './ink-bar';
 import {MatTab} from './tab';
-import {MatTabBody} from './tab-body';
+import {MatTabBody, MatTabBodyPortal} from './tab-body';
 import {MatTabGroup} from './tab-group';
 import {MatTabHeader} from './tab-header';
 import {MatTabLabel} from './tab-label';
@@ -49,6 +49,7 @@ import {MatTabLink, MatTabNav} from './tab-nav-bar/tab-nav-bar';
     MatTabNav,
     MatTabLink,
     MatTabBody,
+    MatTabBodyPortal,
     MatTabHeader
   ],
   providers: [VIEWPORT_RULER_PROVIDER],

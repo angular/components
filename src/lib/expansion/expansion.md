@@ -55,7 +55,7 @@ is in its expanded state.
 #### Disabling a panel
 
 Expansion panels can be disabled using the `disabled` attribute. A disabled expansion panel can't
-be toggled by the user, but can still be manipulated using programmatically.
+be toggled by the user, but can still be manipulated programmatically.
 
 ```html
 <mat-expansion-panel [disabled]="isDisabled">
@@ -99,10 +99,26 @@ panel can be expanded at a given time:
 </mat-accordion>
 ```
 
+### Lazy rendering
+By default, the expansion panel content will be initialized even when the panel is closed.
+To instead defer initialization until the panel is open, the content should be provided as
+an `ng-template`:
+```html
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    This is the expansion title
+  </mat-expansion-panel-header>
+
+  <ng-template matExpansionPanelContent>
+    Some deferred content
+  </ng-template>
+</mat-expansion-panel>
+```
+
 ### Accessibility
 The expansion-panel aims to mimic the experience of the native `<details>` and `<summary>` elements.
-The expansion panel header has `role="button"`. The expansion panel header has attribute
-`aria-controls` with the expansion panel's id as value.
+The expansion panel header has `role="button"` and also the attribute `aria-controls` with the
+expansion panel's id as value.
 
 The expansion panel headers are buttons. Users can use the keyboard to activate the expansion panel
 header to switch between expanded state and collapsed state. Because the header acts as a button,

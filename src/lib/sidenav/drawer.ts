@@ -1,17 +1,18 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-
-import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
-import {FocusTrap, FocusTrapFactory} from '@angular/cdk/a11y';
+import {AnimationEvent} from '@angular/animations';
+import {FocusTrap, FocusTrapFactory, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE} from '@angular/cdk/keycodes';
+import {Platform} from '@angular/cdk/platform';
 import {
+  AfterContentChecked,
   AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -28,15 +29,22 @@ import {
   Optional,
   Output,
   QueryList,
-  Renderer2,
   ViewEncapsulation,
+  InjectionToken,
+  ViewChild,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/platform-browser';
+import {DOCUMENT} from '@angular/common';
 import {merge} from 'rxjs/observable/merge';
-import {first} from 'rxjs/operator/first';
-import {startWith} from 'rxjs/operator/startWith';
-import {takeUntil} from 'rxjs/operator/takeUntil';
+import {filter} from 'rxjs/operators/filter';
+import {take} from 'rxjs/operators/take';
+import {startWith} from 'rxjs/operators/startWith';
+import {takeUntil} from 'rxjs/operators/takeUntil';
+import {debounceTime} from 'rxjs/operators/debounceTime';
+import {map} from 'rxjs/operators/map';
 import {Subject} from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
+import {matDrawerAnimations} from './drawer-animations';
+import {CdkScrollable} from '@angular/cdk/scrolling';
 
 
 /** Throws an exception when two MatDrawer are matching the same position. */
@@ -50,9 +58,16 @@ export function throwMatDuplicatedDrawerError(position: string) {
  * @deprecated
  */
 export class MatDrawerToggleResult {
-  constructor(public type: 'open' | 'close', public animationFinished: boolean) {}
+  constructor(
+    /** Whether the drawer is opened or closed. */
+    public type: 'open' | 'close',
+    /** Whether the drawer animation is finished. */
+    public animationFinished: boolean) {}
 }
 
+/** Configures whether drawers should use auto sizing by default. */
+export const MAT_DRAWER_DEFAULT_AUTOSIZE =
+    new InjectionToken<boolean>('MAT_DRAWER_DEFAULT_AUTOSIZE');
 
 @Component({
   moduleId: module.id,
@@ -60,8 +75,8 @@ export class MatDrawerToggleResult {
   template: '<ng-content></ng-content>',
   host: {
     'class': 'mat-drawer-content',
-    '[style.marginLeft.px]': '_margins.left',
-    '[style.marginRight.px]': '_margins.right',
+    '[style.margin-left.px]': '_margins.left',
+    '[style.margin-right.px]': '_margins.right',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -73,7 +88,7 @@ export class MatDrawerContent implements AfterContentInit {
    * drawer is open. We use margin rather than transform even for push mode because transform breaks
    * fixed position elements inside of the transformed element.
    */
-  _margins: {left: number, right: number} = {left: 0, right: 0};
+  _margins: {left: number|null, right: number|null} = {left: null, right: null};
 
   constructor(
       private _changeDetectorRef: ChangeDetectorRef,
@@ -90,34 +105,18 @@ export class MatDrawerContent implements AfterContentInit {
 
 
 /**
- * <mat-drawer> component.
- *
  * This component corresponds to a drawer that can be opened on the drawer container.
- *
- * Please refer to README.md for examples on how to use it.
  */
 @Component({
   moduleId: module.id,
   selector: 'mat-drawer',
+  exportAs: 'matDrawer',
   template: '<ng-content></ng-content>',
-  animations: [
-    trigger('transform', [
-      state('open, open-instant', style({
-        transform: 'translate3d(0, 0, 0)',
-        visibility: 'visible',
-      })),
-      state('void', style({
-        visibility: 'hidden',
-      })),
-      transition('void => open-instant', animate('0ms')),
-      transition('void <=> open, open-instant => void',
-          animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)'))
-    ])
-  ],
+  animations: [matDrawerAnimations.transformDrawer],
   host: {
     'class': 'mat-drawer',
     '[@transform]': '_animationState',
-    '(@transform.start)': '_onAnimationStart()',
+    '(@transform.start)': '_onAnimationStart($event)',
     '(@transform.done)': '_onAnimationEnd($event)',
     '(keydown)': 'handleKeydown($event)',
     // must prevent the browser from aligning text based on value
@@ -132,7 +131,7 @@ export class MatDrawerContent implements AfterContentInit {
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
 })
-export class MatDrawer implements AfterContentInit, OnDestroy {
+export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestroy {
   private _focusTrap: FocusTrap;
   private _elementFocusedBeforeDrawerWasOpened: HTMLElement | null = null;
 
@@ -141,8 +140,8 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
 
   /** The side that the drawer is attached to. */
   @Input()
-  get position() { return this._position; }
-  set position(value) {
+  get position(): 'start' | 'end' { return this._position; }
+  set position(value: 'start' | 'end') {
     // Make sure we have a valid value.
     value = value === 'end' ? 'end' : 'start';
     if (value != this._position) {
@@ -155,13 +154,13 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
 
   /** @deprecated */
   @Input()
-  get align() { return this.position; }
-  set align(value) { this.position = value; }
+  get align(): 'start' | 'end' { return this.position; }
+  set align(value: 'start' | 'end') { this.position = value; }
 
   /** Mode of the drawer; one of 'over', 'push' or 'side'. */
   @Input()
-  get mode() { return this._mode; }
-  set mode(value) {
+  get mode(): 'over' | 'push' | 'side' { return this._mode; }
+  set mode(value: 'over' | 'push' | 'side') {
     this._mode = value;
     this._modeChanged.next();
   }
@@ -176,33 +175,67 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
   /** Whether the drawer is opened. */
   private _opened: boolean = false;
 
-  /** Emits whenever the drawer has started animating. */
-  _animationStarted = new EventEmitter<void>();
+  /** How the sidenav was opened (keypress, mouse click etc.) */
+  private _openedVia: FocusOrigin | null;
 
-  /** Whether the drawer is animating. Used to prevent overlapping animations. */
-  _isAnimating = false;
+  /** Emits whenever the drawer has started animating. */
+  _animationStarted = new EventEmitter<AnimationEvent>();
 
   /** Current state of the sidenav animation. */
   _animationState: 'open-instant' | 'open' | 'void' = 'void';
 
+  /** Event emitted when the drawer open state is changed. */
+  @Output() openedChange: EventEmitter<boolean> =
+      // Note this has to be async in order to avoid some issues with two-bindings (see #8872).
+      new EventEmitter<boolean>(/* isAsync */true);
+
+  /** Event emitted when the drawer has been opened. */
+  @Output('opened')
+  get _openedStream(): Observable<void> {
+    return this.openedChange.pipe(filter(o => o), map(() => {}));
+  }
+
+  /** Event emitted when the drawer has started opening. */
+  @Output()
+  get openedStart(): Observable<void> {
+    return this._animationStarted.pipe(
+      filter(e => e.fromState !== e.toState && e.toState.indexOf('open') === 0),
+      map(() => {})
+    );
+  }
+
+  /** Event emitted when the drawer has been closed. */
+  @Output('closed')
+  get _closedStream(): Observable<void> {
+    return this.openedChange.pipe(filter(o => !o), map(() => {}));
+  }
+
+  /** Event emitted when the drawer has started closing. */
+  @Output()
+  get closedStart(): Observable<void> {
+    return this._animationStarted.pipe(
+      filter(e => e.fromState !== e.toState && e.toState === 'void'),
+      map(() => {})
+    );
+  }
+
   /**
-   * Promise that resolves when the open/close animation completes. It is here for backwards
-   * compatibility and should be removed next time we do drawer breaking changes.
-   * @deprecated
+   * Event emitted when the drawer is fully opened.
+   * @deprecated Use `opened` instead.
    */
-  private _currentTogglePromise: Promise<MatDrawerToggleResult> | null;
+  @Output('open') onOpen: Observable<void> = this._openedStream;
 
-  /** Event emitted when the drawer is fully opened. */
-  @Output('open') onOpen = new EventEmitter<MatDrawerToggleResult | void>();
-
-  /** Event emitted when the drawer is fully closed. */
-  @Output('close') onClose = new EventEmitter<MatDrawerToggleResult | void>();
+  /**
+   * Event emitted when the drawer is fully closed.
+   * @deprecated Use `closed` instead.
+   */
+  @Output('close') onClose: Observable<void> = this._closedStream;
 
   /** Event emitted when the drawer's position changes. */
-  @Output('positionChanged') onPositionChanged = new EventEmitter<void>();
+  @Output('positionChanged') onPositionChanged: EventEmitter<void> = new EventEmitter<void>();
 
   /** @deprecated */
-  @Output('align-changed') onAlignChanged = new EventEmitter<void>();
+  @Output('align-changed') onAlignChanged: EventEmitter<void> = new EventEmitter<void>();
 
   /**
    * An observable that emits when the drawer mode changes. This is used by the drawer container to
@@ -210,25 +243,41 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
    */
   _modeChanged = new Subject();
 
-  get _isFocusTrapEnabled() {
+  get _isFocusTrapEnabled(): boolean {
     // The focus trap is only enabled when the drawer is open in any mode other than side.
     return this.opened && this.mode !== 'side';
   }
 
   constructor(private _elementRef: ElementRef,
               private _focusTrapFactory: FocusTrapFactory,
+              private _focusMonitor: FocusMonitor,
+              private _platform: Platform,
               @Optional() @Inject(DOCUMENT) private _doc: any) {
-    this.onOpen.subscribe(() => {
-      if (this._doc) {
-        this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
-      }
 
-      if (this._isFocusTrapEnabled && this._focusTrap) {
-        this._focusTrap.focusInitialElementWhenReady();
+    this.openedChange.subscribe((opened: boolean) => {
+      if (opened) {
+        if (this._doc) {
+          this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
+        }
+
+        if (this._isFocusTrapEnabled && this._focusTrap) {
+          this._trapFocus();
+        }
+      } else {
+        this._restoreFocus();
       }
     });
+  }
 
-    this.onClose.subscribe(() => this._restoreFocus());
+  /** Traps focus inside the drawer. */
+  private _trapFocus() {
+    this._focusTrap.focusInitialElementWhenReady().then(hasMovedFocus => {
+      // If there were no focusable elements, focus the sidenav itself so the keyboard navigation
+      // still works. We need to check that `focus` is a function due to Universal.
+      if (!hasMovedFocus && typeof this._elementRef.nativeElement.focus === 'function') {
+        this._elementRef.nativeElement.focus();
+      }
+    });
   }
 
   /**
@@ -236,22 +285,33 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
    * opened.
    */
   private _restoreFocus() {
-    let activeEl = this._doc && this._doc.activeElement;
+    const activeEl = this._doc && this._doc.activeElement;
+
     if (activeEl && this._elementRef.nativeElement.contains(activeEl)) {
       if (this._elementFocusedBeforeDrawerWasOpened instanceof HTMLElement) {
-        this._elementFocusedBeforeDrawerWasOpened.focus();
+        this._focusMonitor.focusVia(this._elementFocusedBeforeDrawerWasOpened, this._openedVia);
       } else {
         this._elementRef.nativeElement.blur();
       }
     }
 
     this._elementFocusedBeforeDrawerWasOpened = null;
+    this._openedVia = null;
   }
 
   ngAfterContentInit() {
     this._focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement);
     this._focusTrap.enabled = this._isFocusTrapEnabled;
-    this._enableAnimations = true;
+  }
+
+  ngAfterContentChecked() {
+    // Enable the animations after the lifecycle hooks have run, in order to avoid animating
+    // drawers that are open by default. When we're on the server, we shouldn't enable the
+    // animations, because we don't want the drawer to animate the first time the user sees
+    // the page.
+    if (this._platform.isBrowser) {
+      this._enableAnimations = true;
+    }
   }
 
   ngOnDestroy() {
@@ -266,47 +326,52 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
    */
   @Input()
   get opened(): boolean { return this._opened; }
-  set opened(v: boolean) {
-    this.toggle(coerceBooleanProperty(v));
-  }
+  set opened(v: boolean) { this.toggle(coerceBooleanProperty(v)); }
 
-
-  /** Open the drawer. */
-  open(): Promise<MatDrawerToggleResult> {
-    return this.toggle(true);
+  /**
+   * Open the drawer.
+   * @param openedVia Whether the drawer was opened by a key press, mouse click or programmatically.
+   * Used for focus management after the sidenav is closed.
+   */
+  open(openedVia?: FocusOrigin): Promise<void> {
+    return this.toggle(true, openedVia);
   }
 
   /** Close the drawer. */
-  close(): Promise<MatDrawerToggleResult> {
+  close(): Promise<void> {
     return this.toggle(false);
   }
 
   /**
    * Toggle this drawer.
    * @param isOpen Whether the drawer should be open.
+   * @param openedVia Whether the drawer was opened by a key press, mouse click or programmatically.
+   * Used for focus management after the sidenav is closed.
    */
-  toggle(isOpen: boolean = !this.opened): Promise<MatDrawerToggleResult> {
-    if (!this._isAnimating) {
-      this._opened = isOpen;
+  toggle(isOpen: boolean = !this.opened, openedVia: FocusOrigin = 'program'):
+    Promise<void> {
 
-      if (isOpen) {
-        this._animationState = this._enableAnimations ? 'open' : 'open-instant';
-      } else {
-        this._animationState = 'void';
-      }
+    this._opened = isOpen;
 
-      this._currentTogglePromise = new Promise(resolve => {
-        first.call(isOpen ? this.onOpen : this.onClose).subscribe(resolve);
-      });
+    if (isOpen) {
+      this._animationState = this._enableAnimations ? 'open' : 'open-instant';
+      this._openedVia = openedVia;
+    } else {
+      this._animationState = 'void';
+      this._restoreFocus();
+    }
 
-      if (this._focusTrap) {
-        this._focusTrap.enabled = this._isFocusTrapEnabled;
-      }
+    if (this._focusTrap) {
+      this._focusTrap.enabled = this._isFocusTrapEnabled;
     }
 
     // TODO(crisbeto): This promise is here for backwards-compatibility.
     // It should be removed next time we do breaking changes in the drawer.
-    return this._currentTogglePromise!;
+    return new Promise<any>(resolve => {
+      this.openedChange.pipe(take(1)).subscribe(open => {
+        resolve(new MatDrawerToggleResult(open ? 'open' : 'close', true));
+      });
+    });
   }
 
   /**
@@ -320,27 +385,17 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
     }
   }
 
-  _onAnimationStart() {
-    this._isAnimating = true;
-    this._animationStarted.emit();
+  _onAnimationStart(event: AnimationEvent) {
+    this._animationStarted.emit(event);
   }
 
   _onAnimationEnd(event: AnimationEvent) {
     const {fromState, toState} = event;
 
-    if (toState.indexOf('open') === 0 && fromState === 'void') {
-      this.onOpen.emit(new MatDrawerToggleResult('open', true));
-    } else if (toState === 'void' && fromState.indexOf('open') === 0) {
-      this.onClose.emit(new MatDrawerToggleResult('close', true));
+    if ((toState.indexOf('open') === 0 && fromState === 'void') ||
+        (toState === 'void' && fromState.indexOf('open') === 0)) {
+      this.openedChange.emit(this._opened);
     }
-
-    // Note: as of Angular 4.3, the animations module seems to fire the `start` callback before
-    // the end if animations are disabled. Make this call async to ensure that it still fires
-    // at the appropriate time.
-    Promise.resolve().then(() => {
-      this._isAnimating = false;
-      this._currentTogglePromise = null;
-    });
   }
 
   get _width() {
@@ -358,11 +413,9 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
 @Component({
   moduleId: module.id,
   selector: 'mat-drawer-container',
+  exportAs: 'matDrawerContainer',
   templateUrl: 'drawer-container.html',
-  styleUrls: [
-    'drawer.css',
-    'drawer-transitions.css',
-  ],
+  styleUrls: ['drawer.css'],
   host: {
     'class': 'mat-drawer-container',
   },
@@ -372,14 +425,26 @@ export class MatDrawer implements AfterContentInit, OnDestroy {
 })
 export class MatDrawerContainer implements AfterContentInit, OnDestroy {
   @ContentChildren(MatDrawer) _drawers: QueryList<MatDrawer>;
-
   @ContentChild(MatDrawerContent) _content: MatDrawerContent;
 
   /** The drawer child with the `start` position. */
-  get start() { return this._start; }
+  get start(): MatDrawer | null { return this._start; }
 
   /** The drawer child with the `end` position. */
-  get end() { return this._end; }
+  get end(): MatDrawer | null { return this._end; }
+
+  /**
+   * Whether to automatically resize the container whenever
+   * the size of any of its drawers changes.
+   *
+   * **Use at your own risk!** Enabling this option can cause layout thrashing by measuring
+   * the drawers on every change detection cycle. Can be configured globally via the
+   * `MAT_DRAWER_DEFAULT_AUTOSIZE` token.
+   */
+  @Input()
+  get autosize(): boolean { return this._autosize; }
+  set autosize(value: boolean) { this._autosize = coerceBooleanProperty(value); }
+  private _autosize: boolean;
 
   /** Event emitted when the drawer backdrop is clicked. */
   @Output() backdropClick = new EventEmitter<void>();
@@ -400,20 +465,34 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
   /** Emits when the component is destroyed. */
   private _destroyed = new Subject<void>();
 
-  _contentMargins = new Subject<{left: number, right: number}>();
+  /** Emits on every ngDoCheck. Used for debouncing reflows. */
+  private _doCheckSubject = new Subject<void>();
 
-  constructor(@Optional() private _dir: Directionality, private _element: ElementRef,
-              private _renderer: Renderer2, private _ngZone: NgZone,
-              private _changeDetectorRef: ChangeDetectorRef) {
-    // If a `Dir` directive exists up the tree, listen direction changes and update the left/right
-    // properties to point to the proper start/end.
-    if (_dir != null) {
-      takeUntil.call(_dir.change, this._destroyed).subscribe(() => this._validateDrawers());
+  _contentMargins = new Subject<{left: number|null, right: number|null}>();
+
+  /** Reference to the CdkScrollable instance that wraps the scrollable content. */
+  @ViewChild(CdkScrollable) scrollable: CdkScrollable;
+
+  constructor(@Optional() private _dir: Directionality,
+              private _element: ElementRef,
+              private _ngZone: NgZone,
+              private _changeDetectorRef: ChangeDetectorRef,
+              @Inject(MAT_DRAWER_DEFAULT_AUTOSIZE) defaultAutosize = false) {
+
+    // If a `Dir` directive exists up the tree, listen direction changes
+    // and update the left/right properties to point to the proper start/end.
+    if (_dir) {
+      _dir.change.pipe(takeUntil(this._destroyed)).subscribe(() => {
+        this._validateDrawers();
+        this._updateContentMargins();
+      });
     }
+
+    this._autosize = defaultAutosize;
   }
 
   ngAfterContentInit() {
-    startWith.call(this._drawers.changes, null).subscribe(() => {
+    this._drawers.changes.pipe(startWith(null)).subscribe(() => {
       this._validateDrawers();
 
       this._drawers.forEach((drawer: MatDrawer) => {
@@ -430,9 +509,15 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
 
       this._changeDetectorRef.markForCheck();
     });
+
+    this._doCheckSubject.pipe(
+      debounceTime(10), // Arbitrary debounce time, less than a frame at 60fps
+      takeUntil(this._destroyed)
+    ).subscribe(() => this._updateContentMargins());
   }
 
   ngOnDestroy() {
+    this._doCheckSubject.complete();
     this._destroyed.next();
     this._destroyed.complete();
   }
@@ -447,29 +532,44 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
     this._drawers.forEach(drawer => drawer.close());
   }
 
+  ngDoCheck() {
+    // If users opted into autosizing, do a check every change detection cycle.
+    if (this._autosize && this._isPushed()) {
+      // Run outside the NgZone, otherwise the debouncer will throw us into an infinite loop.
+      this._ngZone.runOutsideAngular(() => this._doCheckSubject.next());
+    }
+  }
+
   /**
    * Subscribes to drawer events in order to set a class on the main container element when the
    * drawer is open and the backdrop is visible. This ensures any overflow on the container element
    * is properly hidden.
    */
   private _watchDrawerToggle(drawer: MatDrawer): void {
-    takeUntil.call(drawer._animationStarted, this._drawers.changes).subscribe(() => {
+    drawer._animationStarted.pipe(
+      takeUntil(this._drawers.changes),
+      filter((event: AnimationEvent) => event.fromState !== event.toState)
+    )
+    .subscribe((event: AnimationEvent) => {
       // Set the transition class on the container so that the animations occur. This should not
       // be set initially because animations should only be triggered via a change in state.
-      this._renderer.addClass(this._element.nativeElement, 'mat-drawer-transition');
+      if (event.toState !== 'open-instant') {
+        this._element.nativeElement.classList.add('mat-drawer-transition');
+      }
+
       this._updateContentMargins();
       this._changeDetectorRef.markForCheck();
     });
 
     if (drawer.mode !== 'side') {
-      takeUntil.call(merge(drawer.onOpen, drawer.onClose), this._drawers.changes).subscribe(() =>
+      drawer.openedChange.pipe(takeUntil(this._drawers.changes)).subscribe(() =>
           this._setContainerClass(drawer.opened));
     }
   }
 
   /**
-   * Subscribes to drawer onPositionChanged event in order to re-validate drawers when the position
-   * changes.
+   * Subscribes to drawer onPositionChanged event in order to
+   * re-validate drawers when the position changes.
    */
   private _watchDrawerPosition(drawer: MatDrawer): void {
     if (!drawer) {
@@ -477,8 +577,8 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
     }
     // NOTE: We need to wait for the microtask queue to be empty before validating,
     // since both drawers may be swapping positions at the same time.
-    takeUntil.call(drawer.onPositionChanged, this._drawers.changes).subscribe(() => {
-      first.call(this._ngZone.onMicrotaskEmpty.asObservable()).subscribe(() => {
+    drawer.onPositionChanged.pipe(takeUntil(this._drawers.changes)).subscribe(() => {
+      this._ngZone.onMicrotaskEmpty.asObservable().pipe(take(1)).subscribe(() => {
         this._validateDrawers();
       });
     });
@@ -487,7 +587,7 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
   /** Subscribes to changes in drawer mode so we can run change detection. */
   private _watchDrawerMode(drawer: MatDrawer): void {
     if (drawer) {
-      takeUntil.call(drawer._modeChanged, merge(this._drawers.changes, this._destroyed))
+      drawer._modeChanged.pipe(takeUntil(merge(this._drawers.changes, this._destroyed)))
         .subscribe(() => {
           this._updateContentMargins();
           this._changeDetectorRef.markForCheck();
@@ -498,9 +598,9 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
   /** Toggles the 'mat-drawer-opened' class on the main 'mat-drawer-container' element. */
   private _setContainerClass(isAdd: boolean): void {
     if (isAdd) {
-      this._renderer.addClass(this._element.nativeElement, 'mat-drawer-opened');
+      this._element.nativeElement.classList.add('mat-drawer-opened');
     } else {
-      this._renderer.removeClass(this._element.nativeElement, 'mat-drawer-opened');
+      this._element.nativeElement.classList.remove('mat-drawer-opened');
     }
   }
 
@@ -526,13 +626,19 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
     this._right = this._left = null;
 
     // Detect if we're LTR or RTL.
-    if (this._dir == null || this._dir.value == 'ltr') {
+    if (!this._dir || this._dir.value == 'ltr') {
       this._left = this._start;
       this._right = this._end;
     } else {
       this._left = this._end;
       this._right = this._start;
     }
+  }
+
+  /** Whether the container is being pushed to the side by one of the drawers. */
+  private _isPushed() {
+    return (this._isDrawerOpen(this._start) && this._start!.mode != 'over') ||
+           (this._isDrawerOpen(this._end) && this._end!.mode != 'over');
   }
 
   _onBackdropClicked() {
@@ -591,6 +697,7 @@ export class MatDrawerContainer implements AfterContentInit, OnDestroy {
       }
     }
 
-    this._contentMargins.next({left, right});
+    // Pull back into the NgZone since in some cases we could be outside.
+    this._ngZone.run(() => this._contentMargins.next({left, right}));
   }
 }

@@ -1,35 +1,33 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
 import {
-  ViewChild,
   Component,
   Input,
+  Inject,
   Output,
   EventEmitter,
+  OnDestroy,
   OnInit,
   ElementRef,
+  Directive,
   Optional,
-  AfterViewChecked,
   ViewEncapsulation,
   ChangeDetectionStrategy,
+  ComponentFactoryResolver,
+  ViewContainerRef,
+  forwardRef,
 } from '@angular/core';
-import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition,
-  AnimationEvent,
-} from '@angular/animations';
-import {TemplatePortal, PortalHostDirective} from '@angular/cdk/portal';
+import {AnimationEvent} from '@angular/animations';
+import {TemplatePortal, CdkPortalOutlet} from '@angular/cdk/portal';
 import {Directionality, Direction} from '@angular/cdk/bidi';
-
+import {Subscription} from 'rxjs/Subscription';
+import {matTabsAnimations} from './tabs-animations';
 
 /**
  * These position states are used internally as animation states for the tab body. Setting the
@@ -53,6 +51,56 @@ export type MatTabBodyPositionState =
 export type MatTabBodyOriginState = 'left' | 'right';
 
 /**
+ * The portal host directive for the contents of the tab.
+ * @docs-private
+ */
+@Directive({
+  selector: '[matTabBodyHost]'
+})
+export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
+  /** A subscription to events for when the tab body begins centering. */
+  private _centeringSub: Subscription;
+  /** A subscription to events for when the tab body finishes leaving from center position. */
+  private _leavingSub: Subscription;
+
+  constructor(
+    _componentFactoryResolver: ComponentFactoryResolver,
+    _viewContainerRef: ViewContainerRef,
+    @Inject(forwardRef(() => MatTabBody)) private _host: MatTabBody) {
+      super(_componentFactoryResolver, _viewContainerRef);
+  }
+
+  /** Set initial visibility or set up subscription for changing visibility. */
+  ngOnInit(): void {
+    if (this._host._isCenterPosition(this._host._position)) {
+      this.attach(this._host._content);
+    }
+    this._centeringSub = this._host._beforeCentering.subscribe((isCentering: boolean) => {
+      if (isCentering) {
+        if (!this.hasAttached()) {
+          this.attach(this._host._content);
+        }
+      }
+    });
+
+    this._leavingSub = this._host._afterLeavingCenter.subscribe(() => {
+      this.detach();
+    });
+  }
+
+  /** Clean up centering subscription. */
+  ngOnDestroy(): void {
+    if (this._centeringSub && !this._centeringSub.closed) {
+      this._centeringSub.unsubscribe();
+    }
+
+    if (this._leavingSub && !this._leavingSub.closed) {
+      this._leavingSub.unsubscribe();
+    }
+  }
+}
+
+/**
  * Wrapper for the contents of a tab.
  * @docs-private
  */
@@ -64,44 +112,30 @@ export type MatTabBodyOriginState = 'left' | 'right';
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [matTabsAnimations.translateTab],
   host: {
     'class': 'mat-tab-body',
   },
-  animations: [
-    trigger('translateTab', [
-      // Note: transitions to `none` instead of 0, because some browsers might blur the content.
-      state('center, void, left-origin-center, right-origin-center', style({transform: 'none'})),
-      state('left', style({transform: 'translate3d(-100%, 0, 0)'})),
-      state('right', style({transform: 'translate3d(100%, 0, 0)'})),
-      transition('* => left, * => right, left => center, right => center',
-          animate('500ms cubic-bezier(0.35, 0, 0.25, 1)')),
-      transition('void => left-origin-center', [
-        style({transform: 'translate3d(-100%, 0, 0)'}),
-        animate('500ms cubic-bezier(0.35, 0, 0.25, 1)')
-      ]),
-      transition('void => right-origin-center', [
-        style({transform: 'translate3d(100%, 0, 0)'}),
-        animate('500ms cubic-bezier(0.35, 0, 0.25, 1)')
-      ])
-    ])
-  ]
 })
-export class MatTabBody implements OnInit, AfterViewChecked {
-  /** The portal host inside of this container into which the tab body content will be loaded. */
-  @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
-
+export class MatTabBody implements OnInit {
   /** Event emitted when the tab begins to animate towards the center as the active tab. */
-  @Output() onCentering: EventEmitter<number> = new EventEmitter<number>();
+  @Output() _onCentering: EventEmitter<number> = new EventEmitter<number>();
+
+  /** Event emitted before the centering of the tab begins. */
+  @Output() _beforeCentering: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  /** Event emitted before the centering of the tab begins. */
+  @Output() _afterLeavingCenter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** Event emitted when the tab completes its animation towards the center. */
-  @Output() onCentered: EventEmitter<void> = new EventEmitter<void>(true);
+  @Output() _onCentered: EventEmitter<void> = new EventEmitter<void>(true);
 
   /** The tab body content to display. */
-  @Input('content') _content: TemplatePortal<any>;
+  @Input('content') _content: TemplatePortal;
 
   /** The shifted index position of the tab body, where zero represents the active center tab. */
-  _position: MatTabBodyPositionState;
-  @Input('position') set position(position: number) {
+  @Input()
+  set position(position: number) {
     if (position < 0) {
       this._position = this._getLayoutDirection() == 'ltr' ? 'left' : 'right';
     } else if (position > 0) {
@@ -110,12 +144,11 @@ export class MatTabBody implements OnInit, AfterViewChecked {
       this._position = 'center';
     }
   }
+  _position: MatTabBodyPositionState;
 
   /** The origin position from which this tab should appear when it is centered into view. */
-  _origin: MatTabBodyOriginState;
-
-  /** The origin position from which this tab should appear when it is centered into view. */
-  @Input('origin') set origin(origin: number) {
+  @Input()
+  set origin(origin: number) {
     if (origin == null) { return; }
 
     const dir = this._getLayoutDirection();
@@ -125,6 +158,7 @@ export class MatTabBody implements OnInit, AfterViewChecked {
       this._origin = 'right';
     }
   }
+  _origin: MatTabBodyOriginState;
 
   constructor(private _elementRef: ElementRef,
               @Optional() private _dir: Directionality) { }
@@ -139,31 +173,22 @@ export class MatTabBody implements OnInit, AfterViewChecked {
     }
   }
 
-  /**
-   * After the view has been set, check if the tab content is set to the center and attach the
-   * content if it is not already attached.
-   */
-  ngAfterViewChecked() {
-    if (this._isCenterPosition(this._position) && !this._portalHost.hasAttached()) {
-      this._portalHost.attach(this._content);
+  _onTranslateTabStarted(e: AnimationEvent): void {
+    const isCentering = this._isCenterPosition(e.toState);
+    this._beforeCentering.emit(isCentering);
+    if (isCentering) {
+      this._onCentering.emit(this._elementRef.nativeElement.clientHeight);
     }
   }
 
-  _onTranslateTabStarted(e: AnimationEvent) {
-    if (this._isCenterPosition(e.toState)) {
-      this.onCentering.emit(this._elementRef.nativeElement.clientHeight);
-    }
-  }
-
-  _onTranslateTabComplete(e: AnimationEvent) {
-    // If the end state is that the tab is not centered, then detach the content.
-    if (!this._isCenterPosition(e.toState) && !this._isCenterPosition(this._position)) {
-      this._portalHost.detach();
-    }
-
+  _onTranslateTabComplete(e: AnimationEvent): void {
     // If the transition to the center is complete, emit an event.
     if (this._isCenterPosition(e.toState) && this._isCenterPosition(this._position)) {
-      this.onCentered.emit();
+      this._onCentered.emit();
+    }
+
+    if (this._isCenterPosition(e.fromState) && !this._isCenterPosition(this._position)) {
+      this._afterLeavingCenter.emit();
     }
   }
 
@@ -173,7 +198,7 @@ export class MatTabBody implements OnInit, AfterViewChecked {
   }
 
   /** Whether the provided position state is considered center, regardless of origin. */
-  private _isCenterPosition(position: MatTabBodyPositionState|string): boolean {
+  _isCenterPosition(position: MatTabBodyPositionState|string): boolean {
     return position == 'center' ||
         position == 'left-origin-center' ||
         position == 'right-origin-center';

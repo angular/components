@@ -8,13 +8,17 @@
     <div mat-ripple class="mat-radio-ripple"
          [matRippleTrigger]="label"
          [matRippleDisabled]="_isRippleDisabled()"
-         [matRippleCentered]="true"></div>
+         [matRippleCentered]="true"
+         [matRippleRadius]="23"
+         [matRippleAnimation]="{enterDuration: 300}">
+    </div>
   </div>
 
   <input #input class="mat-radio-input cdk-visually-hidden" type="radio"
          [id]="inputId"
          [checked]="checked"
          [disabled]="disabled"
+         [tabIndex]="tabIndex"
          [attr.name]="name"
          [required]="required"
          [attr.aria-label]="ariaLabel"

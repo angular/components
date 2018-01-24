@@ -127,9 +127,9 @@ class ConfigBuilder {
 ```
 
 #### RxJS
-When dealing with RxJS operators, import the operator functions directly (e.g.
-`import "rxjs/operator/map"`), as opposed to using the "patch" imports which pollute the user's
-global Observable object (e.g. `import "rxjs/add/operator/map"`):
+When dealing with RxJS operators, import the pipeable operator (e.g.
+`import {map} from 'rxjs/operators/map'`), as opposed to using the "patch" imports which pollute the
+user's global Observable object (e.g. `import 'rxjs/add/operator/map'`):
 
 ```ts
 // NO
@@ -137,22 +137,9 @@ import 'rxjs/add/operator/map';
 someObservable.map(...).subscribe(...);
 
 // YES
-import {map} from 'rxjs/operator/map';
-map.call(someObservable, ...).subscribe(...);
+import {map} from 'rxjs/operators/map';
+someObservable.pipe(map(...)).subscribe(...);
 ```
-
-Note that this approach can be inflexible when dealing with long chains of operators. You can use
-the `RxChain` class to help with it:
-
-```ts
-// Before
-someObservable.filter(...).map(...).do(...);
-
-// After
-RxChain.from(someObservable).call(filter, ...).call(map, ...).call(do, ...).subscribe(...);
-```
-Note that not all operators are available via the `RxChain`. If the operator that you need isn't
-declared, you can add it to `/core/rxjs/rx-operators.ts`.
 
 #### Access modifiers
 * Omit the `public` keyword as it is the default behavior.
@@ -166,6 +153,24 @@ be part of the user-facing API. This typically applies to symbols used in templa
 
 Additionally, the `@docs-private` JsDoc annotation can be used to hide any symbol from the public
 API docs.
+
+
+#### Getters and Setters
+* Avoid long or complex getters and setters. If the logic of an accessor would take more than
+three lines, introduce a new method to contain the logic.
+* A getter should immediately precede its corresponding setter.
+* Decorators such as `@Input` should be applied to the getter and not the setter.
+* Always use a `readonly` property instead of a getter (with no setter) when possible.
+  ```ts
+  /** YES */
+  readonly active: boolean;
+
+  /** NO */
+  get active(): boolean {
+    // Using a getter solely to make the property read-only.
+    return this._active;
+  }
+  ```
 
 #### JsDoc comments
 

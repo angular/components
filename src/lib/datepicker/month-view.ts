@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -20,7 +20,6 @@ import {
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {MatCalendarCell} from './calendar-body';
-import {coerceDateProperty} from './coerce-date-property';
 import {createMissingDateImplError} from './datepicker-errors';
 
 
@@ -35,6 +34,7 @@ const DAYS_PER_WEEK = 7;
   moduleId: module.id,
   selector: 'mat-month-view',
   templateUrl: 'month-view.html',
+  exportAs: 'matMonthView',
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,7 +47,8 @@ export class MatMonthView<D> implements AfterContentInit {
   get activeDate(): D { return this._activeDate; }
   set activeDate(value: D) {
     let oldActiveDate = this._activeDate;
-    this._activeDate = coerceDateProperty(this._dateAdapter, value) || this._dateAdapter.today();
+    this._activeDate =
+        this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
     if (!this._hasSameMonthAndYear(oldActiveDate, this._activeDate)) {
       this._init();
     }
@@ -58,7 +59,7 @@ export class MatMonthView<D> implements AfterContentInit {
   @Input()
   get selected(): D | null { return this._selected; }
   set selected(value: D | null) {
-    this._selected = coerceDateProperty(this._dateAdapter, value);
+    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._selectedDate = this._getDateInCurrentMonth(this._selected);
   }
   private _selected: D | null;
@@ -70,7 +71,7 @@ export class MatMonthView<D> implements AfterContentInit {
   @Output() selectedChange = new EventEmitter<D | null>();
 
   /** Emits when any date is selected. */
-  @Output() userSelection = new EventEmitter<void>();
+  @Output() _userSelection = new EventEmitter<void>();
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
@@ -130,7 +131,7 @@ export class MatMonthView<D> implements AfterContentInit {
       this.selectedChange.emit(selectedDate);
     }
 
-    this.userSelection.emit();
+    this._userSelection.emit();
   }
 
   /** Initializes this month view. */
@@ -185,5 +186,13 @@ export class MatMonthView<D> implements AfterContentInit {
   private _hasSameMonthAndYear(d1: D | null, d2: D | null): boolean {
     return !!(d1 && d2 && this._dateAdapter.getMonth(d1) == this._dateAdapter.getMonth(d2) &&
               this._dateAdapter.getYear(d1) == this._dateAdapter.getYear(d2));
+  }
+
+  /**
+   * @param obj The object to check.
+   * @returns The given object if it is both a date instance and valid, otherwise null.
+   */
+  private _getValidDateOrNull(obj: any): D | null {
+    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
   }
 }

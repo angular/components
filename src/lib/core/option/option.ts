@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -8,6 +8,7 @@
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
+import {Subject} from 'rxjs/Subject';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -19,6 +20,9 @@ import {
   Output,
   QueryList,
   ViewEncapsulation,
+  InjectionToken,
+  Inject,
+  AfterViewChecked,
 } from '@angular/core';
 import {MatOptgroup} from './optgroup';
 
@@ -30,8 +34,28 @@ let _uniqueIdCounter = 0;
 
 /** Event object emitted by MatOption when selected or deselected. */
 export class MatOptionSelectionChange {
-  constructor(public source: MatOption, public isUserInput = false) { }
+  constructor(
+    /** Reference to the option that emitted the event. */
+    public source: MatOption,
+    /** Whether the change in the option's value was a result of a user action. */
+    public isUserInput = false) { }
 }
+
+/**
+ * Describes a parent component that manages a list of options.
+ * Contains properties that the options can inherit.
+ * @docs-private
+ */
+export interface MatOptionParentComponent {
+  disableRipple?: boolean;
+  multiple?: boolean;
+}
+
+/**
+ * Injection token used to provide the parent component to options.
+ */
+export const MAT_OPTION_PARENT_COMPONENT =
+    new InjectionToken<MatOptionParentComponent>('MAT_OPTION_PARENT_COMPONENT');
 
 /**
  * Single option inside of a `<mat-select>` element.
@@ -39,6 +63,7 @@ export class MatOptionSelectionChange {
 @Component({
   moduleId: module.id,
   selector: 'mat-option',
+  exportAs: 'matOption',
   host: {
     'role': 'option',
     '[attr.tabindex]': '_getTabIndex()',
@@ -53,33 +78,24 @@ export class MatOptionSelectionChange {
     '(keydown)': '_handleKeydown($event)',
     'class': 'mat-option',
   },
+  styleUrls: ['option.css'],
   templateUrl: 'option.html',
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatOption {
-  private _selected: boolean = false;
-  private _active: boolean = false;
-  private _multiple: boolean = false;
-  private _disableRipple: boolean = false;
-
-  /** Whether the option is disabled.  */
-  private _disabled: boolean = false;
-
-  private _id: string = `mat-option-${_uniqueIdCounter++}`;
+export class MatOption implements AfterViewChecked {
+  private _selected = false;
+  private _active = false;
+  private _disabled = false;
+  private _id = `mat-option-${_uniqueIdCounter++}`;
+  private _mostRecentViewValue = '';
 
   /** Whether the wrapping component is in multiple selection mode. */
-  get multiple() { return this._multiple; }
-  set multiple(value: boolean) {
-    if (value !== this._multiple) {
-      this._multiple = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
+  get multiple() { return this._parent && this._parent.multiple; }
 
   /** The unique ID of the option. */
-  get id() { return this._id; }
+  get id(): string { return this._id; }
 
   /** Whether or not the option is currently selected. */
   get selected(): boolean { return this._selected; }
@@ -93,19 +109,19 @@ export class MatOption {
   set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
 
   /** Whether ripples for the option are disabled. */
-  get disableRipple() { return this._disableRipple; }
-  set disableRipple(value: boolean) {
-    this._disableRipple = value;
-    this._changeDetectorRef.markForCheck();
-  }
+  get disableRipple() { return this._parent && this._parent.disableRipple; }
 
   /** Event emitted when the option is selected or deselected. */
   @Output() onSelectionChange = new EventEmitter<MatOptionSelectionChange>();
 
+  /** Emits when the state of the option changes and any parents have to be notified. */
+  _stateChanges = new Subject<void>();
+
   constructor(
     private _element: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
-    @Optional() public readonly group: MatOptgroup) {}
+    @Optional() @Inject(MAT_OPTION_PARENT_COMPONENT) private _parent: MatOptionParentComponent,
+    @Optional() readonly group: MatOptgroup) {}
 
   /**
    * Whether or not the option is currently active and ready to be selected.
@@ -208,6 +224,22 @@ export class MatOption {
   /** Gets the host DOM element. */
   _getHostElement(): HTMLElement {
     return this._element.nativeElement;
+  }
+
+  ngAfterViewChecked() {
+    // Since parent components could be using the option's label to display the selected values
+    // (e.g. `mat-select`) and they don't have a way of knowing if the option's label has changed
+    // we have to check for changes in the DOM ourselves and dispatch an event. These checks are
+    // relatively cheap, however we still limit them only to selected options in order to avoid
+    // hitting the DOM too often.
+    if (this._selected) {
+      const viewValue = this.viewValue;
+
+      if (viewValue !== this._mostRecentViewValue) {
+        this._mostRecentViewValue = viewValue;
+        this._stateChanges.next();
+      }
+    }
   }
 
   /** Emits the selection change event. */

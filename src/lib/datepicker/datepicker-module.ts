@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -22,8 +22,9 @@ import {
 } from './datepicker';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerIntl} from './datepicker-intl';
-import {MatDatepickerToggle} from './datepicker-toggle';
+import {MatDatepickerToggle, MatDatepickerToggleIcon} from './datepicker-toggle';
 import {MatMonthView} from './month-view';
+import {MatMultiYearView} from './multi-year-view';
 import {MatYearView} from './year-view';
 
 
@@ -43,8 +44,10 @@ import {MatYearView} from './year-view';
     MatDatepickerContent,
     MatDatepickerInput,
     MatDatepickerToggle,
+    MatDatepickerToggleIcon,
     MatMonthView,
     MatYearView,
+    MatMultiYearView,
   ],
   declarations: [
     MatCalendar,
@@ -53,8 +56,10 @@ import {MatYearView} from './year-view';
     MatDatepickerContent,
     MatDatepickerInput,
     MatDatepickerToggle,
+    MatDatepickerToggleIcon,
     MatMonthView,
     MatYearView,
+    MatMultiYearView,
   ],
   providers: [
     MatDatepickerIntl,

@@ -20,13 +20,14 @@
     }
   }
 
-  .mat-menu-item .mat-icon,
+  .mat-menu-item .mat-icon:not([color]),
   .mat-menu-item-submenu-trigger::after {
     color: mat-color($foreground, 'icon');
   }
 
   .mat-menu-item:hover,
-  .mat-menu-item:focus,
+  .mat-menu-item.cdk-program-focused,
+  .mat-menu-item.cdk-keyboard-focused,
   .mat-menu-item-highlighted {
     &:not([disabled]) {
       background: mat-color($background, 'hover');
@@ -39,6 +40,7 @@
     font: {
       family: mat-font-family($config, subheading-2);
       size: mat-font-size($config, subheading-2);
+      weight: mat-font-weight($config, subheading-2);
     }
   }
 }

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -9,14 +9,28 @@
 import {QueryList} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
-import {UP_ARROW, DOWN_ARROW, TAB, A, Z, ZERO, NINE} from '@angular/cdk/keycodes';
-import {RxChain, debounceTime, filter, map, doOperator} from '@angular/cdk/rxjs';
+import {
+  UP_ARROW,
+  DOWN_ARROW,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  TAB,
+  A,
+  Z,
+  ZERO,
+  NINE,
+} from '@angular/cdk/keycodes';
+import {debounceTime} from 'rxjs/operators/debounceTime';
+import {filter} from 'rxjs/operators/filter';
+import {map} from 'rxjs/operators/map';
+import {tap} from 'rxjs/operators/tap';
 
-/**
- * This interface is for items that can be passed to a ListKeyManager.
- */
+/** This interface is for items that can be passed to a ListKeyManager. */
 export interface ListKeyManagerOption {
+  /** Whether the option is disabled. */
   disabled?: boolean;
+
+  /** Gets the label for this option. */
   getLabel?(): string;
 }
 
@@ -30,17 +44,33 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   private _wrap = false;
   private _letterKeyStream = new Subject<string>();
   private _typeaheadSubscription = Subscription.EMPTY;
+  private _vertical = true;
+  private _horizontal: 'ltr' | 'rtl' | null;
 
   // Buffer for the letters that the user has pressed when the typeahead option is turned on.
   private _pressedLetters: string[] = [];
 
-  constructor(private _items: QueryList<T>) { }
+  constructor(private _items: QueryList<T>) {
+    _items.changes.subscribe((newItems: QueryList<T>) => {
+      if (this._activeItem) {
+        const itemArray = newItems.toArray();
+        const newIndex = itemArray.indexOf(this._activeItem);
+
+        if (newIndex > -1 && newIndex !== this._activeItemIndex) {
+          this._activeItemIndex = newIndex;
+        }
+      }
+    });
+  }
 
   /**
    * Stream that emits any time the TAB key is pressed, so components can react
    * when focus is shifted off of the list.
    */
   tabOut: Subject<void> = new Subject<void>();
+
+  /** Stream that emits whenever the active item of the list manager changes. */
+  change = new Subject<number>();
 
   /**
    * Turns on wrapping mode, which ensures that the active item will wrap to
@@ -52,10 +82,29 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   }
 
   /**
+   * Configures whether the key manager should be able to move the selection vertically.
+   * @param enabled Whether vertical selection should be enabled.
+   */
+  withVerticalOrientation(enabled: boolean = true): this {
+    this._vertical = enabled;
+    return this;
+  }
+
+  /**
+   * Configures the key manager to move the selection horizontally.
+   * Passing in `null` will disable horizontal movement.
+   * @param direction Direction in which the selection can be moved.
+   */
+  withHorizontalOrientation(direction: 'ltr' | 'rtl' | null): this {
+    this._horizontal = direction;
+    return this;
+  }
+
+  /**
    * Turns on typeahead mode which allows users to set the active item by typing.
    * @param debounceInterval Time to wait after the last keystroke before setting the active item.
    */
-  withTypeAhead(debounceInterval = 200): this {
+  withTypeAhead(debounceInterval: number = 200): this {
     if (this._items.length && this._items.some(item => typeof item.getLabel !== 'function')) {
       throw Error('ListKeyManager items in typeahead mode must implement the `getLabel` method.');
     }
@@ -65,25 +114,28 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     // Debounce the presses of non-navigational keys, collect the ones that correspond to letters
     // and convert those letters back into a string. Afterwards find the first item that starts
     // with that string and select it.
-    this._typeaheadSubscription = RxChain.from(this._letterKeyStream)
-      .call(doOperator, keyCode => this._pressedLetters.push(keyCode))
-      .call(debounceTime, debounceInterval)
-      .call(filter, () => this._pressedLetters.length > 0)
-      .call(map, () => this._pressedLetters.join(''))
-      .subscribe(inputString => {
-        const items = this._items.toArray();
+    this._typeaheadSubscription = this._letterKeyStream.pipe(
+      tap(keyCode => this._pressedLetters.push(keyCode)),
+      debounceTime(debounceInterval),
+      filter(() => this._pressedLetters.length > 0),
+      map(() => this._pressedLetters.join(''))
+    ).subscribe(inputString => {
+      const items = this._items.toArray();
 
-        for (let i = 0; i < items.length; i++) {
-          let item = items[i];
+      // Start at 1 because we want to start searching at the item immediately
+      // following the current active item.
+      for (let i = 1; i < items.length + 1; i++) {
+        const index = (this._activeItemIndex + i) % items.length;
+        const item = items[index];
 
-          if (!item.disabled && item.getLabel!().toUpperCase().trim().indexOf(inputString) === 0) {
-            this.setActiveItem(i);
-            break;
-          }
+        if (!item.disabled && item.getLabel!().toUpperCase().trim().indexOf(inputString) === 0) {
+          this.setActiveItem(index);
+          break;
         }
+      }
 
-        this._pressedLetters = [];
-      });
+      this._pressedLetters = [];
+    });
 
     return this;
   }
@@ -93,8 +145,14 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * @param index The index of the item to be set as active.
    */
   setActiveItem(index: number): void {
+    const previousIndex = this._activeItemIndex;
+
     this._activeItemIndex = index;
     this._activeItem = this._items.toArray()[index];
+
+    if (this._activeItemIndex !== previousIndex) {
+      this.change.next(index);
+    }
   }
 
   /**
@@ -102,13 +160,44 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * @param event Keyboard event to be used for determining which element should be active.
    */
   onKeydown(event: KeyboardEvent): void {
-    switch (event.keyCode) {
-      case DOWN_ARROW: this.setNextItemActive(); break;
-      case UP_ARROW: this.setPreviousItemActive(); break;
-      case TAB: this.tabOut.next(); return;
-      default:
-        const keyCode = event.keyCode;
+    const keyCode = event.keyCode;
 
+    switch (keyCode) {
+      case TAB:
+        this.tabOut.next();
+        return;
+
+      case DOWN_ARROW:
+        if (this._vertical) {
+          this.setNextItemActive();
+          break;
+        }
+
+      case UP_ARROW:
+        if (this._vertical) {
+          this.setPreviousItemActive();
+          break;
+        }
+
+      case RIGHT_ARROW:
+        if (this._horizontal === 'ltr') {
+          this.setNextItemActive();
+          break;
+        } else if (this._horizontal === 'rtl') {
+          this.setPreviousItemActive();
+          break;
+        }
+
+      case LEFT_ARROW:
+        if (this._horizontal === 'ltr') {
+          this.setPreviousItemActive();
+          break;
+        } else if (this._horizontal === 'rtl') {
+          this.setNextItemActive();
+          break;
+        }
+
+      default:
         // Attempt to use the `event.key` which also maps it to the user's keyboard language,
         // otherwise fall back to resolving alphanumeric characters via the keyCode.
         if (event.key && event.key.length === 1) {
@@ -210,10 +299,12 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   private _setActiveItemByIndex(index: number, fallbackDelta: number,
                                   items = this._items.toArray()): void {
     if (!items[index]) { return; }
+
     while (items[index].disabled) {
       index += fallbackDelta;
       if (!items[index]) { return; }
     }
+
     this.setActiveItem(index);
   }
 }

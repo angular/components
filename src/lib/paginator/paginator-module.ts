@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -12,7 +12,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatPaginator} from './paginator';
-import {MatPaginatorIntl} from './paginator-intl';
+import {MAT_PAGINATOR_INTL_PROVIDER} from './paginator-intl';
 
 
 @NgModule({
@@ -24,6 +24,6 @@ import {MatPaginatorIntl} from './paginator-intl';
   ],
   exports: [MatPaginator],
   declarations: [MatPaginator],
-  providers: [MatPaginatorIntl],
+  providers: [MAT_PAGINATOR_INTL_PROVIDER],
 })
 export class MatPaginatorModule {}

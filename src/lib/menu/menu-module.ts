@@ -1,27 +1,28 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {MatCommonModule} from '@angular/material/core';
+import {A11yModule} from '@angular/cdk/a11y';
 import {OverlayModule} from '@angular/cdk/overlay';
-import {MatMenu, MAT_MENU_DEFAULT_OPTIONS} from './menu-directive';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {MatCommonModule, MatRippleModule} from '@angular/material/core';
+import {MAT_MENU_DEFAULT_OPTIONS, MatMenu} from './menu-directive';
 import {MatMenuItem} from './menu-item';
-import {MatMenuTrigger, MAT_MENU_SCROLL_STRATEGY_PROVIDER} from './menu-trigger';
-import {MatRippleModule} from '@angular/material/core';
+import {MAT_MENU_SCROLL_STRATEGY_PROVIDER, MatMenuTrigger} from './menu-trigger';
 
 
 @NgModule({
   imports: [
-    OverlayModule,
+    A11yModule,
     CommonModule,
-    MatRippleModule,
     MatCommonModule,
+    MatRippleModule,
+    OverlayModule,
   ],
   exports: [MatMenu, MatMenuItem, MatMenuTrigger, MatCommonModule],
   declarations: [MatMenu, MatMenuItem, MatMenuTrigger],

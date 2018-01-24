@@ -2,6 +2,8 @@
 // since the demo-app will be served in the browser.
 {
   "compilerOptions": {
+    // Needed for Moment.js since it doesn't have a default export.
+    "allowSyntheticDefaultImports": true,
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -22,9 +24,14 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@angular/material": ["../../dist/packages/material/public_api"],
-      "@angular/cdk/*": ["../../dist/packages/cdk/*"],
       "@angular/material/*": ["../../dist/packages/material/*"],
+      "@angular/material": ["../../dist/packages/material/public-api"],
+      "@angular/cdk/*": ["../../dist/packages/cdk/*"],
+      "@angular/cdk": ["../../dist/packages/cdk"],
+      "@angular/material-experimental/*": ["../../dist/packages/material-experimental/*"],
+      "@angular/material-experimental": ["../../dist/packages/material-experimental"],
+      "@angular/cdk-experimental/*": ["../../dist/packages/cdk-experimental/*"],
+      "@angular/cdk-experimental": ["../../dist/packages/cdk-experimental"],
       "@angular/material-moment-adapter": ["../../dist/packages/material-moment-adapter"]
     }
   },

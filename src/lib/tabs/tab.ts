@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -52,13 +52,17 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
   @Input('label') textLabel: string = '';
 
   /** The portal that will be the hosted content of the tab */
-  private _contentPortal: TemplatePortal<any> | null = null;
-  get content(): TemplatePortal<any> | null { return this._contentPortal; }
+  private _contentPortal: TemplatePortal | null = null;
+
+  /** @docs-private */
+  get content(): TemplatePortal | null {
+    return this._contentPortal;
+  }
 
   /** Emits whenever the label changes. */
   _labelChange = new Subject<void>();
 
-  /** Emits whenevfer the disable changes */
+  /** Emits whenever the disable changes */
   _disableChange = new Subject<void>();
 
   /**

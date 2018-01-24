@@ -6,6 +6,10 @@
 $mat-form-field-hint-min-space: 1em !default;
 // The height of the underline.
 $mat-form-field-underline-height: 1px !default;
+// Infix stretches to fit the container, but naturally wants to be this wide. We set this in order
+// to have a a consistent natural size for the various types of controls that can go in a form
+// field.
+$mat-form-field-default-infix-width: 180px !default;
 
 
 .mat-form-field {
@@ -60,11 +64,12 @@ $mat-form-field-underline-height: 1px !default;
   position: relative;
   flex: auto;
   min-width: 0;
+  width: $mat-form-field-default-infix-width;
 }
 
-// Used to hide the placeholder overflow on IE, since IE doesn't take transform into account when
+// Used to hide the label overflow on IE, since IE doesn't take transform into account when
 // determining overflow.
-.mat-form-field-placeholder-wrapper {
+.mat-form-field-label-wrapper {
   position: absolute;
   left: 0;
   box-sizing: content-box;
@@ -74,12 +79,11 @@ $mat-form-field-underline-height: 1px !default;
   pointer-events: none;  // We shouldn't catch mouse events (let them through).
 }
 
-// The placeholder label. This is invisible unless it is. The logic to show it is
+// The label itself. This is invisible unless it is. The logic to show it is
 // basically `empty || (float && (!empty || focused))`. Float is dependent on the
 // `floatingPlaceholder` property.
-.mat-form-field-placeholder {
-  // The placeholder is after the form field control, but needs to be aligned top-left of the
-  // infix <div>.
+.mat-form-field-label {
+  // The label is after the form field control, but needs to be aligned top-left of the infix <div>.
   position: absolute;
   left: 0;
 
@@ -101,7 +105,7 @@ $mat-form-field-underline-height: 1px !default;
   color $swift-ease-out-duration $swift-ease-out-timing-function,
   width $swift-ease-out-duration $swift-ease-out-timing-function;
 
-  // Hide the placeholder initially, and only show it when it's floating or the control is empty.
+  // Hide the label initially, and only show it when it's floating or the control is empty.
   display: none;
 
   [dir='rtl'] & {
@@ -111,18 +115,18 @@ $mat-form-field-underline-height: 1px !default;
   }
 }
 
-.mat-form-field-empty.mat-form-field-placeholder,
-.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-placeholder {
+.mat-form-field-empty.mat-form-field-label,
+.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
   display: block;
 }
 
-// Pseudo-class for Chrome and Safari auto-fill to move the placeholder to the floating position.
+// Pseudo-class for Chrome and Safari auto-fill to move the label to the floating position.
 // This is necessary because these browsers do not actually fire any events when a form auto-fill is
 // occurring. Once the autofill is committed, a change event happen and the regular mat-form-field
 // classes take over to fulfill this behaviour.
-.mat-form-field-autofill-control:-webkit-autofill + .mat-form-field-placeholder-wrapper
-    .mat-form-field-placeholder {
-  // The form field will be considered empty if it is autofilled, and therefore the placeholder will
+.mat-form-field-autofill-control:-webkit-autofill + .mat-form-field-label-wrapper
+    .mat-form-field-label {
+  // The form field will be considered empty if it is autofilled, and therefore the label will
   // be shown. Therefore we need to override it to hidden...
   display: none;
 
@@ -133,9 +137,21 @@ $mat-form-field-underline-height: 1px !default;
   }
 }
 
-// Disable the placeholder animation when the control is not empty (this prevents placeholder
+// Server-side rendered matInput with focus or a placeholder attribute but placeholder not shown
+// (used as a pure CSS stand-in for mat-form-field-should-float).
+.mat-input-server:focus + .mat-form-field-placeholder-wrapper .mat-form-field-placeholder,
+.mat-input-server[placeholder]:not(:placeholder-shown) + .mat-form-field-placeholder-wrapper
+    .mat-form-field-placeholder {
+  display: none;
+
+  .mat-form-field-can-float & {
+    display: block;
+  }
+}
+
+// Disable the label animation when the control is not empty (this prevents label
 // animating up when the value is set programmatically).
-.mat-form-field-placeholder:not(.mat-form-field-empty) {
+.mat-form-field-label:not(.mat-form-field-empty) {
   transition: none;
 }
 
@@ -146,32 +162,35 @@ $mat-form-field-underline-height: 1px !default;
   height: $mat-form-field-underline-height;
   width: 100%;
 
-  &.mat-disabled {
+  .mat-form-field-disabled & {
     background-position: 0;
     background-color: transparent;
   }
 
   .mat-form-field-ripple {
     position: absolute;
-    height: $mat-form-field-underline-height;
     top: 0;
     left: 0;
     width: 100%;
+    height: $mat-form-field-underline-height * 2;
     transform-origin: 50%;
     transform: scaleX(0.5);
     visibility: hidden;
+    opacity: 0;
     transition: background-color $swift-ease-in-duration $swift-ease-in-timing-function;
 
-    .mat-focused & {
-      height: $mat-form-field-underline-height * 2;
+    .mat-form-field-invalid:not(.mat-focused) & {
+      height: $mat-form-field-underline-height;
     }
 
     .mat-focused &,
     .mat-form-field-invalid & {
       visibility: visible;
+      opacity: 1;
       transform: scaleX(1);
-      transition: transform 150ms linear,
-      background-color $swift-ease-in-duration $swift-ease-in-timing-function;
+      transition: transform 300ms $swift-ease-out-timing-function,
+        opacity 100ms $swift-ease-out-timing-function,
+        background-color 300ms $swift-ease-out-timing-function;
     }
   }
 }
@@ -183,9 +202,9 @@ $mat-form-field-underline-height: 1px !default;
   overflow: hidden; // prevents multi-line errors from overlapping the control
 }
 
-// Scale down icons in the placeholder and hint to be the same size as the text.
+// Scale down icons in the label and hint to be the same size as the text.
 .mat-form-field-subscript-wrapper,
-.mat-form-field-placeholder-wrapper {
+.mat-form-field-label-wrapper {
   .mat-icon {
     width: 1em;
     height: 1em;

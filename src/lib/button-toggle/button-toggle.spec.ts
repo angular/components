@@ -267,6 +267,15 @@ describe('MatButtonToggle without forms', () => {
       expect(groupInstance.selected).toBe(buttonToggleInstances[0]);
     });
 
+    it('should propagate the value change back up via a two-way binding', () => {
+      expect(groupInstance.value).toBeFalsy();
+      buttonToggleLabelElements[0].click();
+      fixture.detectChanges();
+
+      expect(groupInstance.value).toBe('test1');
+      expect(testComponent.groupValue).toBe('test1');
+    });
+
     it('should update the group and toggles when one of the button toggles is clicked', () => {
       expect(groupInstance.value).toBeFalsy();
       buttonToggleLabelElements[0].click();
@@ -569,6 +578,10 @@ describe('MatButtonToggle without forms', () => {
       expect(document.activeElement).toBe(nativeRadioInput);
     });
 
+    it('should not assign a name to the underlying input if one is not passed in', () => {
+      expect(buttonToggleNativeElement.querySelector('input')!.getAttribute('name')).toBeFalsy();
+    });
+
   });
 
   describe('with provided aria-label ', () => {
@@ -618,7 +631,7 @@ describe('MatButtonToggle without forms', () => {
   template: `
   <mat-button-toggle-group [disabled]="isGroupDisabled"
                            [vertical]="isVertical"
-                           [value]="groupValue">
+                           [(value)]="groupValue">
     <mat-button-toggle value="test1">Test1</mat-button-toggle>
     <mat-button-toggle value="test2">Test2</mat-button-toggle>
     <mat-button-toggle value="test3">Test3</mat-button-toggle>

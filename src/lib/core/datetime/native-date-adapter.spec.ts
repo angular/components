@@ -6,9 +6,11 @@ import {DateAdapter, MAT_DATE_LOCALE, NativeDateAdapter, NativeDateModule} from 
 
 const SUPPORTS_INTL = typeof Intl != 'undefined';
 
+
 describe('NativeDateAdapter', () => {
   const platform = new Platform();
   let adapter: NativeDateAdapter;
+  let assertValidDate: (d: Date | null, valid: boolean) => void;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -16,8 +18,15 @@ describe('NativeDateAdapter', () => {
     }).compileComponents();
   }));
 
-  beforeEach(inject([DateAdapter], (d: NativeDateAdapter) => {
-    adapter = d;
+  beforeEach(inject([DateAdapter], (dateAdapter: NativeDateAdapter) => {
+    adapter = dateAdapter;
+
+    assertValidDate = (d: Date | null, valid: boolean) => {
+      expect(adapter.isDateInstance(d)).not.toBeNull(`Expected ${d} to be a date instance`);
+      expect(adapter.isValid(d!)).toBe(valid,
+          `Expected ${d} to be ${valid ? 'valid' : 'invalid'},` +
+          ` but was ${valid ? 'invalid' : 'valid'}`);
+    };
   }));
 
   it('should get year', () => {
@@ -333,14 +342,30 @@ describe('NativeDateAdapter', () => {
   });
 
   it('should create dates from valid ISO strings', () => {
-    expect(adapter.fromIso8601('1985-04-12T23:20:50.52Z')).not.toBeNull();
-    expect(adapter.fromIso8601('1996-12-19T16:39:57-08:00')).not.toBeNull();
-    expect(adapter.fromIso8601('1937-01-01T12:00:27.87+00:20')).not.toBeNull();
-    expect(adapter.fromIso8601('2017-01-01')).not.toBeNull();
-    expect(adapter.fromIso8601('2017-01-01T00:00:00')).not.toBeNull();
-    expect(adapter.fromIso8601('1990-13-31T23:59:00Z')).toBeNull();
-    expect(adapter.fromIso8601('1/1/2017')).toBeNull();
-    expect(adapter.fromIso8601('2017-01-01T')).toBeNull();
+    assertValidDate(adapter.deserialize('1985-04-12T23:20:50.52Z'), true);
+    assertValidDate(adapter.deserialize('1996-12-19T16:39:57-08:00'), true);
+    assertValidDate(adapter.deserialize('1937-01-01T12:00:27.87+00:20'), true);
+    assertValidDate(adapter.deserialize('2017-01-01'), true);
+    assertValidDate(adapter.deserialize('2017-01-01T00:00:00'), true);
+    assertValidDate(adapter.deserialize('1990-13-31T23:59:00Z'), false);
+    assertValidDate(adapter.deserialize('1/1/2017'), false);
+    assertValidDate(adapter.deserialize('2017-01-01T'), false);
+    expect(adapter.deserialize('')).toBeNull();
+    expect(adapter.deserialize(null)).toBeNull();
+    assertValidDate(adapter.deserialize(new Date()), true);
+    assertValidDate(adapter.deserialize(new Date(NaN)), false);
+  });
+
+  it('should create an invalid date', () => {
+    assertValidDate(adapter.invalid(), false);
+  });
+
+  it('should not throw when attempting to format a date with a year less than 1', () => {
+    expect(() => adapter.format(new Date(-1, 1, 1), {})).not.toThrow();
+  });
+
+  it('should not throw when attempting to format a date with a year greater than 9999', () => {
+    expect(() => adapter.format(new Date(10000, 1, 1), {})).not.toThrow();
   });
 });
 
@@ -390,5 +415,4 @@ describe('NativeDateAdapter with LOCALE_ID override', () => {
 
     expect(adapter.getDayOfWeekNames('long')).toEqual(expectedValue);
   });
-
 });

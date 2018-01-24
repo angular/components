@@ -1,12 +1,12 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ContentChild, Directive, ElementRef, Input, Renderer2, TemplateRef} from '@angular/core';
+import {ContentChild, Directive, ElementRef, Input, TemplateRef} from '@angular/core';
 
 /**
  * Cell definition for a CDK table.
@@ -14,7 +14,7 @@ import {ContentChild, Directive, ElementRef, Input, Renderer2, TemplateRef} from
  */
 @Directive({selector: '[cdkCellDef]'})
 export class CdkCellDef {
-  constructor(public template: TemplateRef<any>) { }
+  constructor(/** @docs-private */ public template: TemplateRef<any>) { }
 }
 
 /**
@@ -23,7 +23,7 @@ export class CdkCellDef {
  */
 @Directive({selector: '[cdkHeaderCellDef]'})
 export class CdkHeaderCellDef {
-  constructor(public template: TemplateRef<any>) { }
+  constructor(/** @docs-private */ public template: TemplateRef<any>) { }
 }
 
 /**
@@ -36,6 +36,10 @@ export class CdkColumnDef {
   @Input('cdkColumnDef')
   get name(): string { return this._name; }
   set name(name: string) {
+    // If the directive is set without a name (updated programatically), then this setter will
+    // trigger with an empty string and should not overwrite the programatically set value.
+    if (!name) { return; }
+
     this._name = name;
     this.cssClassFriendlyName = name.replace(/[^a-z0-9_-]/ig, '-');
   }
@@ -64,8 +68,8 @@ export class CdkColumnDef {
   },
 })
 export class CdkHeaderCell {
-  constructor(columnDef: CdkColumnDef, elementRef: ElementRef, renderer: Renderer2) {
-    renderer.addClass(elementRef.nativeElement, `cdk-column-${columnDef.cssClassFriendlyName}`);
+  constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
+    elementRef.nativeElement.classList.add(`cdk-column-${columnDef.cssClassFriendlyName}`);
   }
 }
 
@@ -78,7 +82,7 @@ export class CdkHeaderCell {
   },
 })
 export class CdkCell {
-  constructor(columnDef: CdkColumnDef, elementRef: ElementRef, renderer: Renderer2) {
-    renderer.addClass(elementRef.nativeElement, `cdk-column-${columnDef.cssClassFriendlyName}`);
+  constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
+    elementRef.nativeElement.classList.add(`cdk-column-${columnDef.cssClassFriendlyName}`);
   }
 }

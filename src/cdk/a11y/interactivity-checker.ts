@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -9,11 +9,10 @@
 import {Injectable} from '@angular/core';
 import {Platform} from '@angular/cdk/platform';
 
-/**
- * The InteractivityChecker leans heavily on the ally.js accessibility utilities.
- * Methods like `isTabbable` are only covering specific edge-cases for the browsers which are
- * supported.
- */
+
+// The InteractivityChecker leans heavily on the ally.js accessibility utilities.
+// Methods like `isTabbable` are only covering specific edge-cases for the browsers which are
+// supported.
 
 /**
  * Utility for checking the interactivity of an element, such as whether is is focusable or
@@ -61,11 +60,10 @@ export class InteractivityChecker {
       return false;
     }
 
-    let frameElement = getWindow(element).frameElement as HTMLElement;
+    const frameElement = getFrameElement(getWindow(element));
 
     if (frameElement) {
-
-      let frameType = frameElement && frameElement.nodeName.toLowerCase();
+      const frameType = frameElement && frameElement.nodeName.toLowerCase();
 
       // Frame elements inherit their tabindex onto all child elements.
       if (getTabIndexValue(frameElement) === -1) {
@@ -144,11 +142,25 @@ export class InteractivityChecker {
 
 }
 
+/**
+ * Returns the frame element from a window object. Since browsers like MS Edge throw errors if
+ * the frameElement property is being accessed from a different host address, this property
+ * should be accessed carefully.
+ */
+function getFrameElement(window: Window) {
+  try {
+    return window.frameElement as HTMLElement;
+  } catch (e) {
+    return null;
+  }
+}
+
 /** Checks whether the specified element has any geometry / rectangles. */
 function hasGeometry(element: HTMLElement): boolean {
   // Use logic from jQuery to check for an invisible element.
   // See https://github.com/jquery/jquery/blob/master/src/css/hiddenVisibleSelectors.js#L12
-  return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
+  return !!(element.offsetWidth || element.offsetHeight ||
+      (typeof element.getClientRects === 'function' && element.getClientRects().length));
 }
 
 /** Gets whether an element's  */

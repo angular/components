@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -37,9 +37,15 @@ export class MatDatepickerIntl {
   /** A label for the next year button (used by screen readers). */
   nextYearLabel = 'Next year';
 
+  /** A label for the previous multi-year button (used by screen readers). */
+  prevMultiYearLabel = 'Previous 20 years';
+
+  /** A label for the next multi-year button (used by screen readers). */
+  nextMultiYearLabel = 'Next 20 years';
+
   /** A label for the 'switch to month view' button (used by screen readers). */
-  switchToMonthViewLabel = 'Change to month view';
+  switchToMonthViewLabel = 'Choose date';
 
   /** A label for the 'switch to year view' button (used by screen readers). */
-  switchToYearViewLabel = 'Change to year view';
+  switchToMultiYearViewLabel = 'Choose month and year';
 }
