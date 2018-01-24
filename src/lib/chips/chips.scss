@@ -96,7 +96,8 @@ $mat-chip-remove-size: 18px;
     }
   }
 
-  .mat-chip-remove {
+  .mat-chip-remove,
+  .mat-chip-trailing-icon {
     width: $mat-chip-remove-size;
     height: $mat-chip-remove-size;
     cursor: pointer;

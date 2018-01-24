@@ -84,7 +84,7 @@ export class MatChipTrailingIcon {}
     'role': 'option',
     '[class.mat-chip-selected]': 'selected',
     '[class.mat-chip-with-avatar]': 'avatar',
-    '[class.mat-chip-with-trailing-icon]': 'trailingIcon',
+    '[class.mat-chip-with-trailing-icon]': 'trailingIcon || removeIcon',
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-selected]': 'ariaSelected',
@@ -114,6 +114,9 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
   /** The chip's trailing icon. */
   @ContentChild(MatChipTrailingIcon) trailingIcon: MatChipTrailingIcon;
+
+  /** The chip's remove toggler. */
+  @ContentChild(forwardRef(() => MatChipRemove)) removeIcon: MatChipRemove;
 
   /** Whether the chip is selected. */
   @Input()
@@ -334,7 +337,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 @Directive({
   selector: '[matChipRemove]',
   host: {
-    'class': 'mat-chip-remove',
+    'class': 'mat-chip-remove mat-chip-trailing-icon',
     '(click)': '_handleClick()',
   }
 })
