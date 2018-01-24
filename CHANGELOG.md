@@ -814,6 +814,7 @@ own `scrolling` subpackage in `@angular/cdk`.
 width can be overridden by via the `mat-form-field` css class.
 * **input:** CSS classes have changed from `mat-input-container-` to `mat-form-field-`.
 * **input:** `md-prefix` and `md-suffix` are now `mdPrefix` and `mdSuffix`.
+* **input:** `MdInputDirective` is now `MdInput`.
 * **portal:** `TemplatePortal` now requires a generic type (C) to align with `TemplateRef`.
 This will usually be `any`.
 * **portal:** Attaching a template portal will now return an `EmbeddedViewRef<C>` instead of an
