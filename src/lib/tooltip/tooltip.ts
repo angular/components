@@ -200,6 +200,7 @@ export class MatTooltip implements OnDestroy {
       private _defaultOptions?: MatTooltipDefaultOptions) {
 
     // TODO(crisbeto): make the `_defaultOptions` a required param next time we do breaking changes.
+    // @deletion-target 6.0.0
 
     const element: HTMLElement = _elementRef.nativeElement;
 

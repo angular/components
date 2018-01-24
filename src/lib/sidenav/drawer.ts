@@ -376,6 +376,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
 
     // TODO(crisbeto): This promise is here for backwards-compatibility.
     // It should be removed next time we do breaking changes in the drawer.
+    // @deletion-target 6.0.0
     return new Promise<any>(resolve => {
       this.openedChange.pipe(take(1)).subscribe(open => {
         resolve(new MatDrawerToggleResult(open ? 'open' : 'close', true));
