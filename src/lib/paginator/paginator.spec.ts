@@ -125,7 +125,7 @@ describe('MatPaginator', () => {
       expect(component.latestPageEvent ? component.latestPageEvent.pageIndex : null).toBe(0);
     });
 
-    it('should disable navigating to the next page if at first page', () => {
+    it('should disable navigating to the next page if at last page', () => {
       component.goToLastPage();
       fixture.detectChanges();
       expect(paginator.pageIndex).toBe(10);
