@@ -23,12 +23,12 @@ export class MatSortHeaderIntl {
   changes: Subject<void> = new Subject<void>();
 
   /** ARIA label for the sorting button. */
-  sortButtonLabel = (id: string) => {
+  sortButtonLabel = (id: string): string => {
     return `Change sorting for ${id}`;
   }
 
   /** A label to describe the current sort (visible only to screenreaders). */
-  sortDescriptionLabel = (id: string, direction: SortDirection) => {
+  sortDescriptionLabel = (id: string, direction: SortDirection): string => {
     return `Sorted by ${id} ${direction == 'asc' ? 'ascending' : 'descending'}`;
   }
 }

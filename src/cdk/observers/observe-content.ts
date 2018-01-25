@@ -44,7 +44,8 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
   private _observer: MutationObserver | null;
 
   /** Event emitted for each change in the element's content. */
-  @Output('cdkObserveContent') event = new EventEmitter<MutationRecord[]>();
+  @Output('cdkObserveContent') event: EventEmitter<MutationRecord[]> =
+      new EventEmitter<MutationRecord[]>();
 
   /** Used for debouncing the emitted values to the observeContent event. */
   private _debouncer = new Subject<MutationRecord[]>();

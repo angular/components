@@ -30,13 +30,11 @@ import {Direction, Directionality} from './directionality';
   exportAs: 'dir',
 })
 export class Dir implements Directionality, AfterContentInit, OnDestroy {
-  _dir: Direction = 'ltr';
-
   /** Whether the `value` has been set to its initial value. */
   private _isInitialized: boolean = false;
 
   /** Event emitted when the direction changes. */
-  @Output('dirChange') change = new EventEmitter<Direction>();
+  @Output('dirChange') change: EventEmitter<Direction> = new EventEmitter<Direction>();
 
   /** @docs-private */
   @Input()
@@ -48,6 +46,7 @@ export class Dir implements Directionality, AfterContentInit, OnDestroy {
       this.change.emit(this._dir);
     }
   }
+  _dir: Direction = 'ltr';
 
   /** Current layout direction of the element. */
   get value(): Direction { return this.dir; }

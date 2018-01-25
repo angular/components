@@ -82,8 +82,6 @@ const MAT_MENU_BASE_ELEVATION = 2;
 })
 export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   private _keyManager: FocusKeyManager<MatMenuItem>;
-  private _xPosition: MenuPositionX = this._defaultOptions.xPosition;
-  private _yPosition: MenuPositionY = this._defaultOptions.yPosition;
   private _previousElevation: string;
 
   /** Subscription to tab events on the menu panel */
@@ -111,6 +109,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
     this._xPosition = value;
     this.setPositionClasses();
   }
+  private _xPosition: MenuPositionX = this._defaultOptions.xPosition;
 
   /** Position of the menu in the Y axis. */
   @Input()
@@ -122,6 +121,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
     this._yPosition = value;
     this.setPositionClasses();
   }
+  private _yPosition: MenuPositionY = this._defaultOptions.yPosition;
 
   /** @docs-private */
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
@@ -144,9 +144,9 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
    * @param classes list of class names
    */
   @Input('class')
-  set panelClass(classes: string) {
-    if (classes && classes.length) {
-      this._classList = classes.split(' ').reduce((obj: any, className: string) => {
+  set panelClass(value: string) {
+    if (value && value.length) {
+      this._classList = value.split(' ').reduce((obj: any, className: string) => {
         obj[className] = true;
         return obj;
       }, {});
@@ -165,7 +165,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
    */
   @Input()
   get classList(): string { return this.panelClass; }
-  set classList(classes: string) { this.panelClass = classes; }
+  set classList(value: string) { this.panelClass = value; }
 
   /** Event emitted when the menu is closed. */
   @Output() closed: EventEmitter<void | 'click' | 'keydown'>
@@ -242,7 +242,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
    * Resets the active item in the menu. This is used when the menu is opened, allowing
    * the user to start from the first option when pressing the down arrow.
    */
-  resetActiveItem() {
+  resetActiveItem(): void {
     this._keyManager.setActiveItem(-1);
   }
 
@@ -250,7 +250,8 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
    * It's necessary to set position-based classes to ensure the menu panel animation
    * folds out from the correct direction.
    */
-  setPositionClasses(posX: MenuPositionX = this.xPosition, posY: MenuPositionY = this.yPosition) {
+  setPositionClasses(
+    posX: MenuPositionX = this.xPosition, posY: MenuPositionY = this.yPosition): void {
     this._classList['mat-menu-before'] = posX === 'before';
     this._classList['mat-menu-after'] = posX === 'after';
     this._classList['mat-menu-above'] = posY === 'above';

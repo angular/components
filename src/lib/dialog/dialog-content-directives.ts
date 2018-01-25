@@ -43,6 +43,7 @@ export class MatDialogClose implements OnInit, OnChanges {
   @Input('matDialogClose') _matDialogClose: any;
 
   constructor(
+    /** @docs-private */
     @Optional() public dialogRef: MatDialogRef<any>,
     private _elementRef: ElementRef,
     private _dialog: MatDialog) {}
@@ -79,7 +80,8 @@ export class MatDialogClose implements OnInit, OnChanges {
   },
 })
 export class MatDialogTitle implements OnInit {
-  @Input() id = `mat-dialog-title-${dialogElementUid++}`;
+  /** The unique ID for this dialog title. */
+  @Input() id: string = `mat-dialog-title-${dialogElementUid++}`;
 
   constructor(
     @Optional() private _dialogRef: MatDialogRef<any>,

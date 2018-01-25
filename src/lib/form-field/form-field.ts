@@ -95,7 +95,7 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
    */
   @Input()
   get dividerColor(): 'primary' | 'accent' | 'warn' { return this.color; }
-  set dividerColor(value) { this.color = value; }
+  set dividerColor(value: 'primary' | 'accent' | 'warn') { this.color = value; }
 
   /** Whether the required marker should be hidden. */
   @Input()
@@ -109,12 +109,12 @@ export class MatFormField implements AfterViewInit, AfterContentInit, AfterConte
   private _showAlwaysAnimate = false;
 
   /** Whether the floating label should always float or not. */
-  get _shouldAlwaysFloat() {
+  get _shouldAlwaysFloat(): boolean {
     return this._floatLabel === 'always' && !this._showAlwaysAnimate;
   }
 
   /** Whether the label can float or not. */
-  get _canLabelFloat() { return this._floatLabel !== 'never'; }
+  get _canLabelFloat(): boolean { return this._floatLabel !== 'never'; }
 
   /** State of the mat-hint and mat-error animations. */
   _subscriptAnimationState: string = '';

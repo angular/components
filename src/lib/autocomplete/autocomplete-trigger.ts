@@ -118,7 +118,6 @@ export function getMatAutocompleteMissingPanelError(): Error {
 export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   private _overlayRef: OverlayRef | null;
   private _portal: TemplatePortal;
-  private _panelOpen: boolean = false;
   private _componentDestroyed = false;
 
   /** Strategy that is used to position the panel. */
@@ -158,9 +157,8 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   }
 
   /** Whether or not the autocomplete panel is open. */
-  get panelOpen(): boolean {
-    return this._panelOpen && this.autocomplete.showPanel;
-  }
+  get panelOpen(): boolean { return this._panelOpen && this.autocomplete.showPanel; }
+  private _panelOpen: boolean = false;
 
   /** Opens the autocomplete suggestion panel. */
   openPanel(): void {

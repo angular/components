@@ -22,11 +22,11 @@ export class SliderConfigurableExample {
   value = 0;
   vertical = false;
 
-  get tickInterval(): number | 'auto' {
+  get tickInterval(): 'auto' | number {
     return this.showTicks ? (this.autoTicks ? 'auto' : this._tickInterval) : 0;
   }
-  set tickInterval(v) {
-    this._tickInterval = Number(v);
+  set tickInterval(value: 'auto' | number) {
+    this._tickInterval = Number(value);
   }
   private _tickInterval = 1;
 }

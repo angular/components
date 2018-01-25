@@ -86,31 +86,8 @@ export const _MatRadioGroupMixinBase = mixinDisabled(MatRadioGroupBase);
 })
 export class MatRadioGroup extends _MatRadioGroupMixinBase
     implements AfterContentInit, ControlValueAccessor, CanDisable {
-  /**
-   * Selected value for group. Should equal the value of the selected radio button if there *is*
-   * a corresponding radio button with a matching value. If there is *not* such a corresponding
-   * radio button, this value persists to be applied in case a new radio button is added with a
-   * matching value.
-   */
-  private _value: any = null;
-
-  /** The HTML name attribute applied to radio buttons in this group. */
-  private _name: string = `mat-radio-group-${nextUniqueId++}`;
-
-  /** The currently selected radio button. Should match value. */
-  private _selected: MatRadioButton | null = null;
-
   /** Whether the `value` has been set to its initial value. */
   private _isInitialized: boolean = false;
-
-  /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
-  private _labelPosition: 'before' | 'after' = 'after';
-
-  /** Whether the radio group is disabled. */
-  private _disabled: boolean = false;
-
-  /** Whether the radio group is required. */
-  private _required: boolean = false;
 
   /** The method to be called in order to update ngModel */
   _controlValueAccessorChangeFn: (value: any) => void = () => {};
@@ -119,7 +96,7 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
    * onTouch function registered via registerOnTouch (ControlValueAccessor).
    * @docs-private
    */
-  onTouched: () => any = () => {};
+  _onTouched: () => any = () => {};
 
   /**
    * Event emitted when the group value changes.
@@ -139,6 +116,7 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
     this._name = value;
     this._updateRadioButtonNames();
   }
+  private _name: string = `mat-radio-group-${nextUniqueId++}`;
 
   /**
    * Alignment of the radio-buttons relative to their labels. Can be 'before' or 'after'.
@@ -151,33 +129,37 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
     // label relative to the checkbox. As such, they are inverted.
     return this.labelPosition == 'after' ? 'start' : 'end';
   }
-  set align(v) {
-    this.labelPosition = (v == 'start') ? 'after' : 'before';
+  set align(value: 'start' | 'end') {
+    this.labelPosition = (value == 'start') ? 'after' : 'before';
   }
-
 
   /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
   @Input()
-  get labelPosition(): 'before' | 'after' {
-    return this._labelPosition;
-  }
-  set labelPosition(v) {
-    this._labelPosition = (v == 'before') ? 'before' : 'after';
+  get labelPosition(): 'before' | 'after' { return this._labelPosition; }
+  set labelPosition(value: 'before' | 'after') {
+    this._labelPosition = (value == 'before') ? 'before' : 'after';
     this._markRadiosForCheck();
   }
+  private _labelPosition: 'before' | 'after' = 'after';
 
-  /** Value of the radio button. */
+  /**
+   * Selected value for group. Should equal the value of the selected radio button if there *is*
+   * a corresponding radio button with a matching value. If there is *not* such a corresponding
+   * radio button, this value persists to be applied in case a new radio button is added with a
+   * matching value.
+   */
   @Input()
   get value(): any { return this._value; }
-  set value(newValue: any) {
-    if (this._value != newValue) {
+  set value(value: any) {
+    if (this._value != value) {
       // Set this before proceeding to ensure no circular loop occurs with selection.
-      this._value = newValue;
+      this._value = value;
 
       this._updateSelectedRadioFromValue();
       this._checkSelectedRadioButton();
     }
   }
+  private _value: any = null;
 
   _checkSelectedRadioButton() {
     if (this._selected && !this._selected.checked) {
@@ -185,22 +167,24 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
     }
   }
 
-  /** Whether the radio button is selected. */
+  /** The currently selected radio button. Should match value. */
   @Input()
-  get selected() { return this._selected; }
+  get selected(): MatRadioButton | null { return this._selected; }
   set selected(selected: MatRadioButton | null) {
     this._selected = selected;
     this.value = selected ? selected.value : null;
     this._checkSelectedRadioButton();
   }
+  private _selected: MatRadioButton | null = null;
 
   /** Whether the radio group is disabled */
   @Input()
   get disabled(): boolean { return this._disabled; }
-  set disabled(value) {
+  set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
     this._markRadiosForCheck();
   }
+  private _disabled: boolean = false;
 
   /** Whether the radio group is required */
   @Input()
@@ -209,6 +193,7 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
     this._required = coerceBooleanProperty(value);
     this._markRadiosForCheck();
   }
+  private _required: boolean = false;
 
   constructor(private _changeDetector: ChangeDetectorRef) {
     super();
@@ -230,8 +215,8 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
    * radio buttons upon their blur.
    */
   _touch() {
-    if (this.onTouched) {
-      this.onTouched();
+    if (this._onTouched) {
+      this._onTouched();
     }
   }
 
@@ -299,7 +284,7 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
    * @param fn Callback to be registered.
    */
   registerOnTouched(fn: any) {
-    this.onTouched = fn;
+    this._onTouched = fn;
   }
 
   /**
@@ -392,6 +377,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
       this._changeDetector.markForCheck();
     }
   }
+  private _checked: boolean = false;
 
   /** The value of this radio button. */
   @Input()
@@ -410,6 +396,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
       }
     }
   }
+  private _value: any = null;
 
   /**
    * Whether or not the radio-button should appear before or after the label.
@@ -422,38 +409,33 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
     // label relative to the checkbox. As such, they are inverted.
     return this.labelPosition == 'after' ? 'start' : 'end';
   }
-  set align(v) {
-    this.labelPosition = (v == 'start') ? 'after' : 'before';
+  set align(value: 'start' | 'end') {
+    this.labelPosition = (value == 'start') ? 'after' : 'before';
   }
-
-  private _labelPosition: 'before' | 'after';
 
   /** Whether the label should appear after or before the radio button. Defaults to 'after' */
   @Input()
   get labelPosition(): 'before' | 'after' {
     return this._labelPosition || (this.radioGroup && this.radioGroup.labelPosition) || 'after';
   }
-  set labelPosition(value) {
-    this._labelPosition = value;
-  }
+  set labelPosition(value: 'before' | 'after') { this._labelPosition = value; }
+  private _labelPosition: 'before' | 'after';
 
   /** Whether the radio button is disabled. */
   @Input()
   get disabled(): boolean {
     return this._disabled || (this.radioGroup != null && this.radioGroup.disabled);
   }
-  set disabled(value: boolean) {
-    this._disabled = coerceBooleanProperty(value);
-  }
+  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+  private _disabled: boolean;
 
   /** Whether the radio button is required. */
   @Input()
   get required(): boolean {
     return this._required || (this.radioGroup && this.radioGroup.required);
   }
-  set required(value: boolean) {
-    this._required = coerceBooleanProperty(value);
-  }
+  set required(value: boolean) { this._required = coerceBooleanProperty(value); }
+  private _required: boolean;
 
   /**
    * Event emitted when the checked state of this radio button changes.
@@ -467,18 +449,6 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
 
   /** ID of the native input element inside `<mat-radio-button>` */
   get inputId(): string { return `${this.id || this._uniqueId}-input`; }
-
-  /** Whether this radio is checked. */
-  private _checked: boolean = false;
-
-  /** Whether this radio is disabled. */
-  private _disabled: boolean;
-
-  /** Whether this radio is required. */
-  private _required: boolean;
-
-  /** Value assigned to this radio. */
-  private _value: any = null;
 
   /** The child ripple instance. */
   @ViewChild(MatRipple) _ripple: MatRipple;

@@ -203,20 +203,20 @@ export class OverlayRef implements PortalOutlet {
   }
 
   /** Updates the position of the overlay based on the position strategy. */
-  updatePosition() {
+  updatePosition(): void {
     if (this._config.positionStrategy) {
       this._config.positionStrategy.apply();
     }
   }
 
   /** Update the size properties of the overlay. */
-  updateSize(sizeConfig: OverlaySizeConfig) {
+  updateSize(sizeConfig: OverlaySizeConfig): void {
     this._config = {...this._config, ...sizeConfig};
     this._updateElementSize();
   }
 
   /** Sets the LTR/RTL direction for the overlay. */
-  setDirection(dir: Direction) {
+  setDirection(dir: Direction): void {
     this._config = {...this._config, direction: dir};
     this._updateElementDirection();
   }

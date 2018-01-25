@@ -112,8 +112,6 @@ export class MatListOption extends _MatListOptionMixinBase
     implements AfterContentInit, OnDestroy, OnInit, FocusableOption, CanDisableRipple {
 
   private _lineSetter: MatLineSetter;
-  private _selected: boolean = false;
-  private _disabled: boolean = false;
 
   /** Whether the option has focus. */
   _hasFocus: boolean = false;
@@ -131,8 +129,10 @@ export class MatListOption extends _MatListOptionMixinBase
 
   /** Whether the option is disabled. */
   @Input()
-  get disabled() { return this._disabled || (this.selectionList && this.selectionList.disabled); }
-  set disabled(value: any) {
+  get disabled(): boolean {
+    return this._disabled || (this.selectionList && this.selectionList.disabled);
+  }
+  set disabled(value: boolean) {
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._disabled) {
@@ -140,6 +140,7 @@ export class MatListOption extends _MatListOptionMixinBase
       this._changeDetector.markForCheck();
     }
   }
+  private _disabled: boolean = false;
 
   /** Whether the option is selected. */
   @Input()
@@ -152,6 +153,7 @@ export class MatListOption extends _MatListOptionMixinBase
       this.selectionList._reportValueChange();
     }
   }
+  private _selected: boolean = false;
 
   /**
    * Emits a change event whenever the selected state of an option changes.
@@ -183,7 +185,7 @@ export class MatListOption extends _MatListOptionMixinBase
     this._lineSetter = new MatLineSetter(this._lines, this._element);
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     if (this.selected) {
       // We have to delay this until the next tick in order
       // to avoid changed after checked errors.
@@ -322,7 +324,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
     this.tabIndex = parseInt(tabIndex) || 0;
   }
 
-  ngAfterContentInit(): void {
+  ngAfterContentInit() {
     this._keyManager = new FocusKeyManager<MatListOption>(this.options).withWrap().withTypeAhead();
 
     if (this._tempValues) {
@@ -332,18 +334,18 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   }
 
   /** Focus the selection-list. */
-  focus() {
+  focus(): void {
     this._element.nativeElement.focus();
   }
 
   /** Selects all of the options. */
-  selectAll() {
+  selectAll(): void {
     this.options.forEach(option => option._setSelected(true));
     this._reportValueChange();
   }
 
   /** Deselects all of the options. */
-  deselectAll() {
+  deselectAll(): void {
     this.options.forEach(option => option._setSelected(false));
     this._reportValueChange();
   }

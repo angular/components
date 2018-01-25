@@ -70,7 +70,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   tabOut: Subject<void> = new Subject<void>();
 
   /** Stream that emits whenever the active item of the list manager changes. */
-  change = new Subject<number>();
+  change: Subject<number> = new Subject<number>();
 
   /**
    * Turns on wrapping mode, which ensures that the active item will wrap to

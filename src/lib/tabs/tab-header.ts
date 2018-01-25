@@ -113,8 +113,6 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   /** Whether the scroll distance has changed and should be applied after the view is checked. */
   private _scrollDistanceChanged: boolean;
 
-  private _selectedIndex: number = 0;
-
   /** The index of the active tab. */
   @Input()
   get selectedIndex(): number { return this._selectedIndex; }
@@ -124,12 +122,13 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     this._selectedIndex = value;
     this._focusIndex = value;
   }
+  private _selectedIndex: number = 0;
 
   /** Event emitted when the option is selected. */
-  @Output() selectFocusedIndex = new EventEmitter();
+  @Output() selectFocusedIndex: EventEmitter<number> = new EventEmitter<number>();
 
   /** Event emitted when a label is focused. */
-  @Output() indexFocused = new EventEmitter();
+  @Output() indexFocused: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(private _elementRef: ElementRef,
               private _changeDetectorRef: ChangeDetectorRef,
@@ -138,7 +137,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     super();
   }
 
-  ngAfterContentChecked(): void {
+  ngAfterContentChecked() {
     // If the number of tab labels have changed, check if scrolling should be enabled
     if (this._tabLabelCount != this._labelWrappers.length) {
       this._updatePagination();
@@ -220,6 +219,8 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     this._updateTabScrollPosition();
   }
 
+  /** Tracks which element has focus; used for keyboard navigation */
+  get focusIndex(): number { return this._focusIndex; }
   /** When the focus index is set, we must manually send focus to the correct label */
   set focusIndex(value: number) {
     if (!this._isValidIndex(value) || this._focusIndex == value) { return; }
@@ -228,9 +229,6 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     this.indexFocused.emit(value);
     this._setTabFocus(value);
   }
-
-  /** Tracks which element has focus; used for keyboard navigation */
-  get focusIndex(): number { return this._focusIndex; }
 
   /**
    * Determines if an index is valid.  If the tabs are not ready yet, we assume that the user is
@@ -311,8 +309,8 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
 
   /** Sets the distance in pixels that the tab header should be transformed in the X-axis. */
   get scrollDistance(): number { return this._scrollDistance; }
-  set scrollDistance(v: number) {
-    this._scrollDistance = Math.max(0, Math.min(this._getMaxScrollDistance(), v));
+  set scrollDistance(value: number) {
+    this._scrollDistance = Math.max(0, Math.min(this._getMaxScrollDistance(), value));
 
     // Mark that the scroll distance has changed so that after the view is checked, the CSS
     // transformation can move the header.

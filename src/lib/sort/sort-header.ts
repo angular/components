@@ -79,7 +79,7 @@ export class MatSortHeader extends _MatSortHeaderMixinBase implements MatSortabl
   /** Overrides the disable clear value of the containing MatSort for this MatSortable. */
   @Input()
   get disableClear(): boolean { return this._disableClear; }
-  set disableClear(v) { this._disableClear = coerceBooleanProperty(v); }
+  set disableClear(value: boolean) { this._disableClear = coerceBooleanProperty(value); }
   private _disableClear: boolean;
 
   constructor(public _intl: MatSortHeaderIntl,

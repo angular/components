@@ -73,22 +73,19 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
    * @deletion-target 6.0.0
    */
   @Input('portalHost')
-  get _deprecatedPortal() { return this.portal; }
-  set _deprecatedPortal(v) { this.portal = v; }
+  get _deprecatedPortal(): Portal<any> | null { return this.portal; }
+  set _deprecatedPortal(value: Portal<any> | null) { this.portal = value; }
 
   /**
    * @deprecated
    * @deletion-target 6.0.0
    */
   @Input('cdkPortalHost')
-  get _deprecatedPortalHost() { return this.portal; }
-  set _deprecatedPortalHost(v) { this.portal = v; }
+  get _deprecatedPortalHost(): Portal<any> | null { return this.portal; }
+  set _deprecatedPortalHost(value: Portal<any> | null) { this.portal = value; }
 
   /** Portal associated with the Portal outlet. */
-  get portal(): Portal<any> | null {
-    return this._attachedPortal;
-  }
-
+  get portal(): Portal<any> | null { return this._attachedPortal; }
   set portal(portal: Portal<any> | null) {
     // Ignore the cases where the `portal` is set to a falsy value before the lifecycle hooks have
     // run. This handles the cases where the user might do something like `<div cdkPortalOutlet>`
@@ -109,13 +106,11 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
     this._attachedPortal = portal;
   }
 
-  @Output('attached') attached: EventEmitter<CdkPortalOutletAttachedRef> =
+  @Output() attached: EventEmitter<CdkPortalOutletAttachedRef> =
       new EventEmitter<CdkPortalOutletAttachedRef>();
 
   /** Component or view reference that is attached to the portal. */
-  get attachedRef(): CdkPortalOutletAttachedRef {
-    return this._attachedRef;
-  }
+  get attachedRef(): CdkPortalOutletAttachedRef { return this._attachedRef; }
 
   ngOnInit() {
     this._isInitialized = true;

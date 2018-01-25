@@ -29,7 +29,7 @@ export class MatInkBar {
    * Shows the ink bar if previously set as hidden.
    * @param element
    */
-  alignToElement(element: HTMLElement) {
+  alignToElement(element: HTMLElement): void {
     this.show();
 
     if (typeof requestAnimationFrame !== 'undefined') {

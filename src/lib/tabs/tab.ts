@@ -55,9 +55,7 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
   private _contentPortal: TemplatePortal | null = null;
 
   /** @docs-private */
-  get content(): TemplatePortal | null {
-    return this._contentPortal;
-  }
+  get content(): TemplatePortal | null { return this._contentPortal; }
 
   /** Emits whenever the label changes. */
   _labelChange = new Subject<void>();
@@ -77,10 +75,8 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
    */
   origin: number | null = null;
 
-  /**
-   * Whether the tab is currently active.
-   */
-  isActive = false;
+  /** Whether the tab is currently active. */
+  isActive: boolean = false;
 
   constructor(private _viewContainerRef: ViewContainerRef) {
     super();
@@ -96,12 +92,12 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
     }
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this._disableChange.complete();
     this._labelChange.complete();
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this._contentPortal = new TemplatePortal(this._content, this._viewContainerRef);
   }
 }

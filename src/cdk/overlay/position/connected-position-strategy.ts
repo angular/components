@@ -52,9 +52,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   private _resizeSubscription = Subscription.EMPTY;
 
   /** Whether the we're dealing with an RTL context */
-  get _isRtl() {
-    return this._dir === 'rtl';
-  }
+  get _isRtl() { return this._dir === 'rtl'; }
 
   /** Ordered list of preferred positions, from most to least desirable. */
   _preferredPositions: ConnectionPositionPair[] = [];
@@ -105,13 +103,13 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Disposes all resources used by the position strategy. */
-  dispose() {
+  dispose(): void {
     this._applied = false;
     this._resizeSubscription.unsubscribe();
   }
 
   /** @docs-private */
-  detach() {
+  detach(): void {
     this._applied = false;
     this._resizeSubscription.unsubscribe();
   }

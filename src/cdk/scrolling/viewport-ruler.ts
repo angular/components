@@ -79,7 +79,7 @@ export class ViewportRuler implements OnDestroy {
   }
 
   /** Gets the (top, left) scroll position of the viewport. */
-  getViewportScrollPosition() {
+  getViewportScrollPosition(): {left: number, top: number} {
     // The top-left-corner of the viewport is determined by the scroll position of the document
     // body, normally just (scrollLeft, scrollTop). However, Chrome and Firefox disagree about
     // whether `document.body` or `document.documentElement` is the scrolled element, so reading

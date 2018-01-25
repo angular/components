@@ -43,7 +43,7 @@ export class TileCoordinator {
    * Gets the total span of rows occupied by tiles.
    * Ex: A list with 1 row that contains a tile with rowspan 2 will have a total rowspan of 2.
    */
-  get rowspan() {
+  get rowspan(): number {
     let lastRowMax = Math.max(...this.tracker);
     // if any of the tiles has a rowspan that pushes it beyond the total row count,
     // add the difference to the rowcount

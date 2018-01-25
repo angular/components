@@ -162,7 +162,7 @@ export class CdkStepper implements OnDestroy {
 
   /** The index of the selected step. */
   @Input()
-  get selectedIndex() { return this._selectedIndex; }
+  get selectedIndex(): number { return this._selectedIndex; }
   set selectedIndex(index: number) {
     if (this._steps) {
       if (this._anyControlsInvalidOrPending(index) || index < this._selectedIndex &&

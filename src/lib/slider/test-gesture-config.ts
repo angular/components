@@ -24,7 +24,7 @@ export class TestGestureConfig extends GestureConfig {
   /**
    * Create a mapping of Hammer instances to element so that events can be emitted during testing.
    */
-  buildHammer(element: HTMLElement) {
+  buildHammer(element: HTMLElement): HammerManager {
     let mc = super.buildHammer(element) as HammerManager;
     let instance = this.hammerInstances.get(element);
 
@@ -41,7 +41,7 @@ export class TestGestureConfig extends GestureConfig {
    * The Angular event plugin for Hammer creates a new HammerManager instance for each listener,
    * so we need to apply our event on all instances to hit the correct listener.
    */
-  emitEventForElement(eventType: string, element: HTMLElement, eventData = {}) {
+  emitEventForElement(eventType: string, element: HTMLElement, eventData = {}): void {
     let instances = this.hammerInstances.get(element);
 
     if (instances) {

@@ -40,16 +40,14 @@ export class MatTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   private _previousValue: string;
   private _destroyed = new Subject<void>();
 
-  private _minRows: number;
-  private _maxRows: number;
-
   /** Minimum amount of rows in the textarea. */
   @Input('matAutosizeMinRows')
+  get minRows(): number { return this._minRows; }
   set minRows(value: number) {
     this._minRows = value;
     this._setMinHeight();
   }
-  get minRows(): number { return this._minRows; }
+  private _minRows: number;
 
   /** Maximum amount of rows in the textarea. */
   @Input('matAutosizeMaxRows')
@@ -58,6 +56,7 @@ export class MatTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     this._maxRows = value;
     this._setMaxHeight();
   }
+  private _maxRows: number;
 
   /** Cached height of a textarea with a single row. */
   private _cachedLineHeight: number;
@@ -170,7 +169,7 @@ export class MatTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
    * @param force Whether to force a height recalculation. By default the height will be
    *    recalculated only if the value changed since the last call.
    */
-  resizeToFitContent(force: boolean = false) {
+  resizeToFitContent(force: boolean = false): void {
     this._cacheTextareaLineHeight();
 
     // If we haven't determined the line-height yet, we know we're still hidden and there's no point

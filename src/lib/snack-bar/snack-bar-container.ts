@@ -106,7 +106,7 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
   }
 
   /** Handle end of animations, updating the state of the snackbar. */
-  onAnimationEnd(event: AnimationEvent) {
+  onAnimationEnd(event: AnimationEvent): void {
     const {fromState, toState} = event;
 
     if ((toState === 'void' && fromState !== 'void') || toState.startsWith('hidden')) {

@@ -96,7 +96,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
    * by using the `launch()` method.
    */
   @Input('matRippleDisabled')
-  get disabled() { return this._disabled; }
+  get disabled(): boolean { return this._disabled; }
   set disabled(value: boolean) {
     this._disabled = value;
     this._setupTriggerEventsIfEnabled();
@@ -108,9 +108,9 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
    * Defaults to the directive's host element.
    */
   @Input('matRippleTrigger')
-  get trigger() { return this._trigger || this._elementRef.nativeElement; }
-  set trigger(trigger: HTMLElement) {
-    this._trigger = trigger;
+  get trigger(): HTMLElement { return this._trigger || this._elementRef.nativeElement; }
+  set trigger(value: HTMLElement) {
+    this._trigger = value;
     this._setupTriggerEventsIfEnabled();
   }
   private _trigger: HTMLElement;
@@ -148,7 +148,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   }
 
   /** Fades out all currently showing ripple elements. */
-  fadeOutAll() {
+  fadeOutAll(): void {
     this._rippleRenderer.fadeOutAll();
   }
 

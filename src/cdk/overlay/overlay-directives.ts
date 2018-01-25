@@ -94,14 +94,11 @@ export class CdkOverlayOrigin {
   exportAs: 'cdkConnectedOverlay'
 })
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
-  private _overlayRef: OverlayRef;
-  private _templatePortal: TemplatePortal;
-  private _hasBackdrop = false;
-  private _backdropSubscription = Subscription.EMPTY;
-  private _positionSubscription = Subscription.EMPTY;
-  private _offsetX: number = 0;
-  private _offsetY: number = 0;
-  private _position: ConnectedPositionStrategy;
+private _overlayRef: OverlayRef;
+private _templatePortal: TemplatePortal;
+private _backdropSubscription = Subscription.EMPTY;
+private _positionSubscription = Subscription.EMPTY;
+private _position: ConnectedPositionStrategy;
 
   /** Origin for the connected overlay. */
   @Input('cdkConnectedOverlayOrigin') origin: CdkOverlayOrigin;
@@ -112,22 +109,24 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   /** The offset in pixels for the overlay connection point on the x-axis */
   @Input('cdkConnectedOverlayOffsetX')
   get offsetX(): number { return this._offsetX; }
-  set offsetX(offsetX: number) {
-    this._offsetX = offsetX;
+  set offsetX(value: number) {
+    this._offsetX = value;
     if (this._position) {
-      this._position.withOffsetX(offsetX);
+      this._position.withOffsetX(value);
     }
   }
+  private _offsetX: number = 0;
 
   /** The offset in pixels for the overlay connection point on the y-axis */
   @Input('cdkConnectedOverlayOffsetY')
-  get offsetY() { return this._offsetY; }
-  set offsetY(offsetY: number) {
-    this._offsetY = offsetY;
+  get offsetY(): number { return this._offsetY; }
+  set offsetY(value: number) {
+    this._offsetY = value;
     if (this._position) {
-      this._position.withOffsetY(offsetY);
+      this._position.withOffsetY(value);
     }
   }
+  private _offsetY: number = 0;
 
   /** The width of the overlay panel. */
   @Input('cdkConnectedOverlayWidth') width: number | string;
@@ -153,8 +152,9 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   /** Whether or not the overlay should attach a backdrop. */
   @Input('cdkConnectedOverlayHasBackdrop')
-  get hasBackdrop() { return this._hasBackdrop; }
-  set hasBackdrop(value: any) { this._hasBackdrop = coerceBooleanProperty(value); }
+  get hasBackdrop(): boolean { return this._hasBackdrop; }
+  set hasBackdrop(value: boolean) { this._hasBackdrop = coerceBooleanProperty(value); }
+  private _hasBackdrop = false;
 
   /**
    * @deprecated
@@ -162,7 +162,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
    */
   @Input('origin')
   get _deprecatedOrigin(): CdkOverlayOrigin { return this.origin; }
-  set _deprecatedOrigin(_origin: CdkOverlayOrigin) { this.origin = _origin; }
+  set _deprecatedOrigin(value: CdkOverlayOrigin) { this.origin = value; }
 
   /**
    * @deprecated
@@ -170,7 +170,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
    */
   @Input('positions')
   get _deprecatedPositions(): ConnectionPositionPair[] { return this.positions; }
-  set _deprecatedPositions(_positions: ConnectionPositionPair[]) { this.positions = _positions; }
+  set _deprecatedPositions(value: ConnectionPositionPair[]) { this.positions = value; }
 
   /**
    * @deprecated
@@ -178,7 +178,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
    */
   @Input('offsetX')
   get _deprecatedOffsetX(): number { return this.offsetX; }
-  set _deprecatedOffsetX(_offsetX: number) { this.offsetX = _offsetX; }
+  set _deprecatedOffsetX(value: number) { this.offsetX = value; }
 
   /**
    * @deprecated
@@ -186,7 +186,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
    */
   @Input('offsetY')
   get _deprecatedOffsetY(): number { return this.offsetY; }
-  set _deprecatedOffsetY(_offsetY: number) { this.offsetY = _offsetY; }
+  set _deprecatedOffsetY(value: number) { this.offsetY = value; }
 
   /**
    * @deprecated
@@ -194,7 +194,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
    */
   @Input('width')
   get _deprecatedWidth(): number | string { return this.width; }
-  set _deprecatedWidth(_width: number | string) { this.width = _width; }
+  set _deprecatedWidth(value: number | string) { this.width = value; }
 
   /**
    * @deprecated
@@ -202,7 +202,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
    */
   @Input('height')
   get _deprecatedHeight(): number | string { return this.height; }
-  set _deprecatedHeight(_height: number | string) { this.height = _height; }
+  set _deprecatedHeight(value: number | string) { this.height = value; }
 
   /**
    * @deprecated
@@ -210,7 +210,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
    */
   @Input('minWidth')
   get _deprecatedMinWidth(): number | string { return this.minWidth; }
-  set _deprecatedMinWidth(_minWidth: number | string) { this.minWidth = _minWidth; }
+  set _deprecatedMinWidth(value: number | string) { this.minWidth = value; }
 
   /**
    * @deprecated
@@ -218,7 +218,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
    */
   @Input('minHeight')
   get _deprecatedMinHeight(): number | string { return this.minHeight; }
-  set _deprecatedMinHeight(_minHeight: number | string) { this.minHeight = _minHeight; }
+  set _deprecatedMinHeight(value: number | string) { this.minHeight = value; }
 
   /**
    * @deprecated
@@ -226,7 +226,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
    */
   @Input('backdropClass')
   get _deprecatedBackdropClass(): string { return this.backdropClass; }
-  set _deprecatedBackdropClass(_backdropClass: string) { this.backdropClass = _backdropClass; }
+  set _deprecatedBackdropClass(value: string) { this.backdropClass = value; }
 
   /**
    * @deprecated
@@ -234,9 +234,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
    */
   @Input('scrollStrategy')
   get _deprecatedScrollStrategy(): ScrollStrategy { return this.scrollStrategy; }
-  set _deprecatedScrollStrategy(_scrollStrategy: ScrollStrategy) {
-    this.scrollStrategy = _scrollStrategy;
-  }
+  set _deprecatedScrollStrategy(value: ScrollStrategy) { this.scrollStrategy = value; }
 
   /**
    * @deprecated
@@ -244,27 +242,28 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
    */
   @Input('open')
   get _deprecatedOpen(): boolean { return this.open; }
-  set _deprecatedOpen(_open: boolean) { this.open = _open; }
+  set _deprecatedOpen(value: boolean) { this.open = value; }
 
   /**
    * @deprecated
    * @deletion-target 6.0.0
    */
   @Input('hasBackdrop')
-  get _deprecatedHasBackdrop() { return this.hasBackdrop; }
-  set _deprecatedHasBackdrop(_hasBackdrop: any) { this.hasBackdrop = _hasBackdrop; }
+  get _deprecatedHasBackdrop(): boolean { return this.hasBackdrop; }
+  set _deprecatedHasBackdrop(value: boolean) { this.hasBackdrop = value; }
 
   /** Event emitted when the backdrop is clicked. */
-  @Output() backdropClick = new EventEmitter<void>();
+  @Output() backdropClick: EventEmitter<void> = new EventEmitter<void>();
 
   /** Event emitted when the position has changed. */
-  @Output() positionChange = new EventEmitter<ConnectedOverlayPositionChange>();
+  @Output() positionChange: EventEmitter<ConnectedOverlayPositionChange> =
+      new EventEmitter<ConnectedOverlayPositionChange>();
 
   /** Event emitted when the overlay has been attached. */
-  @Output() attach = new EventEmitter<void>();
+  @Output() attach: EventEmitter<void> = new EventEmitter<void>();
 
   /** Event emitted when the overlay has been detached. */
-  @Output() detach = new EventEmitter<void>();
+  @Output() detach: EventEmitter<void> = new EventEmitter<void>();
 
   // TODO(jelbourn): inputs for size, scroll behavior, animation, etc.
 
@@ -278,14 +277,10 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   }
 
   /** The associated overlay reference. */
-  get overlayRef(): OverlayRef {
-    return this._overlayRef;
-  }
+  get overlayRef(): OverlayRef { return this._overlayRef; }
 
   /** The element's layout direction. */
-  get dir(): Direction {
-    return this._dir ? this._dir.value : 'ltr';
-  }
+  get dir(): Direction { return this._dir ? this._dir.value : 'ltr'; }
 
   ngOnDestroy() {
     this._destroyOverlay();

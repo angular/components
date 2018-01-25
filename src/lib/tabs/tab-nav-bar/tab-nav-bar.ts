@@ -106,7 +106,7 @@ export class MatTabNav extends _MatTabNavMixinBase implements AfterContentInit, 
 
   /** Whether ripples should be disabled for all links or not. */
   @Input()
-  get disableRipple() { return this._disableRipple; }
+  get disableRipple(): boolean { return this._disableRipple; }
   set disableRipple(value: boolean) {
     this._disableRipple = coerceBooleanProperty(value);
     this._setLinkDisableRipple();
@@ -122,7 +122,7 @@ export class MatTabNav extends _MatTabNavMixinBase implements AfterContentInit, 
   }
 
   /** Notifies the component that the active link has been changed. */
-  updateActiveLink(element: ElementRef) {
+  updateActiveLink(element: ElementRef): void {
     this._activeLinkChanged = this._activeLinkElement != element;
     this._activeLinkElement = element;
 
@@ -131,7 +131,7 @@ export class MatTabNav extends _MatTabNavMixinBase implements AfterContentInit, 
     }
   }
 
-  ngAfterContentInit(): void {
+  ngAfterContentInit() {
     this._ngZone.runOutsideAngular(() => {
       const dirChange = this._dir ? this._dir.change : observableOf(null);
 
@@ -143,7 +143,7 @@ export class MatTabNav extends _MatTabNavMixinBase implements AfterContentInit, 
   }
 
   /** Checks if the active link has been changed and, if so, will update the ink bar. */
-  ngAfterContentChecked(): void {
+  ngAfterContentChecked() {
     if (this._activeLinkChanged) {
       this._alignInkBar();
       this._activeLinkChanged = false;

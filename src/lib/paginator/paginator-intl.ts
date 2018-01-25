@@ -31,7 +31,7 @@ export class MatPaginatorIntl {
   previousPageLabel: string = 'Previous page';
 
   /** A label for the range of items within the current page and the length of the whole list. */
-  getRangeLabel = (page: number, pageSize: number, length: number) => {
+  getRangeLabel = (page: number, pageSize: number, length: number): string => {
     if (length == 0 || pageSize == 0) { return `0 of ${length}`; }
 
     length = Math.max(length, 0);

@@ -50,26 +50,26 @@ export class MatTableDataSource<T> implements DataSource<T> {
   filteredData: T[];
 
   /** Array of data that should be rendered by the table, where each object represents one row. */
-  get data() { return this._data.value; }
-  set data(data: T[]) { this._data.next(data); }
+  get data(): T[] { return this._data.value; }
+  set data(value: T[]) { this._data.next(value); }
 
   /**
    * Filter term that should be used to filter out objects from the data array. To override how
    * data objects match to this filter string, provide a custom function for filterPredicate.
    */
   get filter(): string { return this._filter.value; }
-  set filter(filter: string) { this._filter.next(filter); }
+  set filter(value: string) { this._filter.next(value); }
 
   /**
    * Instance of the MatSort directive used by the table to control its sorting. Sort changes
    * emitted by the MatSort will trigger an update to the table's rendered data.
    */
   get sort(): MatSort | null { return this._sort; }
-  set sort(sort: MatSort|null) {
-    this._sort = sort;
+  set sort(value: MatSort | null) {
+    this._sort = value;
     this._updateChangeSubscription();
   }
-  private _sort: MatSort|null;
+  private _sort: MatSort | null;
 
   /**
    * Instance of the MatPaginator component used by the table to control what page of the data is
@@ -82,11 +82,11 @@ export class MatTableDataSource<T> implements DataSource<T> {
    * initialized before assigning it to this data source.
    */
   get paginator(): MatPaginator | null { return this._paginator; }
-  set paginator(paginator: MatPaginator|null) {
-    this._paginator = paginator;
+  set paginator(value: MatPaginator | null) {
+    this._paginator = value;
     this._updateChangeSubscription();
   }
-  private _paginator: MatPaginator|null;
+  private _paginator: MatPaginator | null;
 
   /**
    * Data accessor function that is used for accessing data properties for sorting through

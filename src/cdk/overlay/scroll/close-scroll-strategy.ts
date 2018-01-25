@@ -43,7 +43,7 @@ export class CloseScrollStrategy implements ScrollStrategy {
   }
 
   /** Enables the closing of the attached overlay on scroll. */
-  enable() {
+  enable(): void {
     if (this._scrollSubscription) {
       return;
     }
@@ -68,7 +68,7 @@ export class CloseScrollStrategy implements ScrollStrategy {
   }
 
   /** Disables the closing the attached overlay on scroll. */
-  disable() {
+  disable(): void {
     if (this._scrollSubscription) {
       this._scrollSubscription.unsubscribe();
       this._scrollSubscription = null;
