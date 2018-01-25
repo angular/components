@@ -132,7 +132,7 @@ export class MatMultiYearView<D> implements AfterContentInit {
     if (!this.dateFilter) {
       return true;
     }
-    
+
     const firstOfYear = this._dateAdapter.createDate(year, 0, 1);
 
     // If any date in the year is enabled count the year as enabled.

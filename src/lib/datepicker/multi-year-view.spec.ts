@@ -108,7 +108,9 @@ class StandardMultiYearView {
 }
 
 @Component({
-  template: `<mat-multi-year-view [activeDate]="activeDate" [dateFilter]="dateFilter"></mat-multi-year-view>`
+  template: `
+    <mat-multi-year-view [activeDate]="activeDate" [dateFilter]="dateFilter"></mat-multi-year-view>
+    `
 })
 class MultiYearViewWithDateFilter {
   activeDate = new Date(2017, JAN, 1);
