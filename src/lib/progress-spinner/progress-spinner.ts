@@ -95,8 +95,6 @@ const INDETERMINATE_ANIMATION_TEMPLATE = `
 export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements CanColor,
   OnChanges {
 
-  private _value = 0;
-  private _strokeWidth: number;
   private _fallbackAnimation = false;
 
   /** The width and height of the host element. Will grow with stroke width. */
@@ -114,8 +112,8 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   /** The diameter of the progress spinner (will set width and height of svg). */
   @Input()
   get diameter(): number { return this._diameter; }
-  set diameter(size: number) {
-    this._diameter = coerceNumberProperty(size);
+  set diameter(value: number) {
+    this._diameter = coerceNumberProperty(value);
 
     if (!this._fallbackAnimation && !MatProgressSpinner.diameters.has(this._diameter)) {
       this._attachStyleNode();
@@ -132,19 +130,18 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   set strokeWidth(value: number) {
     this._strokeWidth = coerceNumberProperty(value);
   }
-
+  private _strokeWidth: number;
 
   /** Mode of the progress circle */
   @Input() mode: ProgressSpinnerMode = 'determinate';
 
   /** Value of the progress circle. */
   @Input()
-  get value(): number {
-    return this.mode === 'determinate' ? this._value : 0;
+  get value(): number { return this.mode === 'determinate' ? this._value : 0; }
+  set value(value: number) {
+    this._value = Math.max(0, Math.min(100, coerceNumberProperty(value)));
   }
-  set value(newValue: number) {
-    this._value = Math.max(0, Math.min(100, coerceNumberProperty(newValue)));
-  }
+  private _value = 0;
 
   constructor(public _elementRef: ElementRef,
               platform: Platform,
@@ -168,12 +165,12 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   }
 
   /** The radius of the spinner, adjusted for stroke width. */
-  get _circleRadius() {
+  get _circleRadius(): number {
     return (this.diameter - BASE_STROKE_WIDTH) / 2;
   }
 
   /** The view box of the spinner's svg element. */
-  get _viewBox() {
+  get _viewBox(): string {
     const viewBox = this._circleRadius * 2 + this.strokeWidth;
     return `0 0 ${viewBox} ${viewBox}`;
   }
@@ -184,7 +181,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   }
 
   /** The dash offset of the svg circle. */
-  get _strokeDashOffset() {
+  get _strokeDashOffset(): number | null {
     if (this.mode === 'determinate') {
       return this._strokeCircumference * (100 - this._value) / 100;
     }
@@ -198,7 +195,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   }
 
   /** Stroke width of the circle in percent. */
-  get _circleStrokeWidth() {
+  get _circleStrokeWidth(): number {
     return this.strokeWidth / this._elementSize * 100;
   }
 

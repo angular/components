@@ -58,9 +58,7 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   get disabled(): boolean {
     return this._disabled === undefined ? this.datepicker.disabled : !!this._disabled;
   }
-  set disabled(value: boolean) {
-    this._disabled = coerceBooleanProperty(value);
-  }
+  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
   private _disabled: boolean;
 
   /** Custom icon set by the consumer. */

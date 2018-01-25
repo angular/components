@@ -35,6 +35,7 @@ export class SimpleSnackBar {
   data: { message: string, action: string };
 
   constructor(
+    /** @docs-private */
     public snackBarRef: MatSnackBarRef<SimpleSnackBar>,
     @Inject(MAT_SNACK_BAR_DATA) data: any) {
     this.data = data;

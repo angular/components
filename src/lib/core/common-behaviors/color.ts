@@ -27,8 +27,6 @@ export type ThemePalette = 'primary' | 'accent' | 'warn' | undefined;
 export function mixinColor<T extends Constructor<HasElementRef>>(base: T,
     defaultColor?: ThemePalette): Constructor<CanColor> & T {
   return class extends base {
-    private _color: ThemePalette;
-
     get color(): ThemePalette { return this._color; }
     set color(value: ThemePalette) {
       const colorPalette = value || defaultColor;
@@ -44,6 +42,7 @@ export function mixinColor<T extends Constructor<HasElementRef>>(base: T,
         this._color = colorPalette;
       }
     }
+    private _color: ThemePalette;
 
     constructor(...args: any[]) {
       super(...args);

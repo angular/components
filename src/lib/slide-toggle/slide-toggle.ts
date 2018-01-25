@@ -94,8 +94,6 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
 
   private _uniqueId: string = `mat-slide-toggle-${++nextUniqueId}`;
   private _slideRenderer: SlideToggleRenderer;
-  private _required: boolean = false;
-  private _checked: boolean = false;
 
   /** Reference to the focus state ripple. */
   private _focusRipple: RippleRef | null;
@@ -120,15 +118,18 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   /** Whether the slide-toggle is required. */
   @Input()
   get required(): boolean { return this._required; }
-  set required(value) { this._required = coerceBooleanProperty(value); }
+  set required(value: boolean) { this._required = coerceBooleanProperty(value); }
+  private _required: boolean = false;
 
   /** Whether the slide-toggle element is checked or not */
   @Input()
   get checked(): boolean { return this._checked; }
-  set checked(value) {
+  set checked(value: boolean) {
     this._checked = coerceBooleanProperty(value);
     this._changeDetectorRef.markForCheck();
   }
+  private _checked: boolean = false;
+
   /** An event will be dispatched each time the slide-toggle changes its value. */
   @Output() change: EventEmitter<MatSlideToggleChange> = new EventEmitter<MatSlideToggleChange>();
 

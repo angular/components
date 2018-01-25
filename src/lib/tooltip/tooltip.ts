@@ -107,10 +107,6 @@ export class MatTooltip implements OnDestroy {
   _overlayRef: OverlayRef | null;
   _tooltipInstance: TooltipComponent | null;
 
-  private _position: TooltipPosition = 'below';
-  private _disabled: boolean = false;
-  private _tooltipClass: string|string[]|Set<string>|{[key: string]: any};
-
   /** Allows the user to define the position of the tooltip relative to the parent element */
   @Input('matTooltipPosition')
   get position(): TooltipPosition { return this._position; }
@@ -125,11 +121,12 @@ export class MatTooltip implements OnDestroy {
       }
     }
   }
+  private _position: TooltipPosition = 'below';
 
   /** Disables the display of the tooltip. */
   @Input('matTooltipDisabled')
   get disabled(): boolean { return this._disabled; }
-  set disabled(value) {
+  set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
 
     // If tooltip is disabled, hide immediately.
@@ -137,6 +134,7 @@ export class MatTooltip implements OnDestroy {
       this.hide(0);
     }
   }
+  private _disabled: boolean = false;
 
   /**
    * @deprecated
@@ -158,7 +156,7 @@ export class MatTooltip implements OnDestroy {
 
   /** The message to be displayed in the tooltip */
   @Input('matTooltip')
-  get message() { return this._message; }
+  get message(): string { return this._message; }
   set message(value: string) {
     this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this._message);
 
@@ -175,13 +173,16 @@ export class MatTooltip implements OnDestroy {
 
   /** Classes to be passed to the tooltip. Supports the same syntax as `ngClass`. */
   @Input('matTooltipClass')
-  get tooltipClass() { return this._tooltipClass; }
-  set tooltipClass(value: string|string[]|Set<string>|{[key: string]: any}) {
+  get tooltipClass(): string | string[] | Set<string> | { [key: string]: any } {
+    return this._tooltipClass;
+  }
+  set tooltipClass(value: string | string[] | Set<string> | {[key: string]: any}) {
     this._tooltipClass = value;
     if (this._tooltipInstance) {
       this._setTooltipClass(this._tooltipClass);
     }
   }
+  private _tooltipClass: string | string[] | Set<string> | { [key: string]: any };
 
   private _manualListeners = new Map<string, Function>();
 

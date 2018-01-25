@@ -67,6 +67,7 @@ export class MatExpansionPanelHeader implements OnDestroy {
   private _parentChangeSubscription = Subscription.EMPTY;
 
   constructor(
+    /** @docs-private */
     @Host() public panel: MatExpansionPanel,
     private _element: ElementRef,
     private _focusMonitor: FocusMonitor,

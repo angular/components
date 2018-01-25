@@ -50,16 +50,16 @@ export class CdkAccordionItem implements OnDestroy {
 
   /** Whether the AccordionItem is expanded. */
   @Input()
-  get expanded(): any { return this._expanded; }
-  set expanded(expanded: any) {
-    expanded = coerceBooleanProperty(expanded);
+  get expanded(): boolean { return this._expanded; }
+  set expanded(value: boolean) {
+    value = coerceBooleanProperty(value);
 
     // Only emit events and update the internal value if the value changes.
-    if (this._expanded !== expanded) {
-      this._expanded = expanded;
-      this.expandedChange.emit(expanded);
+    if (this._expanded !== value) {
+      this._expanded = value;
+      this.expandedChange.emit(value);
 
-      if (expanded) {
+      if (value) {
         this.opened.emit();
         /**
          * In the unique selection dispatcher, the id parameter is the id of the CdkAccordionItem,

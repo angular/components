@@ -39,37 +39,37 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, OnDestroy {
 
   controlType = 'my-tel-input';
 
-  get empty() {
+  get empty(): boolean {
     let n = this.parts.value;
     return !n.area && !n.exchange && !n.subscriber;
   }
 
-  get shouldLabelFloat() { return this.focused || !this.empty; }
+  get shouldLabelFloat(): boolean { return this.focused || !this.empty; }
 
   id = `my-tel-input-${MyTelInput.nextId++}`;
 
   describedBy = '';
 
   @Input()
-  get placeholder() { return this._placeholder; }
-  set placeholder(plh) {
-    this._placeholder = plh;
+  get placeholder(): string { return this._placeholder; }
+  set placeholder(value: string) {
+    this._placeholder = value;
     this.stateChanges.next();
   }
   private _placeholder: string;
 
   @Input()
-  get required() { return this._required; }
-  set required(req) {
-    this._required = coerceBooleanProperty(req);
+  get required(): boolean { return this._required; }
+  set required(value: boolean) {
+    this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
   private _required = false;
 
   @Input()
-  get disabled() { return this._disabled; }
-  set disabled(dis) {
-    this._disabled = coerceBooleanProperty(dis);
+  get disabled(): boolean { return this._disabled; }
+  set disabled(value: boolean) {
+    this._disabled = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
   private _disabled = false;
@@ -90,9 +90,9 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, OnDestroy {
 
   constructor(fb: FormBuilder, private fm: FocusMonitor, private elRef: ElementRef) {
     this.parts = fb.group({
-      'area': '',
-      'exchange': '',
-      'subscriber': '',
+      area: '',
+      exchange: '',
+      subscriber: '',
     });
 
     fm.monitor(elRef.nativeElement, true).subscribe((origin) => {

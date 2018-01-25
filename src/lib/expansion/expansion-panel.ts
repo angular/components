@@ -93,9 +93,7 @@ export class MatExpansionPanel extends _MatExpansionPanelMixinBase
   /** Whether the toggle indicator should be hidden. */
   @Input()
   get hideToggle(): boolean { return this._hideToggle; }
-  set hideToggle(value: boolean) {
-    this._hideToggle = coerceBooleanProperty(value);
-  }
+  set hideToggle(value: boolean) { this._hideToggle = coerceBooleanProperty(value); }
   private _hideToggle = false;
 
   /** Stream that emits for changes in `@Input` properties. */

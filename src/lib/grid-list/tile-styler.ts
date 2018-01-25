@@ -159,7 +159,7 @@ export class FixedTileStyler extends TileStyler {
 
   constructor(public fixedRowHeight: string) { super(); }
 
-  init(gutterSize: string, tracker: TileCoordinator, cols: number, direction: string) {
+  init(gutterSize: string, tracker: TileCoordinator, cols: number, direction: string): void {
     super.init(gutterSize, tracker, cols, direction);
     this.fixedRowHeight = normalizeUnits(this.fixedRowHeight);
   }
@@ -175,7 +175,7 @@ export class FixedTileStyler extends TileStyler {
     ];
   }
 
-  reset(list: MatGridList) {
+  reset(list: MatGridList): void {
     list._setListStyle(['height', null]);
 
     list._tiles.forEach(tile => {
@@ -220,7 +220,7 @@ export class RatioTileStyler extends TileStyler {
     ];
   }
 
-  reset(list: MatGridList) {
+  reset(list: MatGridList): void {
     list._setListStyle(['padding-bottom', null]);
 
     list._tiles.forEach(tile => {
@@ -263,7 +263,7 @@ export class FitTileStyler extends TileStyler {
     tile._setStyle('height', calc(this.getTileSize(baseTileHeight, tile.rowspan)));
   }
 
-  reset(list: MatGridList) {
+  reset(list: MatGridList): void {
     list._tiles.forEach(tile => {
       tile._setStyle('top', null);
       tile._setStyle('height', null);

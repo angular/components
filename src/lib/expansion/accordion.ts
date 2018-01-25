@@ -27,7 +27,7 @@ export class MatAccordion extends CdkAccordion {
   /** Whether the expansion indicator should be hidden. */
   @Input()
   get hideToggle(): boolean { return this._hideToggle; }
-  set hideToggle(show: boolean) { this._hideToggle = coerceBooleanProperty(show); }
+  set hideToggle(value: boolean) { this._hideToggle = coerceBooleanProperty(value); }
   private _hideToggle: boolean = false;
 
   /**

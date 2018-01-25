@@ -85,7 +85,6 @@ export const MENU_PANEL_TOP_PADDING = 8;
 export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _portal: TemplatePortal;
   private _overlayRef: OverlayRef | null = null;
-  private _menuOpen: boolean = false;
   private _closeSubscription = Subscription.EMPTY;
   private _positionSubscription = Subscription.EMPTY;
   private _hoverSubscription = Subscription.EMPTY;
@@ -99,13 +98,8 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * @deletion-target 6.0.0
    */
   @Input('mat-menu-trigger-for')
-  get _deprecatedMatMenuTriggerFor(): MatMenuPanel {
-    return this.menu;
-  }
-
-  set _deprecatedMatMenuTriggerFor(v: MatMenuPanel) {
-    this.menu = v;
-  }
+  get _deprecatedMatMenuTriggerFor(): MatMenuPanel { return this.menu; }
+  set _deprecatedMatMenuTriggerFor(value: MatMenuPanel) { this.menu = value; }
 
   /** References the menu instance that the trigger is associated with. */
   @Input('matMenuTriggerFor') menu: MatMenuPanel;
@@ -178,9 +172,8 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   }
 
   /** Whether the menu is open. */
-  get menuOpen(): boolean {
-    return this._menuOpen;
-  }
+  get menuOpen(): boolean { return this._menuOpen; }
+  private _menuOpen: boolean = false;
 
   /** The text direction of the containing app. */
   get dir(): Direction {
@@ -219,7 +212,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * Focuses the menu trigger.
    * @param origin Source of the menu trigger's focus.
    */
-  focus(origin: FocusOrigin = 'program') {
+  focus(origin: FocusOrigin = 'program'): void {
     if (this._focusMonitor) {
       this._focusMonitor.focusVia(this._element.nativeElement, origin);
     } else {

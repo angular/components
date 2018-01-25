@@ -85,34 +85,34 @@ export const MAT_OPTION_PARENT_COMPONENT =
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatOption implements AfterViewChecked {
-  private _selected = false;
-  private _active = false;
-  private _disabled = false;
-  private _id = `mat-option-${_uniqueIdCounter++}`;
   private _mostRecentViewValue = '';
 
   /** Whether the wrapping component is in multiple selection mode. */
-  get multiple() { return this._parent && this._parent.multiple; }
+  get multiple(): boolean | undefined { return this._parent && this._parent.multiple; }
 
   /** The unique ID of the option. */
   get id(): string { return this._id; }
+  private _id = `mat-option-${_uniqueIdCounter++}`;
 
   /** Whether or not the option is currently selected. */
   get selected(): boolean { return this._selected; }
+  private _selected = false;
 
   /** The form value of the option. */
   @Input() value: any;
 
   /** Whether the option is disabled. */
   @Input()
-  get disabled() { return (this.group && this.group.disabled) || this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  get disabled(): boolean { return (this.group && this.group.disabled) || this._disabled; }
+  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+  private _disabled: boolean = false;
 
   /** Whether ripples for the option are disabled. */
-  get disableRipple() { return this._parent && this._parent.disableRipple; }
+  get disableRipple(): boolean | undefined { return this._parent && this._parent.disableRipple; }
 
   /** Event emitted when the option is selected or deselected. */
-  @Output() onSelectionChange = new EventEmitter<MatOptionSelectionChange>();
+  @Output() onSelectionChange: EventEmitter<MatOptionSelectionChange> =
+      new EventEmitter<MatOptionSelectionChange>();
 
   /** Emits when the state of the option changes and any parents have to be notified. */
   _stateChanges = new Subject<void>();
@@ -129,9 +129,8 @@ export class MatOption implements AfterViewChecked {
    * focus is actually retained somewhere else. This comes in handy
    * for components like autocomplete where focus must remain on the input.
    */
-  get active(): boolean {
-    return this._active;
-  }
+  get active(): boolean { return this._active; }
+  private _active = false;
 
   /**
    * The displayed value of the option. It is necessary to show the selected option in the

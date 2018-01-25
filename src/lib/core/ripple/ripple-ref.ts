@@ -28,7 +28,7 @@ export class RippleRef {
   }
 
   /** Fades out the ripple element. */
-  fadeOut() {
+  fadeOut(): void {
     this._renderer.fadeOutRipple(this);
   }
 }

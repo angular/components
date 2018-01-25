@@ -57,7 +57,7 @@ export class FocusTrap {
   }
 
   /** Destroys the focus trap by cleaning up the anchors. */
-  destroy() {
+  destroy(): void {
     if (this._startAnchor && this._startAnchor.parentNode) {
       this._startAnchor.parentNode.removeChild(this._startAnchor);
     }

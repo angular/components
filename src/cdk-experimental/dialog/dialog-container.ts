@@ -78,14 +78,21 @@ export class CdkDialogContainer extends BasePortalOutlet {
   // metadata is not inherited by child classes, instead the host binding data is defined in a way
   // that can be inherited.
   // tslint:disable:no-host-decorator-in-concrete
-  @HostBinding('attr.aria-label') get _ariaLabel() { return this._config.ariaLabel || null; }
+  @HostBinding('attr.aria-label')
+  get _ariaLabel(): string | null { return this._config.ariaLabel || null; }
 
   @HostBinding('attr.aria-describedby')
-  get _ariaDescribedBy() { return this._config ? this._config.ariaDescribedBy : null; }
+  get _ariaDescribedBy(): string | null | undefined {
+    return this._config ? this._config.ariaDescribedBy : null;
+  }
 
-  @HostBinding('attr.role') get _role() { return this._config ? this._config.role : null; }
+  @HostBinding('attr.role')
+  get _role(): string | null | undefined {
+    return this._config ? this._config.role : null;
+  }
 
-  @HostBinding('attr.tabindex') get _tabindex() { return -1; }
+  @HostBinding('attr.tabindex')
+  get _tabindex(): number { return -1; }
   // tslint:disable:no-host-decorator-in-concrete
 
   /** The portal host inside of this container into which the dialog content will be loaded. */

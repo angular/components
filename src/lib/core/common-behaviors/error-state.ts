@@ -41,11 +41,11 @@ export function mixinErrorState<T extends Constructor<HasErrorState>>(base: T)
      * Stream that emits whenever the state of the input changes such that the wrapping
      * `MatFormField needs to run change detection.
      */
-    stateChanges = new Subject<void>();
+    stateChanges: Subject<void> = new Subject<void>();
 
     errorStateMatcher: ErrorStateMatcher;
 
-    updateErrorState() {
+    updateErrorState(): void {
       const oldState = this.errorState;
       const parent = this._parentFormGroup || this._parentForm;
       const matcher = this.errorStateMatcher || this._defaultErrorStateMatcher;

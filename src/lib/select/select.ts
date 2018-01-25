@@ -154,6 +154,7 @@ export class MatSelectBase {
               public _defaultErrorStateMatcher: ErrorStateMatcher,
               public _parentForm: NgForm,
               public _parentFormGroup: FormGroupDirective,
+              /** @docs-private */
               public ngControl: NgControl) {}
 }
 export const _MatSelectMixinBase = mixinDisableRipple(
@@ -212,23 +213,8 @@ export class MatSelectTrigger {}
 export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnChanges,
     OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex,
     MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
-  /** Whether or not the overlay panel is open. */
-  private _panelOpen = false;
-
-  /** Whether filling out the select is required in the form. */
-  private _required: boolean = false;
-
   /** The scroll position of the overlay panel, calculated to center the selected option. */
   private _scrollTop = 0;
-
-  /** The placeholder displayed in the trigger of the select. */
-  private _placeholder: string;
-
-  /** Whether the component is in multiple selection mode. */
-  private _multiple: boolean = false;
-
-  /** Comparison function to specify which option is displayed. Defaults to object equality. */
-  private _compareWith = (o1: any, o2: any) => o1 === o2;
 
   /** Unique id for this input. */
   private _uid = `mat-select-${nextUniqueId++}`;
@@ -297,11 +283,17 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     },
   ];
 
-  /** Whether the select is focused. */
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   focused: boolean = false;
 
-  /** A name for this control that can be used by `mat-form-field`. */
-  controlType = 'mat-select';
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
+  controlType: string = 'mat-select';
 
   /** Trigger that opens the select. */
   @ViewChild('trigger') trigger: ElementRef;
@@ -324,21 +316,29 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   /** User-supplied override of the trigger element. */
   @ContentChild(MatSelectTrigger) customTrigger: MatSelectTrigger;
 
-  /** Placeholder to be shown if no value has been selected. */
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   @Input()
   get placeholder(): string { return this._placeholder; }
   set placeholder(value: string) {
     this._placeholder = value;
     this.stateChanges.next();
   }
+  private _placeholder: string;
 
-  /** Whether the component is required. */
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   @Input()
   get required(): boolean { return this._required; }
   set required(value: boolean) {
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
+  private _required: boolean = false;
 
   /** Whether the user should be allowed to select multiple options. */
   @Input()
@@ -350,6 +350,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
     this._multiple = coerceBooleanProperty(value);
   }
+  private _multiple: boolean = false;
 
   /**
    * A function to compare the option values with the selected values. The first argument
@@ -357,7 +358,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    * should be returned.
    */
   @Input()
-  get compareWith() { return this._compareWith; }
+  get compareWith(): (o1: any, o2: any) => boolean { return this._compareWith; }
   set compareWith(fn: (o1: any, o2: any) => boolean) {
     if (typeof fn !== 'function') {
       throw getMatSelectNonFunctionValueError();
@@ -368,14 +369,15 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       this._initializeSelection();
     }
   }
+  private _compareWith = (o1: any, o2: any) => o1 === o2;
 
   /** Value of the select control. */
   @Input()
   get value(): any { return this._value; }
-  set value(newValue: any) {
-    if (newValue !== this._value) {
-      this.writeValue(newValue);
-      this._value = newValue;
+  set value(value: any) {
+    if (value !== this._value) {
+      this.writeValue(value);
+      this._value = value;
     }
   }
   private _value: any;
@@ -389,7 +391,10 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   /** An object used to control when error messages are shown. */
   @Input() errorStateMatcher: ErrorStateMatcher;
 
-  /** Unique id of the element. */
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   @Input()
   get id(): string { return this._id; }
   set id(value: string) {
@@ -465,6 +470,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     @Optional() _parentForm: NgForm,
     @Optional() _parentFormGroup: FormGroupDirective,
     @Optional() private _parentFormField: MatFormField,
+    /** @docs-private */
     @Self() @Optional() public ngControl: NgControl,
     @Attribute('tabindex') tabIndex: string,
     @Inject(MAT_SELECT_SCROLL_STRATEGY) private _scrollStrategyFactory) {
@@ -603,9 +609,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   }
 
   /** Whether or not the overlay panel is open. */
-  get panelOpen(): boolean {
-    return this._panelOpen;
-  }
+  get panelOpen(): boolean { return this._panelOpen; }
+  private _panelOpen = false;
 
   /** The currently selected option. */
   get selected(): MatOption | MatOption[] {
@@ -749,7 +754,10 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     return this._parentFormField ? `mat-${this._parentFormField.color}` : '';
   }
 
-  /** Whether the select has a value. */
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   get empty(): boolean {
     return !this._selectionModel || this._selectionModel.isEmpty();
   }

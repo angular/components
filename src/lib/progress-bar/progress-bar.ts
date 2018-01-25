@@ -51,20 +51,16 @@ export const _MatProgressBarMixinBase = mixinColor(MatProgressBarBase, 'primary'
 })
 export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor {
 
-  constructor(public _elementRef: ElementRef) {
-    super(_elementRef);
-  }
-
   /** Value of the progress bar. Defaults to zero. Mirrored to aria-valuenow. */
   @Input()
   get value(): number { return this._value; }
-  set value(v: number) { this._value = clamp(v || 0); }
+  set value(value: number) { this._value = clamp(value || 0); }
   private _value: number = 0;
 
   /** Buffer value of the progress bar. Defaults to zero. */
   @Input()
   get bufferValue(): number { return this._bufferValue; }
-  set bufferValue(v: number) { this._bufferValue = clamp(v || 0); }
+  set bufferValue(value: number) { this._bufferValue = clamp(value || 0); }
   private _bufferValue: number = 0;
 
   /**
@@ -75,6 +71,10 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
    * Mirrored to mode attribute.
    */
   @Input() mode: 'determinate' | 'indeterminate' | 'buffer' | 'query' = 'determinate';
+
+  constructor(public _elementRef: ElementRef) {
+    super(_elementRef);
+  }
 
   /** Gets the current transform value for the progress bar's primary indicator. */
   _primaryTransform() {

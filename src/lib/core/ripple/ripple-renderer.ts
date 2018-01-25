@@ -168,7 +168,7 @@ export class RippleRenderer {
   }
 
   /** Fades out a ripple reference. */
-  fadeOutRipple(rippleRef: RippleRef) {
+  fadeOutRipple(rippleRef: RippleRef): void {
     // For ripples that are not active anymore, don't re-un the fade-out animation.
     if (!this._activeRipples.delete(rippleRef)) {
       return;
@@ -190,12 +190,12 @@ export class RippleRenderer {
   }
 
   /** Fades out all currently active ripples. */
-  fadeOutAll() {
+  fadeOutAll(): void {
     this._activeRipples.forEach(ripple => ripple.fadeOut());
   }
 
   /** Sets up the trigger event listeners */
-  setupTriggerEvents(element: HTMLElement) {
+  setupTriggerEvents(element: HTMLElement): void {
     if (!element || element === this._triggerElement) {
       return;
     }

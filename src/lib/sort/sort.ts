@@ -59,7 +59,7 @@ export const _MatSortMixinBase = mixinDisabled(MatSortBase);
 })
 export class MatSort extends _MatSortMixinBase implements CanDisable, OnChanges, OnDestroy {
   /** Collection of all registered sortables that this directive manages. */
-  sortables = new Map<string, MatSortable>();
+  sortables: Map<string, MatSortable> = new Map<string, MatSortable>();
 
   /** Used to notify any child components listening to state changes. */
   _stateChanges = new Subject<void>();
@@ -76,11 +76,11 @@ export class MatSort extends _MatSortMixinBase implements CanDisable, OnChanges,
   /** The sort direction of the currently active MatSortable. */
   @Input('matSortDirection')
   get direction(): SortDirection { return this._direction; }
-  set direction(direction: SortDirection) {
-    if (isDevMode() && direction && direction !== 'asc' && direction !== 'desc') {
-      throw getSortInvalidDirectionError(direction);
+  set direction(value: SortDirection) {
+    if (isDevMode() && value && value !== 'asc' && value !== 'desc') {
+      throw getSortInvalidDirectionError(value);
     }
-    this._direction = direction;
+    this._direction = value;
   }
   private _direction: SortDirection = '';
 
@@ -90,7 +90,7 @@ export class MatSort extends _MatSortMixinBase implements CanDisable, OnChanges,
    */
   @Input('matSortDisableClear')
   get disableClear(): boolean { return this._disableClear; }
-  set disableClear(v: boolean) { this._disableClear = coerceBooleanProperty(v); }
+  set disableClear(value: boolean) { this._disableClear = coerceBooleanProperty(value); }
   private _disableClear: boolean;
 
   /** Event emitted when the user changes either the active sort or sort direction. */

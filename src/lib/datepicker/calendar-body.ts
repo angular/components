@@ -79,7 +79,7 @@ export class MatCalendarBody {
   @Input() cellAspectRatio = 1;
 
   /** Emits when a new value is selected. */
-  @Output() selectedValueChange = new EventEmitter<number>();
+  @Output() selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
 
   _cellClicked(cell: MatCalendarCell): void {
     if (!this.allowDisabledSelection && !cell.enabled) {

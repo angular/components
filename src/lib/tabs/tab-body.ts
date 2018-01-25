@@ -71,7 +71,7 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
   }
 
   /** Set initial visibility or set up subscription for changing visibility. */
-  ngOnInit(): void {
+  ngOnInit() {
     if (this._host._isCenterPosition(this._host._position)) {
       this.attach(this._host._content);
     }
@@ -89,7 +89,7 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
   }
 
   /** Clean up centering subscription. */
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     if (this._centeringSub && !this._centeringSub.closed) {
       this._centeringSub.unsubscribe();
     }
@@ -135,10 +135,10 @@ export class MatTabBody implements OnInit {
 
   /** The shifted index position of the tab body, where zero represents the active center tab. */
   @Input()
-  set position(position: number) {
-    if (position < 0) {
+  set position(value: number) {
+    if (value < 0) {
       this._position = this._getLayoutDirection() == 'ltr' ? 'left' : 'right';
-    } else if (position > 0) {
+    } else if (value > 0) {
       this._position = this._getLayoutDirection() == 'ltr' ? 'right' : 'left';
     } else {
       this._position = 'center';
@@ -148,11 +148,11 @@ export class MatTabBody implements OnInit {
 
   /** The origin position from which this tab should appear when it is centered into view. */
   @Input()
-  set origin(origin: number) {
-    if (origin == null) { return; }
+  set origin(value: number) {
+    if (value == null) { return; }
 
     const dir = this._getLayoutDirection();
-    if ((dir == 'ltr' && origin <= 0) || (dir == 'rtl' && origin > 0)) {
+    if ((dir == 'ltr' && value <= 0) || (dir == 'rtl' && value > 0)) {
       this._origin = 'left';
     } else {
       this._origin = 'right';
