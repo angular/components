@@ -82,13 +82,13 @@ describe('MatMultiYearView', () => {
       fixture = TestBed.createComponent(MultiYearViewWithDateFilter);
       fixture.detectChanges();
 
-      let multiYearViewDebugElement = fixture.debugElement.query(By.directive(MatMultiYearView));
+      const multiYearViewDebugElement = fixture.debugElement.query(By.directive(MatMultiYearView));
       multiYearViewNativeElement = multiYearViewDebugElement.nativeElement;
       testComponent = fixture.componentInstance;
     });
 
     it('should disablex years with no enabled days', () => {
-      let cells = multiYearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+      const cells = multiYearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
       expect(cells[0].classList).not.toContain('mat-calendar-body-disabled');
       expect(cells[1].classList).toContain('mat-calendar-body-disabled');
     });
@@ -113,9 +113,6 @@ class StandardMultiYearView {
 class MultiYearViewWithDateFilter {
   activeDate = new Date(2017, JAN, 1);
   dateFilter(date: Date) {
-    if (date.getFullYear() == 2017) {
-      return false;
-    }
-    return true;
+    return date.getFullYear() !== 2017;
   }
 }
