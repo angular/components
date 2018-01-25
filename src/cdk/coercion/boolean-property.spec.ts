@@ -15,7 +15,7 @@ describe('coerceBooleanProperty', () => {
   });
 
   it('should coerce zero to true', () => {
-    expect(coerceBooleanProperty(0)).toBe(true);
+    expect(coerceBooleanProperty(0)).toBe(false);
   });
 
   it('should coerce the string "false" to false', () => {
