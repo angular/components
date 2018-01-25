@@ -136,18 +136,20 @@ export class MatTreeFlatDataSource<T, F> implements DataSource<F> {
   }
 
   connect(collectionViewer: CollectionViewer): Observable<F[]> {
-    return merge([
+    const changes = [
       collectionViewer.viewChange,
-      this.treeControl.expansionModel.onChange,
-      this._flattenedData])
-      .pipe(map(() => {
-        this._expandedData.next(
-          this.treeFlattener.expandFlattenedNodes(this._flattenedData.value, this.treeControl));
-        return this._expandedData.value;
-      }));
+      this.treeControl.expansionModel.onChange!,
+      this._flattenedData
+    ];
+    return merge(...changes).pipe(map(() => {
+      this._expandedData.next(
+        this.treeFlattener.expandFlattenedNodes(this._flattenedData.value, this.treeControl));
+      return this._expandedData.value;
+    }));
   }
 
   disconnect() {
+    // no op
   }
 }
 
