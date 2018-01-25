@@ -54,6 +54,7 @@ export const rollupGlobals = {
   ...rollupMatEntryPoints,
 
   'rxjs/BehaviorSubject': 'Rx',
+  'rxjs/ReplaySubject': 'Rx',
   'rxjs/Observable': 'Rx',
   'rxjs/Subject': 'Rx',
   'rxjs/Subscription': 'Rx',
