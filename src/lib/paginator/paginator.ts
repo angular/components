@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {coerceNumberProperty, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -98,7 +98,13 @@ export class MatPaginator implements OnInit, OnDestroy {
   private _pageSizeOptions: number[] = [];
 
   /** Whether to hide the page size selection UI from the user. */
-  @Input() hidePageSize = false;
+  @Input()
+  get hidePageSize(): boolean { return this._hidePageSize; }
+  set hidePageSize(value: boolean) {
+    this._hidePageSize = coerceBooleanProperty(value);
+  }
+  private _hidePageSize = false;
+
 
   /** Event emitted when the paginator changes the page size or page index. */
   @Output() readonly page = new EventEmitter<PageEvent>();
