@@ -45,6 +45,11 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
 .mat-select-arrow-wrapper {
   display: table-cell;
   vertical-align: middle;
+
+  // When used in a box appearance form-field the arrow should be centered in the box.
+  .mat-form-field-appearance-box & {
+    transform: translateY(-50%);
+  }
 }
 
 .mat-select-arrow {
@@ -100,5 +105,7 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
     // Remove the transition to prevent the placeholder
     // from overlapping when the label comes back down.
     transition: none;
+    // Prevents the '...' from showing on the parent element.
+    display: block;
   }
 }
