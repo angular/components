@@ -10,9 +10,11 @@ import {FocusableOption} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/keycodes';
 import {
+  ContentChild,
   Directive,
   ElementRef,
   EventEmitter,
+  forwardRef,
   Input,
   OnDestroy,
   Output,
@@ -47,17 +49,27 @@ export class MatChipBase {
 
 export const _MatChipMixinBase = mixinColor(mixinDisabled(MatChipBase), 'primary');
 
+const CHIP_ATTRIBUTE_NAMES = ['mat-basic-chip'];
 
 /**
- * Dummy directive to add CSS class to basic chips.
+ * Dummy directive to add CSS class to chip avatar.
  * @docs-private
  */
 @Directive({
-  selector: `mat-basic-chip, [mat-basic-chip]`,
-  host: {'class': 'mat-basic-chip'},
+  selector: 'mat-chip-avatar, [matChipAvatar]',
+  host: {'class': 'mat-chip-avatar'}
 })
-export class MatBasicChip {
-}
+export class MatChipAvatar {}
+
+/**
+ * Dummy directive to add CSS class to chip trailing icon.
+ * @docs-private
+ */
+@Directive({
+  selector: 'mat-chip-trailing-icon, [matChipTrailingIcon]',
+  host: {'class': 'mat-chip-trailing-icon'}
+})
+export class MatChipTrailingIcon {}
 
 /**
  * Material design styled Chip component. Used inside the MatChipList component.
@@ -71,6 +83,8 @@ export class MatBasicChip {
     '[attr.tabindex]': 'disabled ? null : -1',
     'role': 'option',
     '[class.mat-chip-selected]': 'selected',
+    '[class.mat-chip-with-avatar]': 'avatar',
+    '[class.mat-chip-with-trailing-icon]': 'trailingIcon || removeIcon',
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-selected]': 'ariaSelected',
@@ -85,6 +99,15 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
     CanDisable {
   /** Whether the chip has focus. */
   _hasFocus: boolean = false;
+
+  /** The chip avatar */
+  @ContentChild(MatChipAvatar) avatar: MatChipAvatar;
+
+  /** The chip's trailing icon. */
+  @ContentChild(MatChipTrailingIcon) trailingIcon: MatChipTrailingIcon;
+
+  /** The chip's remove toggler. */
+  @ContentChild(forwardRef(() => MatChipRemove)) removeIcon: MatChipRemove;
 
   /** Whether the chip is selected. */
   @Input()
@@ -167,6 +190,20 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
   constructor(public _elementRef: ElementRef) {
     super(_elementRef);
+
+    this._addHostClassName();
+  }
+
+  _addHostClassName() {
+    // Add class for the different chips
+    for (const attr of CHIP_ATTRIBUTE_NAMES) {
+      if (this._elementRef.nativeElement.hasAttribute(attr) ||
+        this._elementRef.nativeElement.tagName.toLowerCase() === attr) {
+        (this._elementRef.nativeElement as HTMLElement).classList.add(attr);
+        return;
+      }
+    }
+    (this._elementRef.nativeElement as HTMLElement).classList.add('mat-standard-chip');
   }
 
   ngOnDestroy() {
@@ -297,7 +334,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 @Directive({
   selector: '[matChipRemove]',
   host: {
-    'class': 'mat-chip-remove',
+    'class': 'mat-chip-remove mat-chip-trailing-icon',
     '(click)': '_handleClick()',
   }
 })
