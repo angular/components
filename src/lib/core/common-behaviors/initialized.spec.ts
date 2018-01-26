@@ -1,14 +1,14 @@
 import {mixinInitialized} from './initialized';
-import {OnInitialized} from '@angular/material/core';
+import {HasInitialized} from '@angular/material/core';
 
-describe('MixinOnInitialized', () => {
+describe('MixinHasInitialized', () => {
   class EmptyClass { }
-  let instance: OnInitialized;
+  let instance: HasInitialized;
 
   beforeEach(() => {
 
-    const classWithOnInitialized = mixinInitialized(EmptyClass);
-    instance = new classWithOnInitialized();
+    const classWithHasInitialized = mixinInitialized(EmptyClass);
+    instance = new classWithHasInitialized();
   });
 
   it('should emit for subscriptions made before the directive was marked as initialized', done => {
@@ -34,7 +34,8 @@ describe('MixinOnInitialized', () => {
 
     // Function that completes the test when the number of notifications meets the expectation.
     function onNotified() {
-      if (++currentNotificationCount === expectedNotificationCount) {
+      currentNotificationCount++;
+      if (currentNotificationCount === expectedNotificationCount) {
         done();
       }
     }

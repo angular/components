@@ -17,7 +17,7 @@ import {Subscriber} from 'rxjs/Subscriber';
  * an emit immediately.
  * @docs-private
  */
-export interface OnInitialized {
+export interface HasInitialized {
   /** Stream that emits once during the directive/component's ngOnInit. */
   initialized: Observable<void>;
 
@@ -31,16 +31,17 @@ export interface OnInitialized {
 
 /** Mixin to augment a directive with an initialized property that will emits when ngOnInit ends. */
 export function mixinInitialized<T extends Constructor<{}>>(base: T):
-    Constructor<OnInitialized> & T {
+    Constructor<HasInitialized> & T {
   return class extends base {
     /** Whether this directive has been marked as initialized. */
     _isInitialized = false;
 
     /**
      * List of subscribers that subscribed before the directive was initialized. Should be notified
-     * during _markInitialized.
+     * during _markInitialized. Set to null after pending subscribers are notified, and should
+     * not expect to be populated after.
      */
-    _pendingSubscribers: Subscriber<void>[] = [];
+    _pendingSubscribers: Subscriber<void>[] | null = [];
 
     /**
      * Observable stream that emits when the directive initializes. If already initialized, the
@@ -52,7 +53,7 @@ export function mixinInitialized<T extends Constructor<{}>>(base: T):
       if (this._isInitialized) {
         this._notifySubscriber(subscriber);
       } else {
-        this._pendingSubscribers.push(subscriber);
+        this._pendingSubscribers!.push(subscriber);
       }
     });
 
@@ -64,10 +65,15 @@ export function mixinInitialized<T extends Constructor<{}>>(base: T):
      * @docs-private
      */
     _markInitialized(): void {
+      if (this._isInitialized) {
+        throw Error('This directive has already been marked as initialized and ' +
+            'should not be called twice.');
+      }
+
       this._isInitialized = true;
 
-      this._pendingSubscribers.forEach(this._notifySubscriber);
-      this._pendingSubscribers = [];
+      this._pendingSubscribers!.forEach(this._notifySubscriber);
+      this._pendingSubscribers = null;
     }
 
     /** Emits and completes the subscriber stream (should only emit once). */
