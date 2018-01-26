@@ -75,10 +75,7 @@ A typical theme file will look something like this:
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue.
-// Primary hue values(lightest to darkest): 50, 100, 200, 300, 400, 500, 600, 700, 800, or 900
-// Accent hue values (lightest to darkest): A100, A200, A400, A700
-// For full palette see https://www.google.com/design/spec/style/color.html
+// hue. Available color palettes: https://www.google.com/design/spec/style/color.html
 $candy-app-primary: mat-palette($mat-indigo);
 $candy-app-accent:  mat-palette($mat-pink, A200, A100, A400);
 
