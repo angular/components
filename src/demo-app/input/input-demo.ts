@@ -52,6 +52,10 @@ export class InputDemo {
   delayedFormControl = new FormControl('');
   model = 'hello';
 
+  legacyAppearance: string;
+  standardAppearance: string;
+  boxAppearance: string;
+
   constructor() {
     setTimeout(() => this.delayedFormControl.setValue('hello'), 100);
   }
