@@ -1,6 +1,6 @@
 <div class="mat-calendar-header">
   <ng-content select="[myHeader]"></ng-content>
-  <default-header *ngIf="!headers.length">default</default-header>
+  <default-header *ngIf="!headers.length"></default-header>
   <div class="mat-calendar-controls">
     <button mat-button class="mat-calendar-period-button"
             (click)="_currentPeriodClicked()"  [attr.aria-label]="_periodButtonLabel">
