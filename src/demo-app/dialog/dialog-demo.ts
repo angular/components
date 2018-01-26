@@ -64,6 +64,7 @@ export class DialogDemo {
 
   openJazz() {
     this.dialogRef = this.dialog.open(JazzDialog, this.config);
+    this.dialogRef.componentInstance.actionsAlignment = this.actionsAlignment;
 
     this.dialogRef.beforeClose().subscribe((result: string) => {
       this.lastBeforeCloseResult = result;
@@ -96,10 +97,13 @@ export class DialogDemo {
   </mat-form-field>
 
   <p> {{ data.message }} </p>
-  <button type="button" (click)="dialogRef.close(howMuch.value)">Close dialog</button>
-  <button (click)="togglePosition()">Change dimensions</button>`
+  <mat-dialog-actions [attr.align]="actionsAlignment">
+    <button mat-button (click)="dialogRef.close(howMuch.value)">Close dialog</button>
+    <button mat-button (click)="togglePosition()">Change dimensions</button>
+  </mat-dialog-actions>`
 })
 export class JazzDialog {
+  actionsAlignment: string;
   private _dimesionToggle = false;
 
   constructor(
