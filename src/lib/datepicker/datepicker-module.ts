@@ -13,7 +13,7 @@ import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
-import {MatCalendar} from './calendar';
+import {MatCalendar, MyHeaderDirective, MyCustomHeader} from './calendar';
 import {MatCalendarBody} from './calendar-body';
 import {
   MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
@@ -60,6 +60,8 @@ import {MatYearView} from './year-view';
     MatMonthView,
     MatYearView,
     MatMultiYearView,
+    MyHeaderDirective,
+      MyCustomHeader
   ],
   providers: [
     MatDatepickerIntl,

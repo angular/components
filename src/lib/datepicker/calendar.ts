@@ -18,22 +18,22 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgZone,
-  OnChanges,
-  OnDestroy,
-  Optional,
-  Output,
-  SimpleChanges,
-  ViewChild,
-  ViewEncapsulation,
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component, ContentChildren, Directive,
+    ElementRef,
+    EventEmitter, Host,
+    Inject,
+    Input,
+    NgZone,
+    OnChanges,
+    OnDestroy,
+    Optional,
+    Output,
+    SimpleChanges,
+    ViewChild,
+    ViewEncapsulation,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {take} from 'rxjs/operators/take';
@@ -45,6 +45,29 @@ import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
 import {MatYearView} from './year-view';
 import {Directionality} from '@angular/cdk/bidi';
 
+
+@Directive({
+    selector: '[myHeader]'
+})
+export class MyHeaderDirective {
+
+  constructor() {
+    console.log('myHeaderDirective');
+  }
+
+}
+
+@Component({
+    selector: 'my-custom-header',
+    template: '<select><option>Gregorian</option><option>Julian</option></select>'
+})
+export class MyCustomHeader {
+    constructor(@Host() public calendar: MatCalendar<any>,
+                public adapter: DateAdapter<any>) {
+        console.log(this.calendar);
+        console.log(this.adapter);
+    }
+}
 
 /**
  * A calendar that is used as part of the datepicker.
@@ -64,6 +87,9 @@ import {Directionality} from '@angular/cdk/bidi';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
+
+  @ContentChildren(MyHeaderDirective) headers;
+
   private _intlChanges: Subscription;
 
   /** A date representing the period (month or year) to start the calendar in. */
