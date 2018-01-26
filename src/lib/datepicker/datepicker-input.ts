@@ -118,9 +118,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** The value of the input. */
   @Input()
-  get value(): D | null {
-    return this._value;
-  }
+  get value(): D | null { return this._value; }
   set value(value: D | null) {
     value = this._dateAdapter.deserialize(value);
     this._lastValueValid = !value || this._dateAdapter.isValid(value);
@@ -155,8 +153,8 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** Whether the datepicker-input is disabled. */
   @Input()
-  get disabled() { return !!this._disabled; }
-  set disabled(value: any) {
+  get disabled(): boolean { return !!this._disabled; }
+  set disabled(value: boolean) {
     const newValue = coerceBooleanProperty(value);
 
     if (this._disabled !== newValue) {
@@ -167,10 +165,12 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   private _disabled: boolean;
 
   /** Emits when a `change` event is fired on this `<input>`. */
-  @Output() dateChange = new EventEmitter<MatDatepickerInputEvent<D>>();
+  @Output() readonly dateChange: EventEmitter<MatDatepickerInputEvent<D>> =
+      new EventEmitter<MatDatepickerInputEvent<D>>();
 
   /** Emits when an `input` event is fired on this `<input>`. */
-  @Output() dateInput = new EventEmitter<MatDatepickerInputEvent<D>>();
+  @Output() readonly dateInput: EventEmitter<MatDatepickerInputEvent<D>> =
+      new EventEmitter<MatDatepickerInputEvent<D>>();
 
   /** Emits when the value changes (either due to user input or programmatic change). */
   _valueChange = new EventEmitter<D|null>();
@@ -263,6 +263,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this._disabledChange.complete();
   }
 
+  /** @docs-private */
   registerOnValidatorChange(fn: () => void): void {
     this._validatorOnChange = fn;
   }

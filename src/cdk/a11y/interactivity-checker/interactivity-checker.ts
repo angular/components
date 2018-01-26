@@ -60,11 +60,10 @@ export class InteractivityChecker {
       return false;
     }
 
-    let frameElement = getWindow(element).frameElement as HTMLElement;
+    const frameElement = getFrameElement(getWindow(element));
 
     if (frameElement) {
-
-      let frameType = frameElement && frameElement.nodeName.toLowerCase();
+      const frameType = frameElement && frameElement.nodeName.toLowerCase();
 
       // Frame elements inherit their tabindex onto all child elements.
       if (getTabIndexValue(frameElement) === -1) {
@@ -143,6 +142,19 @@ export class InteractivityChecker {
 
 }
 
+/**
+ * Returns the frame element from a window object. Since browsers like MS Edge throw errors if
+ * the frameElement property is being accessed from a different host address, this property
+ * should be accessed carefully.
+ */
+function getFrameElement(window: Window) {
+  try {
+    return window.frameElement as HTMLElement;
+  } catch (e) {
+    return null;
+  }
+}
+
 /** Checks whether the specified element has any geometry / rectangles. */
 function hasGeometry(element: HTMLElement): boolean {
   // Use logic from jQuery to check for an invisible element.
@@ -160,7 +172,7 @@ function isNativeFormElement(element: Node) {
       nodeName === 'textarea';
 }
 
-/** Gets whether an element is an <input type="hidden">. */
+/** Gets whether an element is an `<input type="hidden">`. */
 function isHiddenInput(element: HTMLElement): boolean {
   return isInputElement(element) && element.type == 'hidden';
 }

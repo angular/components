@@ -31,16 +31,16 @@ export class MatDialogRef<T, R = any> {
   componentInstance: T;
 
   /** Whether the user is allowed to close the dialog. */
-  disableClose = this._containerInstance._config.disableClose;
+  disableClose: boolean | undefined = this._containerInstance._config.disableClose;
 
   /** Subject for notifying the user that the dialog has finished opening. */
-  private _afterOpen = new Subject<void>();
+  private readonly _afterOpen = new Subject<void>();
 
   /** Subject for notifying the user that the dialog has finished closing. */
-  private _afterClosed = new Subject<R | undefined>();
+  private readonly _afterClosed = new Subject<R | undefined>();
 
   /** Subject for notifying the user that the dialog has started closing. */
-  private _beforeClose = new Subject<R | undefined>();
+  private readonly _beforeClose = new Subject<R | undefined>();
 
   /** Result to be passed to afterClosed. */
   private _result: R | undefined;
@@ -50,9 +50,12 @@ export class MatDialogRef<T, R = any> {
 
   constructor(
     private _overlayRef: OverlayRef,
-    private _containerInstance: MatDialogContainer,
+    public _containerInstance: MatDialogContainer,
     location?: Location,
     readonly id: string = `mat-dialog-${uniqueId++}`) {
+
+    // Pass the id along to the container.
+    _containerInstance._id = id;
 
     // Emit when opening animation completes
     _containerInstance._animationStateChanged.pipe(

@@ -13,17 +13,15 @@ import {
   Component,
   Directive,
   ElementRef,
-  forwardRef,
-  Inject,
   OnDestroy,
-  Optional,
-  Self,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {
   CanColor,
   CanDisable,
   CanDisableRipple,
+  MatRipple,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple
@@ -74,30 +72,17 @@ export class MatIconButtonCssMatStyler {}
   selector: 'button[mat-fab], a[mat-fab]',
   host: {'class': 'mat-fab'}
 })
-export class MatFab {
-  constructor(@Self() @Optional() @Inject(forwardRef(() => MatButton)) button: MatButton,
-              @Self() @Optional() @Inject(forwardRef(() => MatAnchor)) anchor: MatAnchor) {
-    // Set the default color palette for the mat-fab components.
-    (button || anchor).color = DEFAULT_ROUND_BUTTON_COLOR;
-  }
-}
+export class MatFab {}
 
 /**
- * Directive that targets mini-fab buttons and anchors. It's used to apply the `mat-` class
- * to all mini-fab buttons and also is responsible for setting the default color palette.
+ * Directive whose purpose is to add the mat- CSS styling to this selector.
  * @docs-private
  */
 @Directive({
   selector: 'button[mat-mini-fab], a[mat-mini-fab]',
   host: {'class': 'mat-mini-fab'}
 })
-export class MatMiniFab {
-  constructor(@Self() @Optional() @Inject(forwardRef(() => MatButton)) button: MatButton,
-              @Self() @Optional() @Inject(forwardRef(() => MatAnchor)) anchor: MatAnchor) {
-    // Set the default color palette for the mat-mini-fab components.
-    (button || anchor).color = DEFAULT_ROUND_BUTTON_COLOR;
-  }
-}
+export class MatMiniFab {}
 
 
 // Boilerplate for applying mixins to MatButton.
@@ -135,11 +120,19 @@ export class MatButton extends _MatButtonMixinBase
   /** Whether the button is icon button. */
   _isIconButton: boolean = this._hasHostAttributes('mat-icon-button');
 
+  /** Reference to the MatRipple instance of the button. */
+  @ViewChild(MatRipple) ripple: MatRipple;
+
   constructor(elementRef: ElementRef,
               private _platform: Platform,
               private _focusMonitor: FocusMonitor) {
     super(elementRef);
+
     this._focusMonitor.monitor(this._elementRef.nativeElement, true);
+
+    if (this._isRoundButton) {
+      this.color = DEFAULT_ROUND_BUTTON_COLOR;
+    }
   }
 
   ngOnDestroy() {

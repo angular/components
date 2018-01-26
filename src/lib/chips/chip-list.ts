@@ -223,30 +223,28 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
 
   /** Required for FormFieldControl. The ID of the chip list */
   @Input()
+  get id(): string { return this._id || this._uid; }
   set id(value: string) {
     this._id = value;
     this.stateChanges.next();
   }
-  get id() { return this._id || this._uid; }
 
   /** Required for FormFieldControl. Whether the chip list is required. */
   @Input()
-  set required(value: any) {
+  get required(): boolean { return this._required; }
+  set required(value: boolean) {
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
-  }
-  get required() {
-    return this._required;
   }
 
   /** For FormFieldControl. Use chip input's placholder if there's a chip input */
   @Input()
+  get placeholder(): string {
+    return this._chipInput ? this._chipInput.placeholder : this._placeholder;
+  }
   set placeholder(value: string) {
     this._placeholder = value;
     this.stateChanges.next();
-  }
-  get placeholder() {
-    return this._chipInput ? this._chipInput.placeholder : this._placeholder;
   }
 
   /** Whether any chips or the matChipInput inside of this chip-list has focus. */
@@ -260,9 +258,8 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     return (!this._chipInput || this._chipInput.empty) && this.chips.length === 0;
   }
 
-  get shouldLabelFloat(): boolean {
-    return !this.empty || this.focused;
-  }
+  /** @docs-private */
+  get shouldLabelFloat(): boolean { return !this.empty || this.focused; }
 
   /** Whether this chip-list is disabled. */
   @Input()
@@ -308,14 +305,15 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   }
 
   /** Event emitted when the selected chip list value has been changed by the user. */
-  @Output() change: EventEmitter<MatChipListChange> = new EventEmitter<MatChipListChange>();
+  @Output() readonly change: EventEmitter<MatChipListChange> =
+      new EventEmitter<MatChipListChange>();
 
   /**
    * Event that emits whenever the raw value of the chip-list changes. This is here primarily
    * to facilitate the two-way binding for the `value` input.
    * @docs-private
    */
-  @Output() valueChange = new EventEmitter<any>();
+  @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
 
   /** The chip components contained within this chip list. */
   @ContentChildren(MatChip) chips: QueryList<MatChip>;
@@ -389,7 +387,10 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     this._chipInput = inputElement;
   }
 
-  // Implemented as part of MatFormFieldControl.
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
 
   // Implemented as part of ControlValueAccessor
@@ -416,6 +417,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     this.stateChanges.next();
   }
 
+  /** @docs-private */
   onContainerClick() {
     this.focus();
   }
@@ -424,7 +426,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
    * Focuses the the first non-disabled chip in this chip list, or the associated input when there
    * are no eligible chips.
    */
-  focus() {
+  focus(): void {
     // TODO: ARIA says this should focus the first `selected` chip if any are selected.
     // Focus on first element if there's no chipInput inside chip-list
     if (this._chipInput && this._chipInput.focused) {

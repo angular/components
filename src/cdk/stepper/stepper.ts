@@ -123,6 +123,16 @@ export class CdkStep implements OnChanges {
     this._stepper.selected = this;
   }
 
+  /** Resets the step to its initial state. Note that this includes resetting form data. */
+  reset(): void {
+    this.interacted = false;
+    this.completed = false;
+
+    if (this.stepControl) {
+      this.stepControl.reset();
+    }
+  }
+
   ngOnChanges() {
     // Since basically all inputs of the MatStep get proxied through the view down to the
     // underlying MatStepHeader, we have to make sure that change detection runs correctly.
@@ -171,13 +181,14 @@ export class CdkStepper implements OnDestroy {
 
   /** The step that is selected. */
   @Input()
-  get selected() { return this._steps.toArray()[this.selectedIndex]; }
+  get selected(): CdkStep { return this._steps.toArray()[this.selectedIndex]; }
   set selected(step: CdkStep) {
     this.selectedIndex = this._steps.toArray().indexOf(step);
   }
 
   /** Event emitted when the selected step has changed. */
-  @Output() selectionChange = new EventEmitter<StepperSelectionEvent>();
+  @Output() selectionChange: EventEmitter<StepperSelectionEvent>
+      = new EventEmitter<StepperSelectionEvent>();
 
   /** The index of the step that the focus can be set. */
   _focusIndex: number = 0;
@@ -206,6 +217,13 @@ export class CdkStepper implements OnDestroy {
   /** Selects and focuses the previous step in list. */
   previous(): void {
     this.selectedIndex = Math.max(this._selectedIndex - 1, 0);
+  }
+
+  /** Resets the stepper to its initial state. Note that this includes clearing form data. */
+  reset(): void {
+    this.selectedIndex = 0;
+    this._steps.forEach(step => step.reset());
+    this._stateChanged();
   }
 
   /** Returns a unique id for each step label element. */
@@ -304,7 +322,8 @@ export class CdkStepper implements OnDestroy {
     if (this._linear && index >= 0) {
       return steps.slice(0, index).some(step => {
         const control = step.stepControl;
-        return control ? (control.invalid || control.pending) : !step.completed;
+        const isIncomplete = control ? (control.invalid || control.pending) : !step.completed;
+        return isIncomplete && !step.optional;
       });
     }
 

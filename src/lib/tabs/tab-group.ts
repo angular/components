@@ -103,17 +103,20 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   set dynamicHeight(value: boolean) { this._dynamicHeight = coerceBooleanProperty(value); }
   private _dynamicHeight: boolean = false;
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('mat-dynamic-height')
   get _dynamicHeightDeprecated(): boolean { return this._dynamicHeight; }
   set _dynamicHeightDeprecated(value: boolean) { this._dynamicHeight = value; }
 
   /** The index of the active tab. */
   @Input()
+  get selectedIndex(): number | null { return this._selectedIndex; }
   set selectedIndex(value: number | null) {
     this._indexToSelect = coerceNumberProperty(value, null);
   }
-  get selectedIndex(): number | null { return this._selectedIndex; }
   private _selectedIndex: number | null = null;
 
   /** Position of the tab header. */
@@ -136,23 +139,25 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   private _backgroundColor: ThemePalette;
 
   /** Output to enable support for two-way binding on `[(selectedIndex)]` */
-  @Output() selectedIndexChange: EventEmitter<number> = new EventEmitter();
+  @Output() readonly selectedIndexChange: EventEmitter<number> = new EventEmitter();
 
   /** Event emitted when focus has changed within a tab group. */
-  @Output() focusChange: EventEmitter<MatTabChangeEvent> = new EventEmitter<MatTabChangeEvent>();
+  @Output() readonly focusChange: EventEmitter<MatTabChangeEvent> =
+      new EventEmitter<MatTabChangeEvent>();
 
   /** Event emitted when the body animation has completed */
-  @Output() animationDone: EventEmitter<void> = new EventEmitter<void>();
+  @Output() readonly animationDone: EventEmitter<void> = new EventEmitter<void>();
 
   /** Event emitted when the tab selection has changed. */
-  @Output() selectedTabChange: EventEmitter<MatTabChangeEvent> =
+  @Output() readonly selectedTabChange: EventEmitter<MatTabChangeEvent> =
       new EventEmitter<MatTabChangeEvent>(true);
 
   /**
    * Event emitted when the tab selection has changed.
    * @deprecated Use `selectedTabChange` instead.
+   * @deletion-target 6.0.0
    */
-  @Output() selectChange: EventEmitter<MatTabChangeEvent> = this.selectedTabChange;
+  @Output() readonly selectChange: EventEmitter<MatTabChangeEvent> = this.selectedTabChange;
 
   private _groupId: number;
 

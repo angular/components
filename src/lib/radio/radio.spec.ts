@@ -2,9 +2,8 @@ import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/t
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {dispatchFakeEvent, FakeViewportRuler} from '@angular/cdk/testing';
-import {RIPPLE_FADE_IN_DURATION, RIPPLE_FADE_OUT_DURATION} from '@angular/material/core';
+import {dispatchFakeEvent} from '@angular/cdk/testing';
+import {defaultRippleAnimationConfig} from '@angular/material/core';
 import {MatRadioButton, MatRadioChange, MatRadioGroup, MatRadioModule} from './index';
 
 describe('MatRadio', () => {
@@ -20,9 +19,6 @@ describe('MatRadio', () => {
         StandaloneRadioButtons,
         InterleavedRadioGroup,
         TranscludingWrapper
-      ],
-      providers: [
-        {provide: ViewportRuler, useClass: FakeViewportRuler}
       ]
     });
 
@@ -209,13 +205,13 @@ describe('MatRadio', () => {
       dispatchFakeEvent(radioInputElements[0], 'keydown');
       dispatchFakeEvent(radioInputElements[0], 'focus');
 
-      tick(RIPPLE_FADE_IN_DURATION);
+      tick(defaultRippleAnimationConfig.enterDuration);
 
       expect(radioNativeElements[0].querySelectorAll('.mat-ripple-element').length)
           .toBe(1, 'Expected one ripple after keyboard focus.');
 
       dispatchFakeEvent(radioInputElements[0], 'blur');
-      tick(RIPPLE_FADE_OUT_DURATION);
+      tick(defaultRippleAnimationConfig.exitDuration);
 
       expect(radioNativeElements[0].querySelectorAll('.mat-ripple-element').length)
           .toBe(0, 'Expected no ripples on blur.');
@@ -661,11 +657,25 @@ describe('MatRadio', () => {
       let inputEl = fixture.debugElement.query(By.css('.mat-radio-input')).nativeElement;
 
       radioButtonEl.focus();
-      // Focus events don't always fire in tests, so we needc to fake it.
+      // Focus events don't always fire in tests, so we need to fake it.
       dispatchFakeEvent(radioButtonEl, 'focus');
       fixture.detectChanges();
 
       expect(document.activeElement).toBe(inputEl);
+    });
+
+    it('should allow specifying an explicit tabindex for a single radio-button', () => {
+      const radioButtonInput = fixture.debugElement
+        .query(By.css('.mat-radio-button input')).nativeElement as HTMLInputElement;
+
+      expect(radioButtonInput.tabIndex)
+        .toBe(0, 'Expected the tabindex to be set to "0" by default.');
+
+      fixture.componentInstance.tabIndex = 4;
+      fixture.detectChanges();
+
+      expect(radioButtonInput.tabIndex)
+        .toBe(4, 'Expected the tabindex to be set to "4".');
     });
   });
 
@@ -781,9 +791,11 @@ class RadioGroupWithFormControl {
 }
 
 @Component({
-  template: `<mat-radio-button tabindex="-1"></mat-radio-button>`
+  template: `<mat-radio-button [tabIndex]="tabIndex"></mat-radio-button>`
 })
-class FocusableRadioButton {}
+class FocusableRadioButton {
+  tabIndex: number;
+}
 
 @Component({
   template: `

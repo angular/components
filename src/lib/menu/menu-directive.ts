@@ -17,6 +17,7 @@ import {
   AfterContentInit,
   ChangeDetectionStrategy,
   Component,
+  ContentChild,
   ContentChildren,
   ElementRef,
   EventEmitter,
@@ -38,8 +39,10 @@ import {matMenuAnimations} from './menu-animations';
 import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
 import {MatMenuItem} from './menu-item';
 import {MatMenuPanel} from './menu-panel';
+import {MatMenuContent} from './menu-content';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {FocusOrigin} from '@angular/cdk/a11y';
 
 
 /** Default `mat-menu` options that can be overridden. */
@@ -102,7 +105,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
   /** Position of the menu in the X axis. */
   @Input()
-  get xPosition() { return this._xPosition; }
+  get xPosition(): MenuPositionX { return this._xPosition; }
   set xPosition(value: MenuPositionX) {
     if (value !== 'before' && value !== 'after') {
       throwMatMenuInvalidPositionX();
@@ -113,7 +116,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
   /** Position of the menu in the Y axis. */
   @Input()
-  get yPosition() { return this._yPosition; }
+  get yPosition(): MenuPositionY { return this._yPosition; }
   set yPosition(value: MenuPositionY) {
     if (value !== 'above' && value !== 'below') {
       throwMatMenuInvalidPositionY();
@@ -128,13 +131,17 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   /** List of the items inside of a menu. */
   @ContentChildren(MatMenuItem) items: QueryList<MatMenuItem>;
 
+  /**
+   * Menu content that will be rendered lazily.
+   * @docs-private
+   */
+  @ContentChild(MatMenuContent) lazyContent: MatMenuContent;
+
   /** Whether the menu should overlap its trigger. */
   @Input()
+  get overlapTrigger(): boolean { return this._overlapTrigger; }
   set overlapTrigger(value: boolean) {
     this._overlapTrigger = coerceBooleanProperty(value);
-  }
-  get overlapTrigger(): boolean {
-    return this._overlapTrigger;
   }
   private _overlapTrigger: boolean = this._defaultOptions.overlapTrigger;
 
@@ -162,17 +169,20 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
    * menu template that displays in the overlay container.  Otherwise, it's difficult
    * to style the containing menu from outside the component.
    * @deprecated Use `panelClass` instead.
+   * @deletion-target 6.0.0
    */
   @Input()
-  set classList(classes: string) { this.panelClass = classes; }
   get classList(): string { return this.panelClass; }
+  set classList(classes: string) { this.panelClass = classes; }
 
   /** Event emitted when the menu is closed. */
-  @Output() closed = new EventEmitter<void | 'click' | 'keydown'>();
+  @Output() readonly closed: EventEmitter<void | 'click' | 'keydown'> =
+      new EventEmitter<void | 'click' | 'keydown'>();
 
   /**
    * Event emitted when the menu is closed.
    * @deprecated Switch to `closed` instead
+   * @deletion-target 6.0.0
    */
   @Output() close = this.closed;
 
@@ -228,16 +238,23 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   }
 
   /**
-   * Focus the first item in the menu. This method is used by the menu trigger
-   * to focus the first item when the menu is opened by the ENTER key.
+   * Focus the first item in the menu.
+   * @param origin Action from which the focus originated. Used to set the correct styling.
    */
-  focusFirstItem() {
-    this._keyManager.setFirstItemActive();
+  focusFirstItem(origin: FocusOrigin = 'program'): void {
+    // When the content is rendered lazily, it takes a bit before the items are inside the DOM.
+    if (this.lazyContent) {
+      this._ngZone.onStable.asObservable()
+        .pipe(take(1))
+        .subscribe(() => this._keyManager.setFocusOrigin(origin).setFirstItemActive());
+    } else {
+      this._keyManager.setFocusOrigin(origin).setFirstItemActive();
+    }
   }
 
   /**
-   * Resets the active item in the menu. This is used when the menu is opened by mouse,
-   * allowing the user to start from the first option when pressing the down arrow.
+   * Resets the active item in the menu. This is used when the menu is opened, allowing
+   * the user to start from the first option when pressing the down arrow.
    */
   resetActiveItem() {
     this._keyManager.setActiveItem(-1);

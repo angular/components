@@ -46,34 +46,26 @@ export class MatStepHeader implements OnDestroy {
 
   /** Index of the given step. */
   @Input()
-  get index() { return this._index; }
-  set index(value: any) {
-    this._index = coerceNumberProperty(value);
-  }
+  get index(): number { return this._index; }
+  set index(value: number) { this._index = coerceNumberProperty(value); }
   private _index: number;
 
   /** Whether the given step is selected. */
   @Input()
-  get selected() { return this._selected; }
-  set selected(value: any) {
-    this._selected = coerceBooleanProperty(value);
-  }
+  get selected(): boolean { return this._selected; }
+  set selected(value: boolean) { this._selected = coerceBooleanProperty(value); }
   private _selected: boolean;
 
   /** Whether the given step label is active. */
   @Input()
-  get active() { return this._active; }
-  set active(value: any) {
-    this._active = coerceBooleanProperty(value);
-  }
+  get active(): boolean { return this._active; }
+  set active(value: boolean) { this._active = coerceBooleanProperty(value); }
   private _active: boolean;
 
   /** Whether the given step is optional. */
   @Input()
-  get optional() { return this._optional; }
-  set optional(value: any) {
-    this._optional = coerceBooleanProperty(value);
-  }
+  get optional(): boolean { return this._optional; }
+  set optional(value: boolean) { this._optional = coerceBooleanProperty(value); }
   private _optional: boolean;
 
   constructor(

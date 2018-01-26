@@ -138,7 +138,10 @@ export class MatTooltip implements OnDestroy {
     }
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('tooltip-position')
   get _positionDeprecated(): TooltipPosition { return this._position; }
   set _positionDeprecated(value: TooltipPosition) { this._position = value; }
@@ -197,6 +200,7 @@ export class MatTooltip implements OnDestroy {
       private _defaultOptions?: MatTooltipDefaultOptions) {
 
     // TODO(crisbeto): make the `_defaultOptions` a required param next time we do breaking changes.
+    // @deletion-target 6.0.0
 
     const element: HTMLElement = _elementRef.nativeElement;
 
@@ -217,7 +221,7 @@ export class MatTooltip implements OnDestroy {
       element.style.webkitUserSelect = element.style.userSelect = '';
     }
 
-    _focusMonitor.monitor(element, false).subscribe(origin => {
+    _focusMonitor.monitor(element).subscribe(origin => {
       // Note that the focus monitor runs outside the Angular zone.
       if (!origin) {
         _ngZone.run(() => this.hide(0));
@@ -360,7 +364,7 @@ export class MatTooltip implements OnDestroy {
 
   /**
    * Returns the origin position and a fallback position based on the user's position preference.
-   * The fallback position is the inverse of the origin (e.g. 'below' -> 'above').
+   * The fallback position is the inverse of the origin (e.g. `'below' -> 'above'`).
    */
   _getOrigin(): {main: OriginConnectionPosition, fallback: OriginConnectionPosition} {
     const isDirectionLtr = !this._dir || this._dir.value == 'ltr';
@@ -510,7 +514,7 @@ export class TooltipComponent {
   private _position: TooltipPosition;
 
   /** Subject for notifying that the tooltip has been hidden from the view */
-  private _onHide: Subject<any> = new Subject();
+  private readonly _onHide: Subject<any> = new Subject();
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) {}
 

@@ -62,6 +62,7 @@ export const MAT_SELECTION_LIST_VALUE_ACCESSOR: any = {
 /**
  * Change event object emitted by MatListOption whenever the selected state changes.
  * @deprecated Use the `MatSelectionListChange` event on the selection list instead.
+ * @deletion-target 6.0.0
  */
 export class MatListOptionChange {
   constructor(
@@ -130,7 +131,7 @@ export class MatListOption extends _MatListOptionMixinBase
 
   /** Whether the option is disabled. */
   @Input()
-  get disabled() { return (this.selectionList && this.selectionList.disabled) || this._disabled; }
+  get disabled() { return this._disabled || (this.selectionList && this.selectionList.disabled); }
   set disabled(value: any) {
     const newValue = coerceBooleanProperty(value);
 
@@ -155,13 +156,14 @@ export class MatListOption extends _MatListOptionMixinBase
   /**
    * Emits a change event whenever the selected state of an option changes.
    * @deprecated Use the `selectionChange` event on the `<mat-selection-list>` instead.
+   * @deletion-target 6.0.0
    */
-  @Output() selectionChange: EventEmitter<MatListOptionChange> =
+  @Output() readonly selectionChange: EventEmitter<MatListOptionChange> =
     new EventEmitter<MatListOptionChange>();
 
   constructor(private _element: ElementRef,
               private _changeDetector: ChangeDetectorRef,
-              @Optional() @Inject(forwardRef(() => MatSelectionList))
+              /** @docs-private */ @Optional() @Inject(forwardRef(() => MatSelectionList))
               public selectionList: MatSelectionList) {
     super();
   }
@@ -209,7 +211,7 @@ export class MatListOption extends _MatListOptionMixinBase
     return this._text ? this._text.nativeElement.textContent : '';
   }
 
-  /** Whether this list item should show a ripple effect when clicked.  */
+  /** Whether this list item should show a ripple effect when clicked. */
   _isRippleDisabled() {
     return this.disabled || this.disableRipple || this.selectionList.disableRipple;
   }
@@ -233,7 +235,7 @@ export class MatListOption extends _MatListOptionMixinBase
 
   _handleBlur() {
     this._hasFocus = false;
-    this.selectionList.onTouched();
+    this.selectionList._onTouched();
   }
 
   /** Retrieves the DOM element of the component host. */
@@ -279,7 +281,7 @@ export class MatListOption extends _MatListOptionMixinBase
     '[tabIndex]': 'tabIndex',
     'class': 'mat-selection-list',
     '(focus)': 'focus()',
-    '(blur)': 'onTouched()',
+    '(blur)': '_onTouched()',
     '(keydown)': '_keydown($event)',
     '[attr.aria-disabled]': 'disabled.toString()'},
   template: '<ng-content></ng-content>',
@@ -299,7 +301,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   @ContentChildren(MatListOption) options: QueryList<MatListOption>;
 
   /** Emits a change event whenever the selected state of an option changes. */
-  @Output() selectionChange: EventEmitter<MatSelectionListChange> =
+  @Output() readonly selectionChange: EventEmitter<MatSelectionListChange> =
       new EventEmitter<MatSelectionListChange>();
 
   /** The currently selected options. */
@@ -312,7 +314,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   private _tempValues: string[]|null;
 
   /** View to model callback that should be called if the list or its options lost focus. */
-  onTouched: () => void = () => {};
+  _onTouched: () => void = () => {};
 
   constructor(private _element: ElementRef, @Attribute('tabindex') tabIndex: string) {
     super();
@@ -420,7 +422,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
 
   /** Implemented as part of ControlValueAccessor. */
   registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
+    this._onTouched = fn;
   }
 
   /** Returns the option with the specified value. */

@@ -1,4 +1,4 @@
-import {A11yModule, CDK_DESCRIBEDBY_HOST_ATTRIBUTE} from './index';
+import {A11yModule, CDK_DESCRIBEDBY_HOST_ATTRIBUTE} from '../index';
 import {AriaDescriber, MESSAGES_CONTAINER_ID} from './aria-describer';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ElementRef, ViewChild} from '@angular/core';
@@ -106,6 +106,11 @@ describe('AriaDescriber', () => {
     ariaDescriber.describe(component.element1, 'My Message');
     expectMessages(['My Message']);
     expectMessage(component.element1, 'My Message');
+  });
+
+  it('should not throw when attempting to describe a non-element node', () => {
+    const node: any = document.createComment('Not an element node');
+    expect(() => ariaDescriber.describe(node, 'This looks like an element')).not.toThrow();
   });
 });
 

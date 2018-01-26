@@ -39,7 +39,8 @@ export class OverlayRef implements PortalOutlet {
       private _pane: HTMLElement,
       private _config: ImmutableObject<OverlayConfig>,
       private _ngZone: NgZone,
-      private _keyboardDispatcher: OverlayKeyboardDispatcher) {
+      private _keyboardDispatcher: OverlayKeyboardDispatcher,
+      private _document: Document) {
 
     if (_config.scrollStrategy) {
       _config.scrollStrategy.attach(this);
@@ -82,7 +83,10 @@ export class OverlayRef implements PortalOutlet {
     // before attempting to position it, as the position may depend on the size of the rendered
     // content.
     this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
-      this.updatePosition();
+      // The overlay could've been detached before the zone has stabilized.
+      if (this.hasAttached()) {
+        this.updatePosition();
+      }
     });
 
     // Enable pointer events for the overlay pane element.
@@ -259,7 +263,9 @@ export class OverlayRef implements PortalOutlet {
 
   /** Attaches a backdrop for this overlay. */
   private _attachBackdrop() {
-    this._backdropElement = document.createElement('div');
+    const showingClass = 'cdk-overlay-backdrop-showing';
+
+    this._backdropElement = this._document.createElement('div');
     this._backdropElement.classList.add('cdk-overlay-backdrop');
 
     if (this._config.backdropClass) {
@@ -275,13 +281,17 @@ export class OverlayRef implements PortalOutlet {
     this._backdropElement.addEventListener('click', () => this._backdropClick.next(null));
 
     // Add class to fade-in the backdrop after one frame.
-    this._ngZone.runOutsideAngular(() => {
-      requestAnimationFrame(() => {
-        if (this._backdropElement) {
-          this._backdropElement.classList.add('cdk-overlay-backdrop-showing');
-        }
+    if (typeof requestAnimationFrame !== 'undefined') {
+      this._ngZone.runOutsideAngular(() => {
+        requestAnimationFrame(() => {
+          if (this._backdropElement) {
+            this._backdropElement.classList.add(showingClass);
+          }
+        });
       });
-    });
+    } else {
+      this._backdropElement.classList.add(showingClass);
+    }
   }
 
   /**

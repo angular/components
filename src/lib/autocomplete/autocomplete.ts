@@ -36,7 +36,7 @@ import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
  */
 let _uniqueAutocompleteIdCounter = 0;
 
-/** Event object that is emitted when an autocomplete option is selected */
+/** Event object that is emitted when an autocomplete option is selected. */
 export class MatAutocompleteSelectedEvent {
   constructor(
     /** Reference to the autocomplete panel that emitted the event. */
@@ -99,7 +99,7 @@ export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterC
   @Input() displayWith: ((value: any) => string) | null = null;
 
   /** Event that is emitted whenever an option from the list is selected. */
-  @Output() optionSelected: EventEmitter<MatAutocompleteSelectedEvent> =
+  @Output() readonly optionSelected: EventEmitter<MatAutocompleteSelectedEvent> =
       new EventEmitter<MatAutocompleteSelectedEvent>();
 
   /**

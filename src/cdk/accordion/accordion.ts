@@ -23,8 +23,9 @@ export class CdkAccordion {
   /** A readonly id value to use for unique selection coordination. */
   readonly id = `cdk-accordion-${nextId++}`;
 
-  /** Whether the accordion should allow multiple expanded accordion items simulateously. */
-  @Input() get multi(): boolean { return this._multi; }
+  /** Whether the accordion should allow multiple expanded accordion items simultaneously. */
+  @Input()
+  get multi(): boolean { return this._multi; }
   set multi(multi: boolean) { this._multi = coerceBooleanProperty(multi); }
-  private  _multi: boolean = false;
+  private _multi: boolean = false;
 }

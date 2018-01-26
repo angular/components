@@ -49,7 +49,7 @@ describe('MatDatepicker', () => {
   }
 
   afterEach(inject([OverlayContainer], (container: OverlayContainer) => {
-    container.getContainerElement().parentNode!.removeChild(container.getContainerElement());
+    container.ngOnDestroy();
   }));
 
   describe('with MatNativeDateModule', () => {
@@ -740,6 +740,38 @@ describe('MatDatepicker', () => {
 
           expect(toggle.getAttribute('aria-label')).toBe('Open the calendar, perhaps?');
         }));
+
+      it('should toggle the active state of the datepicker toggle', fakeAsync(() => {
+        const toggle = fixture.debugElement.query(By.css('mat-datepicker-toggle')).nativeElement;
+
+        expect(toggle.classList).not.toContain('mat-datepicker-toggle-active');
+
+        fixture.componentInstance.datepicker.open();
+        fixture.detectChanges();
+        flush();
+
+        expect(toggle.classList).toContain('mat-datepicker-toggle-active');
+
+        fixture.componentInstance.datepicker.close();
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(toggle.classList).not.toContain('mat-datepicker-toggle-active');
+      }));
+    });
+
+    describe('datepicker with custom mat-datepicker-toggle icon', () => {
+      it('should be able to override the mat-datepicker-toggle icon', fakeAsync(() => {
+        const fixture = createComponent(DatepickerWithCustomIcon, [MatNativeDateModule]);
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelector('.mat-datepicker-toggle .custom-icon'))
+            .toBeTruthy('Expected custom icon to be rendered.');
+
+        expect(fixture.nativeElement.querySelector('.mat-datepicker-toggle mat-icon'))
+            .toBeFalsy('Expected default icon to be removed.');
+      }));
     });
 
     describe('datepicker inside mat-form-field', () => {
@@ -1289,6 +1321,16 @@ class DatepickerWithToggle {
   touchUI = true;
 }
 
+@Component({
+  template: `
+    <input [matDatepicker]="d">
+    <mat-datepicker-toggle [for]="d">
+      <div class="custom-icon" matDatepickerToggleIcon></div>
+    </mat-datepicker-toggle>
+    <mat-datepicker #d></mat-datepicker>
+  `,
+})
+class DatepickerWithCustomIcon {}
 
 @Component({
   template: `

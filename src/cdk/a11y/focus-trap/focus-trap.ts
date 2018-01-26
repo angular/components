@@ -18,22 +18,16 @@ import {
 } from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {take} from 'rxjs/operators/take';
-import {InteractivityChecker} from './interactivity-checker';
+import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
 import {DOCUMENT} from '@angular/common';
 
-/**
- * Node type of element nodes. Used instead of Node.ELEMENT_NODE
- * which is unsupported in Universal.
- * @docs-private
- */
-const ELEMENT_NODE_TYPE = 1;
 
 /**
  * Class that allows for trapping focus within a DOM element.
  *
  * This class currently uses a relatively simple approach to focus trapping.
  * It assumes that the tab order is the same as DOM order, which is not necessarily true.
- * Things like tabIndex > 0, flex `order`, and shadow roots can cause to two to misalign.
+ * Things like `tabIndex > 0`, flex `order`, and shadow roots can cause to two to misalign.
  */
 export class FocusTrap {
   private _startAnchor: HTMLElement | null;
@@ -229,7 +223,7 @@ export class FocusTrap {
     let children = root.children || root.childNodes;
 
     for (let i = 0; i < children.length; i++) {
-      let tabbableChild = children[i].nodeType === ELEMENT_NODE_TYPE ?
+      let tabbableChild = children[i].nodeType === this._document.ELEMENT_NODE ?
         this._getFirstTabbableElement(children[i] as HTMLElement) :
         null;
 
@@ -251,7 +245,7 @@ export class FocusTrap {
     let children = root.children || root.childNodes;
 
     for (let i = children.length - 1; i >= 0; i--) {
-      let tabbableChild = children[i].nodeType === ELEMENT_NODE_TYPE ?
+      let tabbableChild = children[i].nodeType === this._document.ELEMENT_NODE ?
         this._getLastTabbableElement(children[i] as HTMLElement) :
         null;
 
@@ -314,6 +308,7 @@ export class FocusTrapFactory {
  * Directive for trapping focus within a region.
  * @docs-private
  * @deprecated
+ * @deletion-target 6.0.0
  */
 @Directive({
   selector: 'cdk-focus-trap',

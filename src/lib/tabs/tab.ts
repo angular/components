@@ -43,7 +43,7 @@ export const _MatTabMixinBase = mixinDisabled(MatTabBase);
   exportAs: 'matTab',
 })
 export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
-  /** Content for the tab label given by <ng-template mat-tab-label>. */
+  /** Content for the tab label given by `<ng-template mat-tab-label>`. */
   @ContentChild(MatTabLabel) templateLabel: MatTabLabel;
 
   /**
@@ -58,18 +58,18 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
   @Input('label') textLabel: string = '';
 
   /** The portal that will be the hosted content of the tab */
-  private _contentPortal: TemplatePortal<any> | null = null;
+  private _contentPortal: TemplatePortal | null = null;
 
   /** @docs-private */
-  get content(): TemplatePortal<any> | null {
+  get content(): TemplatePortal | null {
     return this._contentPortal;
   }
 
   /** Emits whenever the label changes. */
-  _labelChange = new Subject<void>();
+  readonly _labelChange = new Subject<void>();
 
   /** Emits whenever the disable changes */
-  _disableChange = new Subject<void>();
+  readonly _disableChange = new Subject<void>();
 
   /**
    * The relatively indexed position where 0 represents the center, negative is left, and positive

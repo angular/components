@@ -82,8 +82,16 @@ describe('MatHorizontalStepper', () => {
       assertNextStepperButtonClick(fixture);
     });
 
+    it('should set the next stepper button type to "submit"', () => {
+      assertStepperButtonType(fixture, MatStepperNext, 'submit');
+    });
+
     it('should go to previous available step when the previous button is clicked', () => {
       assertPreviousStepperButtonClick(fixture);
+    });
+
+    it('should set the previous stepper button type to "button"', () => {
+      assertStepperButtonType(fixture, MatStepperPrevious, 'button');
     });
 
     it('should set the correct step position for animation', () => {
@@ -250,6 +258,10 @@ describe('MatHorizontalStepper', () => {
 
           expect(stepper.selectedIndex).toBe(1);
         });
+
+    it('should be able to reset the stepper to its initial state', () => {
+      assertLinearStepperResetable(fixture);
+    });
   });
 });
 
@@ -314,8 +326,16 @@ describe('MatVerticalStepper', () => {
       assertNextStepperButtonClick(fixture);
     });
 
+    it('should set the next stepper button type to "submit"', () => {
+      assertStepperButtonType(fixture, MatStepperNext, 'submit');
+    });
+
     it('should go to previous available step when the previous button is clicked', () => {
       assertPreviousStepperButtonClick(fixture);
+    });
+
+    it('should set the previous stepper button type to "button"', () => {
+      assertStepperButtonType(fixture, MatStepperPrevious, 'button');
     });
 
     it('should set the correct step position for animation', () => {
@@ -413,6 +433,10 @@ describe('MatVerticalStepper', () => {
     it('should be able to move to next step even when invalid if current step is optional', () => {
       assertOptionalStepValidity(testComponent, fixture);
     });
+
+    it('should be able to reset the stepper to its initial state', () => {
+      assertLinearStepperResetable(fixture);
+    });
   });
 });
 
@@ -501,6 +525,13 @@ function assertNextStepperButtonClick(fixture: ComponentFixture<any>) {
   fixture.detectChanges();
 
   expect(stepperComponent.selectedIndex).toBe(2);
+}
+
+/** Asserts that the specified type of stepper button has the given type. */
+function assertStepperButtonType(fixture: ComponentFixture<any>, stepperClass: any, type: string) {
+  const buttonElement = fixture.debugElement.query(By.directive(stepperClass)).nativeElement;
+
+  expect(buttonElement.type).toBe(type, `Expected the button to have "${type}" set as type.`);
 }
 
 /** Asserts that clicking on MatStepperPrevious button updates `selectedIndex` correctly. */
@@ -780,13 +811,14 @@ function assertEditableStepChange(fixture: ComponentFixture<any>) {
 }
 
 /**
- * Asserts that it is possible to skip an optional step in linear stepper if there is no input
- * or the input is valid.
+ * Asserts that it is possible to skip an optional step in linear
+ * stepper if there is no input or the input is invalid.
  */
 function assertOptionalStepValidity(testComponent:
                                         LinearMatHorizontalStepperApp | LinearMatVerticalStepperApp,
                                     fixture: ComponentFixture<any>) {
-  let stepperComponent = fixture.debugElement.query(By.directive(MatStepper)).componentInstance;
+  const stepperComponent: MatStepper = fixture.debugElement
+      .query(By.directive(MatStepper)).componentInstance;
 
   testComponent.oneGroup.get('oneCtrl')!.setValue('input');
   testComponent.twoGroup.get('twoCtrl')!.setValue('input');
@@ -794,10 +826,11 @@ function assertOptionalStepValidity(testComponent:
   stepperComponent.selectedIndex = 2;
   fixture.detectChanges();
 
+  expect(stepperComponent._steps.toArray()[2].optional).toBe(true);
   expect(stepperComponent.selectedIndex).toBe(2);
   expect(testComponent.threeGroup.get('threeCtrl')!.valid).toBe(true);
 
-  let nextButtonNativeEl = fixture.debugElement
+  const nextButtonNativeEl = fixture.debugElement
       .queryAll(By.directive(MatStepperNext))[2].nativeElement;
   nextButtonNativeEl.click();
   fixture.detectChanges();
@@ -812,15 +845,7 @@ function assertOptionalStepValidity(testComponent:
 
   expect(testComponent.threeGroup.get('threeCtrl')!.valid).toBe(false);
   expect(stepperComponent.selectedIndex)
-      .toBe(2, 'Expected selectedIndex to remain unchanged when optional step input is invalid.');
-
-  testComponent.threeGroup.get('threeCtrl')!.setValue('valid');
-  nextButtonNativeEl.click();
-  fixture.detectChanges();
-
-  expect(testComponent.threeGroup.get('threeCtrl')!.valid).toBe(true);
-  expect(stepperComponent.selectedIndex)
-      .toBe(3, 'Expected selectedIndex to change when optional step input is valid.');
+      .toBe(3, 'Expected selectedIndex to change when optional step input is invalid.');
 }
 
 /** Asserts that step header set the correct icon depending on the state of step. */
@@ -841,14 +866,54 @@ function assertCorrectStepIcon(fixture: ComponentFixture<any>,
 function asyncValidator(minLength: number, validationTrigger: Observable<any>): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
     return validationTrigger.pipe(
-      map(() =>  {
-        const success = control.value && control.value.length >= minLength;
-        return success ? null : { 'asyncValidation': {}};
-      }),
+      map(() => control.value && control.value.length >= minLength ? null : {asyncValidation: {}}),
       take(1)
     );
   };
 }
+
+
+/** Asserts that a stepper can be reset. */
+function assertLinearStepperResetable(
+    fixture: ComponentFixture<LinearMatHorizontalStepperApp|LinearMatVerticalStepperApp>) {
+
+  const testComponent = fixture.componentInstance;
+  const stepperComponent = fixture.debugElement.query(By.directive(MatStepper)).componentInstance;
+  const steps = stepperComponent._steps.toArray();
+
+  testComponent.oneGroup.get('oneCtrl')!.setValue('value');
+  fixture.detectChanges();
+
+  stepperComponent.next();
+  fixture.detectChanges();
+
+  stepperComponent.next();
+  fixture.detectChanges();
+
+  expect(stepperComponent.selectedIndex).toBe(1);
+  expect(steps[0].interacted).toBe(true);
+  expect(steps[0].completed).toBe(true);
+  expect(testComponent.oneGroup.get('oneCtrl')!.valid).toBe(true);
+  expect(testComponent.oneGroup.get('oneCtrl')!.value).toBe('value');
+
+  expect(steps[1].interacted).toBe(true);
+  expect(steps[1].completed).toBe(false);
+  expect(testComponent.twoGroup.get('twoCtrl')!.valid).toBe(false);
+
+  stepperComponent.reset();
+  fixture.detectChanges();
+
+  expect(stepperComponent.selectedIndex).toBe(0);
+  expect(steps[0].interacted).toBe(false);
+  expect(steps[0].completed).toBe(false);
+  expect(testComponent.oneGroup.get('oneCtrl')!.valid).toBe(false);
+  expect(testComponent.oneGroup.get('oneCtrl')!.value).toBeFalsy();
+
+  expect(steps[1].interacted).toBe(false);
+  expect(steps[1].completed).toBe(false);
+  expect(testComponent.twoGroup.get('twoCtrl')!.valid).toBe(false);
+}
+
 
 @Component({
   template: `

@@ -1,10 +1,15 @@
 import {TAB} from '@angular/cdk/keycodes';
-import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
+import {
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
+  dispatchMouseEvent,
+  patchElementFocus,
+} from '@angular/cdk/testing';
 import {Component} from '@angular/core';
 import {ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {FocusMonitor, FocusOrigin, TOUCH_BUFFER_MS} from './focus-monitor';
-import {A11yModule} from './index';
+import {A11yModule} from '../index';
 
 
 describe('FocusMonitor', () => {
@@ -30,7 +35,7 @@ describe('FocusMonitor', () => {
     focusMonitor = fm;
 
     changeHandler = jasmine.createSpy('focus origin change handler');
-    focusMonitor.monitor(buttonElement, false).subscribe(changeHandler);
+    focusMonitor.monitor(buttonElement).subscribe(changeHandler);
     patchElementFocus(buttonElement);
   }));
 
@@ -186,14 +191,28 @@ describe('FocusMonitor', () => {
     fixture.detectChanges();
     tick();
 
-    expect(buttonElement.classList.length)
-        .toBe(2, 'button should have exactly 2 focus classes');
+    expect(buttonElement.classList.length).toBe(2, 'button should have exactly 2 focus classes');
 
     focusMonitor.stopMonitoring(buttonElement);
     fixture.detectChanges();
 
     expect(buttonElement.classList.length).toBe(0, 'button should not have any focus classes');
   }));
+
+  it('should remove classes when destroyed', fakeAsync(() => {
+    buttonElement.focus();
+    fixture.detectChanges();
+    tick();
+
+    expect(buttonElement.classList.length).toBe(2, 'button should have exactly 2 focus classes');
+
+    // Destroy manually since destroying the fixture won't do it.
+    focusMonitor.ngOnDestroy();
+    fixture.detectChanges();
+
+    expect(buttonElement.classList.length).toBe(0, 'button should not have any focus classes');
+  }));
+
 });
 
 
@@ -399,14 +418,3 @@ class ComplexComponentWithMonitorElementFocus {}
   template: `<div tabindex="0" cdkMonitorSubtreeFocus><button></button></div>`
 })
 class ComplexComponentWithMonitorSubtreeFocus {}
-
-
-/**
- * Patches an elements focus and blur methods to emit events consistently and predictably.
- * This is necessary, because some browsers, like IE11, will call the focus handlers asynchronously,
- * while others won't fire them at all if the browser window is not focused.
- */
-function patchElementFocus(element: HTMLElement) {
-  element.focus = () => dispatchFakeEvent(element, 'focus');
-  element.blur = () => dispatchFakeEvent(element, 'blur');
-}

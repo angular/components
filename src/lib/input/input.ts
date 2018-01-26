@@ -100,15 +100,20 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
    * Stream that emits whenever the state of the input changes such that the wrapping `MatFormField`
    * needs to run change detection.
    */
-  stateChanges = new Subject<void>();
+  readonly stateChanges = new Subject<void>();
 
   /** A name for this control that can be used by `mat-form-field`. */
   controlType = 'mat-input';
 
   /** Whether the element is disabled. */
   @Input()
-  get disabled() { return this.ngControl ? this.ngControl.disabled : this._disabled; }
-  set disabled(value: any) {
+  get disabled(): boolean {
+    if (this.ngControl && this.ngControl.disabled !== null) {
+      return this.ngControl.disabled;
+    }
+    return this._disabled;
+  }
+  set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
 
     // Browsers may not fire the blur event if the input is disabled too quickly.
@@ -121,7 +126,7 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
 
   /** Unique id of the element. */
   @Input()
-  get id() { return this._id; }
+  get id(): string { return this._id; }
   set id(value: string) { this._id = value || this._uid; }
 
   /** Placeholder attribute of the element. */
@@ -129,12 +134,12 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
 
   /** Whether the element is required. */
   @Input()
-  get required() { return this._required; }
-  set required(value: any) { this._required = coerceBooleanProperty(value); }
+  get required(): boolean { return this._required; }
+  set required(value: boolean) { this._required = coerceBooleanProperty(value); }
 
   /** Input type of the element. */
   @Input()
-  get type() { return this._type; }
+  get type(): string { return this._type; }
   set type(value: string) {
     this._type = value || 'text';
     this._validateType();
@@ -152,8 +157,8 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
 
   /** The input element's value. */
   @Input()
-  get value(): any { return this._inputValueAccessor.value; }
-  set value(value: any) {
+  get value(): string { return this._inputValueAccessor.value; }
+  set value(value: string) {
     if (value !== this.value) {
       this._inputValueAccessor.value = value;
       this.stateChanges.next();
@@ -162,8 +167,8 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
 
   /** Whether the element is readonly. */
   @Input()
-  get readonly() { return this._readonly; }
-  set readonly(value: any) { this._readonly = coerceBooleanProperty(value); }
+  get readonly(): boolean { return this._readonly; }
+  set readonly(value: boolean) { this._readonly = coerceBooleanProperty(value); }
 
   protected _neverEmptyInputTypes = [
     'date',
@@ -224,11 +229,12 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
       // error triggers that we can't subscribe to (e.g. parent form submissions). This means
       // that whatever logic is in here has to be super lean or we risk destroying the performance.
       this.updateErrorState();
-    } else {
-      // When the input isn't used together with `@angular/forms`, we need to check manually for
-      // changes to the native `value` property in order to update the floating label.
-      this._dirtyCheckNativeValue();
     }
+
+    // We need to dirty-check the native element's value, because there are some cases where
+    // we won't be notified when it changes (e.g. the consumer isn't using forms or they're
+    // updating the value using `emitEvent: false`).
+    this._dirtyCheckNativeValue();
   }
 
   focus() { this._elementRef.nativeElement.focus(); }
@@ -296,12 +302,21 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     return !this._isNeverEmpty() && !this._elementRef.nativeElement.value && !this._isBadInput();
   }
 
-  // Implemented as part of MatFormFieldControl.
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   get shouldLabelFloat(): boolean { return this.focused || !this.empty; }
 
-  // Implemented as part of MatFormFieldControl.
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
 
-  // Implemented as part of MatFormFieldControl.
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   onContainerClick() { this.focus(); }
 }

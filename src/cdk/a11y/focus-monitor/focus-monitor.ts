@@ -42,7 +42,7 @@ type MonitoredElementInfo = {
 
 /** Monitors mouse and keyboard events to determine the cause of focus events. */
 @Injectable()
-export class FocusMonitor {
+export class FocusMonitor implements OnDestroy {
   /** The focus origin that the next focus event is a result of. */
   private _origin: FocusOrigin = null;
 
@@ -58,8 +58,8 @@ export class FocusMonitor {
   /** The timeout id of the touch timeout, used to cancel timeout later. */
   private _touchTimeout: number;
 
-  /** Weak map of elements being monitored to their info. */
-  private _elementInfo = new WeakMap<Element, MonitoredElementInfo>();
+  /** Map of elements being monitored to their info. */
+  private _elementInfo = new Map<HTMLElement, MonitoredElementInfo>();
 
   /** A map of global objects to lists of current listeners. */
   private _unregisterGlobalListeners = () => {};
@@ -72,6 +72,7 @@ export class FocusMonitor {
   /**
    * @docs-private
    * @deprecated renderer param no longer needed.
+   * @deletion-target 6.0.0
    */
   monitor(element: HTMLElement, renderer: Renderer2, checkChildren: boolean):
       Observable<FocusOrigin>;
@@ -82,10 +83,10 @@ export class FocusMonitor {
    * @returns An observable that emits when the focus state of the element changes.
    *     When the element is blurred, null will be emitted.
    */
-  monitor(element: HTMLElement, checkChildren: boolean): Observable<FocusOrigin>;
+  monitor(element: HTMLElement, checkChildren?: boolean): Observable<FocusOrigin>;
   monitor(
       element: HTMLElement,
-      renderer: Renderer2 | boolean,
+      renderer?: Renderer2 | boolean,
       checkChildren?: boolean): Observable<FocusOrigin> {
     // TODO(mmalerba): clean up after deprecated signature is removed.
     if (!(renderer instanceof Renderer2)) {
@@ -135,7 +136,7 @@ export class FocusMonitor {
    * @param element The element to stop monitoring.
    */
   stopMonitoring(element: HTMLElement): void {
-    let elementInfo = this._elementInfo.get(element);
+    const elementInfo = this._elementInfo.get(element);
 
     if (elementInfo) {
       elementInfo.unlisten();
@@ -155,6 +156,10 @@ export class FocusMonitor {
   focusVia(element: HTMLElement, origin: FocusOrigin): void {
     this._setOriginForCurrentEventQueue(origin);
     element.focus();
+  }
+
+  ngOnDestroy() {
+    this._elementInfo.forEach((_info, element) => this.stopMonitoring(element));
   }
 
   /** Register necessary event listeners on the document and window. */

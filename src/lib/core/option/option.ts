@@ -8,6 +8,7 @@
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
+import {Subject} from 'rxjs/Subject';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -21,6 +22,7 @@ import {
   ViewEncapsulation,
   InjectionToken,
   Inject,
+  AfterViewChecked,
 } from '@angular/core';
 import {MatOptgroup} from './optgroup';
 
@@ -76,16 +78,18 @@ export const MAT_OPTION_PARENT_COMPONENT =
     '(keydown)': '_handleKeydown($event)',
     'class': 'mat-option',
   },
+  styleUrls: ['option.css'],
   templateUrl: 'option.html',
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatOption {
+export class MatOption implements AfterViewChecked {
   private _selected = false;
   private _active = false;
   private _disabled = false;
   private _id = `mat-option-${_uniqueIdCounter++}`;
+  private _mostRecentViewValue = '';
 
   /** Whether the wrapping component is in multiple selection mode. */
   get multiple() { return this._parent && this._parent.multiple; }
@@ -108,7 +112,10 @@ export class MatOption {
   get disableRipple() { return this._parent && this._parent.disableRipple; }
 
   /** Event emitted when the option is selected or deselected. */
-  @Output() onSelectionChange = new EventEmitter<MatOptionSelectionChange>();
+  @Output() readonly onSelectionChange = new EventEmitter<MatOptionSelectionChange>();
+
+  /** Emits when the state of the option changes and any parents have to be notified. */
+  readonly _stateChanges = new Subject<void>();
 
   constructor(
     private _element: ElementRef,
@@ -198,8 +205,8 @@ export class MatOption {
   }
 
   /**
-   * Selects the option while indicating the selection came from the user. Used to
-   * determine if the select's view -> model callback should be invoked.
+   * `Selects the option while indicating the selection came from the user. Used to
+   * determine if the select's view -> model callback should be invoked.`
    */
   _selectViaInteraction(): void {
     if (!this.disabled) {
@@ -217,6 +224,22 @@ export class MatOption {
   /** Gets the host DOM element. */
   _getHostElement(): HTMLElement {
     return this._element.nativeElement;
+  }
+
+  ngAfterViewChecked() {
+    // Since parent components could be using the option's label to display the selected values
+    // (e.g. `mat-select`) and they don't have a way of knowing if the option's label has changed
+    // we have to check for changes in the DOM ourselves and dispatch an event. These checks are
+    // relatively cheap, however we still limit them only to selected options in order to avoid
+    // hitting the DOM too often.
+    if (this._selected) {
+      const viewValue = this.viewValue;
+
+      if (viewValue !== this._mostRecentViewValue) {
+        this._mostRecentViewValue = viewValue;
+        this._stateChanges.next();
+      }
+    }
   }
 
   /** Emits the selection change event. */

@@ -95,7 +95,7 @@ export class CdkOverlayOrigin {
 })
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _overlayRef: OverlayRef;
-  private _templatePortal: TemplatePortal<any>;
+  private _templatePortal: TemplatePortal;
   private _hasBackdrop = false;
   private _backdropSubscription = Subscription.EMPTY;
   private _positionSubscription = Subscription.EMPTY;
@@ -156,64 +156,100 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   get hasBackdrop() { return this._hasBackdrop; }
   set hasBackdrop(value: any) { this._hasBackdrop = coerceBooleanProperty(value); }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('origin')
   get _deprecatedOrigin(): CdkOverlayOrigin { return this.origin; }
   set _deprecatedOrigin(_origin: CdkOverlayOrigin) { this.origin = _origin; }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('positions')
   get _deprecatedPositions(): ConnectionPositionPair[] { return this.positions; }
   set _deprecatedPositions(_positions: ConnectionPositionPair[]) { this.positions = _positions; }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('offsetX')
   get _deprecatedOffsetX(): number { return this.offsetX; }
   set _deprecatedOffsetX(_offsetX: number) { this.offsetX = _offsetX; }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('offsetY')
   get _deprecatedOffsetY(): number { return this.offsetY; }
   set _deprecatedOffsetY(_offsetY: number) { this.offsetY = _offsetY; }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('width')
   get _deprecatedWidth(): number | string { return this.width; }
   set _deprecatedWidth(_width: number | string) { this.width = _width; }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('height')
   get _deprecatedHeight(): number | string { return this.height; }
   set _deprecatedHeight(_height: number | string) { this.height = _height; }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('minWidth')
   get _deprecatedMinWidth(): number | string { return this.minWidth; }
   set _deprecatedMinWidth(_minWidth: number | string) { this.minWidth = _minWidth; }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('minHeight')
   get _deprecatedMinHeight(): number | string { return this.minHeight; }
   set _deprecatedMinHeight(_minHeight: number | string) { this.minHeight = _minHeight; }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('backdropClass')
   get _deprecatedBackdropClass(): string { return this.backdropClass; }
   set _deprecatedBackdropClass(_backdropClass: string) { this.backdropClass = _backdropClass; }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('scrollStrategy')
   get _deprecatedScrollStrategy(): ScrollStrategy { return this.scrollStrategy; }
   set _deprecatedScrollStrategy(_scrollStrategy: ScrollStrategy) {
     this.scrollStrategy = _scrollStrategy;
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('open')
   get _deprecatedOpen(): boolean { return this.open; }
   set _deprecatedOpen(_open: boolean) { this.open = _open; }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('hasBackdrop')
   get _deprecatedHasBackdrop() { return this.hasBackdrop; }
   set _deprecatedHasBackdrop(_hasBackdrop: any) { this.hasBackdrop = _hasBackdrop; }
@@ -256,6 +292,20 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    if (this._position) {
+      if (changes['positions'] || changes['_deprecatedPositions']) {
+        this._position.withPositions(this.positions);
+      }
+
+      if (changes['origin'] || changes['_deprecatedOrigin']) {
+        this._position.setOrigin(this.origin.elementRef);
+
+        if (this.open) {
+          this._position.apply();
+        }
+      }
+    }
+
     if (changes['open'] || changes['_deprecatedOpen']) {
       this.open ? this._attachOverlay() : this._detachOverlay();
     }
@@ -304,21 +354,14 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   /** Returns the position strategy of the overlay to be set on the overlay config */
   private _createPositionStrategy(): ConnectedPositionStrategy {
-    const pos = this.positions[0];
-    const originPoint = {originX: pos.originX, originY: pos.originY};
-    const overlayPoint = {overlayX: pos.overlayX, overlayY: pos.overlayY};
-
+    const primaryPosition = this.positions[0];
+    const originPoint = {originX: primaryPosition.originX, originY: primaryPosition.originY};
+    const overlayPoint = {overlayX: primaryPosition.overlayX, overlayY: primaryPosition.overlayY};
     const strategy = this._overlay.position()
       .connectedTo(this.origin.elementRef, originPoint, overlayPoint)
       .withOffsetX(this.offsetX)
       .withOffsetY(this.offsetY);
 
-    this._handlePositionChanges(strategy);
-
-    return strategy;
-  }
-
-  private _handlePositionChanges(strategy: ConnectedPositionStrategy): void {
     for (let i = 1; i < this.positions.length; i++) {
       strategy.withFallbackPosition(
           {originX: this.positions[i].originX, originY: this.positions[i].originY},
@@ -326,8 +369,10 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       );
     }
 
-    this._positionSubscription =
-        strategy.onPositionChange.subscribe(pos => this.positionChange.emit(pos));
+    this._positionSubscription = strategy.onPositionChange
+        .subscribe(pos => this.positionChange.emit(pos));
+
+    return strategy;
   }
 
   /** Attaches the overlay and subscribes to backdrop clicks if backdrop exists */

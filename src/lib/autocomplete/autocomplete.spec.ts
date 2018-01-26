@@ -31,7 +31,7 @@ import {
   flush,
 } from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatOption} from '@angular/material/core';
+import {MatOption, MatOptionSelectionChange} from '@angular/material/core';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -128,6 +128,19 @@ describe('MatAutocomplete', () => {
 
       expect(trigger.panelOpen).toBe(false, 'Expected panel state to start out closed.');
       dispatchFakeEvent(input, 'focusin');
+      flush();
+
+      fixture.detectChanges();
+      expect(trigger.panelOpen).toBe(false, 'Expected panel to stay closed.');
+    }));
+
+    it('should not open using the arrow keys when the input is readonly', fakeAsync(() => {
+      const trigger = fixture.componentInstance.trigger;
+      input.readOnly = true;
+      fixture.detectChanges();
+
+      expect(trigger.panelOpen).toBe(false, 'Expected panel state to start out closed.');
+      dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
       flush();
 
       fixture.detectChanges();
@@ -902,6 +915,25 @@ describe('MatAutocomplete', () => {
       expect(stopPropagationSpy).toHaveBeenCalled();
     }));
 
+    it('should close the panel when pressing ALT + UP_ARROW', fakeAsync(() => {
+      const trigger = fixture.componentInstance.trigger;
+      const upArrowEvent = createKeyboardEvent('keydown', UP_ARROW);
+      Object.defineProperty(upArrowEvent, 'altKey', {get: () => true});
+
+      input.focus();
+      flush();
+      fixture.detectChanges();
+
+      expect(document.activeElement).toBe(input, 'Expected input to be focused.');
+      expect(trigger.panelOpen).toBe(true, 'Expected panel to be open.');
+
+      trigger._handleKeydown(upArrowEvent);
+      fixture.detectChanges();
+
+      expect(document.activeElement).toBe(input, 'Expected input to continue to be focused.');
+      expect(trigger.panelOpen).toBe(false, 'Expected panel to be closed.');
+    }));
+
     it('should close the panel when tabbing away from a trigger without results', fakeAsync(() => {
       fixture.componentInstance.states = [];
       fixture.componentInstance.filteredStates = [];
@@ -1309,6 +1341,45 @@ describe('MatAutocomplete', () => {
       expect(componentOptions[0].deselect).toHaveBeenCalled();
       componentOptions.slice(1).forEach(option => expect(option.deselect).not.toHaveBeenCalled());
     }));
+
+    it('should emit an event when an option is selected', fakeAsync(() => {
+      const spy = jasmine.createSpy('option selection spy');
+      const subscription = fixture.componentInstance.trigger.optionSelections.subscribe(spy);
+      const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
+      option.click();
+      fixture.detectChanges();
+
+      expect(spy).toHaveBeenCalledWith(jasmine.any(MatOptionSelectionChange));
+      subscription.unsubscribe();
+    }));
+
+    it('should handle `optionSelections` being accessed too early', fakeAsync(() => {
+      overlayContainer.ngOnDestroy();
+      fixture.destroy();
+      fixture = TestBed.createComponent(SimpleAutocomplete);
+
+      let spy = jasmine.createSpy('option selection spy');
+      let subscription: Subscription;
+
+      expect(fixture.componentInstance.trigger.autocomplete).toBeFalsy();
+      expect(() => {
+        subscription = fixture.componentInstance.trigger.optionSelections.subscribe(spy);
+      }).not.toThrow();
+
+      fixture.detectChanges();
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
+
+      option.click();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      expect(spy).toHaveBeenCalledWith(jasmine.any(MatOptionSelectionChange));
+    }));
+
   });
 
   describe('panel closing', () => {
