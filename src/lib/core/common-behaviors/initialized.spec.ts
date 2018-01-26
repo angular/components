@@ -6,7 +6,6 @@ describe('MixinHasInitialized', () => {
   let instance: HasInitialized;
 
   beforeEach(() => {
-
     const classWithHasInitialized = mixinInitialized(EmptyClass);
     instance = new classWithHasInitialized();
   });
