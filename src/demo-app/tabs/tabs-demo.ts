@@ -140,9 +140,7 @@ export class FoggyTabContent {}
   template: `<span>{{count}}</span>`
  })
  export class Counter {
-  count = 0;
   ngOnInit() {
-    this.count++;
-    console.log('Tab Load Count:', this.count);
+    console.log('Tab Loaded:');
   }
  }

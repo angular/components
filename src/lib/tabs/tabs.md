@@ -85,10 +85,13 @@ By default, the tab contents are eagerly loaded. Eagerly loaded tabs
 will initalize the child components but not inject them into the DOM
 until the tab is activated. 
 
+
 If the tab contains several complex child components or the tab's contents
 rely on DOM calculations during initialization, it is advised
-to lazy load the tab's content. Tab contents can be lazy loaded by
-declaring the body in a `ng-template` with the `matTabContent` attribute.
+to lazy load the tab's content.
+
+Tab contents can be lazy loaded by declaring the body in a `ng-template`
+with the `matTabContent` attribute.
 
 ```html
 <mat-tab-group>
