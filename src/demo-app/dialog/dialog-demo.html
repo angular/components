@@ -108,6 +108,8 @@
   </mat-form-field>
 
   <p> {{ data.message }} </p>
-  <button type="button" (click)="dialogRef.close(lastCloseResult = howMuch.value)">Close dialog</button>
-  <button (click)="dialogRef.updateSize('500px', '500px').updatePosition({ top: '25px', left: '25px' });">Change dimensions</button>`
+  <mat-dialog-actions [attr.align]="actionsAlignment">
+    <button mat-button (click)="dialogRef.close(lastCloseResult = howMuch.value)">Close dialog</button>
+    <button mat-button (click)="dialogRef.updateSize('500px', '500px').updatePosition({ top: '25px', left: '25px' });">Change dimensions</button>
+  </mat-dialog-actions>
 </ng-template>
