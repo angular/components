@@ -57,17 +57,30 @@ export class MyHeaderDirective {
 
 }
 
+
+// TODO: This should be defined passed from the outside of angular material!
 @Component({
-    selector: 'my-custom-header',
+    selector: 'custom-header',
     template: '<select><option>Gregorian</option><option>Julian</option></select>'
 })
-export class MyCustomHeader {
+export class CustomHeader {
     constructor(@Host() public calendar: MatCalendar<any>,
                 public adapter: DateAdapter<any>) {
         console.log(this.calendar);
         console.log(this.adapter);
     }
 }
+
+@Component({
+    selector: 'default-header',
+    template: 'default header'
+})
+export class DefaultHeader {
+    constructor() {
+
+    }
+}
+
 
 /**
  * A calendar that is used as part of the datepicker.
