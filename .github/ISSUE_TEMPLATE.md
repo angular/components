@@ -8,7 +8,7 @@
 
 
 #### What are the steps to reproduce?
-Providing a StackBlitz reproduction is the *best* way share your issue. <br/>
+Providing a StackBlitz reproduction is the *best* way to share your issue. <br/>
 StackBlitz starter: https://goo.gl/wwnhMV<br/>
 
 
