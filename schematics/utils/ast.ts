@@ -33,7 +33,7 @@ export function addModuleImportToRootModule(host: Tree, moduleName: string, src:
 /**
  * Import and add module to specific module path.
  * @param host the tree we are updating
- * @param modulePath src location of the module
+ * @param modulePath src location of the module to import
  * @param moduleName name of module to import
  * @param src src location to import
  */
