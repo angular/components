@@ -1,0 +1,63 @@
+@import '../core/style/variables';
+@import '../core/style/vendor-prefixes';
+
+
+// Styles that only apply to the box appearance of the form-field.
+
+// The border radius for the form field box.
+$mat-form-field-box-border-radius: 4px !default;
+// The height of the underline at the bottom of the form field box.
+$mat-form-field-box-underline-height: 2px !default;
+// The horizontal padding between the edge of the form field box and the start of the text.
+$mat-form-field-box-side-padding: 1em !default;
+// The vertical padding between the edge of the form field box and the start of the text as well as
+// between the floating label and the value.
+$mat-form-field-box-line-spacing: 0.5em !default;
+// The scale of the subscript and floating label text w.r.t the value text.
+$mat-form-field-box-subscript-font-scale: 0.75 !default;
+// The horizontal padding between the edge of the subscript box and the start of the subscript text.
+$mat-form-field-box-subscript-padding:
+    $mat-form-field-box-side-padding / $mat-form-field-box-subscript-font-scale;
+
+
+.mat-form-field-appearance-box {
+  .mat-form-field-flex {
+    border-radius: $mat-form-field-box-border-radius;
+    padding: $mat-form-field-box-line-spacing $mat-form-field-box-side-padding 0
+             $mat-form-field-box-side-padding;
+  }
+
+  .mat-form-field-underline {
+    height: $mat-form-field-box-border-radius;
+    border-radius: 0 0 $mat-form-field-box-border-radius $mat-form-field-box-border-radius;
+    overflow: hidden;
+  }
+
+  .mat-form-field-underline::before {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    height: $mat-form-field-box-underline-height;
+    width: 100%;
+  }
+
+  .mat-form-field-ripple {
+    bottom: 0;
+    height: $mat-form-field-box-underline-height;
+  }
+
+  // Note that we need this specific of a selector because we don't want
+  // the hover effect to show when the user hovers over the hints.
+  &:not(.mat-form-field-disabled) .mat-form-field-flex:hover ~ .mat-form-field-underline {
+    .mat-form-field-ripple {
+      opacity: 1;
+      transform: none;
+      transition: opacity 600ms $swift-ease-out-timing-function;
+    }
+  }
+
+  .mat-form-field-subscript-wrapper {
+    padding: 0 $mat-form-field-box-subscript-padding;
+  }
+}
