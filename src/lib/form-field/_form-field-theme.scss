@@ -2,7 +2,7 @@
 @import '../core/theming/theming';
 @import '../core/style/form-common';
 @import '../core/typography/typography-utils';
-@import 'form-field-box-theme.scss';
+@import 'form-field-fill-theme.scss';
 @import 'form-field-legacy-theme.scss';
 @import 'form-field-standard-theme.scss';
 
@@ -18,7 +18,7 @@
   $is-dark-theme: map-get($theme, is-dark);
 
   // Label colors. Required is used for the `*` star shown in the label.
-  $label-color: mat-color($foreground, secondary-text);
+  $label-color: mat-color($foreground, secondary-text, if($is-dark-theme, 0.7, 0.6));
   $focused-label-color: mat-color($primary);
   $required-label-color: mat-color($accent);
 
@@ -33,7 +33,7 @@
   }
 
   .mat-hint {
-    color: mat-color($foreground, secondary-text);
+    color: $label-color;
   }
 
   .mat-focused .mat-form-field-label {
@@ -94,7 +94,7 @@
 
   @include mat-form-field-legacy-theme($theme);
   @include mat-form-field-standard-theme($theme);
-  @include mat-form-field-box-theme($theme);
+  @include mat-form-field-fill-theme($theme);
 }
 
 // Used to make instances of the _mat-form-field-label-floating mixin negligibly different,
@@ -221,5 +221,5 @@ $mat-form-field-dedupe: 0;
 
   @include mat-form-field-legacy-typography($config);
   @include mat-form-field-standard-typography($config);
-  @include mat-form-field-box-typography($config);
+  @include mat-form-field-fill-typography($config);
 }

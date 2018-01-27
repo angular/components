@@ -1149,7 +1149,7 @@ describe('MatInput with forms', () => {
 });
 
 describe('MatInput with appearance', () => {
-  const nonLegacyAppearances: MatFormFieldAppearance[] = ['standard', 'box'];
+  const nonLegacyAppearances: MatFormFieldAppearance[] = ['standard', 'fill'];
   let fixture: ComponentFixture<MatInputWithAppearance>;
   let testComponent: MatInputWithAppearance;
   let containerEl: HTMLElement;
