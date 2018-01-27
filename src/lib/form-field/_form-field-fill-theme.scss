@@ -4,24 +4,24 @@
 @import '../core/typography/typography-utils';
 
 
-// Theme styles that only apply to the box appearance of the form-field.
+// Theme styles that only apply to the fill appearance of the form-field.
 
-@mixin mat-form-field-box-theme($theme) {
+@mixin mat-form-field-fill-theme($theme) {
   $foreground: map-get($theme, foreground);
   $is-dark-theme: map-get($theme, is-dark);
 
-  $box-background: mat-color($foreground, base, if($is-dark-theme, 0.1, 0.04));
-  $box-disabled-background: mat-color($foreground, base, if($is-dark-theme, 0.05, 0.02));
+  $fill-background: mat-color($foreground, base, if($is-dark-theme, 0.1, 0.04));
+  $fill-disabled-background: mat-color($foreground, base, if($is-dark-theme, 0.05, 0.02));
   $underline-color: mat-color($foreground, divider, if($is-dark-theme, 0.5, 0.42));
   $label-disabled-color: mat-color($foreground, disabled-text);
 
-  .mat-form-field-appearance-box {
+  .mat-form-field-appearance-fill {
     .mat-form-field-flex {
-      background-color: $box-background;
+      background-color: $fill-background;
     }
 
     &.mat-form-field-disabled .mat-form-field-flex {
-      background-color: $box-disabled-background;
+      background-color: $fill-disabled-background;
     }
 
     .mat-form-field-underline::before {
@@ -44,18 +44,18 @@
 // and prevent Google's CSS Optimizer from collapsing the declarations. This is needed because some
 // of the selectors contain pseudo-classes not recognized in all browsers. If a browser encounters
 // an unknown pseudo-class it will discard the entire rule set.
-$mat-form-field-box-dedupe: 0;
+$mat-form-field-fill-dedupe: 0;
 
 // Applies a floating label above the form field control itself.
-@mixin _mat-form-field-box-label-floating($font-scale, $infix-padding, $infix-margin-top) {
-  transform: translateY(-$infix-margin-top - $infix-padding + $mat-form-field-box-dedupe)
+@mixin _mat-form-field-fill-label-floating($font-scale, $infix-padding, $infix-margin-top) {
+  transform: translateY(-$infix-margin-top - $infix-padding + $mat-form-field-fill-dedupe)
              scale($font-scale);
-  width: 100% / $font-scale + $mat-form-field-box-dedupe;
+  width: 100% / $font-scale + $mat-form-field-fill-dedupe;
 
-  $mat-form-field-box-dedupe: $mat-form-field-box-dedupe + 0.00001 !global;
+  $mat-form-field-fill-dedupe: $mat-form-field-fill-dedupe + 0.00001 !global;
 }
 
-@mixin mat-form-field-box-typography($config) {
+@mixin mat-form-field-fill-typography($config) {
   // The unit-less line-height from the font config.
   $line-height: mat-line-height($config, input);
   // The amount to scale the font for the floating label and subscript.
@@ -65,16 +65,16 @@ $mat-form-field-box-dedupe: 0;
   $infix-padding-bottom: 0.75em;
   // The margin applied to the form-field-infix to reserve space for the floating label.
   $infix-margin-top: 1em * $line-height * $subscript-font-scale;
-  // The amount we offset the label in the box appearance.
-  $box-appearance-label-offset: -0.5em * $line-height;
+  // The amount we offset the label in the fill appearance.
+  $fill-appearance-label-offset: -0.5em * $line-height;
 
-  .mat-form-field-appearance-box {
+  .mat-form-field-appearance-fill {
     .mat-form-field-infix {
       padding: $infix-padding-top 0 $infix-padding-bottom 0;
     }
 
     .mat-form-field-label {
-      margin-top: $box-appearance-label-offset;
+      margin-top: $fill-appearance-label-offset;
     }
 
     .mat-form-field-label {
@@ -85,14 +85,14 @@ $mat-form-field-box-dedupe: 0;
       &.mat-form-field-should-float .mat-form-field-label,
       .mat-input-server:focus + .mat-form-field-label-wrapper .mat-form-field-label {
         @include _mat-form-field-label-floating(
-                $subscript-font-scale, $infix-padding-top + $box-appearance-label-offset,
+                $subscript-font-scale, $infix-padding-top + $fill-appearance-label-offset,
                 $infix-margin-top);
       }
 
       .mat-form-field-autofill-control:-webkit-autofill + .mat-form-field-label-wrapper
       .mat-form-field-label {
         @include _mat-form-field-label-floating(
-                $subscript-font-scale, $infix-padding-top + $box-appearance-label-offset,
+                $subscript-font-scale, $infix-padding-top + $fill-appearance-label-offset,
                 $infix-margin-top);
       }
 
@@ -101,7 +101,7 @@ $mat-form-field-box-dedupe: 0;
       .mat-input-server[label]:not(:label-shown) + .mat-form-field-label-wrapper
       .mat-form-field-label {
         @include _mat-form-field-label-floating(
-                $subscript-font-scale, $infix-padding-top + $box-appearance-label-offset,
+                $subscript-font-scale, $infix-padding-top + $fill-appearance-label-offset,
                 $infix-margin-top);
       }
     }

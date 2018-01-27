@@ -62,7 +62,7 @@ export const _MatFormFieldMixinBase = mixinColor(MatFormFieldBase, 'primary');
 let nextUniqueId = 0;
 
 
-export type MatFormFieldAppearance = 'legacy' | 'standard' | 'box';
+export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill';
 
 
 /** Container for form controls that applies Material Design styling and behavior. */
@@ -77,7 +77,7 @@ export type MatFormFieldAppearance = 'legacy' | 'standard' | 'box';
   // aren't using MatInput.
   styleUrls: [
     'form-field.css',
-    'form-field-box.css',
+    'form-field-fill.css',
     'form-field-legacy.css',
     'form-field-standard.css',
     '../input/input.css',
@@ -86,7 +86,7 @@ export type MatFormFieldAppearance = 'legacy' | 'standard' | 'box';
   host: {
     'class': 'mat-input-container mat-form-field',
     '[class.mat-form-field-appearance-standard]': 'appearance == "standard"',
-    '[class.mat-form-field-appearance-box]': 'appearance == "box"',
+    '[class.mat-form-field-appearance-fill]': 'appearance == "fill"',
     '[class.mat-form-field-appearance-legacy]': 'appearance == "legacy"',
     '[class.mat-input-invalid]': '_control.errorState',
     '[class.mat-form-field-invalid]': '_control.errorState',
