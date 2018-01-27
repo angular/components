@@ -15,7 +15,6 @@ import {ALL_ROUTES} from './demo-app/routes';
 import {EntryApp} from './demo-app/demo-app';
 import {DemoModule} from './demo-app/demo-module';
 import {AccessibilityDemoModule} from './a11y/a11y-module';
-import {CustomHeader} from './datepicker/datepicker-demo';
 
 
 @NgModule({
@@ -31,8 +30,7 @@ import {CustomHeader} from './datepicker/datepicker-demo';
     EntryApp,
   ],
   entryComponents: [
-    EntryApp,
-      CustomHeader
+    EntryApp
   ],
 })
 export class DemoAppModule {

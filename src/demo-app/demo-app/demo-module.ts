@@ -134,6 +134,7 @@ import {TableDemoModule} from '../table/table-demo-module';
     RotiniPanel,
     ScienceJoke,
     SpagettiPanel,
+      CustomHeader,
   ],
 })
 export class DemoModule {}

@@ -16,9 +16,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {DefaultHeader, MatCalendar} from './calendar';
 import {MatCalendarBody} from './calendar-body';
 import {
-  MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
-  MatDatepicker,
-  MatDatepickerContent,
+    MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
+    MatDatepicker,
+    MatDatepickerContent,
 } from './datepicker';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerIntl} from './datepicker-intl';
@@ -27,7 +27,6 @@ import {MatMonthView} from './month-view';
 import {MatMultiYearView} from './multi-year-view';
 import {MatYearView} from './year-view';
 import {PortalModule} from '@angular/cdk/portal';
-import {CustomHeader} from '../../demo-app/datepicker/datepicker-demo';
 
 
 @NgModule({
