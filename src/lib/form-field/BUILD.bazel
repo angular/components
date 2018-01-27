@@ -9,7 +9,7 @@ ng_module(
   module_name = "@angular/material/form-field",
   assets = [
     ":form_field_css",
-    ":form_field_box_css",
+    ":form_field_fill_css",
     ":form_field_legacy_css",
     ":form_field_standard_css",
     "//src/lib/input:input_css"
@@ -29,8 +29,8 @@ sass_binary(
 )
 
 sass_binary(
-  name = "form_field_box_scss",
-  src = "form-field-box.scss",
+  name = "form_field_fill_scss",
+  src = "form-field-fill.scss",
   deps = ["//src/lib/core:core_scss_lib"],
 )
 
@@ -56,10 +56,10 @@ genrule(
 )
 
 genrule(
-  name = "form_field_box_css",
-  srcs = [":form_field_box_scss"],
-  outs = ["form-field-box.css"],
-  cmd = "cat $(locations :form_field_box_scss) > $@",
+  name = "form_field_fill_css",
+  srcs = [":form_field_fill_scss"],
+  outs = ["form-field-fill.css"],
+  cmd = "cat $(locations :form_field_fill_scss) > $@",
 )
 
 genrule(
