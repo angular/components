@@ -30,6 +30,12 @@ $mat-toolbar-row-padding: 16px !default;
   // Per Material specs a toolbar cannot have multiple lines inside of a single row.
   // Disable text wrapping inside of the toolbar. Developers are still able to overwrite it.
   white-space: nowrap;
+
+  // Plain buttons (buttons without a background color and color palette) should inherit the color
+  // from the  toolbar row, because otherwise the text will be unreadable on themed toolbars.
+  .mat-plain-button {
+    color: inherit;
+  }
 }
 
 .mat-toolbar-multiple-rows {
