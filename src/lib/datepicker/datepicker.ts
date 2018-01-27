@@ -115,7 +115,7 @@ export class MatDatepickerContent<D> implements AfterContentInit {
   preserveWhitespaces: false,
 })
 export class MatDatepicker<D> implements OnDestroy {
-  @Input() calendarHeaderComponent: ComponentType<any>;
+  @Input() customCalendarHeaderComponent: ComponentType<any>;
 
   /** The date to open the calendar to initially. */
   @Input()

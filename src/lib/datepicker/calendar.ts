@@ -46,6 +46,18 @@ import {MatYearView} from './year-view';
 import {Directionality} from '@angular/cdk/bidi';
 import {CdkPortal, ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
 
+/**
+ * Default header of a [MatCalendar].
+ */
+@Component({
+    selector: 'default-header',
+    template: 'default header'
+})
+export class DefaultHeader {
+    constructor() {
+
+    }
+}
 
 /**
  * A calendar that is used as part of the datepicker.
@@ -66,7 +78,7 @@ import {CdkPortal, ComponentPortal, ComponentType, Portal} from '@angular/cdk/po
 })
 export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
-  @Input() calendarHeaderComponent: ComponentType<any>;
+  @Input() customCalendarHeaderComponent: ComponentType<any>;
 
   /** A portal containing the custom header for this calendar. */
   calendarHeaderPortal: Portal<any>;
@@ -208,10 +220,16 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
   ngAfterContentInit() {
 
-    if (this.calendarHeaderComponent !== undefined) {
+    if (this.customCalendarHeaderComponent !== undefined) {
         // custom header
-        this.calendarHeaderPortal = new ComponentPortal(this.calendarHeaderComponent);
+        this.calendarHeaderPortal = new ComponentPortal(this.customCalendarHeaderComponent);
+    } else {
+        // default header
+        this.calendarHeaderPortal = new ComponentPortal(DefaultHeader);
     }
+
+    console.log(this.calendarHeaderPortal)
+
     this._activeDate = this.startAt || this._dateAdapter.today();
     this._focusActiveCell();
     this._currentView = this.startView;
