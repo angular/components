@@ -198,8 +198,9 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * on reposition we can evaluate if it or the overlay has been clipped or outside view. Every
    * Scrollable must be an ancestor element of the strategy's origin element.
    */
-  withScrollableContainers(scrollables: CdkScrollable[]) {
+  withScrollableContainers(scrollables: CdkScrollable[]): this {
     this.scrollables = scrollables;
+    return this;
   }
 
   /**
