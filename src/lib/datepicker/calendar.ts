@@ -228,7 +228,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         this.calendarHeaderPortal = new ComponentPortal(DefaultHeader);
     }
 
-    console.log(this.calendarHeaderPortal)
+    // console.log(this.calendarHeaderPortal)
 
     this._activeDate = this.startAt || this._dateAdapter.today();
     this._focusActiveCell();
