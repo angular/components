@@ -47,28 +47,6 @@ import {Directionality} from '@angular/cdk/bidi';
 import {CdkPortal, ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
 
 
-@Directive({
-    selector: '[myHeader]'
-})
-export class MyHeaderDirective {
-
-  constructor() {
-    console.log('myHeaderDirective');
-  }
-
-}
-
-@Component({
-    selector: 'default-header',
-    template: 'default header'
-})
-export class DefaultHeader {
-    constructor() {
-
-    }
-}
-
-
 /**
  * A calendar that is used as part of the datepicker.
  * @docs-private
@@ -90,10 +68,8 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
   @Input() calendarHeaderComponent: ComponentType<any>;
 
-  /** A portal containing the calendar for this datepicker. */
-  calendarHeaderPortal: ComponentPortal<any>;
-
-  @ContentChildren(MyHeaderDirective) headers;
+  /** A portal containing the custom header for this calendar. */
+  calendarHeaderPortal: Portal<any>;
 
   private _intlChanges: Subscription;
 
@@ -233,11 +209,9 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   ngAfterContentInit() {
 
     if (this.calendarHeaderComponent !== undefined) {
-
+        // custom header
         this.calendarHeaderPortal = new ComponentPortal(this.calendarHeaderComponent);
-        console.log(this.calendarHeaderPortal);
     }
-
     this._activeDate = this.startAt || this._dateAdapter.today();
     this._focusActiveCell();
     this._currentView = this.startView;
