@@ -47,7 +47,7 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
   vertical-align: middle;
 
   // When used in a box appearance form-field the arrow should be centered in the box.
-  .mat-form-field-appearance-box & {
+  .mat-form-field-appearance-fill & {
     transform: translateY(-50%);
   }
 }
