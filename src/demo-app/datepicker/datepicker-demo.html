@@ -11,7 +11,7 @@
     <input matInput [matDatepicker]="minDatePicker" [(ngModel)]="minDate" placeholder="Min date"
         [disabled]="inputDisabled">
     <mat-datepicker-toggle matSuffix [for]="minDatePicker"></mat-datepicker-toggle>
-    <mat-datepicker #minDatePicker [touchUi]="touch" [disabled]="datepickerDisabled"></mat-datepicker>
+    <mat-datepicker #minDatePicker [touchUi]="touch" [disabled]="datepickerDisabled" [calendarHeaderComponent]="customHeader"></mat-datepicker>
   </mat-form-field>
   <mat-form-field>
     <input matInput [matDatepicker]="maxDatePicker" [(ngModel)]="maxDate" placeholder="Max date"

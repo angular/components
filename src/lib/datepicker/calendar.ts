@@ -44,6 +44,7 @@ import {MatMonthView} from './month-view';
 import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
 import {MatYearView} from './year-view';
 import {Directionality} from '@angular/cdk/bidi';
+import {ComponentType} from '@angular/cdk/portal';
 
 
 @Directive({
@@ -55,20 +56,6 @@ export class MyHeaderDirective {
     console.log('myHeaderDirective');
   }
 
-}
-
-
-// TODO: This should be defined passed from the outside of angular material!
-@Component({
-    selector: 'custom-header',
-    template: '<select><option>Gregorian</option><option>Julian</option></select>'
-})
-export class CustomHeader {
-    constructor(@Host() public calendar: MatCalendar<any>,
-                public adapter: DateAdapter<any>) {
-        console.log(this.calendar);
-        console.log(this.adapter);
-    }
 }
 
 @Component({
@@ -100,6 +87,8 @@ export class DefaultHeader {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
+
+  @Input() calendarHeaderComponent: ComponentType<any>;
 
   @ContentChildren(MyHeaderDirective) headers;
 
@@ -239,6 +228,8 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   }
 
   ngAfterContentInit() {
+    console.log('cal: ');
+    console.log(this.calendarHeaderComponent);
     this._activeDate = this.startAt || this._dateAdapter.today();
     this._focusActiveCell();
     this._currentView = this.startView;

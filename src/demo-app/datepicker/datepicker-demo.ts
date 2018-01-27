@@ -6,9 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Host} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import {DateAdapter} from '@angular/material/core';
+import {MatCalendar} from '@angular/material';
 
 
 @Component({
@@ -38,4 +40,20 @@ export class DatepickerDemo {
   onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
 
   dateCtrl = new FormControl();
+
+  // pass custom header component type as input
+  customHeader = CustomHeader;
+}
+
+// Custom Header Component for DatePicker Calendar
+@Component({
+    selector: 'custom-header',
+    template: '<select><option>Gregorian</option><option>Julian</option></select>'
+})
+export class CustomHeader {
+    constructor(@Host() public calendar: MatCalendar<any>,
+                public adapter: DateAdapter<any>) {
+        console.log(this.calendar);
+        console.log(this.adapter);
+    }
 }

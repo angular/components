@@ -17,7 +17,7 @@ import {
   RepositionScrollStrategy,
   ScrollStrategy,
 } from '@angular/cdk/overlay';
-import {ComponentPortal} from '@angular/cdk/portal';
+import {ComponentPortal, ComponentType} from '@angular/cdk/portal';
 import {take} from 'rxjs/operators/take';
 import {filter} from 'rxjs/operators/filter';
 import {
@@ -115,6 +115,8 @@ export class MatDatepickerContent<D> implements AfterContentInit {
   preserveWhitespaces: false,
 })
 export class MatDatepicker<D> implements OnDestroy {
+  @Input() calendarHeaderComponent: ComponentType<any>;
+
   /** The date to open the calendar to initially. */
   @Input()
   get startAt(): D | null {

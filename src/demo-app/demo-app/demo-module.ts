@@ -18,7 +18,7 @@ import {ButtonDemo} from '../button/button-demo';
 import {CardDemo} from '../card/card-demo';
 import {CheckboxDemo, MatCheckboxDemoNestedChecklist} from '../checkbox/checkbox-demo';
 import {ChipsDemo} from '../chips/chips-demo';
-import {DatepickerDemo} from '../datepicker/datepicker-demo';
+import {CustomHeader, DatepickerDemo} from '../datepicker/datepicker-demo';
 import {DemoMaterialModule} from '../demo-material-module';
 import {ContentElementDialog, DialogDemo, IFrameDialog, JazzDialog} from '../dialog/dialog-demo';
 import {DrawerDemo} from '../drawer/drawer-demo';
@@ -79,6 +79,7 @@ import {TableDemoModule} from '../table/table-demo-module';
     ChipsDemo,
     ContentElementDialog,
     DatepickerDemo,
+    CustomHeader,
     DemoApp,
     DialogDemo,
     DrawerDemo,
