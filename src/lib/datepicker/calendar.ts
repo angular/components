@@ -7,32 +7,32 @@
  */
 
 import {
-  DOWN_ARROW,
-  END,
-  ENTER,
-  HOME,
-  LEFT_ARROW,
-  PAGE_DOWN,
-  PAGE_UP,
-  RIGHT_ARROW,
-  UP_ARROW,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    HOME,
+    LEFT_ARROW,
+    PAGE_DOWN,
+    PAGE_UP,
+    RIGHT_ARROW,
+    UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
-    Component, ContentChildren, Directive,
+    Component,
     ElementRef,
-    EventEmitter, Host,
+    EventEmitter,
     Inject,
     Input,
     NgZone,
     OnChanges,
     OnDestroy,
     Optional,
-    Output, QueryList,
+    Output,
     SimpleChanges,
-    ViewChild, ViewChildren,
+    ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
@@ -44,7 +44,7 @@ import {MatMonthView} from './month-view';
 import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
 import {MatYearView} from './year-view';
 import {Directionality} from '@angular/cdk/bidi';
-import {CdkPortal, ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
+import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
 
 /**
  * Default header of a [MatCalendar].

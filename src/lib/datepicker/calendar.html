@@ -1,6 +1,8 @@
 <div class="mat-calendar-header">
+
+  <ng-template [cdkPortalOutlet]="calendarHeaderPortal"></ng-template>
+
   <div class="mat-calendar-controls">
-      <!--<ng-template [cdkPortalOutlet]="calendarHeaderPortal"></ng-template>-->
     <button mat-button class="mat-calendar-period-button"
             (click)="_currentPeriodClicked()"  [attr.aria-label]="_periodButtonLabel">
       {{_periodButtonText}}
