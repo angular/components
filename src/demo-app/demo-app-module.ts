@@ -30,7 +30,7 @@ import {AccessibilityDemoModule} from './a11y/a11y-module';
     EntryApp,
   ],
   entryComponents: [
-    EntryApp
+    EntryApp,
   ],
 })
 export class DemoAppModule {

@@ -70,7 +70,7 @@ import {PortalModule} from '@angular/cdk/portal';
   ],
   entryComponents: [
     MatDatepickerContent,
-      DefaultHeader,
+    DefaultHeader,
   ]
 })
 export class MatDatepickerModule {}
