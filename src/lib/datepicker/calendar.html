@@ -1,7 +1,7 @@
 <div class="mat-calendar-header">
-  <ng-content select="[myHeader]"></ng-content>
-  <default-header *ngIf="!headers.length"></default-header>
   <div class="mat-calendar-controls">
+    <span *ngIf="calendarHeaderPortal !== undefined">Custom Header</span>
+    <!--<ng-template [cdkPortalOutlet]="calendarHeaderPortal"></ng-template>-->
     <button mat-button class="mat-calendar-period-button"
             (click)="_currentPeriodClicked()"  [attr.aria-label]="_periodButtonLabel">
       {{_periodButtonText}}
