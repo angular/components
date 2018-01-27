@@ -18,7 +18,7 @@
   $is-dark-theme: map-get($theme, is-dark);
 
   // Label colors. Required is used for the `*` star shown in the label.
-  $label-color: mat-color($foreground, secondary-text);
+  $label-color: mat-color($foreground, secondary-text, if($is-dark-theme, 0.7, 0.6));
   $focused-label-color: mat-color($primary);
   $required-label-color: mat-color($accent);
 
@@ -33,7 +33,7 @@
   }
 
   .mat-hint {
-    color: mat-color($foreground, secondary-text);
+    color: $label-color;
   }
 
   .mat-focused .mat-form-field-label {

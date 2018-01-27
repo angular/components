@@ -6,8 +6,6 @@
 
 // The height of the underline.
 $mat-form-field-standard-underline-height: 1px !default;
-// The bottom margin of the underline (used to push it up to align with box appearance underline).
-$mat-form-field-standard-underline-margin-bottom: 1px !default;
 // The padding between the top of the form field and the label text (used to align the standard
 // form field with the box appearance).
 $mat-form-field-standard-padding-top: 0.5em !default;
@@ -22,11 +20,10 @@ $mat-form-field-standard-padding-top: 0.5em !default;
   // The ripple is the blue animation coming on top of it.
   .mat-form-field-underline {
     height: $mat-form-field-standard-underline-height;
-    margin-bottom: $mat-form-field-standard-underline-margin-bottom;
   }
 
   .mat-form-field-ripple {
-    top: 0;
+    bottom: 0;
     height: $mat-form-field-standard-underline-height * 2;
   }
 
