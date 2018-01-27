@@ -54,7 +54,7 @@ export class InputDemo {
 
   legacyAppearance: string;
   standardAppearance: string;
-  boxAppearance: string;
+  fillAppearance: string;
 
   constructor() {
     setTimeout(() => this.delayedFormControl.setValue('hello'), 100);
