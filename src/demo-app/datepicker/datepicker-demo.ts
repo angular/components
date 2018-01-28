@@ -8,7 +8,7 @@
 
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import {MatDatepicker, MatDatepickerInputEvent} from '@angular/material/datepicker';
 
 
 @Component({
@@ -30,6 +30,8 @@ export class DatepickerDemo {
   date: Date;
   lastDateInput: Date | null;
   lastDateChange: Date | null;
+  year: number;
+  yearMonth = '';
 
   dateFilter =
       (date: Date) => !(date.getFullYear() % 2) && (date.getMonth() % 2) && !(date.getDate() % 2)
@@ -38,4 +40,35 @@ export class DatepickerDemo {
   onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
 
   dateCtrl = new FormControl();
+
+  constructor() {
+    const date = new Date();
+    this.year = date.getFullYear();
+    this.yearMonth = (date.getMonth() + 1) + '/' + date.getFullYear();
+  }
+
+  chosenYearHandler(year: number, datepicker: MatDatepicker<Date>) {
+    this.year = year;
+    datepicker.close();
+  }
+
+  _open(event: Event, datepicker: MatDatepicker<Date>) {
+    datepicker.open();
+    event.stopPropagation();
+  }
+
+  chosenYearFromYearMonthHandler(year: number) {
+    try {
+      const month = this.yearMonth.split('/')[0];
+      this.yearMonth = month + '/' + year;
+    } catch (e) { throw new Error('Date must be in mm/yyyy format'); }
+  }
+
+  chosenMonthFromYearMonthHandler(month: number, datepicker: MatDatepicker<Date>) {
+    try {
+      const year = this.yearMonth.split('/')[1];
+      this.yearMonth = (month + 1) + '/' + year;
+    } catch (e) { throw new Error('Date must be in mm/yyyy format'); }
+    datepicker.close();
+  }
 }

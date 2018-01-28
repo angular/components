@@ -164,6 +164,18 @@ export class MatDatepicker<D> implements OnDestroy {
    */
   @Output() readonly selectedChanged: EventEmitter<D> = new EventEmitter<D>();
 
+  /**
+   * Emits selected year in multiyear view.
+   * This doesn't implies in change on the selected date.
+   */
+  @Output() readonly yearSelected: EventEmitter<number> = new EventEmitter<number>();
+
+  /**
+   * Emits selected month in year view.
+   * This doesn't implies in change on the selected date.
+   */
+  @Output() readonly monthSelected = new EventEmitter<number>();
+
   /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
   @Input() panelClass: string | string[];
 
@@ -172,6 +184,7 @@ export class MatDatepicker<D> implements OnDestroy {
 
   /** Emits when the datepicker has been closed. */
   @Output('closed') closedStream: EventEmitter<void> = new EventEmitter<void>();
+
 
   /** Whether the calendar is open. */
   @Input()
@@ -251,6 +264,16 @@ export class MatDatepicker<D> implements OnDestroy {
     if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
       this.selectedChanged.emit(date);
     }
+  }
+
+  /** Emits the selected year in multiyear view */
+  _selectYear(year: number): void {
+    this.yearSelected.emit(year);
+  }
+
+  /** Emits selected month in year view */
+  _selectMonth(month: number): void {
+    this.monthSelected.emit(month);
   }
 
   /**

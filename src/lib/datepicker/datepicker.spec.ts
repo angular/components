@@ -433,12 +433,12 @@ describe('MatDatepicker', () => {
       });
     });
 
-    describe('datepicker with startView', () => {
-      let fixture: ComponentFixture<DatepickerWithStartView>;
-      let testComponent: DatepickerWithStartView;
+    describe('datepicker with startView set to year', () => {
+      let fixture: ComponentFixture<DatepickerWithStartViewYear>;
+      let testComponent: DatepickerWithStartViewYear;
 
       beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerWithStartView, [MatNativeDateModule]);
+        fixture = createComponent(DatepickerWithStartViewYear, [MatNativeDateModule]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
@@ -461,6 +461,73 @@ describe('MatDatepicker', () => {
         expect(firstCalendarCell.textContent)
             .toBe('JAN', 'Expected the calendar to be in year-view');
       });
+
+      it('should fire yearSelected when user selects calendar year in year view',
+        fakeAsync(() => {
+          spyOn(testComponent, 'onYearSelection');
+          expect(testComponent.onYearSelection).not.toHaveBeenCalled();
+
+          testComponent.datepicker.open();
+          fixture.detectChanges();
+
+          const cells = document.querySelectorAll('.mat-calendar-body-cell');
+
+          dispatchMouseEvent(cells[0], 'click');
+          fixture.detectChanges();
+          flush();
+
+          expect(testComponent.onYearSelection).toHaveBeenCalled();
+        })
+      );
+    });
+
+    describe('datepicker with startView set to multiyear', () => {
+      let fixture: ComponentFixture<DatepickerWithStartViewMultiYear>;
+      let testComponent: DatepickerWithStartViewMultiYear;
+
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(DatepickerWithStartViewMultiYear, [MatNativeDateModule]);
+        fixture.detectChanges();
+
+        testComponent = fixture.componentInstance;
+
+        spyOn(testComponent, 'onMultiYearSelection');
+      }));
+
+      afterEach(fakeAsync(() => {
+        testComponent.datepicker.close();
+        fixture.detectChanges();
+        flush();
+      }));
+
+      it('should start at the specified view', () => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+
+        const firstCalendarCell = document.querySelector('.mat-calendar-body-cell')!;
+
+        // When the calendar is in year view, the first cell should be for a month rather than
+        // for a date.
+        expect(firstCalendarCell.textContent)
+            .toBe('2016', 'Expected the calendar to be in multi-year-view');
+      });
+
+      it('should fire yearSelected when user selects calendar year in multiyear view',
+        fakeAsync(() => {
+          expect(testComponent.onMultiYearSelection).not.toHaveBeenCalled();
+
+          testComponent.datepicker.open();
+          fixture.detectChanges();
+
+          const cells = document.querySelectorAll('.mat-calendar-body-cell');
+
+          dispatchMouseEvent(cells[0], 'click');
+          fixture.detectChanges();
+          flush();
+
+          expect(testComponent.onMultiYearSelection).toHaveBeenCalled();
+        })
+      );
     });
 
     describe('datepicker with ngModel', () => {
@@ -1003,7 +1070,8 @@ describe('MatDatepicker', () => {
           expect(testComponent.onDateChange).toHaveBeenCalled();
           expect(testComponent.onInput).not.toHaveBeenCalled();
           expect(testComponent.onDateInput).toHaveBeenCalled();
-        }));
+        })
+      );
     });
 
     describe('with ISO 8601 strings as input', () => {
@@ -1271,12 +1339,29 @@ class DatepickerWithStartAt {
 @Component({
   template: `
     <input [matDatepicker]="d" [value]="date">
-    <mat-datepicker #d startView="year"></mat-datepicker>
+    <mat-datepicker #d startView="year" (monthSelected)="onYearSelection()"></mat-datepicker>
   `,
 })
-class DatepickerWithStartView {
+class DatepickerWithStartViewYear {
   date = new Date(2020, JAN, 1);
   @ViewChild('d') datepicker: MatDatepicker<Date>;
+
+  onYearSelection() {}
+}
+
+
+@Component({
+  template: `
+    <input [matDatepicker]="d" [value]="date">
+    <mat-datepicker #d startView="multi-year"
+        (yearSelected)="onMultiYearSelection()"></mat-datepicker>
+  `,
+})
+class DatepickerWithStartViewMultiYear {
+  date = new Date(2020, JAN, 1);
+  @ViewChild('d') datepicker: MatDatepicker<Date>;
+
+  onMultiYearSelection() {}
 }
 
 
@@ -1321,6 +1406,7 @@ class DatepickerWithToggle {
   touchUI = true;
 }
 
+
 @Component({
   template: `
     <input [matDatepicker]="d">
@@ -1331,6 +1417,7 @@ class DatepickerWithToggle {
   `,
 })
 class DatepickerWithCustomIcon {}
+
 
 @Component({
   template: `
@@ -1394,6 +1481,7 @@ class DatepickerWithChangeAndInputEvents {
   onDateInput() {}
 }
 
+
 @Component({
   template: `
     <input [matDatepicker]="d" [(ngModel)]="date">
@@ -1405,6 +1493,7 @@ class DatepickerWithi18n {
   @ViewChild('d') datepicker: MatDatepicker<Date>;
   @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
 }
+
 
 @Component({
   template: `
@@ -1420,6 +1509,7 @@ class DatepickerWithISOStrings {
   @ViewChild('d') datepicker: MatDatepicker<Date>;
   @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
 }
+
 
 @Component({
   template: `

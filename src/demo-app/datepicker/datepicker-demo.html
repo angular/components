@@ -90,7 +90,7 @@
            [matDatepickerFilter]="filterOdd ? dateFilter : null" disabled
            placeholder="Input disabled">
     <mat-datepicker #datePicker1 [touchUi]="touch" [startAt]="startAt"
-                   [startView]="yearView ? 'year' : 'month'"></mat-datepicker>
+                    [startView]="yearView ? 'year' : 'month'"></mat-datepicker>
   </mat-form-field>
 </p>
 
@@ -118,7 +118,7 @@
            [max]="maxDate" [matDatepickerFilter]="filterOdd ? dateFilter : null"
            placeholder="Input disabled, datepicker enabled">
     <mat-datepicker #datePicker3 [touchUi]="touch" [disabled]="false" [startAt]="startAt"
-                   [startView]="yearView ? 'year' : 'month'"></mat-datepicker>
+                    [startView]="yearView ? 'year' : 'month'"></mat-datepicker>
   </mat-form-field>
 </p>
 
@@ -131,5 +131,40 @@
            placeholder="Value binding">
     <mat-datepicker #datePicker4 [touchUi]="touch" [startAt]="startAt"
                     [startView]="yearView ? 'year' : 'month'"></mat-datepicker>
+  </mat-form-field>
+</p>
+
+<h2>Datepicker emulating year picker</h2>
+<p>
+  <input matInput [matDatepicker]="datePicker5" class="datepicker-input-invisible">
+  <mat-datepicker
+      #datePicker5
+      [touchUi]="true"
+      startView="multi-year"
+      (yearSelected)="chosenYearHandler($event, datePicker5)">
+  </mat-datepicker>
+  <mat-form-field>
+    <input matInput [(ngModel)]="year" placeholder="Choose an year">
+    <button matSuffix mat-icon-button type="button" (click)="_open($event, datePicker5)">
+      <mat-icon>today</mat-icon>
+    </button>
+  </mat-form-field>
+</p>
+
+<h2>Datepicker emulating month/year picker</h2>
+<p>
+  <input matInput [matDatepicker]="datePicker6" class="datepicker-input-invisible">
+  <mat-datepicker
+      #datePicker6
+      [touchUi]="true"
+      startView="multi-year"
+      (yearSelected)="chosenYearFromYearMonthHandler($event)"
+      (monthSelected)="chosenMonthFromYearMonthHandler($event, datePicker6)">
+  </mat-datepicker>
+  <mat-form-field>
+    <input matInput [(ngModel)]="yearMonth" placeholder="Choose a date (month and year)">
+    <button matSuffix mat-icon-button type="button" (click)="_open($event, datePicker6)">
+      <mat-icon>today</mat-icon>
+    </button>
   </mat-form-field>
 </p>
