@@ -187,8 +187,9 @@ export class MatFormField extends _MatFormFieldMixinBase
   }
   private _floatLabel: FloatLabelType;
 
-  /** Reference to the form field's underline element. */
+  /** @deletion-target 7.0.0 */
   @ViewChild('underline') underlineRef: ElementRef;
+
   @ViewChild('connectionContainer') _connectionContainerRef: ElementRef;
   @ViewChild('inputContainer') _inputContainerRef: ElementRef;
   @ViewChild('label') private _label: ElementRef;
@@ -208,6 +209,14 @@ export class MatFormField extends _MatFormFieldMixinBase
 
     this._labelOptions = labelOptions ? labelOptions : {};
     this.floatLabel = this._labelOptions.float || 'auto';
+  }
+
+  /**
+   * Gets an ElementRef for the element that a popup container attached to the form-field should be
+   * positioned relative to.
+   */
+  getPopupConnectionElementRef(): ElementRef {
+    return this._connectionContainerRef || this._elementRef;
   }
 
   ngAfterContentInit() {

@@ -277,15 +277,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
    * @return The element to connect the popup to.
    */
   getPopupConnectionElementRef(): ElementRef {
-    return this._formField ? this._formField.underlineRef : this._elementRef;
-  }
-
-  /**
-   * Determines the offset to be used when the calendar goes into a fallback position.
-   * Primarily used to prevent the calendar from overlapping the input.
-   */
-  _getPopupFallbackOffset(): number {
-    return this._formField ? -this._formField._inputContainerRef.nativeElement.clientHeight : 0;
+    return this._formField ? this._formField.getPopupConnectionElementRef() : this._elementRef;
   }
 
   // Implemented as part of ControlValueAccessor
