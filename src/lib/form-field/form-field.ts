@@ -62,7 +62,7 @@ export const _MatFormFieldMixinBase = mixinColor(MatFormFieldBase, 'primary');
 let nextUniqueId = 0;
 
 
-export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill';
+export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill' | 'outline';
 
 
 /** Container for form controls that applies Material Design styling and behavior. */
@@ -79,6 +79,7 @@ export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill';
     'form-field.css',
     'form-field-fill.css',
     'form-field-legacy.css',
+    'form-field-outline.css',
     'form-field-standard.css',
     '../input/input.css',
   ],
@@ -87,6 +88,7 @@ export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill';
     'class': 'mat-input-container mat-form-field',
     '[class.mat-form-field-appearance-standard]': 'appearance == "standard"',
     '[class.mat-form-field-appearance-fill]': 'appearance == "fill"',
+    '[class.mat-form-field-appearance-outline]': 'appearance == "outline"',
     '[class.mat-form-field-appearance-legacy]': 'appearance == "legacy"',
     '[class.mat-input-invalid]': '_control.errorState',
     '[class.mat-form-field-invalid]': '_control.errorState',
@@ -114,7 +116,7 @@ export class MatFormField extends _MatFormFieldMixinBase
   private _labelOptions: LabelOptions;
 
   /** The form-field appearance style. */
-  @Input() appearance: MatFormFieldAppearance = 'legacy';
+  @Input() appearance: MatFormFieldAppearance = 'outline';
 
   /**
    * @deprecated Use `color` instead.

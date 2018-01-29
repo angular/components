@@ -53,11 +53,23 @@
     </div>
   </div>
 
-  <div class="mat-input-underline mat-form-field-underline" #underline>
+  <!-- Underline used for legacy, standard, and box appearances. -->
+  <div class="mat-input-underline mat-form-field-underline" #underline
+       *ngIf="appearance != 'outline'">
     <span class="mat-input-ripple mat-form-field-ripple"
           [class.mat-accent]="color == 'accent'"
           [class.mat-warn]="color == 'warn'"></span>
   </div>
+
+  <!-- Outline used for  outline appearance. -->
+  <ng-container *ngIf="appearance == 'outline'">
+    <div class="mat-form-field-outline">
+      <div class="mat-form-field-outline-gap"></div>
+    </div>
+    <div class="mat-form-field-outline mat-form-field-outline-thick">
+      <div class="mat-form-field-outline-gap"></div>
+    </div>
+  </ng-container>
 
   <div class="mat-input-subscript-wrapper mat-form-field-subscript-wrapper"
        [ngSwitch]="_getDisplayedMessages()">

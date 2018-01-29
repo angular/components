@@ -1,0 +1,60 @@
+@import '../core/style/variables';
+@import '../core/style/vendor-prefixes';
+
+// Styles that only apply to the outline appearance of the form-field.
+
+// The horizontal padding between the edge of the form field fill box and the start of the text.
+$mat-form-field-outline-side-padding: 0.75em !default;
+// The scale of the subscript and floating label text w.r.t the value text.
+$mat-form-field-outline-subscript-font-scale: 0.75 !default;
+// The amount of overlap between the label and the outline.
+$mat-form-field-outline-label-overlap: 0.25em;
+// The horizontal padding between the edge of the subscript box and the start of the subscript text.
+$mat-form-field-outline-subscript-padding:
+    $mat-form-field-outline-side-padding / $mat-form-field-outline-subscript-font-scale;
+
+
+.mat-form-field-appearance-outline {
+  // We need to add margin to the top to reserve space in the layout for the label which sticks out
+  // of the top. In order to ensure that the outline appearance aligns nicely with other form-field
+  // appearances when center-aligned, we also need to add the same amount of margin to the bottom.
+  .mat-form-field-wrapper {
+    margin: $mat-form-field-outline-label-overlap 0;
+  }
+
+  .mat-form-field-flex {
+    padding: 0 $mat-form-field-outline-side-padding 0 $mat-form-field-outline-side-padding;
+    margin-top: -$mat-form-field-outline-label-overlap;
+  }
+
+  .mat-form-field-outline {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+  }
+
+  .mat-form-field-outline::before,
+  .mat-form-field-outline::after {
+    content: '';
+    width: 12px; // use var for this
+    border: 1px solid rgba(0, 0, 0, .5); //use vars for this
+    flex: 1;
+  }
+
+  .mat-form-field-outline::before {
+    border-radius: 4px 0 0 4px; // use vars for this
+    border-right: none;
+  }
+
+  .mat-form-field-outline::after {
+    border-radius: 0 4px 4px 0; // use vars for this
+    border-left: none;
+  }
+
+  .mat-form-field-subscript-wrapper {
+    padding: 0 $mat-form-field-outline-subscript-padding;
+  }
+}
