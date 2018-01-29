@@ -65,7 +65,7 @@ You can use the `mat-color` function to extract a specific color from a palette.
 // Use mat-color to extract individual colors from a palette as necessary.
 // The hue can be one of the standard values (500, A400, etc.), one of the three preconfigured
 // hues (default, lighter, darker), or any of the aforementioned prefixed with "-contrast".
-// For example a hue of "darker-constrast" gives a light color to contrast with a "darker" hue
+// For example a hue of "darker-contrast" gives a light color to contrast with a "darker" hue
 // Available color palettes: https://www.google.com/design/spec/style/color.html
 .candy-carousel {
   background-color: mat-color($candy-app-primary);
