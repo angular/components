@@ -16,9 +16,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {DefaultHeader, MatCalendar} from './calendar';
 import {MatCalendarBody} from './calendar-body';
 import {
-    MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
-    MatDatepicker,
-    MatDatepickerContent,
+  MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
+  MatDatepicker,
+  MatDatepickerContent,
 } from './datepicker';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerIntl} from './datepicker-intl';

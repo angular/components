@@ -7,33 +7,33 @@
  */
 
 import {
-    DOWN_ARROW,
-    END,
-    ENTER,
-    HOME,
-    LEFT_ARROW,
-    PAGE_DOWN,
-    PAGE_UP,
-    RIGHT_ARROW,
-    UP_ARROW,
+  DOWN_ARROW,
+  END,
+  ENTER,
+  HOME,
+  LEFT_ARROW,
+  PAGE_DOWN,
+  PAGE_UP,
+  RIGHT_ARROW,
+  UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
-    AfterContentInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    EventEmitter,
-    Inject,
-    Input,
-    NgZone,
-    OnChanges,
-    OnDestroy,
-    Optional,
-    Output,
-    SimpleChanges,
-    ViewChild,
-    ViewEncapsulation,
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  Input,
+  NgZone,
+  OnChanges,
+  OnDestroy,
+  Optional,
+  Output,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {take} from 'rxjs/operators/take';
@@ -78,9 +78,10 @@ export class DefaultHeader {
 })
 export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
+  /** An input indicating the type of the custom header component, if set. */
   @Input() customCalendarHeaderComponent: ComponentType<any>;
 
-  /** A portal containing the custom header for this calendar. */
+  /** A portal containing the header for this calendar. */
   calendarHeaderPortal: Portal<any>;
 
   private _intlChanges: Subscription;
