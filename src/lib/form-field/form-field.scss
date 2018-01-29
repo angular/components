@@ -99,8 +99,8 @@ $mat-form-field-default-infix-width: 180px !default;
 
   transform-origin: 0 0;
   transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
-  color $swift-ease-out-duration $swift-ease-out-timing-function,
-  width $swift-ease-out-duration $swift-ease-out-timing-function;
+              color $swift-ease-out-duration $swift-ease-out-timing-function,
+              width $swift-ease-out-duration $swift-ease-out-timing-function;
 
   // Hide the label initially, and only show it when it's floating or the control is empty.
   display: none;

@@ -7,13 +7,62 @@
 // Theme styles that only apply to the outline appearance of the form-field.
 
 @mixin mat-form-field-outline-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
   $foreground: map-get($theme, foreground);
+  $is-dark-theme: map-get($theme, is-dark);
+
   $label-disabled-color: mat-color($foreground, disabled-text);
+  $outline-color: mat-color($foreground, divider, if($is-dark-theme, 0.5, 0.42));
+  $outline-color-accent: mat-color($accent);
+  $outline-color-warn: mat-color($warn);
+  $outline-focused-color: mat-color($primary);
 
   .mat-form-field-appearance-outline {
+    .mat-form-field-outline {
+      &::before,
+      &::after {
+        border-color: $outline-color;
+      }
+    }
+
     &.mat-form-field-disabled {
       .mat-form-field-label {
         color: $label-disabled-color;
+      }
+    }
+
+    &.mat-focused {
+      .mat-form-field-outline {
+        &::before,
+        &::after {
+          border-color: $outline-focused-color;
+        }
+      }
+
+      &.mat-accent .mat-form-field-outline {
+        &::before,
+        &::after {
+          border-color: $outline-color-accent;
+        }
+      }
+
+      &.mat-warn .mat-form-field-outline {
+        &::before,
+        &::after {
+          border-color: $outline-color-warn;
+        }
+      }
+    }
+
+    // Class repeated so that rule is specific enough to override focused accent color case.
+    &.mat-form-field-invalid.mat-form-field-invalid {
+      .mat-form-field-outline {
+        &::before,
+        &::after {
+          border-color: $outline-color-warn;
+        }
       }
     }
   }
