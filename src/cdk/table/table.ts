@@ -278,10 +278,9 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    * Checks for differences in the data since the last diff to perform only the necessary
    * changes (add/remove/move rows).
    *
-   * If the table's data source is a DataSource or Observable, this will be invoked each time the
-   * provided Observable stream emits a new data array. Otherwise if your data is being set
-   * directly, you will need to call this function whenever data in the provided array is
-   * added/removed/moved in-place.
+   * If the table's data source is a DataSource or Observable, this will be invoked automatically
+   * each time the provided Observable stream emits a new data array. Otherwise if your data is
+   * an array, this function will need to be called to render any changes.
    */
   renderRows() {
     const changes = this._dataDiffer.diff(this._data);
