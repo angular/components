@@ -59,6 +59,7 @@ export class CustomHeader {
   }
 
   convertCalendarFormatTo(format: string) {
+
     console.log(format);
   }
 }
