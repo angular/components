@@ -40,31 +40,41 @@ $mat-form-field-outline-subscript-padding:
     left: 0;
     right: 0;
     pointer-events: none;
+  }
 
-    &::before,
-    &::after {
-      content: '';
-      width: $mat-form-field-outline-side-padding;
-      border: $mat-form-field-outline-width solid currentColor;
-      flex-grow: 1;
-    }
+  .mat-form-field-outline-start,
+  .mat-form-field-outline-end {
+    border: $mat-form-field-outline-width solid currentColor;
+    min-width: $mat-form-field-outline-border-radius;
+  }
 
-    &::before {
-      border-radius: $mat-form-field-outline-border-radius 0 0
-                     $mat-form-field-outline-border-radius;
-      border-right: none;
-    }
+  .mat-form-field-outline-start {
+    border-radius: $mat-form-field-outline-border-radius 0 0 $mat-form-field-outline-border-radius;
+    border-right-style: none;
 
-    &::after {
+    [dir="rtl"] & {
+      border-right-style: solid;
+      border-left-style: none;
       border-radius: 0 $mat-form-field-outline-border-radius $mat-form-field-outline-border-radius
                      0;
-      border-left: none;
+    }
+  }
+
+  .mat-form-field-outline-end {
+    border-radius: 0 $mat-form-field-outline-border-radius $mat-form-field-outline-border-radius 0;
+    border-left-style: none;
+    flex-grow: 1;
+
+    [dir="rtl"] & {
+      border-left-style: solid;
+      border-right-style: none;
+      border-radius: $mat-form-field-outline-border-radius 0 0
+                     $mat-form-field-outline-border-radius;
     }
   }
 
   .mat-form-field-outline-gap {
     border-bottom: $mat-form-field-outline-width solid currentColor;
-    width: 100px; // TODO(mmalerba): set size dynamically.
 
     &::before {
       content: '';
@@ -85,8 +95,8 @@ $mat-form-field-outline-subscript-padding:
   .mat-form-field-outline-thick {
     opacity: 0;
 
-    &::before,
-    &::after,
+    .mat-form-field-outline-start,
+    .mat-form-field-outline-end,
     .mat-form-field-outline-gap,
     .mat-form-field-outline-gap::before {
       border-width: $mat-form-field-outline-thick-width;

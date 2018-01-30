@@ -48,6 +48,12 @@ import {MatLabel} from './label';
 import {MatPlaceholder} from './placeholder';
 import {MatPrefix} from './prefix';
 import {MatSuffix} from './suffix';
+import {Directionality} from '@angular/cdk/bidi';
+
+
+let nextUniqueId = 0;
+const floatingLabelScale = 0.75;
+const outlineGapPadding = 5;
 
 
 // Boilerplate for applying mixins to MatFormField.
@@ -56,10 +62,8 @@ export class MatFormFieldBase {
   constructor(public _elementRef: ElementRef) { }
 }
 
+
 export const _MatFormFieldMixinBase = mixinColor(MatFormFieldBase, 'primary');
-
-
-let nextUniqueId = 0;
 
 
 export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill' | 'outline';
@@ -118,7 +122,7 @@ export class MatFormField extends _MatFormFieldMixinBase
   private _labelOptions: LabelOptions;
 
   /** The form-field appearance style. */
-  @Input() appearance: MatFormFieldAppearance = 'outline';
+  @Input() appearance: MatFormFieldAppearance = 'legacy';
 
   /**
    * @deprecated Use `color` instead.
@@ -191,6 +195,10 @@ export class MatFormField extends _MatFormFieldMixinBase
   }
   private _floatLabel: FloatLabelType;
 
+  _outlineGapWidth = 0;
+
+  _outlineGapStart = 0;
+
   /** @deletion-target 7.0.0 */
   @ViewChild('underline') underlineRef: ElementRef;
 
@@ -208,7 +216,8 @@ export class MatFormField extends _MatFormFieldMixinBase
   constructor(
       public _elementRef: ElementRef,
       private _changeDetectorRef: ChangeDetectorRef,
-      @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) labelOptions: LabelOptions) {
+      @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) labelOptions: LabelOptions,
+      @Optional() private _dir: Directionality) {
     super(_elementRef);
 
     this._labelOptions = labelOptions ? labelOptions : {};
@@ -254,6 +263,11 @@ export class MatFormField extends _MatFormFieldMixinBase
     this._errorChildren.changes.pipe(startWith(null)).subscribe(() => {
       this._syncDescribedByIds();
       this._changeDetectorRef.markForCheck();
+    });
+
+    Promise.resolve().then(() => {
+      this._updateOutlineGap();
+      this._changeDetectorRef.detectChanges();
     });
   }
 
@@ -393,5 +407,33 @@ export class MatFormField extends _MatFormFieldMixinBase
     if (!this._control) {
       throw getMatFormFieldMissingControlError();
     }
+  }
+
+  /**
+   * Updates the width and position of the gap in the outline. Only relevant for the outline
+   * appearance.
+   */
+  private _updateOutlineGap() {
+    if (this.appearance === 'outline' && this._label && this._label.nativeElement.children.length) {
+      const containerStart = this._getStartEnd(
+          this._connectionContainerRef.nativeElement.getBoundingClientRect());
+      const labelStart = this._getStartEnd(
+          this._label.nativeElement.children[0].getBoundingClientRect());
+      let labelWidth = 0;
+      for (const child of this._label.nativeElement.children) {
+        labelWidth += child.offsetWidth;
+      }
+      this._outlineGapStart = labelStart - containerStart - outlineGapPadding;
+      this._outlineGapWidth = labelWidth * floatingLabelScale + outlineGapPadding * 2;
+    } else {
+      this._outlineGapStart = 0;
+      this._outlineGapWidth = 0;
+    }
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /** Gets the start end of the rect considering the current directionality. */
+  private _getStartEnd(rect: ClientRect): number {
+    return this._dir && this._dir.value === 'rtl' ? rect.right : rect.left;
   }
 }
