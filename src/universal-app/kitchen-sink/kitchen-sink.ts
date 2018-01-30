@@ -43,6 +43,15 @@ import {
 } from '@angular/cdk/table';
 
 import {of as observableOf} from 'rxjs/observable/of';
+import {Observable} from 'rxjs/Observable';
+
+export class TableDataSource extends DataSource<any> {
+  connect(): Observable<any> {
+    return observableOf([{userId: 1}, {userId: 2}]);
+  }
+
+  disconnect() {}
+}
 
 @Component({
   selector: 'kitchen-sink',
@@ -55,16 +64,12 @@ export class KitchenSink {
   tableColumns = ['userId'];
 
   /** Data source for the CDK and Material table. */
-  tableDataSource: DataSource<any> = {
-    connect: () => observableOf([{userId: 1}, {userId: 2}]),
-    disconnect: () => {}
-  };
+  tableDataSource = new TableDataSource();
 
   constructor(snackBar: MatSnackBar) {
     // Open a snack bar to do a basic sanity check of the overlays.
     snackBar.open('Hello there');
   }
-
 }
 
 
