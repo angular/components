@@ -247,8 +247,8 @@ export class RippleRenderer {
 
     // Fade-out all ripples that are visible and not persistent.
     this._activeRipples.forEach(ripple => {
-      // By default, only ripples that are completely visible will fade out on pointer release. 
-      // If the `terminateOnPointerUp` option is set, ripples that fade in will also fade out.
+      // By default, only ripples that are completely visible will fade out on pointer release.
+      // If the `terminateOnPointerUp` option is set, ripples that still fade in will also fade out.
       const isVisible = ripple.state === RippleState.VISIBLE ||
         ripple.config.terminateOnPointerUp && ripple.state === RippleState.FADING_IN;
 
