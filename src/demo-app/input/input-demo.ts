@@ -52,6 +52,7 @@ export class InputDemo {
   delayedFormControl = new FormControl('');
   model = 'hello';
   isAutofilled = false;
+  customAutofillStyle = true;
 
   legacyAppearance: string;
   standardAppearance: string;

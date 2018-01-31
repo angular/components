@@ -1,3 +1,5 @@
+@import '../../../dist/packages/cdk/input/autofill';
+
 .demo-basic {
   padding: 0;
 }
@@ -26,4 +28,8 @@
   overflow: auto;
   padding: 0;
   background: lightblue;
+}
+
+.demo-custom-autofill-style {
+  @include cdk-input-autofill-color(transparent, red);
 }

@@ -633,12 +633,16 @@
 </mat-card>
 
 <mat-card class="demo-card demo-basic">
-  <mat-toolbar color="primary">Autofill Monitor</mat-toolbar>
+  <mat-toolbar color="primary">Autofill</mat-toolbar>
   <mat-card-content>
     <form novalidate>
+      <mat-checkbox [(ngModel)]="customAutofillStyle" name="custom">
+        Use custom autofill style
+      </mat-checkbox>
       <mat-form-field>
-        <mat-label>Autofill monitor</mat-label>
-        <input matInput (cdkAutofill)="isAutofilled = $event.isAutofilled" name="autofill">
+        <mat-label>Autofill monitored</mat-label>
+        <input matInput (cdkAutofill)="isAutofilled = $event.isAutofilled" name="autofill"
+               [class.demo-custom-autofill-style]="customAutofillStyle">
       </mat-form-field>
       <button color="primary" mat-raised-button>Submit</button>
       <span> is autofilled? {{isAutofilled ? 'yes' : 'no'}}</span>
