@@ -60,13 +60,14 @@ $mat-form-field-fill-dedupe: 0;
   $line-height: mat-line-height($config, input);
   // The amount to scale the font for the floating label and subscript.
   $subscript-font-scale: 0.75;
-  // The padding on the infix. Mocks show half of the text size.
+  // The padding on top of the infix.
   $infix-padding-top: 0.25em;
+  // The padding below the infix.
   $infix-padding-bottom: 0.75em;
   // The margin applied to the form-field-infix to reserve space for the floating label.
   $infix-margin-top: 1em * $line-height * $subscript-font-scale;
-  // The amount we offset the label in the fill appearance.
-  $fill-appearance-label-offset: -0.5em * $line-height;
+  // The amount we offset the label from the input text in the fill appearance.
+  $fill-appearance-label-offset: -0.5em;
 
   .mat-form-field-appearance-fill {
     .mat-form-field-infix {
@@ -74,24 +75,21 @@ $mat-form-field-fill-dedupe: 0;
     }
 
     .mat-form-field-label {
-      margin-top: $fill-appearance-label-offset;
-    }
-
-    .mat-form-field-label {
       top: $infix-margin-top + $infix-padding-top;
+      margin-top: $fill-appearance-label-offset;
     }
 
     &.mat-form-field-can-float {
       &.mat-form-field-should-float .mat-form-field-label,
       .mat-input-server:focus + .mat-form-field-label-wrapper .mat-form-field-label {
-        @include _mat-form-field-label-floating(
+        @include _mat-form-field-fill-label-floating(
                 $subscript-font-scale, $infix-padding-top + $fill-appearance-label-offset,
                 $infix-margin-top);
       }
 
       .mat-form-field-autofill-control:-webkit-autofill + .mat-form-field-label-wrapper
       .mat-form-field-label {
-        @include _mat-form-field-label-floating(
+        @include _mat-form-field-fill-label-floating(
                 $subscript-font-scale, $infix-padding-top + $fill-appearance-label-offset,
                 $infix-margin-top);
       }
@@ -100,7 +98,7 @@ $mat-form-field-fill-dedupe: 0;
       // (used as a pure CSS stand-in for mat-form-field-should-float).
       .mat-input-server[label]:not(:label-shown) + .mat-form-field-label-wrapper
       .mat-form-field-label {
-        @include _mat-form-field-label-floating(
+        @include _mat-form-field-fill-label-floating(
                 $subscript-font-scale, $infix-padding-top + $fill-appearance-label-offset,
                 $infix-margin-top);
       }
