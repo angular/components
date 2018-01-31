@@ -69,6 +69,7 @@ export class AutofillMonitor implements OnDestroy {
     if (info) {
       info.unlisten();
       element.classList.remove('cdk-input-autofill-monitored');
+      element.classList.remove('cdk-input-autofilled');
       this._monitoredElements.delete(element);
     }
   }

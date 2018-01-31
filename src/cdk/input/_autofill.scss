@@ -16,9 +16,9 @@
 // Used to generate UIDs for keyframes used to change the input autofill styles.
 $cdk-input-autofill-color-frame-count: 0;
 
-// Mixin used to apply custom background and foreground colors to an autofilled input.
-// Based on:
-// https://stackoverflow.com/questions/2781549/removing-input-background-colour-for-chrome-autocomplete#answer-37432260
+// Mixin used to apply custom background and foreground colors to an autofilled input. Based on:
+// https://stackoverflow.com/questions/2781549/
+// removing-input-background-colour-for-chrome-autocomplete#answer-37432260
 @mixin cdk-input-autofill-color($background, $foreground:'') {
   @keyframes cdk-input-autofill-color-#{$cdk-input-autofill-color-frame-count} {
     to {
@@ -27,11 +27,14 @@ $cdk-input-autofill-color-frame-count: 0;
     }
   }
 
-  &:-webkit-autofill,
+  &:-webkit-autofill {
+    animation-name: cdk-input-autofill-color-#{$cdk-input-autofill-color-frame-count};
+    animation-fill-mode: both;
+  }
+
   &.cdk-input-autofill-monitored:-webkit-autofill {
     animation-name: cdk-input-autofill-start,
                     cdk-input-autofill-color-#{$cdk-input-autofill-color-frame-count};
-    animation-fill-mode: both;
   }
 
   $cdk-input-autofill-color-frame-count: $cdk-input-autofill-color-frame-count + 1 !global;
