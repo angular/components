@@ -426,9 +426,8 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
     // Cannot check this.dataSource['connect'] due to potential property renaming, nor can it
     // checked as an instanceof DataSource<T> since the table should allow for data sources
     // that did not explicitly extend DataSource<T>.
-    const connectFunction = (this.dataSource as DataSource<T>).connect;
-    if (connectFunction instanceof Function) {
-      dataStream = connectFunction(this);
+    if ((this.dataSource as DataSource<T>).connect  instanceof Function) {
+      dataStream = (this.dataSource as DataSource<T>).connect(this);
     } else if (this.dataSource instanceof Observable) {
       dataStream = this.dataSource;
     } else if (Array.isArray(this.dataSource)) {
