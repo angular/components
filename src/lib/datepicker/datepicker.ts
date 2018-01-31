@@ -166,13 +166,13 @@ export class MatDatepicker<D> implements OnDestroy {
 
   /**
    * Emits selected year in multiyear view.
-   * This doesn't implies in change on the selected date.
+   * This doesn't imply a change on the selected date.
    */
   @Output() readonly yearSelected: EventEmitter<number> = new EventEmitter<number>();
 
   /**
    * Emits selected month in year view.
-   * This doesn't implies in change on the selected date.
+   * This doesn't imply a change on the selected date.
    */
   @Output() readonly monthSelected = new EventEmitter<number>();
 

@@ -6,10 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Directive} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {MatDatepicker, MatDatepickerInputEvent} from '@angular/material/datepicker';
+import {MatDatepicker, MatDatepickerInputEvent} from '@angular/material';
+import {MomentDateAdapter} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
+import * as _moment from 'moment';
+import {default as _rollupMoment} from 'moment';
+const moment = _rollupMoment || _moment;
 
 @Component({
   moduleId: module.id,
@@ -30,8 +35,9 @@ export class DatepickerDemo {
   date: Date;
   lastDateInput: Date | null;
   lastDateChange: Date | null;
-  year: number;
-  yearMonth = '';
+
+  monthYearDateControl = new FormControl(moment([2017, 10, 25]));
+  yearDateControl = new FormControl(moment([2017, 10, 25]));
 
   dateFilter =
       (date: Date) => !(date.getFullYear() % 2) && (date.getMonth() % 2) && !(date.getDate() % 2)
@@ -41,14 +47,12 @@ export class DatepickerDemo {
 
   dateCtrl = new FormControl();
 
-  constructor() {
-    const date = new Date();
-    this.year = date.getFullYear();
-    this.yearMonth = (date.getMonth() + 1) + '/' + date.getFullYear();
-  }
+  constructor() { }
 
   chosenYearHandler(year: number, datepicker: MatDatepicker<Date>) {
-    this.year = year;
+    const actualDate = this.yearDateControl.value;
+    actualDate.year(year);
+    this.yearDateControl.setValue(actualDate);
     datepicker.close();
   }
 
@@ -58,17 +62,62 @@ export class DatepickerDemo {
   }
 
   chosenYearFromYearMonthHandler(year: number) {
-    try {
-      const month = this.yearMonth.split('/')[0];
-      this.yearMonth = month + '/' + year;
+    try {      
+      const actualDate = this.monthYearDateControl.value;
+      actualDate.year(year);
+      this.monthYearDateControl.setValue(actualDate);
+
     } catch (e) { throw new Error('Date must be in mm/yyyy format'); }
   }
 
   chosenMonthFromYearMonthHandler(month: number, datepicker: MatDatepicker<Date>) {
     try {
-      const year = this.yearMonth.split('/')[1];
-      this.yearMonth = (month + 1) + '/' + year;
+      const actualDate = this.monthYearDateControl.value;
+      actualDate.month(month);
+      this.monthYearDateControl.setValue(actualDate);
     } catch (e) { throw new Error('Date must be in mm/yyyy format'); }
     datepicker.close();
   }
 }
+
+export const DEMO_MOMENT_MONTH_YEAR_FORMATS = {
+  parse: {
+    dateInput: 'MM/YYYY',
+  },
+  display: {
+    dateInput: 'MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+
+@Directive({
+  selector: '[demo-moment-month-year]',
+  providers: [
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+    {provide: MAT_DATE_FORMATS, useValue: DEMO_MOMENT_MONTH_YEAR_FORMATS},
+  ]
+})
+export class DemoMomentMonthYearDirective { }
+
+export const DEMO_MOMENT_YEAR_FORMATS = {
+  parse: {
+    dateInput: 'YYYY',
+  },
+  display: {
+    dateInput: 'YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+
+@Directive({
+  selector: '[demo-moment-year]',
+  providers: [
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+    {provide: MAT_DATE_FORMATS, useValue: DEMO_MOMENT_YEAR_FORMATS},
+  ]
+})
+export class DemoMomentYearDirective { }

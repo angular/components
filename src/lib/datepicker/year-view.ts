@@ -65,7 +65,7 @@ export class MatYearView<D> implements AfterContentInit {
   /** Emits when a new month is selected. */
   @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
 
-  /** Emits the selected month. This doesn't implies in change on the selected date */
+  /** Emits the selected month. This doesn't imply a change on the selected date */
   @Output() readonly monthSelected = new EventEmitter<number>();
 
   /** Grid of calendar cells representing the months of the year. */

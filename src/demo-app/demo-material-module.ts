@@ -49,6 +49,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {PlatformModule} from '@angular/cdk/platform';
 import {ObserversModule} from '@angular/cdk/observers';
 import {PortalModule} from '@angular/cdk/portal';
+import {MatMomentDateModule} from '@angular/material-moment-adapter';
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.
@@ -88,6 +89,7 @@ import {PortalModule} from '@angular/cdk/portal';
     MatToolbarModule,
     MatTooltipModule,
     MatNativeDateModule,
+    MatMomentDateModule,
     CdkTableModule,
     A11yModule,
     BidiModule,
