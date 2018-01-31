@@ -51,6 +51,7 @@ export class InputDemo {
   emailFormControl = new FormControl('', [Validators.required, Validators.pattern(EMAIL_REGEX)]);
   delayedFormControl = new FormControl('');
   model = 'hello';
+  isAutofilled = false;
 
   legacyAppearance: string;
   standardAppearance: string;

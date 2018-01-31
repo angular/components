@@ -1,0 +1,13 @@
+@mixin cdk-input-autofill {
+  // Keyframes that do nothing, but allow us to monitor when an input becomes autofilled.
+  @keyframes cdk-input-autofill-start {from {} to {}}
+  @keyframes cdk-input-autofill-end {from {} to {}}
+
+  .cdk-input-autofill-monitored:-webkit-autofill {
+    animation-name: cdk-input-autofill-start;
+  }
+
+  .cdk-input-autofill-monitored:not(:-webkit-autofill) {
+    animation-name: cdk-input-autofill-end;
+  }
+}
