@@ -11,6 +11,7 @@ ng_module(
     ":form_field_css",
     ":form_field_fill_css",
     ":form_field_legacy_css",
+    ":form_field_outline_css",
     ":form_field_standard_css",
     "//src/lib/input:input_css"
   ],
@@ -41,6 +42,12 @@ sass_binary(
 )
 
 sass_binary(
+  name = "form_field_outline_scss",
+  src = "form-field-outline.scss",
+  deps = ["//src/lib/core:core_scss_lib"],
+)
+
+sass_binary(
   name = "form_field_standard_scss",
   src = "form-field-standard.scss",
   deps = ["//src/lib/core:core_scss_lib"],
@@ -67,6 +74,13 @@ genrule(
   srcs = [":form_field_legacy_scss"],
   outs = ["form-field-legacy.css"],
   cmd = "cat $(locations :form_field_legacy_scss) > $@",
+)
+
+genrule(
+  name = "form_field_outline_css",
+  srcs = [":form_field_outline_scss"],
+  outs = ["form-field-outline.css"],
+  cmd = "cat $(locations :form_field_outline_scss) > $@",
 )
 
 genrule(
