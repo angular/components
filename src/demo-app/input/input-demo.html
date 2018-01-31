@@ -588,6 +588,13 @@
       <mat-hint>Please type something here</mat-hint>
     </mat-form-field>
 
+    <mat-form-field appearance="outline">
+      <mat-label>Outline appearance</mat-label>
+      <input matInput [(ngModel)]="outlineAppearance" required>
+      <mat-error>This field is required</mat-error>
+      <mat-hint>Please type something here</mat-hint>
+    </mat-form-field>
+
     <table style="width: 100%" cellspacing="0"><tr>
       <td>
         <mat-form-field appearance="legacy" style="width: 100%">
@@ -609,6 +616,14 @@
         <mat-form-field appearance="fill" style="width: 100%">
           <mat-label>Fill appearance</mat-label>
           <input matInput [(ngModel)]="fillAppearance" required>
+          <mat-error>This field is required</mat-error>
+          <mat-hint>Please type something here</mat-hint>
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Outline appearance</mat-label>
+          <input matInput [(ngModel)]="outlineAppearance" required>
           <mat-error>This field is required</mat-error>
           <mat-hint>Please type something here</mat-hint>
         </mat-form-field>

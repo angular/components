@@ -4,6 +4,7 @@
 @import '../core/typography/typography-utils';
 @import 'form-field-fill-theme.scss';
 @import 'form-field-legacy-theme.scss';
+@import 'form-field-outline-theme.scss';
 @import 'form-field-standard-theme.scss';
 
 
@@ -95,6 +96,7 @@
   @include mat-form-field-legacy-theme($theme);
   @include mat-form-field-standard-theme($theme);
   @include mat-form-field-fill-theme($theme);
+  @include mat-form-field-outline-theme($theme);
 }
 
 // Used to make instances of the _mat-form-field-label-floating mixin negligibly different,
@@ -222,4 +224,5 @@ $mat-form-field-dedupe: 0;
   @include mat-form-field-legacy-typography($config);
   @include mat-form-field-standard-typography($config);
   @include mat-form-field-fill-typography($config);
+  @include mat-form-field-outline-typography($config);
 }

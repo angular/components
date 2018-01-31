@@ -48,6 +48,12 @@ import {MatLabel} from './label';
 import {MatPlaceholder} from './placeholder';
 import {MatPrefix} from './prefix';
 import {MatSuffix} from './suffix';
+import {Directionality} from '@angular/cdk/bidi';
+
+
+let nextUniqueId = 0;
+const floatingLabelScale = 0.75;
+const outlineGapPadding = 5;
 
 
 // Boilerplate for applying mixins to MatFormField.
@@ -56,13 +62,11 @@ export class MatFormFieldBase {
   constructor(public _elementRef: ElementRef) { }
 }
 
+
 export const _MatFormFieldMixinBase = mixinColor(MatFormFieldBase, 'primary');
 
 
-let nextUniqueId = 0;
-
-
-export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill';
+export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill' | 'outline';
 
 
 /** Container for form controls that applies Material Design styling and behavior. */
@@ -79,6 +83,7 @@ export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill';
     'form-field.css',
     'form-field-fill.css',
     'form-field-legacy.css',
+    'form-field-outline.css',
     'form-field-standard.css',
     '../input/input.css',
   ],
@@ -87,6 +92,7 @@ export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill';
     'class': 'mat-input-container mat-form-field',
     '[class.mat-form-field-appearance-standard]': 'appearance == "standard"',
     '[class.mat-form-field-appearance-fill]': 'appearance == "fill"',
+    '[class.mat-form-field-appearance-outline]': 'appearance == "outline"',
     '[class.mat-form-field-appearance-legacy]': 'appearance == "legacy"',
     '[class.mat-input-invalid]': '_control.errorState',
     '[class.mat-form-field-invalid]': '_control.errorState',
@@ -95,6 +101,8 @@ export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill';
     '[class.mat-form-field-hide-placeholder]': '_hideControlPlaceholder()',
     '[class.mat-form-field-disabled]': '_control.disabled',
     '[class.mat-focused]': '_control.focused',
+    '[class.mat-accent]': 'color == "accent"',
+    '[class.mat-warn]': 'color == "warn"',
     '[class.ng-untouched]': '_shouldForward("untouched")',
     '[class.ng-touched]': '_shouldForward("touched")',
     '[class.ng-pristine]': '_shouldForward("pristine")',
@@ -187,8 +195,13 @@ export class MatFormField extends _MatFormFieldMixinBase
   }
   private _floatLabel: FloatLabelType;
 
-  /** Reference to the form field's underline element. */
+  _outlineGapWidth = 0;
+
+  _outlineGapStart = 0;
+
+  /** @deletion-target 7.0.0 */
   @ViewChild('underline') underlineRef: ElementRef;
+
   @ViewChild('connectionContainer') _connectionContainerRef: ElementRef;
   @ViewChild('inputContainer') _inputContainerRef: ElementRef;
   @ViewChild('label') private _label: ElementRef;
@@ -203,11 +216,20 @@ export class MatFormField extends _MatFormFieldMixinBase
   constructor(
       public _elementRef: ElementRef,
       private _changeDetectorRef: ChangeDetectorRef,
-      @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) labelOptions: LabelOptions) {
+      @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) labelOptions: LabelOptions,
+      @Optional() private _dir: Directionality) {
     super(_elementRef);
 
     this._labelOptions = labelOptions ? labelOptions : {};
     this.floatLabel = this._labelOptions.float || 'auto';
+  }
+
+  /**
+   * Gets an ElementRef for the element that a overlay attached to the form-field should be
+   * positioned relative to.
+   */
+  getConnectedOverlayOrigin(): ElementRef {
+    return this._connectionContainerRef || this._elementRef;
   }
 
   ngAfterContentInit() {
@@ -241,6 +263,11 @@ export class MatFormField extends _MatFormFieldMixinBase
     this._errorChildren.changes.pipe(startWith(null)).subscribe(() => {
       this._syncDescribedByIds();
       this._changeDetectorRef.markForCheck();
+    });
+
+    Promise.resolve().then(() => {
+      this._updateOutlineGap();
+      this._changeDetectorRef.detectChanges();
     });
   }
 
@@ -380,5 +407,33 @@ export class MatFormField extends _MatFormFieldMixinBase
     if (!this._control) {
       throw getMatFormFieldMissingControlError();
     }
+  }
+
+  /**
+   * Updates the width and position of the gap in the outline. Only relevant for the outline
+   * appearance.
+   */
+  private _updateOutlineGap() {
+    if (this.appearance === 'outline' && this._label && this._label.nativeElement.children.length) {
+      const containerStart = this._getStartEnd(
+          this._connectionContainerRef.nativeElement.getBoundingClientRect());
+      const labelStart = this._getStartEnd(
+          this._label.nativeElement.children[0].getBoundingClientRect());
+      let labelWidth = 0;
+      for (const child of this._label.nativeElement.children) {
+        labelWidth += child.offsetWidth;
+      }
+      this._outlineGapStart = labelStart - containerStart - outlineGapPadding;
+      this._outlineGapWidth = labelWidth * floatingLabelScale + outlineGapPadding * 2;
+    } else {
+      this._outlineGapStart = 0;
+      this._outlineGapWidth = 0;
+    }
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /** Gets the start end of the rect considering the current directionality. */
+  private _getStartEnd(rect: ClientRect): number {
+    return this._dir && this._dir.value === 'rtl' ? rect.right : rect.left;
   }
 }
