@@ -519,7 +519,7 @@ describe('MatRipple', () => {
 
       // Since the enter duration is bigger than the exit duration, the enter duration timer
       // will still exist. To properly finish all timers, we just wait the remaining time.
-      tick (enterDuration - exitDuration);
+      tick(enterDuration - exitDuration);
     }));
   });
 
