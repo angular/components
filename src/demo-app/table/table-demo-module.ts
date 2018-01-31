@@ -29,7 +29,7 @@ import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {WrapperTable} from './custom-table/wrapper-table';
 import {SimpleColumn} from './custom-table/simple-column';
-import {DataInputTableDemo} from 'table/data-input-table/data-input-table';
+import {DataInputTableDemo} from './data-input-table/data-input-table';
 
 @NgModule({
   imports: [

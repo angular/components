@@ -9,7 +9,7 @@
 import {Routes} from '@angular/router';
 import {TableDemo} from './table-demo';
 import {CustomTableDemo} from './custom-table/custom-table';
-import {DataInputTableDemo} from 'table/data-input-table/data-input-table';
+import {DataInputTableDemo} from './data-input-table/data-input-table';
 
 export const TABLE_DEMO_ROUTES: Routes = [
   {path: '', redirectTo: 'main-demo', pathMatch: 'full'},
