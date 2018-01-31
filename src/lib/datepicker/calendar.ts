@@ -50,10 +50,10 @@ import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
  * Default header of a [MatCalendar].
  */
 @Component({
-    selector: 'default-header',
+    selector: 'mat-calendar-header',
     template: 'default header'
 })
-export class DefaultHeader {
+export class MatCalendarHeader {
     constructor() {
 
     }
@@ -78,11 +78,15 @@ export class DefaultHeader {
 })
 export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
-  /** An input indicating the type of the custom header component, if set. */
-  @Input() customCalendarHeaderComponent: ComponentType<any>;
+  /** An input indicating the type of the header component, if set. */
+  @Input() headerComponent: ComponentType<any>;
 
-  /** A portal containing the header for this calendar. */
-  calendarHeaderPortal: Portal<any>;
+  /** A portal containing the header component type for this calendar. */
+  private _calendarHeaderPortal: Portal<any>;
+
+  get calendarHeaderPortal() {
+    return this._calendarHeaderPortal;
+  }
 
   private _intlChanges: Subscription;
 
@@ -145,7 +149,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         (!this.dateFilter || this.dateFilter(date)) &&
         (!this.minDate || this._dateAdapter.compareDate(date, this.minDate) >= 0) &&
         (!this.maxDate || this._dateAdapter.compareDate(date, this.maxDate) <= 0);
-  }
+  };
 
   /**
    * The current active date. This determines which time period is shown and which date is
@@ -221,15 +225,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
   ngAfterContentInit() {
 
-    if (this.customCalendarHeaderComponent !== undefined) {
-        // custom header
-        this.calendarHeaderPortal = new ComponentPortal(this.customCalendarHeaderComponent);
-    } else {
-        // default header
-        this.calendarHeaderPortal = new ComponentPortal(DefaultHeader);
-    }
-
-    // console.log(this.calendarHeaderPortal)
+    this._calendarHeaderPortal = new ComponentPortal(this.headerComponent || MatCalendarHeader);
 
     this._activeDate = this.startAt || this._dateAdapter.today();
     this._focusActiveCell();
