@@ -422,8 +422,13 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
 
     let dataStream: Observable<T[]> | undefined;
 
-    if (this.dataSource instanceof DataSource) {
-      dataStream = this.dataSource.connect(this);
+    // Check if the datasource is a DataSource object by observing if it has a connect function.
+    // Cannot check this.dataSource['connect'] due to potential property renaming, nor can it
+    // checked as an instanceof DataSource<T> since the table should allow for data sources
+    // that did not explicitly extend DataSource<T>.
+    const connectFunction = (this.dataSource as DataSource<T>).connect;
+    if (connectFunction instanceof Function) {
+      dataStream = connectFunction(this);
     } else if (this.dataSource instanceof Observable) {
       dataStream = this.dataSource;
     } else if (Array.isArray(this.dataSource)) {
@@ -434,10 +439,12 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
       throw getTableUnknownDataSourceError();
     }
 
-    this._renderChangeSubscription = dataStream.pipe(takeUntil(this._onDestroy)).subscribe(data => {
-      this._data = data;
-      this.renderRows();
-    });
+    this._renderChangeSubscription = dataStream
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe(data => {
+          this._data = data;
+          this.renderRows();
+        });
   }
 
   /**
