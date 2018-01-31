@@ -273,7 +273,7 @@ describe('MatDatepicker', () => {
       });
 
       it('should attach popup to native input', () => {
-        let attachToRef = testComponent.datepickerInput.getPopupConnectionElementRef();
+        let attachToRef = testComponent.datepickerInput.getConnectedOverlayOrigin();
         expect(attachToRef.nativeElement.tagName.toLowerCase())
             .toBe('input', 'popup should be attached to native input');
       });
@@ -791,7 +791,7 @@ describe('MatDatepicker', () => {
       }));
 
       it('should attach popup to mat-form-field underline', () => {
-        let attachToRef = testComponent.datepickerInput.getPopupConnectionElementRef();
+        let attachToRef = testComponent.datepickerInput.getConnectedOverlayOrigin();
         expect(attachToRef.nativeElement.classList.contains('mat-form-field-underline'))
             .toBe(true, 'popup should be attached to mat-form-field underline');
       });

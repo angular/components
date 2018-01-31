@@ -225,10 +225,10 @@ export class MatFormField extends _MatFormFieldMixinBase
   }
 
   /**
-   * Gets an ElementRef for the element that a popup container attached to the form-field should be
+   * Gets an ElementRef for the element that a overlay attached to the form-field should be
    * positioned relative to.
    */
-  getPopupConnectionElementRef(): ElementRef {
+  getConnectedOverlayOrigin(): ElementRef {
     return this._connectionContainerRef || this._elementRef;
   }
 

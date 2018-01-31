@@ -272,12 +272,17 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     return this._validator ? this._validator(c) : null;
   }
 
+  /** @deletion-target 7.0.0 Use `getConnectedOverlayOrigin` instead */
+  getPopupConnectionElementRef(): ElementRef {
+    return this.getConnectedOverlayOrigin();
+  }
+
   /**
    * Gets the element that the datepicker popup should be connected to.
    * @return The element to connect the popup to.
    */
-  getPopupConnectionElementRef(): ElementRef {
-    return this._formField ? this._formField.getPopupConnectionElementRef() : this._elementRef;
+  getConnectedOverlayOrigin(): ElementRef {
+    return this._formField ? this._formField.getConnectedOverlayOrigin() : this._elementRef;
   }
 
   // Implemented as part of ControlValueAccessor

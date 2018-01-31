@@ -379,7 +379,7 @@ export class MatDatepicker<D> implements OnDestroy {
   /** Create the popup PositionStrategy. */
   private _createPopupPositionStrategy(): PositionStrategy {
     return this._overlay.position()
-      .connectedTo(this._datepickerInput.getPopupConnectionElementRef(),
+      .connectedTo(this._datepickerInput.getConnectedOverlayOrigin(),
         {originX: 'start', originY: 'bottom'},
         {overlayX: 'start', overlayY: 'top'}
       )
