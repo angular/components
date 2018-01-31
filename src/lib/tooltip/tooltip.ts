@@ -26,6 +26,7 @@ import {
 import {Platform} from '@angular/cdk/platform';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {take} from 'rxjs/operators/take';
+import {takeUntil} from 'rxjs/operators/takeUntil';
 import {filter} from 'rxjs/operators/filter';
 import {
   ChangeDetectionStrategy,
@@ -46,7 +47,6 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {matTooltipAnimations} from './tooltip-animations';
 import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
-import {Subscription} from 'rxjs/Subscription';
 
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
@@ -189,7 +189,8 @@ export class MatTooltip implements OnDestroy {
 
   private _manualListeners = new Map<string, Function>();
 
-  private _tooltipPositionSubscription: Subscription | null;
+  /** Emits when the component is destroyed. */
+  private readonly _destroyed = new Subject<void>();
 
   constructor(
     private _overlay: Overlay,
@@ -227,7 +228,7 @@ export class MatTooltip implements OnDestroy {
       element.style.webkitUserSelect = element.style.userSelect = '';
     }
 
-    _focusMonitor.monitor(element).subscribe(origin => {
+    _focusMonitor.monitor(element).pipe(takeUntil(this._destroyed)).subscribe(origin => {
       // Note that the focus monitor runs outside the Angular zone.
       if (!origin) {
         _ngZone.run(() => this.hide(0));
@@ -254,10 +255,8 @@ export class MatTooltip implements OnDestroy {
       this._manualListeners.clear();
     }
 
-    if (this._tooltipPositionSubscription) {
-      this._tooltipPositionSubscription.unsubscribe();
-      this._tooltipPositionSubscription = null;
-    }
+    this._destroyed.next();
+    this._destroyed.complete();
 
     this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this.message);
     this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
@@ -326,7 +325,7 @@ export class MatTooltip implements OnDestroy {
         this._scrollDispatcher.getAncestorScrollContainers(this._elementRef)
       );
 
-    strategy.onPositionChange.pipe(filter(() => !!this._tooltipInstance)).subscribe(change => {
+    strategy.onPositionChange.pipe(filter(() => !!this._tooltipInstance), takeUntil(this._destroyed)).subscribe(change => {
       if (change.scrollableViewProperties.isOverlayClipped && this._tooltipInstance!.isVisible()) {
         // After position changes occur and the overlay is clipped by
         // a parent scrollable then close the tooltip.
@@ -437,12 +436,14 @@ export class MatTooltip implements OnDestroy {
       this._tooltipInstance.message = this.message;
       this._tooltipInstance._markForCheck();
 
-      this._tooltipPositionSubscription =
-          this._ngZone.onMicrotaskEmpty.asObservable().pipe(take(1)).subscribe(() => {
-            if (this._tooltipInstance) {
-              this._overlayRef!.updatePosition();
-            }
-          });
+      this._ngZone.onMicrotaskEmpty.asObservable().pipe(
+        take(1),
+        takeUntil(this._destroyed)
+      ).subscribe(() => {
+        if (this._tooltipInstance) {
+          this._overlayRef!.updatePosition();
+        }
+      });
     }
   }
 
