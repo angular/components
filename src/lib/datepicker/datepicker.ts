@@ -117,7 +117,7 @@ export class MatDatepickerContent<D> implements AfterContentInit {
 export class MatDatepicker<D> implements OnDestroy {
 
   /** An input indicating the type of the custom header component for the calendar, if set. */
-  @Input() customCalendarHeaderComponent: ComponentType<any>;
+  @Input() calendarHeaderComponent: ComponentType<any>;
 
   /** The date to open the calendar to initially. */
   @Input()
