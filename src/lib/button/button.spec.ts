@@ -2,7 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatButtonModule, MatButton} from './index';
-import {MatRipple} from '@angular/material/core';
+import {MatRipple, ThemePalette} from '@angular/material/core';
 
 
 describe('MatButton', () => {
@@ -39,6 +39,29 @@ describe('MatButton', () => {
 
     expect(buttonDebugElement.nativeElement.classList).not.toContain('mat-accent');
     expect(aDebugElement.nativeElement.classList).not.toContain('mat-accent');
+  });
+
+  it('should mark buttons without a background color and theme as plain buttons', () => {
+    const fixture = TestBed.createComponent(TestApp);
+    const buttonDebugEl = fixture.debugElement.query(By.css('button'));
+    const anchorDebugEl = fixture.debugElement.query(By.css('a'));
+    const fabDebugEl = fixture.debugElement.query(By.css('[mat-fab]'));
+
+    fixture.detectChanges();
+
+    // Buttons that have no background color and theme palette are considered as plain buttons.
+    expect(buttonDebugEl.nativeElement.classList).toContain('mat-plain-button');
+    expect(anchorDebugEl.nativeElement.classList).toContain('mat-plain-button');
+    expect(fabDebugEl.nativeElement.classList).not.toContain('mat-plain-button');
+
+    fixture.componentInstance.buttonColor = 'primary';
+    fixture.detectChanges();
+
+    // Buttons that have no background color, but use an explicit theme palette, are not
+    // considered as plain buttons.
+    expect(buttonDebugEl.nativeElement.classList).not.toContain('mat-plain-button');
+    expect(anchorDebugEl.nativeElement.classList).not.toContain('mat-plain-button');
+    expect(fabDebugEl.nativeElement.classList).not.toContain('mat-plain-button');
   });
 
   it('should expose the ripple instance', () => {
@@ -259,6 +282,7 @@ class TestApp {
   clickCount: number = 0;
   isDisabled: boolean = false;
   rippleDisabled: boolean = false;
+  buttonColor: ThemePalette;
 
   increment() {
     this.clickCount++;

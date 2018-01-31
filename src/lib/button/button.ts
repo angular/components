@@ -103,6 +103,7 @@ export const _MatButtonMixinBase = mixinColor(mixinDisabled(mixinDisableRipple(M
   exportAs: 'matButton',
   host: {
     '[disabled]': 'disabled || null',
+    '[class.mat-plain-button]': '_isPlainButton()',
   },
   templateUrl: 'button.html',
   styleUrls: ['button.css'],
@@ -119,6 +120,9 @@ export class MatButton extends _MatButtonMixinBase
 
   /** Whether the button is icon button. */
   _isIconButton: boolean = this._hasHostAttributes('mat-icon-button');
+
+  /** Whether the button is a flat button. */
+  _isFlatButton: boolean = this._hasHostAttributes('mat-button');
 
   /** Reference to the MatRipple instance of the button. */
   @ViewChild(MatRipple) ripple: MatRipple;
@@ -152,6 +156,14 @@ export class MatButton extends _MatButtonMixinBase
     return this.disableRipple || this.disabled;
   }
 
+  /**
+   * Whether the button is a plain button. Plain buttons are buttons without a background
+   * color and theme color set.
+   */
+  _isPlainButton() {
+    return !this.color && (this._isIconButton || this._isFlatButton);
+  }
+
   /** Gets whether the button has one of the given attributes. */
   _hasHostAttributes(...attributes: string[]) {
     // If not on the browser, say that there are none of the attributes present.
@@ -176,6 +188,7 @@ export class MatButton extends _MatButtonMixinBase
     '[attr.tabindex]': 'disabled ? -1 : 0',
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
+    '[class.mat-plain-button]': '_isPlainButton()',
     '(click)': '_haltDisabledEvents($event)',
   },
   inputs: ['disabled', 'disableRipple', 'color'],
