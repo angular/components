@@ -45,21 +45,13 @@ export class DatepickerDemo {
   customHeader = CustomHeader;
 }
 
-// Custom Header Component for DatePicker Calendar
+// Custom header component for datepicker
 @Component({
   selector: 'custom-header',
-  template: `<select (change)="convertCalendarFormatTo($event.target.value)">
-      <option>Gregorian</option>
-      <option>Julian</option>
-  </select>`
+  template: 'custom header'
 })
 export class CustomHeader {
   constructor(@Host() public calendar: MatCalendar<any>,
               public adapter: DateAdapter<any>) {
-  }
-
-  convertCalendarFormatTo(format: string) {
-
-    console.log(format);
   }
 }
