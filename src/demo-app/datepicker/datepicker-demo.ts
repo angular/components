@@ -45,10 +45,6 @@ export class DatepickerDemo {
   onDateInput = (e: MatDatepickerInputEvent<Date>) => this.lastDateInput = e.value;
   onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
 
-  dateCtrl = new FormControl();
-
-  constructor() { }
-
   chosenYearHandler(year: number, datepicker: MatDatepicker<Date>) {
     const actualDate = this.yearDateControl.value;
     actualDate.year(year);
@@ -62,21 +58,15 @@ export class DatepickerDemo {
   }
 
   chosenYearFromYearMonthHandler(year: number) {
-    try {      
-      const actualDate = this.monthYearDateControl.value;
-      actualDate.year(year);
-      this.monthYearDateControl.setValue(actualDate);
-
-    } catch (e) { throw new Error('Date must be in mm/yyyy format'); }
+    const actualDate = this.monthYearDateControl.value;
+    actualDate.year(year);
+    this.monthYearDateControl.setValue(actualDate);
   }
 
   chosenMonthFromYearMonthHandler(month: number, datepicker: MatDatepicker<Date>) {
-    try {
-      const actualDate = this.monthYearDateControl.value;
-      actualDate.month(month);
-      this.monthYearDateControl.setValue(actualDate);
-    } catch (e) { throw new Error('Date must be in mm/yyyy format'); }
-    datepicker.close();
+    const actualDate = this.monthYearDateControl.value;
+    actualDate.month(month);
+    this.monthYearDateControl.setValue(actualDate);
   }
 }
 
