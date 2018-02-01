@@ -161,7 +161,7 @@ export class MatYearView<D> implements AfterContentInit {
 
     const activeYear = this._dateAdapter.getYear(this.activeDate);
 
-    let firstOfMonth = this._dateAdapter.createDate(activeYear, month, 1);
+    const firstOfMonth = this._dateAdapter.createDate(activeYear, month, 1);
 
     if (!this._yearAndMonthBeforeMax(activeYear, month)) {
       return false;
@@ -197,7 +197,7 @@ export class MatYearView<D> implements AfterContentInit {
     return true;
   }
 
-  _yearAndMonthAfterMin(year: number, month: number) {
+  private _yearAndMonthAfterMin(year: number, month: number) {
     if (this.minDate) {
       const minYear = this._dateAdapter.getYear(this.minDate);
       const minMonth = this._dateAdapter.getMonth(this.minDate);
