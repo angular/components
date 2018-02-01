@@ -39,6 +39,8 @@ export class DatepickerDemo {
   monthYearDateControl = new FormControl(moment([2017, 10, 25]));
   yearDateControl = new FormControl(moment([2017, 10, 25]));
 
+  dateCtrl = new FormControl();
+
   dateFilter =
       (date: Date) => !(date.getFullYear() % 2) && (date.getMonth() % 2) && !(date.getDate() % 2)
 
