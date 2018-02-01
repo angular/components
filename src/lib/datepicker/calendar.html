@@ -48,16 +48,10 @@
       *ngSwitchCase="'multi-year'"
       [activeDate]="_activeDate"
       [selected]="selected"
-<<<<<<< HEAD
       [dateFilter]="dateFilter"
       [maxDate]="maxDate"
       [minDate]="minDate"
       (yearSelected)="_yearSelectedInMultiYearView($event)"
-=======
-      [dateFilter]="_dateFilterForViews"
-      [maxDate]="maxDate"
-      [minDate]="minDate"
->>>>>>> add max/min filter to multi year and year views
       (selectedChange)="_goToDateInView($event, 'year')">
   </mat-multi-year-view>
 </div>
