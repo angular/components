@@ -42,17 +42,17 @@ export class AutofillMonitor implements OnDestroy {
 
     const result = new Subject<AutofillEvent>();
     const listener = (event: AnimationEvent) => {
-      if (event.animationName === 'cdk-input-autofill-start') {
-        element.classList.add('cdk-input-autofilled');
+      if (event.animationName === 'mat-input-autofill-start') {
+        element.classList.add('mat-input-autofilled');
         result.next({target: event.target as Element, isAutofilled: true});
-      } else if (event.animationName === 'cdk-input-autofill-end') {
-        element.classList.remove('cdk-input-autofilled');
+      } else if (event.animationName === 'mat-input-autofill-end') {
+        element.classList.remove('mat-input-autofilled');
         result.next({target: event.target as Element, isAutofilled: false});
       }
     };
 
     element.addEventListener('animationstart', listener);
-    element.classList.add('cdk-input-autofill-monitored');
+    element.classList.add('mat-input-autofill-monitored');
 
     this._monitoredElements.set(element, {
       subject: result,
@@ -68,8 +68,8 @@ export class AutofillMonitor implements OnDestroy {
     const info = this._monitoredElements.get(element);
     if (info) {
       info.unlisten();
-      element.classList.remove('cdk-input-autofill-monitored');
-      element.classList.remove('cdk-input-autofilled');
+      element.classList.remove('mat-input-autofill-monitored');
+      element.classList.remove('mat-input-autofilled');
       this._monitoredElements.delete(element);
     }
   }
@@ -85,14 +85,14 @@ export class AutofillMonitor implements OnDestroy {
 
 /** A directive that can be used to monitor the autofill state of an input. */
 @Directive({
-  selector: '[cdkAutofill]',
+  selector: '[matAutofill]',
 })
-export class CdkAutofill implements OnDestroy {
-  @Output() cdkAutofill = new EventEmitter<AutofillEvent>();
+export class MatAutofill implements OnDestroy {
+  @Output() matAutofill = new EventEmitter<AutofillEvent>();
 
   constructor(private _elementRef: ElementRef, private _autofillMonitor: AutofillMonitor) {
     this._autofillMonitor.monitor(this._elementRef.nativeElement)
-        .subscribe(event => this.cdkAutofill.emit(event));
+        .subscribe(event => this.matAutofill.emit(event));
   }
 
   ngOnDestroy() {

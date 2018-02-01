@@ -59,7 +59,6 @@ System.config({
     '@angular/cdk/bidi': 'dist/packages/cdk/bidi/index.js',
     '@angular/cdk/coercion': 'dist/packages/cdk/coercion/index.js',
     '@angular/cdk/collections': 'dist/packages/cdk/collections/index.js',
-    '@angular/cdk/input': 'dist/packages/cdk/input/index.js',
     '@angular/cdk/keycodes': 'dist/packages/cdk/keycodes/index.js',
     '@angular/cdk/layout': 'dist/packages/cdk/layout/index.js',
     '@angular/cdk/observers': 'dist/packages/cdk/observers/index.js',

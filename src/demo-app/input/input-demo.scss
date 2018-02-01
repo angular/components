@@ -1,4 +1,4 @@
-@import '../../../dist/packages/cdk/input/autofill';
+@import '../../../dist/packages/material/input/autofill';
 
 .demo-basic {
   padding: 0;
@@ -31,5 +31,5 @@
 }
 
 .demo-custom-autofill-style {
-  @include cdk-input-autofill-color(transparent, red);
+  @include mat-input-autofill-color(transparent, red);
 }
