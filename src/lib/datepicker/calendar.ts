@@ -82,11 +82,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   @Input() headerComponent: ComponentType<any>;
 
   /** A portal containing the header component type for this calendar. */
-  private _calendarHeaderPortal: Portal<any>;
-
-  get calendarHeaderPortal() {
-    return this._calendarHeaderPortal;
-  }
+  _calendarHeaderPortal: Portal<any>;
 
   private _intlChanges: Subscription;
 
@@ -149,7 +145,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         (!this.dateFilter || this.dateFilter(date)) &&
         (!this.minDate || this._dateAdapter.compareDate(date, this.minDate) >= 0) &&
         (!this.maxDate || this._dateAdapter.compareDate(date, this.maxDate) <= 0);
-  };
+  }
 
   /**
    * The current active date. This determines which time period is shown and which date is
