@@ -54,23 +54,25 @@ year containing the `startAt` date.
 #### Watching the views for changes on selected years and months
 
 When a year or a month is selected in `multi-year` and `year` views respecively, the `yearSelected`
-and `monthSelected` outputs emit the normalized chosen year and normalized month. By "normalized"
-we mean that it will emit an object, not just a number. For example, if `<mat-datepicker>` is
-configured to work with javascript native Date objects, the `yearSelected` will emit
-`new Date(2017,0,1)` if the user selects 2017 in `multi-year` view. Similarly, `monthSelected`
-will emit `new Date(2017,1,0)` if the user selects **Jan** in `year` view and the current date
-value of the connected `<input>` was something like `new Date(2017,MM,dd)` (the month and year
-are irrelevant in this case).
+and `monthSelected` outputs emit a normalized date representing the chosen year or month. By
+"normalized" we mean that the dates representing a year will have their month set to January and
+their day set to the 1st. Dates representing months will have their day set to the 1st of the
+month. For example, if `<mat-datepicker>` is configured to work with javascript native Date
+objects, the `yearSelected` will emit `new Date(2017, 0, 1)` if the user selects 2017 in
+`multi-year` view. Similarly, `monthSelected` will emit `new Date(2017, 1, 0)` if the user
+selects **January** in `year` view and the current date value of the connected `<input>` was
+something like `new Date(2017, MM, dd)` (the month and day are irrelevant in this case).
 
 Notice that the emitted value does not affect the current value in the connected `<input>`, which
 is only bound to the selection made in the `month` view. So if the end user closes the calendar 
-after choosing a year in `multi-view` mode (by pressing the `ESC` key, for example) , the selected
-year, emitted by `yearSelected` output, will not reflect any change in the value of the date in the
+after choosing a year in `multi-view` mode (by pressing the `ESC` key, for example), the selected
+year, emitted by `yearSelected` output, will not cause any change in the value of the date in the
 associated `<input>`.
 
 The following example uses `yearSelected` and `monthSelected` outputs to emulate a month and year
-picker (if you're not familiar with the usage of `MomentDateAdapter` and `formats customization`
-you can read more about them below in this document to fully understand the example).
+picker (if you're not familiar with the usage of `MomentDateAdapter` and `MAT_DATE_FORMATS`
+you can [read more about them](#choosing-a-date-implementation-and-date-format-settings) below in
+this document to fully understand the example).
 
 <!-- example(datepicker-views-selection) -->
 
