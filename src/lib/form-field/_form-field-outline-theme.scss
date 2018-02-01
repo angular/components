@@ -14,7 +14,7 @@
   $is-dark-theme: map-get($theme, is-dark);
 
   $label-disabled-color: mat-color($foreground, disabled-text);
-  $outline-color: mat-color($foreground, divider, if($is-dark-theme, 0.30, 0.12));
+  $outline-color: mat-color($foreground, divider, if($is-dark-theme, 0.3, 0.12));
   $outline-color-hover: mat-color($foreground, divider, if($is-dark-theme, 1, 0.87));
   $outline-color-primary: mat-color($primary);
   $outline-color-accent: mat-color($accent);
