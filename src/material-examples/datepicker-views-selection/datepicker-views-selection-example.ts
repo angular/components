@@ -43,15 +43,15 @@ export const MY_FORMATS = {
 export class DatepickerViewsSelectionExample {
   date = new FormControl(moment());
 
-  chosenYearHandler(year: number) {
+  chosenYearHandler(normalizedYear: Moment) {
     const ctrlValue = this.date.value;
-    ctrlValue.year(year);
+    ctrlValue.year(normalizedYear.year());
     this.date.setValue(ctrlValue);
   }
 
-  chosenMonthHandler(month: number, datepicker: MatDatepicker<Moment>) {
+  chosenMonthHandler(normlizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
     const ctrlValue = this.date.value;
-    ctrlValue.month(month);
+    ctrlValue.month(normlizedMonth.month());
     this.date.setValue(ctrlValue);
     datepicker.close();
   }

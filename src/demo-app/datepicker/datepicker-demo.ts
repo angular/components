@@ -47,22 +47,22 @@ export class DatepickerDemo {
   onDateInput = (e: MatDatepickerInputEvent<Date>) => this.lastDateInput = e.value;
   onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
 
-  chosenYearHandler(year: number, datepicker: MatDatepicker<Moment>) {
+  chosenYearHandler(normalizedYear: Moment, datepicker: MatDatepicker<Moment>) {
     const actualDate = this.yearDateControl.value;
-    actualDate.year(year);
+    actualDate.year(normalizedYear.year());
     this.yearDateControl.setValue(actualDate);
     datepicker.close();
   }
 
-  chosenYearFromYearMonthHandler(year: number) {
+  chosenYearFromYearMonthHandler(normalizedYear: Moment) {
     const actualDate = this.monthYearDateControl.value;
-    actualDate.year(year);
+    actualDate.year(normalizedYear.year());
     this.monthYearDateControl.setValue(actualDate);
   }
 
-  chosenMonthFromYearMonthHandler(month: number, datepicker: MatDatepicker<Moment>) {
+  chosenMonthFromYearMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
     const actualDate = this.monthYearDateControl.value;
-    actualDate.month(month);
+    actualDate.month(normalizedMonth.month());
     this.monthYearDateControl.setValue(actualDate);
     datepicker.close();
   }

@@ -77,7 +77,8 @@ describe('MatYearView', () => {
       (cellEls[cellEls.length - 1] as HTMLElement).click();
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.selectedMonth).toEqual(11);
+      const normalizedMonth: Date = fixture.componentInstance.selectedMonth;
+      expect(normalizedMonth.getMonth()).toEqual(11);
     });
 
     it('should mark active date', () => {
@@ -128,7 +129,7 @@ describe('MatYearView', () => {
 class StandardYearView {
   date = new Date(2017, JAN, 5);
   selected = new Date(2017, MAR, 10);
-  selectedMonth: number;
+  selectedMonth: Date;
 
   @ViewChild(MatYearView) yearView: MatYearView<Date>;
 }

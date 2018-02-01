@@ -71,7 +71,7 @@ export class MatMultiYearView<D> implements AfterContentInit {
   @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** Emits the selected year. This doesn't imply a change on the selected date */
-  @Output() readonly yearSelected: EventEmitter<number> = new EventEmitter<number>();
+  @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
 
   /** Grid of calendar cells representing the currently displayed years. */
   _years: MatCalendarCell[][];
@@ -113,7 +113,7 @@ export class MatMultiYearView<D> implements AfterContentInit {
 
   /** Handles when a new year is selected. */
   _yearSelected(year: number) {
-    this.yearSelected.emit(year);
+    this.yearSelected.emit(this._dateAdapter.createDate(year, 0, 1));
     let month = this._dateAdapter.getMonth(this.activeDate);
     let daysInMonth =
         this._dateAdapter.getNumDaysInMonth(this._dateAdapter.createDate(year, month, 1));

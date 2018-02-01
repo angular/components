@@ -53,8 +53,14 @@ year containing the `startAt` date.
 
 #### Watching the views for changes on selected years and months
 
-When a year or a month is selected in **multi-year and year views** respecively, the `yearSelected`
-and `monthSelected` outputs emit the chosen year (full year) and month (0 - 11).
+When a year or a month is selected in `multi-year` and `year` views respecively, the `yearSelected`
+and `monthSelected` outputs emit the normalized chosen year and normalized month. By "normalized"
+we mean that it will emit an object, not just a number. For example, if `<mat-datepicker>` is
+configured to work with javascript native Date objects, the `yearSelected` will emit
+`new Date(2017,0,1)` if the user selects 2017 in `multi-year` view. Similarly, `monthSelected`
+will emit `new Date(2017,1,0)` if the user selects **Jan** in `year` view and the current date
+value of the connected `<input>` was something like `new Date(2017,MM,dd)` (the month and year
+are irrelevant in this case).
 
 Notice that the emitted value does not affect the current value in the connected `<input>`, which
 is only bound to the selection made in the `month` view. So if the end user closes the calendar 

@@ -211,7 +211,8 @@ describe('MatCalendar', () => {
 
       (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
 
-      expect(fixture.componentInstance.selectedMonth).toEqual(0);
+      const normalizedMonth: Date = fixture.componentInstance.selectedMonth;
+      expect(normalizedMonth.getMonth()).toEqual(0);
     });
 
     it('should emit the selected year on cell clicked in multiyear view', () => {
@@ -225,7 +226,8 @@ describe('MatCalendar', () => {
 
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.selectedYear).toEqual(2017);
+      const normalizedYear: Date = fixture.componentInstance.selectedYear;
+      expect(normalizedYear.getFullYear()).toEqual(2017);
     });
 
     it('should re-render when the i18n labels have changed',
@@ -958,8 +960,8 @@ describe('MatCalendar', () => {
 })
 class StandardCalendar {
   selected: Date;
-  selectedYear: number;
-  selectedMonth: number;
+  selectedYear: Date;
+  selectedMonth: Date;
   startDate = new Date(2017, JAN, 31);
 }
 
