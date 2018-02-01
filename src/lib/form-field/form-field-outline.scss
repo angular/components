@@ -33,6 +33,11 @@ $mat-form-field-outline-subscript-padding:
     margin-top: -$mat-form-field-outline-label-overlap;
   }
 
+  .mat-form-field-prefix,
+  .mat-form-field-suffix {
+    top: $mat-form-field-outline-label-overlap;
+  }
+
   .mat-form-field-outline {
     display: flex;
     position: absolute;
@@ -52,7 +57,7 @@ $mat-form-field-outline-subscript-padding:
     border-radius: $mat-form-field-outline-border-radius 0 0 $mat-form-field-outline-border-radius;
     border-right-style: none;
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
       border-right-style: solid;
       border-left-style: none;
       border-radius: 0 $mat-form-field-outline-border-radius $mat-form-field-outline-border-radius
@@ -65,7 +70,7 @@ $mat-form-field-outline-subscript-padding:
     border-left-style: none;
     flex-grow: 1;
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
       border-left-style: solid;
       border-right-style: none;
       border-radius: $mat-form-field-outline-border-radius 0 0
