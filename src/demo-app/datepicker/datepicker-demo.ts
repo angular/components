@@ -13,7 +13,7 @@ import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
 import * as _moment from 'moment';
-import {default as _rollupMoment} from 'moment';
+import {default as _rollupMoment, Moment} from 'moment';
 const moment = _rollupMoment || _moment;
 
 @Component({
@@ -45,14 +45,14 @@ export class DatepickerDemo {
   onDateInput = (e: MatDatepickerInputEvent<Date>) => this.lastDateInput = e.value;
   onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
 
-  chosenYearHandler(year: number, datepicker: MatDatepicker<Date>) {
+  chosenYearHandler(year: number, datepicker: MatDatepicker<Moment>) {
     const actualDate = this.yearDateControl.value;
     actualDate.year(year);
     this.yearDateControl.setValue(actualDate);
     datepicker.close();
   }
 
-  _open(event: Event, datepicker: MatDatepicker<Date>) {
+  _open(event: Event, datepicker: MatDatepicker<Moment>) {
     datepicker.open();
     event.stopPropagation();
   }
@@ -63,10 +63,11 @@ export class DatepickerDemo {
     this.monthYearDateControl.setValue(actualDate);
   }
 
-  chosenMonthFromYearMonthHandler(month: number, datepicker: MatDatepicker<Date>) {
+  chosenMonthFromYearMonthHandler(month: number, datepicker: MatDatepicker<Moment>) {
     const actualDate = this.monthYearDateControl.value;
     actualDate.month(month);
     this.monthYearDateControl.setValue(actualDate);
+    datepicker.close();
   }
 }
 
