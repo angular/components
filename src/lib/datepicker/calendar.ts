@@ -46,9 +46,7 @@ import {MatYearView} from './year-view';
 import {Directionality} from '@angular/cdk/bidi';
 import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
 
-/**
- * Default header of a [MatCalendar].
- */
+/** Default header for MatCalendar */
 @Component({
     selector: 'mat-calendar-header',
     template: 'default header'
