@@ -64,6 +64,22 @@ export class MatMultiYearView<D> implements AfterContentInit {
   }
   private _selected: D | null;
 
+  /** The minimum selectable date. */
+  @Input()
+  get minDate(): D | null { return this._minDate; }
+  set minDate(value: D | null) {
+    this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _minDate: D | null;
+
+  /** The maximum selectable date. */
+  @Input()
+  get maxDate(): D | null { return this._maxDate; }
+  set maxDate(value: D | null) {
+    this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _maxDate: D | null;
+
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
 
@@ -131,6 +147,20 @@ export class MatMultiYearView<D> implements AfterContentInit {
   private _isYearEnabled(year: number) {
     if (!this.dateFilter) {
       return true;
+    }
+
+    // disable if the year is greater than maxDate
+    if (this.maxDate) {
+      if (year > this._dateAdapter.getYear(this.maxDate)) {
+        return false;
+      }
+    }
+
+    // disable if the year is lower than maxDate
+    if (this.minDate) {
+      if (year < this._dateAdapter.getYear(this.minDate)) {
+        return false;
+      }
     }
 
     const firstOfYear = this._dateAdapter.createDate(year, 0, 1);

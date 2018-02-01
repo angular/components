@@ -36,6 +36,8 @@
       [activeDate]="_activeDate"
       [selected]="selected"
       [dateFilter]="_dateFilterForViews"
+      [maxDate]="maxDate"
+      [minDate]="minDate"
       (selectedChange)="_goToDateInView($event, 'month')">
   </mat-year-view>
 
@@ -44,6 +46,8 @@
       [activeDate]="_activeDate"
       [selected]="selected"
       [dateFilter]="_dateFilterForViews"
+      [maxDate]="maxDate"
+      [minDate]="minDate"
       (selectedChange)="_goToDateInView($event, 'year')">
   </mat-multi-year-view>
 </div>

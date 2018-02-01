@@ -59,6 +59,22 @@ export class MatYearView<D> implements AfterContentInit {
   }
   private _selected: D | null;
 
+  /** The minimum selectable date. */
+  @Input()
+  get minDate(): D | null { return this._minDate; }
+  set minDate(value: D | null) {
+    this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _minDate: D | null;
+
+  /** The maximum selectable date. */
+  @Input()
+  get maxDate(): D | null { return this._maxDate; }
+  set maxDate(value: D | null) {
+    this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _maxDate: D | null;
+
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
 
@@ -143,8 +159,17 @@ export class MatYearView<D> implements AfterContentInit {
       return true;
     }
 
-    let firstOfMonth = this._dateAdapter.createDate(
-        this._dateAdapter.getYear(this.activeDate), month, 1);
+    const activeYear = this._dateAdapter.getYear(this.activeDate);
+
+    let firstOfMonth = this._dateAdapter.createDate(activeYear, month, 1);
+
+    if (!this._yearAndMonthBeforeMax(activeYear, month)) {
+      return false;
+    }
+
+    if (!this._yearAndMonthAfterMin(activeYear, month)) {
+      return false;
+    }
 
     // If any date in the month is enabled count the month as enabled.
     for (let date = firstOfMonth; this._dateAdapter.getMonth(date) == month;
@@ -155,6 +180,31 @@ export class MatYearView<D> implements AfterContentInit {
     }
 
     return false;
+  }
+
+  /**
+   * Tests whether the combination month/year is before this.maxDate, considering
+   * just the month and year of this.maxDate
+   */
+  private _yearAndMonthBeforeMax(year: number, month: number) {
+    if (this.maxDate) {
+      const maxYear = this._dateAdapter.getYear(this.maxDate);
+      const maxMonth = this._dateAdapter.getMonth(this.maxDate);
+
+      return year < maxYear || (year === maxYear && month < maxMonth);
+    }
+
+    return true;
+  }
+
+  _yearAndMonthAfterMin(year: number, month: number) {
+    if (this.minDate) {
+      const minYear = this._dateAdapter.getYear(this.minDate);
+      const minMonth = this._dateAdapter.getMonth(this.minDate);
+      return year > minYear || (year === minYear && month > minMonth);
+    }
+
+    return true;
   }
 
   /**
