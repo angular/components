@@ -70,7 +70,7 @@ class SvgIconConfig {
 }
 
 /**
- * Service to register and display icons used by the <mat-icon> component.
+ * Service to register and display icons used by the `<mat-icon>` component.
  * - Registers icon URLs by namespace and name.
  * - Registers icon set URLs by namespace.
  * - Registers aliases for CSS classes, for use with icon fonts.
@@ -101,7 +101,7 @@ export class MatIconRegistry {
   private _fontCssClassesByAlias = new Map<string, string>();
 
   /**
-   * The CSS class to apply when an <mat-icon> component has no icon name, url, or font specified.
+   * The CSS class to apply when an `<mat-icon>` component has no icon name, url, or font specified.
    * The default 'material-icons' value assumes that the material icon font has been loaded as
    * described at http://google.github.io/material-design-icons/#icon-font-for-the-web
    */
@@ -164,7 +164,7 @@ export class MatIconRegistry {
   /**
    * Defines an alias for a CSS class name to be used for icon fonts. Creating an matIcon
    * component with the alias as the fontSet input will cause the class name to be applied
-   * to the <mat-icon> element.
+   * to the `<mat-icon>` element.
    *
    * @param alias Alias for the font.
    * @param className Class name override to be used instead of the alias.
@@ -183,7 +183,7 @@ export class MatIconRegistry {
   }
 
   /**
-   * Sets the CSS class name to be used for icon fonts when an <mat-icon> component does not
+   * Sets the CSS class name to be used for icon fonts when an `<mat-icon>` component does not
    * have a fontSet input value, and is not loading an icon by name or URL.
    *
    * @param className
@@ -194,7 +194,7 @@ export class MatIconRegistry {
   }
 
   /**
-   * Returns the CSS class name to be used for icon fonts when an <mat-icon> component does not
+   * Returns the CSS class name to be used for icon fonts when an `<mat-icon>` component does not
    * have a fontSet input value, and is not loading an icon by name or URL.
    */
   getDefaultFontSetClass(): string {
@@ -224,7 +224,7 @@ export class MatIconRegistry {
 
     return this._loadSvgIconFromConfig(new SvgIconConfig(safeUrl)).pipe(
       tap(svg => this._cachedIconsByUrl.set(url!, svg)),
-      map(svg => cloneSvg(svg))
+      map(svg => cloneSvg(svg)),
     );
   }
 
@@ -266,7 +266,7 @@ export class MatIconRegistry {
       // Fetch the icon from the config's URL, cache it, and return a copy.
       return this._loadSvgIconFromConfig(config).pipe(
         tap(svg => config.svgElement = svg),
-        map(svg => cloneSvg(svg))
+        map(svg => cloneSvg(svg)),
       );
     }
   }
@@ -274,7 +274,7 @@ export class MatIconRegistry {
   /**
    * Attempts to find an icon with the specified name in any of the SVG icon sets.
    * First searches the available cached icons for a nested element with a matching name, and
-   * if found copies the element to a new <svg> element. If not found, fetches all icon sets
+   * if found copies the element to a new `<svg>` element. If not found, fetches all icon sets
    * that have not been cached, and searches again after all fetches are completed.
    * The returned Observable produces the SVG element if possible, and throws
    * an error if no icon with the specified name can be found.
@@ -305,12 +305,6 @@ export class MatIconRegistry {
             // necessarily fail.
             console.log(`Loading icon set URL: ${url} failed: ${err}`);
             return observableOf(null);
-          }),
-          tap(svg => {
-            // Cache the SVG element.
-            if (svg) {
-              iconSetConfig.svgElement = svg;
-            }
           })
         );
       });
@@ -362,8 +356,20 @@ export class MatIconRegistry {
    * from it.
    */
   private _loadSvgIconSetFromConfig(config: SvgIconConfig): Observable<SVGElement> {
-    // TODO: Document that icons should only be loaded from trusted sources.
-    return this._fetchUrl(config.url).pipe(map(svgText => this._svgElementFromString(svgText)));
+    // If the SVG for this icon set has already been parsed, do nothing.
+    if (config.svgElement) {
+      return observableOf(config.svgElement);
+    }
+
+    return this._fetchUrl(config.url).pipe(map(svgText => {
+      // It is possible that the icon set was parsed and cached by an earlier request, so parsing
+      // only needs to occur if the cache is yet unset.
+      if (!config.svgElement) {
+        config.svgElement = this._svgElementFromString(svgText);
+      }
+
+      return config.svgElement;
+    }));
   }
 
   /**
@@ -492,7 +498,7 @@ export class MatIconRegistry {
     // Observable. Figure out why and fix it.
     const req = this._httpClient.get(url, {responseType: 'text'}).pipe(
       finalize(() => this._inProgressUrlFetches.delete(url)),
-      share()
+      share(),
     );
 
     this._inProgressUrlFetches.set(url, req);
@@ -517,9 +523,9 @@ export const ICON_REGISTRY_PROVIDER = {
     [new Optional(), new SkipSelf(), MatIconRegistry],
     [new Optional(), HttpClient],
     DomSanitizer,
-    [new Optional(), DOCUMENT as InjectionToken<any>]
+    [new Optional(), DOCUMENT as InjectionToken<any>],
   ],
-  useFactory: ICON_REGISTRY_PROVIDER_FACTORY
+  useFactory: ICON_REGISTRY_PROVIDER_FACTORY,
 };
 
 /** Clones an SVGElement while preserving type information. */

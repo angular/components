@@ -83,15 +83,6 @@ export class MatBasicChip {
 })
 export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDestroy, CanColor,
     CanDisable {
-
-  protected _value: any;
-
-  protected _selected: boolean = false;
-
-  protected _selectable: boolean = true;
-
-  protected _removable: boolean = true;
-
   /** Whether the chip has focus. */
   _hasFocus: boolean = false;
 
@@ -106,16 +97,17 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
       selected: value
     });
   }
-  /** The value of the chip. Defaults to the content inside <mat-chip> tags. */
+  protected _selected: boolean = false;
+
+  /** The value of the chip. Defaults to the content inside `<mat-chip>` tags. */
   @Input()
   get value(): any {
     return this._value != undefined
       ? this._value
       : this._elementRef.nativeElement.textContent;
   }
-  set value(newValue: any) {
-    this._value = newValue;
-  }
+  set value(value: any) { this._value = value; }
+  protected _value: any;
 
   /**
    * Whether or not the chips are selectable. When a chip is not selectable,
@@ -126,6 +118,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
   set selectable(value: boolean) {
     this._selectable = coerceBooleanProperty(value);
   }
+  protected _selectable: boolean = true;
 
   /**
    * Determines whether or not the chip displays the remove styling and emits (remove) events.
@@ -135,6 +128,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
   set removable(value: boolean) {
     this._removable = coerceBooleanProperty(value);
   }
+  protected _removable: boolean = true;
 
   /** Emits when the chip is focused. */
   readonly _onFocus = new Subject<MatChipEvent>();
@@ -147,7 +141,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
       new EventEmitter<MatChipSelectionChange>();
 
   /** Emitted when the chip is destroyed. */
-  @Output() readonly destroyed = new EventEmitter<MatChipEvent>();
+  @Output() readonly destroyed: EventEmitter<MatChipEvent> = new EventEmitter<MatChipEvent>();
 
   /**
    * Emitted when the chip is destroyed.
@@ -166,6 +160,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
    */
   @Output('remove') onRemove: EventEmitter<MatChipEvent> = this.removed;
 
+  /** The ARIA selected applied to the chip. */
   get ariaSelected(): string | null {
     return this.selectable ? this.selected.toString() : null;
   }
@@ -174,7 +169,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
     super(_elementRef);
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.destroyed.emit({chip: this});
   }
 
@@ -292,9 +287,9 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
  *
  * Example:
  *
- *     <mat-chip>
+ *     `<mat-chip>
  *       <mat-icon matChipRemove>cancel</mat-icon>
- *     </mat-chip>
+ *     </mat-chip>`
  *
  * You *may* use a custom icon, but you may need to override the `mat-chip-remove` positioning
  * styles to properly center the icon within the chip.
