@@ -43,21 +43,7 @@ $mat-form-field-default-infix-width: 180px !default;
 .mat-form-field-suffix {
   white-space: nowrap;
   flex: none;
-
-  // Allow icons in a prefix or suffix to adapt to the correct size.
-  .mat-icon {
-    width: 1em;
-  }
-
-  // Allow icon buttons in a prefix or suffix to adapt to the correct size.
-  .mat-icon-button {
-    font: inherit;
-    vertical-align: baseline;
-
-    .mat-icon {
-      font-size: inherit;
-    }
-  }
+  position: relative;
 }
 
 .mat-form-field-infix {
