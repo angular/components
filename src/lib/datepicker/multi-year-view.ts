@@ -71,7 +71,7 @@ export class MatMultiYearView<D> implements AfterContentInit {
   @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** Emits the selected year. This doesn't imply a change on the selected date */
-  @Output() readonly yearSelected = new EventEmitter<number>();
+  @Output() readonly yearSelected: EventEmitter<number> = new EventEmitter<number>();
 
   /** Grid of calendar cells representing the currently displayed years. */
   _years: MatCalendarCell[][];

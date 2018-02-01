@@ -174,7 +174,7 @@ export class MatDatepicker<D> implements OnDestroy {
    * Emits selected month in year view.
    * This doesn't imply a change on the selected date.
    */
-  @Output() readonly monthSelected = new EventEmitter<number>();
+  @Output() readonly monthSelected: EventEmitter<number> = new EventEmitter<number>();
 
   /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
   @Input() panelClass: string | string[];

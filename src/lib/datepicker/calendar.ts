@@ -111,13 +111,13 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
    * Emits the year chosen in multiyear view.
    * This doesn't imply a change on the selected date.
    */
-  @Output() readonly yearSelected = new EventEmitter<number>();
+  @Output() readonly yearSelected: EventEmitter<number> = new EventEmitter<number>();
 
   /**
    * Emits the month chosen in year view.
    * This doesn't imply a change on the selected date.
    */
-  @Output() readonly monthSelected = new EventEmitter<number>();
+  @Output() readonly monthSelected: EventEmitter<number> = new EventEmitter<number>();
 
   /** Emits when any date is selected. */
   @Output() readonly _userSelection: EventEmitter<void> = new EventEmitter<void>();
