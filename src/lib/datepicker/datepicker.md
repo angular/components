@@ -60,7 +60,7 @@ their day set to the 1st. Dates representing months will have their day set to t
 month. For example, if `<mat-datepicker>` is configured to work with javascript native Date
 objects, the `yearSelected` will emit `new Date(2017, 0, 1)` if the user selects 2017 in
 `multi-year` view. Similarly, `monthSelected` will emit `new Date(2017, 1, 0)` if the user
-selects **January** in `year` view and the current date value of the connected `<input>` was
+selects **February** in `year` view and the current date value of the connected `<input>` was
 something like `new Date(2017, MM, dd)` (the month and day are irrelevant in this case).
 
 Notice that the emitted value does not affect the current value in the connected `<input>`, which
