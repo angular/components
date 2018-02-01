@@ -51,6 +51,23 @@ year containing the `startAt` date.
 
 <!-- example(datepicker-start-view) -->
 
+#### Watching the views for changes on selected years and months
+
+When a year or a month is selected in **multi-year and year views** respecively, the `yearSelected`
+and `monthSelected` outputs emit the chosen year (full year) and month (0 - 11).
+
+Notice that the emitted value does not affect the current value in the connected `<input>`, which
+is only bound to the selection made in the `month` view. So if the end user closes the calendar 
+after choosing a year in `multi-view` mode (by pressing the `ESC` key, for example) , the selected
+year, emitted by `yearSelected` output, will not reflect any change in the value of the date in the
+associated `<input>`.
+
+The following example uses `yearSelected` and `monthSelected` outputs to emulate a month and year
+picker (if you're not familiar with the usage of `MomentDateAdapter` and `formats customization`
+you can read more about them below in this document to fully understand the example).
+
+<!-- example(datepicker-views-selection) -->
+
 ### Setting the selected date
 
 The type of values that the datepicker expects depends on the type of `DateAdapter` provided in your

@@ -54,11 +54,6 @@ export class DatepickerDemo {
     datepicker.close();
   }
 
-  _open(event: Event, datepicker: MatDatepicker<Moment>) {
-    datepicker.open();
-    event.stopPropagation();
-  }
-
   chosenYearFromYearMonthHandler(year: number) {
     const actualDate = this.monthYearDateControl.value;
     actualDate.year(year);
