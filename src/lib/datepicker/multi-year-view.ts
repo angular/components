@@ -161,20 +161,6 @@ export class MatMultiYearView<D> implements AfterContentInit {
       return true;
     }
 
-    // disable if the year is greater than maxDate
-    if (this.maxDate) {
-      if (year > this._dateAdapter.getYear(this.maxDate)) {
-        return false;
-      }
-    }
-
-    // disable if the year is lower than maxDate
-    if (this.minDate) {
-      if (year < this._dateAdapter.getYear(this.minDate)) {
-        return false;
-      }
-    }
-
     const firstOfYear = this._dateAdapter.createDate(year, 0, 1);
 
     // If any date in the year is enabled count the year as enabled.
