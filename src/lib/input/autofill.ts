@@ -12,8 +12,8 @@ import {
   ElementRef,
   EventEmitter,
   Injectable,
-  NgZone,
   OnDestroy,
+  OnInit,
   Output
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
@@ -50,7 +50,7 @@ const listenerOptions: any = supportsPassiveEventListeners() ? {passive: true} :
 export class AutofillMonitor implements OnDestroy {
   private _monitoredElements = new Map<Element, MonitoredElementInfo>();
 
-  constructor(private _platform: Platform, private _ngZone: NgZone) {}
+  constructor(private _platform: Platform) {}
 
   /**
    * Monitor for changes in the autofill state of the given input element.
@@ -78,9 +78,7 @@ export class AutofillMonitor implements OnDestroy {
       }
     };
 
-    this._ngZone.runOutsideAngular(() => {
-      element.addEventListener('animationstart', listener, listenerOptions);
-    });
+    element.addEventListener('animationstart', listener, listenerOptions);
     element.classList.add('mat-input-autofill-monitored');
 
     this._monitoredElements.set(element, {
@@ -120,13 +118,14 @@ export class AutofillMonitor implements OnDestroy {
 @Directive({
   selector: '[matAutofill]',
 })
-export class MatAutofill implements OnDestroy {
+export class MatAutofill implements OnDestroy, OnInit {
   @Output() matAutofill = new EventEmitter<AutofillEvent>();
 
-  constructor(private _elementRef: ElementRef, private _autofillMonitor: AutofillMonitor,
-              ngZone: NgZone) {
+  constructor(private _elementRef: ElementRef, private _autofillMonitor: AutofillMonitor) {}
+
+  ngOnInit() {
     this._autofillMonitor.monitor(this._elementRef.nativeElement)
-        .subscribe(event => ngZone.run(() => this.matAutofill.emit(event)));
+        .subscribe(event => this.matAutofill.emit(event));
   }
 
   ngOnDestroy() {

@@ -63,7 +63,8 @@ export class MatChipBase {
   constructor(public _elementRef: ElementRef) {}
 }
 
-export const _MatChipMixinBase = mixinColor(mixinDisableRipple(mixinDisabled(MatChipBase)), 'primary');
+export const _MatChipMixinBase =
+    mixinColor(mixinDisableRipple(mixinDisabled(MatChipBase)), 'primary');
 
 const CHIP_ATTRIBUTE_NAMES = ['mat-basic-chip'];
 

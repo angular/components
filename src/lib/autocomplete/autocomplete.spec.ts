@@ -102,11 +102,11 @@ describe('MatAutocomplete', () => {
     let fixture: ComponentFixture<SimpleAutocomplete>;
     let input: HTMLInputElement;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = createComponent(SimpleAutocomplete);
       fixture.detectChanges();
       input = fixture.debugElement.query(By.css('input')).nativeElement;
-    });
+    }));
 
     it('should open the panel when the input is focused', () => {
       expect(fixture.componentInstance.trigger.panelOpen)
@@ -411,7 +411,7 @@ describe('MatAutocomplete', () => {
     }));
   });
 
-  it('should have the correct text direction in RTL', () => {
+  it('should have the correct text direction in RTL', fakeAsync(() => {
     const rtlFixture = createComponent(SimpleAutocomplete, [
       {provide: Directionality, useFactory: () => ({value: 'rtl'})},
     ]);
@@ -423,18 +423,18 @@ describe('MatAutocomplete', () => {
     const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
     expect(overlayPane.getAttribute('dir')).toEqual('rtl');
 
-  });
+  }));
 
   describe('forms integration', () => {
     let fixture: ComponentFixture<SimpleAutocomplete>;
     let input: HTMLInputElement;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = createComponent(SimpleAutocomplete);
       fixture.detectChanges();
 
       input = fixture.debugElement.query(By.css('input')).nativeElement;
-    });
+    }));
 
     it('should update control value as user types with input value', () => {
       fixture.componentInstance.trigger.openPanel();
@@ -615,22 +615,23 @@ describe('MatAutocomplete', () => {
           .toBe(true, `Expected control to become touched on blur.`);
     });
 
-    it('should disable the input when used with a value accessor and without `matInput`', () => {
-      overlayContainer.ngOnDestroy();
-      fixture.destroy();
-      TestBed.resetTestingModule();
+    it('should disable the input when used with a value accessor and without `matInput`',
+        fakeAsync(() => {
+          overlayContainer.ngOnDestroy();
+          fixture.destroy();
+          TestBed.resetTestingModule();
 
-      const plainFixture = createComponent(PlainAutocompleteInputWithFormControl);
-      plainFixture.detectChanges();
-      input = plainFixture.nativeElement.querySelector('input');
+          const plainFixture = createComponent(PlainAutocompleteInputWithFormControl);
+          plainFixture.detectChanges();
+          input = plainFixture.nativeElement.querySelector('input');
 
-      expect(input.disabled).toBe(false);
+          expect(input.disabled).toBe(false);
 
-      plainFixture.componentInstance.formControl.disable();
-      plainFixture.detectChanges();
+          plainFixture.componentInstance.formControl.disable();
+          plainFixture.detectChanges();
 
-      expect(input.disabled).toBe(true);
-    });
+          expect(input.disabled).toBe(true);
+        }));
 
   });
 
@@ -1088,12 +1089,12 @@ describe('MatAutocomplete', () => {
     let fixture: ComponentFixture<SimpleAutocomplete>;
     let input: HTMLInputElement;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = createComponent(SimpleAutocomplete);
       fixture.detectChanges();
 
       input = fixture.debugElement.query(By.css('input')).nativeElement;
-    });
+    }));
 
     it('should set role of input to combobox', () => {
       expect(input.getAttribute('role'))
@@ -1205,13 +1206,13 @@ describe('MatAutocomplete', () => {
     let input: HTMLInputElement;
     let inputReference: HTMLInputElement;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = createComponent(SimpleAutocomplete);
       fixture.detectChanges();
 
       input = fixture.debugElement.query(By.css('input')).nativeElement;
       inputReference = fixture.debugElement.query(By.css('.mat-input-flex')).nativeElement;
-    });
+    }));
 
     it('should use below positioning by default', fakeAsync(() => {
       fixture.componentInstance.trigger.openPanel();
@@ -1292,10 +1293,10 @@ describe('MatAutocomplete', () => {
   describe('Option selection', () => {
     let fixture: ComponentFixture<SimpleAutocomplete>;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = createComponent(SimpleAutocomplete);
       fixture.detectChanges();
-    });
+    }));
 
     it('should deselect any other selected option', fakeAsync(() => {
       fixture.componentInstance.trigger.openPanel();
@@ -1485,10 +1486,10 @@ describe('MatAutocomplete', () => {
   describe('without matInput', () => {
     let fixture: ComponentFixture<AutocompleteWithNativeInput>;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = createComponent(AutocompleteWithNativeInput);
       fixture.detectChanges();
-    });
+    }));
 
     it('should not throw when clicking outside', fakeAsync(() => {
       dispatchFakeEvent(fixture.debugElement.query(By.css('input')).nativeElement, 'focus');
@@ -1501,7 +1502,7 @@ describe('MatAutocomplete', () => {
 
   describe('misc', () => {
 
-    it('should allow basic use without any forms directives', () => {
+    it('should allow basic use without any forms directives', fakeAsync(() => {
       expect(() => {
         const fixture = createComponent(AutocompleteWithoutForms);
         fixture.detectChanges();
@@ -1509,19 +1510,20 @@ describe('MatAutocomplete', () => {
         const input = fixture.debugElement.query(By.css('input')).nativeElement;
         typeInElement('d', input);
         fixture.detectChanges();
+        tick();
 
         const options =
             overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
         expect(options.length).toBe(1);
       }).not.toThrowError();
-    });
+    }));
 
-    it('should display an empty input when the value is undefined with ngModel', () => {
+    it('should display an empty input when the value is undefined with ngModel', fakeAsync(() => {
       const fixture = createComponent(AutocompleteWithNgModel);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('input')).nativeElement.value).toBe('');
-    });
+    }));
 
     it('should display the number when the selected option is the number zero', fakeAsync(() => {
       const fixture = createComponent(AutocompleteWithNumbers);
@@ -1533,7 +1535,7 @@ describe('MatAutocomplete', () => {
       expect(fixture.debugElement.query(By.css('input')).nativeElement.value).toBe('0');
     }));
 
-    it('should work when input is wrapped in ngIf', () => {
+    it('should work when input is wrapped in ngIf', fakeAsync(() => {
       const fixture = createComponent(NgIfAutocomplete);
       fixture.detectChanges();
 
@@ -1546,9 +1548,9 @@ describe('MatAutocomplete', () => {
           .toContain('One', `Expected panel to display when input is focused.`);
       expect(overlayContainerElement.textContent)
           .toContain('Two', `Expected panel to display when input is focused.`);
-    });
+    }));
 
-    it('should filter properly with ngIf after setting the active item', () => {
+    it('should filter properly with ngIf after setting the active item', fakeAsync(() => {
       const fixture = createComponent(NgIfAutocomplete);
       fixture.detectChanges();
 
@@ -1562,18 +1564,19 @@ describe('MatAutocomplete', () => {
       const input = fixture.debugElement.query(By.css('input')).nativeElement;
       typeInElement('o', input);
       fixture.detectChanges();
+      tick();
 
       expect(fixture.componentInstance.matOptions.length).toBe(2);
-    });
+    }));
 
-    it('should throw if the user attempts to open the panel too early', () => {
+    it('should throw if the user attempts to open the panel too early', fakeAsync(() => {
       const fixture = createComponent(AutocompleteWithoutPanel);
       fixture.detectChanges();
 
       expect(() => {
         fixture.componentInstance.trigger.openPanel();
       }).toThrow(getMatAutocompleteMissingPanelError());
-    });
+    }));
 
     it('should not throw on init, even if the panel is not defined', fakeAsync(() => {
       expect(() => {
@@ -1652,7 +1655,7 @@ describe('MatAutocomplete', () => {
 
   });
 
-  it('should have correct width when opened', () => {
+  it('should have correct width when opened', fakeAsync(() => {
     const widthFixture = createComponent(SimpleAutocomplete);
     widthFixture.componentInstance.width = 300;
     widthFixture.detectChanges();
@@ -1675,9 +1678,9 @@ describe('MatAutocomplete', () => {
 
     // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
     expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(500);
-  });
+  }));
 
-  it('should update the width while the panel is open', () => {
+  it('should update the width while the panel is open', fakeAsync(() => {
     const widthFixture = createComponent(SimpleAutocomplete);
 
     widthFixture.componentInstance.width = 300;
@@ -1699,7 +1702,7 @@ describe('MatAutocomplete', () => {
     widthFixture.detectChanges();
 
     expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(500);
-  });
+  }));
 
   it('should show the panel when the options are initialized later within a component with ' +
     'OnPush change detection', fakeAsync(() => {

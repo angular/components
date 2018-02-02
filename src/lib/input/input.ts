@@ -14,9 +14,9 @@ import {
   ElementRef,
   Inject,
   Input,
-  NgZone,
   OnChanges,
   OnDestroy,
+  OnInit,
   Optional,
   Self,
 } from '@angular/core';
@@ -82,7 +82,7 @@ export const _MatInputMixinBase = mixinErrorState(MatInputBase);
   providers: [{provide: MatFormFieldControl, useExisting: MatInput}],
 })
 export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<any>, OnChanges,
-    OnDestroy, DoCheck, CanUpdateErrorState {
+    OnDestroy, OnInit, DoCheck, CanUpdateErrorState {
   protected _uid = `mat-input-${nextUniqueId++}`;
   protected _previousNativeValue: any;
   private _inputValueAccessor: {value: any};
@@ -218,8 +218,7 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
               @Optional() _parentFormGroup: FormGroupDirective,
               _defaultErrorStateMatcher: ErrorStateMatcher,
               @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
-              private _autofillMonitor: AutofillMonitor,
-              ngZone: NgZone) {
+              private _autofillMonitor: AutofillMonitor) {
     super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
     // If no input value accessor was explicitly specified, use the element as the input value
     // accessor.
@@ -246,13 +245,14 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
       });
     }
 
-    this._autofillMonitor.monitor(this._elementRef.nativeElement)
-        .subscribe(event => ngZone.run(() => {
-          this.autofilled = event.isAutofilled;
-          this.stateChanges.next();
-        }));
-
     this._isServer = !this._platform.isBrowser;
+  }
+
+  ngOnInit() {
+    this._autofillMonitor.monitor(this._elementRef.nativeElement).subscribe(event => {
+      this.autofilled = event.isAutofilled;
+      this.stateChanges.next();
+    });
   }
 
   ngOnChanges() {

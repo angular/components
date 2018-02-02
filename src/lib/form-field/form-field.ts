@@ -289,7 +289,7 @@ export class MatFormField extends _MatFormFieldMixinBase
   }
 
   _hasPlaceholder() {
-    return !!(this._control.placeholder || this._placeholderChild);
+    return !!(this._control && this._control.placeholder || this._placeholderChild);
   }
 
   _hasLabel() {
