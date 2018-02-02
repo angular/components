@@ -267,7 +267,7 @@ export class MatFormField extends _MatFormFieldMixinBase
     });
 
     Promise.resolve().then(() => {
-      this._updateOutlineGap();
+      this.updateOutlineGap();
       this._changeDetectorRef.detectChanges();
     });
   }
@@ -414,7 +414,7 @@ export class MatFormField extends _MatFormFieldMixinBase
    * Updates the width and position of the gap in the outline. Only relevant for the outline
    * appearance.
    */
-  private _updateOutlineGap() {
+  updateOutlineGap() {
     if (this.appearance === 'outline' && this._label && this._label.nativeElement.children.length) {
       const containerStart = this._getStartEnd(
           this._connectionContainerRef.nativeElement.getBoundingClientRect());
