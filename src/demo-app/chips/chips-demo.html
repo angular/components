@@ -3,7 +3,16 @@
     <mat-toolbar color="primary">Static Chips</mat-toolbar>
 
     <mat-card-content>
-      <h4>Simple</h4>
+      <h4>Multiple selection</h4>
+
+      <mat-chip-list #chips [multiple]="true" [selectable]="true">
+        <mat-chip>One fish</mat-chip>
+        <mat-chip>Two fish</mat-chip>
+        <mat-chip color="primary" selected="true">Primary fish</mat-chip>
+        <mat-chip color="accent" selected="true">Accent fish</mat-chip>
+      </mat-chip-list>
+
+      <h4>Example</h4>
 
       <mat-chip-list>
         <mat-chip>Chip 1</mat-chip>

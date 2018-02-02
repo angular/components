@@ -42,7 +42,6 @@ $mat-chip-remove-font-size: 18px;
   }
 
   .mat-chip.mat-chip-selected {
-
     &.mat-primary {
       @include mat-chips-theme-color($primary);
     }
@@ -54,6 +53,9 @@ $mat-chip-remove-font-size: 18px;
     &.mat-accent {
       @include mat-chips-theme-color($accent);
     }
+
+    @include mat-elevation(3);
+    outline: none;
   }
 }
 
