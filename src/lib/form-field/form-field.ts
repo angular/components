@@ -100,6 +100,7 @@ export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill' | 'outline';
     '[class.mat-form-field-should-float]': '_shouldLabelFloat()',
     '[class.mat-form-field-hide-placeholder]': '_hideControlPlaceholder()',
     '[class.mat-form-field-disabled]': '_control.disabled',
+    '[class.mat-form-field-autofilled]': '_control.autofilled',
     '[class.mat-focused]': '_control.focused',
     '[class.mat-accent]': 'color == "accent"',
     '[class.mat-warn]': 'color == "warn"',
