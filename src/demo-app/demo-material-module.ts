@@ -9,6 +9,7 @@
 import {NgModule} from '@angular/core';
 import {
   MatAutocompleteModule,
+  MatBottomSheetModule,
   MatButtonModule,
   MatButtonToggleModule,
   MatCardModule,
@@ -56,6 +57,7 @@ import {PortalModule} from '@angular/cdk/portal';
 @NgModule({
   exports: [
     MatAutocompleteModule,
+    MatBottomSheetModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatCardModule,
