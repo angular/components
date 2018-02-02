@@ -9,17 +9,33 @@
 import {FocusableOption} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/keycodes';
+import {Platform} from '@angular/cdk/platform';
 import {
   ContentChild,
   Directive,
   ElementRef,
   EventEmitter,
   forwardRef,
+  Inject,
   Input,
+  NgZone,
   OnDestroy,
+  Optional,
   Output,
 } from '@angular/core';
-import {CanColor, CanDisable, mixinColor, mixinDisabled} from '@angular/material/core';
+import {
+  CanColor,
+  CanDisable,
+  CanDisableRipple,
+  MAT_RIPPLE_GLOBAL_OPTIONS,
+  mixinColor,
+  mixinDisabled,
+  mixinDisableRipple,
+  RippleConfig,
+  RippleGlobalOptions,
+  RippleRenderer,
+  RippleTarget
+} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
 
 
@@ -47,7 +63,7 @@ export class MatChipBase {
   constructor(public _elementRef: ElementRef) {}
 }
 
-export const _MatChipMixinBase = mixinColor(mixinDisabled(MatChipBase), 'primary');
+export const _MatChipMixinBase = mixinColor(mixinDisableRipple(mixinDisabled(MatChipBase)), 'primary');
 
 const CHIP_ATTRIBUTE_NAMES = ['mat-basic-chip'];
 
@@ -76,7 +92,7 @@ export class MatChipTrailingIcon {}
  */
 @Directive({
   selector: `mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]`,
-  inputs: ['color', 'disabled'],
+  inputs: ['color', 'disabled', 'disableRipple'],
   exportAs: 'matChip',
   host: {
     'class': 'mat-chip',
@@ -85,6 +101,7 @@ export class MatChipTrailingIcon {}
     '[class.mat-chip-selected]': 'selected',
     '[class.mat-chip-with-avatar]': 'avatar',
     '[class.mat-chip-with-trailing-icon]': 'trailingIcon || removeIcon',
+    '[class.mat-chip-disabled]': 'disabled',
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-selected]': 'ariaSelected',
@@ -93,10 +110,26 @@ export class MatChipTrailingIcon {}
     '(focus)': '_hasFocus = true',
     '(blur)': '_blur()',
   },
-
 })
 export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDestroy, CanColor,
-    CanDisable {
+    CanDisable, CanDisableRipple, RippleTarget {
+  /**
+   * Ripple configuration for ripples that are launched on pointer down.
+   * @docs-private
+   */
+  rippleConfig: RippleConfig = {};
+
+  /** Reference to the RippleRenderer for the chip. */
+  private _chipRipple: RippleRenderer;
+
+  /**
+   * Whether ripples are disabled on interaction
+   * @docs-private
+   */
+  get rippleDisabled(): boolean {
+    return this.disabled || this.disableRipple;
+  }
+
   /** Whether the chip has focus. */
   _hasFocus: boolean = false;
 
@@ -188,10 +221,23 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
     return this.selectable ? this.selected.toString() : null;
   }
 
-  constructor(public _elementRef: ElementRef) {
+  constructor(public _elementRef: ElementRef,
+              ngZone: NgZone,
+              platform: Platform,
+              @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalOptions: RippleGlobalOptions) {
     super(_elementRef);
 
     this._addHostClassName();
+
+    this._chipRipple = new RippleRenderer(this, ngZone, _elementRef, platform);
+    this._chipRipple.setupTriggerEvents(_elementRef.nativeElement);
+
+    if (globalOptions) {
+      this.rippleConfig = {
+        speedFactor: globalOptions.baseSpeedFactor,
+        animation: globalOptions.animation,
+      };
+    }
   }
 
   _addHostClassName() {
@@ -208,6 +254,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
   ngOnDestroy() {
     this.destroyed.emit({chip: this});
+    this._chipRipple._removeTriggerEvents();
   }
 
   /** Selects the chip. */
