@@ -23,7 +23,9 @@ import {Subject} from 'rxjs/Subject';
 
 /** An event that is emitted when the autofill state of an input changes. */
 export type AutofillEvent = {
+  /** The element whose autofill state changes. */
   target: Element;
+  /** Whether the element is currently autofilled. */
   isAutofilled: boolean;
 };
 
@@ -50,6 +52,11 @@ export class AutofillMonitor implements OnDestroy {
 
   constructor(private _platform: Platform, private _ngZone: NgZone) {}
 
+  /**
+   * Monitor for changes in the autofill state of the given input element.
+   * @param element The element to monitor.
+   * @return A stream of autofill state changes.
+   */
   monitor(element: Element): Observable<AutofillEvent> {
     if (!this._platform.isBrowser) {
       return observableEmpty();
@@ -86,6 +93,10 @@ export class AutofillMonitor implements OnDestroy {
     return result.asObservable();
   }
 
+  /**
+   * Stop monitoring the autofill state of the given input element.
+   * @param element The element to stop monitoring.
+   */
   stopMonitoring(element: Element) {
     const info = this._monitoredElements.get(element);
     if (info) {
