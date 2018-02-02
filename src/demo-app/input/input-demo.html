@@ -631,3 +631,21 @@
     </tr></table>
   </mat-card-content>
 </mat-card>
+
+<mat-card class="demo-card demo-basic">
+  <mat-toolbar color="primary">Autofill</mat-toolbar>
+  <mat-card-content>
+    <form novalidate>
+      <mat-checkbox [(ngModel)]="customAutofillStyle" name="custom">
+        Use custom autofill style
+      </mat-checkbox>
+      <mat-form-field>
+        <mat-label>Autofill monitored</mat-label>
+        <input matInput (matAutofill)="isAutofilled = $event.isAutofilled" name="autofill"
+               [class.demo-custom-autofill-style]="customAutofillStyle">
+      </mat-form-field>
+      <button color="primary" mat-raised-button>Submit</button>
+      <span> is autofilled? {{isAutofilled ? 'yes' : 'no'}}</span>
+    </form>
+  </mat-card-content>
+</mat-card>
