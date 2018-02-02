@@ -150,26 +150,25 @@ export class MatYearView<D> implements AfterContentInit {
         this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1),
         this._dateFormats.display.monthYearA11yLabel);
     return new MatCalendarCell(
-        month, monthName.toLocaleUpperCase(), ariaLabel, this._isMonthEnabled(month));
+        month, monthName.toLocaleUpperCase(), ariaLabel, this._shouldEnableMonth(month));
   }
 
   /** Whether the given month is enabled. */
-  private _isMonthEnabled(month: number) {
+  private _shouldEnableMonth(month: number) {
+
+    const activeYear = this._dateAdapter.getYear(this.activeDate);
+
+    if (month === undefined || month === null ||
+        this._isYearAndMonthAfterMaxDate(activeYear, month) ||
+        this._isYearAndMonthBeforeMinDate(activeYear, month)) {
+      return false;
+    }
+
     if (!this.dateFilter) {
       return true;
     }
 
-    const activeYear = this._dateAdapter.getYear(this.activeDate);
-
     const firstOfMonth = this._dateAdapter.createDate(activeYear, month, 1);
-
-    if (!this._yearAndMonthBeforeMax(activeYear, month)) {
-      return false;
-    }
-
-    if (!this._yearAndMonthAfterMin(activeYear, month)) {
-      return false;
-    }
 
     // If any date in the month is enabled count the month as enabled.
     for (let date = firstOfMonth; this._dateAdapter.getMonth(date) == month;
@@ -183,28 +182,33 @@ export class MatYearView<D> implements AfterContentInit {
   }
 
   /**
-   * Tests whether the combination month/year is before this.maxDate, considering
+   * Tests whether the combination month/year is after this.maxDate, considering
    * just the month and year of this.maxDate
    */
-  private _yearAndMonthBeforeMax(year: number, month: number) {
+  private _isYearAndMonthAfterMaxDate(year: number, month: number) {
     if (this.maxDate) {
       const maxYear = this._dateAdapter.getYear(this.maxDate);
       const maxMonth = this._dateAdapter.getMonth(this.maxDate);
 
-      return year < maxYear || (year === maxYear && month < maxMonth);
+      return year > maxYear || (year === maxYear && month > maxMonth);
     }
 
-    return true;
+    return false;
   }
 
-  private _yearAndMonthAfterMin(year: number, month: number) {
+  /**
+   * Tests whether the combination month/year is before this.minDate, considering
+   * just the month and year of this.minDate
+   */
+  private _isYearAndMonthBeforeMinDate(year: number, month: number) {
     if (this.minDate) {
       const minYear = this._dateAdapter.getYear(this.minDate);
       const minMonth = this._dateAdapter.getMonth(this.minDate);
-      return year > minYear || (year === minYear && month > minMonth);
+
+      return year < minYear || (year === minYear && month < minMonth);
     }
 
-    return true;
+    return false;
   }
 
   /**

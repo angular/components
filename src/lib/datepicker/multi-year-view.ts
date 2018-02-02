@@ -140,27 +140,21 @@ export class MatMultiYearView<D> implements AfterContentInit {
   /** Creates an MatCalendarCell for the given year. */
   private _createCellForYear(year: number) {
     let yearName = this._dateAdapter.getYearName(this._dateAdapter.createDate(year, 0, 1));
-    return new MatCalendarCell(year, yearName, yearName, this._isYearEnabled(year));
+    return new MatCalendarCell(year, yearName, yearName, this._shouldEnableYear(year));
   }
 
   /** Whether the given year is enabled. */
-  private _isYearEnabled(year: number) {
+  private _shouldEnableYear(year: number) {
+    // disable if the year is greater than maxDate lower than minDate
+    if (year === undefined || year === null ||
+        (this.maxDate && year > this._dateAdapter.getYear(this.maxDate)) ||
+        (this.minDate && year < this._dateAdapter.getYear(this.minDate))) {
+      return false;
+    }
+
+    // enable if it reaches here and there's no filter defined
     if (!this.dateFilter) {
       return true;
-    }
-
-    // disable if the year is greater than maxDate
-    if (this.maxDate) {
-      if (year > this._dateAdapter.getYear(this.maxDate)) {
-        return false;
-      }
-    }
-
-    // disable if the year is lower than maxDate
-    if (this.minDate) {
-      if (year < this._dateAdapter.getYear(this.minDate)) {
-        return false;
-      }
     }
 
     const firstOfYear = this._dateAdapter.createDate(year, 0, 1);
