@@ -6,11 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {supportsPassiveEventListeners} from '@angular/cdk/platform';
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {empty as observableEmpty} from 'rxjs/observable/empty';
 import {AutofillEvent, AutofillMonitor} from './autofill';
 import {MatInputModule} from './input-module';
-import {empty as observableEmpty} from 'rxjs/observable/empty';
+
+
+const listenerOptions: any = supportsPassiveEventListeners() ? {passive: true} : false;
+
 
 describe('AutofillMonitor', () => {
   let autofillMonitor: AutofillMonitor;
@@ -48,7 +53,8 @@ describe('AutofillMonitor', () => {
 
     autofillMonitor.monitor(inputEl);
     expect(inputEl.classList).toContain('mat-input-autofill-monitored');
-    expect(inputEl.addEventListener).toHaveBeenCalledWith('animationstart', jasmine.any(Function));
+    expect(inputEl.addEventListener)
+        .toHaveBeenCalledWith('animationstart', jasmine.any(Function), listenerOptions);
   });
 
   it('should not add multiple listeners to the same element', () => {
@@ -69,7 +75,7 @@ describe('AutofillMonitor', () => {
     autofillMonitor.stopMonitoring(inputEl);
     expect(inputEl.classList).not.toContain('mat-input-autofill-monitored');
     expect(inputEl.removeEventListener)
-        .toHaveBeenCalledWith('animationstart', jasmine.any(Function));
+        .toHaveBeenCalledWith('animationstart', jasmine.any(Function), listenerOptions);
   });
 
   it('should stop monitoring all monitored elements upon destroy', () => {

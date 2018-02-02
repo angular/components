@@ -1,6 +1,8 @@
 // Core styles that enable monitoring autofill state of inputs.
 @mixin mat-input-autofill {
-  // Keyframes that do nothing, but allow us to monitor when an input becomes autofilled.
+  // Keyframes that apply no styles, but allow us to monitor when an input becomes autofilled
+  // by watching for the animation events that are fired when they start.
+  // Based on: https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7
   @keyframes mat-input-autofill-start {}
   @keyframes mat-input-autofill-end {}
 

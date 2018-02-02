@@ -6,8 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, EventEmitter, Injectable, OnDestroy, Output} from '@angular/core';
+import {Platform, supportsPassiveEventListeners} from '@angular/cdk/platform';
+import {
+  Directive,
+  ElementRef,
+  EventEmitter,
+  Injectable,
+  NgZone,
+  OnDestroy,
+  Output
+} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
+import {empty as observableEmpty} from 'rxjs/observable/empty';
 import {Subject} from 'rxjs/Subject';
 
 
@@ -25,6 +35,10 @@ type MonitoredElementInfo = {
 };
 
 
+/** Options to pass to the animationstart listener. */
+const listenerOptions: any = supportsPassiveEventListeners() ? {passive: true} : false;
+
+
 /**
  * An injectable service that can be used to monitor the autofill state of an input.
  * Based on the following blog post:
@@ -34,7 +48,13 @@ type MonitoredElementInfo = {
 export class AutofillMonitor implements OnDestroy {
   private _monitoredElements = new Map<Element, MonitoredElementInfo>();
 
+  constructor(private _platform: Platform, private _ngZone: NgZone) {}
+
   monitor(element: Element): Observable<AutofillEvent> {
+    if (!this._platform.isBrowser) {
+      return observableEmpty();
+    }
+
     const info = this._monitoredElements.get(element);
     if (info) {
       return info.subject.asObservable();
@@ -51,13 +71,15 @@ export class AutofillMonitor implements OnDestroy {
       }
     };
 
-    element.addEventListener('animationstart', listener);
+    this._ngZone.runOutsideAngular(() => {
+      element.addEventListener('animationstart', listener, listenerOptions);
+    });
     element.classList.add('mat-input-autofill-monitored');
 
     this._monitoredElements.set(element, {
       subject: result,
       unlisten: () => {
-        element.removeEventListener('animationstart', listener);
+        element.removeEventListener('animationstart', listener, listenerOptions);
       }
     });
 
@@ -90,9 +112,10 @@ export class AutofillMonitor implements OnDestroy {
 export class MatAutofill implements OnDestroy {
   @Output() matAutofill = new EventEmitter<AutofillEvent>();
 
-  constructor(private _elementRef: ElementRef, private _autofillMonitor: AutofillMonitor) {
+  constructor(private _elementRef: ElementRef, private _autofillMonitor: AutofillMonitor,
+              ngZone: NgZone) {
     this._autofillMonitor.monitor(this._elementRef.nativeElement)
-        .subscribe(event => this.matAutofill.emit(event));
+        .subscribe(event => ngZone.run(() => this.matAutofill.emit(event)));
   }
 
   ngOnDestroy() {
