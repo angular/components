@@ -7,20 +7,35 @@
  */
 
 import {
+  DOWN_ARROW,
+  END,
+  ENTER,
+  HOME,
+  LEFT_ARROW,
+  PAGE_DOWN,
+  PAGE_UP,
+  RIGHT_ARROW,
+  UP_ARROW,
+} from '@angular/cdk/keycodes';
+import {
   AfterContentInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   Inject,
   Input,
+  NgZone,
   Optional,
   Output,
   ViewEncapsulation,
-  ChangeDetectorRef,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
+import {take} from 'rxjs/operators/take';
 
 
 const DAYS_PER_WEEK = 7;
@@ -37,7 +52,7 @@ const DAYS_PER_WEEK = 7;
   exportAs: 'matMonthView',
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatMonthView<D> implements AfterContentInit {
   /**
@@ -46,11 +61,15 @@ export class MatMonthView<D> implements AfterContentInit {
   @Input()
   get activeDate(): D { return this._activeDate; }
   set activeDate(value: D) {
-    let oldActiveDate = this._activeDate;
-    this._activeDate =
-        this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
+    const oldActiveDate = this._activeDate;
+    const validDate =
+      this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
+    this._activeDate = this._dateAdapter.clampDate(validDate, this.minDate, this.maxDate);
     if (!this._hasSameMonthAndYear(oldActiveDate, this._activeDate)) {
       this._init();
+    }
+    if (this._dateAdapter.compareDate(oldActiveDate, this._activeDate)) {
+      this.activeDateChange.emit(this._activeDate);
     }
   }
   private _activeDate: D;
@@ -89,6 +108,9 @@ export class MatMonthView<D> implements AfterContentInit {
   /** Emits when any date is selected. */
   @Output() readonly _userSelection: EventEmitter<void> = new EventEmitter<void>();
 
+  /** Emits when any date is activated. */
+  @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
+
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
 
@@ -110,9 +132,12 @@ export class MatMonthView<D> implements AfterContentInit {
   /** The names of the weekdays. */
   _weekdays: {long: string, narrow: string}[];
 
-  constructor(@Optional() public _dateAdapter: DateAdapter<D>,
+  constructor(private _changeDetectorRef: ChangeDetectorRef,
+              private _elementRef: ElementRef,
+              private _ngZone: NgZone,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-              private _changeDetectorRef: ChangeDetectorRef) {
+              @Optional() public _dateAdapter: DateAdapter<D>,
+              @Optional() private _dir?: Directionality) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
@@ -135,6 +160,7 @@ export class MatMonthView<D> implements AfterContentInit {
 
   ngAfterContentInit() {
     this._init();
+    this._focusActiveCell();
   }
 
   /** Handles when a new date is selected. */
@@ -147,7 +173,77 @@ export class MatMonthView<D> implements AfterContentInit {
       this.selectedChange.emit(selectedDate);
     }
 
+    this._userSelected();
+  }
+
+  _userSelected(): void {
     this._userSelection.emit();
+  }
+
+  /** Focuses the active cell after the microtask queue is empty. */
+  _focusActiveCell() {
+    this._ngZone.runOutsideAngular(() => {
+      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
+        this._elementRef.nativeElement.querySelector('.mat-calendar-body-active').focus();
+      });
+    });
+  }
+
+  /** Handles keydown events on the calendar body when calendar is in month view. */
+  _handleCalendarBodyKeydown(event: KeyboardEvent): void {
+    // TODO(mmalerba): We currently allow keyboard navigation to disabled dates, but just prevent
+    // disabled ones from being selected. This may not be ideal, we should look into whether
+    // navigation should skip over disabled dates, and if so, how to implement that efficiently.
+
+    const isRtl = this._isRtl();
+    switch (event.keyCode) {
+      case LEFT_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate, isRtl ? 1 : -1);
+        break;
+      case RIGHT_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate, isRtl ? -1 : 1);
+        break;
+      case UP_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate, -7);
+        break;
+      case DOWN_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate, 7);
+        break;
+      case HOME:
+        this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate,
+            1 - this._dateAdapter.getDate(this._activeDate));
+        break;
+      case END:
+        this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate,
+            (this._dateAdapter.getNumDaysInMonth(this._activeDate) -
+              this._dateAdapter.getDate(this._activeDate)));
+        break;
+      case PAGE_UP:
+        this.activeDate = event.altKey ?
+            this._dateAdapter.addCalendarYears(this._activeDate, -1) :
+            this._dateAdapter.addCalendarMonths(this._activeDate, -1);
+        break;
+      case PAGE_DOWN:
+        this.activeDate = event.altKey ?
+            this._dateAdapter.addCalendarYears(this._activeDate, 1) :
+            this._dateAdapter.addCalendarMonths(this._activeDate, 1);
+        break;
+      case ENTER:
+        if (!this.dateFilter || this.dateFilter(this._activeDate)) {
+          this._dateSelected(this._dateAdapter.getDate(this._activeDate));
+          this._userSelected();
+          // Prevent unexpected default actions such as form submission.
+          event.preventDefault();
+        }
+        return;
+      default:
+        // Don't prevent default or focus active cell on keys that we don't explicitly handle.
+        return;
+    }
+
+    this._focusActiveCell();
+    // Prevent unexpected default actions such as form submission.
+    event.preventDefault();
   }
 
   /** Initializes this month view. */
@@ -217,5 +313,10 @@ export class MatMonthView<D> implements AfterContentInit {
    */
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  }
+
+  /** Determines whether the user has the RTL layout direction. */
+  private _isRtl() {
+    return this._dir && this._dir.value === 'rtl';
   }
 }

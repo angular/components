@@ -7,21 +7,35 @@
  */
 
 import {
+  DOWN_ARROW,
+  END,
+  ENTER,
+  HOME,
+  LEFT_ARROW,
+  PAGE_DOWN,
+  PAGE_UP,
+  RIGHT_ARROW,
+  UP_ARROW,
+} from '@angular/cdk/keycodes';
+import {
   AfterContentInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   Inject,
   Input,
+  NgZone,
   Optional,
   Output,
   ViewEncapsulation,
-  ChangeDetectorRef,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
-
+import {take} from 'rxjs/operators/take';
 
 /**
  * An internal component used to display a single year in the datepicker.
@@ -34,7 +48,7 @@ import {createMissingDateImplError} from './datepicker-errors';
   exportAs: 'matYearView',
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatYearView<D> implements AfterContentInit {
   /** The date to display in this year view (everything other than the year is ignored). */
@@ -42,9 +56,10 @@ export class MatYearView<D> implements AfterContentInit {
   get activeDate(): D { return this._activeDate; }
   set activeDate(value: D) {
     let oldActiveDate = this._activeDate;
-    this._activeDate =
+    const validDate =
         this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
-    if (this._dateAdapter.getYear(oldActiveDate) != this._dateAdapter.getYear(this._activeDate)) {
+    this._activeDate = this._dateAdapter.clampDate(validDate, this.minDate, this.maxDate);
+    if (this._dateAdapter.getYear(oldActiveDate) !== this._dateAdapter.getYear(this._activeDate)) {
       this._init();
     }
   }
@@ -99,9 +114,12 @@ export class MatYearView<D> implements AfterContentInit {
    */
   _selectedMonth: number | null;
 
-  constructor(@Optional() public _dateAdapter: DateAdapter<D>,
+  constructor(private _changeDetectorRef: ChangeDetectorRef,
+              private _elementRef: ElementRef,
+              private _ngZone: NgZone,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-              private _changeDetectorRef: ChangeDetectorRef) {
+              @Optional() public _dateAdapter: DateAdapter<D>,
+              @Optional() private _dir?: Directionality) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
@@ -114,6 +132,7 @@ export class MatYearView<D> implements AfterContentInit {
 
   ngAfterContentInit() {
     this._init();
+    this._focusActiveCell();
   }
 
   /** Handles when a new month is selected. */
@@ -128,6 +147,65 @@ export class MatYearView<D> implements AfterContentInit {
     this.selectedChange.emit(this._dateAdapter.createDate(
         this._dateAdapter.getYear(this.activeDate), month,
         Math.min(this._dateAdapter.getDate(this.activeDate), daysInMonth)));
+  }
+
+    /** Focuses the active cell after the microtask queue is empty. */
+  _focusActiveCell() {
+    this._ngZone.runOutsideAngular(() => {
+      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
+        this._elementRef.nativeElement.querySelector('.mat-calendar-body-active').focus();
+      });
+    });
+  }
+
+  /** Handles keydown events on the calendar body when calendar is in year view. */
+  _handleCalendarBodyKeydown(event: KeyboardEvent): void {
+    // TODO(mmalerba): We currently allow keyboard navigation to disabled dates, but just prevent
+    // disabled ones from being selected. This may not be ideal, we should look into whether
+    // navigation should skip over disabled dates, and if so, how to implement that efficiently.
+
+    const isRtl = this._isRtl();
+
+    switch (event.keyCode) {
+      case LEFT_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, isRtl ? 1 : -1);
+        break;
+      case RIGHT_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, isRtl ? -1 : 1);
+        break;
+      case UP_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, -4);
+        break;
+      case DOWN_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, 4);
+        break;
+      case HOME:
+        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate,
+            -this._dateAdapter.getMonth(this._activeDate));
+        break;
+      case END:
+        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate,
+            11 - this._dateAdapter.getMonth(this._activeDate));
+        break;
+      case PAGE_UP:
+        this.activeDate =
+            this._dateAdapter.addCalendarYears(this._activeDate, event.altKey ? -10 : -1);
+        break;
+      case PAGE_DOWN:
+        this.activeDate =
+            this._dateAdapter.addCalendarYears(this._activeDate, event.altKey ? 10 : 1);
+        break;
+      case ENTER:
+        this._monthSelected(this._dateAdapter.getMonth(this._activeDate));
+        break;
+      default:
+        // Don't prevent default or focus active cell on keys that we don't explicitly handle.
+        return;
+    }
+
+    this._focusActiveCell();
+    // Prevent unexpected default actions such as form submission.
+    event.preventDefault();
   }
 
   /** Initializes this year view. */
@@ -225,5 +303,10 @@ export class MatYearView<D> implements AfterContentInit {
    */
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  }
+
+  /** Determines whether the user has the RTL layout direction. */
+  private _isRtl() {
+    return this._dir && this._dir.value === 'rtl';
   }
 }

@@ -21,7 +21,6 @@ import {ComponentPortal} from '@angular/cdk/portal';
 import {take} from 'rxjs/operators/take';
 import {filter} from 'rxjs/operators/filter';
 import {
-  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
   ComponentRef,
@@ -33,7 +32,6 @@ import {
   OnDestroy,
   Optional,
   Output,
-  ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
   ElementRef,
@@ -44,7 +42,6 @@ import {DOCUMENT} from '@angular/common';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {merge} from 'rxjs/observable/merge';
-import {MatCalendar} from './calendar';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerInput} from './datepicker-input';
 import {CanColor, mixinColor, ThemePalette} from '@angular/material/core';
