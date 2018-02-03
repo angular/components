@@ -219,6 +219,11 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
   /** Allows for programmatic focusing of the chip. */
   focus(): void {
+    if (this.selected) {
+      this.deselect();
+    } else {
+      this.select();
+    }
     this._elementRef.nativeElement.focus();
     this._onFocus.next({chip: this});
   }

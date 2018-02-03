@@ -445,7 +445,16 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     if (this._chipInput && this._chipInput.focused) {
       // do nothing
     } else if (this.chips.length > 0) {
-      this._keyManager.setFirstItemActive();
+      if (this._lastDestroyedIndex) {
+        // Ask if the last event was 'destroy last chip' -> set appropriate chip as active
+        if (this._keyManager.activeItemIndex == this._lastDestroyedIndex - 1) {
+          this._keyManager.setActiveItem(this._lastDestroyedIndex - 1);
+        } else {
+          this._keyManager.setFirstItemActive();
+        }
+      } else {
+        this._keyManager.setFirstItemActive();
+      }
       this.stateChanges.next();
     } else {
       this._focusInput();
@@ -498,8 +507,6 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
         // Check whether the chip is not the last item
         if (chipIndex < this.chips.length - 1) {
           this._keyManager.setActiveItem(chipIndex);
-        } else if (chipIndex - 1 >= 0) {
-          this._keyManager.setActiveItem(chipIndex - 1);
         }
       }
       if (this._keyManager.activeItemIndex === chipIndex) {

@@ -51,7 +51,6 @@ $mat-chip-input-margin: 3px;
   }
 
   &:focus {
-    @include mat-elevation(3);
     outline: none;
   }
 
