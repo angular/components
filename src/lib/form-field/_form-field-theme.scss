@@ -37,7 +37,7 @@
     color: $label-color;
   }
 
-  .mat-focused .mat-form-field-label {
+  .mat-form-field.mat-focused .mat-form-field-label {
     color: $focused-label-color;
 
     &.mat-accent {
