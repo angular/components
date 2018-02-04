@@ -137,10 +137,10 @@ export class FoggyTabContent {}
 @Component({
   moduleId: module.id,
   selector: 'counter',
-  template: `<span>{{count}}</span>`
+  template: `<span>Content</span>`
  })
  export class Counter {
   ngOnInit() {
-    console.log('Tab Loaded:');
+    console.log('Tab Loaded');
   }
  }
