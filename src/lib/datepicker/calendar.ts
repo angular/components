@@ -338,7 +338,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
             this._dateAdapter.addCalendarMonths(this._activeDate, 1);
         break;
       case ENTER:
-        if (this.dateFilter(this._activeDate)) {
+        if (!this.dateFilter || this.dateFilter(this._activeDate)) {
           this._dateSelected(this._activeDate);
           this._userSelected();
           // Prevent unexpected default actions such as form submission.
