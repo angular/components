@@ -268,7 +268,7 @@ export class MatFormField extends _MatFormFieldMixinBase
 
     Promise.resolve().then(() => {
       this.updateOutlineGap();
-      this._changeDetectorRef.detectChanges();
+      this._changeDetectorRef.markForCheck();
     });
   }
 
