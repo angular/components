@@ -33,10 +33,6 @@ $mat-chip-remove-size: 18px;
   align-items: center;
   cursor: default;
 
-  .mat-chip-list-wrapper & {
-    margin: $mat-chips-chip-margin;
-  }
-
   .mat-chip-remove.mat-icon {
     width: $mat-chip-remove-size;
     height: $mat-chip-remove-size;
@@ -125,6 +121,12 @@ $mat-chip-remove-size: 18px;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
+  margin: -$mat-chips-chip-margin;
+
+  input.mat-input-element,
+  .mat-standard-chip {
+    margin: $mat-chips-chip-margin;
+  }
 }
 
 .mat-chip-list-stacked .mat-chip-list-wrapper {
