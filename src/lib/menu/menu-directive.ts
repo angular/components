@@ -9,7 +9,7 @@
 import {AnimationEvent} from '@angular/animations';
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
-import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
 import {startWith} from 'rxjs/operators/startWith';
 import {switchMap} from 'rxjs/operators/switchMap';
 import {take} from 'rxjs/operators/take';
@@ -34,7 +34,6 @@ import {
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
-import {Subscription} from 'rxjs/Subscription';
 import {matMenuAnimations} from './menu-animations';
 import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
 import {MatMenuItem} from './menu-item';
@@ -87,9 +86,6 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   private _xPosition: MenuPositionX = this._defaultOptions.xPosition;
   private _yPosition: MenuPositionY = this._defaultOptions.yPosition;
   private _previousElevation: string;
-
-  /** Subscription to tab events on the menu panel */
-  private _tabSubscription = Subscription.EMPTY;
 
   /** Config object to be passed into the menu's ngClass */
   _classList: {[key: string]: boolean} = {};
@@ -176,8 +172,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   set classList(classes: string) { this.panelClass = classes; }
 
   /** Event emitted when the menu is closed. */
-  @Output() readonly closed: EventEmitter<void | 'click' | 'keydown'> =
-      new EventEmitter<void | 'click' | 'keydown'>();
+  @Output() readonly closed: EventEmitter<Event | void> = new EventEmitter<Event | void>();
 
   /**
    * Event emitted when the menu is closed.
@@ -193,11 +188,9 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
   ngAfterContentInit() {
     this._keyManager = new FocusKeyManager<MatMenuItem>(this.items).withWrap().withTypeAhead();
-    this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close.emit('keydown'));
   }
 
   ngOnDestroy() {
-    this._tabSubscription.unsubscribe();
     this.closed.complete();
   }
 
@@ -219,18 +212,21 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   _handleKeydown(event: KeyboardEvent) {
     switch (event.keyCode) {
       case ESCAPE:
-        this.closed.emit('keydown');
+        this.closed.emit(event);
         event.stopPropagation();
       break;
       case LEFT_ARROW:
         if (this.parentMenu && this.direction === 'ltr') {
-          this.closed.emit('keydown');
+          this.closed.emit(event);
         }
       break;
       case RIGHT_ARROW:
         if (this.parentMenu && this.direction === 'rtl') {
-          this.closed.emit('keydown');
+          this.closed.emit(event);
         }
+      break;
+      case TAB:
+        this.closed.emit(event);
       break;
       default:
         this._keyManager.onKeydown(event);

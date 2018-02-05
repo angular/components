@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {OverlayContainer, Overlay} from '@angular/cdk/overlay';
-import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
 import {
   MAT_MENU_DEFAULT_OPTIONS,
   MatMenu,
@@ -726,7 +726,7 @@ describe('MatMenu', () => {
       menuItem.click();
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.closeCallback).toHaveBeenCalledWith('click');
+      expect(fixture.componentInstance.closeCallback).toHaveBeenCalledWith(jasmine.any(MouseEvent));
       expect(fixture.componentInstance.closeCallback).toHaveBeenCalledTimes(1);
     });
 
@@ -747,7 +747,8 @@ describe('MatMenu', () => {
       dispatchKeyboardEvent(menu, 'keydown', ESCAPE);
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.closeCallback).toHaveBeenCalledWith('keydown');
+      expect(fixture.componentInstance.closeCallback)
+          .toHaveBeenCalledWith(jasmine.any(KeyboardEvent));
       expect(fixture.componentInstance.closeCallback).toHaveBeenCalledTimes(1);
     });
 
@@ -1124,6 +1125,28 @@ describe('MatMenu', () => {
       expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(0, 'Expected no open menus');
     }));
 
+    it('should close all of the menus when tabbing out', fakeAsync(() => {
+      compileTestComponent();
+      instance.rootTriggerEl.nativeElement.click();
+      fixture.detectChanges();
+
+      instance.levelOneTrigger.openMenu();
+      fixture.detectChanges();
+
+      instance.levelTwoTrigger.openMenu();
+      fixture.detectChanges();
+
+      const menus = overlay.querySelectorAll('.mat-menu-panel');
+
+      expect(menus.length).toBe(3, 'Expected three open menus');
+
+      dispatchKeyboardEvent(menus[2], 'keydown', TAB);
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(0, 'Expected no open menus');
+    }));
+
     it('should set a class on the menu items that trigger a sub-menu', () => {
       compileTestComponent();
       instance.rootTrigger.openMenu();
@@ -1405,7 +1428,7 @@ class CustomMenuPanel implements MatMenuPanel {
   parentMenu: MatMenuPanel;
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
-  @Output() close = new EventEmitter<void | 'click' | 'keydown'>();
+  @Output() close = new EventEmitter<Event | void>();
   focusFirstItem = () => {};
   resetActiveItem = () => {};
   setPositionClasses = () => {};
