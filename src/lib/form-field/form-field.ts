@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterContentChecked,
@@ -18,6 +19,7 @@ import {
   ContentChildren,
   ElementRef,
   Inject,
+  InjectionToken,
   Input,
   Optional,
   QueryList,
@@ -48,7 +50,6 @@ import {MatLabel} from './label';
 import {MatPlaceholder} from './placeholder';
 import {MatPrefix} from './prefix';
 import {MatSuffix} from './suffix';
-import {Directionality} from '@angular/cdk/bidi';
 
 
 let nextUniqueId = 0;
@@ -67,6 +68,10 @@ export const _MatFormFieldMixinBase = mixinColor(MatFormFieldBase, 'primary');
 
 
 export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill' | 'outline';
+
+
+export const MAT_DEFAULT_FORM_FIELD_APPEARANCE =
+    new InjectionToken<MatFormFieldAppearance>('MAT_DEFAULT_FORM_FIELD_APPEARANCE');
 
 
 /** Container for form controls that applies Material Design styling and behavior. */
@@ -123,7 +128,7 @@ export class MatFormField extends _MatFormFieldMixinBase
   private _labelOptions: LabelOptions;
 
   /** The form-field appearance style. */
-  @Input() appearance: MatFormFieldAppearance = 'legacy';
+  @Input() appearance: MatFormFieldAppearance = this._defaultAppearance || 'legacy';
 
   /**
    * @deprecated Use `color` instead.
@@ -221,7 +226,8 @@ export class MatFormField extends _MatFormFieldMixinBase
       public _elementRef: ElementRef,
       private _changeDetectorRef: ChangeDetectorRef,
       @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) labelOptions: LabelOptions,
-      @Optional() private _dir: Directionality) {
+      @Optional() private _dir: Directionality,
+      @Optional() @Inject(MAT_DEFAULT_FORM_FIELD_APPEARANCE) private _defaultAppearance: any) {
     super(_elementRef);
 
     this._labelOptions = labelOptions ? labelOptions : {};
