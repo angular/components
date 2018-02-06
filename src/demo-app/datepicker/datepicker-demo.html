@@ -133,34 +133,3 @@
                     [startView]="yearView ? 'year' : 'month'"></mat-datepicker>
   </mat-form-field>
 </p>
-
-<h2>Datepicker emulating year picker</h2>
-<div demo-moment-year>
-    <mat-form-field>
-      <input matInput [matDatepicker]="datePicker5" placeholder="Choose an year" 
-             [formControl]="yearDateControl">
-      <mat-datepicker-toggle  matSuffix [for]="datePicker5"></mat-datepicker-toggle>
-      <mat-datepicker
-          #datePicker5
-          [touchUi]="true"
-          startView="multi-year"
-          (yearSelected)="chosenYearHandler($event, datePicker5)">
-      </mat-datepicker>
-    </mat-form-field>
-</div>
-
-<h2>Datepicker emulating month/year picker</h2>
-<div demo-moment-month-year>
-  <mat-form-field>
-    <input matInput [matDatepicker]="datePicker6" placeholder="Choose a date (year and month)" 
-           [formControl]="monthYearDateControl">
-    <mat-datepicker-toggle  matSuffix [for]="datePicker6"></mat-datepicker-toggle>
-    <mat-datepicker
-        #datePicker6
-        [touchUi]="true"
-        startView="multi-year"
-        (yearSelected)="chosenYearFromYearMonthHandler($event)"
-        (monthSelected)="chosenMonthFromYearMonthHandler($event, datePicker6)">
-    </mat-datepicker>
-  </mat-form-field>
-</div>
