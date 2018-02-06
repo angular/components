@@ -25,13 +25,14 @@ $mat-chip-input-margin: 3px;
   border-radius: $mat-chip-horizontal-padding * 2;
   align-items: center;
   cursor: default;
+  margin-bottom: $mat-chip-input-margin;
 
   // Apply a margin to adjacent sibling chips.
   & + & {
-    margin: 0 0 0 $mat-chips-chip-margin;
+    margin: 0 0 $mat-chip-input-margin $mat-chips-chip-margin;
 
     [dir='rtl'] & {
-      margin: 0 $mat-chips-chip-margin 0 0;
+      margin: 0 $mat-chips-chip-margin $mat-chip-input-margin 0;
     }
   }
 
