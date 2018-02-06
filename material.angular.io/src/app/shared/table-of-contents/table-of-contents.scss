@@ -1,15 +1,22 @@
 :host {
   font-size: 13px;
-  padding-left: 20px;
+  // Width is container width minus content width
+  width: 19%;
+  position: sticky;
+  top: 0;
+  padding-left: 25px;
   box-sizing: border-box;
+  display: inline-flex;
 }
 
 .docs-toc-container {
-  box-sizing: border-box;
-  padding: 5px 0 10px 12px;
+  width: 100%;
+  padding: 5px 0 10px 10px;
 }
 
 .docs-toc-heading {
+  margin: 0;
+  padding: 0;
   font-size: 13px;
   font-weight: bold;
 }
@@ -21,6 +28,7 @@ a {
   text-decoration: none;
   display: block;
   text-overflow: ellipsis;
+  width: 100%;
   overflow: hidden;
 }
 

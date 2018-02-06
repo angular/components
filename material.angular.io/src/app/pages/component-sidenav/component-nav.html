@@ -1,0 +1,23 @@
+<div class="docs-component-viewer-nav">
+  <div class="docs-component-viewer-nav-content">
+    <nav *ngFor="let category of docItems.getCategories((params | async)?.section); let last = last;">
+      <button (click)="toggleExpand(category.id)"
+              [attr.aria-label]="category.name + ', section toggle'"
+              [attr.aria-controls]="'panel-' + category.id"
+              [attr.aria-expanded]="getExpanded(category.id)">
+        {{category.name}}
+        <mat-icon *ngIf="!getExpanded(category.id)">keyboard_arrow_down</mat-icon>
+        <mat-icon *ngIf="getExpanded(category.id)">keyboard_arrow_up</mat-icon>
+      </button>
+      <ul [@bodyExpansion]="_getExpandedState(category.id)" id="panel-{{category.id}}">
+        <li *ngFor="let component of category.items">
+          <a [routerLink]="'/' + (params | async)?.section+ '/' + component.id"
+            routerLinkActive="docs-component-viewer-sidenav-item-selected">
+            {{component.name}}
+          </a>
+        </li>
+      </ul>
+      <hr *ngIf="!last" />
+    </nav>
+  </div>
+</div>
