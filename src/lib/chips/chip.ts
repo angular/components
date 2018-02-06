@@ -237,6 +237,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
       this.rippleConfig = {
         speedFactor: globalOptions.baseSpeedFactor,
         animation: globalOptions.animation,
+        terminateOnPointerUp: globalOptions.terminateOnPointerUp,
       };
     }
   }
