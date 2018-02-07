@@ -62,6 +62,7 @@
 /src/cdk/bidi/**                                   @jelbourn
 /src/cdk/coercion/**                               @jelbourn
 /src/cdk/collections/**                            @jelbourn @crisbeto @andrewseguin
+/src/cdk/input/**                                  @mmalerba
 /src/cdk/keycodes/**                               @jelbourn
 /src/cdk/layout/**                                 @josephperrott
 /src/cdk/observers/**                              @jelbourn @crisbeto

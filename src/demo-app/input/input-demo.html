@@ -641,7 +641,7 @@
       </mat-checkbox>
       <mat-form-field>
         <mat-label>Autofill monitored</mat-label>
-        <input matInput (matAutofill)="isAutofilled = $event.isAutofilled" name="autofill"
+        <input matInput (cdkAutofill)="isAutofilled = $event.isAutofilled" name="autofill"
                [class.demo-custom-autofill-style]="customAutofillStyle">
       </mat-form-field>
       <button color="primary" mat-raised-button>Submit</button>
