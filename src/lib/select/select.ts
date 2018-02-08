@@ -1114,38 +1114,45 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    */
   private _calculateOverlayOffsetY(selectedIndex: number, scrollBuffer: number,
                                   maxScroll: number): number {
-    const itemHeight = this._getItemHeight();
-    const optionHeightAdjustment = (itemHeight - this._triggerRect.height) / 2;
-    const maxOptionsDisplayed = Math.floor(SELECT_PANEL_MAX_HEIGHT / itemHeight);
-    let optionOffsetFromPanelTop: number;
+    // Only enable offset for larger lists
+	if (this._getItemCount() > 10) { 	  
+	  const itemHeight = this._getItemHeight();
+      const optionHeightAdjustment = (itemHeight - this._triggerRect.height) / 2;
+      const maxOptionsDisplayed = Math.floor(SELECT_PANEL_MAX_HEIGHT / itemHeight);
+      let optionOffsetFromPanelTop: number;
 
-    if (this._scrollTop === 0) {
-      optionOffsetFromPanelTop = selectedIndex * itemHeight;
-    } else if (this._scrollTop === maxScroll) {
-      const firstDisplayedIndex = this._getItemCount() - maxOptionsDisplayed;
-      const selectedDisplayIndex = selectedIndex - firstDisplayedIndex;
+      if (this._scrollTop === 0) {
+        optionOffsetFromPanelTop = selectedIndex * itemHeight;
+      } else if (this._scrollTop === maxScroll) {
+        const firstDisplayedIndex = this._getItemCount() - maxOptionsDisplayed;
+        const selectedDisplayIndex = selectedIndex - firstDisplayedIndex;
 
-      // The first item is partially out of the viewport. Therefore we need to calculate what
-      // portion of it is shown in the viewport and account for it in our offset.
-      let partialItemHeight =
-          itemHeight - (this._getItemCount() * itemHeight - SELECT_PANEL_MAX_HEIGHT) % itemHeight;
+        // The first item is partially out of the viewport. Therefore we need to calculate what
+        // portion of it is shown in the viewport and account for it in our offset.
+        let partialItemHeight =
+            itemHeight - (this._getItemCount() * itemHeight - SELECT_PANEL_MAX_HEIGHT) % itemHeight;
 
-      // Because the panel height is longer than the height of the options alone,
-      // there is always extra padding at the top or bottom of the panel. When
-      // scrolled to the very bottom, this padding is at the top of the panel and
-      // must be added to the offset.
-      optionOffsetFromPanelTop = selectedDisplayIndex * itemHeight + partialItemHeight;
-    } else {
-      // If the option was scrolled to the middle of the panel using a scroll buffer,
-      // its offset will be the scroll buffer minus the half height that was added to
-      // center it.
-      optionOffsetFromPanelTop = scrollBuffer - itemHeight / 2;
-    }
+        // Because the panel height is longer than the height of the options alone,
+        // there is always extra padding at the top or bottom of the panel. When
+        // scrolled to the very bottom, this padding is at the top of the panel and
+        // must be added to the offset.
+        optionOffsetFromPanelTop = selectedDisplayIndex * itemHeight + partialItemHeight;
+      } else {
+        // If the option was scrolled to the middle of the panel using a scroll buffer,
+        // its offset will be the scroll buffer minus the half height that was added to
+        // center it.
+        optionOffsetFromPanelTop = scrollBuffer - itemHeight / 2;
+      }
 
-    // The final offset is the option's offset from the top, adjusted for the height
-    // difference, multiplied by -1 to ensure that the overlay moves in the correct
-    // direction up the page.
-    return optionOffsetFromPanelTop * -1 - optionHeightAdjustment;
+      // The final offset is the option's offset from the top, adjusted for the height
+      // difference, multiplied by -1 to ensure that the overlay moves in the correct
+      // direction up the page.
+	
+	  return optionOffsetFromPanelTop * -1 - optionHeightAdjustment;
+	} else {  
+	  // disable offset for smaller lists
+	  return 0;
+	}
   }
 
   /**
