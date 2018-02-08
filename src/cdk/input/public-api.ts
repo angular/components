@@ -7,4 +7,5 @@
  */
 
 export * from './autofill';
+export * from './autosize';
 export * from './input-module';

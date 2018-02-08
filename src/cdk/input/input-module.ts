@@ -9,12 +9,13 @@
 import {PlatformModule} from '@angular/cdk/platform';
 import {NgModule} from '@angular/core';
 import {AutofillMonitor, CdkAutofill} from './autofill';
+import {CdkTextareaAutosize} from './autosize';
 
 
 @NgModule({
-  declarations: [CdkAutofill],
+  declarations: [CdkAutofill, CdkTextareaAutosize],
   imports: [PlatformModule],
-  exports: [CdkAutofill],
+  exports: [CdkAutofill, CdkTextareaAutosize],
   providers: [AutofillMonitor],
 })
 export class InputModule {}

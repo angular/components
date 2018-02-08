@@ -19,15 +19,15 @@ sass_library(
 )
 
 sass_binary(
-  name = "autofill_prebuilt_scss",
-  src = "autofill-prebuilt.scss",
+  name = "input_prebuilt_scss",
+  src = "input-prebuilt.scss",
 )
 
 # TODO(jelbourn): remove this when sass_binary supports specifying an output filename and dir.
 # Copy the output of the sass_binary such that the filename and path match what we expect.
 genrule(
-  name = "autofill_prebuilt_css",
-  srcs = [":autofill_prebuilt_scss"],
-  outs = ["autofill-prebuilt.css"],
-  cmd = "cat $(locations :autofill_prebuilt_scss) > $@",
+  name = "input_prebuilt_css",
+  srcs = [":input_prebuilt_scss"],
+  outs = ["input-prebuilt.css"],
+  cmd = "cat $(locations :input_prebuilt_scss) > $@",
 )

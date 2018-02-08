@@ -1,5 +1,5 @@
 // Core styles that enable monitoring autofill state of inputs.
-@mixin cdk-input-autofill {
+@mixin cdk-input {
   // Keyframes that apply no styles, but allow us to monitor when an input becomes autofilled
   // by watching for the animation events that are fired when they start.
   // Based on: https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7
@@ -12,6 +12,12 @@
 
   .cdk-input-autofill-monitored:not(:-webkit-autofill) {
     animation-name: cdk-input-autofill-end;
+  }
+
+  // Remove the resize handle on autosizing textareas, because whatever height
+  // the user resized to will be overwritten once they start typing again.
+  textarea.cdk-textarea-autosize {
+    resize: none;
   }
 }
 
