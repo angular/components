@@ -7,8 +7,8 @@
  */
 
 import {Component} from '@angular/core';
-import {FlatTreeControl, NestedTreeControl} from '@angular/cdk-experimental/tree';
-import {MatTreeFlattener, MatTreeFlatDataSource, MatTreeNestedDataSource} from '@angular/material-experimental/tree';
+import {FlatTreeControl, NestedTreeControl} from '@angular/cdk/tree';
+import {MatTreeFlattener, MatTreeFlatDataSource, MatTreeNestedDataSource} from '@angular/material/tree';
 import {of as ofObservable} from 'rxjs/observable/of';
 
 import {JsonNode, JsonDatabase} from './json-database';
