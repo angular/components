@@ -86,6 +86,7 @@ export class MatButton extends _MatButtonMixinBase
   @ViewChild(MatRipple) ripple: MatRipple;
 
   constructor(elementRef: ElementRef,
+              // @deletion-target 6.0.0 Remove _platform param, not being used anymore.
               private _platform: Platform,
               private _focusMonitor: FocusMonitor) {
     super(elementRef);
@@ -126,13 +127,6 @@ export class MatButton extends _MatButtonMixinBase
 
   /** Gets whether the button has one of the given attributes. */
   _hasHostAttributes(...attributes: string[]) {
-    // If not on the browser, say that there are none of the attributes present.
-    // Since these only affect how the ripple displays (and ripples only happen on the client),
-    // detecting these attributes isn't necessary when not on the browser.
-    if (!this._platform.isBrowser) {
-      return false;
-    }
-
     return attributes.some(attribute => this._getHostElement().hasAttribute(attribute));
   }
 }
