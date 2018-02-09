@@ -5,7 +5,7 @@ This tree builds on the foundation of the CDK tree and uses a similar interface 
 data source input and template, except that its element and attribute selectors will be prefixed
 with `mat-` instead of `cdk-`.
 
-There are two types of trees: Flat tree and Nested Tree. The DOM structures are different for these
+There are two types of trees: Flat tree and nested tree. The DOM structures are different for these
 two types of trees.
 
 #### Flat tree
