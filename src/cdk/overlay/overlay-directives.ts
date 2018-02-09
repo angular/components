@@ -98,7 +98,6 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _templatePortal: TemplatePortal;
   private _hasBackdrop = false;
   private _backdropSubscription = Subscription.EMPTY;
-  private _positionSubscription = Subscription.EMPTY;
   private _offsetX: number = 0;
   private _offsetY: number = 0;
   private _position: ConnectedPositionStrategy;
@@ -369,8 +368,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       );
     }
 
-    this._positionSubscription = strategy.onPositionChange
-        .subscribe(pos => this.positionChange.emit(pos));
+    strategy.onPositionChange.subscribe(pos => this.positionChange.emit(pos));
 
     return strategy;
   }
@@ -384,6 +382,14 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
         if (event.keyCode === ESCAPE) {
           this._detachOverlay();
         }
+      });
+    } else {
+      // Update the overlay size, in case the directive's inputs have changed
+      this._overlayRef.updateSize({
+        width: this.width,
+        minWidth: this.minWidth,
+        height: this.height,
+        minHeight: this.minHeight,
       });
     }
 
@@ -419,6 +425,5 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     }
 
     this._backdropSubscription.unsubscribe();
-    this._positionSubscription.unsubscribe();
   }
 }

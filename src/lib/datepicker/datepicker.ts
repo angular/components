@@ -168,6 +168,18 @@ export class MatDatepicker<D> implements OnDestroy {
    */
   @Output() readonly selectedChanged: EventEmitter<D> = new EventEmitter<D>();
 
+  /**
+   * Emits selected year in multiyear view.
+   * This doesn't imply a change on the selected date.
+   */
+  @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
+
+  /**
+   * Emits selected month in year view.
+   * This doesn't imply a change on the selected date.
+   */
+  @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
+
   /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
   @Input() panelClass: string | string[];
 
@@ -176,6 +188,7 @@ export class MatDatepicker<D> implements OnDestroy {
 
   /** Emits when the datepicker has been closed. */
   @Output('closed') closedStream: EventEmitter<void> = new EventEmitter<void>();
+
 
   /** Whether the calendar is open. */
   @Input()
@@ -255,6 +268,16 @@ export class MatDatepicker<D> implements OnDestroy {
     if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
       this.selectedChanged.emit(date);
     }
+  }
+
+  /** Emits the selected year in multiyear view */
+  _selectYear(normalizedYear: D): void {
+    this.yearSelected.emit(normalizedYear);
+  }
+
+  /** Emits selected month in year view */
+  _selectMonth(normalizedMonth: D): void {
+    this.monthSelected.emit(normalizedMonth);
   }
 
   /**
@@ -382,18 +405,14 @@ export class MatDatepicker<D> implements OnDestroy {
 
   /** Create the popup PositionStrategy. */
   private _createPopupPositionStrategy(): PositionStrategy {
-    const fallbackOffset = this._datepickerInput._getPopupFallbackOffset();
-
     return this._overlay.position()
-      .connectedTo(this._datepickerInput.getPopupConnectionElementRef(),
+      .connectedTo(this._datepickerInput.getConnectedOverlayOrigin(),
         {originX: 'start', originY: 'bottom'},
         {overlayX: 'start', overlayY: 'top'}
       )
       .withFallbackPosition(
         {originX: 'start', originY: 'top'},
         {overlayX: 'start', overlayY: 'bottom'},
-        undefined,
-        fallbackOffset
       )
       .withFallbackPosition(
         {originX: 'end', originY: 'bottom'},
@@ -402,8 +421,6 @@ export class MatDatepicker<D> implements OnDestroy {
       .withFallbackPosition(
         {originX: 'end', originY: 'top'},
         {overlayX: 'end', overlayY: 'bottom'},
-        undefined,
-        fallbackOffset
       );
   }
 

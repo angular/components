@@ -33,13 +33,13 @@ export class DatepickerDemo {
   lastDateInput: Date | null;
   lastDateChange: Date | null;
 
+  dateCtrl = new FormControl();
+
   dateFilter =
       (date: Date) => !(date.getFullYear() % 2) && (date.getMonth() % 2) && !(date.getDate() % 2)
 
   onDateInput = (e: MatDatepickerInputEvent<Date>) => this.lastDateInput = e.value;
   onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
-
-  dateCtrl = new FormControl();
 
   // pass custom header component type as input
   customHeader = CustomHeader;
@@ -54,4 +54,5 @@ export class CustomHeader {
   constructor(@Host() public calendar: MatCalendar<any>,
               public adapter: DateAdapter<any>) {
   }
+
 }

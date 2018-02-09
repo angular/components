@@ -10,7 +10,7 @@
          [matRippleDisabled]="_isRippleDisabled()"
          [matRippleCentered]="true"
          [matRippleRadius]="23"
-         [matRippleAnimation]="{enterDuration: 300}">
+         [matRippleAnimation]="{enterDuration: 150}">
     </div>
   </div>
 
@@ -23,6 +23,7 @@
          [required]="required"
          [attr.aria-label]="ariaLabel"
          [attr.aria-labelledby]="ariaLabelledby"
+         [attr.aria-describedby]="ariaDescribedby"
          (change)="_onInputChange($event)"
          (click)="_onInputClick($event)">
 

@@ -366,6 +366,9 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   /** The 'aria-labelledby' attribute takes precedence as the element's text alternative. */
   @Input('aria-labelledby') ariaLabelledby: string;
 
+  /** The 'aria-describedby' attribute is read after the element's label and field type. */
+  @Input('aria-describedby') ariaDescribedby: string;
+
   /** Whether this radio button is checked. */
   @Input()
   get checked(): boolean { return this._checked; }
@@ -412,7 +415,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   /**
    * Whether or not the radio-button should appear before or after the label.
    * @deprecated
-   * @deletion-target
+   * @deletion-target 6.0.0
    */
   @Input()
   get align(): 'start' | 'end' {
