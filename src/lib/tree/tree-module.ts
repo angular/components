@@ -8,7 +8,7 @@
 
 import {NgModule} from '@angular/core';
 
-import {CdkTreeModule} from '@angular/cdk-experimental/tree';
+import {CdkTreeModule} from '@angular/cdk/tree';
 import {CommonModule} from '@angular/common';
 import {MatCommonModule} from '@angular/material/core';
 import {MatNestedTreeNode, MatTreeNodeDef, MatTreeNode} from './node';

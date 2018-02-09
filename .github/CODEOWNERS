@@ -32,6 +32,7 @@
 /src/lib/tabs/**                                   @andrewseguin
 /src/lib/toolbar/**                                @devversion
 /src/lib/tooltip/**                                @andrewseguin
+/src/lib/tree/**                                   @tinayuangao
 
 # Angular Material core
 /src/lib/core/*                                    @jelbourn
@@ -70,18 +71,17 @@
 /src/cdk/stepper/**                                @mmalerba
 /src/cdk/table/**                                  @andrewseguin
 /src/cdk/testing/**                                @devversion
+/src/cdk/tree/**                                   @tinayuangao
 
 # Moment adapter package
 /src/material-moment-adapter/**                    @mmalerba
 
 # Material experimental package
 /src/material-experimental/**                      @jelbourn
-/src/material-experimental/tree/**                 @tinayuangao
 
 # CDK experimental package
 /src/cdk-experimental/**                           @jelbourn
 /src/cdk-experimental/dialog/**                    @jelbourn @josephperrott @crisbeto
-/src/cdk-experimental/tree/**                      @tinayuangao
 
 # Docs examples & guides
 /guides/**                                         @amcdnl @jelbourn
@@ -130,6 +130,7 @@
 /src/demo-app/tabs/**                              @andrewseguin
 /src/demo-app/toolbar/**                           @devversion
 /src/demo-app/tooltip/**                           @andrewseguin
+/src/demo-app/tree/**                              @tinayuangao
 /src/demo-app/typography/**                        @crisbeto
 
 # E2E app

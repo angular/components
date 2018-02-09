@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {TreeControl, FlatTreeControl, NestedTreeControl} from '@angular/cdk-experimental/tree';
+import {TreeControl, FlatTreeControl, NestedTreeControl} from '@angular/cdk/tree';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 import {
