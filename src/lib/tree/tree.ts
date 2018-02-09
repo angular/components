@@ -7,7 +7,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation} from '@angular/core';
-import {CdkTree} from '@angular/cdk-experimental/tree';
+import {CdkTree} from '@angular/cdk/tree';
 import {MatTreeNodeOutlet} from './outlet';
 
 /**

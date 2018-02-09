@@ -8,7 +8,8 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/cdk-experimental/tree",
-    "skipTemplateCodegen": true
+    "flatModuleId": "@angular/material/tree",
+    "skipTemplateCodegen": true,
+    "fullTemplateTypeCheck": true
   }
 }
