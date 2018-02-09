@@ -177,7 +177,7 @@ constructor(
 
 Note that if your component implements `ControlValueAccessor`, it may already be set up to provide `NG_VALUE_ACCESSOR` (in the `providers` part of the component's decorator, or possibly in a module declaration). If so you may get a *cannot instantiate cyclic dependency* error. 
 
-To resolve this, remove the `NG_VALUE_ACCESSOR` and instead set the value accessor directly:
+To resolve this, remove the `NG_VALUE_ACCESSOR` provider and instead set the value accessor directly:
 
 ```ts
 constructor(
