@@ -56,7 +56,8 @@
 }
 
 .docs-api-input-marker,
-.docs-api-output-marker {
+.docs-api-output-marker,
+.docs-api-deprecated-marker {
   // Size corresponding to "caption"-style text in the spec.
   font-size: 12px;
 }
@@ -66,4 +67,20 @@
 .docs-api-class-export-name {
   font-family: 'Roboto Mono', monospace;
   padding: 3px;
+}
+
+.docs-api-deprecated-marker,
+.docs-api-class-deprecated-marker,
+.docs-api-interface-deprecated-marker {
+  display: inline-block;
+  font-weight: bold;
+
+  &[title] {
+    border-bottom: 1px dotted grey;
+    cursor: help;
+  }
+}
+
+.docs-api-deprecated-marker + .docs-api-property-name {
+  text-decoration: line-through;
 }
