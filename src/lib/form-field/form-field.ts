@@ -70,8 +70,12 @@ export const _MatFormFieldMixinBase = mixinColor(MatFormFieldBase, 'primary');
 export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill' | 'outline';
 
 
-export const MAT_DEFAULT_FORM_FIELD_APPEARANCE =
-    new InjectionToken<MatFormFieldAppearance>('MAT_DEFAULT_FORM_FIELD_APPEARANCE');
+export interface MatFormFieldDefaultOptions {
+  appearance?: MatFormFieldAppearance
+};
+
+export const MAT_FORM_FIELD_DEFAULT_OPTIONS =
+    new InjectionToken<MatFormFieldDefaultOptions>('MAT_FORM_FIELD_DEFAULT_OPTIONS');
 
 
 /** Container for form controls that applies Material Design styling and behavior. */
@@ -128,7 +132,7 @@ export class MatFormField extends _MatFormFieldMixinBase
   private _labelOptions: LabelOptions;
 
   /** The form-field appearance style. */
-  @Input() appearance: MatFormFieldAppearance = this._defaultAppearance || 'legacy';
+  @Input() appearance: MatFormFieldAppearance;
 
   /**
    * @deprecated Use `color` instead.
@@ -227,8 +231,11 @@ export class MatFormField extends _MatFormFieldMixinBase
       private _changeDetectorRef: ChangeDetectorRef,
       @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) labelOptions: LabelOptions,
       @Optional() private _dir: Directionality,
-      @Optional() @Inject(MAT_DEFAULT_FORM_FIELD_APPEARANCE) private _defaultAppearance: any) {
+      @Optional() @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS) defaultOptions:
+          MatFormFieldDefaultOptions) {
     super(_elementRef);
+
+    this.appearance = defaultOptions && defaultOptions.appearance || 'legacy';
 
     this._labelOptions = labelOptions ? labelOptions : {};
     this.floatLabel = this._labelOptions.float || 'auto';
