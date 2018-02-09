@@ -132,7 +132,14 @@ export class MatFormField extends _MatFormFieldMixinBase
   private _labelOptions: LabelOptions;
 
   /** The form-field appearance style. */
-  @Input() appearance: MatFormFieldAppearance;
+  @Input()
+  get appearance(): MatFormFieldAppearance {
+    return this._appearance || this._defaultOptions && this._defaultOptions.appearance || 'legacy';
+  }
+  set appearance(value: MatFormFieldAppearance) {
+    this._appearance = value;
+  }
+  _appearance: MatFormFieldAppearance;
 
   /**
    * @deprecated Use `color` instead.
@@ -231,11 +238,9 @@ export class MatFormField extends _MatFormFieldMixinBase
       private _changeDetectorRef: ChangeDetectorRef,
       @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) labelOptions: LabelOptions,
       @Optional() private _dir: Directionality,
-      @Optional() @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS) defaultOptions:
+      @Optional() @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS) private _defaultOptions:
           MatFormFieldDefaultOptions) {
     super(_elementRef);
-
-    this.appearance = defaultOptions && defaultOptions.appearance || 'legacy';
 
     this._labelOptions = labelOptions ? labelOptions : {};
     this.floatLabel = this._labelOptions.float || 'auto';
