@@ -1,5 +1,12 @@
 // This is the root config file where the schematics are defined.
 {
   "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
-  "schematics": {}
+  "schematics": {
+    "materialShell": {
+      "description": "Create a Material shell",
+      "factory": "./shell/index",
+      "schema": "./shell/schema.json",
+      "aliases": [ "material-shell" ]
+    }
+  }
 }

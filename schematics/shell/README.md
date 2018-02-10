@@ -1,0 +1,12 @@
+# Material Shell
+Adds Angular Material and its depedencies and pre-configures the application. 
+
+It does the following:
+
+- Adds Material and CDK to `package.json`
+- Adds Material Icons Stylesheet to `index.html`
+- Adds Roboto Font to `index.html`
+- Ensure `BrowserAnimationsModule` is installed and included in root module
+- Adds pre-configured theme to `.angular-cli.json` file
+
+Command: `ng generate material-shell --collection=material-schematics`
