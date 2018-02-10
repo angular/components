@@ -20,7 +20,7 @@ import {
 describe('Overlay', () => {
   let overlay: Overlay;
   let componentPortal: ComponentPortal<PizzaMsg>;
-  let templatePortal: TemplatePortal<any>;
+  let templatePortal: TemplatePortal;
   let overlayContainerElement: HTMLElement;
   let overlayContainer: OverlayContainer;
   let viewContainerFixture: ComponentFixture<TestComponentWithTemplatePortals>;
@@ -239,6 +239,16 @@ describe('Overlay', () => {
     expect(callbackOrder).toEqual(['attach', 'detach']);
   });
 
+  it('should default to the ltr direction', () => {
+    const overlayRef = overlay.create({hasBackdrop: true});
+    expect(overlayRef.getConfig().direction).toBe('ltr');
+  });
+
+  it('should skip undefined values when applying the defaults', () => {
+    const overlayRef = overlay.create({direction: undefined});
+    expect(overlayRef.getConfig().direction).toBe('ltr');
+  });
+
   describe('positioning', () => {
     let config: OverlayConfig;
 
@@ -255,6 +265,22 @@ describe('Overlay', () => {
 
       expect(overlayContainerElement.querySelectorAll('.fake-positioned').length).toBe(1);
     }));
+
+    it('should not apply the position if it detaches before the zone stabilizes', fakeAsync(() => {
+      config.positionStrategy = new FakePositionStrategy();
+
+      const overlayRef = overlay.create(config);
+
+      spyOn(config.positionStrategy, 'apply');
+
+      overlayRef.attach(componentPortal);
+      overlayRef.detach();
+      viewContainerFixture.detectChanges();
+      tick();
+
+      expect(config.positionStrategy.apply).not.toHaveBeenCalled();
+    }));
+
   });
 
   describe('size', () => {
@@ -362,7 +388,7 @@ describe('Overlay', () => {
       overlayRef.backdropClick().subscribe(backdropClickHandler);
 
       backdrop.click();
-      expect(backdropClickHandler).toHaveBeenCalled();
+      expect(backdropClickHandler).toHaveBeenCalledWith(jasmine.any(MouseEvent));
     });
 
     it('should complete the backdrop click stream once the overlay is destroyed', () => {

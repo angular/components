@@ -38,22 +38,22 @@ import {Subject} from 'rxjs/Subject';
 export class MatTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Keep track of the previous textarea value to avoid resizing when the value hasn't changed. */
   private _previousValue: string;
-  private _destroyed = new Subject<void>();
+  private readonly _destroyed = new Subject<void>();
 
   private _minRows: number;
   private _maxRows: number;
 
   /** Minimum amount of rows in the textarea. */
   @Input('matAutosizeMinRows')
-  get minRows() { return this._minRows; }
   set minRows(value: number) {
     this._minRows = value;
     this._setMinHeight();
   }
+  get minRows(): number { return this._minRows; }
 
   /** Maximum amount of rows in the textarea. */
   @Input('matAutosizeMaxRows')
-  get maxRows() { return this._maxRows; }
+  get maxRows(): number { return this._maxRows; }
   set maxRows(value: number) {
     this._maxRows = value;
     this._setMaxHeight();

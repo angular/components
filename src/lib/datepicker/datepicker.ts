@@ -122,8 +122,8 @@ export class MatDatepicker<D> implements OnDestroy {
     // selected value is.
     return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
   }
-  set startAt(date: D | null) {
-    this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(date));
+  set startAt(value: D | null) {
+    this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
   private _startAt: D | null;
 
@@ -135,9 +135,7 @@ export class MatDatepicker<D> implements OnDestroy {
    * than a popup and elements have more padding to allow for bigger touch targets.
    */
   @Input()
-  get touchUi(): boolean {
-    return this._touchUi;
-  }
+  get touchUi(): boolean { return this._touchUi; }
   set touchUi(value: boolean) {
     this._touchUi = coerceBooleanProperty(value);
   }
@@ -162,8 +160,21 @@ export class MatDatepicker<D> implements OnDestroy {
   /**
    * Emits new selected date when selected date changes.
    * @deprecated Switch to the `dateChange` and `dateInput` binding on the input element.
+   * @deletion-target 6.0.0
    */
-  @Output() selectedChanged = new EventEmitter<D>();
+  @Output() readonly selectedChanged: EventEmitter<D> = new EventEmitter<D>();
+
+  /**
+   * Emits selected year in multiyear view.
+   * This doesn't imply a change on the selected date.
+   */
+  @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
+
+  /**
+   * Emits selected month in year view.
+   * This doesn't imply a change on the selected date.
+   */
+  @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
   /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
   @Input() panelClass: string | string[];
@@ -174,14 +185,15 @@ export class MatDatepicker<D> implements OnDestroy {
   /** Emits when the datepicker has been closed. */
   @Output('closed') closedStream: EventEmitter<void> = new EventEmitter<void>();
 
+
   /** Whether the calendar is open. */
   @Input()
   get opened(): boolean { return this._opened; }
-  set opened(shouldOpen: boolean) { shouldOpen ? this.open() : this.close(); }
+  set opened(value: boolean) { value ? this.open() : this.close(); }
   private _opened = false;
 
   /** The id for the datepicker calendar. */
-  id = `mat-datepicker-${datepickerUid++}`;
+  id: string = `mat-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
   get _selected(): D | null { return this._validSelected; }
@@ -220,7 +232,7 @@ export class MatDatepicker<D> implements OnDestroy {
   _datepickerInput: MatDatepickerInput<D>;
 
   /** Emits when the datepicker is disabled. */
-  _disabledChange = new Subject<boolean>();
+  readonly _disabledChange = new Subject<boolean>();
 
   constructor(private _dialog: MatDialog,
               private _overlay: Overlay,
@@ -252,6 +264,16 @@ export class MatDatepicker<D> implements OnDestroy {
     if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
       this.selectedChanged.emit(date);
     }
+  }
+
+  /** Emits the selected year in multiyear view */
+  _selectYear(normalizedYear: D): void {
+    this.yearSelected.emit(normalizedYear);
+  }
+
+  /** Emits selected month in year view */
+  _selectMonth(normalizedMonth: D): void {
+    this.monthSelected.emit(normalizedMonth);
   }
 
   /**
@@ -379,18 +401,14 @@ export class MatDatepicker<D> implements OnDestroy {
 
   /** Create the popup PositionStrategy. */
   private _createPopupPositionStrategy(): PositionStrategy {
-    const fallbackOffset = this._datepickerInput._getPopupFallbackOffset();
-
     return this._overlay.position()
-      .connectedTo(this._datepickerInput.getPopupConnectionElementRef(),
+      .connectedTo(this._datepickerInput.getConnectedOverlayOrigin(),
         {originX: 'start', originY: 'bottom'},
         {overlayX: 'start', overlayY: 'top'}
       )
       .withFallbackPosition(
         {originX: 'start', originY: 'top'},
         {overlayX: 'start', overlayY: 'bottom'},
-        undefined,
-        fallbackOffset
       )
       .withFallbackPosition(
         {originX: 'end', originY: 'bottom'},
@@ -399,8 +417,6 @@ export class MatDatepicker<D> implements OnDestroy {
       .withFallbackPosition(
         {originX: 'end', originY: 'top'},
         {overlayX: 'end', overlayY: 'bottom'},
-        undefined,
-        fallbackOffset
       );
   }
 

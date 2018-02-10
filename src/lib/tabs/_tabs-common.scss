@@ -19,11 +19,21 @@ $mat-tab-animation-duration: 500ms !default;
 
   &:focus {
     outline: none;
-    opacity: 1;
+
+    &:not(.mat-tab-disabled) {
+      opacity: 1;
+    }
   }
 
   &.mat-tab-disabled {
     cursor: default;
+  }
+
+  &.mat-tab-label-content {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
   }
 }
 

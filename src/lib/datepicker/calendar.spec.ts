@@ -27,6 +27,7 @@ import {
   SEP,
 } from '@angular/material/core';
 import {By} from '@angular/platform-browser';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {MatButtonModule} from '../button/index';
 import {MatCalendar} from './calendar';
 import {MatCalendarBody} from './calendar-body';
@@ -37,6 +38,8 @@ import {MatYearView} from './year-view';
 
 
 describe('MatCalendar', () => {
+  let dir: {value: Direction};
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -57,6 +60,7 @@ describe('MatCalendar', () => {
       ],
       providers: [
         MatDatepickerIntl,
+        {provide: Directionality, useFactory: () => dir = {value: 'ltr'}}
       ],
     });
 
@@ -192,6 +196,40 @@ describe('MatCalendar', () => {
       expect(testComponent.selected).toEqual(new Date(2017, JAN, 31));
     });
 
+    it('should emit the selected month on cell clicked in year view', () => {
+      periodButton.click();
+      fixture.detectChanges();
+
+      expect(calendarInstance._currentView).toBe('multi-year');
+      expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 31));
+
+      (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
+
+      fixture.detectChanges();
+
+      expect(calendarInstance._currentView).toBe('year');
+
+      (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
+
+      const normalizedMonth: Date = fixture.componentInstance.selectedMonth;
+      expect(normalizedMonth.getMonth()).toEqual(0);
+    });
+
+    it('should emit the selected year on cell clicked in multiyear view', () => {
+      periodButton.click();
+      fixture.detectChanges();
+
+      expect(calendarInstance._currentView).toBe('multi-year');
+      expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 31));
+
+      (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
+
+      fixture.detectChanges();
+
+      const normalizedYear: Date = fixture.componentInstance.selectedYear;
+      expect(normalizedYear.getFullYear()).toEqual(2017);
+    });
+
     it('should re-render when the i18n labels have changed',
       inject([MatDatepickerIntl], (intl: MatDatepickerIntl) => {
         const button = fixture.debugElement.nativeElement
@@ -220,6 +258,10 @@ describe('MatCalendar', () => {
           expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 31));
         });
 
+        it('should make the calendar body focusable', () => {
+          expect(calendarBodyEl.getAttribute('tabindex')).toBe('-1');
+        });
+
         describe('month view', () => {
           it('should decrement date on left arrow press', () => {
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
@@ -236,6 +278,20 @@ describe('MatCalendar', () => {
             expect(calendarInstance._activeDate).toEqual(new Date(2016, DEC, 31));
           });
 
+          it('should increment date on left arrow press in rtl', () => {
+            dir.value = 'rtl';
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2017, FEB, 1));
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2017, FEB, 2));
+          });
+
           it('should increment date on right arrow press', () => {
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
             fixture.detectChanges();
@@ -246,6 +302,23 @@ describe('MatCalendar', () => {
             fixture.detectChanges();
 
             expect(calendarInstance._activeDate).toEqual(new Date(2017, FEB, 2));
+          });
+
+          it('should decrement date on right arrow press in rtl', () => {
+            dir.value = 'rtl';
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 30));
+
+            calendarInstance._activeDate = new Date(2017, JAN, 1);
+            fixture.detectChanges();
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2016, DEC, 31));
           });
 
           it('should go up a row on up arrow press', () => {
@@ -363,6 +436,20 @@ describe('MatCalendar', () => {
             expect(calendarInstance._activeDate).toEqual(new Date(2016, NOV, 30));
           });
 
+          it('should increment month on left arrow press in rtl', () => {
+            dir.value = 'rtl';
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2017, FEB, 28));
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2017, MAR, 28));
+          });
+
           it('should increment month on right arrow press', () => {
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
             fixture.detectChanges();
@@ -373,6 +460,20 @@ describe('MatCalendar', () => {
             fixture.detectChanges();
 
             expect(calendarInstance._activeDate).toEqual(new Date(2017, MAR, 28));
+          });
+
+          it('should decrement month on right arrow press in rtl', () => {
+            dir.value = 'rtl';
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2016, DEC, 31));
+
+            dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(calendarInstance._activeDate).toEqual(new Date(2016, NOV, 30));
           });
 
           it('should go up a row on up arrow press', () => {
@@ -849,10 +950,18 @@ describe('MatCalendar', () => {
 
 
 @Component({
-  template: `<mat-calendar [startAt]="startDate" [(selected)]="selected"></mat-calendar>`
+  template: `
+    <mat-calendar
+        [startAt]="startDate"
+        [(selected)]="selected"
+        (yearSelected)="selectedYear=$event"
+        (monthSelected)="selectedMonth=$event">
+    </mat-calendar>`
 })
 class StandardCalendar {
   selected: Date;
+  selectedYear: Date;
+  selectedMonth: Date;
   startDate = new Date(2017, JAN, 31);
 }
 

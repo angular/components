@@ -72,6 +72,7 @@ System.config({
 
     '@angular/material/autocomplete': 'dist/packages/material/autocomplete/index.js',
     '@angular/material/badge': 'dist/packages/material/badge/index.js',
+    '@angular/material/bottom-sheet': 'dist/packages/material/bottom-sheet/index.js',
     '@angular/material/button': 'dist/packages/material/button/index.js',
     '@angular/material/button-toggle': 'dist/packages/material/button-toggle/index.js',
     '@angular/material/card': 'dist/packages/material/card/index.js',

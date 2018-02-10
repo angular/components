@@ -64,11 +64,30 @@ export class MatMultiYearView<D> implements AfterContentInit {
   }
   private _selected: D | null;
 
+  /** The minimum selectable date. */
+  @Input()
+  get minDate(): D | null { return this._minDate; }
+  set minDate(value: D | null) {
+    this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _minDate: D | null;
+
+  /** The maximum selectable date. */
+  @Input()
+  get maxDate(): D | null { return this._maxDate; }
+  set maxDate(value: D | null) {
+    this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _maxDate: D | null;
+
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
 
   /** Emits when a new month is selected. */
-  @Output() selectedChange = new EventEmitter<D>();
+  @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
+
+  /** Emits the selected year. This doesn't imply a change on the selected date */
+  @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
 
   /** Grid of calendar cells representing the currently displayed years. */
   _years: MatCalendarCell[][];
@@ -110,6 +129,7 @@ export class MatMultiYearView<D> implements AfterContentInit {
 
   /** Handles when a new year is selected. */
   _yearSelected(year: number) {
+    this.yearSelected.emit(this._dateAdapter.createDate(year, 0, 1));
     let month = this._dateAdapter.getMonth(this.activeDate);
     let daysInMonth =
         this._dateAdapter.getNumDaysInMonth(this._dateAdapter.createDate(year, month, 1));
@@ -124,7 +144,34 @@ export class MatMultiYearView<D> implements AfterContentInit {
   /** Creates an MatCalendarCell for the given year. */
   private _createCellForYear(year: number) {
     let yearName = this._dateAdapter.getYearName(this._dateAdapter.createDate(year, 0, 1));
-    return new MatCalendarCell(year, yearName, yearName, true);
+    return new MatCalendarCell(year, yearName, yearName, this._shouldEnableYear(year));
+  }
+
+  /** Whether the given year is enabled. */
+  private _shouldEnableYear(year: number) {
+    // disable if the year is greater than maxDate lower than minDate
+    if (year === undefined || year === null ||
+        (this.maxDate && year > this._dateAdapter.getYear(this.maxDate)) ||
+        (this.minDate && year < this._dateAdapter.getYear(this.minDate))) {
+      return false;
+    }
+
+    // enable if it reaches here and there's no filter defined
+    if (!this.dateFilter) {
+      return true;
+    }
+
+    const firstOfYear = this._dateAdapter.createDate(year, 0, 1);
+
+    // If any date in the year is enabled count the year as enabled.
+    for (let date = firstOfYear; this._dateAdapter.getYear(date) == year;
+      date = this._dateAdapter.addCalendarDays(date, 1)) {
+      if (this.dateFilter(date)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**

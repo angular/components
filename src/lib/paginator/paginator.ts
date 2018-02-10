@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {coerceNumberProperty, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -64,8 +64,8 @@ export class MatPaginator implements OnInit, OnDestroy {
   /** The zero-based page index of the displayed list of items. Defaulted to 0. */
   @Input()
   get pageIndex(): number { return this._pageIndex; }
-  set pageIndex(pageIndex: number) {
-    this._pageIndex = coerceNumberProperty(pageIndex);
+  set pageIndex(value: number) {
+    this._pageIndex = coerceNumberProperty(value);
     this._changeDetectorRef.markForCheck();
   }
   _pageIndex: number = 0;
@@ -73,8 +73,8 @@ export class MatPaginator implements OnInit, OnDestroy {
   /** The length of the total number of items that are being paginated. Defaulted to 0. */
   @Input()
   get length(): number { return this._length; }
-  set length(length: number) {
-    this._length = coerceNumberProperty(length);
+  set length(value: number) {
+    this._length = coerceNumberProperty(value);
     this._changeDetectorRef.markForCheck();
   }
   _length: number = 0;
@@ -82,8 +82,8 @@ export class MatPaginator implements OnInit, OnDestroy {
   /** Number of items to display on a page. By default set to 50. */
   @Input()
   get pageSize(): number { return this._pageSize; }
-  set pageSize(pageSize: number) {
-    this._pageSize = coerceNumberProperty(pageSize);
+  set pageSize(value: number) {
+    this._pageSize = coerceNumberProperty(value);
     this._updateDisplayedPageSizeOptions();
   }
   private _pageSize: number;
@@ -91,14 +91,31 @@ export class MatPaginator implements OnInit, OnDestroy {
   /** The set of provided page size options to display to the user. */
   @Input()
   get pageSizeOptions(): number[] { return this._pageSizeOptions; }
-  set pageSizeOptions(pageSizeOptions: number[]) {
-    this._pageSizeOptions = (pageSizeOptions || []).map(p => coerceNumberProperty(p));
+  set pageSizeOptions(value: number[]) {
+    this._pageSizeOptions = (value || []).map(p => coerceNumberProperty(p));
     this._updateDisplayedPageSizeOptions();
   }
   private _pageSizeOptions: number[] = [];
 
+  /** Whether to hide the page size selection UI from the user. */
+  @Input()
+  get hidePageSize(): boolean { return this._hidePageSize; }
+  set hidePageSize(value: boolean) {
+    this._hidePageSize = coerceBooleanProperty(value);
+  }
+  private _hidePageSize = false;
+
+
+  /** Whether to show the first/last buttons UI to the user. */
+  @Input()
+  get showFirstLastButtons(): boolean { return this._showFirstLastButtons; }
+  set showFirstLastButtons(value: boolean) {
+    this._showFirstLastButtons = coerceBooleanProperty(value);
+  }
+  private _showFirstLastButtons = false;
+
   /** Event emitted when the paginator changes the page size or page index. */
-  @Output() page = new EventEmitter<PageEvent>();
+  @Output() readonly page: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
 
   /** Displayed set of page size options. Will be sorted and include current page size. */
   _displayedPageSizeOptions: number[];
@@ -118,29 +135,51 @@ export class MatPaginator implements OnInit, OnDestroy {
   }
 
   /** Advances to the next page if it exists. */
-  nextPage() {
+  nextPage(): void {
     if (!this.hasNextPage()) { return; }
     this.pageIndex++;
     this._emitPageEvent();
   }
 
   /** Move back to the previous page if it exists. */
-  previousPage() {
+  previousPage(): void {
     if (!this.hasPreviousPage()) { return; }
     this.pageIndex--;
     this._emitPageEvent();
   }
 
+  /** Move to the first page if not already there. */
+  firstPage(): void {
+    // hasPreviousPage being false implies at the start
+    if (!this.hasPreviousPage()) { return; }
+    this.pageIndex = 0;
+    this._emitPageEvent();
+  }
+
+  /** Move to the last page if not already there. */
+  lastPage(): void {
+    // hasNextPage being false implies at the end
+    if (!this.hasNextPage()) { return; }
+    this.pageIndex = this.getNumberOfPages();
+    this._emitPageEvent();
+  }
+
   /** Whether there is a previous page. */
-  hasPreviousPage() {
+  hasPreviousPage(): boolean {
     return this.pageIndex >= 1 && this.pageSize != 0;
   }
 
   /** Whether there is a next page. */
-  hasNextPage() {
-    const numberOfPages = Math.ceil(this.length / this.pageSize) - 1;
+  hasNextPage(): boolean {
+    const numberOfPages = this.getNumberOfPages();
     return this.pageIndex < numberOfPages && this.pageSize != 0;
   }
+
+  /** Calculate the number of pages */
+  getNumberOfPages(): number {
+    return Math.ceil(this.length / this.pageSize) - 1;
+  }
+
 
   /**
    * Changes the page size so that the first item displayed on the page will still be
@@ -187,7 +226,7 @@ export class MatPaginator implements OnInit, OnDestroy {
 
   /** Emits an event notifying that a change of the paginator's properties has been triggered. */
   private _emitPageEvent() {
-    this.page.next({
+    this.page.emit({
       pageIndex: this.pageIndex,
       pageSize: this.pageSize,
       length: this.length

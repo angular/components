@@ -43,6 +43,7 @@ import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
 import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
 import {MatYearView} from './year-view';
+import {Directionality} from '@angular/cdk/bidi';
 
 
 /**
@@ -104,10 +105,22 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   @Input() dateFilter: (date: D) => boolean;
 
   /** Emits when the currently selected date changes. */
-  @Output() selectedChange = new EventEmitter<D>();
+  @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
+
+  /**
+   * Emits the year chosen in multiyear view.
+   * This doesn't imply a change on the selected date.
+   */
+  @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
+
+  /**
+   * Emits the month chosen in year view.
+   * This doesn't imply a change on the selected date.
+   */
+  @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
   /** Emits when any date is selected. */
-  @Output() _userSelection = new EventEmitter<void>();
+  @Output() readonly _userSelection: EventEmitter<void> = new EventEmitter<void>();
 
   /** Reference to the current month view component. */
   @ViewChild(MatMonthView) monthView: MatMonthView<D>;
@@ -117,14 +130,6 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
   /** Reference to the current multi-year view component. */
   @ViewChild(MatMultiYearView) multiYearView: MatMultiYearView<D>;
-
-  /** Date filter for the month, year, and multi-year views. */
-  _dateFilterForViews = (date: D) => {
-    return !!date &&
-        (!this.dateFilter || this.dateFilter(date)) &&
-        (!this.minDate || this._dateAdapter.compareDate(date, this.minDate) >= 0) &&
-        (!this.maxDate || this._dateAdapter.compareDate(date, this.maxDate) <= 0);
-  }
 
   /**
    * The current active date. This determines which time period is shown and which date is
@@ -184,7 +189,8 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
               private _ngZone: NgZone,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-              changeDetectorRef: ChangeDetectorRef) {
+              changeDetectorRef: ChangeDetectorRef,
+              @Optional() private _dir?: Directionality) {
 
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
@@ -224,6 +230,16 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     if (!this._dateAdapter.sameDate(date, this.selected)) {
       this.selectedChange.emit(date);
     }
+  }
+
+  /** Handles year selection in the multiyear view. */
+  _yearSelectedInMultiYearView(normalizedYear: D) {
+    this.yearSelected.emit(normalizedYear);
+  }
+
+  /** Handles month selection in the year view. */
+  _monthSelectedInYearView(normalizedMonth: D) {
+    this.monthSelected.emit(normalizedMonth);
   }
 
   _userSelected(): void {
@@ -309,12 +325,14 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
   /** Handles keydown events on the calendar body when calendar is in month view. */
   private _handleCalendarBodyKeydownInMonthView(event: KeyboardEvent): void {
+    const isRtl = this._isRtl();
+
     switch (event.keyCode) {
       case LEFT_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarDays(this._activeDate, -1);
+        this._activeDate = this._dateAdapter.addCalendarDays(this._activeDate, isRtl ? 1 : -1);
         break;
       case RIGHT_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarDays(this._activeDate, 1);
+        this._activeDate = this._dateAdapter.addCalendarDays(this._activeDate, isRtl ? -1 : 1);
         break;
       case UP_ARROW:
         this._activeDate = this._dateAdapter.addCalendarDays(this._activeDate, -7);
@@ -342,7 +360,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
             this._dateAdapter.addCalendarMonths(this._activeDate, 1);
         break;
       case ENTER:
-        if (this._dateFilterForViews(this._activeDate)) {
+        if (!this.dateFilter || this.dateFilter(this._activeDate)) {
           this._dateSelected(this._activeDate);
           this._userSelected();
           // Prevent unexpected default actions such as form submission.
@@ -361,12 +379,14 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
   /** Handles keydown events on the calendar body when calendar is in year view. */
   private _handleCalendarBodyKeydownInYearView(event: KeyboardEvent): void {
+    const isRtl = this._isRtl();
+
     switch (event.keyCode) {
       case LEFT_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, -1);
+        this._activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, isRtl ? 1 : -1);
         break;
       case RIGHT_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, 1);
+        this._activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, isRtl ? -1 : 1);
         break;
       case UP_ARROW:
         this._activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, -4);
@@ -455,5 +475,10 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
    */
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  }
+
+  /** Determines whether the user has the RTL layout direction. */
+  private _isRtl() {
+    return this._dir && this._dir.value === 'rtl';
   }
 }

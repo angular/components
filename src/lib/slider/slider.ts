@@ -138,15 +138,15 @@ export class MatSlider extends _MatSliderMixinBase
     implements ControlValueAccessor, OnDestroy, CanDisable, CanColor, OnInit, HasTabIndex {
   /** Whether the slider is inverted. */
   @Input()
-  get invert() { return this._invert; }
-  set invert(value: any) {
+  get invert(): boolean { return this._invert; }
+  set invert(value: boolean) {
     this._invert = coerceBooleanProperty(value);
   }
   private _invert = false;
 
   /** The maximum value that the slider can have. */
   @Input()
-  get max() { return this._max; }
+  get max(): number { return this._max; }
   set max(v: number) {
     this._max = coerceNumberProperty(v, this._max);
     this._percent = this._calculatePercentage(this._value);
@@ -158,7 +158,7 @@ export class MatSlider extends _MatSliderMixinBase
 
   /** The minimum value that the slider can have. */
   @Input()
-  get min() { return this._min; }
+  get min(): number { return this._min; }
   set min(v: number) {
     this._min = coerceNumberProperty(v, this._min);
 
@@ -175,7 +175,7 @@ export class MatSlider extends _MatSliderMixinBase
 
   /** The values at which the thumb will snap. */
   @Input()
-  get step() { return this._step; }
+  get step(): number { return this._step; }
   set step(v: number) {
     this._step = coerceNumberProperty(v, this._step);
 
@@ -191,10 +191,13 @@ export class MatSlider extends _MatSliderMixinBase
   /** Whether or not to show the thumb label. */
   @Input()
   get thumbLabel(): boolean { return this._thumbLabel; }
-  set thumbLabel(value) { this._thumbLabel = coerceBooleanProperty(value); }
+  set thumbLabel(value: boolean) { this._thumbLabel = coerceBooleanProperty(value); }
   private _thumbLabel: boolean = false;
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('thumb-label')
   get _thumbLabelDeprecated(): boolean { return this._thumbLabel; }
   set _thumbLabelDeprecated(value) { this._thumbLabel = value; }
@@ -216,14 +219,17 @@ export class MatSlider extends _MatSliderMixinBase
   }
   private _tickInterval: 'auto' | number = 0;
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('tick-interval')
   get _tickIntervalDeprecated() { return this.tickInterval; }
   set _tickIntervalDeprecated(v) { this.tickInterval = v; }
 
   /** Value of the slider. */
   @Input()
-  get value() {
+  get value(): number | null {
     // If the value needs to be read and it is still uninitialized, initialize it to the min.
     if (this._value === null) {
       this.value = this._min;
@@ -232,7 +238,7 @@ export class MatSlider extends _MatSliderMixinBase
   }
   set value(v: number | null) {
     if (v !== this._value) {
-      this._value = coerceNumberProperty(v, this._value || 0);
+      this._value = coerceNumberProperty(v);
       this._percent = this._calculatePercentage(this._value);
 
       // Since this also modifies the percentage, we need to let the change detection know.
@@ -243,17 +249,17 @@ export class MatSlider extends _MatSliderMixinBase
 
   /** Whether the slider is vertical. */
   @Input()
-  get vertical() { return this._vertical; }
-  set vertical(value: any) {
+  get vertical(): boolean { return this._vertical; }
+  set vertical(value: boolean) {
     this._vertical = coerceBooleanProperty(value);
   }
   private _vertical = false;
 
   /** Event emitted when the slider value has changed. */
-  @Output() change = new EventEmitter<MatSliderChange>();
+  @Output() readonly change: EventEmitter<MatSliderChange> = new EventEmitter<MatSliderChange>();
 
   /** Event emitted when the slider thumb moves. */
-  @Output() input = new EventEmitter<MatSliderChange>();
+  @Output() readonly input: EventEmitter<MatSliderChange> = new EventEmitter<MatSliderChange>();
 
   /** The value to be used for display purposes. */
   get displayValue(): string | number {
@@ -265,6 +271,16 @@ export class MatSlider extends _MatSliderMixinBase
     }
 
     return this.value || 0;
+  }
+
+  /** set focus to the host element */
+  focus() {
+    this._focusHostElement();
+  }
+
+  /** blur the host element */
+  blur() {
+    this._blurHostElement();
   }
 
   /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
@@ -518,7 +534,7 @@ export class MatSlider extends _MatSliderMixinBase
   _onSlideEnd() {
     this._isSliding = false;
 
-    if (this._valueOnSlideStart != this.value) {
+    if (this._valueOnSlideStart != this.value && !this.disabled) {
       this._emitChangeEvent();
     }
     this._valueOnSlideStart = null;
@@ -689,6 +705,11 @@ export class MatSlider extends _MatSliderMixinBase
    */
   private _focusHostElement() {
     this._elementRef.nativeElement.focus();
+  }
+
+  /** Blurs the native element. */
+  private _blurHostElement() {
+    this._elementRef.nativeElement.blur();
   }
 
   /**

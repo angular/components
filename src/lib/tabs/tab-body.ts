@@ -22,9 +22,10 @@ import {
   ComponentFactoryResolver,
   ViewContainerRef,
   forwardRef,
+  ViewChild,
 } from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
-import {TemplatePortal, CdkPortalOutlet} from '@angular/cdk/portal';
+import {TemplatePortal, CdkPortalOutlet, PortalHostDirective} from '@angular/cdk/portal';
 import {Directionality, Direction} from '@angular/cdk/bidi';
 import {Subscription} from 'rxjs/Subscription';
 import {matTabsAnimations} from './tabs-animations';
@@ -119,23 +120,26 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
 })
 export class MatTabBody implements OnInit {
   /** Event emitted when the tab begins to animate towards the center as the active tab. */
-  @Output() _onCentering: EventEmitter<number> = new EventEmitter<number>();
+  @Output() readonly _onCentering: EventEmitter<number> = new EventEmitter<number>();
 
   /** Event emitted before the centering of the tab begins. */
-  @Output() _beforeCentering: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() readonly _beforeCentering: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** Event emitted before the centering of the tab begins. */
-  @Output() _afterLeavingCenter: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() readonly _afterLeavingCenter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** Event emitted when the tab completes its animation towards the center. */
-  @Output() _onCentered: EventEmitter<void> = new EventEmitter<void>(true);
+  @Output() readonly _onCentered: EventEmitter<void> = new EventEmitter<void>(true);
+
+   /** The portal host inside of this container into which the tab body content will be loaded. */
+  @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
   /** The tab body content to display. */
-  @Input('content') _content: TemplatePortal<any>;
+  @Input('content') _content: TemplatePortal;
 
   /** The shifted index position of the tab body, where zero represents the active center tab. */
-  _position: MatTabBodyPositionState;
-  @Input('position') set position(position: number) {
+  @Input()
+  set position(position: number) {
     if (position < 0) {
       this._position = this._getLayoutDirection() == 'ltr' ? 'left' : 'right';
     } else if (position > 0) {
@@ -144,12 +148,11 @@ export class MatTabBody implements OnInit {
       this._position = 'center';
     }
   }
+  _position: MatTabBodyPositionState;
 
   /** The origin position from which this tab should appear when it is centered into view. */
-  _origin: MatTabBodyOriginState;
-
-  /** The origin position from which this tab should appear when it is centered into view. */
-  @Input('origin') set origin(origin: number) {
+  @Input()
+  set origin(origin: number) {
     if (origin == null) { return; }
 
     const dir = this._getLayoutDirection();
@@ -159,6 +162,7 @@ export class MatTabBody implements OnInit {
       this._origin = 'right';
     }
   }
+  _origin: MatTabBodyOriginState;
 
   constructor(private _elementRef: ElementRef,
               @Optional() private _dir: Directionality) { }

@@ -75,8 +75,11 @@ Global ripple options can be specified by setting the `MAT_RIPPLE_GLOBAL_OPTIONS
 ```ts
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: true,
-  baseSpeedFactor: 1.5 // Ripples will animate 50% faster than before.
-}
+  animation: {
+    enterDuration: 300,
+    exitDuration: 0
+  }
+};
 
 @NgModule({
   providers: [
@@ -86,3 +89,42 @@ const globalRippleConfig: RippleGlobalOptions = {
 ```
 
 All available global options can be seen in the `RippleGlobalOptions` interface.
+
+### Disabling animation
+
+The animation of ripples can be disabled by using the `animation` global option. If the 
+`enterDuration` and `exitDuration` is being set to `0`, ripples will just appear without any
+animation.
+
+This is specifically useful in combination with the `disabled` global option, because globally
+disabling ripples won't affect the focus indicator ripples. If someone still wants to disable
+those ripples for performance reasons, the duration can be set to `0`, to remove the ripple feel.
+
+```ts
+const globalRippleConfig: RippleGlobalOptions = {
+  disabled: true,
+  animation: {
+    enterDuration: 0,
+    exitDuration: 0
+  }
+};
+```
+
+### Animation behavior
+
+There are two different animation behaviors for the fade-out of ripples shown in the Material
+Design specifications.
+
+By default, all ripples will start fading out if the mouse or touch is released and the enter
+animation completed. The second possible behavior, which is also shown in the specifications, is
+that ripples start to fade out immediately on mouse or touch release.
+
+In some scenarios, developers might prefer that behavior over the default and would like to have
+the same for Angular Material. This behavior can be activated by specifying the
+`terminateOnPointerUp` global ripple option.
+
+```ts
+const globalRippleConfig: RippleGlobalOptions = {
+  terminateOnPointerUp: true
+};
+```

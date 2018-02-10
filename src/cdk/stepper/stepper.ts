@@ -27,7 +27,16 @@ import {
   OnChanges,
   OnDestroy
 } from '@angular/core';
-import {LEFT_ARROW, RIGHT_ARROW, DOWN_ARROW, UP_ARROW, ENTER, SPACE} from '@angular/cdk/keycodes';
+import {
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  DOWN_ARROW,
+  UP_ARROW,
+  ENTER,
+  SPACE,
+  HOME,
+  END,
+} from '@angular/cdk/keycodes';
 import {CdkStepLabel} from './step-label';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {AbstractControl} from '@angular/forms';
@@ -123,6 +132,19 @@ export class CdkStep implements OnChanges {
     this._stepper.selected = this;
   }
 
+  /** Resets the step to its initial state. Note that this includes resetting form data. */
+  reset(): void {
+    this.interacted = false;
+
+    if (this._customCompleted != null) {
+      this._customCompleted = false;
+    }
+
+    if (this.stepControl) {
+      this.stepControl.reset();
+    }
+  }
+
   ngOnChanges() {
     // Since basically all inputs of the MatStep get proxied through the view down to the
     // underlying MatStepHeader, we have to make sure that change detection runs correctly.
@@ -155,6 +177,11 @@ export class CdkStepper implements OnDestroy {
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
     if (this._steps) {
+      // Ensure that the index can't be out of bounds.
+      if (index < 0 || index > this._steps.length - 1) {
+        throw Error('cdkStepper: Cannot assign out-of-bounds value to `selectedIndex`.');
+      }
+
       if (this._anyControlsInvalidOrPending(index) || index < this._selectedIndex &&
           !this._steps.toArray()[index].editable) {
         // remove focus from clicked step header if the step is not able to be selected
@@ -167,17 +194,18 @@ export class CdkStepper implements OnDestroy {
       this._selectedIndex = this._focusIndex = index;
     }
   }
-  private _selectedIndex: number = 0;
+  private _selectedIndex = 0;
 
   /** The step that is selected. */
   @Input()
-  get selected() { return this._steps.toArray()[this.selectedIndex]; }
+  get selected(): CdkStep { return this._steps.toArray()[this.selectedIndex]; }
   set selected(step: CdkStep) {
     this.selectedIndex = this._steps.toArray().indexOf(step);
   }
 
   /** Event emitted when the selected step has changed. */
-  @Output() selectionChange = new EventEmitter<StepperSelectionEvent>();
+  @Output() selectionChange: EventEmitter<StepperSelectionEvent>
+      = new EventEmitter<StepperSelectionEvent>();
 
   /** The index of the step that the focus can be set. */
   _focusIndex: number = 0;
@@ -206,6 +234,13 @@ export class CdkStepper implements OnDestroy {
   /** Selects and focuses the previous step in list. */
   previous(): void {
     this.selectedIndex = Math.max(this._selectedIndex - 1, 0);
+  }
+
+  /** Resets the stepper to its initial state. Note that this includes clearing form data. */
+  reset(): void {
+    this.selectedIndex = 0;
+    this._steps.forEach(step => step.reset());
+    this._stateChanged();
   }
 
   /** Returns a unique id for each step label element. */
@@ -281,6 +316,16 @@ export class CdkStepper implements OnDestroy {
       this.selectedIndex = this._focusIndex;
       event.preventDefault();
     }
+
+    if (keyCode === HOME) {
+      this._focusStep(0);
+      event.preventDefault();
+    }
+
+    if (keyCode === END) {
+      this._focusStep(this._steps.length - 1);
+      event.preventDefault();
+    }
   }
 
   private _focusNextStep() {
@@ -304,7 +349,8 @@ export class CdkStepper implements OnDestroy {
     if (this._linear && index >= 0) {
       return steps.slice(0, index).some(step => {
         const control = step.stepControl;
-        return control ? (control.invalid || control.pending) : !step.completed;
+        const isIncomplete = control ? (control.invalid || control.pending) : !step.completed;
+        return isIncomplete && !step.optional;
       });
     }
 

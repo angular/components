@@ -1,6 +1,8 @@
 import {Package} from 'dgeni';
+import {patchLogService} from './patch-log-service';
 import {DocsPrivateFilter} from './processors/docs-private-filter';
 import {Categorizer} from './processors/categorizer';
+import {FilterDuplicateExports} from './processors/filter-duplicate-exports';
 import {FilterExportAliases} from './processors/filter-export-aliases';
 import {MergeInheritedProperties} from './processors/merge-inherited-properties';
 import {ComponentGrouper} from './processors/component-grouper';
@@ -49,6 +51,9 @@ const materialPackages = globSync(path.join(sourceDir, 'lib', '*/'))
 
 export const apiDocsPackage = new Package('material2-api-docs', dgeniPackageDeps);
 
+// Processor that filters out duplicate exports that should not be shown in the docs.
+apiDocsPackage.processor(new FilterDuplicateExports());
+
 // Processor that filters out aliased exports that should not be shown in the docs.
 apiDocsPackage.processor(new FilterExportAliases());
 
@@ -75,6 +80,9 @@ apiDocsPackage.config((readFilesProcessor: any, writeFilesProcessor: any) => {
   writeFilesProcessor.outputFolder = outputDir;
 });
 
+// Patches Dgeni's log service to not print warnings about unresolved mixin base symbols.
+apiDocsPackage.config((log: any) => patchLogService(log));
+
 // Configure the output path for written files (i.e., file names).
 apiDocsPackage.config((computePathsProcessor: any) => {
   computePathsProcessor.pathTemplates = [{
@@ -87,7 +95,8 @@ apiDocsPackage.config((computePathsProcessor: any) => {
 // Configure custom JsDoc tags.
 apiDocsPackage.config((parseTagsProcessor: any) => {
   parseTagsProcessor.tagDefinitions = parseTagsProcessor.tagDefinitions.concat([
-    {name: 'docs-private'}
+    {name: 'docs-private'},
+    {name: 'deletion-target'}
   ]);
 });
 

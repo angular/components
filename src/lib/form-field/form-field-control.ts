@@ -42,6 +42,7 @@ export abstract class MatFormFieldControl<T> {
   /**
    * Whether the `MatFormField` placeholder should try to float.
    * @deprecated Use `shouldLabelFloat` instead.
+   * @deletion-target 6.0.0
    */
   readonly shouldPlaceholderFloat?: boolean;
 
@@ -60,6 +61,12 @@ export abstract class MatFormFieldControl<T> {
    * `mat-form-field-type-{{controlType}}` to its root element.
    */
   readonly controlType?: string;
+
+  /**
+   * Whether the input is currently in an autofilled state. If property is not present on the
+   * control it is assumed to be false.
+   */
+  readonly autofilled?: boolean;
 
   /** Sets the list of element IDs that currently describe this control. */
   abstract setDescribedByIds(ids: string[]): void;

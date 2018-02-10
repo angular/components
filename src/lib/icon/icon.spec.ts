@@ -14,7 +14,7 @@ function sortedClassNames(element: Element): string[] {
 }
 
 /**
- * Verifies that an element contains a single <svg> child element, and returns that child.
+ * Verifies that an element contains a single `<svg>` child element, and returns that child.
  */
 function verifyAndGetSingleSvgChild(element: SVGElement): SVGElement {
   expect(element.id).toBeFalsy();
@@ -25,7 +25,7 @@ function verifyAndGetSingleSvgChild(element: SVGElement): SVGElement {
 }
 
 /**
- * Verifies that an element contains a single <path> child element whose "id" attribute has
+ * Verifies that an element contains a single `<path>` child element whose "id" attribute has
  * the specified value.
  */
 function verifyPathChildElement(element: Element, attributeValue: string): void {
@@ -205,6 +205,25 @@ describe('MatIcon', () => {
       expect(svgChild.tagName.toLowerCase()).toBe('g');
       expect(svgChild.getAttribute('name')).toBe('cow');
       verifyPathChildElement(svgChild, 'moo');
+    });
+
+    it('should never parse the same icon set multiple times', () => {
+      // Normally we avoid spying on private methods like this, but the parsing is a private
+      // implementation detail that should not be exposed to the public API. This test, though,
+      // is important enough to warrant the brittle-ness that results.
+      spyOn(iconRegistry, '_svgElementFromString' as any).and.callThrough();
+
+      iconRegistry.addSvgIconSetInNamespace('farm', trust('farm-set-1.svg'));
+
+      // Requests for icons must be subscribed to in order for requests to be made.
+      iconRegistry.getNamedSvgIcon('pig', 'farm').subscribe(() => {});
+      iconRegistry.getNamedSvgIcon('cow', 'farm').subscribe(() => {});
+
+      http.expectOne('farm-set-1.svg').flush(FAKE_SVGS.farmSet1);
+
+      // _svgElementFromString is called once for each icon to create an empty SVG element
+      // and once to parse the full icon set.
+      expect((iconRegistry as any)._svgElementFromString).toHaveBeenCalledTimes(3);
     });
 
     it('should allow multiple icon sets in a namespace', () => {

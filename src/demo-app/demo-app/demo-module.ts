@@ -12,6 +12,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {AutocompleteDemo} from '../autocomplete/autocomplete-demo';
+import {BottomSheetDemo, ExampleBottomSheet} from '../bottom-sheet/bottom-sheet-demo';
 import {BaselineDemo} from '../baseline/baseline-demo';
 import {ButtonToggleDemo} from '../button-toggle/button-toggle-demo';
 import {ButtonDemo} from '../button/button-demo';
@@ -51,7 +52,9 @@ import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
 import {StepperDemo} from '../stepper/stepper-demo';
 import {ScreenTypeDemo} from '../screen-type/screen-type-demo';
 import {LayoutModule} from '@angular/cdk/layout';
-import {FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo} from '../tabs/tabs-demo';
+import {
+  FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo, Counter
+} from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
 import {TypographyDemo} from '../typography/typography-demo';
@@ -72,6 +75,7 @@ import {BadgeDemo} from 'badge/badge-demo';
   ],
   declarations: [
     AutocompleteDemo,
+    BottomSheetDemo,
     BaselineDemo,
     ButtonDemo,
     ButtonToggleDemo,
@@ -87,6 +91,7 @@ import {BadgeDemo} from 'badge/badge-demo';
     ExpansionDemo,
     FocusOriginDemo,
     FoggyTabContent,
+    Counter,
     GesturesDemo,
     GridListDemo,
     Home,
@@ -122,6 +127,7 @@ import {BadgeDemo} from 'badge/badge-demo';
     ToolbarDemo,
     TooltipDemo,
     TypographyDemo,
+    ExampleBottomSheet,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
@@ -135,6 +141,7 @@ import {BadgeDemo} from 'badge/badge-demo';
     RotiniPanel,
     ScienceJoke,
     SpagettiPanel,
+    ExampleBottomSheet,
   ],
 })
 export class DemoModule {}

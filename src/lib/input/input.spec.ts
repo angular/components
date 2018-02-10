@@ -1,7 +1,7 @@
 import {Platform, PlatformModule} from '@angular/cdk/platform';
 import {createFakeEvent, dispatchFakeEvent, wrappedErrorMessage} from '@angular/cdk/testing';
 import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
-import {ComponentFixture, inject, TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, inject, TestBed} from '@angular/core/testing';
 import {
   FormControl,
   FormGroup,
@@ -12,16 +12,17 @@ import {
   Validators,
 } from '@angular/forms';
 import {
-  MAT_LABEL_GLOBAL_OPTIONS,
-  ShowOnDirtyErrorStateMatcher,
   ErrorStateMatcher,
   FloatLabelType,
+  MAT_LABEL_GLOBAL_OPTIONS,
+  ShowOnDirtyErrorStateMatcher,
 } from '@angular/material/core';
 import {
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
   getMatFormFieldPlaceholderConflictError,
   MatFormField,
+  MatFormFieldAppearance,
   MatFormFieldModule,
 } from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
@@ -1130,6 +1131,91 @@ describe('MatInput with forms', () => {
     expect(el).not.toBeNull();
     expect(el.classList.contains('mat-form-field-empty')).toBe(false);
   }));
+
+  it('should update when the form field value is patched without emitting', fakeAsync(() => {
+    const fixture = TestBed.createComponent(MatInputWithFormControl);
+    fixture.detectChanges();
+
+    const el = fixture.debugElement.query(By.css('label')).nativeElement;
+
+    expect(el.classList).toContain('mat-form-field-empty');
+
+    fixture.componentInstance.formControl.patchValue('value', {emitEvent: false});
+    fixture.detectChanges();
+
+    expect(el.classList).not.toContain('mat-form-field-empty');
+  }));
+
+});
+
+describe('MatInput with appearance', () => {
+  const nonLegacyAppearances: MatFormFieldAppearance[] = ['standard', 'fill'];
+  let fixture: ComponentFixture<MatInputWithAppearance>;
+  let testComponent: MatInputWithAppearance;
+  let containerEl: HTMLElement;
+
+  beforeEach(fakeAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        NoopAnimationsModule,
+        PlatformModule,
+        ReactiveFormsModule,
+      ],
+      declarations: [
+        MatInputWithAppearance,
+      ],
+    });
+
+    TestBed.compileComponents();
+  }));
+
+  beforeEach(fakeAsync(() => {
+    fixture = TestBed.createComponent(MatInputWithAppearance);
+    fixture.detectChanges();
+    testComponent = fixture.componentInstance;
+    containerEl = fixture.debugElement.query(By.css('mat-form-field')).nativeElement;
+  }));
+
+  it('legacy appearance should promote placeholder to label', fakeAsync(() => {
+    testComponent.appearance = 'legacy';
+    fixture.detectChanges();
+
+    expect(containerEl.classList).toContain('mat-form-field-appearance-legacy');
+    expect(testComponent.formField._hasFloatingLabel()).toBe(true);
+    expect(testComponent.formField._hideControlPlaceholder()).toBe(true);
+  }));
+
+  it('non-legacy appearances should not promote placeholder to label', fakeAsync(() => {
+    for (let appearance of nonLegacyAppearances) {
+      testComponent.appearance = appearance;
+      fixture.detectChanges();
+
+      expect(containerEl.classList).toContain(`mat-form-field-appearance-${appearance}`);
+      expect(testComponent.formField._hasFloatingLabel()).toBe(false);
+      expect(testComponent.formField._hideControlPlaceholder()).toBe(false);
+    }
+  }));
+
+  it('legacy appearance should respect float never', fakeAsync(() => {
+    testComponent.appearance = 'legacy';
+    fixture.detectChanges();
+
+    expect(containerEl.classList).toContain('mat-form-field-appearance-legacy');
+    expect(testComponent.formField.floatLabel).toBe('never');
+  }));
+
+  it('non-legacy appearances should not respect float never', fakeAsync(() => {
+    for (let appearance of nonLegacyAppearances) {
+      testComponent.appearance = appearance;
+      fixture.detectChanges();
+
+      expect(containerEl.classList).toContain(`mat-form-field-appearance-${appearance}`);
+      expect(testComponent.formField.floatLabel).toBe('auto');
+    }
+  }));
 });
 
 @Component({
@@ -1183,7 +1269,10 @@ class MatInputPlaceholderElementTestComponent {
 }
 
 @Component({
-  template: `<mat-form-field><input matInput [formControl]="formControl"></mat-form-field>`
+  template: `
+    <mat-form-field>
+      <input matInput placeholder="Hello" [formControl]="formControl">
+    </mat-form-field>`
 })
 class MatInputWithFormControl {
   formControl = new FormControl();
@@ -1466,4 +1555,16 @@ class MatInputWithReadonlyInput {}
 })
 class MatInputWithLabelAndPlaceholder {
   floatLabel: FloatLabelType;
+}
+
+@Component({
+  template: `
+    <mat-form-field [appearance]="appearance" floatLabel="never">
+      <input matInput placeholder="Placeholder">
+    </mat-form-field>
+  `
+})
+class MatInputWithAppearance {
+  @ViewChild(MatFormField) formField: MatFormField;
+  appearance: MatFormFieldAppearance;
 }

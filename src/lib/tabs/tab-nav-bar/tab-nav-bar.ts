@@ -55,7 +55,7 @@ import {MatInkBar} from '../ink-bar';
 export class MatTabNavBase {
   constructor(public _elementRef: ElementRef) {}
 }
-export const _MatTabNavMixinBase = mixinDisableRipple(mixinColor(MatTabNavBase, 'primary'));
+export const _MatTabNavMixinBase = mixinColor(MatTabNavBase, 'primary');
 
 /**
  * Navigation component matching the styles of the tab group header.
@@ -65,7 +65,7 @@ export const _MatTabNavMixinBase = mixinDisableRipple(mixinColor(MatTabNavBase, 
   moduleId: module.id,
   selector: '[mat-tab-nav-bar]',
   exportAs: 'matTabNavBar, matTabNav',
-  inputs: ['color', 'disableRipple'],
+  inputs: ['color'],
   templateUrl: 'tab-nav-bar.html',
   styleUrls: ['tab-nav-bar.css'],
   host: {'class': 'mat-tab-nav-bar'},
@@ -74,10 +74,10 @@ export const _MatTabNavMixinBase = mixinDisableRipple(mixinColor(MatTabNavBase, 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatTabNav extends _MatTabNavMixinBase implements AfterContentInit, CanColor,
-    CanDisableRipple, OnDestroy {
+    OnDestroy {
 
   /** Subject that emits when the component has been destroyed. */
-  private _onDestroy = new Subject<void>();
+  private readonly _onDestroy = new Subject<void>();
 
   _activeLinkChanged: boolean;
   _activeLinkElement: ElementRef;
@@ -105,6 +105,7 @@ export class MatTabNav extends _MatTabNavMixinBase implements AfterContentInit, 
   private _backgroundColor: ThemePalette;
 
   /** Whether ripples should be disabled for all links or not. */
+  @Input()
   get disableRipple() { return this._disableRipple; }
   set disableRipple(value: boolean) {
     this._disableRipple = coerceBooleanProperty(value);
@@ -188,6 +189,7 @@ export const _MatTabLinkMixinBase =
     '[attr.tabIndex]': 'tabIndex',
     '[class.mat-tab-disabled]': 'disabled',
     '[class.mat-tab-label-active]': 'active',
+    '(click)': '_handleClick($event)'
   }
 })
 export class MatTabLink extends _MatTabLinkMixinBase
@@ -237,11 +239,24 @@ export class MatTabLink extends _MatTabLinkMixinBase
     this.tabIndex = parseInt(tabIndex) || 0;
 
     if (globalOptions) {
-      this.rippleConfig = {speedFactor: globalOptions.baseSpeedFactor};
+      this.rippleConfig = {
+        terminateOnPointerUp: globalOptions.terminateOnPointerUp,
+        speedFactor: globalOptions.baseSpeedFactor,
+        animation: globalOptions.animation,
+      };
     }
   }
 
   ngOnDestroy() {
     this._tabLinkRipple._removeTriggerEvents();
+  }
+
+  /**
+   * Handles the click event, preventing default navigation if the tab link is disabled.
+   */
+  _handleClick(event: MouseEvent) {
+    if (this.disabled) {
+      event.preventDefault();
+    }
   }
 }

@@ -12,7 +12,7 @@ import {
 } from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
 import {Component, DebugElement, ViewChild} from '@angular/core';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MatSlider, MatSliderModule} from './index';
@@ -247,6 +247,15 @@ describe('MatSlider without forms', () => {
       dispatchSlideEventSequence(sliderNativeElement, 0, 0.5, gestureConfig);
 
       expect(sliderInstance.value).toBe(0);
+    });
+
+    it('should not emit change when disabled', () => {
+      const onChangeSpy = jasmine.createSpy('slider onChange');
+      sliderInstance.change.subscribe(onChangeSpy);
+
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.5, gestureConfig);
+
+      expect(onChangeSpy).toHaveBeenCalledTimes(0);
     });
 
     it('should not add the mat-slider-active class on click when disabled', () => {
@@ -1265,6 +1274,23 @@ describe('MatSlider with forms module', () => {
 
       expect(testComponent.val).toBe(1);
     });
+
+    it('should be able to reset a slider by setting the model back to undefined', fakeAsync(() => {
+      expect(testComponent.slider.value).toBe(0);
+
+      testComponent.val = 5;
+      fixture.detectChanges();
+      flush();
+
+      expect(testComponent.slider.value).toBe(5);
+
+      testComponent.val = undefined;
+      fixture.detectChanges();
+      flush();
+
+      expect(testComponent.slider.value).toBe(0);
+    }));
+
   });
 
   describe('slider as a custom form control', () => {
@@ -1455,7 +1481,8 @@ class SliderWithFormControl {
   styles: [styles],
 })
 class SliderWithNgModel {
-  val = 0;
+  @ViewChild(MatSlider) slider: MatSlider;
+  val: number | undefined = 0;
 }
 
 @Component({
