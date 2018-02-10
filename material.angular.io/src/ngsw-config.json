@@ -15,11 +15,22 @@
       ]
     }
   }, {
-    "name": "assets",
+    "name": "prefetch-assets",
     "installMode": "prefetch",
     "resources": {
       "files": [
-        "/assets/**"
+        "/assets/documents/**",
+        "/assets/*.css"
+      ]
+    }
+  }, {
+    "name": "lazy-assets",
+    "installMode": "lazy",
+    "resources": {
+      "files": [
+        "/assets/examples/**",
+        "/assets/img/**",
+        "/assets/*.css"
       ]
     }
   }, {
