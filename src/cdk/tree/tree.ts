@@ -5,12 +5,15 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+import {FocusableOption} from '@angular/cdk/a11y';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
+  Directive,
+  ElementRef,
   Input,
   IterableDiffers,
   IterableDiffer,
@@ -26,14 +29,90 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {takeUntil} from 'rxjs/operators/takeUntil';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
-import {CdkTreeNodeDef, CdkTreeNode, CdkTreeNodeOutletContext} from './node';
+import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
 import {TreeControl} from './control/tree-control';
 import {
   getTreeControlMissingError,
   getTreeMissingMatchingNodeDefError,
-  getTreeMultipleDefaultNodeDefsError
+  getTreeMultipleDefaultNodeDefsError,
+  getTreeControlFunctionsMissingError
 } from './tree-errors';
+
+/**
+ * Tree node for CdkTree. It contains the data in the tree node.
+ */
+@Directive({
+  selector: 'cdk-tree-node',
+  exportAs: 'cdkTreeNode',
+  host: {
+    '[attr.aria-expanded]': 'isExpanded',
+    '[attr.aria-level]': 'level',
+    '[attr.role]': 'role',
+    'class': 'cdk-tree-node',
+  },
+})
+export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
+  /**
+   * The most recently created `CdkTreeNode`. We save it in static variable so we can retrieve it
+   * in `CdkTree` and set the data to it.
+   */
+  static mostRecentTreeNode: CdkTreeNode<any> | null = null;
+
+  /** Subject that emits when the component has been destroyed. */
+  protected _destroyed = new Subject<void>();
+
+  /** The tree node's data. */
+  get data(): T { return this._data; }
+  set data(value: T) {
+    this._data = value;
+    this._setRoleFromData();
+  }
+  protected _data: T;
+
+  get isExpanded(): boolean {
+    return this._tree.treeControl.isExpanded(this._data);
+  }
+
+  get level(): number {
+    return this._tree.treeControl.getLevel ? this._tree.treeControl.getLevel(this._data) : 0;
+  }
+
+  /**
+   * The role of the node should be 'group' if it's an internal node,
+   * and 'treeitem' if it's a leaf node.
+   */
+  @Input() role: 'treeitem' | 'group' = 'treeitem';
+
+  constructor(protected _elementRef: ElementRef,
+              protected _tree: CdkTree<T>) {
+    CdkTreeNode.mostRecentTreeNode = this;
+  }
+
+  ngOnDestroy() {
+    this._destroyed.next();
+    this._destroyed.complete();
+  }
+
+  /** Focuses the menu item. Implements for FocusableOption. */
+  focus(): void {
+    this._elementRef.nativeElement.focus();
+  }
+
+  private _setRoleFromData(): void {
+    if (this._tree.treeControl.isExpandable) {
+      this.role = this._tree.treeControl.isExpandable(this._data) ? 'group' : 'treeitem';
+    } else {
+      if (!this._tree.treeControl.getChildren) {
+        throw getTreeControlFunctionsMissingError();
+      }
+      this._tree.treeControl.getChildren(this._data).pipe(takeUntil(this._destroyed))
+        .subscribe(children => {
+          this.role = children && children.length ? 'group' : 'treeitem';
+        });
+    }
+  }
+}
 
 
 /**
@@ -67,7 +146,7 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
   private _defaultNodeDef: CdkTreeNodeDef<T> | null;
 
   /** Data subscription */
-  private _dataSubscription : Subscription | null;
+  private _dataSubscription: Subscription | null;
 
   /**
    * Provides a stream containing the latest data array to render. Influenced by the tree's
@@ -90,9 +169,6 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
 
   /** The tree node template for the tree */
   @ContentChildren(CdkTreeNodeDef) _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
-
-  /** The tree node inside the tree */
-  @ContentChildren(CdkTreeNode, {descendants: true}) items: QueryList<CdkTreeNode<T>>;
 
   // TODO(tinayuangao): Setup a listener for scrolling, emit the calculated view to viewChange.
   //     Remove the MAX_VALUE in viewChange

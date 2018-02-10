@@ -8,7 +8,11 @@
 
 import {Component} from '@angular/core';
 import {FlatTreeControl, NestedTreeControl} from '@angular/cdk/tree';
-import {MatTreeFlattener, MatTreeFlatDataSource, MatTreeNestedDataSource} from '@angular/material/tree';
+import {
+  MatTreeFlattener,
+  MatTreeFlatDataSource,
+  MatTreeNestedDataSource
+} from '@angular/material/tree';
 import {of as ofObservable} from 'rxjs/observable/of';
 
 import {JsonNode, JsonDatabase} from './json-database';
@@ -48,10 +52,9 @@ export class TreeDemo {
     this.nestedDataSource = new MatTreeNestedDataSource();
 
     database.dataChange.subscribe(data => {
-      console.log(`datachanges in demo`)
       this.dataSource.data = data;
       this.nestedDataSource.data = data;
-    })
+    });
   }
 
   transformer = (node: JsonNode, level: number) => {
@@ -61,7 +64,7 @@ export class TreeDemo {
     flatNode.level = level;
     flatNode.expandable = !!node.children;
     return flatNode;
-  };
+  }
 
   getLevel = (node: JsonFlatNode) => { return node.level; };
 
