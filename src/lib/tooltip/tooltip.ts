@@ -271,7 +271,9 @@ export class MatTooltip implements OnDestroy {
     this._detach();
     this._portal = this._portal || new ComponentPortal(TooltipComponent, this._viewContainerRef);
     this._tooltipInstance = overlayRef.attach(this._portal).instance;
-    this._tooltipInstance.afterHidden().pipe(takeUntil(this._destroyed)).subscribe(() => this._detach());
+    this._tooltipInstance.afterHidden()
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(() => this._detach());
     this._setTooltipClass(this._tooltipClass);
     this._updateTooltipMessage();
     this._tooltipInstance!.show(this._position, delay);
@@ -346,7 +348,9 @@ export class MatTooltip implements OnDestroy {
       scrollStrategy: this._scrollStrategy()
     });
 
-    this._overlayRef.detachments().pipe(takeUntil(this._destroyed)).subscribe(() => this._detach());
+    this._overlayRef.detachments()
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(() => this._detach());
 
     return this._overlayRef;
   }
