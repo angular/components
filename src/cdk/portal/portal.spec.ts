@@ -311,6 +311,21 @@ describe('Portals', () => {
       expect(instance.portalOutlet.hasAttached()).toBe(true);
     });
 
+    it('should be able to use a custom component factory resolver',
+      inject([ComponentFactoryResolver], (resolver: ComponentFactoryResolver) => {
+        const testAppComponent = fixture.componentInstance;
+        const spy = jasmine.createSpy('resolveComponentFactorySpy');
+
+        testAppComponent.portalOutlet.attachComponentPortal(new ComponentPortal(PizzaMsg), {
+          resolveComponentFactory: (...args: any[]) => {
+            spy();
+            return resolver.resolveComponentFactory.apply(resolver, args);
+          }
+        });
+
+        expect(spy).toHaveBeenCalled();
+      }));
+
   });
 
   describe('DomPortalOutlet', () => {
