@@ -271,7 +271,7 @@ export class MatTooltip implements OnDestroy {
     this._detach();
     this._portal = this._portal || new ComponentPortal(TooltipComponent, this._viewContainerRef);
     this._tooltipInstance = overlayRef.attach(this._portal).instance;
-    this._tooltipInstance.afterHidden().subscribe(() => this._detach());
+    this._tooltipInstance.afterHidden().pipe(takeUntil(this._destroyed)).subscribe(() => this._detach());
     this._setTooltipClass(this._tooltipClass);
     this._updateTooltipMessage();
     this._tooltipInstance!.show(this._position, delay);
@@ -325,7 +325,10 @@ export class MatTooltip implements OnDestroy {
         this._scrollDispatcher.getAncestorScrollContainers(this._elementRef)
       );
 
-    strategy.onPositionChange.pipe(filter(() => !!this._tooltipInstance), takeUntil(this._destroyed)).subscribe(change => {
+    strategy.onPositionChange.pipe(
+        filter(() => !!this._tooltipInstance),
+        takeUntil(this._destroyed)
+    ).subscribe(change => {
       if (change.scrollableViewProperties.isOverlayClipped && this._tooltipInstance!.isVisible()) {
         // After position changes occur and the overlay is clipped by
         // a parent scrollable then close the tooltip.
@@ -343,7 +346,7 @@ export class MatTooltip implements OnDestroy {
       scrollStrategy: this._scrollStrategy()
     });
 
-    this._overlayRef.detachments().subscribe(() => this._detach());
+    this._overlayRef.detachments().pipe(takeUntil(this._destroyed)).subscribe(() => this._detach());
 
     return this._overlayRef;
   }
