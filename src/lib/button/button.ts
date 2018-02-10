@@ -86,6 +86,11 @@ export class MatButton extends _MatButtonMixinBase
   @ViewChild(MatRipple) ripple: MatRipple;
 
   constructor(elementRef: ElementRef,
+              /**
+               * @deprecated Platform checks for SSR are no longer needed
+               * @deletion-target 7.0.0
+               */
+              // tslint:disable-next-line:no-unused-variable
               private _platform: Platform,
               private _focusMonitor: FocusMonitor) {
     super(elementRef);
@@ -126,13 +131,6 @@ export class MatButton extends _MatButtonMixinBase
 
   /** Gets whether the button has one of the given attributes. */
   _hasHostAttributes(...attributes: string[]) {
-    // If not on the browser, say that there are none of the attributes present.
-    // Since these only affect how the ripple displays (and ripples only happen on the client),
-    // detecting these attributes isn't necessary when not on the browser.
-    if (!this._platform.isBrowser) {
-      return false;
-    }
-
     return attributes.some(attribute => this._getHostElement().hasAttribute(attribute));
   }
 }
@@ -159,10 +157,8 @@ export class MatButton extends _MatButtonMixinBase
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatAnchor extends MatButton {
-  constructor(
-      platform: Platform,
-      focusMonitor: FocusMonitor,
-      elementRef: ElementRef) {
+
+  constructor(platform: Platform, focusMonitor: FocusMonitor, elementRef: ElementRef) {
     super(elementRef, platform, focusMonitor);
   }
 
