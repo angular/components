@@ -190,7 +190,7 @@ describe('MatButtonToggle with forms', () => {
       expect(groupElement.querySelectorAll('.mat-ripple-element').length).toBe(1);
     });
 
-    it('should allow disabling ripples', () => {
+    it('should allow ripples to be disabled', () => {
       const groupElement = groupDebugElement.nativeElement;
 
       testComponent.disableRipple = true;
