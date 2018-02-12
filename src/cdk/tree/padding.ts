@@ -11,8 +11,7 @@ import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {Directive, ElementRef, Input, OnDestroy, Optional, Renderer2} from '@angular/core';
 import {takeUntil} from 'rxjs/operators/takeUntil';
 import {Subject} from 'rxjs/Subject';
-import {CdkTreeNode} from './node';
-import {CdkTree} from './tree';
+import {CdkTree, CdkTreeNode} from './tree';
 
 /**
  * Indent for the children tree dataNodes.

@@ -11,8 +11,7 @@ import {
   Directive,
   Input,
 } from '@angular/core';
-import {CdkTree} from './tree';
-import {CdkTreeNode} from './node';
+import {CdkTree, CdkTreeNode} from './tree';
 
 /**
  * Node toggle to expand/collapse the node.

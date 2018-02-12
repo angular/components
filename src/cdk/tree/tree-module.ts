@@ -12,8 +12,8 @@ import {NgModule} from '@angular/core';
 import {CdkTreeNodeOutlet} from './outlet';
 import {CdkTreeNodePadding} from './padding';
 import {CdkTreeNodeToggle} from './toggle';
-import {CdkTree} from './tree';
-import {CdkTreeNodeDef, CdkTreeNode} from './node';
+import {CdkTree, CdkTreeNode} from './tree';
+import {CdkTreeNodeDef} from './node';
 import {CdkNestedTreeNode} from './nested-node';
 
 const EXPORTED_DECLARATIONS = [
