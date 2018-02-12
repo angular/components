@@ -360,6 +360,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     this._multiple = coerceBooleanProperty(value);
   }
 
+  /** Whether the user wants to disable the offset. */
+  @Input () disableOffset: string = '';
+
   /**
    * A function to compare the option values with the selected values. The first argument
    * is a value from an option. The second is a value from the selection. A boolean
@@ -1120,7 +1123,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     let optionOffsetFromPanelTop: number;
 
     // Disable offset for smaller lists by returning 0 as value to offset
-    if (this._getItemCount() <= maxOptionsDisplayed) {
+    if (this.disableOffset == 'true') {
       return 0;
     }
 
