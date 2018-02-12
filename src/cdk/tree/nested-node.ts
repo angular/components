@@ -15,26 +15,29 @@ import {
 } from '@angular/core';
 import {takeUntil} from 'rxjs/operators/takeUntil';
 
-import {CdkTree} from './tree';
+import {CdkTree, CdkTreeNode} from './tree';
 import {CdkTreeNodeOutlet} from './outlet';
-import {CdkTreeNode} from './node';
 
 /**
  * Nested node is a child of `<cdk-tree>`. It works with nested tree.
  * By using `cdk-nested-tree-node` component in tree node template, children of the parent node will
  * be added in the `cdkTreeNodeOutlet` in tree node template.
  * For example:
+ *   ```html
  *   <cdk-mested-tree-node>
  *     {{node.name}}
  *     <ng-template cdkTreeNodeOutlet></ng-template>
  *   </cdk-tree-node>
+ *   ```
  * The children of node will be automatically added to `cdkTreeNodeOutlet`, the result dom will be
  * like this:
+ *   ```html
  *   <cdk-nested-tree-node>
  *     {{node.name}}
-*      <cdk-nested-tree-node>{{child1.name}}</cdk-tree-node>
-*      <cdk-nested-tree-node>{{child2.name}}</cdk-tree-node>
+ *      <cdk-nested-tree-node>{{child1.name}}</cdk-tree-node>
+ *      <cdk-nested-tree-node>{{child2.name}}</cdk-tree-node>
  *   </cdk-tree-node>
+ *   ```
  */
 @Directive({
   selector: 'cdk-nested-tree-node',

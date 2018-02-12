@@ -215,10 +215,6 @@ describe('MatTree', () => {
       });
 
       it('with the right data', () => {
-        const data = underlyingDataSource.data;
-        const child = underlyingDataSource.addData(true);
-        fixture.detectChanges();
-
         expectFlatTreeToMatch(treeElement, 28,
           [`topping_1 - cheese_1 + base_1`],
           [`topping_2 - cheese_2 + base_2`],
@@ -279,7 +275,7 @@ describe('MatTree', () => {
           [`topping_1 - cheese_1 + base_1`],
           [`topping_2 - cheese_2 + base_2`],
           [_, `topping_4 - cheese_4 + base_4`],
-          [`topping_3 - cheese_3 + base_3`])
+          [`topping_3 - cheese_3 + base_3`]);
       });
 
       it('with nested child data', () => {
@@ -329,10 +325,6 @@ describe('MatTree', () => {
       });
 
       it('with the right data', () => {
-        const data = underlyingDataSource.data;
-        const child = underlyingDataSource.addData(true);
-        fixture.detectChanges();
-
         expectNestedTreeToMatch(treeElement,
           [`topping_1 - cheese_1 + base_1`],
           [`topping_2 - cheese_2 + base_2`],
@@ -609,7 +601,7 @@ class SimpleMatTreeApp {
   transformer = (node: TestData, level: number) => {
     node.level = level;
     return node;
-  };
+  }
 
   treeFlattener = new MatTreeFlattener<TestData, TestData>(
     this.transformer, this.getLevel, this.isExpandable, this.getChildren);
@@ -663,7 +655,7 @@ class NestedMatTreeApp {
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
          <ng-template matTreeNodeOutlet></ng-template>
       </mat-nested-tree-node>
-       <mat-nested-tree-node *matTreeNodeDef="let node; when: isSpecial" 
+       <mat-nested-tree-node *matTreeNodeDef="let node; when: isSpecial"
                              matTreeNodeToggle>
                      >>> {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
          <div *ngIf="treeControl.isExpanded(node)">
@@ -713,7 +705,7 @@ class MatTreeAppWithToggle {
   transformer = (node: TestData, level: number) => {
     node.level = level;
     return node;
-  };
+  }
 
   treeFlattener = new MatTreeFlattener<TestData, TestData>(
     this.transformer, this.getLevel, this.isExpandable, this.getChildren);
@@ -788,7 +780,7 @@ class WhenNodeMatTreeApp {
   transformer = (node: TestData, level: number) => {
     node.level = level;
     return node;
-  };
+  }
 
   treeFlattener = new MatTreeFlattener<TestData, TestData>(
     this.transformer, this.getLevel, this.isExpandable, this.getChildren);

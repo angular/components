@@ -42,10 +42,10 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
  *    level: 2
  *  },
  *  NodeTwo: {
-  *   key: 'Pear',
-  *   expandable: false,
-  *   level: 2
-  * }
+ *   key: 'Pear',
+ *   expandable: false,
+ *   level: 2
+ * }
  * and the output flattened type is `F` with additional information.
  */
 export class MatTreeFlattener<T, F> {
