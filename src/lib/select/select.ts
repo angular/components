@@ -420,7 +420,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       .pipe(take(1), switchMap(() => this.optionSelectionChanges));
   });
 
-   /** Event emitted when the select has been opened. */
+   /** Event emitted when the select has been opened (true) or closed (false). */
    @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
    /** Event emitted when the select has been opened. */
