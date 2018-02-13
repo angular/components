@@ -131,9 +131,15 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
    * Attach the given ComponentPortal to this PortalOutlet using the ComponentFactoryResolver.
    *
    * @param portal Portal to be attached to the portal outlet.
+   * @param componentFactoryResolver Alternate `ComponentFactoryResolver` to use when attaching the
+   *    portal. Defaults to the resolver associated with the portal outlet instance.
    * @returns Reference to the created component.
    */
-  attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
+  attachComponentPortal<T>(
+    portal: ComponentPortal<T>,
+    componentFactoryResolver: ComponentFactoryResolver = this._componentFactoryResolver):
+    ComponentRef<T> {
+
     portal.setAttachedHost(this);
 
     // If the portal specifies an origin, use that as the logical location of the component
@@ -142,8 +148,7 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
         portal.viewContainerRef :
         this._viewContainerRef;
 
-    const componentFactory =
-        this._componentFactoryResolver.resolveComponentFactory(portal.component);
+    const componentFactory = componentFactoryResolver.resolveComponentFactory(portal.component);
     const ref = viewContainerRef.createComponent(
         componentFactory, viewContainerRef.length,
         portal.injector || viewContainerRef.parentInjector);
