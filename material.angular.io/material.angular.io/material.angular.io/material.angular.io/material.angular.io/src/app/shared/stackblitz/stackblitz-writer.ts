@@ -3,7 +3,7 @@ import {Http} from '@angular/http';
 import {ExampleData} from '@angular/material-examples';
 import {VERSION} from '@angular/material';
 
-const STACKBLITZ_URL = 'https://run.stackblitz.com/api/angular/v1/';
+const STACKBLITZ_URL = 'https://run.stackblitz.com/api/angular/v1';
 
 const COPYRIGHT =
   `Copyright 2018 Google Inc. All Rights Reserved.
@@ -71,7 +71,8 @@ export class StackblitzWriter {
    * called with submit().
    */
   constructStackblitzForm(data: ExampleData): Promise<HTMLFormElement> {
-    let form = this._createFormElement();
+    const indexFile = `app%2F${data.indexFilename}.ts`;
+    const form = this._createFormElement(indexFile);
 
     TAGS.forEach((tag, i) => this._appendFormInput(form, `tags[${i}]`, tag));
     this._appendFormInput(form, 'private', 'true');
@@ -97,9 +98,9 @@ export class StackblitzWriter {
   }
 
   /** Constructs a new form element that will navigate to the stackblitz url. */
-  _createFormElement(): HTMLFormElement {
+  _createFormElement(indexFile: string): HTMLFormElement {
     const form = document.createElement('form');
-    form.action = STACKBLITZ_URL;
+    form.action = `${STACKBLITZ_URL}?file=${indexFile}`;
     form.method = 'post';
     form.target = '_blank';
     return form;
