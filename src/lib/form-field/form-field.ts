@@ -71,8 +71,8 @@ export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill' | 'outline';
 
 
 export interface MatFormFieldDefaultOptions {
-  appearance?: MatFormFieldAppearance
-};
+  appearance?: MatFormFieldAppearance;
+}
 
 export const MAT_FORM_FIELD_DEFAULT_OPTIONS =
     new InjectionToken<MatFormFieldDefaultOptions>('MAT_FORM_FIELD_DEFAULT_OPTIONS');
