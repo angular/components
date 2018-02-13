@@ -361,7 +361,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   }
 
   /** Whether the user wants to disable the offset. */
-  @Input () disableOffset: string = '';
+  @Input () disableOptionCentering: boolean = false;
 
   /**
    * A function to compare the option values with the selected values. The first argument
@@ -1123,7 +1123,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     let optionOffsetFromPanelTop: number;
 
     // Disable offset for smaller lists by returning 0 as value to offset
-    if (this.disableOffset == 'true') {
+    if (this.disableOptionCentering) {
       return 0;
     }
 
