@@ -218,6 +218,84 @@ describe('CdkTree', () => {
           [`[topping_3] - [cheese_3] + [base_3]`]);
       });
     });
+
+    describe('with array data source', () => {
+      let fixture: ComponentFixture<ArrayDataSourceCdkTreeApp>;
+      let component: ArrayDataSourceCdkTreeApp;
+
+      beforeEach(() => {
+        configureCdkTreeTestingModule([ArrayDataSourceCdkTreeApp]);
+        fixture = TestBed.createComponent(ArrayDataSourceCdkTreeApp);
+
+        component = fixture.componentInstance;
+        dataSource = component.dataSource as FakeDataSource;
+        tree = component.tree;
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+
+        fixture.detectChanges();
+      });
+
+      it('with the right data', () => {
+        expect(dataSource.data.length).toBe(3);
+
+        let data = dataSource.data;
+        expectFlatTreeToMatch(treeElement, 28,
+          [`[topping_1] - [cheese_1] + [base_1]`],
+          [`[topping_2] - [cheese_2] + [base_2]`],
+          [`[topping_3] - [cheese_3] + [base_3]`]);
+
+        dataSource.addChild(data[1]);
+        fixture.detectChanges();
+
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+        data = dataSource.data;
+        expect(data.length).toBe(4);
+        expectFlatTreeToMatch(treeElement, 28,
+          [`[topping_1] - [cheese_1] + [base_1]`],
+          [`[topping_2] - [cheese_2] + [base_2]`],
+          [_, `[topping_4] - [cheese_4] + [base_4]`],
+          [`[topping_3] - [cheese_3] + [base_3]`]);
+      });
+    });
+
+    describe('with observable data source', () => {
+      let fixture: ComponentFixture<ObservableDataSourceCdkTreeApp>;
+      let component: ObservableDataSourceCdkTreeApp;
+
+      beforeEach(() => {
+        configureCdkTreeTestingModule([ObservableDataSourceCdkTreeApp]);
+        fixture = TestBed.createComponent(ObservableDataSourceCdkTreeApp);
+
+        component = fixture.componentInstance;
+        dataSource = component.dataSource as FakeDataSource;
+        tree = component.tree;
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+
+        fixture.detectChanges();
+      });
+
+      it('with the right data', () => {
+        expect(dataSource.data.length).toBe(3);
+
+        let data = dataSource.data;
+        expectFlatTreeToMatch(treeElement, 28,
+          [`[topping_1] - [cheese_1] + [base_1]`],
+          [`[topping_2] - [cheese_2] + [base_2]`],
+          [`[topping_3] - [cheese_3] + [base_3]`]);
+
+        dataSource.addChild(data[1]);
+        fixture.detectChanges();
+
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+        data = dataSource.data;
+        expect(data.length).toBe(4);
+        expectFlatTreeToMatch(treeElement, 28,
+          [`[topping_1] - [cheese_1] + [base_1]`],
+          [`[topping_2] - [cheese_2] + [base_2]`],
+          [_, `[topping_4] - [cheese_4] + [base_4]`],
+          [`[topping_3] - [cheese_3] + [base_3]`]);
+      });
+    });
   });
 
   describe('nested tree', () => {
@@ -433,6 +511,80 @@ describe('CdkTree', () => {
           [`topping_1 - cheese_1 + base_1`],
           [`topping_2 - cheese_2 + base_2`],
           [`topping_3 - cheese_3 + base_3`]);
+      });
+    });
+
+    describe('with array data source', () => {
+      let fixture: ComponentFixture<ArrayDataSourceNestedCdkTreeApp>;
+      let component: ArrayDataSourceNestedCdkTreeApp;
+
+      beforeEach(() => {
+        configureCdkTreeTestingModule([ArrayDataSourceNestedCdkTreeApp]);
+        fixture = TestBed.createComponent(ArrayDataSourceNestedCdkTreeApp);
+
+        component = fixture.componentInstance;
+        dataSource = component.dataSource as FakeDataSource;
+        tree = component.tree;
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+
+        fixture.detectChanges();
+      });
+
+      it('with the right data', () => {
+        expect(dataSource.data.length).toBe(3);
+
+        let data = dataSource.data;
+        expectNestedTreeToMatch(treeElement,
+          [`[topping_1] - [cheese_1] + [base_1]`],
+          [`[topping_2] - [cheese_2] + [base_2]`],
+          [`[topping_3] - [cheese_3] + [base_3]`]);
+
+        dataSource.addChild(data[1], false);
+        fixture.detectChanges();
+
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+        expectNestedTreeToMatch(treeElement,
+          [`[topping_1] - [cheese_1] + [base_1]`],
+          [`[topping_2] - [cheese_2] + [base_2]`],
+          [_, `[topping_4] - [cheese_4] + [base_4]`],
+          [`[topping_3] - [cheese_3] + [base_3]`]);
+      });
+    });
+
+    describe('with observable data source', () => {
+      let fixture: ComponentFixture<ObservableDataSourceNestedCdkTreeApp>;
+      let component: ObservableDataSourceNestedCdkTreeApp;
+
+      beforeEach(() => {
+        configureCdkTreeTestingModule([ObservableDataSourceNestedCdkTreeApp]);
+        fixture = TestBed.createComponent(ObservableDataSourceNestedCdkTreeApp);
+
+        component = fixture.componentInstance;
+        dataSource = component.dataSource as FakeDataSource;
+        tree = component.tree;
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+
+        fixture.detectChanges();
+      });
+
+      it('with the right data', () => {
+        expect(dataSource.data.length).toBe(3);
+
+        let data = dataSource.data;
+        expectNestedTreeToMatch(treeElement,
+          [`[topping_1] - [cheese_1] + [base_1]`],
+          [`[topping_2] - [cheese_2] + [base_2]`],
+          [`[topping_3] - [cheese_3] + [base_3]`]);
+
+        dataSource.addChild(data[1], false);
+        fixture.detectChanges();
+
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+        expectNestedTreeToMatch(treeElement,
+          [`[topping_1] - [cheese_1] + [base_1]`],
+          [`[topping_2] - [cheese_2] + [base_2]`],
+          [_, `[topping_4] - [cheese_4] + [base_4]`],
+          [`[topping_3] - [cheese_3] + [base_3]`]);
       });
     });
   });
@@ -740,4 +892,105 @@ class WhenNodeCdkTreeApp {
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }
 
+@Component({
+  template: `
+    <cdk-tree [dataSource]="dataArray" [treeControl]="treeControl">
+      <cdk-tree-node *cdkTreeNodeDef="let node"
+                     cdkTreeNodePadding [cdkTreeNodePaddingIndent]="28"
+                     cdkTreeNodeToggle>
+                     [{{node.pizzaTopping}}] - [{{node.pizzaCheese}}] + [{{node.pizzaBase}}]
+      </cdk-tree-node>
+    </cdk-tree>
+  `
+})
+class ArrayDataSourceCdkTreeApp {
+  getLevel = (node: TestData) => node.level;
+  isExpandable = (node: TestData) => node.children.length > 0;
+
+  treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
+
+  dataSource: FakeDataSource = new FakeDataSource(this.treeControl);
+
+  get dataArray() {
+    return this.dataSource.data;
+  }
+
+  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+}
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="dataObservable" [treeControl]="treeControl">
+      <cdk-tree-node *cdkTreeNodeDef="let node"
+                     cdkTreeNodePadding [cdkTreeNodePaddingIndent]="28"
+                     cdkTreeNodeToggle>
+                     [{{node.pizzaTopping}}] - [{{node.pizzaCheese}}] + [{{node.pizzaBase}}]
+      </cdk-tree-node>
+    </cdk-tree>
+  `
+})
+class ObservableDataSourceCdkTreeApp {
+  getLevel = (node: TestData) => node.level;
+  isExpandable = (node: TestData) => node.children.length > 0;
+
+  treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
+
+  dataSource: FakeDataSource = new FakeDataSource(this.treeControl);
+
+  get dataObservable() {
+    return this.dataSource._dataChange;
+  }
+
+  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+}
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="dataArray" [treeControl]="treeControl">
+      <cdk-nested-tree-node *cdkTreeNodeDef="let node">
+                     [{{node.pizzaTopping}}] - [{{node.pizzaCheese}}] + [{{node.pizzaBase}}]
+         <ng-template cdkTreeNodeOutlet></ng-template>
+      </cdk-nested-tree-node>
+    </cdk-tree>
+  `
+})
+class ArrayDataSourceNestedCdkTreeApp {
+
+  getChildren = (node: TestData) => node.observableChildren;
+
+  treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
+
+  dataSource: FakeDataSource = new FakeDataSource(this.treeControl);
+
+  get dataArray() {
+    return this.dataSource.data;
+  }
+
+  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+}
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="dataObservable" [treeControl]="treeControl">
+      <cdk-nested-tree-node *cdkTreeNodeDef="let node">
+                     [{{node.pizzaTopping}}] - [{{node.pizzaCheese}}] + [{{node.pizzaBase}}]
+         <ng-template cdkTreeNodeOutlet></ng-template>
+      </cdk-nested-tree-node>
+    </cdk-tree>
+  `
+})
+class ObservableDataSourceNestedCdkTreeApp {
+
+  getChildren = (node: TestData) => node.observableChildren;
+
+  treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
+
+  dataSource: FakeDataSource = new FakeDataSource(this.treeControl);
+
+  get dataObservable() {
+    return this.dataSource._dataChange;
+  }
+
+  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+}
 
