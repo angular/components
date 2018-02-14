@@ -360,7 +360,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     this._multiple = coerceBooleanProperty(value);
   }
 
-  /** Whether the user wants to disable the offset. */
+  /** Whether to center the active option over the trigger. */
   @Input () disableOptionCentering: boolean = false;
 
   /**

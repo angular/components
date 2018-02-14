@@ -2708,7 +2708,7 @@ describe('MatSelect', () => {
       formField = fixture.debugElement.query(By.css('mat-form-field')).nativeElement;
     }));
 
-    it('should align the first option with trigger text if option centering is disabled',
+    it('should not align the active option with the trigger if centering is disabled',
         fakeAsync(() => {
           trigger.click();
           fixture.detectChanges();
@@ -2724,7 +2724,7 @@ describe('MatSelect', () => {
           expect(fixture.componentInstance.options.toArray()[1].selected).toBe(true);
         }));
   });
-  
+
   describe('positioning', () => {
     beforeEach(async(() => configureMatSelectTestingModule([
       BasicSelect,
@@ -4443,17 +4443,13 @@ class SingleSelectWithPreselectedArrayValues {
 @Component({
   selector: 'select-without-option-centering',
   template: `
-    <div [style.height.px]="heightAbove"></div>
     <mat-form-field>
-      <mat-select placeholder="Food" [formControl]="control" [required]="isRequired"
-        [tabIndex]="tabIndexOverride" [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby"
-        [panelClass]="panelClass" [disableRipple]="disableRipple" disableOptionCentering=true>
-        <mat-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
+      <mat-select placeholder="Food" [formControl]="control" disableOptionCentering=true>
+        <mat-option *ngFor="let food of foods" [value]="food.value">
           {{ food.viewValue }}
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <div [style.height.px]="heightBelow"></div>
   `
 })
 class SelectWithoutOptionCentering {
@@ -4468,14 +4464,6 @@ class SelectWithoutOptionCentering {
     { value: 'sushi-7', viewValue: 'Sushi' },
   ];
   control = new FormControl('pizza-1');
-  isRequired: boolean;
-  heightAbove = 0;
-  heightBelow = 0;
-  tabIndexOverride: number;
-  ariaLabel: string;
-  ariaLabelledby: string;
-  panelClass = ['custom-one', 'custom-two'];
-  disableRipple: boolean;
 
   @ViewChild(MatSelect) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
