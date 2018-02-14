@@ -385,7 +385,6 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   get value(): any { return this._value; }
   set value(value: any) {
     if (this._value !== value) {
-      this._value = value;
       if (this.radioGroup !== null) {
         if (!this.checked) {
           // Update checked when the value changed to match the radio group's value
@@ -394,6 +393,12 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
         if (this.checked) {
           this.radioGroup.selected = this;
         }
+      }
+      this._value = value;
+      this._markForCheck();
+
+      if (this.radioGroup && this.checked) {
+        this._updateGroupValue();
       }
     }
   }
@@ -553,16 +558,26 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
     // emit its event object to the `change` output.
     event.stopPropagation();
 
-    const groupValueChanged = this.radioGroup && this.value !== this.radioGroup.value;
+    if (this.radioGroup) {
+      this._updateGroupValue(true);
+    }
+
     this.checked = true;
     this._emitChangeEvent();
+  }
 
-    if (this.radioGroup) {
-      this.radioGroup._controlValueAccessorChangeFn(this.value);
-      this.radioGroup._touch();
-      if (groupValueChanged) {
+  /** Update radio group's value and selected radio button. */
+  private _updateGroupValue(isUserInput: boolean = false) {
+    const groupValueChanged = this.radioGroup.value !== this.value;
+    this.radioGroup.selected = this;
+    if (groupValueChanged) {
+      setTimeout(() => {
+        this.radioGroup._controlValueAccessorChangeFn(this.value);
         this.radioGroup._emitChangeEvent();
-      }
+        if (isUserInput) {
+          this.radioGroup._touch();
+        }
+      });
     }
   }
 

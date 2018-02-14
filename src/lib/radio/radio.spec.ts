@@ -1,4 +1,4 @@
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, TestBed, tick, flush} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -180,7 +180,7 @@ describe('MatRadio', () => {
     });
 
     it(`should not emit a change event from the radio group when change group value
-        programmatically`, () => {
+        programmatically`, fakeAsync(() => {
       expect(groupInstance.value).toBeFalsy();
 
       const changeSpy = jasmine.createSpy('radio-group change listener');
@@ -188,14 +188,16 @@ describe('MatRadio', () => {
 
       radioLabelElements[0].click();
       fixture.detectChanges();
+      flush();
 
       expect(changeSpy).toHaveBeenCalledTimes(1);
 
       groupInstance.value = 'water';
       fixture.detectChanges();
+      flush();
 
       expect(changeSpy).toHaveBeenCalledTimes(1);
-    });
+    }));
 
     it('should show a ripple when focusing via the keyboard', fakeAsync(() => {
       expect(radioNativeElements[0].querySelectorAll('.mat-ripple-element').length)
@@ -430,7 +432,7 @@ describe('MatRadio', () => {
       expect(groupInstance.selected!.value).toBe(groupInstance.value);
     });
 
-    it('should have the correct control state initially and after interaction', () => {
+    it('should have the correct control state initially and after interaction', fakeAsync(() => {
       // The control should start off valid, pristine, and untouched.
       expect(groupNgModel.valid).toBe(true);
       expect(groupNgModel.pristine).toBe(true);
@@ -440,6 +442,7 @@ describe('MatRadio', () => {
       // but remain untouched.
       radioInstances[1].checked = true;
       fixture.detectChanges();
+      flush();
 
       expect(groupNgModel.valid).toBe(true);
       expect(groupNgModel.pristine).toBe(true);
@@ -449,11 +452,12 @@ describe('MatRadio', () => {
       // now also be touched.
       radioLabelElements[2].click();
       fixture.detectChanges();
+      flush();
 
       expect(groupNgModel.valid).toBe(true);
       expect(groupNgModel.pristine).toBe(false);
       expect(groupNgModel.touched).toBe(true);
-    });
+    }));
 
     it('should write to the radio button based on ngModel', fakeAsync(() => {
       testComponent.modelValue = 'chocolate';
@@ -466,24 +470,41 @@ describe('MatRadio', () => {
       expect(radioInstances[1].checked).toBe(true);
     }));
 
-    it('should update the ngModel value when selecting a radio button', () => {
+    it('should update the ngModel value when selecting a radio button', fakeAsync(() => {
       dispatchFakeEvent(innerRadios[1].nativeElement, 'change');
       fixture.detectChanges();
+      flush();
       expect(testComponent.modelValue).toBe('chocolate');
-    });
+    }));
 
-    it('should update the model before firing change event', () => {
+    it('should update the model before firing change event', fakeAsync(() => {
       expect(testComponent.modelValue).toBeUndefined();
       expect(testComponent.lastEvent).toBeUndefined();
 
       dispatchFakeEvent(innerRadios[1].nativeElement, 'change');
       fixture.detectChanges();
+      flush();
       expect(testComponent.lastEvent.value).toBe('chocolate');
 
       dispatchFakeEvent(innerRadios[0].nativeElement, 'change');
       fixture.detectChanges();
+      flush();
       expect(testComponent.lastEvent.value).toBe('vanilla');
-    });
+    }));
+
+    it('should update the ngModel value when the selected option value changed', fakeAsync(() => {
+      expect(testComponent.modelValue).toBeUndefined();
+
+      dispatchFakeEvent(innerRadios[3].nativeElement, 'change');
+      flush();
+      expect(testComponent.modelValue).toBe('blueberry');
+
+      testComponent.customOption = 'lemon';
+      fixture.detectChanges();
+      flush();
+
+      expect(testComponent.modelValue).toBe('lemon');
+    }));
   });
 
   describe('group with FormControl', () => {
@@ -815,6 +836,7 @@ class StandaloneRadioButtons {
     <mat-radio-button *ngFor="let option of options" [value]="option.value">
       {{option.label}}
     </mat-radio-button>
+    <mat-radio-button [value]="customOption">CustomOption</mat-radio-button>
   </mat-radio-group>
   `
 })
@@ -825,6 +847,7 @@ class RadioGroupWithNgModel {
     {label: 'Chocolate', value: 'chocolate'},
     {label: 'Strawberry', value: 'strawberry'},
   ];
+  customOption = 'blueberry';
   lastEvent: MatRadioChange;
 }
 
