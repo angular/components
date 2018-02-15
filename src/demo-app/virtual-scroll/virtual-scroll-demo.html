@@ -1,0 +1,12 @@
+<cdk-virtual-scroll-viewport class="demo-viewport" [itemSize]="20">
+  <div *cdkVirtualFor="let size of data; let i = index" class="demo-item" [style.height.px]="size">
+    Item #{{i}} - ({{size}}px)
+  </div>
+</cdk-virtual-scroll-viewport>
+
+<cdk-virtual-scroll-viewport class="demo-viewport demo-horizontal" [itemSize]="20"
+                             orientation="horizontal">
+  <div *cdkVirtualFor="let size of data; let i = index" class="demo-item" [style.width.px]="size">
+    Item #{{i}} - ({{size}}px)
+  </div>
+</cdk-virtual-scroll-viewport>
