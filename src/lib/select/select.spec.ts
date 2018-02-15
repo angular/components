@@ -4444,7 +4444,7 @@ class SingleSelectWithPreselectedArrayValues {
   selector: 'select-without-option-centering',
   template: `
     <mat-form-field>
-      <mat-select placeholder="Food" [formControl]="control" disableOptionCentering=true>
+      <mat-select placeholder="Food" [formControl]="control" disableOptionCentering>
         <mat-option *ngFor="let food of foods" [value]="food.value">
           {{ food.viewValue }}
         </mat-option>
@@ -4456,7 +4456,7 @@ class SelectWithoutOptionCentering {
   foods: any[] = [
     { value: 'steak-0', viewValue: 'Steak' },
     { value: 'pizza-1', viewValue: 'Pizza' },
-    { value: 'tacos-2', viewValue: 'Tacos', disabled: true },
+    { value: 'tacos-2', viewValue: 'Tacos'},
     { value: 'sandwich-3', viewValue: 'Sandwich' },
     { value: 'chips-4', viewValue: 'Chips' },
     { value: 'eggs-5', viewValue: 'Eggs' },
