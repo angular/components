@@ -49,6 +49,7 @@ import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
 import {TreeDemo} from '../tree/tree-demo';
 import {TypographyDemo} from '../typography/typography-demo';
+import {VirtualScrollDemo} from '../virtual-scroll/virtual-scroll-demo';
 import {DemoApp, Home} from './demo-app';
 import {TableDemoPage} from '../table/table-demo-page';
 import {TABLE_DEMO_ROUTES} from '../table/routes';
@@ -100,6 +101,7 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'expansion', component: ExpansionDemo},
     {path: 'stepper', component: StepperDemo},
     {path: 'screen-type', component: ScreenTypeDemo},
+    {path: 'virtual-scroll', component: VirtualScrollDemo},
   ]}
 ];
 

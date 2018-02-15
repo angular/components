@@ -1,6 +1,7 @@
 # Angular Material components
 /src/lib/*                                         @jelbourn
 /src/lib/autocomplete/**                           @kara @crisbeto
+/src/lib/badge/**                                  @amcdnl
 /src/lib/bottom-sheet/**                           @jelbourn @crisbeto
 /src/lib/button-toggle/**                          @tinayuangao
 /src/lib/button/**                                 @tinayuangao
@@ -32,7 +33,6 @@
 /src/lib/tabs/**                                   @andrewseguin
 /src/lib/toolbar/**                                @devversion
 /src/lib/tooltip/**                                @andrewseguin
-/src/lib/badge/**                                  @amcdnl
 /src/lib/tree/**                                   @tinayuangao
 
 # Angular Material core
@@ -42,10 +42,10 @@
 /src/lib/core/datetime/**                          @mmalerba
 /src/lib/core/error/**                             @crisbeto @mmalerba
 /src/lib/core/gestures/**                          @jelbourn
+/src/lib/core/label/**                             @kara @mmalerba
 /src/lib/core/line/**                              @jelbourn
 /src/lib/core/option/**                            @kara @crisbeto
 /src/lib/core/placeholder/**                       @kara @mmalerba
-/src/lib/core/label/**                             @kara @mmalerba
 /src/lib/core/ripple/**                            @devversion
 /src/lib/core/selection/**                         @tinayuangao @jelbourn
 /src/lib/core/selection/pseudo*/**                 @crisbeto @jelbourn
@@ -92,8 +92,9 @@
 /src/demo-app/*                                    @jelbourn
 /src/demo-app/a11y/**                              @tinayuangao
 /src/demo-app/autocomplete/**                      @kara @crisbeto
-/src/demo-app/bottom-sheet/**                      @jelbourn @crisbeto
+/src/demo-app/badge/**                             @amcdnl
 /src/demo-app/baseline/**                          @mmalerba
+/src/demo-app/bottom-sheet/**                      @jelbourn @crisbeto
 /src/demo-app/button-toggle/**                     @tinayuangao
 /src/demo-app/button/**                            @tinayuangao
 /src/demo-app/card/**                              @jelbourn
@@ -133,7 +134,7 @@
 /src/demo-app/tooltip/**                           @andrewseguin
 /src/demo-app/tree/**                              @tinayuangao
 /src/demo-app/typography/**                        @crisbeto
-/src/demo-app/badge/**                             @amcdnl
+/src/demo-app/virtual-scroll/**                    @mmalerba
 
 # E2E app
 /e2e/*                                             @jelbourn

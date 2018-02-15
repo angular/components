@@ -6,14 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {LayoutModule} from '@angular/cdk/layout';
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {AutocompleteDemo} from '../autocomplete/autocomplete-demo';
-import {BottomSheetDemo, ExampleBottomSheet} from '../bottom-sheet/bottom-sheet-demo';
+import {BadgeDemo} from '../badge/badge-demo';
 import {BaselineDemo} from '../baseline/baseline-demo';
+import {BottomSheetDemo, ExampleBottomSheet} from '../bottom-sheet/bottom-sheet-demo';
 import {ButtonToggleDemo} from '../button-toggle/button-toggle-demo';
 import {ButtonDemo} from '../button/button-demo';
 import {CardDemo} from '../card/card-demo';
@@ -44,24 +46,28 @@ import {ProgressBarDemo} from '../progress-bar/progress-bar-demo';
 import {ProgressSpinnerDemo} from '../progress-spinner/progress-spinner-demo';
 import {RadioDemo} from '../radio/radio-demo';
 import {RippleDemo} from '../ripple/ripple-demo';
+import {ScreenTypeDemo} from '../screen-type/screen-type-demo';
 import {SelectDemo} from '../select/select-demo';
 import {SidenavDemo} from '../sidenav/sidenav-demo';
 import {SlideToggleDemo} from '../slide-toggle/slide-toggle-demo';
 import {SliderDemo} from '../slider/slider-demo';
 import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
 import {StepperDemo} from '../stepper/stepper-demo';
-import {ScreenTypeDemo} from '../screen-type/screen-type-demo';
-import {LayoutModule} from '@angular/cdk/layout';
+import {TableDemoModule} from '../table/table-demo-module';
 import {
-  FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo, Counter
+  Counter,
+  FoggyTabContent,
+  RainyTabContent,
+  SunnyTabContent,
+  TabsDemo
 } from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
 import {TypographyDemo} from '../typography/typography-demo';
+import {VirtualScrollDemo} from '../virtual-scroll/virtual-scroll-demo';
 import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
 import {TableDemoModule} from '../table/table-demo-module';
-import {BadgeDemo} from '../badge/badge-demo';
 import {TreeDemoModule} from '../tree/tree-demo-module';
 
 @NgModule({
@@ -129,6 +135,7 @@ import {TreeDemoModule} from '../tree/tree-demo-module';
     ToolbarDemo,
     TooltipDemo,
     TypographyDemo,
+    VirtualScrollDemo,
     ExampleBottomSheet,
   ],
   providers: [
