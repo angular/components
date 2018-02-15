@@ -138,6 +138,7 @@
 /src/demo-app/tooltip/**                           @andrewseguin
 /src/demo-app/tree/**                              @tinayuangao
 /src/demo-app/typography/**                        @crisbeto
+/src/demo-app/virtual-scroll/**                    @mmalerba
 
 # E2E app
 /e2e/*                                             @jelbourn

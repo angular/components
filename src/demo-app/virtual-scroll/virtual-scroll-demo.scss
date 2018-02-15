@@ -1,0 +1,26 @@
+.demo-viewport {
+  height: 500px;
+  width: 500px;
+  border: 1px solid black;
+
+  .cdk-virtual-scroll-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+.demo-horizontal {
+  .cdk-virtual-scroll-content-wrapper {
+    flex-direction: row;
+    width: auto;
+    height: 100%;
+  }
+
+  .demo-item {
+    -ms-writing-mode: tb-lr;
+    -webkit-writing-mode: vertical-lr;
+    /* stylelint-disable-next-line material/no-prefixes */
+    writing-mode: vertical-lr;
+  }
+}

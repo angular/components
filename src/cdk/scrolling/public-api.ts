@@ -6,7 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+export * from './virtual-for-of';
 export * from './scroll-dispatcher';
 export * from './scrollable';
-export * from './viewport-ruler';
 export * from './scrolling-module';
+export * from './viewport-ruler';
+export * from './virtual-scroll-viewport';
