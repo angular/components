@@ -4,6 +4,7 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
 @import '../core/typography/typography-utils';
+@import '../../cdk/a11y/a11y';
 
 $mat-badge-font-size: 12px;
 $mat-badge-font-weight: 600;
@@ -17,6 +18,11 @@ $mat-badge-large-size: $mat-badge-default-size + 6;
     width: $size;
     height: $size;
     line-height: $size;
+
+    @include cdk-high-contrast {
+      outline: solid 1px;
+      border-radius: 0;
+    }
   }
 
   &.mat-badge-above {
@@ -73,7 +79,7 @@ $mat-badge-large-size: $mat-badge-default-size + 6;
 
     &.mat-badge-after {
       margin-right: $size / 2;
-      
+
       &[dir='rtl'] {
         margin-right: 0;
         margin-left: $size;
@@ -90,7 +96,7 @@ $mat-badge-large-size: $mat-badge-default-size + 6;
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
   $primary: map-get($theme, primary);
-  
+
   .mat-badge-content {
     color: mat-color($primary, default-contrast);
     background: mat-color($primary);
