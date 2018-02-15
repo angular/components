@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Range} from '@angular/cdk/collections';
 import {Directive, forwardRef, Input, OnChanges} from '@angular/core';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
@@ -69,7 +77,7 @@ export class VirtualScrollFixedSizeStrategy implements VirtualScrollStrategy {
     }
 
     this._viewport.setTotalContentSize(this._viewport.getDataLength() * this._itemSize);
-  };
+  }
 
   /** Update the viewport's rendered range. */
   private _updateRenderedRange() {

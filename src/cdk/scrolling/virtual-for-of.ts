@@ -245,7 +245,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   private _updateContext() {
     const count = this._data.length;
     let i = this._viewContainerRef.length;
-    while(i--) {
+    while (i--) {
       let view = this._viewContainerRef.get(i) as EmbeddedViewRef<CdkVirtualForOfContext<T>>;
       view.context.index = this._renderedRange.start + i;
       view.context.count = count;
@@ -289,7 +289,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
     // We have nulled-out all of the views that were removed or moved from previousViews. What is
     // left is the unchanged items that we queue up to be re-inserted.
     i = previousViews.length;
-    while(i--) {
+    while (i--) {
       if (previousViews[i]) {
         insertTuples[i] = {record: null, view: previousViews[i]!};
       }

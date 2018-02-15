@@ -7,7 +7,6 @@
  */
 
 import {Range} from '@angular/cdk/collections';
-import {CdkVirtualForOf} from '@angular/cdk/scrolling/virtual-for-of';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -15,17 +14,18 @@ import {
   DoCheck,
   ElementRef,
   Inject,
+  Input,
   NgZone,
   OnDestroy,
   OnInit,
   ViewChild,
   ViewEncapsulation,
-  Input,
 } from '@angular/core';
+import {Observable} from 'rxjs/Observable';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {takeUntil} from 'rxjs/operators/takeUntil';
 import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
+import {CdkVirtualForOf} from './virtual-for-of';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 
 
@@ -130,7 +130,7 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
   /** Sets the offset of the rendered portion of the data from the start (in pixels). */
   setRenderedContentOffset(offset: number) {
     const transform =
-        this.orientation === 'horizontal' ? `translateX(${offset}px)`: `translateY(${offset}px)`;
+        this.orientation === 'horizontal' ? `translateX(${offset}px)` : `translateY(${offset}px)`;
     if (this._renderedContentTransform != transform) {
       // Re-enter the Angular zone so we can mark for change detection.
       this._ngZone.run(() => {
