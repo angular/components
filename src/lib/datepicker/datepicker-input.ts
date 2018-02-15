@@ -280,7 +280,10 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     return this._validator ? this._validator(c) : null;
   }
 
-  /** @deletion-target 7.0.0 Use `getConnectedOverlayOrigin` instead */
+  /**
+   * @deprecated
+   * @deletion-target 7.0.0 Use `getConnectedOverlayOrigin` instead
+   */
   getPopupConnectionElementRef(): ElementRef {
     return this.getConnectedOverlayOrigin();
   }
@@ -332,6 +335,11 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   _onChange() {
     this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+  }
+
+  /** Returns the palette used by the input's form field, if any. */
+  _getThemePalette() {
+    return this._formField ? this._formField.color : undefined;
   }
 
   /**

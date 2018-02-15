@@ -11,6 +11,7 @@ import {FormControl} from '@angular/forms';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {DateAdapter} from '@angular/material/core';
 import {MatCalendar} from '@angular/material';
+import {ThemePalette} from '@angular/material/core';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class DatepickerDemo {
   date: Date;
   lastDateInput: Date | null;
   lastDateChange: Date | null;
+  color: ThemePalette;
 
   dateCtrl = new FormControl();
 

@@ -71,6 +71,7 @@ System.config({
     '@angular/cdk/testing': 'dist/packages/cdk/testing/index.js',
 
     '@angular/material/autocomplete': 'dist/packages/material/autocomplete/index.js',
+    '@angular/material/badge': 'dist/packages/material/badge/index.js',
     '@angular/material/bottom-sheet': 'dist/packages/material/bottom-sheet/index.js',
     '@angular/material/button': 'dist/packages/material/button/index.js',
     '@angular/material/button-toggle': 'dist/packages/material/button-toggle/index.js',
@@ -117,9 +118,15 @@ System.config({
 });
 
 // Configure the Angular test bed and run all specs once configured.
- configureTestBed()
+configureTestBed()
   .then(runMaterialSpecs)
-  .then(__karma__.start, __karma__.error);
+  .then(__karma__.start, function(error) {
+    // Passing in the error object directly to Karma won't log out the stack trace and
+    // passing the `originalErr` doesn't work correctly either. We have to log out the
+    // stack trace so we can actually debug errors before the tests have started.
+    console.error(error.originalErr.stack);
+    __karma__.error(error);
+  });
 
 
 /** Runs the Angular Material specs in Karma. */
