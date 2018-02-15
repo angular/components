@@ -22,20 +22,18 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   EventEmitter,
   Inject,
   Input,
-  NgZone,
   Optional,
   Output,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {MatCalendarCell} from './calendar-body';
+import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
-import {take} from 'rxjs/operators/take';
 
 /**
  * An internal component used to display a single year in the datepicker.
@@ -99,6 +97,9 @@ export class MatYearView<D> implements AfterContentInit {
   /** Emits the selected month. This doesn't imply a change on the selected date */
   @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
+  /** The body of calendar table */
+  @ViewChild(MatCalendarBody) _matCalendarBody;
+
   /** Grid of calendar cells representing the months of the year. */
   _months: MatCalendarCell[][];
 
@@ -115,8 +116,6 @@ export class MatYearView<D> implements AfterContentInit {
   _selectedMonth: number | null;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef,
-              private _elementRef: ElementRef,
-              private _ngZone: NgZone,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               @Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
@@ -147,15 +146,6 @@ export class MatYearView<D> implements AfterContentInit {
     this.selectedChange.emit(this._dateAdapter.createDate(
         this._dateAdapter.getYear(this.activeDate), month,
         Math.min(this._dateAdapter.getDate(this.activeDate), daysInMonth)));
-  }
-
-    /** Focuses the active cell after the microtask queue is empty. */
-  _focusActiveCell() {
-    this._ngZone.runOutsideAngular(() => {
-      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
-        this._elementRef.nativeElement.querySelector('.mat-calendar-body-active').focus();
-      });
-    });
   }
 
   /** Handles keydown events on the calendar body when calendar is in year view. */
@@ -219,6 +209,11 @@ export class MatYearView<D> implements AfterContentInit {
     this._months = [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11]].map(row => row.map(
         month => this._createCellForMonth(month, monthNames[month])));
     this._changeDetectorRef.markForCheck();
+  }
+
+  /** Focuses the active cell after the microtask queue is empty. */
+  private _focusActiveCell() {
+    this._matCalendarBody._focusActiveCell();
   }
 
   /**

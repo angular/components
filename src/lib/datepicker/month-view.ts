@@ -22,20 +22,18 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   EventEmitter,
   Inject,
   Input,
-  NgZone,
   Optional,
   Output,
   ViewEncapsulation,
+  ViewChild,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {MatCalendarCell} from './calendar-body';
+import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
-import {take} from 'rxjs/operators/take';
 
 
 const DAYS_PER_WEEK = 7;
@@ -63,7 +61,7 @@ export class MatMonthView<D> implements AfterContentInit {
   set activeDate(value: D) {
     const oldActiveDate = this._activeDate;
     const validDate =
-      this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
+        this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
     this._activeDate = this._dateAdapter.clampDate(validDate, this.minDate, this.maxDate);
     if (!this._hasSameMonthAndYear(oldActiveDate, this._activeDate)) {
       this._init();
@@ -111,6 +109,9 @@ export class MatMonthView<D> implements AfterContentInit {
   /** Emits when any date is activated. */
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
+  /** The body of calendar table */
+  @ViewChild(MatCalendarBody) _matCalendarBody;
+
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
 
@@ -133,8 +134,6 @@ export class MatMonthView<D> implements AfterContentInit {
   _weekdays: {long: string, narrow: string}[];
 
   constructor(private _changeDetectorRef: ChangeDetectorRef,
-              private _elementRef: ElementRef,
-              private _ngZone: NgZone,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               @Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
@@ -173,20 +172,7 @@ export class MatMonthView<D> implements AfterContentInit {
       this.selectedChange.emit(selectedDate);
     }
 
-    this._userSelected();
-  }
-
-  _userSelected(): void {
     this._userSelection.emit();
-  }
-
-  /** Focuses the active cell after the microtask queue is empty. */
-  _focusActiveCell() {
-    this._ngZone.runOutsideAngular(() => {
-      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
-        this._elementRef.nativeElement.querySelector('.mat-calendar-body-active').focus();
-      });
-    });
   }
 
   /** Handles keydown events on the calendar body when calendar is in month view. */
@@ -231,7 +217,7 @@ export class MatMonthView<D> implements AfterContentInit {
       case ENTER:
         if (!this.dateFilter || this.dateFilter(this._activeDate)) {
           this._dateSelected(this._dateAdapter.getDate(this._activeDate));
-          this._userSelected();
+          this._userSelection.emit();
           // Prevent unexpected default actions such as form submission.
           event.preventDefault();
         }
@@ -262,6 +248,11 @@ export class MatMonthView<D> implements AfterContentInit {
 
     this._createWeekCells();
     this._changeDetectorRef.markForCheck();
+  }
+
+  /** Focuses the active cell after the microtask queue is empty. */
+  private _focusActiveCell() {
+    this._matCalendarBody._focusActiveCell();
   }
 
   /** Creates MatCalendarCells for the dates in this month. */

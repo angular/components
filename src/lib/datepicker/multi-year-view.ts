@@ -22,19 +22,17 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   EventEmitter,
   Input,
-  NgZone,
   Optional,
   Output,
-  ViewEncapsulation
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {DateAdapter} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {MatCalendarCell} from './calendar-body';
+import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
-import {take} from 'rxjs/operators/take';
 
 export const yearsPerPage = 24;
 
@@ -104,6 +102,9 @@ export class MatMultiYearView<D> implements AfterContentInit {
   /** Emits the selected year. This doesn't imply a change on the selected date */
   @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
 
+  /** The body of calendar table */
+  @ViewChild(MatCalendarBody) _matCalendarBody;
+
   /** Grid of calendar cells representing the currently displayed years. */
   _years: MatCalendarCell[][];
 
@@ -114,8 +115,6 @@ export class MatMultiYearView<D> implements AfterContentInit {
   _selectedYear: number | null;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef,
-              private _elementRef: ElementRef,
-              private _ngZone: NgZone,
               @Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
     if (!this._dateAdapter) {
@@ -154,15 +153,6 @@ export class MatMultiYearView<D> implements AfterContentInit {
         this._dateAdapter.getNumDaysInMonth(this._dateAdapter.createDate(year, month, 1));
     this.selectedChange.emit(this._dateAdapter.createDate(year, month,
         Math.min(this._dateAdapter.getDate(this.activeDate), daysInMonth)));
-  }
-
-  /** Focuses the active cell after the microtask queue is empty. */
-  _focusActiveCell() {
-    this._ngZone.runOutsideAngular(() => {
-      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
-        this._elementRef.nativeElement.querySelector('.mat-calendar-body-active').focus();
-      });
-    });
   }
 
   /** Handles keydown events on the calendar body when calendar is in multi-year view. */
@@ -219,6 +209,11 @@ export class MatMultiYearView<D> implements AfterContentInit {
 
   _getActiveCell(): number {
     return this._dateAdapter.getYear(this.activeDate) % yearsPerPage;
+  }
+
+  /** Focuses the active cell after the microtask queue is empty. */
+  private _focusActiveCell() {
+    this._matCalendarBody._focusActiveCell();
   }
 
   /** Creates an MatCalendarCell for the given year. */
