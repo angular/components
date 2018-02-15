@@ -9,6 +9,7 @@
 export * from './collection-viewer';
 export * from './data-source';
 export * from './selection';
+export * from './static-array-data-source';
 export {
   UniqueSelectionDispatcher,
   UniqueSelectionDispatcherListener,

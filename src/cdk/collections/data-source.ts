@@ -9,6 +9,7 @@
 import {Observable} from 'rxjs/Observable';
 import {CollectionViewer} from './collection-viewer';
 
+
 export abstract class DataSource<T> {
   /**
    * Connects a collection viewer (such as a data-table) to this data source. Note that
