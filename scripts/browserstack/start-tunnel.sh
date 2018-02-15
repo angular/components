@@ -30,14 +30,15 @@ unzip -q ${TUNNEL_FILE} -d browserstack-tunnel
 # Cleanup the download directory.
 rm ${TUNNEL_FILE}
 
-ARGS=""
+if [ -z "${TRAVIS_JOB_ID}" ]; then
+  echo "Error: Cannot set up a BrowserStack tunnel if there is no '\$TRAVIS_JOB_ID' set."
+  exit 1
+fi;
 
-# Set tunnel-id only on Travis, to make local testing easier.
-if [ ! -z "${TRAVIS_JOB_ID}" ]; then
-  ARGS="${ARGS} --local-identifier ${TRAVIS_JOB_ID}"
-fi
+ARGS="--local-identifier ${TRAVIS_JOB_ID}"
 
-echo "Starting Browserstack Local in the background, logging into: ${TUNNEL_LOG}"
+echo "Starting Browserstack Local in the background, logging into: ${TUNNEL_LOG}." \
+  "Using the following tunnel identifier: ${TRAVIS_JOB_ID}"
 
 # Extension to the BrowserStackLocal binaries, because those can't create a readyfile.
 function create_ready_file {

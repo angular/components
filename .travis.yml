@@ -27,9 +27,9 @@ jobs:
     - env: "MODE=payload"
     - env: "MODE=prerender"
     - env: "MODE=e2e"
-    - env: "MODE=saucelabs_required"
-    - env: "MODE=browserstack_required"
-    - env: "MODE=travis_required"
+    - env: "MODE=test-browserstack-1"
+    - env: "MODE=test-browserstack-2"
+    - env: "MODE=test-travis-1"
     - env: "DEPLOY_MODE=build-artifacts"
       if: type = push
     - env: "DEPLOY_MODE=docs-content"
@@ -45,8 +45,8 @@ env:
   global:
   - LOGS_DIR=/tmp/angular-material2-build/logs
   - SAUCE_USERNAME=angular-ci
-  - BROWSER_STACK_USERNAME=angularteam1
-  - BROWSER_STACK_ACCESS_KEY=BWCd4SynLzdDcv8xtzsB
+  - BROWSER_STACK_USERNAME=paulgschwendtner2
+  - BROWSER_STACK_ACCESS_KEY=hsz2pirQRsDASY1aZKaz
   - BROWSER_PROVIDER_READY_FILE=/tmp/angular-material2-build/readyfile
   - BROWSER_PROVIDER_ERROR_FILE=/tmp/angular-material2-build/errorfile
 
