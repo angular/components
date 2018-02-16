@@ -276,7 +276,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
       if (!item.disabled) {
         this.setActiveItem(index);
-        break;
+        return;
       }
     }
   }
