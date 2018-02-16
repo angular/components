@@ -83,9 +83,7 @@ export class MatCalendarBody {
   /** Emits when a new value is selected. */
   @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
 
-  constructor(private _elementRef: ElementRef,
-              private _ngZone: NgZone) {
-  }
+  constructor(private _elementRef: ElementRef, private _ngZone: NgZone) { }
 
   _cellClicked(cell: MatCalendarCell): void {
     if (!this.allowDisabledSelection && !cell.enabled) {
