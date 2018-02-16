@@ -58,7 +58,6 @@ import {
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
 import {TreeDemo} from '../tree/tree-demo';
-import {JsonDatabase} from '../tree/json-database';
 import {TypographyDemo} from '../typography/typography-demo';
 import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
@@ -134,7 +133,6 @@ import {BadgeDemo} from '../badge/badge-demo';
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
-    JsonDatabase
   ],
   entryComponents: [
     ContentElementDialog,

@@ -14,41 +14,41 @@ import {
   MatTreeNestedDataSource
 } from '@angular/material/tree';
 import {of as ofObservable} from 'rxjs/observable/of';
+import {Observable} from 'rxjs/Observable';
 
-import {JsonNode, JsonDatabase} from './json-database';
-import {JsonFlatNode} from './flat-data-source';
-
+import {FileNode, FileFlatNode, FileDatabase} from './file-database';
 
 @Component({
   moduleId: module.id,
   selector: 'tree-demo',
   templateUrl: 'tree-demo.html',
   styleUrls: ['tree-demo.css'],
+  providers: [FileDatabase]
 })
 export class TreeDemo {
   // Flat tree control
-  treeControl: FlatTreeControl<JsonFlatNode>;
+  treeControl: FlatTreeControl<FileFlatNode>;
 
   // Nested tree control
-  nestedTreeControl: NestedTreeControl<JsonNode>;
+  nestedTreeControl: NestedTreeControl<FileNode>;
 
-  treeFlattener: MatTreeFlattener<JsonNode, JsonFlatNode>;
+  treeFlattener: MatTreeFlattener<FileNode, FileFlatNode>;
 
   // Flat tree data source
-  dataSource: MatTreeFlatDataSource<JsonNode, JsonFlatNode>;
+  dataSource: MatTreeFlatDataSource<FileNode, FileFlatNode>;
 
   // Nested tree data source
-  nestedDataSource: MatTreeNestedDataSource<JsonNode>;
+  nestedDataSource: MatTreeNestedDataSource<FileNode>;
 
-  constructor(database: JsonDatabase) {
+  constructor(database: FileDatabase) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
                                               this.isExpandable, this.getChildren);
     // For flat tree
-    this.treeControl = new FlatTreeControl<JsonFlatNode>(this.getLevel, this.isExpandable);
+    this.treeControl = new FlatTreeControl<FileFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
     // For nested tree
-    this.nestedTreeControl = new NestedTreeControl<JsonNode>(this.getChildren);
+    this.nestedTreeControl = new NestedTreeControl<FileNode>(this.getChildren);
     this.nestedDataSource = new MatTreeNestedDataSource();
 
     database.dataChange.subscribe(data => {
@@ -57,22 +57,22 @@ export class TreeDemo {
     });
   }
 
-  transformer = (node: JsonNode, level: number) => {
-    let flatNode = new JsonFlatNode();
-    flatNode.key = node.key;
-    flatNode.value = node.value;
+  transformer = (node: FileNode, level: number) => {
+    let flatNode = new FileFlatNode();
+    flatNode.filename = node.filename;
+    flatNode.type = node.type;
     flatNode.level = level;
     flatNode.expandable = !!node.children;
     return flatNode;
   }
 
-  getLevel = (node: JsonFlatNode) => { return node.level; };
+  getLevel = (node: FileFlatNode) => { return node.level; };
 
-  isExpandable = (node: JsonFlatNode) => { return node.expandable; };
+  isExpandable = (node: FileFlatNode) => { return node.expandable; };
 
-  getChildren = (node: JsonNode) => { return ofObservable(node.children); };
+  getChildren = (node: FileNode): Observable<FileNode[]> => { return ofObservable(node.children); };
 
-  hasChild = (_: number, _nodeData: JsonFlatNode) => { return _nodeData.expandable; };
+  hasChild = (_: number, _nodeData: FileFlatNode) => { return _nodeData.expandable; };
 
-  hasNestedChild = (_: number, nodeData: JsonNode) => {return !(nodeData.value); };
+  hasNestedChild = (_: number, nodeData: FileNode) => {return !(nodeData.type); };
 }
