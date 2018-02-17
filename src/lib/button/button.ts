@@ -9,9 +9,11 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {Platform} from '@angular/cdk/platform';
 import {
+  Attribute,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   ViewChild,
   ViewEncapsulation,
@@ -146,7 +148,7 @@ export class MatButton extends _MatButtonMixinBase
              a[mat-mini-fab], a[mat-stroked-button], a[mat-flat-button]`,
   exportAs: 'matButton, matAnchor',
   host: {
-    '[attr.tabindex]': 'disabled ? -1 : 0',
+    '[attr.tabindex]': 'disabled ? -1 : tabIndex',
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
     '(click)': '_haltDisabledEvents($event)',
@@ -159,11 +161,17 @@ export class MatButton extends _MatButtonMixinBase
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatAnchor extends MatButton {
-  constructor(
-      platform: Platform,
-      focusMonitor: FocusMonitor,
-      elementRef: ElementRef) {
+
+  /** Tabindex of the button anchor. */
+  @Input() tabIndex: number = 0;
+
+  constructor(platform: Platform,
+              focusMonitor: FocusMonitor,
+              elementRef: ElementRef,
+              @Attribute('tabindex') tabIndex: string) {
     super(elementRef, platform, focusMonitor);
+
+    this.tabIndex = parseInt(tabIndex) || 0;
   }
 
   _haltDisabledEvents(event: Event) {

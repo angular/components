@@ -281,7 +281,8 @@ describe('MatSlider without forms', () => {
     });
 
     it('should disable tabbing to the slider', () => {
-      expect(sliderNativeElement.tabIndex).toBe(-1);
+      expect(sliderNativeElement.hasAttribute('tabindex'))
+        .toBe(false, 'Slider element should not have a tabindex set if disabled.');
     });
   });
 
@@ -1181,18 +1182,17 @@ describe('MatSlider without forms', () => {
 
   describe('tabindex', () => {
 
-    it('should allow setting the tabIndex through binding', () => {
+    it('should set the tabIndex binding on the native element', () => {
       const fixture = TestBed.createComponent(SliderWithTabIndexBinding);
+      const sliderEl = fixture.debugElement.query(By.directive(MatSlider)).nativeElement;
       fixture.detectChanges();
 
-      const slider = fixture.debugElement.query(By.directive(MatSlider)).componentInstance;
-
-      expect(slider.tabIndex).toBe(0, 'Expected the tabIndex to be set to 0 by default.');
+      expect(sliderEl.tabIndex).toBe(0, 'Expected the tabIndex to be set to 0 by default.');
 
       fixture.componentInstance.tabIndex = 3;
       fixture.detectChanges();
 
-      expect(slider.tabIndex).toBe(3, 'Expected the tabIndex to have been changed.');
+      expect(sliderEl.tabIndex).toBe(3, 'Expected the tabIndex to have been changed.');
     });
 
     it('should detect the native tabindex attribute', () => {
@@ -1530,16 +1530,14 @@ class VerticalSlider {
   styles: [styles],
 })
 class SliderWithTabIndexBinding {
-  tabIndex: number;
+  tabIndex = 0;
 }
 
 @Component({
   template: `<mat-slider tabindex="5"></mat-slider>`,
   styles: [styles],
 })
-class SliderWithNativeTabindexAttr {
-  tabIndex: number;
-}
+class SliderWithNativeTabindexAttr {}
 
 /**
  * Dispatches a click event sequence (consisting of moueseenter, click) from an element.

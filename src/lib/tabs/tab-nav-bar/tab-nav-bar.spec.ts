@@ -116,13 +116,13 @@ describe('MatTabNavBar', () => {
         .map(tabLinkDebugEl => tabLinkDebugEl.nativeElement);
 
       expect(tabLinkElements.every(tabLink => tabLink.tabIndex === 0))
-        .toBe(true, 'Expected element to be keyboard focusable by default');
+        .toBe(true, 'Expected all links to be tabbable by default');
 
       fixture.componentInstance.disabled = true;
       fixture.detectChanges();
 
-      expect(tabLinkElements.every(tabLink => tabLink.tabIndex === -1))
-        .toBe(true, 'Expected element to no longer be keyboard focusable if disabled.');
+      expect(tabLinkElements.every(tabLink => tabLink.hasAttribute('tabindex') === false))
+        .toBe(true, 'Expected all links to no longer be focusable if disabled.');
     });
 
     it('should prevent default action for clicks if links are disabled', () => {

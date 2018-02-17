@@ -427,8 +427,8 @@ describe('MatSelectionList without forms', () => {
       fixture.componentInstance.disabled = true;
       fixture.detectChanges();
 
-      expect(selectionList.componentInstance.tabIndex)
-        .toBe(-1, 'Expected the tabIndex to be set to "-1" if selection list is disabled.');
+      expect(selectionList.nativeElement.hasAttribute('tabindex'))
+        .toBe(false, 'Expected the list element to no longer have a tabindex if disabled.');
     });
   });
 

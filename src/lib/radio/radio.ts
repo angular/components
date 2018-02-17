@@ -12,6 +12,7 @@ import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
   AfterContentInit,
   AfterViewInit,
+  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -34,12 +35,10 @@ import {
   CanColor,
   CanDisable,
   CanDisableRipple,
-  HasTabIndex,
   MatRipple,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple,
-  mixinTabIndex,
   RippleRef,
 } from '@angular/material/core';
 
@@ -323,7 +322,7 @@ export class MatRadioButtonBase {
 // As per Material design specifications the selection control radio should use the accent color
 // palette by default. https://material.io/guidelines/components/selection-controls.html
 export const _MatRadioButtonMixinBase =
-    mixinColor(mixinDisableRipple(mixinTabIndex(MatRadioButtonBase)), 'accent');
+    mixinColor(mixinDisableRipple(MatRadioButtonBase), 'accent');
 
 /**
  * A Material design radio-button. Typically placed inside of `<mat-radio-group>` elements.
@@ -333,7 +332,7 @@ export const _MatRadioButtonMixinBase =
   selector: 'mat-radio-button',
   templateUrl: 'radio.html',
   styleUrls: ['radio.css'],
-  inputs: ['color', 'disableRipple', 'tabIndex'],
+  inputs: ['color', 'disableRipple'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   exportAs: 'matRadioButton',
@@ -350,7 +349,7 @@ export const _MatRadioButtonMixinBase =
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatRadioButton extends _MatRadioButtonMixinBase
-    implements OnInit, AfterViewInit, OnDestroy, CanColor, CanDisableRipple, HasTabIndex {
+    implements OnInit, AfterViewInit, OnDestroy, CanColor, CanDisableRipple {
 
   private _uniqueId: string = `mat-radio-${++nextUniqueId}`;
 
@@ -359,6 +358,9 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
 
   /** Analog to HTML 'name' attribute used to group radios for unique selection. */
   @Input() name: string;
+
+  /** Tabindex of the underlying radio input element. */
+  @Input() tabIndex: number = 0;
 
   /** Used to set the 'aria-label' attribute on the underlying input element. */
   @Input('aria-label') ariaLabel: string;
@@ -497,8 +499,11 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
               elementRef: ElementRef,
               private _changeDetector: ChangeDetectorRef,
               private _focusMonitor: FocusMonitor,
-              private _radioDispatcher: UniqueSelectionDispatcher) {
+              private _radioDispatcher: UniqueSelectionDispatcher,
+              @Attribute('tabindex') tabIndex: string) {
     super(elementRef);
+
+    this.tabIndex = parseInt(tabIndex) || 0;
 
     // Assertions. Ideally these should be stripped out by the compiler.
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.

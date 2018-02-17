@@ -40,10 +40,8 @@ import {
   CanColor,
   CanDisable,
   HammerInput,
-  HasTabIndex,
   mixinColor,
   mixinDisabled,
-  mixinTabIndex,
 } from '@angular/material/core';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -87,8 +85,7 @@ export class MatSliderChange {
 export class MatSliderBase {
   constructor(public _elementRef: ElementRef) {}
 }
-export const _MatSliderMixinBase =
-  mixinTabIndex(mixinColor(mixinDisabled(MatSliderBase), 'accent'));
+export const _MatSliderMixinBase = mixinColor(mixinDisabled(MatSliderBase), 'accent');
 
 /**
  * Allows users to select from a range of values by moving the slider thumb. It is similar in
@@ -111,7 +108,7 @@ export const _MatSliderMixinBase =
     '(slidestart)': '_onSlideStart($event)',
     'class': 'mat-slider',
     'role': 'slider',
-    '[tabIndex]': 'tabIndex',
+    '[attr.tabindex]': 'disabled ? null : tabIndex',
     '[attr.aria-disabled]': 'disabled',
     '[attr.aria-valuemax]': 'max',
     '[attr.aria-valuemin]': 'min',
@@ -129,13 +126,13 @@ export const _MatSliderMixinBase =
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
-  inputs: ['disabled', 'color', 'tabIndex'],
+  inputs: ['disabled', 'color'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatSlider extends _MatSliderMixinBase
-    implements ControlValueAccessor, OnDestroy, CanDisable, CanColor, OnInit, HasTabIndex {
+    implements ControlValueAccessor, OnDestroy, CanDisable, CanColor, OnInit {
   /** Whether the slider is inverted. */
   @Input()
   get invert(): boolean { return this._invert; }
@@ -254,6 +251,9 @@ export class MatSlider extends _MatSliderMixinBase
     this._vertical = coerceBooleanProperty(value);
   }
   private _vertical = false;
+
+  /** Tabindex of the slider element. */
+  @Input() tabIndex: number = 0;
 
   /** Event emitted when the slider value has changed. */
   @Output() readonly change: EventEmitter<MatSliderChange> = new EventEmitter<MatSliderChange>();

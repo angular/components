@@ -32,12 +32,11 @@ import {
   CanColor,
   CanDisable,
   CanDisableRipple,
-  HasTabIndex,
   MAT_RIPPLE_GLOBAL_OPTIONS,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple,
-  mixinTabIndex, RippleConfig,
+  RippleConfig,
   RippleGlobalOptions,
   RippleRenderer,
   RippleTarget,
@@ -173,8 +172,7 @@ export class MatTabNav extends _MatTabNavMixinBase implements AfterContentInit, 
 
 // Boilerplate for applying mixins to MatTabLink.
 export class MatTabLinkBase {}
-export const _MatTabLinkMixinBase =
-  mixinTabIndex(mixinDisableRipple(mixinDisabled(MatTabLinkBase)));
+export const _MatTabLinkMixinBase = mixinDisableRipple(mixinDisabled(MatTabLinkBase));
 
 /**
  * Link inside of a `mat-tab-nav-bar`.
@@ -182,18 +180,18 @@ export const _MatTabLinkMixinBase =
 @Directive({
   selector: '[mat-tab-link], [matTabLink]',
   exportAs: 'matTabLink',
-  inputs: ['disabled', 'disableRipple', 'tabIndex'],
+  inputs: ['disabled', 'disableRipple'],
   host: {
     'class': 'mat-tab-link',
     '[attr.aria-disabled]': 'disabled.toString()',
-    '[attr.tabIndex]': 'tabIndex',
+    '[attr.tabindex]': 'disabled ? null : tabIndex',
     '[class.mat-tab-disabled]': 'disabled',
     '[class.mat-tab-label-active]': 'active',
     '(click)': '_handleClick($event)'
   }
 })
 export class MatTabLink extends _MatTabLinkMixinBase
-    implements OnDestroy, CanDisable, CanDisableRipple, HasTabIndex, RippleTarget {
+    implements OnDestroy, CanDisable, CanDisableRipple, RippleTarget {
 
   /** Whether the tab link is active or not. */
   private _isActive: boolean = false;
@@ -210,6 +208,9 @@ export class MatTabLink extends _MatTabLinkMixinBase
       this._tabNavBar.updateActiveLink(this._elementRef);
     }
   }
+
+  /** Tabindex of the tab link. */
+  @Input() tabIndex: number = 0;
 
   /**
    * Ripple configuration for ripples that are launched on pointer down.
