@@ -271,7 +271,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    */
   private _setActiveInWrapMode(delta: -1 | 1, items: T[]): void {
     for (let i = 1; i <= items.length; i++) {
-      const index = (this._activeItemIndex + delta * i + items.length) % items.length;
+      const index = (this._activeItemIndex + (delta * i) + items.length) % items.length;
       const item = items[index];
 
       if (!item.disabled) {
