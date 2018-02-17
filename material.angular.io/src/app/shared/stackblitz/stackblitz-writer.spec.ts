@@ -52,12 +52,12 @@ describe('StackblitzWriter', () => {
   });
 
   it('should create form element', () => {
-    expect(stackblitzWriter._createFormElement().outerHTML).toBe(
+    expect(stackblitzWriter._createFormElement('index.ts').outerHTML).toBe(
       `<form action="https://plnkr.co/edit/?p=preview" method="post" target="_blank"></form>`);
   });
 
   it('should add files to form input', () => {
-    let form = stackblitzWriter._createFormElement();
+    let form = stackblitzWriter._createFormElement('index.ts');
 
     stackblitzWriter._addFileToForm(form, data, 'NoContent', 'test.ts', 'path/to/file');
     stackblitzWriter._addFileToForm(form, data, 'Test', 'test.html', 'path/to/file');

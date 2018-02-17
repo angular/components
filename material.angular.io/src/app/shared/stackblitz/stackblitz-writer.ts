@@ -26,6 +26,7 @@ const materialVersion = '5.2.1';
 const dependencies = {
   '@angular/cdk': materialVersion,
   '@angular/material': materialVersion,
+  '@angular/material-moment-adapter': materialVersion,
   '@angular/animations': angularVersion,
   '@angular/common': angularVersion,
   '@angular/compiler': angularVersion,
@@ -40,7 +41,8 @@ const dependencies = {
   'rxjs': '^5.5.2',
   'web-animations-js': '^2.3.1',
   'zone.js': '^0.8.14',
-  'hammerjs': '^2.0.8'
+  'hammerjs': '^2.0.8',
+  'moment': '^2.18.1',
 };
 
 /**
