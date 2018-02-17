@@ -50,8 +50,8 @@ function addImportToStyles(options: Schema) {
       const themeName = options && options.theme ? options.theme : 'indigo-pink';
       const themeSrc = `../node_modules/@angular/material/prebuilt-themes/${themeName}.css`;
       const hasCurrentTheme = app.styles.find((s: string) => s.indexOf(themeSrc) > -1);
-      const hasOtherTheme = app.styles.find((s: string) =>
-        s.indexOf('@angular/material/prebuilt-themes') > -1);
+      const hasOtherTheme =
+        app.styles.find((s: string) => s.indexOf('@angular/material/prebuilt-themes') > -1);
 
       if (!hasCurrentTheme && !hasOtherTheme) {
         app.styles.splice(0, 0, themeSrc);

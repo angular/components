@@ -1,8 +1,6 @@
 # Material Shell
 Adds Angular Material and its depedencies and pre-configures the application. 
 
-It does the following:
-
 - Adds Material and CDK to `package.json`
 - Adds Material Icons Stylesheet to `index.html`
 - Adds Roboto Font to `index.html`
