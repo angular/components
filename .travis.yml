@@ -45,8 +45,8 @@ env:
   global:
   - LOGS_DIR=/tmp/angular-material2-build/logs
   - SAUCE_USERNAME=angular-ci
-  - BROWSER_STACK_USERNAME=paulgschwendtner2
-  - BROWSER_STACK_ACCESS_KEY=hsz2pirQRsDASY1aZKaz
+  - BROWSER_STACK_USERNAME=angularteam1
+  - BROWSER_STACK_ACCESS_KEY=BWCd4SynLzdDcv8xtzsB
   - BROWSER_PROVIDER_READY_FILE=/tmp/angular-material2-build/readyfile
   - BROWSER_PROVIDER_ERROR_FILE=/tmp/angular-material2-build/errorfile
 
