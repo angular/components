@@ -10,9 +10,9 @@
       "description": "Do not add materials dependencies to package.json (e.g., --skipPackageJson)"
     },
     "theme": {
-      "enum": ["indigo-pink", "deeppurple-amber", "pink-bluegrey", "purple-green"],
+      "enum": ["indigo-pink", "deeppurple-amber", "pink-bluegrey", "purple-green", "custom"],
       "default": "indigo-pink",
-      "description": "The pre-built theme to apply"
+      "description": "The theme to apply"
     }
   },
   "required": []

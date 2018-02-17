@@ -8,10 +8,13 @@ import {
 } from '@angular-devkit/schematics';
 import {Schema} from './schema';
 import {materialVersion, cdkVersion, angularVersion} from '../utils/lib-versions';
-import {getConfig} from '../utils/devkit-utils/config';
+import {getConfig, getAppFromConfig, AppConfig, CliConfig} from '../utils/devkit-utils/config';
 import {addModuleImportToRootModule} from '../utils/ast';
 import {addHeadLink} from '../utils/html';
 import {addPackageToPackageJson} from '../utils/package';
+import {CUSTOM_THEME} from './custom-theme';
+import {normalize} from '@angular-devkit/core';
+import {InsertChange} from '../utils/devkit-utils/change';
 
 /**
  * Scaffolds the basics of a Angular Material application, this includes:
@@ -46,24 +49,54 @@ function addMaterialToPackageJson(options: Schema) {
 function addImportToStyles(options: Schema) {
   return (host: Tree) => {
     const config = getConfig(host);
-    config.apps.forEach(app => {
-      const themeName = options && options.theme ? options.theme : 'indigo-pink';
-      const themeSrc = `../node_modules/@angular/material/prebuilt-themes/${themeName}.css`;
-      const hasCurrentTheme = app.styles.find((s: string) => s.indexOf(themeSrc) > -1);
-      const hasOtherTheme =
-        app.styles.find((s: string) => s.indexOf('@angular/material/prebuilt-themes') > -1);
+    const themeName = options && options.theme ? options.theme : 'indigo-pink';
+    const app = getAppFromConfig(config, '0');
 
-      if (!hasCurrentTheme && !hasOtherTheme) {
-        app.styles.splice(0, 0, themeSrc);
-      }
+    if (themeName === 'custom') {
+      insertCustomTheme(app, host);
+    } else {
+      insertPrebuiltTheme(app, host, themeName, config);
+    }
 
-      if (hasOtherTheme) {
-        throw new SchematicsException(`Another theme is already defined.`);
-      }
-    });
-    host.overwrite('.angular-cli.json', JSON.stringify(config, null, 2));
     return host;
   };
+}
+
+/**
+ * Insert a custom theme to styles.scss file.
+ */
+function insertCustomTheme(app: AppConfig, host: Tree) {
+  const stylesPath = normalize(`/${app.root}/styles.scss`);
+
+  const buffer = host.read(stylesPath);
+  if (!buffer) {
+    throw new SchematicsException(`Could not find file for path: ${stylesPath}`);
+  }
+
+  const src = buffer.toString();
+  const insertion = new InsertChange(stylesPath, 0, CUSTOM_THEME);
+  const recorder = host.beginUpdate(stylesPath);
+  recorder.insertLeft(insertion.pos, insertion.toAdd);
+  host.commitUpdate(recorder);
+}
+
+/**
+ * Insert a pre-built theme to .angular-cli.json file.
+ */
+function insertPrebuiltTheme(app: AppConfig, host: Tree, themeName: string, config: CliConfig) {
+  const themeSrc = `../node_modules/@angular/material/prebuilt-themes/${themeName}.css`;
+  const hasCurrentTheme = app.styles.find((s: string) => s.indexOf(themeSrc) > -1);
+  const hasOtherTheme =
+    app.styles.find((s: string) => s.indexOf('@angular/material/prebuilt-themes') > -1);
+
+  if (!hasCurrentTheme && !hasOtherTheme) {
+    app.styles.splice(0, 0, themeSrc);
+  }
+
+  if (hasOtherTheme) {
+    throw new SchematicsException(`Another theme is already defined.`);
+  }
+  host.overwrite('.angular-cli.json', JSON.stringify(config, null, 2));
 }
 
 /**

@@ -3,8 +3,9 @@ import {SchematicTestRunner} from '@angular-devkit/schematics/testing';
 import {join} from 'path';
 import {getFileContent} from '@schematics/angular/utility/test';
 import {createTestApp} from '../utils/testing';
-import {getConfig} from '@schematics/angular/utility/config';
+import {getConfig, getAppFromConfig} from '@schematics/angular/utility/config';
 import {getIndexHtmlPath} from '../utils/ast';
+import {normalize} from '@angular-devkit/core';
 
 const collectionPath = join(__dirname, '../collection.json');
 
@@ -32,6 +33,21 @@ describe('material-shell-schematic', () => {
       expect(app.styles).toContain(
         '../node_modules/@angular/material/prebuilt-themes/indigo-pink.css');
     });
+  });
+
+  it('should add custom theme', () => {
+    const tree = runner.runSchematic('materialShell', {
+      theme: 'custom'
+    }, appTree);
+
+    const config = getConfig(tree);
+    const app = getAppFromConfig(config, '0');
+    const stylesPath = normalize(`/${app.root}/styles.scss`);
+
+    const buffer = tree.read(stylesPath);
+    const src = buffer.toString();
+
+    expect(src.indexOf(`@import '~@angular/material/theming';`)).toBeGreaterThan(-1);
   });
 
   it('should add font links', () => {
