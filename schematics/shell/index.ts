@@ -12,7 +12,7 @@ import {getConfig, getAppFromConfig, AppConfig, CliConfig} from '../utils/devkit
 import {addModuleImportToRootModule} from '../utils/ast';
 import {addHeadLink} from '../utils/html';
 import {addPackageToPackageJson} from '../utils/package';
-import {CUSTOM_THEME} from './custom-theme';
+import {createCustomTheme} from './custom-theme';
 import {normalize} from '@angular-devkit/core';
 import {InsertChange} from '../utils/devkit-utils/change';
 
@@ -25,7 +25,7 @@ import {InsertChange} from '../utils/devkit-utils/change';
 export default function(options: Schema): Rule {
   return chain([
     options && options.skipPackageJson ? noop() : addMaterialToPackageJson(options),
-    addImportToStyles(options),
+    addThemeToAppStyles(options),
     addAnimationRootConfig(),
     addFontsToIndex()
   ]);
@@ -46,7 +46,7 @@ function addMaterialToPackageJson(options: Schema) {
 /**
  * Add pre-built styles to style.ext file
  */
-function addImportToStyles(options: Schema) {
+function addThemeToAppStyles(options: Schema) {
   return (host: Tree) => {
     const config = getConfig(host);
     const themeName = options && options.theme ? options.theme : 'indigo-pink';
@@ -74,7 +74,7 @@ function insertCustomTheme(app: AppConfig, host: Tree) {
   }
 
   const src = buffer.toString();
-  const insertion = new InsertChange(stylesPath, 0, CUSTOM_THEME);
+  const insertion = new InsertChange(stylesPath, 0, createCustomTheme(app));
   const recorder = host.beginUpdate(stylesPath);
   recorder.insertLeft(insertion.pos, insertion.toAdd);
   host.commitUpdate(recorder);

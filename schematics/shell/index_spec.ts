@@ -48,6 +48,7 @@ describe('material-shell-schematic', () => {
     const src = buffer.toString();
 
     expect(src.indexOf(`@import '~@angular/material/theming';`)).toBeGreaterThan(-1);
+    expect(src.indexOf(`$app-primary`)).toBeGreaterThan(-1);
   });
 
   it('should add font links', () => {
