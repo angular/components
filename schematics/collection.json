@@ -1,5 +1,13 @@
 // This is the root config file where the schematics are defined.
 {
   "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
-  "schematics": {}
+  "schematics": {
+    // Create a dashboard component
+    "materialDashboard": {
+      "description": "Create a dashboard component",
+      "factory": "./dashboard/index",
+      "schema": "./dashboard/schema.json",
+      "aliases": [ "material-dashboard" ]
+    }
+  }
 }
