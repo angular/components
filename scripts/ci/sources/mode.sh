@@ -22,7 +22,7 @@ is_payload() {
 }
 
 is_unit() {
-  [[ "${MODE}" =~ ^.*_(optional|required)$ ]]
+  [[ "${MODE}" =~ ^test-.* ]]
 }
 
 is_prerender() {

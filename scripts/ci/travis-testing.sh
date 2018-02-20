@@ -28,8 +28,8 @@ if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then
   fi
 fi
 
-start_tunnel
-wait_for_tunnel
+start_tunnel_if_necessary
+wait_for_tunnel_if_present
 
 if is_lint; then
   $(npm bin)/gulp ci:lint
@@ -52,4 +52,4 @@ if [ -f dist/coverage/coverage-summary.json ]; then
   $(npm bin)/gulp ci:coverage
 fi
 
-teardown_tunnel
+teardown_tunnel_if_present

@@ -9,7 +9,6 @@ module.exports = (config) => {
     plugins: [
       require('karma-jasmine'),
       require('karma-browserstack-launcher'),
-      require('karma-sauce-launcher'),
       require('karma-chrome-launcher'),
       require('karma-firefox-launcher'),
       require('karma-sourcemap-loader'),
@@ -79,9 +78,10 @@ module.exports = (config) => {
 
     browserDisconnectTimeout: 20000,
     browserNoActivityTimeout: 240000,
+    browserDisconnectTolerance: 1,
     captureTimeout: 120000,
-    browsers: ['ChromeHeadlessLocal'],
 
+    browsers: ['ChromeHeadlessLocal'],
     singleRun: false,
 
     browserConsoleLogOptions: {
@@ -98,31 +98,30 @@ module.exports = (config) => {
   });
 
   if (process.env['TRAVIS']) {
-    const buildId = `TRAVIS #${process.env.TRAVIS_BUILD_NUMBER} (${process.env.TRAVIS_BUILD_ID})`;
+    const buildId = `TravisCI ${process.env.TRAVIS_BUILD_ID}`;
+    const tunnelIdentifier = process.env.TRAVIS_JOB_ID;
 
-    if (process.env['TRAVIS_PULL_REQUEST'] === 'false' &&
-        process.env['MODE'] === "travis_required") {
+    if (process.env['TRAVIS_PULL_REQUEST'] === 'false'
+        && process.env['MODE'] === "test-travis-1") {
 
       config.preprocessors['dist/packages/**/!(*+(.|-)spec).js'] = ['coverage'];
       config.reporters.push('coverage');
     }
 
     // The MODE variable is the indicator of what row in the test matrix we're running.
-    // It will look like <platform>_<target>, where platform is one of 'saucelabs', 'browserstack'
-    // or 'travis'. The target is a reference to different collections of browsers that can run
-    // in the previously specified platform.
-    const [platform, target] = process.env.MODE.split('_');
+    // It will look like "test-<platform>[-poolId], where platform is one of 'browserstack' or
+    // 'travis'. Pool ids allow running different browsers on the same
+    // platform, but in different CI jobs.
+    const [, platform, poolId] = process.env.MODE.split('-');
 
-    if (platform === 'saucelabs') {
-      config.sauceLabs.build = buildId;
-      config.sauceLabs.tunnelIdentifier = process.env.TRAVIS_JOB_ID;
-    } else if (platform === 'browserstack') {
+    if (platform === 'browserstack') {
       config.browserStack.build = buildId;
-      config.browserStack.tunnelIdentifier = process.env.TRAVIS_JOB_ID;
+      config.browserStack.tunnelIdentifier = tunnelIdentifier;
+      console.log(`Setting up Browserstack launcher. Connecting to tunnel: "${tunnelIdentifier}"`);
     } else if (platform !== 'travis') {
-      throw new Error(`Platform "${platform}" unknown, but Travis specified. Exiting.`);
+      throw new Error(`Platform "${platform}" is unknown. Exiting..`);
     }
 
-    config.browsers = platformMap[platform][target.toLowerCase()];
+    config.browsers = platformMap[platform][parseInt(poolId)];
   }
 };
