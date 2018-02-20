@@ -83,6 +83,7 @@
 # CDK experimental package
 /src/cdk-experimental/**                           @jelbourn
 /src/cdk-experimental/dialog/**                    @jelbourn @josephperrott @crisbeto
+/src/cdk-experimental/scrolling/**                 @mmalerba
 
 # Docs examples & guides
 /guides/**                                         @amcdnl @jelbourn
