@@ -1,13 +1,14 @@
 {
   "extends": "../tsconfig-build",
   "files": [
-    "public-api.ts"
+    "public-api.ts",
+    "../typings.d.ts"
   ],
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,
-    "strictMetadataEmit": false, // Workaround for Angular #22210
+    "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/cdk/scrolling",
+    "flatModuleId": "@angular/cdk-experimental/scrolling",
     "skipTemplateCodegen": true,
     "fullTemplateTypeCheck": true
   }

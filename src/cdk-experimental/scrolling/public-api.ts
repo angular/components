@@ -6,5 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export * from './public-api';
-export * from './scrolling/index';
+export * from './scrolling-module';
+export * from './virtual-for-of';
+export * from './virtual-scroll-fixed-size';
+export * from './virtual-scroll-strategy';
+export * from './virtual-scroll-viewport';
