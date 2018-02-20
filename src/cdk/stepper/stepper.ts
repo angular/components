@@ -350,7 +350,7 @@ export class CdkStepper implements OnDestroy {
       return steps.slice(0, index).some(step => {
         const control = step.stepControl;
         const isIncomplete = control ?
-            (control.invalid || control.pending) || !step.interacted :
+            (control.invalid || control.pending || !step.interacted) :
             !step.completed;
         return isIncomplete && !step.optional;
       });

@@ -729,6 +729,8 @@ describe('MatStepper', () => {
 
       stepper.selectedIndex = 1;
       fixture.detectChanges();
+      expect(stepper.selectedIndex).toBe(1);
+
       stepper.selectedIndex = 2;
       fixture.detectChanges();
       expect(stepper.selectedIndex).toBe(2);
