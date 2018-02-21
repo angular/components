@@ -54,9 +54,8 @@ sass_bundle = rule(
     # rule (and will thus be available to the nodejs_binary in the sandbox).
     "entry_point": attr.label(mandatory = True, allow_single_file = True),
 
-    # The executable (bundler) for this rule. The user will typically never
-    # specify this and always use the default.
-    "sass_bundle": attr.label(
+    # The executable (bundler) for this rule (private).
+    "_sass_bundle": attr.label(
       default = Label("//tools:sass_bundle"),
       executable = True,
       cfg = "host"

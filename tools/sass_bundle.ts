@@ -8,6 +8,11 @@ const minimist = require('minimist');
 /** The root of the bazel workspace (sandbox). */
 const workspaceRoot = process.cwd();
 
+/**
+ * Bundles sass partials into a single file using the `scss-bundle` package. This does not use the
+ * default CLI for `scss-bundle` to give us a place to introspect / debug values coming from
+ * bazel if necessary.
+ */
 export async function main(args: string[]): Promise<number> {
   const parsedArgs: {srcs: string, output: string, entry: string} = minimist(args);
   const inputFiles = parsedArgs.srcs.split(',');
