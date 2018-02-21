@@ -18,4 +18,4 @@ import {CdkTextareaAutosize} from './autosize';
   exports: [CdkAutofill, CdkTextareaAutosize],
   providers: [AutofillMonitor],
 })
-export class InputModule {}
+export class TextFieldModule {}

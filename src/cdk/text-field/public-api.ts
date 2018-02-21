@@ -8,4 +8,4 @@
 
 export * from './autofill';
 export * from './autosize';
-export * from './input-module';
+export * from './text-field-module';

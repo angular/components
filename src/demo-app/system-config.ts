@@ -48,7 +48,6 @@ System.config({
     '@angular/cdk/bidi': 'dist/packages/cdk/bidi/index.js',
     '@angular/cdk/coercion': 'dist/packages/cdk/coercion/index.js',
     '@angular/cdk/collections': 'dist/packages/cdk/collections/index.js',
-    '@angular/cdk/input': 'dist/packages/cdk/input/index.js',
     '@angular/cdk/keycodes': 'dist/packages/cdk/keycodes/index.js',
     '@angular/cdk/layout': 'dist/packages/cdk/layout/index.js',
     '@angular/cdk/observers': 'dist/packages/cdk/observers/index.js',
@@ -58,6 +57,7 @@ System.config({
     '@angular/cdk/scrolling': 'dist/packages/cdk/scrolling/index.js',
     '@angular/cdk/stepper': 'dist/packages/cdk/stepper/index.js',
     '@angular/cdk/table': 'dist/packages/cdk/table/index.js',
+    '@angular/cdk/text-field': 'dist/packages/cdk/text-field/index.js',
     '@angular/cdk/tree': 'dist/packages/cdk/tree/index.js',
 
     '@angular/material/autocomplete': 'dist/packages/material/autocomplete/index.js',

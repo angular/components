@@ -62,7 +62,6 @@
 /src/cdk/bidi/**                                   @jelbourn
 /src/cdk/coercion/**                               @jelbourn
 /src/cdk/collections/**                            @jelbourn @crisbeto @andrewseguin
-/src/cdk/input/**                                  @mmalerba
 /src/cdk/keycodes/**                               @jelbourn
 /src/cdk/layout/**                                 @josephperrott
 /src/cdk/observers/**                              @jelbourn @crisbeto
@@ -73,6 +72,7 @@
 /src/cdk/stepper/**                                @mmalerba
 /src/cdk/table/**                                  @andrewseguin
 /src/cdk/testing/**                                @devversion
+/src/cdk/text-field/**                             @mmalerba
 /src/cdk/tree/**                                   @tinayuangao
 
 # Moment adapter package

@@ -69,17 +69,17 @@ export class AutofillMonitor implements OnDestroy {
 
     const result = new Subject<AutofillEvent>();
     const listener = (event: AnimationEvent) => {
-      if (event.animationName === 'cdk-input-autofill-start') {
-        element.classList.add('cdk-input-autofilled');
+      if (event.animationName === 'cdk-text-field-autofill-start') {
+        element.classList.add('cdk-text-field-autofilled');
         result.next({target: event.target as Element, isAutofilled: true});
-      } else if (event.animationName === 'cdk-input-autofill-end') {
-        element.classList.remove('cdk-input-autofilled');
+      } else if (event.animationName === 'cdk-text-field-autofill-end') {
+        element.classList.remove('cdk-text-field-autofilled');
         result.next({target: event.target as Element, isAutofilled: false});
       }
     };
 
     element.addEventListener('animationstart', listener, listenerOptions);
-    element.classList.add('cdk-input-autofill-monitored');
+    element.classList.add('cdk-text-field-autofill-monitored');
 
     this._monitoredElements.set(element, {
       subject: result,
@@ -101,8 +101,8 @@ export class AutofillMonitor implements OnDestroy {
     if (info) {
       info.unlisten();
       info.subject.complete();
-      element.classList.remove('cdk-input-autofill-monitored');
-      element.classList.remove('cdk-input-autofilled');
+      element.classList.remove('cdk-text-field-autofill-monitored');
+      element.classList.remove('cdk-text-field-autofilled');
       this._monitoredElements.delete(element);
     }
   }

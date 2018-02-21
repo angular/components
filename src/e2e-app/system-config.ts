@@ -38,7 +38,6 @@ System.config({
     '@angular/cdk/bidi': 'dist/bundles/cdk-bidi.umd.js',
     '@angular/cdk/coercion': 'dist/bundles/cdk-coercion.umd.js',
     '@angular/cdk/collections': 'dist/bundles/cdk-collections.umd.js',
-    '@angular/cdk/input': 'dist/bundles/cdk-input.umd.js',
     '@angular/cdk/keycodes': 'dist/bundles/cdk-keycodes.umd.js',
     '@angular/cdk/layout': 'dist/bundles/cdk-layout.umd.js',
     '@angular/cdk/observers': 'dist/bundles/cdk-observers.umd.js',
@@ -51,6 +50,7 @@ System.config({
     '@angular/cdk/tree': 'dist/bundles/cdk-tree.umd.js',
     '@angular/cdk/testing': 'dist/bundles/cdk-testing.umd.js',
     '@angular/material-examples': 'dist/bundles/material-examples.umd.js',
+    '@angular/cdk/text-field': 'dist/bundles/cdk-text-field.umd.js',
 
     '@angular/material/autocomplete': 'dist/bundles/material-autocomplete.umd.js',
     '@angular/material/bottom-sheet': 'dist/bundles/material-bottom-sheet.umd.js',

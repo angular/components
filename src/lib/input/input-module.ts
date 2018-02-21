@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {InputModule} from '@angular/cdk/input';
+import {TextFieldModule} from '@angular/cdk/text-field';
 import {PlatformModule} from '@angular/cdk/platform';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
@@ -20,12 +20,12 @@ import {MatInput} from './input';
   declarations: [MatInput, MatTextareaAutosize],
   imports: [
     CommonModule,
-    InputModule,
+    TextFieldModule,
     MatFormFieldModule,
     PlatformModule,
   ],
   exports: [
-    InputModule,
+    TextFieldModule,
     // We re-export the `MatFormFieldModule` since `MatInput` will almost always
     // be used together with `MatFormField`.
     MatFormFieldModule,

@@ -11,7 +11,7 @@ import {Component, ElementRef, ViewChild} from '@angular/core';
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {empty as observableEmpty} from 'rxjs/observable/empty';
 import {AutofillEvent, AutofillMonitor} from './autofill';
-import {InputModule} from './input-module';
+import {TextFieldModule} from './text-field-module';
 
 
 const listenerOptions: any = supportsPassiveEventListeners() ? {passive: true} : false;
@@ -24,7 +24,7 @@ describe('AutofillMonitor', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [InputModule],
+      imports: [TextFieldModule],
       declarations: [Inputs],
     }).compileComponents();
   });
@@ -52,7 +52,7 @@ describe('AutofillMonitor', () => {
     expect(inputEl.addEventListener).not.toHaveBeenCalled();
 
     autofillMonitor.monitor(inputEl);
-    expect(inputEl.classList).toContain('cdk-input-autofill-monitored');
+    expect(inputEl.classList).toContain('cdk-text-field-autofill-monitored');
     expect(inputEl.addEventListener)
         .toHaveBeenCalledWith('animationstart', jasmine.any(Function), listenerOptions);
   });
@@ -69,11 +69,11 @@ describe('AutofillMonitor', () => {
   it('should remove monitored class and listener upon stop monitoring', () => {
     const inputEl = testComponent.input1.nativeElement;
     autofillMonitor.monitor(inputEl);
-    expect(inputEl.classList).toContain('cdk-input-autofill-monitored');
+    expect(inputEl.classList).toContain('cdk-text-field-autofill-monitored');
     expect(inputEl.removeEventListener).not.toHaveBeenCalled();
 
     autofillMonitor.stopMonitoring(inputEl);
-    expect(inputEl.classList).not.toContain('cdk-input-autofill-monitored');
+    expect(inputEl.classList).not.toContain('cdk-text-field-autofill-monitored');
     expect(inputEl.removeEventListener)
         .toHaveBeenCalledWith('animationstart', jasmine.any(Function), listenerOptions);
   });
@@ -103,10 +103,10 @@ describe('AutofillMonitor', () => {
     const autofillStream = autofillMonitor.monitor(inputEl);
     autofillStream.subscribe(event => autofillStreamEvent = event);
     expect(autofillStreamEvent).toBeNull();
-    expect(inputEl.classList).not.toContain('cdk-input-autofilled');
+    expect(inputEl.classList).not.toContain('cdk-text-field-autofilled');
 
-    animationStartCallback({animationName: 'cdk-input-autofill-start', target: inputEl});
-    expect(inputEl.classList).toContain('cdk-input-autofilled');
+    animationStartCallback({animationName: 'cdk-text-field-autofill-start', target: inputEl});
+    expect(inputEl.classList).toContain('cdk-text-field-autofilled');
     expect(autofillStreamEvent).toEqual({target: inputEl, isAutofilled: true} as any);
   });
 
@@ -117,12 +117,12 @@ describe('AutofillMonitor', () => {
     inputEl.addEventListener.and.callFake((_, cb) => animationStartCallback = cb);
     const autofillStream = autofillMonitor.monitor(inputEl);
     autofillStream.subscribe(event => autofillStreamEvent = event);
-    animationStartCallback({animationName: 'cdk-input-autofill-start', target: inputEl});
-    expect(inputEl.classList).toContain('cdk-input-autofilled');
+    animationStartCallback({animationName: 'cdk-text-field-autofill-start', target: inputEl});
+    expect(inputEl.classList).toContain('cdk-text-field-autofilled');
     expect(autofillStreamEvent).toEqual({target: inputEl, isAutofilled: true} as any);
 
-    animationStartCallback({animationName: 'cdk-input-autofill-end', target: inputEl});
-    expect(inputEl.classList).not.toContain('cdk-input-autofilled');
+    animationStartCallback({animationName: 'cdk-text-field-autofill-end', target: inputEl});
+    expect(inputEl.classList).not.toContain('cdk-text-field-autofilled');
     expect(autofillStreamEvent).toEqual({target: inputEl, isAutofilled: false} as any);
   });
 
@@ -131,11 +131,11 @@ describe('AutofillMonitor', () => {
     let animationStartCallback: Function = () => {};
     inputEl.addEventListener.and.callFake((_, cb) => animationStartCallback = cb);
     autofillMonitor.monitor(inputEl);
-    animationStartCallback({animationName: 'cdk-input-autofill-start', target: inputEl});
-    expect(inputEl.classList).toContain('cdk-input-autofilled');
+    animationStartCallback({animationName: 'cdk-text-field-autofill-start', target: inputEl});
+    expect(inputEl.classList).toContain('cdk-text-field-autofilled');
 
     autofillMonitor.stopMonitoring(inputEl);
-    expect(inputEl.classlist).not.toContain('cdk-input-autofilled');
+    expect(inputEl.classlist).not.toContain('cdk-text-field-autofilled');
   });
 
   it('should complete the stream when monitoring is stopped', () => {
@@ -159,7 +159,7 @@ describe('cdkAutofill', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [InputModule],
+      imports: [TextFieldModule],
       declarations: [InputWithCdkAutofilled],
     }).compileComponents();
   });

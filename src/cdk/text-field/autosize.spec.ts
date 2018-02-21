@@ -5,7 +5,7 @@ import {FormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {CdkTextareaAutosize} from './autosize';
-import {InputModule} from './input-module';
+import {TextFieldModule} from './text-field-module';
 
 
 describe('CdkTextareaAutosize', () => {
@@ -17,7 +17,7 @@ describe('CdkTextareaAutosize', () => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
-        InputModule,
+        TextFieldModule,
         NoopAnimationsModule,
       ],
       declarations: [

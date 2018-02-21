@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CdkTextareaAutosize} from '@angular/cdk/input';
+import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {Directive, Input} from '@angular/core';
 
 
