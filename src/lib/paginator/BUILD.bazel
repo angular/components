@@ -1,36 +1,37 @@
-package(default_visibility=["//visibility:public"])
+package(default_visibility = ["//visibility:public"])
+
 load("@angular//:index.bzl", "ng_module")
 load("@io_bazel_rules_sass//sass:sass.bzl", "sass_library", "sass_binary")
 
-
 ng_module(
-  name = "paginator",
-  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
-  module_name = "@angular/material/paginator",
-  assets = [":paginator_css"],
-  deps = [
-    "//src/lib/core",
-    "//src/lib/button",
-    "//src/lib/select",
-    "//src/lib/tooltip",
-    "@rxjs",
-  ],
-  tsconfig = ":tsconfig-build.json",
+    name = "paginator",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    assets = [":paginator_css"],
+    module_name = "@angular/material/paginator",
+    tsconfig = ":tsconfig-build.json",
+    deps = [
+        "//src/lib/button",
+        "//src/lib/core",
+        "//src/lib/select",
+        "//src/lib/tooltip",
+        "@rxjs",
+    ],
 )
 
-
 sass_binary(
-  name = "paginator_scss",
-  src = "paginator.scss",
-  deps = ["//src/lib/core:core_scss_lib"],
+    name = "paginator_scss",
+    src = "paginator.scss",
+    deps = ["//src/lib/core:core_scss_lib"],
 )
 
 # TODO(jelbourn): remove this when sass_binary supports specifying an output filename and dir.
 # Copy the output of the sass_binary such that the filename and path match what we expect.
 genrule(
-  name = "paginator_css",
-  srcs = [":paginator_scss"],
-  outs = ["paginator.css"],
-  cmd = "cat $(locations :paginator_scss) > $@",
+    name = "paginator_css",
+    srcs = [":paginator_scss"],
+    outs = ["paginator.css"],
+    cmd = "cat $(locations :paginator_scss) > $@",
 )
-
