@@ -19,7 +19,7 @@
 
 ### Features
 
-* add ripples to button-toggle ([#9891](https://github.com/angular/material2/issues/9891)) ([53417d4](https://github.com/angular/material2/commit/53417d4)), closes [#9442](https://github.com/angular/material2/issues/9442)
+* **button-toggle** add ripples to button-toggle ([#9891](https://github.com/angular/material2/issues/9891)) ([53417d4](https://github.com/angular/material2/commit/53417d4)), closes [#9442](https://github.com/angular/material2/issues/9442)
 * **autocomplete:** add opened/closed events to panel ([#9904](https://github.com/angular/material2/issues/9904)) ([82c5ff0](https://github.com/angular/material2/commit/82c5ff0)), closes [#9894](https://github.com/angular/material2/issues/9894)
 * **badge:** add badge component ([#7483](https://github.com/angular/material2/issues/7483)) ([c98d217](https://github.com/angular/material2/commit/c98d217))
 * **bottom-sheet:** add result param when dismissing bottom sheet ([#9810](https://github.com/angular/material2/issues/9810)) ([98a6910](https://github.com/angular/material2/commit/98a6910))
