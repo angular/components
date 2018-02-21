@@ -20,10 +20,10 @@ $mat-tab-animation-duration: 500ms !default;
 
   &:focus {
     outline: none;
+  }
 
-    &:not(.mat-tab-disabled) {
-      opacity: 1;
-    }
+  &.mat-tab-label-active {
+    opacity: 1;
   }
 
   &.mat-tab-disabled {
