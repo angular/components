@@ -23,7 +23,7 @@ ng_module(
 
 # TODO(jelbourn): replace this w/ sass_library when it supports acting like a filegroup
 filegroup(
-  name = "drawer_scss_partials",
+  name = "sidenav_scss_partials",
   srcs = glob(["**/_*.scss"]),
 )
 

@@ -25,7 +25,7 @@ ng_module(
 
 # TODO(jelbourn): replace this w/ sass_library when it supports acting like a filegroup
 filegroup(
-  name = "expansion_panel_scss_partials",
+  name = "expansion_scss_partials",
   srcs = glob(["**/_*.scss"]),
 )
 

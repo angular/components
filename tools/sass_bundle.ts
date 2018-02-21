@@ -1,5 +1,6 @@
-import {dirname, join} from 'path';
-import {readFileSync, writeFileSync, readdirSync, lstatSync} from 'fs';
+import {writeFileSync} from 'fs';
+import {join} from 'path';
+
 
 const Bundler = require('scss-bundle').Bundler;
 const minimist = require('minimist');

@@ -1,4 +1,5 @@
 load("//tools:sass_bundle.bzl", "sass_bundle")
+load("//:components.bzl", "MATERIAL_PACKAGES")
 
 
 sass_bundle(
@@ -6,40 +7,8 @@ sass_bundle(
   srcs = [
     "//src/cdk/a11y:a11y_scss_partials",
     "//src/cdk/overlay:overlay_scss_partials",
-    "//src/lib/autocomplete:autocomplete_scss_partials",
-    "//src/lib/badge:badge_scss_partials",
-    "//src/lib/bottom-sheet:bottom_sheet_scss_partials",
-    "//src/lib/button-toggle:button_toggle_scss_partials",
-    "//src/lib/button:button_scss_partials",
-    "//src/lib/card:card_scss_partials",
-    "//src/lib/checkbox:checkbox_scss_partials",
-    "//src/lib/chips:chips_scss_partials",
-    "//src/lib/core:core_scss_partials",
-    "//src/lib/datepicker:datepicker_scss_partials",
-    "//src/lib/dialog:dialog_scss_partials",
-    "//src/lib/divider:divider_scss_partials",
-    "//src/lib/expansion:expansion_panel_scss_partials",
-    "//src/lib/form-field:form_field_scss_partials",
-    "//src/lib/grid-list:grid_list_scss_partials",
-    "//src/lib/icon:icon_scss_partials",
-    "//src/lib/input:input_scss_partials",
-    "//src/lib/list:list_scss_partials",
-    "//src/lib/menu:menu_scss_partials",
-    "//src/lib/paginator:paginator_scss_partials",
-    "//src/lib/progress-bar:progress_bar_scss_partials",
-    "//src/lib/progress-spinner:progress_spinner_scss_partials",
-    "//src/lib/radio:radio_scss_partials",
-    "//src/lib/select:select_scss_partials",
-    "//src/lib/sidenav:drawer_scss_partials",
-    "//src/lib/slide-toggle:slide_toggle_scss_partials",
-    "//src/lib/slider:slider_scss_partials",
-    "//src/lib/snack-bar:snack_bar_scss_partials",
-    "//src/lib/sort:sort_header_scss_partials",
-    "//src/lib/stepper:stepper_scss_partials",
-    "//src/lib/table:table_scss_partials",
-    "//src/lib/tabs:tabs_scss_partials",
-    "//src/lib/toolbar:toolbar_scss_partials",
-    "//src/lib/tooltip:tooltip_scss_partials",
+  ] + [
+    "//src/lib/%s:%s_scss_partials" % (p, p.replace('-', '_')) for p in MATERIAL_PACKAGES
   ],
   entry_point = '//src/lib/core:theming/_all-theme.scss',
   output_name = "_theming.scss",
