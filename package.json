@@ -18,7 +18,11 @@
     "deploy": "gulp deploy:devapp",
     "webdriver-manager": "webdriver-manager",
     "docs": "gulp docs",
-    "api": "gulp api-docs"
+    "api": "gulp api-docs",
+    "preskylint": "bazel build --noshow_progress @io_bazel//src/tools/skylark/java/com/google/devtools/skylark/skylint:Skylint",
+    "skylint": "find . -type f -name \"*.bzl\" ! -path \"*/node_modules/*\" ! -path \"./dist/*\" | xargs $(bazel info bazel-bin)/external/io_bazel/src/tools/skylark/java/com/google/devtools/skylark/skylint/Skylint",
+    "prebuildifier": "bazel build --noshow_progress @com_github_bazelbuild_buildtools//buildifier",
+    "buildifier": "find . -type f \\( -name BUILD -or -name BUILD.bazel \\) ! -path \"*/node_modules/*\" | xargs $(bazel info bazel-bin)/external/com_github_bazelbuild_buildtools/buildifier/*/buildifier"
   },
   "version": "6.0.0-beta.2",
   "license": "MIT",
