@@ -1,3 +1,24 @@
+<a name="5.2.2"></a>
+## [5.2.2 cork-yacht](https://github.com/angular/material2/compare/5.2.1...5.2.2) (2018-02-21)
+
+
+### Bug Fixes
+
+* **aria-describer:** better handling of non-string values ([#9959](https://github.com/angular/material2/issues/9959)) ([d351e33](https://github.com/angular/material2/commit/d351e33))
+* **list:** list-options require a parent selection list ([#9899](https://github.com/angular/material2/issues/9899)) ([8cca2c2](https://github.com/angular/material2/commit/8cca2c2))
+* **list-key-manager:** infinite loop if all items are disabled ([#9981](https://github.com/angular/material2/issues/9981)) ([775f560](https://github.com/angular/material2/commit/775f560))
+* **menu:** not picking up indirect descendant items ([#9971](https://github.com/angular/material2/issues/9971)) ([14b21e9](https://github.com/angular/material2/commit/14b21e9)), closes [#9969](https://github.com/angular/material2/issues/9969)
+* **overlay:** expose backdropClick mouse event in ConnectedOverlayDirective ([#9845](https://github.com/angular/material2/issues/9845)) ([5a1e7fe](https://github.com/angular/material2/commit/5a1e7fe))
+* **platform:** potential error if CSS object is undefined ([#9968](https://github.com/angular/material2/issues/9968)) ([3212111](https://github.com/angular/material2/commit/3212111)), closes [#9801](https://github.com/angular/material2/issues/9801)
+* **select:** icons inside option not centered ([#9982](https://github.com/angular/material2/issues/9982)) ([ecc7f53](https://github.com/angular/material2/commit/ecc7f53)), closes [#9978](https://github.com/angular/material2/issues/9978)
+* **select:** lock dropdown position when scrolling ([#9789](https://github.com/angular/material2/issues/9789)) ([30b90a2](https://github.com/angular/material2/commit/30b90a2))
+* **selection-list:** incorrect cursor if disabled ([#9963](https://github.com/angular/material2/issues/9963)) ([13e809a](https://github.com/angular/material2/commit/13e809a)), closes [#9952](https://github.com/angular/material2/issues/9952)
+* **tabs:** ink bar not visible in high contrast mode ([#9997](https://github.com/angular/material2/issues/9997)) ([1ba04eb](https://github.com/angular/material2/commit/1ba04eb))
+* **theming:** add aliases for alternate spelling of "grey" ([#9903](https://github.com/angular/material2/issues/9903)) ([36e1bc0](https://github.com/angular/material2/commit/36e1bc0))
+* **viewport-ruler:** fix server-side rendering errors when attempting to measure the viewport ([#9870](https://github.com/angular/material2/issues/9870)) ([ac4cd91](https://github.com/angular/material2/commit/ac4cd91))
+
+
+
 <a name="5.2.1"></a>
 ## [5.2.1 ghillie-soup](https://github.com/angular/material2/compare/5.2.0...5.2.1) (2018-02-12)
 
