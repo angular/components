@@ -6,9 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, Inject, InjectionToken, Optional, SkipSelf} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
+import {
+  APP_ROOT_SCOPE,
+  Inject,
+  Injectable,
+  InjectionToken,
+  Optional,
+  SkipSelf,
+} from '@angular/core';
 import {addAriaReferencedId, getAriaReferenceIds, removeAriaReferencedId} from './aria-reference';
+
 
 /**
  * Interface used to register message elements and keep a count of how many registrations have
@@ -46,7 +54,7 @@ let messagesContainer: HTMLElement | null = null;
  * content.
  * @docs-private
  */
-@Injectable()
+@Injectable({scope: APP_ROOT_SCOPE})
 export class AriaDescriber {
   private _document: Document;
 
@@ -204,12 +212,13 @@ export class AriaDescriber {
 
 }
 
-/** @docs-private */
+
+/** @docs-private @deprecated @deletion-target 7.0.0 */
 export function ARIA_DESCRIBER_PROVIDER_FACTORY(parentDispatcher: AriaDescriber, _document: any) {
   return parentDispatcher || new AriaDescriber(_document);
 }
 
-/** @docs-private */
+/** @docs-private @deprecated @deletion-target 7.0.0 */
 export const ARIA_DESCRIBER_PROVIDER = {
   // If there is already an AriaDescriber available, use that. Otherwise, provide a new one.
   provide: AriaDescriber,
