@@ -35,6 +35,7 @@ import {
 import {HttpClientModule} from '@angular/common/http';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
+import {GaService} from './shared/ga/ga';
 
 @NgModule({
   imports: [
@@ -66,6 +67,7 @@ import {environment} from '../environments/environment';
   providers: [
     ComponentPageTitle,
     DocumentationItems,
+    GaService,
     GuideItems,
     StyleManager,
     ThemeStorage,
