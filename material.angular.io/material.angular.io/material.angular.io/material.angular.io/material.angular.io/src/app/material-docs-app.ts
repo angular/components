@@ -2,6 +2,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
 import {Router, NavigationEnd} from '@angular/router';
 import {filter} from 'rxjs/operators/filter';
 
+import {GaService} from './shared/ga/ga';
 
 @Component({
   selector: 'material-docs-app',
@@ -11,7 +12,7 @@ import {filter} from 'rxjs/operators/filter';
 })
 export class MaterialDocsApp {
 
-  constructor(router: Router) {
+  constructor(router: Router, ga: GaService) {
     let previousRoute = router.routerState.snapshot.url;
 
     router.events
@@ -24,6 +25,7 @@ export class MaterialDocsApp {
         }
 
         previousRoute = data.urlAfterRedirects;
+        ga.locationChanged(data.urlAfterRedirects);
       });
   }
 }
