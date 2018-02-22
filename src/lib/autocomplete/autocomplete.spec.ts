@@ -1437,6 +1437,7 @@ describe('MatAutocomplete', () => {
       zone.simulateZoneExit();
 
       expect(spy).toHaveBeenCalledWith(jasmine.any(MatOptionSelectionChange));
+      subscription!.unsubscribe();
     }));
 
   });

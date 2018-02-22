@@ -80,9 +80,7 @@ describe('MatButtonToggle with forms', () => {
   describe('button toggle group with ngModel and change event', () => {
     let fixture: ComponentFixture<ButtonToggleGroupWithNgModel>;
     let groupDebugElement: DebugElement;
-    let groupNativeElement: HTMLElement;
     let buttonToggleDebugElements: DebugElement[];
-    let buttonToggleNativeElements: HTMLElement[];
     let groupInstance: MatButtonToggleGroup;
     let buttonToggleInstances: MatButtonToggle[];
     let testComponent: ButtonToggleGroupWithNgModel;
@@ -95,13 +93,10 @@ describe('MatButtonToggle with forms', () => {
       testComponent = fixture.debugElement.componentInstance;
 
       groupDebugElement = fixture.debugElement.query(By.directive(MatButtonToggleGroup));
-      groupNativeElement = groupDebugElement.nativeElement;
       groupInstance = groupDebugElement.injector.get<MatButtonToggleGroup>(MatButtonToggleGroup);
       groupNgModel = groupDebugElement.injector.get<NgModel>(NgModel);
 
       buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MatButtonToggle));
-      buttonToggleNativeElements =
-        buttonToggleDebugElements.map(debugEl => debugEl.nativeElement);
       buttonToggleInstances = buttonToggleDebugElements.map(debugEl => debugEl.componentInstance);
       buttonToggleLabels = buttonToggleDebugElements.map(
         debugEl => debugEl.query(By.css('label')).nativeElement);
@@ -520,13 +515,10 @@ describe('MatButtonToggle without forms', () => {
     let buttonToggleNativeElement: HTMLElement;
     let buttonToggleLabelElement: HTMLLabelElement;
     let buttonToggleInstance: MatButtonToggle;
-    let testComponent: StandaloneButtonToggle;
 
     beforeEach(async(() => {
       fixture = TestBed.createComponent(StandaloneButtonToggle);
       fixture.detectChanges();
-
-      testComponent = fixture.debugElement.componentInstance;
 
       buttonToggleDebugElement = fixture.debugElement.query(By.directive(MatButtonToggle));
       buttonToggleNativeElement = buttonToggleDebugElement.nativeElement;
