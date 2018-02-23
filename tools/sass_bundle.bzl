@@ -19,7 +19,7 @@ def _sass_bundle(ctx):
   # the main thing that sass_bundle rule does.
   ctx.actions.run(
     inputs = ctx.files.srcs,
-    executable = ctx.executable.sass_bundle,
+    executable = ctx.executable._sass_bundle,
     outputs = [ctx.outputs.output_name],
     arguments = [args],
   )
