@@ -19,7 +19,8 @@ describe('MatRadio', () => {
         RadioGroupWithFormControl,
         StandaloneRadioButtons,
         InterleavedRadioGroup,
-        TranscludingWrapper
+        TranscludingWrapper,
+        MultipleFormsRadioButtons
       ]
     });
 
@@ -746,6 +747,59 @@ describe('MatRadio', () => {
       expect(groupInstance.selected).toBe(radioInstances[2]);
     });
   });
+
+  describe('groups inside different forms', () => {
+    let fixture: ComponentFixture<MultipleFormsRadioButtons>;
+    let testComponent: MultipleFormsRadioButtons;
+    let radioDebugElements: DebugElement[];
+    let radioInstances: MatRadioButton[];
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(MultipleFormsRadioButtons);
+      fixture.detectChanges();
+
+      testComponent = fixture.debugElement.componentInstance;
+
+      radioDebugElements = fixture.debugElement.queryAll(By.directive(MatRadioButton));
+      radioInstances = radioDebugElements.map(debugEl => debugEl.componentInstance);
+    });
+
+    it('should select different values even if they have the same name', () => {
+      radioInstances[2].checked = true;
+      radioInstances[3].checked = true;
+      radioInstances[8].checked = true;
+      fixture.detectChanges();
+
+      expect(radioInstances[0].checked).toBeFalsy();
+      expect(radioInstances[1].checked).toBeFalsy();
+      expect(radioInstances[2].checked).toBeTruthy();
+
+      expect(radioInstances[3].checked).toBeTruthy();
+      expect(radioInstances[4].checked).toBeFalsy();
+      expect(radioInstances[5].checked).toBeFalsy();
+
+      expect(radioInstances[6].checked).toBeFalsy();
+      expect(radioInstances[7].checked).toBeFalsy();
+      expect(radioInstances[8].checked).toBeTruthy();
+
+      radioInstances[1].checked = true;
+      radioInstances[5].checked = true;
+      radioInstances[6].checked = true;
+      fixture.detectChanges();
+
+      expect(radioInstances[0].checked).toBeFalsy();
+      expect(radioInstances[1].checked).toBeTruthy();
+      expect(radioInstances[2].checked).toBeFalsy();
+
+      expect(radioInstances[3].checked).toBeFalsy();
+      expect(radioInstances[4].checked).toBeFalsy();
+      expect(radioInstances[5].checked).toBeTruthy();
+
+      expect(radioInstances[6].checked).toBeTruthy();
+      expect(radioInstances[7].checked).toBeFalsy();
+      expect(radioInstances[8].checked).toBeFalsy();
+    });
+  });
 });
 
 
@@ -882,3 +936,23 @@ class InterleavedRadioGroup {
   `
 })
 class TranscludingWrapper {}
+
+@Component({
+  template: `
+      <form>
+        <mat-radio-button name="season" value="spring">Spring</mat-radio-button>
+        <mat-radio-button name="season" value="summer">Summer</mat-radio-button>
+        <mat-radio-button name="season" value="autum">Autumn</mat-radio-button>
+      </form>
+      <form>
+        <mat-radio-button name="season" value="spring">Spring</mat-radio-button>
+        <mat-radio-button name="season" value="summer">Summer</mat-radio-button>
+        <mat-radio-button name="season" value="autum">Autumn</mat-radio-button>
+      </form>
+      <form>
+        <mat-radio-button name="season" value="spring">Spring</mat-radio-button>
+        <mat-radio-button name="season" value="summer">Summer</mat-radio-button>
+        <mat-radio-button name="season" value="autum">Autumn</mat-radio-button>
+      </form>`
+})
+class MultipleFormsRadioButtons {}

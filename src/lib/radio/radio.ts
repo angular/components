@@ -372,11 +372,14 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
         this.radioGroup.selected = null;
       }
 
+      // Apply the changes so the native input boxes will have correct values.
+      this._changeDetector.detectChanges();
+
       if (newCheckedState) {
         // Notify all radio buttons with the same name to un-check.
         this._radioDispatcher.notify(this.id, this.name);
       }
-      this._changeDetector.markForCheck();
+
     }
   }
 
@@ -482,7 +485,9 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
     this._removeUniqueSelectionListener =
       _radioDispatcher.listen((id: string, name: string) => {
         if (id !== this.id && name === this.name) {
-          this.checked = false;
+          // Get the checked state from native radio button. The native radio buttons with the same
+          // name have separate unique selection in different form containers.
+          this.checked = this._inputElement.nativeElement.checked;
         }
       });
   }
