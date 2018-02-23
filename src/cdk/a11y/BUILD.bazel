@@ -8,7 +8,6 @@ sass_library(
   srcs = glob(["**/_*.scss"]),
 )
 
-
 ng_module(
   name = "a11y",
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
@@ -19,7 +18,7 @@ ng_module(
     "//src/cdk/platform",
     "@rxjs",
   ],
-  tsconfig = ":tsconfig-build.json",
+  tsconfig = "//src/cdk:tsconfig-build.json",
 )
 
 ts_library(

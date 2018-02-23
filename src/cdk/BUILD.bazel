@@ -1,5 +1,6 @@
 package(default_visibility=["//visibility:public"])
 load("@build_bazel_rules_typescript//:defs.bzl", "ts_library", "ts_config")
+load("//tools:globals.bzl", "CDK_ENTRY_POINTS", "ROLLUP_GLOBALS")
 
 exports_files(["tsconfig-build.json"])
 
@@ -15,4 +16,14 @@ ts_config(
   name ="tsconfig_tests",
   src = "tsconfig-tests.json",
   deps = ["tsconfig-build.json"],
+)
+
+load("@angular//:index.bzl", "ng_module", "ng_package")
+
+ng_package(
+    name = "npm_package",
+    deps = [":cdk"] + ["//src/cdk/%s" % e for e in CDK_ENTRY_POINTS],
+    entry_point = "src/cdk/index.js",
+    secondary_entry_points = CDK_ENTRY_POINTS,
+    globals = ROLLUP_GLOBALS,
 )
