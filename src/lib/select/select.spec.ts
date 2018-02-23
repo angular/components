@@ -2771,7 +2771,7 @@ describe('MatSelect', () => {
       const options = overlayPane.querySelectorAll('mat-option');
       const optionTop = options[index].getBoundingClientRect().top;
       const triggerFontSize = parseInt(window.getComputedStyle(trigger)['font-size']);
-      const triggerLineHeightEm = 1.125;
+      const triggerLineHeightEm = 1.25;
 
       // Extra trigger height beyond the font size caused by the fact that the line-height is
       // greater than 1em.
@@ -2932,7 +2932,7 @@ describe('MatSelect', () => {
             const selectItemHeight = 48;
             const selectedIndex = 4;
             const fontSize = 16;
-            const lineHeightEm = 1.125;
+            const lineHeightEm = 1.25;
             const expectedExtraScroll = 5;
 
             // Trigger element height.
@@ -2986,7 +2986,7 @@ describe('MatSelect', () => {
             const selectItemHeight = 48;
             const selectedIndex = 4;
             const fontSize = 16;
-            const lineHeightEm = 1.125;
+            const lineHeightEm = 1.25;
             const expectedExtraScroll = 5;
 
             // Trigger element height.
@@ -3515,7 +3515,7 @@ describe('MatSelect', () => {
 
         const menuItemHeight = 48;
         const triggerFontSize = 16;
-        const triggerLineHeightEm = 1.125;
+        const triggerLineHeightEm = 1.25;
         const triggerHeight = triggerFontSize * triggerLineHeightEm;
 
         trigger.click();
