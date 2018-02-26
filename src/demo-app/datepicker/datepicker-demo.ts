@@ -56,5 +56,4 @@ export class CustomHeader {
   constructor(@Host() public calendar: MatCalendar<any>,
               public adapter: DateAdapter<any>) {
   }
-
 }
