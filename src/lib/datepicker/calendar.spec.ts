@@ -5,7 +5,7 @@ import {
 import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed, async, inject} from '@angular/core/testing';
-import {DEC, FEB, JAN, NOV} from '@angular/material/core';
+import {DEC, FEB, JAN, MatNativeDateModule, NOV} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {MatCalendar} from './calendar';
@@ -19,7 +19,8 @@ describe('MatCalendar', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-          MatDatepickerModule
+          MatNativeDateModule,
+          MatDatepickerModule,
       ],
       declarations: [
         // Test components.
