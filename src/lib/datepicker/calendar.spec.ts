@@ -14,7 +14,6 @@ import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
 import {MatMultiYearView, yearsPerPage} from './multi-year-view';
 import {MatYearView} from './year-view';
-import {MatDatepickerModule} from './datepicker-module';
 import {PortalModule} from '@angular/cdk/portal';
 import {MatButtonModule} from '@angular/material/button';
 
