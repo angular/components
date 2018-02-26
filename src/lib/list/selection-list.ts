@@ -111,7 +111,6 @@ export class MatSelectionListChange {
 export class MatListOption extends _MatListOptionMixinBase
     implements AfterContentInit, OnDestroy, OnInit, FocusableOption, CanDisableRipple {
 
-  private _lineSetter: MatLineSetter;
   private _selected = false;
   private _disabled = false;
 
@@ -180,7 +179,9 @@ export class MatListOption extends _MatListOptionMixinBase
   }
 
   ngAfterContentInit() {
-    this._lineSetter = new MatLineSetter(this._lines, this._element);
+    // TODO: consider turning the setter into a function, it doesn't do anything as a class.
+    // tslint:disable-next-line:no-unused-expression
+    new MatLineSetter(this._lines, this._element);
   }
 
   ngOnDestroy(): void {
@@ -283,7 +284,8 @@ export class MatListOption extends _MatListOptionMixinBase
     '(focus)': 'focus()',
     '(blur)': '_onTouched()',
     '(keydown)': '_keydown($event)',
-    '[attr.aria-disabled]': 'disabled.toString()'},
+    '[attr.aria-disabled]': 'disabled.toString()',
+  },
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None,
@@ -390,6 +392,10 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
 
   /** Passes relevant key presses to our key manager. */
   _keydown(event: KeyboardEvent) {
+    if (this.disabled) {
+      return;
+    }
+
     switch (event.keyCode) {
       case SPACE:
       case ENTER:

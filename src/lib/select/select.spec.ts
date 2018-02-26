@@ -2704,6 +2704,37 @@ describe('MatSelect', () => {
 
   });
 
+  describe('with option centering disabled', () => {
+    beforeEach(async(() => configureMatSelectTestingModule([
+      SelectWithoutOptionCentering,
+    ])));
+
+    let fixture: ComponentFixture<SelectWithoutOptionCentering>;
+    let trigger: HTMLElement;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(SelectWithoutOptionCentering);
+      fixture.detectChanges();
+      trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
+    }));
+
+    it('should not align the active option with the trigger if centering is disabled',
+        fakeAsync(() => {
+          trigger.click();
+          fixture.detectChanges();
+          flush();
+
+          const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
+
+          // The panel should be scrolled to 0 because centering the option disabled.
+          expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to be scrolled.`);
+          // The trigger should contain 'Pizza' because it was preselected
+          expect(trigger.textContent).toContain('Pizza');
+          // The selected index should be 1 because it was preselected
+          expect(fixture.componentInstance.options.toArray()[1].selected).toBe(true);
+        }));
+  });
+
   describe('positioning', () => {
     beforeEach(async(() => configureMatSelectTestingModule([
       BasicSelect,
@@ -2717,14 +2748,12 @@ describe('MatSelect', () => {
 
     let fixture: ComponentFixture<BasicSelect>;
     let trigger: HTMLElement;
-    let select: HTMLElement;
     let formField: HTMLElement;
 
     beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(BasicSelect);
       fixture.detectChanges();
       trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
-      select = fixture.debugElement.query(By.css('mat-select')).nativeElement;
       formField = fixture.debugElement.query(By.css('mat-form-field')).nativeElement;
     }));
 
@@ -2777,6 +2806,9 @@ describe('MatSelect', () => {
 
       it('should align the first option with trigger text if no option is selected',
           fakeAsync(() => {
+            // We shouldn't push it too far down for this one, because the default may
+            // end up being too much when running the tests on mobile browsers.
+            formField.style.top = '100px';
             trigger.click();
             fixture.detectChanges();
             flush();
@@ -2860,7 +2892,6 @@ describe('MatSelect', () => {
         let groupFixture = TestBed.createComponent(SelectWithGroups);
         groupFixture.detectChanges();
         trigger = groupFixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
-        select = groupFixture.debugElement.query(By.css('mat-select')).nativeElement;
         formField = groupFixture.debugElement.query(By.css('mat-form-field')).nativeElement;
 
         formField.style.position = 'fixed';
@@ -3373,7 +3404,6 @@ describe('MatSelect', () => {
         multiFixture.detectChanges();
         formField = multiFixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
         trigger = multiFixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
-        select = multiFixture.debugElement.query(By.css('mat-select')).nativeElement;
 
         formField.style.position = 'fixed';
         formField.style.left = '60px';
@@ -3419,7 +3449,6 @@ describe('MatSelect', () => {
         groupFixture.detectChanges();
         formField = groupFixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
         trigger = groupFixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
-        select = groupFixture.debugElement.query(By.css('mat-select')).nativeElement;
 
         formField.style.position = 'fixed';
         formField.style.left = '60px';
@@ -4438,6 +4467,35 @@ class SingleSelectWithPreselectedArrayValues {
   ];
 
   selectedFoods = this.foods[1].value;
+
+  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChildren(MatOption) options: QueryList<MatOption>;
+}
+
+@Component({
+  selector: 'select-without-option-centering',
+  template: `
+    <mat-form-field>
+      <mat-select placeholder="Food" [formControl]="control" disableOptionCentering>
+        <mat-option *ngFor="let food of foods" [value]="food.value">
+          {{ food.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  `
+})
+class SelectWithoutOptionCentering {
+  foods: any[] = [
+    { value: 'steak-0', viewValue: 'Steak' },
+    { value: 'pizza-1', viewValue: 'Pizza' },
+    { value: 'tacos-2', viewValue: 'Tacos'},
+    { value: 'sandwich-3', viewValue: 'Sandwich' },
+    { value: 'chips-4', viewValue: 'Chips' },
+    { value: 'eggs-5', viewValue: 'Eggs' },
+    { value: 'pasta-6', viewValue: 'Pasta' },
+    { value: 'sushi-7', viewValue: 'Sushi' },
+  ];
+  control = new FormControl('pizza-1');
 
   @ViewChild(MatSelect) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;

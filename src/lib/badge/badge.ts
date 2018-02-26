@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Input, ElementRef, Inject, Optional, NgZone} from '@angular/core';
+import {Directive, Input, ElementRef, Inject, Optional, NgZone, OnDestroy} from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ThemePalette} from '@angular/material/core';
 import {AriaDescriber} from '@angular/cdk/a11y';
@@ -22,7 +22,7 @@ export type MatBadgeSize = 'small' | 'medium' | 'large';
   selector: '[matBadge]',
   host: {
     'class': 'mat-badge',
-    '[class.mat-badge-overlap]': '_overlap',
+    '[class.mat-badge-overlap]': 'overlap',
     '[class.mat-badge-above]': 'isAbove()',
     '[class.mat-badge-below]': '!isAbove()',
     '[class.mat-badge-before]': '!isAfter()',
@@ -33,7 +33,7 @@ export type MatBadgeSize = 'small' | 'medium' | 'large';
     '[class.mat-badge-hidden]': 'hidden',
   },
 })
-export class MatBadge {
+export class MatBadge implements OnDestroy {
 
   /** The color of the badge. Can be `primary`, `accent`, or `warn`. */
   @Input('matBadgeColor')
@@ -70,11 +70,11 @@ export class MatBadge {
   /** Message used to describe the decorated element via aria-describedby */
   @Input('matBadgeDescription')
   get description(): string { return this._description; }
-  set description(val: string) {
-    if (this._description) {
-      this._updateHostAriaDescription(val, this._description);
+  set description(newDescription: string) {
+    if (newDescription !== this._description) {
+      this._updateHostAriaDescription(newDescription, this._description);
+      this._description = newDescription;
     }
-    this._description = val;
   }
   private _description: string;
 
@@ -110,6 +110,12 @@ export class MatBadge {
     return this.position.indexOf('before') === -1;
   }
 
+  ngOnDestroy() {
+    if (this.description && this._badgeElement) {
+      this._ariaDescriber.removeDescription(this._badgeElement, this.description);
+    }
+  }
+
   /** Injects a span element into the DOM with the content. */
   private _updateTextContent(): HTMLSpanElement {
     if (!this._badgeElement) {
@@ -123,6 +129,8 @@ export class MatBadge {
   /** Creates the badge element */
   private _createBadgeElement(): HTMLElement {
     const badgeElement = this._document.createElement('span');
+    const activeClass = 'mat-badge-active';
+
     badgeElement.setAttribute('id', `mat-badge-content-${this._id}`);
     badgeElement.classList.add('mat-badge-content');
     badgeElement.textContent = this.content;
@@ -134,22 +142,31 @@ export class MatBadge {
     this._elementRef.nativeElement.appendChild(badgeElement);
 
     // animate in after insertion
-    this._ngZone.runOutsideAngular(() => requestAnimationFrame(() => {
-      // ensure content available
-      if (badgeElement) {
-        badgeElement.classList.add('mat-badge-active');
-      }
-    }));
+    if (typeof requestAnimationFrame === 'function') {
+      this._ngZone.runOutsideAngular(() => {
+        requestAnimationFrame(() => {
+          badgeElement.classList.add(activeClass);
+        });
+      });
+    } else {
+      badgeElement.classList.add(activeClass);
+    }
 
     return badgeElement;
   }
 
   /** Sets the aria-label property on the element */
-  private _updateHostAriaDescription(val: string, prevVal: string): void {
+  private _updateHostAriaDescription(newDescription: string, oldDescription: string): void {
     // ensure content available before setting label
     const content = this._updateTextContent();
-    this._ariaDescriber.removeDescription(content, prevVal);
-    this._ariaDescriber.describe(content, val);
+
+    if (oldDescription) {
+      this._ariaDescriber.removeDescription(content, oldDescription);
+    }
+
+    if (newDescription) {
+      this._ariaDescriber.describe(content, newDescription);
+    }
   }
 
   /** Adds css theme class given the color to the component host */
