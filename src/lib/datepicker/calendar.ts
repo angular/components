@@ -29,13 +29,16 @@ import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
 import {MatMultiYearView, yearsPerPage} from './multi-year-view';
 import {MatYearView} from './year-view';
-import {Directionality} from '@angular/cdk/bidi';
 import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
 
 /** Default header for MatCalendar */
 @Component({
+    moduleId: module.id,
     selector: 'mat-calendar-header',
-    template: 'default header'
+    template: 'default header',
+    encapsulation: ViewEncapsulation.None,
+    preserveWhitespaces: false,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCalendarHeader {
     constructor() {

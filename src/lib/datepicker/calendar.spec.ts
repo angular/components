@@ -5,17 +5,16 @@ import {
 import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed, async, inject} from '@angular/core/testing';
-import {DEC, FEB, JAN, MatNativeDateModule, NOV} from '@angular/material/core';
+import {DEC, FEB, JAN, NOV} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {MatButtonModule} from '../button/index';
 import {MatCalendar} from './calendar';
 import {MatCalendarBody} from './calendar-body';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
 import {MatMultiYearView, yearsPerPage} from './multi-year-view';
 import {MatYearView} from './year-view';
-
+import {MatDatepickerModule} from './datepicker-module';
 
 describe('MatCalendar', () => {
   let dir: {value: Direction};
@@ -23,8 +22,7 @@ describe('MatCalendar', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        MatButtonModule,
-        MatNativeDateModule,
+        MatDatepickerModule,
       ],
       declarations: [
         MatCalendar,
