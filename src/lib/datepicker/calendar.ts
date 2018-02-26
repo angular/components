@@ -35,7 +35,7 @@ import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
 @Component({
     moduleId: module.id,
     selector: 'mat-calendar-header',
-    template: 'default header',
+    template: '',
     encapsulation: ViewEncapsulation.None,
     preserveWhitespaces: false,
     changeDetection: ChangeDetectionStrategy.OnPush,
