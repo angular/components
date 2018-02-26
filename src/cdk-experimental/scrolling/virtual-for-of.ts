@@ -271,14 +271,15 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
         });
 
     // Update $implicit for any items that had an identity change.
-    changes.forEachIdentityChange((record: any) => {
-      const view = this._viewContainerRef.get(record.currentIndex) as
+    changes.forEachIdentityChange((record: IterableChangeRecord<T>) => {
+      const view = this._viewContainerRef.get(record.currentIndex!) as
           EmbeddedViewRef<CdkVirtualForOfContext<T>>;
       view.context.$implicit = record.item;
     });
 
     // Update the context variables on all items.
-    let i = this._viewContainerRef.length, count = this._data.length;
+    const count = this._data.length;
+    let i = this._viewContainerRef.length;
     while (i--) {
       const view = this._viewContainerRef.get(i) as EmbeddedViewRef<CdkVirtualForOfContext<T>>;
       view.context.index = this._renderedRange.start + i;
