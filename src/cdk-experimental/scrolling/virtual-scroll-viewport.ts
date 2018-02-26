@@ -11,7 +11,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  DoCheck,
   ElementRef,
   Inject,
   Input,
@@ -24,9 +23,17 @@ import {
 import {Observable} from 'rxjs/Observable';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {takeUntil} from 'rxjs/operators/takeUntil';
+import {throttleTime} from 'rxjs/operators/throttleTime';
+import {animationFrame} from 'rxjs/scheduler/animationFrame';
 import {Subject} from 'rxjs/Subject';
 import {CdkVirtualForOf} from './virtual-for-of';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
+
+
+/** Checks if the given ranges are equal. */
+function rangesEqual(r1: Range, r2: Range): boolean {
+  return r1.start == r2.start && r1.end == r2.end;
+}
 
 
 /** A viewport that virtualizes it's scrolling with the help of `CdkVirtualForOf`. */
@@ -42,7 +49,7 @@ import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-s
   changeDetection: ChangeDetectionStrategy.OnPush,
   preserveWhitespaces: false,
 })
-export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
+export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   /** Emits when the viewport is detached from a CdkVirtualForOf. */
   private _detachedSubject = new Subject<void>();
 
@@ -78,14 +85,6 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
   /** Whether this viewport is attached to a CdkVirtualForOf. */
   private _isAttached = false;
 
-  /**
-   * The scroll handling status.
-   * needed - The scroll state needs to be updated, but a check hasn't yet been scheduled.
-   * pending - The scroll state needs to be updated, and an update has already been scheduled.
-   * done - The scroll state does not need to be updated.
-   */
-  private _scrollHandledStatus: 'needed' | 'pending' | 'done' = 'done';
-
   constructor(public elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef,
               private _ngZone: NgZone,
               @Inject(VIRTUAL_SCROLL_STRATEGY) private _scrollStrategy: VirtualScrollStrategy) {}
@@ -118,7 +117,7 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
 
   /** Sets the currently rendered range of indices. */
   setRenderedRange(range: Range) {
-    if (!this._rangesEqual(this._renderedRange, range)) {
+    if (!rangesEqual(this._renderedRange, range)) {
       // Re-enter the Angular zone so we can mark for change detection.
       this._ngZone.run(() => {
         this._renderedRangeSubject.next(this._renderedRange = range);
@@ -174,23 +173,14 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
     Promise.resolve().then(() => {
       this._viewportSize = this.orientation === 'horizontal' ?
           this.elementRef.nativeElement.clientWidth : this.elementRef.nativeElement.clientHeight;
-      this._ngZone.runOutsideAngular(() => {
-        fromEvent(this.elementRef.nativeElement, 'scroll').subscribe(() => {
-          this._markScrolled();
-        });
-      });
       this._scrollStrategy.attach(this);
-    });
-  }
 
-  ngDoCheck() {
-    if (this._scrollHandledStatus === 'needed') {
-      this._scrollHandledStatus = 'pending';
-      this._ngZone.runOutsideAngular(() => requestAnimationFrame(() => {
-        this._scrollHandledStatus = 'done';
-        this._scrollStrategy.onContentScrolled();
-      }));
-    }
+      this._ngZone.runOutsideAngular(() => {
+        fromEvent(this.elementRef.nativeElement, 'scroll')
+            .pipe(throttleTime(0, animationFrame))
+            .subscribe(() => this._scrollStrategy.onContentScrolled());
+      });
+    });
   }
 
   ngOnDestroy() {
@@ -200,21 +190,5 @@ export class CdkVirtualScrollViewport implements OnInit, DoCheck, OnDestroy {
     // Complete all subjects
     this._detachedSubject.complete();
     this._renderedRangeSubject.complete();
-  }
-
-  /** Marks that a scroll event happened and that the scroll state should be checked. */
-  private _markScrolled() {
-    if (this._scrollHandledStatus === 'done') {
-      // Re-enter the Angular zone so we can mark for change detection.
-      this._ngZone.run(() => {
-        this._scrollHandledStatus = 'needed';
-        this._changeDetectorRef.markForCheck();
-      });
-    }
-  }
-
-  /** Checks if the given ranges are equal. */
-  private _rangesEqual(r1: Range, r2: Range): boolean {
-    return r1.start == r2.start && r1.end == r2.end;
   }
 }
