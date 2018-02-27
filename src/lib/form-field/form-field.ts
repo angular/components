@@ -139,14 +139,6 @@ export class MatFormField extends _MatFormFieldMixinBase
   }
   _appearance: MatFormFieldAppearance;
 
-  /**
-   * @deprecated Use `color` instead.
-   * @deletion-target 6.0.0
-   */
-  @Input()
-  get dividerColor(): ThemePalette { return this.color; }
-  set dividerColor(value: ThemePalette) { this.color = value; }
-
   /** Whether the required marker should be hidden. */
   @Input()
   get hideRequiredMarker(): boolean { return this._hideRequiredMarker; }
@@ -180,15 +172,6 @@ export class MatFormField extends _MatFormFieldMixinBase
 
   // Unique id for the hint label.
   _hintLabelId: string = `mat-hint-${nextUniqueId++}`;
-
-  /**
-   * Whether the placeholder should always float, never float or float as the user types.
-   * @deprecated Use floatLabel instead.
-   * @deletion-target 6.0.0
-   */
-  @Input()
-  get floatPlaceholder(): FloatLabelType { return this.floatLabel; }
-  set floatPlaceholder(value: FloatLabelType) { this.floatLabel = value; }
 
   /**
    * Whether the label should always float, never float or float as the user types.
