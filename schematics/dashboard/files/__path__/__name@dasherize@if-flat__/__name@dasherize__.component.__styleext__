@@ -15,3 +15,7 @@ mat-card {
   top: 5px;
   right: 10px;
 }
+
+mat-card-content {
+  text-align: center;
+}

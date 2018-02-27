@@ -31,10 +31,10 @@ describe('material-dashboard-schematic', () => {
     const tree = runner.runSchematic('materialDashboard', { ...options }, createTestApp());
     const files = tree.files;
 
-    expect(files.indexOf('/src/app/foo/foo.component.css')).toBeGreaterThanOrEqual(0);
-    expect(files.indexOf('/src/app/foo/foo.component.html')).toBeGreaterThanOrEqual(0);
-    expect(files.indexOf('/src/app/foo/foo.component.spec.ts')).toBeGreaterThanOrEqual(0);
-    expect(files.indexOf('/src/app/foo/foo.component.ts')).toBeGreaterThanOrEqual(0);
+    expect(files).toContain('/src/app/foo/foo.component.css');
+    expect(files).toContain('/src/app/foo/foo.component.html');
+    expect(files).toContain('/src/app/foo/foo.component.spec.ts');
+    expect(files).toContain('/src/app/foo/foo.component.ts');
 
     const moduleContent = getFileContent(tree, '/src/app/app.module.ts');
     expect(moduleContent).toMatch(/import.*Foo.*from '.\/foo\/foo.component'/);

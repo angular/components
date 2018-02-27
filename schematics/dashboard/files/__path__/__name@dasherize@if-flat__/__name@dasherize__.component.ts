@@ -1,20 +1,18 @@
 import { Component, <% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
 
-declare var google: any;
-
 @Component({
   selector: '<%= selector %>',<% if(inlineTemplate) { %>
   template: `
     <div class="grid-container">
       <h1 class="mat-h1">Dashboard</h1>
       <mat-grid-list cols="2" rowHeight="350px">
-        <mat-grid-tile *ngFor="let card of cards">
+        <mat-grid-tile *ngFor="let card of cards" [colspan]="card.cols" [rowspan]="card.rows">
           <mat-card>
             <mat-card-header>
               <mat-card-title>
                 {{card.title}}
-                <button mat-icon-button [matMenuTriggerFor]="menu">
-                  <mat-icon aria-label="Menu icon">more_vert</mat-icon>
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+                  <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu" xPosition="before">
                   <button mat-menu-item>Expand</button>
@@ -23,7 +21,7 @@ declare var google: any;
               </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <div style="text-align:center">Card Content Here</div>
+              <div>Card Content Here</div>
             </mat-card-content>
           </mat-card>
         </mat-grid-tile>
@@ -50,6 +48,10 @@ declare var google: any;
         top: 5px;
         right: 10px;
       }
+
+      mat-card-content {
+        text-align: center;
+      }
   `
   ]<% } else { %>
   styleUrls: ['./<%= dasherize(name) %>.component.<%= styleext %>']<% } %><% if(!!viewEncapsulation) { %>,
@@ -59,16 +61,24 @@ declare var google: any;
 export class <%= classify(name) %>Component {
   cards = [
     {
-      title: 'Card 1'
+      title: 'Card 1',
+      cols: 2,
+      rows: 1
     },
     {
-      title: 'Card 2'
+      title: 'Card 2',
+      cols: 1,
+      rows: 1
     },
     {
-      title: 'Card 3'
+      title: 'Card 3',
+      cols: 1,
+      rows: 2
     },
     {
-      title: 'Card 4'
+      title: 'Card 4',
+      cols: 1,
+      rows: 1
     }
   ];
 }
