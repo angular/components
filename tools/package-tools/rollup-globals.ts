@@ -91,4 +91,5 @@ export const rollupGlobals = {
   'rxjs/operators/take': 'Rx.operators',
   'rxjs/operators/takeUntil': 'Rx.operators',
   'rxjs/operators/tap': 'Rx.operators',
+  'rxjs/operators/throttleTime': 'Rx.operators',
 };

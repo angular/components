@@ -8,19 +8,19 @@
 
 import {NgModule} from '@angular/core';
 import {CdkVirtualForOf} from './virtual-for-of';
-import {CdkVirtualScrollFixedSize} from './virtual-scroll-fixed-size';
+import {CdkFixedSizeVirtualScroll} from './fixed-size-virtual-scroll';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
 
 @NgModule({
   exports: [
     CdkVirtualForOf,
-    CdkVirtualScrollFixedSize,
+    CdkFixedSizeVirtualScroll,
     CdkVirtualScrollViewport,
   ],
   declarations: [
     CdkVirtualForOf,
-    CdkVirtualScrollFixedSize,
+    CdkFixedSizeVirtualScroll,
     CdkVirtualScrollViewport,
   ],
 })

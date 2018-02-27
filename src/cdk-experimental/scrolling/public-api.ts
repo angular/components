@@ -8,6 +8,6 @@
 
 export * from './scrolling-module';
 export * from './virtual-for-of';
-export * from './virtual-scroll-fixed-size';
+export * from './fixed-size-virtual-scroll';
 export * from './virtual-scroll-strategy';
 export * from './virtual-scroll-viewport';
