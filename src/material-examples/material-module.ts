@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 
 import {CdkTableModule} from '@angular/cdk/table';
+import {CdkTreeModule} from '@angular/cdk/tree';
 import {
   MatAutocompleteModule, MatButtonModule, MatButtonToggleModule, MatPaginatorModule,
   MatCardModule, MatCheckboxModule, MatChipsModule, MatDatepickerModule,
@@ -8,12 +9,13 @@ import {
   MatListModule, MatMenuModule, MatProgressBarModule, MatProgressSpinnerModule,
   MatRadioModule, MatSelectModule, MatSidenavModule, MatSliderModule, MatSortModule,
   MatSlideToggleModule, MatSnackBarModule, MatTableModule, MatTabsModule, MatToolbarModule,
-  MatTooltipModule, MatFormFieldModule, MatExpansionModule, MatStepperModule
+  MatTooltipModule, MatFormFieldModule, MatExpansionModule, MatStepperModule, MatTreeModule
 } from '@angular/material';
 
 @NgModule({
   exports: [
     CdkTableModule,
+    CdkTreeModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
@@ -30,21 +32,22 @@ import {
     MatInputModule,
     MatListModule,
     MatMenuModule,
+    MatPaginatorModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatRadioModule,
     MatSelectModule,
+    MatSidenavModule,
     MatSlideToggleModule,
     MatSliderModule,
-    MatSidenavModule,
     MatSnackBarModule,
+    MatSortModule,
     MatStepperModule,
+    MatTableModule,
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatTableModule
+    MatTreeModule
   ]
 })
 export class ExampleMaterialModule {}

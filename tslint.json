@@ -119,6 +119,8 @@
       true,
       "./tools/package-tools/rollup-globals.ts",
       "src/+(lib|cdk|material-examples|material-experimental|cdk-experimental)/**/*.ts"
-    ]
+    ],
+    "deletion-target": true,
+    "no-unescaped-html-tag": true
   }
 }

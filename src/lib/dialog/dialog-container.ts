@@ -60,6 +60,7 @@ export function throwMatDialogContentAlreadyAttachedError() {
   host: {
     'class': 'mat-dialog-container',
     'tabindex': '-1',
+    '[attr.id]': '_id',
     '[attr.role]': '_config?.role',
     '[attr.aria-labelledby]': '_config?.ariaLabel ? null : _ariaLabelledBy',
     '[attr.aria-label]': '_config?.ariaLabel',
@@ -90,6 +91,9 @@ export class MatDialogContainer extends BasePortalOutlet {
 
   /** ID of the element that should be considered as the dialog's label. */
   _ariaLabelledBy: string | null = null;
+
+  /** ID for the container DOM element. */
+  _id: string;
 
   constructor(
     private _elementRef: ElementRef,
@@ -159,10 +163,13 @@ export class MatDialogContainer extends BasePortalOutlet {
     if (this._document) {
       this._elementFocusedBeforeDialogWasOpened = this._document.activeElement as HTMLElement;
 
-      // Move focus onto the dialog immediately in order to prevent the user from accidentally
-      // opening multiple dialogs at the same time. Needs to be async, because the element
-      // may not be focusable immediately.
-      Promise.resolve().then(() => this._elementRef.nativeElement.focus());
+      // Note that there is no focus method when rendering on the server.
+      if (this._elementRef.nativeElement.focus) {
+        // Move focus onto the dialog immediately in order to prevent the user from accidentally
+        // opening multiple dialogs at the same time. Needs to be async, because the element
+        // may not be focusable immediately.
+        Promise.resolve().then(() => this._elementRef.nativeElement.focus());
+      }
     }
   }
 

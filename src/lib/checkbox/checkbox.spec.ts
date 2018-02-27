@@ -4,7 +4,7 @@ import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {MatCheckbox, MatCheckboxChange, MatCheckboxModule} from './index';
-import {RIPPLE_FADE_IN_DURATION, RIPPLE_FADE_OUT_DURATION} from '@angular/material/core';
+import {defaultRippleAnimationConfig} from '@angular/material/core';
 import {MAT_CHECKBOX_CLICK_ACTION} from './checkbox-config';
 import {MutationObserverFactory} from '@angular/cdk/observers';
 
@@ -72,6 +72,10 @@ describe('MatCheckbox', () => {
       expect(checkboxInstance.checked).toBe(false);
       expect(checkboxNativeElement.classList).not.toContain('mat-checkbox-checked');
       expect(inputElement.checked).toBe(false);
+    });
+
+    it('should expose the ripple instance', () => {
+      expect(checkboxInstance.ripple).toBeTruthy();
     });
 
     it('should add and remove indeterminate state', () => {
@@ -386,13 +390,13 @@ describe('MatCheckbox', () => {
       dispatchFakeEvent(inputElement, 'keydown');
       dispatchFakeEvent(inputElement, 'focus');
 
-      tick(RIPPLE_FADE_IN_DURATION);
+      tick(defaultRippleAnimationConfig.enterDuration);
 
       expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
           .toBe(1, 'Expected ripple after element is focused.');
 
       dispatchFakeEvent(checkboxInstance._inputElement.nativeElement, 'blur');
-      tick(RIPPLE_FADE_OUT_DURATION);
+      tick(defaultRippleAnimationConfig.exitDuration);
 
       expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
           .toBe(0, 'Expected no ripple after element is blurred.');
@@ -744,7 +748,6 @@ describe('MatCheckbox', () => {
     let checkboxNativeElement: HTMLElement;
     let testComponent: CheckboxWithTabIndex;
     let inputElement: HTMLInputElement;
-    let labelElement: HTMLLabelElement;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(CheckboxWithTabIndex);
@@ -754,7 +757,6 @@ describe('MatCheckbox', () => {
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox));
       checkboxNativeElement = checkboxDebugElement.nativeElement;
       inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
-      labelElement = <HTMLLabelElement>checkboxNativeElement.querySelector('label');
     });
 
     it('should preserve any given tabIndex', () => {
@@ -936,7 +938,6 @@ describe('MatCheckbox', () => {
 
   describe('without label', () => {
     let testComponent: CheckboxWithoutLabel;
-    let checkboxElement: HTMLElement;
     let checkboxInnerContainer: HTMLElement;
 
     beforeEach(() => {
@@ -945,7 +946,6 @@ describe('MatCheckbox', () => {
       const checkboxDebugEl = fixture.debugElement.query(By.directive(MatCheckbox));
 
       testComponent = fixture.componentInstance;
-      checkboxElement = checkboxDebugEl.nativeElement;
       checkboxInnerContainer = checkboxDebugEl
         .query(By.css('.mat-checkbox-inner-container')).nativeElement;
     });

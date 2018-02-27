@@ -22,8 +22,8 @@ export interface MatChipInputEvent {
 }
 
 /**
- * Directive that adds chip-specific behaviors to an input element inside <mat-form-field>.
- * May be placed inside or outside of an <mat-chip-list>.
+ * Directive that adds chip-specific behaviors to an input element inside `<mat-form-field>`.
+ * May be placed inside or outside of an `<mat-chip-list>`.
  */
 @Directive({
   selector: 'input[matChipInputFor]',
@@ -37,6 +37,7 @@ export interface MatChipInputEvent {
   }
 })
 export class MatChipInput {
+  /** Whether the control is focused. */
   focused: boolean = false;
   _chipList: MatChipList;
 
@@ -53,7 +54,7 @@ export class MatChipInput {
    * Whether or not the chipEnd event will be emitted when the input is blurred.
    */
   @Input('matChipInputAddOnBlur')
-  get addOnBlur() { return this._addOnBlur; }
+  get addOnBlur(): boolean { return this._addOnBlur; }
   set addOnBlur(value: boolean) { this._addOnBlur = coerceBooleanProperty(value); }
   _addOnBlur: boolean = false;
 
@@ -67,16 +68,13 @@ export class MatChipInput {
 
   /** Emitted when a chip is to be added. */
   @Output('matChipInputTokenEnd')
-  chipEnd = new EventEmitter<MatChipInputEvent>();
+  chipEnd: EventEmitter<MatChipInputEvent> = new EventEmitter<MatChipInputEvent>();
 
   /** The input's placeholder text. */
   @Input() placeholder: string = '';
 
   /** Whether the input is empty. */
-  get empty(): boolean {
-    let value: string | null = this._inputElement.value;
-    return (value == null || value === '');
-  }
+  get empty(): boolean { return !this._inputElement.value; }
 
   /** The native input element to which this directive is attached. */
   protected _inputElement: HTMLInputElement;
@@ -127,5 +125,6 @@ export class MatChipInput {
     this._chipList.stateChanges.next();
   }
 
-  focus() { this._inputElement.focus(); }
+  /** Focuses the input. */
+  focus(): void { this._inputElement.focus(); }
 }

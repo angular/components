@@ -22,18 +22,15 @@ import {OverlayKeyboardDispatcher} from './keyboard/overlay-keyboard-dispatcher'
 import {OverlayContainer} from './overlay-container';
 import {ScrollStrategyOptions} from './scroll/index';
 import {DOCUMENT} from '@angular/common';
+import {Directionality} from '@angular/cdk/bidi';
 
 
 /** Next overlay unique ID. */
 let nextUniqueId = 0;
 
-/** The default config for newly created overlays. */
-let defaultConfig = new OverlayConfig();
-
-
 /**
  * Service to create Overlays. Overlays are dynamically added pieces of floating UI, meant to be
- * used as a low-level building building block for other components. Dialogs, tooltips, menus,
+ * used as a low-level building block for other components. Dialogs, tooltips, menus,
  * selects, etc. can all be built using overlays. The service should primarily be used by authors
  * of re-usable components rather than developers building end-user applications.
  *
@@ -51,17 +48,29 @@ export class Overlay {
               private _appRef: ApplicationRef,
               private _injector: Injector,
               private _ngZone: NgZone,
-              @Inject(DOCUMENT) private _document: any) { }
+              @Inject(DOCUMENT) private _document: any,
+              private _directionality: Directionality) { }
 
   /**
    * Creates an overlay.
    * @param config Configuration applied to the overlay.
    * @returns Reference to the created overlay.
    */
-  create(config: OverlayConfig = defaultConfig): OverlayRef {
+  create(config?: OverlayConfig): OverlayRef {
     const pane = this._createPaneElement();
     const portalOutlet = this._createPortalOutlet(pane);
-    return new OverlayRef(portalOutlet, pane, config, this._ngZone, this._keyboardDispatcher);
+    const overlayConfig = new OverlayConfig(config);
+
+    overlayConfig.direction = overlayConfig.direction || this._directionality.value;
+
+    return new OverlayRef(
+      portalOutlet,
+      pane,
+      overlayConfig,
+      this._ngZone,
+      this._keyboardDispatcher,
+      this._document
+    );
   }
 
   /**

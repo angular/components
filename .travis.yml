@@ -1,11 +1,6 @@
 language: node_js
 dist: trusty
-
-# Temporary set sudo to required, because in normal container-based Travis jobs, the Chrome
-# binaries seem to be owned by root, and therefore can't be accessed by Karma. To workaround
-# the issue we temporary grant the CI sudo permissions.
-# https://github.com/travis-ci/travis-ci/issues/8836#issuecomment-356362524.
-sudo: required
+sudo: false
 
 node_js:
   # Use the explicit NodeJS LTS version 8.9.4 to avoid any automatic upgrade of the version.
@@ -23,6 +18,7 @@ addons:
 branches:
   only:
   - master
+  - 5.2.x
 
 jobs:
   include:
@@ -30,17 +26,21 @@ jobs:
     - env: "MODE=aot"
     - env: "MODE=payload"
     - env: "MODE=prerender"
-    # Closure Compiler CI check is temporarily disabled until a new version of
-    # the tool is released with https://github.com/google/closure-compiler/pull/2600
-    # - env: "MODE=closure-compiler"
     - env: "MODE=e2e"
     - env: "MODE=saucelabs_required"
     - env: "MODE=browserstack_required"
     - env: "MODE=travis_required"
     - env: "DEPLOY_MODE=build-artifacts"
+      if: type = push
     - env: "DEPLOY_MODE=docs-content"
+      if: type = push
     - env: "DEPLOY_MODE=screenshot-tool"
+      if: type = cron
     - env: "DEPLOY_MODE=dashboard"
+      if: type = cron
+    # Closure Compiler CI check is temporarily disabled until a new version of
+    # the tool is released with https://github.com/google/closure-compiler/pull/2600
+    # - env: "MODE=closure-compiler"
 env:
   global:
   - LOGS_DIR=/tmp/angular-material2-build/logs

@@ -51,6 +51,8 @@ export class DemoApp {
   dark = false;
   navItems = [
     {name: 'Autocomplete', route: '/autocomplete'},
+    {name: 'Badge', route: '/badge'},
+    {name: 'Bottom sheet', route: '/bottom-sheet'},
     {name: 'Button Toggle', route: '/button-toggle'},
     {name: 'Button', route: '/button'},
     {name: 'Card', route: '/card'},
@@ -86,6 +88,7 @@ export class DemoApp {
     {name: 'Tabs', route: '/tabs'},
     {name: 'Toolbar', route: '/toolbar'},
     {name: 'Tooltip', route: '/tooltip'},
+    {name: 'Tree', route: '/tree'},
     {name: 'Typography', route: '/typography'}
   ];
 

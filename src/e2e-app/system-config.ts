@@ -47,10 +47,12 @@ System.config({
     '@angular/cdk/scrolling': 'dist/bundles/cdk-scrolling.umd.js',
     '@angular/cdk/stepper': 'dist/bundles/cdk-stepper.umd.js',
     '@angular/cdk/table': 'dist/bundles/cdk-table.umd.js',
+    '@angular/cdk/tree': 'dist/bundles/cdk-tree.umd.js',
     '@angular/cdk/testing': 'dist/bundles/cdk-testing.umd.js',
     '@angular/material-examples': 'dist/bundles/material-examples.umd.js',
 
     '@angular/material/autocomplete': 'dist/bundles/material-autocomplete.umd.js',
+    '@angular/material/bottom-sheet': 'dist/bundles/material-bottom-sheet.umd.js',
     '@angular/material/button': 'dist/bundles/material-button.umd.js',
     '@angular/material/button-toggle': 'dist/bundles/material-button-toggle.umd.js',
     '@angular/material/card': 'dist/bundles/material-card.umd.js',
@@ -82,6 +84,7 @@ System.config({
     '@angular/material/tabs': 'dist/bundles/material-tabs.umd.js',
     '@angular/material/toolbar': 'dist/bundles/material-toolbar.umd.js',
     '@angular/material/tooltip': 'dist/bundles/material-tooltip.umd.js',
+    '@angular/material/tree': 'dist/bundles/material-tree.umd.js',
   },
   packages: {
     // Thirdparty barrels.

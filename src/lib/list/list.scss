@@ -1,9 +1,11 @@
 @import '../core/style/variables';
 @import '../core/style/list-common';
 @import '../core/style/layout-common';
+@import '../divider/divider';
 
 
 $mat-list-side-padding: 16px;
+$mat-list-icon-padding: 4px;
 $mat-list-avatar-size: 40px;
 
 // Normal list variables
@@ -26,13 +28,14 @@ $mat-dense-two-line-height: 60px;
 $mat-dense-three-line-height: 76px;
 $mat-dense-multi-line-padding: 16px;
 $mat-dense-list-icon-size: 20px;
+$mat-dense-avatar-size: 36px;
 
 $mat-list-item-inset-divider-offset: 72px;
 
 // This mixin provides all list-item styles, changing font size and height
 // based on whether the list is in dense mode.
-@mixin mat-list-item-base($base-height, $avatar-height, $two-line-height,
-  $three-line-height, $multi-line-padding, $icon-size) {
+@mixin mat-list-item-base($base-height, $height-with-avatar, $two-line-height,
+  $three-line-height, $multi-line-padding, $icon-size, $avatar-size) {
 
   // Prevents the wrapper `mat-list-item-content` from collapsing due to it
   // being `inline` by default.
@@ -66,8 +69,8 @@ $mat-list-item-inset-divider-offset: 72px;
     pointer-events: none;
   }
 
-  &.mat-list-item-avatar {
-    height: $avatar-height;
+  &.mat-list-item-with-avatar {
+    height: $height-with-avatar;
   }
 
   &.mat-2-line {
@@ -92,22 +95,47 @@ $mat-list-item-inset-divider-offset: 72px;
 
   .mat-list-text {
     @include mat-line-wrapper-base();
-    padding: 0 $mat-list-side-padding;
 
-    // We only want to override the padding if there isn't
-    // an avatar or icon before the element. Since the ripple
-    // will always be the first child in the container, we
-    // check whether this element is the second child.
-    &:nth-child(2) {
-      padding: 0;
+    // By default, there will be no padding for the list item text because the padding is already
+    // set on the `mat-list-item-content` element. Later, if the list-item detects that there are
+    // secondary items (avatar, checkbox), a padding on the proper side will be added.
+    padding: 0;
+  }
+
+  // There can be a secondary item (e.g. avatar-icon, checkbox) at the start of the
+  // list-item. This means that there should be a padding for the mat-list-text on the start-side.
+  .mat-list-item-content .mat-list-text:not(:nth-child(2)) {
+    padding-right: 0;
+    padding-left: $mat-list-side-padding;
+
+    [dir='rtl'] & {
+      padding-right: $mat-list-side-padding;
+      padding-left: 0;
+    }
+  }
+
+  // Reversed content is mainly used by the MatSelectionList for displaying the checkbox at the
+  // end of the list option. Since there is a secondary item (checkbox) at the end of the
+  // option, there needs to be a padding for the mat-list-text on the end-side.
+  .mat-list-item-content-reverse .mat-list-text:not(:nth-child(2)) {
+    padding-left: 0;
+    padding-right: $mat-list-side-padding;
+
+    [dir='rtl'] & {
+      padding-right: 0;
+      padding-left: $mat-list-side-padding;
     }
   }
 
   .mat-list-avatar {
     flex-shrink: 0;
-    width: $mat-list-avatar-size;
-    height: $mat-list-avatar-size;
+    width: $avatar-size;
+    height: $avatar-size;
     border-radius: 50%;
+
+    ~ .mat-divider-inset {
+      @include mat-inset-divider-offset($avatar-size, $mat-list-side-padding);
+    }
   }
 
   .mat-list-icon {
@@ -117,7 +145,12 @@ $mat-list-item-inset-divider-offset: 72px;
     font-size: $icon-size;
     box-sizing: content-box;
     border-radius: 50%;
-    padding: 4px;
+    padding: $mat-list-icon-padding;
+
+    ~ .mat-divider-inset {
+      @include mat-inset-divider-offset($icon-size + (2 * $mat-list-icon-padding),
+              $mat-list-side-padding);
+    }
   }
 
   .mat-divider {
@@ -125,21 +158,15 @@ $mat-list-item-inset-divider-offset: 72px;
     bottom: 0;
     left: 0;
     width: 100%;
+    margin: 0;
 
     [dir='rtl'] & {
-      left: auto;
-      right: 0;
+      margin-left: auto;
+      margin-right: 0;
     }
 
     &.mat-divider-inset {
-      left: $mat-list-item-inset-divider-offset;
-      width: calc(100% - #{$mat-list-item-inset-divider-offset});
-      margin: 0;
-
-      [dir='rtl'] & {
-        left: auto;
-        right: $mat-list-item-inset-divider-offset;
-      }
+      position: absolute; // necessary to override card styles
     }
   }
 }
@@ -184,7 +211,8 @@ $mat-list-item-inset-divider-offset: 72px;
       $mat-list-two-line-height,
       $mat-list-three-line-height,
       $mat-list-multi-line-padding,
-      $mat-list-icon-size
+      $mat-list-icon-size,
+      $mat-list-avatar-size
     );
   }
 }
@@ -206,7 +234,8 @@ $mat-list-item-inset-divider-offset: 72px;
       $mat-dense-two-line-height,
       $mat-dense-three-line-height,
       $mat-dense-multi-line-padding,
-      $mat-dense-list-icon-size
+      $mat-dense-list-icon-size,
+      $mat-dense-avatar-size
     );
   }
 }
@@ -228,7 +257,7 @@ $mat-list-item-inset-divider-offset: 72px;
 }
 
 .mat-list-option {
-  &:not([disabled]) {
+  &:not(.mat-list-item-disabled) {
     cursor: pointer;
   }
 }

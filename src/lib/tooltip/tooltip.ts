@@ -15,18 +15,19 @@ import {
   HorizontalConnectionPos,
   OriginConnectionPosition,
   Overlay,
-  OverlayConfig,
+  ScrollDispatcher,
   OverlayConnectionPosition,
   OverlayRef,
   RepositionScrollStrategy,
   ScrollStrategy,
   VerticalConnectionPos,
+  ConnectedPositionStrategy,
 } from '@angular/cdk/overlay';
 import {Platform} from '@angular/cdk/platform';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {take} from 'rxjs/operators/take';
-import {merge} from 'rxjs/observable/merge';
-import {ScrollDispatcher} from '@angular/cdk/scrolling';
+import {takeUntil} from 'rxjs/operators/takeUntil';
+import {filter} from 'rxjs/operators/filter';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -45,6 +46,7 @@ import {
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {matTooltipAnimations} from './tooltip-animations';
+import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 
 
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
@@ -107,6 +109,7 @@ export class MatTooltip implements OnDestroy {
   _overlayRef: OverlayRef | null;
   _tooltipInstance: TooltipComponent | null;
 
+  private _portal: ComponentPortal<TooltipComponent>;
   private _position: TooltipPosition = 'below';
   private _disabled: boolean = false;
   private _tooltipClass: string|string[]|Set<string>|{[key: string]: any};
@@ -118,10 +121,11 @@ export class MatTooltip implements OnDestroy {
     if (value !== this._position) {
       this._position = value;
 
-      // TODO(andrewjs): When the overlay's position can be dynamically changed, do not destroy
-      // the tooltip.
-      if (this._tooltipInstance) {
-        this._disposeTooltip();
+      if (this._overlayRef) {
+        // TODO(andrewjs): When the overlay's position can be
+        // dynamically changed, do not destroy the tooltip.
+        this._detach();
+        this._updatePosition();
       }
     }
   }
@@ -138,7 +142,10 @@ export class MatTooltip implements OnDestroy {
     }
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('tooltip-position')
   get _positionDeprecated(): TooltipPosition { return this._position; }
   set _positionDeprecated(value: TooltipPosition) { this._position = value; }
@@ -182,6 +189,9 @@ export class MatTooltip implements OnDestroy {
 
   private _manualListeners = new Map<string, Function>();
 
+  /** Emits when the component is destroyed. */
+  private readonly _destroyed = new Subject<void>();
+
   constructor(
     private _overlay: Overlay,
     private _elementRef: ElementRef,
@@ -197,6 +207,7 @@ export class MatTooltip implements OnDestroy {
       private _defaultOptions?: MatTooltipDefaultOptions) {
 
     // TODO(crisbeto): make the `_defaultOptions` a required param next time we do breaking changes.
+    // @deletion-target 6.0.0
 
     const element: HTMLElement = _elementRef.nativeElement;
 
@@ -217,7 +228,7 @@ export class MatTooltip implements OnDestroy {
       element.style.webkitUserSelect = element.style.userSelect = '';
     }
 
-    _focusMonitor.monitor(element, false).subscribe(origin => {
+    _focusMonitor.monitor(element).pipe(takeUntil(this._destroyed)).subscribe(origin => {
       // Note that the focus monitor runs outside the Angular zone.
       if (!origin) {
         _ngZone.run(() => this.hide(0));
@@ -231,18 +242,21 @@ export class MatTooltip implements OnDestroy {
    * Dispose the tooltip when destroyed.
    */
   ngOnDestroy() {
-    if (this._tooltipInstance) {
-      this._disposeTooltip();
+    if (this._overlayRef) {
+      this._overlayRef.dispose();
+      this._tooltipInstance = null;
     }
 
     // Clean up the event listeners set in the constructor
     if (!this._platform.IOS) {
-      this._manualListeners.forEach((listener, event) => {
-        this._elementRef.nativeElement.removeEventListener(event, listener);
-      });
+      this._manualListeners.forEach((listener, event) =>
+        this._elementRef.nativeElement.removeEventListener(event, listener));
 
       this._manualListeners.clear();
     }
+
+    this._destroyed.next();
+    this._destroyed.complete();
 
     this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this.message);
     this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
@@ -252,10 +266,14 @@ export class MatTooltip implements OnDestroy {
   show(delay: number = this.showDelay): void {
     if (this.disabled || !this.message) { return; }
 
-    if (!this._tooltipInstance) {
-      this._createTooltip();
-    }
+    const overlayRef = this._createOverlay();
 
+    this._detach();
+    this._portal = this._portal || new ComponentPortal(TooltipComponent, this._viewContainerRef);
+    this._tooltipInstance = overlayRef.attach(this._portal).instance;
+    this._tooltipInstance.afterHidden()
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(() => this._detach());
     this._setTooltipClass(this._tooltipClass);
     this._updateTooltipMessage();
     this._tooltipInstance!.show(this._position, delay);
@@ -291,24 +309,12 @@ export class MatTooltip implements OnDestroy {
     this.hide(this._defaultOptions ? this._defaultOptions.touchendHideDelay : 1500);
   }
 
-  /** Create the tooltip to display */
-  private _createTooltip(): void {
-    const overlayRef = this._createOverlay();
-    const portal = new ComponentPortal(TooltipComponent, this._viewContainerRef);
-
-    this._tooltipInstance = overlayRef.attach(portal).instance;
-
-    // Dispose of the tooltip when the overlay is detached.
-    merge(this._tooltipInstance!.afterHidden(), overlayRef.detachments()).subscribe(() => {
-      // Check first if the tooltip has already been removed through this components destroy.
-      if (this._tooltipInstance) {
-        this._disposeTooltip();
-      }
-    });
-  }
-
   /** Create the overlay config and position strategy */
   private _createOverlay(): OverlayRef {
+    if (this._overlayRef) {
+      return this._overlayRef;
+    }
+
     const origin = this._getOrigin();
     const overlay = this._getOverlayPosition();
 
@@ -316,51 +322,63 @@ export class MatTooltip implements OnDestroy {
     const strategy = this._overlay
       .position()
       .connectedTo(this._elementRef, origin.main, overlay.main)
-      .withFallbackPosition(origin.fallback, overlay.fallback);
+      .withFallbackPosition(origin.fallback, overlay.fallback)
+      .withScrollableContainers(
+        this._scrollDispatcher.getAncestorScrollContainers(this._elementRef)
+      );
 
-    const scrollableAncestors = this._scrollDispatcher
-      .getAncestorScrollContainers(this._elementRef);
-
-    strategy.withScrollableContainers(scrollableAncestors);
-
-    strategy.onPositionChange.subscribe(change => {
-      if (this._tooltipInstance) {
-        if (change.scrollableViewProperties.isOverlayClipped && this._tooltipInstance.isVisible()) {
-          // After position changes occur and the overlay is clipped by
-          // a parent scrollable then close the tooltip.
-          this._ngZone.run(() => this.hide(0));
-        } else {
-          // Otherwise recalculate the origin based on the new position.
-          this._tooltipInstance._setTransformOrigin(change.connectionPair);
-        }
+    strategy.onPositionChange.pipe(
+        filter(() => !!this._tooltipInstance),
+        takeUntil(this._destroyed)
+    ).subscribe(change => {
+      if (change.scrollableViewProperties.isOverlayClipped && this._tooltipInstance!.isVisible()) {
+        // After position changes occur and the overlay is clipped by
+        // a parent scrollable then close the tooltip.
+        this._ngZone.run(() => this.hide(0));
+      } else {
+        // Otherwise recalculate the origin based on the new position.
+        this._tooltipInstance!._setTransformOrigin(change.connectionPair);
       }
     });
 
-    const config = new OverlayConfig({
+    this._overlayRef = this._overlay.create({
       direction: this._dir ? this._dir.value : 'ltr',
       positionStrategy: strategy,
       panelClass: TOOLTIP_PANEL_CLASS,
       scrollStrategy: this._scrollStrategy()
     });
 
-    this._overlayRef = this._overlay.create(config);
+    this._overlayRef.detachments()
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(() => this._detach());
 
     return this._overlayRef;
   }
 
-  /** Disposes the current tooltip and the overlay it is attached to */
-  private _disposeTooltip(): void {
-    if (this._overlayRef) {
-      this._overlayRef.dispose();
-      this._overlayRef = null;
+  /** Detaches the currently-attached tooltip. */
+  private _detach() {
+    if (this._overlayRef && this._overlayRef.hasAttached()) {
+      this._overlayRef.detach();
     }
 
     this._tooltipInstance = null;
   }
 
+  /** Updates the position of the current tooltip. */
+  private _updatePosition() {
+    const position = this._overlayRef!.getConfig().positionStrategy as ConnectedPositionStrategy;
+    const origin = this._getOrigin();
+    const overlay = this._getOverlayPosition();
+
+    position
+      .withPositions([])
+      .withFallbackPosition(origin.main, overlay.main)
+      .withFallbackPosition(origin.fallback, overlay.fallback);
+  }
+
   /**
    * Returns the origin position and a fallback position based on the user's position preference.
-   * The fallback position is the inverse of the origin (e.g. 'below' -> 'above').
+   * The fallback position is the inverse of the origin (e.g. `'below' -> 'above'`).
    */
   _getOrigin(): {main: OriginConnectionPosition, fallback: OriginConnectionPosition} {
     const isDirectionLtr = !this._dir || this._dir.value == 'ltr';
@@ -425,7 +443,10 @@ export class MatTooltip implements OnDestroy {
       this._tooltipInstance.message = this.message;
       this._tooltipInstance._markForCheck();
 
-      this._ngZone.onMicrotaskEmpty.asObservable().pipe(take(1)).subscribe(() => {
+      this._ngZone.onMicrotaskEmpty.asObservable().pipe(
+        take(1),
+        takeUntil(this._destroyed)
+      ).subscribe(() => {
         if (this._tooltipInstance) {
           this._overlayRef!.updatePosition();
         }
@@ -510,9 +531,14 @@ export class TooltipComponent {
   private _position: TooltipPosition;
 
   /** Subject for notifying that the tooltip has been hidden from the view */
-  private _onHide: Subject<any> = new Subject();
+  private readonly _onHide: Subject<any> = new Subject();
 
-  constructor(private _changeDetectorRef: ChangeDetectorRef) {}
+  /** Stream that emits whether the user has a handset-sized display.  */
+  _isHandset: Observable<BreakpointState> = this._breakpointObserver.observe(Breakpoints.Handset);
+
+  constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _breakpointObserver: BreakpointObserver) {}
 
   /**
    * Shows the tooltip with an animation originating from the provided origin
@@ -594,10 +620,7 @@ export class TooltipComponent {
     }
 
     if (toState === 'visible' || toState === 'hidden') {
-      // Note: as of Angular 4.3, the animations module seems to fire the `start` callback before
-      // the end if animations are disabled. Make this call async to ensure that it still fires
-      // at the appropriate time.
-      Promise.resolve().then(() => this._closeOnInteraction = true);
+      this._closeOnInteraction = true;
     }
   }
 

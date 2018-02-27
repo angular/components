@@ -1,6 +1,7 @@
 # Angular Material components
 /src/lib/*                                         @jelbourn
 /src/lib/autocomplete/**                           @kara @crisbeto
+/src/lib/bottom-sheet/**                           @jelbourn @crisbeto
 /src/lib/button-toggle/**                          @tinayuangao
 /src/lib/button/**                                 @tinayuangao
 /src/lib/card/**                                   @jelbourn
@@ -31,6 +32,8 @@
 /src/lib/tabs/**                                   @andrewseguin
 /src/lib/toolbar/**                                @devversion
 /src/lib/tooltip/**                                @andrewseguin
+/src/lib/badge/**                                  @amcdnl
+/src/lib/tree/**                                   @tinayuangao
 
 # Angular Material core
 /src/lib/core/*                                    @jelbourn
@@ -69,6 +72,7 @@
 /src/cdk/stepper/**                                @mmalerba
 /src/cdk/table/**                                  @andrewseguin
 /src/cdk/testing/**                                @devversion
+/src/cdk/tree/**                                   @tinayuangao
 
 # Moment adapter package
 /src/material-moment-adapter/**                    @mmalerba
@@ -88,6 +92,7 @@
 /src/demo-app/*                                    @jelbourn
 /src/demo-app/a11y/**                              @tinayuangao
 /src/demo-app/autocomplete/**                      @kara @crisbeto
+/src/demo-app/bottom-sheet/**                      @jelbourn @crisbeto
 /src/demo-app/baseline/**                          @mmalerba
 /src/demo-app/button-toggle/**                     @tinayuangao
 /src/demo-app/button/**                            @tinayuangao
@@ -126,7 +131,9 @@
 /src/demo-app/tabs/**                              @andrewseguin
 /src/demo-app/toolbar/**                           @devversion
 /src/demo-app/tooltip/**                           @andrewseguin
+/src/demo-app/tree/**                              @tinayuangao
 /src/demo-app/typography/**                        @crisbeto
+/src/demo-app/badge/**                             @amcdnl
 
 # E2E app
 /e2e/*                                             @jelbourn
@@ -169,6 +176,9 @@
 /src/e2e-app/sidenav/**                            @mmalerba
 /src/e2e-app/slide-toggle/**                       @devversion
 /src/e2e-app/tabs/**                               @andrewseguin
+
+# Schematics
+/schematics/**                                     @amcdnl
 
 # Universal app
 /src/universal-app/**                              @jelbourn

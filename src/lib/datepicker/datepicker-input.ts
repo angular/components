@@ -110,17 +110,15 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** Function that can be used to filter out dates within the datepicker. */
   @Input()
-  set matDatepickerFilter(filter: (date: D | null) => boolean) {
-    this._dateFilter = filter;
+  set matDatepickerFilter(value: (date: D | null) => boolean) {
+    this._dateFilter = value;
     this._validatorOnChange();
   }
   _dateFilter: (date: D | null) => boolean;
 
   /** The value of the input. */
   @Input()
-  get value(): D | null {
-    return this._value;
-  }
+  get value(): D | null { return this._value; }
   set value(value: D | null) {
     value = this._dateAdapter.deserialize(value);
     this._lastValueValid = !value || this._dateAdapter.isValid(value);
@@ -155,25 +153,34 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** Whether the datepicker-input is disabled. */
   @Input()
-  get disabled() { return !!this._disabled; }
-  set disabled(value: any) {
+  get disabled(): boolean { return !!this._disabled; }
+  set disabled(value: boolean) {
     const newValue = coerceBooleanProperty(value);
 
     if (this._disabled !== newValue) {
       this._disabled = newValue;
       this._disabledChange.emit(newValue);
     }
+
+    if (newValue) {
+      // Normally, native input elements automatically blur if they turn disabled. This behavior
+      // is problematic, because it would mean that it triggers another change detection cycle,
+      // which then causes a changed after checked error if the input element was focused before.
+      this._elementRef.nativeElement.blur();
+    }
   }
   private _disabled: boolean;
 
   /** Emits when a `change` event is fired on this `<input>`. */
-  @Output() dateChange = new EventEmitter<MatDatepickerInputEvent<D>>();
+  @Output() readonly dateChange: EventEmitter<MatDatepickerInputEvent<D>> =
+      new EventEmitter<MatDatepickerInputEvent<D>>();
 
   /** Emits when an `input` event is fired on this `<input>`. */
-  @Output() dateInput = new EventEmitter<MatDatepickerInputEvent<D>>();
+  @Output() readonly dateInput: EventEmitter<MatDatepickerInputEvent<D>> =
+      new EventEmitter<MatDatepickerInputEvent<D>>();
 
   /** Emits when the value changes (either due to user input or programmatic change). */
-  _valueChange = new EventEmitter<D|null>();
+  _valueChange = new EventEmitter<D | null>();
 
   /** Emits when the disabled state has changed */
   _disabledChange = new EventEmitter<boolean>();
@@ -263,48 +270,50 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this._disabledChange.complete();
   }
 
+  /** @docs-private */
   registerOnValidatorChange(fn: () => void): void {
     this._validatorOnChange = fn;
   }
 
+  /** @docs-private */
   validate(c: AbstractControl): ValidationErrors | null {
     return this._validator ? this._validator(c) : null;
+  }
+
+  /**
+   * @deprecated
+   * @deletion-target 7.0.0 Use `getConnectedOverlayOrigin` instead
+   */
+  getPopupConnectionElementRef(): ElementRef {
+    return this.getConnectedOverlayOrigin();
   }
 
   /**
    * Gets the element that the datepicker popup should be connected to.
    * @return The element to connect the popup to.
    */
-  getPopupConnectionElementRef(): ElementRef {
-    return this._formField ? this._formField.underlineRef : this._elementRef;
+  getConnectedOverlayOrigin(): ElementRef {
+    return this._formField ? this._formField.getConnectedOverlayOrigin() : this._elementRef;
   }
 
-  /**
-   * Determines the offset to be used when the calendar goes into a fallback position.
-   * Primarily used to prevent the calendar from overlapping the input.
-   */
-  _getPopupFallbackOffset(): number {
-    return this._formField ? -this._formField._inputContainerRef.nativeElement.clientHeight : 0;
-  }
-
-  // Implemented as part of ControlValueAccessor
+  // Implemented as part of ControlValueAccessor.
   writeValue(value: D): void {
     this.value = value;
   }
 
-  // Implemented as part of ControlValueAccessor
+  // Implemented as part of ControlValueAccessor.
   registerOnChange(fn: (value: any) => void): void {
     this._cvaOnChange = fn;
   }
 
-  // Implemented as part of ControlValueAccessor
+  // Implemented as part of ControlValueAccessor.
   registerOnTouched(fn: () => void): void {
     this._onTouched = fn;
   }
 
-  // Implemented as part of ControlValueAccessor
-  setDisabledState(disabled: boolean): void {
-    this.disabled = disabled;
+  // Implemented as part of ControlValueAccessor.
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 
   _onKeydown(event: KeyboardEvent) {
@@ -326,6 +335,11 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   _onChange() {
     this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+  }
+
+  /** Returns the palette used by the input's form field, if any. */
+  _getThemePalette() {
+    return this._formField ? this._formField.color : undefined;
   }
 
   /**

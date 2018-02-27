@@ -31,7 +31,7 @@
           <span>{{message.subject}} -- </span>
           <span class="demo-secondary-text">{{message.message}}</span>
         </p>
-        <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
+        <mat-divider inset *ngIf="!last"></mat-divider>
       </mat-list-item>
       <mat-divider></mat-divider>
       <mat-list-item *ngFor="let message of messages">
@@ -87,10 +87,11 @@
       </mat-list-item>
     </mat-nav-list>
     <mat-nav-list>
-      <a mat-list-item *ngFor="let link of links" href="http://www.google.com">
+      <a mat-list-item *ngFor="let link of links; last as last" href="http://www.google.com">
         <mat-icon mat-list-icon>folder</mat-icon>
         <span mat-line>{{ link.name }}</span>
         <span mat-line class="demo-secondary-text"> Description </span>
+        <mat-divider inset *ngIf="!last"></mat-divider>
       </a>
     </mat-nav-list>
     <mat-nav-list dense>
@@ -108,10 +109,11 @@
 
     <mat-selection-list #groceries [ngModel]="selectedOptions"
                         (ngModelChange)="onSelectedOptionsChange($event)"
-                        (change)="changeEventCount = changeEventCount + 1">
+                        (change)="changeEventCount = changeEventCount + 1"
+                        [disabled]="selectionListDisabled">
       <h3 mat-subheader>Groceries</h3>
 
-      <mat-list-option value="bananas">Bananas</mat-list-option>
+      <mat-list-option value="bananas" checkboxPosition="before">Bananas</mat-list-option>
       <mat-list-option selected value="oranges">Oranges</mat-list-option>
       <mat-list-option value="apples">Apples</mat-list-option>
       <mat-list-option value="strawberries">Strawberries</mat-list-option>
@@ -120,6 +122,7 @@
     <p>Selected: {{selectedOptions | json}}</p>
     <p>Change Event Count {{changeEventCount}}</p>
     <p>Model Change Event Count {{modelChangeEventCount}}</p>
+    <mat-checkbox [(ngModel)]="selectionListDisabled">Disable Selection List</mat-checkbox>
 
     <p>
       <button mat-raised-button (click)="groceries.selectAll()">Select all</button>

@@ -7,26 +7,13 @@
  */
 
 import {
-  DOWN_ARROW,
-  END,
-  ENTER,
-  HOME,
-  LEFT_ARROW,
-  PAGE_DOWN,
-  PAGE_UP,
-  RIGHT_ARROW,
-  UP_ARROW,
-} from '@angular/cdk/keycodes';
-import {
   AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   EventEmitter,
   Inject,
   Input,
-  NgZone,
   OnChanges,
   OnDestroy,
   Optional,
@@ -36,12 +23,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
-import {take} from 'rxjs/operators/take';
 import {Subscription} from 'rxjs/Subscription';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
-import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
+import {MatMultiYearView, yearsPerPage} from './multi-year-view';
 import {MatYearView} from './year-view';
 
 
@@ -104,10 +90,22 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   @Input() dateFilter: (date: D) => boolean;
 
   /** Emits when the currently selected date changes. */
-  @Output() selectedChange = new EventEmitter<D>();
+  @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
+
+  /**
+   * Emits the year chosen in multiyear view.
+   * This doesn't imply a change on the selected date.
+   */
+  @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
+
+  /**
+   * Emits the month chosen in year view.
+   * This doesn't imply a change on the selected date.
+   */
+  @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
   /** Emits when any date is selected. */
-  @Output() _userSelection = new EventEmitter<void>();
+  @Output() readonly _userSelection: EventEmitter<void> = new EventEmitter<void>();
 
   /** Reference to the current month view component. */
   @ViewChild(MatMonthView) monthView: MatMonthView<D>;
@@ -117,14 +115,6 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
   /** Reference to the current multi-year view component. */
   @ViewChild(MatMultiYearView) multiYearView: MatMultiYearView<D>;
-
-  /** Date filter for the month, year, and multi-year views. */
-  _dateFilterForViews = (date: D) => {
-    return !!date &&
-        (!this.dateFilter || this.dateFilter(date)) &&
-        (!this.minDate || this._dateAdapter.compareDate(date, this.minDate) >= 0) &&
-        (!this.maxDate || this._dateAdapter.compareDate(date, this.maxDate) <= 0);
-  }
 
   /**
    * The current active date. This determines which time period is shown and which date is
@@ -179,9 +169,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     }[this._currentView];
   }
 
-  constructor(private _elementRef: ElementRef,
-              private _intl: MatDatepickerIntl,
-              private _ngZone: NgZone,
+  constructor(private _intl: MatDatepickerIntl,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               changeDetectorRef: ChangeDetectorRef) {
@@ -199,7 +187,6 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
   ngAfterContentInit() {
     this._activeDate = this.startAt || this._dateAdapter.today();
-    this._focusActiveCell();
     this._currentView = this.startView;
   }
 
@@ -226,11 +213,21 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     }
   }
 
+  /** Handles year selection in the multiyear view. */
+  _yearSelectedInMultiYearView(normalizedYear: D) {
+    this.yearSelected.emit(normalizedYear);
+  }
+
+  /** Handles month selection in the year view. */
+  _monthSelectedInYearView(normalizedMonth: D) {
+    this.monthSelected.emit(normalizedMonth);
+  }
+
   _userSelected(): void {
     this._userSelection.emit();
   }
 
-  /** Handles month selection in the multi-year view. */
+  /** Handles year/month selection in the multi-year/year views. */
   _goToDateInView(date: D, view: 'month' | 'year' | 'multi-year'): void {
     this._activeDate = date;
     this._currentView = view;
@@ -270,29 +267,6 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     return !this.maxDate || !this._isSameView(this._activeDate, this.maxDate);
   }
 
-  /** Handles keydown events on the calendar body. */
-  _handleCalendarBodyKeydown(event: KeyboardEvent): void {
-    // TODO(mmalerba): We currently allow keyboard navigation to disabled dates, but just prevent
-    // disabled ones from being selected. This may not be ideal, we should look into whether
-    // navigation should skip over disabled dates, and if so, how to implement that efficiently.
-    if (this._currentView == 'month') {
-      this._handleCalendarBodyKeydownInMonthView(event);
-    } else if (this._currentView == 'year') {
-      this._handleCalendarBodyKeydownInYearView(event);
-    } else {
-      this._handleCalendarBodyKeydownInMultiYearView(event);
-    }
-  }
-
-  /** Focuses the active cell after the microtask queue is empty. */
-  _focusActiveCell() {
-    this._ngZone.runOutsideAngular(() => {
-      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
-        this._elementRef.nativeElement.querySelector('.mat-calendar-body-active').focus();
-      });
-    });
-  }
-
   /** Whether the two dates represent the same view in the current view mode (month or year). */
   private _isSameView(date1: D, date2: D): boolean {
     if (this._currentView == 'month') {
@@ -305,148 +279,6 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     // Otherwise we are in 'multi-year' view.
     return Math.floor(this._dateAdapter.getYear(date1) / yearsPerPage) ==
         Math.floor(this._dateAdapter.getYear(date2) / yearsPerPage);
-  }
-
-  /** Handles keydown events on the calendar body when calendar is in month view. */
-  private _handleCalendarBodyKeydownInMonthView(event: KeyboardEvent): void {
-    switch (event.keyCode) {
-      case LEFT_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarDays(this._activeDate, -1);
-        break;
-      case RIGHT_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarDays(this._activeDate, 1);
-        break;
-      case UP_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarDays(this._activeDate, -7);
-        break;
-      case DOWN_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarDays(this._activeDate, 7);
-        break;
-      case HOME:
-        this._activeDate = this._dateAdapter.addCalendarDays(this._activeDate,
-            1 - this._dateAdapter.getDate(this._activeDate));
-        break;
-      case END:
-        this._activeDate = this._dateAdapter.addCalendarDays(this._activeDate,
-            (this._dateAdapter.getNumDaysInMonth(this._activeDate) -
-             this._dateAdapter.getDate(this._activeDate)));
-        break;
-      case PAGE_UP:
-        this._activeDate = event.altKey ?
-            this._dateAdapter.addCalendarYears(this._activeDate, -1) :
-            this._dateAdapter.addCalendarMonths(this._activeDate, -1);
-        break;
-      case PAGE_DOWN:
-        this._activeDate = event.altKey ?
-            this._dateAdapter.addCalendarYears(this._activeDate, 1) :
-            this._dateAdapter.addCalendarMonths(this._activeDate, 1);
-        break;
-      case ENTER:
-        if (this._dateFilterForViews(this._activeDate)) {
-          this._dateSelected(this._activeDate);
-          this._userSelected();
-          // Prevent unexpected default actions such as form submission.
-          event.preventDefault();
-        }
-        return;
-      default:
-        // Don't prevent default or focus active cell on keys that we don't explicitly handle.
-        return;
-    }
-
-    this._focusActiveCell();
-    // Prevent unexpected default actions such as form submission.
-    event.preventDefault();
-  }
-
-  /** Handles keydown events on the calendar body when calendar is in year view. */
-  private _handleCalendarBodyKeydownInYearView(event: KeyboardEvent): void {
-    switch (event.keyCode) {
-      case LEFT_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, -1);
-        break;
-      case RIGHT_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, 1);
-        break;
-      case UP_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, -4);
-        break;
-      case DOWN_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, 4);
-        break;
-      case HOME:
-        this._activeDate = this._dateAdapter.addCalendarMonths(this._activeDate,
-            -this._dateAdapter.getMonth(this._activeDate));
-        break;
-      case END:
-        this._activeDate = this._dateAdapter.addCalendarMonths(this._activeDate,
-            11 - this._dateAdapter.getMonth(this._activeDate));
-        break;
-      case PAGE_UP:
-        this._activeDate =
-            this._dateAdapter.addCalendarYears(this._activeDate, event.altKey ? -10 : -1);
-        break;
-      case PAGE_DOWN:
-        this._activeDate =
-            this._dateAdapter.addCalendarYears(this._activeDate, event.altKey ? 10 : 1);
-        break;
-      case ENTER:
-        this._goToDateInView(this._activeDate, 'month');
-        break;
-      default:
-        // Don't prevent default or focus active cell on keys that we don't explicitly handle.
-        return;
-    }
-
-    this._focusActiveCell();
-    // Prevent unexpected default actions such as form submission.
-    event.preventDefault();
-  }
-
-  /** Handles keydown events on the calendar body when calendar is in multi-year view. */
-  private _handleCalendarBodyKeydownInMultiYearView(event: KeyboardEvent): void {
-    switch (event.keyCode) {
-      case LEFT_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarYears(this._activeDate, -1);
-        break;
-      case RIGHT_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarYears(this._activeDate, 1);
-        break;
-      case UP_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarYears(this._activeDate, -yearsPerRow);
-        break;
-      case DOWN_ARROW:
-        this._activeDate = this._dateAdapter.addCalendarYears(this._activeDate, yearsPerRow);
-        break;
-      case HOME:
-        this._activeDate = this._dateAdapter.addCalendarYears(this._activeDate,
-            -this._dateAdapter.getYear(this._activeDate) % yearsPerPage);
-        break;
-      case END:
-        this._activeDate = this._dateAdapter.addCalendarYears(this._activeDate,
-            yearsPerPage - this._dateAdapter.getYear(this._activeDate) % yearsPerPage - 1);
-        break;
-      case PAGE_UP:
-        this._activeDate =
-            this._dateAdapter.addCalendarYears(
-                this._activeDate, event.altKey ? -yearsPerPage * 10 : -yearsPerPage);
-        break;
-      case PAGE_DOWN:
-        this._activeDate =
-            this._dateAdapter.addCalendarYears(
-                this._activeDate, event.altKey ? yearsPerPage * 10 : yearsPerPage);
-        break;
-      case ENTER:
-        this._goToDateInView(this._activeDate, 'year');
-        break;
-      default:
-        // Don't prevent default or focus active cell on keys that we don't explicitly handle.
-        return;
-    }
-
-    this._focusActiveCell();
-    // Prevent unexpected default actions such as form submission.
-    event.preventDefault();
   }
 
   /**

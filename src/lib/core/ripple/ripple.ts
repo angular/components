@@ -19,7 +19,7 @@ import {
   Optional,
 } from '@angular/core';
 import {RippleRef} from './ripple-ref';
-import {RippleConfig, RippleRenderer, RippleTarget} from './ripple-renderer';
+import {RippleAnimationConfig, RippleConfig, RippleRenderer, RippleTarget} from './ripple-renderer';
 
 /** Configurable options for `matRipple`. */
 export interface RippleGlobalOptions {
@@ -30,11 +30,25 @@ export interface RippleGlobalOptions {
   disabled?: boolean;
 
   /**
+   * Configuration for the animation duration of the ripples.
+   * There are two phases with different durations for the ripples.
+   */
+  animation?: RippleAnimationConfig;
+
+  /**
    * If set, the default duration of the fade-in animation is divided by this value. For example,
    * setting it to 0.5 will cause the ripple fade-in animation to take twice as long.
    * A changed speedFactor will not affect the fade-out duration of the ripples.
+   * @deprecated Use the `animation` global option instead.
+   * @deletion-target 7.0.0
    */
   baseSpeedFactor?: number;
+
+  /**
+   * Whether ripples should start fading out immediately after the mouse our touch is released. By
+   * default, ripples will wait for the enter animation to complete and for mouse or touch release.
+   */
+  terminateOnPointerUp?: boolean;
 }
 
 /** Injection token that can be used to specify the global ripple options. */
@@ -74,8 +88,16 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
    * If set, the normal duration of ripple animations is divided by this value. For example,
    * setting it to 0.5 will cause the animations to take twice as long.
    * A changed speedFactor will not modify the fade-out duration of the ripples.
+   * @deprecated Use the [matRippleAnimation] binding instead.
+   * @deletion-target 7.0.0
    */
   @Input('matRippleSpeedFactor') speedFactor: number = 1;
+
+  /**
+   * Configuration for the ripple animation. Allows modifying the enter and exit animation
+   * duration of the ripples.
+   */
+  @Input('matRippleAnimation') animation: RippleAnimationConfig;
 
   /**
    * Whether click events will not trigger the ripple. Ripples can be still launched manually
@@ -128,11 +150,6 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
     this._rippleRenderer._removeTriggerEvents();
   }
 
-  /** Launches a manual ripple at the specified position. */
-  launch(x: number, y: number, config: RippleConfig = this): RippleRef {
-    return this._rippleRenderer.fadeInRipple(x, y, config);
-  }
-
   /** Fades out all currently showing ripple elements. */
   fadeOutAll() {
     this._rippleRenderer.fadeOutAll();
@@ -142,13 +159,15 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   get rippleConfig(): RippleConfig {
     return {
       centered: this.centered,
-      speedFactor: this.speedFactor * (this._globalOptions.baseSpeedFactor || 1),
       radius: this.radius,
-      color: this.color
+      color: this.color,
+      animation: {...this._globalOptions.animation, ...this.animation},
+      terminateOnPointerUp: this._globalOptions.terminateOnPointerUp,
+      speedFactor: this.speedFactor * (this._globalOptions.baseSpeedFactor || 1),
     };
   }
 
-  /** Whether ripples on pointer-down are  disabled or not. */
+  /** Whether ripples on pointer-down are disabled or not. */
   get rippleDisabled(): boolean {
     return this.disabled || !!this._globalOptions.disabled;
   }
@@ -157,6 +176,29 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   private _setupTriggerEventsIfEnabled() {
     if (!this.disabled && this._isInitialized) {
       this._rippleRenderer.setupTriggerEvents(this.trigger);
+    }
+  }
+
+  /**
+   * Launches a manual ripple using the specified ripple configuration.
+   * @param config Configuration for the manual ripple.
+   */
+  launch(config: RippleConfig): RippleRef;
+
+  /**
+   * Launches a manual ripple at the specified coordinates within the element.
+   * @param x Coordinate within the element, along the X axis at which to fade-in the ripple.
+   * @param y Coordinate within the element, along the Y axis at which to fade-in the ripple.
+   * @param config Optional ripple configuration for the manual ripple.
+   */
+  launch(x: number, y: number, config?: RippleConfig): RippleRef;
+
+  /** Launches a manual ripple at the specified coordinated or just by the ripple config. */
+  launch(configOrX: number | RippleConfig, y: number = 0, config?: RippleConfig): RippleRef {
+    if (typeof configOrX === 'number') {
+      return this._rippleRenderer.fadeInRipple(configOrX, y, {...this.rippleConfig, ...config});
+    } else {
+      return this._rippleRenderer.fadeInRipple(0, 0, {...this.rippleConfig, ...configOrX});
     }
   }
 }

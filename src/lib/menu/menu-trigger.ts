@@ -43,6 +43,7 @@ import {throwMatMenuMissingError} from './menu-errors';
 import {MatMenuItem} from './menu-item';
 import {MatMenuPanel} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 
 /** Injection token that determines the scroll handling while the menu is open. */
 export const MAT_MENU_SCROLL_STRATEGY =
@@ -82,18 +83,20 @@ export const MENU_PANEL_TOP_PADDING = 8;
   exportAs: 'matMenuTrigger'
 })
 export class MatMenuTrigger implements AfterContentInit, OnDestroy {
-  private _portal: TemplatePortal<any>;
+  private _portal: TemplatePortal;
   private _overlayRef: OverlayRef | null = null;
   private _menuOpen: boolean = false;
   private _closeSubscription = Subscription.EMPTY;
-  private _positionSubscription = Subscription.EMPTY;
   private _hoverSubscription = Subscription.EMPTY;
 
   // Tracking input type is necessary so it's possible to only auto-focus
   // the first item of the list when the menu is opened via the keyboard
   private _openedByMouse: boolean = false;
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   * @deletion-target 6.0.0
+   */
   @Input('mat-menu-trigger-for')
   get _deprecatedMatMenuTriggerFor(): MatMenuPanel {
     return this.menu;
@@ -106,23 +109,28 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /** References the menu instance that the trigger is associated with. */
   @Input('matMenuTriggerFor') menu: MatMenuPanel;
 
+  /** Data to be passed along to any lazily-rendered content. */
+  @Input('matMenuTriggerData') menuData: any;
+
   /** Event emitted when the associated menu is opened. */
-  @Output() menuOpened = new EventEmitter<void>();
+  @Output() readonly menuOpened: EventEmitter<void> = new EventEmitter<void>();
 
   /**
    * Event emitted when the associated menu is opened.
    * @deprecated Switch to `menuOpened` instead
+   * @deletion-target 6.0.0
    */
-  @Output() onMenuOpen = this.menuOpened;
+  @Output() readonly onMenuOpen: EventEmitter<void> = this.menuOpened;
 
   /** Event emitted when the associated menu is closed. */
-  @Output() menuClosed = new EventEmitter<void>();
+  @Output() readonly menuClosed: EventEmitter<void> = new EventEmitter<void>();
 
   /**
    * Event emitted when the associated menu is closed.
    * @deprecated Switch to `menuClosed` instead
+   * @deletion-target 6.0.0
    */
-  @Output() onMenuClose = this.menuClosed;
+  @Output() readonly onMenuClose: EventEmitter<void> = this.menuClosed;
 
   constructor(private _overlay: Overlay,
               private _element: ElementRef,
@@ -130,7 +138,9 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
               @Inject(MAT_MENU_SCROLL_STRATEGY) private _scrollStrategy,
               @Optional() private _parentMenu: MatMenu,
               @Optional() @Self() private _menuItemInstance: MatMenuItem,
-              @Optional() private _dir: Directionality) {
+              @Optional() private _dir: Directionality,
+              // TODO(crisbeto): make the _focusMonitor required when doing breaking changes.
+              private _focusMonitor?: FocusMonitor) {
 
     if (_menuItemInstance) {
       _menuItemInstance._triggersSubmenu = this.triggersSubmenu();
@@ -191,14 +201,21 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /** Opens the menu. */
   openMenu(): void {
-    if (!this._menuOpen) {
-      this._createOverlay().attach(this._portal);
-      this._closeSubscription = this._menuClosingActions().subscribe(() => this.closeMenu());
-      this._initMenu();
+    if (this._menuOpen) {
+      return;
+    }
 
-      if (this.menu instanceof MatMenu) {
-        this.menu._startAnimation();
-      }
+    this._createOverlay().attach(this._portal);
+
+    if (this.menu.lazyContent) {
+      this.menu.lazyContent.attach(this.menuData);
+    }
+
+    this._closeSubscription = this._menuClosingActions().subscribe(() => this.closeMenu());
+    this._initMenu();
+
+    if (this.menu instanceof MatMenu) {
+      this.menu._startAnimation();
     }
   }
 
@@ -207,9 +224,16 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     this.menu.close.emit();
   }
 
-  /** Focuses the menu trigger. */
-  focus() {
-    this._element.nativeElement.focus();
+  /**
+   * Focuses the menu trigger.
+   * @param origin Source of the menu trigger's focus.
+   */
+  focus(origin: FocusOrigin = 'program') {
+    if (this._focusMonitor) {
+      this._focusMonitor.focusVia(this._element.nativeElement, origin);
+    } else {
+      this._element.nativeElement.focus();
+    }
   }
 
   /** Closes the menu and does the necessary cleanup. */
@@ -234,19 +258,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     this.menu.direction = this.dir;
     this._setMenuElevation();
     this._setIsMenuOpen(true);
-
-    // If the menu was opened by mouse, we focus the root node, which allows for the keyboard
-    // interactions to work. Otherwise, if the menu was opened by keyboard, we focus the first item.
-    if (this._openedByMouse) {
-      let rootNode = this._overlayRef!.overlayElement.firstElementChild as HTMLElement;
-
-      if (rootNode) {
-        this.menu.resetActiveItem();
-        rootNode.focus();
-      }
-    } else {
-      this.menu.focusFirstItem();
-    }
+    this.menu.focusFirstItem(this._openedByMouse ? 'mouse' : 'program');
   }
 
   /** Updates the menu elevation based on the amount of parent menus that it has. */
@@ -274,8 +286,12 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     // We should reset focus if the user is navigating using a keyboard or
     // if we have a top-level trigger which might cause focus to be lost
     // when clicking on the backdrop.
-    if (!this._openedByMouse || !this.triggersSubmenu()) {
+    if (!this._openedByMouse) {
+      // Note that the focus style will show up both for `program` and
+      // `keyboard` so we don't have to specify which one it is.
       this.focus();
+    } else if (!this.triggersSubmenu()) {
+      this.focus('mouse');
     }
 
     this._openedByMouse = false;
@@ -324,7 +340,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     return new OverlayConfig({
       positionStrategy: this._getPosition(),
       hasBackdrop: !this.triggersSubmenu(),
-      backdropClass: 'cdk-overlay-transparent-backdrop',
+      backdropClass: this.menu.backdropClass || 'cdk-overlay-transparent-backdrop',
       direction: this.dir,
       scrollStrategy: this._scrollStrategy()
     });
@@ -336,7 +352,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * correct, even if a fallback position is used for the overlay.
    */
   private _subscribeToPositions(position: ConnectedPositionStrategy): void {
-    this._positionSubscription = position.onPositionChange.subscribe(change => {
+    position.onPositionChange.subscribe(change => {
       const posX: MenuPositionX = change.connectionPair.overlayX === 'start' ? 'after' : 'before';
       const posY: MenuPositionY = change.connectionPair.overlayY === 'top' ? 'below' : 'above';
 
@@ -391,7 +407,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /** Cleans up the active subscriptions. */
   private _cleanUpSubscriptions(): void {
     this._closeSubscription.unsubscribe();
-    this._positionSubscription.unsubscribe();
     this._hoverSubscription.unsubscribe();
   }
 

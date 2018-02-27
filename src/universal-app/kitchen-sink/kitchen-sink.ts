@@ -3,6 +3,7 @@ import {ServerModule} from '@angular/platform-server';
 import {BrowserModule} from '@angular/platform-browser';
 import {
   MatAutocompleteModule,
+  MatBadgeModule,
   MatButtonModule,
   MatButtonToggleModule,
   MatCardModule,
@@ -36,13 +37,30 @@ import {
   MatTooltipModule,
   MatStepperModule,
   MatSnackBar,
+  MatDialog,
 } from '@angular/material';
 import {
   CdkTableModule,
   DataSource
 } from '@angular/cdk/table';
-
+import {ViewportRuler} from '@angular/cdk/scrolling';
 import {of as observableOf} from 'rxjs/observable/of';
+import {Observable} from 'rxjs/Observable';
+
+export class TableDataSource extends DataSource<any> {
+  connect(): Observable<any> {
+    return observableOf([{userId: 1}, {userId: 2}]);
+  }
+
+  disconnect() {}
+}
+
+
+@Component({
+  template: `<button>Do the thing</button>`
+})
+export class TestDialog {}
+
 
 @Component({
   selector: 'kitchen-sink',
@@ -55,16 +73,20 @@ export class KitchenSink {
   tableColumns = ['userId'];
 
   /** Data source for the CDK and Material table. */
-  tableDataSource: DataSource<any> = {
-    connect: () => observableOf([{userId: 1}, {userId: 2}]),
-    disconnect: () => {}
-  };
+  tableDataSource = new TableDataSource();
 
-  constructor(snackBar: MatSnackBar) {
-    // Open a snack bar to do a basic sanity check of the overlays.
+  constructor(
+    snackBar: MatSnackBar,
+    dialog: MatDialog,
+    viewportRuler: ViewportRuler) {
     snackBar.open('Hello there');
-  }
+    dialog.open(TestDialog);
 
+    // Do a sanity check on the viewport ruler.
+    viewportRuler.getViewportRect();
+    viewportRuler.getViewportSize();
+    viewportRuler.getViewportScrollPosition();
+  }
 }
 
 
@@ -72,6 +94,7 @@ export class KitchenSink {
   imports: [
     BrowserModule.withServerTransition({appId: 'kitchen-sink'}),
     MatAutocompleteModule,
+    MatBadgeModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatCardModule,
@@ -109,7 +132,8 @@ export class KitchenSink {
     CdkTableModule
   ],
   bootstrap: [KitchenSink],
-  declarations: [KitchenSink],
+  declarations: [KitchenSink, TestDialog],
+  entryComponents: [TestDialog],
 })
 export class KitchenSinkClientModule { }
 

@@ -1,6 +1,8 @@
 import {Package} from 'dgeni';
+import {patchLogService} from './patch-log-service';
 import {DocsPrivateFilter} from './processors/docs-private-filter';
 import {Categorizer} from './processors/categorizer';
+import {FilterDuplicateExports} from './processors/filter-duplicate-exports';
 import {FilterExportAliases} from './processors/filter-export-aliases';
 import {MergeInheritedProperties} from './processors/merge-inherited-properties';
 import {ComponentGrouper} from './processors/component-grouper';
@@ -9,7 +11,7 @@ import {TsParser} from 'dgeni-packages/typescript/services/TsParser';
 import {sync as globSync} from 'glob';
 import * as path from 'path';
 
-// Dgeni packages
+// Dgeni packages that the Material docs package depends on.
 const jsdocPackage = require('dgeni-packages/jsdoc');
 const nunjucksPackage = require('dgeni-packages/nunjucks');
 const typescriptPackage = require('dgeni-packages/typescript');
@@ -20,24 +22,6 @@ const sourceDir = path.resolve(projectRootDir, 'src');
 const outputDir = path.resolve(projectRootDir, 'dist/docs/api');
 const templateDir = path.resolve(__dirname, './templates');
 
-// Package definition for material2 api docs. This only *defines* the package- it does not yet
-// actually *run* anything.
-//
-// A dgeni package is very similar to an AngularJS module. Modules contain:
-//  "services" (injectables)
-//  "processors" (injectables that conform to a specific interface)
-//  "templates": nunjucks templates that can be used to render content
-//
-// A dgeni package also has a `config` method, similar to an AngularJS module.
-// A config block can inject any services/processors and configure them before
-// docs processing begins.
-
-const dgeniPackageDeps = [
-  jsdocPackage,
-  nunjucksPackage,
-  typescriptPackage,
-];
-
 /** List of CDK packages that need to be documented. */
 const cdkPackages = globSync(path.join(sourceDir, 'cdk', '*/'))
   .filter(packagePath => !packagePath.endsWith('testing/'))
@@ -47,7 +31,27 @@ const cdkPackages = globSync(path.join(sourceDir, 'cdk', '*/'))
 const materialPackages = globSync(path.join(sourceDir, 'lib', '*/'))
   .map(packagePath => path.basename(packagePath));
 
-export const apiDocsPackage = new Package('material2-api-docs', dgeniPackageDeps);
+/**
+ * Dgeni package for the Angular Material docs. This just defines the package, but doesn't
+ * generate the docs yet.
+ *
+ * Dgeni packages are very similar to AngularJS modules. Those can contain:
+ *
+ *  - Services that can be injected
+ *  - Templates that are used to convert the data into HTML output.
+ *  - Processors that can modify the doc items (like a build pipeline).
+ *
+ * Similar to AngularJS, there is also a `config` lifecycle hook, that can be used to
+ * configure specific processors, services before the procession begins.
+ */
+export const apiDocsPackage = new Package('material2-api-docs', [
+  jsdocPackage,
+  nunjucksPackage,
+  typescriptPackage,
+]);
+
+// Processor that filters out duplicate exports that should not be shown in the docs.
+apiDocsPackage.processor(new FilterDuplicateExports());
 
 // Processor that filters out aliased exports that should not be shown in the docs.
 apiDocsPackage.processor(new FilterExportAliases());
@@ -75,6 +79,9 @@ apiDocsPackage.config((readFilesProcessor: any, writeFilesProcessor: any) => {
   writeFilesProcessor.outputFolder = outputDir;
 });
 
+// Patches Dgeni's log service to not print warnings about unresolved mixin base symbols.
+apiDocsPackage.config((log: any) => patchLogService(log));
+
 // Configure the output path for written files (i.e., file names).
 apiDocsPackage.config((computePathsProcessor: any) => {
   computePathsProcessor.pathTemplates = [{
@@ -87,7 +94,8 @@ apiDocsPackage.config((computePathsProcessor: any) => {
 // Configure custom JsDoc tags.
 apiDocsPackage.config((parseTagsProcessor: any) => {
   parseTagsProcessor.tagDefinitions = parseTagsProcessor.tagDefinitions.concat([
-    {name: 'docs-private'}
+    {name: 'docs-private'},
+    {name: 'deletion-target'}
   ]);
 });
 
@@ -112,7 +120,7 @@ apiDocsPackage.config((readTypeScriptModules: ReadTypeScriptModules, tsParser: T
   tsParser.options.paths = typescriptPathMap;
   tsParser.options.baseUrl = sourceDir;
 
-  // Entry points for docs generation. All publically exported symbols found through these
+  // Entry points for docs generation. All publicly exported symbols found through these
   // files will have docs generated.
   readTypeScriptModules.sourceFiles = [
     ...cdkPackages.map(packageName => `./cdk/${packageName}/index.ts`),
@@ -140,7 +148,7 @@ apiDocsPackage.config((templateFinder: any, templateEngine: any) => {
     'common.template.html'
   ];
 
-  // dgeni disables autoescape by default, but we want this turned on.
+  // Dgeni disables autoescape by default, but we want this turned on.
   templateEngine.config.autoescape = true;
 
   // Nunjucks and Angular conflict in their template bindings so change Nunjucks

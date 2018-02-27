@@ -2,13 +2,12 @@
 // up into a single flat scss file for material.
 @import '../../cdk/overlay/overlay';
 @import '../../cdk/a11y/a11y';
+@import '../input/autofill';
 
 // Core styles that can be used to apply material design treatments to any element.
 @import 'style/elevation';
 @import 'ripple/ripple';
-@import 'option/option';
 @import 'option/option-theme';
-@import 'option/optgroup';
 @import 'option/optgroup-theme';
 @import 'selection/pseudo-checkbox/pseudo-checkbox-theme';
 @import 'typography/all-typography';
@@ -26,10 +25,9 @@
 
   @include angular-material-typography($typography-config);
   @include mat-ripple();
-  @include mat-option();
-  @include mat-optgroup();
   @include cdk-a11y();
   @include cdk-overlay();
+  @include mat-input-autofill();
 }
 
 // Mixin that renders all of the core styles that depend on the theme.
@@ -43,7 +41,10 @@
   // user's content isn't inside of a `mat-sidenav-container`.
   .mat-app-background {
     $background: map-get($theme, background);
+    $foreground: map-get($theme, foreground);
+
     background-color: mat-color($background, background);
+    color: mat-color($foreground, text);
   }
 
   // Marker that is used to determine whether the user has added a theme to their page.

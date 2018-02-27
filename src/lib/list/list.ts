@@ -98,6 +98,9 @@ export class MatListSubheaderCssMatStyler {}
   exportAs: 'matListItem',
   host: {
     'class': 'mat-list-item',
+    // @deletion-target 7.0.0 Remove `mat-list-item-avatar` in favor of `mat-list-item-with-avatar`.
+    '[class.mat-list-item-avatar]': '_avatar',
+    '[class.mat-list-item-with-avatar]': '_avatar',
     '(focus)': '_handleFocus()',
     '(blur)': '_handleBlur()',
   },
@@ -109,19 +112,10 @@ export class MatListSubheaderCssMatStyler {}
 })
 export class MatListItem extends _MatListItemMixinBase implements AfterContentInit,
     CanDisableRipple {
-  private _lineSetter: MatLineSetter;
   private _isNavList: boolean = false;
 
   @ContentChildren(MatLine) _lines: QueryList<MatLine>;
-
-  @ContentChild(MatListAvatarCssMatStyler)
-  set _hasAvatar(avatar: MatListAvatarCssMatStyler) {
-    if (avatar != null) {
-      this._element.nativeElement.classList.add('mat-list-item-avatar');
-    } else {
-      this._element.nativeElement.classList.remove('mat-list-item-avatar');
-    }
-  }
+  @ContentChild(MatListAvatarCssMatStyler) _avatar: MatListAvatarCssMatStyler;
 
   constructor(private _element: ElementRef,
               @Optional() private _navList: MatNavList) {
@@ -130,10 +124,12 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
   }
 
   ngAfterContentInit() {
-    this._lineSetter = new MatLineSetter(this._lines, this._element);
+    // TODO: consider turning the setter into a function, it doesn't do anything as a class.
+    // tslint:disable-next-line:no-unused-expression
+    new MatLineSetter(this._lines, this._element);
   }
 
-  /** Whether this list item should show a ripple effect when clicked.  */
+  /** Whether this list item should show a ripple effect when clicked. */
   _isRippleDisabled() {
     return !this._isNavList || this.disableRipple || this._navList.disableRipple;
   }

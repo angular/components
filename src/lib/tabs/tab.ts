@@ -24,6 +24,7 @@ import {
 import {CanDisable, mixinDisabled} from '@angular/material/core';
 import {Subject} from 'rxjs/Subject';
 import {MatTabLabel} from './tab-label';
+import {MatTabContent} from './tab-content';
 
 
 // Boilerplate for applying mixins to MatTab.
@@ -42,28 +43,33 @@ export const _MatTabMixinBase = mixinDisabled(MatTabBase);
   exportAs: 'matTab',
 })
 export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
-  /** Content for the tab label given by <ng-template mat-tab-label>. */
+  /** Content for the tab label given by `<ng-template mat-tab-label>`. */
   @ContentChild(MatTabLabel) templateLabel: MatTabLabel;
 
-  /** Template inside the MatTab view that contains an <ng-content>. */
-  @ViewChild(TemplateRef) _content: TemplateRef<any>;
+  /**
+   * Template provided in the tab content that will be used if present, used to enable lazy-loading
+   */
+  @ContentChild(MatTabContent, {read: TemplateRef}) _explicitContent: TemplateRef<any>;
+
+  /** Template inside the MatTab view that contains an `<ng-content>`. */
+  @ViewChild(TemplateRef) _implicitContent: TemplateRef<any>;
 
   /** The plain text label for the tab, used when there is no template label. */
   @Input('label') textLabel: string = '';
 
   /** The portal that will be the hosted content of the tab */
-  private _contentPortal: TemplatePortal<any> | null = null;
+  private _contentPortal: TemplatePortal | null = null;
 
   /** @docs-private */
-  get content(): TemplatePortal<any> | null {
+  get content(): TemplatePortal | null {
     return this._contentPortal;
   }
 
   /** Emits whenever the label changes. */
-  _labelChange = new Subject<void>();
+  readonly _labelChange = new Subject<void>();
 
   /** Emits whenever the disable changes */
-  _disableChange = new Subject<void>();
+  readonly _disableChange = new Subject<void>();
 
   /**
    * The relatively indexed position where 0 represents the center, negative is left, and positive
@@ -102,6 +108,7 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
   }
 
   ngOnInit(): void {
-    this._contentPortal = new TemplatePortal(this._content, this._viewContainerRef);
+    this._contentPortal = new TemplatePortal(
+        this._explicitContent || this._implicitContent, this._viewContainerRef);
   }
 }

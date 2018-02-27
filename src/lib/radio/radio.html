@@ -8,9 +8,9 @@
     <div mat-ripple class="mat-radio-ripple"
          [matRippleTrigger]="label"
          [matRippleDisabled]="_isRippleDisabled()"
-         [matRippleCentered]="_rippleConfig.centered"
-         [matRippleRadius]="_rippleConfig.radius"
-         [matRippleSpeedFactor]="_rippleConfig.speedFactor">
+         [matRippleCentered]="true"
+         [matRippleRadius]="23"
+         [matRippleAnimation]="{enterDuration: 150}">
     </div>
   </div>
 
@@ -18,10 +18,12 @@
          [id]="inputId"
          [checked]="checked"
          [disabled]="disabled"
+         [tabIndex]="tabIndex"
          [attr.name]="name"
          [required]="required"
          [attr.aria-label]="ariaLabel"
          [attr.aria-labelledby]="ariaLabelledby"
+         [attr.aria-describedby]="ariaDescribedby"
          (change)="_onInputChange($event)"
          (click)="_onInputClick($event)">
 

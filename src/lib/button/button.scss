@@ -4,23 +4,38 @@
 @import '../core/style/layout-common';
 @import '../../cdk/a11y/a11y';
 
-.mat-button, .mat-icon-button {
-  @extend %mat-button-base;
+.mat-button, .mat-icon-button, .mat-stroked-button, .mat-flat-button {
+  @include mat-button-base;
+}
 
+.mat-button, .mat-icon-button {
   .mat-button-focus-overlay {
     transition: none;
     opacity: 0;
   }
 }
 
-// Only flat buttons (not raised, FABs or icon buttons) have a hover style.
+// Only flat and stroked buttons (not raised, FABs or icon buttons) have a hover style.
 // Use the same visual treatment for hover as for focus.
-.mat-button:hover .mat-button-focus-overlay {
+.mat-button:hover .mat-button-focus-overlay,
+.mat-stroked-button:hover .mat-button-focus-overlay {
   opacity: 1;
 }
 
 .mat-raised-button {
-  @extend %mat-raised-button;
+  @include mat-raised-button;
+}
+
+.mat-stroked-button {
+  @include mat-overridable-elevation(0);
+
+  border: 1px solid currentColor;
+  padding: $mat-stroked-button-padding;
+  line-height: $mat-stroked-button-line-height;
+}
+
+.mat-flat-button {
+  @include mat-overridable-elevation(0);
 }
 
 .mat-fab {
@@ -47,6 +62,19 @@
 
   i, .mat-icon {
     line-height: $mat-icon-button-line-height;
+  }
+}
+
+// Align icon-buttons correctly inside of standard, fill, and outline form-field appearances.
+.mat-form-field:not(.mat-form-field-appearance-legacy) {
+  .mat-form-field-prefix,
+  .mat-form-field-suffix {
+    .mat-icon-button {
+      display: block;
+      font-size: inherit;
+      width: 2.5em;
+      height: 2.5em;
+    }
   }
 }
 
@@ -94,9 +122,10 @@
   z-index: 1;
 }
 
-// Add an outline to make it more visible in high contrast mode.
+// Add an outline to make buttons more visible in high contrast mode. Stroked buttons
+// don't need a special look in high-contrast mode, because those already have an outline.
 @include cdk-high-contrast {
-  .mat-button, .mat-raised-button, .mat-icon-button, .mat-fab, .mat-mini-fab {
+  .mat-button, .mat-flat-button, .mat-raised-button, .mat-icon-button, .mat-fab, .mat-mini-fab {
     outline: solid 1px;
   }
 }

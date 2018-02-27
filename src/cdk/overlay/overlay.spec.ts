@@ -1,5 +1,6 @@
 import {async, fakeAsync, tick, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {Component, NgModule, ViewChild, ViewContainerRef} from '@angular/core';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {
   ComponentPortal,
   PortalModule,
@@ -20,14 +21,24 @@ import {
 describe('Overlay', () => {
   let overlay: Overlay;
   let componentPortal: ComponentPortal<PizzaMsg>;
-  let templatePortal: TemplatePortal<any>;
+  let templatePortal: TemplatePortal;
   let overlayContainerElement: HTMLElement;
   let overlayContainer: OverlayContainer;
   let viewContainerFixture: ComponentFixture<TestComponentWithTemplatePortals>;
+  let dir: Direction;
 
   beforeEach(async(() => {
+    dir = 'ltr';
     TestBed.configureTestingModule({
-      imports: [OverlayModule, PortalModule, OverlayTestModule]
+      imports: [OverlayModule, PortalModule, OverlayTestModule],
+      providers: [{
+        provide: Directionality,
+        useFactory: () => {
+          const fakeDirectionality = {};
+          Object.defineProperty(fakeDirectionality, 'value', {get: () => dir});
+          return fakeDirectionality;
+        }
+      }],
     }).compileComponents();
   }));
 
@@ -132,13 +143,21 @@ describe('Overlay', () => {
         .toBeFalsy('Expected cake to still be on top.');
   }));
 
+  it('should take the default direction from the global Directionality', () => {
+    dir = 'rtl';
+    overlay.create().attach(componentPortal);
+
+    const pane = overlayContainerElement.children[0] as HTMLElement;
+    expect(pane.getAttribute('dir')).toBe('rtl');
+  });
+
   it('should set the direction', () => {
     const config = new OverlayConfig({direction: 'rtl'});
 
     overlay.create(config).attach(componentPortal);
 
     const pane = overlayContainerElement.children[0] as HTMLElement;
-    expect(pane.getAttribute('dir')).toEqual('rtl');
+    expect(pane.getAttribute('dir')).toBe('rtl');
   });
 
   it('should emit when an overlay is attached', () => {
@@ -239,6 +258,16 @@ describe('Overlay', () => {
     expect(callbackOrder).toEqual(['attach', 'detach']);
   });
 
+  it('should default to the ltr direction', () => {
+    const overlayRef = overlay.create({hasBackdrop: true});
+    expect(overlayRef.getConfig().direction).toBe('ltr');
+  });
+
+  it('should skip undefined values when applying the defaults', () => {
+    const overlayRef = overlay.create({direction: undefined});
+    expect(overlayRef.getConfig().direction).toBe('ltr');
+  });
+
   describe('positioning', () => {
     let config: OverlayConfig;
 
@@ -255,6 +284,22 @@ describe('Overlay', () => {
 
       expect(overlayContainerElement.querySelectorAll('.fake-positioned').length).toBe(1);
     }));
+
+    it('should not apply the position if it detaches before the zone stabilizes', fakeAsync(() => {
+      config.positionStrategy = new FakePositionStrategy();
+
+      const overlayRef = overlay.create(config);
+
+      spyOn(config.positionStrategy, 'apply');
+
+      overlayRef.attach(componentPortal);
+      overlayRef.detach();
+      viewContainerFixture.detectChanges();
+      tick();
+
+      expect(config.positionStrategy.apply).not.toHaveBeenCalled();
+    }));
+
   });
 
   describe('size', () => {
@@ -362,7 +407,7 @@ describe('Overlay', () => {
       overlayRef.backdropClick().subscribe(backdropClickHandler);
 
       backdrop.click();
-      expect(backdropClickHandler).toHaveBeenCalled();
+      expect(backdropClickHandler).toHaveBeenCalledWith(jasmine.any(MouseEvent));
     });
 
     it('should complete the backdrop click stream once the overlay is destroyed', () => {

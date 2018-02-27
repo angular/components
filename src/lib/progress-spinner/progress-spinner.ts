@@ -44,32 +44,36 @@ export class MatProgressSpinnerBase {
 }
 export const _MatProgressSpinnerMixinBase = mixinColor(MatProgressSpinnerBase, 'primary');
 
+// .0001 percentage difference is necessary in order to avoid unwanted animation frames
+// for example because the animation duration is 4 seconds, .1% accounts to 4ms
+// which are enough to see the flicker described in
+// https://github.com/angular/material2/issues/8984
 const INDETERMINATE_ANIMATION_TEMPLATE = `
  @keyframes mat-progress-spinner-stroke-rotate-DIAMETER {
     0%      { stroke-dashoffset: START_VALUE;  transform: rotate(0); }
     12.5%   { stroke-dashoffset: END_VALUE;    transform: rotate(0); }
-    12.51%  { stroke-dashoffset: END_VALUE;    transform: rotateX(180deg) rotate(72.5deg); }
+    12.5001%  { stroke-dashoffset: END_VALUE;    transform: rotateX(180deg) rotate(72.5deg); }
     25%     { stroke-dashoffset: START_VALUE;  transform: rotateX(180deg) rotate(72.5deg); }
 
-    25.1%   { stroke-dashoffset: START_VALUE;  transform: rotate(270deg); }
+    25.0001%   { stroke-dashoffset: START_VALUE;  transform: rotate(270deg); }
     37.5%   { stroke-dashoffset: END_VALUE;    transform: rotate(270deg); }
-    37.51%  { stroke-dashoffset: END_VALUE;    transform: rotateX(180deg) rotate(161.5deg); }
+    37.5001%  { stroke-dashoffset: END_VALUE;    transform: rotateX(180deg) rotate(161.5deg); }
     50%     { stroke-dashoffset: START_VALUE;  transform: rotateX(180deg) rotate(161.5deg); }
 
-    50.01%  { stroke-dashoffset: START_VALUE;  transform: rotate(180deg); }
+    50.0001%  { stroke-dashoffset: START_VALUE;  transform: rotate(180deg); }
     62.5%   { stroke-dashoffset: END_VALUE;    transform: rotate(180deg); }
-    62.51%  { stroke-dashoffset: END_VALUE;    transform: rotateX(180deg) rotate(251.5deg); }
+    62.5001%  { stroke-dashoffset: END_VALUE;    transform: rotateX(180deg) rotate(251.5deg); }
     75%     { stroke-dashoffset: START_VALUE;  transform: rotateX(180deg) rotate(251.5deg); }
 
-    75.01%  { stroke-dashoffset: START_VALUE;  transform: rotate(90deg); }
+    75.0001%  { stroke-dashoffset: START_VALUE;  transform: rotate(90deg); }
     87.5%   { stroke-dashoffset: END_VALUE;    transform: rotate(90deg); }
-    87.51%  { stroke-dashoffset: END_VALUE;    transform: rotateX(180deg) rotate(341.5deg); }
+    87.5001%  { stroke-dashoffset: END_VALUE;    transform: rotateX(180deg) rotate(341.5deg); }
     100%    { stroke-dashoffset: START_VALUE;  transform: rotateX(180deg) rotate(341.5deg); }
   }
 `;
 
 /**
- * <mat-progress-spinner> component.
+ * `<mat-progress-spinner>` component.
  */
 @Component({
   moduleId: module.id,
@@ -113,15 +117,14 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
 
   /** The diameter of the progress spinner (will set width and height of svg). */
   @Input()
-  get diameter(): number {
-    return this._diameter;
-  }
+  get diameter(): number { return this._diameter; }
   set diameter(size: number) {
     this._diameter = coerceNumberProperty(size);
 
     if (!this._fallbackAnimation && !MatProgressSpinner.diameters.has(this._diameter)) {
       this._attachStyleNode();
     }
+    this._updateElementSize();
   }
   private _diameter = BASE_SIZE;
 
@@ -130,7 +133,6 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   get strokeWidth(): number {
     return this._strokeWidth || this.diameter / 10;
   }
-
   set strokeWidth(value: number) {
     this._strokeWidth = coerceNumberProperty(value);
   }
@@ -165,7 +167,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.strokeWidth || changes.diameter) {
-      this._elementSize = this._diameter + Math.max(this.strokeWidth - BASE_STROKE_WIDTH, 0);
+      this._updateElementSize();
     }
   }
 
@@ -229,14 +231,19 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
         .replace(/END_VALUE/g, `${0.2 * this._strokeCircumference}`)
         .replace(/DIAMETER/g, `${this.diameter}`);
   }
+
+  /** Updates the spinner element size based on its diameter. */
+  private _updateElementSize() {
+    this._elementSize = this._diameter + Math.max(this.strokeWidth - BASE_STROKE_WIDTH, 0);
+  }
 }
 
 
 /**
- * <mat-spinner> component.
+ * `<mat-spinner>` component.
  *
  * This is a component definition to be used as a convenience reference to create an
- * indeterminate <mat-progress-spinner> instance.
+ * indeterminate `<mat-progress-spinner>` instance.
  */
 @Component({
   moduleId: module.id,

@@ -5,6 +5,7 @@ import {
   ComponentFixture,
   TestBed,
 } from '@angular/core/testing';
+import {dispatchMouseEvent} from '@angular/cdk/testing';
 import {NgModel, FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -80,9 +81,7 @@ describe('MatButtonToggle with forms', () => {
   describe('button toggle group with ngModel and change event', () => {
     let fixture: ComponentFixture<ButtonToggleGroupWithNgModel>;
     let groupDebugElement: DebugElement;
-    let groupNativeElement: HTMLElement;
     let buttonToggleDebugElements: DebugElement[];
-    let buttonToggleNativeElements: HTMLElement[];
     let groupInstance: MatButtonToggleGroup;
     let buttonToggleInstances: MatButtonToggle[];
     let testComponent: ButtonToggleGroupWithNgModel;
@@ -95,13 +94,10 @@ describe('MatButtonToggle with forms', () => {
       testComponent = fixture.debugElement.componentInstance;
 
       groupDebugElement = fixture.debugElement.query(By.directive(MatButtonToggleGroup));
-      groupNativeElement = groupDebugElement.nativeElement;
       groupInstance = groupDebugElement.injector.get<MatButtonToggleGroup>(MatButtonToggleGroup);
       groupNgModel = groupDebugElement.injector.get<NgModel>(NgModel);
 
       buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MatButtonToggle));
-      buttonToggleNativeElements =
-        buttonToggleDebugElements.map(debugEl => debugEl.nativeElement);
       buttonToggleInstances = buttonToggleDebugElements.map(debugEl => debugEl.componentInstance);
       buttonToggleLabels = buttonToggleDebugElements.map(
         debugEl => debugEl.query(By.css('label')).nativeElement);
@@ -177,8 +173,32 @@ describe('MatButtonToggle with forms', () => {
 
       expect(testComponent.modelValue).toBe('green');
     }));
-  });
 
+    it('should show a ripple on label click', () => {
+      const groupElement = groupDebugElement.nativeElement;
+
+      expect(groupElement.querySelectorAll('.mat-ripple-element').length).toBe(0);
+
+      dispatchMouseEvent(buttonToggleLabels[0], 'mousedown');
+      dispatchMouseEvent(buttonToggleLabels[0], 'mouseup');
+
+      expect(groupElement.querySelectorAll('.mat-ripple-element').length).toBe(1);
+    });
+
+    it('should allow ripples to be disabled', () => {
+      const groupElement = groupDebugElement.nativeElement;
+
+      testComponent.disableRipple = true;
+      fixture.detectChanges();
+
+      expect(groupElement.querySelectorAll('.mat-ripple-element').length).toBe(0);
+
+      dispatchMouseEvent(buttonToggleLabels[0], 'mousedown');
+      dispatchMouseEvent(buttonToggleLabels[0], 'mouseup');
+
+      expect(groupElement.querySelectorAll('.mat-ripple-element').length).toBe(0);
+    });
+  });
 });
 
 describe('MatButtonToggle without forms', () => {
@@ -520,13 +540,10 @@ describe('MatButtonToggle without forms', () => {
     let buttonToggleNativeElement: HTMLElement;
     let buttonToggleLabelElement: HTMLLabelElement;
     let buttonToggleInstance: MatButtonToggle;
-    let testComponent: StandaloneButtonToggle;
 
     beforeEach(async(() => {
       fixture = TestBed.createComponent(StandaloneButtonToggle);
       fixture.detectChanges();
-
-      testComponent = fixture.debugElement.componentInstance;
 
       buttonToggleDebugElement = fixture.debugElement.query(By.directive(MatButtonToggle));
       buttonToggleNativeElement = buttonToggleDebugElement.nativeElement;
@@ -576,6 +593,10 @@ describe('MatButtonToggle without forms', () => {
       fixture.detectChanges();
 
       expect(document.activeElement).toBe(nativeRadioInput);
+    });
+
+    it('should not assign a name to the underlying input if one is not passed in', () => {
+      expect(buttonToggleNativeElement.querySelector('input')!.getAttribute('name')).toBeFalsy();
     });
 
   });
@@ -643,7 +664,8 @@ class ButtonTogglesInsideButtonToggleGroup {
 @Component({
   template: `
   <mat-button-toggle-group [(ngModel)]="modelValue" (change)="lastEvent = $event">
-    <mat-button-toggle *ngFor="let option of options" [value]="option.value">
+    <mat-button-toggle *ngFor="let option of options" [value]="option.value"
+                       [disableRipple]="disableRipple">
       {{option.label}}
     </mat-button-toggle>
   </mat-button-toggle-group>
@@ -657,6 +679,7 @@ class ButtonToggleGroupWithNgModel {
     {label: 'Blue', value: 'blue'},
   ];
   lastEvent: MatButtonToggleChange;
+  disableRipple = false;
 }
 
 @Component({

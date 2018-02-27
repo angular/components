@@ -63,6 +63,16 @@ describe('MatChipList', () => {
       it('should add the `mat-chip-list` class', () => {
         expect(chipListNativeElement.classList).toContain('mat-chip-list');
       });
+
+      it('should not have the aria-selected attribute when is not selectable', () => {
+        testComponent.selectable = false;
+        fixture.detectChanges();
+
+        const chipsValid = chips.toArray().every(chip =>
+            !chip.selectable && !chip._elementRef.nativeElement.hasAttribute('aria-selected'));
+
+        expect(chipsValid).toBe(true);
+      });
     });
 
     describe('with selected chips', () => {
@@ -210,6 +220,18 @@ describe('MatChipList', () => {
 
           // It focuses the next-to-last item
           expect(manager.activeItemIndex).toEqual(1);
+        });
+
+        it('should not handle arrow key events from non-chip elements', () => {
+          const event: KeyboardEvent =
+              createKeyboardEvent('keydown', RIGHT_ARROW, chipListNativeElement);
+          const initialActiveIndex = manager.activeItemIndex;
+
+          chipListInstance._keydown(event);
+          fixture.detectChanges();
+
+          expect(manager.activeItemIndex)
+              .toBe(initialActiveIndex, 'Expected focused item not to have changed.');
         });
 
       });
@@ -433,7 +455,6 @@ describe('MatChipList', () => {
   });
 
   describe('forms integration', () => {
-    let formField: HTMLElement;
     let nativeChips: HTMLElement[];
 
     describe('single selection', () => {
@@ -441,7 +462,6 @@ describe('MatChipList', () => {
         fixture = TestBed.createComponent(BasicChipList);
         fixture.detectChanges();
 
-        formField = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
         nativeChips = fixture.debugElement.queryAll(By.css('mat-chip'))
           .map((chip) => chip.nativeElement);
         chips = fixture.componentInstance.chips;
@@ -605,7 +625,6 @@ describe('MatChipList', () => {
         fixture = TestBed.createComponent(MultiSelectionChipList);
         fixture.detectChanges();
 
-        formField = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
         nativeChips = fixture.debugElement.queryAll(By.css('mat-chip'))
           .map((chip) => chip.nativeElement);
         chips = fixture.componentInstance.chips;
@@ -683,14 +702,12 @@ describe('MatChipList', () => {
   });
 
   describe('chip list with chip input', () => {
-    let formField: HTMLElement;
     let nativeChips: HTMLElement[];
 
     beforeEach(() => {
       fixture = TestBed.createComponent(InputChipList);
       fixture.detectChanges();
 
-      formField = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
       nativeChips = fixture.debugElement.queryAll(By.css('mat-chip'))
         .map((chip) => chip.nativeElement);
     });
@@ -1015,7 +1032,7 @@ describe('MatChipList', () => {
 
 @Component({
   template: `
-    <mat-chip-list [tabIndex]="tabIndex">
+    <mat-chip-list [tabIndex]="tabIndex" [selectable]="selectable">
       <div *ngFor="let i of [0,1,2,3,4]">
        <div *ngIf="remove != i">
           <mat-chip (select)="chipSelect(i)" (deselect)="chipDeselect(i)">
