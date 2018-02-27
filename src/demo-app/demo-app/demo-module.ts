@@ -63,12 +63,11 @@ import {
 } from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
+import {TreeDemoModule} from '../tree/tree-demo-module';
 import {TypographyDemo} from '../typography/typography-demo';
 import {VirtualScrollDemo} from '../virtual-scroll/virtual-scroll-demo';
 import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
-import {TableDemoModule} from '../table/table-demo-module';
-import {TreeDemoModule} from '../tree/tree-demo-module';
 
 @NgModule({
   imports: [
