@@ -390,6 +390,24 @@ describe('MatRipple', () => {
 
      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
    }));
+
+   it('should allow passing only a configuration', fakeAsync(() => {
+     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+
+     const rippleRef = rippleDirective.launch({persistent: true});
+
+     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
+
+     tick(enterDuration + exitDuration);
+
+     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
+
+     rippleRef.fadeOut();
+
+     tick(exitDuration);
+
+     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+   }));
   });
 
   describe('global ripple options', () => {
@@ -525,14 +543,12 @@ describe('MatRipple', () => {
 
   describe('configuring behavior', () => {
     let controller: RippleContainerWithInputBindings;
-    let rippleComponent: MatRipple;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(RippleContainerWithInputBindings);
       fixture.detectChanges();
 
       controller = fixture.debugElement.componentInstance;
-      rippleComponent = controller.ripple;
       rippleTarget = fixture.debugElement.nativeElement.querySelector('[mat-ripple]');
     });
 

@@ -24,7 +24,6 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
   QueryList,
   ViewChild,
@@ -112,7 +111,6 @@ export class MatSelectionListChange {
 export class MatListOption extends _MatListOptionMixinBase
     implements AfterContentInit, OnDestroy, OnInit, FocusableOption, CanDisableRipple {
 
-  private _lineSetter: MatLineSetter;
   private _selected = false;
   private _disabled = false;
 
@@ -164,24 +162,31 @@ export class MatListOption extends _MatListOptionMixinBase
 
   constructor(private _element: ElementRef,
               private _changeDetector: ChangeDetectorRef,
-              /** @docs-private */ @Optional() @Inject(forwardRef(() => MatSelectionList))
-              public selectionList: MatSelectionList) {
+              /** @docs-private */
+              @Inject(forwardRef(() => MatSelectionList)) public selectionList: MatSelectionList) {
     super();
   }
 
   ngOnInit() {
-    if (this._selected) {
-      // List options that are selected at initialization can't be reported properly to the form
-      // control. This is because it takes some time until the selection-list knows about all
-      // available options. Also it can happen that the ControlValueAccessor has an initial value
-      // that should be used instead. Deferring the value change report to the next tick ensures
-      // that the form control value is not being overwritten.
-      Promise.resolve().then(() => this.selected = true);
-    }
+    // List options that are selected at initialization can't be reported properly to the form
+    // control. This is because it takes some time until the selection-list knows about all
+    // available options. Also it can happen that the ControlValueAccessor has an initial value
+    // that should be used instead. Deferring the value change report to the next tick ensures
+    // that the form control value is not being overwritten.
+    const wasSelected = this._selected;
+
+    Promise.resolve().then(() => {
+      if (this._selected || wasSelected) {
+        this.selected = true;
+        this._changeDetector.markForCheck();
+      }
+    });
   }
 
   ngAfterContentInit() {
-    this._lineSetter = new MatLineSetter(this._lines, this._element);
+    // TODO: consider turning the setter into a function, it doesn't do anything as a class.
+    // tslint:disable-next-line:no-unused-expression
+    new MatLineSetter(this._lines, this._element);
   }
 
   ngOnDestroy(): void {
@@ -284,7 +289,8 @@ export class MatListOption extends _MatListOptionMixinBase
     '(focus)': 'focus()',
     '(blur)': '_onTouched()',
     '(keydown)': '_keydown($event)',
-    '[attr.aria-disabled]': 'disabled.toString()'},
+    '[attr.aria-disabled]': 'disabled.toString()',
+  },
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None,
@@ -391,6 +397,10 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
 
   /** Passes relevant key presses to our key manager. */
   _keydown(event: KeyboardEvent) {
+    if (this.disabled) {
+      return;
+    }
+
     switch (event.keyCode) {
       case SPACE:
       case ENTER:

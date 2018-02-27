@@ -17,8 +17,5 @@
       "jasmine",
       "node"
     ]
-  },
-  "exclude": [
-    "*/files/**/*"
-  ]
+  }
 }

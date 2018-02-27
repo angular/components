@@ -1,13 +1,12 @@
 import {DOWN_ARROW, SPACE, ENTER, UP_ARROW, HOME, END} from '@angular/cdk/keycodes';
-import {Platform} from '@angular/cdk/platform';
 import {
   createKeyboardEvent,
   dispatchFakeEvent,
   dispatchEvent,
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing';
-import {Component, DebugElement} from '@angular/core';
-import {async, ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
+import {Component, DebugElement, ChangeDetectionStrategy} from '@angular/core';
+import {async, ComponentFixture, fakeAsync, TestBed, tick, flush} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
   MatListModule,
@@ -22,7 +21,6 @@ describe('MatSelectionList without forms', () => {
   describe('with list option', () => {
     let fixture: ComponentFixture<SelectionListWithListOptions>;
     let listOptions: DebugElement[];
-    let listItemEl: DebugElement;
     let selectionList: DebugElement;
 
     beforeEach(async(() => {
@@ -45,7 +43,6 @@ describe('MatSelectionList without forms', () => {
       fixture.detectChanges();
 
       listOptions = fixture.debugElement.queryAll(By.directive(MatListOption));
-      listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
       selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
     }));
 
@@ -436,8 +433,6 @@ describe('MatSelectionList without forms', () => {
     let fixture: ComponentFixture<SelectionListWithOnlyOneOption>;
     let listOption: DebugElement;
     let listItemEl: DebugElement;
-    let selectionList: DebugElement;
-    let platform: Platform;
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
@@ -457,12 +452,7 @@ describe('MatSelectionList without forms', () => {
       fixture = TestBed.createComponent(SelectionListWithOnlyOneOption);
       listOption = fixture.debugElement.query(By.directive(MatListOption));
       listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
-      selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
       fixture.detectChanges();
-    }));
-
-    beforeEach(inject([Platform], (p: Platform) => {
-      platform = p;
     }));
 
     it('should be focused when focus on nativeElements', () => {
@@ -527,7 +517,6 @@ describe('MatSelectionList without forms', () => {
   describe('with list disabled', () => {
     let fixture: ComponentFixture<SelectionListWithListDisabled>;
     let listOption: DebugElement[];
-    let listItemEl: DebugElement;
     let selectionList: DebugElement;
 
     beforeEach(async(() => {
@@ -547,7 +536,6 @@ describe('MatSelectionList without forms', () => {
     beforeEach(async(() => {
       fixture = TestBed.createComponent(SelectionListWithListDisabled);
       listOption = fixture.debugElement.queryAll(By.directive(MatListOption));
-      listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
       selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
       fixture.detectChanges();
     }));
@@ -568,9 +556,6 @@ describe('MatSelectionList without forms', () => {
 
   describe('with checkbox position after', () => {
     let fixture: ComponentFixture<SelectionListWithCheckboxPositionAfter>;
-    let listOption: DebugElement[];
-    let listItemEl: DebugElement;
-    let selectionList: DebugElement;
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
@@ -588,9 +573,6 @@ describe('MatSelectionList without forms', () => {
 
     beforeEach(async(() => {
       fixture = TestBed.createComponent(SelectionListWithCheckboxPositionAfter);
-      listOption = fixture.debugElement.queryAll(By.directive(MatListOption));
-      listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
-      selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
       fixture.detectChanges();
     }));
 
@@ -610,7 +592,8 @@ describe('MatSelectionList with forms', () => {
         SelectionListWithModel,
         SelectionListWithFormControl,
         SelectionListWithPreselectedOption,
-        SelectionListWithPreselectedOptionAndModel
+        SelectionListWithPreselectedOptionAndModel,
+        SelectionListWithPreselectedFormControlOnPush,
       ]
     });
 
@@ -620,7 +603,6 @@ describe('MatSelectionList with forms', () => {
   describe('and ngModel', () => {
     let fixture: ComponentFixture<SelectionListWithModel>;
     let selectionListDebug: DebugElement;
-    let selectionList: MatSelectionList;
     let listOptions: MatListOption[];
     let ngModel: NgModel;
 
@@ -629,7 +611,6 @@ describe('MatSelectionList with forms', () => {
       fixture.detectChanges();
 
       selectionListDebug = fixture.debugElement.query(By.directive(MatSelectionList));
-      selectionList = selectionListDebug.componentInstance;
       ngModel = selectionListDebug.injector.get<NgModel>(NgModel);
       listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
         .map(optionDebugEl => optionDebugEl.componentInstance);
@@ -730,7 +711,7 @@ describe('MatSelectionList with forms', () => {
     it('should update the model if an option got selected via the model', fakeAsync(() => {
       expect(fixture.componentInstance.selectedOptions).toEqual([]);
 
-      selectionList.selectedOptions.select(listOptions[0]);
+      selectionListDebug.componentInstance.selectedOptions.select(listOptions[0]);
       fixture.detectChanges();
       tick();
 
@@ -741,16 +722,12 @@ describe('MatSelectionList with forms', () => {
 
   describe('and formControl', () => {
     let fixture: ComponentFixture<SelectionListWithFormControl>;
-    let selectionListDebug: DebugElement;
-    let selectionList: MatSelectionList;
     let listOptions: MatListOption[];
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SelectionListWithFormControl);
       fixture.detectChanges();
 
-      selectionListDebug = fixture.debugElement.query(By.directive(MatSelectionList));
-      selectionList = selectionListDebug.componentInstance;
       listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
         .map(optionDebugEl => optionDebugEl.componentInstance);
     });
@@ -786,8 +763,6 @@ describe('MatSelectionList with forms', () => {
     it('should mark options as selected when the value is set before they are initialized', () => {
       fixture.destroy();
       fixture = TestBed.createComponent(SelectionListWithFormControl);
-      selectionListDebug = fixture.debugElement.query(By.directive(MatSelectionList));
-      selectionList = selectionListDebug.componentInstance;
 
       fixture.componentInstance.formControl.setValue(['opt2', 'opt3']);
       fixture.detectChanges();
@@ -824,6 +799,20 @@ describe('MatSelectionList with forms', () => {
       expect(listOptions[0].selected).toBe(true);
       expect(listOptions[1].selected).toBe(true);
       expect(fixture.componentInstance.selectedOptions).toEqual(['opt1', 'opt2']);
+    }));
+
+    it('should show the item as selected when preselected inside OnPush parent', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectionListWithPreselectedFormControlOnPush);
+      fixture.detectChanges();
+
+      const option = fixture.debugElement.queryAll(By.directive(MatListOption))[1];
+
+      fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
+
+      expect(option.componentInstance.selected).toBe(true);
+      expect(option.nativeElement.querySelector('.mat-pseudo-checkbox-checked')).toBeTruthy();
     }));
 
   });
@@ -974,4 +963,18 @@ class SelectionListWithPreselectedOption {
 })
 class SelectionListWithPreselectedOptionAndModel {
   selectedOptions = ['opt1'];
+}
+
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <mat-selection-list [formControl]="formControl">
+      <mat-list-option *ngFor="let opt of opts" [value]="opt">{{opt}}</mat-list-option>
+    </mat-selection-list>
+  `
+})
+class SelectionListWithPreselectedFormControlOnPush {
+  opts = ['opt1', 'opt2', 'opt3'];
+  formControl = new FormControl(['opt2']);
 }
