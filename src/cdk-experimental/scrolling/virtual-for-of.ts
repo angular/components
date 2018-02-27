@@ -45,12 +45,6 @@ export type CdkVirtualForOfContext<T> = {
 };
 
 
-type RecordViewTuple<T> = {
-  record: IterableChangeRecord<T> | null,
-  view?: EmbeddedViewRef<CdkVirtualForOfContext<T>>
-};
-
-
 /**
  * A directive similar to `ngForOf` to be used for rendering data inside a virtual scrolling
  * container.
@@ -100,6 +94,8 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
       this._template = value;
     }
   }
+
+  @Input() cdkVirtualForTemplateCacheSize: number = 20;
 
   /** Emits whenever the data in the current DataSource changes. */
   dataStream: Observable<T[]> = this._dataSourceChanges
@@ -256,80 +252,63 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
 
   /** Apply changes to the DOM. */
   private _applyChanges(changes: IterableChanges<T>) {
-    // TODO(mmalerba): Currently we remove every view and then re-insert it in the correct place.
-    // It would be better to generate the minimal set of remove & inserts to get to the new list
-    // instead.
+    // Rearrange the views to put them in the right location.
+    changes.forEachOperation(
+        (record: IterableChangeRecord<T>, adjustedPreviousIndex: number, currentIndex: number) => {
+          if (record.previousIndex == null) {  // Item added.
+            const view = this._getViewForNewItem();
+            this._viewContainerRef.insert(view, currentIndex);
+            view.context.$implicit = record.item;
+          } else if (currentIndex == null) {  // Item removed.
+            this._cacheView(this._viewContainerRef.detach(adjustedPreviousIndex) as
+                EmbeddedViewRef<CdkVirtualForOfContext<T>>);
+          } else {  // Item moved.
+            const view = this._viewContainerRef.get(adjustedPreviousIndex) as
+                EmbeddedViewRef<CdkVirtualForOfContext<T>>;
+            this._viewContainerRef.move(view, currentIndex);
+            view.context.$implicit = record.item;
+          }
+        });
 
-    // Detach all of the views and add them into an array to preserve their original order.
-    const previousViews: (EmbeddedViewRef<CdkVirtualForOfContext<T>> | null)[] = [];
+    // Update $implicit for any items that had an identity change.
+    changes.forEachIdentityChange((record: IterableChangeRecord<T>) => {
+      const view = this._viewContainerRef.get(record.currentIndex!) as
+          EmbeddedViewRef<CdkVirtualForOfContext<T>>;
+      view.context.$implicit = record.item;
+    });
+
+    // Update the context variables on all items.
+    const count = this._data.length;
     let i = this._viewContainerRef.length;
     while (i--) {
-      previousViews.unshift(
-          this._viewContainerRef.detach()! as EmbeddedViewRef<CdkVirtualForOfContext<T>>);
-    }
-
-    // Mark the removed indices so we can recycle their views.
-    changes.forEachRemovedItem(record => {
-      this._templateCache.push(previousViews[record.previousIndex!]!);
-      previousViews[record.previousIndex!] = null;
-    });
-
-    // Queue up the newly added items to be inserted, recycling views from the cache if possible.
-    const insertTuples: RecordViewTuple<T>[] = [];
-    changes.forEachAddedItem(record => {
-      insertTuples[record.currentIndex!] = {record, view: this._templateCache.pop()};
-    });
-
-    // Queue up moved items to be re-inserted.
-    changes.forEachMovedItem(record => {
-      insertTuples[record.currentIndex!] = {record, view: previousViews[record.previousIndex!]!};
-      previousViews[record.previousIndex!] = null;
-    });
-
-    // We have nulled-out all of the views that were removed or moved from previousViews. What is
-    // left is the unchanged items that we queue up to be re-inserted.
-    i = previousViews.length;
-    while (i--) {
-      if (previousViews[i]) {
-        insertTuples[i] = {record: null, view: previousViews[i]!};
-      }
-    }
-
-    // We now have a full list of everything to be inserted, so go ahead and insert them.
-    this._insertViews(insertTuples);
-  }
-
-  /** Insert the RecordViewTuples into the container element. */
-  private _insertViews(insertTuples: RecordViewTuple<T>[]) {
-    const count = this._data.length;
-    let i = insertTuples.length;
-    const lastIndex = i - 1;
-    while (i--) {
-      const index = lastIndex - i;
-      let {view, record} = insertTuples[index];
-      if (view) {
-        this._viewContainerRef.insert(view);
-      } else {
-        view = this._viewContainerRef.createEmbeddedView(this._template, {
-              $implicit: null!,
-              cdkVirtualForOf: this._cdkVirtualForOf,
-              index: -1,
-              count: -1,
-              first: false,
-              last: false,
-              odd: false,
-              even: false
-            });
-      }
-
-      if (record) {
-        view.context.$implicit = record.item as T;
-      }
-      view.context.index = this._renderedRange.start + index;
+      const view = this._viewContainerRef.get(i) as EmbeddedViewRef<CdkVirtualForOfContext<T>>;
+      view.context.index = this._renderedRange.start + i;
       view.context.count = count;
       this._updateComputedContextProperties(view.context);
-      view.detectChanges();
     }
+  }
+
+  /** Cache the given detached view. */
+  private _cacheView(view: EmbeddedViewRef<CdkVirtualForOfContext<T>>) {
+    if (this._templateCache.length < this.cdkVirtualForTemplateCacheSize) {
+      this._templateCache.push(view);
+    } else {
+      view.destroy();
+    }
+  }
+
+  /** Get a view for a new item, either from the cache or by creating a new one. */
+  private _getViewForNewItem(): EmbeddedViewRef<CdkVirtualForOfContext<T>> {
+    return this._templateCache.pop() || this._viewContainerRef.createEmbeddedView(this._template, {
+      $implicit: null!,
+      cdkVirtualForOf: this._cdkVirtualForOf,
+      index: -1,
+      count: -1,
+      first: false,
+      last: false,
+      odd: false,
+      even: false
+    });
   }
 
   /** Update the computed properties on the `CdkVirtualForOfContext`. */
