@@ -22,8 +22,8 @@ import {
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {fromEvent} from 'rxjs/observable/fromEvent';
+import {sampleTime} from 'rxjs/operators/sampleTime';
 import {takeUntil} from 'rxjs/operators/takeUntil';
-import {throttleTime} from 'rxjs/operators/throttleTime';
 import {animationFrame} from 'rxjs/scheduler/animationFrame';
 import {Subject} from 'rxjs/Subject';
 import {CdkVirtualForOf} from './virtual-for-of';
@@ -177,7 +177,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
 
       this._ngZone.runOutsideAngular(() => {
         fromEvent(this.elementRef.nativeElement, 'scroll')
-            .pipe(throttleTime(0, animationFrame))
+            .pipe(sampleTime(0, animationFrame))
             .subscribe(() => this._scrollStrategy.onContentScrolled());
       });
     });
