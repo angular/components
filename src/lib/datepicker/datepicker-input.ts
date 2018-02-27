@@ -59,8 +59,11 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
  */
 export class MatDatepickerInputEvent<D> {
   /** The new value for the target datepicker input. */
-  selectionModel: MatDateSelectionModel<D> | null;
   value: D|null;
+
+  /** The selection model for the target datepicker */
+  selectionModel: MatDateSelectionModel<D> | null;
+
   constructor(
     /** Reference to the datepicker input component that emitted the event. */
     public target: MatDatepickerInput<D>,
