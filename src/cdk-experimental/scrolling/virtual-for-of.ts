@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CollectionViewer, DataSource, Range, StaticArrayDataSource} from '@angular/cdk/collections';
+import {ArrayDataSource, CollectionViewer, DataSource, Range} from '@angular/cdk/collections';
 import {
   Directive,
   DoCheck,
@@ -35,7 +35,7 @@ import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 /** The context for an item rendered by `CdkVirtualForOf` */
 export type CdkVirtualForOfContext<T> = {
   $implicit: T;
-  cdkVirtualForOf: NgIterable<T> | DataSource<T>;
+  cdkVirtualForOf: DataSource<T> | Observable<T[]> | NgIterable<T>;
   index: number;
   count: number;
   first: boolean;
@@ -61,15 +61,18 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
 
   /** The DataSource to display. */
   @Input()
-  get cdkVirtualForOf(): NgIterable<T> | DataSource<T> { return this._cdkVirtualForOf; }
-  set cdkVirtualForOf(value: NgIterable<T> | DataSource<T>) {
+  get cdkVirtualForOf(): DataSource<T> | Observable<T[]> | NgIterable<T> {
+    return this._cdkVirtualForOf;
+  }
+  set cdkVirtualForOf(value: DataSource<T> | Observable<T[]> | NgIterable<T>) {
     this._cdkVirtualForOf = value;
     const ds = value instanceof DataSource ? value :
-        // Slice the value since NgIterable may be array-like rather than an array.
-        new StaticArrayDataSource<T>(Array.prototype.slice.call(value));
+        // Slice the value if its an NgIterable to ensure we're working with an array.
+        new ArrayDataSource<T>(
+            value instanceof Observable ? value : Array.prototype.slice.call(value));
     this._dataSourceChanges.next(ds);
   }
-  _cdkVirtualForOf: NgIterable<T> | DataSource<T>;
+  _cdkVirtualForOf: DataSource<T> | Observable<T[]> | NgIterable<T>;
 
   /**
    * The `TrackByFunction` to use for tracking changes. The `TrackByFunction` takes the index and
