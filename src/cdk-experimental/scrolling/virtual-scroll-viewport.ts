@@ -177,6 +177,8 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
 
       this._ngZone.runOutsideAngular(() => {
         fromEvent(this.elementRef.nativeElement, 'scroll')
+            // Sample the scroll stream at every animation frame. This way if there are multiple
+            // scroll events in the same frame we only need to recheck our layout once
             .pipe(sampleTime(0, animationFrame))
             .subscribe(() => this._scrollStrategy.onContentScrolled());
       });
