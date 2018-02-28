@@ -35,7 +35,7 @@ import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs/Subscription';
 import {MatDatepicker} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
-import {MatDateSelectionChange, MatDateSelectionModel} from './date-selection';
+import {MatDatepickerRange, MatDateSelectionChange, MatDateSelectionModel} from './date-selection';
 
 
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -59,7 +59,7 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
  */
 export class MatDatepickerInputEvent<D> {
   /** The new value for the target datepicker input. */
-  value: D|null;
+  value: MatDatepickerRange<D> | D | null;
 
   constructor(
     /** Reference to the datepicker input component that emitted the event. */
@@ -70,14 +70,13 @@ export class MatDatepickerInputEvent<D> {
   }
 }
 
-
 /** Directive used to connect an input to a MatDatepicker. */
 @Directive({
-  selector: 'input[matDatepicker]',
+  selector: 'input[matDatepickerCommon]',
   providers: [
     MAT_DATEPICKER_VALUE_ACCESSOR,
     MAT_DATEPICKER_VALIDATORS,
-    {provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: MatDatepickerInput},
+    {provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: MatDatepickerInputCommon},
   ],
   host: {
     '[attr.aria-haspopup]': 'true',
@@ -92,7 +91,7 @@ export class MatDatepickerInputEvent<D> {
   },
   exportAs: 'matDatepickerInput',
 })
-export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, Validator {
+export class MatDatepickerInputCommon<D> implements ControlValueAccessor, OnDestroy, Validator {
   /** The datepicker that this input is associated with. */
   @Input()
   set matDatepicker(value: MatDatepicker<D>) {
@@ -120,7 +119,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /** The value of the input. */
   @Input()
-  get value(): D | null { return this._selectionModel.selected; }
+  get value(): D | null { return <D|null>this._selectionModel.selected; }
   set value(value: D | null) {
     value = this._dateAdapter.deserialize(value);
     value = this._getValidDateOrNull(value);
@@ -246,9 +245,9 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     this._selectionModel = new MatDateSelectionModel<D>(this._dateAdapter);
     this._selectionModelSubscription = this._selectionModel.onChange
       .subscribe((selected: MatDateSelectionChange<D>) => {
-        const oldValue = this.value;
-        this.value = selected.value;
-        if (!this._dateAdapter.sameDate(oldValue, selected.value)) {
+        const oldValue = this._prevValue;
+        this.value = <D|null>selected.value;
+        if (!this._dateAdapter.sameDate(oldValue, <D|null>selected.value)) {
           this._cvaOnChange(this.value);
           this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
           this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
@@ -354,4 +353,30 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
   }
+}
+
+
+/** Directive used to connect an input to a MatDatepicker. */
+@Directive({
+  selector: 'input[matDatepicker]',
+  providers: [
+    MAT_DATEPICKER_VALUE_ACCESSOR,
+    MAT_DATEPICKER_VALIDATORS,
+    {provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: MatDatepickerInput},
+  ],
+  host: {
+    '[attr.aria-haspopup]': 'true',
+    '[attr.aria-owns]': '(_datepicker?.opened && _datepicker.id) || null',
+    '[attr.min]': 'min ? _dateAdapter.toIso8601(min) : null',
+    '[attr.max]': 'max ? _dateAdapter.toIso8601(max) : null',
+    '[disabled]': 'disabled',
+    '(input)': '_onInput($event.target.value)',
+    '(change)': '_onChange()',
+    '(blur)': '_onTouched()',
+    '(keydown)': '_onKeydown($event)',
+  },
+  exportAs: 'matDatepickerInput',
+})
+export class MatDatepickerInput<D> extends MatDatepickerInputCommon<D>
+  implements ControlValueAccessor, OnDestroy, Validator {
 }
