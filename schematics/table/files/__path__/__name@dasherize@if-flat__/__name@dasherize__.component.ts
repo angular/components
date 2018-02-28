@@ -6,35 +6,38 @@ import { DataSource } from '@angular/cdk/collections';
 import { of } from 'rxjs/observable/of';
 import { merge } from 'rxjs/observable/merge';
 
-export interface Element {
+/** Todo: Replace this with your own data model type */
+export interface DataItem {
   name: string;
-  position: number;
-  weight: number;
-  symbol: string;
+  id: number;
+}
+
+function compare(a, b, isAsc) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
 
 export class ExampleDataSource extends DataSource<any> {
-  data: Element[] = [
-    {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-    {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-    {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-    {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-    {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-    {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-    {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-    {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-    {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-    {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-    {position: 11, name: 'Sodium', weight: 22.9897, symbol: 'Na'},
-    {position: 12, name: 'Magnesium', weight: 24.305, symbol: 'Mg'},
-    {position: 13, name: 'Aluminum', weight: 26.9815, symbol: 'Al'},
-    {position: 14, name: 'Silicon', weight: 28.0855, symbol: 'Si'},
-    {position: 15, name: 'Phosphorus', weight: 30.9738, symbol: 'P'},
-    {position: 16, name: 'Sulfur', weight: 32.065, symbol: 'S'},
-    {position: 17, name: 'Chlorine', weight: 35.453, symbol: 'Cl'},
-    {position: 18, name: 'Argon', weight: 39.948, symbol: 'Ar'},
-    {position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K'},
-    {position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca'},
+  data: DataItem[] = [
+    {id: 1, name: 'Hydrogen'},
+    {id: 2, name: 'Helium'},
+    {id: 3, name: 'Lithium'},
+    {id: 4, name: 'Beryllium'},
+    {id: 5, name: 'Boron'},
+    {id: 6, name: 'Carbon'},
+    {id: 7, name: 'Nitrogen'},
+    {id: 8, name: 'Oxygen'},
+    {id: 9, name: 'Fluorine'},
+    {id: 10, name: 'Neon'},
+    {id: 11, name: 'Sodium'},
+    {id: 12, name: 'Magnesium'},
+    {id: 13, name: 'Aluminum'},
+    {id: 14, name: 'Silicon'},
+    {id: 15, name: 'Phosphorus'},
+    {id: 16, name: 'Sulfur'},
+    {id: 17, name: 'Chlorine'},
+    {id: 18, name: 'Argon'},
+    {id: 19, name: 'Potassium'},
+    {id: 20, name: 'Calcium'},
   ];
 
   constructor(private _paginator: MatPaginator, private _sort: MatSort) {
@@ -42,32 +45,38 @@ export class ExampleDataSource extends DataSource<any> {
   }
 
   connect(): Observable<Element[]> {
-    const stream = [
+    // Combine everything that affects the rendered data into one update
+    // stream for the data-table to consume.
+    const dataMutations = [
       of(this.data),
       this._paginator.page,
       this._sort.sortChange
     ];
 
-    return merge(...stream).pipe(map(() => {
-      return this.getPagedData(this.getSortedData([...this.data]));
+    return merge(...dataMutations).pipe(map(() => {
+      return this.getPagedData(this.getSortedData(this.data));
     }));
   }
 
   disconnect() {}
 
-  getPagedData(data) {
+  private getPagedData(data) {
     const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
     return data.splice(startIndex, this._paginator.pageSize);
   }
 
-  getSortedData(data) {
-    if (!this._sort.active || this._sort.direction === '') { return data; }
+  private getSortedData(data) {
+    if (!this._sort.active || this._sort.direction === '') {
+      return data;
+    }
+
     return data.sort((a, b) => {
-      const propertyA = a[this._sort.active];
-      const propertyB = b[this._sort.active];
-      const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
-      const valueB = isNaN(+propertyB) ? propertyB : +propertyB;
-      return (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1);
+      const isAsc = this._sort.direction == 'asc';
+      switch (this._sort.active) {
+        case 'name': return compare(a.name, b.name, isAsc);
+        case 'id': return compare(+a.id, +b.id, isAsc);
+        default: return 0;
+      }
     });
   }
 }
@@ -76,30 +85,18 @@ export class ExampleDataSource extends DataSource<any> {
   selector: '<%= selector %>',<% if(inlineTemplate) { %>
   template: `
     <div class="mat-elevation-z8">
-      <mat-table #table [dataSource]="dataSource" matSort>
+      <mat-table #table [dataSource]="dataSource" matSort aria-label="Elements">
 
-        <!-- Position Column -->
-        <ng-container matColumnDef="position">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>No.</mat-header-cell>
-          <mat-cell *matCellDef="let element">{{element.position}}</mat-cell>
+        <!-- Id Column -->
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
         </ng-container>
 
         <!-- Name Column -->
         <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
-          <mat-cell *matCellDef="let element">{{element.name}}</mat-cell>
-        </ng-container>
-
-        <!-- Weight Column -->
-        <ng-container matColumnDef="weight">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>Weight</mat-header-cell>
-          <mat-cell *matCellDef="let element">{{element.weight}}</mat-cell>
-        </ng-container>
-
-        <!-- Color Column -->
-        <ng-container matColumnDef="symbol">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>Symbol</mat-header-cell>
-          <mat-cell *matCellDef="let element">{{element.symbol}}</mat-cell>
+          <mat-cell *matCellDef="let row">{{row.name}}</mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -107,10 +104,10 @@ export class ExampleDataSource extends DataSource<any> {
       </mat-table>
 
       <mat-paginator #paginator
-        [length]="20"
+        [length]="dataSource.data.length"
         [pageIndex]="0"
         [pageSize]="10"
-        [pageSizeOptions]="[5, 10, 25, 100]">
+        [pageSizeOptions]="[25, 50, 100, 250]">
       </mat-paginator>
     </div>
   `,<% } else { %>
@@ -123,8 +120,10 @@ export class ExampleDataSource extends DataSource<any> {
 export class <%= classify(name) %>Component implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  displayedColumns = ['position', 'name', 'weight', 'symbol'];
   dataSource: ExampleDataSource;
+
+  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
+  displayedColumns = ['id', 'name'];
 
   ngOnInit() {
     this.dataSource = new ExampleDataSource(this.paginator, this.sort);

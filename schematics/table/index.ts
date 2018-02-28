@@ -10,15 +10,15 @@ import {buildComponent} from '../utils/devkit-utils/component';
  */
 export default function(options: Schema): Rule {
   return chain([
-    buildComponent({ ...options }),
-    options.skipImport ? noop() : addNavModulesToModule(options)
+    buildComponent({...options}),
+    options.skipImport ? noop() : addTableModulesToModule(options)
   ]);
 }
 
 /**
  * Adds the required modules to the relative module.
  */
-function addNavModulesToModule(options: Schema) {
+function addTableModulesToModule(options: Schema) {
   return (host: Tree) => {
     const modulePath = findModuleFromOptions(host, options);
     addModuleImportToModule(host, modulePath, 'MatTableModule', '@angular/material');

@@ -1,28 +1,16 @@
 <div class="mat-elevation-z8">
-  <mat-table #table [dataSource]="dataSource" matSort>
+  <mat-table #table [dataSource]="dataSource" matSort aria-label="Elements">
 
-    <!-- Position Column -->
-    <ng-container matColumnDef="position">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>No.</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{element.position}}</mat-cell>
+    <!-- Id Column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
     </ng-container>
 
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{element.name}}</mat-cell>
-    </ng-container>
-
-    <!-- Weight Column -->
-    <ng-container matColumnDef="weight">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Weight</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{element.weight}}</mat-cell>
-    </ng-container>
-
-    <!-- Color Column -->
-    <ng-container matColumnDef="symbol">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Symbol</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{element.symbol}}</mat-cell>
+      <mat-cell *matCellDef="let row">{{row.name}}</mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -30,9 +18,9 @@
   </mat-table>
 
   <mat-paginator #paginator
-    [length]="20"
+    [length]="dataSource.data.length"
     [pageIndex]="0"
     [pageSize]="10"
-    [pageSizeOptions]="[5, 10, 25, 100]">
+    [pageSizeOptions]="[25, 50, 100, 250]">
   </mat-paginator>
 </div>
