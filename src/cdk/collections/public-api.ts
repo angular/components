@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+export * from './array-data-source';
 export * from './collection-viewer';
 export * from './data-source';
 export * from './selection';
-export * from './static-array-data-source';
 export {
   UniqueSelectionDispatcher,
   UniqueSelectionDispatcherListener,
