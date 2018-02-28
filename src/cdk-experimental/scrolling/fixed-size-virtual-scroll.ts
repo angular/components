@@ -59,7 +59,7 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     this._updateRenderedRange();
   }
 
-  /** Called when the viewport is scrolled (debounced using requestAnimationFrame). */
+  /** Called when the viewport is scrolled. */
   onContentScrolled() {
     this._updateRenderedRange();
   }
