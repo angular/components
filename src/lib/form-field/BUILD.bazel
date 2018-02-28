@@ -1,91 +1,94 @@
-package(default_visibility=["//visibility:public"])
+package(default_visibility = ["//visibility:public"])
+
 load("@angular//:index.bzl", "ng_module")
 load("@io_bazel_rules_sass//sass:sass.bzl", "sass_library", "sass_binary")
 
-
 ng_module(
-  name = "form-field",
-  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
-  module_name = "@angular/material/form-field",
-  assets = [
-    ":form_field_css",
-    ":form_field_fill_css",
-    ":form_field_legacy_css",
-    ":form_field_outline_css",
-    ":form_field_standard_css",
-    "//src/lib/input:input_css"
-  ],
-  deps = [
-    "//src/lib/core",
-    "//src/cdk/coercion",
-    "//src/cdk/platform",
-  ],
-  tsconfig = ":tsconfig-build.json",
+    name = "form-field",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    assets = [
+        ":form_field_css",
+        ":form_field_fill_css",
+        ":form_field_legacy_css",
+        ":form_field_outline_css",
+        ":form_field_standard_css",
+        "//src/lib/input:input_css",
+    ],
+    module_name = "@angular/material/form-field",
+    tsconfig = ":tsconfig-build.json",
+    deps = [
+        "//src/cdk/coercion",
+        "//src/cdk/platform",
+        "//src/lib/core",
+    ],
 )
 
 sass_binary(
-  name = "form_field_scss",
-  src = "form-field.scss",
-  deps = ["//src/lib/core:core_scss_lib"],
+    name = "form_field_scss",
+    src = "form-field.scss",
+    deps = ["//src/lib/core:core_scss_lib"],
 )
 
 sass_binary(
-  name = "form_field_fill_scss",
-  src = "form-field-fill.scss",
-  deps = ["//src/lib/core:core_scss_lib"],
+    name = "form_field_fill_scss",
+    src = "form-field-fill.scss",
+    deps = ["//src/lib/core:core_scss_lib"],
 )
 
 sass_binary(
-  name = "form_field_legacy_scss",
-  src = "form-field-legacy.scss",
-  deps = ["//src/lib/core:core_scss_lib"],
+    name = "form_field_legacy_scss",
+    src = "form-field-legacy.scss",
+    deps = ["//src/lib/core:core_scss_lib"],
 )
 
 sass_binary(
-  name = "form_field_outline_scss",
-  src = "form-field-outline.scss",
-  deps = ["//src/lib/core:core_scss_lib"],
+    name = "form_field_outline_scss",
+    src = "form-field-outline.scss",
+    deps = ["//src/lib/core:core_scss_lib"],
 )
 
 sass_binary(
-  name = "form_field_standard_scss",
-  src = "form-field-standard.scss",
-  deps = ["//src/lib/core:core_scss_lib"],
+    name = "form_field_standard_scss",
+    src = "form-field-standard.scss",
+    deps = ["//src/lib/core:core_scss_lib"],
 )
 
 # TODO(jelbourn): remove these when sass_binary supports specifying an output filename and dir.
 # Copy the output of the sass_binary such that the filename and path match what we expect.
 genrule(
-  name = "form_field_css",
-  srcs = [":form_field_scss"],
-  outs = ["form-field.css"],
-  cmd = "cat $(locations :form_field_scss) > $@",
+    name = "form_field_css",
+    srcs = [":form_field_scss"],
+    outs = ["form-field.css"],
+    cmd = "cat $(locations :form_field_scss) > $@",
 )
 
 genrule(
-  name = "form_field_fill_css",
-  srcs = [":form_field_fill_scss"],
-  outs = ["form-field-fill.css"],
-  cmd = "cat $(locations :form_field_fill_scss) > $@",
+    name = "form_field_fill_css",
+    srcs = [":form_field_fill_scss"],
+    outs = ["form-field-fill.css"],
+    cmd = "cat $(locations :form_field_fill_scss) > $@",
 )
 
 genrule(
-  name = "form_field_legacy_css",
-  srcs = [":form_field_legacy_scss"],
-  outs = ["form-field-legacy.css"],
-  cmd = "cat $(locations :form_field_legacy_scss) > $@",
+    name = "form_field_legacy_css",
+    srcs = [":form_field_legacy_scss"],
+    outs = ["form-field-legacy.css"],
+    cmd = "cat $(locations :form_field_legacy_scss) > $@",
 )
 
 genrule(
-  name = "form_field_outline_css",
-  srcs = [":form_field_outline_scss"],
-  outs = ["form-field-outline.css"],
-  cmd = "cat $(locations :form_field_outline_scss) > $@",
+    name = "form_field_outline_css",
+    srcs = [":form_field_outline_scss"],
+    outs = ["form-field-outline.css"],
+    cmd = "cat $(locations :form_field_outline_scss) > $@",
 )
 
 genrule(
-  name = "form_field_standard_css",
-  srcs = [":form_field_standard_scss"],
-  outs = ["form-field-standard.css"],
-  cmd = "cat $(locations :form_field_standard_scss) > $@",
+    name = "form_field_standard_css",
+    srcs = [":form_field_standard_scss"],
+    outs = ["form-field-standard.css"],
+    cmd = "cat $(locations :form_field_standard_scss) > $@",
 )

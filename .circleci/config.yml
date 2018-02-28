@@ -41,12 +41,29 @@ jobs:
           key: material2-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
             - "node_modules"
+  lint:
+    <<: *job_defaults
+    steps:
+      - checkout:
+          <<: *post_checkout
+
+      # Enforce that BUILD files are formatted. Note that this uses the version of buildifier
+      # from the docker image above - take care that you use the same version when you run
+      # buildifier locally on your change.
+      - run: 'buildifier -mode=check $(find . -type f \( -name BUILD.bazel -or -name BUILD \)) ||
+              (echo "BUILD files not formatted. Please run ''npm run buildifier''" ; exit 1)'
+
+      # Run the skylark linter to check our Bazel rules
+      - run: 'find . -type f -name "*.bzl" |
+              xargs java -jar /usr/local/bin/Skylint_deploy.jar ||
+              (echo -e "\n.bzl files have lint errors. Please run ''yarn skylint''"; exit 1)'
 
 workflows:
   version: 2
   default_workflow:
     jobs:
       - build
+      - lint
 
 notify:
   webhooks:
