@@ -28,7 +28,8 @@ import {
   Optional,
   Output,
   ViewEncapsulation,
-  ViewChild, OnDestroy,
+  ViewChild,
+  OnDestroy,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
@@ -76,10 +77,10 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   get selectionModel(): MatDateSelectionModel<D> { return this._selectionModel; }
   set selectionModel(value: MatDateSelectionModel<D>) {
     this._selectionModel = value;
-    this._selectedDate = this._getDateInCurrentMonth(value.selected);
+    this._selectedDate = this._getDateInCurrentMonth(<D|null>value.selected);
     this._selectionModelSubscription.unsubscribe();
     this._selectionModelSubscription = this._selectionModel.onChange.subscribe(selected => {
-      this._selectedDate = this._getDateInCurrentMonth(selected.value);
+      this._selectedDate = this._getDateInCurrentMonth(<D|null>selected.value);
     });
   }
   private _selectionModel: MatDateSelectionModel<D>;

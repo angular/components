@@ -214,10 +214,6 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** The id for the datepicker calendar. */
   id: string = `mat-datepicker-${datepickerUid++}`;
 
-  /** The currently selected date. */
-  get _selected(): D | null { return this._selectionModel.selected; }
-  set _selected(value: D | null) { this._selectionModel.select(value); }
-
   /** The minimum selectable date. */
   get _minDate(): D | null {
     return this._datepickerInput && this._datepickerInput.min;
