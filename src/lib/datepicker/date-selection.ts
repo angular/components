@@ -23,8 +23,8 @@ export class MatDateSelectionModel<D> {
   private _selectionFinished = true;
 
   constructor(public _dateAdapter: DateAdapter<D>,
-              private _rangeMode: boolean | null = null,
-              private _selected: D | null | undefined = undefined) {
+              private _rangeMode = false,
+              private _selected: D | null = null) {
     if (this._selected !== undefined) {
       this.validateDate(this._selected);
     }
@@ -32,17 +32,11 @@ export class MatDateSelectionModel<D> {
 
   /** Selected value. */
   get selected(): D | null {
-    return this._selected === undefined ? null : this._selected;
+    return this._selected;
   }
 
   get rangeMode(): boolean {
-    return !!this._rangeMode;
-  }
-  set rangeMode(value: boolean) {
-    if (this._rangeMode !== null) {
-      throw Error('Datepicker range mode has been already set');
-    }
-    this._rangeMode = value;
+    return this._rangeMode;
   }
 
   /*

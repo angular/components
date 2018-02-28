@@ -61,16 +61,12 @@ export class MatDatepickerInputEvent<D> {
   /** The new value for the target datepicker input. */
   value: D|null;
 
-  /** The selection model for the target datepicker */
-  selectionModel: MatDateSelectionModel<D> | null;
-
   constructor(
     /** Reference to the datepicker input component that emitted the event. */
     public target: MatDatepickerInput<D>,
     /** Reference to the native input element associated with the datepicker input. */
     public targetElement: HTMLElement) {
-    this.selectionModel = this.target._selectionModel;
-    this.value = this.selectionModel.selected;
+    this.value = this.target._selectionModel.selected;
   }
 }
 
@@ -96,8 +92,7 @@ export class MatDatepickerInputEvent<D> {
   },
   exportAs: 'matDatepickerInput',
 })
-export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy,
-    Validator {
+export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, Validator {
   /** The datepicker that this input is associated with. */
   @Input()
   set matDatepicker(value: MatDatepicker<D>) {
@@ -132,11 +127,8 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy,
     if (!this._dateAdapter.sameDate(this._prevValue, value)) {
       this._prevValue = value;
       this._lastValueValid = value === null || this._dateAdapter.isValid(value);
-      this._cvaOnChange(value);
-      this.updateInputValue();
       this._selectionModel.select(value);
-      this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-      this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+      this.updateInputValue();
     }
   }
 
@@ -254,8 +246,14 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy,
     this._selectionModel = new MatDateSelectionModel<D>(this._dateAdapter);
     this._selectionModelSubscription = this._selectionModel.onChange
       .subscribe((selected: MatDateSelectionChange<D>) => {
-      this.value = selected.value;
-    });
+        const oldValue = this.value;
+        this.value = selected.value;
+        if (!this._dateAdapter.sameDate(oldValue, selected.value)) {
+          this._cvaOnChange(this.value);
+          this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+          this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+        }
+      });
 
     // Update the displayed date when the locale changes.
     this._localeSubscription = _dateAdapter.localeChanges.subscribe(() => {
