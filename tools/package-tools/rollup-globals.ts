@@ -71,6 +71,8 @@ export const rollupGlobals = {
   'rxjs/observable/of': 'Rx.Observable',
   'rxjs/observable/throw': 'Rx.Observable',
 
+  'rxjs/scheduler/animationFrame': 'Rx.Scheduler',
+
   'rxjs/operators/auditTime': 'Rx.operators',
   'rxjs/operators/catchError': 'Rx.operators',
   'rxjs/operators/combineLatest': 'Rx.operators',
@@ -81,6 +83,7 @@ export const rollupGlobals = {
   'rxjs/operators/first': 'Rx.operators',
   'rxjs/operators/map': 'Rx.operators',
   'rxjs/operators/pairwise': 'Rx.operators',
+  'rxjs/operators/sampleTime': 'Rx.operators',
   'rxjs/operators/share': 'Rx.operators',
   'rxjs/operators/shareReplay': 'Rx.operators',
   'rxjs/operators/startWith': 'Rx.operators',
