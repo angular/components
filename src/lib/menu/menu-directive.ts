@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {AnimationEvent} from '@angular/animations';
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
 import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
@@ -31,6 +30,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   NgZone,
+  OnInit,
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {merge} from 'rxjs/observable/merge';
@@ -55,6 +55,9 @@ export interface MatMenuDefaultOptions {
 
   /** Whether the menu should overlap the menu trigger. */
   overlapTrigger: boolean;
+
+  /** Class to be applied to the menu's backdrop. */
+  backdropClass: string;
 }
 
 /** Injection token to be used to override the default options for `mat-menu`. */
@@ -82,7 +85,7 @@ const MAT_MENU_BASE_ELEVATION = 2;
   ],
   exportAs: 'matMenu'
 })
-export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
+export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestroy {
   private _keyManager: FocusKeyManager<MatMenuItem>;
   private _xPosition: MenuPositionX = this._defaultOptions.xPosition;
   private _yPosition: MenuPositionY = this._defaultOptions.yPosition;
@@ -95,13 +98,16 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   _classList: {[key: string]: boolean} = {};
 
   /** Current state of the panel animation. */
-  _panelAnimationState: 'void' | 'enter-start' | 'enter' = 'void';
+  _panelAnimationState: 'void' | 'enter' = 'void';
 
   /** Parent menu of the current menu panel. */
   parentMenu: MatMenuPanel | undefined;
 
   /** Layout direction of the menu. */
   direction: Direction;
+
+  /** Class to be added to the backdrop element. */
+  @Input() backdropClass: string = this._defaultOptions.backdropClass;
 
   /** Position of the menu in the X axis. */
   @Input()
@@ -190,6 +196,10 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
     private _elementRef: ElementRef,
     private _ngZone: NgZone,
     @Inject(MAT_MENU_DEFAULT_OPTIONS) private _defaultOptions: MatMenuDefaultOptions) { }
+
+  ngOnInit() {
+    this.setPositionClasses();
+  }
 
   ngAfterContentInit() {
     this._keyManager = new FocusKeyManager<MatMenuItem>(this.items).withWrap().withTypeAhead();
@@ -292,19 +302,18 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
   /** Starts the enter animation. */
   _startAnimation() {
-    this._panelAnimationState = 'enter-start';
+    // @deletion-target 6.0.0 Combine with _resetAnimation.
+    this._panelAnimationState = 'enter';
   }
 
   /** Resets the panel animation to its initial state. */
   _resetAnimation() {
+    // @deletion-target 6.0.0 Combine with _startAnimation.
     this._panelAnimationState = 'void';
   }
 
   /** Callback that is invoked when the panel animation completes. */
-  _onAnimationDone(event: AnimationEvent) {
-    // After the initial expansion is done, trigger the second phase of the enter animation.
-    if (event.toState === 'enter-start') {
-      this._panelAnimationState = 'enter';
-    }
+  _onAnimationDone(_event: AnimationEvent) {
+    // @deletion-target 6.0.0 Not being used anymore. To be removed.
   }
 }

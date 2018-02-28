@@ -8,6 +8,13 @@
       "factory": "./table/index",
       "schema": "./table/schema.json",
       "aliases": [ "material-table" ]
+    },
+    // Adds Angular Material to an application without changing any templates
+    "materialShell": {
+      "description": "Create a Material shell",
+      "factory": "./shell",
+      "schema": "./shell/schema.json",
+      "aliases": ["material-shell"]
     }
   }
 }

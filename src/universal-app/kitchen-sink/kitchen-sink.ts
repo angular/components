@@ -3,6 +3,7 @@ import {ServerModule} from '@angular/platform-server';
 import {BrowserModule} from '@angular/platform-browser';
 import {
   MatAutocompleteModule,
+  MatBadgeModule,
   MatButtonModule,
   MatButtonToggleModule,
   MatCardModule,
@@ -42,8 +43,7 @@ import {
   CdkTableModule,
   DataSource
 } from '@angular/cdk/table';
-import {Overlay} from '@angular/cdk/overlay';
-
+import {ViewportRuler} from '@angular/cdk/scrolling';
 import {of as observableOf} from 'rxjs/observable/of';
 import {Observable} from 'rxjs/Observable';
 
@@ -75,13 +75,17 @@ export class KitchenSink {
   /** Data source for the CDK and Material table. */
   tableDataSource = new TableDataSource();
 
-  constructor(snackBar: MatSnackBar, dialog: MatDialog, overlay: Overlay) {
-    // Open a snack bar to do a basic sanity check of the overlays.
+  constructor(
+    snackBar: MatSnackBar,
+    dialog: MatDialog,
+    viewportRuler: ViewportRuler) {
     snackBar.open('Hello there');
+    dialog.open(TestDialog);
 
-    // TODO(crisbeto): use the noop scroll strategy until
-    // the fixes for the block scroll strategy get in.
-    dialog.open(TestDialog, {scrollStrategy: overlay.scrollStrategies.noop()});
+    // Do a sanity check on the viewport ruler.
+    viewportRuler.getViewportRect();
+    viewportRuler.getViewportSize();
+    viewportRuler.getViewportScrollPosition();
   }
 }
 
@@ -90,6 +94,7 @@ export class KitchenSink {
   imports: [
     BrowserModule.withServerTransition({appId: 'kitchen-sink'}),
     MatAutocompleteModule,
+    MatBadgeModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatCardModule,

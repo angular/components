@@ -10,6 +10,7 @@ import {
   TemplateRef,
   SkipSelf,
   Optional,
+  Injectable,
   Injector,
   Inject,
   ComponentRef
@@ -44,6 +45,7 @@ import {
 /**
  * Service to open modal dialogs.
  */
+@Injectable()
 export class Dialog {
   /** Stream that emits when all dialogs are closed. */
   get _afterAllClosed(): Observable<void> {
@@ -262,13 +264,17 @@ export class Dialog {
     const userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
     const injectionTokens = new WeakMap();
 
-    injectionTokens.set(this.injector.get(DIALOG_REF), dialogRef);
-    injectionTokens.set(this.injector.get(DIALOG_CONTAINER), dialogContainer);
-    injectionTokens.set(DIALOG_DATA, config.data);
-    injectionTokens.set(Directionality, {
-      value: config.direction,
-      change: observableOf()
-    });
+    injectionTokens
+      .set(this.injector.get(DIALOG_REF), dialogRef)
+      .set(this.injector.get(DIALOG_CONTAINER), dialogContainer)
+      .set(DIALOG_DATA, config.data);
+
+    if (!userInjector || !userInjector.get(Directionality, null)) {
+      injectionTokens.set(Directionality, {
+        value: config.direction,
+        change: observableOf()
+      });
+    }
 
     return new PortalInjector(userInjector || this.injector, injectionTokens);
   }
