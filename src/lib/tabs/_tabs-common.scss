@@ -25,6 +25,10 @@ $mat-tab-animation-duration: 500ms !default;
       opacity: 1;
     }
   }
+  
+  &.mat-tab-label-active {
+    opacity: 1;
+  }
 
   &.mat-tab-disabled {
     cursor: default;
