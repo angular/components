@@ -25,9 +25,7 @@ export class MatDateSelectionModel<D> {
   constructor(public _dateAdapter: DateAdapter<D>,
               private _rangeMode = false,
               private _selected: D | null = null) {
-    if (this._selected !== undefined) {
-      this.validateDate(this._selected);
-    }
+    this.validateDate(this._selected);
   }
 
   /** Selected value. */
