@@ -25,7 +25,7 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
 
   /**
    * @param itemSize The size of the items in the virtually scrolling list.
-   * @param bufferSize he number of buffer items to render beyond the edge of the viewport.
+   * @param bufferSize The number of buffer items to render beyond the edge of the viewport.
    */
   constructor(itemSize: number, bufferSize: number) {
     this._itemSize = itemSize;
@@ -115,12 +115,12 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
 
 
 /**
- * Provider factory for `VirtualScrollFixedSizeStrategy` that simply extracts the already created
- * `VirtualScrollFixedSizeStrategy` from the given directive.
- * @param fixedSizeDir The instance of `CdkVirtualScrollFixedSize` to extract the
- *     `VirtualScrollFixedSizeStrategy` from.
+ * Provider factory for `FixedSizeVirtualScrollStrategy` that simply extracts the already created
+ * `FixedSizeVirtualScrollStrategy` from the given directive.
+ * @param fixedSizeDir The instance of `CdkFixedSizeVirtualScroll` to extract the
+ *     `FixedSizeVirtualScrollStrategy` from.
  */
-export function _virtualScrollFixedSizeStrategyFactory(fixedSizeDir: CdkFixedSizeVirtualScroll) {
+export function _fixedSizeVirtualScrollStrategyFactory(fixedSizeDir: CdkFixedSizeVirtualScroll) {
   return fixedSizeDir._scrollStrategy;
 }
 
@@ -130,7 +130,7 @@ export function _virtualScrollFixedSizeStrategyFactory(fixedSizeDir: CdkFixedSiz
   selector: 'cdk-virtual-scroll-viewport[itemSize]',
   providers: [{
     provide: VIRTUAL_SCROLL_STRATEGY,
-    useFactory: _virtualScrollFixedSizeStrategyFactory,
+    useFactory: _fixedSizeVirtualScrollStrategyFactory,
     deps: [forwardRef(() => CdkFixedSizeVirtualScroll)],
   }],
 })
