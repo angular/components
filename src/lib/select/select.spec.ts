@@ -220,10 +220,10 @@ describe('MatSelect', () => {
           expect(select.getAttribute('aria-disabled')).toEqual('true');
         }));
 
-        it('should set the tabindex of the select to -1 if disabled', fakeAsync(() => {
+        it('should remove the tabindex attribute if disabled', fakeAsync(() => {
           fixture.componentInstance.control.disable();
           fixture.detectChanges();
-          expect(select.getAttribute('tabindex')).toEqual('-1');
+          expect(select.hasAttribute('tabindex')).toBe(false);
 
           fixture.componentInstance.control.enable();
           fixture.detectChanges();
@@ -3797,7 +3797,7 @@ class BasicSelect {
   isRequired: boolean;
   heightAbove = 0;
   heightBelow = 0;
-  tabIndexOverride: number;
+  tabIndexOverride = 0;
   ariaLabel: string;
   ariaLabelledby: string;
   panelClass = ['custom-one', 'custom-two'];

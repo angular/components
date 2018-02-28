@@ -9,13 +9,20 @@
 import {Constructor} from './constructor';
 import {CanDisable} from './disabled';
 
-/** @docs-private */
+/**
+ * @deprecated
+ * @deletion-target 7.0.0
+ */
 export interface HasTabIndex {
   /** Tabindex of the component. */
   tabIndex: number;
 }
 
-/** Mixin to augment a directive with a `tabIndex` property. */
+/**
+ * Mixin to augment a directive with a `tabIndex` property.
+ * @deprecated
+ * @deletion-target 7.0.0
+ */
 export function mixinTabIndex<T extends Constructor<CanDisable>>(base: T, defaultTabIndex = 0)
     : Constructor<HasTabIndex> & T {
   return class extends base {

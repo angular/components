@@ -30,12 +30,10 @@ import {
   CanColor,
   CanDisable,
   CanDisableRipple,
-  HasTabIndex,
   MatRipple,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple,
-  mixinTabIndex,
   RippleRef,
 } from '@angular/material/core';
 import {MAT_CHECKBOX_CLICK_ACTION, MatCheckboxClickAction} from './checkbox-config';
@@ -84,7 +82,7 @@ export class MatCheckboxBase {
   constructor(public _elementRef: ElementRef) {}
 }
 export const _MatCheckboxMixinBase =
-  mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatCheckboxBase)), 'accent'));
+  mixinColor(mixinDisableRipple(mixinDisabled(MatCheckboxBase)), 'accent');
 
 
 /**
@@ -110,13 +108,15 @@ export const _MatCheckboxMixinBase =
     '[class.mat-checkbox-label-before]': 'labelPosition == "before"',
   },
   providers: [MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR],
-  inputs: ['disabled', 'disableRipple', 'color', 'tabIndex'],
+  inputs: ['disabled', 'disableRipple', 'color'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAccessor,
-    AfterViewInit, OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple {
+    AfterViewInit, OnDestroy, CanColor, CanDisable, CanDisableRipple {
+
+  private _uniqueId: string = `mat-checkbox-${++nextUniqueId}`;
 
   /**
    * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
@@ -129,10 +129,11 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
    */
   @Input('aria-labelledby') ariaLabelledby: string | null = null;
 
-  private _uniqueId: string = `mat-checkbox-${++nextUniqueId}`;
-
   /** A unique id for the checkbox input. If none is supplied, it will be auto-generated. */
   @Input() id: string = this._uniqueId;
+
+  /** Tabindex for the underlying checkbox input. */
+  @Input() tabIndex: number = 0;
 
   /** Returns the unique id for the visual hidden input. */
   get inputId(): string { return `${this.id || this._uniqueId}-input`; }

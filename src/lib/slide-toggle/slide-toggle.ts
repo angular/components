@@ -30,12 +30,10 @@ import {
   CanDisable,
   CanDisableRipple,
   HammerInput,
-  HasTabIndex,
   MatRipple,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple,
-  mixinTabIndex,
   RippleRef,
 } from '@angular/material/core';
 
@@ -63,7 +61,7 @@ export class MatSlideToggleBase {
   constructor(public _elementRef: ElementRef) {}
 }
 export const _MatSlideToggleMixinBase =
-  mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatSlideToggleBase)), 'accent'));
+  mixinColor(mixinDisableRipple(mixinDisabled(MatSlideToggleBase)), 'accent');
 
 /** Represents a slidable "switch" toggle that can be moved between on and off. */
 @Component({
@@ -80,13 +78,13 @@ export const _MatSlideToggleMixinBase =
   templateUrl: 'slide-toggle.html',
   styleUrls: ['slide-toggle.css'],
   providers: [MAT_SLIDE_TOGGLE_VALUE_ACCESSOR],
-  inputs: ['disabled', 'disableRipple', 'color', 'tabIndex'],
+  inputs: ['disabled', 'disableRipple', 'color'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestroy, AfterContentInit,
-    ControlValueAccessor, CanDisable, CanColor, HasTabIndex, CanDisableRipple {
+    ControlValueAccessor, CanDisable, CanColor, CanDisableRipple {
 
   private onChange = (_: any) => {};
   private onTouched = () => {};
@@ -107,6 +105,9 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
 
   /** Whether the label should appear after or before the slide-toggle. Defaults to 'after' */
   @Input() labelPosition: 'before' | 'after' = 'after';
+
+  /** Tabindex of the underlying slide-toggle input element. */
+  @Input() tabIndex: number = 0;
 
   /** Whether the slide-toggle element is checked or not */
 

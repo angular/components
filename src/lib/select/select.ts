@@ -71,12 +71,10 @@ import {
   ErrorStateMatcher,
   CanUpdateErrorState,
   mixinErrorState,
-  HasTabIndex,
   MatOptgroup,
   MatOption,
   MatOptionSelectionChange,
   mixinDisabled,
-  mixinTabIndex,
   MAT_OPTION_PARENT_COMPONENT,
   mixinDisableRipple,
   CanDisableRipple,
@@ -167,8 +165,8 @@ export class MatSelectBase {
               public _parentFormGroup: FormGroupDirective,
               public ngControl: NgControl) {}
 }
-export const _MatSelectMixinBase = mixinDisableRipple(
-    mixinTabIndex(mixinDisabled(mixinErrorState(MatSelectBase))));
+export const _MatSelectMixinBase =
+  mixinDisableRipple(mixinDisabled(mixinErrorState(MatSelectBase)));
 
 
 /**
@@ -186,14 +184,14 @@ export class MatSelectTrigger {}
   exportAs: 'matSelect',
   templateUrl: 'select.html',
   styleUrls: ['select.css'],
-  inputs: ['disabled', 'disableRipple', 'tabIndex'],
+  inputs: ['disabled', 'disableRipple'],
   encapsulation: ViewEncapsulation.None,
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'role': 'listbox',
     '[attr.id]': 'id',
-    '[attr.tabindex]': 'tabIndex',
+    '[attr.tabindex]': 'disabled ? null : tabIndex',
     '[attr.aria-label]': '_ariaLabel',
     '[attr.aria-labelledby]': 'ariaLabelledby',
     '[attr.aria-required]': 'required.toString()',
@@ -221,8 +219,9 @@ export class MatSelectTrigger {}
   ],
 })
 export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnChanges,
-    OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex,
+    OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable,
     MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
+
   /** Whether or not the overlay panel is open. */
   private _panelOpen = false;
 
@@ -334,6 +333,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
   @Input() panelClass: string|string[]|Set<string>|{[key: string]: any};
+
+  /** Tabindex of the select element. */
+  @Input() tabIndex: number = 0;
 
   /** User-supplied override of the trigger element. */
   @ContentChild(MatSelectTrigger) customTrigger: MatSelectTrigger;
