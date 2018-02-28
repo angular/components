@@ -233,7 +233,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   }
 
   /** Selection model for value */
-  private _selectionModel: MatDateSelectionModel<D>;
+  _selectionModel: MatDateSelectionModel<D>;
 
   /** A reference to the overlay when the calendar is opened as a popup. */
   private _popupRef: OverlayRef;
@@ -281,11 +281,6 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       this._popupRef.dispose();
       this._popupComponentRef = null;
     }
-  }
-
-  /** Selects the given date */
-  _select(date: D): void {
-    this._selectionModel.select(date);
   }
 
   /** Emits the selected year in multiyear view */
