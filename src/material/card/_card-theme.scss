@@ -27,21 +27,22 @@
 @mixin mat-card-typography($config) {
   .mat-card {
     font-family: mat-font-family($config);
-  }
 
-  .mat-card-title {
-    font: {
-      size: mat-font-size($config, headline);
-      weight: mat-font-weight($config, title);
+    // These need the extra specificity, because they can be
+    // easily overridden by the global typography styles.
+    .mat-card-title {
+      font-size: mat-font-size($config, headline);
+      font-weight: mat-font-weight($config, headline);
+      line-height: normal;
     }
-  }
 
-  .mat-card-header .mat-card-title {
-    font-size: mat-font-size($config, title);
-  }
+    .mat-card-header .mat-card-title {
+      font-size: mat-font-size($config, title);
+    }
 
-  .mat-card-subtitle,
-  .mat-card-content {
-    font-size: mat-font-size($config, body-1);
+    .mat-card-subtitle,
+    .mat-card-content {
+      font-size: mat-font-size($config, body-1);
+    }
   }
 }

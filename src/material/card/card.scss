@@ -48,14 +48,19 @@ $mat-card-header-size: 40px !default;
   margin-bottom: 16px;
 }
 
-.mat-card-title {
-  display: block;
-  margin-bottom: 8px;
+.mat-card {
+  // Needs slightly higher specificity due to it potentially
+  // being overridden by the global typography styles.
+  .mat-card-title {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .mat-card-subtitle, .mat-card-content {
+    @extend %mat-card-section-base;
+  }
 }
 
-.mat-card-subtitle, .mat-card-content {
-  @extend %mat-card-section-base;
-}
 
 .mat-card-actions {
   @extend %mat-card-section-base;
