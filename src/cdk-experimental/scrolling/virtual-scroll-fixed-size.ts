@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Range} from '@angular/cdk/collections';
+import {ListRange} from '@angular/cdk/collections';
 import {Directive, forwardRef, Input, OnChanges} from '@angular/core';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
@@ -102,7 +102,7 @@ export class VirtualScrollFixedSizeStrategy implements VirtualScrollStrategy {
    * @param expandEnd The number of items to expand the end of the range by.
    * @return The expanded range.
    */
-  private _expandRange(range: Range, expandStart: number, expandEnd: number): Range {
+  private _expandRange(range: ListRange, expandStart: number, expandEnd: number): ListRange {
     if (!this._viewport) {
       return {...range};
     }
