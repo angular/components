@@ -45,7 +45,6 @@ export const _MatStepper = CdkStepper;
   providers: [{provide: ErrorStateMatcher, useExisting: MatStep}],
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matStep',
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatStep extends CdkStep implements ErrorStateMatcher {
@@ -120,7 +119,6 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   animations: [matStepperAnimations.horizontalStepTransition],
   providers: [{provide: MatStepper, useExisting: MatHorizontalStepper}],
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatHorizontalStepper extends MatStepper { }
@@ -140,7 +138,6 @@ export class MatHorizontalStepper extends MatStepper { }
   animations: [matStepperAnimations.verticalStepTransition],
   providers: [{provide: MatStepper, useExisting: MatVerticalStepper}],
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatVerticalStepper extends MatStepper {
