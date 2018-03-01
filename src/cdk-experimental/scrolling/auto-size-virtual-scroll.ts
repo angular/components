@@ -16,7 +16,7 @@ import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
  * A class that tracks the size of items that have been seen and uses it to estimate the average
  * item size.
  */
-export class ItemSizeEstimator {
+export class ItemSizeAverager {
   /** The total amount of weight behind the current average. */
   private _totalWeight = 0;
 
@@ -65,7 +65,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   private _addBufferPx: number;
 
   /** The estimator used to estimate the size of unseen items. */
-  private _estimator: ItemSizeEstimator;
+  private _averager: ItemSizeAverager;
 
   /**
    * @param minBufferPx The minimum amount of buffer rendered beyond the viewport (in pixels).
@@ -73,12 +73,12 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    * @param addBufferPx The number of pixels worth of buffer to shoot for when rendering new items.
    *     If the actual amount turns out to be less it will not necessarily trigger an additional
    *     rendering cycle (as long as the amount of buffer is still greater than `minBufferPx`).
-   * @param estimator The estimator used to estimate the size of unseen items.
+   * @param averager The averager used to estimate the size of unseen items.
    */
-  constructor(minBufferPx: number, addBufferPx: number, estimator = new ItemSizeEstimator()) {
+  constructor(minBufferPx: number, addBufferPx: number, averager = new ItemSizeAverager()) {
     this._minBufferPx = minBufferPx;
     this._addBufferPx = addBufferPx;
-    this._estimator = estimator;
+    this._averager = averager;
   }
 
   /**
@@ -87,7 +87,8 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    */
   attach(viewport: CdkVirtualScrollViewport) {
     this._viewport = viewport;
-    // TODO: kick off rendering (start with totally made up size estimate).
+    this._updateTotalContentSize();
+    this._renderContentForOffset(this._viewport.measureScrollOffset());
   }
 
   /** Detaches this scroll strategy from the currently attached viewport. */
@@ -97,12 +98,17 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
 
   /** Called when the viewport is scrolled. */
   onContentScrolled() {
-    // TODO: do stuff.
+    if (this._viewport) {
+      this._renderContentForOffset(this._viewport.measureScrollOffset());
+    }
   }
 
   /** Called when the length of the data changes. */
   onDataLengthChanged() {
-    // TODO: do stuff.
+    if (this._viewport) {
+      this._updateTotalContentSize();
+      this._renderContentForOffset(this._viewport.measureScrollOffset());
+    }
   }
 
   /**
@@ -114,6 +120,68 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   updateBufferSize(minBufferPx, addBufferPx) {
     this._minBufferPx = minBufferPx;
     this._addBufferPx = addBufferPx;
+  }
+
+  /**
+   * Render the content that we estimate should be shown for the given scroll offset.
+   * Note: must not be called if `this._viewport` is null
+   */
+  private _renderContentForOffset(scrollOffset: number) {
+    const viewport = this._viewport!;
+    const itemSize = this._averager.getAverageItemSize();
+    const firstVisibleIndex =
+        Math.min(viewport.getDataLength() - 1, Math.floor(scrollOffset / itemSize));
+    const bufferSize = Math.ceil(this._addBufferPx / itemSize);
+    const range = this._expandRange(
+        this._getVisibleRangeForIndex(firstVisibleIndex), bufferSize, bufferSize);
+
+    viewport.setRenderedRange(range);
+    viewport.setRenderedContentOffset(itemSize * range.start);
+  }
+
+  // TODO: maybe move to base class, can probably share with fixed size strategy.
+  /**
+   * Gets the visible range of data for the given start index. If the start index is too close to
+   * the end of the list it may be backed up to ensure the estimated size of the range is enough to
+   * fill the viewport.
+   * Note: must not be called if `this._viewport` is null
+   * @param startIndex The index to start the range at
+   * @return a range estimated to be large enough to fill the viewport when rendered.
+   */
+  private _getVisibleRangeForIndex(startIndex: number): Range {
+    const viewport = this._viewport!;
+    let range = {
+      start: startIndex,
+      end: startIndex +
+          Math.ceil(viewport.getViewportSize() / this._averager.getAverageItemSize())
+    };
+    const extra = range.end - viewport.getDataLength();
+    if (extra > 0) {
+      range.start = Math.max(0, range.start - extra);
+    }
+    return range;
+  }
+
+  // TODO: maybe move to base class, can probably share with fixed size strategy.
+  /**
+   * Expand the given range by the given amount in either direction.
+   * Note: must not be called if `this._viewport` is null
+   * @param range The range to expand
+   * @param expandStart The number of items to expand the start of the range by.
+   * @param expandEnd The number of items to expand the end of the range by.
+   * @return The expanded range.
+   */
+  private _expandRange(range: Range, expandStart: number, expandEnd: number): Range {
+    const viewport = this._viewport!;
+    const start = Math.max(0, range.start - expandStart);
+    const end = Math.min(viewport.getDataLength(), range.end + expandEnd);
+    return {start, end};
+  }
+
+  /** Update the viewport's total content size. */
+  private _updateTotalContentSize() {
+    const viewport = this._viewport!;
+    viewport.setTotalContentSize(viewport.getDataLength() * this._averager.getAverageItemSize());
   }
 }
 
@@ -142,14 +210,14 @@ export class CdkAutoSizeVirtualScroll implements OnChanges {
    * The minimum amount of buffer rendered beyond the viewport (in pixels).
    * If the amount of buffer dips below this number, more items will be rendered.
    */
-  @Input() minBufferPx = 20;
+  @Input() minBufferPx = 100;
 
   /**
    * The number of pixels worth of buffer to shoot for when rendering new items.
    * If the actual amount turns out to be less it will not necessarily trigger an additional
    * rendering cycle (as long as the amount of buffer is still greater than `minBufferPx`).
    */
-  @Input() addBufferPx = 5;
+  @Input() addBufferPx = 200;
 
   /** The scroll strategy used by this directive. */
   _scrollStrategy = new AutoSizeVirtualScrollStrategy(this.minBufferPx, this.addBufferPx);

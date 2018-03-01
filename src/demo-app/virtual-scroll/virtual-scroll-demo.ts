@@ -16,5 +16,6 @@ import {Component, ViewEncapsulation} from '@angular/core';
   encapsulation: ViewEncapsulation.None,
 })
 export class VirtualScrollDemo {
-  data = Array(10000).fill(20);
+  fixedSizeData = Array(10000).fill(50);
+  randomData = Array(10000).fill(0).map(() => Math.round(Math.random() * 100));
 }
