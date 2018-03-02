@@ -95,7 +95,7 @@ export class MatSelectionListChange {
     '(blur)': '_handleBlur()',
     '(click)': '_handleClick()',
     'tabindex': '-1',
-    '[class.mat-list-item-disabled]': 'disabled',
+    '[class.mat-list-option-disabled]': 'disabled',
     '[class.mat-list-item-focus]': '_hasFocus',
     '[attr.aria-selected]': 'selected.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
