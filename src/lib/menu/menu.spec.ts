@@ -327,8 +327,8 @@ describe('MatMenu', () => {
   describe('lazy rendering', () => {
     it('should be able to render the menu content lazily', fakeAsync(() => {
       const fixture = TestBed.createComponent(SimpleLazyMenu);
-      fixture.detectChanges();
 
+      fixture.detectChanges();
       fixture.componentInstance.triggerEl.nativeElement.click();
       fixture.detectChanges();
       tick(500);
@@ -338,6 +338,24 @@ describe('MatMenu', () => {
       expect(panel).toBeTruthy('Expected panel to be defined');
       expect(panel.textContent).toContain('Another item', 'Expected panel to have correct content');
       expect(fixture.componentInstance.trigger.menuOpen).toBe(true, 'Expected menu to be open');
+    }));
+
+    it('should detach the lazy content when the menu is closed', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SimpleLazyMenu);
+
+      fixture.detectChanges();
+      fixture.componentInstance.trigger.openMenu();
+      fixture.detectChanges();
+      tick(500);
+
+      expect(fixture.componentInstance.items.length).toBeGreaterThan(0);
+
+      fixture.componentInstance.trigger.closeMenu();
+      fixture.detectChanges();
+      tick(500);
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.items.length).toBe(0);
     }));
 
     it('should focus the first menu item when opening a lazy menu via keyboard', fakeAsync(() => {
@@ -372,8 +390,8 @@ describe('MatMenu', () => {
 
     it('should be able to open the same menu with a different context', fakeAsync(() => {
       const fixture = TestBed.createComponent(LazyMenuWithContext);
-      fixture.detectChanges();
 
+      fixture.detectChanges();
       fixture.componentInstance.triggerOne.openMenu();
       fixture.detectChanges();
       tick(500);
@@ -1557,6 +1575,7 @@ class FakeIcon {}
 class SimpleLazyMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
   @ViewChild('triggerEl') triggerEl: ElementRef;
+  @ViewChildren(MatMenuItem) items: QueryList<MatMenuItem>;
 }
 
 

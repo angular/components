@@ -33,6 +33,7 @@ import {
   NgZone,
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
 import {merge} from 'rxjs/observable/merge';
 import {Subscription} from 'rxjs/Subscription';
 import {matMenuAnimations} from './menu-animations';
@@ -96,6 +97,9 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
   /** Current state of the panel animation. */
   _panelAnimationState: 'void' | 'enter-start' | 'enter' = 'void';
+
+  /** Emits whenever an animation on the menu completes. */
+  _animationDone = new Subject<void>();
 
   /** Parent menu of the current menu panel. */
   parentMenu: MatMenuPanel | undefined;
@@ -301,10 +305,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   }
 
   /** Callback that is invoked when the panel animation completes. */
-  _onAnimationDone(event: AnimationEvent) {
-    // After the initial expansion is done, trigger the second phase of the enter animation.
-    if (event.toState === 'enter-start') {
-      this._panelAnimationState = 'enter';
-    }
+  _onAnimationDone() {
+    this._animationDone.next();
   }
 }
