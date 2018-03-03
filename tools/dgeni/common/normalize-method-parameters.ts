@@ -1,7 +1,7 @@
 import {MethodMemberDoc} from 'dgeni-packages/typescript/api-doc-types/MethodMemberDoc';
 
 export class NormalizedMethodMemberDoc extends MethodMemberDoc {
-  params?: MethodParameterInfo[];
+  params: MethodParameterInfo[];
 }
 
 export interface MethodParameterInfo {
@@ -21,6 +21,10 @@ export interface MethodParameterInfo {
  * an object.
  */
 export function normalizeMethodParameters(method: NormalizedMethodMemberDoc) {
+  if (!method.params) {
+    method.params = [];
+  }
+
   if (method.parameters) {
     method.parameters.forEach(parameter => {
       let [parameterName, parameterType] = parameter.split(':');
@@ -31,10 +35,6 @@ export function normalizeMethodParameters(method: NormalizedMethodMemberDoc) {
       if (parameterName.includes('?')) {
         isOptional = true;
         parameterName = parameterName.replace('?', '');
-      }
-
-      if (!method.params) {
-        method.params = [];
       }
 
       if (!parameterType) {

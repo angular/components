@@ -1,0 +1,47 @@
+include ./deprecated-marker.pug
+
+mixin method(doc)
+
+  table(class='docs-api-method-table')
+    thead
+      tr(class='docs-api-method-name-row')
+        th(colspan=2, class='docs-api-method-name-cell')
+
+          if doc.isDeprecated
+            +deprecatedMarker(doc)
+
+          span #{doc.name}
+
+    if doc.description
+      tr(class='docs-api-method-description-row')
+        td(colspan=2, class='docs-api-method-description-cell') #{doc.description}
+
+    if doc.params.length
+      thead
+        tr(class='docs-api-method-parameters-header-row')
+          th(colspan=2, class='docs-api-method-parameters-header-cell') Parameters
+
+      each param in doc.params
+        tr(class='docs-api-method-parameter-row')
+          td(class='docs-api-method-parameter-cell')
+            p(class='docs-api-method-parameter-name') #{param.name}
+
+              if param.isOptional
+                span(class='docs-api-method-parameter-optional-marker') ?
+
+            code(class='docs-api-method-parameter-type') #{param.type}
+
+          td(class='docs-api-method-parameter-description-cell')
+            p(class='docs-api-method-parameter-description')!= marked(param.description)
+
+    if doc.showReturns
+      thead
+        tr(class='docs-api-method-returns-header-row')
+          th(colspan=2, class='docs-api-method-returns-header-cell') Returns
+
+      tr
+        td(class='docs-api-method-returns-type-cell')
+          code(class='docs-api-method-returns-type') #{doc.type}
+
+        td(class='docs-api-method-returns-description-cell')
+          p(class='docs-api-method-returns-description')!= marked(doc.description)

@@ -1,0 +1,37 @@
+include property-list.mixin.pug
+include method-list.mixin.pug
+include deprecated-marker.pug
+
+mixin class(doc)
+  h4(id=doc.name, class='docs-header-link docs-api-h4 docs-api-class-name')
+
+    span(header-link=doc.name)
+    code #{doc.name}
+
+    if doc.extendedDoc
+      span(class='docs-api-class-extends-clauses')
+        // Since the we want to add the `extends` inline between the name and the base class,
+        // we need to add a leading and trailing space explicitly.
+        span(class='docs-api-class-extends-label')=' extends '
+        span(class='docs-api-class-etends-type') #{doc.extendedDoc.name}
+
+  if doc.description
+    p(class='docs-api-class-description')!= marked(doc.description)
+
+  if doc.directiveSelectors
+    p(class='docs-api-directive-selectors')
+      span(class='docs-api-class-selector-label') Selector:
+
+      each selector in doc.directiveSelectors
+        span(class='docs-api-class-selector-name') #{selector}
+
+  if doc.directiveExportAs
+    span(class='docs-api-class-export-label') Exported as:
+    span(class='docs-api-class-export-name') #{doc.directiveExportAs}
+
+  if doc.isDeprecated
+    +deprecatedMarker(doc, 'docs-api-class-deprecated-marker')
+
+  +propertyList(doc.properties)
+
+  +methodList(doc.methods)

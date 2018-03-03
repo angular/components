@@ -1,0 +1,5 @@
+mixin deprecatedMarker(doc, className)
+  - className = className || 'docs-api-deprecated-marker';
+
+  div(class=className, title=`Will be deleted in v${doc.deletionTarget}`) Deprecated
+

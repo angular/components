@@ -1,0 +1,8 @@
+include method.mixin.pug
+
+mixin methodList(items)
+  if items.length
+    h5(class='docs-api-h5 docs-api-method-header') Methods
+
+    each item in items
+      +method(item)

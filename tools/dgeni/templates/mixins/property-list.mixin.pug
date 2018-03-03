@@ -1,0 +1,13 @@
+include property.mixin.pug
+
+mixin propertyList(items)
+  if items.length
+
+    h5(class='docs-api-h5 docs-api-method-header') Properties
+    table(class='docs-api-properties-table')
+      tr(class='docs-api-properties-header-row')
+        th(class='docs-api-properties-th') Name
+        th(class='docs-api-properties-th') Description
+
+      each item in items
+        +property(item)
