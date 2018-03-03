@@ -1,29 +1,7 @@
-<div class="mat-calendar-header">
 
-  <ng-template [cdkPortalOutlet]="_calendarHeaderPortal"></ng-template>
+<ng-template [cdkPortalOutlet]="_calendarHeaderPortal"></ng-template>
 
-  <div class="mat-calendar-controls">
-    <button mat-button class="mat-calendar-period-button"
-            (click)="_currentPeriodClicked()"  [attr.aria-label]="_periodButtonLabel">
-      {{_periodButtonText}}
-      <div class="mat-calendar-arrow" [class.mat-calendar-invert]="_currentView != 'month'"></div>
-    </button>
-
-    <div class="mat-calendar-spacer"></div>
-
-    <button mat-icon-button class="mat-calendar-previous-button"
-            [disabled]="!_previousEnabled()" (click)="_previousClicked()"
-            [attr.aria-label]="_prevButtonLabel">
-    </button>
-
-    <button mat-icon-button class="mat-calendar-next-button"
-            [disabled]="!_nextEnabled()" (click)="_nextClicked()"
-            [attr.aria-label]="_nextButtonLabel">
-    </button>
-  </div>
-</div>
-
-<div class="mat-calendar-content" [ngSwitch]="_currentView" cdkMonitorSubtreeFocus tabindex="-1">
+<div class="mat-calendar-content" [ngSwitch]="currentView" cdkMonitorSubtreeFocus tabindex="-1">
   <mat-month-view
       *ngSwitchCase="'month'"
       [(activeDate)]="_activeDate"
