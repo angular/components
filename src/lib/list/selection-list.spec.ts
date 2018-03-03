@@ -499,13 +499,13 @@ describe('MatSelectionList without forms', () => {
         .toBe(true, 'Expected ripples to be disabled if option is disabled');
     });
 
-    it('should apply the "mat-list-item-disabled" class properly', () => {
-      expect(listOptionEl.classList).not.toContain('mat-list-item-disabled');
+    it('should apply the "mat-list-option-disabled" class properly', () => {
+      expect(listOptionEl.classList).not.toContain('mat-list-option-disabled');
 
       fixture.componentInstance.disableItem = true;
       fixture.detectChanges();
 
-      expect(listOptionEl.classList).toContain('mat-list-item-disabled');
+      expect(listOptionEl.classList).toContain('mat-list-option-disabled');
     });
   });
 
