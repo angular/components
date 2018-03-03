@@ -1,0 +1,18 @@
+include property-list.mixin.pug
+include method-list.mixin.pug
+include deprecated-marker.pug
+
+mixin interface(doc)
+
+  h4(id=doc.name, class='docs-header-link docs-api-h4 docs-api-interface-name')
+    span(header-link=doc.name)
+    code #{doc.name}
+
+  if doc.description
+    p(class='docs-api-interface-description')!= marked(doc.description)
+
+  if doc.isDeprecated
+    +deprecationMarker(doc, 'docs-api-interface-deprecated-marker')
+
+  +propertyList(doc.properties)
+  +methodList(doc.methods)

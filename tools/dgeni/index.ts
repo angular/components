@@ -9,10 +9,10 @@ import {ReadTypeScriptModules} from 'dgeni-packages/typescript/processors/readTy
 import {TsParser} from 'dgeni-packages/typescript/services/TsParser';
 import {sync as globSync} from 'glob';
 import * as path from 'path';
+import {PugTemplateEngine} from './pug-template-engine';
 
 // Dgeni packages that the Material docs package depends on.
 const jsdocPackage = require('dgeni-packages/jsdoc');
-const nunjucksPackage = require('dgeni-packages/nunjucks');
 const typescriptPackage = require('dgeni-packages/typescript');
 
 // Project configuration.
@@ -45,9 +45,13 @@ const materialPackages = globSync(path.join(sourceDir, 'lib', '*/'))
  */
 export const apiDocsPackage = new Package('material2-api-docs', [
   jsdocPackage,
-  nunjucksPackage,
   typescriptPackage,
 ]);
+
+// Setup Pug as template engine.
+apiDocsPackage.factory('templateEngine', (templateFinder: any) => {
+  return new PugTemplateEngine(templateFinder);
+});
 
 // Processor that filters out duplicate exports that should not be shown in the docs.
 apiDocsPackage.processor(new FilterDuplicateExports());
@@ -125,31 +129,12 @@ apiDocsPackage.config((readTypeScriptModules: ReadTypeScriptModules, tsParser: T
 });
 
 // Configure processor for finding nunjucks templates.
-apiDocsPackage.config((templateFinder: any, templateEngine: any) => {
+apiDocsPackage.config((templateFinder: any) => {
   // Where to find the templates for the doc rendering
   templateFinder.templateFolders = [templateDir];
 
   // Standard patterns for matching docs to templates
   templateFinder.templatePatterns = [
-    '${ doc.template }',
-    '${ doc.id }.${ doc.docType }.template.html',
-    '${ doc.id }.template.html',
-    '${ doc.docType }.template.html',
-    '${ doc.id }.${ doc.docType }.template.js',
-    '${ doc.id }.template.js',
-    '${ doc.docType }.template.js',
-    '${ doc.id }.${ doc.docType }.template.json',
-    '${ doc.id }.template.json',
-    '${ doc.docType }.template.json',
-    'common.template.html'
+    '${ doc.docType }.template.pug',
   ];
-
-  // Dgeni disables autoescape by default, but we want this turned on.
-  templateEngine.config.autoescape = true;
-
-  // Nunjucks and Angular conflict in their template bindings so change Nunjucks
-  templateEngine.config.tags = {
-    variableStart: '{$',
-    variableEnd: '$}'
-  };
 });

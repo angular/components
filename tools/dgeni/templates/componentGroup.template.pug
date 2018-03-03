@@ -1,0 +1,41 @@
+include mixins/class.mixin.pug
+include mixins/interface.mixin.pug
+
+div(class='docs-api')
+  h2 API reference for Angular #{doc.packageDisplayName} #{doc.displayName}
+
+  if doc.ngModule
+    p(class='docs-api-module-import')
+      code import {#{doc.ngModule.name}} from '#{doc.moduleImportPath}';
+
+  if doc.services.length
+    h3(id='services', class='docs-header-link docs-api-h3')
+      span(header-link='services')
+      span Services
+
+    each service in doc.services
+      +class(service)
+
+  if doc.directives.length
+    h3(id='directives', class='docs-header-link docs-api-h3')
+      span(header-link='directives')
+      span Directives
+
+    each directive in doc.directives
+      +class(directive)
+
+  if doc.additionalClasses.length
+    h3(id='additional_classes', class='docs-header-link docs-api-h3')
+      span(header-link='additional_classes')
+      span Additional classes
+
+    each additionalClass in doc.additionalClasses
+      +class(additionalClass)
+
+  if doc.additionalInterfaces.length
+    h3(id='additional_interfaces', class='docs-header-link docs-api-h3')
+      span(header-link='additional_interfaces')
+      span Additional interfaces
+
+    each interface in doc.additionalInterfaces
+      +interface(interface)

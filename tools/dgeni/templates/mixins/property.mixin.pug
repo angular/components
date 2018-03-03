@@ -1,0 +1,28 @@
+include ./deprecated-marker.pug
+
+mixin property(doc)
+
+  tr(class='docs-api-properties-row')
+    td(class='docs-api-properties-name-cell')
+      if doc.isDirectiveInput
+        div(class='docs-api-input-marker')
+          if doc.directiveInputAlias
+            | @Input(#[span(class='docs-api-input-alias')=doc.directiveInputAlias])
+          else
+            | @Input()
+
+      if doc.isDirectiveOutput
+        div(class='docs-api-output-marker')
+          if doc.directiveOutputAlias
+            | @Output(#[span(class='docs-api-output-alias')=doc.directiveOutputAlias])
+          else
+            | @Output()
+
+      if doc.isDeprecated
+        +deprecatedMarker(doc)
+
+      p(class='docs-api-property-name')
+        code #{doc.name}: #{doc.type}
+
+    td(class='docs-api-property-description')
+      p!= marked(doc.description)
