@@ -1,12 +1,10 @@
 import {Component, ViewChild, ElementRef} from '@angular/core';
 import {MatChipInputEvent, MatAutocompleteSelectedEvent} from '@angular/material';
-import {ENTER} from '@angular/cdk/keycodes';
+import {ENTER, COMMA} from '@angular/cdk/keycodes';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/map';
-
-const COMMA = 188;
+import {startWith} from 'rxjs/operators/startWith';
+import {map} from 'rxjs/operators/map';
 
 /**
  * @title Chips Autocomplete
@@ -43,14 +41,14 @@ export class ChipsAutocompleteExample {
   @ViewChild('fruitInput') fruitInput: ElementRef;
 
   constructor() {
-    this.filteredFruits = this.fruitCtrl.valueChanges
-        .startWith(null)
-        .map(fruit => fruit ? this.filter(fruit) : this.allFruits.slice());
+    this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
+      startWith(null),
+      map((fruit: string | null) => fruit ? this.filter(fruit) : this.allFruits.slice()));
   }
 
   add(event: MatChipInputEvent): void {
-    let input = event.input;
-    let value = event.value;
+    const input = event.input;
+    const value = event.value;
 
     // Add our fruit
     if ((value || '').trim()) {
@@ -64,7 +62,7 @@ export class ChipsAutocompleteExample {
   }
 
   remove(fruit: any): void {
-    let index = this.fruits.indexOf(fruit);
+    const index = this.fruits.indexOf(fruit);
 
     if (index >= 0) {
       this.fruits.splice(index, 1);
