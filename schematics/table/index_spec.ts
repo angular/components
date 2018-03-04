@@ -35,10 +35,18 @@ describe('material-table-schematic', () => {
     expect(files).toContain('/src/app/foo/foo.component.html');
     expect(files).toContain('/src/app/foo/foo.component.spec.ts');
     expect(files).toContain('/src/app/foo/foo.component.ts');
+    expect(files).toContain('/src/app/foo/foo-datasource.ts');
 
     const moduleContent = getFileContent(tree, '/src/app/app.module.ts');
     expect(moduleContent).toMatch(/import.*Foo.*from '.\/foo\/foo.component'/);
     expect(moduleContent).toMatch(/declarations:\s*\[[^\]]+?,\r?\n\s+FooComponent\r?\n/m);
+
+    const datasourceContent = getFileContent(tree, '/src/app/foo/foo-datasource.ts');
+    expect(datasourceContent).toContain('FooItem');
+    expect(datasourceContent).toContain('FooDataSource');
+
+    const componentContent = getFileContent(tree, '/src/app/foo/foo.component.ts');
+    expect(componentContent).toContain('FooDataSource');
   });
 
   it('should add table imports to module', () => {
