@@ -129,7 +129,7 @@ export const _MatSliderMixinBase =
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
-  inputs: ['disabled', 'color', 'tabIndex'],
+  inputs: ['disabled', 'color', 'tabIndex', 'warnColor', 'threshold'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -171,6 +171,27 @@ export class MatSlider extends _MatSliderMixinBase
     this._changeDetectorRef.markForCheck();
   }
   private _min: number = 0;
+
+  /** The maximum value that the slider can have before adding warn color. */
+  @Input()
+  get threshold(): number { return this._threshold; }
+  set threshold(v: number) {
+    this._threshold = coerceNumberProperty(v, this._threshold);
+    if (this._threshold > this._max) {
+      this._threshold = this._max;
+    } else if (this._threshold < this._min) {
+      this._threshold = this._min;
+    }
+  }
+  private _threshold: number = this._max;
+
+  /** The input for warn color. */
+  @Input()
+  get warnColor(): string { return this._warnColor; }
+  set warnColor(v: string) {
+    this._warnColor = v;
+  }
+  private _warnColor: string = '#FF0000';
 
   /** The values at which the thumb will snap. */
   @Input()
@@ -339,8 +360,10 @@ export class MatSlider extends _MatSliderMixinBase
   get _trackFillStyles(): { [key: string]: string } {
     let axis = this.vertical ? 'Y' : 'X';
     let sign = this._invertMouseCoords ? '' : '-';
+    let color = this.displayValue > this._threshold ? this._warnColor : '';
     return {
-      'transform': `translate${axis}(${sign}${this._thumbGap}px) scale${axis}(${this.percent})`
+      'transform': `translate${axis}(${sign}${this._thumbGap}px) scale${axis}(${this.percent})`,
+      'background-color': `${color}`
     };
   }
 
@@ -391,6 +414,14 @@ export class MatSlider extends _MatSliderMixinBase
     let offset = (invertOffset ? this.percent : 1 - this.percent) * 100;
     return {
       'transform': `translate${axis}(-${offset}%)`
+    };
+  }
+
+  /** CSS styles for the thumb fill element. */
+  get _thumbFillStyles(): { [key: string]: string } {
+    let color = this.displayValue > this._threshold ? this._warnColor : '';
+    return {
+      'background-color': `${color}`
     };
   }
 
