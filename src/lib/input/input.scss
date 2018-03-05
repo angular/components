@@ -87,4 +87,8 @@ textarea.mat-input-element {
   // Only allow resizing along the Y axis.
   resize: vertical;
   overflow: auto;
+
+  &.cdk-textarea-autosize {
+    resize: none;
+  }
 }
