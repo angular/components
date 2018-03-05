@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ArrayDataSource, CollectionViewer, DataSource, Range} from '@angular/cdk/collections';
+import {ArrayDataSource, CollectionViewer, DataSource, ListRange} from '@angular/cdk/collections';
 import {
   Directive,
   DoCheck,
@@ -54,7 +54,7 @@ export type CdkVirtualForOfContext<T> = {
 })
 export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy {
   /** Emits when the rendered view of the data changes. */
-  viewChange = new Subject<Range>();
+  viewChange = new Subject<ListRange>();
 
   /** Subject that emits when a new DataSource instance is given. */
   private _dataSourceChanges = new Subject<DataSource<T>>();
@@ -124,7 +124,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   private _renderedItems: T[];
 
   /** The currently rendered range of indices. */
-  private _renderedRange: Range;
+  private _renderedRange: ListRange;
 
   /**
    * The template cache used to hold on ot template instancess that have been stamped out, but don't
@@ -221,7 +221,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   }
 
   /** React to scroll state changes in the viewport. */
-  private _onRenderedRangeChange(renderedRange: Range) {
+  private _onRenderedRangeChange(renderedRange: ListRange) {
     this._renderedRange = renderedRange;
     this.viewChange.next(this._renderedRange);
     this._renderedItems = this._data.slice(this._renderedRange.start, this._renderedRange.end);
