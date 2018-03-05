@@ -10,7 +10,7 @@ import {Observable} from 'rxjs/Observable';
 
 
 /** Represents a range of numbers with a specified start and end. */
-export type Range = {start: number, end: number};
+export type ListRange = {start: number, end: number};
 
 
 /**
@@ -22,5 +22,5 @@ export interface CollectionViewer {
    * A stream that emits whenever the `CollectionViewer` starts looking at a new portion of the
    * data. The `start` index is inclusive, while the `end` is exclusive.
    */
-  viewChange: Observable<Range>;
+  viewChange: Observable<ListRange>;
 }
