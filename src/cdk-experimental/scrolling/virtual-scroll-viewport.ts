@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Range} from '@angular/cdk/collections';
+import {ListRange} from '@angular/cdk/collections';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -31,7 +31,7 @@ import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-s
 
 
 /** Checks if the given ranges are equal. */
-function rangesEqual(r1: Range, r2: Range): boolean {
+function rangesEqual(r1: ListRange, r2: ListRange): boolean {
   return r1.start == r2.start && r1.end == r2.end;
 }
 
@@ -54,7 +54,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   private _detachedSubject = new Subject<void>();
 
   /** Emits when the rendered range changes. */
-  private _renderedRangeSubject = new Subject<Range>();
+  private _renderedRangeSubject = new Subject<ListRange>();
 
   /** The direction the viewport scrolls. */
   @Input() orientation: 'horizontal' | 'vertical' = 'vertical';
@@ -63,7 +63,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   @ViewChild('contentWrapper') _contentWrapper: ElementRef;
 
   /** A stream that emits whenever the rendered range changes. */
-  renderedRangeStream: Observable<Range> = this._renderedRangeSubject.asObservable();
+  renderedRangeStream: Observable<ListRange> = this._renderedRangeSubject.asObservable();
 
   /**
    * The total size of all content (in pixels), including content that is not currently rendered.
@@ -74,7 +74,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   _renderedContentTransform: string;
 
   /** The currently rendered range of indices. */
-  private _renderedRange: Range = {start: 0, end: 0};
+  private _renderedRange: ListRange = {start: 0, end: 0};
 
   /** The length of the data bound to this viewport (in number of items). */
   private _dataLength = 0;
@@ -116,7 +116,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   }
 
   /** Sets the currently rendered range of indices. */
-  setRenderedRange(range: Range) {
+  setRenderedRange(range: ListRange) {
     if (!rangesEqual(this._renderedRange, range)) {
       // Re-enter the Angular zone so we can mark for change detection.
       this._ngZone.run(() => {
