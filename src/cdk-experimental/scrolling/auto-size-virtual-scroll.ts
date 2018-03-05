@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Range} from '@angular/cdk/collections';
+import {ListRange} from '@angular/cdk/collections';
 import {Directive, forwardRef, Input, OnChanges} from '@angular/core';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
@@ -38,7 +38,7 @@ export class ItemSizeAverager {
    * @param range The measured range.
    * @param size The measured size of the given range in pixels.
    */
-  addSample(range: Range, size: number) {
+  addSample(range: ListRange, size: number) {
     const weight = range.end - range.start;
     const newTotalWeight = this._totalWeight + weight;
     if (newTotalWeight) {
@@ -117,7 +117,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    * @param addBufferPx The number of buffer items to render beyond the edge of the viewport (in
    *     pixels).
    */
-  updateBufferSize(minBufferPx, addBufferPx) {
+  updateBufferSize(minBufferPx: number, addBufferPx: number) {
     this._minBufferPx = minBufferPx;
     this._addBufferPx = addBufferPx;
   }
@@ -148,9 +148,9 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    * @param startIndex The index to start the range at
    * @return a range estimated to be large enough to fill the viewport when rendered.
    */
-  private _getVisibleRangeForIndex(startIndex: number): Range {
+  private _getVisibleRangeForIndex(startIndex: number): ListRange {
     const viewport = this._viewport!;
-    let range = {
+    const range: ListRange = {
       start: startIndex,
       end: startIndex +
           Math.ceil(viewport.getViewportSize() / this._averager.getAverageItemSize())
@@ -171,7 +171,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    * @param expandEnd The number of items to expand the end of the range by.
    * @return The expanded range.
    */
-  private _expandRange(range: Range, expandStart: number, expandEnd: number): Range {
+  private _expandRange(range: ListRange, expandStart: number, expandEnd: number): ListRange {
     const viewport = this._viewport!;
     const start = Math.max(0, range.start - expandStart);
     const end = Math.min(viewport.getDataLength(), range.end + expandEnd);
@@ -210,14 +210,14 @@ export class CdkAutoSizeVirtualScroll implements OnChanges {
    * The minimum amount of buffer rendered beyond the viewport (in pixels).
    * If the amount of buffer dips below this number, more items will be rendered.
    */
-  @Input() minBufferPx = 100;
+  @Input() minBufferPx: number = 100;
 
   /**
    * The number of pixels worth of buffer to shoot for when rendering new items.
    * If the actual amount turns out to be less it will not necessarily trigger an additional
    * rendering cycle (as long as the amount of buffer is still greater than `minBufferPx`).
    */
-  @Input() addBufferPx = 200;
+  @Input() addBufferPx: number = 200;
 
   /** The scroll strategy used by this directive. */
   _scrollStrategy = new AutoSizeVirtualScrollStrategy(this.minBufferPx, this.addBufferPx);
