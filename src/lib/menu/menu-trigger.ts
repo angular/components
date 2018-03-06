@@ -21,7 +21,6 @@ import {
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {filter} from 'rxjs/operators/filter';
-import {take} from 'rxjs/operators/take';
 import {
   AfterContentInit,
   Directive,
@@ -239,27 +238,14 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /** Closes the menu and does the necessary cleanup. */
   private _destroyMenu() {
-    if (!this._overlayRef || !this.menuOpen) {
-      return;
-    }
+    if (this._overlayRef && this.menuOpen) {
+      this._resetMenu();
+      this._closeSubscription.unsubscribe();
+      this._overlayRef.detach();
 
-    const menu = this.menu;
-
-    this._resetMenu();
-    this._closeSubscription.unsubscribe();
-    this._overlayRef.detach();
-
-    if (menu instanceof MatMenu) {
-      menu._resetAnimation();
-
-      if (menu.lazyContent) {
-        // Wait for the exit animation to finish before detaching the content.
-        menu._animationDone
-          .pipe(take(1))
-          .subscribe(() => menu.lazyContent!.detach());
+      if (this.menu instanceof MatMenu) {
+        this.menu._resetAnimation();
       }
-    } else if (menu.lazyContent) {
-      menu.lazyContent.detach();
     }
   }
 
