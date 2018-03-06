@@ -9,7 +9,7 @@ Though the CDK leaves most styling up to the developer, in some cases it is nece
 
 In order for the overlay in the CDK to work correctly you need to include the prebuilt overlay styles. 
 
-You can reference the styles in a SASS file like this.
+You can reference the styles in a Sass file like this.
 ```scss
 @import "~@angular/cdk/overlay-prebuilt.css"
 ```
