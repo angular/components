@@ -1,12 +1,32 @@
-<cdk-virtual-scroll-viewport class="demo-viewport" [itemSize]="20">
-  <div *cdkVirtualFor="let size of data; let i = index" class="demo-item" [style.height.px]="size">
+<h2>Autosize</h2>
+
+<cdk-virtual-scroll-viewport class="demo-viewport" autosize>
+  <div *cdkVirtualFor="let size of fixedSizeData; let i = index" class="demo-item"
+       [style.height.px]="size">
     Item #{{i}} - ({{size}}px)
   </div>
 </cdk-virtual-scroll-viewport>
 
-<cdk-virtual-scroll-viewport class="demo-viewport demo-horizontal" [itemSize]="20"
+<cdk-virtual-scroll-viewport class="demo-viewport" autosize>
+  <div *cdkVirtualFor="let size of randomData; let i = index" class="demo-item"
+       [style.height.px]="size">
+    Item #{{i}} - ({{size}}px)
+  </div>
+</cdk-virtual-scroll-viewport>
+
+<h2>Fixed size</h2>
+
+<cdk-virtual-scroll-viewport class="demo-viewport" [itemSize]="50">
+  <div *cdkVirtualFor="let size of fixedSizeData; let i = index" class="demo-item"
+       [style.height.px]="size">
+    Item #{{i}} - ({{size}}px)
+  </div>
+</cdk-virtual-scroll-viewport>
+
+<cdk-virtual-scroll-viewport class="demo-viewport demo-horizontal" [itemSize]="50"
                              orientation="horizontal">
-  <div *cdkVirtualFor="let size of data; let i = index" class="demo-item" [style.width.px]="size">
+  <div *cdkVirtualFor="let size of fixedSizeData; let i = index" class="demo-item"
+       [style.width.px]="size">
     Item #{{i}} - ({{size}}px)
   </div>
 </cdk-virtual-scroll-viewport>
