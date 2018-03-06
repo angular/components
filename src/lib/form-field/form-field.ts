@@ -72,8 +72,7 @@ export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill' | 'outline';
 /** Container for form controls that applies Material Design styling and behavior. */
 @Component({
   moduleId: module.id,
-  // TODO(mmalerba): the input-container selectors and classes are deprecated and will be removed.
-  selector: 'mat-input-container, mat-form-field',
+  selector: 'mat-form-field',
   exportAs: 'matFormField',
   templateUrl: 'form-field.html',
   // MatInput is a directive and can't have styles, so we need to include its styles here.
