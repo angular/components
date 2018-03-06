@@ -117,11 +117,11 @@ If no `mode` is specified, `over` is used by default.
 
 <!-- example(sidenav-mode) -->
 
-The `over` and `push` sidenav modes show a backdrop by default, while the side mode does not. This
-can be customized by setting the `hasBackdrop` property on `mat-sidenav-container`. Setting it to
-`true` will force all sidenavs to have a backdrop regardless of their mode. Setting it to `false`
-will disable the backdrop on all sidenavs, regardless of their mode. Leaving the property unset or
-setting it to `null` will use the default backdrop visibility for each mode.
+The `over` and `push` sidenav modes show a backdrop by default, while the `side` mode does not. This
+can be customized by setting the `hasBackdrop` property on `mat-sidenav-container`. Explicitly
+setting `hasBackdrop` to `true` or `false` will override the default backdrop visibility setting for
+all sidenavs regadless of mode. Leaving the property unset or setting it to `null` will use the
+default backdrop visibility for each mode.
 
 <!-- example(sidenav-backdrop) -->
 
