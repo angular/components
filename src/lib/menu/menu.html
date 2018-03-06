@@ -3,7 +3,7 @@
     class="mat-menu-panel"
     [ngClass]="_classList"
     (keydown)="_handleKeydown($event)"
-    (click)="closed.emit('click')"
+    (click)="closed.emit($event)"
     [@transformMenu]="_panelAnimationState"
     (@transformMenu.done)="_onAnimationDone()"
     tabindex="-1"

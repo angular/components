@@ -8,7 +8,7 @@
 
 import {isFakeMousedownFromScreenReader} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
 import {
   ConnectedPositionStrategy,
   HorizontalConnectionPos,
@@ -151,19 +151,23 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   ngAfterContentInit() {
     this._checkMenu();
 
-    this.menu.close.subscribe(reason => {
+    this.menu.close.subscribe((event?: Event) => {
       this._destroyMenu();
 
-      // If a click closed the menu, we should close the entire chain of nested menus.
-      if (reason === 'click' && this._parentMenu) {
-        this._parentMenu.closed.emit(reason);
+      const isClickEvent = event && event.type === 'click';
+      const isTabbingOut = event && event.type.indexOf('key') === 0 &&
+                           (event as KeyboardEvent).keyCode === TAB;
+
+      // If a click or a tab closed the menu, we should close the entire chain of nested menus.
+      if (this._parentMenu && (isClickEvent || isTabbingOut)) {
+        this._parentMenu.closed.emit(event);
       }
     });
 
     if (this.triggersSubmenu()) {
       // Subscribe to changes in the hovered item in order to toggle the panel.
       this._hoverSubscription = this._parentMenu._hovered()
-          .pipe(filter(active => active === this._menuItemInstance))
+          .pipe(filter(activeItem => activeItem === this._menuItemInstance))
           .subscribe(() => {
             this._openedByMouse = true;
             this.openMenu();
