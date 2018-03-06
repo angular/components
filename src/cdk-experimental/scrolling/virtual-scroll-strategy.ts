@@ -31,4 +31,7 @@ export interface VirtualScrollStrategy {
 
   /** Called when the length of the data changes. */
   onDataLengthChanged();
+
+  /** Called when the range of items rendered in the DOM has changed. */
+  onContentRendered();
 }

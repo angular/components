@@ -39,11 +39,10 @@ export class ItemSizeAverager {
    * @param size The measured size of the given range in pixels.
    */
   addSample(range: ListRange, size: number) {
-    const weight = range.end - range.start;
-    const newTotalWeight = this._totalWeight + weight;
+    const newTotalWeight = this._totalWeight + range.end - range.start;
     if (newTotalWeight) {
       const newAverageItemSize =
-          (size * weight + this._averageItemSize * this._totalWeight) / newTotalWeight;
+          (size + this._averageItemSize * this._totalWeight) / newTotalWeight;
       if (newAverageItemSize) {
         this._averageItemSize = newAverageItemSize;
         this._totalWeight = newTotalWeight;
@@ -87,7 +86,6 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    */
   attach(viewport: CdkVirtualScrollViewport) {
     this._viewport = viewport;
-    this._updateTotalContentSize();
     this._renderContentForOffset(this._viewport.measureScrollOffset());
   }
 
@@ -106,8 +104,17 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   /** Called when the length of the data changes. */
   onDataLengthChanged() {
     if (this._viewport) {
-      this._updateTotalContentSize();
       this._renderContentForOffset(this._viewport.measureScrollOffset());
+    }
+  }
+
+  /** Called when the range of items rendered in the DOM has changed. */
+  onContentRendered() {
+    if (this._viewport) {
+      const renderedContentSize = this._viewport.measureRenderedContentSize();
+      this._averager.addSample(
+          this._viewport.getRenderedRange(), renderedContentSize);
+      this._updateTotalContentSize(renderedContentSize);
     }
   }
 
@@ -179,9 +186,13 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   }
 
   /** Update the viewport's total content size. */
-  private _updateTotalContentSize() {
+  private _updateTotalContentSize(renderedContentSize) {
     const viewport = this._viewport!;
-    viewport.setTotalContentSize(viewport.getDataLength() * this._averager.getAverageItemSize());
+    const renderedRange = viewport.getRenderedRange();
+    const totalSize = renderedContentSize +
+        (viewport.getDataLength() - (renderedRange.end - renderedRange.start)) *
+        this._averager.getAverageItemSize();
+    viewport.setTotalContentSize(totalSize);
   }
 }
 

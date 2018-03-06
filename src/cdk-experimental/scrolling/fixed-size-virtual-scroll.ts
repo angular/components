@@ -70,6 +70,9 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     this._updateRenderedRange();
   }
 
+  /** Called when the range of items rendered in the DOM has changed. */
+  onContentRendered() { /* no-op */ }
+
   /** Update the viewport's total content size. */
   private _updateTotalContentSize() {
     if (!this._viewport) {
