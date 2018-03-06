@@ -13,7 +13,7 @@ import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
 
 /** Virtual scrolling strategy for lists with items of known fixed size. */
-export class VirtualScrollFixedSizeStrategy implements VirtualScrollStrategy {
+export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   /** The attached viewport. */
   private _viewport: CdkVirtualScrollViewport | null = null;
 
@@ -25,7 +25,7 @@ export class VirtualScrollFixedSizeStrategy implements VirtualScrollStrategy {
 
   /**
    * @param itemSize The size of the items in the virtually scrolling list.
-   * @param bufferSize he number of buffer items to render beyond the edge of the viewport.
+   * @param bufferSize The number of buffer items to render beyond the edge of the viewport.
    */
   constructor(itemSize: number, bufferSize: number) {
     this._itemSize = itemSize;
@@ -59,7 +59,7 @@ export class VirtualScrollFixedSizeStrategy implements VirtualScrollStrategy {
     this._updateRenderedRange();
   }
 
-  /** Called when the viewport is scrolled (debounced using requestAnimationFrame). */
+  /** Called when the viewport is scrolled. */
   onContentScrolled() {
     this._updateRenderedRange();
   }
@@ -115,12 +115,12 @@ export class VirtualScrollFixedSizeStrategy implements VirtualScrollStrategy {
 
 
 /**
- * Provider factory for `VirtualScrollFixedSizeStrategy` that simply extracts the already created
- * `VirtualScrollFixedSizeStrategy` from the given directive.
- * @param fixedSizeDir The instance of `CdkVirtualScrollFixedSize` to extract the
- *     `VirtualScrollFixedSizeStrategy` from.
+ * Provider factory for `FixedSizeVirtualScrollStrategy` that simply extracts the already created
+ * `FixedSizeVirtualScrollStrategy` from the given directive.
+ * @param fixedSizeDir The instance of `CdkFixedSizeVirtualScroll` to extract the
+ *     `FixedSizeVirtualScrollStrategy` from.
  */
-export function _virtualScrollFixedSizeStrategyFactory(fixedSizeDir: CdkVirtualScrollFixedSize) {
+export function _fixedSizeVirtualScrollStrategyFactory(fixedSizeDir: CdkFixedSizeVirtualScroll) {
   return fixedSizeDir._scrollStrategy;
 }
 
@@ -130,11 +130,11 @@ export function _virtualScrollFixedSizeStrategyFactory(fixedSizeDir: CdkVirtualS
   selector: 'cdk-virtual-scroll-viewport[itemSize]',
   providers: [{
     provide: VIRTUAL_SCROLL_STRATEGY,
-    useFactory: _virtualScrollFixedSizeStrategyFactory,
-    deps: [forwardRef(() => CdkVirtualScrollFixedSize)],
+    useFactory: _fixedSizeVirtualScrollStrategyFactory,
+    deps: [forwardRef(() => CdkFixedSizeVirtualScroll)],
   }],
 })
-export class CdkVirtualScrollFixedSize implements OnChanges {
+export class CdkFixedSizeVirtualScroll implements OnChanges {
   /** The size of the items in the list (in pixels). */
   @Input() itemSize = 20;
 
@@ -142,7 +142,7 @@ export class CdkVirtualScrollFixedSize implements OnChanges {
   @Input() bufferSize = 5;
 
   /** The scroll strategy used by this directive. */
-  _scrollStrategy = new VirtualScrollFixedSizeStrategy(this.itemSize, this.bufferSize);
+  _scrollStrategy = new FixedSizeVirtualScrollStrategy(this.itemSize, this.bufferSize);
 
   ngOnChanges() {
     this._scrollStrategy.updateItemAndBufferSize(this.itemSize, this.bufferSize);
