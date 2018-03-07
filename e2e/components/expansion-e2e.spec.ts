@@ -5,13 +5,8 @@ describe('expansion', () => {
 
   beforeEach(() => browser.get('/expansion'));
 
-  it('should show an accordion', async () => {
-    expect(element(by.css('.mat-accordion'))).toBeDefined();
-    screenshot();
-  });
-
-  it('should show two panels', async () => {
-    expect(await element.all(by.css('.mat-expansion-panel')).count()).toBe(2);
+  it('should show an expansion panel', async () => {
+    expect(element(by.css('.mat-expansion-panel'))).toBeDefined();
     screenshot();
   });
 
@@ -25,20 +20,5 @@ describe('expansion', () => {
 
     expect(await panelContent.isDisplayed()).toBe(true);
   });
-
-  it('should emit events for expanding and collapsing', async () => {
-    const panelHeader = element.all(by.css('.mat-expansion-panel-header')).get(1);
-    const panelDescription = element
-      .all(by.css('.mat-expansion-panel-header mat-panel-description')).get(1);
-
-    panelHeader.click();
-
-    expect(panelDescription.getText()).toContain('Currently I am open');
-
-    panelHeader.click();
-
-    expect(panelDescription.getText()).toContain('Currently I am closed');
-  });
-
 });
 
