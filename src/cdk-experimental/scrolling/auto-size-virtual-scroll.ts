@@ -39,11 +39,10 @@ export class ItemSizeAverager {
    * @param size The measured size of the given range in pixels.
    */
   addSample(range: ListRange, size: number) {
-    const weight = range.end - range.start;
-    const newTotalWeight = this._totalWeight + weight;
+    const newTotalWeight = this._totalWeight + range.end - range.start;
     if (newTotalWeight) {
       const newAverageItemSize =
-          (size * weight + this._averageItemSize * this._totalWeight) / newTotalWeight;
+          (size + this._averageItemSize * this._totalWeight) / newTotalWeight;
       if (newAverageItemSize) {
         this._averageItemSize = newAverageItemSize;
         this._totalWeight = newTotalWeight;
@@ -87,7 +86,6 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    */
   attach(viewport: CdkVirtualScrollViewport) {
     this._viewport = viewport;
-    this._updateTotalContentSize();
     this._renderContentForOffset(this._viewport.measureScrollOffset());
   }
 
@@ -96,18 +94,24 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     this._viewport = null;
   }
 
-  /** Called when the viewport is scrolled. */
+  /** Implemented as part of VirtualScrollStrategy. */
   onContentScrolled() {
     if (this._viewport) {
       this._renderContentForOffset(this._viewport.measureScrollOffset());
     }
   }
 
-  /** Called when the length of the data changes. */
+  /** Implemented as part of VirtualScrollStrategy. */
   onDataLengthChanged() {
     if (this._viewport) {
-      this._updateTotalContentSize();
       this._renderContentForOffset(this._viewport.measureScrollOffset());
+    }
+  }
+
+  /** Implemented as part of VirtualScrollStrategy. */
+  onContentRendered() {
+    if (this._viewport) {
+      this._checkRenderedContentSize();
     }
   }
 
@@ -120,6 +124,17 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   updateBufferSize(minBufferPx: number, addBufferPx: number) {
     this._minBufferPx = minBufferPx;
     this._addBufferPx = addBufferPx;
+  }
+
+  /**
+   * Checks the size of the currently rendered content and uses it to update the estimated item size
+   * and estimated total content size.
+   */
+  private _checkRenderedContentSize() {
+    const viewport = this._viewport!;
+    const renderedContentSize = viewport.measureRenderedContentSize();
+    this._averager.addSample(viewport.getRenderedRange(), renderedContentSize);
+    this._updateTotalContentSize(renderedContentSize);
   }
 
   /**
@@ -179,9 +194,13 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   }
 
   /** Update the viewport's total content size. */
-  private _updateTotalContentSize() {
+  private _updateTotalContentSize(renderedContentSize: number) {
     const viewport = this._viewport!;
-    viewport.setTotalContentSize(viewport.getDataLength() * this._averager.getAverageItemSize());
+    const renderedRange = viewport.getRenderedRange();
+    const totalSize = renderedContentSize +
+        (viewport.getDataLength() - (renderedRange.end - renderedRange.start)) *
+        this._averager.getAverageItemSize();
+    viewport.setTotalContentSize(totalSize);
   }
 }
 
