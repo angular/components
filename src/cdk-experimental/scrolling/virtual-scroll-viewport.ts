@@ -23,6 +23,7 @@ import {
 import {Observable} from 'rxjs/Observable';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {sampleTime} from 'rxjs/operators/sampleTime';
+import {take} from 'rxjs/operators/take';
 import {takeUntil} from 'rxjs/operators/takeUntil';
 import {animationFrame} from 'rxjs/scheduler/animationFrame';
 import {Subject} from 'rxjs/Subject';
@@ -99,6 +100,11 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
     return this._viewportSize;
   }
 
+  /** Get the current rendered range of items. */
+  getRenderedRange(): ListRange {
+    return this._renderedRange;
+  }
+
   // TODO(mmalebra): Consider calling `detectChanges()` directly rather than the methods below.
 
   /**
@@ -122,6 +128,9 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
       this._ngZone.run(() => {
         this._renderedRangeSubject.next(this._renderedRange = range);
         this._changeDetectorRef.markForCheck();
+        this._ngZone.runOutsideAngular(() => this._ngZone.onStable.pipe(take(1)).subscribe(() => {
+          this._scrollStrategy.onContentRendered();
+        }));
       });
     }
   }
@@ -167,6 +176,12 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   measureScrollOffset() {
     return this.orientation === 'horizontal' ?
         this.elementRef.nativeElement.scrollLeft : this.elementRef.nativeElement.scrollTop;
+  }
+
+  /** Measure the combined size of all of the rendered items. */
+  measureRenderedContentSize() {
+    const contentEl = this._contentWrapper.nativeElement;
+    return this.orientation === 'horizontal' ? contentEl.offsetWidth : contentEl.offsetHeight;
   }
 
   ngOnInit() {
