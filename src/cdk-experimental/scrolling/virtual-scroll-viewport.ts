@@ -180,9 +180,8 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
 
   /** Measure the combined size of all of the rendered items. */
   measureRenderedContentSize() {
-    return this.orientation === 'horizontal' ?
-        this._contentWrapper.nativeElement.offsetWidth :
-        this._contentWrapper.nativeElement.offsetHeight;
+    const contentEl = this._contentWrapper.nativeElement;
+    return this.orientation === 'horizontal' ? contentEl.offsetWidth : contentEl.offsetHeight;
   }
 
   ngOnInit() {

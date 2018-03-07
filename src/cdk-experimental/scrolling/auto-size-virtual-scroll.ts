@@ -94,27 +94,24 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     this._viewport = null;
   }
 
-  /** Called when the viewport is scrolled. */
+  /** Implemented as part of VirtualScrollStrategy. */
   onContentScrolled() {
     if (this._viewport) {
       this._renderContentForOffset(this._viewport.measureScrollOffset());
     }
   }
 
-  /** Called when the length of the data changes. */
+  /** Implemented as part of VirtualScrollStrategy. */
   onDataLengthChanged() {
     if (this._viewport) {
       this._renderContentForOffset(this._viewport.measureScrollOffset());
     }
   }
 
-  /** Called when the range of items rendered in the DOM has changed. */
+  /** Implemented as part of VirtualScrollStrategy. */
   onContentRendered() {
     if (this._viewport) {
-      const renderedContentSize = this._viewport.measureRenderedContentSize();
-      this._averager.addSample(
-          this._viewport.getRenderedRange(), renderedContentSize);
-      this._updateTotalContentSize(renderedContentSize);
+      this._checkRenderedContentSize();
     }
   }
 
@@ -127,6 +124,17 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   updateBufferSize(minBufferPx: number, addBufferPx: number) {
     this._minBufferPx = minBufferPx;
     this._addBufferPx = addBufferPx;
+  }
+
+  /**
+   * Checks the size of the currently rendered content and uses it to update the estimated item size
+   * and estimated total content size.
+   */
+  private _checkRenderedContentSize() {
+    const viewport = this._viewport!;
+    const renderedContentSize = viewport.measureRenderedContentSize();
+    this._averager.addSample(viewport.getRenderedRange(), renderedContentSize);
+    this._updateTotalContentSize(renderedContentSize);
   }
 
   /**
@@ -186,7 +194,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   }
 
   /** Update the viewport's total content size. */
-  private _updateTotalContentSize(renderedContentSize) {
+  private _updateTotalContentSize(renderedContentSize: number) {
     const viewport = this._viewport!;
     const renderedRange = viewport.getRenderedRange();
     const totalSize = renderedContentSize +
