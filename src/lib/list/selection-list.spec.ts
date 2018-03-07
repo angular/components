@@ -5,8 +5,8 @@ import {
   dispatchEvent,
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing';
-import {Component, DebugElement} from '@angular/core';
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {Component, DebugElement, ChangeDetectionStrategy} from '@angular/core';
+import {async, ComponentFixture, fakeAsync, TestBed, tick, flush} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
   MatListModule,
@@ -251,30 +251,25 @@ describe('MatSelectionList without forms', () => {
     });
 
     it('should focus next item when press DOWN ARROW', () => {
-      let testListItem = listOptions[2].nativeElement as HTMLElement;
-      let DOWN_EVENT: KeyboardEvent =
-        createKeyboardEvent('keydown', DOWN_ARROW, testListItem);
-      let manager = selectionList.componentInstance._keyManager;
+      const manager = selectionList.componentInstance._keyManager;
 
       dispatchFakeEvent(listOptions[2].nativeElement, 'focus');
       expect(manager.activeItemIndex).toEqual(2);
 
-      selectionList.componentInstance._keydown(DOWN_EVENT);
-
+      selectionList.componentInstance._keydown(createKeyboardEvent('keydown', DOWN_ARROW));
       fixture.detectChanges();
 
       expect(manager.activeItemIndex).toEqual(3);
     });
 
-    it('should focus the first non-disabled item when pressing HOME', () => {
+    it('should be able to focus the first item when pressing HOME', () => {
       const manager = selectionList.componentInstance._keyManager;
       expect(manager.activeItemIndex).toBe(-1);
 
       const event = dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', HOME);
       fixture.detectChanges();
 
-      // Note that the first item is disabled so we expect the second one to be focused.
-      expect(manager.activeItemIndex).toBe(1);
+      expect(manager.activeItemIndex).toBe(0);
       expect(event.defaultPrevented).toBe(true);
     });
 
@@ -425,7 +420,7 @@ describe('MatSelectionList without forms', () => {
       fixture.detectChanges();
 
       expect(selectionList.componentInstance.tabIndex)
-        .toBe(-1, 'Expected the tabIndex to be set to "-1" if selection list is disabled.');
+        .toBe(3, 'Expected the tabIndex to be still set to "3".');
     });
   });
 
@@ -592,7 +587,8 @@ describe('MatSelectionList with forms', () => {
         SelectionListWithModel,
         SelectionListWithFormControl,
         SelectionListWithPreselectedOption,
-        SelectionListWithPreselectedOptionAndModel
+        SelectionListWithPreselectedOptionAndModel,
+        SelectionListWithPreselectedFormControlOnPush,
       ]
     });
 
@@ -800,6 +796,20 @@ describe('MatSelectionList with forms', () => {
       expect(fixture.componentInstance.selectedOptions).toEqual(['opt1', 'opt2']);
     }));
 
+    it('should show the item as selected when preselected inside OnPush parent', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectionListWithPreselectedFormControlOnPush);
+      fixture.detectChanges();
+
+      const option = fixture.debugElement.queryAll(By.directive(MatListOption))[1];
+
+      fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
+
+      expect(option.componentInstance.selected).toBe(true);
+      expect(option.nativeElement.querySelector('.mat-pseudo-checkbox-checked')).toBeTruthy();
+    }));
+
   });
 });
 
@@ -948,4 +958,18 @@ class SelectionListWithPreselectedOption {
 })
 class SelectionListWithPreselectedOptionAndModel {
   selectedOptions = ['opt1'];
+}
+
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <mat-selection-list [formControl]="formControl">
+      <mat-list-option *ngFor="let opt of opts" [value]="opt">{{opt}}</mat-list-option>
+    </mat-selection-list>
+  `
+})
+class SelectionListWithPreselectedFormControlOnPush {
+  opts = ['opt1', 'opt2', 'opt3'];
+  formControl = new FormControl(['opt2']);
 }

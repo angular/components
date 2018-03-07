@@ -33,7 +33,6 @@ import {MatStepperIntl} from './stepper-intl';
     'role': 'tab',
   },
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatStepHeader implements OnDestroy {
@@ -99,5 +98,9 @@ export class MatStepHeader implements OnDestroy {
   /** Returns the host HTML element. */
   _getHostElement() {
     return this._element.nativeElement;
+  }
+
+  focus() {
+    this._getHostElement().focus();
   }
 }

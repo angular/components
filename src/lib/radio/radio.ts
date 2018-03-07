@@ -141,29 +141,13 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
     this._updateRadioButtonNames();
   }
 
-  /**
-   * Alignment of the radio-buttons relative to their labels. Can be 'before' or 'after'.
-   * @deprecated
-   * @deletion-target 6.0.0
-   */
-  @Input()
-  get align(): 'start' | 'end' {
-    // align refers to the checkbox relative to the label, while labelPosition refers to the
-    // label relative to the checkbox. As such, they are inverted.
-    return this.labelPosition == 'after' ? 'start' : 'end';
-  }
-  set align(v) {
-    this.labelPosition = (v == 'start') ? 'after' : 'before';
-  }
-
-
   /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
   @Input()
   get labelPosition(): 'before' | 'after' {
     return this._labelPosition;
   }
   set labelPosition(v) {
-    this._labelPosition = (v == 'before') ? 'before' : 'after';
+    this._labelPosition = v === 'before' ? 'before' : 'after';
     this._markRadiosForCheck();
   }
 
@@ -335,7 +319,6 @@ export const _MatRadioButtonMixinBase =
   styleUrls: ['radio.css'],
   inputs: ['color', 'disableRipple', 'tabIndex'],
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   exportAs: 'matRadioButton',
   host: {
     'class': 'mat-radio-button',
@@ -412,23 +395,6 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
     }
   }
 
-  /**
-   * Whether or not the radio-button should appear before or after the label.
-   * @deprecated
-   * @deletion-target 6.0.0
-   */
-  @Input()
-  get align(): 'start' | 'end' {
-    // align refers to the checkbox relative to the label, while labelPosition refers to the
-    // label relative to the checkbox. As such, they are inverted.
-    return this.labelPosition == 'after' ? 'start' : 'end';
-  }
-  set align(v) {
-    this.labelPosition = (v == 'start') ? 'after' : 'before';
-  }
-
-  private _labelPosition: 'before' | 'after';
-
   /** Whether the label should appear after or before the radio button. Defaults to 'after' */
   @Input()
   get labelPosition(): 'before' | 'after' {
@@ -437,6 +403,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   set labelPosition(value) {
     this._labelPosition = value;
   }
+  private _labelPosition: 'before' | 'after';
 
   /** Whether the radio button is disabled. */
   @Input()

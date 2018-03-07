@@ -61,7 +61,6 @@ export class MatCalendarHeader {
   },
   exportAs: 'matCalendar',
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {

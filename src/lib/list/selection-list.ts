@@ -32,12 +32,10 @@ import {
 import {
   CanDisable,
   CanDisableRipple,
-  HasTabIndex,
   MatLine,
   MatLineSetter,
   mixinDisabled,
   mixinDisableRipple,
-  mixinTabIndex,
 } from '@angular/material/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
@@ -45,8 +43,7 @@ import {Subscription} from 'rxjs/Subscription';
 
 /** @docs-private */
 export class MatSelectionListBase {}
-export const _MatSelectionListMixinBase =
-  mixinTabIndex(mixinDisableRipple(mixinDisabled(MatSelectionListBase)));
+export const _MatSelectionListMixinBase = mixinDisableRipple(mixinDisabled(MatSelectionListBase));
 
 /** @docs-private */
 export class MatListOptionBase {}
@@ -105,7 +102,6 @@ export class MatSelectionListChange {
   },
   templateUrl: 'list-option.html',
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatListOption extends _MatListOptionMixinBase
@@ -168,14 +164,19 @@ export class MatListOption extends _MatListOptionMixinBase
   }
 
   ngOnInit() {
-    if (this._selected) {
-      // List options that are selected at initialization can't be reported properly to the form
-      // control. This is because it takes some time until the selection-list knows about all
-      // available options. Also it can happen that the ControlValueAccessor has an initial value
-      // that should be used instead. Deferring the value change report to the next tick ensures
-      // that the form control value is not being overwritten.
-      Promise.resolve().then(() => this.selected = true);
-    }
+    // List options that are selected at initialization can't be reported properly to the form
+    // control. This is because it takes some time until the selection-list knows about all
+    // available options. Also it can happen that the ControlValueAccessor has an initial value
+    // that should be used instead. Deferring the value change report to the next tick ensures
+    // that the form control value is not being overwritten.
+    const wasSelected = this._selected;
+
+    Promise.resolve().then(() => {
+      if (this._selected || wasSelected) {
+        this.selected = true;
+        this._changeDetector.markForCheck();
+      }
+    });
   }
 
   ngAfterContentInit() {
@@ -290,11 +291,10 @@ export class MatListOption extends _MatListOptionMixinBase
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None,
   providers: [MAT_SELECTION_LIST_VALUE_ACCESSOR],
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatSelectionList extends _MatSelectionListMixinBase implements FocusableOption,
-    CanDisable, CanDisableRipple, HasTabIndex, AfterContentInit, ControlValueAccessor, OnDestroy {
+    CanDisable, CanDisableRipple, AfterContentInit, ControlValueAccessor, OnDestroy {
 
   /** The FocusKeyManager which handles focus. */
   _keyManager: FocusKeyManager<MatListOption>;
@@ -305,6 +305,9 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   /** Emits a change event whenever the selected state of an option changes. */
   @Output() readonly selectionChange: EventEmitter<MatSelectionListChange> =
       new EventEmitter<MatSelectionListChange>();
+
+  /** Tabindex of the selection list. */
+  @Input() tabIndex: number = 0;
 
   /** The currently selected options. */
   selectedOptions: SelectionModel<MatListOption> = new SelectionModel<MatListOption>(true);
@@ -327,7 +330,12 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   }
 
   ngAfterContentInit(): void {
-    this._keyManager = new FocusKeyManager<MatListOption>(this.options).withWrap().withTypeAhead();
+    this._keyManager = new FocusKeyManager<MatListOption>(this.options)
+      .withWrap()
+      .withTypeAhead()
+      // Allow disabled items to be focusable. For accessibility reasons, there must be a way for
+      // screenreader users, that allows reading the different options of the list.
+      .skipPredicate(() => false);
 
     if (this._tempValues) {
       this._setOptionsFromValues(this._tempValues);
@@ -354,7 +362,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
     this._modelChanges.unsubscribe();
   }
 
-  /** Focus the selection-list. */
+  /** Focuses the last active list option. */
   focus() {
     this._element.nativeElement.focus();
   }
@@ -392,16 +400,15 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
 
   /** Passes relevant key presses to our key manager. */
   _keydown(event: KeyboardEvent) {
-    if (this.disabled) {
-      return;
-    }
-
     switch (event.keyCode) {
       case SPACE:
       case ENTER:
-        this._toggleSelectOnFocusedOption();
-        // Always prevent space from scrolling the page since the list has focus
-        event.preventDefault();
+        if (!this.disabled) {
+          this._toggleSelectOnFocusedOption();
+
+          // Always prevent space from scrolling the page since the list has focus
+          event.preventDefault();
+        }
         break;
       case HOME:
       case END:
