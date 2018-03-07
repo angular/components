@@ -47,6 +47,12 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   private _vertical = true;
   private _horizontal: 'ltr' | 'rtl' | null;
 
+  /**
+   * Predicate function that can be used to check whether an item should be skipped
+   * by the key manager. By default, disabled items are skipped.
+   */
+  private _skipPredicateFn = (item: T) => item.disabled;
+
   // Buffer for the letters that the user has pressed when the typeahead option is turned on.
   private _pressedLetters: string[] = [];
 
@@ -71,6 +77,16 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
   /** Stream that emits whenever the active item of the list manager changes. */
   change = new Subject<number>();
+
+  /**
+   * Sets the predicate function that determines which items should be skipped by the
+   * list key manager.
+   * @param predicate Function that determines whether the given item should be skipped.
+   */
+  skipPredicate(predicate: (item: T) => boolean): this {
+    this._skipPredicateFn = predicate;
+    return this;
+  }
 
   /**
    * Turns on wrapping mode, which ensures that the active item will wrap to
@@ -128,7 +144,9 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         const index = (this._activeItemIndex + i) % items.length;
         const item = items[index];
 
-        if (!item.disabled && item.getLabel!().toUpperCase().trim().indexOf(inputString) === 0) {
+        if (!this._skipPredicateFn(item) &&
+            item.getLabel!().toUpperCase().trim().indexOf(inputString) === 0) {
+
           this.setActiveItem(index);
           break;
         }
@@ -144,14 +162,21 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * Sets the active item to the item at the index specified.
    * @param index The index of the item to be set as active.
    */
-  setActiveItem(index: number): void {
+  setActiveItem(index: number): void;
+
+  /**
+   * Sets the active item to the specified item.
+   * @param item The item to be set as active.
+   */
+  setActiveItem(item: T): void;
+
+  setActiveItem(item: any): void {
     const previousIndex = this._activeItemIndex;
 
-    this._activeItemIndex = index;
-    this._activeItem = this._items.toArray()[index];
+    this.updateActiveItem(item);
 
     if (this._activeItemIndex !== previousIndex) {
-      this.change.next(index);
+      this.change.next(this._activeItemIndex);
     }
   }
 
@@ -171,12 +196,16 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         if (this._vertical) {
           this.setNextItemActive();
           break;
+        } else {
+          return;
         }
 
       case UP_ARROW:
         if (this._vertical) {
           this.setPreviousItemActive();
           break;
+        } else {
+          return;
         }
 
       case RIGHT_ARROW:
@@ -186,6 +215,8 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         } else if (this._horizontal === 'rtl') {
           this.setPreviousItemActive();
           break;
+        } else {
+          return;
         }
 
       case LEFT_ARROW:
@@ -195,6 +226,8 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         } else if (this._horizontal === 'rtl') {
           this.setNextItemActive();
           break;
+        } else {
+          return;
         }
 
       default:
@@ -247,11 +280,33 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   }
 
   /**
+   * Allows setting the active without any other effects.
+   * @param index Index of the item to be set as active.
+   */
+  updateActiveItem(index: number): void;
+
+  /**
+   * Allows setting the active item without any other effects.
+   * @param item Item to be set as active.
+   */
+  updateActiveItem(item: T): void;
+
+  updateActiveItem(item: any): void {
+    const itemArray = this._items.toArray();
+    const index = typeof item === 'number' ? item : itemArray.indexOf(item);
+
+    this._activeItemIndex = index;
+    this._activeItem = itemArray[index];
+  }
+
+  /**
    * Allows setting of the activeItemIndex without any other effects.
    * @param index The new activeItemIndex.
+   * @deprecated Use `updateActiveItem` instead.
+   * @deletion-target 7.0.0
    */
-  updateActiveItemIndex(index: number) {
-    this._activeItemIndex = index;
+  updateActiveItemIndex(index: number): void {
+    this.updateActiveItem(index);
   }
 
   /**
@@ -259,7 +314,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * currently active item and the new active item. It will calculate differently
    * depending on whether wrap mode is turned on.
    */
-  private _setActiveItemByDelta(delta: number, items = this._items.toArray()): void {
+  private _setActiveItemByDelta(delta: -1 | 1, items = this._items.toArray()): void {
     this._wrap ? this._setActiveInWrapMode(delta, items)
                : this._setActiveInDefaultMode(delta, items);
   }
@@ -269,16 +324,15 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * down the list until it finds an item that is not disabled, and it will wrap if it
    * encounters either end of the list.
    */
-  private _setActiveInWrapMode(delta: number, items: T[]): void {
-    // when active item would leave menu, wrap to beginning or end
-    this._activeItemIndex =
-      (this._activeItemIndex + delta + items.length) % items.length;
+  private _setActiveInWrapMode(delta: -1 | 1, items: T[]): void {
+    for (let i = 1; i <= items.length; i++) {
+      const index = (this._activeItemIndex + (delta * i) + items.length) % items.length;
+      const item = items[index];
 
-    // skip all disabled menu items recursively until an enabled one is reached
-    if (items[this._activeItemIndex].disabled) {
-      this._setActiveInWrapMode(delta, items);
-    } else {
-      this.setActiveItem(this._activeItemIndex);
+      if (!this._skipPredicateFn(item)) {
+        this.setActiveItem(index);
+        return;
+      }
     }
   }
 
@@ -287,7 +341,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * continue to move down the list until it finds an item that is not disabled. If
    * it encounters either end of the list, it will stop and not wrap.
    */
-  private _setActiveInDefaultMode(delta: number, items: T[]): void {
+  private _setActiveInDefaultMode(delta: -1 | 1, items: T[]): void {
     this._setActiveItemByIndex(this._activeItemIndex + delta, delta, items);
   }
 
@@ -296,13 +350,18 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * item is disabled, it will move in the fallbackDelta direction until it either
    * finds an enabled item or encounters the end of the list.
    */
-  private _setActiveItemByIndex(index: number, fallbackDelta: number,
-                                  items = this._items.toArray()): void {
-    if (!items[index]) { return; }
+  private _setActiveItemByIndex(index: number, fallbackDelta: -1 | 1,
+                                items = this._items.toArray()): void {
+    if (!items[index]) {
+      return;
+    }
 
-    while (items[index].disabled) {
+    while (this._skipPredicateFn(items[index])) {
       index += fallbackDelta;
-      if (!items[index]) { return; }
+
+      if (!items[index]) {
+        return;
+      }
     }
 
     this.setActiveItem(index);

@@ -1,25 +1,32 @@
-import {Directionality, Direction} from '@angular/cdk/bidi';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {
+  DOWN_ARROW,
+  END,
   ENTER,
+  HOME,
   LEFT_ARROW,
   RIGHT_ARROW,
-  UP_ARROW,
-  DOWN_ARROW,
   SPACE,
-  HOME,
-  END,
+  UP_ARROW,
 } from '@angular/cdk/keycodes';
+import {StepperOrientation} from '@angular/cdk/stepper';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {Component, DebugElement} from '@angular/core';
-import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
-import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ReactiveFormsModule,
-  ValidationErrors, Validators} from '@angular/forms';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {
+  AbstractControl,
+  AsyncValidatorFn,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {StepperOrientation} from '@angular/cdk/stepper';
+import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators/map';
 import {take} from 'rxjs/operators/take';
-import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {MatStepperModule} from './index';
 import {MatHorizontalStepper, MatStep, MatStepper, MatVerticalStepper} from './stepper';
@@ -44,6 +51,7 @@ describe('MatStepper', () => {
         SimpleStepperWithoutStepControl,
         SimpleStepperWithStepControlAndCompletedBinding,
         SimpleMatHorizontalStepperApp,
+        LinearStepperWithValidOptionalStep,
       ],
       providers: [
         {provide: Directionality, useFactory: () => ({value: dir})}
@@ -477,20 +485,20 @@ describe('MatStepper', () => {
       expect(stepperComponent.selectedIndex).toBe(2);
     });
 
-    it('should not focus step header upon click if it is not able to be selected', () => {
+    it('should be able to focus step header upon click if it is unable to be selected', () => {
       let stepHeaderEl = fixture.debugElement.queryAll(By.css('mat-step-header'))[1].nativeElement;
 
-      spyOn(stepHeaderEl, 'blur');
-      stepHeaderEl.click();
       fixture.detectChanges();
 
-      expect(stepHeaderEl.blur).toHaveBeenCalled();
+      expect(stepHeaderEl.getAttribute('tabindex')).toBe('-1');
     });
 
     it('should be able to move to next step even when invalid if current step is optional', () => {
       testComponent.oneGroup.get('oneCtrl')!.setValue('input');
       testComponent.twoGroup.get('twoCtrl')!.setValue('input');
       testComponent.validationTrigger.next();
+      stepperComponent.selectedIndex = 1;
+      fixture.detectChanges();
       stepperComponent.selectedIndex = 2;
       fixture.detectChanges();
 
@@ -559,6 +567,8 @@ describe('MatStepper', () => {
         testComponent.twoGroup.get('twoCtrl')!.setValue('input');
         testComponent.threeGroup.get('threeCtrl')!.setValue('valid');
         testComponent.validationTrigger.next();
+        stepperComponent.selectedIndex = 1;
+        fixture.detectChanges();
         stepperComponent.selectedIndex = 2;
         fixture.detectChanges();
         stepperComponent.selectedIndex = 3;
@@ -695,6 +705,43 @@ describe('MatStepper', () => {
       assertArrowKeyInteractionInRtl(fixture, stepHeaders);
     });
   });
+
+  describe('valid step in linear stepper', () => {
+    let fixture: ComponentFixture<LinearStepperWithValidOptionalStep>;
+    let testComponent: LinearStepperWithValidOptionalStep;
+    let stepper: MatStepper;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(LinearStepperWithValidOptionalStep);
+      fixture.detectChanges();
+
+      testComponent = fixture.componentInstance;
+      stepper = fixture.debugElement
+          .query(By.css('mat-horizontal-stepper')).componentInstance;
+    });
+
+    it('must be visited if not optional', () => {
+      stepper.selectedIndex = 2;
+      fixture.detectChanges();
+      expect(stepper.selectedIndex).toBe(0);
+
+      stepper.selectedIndex = 1;
+      fixture.detectChanges();
+      expect(stepper.selectedIndex).toBe(1);
+
+      stepper.selectedIndex = 2;
+      fixture.detectChanges();
+      expect(stepper.selectedIndex).toBe(2);
+    });
+
+    it('can be skipped entirely if optional', () => {
+      testComponent.step2Optional = true;
+      fixture.detectChanges();
+      stepper.selectedIndex = 2;
+      fixture.detectChanges();
+      expect(stepper.selectedIndex).toBe(2);
+    });
+  });
 });
 
 /** Asserts that keyboard interaction works correctly. */
@@ -705,14 +752,14 @@ function assertCorrectKeyboardInteraction(fixture: ComponentFixture<any>,
   let nextKey = orientation === 'vertical' ? DOWN_ARROW : RIGHT_ARROW;
   let prevKey = orientation === 'vertical' ? UP_ARROW : LEFT_ARROW;
 
-  expect(stepperComponent._focusIndex).toBe(0);
+  expect(stepperComponent._getFocusIndex()).toBe(0);
   expect(stepperComponent.selectedIndex).toBe(0);
 
   let stepHeaderEl = stepHeaders[0].nativeElement;
   dispatchKeyboardEvent(stepHeaderEl, 'keydown', nextKey);
   fixture.detectChanges();
 
-  expect(stepperComponent._focusIndex)
+  expect(stepperComponent._getFocusIndex())
       .toBe(1, 'Expected index of focused step to increase by 1 after pressing the next key.');
   expect(stepperComponent.selectedIndex)
       .toBe(0, 'Expected index of selected step to remain unchanged after pressing the next key.');
@@ -721,7 +768,7 @@ function assertCorrectKeyboardInteraction(fixture: ComponentFixture<any>,
   dispatchKeyboardEvent(stepHeaderEl, 'keydown', ENTER);
   fixture.detectChanges();
 
-  expect(stepperComponent._focusIndex)
+  expect(stepperComponent._getFocusIndex())
       .toBe(1, 'Expected index of focused step to remain unchanged after ENTER event.');
   expect(stepperComponent.selectedIndex)
       .toBe(1,
@@ -731,19 +778,19 @@ function assertCorrectKeyboardInteraction(fixture: ComponentFixture<any>,
   dispatchKeyboardEvent(stepHeaderEl, 'keydown', prevKey);
   fixture.detectChanges();
 
-  expect(stepperComponent._focusIndex)
+  expect(stepperComponent._getFocusIndex())
       .toBe(0, 'Expected index of focused step to decrease by 1 after pressing the previous key.');
   expect(stepperComponent.selectedIndex).toBe(1,
       'Expected index of selected step to remain unchanged after pressing the previous key.');
 
   // When the focus is on the last step and right arrow key is pressed, the focus should cycle
   // through to the first step.
-  stepperComponent._focusIndex = 2;
+  stepperComponent._keyManager.updateActiveItemIndex(2);
   stepHeaderEl = stepHeaders[2].nativeElement;
   dispatchKeyboardEvent(stepHeaderEl, 'keydown', nextKey);
   fixture.detectChanges();
 
-  expect(stepperComponent._focusIndex).toBe(0,
+  expect(stepperComponent._getFocusIndex()).toBe(0,
       'Expected index of focused step to cycle through to index 0 after pressing the next key.');
   expect(stepperComponent.selectedIndex)
       .toBe(1, 'Expected index of selected step to remain unchanged after pressing the next key.');
@@ -752,19 +799,19 @@ function assertCorrectKeyboardInteraction(fixture: ComponentFixture<any>,
   dispatchKeyboardEvent(stepHeaderEl, 'keydown', SPACE);
   fixture.detectChanges();
 
-  expect(stepperComponent._focusIndex)
+  expect(stepperComponent._getFocusIndex())
       .toBe(0, 'Expected index of focused to remain unchanged after SPACE event.');
   expect(stepperComponent.selectedIndex)
       .toBe(0,
           'Expected index of selected step to change to index of focused step after SPACE event.');
 
   const endEvent = dispatchKeyboardEvent(stepHeaderEl, 'keydown', END);
-  expect(stepperComponent._focusIndex)
+  expect(stepperComponent._getFocusIndex())
       .toBe(stepHeaders.length - 1, 'Expected last step to be focused when pressing END.');
   expect(endEvent.defaultPrevented).toBe(true, 'Expected default END action to be prevented.');
 
   const homeEvent = dispatchKeyboardEvent(stepHeaderEl, 'keydown', HOME);
-  expect(stepperComponent._focusIndex)
+  expect(stepperComponent._getFocusIndex())
       .toBe(0, 'Expected first step to be focused when pressing HOME.');
   expect(homeEvent.defaultPrevented).toBe(true, 'Expected default HOME action to be prevented.');
 }
@@ -774,19 +821,19 @@ function assertArrowKeyInteractionInRtl(fixture: ComponentFixture<any>,
                                         stepHeaders: DebugElement[]) {
   let stepperComponent = fixture.debugElement.query(By.directive(MatStepper)).componentInstance;
 
-  expect(stepperComponent._focusIndex).toBe(0);
+  expect(stepperComponent._getFocusIndex()).toBe(0);
 
   let stepHeaderEl = stepHeaders[0].nativeElement;
   dispatchKeyboardEvent(stepHeaderEl, 'keydown', LEFT_ARROW);
   fixture.detectChanges();
 
-  expect(stepperComponent._focusIndex).toBe(1);
+  expect(stepperComponent._getFocusIndex()).toBe(1);
 
   stepHeaderEl = stepHeaders[1].nativeElement;
   dispatchKeyboardEvent(stepHeaderEl, 'keydown', RIGHT_ARROW);
   fixture.detectChanges();
 
-  expect(stepperComponent._focusIndex).toBe(0);
+  expect(stepperComponent._getFocusIndex()).toBe(0);
 }
 
 function asyncValidator(minLength: number, validationTrigger: Observable<any>): AsyncValidatorFn {
@@ -986,3 +1033,17 @@ class SimpleStepperWithStepControlAndCompletedBinding {
 `
 })
 class IconOverridesStepper {}
+
+@Component({
+  template: `
+    <mat-horizontal-stepper linear>
+      <mat-step label="Step 1" [stepControl]="controls[0]"></mat-step>
+      <mat-step label="Step 2" [stepControl]="controls[1]" [optional]="step2Optional"></mat-step>
+      <mat-step label="Step 3" [stepControl]="controls[2]"></mat-step>
+    </mat-horizontal-stepper>
+  `
+})
+class LinearStepperWithValidOptionalStep {
+  controls = [0, 0, 0].map(() => new FormControl());
+  step2Optional = false;
+}

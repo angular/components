@@ -82,7 +82,6 @@ export const _MatSlideToggleMixinBase =
   providers: [MAT_SLIDE_TOGGLE_VALUE_ACCESSOR],
   inputs: ['disabled', 'disableRipple', 'color', 'tabIndex'],
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestroy, AfterContentInit,
@@ -231,6 +230,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
 
   /** Function is called whenever the focus changes for the input element. */
   private _onInputFocusChange(focusOrigin: FocusOrigin) {
+    // TODO(paul): support `program`. See https://github.com/angular/material2/issues/9889
     if (!this._focusRipple && focusOrigin === 'keyboard') {
       // For keyboard focus show a persistent ripple as focus indicator.
       this._focusRipple = this._ripple.launch(0, 0, {persistent: true});

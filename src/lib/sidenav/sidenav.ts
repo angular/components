@@ -34,7 +34,6 @@ import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
 })
 export class MatSidenavContent extends MatDrawerContent {
   constructor(
@@ -57,7 +56,6 @@ export class MatSidenavContent extends MatDrawerContent {
     '[@transform]': '_animationState',
     '(@transform.start)': '_onAnimationStart($event)',
     '(@transform.done)': '_onAnimationEnd($event)',
-    '(keydown)': 'handleKeydown($event)',
     // must prevent the browser from aligning text based on value
     '[attr.align]': 'null',
     '[class.mat-drawer-end]': 'position === "end"',
@@ -70,7 +68,6 @@ export class MatSidenavContent extends MatDrawerContent {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
 })
 export class MatSidenav extends MatDrawer {
   /** Whether the sidenav is fixed in the viewport. */
@@ -107,10 +104,10 @@ export class MatSidenav extends MatDrawer {
   styleUrls: ['drawer.css'],
   host: {
     'class': 'mat-drawer-container mat-sidenav-container',
+    '[class.mat-drawer-container-explicit-backdrop]': '_backdropOverride',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
 })
 export class MatSidenavContainer extends MatDrawerContainer {
   @ContentChildren(MatSidenav) _drawers: QueryList<MatSidenav>;

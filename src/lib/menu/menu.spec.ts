@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {OverlayContainer, Overlay} from '@angular/cdk/overlay';
-import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
 import {
   MAT_MENU_DEFAULT_OPTIONS,
   MatMenu,
@@ -111,6 +111,18 @@ describe('MatMenu', () => {
     expect(overlayContainerElement.textContent).toBe('');
   }));
 
+  it('should be able to remove the backdrop', fakeAsync(() => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.detectChanges();
+
+    fixture.componentInstance.menu.hasBackdrop = false;
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
+  }));
+
   it('should restore focus to the trigger when the menu was opened by keyboard', fakeAsync(() => {
     const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
@@ -128,6 +140,20 @@ describe('MatMenu', () => {
     tick(500);
 
     expect(document.activeElement).toBe(triggerEl);
+  }));
+
+  it('should be able to set a custom class on the backdrop', fakeAsync(() => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+
+    fixture.componentInstance.backdropClass = 'custom-backdrop';
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+
+    expect(backdrop.classList).toContain('custom-backdrop');
   }));
 
   it('should restore focus to the root trigger when the menu was opened by mouse', fakeAsync(() => {
@@ -327,8 +353,8 @@ describe('MatMenu', () => {
   describe('lazy rendering', () => {
     it('should be able to render the menu content lazily', fakeAsync(() => {
       const fixture = TestBed.createComponent(SimpleLazyMenu);
-      fixture.detectChanges();
 
+      fixture.detectChanges();
       fixture.componentInstance.triggerEl.nativeElement.click();
       fixture.detectChanges();
       tick(500);
@@ -338,6 +364,24 @@ describe('MatMenu', () => {
       expect(panel).toBeTruthy('Expected panel to be defined');
       expect(panel.textContent).toContain('Another item', 'Expected panel to have correct content');
       expect(fixture.componentInstance.trigger.menuOpen).toBe(true, 'Expected menu to be open');
+    }));
+
+    it('should detach the lazy content when the menu is closed', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SimpleLazyMenu);
+
+      fixture.detectChanges();
+      fixture.componentInstance.trigger.openMenu();
+      fixture.detectChanges();
+      tick(500);
+
+      expect(fixture.componentInstance.items.length).toBeGreaterThan(0);
+
+      fixture.componentInstance.trigger.closeMenu();
+      fixture.detectChanges();
+      tick(500);
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.items.length).toBe(0);
     }));
 
     it('should focus the first menu item when opening a lazy menu via keyboard', fakeAsync(() => {
@@ -372,8 +416,8 @@ describe('MatMenu', () => {
 
     it('should be able to open the same menu with a different context', fakeAsync(() => {
       const fixture = TestBed.createComponent(LazyMenuWithContext);
-      fixture.detectChanges();
 
+      fixture.detectChanges();
       fixture.componentInstance.triggerOne.openMenu();
       fixture.detectChanges();
       tick(500);
@@ -1124,6 +1168,28 @@ describe('MatMenu', () => {
       expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(0, 'Expected no open menus');
     }));
 
+    it('should close all of the menus when the user tabs away', fakeAsync(() => {
+      compileTestComponent();
+      instance.rootTriggerEl.nativeElement.click();
+      fixture.detectChanges();
+
+      instance.levelOneTrigger.openMenu();
+      fixture.detectChanges();
+
+      instance.levelTwoTrigger.openMenu();
+      fixture.detectChanges();
+
+      const menus = overlay.querySelectorAll('.mat-menu-panel');
+
+      expect(menus.length).toBe(3, 'Expected three open menus');
+
+      dispatchKeyboardEvent(menus[menus.length - 1], 'keydown', TAB);
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(0, 'Expected no open menus');
+    }));
+
     it('should set a class on the menu items that trigger a sub-menu', () => {
       compileTestComponent();
       instance.rootTrigger.openMenu();
@@ -1336,7 +1402,12 @@ describe('MatMenu default overrides', () => {
 @Component({
   template: `
     <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
-    <mat-menu class="custom-one custom-two" #menu="matMenu" (closed)="closeCallback($event)">
+    <mat-menu
+      #menu="matMenu"
+      class="custom-one custom-two"
+      (closed)="closeCallback($event)"
+      [backdropClass]="backdropClass">
+
       <button mat-menu-item> Item </button>
       <button mat-menu-item disabled> Disabled </button>
       <button mat-menu-item disableRipple>
@@ -1352,6 +1423,7 @@ class SimpleMenu {
   @ViewChild(MatMenu) menu: MatMenu;
   @ViewChildren(MatMenuItem) items: QueryList<MatMenuItem>;
   closeCallback = jasmine.createSpy('menu closed callback');
+  backdropClass: string;
 }
 
 @Component({
@@ -1557,6 +1629,7 @@ class FakeIcon {}
 class SimpleLazyMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
   @ViewChild('triggerEl') triggerEl: ElementRef;
+  @ViewChildren(MatMenuItem) items: QueryList<MatMenuItem>;
 }
 
 
@@ -1572,7 +1645,7 @@ class SimpleLazyMenu {
       [matMenuTriggerData]="{label: 'two'}"
       #triggerTwo="matMenuTrigger">Two</button>
 
-    <mat-menu matMenuContent #menu="matMenu">
+    <mat-menu #menu="matMenu">
       <ng-template let-label="label" matMenuContent>
         <button mat-menu-item>{{label}}</button>
       </ng-template>

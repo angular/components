@@ -92,7 +92,6 @@ export class MatChipListChange {
   providers: [{provide: MatFormFieldControl, useExisting: MatChipList}],
   styleUrls: ['chips.css'],
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatChipList extends _MatChipListMixinBase implements MatFormFieldControl<any>,
@@ -274,12 +273,17 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   @Input('aria-orientation') ariaOrientation: 'horizontal' | 'vertical' = 'horizontal';
 
   /**
-   * Whether or not this chip is selectable. When a chip is not selectable,
-   * its selected state is always ignored.
+   * Whether or not this chip list is selectable. When a chip list is not selectable,
+   * the selected states for all the chips inside the chip list are always ignored.
    */
   @Input()
   get selectable(): boolean { return this._selectable; }
-  set selectable(value: boolean) { this._selectable = coerceBooleanProperty(value); }
+  set selectable(value: boolean) {
+    this._selectable = coerceBooleanProperty(value);
+    if (this.chips) {
+      this.chips.forEach(chip => chip.chipListSelectable = this._selectable);
+    }
+  }
   protected _selectable: boolean = true;
 
   @Input()
@@ -361,6 +365,8 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
 
       // Check to see if we have a destroyed chip and need to refocus
       this._updateFocusForDestroyedChips();
+
+      this.stateChanges.next();
     });
   }
 
@@ -384,6 +390,11 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     if (this._changeSubscription) {
       this._changeSubscription.unsubscribe();
     }
+
+    if (this._chipRemoveSubscription) {
+      this._chipRemoveSubscription.unsubscribe();
+    }
+
     this._dropSubscriptions();
     this.stateChanges.complete();
   }
@@ -557,14 +568,11 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
       // Shift focus to the active item. Note that we shouldn't do this in multiple
       // mode, because we don't know what chip the user interacted with last.
       if (correspondingChip) {
-        const correspondingChipIndex = this.chips.toArray().indexOf(correspondingChip);
-
         if (isUserInput) {
-          this._keyManager.setActiveItem(correspondingChipIndex);
+          this._keyManager.setActiveItem(correspondingChip);
         } else {
-          this._keyManager.updateActiveItemIndex(correspondingChipIndex);
+          this._keyManager.updateActiveItem(correspondingChip);
         }
-
       }
     }
   }
@@ -742,4 +750,3 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     });
   }
 }
-

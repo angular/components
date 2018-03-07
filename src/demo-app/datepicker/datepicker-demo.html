@@ -5,16 +5,23 @@
   <mat-checkbox [(ngModel)]="yearView">Start in year view</mat-checkbox>
   <mat-checkbox [(ngModel)]="datepickerDisabled">Disable datepicker</mat-checkbox>
   <mat-checkbox [(ngModel)]="inputDisabled">Disable input</mat-checkbox>
+  <mat-form-field>
+    <mat-select [(ngModel)]="color" placeholder="Color">
+      <mat-option value="primary">Primary</mat-option>
+      <mat-option value="accent">Accent</mat-option>
+      <mat-option value="warn">Warn</mat-option>
+    </mat-select>
+  </mat-form-field>
 </p>
 <p>
-  <mat-form-field>
+  <mat-form-field color="accent">
     <mat-label>Min date</mat-label>
     <input matInput [matDatepicker]="minDatePicker" [(ngModel)]="minDate"
         [disabled]="inputDisabled">
     <mat-datepicker-toggle matSuffix [for]="minDatePicker"></mat-datepicker-toggle>
     <mat-datepicker #minDatePicker [touchUi]="touch" [disabled]="datepickerDisabled"></mat-datepicker>
   </mat-form-field>
-  <mat-form-field>
+  <mat-form-field color="accent">
     <mat-label>Max date</mat-label>
     <input matInput [matDatepicker]="maxDatePicker" [(ngModel)]="maxDate"
         [disabled]="inputDisabled">
@@ -23,7 +30,7 @@
   </mat-form-field>
 </p>
 <p>
-  <mat-form-field>
+  <mat-form-field color="accent">
     <mat-label>Start at date</mat-label>
     <input matInput [matDatepicker]="startAtPicker" [(ngModel)]="startAt"
         [disabled]="inputDisabled">
@@ -53,7 +60,8 @@
         [touchUi]="touch"
         [disabled]="datepickerDisabled"
         [startAt]="startAt"
-        [startView]="yearView ? 'year' : 'month'">
+        [startView]="yearView ? 'year' : 'month'"
+        [color]="color">
     </mat-datepicker>
     <mat-error *ngIf="resultPickerModel.hasError('matDatepickerParse')">
       "{{resultPickerModel.getError('matDatepickerParse').text}}" is not a valid date!

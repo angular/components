@@ -17,9 +17,6 @@ $mat-menu-icon-margin: 16px !default;
 @mixin mat-menu-base($default-elevation) {
   @include mat-overridable-elevation($default-elevation);
 
-  // Prevents the content from repainting on scroll.
-  @include backface-visibility(hidden);
-
   min-width: $mat-menu-overlay-min-width;
   max-width: $mat-menu-overlay-max-width;
   overflow: auto;
@@ -48,6 +45,7 @@ $mat-menu-icon-margin: 16px !default;
 
   .mat-icon {
     margin-right: $mat-menu-icon-margin;
+    vertical-align: middle;
 
     [dir='rtl'] & {
       margin-left: $mat-menu-icon-margin;

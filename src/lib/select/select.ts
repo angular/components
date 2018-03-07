@@ -188,7 +188,6 @@ export class MatSelectTrigger {}
   styleUrls: ['select.css'],
   inputs: ['disabled', 'disableRipple', 'tabIndex'],
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'role': 'listbox',
@@ -308,6 +307,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     },
   ];
 
+  /** Whether the component is disabling centering of the active option over the trigger. */
+  private _disableOptionCentering: boolean = false;
+
   /** Whether the select is focused. */
   focused: boolean = false;
 
@@ -360,6 +362,13 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     }
 
     this._multiple = coerceBooleanProperty(value);
+  }
+
+  /** Whether to center the active option over the trigger. */
+  @Input()
+  get disableOptionCentering(): boolean { return this._disableOptionCentering; }
+  set disableOptionCentering(value: boolean) {
+    this._disableOptionCentering = coerceBooleanProperty(value);
   }
 
   /**
@@ -420,7 +429,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       .pipe(take(1), switchMap(() => this.optionSelectionChanges));
   });
 
-   /** Event emitted when the select has been opened. */
+   /** Event emitted when the select panel has been toggled. */
    @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
    /** Event emitted when the select has been opened. */
@@ -798,7 +807,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       // Shift focus to the active item. Note that we shouldn't do this in multiple
       // mode, because we don't know what option the user interacted with last.
       if (correspondingOption) {
-        this._keyManager.setActiveItem(this.options.toArray().indexOf(correspondingOption));
+        this._keyManager.setActiveItem(correspondingOption);
       }
     }
 
@@ -900,7 +909,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       this._selectionModel.toggle(option);
       this.stateChanges.next();
       wasSelected ? option.deselect() : option.select();
-      this._keyManager.setActiveItem(this._getOptionIndex(option)!);
+      this._keyManager.setActiveItem(option);
       this._sortValues();
     } else {
       this._clearSelection(option.value == null ? undefined : option);
@@ -966,7 +975,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       if (this.empty) {
         this._keyManager.setFirstItemActive();
       } else {
-        this._keyManager.setActiveItem(this._getOptionIndex(this._selectionModel.selected[0])!);
+        this._keyManager.setActiveItem(this._selectionModel.selected[0]);
       }
     }
   }
@@ -1117,6 +1126,11 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     const optionHeightAdjustment = (itemHeight - this._triggerRect.height) / 2;
     const maxOptionsDisplayed = Math.floor(SELECT_PANEL_MAX_HEIGHT / itemHeight);
     let optionOffsetFromPanelTop: number;
+
+    // Disable offset if requested by user by returning 0 as value to offset
+    if (this._disableOptionCentering) {
+      return 0;
+    }
 
     if (this._scrollTop === 0) {
       optionOffsetFromPanelTop = selectedIndex * itemHeight;

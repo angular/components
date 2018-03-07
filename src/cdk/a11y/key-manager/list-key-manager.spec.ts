@@ -11,8 +11,11 @@ import {Subject} from 'rxjs/Subject';
 
 
 class FakeFocusable {
-  constructor(private _label = '') { }
+  /** Whether the item is disabled or not. */
   disabled = false;
+  /** Test property that can be used to test the `skipPredicate` functionality. */
+  skipItem = false;
+  constructor(private _label = '') {}
   focus(_focusOrigin?: FocusOrigin) {}
   getLabel() { return this._label; }
 }
@@ -27,6 +30,7 @@ class FakeQueryList<T> extends QueryList<T> {
   changes = new Subject<FakeQueryList<T>>();
   items: T[];
   get length() { return this.items.length; }
+  set length(_) { /* Empty setter for base class constructor */  }
   get first() { return this.items[0]; }
   toArray() { return this.items; }
   some() { return this.items.some.apply(this.items, arguments); }
@@ -136,6 +140,28 @@ describe('Key managers', () => {
 
         expect(keyManager.activeItemIndex).toBe(1);
         expect(fakeKeyEvents.unsupported.defaultPrevented).toBe(false);
+      });
+
+      it('should ignore the horizontal keys when only in vertical mode', () => {
+        keyManager.withVerticalOrientation().withHorizontalOrientation(null);
+
+        expect(keyManager.activeItemIndex).toBe(0);
+
+        keyManager.onKeydown(fakeKeyEvents.rightArrow);
+
+        expect(keyManager.activeItemIndex).toBe(0);
+        expect(fakeKeyEvents.rightArrow.defaultPrevented).toBe(false);
+      });
+
+      it('should ignore the horizontal keys when only in horizontal mode', () => {
+        keyManager.withVerticalOrientation(false).withHorizontalOrientation('ltr');
+
+        expect(keyManager.activeItemIndex).toBe(0);
+
+        keyManager.onKeydown(fakeKeyEvents.downArrow);
+
+        expect(keyManager.activeItemIndex).toBe(0);
+        expect(fakeKeyEvents.downArrow.defaultPrevented).toBe(false);
       });
 
       describe('with `vertical` direction', () => {
@@ -323,6 +349,29 @@ describe('Key managers', () => {
             .toBe(1, `Expected activeItemIndex to be updated when setActiveItem() was called.`);
       });
 
+      it('should be able to set the active item by reference', () => {
+        expect(keyManager.activeItemIndex)
+            .toBe(0, `Expected first item of the list to be active.`);
+
+        keyManager.setActiveItem(itemList.items[2]);
+        expect(keyManager.activeItemIndex)
+            .toBe(2, `Expected activeItemIndex to be updated.`);
+      });
+
+      it('should be able to set the active item without emitting an event', () => {
+        const spy = jasmine.createSpy('change spy');
+        const subscription = keyManager.change.subscribe(spy);
+
+        expect(keyManager.activeItemIndex).toBe(0);
+
+        keyManager.updateActiveItem(2);
+
+        expect(keyManager.activeItemIndex).toBe(2);
+        expect(spy).not.toHaveBeenCalled();
+
+        subscription.unsubscribe();
+      });
+
       it('should expose the active item correctly', () => {
         keyManager.onKeydown(fakeKeyEvents.downArrow);
 
@@ -467,6 +516,41 @@ describe('Key managers', () => {
         expect(keyManager.setActiveItem).toHaveBeenCalledWith(0);
       });
 
+      // This test should pass if all items are disabled and the down arrow key got pressed.
+      // If the test setup crashes or this test times out, this test can be considered as failed.
+      it('should not get into an infinite loop if all items are disabled', () => {
+        keyManager.withWrap();
+        keyManager.setActiveItem(0);
+
+        itemList.items.forEach(item => item.disabled = true);
+
+        keyManager.onKeydown(fakeKeyEvents.downArrow);
+      });
+    });
+
+    describe('skip predicate', () => {
+
+      it('should skip disabled items by default', () => {
+        itemList.items[1].disabled = true;
+
+        expect(keyManager.activeItemIndex).toBe(0);
+
+        keyManager.onKeydown(fakeKeyEvents.downArrow);
+
+        expect(keyManager.activeItemIndex).toBe(2);
+      });
+
+      it('should be able to skip items with a custom predicate', () => {
+        keyManager.skipPredicate(item => item.skipItem);
+
+        itemList.items[1].skipItem = true;
+
+        expect(keyManager.activeItemIndex).toBe(0);
+
+        keyManager.onKeydown(fakeKeyEvents.downArrow);
+
+        expect(keyManager.activeItemIndex).toBe(2);
+      });
     });
 
     describe('typeahead mode', () => {

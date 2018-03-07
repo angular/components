@@ -47,15 +47,18 @@ import {TABS_DEMO_ROUTES} from '../tabs/routes';
 import {TabsDemo} from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
+import {TreeDemo} from '../tree/tree-demo';
 import {TypographyDemo} from '../typography/typography-demo';
 import {DemoApp, Home} from './demo-app';
 import {TableDemoPage} from '../table/table-demo-page';
 import {TABLE_DEMO_ROUTES} from '../table/routes';
+import {BadgeDemo} from '../badge/badge-demo';
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: DemoApp, children: [
     {path: '', component: Home},
     {path: 'autocomplete', component: AutocompleteDemo},
+    {path: 'badge', component: BadgeDemo},
     {path: 'bottom-sheet', component: BottomSheetDemo},
     {path: 'baseline', component: BaselineDemo},
     {path: 'button', component: ButtonDemo},
@@ -92,6 +95,7 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'tabs', component: TabsDemo, children: TABS_DEMO_ROUTES},
     {path: 'toolbar', component: ToolbarDemo},
     {path: 'tooltip', component: TooltipDemo},
+    {path: 'tree', component: TreeDemo},
     {path: 'typography', component: TypographyDemo},
     {path: 'expansion', component: ExpansionDemo},
     {path: 'stepper', component: StepperDemo},

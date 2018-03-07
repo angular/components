@@ -21,7 +21,7 @@ export interface MatMenuPanel {
   yPosition: MenuPositionY;
   overlapTrigger: boolean;
   templateRef: TemplateRef<any>;
-  close: EventEmitter<void | 'click' | 'keydown'>;
+  close: EventEmitter<void | 'click' | 'keydown' | 'tab'>;
   parentMenu?: MatMenuPanel | undefined;
   direction?: Direction;
   focusFirstItem: (origin?: FocusOrigin) => void;
@@ -29,4 +29,6 @@ export interface MatMenuPanel {
   setPositionClasses: (x: MenuPositionX, y: MenuPositionY) => void;
   setElevation?(depth: number): void;
   lazyContent?: MatMenuContent;
+  backdropClass?: string;
+  hasBackdrop?: boolean;
 }

@@ -3,7 +3,9 @@
     "./tools/stylelint/no-prefixes/no-prefixes.js",
     "./tools/stylelint/selector-nested-pattern-scoped/index.js",
     "./tools/stylelint/selector-no-deep/index.js",
-    "./tools/stylelint/no-nested-mixin/index.js"
+    "./tools/stylelint/no-nested-mixin/index.js",
+    "./tools/stylelint/no-concrete-rules/index.js",
+    "./tools/stylelint/no-top-level-ampersand-in-mixin/index.js"
   ],
   "rules": {
     "material/no-prefixes": [["last 2 versions", "not ie <= 10", "not ie_mob <= 10"]],
@@ -11,6 +13,12 @@
     "material/no-nested-mixin": true,
     "material/selector-nested-pattern-scoped": [".*[^&]$", {
       "message": "The & operator is not allowed at the end of theme selectors.",
+      "filePattern": "-theme\\.scss$"
+    }],
+    "material/no-concrete-rules": [true, {
+      "filePattern": "^_.*\\.scss$"
+    }],
+    "material/no-top-level-ampersand-in-mixin": [true, {
       "filePattern": "-theme\\.scss$"
     }],
 
@@ -43,7 +51,7 @@
 
     "property-case": "lower",
 
-    "declaration-block-no-duplicate-properties": [ true, {
+    "declaration-block-no-duplicate-properties": [true, {
       "ignore": ["consecutive-duplicates-with-different-values"]
     }],
     "declaration-block-trailing-semicolon": "always",
@@ -53,8 +61,8 @@
     "declaration-block-semicolon-newline-before": "never-multi-line",
     "declaration-block-semicolon-newline-after": "always-multi-line",
     "declaration-property-value-blacklist": [
-        { "/.*/": ["initial"] },
-        { "message": "The `initial` value is not supported in IE."}
+        {"/.*/": ["initial"]},
+        {"message": "The `initial` value is not supported in IE."}
     ],
 
     "block-closing-brace-newline-after": "always",

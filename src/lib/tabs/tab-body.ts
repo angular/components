@@ -77,10 +77,8 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
       this.attach(this._host._content);
     }
     this._centeringSub = this._host._beforeCentering.subscribe((isCentering: boolean) => {
-      if (isCentering) {
-        if (!this.hasAttached()) {
-          this.attach(this._host._content);
-        }
+      if (isCentering && !this.hasAttached()) {
+        this.attach(this._host._content);
       }
     });
 
@@ -111,7 +109,6 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
   templateUrl: 'tab-body.html',
   styleUrls: ['tab-body.css'],
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [matTabsAnimations.translateTab],
   host: {

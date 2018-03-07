@@ -20,7 +20,6 @@ import {Component, ElementRef, ViewEncapsulation} from '@angular/core';
   selector: 'entry-app',
   template: '<router-outlet></router-outlet>',
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
 })
 export class EntryApp {}
 
@@ -45,12 +44,12 @@ export class Home {}
   templateUrl: 'demo-app.html',
   styleUrls: ['demo-app.css'],
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
 })
 export class DemoApp {
   dark = false;
   navItems = [
     {name: 'Autocomplete', route: '/autocomplete'},
+    {name: 'Badge', route: '/badge'},
     {name: 'Bottom sheet', route: '/bottom-sheet'},
     {name: 'Button Toggle', route: '/button-toggle'},
     {name: 'Button', route: '/button'},
@@ -87,6 +86,7 @@ export class DemoApp {
     {name: 'Tabs', route: '/tabs'},
     {name: 'Toolbar', route: '/toolbar'},
     {name: 'Tooltip', route: '/tooltip'},
+    {name: 'Tree', route: '/tree'},
     {name: 'Typography', route: '/typography'}
   ];
 

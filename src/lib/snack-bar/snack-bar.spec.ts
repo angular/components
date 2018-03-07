@@ -6,7 +6,15 @@ import {
   tick,
   flush,
 } from '@angular/core/testing';
-import {NgModule, Component, Directive, ViewChild, ViewContainerRef, Inject} from '@angular/core';
+import {
+  NgModule,
+  Component,
+  Directive,
+  ViewChild,
+  ViewContainerRef,
+  Inject,
+  TemplateRef,
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {OverlayContainer} from '@angular/cdk/overlay';
@@ -18,6 +26,7 @@ import {
   MatSnackBarRef,
   SimpleSnackBar,
   MAT_SNACK_BAR_DATA,
+  MAT_SNACK_BAR_DEFAULT_OPTIONS,
 } from './index';
 
 describe('MatSnackBar', () => {
@@ -387,6 +396,32 @@ describe('MatSnackBar', () => {
     expect(pane.getAttribute('dir')).toBe('rtl', 'Expected the pane to be in RTL mode.');
   });
 
+  it('should be able to override the default config', fakeAsync(() => {
+    overlayContainer.ngOnDestroy();
+    viewContainerFixture.destroy();
+
+    TestBed
+      .resetTestingModule()
+      .overrideProvider(MAT_SNACK_BAR_DEFAULT_OPTIONS, {
+        deps: [],
+        useFactory: () => ({panelClass: 'custom-class'})
+      })
+      .configureTestingModule({imports: [MatSnackBarModule, NoopAnimationsModule]})
+      .compileComponents();
+
+    inject([MatSnackBar, OverlayContainer], (sb: MatSnackBar, oc: OverlayContainer) => {
+      snackBar = sb;
+      overlayContainer = oc;
+      overlayContainerElement = oc.getContainerElement();
+    })();
+
+    snackBar.open(simpleMessage);
+    flush();
+
+    expect(overlayContainerElement.querySelector('snack-bar-container')!.classList)
+        .toContain('custom-class', 'Expected class applied through the defaults to be applied.');
+  }));
+
   describe('with custom component', () => {
     it('should open a custom component', () => {
       const snackBarRef = snackBar.openFromComponent(BurritosNotification);
@@ -434,6 +469,42 @@ describe('MatSnackBar', () => {
 
       tick(500);
     }));
+
+  });
+
+  describe('with TemplateRef', () => {
+    let templateFixture: ComponentFixture<ComponentWithTemplateRef>;
+
+    beforeEach(() => {
+      templateFixture = TestBed.createComponent(ComponentWithTemplateRef);
+      templateFixture.detectChanges();
+    });
+
+    it('should be able to open a snack bar using a TemplateRef', () => {
+      templateFixture.componentInstance.localValue = 'Pizza';
+      snackBar.openFromTemplate(templateFixture.componentInstance.templateRef);
+      templateFixture.detectChanges();
+
+      const containerElement = overlayContainerElement.querySelector('snack-bar-container')!;
+
+      expect(containerElement.textContent).toContain('Fries');
+      expect(containerElement.textContent).toContain('Pizza');
+
+      templateFixture.componentInstance.localValue = 'Pasta';
+      templateFixture.detectChanges();
+
+      expect(containerElement.textContent).toContain('Pasta');
+    });
+
+    it('should be able to pass in contextual data when opening with a TemplateRef', () => {
+      snackBar.openFromTemplate(templateFixture.componentInstance.templateRef, {
+        data: {value: 'Oranges'}
+      });
+
+      const containerElement = overlayContainerElement.querySelector('snack-bar-container')!;
+
+      expect(containerElement.textContent).toContain('Oranges');
+    });
 
   });
 
@@ -504,14 +575,12 @@ describe('MatSnackBar with parent MatSnackBar', () => {
   }));
 });
 
-
 describe('MatSnackBar Positioning', () => {
   let snackBar: MatSnackBar;
   let liveAnnouncer: LiveAnnouncer;
   let overlayContainer: OverlayContainer;
   let overlayContainerEl: HTMLElement;
 
-  let testViewContainerRef: ViewContainerRef;
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
 
   let simpleMessage = 'Burritos are here!';
@@ -539,7 +608,6 @@ describe('MatSnackBar Positioning', () => {
   beforeEach(() => {
     viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
     viewContainerFixture.detectChanges();
-    testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
   });
 
   it('should default to bottom center', fakeAsync(() => {
@@ -786,6 +854,20 @@ class ComponentWithChildViewContainer {
   }
 }
 
+@Component({
+  selector: 'arbitrary-component-with-template-ref',
+  template: `
+    <ng-template let-data>
+      Fries {{localValue}} {{data?.value}}
+    </ng-template>
+  `,
+})
+class ComponentWithTemplateRef {
+  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  localValue: string;
+}
+
+
 /** Simple component for testing ComponentPortal. */
 @Component({template: '<p>Burritos are on the way.</p>'})
 class BurritosNotification {
@@ -811,7 +893,8 @@ class ComponentThatProvidesMatSnackBar {
  */
 const TEST_DIRECTIVES = [ComponentWithChildViewContainer,
                          BurritosNotification,
-                         DirectiveWithViewContainer];
+                         DirectiveWithViewContainer,
+                         ComponentWithTemplateRef];
 @NgModule({
   imports: [CommonModule, MatSnackBarModule],
   exports: TEST_DIRECTIVES,
