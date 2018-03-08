@@ -5,8 +5,14 @@ import { Observable } from 'rxjs/Observable';
 @Component({
   selector: '<%= selector %>',<% if(inlineTemplate) { %>
   template: `
-    <mat-sidenav-container>
-      <mat-sidenav fixedInViewport="true" [mode]="isHandset ? 'over' : 'side'" #drawer [opened]="!(_isHandset | async)!.matches">
+    <mat-sidenav-container class="sidenav-container">
+      <mat-sidenav
+        #drawer
+        class="sidenav"
+        fixedInViewport="true"
+        [attr.role]="isHandset ? 'dialog' : 'navigation'"
+        [mode]="isHandset ? 'over' : 'side'"
+        [opened]="!(isHandset | async)!.matches">
         <mat-toolbar color="primary">Menu</mat-toolbar>
         <mat-nav-list>
           <a mat-list-item href="#">Link 1</a>
@@ -16,7 +22,12 @@ import { Observable } from 'rxjs/Observable';
       </mat-sidenav>
       <mat-sidenav-content>
         <mat-toolbar color="primary">
-          <button type="button" mat-icon-button (click)="drawer.toggle()" *ngIf="(_isHandset | async)!.matches">
+          <button
+            type="button"
+            aria-label="Toggle sidenav"
+            mat-icon-button
+            (click)="drawer.toggle()"
+            *ngIf="(isHandset | async)!.matches">
             <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
           </button>
           <span>Application Title</span>
@@ -27,11 +38,11 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: './<%= dasherize(name) %>.component.html',<% } if(inlineStyle) { %>
   styles: [
     `
-    mat-sidenav-container {
+    .sidenav-container {
       height: 100%;
     }
     
-    mat-sidenav {
+    .sidenav {
       width: 200px;
       box-shadow: 3px 0 6px rgba(0,0,0,.24);
     }
@@ -42,6 +53,6 @@ import { Observable } from 'rxjs/Observable';
   changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %>
 })
 export class <%= classify(name) %>Component {
-  _isHandset: Observable<BreakpointState> = this._breakpointObserver.observe(Breakpoints.Handset);
-  constructor(private _breakpointObserver: BreakpointObserver) {}
+  isHandset: Observable<BreakpointState> = this.breakpointObserver.observe(Breakpoints.Handset);
+  constructor(private breakpointObserver: BreakpointObserver) {}
 }

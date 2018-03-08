@@ -42,6 +42,7 @@
       "description": "Specifies the view encapsulation strategy.",
       "enum": ["Emulated", "Native", "None"],
       "type": "string",
+      "default": "Emulated",
       "alias": "ve"
     },
     "changeDetection": {
