@@ -42,14 +42,14 @@ import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCalendarHeader {
-    constructor(@Host() public calendar: MatCalendar<any>,
-                private _intl: MatDatepickerIntl,
-                changeDetectorRef: ChangeDetectorRef) {
+  constructor(@Host() public calendar: MatCalendar<any>,
+              private _intl: MatDatepickerIntl,
+              changeDetectorRef: ChangeDetectorRef) {
 
-      this._intlChanges = _intl.changes.subscribe(() => changeDetectorRef.markForCheck());
-    }
+    this._intlChanges = _intl.changes.subscribe(() => changeDetectorRef.markForCheck());
+  }
 
-    private _intlChanges: Subscription;
+  private _intlChanges: Subscription;
 }
 
 /**
