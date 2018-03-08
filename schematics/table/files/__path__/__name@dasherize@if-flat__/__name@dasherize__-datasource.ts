@@ -5,7 +5,7 @@ import { MatPaginator, MatSort } from '@angular/material';
 import { map } from 'rxjs/operators/map';
 import { Observable } from 'rxjs/Observable';
 
-/** TODO: Replace this with your own data model type */
+// TODO: Replace this with your own data model type
 export interface <%= classify(name) %>Item {
   name: string;
   id: number;
@@ -35,10 +35,15 @@ const EXAMPLE_DATA = <%= classify(name) %>Item[] = [
   {id: 20, name: 'Calcium'},
 ];
 
+/**
+ * Data source for the <%= classify(name) %> view. This class should
+ * encapsulate all logic for fetching and manipulating the displayed data
+ * (including sorting, pagination, and filtering).
+ */
 export class <%= classify(name) %>DataSource extends DataSource<<%= classify(name) %>Item> {
   data: <%= classify(name) %>Item[] = EXAMPLE_DATA;
 
-  constructor(private _paginator: MatPaginator, private _sort: MatSort) {
+  constructor(private paginator: MatPaginator, private sort: MatSort) {
     super();
   }
 
@@ -52,8 +57,8 @@ export class <%= classify(name) %>DataSource extends DataSource<<%= classify(nam
     // stream for the data-table to consume.
     const dataMutations = [
       observableOf(this.data),
-      this._paginator.page,
-      this._sort.sortChange
+      this.paginator.page,
+      this.sort.sortChange
     ];
 
     return merge(...dataMutations).pipe(map(() => {
@@ -61,31 +66,33 @@ export class <%= classify(name) %>DataSource extends DataSource<<%= classify(nam
     }));
   }
 
-  disconnect() {
-    // TODO: clean up any open connections, free any held resources, etc.
-  }
+  /**
+   *  Called when the table is being destroyed. Use this function, to clean up
+   * any open connections or free any held resources that were set up during connect.
+   */
+  disconnect() {}
 
   /**
-   * Client-side page the data by slicing out the next from the data array.
-   * If you are using external datasource for pagination, you would connect it here.
+   * Paginate the data (client-side). If you're using server-side pagination,
+   * this would be replaced by requesting the appropriate data from the server.
    */
   private getPagedData(data: <%= classify(name) %>Item[]) {
-    const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
-    return data.splice(startIndex, this._paginator.pageSize);
+    const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
+    return data.splice(startIndex, this.paginator.pageSize);
   }
 
   /**
-   * Client-side sort the data array.
-   * If you are using a external datasource for sorting, you would connect it here
+   * Sort the data (client-side). If you're using server-side sorting,
+   * this would be replaced by requesting the appropriate data from the server.
    */
   private getSortedData(data: <%= classify(name) %>Item[]) {
-    if (!this._sort.active || this._sort.direction === '') {
+    if (!this.sort.active || this.sort.direction === '') {
       return data;
     }
 
     return data.sort((a, b) => {
-      const isAsc = this._sort.direction == 'asc';
-      switch (this._sort.active) {
+      const isAsc = this.sort.direction == 'asc';
+      switch (this.sort.active) {
         case 'name': return compare(a.name, b.name, isAsc);
         case 'id': return compare(+a.id, +b.id, isAsc);
         default: return 0;
@@ -94,7 +101,7 @@ export class <%= classify(name) %>DataSource extends DataSource<<%= classify(nam
   }
 }
 
-/** Simple sort comparator for example ID/Name columns. */
+/** Simple sort comparator for example ID/Name columns (for client-side sorting). */
 function compare(a, b, isAsc) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
