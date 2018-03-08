@@ -20,7 +20,6 @@ export class ChipsAutocompleteExample {
   removable: boolean = true;
   addOnBlur: boolean = false;
 
-  // Enter, comma
   separatorKeysCodes = [ENTER, COMMA];
 
   fruitCtrl = new FormControl();
@@ -42,8 +41,8 @@ export class ChipsAutocompleteExample {
 
   constructor() {
     this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
-      startWith(null),
-      map((fruit: string | null) => fruit ? this.filter(fruit) : this.allFruits.slice()));
+        startWith(null),
+        map((fruit: string | null) => fruit ? this.filter(fruit) : this.allFruits.slice()));
   }
 
   add(event: MatChipInputEvent): void {
@@ -71,7 +70,7 @@ export class ChipsAutocompleteExample {
 
   filter(name: string) {
     return this.allFruits.filter(fruit =>
-      fruit.toLowerCase().indexOf(name.toLowerCase()) === 0);
+        fruit.toLowerCase().indexOf(name.toLowerCase()) === 0);
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
