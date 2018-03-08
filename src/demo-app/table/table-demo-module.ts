@@ -17,11 +17,13 @@ import {
   MatCardModule,
   MatCheckboxModule,
   MatIconModule,
-  MatInputModule, MatMenuModule,
+  MatInputModule,
+  MatMenuModule,
   MatPaginatorModule,
   MatRadioModule,
   MatSortModule,
-  MatTableModule, MatTabsModule
+  MatTableModule,
+  MatTabsModule
 } from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
@@ -30,9 +32,12 @@ import {RouterModule} from '@angular/router';
 import {WrapperTable} from './custom-table/wrapper-table';
 import {SimpleColumn} from './custom-table/simple-column';
 import {DataInputTableDemo} from './data-input-table/data-input-table';
+import {FooterTableDemo} from './footer/footer-table';
+import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 
 @NgModule({
   imports: [
+    ScrollDispatchModule,
     CdkTableModule,
     CommonModule,
     FormsModule,
@@ -57,6 +62,7 @@ import {DataInputTableDemo} from './data-input-table/data-input-table';
     TableHeaderDemo,
     WrapperTable,
     SimpleColumn,
+    FooterTableDemo,
   ],
   providers: [
     PeopleDatabase

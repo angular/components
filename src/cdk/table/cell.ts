@@ -8,12 +8,17 @@
 
 import {ContentChild, Directive, ElementRef, Input, TemplateRef} from '@angular/core';
 
+/** Base class for a cell definition. Captures a column's cell template definition. */
+export interface BaseCellDef {
+  template: TemplateRef<any>;
+}
+
 /**
  * Cell definition for a CDK table.
  * Captures the template of a column's data row cell as well as cell-specific properties.
  */
 @Directive({selector: '[cdkCellDef]'})
-export class CdkCellDef {
+export class CdkCellDef implements BaseCellDef {
   constructor(/** @docs-private */ public template: TemplateRef<any>) { }
 }
 
@@ -22,7 +27,16 @@ export class CdkCellDef {
  * Captures the template of a column's header cell and as well as cell-specific properties.
  */
 @Directive({selector: '[cdkHeaderCellDef]'})
-export class CdkHeaderCellDef {
+export class CdkHeaderCellDef implements BaseCellDef {
+  constructor(/** @docs-private */ public template: TemplateRef<any>) { }
+}
+
+/**
+ * Footer cell definition for a CDK table.
+ * Captures the template of a column's footer cell and as well as cell-specific properties.
+ */
+@Directive({selector: '[cdkFooterCellDef]'})
+export class CdkFooterCellDef implements BaseCellDef {
   constructor(/** @docs-private */ public template: TemplateRef<any>) { }
 }
 
@@ -51,6 +65,9 @@ export class CdkColumnDef {
   /** @docs-private */
   @ContentChild(CdkHeaderCellDef) headerCell: CdkHeaderCellDef;
 
+  /** @docs-private */
+  @ContentChild(CdkFooterCellDef) footerCell: CdkFooterCellDef;
+
   /**
    * Transformed version of the column name that can be used as part of a CSS classname. Excludes
    * all non-alphanumeric characters and the special characters '-' and '_'. Any characters that
@@ -68,6 +85,20 @@ export class CdkColumnDef {
   },
 })
 export class CdkHeaderCell {
+  constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
+    elementRef.nativeElement.classList.add(`cdk-column-${columnDef.cssClassFriendlyName}`);
+  }
+}
+
+/** Footer cell template container that adds the right classes and role. */
+@Directive({
+  selector: 'cdk-footer-cell',
+  host: {
+    'class': 'cdk-footer-cell',
+    'role': 'gridcell',
+  },
+})
+export class CdkFooterCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
     elementRef.nativeElement.classList.add(`cdk-column-${columnDef.cssClassFriendlyName}`);
   }

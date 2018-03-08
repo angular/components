@@ -10,14 +10,17 @@ $mat-row-horizontal-padding: 24px;
   min-height: $mat-header-row-height;
 }
 
-.mat-row {
+.mat-row, .mat-footer-row {
   min-height: $mat-row-height;
 }
 
-.mat-row, .mat-header-row {
+.mat-row, .mat-header-row, .mat-footer-row {
   display: flex;
+  // Define a border style, but then widths default to 3px. Reset them to 0px except the bottom
+  // which should be 1px;
+  border-width: 0;
   border-bottom-width: 1px;
-  border-bottom-style: solid;
+  border-style: solid;
   align-items: center;
   padding: 0 $mat-row-horizontal-padding;
   box-sizing: border-box;
@@ -32,7 +35,7 @@ $mat-row-horizontal-padding: 24px;
   }
 }
 
-.mat-cell, .mat-header-cell {
+.mat-cell, .mat-header-cell, .mat-footer-cell {
   flex: 1;
   overflow: hidden;
   word-wrap: break-word;

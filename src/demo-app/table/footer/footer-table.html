@@ -1,0 +1,21 @@
+<h3>Table with Footer</h3>
+
+<mat-card class="demo-table-card">
+  <mat-table [dataSource]="data" cdk-scrollable>
+    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+      <mat-header-cell *matHeaderCellDef> {{column}} </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element[column]}} </mat-cell>
+      <mat-footer-cell *matFooterCellDef> {{column}} Footer </mat-footer-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="columnsToDisplay"
+                    [class.demo-sticky-row]="!isScrollPositionTop">
+    </mat-header-row>
+
+    <mat-row *matRowDef="let row; columns: columnsToDisplay;"></mat-row>
+
+    <mat-footer-row *matFooterRowDef="columnsToDisplay"
+                    [class.demo-sticky-row]="!isScrollPositionBottom">
+    </mat-footer-row>
+  </mat-table>
+</mat-card>

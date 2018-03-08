@@ -30,7 +30,8 @@ describe('MatTable', () => {
         [data[0].a, data[0].b, data[0].c],
         [data[1].a, data[1].b, data[1].c],
         [data[2].a, data[2].b, data[2].c],
-        ['fourth_row']
+        ['fourth_row'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
     });
 
@@ -44,7 +45,8 @@ describe('MatTable', () => {
         ['a_1'],
         ['a_2'],
         ['a_3'],
-        ['fourth_row']
+        ['fourth_row'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
     });
   });
@@ -70,6 +72,7 @@ describe('MatTable', () => {
         ['a_1', 'b_1', 'c_1'],
         ['a_2', 'b_2', 'c_2'],
         ['a_3', 'b_3', 'c_3'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
     });
 
@@ -83,6 +86,7 @@ describe('MatTable', () => {
         ['a_2', 'b_2', 'c_2'],
         ['a_3', 'b_3', 'c_3'],
         ['a_4', 'b_4', 'c_4'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
       // Remove data
@@ -95,6 +99,7 @@ describe('MatTable', () => {
         ['a_2', 'b_2', 'c_2'],
         ['a_3', 'b_3', 'c_3'],
         ['a_4', 'b_4', 'c_4'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
     });
 
@@ -107,6 +112,7 @@ describe('MatTable', () => {
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['a_1', 'b_1', 'c_1'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
       flushMicrotasks();  // Resolve promise that updates paginator's length
@@ -120,6 +126,7 @@ describe('MatTable', () => {
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['a_2', 'b_2', 'c_2'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
       // Change filter to empty string, should match all rows
@@ -134,6 +141,7 @@ describe('MatTable', () => {
         ['a_1', 'b_1', 'c_1'],
         ['a_2', 'b_2', 'c_2'],
         ['a_3', 'b_3', 'c_3'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
       // Change filter function and filter, should match to rows with zebra.
@@ -153,6 +161,7 @@ describe('MatTable', () => {
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['a_2', 'b_2', 'c_2'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
     }));
 
@@ -165,6 +174,7 @@ describe('MatTable', () => {
         ['a_1', 'b_1', 'c_1'],
         ['a_2', 'b_2', 'c_2'],
         ['a_3', 'b_3', 'c_3'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
       // Activate column A sort again (reverse direction)
@@ -175,6 +185,7 @@ describe('MatTable', () => {
         ['a_3', 'b_3', 'c_3'],
         ['a_2', 'b_2', 'c_2'],
         ['a_1', 'b_1', 'c_1'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
       // Change sort function to customize how it sorts - first column 1, then 3, then 2
@@ -193,6 +204,7 @@ describe('MatTable', () => {
         ['a_1', 'b_1', 'c_1'],
         ['a_3', 'b_3', 'c_3'],
         ['a_2', 'b_2', 'c_2'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
     });
 
@@ -208,6 +220,7 @@ describe('MatTable', () => {
         ['', 'b_1', 'c_1'],
         ['a_2', 'b_2', 'c_2'],
         ['a_3', 'b_3', 'c_3'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
       // Expect that empty string row comes before the other values
@@ -218,6 +231,7 @@ describe('MatTable', () => {
         ['a_3', 'b_3', 'c_3'],
         ['a_2', 'b_2', 'c_2'],
         ['', 'b_1', 'c_1'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
     });
 
@@ -233,6 +247,7 @@ describe('MatTable', () => {
         ['', 'b_1', 'c_1'],
         ['a_2', 'b_2', 'c_2'],
         ['a_3', 'b_3', 'c_3'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
 
@@ -244,6 +259,7 @@ describe('MatTable', () => {
         ['a_3', 'b_3', 'c_3'],
         ['a_2', 'b_2', 'c_2'],
         ['', 'b_1', 'c_1'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
     });
 
@@ -261,6 +277,7 @@ describe('MatTable', () => {
         ['a_3', 'b_3', 'c_3'],
         ['a_4', 'b_4', 'c_4'],
         ['a_5', 'b_5', 'c_5'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
       // Navigate to the next page
@@ -273,6 +290,7 @@ describe('MatTable', () => {
         ['a_8', 'b_8', 'c_8'],
         ['a_9', 'b_9', 'c_9'],
         ['a_10', 'b_10', 'c_10'],
+        ['Footer A', 'Footer B', 'Footer C'],
       ]);
     }));
   });
@@ -320,16 +338,19 @@ class FakeDataSource extends DataSource<TestData> {
       <ng-container matColumnDef="column_a">
         <mat-header-cell *matHeaderCellDef> Column A</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.a}}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> Footer A</mat-footer-cell>
       </ng-container>
 
       <ng-container matColumnDef="column_b">
         <mat-header-cell *matHeaderCellDef> Column B</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.b}}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> Footer B</mat-footer-cell>
       </ng-container>
 
       <ng-container matColumnDef="column_c">
         <mat-header-cell *matHeaderCellDef> Column C</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.c}}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> Footer C</mat-footer-cell>
       </ng-container>
 
       <ng-container matColumnDef="special_column">
@@ -339,6 +360,7 @@ class FakeDataSource extends DataSource<TestData> {
       <mat-header-row *matHeaderRowDef="columnsToRender"></mat-header-row>
       <mat-row *matRowDef="let row; columns: columnsToRender"></mat-row>
       <mat-row *matRowDef="let row; columns: ['special_column']; when: isFourthRow"></mat-row>
+      <mat-footer-row *matFooterRowDef="columnsToRender"></mat-footer-row>
     </mat-table>
   `
 })
@@ -357,6 +379,7 @@ class MatTableApp {
       <ng-container matColumnDef="column_a">
         <mat-header-cell *matHeaderCellDef> Column A</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.a}}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> Footer A</mat-footer-cell>
       </ng-container>
 
       <ng-container matColumnDef="special_column">
@@ -366,6 +389,7 @@ class MatTableApp {
       <mat-header-row *matHeaderRowDef="['column_a']"></mat-header-row>
       <mat-row *matRowDef="let row; columns: ['column_a']"></mat-row>
       <mat-row *matRowDef="let row; columns: ['special_column']; when: isFourthRow"></mat-row>
+      <mat-footer-row *matFooterRowDef="['column_a']"></mat-footer-row>
     </mat-table>
   `
 })
@@ -383,20 +407,24 @@ class MatTableWithWhenRowApp {
       <ng-container matColumnDef="column_a">
         <mat-header-cell *matHeaderCellDef mat-sort-header="a"> Column A</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.a}}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> Footer A</mat-footer-cell>
       </ng-container>
 
       <ng-container matColumnDef="column_b">
         <mat-header-cell *matHeaderCellDef> Column B</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.b}}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> Footer B</mat-footer-cell>
       </ng-container>
 
       <ng-container matColumnDef="column_c">
         <mat-header-cell *matHeaderCellDef> Column C</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.c}}</mat-cell>
+        <mat-footer-cell *matFooterCellDef> Footer C</mat-footer-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="columnsToRender"></mat-header-row>
       <mat-row *matRowDef="let row; columns: columnsToRender"></mat-row>
+      <mat-footer-row *matFooterRowDef="columnsToRender"></mat-footer-row>
     </mat-table>
 
     <mat-paginator [pageSize]="5"></mat-paginator>
@@ -433,13 +461,16 @@ class ArrayDataSourceMatTableApp {
   }
 }
 
-// Utilities copied from CDKTable's spec
 function getElements(element: Element, query: string): Element[] {
   return [].slice.call(element.querySelectorAll(query));
 }
 
 function getHeaderRow(tableElement: Element): Element {
   return tableElement.querySelector('.mat-header-row')!;
+}
+
+function getFooterRow(tableElement: Element): Element {
+  return tableElement.querySelector('.mat-footer-row')!;
 }
 
 function getRows(tableElement: Element): Element[] {
@@ -453,35 +484,46 @@ function getHeaderCells(tableElement: Element): Element[] {
   return getElements(getHeaderRow(tableElement), '.mat-header-cell');
 }
 
-function expectTableToMatchContent(tableElement: Element, expectedTableContent: any[]) {
+function getFooterCells(tableElement: Element): Element[] {
+  return getElements(getFooterRow(tableElement), '.mat-footer-cell');
+}
+
+function getActualTableContent(tableElement: Element): string[][] {
+  let actualTableContent: Element[][] = [];
+  if (getHeaderRow(tableElement)) {
+    actualTableContent.push(getHeaderCells(tableElement));
+  }
+
+  // Check data row cells
+  const rows = getRows(tableElement).map(row => getCells(row));
+  actualTableContent = actualTableContent.concat(rows);
+
+  if (getFooterRow(tableElement)) {
+    actualTableContent.push(getFooterCells(tableElement));
+  }
+
+  // Convert the nodes into their text content;
+  return actualTableContent.map(row => row.map(cell => cell.textContent!.trim()));
+}
+
+function expectTableToMatchContent(tableElement: Element, expected: any[]) {
   const missedExpectations: string[] = [];
-  function checkCellContent(cell: Element, expectedTextContent: string) {
-    const actualTextContent = cell.textContent!.trim();
-    if (actualTextContent !== expectedTextContent) {
-      missedExpectations.push(
-          `Expected cell contents to be ${expectedTextContent} but was ${actualTextContent}`);
+  function checkCellContent(actualCell: string, expectedCell: string) {
+    if (actualCell !== expectedCell) {
+      missedExpectations.push(`Expected cell contents to be ${actualCell} but was ${expectedCell}`);
     }
   }
 
-  // Check header cells
-  const expectedHeaderContent = expectedTableContent.shift();
-  getHeaderCells(tableElement).forEach((cell, index) => {
-    const expected = expectedHeaderContent ?
-        expectedHeaderContent[index] :
-        null;
-    checkCellContent(cell, expected);
-  });
+  const actual = getActualTableContent(tableElement);
 
-  // Check data row cells
-  const rows = getRows(tableElement);
-  expect(rows.length).toBe(expectedTableContent.length,
-      `Found ${rows.length} rows but expected ${expectedTableContent.length}`);
-  rows.forEach((row, rowIndex) => {
-    getCells(row).forEach((cell, cellIndex) => {
-      const expected = expectedTableContent.length ?
-          expectedTableContent[rowIndex][cellIndex] :
-          null;
-      checkCellContent(cell, expected);
+  if (actual.length !== expected.length) {
+    missedExpectations.push(`Expected ${expected.length} total rows but got ${actual.length}`);
+    fail(missedExpectations.join('\n'));
+  }
+  actual.forEach((row, rowIndex) => {
+    row.forEach((actualCell, cellIndex) => {
+      const expectedCell = expected[rowIndex] ? expected[rowIndex][cellIndex] : null;
+      checkCellContent(actualCell, expectedCell);
     });
   });
 
