@@ -31,6 +31,8 @@ import {MatMonthView} from './month-view';
 import {MatMultiYearView, yearsPerPage} from './multi-year-view';
 import {MatYearView} from './year-view';
 import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
+import {Subject} from 'rxjs/Subject';
+import {takeUntil} from 'rxjs/operators/takeUntil';
 
 /** Default header for MatCalendar */
 @Component({
@@ -41,15 +43,25 @@ import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
     preserveWhitespaces: false,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatCalendarHeader {
+export class MatCalendarHeader implements OnDestroy {
+  /** Subject that emits when the component has been destroyed. */
+  private _destroyed = new Subject<void>();
+
+  private _intlChanges: Subscription;
+
   constructor(@Host() public calendar: MatCalendar<any>,
               private _intl: MatDatepickerIntl,
               changeDetectorRef: ChangeDetectorRef) {
-
-    this._intlChanges = _intl.changes.subscribe(() => changeDetectorRef.markForCheck());
+    this._intlChanges = _intl.changes.pipe(takeUntil(this._destroyed)).subscribe(
+        () => changeDetectorRef.markForCheck()
+    );
   }
 
-  private _intlChanges: Subscription;
+  ngOnDestroy() {
+    this._destroyed.next();
+    this._destroyed.complete();
+  }
+
 }
 
 /**
@@ -69,7 +81,6 @@ export class MatCalendarHeader {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
-
   /** An input indicating the type of the header component, if set. */
   @Input() headerComponent: ComponentType<any>;
 
@@ -213,7 +224,6 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   }
 
   ngAfterContentInit() {
-
     this._calendarHeaderPortal = new ComponentPortal(this.headerComponent || MatCalendarHeader);
 
     this._activeDate = this.startAt || this._dateAdapter.today();

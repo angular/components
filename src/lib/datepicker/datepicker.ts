@@ -134,9 +134,7 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-
 export class MatDatepicker<D> implements OnDestroy, CanColor {
-
   /** An input indicating the type of the custom header component for the calendar, if set. */
   @Input() calendarHeaderComponent: ComponentType<any>;
 
