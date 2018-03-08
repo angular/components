@@ -6,8 +6,7 @@
     [minDate]="datepicker._minDate"
     [maxDate]="datepicker._maxDate"
     [dateFilter]="datepicker._dateFilter"
-    [selected]="datepicker._selected"
-    (selectedChange)="datepicker._select($event)"
+    [selectionModel]="datepicker._selectionModel"
     (yearSelected)="datepicker._selectYear($event)"
     (monthSelected)="datepicker._selectMonth($event)"
     (_userSelection)="datepicker.close()">

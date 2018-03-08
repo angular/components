@@ -47,6 +47,7 @@ import {merge} from 'rxjs/observable/merge';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatCalendar} from './calendar';
+import {MatDateSelectionModel} from './date-selection';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -189,13 +190,6 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   private _disabled: boolean;
 
   /**
-   * Emits new selected date when selected date changes.
-   * @deprecated Switch to the `dateChange` and `dateInput` binding on the input element.
-   * @deletion-target 6.0.0
-   */
-  @Output() readonly selectedChanged: EventEmitter<D> = new EventEmitter<D>();
-
-  /**
    * Emits selected year in multiyear view.
    * This doesn't imply a change on the selected date.
    */
@@ -226,11 +220,6 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** The id for the datepicker calendar. */
   id: string = `mat-datepicker-${datepickerUid++}`;
 
-  /** The currently selected date. */
-  get _selected(): D | null { return this._validSelected; }
-  set _selected(value: D | null) { this._validSelected = value; }
-  private _validSelected: D | null = null;
-
   /** The minimum selectable date. */
   get _minDate(): D | null {
     return this._datepickerInput && this._datepickerInput.min;
@@ -244,6 +233,9 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   get _dateFilter(): (date: D | null) => boolean {
     return this._datepickerInput && this._datepickerInput._dateFilter;
   }
+
+  /** Selection model for value */
+  _selectionModel: MatDateSelectionModel<D>;
 
   /** A reference to the overlay when the calendar is opened as a popup. */
   private _popupRef: OverlayRef;
@@ -293,15 +285,6 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     }
   }
 
-  /** Selects the given date */
-  _select(date: D): void {
-    let oldValue = this._selected;
-    this._selected = date;
-    if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
-      this.selectedChanged.emit(date);
-    }
-  }
-
   /** Emits the selected year in multiyear view */
   _selectYear(normalizedYear: D): void {
     this.yearSelected.emit(normalizedYear);
@@ -321,8 +304,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       throw Error('A MatDatepicker can only be associated with a single input.');
     }
     this._datepickerInput = input;
-    this._inputSubscription =
-        this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
+    this._selectionModel = input._selectionModel;
   }
 
   /** Open the calendar. */

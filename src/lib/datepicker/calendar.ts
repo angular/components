@@ -29,6 +29,7 @@ import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
 import {MatMultiYearView, yearsPerPage} from './multi-year-view';
 import {MatYearView} from './year-view';
+import {MatDateSelectionModel} from './date-selection';
 
 
 /**
@@ -63,11 +64,11 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
   /** The currently selected date. */
   @Input()
-  get selected(): D | null { return this._selected; }
-  set selected(value: D | null) {
-    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  get selectionModel(): MatDateSelectionModel<D> { return this._selectionModel; }
+  set selectionModel(model: MatDateSelectionModel<D>) {
+    this._selectionModel = model;
   }
-  private _selected: D | null;
+  private _selectionModel: MatDateSelectionModel<D>;
 
   /** The minimum selectable date. */
   @Input()
@@ -202,13 +203,6 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
       if (view) {
         view._init();
       }
-    }
-  }
-
-  /** Handles date selection in the month view. */
-  _dateSelected(date: D): void {
-    if (!this._dateAdapter.sameDate(date, this.selected)) {
-      this.selectedChange.emit(date);
     }
   }
 

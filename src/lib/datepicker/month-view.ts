@@ -29,11 +29,14 @@ import {
   Output,
   ViewEncapsulation,
   ViewChild,
+  OnDestroy,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
+import {MatDateSelectionModel} from './date-selection';
+import {Subscription} from 'rxjs/Subscription';
 
 
 const DAYS_PER_WEEK = 7;
@@ -51,7 +54,7 @@ const DAYS_PER_WEEK = 7;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MatMonthView<D> implements AfterContentInit {
+export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   /**
    * The date to display in this month view (everything other than the month and year is ignored).
    */
@@ -70,12 +73,17 @@ export class MatMonthView<D> implements AfterContentInit {
 
   /** The currently selected date. */
   @Input()
-  get selected(): D | null { return this._selected; }
-  set selected(value: D | null) {
-    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._selectedDate = this._getDateInCurrentMonth(this._selected);
+  get selectionModel(): MatDateSelectionModel<D> { return this._selectionModel; }
+  set selectionModel(value: MatDateSelectionModel<D>) {
+    this._selectionModel = value;
+    this._selectedDate = this._getDateInCurrentMonth(<D|null>value.selected);
+    this._selectionModelSubscription.unsubscribe();
+    this._selectionModelSubscription = this._selectionModel.onChange.subscribe(selected => {
+      this._selectedDate = this._getDateInCurrentMonth(<D|null>selected.value);
+    });
   }
-  private _selected: D | null;
+  private _selectionModel: MatDateSelectionModel<D>;
+  private _selectionModelSubscription = Subscription.EMPTY;
 
   /** The minimum selectable date. */
   @Input()
@@ -95,9 +103,6 @@ export class MatMonthView<D> implements AfterContentInit {
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
-
-  /** Emits when a new date is selected. */
-  @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
 
   /** Emits when any date is selected. */
   @Output() readonly _userSelection: EventEmitter<void> = new EventEmitter<void>();
@@ -165,7 +170,7 @@ export class MatMonthView<D> implements AfterContentInit {
       const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
       const selectedDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
 
-      this.selectedChange.emit(selectedDate);
+      this.selectionModel.select(selectedDate);
     }
 
     this._userSelection.emit();
@@ -236,7 +241,6 @@ export class MatMonthView<D> implements AfterContentInit {
 
   /** Initializes this month view. */
   _init() {
-    this._selectedDate = this._getDateInCurrentMonth(this.selected);
     this._todayDate = this._getDateInCurrentMonth(this._dateAdapter.today());
     this._monthLabel =
         this._dateAdapter.getMonthNames('short')[this._dateAdapter.getMonth(this.activeDate)]
@@ -250,6 +254,10 @@ export class MatMonthView<D> implements AfterContentInit {
 
     this._createWeekCells();
     this._changeDetectorRef.markForCheck();
+  }
+
+  ngOnDestroy() {
+    this._selectionModelSubscription.unsubscribe();
   }
 
   /** Focuses the active cell after the microtask queue is empty. */
