@@ -6,10 +6,10 @@
     [minDate]="datepicker._minDate"
     [maxDate]="datepicker._maxDate"
     [dateFilter]="datepicker._dateFilter"
+    [headerComponent]="datepicker.calendarHeaderComponent"
     [selected]="datepicker._selected"
     (selectedChange)="datepicker._select($event)"
     (yearSelected)="datepicker._selectYear($event)"
     (monthSelected)="datepicker._selectMonth($event)"
-    (_userSelection)="datepicker.close()"
-    [headerComponent]="datepicker.calendarHeaderComponent">
+    (_userSelection)="datepicker.close()">
 </mat-calendar>

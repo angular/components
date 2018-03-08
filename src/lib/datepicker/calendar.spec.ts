@@ -19,8 +19,8 @@ describe('MatCalendar', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-          MatNativeDateModule,
-          MatDatepickerModule,
+        MatNativeDateModule,
+        MatDatepickerModule,
       ],
       declarations: [
         // Test components.

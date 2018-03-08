@@ -42,9 +42,7 @@ import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCalendarHeader {
-    constructor(@Host() public calendar: MatCalendar<any>) {
-
-    }
+    constructor(@Host() public calendar: MatCalendar<any>) {}
 }
 
 /**
