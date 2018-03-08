@@ -47,21 +47,16 @@ export class MatCalendarHeader implements OnDestroy {
   /** Subject that emits when the component has been destroyed. */
   private _destroyed = new Subject<void>();
 
-  private _intlChanges: Subscription;
-
   constructor(@Host() public calendar: MatCalendar<any>,
-              private _intl: MatDatepickerIntl,
+              intl: MatDatepickerIntl,
               changeDetectorRef: ChangeDetectorRef) {
-    this._intlChanges = _intl.changes.pipe(takeUntil(this._destroyed)).subscribe(
-        () => changeDetectorRef.markForCheck()
-    );
+    intl.changes.pipe(takeUntil(this._destroyed)).subscribe(() => changeDetectorRef.markForCheck());
   }
 
   ngOnDestroy() {
     this._destroyed.next();
     this._destroyed.complete();
   }
-
 }
 
 /**
