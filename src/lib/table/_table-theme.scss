@@ -10,15 +10,15 @@
     background: mat-color($background, 'card');
   }
 
-  .mat-row, .mat-header-row {
-    border-bottom-color: mat-color($foreground, divider);
+  .mat-row, .mat-header-row, .mat-footer-row {
+    border-color: mat-color($foreground, divider);
   }
 
   .mat-header-cell {
     color: mat-color($foreground, secondary-text);
   }
 
-  .mat-cell {
+  .mat-cell, .mat-footer-cell {
     color: mat-color($foreground, text);
   }
 }
@@ -33,7 +33,7 @@
     font-weight: mat-font-weight($config, body-2);
   }
 
-  .mat-cell {
+  .mat-cell, .mat-footer-cell {
     font-size: mat-font-size($config, body-1);
   }
 }

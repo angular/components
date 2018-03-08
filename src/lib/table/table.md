@@ -257,6 +257,28 @@ masterToggle() {
 }
 ```
 
+#### Footer row
+
+A footer row can be added to the table by adding a footer row definition to the table and adding
+footer cell templates to column definitions. The footer row will be rendered after the rendered
+data rows.
+
+```html
+<ng-container matColumnDef="cost">
+  <mat-header-cell *matHeaderCellDef> Cost </mat-header-cell>
+  <mat-cell *matCellDef="let data"> {{data.cost}} </mat-cell>
+    <mat-header-cell *matHeaderCellDef> {{totalCost}} </mat-header-cell>
+</ng-container>
+
+...
+
+<mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+<mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></mat-row>
+<mat-footer-row *matFooterRowDef="columnsToDisplay"></mat-footer-row>
+```
+
+<!--- example(table-footer-row) -->
+
 ##### 4. Include overflow styling 
 
 Finally, adjust the styling for the select column so that its overflow is not hidden. This allows 

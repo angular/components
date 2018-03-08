@@ -1,0 +1,32 @@
+mat-card {
+  margin: 8px 0;
+  padding: 0;
+}
+
+mat-table {
+  height: 500px;
+  overflow: auto;
+}
+
+.mat-header-row, .mat-footer-row {
+  position: -webkit-sticky;
+  background: white;
+  transition: box-shadow 200ms ease-in-out;
+}
+
+.mat-header-row {
+  top: 0;
+}
+
+.mat-footer-row {
+  bottom: 0;
+  border-top-width: 1px;
+}
+
+.mat-row:last-of-type {
+  border-bottom-width: 0;
+}
+
+.demo-sticky-row {
+  box-shadow: 0 0 8px 1px #ccc;
+}

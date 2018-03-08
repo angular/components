@@ -18,13 +18,16 @@ top of the CDK data-table.
 
 The first step to writing the data-table template is to define the columns.
 A column definition is specified via an `<ng-container>` with the `cdkColumnDef` directive, giving
-the column a name. Each column definition then further defines both a header-cell template
-(`cdkHeaderCellDef`) and a data-cell template (`cdkCellDef`).
+the column a name. Each column definition then further defines a header-cell template
+(`cdkHeaderCellDef`), data-cell template (`cdkCellDef`), and footer-cell 
+template (`cdkFooterCellDef`). Note that each of these cell definitions need to be present if they
+are used by their respective row definition. 
 
 ```html
 <ng-container cdkColumnDef="username">
   <cdk-header-cell *cdkHeaderCellDef> User name </cdk-header-cell>
   <cdk-cell *cdkCellDef="let row"> {{row.a}} </cdk-cell>
+  <cdk-footer-cell *cdkFooterCellDef> User name </cdk-footer-cell>
 </ng-container>
 ```
 
@@ -35,11 +38,15 @@ Note that `cdkCellDef` exports the row context such that the row data can be ref
 template. The directive also exports the same properties as `ngFor` (index, even, odd, first,
 last).
 
-The next step is to define the table's header-row (`cdkHeaderRowDef`) and data-row (`cdkRowDef`).
+The next step is to define the table's header-row (`cdkHeaderRowDef`), data-row (`cdkRowDef`),
+and fitler-row (`cdkFooterRowDef`). Note that each of these are optional to include, depending on
+what type of rows you want rendered (e.g. if you do not need a footer row, simply do not add
+its definition).
 
 ```html
 <cdk-header-row *cdkHeaderRowDef="['username', 'age', 'title']"></cdk-header-row>
 <cdk-row *cdkRowDef="let row; columns: ['username', 'age', 'title']"></cdk-row>
+<cdk-footer-row *cdkFooterRowDef="['username', 'age', 'title']"></cdk-footer-row>
 ```
 
 These row templates accept the specific columns to be rendered via the name given to the

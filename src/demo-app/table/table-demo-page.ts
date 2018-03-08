@@ -17,5 +17,6 @@ export class TableDemoPage {
     {name: 'Main Page', link: 'main-demo'},
     {name: 'Custom Table', link: 'custom-table'},
     {name: 'Direct Data', link: 'data-input-table'},
+    {name: 'Footer Table', link: 'footer-table'},
   ];
 }
