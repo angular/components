@@ -2,7 +2,7 @@
   margin: 20px;
 }
 
-mat-card {
+.dashboard-card {
   position: absolute;
   top: 15px;
   left: 15px;
@@ -10,12 +10,12 @@ mat-card {
   bottom: 15px;
 }
 
-[mat-icon-button] {
+.more-button {
   position: absolute;
   top: 5px;
   right: 10px;
 }
 
-mat-card-content {
+.dashboard-card-content {
   text-align: center;
 }
