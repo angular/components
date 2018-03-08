@@ -33,6 +33,7 @@ import {
   OnInit,
 } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
 import {merge} from 'rxjs/observable/merge';
 import {Subscription} from 'rxjs/Subscription';
 import {matMenuAnimations} from './menu-animations';
@@ -58,6 +59,9 @@ export interface MatMenuDefaultOptions {
 
   /** Class to be applied to the menu's backdrop. */
   backdropClass: string;
+
+  /** Whether the menu has a backdrop. */
+  hasBackdrop: boolean;
 }
 
 /** Injection token to be used to override the default options for `mat-menu`. */
@@ -78,7 +82,6 @@ const MAT_MENU_BASE_ELEVATION = 2;
   styleUrls: ['menu.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   animations: [
     matMenuAnimations.transformMenu,
     matMenuAnimations.fadeInItems
@@ -99,6 +102,9 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
 
   /** Current state of the panel animation. */
   _panelAnimationState: 'void' | 'enter' = 'void';
+
+  /** Emits whenever an animation on the menu completes. */
+  _animationDone = new Subject<void>();
 
   /** Parent menu of the current menu panel. */
   parentMenu: MatMenuPanel | undefined;
@@ -151,6 +157,14 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
   }
   private _overlapTrigger: boolean = this._defaultOptions.overlapTrigger;
 
+  /** Whether the menu has a backdrop. */
+  @Input()
+  get hasBackdrop(): boolean { return this._hasBackdrop; }
+  set hasBackdrop(value: boolean) {
+    this._hasBackdrop = coerceBooleanProperty(value);
+  }
+  private _hasBackdrop: boolean = this._defaultOptions.hasBackdrop;
+
   /**
    * This method takes classes set on the host mat-menu element and applies them on the
    * menu template that displays in the overlay container.  Otherwise, it's difficult
@@ -182,8 +196,8 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
   set classList(classes: string) { this.panelClass = classes; }
 
   /** Event emitted when the menu is closed. */
-  @Output() readonly closed: EventEmitter<void | 'click' | 'keydown'> =
-      new EventEmitter<void | 'click' | 'keydown'>();
+  @Output() readonly closed: EventEmitter<void | 'click' | 'keydown' | 'tab'> =
+      new EventEmitter<void | 'click' | 'keydown' | 'tab'>();
 
   /**
    * Event emitted when the menu is closed.
@@ -203,7 +217,7 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
 
   ngAfterContentInit() {
     this._keyManager = new FocusKeyManager<MatMenuItem>(this.items).withWrap().withTypeAhead();
-    this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close.emit('keydown'));
+    this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close.emit('tab'));
   }
 
   ngOnDestroy() {
@@ -313,7 +327,7 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
   }
 
   /** Callback that is invoked when the panel animation completes. */
-  _onAnimationDone(_event: AnimationEvent) {
-    // @deletion-target 6.0.0 Not being used anymore. To be removed.
+  _onAnimationDone() {
+    this._animationDone.next();
   }
 }

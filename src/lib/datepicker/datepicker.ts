@@ -94,7 +94,6 @@ export const _MatDatepickerContentMixinBase = mixinColor(MatDatepickerContentBas
   },
   exportAs: 'matDatepickerContent',
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   inputs: ['color'],
 })
@@ -134,7 +133,6 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   exportAs: 'matDatepicker',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
 })
 export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** The date to open the calendar to initially. */
@@ -153,7 +151,15 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   @Input() startView: 'month' | 'year' = 'month';
 
   /** Color palette to use on the datepicker's calendar. */
-  @Input() color: ThemePalette;
+  @Input()
+  get color(): ThemePalette {
+    return this._color ||
+        (this._datepickerInput ? this._datepickerInput._getThemePalette() : undefined);
+  }
+  set color(value: ThemePalette) {
+    this._color = value;
+  }
+  _color: ThemePalette;
 
   /**
    * Whether the calendar UI is in touch mode. In touch mode the calendar opens in a dialog rather
@@ -464,13 +470,10 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
 
   /** Passes the current theme color along to the calendar overlay. */
   private _setColor(): void {
-    const input = this._datepickerInput;
-    const color = this.color || (input ? input._getThemePalette() : undefined);
-
+    const color = this.color;
     if (this._popupComponentRef) {
       this._popupComponentRef.instance.color = color;
     }
-
     if (this._dialogRef) {
       this._dialogRef.componentInstance.color = color;
     }

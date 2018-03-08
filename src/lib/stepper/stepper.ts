@@ -14,7 +14,6 @@ import {
   ContentChild,
   ContentChildren,
   Directive,
-  ElementRef,
   forwardRef,
   Inject,
   QueryList,
@@ -45,7 +44,6 @@ export const _MatStepper = CdkStepper;
   providers: [{provide: ErrorStateMatcher, useExisting: MatStep}],
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matStep',
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatStep extends CdkStep implements ErrorStateMatcher {
@@ -76,7 +74,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
 })
 export class MatStepper extends CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */
-  @ViewChildren(MatStepHeader, {read: ElementRef}) _stepHeader: QueryList<ElementRef>;
+  @ViewChildren(MatStepHeader) _stepHeader: QueryList<MatStepHeader>;
 
   /** Steps that the stepper holds. */
   @ContentChildren(MatStep) _steps: QueryList<MatStep>;
@@ -120,7 +118,6 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   animations: [matStepperAnimations.horizontalStepTransition],
   providers: [{provide: MatStepper, useExisting: MatHorizontalStepper}],
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatHorizontalStepper extends MatStepper { }
@@ -140,7 +137,6 @@ export class MatHorizontalStepper extends MatStepper { }
   animations: [matStepperAnimations.verticalStepTransition],
   providers: [{provide: MatStepper, useExisting: MatVerticalStepper}],
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatVerticalStepper extends MatStepper {

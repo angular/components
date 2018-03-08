@@ -21,6 +21,7 @@ import {
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {filter} from 'rxjs/operators/filter';
+import {take} from 'rxjs/operators/take';
 import {
   AfterContentInit,
   Directive,
@@ -154,7 +155,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       this._destroyMenu();
 
       // If a click closed the menu, we should close the entire chain of nested menus.
-      if (reason === 'click' && this._parentMenu) {
+      if ((reason === 'click' || reason === 'tab') && this._parentMenu) {
         this._parentMenu.closed.emit(reason);
       }
     });
@@ -238,14 +239,27 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /** Closes the menu and does the necessary cleanup. */
   private _destroyMenu() {
-    if (this._overlayRef && this.menuOpen) {
-      this._resetMenu();
-      this._closeSubscription.unsubscribe();
-      this._overlayRef.detach();
+    if (!this._overlayRef || !this.menuOpen) {
+      return;
+    }
 
-      if (this.menu instanceof MatMenu) {
-        this.menu._resetAnimation();
+    const menu = this.menu;
+
+    this._resetMenu();
+    this._closeSubscription.unsubscribe();
+    this._overlayRef.detach();
+
+    if (menu instanceof MatMenu) {
+      menu._resetAnimation();
+
+      if (menu.lazyContent) {
+        // Wait for the exit animation to finish before detaching the content.
+        menu._animationDone
+          .pipe(take(1))
+          .subscribe(() => menu.lazyContent!.detach());
       }
+    } else if (menu.lazyContent) {
+      menu.lazyContent.detach();
     }
   }
 
@@ -339,7 +353,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _getOverlayConfig(): OverlayConfig {
     return new OverlayConfig({
       positionStrategy: this._getPosition(),
-      hasBackdrop: !this.triggersSubmenu(),
+      hasBackdrop: this.menu.hasBackdrop == null ? !this.triggersSubmenu() : this.menu.hasBackdrop,
       backdropClass: this.menu.backdropClass || 'cdk-overlay-transparent-backdrop',
       direction: this.dir,
       scrollStrategy: this._scrollStrategy()
