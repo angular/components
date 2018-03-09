@@ -11,6 +11,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DoCheck,
   ElementRef,
   Inject,
   Input,
@@ -20,6 +21,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {sampleTime} from 'rxjs/operators/sampleTime';
@@ -50,7 +52,7 @@ function rangesEqual(r1: ListRange, r2: ListRange): boolean {
   changeDetection: ChangeDetectionStrategy.OnPush,
   preserveWhitespaces: false,
 })
-export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
+export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
   /** Emits when the viewport is detached from a CdkVirtualForOf. */
   private _detachedSubject = new Subject<void>();
 
@@ -72,7 +74,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   _totalContentSize = 0;
 
   /** The transform used to offset the rendered content wrapper element. */
-  _renderedContentTransform: string;
+  _renderedContentTransform: SafeStyle;
 
   /** The currently rendered range of indices. */
   private _renderedRange: ListRange = {start: 0, end: 0};
@@ -83,12 +85,74 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   /** The size of the viewport (in pixels). */
   private _viewportSize = 0;
 
-  /** Whether this viewport is attached to a CdkVirtualForOf. */
-  private _isAttached = false;
+  /** The pending scroll offset to be applied during the next change detection cycle. */
+  private _pendingScrollOffset: number | null;
+
+  /** the currently attached CdkVirtualForOf. */
+  private _forOf: CdkVirtualForOf<any> | null;
 
   constructor(public elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef,
-              private _ngZone: NgZone,
+              private _ngZone: NgZone, private _sanitizer: DomSanitizer,
               @Inject(VIRTUAL_SCROLL_STRATEGY) private _scrollStrategy: VirtualScrollStrategy) {}
+
+  ngOnInit() {
+    Promise.resolve().then(() => {
+      this._viewportSize = this.orientation === 'horizontal' ?
+          this.elementRef.nativeElement.clientWidth : this.elementRef.nativeElement.clientHeight;
+      this._scrollStrategy.attach(this);
+
+      this._ngZone.runOutsideAngular(() => {
+        fromEvent(this.elementRef.nativeElement, 'scroll')
+            // Sample the scroll stream at every animation frame. This way if there are multiple
+            // scroll events in the same frame we only need to recheck our layout once.
+            .pipe(sampleTime(0, animationFrame))
+            .subscribe(() => this._scrollStrategy.onContentScrolled());
+      });
+    });
+  }
+
+  ngDoCheck() {
+    if (this._pendingScrollOffset != null) {
+      if (this.orientation === 'horizontal') {
+        this.elementRef.nativeElement.offsetLeft = this._pendingScrollOffset;
+      } else {
+        this.elementRef.nativeElement.offsetTop = this._pendingScrollOffset;
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.detach();
+    this._scrollStrategy.detach();
+
+    // Complete all subjects
+    this._detachedSubject.complete();
+    this._renderedRangeSubject.complete();
+  }
+
+  /** Attaches a `CdkVirtualForOf` to this viewport. */
+  attach(forOf: CdkVirtualForOf<any>) {
+    if (this._forOf) {
+      throw Error('CdkVirtualScrollViewport is already attached.');
+    }
+    this._forOf = forOf;
+
+    // Subscribe to the data stream of the CdkVirtualForOf to keep track of when the data length
+    // changes.
+    this._forOf.dataStream.pipe(takeUntil(this._detachedSubject)).subscribe(data => {
+      const len = data.length;
+      if (len != this._dataLength) {
+        this._dataLength = len;
+        this._scrollStrategy.onDataLengthChanged();
+      }
+    });
+  }
+
+  /** Detaches the current `CdkVirtualForOf`. */
+  detach() {
+    this._forOf = null;
+    this._detachedSubject.next();
+  }
 
   /** Gets the length of the data bound to this viewport (in number of items). */
   getDataLength(): number {
@@ -99,6 +163,11 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   getViewportSize(): number {
     return this._viewportSize;
   }
+
+  // TODO(mmalerba): This is technically out of sync with what's really rendered until a render
+  // cycle happens. I'm being careful to only call it after the render cycle is complete and before
+  // setting it to something else, but its error prone and should probably be split into
+  // `pendingRange` and `renderedRange`, the latter reflecting whats actually in the DOM.
 
   /** Get the current rendered range of items. */
   getRenderedRange(): ListRange {
@@ -129,83 +198,84 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
         this._renderedRangeSubject.next(this._renderedRange = range);
         this._changeDetectorRef.markForCheck();
         this._ngZone.runOutsideAngular(() => this._ngZone.onStable.pipe(take(1)).subscribe(() => {
-          this._scrollStrategy.onContentRendered();
+          // Queue this up in a `Promise.resolve()` so that if the user makes a series of calls
+          // like:
+          //
+          // viewport.setRenderedRange(...);
+          // viewport.setTotalContentSize(...);
+          // viewport.setRenderedContentOffset(...);
+          //
+          // The call to `onContentRendered` will happen after all of the updates have been applied.
+          Promise.resolve().then(() => this._scrollStrategy.onContentRendered());
         }));
       });
     }
   }
 
   /** Sets the offset of the rendered portion of the data from the start (in pixels). */
-  setRenderedContentOffset(offset: number) {
-    const transform =
-        this.orientation === 'horizontal' ? `translateX(${offset}px)` : `translateY(${offset}px)`;
+  setRenderedContentOffset(offset: number, to: 'to-start' | 'to-end' = 'to-start') {
+    const axis = this.orientation === 'horizontal' ? 'X' : 'Y';
+    let transform = `translate${axis}(${Number(offset)}px)`;
+    if (to === 'to-end') {
+      // TODO(mmalerba): The viewport should rewrite this as a `to-start` offset on the next render
+      // cycle. Otherwise elements will appear to expand in the wrong direction (e.g.
+      // `mat-expansion-panel` would expand upward).
+      transform += ` translate${axis}(-100%)`;
+    }
     if (this._renderedContentTransform != transform) {
       // Re-enter the Angular zone so we can mark for change detection.
       this._ngZone.run(() => {
-        this._renderedContentTransform = transform;
+        // We know this value is safe because we parse `offset` with `Number()` before passing it
+        // into the string.
+        this._renderedContentTransform = this._sanitizer.bypassSecurityTrustStyle(transform);
         this._changeDetectorRef.markForCheck();
       });
     }
   }
 
-  /** Attaches a `CdkVirtualForOf` to this viewport. */
-  attach(forOf: CdkVirtualForOf<any>) {
-    if (this._isAttached) {
-      throw Error('CdkVirtualScrollViewport is already attached.');
-    }
-
-    this._isAttached = true;
-    // Subscribe to the data stream of the CdkVirtualForOf to keep track of when the data length
-    // changes.
-    forOf.dataStream.pipe(takeUntil(this._detachedSubject)).subscribe(data => {
-      const len = data.length;
-      if (len != this._dataLength) {
-        this._dataLength = len;
-        this._scrollStrategy.onDataLengthChanged();
-      }
+  /** Sets the scroll offset on the viewport. */
+  setScrollOffset(offset: number) {
+    this._ngZone.run(() => {
+      this._pendingScrollOffset = offset;
+      this._changeDetectorRef.markForCheck();
     });
   }
 
-  /** Detaches the current `CdkVirtualForOf`. */
-  detach() {
-    this._isAttached = false;
-    this._detachedSubject.next();
-  }
-
   /** Gets the current scroll offset of the viewport (in pixels). */
-  measureScrollOffset() {
+  measureScrollOffset(): number {
     return this.orientation === 'horizontal' ?
         this.elementRef.nativeElement.scrollLeft : this.elementRef.nativeElement.scrollTop;
   }
 
   /** Measure the combined size of all of the rendered items. */
-  measureRenderedContentSize() {
+  measureRenderedContentSize(): number {
     const contentEl = this._contentWrapper.nativeElement;
     return this.orientation === 'horizontal' ? contentEl.offsetWidth : contentEl.offsetHeight;
   }
 
-  ngOnInit() {
-    Promise.resolve().then(() => {
-      this._viewportSize = this.orientation === 'horizontal' ?
-          this.elementRef.nativeElement.clientWidth : this.elementRef.nativeElement.clientHeight;
-      this._scrollStrategy.attach(this);
-
-      this._ngZone.runOutsideAngular(() => {
-        fromEvent(this.elementRef.nativeElement, 'scroll')
-            // Sample the scroll stream at every animation frame. This way if there are multiple
-            // scroll events in the same frame we only need to recheck our layout once
-            .pipe(sampleTime(0, animationFrame))
-            .subscribe(() => this._scrollStrategy.onContentScrolled());
-      });
-    });
+  // TODO(mmalerba): Try to do this in a way that's less bad for performance. (The bad part here is
+  // that we have to measure the viewport which is not absolutely positioned.)
+  /** Measure the offset from the start of the viewport to the start of the rendered content. */
+  measureRenderedContentOffset(): number {
+    const viewportEl = this.elementRef.nativeElement;
+    const contentEl = this._contentWrapper.nativeElement;
+    if (this.orientation === 'horizontal') {
+      return contentEl.getBoundingClientRect().left + viewportEl.scrollLeft -
+          viewportEl.getBoundingClientRect().left - viewportEl.clientLeft;
+    } else {
+      return contentEl.getBoundingClientRect().top + viewportEl.scrollTop -
+          viewportEl.getBoundingClientRect().top - viewportEl.clientTop;
+    }
   }
 
-  ngOnDestroy() {
-    this.detach();
-    this._scrollStrategy.detach();
-
-    // Complete all subjects
-    this._detachedSubject.complete();
-    this._renderedRangeSubject.complete();
+  /**
+   * Measure the total combined size of the given range. Throws if the range includes items that are
+   * not rendered.
+   */
+  measureRangeSize(range: ListRange): number {
+    if (!this._forOf) {
+      return 0;
+    }
+    return this._forOf.measureRangeSize(range, this.orientation);
   }
 }

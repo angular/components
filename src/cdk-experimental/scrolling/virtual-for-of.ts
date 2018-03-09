@@ -151,47 +151,39 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   }
 
   /**
-   * Get the client rect for the given index.
-   * @param index The index of the data element whose client rect we want to measure.
-   * @return The combined client rect for all DOM elements rendered as part of the given index.
-   *     Or null if no DOM elements are rendered for the given index.
-   * @throws If the given index is not in the rendered range.
+   * Measures the combined size (width for horizontal orientation, height for vertical) of all items
+   * in the specified range. Throws an error if the range includes items that are not currently
+   * rendered.
    */
-  measureClientRect(index: number): ClientRect | null {
-    if (index < this._renderedRange.start || index >= this._renderedRange.end) {
-      throw Error(`Error: attempted to measure an element that isn't rendered.`);
+  measureRangeSize(range: ListRange, orientation: 'horizontal' | 'vertical'): number {
+    if (range.start >= range.end) {
+      return 0;
     }
-    const renderedIndex = index - this._renderedRange.start;
-    let view = this._viewContainerRef.get(renderedIndex) as
-        EmbeddedViewRef<CdkVirtualForOfContext<T>> | null;
-    if (view && view.rootNodes.length) {
-      // There may be multiple root DOM elements for a single data element, so we merge their rects.
-      // These variables keep track of the minimum top and left as well as maximum bottom and right
-      // that we have encoutnered on any rectangle, so that we can merge the results into the
-      // smallest possible rect that contains all of the root rects.
-      let minTop = Infinity;
-      let minLeft = Infinity;
-      let maxBottom = -Infinity;
-      let maxRight = -Infinity;
+    if (range.start < this._renderedRange.start || range.end > this._renderedRange.end) {
+      throw Error(`Error: attempted to measure an item that isn't rendered.`);
+    }
 
-      for (let i = view.rootNodes.length - 1; i >= 0 ; i--) {
-        let rect = (view.rootNodes[i] as Element).getBoundingClientRect();
-        minTop = Math.min(minTop, rect.top);
-        minLeft = Math.min(minLeft, rect.left);
-        maxBottom = Math.max(maxBottom, rect.bottom);
-        maxRight = Math.max(maxRight, rect.right);
+    // Helper to extract size from a ClientRect.
+    const getSize = rect => orientation == 'horizontal' ? rect.width : rect.height;
+    // The index into the list of rendered views for the first item in the range.
+    const renderedStartIndex = range.start - this._renderedRange.start;
+    // The length of the range we're measuring.
+    const rangeLen = range.end - range.start;
+
+    // Loop over all root nodes for all items in the range and sum up their size.
+    // TODO(mmalerba): Make this work with non-element nodes.
+    let totalSize = 0;
+    let i = rangeLen;
+    while(i--) {
+      const view = this._viewContainerRef.get(i + renderedStartIndex) as
+          EmbeddedViewRef<CdkVirtualForOfContext<T>> | null;
+      let j = view ? view.rootNodes.length : 0;
+      while (j--) {
+        totalSize += getSize((view!.rootNodes[j] as Element).getBoundingClientRect());
       }
-
-      return {
-        top: minTop,
-        left: minLeft,
-        bottom: maxBottom,
-        right: maxRight,
-        height: maxBottom - minTop,
-        width: maxRight - minLeft
-      };
     }
-    return null;
+
+    return totalSize;
   }
 
   ngDoCheck() {
