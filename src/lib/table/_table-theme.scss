@@ -10,6 +10,12 @@
     background: mat-color($background, 'card');
   }
 
+  // The background should be inherited from the parent table so that if any cell is sticky and
+  // above another, it does not appear transparent.
+  .mat-row, .mat-header-row, .mat-cell, .mat-header-cell {
+    background: inherit;
+  }
+
   .mat-row, .mat-header-row {
     border-bottom-color: mat-color($foreground, divider);
   }
