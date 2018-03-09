@@ -55,8 +55,8 @@ year containing the `startAt` date.
 
 When a year or a month is selected in `multi-year` and `year` views respectively, the `yearSelected`
 and `monthSelected` outputs emit a normalized date representing the chosen year or month. By
-"normalized" we mean that the dates representing a year will have their month set to January and
-their day set to the 1st. Dates representing a month will have their day set to the 1st of that
+"normalized" we mean that the dates representing years will have their month set to January and
+their day set to the 1st. Dates representing months will have their day set to the 1st of the
 month. For example, if `<mat-datepicker>` is configured to work with javascript native Date
 objects, the `yearSelected` will emit `new Date(2017, 0, 1)` if the user selects 2017 in
 `multi-year` view. Similarly, `monthSelected` will emit `new Date(2017, 1, 1)` if the user
