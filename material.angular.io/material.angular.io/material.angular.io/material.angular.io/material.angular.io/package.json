@@ -14,8 +14,8 @@
     "build-themes": "bash ./tools/build-themes.sh",
     "prod-build": "npm run build-themes && ng build --aot --prod",
     "postinstall": "webdriver-manager update && bash ./tools/fetch-assets.sh",
-    "publish-prod": "npm run build-themes && ng build --aot --prod && firebase use material-angular-io && firebase deploy",
-    "publish-dev": "npm run build-themes && ng build --aot --prod && firebase use material2-docs-dev && firebase deploy"
+    "publish-prod": "bash ./tools/deploy.sh stable prod",
+    "publish-dev": "bash ./tools/deploy.sh"
   },
   "private": true,
   "dependencies": {
