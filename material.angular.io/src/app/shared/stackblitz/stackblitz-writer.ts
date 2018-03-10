@@ -3,6 +3,8 @@ import {Http} from '@angular/http';
 import {ExampleData} from '@angular/material-examples';
 import {VERSION} from '@angular/material';
 
+import {materialVersion} from '../version/version';
+
 const STACKBLITZ_URL = 'https://run.stackblitz.com/api/angular/v1';
 
 const COPYRIGHT =
@@ -21,7 +23,6 @@ const TEMPLATE_FILES = [
 
 const TAGS: string[] = ['angular', 'material', 'example'];
 const angularVersion = '^5.0.0';
-const materialVersion = '5.2.4';
 
 const dependencies = {
   '@angular/cdk': materialVersion,

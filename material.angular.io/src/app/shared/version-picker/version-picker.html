@@ -1,0 +1,9 @@
+<button mat-button [matMenuTriggerFor]="versionPicker">
+  {{materialVersion}}
+</button>
+<mat-menu #versionPicker="matMenu">
+  <button mat-menu-item *ngFor="let version of docVersions"
+          (click)="onVersionChanged(version)">
+    {{version.title}}
+  </button>
+</mat-menu>
