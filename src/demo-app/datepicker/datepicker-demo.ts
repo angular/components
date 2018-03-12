@@ -38,6 +38,13 @@ export class DatepickerDemo {
   dateFilter =
       (date: Date) => !(date.getFullYear() % 2) && (date.getMonth() % 2) && !(date.getDate() % 2)
 
-  onDateInput = (e: MatDatepickerInputEvent<Date>) => this.lastDateInput = e.value;
-  onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
+  onDateInput = (e: MatDatepickerInputEvent<Date>) => {
+
+    // console.log('lol')
+    this.lastDateInput = e.value;
+  }
+  onDateChange = (e: MatDatepickerInputEvent<Date>) => {
+    // console.log(e);
+    this.lastDateChange = e.value;
+  }
 }

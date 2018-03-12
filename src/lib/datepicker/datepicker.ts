@@ -45,9 +45,9 @@ import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {merge} from 'rxjs/observable/merge';
 import {createMissingDateImplError} from './datepicker-errors';
-import {MatDatepickerInput} from './datepicker-input';
 import {MatCalendar} from './calendar';
 import {MatDateSelectionModel} from './date-selection';
+import {MatDatepickerInputCommon} from './datepicker-input';
 
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -250,7 +250,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   private _inputSubscription = Subscription.EMPTY;
 
   /** The input element this datepicker is associated with. */
-  _datepickerInput: MatDatepickerInput<D>;
+  _datepickerInput: MatDatepickerInputCommon<D>;
 
   /** Emits when the datepicker is disabled. */
   readonly _disabledChange = new Subject<boolean>();
@@ -293,7 +293,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
    * Register an input with this datepicker.
    * @param input The datepicker input to register with this datepicker.
    */
-  _registerInput(input: MatDatepickerInput<D>): void {
+  _registerInput(input: MatDatepickerInputCommon<D>): void {
     if (this._datepickerInput) {
       throw Error('A MatDatepicker can only be associated with a single input.');
     }

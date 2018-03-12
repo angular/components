@@ -63,7 +63,7 @@ export class MatDatepickerInputEvent<D> {
 
   constructor(
     /** Reference to the datepicker input component that emitted the event. */
-    public target: MatDatepickerInput<D>,
+    public target: MatDatepickerInputCommon<D>,
     /** Reference to the native input element associated with the datepicker input. */
     public targetElement: HTMLElement) {
     this.value = this.target._selectionModel.selected;
@@ -91,7 +91,8 @@ export class MatDatepickerInputEvent<D> {
   },
   exportAs: 'matDatepickerInput',
 })
-export class MatDatepickerInputCommon<D> implements ControlValueAccessor, OnDestroy, Validator {
+export class MatDatepickerInputCommon<D> implements ControlValueAccessor, OnDestroy,
+  Validator {
   /** The datepicker that this input is associated with. */
   @Input()
   set matDatepicker(value: MatDatepicker<D>) {
@@ -242,12 +243,12 @@ export class MatDatepickerInputCommon<D> implements ControlValueAccessor, OnDest
       throw createMissingDateImplError('MAT_DATE_FORMATS');
     }
 
-    this._selectionModel = new MatDateSelectionModel<D>(this._dateAdapter);
+    this._selectionModel = this._createDateSelectionModel();
     this._selectionModelSubscription = this._selectionModel.onChange
       .subscribe((selected: MatDateSelectionChange<D>) => {
         const oldValue = this._prevValue;
         this.value = <D|null>selected.value;
-        if (!this._dateAdapter.sameDate(oldValue, <D|null>selected.value)) {
+        if (!this._isValueSame(oldValue, <D|null>selected.value)) {
           this._cvaOnChange(this.value);
           this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
           this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
@@ -340,6 +341,17 @@ export class MatDatepickerInputCommon<D> implements ControlValueAccessor, OnDest
     return this._formField ? this._formField.color : undefined;
   }
 
+  /** Creates date selection model. Override for range mode. */
+  protected _createDateSelectionModel(): MatDateSelectionModel<D> {
+    return new MatDateSelectionModel<D>(this._dateAdapter);
+  }
+
+  /** Check if value is the same. implementation variates on mode. */
+  protected _isValueSame(first: MatDatepickerRange<D>|D|null,
+                                  second: MatDatepickerRange<D>|D|null): boolean {
+    throw Error('You must override me.' + first + second);
+  }
+
   /** Updates current value in input according the format */
   private updateInputValue() {
       this._elementRef.nativeElement.value =
@@ -379,4 +391,52 @@ export class MatDatepickerInputCommon<D> implements ControlValueAccessor, OnDest
 })
 export class MatDatepickerInput<D> extends MatDatepickerInputCommon<D>
   implements ControlValueAccessor, OnDestroy, Validator {
+
+  /** @inheritDoc */
+   protected _isValueSame(first: D | null, second: D | null) {
+    return this._dateAdapter.sameDate(first, second);
+  }
+}
+
+
+/** Directive used to connect an input to a MatDatepicker in range mode. */
+@Directive({
+  selector: 'input[matRangeDatepicker]',
+  providers: [
+    MAT_DATEPICKER_VALUE_ACCESSOR,
+    MAT_DATEPICKER_VALIDATORS,
+    {provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: MatRangeDatepickerInput},
+  ],
+  host: {
+    '[attr.aria-haspopup]': 'true',
+    '[attr.aria-owns]': '(_datepicker?.opened && _datepicker.id) || null',
+    '[attr.min]': 'min ? _dateAdapter.toIso8601(min) : null',
+    '[attr.max]': 'max ? _dateAdapter.toIso8601(max) : null',
+    '[disabled]': 'disabled',
+    '(input)': '_onInput($event.target.value)',
+    '(change)': '_onChange()',
+    '(blur)': '_onTouched()',
+    '(keydown)': '_onKeydown($event)',
+  },
+  exportAs: 'matRangeDatepickerInput',
+})
+export class MatRangeDatepickerInput<D> extends MatDatepickerInputCommon<D>
+  implements ControlValueAccessor, OnDestroy, Validator {
+
+
+  /** @inheritDoc */
+  _onInput(value: string) {
+    console.log(value);
+  }
+
+  /** @inheritDoc */
+  protected _createDateSelectionModel() {
+    return new MatDateSelectionModel<D>(this._dateAdapter, true);
+  }
+
+  /** @inheritDoc */
+  protected _isValueSame(first: MatDatepickerRange<D>|null, second: MatDatepickerRange<D>|null) {
+    return this._dateAdapter.sameDate(first!.begin, second!.begin) &&
+        this._dateAdapter.sameDate(first!.end, second!.end);
+  }
 }
