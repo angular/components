@@ -10,12 +10,12 @@
 
     <button mat-icon-button class="mat-calendar-previous-button"
             [disabled]="!calendar.previousEnabled()" (click)="calendar.previousClicked()"
-            [attr.aria-label]="calendar.prevButtonLabel">
+            [attr.aria-label]="prevButtonLabel">
     </button>
 
     <button mat-icon-button class="mat-calendar-next-button"
             [disabled]="!calendar.nextEnabled()" (click)="calendar.nextClicked()"
-            [attr.aria-label]="calendar.nextButtonLabel">
+            [attr.aria-label]="nextButtonLabel">
     </button>
   </div>
 </div>

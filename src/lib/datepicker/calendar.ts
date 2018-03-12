@@ -80,6 +80,24 @@ export class MatCalendarHeader implements OnDestroy {
             this._intl.switchToMultiYearViewLabel : this._intl.switchToMonthViewLabel;
   }
 
+  /** The label for the the previous button. */
+  get prevButtonLabel(): string {
+    return {
+      'month': this._intl.prevMonthLabel,
+      'year': this._intl.prevYearLabel,
+      'multi-year': this._intl.prevMultiYearLabel
+    }[this.calendar.currentView];
+  }
+
+  /** The label for the the next button. */
+  get nextButtonLabel(): string {
+    return {
+      'month': this._intl.nextMonthLabel,
+      'year': this._intl.nextYearLabel,
+      'multi-year': this._intl.nextMultiYearLabel
+    }[this.calendar.currentView];
+  }
+
   ngOnDestroy() {
     this._destroyed.next();
     this._destroyed.complete();
@@ -188,24 +206,6 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
   /** Whether the calendar is in month view. */
   currentView: 'month' | 'year' | 'multi-year';
-
-  /** The label for the the previous button. */
-  get prevButtonLabel(): string {
-    return {
-      'month': this._intl.prevMonthLabel,
-      'year': this._intl.prevYearLabel,
-      'multi-year': this._intl.prevMultiYearLabel
-    }[this.currentView];
-  }
-
-  /** The label for the the next button. */
-  get nextButtonLabel(): string {
-    return {
-      'month': this._intl.nextMonthLabel,
-      'year': this._intl.nextYearLabel,
-      'multi-year': this._intl.nextMultiYearLabel
-    }[this.currentView];
-  }
 
   constructor(private _intl: MatDatepickerIntl,
               @Optional() private _dateAdapter: DateAdapter<D>,
