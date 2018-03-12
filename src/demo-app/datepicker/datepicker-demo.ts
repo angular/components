@@ -13,7 +13,6 @@ import {DateAdapter} from '@angular/material/core';
 import {MatCalendar} from '@angular/material';
 import {ThemePalette} from '@angular/material/core';
 
-
 @Component({
   moduleId: module.id,
   selector: 'datepicker-demo',
@@ -50,10 +49,41 @@ export class DatepickerDemo {
 // Custom header component for datepicker
 @Component({
   selector: 'custom-header',
-  template: 'custom header'
+  template: `
+      <div>
+        <button (click)="previousClicked('year')">&lt;&lt;</button>
+          <button (click)="previousClicked('month')">&lt;</button>
+        {{periodLabel}}
+        <button (click)="nextClicked('month')">&gt;</button>
+          <button (click)="nextClicked('year')">&gt;&gt;</button>
+      </div>
+  `
 })
 export class CustomHeader {
   constructor(@Host() public calendar: MatCalendar<any>,
-              public adapter: DateAdapter<any>) {
+              private _dateAdapter: DateAdapter<any>) {}
+
+  get periodLabel() {
+    let year = this._dateAdapter.getYearName(this.calendar.activeDate);
+    let month = (this._dateAdapter.getMonth(this.calendar.activeDate) + 1);
+    return `${month}/${year}`;
+  }
+
+  previousClicked(mode: 'month' | 'year') {
+    this.calendar.activeDate = mode == 'month' ?
+            this._dateAdapter.addCalendarMonths(this.calendar.activeDate, -1) :
+            this._dateAdapter.addCalendarYears(
+                    this.calendar.activeDate,
+                    -1
+            );
+  }
+
+  nextClicked(mode: 'month' | 'year') {
+    this.calendar.activeDate = mode == 'month' ?
+            this._dateAdapter.addCalendarMonths(this.calendar.activeDate, 1) :
+            this._dateAdapter.addCalendarYears(
+                    this.calendar.activeDate,
+                    1
+            );
   }
 }
