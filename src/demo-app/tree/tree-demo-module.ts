@@ -16,6 +16,7 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
+  MatProgressBarModule,
   MatTreeModule
 } from '@angular/material';
 import {TreeDemo} from './tree-demo';
@@ -35,6 +36,7 @@ import {LoadmoreTreeDemo} from './loadmore-tree-demo/loadmore-tree-demo';
     MatIconModule,
     MatInputModule,
     MatTreeModule,
+    MatProgressBarModule,
   ],
   declarations: [
     ChecklistTreeDemo,
