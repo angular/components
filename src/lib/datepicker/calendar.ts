@@ -48,6 +48,7 @@ export class MatCalendarHeader implements OnDestroy {
   private _destroyed = new Subject<void>();
 
   constructor(@Host() public calendar: MatCalendar<any>,
+              public adapter: DateAdapter<any>,
               intl: MatDatepickerIntl,
               changeDetectorRef: ChangeDetectorRef) {
     intl.changes.pipe(takeUntil(this._destroyed)).subscribe(() => changeDetectorRef.markForCheck());
