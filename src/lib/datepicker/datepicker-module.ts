@@ -12,7 +12,8 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
-import {MatCalendarHeader, MatCalendar} from './calendar';
+import {MatCalendar} from './calendar';
+import {MatCalendarHeader} from './calendar-header';
 import {MatCalendarBody} from './calendar-body';
 import {
   MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
