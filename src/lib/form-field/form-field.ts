@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterContentChecked,
@@ -18,6 +19,7 @@ import {
   ContentChildren,
   ElementRef,
   Inject,
+  InjectionToken,
   Input,
   Optional,
   QueryList,
@@ -48,7 +50,6 @@ import {MatLabel} from './label';
 import {MatPlaceholder} from './placeholder';
 import {MatPrefix} from './prefix';
 import {MatSuffix} from './suffix';
-import {Directionality} from '@angular/cdk/bidi';
 
 
 let nextUniqueId = 0;
@@ -69,11 +70,18 @@ export const _MatFormFieldMixinBase = mixinColor(MatFormFieldBase, 'primary');
 export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill' | 'outline';
 
 
+export interface MatFormFieldDefaultOptions {
+  appearance?: MatFormFieldAppearance;
+}
+
+export const MAT_FORM_FIELD_DEFAULT_OPTIONS =
+    new InjectionToken<MatFormFieldDefaultOptions>('MAT_FORM_FIELD_DEFAULT_OPTIONS');
+
+
 /** Container for form controls that applies Material Design styling and behavior. */
 @Component({
   moduleId: module.id,
-  // TODO(mmalerba): the input-container selectors and classes are deprecated and will be removed.
-  selector: 'mat-input-container, mat-form-field',
+  selector: 'mat-form-field',
   exportAs: 'matFormField',
   templateUrl: 'form-field.html',
   // MatInput is a directive and can't have styles, so we need to include its styles here.
@@ -122,7 +130,14 @@ export class MatFormField extends _MatFormFieldMixinBase
   private _labelOptions: LabelOptions;
 
   /** The form-field appearance style. */
-  @Input() appearance: MatFormFieldAppearance = 'legacy';
+  @Input()
+  get appearance(): MatFormFieldAppearance {
+    return this._appearance || this._defaultOptions && this._defaultOptions.appearance || 'legacy';
+  }
+  set appearance(value: MatFormFieldAppearance) {
+    this._appearance = value;
+  }
+  _appearance: MatFormFieldAppearance;
 
   /**
    * @deprecated Use `color` instead.
@@ -220,7 +235,9 @@ export class MatFormField extends _MatFormFieldMixinBase
       public _elementRef: ElementRef,
       private _changeDetectorRef: ChangeDetectorRef,
       @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) labelOptions: LabelOptions,
-      @Optional() private _dir: Directionality) {
+      @Optional() private _dir: Directionality,
+      @Optional() @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS) private _defaultOptions:
+          MatFormFieldDefaultOptions) {
     super(_elementRef);
 
     this._labelOptions = labelOptions ? labelOptions : {};
@@ -299,8 +316,7 @@ export class MatFormField extends _MatFormFieldMixinBase
   }
 
   _shouldLabelFloat() {
-    return this._canLabelFloat && (this._control.shouldLabelFloat ||
-        this._control.shouldPlaceholderFloat || this._shouldAlwaysFloat);
+    return this._canLabelFloat && (this._control.shouldLabelFloat || this._shouldAlwaysFloat);
   }
 
   _hideControlPlaceholder() {

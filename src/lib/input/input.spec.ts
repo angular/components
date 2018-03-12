@@ -20,7 +20,7 @@ import {
 import {
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
-  getMatFormFieldPlaceholderConflictError,
+  getMatFormFieldPlaceholderConflictError, MAT_FORM_FIELD_DEFAULT_OPTIONS,
   MatFormField,
   MatFormFieldAppearance,
   MatFormFieldModule,
@@ -71,6 +71,7 @@ describe('MatInput without forms', () => {
         MatInputOnPush,
         MatInputWithReadonlyInput,
         MatInputWithLabelAndPlaceholder,
+        MatInputWithoutPlaceholder,
       ],
     });
 
@@ -794,6 +795,14 @@ describe('MatInput without forms', () => {
     expect(container.classList).not.toContain('mat-form-field-hide-placeholder');
   });
 
+  it('should not add the `placeholder` attribute if there is no placeholder', () => {
+    const fixture = TestBed.createComponent(MatInputWithoutPlaceholder);
+    fixture.detectChanges();
+    const input = fixture.debugElement.query(By.css('input')).nativeElement;
+
+    expect(input.hasAttribute('placeholder')).toBe(false);
+  });
+
   it('should not show the native placeholder when floatLabel is set to "never"', () => {
     const fixture = TestBed.createComponent(MatInputWithLabelAndPlaceholder);
 
@@ -1218,6 +1227,77 @@ describe('MatInput with appearance', () => {
   }));
 });
 
+describe('MatFormField default options', () => {
+  it('should be legacy appearance if no default options provided', fakeAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        NoopAnimationsModule,
+        PlatformModule,
+      ],
+      declarations: [
+        MatInputWithAppearance,
+      ],
+    });
+
+    TestBed.compileComponents();
+
+    const fixture = TestBed.createComponent(MatInputWithAppearance);
+    fixture.detectChanges();
+    flush();
+    expect(fixture.componentInstance.formField.appearance).toBe('legacy');
+  }));
+
+  it('should be legacy appearance if empty default options provided', fakeAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        NoopAnimationsModule,
+        PlatformModule,
+      ],
+      declarations: [
+        MatInputWithAppearance,
+      ],
+      providers: [{provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {}}],
+    });
+
+    TestBed.compileComponents();
+
+    const fixture = TestBed.createComponent(MatInputWithAppearance);
+    fixture.detectChanges();
+    flush();
+    expect(fixture.componentInstance.formField.appearance).toBe('legacy');
+  }));
+
+  it('should be custom default appearance if custom appearance specified in default options',
+      fakeAsync(() => {
+        TestBed.configureTestingModule({
+          imports: [
+            FormsModule,
+            MatFormFieldModule,
+            MatInputModule,
+            NoopAnimationsModule,
+            PlatformModule,
+          ],
+          declarations: [
+            MatInputWithAppearance,
+          ],
+          providers: [{provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}],
+        });
+
+        TestBed.compileComponents();
+
+        const fixture = TestBed.createComponent(MatInputWithAppearance);
+        fixture.detectChanges();
+        flush();
+        expect(fixture.componentInstance.formField.appearance).toBe('fill');
+      }));
+});
+
 @Component({
   template: `
     <mat-form-field>
@@ -1567,4 +1647,14 @@ class MatInputWithLabelAndPlaceholder {
 class MatInputWithAppearance {
   @ViewChild(MatFormField) formField: MatFormField;
   appearance: MatFormFieldAppearance;
+}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <input matInput>
+    </mat-form-field>
+  `
+})
+class MatInputWithoutPlaceholder {
 }

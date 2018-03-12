@@ -169,6 +169,22 @@ describe('MatChipList', () => {
           // It focuses the next-to-last item
           expect(manager.activeItemIndex).toEqual(lastIndex - 1);
         });
+
+        it('should not focus if chip list is not focused', () => {
+          let array = chips.toArray();
+          let midItem = array[2];
+
+          // Focus and blur the middle item
+          midItem.focus();
+          midItem._blur();
+
+          // Destroy the middle item
+          testComponent.remove = 2;
+          fixture.detectChanges();
+
+          // Should not have focus
+          expect(chipListInstance._keyManager.activeItemIndex).toEqual(-1);
+        });
       });
     });
 
@@ -375,6 +391,17 @@ describe('MatChipList', () => {
       fixture.destroy();
       expect(spy).toHaveBeenCalled();
       subscription.unsubscribe();
+    });
+
+    it('should point the label id to the chip input', () => {
+      const label = fixture.nativeElement.querySelector('label');
+      const input = fixture.nativeElement.querySelector('input');
+
+      fixture.detectChanges();
+
+      expect(label.getAttribute('for')).toBeTruthy();
+      expect(label.getAttribute('for')).toBe(input.getAttribute('id'));
+      expect(label.getAttribute('aria-owns')).toBe(input.getAttribute('id'));
     });
 
   });
@@ -1054,12 +1081,13 @@ class StandardChipList {
 @Component({
   template: `
     <mat-form-field>
+      <mat-label>Add a chip</mat-label>
       <mat-chip-list #chipList>
         <mat-chip>Chip 1</mat-chip>
         <mat-chip>Chip 1</mat-chip>
         <mat-chip>Chip 1</mat-chip>
       </mat-chip-list>
-      <input matInput name="test" [matChipInputFor]="chipList"/>
+      <input name="test" [matChipInputFor]="chipList"/>
     </mat-form-field>
   `
 })
