@@ -1,3 +1,4 @@
+<!-- @deletion-target 7.0.0 Remove all of the `mat-input-*` classes -->
 <div class="mat-input-wrapper mat-form-field-wrapper">
   <div class="mat-input-flex mat-form-field-flex" #connectionContainer
        (click)="_control.onContainerClick && _control.onContainerClick($event)">
@@ -8,21 +9,10 @@
     <div class="mat-input-infix mat-form-field-infix" #inputContainer>
       <ng-content></ng-content>
 
-      <!--
-        TODO: remove `mat-input-placeholder-wrapper` and `mat-form-field-placeholder-wrapper`
-        next time we do breaking changes.
-        @deletion-target 6.0.0
-      -->
-      <span class="mat-form-field-label-wrapper mat-input-placeholder-wrapper mat-form-field-placeholder-wrapper">
+      <span class="mat-form-field-label-wrapper">
         <!-- We add aria-owns as a workaround for an issue in JAWS & NVDA where the label isn't
              read if it comes before the control in the DOM. -->
-
-        <!--
-          TODO: remove `mat-input-placeholder` and `mat-form-field-placeholder`
-          next time we do breaking changes.
-          @deletion-target 6.0.0
-        -->
-        <label class="mat-form-field-label mat-input-placeholder mat-form-field-placeholder"
+        <label class="mat-form-field-label"
                [attr.for]="_control.id"
                [attr.aria-owns]="_control.id"
                [class.mat-empty]="_control.empty && !_shouldAlwaysFloat"
