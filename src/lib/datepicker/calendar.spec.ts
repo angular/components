@@ -62,7 +62,7 @@ describe('MatCalendar', () => {
 
     it('should be in month view with specified month active', () => {
       expect(calendarInstance.currentView).toBe('month');
-      expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 31));
+      expect(calendarInstance.activeDate).toEqual(new Date(2017, JAN, 31));
     });
 
     it('should toggle view when period clicked', () => {
@@ -80,17 +80,17 @@ describe('MatCalendar', () => {
     });
 
     it('should go to next and previous month', () => {
-      expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 31));
+      expect(calendarInstance.activeDate).toEqual(new Date(2017, JAN, 31));
 
       nextButton.click();
       fixture.detectChanges();
 
-      expect(calendarInstance._activeDate).toEqual(new Date(2017, FEB, 28));
+      expect(calendarInstance.activeDate).toEqual(new Date(2017, FEB, 28));
 
       prevButton.click();
       fixture.detectChanges();
 
-      expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 28));
+      expect(calendarInstance.activeDate).toEqual(new Date(2017, JAN, 28));
     });
 
     it('should go to previous and next year', () => {
@@ -98,7 +98,7 @@ describe('MatCalendar', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('multi-year');
-      expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 31));
+      expect(calendarInstance.activeDate).toEqual(new Date(2017, JAN, 31));
 
       (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
       fixture.detectChanges();
@@ -108,12 +108,12 @@ describe('MatCalendar', () => {
       nextButton.click();
       fixture.detectChanges();
 
-      expect(calendarInstance._activeDate).toEqual(new Date(2018, JAN, 31));
+      expect(calendarInstance.activeDate).toEqual(new Date(2018, JAN, 31));
 
       prevButton.click();
       fixture.detectChanges();
 
-      expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 31));
+      expect(calendarInstance.activeDate).toEqual(new Date(2017, JAN, 31));
     });
 
     it('should go to previous and next multi-year range', () => {
@@ -121,17 +121,17 @@ describe('MatCalendar', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('multi-year');
-      expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 31));
+      expect(calendarInstance.activeDate).toEqual(new Date(2017, JAN, 31));
 
       nextButton.click();
       fixture.detectChanges();
 
-      expect(calendarInstance._activeDate).toEqual(new Date(2017 + yearsPerPage, JAN, 31));
+      expect(calendarInstance.activeDate).toEqual(new Date(2017 + yearsPerPage, JAN, 31));
 
       prevButton.click();
       fixture.detectChanges();
 
-      expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 31));
+      expect(calendarInstance.activeDate).toEqual(new Date(2017, JAN, 31));
     });
 
     it('should go back to month view after selecting year and month', () => {
@@ -139,21 +139,21 @@ describe('MatCalendar', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('multi-year');
-      expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 31));
+      expect(calendarInstance.activeDate).toEqual(new Date(2017, JAN, 31));
 
       let yearCells = calendarElement.querySelectorAll('.mat-calendar-body-cell');
       (yearCells[0] as HTMLElement).click();
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('year');
-      expect(calendarInstance._activeDate).toEqual(new Date(2016, JAN, 31));
+      expect(calendarInstance.activeDate).toEqual(new Date(2016, JAN, 31));
 
       let monthCells = calendarElement.querySelectorAll('.mat-calendar-body-cell');
       (monthCells[monthCells.length - 1] as HTMLElement).click();
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('month');
-      expect(calendarInstance._activeDate).toEqual(new Date(2016, DEC, 31));
+      expect(calendarInstance.activeDate).toEqual(new Date(2016, DEC, 31));
       expect(testComponent.selected).toBeFalsy('no date should be selected yet');
     });
 
@@ -171,7 +171,7 @@ describe('MatCalendar', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('multi-year');
-      expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 31));
+      expect(calendarInstance.activeDate).toEqual(new Date(2017, JAN, 31));
 
       (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
 
@@ -190,7 +190,7 @@ describe('MatCalendar', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('multi-year');
-      expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 31));
+      expect(calendarInstance.activeDate).toEqual(new Date(2017, JAN, 31));
 
       (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
 
@@ -227,7 +227,7 @@ describe('MatCalendar', () => {
         });
 
         it('should initially set start date active', () => {
-          expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 31));
+          expect(calendarInstance.activeDate).toEqual(new Date(2017, JAN, 31));
         });
 
         it('should make the calendar body focusable', () => {
@@ -257,7 +257,7 @@ describe('MatCalendar', () => {
             fixture.detectChanges();
 
             expect(calendarInstance.currentView).toBe('month');
-            expect(calendarInstance._activeDate).toEqual(new Date(2017, FEB, 28));
+            expect(calendarInstance.activeDate).toEqual(new Date(2017, FEB, 28));
             expect(testComponent.selected).toBeUndefined();
           });
         });
@@ -280,7 +280,7 @@ describe('MatCalendar', () => {
             fixture.detectChanges();
 
             expect(calendarInstance.currentView).toBe('year');
-            expect(calendarInstance._activeDate).toEqual(new Date(2018, JAN, 31));
+            expect(calendarInstance.activeDate).toEqual(new Date(2018, JAN, 31));
             expect(testComponent.selected).toBeUndefined();
           });
         });
@@ -309,14 +309,14 @@ describe('MatCalendar', () => {
       testComponent.startAt = new Date(2000, JAN, 1);
       fixture.detectChanges();
 
-      expect(calendarInstance._activeDate).toEqual(new Date(2016, JAN, 1));
+      expect(calendarInstance.activeDate).toEqual(new Date(2016, JAN, 1));
     });
 
     it('should clamp startAt value above max date', () => {
       testComponent.startAt = new Date(2020, JAN, 1);
       fixture.detectChanges();
 
-      expect(calendarInstance._activeDate).toEqual(new Date(2018, JAN, 1));
+      expect(calendarInstance.activeDate).toEqual(new Date(2018, JAN, 1));
     });
 
     it('should not go back past min date', () => {
@@ -327,18 +327,18 @@ describe('MatCalendar', () => {
           calendarElement.querySelector('.mat-calendar-previous-button') as HTMLButtonElement;
 
       expect(prevButton.disabled).toBe(false, 'previous button should not be disabled');
-      expect(calendarInstance._activeDate).toEqual(new Date(2016, FEB, 1));
+      expect(calendarInstance.activeDate).toEqual(new Date(2016, FEB, 1));
 
       prevButton.click();
       fixture.detectChanges();
 
       expect(prevButton.disabled).toBe(true, 'previous button should be disabled');
-      expect(calendarInstance._activeDate).toEqual(new Date(2016, JAN, 1));
+      expect(calendarInstance.activeDate).toEqual(new Date(2016, JAN, 1));
 
       prevButton.click();
       fixture.detectChanges();
 
-      expect(calendarInstance._activeDate).toEqual(new Date(2016, JAN, 1));
+      expect(calendarInstance.activeDate).toEqual(new Date(2016, JAN, 1));
     });
 
     it('should not go forward past max date', () => {
@@ -349,18 +349,18 @@ describe('MatCalendar', () => {
           calendarElement.querySelector('.mat-calendar-next-button') as HTMLButtonElement;
 
       expect(nextButton.disabled).toBe(false, 'next button should not be disabled');
-      expect(calendarInstance._activeDate).toEqual(new Date(2017, DEC, 1));
+      expect(calendarInstance.activeDate).toEqual(new Date(2017, DEC, 1));
 
       nextButton.click();
       fixture.detectChanges();
 
       expect(nextButton.disabled).toBe(true, 'next button should be disabled');
-      expect(calendarInstance._activeDate).toEqual(new Date(2018, JAN, 1));
+      expect(calendarInstance.activeDate).toEqual(new Date(2018, JAN, 1));
 
       nextButton.click();
       fixture.detectChanges();
 
-      expect(calendarInstance._activeDate).toEqual(new Date(2018, JAN, 1));
+      expect(calendarInstance.activeDate).toEqual(new Date(2018, JAN, 1));
     });
 
     it('should re-render the month view when the minDate changes', () => {
@@ -492,7 +492,7 @@ describe('MatCalendar', () => {
 
       it('should not allow selection of disabled date in month view', () => {
         expect(calendarInstance.currentView).toBe('month');
-        expect(calendarInstance._activeDate).toEqual(new Date(2017, JAN, 1));
+        expect(calendarInstance.activeDate).toEqual(new Date(2017, JAN, 1));
 
         dispatchKeyboardEvent(tableBodyEl, 'keydown', ENTER);
         fixture.detectChanges();
@@ -509,7 +509,7 @@ describe('MatCalendar', () => {
         (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
         fixture.detectChanges();
 
-        calendarInstance._activeDate = new Date(2017, NOV, 1);
+        calendarInstance.activeDate = new Date(2017, NOV, 1);
         fixture.detectChanges();
 
         expect(calendarInstance.currentView).toBe('year');
