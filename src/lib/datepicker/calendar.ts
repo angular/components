@@ -98,6 +98,46 @@ export class MatCalendarHeader implements OnDestroy {
     }[this.calendar.currentView];
   }
 
+  /** Handles user clicks on the period label. */
+  currentPeriodClicked(): void {
+    this.calendar.currentView = this.calendar.currentView == 'month' ? 'multi-year' : 'month';
+  }
+
+  /** Handles user clicks on the previous button. */
+  previousClicked(): void {
+    this.calendar.activeDate = this.calendar.currentView == 'month' ?
+            this._dateAdapter.addCalendarMonths(this.calendar.activeDate, -1) :
+            this._dateAdapter.addCalendarYears(
+                    this.calendar.activeDate,
+                    this.calendar.currentView == 'year' ? -1 : -yearsPerPage
+            );
+  }
+
+  /** Handles user clicks on the next button. */
+  nextClicked(): void {
+    this.calendar.activeDate = this.calendar.currentView == 'month' ?
+            this._dateAdapter.addCalendarMonths(this.calendar.activeDate, 1) :
+            this._dateAdapter.addCalendarYears(
+                    this.calendar.activeDate,
+                    this.calendar.currentView == 'year' ? 1 : yearsPerPage
+            );
+  }
+
+  /** Whether the previous period button is enabled. */
+  previousEnabled(): boolean {
+    if (!this.calendar.minDate) {
+      return true;
+    }
+    return !this.calendar.minDate ||
+            !this.calendar.isSameView(this.calendar.activeDate, this.calendar.minDate);
+  }
+
+  /** Whether the next period button is enabled. */
+  nextEnabled(): boolean {
+    return !this.calendar.maxDate ||
+            !this.calendar.isSameView(this.calendar.activeDate, this.calendar.maxDate);
+  }
+
   ngOnDestroy() {
     this._destroyed.next();
     this._destroyed.complete();
@@ -273,42 +313,8 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     this.currentView = view;
   }
 
-  /** Handles user clicks on the period label. */
-  currentPeriodClicked(): void {
-    this.currentView = this.currentView == 'month' ? 'multi-year' : 'month';
-  }
-
-  /** Handles user clicks on the previous button. */
-  previousClicked(): void {
-    this.activeDate = this.currentView == 'month' ?
-        this._dateAdapter.addCalendarMonths(this.activeDate, -1) :
-        this._dateAdapter.addCalendarYears(
-            this.activeDate, this.currentView == 'year' ? -1 : -yearsPerPage);
-  }
-
-  /** Handles user clicks on the next button. */
-  nextClicked(): void {
-    this.activeDate = this.currentView == 'month' ?
-        this._dateAdapter.addCalendarMonths(this.activeDate, 1) :
-        this._dateAdapter.addCalendarYears(
-            this.activeDate, this.currentView == 'year' ? 1 : yearsPerPage);
-  }
-
-  /** Whether the previous period button is enabled. */
-  previousEnabled(): boolean {
-    if (!this.minDate) {
-      return true;
-    }
-    return !this.minDate || !this._isSameView(this.activeDate, this.minDate);
-  }
-
-  /** Whether the next period button is enabled. */
-  nextEnabled(): boolean {
-    return !this.maxDate || !this._isSameView(this.activeDate, this.maxDate);
-  }
-
   /** Whether the two dates represent the same view in the current view mode (month or year). */
-  private _isSameView(date1: D, date2: D): boolean {
+  isSameView(date1: D, date2: D): boolean {
     if (this.currentView == 'month') {
       return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2) &&
           this._dateAdapter.getMonth(date1) == this._dateAdapter.getMonth(date2);
