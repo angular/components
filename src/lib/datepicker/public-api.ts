@@ -8,7 +8,6 @@
 
 export * from './datepicker-module';
 export * from './calendar';
-export * from './calendar-header';
 export * from './calendar-body';
 export * from './datepicker';
 export * from './datepicker-animations';
