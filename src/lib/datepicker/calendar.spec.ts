@@ -10,7 +10,6 @@ import {By} from '@angular/platform-browser';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {MatCalendar} from './calendar';
 import {MatDatepickerIntl} from './datepicker-intl';
-import {yearsPerPage} from './multi-year-view';
 import {MatDatepickerModule} from './datepicker-module';
 
 describe('MatCalendar', () => {
@@ -42,8 +41,6 @@ describe('MatCalendar', () => {
     let testComponent: StandardCalendar;
     let calendarElement: HTMLElement;
     let periodButton: HTMLElement;
-    let prevButton: HTMLElement;
-    let nextButton: HTMLElement;
     let calendarInstance: MatCalendar<Date>;
 
     beforeEach(() => {
@@ -53,8 +50,6 @@ describe('MatCalendar', () => {
       let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar));
       calendarElement = calendarDebugElement.nativeElement;
       periodButton = calendarElement.querySelector('.mat-calendar-period-button') as HTMLElement;
-      prevButton = calendarElement.querySelector('.mat-calendar-previous-button') as HTMLElement;
-      nextButton = calendarElement.querySelector('.mat-calendar-next-button') as HTMLElement;
 
       calendarInstance = calendarDebugElement.componentInstance;
       testComponent = fixture.componentInstance;

@@ -135,7 +135,7 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   /** Whether the calendar is in month view. */
   currentView: 'month' | 'year' | 'multi-year';
 
-  constructor(private _intl: MatDatepickerIntl,
+  constructor(_intl: MatDatepickerIntl,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               changeDetectorRef: ChangeDetectorRef) {
