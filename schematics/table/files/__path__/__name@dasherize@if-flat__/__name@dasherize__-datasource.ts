@@ -61,8 +61,11 @@ export class <%= classify(name) %>DataSource extends DataSource<<%= classify(nam
       this.sort.sortChange
     ];
 
+    // Set the paginators length
+    this.paginator.length = this.data.length;
+
     return merge(...dataMutations).pipe(map(() => {
-      return this.getPagedData(this.getSortedData(this.data));
+      return this.getPagedData(this.getSortedData([...this.data]));
     }));
   }
 
