@@ -60,3 +60,23 @@ export function getIndexHtmlPath(host: Tree) {
   const app = getAppFromConfig(config, '0');
   return normalize(`/${app.root}/${app.index}`);
 }
+
+/**
+ * Get the root stylesheet file.
+ */
+export function getStylesPath(host: Tree) {
+  const config = getConfig(host);
+  const app = getAppFromConfig(config, '0');
+  const styles = app.styles.find(style => {
+    const str = style.toString();
+    return str === 'styles.css' ||
+           str === 'styles.less' ||
+           str === 'styles.scss';
+  });
+
+  if (!styles) {
+    throw new SchematicsException(`Could not find global styles.ext file.`);
+  }
+
+  return normalize(`/${app.root}/${styles}`);
+}

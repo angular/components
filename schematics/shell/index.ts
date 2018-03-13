@@ -9,7 +9,7 @@ import {
 import {Schema} from './schema';
 import {materialVersion, cdkVersion, angularVersion} from '../utils/lib-versions';
 import {getConfig, getAppFromConfig, AppConfig, CliConfig} from '../utils/devkit-utils/config';
-import {addModuleImportToRootModule} from '../utils/ast';
+import {addModuleImportToRootModule, getStylesPath} from '../utils/ast';
 import {addHeadLink} from '../utils/html';
 import {addPackageToPackageJson} from '../utils/package';
 import {createCustomTheme} from './custom-theme';
@@ -27,7 +27,8 @@ export default function(options: Schema): Rule {
     options && options.skipPackageJson ? noop() : addMaterialToPackageJson(options),
     addThemeToAppStyles(options),
     addAnimationRootConfig(),
-    addFontsToIndex()
+    addFontsToIndex(),
+    addBodyMarginToStyles()
   ]);
 }
 
@@ -115,10 +116,32 @@ function addAnimationRootConfig() {
  */
 function addFontsToIndex() {
   return (host: Tree) => {
-    addHeadLink(host,
-      `<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">`);
-    addHeadLink(host,
-      `<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">`);
+    addHeadLink(host, `
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">`);
+    addHeadLink(host, `
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">`);
     return host;
+  };
+}
+
+/**
+ * Add 0 margin to body in styles.ext
+ */
+function addBodyMarginToStyles() {
+  return (host: Tree) => {
+    const stylesPath = getStylesPath(host);
+
+    const buffer = host.read(stylesPath);
+    if (!buffer) {
+      throw new SchematicsException(`Could not find file for path: ${stylesPath}`);
+    }
+
+    const src = buffer.toString();
+    const insertion = new InsertChange(stylesPath, src.length, `
+body { margin: 0; }
+`);
+    const recorder = host.beginUpdate(stylesPath);
+    recorder.insertLeft(insertion.pos, insertion.toAdd);
+    host.commitUpdate(recorder);
   };
 }
