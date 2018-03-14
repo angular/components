@@ -189,7 +189,7 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
       new EventEmitter<void | 'click' | 'keydown' | 'tab'>();
 
   /**
-   * @deprecated Use `close` instead.
+   * @deprecated Use `closed` instead.
    * @deletion-target 7.0.0
    */
   readonly close: EventEmitter<void | 'click' | 'keydown' | 'tab'> = this.closed;
