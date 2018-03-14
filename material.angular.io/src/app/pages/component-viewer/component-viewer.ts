@@ -28,16 +28,16 @@ export class ComponentViewer {
     // parent route for the section (material/cdk).
     combineLatest(_route.params, _route.parent.params).pipe(
         map((p: [Params, Params]) => ({id: p[0]['id'], section: p[1]['section']})),
-        map(p => docItems.getItemById(p.id, p.section))).subscribe(d => {
-          this.componentDocItem = d;
+        map(p => ({doc: docItems.getItemById(p.id, p.section), section: p.section}))
+        ).subscribe(d => {
+          this.componentDocItem = d.doc;
           if (this.componentDocItem) {
             this._componentPageTitle.title = `${this.componentDocItem.name}`;
             this.componentDocItem.examples.length ?
                 this.sections.add('examples') :
                 this.sections.delete('examples');
-
           } else {
-            this.router.navigate(['/components']);
+            this.router.navigate(['/' + d.section]);
           }
         });
   }
