@@ -73,7 +73,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * Stream that emits any time the TAB key is pressed, so components can react
    * when focus is shifted off of the list.
    */
-  tabOut: Subject<void> = new Subject<void>();
+  tabOut: Subject<KeyboardEvent> = new Subject<KeyboardEvent>();
 
   /** Stream that emits whenever the active item of the list manager changes. */
   change = new Subject<number>();
@@ -189,7 +189,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
     switch (keyCode) {
       case TAB:
-        this.tabOut.next();
+        this.tabOut.next(event);
         return;
 
       case DOWN_ARROW:

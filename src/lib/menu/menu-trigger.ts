@@ -74,7 +74,7 @@ export const MENU_PANEL_TOP_PADDING = 8;
  * responsible for toggling the display of the provided menu instance.
  */
 @Directive({
-  selector: `[mat-menu-trigger-for], [matMenuTriggerFor]`,
+  selector: `[matMenuTriggerFor]`,
   host: {
     'aria-haspopup': 'true',
     '(mousedown)': '_handleMousedown($event)',
@@ -94,19 +94,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   // the first item of the list when the menu is opened via the keyboard
   private _openedByMouse: boolean = false;
 
-  /**
-   * @deprecated
-   * @deletion-target 6.0.0
-   */
-  @Input('mat-menu-trigger-for')
-  get _deprecatedMatMenuTriggerFor(): MatMenuPanel {
-    return this.menu;
-  }
-
-  set _deprecatedMatMenuTriggerFor(v: MatMenuPanel) {
-    this.menu = v;
-  }
-
   /** References the menu instance that the trigger is associated with. */
   @Input('matMenuTriggerFor') menu: MatMenuPanel;
 
@@ -116,22 +103,8 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /** Event emitted when the associated menu is opened. */
   @Output() readonly menuOpened: EventEmitter<void> = new EventEmitter<void>();
 
-  /**
-   * Event emitted when the associated menu is opened.
-   * @deprecated Switch to `menuOpened` instead
-   * @deletion-target 6.0.0
-   */
-  @Output() readonly onMenuOpen: EventEmitter<void> = this.menuOpened;
-
   /** Event emitted when the associated menu is closed. */
   @Output() readonly menuClosed: EventEmitter<void> = new EventEmitter<void>();
-
-  /**
-   * Event emitted when the associated menu is closed.
-   * @deprecated Switch to `menuClosed` instead
-   * @deletion-target 6.0.0
-   */
-  @Output() readonly onMenuClose: EventEmitter<void> = this.menuClosed;
 
   constructor(private _overlay: Overlay,
               private _element: ElementRef,
@@ -140,8 +113,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
               @Optional() private _parentMenu: MatMenu,
               @Optional() @Self() private _menuItemInstance: MatMenuItem,
               @Optional() private _dir: Directionality,
-              // TODO(crisbeto): make the _focusMonitor required when doing breaking changes.
-              private _focusMonitor?: FocusMonitor) {
+              private _focusMonitor: FocusMonitor) {
 
     if (_menuItemInstance) {
       _menuItemInstance._triggersSubmenu = this.triggersSubmenu();
@@ -151,11 +123,11 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   ngAfterContentInit() {
     this._checkMenu();
 
-    this.menu.close.subscribe(reason => {
+    this._getClosedEvent().subscribe(reason => {
       this._destroyMenu();
 
       // If a click closed the menu, we should close the entire chain of nested menus.
-      if ((reason === 'click' || reason === 'tab') && this._parentMenu) {
+      if (this._parentMenu && (reason === 'click' || reason === 'tab')) {
         this._parentMenu.closed.emit(reason);
       }
     });
@@ -216,13 +188,13 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     this._initMenu();
 
     if (this.menu instanceof MatMenu) {
-      this.menu._startAnimation();
+      this.menu._startAnimation('enter');
     }
   }
 
   /** Closes the menu. */
   closeMenu(): void {
-    this.menu.close.emit();
+    this._getClosedEvent().emit();
   }
 
   /**
@@ -230,11 +202,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * @param origin Source of the menu trigger's focus.
    */
   focus(origin: FocusOrigin = 'program') {
-    if (this._focusMonitor) {
-      this._focusMonitor.focusVia(this._element.nativeElement, origin);
-    } else {
-      this._element.nativeElement.focus();
-    }
+    this._focusMonitor.focusVia(this._element.nativeElement, origin);
   }
 
   /** Closes the menu and does the necessary cleanup. */
@@ -250,7 +218,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     this._overlayRef.detach();
 
     if (menu instanceof MatMenu) {
-      menu._resetAnimation();
+      menu._startAnimation('void');
 
       if (menu.lazyContent) {
         // Wait for the exit animation to finish before detaching the content.
@@ -428,13 +396,27 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _menuClosingActions() {
     const backdrop = this._overlayRef!.backdropClick();
     const detachments = this._overlayRef!.detachments();
-    const parentClose = this._parentMenu ? this._parentMenu.close : observableOf();
+    const parentClose = this._parentMenu ? this._parentMenu.closed : observableOf();
     const hover = this._parentMenu ? this._parentMenu._hovered().pipe(
       filter(active => active !== this._menuItemInstance),
       filter(() => this._menuOpen)
     ) : observableOf();
 
     return merge(backdrop, parentClose, hover, detachments);
+  }
+
+  /**
+   * Utility for handling both `close` and `closed` in the menu panel.
+   * @deletion-target 7.0.0
+   */
+  private _getClosedEvent() {
+    const event = this.menu.close || this.menu.closed;
+
+    if (!event) {
+      throw Error('MatMenuPanel must provide a `close` or `closed` event.');
+    }
+
+    return event;
   }
 
   /** Handles mouse presses on the trigger. */
