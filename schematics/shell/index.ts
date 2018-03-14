@@ -70,15 +70,15 @@ function insertCustomTheme(app: AppConfig, host: Tree) {
   const stylesPath = normalize(`/${app.root}/styles.scss`);
 
   const buffer = host.read(stylesPath);
-  if (!buffer) {
-    throw new SchematicsException(`Could not find file for path: ${stylesPath}`);
+  if (buffer) {
+    const src = buffer.toString();
+    const insertion = new InsertChange(stylesPath, 0, createCustomTheme(app));
+    const recorder = host.beginUpdate(stylesPath);
+    recorder.insertLeft(insertion.pos, insertion.toAdd);
+    host.commitUpdate(recorder);
+  } else {
+    console.warn(`Skipped custom theme; could not find file: ${stylesPath}`);
   }
-
-  const src = buffer.toString();
-  const insertion = new InsertChange(stylesPath, 0, createCustomTheme(app));
-  const recorder = host.beginUpdate(stylesPath);
-  recorder.insertLeft(insertion.pos, insertion.toAdd);
-  host.commitUpdate(recorder);
 }
 
 /**
@@ -95,9 +95,10 @@ function insertPrebuiltTheme(app: AppConfig, host: Tree, themeName: string, conf
   }
 
   if (hasOtherTheme) {
-    throw new SchematicsException(`Another theme is already defined.`);
+    console.warn(`Skipped theme insertion; another theme is already defined.`);
+  } else {
+    host.overwrite('.angular-cli.json', JSON.stringify(config, null, 2));
   }
-  host.overwrite('.angular-cli.json', JSON.stringify(config, null, 2));
 }
 
 /**
@@ -116,10 +117,12 @@ function addAnimationRootConfig() {
  */
 function addFontsToIndex() {
   return (host: Tree) => {
-    addHeadLink(host, `
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">`);
-    addHeadLink(host, `
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">`);
+    addHeadLink(host,
+      // tslint:disable-next-line
+      `\n<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">`);
+    addHeadLink(host,
+      // tslint:disable-next-line
+      `\n<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">`);
     return host;
   };
 }
@@ -132,16 +135,14 @@ function addBodyMarginToStyles() {
     const stylesPath = getStylesPath(host);
 
     const buffer = host.read(stylesPath);
-    if (!buffer) {
-      throw new SchematicsException(`Could not find file for path: ${stylesPath}`);
+    if (buffer) {
+      const src = buffer.toString();
+      const insertion = new InsertChange(stylesPath, src.length, `\nbody { margin: 0; }\n`);
+      const recorder = host.beginUpdate(stylesPath);
+      recorder.insertLeft(insertion.pos, insertion.toAdd);
+      host.commitUpdate(recorder);
+    } else {
+      console.warn(`Skipped body reset; could not find file: ${stylesPath}`);
     }
-
-    const src = buffer.toString();
-    const insertion = new InsertChange(stylesPath, src.length, `
-body { margin: 0; }
-`);
-    const recorder = host.beginUpdate(stylesPath);
-    recorder.insertLeft(insertion.pos, insertion.toAdd);
-    host.commitUpdate(recorder);
   };
 }

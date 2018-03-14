@@ -67,16 +67,11 @@ export function getIndexHtmlPath(host: Tree) {
 export function getStylesPath(host: Tree) {
   const config = getConfig(host);
   const app = getAppFromConfig(config, '0');
-  const styles = app.styles.find(style => {
-    const str = style.toString();
-    return str === 'styles.css' ||
-           str === 'styles.less' ||
-           str === 'styles.scss';
-  });
+  const styles = app.styles.find(s => /styles\.(c|le|sc)ss/.test(s.toString()));
 
-  if (!styles) {
-    throw new SchematicsException(`Could not find global styles.ext file.`);
+  if (styles) {
+    return normalize(`/${app.root}/${styles}`);
+  } else {
+    console.warn(`Could not find global styles.ext file.`);
   }
-
-  return normalize(`/${app.root}/${styles}`);
 }
