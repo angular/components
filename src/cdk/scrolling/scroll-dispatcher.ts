@@ -8,7 +8,6 @@
 
 import {Platform} from '@angular/cdk/platform';
 import {
-  APP_ROOT_SCOPE,
   ElementRef,
   Injectable,
   NgZone,
@@ -33,7 +32,7 @@ export const DEFAULT_SCROLL_TIME = 20;
  * Service contained all registered Scrollable references and emits an event when any one of the
  * Scrollable references emit a scrolled event.
  */
-@Injectable({scope: APP_ROOT_SCOPE})
+@Injectable({providedIn: 'root'})
 export class ScrollDispatcher implements OnDestroy {
   constructor(private _ngZone: NgZone, private _platform: Platform) { }
 

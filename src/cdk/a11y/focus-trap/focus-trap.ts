@@ -10,7 +10,6 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterContentInit,
-  APP_ROOT_SCOPE,
   Directive,
   ElementRef,
   Inject,
@@ -279,7 +278,7 @@ export class FocusTrap {
 
 
 /** Factory that allows easy instantiation of focus traps. */
-@Injectable({scope: APP_ROOT_SCOPE})
+@Injectable({providedIn: 'root'})
 export class FocusTrapFactory {
   private _document: Document;
 

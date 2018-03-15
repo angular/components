@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {APP_ROOT_SCOPE, Injectable, OnDestroy} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 
 
 // Users of the Dispatcher never need to see this type, but TypeScript requires it to be exported.
@@ -21,7 +21,7 @@ export type UniqueSelectionDispatcherListener = (id: string, name: string) => vo
  * This service does not *store* any IDs and names because they may change at any time, so it is
  * less error-prone if they are simply passed through when the events occur.
  */
-@Injectable({scope: APP_ROOT_SCOPE})
+@Injectable({providedIn: 'root'})
 export class UniqueSelectionDispatcher implements OnDestroy {
   private _listeners: UniqueSelectionDispatcherListener[] = [];
 

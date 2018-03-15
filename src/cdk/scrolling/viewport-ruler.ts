@@ -7,7 +7,7 @@
  */
 
 import {Platform} from '@angular/cdk/platform';
-import {APP_ROOT_SCOPE, Injectable, NgZone, OnDestroy, Optional, SkipSelf} from '@angular/core';
+import {Injectable, NgZone, OnDestroy, Optional, SkipSelf} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {merge} from 'rxjs/observable/merge';
@@ -23,7 +23,7 @@ export const DEFAULT_RESIZE_TIME = 20;
  * Simple utility for getting the bounds of the browser viewport.
  * @docs-private
  */
-@Injectable({scope: APP_ROOT_SCOPE})
+@Injectable({providedIn: 'root'})
 export class ViewportRuler implements OnDestroy {
   /** Cached viewport dimensions. */
   private _viewportSize: {width: number; height: number};

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {APP_ROOT_SCOPE, EventEmitter, Inject, Injectable, Optional} from '@angular/core';
+import {EventEmitter, Inject, Injectable, Optional} from '@angular/core';
 import {DIR_DOCUMENT} from './dir-document-token';
 
 
@@ -17,7 +17,7 @@ export type Direction = 'ltr' | 'rtl';
  * The directionality (LTR / RTL) context for the application (or a subtree of it).
  * Exposes the current direction and a stream of direction changes.
  */
-@Injectable({scope: APP_ROOT_SCOPE})
+@Injectable({providedIn: 'root'})
 export class Directionality {
   /** The current 'ltr' or 'rtl' value. */
   readonly value: Direction = 'ltr';

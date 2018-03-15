@@ -8,7 +8,7 @@
 
 import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
-import {APP_ROOT_SCOPE, Inject, Injectable, NgZone} from '@angular/core';
+import {Inject, Injectable, NgZone} from '@angular/core';
 import {BlockScrollStrategy} from './block-scroll-strategy';
 import {CloseScrollStrategy, CloseScrollStrategyConfig} from './close-scroll-strategy';
 import {NoopScrollStrategy} from './noop-scroll-strategy';
@@ -24,7 +24,7 @@ import {
  * Users can provide a custom value for `ScrollStrategyOptions` to replace the default
  * behaviors. This class primarily acts as a factory for ScrollStrategy instances.
  */
-@Injectable({scope: APP_ROOT_SCOPE})
+@Injectable({providedIn: 'root'})
 export class ScrollStrategyOptions {
   private _document: Document;
 

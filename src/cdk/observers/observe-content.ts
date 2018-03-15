@@ -9,7 +9,6 @@
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
-  APP_ROOT_SCOPE,
   Directive,
   ElementRef,
   EventEmitter,
@@ -30,7 +29,7 @@ import {Subject} from 'rxjs/Subject';
  * Factory that creates a new MutationObserver and allows us to stub it out in unit tests.
  * @docs-private
  */
-@Injectable({scope: APP_ROOT_SCOPE})
+@Injectable({providedIn: 'root'})
 export class MutationObserverFactory {
   create(callback: MutationCallback): MutationObserver | null {
     return typeof MutationObserver === 'undefined' ? null : new MutationObserver(callback);

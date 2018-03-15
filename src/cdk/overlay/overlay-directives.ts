@@ -12,7 +12,6 @@ import {ESCAPE} from '@angular/cdk/keycodes';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 import {
-  APP_ROOT_SCOPE,
   Directive,
   ElementRef,
   EventEmitter,
@@ -76,7 +75,7 @@ const defaultPositionList: ConnectedPosition[] = [
 /** Injection token that determines the scroll handling while the connected overlay is open. */
 export const CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY =
     new InjectionToken<() => ScrollStrategy>('cdk-connected-overlay-scroll-strategy', {
-  scope: APP_ROOT_SCOPE,
+  providedIn: 'root',
   factory: () => {
     // Store the injected deps here because we can't use the `inject` function outside
     // this function's context (including the inner function).

@@ -8,7 +8,7 @@
 
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
-import {APP_ROOT_SCOPE, ElementRef, Inject, Injectable} from '@angular/core';
+import {ElementRef, Inject, Injectable} from '@angular/core';
 import {OriginConnectionPosition, OverlayConnectionPosition} from './connected-position';
 import {ConnectedPositionStrategy} from './connected-position-strategy';
 import {FlexibleConnectedPositionStrategy} from './flexible-connected-position-strategy';
@@ -16,7 +16,7 @@ import {GlobalPositionStrategy} from './global-position-strategy';
 
 
 /** Builder for overlay position strategy. */
-@Injectable({scope: APP_ROOT_SCOPE})
+@Injectable({providedIn: 'root'})
 export class OverlayPositionBuilder {
   constructor(
     private _viewportRuler: ViewportRuler,

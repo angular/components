@@ -8,7 +8,6 @@
 
 import {Platform, supportsPassiveEventListeners} from '@angular/cdk/platform';
 import {
-  APP_ROOT_SCOPE,
   Directive,
   ElementRef,
   EventEmitter,
@@ -41,7 +40,7 @@ type MonitoredElementInfo = {
 
 
 /** Monitors mouse and keyboard events to determine the cause of focus events. */
-@Injectable({scope: APP_ROOT_SCOPE})
+@Injectable({providedIn: 'root'})
 export class FocusMonitor implements OnDestroy {
   /** The focus origin that the next focus event is a result of. */
   private _origin: FocusOrigin = null;
