@@ -13,15 +13,9 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
 import {SimpleSnackBar} from './simple-snack-bar';
-import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBar} from './snack-bar';
-import {MatSnackBarConfig} from './snack-bar-config';
+import {MatSnackBar} from './snack-bar';
 import {MatSnackBarContainer} from './snack-bar-container';
 
-
-/** @docs-private */
-export function MAT_SNACK_BAR_DEFAULT_OPTIONS_PROVIDER_FACTORY() {
-  return new MatSnackBarConfig();
-}
 
 @NgModule({
   imports: [
@@ -34,12 +28,6 @@ export function MAT_SNACK_BAR_DEFAULT_OPTIONS_PROVIDER_FACTORY() {
   exports: [MatSnackBarContainer, MatCommonModule],
   declarations: [MatSnackBarContainer, SimpleSnackBar],
   entryComponents: [MatSnackBarContainer, SimpleSnackBar],
-  providers: [
-    MatSnackBar,
-    {
-      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
-      useFactory: MAT_SNACK_BAR_DEFAULT_OPTIONS_PROVIDER_FACTORY
-    },
-  ]
+  providers: [MatSnackBar]
 })
 export class MatSnackBarModule {}
