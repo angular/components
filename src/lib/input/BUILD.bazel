@@ -13,10 +13,16 @@ ng_module(
     "//src/lib/form-field",
     "//src/cdk/coercion",
     "//src/cdk/platform",
+    "//src/cdk/text-field",
   ],
   tsconfig = ":tsconfig-build.json",
 )
 
+# TODO(jelbourn): replace this w/ sass_library when it supports acting like a filegroup
+filegroup(
+  name = "input_scss_partials",
+  srcs = glob(["**/_*.scss"]),
+)
 
 sass_binary(
   name = "input_scss",

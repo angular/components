@@ -72,6 +72,7 @@
 /src/cdk/stepper/**                                @mmalerba
 /src/cdk/table/**                                  @andrewseguin
 /src/cdk/testing/**                                @devversion
+/src/cdk/text-field/**                             @mmalerba
 /src/cdk/tree/**                                   @tinayuangao
 
 # Moment adapter package
@@ -99,6 +100,7 @@
 /src/demo-app/card/**                              @jelbourn
 /src/demo-app/checkbox/**                          @tinayuangao @devversion
 /src/demo-app/chips/**                             @tinayuangao
+/src/demo-app/connected-overlay/**                 @jelbourn @crisbeto
 /src/demo-app/dataset/**                           @andrewseguin
 /src/demo-app/datepicker/**                        @mmalerba
 /src/demo-app/demo-app/**                          @jelbourn

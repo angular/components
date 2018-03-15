@@ -1,4 +1,4 @@
-import { Component, <% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
+import { Component<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { Observable } from 'rxjs/Observable';
 
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
         class="sidenav"
         fixedInViewport="true"
         [attr.role]="isHandset ? 'dialog' : 'navigation'"
-        [mode]="isHandset ? 'over' : 'side'"
+        [mode]="(isHandset | async)!.matches ? 'over' : 'side'"
         [opened]="!(isHandset | async)!.matches">
         <mat-toolbar color="primary">Menu</mat-toolbar>
         <mat-nav-list>
