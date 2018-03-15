@@ -8,7 +8,6 @@
 
 import {DOCUMENT} from '@angular/common';
 import {
-  APP_ROOT_SCOPE,
   Inject,
   Injectable,
   InjectionToken,
@@ -24,7 +23,7 @@ import {OverlayRef} from '../overlay-ref';
  * if any. It maintains a list of attached overlays to determine best suited overlay based
  * on event target and order of overlay opens.
  */
-@Injectable({scope: APP_ROOT_SCOPE})
+@Injectable({providedIn: 'root'})
 export class OverlayKeyboardDispatcher implements OnDestroy {
 
   /** Currently attached overlays in the order they were attached. */

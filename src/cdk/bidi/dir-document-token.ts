@@ -7,7 +7,7 @@
  */
 
 import {DOCUMENT} from '@angular/common';
-import {APP_ROOT_SCOPE, inject, InjectionToken} from '@angular/core';
+import {inject, InjectionToken} from '@angular/core';
 
 
 /**
@@ -26,6 +26,6 @@ import {APP_ROOT_SCOPE, inject, InjectionToken} from '@angular/core';
  * @docs-private
  */
 export const DIR_DOCUMENT = new InjectionToken<Document>('cdk-dir-doc', {
-  scope: APP_ROOT_SCOPE,
+  providedIn: 'root',
   factory: () => inject(DOCUMENT),
 });

@@ -8,7 +8,6 @@
 
 import {DOCUMENT} from '@angular/common';
 import {
-  APP_ROOT_SCOPE,
   Inject,
   Injectable,
   OnDestroy,
@@ -22,7 +21,7 @@ import {LIVE_ANNOUNCER_ELEMENT_TOKEN} from './live-announcer-token';
 /** Possible politeness levels. */
 export type AriaLivePoliteness = 'off' | 'polite' | 'assertive';
 
-@Injectable({scope: APP_ROOT_SCOPE})
+@Injectable({providedIn: 'root'})
 export class LiveAnnouncer implements OnDestroy {
   private readonly _liveElement: Element;
 

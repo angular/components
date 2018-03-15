@@ -8,7 +8,6 @@
 
 import {DOCUMENT} from '@angular/common';
 import {
-  APP_ROOT_SCOPE,
   Inject,
   Injectable,
   InjectionToken,
@@ -54,7 +53,7 @@ let messagesContainer: HTMLElement | null = null;
  * content.
  * @docs-private
  */
-@Injectable({scope: APP_ROOT_SCOPE})
+@Injectable({providedIn: 'root'})
 export class AriaDescriber {
   private _document: Document;
 

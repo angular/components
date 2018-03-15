@@ -8,7 +8,6 @@
 
 import {DOCUMENT} from '@angular/common';
 import {
-  APP_ROOT_SCOPE,
   Inject,
   Injectable,
   InjectionToken,
@@ -19,7 +18,7 @@ import {
 
 
 /** Container inside which all overlays will render. */
-@Injectable({scope: APP_ROOT_SCOPE})
+@Injectable({providedIn: 'root'})
 export class OverlayContainer implements OnDestroy {
   protected _containerElement: HTMLElement;
 

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {APP_ROOT_SCOPE, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 
 
 // Whether the current platform supports the V8 Break Iterator. The V8 check
@@ -17,7 +17,7 @@ const hasV8BreakIterator = (typeof Intl !== 'undefined' && (Intl as any).v8Break
  * Service to detect the current platform by comparing the userAgent strings and
  * checking browser-specific global properties.
  */
-@Injectable({scope: APP_ROOT_SCOPE})
+@Injectable({providedIn: 'root'})
 export class Platform {
   /** Whether the Angular application is being rendered in the browser. */
   isBrowser: boolean = typeof document === 'object' && !!document;
