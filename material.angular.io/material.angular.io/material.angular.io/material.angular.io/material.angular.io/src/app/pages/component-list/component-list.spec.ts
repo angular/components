@@ -1,20 +1,17 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {ActivatedRoute} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
+import {of as observableOf} from 'rxjs/observable/of';
 import {ComponentList, ComponentListModule} from './component-list';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 
 const CATEGORY_ID = 'forms';
+const routeWithParams = new ActivatedRoute();
+routeWithParams.params = observableOf({
+  section: 'components',
+  id: CATEGORY_ID,
+});
 const mockActivatedRoute = {
-  pathFromRoot: Observable.create(observer => {
-    observer.next({
-      params: {
-        section: 'components',
-        id: CATEGORY_ID,
-      }
-    });
-    observer.complete();
-  })
+  pathFromRoot: [routeWithParams]
 };
 
 describe('ComponentList', () => {

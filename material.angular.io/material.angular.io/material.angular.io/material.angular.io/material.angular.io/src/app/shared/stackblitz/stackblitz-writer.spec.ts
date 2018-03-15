@@ -53,7 +53,8 @@ describe('StackblitzWriter', () => {
 
   it('should create form element', () => {
     expect(stackblitzWriter._createFormElement('index.ts').outerHTML).toBe(
-      `<form action="https://plnkr.co/edit/?p=preview" method="post" target="_blank"></form>`);
+      `<form action="https://run.stackblitz.com/api/angular/v1?file=index.ts" ` +
+      `method="post" target="_blank"></form>`);
   });
 
   it('should add files to form input', () => {
@@ -64,9 +65,9 @@ describe('StackblitzWriter', () => {
     stackblitzWriter._addFileToForm(form, data, 'Detail', 'src/detail.ts', 'path/to/file');
 
     expect(form.elements.length).toBe(3);
-    expect(form.elements[0].getAttribute('name')).toBe('files[test.ts]');
-    expect(form.elements[1].getAttribute('name')).toBe('files[test.html]');
-    expect(form.elements[2].getAttribute('name')).toBe('files[src/detail.ts]');
+    expect(form.elements[0].getAttribute('name')).toBe('files[app/test.ts]');
+    expect(form.elements[1].getAttribute('name')).toBe('files[app/test.html]');
+    expect(form.elements[2].getAttribute('name')).toBe('files[app/src/detail.ts]');
   });
 
   it('should open a new window with stackblitz url', fakeAsync(() => {
@@ -74,27 +75,31 @@ describe('StackblitzWriter', () => {
     stackblitzWriter.constructStackblitzForm(data).then(result => form = result);
     flushMicrotasks();
 
-    expect(form.elements.length).toBe(11);
+    expect(form.elements.length).toBe(14);
 
     // Should have correct tags
     expect(form.elements[0].getAttribute('name')).toBe('tags[0]');
     expect(form.elements[0].getAttribute('value')).toBe('angular');
+    expect(form.elements[1].getAttribute('name')).toBe('tags[1]');
     expect(form.elements[1].getAttribute('value')).toBe('material');
+    expect(form.elements[2].getAttribute('name')).toBe('tags[2]');
     expect(form.elements[2].getAttribute('value')).toBe('example');
-
-    // Should have private and description
+    
+    // Should bet set as private and have description and dependencies.
     expect(form.elements[3].getAttribute('name')).toBe('private');
+    expect(form.elements[3].getAttribute('value')).toBe('true');
     expect(form.elements[4].getAttribute('name')).toBe('description');
+    expect(form.elements[5].getAttribute('name')).toBe('dependencies');
 
-    // Should have example files
-    expect(form.elements[5].getAttribute('name')).toBe('files[index.html]');
-    expect(form.elements[6].getAttribute('name')).toBe('files[systemjs.config.js]');
-    expect(form.elements[7].getAttribute('name')).toBe('files[main.ts]');
-
-    // Should have template files
-    expect(form.elements[8].getAttribute('name')).toBe('files[test.ts]');
-    expect(form.elements[9].getAttribute('name')).toBe('files[test.html]');
-    expect(form.elements[10].getAttribute('name')).toBe('files[src/detail.ts]');
+    // Should have files needed for example.
+    expect(form.elements[6].getAttribute('name')).toBe('files[index.html]');
+    expect(form.elements[7].getAttribute('name')).toBe('files[styles.css]');
+    expect(form.elements[8].getAttribute('name')).toBe('files[polyfills.ts]');
+    expect(form.elements[9].getAttribute('name')).toBe('files[.angular-cli.json]');
+    expect(form.elements[10].getAttribute('name')).toBe('files[main.ts]');
+    expect(form.elements[11].getAttribute('name')).toBe('files[app/test.ts]');
+    expect(form.elements[12].getAttribute('name')).toBe('files[app/test.html]');
+    expect(form.elements[13].getAttribute('name')).toBe('files[app/src/detail.ts]');
 
     // TODO(tinagao): Add more test
   }));

@@ -195,7 +195,7 @@ export class StackblitzWriter {
       // Replace `bootstrap: [MaterialDocsExample]`
       // will be replaced as `bootstrap: [ButtonDemo]`
       // This assumes the first component listed in the main component
-      const componentList = data.componentName.split(',')[0];
+      const componentList = (data.componentName || '').split(',')[0];
       fileContent = fileContent.
         replace(/bootstrap: \[MaterialDocsExample\]/g,
           `bootstrap: [${componentList}]`);

@@ -19,7 +19,8 @@ env:
   - BROWSER_PROVIDER_ERROR_FILE=/tmp/material-angular-io-build/errorfile
   matrix:
     - MODE=lint
-    - MODE=e2e
+    # TODO(josephperrott): Add e2e tests
+    # - MODE=e2e
     - MODE=saucelabs
     - MODE=browserstack
 

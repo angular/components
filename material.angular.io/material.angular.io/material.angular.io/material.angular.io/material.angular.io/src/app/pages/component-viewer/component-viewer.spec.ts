@@ -1,11 +1,11 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {ActivatedRoute} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
+import {of as observableOf} from 'rxjs/observable/of';
 import {ComponentViewer, ComponentViewerModule} from './component-viewer';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 
 import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
-import {MatButtonModule} from '@angular/material';
+import {MatButtonModule, MatIconModule} from '@angular/material';
 import {NgModule} from '@angular/core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -14,13 +14,11 @@ const exampleKey = 'button-types';
 
 const mockActivatedRoute = {
   snapshot: {},
-  fragment: Observable.create(observer => {
-    observer.complete();
-  }),
-  params: Observable.create(observer => {
-    observer.next({id: docItemsId});
-    observer.complete();
-  })
+  fragment: observableOf({}),
+  parent: {
+    params: observableOf({})
+  },
+  params: observableOf({id: docItemsId})
 };
 
 describe('ComponentViewer', () => {
@@ -53,6 +51,7 @@ describe('ComponentViewer', () => {
 @NgModule({
   imports: [
     MatButtonModule,
+    MatIconModule,
     NoopAnimationsModule,
   ],
   declarations: [EXAMPLE_COMPONENTS[exampleKey].component],
