@@ -78,7 +78,7 @@ module.exports = (config) => {
     },
 
     browserDisconnectTimeout: 20000,
-    browserNoActivityTimeout: 240000,
+    browserNoActivityTimeout: 300000,
     captureTimeout: 120000,
     browsers: ['ChromeHeadlessLocal'],
 
