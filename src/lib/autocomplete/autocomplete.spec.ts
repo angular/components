@@ -51,7 +51,7 @@ import {
 } from './index';
 
 
-describe('MatAutocomplete', () => {
+fdescribe('MatAutocomplete', () => {
   let overlayContainer: OverlayContainer;
   let overlayContainerElement: HTMLElement;
   let scrolledSubject = new Subject();
@@ -1338,6 +1338,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should fall back to above position if panel cannot fit below', fakeAsync(() => {
+      console.log('window size: ', window.innerHeight, window.innerWidth);
       // Push the autocomplete trigger down so it won't have room to open "below"
       inputReference.style.bottom = '0';
       inputReference.style.position = 'fixed';

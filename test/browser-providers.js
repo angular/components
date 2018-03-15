@@ -26,13 +26,18 @@ const browserConfig = {
   'Safari10':          { unitTest: {target: 'BS', required: true  }},
   'iOS7':              { unitTest: {target: null, required: false }},
   'iOS8':              { unitTest: {target: null, required: false }},
-  'iOS9':              { unitTest: {target: null, required: false }},
+  'iOS9':              { unitTest: {target: 'BS', required: true }},
   'iOS10':             { unitTest: {target: 'BS', required: true  }},
   'WindowsPhone':      { unitTest: {target: null, required: false }}
 };
 
 /** Exports all available remote browsers. */
-exports.customLaunchers = require('./remote_browsers.json');
+const customLaunchers = require('./remote_browsers.json');
+
+const customLaunchersMapped = customLaunchers.map(launcher => {
+  launcher['browserstack.video'] = 'false';
+  return launcher;
+})
 
 /** Exports a map of configured browsers, which should run on the CI. */
 exports.platformMap = {
