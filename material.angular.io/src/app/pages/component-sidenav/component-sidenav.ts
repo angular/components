@@ -93,7 +93,7 @@ export class ComponentNav implements OnInit, OnDestroy {
   /** Set the expansions based on the route url */
   setExpansions(params: Params) {
     const categories = this.docItems.getCategories(params.section);
-    for (const category of categories) {
+    for (const category of (categories || [])) {
       if (this.expansions[category.id] === true) {
         continue;
       }

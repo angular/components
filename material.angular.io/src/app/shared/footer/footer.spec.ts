@@ -23,7 +23,7 @@ describe('Footer', () => {
   it('should have a link to angular.io', () => {
     const link = fixture
       .nativeElement
-      .querySelector('.docs-footer-links a');
+      .querySelector('.docs-footer-logo a');
     const href = link.getAttribute('href');
     const text = link.textContent;
     expect(href).toContain('angular.io');
