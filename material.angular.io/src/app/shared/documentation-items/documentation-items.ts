@@ -154,6 +154,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
       id: 'modals',
       name: 'Popups & Modals',
       items: [
+        {id: 'bottom-sheet', name: 'Bottom Sheet', examples: ['bottom-sheet-overview']},
         {id: 'dialog', name: 'Dialog', examples: ['dialog-overview']},
         {id: 'snack-bar', name: 'Snackbar', examples: ['snack-bar-component']},
         {id: 'tooltip', name: 'Tooltip', examples: ['tooltip-position']},
