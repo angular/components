@@ -111,8 +111,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _hasBackdrop = false;
   private _lockPosition = false;
   private _backdropSubscription = Subscription.EMPTY;
-  private _offsetX: number = 0;
-  private _offsetY: number = 0;
+  private _offsetX: number;
+  private _offsetY: number;
   private _position: FlexibleConnectedPositionStrategy;
 
   /** Origin for the connected overlay. */
@@ -307,8 +307,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       originY: pos.originY,
       overlayX: pos.overlayX,
       overlayY: pos.overlayY,
-      offsetX: this.offsetX,
-      offsetY: this.offsetY
+      offsetX: pos.offsetX || this.offsetX,
+      offsetY: pos.offsetY || this.offsetY
     }));
 
     positionStrategy.withPositions(positions);
