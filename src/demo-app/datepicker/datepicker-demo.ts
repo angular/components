@@ -48,16 +48,11 @@ export class DatepickerDemo {
 
 // Custom header component for datepicker
 @Component({
+  moduleId: module.id,
   selector: 'custom-header',
-  template: `
-      <div>
-        <button (click)="previousClicked('year')">&lt;&lt;</button>
-        <button (click)="previousClicked('month')">&lt;</button>
-        {{periodLabel}}
-        <button (click)="nextClicked('month')">&gt;</button>
-        <button (click)="nextClicked('year')">&gt;&gt;</button>
-      </div>
-  `
+  templateUrl: 'custom-header.html',
+  styleUrls: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomHeader<D> {
   constructor(@Host() private _calendar: MatCalendar<D>,
