@@ -51,7 +51,7 @@ export class DatepickerDemo {
   moduleId: module.id,
   selector: 'custom-header',
   templateUrl: 'custom-header.html',
-  styleUrls: [],
+  styleUrls: ['custom-header.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomHeader<D> {
