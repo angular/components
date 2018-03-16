@@ -60,24 +60,24 @@ export class DatepickerDemo {
   `
 })
 export class CustomHeader {
-  constructor(@Host() public calendar: MatCalendar<any>,
+  constructor(@Host() private _calendar: MatCalendar<any>,
               private _dateAdapter: DateAdapter<any>) {}
 
   get periodLabel() {
-    let year = this._dateAdapter.getYearName(this.calendar.activeDate);
-    let month = (this._dateAdapter.getMonth(this.calendar.activeDate) + 1);
+    let year = this._dateAdapter.getYearName(this._calendar.activeDate);
+    let month = (this._dateAdapter.getMonth(this._calendar.activeDate) + 1);
     return `${month}/${year}`;
   }
 
   previousClicked(mode: 'month' | 'year') {
-    this.calendar.activeDate = mode == 'month' ?
-        this._dateAdapter.addCalendarMonths(this.calendar.activeDate, -1) :
-            this._dateAdapter.addCalendarYears(this.calendar.activeDate, -1);
+    this._calendar.activeDate = mode == 'month' ?
+        this._dateAdapter.addCalendarMonths(this._calendar.activeDate, -1) :
+            this._dateAdapter.addCalendarYears(this._calendar.activeDate, -1);
   }
 
   nextClicked(mode: 'month' | 'year') {
-    this.calendar.activeDate = mode == 'month' ?
-        this._dateAdapter.addCalendarMonths(this.calendar.activeDate, 1) :
-            this._dateAdapter.addCalendarYears(this.calendar.activeDate, 1);
+    this._calendar.activeDate = mode == 'month' ?
+        this._dateAdapter.addCalendarMonths(this._calendar.activeDate, 1) :
+            this._dateAdapter.addCalendarYears(this._calendar.activeDate, 1);
   }
 }
