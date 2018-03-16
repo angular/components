@@ -59,9 +59,9 @@ export class DatepickerDemo {
       </div>
   `
 })
-export class CustomHeader {
-  constructor(@Host() private _calendar: MatCalendar<any>,
-              private _dateAdapter: DateAdapter<any>) {}
+export class CustomHeader<D> {
+  constructor(@Host() private _calendar: MatCalendar<D>,
+              private _dateAdapter: DateAdapter<D>) {}
 
   get periodLabel() {
     let year = this._dateAdapter.getYearName(this._calendar.activeDate);

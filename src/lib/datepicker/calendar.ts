@@ -43,13 +43,13 @@ import {takeUntil} from 'rxjs/operators/takeUntil';
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatCalendarHeader implements OnDestroy {
+export class MatCalendarHeader<D> implements OnDestroy {
   /** Subject that emits when the component has been destroyed. */
   private _destroyed = new Subject<void>();
 
   constructor(private _intl: MatDatepickerIntl,
-              @Host() public calendar: MatCalendar<any>,
-              @Optional() private _dateAdapter: DateAdapter<any>,
+              @Host() public calendar: MatCalendar<D>,
+              @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               changeDetectorRef: ChangeDetectorRef) {
     _intl.changes.pipe(takeUntil(this._destroyed))
@@ -127,13 +127,27 @@ export class MatCalendarHeader implements OnDestroy {
       return true;
     }
     return !this.calendar.minDate ||
-        !this.calendar.isSameView(this.calendar.activeDate, this.calendar.minDate);
+        !this._isSameView(this.calendar.activeDate, this.calendar.minDate);
   }
 
   /** Whether the next period button is enabled. */
   nextEnabled(): boolean {
     return !this.calendar.maxDate ||
-        !this.calendar.isSameView(this.calendar.activeDate, this.calendar.maxDate);
+        !this._isSameView(this.calendar.activeDate, this.calendar.maxDate);
+  }
+
+  /** Whether the two dates represent the same view in the current view mode (month or year). */
+  private _isSameView(date1: D, date2: D): boolean {
+    if (this.calendar.currentView == 'month') {
+      return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2) &&
+          this._dateAdapter.getMonth(date1) == this._dateAdapter.getMonth(date2);
+    }
+    if (this.calendar.currentView == 'year') {
+      return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2);
+    }
+    // Otherwise we are in 'multi-year' view.
+    return Math.floor(this._dateAdapter.getYear(date1) / yearsPerPage) ==
+        Math.floor(this._dateAdapter.getYear(date2) / yearsPerPage);
   }
 
   ngOnDestroy() {
@@ -309,20 +323,6 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   _goToDateInView(date: D, view: 'month' | 'year' | 'multi-year'): void {
     this.activeDate = date;
     this.currentView = view;
-  }
-
-  /** Whether the two dates represent the same view in the current view mode (month or year). */
-  isSameView(date1: D, date2: D): boolean {
-    if (this.currentView == 'month') {
-      return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2) &&
-          this._dateAdapter.getMonth(date1) == this._dateAdapter.getMonth(date2);
-    }
-    if (this.currentView == 'year') {
-      return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2);
-    }
-    // Otherwise we are in 'multi-year' view.
-    return Math.floor(this._dateAdapter.getYear(date1) / yearsPerPage) ==
-        Math.floor(this._dateAdapter.getYear(date2) / yearsPerPage);
   }
 
   /**
