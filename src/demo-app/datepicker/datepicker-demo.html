@@ -39,17 +39,6 @@
   </mat-form-field>
 </p>
 
-<h2>Datepicker with custom header</h2>
-<p>
-  <mat-form-field>
-    <mat-label>Custom calendar header</mat-label>
-    <input matInput [matDatepicker]="customCalendarHeaderPicker"
-           [disabled]="inputDisabled">
-    <mat-datepicker-toggle matSuffix [for]="customCalendarHeaderPicker"></mat-datepicker-toggle>
-    <mat-datepicker #customCalendarHeaderPicker [touchUi]="touch" [disabled]="datepickerDisabled" [calendarHeaderComponent]="customHeader"></mat-datepicker>
-  </mat-form-field>
-</p>
-
 <h2>Result</h2>
 
 <p>
@@ -153,5 +142,16 @@
            [max]="maxDate" [matDatepickerFilter]="filterOdd ? dateFilter : null">
     <mat-datepicker #datePicker4 [touchUi]="touch" [startAt]="startAt"
                     [startView]="yearView ? 'year' : 'month'"></mat-datepicker>
+  </mat-form-field>
+</p>
+
+<h2>Datepicker with custom header</h2>
+<p>
+  <mat-form-field>
+    <mat-label>Custom calendar header</mat-label>
+    <input matInput [matDatepicker]="customCalendarHeaderPicker"
+           [disabled]="inputDisabled">
+    <mat-datepicker-toggle matSuffix [for]="customCalendarHeaderPicker"></mat-datepicker-toggle>
+    <mat-datepicker #customCalendarHeaderPicker [touchUi]="touch" [disabled]="datepickerDisabled" [calendarHeaderComponent]="customHeader"></mat-datepicker>
   </mat-form-field>
 </p>
