@@ -6,19 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {A11yModule, ARIA_DESCRIBER_PROVIDER} from '@angular/cdk/a11y';
+import {A11yModule} from '@angular/cdk/a11y';
+import {LayoutModule} from '@angular/cdk/layout';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {PlatformModule} from '@angular/cdk/platform';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
-import {LayoutModule} from '@angular/cdk/layout';
-import {
-  MAT_TOOLTIP_SCROLL_STRATEGY_PROVIDER,
-  MAT_TOOLTIP_DEFAULT_OPTIONS,
-  MatTooltip,
-  TooltipComponent,
-} from './tooltip';
+import {MatTooltip, TooltipComponent} from './tooltip';
 
 
 @NgModule({
@@ -33,17 +28,5 @@ import {
   exports: [MatTooltip, TooltipComponent, MatCommonModule],
   declarations: [MatTooltip, TooltipComponent],
   entryComponents: [TooltipComponent],
-  providers: [
-    MAT_TOOLTIP_SCROLL_STRATEGY_PROVIDER,
-    ARIA_DESCRIBER_PROVIDER,
-    {
-      provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
-      useValue: {
-        showDelay: 0,
-        hideDelay: 0,
-        touchendHideDelay: 1500
-      }
-    }
-  ],
 })
 export class MatTooltipModule {}
