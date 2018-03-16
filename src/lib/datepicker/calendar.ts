@@ -61,7 +61,7 @@ export class MatCalendarHeader implements OnDestroy {
     if (this.calendar.currentView == 'month') {
       return this._dateAdapter
           .format(this.calendar.activeDate, this._dateFormats.display.monthYearLabel)
-          .toLocaleUpperCase();
+              .toLocaleUpperCase();
     }
     if (this.calendar.currentView == 'year') {
       return this._dateAdapter.getYearName(this.calendar.activeDate);
