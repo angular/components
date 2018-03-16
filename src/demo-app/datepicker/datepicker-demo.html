@@ -40,7 +40,8 @@
 </p>
 <p>
   <mat-form-field>
-    <input matInput [matDatepicker]="customCalendarHeaderPicker" placeholder="Custom calendar header"
+    <mat-label>Custom calendar header</mat-label>
+    <input matInput [matDatepicker]="customCalendarHeaderPicker"
            [disabled]="inputDisabled">
     <mat-datepicker-toggle matSuffix [for]="customCalendarHeaderPicker"></mat-datepicker-toggle>
     <mat-datepicker #customCalendarHeaderPicker [touchUi]="touch" [disabled]="datepickerDisabled" [calendarHeaderComponent]="customHeader"></mat-datepicker>

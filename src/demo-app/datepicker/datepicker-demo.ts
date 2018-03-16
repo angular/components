@@ -52,10 +52,10 @@ export class DatepickerDemo {
   template: `
       <div>
         <button (click)="previousClicked('year')">&lt;&lt;</button>
-          <button (click)="previousClicked('month')">&lt;</button>
+        <button (click)="previousClicked('month')">&lt;</button>
         {{periodLabel}}
         <button (click)="nextClicked('month')">&gt;</button>
-          <button (click)="nextClicked('year')">&gt;&gt;</button>
+        <button (click)="nextClicked('year')">&gt;&gt;</button>
       </div>
   `
 })
@@ -71,19 +71,13 @@ export class CustomHeader {
 
   previousClicked(mode: 'month' | 'year') {
     this.calendar.activeDate = mode == 'month' ?
-            this._dateAdapter.addCalendarMonths(this.calendar.activeDate, -1) :
-            this._dateAdapter.addCalendarYears(
-                    this.calendar.activeDate,
-                    -1
-            );
+        this._dateAdapter.addCalendarMonths(this.calendar.activeDate, -1) :
+            this._dateAdapter.addCalendarYears(this.calendar.activeDate, -1);
   }
 
   nextClicked(mode: 'month' | 'year') {
     this.calendar.activeDate = mode == 'month' ?
-            this._dateAdapter.addCalendarMonths(this.calendar.activeDate, 1) :
-            this._dateAdapter.addCalendarYears(
-                    this.calendar.activeDate,
-                    1
-            );
+        this._dateAdapter.addCalendarMonths(this.calendar.activeDate, 1) :
+            this._dateAdapter.addCalendarYears(this.calendar.activeDate, 1);
   }
 }
