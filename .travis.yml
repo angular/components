@@ -3,9 +3,9 @@ dist: trusty
 sudo: false
 
 node_js:
-  # Use the explicit NodeJS LTS version 8.9.4 to avoid any automatic upgrade of the version.
+  # Use an explicit NodeJS LTS version to avoid any automatic upgrade of the version.
   # This ensures that all Travis jobs run consistently and don't have different Node versions.
-  - '8.9.4'
+  - '8.10.0'
 
 addons:
   jwt:
@@ -52,9 +52,10 @@ env:
 
 before_install:
   - source ./scripts/ci/travis-env.sh
+  - if [[ `npm -v` != 5.7* ]]; then npm i -g npm@5.7; fi
 
 install:
-  - npm install
+  - npm ci
 
 before_script:
   - mkdir -p $LOGS_DIR
