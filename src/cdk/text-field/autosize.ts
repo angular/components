@@ -61,10 +61,10 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     this._maxRows = value;
     this._setMaxHeight();
   }
-                                            
-  /** Emit event when textarea height changes */                                            
+
+  /** Emit event when textarea height changes */
   @Output('cdkAutosizeSizeChanged')
-  sizeChanged = new EventEmitter<number>(false);                                            
+  sizeChanged = new EventEmitter<number>(false);
 
   /** Cached height of a textarea with a single row. */
   private _cachedLineHeight: number;
@@ -212,8 +212,9 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
     this._previousValue = value;
 
-    if ((textarea.scrollHeight !== this._previousHeight && !this._maxHeight) 
-        || textarea.scrollHeight !== this._previousHeight && textarea.scrollHeight <= this._maxHeight) {
+    if ((textarea.scrollHeight !== this._previousHeight && !this._maxHeight)
+        || (textarea.scrollHeight !== this._previousHeight
+          && textarea.scrollHeight <= this._maxHeight)) {
       this._previousHeight = textarea.scrollHeight;
       this.sizeChanged.emit(this._previousHeight);
     }
