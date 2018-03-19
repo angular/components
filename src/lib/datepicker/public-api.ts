@@ -9,6 +9,7 @@
 export * from './datepicker-module';
 export * from './calendar';
 export * from './calendar-body';
+export * from './date-selection';
 export * from './datepicker';
 export * from './datepicker-animations';
 export * from './datepicker-input';

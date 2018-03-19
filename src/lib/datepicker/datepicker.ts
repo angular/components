@@ -51,6 +51,7 @@ import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatCalendar} from './calendar';
 import {matDatepickerAnimations} from './datepicker-animations';
+import {MatDateSelectionModel} from './date-selection';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -275,9 +276,9 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   id: string = `mat-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
-  get _selected(): D | null { return this._validSelected; }
-  set _selected(value: D | null) { this._validSelected = value; }
-  private _validSelected: D | null = null;
+  get _selected(): MatDateSelectionModel<D> { return this._datepickerInput._selectionModel; }
+  // set _selected(value: D | null) { this._datepickerInput._selectionModel.select(value); }
+  // private _validSelected: D | null = null;
 
   /** The minimum selectable date. */
   get _minDate(): D | null {
@@ -343,9 +344,8 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
 
   /** Selects the given date */
   _select(date: D): void {
-    let oldValue = this._selected;
-    this._selected = date;
-    if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
+    let oldValue = this._selected.selected as D; // todo think twice
+    if (!this._dateAdapter.sameDate(oldValue, date)) {
       this.selectedChanged.emit(date);
     }
   }
@@ -369,8 +369,8 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       throw Error('A MatDatepicker can only be associated with a single input.');
     }
     this._datepickerInput = input;
-    this._inputSubscription =
-        this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
+    // this._inputSubscription = // todo think twice
+    //   this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
   }
 
   /** Open the calendar. */
