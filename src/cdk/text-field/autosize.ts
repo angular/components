@@ -39,6 +39,7 @@ import {Subject} from 'rxjs/Subject';
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Keep track of the previous textarea value to avoid resizing when the value hasn't changed. */
   private _previousValue: string;
+  private _previousHeight = 0;
   private readonly _destroyed = new Subject<void>();
 
   private _minRows: number;
@@ -212,7 +213,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     this._previousValue = value;
 
     if ((textarea.scrollHeight !== this._previousHeight && !this._maxHeight) 
-        || textarea.scrollHeight !== this._previousHeight && textarea.scrollHeight < this._maxHeight) {
+        || textarea.scrollHeight !== this._previousHeight && textarea.scrollHeight <= this._maxHeight) {
       this._previousHeight = textarea.scrollHeight;
       this.sizeChanged.emit(this._previousHeight);
     }
