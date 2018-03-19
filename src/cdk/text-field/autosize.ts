@@ -79,7 +79,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Sets the minimum height of the textarea as determined by minRows. */
   _setMinHeight(): void {
     const minHeight = this.minRows && this._cachedLineHeight ?
-        `${this.minRows * this._cachedLineHeight}px` : 0;
+        `${this.minRows * this._cachedLineHeight}px` : null;
 
     if (minHeight)  {
       this._setTextareaStyle('minHeight', minHeight);
