@@ -14,6 +14,8 @@ import {
   DoCheck,
   OnDestroy,
   NgZone,
+  EventEmitter,
+  Output
 } from '@angular/core';
 import {Platform} from '@angular/cdk/platform';
 import {fromEvent} from 'rxjs/observable/fromEvent';
@@ -37,10 +39,12 @@ import {Subject} from 'rxjs/Subject';
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Keep track of the previous textarea value to avoid resizing when the value hasn't changed. */
   private _previousValue: string;
+  private _previousHeight = 0;
   private readonly _destroyed = new Subject<void>();
 
   private _minRows: number;
   private _maxRows: number;
+  private _maxHeight: number;
 
   /** Minimum amount of rows in the textarea. */
   @Input('cdkAutosizeMinRows')
@@ -57,6 +61,10 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     this._maxRows = value;
     this._setMaxHeight();
   }
+
+  /** Emit event when textarea height changes */
+  @Output('cdkAutosizeSizeChanged')
+  sizeChanged = new EventEmitter<number>(false);
 
   /** Cached height of a textarea with a single row. */
   private _cachedLineHeight: number;
@@ -78,11 +86,11 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
   /** Sets the maximum height of the textarea as determined by maxRows. */
   _setMaxHeight(): void {
-    const maxHeight = this.maxRows && this._cachedLineHeight ?
-        `${this.maxRows * this._cachedLineHeight}px` : null;
+    this._maxHeight = this.maxRows && this._cachedLineHeight ?
+        this.maxRows * this._cachedLineHeight : 0;
 
-    if (maxHeight) {
-      this._setTextareaStyle('maxHeight', maxHeight);
+    if (this._maxHeight) {
+      this._setTextareaStyle('maxHeight', `${this._maxHeight}px`);
     }
   }
 
@@ -199,6 +207,13 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     textarea.placeholder = placeholderText;
 
     this._previousValue = value;
+
+    if ((textarea.scrollHeight !== this._previousHeight && !this._maxHeight)
+        || (textarea.scrollHeight !== this._previousHeight
+          && textarea.scrollHeight <= this._maxHeight)) {
+      this._previousHeight = textarea.scrollHeight;
+      this.sizeChanged.emit(this._previousHeight);
+    }
   }
 
   _noopInputHandler() {
