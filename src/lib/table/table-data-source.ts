@@ -12,9 +12,9 @@ import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {MatSort, Sort} from '@angular/material/sort';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
-import {combineLatest} from 'rxjs/operators/combineLatest';
 import {map} from 'rxjs/operators/map';
 import {startWith} from 'rxjs/operators/startWith';
+import {combineLatest} from 'rxjs/observable/combineLatest';
 import {empty} from 'rxjs/observable/empty';
 import {_isNumberValue} from '@angular/cdk/coercion';
 
@@ -186,19 +186,18 @@ export class MatTableDataSource<T> extends DataSource<T> {
       this._renderChangesSubscription.unsubscribe();
     }
 
+    const dataStream = this._data;
     // Watch for base data or filter changes to provide a filtered set of data.
-    this._renderChangesSubscription = this._data.pipe(
-      combineLatest(this._filter),
-      map(([data]) => this._filterData(data)),
-      // Watch for filtered data or sort changes to provide an ordered set of data.
-      combineLatest(sortChange.pipe(startWith(null!))),
-      map(([data]) => this._orderData(data)),
-      // Watch for ordered data or page changes to provide a paged set of data.
-      combineLatest(pageChange.pipe(startWith(null!))),
-      map(([data]) => this._pageData(data))
-    )
+    const filteredData = combineLatest(dataStream, this._filter)
+      .pipe(map(([data]) => this._filterData(data)));
+    // Watch for filtered data or sort changes to provide an ordered set of data.
+    const orderedData = combineLatest(filteredData, sortChange.pipe(startWith(null!)))
+      .pipe(map(([data]) => this._orderData(data)));
+    // Watch for ordered data or page changes to provide a paged set of data.
+    const paginatedData = combineLatest(orderedData, pageChange.pipe(startWith(null!)))
+      .pipe(map(([data]) => this._pageData(data)));
     // Watched for paged data changes and send the result to the table to render.
-    .subscribe(data => this._renderData.next(data));
+    paginatedData.subscribe(data => this._renderData.next(data));
   }
 
   /**
