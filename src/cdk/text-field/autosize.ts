@@ -90,8 +90,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     this._maxHeight = this.maxRows && this._cachedLineHeight ?
         this.maxRows * this._cachedLineHeight : null;
 
-    if (maxHeight) {
-      this._setTextareaStyle('maxHeight', `${maxHeight}px`);
+    if (this._maxHeight) {
+      this._setTextareaStyle('maxHeight', `${this._maxHeight}px`);
     }
   }
 
