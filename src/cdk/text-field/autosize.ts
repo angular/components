@@ -44,7 +44,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
   private _minRows: number;
   private _maxRows: number;
-  private _maxHeight: number | null;
+  private _maxHeight: number;
 
   /** Minimum amount of rows in the textarea. */
   @Input('cdkAutosizeMinRows')
@@ -79,7 +79,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Sets the minimum height of the textarea as determined by minRows. */
   _setMinHeight(): void {
     const minHeight = this.minRows && this._cachedLineHeight ?
-        `${this.minRows * this._cachedLineHeight}px` : null;
+        `${this.minRows * this._cachedLineHeight}px` : 0;
 
     if (minHeight)  {
       this._setTextareaStyle('minHeight', minHeight);
@@ -89,7 +89,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Sets the maximum height of the textarea as determined by maxRows. */
   _setMaxHeight(): void {
     this._maxHeight = this.maxRows && this._cachedLineHeight ?
-        this.maxRows * this._cachedLineHeight : null;
+        this.maxRows * this._cachedLineHeight : 0;
 
     if (this._maxHeight) {
       this._setTextareaStyle('maxHeight', `${this._maxHeight}px`);
