@@ -75,7 +75,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
 
   /** The estimator used to estimate the size of unseen items. */
   private _averager: ItemSizeAverager;
-  
+
   /** The last measured scroll offset of the viewport. */
   private _lastScrollOffset: number;
 

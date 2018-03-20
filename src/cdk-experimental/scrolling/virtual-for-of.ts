@@ -174,7 +174,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
     // TODO(mmalerba): Make this work with non-element nodes.
     let totalSize = 0;
     let i = rangeLen;
-    while(i--) {
+    while (i--) {
       const view = this._viewContainerRef.get(i + renderedStartIndex) as
           EmbeddedViewRef<CdkVirtualForOfContext<T>> | null;
       let j = view ? view.rootNodes.length : 0;
