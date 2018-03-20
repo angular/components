@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {LayoutModule} from '@angular/cdk/layout';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {PortalModule} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
@@ -23,7 +22,6 @@ import {MatSnackBarContainer} from './snack-bar-container';
     PortalModule,
     CommonModule,
     MatCommonModule,
-    LayoutModule,
   ],
   exports: [MatSnackBarContainer, MatCommonModule],
   declarations: [MatSnackBarContainer, SimpleSnackBar],

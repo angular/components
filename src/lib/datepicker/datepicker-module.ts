@@ -25,11 +25,11 @@ import {MatYearView} from './year-view';
 
 @NgModule({
   imports: [
+    A11yModule,
     CommonModule,
     MatButtonModule,
     MatDialogModule,
     OverlayModule,
-    A11yModule,
   ],
   exports: [
     MatCalendar,
