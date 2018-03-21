@@ -6,14 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Host,
   forwardRef,
+  Host,
   Inject,
   Input,
   OnChanges,
@@ -25,15 +26,15 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {Observable} from 'rxjs/Observable';
+import {takeUntil} from 'rxjs/operators/takeUntil';
+import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
 import {MatMultiYearView, yearsPerPage} from './multi-year-view';
 import {MatYearView} from './year-view';
-import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
-import {Subject} from 'rxjs/Subject';
-import {takeUntil} from 'rxjs/operators/takeUntil';
 
 /** Default header for MatCalendar */
 @Component({
@@ -53,7 +54,7 @@ export class MatCalendarHeader<D> implements OnDestroy {
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               changeDetectorRef: ChangeDetectorRef) {
-    _intl.changes.pipe(takeUntil(this._destroyed))
+    this.calendar.stateChanges.pipe(takeUntil(this._destroyed))
         .subscribe(() => changeDetectorRef.markForCheck());
   }
 
@@ -254,11 +255,21 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   get activeDate(): D { return this._clampedActiveDate; }
   set activeDate(value: D) {
     this._clampedActiveDate = this._dateAdapter.clampDate(value, this.minDate, this.maxDate);
+    this._stateChanges.next();
   }
   private _clampedActiveDate: D;
 
   /** Whether the calendar is in month view. */
   currentView: 'month' | 'year' | 'multi-year';
+
+  /**
+   * An observable that emits whenever there is a state change that the header may need to respond
+   * to.
+   */
+  get stateChanges(): Observable<void> {
+    return this._stateChanges.asObservable();
+  }
+  private _stateChanges = new Subject<void>();
 
   constructor(_intl: MatDatepickerIntl,
               @Optional() private _dateAdapter: DateAdapter<D>,
@@ -273,7 +284,10 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
       throw createMissingDateImplError('MAT_DATE_FORMATS');
     }
 
-    this._intlChanges = _intl.changes.subscribe(() => changeDetectorRef.markForCheck());
+    this._intlChanges = _intl.changes.subscribe(() => {
+      changeDetectorRef.markForCheck();
+      this._stateChanges.next();
+    });
   }
 
   ngAfterContentInit() {
@@ -297,6 +311,8 @@ export class MatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         view._init();
       }
     }
+
+    this._stateChanges.next();
   }
 
   /** Handles date selection in the month view. */
