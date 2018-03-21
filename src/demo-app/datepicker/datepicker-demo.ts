@@ -59,8 +59,8 @@ export class CustomHeader<D> {
               private _dateAdapter: DateAdapter<D>) {}
 
   get periodLabel() {
-    let year = this._dateAdapter.getYearName(this._calendar.activeDate);
-    let month = (this._dateAdapter.getMonth(this._calendar.activeDate) + 1);
+    const year = this._dateAdapter.getYearName(this._calendar.activeDate);
+    const month = (this._dateAdapter.getMonth(this._calendar.activeDate) + 1);
     return `${month}/${year}`;
   }
 
