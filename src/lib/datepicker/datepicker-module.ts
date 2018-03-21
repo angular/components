@@ -15,11 +15,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatCalendar} from './calendar';
 import {MatCalendarHeader} from './calendar';
 import {MatCalendarBody} from './calendar-body';
-import {
-  MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
-  MatDatepicker,
-  MatDatepickerContent,
-} from './datepicker';
+import {MatDatepicker, MatDatepickerContent} from './datepicker';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerToggle, MatDatepickerToggleIcon} from './datepicker-toggle';
@@ -65,7 +61,6 @@ import {PortalModule} from '@angular/cdk/portal';
   ],
   providers: [
     MatDatepickerIntl,
-    MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
   ],
   entryComponents: [
     MatDatepickerContent,
