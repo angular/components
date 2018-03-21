@@ -54,7 +54,6 @@ import {
 describe('MatAutocomplete', () => {
   let overlayContainer: OverlayContainer;
   let overlayContainerElement: HTMLElement;
-  let scrolledSubject = new Subject();
   let zone: MockNgZone;
 
   // Creates a test component fixture.
@@ -70,13 +69,7 @@ describe('MatAutocomplete', () => {
       ],
       declarations: [component],
       providers: [
-        {provide: ScrollDispatcher, useFactory: () => ({
-          scrolled: () => scrolledSubject.asObservable()
-        })},
-        {provide: NgZone, useFactory: () => {
-          zone = new MockNgZone();
-          return zone;
-        }},
+        {provide: NgZone, useFactory: () => zone = new MockNgZone()},
         ...providers
       ]
     });
@@ -1289,19 +1282,11 @@ describe('MatAutocomplete', () => {
   });
 
   describe('Fallback positions', () => {
-    let fixture: ComponentFixture<SimpleAutocomplete>;
-    let input: HTMLInputElement;
-    let inputReference: HTMLInputElement;
-
-    beforeEach(() => {
-      fixture = createComponent(SimpleAutocomplete);
-      fixture.detectChanges();
-
-      input = fixture.debugElement.query(By.css('input')).nativeElement;
-      inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex')).nativeElement;
-    });
-
     it('should use below positioning by default', fakeAsync(() => {
+      let fixture = createComponent(SimpleAutocomplete);
+      fixture.detectChanges();
+      let inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex')).nativeElement;
+
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
@@ -1315,8 +1300,16 @@ describe('MatAutocomplete', () => {
     }));
 
     it('should reposition the panel on scroll', () => {
-      const spacer = document.createElement('div');
+      let scrolledSubject = new Subject();
+      let spacer = document.createElement('div');
+      let fixture = createComponent(SimpleAutocomplete, [{
+        provide: ScrollDispatcher,
+        useValue: {scrolled: () => scrolledSubject.asObservable()}
+      }]);
 
+      fixture.detectChanges();
+
+      let inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex')).nativeElement;
       spacer.style.height = '1000px';
       document.body.appendChild(spacer);
 
@@ -1335,9 +1328,14 @@ describe('MatAutocomplete', () => {
           'Expected panel top to match input bottom after scrolling.');
 
       document.body.removeChild(spacer);
+      window.scroll(0, 0);
     });
 
     it('should fall back to above position if panel cannot fit below', fakeAsync(() => {
+      let fixture = createComponent(SimpleAutocomplete);
+      fixture.detectChanges();
+      let inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex')).nativeElement;
+
       // Push the autocomplete trigger down so it won't have room to open "below"
       inputReference.style.bottom = '0';
       inputReference.style.position = 'fixed';
@@ -1354,7 +1352,53 @@ describe('MatAutocomplete', () => {
           .toEqual(Math.floor(panelBottom), `Expected panel to fall back to above position.`);
     }));
 
+    it('should allow the panel to expand when the number of results increases', fakeAsync(() => {
+      let fixture = createComponent(SimpleAutocomplete);
+      fixture.detectChanges();
+
+      let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+      let inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex')).nativeElement;
+
+      // Push the element down so it has a little bit of space, but not enough to render.
+      inputReference.style.bottom = '10px';
+      inputReference.style.position = 'fixed';
+
+      // Type enough to only show one option.
+      typeInElement('California', inputEl);
+      fixture.detectChanges();
+      tick();
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      let panel = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
+      let initialPanelHeight = panel.getBoundingClientRect().height;
+
+      fixture.componentInstance.trigger.closePanel();
+      fixture.detectChanges();
+
+      // Change the text so we get more than one result.
+      typeInElement('C', inputEl);
+      fixture.detectChanges();
+      tick();
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      panel = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
+
+      expect(panel.getBoundingClientRect().height).toBeGreaterThan(initialPanelHeight);
+    }));
+
     it('should align panel properly when filtering in "above" position', fakeAsync(() => {
+      let fixture = createComponent(SimpleAutocomplete);
+      fixture.detectChanges();
+
+      let input = fixture.debugElement.query(By.css('input')).nativeElement;
+      let inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex')).nativeElement;
+
       // Push the autocomplete trigger down so it won't have room to open "below"
       inputReference.style.bottom = '0';
       inputReference.style.position = 'fixed';
@@ -1707,12 +1751,19 @@ describe('MatAutocomplete', () => {
     }));
 
     it('should reset correctly when closed programmatically', fakeAsync(() => {
-      TestBed.overrideProvider(MAT_AUTOCOMPLETE_SCROLL_STRATEGY, {
-        useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close(),
-        deps: [Overlay]
-      });
+      const scrolledSubject = new Subject();
+      const fixture = createComponent(SimpleAutocomplete, [
+        {
+          provide: ScrollDispatcher,
+          useValue: {scrolled: () => scrolledSubject.asObservable()}
+        },
+        {
+          provide: MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
+          useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close(),
+          deps: [Overlay]
+        }
+      ]);
 
-      const fixture = createComponent(SimpleAutocomplete);
       fixture.detectChanges();
       const trigger = fixture.componentInstance.trigger;
 
@@ -1871,7 +1922,7 @@ describe('MatAutocomplete', () => {
     <mat-autocomplete class="class-one class-two" #auto="matAutocomplete" [displayWith]="displayFn"
       [disableRipple]="disableRipple" (opened)="openedSpy()" (closed)="closedSpy()">
       <mat-option *ngFor="let state of filteredStates" [value]="state">
-        <span> {{ state.code }}: {{ state.name }}  </span>
+        <span>{{ state.code }}: {{ state.name }}</span>
       </mat-option>
     </mat-autocomplete>
   `

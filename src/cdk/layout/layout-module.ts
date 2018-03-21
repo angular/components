@@ -5,14 +5,13 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-
-import {PlatformModule} from '@angular/cdk/platform';
 import {NgModule} from '@angular/core';
-import {CdkScrollable} from './scrollable';
+import {PlatformModule} from '@angular/cdk/platform';
+import {BreakpointObserver} from './breakpoints-observer';
+import {MediaMatcher} from './media-matcher';
 
 @NgModule({
+  providers: [BreakpointObserver, MediaMatcher],
   imports: [PlatformModule],
-  exports: [CdkScrollable],
-  declarations: [CdkScrollable],
 })
-export class ScrollDispatchModule {}
+export class LayoutModule {}
