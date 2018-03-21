@@ -21,9 +21,6 @@ ts_library(
 ng_package(
   name = "npm_package",
   srcs = ["package.json"],
-
-  # TODO(jelbourn): remove this tag when 6.0.0-beta.9 or 6.0.0-rc.0 is released.
-  tags = ["manual"],
   entry_point = "src/cdk/public_api.js",
   globals = CDK_ROLLUP_GLOBALS,
   deps = [":cdk"] + ["//src/cdk/%s" % p for p in CDK_PACKAGES]

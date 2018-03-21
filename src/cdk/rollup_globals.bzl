@@ -3,7 +3,6 @@ load("//:packages.bzl", "CDK_PACKAGES")
 # Base rollup globals for dependencies and the root entry-point.
 CDK_ROLLUP_GLOBALS = {
   'tslib': 'tslib',
-  'moment': 'moment',
   '@angular/cdk': 'ng.cdk',
 }
 
