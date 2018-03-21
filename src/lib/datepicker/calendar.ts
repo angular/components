@@ -13,6 +13,7 @@ import {
   Component,
   EventEmitter,
   Host,
+  forwardRef,
   Inject,
   Input,
   OnChanges,
@@ -48,7 +49,7 @@ export class MatCalendarHeader<D> implements OnDestroy {
   private _destroyed = new Subject<void>();
 
   constructor(private _intl: MatDatepickerIntl,
-              @Host() public calendar: MatCalendar<D>,
+              @Host() @Inject(forwardRef(() => MatCalendar)) public calendar: MatCalendar<D>,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               changeDetectorRef: ChangeDetectorRef) {
