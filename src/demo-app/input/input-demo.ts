@@ -91,4 +91,8 @@ export class InputDemo {
       this.placeholderTestControl.markAsUntouched() :
       this.placeholderTestControl.markAsTouched();
   }
+
+  logSizeChange(newSize: number) {
+    console.log(newSize);
+  }
 }

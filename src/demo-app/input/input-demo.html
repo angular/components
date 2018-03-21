@@ -547,7 +547,7 @@
     <div>
       <mat-form-field>
         <mat-label>Autosized textarea</mat-label>
-        <textarea matInput cdkTextareaAutosize cdkAutosizeMaxRows="10"></textarea>
+        <textarea matInput cdkTextareaAutosize cdkAutosizeMaxRows="10" (cdkAutosizeSizeChanged)="logSizeChange($event)"></textarea>
       </mat-form-field>
     </div>
 

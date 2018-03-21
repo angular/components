@@ -39,12 +39,13 @@ import {Subject} from 'rxjs/Subject';
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Keep track of the previous textarea value to avoid resizing when the value hasn't changed. */
   private _previousValue: string;
-  private _previousHeight = 0;
+  private _previousHeight: number;
   private readonly _destroyed = new Subject<void>();
 
   private _minRows: number;
   private _maxRows: number;
   private _maxHeight: number;
+  private _minHeight: number;
 
   /** Minimum amount of rows in the textarea. */
   @Input('cdkAutosizeMinRows')
@@ -64,7 +65,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
   /** Emit event when textarea height changes */
   @Output('cdkAutosizeSizeChanged')
-  sizeChanged = new EventEmitter<number>(false);
+  sizeChanged: EventEmitter<number> = new EventEmitter<number>();
 
   /** Cached height of a textarea with a single row. */
   private _cachedLineHeight: number;
@@ -78,17 +79,17 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
   /** Sets the minimum height of the textarea as determined by minRows. */
   _setMinHeight(): void {
-    const minHeight = this.minRows && this._cachedLineHeight ?
-        `${this.minRows * this._cachedLineHeight}px` : null;
+    this._minHeight = (this.minRows && this._cachedLineHeight) ?
+        this.minRows * this._cachedLineHeight : 0;
 
-    if (minHeight)  {
-      this._setTextareaStyle('minHeight', minHeight);
+    if (this._minHeight)  {
+      this._setTextareaStyle('minHeight', `${this._minHeight}px`);
     }
   }
 
   /** Sets the maximum height of the textarea as determined by maxRows. */
   _setMaxHeight(): void {
-    this._maxHeight = this.maxRows && this._cachedLineHeight ?
+    this._maxHeight = (this.maxRows && this._cachedLineHeight) ?
         this.maxRows * this._cachedLineHeight : 0;
 
     if (this._maxHeight) {
@@ -195,7 +196,6 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     }
 
     const placeholderText = textarea.placeholder;
-
     // Reset the textarea height to auto in order to shrink back to its default size.
     // Also temporarily force overflow:hidden, so scroll bars do not interfere with calculations.
     // Long placeholders that are wider than the textarea width may lead to a bigger scrollHeight
@@ -212,10 +212,14 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
     this._previousValue = value;
 
-    if ((textarea.scrollHeight !== this._previousHeight && !this._maxHeight)
-        || (textarea.scrollHeight !== this._previousHeight
-          && textarea.scrollHeight <= this._maxHeight)) {
-      this._previousHeight = textarea.scrollHeight;
+    const scrollHeight = textarea.scrollHeight;
+    const newHeight = Math.max(
+      Math.min(scrollHeight, this._maxHeight || Infinity),
+      this._minHeight || -Infinity
+    );
+
+    if (newHeight !== this._previousHeight) {
+      this._previousHeight = scrollHeight;
       this.sizeChanged.emit(this._previousHeight);
     }
   }
