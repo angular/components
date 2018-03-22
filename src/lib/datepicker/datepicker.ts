@@ -10,68 +10,60 @@ import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {
+  FlexibleConnectedPositionStrategy,
   Overlay,
   OverlayConfig,
   OverlayRef,
   PositionStrategy,
-  RepositionScrollStrategy,
   ScrollStrategy,
-  FlexibleConnectedPositionStrategy,
 } from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
-import {take} from 'rxjs/operators/take';
-import {filter} from 'rxjs/operators/filter';
+import {DOCUMENT} from '@angular/common';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ComponentRef,
   ElementRef,
   EventEmitter,
   Inject,
+  inject,
   InjectionToken,
   Input,
   NgZone,
   OnDestroy,
+  OnInit,
   Optional,
   Output,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
-  ChangeDetectorRef,
-  OnInit,
 } from '@angular/core';
 import {CanColor, DateAdapter, mixinColor, ThemePalette} from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {DOCUMENT} from '@angular/common';
+import {merge} from 'rxjs/observable/merge';
+import {filter} from 'rxjs/operators/filter';
+import {take} from 'rxjs/operators/take';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
-import {merge} from 'rxjs/observable/merge';
-import {createMissingDateImplError} from './datepicker-errors';
-import {MatDatepickerInput} from './datepicker-input';
 import {MatCalendar} from './calendar';
 import {matDatepickerAnimations} from './datepicker-animations';
-import {MatDateSelectionModel} from './date-selection';
+import {createMissingDateImplError} from './datepicker-errors';
+import {MatDatepickerInput} from './datepicker-input';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
 
 /** Injection token that determines the scroll handling while the calendar is open. */
 export const MAT_DATEPICKER_SCROLL_STRATEGY =
-    new InjectionToken<() => ScrollStrategy>('mat-datepicker-scroll-strategy');
-
-/** @docs-private */
-export function MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
-    () => RepositionScrollStrategy {
-  return () => overlay.scrollStrategies.reposition();
-}
-
-/** @docs-private */
-export const MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER = {
-  provide: MAT_DATEPICKER_SCROLL_STRATEGY,
-  deps: [Overlay],
-  useFactory: MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER_FACTORY,
-};
+    new InjectionToken<() => ScrollStrategy>('mat-datepicker-scroll-strategy', {
+      providedIn: 'root',
+      factory: () => {
+        const overlay = inject(Overlay);
+        return () => overlay.scrollStrategies.reposition();
+      }
+    });
 
 // Boilerplate for applying mixins to MatDatepickerContent.
 /** @docs-private */
@@ -238,13 +230,6 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   private _disabled: boolean;
 
   /**
-   * Emits new selected date when selected date changes.
-   * @deprecated Switch to the `dateChange` and `dateInput` binding on the input element.
-   * @deletion-target 6.0.0
-   */
-  @Output() readonly selectedChanged: EventEmitter<D> = new EventEmitter<D>();
-
-  /**
    * Emits selected year in multiyear view.
    * This doesn't imply a change on the selected date.
    */
@@ -276,9 +261,9 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   id: string = `mat-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
-  get _selected(): MatDateSelectionModel<D> { return this._datepickerInput._selectionModel; }
-  // set _selected(value: D | null) { this._datepickerInput._selectionModel.select(value); }
-  // private _validSelected: D | null = null;
+  get _selected(): D | null { return this._validSelected; }
+  set _selected(value: D | null) { this._validSelected = value; }
+  private _validSelected: D | null = null;
 
   /** The minimum selectable date. */
   get _minDate(): D | null {
@@ -318,6 +303,9 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** Emits when the datepicker is disabled. */
   readonly _disabledChange = new Subject<boolean>();
 
+  /** Emits new selected date when selected date changes. */
+  readonly _selectedChanged = new Subject<D>();
+
   constructor(private _dialog: MatDialog,
               private _overlay: Overlay,
               private _ngZone: NgZone,
@@ -344,9 +332,10 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
 
   /** Selects the given date */
   _select(date: D): void {
-    let oldValue = this._selected.selected as D; // todo think twice
-    if (!this._dateAdapter.sameDate(oldValue, date)) {
-      this.selectedChanged.emit(date);
+    let oldValue = this._selected;
+    this._selected = date;
+    if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
+      this._selectedChanged.next(date);
     }
   }
 
@@ -369,8 +358,8 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       throw Error('A MatDatepicker can only be associated with a single input.');
     }
     this._datepickerInput = input;
-    // this._inputSubscription = // todo think twice
-    //   this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
+    this._inputSubscription =
+        this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
   }
 
   /** Open the calendar. */

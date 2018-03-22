@@ -95,7 +95,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _boundingBox: HTMLElement | null;
 
   /** The last position to have been calculated as the best fit position. */
-  private _lastPosition: ConnectedPosition;
+  private _lastPosition: ConnectedPosition | null;
 
   /** Subject that emits whenever the position changes. */
   private _positionChanges = new Subject<ConnectedOverlayPositionChange>();
@@ -305,6 +305,13 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    */
   withPositions(positions: ConnectedPosition[]): this {
     this._preferredPositions = positions;
+
+    // If the last calculated position object isn't part of the positions anymore, clear
+    // it in order to avoid it being picked up if the consumer tries to re-apply.
+    if (positions.indexOf(this._lastPosition!) === -1) {
+      this._lastPosition = null;
+    }
+
     return this;
   }
 
@@ -557,8 +564,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       height = viewport.bottom - origin.y;
     } else if (position.overlayY === 'bottom') {
       // Overlay is opening "upward" and thus is bound by the top viewport edge.
-      bottom = viewport.bottom - origin.y + this._viewportMargin;
-      height = origin.y - viewport.top;
+      bottom = viewport.height - origin.y + this._viewportMargin;
+      height = viewport.height - bottom;
     } else {
       // If neither top nor bottom, it means that the overlay
       // is vertically centered on the origin point.
@@ -635,8 +642,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       styles.height = '100%';
     } else {
       styles.height = `${boundingBoxRect.height}px`;
-      styles.top = boundingBoxRect.top ? `${boundingBoxRect.top}px` : '';
-      styles.bottom = boundingBoxRect.bottom ? `${boundingBoxRect.bottom}px` : '';
+      styles.top = boundingBoxRect.top != null ? `${boundingBoxRect.top}px` : '';
+      styles.bottom = boundingBoxRect.bottom != null ? `${boundingBoxRect.bottom}px` : '';
     }
 
     if (!this._hasFlexibleWidth || this._isPushed) {
@@ -645,8 +652,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       styles.width = '100%';
     } else {
       styles.width = `${boundingBoxRect.width}px`;
-      styles.left = boundingBoxRect.left ? `${boundingBoxRect.left}px` : '';
-      styles.right = boundingBoxRect.right ? `${boundingBoxRect.right}px` : '';
+      styles.left = boundingBoxRect.left != null ? `${boundingBoxRect.left}px` : '';
+      styles.right = boundingBoxRect.right != null ? `${boundingBoxRect.right}px` : '';
     }
 
     const maxHeight = this._overlayRef.getConfig().maxHeight;

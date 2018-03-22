@@ -36,7 +36,6 @@ import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs/Subscription';
 import {MatDatepicker} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
-import {MatDateSelectionModel} from './date-selection';
 
 
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -117,11 +116,9 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   }
   _dateFilter: (date: D | null) => boolean;
 
-  // todo description
-  _selectionModel: MatDateSelectionModel<D>;
   /** The value of the input. */
   @Input()
-  get value(): D | null { return this._selectionModel.selected as D|null; }
+  get value(): D | null { return this._value; }
   set value(value: D | null) {
     value = this._dateAdapter.deserialize(value);
     this._lastValueValid = !value || this._dateAdapter.isValid(value);
@@ -131,7 +128,6 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this._elementRef.nativeElement.value =
         value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
     if (!this._dateAdapter.sameDate(oldDate, value)) {
-      this._selectionModel.select(value);
       this._valueChange.emit(value);
     }
   }
@@ -254,27 +250,17 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this._localeSubscription = _dateAdapter.localeChanges.subscribe(() => {
       this.value = this.value;
     });
-
-    this.createSelectionModel();
-    this._selectionModel.onChange.subscribe((event) => this.value = event.value as D);
-    this._selectionModel.onChange.subscribe((event) => console.log(event));
-    // TODO unsubscribe
-  }
-
-  protected createSelectionModel() {
-    this._selectionModel = new MatDateSelectionModel<D>(this._dateAdapter, false);
   }
 
   ngAfterContentInit() {
     if (this._datepicker) {
-      this._datepickerSubscription =
-          this._datepicker.selectedChanged.subscribe((selected: D) => {
-            this.value = selected;
-            this._cvaOnChange(selected);
-            this._onTouched();
-            this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-            this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-          });
+      this._datepickerSubscription = this._datepicker._selectedChanged.subscribe((selected: D) => {
+        this.value = selected;
+        this._cvaOnChange(selected);
+        this._onTouched();
+        this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+        this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+      });
     }
   }
 
@@ -345,7 +331,6 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this._value = date;
     this._cvaOnChange(date);
     this._valueChange.emit(date);
-    this._selectionModel.select(date); // Is it ok?
     this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
   }
 
