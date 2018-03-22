@@ -3,8 +3,6 @@ load("@build_bazel_rules_typescript//:defs.bzl", "ts_library")
 load("@angular//:index.bzl", "ng_module")
 
 
-# TODO(jelbourn): change this back to a ts_library once ng_package supports
-# ts_library as a secondary entry-point
 ng_module(
   name = "keycodes",
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
