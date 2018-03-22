@@ -166,7 +166,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     const startBuffer = this._lastScrollOffset - this._lastRenderedContentOffset;
     // The current amount of buffer past the end of the viewport.
     const endBuffer = (this._lastRenderedContentOffset + this._lastRenderedContentSize) -
-        (this._lastScrollOffset  + viewport.getViewportSize());
+        (this._lastScrollOffset + viewport.getViewportSize());
     // The amount of unfilled space that should be filled on the side the user is scrolling toward
     // in order to safely absorb the scroll delta.
     const underscan = scrollMagnitude + this._minBufferPx -
@@ -181,7 +181,6 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
       // the same number of pixels as the scroll magnitude.
       if (scrollMagnitude >= viewport.getViewportSize()) {
         this._setScrollOffset();
-
       } else {
         // The number of new items to render on the side the user is scrolling towards. Rather than
         // just filling the underscan space, we actually fill enough to have a buffer size of
@@ -213,30 +212,28 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
         // number of pixels we removed and then adjust the offset to the start of the rendered
         // content or to the end of the rendered content accordingly (whichever one doesn't require
         // that the newly added items to be rendered to calculate.)
-        let contentOffset: {offset: number, to: 'to-start' | 'to-end'};
+        let contentOffset: number;
+        let contentOffsetTo: 'to-start' | 'to-end';
         if (scrollDelta < 0) {
           const removedSize = viewport.measureRangeSize({
             start: range.end,
             end: renderedRange.end,
           });
-          contentOffset = {
-            offset: this._lastRenderedContentOffset + this._lastRenderedContentSize - removedSize,
-            to: 'to-end',
-          };
+          contentOffset =
+              this._lastRenderedContentOffset + this._lastRenderedContentSize - removedSize;
+          contentOffsetTo = 'to-end';
         } else {
           const removedSize = viewport.measureRangeSize({
             start: renderedRange.start,
             end: range.start,
           });
-          contentOffset = {
-            offset: this._lastRenderedContentOffset + removedSize,
-            to: 'to-start',
-          };
+          contentOffset = this._lastRenderedContentOffset + removedSize;
+          contentOffsetTo = 'to-start';
         }
 
         // Set the range and offset we calculated above.
         viewport.setRenderedRange(range);
-        viewport.setRenderedContentOffset(contentOffset.offset, contentOffset.to);
+        viewport.setRenderedContentOffset(contentOffset, contentOffsetTo);
       }
     }
 

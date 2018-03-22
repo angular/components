@@ -45,6 +45,12 @@ export type CdkVirtualForOfContext<T> = {
 };
 
 
+/** Helper to extract size from a ClientRect. **/
+function getSize(orientation: 'horizontal' | 'vertical', rect: ClientRect): number {
+  return orientation == 'horizontal' ? rect.width : rect.height;
+}
+
+
 /**
  * A directive similar to `ngForOf` to be used for rendering data inside a virtual scrolling
  * container.
@@ -163,8 +169,6 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
       throw Error(`Error: attempted to measure an item that isn't rendered.`);
     }
 
-    // Helper to extract size from a ClientRect.
-    const getSize = rect => orientation == 'horizontal' ? rect.width : rect.height;
     // The index into the list of rendered views for the first item in the range.
     const renderedStartIndex = range.start - this._renderedRange.start;
     // The length of the range we're measuring.
@@ -179,7 +183,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
           EmbeddedViewRef<CdkVirtualForOfContext<T>> | null;
       let j = view ? view.rootNodes.length : 0;
       while (j--) {
-        totalSize += getSize((view!.rootNodes[j] as Element).getBoundingClientRect());
+        totalSize += getSize(orientation, (view!.rootNodes[j] as Element).getBoundingClientRect());
       }
     }
 

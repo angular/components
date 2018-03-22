@@ -96,13 +96,14 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
               @Inject(VIRTUAL_SCROLL_STRATEGY) private _scrollStrategy: VirtualScrollStrategy) {}
 
   ngOnInit() {
+    const viewportEl = this.elementRef.nativeElement;
     Promise.resolve().then(() => {
       this._viewportSize = this.orientation === 'horizontal' ?
-          this.elementRef.nativeElement.clientWidth : this.elementRef.nativeElement.clientHeight;
+          viewportEl.clientWidth : viewportEl.clientHeight;
       this._scrollStrategy.attach(this);
 
       this._ngZone.runOutsideAngular(() => {
-        fromEvent(this.elementRef.nativeElement, 'scroll')
+        fromEvent(viewportEl, 'scroll')
             // Sample the scroll stream at every animation frame. This way if there are multiple
             // scroll events in the same frame we only need to recheck our layout once.
             .pipe(sampleTime(0, animationFrame))
@@ -114,9 +115,9 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
   ngDoCheck() {
     if (this._pendingScrollOffset != null) {
       if (this.orientation === 'horizontal') {
-        this.elementRef.nativeElement.offsetLeft = this._pendingScrollOffset;
+        this.elementRef.nativeElement.scrollLeft = this._pendingScrollOffset;
       } else {
-        this.elementRef.nativeElement.offsetTop = this._pendingScrollOffset;
+        this.elementRef.nativeElement.scrollTop = this._pendingScrollOffset;
       }
     }
   }
@@ -126,8 +127,8 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
     this._scrollStrategy.detach();
 
     // Complete all subjects
-    this._detachedSubject.complete();
     this._renderedRangeSubject.complete();
+    this._detachedSubject.complete();
   }
 
   /** Attaches a `CdkVirtualForOf` to this viewport. */
