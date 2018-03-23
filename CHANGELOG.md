@@ -1,6 +1,11 @@
 <a name="6.0.0-beta.5"></a>
 # [6.0.0-beta.5](https://github.com/angular/material2/compare/5.2.4...6.0.0-beta.5) (2018-03-23)
 
+This release contains many breaking changes due to the deletion of deprecated targets. We are 
+currently working on a tool that will help migrate your app if you are affected by these changes.
+We expect to have the tool ready when we release version 6.0.0.  
+
+
 ### BREAKING CHANGES
 
 * **typography:**  The `$mat-font-family` variable has been removed. Use the Material typography or redeclare in your project `$mat-font-family: Roboto, 'Helvetica Neue', sans-serif;`.
