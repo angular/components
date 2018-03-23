@@ -27,8 +27,8 @@ export class GaService {
       return;
     }
     this.previousUrl = url;
-    this.ga('mat.set', 'page', '/' + url);
-    this.ga('ng.set', 'page', '/' + url);
+    this.ga('mat.set', 'page', url);
+    this.ga('ng.set', 'page', url);
     this.ga('mat.send', 'pageview');
     this.ga('ng.send', 'pageview');
   }
