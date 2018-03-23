@@ -31,7 +31,6 @@ import {MAT_INPUT_VALUE_ACCESSOR} from './input-value-accessor';
 const MAT_INPUT_INVALID_TYPES = [
   'button',
   'checkbox',
-  'color',
   'file',
   'hidden',
   'image',
@@ -109,7 +108,16 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
   /** Whether the element is disabled. */
   @Input()
   get disabled() { return this.ngControl ? this.ngControl.disabled : this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  set disabled(value: any) {
+    this._disabled = coerceBooleanProperty(value);
+
+    // Browsers may not fire the blur event if the input is disabled too quickly.
+    // Reset from here to ensure that the element doesn't become stuck.
+    if (this.focused) {
+      this.focused = false;
+      this.stateChanges.next();
+    }
+  }
 
   /** Unique id of the element. */
   @Input()
@@ -285,12 +293,7 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
 
   // Implemented as part of MatFormFieldControl.
   get empty(): boolean {
-    return !this._isNeverEmpty() &&
-        (this.value == null || this.value === '') &&
-        // Check if the input contains bad input. If so, we know that it only appears empty because
-        // the value failed to parse. From the user's perspective it is not empty.
-        // TODO(mmalerba): Add e2e test for bad input case.
-        !this._isBadInput();
+    return !this._isNeverEmpty() && !this._elementRef.nativeElement.value && !this._isBadInput();
   }
 
   // Implemented as part of MatFormFieldControl.

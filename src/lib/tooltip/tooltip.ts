@@ -85,7 +85,7 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY_PROVIDER = {
  * https://material.google.com/components/tooltips.html
  */
 @Directive({
-  selector: '[mat-tooltip], [matTooltip]',
+  selector: '[matTooltip]',
   exportAs: 'matTooltip',
   host: {
     '(longpress)': 'show()',
@@ -307,7 +307,7 @@ export class MatTooltip implements OnDestroy {
         if (change.scrollableViewProperties.isOverlayClipped && this._tooltipInstance.isVisible()) {
           // After position changes occur and the overlay is clipped by
           // a parent scrollable then close the tooltip.
-          this.hide(0);
+          this._ngZone.run(() => this.hide(0));
         } else {
           // Otherwise recalculate the origin based on the new position.
           this._tooltipInstance._setTransformOrigin(change.connectionPair);

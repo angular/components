@@ -18,29 +18,31 @@ export class ExampleData {
   componentName = 'ButtonDemo';
 
   constructor(example: string) {
-    if (example && EXAMPLE_COMPONENTS[example]) {
-      this.examplePath = `/assets/stackblitz/examples/${example}/`;
-      // TODO(tinayuangao): Do not hard-code extensions
-      this.exampleFiles = ['html', 'ts', 'css']
-        .map((extension) => `${example}-example.${extension}`);
-      if (EXAMPLE_COMPONENTS[example].additionalFiles) {
-        this.exampleFiles = this.exampleFiles.concat(EXAMPLE_COMPONENTS[example].additionalFiles);
-      }
-      this.selectorName = this.indexFilename = `${example}-example`;
+    if (!example || !EXAMPLE_COMPONENTS.hasOwnProperty(example)) {
+      return;
+    }
 
-      let exampleName = example.replace(/(?:^\w|\b\w)/g, letter => letter.toUpperCase());
+    const exampleConfig = EXAMPLE_COMPONENTS[example];
+    const exampleFilesSet = new Set(['html', 'ts', 'css'].map(extension => {
+      return `${example}-example.${extension}`;
+    }));
 
-      if (EXAMPLE_COMPONENTS[example].title) {
-        this.description = EXAMPLE_COMPONENTS[example].title;
-      } else {
-        this.description = exampleName.replace(/[\-]+/g, ' ') + ' Example';
-      }
+    // TODO(tinayuangao): Do not hard-code extensions
+    this.exampleFiles = ['html', 'ts', 'css'].map(extension => `${example}-example.${extension}`);
+    this.examplePath = `/assets/stackblitz/examples/${example}/`;
+    this.exampleFiles = Array.from(exampleFilesSet.values());
+    this.selectorName = this.indexFilename = `${example}-example`;
 
-      if (EXAMPLE_COMPONENTS[example].selectorName) {
-        this.componentName = EXAMPLE_COMPONENTS[example].selectorName;
-      } else {
-        this.componentName = exampleName.replace(/[\-]+/g, '') + 'Example';
+    if (exampleConfig.additionalFiles) {
+      for (let file of exampleConfig.additionalFiles) {
+        exampleFilesSet.add(file);
       }
     }
+
+    const exampleName = example.replace(/(?:^\w|\b\w)/g, letter => letter.toUpperCase());
+
+    this.description = exampleConfig.title || exampleName.replace(/[\-]+/g, ' ') + ' Example';
+    this.componentName = exampleConfig.selectorName ||
+                          exampleName.replace(/[\-]+/g, '') + 'Example';
   }
 }

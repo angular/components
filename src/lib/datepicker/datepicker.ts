@@ -352,8 +352,6 @@ export class MatDatepicker<D> implements OnDestroy {
         this._popupRef.updatePosition();
       });
     }
-
-    this._popupRef.backdropClick().subscribe(() => this.close());
   }
 
   /** Create the popup. */
@@ -368,26 +366,33 @@ export class MatDatepicker<D> implements OnDestroy {
     });
 
     this._popupRef = this._overlay.create(overlayConfig);
+    this._popupRef.backdropClick().subscribe(() => this.close());
   }
 
   /** Create the popup PositionStrategy. */
   private _createPopupPositionStrategy(): PositionStrategy {
+    const fallbackOffset = this._datepickerInput._getPopupFallbackOffset();
+
     return this._overlay.position()
       .connectedTo(this._datepickerInput.getPopupConnectionElementRef(),
         {originX: 'start', originY: 'bottom'},
         {overlayX: 'start', overlayY: 'top'}
       )
       .withFallbackPosition(
-        { originX: 'start', originY: 'top' },
-        { overlayX: 'start', overlayY: 'bottom' }
+        {originX: 'start', originY: 'top'},
+        {overlayX: 'start', overlayY: 'bottom'},
+        undefined,
+        fallbackOffset
       )
       .withFallbackPosition(
         {originX: 'end', originY: 'bottom'},
         {overlayX: 'end', overlayY: 'top'}
       )
       .withFallbackPosition(
-        { originX: 'end', originY: 'top' },
-        { overlayX: 'end', overlayY: 'bottom' }
+        {originX: 'end', originY: 'top'},
+        {overlayX: 'end', overlayY: 'bottom'},
+        undefined,
+        fallbackOffset
       );
   }
 

@@ -13,7 +13,7 @@ import {
   QueryList,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {OverlayContainer} from '@angular/cdk/overlay';
+import {OverlayContainer, Overlay} from '@angular/cdk/overlay';
 import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {
   MAT_MENU_DEFAULT_OPTIONS,
@@ -25,7 +25,7 @@ import {
   MenuPositionY,
   MatMenuItem,
 } from './index';
-import {MENU_PANEL_TOP_PADDING} from './menu-trigger';
+import {MENU_PANEL_TOP_PADDING, MAT_MENU_SCROLL_STRATEGY} from './menu-trigger';
 import {MatRipple} from '@angular/material/core';
 import {
   dispatchKeyboardEvent,
@@ -35,6 +35,8 @@ import {
   createMouseEvent,
   dispatchFakeEvent,
 } from '@angular/cdk/testing';
+import {Subject} from 'rxjs/Subject';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
 
 
 describe('MatMenu', () => {
@@ -70,9 +72,12 @@ describe('MatMenu', () => {
     })();
   }));
 
-  afterEach(() => {
+  afterEach(inject([OverlayContainer], (currentOverlayContainer: OverlayContainer) => {
+    // Since we're resetting the testing module in some of the tests,
+    // we can potentially have multiple overlay containers.
+    currentOverlayContainer.ngOnDestroy();
     overlayContainer.ngOnDestroy();
-  });
+  }));
 
   it('should open the menu as an idempotent operation', () => {
     const fixture = TestBed.createComponent(SimpleMenu);
@@ -241,6 +246,40 @@ describe('MatMenu', () => {
     expect(panel).toBeTruthy('Expected the panel to be rendered.');
     expect(document.activeElement).toBe(panel, 'Expected the panel to be focused.');
   });
+
+  it('should close the menu when using the CloseScrollStrategy', fakeAsync(() => {
+    const scrolledSubject = new Subject();
+
+    TestBed
+      .resetTestingModule()
+      .configureTestingModule({
+        imports: [MatMenuModule, NoopAnimationsModule],
+        declarations: [SimpleMenu, FakeIcon],
+        providers: [
+          {provide: ScrollDispatcher, useFactory: () => ({scrolled: () => scrolledSubject})},
+          {
+            provide: MAT_MENU_SCROLL_STRATEGY,
+            deps: [Overlay],
+            useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close()
+          }
+        ]
+      })
+      .compileComponents();
+
+    const fixture = TestBed.createComponent(SimpleMenu);
+    const trigger = fixture.componentInstance.trigger;
+
+    fixture.detectChanges();
+    trigger.openMenu();
+    fixture.detectChanges();
+
+    expect(trigger.menuOpen).toBe(true);
+
+    scrolledSubject.next();
+    tick(500);
+
+    expect(trigger.menuOpen).toBe(false);
+  }));
 
   describe('positions', () => {
     let fixture: ComponentFixture<PositionedMenu>;

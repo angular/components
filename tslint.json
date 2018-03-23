@@ -82,6 +82,8 @@
     "import-blacklist": [true, "rxjs", "rxjs/operators"],
     // Avoids inconsistent linebreak styles in source files. Forces developers to use LF linebreaks.
     "linebreak-style": [true, "LF"],
+    // Namespaces are no allowed, because of Closure compiler.
+    "no-namespace": true,
 
     // Custom Rules
     "ts-loader": true,
@@ -96,21 +98,25 @@
         "encapsulation": "\\.None$",
         "moduleId": "^module\\.id$",
         "preserveWhitespaces": "false$",
-        "changeDetection": "\\.OnPush$"
+        "changeDetection": "\\.OnPush$",
+        "!host": "\\[class\\]"
+      },
+      "Directive": {
+        "!host": "\\[class\\]"
       }
-    }, "src/+(lib|cdk)/**/!(*.spec).ts"],
+    }, "src/+(lib|cdk|material-experimental|cdk-experimental)/**/!(*.spec).ts"],
     "require-license-banner": [
       true,
-      "src/+(lib|cdk|demo-app)/**/!(*.spec).ts"
+      "src/+(lib|cdk|material-experimental|cdk-experimental|demo-app)/**/!(*.spec).ts"
     ],
     "no-rxjs-patch-imports": [
       true,
-      "src/+(lib|cdk)/**/*.ts"
+      "src/+(lib|cdk|material-experimental|cdk-experimental)/**/*.ts"
     ],
     "missing-rollup-globals": [
       true,
       "./tools/package-tools/rollup-globals.ts",
-      "src/+(lib|cdk|material-examples)/**/*.ts"
+      "src/+(lib|cdk|material-examples|material-experimental|cdk-experimental)/**/*.ts"
     ]
   }
 }

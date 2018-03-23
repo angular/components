@@ -145,7 +145,7 @@ task('api-docs', () => {
 });
 
 /** Generates minified html api docs. */
-task('minified-api-docs', ['api-docs'], () => {
+task('minified-api-docs', () => {
   return src('dist/docs/api/*.html')
     .pipe(htmlmin(htmlMinifierOptions))
     .pipe(dest('dist/docs/api/'));

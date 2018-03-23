@@ -39,6 +39,18 @@ export class YourDialog {
 }
 ```
 
+### Specifying global configuration defaults
+Default dialog options can be specified by providing an instance of `MatDialogConfig` for
+MAT_DIALOG_DEFAULT_OPTIONS in your application's root module.
+
+```ts
+@NgModule({
+  providers: [
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
+  ]
+})
+```
+
 ### Sharing data with the Dialog component.
 If you want to share data with your dialog, you can use the `data` option to pass information to the dialog component.
 
@@ -81,7 +93,7 @@ For example:
 <mat-dialog-content>Are you sure?</mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>No</button>
-  <!-- Can optionally provide a result for the closing dialog. -->
+  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
   <button mat-button [mat-dialog-close]="true">Yes</button>
 </mat-dialog-actions>
 ```
@@ -124,7 +136,7 @@ the `ComponentFactory` for it.
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule() {}
+export class AppModule {}
 ```
 
 ### Accessibility

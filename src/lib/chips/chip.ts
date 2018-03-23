@@ -29,7 +29,13 @@ export interface MatChipEvent {
 
 /** Event object emitted by MatChip when selected or deselected. */
 export class MatChipSelectionChange {
-  constructor(public source: MatChip, public selected: boolean, public isUserInput = false) { }
+  constructor(
+    /** Reference to the chip that emitted the event. */
+    public source: MatChip,
+    /** Whether the chip that emitted the event is selected. */
+    public selected: boolean,
+    /** Whether the selection change was a result of a user interaction. */
+    public isUserInput = false) { }
 }
 
 
@@ -62,7 +68,7 @@ export class MatBasicChip {
   exportAs: 'matChip',
   host: {
     'class': 'mat-chip',
-    'tabindex': '-1',
+    '[attr.tabindex]': 'disabled ? null : -1',
     'role': 'option',
     '[class.mat-chip-selected]': 'selected',
     '[attr.disabled]': 'disabled || null',

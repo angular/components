@@ -12,7 +12,8 @@ import {
   Component,
   DebugElement,
   ElementRef,
-  ViewChild
+  ViewChild,
+  NgZone,
 } from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
 import {By} from '@angular/platform-browser';
@@ -37,8 +38,12 @@ describe('MatTooltip', () => {
   let overlayContainer: OverlayContainer;
   let overlayContainerElement: HTMLElement;
   let dir: {value: Direction};
+  let platform: {IOS: boolean, isBrowser: boolean};
 
   beforeEach(async(() => {
+    // Set the default Platform override that can be updated before component creation.
+    platform = {IOS: false, isBrowser: true};
+
     TestBed.configureTestingModule({
       imports: [MatTooltipModule, OverlayModule, NoopAnimationsModule],
       declarations: [
@@ -49,7 +54,7 @@ describe('MatTooltip', () => {
         TooltipOnTextFields
       ],
       providers: [
-        {provide: Platform, useValue: {IOS: false, isBrowser: true}},
+        {provide: Platform, useFactory: () => platform},
         {provide: Directionality, useFactory: () => {
           return dir = {value: 'ltr'};
         }}
@@ -64,9 +69,12 @@ describe('MatTooltip', () => {
     })();
   }));
 
-  afterEach(() => {
+  afterEach(inject([OverlayContainer], (currentOverlayContainer: OverlayContainer) => {
+    // Since we're resetting the testing module in some of the tests,
+    // we can potentially have multiple overlay containers.
+    currentOverlayContainer.ngOnDestroy();
     overlayContainer.ngOnDestroy();
-  });
+  }));
 
   describe('basic usage', () => {
     let fixture: ComponentFixture<BasicTooltipDemo>;
@@ -624,6 +632,26 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._isTooltipVisible())
           .toBe(false, 'Expected tooltip hidden when scrolled out of view, after throttle limit');
     }));
+
+    it('should execute the `hide` call, after scrolling away, inside the NgZone', fakeAsync(() => {
+      const inZoneSpy = jasmine.createSpy('in zone spy');
+
+      tooltipDirective.show();
+      fixture.detectChanges();
+      tick(0);
+
+      spyOn(tooltipDirective._tooltipInstance!, 'hide').and.callFake(() => {
+        inZoneSpy(NgZone.isInAngularZone());
+      });
+
+      fixture.componentInstance.scrollDown();
+      tick(100);
+      fixture.detectChanges();
+
+      expect(inZoneSpy).toHaveBeenCalled();
+      expect(inZoneSpy).toHaveBeenCalledWith(true);
+    }));
+
   });
 
   describe('with OnPush', () => {
@@ -684,9 +712,7 @@ describe('MatTooltip', () => {
 
   describe('special cases', () => {
     it('should clear the `user-select` when a tooltip is set on a text field in iOS', () => {
-      TestBed.overrideProvider(Platform, {
-        useValue: {IOS: true, isBrowser: true}
-      });
+      platform.IOS = true;
 
       const fixture = TestBed.createComponent(TooltipOnTextFields);
       const instance = fixture.componentInstance;

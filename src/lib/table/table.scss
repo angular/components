@@ -1,3 +1,4 @@
+$mat-header-row-height: 56px;
 $mat-row-height: 48px;
 $mat-row-horizontal-padding: 24px;
 
@@ -5,13 +6,30 @@ $mat-row-horizontal-padding: 24px;
   display: block;
 }
 
+.mat-header-row {
+  min-height: $mat-header-row-height;
+}
+
+.mat-row {
+  min-height: $mat-row-height;
+}
+
 .mat-row, .mat-header-row {
   display: flex;
   border-bottom-width: 1px;
   border-bottom-style: solid;
   align-items: center;
-  min-height: $mat-row-height;
   padding: 0 $mat-row-horizontal-padding;
+  box-sizing: border-box;
+
+  // Workaround for https://goo.gl/pFmjJD in IE 11. Adds a pseudo
+  // element that will stretch the row the correct height. See:
+  // https://connect.microsoft.com/IE/feedback/details/802625
+  &::after {
+    display: inline-block;
+    min-height: inherit;
+    content: '';
+  }
 }
 
 .mat-cell, .mat-header-cell {
