@@ -26,7 +26,6 @@ export class DatepickerCustomHeaderExample {
 
 /** Custom header component for datepicker. */
 @Component({
-  moduleId: module.id,
   selector: 'example-header',
   template: `
     <div class="example-header">
