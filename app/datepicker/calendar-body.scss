@@ -1,0 +1,67 @@
+$mat-calendar-body-label-padding-start: 5% !default;
+// We don't want the label to jump around when we switch between month and year views, so we use
+// the same amount of padding regardless of the number of columns. We align the header label with
+// the one third mark of the first cell, this was chosen somewhat arbitrarily to make it look
+// roughly like the mock. Half way is too far since the cell text is center aligned.
+$mat-calendar-body-label-side-padding: 33% / 7 !default;
+$mat-calendar-body-cell-min-size: 32px !default;
+$mat-calendar-body-cell-content-margin: 5% !default;
+$mat-calendar-body-cell-content-border-width: 1px !default;
+
+$mat-calendar-body-min-size: 7 * $mat-calendar-body-cell-min-size !default;
+$mat-calendar-body-cell-content-size: 100% - $mat-calendar-body-cell-content-margin * 2 !default;
+
+
+.mat-calendar-body {
+  min-width: $mat-calendar-body-min-size;
+}
+
+.mat-calendar-body-label {
+  height: 0;
+  line-height: 0;
+  text-align: left;
+  padding-left: $mat-calendar-body-label-side-padding;
+  padding-right: $mat-calendar-body-label-side-padding;
+}
+
+.mat-calendar-body-cell {
+  position: relative;
+  height: 0;
+  line-height: 0;
+  text-align: center;
+  outline: none;
+  cursor: pointer;
+}
+
+.mat-calendar-body-disabled {
+  cursor: default;
+}
+
+.mat-calendar-body-cell-content {
+  position: absolute;
+  top: $mat-calendar-body-cell-content-margin;
+  left: $mat-calendar-body-cell-content-margin;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+  width: $mat-calendar-body-cell-content-size;
+  height: $mat-calendar-body-cell-content-size;
+
+  // Prevents text being off-center on Android.
+  line-height: 1;
+
+  border-width: $mat-calendar-body-cell-content-border-width;
+  border-style: solid;
+
+  // Choosing a value clearly larger than the height ensures we get the correct capsule shape.
+  border-radius: 999px;
+}
+
+[dir='rtl'] {
+  .mat-calendar-body-label {
+    text-align: right;
+  }
+}

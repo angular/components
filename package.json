@@ -18,7 +18,8 @@
     "deploy": "gulp deploy:devapp",
     "webdriver-manager": "webdriver-manager",
     "docs": "gulp docs",
-    "api": "gulp api-docs"
+    "api": "gulp api-docs",
+    "packagr": "ng-packagr -p ng-package.json"
   },
   "version": "6.0.0-beta.4",
   "license": "MIT",
@@ -27,6 +28,7 @@
   },
   "dependencies": {
     "@angular/animations": "6.0.0-beta.8",
+    "@angular/cli": "^6.0.0-beta.6",
     "@angular/common": "6.0.0-beta.8",
     "@angular/compiler": "6.0.0-beta.8",
     "@angular/core": "6.0.0-beta.8",
@@ -126,6 +128,7 @@
     "ts-node": "^3.0.4",
     "tsconfig-paths": "^2.3.0",
     "tslint": "^5.9.1",
+    "tsickle": "^0.27.2",
     "tsutils": "^2.6.0",
     "typescript": "~2.7.0",
     "uglify-js": "^2.8.14",

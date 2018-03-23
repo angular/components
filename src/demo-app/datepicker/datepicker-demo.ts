@@ -10,6 +10,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {ThemePalette} from '@angular/material/core';
+import {MatDatePickerRangeValue} from '@angular/material';
 
 
 @Component({
@@ -28,9 +29,9 @@ export class DatepickerDemo {
   minDate: Date;
   maxDate: Date;
   startAt: Date;
-  date: Date;
-  lastDateInput: Date | null;
-  lastDateChange: Date | null;
+  date: MatDatePickerRangeValue<Date> |Date;
+  lastDateInput: MatDatePickerRangeValue<Date> | Date | null;
+  lastDateChange: MatDatePickerRangeValue<Date> | Date | null;
   color: ThemePalette;
 
   dateCtrl = new FormControl();
@@ -40,4 +41,5 @@ export class DatepickerDemo {
 
   onDateInput = (e: MatDatepickerInputEvent<Date>) => this.lastDateInput = e.value;
   onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
+  onDateChange2 = (e: any) => this.date = e;
 }

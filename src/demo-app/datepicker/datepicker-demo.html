@@ -58,6 +58,7 @@
     <mat-datepicker
         #resultPicker
         [touchUi]="touch"
+        [rangeMode]="true"
         [disabled]="datepickerDisabled"
         [startAt]="startAt"
         [startView]="yearView ? 'year' : 'month'"
@@ -73,6 +74,8 @@
 </p>
 <p>Last input: {{lastDateInput}}</p>
 <p>Last change: {{lastDateChange}}</p>
+<p>Last input: {{lastDateInput?.begin}} {{lastDateInput?.end}} </p>
+<p>Last change: {{lastDateChange?.begin}} {{lastDateChange?.end}} </p>
 <br>
 <p>
   <input #resultPickerModel2

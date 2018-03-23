@@ -14,7 +14,7 @@ import {
   Overlay,
   OverlayConfig,
   OverlayRef,
-  PositionStrategy, RepositionScrollStrategy,
+  PositionStrategy,
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
@@ -57,20 +57,13 @@ let datepickerUid = 0;
 
 /** Injection token that determines the scroll handling while the calendar is open. */
 export const MAT_DATEPICKER_SCROLL_STRATEGY =
-  new InjectionToken<() => ScrollStrategy>('mat-datepicker-scroll-strategy');
-
-/** @docs-private */
-export function MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
-() => RepositionScrollStrategy {
-  return () => overlay.scrollStrategies.reposition();
-}
-
-/** @docs-private */
-export const MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER = {
-  provide: MAT_DATEPICKER_SCROLL_STRATEGY,
-  deps: [Overlay],
-  useFactory: MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER_FACTORY,
-};
+    new InjectionToken<() => ScrollStrategy>('mat-datepicker-scroll-strategy', {
+      providedIn: 'root',
+      factory: () => {
+        const overlay = inject(Overlay);
+        return () => overlay.scrollStrategies.reposition();
+      }
+    });
 
 // Boilerplate for applying mixins to MatDatepickerContent.
 /** @docs-private */
