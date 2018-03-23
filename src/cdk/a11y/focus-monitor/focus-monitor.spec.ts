@@ -5,7 +5,7 @@ import {
   dispatchMouseEvent,
   patchElementFocus,
 } from '@angular/cdk/testing';
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, NgZone} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {A11yModule} from '../index';
@@ -223,7 +223,6 @@ describe('cdkMonitorFocus', () => {
         ButtonWithFocusClasses,
         ComplexComponentWithMonitorElementFocus,
         ComplexComponentWithMonitorSubtreeFocus,
-        ComplexComponentWithMonitorSubtreeFocusAnfMonitorElementFocus,
       ],
     }).compileComponents();
   });
@@ -424,7 +423,7 @@ describe('cdkMonitorFocus', () => {
 });
 
 describe('FocusMonitor observable stream', () => {
-  let fixture: ComponentFixture<MonitoredElementRequiringChangeDetection>;
+  let fixture: ComponentFixture<PlainButton>;
   let buttonElement: HTMLElement;
   let focusMonitor: FocusMonitor;
 
@@ -432,28 +431,29 @@ describe('FocusMonitor observable stream', () => {
     TestBed.configureTestingModule({
       imports: [A11yModule],
       declarations: [
-        MonitoredElementRequiringChangeDetection,
+        PlainButton,
       ],
     }).compileComponents();
   });
 
   beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
-    fixture = TestBed.createComponent(MonitoredElementRequiringChangeDetection);
-    fixture.detectChanges();
-
-    buttonElement = fixture.componentInstance.button.nativeElement;
+    fixture = TestBed.createComponent(PlainButton);
     focusMonitor = fm;
-
+    fixture.detectChanges();
+    buttonElement = fixture.debugElement.nativeElement.querySelector('button');
     patchElementFocus(buttonElement);
   }));
 
-  it('should emit inside the NgZone', () => {
-    fixture.detectChanges();
-    expect(buttonElement.innerText).toBe('');
+  it('should emit inside the NgZone', fakeAsync(() => {
+    const spy = jasmine.createSpy('zone spy');
+    focusMonitor.monitor(buttonElement).subscribe(() => spy(NgZone.isInAngularZone()));
+    expect(spy).not.toHaveBeenCalled();
+
     buttonElement.focus();
     fixture.detectChanges();
-    expect(buttonElement.innerText).toBe('program');
-  });
+    tick();
+    expect(spy).toHaveBeenCalledWith(true);
+  }));
 });
 
 
@@ -486,21 +486,3 @@ class ComplexComponentWithMonitorSubtreeFocus {}
   template: `<div cdkMonitorSubtreeFocus><button cdkMonitorElementFocus></button></div>`
 })
 class ComplexComponentWithMonitorSubtreeFocusAnfMonitorElementFocus {}
-
-@Component({
-  template: `<button #b>{{origin}}</button>`
-})
-class MonitoredElementRequiringChangeDetection {
-  @ViewChild('b') button: ElementRef;
-  origin: string;
-
-  constructor(private _focusMonitor: FocusMonitor) {}
-
-  ngOnInit() {
-    this._focusMonitor.monitor(this.button.nativeElement).subscribe(o => this.origin = o || '');
-  }
-
-  ngOnDestroy() {
-    this._focusMonitor.stopMonitoring(this.button.nativeElement);
-  }
-}
