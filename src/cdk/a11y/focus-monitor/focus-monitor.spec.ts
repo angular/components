@@ -5,7 +5,7 @@ import {
   dispatchMouseEvent,
   patchElementFocus,
 } from '@angular/cdk/testing';
-import {Component} from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {A11yModule} from '../index';
@@ -212,7 +212,6 @@ describe('FocusMonitor', () => {
 
     expect(buttonElement.classList.length).toBe(0, 'button should not have any focus classes');
   }));
-
 });
 
 
@@ -424,6 +423,39 @@ describe('cdkMonitorFocus', () => {
   });
 });
 
+describe('FocusMonitor observable stream', () => {
+  let fixture: ComponentFixture<MonitoredElementRequiringChangeDetection>;
+  let buttonElement: HTMLElement;
+  let focusMonitor: FocusMonitor;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [A11yModule],
+      declarations: [
+        MonitoredElementRequiringChangeDetection,
+      ],
+    }).compileComponents();
+  });
+
+  beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
+    fixture = TestBed.createComponent(MonitoredElementRequiringChangeDetection);
+    fixture.detectChanges();
+
+    buttonElement = fixture.componentInstance.button.nativeElement;
+    focusMonitor = fm;
+
+    patchElementFocus(buttonElement);
+  }));
+
+  it('should emit inside the NgZone', () => {
+    fixture.detectChanges();
+    expect(buttonElement.innerText).toBe('');
+    buttonElement.focus();
+    fixture.detectChanges();
+    expect(buttonElement.innerText).toBe('program');
+  });
+});
+
 
 @Component({
   template: `<button>focus me!</button>`
@@ -454,3 +486,21 @@ class ComplexComponentWithMonitorSubtreeFocus {}
   template: `<div cdkMonitorSubtreeFocus><button cdkMonitorElementFocus></button></div>`
 })
 class ComplexComponentWithMonitorSubtreeFocusAnfMonitorElementFocus {}
+
+@Component({
+  template: `<button #b>{{origin}}</button>`
+})
+class MonitoredElementRequiringChangeDetection {
+  @ViewChild('b') button: ElementRef;
+  origin: string;
+
+  constructor(private _focusMonitor: FocusMonitor) {}
+
+  ngOnInit() {
+    this._focusMonitor.monitor(this.button.nativeElement).subscribe(o => this.origin = o || '');
+  }
+
+  ngOnDestroy() {
+    this._focusMonitor.stopMonitoring(this.button.nativeElement);
+  }
+}
