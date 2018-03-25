@@ -24,4 +24,6 @@ export const A = 65;
 export const Z = 90;
 export const ZERO = 48;
 export const NINE = 57;
+export const ZERO_NUMPAD = 96;
+export const NINE_NUMPAD = 105;
 export const COMMA = 188;
