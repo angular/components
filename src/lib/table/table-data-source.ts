@@ -96,7 +96,7 @@ export class MatTableDataSource<T> extends DataSource<T> {
    * @param data Data object that is being accessed.
    * @param sortHeaderId The name of the column that represents the data.
    */
-  sortingDataAccessor: ((data: T, sortHeaderId: string) => string|number) =
+  public sortingDataAccessor: ((data: T, sortHeaderId: string) => string|number) =
       (data: T, sortHeaderId: string): string|number => {
     const value: any = data[sortHeaderId];
     return _isNumberValue(value) ? Number(value) : value;
@@ -111,7 +111,7 @@ export class MatTableDataSource<T> extends DataSource<T> {
    * @param data The array of data that should be sorted.
    * @param sort The connected MatSort that holds the current sort state.
    */
-  sortData: ((data: T[], sort: MatSort) => T[]) = (data: T[], sort: MatSort): T[] => {
+  public sortData: ((data: T[], sort: MatSort) => T[]) = (data: T[], sort: MatSort): T[] => {
     const active = sort.active;
     const direction = sort.direction;
     if (!active || direction == '') { return data; }
@@ -152,7 +152,7 @@ export class MatTableDataSource<T> extends DataSource<T> {
    * @param filter Filter string that has been set on the data source.
    * @returns Whether the filter matches against the data
    */
-  filterPredicate: ((data: T, filter: string) => boolean) = (data: T, filter: string): boolean => {
+  public filterPredicate: ((data: T, filter: string) => boolean) = (data: T, filter: string): boolean => {
     // Transform the data into a lowercase string of all property values.
     const accumulator = (currentTerm, key) => currentTerm + data[key];
     const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
