@@ -42,8 +42,8 @@
   "devDependencies": {
     "@angular-devkit/core": "^0.4.5",
     "@angular-devkit/schematics": "^0.4.5",
-    "@angular/bazel": "6.0.0-rc.0",
-    "@angular/compiler-cli": "6.0.0-rc.0",
+    "@angular/bazel": "github:angular/bazel-builds#2cc851b01b889a304b05ef46569f896b20f10705",
+    "@angular/compiler-cli": "github:angular/compiler-cli-builds#024717fcdfebc2dc2854ab59da956d167fa3caeb",
     "@angular/http": "6.0.0-rc.0",
     "@angular/platform-browser-dynamic": "6.0.0-rc.0",
     "@angular/platform-server": "6.0.0-rc.0",
