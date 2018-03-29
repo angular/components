@@ -13,6 +13,11 @@ const GUIDES = [
     document: '/assets/documents/guides/material-getting-started.html',
   },
   {
+    id: 'schematics',
+    name: 'Schematics',
+    document: '/assets/documents/guides/schematics.html'
+  },
+  {
     id: 'theming',
     name: 'Theming Angular Material',
     document: '/assets/documents/guides/material-theming.html',
