@@ -220,7 +220,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
   }
 
   ngOnInit() {
-    if (this._elementRef.nativeElement.tagName === 'TABLE') {
+    if (this._elementRef.nativeElement.nodeName === 'TABLE') {
       this._applyNativeTableSections();
     }
 
@@ -565,13 +565,13 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
 
   /** Adds native table sections (e.g. tbody) and moves the row placeholders into them. */
   private _applyNativeTableSections() {
-    const tHeadEl = document.createElement('thead');
-    const tBodyEl = document.createElement('tbody');
+    const thead = document.createElement('thead');
+    const tbody = document.createElement('tbody');
 
-    this._elementRef.nativeElement.appendChild(tHeadEl);
-    this._elementRef.nativeElement.appendChild(tBodyEl);
+    this._elementRef.nativeElement.appendChild(thead);
+    this._elementRef.nativeElement.appendChild(tbody);
 
-    tHeadEl.appendChild(this._headerRowPlaceholder.elementRef.nativeElement);
-    tBodyEl.appendChild(this._rowPlaceholder.elementRef.nativeElement);
+    thead.appendChild(this._headerRowPlaceholder.elementRef.nativeElement);
+    tbody.appendChild(this._rowPlaceholder.elementRef.nativeElement);
   }
 }

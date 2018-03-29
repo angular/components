@@ -279,10 +279,10 @@ Table's default role is `grid`, and it can be changed to `treegrid` through `rol
 `mat-table` does not manage any focus/keyboard interaction on its own. Users can add desired 
 focus/keyboard interactions in their application.
 
-### Using flex layout
+### Tables with `display: flex`
 
 The `MatTable` does not require that you use a native HTML table. Instead, you can use an
-alternative approach that uses flex-layout for the table's styles.
+alternative approach that uses `display: flex` for the table's styles.
 
 This alternative approach replaces the native table element tags with the `MatTable` directive
 selectors. For example, `<table mat-table>` becomes `<mat-table>`; `<tr mat-row`> becomes 
