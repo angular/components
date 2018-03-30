@@ -385,6 +385,8 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       originFallbackX = overlayX = originX === 'end' ? 'start' : 'end';
       offsetY = overlayY === 'bottom' ? MENU_PANEL_TOP_PADDING : -MENU_PANEL_TOP_PADDING;
     } else if (!this.menu.overlapTrigger) {
+      originX = overlayX === 'start' ? 'end' : 'start';
+      originFallbackX = overlayFallbackX === 'start' ? 'end' : 'start';
       originY = overlayY === 'top' ? 'bottom' : 'top';
       originFallbackY = overlayFallbackY === 'top' ? 'bottom' : 'top';
     }
