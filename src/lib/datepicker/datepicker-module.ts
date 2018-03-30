@@ -45,6 +45,7 @@ import {PortalModule} from '@angular/cdk/portal';
     MatMonthView,
     MatYearView,
     MatMultiYearView,
+    MatCalendarHeader,
   ],
   declarations: [
     MatCalendar,
@@ -57,7 +58,7 @@ import {PortalModule} from '@angular/cdk/portal';
     MatMonthView,
     MatYearView,
     MatMultiYearView,
-    MatCalendarHeader
+    MatCalendarHeader,
   ],
   providers: [
     MatDatepickerIntl,
