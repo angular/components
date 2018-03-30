@@ -7,7 +7,7 @@
  */
 
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {ELEMENT_DATA} from '../element-data';
+import {ELEMENT_DATA, Element} from '../element-data';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {PeopleDatabase, UserData} from '../people-database';
 import {SelectionModel} from '@angular/cdk/collections';
@@ -22,7 +22,7 @@ import {fromEvent} from 'rxjs';
 export class NativeTableDemo {
   definedColumns = ['name', 'weight', 'symbol', 'position'];
   columnsToDisplay = this.definedColumns;
-  data = ELEMENT_DATA.slice();
+  data: Element[] = ELEMENT_DATA.slice();
 
   dataSource = new MatTableDataSource<UserData>();
   columns = ['select', 'userId', 'userName', 'progress', 'color'];
