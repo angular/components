@@ -10,6 +10,8 @@ export * from './overlay-config';
 export * from './position/connected-position';
 export * from './scroll/index';
 export * from './overlay-module';
+export * from './backdrop';
+
 export {Overlay} from './overlay';
 export {OverlayContainer} from './overlay-container';
 export {CdkOverlayOrigin, CdkConnectedOverlay} from './overlay-directives';

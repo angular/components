@@ -19,13 +19,15 @@ import {
   CdkOverlayOrigin,
 } from './overlay-directives';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
+import {CdkOverlayBackdrop} from './backdrop';
 
 
 @NgModule({
   imports: [BidiModule, PortalModule, ScrollDispatchModule],
-  exports: [CdkConnectedOverlay, CdkOverlayOrigin, ScrollDispatchModule],
-  declarations: [CdkConnectedOverlay, CdkOverlayOrigin],
+  exports: [CdkConnectedOverlay, CdkOverlayOrigin, CdkOverlayBackdrop, ScrollDispatchModule],
+  declarations: [CdkConnectedOverlay, CdkOverlayOrigin, CdkOverlayBackdrop],
   providers: [Overlay],
+  entryComponents: [CdkOverlayBackdrop],
 })
 export class OverlayModule {}
 
