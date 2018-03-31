@@ -5,11 +5,9 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import { normalize } from '@angular-devkit/core';
-import { SchematicsException, Tree } from '@angular-devkit/schematics';
+import {SchematicsException, Tree} from '@angular-devkit/schematics';
 import * as ts from 'typescript';
-import { findNode, getSourceNodes } from './ast-utils';
-import { AppConfig } from './config';
+import {findNode, getSourceNodes} from './ast-utils';
 
 export function findBootstrapModuleCall(host: Tree, mainPath: string): ts.CallExpression | null {
   const mainBuffer = host.read(mainPath);
@@ -73,12 +71,4 @@ export function findBootstrapModulePath(host: Tree, mainPath: string): string {
     })[0];
 
   return bootstrapModuleRelativePath;
-}
-
-export function getAppModulePath(host: Tree, app: AppConfig) {
-  const mainPath = normalize(`/${app.root}/${app.main}`);
-  const moduleRelativePath = findBootstrapModulePath(host, mainPath);
-  const modulePath = normalize(`/${app.root}/${moduleRelativePath}.ts`);
-
-  return modulePath;
 }
