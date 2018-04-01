@@ -157,7 +157,7 @@ System.config({
     // CDK individual packages
     '@angular/cdk/platform': 'npm:@angular/cdk/bundles/cdk-platform.umd.js',
     '@angular/cdk/a11y': 'npm:@angular/cdk/bundles/cdk-a11y.umd.js',
-
+    //...
     'hammerjs': 'npm:hammerjs'
   },
   packages:{
