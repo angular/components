@@ -33,6 +33,11 @@ export function addModuleImportToRootModule(host: Tree, moduleName: string, src:
 export function addModuleImportToModule(
     host: Tree, modulePath: string, moduleName: string, src: string) {
   const moduleSource = getSourceFile(host, modulePath);
+
+  if (!moduleSource) {
+    throw new SchematicsException(`Module not found: ${modulePath}`);
+  }
+
   const changes = addImportToModule(moduleSource, modulePath, moduleName, src);
   const recorder = host.beginUpdate(modulePath);
 
