@@ -33,7 +33,7 @@ import {
   MAT_LABEL_GLOBAL_OPTIONS,
   mixinColor,
 } from '@angular/material/core';
-import {fromEvent} from 'rxjs';
+import {fromEvent, merge} from 'rxjs';
 import {startWith} from 'rxjs/operators';
 import {take} from 'rxjs/operators';
 import {MatError} from './error';
@@ -263,6 +263,11 @@ export class MatFormField extends _MatFormFieldMixinBase
     // Update the aria-described by when the number of errors changes.
     this._errorChildren.changes.pipe(startWith(null)).subscribe(() => {
       this._syncDescribedByIds();
+      this._changeDetectorRef.markForCheck();
+    });
+
+    // Run change detection if the prefix or suffix changes.
+    merge(this._prefixChildren.changes, this._suffixChildren.changes).subscribe(() => {
       this._changeDetectorRef.markForCheck();
     });
 
