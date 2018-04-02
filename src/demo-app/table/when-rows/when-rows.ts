@@ -11,20 +11,9 @@ import {Element, ELEMENT_DATA} from 'table/element-data';
 
 @Component({
   moduleId: module.id,
-  templateUrl: 'table-demo.html',
-  styles: [`
-    mat-card {
-      max-height: 300px;
-      overflow: auto;
-      margin: 16px 0;
-    }
-
-    table {
-      width: 100%;
-    }
-  `]
+  templateUrl: 'when-rows.html',
 })
-export class TableDemo {
+export class WhenRowsDemo {
   columns = ['name', 'weight', 'symbol', 'position'];
   dataSource: Element[] = ELEMENT_DATA.slice();
 }

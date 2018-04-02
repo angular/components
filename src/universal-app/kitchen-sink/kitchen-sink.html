@@ -281,7 +281,7 @@
 
 <h2>CDK Table</h2>
 
-<cdk-table #table [dataSource]="tableDataSource">
+<cdk-table #table [dataSource]="matTableDataSource">
   <ng-container cdkColumnDef="userId">
     <cdk-header-cell *cdkHeaderCellDef>ID</cdk-header-cell>
     <cdk-cell *cdkCellDef="let row">{{row.userId}}</cdk-cell>
@@ -293,7 +293,7 @@
 
 <h2>Material Table</h2>
 
-<mat-table [dataSource]="tableDataSource">
+<mat-table [dataSource]="matTableDataSource">
   <ng-container cdkColumnDef="userId">
     <mat-header-cell *cdkHeaderCellDef>ID</mat-header-cell>
     <mat-cell *cdkCellDef="let row"> {{row.userId}} </mat-cell>
