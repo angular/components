@@ -3,9 +3,9 @@ workspace(name = "angular_material")
 # Add nodejs rules
 http_archive(
   name = "build_bazel_rules_nodejs",
-  url = "https://github.com/bazelbuild/rules_nodejs/archive/0.5.3.zip",
-  strip_prefix = "rules_nodejs-0.5.3",
-  sha256 = "17a5515f59777b00cb25dbc710017a14273f825029b2ec60e0969d28914870be",
+  url = "https://github.com/bazelbuild/rules_nodejs/archive/0.6.0.zip",
+  strip_prefix = "rules_nodejs-0.6.0",
+  sha256 = "e8a2bb5ca51fbafb244bc507bcebcae33a63d969f47413b319a8dcce032845bf",
 )
 
 # NOTE: this rule installs nodejs, npm, and yarn, but does NOT install
