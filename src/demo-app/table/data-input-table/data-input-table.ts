@@ -103,6 +103,6 @@ export class DataInputTableDemo {
   }
 
   highlightFirstRow() {
-    document.querySelector('table tbody tr')!.setAttribute('style', 'background: red')
+    document.querySelector('table tbody tr')!.setAttribute('style', 'background: red');
   }
 }

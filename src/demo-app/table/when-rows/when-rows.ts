@@ -16,4 +16,6 @@ import {Element, ELEMENT_DATA} from 'table/element-data';
 export class WhenRowsDemo {
   columns = ['name', 'weight', 'symbol', 'position'];
   dataSource: Element[] = ELEMENT_DATA.slice();
+
+  isOdd = (i: number, _d: Element) => i % 2 !== 0;
 }

@@ -21,7 +21,7 @@ import {SimpleColumn} from './simple-column';
       display: block;
       width: 100%;
     }
-      
+
     .mat-table {
       width: 100%;
     }
