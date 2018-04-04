@@ -7,6 +7,7 @@
     "type": "git",
     "url": "https://github.com/angular/material2.git"
   },
+  "schematics": "./src/lib/schematics/collection.json",
   "scripts": {
     "postinstall": "ngc -p angular.tsconfig.json",
     "build": "gulp :publish:build-releases",

@@ -4,7 +4,7 @@ import * as ts from 'typescript';
 import {addImportToModule} from './devkit-utils/ast-utils';
 import {InsertChange} from './devkit-utils/change';
 import {Project} from './devkit-utils/config';
-import {findBootstrapModulePath} from './devkit-utils/ng-ast-utils';
+import {findBootstrapModulePath, getAppModulePath} from './devkit-utils/ng-ast-utils';
 
 
 /** Reads file given path and returns TypeScript source file. */
@@ -19,7 +19,7 @@ export function getSourceFile(host: Tree, path: string): ts.SourceFile {
 
 /** Import and add module to root app module. */
 export function addModuleImportToRootModule(host: Tree, moduleName: string, src: string, project: Project) {
-  const modulePath = getAppModulePath(host, project);
+  const modulePath = getAppModulePath(host, project.architect.build.options.main);
   addModuleImportToModule(host, modulePath, moduleName, src);
 }
 
@@ -52,7 +52,7 @@ export function addModuleImportToModule(
 
 /** Gets the app index.html file */
 export function getIndexHtmlPath(host: Tree, project: Project): string {
-  const buildTarget = project.architect['build'];
+  const buildTarget = project.architect.build.options;
 
   if (buildTarget.index && buildTarget.index.endsWith('index.html')) {
     return buildTarget.index;
@@ -83,13 +83,4 @@ export function getStylesPath(host: Tree, project: Project): string {
   }
 
   throw new SchematicsException('No style files could be found into which a theme could be added');
-}
-
-/** Gets the path to the file containing the project's root NgModule. */
-function getAppModulePath(host: Tree, project: Project) {
-  const buildTarget = project.architect['build'];
-  const mainPath = normalize(`/${project.root}/${buildTarget.options.main}`);
-  const moduleRelativePath = findBootstrapModulePath(host, mainPath);
-
-  return normalize(`/${project.root}/${moduleRelativePath}.ts`);
 }
