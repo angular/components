@@ -1,5 +1,5 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {GuideViewer, GuideViewerModule} from './guide-viewer';
 import {DocsAppTestingModule} from '../../testing/testing-module';

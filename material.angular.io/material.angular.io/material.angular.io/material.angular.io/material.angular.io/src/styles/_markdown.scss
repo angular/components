@@ -1,5 +1,9 @@
 // Styles for overview and guide docs generated via `marked` from the material2 repo.
 
+.docs-markdown {
+  max-width: 100%;
+}
+
 .docs-markdown-h1 {
   display: inline-block;
   font-size: 34px;
