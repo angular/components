@@ -21,6 +21,7 @@ import {ButtonDemo} from '../button/button-demo';
 import {CardDemo} from '../card/card-demo';
 import {CheckboxDemo, MatCheckboxDemoNestedChecklist} from '../checkbox/checkbox-demo';
 import {ChipsDemo} from '../chips/chips-demo';
+import {ConnectedOverlayDemo, DemoOverlay} from '../connected-overlay/connected-overlay-demo';
 import {CustomHeader, DatepickerDemo} from '../datepicker/datepicker-demo';
 import {DemoMaterialModule} from '../demo-material-module';
 import {ContentElementDialog, DialogDemo, IFrameDialog, JazzDialog} from '../dialog/dialog-demo';
@@ -63,13 +64,11 @@ import {
 } from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
+import {TreeDemoModule} from '../tree/tree-demo-module';
 import {TypographyDemo} from '../typography/typography-demo';
 import {VirtualScrollDemo} from '../virtual-scroll/virtual-scroll-demo';
 import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
-import {TableDemoModule} from '../table/table-demo-module';
-import {TreeDemoModule} from '../tree/tree-demo-module';
-import {ConnectedOverlayDemo, DemoOverlay} from '../connected-overlay/connected-overlay-demo';
 
 @NgModule({
   imports: [

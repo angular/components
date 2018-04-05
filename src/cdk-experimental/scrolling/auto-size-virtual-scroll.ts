@@ -23,8 +23,12 @@ export class ItemSizeAverager {
   /** The current average item size. */
   private _averageItemSize: number;
 
+  /** The default size to use for items when no data is available. */
+  private _defaultItemSize: number;
+
   /** @param defaultItemSize The default size to use for items when no data is available. */
   constructor(defaultItemSize = 50) {
+    this._defaultItemSize = defaultItemSize;
     this._averageItemSize = defaultItemSize;
   }
 
@@ -49,6 +53,12 @@ export class ItemSizeAverager {
       }
     }
   }
+
+  /** Resets the averager. */
+  reset() {
+    this._averageItemSize = this._defaultItemSize;
+    this._totalWeight = 0;
+  }
 }
 
 
@@ -65,6 +75,15 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
 
   /** The estimator used to estimate the size of unseen items. */
   private _averager: ItemSizeAverager;
+
+  /** The last measured scroll offset of the viewport. */
+  private _lastScrollOffset: number;
+
+  /** The last measured size of the rendered content in the viewport. */
+  private _lastRenderedContentSize: number;
+
+  /** The last measured size of the rendered content in the viewport. */
+  private _lastRenderedContentOffset: number;
 
   /**
    * @param minBufferPx The minimum amount of buffer rendered beyond the viewport (in pixels).
@@ -85,8 +104,9 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    * @param viewport The viewport to attach this strategy to.
    */
   attach(viewport: CdkVirtualScrollViewport) {
+    this._averager.reset();
     this._viewport = viewport;
-    this._renderContentForOffset(this._viewport.measureScrollOffset());
+    this._setScrollOffset();
   }
 
   /** Detaches this scroll strategy from the currently attached viewport. */
@@ -97,14 +117,15 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   /** Implemented as part of VirtualScrollStrategy. */
   onContentScrolled() {
     if (this._viewport) {
-      this._renderContentForOffset(this._viewport.measureScrollOffset());
+      this._updateRenderedContentAfterScroll();
     }
   }
 
   /** Implemented as part of VirtualScrollStrategy. */
   onDataLengthChanged() {
     if (this._viewport) {
-      this._renderContentForOffset(this._viewport.measureScrollOffset());
+      // TODO(mmalebra): Do something smarter here.
+      this._setScrollOffset();
     }
   }
 
@@ -126,23 +147,127 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     this._addBufferPx = addBufferPx;
   }
 
+  /** Update the rendered content after the user scrolls. */
+  private _updateRenderedContentAfterScroll() {
+    const viewport = this._viewport!;
+
+    // The current scroll offset.
+    const scrollOffset = viewport.measureScrollOffset();
+    // The delta between the current scroll offset and the previously recorded scroll offset.
+    const scrollDelta = scrollOffset - this._lastScrollOffset;
+    // The magnitude of the scroll delta.
+    const scrollMagnitude = Math.abs(scrollDelta);
+
+    // TODO(mmalerba): Record error between actual scroll offset and predicted scroll offset given
+    // the index of the first rendered element. Fudge the scroll delta to slowly eliminate the error
+    // as the user scrolls.
+
+    // The current amount of buffer past the start of the viewport.
+    const startBuffer = this._lastScrollOffset - this._lastRenderedContentOffset;
+    // The current amount of buffer past the end of the viewport.
+    const endBuffer = (this._lastRenderedContentOffset + this._lastRenderedContentSize) -
+        (this._lastScrollOffset + viewport.getViewportSize());
+    // The amount of unfilled space that should be filled on the side the user is scrolling toward
+    // in order to safely absorb the scroll delta.
+    const underscan = scrollMagnitude + this._minBufferPx -
+        (scrollDelta < 0 ? startBuffer : endBuffer);
+
+    // Check if there's unfilled space that we need to render new elements to fill.
+    if (underscan > 0) {
+      // Check if the scroll magnitude was larger than the viewport size. In this case the user
+      // won't notice a discontinuity if we just jump to the new estimated position in the list.
+      // However, if the scroll magnitude is smaller than the viewport the user might notice some
+      // jitteriness if we just jump to the estimated position. Instead we make sure to scroll by
+      // the same number of pixels as the scroll magnitude.
+      if (scrollMagnitude >= viewport.getViewportSize()) {
+        this._setScrollOffset();
+      } else {
+        // The number of new items to render on the side the user is scrolling towards. Rather than
+        // just filling the underscan space, we actually fill enough to have a buffer size of
+        // `addBufferPx`. This gives us a little wiggle room in case our item size estimate is off.
+        const addItems = Math.max(0, Math.ceil((underscan - this._minBufferPx + this._addBufferPx) /
+            this._averager.getAverageItemSize()));
+        // The amount of filled space beyond what is necessary on the side the user is scrolling
+        // away from.
+        const overscan = (scrollDelta < 0 ? endBuffer : startBuffer) - this._minBufferPx +
+            scrollMagnitude;
+        // The number of currently rendered items to remove on the side the user is scrolling away
+        // from.
+        const removeItems = Math.max(0, Math.floor(overscan / this._averager.getAverageItemSize()));
+
+        // The currently rendered range.
+        const renderedRange = viewport.getRenderedRange();
+        // The new range we will tell the viewport to render. We first expand it to include the new
+        // items we want rendered, we then contract the opposite side to remove items we no longer
+        // want rendered.
+        const range = this._expandRange(
+            renderedRange, scrollDelta < 0 ? addItems : 0, scrollDelta > 0 ? addItems : 0);
+        if (scrollDelta < 0) {
+          range.end = Math.max(range.start + 1, range.end - removeItems);
+        } else {
+          range.start = Math.min(range.end - 1, range.start + removeItems);
+        }
+
+        // The new offset we want to set on the rendered content. To determine this we measure the
+        // number of pixels we removed and then adjust the offset to the start of the rendered
+        // content or to the end of the rendered content accordingly (whichever one doesn't require
+        // that the newly added items to be rendered to calculate.)
+        let contentOffset: number;
+        let contentOffsetTo: 'to-start' | 'to-end';
+        if (scrollDelta < 0) {
+          const removedSize = viewport.measureRangeSize({
+            start: range.end,
+            end: renderedRange.end,
+          });
+          contentOffset =
+              this._lastRenderedContentOffset + this._lastRenderedContentSize - removedSize;
+          contentOffsetTo = 'to-end';
+        } else {
+          const removedSize = viewport.measureRangeSize({
+            start: renderedRange.start,
+            end: range.start,
+          });
+          contentOffset = this._lastRenderedContentOffset + removedSize;
+          contentOffsetTo = 'to-start';
+        }
+
+        // Set the range and offset we calculated above.
+        viewport.setRenderedRange(range);
+        viewport.setRenderedContentOffset(contentOffset, contentOffsetTo);
+      }
+    }
+
+    // Save the scroll offset to be compared to the new value on the next scroll event.
+    this._lastScrollOffset = scrollOffset;
+  }
+
   /**
    * Checks the size of the currently rendered content and uses it to update the estimated item size
    * and estimated total content size.
    */
   private _checkRenderedContentSize() {
     const viewport = this._viewport!;
-    const renderedContentSize = viewport.measureRenderedContentSize();
-    this._averager.addSample(viewport.getRenderedRange(), renderedContentSize);
-    this._updateTotalContentSize(renderedContentSize);
+    this._lastRenderedContentOffset = viewport.measureRenderedContentOffset();
+    this._lastRenderedContentSize = viewport.measureRenderedContentSize();
+    this._averager.addSample(viewport.getRenderedRange(), this._lastRenderedContentSize);
+    this._updateTotalContentSize(this._lastRenderedContentSize);
   }
 
   /**
-   * Render the content that we estimate should be shown for the given scroll offset.
-   * Note: must not be called if `this._viewport` is null
+   * Sets the scroll offset and renders the content we estimate should be shown at that point.
+   * @param scrollOffset The offset to jump to. If not specified the scroll offset will not be
+   *     changed, but the rendered content will be recalculated based on our estimate of what should
+   *     be shown at the current scroll offset.
    */
-  private _renderContentForOffset(scrollOffset: number) {
+  private _setScrollOffset(scrollOffset?: number) {
     const viewport = this._viewport!;
+    if (scrollOffset == null) {
+      scrollOffset = viewport.measureScrollOffset();
+    } else {
+      viewport.setScrollOffset(scrollOffset);
+    }
+    this._lastScrollOffset = scrollOffset;
+
     const itemSize = this._averager.getAverageItemSize();
     const firstVisibleIndex =
         Math.min(viewport.getDataLength() - 1, Math.floor(scrollOffset / itemSize));
