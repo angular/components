@@ -15,41 +15,33 @@ import {
   LEFT_ARROW,
   NUMPAD_MULTIPLY,
   RIGHT_ARROW,
-  TAB,
   UP_ARROW
 } from '@angular/cdk/keycodes';
 import {Directive, Optional} from '@angular/core';
-import {Subject} from 'rxjs';
 import {TreeControl} from './control/tree-control';
 
-
 /**
- * Keyboard navigator interface.
- */
-// TODO(tinayuangao): Move to a common place
-export interface CdkNavigator<T> {
-  insert(index: number, data: T, node: FocusableOption, parentData?: T);
-  remove(index: number, parentData?: any);
-  move(previousIndex: number, currentIndex: number, parentData?: T);
-  updateFocusedData(newFocusedData: T);
-}
-
-/**
- * Navigator for CDK tree component. Use keyboard to navigate through the tree nodes.
- * `HOME` moves the focus to first node in the tree
- * `END` moves the focus to last node in the tree
- * `UP_ARROW`, and `DOWN_ARROW` moves the focus to previous/next visible node.
- * `LEFT_ARROW` moves the focus to parent node, or collapse current focused node.
- * `RIGHT_ARROW` moves the focus to first child node, or expand the current focused node.
+ * Keyboard interaction for CDK tree component. Use keyboard to navigate through the tree nodes.
+ * This directive maintaining a list of data/nodes and it's updated when the tree insert/move/remove
+ * a node in the node outlet of the tree, or the node outlet of parent tree node in the nested tree.
+ * Focus of the tree node is moved based on keyboard interaction. It moves the focus to
+ * correct position or expand/collapse nodes.
+ *   `HOME` moves the focus to first node in the tree
+ *   `END` moves the focus to last node in the tree
+ *   `UP_ARROW`, and `DOWN_ARROW` moves the focus to previous/next visible node.
+ *   `LEFT_ARROW` moves the focus to parent node, or collapse current focused node.
+ *   `RIGHT_ARROW` moves the focus to first child node, or expand the current focused node.
+ *   `*` in numer pad expands all nodes
+ * @docs-private
  */
 @Directive({
-  selector: '[cdkTreeNavigator]',
+  selector: '[cdkTreeKeyboardInteraction]',
   host: {
     '(keydown)': '_handleKeydown($event)',
-    'class': 'cdk-tree-navigator',
-  }
+    'class': 'cdk-tree-keyboard-interaction',
+  },
 })
-export class CdkTreeNavigator<T> implements CdkNavigator<T> {
+export class CdkTreeKeyboardInteraction<T> {
   /** The node map map data nodes to CdkTreeNodes */
   protected nodeMap: Map<T, FocusableOption> = new Map<T, FocusableOption>();
 
@@ -65,15 +57,9 @@ export class CdkTreeNavigator<T> implements CdkNavigator<T> {
   /** Tree control is used to expand or collapse nodes. */
   treeControl: TreeControl<T>;
 
-  /**
-   * Stream that emits any time the TAB key is pressed, so components can react
-   * when focus is shifted off of the list.
-   */
-  tabOut: Subject<void> = new Subject<void>();
-
   constructor(@Optional() protected dir: Directionality) {}
 
-  /** Add tree node to navigator's data */
+  /** Add tree node to data list based on owner of parent view container. */
   insert(index: number, data: T, node: FocusableOption, parentData?: T) {
     this.nodeMap.set(data, node);
     if (parentData) {
@@ -82,7 +68,7 @@ export class CdkTreeNavigator<T> implements CdkNavigator<T> {
     this._getNodeList(parentData).splice(index, 0, data);
   }
 
-  /** Remove a node data from navigator */
+  /** Remove a node data from node list based on the owner of view container. */
   remove(index: number, parentData?: T) {
     const nodeList = this._getNodeList(parentData);
     const removed = nodeList.splice(index, 1)[0];
@@ -94,16 +80,21 @@ export class CdkTreeNavigator<T> implements CdkNavigator<T> {
     this.nodeListMap.delete(removed);
   }
 
-  /** Update node's index information */
+  /** Update node's index information based on the owner of view container. */
   move(previousIndex: number, currentIndex: number, parentData?: T) {
     const nodeList = this._getNodeList(parentData);
     const target = nodeList.splice(previousIndex, 1);
     nodeList.splice(currentIndex, 0, target[0]);
   }
 
-  /** When a tree node is focused, update the focused data in navigator */
+  /** When a tree node is focused, update the current focused data. */
   updateFocusedData(newFocusedData: T) {
     this.focusedData = newFocusedData;
+  }
+
+  /** Focus first node when the tree is focused */
+  focus() {
+    this.focusedData ? this._changeFocusedData(this.focusedData) : this.focusFirst();
   }
 
   /** Change focus to first visible node in the tree. */
@@ -201,13 +192,13 @@ export class CdkTreeNavigator<T> implements CdkNavigator<T> {
       case NUMPAD_MULTIPLY:
         this.expandAll();
         break;
-      case TAB:
-        this.tabOut.next();
+      default:
         return;
     }
     event.preventDefault();
   }
 
+  /** Focus the tree node component with new focused data. */
   _changeFocusedData(newFocused: T | undefined) {
     if (newFocused) {
       this.focusedData = newFocused;
@@ -217,16 +208,19 @@ export class CdkTreeNavigator<T> implements CdkNavigator<T> {
     }
   }
 
+  /** Returns the data of the first visible tree node in the tree. */
   _getFirst(): T | undefined {
     const nodeList = this._getNodeList();
     return nodeList[0];
   }
 
+  /** Returns the data of the last visible tree node in the tree. */
   _getLast(): T | undefined {
     const nodeList = this._getNodeList();
     return this._getLastChild(nodeList[nodeList.length - 1]);
   }
 
+  /** Returns the previous visible tree node of current focused data. */
   _getPrevious(): T | undefined {
     if (!this.focusedData) {
       return;
@@ -241,6 +235,7 @@ export class CdkTreeNavigator<T> implements CdkNavigator<T> {
     }
   }
 
+  /** Returns the next visible tree node data of current focused data. */
   _getNext(): T | undefined {
     if (!this.focusedData) {
       return;
@@ -268,6 +263,7 @@ export class CdkTreeNavigator<T> implements CdkNavigator<T> {
     return undefined;
   }
 
+  /** Returns the parent of current focused node. */
   _getParent(): T | undefined {
     if (this.parentMap.has(this.focusedData)) {
       // For nested tree
@@ -288,6 +284,10 @@ export class CdkTreeNavigator<T> implements CdkNavigator<T> {
     }
   }
 
+  /**
+   * Returns the data of list of children in the current `parentData` node's view container.
+   * If there's no parent, return the tree nodes in the tree's view container.
+   */
   _getNodeList(parentData?: T): T[] {
     if (!this.nodeListMap.has(parentData)) {
       this.nodeListMap.set(parentData, []);
@@ -295,6 +295,9 @@ export class CdkTreeNavigator<T> implements CdkNavigator<T> {
     return this.nodeListMap.get(parentData)!;
   }
 
+  /**
+   * Returns the data of last visible elements in the sub-tree rooted at `targetNode`.
+   */
   _getLastChild(targetNode: T) {
     let currentData = targetNode;
     while (currentData && this.nodeListMap.has(currentData) &&

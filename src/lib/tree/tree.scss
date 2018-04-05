@@ -3,6 +3,10 @@ $mat-node-height: 48px;
 
 .mat-tree {
   display: block;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .mat-tree-node {

@@ -20,7 +20,7 @@ import {FlatTreeControl} from './control/flat-tree-control';
 import {NestedTreeControl} from './control/nested-tree-control';
 import {CdkTreeModule} from './index';
 import {CdkTree} from './tree';
-import {CdkTreeNavigator} from './navigator';
+import {CdkTreeKeyboardInteraction} from './navigator';
 import {getTreeControlFunctionsMissingError} from './tree-errors';
 
 
@@ -394,7 +394,7 @@ describe('CdkTree', () => {
     describe('with navigator', () => {
       let fixture: ComponentFixture<FlatCdkNavigationTreeApp>;
       let component: FlatCdkNavigationTreeApp;
-      let navigator: CdkTreeNavigator<TestData>;
+      let navigator: CdkTreeKeyboardInteraction<TestData>;
 
       beforeEach(() => {
         configureCdkTreeTestingModule([FlatCdkNavigationTreeApp]);
@@ -404,7 +404,7 @@ describe('CdkTree', () => {
         dataSource = component.dataSource as FakeDataSource;
         tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
-        navigator = tree._treeNavigator;
+        navigator = tree._treeInteraction;
         fixture.detectChanges();
       });
 
@@ -932,7 +932,7 @@ describe('CdkTree', () => {
     describe('with navigator', () => {
       let fixture: ComponentFixture<NestedCdkNavigationTreeApp>;
       let component: NestedCdkNavigationTreeApp;
-      let navigator: CdkTreeNavigator<TestData>;
+      let navigator: CdkTreeKeyboardInteraction<TestData>;
 
       beforeEach(() => {
         configureCdkTreeTestingModule([NestedCdkNavigationTreeApp]);
@@ -942,7 +942,7 @@ describe('CdkTree', () => {
         dataSource = component.dataSource as FakeDataSource;
         tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
-        navigator = tree._treeNavigator;
+        navigator = tree._treeInteraction;
         fixture.detectChanges();
       });
 

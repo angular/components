@@ -10,7 +10,7 @@ import {FocusMonitor} from '@angular/cdk/a11y';
 import {
   CdkNestedTreeNode,
   CdkTree,
-  CdkTreeNavigator,
+  CdkTreeKeyboardInteraction,
   CdkTreeNode,
   CdkTreeNodeDef,
 } from '@angular/cdk/tree';
@@ -57,11 +57,11 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
   constructor(protected _elementRef: ElementRef,
               protected _tree: CdkTree<T>,
               protected _focusMonitor: FocusMonitor,
-              @Optional() protected _treeNavigator: CdkTreeNavigator<T>,
+              @Optional() public _treeInteraction: CdkTreeKeyboardInteraction<T>,
               @Attribute('tabindex') tabIndex: string) {
-    super(_elementRef, _tree, _focusMonitor, _treeNavigator);
+    super(_elementRef, _tree, _focusMonitor, _treeInteraction);
 
-    this.tabIndex = Number(tabIndex) || (_treeNavigator ? -1 : 0);
+    this.tabIndex = Number(tabIndex) || (_treeInteraction ? -1 : 0);
   }
 }
 
@@ -108,12 +108,12 @@ export class MatNestedTreeNode<T> extends _MatNestedTreeNodeMixinBase<T>
   constructor(protected _elementRef: ElementRef,
               protected _tree: CdkTree<T>,
               protected _focusMonitor: FocusMonitor,
-              @Optional() protected _treeNavigator: CdkTreeNavigator<T>,
+              @Optional() public _treeInteraction: CdkTreeKeyboardInteraction<T>,
               protected _differs: IterableDiffers,
               @Attribute('tabindex') tabIndex: string) {
-    super(_elementRef, _tree, _focusMonitor, _treeNavigator, _differs);
+    super(_elementRef, _tree, _focusMonitor, _treeInteraction, _differs);
 
-    this.tabIndex = Number(tabIndex) || (_treeNavigator ? -1 : 0);
+    this.tabIndex = Number(tabIndex) || (_treeInteraction ? -1 : 0);
   }
 
   // This is a workaround for https://github.com/angular/angular/issues/23091

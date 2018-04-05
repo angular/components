@@ -2,7 +2,7 @@
 
   <mat-expansion-panel>
     <mat-expansion-panel-header>Flattened tree</mat-expansion-panel-header>
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" matTreeNavigator>
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" matTreeKeyboardInteraction>
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding >
         <button mat-icon-button disabled></button>
         {{node.filename}} : {{node.type}}
@@ -21,7 +21,8 @@
 
   <mat-expansion-panel>
     <mat-expansion-panel-header>Nested tree</mat-expansion-panel-header>
-    <mat-tree [dataSource]="nestedDataSource" [treeControl]="nestedTreeControl" matTreeNavigator>
+    <mat-tree [dataSource]="nestedDataSource" [treeControl]="nestedTreeControl"
+              matTreeKeyboardInteraction>
       <mat-nested-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
         <li class="mat-tree-node">
           <button mat-icon-button disabled></button>

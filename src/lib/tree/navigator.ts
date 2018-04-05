@@ -5,19 +5,20 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {CdkTreeNavigator} from '@angular/cdk/tree';
+import {CdkTreeKeyboardInteraction} from '@angular/cdk/tree';
 import {Directive} from '@angular/core';
 
 /**
- * Wrapper for keyboard navigator for Material design tree
+ * Wrapper for keyboard interaction for Material design tree
+ * @docs-private
  */
 @Directive({
-  selector: '[matTreeNavigator]',
+  selector: '[matTreeKeyboardInteraction]',
   host: {
     '(keydown)': '_handleKeydown($event)',
-    'class': 'mat-tree-navigator',
+    'class': 'mat-tree-keyboard-interaction',
   },
-  providers: [{provide: CdkTreeNavigator, useExisting: MatTreeNavigator}]
+  providers: [{provide: CdkTreeKeyboardInteraction, useExisting: MatTreeKeyboardInteraction}]
 })
-export class MatTreeNavigator<T> extends CdkTreeNavigator<T> {
+export class MatTreeKeyboardInteraction<T> extends CdkTreeKeyboardInteraction<T> {
 }

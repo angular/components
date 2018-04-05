@@ -42,7 +42,7 @@ import {
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError
 } from './tree-errors';
-import {CdkTreeNavigator} from './navigator';
+import {CdkTreeKeyboardInteraction} from './navigator';
 
 /**
  * Tree node for CdkTree. It contains the data in the tree node.
@@ -51,12 +51,11 @@ import {CdkTreeNavigator} from './navigator';
   selector: 'cdk-tree-node',
   exportAs: 'cdkTreeNode',
   host: {
-    '[attr.tabindex]': '_treeNavigator ? -1 : null',
+    '[attr.tabindex]': '_treeInteraction ? -1 : null',
     '[attr.aria-expanded]': 'isExpanded',
     '[attr.aria-level]': 'role === "treeitem" ? level : null',
     '[attr.role]': 'role',
     'class': 'cdk-tree-node',
-    '(focus)': '_focus()'
   },
 })
 export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
@@ -94,7 +93,7 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
   constructor(protected _elementRef: ElementRef,
               protected _tree: CdkTree<T>,
               protected _focusMonitor: FocusMonitor,
-              @Optional() protected treeNavigator: CdkTreeNavigator<T>) {
+              @Optional() public _treeInteraction: CdkTreeKeyboardInteraction<T>) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T>;
     this._focusMonitor.monitor(this._elementRef.nativeElement);
   }
@@ -110,10 +109,10 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
     this._elementRef.nativeElement.focus();
   }
 
-  /** Update the focused data in tree navigator */
+  /** Update the focused data in tree keyboard interaction */
   _focus(): void {
-    if (this._tree._treeNavigator) {
-      this._tree._treeNavigator.updateFocusedData(this._data);
+    if (this._tree._treeInteraction) {
+      this._tree._treeInteraction.updateFocusedData(this._data);
     }
   }
 
@@ -210,7 +209,7 @@ export class CdkTree<T>
   // Outlets within the tree's template where the dataNodes will be inserted.
   @ViewChild(CdkTreeNodeOutlet) _nodeOutlet: CdkTreeNodeOutlet;
 
-  @ContentChild(CdkTreeNavigator) _treeNavigator: CdkTreeNavigator<T>;
+  @ContentChild(CdkTreeKeyboardInteraction) _treeInteraction: CdkTreeKeyboardInteraction<T>;
 
   /** The tree node template for the tree */
   @ContentChildren(CdkTreeNodeDef) _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
@@ -225,16 +224,21 @@ export class CdkTree<T>
     new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
 
   constructor(private _differs: IterableDiffers,
-              private _changeDetectorRef: ChangeDetectorRef) {}
+              private _changeDetectorRef: ChangeDetectorRef,
+              protected _elementRef: ElementRef,
+              protected _focusMonitor: FocusMonitor) {
+  }
 
   ngOnInit() {
     this._dataDiffer = this._differs.find([]).create(this.trackBy);
     if (!this.treeControl) {
       throw getTreeControlMissingError();
     }
+    this._monitorTreeFocus();
   }
 
   ngOnDestroy() {
+    this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
     this._nodeOutlet.viewContainer.clear();
 
     this._onDestroy.next();
@@ -263,21 +267,14 @@ export class CdkTree<T>
   }
 
   ngAfterContentInit() {
-    if (this._treeNavigator) {
-      this._treeNavigator.treeControl = this.treeControl;
-
-      // Prevents the tree from capturing focus and redirecting
-      // it back to the first node when the user tabs out.
-      this._treeNavigator.tabOut.pipe(takeUntil(this._onDestroy)).subscribe(() => {
-        this._tabIndex = -1;
-        setTimeout(() => this._tabIndex = this._userTabIndex || 0);
-      });
+    if (this._treeInteraction) {
+      this._treeInteraction.treeControl = this.treeControl;
     }
   }
 
   focus() {
-    if (this._treeNavigator) {
-      this._treeNavigator.focusFirst();
+    if (this._treeInteraction) {
+      this._treeInteraction.focus();
     }
   }
 
@@ -343,14 +340,14 @@ export class CdkTree<T>
         } else if (currentIndex == null) {
           viewContainer.remove(adjustedPreviousIndex);
           this._levels.delete(item.item);
-          if (this._treeNavigator) {
-            this._treeNavigator.remove(adjustedPreviousIndex, parentData);
+          if (this._treeInteraction) {
+            this._treeInteraction.remove(adjustedPreviousIndex, parentData);
           }
         } else {
           const view = viewContainer.get(adjustedPreviousIndex);
           viewContainer.move(view!, currentIndex);
-          if (this._treeNavigator) {
-            this._treeNavigator.move(adjustedPreviousIndex, currentIndex, parentData);
+          if (this._treeInteraction) {
+            this._treeInteraction.move(adjustedPreviousIndex, currentIndex, parentData);
           }
         }
       });
@@ -405,10 +402,23 @@ export class CdkTree<T>
     if (CdkTreeNode.mostRecentTreeNode) {
       (CdkTreeNode.mostRecentTreeNode as CdkTreeNode<T>).data = nodeData;
 
-      if (this._treeNavigator) {
-        this._treeNavigator.insert(index, nodeData,
+      if (this._treeInteraction) {
+        this._treeInteraction.insert(index, nodeData,
             CdkTreeNode.mostRecentTreeNode as CdkTreeNode<T>, parentData);
       }
     }
+  }
+
+  /**
+   * Monitor focus of the tree. When the tree is focused, change the tab index to -1 so TAB
+   * can move the focus out of the tree. When the tree is blurred, change back the tab index.
+   * can move the focus out of the tree. When the tree is blurred, change back the tab index.
+   */
+  _monitorTreeFocus() {
+    this._focusMonitor.monitor(this._elementRef.nativeElement, true)
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe((origin) => {
+      this._tabIndex = origin ? -1 : (this._userTabIndex || 0);
+    });
   }
 }

@@ -21,8 +21,13 @@
     margin: 16px;
   }
 
-  .mat-tree-navigator .cdk-keyboard-focused > * > .mat-tree-node,
-  .mat-tree-navigator .cdk-keyboard-focused > .mat-tree-node {
-    background: #eee;
+  .mat-tree-keyboard-interaction {
+    .cdk-program-focused,
+    .cdk-keyboard-focused {
+      > .mat-tree-node,
+      > * > .mat-tree-node {
+        background: #eee;
+      }
+    }
   }
 }
