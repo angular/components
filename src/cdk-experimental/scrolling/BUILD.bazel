@@ -1,5 +1,6 @@
 package(default_visibility=["//visibility:public"])
 load("@angular//:index.bzl", "ng_module")
+load("@build_bazel_rules_typescript//:defs.bzl", "ts_library", "ts_web_test")
 load("@io_bazel_rules_sass//sass:sass.bzl", "sass_binary")
 
 
@@ -7,14 +8,12 @@ ng_module(
   name = "scrolling",
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/cdk-experimental/scrolling",
-    assets = [
-      ":virtual_scroll_viewport_css",
-    ],
+  assets = [":virtual_scroll_viewport_css"] + glob(["**/*.html"]),
   deps = [
     "//src/cdk/collections",
     "@rxjs",
   ],
-  tsconfig = ":tsconfig-build.json",
+  tsconfig = "//src/cdk-experimental:tsconfig-build.json",
 )
 
 sass_binary(
@@ -26,8 +25,36 @@ sass_binary(
 # Copy the output of the sass_binary such that the filename and path match what we expect.
 genrule(
   name = "virtual_scroll_viewport_css",
-  srcs = [":virtual_scroll_viewport_scss"],
+  srcs = [":virtual_scroll_viewport_scss.css"],
   outs = ["virtual-scroll-viewport.css"],
-  cmd = "cat $(locations :virtual_scroll_viewport_scss) > $@",
+  cmd = "cp $< $@",
 )
 
+ts_library(
+  name = "scrolling_test_sources",
+  testonly = 1,
+  srcs = glob(["**/*.spec.ts"]),
+  deps = [
+    ":scrolling",
+    "//src/cdk/testing",
+    "@rxjs",
+  ],
+  tsconfig = "//src/cdk-experimental:tsconfig-build.json",
+)
+
+ts_web_test(
+  name = "unit_tests",
+  bootstrap = [
+    "//:web_test_bootstrap_scripts",
+  ],
+  tags = ["manual"],
+
+  # Do not sort
+  deps = [
+    "//:tslib_bundle",
+    "//:angular_bundles",
+    "//:angular_test_bundles",
+    "//test:angular_test_init",
+    ":scrolling_test_sources",
+  ],
+)

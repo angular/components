@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Observable} from 'rxjs/Observable';
-import {of as observableOf} from 'rxjs/observable/of';
+import {Observable, of as observableOf} from 'rxjs';
 import {DataSource} from './data-source';
 
 

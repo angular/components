@@ -22,13 +22,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
-import {Observable} from 'rxjs/Observable';
-import {fromEvent} from 'rxjs/observable/fromEvent';
-import {sampleTime} from 'rxjs/operators/sampleTime';
-import {take} from 'rxjs/operators/take';
-import {takeUntil} from 'rxjs/operators/takeUntil';
-import {animationFrame} from 'rxjs/scheduler/animationFrame';
-import {Subject} from 'rxjs/Subject';
+import {animationFrameScheduler, fromEvent, Observable, Subject} from 'rxjs';
+import {sampleTime, take, takeUntil} from 'rxjs/operators';
 import {CdkVirtualForOf} from './virtual-for-of';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 
@@ -106,7 +101,7 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
         fromEvent(viewportEl, 'scroll')
             // Sample the scroll stream at every animation frame. This way if there are multiple
             // scroll events in the same frame we only need to recheck our layout once.
-            .pipe(sampleTime(0, animationFrame))
+            .pipe(sampleTime(0, animationFrameScheduler))
             .subscribe(() => this._scrollStrategy.onContentScrolled());
       });
     });

@@ -23,12 +23,8 @@ import {
   TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {pairwise} from 'rxjs/operators/pairwise';
-import {shareReplay} from 'rxjs/operators/shareReplay';
-import {startWith} from 'rxjs/operators/startWith';
-import {switchMap} from 'rxjs/operators/switchMap';
-import {Subject} from 'rxjs/Subject';
+import {Observable, Subject} from 'rxjs';
+import {pairwise, shareReplay, startWith, switchMap} from 'rxjs/operators';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
 

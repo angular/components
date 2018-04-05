@@ -7,4 +7,4 @@
  */
 
 export * from './public-api';
-export * from './scrolling/index';
+export * from '@angular/cdk-experimental/scrolling';
