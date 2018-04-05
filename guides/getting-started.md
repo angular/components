@@ -194,6 +194,7 @@ System.config({
   packages: {
     //...
     hammerjs: {main: './hammer.min.js', defaultExtension: 'js'}
+    //...
   }
 });
 ```
