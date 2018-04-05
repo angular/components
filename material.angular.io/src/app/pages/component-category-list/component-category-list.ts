@@ -5,9 +5,7 @@ import {ActivatedRoute, Params, RouterModule} from '@angular/router';
 import {DocumentationItems, SECTIONS} from '../../shared/documentation-items/documentation-items';
 import {ComponentPageTitle} from '../page-title/page-title';
 import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
-import {Observable} from 'rxjs/Observable';
-import {combineLatest} from 'rxjs/observable/combineLatest';
-import {Subscription} from 'rxjs/Subscription';
+import {Observable, combineLatest, Subscription} from 'rxjs';
 
 
 @Component({

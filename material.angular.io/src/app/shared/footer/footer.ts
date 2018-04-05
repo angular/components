@@ -1,5 +1,5 @@
 import {Component, NgModule} from '@angular/core';
-import {materialVersion} from '../version/version'
+import {materialVersion} from '../version/version';
 
 @Component({
   selector: 'app-footer',

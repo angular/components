@@ -1,10 +1,8 @@
 import {Component, ElementRef, Inject, Input, OnInit} from '@angular/core';
 import {DOCUMENT} from '@angular/platform-browser';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {Subject} from 'rxjs/Subject';
-import {debounceTime} from 'rxjs/operators/debounceTime';
-import {takeUntil} from 'rxjs/operators/takeUntil';
-import {fromEvent} from 'rxjs/observable/fromEvent';
+import {Subject, fromEvent} from 'rxjs';
+import {debounceTime, takeUntil} from 'rxjs/operators';
 
 
 interface Link {
@@ -77,6 +75,10 @@ export class TableOfContents implements OnInit {
           debounceTime(10))
         .subscribe(() => this.onScroll());
     });
+  }
+
+  ngAfterViewInit() {
+    this.updateScrollPosition();
   }
 
   ngOnDestroy(): void {

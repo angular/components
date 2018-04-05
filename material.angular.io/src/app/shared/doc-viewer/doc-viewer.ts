@@ -11,7 +11,7 @@ import {
   Output,
 } from '@angular/core';
 import {Http} from '@angular/http';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {ExampleViewer} from '../example-viewer/example-viewer';
 import {HeaderLink} from './header-link';
 import {ComponentPortal, DomPortalHost} from '@angular/cdk/portal';

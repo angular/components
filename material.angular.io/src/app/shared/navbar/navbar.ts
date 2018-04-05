@@ -24,7 +24,14 @@ export class NavBar {
 }
 
 @NgModule({
-  imports: [MatButtonModule, MatMenuModule, RouterModule, ThemePickerModule, VersionPickerModule, CommonModule],
+  imports: [
+    MatButtonModule,
+    MatMenuModule,
+    RouterModule,
+    ThemePickerModule,
+    VersionPickerModule,
+    CommonModule
+  ],
   exports: [NavBar],
   declarations: [NavBar],
 })

@@ -1,6 +1,5 @@
 import {
-  Component, Input, NgZone, ViewEncapsulation, ViewChild, OnInit, NgModule, trigger, state,
-  animate, transition, style, OnDestroy
+  Component, Input, NgZone, ViewEncapsulation, ViewChild, OnInit, NgModule, OnDestroy
 } from '@angular/core';
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
 import {MatSidenav, MatSidenavModule, MatIconModule} from '@angular/material';
@@ -9,12 +8,9 @@ import {ActivatedRoute, Params, Router, RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {ComponentHeaderModule} from '../component-page-header/component-page-header';
 import {FooterModule} from '../../shared/footer/footer';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
-import {switchMap} from 'rxjs/operators/switchMap';
-import {takeUntil} from 'rxjs/operators/takeUntil';
-import {startWith} from 'rxjs/operators/startWith';
-import {combineLatest} from 'rxjs/observable/combineLatest';
+import {Observable, Subject, combineLatest} from 'rxjs';
+import {switchMap, takeUntil, startWith} from 'rxjs/operators';
+import {trigger, animate, state, style, transition} from '@angular/animations';
 
 const SMALL_WIDTH_BREAKPOINT = 720;
 
@@ -62,8 +58,8 @@ export class ComponentSidenav implements OnInit {
   templateUrl: './component-nav.html',
   animations: [
     trigger('bodyExpansion', [
-      state('collapsed', style({height: '0px', visibility: 'hidden'})),
-      state('expanded', style({height: '*', visibility: 'visible'})),
+      state('collapsed', style({height: '0px', display: 'none'})),
+      state('expanded', style({height: '*', display: 'block'})),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4,0.0,0.2,1)')),
     ]),
   ],
@@ -105,7 +101,10 @@ export class ComponentNav implements OnInit, OnDestroy {
           break;
         }
       }
-      this.expansions[category.id] = match;
+
+      if (this.expansions[category.id] === false) {
+        this.expansions[category.id] = match;
+      }
     }
   }
 
@@ -121,7 +120,7 @@ export class ComponentNav implements OnInit, OnDestroy {
 
   /** Gets whether expanded or not */
   getExpanded(category: string): boolean {
-    return this.expansions[category];
+    return this.expansions[category] === undefined ? true : this.expansions[category];
   }
 
 }

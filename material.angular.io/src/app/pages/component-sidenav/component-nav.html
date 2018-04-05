@@ -2,6 +2,7 @@
   <div class="docs-component-viewer-nav-content">
     <nav *ngFor="let category of docItems.getCategories((params | async)?.section); let last = last;">
       <button (click)="toggleExpand(category.id)"
+              class="docs-nav-content-btn"
               [attr.aria-label]="category.name + ', section toggle'"
               [attr.aria-controls]="'panel-' + category.id"
               [attr.aria-expanded]="getExpanded(category.id)">

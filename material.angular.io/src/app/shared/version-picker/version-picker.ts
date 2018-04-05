@@ -1,7 +1,7 @@
 import {Component, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatButtonModule, MatMenuModule} from '@angular/material';
-import {docVersions, materialVersion, VersionInfo} from '../version/version'
+import {docVersions, materialVersion, VersionInfo} from '../version/version';
 
 @Component({
   selector: 'version-picker',

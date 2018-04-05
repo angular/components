@@ -1,5 +1,5 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {TableOfContents} from './table-of-contents';
 import {TableOfContentsModule} from './table-of-contents.module';

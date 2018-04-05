@@ -1,6 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {Router, NavigationEnd} from '@angular/router';
-import {filter} from 'rxjs/operators/filter';
+import {filter} from 'rxjs/operators';
 
 import {GaService} from './shared/ga/ga';
 
