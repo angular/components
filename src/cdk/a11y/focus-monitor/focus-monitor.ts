@@ -18,7 +18,7 @@ import {
   Output,
   SkipSelf,
 } from '@angular/core';
-import {of as observableOf, Observable, Subject, Subscription} from 'rxjs';
+import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 
 
 // This is the value used by AngularJS Material. Through trial and error (on iPhone 6S) they found
@@ -315,7 +315,10 @@ export class FocusMonitor implements OnDestroy {
     this._setClasses(element, this._origin);
     elementInfo.subject.next(this._origin);
     this._lastFocusOrigin = this._origin;
-    this._origin = null;
+
+    // Null-out the origin after a setTimeout. This allows the full capture/bubble cycle to complete
+    // for the current event before nulling it.
+    setTimeout(() => this._origin = null);
   }
 
   /**
