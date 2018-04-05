@@ -113,6 +113,8 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
   }
 
   ngDoCheck() {
+    // In order to batch setting the scroll offset together with other DOM writes, we wait until a
+    // change detection cycle to actually apply it.
     if (this._pendingScrollOffset != null) {
       if (this.orientation === 'horizontal') {
         this.elementRef.nativeElement.scrollLeft = this._pendingScrollOffset;
@@ -236,6 +238,8 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
 
   /** Sets the scroll offset on the viewport. */
   setScrollOffset(offset: number) {
+    // Rather than setting the offset immediately, we batch it up to be applied along with other DOM
+    // writes during the next change detection cycle.
     this._ngZone.run(() => {
       this._pendingScrollOffset = offset;
       this._changeDetectorRef.markForCheck();
