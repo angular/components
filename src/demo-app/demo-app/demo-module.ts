@@ -64,7 +64,7 @@ import {TreeDemoModule} from '../tree/tree-demo-module';
 import {TypographyDemo} from '../typography/typography-demo';
 import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
-import {PaginatorDemo} from 'paginator/paginator-demo';
+import {PaginatorDemo} from '../paginator/paginator-demo';
 
 @NgModule({
   imports: [
