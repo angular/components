@@ -41,7 +41,7 @@ export type CdkVirtualForOfContext<T> = {
 };
 
 
-/** Helper to extract size from a ClientRect. **/
+/** Helper to extract size from a ClientRect. */
 function getSize(orientation: 'horizontal' | 'vertical', rect: ClientRect): number {
   return orientation == 'horizontal' ? rect.width : rect.height;
 }
