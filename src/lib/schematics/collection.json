@@ -10,7 +10,7 @@
       "aliases": ["material-shell"]
     },
     "ng-update": {
-      "description": "Attempts to make fixes to the application to make upgrading from Angular Material 5 to 6 easier",
+      "description": "Updates API usage for the most recent major version of Angular CDK and Angular Material",
       "factory": "./update/update"
     },
     // Create a dashboard component
