@@ -26,6 +26,9 @@ export class Rule extends Rules.TypedRule {
 }
 
 export class SwitchIdentifiersWalker extends ProgramAwareRuleWalker {
+  constructor(sf, opt, prog) {
+    super(sf, opt, prog);
+  }
 
   /** List of Angular Material declarations inside of the current source file. */
   materialDeclarations: ts.Declaration[] = [];

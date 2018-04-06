@@ -11,8 +11,8 @@ export default function(): Rule {
         "switch-identifiers": true,
       }
     }, {
-      includes: '*.ts',
       silent: false,
+      tsConfigPath: './tsconfig.json',
     }));
   };
 }
