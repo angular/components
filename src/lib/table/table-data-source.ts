@@ -123,16 +123,16 @@ export class MatTableDataSource<T> extends DataSource<T> {
       // This avoids inconsistent results when comparing values to undefined/null.
       // If neither value exists, return 0 (equal).
       let comparatorResult = 0;
-      if (valueA != null && valueB != null) {
+      if (valueA && valueB) {
         // Check if one value is greater than the other; if equal, comparatorResult should remain 0.
         if (valueA > valueB) {
           comparatorResult = 1;
         } else if (valueA < valueB) {
           comparatorResult = -1;
         }
-      } else if (valueA != null) {
+      } else if (valueA) {
         comparatorResult = 1;
-      } else if (valueB != null) {
+      } else if (valueB) {
         comparatorResult = -1;
       }
 
