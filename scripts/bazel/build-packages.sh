@@ -4,7 +4,8 @@
 set -e
 
 # Source directories for packages to build with bazel and copy into dist/
-packages=(cdk lib cdk-experimental material-experimental material-moment-adapter)
+# We use the bazel tag "publish" as a marker for rules we care about here.
+packages=$(bazel query --output=package 'attr(tags, publish, ...)' | xargs -n1 basename)
 
 # The bazel-bin directory where the bazel output is written
 bazel_bin="$(bazel info bazel-bin)"
@@ -30,10 +31,6 @@ done
 
 # Update the root @angular/material metadata file to re-export metadata from each entry-point.
 ./scripts/bazel/update-material-metadata-reexports.js
-
-# Update the Angular version used as a peerDependency for all of the packages.
-ng_version=$(echo "console.log(require('./build-config').angularVersion)" | node)
-find ${packages_dist} -type f -exec sed -i "s|0.0.0-NG|${ng_version}|g" {} \;
 
 # Create a tgz for each package with `npm pack`. Change directory in a subshell because
 # `npm pack` always outputs to the current working directory.
