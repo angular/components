@@ -6,7 +6,6 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-// import { relative, Path } from "../../../angular_devkit/core/src/virtual-fs";
 import { Path, basename, dirname, normalize } from '@angular-devkit/core';
 
 export interface Location {
