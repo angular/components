@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@angular-devkit/core": "^0.5.4",
-    "@angular-devkit/schematics": "^0.5.4",
+    "@angular-devkit/schematics": "file:../devkit/dist/@angular-devkit/schematics/angular-devkit-schematics-0.5.4.tgz",
     "@angular/bazel": "6.0.0-rc.3",
     "@angular/compiler-cli": "6.0.0-rc.3",
     "@angular/http": "6.0.0-rc.3",
