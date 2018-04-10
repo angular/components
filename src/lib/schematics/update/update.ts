@@ -1,4 +1,4 @@
-import {FileEntry, Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
+import {chain, FileEntry, Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
 import {
   NodePackageInstallTask,
   RunSchematicTask,
@@ -64,13 +64,13 @@ export default function(): Rule {
 
     // Upgrade @angular/material back to 6.x.
     const upgradeTask = context.addTask(new NodePackageInstallTask({
-      // TODO(mmalerba): Change "next" to ">=6 <7". Change material back to npm package.
-      packageName: '@angular/cdk@next /usr/local/google/home/mmalerba/material2/dist/releases/material/angular-material-6.0.0-rc.1.tgz'
+      // TODO(mmalerba): Change "next" to ">=6 <7".
+      packageName: '@angular/cdk@next @angular/material@next'
     }), [updateTask]);
 
     // Delete the temporary schematics directory.
     context.addTask(
-        new RunSchematicTask(path.join(__dirname, '../collection.json'), 'ng-post-update', {
+        new RunSchematicTask('ng-post-update', {
           deleteFiles: updateSrcs
               .map(entry => entry.path.replace(schematicsSrcPath, schematicsTmpPath))
         }), [upgradeTask]);
@@ -79,12 +79,18 @@ export default function(): Rule {
 
 /** Post-update schematic to be called when ng update is finished. */
 export function postUpdate(options: {deleteFiles: string[]}): Rule {
-  return (tree: Tree) => {
+  return (tree: Tree, context: SchematicContext) => {
     for (let file of options.deleteFiles) {
       tree.delete(file);
     }
 
-    console.log('\nComplete! Please check the output above for any issues that were detected but' +
-                ' could not be automatically fixed.');
-  }
+    context.addTask(new RunSchematicTask('ng-post-post-update', {}));
+  };
+}
+
+/** Post-post-update schematic to be called when post-update is finished. */
+export function postPostUpdate(): Rule {
+  return () => console.log(
+      '\nComplete! Please check the output above for any issues that were detected but could not' +
+      ' be automatically fixed.');
 }
