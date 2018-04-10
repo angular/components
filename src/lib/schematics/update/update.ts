@@ -32,26 +32,36 @@ export default function(): Rule {
     const updateTask = context.addTask(new TslintFixTask({
       rulesDirectory: path.join(schematicsTmpPath, 'update/rules'),
       rules: {
+        // Automatic fixes.
         "switch-identifiers": true,
         "switch-property-names": true,
         "switch-string-literal-attribute-selectors": true,
         "switch-string-literal-css-names": true,
         "switch-string-literal-element-selectors": true,
-        // TODO(mmalerba): These require an extra CLI param, figure out how to handle.
-        /*"switch-stylesheet-attribute-selectors": true,
+        "switch-stylesheet-attribute-selectors": true,
         "switch-stylesheet-css-names": true,
         "switch-stylesheet-element-selectors": true,
         "switch-stylesheet-input-names": true,
-        "switch-stylesheet-output-names": true,*/
+        "switch-stylesheet-output-names": true,
         "switch-template-attribute-selectors": true,
         "switch-template-css-names": true,
         "switch-template-element-selectors": true,
         "switch-template-export-as-names": true,
         "switch-template-input-names": true,
         "switch-template-output-names": true,
+
+        // Additional issues we can detect but not automatically fix.
+        "check-class-declaration-misc": true,
+        "check-identifier-misc": true,
+        "check-import-misc": true,
+        "check-inheritance": true,
+        "check-method-calls": true,
+        "check-property-access-misc": true,
+        "check-template-misc": true
       }
     }, {
       silent: false,
+      ignoreErrors: true,
       tsConfigPath: './tsconfig.json',
     }), [downgradeCdkTask, downgradeMaterialTask]);
 
@@ -80,5 +90,8 @@ export function postUpdate(options: {deleteFiles: string[]}): Rule {
     for (let file of options.deleteFiles) {
       tree.delete(file);
     }
+
+    console.log('\nComplete! Please check the output above for any issues that were detected but' +
+                ' could not be automatically fixed.');
   }
 }
