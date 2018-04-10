@@ -21,7 +21,17 @@ export interface MatMenuPanel {
   yPosition: MenuPositionY;
   overlapTrigger: boolean;
   templateRef: TemplateRef<any>;
-  close: EventEmitter<void | 'click' | 'keydown' | 'tab'>;
+  /**
+   * @deprecated Use `closed` instead.
+   * @deletion-target 7.0.0
+   */
+  close?: EventEmitter<void | 'click' | 'keydown' | 'tab'>;
+
+  /**
+   * @deprecated Signature to be changed to `Event | void` and to become required.
+   * @deletion-target 7.0.0
+   */
+  closed?: EventEmitter<void | 'click' | 'keydown' | 'tab'>;
   parentMenu?: MatMenuPanel | undefined;
   direction?: Direction;
   focusFirstItem: (origin?: FocusOrigin) => void;

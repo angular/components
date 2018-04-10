@@ -186,27 +186,15 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
     }
   }
 
-  /**
-   * This method takes classes set on the host mat-menu element and applies them on the
-   * menu template that displays in the overlay container.  Otherwise, it's difficult
-   * to style the containing menu from outside the component.
-   * @deprecated Use `panelClass` instead.
-   * @deletion-target 6.0.0
-   */
-  @Input()
-  get classList(): string { return this.panelClass; }
-  set classList(classes: string) { this.panelClass = classes; }
-
   /** Event emitted when the menu is closed. */
   @Output() readonly closed: EventEmitter<void | 'click' | 'keydown' | 'tab'> =
       new EventEmitter<void | 'click' | 'keydown' | 'tab'>();
 
   /**
-   * Event emitted when the menu is closed.
-   * @deprecated Switch to `closed` instead
-   * @deletion-target 6.0.0
+   * @deprecated Use `closed` instead.
+   * @deletion-target 7.0.0
    */
-  @Output() close = this.closed;
+  readonly close: EventEmitter<void | 'click' | 'keydown' | 'tab'> = this.closed;
 
   constructor(
     private _elementRef: ElementRef,
@@ -219,7 +207,7 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
 
   ngAfterContentInit() {
     this._keyManager = new FocusKeyManager<MatMenuItem>(this.items).withWrap().withTypeAhead();
-    this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close.emit('tab'));
+    this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.closed.emit('tab'));
   }
 
   ngOnDestroy() {
@@ -316,16 +304,12 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
     }
   }
 
-  /** Starts the enter animation. */
-  _startAnimation() {
-    // @deletion-target 6.0.0 Combine with _resetAnimation.
-    this._panelAnimationState = 'enter';
-  }
-
-  /** Resets the panel animation to its initial state. */
-  _resetAnimation() {
-    // @deletion-target 6.0.0 Combine with _startAnimation.
-    this._panelAnimationState = 'void';
+  /**
+   * Starts an animation of the menu.
+   * @param toState State to which to animate the menu.
+   */
+  _startAnimation(toState: 'void' | 'enter') {
+    this._panelAnimationState = toState;
   }
 
   /** Callback that is invoked when the panel animation completes. */
