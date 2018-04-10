@@ -19,13 +19,10 @@ export default function(): Rule {
       tree.create(src.path.replace(schematicsSrcPath, schematicsTmpPath), src.content);
     }
 
-    // Downgrade @angular/material to 5.x. This allows us to use the 5.x type information in the
-    // update script.
-    const downgradeCdkTask = context.addTask(new NodePackageInstallTask({
-      packageName: '@angular/cdk@">=5 <6"'
-    }));
-    const downgradeMaterialTask = context.addTask(new NodePackageInstallTask({
-      packageName: '@angular/material@">=5 <6"'
+    // Downgrade @angular/cdk and @angular/material to 5.x. This allows us to use the 5.x type
+    // information in the update script.
+    const downgradeTask = context.addTask(new NodePackageInstallTask({
+      packageName: '@angular/cdk@">=5 <6" @angular/material@">=5 <6"'
     }));
 
     // Run the update tslint rules.
@@ -63,16 +60,12 @@ export default function(): Rule {
       silent: false,
       ignoreErrors: true,
       tsConfigPath: './tsconfig.json',
-    }), [downgradeCdkTask, downgradeMaterialTask]);
+    }), [downgradeTask]);
 
     // Upgrade @angular/material back to 6.x.
-    const upgradeCdkTask = context.addTask(new NodePackageInstallTask({
-      // TODO(mmalerba): Change "next" to ">=6 <7".
-      packageName: '@angular/cdk@next'
-    }), [updateTask]);
-    const upgradeMaterialTask = context.addTask(new NodePackageInstallTask({
-      // TODO(mmalerba): Fix before submitting.
-      packageName: '/usr/local/google/home/mmalerba/material2/dist/releases/material/angular-material-6.0.0-rc.1.tgz'
+    const upgradeTask = context.addTask(new NodePackageInstallTask({
+      // TODO(mmalerba): Change "next" to ">=6 <7". Change material back to npm package.
+      packageName: '@angular/cdk@next /usr/local/google/home/mmalerba/material2/dist/releases/material/angular-material-6.0.0-rc.1.tgz'
     }), [updateTask]);
 
     // Delete the temporary schematics directory.
@@ -80,7 +73,7 @@ export default function(): Rule {
         new RunSchematicTask(path.join(__dirname, '../collection.json'), 'ng-post-update', {
           deleteFiles: updateSrcs
               .map(entry => entry.path.replace(schematicsSrcPath, schematicsTmpPath))
-        }), [upgradeCdkTask, upgradeMaterialTask]);
+        }), [upgradeTask]);
   };
 }
 
