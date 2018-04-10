@@ -13,6 +13,10 @@
       "description": "Updates API usage for the most recent major version of Angular CDK and Angular Material",
       "factory": "./update/update"
     },
+    "ng-post-update": {
+      "description": "Updates API usage for the most recent major version of Angular CDK and Angular Material",
+      "factory": "./update/update#postUpdate",
+    },
     // Create a dashboard component
     "materialDashboard": {
       "description": "Create a card-based dashboard component",
