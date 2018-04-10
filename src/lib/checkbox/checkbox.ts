@@ -77,7 +77,7 @@ export class MatCheckboxChange {
   /** The new `checked` value of the checkbox. */
   checked: boolean;
   /** The original event */
-  originalEvent: Event;
+  nativeEvent: Event;
 }
 
 // Boilerplate for applying mixins to MatCheckbox.
@@ -299,7 +299,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   private _emitChangeEvent(event: Event) {
     const changeEvent = new MatCheckboxChange();
     changeEvent.source = this;
-    changeEvent.originalEvent = event;
+    changeEvent.nativeEvent = event;
     changeEvent.checked = this.checked;
 
     this._controlValueAccessorChangeFn(this.checked);
