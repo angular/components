@@ -43,6 +43,7 @@ describe('MatSlider without forms', () => {
         SliderWithNativeTabindexAttr,
         VerticalSlider,
         SliderWithCustomThumbLabelFormatting,
+        SliderWithThreshold
       ],
       providers: [
         {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
@@ -1222,6 +1223,53 @@ describe('MatSlider without forms', () => {
         .toBe(5, 'Expected the tabIndex to be set to the value of the native attribute.');
     });
   });
+
+  describe('slider with threshold', () => {
+    let fixture: ComponentFixture<SliderWithThreshold>;
+    let sliderDebugElement: DebugElement;
+    let sliderInstance: MatSlider;
+    let trackFillNativeElement: HTMLElement;
+    let originalColor: string;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SliderWithThreshold);
+      fixture.detectChanges();
+
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
+      trackFillNativeElement = fixture.nativeElement.querySelector('.mat-slider-track-fill');
+      originalColor = getComputedStyle(trackFillNativeElement, '')
+        .getPropertyValue('background-color');
+    });
+
+    it('should check that the originalColor is set correctly', () => {
+      expect(originalColor).toBe('rgb(63, 81, 181)');
+    });
+
+    it('should set the default value from the attribute and have no overridden color', () => {
+      expect(sliderInstance.value).toBe(50);
+      expect(trackFillNativeElement.style.backgroundColor).toBe('');
+    });
+
+    it('should increase the value to breach the threshold and change to warn color', () => {
+      sliderInstance.value = 51;
+      fixture.detectChanges();
+
+      expect(sliderInstance.value).toBe(51);
+      expect(trackFillNativeElement.style.backgroundColor).toBe('rgb(255, 0, 0)');
+    });
+
+    it('should breach threshold, then reduce back and have no color override', () => {
+      sliderInstance.value = 51;
+      fixture.detectChanges();
+
+      sliderInstance.value = 49;
+      fixture.detectChanges();
+
+      expect(sliderInstance.value).toBe(49);
+      expect(trackFillNativeElement.style.backgroundColor).toBe('');
+    });
+  });
 });
 
 describe('MatSlider with forms module', () => {
@@ -1570,6 +1618,14 @@ class SliderWithTabIndexBinding {
 })
 class SliderWithNativeTabindexAttr {
   tabIndex: number;
+}
+
+@Component({
+  template: `<mat-slider value="50" color="primary"
+    warnColor="#FF0000" threshold="50"></mat-slider>`,
+  styles: [styles],
+})
+class SliderWithThreshold {
 }
 
 /**
