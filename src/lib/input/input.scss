@@ -92,3 +92,8 @@ textarea.mat-input-element {
     resize: none;
   }
 }
+
+textarea.mat-input-element {
+  padding: 2px 0;
+  margin: -2px 0;
+}

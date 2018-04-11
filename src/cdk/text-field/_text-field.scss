@@ -19,6 +19,13 @@
   textarea.cdk-textarea-autosize {
     resize: none;
   }
+
+  textarea.cdk-textarea-autosize-measuring {
+    height: auto !important;
+    overflow: hidden !important;
+    padding: 2px 0 !important;
+    box-sizing: content-box !important;
+  }
 }
 
 // Used to generate UIDs for keyframes used to change the text field autofill styles.

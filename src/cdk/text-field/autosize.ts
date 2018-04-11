@@ -187,15 +187,16 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     // Long placeholders that are wider than the textarea width may lead to a bigger scrollHeight
     // value. To ensure that the scrollHeight is not bigger than the content, the placeholders
     // need to be removed temporarily.
-    textarea.style.height = 'auto';
-    textarea.style.overflow = 'hidden';
+    textarea.classList.add('cdk-textarea-autosize-measuring');
     textarea.placeholder = '';
 
-    const height = textarea.scrollHeight;
+    // We subtract 4 from the scrollHeight because of the 2px top and bottom padding. Having the
+    // extra 2px on either side seems to fix inaccurate measurements in Chrome.
+    const height = textarea.scrollHeight - 4;
 
     // Use the scrollHeight to know how large the textarea *would* be if fit its entire value.
     textarea.style.height = `${height}px`;
-    textarea.style.overflow = '';
+    textarea.classList.remove('cdk-textarea-autosize-measuring');
     textarea.placeholder = placeholderText;
 
     // On Firefox resizing the textarea will prevent it from scrolling to the caret position.
