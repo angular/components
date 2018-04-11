@@ -105,7 +105,10 @@ export function getProjectFromWorkspace(config: Workspace, projectName?: string)
     const allProjectNames = Object.keys(config.projects);
     if (allProjectNames.length === 1) {
       const project = config.projects[allProjectNames[0]];
-      project.name = allProjectNames[0];
+      // Set a non-enumerable project name to the project. We need the name for schematics
+      // later on, but don't want to write it back out to the config file.
+      Object.defineProperty(project, 'name', {enumerable: false, value: projectName});
+      return project;
     } else {
       throw new SchematicsException('Multiple projects are defined; please specify a project name');
     }

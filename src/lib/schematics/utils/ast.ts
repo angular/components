@@ -3,8 +3,9 @@ import {SchematicsException, Tree} from '@angular-devkit/schematics';
 import * as ts from 'typescript';
 import {addImportToModule} from './devkit-utils/ast-utils';
 import {InsertChange} from './devkit-utils/change';
-import {Project} from './devkit-utils/config';
+import {Project, getWorkspace} from './devkit-utils/config';
 import {findBootstrapModulePath, getAppModulePath} from './devkit-utils/ng-ast-utils';
+import {ModuleOptions, findModuleFromOptions as internalFindModule} from './devkit-utils/find-module';
 
 
 /** Reads file given path and returns TypeScript source file. */
@@ -83,4 +84,20 @@ export function getStylesPath(host: Tree, project: Project): string {
   }
 
   throw new SchematicsException('No style files could be found into which a theme could be added');
+}
+
+/** Wraps the internal find module from options with undefined path handling  */
+export function findModuleFromOptions(host: Tree, options: any) {
+  const workspace = getWorkspace(host);
+  if (!options.project) {
+    options.project = Object.keys(workspace.projects)[0];
+  }
+
+  const project = workspace.projects[options.project];
+
+  if (options.path === undefined) {
+    options.path = `/${project.root}/src/app`;
+  }
+
+  return internalFindModule(host, options);
 }
