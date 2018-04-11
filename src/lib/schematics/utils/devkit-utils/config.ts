@@ -98,7 +98,7 @@ export function getProjectFromWorkspace(config: Workspace, projectName?: string)
         throw new SchematicsException(`No project named "${projectName}" exists.`);
       }
 
-      project.name = projectName;
+      Object.defineProperty(project, 'name', {enumerable: false, value: projectName});
       return project;
     }
 
