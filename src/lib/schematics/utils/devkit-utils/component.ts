@@ -94,7 +94,6 @@ function buildSelector(options: any) {
 
 
 export function buildComponent(options: any): Rule {
-  const sourceDir = options.sourceDir;
   return (host: Tree, context: SchematicContext) => {
     const workspace = getWorkspace(host);
     if (!options.project) {
