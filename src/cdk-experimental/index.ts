@@ -7,4 +7,3 @@
  */
 
 export * from './public-api';
-export * from '@angular/cdk-experimental/scrolling';
