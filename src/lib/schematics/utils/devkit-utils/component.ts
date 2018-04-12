@@ -36,7 +36,7 @@ function addDeclarationToNgModule(options: any): Rule {
     const sourceText = text.toString('utf-8');
     const source = ts.createSourceFile(modulePath, sourceText, ts.ScriptTarget.Latest, true);
 
-    const componentPath = `/${options.sourceDir}/${options.path}/`
+    const componentPath = `/${options.path}/`
                           + (options.flat ? '' : strings.dasherize(options.name) + '/')
                           + strings.dasherize(options.name)
                           + '.component';
