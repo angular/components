@@ -85,6 +85,9 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   /** The last measured size of the rendered content in the viewport. */
   private _lastRenderedContentOffset: number;
 
+  /** The number of consecutive cycles where removing extra items has failed. */
+  private _removalFailures = 0;
+
   /**
    * @param minBufferPx The minimum amount of buffer rendered beyond the viewport (in pixels).
    *     If the amount of buffer dips below this number, more items will be rendered.
@@ -182,6 +185,8 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
       if (scrollMagnitude >= viewport.getViewportSize()) {
         this._setScrollOffset();
       } else {
+        // The currently rendered range.
+        const renderedRange = viewport.getRenderedRange();
         // The number of new items to render on the side the user is scrolling towards. Rather than
         // just filling the underscan space, we actually fill enough to have a buffer size of
         // `addBufferPx`. This gives us a little wiggle room in case our item size estimate is off.
@@ -192,11 +197,12 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
         const overscan = (scrollDelta < 0 ? endBuffer : startBuffer) - this._minBufferPx +
             scrollMagnitude;
         // The number of currently rendered items to remove on the side the user is scrolling away
-        // from.
-        const removeItems = Math.max(0, Math.floor(overscan / this._averager.getAverageItemSize()));
+        // from. If removal has failed in recent cycles we are less aggressive in how much we try to
+        // remove.
+        const removeItems = Math.min(renderedRange.end - renderedRange.start, Math.max(0,
+            Math.floor(
+                overscan / this._averager.getAverageItemSize() / (this._removalFailures + 1))));
 
-        // The currently rendered range.
-        const renderedRange = viewport.getRenderedRange();
         // The new range we will tell the viewport to render. We first expand it to include the new
         // items we want rendered, we then contract the opposite side to remove items we no longer
         // want rendered.
@@ -215,19 +221,39 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
         let contentOffset: number;
         let contentOffsetTo: 'to-start' | 'to-end';
         if (scrollDelta < 0) {
-          const removedSize = viewport.measureRangeSize({
+          let removedSize = viewport.measureRangeSize({
             start: range.end,
             end: renderedRange.end,
           });
-          contentOffset =
-              this._lastRenderedContentOffset + this._lastRenderedContentSize - removedSize;
+          // Check that we're not removing too much.
+          if (removedSize <= overscan) {
+            contentOffset =
+                this._lastRenderedContentOffset + this._lastRenderedContentSize - removedSize;
+            this._removalFailures = 0;
+          } else {
+            // If the removal is more than the overscan can absorb just undo it and record the fact
+            // that the removal failed so we can be less aggressive next time.
+            range.end = renderedRange.end;
+            contentOffset = this._lastRenderedContentOffset + this._lastRenderedContentSize;
+            this._removalFailures++;
+          }
           contentOffsetTo = 'to-end';
         } else {
           const removedSize = viewport.measureRangeSize({
             start: renderedRange.start,
             end: range.start,
           });
-          contentOffset = this._lastRenderedContentOffset + removedSize;
+          // Check that we're not removing too much.
+          if (removedSize <= overscan) {
+            contentOffset = this._lastRenderedContentOffset + removedSize;
+            this._removalFailures = 0;
+          } else {
+            // If the removal is more than the overscan can absorb just undo it and record the fact
+            // that the removal failed so we can be less aggressive next time.
+            range.start = renderedRange.start;
+            contentOffset = this._lastRenderedContentOffset;
+            this._removalFailures++;
+          }
           contentOffsetTo = 'to-start';
         }
 
@@ -267,6 +293,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
       viewport.setScrollOffset(scrollOffset);
     }
     this._lastScrollOffset = scrollOffset;
+    this._removalFailures = 0;
 
     const itemSize = this._averager.getAverageItemSize();
     const firstVisibleIndex =

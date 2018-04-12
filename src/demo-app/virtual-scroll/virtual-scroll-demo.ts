@@ -17,7 +17,8 @@ import {Component, ViewEncapsulation} from '@angular/core';
 })
 export class VirtualScrollDemo {
   fixedSizeData = Array(10000).fill(50);
-  increasingSizeData = Array(10000).fill(0).map((_, i) => i / 10000 * 300);
-  decreasingSizeData = Array(10000).fill(0).map((_, i) => (10000 - i) / 10000 * 300);
+  increasingSizeData = Array(10000).fill(0).map((_, i) => (1 + Math.floor(i / 1000)) * 20);
+  decreasingSizeData = Array(10000).fill(0)
+      .map((_, i) => (1 + Math.floor((10000 - i) / 1000)) * 20);
   randomData = Array(10000).fill(0).map(() => Math.round(Math.random() * 100));
 }
