@@ -13,7 +13,7 @@ import {Schema} from './schema';
 
 /** Add pre-built styles to the main project style file. */
 export function addThemeToAppStyles(options: Schema) {
-  return (host: Tree) => {
+  return function(host: Tree) {
     const workspace = getWorkspace(host);
     const project = getProjectFromWorkspace(workspace, options.project);
 
