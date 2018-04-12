@@ -86,6 +86,15 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
   /** the currently attached CdkVirtualForOf. */
   private _forOf: CdkVirtualForOf<any> | null;
 
+  /** The last rendered content offset that was set. */
+  private _renderedContentOffset = 0;
+
+  /**
+   * Whether the last rendered content offset was to the end of the content (and therefore needs to
+   * be rewritten as an offset to the start of the content).
+   */
+  private _renderedContentOffsetNeedsRewrite = false;
+
   constructor(public elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef,
               private _ngZone: NgZone, private _sanitizer: DomSanitizer,
               @Inject(VIRTUAL_SCROLL_STRATEGY) private _scrollStrategy: VirtualScrollStrategy) {}
@@ -204,21 +213,43 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
           // viewport.setRenderedContentOffset(...);
           //
           // The call to `onContentRendered` will happen after all of the updates have been applied.
-          Promise.resolve().then(() => this._scrollStrategy.onContentRendered());
+          Promise.resolve().then(() => {
+            // If the rendered content offset was specified as an offset to the end of the content,
+            // rewrite it as an offset to the start of the content.
+            if (this._renderedContentOffsetNeedsRewrite) {
+              this._renderedContentOffset -= this.measureRenderedContentSize();
+              this._renderedContentOffsetNeedsRewrite = false;
+              this.setRenderedContentOffset(this._renderedContentOffset);
+            }
+
+            this._scrollStrategy.onContentRendered();
+          });
         }));
       });
     }
   }
 
-  /** Sets the offset of the rendered portion of the data from the start (in pixels). */
+  /**
+   * Gets the offset from the start of the viewport to the start of the rendered data (in pixels).
+   */
+  getOffsetToRenderedContentStart(): number | null {
+    return this._renderedContentOffsetNeedsRewrite ? null: this._renderedContentOffset;
+  }
+
+  /**
+   * Sets the offset from the start of the viewport to either the start or end of the rendered data
+   * (in pixels).
+   */
   setRenderedContentOffset(offset: number, to: 'to-start' | 'to-end' = 'to-start') {
     const axis = this.orientation === 'horizontal' ? 'X' : 'Y';
     let transform = `translate${axis}(${Number(offset)}px)`;
+    this._renderedContentOffset = offset;
     if (to === 'to-end') {
       // TODO(mmalerba): The viewport should rewrite this as a `to-start` offset on the next render
       // cycle. Otherwise elements will appear to expand in the wrong direction (e.g.
       // `mat-expansion-panel` would expand upward).
       transform += ` translate${axis}(-100%)`;
+      this._renderedContentOffsetNeedsRewrite = true;
     }
     if (this._renderedContentTransform != transform) {
       // Re-enter the Angular zone so we can mark for change detection.
@@ -251,21 +282,6 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
   measureRenderedContentSize(): number {
     const contentEl = this._contentWrapper.nativeElement;
     return this.orientation === 'horizontal' ? contentEl.offsetWidth : contentEl.offsetHeight;
-  }
-
-  // TODO(mmalerba): Try to do this in a way that's less bad for performance. (The bad part here is
-  // that we have to measure the viewport which is not absolutely positioned.)
-  /** Measure the offset from the start of the viewport to the start of the rendered content. */
-  measureRenderedContentOffset(): number {
-    const viewportEl = this.elementRef.nativeElement;
-    const contentEl = this._contentWrapper.nativeElement;
-    if (this.orientation === 'horizontal') {
-      return contentEl.getBoundingClientRect().left + viewportEl.scrollLeft -
-          viewportEl.getBoundingClientRect().left - viewportEl.clientLeft;
-    } else {
-      return contentEl.getBoundingClientRect().top + viewportEl.scrollTop -
-          viewportEl.getBoundingClientRect().top - viewportEl.clientTop;
-    }
   }
 
   /**

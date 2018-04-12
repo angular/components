@@ -247,7 +247,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    */
   private _checkRenderedContentSize() {
     const viewport = this._viewport!;
-    this._lastRenderedContentOffset = viewport.measureRenderedContentOffset();
+    this._lastRenderedContentOffset = viewport.getOffsetToRenderedContentStart()!;
     this._lastRenderedContentSize = viewport.measureRenderedContentSize();
     this._averager.addSample(viewport.getRenderedRange(), this._lastRenderedContentSize);
     this._updateTotalContentSize(this._lastRenderedContentSize);
