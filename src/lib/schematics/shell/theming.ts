@@ -50,7 +50,7 @@ function insertCustomTheme(project: Project, host: Tree) {
 /** Insert a pre-built theme into the angular.json file. */
 function insertPrebuiltTheme(project: Project, host: Tree, theme: string, workspace: Workspace) {
   // TODO(jelbourn): what should this be relative to?
-  const themePath = `../node_modules/@angular/material/prebuilt-themes/${theme}.css`;
+  const themePath = `node_modules/@angular/material/prebuilt-themes/${theme}.css`;
 
   if (project.architect) {
     addStyleToTarget(project.architect['build'], host, themePath, workspace);
