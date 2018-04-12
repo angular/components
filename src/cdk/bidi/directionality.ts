@@ -25,7 +25,7 @@ export class Directionality {
   /** Stream that emits whenever the 'ltr' / 'rtl' state changes. */
   readonly change = new EventEmitter<Direction>();
 
-  constructor(@Optional() @Inject(DIR_DOCUMENT) _document?: any) {
+  constructor(@Optional() @Inject(DIR_DOCUMENT) _document?: Document) {
     if (_document) {
       // TODO: handle 'auto' value -
       // We still need to account for dir="auto".

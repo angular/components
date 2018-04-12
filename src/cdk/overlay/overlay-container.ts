@@ -67,7 +67,8 @@ export const OVERLAY_CONTAINER_PROVIDER = {
   provide: OverlayContainer,
   deps: [
     [new Optional(), new SkipSelf(), OverlayContainer],
-    // We need to use the InjectionToken somewhere to keep TS happy
+    // Coerce to `InjectionToken` so that the `deps` match the "shape"
+    // of the type expected by Angular
     DOCUMENT as InjectionToken<Document>
   ],
   useFactory: OVERLAY_CONTAINER_PROVIDER_FACTORY

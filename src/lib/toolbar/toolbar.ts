@@ -52,7 +52,7 @@ export class MatToolbarRow {}
   encapsulation: ViewEncapsulation.None,
 })
 export class MatToolbar extends _MatToolbarMixinBase implements CanColor, AfterViewInit {
-  private _document: Document;
+  private _document?: Document;
 
   /** Reference to all toolbar row elements that have been projected. */
   @ContentChildren(MatToolbarRow) _toolbarRows: QueryList<MatToolbarRow>;
@@ -60,10 +60,11 @@ export class MatToolbar extends _MatToolbarMixinBase implements CanColor, AfterV
   constructor(
     elementRef: ElementRef,
     private _platform: Platform,
-    @Inject(DOCUMENT) document?: any) {
+    // TODO: make the document required when doing breaking changes.
+    // @deletion-target 7.0.0
+    @Inject(DOCUMENT) document?: Document) {
     super(elementRef);
 
-    // TODO: make the document a required param when doing breaking changes.
     this._document = document;
   }
 

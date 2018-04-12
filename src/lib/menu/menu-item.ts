@@ -56,7 +56,7 @@ export const _MatMenuItemMixinBase = mixinDisableRipple(mixinDisabled(MatMenuIte
 export class MatMenuItem extends _MatMenuItemMixinBase
     implements FocusableOption, CanDisable, CanDisableRipple, OnDestroy {
 
-  private _document: Document;
+  private _document?: Document;
 
   /** Stream that emits when the menu item is hovered. */
   readonly _hovered: Subject<MatMenuItem> = new Subject<MatMenuItem>();
@@ -69,10 +69,12 @@ export class MatMenuItem extends _MatMenuItemMixinBase
 
   constructor(
     private _elementRef: ElementRef,
-    @Inject(DOCUMENT) document?: any,
+    // TODO: make the document required when doing breaking changes.
+    // @deletion-target 7.0.0
+    @Inject(DOCUMENT) document?: Document,
+    // TODO: make the _focusMonitor required when doing breaking changes.
+    // @deletion-target 7.0.0
     private _focusMonitor?: FocusMonitor) {
-
-    // @deletion-target 7.0.0 make `_focusMonitor` and `document` required params.
     super();
 
     if (_focusMonitor) {
