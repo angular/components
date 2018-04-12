@@ -102,7 +102,7 @@ export function buildComponent(options: any): Rule {
     const project = workspace.projects[options.project];
 
     if (options.path === undefined) {
-      options.path = `${project.root}src/app`;
+      options.path = `/${project.root}/src/app`;
     }
 
     options.selector = options.selector || buildSelector(options);
@@ -123,7 +123,7 @@ export function buildComponent(options: any): Rule {
         'if-flat': (s: string) => options.flat ? '' : s,
         ...options,
       }),
-      move(parsedPath.path),
+      move(null, parsedPath.path),
     ]);
 
     return chain([
