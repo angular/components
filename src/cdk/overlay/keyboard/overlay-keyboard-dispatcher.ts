@@ -105,7 +105,6 @@ export const OVERLAY_KEYBOARD_DISPATCHER_PROVIDER = {
   provide: OverlayKeyboardDispatcher,
   deps: [
     [new Optional(), new SkipSelf(), OverlayKeyboardDispatcher],
-
     // Coerce to `InjectionToken` so that the `deps` match the "shape"
     // of the type expected by Angular
     DOCUMENT as InjectionToken<Document>

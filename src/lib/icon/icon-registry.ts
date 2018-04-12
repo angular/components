@@ -16,7 +16,7 @@ import {
   SecurityContext,
   SkipSelf,
 } from '@angular/core';
-import {DomSanitizer, SafeResourceUrl, SafeHtml} from '@angular/platform-browser';
+import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
 import {forkJoin, Observable, of as observableOf, throwError as observableThrow} from 'rxjs';
 import {catchError, finalize, map, share, tap} from 'rxjs/operators';
 
@@ -601,7 +601,9 @@ export const ICON_REGISTRY_PROVIDER = {
     [new Optional(), new SkipSelf(), MatIconRegistry],
     [new Optional(), HttpClient],
     DomSanitizer,
-    [new Optional(), DOCUMENT as InjectionToken<any>],
+    // Coerce to `InjectionToken` so that the `deps` match the "shape"
+    // of the type expected by Angular
+    [new Optional(), DOCUMENT as InjectionToken<Document>],
   ],
   useFactory: ICON_REGISTRY_PROVIDER_FACTORY,
 };
