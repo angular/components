@@ -52,10 +52,10 @@ export const MAT_MENU_SCROLL_STRATEGY =
       }
     });
 
-// TODO(andrewseguin): Remove the kebab versions in favor of camelCased attribute selectors
-
 /** Default top padding of the menu panel. */
 export const MENU_PANEL_TOP_PADDING = 8;
+
+// TODO(andrewseguin): Remove the kebab versions in favor of camelCased attribute selectors
 
 /**
  * This directive is intended to be used in conjunction with an mat-menu tag.  It is
@@ -84,7 +84,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /**
    * @deprecated
-   * @deletion-target 6.0.0
+   * @deletion-target 7.0.0
    */
   @Input('mat-menu-trigger-for')
   get _deprecatedMatMenuTriggerFor(): MatMenuPanel {
@@ -107,7 +107,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /**
    * Event emitted when the associated menu is opened.
    * @deprecated Switch to `menuOpened` instead
-   * @deletion-target 6.0.0
+   * @deletion-target 7.0.0
    */
   @Output() readonly onMenuOpen: EventEmitter<void> = this.menuOpened;
 
@@ -117,7 +117,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /**
    * Event emitted when the associated menu is closed.
    * @deprecated Switch to `menuClosed` instead
-   * @deletion-target 6.0.0
+   * @deletion-target 7.0.0
    */
   @Output() readonly onMenuClose: EventEmitter<void> = this.menuClosed;
 
@@ -129,6 +129,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
               @Optional() @Self() private _menuItemInstance: MatMenuItem,
               @Optional() private _dir: Directionality,
               // TODO(crisbeto): make the _focusMonitor required when doing breaking changes.
+              // @deletion-target 7.0.0
               private _focusMonitor?: FocusMonitor) {
 
     if (_menuItemInstance) {

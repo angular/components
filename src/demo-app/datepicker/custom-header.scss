@@ -1,10 +1,16 @@
-.custom-header {
-  padding: 1em 1.5em;
+.demo-calendar-header {
   display: flex;
   align-items: center;
+  padding: 0.5em;
 }
 
-.custom-header-label {
+.demo-calendar-header-label {
   flex: 1;
+  height: 1em;
+  font-weight: bold;
   text-align: center;
+}
+
+.demo-double-arrow .mat-icon {
+  margin: -22%;
 }

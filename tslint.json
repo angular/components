@@ -95,11 +95,12 @@
     ],
     "validate-decorators": [true, {
       "Component": {
-        "encapsulation": "\\.None$",
-        "moduleId": "^module\\.id$",
-        "changeDetection": "\\.OnPush$",
+        "!host": "\\[class\\]",
+        "!preserveWhitespaces": ".*",
         "!styles": ".*",
-        "!host": "\\[class\\]"
+        "changeDetection": "\\.OnPush$",
+        "encapsulation": "\\.None$",
+        "moduleId": "^module\\.id$"
       },
       "Directive": {
         "!host": "\\[class\\]"
@@ -108,10 +109,6 @@
     "require-license-banner": [
       true,
       "src/+(lib|cdk|material-experimental|cdk-experimental|demo-app)/**/!(*.spec).ts"
-    ],
-    "no-rxjs-patch-imports": [
-      true,
-      "src/+(lib|cdk|material-experimental|cdk-experimental)/**/*.ts"
     ],
     "missing-rollup-globals": [
       true,
