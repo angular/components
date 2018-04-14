@@ -154,3 +154,13 @@
     <mat-datepicker #customHeaderPicker [calendarHeaderComponent]="customHeader"></mat-datepicker>
   </mat-form-field>
 </p>
+
+<h2>Datepicker with custom header using standard header</h2>
+<p>
+  <mat-form-field>
+    <mat-label>Custom calendar header using standard header</mat-label>
+    <input matInput [matDatepicker]="customHeaderPicker2">
+    <mat-datepicker-toggle matSuffix [for]="customHeaderPicker2"></mat-datepicker-toggle>
+    <mat-datepicker #customHeaderPicker2 [calendarHeaderComponent]="customHeader2"></mat-datepicker>
+  </mat-form-field>
+</p>
