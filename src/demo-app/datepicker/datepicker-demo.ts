@@ -109,7 +109,7 @@ export class CustomHeader<D> implements OnDestroy {
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomHeader2<D> {
+export class CustomHeader2 {
   constructor() {
   }
 }
