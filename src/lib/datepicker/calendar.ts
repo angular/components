@@ -14,7 +14,6 @@ import {
   Component,
   EventEmitter,
   forwardRef,
-  Host,
   Inject,
   Input,
   OnChanges,
