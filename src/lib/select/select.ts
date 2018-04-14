@@ -897,11 +897,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   private _onSelect(option: MatOption, isUserInput: boolean): void {
     const wasSelected = this._selectionModel.isSelected(option);
 
-    if (option.value == null && !this._multiple) {
-      option.deselect();
-      this._selectionModel.clear();
-      this._propagateChanges(option.value);
-    } else {
+    if (option.value != null || this._multiple) {
       option.selected ? this._selectionModel.select(option) : this._selectionModel.deselect(option);
 
       if (isUserInput) {
@@ -919,6 +915,10 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
           this.focus();
         }
       }
+    } else if (option.value == null && this.value != option.value) {
+      option.deselect();
+      this._selectionModel.clear();
+      this._propagateChanges(option.value);
     }
 
     if (wasSelected !== this._selectionModel.isSelected(option)) {
