@@ -145,7 +145,7 @@ export class JazzDialog {
     }
   `],
   template: `
-    <h2 mat-dialog-title>Neptune</h2>
+    <h2 color="primary" mat-dialog-title>Neptune</h2>
 
     <mat-dialog-content>
       <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/Neptune_Full.jpg"/>

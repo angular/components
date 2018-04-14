@@ -36,10 +36,20 @@ $mat-dialog-button-margin: 8px !default;
   max-height: $mat-dialog-max-height;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
+
+  // We the content is preceeded by a title that has a color, we have to add some
+  // extra padding so the user's content isn't flush against the title.
+  .mat-dialog-title.mat-primary + &,
+  .mat-dialog-title.mat-accent + &,
+  .mat-dialog-title.mat-warn + & {
+    padding-top: $mat-dialog-padding;
+  }
 }
 
 .mat-dialog-title {
-  margin: 0 0 20px;
+  $inverted-padding: $mat-dialog-padding * -1;
+  margin: $inverted-padding $inverted-padding 0 $inverted-padding;
+  padding: $mat-dialog-padding;
   display: block;
 }
 

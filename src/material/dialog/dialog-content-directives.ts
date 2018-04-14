@@ -17,6 +17,7 @@ import {
 } from '@angular/core';
 import {MatDialog} from './dialog';
 import {MatDialogRef} from './dialog-ref';
+import {CanColor, mixinColor} from '@angular/material/core';
 
 /** Counter used to generate unique IDs for dialog elements. */
 let dialogElementUid = 0;
@@ -67,24 +68,35 @@ export class MatDialogClose implements OnInit, OnChanges {
   }
 }
 
+// Boilerplate for applying mixins to MatDialogTitle.
+/** @docs-private */
+export class MatDialogTitleBase {
+  constructor(public _elementRef: ElementRef) {}
+}
+export const _MatDialogTitleMixinBase = mixinColor(MatDialogTitleBase);
+
 /**
  * Title of a dialog element. Stays fixed to the top of the dialog when scrolling.
  */
 @Directive({
   selector: '[mat-dialog-title], [matDialogTitle]',
   exportAs: 'matDialogTitle',
+  inputs: ['color'],
   host: {
     'class': 'mat-dialog-title',
     '[id]': 'id',
   },
 })
-export class MatDialogTitle implements OnInit {
+export class MatDialogTitle extends _MatDialogTitleMixinBase implements OnInit, CanColor {
   @Input() id = `mat-dialog-title-${dialogElementUid++}`;
 
   constructor(
     @Optional() private _dialogRef: MatDialogRef<any>,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _dialog: MatDialog) {}
+    elementRef: ElementRef<HTMLElement>,
+    private _dialog: MatDialog) {
+
+    super(elementRef);
+  }
 
   ngOnInit() {
     if (!this._dialogRef) {

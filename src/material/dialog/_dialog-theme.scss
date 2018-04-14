@@ -7,11 +7,31 @@
 @mixin mat-dialog-theme($theme) {
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
 
   .mat-dialog-container {
     @include _mat-theme-elevation(24, $theme);
     background: mat-color($background, dialog);
     color: mat-color($foreground, text);
+  }
+
+  .mat-dialog-title {
+    &.mat-primary {
+      background: mat-color($primary);
+      color: mat-color($primary, default-contrast);
+    }
+
+    &.mat-accent {
+      background: mat-color($accent);
+      color: mat-color($accent, default-contrast);
+    }
+
+    &.mat-warn {
+      background: mat-color($warn);
+      color: mat-color($warn, default-contrast);
+    }
   }
 }
 
