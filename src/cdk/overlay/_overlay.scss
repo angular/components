@@ -61,6 +61,10 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     display: flex;
     max-width: 100%;
     max-height: 100%;
+
+    // Needs to be set specifically on the pane for
+    // the content to become scrollable on IE11.
+    overflow: auto;
   }
 
   .cdk-overlay-backdrop {
