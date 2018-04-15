@@ -26,6 +26,7 @@ import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion
 @Component({
   moduleId: module.id,
   selector: 'mat-sidenav-content',
+  exportAs: 'matSidenavContent',
   template: '<ng-content></ng-content>',
   host: {
     'class': 'mat-drawer-content mat-sidenav-content',

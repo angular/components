@@ -21,6 +21,7 @@ import {
  */
 @Directive({
   selector: '[matHeaderRowDef]',
+  exportAs: 'matHeaderRowDef',
   providers: [{provide: CdkHeaderRowDef, useExisting: MatHeaderRowDef}],
   inputs: ['columns: matHeaderRowDef'],
 })
@@ -33,6 +34,7 @@ export class MatHeaderRowDef extends CdkHeaderRowDef { }
  */
 @Directive({
   selector: '[matRowDef]',
+  exportAs: 'matRowDef',
   providers: [{provide: CdkRowDef, useExisting: MatRowDef}],
   inputs: ['columns: matRowDefColumns', 'when: matRowDefWhen'],
 })

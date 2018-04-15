@@ -65,6 +65,7 @@ export abstract class BaseRowDef {
  */
 @Directive({
   selector: '[cdkHeaderRowDef]',
+  exportAs: 'cdkHeaderRowDef',
   inputs: ['columns: cdkHeaderRowDef'],
 })
 export class CdkHeaderRowDef extends BaseRowDef {
@@ -80,6 +81,7 @@ export class CdkHeaderRowDef extends BaseRowDef {
  */
 @Directive({
   selector: '[cdkRowDef]',
+  exportAs: 'cdkRowDef',
   inputs: ['columns: cdkRowDefColumns', 'when: cdkRowDefWhen'],
 })
 export class CdkRowDef<T> extends BaseRowDef {
@@ -126,7 +128,10 @@ export interface CdkCellOutletRowContext<T> {
  * Outlet for rendering cells inside of a row or header row.
  * @docs-private
  */
-@Directive({selector: '[cdkCellOutlet]'})
+@Directive({
+  selector: '[cdkCellOutlet]',
+  exportAs: 'cdkCellOutlet',
+})
 export class CdkCellOutlet {
   /** The ordered list of cells to render within this outlet's view container */
   cells: CdkCellDef[];
@@ -152,6 +157,7 @@ export class CdkCellOutlet {
 @Component({
   moduleId: module.id,
   selector: 'cdk-header-row, tr[cdk-header-row]',
+  exportAs: 'cdkHeaderRow',
   template: CDK_ROW_TEMPLATE,
   host: {
     'class': 'cdk-header-row',
@@ -166,6 +172,7 @@ export class CdkHeaderRow { }
 @Component({
   moduleId: module.id,
   selector: 'cdk-row, tr[cdk-row]',
+  exportAs: 'cdkRow',
   template: CDK_ROW_TEMPLATE,
   host: {
     'class': 'cdk-row',

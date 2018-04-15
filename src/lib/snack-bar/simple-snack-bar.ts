@@ -19,6 +19,7 @@ import {matSnackBarAnimations} from './snack-bar-animations';
 @Component({
   moduleId: module.id,
   selector: 'simple-snack-bar',
+  exportAs: 'matSimpleSnackBar',
   templateUrl: 'simple-snack-bar.html',
   styleUrls: ['simple-snack-bar.css'],
   encapsulation: ViewEncapsulation.None,
@@ -27,7 +28,7 @@ import {matSnackBarAnimations} from './snack-bar-animations';
   host: {
     '[@contentFade]': '',
     'class': 'mat-simple-snackbar',
-  }
+  },
 })
 export class SimpleSnackBar {
   /** Data that was injected into the snack bar. */

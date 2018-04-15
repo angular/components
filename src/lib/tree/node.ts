@@ -41,7 +41,7 @@ export const _MatNestedTreeNodeMixinBase = mixinTabIndex(mixinDisabled(CdkNested
     '[attr.role]': 'role',
     'class': 'mat-tree-node'
   },
-  providers: [{provide: CdkTreeNode, useExisting: MatTreeNode}]
+  providers: [{provide: CdkTreeNode, useExisting: MatTreeNode}],
 })
 export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T> implements HasTabIndex, CanDisable {
   @Input() role: 'treeitem' | 'group' = 'treeitem';
@@ -60,10 +60,11 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T> implements HasTabIn
  */
 @Directive({
   selector: '[matTreeNodeDef]',
+  exportAs: 'matTreeNodeDef',
   inputs: [
     'when: matTreeNodeDefWhen'
   ],
-  providers: [{provide: CdkTreeNodeDef, useExisting: MatTreeNodeDef}]
+  providers: [{provide: CdkTreeNodeDef, useExisting: MatTreeNodeDef}],
 })
 export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   @Input('matTreeNode') data: T;
@@ -84,7 +85,7 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   providers: [
     {provide: CdkNestedTreeNode, useExisting: MatNestedTreeNode},
     {provide: CdkTreeNode, useExisting: MatNestedTreeNode}
-  ]
+  ],
 })
 export class MatNestedTreeNode<T> extends _MatNestedTreeNodeMixinBase<T>
     implements HasTabIndex, CanDisable {

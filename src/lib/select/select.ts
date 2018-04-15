@@ -163,7 +163,8 @@ export const _MatSelectMixinBase = mixinDisableRipple(
  * Allows the user to customize the trigger that is displayed when the select has a value.
  */
 @Directive({
-  selector: 'mat-select-trigger'
+  selector: 'mat-select-trigger',
+  exportAs: 'matSelectTrigger',
 })
 export class MatSelectTrigger {}
 

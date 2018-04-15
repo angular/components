@@ -43,6 +43,7 @@ import {FocusTrap, FocusTrapFactory} from '@angular/cdk/a11y';
 @Component({
   moduleId: module.id,
   selector: 'mat-bottom-sheet-container',
+  exportAs: 'matBottomSheetContainer',
   templateUrl: 'bottom-sheet-container.html',
   styleUrls: ['bottom-sheet-container.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

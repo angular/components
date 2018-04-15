@@ -21,6 +21,7 @@ export type MatBadgeSize = 'small' | 'medium' | 'large';
 /** Directive to display a text badge. */
 @Directive({
   selector: '[matBadge]',
+  exportAs: 'matBadge',
   host: {
     'class': 'mat-badge',
     '[class.mat-badge-overlap]': 'overlap',

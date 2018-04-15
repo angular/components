@@ -492,6 +492,7 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
 @Component({
   moduleId: module.id,
   selector: 'mat-tooltip-component',
+  exportAs: 'matTooltipComponent',
   templateUrl: 'tooltip.html',
   styleUrls: ['tooltip.css'],
   encapsulation: ViewEncapsulation.None,
@@ -503,7 +504,7 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
     '[style.zoom]': '_visibility === "visible" ? 1 : null',
     '(body:click)': 'this._handleBodyInteraction()',
     'aria-hidden': 'true',
-  }
+  },
 })
 export class TooltipComponent {
   /** Message to display in the tooltip */

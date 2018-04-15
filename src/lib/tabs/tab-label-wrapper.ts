@@ -20,10 +20,11 @@ export const _MatTabLabelWrapperMixinBase = mixinDisabled(MatTabLabelWrapperBase
  */
 @Directive({
   selector: '[matTabLabelWrapper]',
+  exportAs: 'matTabLabelWrapper',
   inputs: ['disabled'],
   host: {
     '[class.mat-tab-disabled]': 'disabled'
-  }
+  },
 })
 export class MatTabLabelWrapper extends _MatTabLabelWrapperMixinBase implements CanDisable {
   constructor(public elementRef: ElementRef) {

@@ -59,6 +59,7 @@ export const MAT_DRAWER_DEFAULT_AUTOSIZE =
 @Component({
   moduleId: module.id,
   selector: 'mat-drawer-content',
+  exportAs: 'matDrawerContent',
   template: '<ng-content></ng-content>',
   host: {
     'class': 'mat-drawer-content',

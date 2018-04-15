@@ -12,6 +12,7 @@ import {CdkPortal} from '@angular/cdk/portal';
 /** Used to flag tab labels for use with the portal directive */
 @Directive({
   selector: '[mat-tab-label], [matTabLabel]',
+  exportAs: 'matTabLabel',
 })
 export class MatTabLabel extends CdkPortal {
   constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef) {

@@ -57,7 +57,8 @@ export type MatTabBodyOriginState = 'left' | 'right';
  * @docs-private
  */
 @Directive({
-  selector: '[matTabBodyHost]'
+  selector: '[matTabBodyHost]',
+  exportAs: 'matTabBodyHost',
 })
 export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
   /** Subscription to events for when the tab body begins centering. */
@@ -104,6 +105,7 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
 @Component({
   moduleId: module.id,
   selector: 'mat-tab-body',
+  exportAs: 'matTabBody',
   templateUrl: 'tab-body.html',
   styleUrls: ['tab-body.css'],
   encapsulation: ViewEncapsulation.None,

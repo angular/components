@@ -38,6 +38,7 @@ import {MatYearView} from './year-view';
 @Component({
   moduleId: module.id,
   selector: 'mat-calendar-header',
+  exportAs: 'matCalendarHeader',
   templateUrl: 'calendar-header.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

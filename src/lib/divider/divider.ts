@@ -12,6 +12,9 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
 @Component({
   moduleId: module.id,
   selector: 'mat-divider',
+  exportAs: 'matDivider',
+  template: '',
+  styleUrls: ['divider.css'],
   host: {
     'role': 'separator',
     '[attr.aria-orientation]': 'vertical ? "vertical" : "horizontal"',
@@ -19,8 +22,6 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
     '[class.mat-divider-inset]': 'inset',
     'class': 'mat-divider'
   },
-  template: '',
-  styleUrls: ['divider.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

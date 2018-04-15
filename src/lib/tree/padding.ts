@@ -14,6 +14,7 @@ import {Directive, Input} from '@angular/core';
  */
 @Directive({
   selector: '[matTreeNodePadding]',
+  exportAs: 'matTreeNodePadding',
   providers: [{provide: CdkTreeNodePadding, useExisting: MatTreeNodePadding}]
 })
 export class MatTreeNodePadding<T> extends CdkTreeNodePadding<T> {

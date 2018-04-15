@@ -62,7 +62,7 @@ export const MENU_PANEL_TOP_PADDING = 8;
  * responsible for toggling the display of the provided menu instance.
  */
 @Directive({
-  selector: `[mat-menu-trigger-for], [matMenuTriggerFor]`,
+  selector: '[mat-menu-trigger-for], [matMenuTriggerFor]',
   host: {
     'aria-haspopup': 'true',
     '(mousedown)': '_handleMousedown($event)',

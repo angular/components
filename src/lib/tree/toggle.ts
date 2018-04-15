@@ -14,6 +14,7 @@ import {CdkTreeNodeToggle} from '@angular/cdk/tree';
  */
 @Directive({
   selector: '[matTreeNodeToggle]',
+  exportAs: 'matTreeNodeToggle',
   host: {
     '(click)': '_toggle($event)',
   },

@@ -15,13 +15,14 @@ let nextUniqueId = 0;
 /** Hint text to be shown underneath the form field control. */
 @Directive({
   selector: 'mat-hint',
+  exportAs: 'matHint',
   host: {
     'class': 'mat-hint',
-    '[class.mat-right]': 'align == "end"',
+    '[class.mat-right]': 'align === "end"',
     '[attr.id]': 'id',
     // Remove align attribute to prevent it from interfering with layout.
     '[attr.align]': 'null',
-  }
+  },
 })
 export class MatHint {
   /** Whether to align the hint label at the start or end of the line. */

@@ -60,6 +60,7 @@ export class MatGridTile {
 @Component({
   moduleId: module.id,
   selector: 'mat-grid-tile-header, mat-grid-tile-footer',
+  exportAs: 'matGridTileText',
   templateUrl: 'grid-tile-text.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -85,7 +86,8 @@ export class MatGridTileText implements AfterContentInit {
  */
 @Directive({
   selector: '[mat-grid-avatar], [matGridAvatar]',
-  host: {'class': 'mat-grid-avatar'}
+  exportAs: 'matGridAvatar',
+  host: {'class': 'mat-grid-avatar'},
 })
 export class MatGridAvatarCssMatStyler {}
 
@@ -95,6 +97,7 @@ export class MatGridAvatarCssMatStyler {}
  */
 @Directive({
   selector: 'mat-grid-tile-header',
+  exportAs: 'matGridTileHeader',
   host: {'class': 'mat-grid-tile-header'}
 })
 export class MatGridTileHeaderCssMatStyler {}
@@ -105,6 +108,7 @@ export class MatGridTileHeaderCssMatStyler {}
  */
 @Directive({
   selector: 'mat-grid-tile-footer',
+  exportAs: 'matGridTileFooter',
   host: {'class': 'mat-grid-tile-footer'}
 })
 export class MatGridTileFooterCssMatStyler {}

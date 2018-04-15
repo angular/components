@@ -15,11 +15,12 @@ let nextUniqueId = 0;
 /** Single error message to be shown underneath the form field. */
 @Directive({
   selector: 'mat-error',
+  exportAs: 'matError',
   host: {
     'class': 'mat-error',
     'role': 'alert',
     '[attr.id]': 'id',
-  }
+  },
 })
 export class MatError {
   @Input() id: string = `mat-error-${nextUniqueId++}`;

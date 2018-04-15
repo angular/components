@@ -21,6 +21,7 @@ import {
  */
 @Directive({
   selector: '[matCellDef]',
+  exportAs: 'matCellDef',
   providers: [{provide: CdkCellDef, useExisting: MatCellDef}]
 })
 export class MatCellDef extends CdkCellDef { }
@@ -31,6 +32,7 @@ export class MatCellDef extends CdkCellDef { }
  */
 @Directive({
   selector: '[matHeaderCellDef]',
+  exportAs: 'matHeaderCellDef',
   providers: [{provide: CdkHeaderCellDef, useExisting: MatHeaderCellDef}]
 })
 export class MatHeaderCellDef extends CdkHeaderCellDef { }
@@ -41,6 +43,7 @@ export class MatHeaderCellDef extends CdkHeaderCellDef { }
  */
 @Directive({
   selector: '[matColumnDef]',
+  exportAs: 'matColumnDef',
   providers: [{provide: CdkColumnDef, useExisting: MatColumnDef}],
 })
 export class MatColumnDef extends CdkColumnDef {
@@ -51,6 +54,7 @@ export class MatColumnDef extends CdkColumnDef {
 /** Header cell template container that adds the right classes and role. */
 @Directive({
   selector: 'mat-header-cell, th[mat-header-cell]',
+  exportAs: 'matHeaderCell',
   host: {
     'class': 'mat-header-cell',
     'role': 'columnheader',
@@ -67,6 +71,7 @@ export class MatHeaderCell extends CdkHeaderCell {
 /** Cell template container that adds the right classes and role. */
 @Directive({
   selector: 'mat-cell, td[mat-cell]',
+  exportAs: 'matCell',
   host: {
     'class': 'mat-cell',
     'role': 'gridcell',

@@ -23,7 +23,8 @@ import {DOCUMENT} from '@angular/common';
  * Menu content that will be rendered lazily once the menu is opened.
  */
 @Directive({
-  selector: 'ng-template[matMenuContent]'
+  selector: 'ng-template[matMenuContent]',
+  exportAs: 'matMenuContent',
 })
 export class MatMenuContent implements OnDestroy {
   private _portal: TemplatePortal<any>;

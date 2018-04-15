@@ -70,7 +70,8 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
 
 
 @Directive({
-  selector: '[matStepper]'
+  selector: '[matStepper]',
+  exportAs: 'matStepper',
 })
 export class MatStepper extends CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */

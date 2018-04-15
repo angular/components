@@ -19,6 +19,7 @@ import {CdkTree, CdkTreeNode} from './tree';
  */
 @Directive({
   selector: '[cdkTreeNodePadding]',
+  exportAs: 'cdkTreeNodePadding',
 })
 export class CdkTreeNodePadding<T> implements OnDestroy {
   /** Subject that emits when the component has been destroyed. */

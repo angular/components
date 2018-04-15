@@ -33,8 +33,9 @@ import {MatExpansionPanel} from './expansion-panel';
 @Component({
   moduleId: module.id,
   selector: 'mat-expansion-panel-header',
-  styleUrls: ['./expansion-panel-header.css'],
+  exportAs: 'matExpansionPanelHeader',
   templateUrl: './expansion-panel-header.html',
+  styleUrls: ['./expansion-panel-header.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
@@ -140,9 +141,10 @@ export class MatExpansionPanelHeader implements OnDestroy {
  */
 @Directive({
   selector: 'mat-panel-description',
+  exportAs: 'matExpansionPanelDescription',
   host : {
     class: 'mat-expansion-panel-header-description'
-  }
+  },
 })
 export class MatExpansionPanelDescription {}
 
@@ -153,6 +155,7 @@ export class MatExpansionPanelDescription {}
  */
 @Directive({
   selector: 'mat-panel-title',
+  exportAs: 'matExpansionPanelTitle',
   host : {
     class: 'mat-expansion-panel-header-title'
   }

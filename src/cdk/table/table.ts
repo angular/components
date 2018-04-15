@@ -47,7 +47,11 @@ import {
  * Provides a handle for the table to grab the view container's ng-container to insert data rows.
  * @docs-private
  */
-@Directive({selector: '[rowPlaceholder]'})
+@Directive({
+  selector: '[rowPlaceholder]',
+  // tslint:disable-next-line:validate-decorators
+  exportAs: 'rowPlaceholder',
+})
 export class RowPlaceholder {
   constructor(public viewContainer: ViewContainerRef, public elementRef: ElementRef) { }
 }
@@ -56,7 +60,11 @@ export class RowPlaceholder {
  * Provides a handle for the table to grab the view container's ng-container to insert the header.
  * @docs-private
  */
-@Directive({selector: '[headerRowPlaceholder]'})
+@Directive({
+  selector: '[headerRowPlaceholder]',
+  // tslint:disable-next-line:validate-decorators
+  exportAs: 'headerRowPlaceholder',
+})
 export class HeaderRowPlaceholder {
   constructor(public viewContainer: ViewContainerRef, public elementRef: ElementRef) { }
 }
