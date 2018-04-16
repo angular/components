@@ -50,9 +50,8 @@ export class DatepickerDemo {
   onDateInput = (e: MatDatepickerInputEvent<Date>) => this.lastDateInput = e.value;
   onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
 
-  // pass custom header component types as input
+  // pass custom header component type as input
   customHeader = CustomHeader;
-  customHeader2 = CustomHeader2;
 }
 
 // Custom header component for datepicker
@@ -99,17 +98,4 @@ export class CustomHeader<D> implements OnDestroy {
   }
 }
 
-// Custom header component for datepicker using standard header
-@Component({
-  moduleId: module.id,
-  selector: 'custom-header2',
-  template: `
-  <div>Custom element</div>
-  <mat-calendar-header></mat-calendar-header>`,
-  styleUrls: [],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class CustomHeader2 {
-  constructor() {
-  }
-}
+

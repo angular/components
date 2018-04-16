@@ -19,7 +19,7 @@ import {ButtonDemo} from '../button/button-demo';
 import {CardDemo} from '../card/card-demo';
 import {CheckboxDemo, MatCheckboxDemoNestedChecklist} from '../checkbox/checkbox-demo';
 import {ChipsDemo} from '../chips/chips-demo';
-import {CustomHeader, CustomHeader2, DatepickerDemo} from '../datepicker/datepicker-demo';
+import {CustomHeader, DatepickerDemo} from '../datepicker/datepicker-demo';
 import {DemoMaterialModule} from '../demo-material-module';
 import {ContentElementDialog, DialogDemo, IFrameDialog, JazzDialog} from '../dialog/dialog-demo';
 import {DrawerDemo} from '../drawer/drawer-demo';
@@ -89,7 +89,6 @@ import {ConnectedOverlayDemo, DemoOverlay} from '../connected-overlay/connected-
     ContentElementDialog,
     DatepickerDemo,
     CustomHeader,
-    CustomHeader2,
     DemoApp,
     DialogDemo,
     DrawerDemo,
@@ -151,7 +150,6 @@ import {ConnectedOverlayDemo, DemoOverlay} from '../connected-overlay/connected-
     SpagettiPanel,
     ExampleBottomSheet,
     CustomHeader,
-    CustomHeader2,
     DemoOverlay,
   ],
 })
