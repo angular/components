@@ -97,5 +97,3 @@ export class CustomHeader<D> implements OnDestroy {
         this._dateAdapter.addCalendarYears(this._calendar.activeDate, 1);
   }
 }
-
-
