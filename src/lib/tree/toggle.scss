@@ -1,0 +1,15 @@
+$mat-tree-node-toggle-width: 40px;
+
+.mat-tree-node-toggle-icon {
+  transition: 225ms;
+  transform: rotate(0);
+}
+
+.mat-tree-node-toggle-expanded {
+  transform: rotate(-90deg);
+}
+
+.mat-tree-node-toggle-space {
+  display: inline-block;
+  width: $mat-tree-node-toggle-width;
+}

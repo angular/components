@@ -7,9 +7,10 @@ ng_module(
   name = "tree",
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/material/tree",
-  assets = [":tree.css"] + glob(["**/*.html"]),
+  assets = [":tree.css", ":toggle.css"] + glob(["**/*.html"]),
   deps = [
     "//src/cdk/tree",
+    "//src/lib/button",
     "//src/lib/core",
     "@rxjs",
   ],
@@ -25,6 +26,12 @@ filegroup(
 sass_binary(
   name = "tree_scss",
   src = "tree.scss",
+  deps = ["//src/lib/core:core_scss_lib"],
+)
+
+sass_binary(
+  name = "toggle_scss",
+  src = "toggle.scss",
   deps = ["//src/lib/core:core_scss_lib"],
 )
 

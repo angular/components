@@ -74,6 +74,9 @@ tree node recursively by setting `[matTreeNodeToggleRecursive]` to `true`.
 
 The toggle can be placed anywhere in the tree node, and is only toggled by `click` action.
 
+Alternatively, there's a component `<mat-tree-node-toggle>` available which is a built in button
+with material style and react to `click` events.
+
 
 ### Padding (Flat tree only)
 
@@ -93,3 +96,5 @@ Parent nodes are given `role="group"`, while leaf nodes are given `role="treeite
 
 `mat-tree` does not manage any focus/keyboard interaction on its own. Users can add desired
 focus/keyboard interactions in their application.
+
+Users are responsible for adding correct `aria-label` for `mat-tree-node-toggle`.

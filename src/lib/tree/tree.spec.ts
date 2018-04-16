@@ -189,6 +189,102 @@ describe('MatTree', () => {
           [`topping_2 - cheese_2 + base_2`],
           [`topping_3 - cheese_3 + base_3`]);
       });
+
+      it('should expand/collapse the node with toggle component', () => {
+        component.useToggleComponent = true;
+        fixture.detectChanges();
+
+        expect(underlyingDataSource.data.length).toBe(3);
+
+        expect(component.treeControl.expansionModel.selected.length)
+          .toBe(0, `Expect no expanded node`);
+
+        component.toggleRecursively = false;
+        const data = underlyingDataSource.data;
+        const child = underlyingDataSource.addChild(data[2]);
+        underlyingDataSource.addChild(child);
+        fixture.detectChanges();
+
+        expectFlatTreeToMatch(treeElement, 40,
+          [`topping_1 - cheese_1 + base_1`],
+          [`topping_2 - cheese_2 + base_2`],
+          [`topping_3 - cheese_3 + base_3`]);
+
+        (getNodeToggles(treeElement)[0] as HTMLElement).click();
+        fixture.detectChanges();
+
+        expect(component.treeControl.expansionModel.selected.length)
+          .toBe(1, `Expect node expanded one level`);
+        expectFlatTreeToMatch(treeElement, 40,
+          [`topping_1 - cheese_1 + base_1`],
+          [`topping_2 - cheese_2 + base_2`],
+          [`topping_3 - cheese_3 + base_3`],
+          [_, `topping_4 - cheese_4 + base_4`]);
+
+        (getNodeToggles(treeElement)[1] as HTMLElement).click();
+        fixture.detectChanges();
+
+        expect(component.treeControl.expansionModel.selected.length)
+          .toBe(2, `Expect node expanded`);
+        expectFlatTreeToMatch(treeElement, 40,
+          [`topping_1 - cheese_1 + base_1`],
+          [`topping_2 - cheese_2 + base_2`],
+          [`topping_3 - cheese_3 + base_3`],
+          [_, `topping_4 - cheese_4 + base_4`],
+          [_, _, `topping_5 - cheese_5 + base_5`]);
+
+        (getNodeToggles(treeElement)[0] as HTMLElement).click();
+        fixture.detectChanges();
+
+        expectFlatTreeToMatch(treeElement, 40,
+          [`topping_1 - cheese_1 + base_1`],
+          [`topping_2 - cheese_2 + base_2`],
+          [`topping_3 - cheese_3 + base_3`]);
+      });
+
+      it('should expand/collapse the node recursively with toggle component', () => {
+        component.useToggleComponent = true;
+        fixture.detectChanges();
+
+        expect(underlyingDataSource.data.length).toBe(3);
+
+        expect(component.treeControl.expansionModel.selected.length)
+          .toBe(0, `Expect no expanded node`);
+
+        const data = underlyingDataSource.data;
+        const child = underlyingDataSource.addChild(data[2]);
+        underlyingDataSource.addChild(child);
+        fixture.detectChanges();
+
+        expectFlatTreeToMatch(treeElement, 40,
+          [`topping_1 - cheese_1 + base_1`],
+          [`topping_2 - cheese_2 + base_2`],
+          [`topping_3 - cheese_3 + base_3`]);
+
+        (getNodeToggles(treeElement)[0] as HTMLElement).click();
+        fixture.detectChanges();
+
+        expect(component.treeControl.expansionModel.selected.length)
+          .toBe(3, `Expect nodes expanded`);
+        expectFlatTreeToMatch(treeElement, 40,
+          [`topping_1 - cheese_1 + base_1`],
+          [`topping_2 - cheese_2 + base_2`],
+          [`topping_3 - cheese_3 + base_3`],
+          [_, `topping_4 - cheese_4 + base_4`],
+          [_, _, `topping_5 - cheese_5 + base_5`]);
+
+
+        (getNodeToggles(treeElement)[0] as HTMLElement).click();
+        fixture.detectChanges();
+
+        expect(component.treeControl.expansionModel.selected.length)
+          .toBe(0, `Expect node collapsed`);
+
+        expectFlatTreeToMatch(treeElement, 40,
+          [`topping_1 - cheese_1 + base_1`],
+          [`topping_2 - cheese_2 + base_2`],
+          [`topping_3 - cheese_3 + base_3`]);
+      });
     });
 
     describe('with when node template', () => {
@@ -408,6 +504,79 @@ describe('MatTree', () => {
           [`topping_2 - cheese_2 + base_2`],
           [`topping_3 - cheese_3 + base_3`]);
       });
+
+      it('should expand/collapse the node with toggle component', () => {
+        component.toggleRecursively = false;
+        component.useToggleComponent = true;
+        let data = underlyingDataSource.data;
+        const child = underlyingDataSource.addChild(data[1]);
+        underlyingDataSource.addChild(child);
+
+        fixture.detectChanges();
+        expectNestedTreeToMatch(treeElement,
+          [`topping_1 - cheese_1 + base_1`],
+          [`topping_2 - cheese_2 + base_2`],
+          [`topping_3 - cheese_3 + base_3`]);
+
+        fixture.detectChanges();
+
+        (getNodeToggles(treeElement)[0] as HTMLElement).click();
+        fixture.detectChanges();
+
+        expect(component.treeControl.expansionModel.selected.length)
+          .toBe(1, `Expect node expanded`);
+        expectNestedTreeToMatch(treeElement,
+          [`topping_1 - cheese_1 + base_1`],
+          [`topping_2 - cheese_2 + base_2`],
+          [_, `topping_4 - cheese_4 + base_4`],
+          [`topping_3 - cheese_3 + base_3`]);
+
+        (getNodeToggles(treeElement)[0] as HTMLElement).click();
+        fixture.detectChanges();
+
+        expectNestedTreeToMatch(treeElement,
+          [`topping_1 - cheese_1 + base_1`],
+          [`topping_2 - cheese_2 + base_2`],
+          [`topping_3 - cheese_3 + base_3`]);
+        expect(component.treeControl.expansionModel.selected.length)
+          .toBe(0, `Expect node collapsed`);
+      });
+
+      it('should expand/collapse the node recursively', () => {
+        component.useToggleComponent = true;
+        let data = underlyingDataSource.data;
+        const child = underlyingDataSource.addChild(data[1]);
+        underlyingDataSource.addChild(child);
+
+        fixture.detectChanges();
+
+        expectNestedTreeToMatch(treeElement,
+          [`topping_1 - cheese_1 + base_1`],
+          [`topping_2 - cheese_2 + base_2`],
+          [`topping_3 - cheese_3 + base_3`]);
+
+        (getNodeToggles(treeElement)[0] as HTMLElement).click();
+        fixture.detectChanges();
+
+        expect(component.treeControl.expansionModel.selected.length)
+          .toBe(3, `Expect node expanded`);
+        expectNestedTreeToMatch(treeElement,
+          [`topping_1 - cheese_1 + base_1`],
+          [`topping_2 - cheese_2 + base_2`],
+          [_, `topping_4 - cheese_4 + base_4`],
+          [_, _, `topping_5 - cheese_5 + base_5`],
+          [`topping_3 - cheese_3 + base_3`]);
+
+        (getNodeToggles(treeElement)[0] as HTMLElement).click();
+        fixture.detectChanges();
+
+        expect(component.treeControl.expansionModel.selected.length)
+          .toBe(0, `Expect node collapsed`);
+        expectNestedTreeToMatch(treeElement,
+          [`topping_1 - cheese_1 + base_1`],
+          [`topping_2 - cheese_2 + base_2`],
+          [`topping_3 - cheese_3 + base_3`]);
+      });
     });
   });
 });
@@ -478,6 +647,10 @@ class FakeDataSource {
 
     this.data = copiedData;
   }
+}
+
+function getNodeToggles(treeElement: Element): Element[] {
+  return [].slice.call(treeElement.querySelectorAll('.mat-tree-node-toggle'))!;
 }
 
 function getNodes(treeElement: Element): Element[] {
@@ -682,11 +855,18 @@ class WhenNodeNestedMatTreeApp {
                      matTreeNodeToggle [matTreeNodeToggleRecursive]="toggleRecursively">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
       </mat-tree-node>
+      <mat-tree-node *matTreeNodeDef="let node; when: useComponent" class="customNodeClass"
+                     matTreeNodePadding>
+                     <mat-tree-node-toggle [matTreeNodeToggleRecursive]="toggleRecursively">
+                     </mat-tree-node-toggle>
+                     {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
+      </mat-tree-node>
     </mat-tree>
   `
 })
 class MatTreeAppWithToggle {
   toggleRecursively: boolean = true;
+  useToggleComponent: boolean = false;
 
   getLevel = (node: TestData) => node.level;
   isExpandable = (node: TestData) => node.children.length > 0;
@@ -711,6 +891,8 @@ class MatTreeAppWithToggle {
       this.dataSource.data = data;
     });
   }
+
+  useComponent = (_a: number, _b: TestData) => this.useToggleComponent;
 }
 
 @Component({
@@ -723,11 +905,20 @@ class MatTreeAppWithToggle {
           <ng-template matTreeNodeOutlet></ng-template>
         </div>
       </mat-nested-tree-node>
+      <mat-nested-tree-node *matTreeNodeDef="let node; when: useComponent">
+        {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
+        <mat-tree-node-toggle [matTreeNodeToggleRecursive]="toggleRecursively">
+        </mat-tree-node-toggle>
+        <div *ngIf="treeControl.isExpanded(node)">
+          <ng-template matTreeNodeOutlet></ng-template>
+        </div>
+      </mat-nested-tree-node>
     </mat-tree>
   `
 })
 class NestedMatTreeAppWithToggle {
   toggleRecursively: boolean = true;
+  useToggleComponent: boolean = false;
 
   getChildren = (node: TestData) => node.observableChildren;
 
@@ -742,6 +933,8 @@ class NestedMatTreeAppWithToggle {
       this.dataSource.data = data;
     });
   }
+
+  useComponent = (_a: number, _b: TestData) => this.useToggleComponent;
 }
 
 @Component({
