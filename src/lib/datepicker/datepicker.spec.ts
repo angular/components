@@ -1435,7 +1435,6 @@ describe('MatDatepicker', () => {
       fixture = createComponent(DatepickerWithCustomHeader, [MatNativeDateModule]);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-
     }));
 
     it('should instantiate a datepicker with a custom header', fakeAsync(() => {
@@ -1693,10 +1692,21 @@ class DatepickerOpeningOnFocus {
 @Component({
   template: `
     <input [matDatepicker]="ch">
-    <mat-datepicker #ch></mat-datepicker>
+    <mat-datepicker #ch [calendarHeaderComponent]="CustomHeaderForDatepicker"></mat-datepicker>
   `,
 })
 class DatepickerWithCustomHeader {
   @ViewChild('ch') datepicker: MatDatepicker<Date>;
   @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+}
+
+@Component({
+  template: `
+  <div>Custom element</div>
+  <mat-calendar-header></mat-calendar-header>
+  `
+})
+export class CustomHeaderForDatepicker {
+  constructor() {
+  }
 }
