@@ -1,20 +1,25 @@
-import {async, ComponentFixture, fakeAsync, flushMicrotasks, TestBed} from '@angular/core/testing';
-import {Component, ViewChild} from '@angular/core';
 import {DataSource} from '@angular/cdk/collections';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
-import {MatTableModule} from './index';
-import {MatTable} from './table';
+import {Component, ViewChild} from '@angular/core';
+import {async, ComponentFixture, fakeAsync, flushMicrotasks, TestBed} from '@angular/core/testing';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {MatPaginator, MatPaginatorModule} from '../paginator/index';
 import {MatSort, MatSortHeader, MatSortModule} from '../sort/index';
+import {MatTableModule} from './index';
+import {MatTable} from './table';
 import {MatTableDataSource} from './table-data-source';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
 
 describe('MatTable', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MatTableModule, MatPaginatorModule, MatSortModule, NoopAnimationsModule],
-      declarations: [MatTableApp, MatTableWithWhenRowApp, ArrayDataSourceMatTableApp],
+      declarations: [
+        MatTableApp,
+        MatTableWithWhenRowApp,
+        ArrayDataSourceMatTableApp,
+        NativeHtmlTableApp
+      ],
     }).compileComponents();
   }));
 
@@ -47,6 +52,21 @@ describe('MatTable', () => {
         ['fourth_row']
       ]);
     });
+  });
+
+  it('should be able to render a table correctly with native elements', () => {
+    let fixture = TestBed.createComponent(NativeHtmlTableApp);
+    fixture.detectChanges();
+
+    const tableElement = fixture.nativeElement.querySelector('table');
+    const data = fixture.componentInstance.dataSource!.data;
+    expectTableToMatchContent(tableElement, [
+      ['Column A', 'Column B', 'Column C'],
+      [data[0].a, data[0].b, data[0].c],
+      [data[1].a, data[1].b, data[1].c],
+      [data[2].a, data[2].b, data[2].c],
+      [data[3].a, data[3].b, data[3].c],
+    ]);
   });
 
   describe('with MatTableDataSource', () => {
@@ -161,7 +181,7 @@ describe('MatTable', () => {
       component.sort.sort(component.sortHeader);
       fixture.detectChanges();
       expectTableToMatchContent(tableElement, [
-        ['Column A\xa0Sorted by a ascending', 'Column B', 'Column C'],
+        ['Column A', 'Column B', 'Column C'],
         ['a_1', 'b_1', 'c_1'],
         ['a_2', 'b_2', 'c_2'],
         ['a_3', 'b_3', 'c_3'],
@@ -171,7 +191,7 @@ describe('MatTable', () => {
       component.sort.sort(component.sortHeader);
       fixture.detectChanges();
       expectTableToMatchContent(tableElement, [
-        ['Column A\xa0Sorted by a descending', 'Column B', 'Column C'],
+        ['Column A', 'Column B', 'Column C'],
         ['a_3', 'b_3', 'c_3'],
         ['a_2', 'b_2', 'c_2'],
         ['a_1', 'b_1', 'c_1'],
@@ -189,7 +209,7 @@ describe('MatTable', () => {
       component.sort.direction = '';
       component.sort.sort(component.sortHeader);
       expectTableToMatchContent(tableElement, [
-        ['Column A\xa0Sorted by a descending', 'Column B', 'Column C'],
+        ['Column A', 'Column B', 'Column C'],
         ['a_1', 'b_1', 'c_1'],
         ['a_3', 'b_3', 'c_3'],
         ['a_2', 'b_2', 'c_2'],
@@ -204,7 +224,7 @@ describe('MatTable', () => {
 
       // Expect that empty string row comes before the other values
       expectTableToMatchContent(tableElement, [
-        ['Column A\xa0Sorted by a ascending', 'Column B', 'Column C'],
+        ['Column A', 'Column B', 'Column C'],
         ['', 'b_1', 'c_1'],
         ['a_2', 'b_2', 'c_2'],
         ['a_3', 'b_3', 'c_3'],
@@ -214,7 +234,7 @@ describe('MatTable', () => {
       component.sort.sort(component.sortHeader);
       fixture.detectChanges();
       expectTableToMatchContent(tableElement, [
-        ['Column A\xa0Sorted by a descending', 'Column B', 'Column C'],
+        ['Column A', 'Column B', 'Column C'],
         ['a_3', 'b_3', 'c_3'],
         ['a_2', 'b_2', 'c_2'],
         ['', 'b_1', 'c_1'],
@@ -229,7 +249,7 @@ describe('MatTable', () => {
       component.sort.sort(component.sortHeader);
       fixture.detectChanges();
       expectTableToMatchContent(tableElement, [
-        ['Column A\xa0Sorted by a ascending', 'Column B', 'Column C'],
+        ['Column A', 'Column B', 'Column C'],
         ['', 'b_1', 'c_1'],
         ['a_2', 'b_2', 'c_2'],
         ['a_3', 'b_3', 'c_3'],
@@ -240,10 +260,39 @@ describe('MatTable', () => {
       component.sort.sort(component.sortHeader);
       fixture.detectChanges();
       expectTableToMatchContent(tableElement, [
-        ['Column A\xa0Sorted by a descending', 'Column B', 'Column C'],
+        ['Column A', 'Column B', 'Column C'],
         ['a_3', 'b_3', 'c_3'],
         ['a_2', 'b_2', 'c_2'],
         ['', 'b_1', 'c_1'],
+      ]);
+    });
+
+    it('should sort zero correctly', () => {
+      // Activate column A sort
+      dataSource.data[0].a = 1;
+      dataSource.data[1].a = 0;
+      dataSource.data[2].a = -1;
+
+      // Expect that zero comes after the negative numbers and before the positive ones.
+      component.sort.sort(component.sortHeader);
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['-1', 'b_3', 'c_3'],
+        ['0', 'b_2', 'c_2'],
+        ['1', 'b_1', 'c_1'],
+      ]);
+
+
+      // Expect that zero comes after the negative numbers and before
+      // the positive ones when switching the sorting direction.
+      component.sort.sort(component.sortHeader);
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['1', 'b_1', 'c_1'],
+        ['0', 'b_2', 'c_2'],
+        ['-1', 'b_3', 'c_3'],
       ]);
     });
 
@@ -279,9 +328,9 @@ describe('MatTable', () => {
 });
 
 interface TestData {
-  a: string|undefined;
-  b: string|undefined;
-  c: string|undefined;
+  a: string|number|undefined;
+  b: string|number|undefined;
+  c: string|number|undefined;
 }
 
 class FakeDataSource extends DataSource<TestData> {
@@ -346,6 +395,36 @@ class MatTableApp {
   dataSource: FakeDataSource | null = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   isFourthRow = (i: number, _rowData: TestData) => i == 3;
+
+  @ViewChild(MatTable) table: MatTable<TestData>;
+}
+
+@Component({
+  template: `
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="column_a">
+        <th mat-header-cell *matHeaderCellDef> Column A</th>
+        <td mat-cell *matCellDef="let row"> {{row.a}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="column_b">
+        <th mat-header-cell *matHeaderCellDef> Column B</th>
+        <td mat-cell *matCellDef="let row"> {{row.b}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="column_c">
+        <th mat-header-cell *matHeaderCellDef> Column C</th>
+        <td mat-cell *matCellDef="let row"> {{row.c}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnsToRender"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnsToRender"></tr>
+    </table>
+  `
+})
+class NativeHtmlTableApp {
+  dataSource: FakeDataSource | null = new FakeDataSource();
+  columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(MatTable) table: MatTable<TestData>;
 }

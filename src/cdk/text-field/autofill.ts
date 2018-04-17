@@ -12,14 +12,12 @@ import {
   ElementRef,
   EventEmitter,
   Injectable,
+  NgZone,
   OnDestroy,
   OnInit,
   Output,
-  NgZone,
 } from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {empty as observableEmpty} from 'rxjs/observable/empty';
-import {Subject} from 'rxjs/Subject';
+import {empty, Observable, Subject} from 'rxjs';
 
 
 /** An event that is emitted when the autofill state of an input changes. */
@@ -47,7 +45,7 @@ const listenerOptions: any = supportsPassiveEventListeners() ? {passive: true} :
  * Based on the following blog post:
  * https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7
  */
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class AutofillMonitor implements OnDestroy {
   private _monitoredElements = new Map<Element, MonitoredElementInfo>();
 
@@ -60,7 +58,7 @@ export class AutofillMonitor implements OnDestroy {
    */
   monitor(element: Element): Observable<AutofillEvent> {
     if (!this._platform.isBrowser) {
-      return observableEmpty();
+      return empty();
     }
 
     const info = this._monitoredElements.get(element);

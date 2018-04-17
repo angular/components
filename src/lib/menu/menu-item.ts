@@ -21,7 +21,7 @@ import {
   mixinDisabled,
   mixinDisableRipple
 } from '@angular/material/core';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 import {DOCUMENT} from '@angular/common';
 
 // Boilerplate for applying mixins to MatMenuItem.
@@ -72,7 +72,7 @@ export class MatMenuItem extends _MatMenuItemMixinBase
     @Inject(DOCUMENT) document?: any,
     private _focusMonitor?: FocusMonitor) {
 
-    // @deletion-target 6.0.0 make `_focusMonitor` and `document` required params.
+    // @deletion-target 7.0.0 make `_focusMonitor` and `document` required params.
     super();
 
     if (_focusMonitor) {

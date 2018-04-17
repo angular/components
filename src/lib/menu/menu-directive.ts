@@ -6,12 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusKeyManager} from '@angular/cdk/a11y';
+import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
-import {startWith} from 'rxjs/operators/startWith';
-import {switchMap} from 'rxjs/operators/switchMap';
-import {take} from 'rxjs/operators/take';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -23,27 +21,23 @@ import {
   Inject,
   InjectionToken,
   Input,
+  NgZone,
   OnDestroy,
+  OnInit,
   Output,
   QueryList,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
-  NgZone,
-  OnInit,
 } from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
-import {merge} from 'rxjs/observable/merge';
-import {Subscription} from 'rxjs/Subscription';
+import {merge, Observable, Subject, Subscription} from 'rxjs';
+import {startWith, switchMap, take} from 'rxjs/operators';
 import {matMenuAnimations} from './menu-animations';
+import {MatMenuContent} from './menu-content';
 import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
 import {MatMenuItem} from './menu-item';
 import {MatMenuPanel} from './menu-panel';
-import {MatMenuContent} from './menu-content';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {FocusOrigin} from '@angular/cdk/a11y';
 
 
 /** Default `mat-menu` options that can be overridden. */
@@ -197,7 +191,7 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
    * menu template that displays in the overlay container.  Otherwise, it's difficult
    * to style the containing menu from outside the component.
    * @deprecated Use `panelClass` instead.
-   * @deletion-target 6.0.0
+   * @deletion-target 7.0.0
    */
   @Input()
   get classList(): string { return this.panelClass; }
@@ -210,7 +204,7 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
   /**
    * Event emitted when the menu is closed.
    * @deprecated Switch to `closed` instead
-   * @deletion-target 6.0.0
+   * @deletion-target 7.0.0
    */
   @Output() close = this.closed;
 
@@ -324,13 +318,13 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
 
   /** Starts the enter animation. */
   _startAnimation() {
-    // @deletion-target 6.0.0 Combine with _resetAnimation.
+    // @deletion-target 7.0.0 Combine with _resetAnimation.
     this._panelAnimationState = 'enter';
   }
 
   /** Resets the panel animation to its initial state. */
   _resetAnimation() {
-    // @deletion-target 6.0.0 Combine with _startAnimation.
+    // @deletion-target 7.0.0 Combine with _startAnimation.
     this._panelAnimationState = 'void';
   }
 

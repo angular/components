@@ -78,13 +78,12 @@
       ["xdescribe"],
       {"name": "Object.assign", "message": "Use the spread operator instead."}
     ],
-    // Disallows importing the whole RxJS library. Submodules can be still imported.
-    "import-blacklist": [true, "rxjs", "rxjs/operators"],
     // Avoids inconsistent linebreak styles in source files. Forces developers to use LF linebreaks.
     "linebreak-style": [true, "LF"],
     // Namespaces are no allowed, because of Closure compiler.
     "no-namespace": true,
     "jsdoc-format": [true, "check-multiline-start"],
+    "no-duplicate-imports": true,
 
     // Custom Rules
     "ts-loader": true,
@@ -96,11 +95,12 @@
     ],
     "validate-decorators": [true, {
       "Component": {
-        "encapsulation": "\\.None$",
-        "moduleId": "^module\\.id$",
-        "changeDetection": "\\.OnPush$",
+        "!host": "\\[class\\]",
+        "!preserveWhitespaces": ".*",
         "!styles": ".*",
-        "!host": "\\[class\\]"
+        "changeDetection": "\\.OnPush$",
+        "encapsulation": "\\.None$",
+        "moduleId": "^module\\.id$"
       },
       "Directive": {
         "!host": "\\[class\\]"
@@ -110,10 +110,6 @@
       true,
       "src/+(lib|cdk|material-experimental|cdk-experimental|demo-app)/**/!(*.spec).ts"
     ],
-    "no-rxjs-patch-imports": [
-      true,
-      "src/+(lib|cdk|material-experimental|cdk-experimental)/**/*.ts"
-    ],
     "missing-rollup-globals": [
       true,
       "./tools/package-tools/rollup-globals.ts",
@@ -121,5 +117,8 @@
     ],
     "deletion-target": true,
     "no-unescaped-html-tag": true
+  },
+  "linterOptions": {
+    "exclude": ["src/lib/schematics/**/*"]
   }
 }

@@ -5,116 +5,107 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-
-import {Component} from '@angular/core';
+import {ChangeDetectorRef, ChangeDetectionStrategy, Component} from '@angular/core';
 import {SelectionModel} from '@angular/cdk/collections';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {MatTreeFlattener, MatTreeFlatDataSource} from '@angular/material/tree';
-import {of as ofObservable} from 'rxjs/observable/of';
-import {Observable} from 'rxjs/Observable';
-import {TodoItemNode, TodoItemFlatNode, ChecklistDatabase} from './checklist-database';
+import {TodoItemNode, ChecklistDatabase} from './checklist-database';
+import {BehaviorSubject} from 'rxjs';
 
 /**
- * A nested checklist example using tree component.
- * Each item/category has a checkbox, and user can check/uncheck a to-do item.
+ * Checklist demo with flat tree
  */
 @Component({
   moduleId: module.id,
   selector: 'checklist-tree-demo',
   templateUrl: 'checklist-tree-demo.html',
   styleUrls: ['checklist-tree-demo.css'],
-  providers: [ChecklistDatabase]
+  providers: [ChecklistDatabase],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChecklistTreeDemo {
-  /** Map from flat node to nested node. This helps us finding the nested node to be modified */
-  flatNodeMap: Map<TodoItemFlatNode, TodoItemNode> = new Map<TodoItemFlatNode, TodoItemNode>();
+  levels = new Map<TodoItemNode, number>();
+  treeControl: FlatTreeControl<TodoItemNode>;
 
-  /** Map from nested node to flattened node. This helps us to keep the same object for selection */
-  nestedNodeMap: Map<TodoItemNode, TodoItemFlatNode> = new Map<TodoItemNode, TodoItemFlatNode>();
+  treeFlattener: MatTreeFlattener<TodoItemNode, TodoItemNode>;
 
-  /** A selected parent node to be inserted */
-  selectedParent: TodoItemFlatNode | null = null;
-
-  /** The new item's name */
-  newItemName: string = '';
-
-  treeControl: FlatTreeControl<TodoItemFlatNode>;
-
-  treeFlattener: MatTreeFlattener<TodoItemNode, TodoItemFlatNode>;
-
-  dataSource: MatTreeFlatDataSource<TodoItemNode, TodoItemFlatNode>;
+  dataSource: MatTreeFlatDataSource<TodoItemNode, TodoItemNode>;
 
   /** The selection for checklist */
-  checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
+  checklistSelection = new SelectionModel<TodoItemNode>(true /* multiple */);
 
-  constructor(private database: ChecklistDatabase) {
+  constructor(private database: ChecklistDatabase, private changeDetectorRef: ChangeDetectorRef) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
-      this.isExpandable, this.getChildren);
-    this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
+        this.isExpandable, this.getChildren);
+    this.treeControl = new FlatTreeControl<TodoItemNode>(
+        this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-    database.dataChange.subscribe(data => {
-      this.dataSource.data = data;
-    });
+    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+    database.dataChange.subscribe(data => this.dataSource.data = data);
   }
 
-  getLevel = (node: TodoItemFlatNode) => { return node.level; };
-
-  isExpandable = (node: TodoItemFlatNode) => { return node.expandable; };
-
-  getChildren = (node: TodoItemNode): Observable<TodoItemNode[]> => {
-    return ofObservable(node.children);
+  getLevel = (node: TodoItemNode): number => {
+    return this.levels.get(node) || 0;
   }
 
-  hasChild = (_: number, _nodeData: TodoItemFlatNode) => { return _nodeData.expandable; };
+  isExpandable = (node: TodoItemNode): boolean => {
+    return node.children.value.length > 0;
+  }
 
-  /**
-   * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
-   */
+  getChildren = (node: TodoItemNode): BehaviorSubject<TodoItemNode[]> => {
+    return node.children;
+  }
+
   transformer = (node: TodoItemNode, level: number) => {
-    let flatNode = this.nestedNodeMap.has(node)
-      ? this.nestedNodeMap.get(node)!
-      : new TodoItemFlatNode();
-    flatNode.item = node.item;
-    flatNode.level = level;
-    flatNode.expandable = !!node.children;
-    this.flatNodeMap.set(flatNode, node);
-    this.nestedNodeMap.set(node, flatNode);
-    return flatNode;
+    this.levels.set(node, level);
+    return node;
   }
+
+  hasNoContent(_nodeData: TodoItemNode) { return _nodeData.item === ''; }
 
   /** Whether all the descendants of the node are selected */
-  descendantsAllSelected(node: TodoItemFlatNode): boolean {
+  descendantsAllSelected(node: TodoItemNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
-    return descendants.every(child => this.checklistSelection.isSelected(child));
+    if (!descendants.length) {
+      return this.checklistSelection.isSelected(node);
+    }
+    const selected = this.checklistSelection.isSelected(node);
+    const allSelected = descendants.every(child => this.checklistSelection.isSelected(child));
+    if (!selected && allSelected) {
+      this.checklistSelection.select(node);
+      this.changeDetectorRef.markForCheck();
+    }
+    return allSelected;
   }
 
   /** Whether part of the descendants are selected */
-  descendantsPartiallySelected(node: TodoItemFlatNode): boolean {
+  descendantsPartiallySelected(node: TodoItemNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
+    if (!descendants.length) {
+      return false;
+    }
     const result = descendants.some(child => this.checklistSelection.isSelected(child));
     return result && !this.descendantsAllSelected(node);
   }
 
   /** Toggle the to-do item selection. Select/deselect all the descendants node */
-  todoItemSelectionToggle(node: TodoItemFlatNode): void {
+  todoItemSelectionToggle(node: TodoItemNode): void {
     this.checklistSelection.toggle(node);
     const descendants = this.treeControl.getDescendants(node);
     this.checklistSelection.isSelected(node)
-        ? this.checklistSelection.select(...descendants)
-        : this.checklistSelection.deselect(...descendants);
-  }
-
-  /** Insert a new item with name `newItemName` to be under category `selectedParent`. */
-  addNode() {
-    if (this.selectedParent) {
-      const parentNode = this.flatNodeMap.get(this.selectedParent);
-      this.database.insertItem(parentNode!, this.newItemName);
-    }
+      ? this.checklistSelection.select(...descendants, node)
+      : this.checklistSelection.deselect(...descendants, node);
+    this.changeDetectorRef.markForCheck();
   }
 
   /** Select the category so we can insert the new item. */
-  setParent(node: TodoItemFlatNode) {
-    this.selectedParent = node;
+  addNewItem(node: TodoItemNode) {
+    this.database.insertItem(node, '');
+    this.treeControl.expand(node);
+  }
+
+  /** Save the node to database */
+  saveNode(node: TodoItemNode, itemValue: string) {
+    this.database.updateItem(node, itemValue);
   }
 }

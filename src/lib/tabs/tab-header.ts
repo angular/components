@@ -7,7 +7,9 @@
  */
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE, HOME, END} from '@angular/cdk/keycodes';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
+import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -26,13 +28,9 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {CanDisableRipple, mixinDisableRipple} from '@angular/material/core';
-import {merge} from 'rxjs/observable/merge';
-import {of as observableOf} from 'rxjs/observable/of';
-import {Subscription} from 'rxjs/Subscription';
-import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {merge, of as observableOf, Subscription} from 'rxjs';
 import {MatInkBar} from './ink-bar';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
-import {ViewportRuler} from '@angular/cdk/scrolling';
 
 
 /**
@@ -450,7 +448,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   }
 
   /** Tells the ink-bar to align itself to the current label wrapper */
-  private _alignInkBarToSelectedTab(): void {
+  _alignInkBarToSelectedTab(): void {
     const selectedLabelWrapper = this._labelWrappers && this._labelWrappers.length ?
         this._labelWrappers.toArray()[this.selectedIndex].elementRef.nativeElement :
         null;

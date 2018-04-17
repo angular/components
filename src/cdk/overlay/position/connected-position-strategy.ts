@@ -6,23 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {PositionStrategy} from './position-strategy';
-import {ElementRef} from '@angular/core';
-import {ViewportRuler} from '@angular/cdk/scrolling';
 import {Direction} from '@angular/cdk/bidi';
+import {CdkScrollable, ViewportRuler} from '@angular/cdk/scrolling';
+import {ElementRef} from '@angular/core';
+import {Observable} from 'rxjs';
+import {OverlayRef} from '../overlay-ref';
 import {
+  ConnectedOverlayPositionChange,
   ConnectionPositionPair,
   OriginConnectionPosition,
   OverlayConnectionPosition,
-  ConnectedOverlayPositionChange,
   validateHorizontalPosition,
   validateVerticalPosition,
 } from './connected-position';
-import {Observable} from 'rxjs/Observable';
-import {CdkScrollable} from '@angular/cdk/scrolling';
-import {OverlayRef} from '../overlay-ref';
 import {FlexibleConnectedPositionStrategy} from './flexible-connected-position-strategy';
-
+import {PositionStrategy} from './position-strategy';
 
 
 /**
@@ -72,8 +70,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     // proxy all of the API calls.
     this._positionStrategy =
       new FlexibleConnectedPositionStrategy(connectedTo, viewportRuler, document)
-        .withFlexibleHeight(false)
-        .withFlexibleWidth(false)
+        .withFlexibleDimensions(false)
         .withPush(false)
         .withViewportMargin(0);
 
@@ -174,12 +171,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * @param offset New offset in the X axis.
    */
   withOffsetX(offset: number): this {
-    this._preferredPositions.forEach(position => {
-      if (position.offsetX == null) {
-        position.offsetX = offset;
-      }
-    });
-
+    this._positionStrategy.withDefaultOffsetX(offset);
     return this;
   }
 
@@ -188,12 +180,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * @param  offset New offset in the Y axis.
    */
   withOffsetY(offset: number): this {
-    this._preferredPositions.forEach(position => {
-      if (position.offsetY == null) {
-        position.offsetY = offset;
-      }
-    });
-
+    this._positionStrategy.withDefaultOffsetY(offset);
     return this;
   }
 

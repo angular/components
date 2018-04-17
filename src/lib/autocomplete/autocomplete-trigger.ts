@@ -14,9 +14,11 @@ import {
   OverlayRef,
   PositionStrategy,
   ScrollStrategy,
+  ViewportRuler,
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
+import {filter, take, switchMap, delay, tap} from 'rxjs/operators';
 import {
   ChangeDetectorRef,
   Directive,
@@ -40,18 +42,7 @@ import {
   MatOptionSelectionChange,
 } from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
-import {Observable} from 'rxjs/Observable';
-import {defer} from 'rxjs/observable/defer';
-import {fromEvent} from 'rxjs/observable/fromEvent';
-import {merge} from 'rxjs/observable/merge';
-import {of as observableOf} from 'rxjs/observable/of';
-import {delay} from 'rxjs/operators/delay';
-import {filter} from 'rxjs/operators/filter';
-import {switchMap} from 'rxjs/operators/switchMap';
-import {take} from 'rxjs/operators/take';
-import {tap} from 'rxjs/operators/tap';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription, defer, fromEvent, merge, of as observableOf, Subject, Observable} from 'rxjs';
 import {MatAutocomplete} from './autocomplete';
 
 
@@ -132,6 +123,9 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   /** The subscription for closing actions (some are bound to document). */
   private _closingActionsSubscription: Subscription;
 
+  /** Subscription to viewport size changes. */
+  private _viewportSubscription = Subscription.EMPTY;
+
   /** Stream of keyboard events that can close the panel. */
   private readonly _closeKeyEventStream = new Subject<void>();
 
@@ -151,9 +145,12 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
               @Inject(MAT_AUTOCOMPLETE_SCROLL_STRATEGY) private _scrollStrategy,
               @Optional() private _dir: Directionality,
               @Optional() @Host() private _formField: MatFormField,
-              @Optional() @Inject(DOCUMENT) private _document: any) {}
+              @Optional() @Inject(DOCUMENT) private _document: any,
+              // @deletion-target 7.0.0 Make `_viewportRuler` required.
+              private _viewportRuler?: ViewportRuler) {}
 
   ngOnDestroy() {
+    this._viewportSubscription.unsubscribe();
     this._componentDestroyed = true;
     this._destroyPanel();
     this._closeKeyEventStream.complete();
@@ -492,6 +489,14 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     if (!this._overlayRef) {
       this._portal = new TemplatePortal(this.autocomplete.template, this._viewContainerRef);
       this._overlayRef = this._overlay.create(this._getOverlayConfig());
+
+      if (this._viewportRuler) {
+        this._viewportSubscription = this._viewportRuler.change().subscribe(() => {
+          if (this.panelOpen && this._overlayRef) {
+            this._overlayRef.updateSize({width: this._getHostWidth()});
+          }
+        });
+      }
     } else {
       /** Update the panel width, in case the host width has changed */
       this._overlayRef.updateSize({width: this._getHostWidth()});
@@ -526,8 +531,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   private _getOverlayPosition(): PositionStrategy {
     this._positionStrategy = this._overlay.position()
       .flexibleConnectedTo(this._getConnectedElement())
-      .withFlexibleHeight(false)
-      .withFlexibleWidth(false)
+      .withFlexibleDimensions(false)
       .withPush(false)
       .withPositions([
         {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top'},

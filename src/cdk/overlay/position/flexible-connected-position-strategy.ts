@@ -14,11 +14,10 @@ import {
   ConnectionPositionPair,
   ScrollingVisibility,
 } from './connected-position';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs/Observable';
+import {Observable, Subscription, Subject} from 'rxjs';
 import {OverlayRef} from '../overlay-ref';
 import {isElementScrolledOutsideView, isElementClippedByScrolling} from './scroll-clip';
+import {coerceCssPixelValue} from '@angular/cdk/coercion';
 
 
 // TODO: refactor clipping detection into a separate thing (part of scrolling module)
@@ -52,11 +51,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** Whether the overlay can grow via flexible width/height after the initial open. */
   private _growAfterOpen = false;
 
-  /** Whether the overlay's height can be constrained to fit within the viewport. */
-  private _hasFlexibleHeight = true;
-
-  /** Whether the overlay's width can be constrained to fit within the viewport. */
-  private _hasFlexibleWidth = true;
+  /** Whether the overlay's width and height can be constrained to fit within the viewport. */
+  private _hasFlexibleDimensions = true;
 
   /** Whether the overlay position is locked. */
   private _positionLocked = false;
@@ -71,7 +67,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _viewportRect: ClientRect;
 
   /** Amount of space that must be maintained between the overlay and the edge of the viewport. */
-  private _viewportMargin: number = 0;
+  private _viewportMargin = 0;
 
   /** The Scrollable containers used to check scrollable view properties on position change. */
   private scrollables: CdkScrollable[] = [];
@@ -102,6 +98,12 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
   /** Subscription to viewport size changes. */
   private _resizeSubscription = Subscription.EMPTY;
+
+  /** Default offset for the overlay along the x axis. */
+  private _offsetX = 0;
+
+  /** Default offset for the overlay along the y axis. */
+  private _offsetY = 0;
 
   /** Observable sequence of position changes. */
   positionChanges: Observable<ConnectedOverlayPositionChange> =
@@ -162,6 +164,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       return;
     }
 
+    this._resetOverlayElementStyles();
     this._resetBoundingBoxStyles();
 
     // We need the bounding rects for the origin and the overlay to determine how to position
@@ -324,15 +327,9 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     return this;
   }
 
-  /** Sets whether the overlay's height can be constrained to fit within the viewport. */
-  withFlexibleHeight(flexibleHeight = true): this {
-    this._hasFlexibleHeight = flexibleHeight;
-    return this;
-  }
-
-  /** Sets whether the overlay's width can be constrained to fit within the viewport. */
-  withFlexibleWidth(flexibleWidth = true): this {
-    this._hasFlexibleWidth = flexibleWidth;
+  /** Sets whether the overlay's width and height can be constrained to fit within the viewport. */
+  withFlexibleDimensions(flexibleDimensions = true): this {
+    this._hasFlexibleDimensions = flexibleDimensions;
     return this;
   }
 
@@ -365,6 +362,24 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    */
   setOrigin(origin: ElementRef): this {
     this._origin = origin.nativeElement;
+    return this;
+  }
+
+  /**
+   * Sets the default offset for the overlay's connection point on the x-axis.
+   * @param offset New offset in the X axis.
+   */
+  withDefaultOffsetX(offset: number): this {
+    this._offsetX = offset;
+    return this;
+  }
+
+  /**
+   * Sets the default offset for the overlay's connection point on the y-axis.
+   * @param offset New offset in the Y axis.
+   */
+  withDefaultOffsetY(offset: number): this {
+    this._offsetY = offset;
     return this;
   }
 
@@ -433,14 +448,16 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     position: ConnectedPosition): OverlayFit {
 
     let {x, y} = point;
+    let offsetX = this._getOffset(position, 'x');
+    let offsetY = this._getOffset(position, 'y');
 
     // Account for the offsets since they could push the overlay out of the viewport.
-    if (position.offsetX) {
-      x += position.offsetX;
+    if (offsetX) {
+      x += offsetX;
     }
 
-    if (position.offsetY) {
-      y += position.offsetY;
+    if (offsetY) {
+      y += offsetY;
     }
 
     // How much the overlay would overflow at this position, on each side.
@@ -469,16 +486,16 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    * @param viewport The geometry of the viewport.
    */
   private _canFitWithFlexibleDimensions(fit: OverlayFit, point: Point, viewport: ClientRect) {
-    if (this._hasFlexibleWidth || this._hasFlexibleWidth) {
+    if (this._hasFlexibleDimensions) {
       const availableHeight = viewport.bottom - point.y;
       const availableWidth = viewport.right - point.x;
-      const minHeight = this._overlayRef.getConfig().minHeight || 0;
-      const minWidth = this._overlayRef.getConfig().minWidth || 0;
+      const minHeight = this._overlayRef.getConfig().minHeight;
+      const minWidth = this._overlayRef.getConfig().minWidth;
 
       const verticalFit = fit.fitsInViewportVertically ||
-          (this._hasFlexibleHeight && minHeight <= availableHeight);
+          (minHeight != null && minHeight <= availableHeight);
       const horizontalFit = fit.fitsInViewportHorizontally ||
-          (this._hasFlexibleWidth && minWidth <= availableWidth);
+          (minWidth != null && minWidth <= availableWidth);
 
       return verticalFit && horizontalFit;
     }
@@ -556,6 +573,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    */
   private _calculateBoundingBoxRect(origin: Point, position: ConnectedPosition): BoundingBoxRect {
     const viewport = this._viewportRect;
+    const isRtl = this._isRtl();
     let height, top, bottom;
 
     if (position.overlayY === 'top') {
@@ -563,9 +581,11 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       top = origin.y;
       height = viewport.bottom - origin.y;
     } else if (position.overlayY === 'bottom') {
-      // Overlay is opening "upward" and thus is bound by the top viewport edge.
-      bottom = viewport.height - origin.y + this._viewportMargin;
-      height = viewport.height - bottom;
+      // Overlay is opening "upward" and thus is bound by the top viewport edge. We need to add
+      // the viewport margin back in, because the viewport rect is narrowed down to remove the
+      // margin, whereas the `origin` position is calculated based on its `ClientRect`.
+      bottom = viewport.height - origin.y + this._viewportMargin * 2;
+      height = viewport.height - bottom + this._viewportMargin;
     } else {
       // If neither top nor bottom, it means that the overlay
       // is vertically centered on the origin point.
@@ -583,13 +603,13 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     // The overlay is opening 'right-ward' (the content flows to the right).
     const isBoundedByRightViewportEdge =
-        (position.overlayX === 'start' && !this._isRtl()) ||
-        (position.overlayX === 'end' && this._isRtl());
+        (position.overlayX === 'start' && !isRtl) ||
+        (position.overlayX === 'end' && isRtl);
 
     // The overlay is opening 'left-ward' (the content flows to the left).
     const isBoundedByLeftViewportEdge =
-        (position.overlayX === 'end' && !this._isRtl()) ||
-        (position.overlayX === 'start' && this._isRtl());
+        (position.overlayX === 'end' && !isRtl) ||
+        (position.overlayX === 'start' && isRtl);
 
     let width, left, right;
 
@@ -636,34 +656,43 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     const styles = {} as CSSStyleDeclaration;
 
-    if (!this._hasFlexibleHeight || this._isPushed) {
-      styles.top = '0';
-      styles.bottom = '';
-      styles.height = '100%';
+    if (this._hasExactPosition()) {
+      styles.top = styles.left = '0';
+      styles.bottom = styles.right = '';
+      styles.width = styles.height = '100%';
     } else {
-      styles.height = `${boundingBoxRect.height}px`;
-      styles.top = boundingBoxRect.top != null ? `${boundingBoxRect.top}px` : '';
-      styles.bottom = boundingBoxRect.bottom != null ? `${boundingBoxRect.bottom}px` : '';
-    }
+      const maxHeight = this._overlayRef.getConfig().maxHeight;
+      const maxWidth = this._overlayRef.getConfig().maxWidth;
 
-    if (!this._hasFlexibleWidth || this._isPushed) {
-      styles.left = '0';
-      styles.right = '';
-      styles.width = '100%';
-    } else {
-      styles.width = `${boundingBoxRect.width}px`;
-      styles.left = boundingBoxRect.left != null ? `${boundingBoxRect.left}px` : '';
-      styles.right = boundingBoxRect.right != null ? `${boundingBoxRect.right}px` : '';
-    }
+      styles.height = coerceCssPixelValue(boundingBoxRect.height);
+      styles.top = coerceCssPixelValue(boundingBoxRect.top);
+      styles.bottom = coerceCssPixelValue(boundingBoxRect.bottom);
+      styles.width = coerceCssPixelValue(boundingBoxRect.width);
+      styles.left = coerceCssPixelValue(boundingBoxRect.left);
+      styles.right = coerceCssPixelValue(boundingBoxRect.right);
 
-    const maxHeight = this._overlayRef.getConfig().maxHeight;
-    if (maxHeight && this._hasFlexibleHeight) {
-      styles.maxHeight = formatCssUnit(maxHeight);
-    }
+      // Push the pane content towards the proper direction.
+      if (position.overlayX === 'center') {
+        styles.alignItems = 'center';
+      } else if (this._isRtl()) {
+        styles.alignItems = position.overlayX === 'end' ? 'flex-start' : 'flex-end';
+      } else {
+        styles.alignItems = position.overlayX === 'end' ? 'flex-end' : 'flex-start';
+      }
 
-    const maxWidth = this._overlayRef.getConfig().maxWidth;
-    if (maxWidth && this._hasFlexibleWidth) {
-      styles.maxWidth = formatCssUnit(maxWidth);
+      if (position.overlayY === 'center') {
+        styles.justifyContent = 'center';
+      } else {
+        styles.justifyContent = position.overlayY === 'bottom' ? 'flex-end' : 'flex-start';
+      }
+
+      if (maxHeight) {
+        styles.maxHeight = coerceCssPixelValue(maxHeight);
+      }
+
+      if (maxWidth) {
+        styles.maxWidth = coerceCssPixelValue(maxWidth);
+      }
     }
 
     this._lastBoundingBoxSize = boundingBoxRect;
@@ -685,36 +714,26 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     } as CSSStyleDeclaration);
   }
 
-  /** Sets positioning styles to the overlay element. */
-  private _setOverlayElementStyles(originPoint: Point, position: ConnectedPosition): void {
-    // Reset styles from any previous positioning.
-    const styles = {
+  /** Resets the styles for the overlay pane so that a new positioning can be computed. */
+  private _resetOverlayElementStyles() {
+    extendStyles(this._pane.style, {
       top: '',
       left: '',
       bottom: '',
       right: '',
-    } as CSSStyleDeclaration;
+      position: '',
+    } as CSSStyleDeclaration);
+  }
 
-    // Align the overlay panel to the appropriate edge of the
-    // size-constraining container unless using a 'center' position.
-    if (this._hasFlexibleWidth && position.overlayX !== 'center' && !this._isPushed) {
-      if (this._isRtl()) {
-        styles[position.overlayX === 'end' ? 'left' : 'right'] = '0';
-      } else {
-        styles[position.overlayX === 'end' ? 'right' : 'left'] = '0';
-      }
-    }
+  /** Sets positioning styles to the overlay element. */
+  private _setOverlayElementStyles(originPoint: Point, position: ConnectedPosition): void {
+    const styles = {} as CSSStyleDeclaration;
 
-    if (this._hasFlexibleHeight && position.overlayY !== 'center' && !this._isPushed) {
-      styles[position.overlayY === 'bottom' ? 'bottom' : 'top'] = '0';
-    }
-
-    if (!this._hasFlexibleHeight || this._isPushed) {
+    if (this._hasExactPosition()) {
       extendStyles(styles, this._getExactOverlayY(position, originPoint));
-    }
-
-    if (!this._hasFlexibleWidth || this._isPushed) {
       extendStyles(styles, this._getExactOverlayX(position, originPoint));
+    } else {
+      styles.position = 'static';
     }
 
     // Use a transform to apply the offsets. We do this because the `center` positions rely on
@@ -722,14 +741,16 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     // off the position. We also can't use margins, because they won't have an effect in some
     // cases where the element doesn't have anything to "push off of". Finally, this works
     // better both with flexible and non-flexible positioning.
-    let transformString = ' ';
+    let transformString = '';
+    let offsetX = this._getOffset(position, 'x');
+    let offsetY = this._getOffset(position, 'y');
 
-    if (position.offsetX) {
-      transformString += `translateX(${position.offsetX}px)`;
+    if (offsetX) {
+      transformString += `translateX(${offsetX}px) `;
     }
 
-    if (position.offsetY) {
-      transformString += `translateY(${position.offsetY}px)`;
+    if (offsetY) {
+      transformString += `translateY(${offsetY}px)`;
     }
 
     styles.transform = transformString.trim();
@@ -737,19 +758,12 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     // If a maxWidth or maxHeight is specified on the overlay, we remove them. We do this because
     // we need these values to both be set to "100%" for the automatic flexible sizing to work.
     // The maxHeight and maxWidth are set on the boundingBox in order to enforce the constraint.
-    if (this._hasFlexibleHeight && this._overlayRef.getConfig().maxHeight) {
+    if (this._hasFlexibleDimensions && this._overlayRef.getConfig().maxHeight) {
       styles.maxHeight = '';
     }
 
-    if (this._hasFlexibleWidth && this._overlayRef.getConfig().maxWidth) {
+    if (this._hasFlexibleDimensions && this._overlayRef.getConfig().maxWidth) {
       styles.maxWidth = '';
-    }
-
-    // Push the pane content towards the proper direction.
-    if (position.overlayX === 'center') {
-      styles.justifyContent = 'center';
-    } else {
-      styles.justifyContent = position.overlayX === 'end' ? 'flex-end' : 'flex-start';
     }
 
     extendStyles(this._pane.style, styles);
@@ -774,7 +788,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       const documentHeight = this._document.documentElement.clientHeight;
       styles.bottom = `${documentHeight - (overlayPoint.y + this._overlayRect.height)}px`;
     } else {
-      styles.top = `${overlayPoint.y}px`;
+      styles.top = coerceCssPixelValue(overlayPoint.y);
     }
 
     return styles;
@@ -809,7 +823,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       const documentWidth = this._document.documentElement.clientWidth;
       styles.right = `${documentWidth - (overlayPoint.x + this._overlayRect.width)}px`;
     } else {
-      styles.left = `${overlayPoint.x}px`;
+      styles.left = coerceCssPixelValue(overlayPoint.x);
     }
 
     return styles;
@@ -860,7 +874,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     return {
       top:    scrollPosition.top + this._viewportMargin,
       left:   scrollPosition.left + this._viewportMargin,
-      right:  scrollPosition.left + width  - this._viewportMargin,
+      right:  scrollPosition.left + width - this._viewportMargin,
       bottom: scrollPosition.top + height - this._viewportMargin,
       width:  width  - (2 * this._viewportMargin),
       height: height - (2 * this._viewportMargin),
@@ -870,6 +884,22 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** Whether the we're dealing with an RTL context */
   private _isRtl() {
     return this._overlayRef.getConfig().direction === 'rtl';
+  }
+
+  /** Determines whether the overlay uses exact or flexible positioning. */
+  private _hasExactPosition() {
+    return !this._hasFlexibleDimensions || this._isPushed;
+  }
+
+  /** Retrieves the offset of a position along the x or y axis. */
+  private _getOffset(position: ConnectedPosition, axis: 'x' | 'y') {
+    if (axis === 'x') {
+      // We don't do something like `position['offset' + axis]` in
+      // order to avoid breking minifiers that rename properties.
+      return position.offsetX == null ? this._offsetX : position.offsetX;
+    }
+
+    return position.offsetY == null ? this._offsetY : position.offsetY;
   }
 }
 
@@ -932,11 +962,6 @@ export interface ConnectedPosition {
   weight?: number;
   offsetX?: number;
   offsetY?: number;
-}
-
-// TODO: move to common place
-function formatCssUnit(value: number | string) {
-  return typeof value === 'string' ? value as string : `${value}px`;
 }
 
 /** Shallow-extends a stylesheet object with another stylesheet object. */

@@ -6,17 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {_isNumberValue} from '@angular/cdk/coercion';
 import {DataSource} from '@angular/cdk/table';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {MatSort, Sort} from '@angular/material/sort';
-import {Subscription} from 'rxjs/Subscription';
-import {combineLatest} from 'rxjs/operators/combineLatest';
-import {map} from 'rxjs/operators/map';
-import {startWith} from 'rxjs/operators/startWith';
-import {empty} from 'rxjs/observable/empty';
-import {_isNumberValue} from '@angular/cdk/coercion';
+import {BehaviorSubject, combineLatest, empty, Observable, Subscription} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+
 
 /**
  * Data source that accepts a client-side data array and includes native support of filtering,
@@ -127,16 +123,16 @@ export class MatTableDataSource<T> extends DataSource<T> {
       // This avoids inconsistent results when comparing values to undefined/null.
       // If neither value exists, return 0 (equal).
       let comparatorResult = 0;
-      if (valueA && valueB) {
+      if (valueA != null && valueB != null) {
         // Check if one value is greater than the other; if equal, comparatorResult should remain 0.
         if (valueA > valueB) {
           comparatorResult = 1;
         } else if (valueA < valueB) {
           comparatorResult = -1;
         }
-      } else if (valueA) {
+      } else if (valueA != null) {
         comparatorResult = 1;
-      } else if (valueB) {
+      } else if (valueB != null) {
         comparatorResult = -1;
       }
 
@@ -179,27 +175,25 @@ export class MatTableDataSource<T> extends DataSource<T> {
   _updateChangeSubscription() {
     // Sorting and/or pagination should be watched if MatSort and/or MatPaginator are provided.
     // Otherwise, use an empty observable stream to take their place.
-    const sortChange = (this._sort ? this._sort.sortChange : empty()) as Observable<Sort | null>;
-    const pageChange =
-        (this._paginator ? this._paginator.page : empty()) as Observable<PageEvent | null>;
+    const sortChange: Observable<Sort> = this._sort ? this._sort.sortChange : empty();
+    const pageChange: Observable<PageEvent> = this._paginator ? this._paginator.page : empty();
 
     if (this._renderChangesSubscription) {
       this._renderChangesSubscription.unsubscribe();
     }
 
+    const dataStream = this._data;
     // Watch for base data or filter changes to provide a filtered set of data.
-    this._renderChangesSubscription = this._data.pipe(
-      combineLatest(this._filter),
-      map(([data]) => this._filterData(data)),
-      // Watch for filtered data or sort changes to provide an ordered set of data.
-      combineLatest(sortChange.pipe(startWith(null))),
-      map(([data]) => this._orderData(data)),
-      // Watch for ordered data or page changes to provide a paged set of data.
-      combineLatest(pageChange.pipe(startWith(null))),
-      map(([data]) => this._pageData(data))
-    )
+    const filteredData = combineLatest(dataStream, this._filter)
+      .pipe(map(([data]) => this._filterData(data)));
+    // Watch for filtered data or sort changes to provide an ordered set of data.
+    const orderedData = combineLatest(filteredData, sortChange.pipe(startWith(null!)))
+      .pipe(map(([data]) => this._orderData(data)));
+    // Watch for ordered data or page changes to provide a paged set of data.
+    const paginatedData = combineLatest(orderedData, pageChange.pipe(startWith(null!)))
+      .pipe(map(([data]) => this._pageData(data)));
     // Watched for paged data changes and send the result to the table to render.
-    .subscribe(data => this._renderData.next(data));
+    paginatedData.subscribe(data => this._renderData.next(data));
   }
 
   /**

@@ -25,6 +25,7 @@ import {
 } from '@angular/cdk/overlay';
 import {Platform} from '@angular/cdk/platform';
 import {ComponentPortal} from '@angular/cdk/portal';
+import {take, takeUntil} from 'rxjs/operators';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -41,10 +42,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {take} from 'rxjs/operators/take';
-import {takeUntil} from 'rxjs/operators/takeUntil';
-import {Subject} from 'rxjs/Subject';
+import {Subject, Observable} from 'rxjs';
 import {matTooltipAnimations} from './tooltip-animations';
 
 
@@ -121,10 +119,13 @@ export class MatTooltip implements OnDestroy {
       this._position = value;
 
       if (this._overlayRef) {
-        // TODO(andrewjs): When the overlay's position can be
-        // dynamically changed, do not destroy the tooltip.
-        this._detach();
         this._updatePosition();
+
+        if (this._tooltipInstance) {
+          this._tooltipInstance!.show(value, 0);
+        }
+
+        this._overlayRef.updatePosition();
       }
     }
   }
@@ -308,8 +309,7 @@ export class MatTooltip implements OnDestroy {
     // Create connected position strategy that listens for scroll events to reposition.
     const strategy = this._overlay.position()
       .flexibleConnectedTo(this._elementRef)
-      .withFlexibleHeight(false)
-      .withFlexibleWidth(false)
+      .withFlexibleDimensions(false)
       .withViewportMargin(8)
       .withPositions([
         {...origin.main, ...overlay.main},

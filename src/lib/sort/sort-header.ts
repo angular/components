@@ -6,6 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {CdkColumnDef} from '@angular/cdk/table';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -14,16 +16,14 @@ import {
   Optional,
   ViewEncapsulation
 } from '@angular/core';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {CdkColumnDef} from '@angular/cdk/table';
-import {Subscription} from 'rxjs/Subscription';
-import {merge} from 'rxjs/observable/merge';
-import {MatSort, MatSortable} from './sort';
-import {SortDirection} from './sort-direction';
-import {MatSortHeaderIntl} from './sort-header-intl';
-import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
 import {CanDisable, mixinDisabled} from '@angular/material/core';
+import {merge, Subscription} from 'rxjs';
+import {MatSort, MatSortable} from './sort';
 import {matSortAnimations} from './sort-animations';
+import {SortDirection} from './sort-direction';
+import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
+import {MatSortHeaderIntl} from './sort-header-intl';
+
 
 // Boilerplate for applying mixins to the sort header.
 /** @docs-private */
@@ -70,6 +70,7 @@ export interface ArrowViewStateTransition {
     '(mouseenter)': '_setIndicatorHintVisible(true)',
     '(longpress)': '_setIndicatorHintVisible(true)',
     '(mouseleave)': '_setIndicatorHintVisible(false)',
+    '[attr.aria-sort]': '_getAriaSortAttribute()',
     '[class.mat-sort-header-disabled]': '_isDisabled()',
   },
   encapsulation: ViewEncapsulation.None,
@@ -262,5 +263,17 @@ export class MatSortHeader extends _MatSortHeaderMixinBase implements MatSortabl
 
   _isDisabled() {
     return this._sort.disabled || this.disabled;
+  }
+
+  /**
+   * Gets the aria-sort attribute that should be applied to this sort header. If this header
+   * is not sorted, returns null so that the attribute is removed from the host element. Aria spec
+   * says that the aria-sort property should only be present on one header at a time, so removing
+   * ensures this is true.
+   */
+  _getAriaSortAttribute() {
+    if (!this._isSorted()) { return null; }
+
+    return this._sort.direction == 'asc' ? 'ascending' : 'descending';
   }
 }

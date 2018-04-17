@@ -11,8 +11,8 @@ import {tsBuildTask} from '../util/task_helpers';
 const gulpRename = require('gulp-rename');
 
 const distDir = buildConfig.outputDir;
-const schematicsDir = join(buildConfig.projectDir, 'schematics');
 const {sourceDir, outputDir} = materialPackage;
+const schematicsDir = join(sourceDir, 'schematics');
 
 /** Path to the directory where all releases are created. */
 const releasesDir = join(distDir, 'releases');
@@ -31,8 +31,8 @@ const allScssGlob = join(buildConfig.packagesDir, '**/*.scss');
 // Pattern matching schematics files to be copied into the @angular/material package.
 const schematicsGlobs = [
   // File templates and schemas are copied as-is from source.
-  join(schematicsDir, '**/files/**/*'),
-  join(schematicsDir, '**/+(schema|collection).json'),
+  join(schematicsDir, '**/+(data|files)/**/*'),
+  join(schematicsDir, '**/+(schema|collection|migration).json'),
 
   // JavaScript files compiled from the TypeScript sources.
   join(distDir, 'schematics', '**/*.js?(.map)'),

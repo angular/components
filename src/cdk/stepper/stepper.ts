@@ -32,9 +32,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {AbstractControl} from '@angular/forms';
-import {Subject} from 'rxjs/Subject';
 import {CdkStepLabel} from './step-label';
-
+import {Subject} from 'rxjs';
 
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;
@@ -67,7 +66,7 @@ export class StepperSelectionEvent {
   moduleId: module.id,
   selector: 'cdk-step',
   exportAs: 'cdkStep',
-  templateUrl: 'step.html',
+  template: '<ng-template><ng-content></ng-content></ng-template>',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -180,9 +179,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
       if (this._selectedIndex != index &&
           !this._anyControlsInvalidOrPending(index) &&
           (index >= this._selectedIndex || this._steps.toArray()[index].editable)) {
-
-        this._emitStepperSelectionEvent(index);
-        this._keyManager.updateActiveItemIndex(this._selectedIndex);
+        this._updateSelectedItemIndex(index);
       }
     } else {
       this._selectedIndex = index;
@@ -238,7 +235,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
 
   /** Resets the stepper to its initial state. Note that this includes clearing form data. */
   reset(): void {
-    this.selectedIndex = 0;
+    this._updateSelectedItemIndex(0);
     this._steps.forEach(step => step.reset());
     this._stateChanged();
   }
@@ -284,7 +281,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
     return this._keyManager ? this._keyManager.activeItemIndex : this._selectedIndex;
   }
 
-  private _emitStepperSelectionEvent(newIndex: number): void {
+  private _updateSelectedItemIndex(newIndex: number): void {
     const stepsArray = this._steps.toArray();
     this.selectionChange.emit({
       selectedIndex: newIndex,
@@ -292,6 +289,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
       selectedStep: stepsArray[newIndex],
       previouslySelectedStep: stepsArray[this._selectedIndex],
     });
+    this._keyManager.updateActiveItemIndex(newIndex);
     this._selectedIndex = newIndex;
     this._stateChanged();
   }

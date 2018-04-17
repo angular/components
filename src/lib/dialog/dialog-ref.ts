@@ -6,15 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {OverlayRef, GlobalPositionStrategy} from '@angular/cdk/overlay';
 import {ESCAPE} from '@angular/cdk/keycodes';
+import {GlobalPositionStrategy, OverlayRef} from '@angular/cdk/overlay';
 import {Location} from '@angular/common';
-import {filter} from 'rxjs/operators/filter';
-import {take} from 'rxjs/operators/take';
+import {Observable, Subject, Subscription, SubscriptionLike} from 'rxjs';
+import {filter, take} from 'rxjs/operators';
 import {DialogPosition} from './dialog-config';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
-import {Subscription, ISubscription} from 'rxjs/Subscription';
 import {MatDialogContainer} from './dialog-container';
 
 
@@ -46,7 +43,7 @@ export class MatDialogRef<T, R = any> {
   private _result: R | undefined;
 
   /** Subscription to changes in the user's location. */
-  private _locationChanges: ISubscription = Subscription.EMPTY;
+  private _locationChanges: SubscriptionLike = Subscription.EMPTY;
 
   constructor(
     private _overlayRef: OverlayRef,

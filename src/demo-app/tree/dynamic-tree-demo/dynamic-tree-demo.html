@@ -1,5 +1,6 @@
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+    <button mat-icon-button disabled></button>
     {{node.item}}
   </mat-tree-node>
   <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
@@ -10,5 +11,8 @@
       </mat-icon>
     </button>
     {{node.item}}
+    <mat-progress-bar *ngIf="node.isLoading"
+                      mode="indeterminate"
+                      class="demo-tree-progress-bar"></mat-progress-bar>
   </mat-tree-node>
 </mat-tree>

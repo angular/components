@@ -10,8 +10,8 @@ import {Component, ElementRef, ViewChild} from '@angular/core';
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {Observable} from 'rxjs/Observable';
-import {map} from 'rxjs/operators/map';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {MatTableModule} from '../table/index';
 import {
   MatSort,
@@ -345,6 +345,23 @@ describe('MatSort', () => {
 
     header._handleClick();
     expect(header._showIndicatorHint).toBeFalsy();
+  });
+
+  it('should apply the aria-sort label to the header when sorted', () => {
+    const sortHeaderElement = fixture.nativeElement.querySelector('#defaultA');
+    expect(sortHeaderElement.getAttribute('aria-sort')).toBe(null);
+
+    component.sort('defaultA');
+    fixture.detectChanges();
+    expect(sortHeaderElement.getAttribute('aria-sort')).toBe('ascending');
+
+    component.sort('defaultA');
+    fixture.detectChanges();
+    expect(sortHeaderElement.getAttribute('aria-sort')).toBe('descending');
+
+    component.sort('defaultA');
+    fixture.detectChanges();
+    expect(sortHeaderElement.getAttribute('aria-sort')).toBe(null);
   });
 
   it('should re-render when the i18n labels have changed',

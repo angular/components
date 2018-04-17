@@ -8,7 +8,7 @@ ng_module(
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/cdk/collections",
   deps = ["@rxjs"],
-  tsconfig = ":tsconfig-build.json",
+  tsconfig = "//src/cdk:tsconfig-build.json",
 )
 
 ts_library(
@@ -19,12 +19,13 @@ ts_library(
     ":collections",
     "@rxjs",
   ],
-  tsconfig = ":tsconfig-build.json",
+  tsconfig = "//src/cdk:tsconfig-build.json",
 )
 
 ts_web_test(
   name = "unit_tests",
   bootstrap = ["//:web_test_bootstrap_scripts"],
+  tags = ["manual"],
 
   # Do not sort
   deps = [

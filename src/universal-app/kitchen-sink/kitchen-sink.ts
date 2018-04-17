@@ -1,6 +1,9 @@
-import {Component, NgModule} from '@angular/core';
-import {ServerModule} from '@angular/platform-server';
-import {BrowserModule} from '@angular/platform-browser';
+import {ViewportRuler} from '@angular/cdk/scrolling';
+import {
+  CdkTableModule,
+  DataSource
+} from '@angular/cdk/table';
+import {Component, ElementRef, NgModule} from '@angular/core';
 import {
   MatAutocompleteModule,
   MatBadgeModule,
@@ -10,8 +13,9 @@ import {
   MatCheckboxModule,
   MatChipsModule,
   MatDatepickerModule,
-  MatDividerModule,
+  MatDialog,
   MatDialogModule,
+  MatDividerModule,
   MatExpansionModule,
   MatFormFieldModule,
   MatGridListModule,
@@ -29,23 +33,19 @@ import {
   MatSidenavModule,
   MatSliderModule,
   MatSlideToggleModule,
+  MatSnackBar,
   MatSnackBarModule,
   MatSortModule,
+  MatStepperModule,
   MatTableModule,
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
-  MatStepperModule,
-  MatSnackBar,
-  MatDialog,
 } from '@angular/material';
-import {
-  CdkTableModule,
-  DataSource
-} from '@angular/cdk/table';
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {of as observableOf} from 'rxjs/observable/of';
-import {Observable} from 'rxjs/Observable';
+import {BrowserModule} from '@angular/platform-browser';
+import {ServerModule} from '@angular/platform-server';
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {Observable, of as observableOf} from 'rxjs';
 
 export class TableDataSource extends DataSource<any> {
   connect(): Observable<any> {
@@ -78,7 +78,10 @@ export class KitchenSink {
   constructor(
     snackBar: MatSnackBar,
     dialog: MatDialog,
-    viewportRuler: ViewportRuler) {
+    viewportRuler: ViewportRuler,
+    focusMonitor: FocusMonitor,
+    elementRef: ElementRef<HTMLElement>) {
+    focusMonitor.focusVia(elementRef.nativeElement, 'program');
     snackBar.open('Hello there');
     dialog.open(TestDialog);
 

@@ -5,18 +5,17 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {TreeControl, FlatTreeControl, NestedTreeControl} from '@angular/cdk/tree';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {FlatTreeControl, NestedTreeControl, TreeControl} from '@angular/cdk/tree';
 import {Component, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {
   MatTree,
-  MatTreeModule,
-  MatTreeFlattener,
   MatTreeFlatDataSource,
+  MatTreeFlattener,
+  MatTreeModule,
   MatTreeNestedDataSource
 } from './index';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
 
 
 describe('MatTree', () => {
@@ -436,8 +435,8 @@ export class TestData {
 class FakeDataSource {
   dataIndex = 0;
   _dataChange = new BehaviorSubject<TestData[]>([]);
-  set data(data: TestData[]) { this._dataChange.next(data); }
   get data() { return this._dataChange.getValue(); }
+  set data(data: TestData[]) { this._dataChange.next(data); }
 
   connect(): Observable<TestData[]> {
     return this._dataChange;

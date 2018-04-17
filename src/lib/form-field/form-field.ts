@@ -33,9 +33,8 @@ import {
   MAT_LABEL_GLOBAL_OPTIONS,
   mixinColor,
 } from '@angular/material/core';
-import {fromEvent} from 'rxjs/observable/fromEvent';
-import {startWith} from 'rxjs/operators/startWith';
-import {take} from 'rxjs/operators/take';
+import {EMPTY, fromEvent, merge} from 'rxjs';
+import {startWith, take} from 'rxjs/operators';
 import {MatError} from './error';
 import {matFormFieldAnimations} from './form-field-animations';
 import {MatFormFieldControl} from './form-field-control';
@@ -49,6 +48,7 @@ import {MatLabel} from './label';
 import {MatPlaceholder} from './placeholder';
 import {MatPrefix} from './prefix';
 import {MatSuffix} from './suffix';
+import {Platform} from '@angular/cdk/platform';
 
 
 let nextUniqueId = 0;
@@ -218,7 +218,9 @@ export class MatFormField extends _MatFormFieldMixinBase
       @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) labelOptions: LabelOptions,
       @Optional() private _dir: Directionality,
       @Optional() @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS) private _defaultOptions:
-          MatFormFieldDefaultOptions) {
+          MatFormFieldDefaultOptions,
+      // @deletion-target 7.0.0 _platform to be made required.
+      private _platform?: Platform) {
     super(_elementRef);
 
     this._labelOptions = labelOptions ? labelOptions : {};
@@ -247,12 +249,10 @@ export class MatFormField extends _MatFormFieldMixinBase
       this._changeDetectorRef.markForCheck();
     });
 
-    let ngControl = this._control.ngControl;
-    if (ngControl && ngControl.valueChanges) {
-      ngControl.valueChanges.subscribe(() => {
-        this._changeDetectorRef.markForCheck();
-      });
-    }
+    // Run change detection if the value, prefix, or suffix changes.
+    const valueChanges = this._control.ngControl && this._control.ngControl.valueChanges || EMPTY;
+    merge(valueChanges, this._prefixChildren.changes, this._suffixChildren.changes)
+        .subscribe(() => this._changeDetectorRef.markForCheck());
 
     // Re-validate when the number of hints changes.
     this._hintChildren.changes.pipe(startWith(null)).subscribe(() => {
@@ -415,6 +415,11 @@ export class MatFormField extends _MatFormFieldMixinBase
    */
   updateOutlineGap() {
     if (this.appearance === 'outline' && this._label && this._label.nativeElement.children.length) {
+      if (this._platform && !this._platform.isBrowser) {
+        // getBoundingClientRect isn't available on the server.
+        return;
+      }
+
       const containerStart = this._getStartEnd(
           this._connectionContainerRef.nativeElement.getBoundingClientRect());
       const labelStart = this._getStartEnd(

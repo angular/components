@@ -25,12 +25,8 @@ import {
   ViewContainerRef,
   ViewEncapsulation
 } from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {takeUntil} from 'rxjs/operators/takeUntil';
-import {Observable} from 'rxjs/Observable';
-import {of} from 'rxjs/observable/of';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
+import {of, BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
 import {TreeControl} from './control/tree-control';
@@ -263,22 +259,22 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
 
     if (dataStream) {
       this._dataSubscription = dataStream.pipe(takeUntil(this._onDestroy))
-        .subscribe(data => this._renderNodeChanges(data));
+        .subscribe(data => this.renderNodeChanges(data));
     } else {
       throw getTreeNoValidDataSourceError();
     }
   }
 
   /** Check for changes made in the data and render each change (node added/removed/moved). */
-  private _renderNodeChanges(dataNodes: T[]) {
-    const changes = this._dataDiffer.diff(dataNodes);
+  renderNodeChanges(data: T[], dataDiffer: IterableDiffer<T> = this._dataDiffer,
+                    viewContainer: ViewContainerRef = this._nodeOutlet.viewContainer) {
+    const changes = dataDiffer.diff(data);
     if (!changes) { return; }
 
-    const viewContainer = this._nodeOutlet.viewContainer;
     changes.forEachOperation(
       (item: IterableChangeRecord<T>, adjustedPreviousIndex: number, currentIndex: number) => {
         if (item.previousIndex == null) {
-          this.insertNode(dataNodes[currentIndex], currentIndex);
+          this.insertNode(data[currentIndex], currentIndex, viewContainer);
         } else if (currentIndex == null) {
           viewContainer.remove(adjustedPreviousIndex);
         } else {

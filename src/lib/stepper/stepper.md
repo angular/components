@@ -112,9 +112,14 @@ are completed.
 If completion of a step in linear stepper is not required, then the `optional` attribute can be set
 on `mat-step`.
 
+<!-- example(stepper-optional) -->
+
+
 #### Editable step
 By default, steps are editable, which means users can return to previously completed steps and
 edit their responses. `editable="true"` can be set on `mat-step` to change the default.
+
+<!-- example(stepper-editable) -->
 
 #### Completed step
 By default, the `completed` attribute of a step returns `true` if the step is valid (in case of
@@ -124,7 +129,8 @@ this default `completed` behavior by setting the `completed` attribute as needed
 #### Overriding icons
 By default, the step headers will use the `create` and `done` icons from the Material design icon
 set via `<mat-icon>` elements. If you want to provide a different set of icons, you can do so
-by placing a `matStepperIcon` for each of the icons that you want to override:
+by placing a `matStepperIcon` for each of the icons that you want to override. The `index`,
+`active`, and `optional` values of the individual steps are available through template variables:
 
 ```html
 <mat-vertical-stepper>
@@ -134,6 +140,11 @@ by placing a `matStepperIcon` for each of the icons that you want to override:
 
   <ng-template matStepperIcon="done">
     <mat-icon>done_all</mat-icon>
+  </ng-template>
+
+  <!-- Custom icon with a context variable. -->
+  <ng-template matStepperIcon="number" let-index="index">
+    {{index + 10}}
   </ng-template>
 
   <!-- Stepper steps go here -->

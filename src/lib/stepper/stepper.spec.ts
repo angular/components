@@ -12,7 +12,7 @@ import {
 import {StepperOrientation} from '@angular/cdk/stepper';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {Component, DebugElement} from '@angular/core';
-import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, inject, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {
   AbstractControl,
   AsyncValidatorFn,
@@ -24,14 +24,13 @@ import {
 } from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {Observable} from 'rxjs/Observable';
-import {map} from 'rxjs/operators/map';
-import {take} from 'rxjs/operators/take';
-import {Subject} from 'rxjs/Subject';
+import {Observable, Subject} from 'rxjs';
+import {map, take} from 'rxjs/operators';
 import {MatStepperModule} from './index';
 import {MatHorizontalStepper, MatStep, MatStepper, MatVerticalStepper} from './stepper';
 import {MatStepperNext, MatStepperPrevious} from './stepper-button';
 import {MatStepperIntl} from './stepper-intl';
+
 
 const VALID_REGEX = /valid/;
 
@@ -319,6 +318,28 @@ describe('MatStepper', () => {
 
         expect(optionalLabel.textContent).toBe('Valgfri');
       }));
+
+      it('should emit an event when the enter animation is done', fakeAsync(() => {
+        let stepper = fixture.debugElement.query(By.directive(MatStepper)).componentInstance;
+        let selectionChangeSpy = jasmine.createSpy('selectionChange spy');
+        let animationDoneSpy = jasmine.createSpy('animationDone spy');
+        let selectionChangeSubscription = stepper.selectionChange.subscribe(selectionChangeSpy);
+        let animationDoneSubscription = stepper.animationDone.subscribe(animationDoneSpy);
+
+        stepper.selectedIndex = 1;
+        fixture.detectChanges();
+
+        expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+        expect(animationDoneSpy).not.toHaveBeenCalled();
+
+        flush();
+
+        expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+        expect(animationDoneSpy).toHaveBeenCalledTimes(1);
+
+        selectionChangeSubscription.unsubscribe();
+        animationDoneSubscription.unsubscribe();
+      }));
   });
 
   describe('icon overrides', () => {
@@ -353,6 +374,13 @@ describe('MatStepper', () => {
       const header = stepperDebugElement.nativeElement.querySelector('mat-step-header');
 
       expect(header.textContent).toContain('Custom done');
+    });
+
+    it('should allow for the `number` icon to be overridden with context', () => {
+      const stepperDebugElement = fixture.debugElement.query(By.directive(MatStepper));
+      const headers = stepperDebugElement.nativeElement.querySelectorAll('mat-step-header');
+
+      expect(headers[2].textContent).toContain('III');
     });
   });
 
@@ -558,6 +586,25 @@ describe('MatStepper', () => {
       expect(steps[1].interacted).toBe(false);
       expect(steps[1].completed).toBe(false);
       expect(testComponent.twoGroup.get('twoCtrl')!.valid).toBe(false);
+    });
+
+    it('should reset back to the first step when some of the steps are not editable', () => {
+      const steps = stepperComponent._steps.toArray();
+
+      steps[0].editable = false;
+
+      testComponent.oneGroup.get('oneCtrl')!.setValue('value');
+      fixture.detectChanges();
+
+      stepperComponent.next();
+      fixture.detectChanges();
+
+      expect(stepperComponent.selectedIndex).toBe(1);
+
+      stepperComponent.reset();
+      fixture.detectChanges();
+
+      expect(stepperComponent.selectedIndex).toBe(0);
     });
 
     it('should not clobber the `complete` binding when resetting', () => {
@@ -1025,6 +1072,9 @@ class SimpleStepperWithStepControlAndCompletedBinding {
     <mat-horizontal-stepper>
       <ng-template matStepperIcon="edit">Custom edit</ng-template>
       <ng-template matStepperIcon="done">Custom done</ng-template>
+      <ng-template matStepperIcon="number" let-index="index">
+        {{getRomanNumeral(index + 1)}}
+      </ng-template>
 
       <mat-step>Content 1</mat-step>
       <mat-step>Content 2</mat-step>
@@ -1032,7 +1082,21 @@ class SimpleStepperWithStepControlAndCompletedBinding {
     </mat-horizontal-stepper>
 `
 })
-class IconOverridesStepper {}
+class IconOverridesStepper {
+  getRomanNumeral(value: number) {
+    return {
+      1: 'I',
+      2: 'II',
+      3: 'III',
+      4: 'IV',
+      5: 'V',
+      6: 'VI',
+      7: 'VII',
+      8: 'VIII',
+      9: 'IX'
+    }[value];
+  }
+}
 
 @Component({
   template: `

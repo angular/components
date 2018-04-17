@@ -60,7 +60,7 @@ module.exports = (config) => {
     },
 
     specReporter: {
-      maxLogLines: 1,
+      maxLogLines: Infinity, // Log out the entire stack trace on errors and failures.
       suppressSkipped: true,
       showSpecTiming: true,
     },
@@ -113,6 +113,8 @@ module.exports = (config) => {
 
       config.preprocessors['dist/packages/**/!(*+(.|-)spec).js'] = ['coverage'];
       config.reporters.push('coverage');
+      // Hide passed tests from logs while on travis.
+      config.specReporter.suppressPassed = true;
     }
 
     // The MODE variable is the indicator of what row in the test matrix we're running.

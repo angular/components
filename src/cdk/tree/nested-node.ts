@@ -10,10 +10,12 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
+  IterableDiffers,
+  IterableDiffer,
   OnDestroy,
   QueryList,
 } from '@angular/core';
-import {takeUntil} from 'rxjs/operators/takeUntil';
+import {takeUntil} from 'rxjs/operators';
 
 import {CdkTree, CdkTreeNode} from './tree';
 import {CdkTreeNodeOutlet} from './outlet';
@@ -51,6 +53,9 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
   providers: [{provide: CdkTreeNode, useExisting: CdkNestedTreeNode}]
 })
 export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContentInit, OnDestroy {
+  /** Differ used to find the changes in the data provided by the data source. */
+  private _dataDiffer: IterableDiffer<T>;
+
   /** The children data dataNodes of current node. They will be placed in `CdkTreeNodeOutlet`. */
   protected _children: T[];
 
@@ -58,40 +63,38 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
   @ContentChildren(CdkTreeNodeOutlet) nodeOutlet: QueryList<CdkTreeNodeOutlet>;
 
   constructor(protected _elementRef: ElementRef,
-              protected _tree: CdkTree<T>) {
+              protected _tree: CdkTree<T>,
+              protected _differs: IterableDiffers) {
     super(_elementRef, _tree);
   }
 
   ngAfterContentInit() {
+    this._dataDiffer = this._differs.find([]).create();
     if (!this._tree.treeControl.getChildren) {
       throw getTreeControlFunctionsMissingError();
     }
     this._tree.treeControl.getChildren(this.data).pipe(takeUntil(this._destroyed))
         .subscribe(result => {
-          if (result && result.length) {
-            // In case when nodeOutlet is not in the DOM when children changes, save it in the node
-            // and add to nodeOutlet when it's available.
-            this._children = result as T[];
-            this._addChildrenNodes();
-          }
+          this._children = result;
+          this.updateChildrenNodes();
         });
     this.nodeOutlet.changes.pipe(takeUntil(this._destroyed))
-        .subscribe((_) => this._addChildrenNodes());
+        .subscribe(() => this.updateChildrenNodes());
   }
 
   ngOnDestroy() {
     this._clear();
-    this._destroyed.next();
-    this._destroyed.complete();
+    super.ngOnDestroy();
   }
 
   /** Add children dataNodes to the NodeOutlet */
-  protected _addChildrenNodes(): void {
-    this._clear();
-    if (this.nodeOutlet.length && this._children && this._children.length) {
-      this._children.forEach((child, index) => {
-        this._tree.insertNode(child, index, this.nodeOutlet.first.viewContainer);
-      });
+  protected updateChildrenNodes(): void {
+    if (this.nodeOutlet.length && this._children) {
+      const viewContainer = this.nodeOutlet.first.viewContainer;
+      this._tree.renderNodeChanges(this._children, this._dataDiffer, viewContainer);
+    } else {
+      // Reset the data differ if there's no children nodes displayed
+      this._dataDiffer.diff([]);
     }
   }
 
@@ -99,6 +102,7 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
   protected _clear(): void {
     if (this.nodeOutlet && this.nodeOutlet.first) {
       this.nodeOutlet.first.viewContainer.clear();
+      this._dataDiffer.diff([]);
     }
   }
 }

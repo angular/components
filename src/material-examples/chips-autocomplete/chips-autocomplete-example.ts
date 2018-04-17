@@ -1,10 +1,9 @@
-import {Component, ViewChild, ElementRef} from '@angular/core';
-import {MatChipInputEvent, MatAutocompleteSelectedEvent} from '@angular/material';
-import {ENTER, COMMA} from '@angular/cdk/keycodes';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
-import {startWith} from 'rxjs/operators/startWith';
-import {map} from 'rxjs/operators/map';
+import {MatAutocompleteSelectedEvent, MatChipInputEvent} from '@angular/material';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 /**
  * @title Chips Autocomplete

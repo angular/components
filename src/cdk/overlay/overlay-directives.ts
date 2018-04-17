@@ -28,7 +28,7 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {Overlay} from './overlay';
 import {OverlayConfig} from './overlay-config';
 import {OverlayRef} from './overlay-ref';
@@ -115,8 +115,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _hasBackdrop = false;
   private _lockPosition = false;
   private _backdropSubscription = Subscription.EMPTY;
-  private _offsetX: number = 0;
-  private _offsetY: number = 0;
+  private _offsetX: number;
+  private _offsetY: number;
   private _position: FlexibleConnectedPositionStrategy;
 
   /** Origin for the connected overlay. */
@@ -289,8 +289,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       // the same way as the old ConnectedPositionStrategy and to avoid breaking changes.
       // TODO(crisbeto): make these on by default and add inputs for them
       // next time we do breaking changes.
-      .withFlexibleHeight(false)
-      .withFlexibleWidth(false)
+      .withFlexibleDimensions(false)
       .withPush(false)
       .withGrowAfterOpen(false)
       .withLockedPosition(this.lockPosition);
@@ -311,8 +310,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       originY: pos.originY,
       overlayX: pos.overlayX,
       overlayY: pos.overlayY,
-      offsetX: this.offsetX,
-      offsetY: this.offsetY
+      offsetX: pos.offsetX || this.offsetX,
+      offsetY: pos.offsetY || this.offsetY
     }));
 
     positionStrategy.withPositions(positions);

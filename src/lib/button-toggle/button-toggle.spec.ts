@@ -1,7 +1,7 @@
 import {fakeAsync, tick, ComponentFixture, TestBed} from '@angular/core/testing';
 import {dispatchMouseEvent} from '@angular/cdk/testing';
 import {NgModel, FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
-import {Component, DebugElement} from '@angular/core';
+import {Component, DebugElement, ViewChild, ViewChildren, QueryList} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
   MatButtonToggleGroup,
@@ -209,6 +209,7 @@ describe('MatButtonToggle without forms', () => {
         StandaloneButtonToggle,
         ButtonToggleWithAriaLabel,
         ButtonToggleWithAriaLabelledby,
+        RepeatedButtonTogglesWithPreselectedValue,
       ],
     });
 
@@ -621,16 +622,22 @@ describe('MatButtonToggle without forms', () => {
 
   });
 
-  describe('with provided aria-label ', () => {
-    let checkboxDebugElement: DebugElement;
-    let checkboxNativeElement: HTMLElement;
-    let inputElement: HTMLInputElement;
+  describe('aria-label handling ', () => {
+    it('should not set the aria-label attribute if none is provided', () => {
+      let fixture = TestBed.createComponent(StandaloneButtonToggle);
+      let checkboxDebugElement = fixture.debugElement.query(By.directive(MatButtonToggle));
+      let checkboxNativeElement = checkboxDebugElement.nativeElement;
+      let inputElement = checkboxNativeElement.querySelector('input') as HTMLInputElement;
+
+      fixture.detectChanges();
+      expect(inputElement.hasAttribute('aria-label')).toBe(false);
+    });
 
     it('should use the provided aria-label', () => {
       let fixture = TestBed.createComponent(ButtonToggleWithAriaLabel);
-      checkboxDebugElement = fixture.debugElement.query(By.directive(MatButtonToggle));
-      checkboxNativeElement = checkboxDebugElement.nativeElement;
-      inputElement = checkboxNativeElement.querySelector('input') as HTMLInputElement;
+      let checkboxDebugElement = fixture.debugElement.query(By.directive(MatButtonToggle));
+      let checkboxNativeElement = checkboxDebugElement.nativeElement;
+      let inputElement = checkboxNativeElement.querySelector('input') as HTMLInputElement;
 
       fixture.detectChanges();
       expect(inputElement.getAttribute('aria-label')).toBe('Super effective');
@@ -662,6 +669,30 @@ describe('MatButtonToggle without forms', () => {
       expect(inputElement.getAttribute('aria-labelledby')).toBe(null);
     });
   });
+
+  it('should not throw on init when toggles are repeated and there is an initial value', () => {
+    const fixture = TestBed.createComponent(RepeatedButtonTogglesWithPreselectedValue);
+
+    expect(() => fixture.detectChanges()).not.toThrow();
+    expect(fixture.componentInstance.toggleGroup.value).toBe('Two');
+    expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(true);
+  });
+
+  it('should maintain the selected state when the value and toggles are swapped out at ' +
+    'the same time', () => {
+      const fixture = TestBed.createComponent(RepeatedButtonTogglesWithPreselectedValue);
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.toggleGroup.value).toBe('Two');
+      expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(true);
+
+      fixture.componentInstance.possibleValues = ['Five', 'Six', 'Seven'];
+      fixture.componentInstance.value = 'Seven';
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.toggleGroup.value).toBe('Seven');
+      expect(fixture.componentInstance.toggles.toArray()[2].checked).toBe(true);
+    });
 });
 
 @Component({
@@ -759,3 +790,21 @@ class ButtonToggleWithAriaLabel { }
   template: `<mat-button-toggle aria-labelledby="some-id"></mat-button-toggle>`
 })
 class ButtonToggleWithAriaLabelledby {}
+
+
+@Component({
+  template: `
+    <mat-button-toggle-group [(value)]="value">
+      <mat-button-toggle *ngFor="let toggle of possibleValues" [value]="toggle">
+        {{toggle}}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  `
+})
+class RepeatedButtonTogglesWithPreselectedValue {
+  @ViewChild(MatButtonToggleGroup) toggleGroup: MatButtonToggleGroup;
+  @ViewChildren(MatButtonToggle) toggles: QueryList<MatButtonToggle>;
+
+  possibleValues = ['One', 'Two', 'Three'];
+  value = 'Two';
+}

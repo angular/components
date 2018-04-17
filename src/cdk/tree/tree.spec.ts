@@ -5,14 +5,12 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
-import {combineLatest} from 'rxjs/observable/combineLatest';
-import {map} from 'rxjs/operators/map';
+import {combineLatest, BehaviorSubject, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 import {BaseTreeControl} from './control/base-tree-control';
 import {TreeControl} from './control/tree-control';
@@ -444,7 +442,7 @@ describe('CdkTree', () => {
         fixture.detectChanges();
       });
 
-      it('should expand/collapse the node', () => {
+      it('should expand/collapse the node multiple times', () => {
         component.toggleRecursively = false;
         let data = dataSource.data;
         const child = dataSource.addChild(data[1], false);
@@ -479,6 +477,17 @@ describe('CdkTree', () => {
           [`topping_3 - cheese_3 + base_3`]);
         expect(component.treeControl.expansionModel.selected.length)
           .toBe(0, `Expect node collapsed`);
+
+        (getNodes(treeElement)[1] as HTMLElement).click();
+        fixture.detectChanges();
+
+        expect(component.treeControl.expansionModel.selected.length)
+          .toBe(1, `Expect node expanded`);
+        expectNestedTreeToMatch(treeElement,
+          [`topping_1 - cheese_1 + base_1`],
+          [`topping_2 - cheese_2 + base_2`],
+          [_, `topping_4 - cheese_4 + base_4`],
+          [`topping_3 - cheese_3 + base_3`]);
       });
 
       it('should expand/collapse the node recursively', () => {
@@ -590,17 +599,29 @@ describe('CdkTree', () => {
       });
     });
 
-    it('should throw an error when missing function in nested tree', () => {
+    it('should throw an error when missing function in nested tree', fakeAsync(() => {
       configureCdkTreeTestingModule([NestedCdkErrorTreeApp]);
-      expect(() => TestBed.createComponent(NestedCdkErrorTreeApp).detectChanges())
-          .toThrowError(getTreeControlFunctionsMissingError().message);
-    });
+      expect(() => {
+        try {
+          TestBed.createComponent(NestedCdkErrorTreeApp).detectChanges();
+          flush();
+        } catch {
+          flush();
+        }
+      }).toThrowError(getTreeControlFunctionsMissingError().message);
+    }));
 
-    it('should throw an error when missing function in flat tree', () => {
+    it('should throw an error when missing function in flat tree', fakeAsync(() => {
       configureCdkTreeTestingModule([FlatCdkErrorTreeApp]);
-      expect(() => TestBed.createComponent(FlatCdkErrorTreeApp).detectChanges())
-        .toThrowError(getTreeControlFunctionsMissingError().message);
-    });
+      expect(() => {
+        try {
+          TestBed.createComponent(FlatCdkErrorTreeApp).detectChanges();
+          flush();
+        } catch {
+          flush();
+        }
+      }).toThrowError(getTreeControlFunctionsMissingError().message);
+    }));
   });
 });
 
@@ -627,8 +648,8 @@ class FakeDataSource extends DataSource<TestData> {
   isConnected = false;
 
   _dataChange = new BehaviorSubject<TestData[]>([]);
-  set data(data: TestData[]) { this._dataChange.next(data); }
   get data() { return this._dataChange.getValue(); }
+  set data(data: TestData[]) { this._dataChange.next(data); }
 
   constructor(public treeControl: TreeControl<TestData>) {
     super();
@@ -640,7 +661,7 @@ class FakeDataSource extends DataSource<TestData> {
   connect(collectionViewer: CollectionViewer): Observable<TestData[]> {
     this.isConnected = true;
     const streams = [this._dataChange, collectionViewer.viewChange];
-    return combineLatest<[TestData[]]>(streams)
+    return combineLatest<TestData[]>(streams)
       .pipe(map(([data]) => {
         this.treeControl.dataNodes = data;
         return data;

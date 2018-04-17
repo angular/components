@@ -16,7 +16,7 @@ import {
   ViewEncapsulation,
   NgZone,
 } from '@angular/core';
-import {take} from 'rxjs/operators/take';
+import {take} from 'rxjs/operators';
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
@@ -60,22 +60,6 @@ export class MatCalendarBody {
 
   /** The value in the table that is currently selected. */
   @Input() selectedValue: number;
-
-  /** The value in the table since range of dates started.
-   * Null means no interval or interval doesn't start in this month
-   */
-  @Input() begin: number|null;
-
-  /** The value in the table representing end of dates range.
-   * Null means no interval or interval doesn't end in this month
-   */
-  @Input() end: number|null;
-
-  /** Whether to mark all dates as semi-selected. */
-  @Input() rangeFull: boolean;
-
-  /** Whether to use date range selection behaviour.*/
-  @Input() rangeMode = false;
 
   /** The minimum number of free cells needed to fit the label in the first row. */
   @Input() labelMinRequiredCells: number;
@@ -124,27 +108,6 @@ export class MatCalendarBody {
     return cellNumber == this.activeCell;
   }
 
-  /** Whenever to mark cell as semi-selected (inside dates interval). */
-  _isSemiSelected(date: number) {
-    if (!this.rangeMode) {
-      return false;
-    }
-    if (this.rangeFull) {
-      return true;
-    }
-    /** Do not mark start and end of interval. */
-    if (date === this.begin || date === this.end) {
-      return false;
-    }
-    if (this.begin && !this.end) {
-      return date > this.begin;
-    }
-    if (this.end && !this.begin) {
-      return date < this.end;
-    }
-    return date > <number>this.begin && date < <number>this.end;
-  }
-  
   /** Focuses the active cell after the microtask queue is empty. */
   _focusActiveCell() {
     this._ngZone.runOutsideAngular(() => {
