@@ -30,13 +30,17 @@ import {MatDatepickerToggle} from './datepicker-toggle';
 import {MAT_DATEPICKER_SCROLL_STRATEGY, MatDatepickerIntl, MatDatepickerModule} from './index';
 import {Subject} from 'rxjs';
 import {Directionality} from '@angular/cdk/bidi';
+import {BrowserDynamicTestingModule} from '@angular/platform-browser-dynamic/testing';
 
 describe('MatDatepicker', () => {
   const SUPPORTS_INTL = typeof Intl != 'undefined';
 
   // Creates a test component fixture.
-  function createComponent(component: any, imports: any[] = [], providers: any[] = []):
-    ComponentFixture<any> {
+  function createComponent(
+    component: any,
+    imports: any[] = [],
+    providers: any[] = [],
+    entryComponents: any[] = []): ComponentFixture<any> {
 
     TestBed.configureTestingModule({
       imports: [
@@ -50,6 +54,12 @@ describe('MatDatepicker', () => {
       ],
       providers,
       declarations: [component],
+    });
+
+    TestBed.overrideModule(BrowserDynamicTestingModule, {
+      set: {
+        entryComponents: [entryComponents]
+      }
     }).compileComponents();
 
     return TestBed.createComponent(component);
@@ -1495,7 +1505,12 @@ describe('MatDatepicker', () => {
     let testComponent: DatepickerWithCustomHeader;
 
     beforeEach(fakeAsync(() => {
-      fixture = createComponent(DatepickerWithCustomHeader, [MatNativeDateModule]);
+      fixture = createComponent(
+        DatepickerWithCustomHeader,
+        [MatNativeDateModule],
+        [],
+        [CustomHeaderForDatepicker]
+      );
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
     }));
@@ -1752,13 +1767,25 @@ class DatepickerOpeningOnFocus {
   @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;
 }
 
+
 @Component({
   template: `
     <input [matDatepicker]="ch">
-    <mat-datepicker #ch></mat-datepicker>
+    <mat-datepicker #ch [calendarHeaderComponent]="CustomHeaderForDatepicker"></mat-datepicker>
   `,
 })
 class DatepickerWithCustomHeader {
   @ViewChild('ch') datepicker: MatDatepicker<Date>;
   @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+}
+
+@Component({
+  template: `
+  <div>Custom element</div>
+  <mat-calendar-header></mat-calendar-header>
+  `
+})
+class CustomHeaderForDatepicker {
+  constructor() {
+  }
 }
