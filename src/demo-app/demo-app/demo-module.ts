@@ -64,7 +64,7 @@ import {TableDemoModule} from '../table/table-demo-module';
 import {BadgeDemo} from '../badge/badge-demo';
 import {TreeDemoModule} from '../tree/tree-demo-module';
 import {ConnectedOverlayDemo, DemoOverlay} from '../connected-overlay/connected-overlay-demo';
-import {PaginatorDemo} from 'paginator/paginator-demo';
+import {PaginatorDemo} from '../paginator/paginator-demo';
 
 @NgModule({
   imports: [
