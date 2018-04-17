@@ -22,7 +22,6 @@ import {MatDatepickerToggle, MatDatepickerToggleIcon} from './datepicker-toggle'
 import {MatMonthView} from './month-view';
 import {MatMultiYearView} from './multi-year-view';
 import {MatYearView} from './year-view';
-import {CustomHeaderForDatepicker} from '@angular/material/datepicker/datepicker.spec';
 
 
 @NgModule({
@@ -59,7 +58,6 @@ import {CustomHeaderForDatepicker} from '@angular/material/datepicker/datepicker
     MatYearView,
     MatMultiYearView,
     MatCalendarHeader,
-    CustomHeaderForDatepicker,
   ],
   providers: [
     MatDatepickerIntl,
@@ -67,7 +65,6 @@ import {CustomHeaderForDatepicker} from '@angular/material/datepicker/datepicker
   entryComponents: [
     MatDatepickerContent,
     MatCalendarHeader,
-    CustomHeaderForDatepicker,
   ]
 })
 export class MatDatepickerModule {}

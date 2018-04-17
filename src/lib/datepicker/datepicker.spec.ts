@@ -1755,21 +1755,10 @@ class DatepickerOpeningOnFocus {
 @Component({
   template: `
     <input [matDatepicker]="ch">
-    <mat-datepicker #ch [calendarHeaderComponent]="CustomHeaderForDatepicker"></mat-datepicker>
+    <mat-datepicker #ch></mat-datepicker>
   `,
 })
 class DatepickerWithCustomHeader {
   @ViewChild('ch') datepicker: MatDatepicker<Date>;
   @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
-}
-
-@Component({
-  template: `
-  <div>Custom element</div>
-  <mat-calendar-header></mat-calendar-header>
-  `
-})
-export class CustomHeaderForDatepicker {
-  constructor() {
-  }
 }
