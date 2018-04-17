@@ -1,3 +1,12 @@
+<a name="5.2.5"></a>
+## [5.2.5 cardboard-kangaroo](https://github.com/angular/material2/compare/5.2.4...5.2.5) (2018-04-17)
+
+
+### Highlights
+* Tweak peer deps to avoid warnings when updating Angular to 6.0
+
+
+
 <a name="5.2.4"></a>
 ## [5.2.4 ash-submarine](https://github.com/angular/material2/compare/5.2.3...5.2.4) (2018-03-06)
 
