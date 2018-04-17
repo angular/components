@@ -12,7 +12,10 @@ import {ContentChild, Directive, ElementRef, Input, TemplateRef} from '@angular/
  * Cell definition for a CDK table.
  * Captures the template of a column's data row cell as well as cell-specific properties.
  */
-@Directive({selector: '[cdkCellDef]'})
+@Directive({
+  selector: '[cdkCellDef]',
+  exportAs: 'cdkCellDef',
+})
 export class CdkCellDef {
   constructor(/** @docs-private */ public template: TemplateRef<any>) { }
 }
@@ -21,7 +24,10 @@ export class CdkCellDef {
  * Header cell definition for a CDK table.
  * Captures the template of a column's header cell and as well as cell-specific properties.
  */
-@Directive({selector: '[cdkHeaderCellDef]'})
+@Directive({
+  selector: '[cdkHeaderCellDef]',
+  exportAs: 'cdkHeaderCellDef',
+})
 export class CdkHeaderCellDef {
   constructor(/** @docs-private */ public template: TemplateRef<any>) { }
 }
@@ -30,7 +36,10 @@ export class CdkHeaderCellDef {
  * Column definition for the CDK table.
  * Defines a set of cells available for a table column.
  */
-@Directive({selector: '[cdkColumnDef]'})
+@Directive({
+  selector: '[cdkColumnDef]',
+  exportAs: 'cdkColumnDef',
+})
 export class CdkColumnDef {
   /** Unique name for this column. */
   @Input('cdkColumnDef')
@@ -62,6 +71,7 @@ export class CdkColumnDef {
 /** Header cell template container that adds the right classes and role. */
 @Directive({
   selector: 'cdk-header-cell, th[cdk-header-cell]',
+  exportAs: 'cdkHeaderCell',
   host: {
     'class': 'cdk-header-cell',
     'role': 'columnheader',
@@ -76,6 +86,7 @@ export class CdkHeaderCell {
 /** Cell template container that adds the right classes and role. */
 @Directive({
   selector: 'cdk-cell, td[cdk-cell]',
+  exportAs: 'cdkCell',
   host: {
     'class': 'cdk-cell',
     'role': 'gridcell',

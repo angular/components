@@ -25,13 +25,13 @@ let dialogElementUid = 0;
  * Button that will close the current dialog.
  */
 @Directive({
-  selector: `button[mat-dialog-close], button[matDialogClose]`,
+  selector: 'button[mat-dialog-close], button[matDialogClose]',
   exportAs: 'matDialogClose',
   host: {
     '(click)': 'dialogRef.close(dialogResult)',
     '[attr.aria-label]': 'ariaLabel',
     'type': 'button', // Prevents accidental form submits.
-  }
+  },
 })
 export class MatDialogClose implements OnInit, OnChanges {
   /** Screenreader label for the button. */
@@ -108,8 +108,9 @@ export class MatDialogTitle implements OnInit {
  * Scrollable content container of a dialog.
  */
 @Directive({
-  selector: `[mat-dialog-content], mat-dialog-content, [matDialogContent]`,
-  host: {'class': 'mat-dialog-content'}
+  selector: '[mat-dialog-content], mat-dialog-content, [matDialogContent]',
+  exportAs: 'matDialogContent',
+  host: {'class': 'mat-dialog-content'},
 })
 export class MatDialogContent {}
 
@@ -119,8 +120,9 @@ export class MatDialogContent {}
  * Stays fixed to the bottom when scrolling.
  */
 @Directive({
-  selector: `[mat-dialog-actions], mat-dialog-actions, [matDialogActions]`,
-  host: {'class': 'mat-dialog-actions'}
+  selector: '[mat-dialog-actions], mat-dialog-actions, [matDialogActions]',
+  exportAs: 'matDialogActions',
+  host: {'class': 'mat-dialog-actions'},
 })
 export class MatDialogActions {}
 

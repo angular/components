@@ -18,6 +18,7 @@ import {CdkTree, CdkTreeNode} from './tree';
  */
 @Directive({
   selector: '[cdkTreeNodeToggle]',
+  exportAs: 'cdkTreeNodeToggle',
   host: {
     '(click)': '_toggle($event)',
   }

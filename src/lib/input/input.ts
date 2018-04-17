@@ -58,7 +58,7 @@ export const _MatInputMixinBase = mixinErrorState(MatInputBase);
 
 /** Directive that allows a native input to work inside a `MatFormField`. */
 @Directive({
-  selector: `input[matInput], textarea[matInput]`,
+  selector: 'input[matInput], textarea[matInput]',
   exportAs: 'matInput',
   host: {
     /**

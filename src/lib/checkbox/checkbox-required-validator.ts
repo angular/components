@@ -30,6 +30,7 @@ export const MAT_CHECKBOX_REQUIRED_VALIDATOR: Provider = {
 @Directive({
   selector: `mat-checkbox[required][formControlName],
              mat-checkbox[required][formControl], mat-checkbox[required][ngModel]`,
+  exportAs: 'matCheckboxRequiredValidator',
   providers: [MAT_CHECKBOX_REQUIRED_VALIDATOR],
   host: {'[attr.required]': 'required ? "" : null'}
 })

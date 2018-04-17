@@ -41,6 +41,7 @@ export const _matInkBarPositioner: _MatInkBarPositioner = (element: HTMLElement)
  */
 @Directive({
   selector: 'mat-ink-bar',
+  exportAs: 'matInkBar',
   host: {
     'class': 'mat-ink-bar',
   },

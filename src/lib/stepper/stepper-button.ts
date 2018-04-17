@@ -13,6 +13,7 @@ import {MatStepper} from './stepper';
 /** Button that moves to the next step in a stepper workflow. */
 @Directive({
   selector: 'button[matStepperNext]',
+  exportAs: 'matStepperNext',
   host: {
     '(click)': '_stepper.next()',
     '[type]': 'type',
@@ -25,6 +26,7 @@ export class MatStepperNext extends CdkStepperNext {}
 /** Button that moves to the previous step in a stepper workflow. */
 @Directive({
   selector: 'button[matStepperPrevious]',
+  exportAs: 'matStepperPrevious',
   host: {
     '(click)': '_stepper.previous()',
     '[type]': 'type',

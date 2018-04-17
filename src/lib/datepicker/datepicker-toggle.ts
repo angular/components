@@ -27,7 +27,8 @@ import {MatDatepickerIntl} from './datepicker-intl';
 
 /** Can be used to override the icon of a `matDatepickerToggle`. */
 @Directive({
-  selector: '[matDatepickerToggleIcon]'
+  selector: '[matDatepickerToggleIcon]',
+  exportAs: 'matDatepickerToggleIcon',
 })
 export class MatDatepickerToggleIcon {}
 

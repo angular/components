@@ -9,7 +9,10 @@
 import {Directive, TemplateRef} from '@angular/core';
 
 /** Decorates the `ng-template` tags and reads out the template from it. */
-@Directive({selector: '[matTabContent]'})
+@Directive({
+  selector: '[matTabContent]',
+  exportAs: 'matTabContent',
+})
 export class MatTabContent {
   constructor(public template: TemplateRef<any>) { }
 }

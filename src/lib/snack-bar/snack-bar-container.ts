@@ -38,6 +38,7 @@ import {MatSnackBarConfig} from './snack-bar-config';
 @Component({
   moduleId: module.id,
   selector: 'snack-bar-container',
+  exportAs: 'matSnackBarContainer',
   templateUrl: 'snack-bar-container.html',
   styleUrls: ['snack-bar-container.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -229,6 +229,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
 @Component({
   moduleId: module.id,
   selector: 'mat-spinner',
+  exportAs: 'matSpinner',
   host: {
     'role': 'progressbar',
     'mode': 'indeterminate',

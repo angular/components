@@ -65,7 +65,8 @@ export class MatList extends _MatListMixinBase implements CanDisableRipple {}
  */
 @Directive({
   selector: '[mat-list-avatar], [matListAvatar]',
-  host: {'class': 'mat-list-avatar'}
+  exportAs: 'matListAvatar',
+  host: {'class': 'mat-list-avatar'},
 })
 export class MatListAvatarCssMatStyler {}
 
@@ -75,7 +76,8 @@ export class MatListAvatarCssMatStyler {}
  */
 @Directive({
   selector: '[mat-list-icon], [matListIcon]',
-  host: {'class': 'mat-list-icon'}
+  exportAs: 'matListIcon',
+  host: {'class': 'mat-list-icon'},
 })
 export class MatListIconCssMatStyler {}
 
@@ -85,7 +87,8 @@ export class MatListIconCssMatStyler {}
  */
 @Directive({
   selector: '[mat-subheader], [matSubheader]',
-  host: {'class': 'mat-subheader'}
+  exportAs: 'matSubheader',
+  host: {'class': 'mat-subheader'},
 })
 export class MatListSubheaderCssMatStyler {}
 

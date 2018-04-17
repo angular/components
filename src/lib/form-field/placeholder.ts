@@ -11,6 +11,7 @@ import {Directive} from '@angular/core';
 
 /** The placeholder text for an `MatFormField`. */
 @Directive({
-  selector: 'mat-placeholder'
+  selector: 'mat-placeholder',
+  exportAs: 'matPlaceholder',
 })
 export class MatPlaceholder {}

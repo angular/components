@@ -13,7 +13,8 @@ import {Directive, TemplateRef} from '@angular/core';
  * after the panel is opened for the first time.
  */
 @Directive({
-  selector: 'ng-template[matExpansionPanelContent]'
+  selector: 'ng-template[matExpansionPanelContent]',
+  exportAs: 'matExpansionPanelContent',
 })
 export class MatExpansionPanelContent {
   constructor(public _template: TemplateRef<any>) {}

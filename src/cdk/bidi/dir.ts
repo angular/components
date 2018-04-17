@@ -27,6 +27,7 @@ import {Direction, Directionality} from './directionality';
   selector: '[dir]',
   providers: [{provide: Directionality, useExisting: Dir}],
   host: {'[dir]': 'dir'},
+  // tslint:disable-next-line:validate-decorators
   exportAs: 'dir',
 })
 export class Dir implements Directionality, AfterContentInit, OnDestroy {

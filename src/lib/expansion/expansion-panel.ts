@@ -61,7 +61,7 @@ let uniqueId = 0;
     'class': 'mat-expansion-panel',
     '[class.mat-expanded]': 'expanded',
     '[class.mat-expansion-panel-spacing]': '_hasSpacing()',
-  }
+  },
 })
 export class MatExpansionPanel extends CdkAccordionItem
     implements AfterContentInit, OnChanges, OnDestroy {
@@ -158,8 +158,9 @@ export class MatExpansionPanel extends CdkAccordionItem
 
 @Directive({
   selector: 'mat-action-row',
+  exportAs: 'matExpansionPanelActionRow',
   host: {
     class: 'mat-action-row'
-  }
+  },
 })
 export class MatExpansionPanelActionRow {}

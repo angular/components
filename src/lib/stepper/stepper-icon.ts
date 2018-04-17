@@ -23,6 +23,7 @@ export interface MatStepperIconContext {
  */
 @Directive({
   selector: 'ng-template[matStepperIcon]',
+  exportAs: 'matStepperIcon',
 })
 export class MatStepperIcon {
   /** Name of the icon to be overridden. */

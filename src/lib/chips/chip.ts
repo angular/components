@@ -74,7 +74,8 @@ const CHIP_ATTRIBUTE_NAMES = ['mat-basic-chip'];
  */
 @Directive({
   selector: 'mat-chip-avatar, [matChipAvatar]',
-  host: {'class': 'mat-chip-avatar'}
+  exportAs: 'matChipAvatar',
+  host: {'class': 'mat-chip-avatar'},
 })
 export class MatChipAvatar {}
 
@@ -84,6 +85,7 @@ export class MatChipAvatar {}
  */
 @Directive({
   selector: 'mat-chip-trailing-icon, [matChipTrailingIcon]',
+  exportAs: 'matChipTrailingIcon',
   host: {'class': 'mat-chip-trailing-icon'}
 })
 export class MatChipTrailingIcon {}
@@ -92,7 +94,7 @@ export class MatChipTrailingIcon {}
  * Material design styled Chip component. Used inside the MatChipList component.
  */
 @Directive({
-  selector: `mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]`,
+  selector: 'mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]',
   inputs: ['color', 'disabled', 'disableRipple'],
   exportAs: 'matChip',
   host: {
@@ -374,6 +376,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
  */
 @Directive({
   selector: '[matChipRemove]',
+  exportAs: 'matChipRemove',
   host: {
     'class': 'mat-chip-remove mat-chip-trailing-icon',
     '(click)': '_handleClick()',
