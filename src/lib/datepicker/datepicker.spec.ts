@@ -1519,7 +1519,7 @@ describe('MatDatepicker', () => {
       expect(testComponent).toBeTruthy();
     }));
 
-    it('should find the standard header selector', fakeAsync(() => {
+    it('should find the standard header element', fakeAsync(() => {
       testComponent.datepicker.open();
       fixture.detectChanges();
       flush();
