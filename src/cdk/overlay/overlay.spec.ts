@@ -1,6 +1,7 @@
 import {async, fakeAsync, tick, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {Component, NgModule, ViewChild, ViewContainerRef} from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
   ComponentPortal,
   PortalModule,
@@ -30,7 +31,7 @@ describe('Overlay', () => {
   beforeEach(async(() => {
     dir = 'ltr';
     TestBed.configureTestingModule({
-      imports: [OverlayModule, PortalModule, OverlayTestModule],
+      imports: [OverlayModule, PortalModule, OverlayTestModule, NoopAnimationsModule],
       providers: [{
         provide: Directionality,
         useFactory: () => {
@@ -92,6 +93,7 @@ describe('Overlay', () => {
       .toBe('auto', 'Expected the overlay pane to enable pointerEvents when attached.');
 
     overlayRef.detach();
+    viewContainerFixture.detectChanges();
 
     expect(paneElement.childNodes.length).toBe(0);
     expect(paneElement.style.pointerEvents)
@@ -220,6 +222,8 @@ describe('Overlay', () => {
     let overlayRef = overlay.create();
 
     overlayRef.detachments().subscribe(() => {
+      viewContainerFixture.detectChanges();
+
       expect(overlayContainerElement.querySelector('pizza'))
           .toBeFalsy('Expected the overlay to have been detached.');
     });
@@ -410,7 +414,6 @@ describe('Overlay', () => {
       viewContainerFixture.detectChanges();
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
       expect(backdrop).toBeTruthy();
-      expect(backdrop.classList).not.toContain('cdk-overlay-backdrop-showing');
 
       let backdropClickHandler = jasmine.createSpy('backdropClickHander');
       overlayRef.backdropClick().subscribe(backdropClickHandler);
@@ -453,29 +456,15 @@ describe('Overlay', () => {
       expect(backdrop.classList).toContain('cdk-overlay-transparent-backdrop');
     });
 
-    it('should disable the pointer events of a backdrop that is being removed', () => {
+    it('should insert the backdrop before the overlay pane in the DOM order', () => {
       let overlayRef = overlay.create(config);
-      overlayRef.attach(componentPortal);
-
-      viewContainerFixture.detectChanges();
-      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
-
-      expect(backdrop.style.pointerEvents).toBeFalsy();
-
-      overlayRef.detach();
-
-      expect(backdrop.style.pointerEvents).toBe('none');
-    });
-
-    it('should insert the backdrop before the overlay host in the DOM order', () => {
-      const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
 
-      const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop');
-      const host = overlayContainerElement.querySelector('.cdk-overlay-pane')!.parentElement!;
-      const children = Array.prototype.slice.call(overlayContainerElement.children);
+      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop')!.parentNode;
+      let children = Array.prototype.slice.call(overlayContainerElement.children);
+      let host = overlayRef.hostElement;
 
       expect(children.indexOf(backdrop)).toBeGreaterThan(-1);
       expect(children.indexOf(host)).toBeGreaterThan(-1);

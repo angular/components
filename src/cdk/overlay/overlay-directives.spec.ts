@@ -1,6 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {ComponentFixture, TestBed, async, inject} from '@angular/core/testing';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Directionality} from '@angular/cdk/bidi';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {ESCAPE} from '@angular/cdk/keycodes';
@@ -21,7 +22,7 @@ describe('Overlay directives', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule],
+      imports: [OverlayModule, NoopAnimationsModule],
       declarations: [ConnectedOverlayDirectiveTest, ConnectedOverlayPropertyInitOrder],
       providers: [{provide: Directionality, useFactory: () => dir = {value: 'ltr'}}],
     });

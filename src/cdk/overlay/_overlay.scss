@@ -79,14 +79,15 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     transition: opacity $backdrop-animation-duration $backdrop-animation-timing-function;
     opacity: 0;
 
-    &.cdk-overlay-backdrop-showing {
-      opacity: 1;
+    // In high contrast mode the rgba background will become solid
+    // so we need to fall back to making it opaque using `opacity`.
+    @include cdk-high-contrast {
+      opacity: 0.6;
+    }
 
-      // In high contrast mode the rgba background will become solid
-      // so we need to fall back to making it opaque using `opacity`.
-      @include cdk-high-contrast {
-        opacity: 0.6;
-      }
+    // Prevent the user from interacting while the backdrop is animating.
+    &.ng-animating {
+      pointer-events: none;
     }
   }
 

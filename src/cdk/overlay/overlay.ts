@@ -60,15 +60,17 @@ export class Overlay {
    * @returns Reference to the created overlay.
    */
   create(config?: OverlayConfig): OverlayRef {
-    const host = this._createHostElement();
+    const overlayConfig = new OverlayConfig(config);
+    const backdrop = overlayConfig.hasBackdrop ? this._createOverlayElement() : null;
+    const backdropHost = backdrop ? this._createPortalOutlet(backdrop) : null;
+    const host = this._createOverlayElement();
     const pane = this._createPaneElement(host);
     const portalOutlet = this._createPortalOutlet(pane);
-    const overlayConfig = new OverlayConfig(config);
 
     overlayConfig.direction = overlayConfig.direction || this._directionality.value;
 
-    return new OverlayRef(portalOutlet, host, pane, overlayConfig, this._ngZone,
-      this._keyboardDispatcher, this._document);
+    return new OverlayRef(portalOutlet, host, pane, backdropHost, overlayConfig, this._ngZone,
+      this._keyboardDispatcher);
   }
 
   /**
@@ -94,21 +96,17 @@ export class Overlay {
     return pane;
   }
 
-  /**
-   * Creates the host element that wraps around an overlay
-   * and can be used for advanced positioning.
-   * @returns Newly-create host element.
-   */
-  private _createHostElement(): HTMLElement {
-    const host = this._document.createElement('div');
-    this._overlayContainer.getContainerElement().appendChild(host);
-    return host;
+  /** Creates an element and appends it to the overlay container. */
+  private _createOverlayElement(): HTMLElement {
+    const element = this._document.createElement('div');
+    this._overlayContainer.getContainerElement().appendChild(element);
+    return element;
   }
 
   /**
-   * Create a DomPortalOutlet into which the overlay content can be loaded.
-   * @param pane The DOM element to turn into a portal outlet.
-   * @returns A portal outlet for the given DOM element.
+   * Create a DomPortalHost into which the overlay content can be loaded.
+   * @param pane The DOM element to turn into a portal host.
+   * @returns A portal host for the given DOM element.
    */
   private _createPortalOutlet(pane: HTMLElement): DomPortalOutlet {
     return new DomPortalOutlet(pane, this._componentFactoryResolver, this._appRef, this._injector);
