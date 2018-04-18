@@ -1518,6 +1518,15 @@ describe('MatDatepicker', () => {
     it('should instantiate a datepicker with a custom header', fakeAsync(() => {
       expect(testComponent).toBeTruthy();
     }));
+
+    it('should find the standard header selector', fakeAsync(() => {
+      testComponent.datepicker.open();
+      fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
+
+      expect(document.querySelector('mat-calendar-header')).toBeTruthy();
+    }));
   });
 });
 
