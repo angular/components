@@ -40,10 +40,7 @@ describe('MatDatepicker', () => {
     component: any,
     imports: any[] = [],
     providers: any[] = [],
-    declarations: any[] = [],
     entryComponents: any[] = []): ComponentFixture<any> {
-
-    declarations.push(component);
 
     TestBed.configureTestingModule({
       imports: [
@@ -56,7 +53,7 @@ describe('MatDatepicker', () => {
         ...imports
       ],
       providers,
-      declarations: declarations,
+      declarations: [component, ...entryComponents],
     });
 
     TestBed.overrideModule(BrowserDynamicTestingModule, {
@@ -1512,7 +1509,6 @@ describe('MatDatepicker', () => {
         DatepickerWithCustomHeader,
         [MatNativeDateModule],
         [],
-        [CustomHeaderForDatepicker],
         [CustomHeaderForDatepicker]
       );
       fixture.detectChanges();
@@ -1780,7 +1776,6 @@ class DatepickerOpeningOnFocus {
 })
 class DatepickerWithCustomHeader {
   @ViewChild('ch') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
 }
 
 @Component({
@@ -1789,7 +1784,4 @@ class DatepickerWithCustomHeader {
   <mat-calendar-header></mat-calendar-header>
   `
 })
-class CustomHeaderForDatepicker {
-  constructor() {
-  }
-}
+class CustomHeaderForDatepicker {}
