@@ -40,7 +40,10 @@ describe('MatDatepicker', () => {
     component: any,
     imports: any[] = [],
     providers: any[] = [],
+    declarations: any[] = [],
     entryComponents: any[] = []): ComponentFixture<any> {
+
+    declarations.push(component);
 
     TestBed.configureTestingModule({
       imports: [
@@ -53,7 +56,7 @@ describe('MatDatepicker', () => {
         ...imports
       ],
       providers,
-      declarations: [component],
+      declarations: declarations,
     });
 
     TestBed.overrideModule(BrowserDynamicTestingModule, {
@@ -1509,6 +1512,7 @@ describe('MatDatepicker', () => {
         DatepickerWithCustomHeader,
         [MatNativeDateModule],
         [],
+        [CustomHeaderForDatepicker],
         [CustomHeaderForDatepicker]
       );
       fixture.detectChanges();
