@@ -7,7 +7,7 @@
  */
 
 import {Component} from '@angular/core';
-import {Element, ELEMENT_DATA} from '../element-data';
+import {Element, ELEMENT_DATA} from './element-data';
 
 @Component({
   moduleId: module.id,
