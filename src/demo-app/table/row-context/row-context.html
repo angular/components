@@ -1,5 +1,5 @@
 <mat-card>
-  <table cdk-table [dataSource]="data">
+  <table mat-table [dataSource]="data">
     <ng-container matColumnDef="context">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let $implicit; let index = index; let count = count; let first = first; let last = last; let even = even; let odd = odd">
