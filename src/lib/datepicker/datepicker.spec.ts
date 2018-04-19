@@ -7,7 +7,7 @@ import {
   createKeyboardEvent,
   dispatchEvent,
 } from '@angular/cdk/testing';
-import {Component, ViewChild} from '@angular/core';
+import {Component, FactoryProvider, Type, ValueProvider, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -37,10 +37,10 @@ describe('MatDatepicker', () => {
 
   // Creates a test component fixture.
   function createComponent(
-    component: any,
-    imports: any[] = [],
-    providers: any[] = [],
-    entryComponents: any[] = []): ComponentFixture<any> {
+    component: Type<any>,
+    imports: Type<any>[] = [],
+    providers: (FactoryProvider | ValueProvider)[] = [],
+    entryComponents: Type<any>[] = []): ComponentFixture<any> {
 
     TestBed.configureTestingModule({
       imports: [
@@ -1789,8 +1789,8 @@ class DatepickerWithCustomHeader {
 
 @Component({
   template: `
-  <div>Custom element</div>
-  <mat-calendar-header></mat-calendar-header>
-  `
+    <div>Custom element</div>
+    <mat-calendar-header></mat-calendar-header>
+  `,
 })
 class CustomHeaderForDatepicker {}
