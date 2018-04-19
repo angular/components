@@ -35,7 +35,7 @@ const appVendors = [
   'web-animations-js',
   'moment',
   'tslib',
-  'document-register-element',
+  '@webcomponents',
 ];
 
 /** Glob that matches all required vendors for the demo-app. */
