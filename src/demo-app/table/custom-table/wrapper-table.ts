@@ -6,7 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ContentChild, ContentChildren, Input, QueryList, ViewChild} from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ContentChildren,
+    Input,
+    QueryList,
+    ViewChild
+} from '@angular/core';
 import {DataSource} from '@angular/cdk/collections';
 import {MatColumnDef, MatHeaderRowDef, MatRowDef, MatTable} from '@angular/material';
 import {SimpleColumn} from './simple-column';
@@ -37,9 +45,21 @@ export class WrapperTable<T> {
 
   @ViewChild(MatTable) table: MatTable<T>;
 
-  @Input() columns: string[];
+  private _columns: string[];
+
+  // @Input() columns: string[];
+  @Input() set columns(vals: string[]) {
+    this._columns = vals;
+    this._changeDefRef.detectChanges();
+  }
+  get columns() {
+    return this._columns;
+  }
 
   @Input() dataSource: DataSource<T>;
+
+  constructor(private _changeDefRef: ChangeDetectorRef) {
+  }
 
   ngAfterContentInit() {
     // Register the simple columns to the table
