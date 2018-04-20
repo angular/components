@@ -417,6 +417,7 @@ export class MatFormField extends _MatFormFieldMixinBase
     if (this.appearance === 'outline' && this._label && this._label.nativeElement.children.length) {
       if (this._platform && !this._platform.isBrowser) {
         // getBoundingClientRect isn't available on the server.
+        this._initialGapCalculated = true;
         return;
       }
       if (!document.contains(this._elementRef.nativeElement)) {
