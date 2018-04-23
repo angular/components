@@ -50,6 +50,7 @@ import {
   getTableUnknownColumnError,
   getTableUnknownDataSourceError
 } from './table-errors';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /** Interface used to provide an outlet for rows to be inserted into. */
 export interface RowOutlet {
@@ -100,6 +101,16 @@ export const CDK_TABLE_TEMPLATE = `
 abstract class RowViewRef<T> extends EmbeddedViewRef<CdkCellOutletRowContext<T>> { }
 
 /**
+ * Set of properties that represent a single rendered row. Acts as the row's identity for the
+ * `IterableDiffer`.
+ */
+export interface DataRow<T> {
+  data: T;
+  index: number;
+  rowDef: CdkRowDef<T>;
+}
+
+/**
  * A data table that can render a header row, data rows, and a footer row.
  * Uses the dataSource input to determine the data to be rendered. The data can be provided either
  * as a data array, an Observable stream that emits the data array to render, or a DataSource with a
@@ -123,6 +134,9 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
   /** Latest data provided by the data source. */
   private _data: T[];
 
+  /** List of the rendered rows as identified by their `DataRow` object. */
+   private _dataRows: DataRow<T>[];
+
   /** Subscription that listens for the data provided by the data source. */
   private _renderChangeSubscription: Subscription | null;
 
@@ -140,7 +154,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
   private _rowDefs: CdkRowDef<T>[];
 
   /** Differ used to find the changes in the data provided by the data source. */
-  private _dataDiffer: IterableDiffer<T>;
+  private _dataDiffer: IterableDiffer<DataRow<T>>;
 
   /** Stores the row definition that does not have a when predicate. */
   private _defaultRowDef: CdkRowDef<T> | null;
@@ -150,6 +164,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
 
   /** Row definitions that were defined outside of the direct content children of the table. */
   private _customRowDefs = new Set<CdkRowDef<T>>();
+
 
   /**
    * Whether the header row definition has been changed. Triggers an update to the header row after
@@ -162,6 +177,19 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    * content is checked.
    */
   private _footerRowDefChanged = false;
+
+  /**
+   * Cache of the latest rendered `DataRow` objects as a map for easy retrieval when constructing
+   * a new list of `DataRow` objects for rendering rows. Since the new list is constructed with
+   * the cached `DataRow` objects when possible, the row identity is preserved when the data
+   * and row template matches, which allows the `IterableDiffer` to check rows by reference
+   * and understand which rows are added/moved/removed.
+   *
+   * Implemented as a map of maps where the first key is the `data: T` object and the second is the
+   * `CdkRowDef<T>` object. With the two keys, the cache points to a `DataRow<T>` object that
+   * contains the pair.
+   */
+  private _cachedDataRowsMap = new Map<T, Map<CdkRowDef<T>, DataRow<T>>>();
 
   /**
    * Tracking function that will be used to check the differences in data changes. Used similarly
@@ -209,6 +237,22 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
     }
   }
   private _dataSource: DataSource<T> | Observable<T[]> | T[] | T[];
+
+  /**
+   * Whether to allow multiple rows per data object by evaluating which rows evaluate their 'when'
+   * predicate to true. If `enableRowMultiplex` is false, which is the default value, then each data
+   * object will render the first row that evaluates its when predicate to true, in the order
+   * defined in the table, or otherwise the default row which does not have a when predicate.
+   */
+  @Input()
+  get enableRowMultiplex(): boolean { return this._enableRowMultiplex; }
+  set enableRowMultiplex(v: boolean) {
+    this._enableRowMultiplex = coerceBooleanProperty(v);
+    if (!!this._rowOutlet.viewContainer.length) {
+      this._forceRenderDataRows();
+    }
+  }
+  _enableRowMultiplex: boolean = false;
 
   // TODO(andrewseguin): Remove max value as the end index
   //   and instead calculate the view on init and scroll.
@@ -263,8 +307,9 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
       this._applyNativeTableSections();
     }
 
-    // TODO(andrewseguin): Setup a listener for scrolling, emit the calculated view to viewChange
-    this._dataDiffer = this._differs.find([]).create(this._trackByFn);
+    this._dataDiffer = this._differs.find([]).create((_i: number, dataRow: DataRow<T>) => {
+      return this.trackBy ? this.trackBy(dataRow.index, dataRow.data) : dataRow;
+    });
 
     // If the table has header or footer row definitions defined as part of its content, mark that
     // there is a change so that the content check will render the row.
@@ -327,18 +372,19 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    * an array, this function will need to be called to render any changes.
    */
   renderRows() {
-    const changes = this._dataDiffer.diff(this._data);
+    this._dataRows = this._getDataRows();
+    const changes = this._dataDiffer.diff(this._dataRows);
     if (!changes) { return; }
 
     const viewContainer = this._rowOutlet.viewContainer;
     changes.forEachOperation(
-        (record: IterableChangeRecord<T>, adjustedPreviousIndex: number, currentIndex: number) => {
+        (record: IterableChangeRecord<DataRow<T>>, prevIndex: number, currentIndex: number) => {
           if (record.previousIndex == null) {
             this._insertRow(record.item, currentIndex);
           } else if (currentIndex == null) {
-            viewContainer.remove(adjustedPreviousIndex);
+            viewContainer.remove(prevIndex);
           } else {
-            const view = <RowViewRef<T>>viewContainer.get(adjustedPreviousIndex);
+            const view = <RowViewRef<T>>viewContainer.get(prevIndex);
             viewContainer.move(view!, currentIndex);
           }
         });
@@ -348,9 +394,9 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
 
     // Update rows that did not get added/removed/moved but may have had their identity changed,
     // e.g. if trackBy matched data on some property but the actual data reference changed.
-    changes.forEachIdentityChange((record: IterableChangeRecord<T>) => {
+    changes.forEachIdentityChange((record: IterableChangeRecord<DataRow<T>>) => {
       const rowView = <RowViewRef<T>>viewContainer.get(record.currentIndex!);
-      rowView.context.$implicit = record.item;
+      rowView.context.$implicit = record.item.data;
     });
   }
 
@@ -394,6 +440,56 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
     this._customRowDefs.delete(rowDef);
   }
 
+  /**
+   * Get the list of DataRow objects to render according to the current list of data and defined
+   * row definitions. If the previous list already contained a particular pair, it should be reused
+   * so that the differ equates their references.
+   */
+  private _getDataRows(): DataRow<T>[] {
+    const dataRows: DataRow<T>[] = [];
+
+    // Store the cache and create a new one. Any re-used DataRow objects will be moved into the new
+    // cache while unused ones can be picked up by garbage collection.
+    const prevCachedDataRows = this._cachedDataRowsMap;
+    this._cachedDataRowsMap = new Map();
+
+    // For each data object, get the list of rows that should be rendered, represented by the
+    // respective `DataRow` object which is the pair of `data` and `CdkRowDef`.
+    for (let i = 0; i < this._data.length; i++) {
+      let data = this._data[i];
+      const dataRowsForData = this._getDataRowsForData(data, i, prevCachedDataRows.get(data));
+
+      this._cachedDataRowsMap.set(data, new Map());
+      for (let j = 0; j < dataRowsForData.length; j++) {
+        let dataRow = dataRowsForData[j];
+        this._cachedDataRowsMap.get(dataRow.data)!.set(dataRow.rowDef, dataRow);
+        dataRows.push(dataRow);
+      }
+    }
+
+    return dataRows;
+  }
+
+  /**
+   * Returns a list of `DataRow<T>` for the provided data object and any `CdkRowDef` objects that
+   * should be rendered for this data. Reuses the cached DataRow objects if they match the same
+   * `(T, CdkRowDef)` pair.
+   */
+  private _getDataRowsForData(
+      data: T, index: number, cache?: Map<CdkRowDef<T>, DataRow<T>>): DataRow<T>[] {
+    const rowDefs = this._getRowDefs(data, index);
+
+    return rowDefs.map(rowDef => {
+      if (cache && cache.has(rowDef)) {
+        const dataRow = cache.get(rowDef)!;
+        dataRow.index = index;
+        return dataRow;
+      } else {
+        return {data, rowDef, index};
+      }
+    });
+  }
+
   /** Update the map containing the content's column definitions. */
   private _cacheColumnDefs() {
     this._columnDefsByName.clear();
@@ -415,7 +511,9 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
     this._customRowDefs.forEach(rowDef => this._rowDefs.push(rowDef));
 
     const defaultRowDefs = this._rowDefs.filter(def => !def.when);
-    if (defaultRowDefs.length > 1) { throw getTableMultipleDefaultRowDefsError(); }
+    if (!this.enableRowMultiplex && defaultRowDefs.length > 1) {
+      throw getTableMultipleDefaultRowDefsError();
+    }
     this._defaultRowDef = defaultRowDefs[0];
   }
 
@@ -427,11 +525,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
     // Re-render the rows when the row definition columns change.
     this._rowDefs.forEach(def => {
       if (!!def.getColumnsDiff()) {
-        // Reset the data to an empty array so that renderRowChanges will re-render all new rows.
-        this._dataDiffer.diff([]);
-
-        this._rowOutlet.viewContainer.clear();
-        this.renderRows();
+        this._forceRenderDataRows();
       }
     });
 
@@ -532,27 +626,38 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
   }
 
   /**
-   * Finds the matching row definition that should be used for this row data. If there is only
-   * one row definition, it is returned. Otherwise, find the row definition that has a when
+   * Get the matching row definitions that should be used for this row data. If there is only
+   * one row definition, it is returned. Otherwise, find the row definitions that has a when
    * predicate that returns true with the data. If none return true, return the default row
    * definition.
    */
-  _getRowDef(data: T, i: number): CdkRowDef<T> {
-    if (this._rowDefs.length == 1) { return this._rowDefs[0]; }
+  _getRowDefs(data: T, i: number): CdkRowDef<T>[] {
+    if (this._rowDefs.length == 1) { return [this._rowDefs[0]]; }
 
-    let rowDef = this._rowDefs.find(def => def.when && def.when(i, data)) || this._defaultRowDef;
-    if (!rowDef) { throw getTableMissingMatchingRowDefError(); }
+    let rowDefs: CdkRowDef<T>[] = [];
+    if (this.enableRowMultiplex) {
+      rowDefs = this._rowDefs.filter(def => !def.when || def.when(i, data));
+    } else {
+      let rowDef = this._rowDefs.find(def => def.when && def.when(i, data)) || this._defaultRowDef;
+      if (rowDef) {
+        rowDefs.push(rowDef);
+      }
+    }
 
-    return rowDef;
+    if (!rowDefs.length) {
+      throw getTableMissingMatchingRowDefError(data);
+    }
+
+    return rowDefs;
   }
 
   /**
    * Create the embedded view for the data row template and place it in the correct index location
    * within the data row view container.
    */
-  private _insertRow(rowData: T, index: number) {
-    const rowDef = this._getRowDef(rowData, index);
-    const context: CdkCellOutletRowContext<T> = {$implicit: rowData};
+  private _insertRow(dataRow: DataRow<T>, index: number) {
+    const rowDef = dataRow.rowDef;
+    const context: CdkCellOutletRowContext<T> = {$implicit: dataRow.data};
     this._renderRow(this._rowOutlet, rowDef, context, index);
   }
 
@@ -583,7 +688,8 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
     const viewContainer = this._rowOutlet.viewContainer;
     for (let index = 0, count = viewContainer.length; index < count; index++) {
       const viewRef = viewContainer.get(index) as RowViewRef<T>;
-      viewRef.context.index = index;
+      viewRef.context.index = this._dataRows[index].index;
+      viewRef.context.rowIndex = index;
       viewRef.context.count = count;
       viewRef.context.first = index === 0;
       viewRef.context.last = index === count - 1;
@@ -619,5 +725,12 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
       element.appendChild(section.outlet.elementRef.nativeElement);
       this._elementRef.nativeElement.appendChild(element);
     }
+  }
+
+  /** Forces a re-render of the data rows. */
+  private _forceRenderDataRows() {
+    this._dataDiffer.diff([]);
+    this._rowOutlet.viewContainer.clear();
+    this.renderRows();
   }
 }

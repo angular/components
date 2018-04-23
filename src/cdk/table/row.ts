@@ -136,6 +136,9 @@ export interface CdkCellOutletRowContext<T> {
   $implicit?: T;
 
   /** Index location of the row that this cell is located within. */
+  rowIndex?: number;
+
+  /** Index of the data object in the provided data array. */
   index?: number;
 
   /** Length of the number of total rows. */
