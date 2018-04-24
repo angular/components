@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {ListRange} from '@angular/cdk/collections';
 import {Directive, forwardRef, Input, OnChanges} from '@angular/core';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
@@ -139,10 +140,16 @@ export function _fixedSizeVirtualScrollStrategyFactory(fixedSizeDir: CdkFixedSiz
 })
 export class CdkFixedSizeVirtualScroll implements OnChanges {
   /** The size of the items in the list (in pixels). */
-  @Input() itemSize = 20;
+  @Input()
+  get itemSize(): number { return this._itemSize; }
+  set itemSize(value: number) { this._itemSize = coerceNumberProperty(value); }
+  _itemSize = 20;
 
   /** The number of extra elements to render on either side of the scrolling viewport. */
-  @Input() bufferSize = 5;
+  @Input()
+  get bufferSize(): number { return this._bufferSize; }
+  set bufferSize(value: number) { this._bufferSize = coerceNumberProperty(value); }
+  _bufferSize = 5;
 
   /** The scroll strategy used by this directive. */
   _scrollStrategy = new FixedSizeVirtualScrollStrategy(this.itemSize, this.bufferSize);

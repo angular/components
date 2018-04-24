@@ -71,7 +71,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
     const ds = value instanceof DataSource ? value :
         // Slice the value if its an NgIterable to ensure we're working with an array.
         new ArrayDataSource<T>(
-            value instanceof Observable ? value : Array.prototype.slice.call(value));
+            value instanceof Observable ? value : Array.prototype.slice.call(value || []));
     this._dataSourceChanges.next(ds);
   }
   _cdkVirtualForOf: DataSource<T> | Observable<T[]> | NgIterable<T>;

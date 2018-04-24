@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {ListRange} from '@angular/cdk/collections';
 import {Directive, forwardRef, Input, OnChanges} from '@angular/core';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
@@ -381,14 +382,20 @@ export class CdkAutoSizeVirtualScroll implements OnChanges {
    * The minimum amount of buffer rendered beyond the viewport (in pixels).
    * If the amount of buffer dips below this number, more items will be rendered.
    */
-  @Input() minBufferPx: number = 100;
+  @Input()
+  get minBufferPx(): number { return this._minBufferPx; }
+  set minBufferPx(value: number) { this._minBufferPx = coerceNumberProperty(value); }
+  _minBufferPx = 100;
 
   /**
    * The number of pixels worth of buffer to shoot for when rendering new items.
    * If the actual amount turns out to be less it will not necessarily trigger an additional
    * rendering cycle (as long as the amount of buffer is still greater than `minBufferPx`).
    */
-  @Input() addBufferPx: number = 200;
+  @Input()
+  get addBufferPx(): number { return this._addBufferPx; }
+  set addBufferPx(value: number) { this._addBufferPx = coerceNumberProperty(value); }
+  _addBufferPx = 200;
 
   /** The scroll strategy used by this directive. */
   _scrollStrategy = new AutoSizeVirtualScrollStrategy(this.minBufferPx, this.addBufferPx);
