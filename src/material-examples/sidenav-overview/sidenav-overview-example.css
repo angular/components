@@ -5,3 +5,17 @@
   left: 0;
   right: 0;
 }
+.side-nav-container {
+  background: #3f51b5;
+  color: #fff;
+  min-width: 250px;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+.main-content-container {
+  padding: 10px;
+}
+.toggle-button {
+  background: #fff;
+  color: #000;
+}
