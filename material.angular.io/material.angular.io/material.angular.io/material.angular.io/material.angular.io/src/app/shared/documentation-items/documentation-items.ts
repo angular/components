@@ -104,7 +104,15 @@ const DOCS: {[key: string]: DocCategory[]} = {
       name: 'Navigation',
       summary: 'Sidenavs, toolbars, menus',
       items: [
-        {id: 'menu', name: 'Menu', examples: ['menu-icons']},
+        {
+          id: 'menu',
+          name: 'Menu',
+          examples: [
+            'menu-overview',
+            'menu-icon',
+            'nested-menu'
+          ]
+        },
         {
           id: 'sidenav',
           name: 'Sidenav',
