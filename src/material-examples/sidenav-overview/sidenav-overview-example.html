@@ -1,6 +1,21 @@
 <mat-sidenav-container class="example-container" *ngIf="shouldRun">
-  <mat-sidenav mode="side" opened>Sidenav content</mat-sidenav>
-  <mat-sidenav-content>Main content</mat-sidenav-content>
+  <mat-sidenav #sideNav class="side-nav-container" mode="side" opened>
+    Sidenav content
+    <p>
+      <button mat-button class="toggle-button" (click)="sideNav.close()">Click to close!</button>
+    </p>
+  </mat-sidenav>
+  <mat-sidenav-content class="main-content-container">
+    Main content
+    <p *ngIf="!sideNav.opened">
+      <button mat-button class="toggle-button" (click)="sideNav.open()">Click to open!</button>
+    </p>
+  </mat-sidenav-content>
 </mat-sidenav-container>
 
 <div *ngIf="!shouldRun">Please open on Stackblitz to see result</div>
+
+
+<!-- Copyright 2018 Google Inc. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->
