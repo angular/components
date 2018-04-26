@@ -59,7 +59,7 @@ describe('MatTable', () => {
 
     it('should create a table with row multiplex', () => {
       let fixture = TestBed.createComponent(MatTableWithWhenRowApp);
-      fixture.componentInstance.enableRowMultiplex = true;
+      fixture.componentInstance.multiTemplateRows = true;
       fixture.detectChanges();
 
       const tableElement = fixture.nativeElement.querySelector('.mat-table');
@@ -503,7 +503,7 @@ class NativeHtmlTableApp {
 
 @Component({
   template: `
-    <mat-table [dataSource]="dataSource" [enableRowMultiplex]="enableRowMultiplex">
+    <mat-table [dataSource]="dataSource" [multiTemplateRows]="multiTemplateRows">
       <ng-container matColumnDef="column_a">
         <mat-header-cell *matHeaderCellDef> Column A</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.a}}</mat-cell>
@@ -522,7 +522,7 @@ class NativeHtmlTableApp {
   `
 })
 class MatTableWithWhenRowApp {
-  enableRowMultiplex = false;
+  multiTemplateRows = false;
   dataSource: FakeDataSource | null = new FakeDataSource();
   isFourthRow = (i: number, _rowData: TestData) => i == 3;
 

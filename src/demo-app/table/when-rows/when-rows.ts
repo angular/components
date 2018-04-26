@@ -20,11 +20,11 @@ export interface DemoDataObject {
   templateUrl: 'when-rows.html',
 })
 export class WhenRowsDemo {
-  columnsToDisplay = ['data', 'dataIndex', 'rowIndex'];
+  columnsToDisplay = ['data', 'index', 'dataIndex', 'rowIndex'];
   data: DemoDataObject[] =
       (new Array(DATA_LENGTH) as DemoDataObject[]).fill({value: false}, 0, DATA_LENGTH);
   randomNumber = 0;
-  enableRowMultiplex = false;
+  multiTemplateRows = false;
   useTrackByValue = false;
 
   whenFn = (_i: number, d: DemoDataObject) => d.value;

@@ -8,7 +8,7 @@
 </div>
 
 <div>
-  <mat-slide-toggle (change)="enableRowMultiplex = $event.checked">
+  <mat-slide-toggle (change)="multiTemplateRows = $event.checked">
     Enable row multiplex
   </mat-slide-toggle>
 </div>
@@ -24,7 +24,7 @@
 
   <table mat-table style="width: 100%"
          [trackBy]="useTrackByValue ? trackByValue : undefined"
-         [enableRowMultiplex]="enableRowMultiplex"
+         [multiTemplateRows]="multiTemplateRows"
          [dataSource]="data">
     <!-- Data column -->
     <ng-container matColumnDef="data">
@@ -34,19 +34,27 @@
       </td>
     </ng-container>
 
-    <!-- Data index column -->
-    <ng-container matColumnDef="dataIndex">
-      <th mat-header-cell *matHeaderCellDef> Data Index </th>
+    <!-- Index column -->
+    <ng-container matColumnDef="index">
+      <th mat-header-cell *matHeaderCellDef> Index </th>
       <td mat-cell *matCellDef="let data; let index = index">
         {{index}}
       </td>
     </ng-container>
 
+    <!-- Data index column -->
+    <ng-container matColumnDef="dataIndex">
+      <th mat-header-cell *matHeaderCellDef> Data Index </th>
+      <td mat-cell *matCellDef="let data; let dataIndex = dataIndex">
+        {{dataIndex}}
+      </td>
+    </ng-container>
+
     <!-- Row Index column -->
     <ng-container matColumnDef="rowIndex">
-      <th mat-header-cell *matHeaderCellDef> Row Index </th>
-      <td mat-cell *matCellDef="let data; let rowIndex = rowIndex">
-        {{rowIndex}}
+      <th mat-header-cell *matHeaderCellDef> Render Index </th>
+      <td mat-cell *matCellDef="let data; let renderIndex = renderIndex">
+        {{renderIndex}}
       </td>
     </ng-container>
 

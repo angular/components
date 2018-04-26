@@ -536,7 +536,7 @@ describe('CdkTable', () => {
         }).toThrowError(getTableMissingMatchingRowDefError(data[0]).message);
     }));
 
-    it('should fail when multiple rows match data without enableRowMultiplex', fakeAsync(() => {
+    it('should fail when multiple rows match data without multiTemplateRows', fakeAsync(() => {
       let whenFixture = createComponent(WhenRowMultipleDefaultsCdkTableApp);
       expect(() => {
         whenFixture.detectChanges();
@@ -544,10 +544,10 @@ describe('CdkTable', () => {
       }).toThrowError(getTableMultipleDefaultRowDefsError().message);
     }));
 
-    describe('with enableRowMultiplex', () => {
+    describe('with multiTemplateRows', () => {
       it('should be able to render multiple rows per data object', () => {
         let whenFixture = createComponent(WhenRowCdkTableApp);
-        whenFixture.componentInstance.enableRowMultiplex = true;
+        whenFixture.componentInstance.multiTemplateRows = true;
         whenFixture.detectChanges();
 
         const data = whenFixture.componentInstance.dataSource.data;
@@ -564,7 +564,7 @@ describe('CdkTable', () => {
 
       it('should have the correct data and row indicies', () => {
         let whenFixture = createComponent(WhenRowCdkTableApp);
-        whenFixture.componentInstance.enableRowMultiplex = true;
+        whenFixture.componentInstance.multiTemplateRows = true;
         whenFixture.componentInstance.showIndexColumns();
         whenFixture.detectChanges();
 
@@ -961,7 +961,7 @@ class BooleanRowCdkTableApp {
 
 @Component({
   template: `
-    <cdk-table [dataSource]="dataSource" [enableRowMultiplex]="enableRowMultiplex">
+    <cdk-table [dataSource]="dataSource" [multiTemplateRows]="multiTemplateRows">
       <ng-container cdkColumnDef="column_a">
         <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
         <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
@@ -1005,7 +1005,7 @@ class BooleanRowCdkTableApp {
   `
 })
 class WhenRowCdkTableApp {
-  enableRowMultiplex = false;
+  multiTemplateRows = false;
   dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   isIndex1Columns = ['index1Column'];
