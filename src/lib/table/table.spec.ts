@@ -57,7 +57,7 @@ describe('MatTable', () => {
       ]);
     });
 
-    it('should create a table with row multiplex', () => {
+    it('should create a table with multiTemplateRows true', () => {
       let fixture = TestBed.createComponent(MatTableWithWhenRowApp);
       fixture.componentInstance.multiTemplateRows = true;
       fixture.detectChanges();
@@ -68,7 +68,7 @@ describe('MatTable', () => {
         ['a_1'],
         ['a_2'],
         ['a_3'],
-        ['a_4'], // With multiplex, this row shows up along with the special 'when' fourth_row
+        ['a_4'], // With multiple rows, this row shows up along with the special 'when' fourth_row
         ['fourth_row'],
         ['Footer A', 'Footer B', 'Footer C'],
       ]);

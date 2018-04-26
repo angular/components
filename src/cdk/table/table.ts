@@ -123,7 +123,7 @@ abstract class RowViewRef<T> extends EmbeddedViewRef<RowContext<T>> { }
  */
 export interface RenderRow<T> {
   data: T;
-  index: number;
+  dataIndex: number;
   rowDef: CdkRowDef<T>;
 }
 
@@ -181,7 +181,6 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
 
   /** Row definitions that were defined outside of the direct content children of the table. */
   private _customRowDefs = new Set<CdkRowDef<T>>();
-
 
   /**
    * Whether the header row definition has been changed. Triggers an update to the header row after
@@ -265,7 +264,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
   get multiTemplateRows(): boolean { return this._multiTemplateRows; }
   set multiTemplateRows(v: boolean) {
     this._multiTemplateRows = coerceBooleanProperty(v);
-    if (!!this._rowOutlet.viewContainer.length) {
+    if (this._rowOutlet.viewContainer.length) {
       this._forceRenderRows();
     }
   }
@@ -328,7 +327,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
     // the user has provided a custom trackBy, return the result of that function as evaluated
     // with the values of the `RenderRow`'s data and index.
     this._dataDiffer = this._differs.find([]).create((_i: number, dataRow: RenderRow<T>) => {
-      return this.trackBy ? this.trackBy(dataRow.index, dataRow.data) : dataRow;
+      return this.trackBy ? this.trackBy(dataRow.dataIndex, dataRow.data) : dataRow;
     });
 
     // If the table has header or footer row definitions defined as part of its content, mark that
@@ -469,7 +468,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    * so that the differ equates their references.
    */
   private _getAllRenderRows(): RenderRow<T>[] {
-    const dataRows: RenderRow<T>[] = [];
+    const renderRows: RenderRow<T>[] = [];
 
     // Store the cache and create a new one. Any re-used RenderRow objects will be moved into the
     // new cache while unused ones can be picked up by garbage collection.
@@ -480,17 +479,17 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
     // respective `RenderRow` object which is the pair of `data` and `CdkRowDef`.
     for (let i = 0; i < this._data.length; i++) {
       let data = this._data[i];
-      const dataRowsForData = this._getRenderRowsForData(data, i, prevCachedRenderRows.get(data));
+      const renderRowsForData = this._getRenderRowsForData(data, i, prevCachedRenderRows.get(data));
 
       this._cachedRenderRowsMap.set(data, new WeakMap());
-      for (let j = 0; j < dataRowsForData.length; j++) {
-        let dataRow = dataRowsForData[j];
-        this._cachedRenderRowsMap.get(dataRow.data)!.set(dataRow.rowDef, dataRow);
-        dataRows.push(dataRow);
+      for (let j = 0; j < renderRowsForData.length; j++) {
+        let renderRow = renderRowsForData[j];
+        this._cachedRenderRowsMap.get(renderRow.data)!.set(renderRow.rowDef, renderRow);
+        renderRows.push(renderRow);
       }
     }
 
-    return dataRows;
+    return renderRows;
   }
 
   /**
@@ -499,16 +498,16 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    * `(T, CdkRowDef)` pair.
    */
   private _getRenderRowsForData(
-      data: T, index: number, cache?: WeakMap<CdkRowDef<T>, RenderRow<T>>): RenderRow<T>[] {
-    const rowDefs = this._getRowDefs(data, index);
+      data: T, dataIndex: number, cache?: WeakMap<CdkRowDef<T>, RenderRow<T>>): RenderRow<T>[] {
+    const rowDefs = this._getRowDefs(data, dataIndex);
 
     return rowDefs.map(rowDef => {
       if (cache && cache.has(rowDef)) {
         const dataRow = cache.get(rowDef)!;
-        dataRow.index = index;
+        dataRow.dataIndex = dataIndex;
         return dataRow;
       } else {
-        return {data, rowDef, index};
+        return {data, rowDef, dataIndex};
       }
     });
   }
@@ -547,7 +546,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
   private _renderUpdatedColumns() {
     // Re-render the rows when the row definition columns change.
     this._rowDefs.forEach(def => {
-      if (!!def.getColumnsDiff()) {
+      if (def.getColumnsDiff()) {
         this._forceRenderRows();
       }
     });
@@ -678,10 +677,10 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    * Create the embedded view for the data row template and place it in the correct index location
    * within the data row view container.
    */
-  private _insertRow(dataRow: RenderRow<T>, index: number) {
-    const rowDef = dataRow.rowDef;
-    const context: RowContext<T> = {$implicit: dataRow.data};
-    this._renderRow(this._rowOutlet, rowDef, context, index);
+  private _insertRow(renderRow: RenderRow<T>, renderIndex: number) {
+    const rowDef = renderRow.rowDef;
+    const context: RowContext<T> = {$implicit: renderRow.data};
+    this._renderRow(this._rowOutlet, rowDef, context, renderIndex);
   }
 
   /**
@@ -719,10 +718,10 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
       context.odd = !context.even;
 
       if (this.multiTemplateRows) {
-        context.dataIndex = this._renderRows[index].index;
+        context.dataIndex = this._renderRows[index].dataIndex;
         context.renderIndex = index;
       } else {
-        context.index = this._renderRows[index].index;
+        context.index = this._renderRows[index].dataIndex;
       }
     }
   }
@@ -756,7 +755,11 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
     }
   }
 
-  /** Forces a re-render of the data rows. */
+  /**
+   * Forces a re-render of the data rows. Should be called in cases where there has been an input
+   * change that affects the evaluation of which rows should be rendered, e.g. toggling
+   * `multiTemplateRows` or adding/removing row definitions.
+   */
   private _forceRenderRows() {
     this._dataDiffer.diff([]);
     this._rowOutlet.viewContainer.clear();

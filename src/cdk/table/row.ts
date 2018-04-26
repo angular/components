@@ -154,7 +154,11 @@ export interface CdkCellOutletRowContext<T> {
   odd?: boolean;
 }
 
-/** Context provided to the row cells when `multiTemplateDataRows` is true */
+/**
+ * Context provided to the row cells when `multiTemplateDataRows` is true. This context is the same
+ * as CdkCellOutletRowContext except that the single `index` value is replaced by `dataIndex` and
+ * `renderIndex`.
+ */
 export interface CdkCellOutletMultiRowContext<T> {
   /** Data for the row that this cell is located within. */
   $implicit?: T;
@@ -164,9 +168,6 @@ export interface CdkCellOutletMultiRowContext<T> {
 
   /** Index location of the rendered row that this cell is located within. */
   renderIndex?: number;
-
-  /** Index of the data object in the provided data array. */
-  index?: number;
 
   /** Length of the number of total rows. */
   count?: number;

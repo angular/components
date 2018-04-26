@@ -1004,8 +1004,8 @@ class BooleanRowCdkTableApp {
 
       <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
       <cdk-row *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
-      <cdk-row *cdkRowDef="let row; columns: isIndex1Columns; when: isIndex1"></cdk-row>
-      <cdk-row *cdkRowDef="let row; columns: hasC3Columns; when: hasC3"></cdk-row>
+      <cdk-row *cdkRowDef="let row; columns: columnsForIsIndex1Row; when: isIndex1"></cdk-row>
+      <cdk-row *cdkRowDef="let row; columns: columnsForHasC3Row; when: hasC3"></cdk-row>
     </cdk-table>
   `
 })
@@ -1013,8 +1013,8 @@ class WhenRowCdkTableApp {
   multiTemplateRows = false;
   dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
-  isIndex1Columns = ['index1Column'];
-  hasC3Columns = ['c3Column'];
+  columnsForIsIndex1Row = ['index1Column'];
+  columnsForHasC3Row = ['c3Column'];
   isIndex1 = (index: number, _rowData: TestData) => index == 1;
   hasC3 = (_index: number, rowData: TestData) => rowData.c == 'c_3';
 
@@ -1025,8 +1025,8 @@ class WhenRowCdkTableApp {
   showIndexColumns() {
     const indexColumns = ['index', 'dataIndex', 'renderIndex'];
     this.columnsToRender = indexColumns;
-    this.isIndex1Columns = indexColumns;
-    this.hasC3Columns = indexColumns;
+    this.columnsForIsIndex1Row = indexColumns;
+    this.columnsForHasC3Row = indexColumns;
   }
 }
 
