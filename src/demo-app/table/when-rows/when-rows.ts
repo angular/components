@@ -20,7 +20,7 @@ export interface DemoDataObject {
   templateUrl: 'when-rows.html',
 })
 export class WhenRowsDemo {
-  columnsToDisplay = ['data', 'index', 'dataIndex', 'rowIndex'];
+  columnsToDisplay = ['data', 'index', 'dataIndex', 'renderIndex'];
   data: DemoDataObject[] =
       (new Array(DATA_LENGTH) as DemoDataObject[]).fill({value: false}, 0, DATA_LENGTH);
   randomNumber = 0;

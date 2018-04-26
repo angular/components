@@ -569,13 +569,13 @@ describe('CdkTable', () => {
         whenFixture.detectChanges();
 
         expectTableToMatchContent(whenFixture.nativeElement.querySelector('cdk-table'), [
-          ['Data Index', 'Row Index'],
-          ['0', '0'],
-          ['1', '1'],
-          ['1', '2'],
-          ['2', '3'],
-          ['2', '4'],
-          ['3', '5'],
+          ['Index', 'Data Index', 'Render Index'],
+          ['', '0', '0'],
+          ['', '1', '1'],
+          ['', '1', '2'],
+          ['', '2', '3'],
+          ['', '2', '4'],
+          ['', '3', '5'],
         ]);
       });
     });
@@ -987,14 +987,19 @@ class BooleanRowCdkTableApp {
         <cdk-cell *cdkCellDef="let row"> c3_special_row</cdk-cell>
       </ng-container>
 
-      <ng-container cdkColumnDef="dataIndex">
-        <cdk-header-cell *cdkHeaderCellDef> Data Index</cdk-header-cell>
+      <ng-container cdkColumnDef="index">
+        <cdk-header-cell *cdkHeaderCellDef> Index</cdk-header-cell>
         <cdk-cell *cdkCellDef="let row; let index = index"> {{index}}</cdk-cell>
       </ng-container>
 
-      <ng-container cdkColumnDef="rowIndex">
-        <cdk-header-cell *cdkHeaderCellDef> Row Index</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row; let rowIndex = rowIndex"> {{rowIndex}}</cdk-cell>
+      <ng-container cdkColumnDef="dataIndex">
+        <cdk-header-cell *cdkHeaderCellDef> Data Index</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row; let dataIndex = dataIndex"> {{dataIndex}}</cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="renderIndex">
+        <cdk-header-cell *cdkHeaderCellDef> Render Index</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row; let renderIndex = renderIndex"> {{renderIndex}}</cdk-cell>
       </ng-container>
 
       <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
@@ -1018,7 +1023,7 @@ class WhenRowCdkTableApp {
   @ViewChild(CdkTable) table: CdkTable<TestData>;
 
   showIndexColumns() {
-    const indexColumns = ['dataIndex', 'rowIndex'];
+    const indexColumns = ['index', 'dataIndex', 'renderIndex'];
     this.columnsToRender = indexColumns;
     this.isIndex1Columns = indexColumns;
     this.hasC3Columns = indexColumns;
