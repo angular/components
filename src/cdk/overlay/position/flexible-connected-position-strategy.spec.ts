@@ -344,9 +344,6 @@ describe('FlexibleConnectedPositionStrategy', () => {
       });
 
       it('should position a panel properly when rtl', () => {
-        // must make the overlay longer than the origin to properly test attachment
-        overlayRef.overlayElement.style.width = `500px`;
-
         const originRect = originElement.getBoundingClientRect();
 
         positionStrategy.withPositions([{
@@ -360,6 +357,9 @@ describe('FlexibleConnectedPositionStrategy', () => {
           positionStrategy,
           direction: 'rtl'
         });
+
+        // must make the overlay longer than the origin to properly test attachment
+        overlayRef.overlayElement.style.width = `500px`;
 
         const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
         expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.bottom));
@@ -1591,6 +1591,57 @@ describe('FlexibleConnectedPositionStrategy', () => {
       });
     });
 
+  });
+
+  describe('validations', () => {
+    let originElement: HTMLElement;
+    let positionStrategy: FlexibleConnectedPositionStrategy;
+
+    beforeEach(() => {
+      originElement = createPositionedBlockElement();
+      document.body.appendChild(originElement);
+      positionStrategy = overlay.position().flexibleConnectedTo(new ElementRef(originElement));
+    });
+
+    afterEach(() => {
+      positionStrategy.dispose();
+    });
+
+    it('should throw when attaching without any positions', () => {
+      expect(() => positionStrategy.withPositions([])).toThrow();
+    });
+
+    it('should throw when passing in something that is missing a connection point', () => {
+      expect(() => {
+        positionStrategy.withPositions([{
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'top'
+        } as any]);
+      }).toThrow();
+    });
+
+    it('should throw when passing in something that has an invalid X position', () => {
+      expect(() => {
+        positionStrategy.withPositions([{
+          originX: 'left',
+          originY: 'top',
+          overlayX: 'left',
+          overlayY: 'top'
+        } as any]);
+      }).toThrow();
+    });
+
+    it('should throw when passing in something that has an invalid Y position', () => {
+      expect(() => {
+        positionStrategy.withPositions([{
+          originX: 'start',
+          originY: 'middle',
+          overlayX: 'start',
+          overlayY: 'middle'
+        } as any]);
+      }).toThrow();
+    });
   });
 
 });

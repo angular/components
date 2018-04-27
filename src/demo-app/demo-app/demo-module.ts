@@ -39,7 +39,7 @@ import {
   KeyboardTrackingPanel,
   OverlayDemo,
   RotiniPanel,
-  SpagettiPanel
+  SpaghettiPanel
 } from '../overlay/overlay-demo';
 import {PlatformDemo} from '../platform/platform-demo';
 import {PortalDemo, ScienceJoke} from '../portal/portal-demo';
@@ -56,11 +56,7 @@ import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
 import {StepperDemo} from '../stepper/stepper-demo';
 import {TableDemoModule} from '../table/table-demo-module';
 import {
-  Counter,
-  FoggyTabContent,
-  RainyTabContent,
-  SunnyTabContent,
-  TabsDemo
+  Counter,FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo
 } from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
@@ -69,6 +65,7 @@ import {TypographyDemo} from '../typography/typography-demo';
 import {VirtualScrollDemo} from '../virtual-scroll/virtual-scroll-demo';
 import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
+import {PaginatorDemo} from '../paginator/paginator-demo';
 
 @NgModule({
   imports: [
@@ -83,29 +80,33 @@ import {DEMO_APP_ROUTES} from './routes';
   ],
   declarations: [
     AutocompleteDemo,
-    BottomSheetDemo,
+    BadgeDemo,
     BaselineDemo,
+    BottomSheetDemo,
     ButtonDemo,
     ButtonToggleDemo,
-    BadgeDemo,
     CardDemo,
     CheckboxDemo,
     ChipsDemo,
+    ConnectedOverlayDemo,
     ContentElementDialog,
-    DatepickerDemo,
+    Counter,
     CustomHeader,
+    DatepickerDemo,
     DemoApp,
+    DemoOverlay,
     DialogDemo,
     DrawerDemo,
+    ExampleBottomSheet,
+    ExpansionDemo,
     ExpansionDemo,
     FocusOriginDemo,
     FoggyTabContent,
-    Counter,
     GesturesDemo,
     GridListDemo,
     Home,
-    IconDemo,
     IFrameDialog,
+    IconDemo,
     InputDemo,
     JazzDialog,
     KeyboardTrackingPanel,
@@ -114,6 +115,7 @@ import {DEMO_APP_ROUTES} from './routes';
     MatCheckboxDemoNestedChecklist,
     MenuDemo,
     OverlayDemo,
+    PaginatorDemo,
     PlatformDemo,
     PortalDemo,
     ProgressBarDemo,
@@ -126,10 +128,10 @@ import {DEMO_APP_ROUTES} from './routes';
     ScreenTypeDemo,
     SelectDemo,
     SidenavDemo,
-    SliderDemo,
     SlideToggleDemo,
+    SliderDemo,
     SnackBarDemo,
-    SpagettiPanel,
+    SpaghettiPanel,
     StepperDemo,
     SunnyTabContent,
     TabsDemo,
@@ -147,16 +149,16 @@ import {DEMO_APP_ROUTES} from './routes';
   ],
   entryComponents: [
     ContentElementDialog,
+    CustomHeader,
     DemoApp,
+    DemoOverlay,
+    ExampleBottomSheet,
     IFrameDialog,
     JazzDialog,
     KeyboardTrackingPanel,
     RotiniPanel,
     ScienceJoke,
-    SpagettiPanel,
-    ExampleBottomSheet,
-    CustomHeader,
-    DemoOverlay,
+    SpaghettiPanel,
   ],
 })
 export class DemoModule {}

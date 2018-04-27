@@ -39,6 +39,7 @@ export const rollupGlobals = {
   '@angular/forms': 'ng.forms',
   '@angular/platform-browser': 'ng.platformBrowser',
   '@angular/platform-browser-dynamic': 'ng.platformBrowserDynamic',
+  '@angular/platform-browser-dynamic/testing': 'ng.platformBrowserDynamic.testing',
   '@angular/platform-browser/animations': 'ng.platformBrowser.animations',
   '@angular/platform-server': 'ng.platformServer',
   '@angular/router': 'ng.router',

@@ -3,10 +3,11 @@ import {
   CdkTableModule,
   DataSource
 } from '@angular/cdk/table';
-import {Component, NgModule} from '@angular/core';
+import {Component, ElementRef, NgModule} from '@angular/core';
 import {
   MatAutocompleteModule,
   MatBadgeModule,
+  MatBottomSheetModule,
   MatButtonModule,
   MatButtonToggleModule,
   MatCardModule,
@@ -41,9 +42,11 @@ import {
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
+  MatBottomSheet,
 } from '@angular/material';
 import {BrowserModule} from '@angular/platform-browser';
 import {ServerModule} from '@angular/platform-server';
+import {FocusMonitor} from '@angular/cdk/a11y';
 import {Observable, of as observableOf} from 'rxjs';
 
 export class TableDataSource extends DataSource<any> {
@@ -58,7 +61,7 @@ export class TableDataSource extends DataSource<any> {
 @Component({
   template: `<button>Do the thing</button>`
 })
-export class TestDialog {}
+export class TestEntryComponent {}
 
 
 @Component({
@@ -77,9 +80,14 @@ export class KitchenSink {
   constructor(
     snackBar: MatSnackBar,
     dialog: MatDialog,
-    viewportRuler: ViewportRuler) {
+    viewportRuler: ViewportRuler,
+    focusMonitor: FocusMonitor,
+    elementRef: ElementRef<HTMLElement>,
+    bottomSheet: MatBottomSheet) {
+    focusMonitor.focusVia(elementRef.nativeElement, 'program');
     snackBar.open('Hello there');
-    dialog.open(TestDialog);
+    dialog.open(TestEntryComponent);
+    bottomSheet.open(TestEntryComponent);
 
     // Do a sanity check on the viewport ruler.
     viewportRuler.getViewportRect();
@@ -94,6 +102,7 @@ export class KitchenSink {
     BrowserModule.withServerTransition({appId: 'kitchen-sink'}),
     MatAutocompleteModule,
     MatBadgeModule,
+    MatBottomSheetModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatCardModule,
@@ -131,8 +140,8 @@ export class KitchenSink {
     CdkTableModule
   ],
   bootstrap: [KitchenSink],
-  declarations: [KitchenSink, TestDialog],
-  entryComponents: [TestDialog],
+  declarations: [KitchenSink, TestEntryComponent],
+  entryComponents: [TestEntryComponent],
 })
 export class KitchenSinkClientModule { }
 
