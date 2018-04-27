@@ -1,10 +1,11 @@
-import {chain, FileEntry, Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
+import {FileEntry, Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
 import {
   NodePackageInstallTask,
   RunSchematicTask,
   TslintFixTask
 } from '@angular-devkit/schematics/tasks';
 import * as path from 'path';
+import {existsSync} from 'fs';
 
 const schematicsSrcPath = 'node_modules/@angular/material/schematics';
 const schematicsTmpPath = 'node_modules/_tmp_angular_material_schematics';
@@ -59,7 +60,7 @@ export default function(): Rule {
     }, {
       silent: false,
       ignoreErrors: true,
-      tsConfigPath: './src/tsconfig.json',
+      tsConfigPath: getTsConfigPath(),
     }), [downgradeTask]);
 
     // Upgrade @angular/material back to 6.x.
@@ -93,4 +94,15 @@ export function postPostUpdate(): Rule {
   return () => console.log(
       '\nComplete! Please check the output above for any issues that were detected but could not' +
       ' be automatically fixed.');
+}
+
+/** Gets the first tsconfig path from possibile locations based on the history of the CLI. */
+function getTsConfigPath(): string {
+  const possiblePaths = [
+    './tsconfig.json',
+    './src/tsconfig.json',
+    './src/tsconfig.app.json',
+  ];
+
+  return possiblePaths.find(p => existsSync(p));
 }
