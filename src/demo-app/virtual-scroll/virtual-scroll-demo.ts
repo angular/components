@@ -7,6 +7,7 @@
  */
 
 import {Component, ViewEncapsulation} from '@angular/core';
+import {BehaviorSubject} from 'rxjs/index';
 
 @Component({
   moduleId: module.id,
@@ -21,4 +22,17 @@ export class VirtualScrollDemo {
   decreasingSizeData = Array(10000).fill(0)
       .map((_, i) => (1 + Math.floor((10000 - i) / 1000)) * 20);
   randomData = Array(10000).fill(0).map(() => Math.round(Math.random() * 100));
+  observableData = new BehaviorSubject<number[]>([]);
+
+  constructor() {
+    this.emitData();
+  }
+
+  emitData() {
+    let data = this.observableData.value.concat([50]);
+    this.observableData.next(data);
+    if (data.length < 1000) {
+      setTimeout(() => this.emitData(), 1000);
+    }
+  }
 }
