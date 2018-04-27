@@ -13,6 +13,10 @@ const schematicsTmpPath = 'node_modules/_tmp_angular_material_schematics';
 /** Entry point for `ng update` from Angular CLI. */
 export default function(): Rule {
   return (tree: Tree, context: SchematicContext) => {
+    // If this script failed in an earlier run, clear out the temporary files from that failed
+    // run before doing anything else.
+    tree.getDir(schematicsTmpPath).visit((_, entry) => tree.delete(entry.path));
+
     // Copy the update schematics to a temporary directory.
     const updateSrcs: FileEntry[] = [];
     tree.getDir(schematicsSrcPath).visit((_, entry) => updateSrcs.push(entry));
