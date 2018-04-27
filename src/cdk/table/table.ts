@@ -616,7 +616,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
     this._renderChangeSubscription = dataStream
         .pipe(takeUntil(this._onDestroy))
         .subscribe(data => {
-          this._data = data;
+          this._data = data || [];
           this.renderRows();
         });
   }

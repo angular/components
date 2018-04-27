@@ -10,7 +10,7 @@ import {
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {CdkTable} from './table';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {combineLatest, BehaviorSubject, Observable} from 'rxjs';
+import {combineLatest, BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {CdkTableModule} from './index';
 import {
@@ -238,6 +238,13 @@ describe('CdkTable', () => {
     });
   });
 
+  it('should render no rows when the data is null', fakeAsync(() => {
+    setupTableTestApp(NullDataCdkTableApp);
+    fixture.detectChanges();
+
+    expect(getRows(tableElement).length).toBe(0);
+  }));
+
   describe('with different data inputs other than data source', () => {
     let baseData: TestData[] = [
       {a: 'a_1', b: 'b_1', c: 'c_1'},
@@ -247,7 +254,6 @@ describe('CdkTable', () => {
 
     beforeEach(() => {
       setupTableTestApp(CdkTableWithDifferentDataInputsApp);
-      component = fixture.componentInstance;
     });
 
     it('should render with data array input', () => {
@@ -957,6 +963,24 @@ class CdkTableWithDifferentDataInputsApp {
 })
 class BooleanRowCdkTableApp {
   dataSource = new BooleanDataSource();
+}
+
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_a">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let data"> {{data}} </cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="['column_a']"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: ['column_a']"></cdk-row>
+    </cdk-table>
+  `
+})
+class NullDataCdkTableApp {
+  dataSource = observableOf(null);
 }
 
 @Component({
