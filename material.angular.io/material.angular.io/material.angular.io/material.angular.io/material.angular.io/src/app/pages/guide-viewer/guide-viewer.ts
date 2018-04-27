@@ -14,7 +14,7 @@ import {ComponentPageTitle} from '../page-title/page-title';
 export class GuideViewer implements OnInit {
   guide: GuideItem;
 
-  constructor(private _route: ActivatedRoute,
+  constructor(_route: ActivatedRoute,
               private _componentPageTitle: ComponentPageTitle,
               private router: Router,
               public guideItems: GuideItems) {

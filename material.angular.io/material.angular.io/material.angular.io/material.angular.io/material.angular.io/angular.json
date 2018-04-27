@@ -1,0 +1,186 @@
+{
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "material-angular-io": {
+      "root": "",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "aot": true,
+            "sourceMap": false,
+            "outputPath": "dist",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "tsConfig": "src/tsconfig.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets"
+              },
+              {
+                "glob": "favicon.ico",
+                "input": "src",
+                "output": "/"
+              }
+            ],
+            "styles": [
+              {
+                "input": "src/main.scss"
+              },
+              {
+                "input": "src/highlightjs/material-light.css"
+              },
+              {
+                "input": "src/assets/pink-bluegrey.css",
+                "lazy": true,
+                "bundleName": "pink-bluegrey"
+              },
+              {
+                "input": "src/assets/deeppurple-amber.css",
+                "lazy": true,
+                "bundleName": "deeppurple-amber"
+              },
+              {
+                "input": "src/assets/indigo-pink.css",
+                "lazy": true,
+                "bundleName": "indigo-pink"
+              },
+              {
+                "input": "src/assets/purple-green.css",
+                "lazy": true,
+                "bundleName": "purple-green"
+              }
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "serviceWorker": true,
+              "fileReplacements": [
+                {
+                  "src": "src/environments/environment.ts",
+                  "replaceWith": "src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "material-angular-io:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "material-angular-io:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "material-angular-io:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "karmaConfig": "./karma.conf.js",
+            "tsConfig": "src/tsconfig.spec.json",
+            "scripts": [],
+            "styles": [
+              {
+                "input": "src/main.scss"
+              },
+              {
+                "input": "src/highlightjs/material-light.css"
+              },
+              {
+                "input": "src/assets/pink-bluegrey.css",
+                "lazy": true,
+                "bundleName": "pink-bluegrey"
+              },
+              {
+                "input": "src/assets/deeppurple-amber.css",
+                "lazy": true,
+                "bundleName": "deeppurple-amber"
+              },
+              {
+                "input": "src/assets/indigo-pink.css",
+                "lazy": true,
+                "bundleName": "indigo-pink"
+              },
+              {
+                "input": "src/assets/purple-green.css",
+                "lazy": true,
+                "bundleName": "purple-green"
+              }
+            ],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets"
+              },
+              {
+                "glob": "favicon.ico",
+                "input": "src",
+                "output": "/"
+              }
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "src/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "material-angular-io-e2e": {
+      "root": "",
+      "projectType": "application",
+      "cli": {},
+      "schematics": {},
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "./protractor.conf.js",
+            "devServerTarget": "material-angular-io:serve"
+          }
+        }
+      }
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "prefix": "app",
+      "styleext": "css"
+    },
+    "@schematics/angular:directive": {
+      "prefix": "app"
+    }
+  }
+}

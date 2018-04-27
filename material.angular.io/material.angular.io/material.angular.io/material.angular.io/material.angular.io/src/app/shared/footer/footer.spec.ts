@@ -6,7 +6,6 @@ import {DocsAppTestingModule} from '../../testing/testing-module';
 
 describe('Footer', () => {
   let fixture: ComponentFixture<Footer>;
-  let component: Footer;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -16,14 +15,11 @@ describe('Footer', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(Footer);
-    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should have a link to angular.io', () => {
-    const link = fixture
-      .nativeElement
-      .querySelector('.docs-footer-logo a');
+    const link = fixture.nativeElement.querySelector('.docs-footer-logo a');
     const href = link.getAttribute('href');
     const text = link.textContent;
     expect(href).toContain('angular.io');

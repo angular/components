@@ -1,24 +1,23 @@
-import {ReactiveFormsModule} from '@angular/forms';
-import {async, inject, ComponentFixture, TestBed} from '@angular/core/testing';
-import {MockBackend} from '@angular/http/testing';
-import {Response, ResponseOptions} from '@angular/http';
-import {By} from '@angular/platform-browser';
-
-import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
-import {ExampleViewer} from './example-viewer';
-import {DocsAppTestingModule} from '../../testing/testing-module';
-import {DocViewerModule} from '../doc-viewer/doc-viewer-module';
-import {FormsModule} from '@angular/forms';
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {NgModule} from '@angular/core';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {Response, ResponseOptions} from '@angular/http';
+import {MockBackend} from '@angular/http/testing';
 import {
   MatAutocompleteModule,
   MatInputModule,
-  MatSlideToggleModule
+  MatSlideToggleModule,
+  MatSnackBar,
 } from '@angular/material';
+
+import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
+import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {DocsAppTestingModule} from '../../testing/testing-module';
 import {CopierService} from '../copier/copier.service';
-import {MatSnackBar} from '@angular/material';
+import {DocViewerModule} from '../doc-viewer/doc-viewer-module';
+import {ExampleViewer} from './example-viewer';
 
 const exampleKey = 'autocomplete-overview';
 
@@ -51,30 +50,30 @@ describe('ExampleViewer', () => {
     component = fixture.componentInstance;
   });
 
-  it('should toggle showSource boolean', () => {
+  it('should toggle showSource boolean', async(() => {
     fixture.detectChanges();
     expect(component.showSource).toBe(false);
     component.toggleSourceView();
     expect(component.showSource).toBe(true);
-  });
+  }));
 
-  it('should set and return example properly', () => {
+  it('should set and return example properly', async(() => {
     component.example = exampleKey;
     fixture.detectChanges();
     const data = component.exampleData;
     // TODO(jelbourn): remove `as any` once LiveExample is updated to have optional members.
     expect(data).toEqual(EXAMPLE_COMPONENTS[exampleKey] as any);
-  });
+  }));
 
-  it('should log message about missing example', () => {
+  it('should log message about missing example', async(() => {
     spyOn(console, 'log');
     component.example = 'foobar';
     fixture.detectChanges();
     expect(console.log).toHaveBeenCalled();
     expect(console.log).toHaveBeenCalledWith('MISSING EXAMPLE: ', 'foobar');
-  });
+  }));
 
-  it('should return assets path for example based on extension', () => {
+  it('should return assets path for example based on extension', async(() => {
     // set example
     component.example = exampleKey;
     fixture.detectChanges();
@@ -87,7 +86,7 @@ describe('ExampleViewer', () => {
       const actual = component.exampleFileUrl(ext);
       expect(actual).toEqual(expected);
     });
-  });
+  }));
 
   describe('copy button', () => {
     let button: HTMLElement;
@@ -103,25 +102,25 @@ describe('ExampleViewer', () => {
       button = btnDe ? btnDe.nativeElement : null;
     });
 
-    it('should call copier service when clicked', () => {
+    it('should call copier service when clicked', (() => {
       const copierService: CopierService = TestBed.get(CopierService);
       const spy = spyOn(copierService, 'copyText');
       expect(spy.calls.count()).toBe(0, 'before click');
       button.click();
       expect(spy.calls.count()).toBe(1, 'after click');
       expect(spy.calls.argsFor(0)[0]).toBe('my docs page', 'click content');
-    });
+    }));
 
-    it('should display a message when copy succeeds', () => {
+    it('should display a message when copy succeeds', (() => {
       const snackBar: MatSnackBar = TestBed.get(MatSnackBar);
       const copierService: CopierService = TestBed.get(CopierService);
       spyOn(snackBar, 'open');
       spyOn(copierService, 'copyText').and.returnValue(true);
       button.click();
       expect(snackBar.open).toHaveBeenCalledWith('Code copied', '', {duration: 2500});
-    });
+    }));
 
-    it('should display an error when copy fails', () => {
+    it('should display an error when copy fails', (() => {
       const snackBar: MatSnackBar = TestBed.get(MatSnackBar);
       const copierService: CopierService = TestBed.get(CopierService);
       spyOn(snackBar, 'open');
@@ -129,7 +128,7 @@ describe('ExampleViewer', () => {
       button.click();
       expect(snackBar.open)
           .toHaveBeenCalledWith('Copy failed. Please try again!', '', {duration: 2500});
-    });
+    }));
   });
 
 });
