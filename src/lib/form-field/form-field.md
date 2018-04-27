@@ -46,7 +46,7 @@ floats above the form field control. The label for a form field can be specified
 `mat-label` element.
  
 In the legacy version of the `<mat-form-field>` (one that has no `appearance` attribute or has
-`appearance="legacy"`) if a label is not specified the `placeholder` attribute on the form control
+`appearance="legacy"`) if a label is not specified, the `placeholder` attribute on the form control
 is promoted to a label. If a label is specified, the `placeholder` will be displayed as a normal
 placeholder. The `placeholder` will never be promoted to a label for `standard`, `fill`, and
 `outline` form fields. If you want to create a legacy form field with a placeholder but no label,

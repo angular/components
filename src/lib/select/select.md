@@ -38,8 +38,8 @@ these features, see the
 
 The placeholder is text shown when the `<mat-form-field>` label is floating but the `<mat-select>`
 is empty. It is used to give the user an additional hint about the value they should select. The
-placeholder can be specified by setting the `placeholder` on the `<mat-select>` element. In some
-cases that `<mat-form-field>` may use the placeholder as the label (see the
+placeholder can be specified by setting the `placeholder` attribute on the `<mat-select>` element.
+In some cases that `<mat-form-field>` may use the placeholder as the label (see the
 [form field label documentation](https://material.angular.io/components/form-field/overview#floating-label)).
 
 ### Disabling the select or individual options

@@ -41,8 +41,8 @@ additional information about these features, see the
 
 The placeholder is text shown when the `<mat-form-field>` label is floating but the input is empty.
 It is used to give the user an additional hint about what they should type in the input. The
-placeholder can be specified by setting the `placeholder` on the `<input>` or `<textarea>` element.
-In some cases that `<mat-form-field>` may use the placeholder as the label (see the
+placeholder can be specified by setting the `placeholder` attribute on the `<input>` or `<textarea>`
+element. In some cases that `<mat-form-field>` may use the placeholder as the label (see the
 [form field label documentation](https://material.angular.io/components/form-field/overview#floating-label)).
 
 ### Changing when error messages are shown
