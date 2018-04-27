@@ -2,7 +2,9 @@ language: node_js
 sudo: false
 
 node_js:
-  - '6.9.1'
+  # Use the explicit NodeJS LTS version 8.9.4 to avoid any automatic upgrade of the version.
+  # This ensures that all Travis jobs run consistently and don't have different Node versions.
+  - '8.9.4'
 
 branches:
   only:
@@ -14,7 +16,7 @@ env:
   - SAUCE_USERNAME=angular-ci
   - SAUCE_ACCESS_KEY=9b988f434ff8-fbca-8aa4-4ae3-35442987
   - BROWSER_STACK_USERNAME=angularteam1
-  - BROWSER_STACK_ACCESS_KEY=BWCd4SynLzdDcv8xtzsB
+  - BROWSER_STACK_ACCESS_KEY=CaXMeMHD9pr5PHg8N7Jq
   - BROWSER_PROVIDER_READY_FILE=/tmp/material-angular-io-build/readyfile
   - BROWSER_PROVIDER_ERROR_FILE=/tmp/material-angular-io-build/errorfile
   matrix:

@@ -6,7 +6,6 @@ import {DocsAppTestingModule} from '../../testing/testing-module';
 
 describe('NavBar', () => {
   let fixture: ComponentFixture<NavBar>;
-  let component: NavBar;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -16,7 +15,6 @@ describe('NavBar', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NavBar);
-    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 

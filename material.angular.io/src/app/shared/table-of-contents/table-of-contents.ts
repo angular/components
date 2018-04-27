@@ -70,10 +70,12 @@ export class TableOfContents implements OnInit {
       this._scrollContainer = this.container ?
         this._document.querySelectorAll(this.container)[0] : window;
 
-      fromEvent(this._scrollContainer, 'scroll').pipe(
-          takeUntil(this._destroyed),
-          debounceTime(10))
-        .subscribe(() => this.onScroll());
+      if (this._scrollContainer) {
+        fromEvent(this._scrollContainer, 'scroll').pipe(
+            takeUntil(this._destroyed),
+            debounceTime(10))
+            .subscribe(() => this.onScroll());
+      }
     });
   }
 

@@ -84,7 +84,7 @@ describe('StackblitzWriter', () => {
     expect(form.elements[1].getAttribute('value')).toBe('material');
     expect(form.elements[2].getAttribute('name')).toBe('tags[2]');
     expect(form.elements[2].getAttribute('value')).toBe('example');
-    
+
     // Should bet set as private and have description and dependencies.
     expect(form.elements[3].getAttribute('name')).toBe('private');
     expect(form.elements[3].getAttribute('value')).toBe('true');

@@ -1,23 +1,23 @@
+import {BreakpointObserver} from '@angular/cdk/layout';
 import {CommonModule} from '@angular/common';
 import {
   Component,
   ElementRef,
   NgModule,
+  OnDestroy,
   OnInit,
   ViewChild,
   ViewEncapsulation,
-  OnDestroy
 } from '@angular/core';
 import {MatTabsModule} from '@angular/material';
 import {ActivatedRoute, Params, Router, RouterModule} from '@angular/router';
+import {combineLatest, Observable, Subject} from 'rxjs';
+import {map, takeUntil} from 'rxjs/operators';
 import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
 import {DocItem, DocumentationItems} from '../../shared/documentation-items/documentation-items';
+import {TableOfContents} from '../../shared/table-of-contents/table-of-contents';
 import {TableOfContentsModule} from '../../shared/table-of-contents/table-of-contents.module';
 import {ComponentPageTitle} from '../page-title/page-title';
-import {BreakpointObserver} from '@angular/cdk/layout';
-import {Subject, Subscription, Observable, combineLatest} from 'rxjs';
-import {map, takeUntil} from 'rxjs/operators';
-import {TableOfContents} from '../../shared/table-of-contents/table-of-contents';
 
 @Component({
   selector: 'app-component-viewer',
@@ -28,10 +28,9 @@ import {TableOfContents} from '../../shared/table-of-contents/table-of-contents'
 export class ComponentViewer implements OnDestroy {
   componentDocItem: DocItem;
   sections: Set<string> = new Set(['overview', 'api']);
-  private _subscription: Subscription;
   private _destroyed = new Subject();
 
-  constructor(private _route: ActivatedRoute,
+  constructor(_route: ActivatedRoute,
               private router: Router,
               public _componentPageTitle: ComponentPageTitle,
               public docItems: DocumentationItems,

@@ -25,10 +25,14 @@ export class StackblitzButton {
   set example(example: string) {
     const exampleData = new ExampleData(example);
 
-    this.stackblitzWriter.constructStackblitzForm(exampleData).then(stackblitzForm => {
-      this.stackblitzForm = stackblitzForm;
-      this.isDisabled = false;
-    });
+    if (example) {
+      this.stackblitzWriter.constructStackblitzForm(exampleData).then(stackblitzForm => {
+        this.stackblitzForm = stackblitzForm;
+        this.isDisabled = false;
+      });
+    } else {
+      this.isDisabled = true;
+    }
   }
 
   constructor(private stackblitzWriter: StackblitzWriter) {}

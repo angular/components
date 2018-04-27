@@ -22,7 +22,7 @@ const TEMPLATE_FILES = [
 ];
 
 const TAGS: string[] = ['angular', 'material', 'example'];
-const angularVersion = '^5.0.0';
+const angularVersion = '>=6.0.0-beta.0 <7.0.0';
 
 const dependencies = {
   '@angular/cdk': materialVersion,
@@ -39,7 +39,7 @@ const dependencies = {
   '@angular/router': angularVersion,
   'angular-in-memory-web-api': '~0.5.0',
   'core-js': '^2.4.1',
-  'rxjs': '^5.5.2',
+  'rxjs': '>=6.0.0-beta.0 <7.0.0',
   'web-animations-js': '^2.3.1',
   'zone.js': '^0.8.14',
   'hammerjs': '^2.0.8',
