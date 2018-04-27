@@ -85,7 +85,11 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   /** The last measured size of the rendered content in the viewport. */
   private _lastRenderedContentOffset: number;
 
-  /** The number of consecutive cycles where removing extra items has failed. */
+  /**
+   * The number of consecutive cycles where removing extra items has failed. Failure here means that
+   * we estimated how many items we could safely remove, but our estimate turned out to be too much
+   * and it wasn't safe to remove that many elements.
+   */
   private _removalFailures = 0;
 
   /**
@@ -199,9 +203,10 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
         // The number of currently rendered items to remove on the side the user is scrolling away
         // from. If removal has failed in recent cycles we are less aggressive in how much we try to
         // remove.
-        const removeItems = Math.min(renderedRange.end - renderedRange.start, Math.max(0,
-            Math.floor(
-                overscan / this._averager.getAverageItemSize() / (this._removalFailures + 1))));
+        const unboundedRemoveItems = Math.floor(
+            overscan / this._averager.getAverageItemSize() / (this._removalFailures + 1));
+        const removeItems =
+            Math.min(renderedRange.end - renderedRange.start, Math.max(0, unboundedRemoveItems));
 
         // The new range we will tell the viewport to render. We first expand it to include the new
         // items we want rendered, we then contract the opposite side to remove items we no longer
