@@ -55,6 +55,8 @@ import {TableDemoPage} from '../table/table-demo-page';
 import {TABLE_DEMO_ROUTES} from '../table/routes';
 import {BadgeDemo} from '../badge/badge-demo';
 import {ConnectedOverlayDemo} from '../connected-overlay/connected-overlay-demo';
+import {PaginatorDemo} from '../paginator/paginator-demo';
+
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: DemoApp, children: [
@@ -81,6 +83,7 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'live-announcer', component: LiveAnnouncerDemo},
     {path: 'menu', component: MenuDemo},
     {path: 'overlay', component: OverlayDemo},
+    {path: 'paginator', component: PaginatorDemo},
     {path: 'platform', component: PlatformDemo},
     {path: 'portal', component: PortalDemo},
     {path: 'progress-bar', component: ProgressBarDemo},

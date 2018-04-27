@@ -7,7 +7,7 @@ import {
   createKeyboardEvent,
   dispatchEvent,
 } from '@angular/cdk/testing';
-import {Component, ViewChild} from '@angular/core';
+import {Component, FactoryProvider, Type, ValueProvider, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -29,13 +29,18 @@ import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerToggle} from './datepicker-toggle';
 import {MAT_DATEPICKER_SCROLL_STRATEGY, MatDatepickerIntl, MatDatepickerModule} from './index';
 import {Subject} from 'rxjs';
+import {Directionality} from '@angular/cdk/bidi';
+import {BrowserDynamicTestingModule} from '@angular/platform-browser-dynamic/testing';
 
 describe('MatDatepicker', () => {
   const SUPPORTS_INTL = typeof Intl != 'undefined';
 
   // Creates a test component fixture.
-  function createComponent(component: any, imports: any[] = [], providers: any[] = []):
-    ComponentFixture<any> {
+  function createComponent(
+    component: Type<any>,
+    imports: Type<any>[] = [],
+    providers: (FactoryProvider | ValueProvider)[] = [],
+    entryComponents: Type<any>[] = []): ComponentFixture<any> {
 
     TestBed.configureTestingModule({
       imports: [
@@ -48,7 +53,13 @@ describe('MatDatepicker', () => {
         ...imports
       ],
       providers,
-      declarations: [component],
+      declarations: [component, ...entryComponents],
+    });
+
+    TestBed.overrideModule(BrowserDynamicTestingModule, {
+      set: {
+        entryComponents: [entryComponents]
+      }
     }).compileComponents();
 
     return TestBed.createComponent(component);
@@ -1268,6 +1279,68 @@ describe('MatDatepicker', () => {
       }));
     });
 
+    describe('datepicker directionality', () => {
+      it('should pass along the directionality to the popup', () => {
+        const fixture = createComponent(StandardDatepicker, [MatNativeDateModule], [{
+          provide: Directionality,
+          useValue: ({value: 'rtl'})
+        }]);
+
+        fixture.detectChanges();
+        fixture.componentInstance.datepicker.open();
+        fixture.detectChanges();
+
+        const overlay = document.querySelector('.cdk-overlay-pane')!;
+
+        expect(overlay.getAttribute('dir')).toBe('rtl');
+      });
+
+      it('should update the popup direction if the directionality value changes', fakeAsync(() => {
+        const dirProvider = {value: 'ltr'};
+        const fixture = createComponent(StandardDatepicker, [MatNativeDateModule], [{
+          provide: Directionality,
+          useFactory: () => dirProvider
+        }]);
+
+        fixture.detectChanges();
+        fixture.componentInstance.datepicker.open();
+        fixture.detectChanges();
+
+        let overlay = document.querySelector('.cdk-overlay-pane')!;
+
+        expect(overlay.getAttribute('dir')).toBe('ltr');
+
+        fixture.componentInstance.datepicker.close();
+        fixture.detectChanges();
+        flush();
+
+        dirProvider.value = 'rtl';
+        fixture.componentInstance.datepicker.open();
+        fixture.detectChanges();
+
+        overlay = document.querySelector('.cdk-overlay-pane')!;
+
+        expect(overlay.getAttribute('dir')).toBe('rtl');
+      }));
+
+      it('should pass along the directionality to the dialog in touch mode', () => {
+        const fixture = createComponent(StandardDatepicker, [MatNativeDateModule], [{
+          provide: Directionality,
+          useValue: ({value: 'rtl'})
+        }]);
+
+        fixture.componentInstance.touch = true;
+        fixture.detectChanges();
+        fixture.componentInstance.datepicker.open();
+        fixture.detectChanges();
+
+        const overlay = document.querySelector('.cdk-overlay-pane')!;
+
+        expect(overlay.getAttribute('dir')).toBe('rtl');
+      });
+
+    });
+
   });
 
   describe('with missing DateAdapter and MAT_DATE_FORMATS', () => {
@@ -1425,6 +1498,35 @@ describe('MatDatepicker', () => {
       expect(content.classList).toContain('mat-datepicker-content-above');
     }));
 
+  });
+
+  describe('datepicker with custom header', () => {
+    let fixture: ComponentFixture<DatepickerWithCustomHeader>;
+    let testComponent: DatepickerWithCustomHeader;
+
+    beforeEach(fakeAsync(() => {
+      fixture = createComponent(
+        DatepickerWithCustomHeader,
+        [MatNativeDateModule],
+        [],
+        [CustomHeaderForDatepicker]
+      );
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('should instantiate a datepicker with a custom header', fakeAsync(() => {
+      expect(testComponent).toBeTruthy();
+    }));
+
+    it('should find the standard header element', fakeAsync(() => {
+      testComponent.datepicker.open();
+      fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
+
+      expect(document.querySelector('mat-calendar-header')).toBeTruthy();
+    }));
   });
 });
 
@@ -1673,3 +1775,22 @@ class DatepickerWithEvents {
 class DatepickerOpeningOnFocus {
   @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;
 }
+
+
+@Component({
+  template: `
+    <input [matDatepicker]="ch">
+    <mat-datepicker #ch [calendarHeaderComponent]="CustomHeaderForDatepicker"></mat-datepicker>
+  `,
+})
+class DatepickerWithCustomHeader {
+  @ViewChild('ch') datepicker: MatDatepicker<Date>;
+}
+
+@Component({
+  template: `
+    <div>Custom element</div>
+    <mat-calendar-header></mat-calendar-header>
+  `,
+})
+class CustomHeaderForDatepicker {}

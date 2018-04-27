@@ -9,7 +9,7 @@
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
-import {SPACE, ENTER, HOME, END} from '@angular/cdk/keycodes';
+import {SPACE, ENTER, HOME, END, UP_ARROW, DOWN_ARROW} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   Attribute,
@@ -279,6 +279,13 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   /** Tabindex of the selection list. */
   @Input() tabIndex: number = 0;
 
+  /**
+   * Function used for comparing an option against the selected value when determining which
+   * options should appear as selected. The first argument is the value of an options. The second
+   * one is a value from the selected value. A boolean must be returned.
+   */
+  @Input() compareWith: (o1: any, o2: any) => boolean;
+
   /** The currently selected options. */
   selectedOptions: SelectionModel<MatListOption> = new SelectionModel<MatListOption>(true);
 
@@ -370,7 +377,11 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
 
   /** Passes relevant key presses to our key manager. */
   _keydown(event: KeyboardEvent) {
-    switch (event.keyCode) {
+    const keyCode = event.keyCode;
+    const manager = this._keyManager;
+    const previousFocusIndex = manager.activeItemIndex;
+
+    switch (keyCode) {
       case SPACE:
       case ENTER:
         if (!this.disabled) {
@@ -382,12 +393,16 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
         break;
       case HOME:
       case END:
-        event.keyCode === HOME ? this._keyManager.setFirstItemActive() :
-                                 this._keyManager.setLastItemActive();
+        keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
         event.preventDefault();
         break;
       default:
-        this._keyManager.onKeydown(event);
+        manager.onKeydown(event);
+    }
+
+    if ((keyCode === UP_ARROW || keyCode === DOWN_ARROW) && event.shiftKey &&
+        manager.activeItemIndex !== previousFocusIndex) {
+      this._toggleSelectOnFocusedOption();
     }
   }
 
@@ -429,17 +444,15 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
     this._onTouched = fn;
   }
 
-  /** Returns the option with the specified value. */
-  private _getOptionByValue(value: string): MatListOption | undefined {
-    return this.options.find(option => option.value === value);
-  }
-
   /** Sets the selected options based on the specified values. */
   private _setOptionsFromValues(values: string[]) {
     this.options.forEach(option => option._setSelected(false));
 
     values
-      .map(value => this._getOptionByValue(value))
+      .map(value => {
+        return this.options.find(option =>
+            this.compareWith ? this.compareWith(option.value, value) : option.value === value);
+      })
       .filter(Boolean)
       .forEach(option => option!._setSelected(true));
   }

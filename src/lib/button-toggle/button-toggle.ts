@@ -19,6 +19,7 @@ import {
   EventEmitter,
   forwardRef,
   Input,
+  OnDestroy,
   OnInit,
   Optional,
   Output,
@@ -95,10 +96,12 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase impleme
   private _selectionModel: SelectionModel<MatButtonToggle>;
 
   /**
-   * Used for storing a value temporarily, if it is assigned
-   * before the button toggles are initialized.
+   * Reference to the raw value that the consumer tried to assign. The real
+   * value will exaclude any values from this one that don't correspond to a
+   * toggle. Useful for the cases where the value is assigned before the toggles
+   * have been initialized or at the same that they're being swapped out.
    */
-  private _tempValue: any;
+  private _rawValue: any;
 
   /**
    * The method to be called in order to update ngModel.
@@ -181,7 +184,6 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase impleme
 
   ngAfterContentInit() {
     this._selectionModel.select(...this._buttonToggles.filter(toggle => toggle.checked));
-    this._tempValue = undefined;
   }
 
   /**
@@ -257,22 +259,22 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase impleme
 
   /** Determines whether a button toggle should be checked on init. */
   _isPrechecked(toggle: MatButtonToggle) {
-    if (typeof this._tempValue === 'undefined') {
+    if (typeof this._rawValue === 'undefined') {
       return false;
     }
 
-    if (this.multiple && Array.isArray(this._tempValue)) {
-      return !!this._tempValue.find(value => toggle.value != null && value === toggle.value);
+    if (this.multiple && Array.isArray(this._rawValue)) {
+      return !!this._rawValue.find(value => toggle.value != null && value === toggle.value);
     }
 
-    return toggle.value === this._tempValue;
+    return toggle.value === this._rawValue;
   }
 
   /** Updates the selection state of the toggles in the group based on a value. */
   private _setSelectionByValue(value: any|any[]) {
-    // If the toggles haven't been initialized yet, save the value for later.
+    this._rawValue = value;
+
     if (!this._buttonToggles) {
-      this._tempValue = value;
       return;
     }
 
@@ -331,7 +333,8 @@ export const _MatButtonToggleMixinBase = mixinDisableRipple(MatButtonToggleBase)
     '[attr.id]': 'id',
   }
 })
-export class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit, CanDisableRipple {
+export class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit,
+  CanDisableRipple, OnDestroy {
 
   private _isSingleSelector = false;
   private _checked = false;
@@ -350,7 +353,7 @@ export class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit
   /** Type of the button toggle. Either 'radio' or 'checkbox'. */
   _type: ToggleType;
 
-  @ViewChild('input') _inputElement: ElementRef;
+  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
 
   /** The parent button toggle group (exclusive selection). Optional. */
   buttonToggleGroup: MatButtonToggleGroup;
@@ -400,7 +403,7 @@ export class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit
 
   constructor(@Optional() toggleGroup: MatButtonToggleGroup,
               private _changeDetectorRef: ChangeDetectorRef,
-              private _elementRef: ElementRef,
+              private _elementRef: ElementRef<HTMLElement>,
               private _focusMonitor: FocusMonitor) {
     super();
 
@@ -421,6 +424,10 @@ export class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit
     }
 
     this._focusMonitor.monitor(this._elementRef.nativeElement, true);
+  }
+
+  ngOnDestroy() {
+    this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
   }
 
   /** Focuses the button. */

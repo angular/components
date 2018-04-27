@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {OverlayContainer, Overlay} from '@angular/cdk/overlay';
-import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
+import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB} from '@angular/cdk/keycodes';
 import {
   MAT_MENU_DEFAULT_OPTIONS,
   MatMenu,
@@ -331,6 +331,34 @@ describe('MatMenu', () => {
 
     expect(trigger.menuOpen).toBe(false);
   }));
+
+  it('should switch to keyboard focus when using the keyboard after opening using the mouse',
+    fakeAsync(() => {
+      const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+
+      fixture.detectChanges();
+      fixture.componentInstance.triggerEl.nativeElement.click();
+      fixture.detectChanges();
+
+      const panel = document.querySelector('.mat-menu-panel')! as HTMLElement;
+      const items: HTMLElement[] =
+          Array.from(panel.querySelectorAll('.mat-menu-panel [mat-menu-item]'));
+
+      items.forEach(item => patchElementFocus(item));
+
+      tick(500);
+      tick();
+      fixture.detectChanges();
+      expect(items.some(item => item.classList.contains('cdk-keyboard-focused'))).toBe(false);
+
+      dispatchKeyboardEvent(panel, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      tick();
+
+      // We skip to the third item, because the second one is disabled.
+      expect(items[2].classList).toContain('cdk-focused');
+      expect(items[2].classList).toContain('cdk-keyboard-focused');
+    }));
 
   describe('lazy rendering', () => {
     it('should be able to render the menu content lazily', fakeAsync(() => {
@@ -909,6 +937,57 @@ describe('MatMenu', () => {
         expect(overlay.querySelectorAll('.mat-menu-panel').length)
             .toBe(1, 'Expected one open menu');
       }));
+
+      it('should close submenu when hovering over disabled sibling item', fakeAsync(() => {
+        compileTestComponent();
+        instance.rootTriggerEl.nativeElement.click();
+        fixture.detectChanges();
+        tick(500);
+
+        const items = fixture.debugElement.queryAll(By.directive(MatMenuItem));
+
+        dispatchFakeEvent(items[0].nativeElement, 'mouseenter');
+        fixture.detectChanges();
+        tick(500);
+
+        expect(overlay.querySelectorAll('.mat-menu-panel').length)
+            .toBe(2, 'Expected two open menus');
+
+        items[1].componentInstance.disabled = true;
+        fixture.detectChanges();
+
+        // Invoke the handler directly since the fake events are flaky on disabled elements.
+        items[1].componentInstance._handleMouseEnter();
+        fixture.detectChanges();
+        tick(500);
+
+        expect(overlay.querySelectorAll('.mat-menu-panel').length)
+            .toBe(1, 'Expected one open menu');
+      }));
+
+    it('should not open submenu when hovering over disabled trigger', fakeAsync(() => {
+      compileTestComponent();
+      instance.rootTriggerEl.nativeElement.click();
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlay.querySelectorAll('.mat-menu-panel').length)
+          .toBe(1, 'Expected one open menu');
+
+      const item = fixture.debugElement.query(By.directive(MatMenuItem));
+
+      item.componentInstance.disabled = true;
+      fixture.detectChanges();
+
+      // Invoke the handler directly since the fake events are flaky on disabled elements.
+      item.componentInstance._handleMouseEnter();
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlay.querySelectorAll('.mat-menu-panel').length)
+          .toBe(1, 'Expected to remain at one open menu');
+    }));
+
 
     it('should open a nested menu when its trigger is clicked', () => {
       compileTestComponent();

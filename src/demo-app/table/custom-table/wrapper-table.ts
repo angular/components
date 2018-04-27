@@ -11,14 +11,19 @@ import {DataSource} from '@angular/cdk/collections';
 import {MatColumnDef, MatHeaderRowDef, MatRowDef, MatTable} from '@angular/material';
 import {SimpleColumn} from './simple-column';
 
+
 @Component({
   moduleId: module.id,
   selector: 'wrapper-table',
   templateUrl: 'wrapper-table.html',
   styles: [`
+    :host {
+      display: block;
+      width: 100%;
+    }
+
     .mat-table {
-      height: 300px;
-      overflow: auto;
+      width: 100%;
     }
   `]
 })
