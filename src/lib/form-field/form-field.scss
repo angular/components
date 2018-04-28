@@ -144,6 +144,8 @@ $mat-form-field-default-infix-width: 180px !default;
   width: 100%;
   // Need this so that the underline doesn't block the hover effect.
   pointer-events: none;
+  // We transform the height slightly higher to fix inconsistent underline height for some DPIs.
+  transform: scaleY(1.0001);
 }
 
 .mat-form-field-ripple {
