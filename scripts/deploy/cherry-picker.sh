@@ -1,39 +1,43 @@
 #! /bin/bash
+
 TARGETS=(
-  '5.0.x'
-  '5.1.x'
-  '5.2.x'
+  'master'
 )
 FAILING_TARGETS=()
-SHA="$1";
 
-function canBeCherryPicked() {
-  git cherry-pick -x $1 &>/dev/null;
+function parse_git_branch() {
+  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ \1/'
+}
+  
+PR=$(parse_git_branch)
+
+function canBeMerged() {
+  git merge --no-commit $1 &>/dev/null;
   if [ $? -eq 0 ]; then
-      local can_cherry_pick=true;
-      git reset --hard HEAD~1 &>/dev/null;
+      local can_merge=true;
+      git reset --hard &>/dev/null;
   else
-      local can_cherry_pick=false;
-      git cherry-pick --abort &>/dev/null;
+      local can_merge=false;
+      git merge --abort &>/dev/null;
   fi
-  echo $can_cherry_pick
+  echo $can_merge
 }
 
 # For each target, check if it can be cherry picked, keep track of those
 # that can't
 for target in "${TARGETS[@]}"
 do
-  eval "git checkout origin/${target} &>/dev/null";
+  git checkout remotes/origin/${target} &>/dev/null
   echo
-  cherry_pickable=$(canBeCherryPicked $SHA);
-  echo "Testing if $SHA can be cherrypicked to $target: $cherry_pickable";
-  if ! $cherry_pickable; then
+  echo -e "\e[1;31m-------------------------------------------------------\e[0m"
+  echo $(git status); 
+  mergable=$(canBeMerged $PR);
+  echo "Testing if $PR can be cherrypicked to $target: $mergable";
+
+  if ! $mergable; then
     FAILING_TARGETS+=($target)
   fi
 done
-
-# move back to master branch
-git checkout master &>/dev/null;
 
 # Determine if any failing targets were found
 if [ ${#FAILING_TARGETS[@]} -eq 0 ]; then
@@ -46,5 +50,5 @@ else
   do 
     echo $target
   done
+  exit 1;
 fi
-

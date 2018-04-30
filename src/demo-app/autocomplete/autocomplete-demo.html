@@ -8,7 +8,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
 
     <mat-form-field floatLabel="never">
       <mat-label>State</mat-label>
-      <input matInput [matAutocomplete]="reactiveAuto" [formControl]="stateCtrl">
+      <input matInput [matAutocomplete]="reactiveAuto" matAutocompleteDisabled="true" [formControl]="stateCtrl">
       <mat-autocomplete #reactiveAuto="matAutocomplete" [displayWith]="displayFn">
         <mat-option *ngFor="let state of tempStates" [value]="state">
           <span>{{ state.name }}</span>
