@@ -618,7 +618,8 @@ describe('CdkTable', () => {
         ]);
       });
 
-      it('should have the correct data and row indicies when data is homogeneous', () => {
+      it('should have the correct data and row indicies when data contains multiple instances of ' +
+          'the same object instance', () => {
         setupTableTestApp(WhenRowCdkTableApp);
         component.multiTemplateDataRows = true;
         component.showIndexColumns();
