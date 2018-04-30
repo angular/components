@@ -24,3 +24,19 @@
     writing-mode: vertical-lr;
   }
 }
+
+.demo-state-item {
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.demo-state {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.demo-capital {
+  font-size: 14px;
+}
