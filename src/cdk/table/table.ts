@@ -203,9 +203,11 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    *
    * Implemented as a map of maps where the first key is the `data: T` object and the second is the
    * `CdkRowDef<T>` object. With the two keys, the cache points to a `RenderRow<T>` object that
-   * contains the pair.
+   * contains an array of created pairs. The array is necessary to handle cases where the data
+   * array contains multiple duplicate data objects and each instantiated `RenderRow` must be
+   * stored.
    */
-  private _cachedRenderRowsMap = new Map<T, WeakMap<CdkRowDef<T>, RenderRow<T>>>();
+  private _cachedRenderRowsMap = new Map<T, WeakMap<CdkRowDef<T>, RenderRow<T>[]>>();
 
   /**
    * Tracking function that will be used to check the differences in data changes. Used similarly
@@ -481,10 +483,19 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
       let data = this._data[i];
       const renderRowsForData = this._getRenderRowsForData(data, i, prevCachedRenderRows.get(data));
 
-      this._cachedRenderRowsMap.set(data, new WeakMap());
+      if (!this._cachedRenderRowsMap.has(data)) {
+        this._cachedRenderRowsMap.set(data, new WeakMap());
+      }
+
       for (let j = 0; j < renderRowsForData.length; j++) {
         let renderRow = renderRowsForData[j];
-        this._cachedRenderRowsMap.get(renderRow.data)!.set(renderRow.rowDef, renderRow);
+
+        const cache = this._cachedRenderRowsMap.get(renderRow.data)!;
+        if (cache.has(renderRow.rowDef)) {
+          cache.get(renderRow.rowDef)!.push(renderRow);
+        } else {
+          cache.set(renderRow.rowDef, [renderRow]);
+        }
         renderRows.push(renderRow);
       }
     }
@@ -498,12 +509,13 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    * `(T, CdkRowDef)` pair.
    */
   private _getRenderRowsForData(
-      data: T, dataIndex: number, cache?: WeakMap<CdkRowDef<T>, RenderRow<T>>): RenderRow<T>[] {
+      data: T, dataIndex: number, cache?: WeakMap<CdkRowDef<T>, RenderRow<T>[]>): RenderRow<T>[] {
     const rowDefs = this._getRowDefs(data, dataIndex);
 
     return rowDefs.map(rowDef => {
-      if (cache && cache.has(rowDef)) {
-        const dataRow = cache.get(rowDef)!;
+      const cachedRenderRows = (cache && cache.has(rowDef)) ? cache.get(rowDef)! : [];
+      if (cachedRenderRows.length) {
+        const dataRow = cachedRenderRows.shift()!;
         dataRow.dataIndex = dataIndex;
         return dataRow;
       } else {
@@ -708,20 +720,23 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    */
   private _updateRowIndexContext() {
     const viewContainer = this._rowOutlet.viewContainer;
-    for (let index = 0, count = viewContainer.length; index < count; index++) {
-      const viewRef = viewContainer.get(index) as RowViewRef<T>;
+    const dataIndex = 0;
+
+    for (let renderIndex = 0, count = viewContainer.length; renderIndex < count; renderIndex++) {
+
+      const viewRef = viewContainer.get(renderIndex) as RowViewRef<T>;
       const context = viewRef.context as RowContext<T>;
       context.count = count;
-      context.first = index === 0;
-      context.last = index === count - 1;
-      context.even = index % 2 === 0;
+      context.first = renderIndex === 0;
+      context.last = renderIndex === count - 1;
+      context.even = renderIndex % 2 === 0;
       context.odd = !context.even;
 
       if (this.multiTemplateRows) {
-        context.dataIndex = this._renderRows[index].dataIndex;
-        context.renderIndex = index;
+        context.dataIndex = this._renderRows[renderIndex].dataIndex;
+        context.renderIndex = renderIndex;
       } else {
-        context.index = this._renderRows[index].dataIndex;
+        context.index = this._renderRows[renderIndex].dataIndex;
       }
     }
   }

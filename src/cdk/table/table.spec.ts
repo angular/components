@@ -133,37 +133,71 @@ describe('CdkTable', () => {
       });
     });
 
-    it('should use differ to add/remove/move rows', () => {
-      // Each row receives an attribute 'initialIndex' the element's original place
-      getRows(tableElement).forEach((row: Element, index: number) => {
-        row.setAttribute('initialIndex', index.toString());
+    describe('should correctly use the differ to add/remove/move rows', () => {
+      function addInitialIndexAttribute() {
+        // Each row receives an attribute 'initialIndex' the element's original place
+        getRows(tableElement).forEach((row: Element, index: number) => {
+          row.setAttribute('initialIndex', index.toString());
+        });
+
+        // Prove that the attributes match their indicies
+        const initialRows = getRows(tableElement);
+        expect(initialRows[0].getAttribute('initialIndex')).toBe('0');
+        expect(initialRows[1].getAttribute('initialIndex')).toBe('1');
+        expect(initialRows[2].getAttribute('initialIndex')).toBe('2');
+      }
+
+      it('when the data is heterogeneous', () => {
+        addInitialIndexAttribute();
+
+        // Swap first and second data in data array
+        const copiedData = component.dataSource!.data.slice();
+        const temp = copiedData[0];
+        copiedData[0] = copiedData[1];
+        copiedData[1] = temp;
+
+        // Remove the third element
+        copiedData.splice(2, 1);
+
+        // Add new data
+        component.dataSource!.data = copiedData;
+        component.dataSource!.addData();
+
+        // Expect that the first and second rows were swapped and that the last row is new
+        const changedRows = getRows(tableElement);
+        expect(changedRows.length).toBe(3);
+        expect(changedRows[0].getAttribute('initialIndex')).toBe('1');
+        expect(changedRows[1].getAttribute('initialIndex')).toBe('0');
+        expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
       });
 
-      // Prove that the attributes match their indicies
-      const initialRows = getRows(tableElement);
-      expect(initialRows[0].getAttribute('initialIndex')).toBe('0');
-      expect(initialRows[1].getAttribute('initialIndex')).toBe('1');
-      expect(initialRows[2].getAttribute('initialIndex')).toBe('2');
+      it('when the data is homogeneous', () => {
+        // Change default data to be one that is a list of homogeneous data.
+        const obj = {value: true};
+        component.dataSource!.data = [obj, obj, obj];
+        addInitialIndexAttribute();
 
-      // Swap first and second data in data array
-      const copiedData = component.dataSource!.data.slice();
-      const temp = copiedData[0];
-      copiedData[0] = copiedData[1];
-      copiedData[1] = temp;
+        const copiedData = component.dataSource!.data.slice();
 
-      // Remove the third element
-      copiedData.splice(2, 1);
+        // Remove the third element and add a new different obj in the beginning.
+        copiedData.splice(2, 1);
+        copiedData.unshift({value: false});
 
-      // Add new data
-      component.dataSource!.data = copiedData;
-      component.dataSource!.addData();
+        // Add new data
+        component.dataSource!.data = copiedData;
 
-      // Expect that the first and second rows were swapped and that the last row is new
-      const changedRows = getRows(tableElement);
-      expect(changedRows.length).toBe(3);
-      expect(changedRows[0].getAttribute('initialIndex')).toBe('1');
-      expect(changedRows[1].getAttribute('initialIndex')).toBe('0');
-      expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
+        // Expect that two of the three rows still have an initial index. Not as concerned about
+        // the order they are in, but more important that there was no unnecessary removes/inserts.
+        const changedRows = getRows(tableElement);
+        expect(changedRows.length).toBe(3);
+        let numInitialRows = 0;
+        changedRows.forEach(row => {
+          if (row.getAttribute('initialIndex') !== null) {
+            numInitialRows++;
+          }
+        });
+        expect(numInitialRows).toBe(2);
+      });
     });
 
     it('should clear the row view containers on destroy', () => {
@@ -529,18 +563,18 @@ describe('CdkTable', () => {
     });
 
     it('should error if there is row data that does not have a matching row template',
-      fakeAsync(() => {
-        const whenRowWithoutDefaultFixture = createComponent(WhenRowWithoutDefaultCdkTableApp);
-        const data = whenRowWithoutDefaultFixture.componentInstance.dataSource.data;
-        expect(() => {
-          try {
-            whenRowWithoutDefaultFixture.detectChanges();
-            flush();
-          } catch {
-            flush();
-          }
-        }).toThrowError(getTableMissingMatchingRowDefError(data[0]).message);
-    }));
+        fakeAsync(() => {
+          const whenRowWithoutDefaultFixture = createComponent(WhenRowWithoutDefaultCdkTableApp);
+          const data = whenRowWithoutDefaultFixture.componentInstance.dataSource.data;
+          expect(() => {
+            try {
+              whenRowWithoutDefaultFixture.detectChanges();
+              flush();
+            } catch {
+              flush();
+            }
+          }).toThrowError(getTableMissingMatchingRowDefError(data[0]).message);
+        }));
 
     it('should fail when multiple rows match data without multiTemplateRows', fakeAsync(() => {
       let whenFixture = createComponent(WhenRowMultipleDefaultsCdkTableApp);
@@ -552,12 +586,12 @@ describe('CdkTable', () => {
 
     describe('with multiTemplateRows', () => {
       it('should be able to render multiple rows per data object', () => {
-        let whenFixture = createComponent(WhenRowCdkTableApp);
-        whenFixture.componentInstance.multiTemplateRows = true;
-        whenFixture.detectChanges();
+        setupTableTestApp(WhenRowCdkTableApp);
+        component.multiTemplateRows = true;
+        fixture.detectChanges();
 
-        const data = whenFixture.componentInstance.dataSource.data;
-        expectTableToMatchContent(whenFixture.nativeElement.querySelector('cdk-table'), [
+        const data = component.dataSource.data;
+        expectTableToMatchContent(tableElement, [
           ['Column A', 'Column B', 'Column C'],
           [data[0].a, data[0].b, data[0].c],
           [data[1].a, data[1].b, data[1].c],
@@ -569,12 +603,12 @@ describe('CdkTable', () => {
       });
 
       it('should have the correct data and row indicies', () => {
-        let whenFixture = createComponent(WhenRowCdkTableApp);
-        whenFixture.componentInstance.multiTemplateRows = true;
-        whenFixture.componentInstance.showIndexColumns();
-        whenFixture.detectChanges();
+        setupTableTestApp(WhenRowCdkTableApp);
+        component.multiTemplateRows = true;
+        component.showIndexColumns();
+        fixture.detectChanges();
 
-        expectTableToMatchContent(whenFixture.nativeElement.querySelector('cdk-table'), [
+        expectTableToMatchContent(tableElement, [
           ['Index', 'Data Index', 'Render Index'],
           ['', '0', '0'],
           ['', '1', '1'],
@@ -583,6 +617,41 @@ describe('CdkTable', () => {
           ['', '2', '4'],
           ['', '3', '5'],
         ]);
+      });
+
+      it('should have the correct data and row indicies when data is homogeneous', () => {
+        setupTableTestApp(WhenRowCdkTableApp);
+        component.multiTemplateRows = true;
+        component.showIndexColumns();
+
+        const obj = {value: true};
+        component.dataSource.data = [obj, obj, obj, obj];
+        fixture.detectChanges();
+
+        expectTableToMatchContent(tableElement, [
+          ['Index', 'Data Index', 'Render Index'],
+          ['', '0', '0'],
+          ['', '1', '1'],
+          ['', '1', '2'],
+          ['', '2', '3'],
+          ['', '3', '4'],
+        ]);
+
+        // Push unique data on the front and add another obj to the array
+        component.dataSource.data = [{value: false}, obj, obj, obj, obj, obj];
+        fixture.detectChanges();
+
+        expectTableToMatchContent(tableElement, [
+          ['Index', 'Data Index', 'Render Index'],
+          ['', '0', '0'],
+          ['', '1', '1'],
+          ['', '1', '2'],
+          ['', '2', '3'],
+          ['', '3', '4'],
+          ['', '4', '5'],
+          ['', '5', '6'],
+        ]);
+
       });
     });
   });
