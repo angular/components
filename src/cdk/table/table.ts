@@ -504,7 +504,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
   }
 
   /**
-   * Returns a list of `RenderRow<T>` for the provided data object and any `CdkRowDef` objects that
+   * Gets a list of `RenderRow<T>` for the provided data object and any `CdkRowDef` objects that
    * should be rendered for this data. Reuses the cached RenderRow objects if they match the same
    * `(T, CdkRowDef)` pair.
    */
@@ -665,14 +665,15 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    * predicate that returns true with the data. If none return true, return the default row
    * definition.
    */
-  _getRowDefs(data: T, i: number): CdkRowDef<T>[] {
+  _getRowDefs(data: T, dataIndex: number): CdkRowDef<T>[] {
     if (this._rowDefs.length == 1) { return [this._rowDefs[0]]; }
 
     let rowDefs: CdkRowDef<T>[] = [];
     if (this.multiTemplateDataRows) {
-      rowDefs = this._rowDefs.filter(def => !def.when || def.when(i, data));
+      rowDefs = this._rowDefs.filter(def => !def.when || def.when(dataIndex, data));
     } else {
-      let rowDef = this._rowDefs.find(def => def.when && def.when(i, data)) || this._defaultRowDef;
+      let rowDef =
+          this._rowDefs.find(def => def.when && def.when(dataIndex, data)) || this._defaultRowDef;
       if (rowDef) {
         rowDefs.push(rowDef);
       }

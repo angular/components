@@ -171,8 +171,7 @@ describe('CdkTable', () => {
         expect(changedRows[2].getAttribute('initialIndex')).toBe(null);
       });
 
-      it('when the data is homogeneous', () => {
-        // Change default data to be one that is a list of homogeneous data.
+      it('when the data contains multiple occurrences of the same object instance', () => {
         const obj = {value: true};
         component.dataSource!.data = [obj, obj, obj];
         addInitialIndexAttribute();
