@@ -24,7 +24,7 @@ export class WhenRowsDemo {
   data: DemoDataObject[] =
       (new Array(DATA_LENGTH) as DemoDataObject[]).fill({value: false}, 0, DATA_LENGTH);
   randomNumber = 0;
-  multiTemplateRows = false;
+  multiTemplateDataRows = false;
   useTrackByValue = false;
 
   whenFn = (_i: number, d: DemoDataObject) => d.value;

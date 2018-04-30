@@ -8,7 +8,7 @@
 </div>
 
 <div>
-  <mat-slide-toggle (change)="multiTemplateRows = $event.checked">
+  <mat-slide-toggle (change)="multiTemplateDataRows = $event.checked">
     Enable multiple data rows
   </mat-slide-toggle>
 </div>
@@ -24,7 +24,7 @@
 
   <table mat-table style="width: 100%"
          [trackBy]="useTrackByValue ? trackByValue : undefined"
-         [multiTemplateRows]="multiTemplateRows"
+         [multiTemplateDataRows]="multiTemplateDataRows"
          [dataSource]="data">
     <!-- Data column -->
     <ng-container matColumnDef="data">

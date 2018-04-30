@@ -112,8 +112,8 @@ abstract class RowViewRef<T> extends EmbeddedViewRef<RowContext<T>> { }
  * Set of properties that represents the identity of a single rendered row.
  *
  * When the table needs to determine the list of rows to render, it will do so by iterating through
- * each data object and evaluating its list of row templates to display (when multiTemplateRows is
- * false, there is only one template per data object). For each pair of data object and row
+ * each data object and evaluating its list of row templates to display (when multiTemplateDataRows
+ * is false, there is only one template per data object). For each pair of data object and row
  * template, a `RenderRow` is added to the list of rows to render. If the data object and row
  * template pair has already been rendered, the previously used `RenderRow` is added; else a new
  * `RenderRow` is * created. Once the list is complete and all data objects have been itereated
@@ -258,19 +258,19 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
 
   /**
    * Whether to allow multiple rows per data object by evaluating which rows evaluate their 'when'
-   * predicate to true. If `multiTemplateRows` is false, which is the default value, then each data
-   * object will render the first row that evaluates its when predicate to true, in the order
+   * predicate to true. If `multiTemplateDataRows` is false, which is the default value, then each
+   * dataobject will render the first row that evaluates its when predicate to true, in the order
    * defined in the table, or otherwise the default row which does not have a when predicate.
    */
   @Input()
-  get multiTemplateRows(): boolean { return this._multiTemplateRows; }
-  set multiTemplateRows(v: boolean) {
-    this._multiTemplateRows = coerceBooleanProperty(v);
+  get multiTemplateDataRows(): boolean { return this._multiTemplateDataRows; }
+  set multiTemplateDataRows(v: boolean) {
+    this._multiTemplateDataRows = coerceBooleanProperty(v);
     if (this._rowOutlet.viewContainer.length) {
       this._forceRenderRows();
     }
   }
-  _multiTemplateRows: boolean = false;
+  _multiTemplateDataRows: boolean = false;
 
   // TODO(andrewseguin): Remove max value as the end index
   //   and instead calculate the view on init and scroll.
@@ -545,7 +545,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
     this._customRowDefs.forEach(rowDef => this._rowDefs.push(rowDef));
 
     const defaultRowDefs = this._rowDefs.filter(def => !def.when);
-    if (!this.multiTemplateRows && defaultRowDefs.length > 1) {
+    if (!this.multiTemplateDataRows && defaultRowDefs.length > 1) {
       throw getTableMultipleDefaultRowDefsError();
     }
     this._defaultRowDef = defaultRowDefs[0];
@@ -669,7 +669,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
     if (this._rowDefs.length == 1) { return [this._rowDefs[0]]; }
 
     let rowDefs: CdkRowDef<T>[] = [];
-    if (this.multiTemplateRows) {
+    if (this.multiTemplateDataRows) {
       rowDefs = this._rowDefs.filter(def => !def.when || def.when(i, data));
     } else {
       let rowDef = this._rowDefs.find(def => def.when && def.when(i, data)) || this._defaultRowDef;
@@ -720,10 +720,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    */
   private _updateRowIndexContext() {
     const viewContainer = this._rowOutlet.viewContainer;
-    const dataIndex = 0;
-
     for (let renderIndex = 0, count = viewContainer.length; renderIndex < count; renderIndex++) {
-
       const viewRef = viewContainer.get(renderIndex) as RowViewRef<T>;
       const context = viewRef.context as RowContext<T>;
       context.count = count;
@@ -732,7 +729,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
       context.even = renderIndex % 2 === 0;
       context.odd = !context.even;
 
-      if (this.multiTemplateRows) {
+      if (this.multiTemplateDataRows) {
         context.dataIndex = this._renderRows[renderIndex].dataIndex;
         context.renderIndex = renderIndex;
       } else {
@@ -773,7 +770,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
   /**
    * Forces a re-render of the data rows. Should be called in cases where there has been an input
    * change that affects the evaluation of which rows should be rendered, e.g. toggling
-   * `multiTemplateRows` or adding/removing row definitions.
+   * `multiTemplateDataRows` or adding/removing row definitions.
    */
   private _forceRenderRows() {
     this._dataDiffer.diff([]);

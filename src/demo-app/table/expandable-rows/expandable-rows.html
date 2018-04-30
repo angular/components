@@ -1,5 +1,5 @@
 <mat-card>
-  <table mat-table [dataSource]="dataSource" multiTemplateRows matSort [trackBy]="trackBy">
+  <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort [trackBy]="trackBy">
     <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column}} </th>
       <td mat-cell *matCellDef="let element"> {{element[column]}} </td>

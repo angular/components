@@ -576,7 +576,7 @@ describe('CdkTable', () => {
           }).toThrowError(getTableMissingMatchingRowDefError(data[0]).message);
         }));
 
-    it('should fail when multiple rows match data without multiTemplateRows', fakeAsync(() => {
+    it('should fail when multiple rows match data without multiTemplateDataRows', fakeAsync(() => {
       let whenFixture = createComponent(WhenRowMultipleDefaultsCdkTableApp);
       expect(() => {
         whenFixture.detectChanges();
@@ -584,10 +584,10 @@ describe('CdkTable', () => {
       }).toThrowError(getTableMultipleDefaultRowDefsError().message);
     }));
 
-    describe('with multiTemplateRows', () => {
+    describe('with multiTemplateDataRows', () => {
       it('should be able to render multiple rows per data object', () => {
         setupTableTestApp(WhenRowCdkTableApp);
-        component.multiTemplateRows = true;
+        component.multiTemplateDataRows = true;
         fixture.detectChanges();
 
         const data = component.dataSource.data;
@@ -604,7 +604,7 @@ describe('CdkTable', () => {
 
       it('should have the correct data and row indicies', () => {
         setupTableTestApp(WhenRowCdkTableApp);
-        component.multiTemplateRows = true;
+        component.multiTemplateDataRows = true;
         component.showIndexColumns();
         fixture.detectChanges();
 
@@ -621,7 +621,7 @@ describe('CdkTable', () => {
 
       it('should have the correct data and row indicies when data is homogeneous', () => {
         setupTableTestApp(WhenRowCdkTableApp);
-        component.multiTemplateRows = true;
+        component.multiTemplateDataRows = true;
         component.showIndexColumns();
 
         const obj = {value: true};
@@ -1054,7 +1054,7 @@ class NullDataCdkTableApp {
 
 @Component({
   template: `
-    <cdk-table [dataSource]="dataSource" [multiTemplateRows]="multiTemplateRows">
+    <cdk-table [dataSource]="dataSource" [multiTemplateDataRows]="multiTemplateDataRows">
       <ng-container cdkColumnDef="column_a">
         <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
         <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
@@ -1103,7 +1103,7 @@ class NullDataCdkTableApp {
   `
 })
 class WhenRowCdkTableApp {
-  multiTemplateRows = false;
+  multiTemplateDataRows = false;
   dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   columnsForIsIndex1Row = ['index1Column'];
