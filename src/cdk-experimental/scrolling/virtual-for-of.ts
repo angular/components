@@ -147,8 +147,15 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
       private _differs: IterableDiffers,
       /** The virtual scrolling viewport that these items are being rendered in. */
       @SkipSelf() private _viewport: CdkVirtualScrollViewport) {
-    this.dataStream.subscribe(data => this._data = data);
-    this._viewport.renderedRangeStream.subscribe(range => this._onRenderedRangeChange(range));
+    this.dataStream.subscribe(data => {
+      this._data = data;
+      this._onRenderedDataChange();
+    });
+    this._viewport.renderedRangeStream.subscribe(range => {
+      this._renderedRange = range;
+      this.viewChange.next(this._renderedRange);
+      this._onRenderedDataChange();
+    });
     this._viewport.attach(this);
   }
 
@@ -213,9 +220,10 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   }
 
   /** React to scroll state changes in the viewport. */
-  private _onRenderedRangeChange(renderedRange: ListRange) {
-    this._renderedRange = renderedRange;
-    this.viewChange.next(this._renderedRange);
+  private _onRenderedDataChange() {
+    if (!this._renderedRange) {
+      return;
+    }
     this._renderedItems = this._data.slice(this._renderedRange.start, this._renderedRange.end);
     if (!this._differ) {
       this._differ = this._differs.find(this._renderedItems).create(this.cdkVirtualForTrackBy);
