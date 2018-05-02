@@ -1,3 +1,5 @@
+import {ComponentPortal, DomPortalHost} from '@angular/cdk/portal';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {
   ApplicationRef,
   Component,
@@ -7,15 +9,13 @@ import {
   Injector,
   Input,
   OnDestroy,
-  ViewContainerRef,
   Output,
+  ViewContainerRef,
 } from '@angular/core';
-import {Http} from '@angular/http';
+import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {ExampleViewer} from '../example-viewer/example-viewer';
 import {HeaderLink} from './header-link';
-import {ComponentPortal, DomPortalHost} from '@angular/cdk/portal';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'doc-viewer',
@@ -39,7 +39,7 @@ export class DocViewer implements OnDestroy {
   constructor(private _appRef: ApplicationRef,
               private _componentFactoryResolver: ComponentFactoryResolver,
               private _elementRef: ElementRef,
-              private _http: Http,
+              private _http: HttpClient,
               private _injector: Injector,
               private _viewContainerRef: ViewContainerRef,
               private _router: Router) {}
@@ -51,25 +51,30 @@ export class DocViewer implements OnDestroy {
       this._documentFetchSubscription.unsubscribe();
     }
 
-    this._documentFetchSubscription = this._http.get(url).subscribe(
-        response => {
-          // TODO(mmalerba): Trust HTML.
-          if (response.ok) {
-            this._elementRef.nativeElement.innerHTML = response.text();
-            this.textContent = this._elementRef.nativeElement.textContent;
-            this._loadComponents('material-docs-example', ExampleViewer);
-            this._loadComponents('header-link', HeaderLink);
-            this._fixFragmentUrls();
-            this.contentLoaded.next();
-          } else {
-            this._elementRef.nativeElement.innerText =
-              `Failed to load document: ${url}. Error: ${response.status}`;
-          }
-        },
-        error => {
-          this._elementRef.nativeElement.innerText =
-              `Failed to load document: ${url}. Error: ${error}`;
-        });
+    this._documentFetchSubscription = this._http.get(url, {responseType: 'text'}).subscribe(
+      document => this.updateDocument(document),
+      error => this.showError(url, error)
+    );
+  }
+
+  /**
+   * Updates the displayed document
+   * @param document The raw document content to show.
+   */
+  private updateDocument(document: string) {
+    this._elementRef.nativeElement.innerHTML = document;
+    this.textContent = this._elementRef.nativeElement.textContent;
+    this._loadComponents('material-docs-example', ExampleViewer);
+    this._loadComponents('header-link', HeaderLink);
+    this._fixFragmentUrls();
+    this.contentLoaded.next();
+  }
+
+  /** Show an error that ocurred when fetching a document. */
+  private showError(url: string, error: HttpErrorResponse) {
+    console.log(error);
+    this._elementRef.nativeElement.innerText =
+      `Failed to load document: ${url}. Error: ${error.statusText}`;
   }
 
   releadLiveExamples() {

@@ -3,7 +3,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {HttpModule} from '@angular/http';
 import {RouterModule} from '@angular/router';
 import {MatNativeDateModule} from '@angular/material';
 import {ExampleModule} from '@angular/material-examples';
@@ -43,7 +42,6 @@ import {GaService} from './shared/ga/ga';
     BrowserAnimationsModule,
     ExampleModule,
     FormsModule,
-    HttpModule,
     HttpClientModule,
     MatNativeDateModule,
     RouterModule.forRoot(MATERIAL_DOCS_ROUTES),

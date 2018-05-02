@@ -1,7 +1,7 @@
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Http} from '@angular/http';
-import {ExampleData} from '@angular/material-examples';
 import {VERSION} from '@angular/material';
+import {ExampleData} from '@angular/material-examples';
 
 import {materialVersion} from '../version/version';
 
@@ -67,7 +67,7 @@ const dependencies = {
  */
 @Injectable()
 export class StackblitzWriter {
-  constructor(private _http: Http) {}
+  constructor(private _http: HttpClient) {}
 
   /**
    * Returns an HTMLFormElement that will open a new stackblitz template with the example data when
@@ -131,9 +131,10 @@ export class StackblitzWriter {
             filename: string,
             path: string,
             prependApp = true): void {
-    this._http.get(path + filename).toPromise().then(
-      response => this._addFileToForm(form, data, response.text(), filename, path, prependApp),
-      error => console.log(error));
+    this._http.get(path + filename, {responseType: 'text'}).subscribe(
+      response => this._addFileToForm(form, data, response, filename, path, prependApp),
+      error => console.log(error)
+    );
   }
 
   /**
