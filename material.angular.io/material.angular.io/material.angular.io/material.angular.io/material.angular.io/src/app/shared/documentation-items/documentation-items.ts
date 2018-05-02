@@ -143,6 +143,13 @@ const DOCS: {[key: string]: DocCategory[]} = {
         {id: 'list', name: 'List', examples: ['list-sections']},
         {id: 'stepper', name: 'Stepper', examples: ['stepper-overview']},
         {id: 'tabs', name: 'Tabs', examples: ['tabs-template-label']},
+        {id: 'tree', name: 'Tree', examples: [
+          'tree-dynamic-example',
+          'tree-flat-overview-example',
+          'tree-checklist-example',
+          'tree-nested-overview-example',
+          'tree-loadmore-example',
+        ]},
       ]
     },
     {
@@ -151,6 +158,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
       items: [
         {id: 'button', name: 'Button', examples: ['button-types']},
         {id: 'button-toggle', name: 'Button toggle', examples: ['button-toggle-exclusive']},
+        {id: 'badge', name: 'Badge', examples: ['badge-overview']},
         {id: 'chips', name: 'Chips', examples: ['chips-stacked']},
         {id: 'icon', name: 'Icon', examples: ['icon-svg']},
         {id: 'progress-spinner', name: 'Progress spinner',
@@ -204,6 +212,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
       items: [
         {id: 'stepper', name: 'Stepper', examples: []},
         {id: 'table', name: 'Table', examples: []},
+        {id: 'tree', name: 'Tree', examples: []},
 
       ]
     },
