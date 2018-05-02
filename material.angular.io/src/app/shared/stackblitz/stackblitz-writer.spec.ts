@@ -1,40 +1,34 @@
-import {TestBed, inject, async, flushMicrotasks, fakeAsync} from '@angular/core/testing';
-import {MockBackend} from '@angular/http/testing';
-import {
-  BaseRequestOptions, Http, HttpModule, Response, ResponseOptions,
-  XHRBackend
-} from '@angular/http';
-import {StackblitzWriter} from './stackblitz-writer';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {async, fakeAsync, flushMicrotasks, inject, TestBed} from '@angular/core/testing';
 import {ExampleData} from '@angular/material-examples';
+import {StackblitzWriter} from './stackblitz-writer';
 
 
 describe('StackblitzWriter', () => {
   let stackblitzWriter: StackblitzWriter;
   let data: ExampleData;
+  let http: HttpTestingController;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpModule],
+      imports: [HttpClientTestingModule],
       declarations: [],
       providers: [
         StackblitzWriter,
-        BaseRequestOptions,
-        MockBackend,
-        {provide: XHRBackend, useExisting: MockBackend},
       ]
     }).compileComponents();
   }));
 
-  beforeEach(inject([MockBackend], (mockBackend: MockBackend, http: Http) => {
-    mockBackend.connections.subscribe((connection: any) => {
-      const url = connection.request.url;
-      connection.mockRespond(getFakeDocResponse(url));
-    });
+  beforeEach(inject([HttpTestingController], (h: HttpTestingController) => {
+    http = h;
+  }));
 
+  beforeEach(() => {
     stackblitzWriter = TestBed.get(StackblitzWriter);
     data = new ExampleData('');
     data.examplePath = 'http://material.angular.io/';
     data.exampleFiles = ['test.ts', 'test.html', 'src/detail.ts'];
-  }));
+  });
 
   it('should append correct copyright', () => {
     expect(stackblitzWriter._appendCopyright('test.ts', 'NoContent')).toBe(`NoContent
@@ -75,6 +69,11 @@ describe('StackblitzWriter', () => {
     stackblitzWriter.constructStackblitzForm(data).then(result => form = result);
     flushMicrotasks();
 
+    for (const url of TEST_URLS) {
+      http.expectOne(url).flush(FAKE_DOCS[url] || '');
+    }
+    flushMicrotasks();
+
     expect(form.elements.length).toBe(14);
 
     // Should have correct tags
@@ -100,8 +99,6 @@ describe('StackblitzWriter', () => {
     expect(form.elements[11].getAttribute('name')).toBe('files[app/test.ts]');
     expect(form.elements[12].getAttribute('name')).toBe('files[app/test.html]');
     expect(form.elements[13].getAttribute('name')).toBe('files[app/src/detail.ts]');
-
-    // TODO(tinagao): Add more test
   }));
 });
 
@@ -112,13 +109,13 @@ const FAKE_DOCS = {
   'http://material.angular.io/src/detail.ts': 'DetailComponent',
 };
 
-function getFakeDocResponse(url: string) {
-  if (url in FAKE_DOCS) {
-    return new Response(new ResponseOptions({
-      status: 200,
-      body: FAKE_DOCS[url],
-    }));
-  } else {
-    return new Response(new ResponseOptions({status: 404}));
-  }
-}
+const TEST_URLS = [
+  '/assets/stackblitz/index.html',
+  '/assets/stackblitz/styles.css',
+  '/assets/stackblitz/polyfills.ts',
+  '/assets/stackblitz/.angular-cli.json',
+  '/assets/stackblitz/main.ts',
+  'http://material.angular.io/test.ts',
+  'http://material.angular.io/test.html',
+  'http://material.angular.io/src/detail.ts',
+];

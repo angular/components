@@ -1,9 +1,8 @@
 import {CommonModule} from '@angular/common';
+import {HttpTestingController} from '@angular/common/http/testing';
 import {NgModule} from '@angular/core';
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Response, ResponseOptions} from '@angular/http';
-import {MockBackend} from '@angular/http/testing';
 import {
   MatAutocompleteModule,
   MatInputModule,
@@ -25,6 +24,7 @@ const exampleKey = 'autocomplete-overview';
 describe('ExampleViewer', () => {
   let fixture: ComponentFixture<ExampleViewer>;
   let component: ExampleViewer;
+  let http: HttpTestingController;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -32,17 +32,13 @@ describe('ExampleViewer', () => {
         DocViewerModule,
         DocsAppTestingModule,
         ReactiveFormsModule,
-        TestExampleModule
+        TestExampleModule,
       ],
     }).compileComponents();
   }));
 
-  beforeEach(inject([MockBackend], (mockBackend: MockBackend) => {
-    // Mock backend request that may come through the doc viewer
-    mockBackend.connections.subscribe((connection: any) => {
-      const url = connection.request.url;
-      connection.mockRespond(getFakeDocResponse(url));
-    });
+  beforeEach(inject([HttpTestingController], (h: HttpTestingController) => {
+    http = h;
   }));
 
   beforeEach(() => {
@@ -96,6 +92,10 @@ describe('ExampleViewer', () => {
       component.example = exampleKey;
       component.showSource = true;
       fixture.detectChanges();
+
+      for (const url of Object.keys(FAKE_DOCS)) {
+        http.expectOne(url).flush(FAKE_DOCS[url]);
+      }
 
       // Select button element
       const btnDe = fixture.debugElement.query(By.css('.docs-example-source-copy'));
@@ -160,14 +160,3 @@ const FAKE_DOCS = {
   '/assets/examples/autocomplete-overview-example-css.html':
       '<pre>.class { color: black; }</pre>',
 };
-
-function getFakeDocResponse(url: string) {
-  if (url in FAKE_DOCS) {
-    return new Response(new ResponseOptions({
-      status: 200,
-      body: FAKE_DOCS[url],
-    }));
-  } else {
-    return new Response(new ResponseOptions({status: 404}));
-  }
-}

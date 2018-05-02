@@ -28,7 +28,10 @@ const DOCS: {[key: string]: DocCategory[]} = {
       id: 'forms',
       name: 'Form Controls',
       items: [
-        {id: 'autocomplete', name: 'Autocomplete', examples: ['autocomplete-overview']},
+        {id: 'autocomplete', name: 'Autocomplete', examples: [
+          'autocomplete-overview',
+          'autocomplete-optgroup',
+        ]},
         {id: 'checkbox', name: 'Checkbox', examples: ['checkbox-configurable']},
         {
           id: 'datepicker',

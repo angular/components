@@ -4,7 +4,6 @@ import {CdkTableModule} from '@angular/cdk/table';
 import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpModule} from '@angular/http';
 import {
   MatAutocompleteModule,
   MatBottomSheetModule,
@@ -90,7 +89,6 @@ export class DemoMaterialModule {}
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
-    HttpModule,
     HttpClientModule,
     DemoMaterialModule,
     MatNativeDateModule,
