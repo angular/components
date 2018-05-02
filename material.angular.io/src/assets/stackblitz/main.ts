@@ -38,6 +38,7 @@ import {
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
+  MatTreeModule,
 } from '@angular/material';
 import {BrowserModule} from '@angular/platform-browser';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
@@ -80,6 +81,7 @@ import {MaterialDocsExample} from './app/material-docs-example';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
+    MatTreeModule,
   ]
 })
 export class DemoMaterialModule {}
