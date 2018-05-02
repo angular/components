@@ -508,11 +508,10 @@ describe('MatMenu', () => {
     });
 
     it('should default to the "below" and "after" positions', () => {
-      overlayContainer.ngOnDestroy();
       fixture.destroy();
       TestBed.resetTestingModule();
 
-      const newFixture = createComponent(SimpleMenu, [], [FakeIcon]);
+      let newFixture = createComponent(SimpleMenu, [], [FakeIcon]);
 
       newFixture.detectChanges();
       newFixture.componentInstance.trigger.openMenu();
