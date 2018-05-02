@@ -15,7 +15,7 @@ const GUIDES = [
   {
     id: 'schematics',
     name: 'Schematics',
-    document: '/assets/documents/guides/schematics.html'
+    document: '/assets/documents/guides/material-schematics.html'
   },
   {
     id: 'theming',
