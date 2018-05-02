@@ -13,11 +13,11 @@ export interface VersionInfo {
 // TODO(tinayuangao): Update the title with actual versions
 export const docVersions: VersionInfo[] = [
   {
-    url: 'https://material.angular.io/',
+    url: 'https://v5.material.angular.io/',
     title: '5.2.4'
   },
   {
-    url: `http://v5.material.angular.io`,
-    title: '6.0.0-beta.4'
+    url: `http://material.angular.io`,
+    title: '6.0.0'
   }
 ];
