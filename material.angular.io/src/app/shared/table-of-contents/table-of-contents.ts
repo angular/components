@@ -33,7 +33,7 @@ export class TableOfContents implements OnInit {
   @Input() container: string;
   @Input() headerSelectors = '.docs-markdown-h3,.docs-markdown-h4';
 
-  _rootUrl: string;
+  _rootUrl = this._router.url.split('#')[0];
   private _scrollContainer: any;
   private _destroyed = new Subject();
   private _urlFragment = '';
