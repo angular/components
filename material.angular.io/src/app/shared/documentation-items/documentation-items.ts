@@ -147,11 +147,11 @@ const DOCS: {[key: string]: DocCategory[]} = {
         {id: 'stepper', name: 'Stepper', examples: ['stepper-overview']},
         {id: 'tabs', name: 'Tabs', examples: ['tabs-template-label']},
         {id: 'tree', name: 'Tree', examples: [
-          'tree-dynamic-example',
-          'tree-flat-overview-example',
-          'tree-checklist-example',
-          'tree-nested-overview-example',
-          'tree-loadmore-example',
+          'tree-dynamic',
+          'tree-flat-overview',
+          'tree-checklist',
+          'tree-nested-overview',
+          'tree-loadmore',
         ]},
       ]
     },
