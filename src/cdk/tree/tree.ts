@@ -46,7 +46,7 @@ import {
   exportAs: 'cdkTreeNode',
   host: {
     '[attr.aria-expanded]': 'isExpanded',
-    '[attr.aria-level]': 'level',
+    '[attr.aria-level]': 'role === "treeitem" ? level : null',
     '[attr.role]': 'role',
     'class': 'cdk-tree-node',
   },
@@ -142,6 +142,9 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
 
   /** Data subscription */
   private _dataSubscription: Subscription | null;
+
+  /** Level of nodes */
+  private _levels: Map<T, number> = new Map<T, number>();
 
   /**
    * Provides a stream containing the latest data array to render. Influenced by the tree's
@@ -267,21 +270,25 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
 
   /** Check for changes made in the data and render each change (node added/removed/moved). */
   renderNodeChanges(data: T[], dataDiffer: IterableDiffer<T> = this._dataDiffer,
-                    viewContainer: ViewContainerRef = this._nodeOutlet.viewContainer) {
+                    viewContainer: ViewContainerRef = this._nodeOutlet.viewContainer,
+                    parentData?: T) {
     const changes = dataDiffer.diff(data);
     if (!changes) { return; }
 
     changes.forEachOperation(
       (item: IterableChangeRecord<T>, adjustedPreviousIndex: number, currentIndex: number) => {
         if (item.previousIndex == null) {
-          this.insertNode(data[currentIndex], currentIndex, viewContainer);
+          this.insertNode(data[currentIndex], currentIndex, viewContainer, parentData);
         } else if (currentIndex == null) {
           viewContainer.remove(adjustedPreviousIndex);
+          this._levels.delete(item.item);
         } else {
           const view = viewContainer.get(adjustedPreviousIndex);
           viewContainer.move(view!, currentIndex);
         }
       });
+
+    this._changeDetectorRef.detectChanges();
   }
 
   /**
@@ -304,11 +311,22 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
    * Create the embedded view for the data node template and place it in the correct index location
    * within the data node view container.
    */
-  insertNode(nodeData: T, index: number, viewContainer?: ViewContainerRef) {
+  insertNode(nodeData: T, index: number, viewContainer?: ViewContainerRef, parentData?: T) {
     const node = this._getNodeDef(nodeData, index);
 
     // Node context that will be provided to created embedded view
     const context = new CdkTreeNodeOutletContext<T>(nodeData);
+
+    // If the tree is flat tree, then use the `getLevel` function in flat tree control
+    // Otherwise, use the level of parent node.
+    if (this.treeControl.getLevel) {
+      context.level = this.treeControl.getLevel(nodeData);
+    } else if (typeof parentData !== 'undefined' && this._levels.has(parentData)) {
+      context.level = this._levels.get(parentData)! + 1;
+    } else {
+      context.level = 0;
+    }
+    this._levels.set(nodeData, context.level);
 
     // Use default tree nodeOutlet, or nested node's nodeOutlet
     const container = viewContainer ? viewContainer : this._nodeOutlet.viewContainer;
@@ -320,7 +338,5 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
     if (CdkTreeNode.mostRecentTreeNode) {
       CdkTreeNode.mostRecentTreeNode.data = nodeData;
     }
-
-    this._changeDetectorRef.detectChanges();
   }
 }

@@ -16,11 +16,10 @@ import {
   ConnectionPositionPair,
   OriginConnectionPosition,
   OverlayConnectionPosition,
-  validateHorizontalPosition,
-  validateVerticalPosition,
 } from './connected-position';
 import {FlexibleConnectedPositionStrategy} from './flexible-connected-position-strategy';
 import {PositionStrategy} from './position-strategy';
+import {Platform} from '@angular/cdk/platform';
 
 
 /**
@@ -62,16 +61,17 @@ export class ConnectedPositionStrategy implements PositionStrategy {
       overlayPos: OverlayConnectionPosition,
       connectedTo: ElementRef,
       viewportRuler: ViewportRuler,
-      document: Document) {
+      document: Document,
+      // @deletion-target 7.0.0 `platform` parameter to be made required.
+      platform?: Platform) {
 
     // Since the `ConnectedPositionStrategy` is deprecated and we don't want to maintain
     // the extra logic, we create an instance of the positioning strategy that has some
     // defaults that make it behave as the old position strategy and to which we'll
     // proxy all of the API calls.
     this._positionStrategy =
-      new FlexibleConnectedPositionStrategy(connectedTo, viewportRuler, document)
-        .withFlexibleHeight(false)
-        .withFlexibleWidth(false)
+      new FlexibleConnectedPositionStrategy(connectedTo, viewportRuler, document, platform)
+        .withFlexibleDimensions(false)
         .withPush(false)
         .withViewportMargin(0);
 
@@ -110,7 +110,6 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * @docs-private
    */
   apply(): void {
-    this._validatePositions();
     this._positionStrategy.apply();
   }
 
@@ -120,7 +119,6 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * allows one to re-align the panel without changing the orientation of the panel.
    */
   recalculateLastPosition(): void {
-    this._validatePositions();
     this._positionStrategy.reapplyLastPosition();
   }
 
@@ -213,22 +211,5 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   setOrigin(origin: ElementRef): this {
     this._positionStrategy.setOrigin(origin);
     return this;
-  }
-
-  /** Validates that the current position match the expected values. */
-  private _validatePositions(): void {
-    if (!this._preferredPositions.length) {
-      throw Error('ConnectedPositionStrategy: At least one position is required.');
-    }
-
-    // TODO(crisbeto): remove these once Angular's template type
-    // checking is advanced enough to catch these cases.
-    // TODO(crisbeto): port these checks into the flexible positioning.
-    this._preferredPositions.forEach(pair => {
-      validateHorizontalPosition('originX', pair.originX);
-      validateVerticalPosition('originY', pair.originY);
-      validateHorizontalPosition('overlayX', pair.overlayX);
-      validateVerticalPosition('overlayY', pair.overlayY);
-    });
   }
 }

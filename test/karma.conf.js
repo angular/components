@@ -5,7 +5,7 @@ module.exports = (config) => {
 
   config.set({
     basePath: path.join(__dirname, '..'),
-    frameworks: ['jasmine'],
+    frameworks: ['sharding', 'jasmine'],
     plugins: [
       require('karma-jasmine'),
       require('karma-browserstack-launcher'),
@@ -14,7 +14,8 @@ module.exports = (config) => {
       require('karma-firefox-launcher'),
       require('karma-sourcemap-loader'),
       require('karma-coverage'),
-      require('karma-spec-reporter')
+      require('karma-spec-reporter'),
+      require('karma-sharding'),
     ],
     files: [
       {pattern: 'node_modules/core-js/client/core.js', included: true, watched: false},
@@ -50,7 +51,7 @@ module.exports = (config) => {
       'dist/packages/**/*.js': ['sourcemap']
     },
 
-    reporters: ['spec'],
+    reporters: ['dots'],
     autoWatch: false,
 
     coverageReporter: {
@@ -59,6 +60,7 @@ module.exports = (config) => {
       subdir: '.'
     },
 
+    // TODO(josephperrott): Determine how to properly disable extra output on ci.
     specReporter: {
       maxLogLines: Infinity, // Log out the entire stack trace on errors and failures.
       suppressSkipped: true,
@@ -133,6 +135,7 @@ module.exports = (config) => {
       throw new Error(`Platform "${platform}" unknown, but Travis specified. Exiting.`);
     }
 
-    config.browsers = platformMap[platform][target.toLowerCase()];
+    // Set the browser list to be the same browser 3 times, to shard tests into three instances.
+    config.browsers = (new Array(3)).fill(platformMap[platform][target.toLowerCase()][0]);
   }
 };

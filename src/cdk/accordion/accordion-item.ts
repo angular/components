@@ -28,7 +28,7 @@ let nextId = 0;
  * events and attributes needed to be managed by a CdkAccordion parent.
  */
 @Directive({
-  selector: 'cdk-accordion-item',
+  selector: 'cdk-accordion-item, [cdkAccordionItem]',
   exportAs: 'cdkAccordionItem',
 })
 export class CdkAccordionItem implements OnDestroy {
@@ -109,7 +109,10 @@ export class CdkAccordionItem implements OnDestroy {
 
   /** Emits an event for the accordion item being destroyed. */
   ngOnDestroy() {
+    this.opened.complete();
+    this.closed.complete();
     this.destroyed.emit();
+    this.destroyed.complete();
     this._removeUniqueSelectionListener();
     this._openCloseAllSubscription.unsubscribe();
   }

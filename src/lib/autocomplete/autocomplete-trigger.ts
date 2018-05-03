@@ -62,11 +62,14 @@ export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
 export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY =
     new InjectionToken<() => ScrollStrategy>('mat-autocomplete-scroll-strategy', {
       providedIn: 'root',
-      factory: () => {
-        const overlay = inject(Overlay);
-        return () => overlay.scrollStrategies.reposition();
-      }
+      factory: MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY,
     });
+
+/** @docs-private */
+export function MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(): () => ScrollStrategy {
+  const overlay = inject(Overlay);
+  return () => overlay.scrollStrategies.reposition();
+}
 
 /**
  * Provider that allows the autocomplete to register as a ControlValueAccessor.
@@ -498,8 +501,9 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
         });
       }
     } else {
-      /** Update the panel width, in case the host width has changed */
+      // Update the panel width and direction, in case anything has changed.
       this._overlayRef.updateSize({width: this._getHostWidth()});
+      this._overlayRef.setDirection(this._getDirection());
     }
 
     if (this._overlayRef && !this._overlayRef.hasAttached()) {
@@ -524,15 +528,14 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       positionStrategy: this._getOverlayPosition(),
       scrollStrategy: this._scrollStrategy(),
       width: this._getHostWidth(),
-      direction: this._dir ? this._dir.value : 'ltr'
+      direction: this._getDirection()
     });
   }
 
   private _getOverlayPosition(): PositionStrategy {
     this._positionStrategy = this._overlay.position()
       .flexibleConnectedTo(this._getConnectedElement())
-      .withFlexibleHeight(false)
-      .withFlexibleWidth(false)
+      .withFlexibleDimensions(false)
       .withPush(false)
       .withPositions([
         {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top'},
@@ -540,6 +543,10 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       ]);
 
     return this._positionStrategy;
+  }
+
+  private _getDirection() {
+    return this._dir ? this._dir.value : 'ltr';
   }
 
   private _getConnectedElement(): ElementRef {

@@ -48,6 +48,7 @@ import {MatLabel} from './label';
 import {MatPlaceholder} from './placeholder';
 import {MatPrefix} from './prefix';
 import {MatSuffix} from './suffix';
+import {Platform} from '@angular/cdk/platform';
 
 
 let nextUniqueId = 0;
@@ -194,6 +195,8 @@ export class MatFormField extends _MatFormFieldMixinBase
 
   _outlineGapStart = 0;
 
+  _initialGapCalculated = false;
+
   /**
    * @deprecated
    * @deletion-target 7.0.0
@@ -217,7 +220,9 @@ export class MatFormField extends _MatFormFieldMixinBase
       @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) labelOptions: LabelOptions,
       @Optional() private _dir: Directionality,
       @Optional() @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS) private _defaultOptions:
-          MatFormFieldDefaultOptions) {
+          MatFormFieldDefaultOptions,
+      // @deletion-target 7.0.0 _platform to be made required.
+      private _platform?: Platform) {
     super(_elementRef);
 
     this._labelOptions = labelOptions ? labelOptions : {};
@@ -262,15 +267,13 @@ export class MatFormField extends _MatFormFieldMixinBase
       this._syncDescribedByIds();
       this._changeDetectorRef.markForCheck();
     });
-
-    Promise.resolve().then(() => {
-      this.updateOutlineGap();
-      this._changeDetectorRef.markForCheck();
-    });
   }
 
   ngAfterContentChecked() {
     this._validateControlChild();
+    if (!this._initialGapCalculated) {
+      Promise.resolve().then(() => this.updateOutlineGap());
+    }
   }
 
   ngAfterViewInit() {
@@ -412,6 +415,15 @@ export class MatFormField extends _MatFormFieldMixinBase
    */
   updateOutlineGap() {
     if (this.appearance === 'outline' && this._label && this._label.nativeElement.children.length) {
+      if (this._platform && !this._platform.isBrowser) {
+        // getBoundingClientRect isn't available on the server.
+        this._initialGapCalculated = true;
+        return;
+      }
+      if (!document.contains(this._elementRef.nativeElement)) {
+        return;
+      }
+
       const containerStart = this._getStartEnd(
           this._connectionContainerRef.nativeElement.getBoundingClientRect());
       const labelStart = this._getStartEnd(
@@ -426,6 +438,7 @@ export class MatFormField extends _MatFormFieldMixinBase
       this._outlineGapStart = 0;
       this._outlineGapWidth = 0;
     }
+    this._initialGapCalculated = true;
     this._changeDetectorRef.markForCheck();
   }
 

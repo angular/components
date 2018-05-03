@@ -1,5 +1,12 @@
 import {async, fakeAsync, tick, ComponentFixture, inject, TestBed} from '@angular/core/testing';
-import {Component, NgModule, ViewChild, ViewContainerRef} from '@angular/core';
+import {
+  Component,
+  NgModule,
+  ViewChild,
+  ViewContainerRef,
+  ErrorHandler,
+  Injectable,
+} from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {
   ComponentPortal,
@@ -259,13 +266,56 @@ describe('Overlay', () => {
   });
 
   it('should default to the ltr direction', () => {
-    const overlayRef = overlay.create({hasBackdrop: true});
+    const overlayRef = overlay.create();
     expect(overlayRef.getConfig().direction).toBe('ltr');
   });
 
   it('should skip undefined values when applying the defaults', () => {
     const overlayRef = overlay.create({direction: undefined});
     expect(overlayRef.getConfig().direction).toBe('ltr');
+  });
+
+  it('should clear out all DOM element references on dispose', fakeAsync(() => {
+    const overlayRef = overlay.create({hasBackdrop: true});
+    overlayRef.attach(componentPortal);
+
+    expect(overlayRef.hostElement).toBeTruthy('Expected overlay host to be defined.');
+    expect(overlayRef.overlayElement).toBeTruthy('Expected overlay element to be defined.');
+    expect(overlayRef.backdropElement).toBeTruthy('Expected backdrop element to be defined.');
+
+    overlayRef.dispose();
+    tick(500);
+
+    expect(overlayRef.hostElement).toBeFalsy('Expected overlay host not to be referenced.');
+    expect(overlayRef.overlayElement).toBeFalsy('Expected overlay element not to be referenced.');
+    expect(overlayRef.backdropElement).toBeFalsy('Expected backdrop element not to be referenced.');
+  }));
+
+  it('should be able to use the `Overlay` provider during app initialization', () => {
+    /** Dummy provider that depends on `Overlay`. */
+    @Injectable()
+    class CustomErrorHandler extends ErrorHandler {
+      constructor(private _overlay: Overlay) { super(); }
+
+      handleError(error: any) {
+        const overlayRef = this._overlay.create({hasBackdrop: !!error});
+        overlayRef.dispose();
+      }
+    }
+
+    overlayContainer.ngOnDestroy();
+
+    TestBed
+      .resetTestingModule()
+      .configureTestingModule({
+        imports: [OverlayModule],
+        providers: [
+          CustomErrorHandler,
+          {provide: ErrorHandler, useExisting: CustomErrorHandler}
+        ]
+      });
+
+    expect(() => TestBed.compileComponents()).not.toThrow();
   });
 
   describe('positioning', () => {
@@ -442,7 +492,7 @@ describe('Overlay', () => {
       expect(backdrop.classList).toContain('cdk-overlay-dark-backdrop');
     });
 
-    it('should apply a custom overlay backdrop class', () => {
+    it('should apply a custom class to the backdrop', () => {
       config.backdropClass = 'cdk-overlay-transparent-backdrop';
 
       let overlayRef = overlay.create(config);
@@ -451,6 +501,18 @@ describe('Overlay', () => {
 
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
       expect(backdrop.classList).toContain('cdk-overlay-transparent-backdrop');
+    });
+
+    it('should apply multiple custom classes to the overlay', () => {
+      config.backdropClass = ['custom-class-1', 'custom-class-2'];
+
+      let overlayRef = overlay.create(config);
+      overlayRef.attach(componentPortal);
+      viewContainerFixture.detectChanges();
+
+      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+      expect(backdrop.classList).toContain('custom-class-1');
+      expect(backdrop.classList).toContain('custom-class-2');
     });
 
     it('should disable the pointer events of a backdrop that is being removed', () => {

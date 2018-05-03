@@ -1,5 +1,5 @@
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ViewChildren, QueryList} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent, dispatchMouseEvent, createMouseEvent} from '@angular/cdk/testing';
 import {Direction, Directionality} from '@angular/cdk/bidi';
@@ -97,18 +97,27 @@ describe('MatTabNavBar', () => {
         .toBe(true, 'Expected aria-disabled to be set to "true" if link is disabled.');
     });
 
-    it('should update the disableRipple property on each tab link', () => {
-      const tabLinkElements = fixture.debugElement.queryAll(By.directive(MatTabLink))
-        .map(tabLinkDebug => tabLinkDebug.componentInstance) as MatTabLink[];
-
-      expect(tabLinkElements.every(tabLink => !tabLink.disableRipple))
+    it('should disable the ripples on all tabs when they are disabled on the nav bar', () => {
+      expect(fixture.componentInstance.tabLinks.toArray().every(tabLink => !tabLink.rippleDisabled))
         .toBe(true, 'Expected every tab link to have ripples enabled');
 
-      fixture.componentInstance.disableRipple = true;
+      fixture.componentInstance.disableRippleOnBar = true;
       fixture.detectChanges();
 
-      expect(tabLinkElements.every(tabLink => tabLink.disableRipple))
+      expect(fixture.componentInstance.tabLinks.toArray().every(tabLink => tabLink.rippleDisabled))
         .toBe(true, 'Expected every tab link to have ripples disabled');
+    });
+
+    it('should have the `disableRipple` from the tab take precendence over the nav bar', () => {
+      const firstTab = fixture.componentInstance.tabLinks.first;
+
+      expect(firstTab.rippleDisabled).toBe(false, 'Expected ripples to be enabled on first tab');
+
+      firstTab.disableRipple = true;
+      fixture.componentInstance.disableRippleOnBar = false;
+      fixture.detectChanges();
+
+      expect(firstTab.rippleDisabled).toBe(true, 'Expected ripples to be disabled on first tab');
     });
 
     it('should update the tabindex if links are disabled', () => {
@@ -213,6 +222,17 @@ describe('MatTabNavBar', () => {
 
       expect(inkBar.alignToElement).toHaveBeenCalled();
     }));
+
+    it('should hide the ink bar when all the links are inactive', () => {
+      const inkBar = fixture.componentInstance.tabNavBar._inkBar;
+
+      spyOn(inkBar, 'hide');
+
+      fixture.componentInstance.tabLinks.forEach(link => link.active = false);
+      fixture.detectChanges();
+
+      expect(inkBar.hide).toHaveBeenCalled();
+    });
   });
 
   it('should clean up the ripple event handlers on destroy', () => {
@@ -258,7 +278,7 @@ describe('MatTabNavBar', () => {
 @Component({
   selector: 'test-app',
   template: `
-    <nav mat-tab-nav-bar [disableRipple]="disableRipple">
+    <nav mat-tab-nav-bar [disableRipple]="disableRippleOnBar">
       <a mat-tab-link
          *ngFor="let tab of tabs; let index = index"
          [active]="activeIndex === index"
@@ -271,10 +291,11 @@ describe('MatTabNavBar', () => {
 })
 class SimpleTabNavBarTestApp {
   @ViewChild(MatTabNav) tabNavBar: MatTabNav;
+  @ViewChildren(MatTabLink) tabLinks: QueryList<MatTabLink>;
 
   label = '';
-  disabled: boolean = false;
-  disableRipple: boolean = false;
+  disabled = false;
+  disableRippleOnBar = false;
   tabs = [0, 1, 2];
 
   activeIndex = 0;

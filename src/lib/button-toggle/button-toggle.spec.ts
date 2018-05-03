@@ -1,13 +1,13 @@
-import {fakeAsync, tick, ComponentFixture, TestBed} from '@angular/core/testing';
 import {dispatchMouseEvent} from '@angular/cdk/testing';
-import {NgModel, FormsModule, ReactiveFormsModule, FormControl} from '@angular/forms';
-import {Component, DebugElement, ViewChild, ViewChildren, QueryList} from '@angular/core';
+import {Component, DebugElement, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
+import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {
-  MatButtonToggleGroup,
-  MatButtonToggleGroupMultiple,
   MatButtonToggle,
   MatButtonToggleChange,
+  MatButtonToggleGroup,
+  MatButtonToggleGroupMultiple,
   MatButtonToggleModule,
 } from './index';
 
@@ -574,13 +574,14 @@ describe('MatButtonToggle without forms', () => {
 
     it('should toggle when clicked', fakeAsync(() => {
       buttonToggleLabelElement.click();
-
       fixture.detectChanges();
+      flush();
 
       expect(buttonToggleInstance.checked).toBe(true);
 
       buttonToggleLabelElement.click();
       fixture.detectChanges();
+      flush();
 
       expect(buttonToggleInstance.checked).toBe(false);
     }));
@@ -677,6 +678,22 @@ describe('MatButtonToggle without forms', () => {
     expect(fixture.componentInstance.toggleGroup.value).toBe('Two');
     expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(true);
   });
+
+  it('should maintain the selected state when the value and toggles are swapped out at ' +
+    'the same time', () => {
+      const fixture = TestBed.createComponent(RepeatedButtonTogglesWithPreselectedValue);
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.toggleGroup.value).toBe('Two');
+      expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(true);
+
+      fixture.componentInstance.possibleValues = ['Five', 'Six', 'Seven'];
+      fixture.componentInstance.value = 'Seven';
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.toggleGroup.value).toBe('Seven');
+      expect(fixture.componentInstance.toggles.toArray()[2].checked).toBe(true);
+    });
 });
 
 @Component({

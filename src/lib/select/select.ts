@@ -508,7 +508,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** Opens the overlay panel. */
   open(): void {
-    if (this.disabled || !this.options || !this.options.length) {
+    if (this.disabled || !this.options || !this.options.length || this._panelOpen) {
       return;
     }
 
@@ -826,7 +826,13 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       .withVerticalOrientation()
       .withHorizontalOrientation(this._isRtl() ? 'rtl' : 'ltr');
 
-      this._keyManager.tabOut.pipe(takeUntil(this._destroy)).subscribe(() => this.close());
+    this._keyManager.tabOut.pipe(takeUntil(this._destroy)).subscribe(() => {
+      // Restore focus to the trigger before closing. Ensures that the focus
+      // position won't be lost if the user got focus into the overlay.
+      this.focus();
+      this.close();
+    });
+
     this._keyManager.change.pipe(takeUntil(this._destroy)).subscribe(() => {
       if (this._panelOpen && this.panel) {
         this._scrollActiveOptionIntoView();
@@ -874,6 +880,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       wasSelected ? option.deselect() : option.select();
       this._keyManager.setActiveItem(option);
       this._sortValues();
+
+      // In case the user select the option with their mouse, we
+      // want to restore focus back to the trigger, in order to
+      // prevent the select keyboard controls from clashing with
+      // the ones from `mat-option`.
+      this.focus();
     } else {
       this._clearSelection(option.value == null ? undefined : option);
 

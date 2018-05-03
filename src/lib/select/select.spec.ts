@@ -702,6 +702,29 @@ describe('MatSelect', () => {
             expect(host.getAttribute('aria-activedescendant')).toBe(options[0].id);
           }));
 
+        it('should restore focus to the trigger after selecting an option in multi-select mode',
+          fakeAsync(() => {
+            fixture.destroy();
+
+            const multiFixture = TestBed.createComponent(MultiSelect);
+            const instance = multiFixture.componentInstance;
+
+            multiFixture.detectChanges();
+            select = multiFixture.debugElement.query(By.css('mat-select')).nativeElement;
+            instance.select.open();
+            multiFixture.detectChanges();
+
+            // Ensure that the select isn't focused to begin with.
+            select.blur();
+            expect(document.activeElement).not.toBe(select, 'Expected trigger not to be focused.');
+
+            const option = overlayContainerElement.querySelector('mat-option')! as HTMLElement;
+            option.click();
+            multiFixture.detectChanges();
+
+            expect(document.activeElement).toBe(select, 'Expected trigger to be focused.');
+          }));
+
       });
 
       describe('for options', () => {
@@ -887,6 +910,25 @@ describe('MatSelect', () => {
         flush();
 
         expect(fixture.componentInstance.select.panelOpen).toBe(false);
+      }));
+
+      it('should restore focus to the host before tabbing away', fakeAsync(() => {
+        const select = fixture.nativeElement.querySelector('.mat-select');
+
+        trigger.click();
+        fixture.detectChanges();
+        flush();
+
+        expect(fixture.componentInstance.select.panelOpen).toBe(true);
+
+        // Use a spy since focus can be flaky in unit tests.
+        spyOn(select, 'focus').and.callThrough();
+
+        dispatchKeyboardEvent(trigger, 'keydown', TAB);
+        fixture.detectChanges();
+        flush();
+
+        expect(select.focus).toHaveBeenCalled();
       }));
 
       it('should close when tabbing out from inside the panel', fakeAsync(() => {

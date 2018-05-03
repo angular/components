@@ -1,6 +1,6 @@
-import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed, inject, tick, fakeAsync} from '@angular/core/testing';
 import {MatPaginatorModule} from './index';
-import {MatPaginator, PageEvent} from './paginator';
+import {MatPaginator} from './paginator';
 import {Component, ViewChild} from '@angular/core';
 import {MatPaginatorIntl} from './paginator-intl';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -111,7 +111,10 @@ describe('MatPaginator', () => {
       dispatchMouseEvent(getNextButton(fixture), 'click');
 
       expect(paginator.pageIndex).toBe(1);
-      expect(component.latestPageEvent ? component.latestPageEvent.pageIndex : null).toBe(1);
+      expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
+        previousPageIndex: 0,
+        pageIndex: 1
+      }));
     });
 
     it('should be able to go to the previous page', () => {
@@ -122,27 +125,46 @@ describe('MatPaginator', () => {
       dispatchMouseEvent(getPreviousButton(fixture), 'click');
 
       expect(paginator.pageIndex).toBe(0);
-      expect(component.latestPageEvent ? component.latestPageEvent.pageIndex : null).toBe(0);
+      expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
+        previousPageIndex: 1,
+        pageIndex: 0
+      }));
     });
-
   });
 
   it('should be able to show the first/last buttons', () => {
     expect(getFirstButton(fixture))
-      .toBeNull('Expected first button to not exist.');
+        .toBeNull('Expected first button to not exist.');
 
     expect(getLastButton(fixture))
-      .toBeNull('Expected last button to not exist.');
+        .toBeNull('Expected last button to not exist.');
 
     fixture.componentInstance.showFirstLastButtons = true;
     fixture.detectChanges();
 
     expect(getFirstButton(fixture))
-      .toBeTruthy('Expected first button to be rendered.');
+        .toBeTruthy('Expected first button to be rendered.');
 
     expect(getLastButton(fixture))
-      .toBeTruthy('Expected last button to be rendered.');
+        .toBeTruthy('Expected last button to be rendered.');
+  });
 
+  it('should mark itself as initialized', fakeAsync(() => {
+    let isMarkedInitialized = false;
+    paginator.initialized.subscribe(() => isMarkedInitialized = true);
+
+    tick();
+    expect(isMarkedInitialized).toBeTruthy();
+  }));
+
+  it('should not allow a negative pageSize', () => {
+    paginator.pageSize = -1337;
+    expect(paginator.pageSize).toBeGreaterThanOrEqual(0);
+  });
+
+  it('should not allow a negative pageIndex', () => {
+    paginator.pageSize = -42;
+    expect(paginator.pageIndex).toBeGreaterThanOrEqual(0);
   });
 
   describe('when showing the first and last button', () => {
@@ -163,7 +185,10 @@ describe('MatPaginator', () => {
       dispatchMouseEvent(getLastButton(fixture), 'click');
 
       expect(paginator.pageIndex).toBe(9);
-      expect(component.latestPageEvent ? component.latestPageEvent.pageIndex : null).toBe(9);
+      expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
+        previousPageIndex: 0,
+        pageIndex: 9
+      }));
     });
 
     it('should be able to go to the first page via the first page button', () => {
@@ -174,7 +199,10 @@ describe('MatPaginator', () => {
       dispatchMouseEvent(getFirstButton(fixture), 'click');
 
       expect(paginator.pageIndex).toBe(0);
-      expect(component.latestPageEvent ? component.latestPageEvent.pageIndex : null).toBe(0);
+      expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
+        previousPageIndex: 3,
+        pageIndex: 0
+      }));
     });
 
     it('should disable navigating to the next page if at last page', () => {
@@ -183,10 +211,10 @@ describe('MatPaginator', () => {
       expect(paginator.pageIndex).toBe(9);
       expect(paginator.hasNextPage()).toBe(false);
 
-      component.latestPageEvent = null;
+      component.pageEvent.calls.reset();
       dispatchMouseEvent(getNextButton(fixture), 'click');
 
-      expect(component.latestPageEvent).toBe(null);
+      expect(component.pageEvent).not.toHaveBeenCalled();
       expect(paginator.pageIndex).toBe(9);
     });
 
@@ -194,10 +222,10 @@ describe('MatPaginator', () => {
       expect(paginator.pageIndex).toBe(0);
       expect(paginator.hasPreviousPage()).toBe(false);
 
-      component.latestPageEvent = null;
+      component.pageEvent.calls.reset();
       dispatchMouseEvent(getPreviousButton(fixture), 'click');
 
-      expect(component.latestPageEvent).toBe(null);
+      expect(component.pageEvent).not.toHaveBeenCalled();
       expect(paginator.pageIndex).toBe(0);
     });
 
@@ -264,35 +292,37 @@ describe('MatPaginator', () => {
     fixture.detectChanges();
 
     // The first item of the page should be item with index 40
-    let firstPageItemIndex: number | null = paginator.pageIndex * paginator.pageSize;
-    expect(firstPageItemIndex).toBe(40);
+    expect(paginator.pageIndex * paginator.pageSize).toBe(40);
 
     // The first item on the page is now 25. Change the page size to 25 so that we should now be
     // on the second page where the top item is index 25.
+    component.pageEvent.calls.reset();
     paginator._changePageSize(25);
-    let paginationEvent = component.latestPageEvent;
-    firstPageItemIndex = paginationEvent ?
-        paginationEvent.pageIndex * paginationEvent.pageSize : null;
-    expect(firstPageItemIndex).toBe(25);
-    expect(paginationEvent ? paginationEvent.pageIndex : null).toBe(1);
+
+    expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
+      pageIndex: 1,
+      pageSize: 25
+    }));
 
     // The first item on the page is still 25. Change the page size to 8 so that we should now be
     // on the fourth page where the top item is index 24.
+    component.pageEvent.calls.reset();
     paginator._changePageSize(8);
-    paginationEvent = component.latestPageEvent;
-    firstPageItemIndex = paginationEvent ?
-        paginationEvent.pageIndex * paginationEvent.pageSize : null;
-    expect(firstPageItemIndex).toBe(24);
-    expect(paginationEvent ? paginationEvent.pageIndex : null).toBe(3);
+
+    expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
+      pageIndex: 3,
+      pageSize: 8
+    }));
 
     // The first item on the page is 24. Change the page size to 16 so that we should now be
     // on the first page where the top item is index 0.
+    component.pageEvent.calls.reset();
     paginator._changePageSize(25);
-    paginationEvent = component.latestPageEvent;
-    firstPageItemIndex = paginationEvent ?
-        paginationEvent.pageIndex * paginationEvent.pageSize : null;
-    expect(firstPageItemIndex).toBe(0);
-    expect(paginationEvent ? paginationEvent.pageIndex : null).toBe(0);
+
+    expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
+      pageIndex: 0,
+      pageSize: 25
+    }));
   });
 
   it('should show a select only if there are multiple options', () => {
@@ -357,7 +387,7 @@ function getLastButton(fixture: ComponentFixture<any>) {
                    [hidePageSize]="hidePageSize"
                    [showFirstLastButtons]="showFirstLastButtons"
                    [length]="length"
-                   (page)="latestPageEvent = $event">
+                   (page)="pageEvent($event)">
     </mat-paginator>
   `,
 })
@@ -368,8 +398,7 @@ class MatPaginatorApp {
   hidePageSize = false;
   showFirstLastButtons = false;
   length = 100;
-
-  latestPageEvent: PageEvent | null;
+  pageEvent = jasmine.createSpy('page event');
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 

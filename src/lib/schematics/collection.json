@@ -9,6 +9,7 @@
       "schema": "./shell/schema.json",
       "aliases": ["material-shell"]
     },
+
     // Create a dashboard component
     "materialDashboard": {
       "description": "Create a card-based dashboard component",

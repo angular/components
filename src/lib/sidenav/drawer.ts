@@ -53,8 +53,13 @@ export type MatDrawerToggleResult = 'open' | 'close';
 export const MAT_DRAWER_DEFAULT_AUTOSIZE =
     new InjectionToken<boolean>('MAT_DRAWER_DEFAULT_AUTOSIZE', {
       providedIn: 'root',
-      factory: () => false,
+      factory: MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY,
     });
+
+/** @docs-private */
+export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean {
+  return false;
+}
 
 @Component({
   moduleId: module.id,
@@ -149,6 +154,12 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   get disableClose(): boolean { return this._disableClose; }
   set disableClose(value: boolean) { this._disableClose = coerceBooleanProperty(value); }
   private _disableClose: boolean = false;
+
+  /** Whether the drawer should focus the first focusable element automatically when opened. */
+  @Input()
+  get autoFocus(): boolean { return this._autoFocus; }
+  set autoFocus(value: boolean) { this._autoFocus = coerceBooleanProperty(value); }
+  private _autoFocus: boolean = true;
 
   /** How the sidenav was opened (keypress, mouse click etc.) */
   private _openedVia: FocusOrigin | null;
@@ -246,6 +257,10 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
 
   /** Traps focus inside the drawer. */
   private _trapFocus() {
+    if (!this.autoFocus) {
+      return;
+    }
+
     this._focusTrap.focusInitialElementWhenReady().then(hasMovedFocus => {
       // If there were no focusable elements, focus the sidenav itself so the keyboard navigation
       // still works. We need to check that `focus` is a function due to Universal.
@@ -260,6 +275,10 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
    * opened.
    */
   private _restoreFocus() {
+    if (!this.autoFocus) {
+      return;
+    }
+
     const activeEl = this._doc && this._doc.activeElement;
 
     if (activeEl && this._elementRef.nativeElement.contains(activeEl)) {

@@ -31,8 +31,8 @@ const allScssGlob = join(buildConfig.packagesDir, '**/*.scss');
 // Pattern matching schematics files to be copied into the @angular/material package.
 const schematicsGlobs = [
   // File templates and schemas are copied as-is from source.
-  join(schematicsDir, '**/files/**/*'),
-  join(schematicsDir, '**/+(schema|collection).json'),
+  join(schematicsDir, '**/+(data|files)/**/*'),
+  join(schematicsDir, '**/+(schema|collection|migration).json'),
 
   // JavaScript files compiled from the TypeScript sources.
   join(distDir, 'schematics', '**/*.js?(.map)'),
