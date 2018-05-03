@@ -11,6 +11,7 @@ import {FooterModule} from '../../shared/footer/footer';
 import {Observable, Subject, combineLatest} from 'rxjs';
 import {switchMap, takeUntil, startWith} from 'rxjs/operators';
 import {trigger, animate, state, style, transition} from '@angular/animations';
+import {CdkAccordionModule} from '@angular/cdk/accordion';
 
 const SMALL_WIDTH_BREAKPOINT = 720;
 
@@ -135,6 +136,7 @@ export class ComponentNav implements OnInit, OnDestroy {
     FooterModule,
     BrowserAnimationsModule,
     MatIconModule,
+    CdkAccordionModule
   ],
   exports: [ComponentSidenav],
   declarations: [ComponentSidenav, ComponentNav],
