@@ -3,10 +3,6 @@
 #options for the size plugin
 size:
   disabled: true
-  maxSizeIncrease: 1000
-  status:
-    disabled: false
-    context: "ci/angular: size"
 
 # options for the merge plugin
 merge:
