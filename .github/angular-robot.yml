@@ -2,7 +2,7 @@
 
 #options for the size plugin
 size:
-  disabled: false
+  disabled: true
   maxSizeIncrease: 1000
   status:
     disabled: false
