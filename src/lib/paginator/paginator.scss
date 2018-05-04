@@ -15,8 +15,22 @@ $mat-paginator-button-margin: 8px;
 $mat-paginator-button-icon-height: 8px;
 $mat-paginator-button-icon-width: 8px;
 
-$mat-paginator-button-decrement-icon-margin: 12px;
-$mat-paginator-button-increment-icon-margin: 16px;
+$mat-paginator-button-increment-icon-margin: 12px;
+$mat-paginator-button-decrement-icon-margin: 16px;
+
+$mat-paginator-button-first-last-icon-width: 14px;
+
+$mat-paginator-button-first-icon-margin: 3px;
+$mat-paginator-button-last-icon-margin: 15px;
+
+
+$mat-paginator-button-first-decrement-icon-margin: 21px;
+$mat-paginator-button-last-increment-icon-margin: 9px;
+
+
+.mat-paginator {
+  display: block;
+}
 
 .mat-paginator-container {
   display: flex;
@@ -31,6 +45,11 @@ $mat-paginator-button-increment-icon-margin: 16px;
   display: flex;
   align-items: baseline;
   margin-right: $mat-paginator-page-size-margin-right;
+
+  [dir='rtl'] & {
+    margin-right: 0;
+    margin-left: $mat-paginator-page-size-margin-right;
+  }
 }
 
 .mat-paginator-page-size-label {
@@ -46,45 +65,17 @@ $mat-paginator-button-increment-icon-margin: 16px;
   margin: $mat-paginator-range-label-margin;
 }
 
-.mat-paginator-increment-button + .mat-paginator-increment-button {
-  margin: 0 0 0 $mat-paginator-button-margin;
-
-  [dir='rtl'] & {
-    margin: 0 $mat-paginator-button-margin 0 0;
-  }
-}
-
-.mat-paginator-increment,
-.mat-paginator-decrement {
-  width: $mat-paginator-button-icon-width;
-  height: $mat-paginator-button-icon-height;
-}
-
-.mat-paginator-decrement,
-[dir='rtl'] .mat-paginator-increment {
-  transform: rotate(45deg);
-}
-.mat-paginator-increment,
-[dir='rtl'] .mat-paginator-decrement {
-  transform: rotate(225deg);
-}
-
-.mat-paginator-decrement {
-  margin-left: $mat-paginator-button-decrement-icon-margin;
-  [dir='rtl'] & {
-    margin-right: $mat-paginator-button-decrement-icon-margin;
-  }
-}
-
-.mat-paginator-increment {
-  margin-left: $mat-paginator-button-increment-icon-margin;
-  [dir='rtl'] & {
-    margin-right: $mat-paginator-button-increment-icon-margin;
-  }
-}
-
 .mat-paginator-range-actions {
   display: flex;
   align-items: center;
   min-height: $mat-paginator-range-actions-min-height;
+}
+
+.mat-paginator-icon {
+  width: $mat-paginator-height / 2;
+  fill: currentColor;
+
+  [dir='rtl'] & {
+    transform: rotate(180deg);
+  }
 }

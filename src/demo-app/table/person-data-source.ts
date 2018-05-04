@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MatPaginator, MatSort} from '@angular/material';
 import {DataSource} from '@angular/cdk/collections';
-import {Observable} from 'rxjs/Observable';
+import {MatPaginator, MatSort} from '@angular/material';
+import {merge, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {PeopleDatabase, UserData} from './people-database';
-import {merge} from 'rxjs/observable/merge';
-import {map} from 'rxjs/operators/map';
+
 
 export class PersonDataSource extends DataSource<any> {
   constructor(private _peopleDatabase: PeopleDatabase,
@@ -42,7 +42,7 @@ export class PersonDataSource extends DataSource<any> {
   /** Returns a sorted copy of the database data. */
   getSortedData(): UserData[] {
     const data = this._peopleDatabase.data.slice();
-    if (!this._sort.active || this._sort.direction == '') { return data; }
+    if (!this._sort.active || this._sort.direction === '') { return data; }
 
     return data.sort((a, b) => {
       let propertyA: number|string = '';
@@ -55,10 +55,10 @@ export class PersonDataSource extends DataSource<any> {
         case 'color': [propertyA, propertyB] = [a.color, b.color]; break;
       }
 
-      let valueA = isNaN(+propertyA) ? propertyA : +propertyA;
-      let valueB = isNaN(+propertyB) ? propertyB : +propertyB;
+      const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
+      const valueB = isNaN(+propertyB) ? propertyB : +propertyB;
 
-      return (valueA < valueB ? -1 : 1) * (this._sort.direction == 'asc' ? 1 : -1);
+      return (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1);
     });
   }
 }

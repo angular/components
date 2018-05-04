@@ -8,6 +8,8 @@
 
 export * from './version';
 export * from '@angular/material/autocomplete';
+export * from '@angular/material/badge';
+export * from '@angular/material/bottom-sheet';
 export * from '@angular/material/button';
 export * from '@angular/material/button-toggle';
 export * from '@angular/material/card';
@@ -16,6 +18,7 @@ export * from '@angular/material/chips';
 export * from '@angular/material/core';
 export * from '@angular/material/datepicker';
 export * from '@angular/material/dialog';
+export * from '@angular/material/divider';
 export * from '@angular/material/expansion';
 export * from '@angular/material/form-field';
 export * from '@angular/material/grid-list';
@@ -38,3 +41,4 @@ export * from '@angular/material/table';
 export * from '@angular/material/tabs';
 export * from '@angular/material/toolbar';
 export * from '@angular/material/tooltip';
+export * from '@angular/material/tree';

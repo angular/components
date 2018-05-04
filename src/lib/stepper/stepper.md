@@ -54,12 +54,16 @@ There are two button directives to support navigation between different steps:
 
 ### Linear stepper
 The `linear` attribute can be set on `mat-horizontal-stepper` and `mat-vertical-stepper` to create
-a linear stepper that requires the user to complete previous steps before proceeding
-to following steps. For each `mat-step`, the `stepControl` attribute can be set to the top level
+a linear stepper that requires the user to complete previous steps before proceeding to following
+steps. For each `mat-step`, the `stepControl` attribute can be set to the top level
 `AbstractControl` that is used to check the validity of the step.
 
 There are two possible approaches. One is using a single form for stepper, and the other is
 using a different form for each step.
+
+Alternatively, if you don't want to use the Angular forms, you can pass in the `completed` property
+to each of the steps which won't allow the user to continue until it becomes `true`. Note that if
+both `completed` and `stepControl` are set, the `stepControl` will take precedence.
 
 #### Using a single form
 When using a single form for the stepper, `matStepperPrevious` and `matStepperNext` have to be
@@ -108,14 +112,46 @@ are completed.
 If completion of a step in linear stepper is not required, then the `optional` attribute can be set
 on `mat-step`.
 
+<!-- example(stepper-optional) -->
+
+
 #### Editable step
 By default, steps are editable, which means users can return to previously completed steps and
 edit their responses. `editable="true"` can be set on `mat-step` to change the default.
+
+<!-- example(stepper-editable) -->
 
 #### Completed step
 By default, the `completed` attribute of a step returns `true` if the step is valid (in case of
 linear stepper) and the user has interacted with the step. The user, however, can also override
 this default `completed` behavior by setting the `completed` attribute as needed.
+
+#### Overriding icons
+By default, the step headers will use the `create` and `done` icons from the Material design icon
+set via `<mat-icon>` elements. If you want to provide a different set of icons, you can do so
+by placing a `matStepperIcon` for each of the icons that you want to override. The `index`,
+`active`, and `optional` values of the individual steps are available through template variables:
+
+```html
+<mat-vertical-stepper>
+  <ng-template matStepperIcon="edit">
+    <mat-icon>insert_drive_file</mat-icon>
+  </ng-template>
+
+  <ng-template matStepperIcon="done">
+    <mat-icon>done_all</mat-icon>
+  </ng-template>
+
+  <!-- Custom icon with a context variable. -->
+  <ng-template matStepperIcon="number" let-index="index">
+    {{index + 10}}
+  </ng-template>
+
+  <!-- Stepper steps go here -->
+</mat-vertical-stepper>
+```
+
+Note that you aren't limited to using the `mat-icon` component when providing custom icons.
 
 ### Keyboard interaction
 - <kbd>LEFT_ARROW</kbd>: Focuses the previous step header

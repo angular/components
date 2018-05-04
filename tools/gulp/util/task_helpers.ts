@@ -4,7 +4,7 @@ import * as gulp from 'gulp';
 import * as path from 'path';
 import {buildConfig} from 'material2-build-tools';
 
-/* Those imports lack typings. */
+// Those imports lack typings.
 const gulpClean = require('gulp-clean');
 const gulpConnect = require('gulp-connect');
 
@@ -135,6 +135,7 @@ export function serverTask(packagePath: string, livereload = true) {
       root: projectDir,
       livereload: livereload,
       port: 4200,
+      host: '0.0.0.0',
       middleware: () => {
         return [httpRewrite.getMiddleware([
           // Rewrite the node_modules/ and dist/ folder to the real paths. This is a trick to

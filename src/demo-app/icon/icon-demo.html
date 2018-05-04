@@ -5,8 +5,22 @@
 
   <p>
     By name registered with MatIconProvider:
-    <mat-icon svgIcon="thumb-up" class="green"></mat-icon>
+    <mat-icon svgIcon="thumb-up" class="demo-icon-green"></mat-icon>
     <mat-icon svgIcon="thumb-up"></mat-icon>
+  </p>
+
+  <p>
+    From inline template with MatIconProvider:
+    <mat-icon svgIcon="bike" class="green"></mat-icon>
+    <mat-icon svgIcon="bike"></mat-icon>
+  </p>
+
+  <p>
+    Mirrored in RTL:
+    <mat-icon class="mat-icon-rtl-mirror green" svgIcon="thumb-up"></mat-icon>
+    <mat-icon class="mat-icon-rtl-mirror" svgIcon="thumb-up"></mat-icon>
+    <mat-icon class="mat-icon-rtl-mirror green" svgIcon="bike"></mat-icon>
+    <mat-icon class="mat-icon-rtl-mirror" svgIcon="bike"></mat-icon>
   </p>
 
   <p>
@@ -14,6 +28,13 @@
     <mat-icon svgIcon="core:alarm"></mat-icon>
     <mat-icon svgIcon="core:accessibility"></mat-icon>
     <mat-icon svgIcon="core:alarm"></mat-icon>
+  </p>
+
+  <p>
+    From inline icon set:
+    <mat-icon svgIcon="core-inline:account-balance"></mat-icon>
+    <mat-icon svgIcon="core-inline:account-balance-wallet"></mat-icon>
+    <mat-icon svgIcon="core-inline:account-box"></mat-icon>
   </p>
 
   <p>
@@ -31,5 +52,13 @@
   <p>
     Custom icon font and CSS:
     <mat-icon fontSet="fontawesome" fontIcon="fa-birthday-cake"></mat-icon>
+  </p>
+
+  <span>Inline styling allows icons to appear as the same size as text around them.</span>
+  <p>
+    My <span class="cdk-visually-hidden">dog</span><mat-icon inline="true">pets</mat-icon> is my
+    <span class="cdk-visually-hidden">favorite</span><mat-icon inline="true">favorite</mat-icon>,
+    he loves to go on <span class="cdk-visually-hidden">walks</span>
+    <mat-icon inline="true">directions_walk</mat-icon>
   </p>
 </div>

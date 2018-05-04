@@ -1,16 +1,37 @@
 <div class="mat-step-header-ripple" mat-ripple [matRippleTrigger]="_getHostElement()"></div>
-<div [class.mat-step-icon]="icon !== 'number' || selected"
-     [class.mat-step-icon-not-touched]="icon == 'number' && !selected"
-     [ngSwitch]="icon">
-  <span *ngSwitchCase="'number'">{{index + 1}}</span>
-  <mat-icon *ngSwitchCase="'edit'">create</mat-icon>
-  <mat-icon *ngSwitchCase="'done'">done</mat-icon>
+<div [class.mat-step-icon]="state !== 'number' || selected"
+     [class.mat-step-icon-not-touched]="state == 'number' && !selected"
+     [ngSwitch]="state">
+
+  <ng-container *ngSwitchCase="'number'" [ngSwitch]="!!(iconOverrides && iconOverrides.number)">
+    <ng-container
+      *ngSwitchCase="true"
+      [ngTemplateOutlet]="iconOverrides.number"
+      [ngTemplateOutletContext]="_getIconContext()"></ng-container>
+    <span *ngSwitchDefault>{{index + 1}}</span>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'edit'" [ngSwitch]="!!(iconOverrides && iconOverrides.edit)">
+    <ng-container
+      *ngSwitchCase="true"
+      [ngTemplateOutlet]="iconOverrides.edit"
+      [ngTemplateOutletContext]="_getIconContext()"></ng-container>
+    <mat-icon *ngSwitchDefault>create</mat-icon>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'done'" [ngSwitch]="!!(iconOverrides && iconOverrides.done)">
+    <ng-container
+      *ngSwitchCase="true"
+      [ngTemplateOutlet]="iconOverrides.done"
+      [ngTemplateOutletContext]="_getIconContext()"></ng-container>
+    <mat-icon *ngSwitchDefault>done</mat-icon>
+  </ng-container>
 </div>
 <div class="mat-step-label"
      [class.mat-step-label-active]="active"
      [class.mat-step-label-selected]="selected">
   <!-- If there is a label template, use it. -->
-  <ng-container *ngIf="_templateLabel()" [ngTemplateOutlet]="label.template">
+  <ng-container *ngIf="_templateLabel()" [ngTemplateOutlet]="_templateLabel()!.template">
   </ng-container>
   <!-- It there is no label template, fall back to the text label. -->
   <div class="mat-step-text-label" *ngIf="_stringLabel()">{{label}}</div>

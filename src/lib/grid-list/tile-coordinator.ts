@@ -39,8 +39,10 @@ export class TileCoordinator {
   /** Gets the total number of rows occupied by tiles */
   get rowCount(): number { return this.rowIndex + 1; }
 
-  /** Gets the total span of rows occupied by tiles.
-   * Ex: A list with 1 row that contains a tile with rowspan 2 will have a total rowspan of 2. */
+  /**
+   * Gets the total span of rows occupied by tiles.
+   * Ex: A list with 1 row that contains a tile with rowspan 2 will have a total rowspan of 2.
+   */
   get rowspan() {
     let lastRowMax = Math.max(...this.tracker);
     // if any of the tiles has a rowspan that pushes it beyond the total row count,
@@ -108,7 +110,10 @@ export class TileCoordinator {
 
       // Continue iterating until we find a gap wide enough for this tile.
     } while (gapEndIndex - gapStartIndex < tileCols);
-    return gapStartIndex;
+
+    // If we still didn't manage to find a gap, ensure that the index is
+    // at least zero so the tile doesn't get pulled out of the grid.
+    return Math.max(gapStartIndex, 0);
   }
 
   /** Move "down" to the next row. */

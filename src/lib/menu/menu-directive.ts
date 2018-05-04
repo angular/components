@@ -6,40 +6,38 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {AnimationEvent} from '@angular/animations';
-import {FocusKeyManager} from '@angular/cdk/a11y';
+import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
-import {ESCAPE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
-import {startWith} from 'rxjs/operators/startWith';
-import {switchMap} from 'rxjs/operators/switchMap';
-import {take} from 'rxjs/operators/take';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, DOWN_ARROW, UP_ARROW} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
   Component,
+  ContentChild,
   ContentChildren,
   ElementRef,
   EventEmitter,
   Inject,
   InjectionToken,
   Input,
+  NgZone,
   OnDestroy,
+  OnInit,
   Output,
-  QueryList,
   TemplateRef,
+  QueryList,
   ViewChild,
   ViewEncapsulation,
-  NgZone,
 } from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {merge} from 'rxjs/observable/merge';
-import {Subscription} from 'rxjs/Subscription';
-import {fadeInItems, transformMenu} from './menu-animations';
+import {merge, Observable, Subject, Subscription} from 'rxjs';
+import {startWith, switchMap, take} from 'rxjs/operators';
+import {matMenuAnimations} from './menu-animations';
+import {MatMenuContent} from './menu-content';
 import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
 import {MatMenuItem} from './menu-item';
-import {MatMenuPanel} from './menu-panel';
+import {MAT_MENU_PANEL, MatMenuPanel} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 
 /** Default `mat-menu` options that can be overridden. */
@@ -52,12 +50,30 @@ export interface MatMenuDefaultOptions {
 
   /** Whether the menu should overlap the menu trigger. */
   overlapTrigger: boolean;
+
+  /** Class to be applied to the menu's backdrop. */
+  backdropClass: string;
+
+  /** Whether the menu has a backdrop. */
+  hasBackdrop?: boolean;
 }
 
 /** Injection token to be used to override the default options for `mat-menu`. */
 export const MAT_MENU_DEFAULT_OPTIONS =
-    new InjectionToken<MatMenuDefaultOptions>('mat-menu-default-options');
+    new InjectionToken<MatMenuDefaultOptions>('mat-menu-default-options', {
+      providedIn: 'root',
+      factory: MAT_MENU_DEFAULT_OPTIONS_FACTORY
+    });
 
+/** @docs-private */
+export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
+  return {
+    overlapTrigger: true,
+    xPosition: 'after',
+    yPosition: 'below',
+    backdropClass: 'cdk-overlay-transparent-backdrop',
+  };
+}
 /**
  * Start elevation for the menu panel.
  * @docs-private
@@ -72,18 +88,26 @@ const MAT_MENU_BASE_ELEVATION = 2;
   styleUrls: ['menu.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
+  exportAs: 'matMenu',
   animations: [
-    transformMenu,
-    fadeInItems
+    matMenuAnimations.transformMenu,
+    matMenuAnimations.fadeInItems
   ],
-  exportAs: 'matMenu'
+  providers: [
+    {provide: MAT_MENU_PANEL, useExisting: MatMenu}
+  ]
 })
-export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
+export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel<MatMenuItem>, OnDestroy {
   private _keyManager: FocusKeyManager<MatMenuItem>;
   private _xPosition: MenuPositionX = this._defaultOptions.xPosition;
   private _yPosition: MenuPositionY = this._defaultOptions.yPosition;
   private _previousElevation: string;
+
+  /** Menu items inside the current menu. */
+  private _items: MatMenuItem[] = [];
+
+  /** Emits whenever the amount of menu items changes. */
+  private _itemChanges = new Subject<MatMenuItem[]>();
 
   /** Subscription to tab events on the menu panel */
   private _tabSubscription = Subscription.EMPTY;
@@ -92,7 +116,13 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   _classList: {[key: string]: boolean} = {};
 
   /** Current state of the panel animation. */
-  _panelAnimationState: 'void' | 'enter-start' | 'enter' = 'void';
+  _panelAnimationState: 'void' | 'enter' = 'void';
+
+  /** Emits whenever an animation on the menu completes. */
+  _animationDone = new Subject<AnimationEvent>();
+
+  /** Whether the menu is animating. */
+  _isAnimating: boolean;
 
   /** Parent menu of the current menu panel. */
   parentMenu: MatMenuPanel | undefined;
@@ -100,9 +130,12 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
   /** Layout direction of the menu. */
   direction: Direction;
 
+  /** Class to be added to the backdrop element. */
+  @Input() backdropClass: string = this._defaultOptions.backdropClass;
+
   /** Position of the menu in the X axis. */
   @Input()
-  get xPosition() { return this._xPosition; }
+  get xPosition(): MenuPositionX { return this._xPosition; }
   set xPosition(value: MenuPositionX) {
     if (value !== 'before' && value !== 'after') {
       throwMatMenuInvalidPositionX();
@@ -113,7 +146,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
   /** Position of the menu in the Y axis. */
   @Input()
-  get yPosition() { return this._yPosition; }
+  get yPosition(): MenuPositionY { return this._yPosition; }
   set yPosition(value: MenuPositionY) {
     if (value !== 'above' && value !== 'below') {
       throwMatMenuInvalidPositionY();
@@ -122,20 +155,37 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
     this.setPositionClasses();
   }
 
+  /** @docs-private */
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
 
-  /** List of the items inside of a menu. */
+  /**
+   * List of the items inside of a menu.
+   * @deprecated
+   * @deletion-target 7.0.0
+   */
   @ContentChildren(MatMenuItem) items: QueryList<MatMenuItem>;
+
+  /**
+   * Menu content that will be rendered lazily.
+   * @docs-private
+   */
+  @ContentChild(MatMenuContent) lazyContent: MatMenuContent;
 
   /** Whether the menu should overlap its trigger. */
   @Input()
+  get overlapTrigger(): boolean { return this._overlapTrigger; }
   set overlapTrigger(value: boolean) {
     this._overlapTrigger = coerceBooleanProperty(value);
   }
-  get overlapTrigger(): boolean {
-    return this._overlapTrigger;
-  }
   private _overlapTrigger: boolean = this._defaultOptions.overlapTrigger;
+
+  /** Whether the menu has a backdrop. */
+  @Input()
+  get hasBackdrop(): boolean | undefined { return this._hasBackdrop; }
+  set hasBackdrop(value: boolean | undefined) {
+    this._hasBackdrop = coerceBooleanProperty(value);
+  }
+  private _hasBackdrop: boolean | undefined = this._defaultOptions.hasBackdrop;
 
   /**
    * This method takes classes set on the host mat-menu element and applies them on the
@@ -161,17 +211,20 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
    * menu template that displays in the overlay container.  Otherwise, it's difficult
    * to style the containing menu from outside the component.
    * @deprecated Use `panelClass` instead.
+   * @deletion-target 7.0.0
    */
   @Input()
-  set classList(classes: string) { this.panelClass = classes; }
   get classList(): string { return this.panelClass; }
+  set classList(classes: string) { this.panelClass = classes; }
 
   /** Event emitted when the menu is closed. */
-  @Output() closed = new EventEmitter<void | 'click' | 'keydown'>();
+  @Output() readonly closed: EventEmitter<void | 'click' | 'keydown' | 'tab'> =
+      new EventEmitter<void | 'click' | 'keydown' | 'tab'>();
 
   /**
    * Event emitted when the menu is closed.
    * @deprecated Switch to `closed` instead
+   * @deletion-target 7.0.0
    */
   @Output() close = this.closed;
 
@@ -180,9 +233,13 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
     private _ngZone: NgZone,
     @Inject(MAT_MENU_DEFAULT_OPTIONS) private _defaultOptions: MatMenuDefaultOptions) { }
 
+  ngOnInit() {
+    this.setPositionClasses();
+  }
+
   ngAfterContentInit() {
-    this._keyManager = new FocusKeyManager<MatMenuItem>(this.items).withWrap().withTypeAhead();
-    this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close.emit('keydown'));
+    this._keyManager = new FocusKeyManager<MatMenuItem>(this._items).withWrap().withTypeAhead();
+    this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close.emit('tab'));
   }
 
   ngOnDestroy() {
@@ -192,21 +249,17 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
 
   /** Stream that emits whenever the hovered menu item changes. */
   _hovered(): Observable<MatMenuItem> {
-    if (this.items) {
-      return this.items.changes.pipe(
-        startWith(this.items),
-        switchMap(items => merge(...items.map(item => item._hovered)))
-      );
-    }
-
-    return this._ngZone.onStable
-      .asObservable()
-      .pipe(take(1), switchMap(() => this._hovered()));
+    return this._itemChanges.pipe(
+      startWith(this._items),
+      switchMap(items => merge(...items.map(item => item._hovered)))
+    );
   }
 
   /** Handle a keyboard event from the menu, delegating to the appropriate action. */
   _handleKeydown(event: KeyboardEvent) {
-    switch (event.keyCode) {
+    const keyCode = event.keyCode;
+
+    switch (keyCode) {
       case ESCAPE:
         this.closed.emit('keydown');
         event.stopPropagation();
@@ -222,21 +275,32 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
         }
       break;
       default:
+        if (keyCode === UP_ARROW || keyCode === DOWN_ARROW) {
+          this._keyManager.setFocusOrigin('keyboard');
+        }
+
         this._keyManager.onKeydown(event);
     }
   }
 
   /**
-   * Focus the first item in the menu. This method is used by the menu trigger
-   * to focus the first item when the menu is opened by the ENTER key.
+   * Focus the first item in the menu.
+   * @param origin Action from which the focus originated. Used to set the correct styling.
    */
-  focusFirstItem() {
-    this._keyManager.setFirstItemActive();
+  focusFirstItem(origin: FocusOrigin = 'program'): void {
+    // When the content is rendered lazily, it takes a bit before the items are inside the DOM.
+    if (this.lazyContent) {
+      this._ngZone.onStable.asObservable()
+        .pipe(take(1))
+        .subscribe(() => this._keyManager.setFocusOrigin(origin).setFirstItemActive());
+    } else {
+      this._keyManager.setFocusOrigin(origin).setFirstItemActive();
+    }
   }
 
   /**
-   * Resets the active item in the menu. This is used when the menu is opened by mouse,
-   * allowing the user to start from the first option when pressing the down arrow.
+   * Resets the active item in the menu. This is used when the menu is opened, allowing
+   * the user to start from the first option when pressing the down arrow.
    */
   resetActiveItem() {
     this._keyManager.setActiveItem(-1);
@@ -272,21 +336,50 @@ export class MatMenu implements AfterContentInit, MatMenuPanel, OnDestroy {
     }
   }
 
+  /**
+   * Registers a menu item with the menu.
+   * @docs-private
+   */
+  addItem(item: MatMenuItem) {
+    // We register the items through this method, rather than picking them up through
+    // `ContentChildren`, because we need the items to be picked up by their closest
+    // `mat-menu` ancestor. If we used `@ContentChildren(MatMenuItem, {descendants: true})`,
+    // all descendant items will bleed into the top-level menu in the case where the consumer
+    // has `mat-menu` instances nested inside each other.
+    if (this._items.indexOf(item) === -1) {
+      this._items.push(item);
+      this._itemChanges.next(this._items);
+    }
+  }
+
+  /**
+   * Removes an item from the menu.
+   * @docs-private
+   */
+  removeItem(item: MatMenuItem) {
+    const index = this._items.indexOf(item);
+
+    if (this._items.indexOf(item) > -1) {
+      this._items.splice(index, 1);
+      this._itemChanges.next(this._items);
+    }
+  }
+
   /** Starts the enter animation. */
   _startAnimation() {
-    this._panelAnimationState = 'enter-start';
+    // @deletion-target 7.0.0 Combine with _resetAnimation.
+    this._panelAnimationState = 'enter';
   }
 
   /** Resets the panel animation to its initial state. */
   _resetAnimation() {
+    // @deletion-target 7.0.0 Combine with _startAnimation.
     this._panelAnimationState = 'void';
   }
 
   /** Callback that is invoked when the panel animation completes. */
   _onAnimationDone(event: AnimationEvent) {
-    // After the initial expansion is done, trigger the second phase of the enter animation.
-    if (event.toState === 'enter-start') {
-      this._panelAnimationState = 'enter';
-    }
+    this._animationDone.next(event);
+    this._isAnimating = false;
   }
 }

@@ -4,13 +4,13 @@
     <tr><th class="mat-calendar-table-header-divider" colspan="7" aria-hidden="true"></th></tr>
   </thead>
   <tbody mat-calendar-body
-         role="grid"
          [label]="_monthLabel"
          [rows]="_weeks"
          [todayValue]="_todayDate"
          [selectedValue]="_selectedDate"
          [labelMinRequiredCells]="3"
          [activeCell]="_dateAdapter.getDate(activeDate) - 1"
-         (selectedValueChange)="_dateSelected($event)">
+         (selectedValueChange)="_dateSelected($event)"
+         (keydown)="_handleCalendarBodyKeydown($event)">
   </tbody>
 </table>

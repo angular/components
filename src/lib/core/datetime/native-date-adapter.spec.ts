@@ -8,7 +8,7 @@ const SUPPORTS_INTL = typeof Intl != 'undefined';
 
 
 describe('NativeDateAdapter', () => {
-  const platform = new Platform();
+  let platform: Platform;
   let adapter: NativeDateAdapter;
   let assertValidDate: (d: Date | null, valid: boolean) => void;
 
@@ -18,8 +18,10 @@ describe('NativeDateAdapter', () => {
     }).compileComponents();
   }));
 
-  beforeEach(inject([DateAdapter], (dateAdapter: NativeDateAdapter) => {
+  beforeEach(inject([DateAdapter, Platform],
+    (dateAdapter: NativeDateAdapter, _platform: Platform) => {
     adapter = dateAdapter;
+    platform = _platform;
 
     assertValidDate = (d: Date | null, valid: boolean) => {
       expect(adapter.isDateInstance(d)).not.toBeNull(`Expected ${d} to be a date instance`);
@@ -358,6 +360,14 @@ describe('NativeDateAdapter', () => {
 
   it('should create an invalid date', () => {
     assertValidDate(adapter.invalid(), false);
+  });
+
+  it('should not throw when attempting to format a date with a year less than 1', () => {
+    expect(() => adapter.format(new Date(-1, 1, 1), {})).not.toThrow();
+  });
+
+  it('should not throw when attempting to format a date with a year greater than 9999', () => {
+    expect(() => adapter.format(new Date(10000, 1, 1), {})).not.toThrow();
   });
 });
 

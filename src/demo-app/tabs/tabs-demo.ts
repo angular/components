@@ -6,29 +6,35 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ViewEncapsulation} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Component} from '@angular/core';
+import {Observable, Observer} from 'rxjs';
+
+
+export interface DemoTab {
+  content: string;
+  disabled?: boolean;
+  extraContent?: boolean;
+  label: string;
+}
 
 @Component({
   moduleId: module.id,
   selector: 'tabs-demo',
   templateUrl: 'tabs-demo.html',
   styleUrls: ['tabs-demo.css'],
-  encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
 })
 export class TabsDemo {
   // Nav bar demo
-  tabLinks = [
+  tabLinks: {label: string, link: string}[] = [
     {label: 'Sun', link: 'sunny-tab'},
     {label: 'Rain', link: 'rainy-tab'},
     {label: 'Fog', link: 'foggy-tab'},
   ];
 
-  tabNavBackground: any = undefined;
+  tabNavBackground: string | undefined = undefined;
 
   // Standard tabs demo
-  tabs = [
+  tabs: DemoTab[] = [
     {
       label: 'Tab 1',
       content: 'This is the body of the first tab'
@@ -51,7 +57,7 @@ export class TabsDemo {
   addTabPosition = 0;
   gotoNewTabAfterAdding = false;
   createWithLongContent = false;
-  dynamicTabs = [
+  dynamicTabs: DemoTab[] = [
     {
       label: 'Tab 1',
       content: 'This is the body of the first tab'
@@ -69,10 +75,10 @@ export class TabsDemo {
     },
   ];
 
-  asyncTabs: Observable<any>;
+  asyncTabs: Observable<DemoTab[]>;
 
   constructor() {
-    this.asyncTabs = Observable.create((observer: any) => {
+    this.asyncTabs = Observable.create((observer: Observer<DemoTab[]>) => {
       setTimeout(() => {
         observer.next(this.tabs);
       }, 1000);
@@ -91,7 +97,7 @@ export class TabsDemo {
     }
   }
 
-  deleteTab(tab: any) {
+  deleteTab(tab: DemoTab) {
     this.dynamicTabs.splice(this.dynamicTabs.indexOf(tab), 1);
   }
 
@@ -106,7 +112,7 @@ export class TabsDemo {
   }
 
   toggleBackground() {
-    this.tabNavBackground = this.tabNavBackground ? undefined : 'primary';
+    this.tabNavBackground = this.tabNavBackground || 'primary';
   }
 }
 
@@ -133,3 +139,15 @@ export class RainyTabContent {}
   template: 'This is the routed body of the foggy tab.',
 })
 export class FoggyTabContent {}
+
+
+@Component({
+  moduleId: module.id,
+  selector: 'counter',
+  template: `<span>Content</span>`
+})
+export class Counter {
+  ngOnInit() {
+    console.log('Tab Loaded');
+  }
+}

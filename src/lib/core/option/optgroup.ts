@@ -26,9 +26,9 @@ let _uniqueOptgroupIdCounter = 0;
   exportAs: 'matOptgroup',
   templateUrl: 'optgroup.html',
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   inputs: ['disabled'],
+  styleUrls: ['optgroup.css'],
   host: {
     'class': 'mat-optgroup',
     'role': 'group',

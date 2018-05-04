@@ -31,6 +31,8 @@ System.config({
     '@angular/material-experimental': 'dist/bundles/material-experimental.umd.js',
     '@angular/material-moment-adapter': 'dist/bundles/material-moment-adapter.umd.js',
     '@angular/cdk': 'dist/bundles/cdk.umd.js',
+    '@angular/cdk-experimental': 'dist/bundles/cdk-experimental.umd.js',
+
     '@angular/cdk/a11y': 'dist/bundles/cdk-a11y.umd.js',
     '@angular/cdk/accordion': 'dist/bundles/cdk-accordion.umd.js',
     '@angular/cdk/bidi': 'dist/bundles/cdk-bidi.umd.js',
@@ -45,10 +47,13 @@ System.config({
     '@angular/cdk/scrolling': 'dist/bundles/cdk-scrolling.umd.js',
     '@angular/cdk/stepper': 'dist/bundles/cdk-stepper.umd.js',
     '@angular/cdk/table': 'dist/bundles/cdk-table.umd.js',
+    '@angular/cdk/tree': 'dist/bundles/cdk-tree.umd.js',
     '@angular/cdk/testing': 'dist/bundles/cdk-testing.umd.js',
     '@angular/material-examples': 'dist/bundles/material-examples.umd.js',
+    '@angular/cdk/text-field': 'dist/bundles/cdk-text-field.umd.js',
 
     '@angular/material/autocomplete': 'dist/bundles/material-autocomplete.umd.js',
+    '@angular/material/bottom-sheet': 'dist/bundles/material-bottom-sheet.umd.js',
     '@angular/material/button': 'dist/bundles/material-button.umd.js',
     '@angular/material/button-toggle': 'dist/bundles/material-button-toggle.umd.js',
     '@angular/material/card': 'dist/bundles/material-card.umd.js',
@@ -57,6 +62,7 @@ System.config({
     '@angular/material/core': 'dist/bundles/material-core.umd.js',
     '@angular/material/datepicker': 'dist/bundles/material-datepicker.umd.js',
     '@angular/material/dialog': 'dist/bundles/material-dialog.umd.js',
+    '@angular/material/divider': 'dist/bundles/material-divider.umd.js',
     '@angular/material/expansion': 'dist/bundles/material-expansion.umd.js',
     '@angular/material/form-field': 'dist/bundles/material-form-field.umd.js',
     '@angular/material/grid-list': 'dist/bundles/material-grid-list.umd.js',
@@ -79,10 +85,13 @@ System.config({
     '@angular/material/tabs': 'dist/bundles/material-tabs.umd.js',
     '@angular/material/toolbar': 'dist/bundles/material-toolbar.umd.js',
     '@angular/material/tooltip': 'dist/bundles/material-tooltip.umd.js',
+    '@angular/material/badge': 'dist/bundles/material-badge.umd.js',
+    '@angular/material/tree': 'dist/bundles/material-tree.umd.js',
   },
   packages: {
     // Thirdparty barrels.
     'rxjs': {main: 'index'},
+    'rxjs/operators': {main: 'index'},
 
     // Set the default extension for the root package, because otherwise the demo-app can't
     // be built within the production mode. Due to missing file extensions.

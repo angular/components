@@ -97,9 +97,9 @@ describe('menu', () => {
       expectFocusOn(page.items(0));
     });
 
-    it('should focus the panel when opened by mouse', () => {
+    it('should focus the first item when opened by mouse', () => {
       page.trigger().click();
-      expectFocusOn(page.menu());
+      expectFocusOn(page.items(0));
     });
 
     it('should focus subsequent items when down arrow is pressed', () => {
@@ -168,7 +168,7 @@ describe('menu', () => {
       const trigger = await page.beforeTrigger().getLocation();
 
       // the menu's right corner must be attached to the trigger's right corner.
-      // menu = 112px wide. trigger = 60px wide.  112 - 60 =  52px of menu to the left of trigger.
+      // menu = 112px wide. trigger = 60px wide. 112 - 60 = 52px of menu to the left of trigger.
       // trigger.x (left corner) - 52px (menu left of trigger) = expected menu.x (left corner)
       // menu.y should equal trigger.y because only x position has changed.
       expectLocation(page.beforeMenu(), {x: trigger.x - 52, y: trigger.y});

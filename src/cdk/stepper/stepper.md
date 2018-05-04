@@ -7,11 +7,15 @@ keyboard interactions and exposing an API for advancing or rewinding through the
 
 #### Linear stepper
 A stepper marked as `linear` requires the user to complete previous steps before proceeding.
-For each step, the `stepControl` attribute can be set to the top level
-`AbstractControl` that is used to check the validity of the step.
+For each step, the `stepControl` attribute can be set to the top level `AbstractControl` that
+is used to check the validity of the step.
 
 There are two possible approaches. One is using a single form for stepper, and the other is
 using a different form for each step.
+
+Alternatively, if you don't want to use the Angular forms, you can pass in the `completed` property
+to each of the steps which won't allow the user to continue until it becomes `true`. Note that if
+both `completed` and `stepControl` are set, the `stepControl` will take precedence.
 
 #### Using a single form for the entire stepper
 When using a single form for the stepper, any intermediate next/previous buttons within the steps
@@ -41,6 +45,10 @@ There are two button directives to support navigation between different steps:
 `CdkStepperNext` and `CdkStepperPrevious`. When placed inside of a step, these will automatically
 add click handlers to advance or rewind the workflow, respectively.
 
+### Resetting a stepper
+If you want to reset a stepper to its initial state, you can use the `reset` method. Note that
+resetting it will call `reset` on the underlying form control which clears the value.
+
 ### Keyboard interaction
 - <kbd>LEFT_ARROW</kbd>: Focuses the previous step header
 - <kbd>RIGHT_ARROW</kbd>: Focuses the next step header
@@ -56,4 +64,4 @@ is given `role="tab"`, and the content that can be expanded upon selection is gi
 step content is automatically set based on step selection change.
 
 The stepper and each step should be given a meaningful label via `aria-label` or `aria-labelledby`.
- 
+

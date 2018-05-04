@@ -155,7 +155,6 @@ export class MatCardAvatar {}
   templateUrl: 'card.html',
   styleUrls: ['card.css'],
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'class': 'mat-card'}
 })
@@ -172,7 +171,6 @@ export class MatCard {}
   selector: 'mat-card-header',
   templateUrl: 'card-header.html',
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'class': 'mat-card-header'}
 })
@@ -180,7 +178,7 @@ export class MatCardHeader {}
 
 
 /**
- * Component intended to be used within the <mat-card> component. It adds styles for a preset
+ * Component intended to be used within the `<mat-card>` component. It adds styles for a preset
  * layout that groups an image with a title section.
  * @docs-private
  */
@@ -189,7 +187,6 @@ export class MatCardHeader {}
   selector: 'mat-card-title-group',
   templateUrl: 'card-title-group.html',
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'class': 'mat-card-title-group'}
 })

@@ -32,19 +32,50 @@ can easily be used as a prefix or suffix on the material input:
 </mat-form-field>
 ```
 
+If you want to customize the icon that is rendered inside the `mat-datepicker-toggle`, you can do so
+by using the `matDatepickerToggleIcon` directive:
+
+<!-- example(datepicker-custom-icon) -->
+
 ### Setting the calendar starting view
 
-By default the calendar will open in month view, this can be changed by setting the `startView`
-property of `<mat-datepicker>` to `year`. In year view the user will see all months of the year and
-then proceed to month view after choosing a month.
+The `startView` property of `<mat-datepicker>` can be used to set the view that will show up when
+the calendar first opens. It can be set to `month`, `year`, or `multi-year`; by default it will open
+to month view.
 
-The month or year that the calendar opens to is determined by first checking if any date is
-currently selected, if so it will open to the month or year containing that date. Otherwise it will
-open to the month or year containing today's date. This behavior can be overridden by using the
-`startAt` property of `<mat-datepicker>`. In this case the calendar will open to the month or year
-containing the `startAt` date.
+The month, year, or range of years that the calendar opens to is determined by first checking if any
+date is currently selected, if so it will open to the month or year containing that date. Otherwise
+it will open to the month or year containing today's date. This behavior can be overridden by using
+the `startAt` property of `<mat-datepicker>`. In this case the calendar will open to the month or
+year containing the `startAt` date.
 
 <!-- example(datepicker-start-view) -->
+
+#### Watching the views for changes on selected years and months
+
+When a year or a month is selected in `multi-year` and `year` views respectively, the `yearSelected`
+and `monthSelected` outputs emit a normalized date representing the chosen year or month. By
+"normalized" we mean that the dates representing years will have their month set to January and
+their day set to the 1st. Dates representing months will have their day set to the 1st of the
+month. For example, if `<mat-datepicker>` is configured to work with javascript native Date
+objects, the `yearSelected` will emit `new Date(2017, 0, 1)` if the user selects 2017 in
+`multi-year` view. Similarly, `monthSelected` will emit `new Date(2017, 1, 1)` if the user
+selects **February** in `year` view and the current date value of the connected `<input>` was
+set to something like `new Date(2017, MM, dd)` when the calendar was opened (the month and day are
+irrelevant in this case).
+
+Notice that the emitted value does not affect the current value in the connected `<input>`, which
+is only bound to the selection made in the `month` view. So if the end user closes the calendar 
+after choosing a year in `multi-view` mode (by pressing the `ESC` key, for example), the selected
+year, emitted by `yearSelected` output, will not cause any change in the value of the date in the
+associated `<input>`.
+
+The following example uses `yearSelected` and `monthSelected` outputs to emulate a month and year
+picker (if you're not familiar with the usage of `MomentDateAdapter` and `MAT_DATE_FORMATS`
+you can [read more about them](#choosing-a-date-implementation-and-date-format-settings) below in
+this document to fully understand the example).
+
+<!-- example(datepicker-views-selection) -->
 
 ### Setting the selected date
 
@@ -68,6 +99,14 @@ As with other types of `<input>`, the datepicker works with `@angular/forms` dir
 `formGroup`, `formControl`, `ngModel`, etc.
 
 <!-- example(datepicker-value) -->
+
+### Changing the datepicker colors
+
+The datepicker popup will automatically inherit the color palette (`primary`, `accent`, or `warn`)
+from the `mat-form-field` it is attached to. If you would like to specify a different palette for
+the popup you can do so by setting the `color` property on `mat-datepicker`.
+
+<!-- example(datepicker-color) -->
 
 ### Date validation
 
@@ -99,7 +138,7 @@ Each validation property has a different error that can be checked:
  * A value that violates the `min` property will have a `matDatepickerMin` error.
  * A value that violates the `max` property will have a `matDatepickerMax` error.
  * A value that violates the `matDatepickerFilter` property will have a `matDatepickerFilter` error.
- 
+
 ### Input and change events
 
 The input's native `(input)` and `(change)` events will only trigger due to user interaction with
@@ -171,7 +210,7 @@ It's also possible to set the locale at runtime using the `setLocale` method of 
 The datepicker was built to be date implementation agnostic. This means that it can be made to work
 with a variety of different date implementations. However it also means that developers need to make
 sure to provide the appropriate pieces for the datepicker to work with their chosen implementation.
-The easiest way to ensure this is just to import one of the pre-made modules: 
+The easiest way to ensure this is just to import one of the pre-made modules:
 
 |Module               |Date type|Supported locales                                                      |Dependencies                      |Import from                       |
 |---------------------|---------|-----------------------------------------------------------------------|----------------------------------|----------------------------------|
@@ -248,6 +287,20 @@ export class MyApp {}
 
 <!-- example(datepicker-formats) -->
 
+#### Customizing the calendar header
+
+The header section of the calendar (the part containing the view switcher and previous and next
+buttons) can be replaced with a custom component if desired. This is accomplished using the
+`calendarHeaderComponent` property of `<mat-datepicker>`. It takes a component class and constructs
+an instance of the component to use as the header.
+
+In order to interact with the calendar in your custom header component, you can inject the parent
+`MatCalendar` in the constructor. To make sure your header stays in sync with the calendar,
+subscribe to the `stateChanges` observable of the calendar and mark your header component for change
+detection.
+
+<!-- example(datepicker-custom-header) -->
+
 #### Localizing labels and messages
 
 The various text strings used by the datepicker are provided through `MatDatepickerIntl`.
@@ -275,46 +328,62 @@ should have a placeholder or be given a meaningful label via `aria-label`, `aria
 
 #### Keyboard shortcuts
 
-The keyboard shortcuts to handle datepicker are:
+The datepicker supports the following keyboard shortcuts:
 
-| Shortcut             | Action                              |
-|----------------------|-------------------------------------|
-| `ALT` + `DOWN_ARROW` | Open the calendar pop-up            |
-| `ESCAPE`             | Close the calendar pop-up           |
+| Shortcut             | Action                                    |
+|----------------------|-------------------------------------------|
+| `ALT` + `DOWN_ARROW` | Open the calendar pop-up                  |
+| `ESCAPE`             | Close the calendar pop-up                 |
 
 
 In month view:
 
-| Shortcut             | Action                              |
-|----------------------|-------------------------------------|
-| `LEFT_ARROW`         | Go to previous day                  |
-| `RIGHT_ARROW`        | Go to next day                      |
-| `UP_ARROW`           | Go to same day in the previous week |
-| `DOWN_ARROW`         | Go to same day in the next week     |
-| `HOME`               | Go to the first day of the month    |
-| `END`                | Go to the last day of the month     |
-| `PAGE_UP`            | Go to previous month                |
-| `ALT` + `PAGE_UP`    | Go to previous year                 |
-| `PAGE_DOWN`          | Go to next month                    |
-| `ALT` + `PAGE_DOWN`  | Go to next year                     |
-| `ENTER`              | Select current date                 |
+| Shortcut             | Action                                    |
+|----------------------|-------------------------------------------|
+| `LEFT_ARROW`         | Go to previous day                        |
+| `RIGHT_ARROW`        | Go to next day                            |
+| `UP_ARROW`           | Go to same day in the previous week       |
+| `DOWN_ARROW`         | Go to same day in the next week           |
+| `HOME`               | Go to the first day of the month          |
+| `END`                | Go to the last day of the month           |
+| `PAGE_UP`            | Go to the same day in the previous month  |
+| `ALT` + `PAGE_UP`    | Go to the same day in the previous year   |
+| `PAGE_DOWN`          | Go to the same day in the next month      |
+| `ALT` + `PAGE_DOWN`  | Go to the same day in the next year       |
+| `ENTER`              | Select current date                       |
 
 
 In year view:
 
-| Shortcut             | Action                              |
-|----------------------|-------------------------------------|
-| `LEFT_ARROW`         | Go to previous month                |
-| `RIGHT_ARROW`        | Go to next month                    |
-| `UP_ARROW`           | Go to previous 6 months             |
-| `DOWN_ARROW`         | Go to next 6 months                 |
-| `HOME`               | Go to the first month of the year   |
-| `END`                | Go to the last month of the year    |
-| `PAGE_UP`            | Go to previous year                 |
-| `ALT` + `PAGE_UP`    | Go to previous 10 years             |
-| `PAGE_DOWN`          | Go to next year                     |
-| `ALT` + `PAGE_DOWN`  | Go to next 10 years                 |
-| `ENTER`              | Select current month                |
+| Shortcut             | Action                                    |
+|----------------------|-------------------------------------------|
+| `LEFT_ARROW`         | Go to previous month                      |
+| `RIGHT_ARROW`        | Go to next month                          |
+| `UP_ARROW`           | Go up a row (back 4 months)               |
+| `DOWN_ARROW`         | Go down a row (forward 4 months)          |
+| `HOME`               | Go to the first month of the year         |
+| `END`                | Go to the last month of the year          |
+| `PAGE_UP`            | Go to the same month in the previous year |
+| `ALT` + `PAGE_UP`    | Go to the same month 10 years back        |
+| `PAGE_DOWN`          | Go to the same month in the next year     |
+| `ALT` + `PAGE_DOWN`  | Go to the same month 10 years forward     |
+| `ENTER`              | Select current month                      |
+
+In multi-year view:
+
+| Shortcut             | Action                                    |
+|----------------------|-------------------------------------------|
+| `LEFT_ARROW`         | Go to previous year                       |
+| `RIGHT_ARROW`        | Go to next year                           |
+| `UP_ARROW`           | Go up a row (back 4 years)                |
+| `DOWN_ARROW`         | Go down a row (forward 4 years)           |
+| `HOME`               | Go to the first year in the current range |
+| `END`                | Go to the last year in the current range  |
+| `PAGE_UP`            | Go back 24 years                          |
+| `ALT` + `PAGE_UP`    | Go back 240 years                         |
+| `PAGE_DOWN`          | Go forward 24 years                       |
+| `ALT` + `PAGE_DOWN`  | Go forward 240 years                      |
+| `ENTER`              | Select current year                       |
 
 ### Troubleshooting
 
@@ -322,7 +391,7 @@ In year view:
 
 This error is thrown if you have not provided all of the injectables the datepicker needs to work.
 The easiest way to resolve this is to import the `MatNativeDateModule` or `MatMomentDateModule` in
-your application's root module. See 
+your application's root module. See
 [_Choosing a date implementation_](#choosing-a-date-implementation-and-date-format-settings)) for
 more information.
 

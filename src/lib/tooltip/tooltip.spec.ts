@@ -12,7 +12,8 @@ import {
   Component,
   DebugElement,
   ElementRef,
-  ViewChild
+  ViewChild,
+  NgZone,
 } from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
 import {By} from '@angular/platform-browser';
@@ -27,7 +28,7 @@ import {
   MatTooltipModule,
   SCROLL_THROTTLE_MS,
   TOOLTIP_PANEL_CLASS,
-  TooltipPosition
+  MAT_TOOLTIP_DEFAULT_OPTIONS,
 } from './index';
 
 
@@ -68,9 +69,12 @@ describe('MatTooltip', () => {
     })();
   }));
 
-  afterEach(() => {
+  afterEach(inject([OverlayContainer], (currentOverlayContainer: OverlayContainer) => {
+    // Since we're resetting the testing module in some of the tests,
+    // we can potentially have multiple overlay containers.
+    currentOverlayContainer.ngOnDestroy();
     overlayContainer.ngOnDestroy();
-  });
+  }));
 
   describe('basic usage', () => {
     let fixture: ComponentFixture<BasicTooltipDemo>;
@@ -155,6 +159,40 @@ describe('MatTooltip', () => {
       expect(overlayContainerElement.textContent).toContain(initialTooltipMessage);
     }));
 
+    it('should be able to override the default show and hide delays', fakeAsync(() => {
+      TestBed
+        .resetTestingModule()
+        .configureTestingModule({
+          imports: [MatTooltipModule, OverlayModule, NoopAnimationsModule],
+          declarations: [BasicTooltipDemo],
+          providers: [{
+            provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+            useValue: {showDelay: 1337, hideDelay: 7331}
+          }]
+        })
+        .compileComponents();
+
+      fixture = TestBed.createComponent(BasicTooltipDemo);
+      fixture.detectChanges();
+      tooltipDirective = fixture.debugElement.query(By.css('button')).injector.get(MatTooltip);
+
+      tooltipDirective.show();
+      fixture.detectChanges();
+      tick();
+
+      expect(tooltipDirective._isTooltipVisible()).toBe(false);
+      tick(1337);
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+
+      tooltipDirective.hide();
+      fixture.detectChanges();
+      tick();
+
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+      tick(7331);
+      expect(tooltipDirective._isTooltipVisible()).toBe(false);
+    }));
+
     it('should set a css class on the overlay panel element', fakeAsync(() => {
       tooltipDirective.show();
       fixture.detectChanges();
@@ -162,7 +200,7 @@ describe('MatTooltip', () => {
 
       const overlayRef = tooltipDirective._overlayRef;
 
-      expect(overlayRef).not.toBeNull();
+      expect(!!overlayRef).toBeTruthy();
       expect(overlayRef!.overlayElement.classList).toContain(TOOLTIP_PANEL_CLASS,
           'Expected the overlay panel element to have the tooltip panel class set.');
     }));
@@ -267,25 +305,48 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._isTooltipVisible()).toBe(true);
     }));
 
-    it('should remove the tooltip when changing position', () => {
-      const initialPosition: TooltipPosition = 'below';
-      const changedPosition: TooltipPosition = 'above';
-
-      assertTooltipInstance(tooltipDirective, false);
-
-      tooltipDirective.position = initialPosition;
+    it('should be able to update the tooltip position while open', fakeAsync(() => {
+      tooltipDirective.position = 'below';
       tooltipDirective.show();
-      expect(tooltipDirective._tooltipInstance).toBeDefined();
+      tick();
 
-      // Same position value should not remove the tooltip
-      tooltipDirective.position = initialPosition;
-      expect(tooltipDirective._tooltipInstance).toBeDefined();
+      assertTooltipInstance(tooltipDirective, true);
 
-      // Different position value should destroy the tooltip
-      tooltipDirective.position = changedPosition;
-      assertTooltipInstance(tooltipDirective, false);
-      expect(tooltipDirective._overlayRef).toBeNull();
-    });
+      tooltipDirective.position = 'above';
+      spyOn(tooltipDirective._overlayRef!, 'updatePosition').and.callThrough();
+      fixture.detectChanges();
+      tick();
+
+      assertTooltipInstance(tooltipDirective, true);
+      expect(tooltipDirective._overlayRef!.updatePosition).toHaveBeenCalled();
+    }));
+
+    it('should not throw when updating the position for a closed tooltip', fakeAsync(() => {
+      tooltipDirective.position = 'left';
+      tooltipDirective.show(0);
+      fixture.detectChanges();
+      tick();
+
+      tooltipDirective.hide(0);
+      fixture.detectChanges();
+      tick();
+
+      // At this point the animation should be able to complete itself and trigger the
+      // _animationDone function, but for unknown reasons in the test infrastructure,
+      // this does not occur. Manually call the hook so the animation subscriptions get invoked.
+      tooltipDirective._tooltipInstance!._animationDone({
+        fromState: 'visible',
+        toState: 'hidden',
+        totalTime: 150,
+        phaseName: 'done',
+      } as AnimationEvent);
+
+      expect(() => {
+        tooltipDirective.position = 'right';
+        fixture.detectChanges();
+        tick();
+      }).not.toThrow();
+    }));
 
     it('should be able to modify the tooltip message', fakeAsync(() => {
       assertTooltipInstance(tooltipDirective, false);
@@ -393,12 +454,12 @@ describe('MatTooltip', () => {
       tooltipDirective.position = 'after';
       expect(tooltipDirective._getOrigin().main).toEqual(rightOrigin);
 
-      // Test expectations in LTR
+      // Test expectations in RTL
       dir.value = 'rtl';
       tooltipDirective.position = 'before';
-      expect(tooltipDirective._getOrigin().main).toEqual(rightOrigin);
-      tooltipDirective.position = 'after';
       expect(tooltipDirective._getOrigin().main).toEqual(leftOrigin);
+      tooltipDirective.position = 'after';
+      expect(tooltipDirective._getOrigin().main).toEqual(rightOrigin);
     });
 
     it('should consistently position before and after overlay position in ltr and rtl dir', () => {
@@ -413,15 +474,15 @@ describe('MatTooltip', () => {
       tooltipDirective.position = 'after';
       expect(tooltipDirective._getOverlayPosition().main).toEqual(rightOverlayPosition);
 
-      // Test expectations in LTR
+      // Test expectations in RTL
       dir.value = 'rtl';
       tooltipDirective.position = 'before';
-      expect(tooltipDirective._getOverlayPosition().main).toEqual(rightOverlayPosition);
-      tooltipDirective.position = 'after';
       expect(tooltipDirective._getOverlayPosition().main).toEqual(leftOverlayPosition);
+      tooltipDirective.position = 'after';
+      expect(tooltipDirective._getOverlayPosition().main).toEqual(rightOverlayPosition);
     });
 
-    it('should have consistent left transform origin in any dir', () => {
+    it('should have consistent left transform origin in ltr', () => {
       tooltipDirective.position = 'right';
       tooltipDirective.show();
       fixture.detectChanges();
@@ -431,7 +492,9 @@ describe('MatTooltip', () => {
       tooltipDirective.show();
       fixture.detectChanges();
       expect(tooltipDirective._tooltipInstance!._transformOrigin).toBe('left');
+    });
 
+    it('should have consistent left transform origin in rtl', () => {
       dir.value = 'rtl';
       tooltipDirective.position = 'before';
       tooltipDirective.show();
@@ -439,10 +502,10 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._tooltipInstance!._transformOrigin).toBe('left');
     });
 
-    it('should have consistent right transform origin in any dir', () => {
+    it('should have consistent right transform origin in ltr', () => {
       // Move the button away from the edge of the screen so
       // we don't get into the fallback positions.
-      fixture.componentInstance.button.nativeElement.style.margin = '200px';
+      fixture.componentInstance.button.nativeElement.style.margin = '300px';
 
       tooltipDirective.position = 'left';
       tooltipDirective.show();
@@ -453,6 +516,12 @@ describe('MatTooltip', () => {
       tooltipDirective.show();
       fixture.detectChanges();
       expect(tooltipDirective._tooltipInstance!._transformOrigin).toBe('right');
+    });
+
+    it('should have consistent right transform origin in rtl', () => {
+      // Move the button away from the edge of the screen so
+      // we don't get into the fallback positions.
+      fixture.componentInstance.button.nativeElement.style.margin = '300px';
 
       dir.value = 'rtl';
       tooltipDirective.position = 'after';
@@ -502,6 +571,7 @@ describe('MatTooltip', () => {
       tick(0);
       fixture.detectChanges();
       tick(500);
+      fixture.detectChanges();
 
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
       expect(overlayContainerElement.textContent).toBe('');
@@ -592,14 +662,12 @@ describe('MatTooltip', () => {
   describe('scrollable usage', () => {
     let fixture: ComponentFixture<ScrollableTooltipDemo>;
     let buttonDebugElement: DebugElement;
-    let buttonElement: HTMLButtonElement;
     let tooltipDirective: MatTooltip;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(ScrollableTooltipDemo);
       fixture.detectChanges();
       buttonDebugElement = fixture.debugElement.query(By.css('button'));
-      buttonElement = <HTMLButtonElement> buttonDebugElement.nativeElement;
       tooltipDirective = buttonDebugElement.injector.get<MatTooltip>(MatTooltip);
     });
 
@@ -628,6 +696,26 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._isTooltipVisible())
           .toBe(false, 'Expected tooltip hidden when scrolled out of view, after throttle limit');
     }));
+
+    it('should execute the `hide` call, after scrolling away, inside the NgZone', fakeAsync(() => {
+      const inZoneSpy = jasmine.createSpy('in zone spy');
+
+      tooltipDirective.show();
+      fixture.detectChanges();
+      tick(0);
+
+      spyOn(tooltipDirective._tooltipInstance!, 'hide').and.callFake(() => {
+        inZoneSpy(NgZone.isInAngularZone());
+      });
+
+      fixture.componentInstance.scrollDown();
+      tick(100);
+      fixture.detectChanges();
+
+      expect(inZoneSpy).toHaveBeenCalled();
+      expect(inZoneSpy).toHaveBeenCalledWith(true);
+    }));
+
   });
 
   describe('with OnPush', () => {

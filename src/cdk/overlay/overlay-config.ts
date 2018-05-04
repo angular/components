@@ -27,7 +27,7 @@ export class OverlayConfig {
   hasBackdrop?: boolean = false;
 
   /** Custom class to add to the backdrop */
-  backdropClass?: string = 'cdk-overlay-dark-backdrop';
+  backdropClass?: string | string[] = 'cdk-overlay-dark-backdrop';
 
   /** The width of the overlay panel. If a number is provided, pixel units are assumed. */
   width?: number | string;
@@ -48,11 +48,13 @@ export class OverlayConfig {
   maxHeight?: number | string;
 
   /** The direction of the text in the overlay panel. */
-  direction?: Direction = 'ltr';
+  direction?: Direction;
 
   constructor(config?: OverlayConfig) {
     if (config) {
-      Object.keys(config).forEach(key => this[key] = config[key]);
+      Object.keys(config)
+        .filter(key => typeof config[key] !== 'undefined')
+        .forEach(key => this[key] = config[key]);
     }
   }
 }

@@ -8,22 +8,19 @@
 
 import {A11yModule} from '@angular/cdk/a11y';
 import {OverlayModule} from '@angular/cdk/overlay';
+import {PortalModule} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
-import {MatIconModule} from '@angular/material/icon';
-import {MatCalendar} from './calendar';
+import {MatCalendar, MatCalendarHeader} from './calendar';
 import {MatCalendarBody} from './calendar-body';
-import {
-  MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
-  MatDatepicker,
-  MatDatepickerContent,
-} from './datepicker';
+import {MatDatepicker, MatDatepickerContent} from './datepicker';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerIntl} from './datepicker-intl';
-import {MatDatepickerToggle} from './datepicker-toggle';
+import {MatDatepickerToggle, MatDatepickerToggleIcon} from './datepicker-toggle';
 import {MatMonthView} from './month-view';
+import {MatMultiYearView} from './multi-year-view';
 import {MatYearView} from './year-view';
 
 
@@ -32,9 +29,9 @@ import {MatYearView} from './year-view';
     CommonModule,
     MatButtonModule,
     MatDialogModule,
-    MatIconModule,
     OverlayModule,
     A11yModule,
+    PortalModule,
   ],
   exports: [
     MatCalendar,
@@ -43,8 +40,11 @@ import {MatYearView} from './year-view';
     MatDatepickerContent,
     MatDatepickerInput,
     MatDatepickerToggle,
+    MatDatepickerToggleIcon,
     MatMonthView,
     MatYearView,
+    MatMultiYearView,
+    MatCalendarHeader,
   ],
   declarations: [
     MatCalendar,
@@ -53,15 +53,18 @@ import {MatYearView} from './year-view';
     MatDatepickerContent,
     MatDatepickerInput,
     MatDatepickerToggle,
+    MatDatepickerToggleIcon,
     MatMonthView,
     MatYearView,
+    MatMultiYearView,
+    MatCalendarHeader,
   ],
   providers: [
     MatDatepickerIntl,
-    MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
   ],
   entryComponents: [
     MatDatepickerContent,
+    MatCalendarHeader,
   ]
 })
 export class MatDatepickerModule {}

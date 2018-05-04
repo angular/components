@@ -1,9 +1,11 @@
 language: node_js
-sudo: false
 dist: trusty
+sudo: false
 
 node_js:
-  - '7'
+  # Use the explicit NodeJS LTS version 8.9.4 to avoid any automatic upgrade of the version.
+  # This ensures that all Travis jobs run consistently and don't have different Node versions.
+  - '8.9.4'
 
 addons:
   jwt:
@@ -16,6 +18,7 @@ addons:
 branches:
   only:
   - master
+  - 5.2.x
 
 jobs:
   include:
@@ -23,23 +26,27 @@ jobs:
     - env: "MODE=aot"
     - env: "MODE=payload"
     - env: "MODE=prerender"
-    # Closure Compiler CI check is temporarily disabled until a new version of
-    # the tool is released with https://github.com/google/closure-compiler/pull/2600
-    # - env: "MODE=closure-compiler"
     - env: "MODE=e2e"
     - env: "MODE=saucelabs_required"
     - env: "MODE=browserstack_required"
     - env: "MODE=travis_required"
     - env: "DEPLOY_MODE=build-artifacts"
+      if: type = push
     - env: "DEPLOY_MODE=docs-content"
+      if: type = push
     - env: "DEPLOY_MODE=screenshot-tool"
+      if: type = cron
     - env: "DEPLOY_MODE=dashboard"
+      if: type = cron
+    # Closure Compiler CI check is temporarily disabled until a new version of
+    # the tool is released with https://github.com/google/closure-compiler/pull/2600
+    # - env: "MODE=closure-compiler"
 env:
   global:
   - LOGS_DIR=/tmp/angular-material2-build/logs
   - SAUCE_USERNAME=angular-ci
   - BROWSER_STACK_USERNAME=angularteam1
-  - BROWSER_STACK_ACCESS_KEY=BWCd4SynLzdDcv8xtzsB
+  - BROWSER_STACK_ACCESS_KEY=CaXMeMHD9pr5PHg8N7Jq
   - BROWSER_PROVIDER_READY_FILE=/tmp/angular-material2-build/readyfile
   - BROWSER_PROVIDER_ERROR_FILE=/tmp/angular-material2-build/errorfile
 
@@ -58,8 +65,3 @@ script:
 cache:
   directories:
     - ./node_modules/
-
-notifications:
-  webhooks:
-    urls:
-      - https://us-central1-test-jperrott.cloudfunctions.net/travisCi

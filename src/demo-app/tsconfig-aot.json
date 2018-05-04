@@ -20,7 +20,10 @@
       "@angular/cdk": ["../../dist/releases/cdk"],
       "@angular/material-experimental/*": ["../../dist/releases/material-experimental/*"],
       "@angular/material-experimental": ["../../dist/releases/material-experimental"],
-      "@angular/material-moment-adapter": ["../../dist/releases/material-moment-adapter"]
+      "@angular/cdk-experimental/*": ["../../dist/releases/cdk-experimental/*"],
+      "@angular/cdk-experimental": ["../../dist/releases/cdk-experimental"],
+      "@angular/material-moment-adapter": ["../../dist/releases/material-moment-adapter"],
+      "@angular/material-examples": ["../../dist/packages/material-examples"]
     }
   },
   "files": [
@@ -29,6 +32,8 @@
     "./main-aot.ts"
   ],
   "angularCompilerOptions": {
-    "skipTemplateCodegen": false
+    "skipTemplateCodegen": false,
+    // TODO: disabled for now due to @angular/forms
+    "fullTemplateTypeCheck": false
   }
 }

@@ -1,10 +1,8 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {FakeViewportRuler} from '@angular/cdk/testing';
-import {MatButtonModule} from './index';
-import {MatRipple} from '@angular/material/core';
+import {MatButtonModule, MatButton} from './index';
+import {MatRipple, ThemePalette} from '@angular/material/core';
 
 
 describe('MatButton', () => {
@@ -13,9 +11,6 @@ describe('MatButton', () => {
     TestBed.configureTestingModule({
       imports: [MatButtonModule],
       declarations: [TestApp],
-      providers: [
-        {provide: ViewportRuler, useClass: FakeViewportRuler},
-      ]
     });
 
     TestBed.compileComponents();
@@ -44,6 +39,13 @@ describe('MatButton', () => {
 
     expect(buttonDebugElement.nativeElement.classList).not.toContain('mat-accent');
     expect(aDebugElement.nativeElement.classList).not.toContain('mat-accent');
+  });
+
+  it('should expose the ripple instance', () => {
+    const fixture = TestBed.createComponent(TestApp);
+    const button = fixture.debugElement.query(By.css('button')).componentInstance as MatButton;
+
+    expect(button.ripple).toBeTruthy();
   });
 
   it('should should not clear previous defined classes', () => {
@@ -257,6 +259,7 @@ class TestApp {
   clickCount: number = 0;
   isDisabled: boolean = false;
   rippleDisabled: boolean = false;
+  buttonColor: ThemePalette;
 
   increment() {
     this.clickCount++;

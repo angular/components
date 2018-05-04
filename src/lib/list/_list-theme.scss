@@ -26,21 +26,8 @@
     background-color: mat-color($background, disabled-list-option);
   }
 
-  .mat-divider {
-    border-top-color: mat-color($foreground, divider);
-  }
-
+  .mat-list-option,
   .mat-nav-list .mat-list-item {
-    outline: none;
-
-    &:hover, &.mat-list-item-focus {
-      background: mat-color($background, 'hover');
-    }
-  }
-
-  .mat-list-option {
-    outline: none;
-
     &:hover, &.mat-list-item-focus {
       background: mat-color($background, 'hover');
     }

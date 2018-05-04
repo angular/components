@@ -1,11 +1,27 @@
 package(default_visibility=["//visibility:public"])
 load("@build_bazel_rules_typescript//:defs.bzl", "ts_library")
+load("@angular//:index.bzl", "ng_package")
+load("//:packages.bzl", "CDK_TARGETS", "ROLLUP_GLOBALS", "VERSION_PLACEHOLDER_REPLACEMENTS")
 
+# Export the CDK tsconfig so that subpackages can reference it directly.
+exports_files(["tsconfig-build.json"])
 
+# Root "@angular/cdk" entry-point that does not re-export individual entry-points.
 ts_library(
   name = "cdk",
   srcs = glob(["*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/cdk",
   deps = [],
-  tsconfig = ":tsconfig-build.json",
+  tsconfig = "//src/lib:tsconfig-build.json",
+)
+
+# Creates the @angular/cdk package published to npm.
+ng_package(
+  name = "npm_package",
+  srcs = ["package.json"],
+  entry_point = "src/cdk/public_api.js",
+  globals = ROLLUP_GLOBALS,
+  replacements = VERSION_PLACEHOLDER_REPLACEMENTS,
+  deps = CDK_TARGETS,
+  tags = ["publish"],
 )

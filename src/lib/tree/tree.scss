@@ -1,0 +1,18 @@
+$mat-node-height: 48px;
+
+.mat-tree {
+  display: block;
+}
+
+.mat-tree-node {
+  display: flex;
+  align-items: center;
+  min-height: $mat-node-height;
+  flex: 1;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.mat-nested-tree-ndoe {
+  border-bottom-width: 0;
+}

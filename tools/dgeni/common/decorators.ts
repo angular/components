@@ -1,12 +1,13 @@
+import {ClassExportDoc} from 'dgeni-packages/typescript/api-doc-types/ClassExportDoc';
+import {PropertyMemberDoc} from 'dgeni-packages/typescript/api-doc-types/PropertyMemberDoc';
+import {MemberDoc} from 'dgeni-packages/typescript/api-doc-types/MemberDoc';
+import {CategorizedClassDoc, DeprecationDoc, HasDecoratorsDoc} from './dgeni-definitions';
+
 /**
  * We want to avoid emitting selectors that are deprecated but don't have a way to mark
  * them as such in the source code. Thus, we maintain a separate blacklist of selectors
  * that should not be emitted in the documentation.
  */
-import {ClassExportDoc} from 'dgeni-packages/typescript/api-doc-types/ClassExportDoc';
-import {PropertyMemberDoc} from 'dgeni-packages/typescript/api-doc-types/PropertyMemberDoc';
-import {MemberDoc} from 'dgeni-packages/typescript/api-doc-types/MemberDoc';
-
 const SELECTOR_BLACKLIST = new Set([
   '[portal]',
   '[portalHost]',
@@ -49,46 +50,22 @@ export function isNgModule(doc: ClassExportDoc) {
   return hasClassDecorator(doc, 'NgModule');
 }
 
-export function isDirectiveOutput(doc: PropertyMemberDoc) {
-  return hasMemberDecorator(doc, 'Output');
-}
-
-export function isDirectiveInput(doc: PropertyMemberDoc) {
-  return hasMemberDecorator(doc, 'Input');
-}
-
 export function isDeprecatedDoc(doc: any) {
   return (doc.tags && doc.tags.tags || []).some((tag: any) => tag.tagName === 'deprecated');
 }
 
-export function getDirectiveInputAlias(doc: PropertyMemberDoc) {
-  return isDirectiveInput(doc) ? doc.decorators!.find(d => d.name == 'Input')!.arguments![0] : '';
-}
+export function getDirectiveSelectors(classDoc: CategorizedClassDoc) {
+  if (!classDoc.directiveMetadata) {
+    return;
+  }
 
-export function getDirectiveOutputAlias(doc: PropertyMemberDoc) {
-  return isDirectiveOutput(doc) ? doc.decorators!.find(d => d.name == 'Output')!.arguments![0] : '';
-}
-
-export function getDirectiveSelectors(classDoc: ClassExportDoc) {
-  const directiveSelectors = getMetadataProperty(classDoc, 'selector');
+  const directiveSelectors: string = classDoc.directiveMetadata.get('selector');
 
   if (directiveSelectors) {
     // Filter blacklisted selectors and remove line-breaks in resolved selectors.
     return directiveSelectors.replace(/[\r\n]/g, '').split(/\s*,\s*/)
       .filter(s => s !== '' && !s.includes('md') && !SELECTOR_BLACKLIST.has(s));
   }
-}
-
-export function getMetadataProperty(doc: ClassExportDoc, property: string) {
-  const metadata = doc.decorators!
-    .find(d => d.name === 'Component' || d.name === 'Directive')!.arguments![0];
-
-  // Use a Regex to determine the given metadata property. This is necessary, because we can't
-  // parse the JSON due to environment variables inside of the JSON (e.g module.id)
-  const matches = new RegExp(`${property}s*:\\s*(?:"|'|\`)((?:.|\\n|\\r)+?)(?:"|'|\`)`)
-    .exec(metadata);
-
-  return matches && matches[1].trim();
 }
 
 export function hasMemberDecorator(doc: MemberDoc, decoratorName: string) {
@@ -99,16 +76,34 @@ export function hasClassDecorator(doc: ClassExportDoc, decoratorName: string) {
   return doc.docType == 'class' && hasDecorator(doc, decoratorName);
 }
 
-export function hasDecorator(doc: {decorators?: {name: string}[]}, decoratorName: string) {
+export function hasDecorator(doc: HasDecoratorsDoc, decoratorName: string) {
   return !!doc.decorators &&
     doc.decorators.length > 0 &&
     doc.decorators.some(d => d.name == decoratorName);
 }
 
+export function getDeletionTarget(doc: any): string | null {
+  if (!doc.tags) {
+    return null;
+  }
+
+  const deletionTarget = doc.tags.tags.find((t: any) => t.tagName === 'deletion-target');
+
+  return deletionTarget ? deletionTarget.description : null;
+}
+
 /**
  * Decorates public exposed docs. Creates a property on the doc that indicates whether
  * the item is deprecated or not.
- **/
-export function decorateDeprecatedDoc(doc: {isDeprecated: boolean}) {
+ */
+export function decorateDeprecatedDoc(doc: DeprecationDoc) {
   doc.isDeprecated = isDeprecatedDoc(doc);
+  doc.deletionTarget = getDeletionTarget(doc);
+
+  if (doc.isDeprecated && !doc.deletionTarget) {
+    console.warn('Warning: There is a deprecated item without a @deletion-target tag.', doc.id);
+  } else if  (doc.deletionTarget && !doc.isDeprecated) {
+    console.warn('Warning: There is an item with a @deletion-target which is not deprecated.',
+      doc.id);
+  }
 }

@@ -90,6 +90,17 @@ describe('Scroll Dispatcher', () => {
 
       expect(spy).toHaveBeenCalledTimes(1);
     });
+
+    it('should complete the `scrolled` stream on destroy', () => {
+      const completeSpy = jasmine.createSpy('complete spy');
+      const subscription = scroll.scrolled(0).subscribe(undefined, undefined, completeSpy);
+
+      scroll.ngOnDestroy();
+
+      expect(completeSpy).toHaveBeenCalled();
+
+      subscription.unsubscribe();
+    });
   });
 
   describe('Nested scrollables', () => {
@@ -178,6 +189,22 @@ describe('Scroll Dispatcher', () => {
           'Expected global listeners to have been removed after the subscription has stopped.');
       expect(scroll.scrollContainers.size)
           .toBe(4, 'Expected scrollable count to stay the same');
+    });
+
+    it('should remove the global subscription on destroy', () => {
+      expect(scroll._globalSubscription).toBeNull('Expected no global listeners on init.');
+
+      const subscription = scroll.scrolled(0).subscribe(() => {});
+
+      expect(scroll._globalSubscription).toBeTruthy(
+          'Expected global listeners after a subscription has been added.');
+
+      scroll.ngOnDestroy();
+
+      expect(scroll._globalSubscription).toBeNull(
+          'Expected global listeners to have been removed after the subscription has stopped.');
+
+      subscription.unsubscribe();
     });
 
   });

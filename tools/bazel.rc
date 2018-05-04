@@ -36,13 +36,13 @@ test --test_output=errors
 build --experimental_ui
 test --experimental_ui
 
+# Configures script to do version stamping.
+# See https://docs.bazel.build/versions/master/user-manual.html#flag--workspace_status_command
+build --workspace_status_command=./tools/bazel-stamp-vars.sh
+
 ###############################
 # Typescript / Angular / Sass #
 ###############################
 # Make TypeScript and Angular compilation fast, by keeping a few copies of the compiler
 # running as daemons, and cache SourceFile AST's to reduce parse time.
 build --strategy=TypeScriptCompile=worker --strategy=AngularTemplateCompile=worker
-
-# Workaround rules_sass still using old 'set' constructor
-# This is an error in bazel >= 0.6 unless this flag is set
-build --incompatible_disallow_set_constructor=false

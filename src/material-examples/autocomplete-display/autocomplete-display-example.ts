@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
-import {startWith} from 'rxjs/operators/startWith';
-import {map} from 'rxjs/operators/map';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 export class User {
   constructor(public name: string) { }
@@ -31,8 +30,8 @@ export class AutocompleteDisplayExample {
   ngOnInit() {
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
-        startWith({} as User),
-        map(user => user && typeof user === 'object' ? user.name : user),
+        startWith<string | User>(''),
+        map(value => typeof value === 'string' ? value : value.name),
         map(name => name ? this.filter(name) : this.options.slice())
       );
   }
@@ -42,8 +41,8 @@ export class AutocompleteDisplayExample {
       option.name.toLowerCase().indexOf(name.toLowerCase()) === 0);
   }
 
-  displayFn(user: User): string {
-    return user ? user.name : user;
+  displayFn(user?: User): string | undefined {
+    return user ? user.name : undefined;
   }
 
 }

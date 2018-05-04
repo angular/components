@@ -1,5 +1,7 @@
 @import './typography';
 @import '../../autocomplete/autocomplete-theme';
+@import '../../badge/badge-theme';
+@import '../../bottom-sheet/bottom-sheet-theme';
 @import '../../button/button-theme';
 @import '../../button-toggle/button-toggle-theme';
 @import '../../card/card-theme';
@@ -30,6 +32,7 @@
 @import '../option/option-theme';
 @import '../option/optgroup-theme';
 @import '../../form-field/form-field-theme';
+@import '../../tree/tree-theme';
 
 
 // Includes all of the typographic styles.
@@ -38,8 +41,10 @@
     $config: mat-typography-config();
   }
 
+  @include mat-badge-typography($config);
   @include mat-base-typography($config);
   @include mat-autocomplete-typography($config);
+  @include mat-bottom-sheet-typography($config);
   @include mat-button-typography($config);
   @include mat-button-toggle-typography($config);
   @include mat-card-typography($config);
@@ -70,4 +75,5 @@
   @include mat-option-typography($config);
   @include mat-optgroup-typography($config);
   @include mat-snack-bar-typography($config);
+  @include mat-tree-typography($config);
 }

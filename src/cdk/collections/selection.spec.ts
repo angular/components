@@ -85,6 +85,19 @@ describe('SelectionModel', () => {
   });
 
   describe('onChange event', () => {
+    it('should return the model that dispatched the event', () => {
+      let model = new SelectionModel();
+      let spy = jasmine.createSpy('SelectionModel change event');
+
+      model.onChange!.subscribe(spy);
+      model.select(1);
+
+      let event = spy.calls.mostRecent().args[0];
+
+      expect(spy).toHaveBeenCalled();
+      expect(event.source).toBe(model);
+    });
+
     it('should return both the added and removed values', () => {
       let model = new SelectionModel();
       let spy = jasmine.createSpy('SelectionModel change event');
@@ -251,5 +264,9 @@ describe('SelectionModel', () => {
 
     expect(model.selected.length).toBe(0);
     expect(model.isEmpty()).toBe(true);
+  });
+
+  it('should be empty if an empty array is passed for the preselected values', () => {
+    expect(new SelectionModel(false, []).selected).toEqual([]);
   });
 });

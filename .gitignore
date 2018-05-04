@@ -5,6 +5,10 @@
 /tmp
 /deploy
 /screenshots
+/bazel-out
+
+# Example module file will be auto-generated.
+/src/material-examples/example-module.ts
 
 # dependencies
 node_modules
@@ -35,3 +39,7 @@ npm-debug.log
 testem.log
 /.chrome
 /.git
+
+# schematics
+/src/lib/schematics/**/*.js
+/src/lib/schematics/**/*.map

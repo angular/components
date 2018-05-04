@@ -29,7 +29,6 @@
   }
 }
 
-.mat-tab-group[mat-stretch-tabs] .mat-tab-label,
 .mat-tab-group[mat-stretch-tabs] .mat-tab-label {
   flex-basis: 0;
   flex-grow: 1;
@@ -48,6 +47,9 @@
   @include mat-fill;
   display: block;
   overflow: hidden;
+
+  // Fix for auto content wrapping in IE11
+  flex-basis: 100%;
 
   &.mat-tab-body-active {
     position: relative;

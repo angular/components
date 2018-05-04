@@ -2,8 +2,8 @@ import {FocusMonitor} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Component, ElementRef, Input, OnDestroy} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {MatFormFieldControl} from '@angular/material/form-field';
-import {Subject} from 'rxjs/Subject';
+import {MatFormFieldControl} from '@angular/material';
+import {Subject} from 'rxjs';
 
 
 /** Data structure for holding telephone number. */
@@ -44,18 +44,14 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, OnDestroy {
     return !n.area && !n.exchange && !n.subscriber;
   }
 
-  get shouldLabelFloat() {
-    return this.focused || !this.empty;
-  }
+  get shouldLabelFloat() { return this.focused || !this.empty; }
 
   id = `my-tel-input-${MyTelInput.nextId++}`;
 
   describedBy = '';
 
   @Input()
-  get placeholder() {
-    return this._placeholder;
-  }
+  get placeholder() { return this._placeholder; }
   set placeholder(plh) {
     this._placeholder = plh;
     this.stateChanges.next();
@@ -63,9 +59,7 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, OnDestroy {
   private _placeholder: string;
 
   @Input()
-  get required() {
-    return this._required;
-  }
+  get required() { return this._required; }
   set required(req) {
     this._required = coerceBooleanProperty(req);
     this.stateChanges.next();
@@ -73,9 +67,7 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, OnDestroy {
   private _required = false;
 
   @Input()
-  get disabled() {
-    return this._disabled;
-  }
+  get disabled() { return this._disabled; }
   set disabled(dis) {
     this._disabled = coerceBooleanProperty(dis);
     this.stateChanges.next();
@@ -97,7 +89,7 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, OnDestroy {
   }
 
   constructor(fb: FormBuilder, private fm: FocusMonitor, private elRef: ElementRef) {
-    this.parts =  fb.group({
+    this.parts = fb.group({
       'area': '',
       'exchange': '',
       'subscriber': '',

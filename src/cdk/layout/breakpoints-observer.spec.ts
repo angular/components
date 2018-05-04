@@ -5,7 +5,8 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {LayoutModule, BreakpointObserver, BreakpointState} from './index';
+import {LayoutModule} from './layout-module';
+import {BreakpointObserver, BreakpointState} from './breakpoints-observer';
 import {MediaMatcher} from './media-matcher';
 import {async, TestBed, inject} from '@angular/core/testing';
 import {Injectable} from '@angular/core';
@@ -49,6 +50,16 @@ describe('BreakpointObserver', () => {
     expect(mediaMatcher.queryCount).toBe(2);
   });
 
+  it('splits combined query strings into individual matchMedia listeners', () => {
+    expect(mediaMatcher.queryCount).toBe(0);
+    breakpointManager.observe('query1, query2');
+    expect(mediaMatcher.queryCount).toBe(2);
+    breakpointManager.observe('query1');
+    expect(mediaMatcher.queryCount).toBe(2);
+    breakpointManager.observe('query2, query3');
+    expect(mediaMatcher.queryCount).toBe(3);
+  });
+
   it('accepts an array of queries', () => {
     let queries = ['1 query', '2 query', 'red query', 'blue query'];
     breakpointManager.observe(queries);
@@ -77,11 +88,9 @@ describe('BreakpointObserver', () => {
       queryMatchState = state.matches;
     });
 
-    async(() => {
-      expect(queryMatchState).toBeTruthy();
-      mediaMatcher.setMatchesQuery(query, false);
-      expect(queryMatchState).toBeFalsy();
-    });
+    expect(queryMatchState).toBeTruthy();
+    mediaMatcher.setMatchesQuery(query, false);
+    expect(queryMatchState).toBeFalsy();
   });
 
   it('emits a true matches state when the query is matched', () => {

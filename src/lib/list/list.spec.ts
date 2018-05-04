@@ -77,13 +77,13 @@ describe('MatList', () => {
     expect(listItems[1].nativeElement.className).toContain('mat-multi-line');
   });
 
-  it('should apply mat-list-avatar class to list items with avatars', () => {
+  it('should apply a class to list items with avatars', () => {
     let fixture = TestBed.createComponent(ListWithAvatar);
     fixture.detectChanges();
 
     let listItems = fixture.debugElement.children[0].queryAll(By.css('mat-list-item'));
-    expect(listItems[0].nativeElement.className).toContain('mat-list-item-avatar');
-    expect(listItems[1].nativeElement.className).not.toContain('mat-list-item-avatar');
+    expect(listItems[0].nativeElement.className).toContain('mat-list-item-with-avatar');
+    expect(listItems[1].nativeElement.className).not.toContain('mat-list-item-with-avatar');
   });
 
   it('should not clear custom classes provided by user', () => {
@@ -115,8 +115,8 @@ describe('MatList', () => {
 
     let list = fixture.debugElement.children[0];
     let listItem = fixture.debugElement.children[0].query(By.css('mat-list-item'));
-    expect(list.nativeElement.getAttribute('role')).toBeNull();
-    expect(listItem.nativeElement.getAttribute('role')).toBe('listitem');
+    expect(list.nativeElement.getAttribute('role')).toBeNull('Expect mat-list no role');
+    expect(listItem.nativeElement.getAttribute('role')).toBeNull('Expect mat-list-item no role');
   });
 
   it('should not show ripples for non-nav lists', () => {

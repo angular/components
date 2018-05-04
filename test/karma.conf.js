@@ -5,7 +5,7 @@ module.exports = (config) => {
 
   config.set({
     basePath: path.join(__dirname, '..'),
-    frameworks: ['jasmine'],
+    frameworks: ['sharding', 'jasmine'],
     plugins: [
       require('karma-jasmine'),
       require('karma-browserstack-launcher'),
@@ -13,7 +13,9 @@ module.exports = (config) => {
       require('karma-chrome-launcher'),
       require('karma-firefox-launcher'),
       require('karma-sourcemap-loader'),
-      require('karma-coverage')
+      require('karma-coverage'),
+      require('karma-spec-reporter'),
+      require('karma-sharding'),
     ],
     files: [
       {pattern: 'node_modules/core-js/client/core.js', included: true, watched: false},
@@ -58,6 +60,13 @@ module.exports = (config) => {
       subdir: '.'
     },
 
+    // TODO(josephperrott): Determine how to properly disable extra output on ci.
+    specReporter: {
+      maxLogLines: Infinity, // Log out the entire stack trace on errors and failures.
+      suppressSkipped: true,
+      showSpecTiming: true,
+    },
+
     sauceLabs: {
       testName: 'material2',
       startConnect: false,
@@ -72,14 +81,15 @@ module.exports = (config) => {
       project: 'material2',
       startTunnel: false,
       retryLimit: 1,
-      timeout: 600,
+      timeout: 1800,
       pollingTimeout: 20000,
       video: false,
     },
 
-    browserDisconnectTimeout: 20000,
-    browserNoActivityTimeout: 240000,
-    captureTimeout: 120000,
+    browserDisconnectTimeout: 180000,
+    browserDisconnectTolerance: 3,
+    browserNoActivityTimeout: 300000,
+    captureTimeout: 180000,
     browsers: ['ChromeHeadlessLocal'],
 
     singleRun: false,
@@ -105,6 +115,8 @@ module.exports = (config) => {
 
       config.preprocessors['dist/packages/**/!(*+(.|-)spec).js'] = ['coverage'];
       config.reporters.push('coverage');
+      // Hide passed tests from logs while on travis.
+      config.specReporter.suppressPassed = true;
     }
 
     // The MODE variable is the indicator of what row in the test matrix we're running.
@@ -123,6 +135,7 @@ module.exports = (config) => {
       throw new Error(`Platform "${platform}" unknown, but Travis specified. Exiting.`);
     }
 
-    config.browsers = platformMap[platform][target.toLowerCase()];
+    // Set the browser list to be the same browser 3 times, to shard tests into three instances.
+    config.browsers = (new Array(3)).fill(platformMap[platform][target.toLowerCase()][0]);
   }
 };

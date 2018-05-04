@@ -12,7 +12,10 @@
       "@angular/material": ["../lib/public-api.ts"],
       "@angular/material-experimental/*": ["../material-experimental/*"],
       "@angular/material-experimental": ["../material-experimental"],
-      "@angular/material-moment-adapter": ["../material-moment-adapter/public-api.ts"]
+      "@angular/cdk-experimental/*": ["../cdk-experimental/*"],
+      "@angular/cdk-experimental": ["../cdk-experimental"],
+      "@angular/material-moment-adapter": ["../material-moment-adapter/public-api.ts"],
+      "@angular/material-examples": ["../../dist/packages/material-examples"]
     }
   },
   "include": ["./**/*.ts"]

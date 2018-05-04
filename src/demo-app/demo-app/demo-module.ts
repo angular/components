@@ -6,19 +6,26 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {LayoutModule} from '@angular/cdk/layout';
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
 import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
+import {Injector, NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
+import {createCustomElement} from '@angular/elements';
+import {EXAMPLE_COMPONENTS, ExampleModule} from '@angular/material-examples';
+
 import {AutocompleteDemo} from '../autocomplete/autocomplete-demo';
+import {BadgeDemo} from '../badge/badge-demo';
 import {BaselineDemo} from '../baseline/baseline-demo';
+import {BottomSheetDemo, ExampleBottomSheet} from '../bottom-sheet/bottom-sheet-demo';
 import {ButtonToggleDemo} from '../button-toggle/button-toggle-demo';
 import {ButtonDemo} from '../button/button-demo';
 import {CardDemo} from '../card/card-demo';
 import {CheckboxDemo, MatCheckboxDemoNestedChecklist} from '../checkbox/checkbox-demo';
 import {ChipsDemo} from '../chips/chips-demo';
-import {DatepickerDemo} from '../datepicker/datepicker-demo';
+import {ConnectedOverlayDemo, DemoOverlay} from '../connected-overlay/connected-overlay-demo';
+import {CustomHeader, DatepickerDemo} from '../datepicker/datepicker-demo';
 import {DemoMaterialModule} from '../demo-material-module';
 import {ContentElementDialog, DialogDemo, IFrameDialog, JazzDialog} from '../dialog/dialog-demo';
 import {DrawerDemo} from '../drawer/drawer-demo';
@@ -32,10 +39,10 @@ import {ListDemo} from '../list/list-demo';
 import {LiveAnnouncerDemo} from '../live-announcer/live-announcer-demo';
 import {MenuDemo} from '../menu/menu-demo';
 import {
+  KeyboardTrackingPanel,
   OverlayDemo,
   RotiniPanel,
-  SpagettiPanel,
-  KeyboardTrackingPanel
+  SpaghettiPanel
 } from '../overlay/overlay-demo';
 import {PlatformDemo} from '../platform/platform-demo';
 import {PortalDemo, ScienceJoke} from '../portal/portal-demo';
@@ -43,54 +50,70 @@ import {ProgressBarDemo} from '../progress-bar/progress-bar-demo';
 import {ProgressSpinnerDemo} from '../progress-spinner/progress-spinner-demo';
 import {RadioDemo} from '../radio/radio-demo';
 import {RippleDemo} from '../ripple/ripple-demo';
+import {ScreenTypeDemo} from '../screen-type/screen-type-demo';
 import {SelectDemo} from '../select/select-demo';
 import {SidenavDemo} from '../sidenav/sidenav-demo';
 import {SlideToggleDemo} from '../slide-toggle/slide-toggle-demo';
 import {SliderDemo} from '../slider/slider-demo';
 import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
 import {StepperDemo} from '../stepper/stepper-demo';
-import {PeopleDatabase} from '../table/people-database';
-import {TableDemo} from '../table/table-demo';
-import {ScreenTypeDemo} from '../screen-type/screen-type-demo';
-import {LayoutModule} from '@angular/cdk/layout';
-import {TableHeaderDemo} from '../table/table-header-demo';
-import {FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo} from '../tabs/tabs-demo';
+import {TableDemoModule} from '../table/table-demo-module';
+import {
+  Counter, FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo
+} from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
+import {TreeDemoModule} from '../tree/tree-demo-module';
 import {TypographyDemo} from '../typography/typography-demo';
 import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
+import {PaginatorDemo} from '../paginator/paginator-demo';
+import {ExamplesPage} from '../examples-page/examples-page';
+import {MaterialExampleModule} from '../example/example-module';
 
 @NgModule({
   imports: [
+    MaterialExampleModule,
+    ExampleModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(DEMO_APP_ROUTES),
     DemoMaterialModule,
     LayoutModule,
+    TableDemoModule,
+    TreeDemoModule,
   ],
   declarations: [
+    ExamplesPage,
     AutocompleteDemo,
+    BadgeDemo,
     BaselineDemo,
+    BottomSheetDemo,
     ButtonDemo,
     ButtonToggleDemo,
     CardDemo,
     CheckboxDemo,
     ChipsDemo,
+    ConnectedOverlayDemo,
     ContentElementDialog,
+    Counter,
+    CustomHeader,
     DatepickerDemo,
     DemoApp,
+    DemoOverlay,
     DialogDemo,
     DrawerDemo,
+    ExampleBottomSheet,
+    ExpansionDemo,
     ExpansionDemo,
     FocusOriginDemo,
     FoggyTabContent,
     GesturesDemo,
     GridListDemo,
     Home,
-    IconDemo,
     IFrameDialog,
+    IconDemo,
     InputDemo,
     JazzDialog,
     KeyboardTrackingPanel,
@@ -99,6 +122,7 @@ import {DEMO_APP_ROUTES} from './routes';
     MatCheckboxDemoNestedChecklist,
     MenuDemo,
     OverlayDemo,
+    PaginatorDemo,
     PlatformDemo,
     PortalDemo,
     ProgressBarDemo,
@@ -111,14 +135,12 @@ import {DEMO_APP_ROUTES} from './routes';
     ScreenTypeDemo,
     SelectDemo,
     SidenavDemo,
-    SliderDemo,
     SlideToggleDemo,
+    SliderDemo,
     SnackBarDemo,
-    SpagettiPanel,
+    SpaghettiPanel,
     StepperDemo,
     SunnyTabContent,
-    TableDemo,
-    TableHeaderDemo,
     TabsDemo,
     ToolbarDemo,
     TooltipDemo,
@@ -126,17 +148,27 @@ import {DEMO_APP_ROUTES} from './routes';
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
-    PeopleDatabase
   ],
   entryComponents: [
     ContentElementDialog,
+    CustomHeader,
     DemoApp,
+    DemoOverlay,
+    ExampleBottomSheet,
     IFrameDialog,
     JazzDialog,
     KeyboardTrackingPanel,
     RotiniPanel,
     ScienceJoke,
-    SpagettiPanel,
+    SpaghettiPanel,
   ],
 })
-export class DemoModule {}
+export class DemoModule {
+  constructor(injector: Injector) {
+    // Register examples as custom elements so that they can be inserted into the DOM dynamically
+    Object.keys(EXAMPLE_COMPONENTS).forEach(key => {
+      const element = createCustomElement(EXAMPLE_COMPONENTS[key].component, {injector});
+      customElements.define(key, element);
+    });
+  }
+}

@@ -26,6 +26,12 @@
   // Needed to make last line of the textarea line up with the baseline.
   vertical-align: bottom;
 
+  // User agent stylesheets set the text-align of inputs explicitly to "start". Those can be
+  // easily overwritten by targeting the input element using a simple CSS selector, but since
+  // the text-align will be applied most of the time on the `mat-form-field` to also align the
+  // placeholder, the alignment should be inherited here.
+  text-align: inherit;
+
   // Undo the red box-shadow glow added by Firefox on invalid inputs.
   // See https://developer.mozilla.org/en-US/docs/Web/CSS/:-moz-ui-invalid
   &:-moz-ui-invalid {
@@ -81,4 +87,15 @@ textarea.mat-input-element {
   // Only allow resizing along the Y axis.
   resize: vertical;
   overflow: auto;
+
+  &.cdk-textarea-autosize {
+    resize: none;
+  }
+}
+
+textarea.mat-input-element {
+  // The 2px padding prevents scrollbars from appearing on Chrome even when they aren't needed.
+  // We also add a negative margin to negate the effect of the padding on the layout.
+  padding: 2px 0;
+  margin: -2px 0;
 }

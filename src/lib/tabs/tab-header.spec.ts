@@ -1,19 +1,24 @@
-import {
-  async, ComponentFixture, TestBed, fakeAsync, tick, discardPeriodicTasks
-} from '@angular/core/testing';
-import {Component, ViewChild} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
-import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
-import {PortalModule} from '@angular/cdk/portal';
+import {HAMMER_GESTURE_CONFIG, By} from '@angular/platform-browser';
 import {Direction, Directionality} from '@angular/cdk/bidi';
+import {END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
+import {PortalModule} from '@angular/cdk/portal';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing';
-import {MatTabHeader} from './tab-header';
+import {CommonModule} from '@angular/common';
+import {Component, ViewChild} from '@angular/core';
+import {
+  async,
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import {MatRippleModule} from '@angular/material/core';
 import {MatInkBar} from './ink-bar';
+import {MatTabHeader} from './tab-header';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
-import {Subject} from 'rxjs/Subject';
 import {TestGestureConfig} from '../core/gestures/test-gesture-config';
+import {Subject} from 'rxjs';
 // tslint:disable-next-line:no-unused-variable
 import {VIEWPORT_RULER_PROVIDER, ViewportRuler, ScrollDispatchModule} from '@angular/cdk/scrolling';
 
@@ -35,7 +40,7 @@ describe('MatTabHeader', () => {
         SimpleTabHeaderApp,
       ],
       providers: [
-        VIEWPORT_RULER_PROVIDER,
+        ViewportRuler,
         {provide: Directionality, useFactory: () => ({value: dir, change: change.asObservable()})},
         {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
           gestureConfig = new TestGestureConfig();
@@ -142,6 +147,60 @@ describe('MatTabHeader', () => {
       expect(appComponent.selectedIndex).toBe(0);
       expect(spaceEvent.defaultPrevented).toBe(true);
     });
+
+    it('should move focus to the first tab when pressing HOME', () => {
+      appComponent.tabHeader.focusIndex = 3;
+      fixture.detectChanges();
+      expect(appComponent.tabHeader.focusIndex).toBe(3);
+
+      const tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
+      const event = dispatchKeyboardEvent(tabListContainer, 'keydown', HOME);
+      fixture.detectChanges();
+
+      expect(appComponent.tabHeader.focusIndex).toBe(0);
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    it('should skip disabled items when moving focus using HOME', () => {
+      appComponent.tabHeader.focusIndex = 3;
+      appComponent.tabs[0].disabled = true;
+      fixture.detectChanges();
+      expect(appComponent.tabHeader.focusIndex).toBe(3);
+
+      const tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
+      dispatchKeyboardEvent(tabListContainer, 'keydown', HOME);
+      fixture.detectChanges();
+
+      // Note that the second tab is disabled by default already.
+      expect(appComponent.tabHeader.focusIndex).toBe(2);
+    });
+
+    it('should move focus to the last tab when pressing END', () => {
+      appComponent.tabHeader.focusIndex = 0;
+      fixture.detectChanges();
+      expect(appComponent.tabHeader.focusIndex).toBe(0);
+
+      const tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
+      const event = dispatchKeyboardEvent(tabListContainer, 'keydown', END);
+      fixture.detectChanges();
+
+      expect(appComponent.tabHeader.focusIndex).toBe(3);
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    it('should skip disabled items when moving focus using END', () => {
+      appComponent.tabHeader.focusIndex = 0;
+      appComponent.tabs[3].disabled = true;
+      fixture.detectChanges();
+      expect(appComponent.tabHeader.focusIndex).toBe(0);
+
+      const tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
+      dispatchKeyboardEvent(tabListContainer, 'keydown', END);
+      fixture.detectChanges();
+
+      expect(appComponent.tabHeader.focusIndex).toBe(2);
+    });
+
   });
 
   describe('pagination', () => {

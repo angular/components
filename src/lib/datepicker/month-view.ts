@@ -7,8 +7,20 @@
  */
 
 import {
+  DOWN_ARROW,
+  END,
+  ENTER,
+  HOME,
+  LEFT_ARROW,
+  PAGE_DOWN,
+  PAGE_UP,
+  RIGHT_ARROW,
+  UP_ARROW,
+} from '@angular/cdk/keycodes';
+import {
   AfterContentInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Inject,
@@ -16,10 +28,11 @@ import {
   Optional,
   Output,
   ViewEncapsulation,
-  ChangeDetectorRef,
+  ViewChild,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
-import {MatCalendarCell} from './calendar-body';
+import {Directionality} from '@angular/cdk/bidi';
+import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 
 
@@ -34,10 +47,9 @@ const DAYS_PER_WEEK = 7;
   moduleId: module.id,
   selector: 'mat-month-view',
   templateUrl: 'month-view.html',
-  exportAs: 'matMonthVeiw',
+  exportAs: 'matMonthView',
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatMonthView<D> implements AfterContentInit {
   /**
@@ -46,9 +58,10 @@ export class MatMonthView<D> implements AfterContentInit {
   @Input()
   get activeDate(): D { return this._activeDate; }
   set activeDate(value: D) {
-    let oldActiveDate = this._activeDate;
-    this._activeDate =
+    const oldActiveDate = this._activeDate;
+    const validDate =
         this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
+    this._activeDate = this._dateAdapter.clampDate(validDate, this.minDate, this.maxDate);
     if (!this._hasSameMonthAndYear(oldActiveDate, this._activeDate)) {
       this._init();
     }
@@ -64,14 +77,36 @@ export class MatMonthView<D> implements AfterContentInit {
   }
   private _selected: D | null;
 
+  /** The minimum selectable date. */
+  @Input()
+  get minDate(): D | null { return this._minDate; }
+  set minDate(value: D | null) {
+    this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _minDate: D | null;
+
+  /** The maximum selectable date. */
+  @Input()
+  get maxDate(): D | null { return this._maxDate; }
+  set maxDate(value: D | null) {
+    this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _maxDate: D | null;
+
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
 
   /** Emits when a new date is selected. */
-  @Output() selectedChange = new EventEmitter<D | null>();
+  @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
 
   /** Emits when any date is selected. */
-  @Output() _userSelection = new EventEmitter<void>();
+  @Output() readonly _userSelection: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Emits when any date is activated. */
+  @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
+
+  /** The body of calendar table */
+  @ViewChild(MatCalendarBody) _matCalendarBody;
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
@@ -94,9 +129,10 @@ export class MatMonthView<D> implements AfterContentInit {
   /** The names of the weekdays. */
   _weekdays: {long: string, narrow: string}[];
 
-  constructor(@Optional() public _dateAdapter: DateAdapter<D>,
+  constructor(private _changeDetectorRef: ChangeDetectorRef,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-              private _changeDetectorRef: ChangeDetectorRef) {
+              @Optional() public _dateAdapter: DateAdapter<D>,
+              @Optional() private _dir?: Directionality) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
@@ -117,8 +153,9 @@ export class MatMonthView<D> implements AfterContentInit {
     this._activeDate = this._dateAdapter.today();
   }
 
-  ngAfterContentInit(): void {
+  ngAfterContentInit() {
     this._init();
+    this._focusActiveCell();
   }
 
   /** Handles when a new date is selected. */
@@ -132,6 +169,69 @@ export class MatMonthView<D> implements AfterContentInit {
     }
 
     this._userSelection.emit();
+  }
+
+  /** Handles keydown events on the calendar body when calendar is in month view. */
+  _handleCalendarBodyKeydown(event: KeyboardEvent): void {
+    // TODO(mmalerba): We currently allow keyboard navigation to disabled dates, but just prevent
+    // disabled ones from being selected. This may not be ideal, we should look into whether
+    // navigation should skip over disabled dates, and if so, how to implement that efficiently.
+
+    const oldActiveDate = this._activeDate;
+
+    const isRtl = this._isRtl();
+    switch (event.keyCode) {
+      case LEFT_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate, isRtl ? 1 : -1);
+        break;
+      case RIGHT_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate, isRtl ? -1 : 1);
+        break;
+      case UP_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate, -7);
+        break;
+      case DOWN_ARROW:
+        this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate, 7);
+        break;
+      case HOME:
+        this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate,
+            1 - this._dateAdapter.getDate(this._activeDate));
+        break;
+      case END:
+        this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate,
+            (this._dateAdapter.getNumDaysInMonth(this._activeDate) -
+              this._dateAdapter.getDate(this._activeDate)));
+        break;
+      case PAGE_UP:
+        this.activeDate = event.altKey ?
+            this._dateAdapter.addCalendarYears(this._activeDate, -1) :
+            this._dateAdapter.addCalendarMonths(this._activeDate, -1);
+        break;
+      case PAGE_DOWN:
+        this.activeDate = event.altKey ?
+            this._dateAdapter.addCalendarYears(this._activeDate, 1) :
+            this._dateAdapter.addCalendarMonths(this._activeDate, 1);
+        break;
+      case ENTER:
+        if (!this.dateFilter || this.dateFilter(this._activeDate)) {
+          this._dateSelected(this._dateAdapter.getDate(this._activeDate));
+          this._userSelection.emit();
+          // Prevent unexpected default actions such as form submission.
+          event.preventDefault();
+        }
+        return;
+      default:
+        // Don't prevent default or focus active cell on keys that we don't explicitly handle.
+        return;
+    }
+
+    if (this._dateAdapter.compareDate(oldActiveDate, this.activeDate)) {
+      this.activeDateChange.emit(this.activeDate);
+    }
+
+    this._focusActiveCell();
+    // Prevent unexpected default actions such as form submission.
+    event.preventDefault();
   }
 
   /** Initializes this month view. */
@@ -152,25 +252,37 @@ export class MatMonthView<D> implements AfterContentInit {
     this._changeDetectorRef.markForCheck();
   }
 
+  /** Focuses the active cell after the microtask queue is empty. */
+  private _focusActiveCell() {
+    this._matCalendarBody._focusActiveCell();
+  }
+
   /** Creates MatCalendarCells for the dates in this month. */
   private _createWeekCells() {
-    let daysInMonth = this._dateAdapter.getNumDaysInMonth(this.activeDate);
-    let dateNames = this._dateAdapter.getDateNames();
+    const daysInMonth = this._dateAdapter.getNumDaysInMonth(this.activeDate);
+    const dateNames = this._dateAdapter.getDateNames();
     this._weeks = [[]];
     for (let i = 0, cell = this._firstWeekOffset; i < daysInMonth; i++, cell++) {
       if (cell == DAYS_PER_WEEK) {
         this._weeks.push([]);
         cell = 0;
       }
-      let date = this._dateAdapter.createDate(
-          this._dateAdapter.getYear(this.activeDate),
-          this._dateAdapter.getMonth(this.activeDate), i + 1);
-      let enabled = !this.dateFilter ||
-          this.dateFilter(date);
-      let ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
+      const date = this._dateAdapter.createDate(
+            this._dateAdapter.getYear(this.activeDate),
+            this._dateAdapter.getMonth(this.activeDate), i + 1);
+      const enabled = this._shouldEnableDate(date);
+      const ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
       this._weeks[this._weeks.length - 1]
           .push(new MatCalendarCell(i + 1, dateNames[i], ariaLabel, enabled));
     }
+  }
+
+  /** Date filter for the month */
+  private _shouldEnableDate(date: D): boolean {
+    return !!date &&
+        (!this.dateFilter || this.dateFilter(date)) &&
+        (!this.minDate || this._dateAdapter.compareDate(date, this.minDate) >= 0) &&
+        (!this.maxDate || this._dateAdapter.compareDate(date, this.maxDate) <= 0);
   }
 
   /**
@@ -194,5 +306,10 @@ export class MatMonthView<D> implements AfterContentInit {
    */
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  }
+
+  /** Determines whether the user has the RTL layout direction. */
+  private _isRtl() {
+    return this._dir && this._dir.value === 'rtl';
   }
 }

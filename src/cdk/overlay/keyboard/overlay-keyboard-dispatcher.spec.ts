@@ -2,8 +2,7 @@ import {TestBed, inject} from '@angular/core/testing';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {Component, NgModule} from '@angular/core';
-import {Overlay} from '../overlay';
-import {OverlayModule} from '../index';
+import {OverlayModule, OverlayContainer, Overlay} from '../index';
 import {OverlayKeyboardDispatcher} from './overlay-keyboard-dispatcher';
 import {ComponentPortal} from '@angular/cdk/portal';
 
@@ -16,12 +15,15 @@ describe('OverlayKeyboardDispatcher', () => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, TestComponentModule],
     });
+
+    inject([OverlayKeyboardDispatcher, Overlay], (kbd: OverlayKeyboardDispatcher, o: Overlay) => {
+      keyboardDispatcher = kbd;
+      overlay = o;
+    })();
   });
 
-  beforeEach(inject([OverlayKeyboardDispatcher, Overlay],
-        (kbd: OverlayKeyboardDispatcher, o: Overlay) => {
-    keyboardDispatcher = kbd;
-    overlay = o;
+  afterEach(inject([OverlayContainer], (overlayContainer: OverlayContainer) => {
+    overlayContainer.ngOnDestroy();
   }));
 
   it('should track overlays in order as they are attached and detached', () => {
@@ -67,26 +69,21 @@ describe('OverlayKeyboardDispatcher', () => {
     expect(overlayTwoSpy).toHaveBeenCalled();
   });
 
-  it('should dispatch targeted keyboard events to the overlay containing that target', () => {
-    const overlayOne = overlay.create();
-    const overlayTwo = overlay.create();
-    const overlayOneSpy = jasmine.createSpy('overlayOne keyboard event spy');
-    const overlayTwoSpy = jasmine.createSpy('overlayOne keyboard event spy');
+  it('should dispatch keyboard events when propagation is stopped', () => {
+    const overlayRef = overlay.create();
+    const spy = jasmine.createSpy('keyboard event spy');
+    const button = document.createElement('button');
 
-    overlayOne.keydownEvents().subscribe(overlayOneSpy);
-    overlayTwo.keydownEvents().subscribe(overlayTwoSpy);
+    document.body.appendChild(button);
+    button.addEventListener('keydown', event => event.stopPropagation());
 
-    // Attach overlays
-    keyboardDispatcher.add(overlayOne);
-    keyboardDispatcher.add(overlayTwo);
+    overlayRef.keydownEvents().subscribe(spy);
+    keyboardDispatcher.add(overlayRef);
+    dispatchKeyboardEvent(button, 'keydown', ESCAPE);
 
-    const overlayOnePane = overlayOne.overlayElement;
+    expect(spy).toHaveBeenCalled();
 
-    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE, overlayOnePane);
-
-    // Targeted overlay should receive event
-    expect(overlayOneSpy).toHaveBeenCalled();
-    expect(overlayTwoSpy).not.toHaveBeenCalled();
+    button.parentNode!.removeChild(button);
   });
 
   it('should complete the keydown stream on dispose', () => {
@@ -130,6 +127,20 @@ describe('OverlayKeyboardDispatcher', () => {
     dispatchKeyboardEvent(document.body, 'keydown', ESCAPE, instance.overlayElement);
 
     expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should dispose of the global keyboard event handler correctly', () => {
+    const overlayRef = overlay.create();
+    const body = document.body;
+
+    spyOn(body, 'addEventListener');
+    spyOn(body, 'removeEventListener');
+
+    keyboardDispatcher.add(overlayRef);
+    expect(body.addEventListener).toHaveBeenCalledWith('keydown', jasmine.any(Function), true);
+
+    overlayRef.dispose();
+    expect(body.removeEventListener).toHaveBeenCalledWith('keydown', jasmine.any(Function), true);
   });
 
 });

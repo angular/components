@@ -6,17 +6,30 @@
 
 
 @mixin mat-input-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
   $foreground: map-get($theme, foreground);
-  $is-dark-theme: map-get($theme, is-dark);
 
   .mat-input-element:disabled {
-    color: mat-color($foreground, secondary-text, if($is-dark-theme, 0.7, 0.42));
+    color: mat-color($foreground, disabled-text);
   }
 
   .mat-input-element {
+    caret-color: mat-color($primary);
+
     @include input-placeholder {
       color: _mat-control-placeholder-color($theme);
     }
+  }
+
+  .mat-accent .mat-input-element {
+    caret-color: mat-color($accent);
+  }
+
+  .mat-warn .mat-input-element,
+  .mat-form-field-invalid .mat-input-element {
+    caret-color: mat-color($warn);
   }
 }
 

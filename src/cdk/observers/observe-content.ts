@@ -6,26 +6,29 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
+  AfterContentInit,
   Directive,
   ElementRef,
-  NgModule,
-  Output,
-  Input,
   EventEmitter,
-  OnDestroy,
-  AfterContentInit,
   Injectable,
+  Input,
+  NgModule,
   NgZone,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
-import {Subject} from 'rxjs/Subject';
-import {debounceTime} from 'rxjs/operators/debounceTime';
+import {Subject} from 'rxjs';
+import {debounceTime} from 'rxjs/operators';
 
 /**
  * Factory that creates a new MutationObserver and allows us to stub it out in unit tests.
  * @docs-private
  */
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class MutationObserverFactory {
   create(callback: MutationCallback): MutationObserver | null {
     return typeof MutationObserver === 'undefined' ? null : new MutationObserver(callback);
@@ -40,11 +43,22 @@ export class MutationObserverFactory {
   selector: '[cdkObserveContent]',
   exportAs: 'cdkObserveContent',
 })
-export class CdkObserveContent implements AfterContentInit, OnDestroy {
+export class CdkObserveContent implements AfterContentInit, OnChanges, OnDestroy {
   private _observer: MutationObserver | null;
+  private _disabled = false;
 
   /** Event emitted for each change in the element's content. */
   @Output('cdkObserveContent') event = new EventEmitter<MutationRecord[]>();
+
+  /**
+   * Whether observing content is disabled. This option can be used
+   * to disconnect the underlying MutationObserver until it is needed.
+   */
+  @Input('cdkObserveContentDisabled')
+  get disabled() { return this._disabled; }
+  set disabled(value: any) {
+    this._disabled = coerceBooleanProperty(value);
+  }
 
   /** Used for debouncing the emitted values to the observeContent event. */
   private _debouncer = new Subject<MutationRecord[]>();
@@ -73,21 +87,36 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
       });
     });
 
-    if (this._observer) {
-      this._observer.observe(this._elementRef.nativeElement, {
-        'characterData': true,
-        'childList': true,
-        'subtree': true
-      });
+    if (!this.disabled) {
+      this._enable();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['disabled']) {
+      changes['disabled'].currentValue ? this._disable() : this._enable();
     }
   }
 
   ngOnDestroy() {
+    this._disable();
+    this._debouncer.complete();
+  }
+
+  private _disable() {
     if (this._observer) {
       this._observer.disconnect();
     }
+  }
 
-    this._debouncer.complete();
+  private _enable() {
+    if (this._observer) {
+      this._observer.observe(this._elementRef.nativeElement, {
+        characterData: true,
+        childList: true,
+        subtree: true
+      });
+    }
   }
 }
 
