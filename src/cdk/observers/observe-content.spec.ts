@@ -1,11 +1,11 @@
-import {Component} from '@angular/core';
-import {async, TestBed, ComponentFixture, fakeAsync, tick} from '@angular/core/testing';
-import {ObserversModule, MutationObserverFactory} from './observe-content';
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {async, ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
+import {ContentObserverFactory, MutationObserverFactory, ObserversModule} from './observe-content';
 
 // TODO(elad): `ProxyZone` doesn't seem to capture the events raised by
 // `MutationObserver` and needs to be investigated
 
-describe('Observe content', () => {
+describe('Observe content directive', () => {
   describe('basic usage', () => {
     beforeEach(async(() => {
       TestBed.configureTestingModule({
@@ -120,6 +120,57 @@ describe('Observe content', () => {
   });
 });
 
+describe('Observe content injectable', () => {
+  describe('basic usage', () => {
+    let callbacks: Function[];
+    let invokeCallbacks = (args?: any) => callbacks.forEach(callback => callback(args));
+
+    beforeEach(fakeAsync(() => {
+      callbacks = [];
+
+      TestBed.configureTestingModule({
+        imports: [ObserversModule],
+        declarations: [UnobservedComponentWithTextContent],
+        providers: [{
+          provide: MutationObserverFactory,
+          useValue: {
+            create: function(callback: Function) {
+              callbacks.push(callback);
+
+              return {
+                observe: () => {},
+                disconnect: () => {}
+              };
+            }
+          }
+        }]
+      });
+
+      TestBed.compileComponents();
+    }));
+
+    it('should trigger the callback when the content of the element changes',
+        fakeAsync(inject([ContentObserverFactory], (cof: ContentObserverFactory) => {
+          let fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
+          fixture.detectChanges();
+
+          const spy = jasmine.createSpy('content observer');
+
+          const observer = cof.create(fixture.componentInstance.contentEl.nativeElement);
+          observer.changes.subscribe(() => spy());
+          observer.start();
+
+          expect(spy).not.toHaveBeenCalled();
+
+          fixture.componentInstance.text = 'text';
+          fixture.detectChanges();
+          invokeCallbacks();
+
+          expect(spy).toHaveBeenCalled();
+        })));
+  });
+});
+
 
 @Component({
   template: `
@@ -146,4 +197,12 @@ class ComponentWithChildTextContent {
 class ComponentWithDebouncedListener {
   debounce = 500;
   spy = jasmine.createSpy('MutationObserver callback');
+}
+
+@Component({
+  template: `<div #contentEl>{{text}}</div>`
+})
+class UnobservedComponentWithTextContent {
+  @ViewChild('contentEl') contentEl: ElementRef;
+  text = '';
 }
