@@ -223,6 +223,7 @@ describe('cdkMonitorFocus', () => {
         ButtonWithFocusClasses,
         ComplexComponentWithMonitorElementFocus,
         ComplexComponentWithMonitorSubtreeFocus,
+        ComplexComponentWithMonitorSubtreeFocusAndMonitorElementFocus,
       ],
     }).compileComponents();
   });
@@ -392,7 +393,7 @@ describe('cdkMonitorFocus', () => {
   });
 
   describe('complex component with cdkMonitorSubtreeFocus and cdkMonitorElementFocus', () => {
-    let fixture: ComponentFixture<ComplexComponentWithMonitorSubtreeFocusAnfMonitorElementFocus>;
+    let fixture: ComponentFixture<ComplexComponentWithMonitorSubtreeFocusAndMonitorElementFocus>;
     let parentElement: HTMLElement;
     let childElement: HTMLElement;
     let focusMonitor: FocusMonitor;
@@ -400,7 +401,7 @@ describe('cdkMonitorFocus', () => {
     beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
       focusMonitor = fm;
       fixture =
-          TestBed.createComponent(ComplexComponentWithMonitorSubtreeFocusAnfMonitorElementFocus);
+          TestBed.createComponent(ComplexComponentWithMonitorSubtreeFocusAndMonitorElementFocus);
       fixture.detectChanges();
 
       parentElement = fixture.debugElement.query(By.css('div')).nativeElement;
@@ -485,4 +486,4 @@ class ComplexComponentWithMonitorSubtreeFocus {}
 @Component({
   template: `<div cdkMonitorSubtreeFocus><button cdkMonitorElementFocus></button></div>`
 })
-class ComplexComponentWithMonitorSubtreeFocusAnfMonitorElementFocus {}
+class ComplexComponentWithMonitorSubtreeFocusAndMonitorElementFocus {}
