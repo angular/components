@@ -24,7 +24,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {pairwise, shareReplay, startWith, switchMap} from 'rxjs/operators';
+import {pairwise, shareReplay, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
 
@@ -138,6 +138,8 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   /** Whether the rendered data should be updated during the next ngDoCheck cycle. */
   private _needsUpdate = false;
 
+  private _destroyed = new Subject<void>();
+
   constructor(
       /** The view container to add items to. */
       private _viewContainerRef: ViewContainerRef,
@@ -151,7 +153,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
       this._data = data;
       this._onRenderedDataChange();
     });
-    this._viewport.renderedRangeStream.subscribe(range => {
+    this._viewport.renderedRangeStream.pipe(takeUntil(this._destroyed)).subscribe(range => {
       this._renderedRange = range;
       this.viewChange.next(this._renderedRange);
       this._onRenderedDataChange();
@@ -213,6 +215,9 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
 
     this._dataSourceChanges.complete();
     this.viewChange.complete();
+
+    this._destroyed.next();
+    this._destroyed.complete();
 
     for (let view of this._templateCache) {
       view.destroy();

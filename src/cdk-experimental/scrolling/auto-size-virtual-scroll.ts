@@ -122,14 +122,14 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     this._viewport = null;
   }
 
-  /** Implemented as part of VirtualScrollStrategy. */
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onContentScrolled() {
     if (this._viewport) {
       this._updateRenderedContentAfterScroll();
     }
   }
 
-  /** Implemented as part of VirtualScrollStrategy. */
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onDataLengthChanged() {
     if (this._viewport) {
       // TODO(mmalebra): Do something smarter here.
@@ -137,14 +137,14 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     }
   }
 
-  /** Implemented as part of VirtualScrollStrategy. */
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onContentRendered() {
     if (this._viewport) {
       this._checkRenderedContentSize();
     }
   }
 
-  /** Implemented as part of VirtualScrollStrategy. */
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onRenderedOffsetChanged() {
     if (this._viewport) {
       this._checkRenderedContentOffset();
@@ -318,6 +318,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     this._updateTotalContentSize(this._lastRenderedContentSize);
   }
 
+  /** Checks the currently rendered content offset and saves the value for later use. */
   private _checkRenderedContentOffset() {
     const viewport = this._viewport!;
     this._lastRenderedContentOffset = viewport.getOffsetToRenderedContentStart()!;

@@ -60,21 +60,21 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     this._updateRenderedRange();
   }
 
-  /** Implemented as part of VirtualScrollStrategy. */
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onContentScrolled() {
     this._updateRenderedRange();
   }
 
-  /** Implemented as part of VirtualScrollStrategy. */
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onDataLengthChanged() {
     this._updateTotalContentSize();
     this._updateRenderedRange();
   }
 
-  /** Implemented as part of VirtualScrollStrategy. */
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onContentRendered() { /* no-op */ }
 
-  /** Implemented as part of VirtualScrollStrategy. */
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onRenderedOffsetChanged() { /* no-op */ }
 
   /** Update the viewport's total content size. */

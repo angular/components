@@ -257,16 +257,15 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
 
         // If the rendered content offset was specified as an offset to the end of the content,
         // rewrite it as an offset to the start of the content.
-        if (this._renderedContentOffsetNeedsRewrite) {
-          this._ngZone.onStable.pipe(take(1)).subscribe(() => {
+        this._ngZone.onStable.pipe(take(1)).subscribe(() => {
+          if (this._renderedContentOffsetNeedsRewrite) {
             this._renderedContentOffset -= this.measureRenderedContentSize();
             this._renderedContentOffsetNeedsRewrite = false;
             this.setRenderedContentOffset(this._renderedContentOffset);
-          });
-        } else {
-          this._ngZone.onStable.pipe(take(1))
-              .subscribe(() => this._scrollStrategy.onRenderedOffsetChanged());
-        }
+          } else {
+            this._scrollStrategy.onRenderedOffsetChanged();
+          }
+        });
       });
     }
   }

@@ -98,7 +98,12 @@ export class VirtualScrollDemo {
   sortBy(prop: 'name' | 'capital') {
     this.statesObservable.next(this.states.map(s => ({...s})).sort((a, b) => {
       const aProp = a[prop], bProp = b[prop];
-      return aProp < bProp ? -1 : (aProp > bProp ? 1 : 0);
+      if (aProp < bProp) {
+        return -1;
+      } else if (aProp > bProp) {
+        return 1;
+      }
+      return 0;
     }));
   }
 }
