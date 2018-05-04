@@ -11,6 +11,8 @@ import {tap} from 'rxjs/operators/tap';
 import {finalize} from 'rxjs/operators/finalize';
 import {map} from 'rxjs/operators/map';
 import {share} from 'rxjs/operators/share';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/mergeMap';
 import {
   Injectable,
   Inject,
@@ -20,12 +22,13 @@ import {
   SkipSelf,
 } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {DomSanitizer, SafeResourceUrl, SafeHtml} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
 import {forkJoin} from 'rxjs/observable/forkJoin';
 import {of as observableOf} from 'rxjs/observable/of';
 import {_throw as observableThrow} from 'rxjs/observable/throw';
 import {DOCUMENT} from '@angular/common';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 
 /**
@@ -99,6 +102,9 @@ export class MatIconRegistry {
 
   /** Map from font identifiers to their CSS class names. Used for icon fonts. */
   private _fontCssClassesByAlias = new Map<string, string>();
+  
+  /** Subject for notifying when an icon is added to the registry */
+  private _registrySubject = new BehaviorSubject<string>("");
 
   /**
    * The CSS class to apply when an `<mat-icon>` component has no icon name, url, or font specified.
@@ -132,7 +138,12 @@ export class MatIconRegistry {
    */
   addSvgIconInNamespace(namespace: string, iconName: string, url: SafeResourceUrl): this {
     const key = iconKey(namespace, iconName);
+    const hasIcon = this._svgIconConfigs.has(key);
     this._svgIconConfigs.set(key, new SvgIconConfig(url));
+    // if the icon has been newly added to this registry, then notify any listeners
+    if (!hasIcon) {
+      this._registrySubject.next(key)
+    }
     return this;
   }
 
@@ -172,6 +183,29 @@ export class MatIconRegistry {
   registerFontClassAlias(alias: string, className: string = alias): this {
     this._fontCssClassesByAlias.set(alias, className);
     return this;
+  }
+
+  /**
+   * Subscribe to be notifed of when a specific icon is added to this registry
+   * @param name The name of the icon to subscribe for
+   * @param namespace The namespace the icon exists within
+   */
+  subscribeForIcon(name: string, namespace: string = ''): Observable<SVGElement> {
+    const key = iconKey(namespace, name);
+
+    // create an observable that filters for 
+    const svgRequest = this._registrySubject
+      .filter((x: string) => x === key)
+      .flatMap(x => {
+        // grab the icon config from the config map, then grab the svg from the config
+        const config = this._svgIconConfigs.get(x);
+        if(config) {
+          return this._getSvgFromConfig(config);
+        } else {
+          throw Observable.throw("");  
+        }
+      });     
+      return svgRequest;
   }
 
   /**
