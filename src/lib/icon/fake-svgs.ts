@@ -14,6 +14,7 @@
 export const FAKE_SVGS = {
   cat: '<svg><path id="meow" name="meow"></path></svg>',
   dog: '<svg><path id="woof" name="woof"></path></svg>',
+  mouse: '<svg><path id="squeak" name="squeak"></path></svg>',
   farmSet1: `
     <svg>
       <defs>

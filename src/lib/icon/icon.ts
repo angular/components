@@ -142,7 +142,18 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Can
 
         this._iconRegistry.getNamedSvgIcon(iconName, namespace).pipe(take(1)).subscribe(
           svg => this._setSvgElement(svg),
-          (err: Error) => console.log(`Error retrieving icon: ${err.message}`)
+          (err: Error) => {
+            console.log(`Error retrieving icon: ${err.message}`);
+            // Set up a nested subscription to be notified if this icon is ever added to the registry
+            this._iconRegistry.subscribeForIcon(iconName, namespace)
+              .subscribe(
+                svg2 => {
+                  this._setSvgElement(svg2);
+                },
+                (err: Error) => {
+                  console.log(`Error retrieving icon from subscription: ${err.message}`);
+              });
+          }
         );
       } else {
         this._clearSvgElement();

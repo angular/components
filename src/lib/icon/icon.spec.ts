@@ -146,6 +146,18 @@ describe('MatIcon', () => {
       svgElement = verifyAndGetSingleSvgChild(iconElement);
       verifyPathChildElement(svgElement, 'woof');
 
+      // Assert that an unregistered icon is rendered when eventually registered
+      testComponent.iconName = 'morris';
+      fixture.detectChanges();
+      // No request should be made as the svg was not added to the registry
+      http.expectNone('mouse.svg');
+      // Now that the icon is added, the http request will be made almost immediately
+      iconRegistry.addSvgIcon('morris', trust('mouse.svg'))
+      http.expectOne('mouse.svg').flush(FAKE_SVGS.mouse);
+      svgElement = verifyAndGetSingleSvgChild(iconElement);
+      verifyPathChildElement(svgElement, 'squeak');
+
+
       // Assert that a registered icon can be looked-up by url.
       iconRegistry.getSvgIconFromUrl(trust('cat.svg')).subscribe(element => {
         verifyPathChildElement(element, 'meow');
