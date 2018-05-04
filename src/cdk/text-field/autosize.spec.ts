@@ -24,6 +24,7 @@ describe('CdkTextareaAutosize', () => {
         AutosizeTextAreaWithContent,
         AutosizeTextAreaWithValue,
         AutosizeTextareaWithNgModel,
+        AutosizeTextareaWithoutAutosize,
       ],
     });
 
@@ -217,6 +218,50 @@ describe('CdkTextareaAutosize', () => {
 
     expect(autosize.resizeToFitContent).toHaveBeenCalled();
   }));
+
+  it('should not trigger a resize when it is disabled', fakeAsync(() => {
+    const fixtureWithoutAutosize = TestBed.createComponent(AutosizeTextareaWithoutAutosize);
+    textarea = fixtureWithoutAutosize.nativeElement.querySelector('textarea');
+    autosize = fixtureWithoutAutosize.debugElement.query(By.css('textarea'))
+        .injector.get(CdkTextareaAutosize);
+
+    fixtureWithoutAutosize.detectChanges();
+
+    let previousHeight = textarea.clientHeight;
+
+    fixtureWithoutAutosize.componentInstance.content = `
+    Line
+    Line
+    Line
+    Line
+    Line`;
+
+    // Manually call resizeToFitContent instead of faking an `input` event.
+    fixtureWithoutAutosize.detectChanges();
+
+    expect(textarea.clientHeight)
+        .toEqual(previousHeight, 'Expected textarea to still have the same size.');
+    expect(textarea.clientHeight)
+        .toBeLessThan(textarea.scrollHeight,
+          'Expected textarea height to be less than its scrollHeight');
+
+    autosize.enabled = true;
+    fixtureWithoutAutosize.detectChanges();
+
+    expect(textarea.clientHeight)
+        .toBeGreaterThan(previousHeight, 'Expected textarea to have grown after enabling.');
+    expect(textarea.clientHeight)
+        .toBe(textarea.scrollHeight, 'Expected textarea height to match its scrollHeight');
+
+    autosize.enabled = false;
+    fixtureWithoutAutosize.detectChanges();
+
+    expect(textarea.clientHeight)
+        .toEqual(previousHeight, 'Expected textarea to again have the original size.');
+    expect(textarea.clientHeight)
+        .toBeLessThan(textarea.scrollHeight,
+            'Expected textarea height to be less than its scrollHeight again');
+  }));
 });
 
 // Styles to reset padding and border to make measurement comparisons easier.
@@ -257,3 +302,12 @@ class AutosizeTextAreaWithValue {
 class AutosizeTextareaWithNgModel {
   model = '';
 }
+
+@Component({
+  template: `<textarea [cdkTextareaAutosize]="false">{{content}}</textarea>`,
+  styles: [textareaStyleReset],
+})
+class AutosizeTextareaWithoutAutosize {
+  content: string = '';
+}
+

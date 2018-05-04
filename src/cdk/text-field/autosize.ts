@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   Directive,
   ElementRef,
@@ -35,10 +36,16 @@ import {fromEvent, Subject} from 'rxjs';
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Keep track of the previous textarea value to avoid resizing when the value hasn't changed. */
   private _previousValue: string;
+  private _initialHeight: string | null;
   private readonly _destroyed = new Subject<void>();
 
   private _minRows: number;
   private _maxRows: number;
+  private _enabled: boolean = true;
+
+  private get textarea(): HTMLTextAreaElement {
+    return this._elementRef.nativeElement as HTMLTextAreaElement;
+  }
 
   /** Minimum amount of rows in the textarea. */
   @Input('cdkAutosizeMinRows')
@@ -54,6 +61,19 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   set maxRows(value: number) {
     this._maxRows = value;
     this._setMaxHeight();
+  }
+
+  /** Whether autosizing is enabled or not */
+  @Input('cdkTextareaAutosize')
+  get enabled(): boolean { return this._enabled; }
+  set enabled(value: boolean) {
+    value = coerceBooleanProperty(value);
+
+    // Only act if the actual value changed. This specifically helps to not run
+    // resizeToFitContent too early (i.e. before ngAfterViewInit)
+    if (this._enabled !== value) {
+      (this._enabled = value) ? this.resizeToFitContent(true) : this.reset();
+    }
   }
 
   /** Cached height of a textarea with a single row. */
@@ -86,6 +106,9 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
   ngAfterViewInit() {
     if (this._platform.isBrowser) {
+      // Remember the height which we started with in case autosizing is disabled
+      this._initialHeight = this.textarea.style.height;
+
       this.resizeToFitContent();
 
       this._ngZone.runOutsideAngular(() => {
@@ -103,8 +126,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
   /** Sets a style property on the textarea element. */
   private _setTextareaStyle(property: string, value: string): void {
-    const textarea = this._elementRef.nativeElement as HTMLTextAreaElement;
-    textarea.style[property] = value;
+    this.textarea.style[property] = value;
   }
 
   /**
@@ -119,10 +141,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
       return;
     }
 
-    let textarea = this._elementRef.nativeElement as HTMLTextAreaElement;
-
     // Use a clone element because we have to override some styles.
-    let textareaClone = textarea.cloneNode(false) as HTMLTextAreaElement;
+    let textareaClone = this.textarea.cloneNode(false) as HTMLTextAreaElement;
     textareaClone.rows = 1;
 
     // Use `position: absolute` so that this doesn't cause a browser layout and use
@@ -143,9 +163,9 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     // See Firefox bug report: https://bugzilla.mozilla.org/show_bug.cgi?id=33654
     textareaClone.style.overflow = 'hidden';
 
-    textarea.parentNode!.appendChild(textareaClone);
+    this.textarea.parentNode!.appendChild(textareaClone);
     this._cachedLineHeight = textareaClone.clientHeight;
-    textarea.parentNode!.removeChild(textareaClone);
+    this.textarea.parentNode!.removeChild(textareaClone);
 
     // Min and max heights have to be re-calculated if the cached line height changes
     this._setMinHeight();
@@ -164,6 +184,11 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
    *    recalculated only if the value changed since the last call.
    */
   resizeToFitContent(force: boolean = false) {
+    // If autosizing is disabled, just skip everything else
+    if (!this._enabled) {
+      return;
+    }
+
     this._cacheTextareaLineHeight();
 
     // If we haven't determined the line-height yet, we know we're still hidden and there's no point
@@ -209,6 +234,16 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     }
 
     this._previousValue = value;
+  }
+
+  /**
+   * Resets the textarea to it's original size
+   */
+  reset() {
+    if (this._initialHeight === undefined) {
+      return;
+    }
+    this.textarea.style.height = this._initialHeight;
   }
 
   _noopInputHandler() {
