@@ -355,6 +355,14 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   private _updateTotalContentSize(renderedContentSize: number) {
     const viewport = this._viewport!;
     const renderedRange = viewport.getRenderedRange();
+
+    // once we hit the bottom, we need to resample our range
+    // based on the items in view so we don't create a gap
+    if (renderedRange.end === viewport.getDataLength()) {
+      this._averager.reset();
+      this._averager.addSample(renderedRange, viewport.getDataLength());
+    }
+
     const totalSize = renderedContentSize +
         (viewport.getDataLength() - (renderedRange.end - renderedRange.start)) *
         this._averager.getAverageItemSize();
