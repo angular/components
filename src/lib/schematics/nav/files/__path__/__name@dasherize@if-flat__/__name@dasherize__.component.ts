@@ -30,8 +30,9 @@ import { Observable } from 'rxjs';
             *ngIf="(isHandset | async)!.matches">
             <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
           </button>
-          <span>Application Title</span>
+          <span><%= project %></span>
         </mat-toolbar>
+        <!-- Add Content Here -->
       </mat-sidenav-content>
     </mat-sidenav-container>
   `,<% } else { %>
@@ -44,7 +45,11 @@ import { Observable } from 'rxjs';
     
     .sidenav {
       width: 200px;
-      box-shadow: 3px 0 6px rgba(0,0,0,.24);
+    }
+
+    .mat-toolbar.mat-primary {
+      position: sticky;
+      top: 0;
     }
   `
   ]<% } else { %>

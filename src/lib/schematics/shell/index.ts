@@ -3,7 +3,7 @@ import {addModuleImportToRootModule, getStylesPath} from '../utils/ast';
 import {InsertChange} from '../utils/devkit-utils/change';
 import {getProjectFromWorkspace, getWorkspace} from '../utils/devkit-utils/config';
 import {addHeadLink} from '../utils/html';
-import {angularVersion, cdkVersion, materialVersion} from '../utils/lib-versions';
+import {angularVersion, materialVersion} from '../utils/lib-versions';
 import {addPackageToPackageJson} from '../utils/package';
 import {Schema} from './schema';
 import {addThemeToAppStyles} from './theming';
@@ -28,7 +28,7 @@ export default function(options: Schema): Rule {
 /** Add material, cdk, annimations to package.json if not already present. */
 function addMaterialToPackageJson() {
   return (host: Tree) => {
-    addPackageToPackageJson(host, 'dependencies', '@angular/cdk', cdkVersion);
+    addPackageToPackageJson(host, 'dependencies', '@angular/cdk', materialVersion);
     addPackageToPackageJson(host, 'dependencies', '@angular/material', materialVersion);
     addPackageToPackageJson(host, 'dependencies', '@angular/animations', angularVersion);
     return host;
@@ -78,7 +78,7 @@ function addBodyMarginToStyles(options: Schema) {
     const buffer = host.read(stylesPath);
     if (buffer) {
       const src = buffer.toString();
-      const insertion = new InsertChange(stylesPath, src.length, `\nbody { margin: 0; }\n`);
+      const insertion = new InsertChange(stylesPath, src.length, `\nbody { margin: 0; font-family: 'Roboto', sans-serif; }\n`);
       const recorder = host.beginUpdate(stylesPath);
       recorder.insertLeft(insertion.pos, insertion.toAdd);
       host.commitUpdate(recorder);
