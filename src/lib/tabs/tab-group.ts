@@ -198,7 +198,7 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
     }
   }
 
-  ngAfterContentInit(): void {
+  ngAfterContentInit() {
     this._subscribeToTabLabels();
 
     // Subscribe to changes in the amount of tabs, in order to be
@@ -209,7 +209,7 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
     });
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this._tabsSubscription.unsubscribe();
     this._tabLabelSubscription.unsubscribe();
   }
