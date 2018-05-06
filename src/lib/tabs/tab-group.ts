@@ -24,14 +24,15 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {HammerInput, HammerDirection} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {
   CanColor,
   CanDisableRipple,
   mixinColor,
   mixinDisableRipple,
-  ThemePalette
+  ThemePalette,
+  HammerInput,
+  HammerDirection
 } from '@angular/material/core';
 import {merge, Subscription} from 'rxjs';
 import {MatTab} from './tab';
