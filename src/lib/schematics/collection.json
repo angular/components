@@ -14,21 +14,21 @@
       "description": "Create a card-based dashboard component",
       "factory": "./dashboard/index",
       "schema": "./dashboard/schema.json",
-      "aliases": [ "material-dashboard", "materialDashboard" ]
+      "aliases": []
     },
     // Creates a table component
     "table": {
       "description": "Create a component that displays data with a data-table",
       "factory": "./table/index",
       "schema": "./table/schema.json",
-      "aliases": [ "material-table", "materialTable" ]
+      "aliases": []
     },
     // Creates toolbar and navigation components
     "nav": {
       "description": "Create a component with a responsive sidenav for navigation",
       "factory": "./nav/index",
       "schema": "./nav/schema.json",
-      "aliases": [ "material-nav", "materialNav" ]
+      "aliases": []
     }
   }
 }
