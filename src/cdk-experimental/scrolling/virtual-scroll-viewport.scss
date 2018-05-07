@@ -14,6 +14,14 @@ cdk-virtual-scroll-viewport {
   will-change: contents, transform;
 }
 
+.virtual-scroll-orientation-horizontal {
+  bottom: 0;
+}
+
+.virtual-scroll-orientation-vertical {
+  right: 0;
+}
+
 // Spacer element that whose width or height will be adjusted to match the size of the entire data
 // set if it were rendered all at once. This ensures that the scrollable content region is the
 // correct size.

@@ -42,6 +42,8 @@ function rangesEqual(r1: ListRange, r2: ListRange): boolean {
   styleUrls: ['virtual-scroll-viewport.css'],
   host: {
     'class': 'cdk-virtual-scroll-viewport',
+    '[class.virtual-scroll-orientation-horizontal]': 'orientation === "horizontal"',
+    '[class.virtual-scroll-orientation-vertical]': 'orientation === "vertical"',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
