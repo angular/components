@@ -71,6 +71,9 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
   /** The transform used to offset the rendered content wrapper element. */
   _renderedContentTransform: SafeStyle;
 
+  /** The raw string version of the rendered content transform. */
+  private _rawRenderedContentTransform: string;
+
   /** The currently rendered range of indices. */
   private _renderedRange: ListRange = {start: 0, end: 0};
 
@@ -214,14 +217,6 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
           //
           // The call to `onContentRendered` will happen after all of the updates have been applied.
           Promise.resolve().then(() => {
-            // If the rendered content offset was specified as an offset to the end of the content,
-            // rewrite it as an offset to the start of the content.
-            if (this._renderedContentOffsetNeedsRewrite) {
-              this._renderedContentOffset -= this.measureRenderedContentSize();
-              this._renderedContentOffsetNeedsRewrite = false;
-              this.setRenderedContentOffset(this._renderedContentOffset);
-            }
-
             this._scrollStrategy.onContentRendered();
           });
         }));
@@ -251,13 +246,26 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
       transform += ` translate${axis}(-100%)`;
       this._renderedContentOffsetNeedsRewrite = true;
     }
-    if (this._renderedContentTransform != transform) {
+    if (this._rawRenderedContentTransform != transform) {
       // Re-enter the Angular zone so we can mark for change detection.
       this._ngZone.run(() => {
         // We know this value is safe because we parse `offset` with `Number()` before passing it
         // into the string.
+        this._rawRenderedContentTransform = transform;
         this._renderedContentTransform = this._sanitizer.bypassSecurityTrustStyle(transform);
         this._changeDetectorRef.markForCheck();
+
+        // If the rendered content offset was specified as an offset to the end of the content,
+        // rewrite it as an offset to the start of the content.
+        this._ngZone.onStable.pipe(take(1)).subscribe(() => {
+          if (this._renderedContentOffsetNeedsRewrite) {
+            this._renderedContentOffset -= this.measureRenderedContentSize();
+            this._renderedContentOffsetNeedsRewrite = false;
+            this.setRenderedContentOffset(this._renderedContentOffset);
+          } else {
+            this._scrollStrategy.onRenderedOffsetChanged();
+          }
+        });
       });
     }
   }
