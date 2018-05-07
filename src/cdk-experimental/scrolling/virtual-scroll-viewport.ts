@@ -137,6 +137,15 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
     this._detachedSubject.complete();
   }
 
+  /** Update the viewport dimensions and re-render. */
+  updateViewport() {
+    const viewportEl = this.elementRef.nativeElement;
+    this._viewportSize = this.orientation === 'horizontal' ?
+      viewportEl.clientWidth : viewportEl.clientHeight;
+
+    this._scrollStrategy.onDataLengthChanged();
+  }
+
   /** Attaches a `CdkVirtualForOf` to this viewport. */
   attach(forOf: CdkVirtualForOf<any>) {
     if (this._forOf) {
