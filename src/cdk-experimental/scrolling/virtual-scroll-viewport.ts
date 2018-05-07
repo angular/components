@@ -100,13 +100,12 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
               @Inject(VIRTUAL_SCROLL_STRATEGY) private _scrollStrategy: VirtualScrollStrategy) {}
 
   ngOnInit() {
-    const viewportEl = this.elementRef.nativeElement;
     Promise.resolve().then(() => {
       this._measureViewportSize();
       this._scrollStrategy.attach(this);
 
       this._ngZone.runOutsideAngular(() => {
-        fromEvent(viewportEl, 'scroll')
+        fromEvent(this.elementRef.nativeElement, 'scroll')
             // Sample the scroll stream at every animation frame. This way if there are multiple
             // scroll events in the same frame we only need to recheck our layout once.
             .pipe(sampleTime(0, animationFrameScheduler))
@@ -301,7 +300,7 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
   }
 
   /** Measure the viewport size. */
-  _measureViewportSize() {
+  private _measureViewportSize() {
     const viewportEl = this.elementRef.nativeElement;
     this._viewportSize = this.orientation === 'horizontal' ?
       viewportEl.clientWidth : viewportEl.clientHeight;
