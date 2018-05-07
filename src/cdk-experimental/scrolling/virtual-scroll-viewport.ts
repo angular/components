@@ -102,8 +102,7 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
   ngOnInit() {
     const viewportEl = this.elementRef.nativeElement;
     Promise.resolve().then(() => {
-      this._viewportSize = this.orientation === 'horizontal' ?
-          viewportEl.clientWidth : viewportEl.clientHeight;
+      this._measureViewportSize();
       this._scrollStrategy.attach(this);
 
       this._ngZone.runOutsideAngular(() => {
@@ -138,11 +137,8 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
   }
 
   /** Update the viewport dimensions and re-render. */
-  updateViewport() {
-    const viewportEl = this.elementRef.nativeElement;
-    this._viewportSize = this.orientation === 'horizontal' ?
-      viewportEl.clientWidth : viewportEl.clientHeight;
-
+  updateViewportSize() {
+    this._measureViewportSize();
     this._scrollStrategy.onDataLengthChanged();
   }
 
@@ -302,5 +298,12 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
       return 0;
     }
     return this._forOf.measureRangeSize(range, this.orientation);
+  }
+
+  /** Measure the viewport size. */
+  _measureViewportSize() {
+    const viewportEl = this.elementRef.nativeElement;
+    this._viewportSize = this.orientation === 'horizontal' ?
+      viewportEl.clientWidth : viewportEl.clientHeight;
   }
 }
