@@ -77,9 +77,15 @@ export class MatButton extends _MatButtonMixinBase
 
   /** Whether the button is round. */
   _isRoundButton: boolean = this._hasHostAttributes('mat-fab', 'mat-mini-fab');
+  get isRoundButton(): boolean {
+    return this._isRoundButton;
+  }
 
   /** Whether the button is icon button. */
   _isIconButton: boolean = this._hasHostAttributes('mat-icon-button');
+  get isIconButton(): boolean {
+    return this._isIconButton;
+  }
 
   /** Reference to the MatRipple instance of the button. */
   @ViewChild(MatRipple) ripple: MatRipple;
