@@ -1,6 +1,6 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {async, ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
-import {ContentObserverFactory, MutationObserverFactory, ObserversModule} from './observe-content';
+import {ContentObserver, MutationObserverFactory, ObserversModule} from './observe-content';
 
 // TODO(elad): `ProxyZone` doesn't seem to capture the events raised by
 // `MutationObserver` and needs to be investigated
@@ -120,7 +120,7 @@ describe('Observe content directive', () => {
   });
 });
 
-describe('Observe content injectable', () => {
+describe('ContentObserver injectable', () => {
   describe('basic usage', () => {
     let callbacks: Function[];
     let invokeCallbacks = (args?: any) => callbacks.forEach(callback => callback(args));
@@ -150,15 +150,14 @@ describe('Observe content injectable', () => {
     }));
 
     it('should trigger the callback when the content of the element changes',
-        fakeAsync(inject([ContentObserverFactory], (cof: ContentObserverFactory) => {
+        fakeAsync(inject([ContentObserver], (co: ContentObserver) => {
           let fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
           fixture.detectChanges();
 
           const spy = jasmine.createSpy('content observer');
 
-          const observer = cof.create(fixture.componentInstance.contentEl.nativeElement);
-          observer.changes.subscribe(() => spy());
-          observer.start();
+          const subscription = co.observe(fixture.componentInstance.contentEl.nativeElement)
+              .subscribe(() => spy());
 
           expect(spy).not.toHaveBeenCalled();
 
@@ -167,6 +166,8 @@ describe('Observe content injectable', () => {
           invokeCallbacks();
 
           expect(spy).toHaveBeenCalled();
+
+          subscription.unsubscribe();
         })));
   });
 });

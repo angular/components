@@ -15,11 +15,10 @@ import {
   Injectable,
   Input,
   NgModule,
-  NgZone,
   OnDestroy,
   Output,
 } from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 
 /**
@@ -36,49 +35,63 @@ export class MutationObserverFactory {
 
 /** A factory that creates ContentObservers. */
 @Injectable({providedIn: 'root'})
-export class ContentObserverFactory {
-  constructor(private _mutationObserverFactory: MutationObserverFactory, private _ngZone: NgZone) {}
-
-  create(element: Element, debounce?: number) {
-    const changes = new Subject<MutationRecord[]>();
-    const observer = this._ngZone.runOutsideAngular(
-        () => this._mutationObserverFactory.create((mutations) => changes.next(mutations)));
-    return new ContentObserver(element, observer, changes, debounce);
-  }
-}
-
-
-/** A class that observes an element for content changes. */
 export class ContentObserver {
-  changes: Observable<MutationRecord[]>;
+  private _observedElements = new Map<Element, {
+    observer: MutationObserver | null,
+    stream: Subject<MutationRecord[]>,
+    count: number
+  }>();
 
-  constructor(private _element: Element, private _mutationObserver: MutationObserver | null,
-              private _rawChanges: Subject<MutationRecord[]>, debounce: number = 0) {
-    this.changes = debounce ?
-        this._rawChanges.pipe(debounceTime(debounce)) : this._rawChanges.asObservable();
+  constructor(private _mutationObserverFactory: MutationObserverFactory) {}
+
+  observe(element: Element, debounce?: number): Observable<MutationRecord[]> {
+    return Observable.create(observer => {
+      const stream = this._observeElement(element);
+      const subscription =
+          (debounce ? stream.pipe(debounceTime(debounce)) : stream).subscribe(observer);
+
+      return () => {
+        subscription.unsubscribe();
+        this._unobserveElement(element);
+      }
+    });
   }
 
-  start(): ContentObserver {
-    if (this._mutationObserver) {
-      this._mutationObserver.observe(this._element, {
-        characterData: true,
-        childList: true,
-        subtree: true
-      });
+  private _observeElement(element: Element): Subject<MutationRecord[]> {
+    if (!this._observedElements.has(element)) {
+      const stream = new Subject<MutationRecord[]>();
+      const observer = this._mutationObserverFactory.create(mutations => stream.next(mutations));
+      if (observer) {
+        observer.observe(element, {
+          characterData: true,
+          childList: true,
+          subtree: true
+        });
+      }
+      this._observedElements.set(element, {observer, stream, count: 1});
+    } else {
+      this._observedElements.get(element)!.count++;
     }
-    return this;
+    return this._observedElements.get(element)!.stream;
   }
 
-  pause() {
-    if (this._mutationObserver) {
-      this._mutationObserver.disconnect();
+  private _unobserveElement(element: Element) {
+    if (this._observedElements.has(element)) {
+      if (!--this._observedElements.get(element)!.count) {
+        this._cleanupObserver(element);
+      }
     }
   }
 
-  stop() {
-    this.pause();
-    this._rawChanges.complete();
-    this._mutationObserver = null;
+  private _cleanupObserver(element: Element) {
+    if (this._observedElements.has(element)) {
+      const {observer, stream} = this._observedElements.get(element)!;
+      if (observer) {
+        observer.disconnect();
+      }
+      stream.complete();
+      this._observedElements.delete(element);
+    }
   }
 }
 
@@ -103,12 +116,10 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
   get disabled() { return this._disabled; }
   set disabled(value: any) {
     this._disabled = coerceBooleanProperty(value);
-    if (this._observer) {
-      if (this._disabled) {
-        this._observer.pause();
-      } else {
-        this._observer.start();
-      }
+    if (this._disabled) {
+      this._unsubscribe();
+    } else {
+      this._subscribe();
     }
   }
   private _disabled = false;
@@ -118,30 +129,34 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
   get debounce(): number { return this._debounce; }
   set debounce(value: number) {
     this._debounce = coerceNumberProperty(value);
+    this._subscribe();
   }
   private _debounce: number;
 
-  private _observer: ContentObserver;
+  private _currentSubscription: Subscription | null = null;
 
-  constructor(private _contentObserverFactory: ContentObserverFactory,
-              private _elementRef: ElementRef, private _ngZone: NgZone) {}
+  constructor(private _contentObserver: ContentObserver, private _elementRef: ElementRef) {}
 
   ngAfterContentInit() {
-    this._observer =
-        this._contentObserverFactory.create(this._elementRef.nativeElement, this.debounce);
-    this._ngZone.run(
-        () => this._observer.changes.subscribe(mutations => this.event.next(mutations)));
-
-    if (!this.disabled) {
-      this._observer.start();
+    if (!this._currentSubscription && !this.disabled) {
+      this._subscribe();
     }
   }
 
   ngOnDestroy() {
-    // Its possible _observer is undefined if the component is destroyed before init
-    // (could happen in a test).
-    if (this._observer) {
-      this._observer.stop();
+    this._unsubscribe();
+  }
+
+  private _subscribe() {
+    this._unsubscribe();
+    this._currentSubscription =
+        this._contentObserver.observe(this._elementRef.nativeElement, this.debounce)
+            .subscribe(mutations => this.event.next(mutations));
+  }
+
+  private _unsubscribe() {
+    if (this._currentSubscription) {
+      this._currentSubscription.unsubscribe();
     }
   }
 }
