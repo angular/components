@@ -23,7 +23,7 @@ export type AriaLivePoliteness = 'off' | 'polite' | 'assertive';
 
 @Injectable({providedIn: 'root'})
 export class LiveAnnouncer implements OnDestroy {
-  private readonly _liveElement: Element;
+  private readonly _liveElement: HTMLElement;
 
   constructor(
       @Optional() @Inject(LIVE_ANNOUNCER_ELEMENT_TOKEN) elementToken: any,
@@ -46,6 +46,7 @@ export class LiveAnnouncer implements OnDestroy {
 
     // TODO: ensure changing the politeness works on all environments we support.
     this._liveElement.setAttribute('aria-live', politeness);
+    this._liveElement.style.display = 'none';
 
     // This 100ms timeout is necessary for some browser + screen-reader combinations:
     // - Both JAWS and NVDA over IE11 will not announce anything without a non-zero timeout.
@@ -54,6 +55,7 @@ export class LiveAnnouncer implements OnDestroy {
     // (using JAWS 17 at time of this writing).
     return new Promise(resolve => {
       setTimeout(() => {
+        this._liveElement.style.display = '';
         this._liveElement.textContent = message;
         resolve();
       }, 100);
@@ -66,7 +68,7 @@ export class LiveAnnouncer implements OnDestroy {
     }
   }
 
-  private _createLiveElement(): Element {
+  private _createLiveElement(): HTMLElement {
     let liveEl = this._document.createElement('div');
 
     liveEl.classList.add('cdk-visually-hidden');
@@ -77,7 +79,6 @@ export class LiveAnnouncer implements OnDestroy {
 
     return liveEl;
   }
-
 }
 
 
