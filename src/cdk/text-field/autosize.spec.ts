@@ -227,7 +227,7 @@ describe('CdkTextareaAutosize', () => {
 
     fixtureWithoutAutosize.detectChanges();
 
-    let previousHeight = textarea.clientHeight;
+    const previousHeight = textarea.clientHeight;
 
     fixtureWithoutAutosize.componentInstance.content = `
     Line
@@ -242,25 +242,24 @@ describe('CdkTextareaAutosize', () => {
     expect(textarea.clientHeight)
         .toEqual(previousHeight, 'Expected textarea to still have the same size.');
     expect(textarea.clientHeight)
-        .toBeLessThan(textarea.scrollHeight,
-          'Expected textarea height to be less than its scrollHeight');
+        .toBeLessThan(textarea.scrollHeight, 'Expected textarea to a have scrollbar.');
 
     autosize.enabled = true;
     fixtureWithoutAutosize.detectChanges();
 
     expect(textarea.clientHeight)
-        .toBeGreaterThan(previousHeight, 'Expected textarea to have grown after enabling.');
+        .toBeGreaterThan(previousHeight,
+            'Expected textarea to have grown after enabling autosize.');
     expect(textarea.clientHeight)
-        .toBe(textarea.scrollHeight, 'Expected textarea height to match its scrollHeight');
+        .toBe(textarea.scrollHeight, 'Expected textarea not to have a scrollbar');
 
     autosize.enabled = false;
     fixtureWithoutAutosize.detectChanges();
 
     expect(textarea.clientHeight)
-        .toEqual(previousHeight, 'Expected textarea to again have the original size.');
+        .toEqual(previousHeight, 'Expected textarea to have the original size.');
     expect(textarea.clientHeight)
-        .toBeLessThan(textarea.scrollHeight,
-            'Expected textarea height to be less than its scrollHeight again');
+        .toBeLessThan(textarea.scrollHeight, 'Expected textarea to have a scrollbar.');
   }));
 });
 

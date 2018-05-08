@@ -43,9 +43,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   private _maxRows: number;
   private _enabled: boolean = true;
 
-  private get textarea(): HTMLTextAreaElement {
-    return this._elementRef.nativeElement as HTMLTextAreaElement;
-  }
+  private _textareaElement: HTMLTextAreaElement;
 
   /** Minimum amount of rows in the textarea. */
   @Input('cdkAutosizeMinRows')
@@ -82,7 +80,9 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   constructor(
     private _elementRef: ElementRef,
     private _platform: Platform,
-    private _ngZone: NgZone) {}
+    private _ngZone: NgZone) {
+    this._textareaElement = this._elementRef.nativeElement as HTMLTextAreaElement;
+  }
 
   /** Sets the minimum height of the textarea as determined by minRows. */
   _setMinHeight(): void {
@@ -107,7 +107,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   ngAfterViewInit() {
     if (this._platform.isBrowser) {
       // Remember the height which we started with in case autosizing is disabled
-      this._initialHeight = this.textarea.style.height;
+      this._initialHeight = this._textareaElement.style.height;
 
       this.resizeToFitContent();
 
@@ -126,7 +126,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
   /** Sets a style property on the textarea element. */
   private _setTextareaStyle(property: string, value: string): void {
-    this.textarea.style[property] = value;
+    this._textareaElement.style[property] = value;
   }
 
   /**
@@ -142,7 +142,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     }
 
     // Use a clone element because we have to override some styles.
-    let textareaClone = this.textarea.cloneNode(false) as HTMLTextAreaElement;
+    let textareaClone = this._textareaElement.cloneNode(false) as HTMLTextAreaElement;
     textareaClone.rows = 1;
 
     // Use `position: absolute` so that this doesn't cause a browser layout and use
@@ -163,9 +163,9 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     // See Firefox bug report: https://bugzilla.mozilla.org/show_bug.cgi?id=33654
     textareaClone.style.overflow = 'hidden';
 
-    this.textarea.parentNode!.appendChild(textareaClone);
+    this._textareaElement.parentNode!.appendChild(textareaClone);
     this._cachedLineHeight = textareaClone.clientHeight;
-    this.textarea.parentNode!.removeChild(textareaClone);
+    this._textareaElement.parentNode!.removeChild(textareaClone);
 
     // Min and max heights have to be re-calculated if the cached line height changes
     this._setMinHeight();
@@ -240,10 +240,12 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
    * Resets the textarea to it's original size
    */
   reset() {
+    // Do not try to change the textarea, if the initialHeight has not been determined yet
+    // This might potentially remove styles when reset() is called before ngAfterViewInit
     if (this._initialHeight === undefined) {
       return;
     }
-    this.textarea.style.height = this._initialHeight;
+    this._textareaElement.style.height = this._initialHeight;
   }
 
   _noopInputHandler() {
