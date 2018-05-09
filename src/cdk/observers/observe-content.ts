@@ -33,9 +33,10 @@ export class MutationObserverFactory {
 }
 
 
-/** A factory that creates ContentObservers. */
+/** An injectable service that allows watching elements for changes to their content. */
 @Injectable({providedIn: 'root'})
-export class ContentObserver {
+export class ContentObserver implements OnDestroy {
+  /** Keeps track of the existing MutationObservers so they can be reused. */
   private _observedElements = new Map<Element, {
     observer: MutationObserver | null,
     stream: Subject<MutationRecord[]>,
@@ -44,19 +45,30 @@ export class ContentObserver {
 
   constructor(private _mutationObserverFactory: MutationObserverFactory) {}
 
-  observe(element: Element, debounce?: number): Observable<MutationRecord[]> {
+  ngOnDestroy() {
+    this._observedElements.forEach((_, element) => this._cleanupObserver(element));
+  }
+
+  /**
+   * Observe content changes on an element.
+   * @param element The element to observe for content changes.
+   */
+  observe(element: Element): Observable<MutationRecord[]> {
     return Observable.create(observer => {
       const stream = this._observeElement(element);
-      const subscription =
-          (debounce ? stream.pipe(debounceTime(debounce)) : stream).subscribe(observer);
+      const subscription = stream.subscribe(observer);
 
       return () => {
         subscription.unsubscribe();
         this._unobserveElement(element);
-      }
+      };
     });
   }
 
+  /**
+   * Observes the given element by using the existing MutationObserver if available, or creating a
+   * new one if not.
+   */
   private _observeElement(element: Element): Subject<MutationRecord[]> {
     if (!this._observedElements.has(element)) {
       const stream = new Subject<MutationRecord[]>();
@@ -75,14 +87,20 @@ export class ContentObserver {
     return this._observedElements.get(element)!.stream;
   }
 
+  /**
+   * Un-observes the given element and cleans up the underlying MutationObserver if nobody else is
+   * observing this element.
+   */
   private _unobserveElement(element: Element) {
     if (this._observedElements.has(element)) {
-      if (!--this._observedElements.get(element)!.count) {
+      this._observedElements.get(element)!.count--;
+      if (!this._observedElements.get(element)!.count) {
         this._cleanupObserver(element);
       }
     }
   }
 
+  /** Clean up the underlying MutationObserver for the specified element. */
   private _cleanupObserver(element: Element) {
     if (this._observedElements.has(element)) {
       const {observer, stream} = this._observedElements.get(element)!;
@@ -149,9 +167,9 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
 
   private _subscribe() {
     this._unsubscribe();
-    this._currentSubscription =
-        this._contentObserver.observe(this._elementRef.nativeElement, this.debounce)
-            .subscribe(mutations => this.event.next(mutations));
+    const stream = this._contentObserver.observe(this._elementRef.nativeElement);
+    this._currentSubscription = (this.debounce ? stream.pipe(debounceTime(this.debounce)) : stream)
+        .subscribe(mutations => this.event.next(mutations));
   }
 
   private _unsubscribe() {

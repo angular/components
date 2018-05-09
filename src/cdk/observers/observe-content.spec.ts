@@ -124,6 +124,7 @@ describe('ContentObserver injectable', () => {
   describe('basic usage', () => {
     let callbacks: Function[];
     let invokeCallbacks = (args?: any) => callbacks.forEach(callback => callback(args));
+    let contentObserver: ContentObserver;
 
     beforeEach(fakeAsync(() => {
       callbacks = [];
@@ -149,25 +150,51 @@ describe('ContentObserver injectable', () => {
       TestBed.compileComponents();
     }));
 
-    it('should trigger the callback when the content of the element changes',
-        fakeAsync(inject([ContentObserver], (co: ContentObserver) => {
-          let fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
+    beforeEach(inject([ContentObserver], (co: ContentObserver) => {
+      contentObserver = co;
+    }));
+
+    it('should trigger the callback when the content of the element changes', fakeAsync(() => {
+      const spy = jasmine.createSpy('content observer');
+      const fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
+      fixture.detectChanges();
+
+      contentObserver.observe(fixture.componentInstance.contentEl.nativeElement)
+          .subscribe(() => spy());
+
+      expect(spy).not.toHaveBeenCalled();
+
+      fixture.componentInstance.text = 'text';
+      invokeCallbacks();
+
+      expect(spy).toHaveBeenCalled();
+    }));
+
+    it('should only create one MutationObserver when observing the same element twice',
+        fakeAsync(inject([MutationObserverFactory], (mof: MutationObserverFactory) => {
+          const spy = jasmine.createSpy('content observer');
+          spyOn(mof, 'create').and.callThrough();
+          const fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
           fixture.detectChanges();
 
-          const spy = jasmine.createSpy('content observer');
-
-          const subscription = co.observe(fixture.componentInstance.contentEl.nativeElement)
+          const sub1 = contentObserver.observe(fixture.componentInstance.contentEl.nativeElement)
+              .subscribe(() => spy());
+          contentObserver.observe(fixture.componentInstance.contentEl.nativeElement)
               .subscribe(() => spy());
 
-          expect(spy).not.toHaveBeenCalled();
+          expect(mof.create).toHaveBeenCalledTimes(1);
 
           fixture.componentInstance.text = 'text';
-          fixture.detectChanges();
           invokeCallbacks();
 
-          expect(spy).toHaveBeenCalled();
+          expect(spy).toHaveBeenCalledTimes(2);
 
-          subscription.unsubscribe();
+          spy.calls.reset();
+          sub1.unsubscribe();
+          fixture.componentInstance.text = 'text text';
+          invokeCallbacks();
+
+          expect(spy).toHaveBeenCalledTimes(1);
         })));
   });
 });
@@ -186,7 +213,7 @@ class ComponentWithTextContent {
   doSomething() {}
 }
 
-@Component({ template: `<div (cdkObserveContent)="doSomething()"><div>{{text}}<div></div>` })
+@Component({ template: `<div (cdkObserveContent)="doSomething()"><div>{{text}}</div></div>` })
 class ComponentWithChildTextContent {
   text = '';
   doSomething() {}
