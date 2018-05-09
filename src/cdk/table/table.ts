@@ -12,7 +12,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ContentChild,
   ContentChildren,
   Directive,
   ElementRef,
@@ -152,7 +151,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
   private _data: T[];
 
   /** List of the rendered rows as identified by their `RenderRow` object. */
-   private _renderRows: RenderRow<T>[];
+  private _renderRows: RenderRow<T>[];
 
   /** Subscription that listens for the data provided by the data source. */
   private _renderChangeSubscription: Subscription | null;
@@ -165,10 +164,24 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
   private _columnDefsByName = new Map<string,  CdkColumnDef>();
 
   /**
-   * Set of all row defitions that can be used by this table. Populated by the rows gathered by
+   * Set of all row definitions that can be used by this table. Populated by the rows gathered by
    * using `ContentChildren` as well as any custom row definitions added to `_customRowDefs`.
    */
   private _rowDefs: CdkRowDef<T>[];
+
+  /**
+   * Set of all header row definitions that can be used by this table. Populated by the rows gathered
+   * by using `ContentChildren` as well as any custom row definitions added to
+   * `_customHeaderRowDefs`.
+   */
+  private _headerRowDefs: CdkHeaderRowDef[];
+
+  /**
+   * Set of all row definitions that can be used by this table. Populated by the rows gathered by
+   * using `ContentChildren` as well as any custom row definitions added to
+   * `_customFooterRowDefs`.
+   */
+  private _footerRowDefs: CdkFooterRowDef[];
 
   /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<RenderRow<T>>;
@@ -182,17 +195,23 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
   /** Row definitions that were defined outside of the direct content children of the table. */
   private _customRowDefs = new Set<CdkRowDef<T>>();
 
+  /** Header row defs that were defined outside of the direct content children of the table. */
+  private _customHeaderRowDefs = new Set<CdkHeaderRowDef>();
+
+  /** Footer row defs that were defined outside of the direct content children of the table. */
+  private _customFooterRowDefs = new Set<CdkFooterRowDef>();
+
   /**
    * Whether the header row definition has been changed. Triggers an update to the header row after
-   * content is checked.
+   * content is checked. Initialized as true so that the table renders the initial set of rows.
    */
-  private _headerRowDefChanged = false;
+  private _headerRowDefChanged = true;
 
   /**
    * Whether the footer row definition has been changed. Triggers an update to the footer row after
-   * content is checked.
+   * content is checked. Initialized as true so that the table renders the initial set of rows.
    */
-  private _footerRowDefChanged = false;
+  private _footerRowDefChanged = true;
 
   /**
    * Cache of the latest rendered `RenderRow` objects as a map for easy retrieval when constructing
@@ -292,24 +311,14 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    */
   @ContentChildren(CdkColumnDef) _contentColumnDefs: QueryList<CdkColumnDef>;
 
-  /** Set of template definitions that used as the data row containers. */
+  /** Set of data row definitions that were provided to the table as content children. */
   @ContentChildren(CdkRowDef) _contentRowDefs: QueryList<CdkRowDef<T>>;
 
-  /**
-   * Template definition used as the header container. By default it stores the header row
-   * definition found as a direct content child. Override this value through `setHeaderRowDef` if
-   * the header row definition should be changed or was not defined as a part of the table's
-   * content.
-   */
-  @ContentChild(CdkHeaderRowDef) _headerRowDef: CdkHeaderRowDef;
+  /** Set of header row definitions that were provided to the table as content children. */
+  @ContentChildren(CdkHeaderRowDef) _contentHeaderRowDefs: QueryList<CdkHeaderRowDef>;
 
-  /**
-   * Template definition used as the footer container. By default it stores the footer row
-   * definition found as a direct content child. Override this value through `setFooterRowDef` if
-   * the footer row definition should be changed or was not defined as a part of the table's
-   * content.
-   */
-  @ContentChild(CdkFooterRowDef) _footerRowDef: CdkFooterRowDef;
+  /** Set of footer row definitions that were provided to the table as content children. */
+  @ContentChildren(CdkFooterRowDef) _contentFooterRowDefs: QueryList<CdkFooterRowDef>;
 
   constructor(protected readonly _differs: IterableDiffers,
               protected readonly _changeDetectorRef: ChangeDetectorRef,
@@ -331,11 +340,6 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
     this._dataDiffer = this._differs.find([]).create((_i: number, dataRow: RenderRow<T>) => {
       return this.trackBy ? this.trackBy(dataRow.dataIndex, dataRow.data) : dataRow;
     });
-
-    // If the table has header or footer row definitions defined as part of its content, mark that
-    // there is a change so that the content check will render the row.
-    this._headerRowDefChanged = !!this._headerRowDef;
-    this._footerRowDefChanged = !!this._footerRowDef;
   }
 
   ngAfterContentChecked() {
@@ -344,7 +348,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
     this._cacheColumnDefs();
 
     // Make sure that the user has at least added header, footer, or data row def.
-    if (!this._headerRowDef && !this._footerRowDef && !this._rowDefs.length) {
+    if (!this._headerRowDefs.length && !this._footerRowDefs.length && !this._rowDefs.length) {
       throw getTableMissingRowDefsError();
     }
 
@@ -353,13 +357,13 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
 
     // If the header row definition has been changed, trigger a render to the header row.
     if (this._headerRowDefChanged) {
-      this._renderHeaderRow();
+      this._renderHeaderRows();
       this._headerRowDefChanged = false;
     }
 
     // If the footer row definition has been changed, trigger a render to the footer row.
     if (this._footerRowDefChanged) {
-      this._renderFooterRow();
+      this._renderFooterRows();
       this._footerRowDefChanged = false;
     }
 
@@ -428,9 +432,12 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    * Sets the header row definition to be used. Overrides the header row definition gathered by
    * using `ContentChild`, if one exists. Sets a flag that will re-render the header row after the
    * table's content is checked.
+   * @docs-private
+   * @deprecated Use `addHeaderRowDef` and `removeHeaderRowDef` instead
+   * @deletion-target 7.0.0
    */
   setHeaderRowDef(headerRowDef: CdkHeaderRowDef) {
-    this._headerRowDef = headerRowDef;
+    this._customHeaderRowDefs = new Set([headerRowDef]);
     this._headerRowDefChanged = true;
   }
 
@@ -438,30 +445,57 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    * Sets the footer row definition to be used. Overrides the footer row definition gathered by
    * using `ContentChild`, if one exists. Sets a flag that will re-render the footer row after the
    * table's content is checked.
+   * @docs-private
+   * @deprecated Use `addFooterRowDef` and `removeFooterRowDef` instead
+   * @deletion-target 7.0.0
    */
   setFooterRowDef(footerRowDef: CdkFooterRowDef) {
-    this._footerRowDef = footerRowDef;
+    this._customFooterRowDefs = new Set([footerRowDef]);
     this._footerRowDefChanged = true;
   }
 
-  /** Adds a column definition that was not included as part of the direct content children. */
+  /** Adds a column definition that was not included as part of the content children. */
   addColumnDef(columnDef: CdkColumnDef) {
     this._customColumnDefs.add(columnDef);
   }
 
-  /** Removes a column definition that was not included as part of the direct content children. */
+  /** Removes a column definition that was not included as part of the content children. */
   removeColumnDef(columnDef: CdkColumnDef) {
     this._customColumnDefs.delete(columnDef);
   }
 
-  /** Adds a row definition that was not included as part of the direct content children. */
+  /** Adds a row definition that was not included as part of the content children. */
   addRowDef(rowDef: CdkRowDef<T>) {
     this._customRowDefs.add(rowDef);
   }
 
-  /** Removes a row definition that was not included as part of the direct content children. */
+  /** Removes a row definition that was not included as part of the content children. */
   removeRowDef(rowDef: CdkRowDef<T>) {
     this._customRowDefs.delete(rowDef);
+  }
+
+  /** Adds a header row definition that was not included as part of the content children. */
+  addHeaderRowDef(headerRowDef: CdkHeaderRowDef) {
+    this._customHeaderRowDefs.add(headerRowDef);
+    this._headerRowDefChanged = true;
+  }
+
+  /** Removes a header row definition that was not included as part of the content children. */
+  removeHeaderRowDef(headerRowDef: CdkHeaderRowDef) {
+    this._customHeaderRowDefs.delete(headerRowDef);
+    this._headerRowDefChanged = true;
+  }
+
+  /** Adds a footer row definition that was not included as part of the content children. */
+  addFooterRowDef(footerRowDef: CdkFooterRowDef) {
+    this._customFooterRowDefs.add(footerRowDef);
+    this._footerRowDefChanged = true;
+  }
+
+  /** Removes a footer row definition that was not included as part of the content children. */
+  removeFooterRowDef(footerRowDef: CdkFooterRowDef) {
+    this._customFooterRowDefs.delete(footerRowDef);
+    this._footerRowDefChanged = true;
   }
 
   /**
@@ -528,9 +562,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
   private _cacheColumnDefs() {
     this._columnDefsByName.clear();
 
-    const columnDefs = this._contentColumnDefs ? this._contentColumnDefs.toArray() : [];
-    this._customColumnDefs.forEach(columnDef => columnDefs.push(columnDef));
-
+    const columnDefs = mergeQueryListAndSet(this._contentColumnDefs, this._customColumnDefs);
     columnDefs.forEach(columnDef => {
       if (this._columnDefsByName.has(columnDef.name)) {
         throw getTableDuplicateColumnNameError(columnDef.name);
@@ -541,9 +573,14 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
 
   /** Update the list of all available row definitions that can be used. */
   private _cacheRowDefs() {
-    this._rowDefs = this._contentRowDefs ? this._contentRowDefs.toArray() : [];
-    this._customRowDefs.forEach(rowDef => this._rowDefs.push(rowDef));
+    this._headerRowDefs =
+        mergeQueryListAndSet(this._contentHeaderRowDefs, this._customHeaderRowDefs);
+    this._footerRowDefs =
+        mergeQueryListAndSet(this._contentFooterRowDefs, this._customFooterRowDefs);
+    this._rowDefs =
+        mergeQueryListAndSet(this._contentRowDefs, this._customRowDefs);
 
+    // After all row definitions are determined, find the row definition to be considered default.
     const defaultRowDefs = this._rowDefs.filter(def => !def.when);
     if (!this.multiTemplateDataRows && defaultRowDefs.length > 1) {
       throw getTableMultipleDefaultRowDefsError();
@@ -556,21 +593,18 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    * If there is a diff, then re-render that section.
    */
   private _renderUpdatedColumns() {
-    // Re-render the rows when the row definition columns change.
-    this._rowDefs.forEach(def => {
-      if (def.getColumnsDiff()) {
-        this._forceRenderRows();
-      }
-    });
+    const defColumnsDiffReducer = (accumulator, def) => accumulator || !!def.getColumnsDiff();
 
-    // Re-render the header row if there is a difference in its columns.
-    if (this._headerRowDef && this._headerRowDef.getColumnsDiff()) {
-      this._renderHeaderRow();
+    if (this._rowDefs.reduce(defColumnsDiffReducer, false)) {
+      this._forceRenderRows();
     }
 
-    // Re-render the footer row if there is a difference in its columns.
-    if (this._footerRowDef && this._footerRowDef.getColumnsDiff()) {
-      this._renderFooterRow();
+    if (this._headerRowDefs.reduce(defColumnsDiffReducer, false)) {
+      this._renderHeaderRows();
+    }
+
+    if (this._footerRowDefs.reduce(defColumnsDiffReducer, false)) {
+      this._renderFooterRows();
     }
   }
 
@@ -637,26 +671,26 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    * Clears any existing content in the header row outlet and creates a new embedded view
    * in the outlet using the header row definition.
    */
-  private _renderHeaderRow() {
+  private _renderHeaderRows() {
     // Clear the footer row outlet if any content exists.
     if (this._headerRowOutlet.viewContainer.length > 0) {
       this._headerRowOutlet.viewContainer.clear();
     }
 
-    this._renderRow(this._headerRowOutlet, this._headerRowDef);
+    this._headerRowDefs.forEach((def, i) => this._renderRow(this._headerRowOutlet, def, i));
   }
 
   /**
    * Clears any existing content in the footer row outlet and creates a new embedded view
    * in the outlet using the footer row definition.
    */
-  private _renderFooterRow() {
+  private _renderFooterRows() {
     // Clear the footer row outlet if any content exists.
     if (this._footerRowOutlet.viewContainer.length > 0) {
       this._footerRowOutlet.viewContainer.clear();
     }
 
-    this._renderRow(this._footerRowOutlet, this._footerRowDef);
+    this._footerRowDefs.forEach((def, i) => this._renderRow(this._footerRowOutlet, def, i));
   }
 
   /**
@@ -693,7 +727,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
   private _insertRow(renderRow: RenderRow<T>, renderIndex: number) {
     const rowDef = renderRow.rowDef;
     const context: RowContext<T> = {$implicit: renderRow.data};
-    this._renderRow(this._rowOutlet, rowDef, context, renderIndex);
+    this._renderRow(this._rowOutlet, rowDef, renderIndex, context);
   }
 
   /**
@@ -702,7 +736,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
    * of where to place the new row template in the outlet.
    */
   private _renderRow(
-      outlet: RowOutlet, rowDef: BaseRowDef, context: RowContext<T> = {}, index = 0) {
+      outlet: RowOutlet, rowDef: BaseRowDef, index: number, context: RowContext<T> = {}) {
     // TODO(andrewseguin): enforce that one outlet was instantiated from createEmbeddedView
     outlet.viewContainer.createEmbeddedView(rowDef.template, context, index);
 
@@ -778,4 +812,12 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
     this._rowOutlet.viewContainer.clear();
     this.renderRows();
   }
+}
+
+/**
+ * Utility function that gets a merged list of the entries in a QueryList and values of a Set.
+ * @docs-private
+ */
+function  mergeQueryListAndSet(queryList: QueryList<any>, set: Set<any>) {
+  return queryList.toArray().concat(Array.from(set));
 }
