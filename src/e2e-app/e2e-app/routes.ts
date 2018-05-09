@@ -15,6 +15,7 @@ import {FullscreenE2E} from '../fullscreen/fullscreen-e2e';
 import {InputE2E} from '../input/input-e2e';
 import {SidenavE2E} from '../sidenav/sidenav-e2e';
 import {BlockScrollStrategyE2E} from '../block-scroll-strategy/block-scroll-strategy-e2e';
+import {AutocompleteE2E} from '../autocomplete/autocomplete-e2e';
 import {
   CardFancyExample,
   ListOverviewExample,
@@ -26,6 +27,7 @@ import {
 
 export const E2E_APP_ROUTES: Routes = [
   {path: '', component: Home},
+  {path: 'autocomplete', component: AutocompleteE2E},
   {path: 'block-scroll-strategy', component: BlockScrollStrategyE2E},
   {path: 'button', component: ButtonE2E},
   {path: 'button-toggle', component: ButtonToggleOverviewExample},

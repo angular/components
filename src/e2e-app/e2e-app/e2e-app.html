@@ -1,6 +1,7 @@
 <button (click)="showLinks = !showLinks">Toggle Navigation Links</button>
 
 <mat-nav-list *ngIf="showLinks">
+  <a mat-list-item [routerLink]="['autocomplete']">Autocomplete</a>
   <a mat-list-item [routerLink]="['block-scroll-strategy']">Block scroll strategy</a>
   <a mat-list-item [routerLink]="['button']">Button</a>
   <a mat-list-item [routerLink]="['button-toggle']">Button Toggle</a>

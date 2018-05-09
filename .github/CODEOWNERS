@@ -144,6 +144,7 @@
 
 # E2E app
 /e2e/*                                             @jelbourn
+/e2e/components/autocomplete-e2e.spec.ts           @crisbeto
 /e2e/components/block-scroll-strategy-e2e.spec.ts  @andrewseguin @crisbeto
 /e2e/components/button-e2e.spec.ts                 @tinayuangao
 /e2e/components/button-toggle-e2e.spec.ts          @tinayuangao
@@ -167,6 +168,7 @@
 /e2e/components/toolbar-e2e.spec.ts                @devversion
 /e2e/util/**                                       @jelbourn
 /src/e2e-app/*                                     @jelbourn
+/src/e2e-app/autocomplete/**                       @crisbeto
 /src/e2e-app/block-scroll-strategy/**              @andrewseguin @crisbeto
 /src/e2e-app/button/**                             @tinayuangao
 /src/e2e-app/checkbox/**                           @tinayuangao @devversion
