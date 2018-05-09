@@ -104,7 +104,7 @@ export class MatButton extends _MatButtonMixinBase
 
     this._focusMonitor.monitor(this._elementRef.nativeElement, true);
 
-    if (this._isRoundButton) {
+    if (this.isRoundButton) {
       this.color = DEFAULT_ROUND_BUTTON_COLOR;
     } else if (this._hasHostAttributes('mat-flat-button')) {
       this.color = DEFAULT_FLAT_BUTTON_COLOR;
