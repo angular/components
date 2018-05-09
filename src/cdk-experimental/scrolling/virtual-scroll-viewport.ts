@@ -47,7 +47,6 @@ function rangesEqual(r1: ListRange, r2: ListRange): boolean {
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  preserveWhitespaces: false,
 })
 export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
   /** Emits when the viewport is detached from a CdkVirtualForOf. */
@@ -230,7 +229,7 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
    * Gets the offset from the start of the viewport to the start of the rendered data (in pixels).
    */
   getOffsetToRenderedContentStart(): number | null {
-    return this._renderedContentOffsetNeedsRewrite ? null: this._renderedContentOffset;
+    return this._renderedContentOffsetNeedsRewrite ? null : this._renderedContentOffset;
   }
 
   /**
