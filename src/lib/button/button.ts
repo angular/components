@@ -76,16 +76,10 @@ export class MatButton extends _MatButtonMixinBase
     implements OnDestroy, CanDisable, CanColor, CanDisableRipple {
 
   /** Whether the button is round. */
-  _isRoundButton: boolean = this._hasHostAttributes('mat-fab', 'mat-mini-fab');
-  get isRoundButton(): boolean {
-    return this._isRoundButton;
-  }
+  readonly isRoundButton: boolean = this._hasHostAttributes('mat-fab', 'mat-mini-fab');
 
   /** Whether the button is icon button. */
-  _isIconButton: boolean = this._hasHostAttributes('mat-icon-button');
-  get isIconButton(): boolean {
-    return this._isIconButton;
-  }
+  readonly isIconButton: boolean = this._hasHostAttributes('mat-icon-button');
 
   /** Reference to the MatRipple instance of the button. */
   @ViewChild(MatRipple) ripple: MatRipple;
