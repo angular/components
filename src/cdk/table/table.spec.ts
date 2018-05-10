@@ -292,6 +292,28 @@ describe('CdkTable', () => {
     ]);
   });
 
+  it('should be able to render and change multiple header and footer rows', () => {
+    setupTableTestApp(MultipleHeaderFooterRowsCdkTableApp);
+    fixture.detectChanges();
+
+    expectTableToMatchContent(tableElement, [
+      ['first-header'],
+      ['second-header'],
+      ['first-footer'],
+      ['second-footer'],
+    ]);
+
+    component.showAlternativeHeadersAndFooters = true;
+    fixture.detectChanges();
+
+    expectTableToMatchContent(tableElement, [
+      ['first-header'],
+      ['second-header'],
+      ['first-footer'],
+      ['second-footer'],
+    ]);
+  });
+
   describe('with different data inputs other than data source', () => {
     let baseData: TestData[] = [
       {a: 'a_1', b: 'b_1', c: 'c_1'},
@@ -1089,14 +1111,41 @@ class NullDataCdkTableApp {
         <td cdk-footer-cell *cdkFooterCellDef> second-footer </td>
       </ng-container>
 
-      <tr cdk-header-row *cdkHeaderRowDef="['first-header']"></tr>
-      <tr cdk-header-row *cdkHeaderRowDef="['second-header']"></tr>
-      <tr cdk-footer-row *cdkFooterRowDef="['first-footer']"></tr>
-      <tr cdk-footer-row *cdkFooterRowDef="['second-footer']"></tr>
+      <ng-container *ngIf="!showAlternativeHeadersAndFooters">
+        <tr cdk-header-row *cdkHeaderRowDef="['first-header']"></tr>
+        <tr cdk-header-row *cdkHeaderRowDef="['second-header']"></tr>
+        <tr cdk-footer-row *cdkFooterRowDef="['first-footer']"></tr>
+        <tr cdk-footer-row *cdkFooterRowDef="['second-footer']"></tr>
+      </ng-container>
+
+      <ng-container cdkColumnDef="alt-first-header">
+        <th cdk-header-cell *cdkHeaderCellDef> alt-first-header </th>
+      </ng-container>
+
+      <ng-container cdkColumnDef="alt-second-header">
+        <th cdk-header-cell *cdkHeaderCellDef> alt-second-header </th>
+      </ng-container>
+
+      <ng-container cdkColumnDef="alt-first-footer">
+        <td cdk-footer-cell *cdkFooterCellDef> alt-first-footer </td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="alt-second-footer">
+        <td cdk-footer-cell *cdkFooterCellDef> alt-second-footer </td>
+      </ng-container>
+
+      <ng-container *ngIf="showAlternativeHeadersAndFooters">
+        <tr cdk-header-row *cdkHeaderRowDef="['alt-first-header']"></tr>
+        <tr cdk-header-row *cdkHeaderRowDef="['alt-second-header']"></tr>
+        <tr cdk-footer-row *cdkFooterRowDef="['alt-first-footer']"></tr>
+        <tr cdk-footer-row *cdkFooterRowDef="['alt-second-footer']"></tr>
+      </ng-container>
     </cdk-table>
   `
 })
-class MultipleHeaderFooterRowsCdkTableApp { }
+class MultipleHeaderFooterRowsCdkTableApp {
+  showAlternativeHeadersAndFooters = false;
+}
 
 @Component({
   template: `
