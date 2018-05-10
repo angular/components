@@ -578,8 +578,7 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
   private _cacheColumnDefs() {
     this._columnDefsByName.clear();
 
-    const columnDefs =
-        mergeQueryListAndSet<CdkColumnDef>(this._contentColumnDefs, this._customColumnDefs);
+    const columnDefs = mergeQueryListAndSet(this._contentColumnDefs, this._customColumnDefs);
     columnDefs.forEach(columnDef => {
       if (this._columnDefsByName.has(columnDef.name)) {
         throw getTableDuplicateColumnNameError(columnDef.name);
@@ -832,6 +831,6 @@ export class CdkTable<T> implements CollectionViewer, OnInit, AfterContentChecke
 }
 
 /** Utility function that gets a merged list of the entries in a QueryList and values of a Set. */
-function  mergeQueryListAndSet<T>(queryList: QueryList<any>, set: Set<any>): T[] {
+function  mergeQueryListAndSet<T>(queryList: QueryList<T>, set: Set<T>): T[] {
   return queryList.toArray().concat(Array.from(set));
 }
