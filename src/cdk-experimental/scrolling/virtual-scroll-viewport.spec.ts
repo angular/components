@@ -7,7 +7,7 @@ import {CdkVirtualForOf} from './virtual-for-of';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
 
-describe('CdkVirtualScrollViewport', () => {
+fdescribe('CdkVirtualScrollViewport', () => {
   describe ('with FixedSizeVirtualScrollStrategy', () => {
     let fixture: ComponentFixture<FixedVirtualScroll>;
     let testComponent: FixedVirtualScroll;
@@ -32,7 +32,7 @@ describe('CdkVirtualScrollViewport', () => {
       fixture.detectChanges();
 
       expect((viewport._renderedContentTransform as any).changingThisBreaksApplicationSecurity)
-          .toEqual('translateY(NaNpx)');
+          .toBe('translateY(NaNpx)');
     }));
 
     it('should render initial state', fakeAsync(() => {
@@ -157,10 +157,15 @@ describe('CdkVirtualScrollViewport', () => {
           start: Math.floor(offset / testComponent.itemSize),
           end: Math.floor(offset / testComponent.itemSize) + 4
         };
-        expect(viewport.getRenderedRange()).toEqual(expectedRange);
+        expect(viewport.getRenderedRange())
+            .toEqual(expectedRange,
+                `rendered range should match expected value at scroll offset ${offset}`);
         expect(viewport.getOffsetToRenderedContentStart())
-            .toBe(expectedRange.start * testComponent.itemSize);
-        expect(viewport.measureRenderedContentSize()).toBe(testComponent.viewportSize);
+            .toBe(expectedRange.start * testComponent.itemSize,
+                `rendered content offset should match expected value at scroll offset ${offset}`);
+        expect(viewport.measureRenderedContentSize())
+            .toBe(testComponent.viewportSize,
+                `rendered content size should match expected value at offset ${offset}`);
       }
     }));
 
@@ -177,10 +182,15 @@ describe('CdkVirtualScrollViewport', () => {
           start: Math.floor(offset / testComponent.itemSize),
           end: Math.floor(offset / testComponent.itemSize) + 4
         };
-        expect(viewport.getRenderedRange()).toEqual(expectedRange);
+        expect(viewport.getRenderedRange())
+            .toEqual(expectedRange,
+                `rendered range should match expected value at scroll offset ${offset}`);
         expect(viewport.getOffsetToRenderedContentStart())
-            .toBe(expectedRange.start * testComponent.itemSize);
-        expect(viewport.measureRenderedContentSize()).toBe(testComponent.viewportSize);
+            .toBe(expectedRange.start * testComponent.itemSize,
+                `rendered content offset should match expected value at scroll offset ${offset}`);
+        expect(viewport.measureRenderedContentSize())
+            .toBe(testComponent.viewportSize,
+                `rendered content size should match expected value at offset ${offset}`);
       }
     }));
 
@@ -293,10 +303,15 @@ describe('CdkVirtualScrollViewport', () => {
           start: Math.floor(offset / testComponent.itemSize),
           end: Math.floor(offset / testComponent.itemSize) + 4
         };
-        expect(viewport.getRenderedRange()).toEqual(expectedRange);
+        expect(viewport.getRenderedRange())
+            .toEqual(expectedRange,
+                `rendered range should match expected value at scroll offset ${offset}`);
         expect(viewport.getOffsetToRenderedContentStart())
-            .toBe(expectedRange.start * testComponent.itemSize);
-        expect(viewport.measureRenderedContentSize()).toBe(testComponent.viewportSize);
+            .toBe(expectedRange.start * testComponent.itemSize,
+                `rendered content offset should match expected value at scroll offset ${offset}`);
+        expect(viewport.measureRenderedContentSize())
+            .toBe(testComponent.viewportSize,
+                `rendered content size should match expected value at offset ${offset}`);
       }
     }));
 
@@ -313,10 +328,15 @@ describe('CdkVirtualScrollViewport', () => {
           start: Math.floor(offset / testComponent.itemSize),
           end: Math.floor(offset / testComponent.itemSize) + 4
         };
-        expect(viewport.getRenderedRange()).toEqual(expectedRange);
+        expect(viewport.getRenderedRange())
+            .toEqual(expectedRange,
+                `rendered range should match expected value at scroll offset ${offset}`);
         expect(viewport.getOffsetToRenderedContentStart())
-            .toBe(expectedRange.start * testComponent.itemSize);
-        expect(viewport.measureRenderedContentSize()).toBe(testComponent.viewportSize);
+            .toBe(expectedRange.start * testComponent.itemSize,
+                `rendered content offset should match expected value at scroll offset ${offset}`);
+        expect(viewport.measureRenderedContentSize())
+            .toBe(testComponent.viewportSize,
+                `rendered content size should match expected value at offset ${offset}`);
       }
     }));
   });
@@ -325,7 +345,7 @@ describe('CdkVirtualScrollViewport', () => {
 
 /** Finish initializing the virtual scroll component at the beginning of a test. */
 function finishInit(fixture: ComponentFixture<any>) {
-  // One the first cycle we render and measure the viewport.
+  // On the first cycle we render and measure the viewport.
   fixture.detectChanges();
   flush();
 
