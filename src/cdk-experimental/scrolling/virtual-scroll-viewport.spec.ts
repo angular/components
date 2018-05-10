@@ -7,7 +7,7 @@ import {CdkVirtualForOf} from './virtual-for-of';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
 
-fdescribe('CdkVirtualScrollViewport', () => {
+describe('CdkVirtualScrollViewport', () => {
   describe ('with FixedSizeVirtualScrollStrategy', () => {
     let fixture: ComponentFixture<FixedVirtualScroll>;
     let testComponent: FixedVirtualScroll;
@@ -155,7 +155,7 @@ fdescribe('CdkVirtualScrollViewport', () => {
 
         const expectedRange = {
           start: Math.floor(offset / testComponent.itemSize),
-          end: Math.floor(offset / testComponent.itemSize) + 4
+          end: Math.ceil((offset + testComponent.viewportSize) / testComponent.itemSize)
         };
         expect(viewport.getRenderedRange())
             .toEqual(expectedRange,
@@ -164,7 +164,7 @@ fdescribe('CdkVirtualScrollViewport', () => {
             .toBe(expectedRange.start * testComponent.itemSize,
                 `rendered content offset should match expected value at scroll offset ${offset}`);
         expect(viewport.measureRenderedContentSize())
-            .toBe(testComponent.viewportSize,
+            .toBe((expectedRange.end - expectedRange.start) * testComponent.itemSize,
                 `rendered content size should match expected value at offset ${offset}`);
       }
     }));
@@ -180,7 +180,7 @@ fdescribe('CdkVirtualScrollViewport', () => {
 
         const expectedRange = {
           start: Math.floor(offset / testComponent.itemSize),
-          end: Math.floor(offset / testComponent.itemSize) + 4
+          end: Math.ceil((offset + testComponent.viewportSize) / testComponent.itemSize)
         };
         expect(viewport.getRenderedRange())
             .toEqual(expectedRange,
@@ -189,7 +189,7 @@ fdescribe('CdkVirtualScrollViewport', () => {
             .toBe(expectedRange.start * testComponent.itemSize,
                 `rendered content offset should match expected value at scroll offset ${offset}`);
         expect(viewport.measureRenderedContentSize())
-            .toBe(testComponent.viewportSize,
+            .toBe((expectedRange.end - expectedRange.start) * testComponent.itemSize,
                 `rendered content size should match expected value at offset ${offset}`);
       }
     }));
@@ -301,7 +301,7 @@ fdescribe('CdkVirtualScrollViewport', () => {
 
         const expectedRange = {
           start: Math.floor(offset / testComponent.itemSize),
-          end: Math.floor(offset / testComponent.itemSize) + 4
+          end: Math.ceil((offset + testComponent.viewportSize) / testComponent.itemSize)
         };
         expect(viewport.getRenderedRange())
             .toEqual(expectedRange,
@@ -310,7 +310,7 @@ fdescribe('CdkVirtualScrollViewport', () => {
             .toBe(expectedRange.start * testComponent.itemSize,
                 `rendered content offset should match expected value at scroll offset ${offset}`);
         expect(viewport.measureRenderedContentSize())
-            .toBe(testComponent.viewportSize,
+            .toBe((expectedRange.end - expectedRange.start) * testComponent.itemSize,
                 `rendered content size should match expected value at offset ${offset}`);
       }
     }));
@@ -326,7 +326,7 @@ fdescribe('CdkVirtualScrollViewport', () => {
 
         const expectedRange = {
           start: Math.floor(offset / testComponent.itemSize),
-          end: Math.floor(offset / testComponent.itemSize) + 4
+          end: Math.ceil((offset + testComponent.viewportSize) / testComponent.itemSize)
         };
         expect(viewport.getRenderedRange())
             .toEqual(expectedRange,
@@ -335,7 +335,7 @@ fdescribe('CdkVirtualScrollViewport', () => {
             .toBe(expectedRange.start * testComponent.itemSize,
                 `rendered content offset should match expected value at scroll offset ${offset}`);
         expect(viewport.measureRenderedContentSize())
-            .toBe(testComponent.viewportSize,
+            .toBe((expectedRange.end - expectedRange.start) * testComponent.itemSize,
                 `rendered content size should match expected value at offset ${offset}`);
       }
     }));
