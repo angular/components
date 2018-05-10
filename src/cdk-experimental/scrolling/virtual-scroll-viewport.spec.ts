@@ -358,7 +358,7 @@ describe('CdkVirtualScrollViewport', () => {
           .toEqual({start: 0, end: 3}, 'newly emitted items should be rendered');
     }));
 
-    it('should trackBy value', fakeAsync(() => {
+    it('should trackBy value by default', fakeAsync(() => {
       testComponent.items = [];
       spyOn(testComponent.cdkForOfViewContainer, 'detach').and.callThrough();
       finishInit(fixture);
@@ -374,7 +374,7 @@ describe('CdkVirtualScrollViewport', () => {
       expect(testComponent.cdkForOfViewContainer.detach).toHaveBeenCalled();
     }));
 
-    it('should trackBy index', fakeAsync(() => {
+    it('should trackBy index when specified', fakeAsync(() => {
       testComponent.trackBy = i => i;
       testComponent.items = [];
       spyOn(testComponent.cdkForOfViewContainer, 'detach').and.callThrough();
@@ -514,7 +514,7 @@ class FixedVirtualScroll {
   @Input() itemSize = 50;
   @Input() bufferSize = 0;
   @Input() items = Array(10).fill(0).map((_, i) => i);
-  @Input() trackBy = (_, v) => v;
+  @Input() trackBy;
   @Input() templateCacheSize = 20;
 
   get viewportWidth() {
