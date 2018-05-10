@@ -37,6 +37,7 @@ ts_library(
   srcs = glob(["**/*.spec.ts"]),
   deps = [
     ":scrolling",
+    "//src/cdk/collections",
     "//src/cdk/testing",
     "@rxjs",
   ],
