@@ -272,25 +272,9 @@ describe('CdkVirtualScrollViewport', () => {
       expect(viewport.getOffsetToRenderedContentStart())
           .toBe(testComponent.itemSize, 'should be scrolled to bottom of 5 item list');
     }));
-  });
 
-  describe('with FixedSizeVirtualScrollStrategy and horizontal orientation', () => {
-    let fixture: ComponentFixture<FixedHorizontalVirtualScroll>;
-    let testComponent: FixedHorizontalVirtualScroll;
-    let viewport: CdkVirtualScrollViewport;
-
-    beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [ScrollingModule],
-        declarations: [FixedHorizontalVirtualScroll],
-      }).compileComponents();
-
-      fixture = TestBed.createComponent(FixedHorizontalVirtualScroll);
-      testComponent = fixture.componentInstance;
-      viewport = testComponent.viewport;
-    });
-
-    it('should update viewport as user scrolls right', fakeAsync(() => {
+    it('should update viewport as user scrolls right in horizontal mode', fakeAsync(() => {
+      testComponent.orientation = 'horizontal';
       finishInit(fixture);
 
       const maxOffset =
@@ -315,7 +299,8 @@ describe('CdkVirtualScrollViewport', () => {
       }
     }));
 
-    it('should update viewport as user scrolls left', fakeAsync(() => {
+    it('should update viewport as user scrolls left in horizontal mode', fakeAsync(() => {
+      testComponent.orientation = 'horizontal';
       finishInit(fixture);
 
       const maxOffset =
@@ -337,6 +322,7 @@ describe('CdkVirtualScrollViewport', () => {
         expect(viewport.measureRenderedContentSize())
             .toBe((expectedRange.end - expectedRange.start) * testComponent.itemSize,
                 `rendered content size should match expected value at offset ${offset}`);
+        debugger;
       }
     }));
   });
@@ -370,48 +356,42 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
 @Component({
   template: `
     <cdk-virtual-scroll-viewport
-        class="viewport" [itemSize]="itemSize" [bufferSize]="bufferSize"
-        [style.height.px]="viewportSize" [style.width.px]="viewportCrossSize">
+        class="viewport" [itemSize]="itemSize" [bufferSize]="bufferSize" [orientation]="orientation"
+        [style.height.px]="viewportHeight" [style.width.px]="viewportWidth">
       <div class="item" *cdkVirtualFor="let item of items; let i = index"
-           [style.height.px]="itemSize">
+           [style.height.px]="itemSize" [style.width.px]="itemSize">
         {{i}} - {{item}}
       </div>
     </cdk-virtual-scroll-viewport>
   `,
-  styles: [`.cdk-virtual-scroll-content-wrapper { display: flex; flex-direction: column; }`],
+  styles: [`
+    .cdk-virtual-scroll-content-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cdk-virtual-scroll-orientation-horizontal .cdk-virtual-scroll-content-wrapper {
+      flex-direction: row;
+    }
+  `],
   encapsulation: ViewEncapsulation.None,
 })
 class FixedVirtualScroll {
   @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
   @ViewChild(CdkVirtualForOf, {read: ViewContainerRef}) cdkForOfViewContainer: ViewContainerRef;
 
+  @Input() orientation = 'vertical';
   @Input() viewportSize = 200;
   @Input() viewportCrossSize = 100;
   @Input() itemSize = 50;
   @Input() bufferSize = 0;
   @Input() items = Array(10).fill(0).map((_, i) => i);
-}
 
-@Component({
-  template: `
-    <cdk-virtual-scroll-viewport
-        class="viewport" [itemSize]="itemSize" [bufferSize]="bufferSize" orientation="horizontal"
-        [style.width.px]="viewportSize" [style.height.px]="viewportCrossSize">
-      <div class="item" *cdkVirtualFor="let item of items; let i = index"
-           [style.width.px]="itemSize">
-        {{i}} - {{item}}
-      </div>
-    </cdk-virtual-scroll-viewport>
-  `,
-  styles: [`.cdk-virtual-scroll-content-wrapper { display: flex; flex-direction: row; }`],
-  encapsulation: ViewEncapsulation.None,
-})
-class FixedHorizontalVirtualScroll {
-  @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
+  get viewportWidth() {
+    return this.orientation == 'horizontal' ? this.viewportSize : this.viewportCrossSize;
+  }
 
-  @Input() viewportSize = 200;
-  @Input() viewportCrossSize = 100;
-  @Input() itemSize = 50;
-  @Input() bufferSize = 0;
-  @Input() items = Array(10).fill(0).map((_, i) => i);
+  get viewportHeight() {
+    return this.orientation == 'horizontal' ? this.viewportCrossSize : this.viewportSize;
+  }
 }

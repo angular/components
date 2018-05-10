@@ -14,11 +14,11 @@ cdk-virtual-scroll-viewport {
   will-change: contents, transform;
 }
 
-.virtual-scroll-orientation-horizontal {
+.cdk-virtual-scroll-orientation-horizontal {
   bottom: 0;
 }
 
-.virtual-scroll-orientation-vertical {
+.cdk-virtual-scroll-orientation-vertical {
   right: 0;
 }
 
