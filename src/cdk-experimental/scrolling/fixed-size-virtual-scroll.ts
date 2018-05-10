@@ -94,10 +94,12 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
 
     const scrollOffset = this._viewport.measureScrollOffset();
     const firstVisibleIndex = Math.floor(scrollOffset / this._itemSize);
+    const firstItemRemainder = scrollOffset % this._itemSize;
     const range = this._expandRange(
         {start: firstVisibleIndex, end: firstVisibleIndex},
         this._bufferSize,
-        Math.ceil(this._viewport.getViewportSize() / this._itemSize) + this._bufferSize);
+        Math.ceil((this._viewport.getViewportSize() + firstItemRemainder) / this._itemSize) +
+            this._bufferSize);
     this._viewport.setRenderedRange(range);
     this._viewport.setRenderedContentOffset(this._itemSize * range.start);
   }

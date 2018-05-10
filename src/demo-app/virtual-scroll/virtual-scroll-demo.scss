@@ -6,15 +6,12 @@
   .cdk-virtual-scroll-content-wrapper {
     display: flex;
     flex-direction: column;
-    width: 100%;
   }
 }
 
 .demo-horizontal {
   .cdk-virtual-scroll-content-wrapper {
     flex-direction: row;
-    width: auto;
-    height: 100%;
   }
 
   .demo-item {
