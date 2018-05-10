@@ -48,3 +48,9 @@ local_repository(
   name = "rxjs",
   path = "node_modules/rxjs/src",
 )
+
+
+# This commit matches the version of buildifier in angular/ngcontainer
+# If you change this, also check if it matches the version in the angular/ngcontainer
+# version in /.circleci/config.yml
+BAZEL_BUILDTOOLS_VERSION = "fd9878fd5de921e0bbab3dcdcb932c2627812ee1"
