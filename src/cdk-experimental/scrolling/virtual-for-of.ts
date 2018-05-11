@@ -81,15 +81,16 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
    * the item and produces a value to be used as the item's identity when tracking changes.
    */
   @Input()
-  get cdkVirtualForTrackBy(): TrackByFunction<T> {
+  get cdkVirtualForTrackBy(): TrackByFunction<T> | undefined {
     return this._cdkVirtualForTrackBy;
   }
-  set cdkVirtualForTrackBy(fn: TrackByFunction<T>) {
+  set cdkVirtualForTrackBy(fn: TrackByFunction<T> | undefined) {
     this._needsUpdate = true;
-    this._cdkVirtualForTrackBy =
-        (index, item) => fn(index + (this._renderedRange ? this._renderedRange.start : 0), item);
+    this._cdkVirtualForTrackBy = fn ?
+        (index, item) => fn(index + (this._renderedRange ? this._renderedRange.start : 0), item) :
+        undefined;
   }
-  private _cdkVirtualForTrackBy: TrackByFunction<T>;
+  private _cdkVirtualForTrackBy: TrackByFunction<T> | undefined;
 
   /** The template used to stamp out new elements. */
   @Input()

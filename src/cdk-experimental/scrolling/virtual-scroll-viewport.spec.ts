@@ -1,7 +1,8 @@
+import {ArrayDataSource} from '@angular/cdk/collections';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {Component, Input, ViewChild, ViewContainerRef, ViewEncapsulation} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
-import {animationFrameScheduler} from 'rxjs';
+import {animationFrameScheduler, Subject} from 'rxjs';
 import {ScrollingModule} from './scrolling-module';
 import {CdkVirtualForOf} from './virtual-for-of';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
@@ -272,25 +273,9 @@ describe('CdkVirtualScrollViewport', () => {
       expect(viewport.getOffsetToRenderedContentStart())
           .toBe(testComponent.itemSize, 'should be scrolled to bottom of 5 item list');
     }));
-  });
 
-  describe('with FixedSizeVirtualScrollStrategy and horizontal orientation', () => {
-    let fixture: ComponentFixture<FixedHorizontalVirtualScroll>;
-    let testComponent: FixedHorizontalVirtualScroll;
-    let viewport: CdkVirtualScrollViewport;
-
-    beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [ScrollingModule],
-        declarations: [FixedHorizontalVirtualScroll],
-      }).compileComponents();
-
-      fixture = TestBed.createComponent(FixedHorizontalVirtualScroll);
-      testComponent = fixture.componentInstance;
-      viewport = testComponent.viewport;
-    });
-
-    it('should update viewport as user scrolls right', fakeAsync(() => {
+    it('should update viewport as user scrolls right in horizontal mode', fakeAsync(() => {
+      testComponent.orientation = 'horizontal';
       finishInit(fixture);
 
       const maxOffset =
@@ -315,7 +300,8 @@ describe('CdkVirtualScrollViewport', () => {
       }
     }));
 
-    it('should update viewport as user scrolls left', fakeAsync(() => {
+    it('should update viewport as user scrolls left in horizontal mode', fakeAsync(() => {
+      testComponent.orientation = 'horizontal';
       finishInit(fixture);
 
       const maxOffset =
@@ -338,6 +324,134 @@ describe('CdkVirtualScrollViewport', () => {
             .toBe((expectedRange.end - expectedRange.start) * testComponent.itemSize,
                 `rendered content size should match expected value at offset ${offset}`);
       }
+    }));
+
+    it('should work with an Observable', fakeAsync(() => {
+      const data = new Subject<number[]>();
+      testComponent.items = data as any;
+      finishInit(fixture);
+
+      expect(viewport.getRenderedRange())
+          .toEqual({start: 0, end: 0}, 'no items should be rendered');
+
+      data.next([1, 2, 3]);
+      fixture.detectChanges();
+
+      expect(viewport.getRenderedRange())
+          .toEqual({start: 0, end: 3}, 'newly emitted items should be rendered');
+    }));
+
+    it('should work with a DataSource', fakeAsync(() => {
+      const data = new Subject<number[]>();
+      testComponent.items = new ArrayDataSource(data) as any;
+      finishInit(fixture);
+      flush();
+
+      expect(viewport.getRenderedRange())
+          .toEqual({start: 0, end: 0}, 'no items should be rendered');
+
+      data.next([1, 2, 3]);
+      fixture.detectChanges();
+      flush();
+
+      expect(viewport.getRenderedRange())
+          .toEqual({start: 0, end: 3}, 'newly emitted items should be rendered');
+    }));
+
+    it('should trackBy value by default', fakeAsync(() => {
+      testComponent.items = [];
+      spyOn(testComponent.virtualForViewContainer, 'detach').and.callThrough();
+      finishInit(fixture);
+
+      testComponent.items = [0];
+      fixture.detectChanges();
+
+      expect(testComponent.virtualForViewContainer.detach).not.toHaveBeenCalled();
+
+      testComponent.items = [1];
+      fixture.detectChanges();
+
+      expect(testComponent.virtualForViewContainer.detach).toHaveBeenCalled();
+    }));
+
+    it('should trackBy index when specified', fakeAsync(() => {
+      testComponent.trackBy = i => i;
+      testComponent.items = [];
+      spyOn(testComponent.virtualForViewContainer, 'detach').and.callThrough();
+      finishInit(fixture);
+
+      testComponent.items = [0];
+      fixture.detectChanges();
+
+      expect(testComponent.virtualForViewContainer.detach).not.toHaveBeenCalled();
+
+      testComponent.items = [1];
+      fixture.detectChanges();
+
+      expect(testComponent.virtualForViewContainer.detach).not.toHaveBeenCalled();
+    }));
+
+    it('should recycle views when template cache is large enough to accommodate', fakeAsync(() => {
+      testComponent.trackBy = i => i;
+      const spy =
+          spyOn(testComponent.virtualForViewContainer, 'createEmbeddedView').and.callThrough();
+      finishInit(fixture);
+
+      // Should create views for the initial rendered items.
+      expect(testComponent.virtualForViewContainer.createEmbeddedView).toHaveBeenCalledTimes(4);
+
+      spy.calls.reset();
+      triggerScroll(viewport, 10);
+      fixture.detectChanges();
+
+      // As we first start to scroll we need to create one more item. This is because the first item
+      // is still partially on screen and therefore can't be removed yet. At the same time a new
+      // item is now partially on the screen at the bottom and so a new view is needed.
+      expect(testComponent.virtualForViewContainer.createEmbeddedView).toHaveBeenCalledTimes(1);
+
+      spy.calls.reset();
+      const maxOffset =
+          testComponent.itemSize * testComponent.items.length - testComponent.viewportSize;
+      for (let offset = 10; offset <= maxOffset; offset += 10) {
+        triggerScroll(viewport, offset);
+        fixture.detectChanges();
+      }
+
+      // As we scroll through the rest of the items, no new views should be created, our existing 5
+      // can just be recycled as appropriate.
+      expect(testComponent.virtualForViewContainer.createEmbeddedView).not.toHaveBeenCalled();
+    }));
+
+    it('should not recycle views when template cache is full', fakeAsync(() => {
+      testComponent.trackBy = i => i;
+      testComponent.templateCacheSize = 0;
+      const spy =
+          spyOn(testComponent.virtualForViewContainer, 'createEmbeddedView').and.callThrough();
+      finishInit(fixture);
+
+      // Should create views for the initial rendered items.
+      expect(testComponent.virtualForViewContainer.createEmbeddedView).toHaveBeenCalledTimes(4);
+
+      spy.calls.reset();
+      triggerScroll(viewport, 10);
+      fixture.detectChanges();
+
+      // As we first start to scroll we need to create one more item. This is because the first item
+      // is still partially on screen and therefore can't be removed yet. At the same time a new
+      // item is now partially on the screen at the bottom and so a new view is needed.
+      expect(testComponent.virtualForViewContainer.createEmbeddedView).toHaveBeenCalledTimes(1);
+
+      spy.calls.reset();
+      const maxOffset =
+          testComponent.itemSize * testComponent.items.length - testComponent.viewportSize;
+      for (let offset = 10; offset <= maxOffset; offset += 10) {
+        triggerScroll(viewport, offset);
+        fixture.detectChanges();
+      }
+
+      // Since our template cache size is 0, as we scroll through the rest of the items, we need to
+      // create a new view for each one.
+      expect(testComponent.virtualForViewContainer.createEmbeddedView).toHaveBeenCalledTimes(5);
     }));
   });
 });
@@ -370,48 +484,46 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
 @Component({
   template: `
     <cdk-virtual-scroll-viewport
-        class="viewport" [itemSize]="itemSize" [bufferSize]="bufferSize"
-        [style.height.px]="viewportSize" [style.width.px]="viewportCrossSize">
-      <div class="item" *cdkVirtualFor="let item of items; let i = index"
-           [style.height.px]="itemSize">
+        [itemSize]="itemSize" [bufferSize]="bufferSize" [orientation]="orientation"
+        [style.height.px]="viewportHeight" [style.width.px]="viewportWidth">
+      <div class="item" 
+           *cdkVirtualFor="let item of items; let i = index; trackBy: trackBy; \
+                           templateCacheSize: templateCacheSize"
+           [style.height.px]="itemSize" [style.width.px]="itemSize">
         {{i}} - {{item}}
       </div>
     </cdk-virtual-scroll-viewport>
   `,
-  styles: [`.cdk-virtual-scroll-content-wrapper { display: flex; flex-direction: column; }`],
+  styles: [`
+    .cdk-virtual-scroll-content-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cdk-virtual-scroll-orientation-horizontal .cdk-virtual-scroll-content-wrapper {
+      flex-direction: row;
+    }
+  `],
   encapsulation: ViewEncapsulation.None,
 })
 class FixedVirtualScroll {
   @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
-  @ViewChild(CdkVirtualForOf, {read: ViewContainerRef}) cdkForOfViewContainer: ViewContainerRef;
+  @ViewChild(CdkVirtualForOf, {read: ViewContainerRef}) virtualForViewContainer: ViewContainerRef;
 
+  @Input() orientation = 'vertical';
   @Input() viewportSize = 200;
   @Input() viewportCrossSize = 100;
   @Input() itemSize = 50;
   @Input() bufferSize = 0;
   @Input() items = Array(10).fill(0).map((_, i) => i);
-}
+  @Input() trackBy;
+  @Input() templateCacheSize = 20;
 
-@Component({
-  template: `
-    <cdk-virtual-scroll-viewport
-        class="viewport" [itemSize]="itemSize" [bufferSize]="bufferSize" orientation="horizontal"
-        [style.width.px]="viewportSize" [style.height.px]="viewportCrossSize">
-      <div class="item" *cdkVirtualFor="let item of items; let i = index"
-           [style.width.px]="itemSize">
-        {{i}} - {{item}}
-      </div>
-    </cdk-virtual-scroll-viewport>
-  `,
-  styles: [`.cdk-virtual-scroll-content-wrapper { display: flex; flex-direction: row; }`],
-  encapsulation: ViewEncapsulation.None,
-})
-class FixedHorizontalVirtualScroll {
-  @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
+  get viewportWidth() {
+    return this.orientation == 'horizontal' ? this.viewportSize : this.viewportCrossSize;
+  }
 
-  @Input() viewportSize = 200;
-  @Input() viewportCrossSize = 100;
-  @Input() itemSize = 50;
-  @Input() bufferSize = 0;
-  @Input() items = Array(10).fill(0).map((_, i) => i);
+  get viewportHeight() {
+    return this.orientation == 'horizontal' ? this.viewportCrossSize : this.viewportSize;
+  }
 }
