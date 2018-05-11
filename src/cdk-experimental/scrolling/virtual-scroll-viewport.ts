@@ -99,6 +99,9 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
    */
   private _renderedContentOffsetNeedsRewrite = false;
 
+  /** Observable that emits when the viewport is destroyed. */
+  private _destroyed = new Subject<void>();
+
   constructor(public elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef,
               private _ngZone: NgZone, private _sanitizer: DomSanitizer,
               @Inject(VIRTUAL_SCROLL_STRATEGY) private _scrollStrategy: VirtualScrollStrategy) {}
@@ -114,7 +117,7 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
         fromEvent(viewportEl, 'scroll')
             // Sample the scroll stream at every animation frame. This way if there are multiple
             // scroll events in the same frame we only need to recheck our layout once.
-            .pipe(sampleTime(0, animationFrameScheduler))
+            .pipe(sampleTime(0, animationFrameScheduler), takeUntil(this._destroyed))
             .subscribe(() => this._scrollStrategy.onContentScrolled());
       });
     });
@@ -135,10 +138,12 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
   ngOnDestroy() {
     this.detach();
     this._scrollStrategy.detach();
+    this._destroyed.next();
 
     // Complete all subjects
     this._renderedRangeSubject.complete();
     this._detachedSubject.complete();
+    this._destroyed.complete();
   }
 
   /** Attaches a `CdkVirtualForOf` to this viewport. */
@@ -208,20 +213,17 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
       this._ngZone.run(() => {
         this._renderedRangeSubject.next(this._renderedRange = range);
         this._changeDetectorRef.markForCheck();
-        this._ngZone.runOutsideAngular(() => this._ngZone.onStable.pipe(take(1)).subscribe(() => {
-          // Queue this up in a `Promise.resolve()` so that if the user makes a series of calls
-          // like:
-          //
-          // viewport.setRenderedRange(...);
-          // viewport.setTotalContentSize(...);
-          // viewport.setRenderedContentOffset(...);
-          //
-          // The call to `onContentRendered` will happen after all of the updates have been applied.
-          Promise.resolve().then(() => {
-            this._scrollStrategy.onContentRendered();
-          });
-        }));
       });
+      // Queue this up in a `Promise.resolve()` so that if the user makes a series of calls
+      // like:
+      //
+      // viewport.setRenderedRange(...);
+      // viewport.setTotalContentSize(...);
+      // viewport.setRenderedContentOffset(...);
+      //
+      // The call to `onContentRendered` will happen after all of the updates have been applied.
+      this._ngZone.runOutsideAngular(() => this._ngZone.onStable.pipe(take(1)).subscribe(
+          () => Promise.resolve().then(() => this._scrollStrategy.onContentRendered())));
     }
   }
 
