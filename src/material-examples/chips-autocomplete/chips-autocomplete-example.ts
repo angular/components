@@ -57,6 +57,8 @@ export class ChipsAutocompleteExample {
     if (input) {
       input.value = '';
     }
+
+    this.fruitCtrl.setValue(null);
   }
 
   remove(fruit: any): void {
@@ -75,5 +77,6 @@ export class ChipsAutocompleteExample {
   selected(event: MatAutocompleteSelectedEvent): void {
     this.fruits.push({ name: event.option.viewValue });
     this.fruitInput.nativeElement.value = '';
+    this.fruitCtrl.setValue(null);
   }
 }
