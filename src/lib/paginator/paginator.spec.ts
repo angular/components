@@ -276,23 +276,18 @@ describe('MatPaginator', () => {
         new PageSizeOption('5', 5),
         new PageSizeOption('10', 10),
         new PageSizeOption('25', 25),
-        new PageSizeOption('100', 100),
+        new PageSizeOption('100', 100)
     ]);
 
     component.pageSize = 30;
     fixture.detectChanges();
-    expect(paginator.pageSizeOptions).toEqual([
-        new PageSizeOption('5', 5),
-        new PageSizeOption('10', 10),
-        new PageSizeOption('25', 25),
-        new PageSizeOption('100', 100),
-    ]);
+    expect(paginator.pageSizeOptions).toEqual([5, 10, 25, 100]);
     expect(paginator._displayedPageSizeOptions).toEqual([
         new PageSizeOption('5', 5),
         new PageSizeOption('10', 10),
         new PageSizeOption('25', 25),
         new PageSizeOption('30', 30),
-        new PageSizeOption('100', 100),
+        new PageSizeOption('100', 100)
     ]);
 
     component.pageSizeOptions = [100, 25, 10, 5];
@@ -302,7 +297,7 @@ describe('MatPaginator', () => {
         new PageSizeOption('10', 10),
         new PageSizeOption('25', 25),
         new PageSizeOption('30', 30),
-        new PageSizeOption('100', 100),
+        new PageSizeOption('100', 100)
     ]);
   });
 
