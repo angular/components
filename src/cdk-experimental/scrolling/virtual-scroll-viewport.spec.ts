@@ -30,6 +30,23 @@ describe('Basic CdkVirtualScrollViewport', () => {
     expect((viewport._renderedContentTransform as any).changingThisBreaksApplicationSecurity)
         .toEqual('translateY(NaNpx)');
   }));
+
+  fit('should update content size', fakeAsync(() => {
+    viewport.elementRef.nativeElement.style['height'] = '300px';
+    viewport.updateViewportSize();
+    fixture.detectChanges();
+    const size = viewport.getViewportSize();
+
+    expect(size).toBe(300);
+
+    viewport.elementRef.nativeElement.style['height'] = '500px';
+    viewport.updateViewportSize();
+    fixture.detectChanges();
+    const newSize = viewport.getViewportSize();
+    const newLength = viewport.getRenderedRange();
+
+    expect(newSize).toBe(500);
+  }));
 });
 
 @Component({
