@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
         #drawer
         class="sidenav"
         fixedInViewport="true"
-        [attr.role]="isHandset ? 'dialog' : 'navigation'"
+        [attr.role]="(isHandset | async)!.matches ? 'dialog' : 'navigation'"
         [mode]="(isHandset | async)!.matches ? 'over' : 'side'"
         [opened]="!(isHandset | async)!.matches">
         <mat-toolbar color="primary">Menu</mat-toolbar>
