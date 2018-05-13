@@ -34,4 +34,7 @@ export interface VirtualScrollStrategy {
 
   /** Called when the range of items rendered in the DOM has changed. */
   onContentRendered();
+
+  /** Called when the offset of the rendered items changed. */
+  onRenderedOffsetChanged();
 }

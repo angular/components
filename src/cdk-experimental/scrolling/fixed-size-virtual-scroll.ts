@@ -60,19 +60,22 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     this._updateRenderedRange();
   }
 
-  /** Called when the viewport is scrolled. */
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onContentScrolled() {
     this._updateRenderedRange();
   }
 
-  /** Called when the length of the data changes. */
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onDataLengthChanged() {
     this._updateTotalContentSize();
     this._updateRenderedRange();
   }
 
-  /** Called when the range of items rendered in the DOM has changed. */
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onContentRendered() { /* no-op */ }
+
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
+  onRenderedOffsetChanged() { /* no-op */ }
 
   /** Update the viewport's total content size. */
   private _updateTotalContentSize() {
@@ -91,10 +94,12 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
 
     const scrollOffset = this._viewport.measureScrollOffset();
     const firstVisibleIndex = Math.floor(scrollOffset / this._itemSize);
+    const firstItemRemainder = scrollOffset % this._itemSize;
     const range = this._expandRange(
         {start: firstVisibleIndex, end: firstVisibleIndex},
         this._bufferSize,
-        Math.ceil(this._viewport.getViewportSize() / this._itemSize) + this._bufferSize);
+        Math.ceil((this._viewport.getViewportSize() + firstItemRemainder) / this._itemSize) +
+            this._bufferSize);
     this._viewport.setRenderedRange(range);
     this._viewport.setRenderedContentOffset(this._itemSize * range.start);
   }

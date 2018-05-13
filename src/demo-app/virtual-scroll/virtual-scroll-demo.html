@@ -51,6 +51,7 @@
 
 <h2>Observable data</h2>
 
+<button (click)="emitData()">Add item</button>
 <cdk-virtual-scroll-viewport class="demo-viewport" [itemSize]="50">
   <div *cdkVirtualFor="let size of observableData | async; let i = index" class="demo-item"
        [style.height.px]="size">

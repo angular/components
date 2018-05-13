@@ -122,14 +122,14 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     this._viewport = null;
   }
 
-  /** Implemented as part of VirtualScrollStrategy. */
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onContentScrolled() {
     if (this._viewport) {
       this._updateRenderedContentAfterScroll();
     }
   }
 
-  /** Implemented as part of VirtualScrollStrategy. */
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onDataLengthChanged() {
     if (this._viewport) {
       // TODO(mmalebra): Do something smarter here.
@@ -137,10 +137,17 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     }
   }
 
-  /** Implemented as part of VirtualScrollStrategy. */
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onContentRendered() {
     if (this._viewport) {
       this._checkRenderedContentSize();
+    }
+  }
+
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
+  onRenderedOffsetChanged() {
+    if (this._viewport) {
+      this._checkRenderedContentOffset();
     }
   }
 
@@ -162,13 +169,38 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     // The current scroll offset.
     const scrollOffset = viewport.measureScrollOffset();
     // The delta between the current scroll offset and the previously recorded scroll offset.
-    const scrollDelta = scrollOffset - this._lastScrollOffset;
+    let scrollDelta = scrollOffset - this._lastScrollOffset;
     // The magnitude of the scroll delta.
-    const scrollMagnitude = Math.abs(scrollDelta);
+    let scrollMagnitude = Math.abs(scrollDelta);
 
-    // TODO(mmalerba): Record error between actual scroll offset and predicted scroll offset given
-    // the index of the first rendered element. Fudge the scroll delta to slowly eliminate the error
-    // as the user scrolls.
+    // The currently rendered range.
+    const renderedRange = viewport.getRenderedRange();
+
+    // If we're scrolling toward the top, we need to account for the fact that the predicted amount
+    // of content and the actual amount of scrollable space may differ. We address this by slowly
+    // correcting the difference on each scroll event.
+    let offsetCorrection = 0;
+    if (scrollDelta < 0) {
+      // The content offset we would expect based on the average item size.
+      const predictedOffset = renderedRange.start * this._averager.getAverageItemSize();
+      // The difference between the predicted size of the unrendered content at the beginning and
+      // the actual available space to scroll over. We need to reduce this to zero by the time the
+      // user scrolls to the top.
+      // - 0 indicates that the predicted size and available space are the same.
+      // - A negative number that the predicted size is smaller than the available space.
+      // - A positive number indicates the predicted size is larger than the available space
+      const offsetDifference = predictedOffset - this._lastRenderedContentOffset;
+      // The amount of difference to correct during this scroll event. We calculate this as a
+      // percentage of the total difference based on the percentage of the distance toward the top
+      // that the user scrolled.
+      offsetCorrection = Math.round(offsetDifference *
+          Math.max(0, Math.min(1, scrollMagnitude / (scrollOffset + scrollMagnitude))));
+
+      // Based on the offset correction above, we pretend that the scroll delta was bigger or
+      // smaller than it actually was, this way we can start to eliminate the difference.
+      scrollDelta = scrollDelta - offsetCorrection;
+      scrollMagnitude = Math.abs(scrollDelta);
+    }
 
     // The current amount of buffer past the start of the viewport.
     const startBuffer = this._lastScrollOffset - this._lastRenderedContentOffset;
@@ -190,8 +222,6 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
       if (scrollMagnitude >= viewport.getViewportSize()) {
         this._setScrollOffset();
       } else {
-        // The currently rendered range.
-        const renderedRange = viewport.getRenderedRange();
         // The number of new items to render on the side the user is scrolling towards. Rather than
         // just filling the underscan space, we actually fill enough to have a buffer size of
         // `addBufferPx`. This gives us a little wiggle room in case our item size estimate is off.
@@ -265,8 +295,12 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
 
         // Set the range and offset we calculated above.
         viewport.setRenderedRange(range);
-        viewport.setRenderedContentOffset(contentOffset, contentOffsetTo);
+        viewport.setRenderedContentOffset(contentOffset + offsetCorrection, contentOffsetTo);
       }
+    } else if (offsetCorrection) {
+      // Even if the rendered range didn't change, we may still need to adjust the content offset to
+      // simulate scrolling slightly slower or faster than the user actually scrolled.
+      viewport.setRenderedContentOffset(this._lastRenderedContentOffset + offsetCorrection);
     }
 
     // Save the scroll offset to be compared to the new value on the next scroll event.
@@ -279,10 +313,15 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    */
   private _checkRenderedContentSize() {
     const viewport = this._viewport!;
-    this._lastRenderedContentOffset = viewport.getOffsetToRenderedContentStart()!;
     this._lastRenderedContentSize = viewport.measureRenderedContentSize();
     this._averager.addSample(viewport.getRenderedRange(), this._lastRenderedContentSize);
     this._updateTotalContentSize(this._lastRenderedContentSize);
+  }
+
+  /** Checks the currently rendered content offset and saves the value for later use. */
+  private _checkRenderedContentOffset() {
+    const viewport = this._viewport!;
+    this._lastRenderedContentOffset = viewport.getOffsetToRenderedContentStart()!;
   }
 
   /**

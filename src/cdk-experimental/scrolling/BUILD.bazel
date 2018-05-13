@@ -10,6 +10,7 @@ ng_module(
   module_name = "@angular/cdk-experimental/scrolling",
   assets = [":virtual_scroll_viewport_css"] + glob(["**/*.html"]),
   deps = [
+    "//src/cdk/coercion",
     "//src/cdk/collections",
     "@rxjs",
   ],
@@ -36,6 +37,7 @@ ts_library(
   srcs = glob(["**/*.spec.ts"]),
   deps = [
     ":scrolling",
+    "//src/cdk/collections",
     "//src/cdk/testing",
     "@rxjs",
   ],

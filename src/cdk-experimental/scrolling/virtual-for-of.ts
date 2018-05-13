@@ -24,7 +24,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {pairwise, shareReplay, startWith, switchMap} from 'rxjs/operators';
+import {pairwise, shareReplay, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
 
@@ -81,15 +81,16 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
    * the item and produces a value to be used as the item's identity when tracking changes.
    */
   @Input()
-  get cdkVirtualForTrackBy(): TrackByFunction<T> {
+  get cdkVirtualForTrackBy(): TrackByFunction<T> | undefined {
     return this._cdkVirtualForTrackBy;
   }
-  set cdkVirtualForTrackBy(fn: TrackByFunction<T>) {
+  set cdkVirtualForTrackBy(fn: TrackByFunction<T> | undefined) {
     this._needsUpdate = true;
-    this._cdkVirtualForTrackBy =
-        (index, item) => fn(index + (this._renderedRange ? this._renderedRange.start : 0), item);
+    this._cdkVirtualForTrackBy = fn ?
+        (index, item) => fn(index + (this._renderedRange ? this._renderedRange.start : 0), item) :
+        undefined;
   }
-  private _cdkVirtualForTrackBy: TrackByFunction<T>;
+  private _cdkVirtualForTrackBy: TrackByFunction<T> | undefined;
 
   /** The template used to stamp out new elements. */
   @Input()
@@ -138,6 +139,8 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   /** Whether the rendered data should be updated during the next ngDoCheck cycle. */
   private _needsUpdate = false;
 
+  private _destroyed = new Subject<void>();
+
   constructor(
       /** The view container to add items to. */
       private _viewContainerRef: ViewContainerRef,
@@ -151,7 +154,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
       this._data = data;
       this._onRenderedDataChange();
     });
-    this._viewport.renderedRangeStream.subscribe(range => {
+    this._viewport.renderedRangeStream.pipe(takeUntil(this._destroyed)).subscribe(range => {
       this._renderedRange = range;
       this.viewChange.next(this._renderedRange);
       this._onRenderedDataChange();
@@ -213,6 +216,9 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
 
     this._dataSourceChanges.complete();
     this.viewChange.complete();
+
+    this._destroyed.next();
+    this._destroyed.complete();
 
     for (let view of this._templateCache) {
       view.destroy();

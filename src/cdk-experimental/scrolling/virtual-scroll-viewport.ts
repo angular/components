@@ -42,10 +42,11 @@ function rangesEqual(r1: ListRange, r2: ListRange): boolean {
   styleUrls: ['virtual-scroll-viewport.css'],
   host: {
     'class': 'cdk-virtual-scroll-viewport',
+    '[class.cdk-virtual-scroll-orientation-horizontal]': 'orientation === "horizontal"',
+    '[class.cdk-virtual-scroll-orientation-vertical]': 'orientation === "vertical"',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  preserveWhitespaces: false,
 })
 export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
   /** Emits when the viewport is detached from a CdkVirtualForOf. */
@@ -71,6 +72,9 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
   /** The transform used to offset the rendered content wrapper element. */
   _renderedContentTransform: SafeStyle;
 
+  /** The raw string version of the rendered content transform. */
+  private _rawRenderedContentTransform: string;
+
   /** The currently rendered range of indices. */
   private _renderedRange: ListRange = {start: 0, end: 0};
 
@@ -95,6 +99,9 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
    */
   private _renderedContentOffsetNeedsRewrite = false;
 
+  /** Observable that emits when the viewport is destroyed. */
+  private _destroyed = new Subject<void>();
+
   constructor(public elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef,
               private _ngZone: NgZone, private _sanitizer: DomSanitizer,
               @Inject(VIRTUAL_SCROLL_STRATEGY) private _scrollStrategy: VirtualScrollStrategy) {}
@@ -108,7 +115,7 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
         fromEvent(this.elementRef.nativeElement, 'scroll')
             // Sample the scroll stream at every animation frame. This way if there are multiple
             // scroll events in the same frame we only need to recheck our layout once.
-            .pipe(sampleTime(0, animationFrameScheduler))
+            .pipe(sampleTime(0, animationFrameScheduler), takeUntil(this._destroyed))
             .subscribe(() => this._scrollStrategy.onContentScrolled());
       });
     });
@@ -129,10 +136,12 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
   ngOnDestroy() {
     this.detach();
     this._scrollStrategy.detach();
+    this._destroyed.next();
 
     // Complete all subjects
     this._renderedRangeSubject.complete();
     this._detachedSubject.complete();
+    this._destroyed.complete();
   }
 
   /** Update the viewport dimensions and re-render. */
@@ -209,28 +218,17 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
       this._ngZone.run(() => {
         this._renderedRangeSubject.next(this._renderedRange = range);
         this._changeDetectorRef.markForCheck();
-        this._ngZone.runOutsideAngular(() => this._ngZone.onStable.pipe(take(1)).subscribe(() => {
-          // Queue this up in a `Promise.resolve()` so that if the user makes a series of calls
-          // like:
-          //
-          // viewport.setRenderedRange(...);
-          // viewport.setTotalContentSize(...);
-          // viewport.setRenderedContentOffset(...);
-          //
-          // The call to `onContentRendered` will happen after all of the updates have been applied.
-          Promise.resolve().then(() => {
-            // If the rendered content offset was specified as an offset to the end of the content,
-            // rewrite it as an offset to the start of the content.
-            if (this._renderedContentOffsetNeedsRewrite) {
-              this._renderedContentOffset -= this.measureRenderedContentSize();
-              this._renderedContentOffsetNeedsRewrite = false;
-              this.setRenderedContentOffset(this._renderedContentOffset);
-            }
-
-            this._scrollStrategy.onContentRendered();
-          });
-        }));
       });
+      // Queue this up in a `Promise.resolve()` so that if the user makes a series of calls
+      // like:
+      //
+      // viewport.setRenderedRange(...);
+      // viewport.setTotalContentSize(...);
+      // viewport.setRenderedContentOffset(...);
+      //
+      // The call to `onContentRendered` will happen after all of the updates have been applied.
+      this._ngZone.runOutsideAngular(() => this._ngZone.onStable.pipe(take(1)).subscribe(
+          () => Promise.resolve().then(() => this._scrollStrategy.onContentRendered())));
     }
   }
 
@@ -238,7 +236,7 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
    * Gets the offset from the start of the viewport to the start of the rendered data (in pixels).
    */
   getOffsetToRenderedContentStart(): number | null {
-    return this._renderedContentOffsetNeedsRewrite ? null: this._renderedContentOffset;
+    return this._renderedContentOffsetNeedsRewrite ? null : this._renderedContentOffset;
   }
 
   /**
@@ -256,13 +254,26 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
       transform += ` translate${axis}(-100%)`;
       this._renderedContentOffsetNeedsRewrite = true;
     }
-    if (this._renderedContentTransform != transform) {
+    if (this._rawRenderedContentTransform != transform) {
       // Re-enter the Angular zone so we can mark for change detection.
       this._ngZone.run(() => {
         // We know this value is safe because we parse `offset` with `Number()` before passing it
         // into the string.
+        this._rawRenderedContentTransform = transform;
         this._renderedContentTransform = this._sanitizer.bypassSecurityTrustStyle(transform);
         this._changeDetectorRef.markForCheck();
+
+        // If the rendered content offset was specified as an offset to the end of the content,
+        // rewrite it as an offset to the start of the content.
+        this._ngZone.onStable.pipe(take(1)).subscribe(() => {
+          if (this._renderedContentOffsetNeedsRewrite) {
+            this._renderedContentOffset -= this.measureRenderedContentSize();
+            this._renderedContentOffsetNeedsRewrite = false;
+            this.setRenderedContentOffset(this._renderedContentOffset);
+          } else {
+            this._scrollStrategy.onRenderedOffsetChanged();
+          }
+        });
       });
     }
   }
