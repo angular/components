@@ -10,9 +10,9 @@ import { Observable } from 'rxjs';
         #drawer
         class="sidenav"
         fixedInViewport="true"
-        [attr.role]="(isHandset | async)!.matches ? 'dialog' : 'navigation'"
-        [mode]="(isHandset | async)!.matches ? 'over' : 'side'"
-        [opened]="!(isHandset | async)!.matches">
+        [attr.role]="(isHandset$ | async)!.matches ? 'dialog' : 'navigation'"
+        [mode]="(isHandset$ | async)!.matches ? 'over' : 'side'"
+        [opened]="!(isHandset$ | async)!.matches">
         <mat-toolbar color="primary">Menu</mat-toolbar>
         <mat-nav-list>
           <a mat-list-item href="#">Link 1</a>
@@ -27,7 +27,7 @@ import { Observable } from 'rxjs';
             aria-label="Toggle sidenav"
             mat-icon-button
             (click)="drawer.toggle()"
-            *ngIf="(isHandset | async)!.matches">
+            *ngIf="(isHandset$ | async)!.matches">
             <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
           </button>
           <span>Application Title</span>
@@ -53,6 +53,6 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %>
 })
 export class <%= classify(name) %>Component {
-  isHandset: Observable<BreakpointState> = this.breakpointObserver.observe(Breakpoints.Handset);
+  isHandset$: Observable<BreakpointState> = this.breakpointObserver.observe(Breakpoints.Handset);
   constructor(private breakpointObserver: BreakpointObserver) {}
 }
