@@ -137,6 +137,7 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
 
   /** Update the viewport dimensions and re-render. */
   updateViewportSize() {
+    // TODO: Cleanup later when add logic for handling content resize
     this._measureViewportSize();
     this._scrollStrategy.onDataLengthChanged();
   }
