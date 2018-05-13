@@ -76,6 +76,8 @@ export class MatCheckboxChange {
   source: MatCheckbox;
   /** The new `checked` value of the checkbox. */
   checked: boolean;
+  /** The original event */
+  nativeEvent: Event;
 }
 
 // Boilerplate for applying mixins to MatCheckbox.
@@ -307,13 +309,14 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     }
   }
 
-  private _emitChangeEvent() {
-    let event = new MatCheckboxChange();
-    event.source = this;
-    event.checked = this.checked;
+  private _emitChangeEvent(event: Event) {
+    const changeEvent = new MatCheckboxChange();
+    changeEvent.source = this;
+    changeEvent.nativeEvent = event;
+    changeEvent.checked = this.checked;
 
     this._controlValueAccessorChangeFn(this.checked);
-    this.change.emit(event);
+    this.change.emit(changeEvent);
   }
 
   /** Function is called whenever the focus changes for the input element. */
@@ -367,7 +370,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
       // Emit our custom change event if the native input emitted one.
       // It is important to only emit it, if the native input triggered one, because
       // we don't want to trigger a change event, when the `checked` variable changes for example.
-      this._emitChangeEvent();
+      this._emitChangeEvent(event);
     } else if (!this.disabled && this._clickAction === 'noop') {
       // Reset native input when clicked with noop. The native checkbox becomes checked after
       // click, reset it to be align with `checked` value of `mat-checkbox`.
