@@ -1,3 +1,5 @@
+import {dispatchFakeEvent} from '@angular/cdk/testing';
+import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -640,7 +642,7 @@ class DisabledTabsTestApp {
    </mat-tab-group>
   `
 })
-class AsyncTabsTestApp {
+class AsyncTabsTestApp implements OnInit {
   private _tabs = [
     { label: 'one', content: 'one' },
     { label: 'two', content: 'two' }

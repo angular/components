@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 
 /**
@@ -9,7 +9,7 @@ import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
   styleUrls: ['table-overview-example.css'],
   templateUrl: 'table-overview-example.html',
 })
-export class TableOverviewExample {
+export class TableOverviewExample implements OnInit {
   displayedColumns = ['id', 'name', 'progress', 'color'];
   dataSource: MatTableDataSource<UserData>;
 
@@ -34,6 +34,9 @@ export class TableOverviewExample {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
     this.dataSource.filter = filterValue;
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }
 

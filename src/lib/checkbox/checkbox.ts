@@ -93,7 +93,7 @@ export const _MatCheckboxMixinBase =
  * disabled. Note that all additional accessibility attributes are taken care of by the component,
  * so there is no need to provide them yourself. However, if you want to omit a label and still
  * have the checkbox be accessible, you may supply an [aria-label] input.
- * See: https://www.google.com/design/spec/components/selection-controls.html
+ * See: https://material.io/design/components/selection-controls.html
  */
 @Component({
   moduleId: module.id,
@@ -110,7 +110,7 @@ export const _MatCheckboxMixinBase =
     '[class.mat-checkbox-label-before]': 'labelPosition == "before"',
   },
   providers: [MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR],
-  inputs: ['disabled', 'disableRipple', 'color', 'tabIndex'],
+  inputs: ['disableRipple', 'color', 'tabIndex'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -214,6 +214,20 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   private _checked: boolean = false;
 
   /**
+   * Whether the checkbox is disabled. This fully overrides the implementation provided by
+   * mixinDisabled, but the mixin is still required because mixinTabIndex requires it.
+   */
+  @Input()
+  get disabled() { return this._disabled; }
+  set disabled(value: any) {
+    if (value != this.disabled) {
+      this._disabled = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+  private _disabled: boolean = false;
+
+  /**
    * Whether the checkbox is indeterminate. This is also known as "mixed" mode and can be used to
    * represent a checkbox with three states, e.g. a checkbox that represents a nested list of
    * checkable items. Note that whenever checkbox is manually clicked, indeterminate is immediately
@@ -267,7 +281,6 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   // Implemented as part of ControlValueAccessor.
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
-    this._changeDetectorRef.markForCheck();
   }
 
   _getAriaChecked(): 'true' | 'false' | 'mixed' {
