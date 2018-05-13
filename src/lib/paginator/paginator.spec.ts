@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed, inject, tick, fakeAsync} from '@angular/core/testing';
 import {MatPaginatorModule} from './index';
-import {MatPaginator} from './paginator';
+import {MatPaginator, PageSizeOption} from './paginator';
 import {Component, ViewChild} from '@angular/core';
 import {MatPaginatorIntl} from './paginator-intl';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -261,7 +261,7 @@ describe('MatPaginator', () => {
     withoutOptionsAppFixture.detectChanges();
 
     expect(withoutOptionsAppFixture.componentInstance.paginator._displayedPageSizeOptions)
-        .toEqual([10]);
+        .toEqual([new PageSizeOption('10', 10)]);
   });
 
   it('should default the page size to the first page size option if not provided', () => {
@@ -272,16 +272,38 @@ describe('MatPaginator', () => {
   });
 
   it('should show a sorted list of page size options including the current page size', () => {
-    expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 100]);
+    expect(paginator._displayedPageSizeOptions).toEqual([
+        new PageSizeOption('5', 5),
+        new PageSizeOption('10', 10),
+        new PageSizeOption('25', 25),
+        new PageSizeOption('100', 100),
+    ]);
 
     component.pageSize = 30;
     fixture.detectChanges();
-    expect(paginator.pageSizeOptions).toEqual([5, 10, 25, 100]);
-    expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 30, 100]);
+    expect(paginator.pageSizeOptions).toEqual([
+        new PageSizeOption('5', 5),
+        new PageSizeOption('10', 10),
+        new PageSizeOption('25', 25),
+        new PageSizeOption('100', 100),
+    ]);
+    expect(paginator._displayedPageSizeOptions).toEqual([
+        new PageSizeOption('5', 5),
+        new PageSizeOption('10', 10),
+        new PageSizeOption('25', 25),
+        new PageSizeOption('30', 30),
+        new PageSizeOption('100', 100),
+    ]);
 
     component.pageSizeOptions = [100, 25, 10, 5];
     fixture.detectChanges();
-    expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 30, 100]);
+    expect(paginator._displayedPageSizeOptions).toEqual([
+        new PageSizeOption('5', 5),
+        new PageSizeOption('10', 10),
+        new PageSizeOption('25', 25),
+        new PageSizeOption('30', 30),
+        new PageSizeOption('100', 100),
+    ]);
   });
 
   it('should be able to change the page size while keeping the first item present', () => {
@@ -326,8 +348,13 @@ describe('MatPaginator', () => {
   });
 
   it('should show a select only if there are multiple options', () => {
-    expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 100]);
-    expect(fixture.nativeElement.querySelector('.mat-select')).not.toBeNull();
+    expect(paginator._displayedPageSizeOptions).toEqual([
+          new PageSizeOption('5', 5),
+          new PageSizeOption('10', 10),
+          new PageSizeOption('25', 25),
+          new PageSizeOption('100', 100),
+      ]);
+      expect(fixture.nativeElement.querySelector('.mat-select')).not.toBeNull();
 
     // Remove options so that the paginator only uses the current page size (10) as an option.
     // Should no longer show the select component since there is only one option.

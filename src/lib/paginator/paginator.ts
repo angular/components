@@ -46,6 +46,20 @@ export class PageEvent {
   length: number;
 }
 
+export class PageSizeOption {
+
+  constructor(displayText: string, value: number) {
+    this.displayText = displayText;
+    this.value = value;
+  }
+
+  /** Text to display for the option. */
+  displayText: string;
+
+  /** Value for the option. */
+  value: number;
+}
+
 // Boilerplate for applying mixins to MatPaginator.
 /** @docs-private */
 export class MatPaginatorBase {}
@@ -101,12 +115,14 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
 
   /** The set of provided page size options to display to the user. */
   @Input()
-  get pageSizeOptions(): number[] { return this._pageSizeOptions; }
-  set pageSizeOptions(value: number[]) {
-    this._pageSizeOptions = (value || []).map(p => coerceNumberProperty(p));
+  get pageSizeOptions(): (number | PageSizeOption)[] { return this._pageSizeOptions; }
+  set pageSizeOptions(value: (number | PageSizeOption)[]) {
+    this._pageSizeOptions = (value || []).map(p => {
+      return p instanceof PageSizeOption ? p : coerceNumberProperty(p);
+    });
     this._updateDisplayedPageSizeOptions();
   }
-  private _pageSizeOptions: number[] = [];
+  private _pageSizeOptions:  (number | PageSizeOption)[] = [];
 
   /** Whether to hide the page size selection UI from the user. */
   @Input()
@@ -129,7 +145,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
   @Output() readonly page: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
 
   /** Displayed set of page size options. Will be sorted and include current page size. */
-  _displayedPageSizeOptions: number[];
+  _displayedPageSizeOptions: PageSizeOption[];
 
   constructor(public _intl: MatPaginatorIntl,
               private _changeDetectorRef: ChangeDetectorRef) {
@@ -228,21 +244,24 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
   private _updateDisplayedPageSizeOptions() {
     if (!this._initialized) { return; }
 
+    this._displayedPageSizeOptions = this.pageSizeOptions.map(p => {
+      return p instanceof PageSizeOption ?
+          p : new PageSizeOption(p.toString(), coerceNumberProperty(p));
+    });
     // If no page size is provided, use the first page size option or the default page size.
     if (!this.pageSize) {
       this._pageSize = this.pageSizeOptions.length != 0 ?
-          this.pageSizeOptions[0] :
+          this._displayedPageSizeOptions[0].value :
           DEFAULT_PAGE_SIZE;
     }
 
-    this._displayedPageSizeOptions = this.pageSizeOptions.slice();
-
-    if (this._displayedPageSizeOptions.indexOf(this.pageSize) === -1) {
-      this._displayedPageSizeOptions.push(this.pageSize);
+    if (this._displayedPageSizeOptions.findIndex(p => p.value === this.pageSize) === -1) {
+      this._displayedPageSizeOptions
+          .push(new PageSizeOption(this.pageSize.toString(), this.pageSize));
     }
 
     // Sort the numbers using a number-specific sort function.
-    this._displayedPageSizeOptions.sort((a, b) => a - b);
+    this._displayedPageSizeOptions.sort((a, b) => a.value - b.value);
     this._changeDetectorRef.markForCheck();
   }
 
