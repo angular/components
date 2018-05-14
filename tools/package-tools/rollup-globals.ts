@@ -12,6 +12,10 @@ const cdkSecondaryEntryPoints = getSubdirectoryNames(join(buildConfig.packagesDi
 /** List of potential secondary entry-points for the material package. */
 const matSecondaryEntryPoints = getSubdirectoryNames(join(buildConfig.packagesDir, 'lib'));
 
+/** List of potential secondary entry-points for the cdk-experimental package. */
+const cdkExperimentalSecondaryEntryPoints =
+    getSubdirectoryNames(join(buildConfig.packagesDir, 'cdk-experimental'));
+
 /** Object with all cdk entry points in the format of Rollup globals. */
 const rollupCdkEntryPoints = cdkSecondaryEntryPoints.reduce((globals: any, entryPoint: string) => {
   globals[`@angular/cdk/${entryPoint}`] = `ng.cdk.${dashCaseToCamelCase(entryPoint)}`;
@@ -23,6 +27,14 @@ const rollupMatEntryPoints = matSecondaryEntryPoints.reduce((globals: any, entry
   globals[`@angular/material/${entryPoint}`] = `ng.material.${dashCaseToCamelCase(entryPoint)}`;
   return globals;
 }, {});
+
+/** Object with all cdk-experimental entry points in the format of Rollup globals. */
+const rollupCdkExperimentalEntryPoints =
+    cdkSecondaryEntryPoints.reduce((globals: any, entryPoint: string) => {
+      globals[`@angular/cdk-experimental/${entryPoint}`] =
+          `ng.cdkExperimental.${dashCaseToCamelCase(entryPoint)}`;
+      return globals;
+    }, {});
 
 /** Map of globals that are used inside of the different packages. */
 export const rollupGlobals = {
@@ -55,6 +67,7 @@ export const rollupGlobals = {
   // Include secondary entry-points of the cdk and material packages
   ...rollupCdkEntryPoints,
   ...rollupMatEntryPoints,
+  ...rollupCdkExperimentalEntryPoints,
 
   'rxjs': 'Rx',
   'rxjs/operators': 'Rx.operators',
