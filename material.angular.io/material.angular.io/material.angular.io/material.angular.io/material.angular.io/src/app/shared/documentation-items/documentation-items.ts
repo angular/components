@@ -112,7 +112,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
           name: 'Menu',
           examples: [
             'menu-overview',
-            'menu-icon',
+            'menu-icons',
             'nested-menu'
           ]
         },
