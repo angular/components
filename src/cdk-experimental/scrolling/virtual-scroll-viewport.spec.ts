@@ -525,7 +525,7 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
     <cdk-virtual-scroll-viewport
         [itemSize]="itemSize" [bufferSize]="bufferSize" [orientation]="orientation"
         [style.height.px]="viewportHeight" [style.width.px]="viewportWidth">
-      <div class="item" 
+      <div class="item"
            *cdkVirtualFor="let item of items; let i = index; trackBy: trackBy; \
                            templateCacheSize: templateCacheSize"
            [style.height.px]="itemSize" [style.width.px]="itemSize">
@@ -571,9 +571,9 @@ class FixedSizeVirtualScroll {
   template: `
     <cdk-virtual-scroll-viewport
         autosize [minBufferPx]="minBufferSize" [addBufferPx]="addBufferSize"
-        [orientation]="orientation" [style.height.px]="viewportHeight" 
+        [orientation]="orientation" [style.height.px]="viewportHeight"
         [style.width.px]="viewportWidth">
-      <div class="item" *cdkVirtualFor="let size of items; let i = index" [style.height.px]="size" 
+      <div class="item" *cdkVirtualFor="let size of items; let i = index" [style.height.px]="size"
            [style.width.px]="size">
         {{i}} - {{size}}
       </div>
