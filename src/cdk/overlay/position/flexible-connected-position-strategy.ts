@@ -22,7 +22,6 @@ import {isElementScrolledOutsideView, isElementClippedByScrolling} from './scrol
 import {coerceCssPixelValue} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 
-
 // TODO: refactor clipping detection into a separate thing (part of scrolling module)
 // TODO: doesn't handle both flexible width and height when it has to scroll along both axis.
 
@@ -119,12 +118,12 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   constructor(
-    private _connectedTo: ElementRef,
+    connectedTo: ElementRef | HTMLElement,
     private _viewportRuler: ViewportRuler,
     private _document: Document,
     // @deletion-target 7.0.0 `_platform` parameter to be made required.
     private _platform?: Platform) {
-    this._origin = this._connectedTo.nativeElement;
+    this.setOrigin(connectedTo);
   }
 
   /** Attaches this position strategy to an overlay. */
@@ -370,8 +369,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    * Sets the origin element, relative to which to position the overlay.
    * @param origin Reference to the new origin element.
    */
-  setOrigin(origin: ElementRef): this {
-    this._origin = origin.nativeElement;
+  setOrigin(origin: ElementRef | HTMLElement): this {
+    this._origin = origin instanceof ElementRef ? origin.nativeElement : origin;
     return this;
   }
 
