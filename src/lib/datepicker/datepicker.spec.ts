@@ -1,11 +1,11 @@
 import {ENTER, ESCAPE, RIGHT_ARROW, UP_ARROW} from '@angular/cdk/keycodes';
 import {Overlay, OverlayContainer, ScrollDispatcher} from '@angular/cdk/overlay';
 import {
+  createKeyboardEvent,
+  dispatchEvent,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
-  createKeyboardEvent,
-  dispatchEvent,
 } from '@angular/cdk/testing';
 import {Component, FactoryProvider, Type, ValueProvider, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed} from '@angular/core/testing';
@@ -23,12 +23,12 @@ import {
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {Subject} from 'rxjs';
 import {MatInputModule} from '../input/index';
 import {MatDatepicker} from './datepicker';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerToggle} from './datepicker-toggle';
 import {MAT_DATEPICKER_SCROLL_STRATEGY, MatDatepickerIntl, MatDatepickerModule} from './index';
-import {Subject} from 'rxjs';
 import {Directionality} from '@angular/cdk/bidi';
 import {BrowserDynamicTestingModule} from '@angular/platform-browser-dynamic/testing';
 
@@ -308,6 +308,7 @@ describe('MatDatepicker', () => {
 
         testComponent.datepicker.open();
         fixture.detectChanges();
+        flush();
 
         let ownedElementId = inputEl.getAttribute('aria-owns');
         expect(ownedElementId).not.toBeNull();
@@ -626,6 +627,7 @@ describe('MatDatepicker', () => {
 
         expect(inputEl.classList).toContain('ng-pristine');
 
+        inputEl.value = '2001-01-01';
         dispatchFakeEvent(inputEl, 'input');
         fixture.detectChanges();
 
@@ -945,6 +947,7 @@ describe('MatDatepicker', () => {
         testComponent.formField.color = 'primary';
         testComponent.datepicker.open();
         fixture.detectChanges();
+        flush();
 
         let contentEl = document.querySelector('.mat-datepicker-content')!;
 
@@ -959,6 +962,7 @@ describe('MatDatepicker', () => {
 
         contentEl = document.querySelector('.mat-datepicker-content')!;
         fixture.detectChanges();
+        flush();
 
         expect(contentEl.classList).toContain('mat-warn');
         expect(contentEl.classList).not.toContain('mat-primary');
@@ -969,6 +973,7 @@ describe('MatDatepicker', () => {
         testComponent.formField.color = 'warn';
         testComponent.datepicker.open();
         fixture.detectChanges();
+        flush();
 
         const contentEl = document.querySelector('.mat-datepicker-content')!;
 
@@ -1128,6 +1133,7 @@ describe('MatDatepicker', () => {
         expect(testComponent.onInput).not.toHaveBeenCalled();
         expect(testComponent.onDateInput).not.toHaveBeenCalled();
 
+        inputEl.value = '2001-01-01';
         dispatchFakeEvent(inputEl, 'input');
         fixture.detectChanges();
 
@@ -1175,6 +1181,22 @@ describe('MatDatepicker', () => {
           expect(testComponent.onDateInput).toHaveBeenCalled();
         })
       );
+
+      it('should not fire the dateInput event if the value has not changed', () => {
+        expect(testComponent.onDateInput).not.toHaveBeenCalled();
+
+        inputEl.value = '12/12/2012';
+        dispatchFakeEvent(inputEl, 'input');
+        fixture.detectChanges();
+
+        expect(testComponent.onDateInput).toHaveBeenCalledTimes(1);
+
+        dispatchFakeEvent(inputEl, 'input');
+        fixture.detectChanges();
+
+        expect(testComponent.onDateInput).toHaveBeenCalledTimes(1);
+      });
+
     });
 
     describe('with ISO 8601 strings as input', () => {
@@ -1452,52 +1474,6 @@ describe('MatDatepicker', () => {
       expect(input.value).toMatch(/0?1\.0?9\.2017/);
       expect(testComponent.datepickerInput.value).toBe(selected);
     }));
-  });
-
-  describe('popup animations', () => {
-    let fixture: ComponentFixture<StandardDatepicker>;
-
-    beforeEach(fakeAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [MatDatepickerModule, MatNativeDateModule, NoopAnimationsModule],
-        declarations: [StandardDatepicker],
-      }).compileComponents();
-
-      fixture = TestBed.createComponent(StandardDatepicker);
-      fixture.detectChanges();
-    }));
-
-    it('should not set the `mat-datepicker-content-above` class when opening downwards',
-      fakeAsync(() => {
-        fixture.componentInstance.datepicker.open();
-        fixture.detectChanges();
-        flush();
-        fixture.detectChanges();
-
-        const content =
-            document.querySelector('.cdk-overlay-pane mat-datepicker-content')! as HTMLElement;
-
-        expect(content.classList).not.toContain('mat-datepicker-content-above');
-      }));
-
-    it('should set the `mat-datepicker-content-above` class when opening upwards', fakeAsync(() => {
-      const input = fixture.debugElement.nativeElement.querySelector('input');
-
-      // Push the input to the bottom of the page to force the calendar to open upwards
-      input.style.position = 'fixed';
-      input.style.bottom = '0';
-
-      fixture.componentInstance.datepicker.open();
-      fixture.detectChanges();
-      flush();
-      fixture.detectChanges();
-
-      const content =
-          document.querySelector('.cdk-overlay-pane mat-datepicker-content')! as HTMLElement;
-
-      expect(content.classList).toContain('mat-datepicker-content-above');
-    }));
-
   });
 
   describe('datepicker with custom header', () => {

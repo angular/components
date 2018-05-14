@@ -10,7 +10,6 @@ import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE, UP_ARROW} from '@angular/cdk/keycodes';
 import {
-  FlexibleConnectedPositionStrategy,
   Overlay,
   OverlayConfig,
   OverlayRef,
@@ -21,9 +20,8 @@ import {ComponentPortal, ComponentType} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
 import {take, filter} from 'rxjs/operators';
 import {
-  AfterContentInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ComponentRef,
   ElementRef,
@@ -33,13 +31,12 @@ import {
   InjectionToken,
   Input,
   NgZone,
-  OnDestroy,
-  OnInit,
   Optional,
   Output,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  OnDestroy,
 } from '@angular/core';
 import {CanColor, DateAdapter, mixinColor, ThemePalette} from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
@@ -56,11 +53,14 @@ let datepickerUid = 0;
 export const MAT_DATEPICKER_SCROLL_STRATEGY =
     new InjectionToken<() => ScrollStrategy>('mat-datepicker-scroll-strategy', {
       providedIn: 'root',
-      factory: () => {
-        const overlay = inject(Overlay);
-        return () => overlay.scrollStrategies.reposition();
-      }
+      factory: MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY,
     });
+
+/** @docs-private */
+export function MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY(): () => ScrollStrategy {
+  const overlay = inject(Overlay);
+  return () => overlay.scrollStrategies.reposition();
+}
 
 // Boilerplate for applying mixins to MatDatepickerContent.
 /** @docs-private */
@@ -85,7 +85,6 @@ export const _MatDatepickerContentMixinBase = mixinColor(MatDatepickerContentBas
     'class': 'mat-datepicker-content',
     '[@transformPanel]': '"enter"',
     '[class.mat-datepicker-content-touch]': 'datepicker.touchUi',
-    '[class.mat-datepicker-content-above]': '_isAbove',
   },
   animations: [
     matDatepickerAnimations.transformPanel,
@@ -97,10 +96,7 @@ export const _MatDatepickerContentMixinBase = mixinColor(MatDatepickerContentBas
   inputs: ['color'],
 })
 export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
-  implements AfterContentInit, CanColor, OnInit, OnDestroy {
-
-  /** Subscription to changes in the overlay's position. */
-  private _positionChange: Subscription|null;
+  implements AfterViewInit, CanColor {
 
   /** Reference to the internal calendar component. */
   @ViewChild(MatCalendar) _calendar: MatCalendar<D>;
@@ -111,51 +107,12 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   /** Whether the datepicker is above or below the input. */
   _isAbove: boolean;
 
-  constructor(
-    elementRef: ElementRef,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _ngZone: NgZone) {
+  constructor(elementRef: ElementRef) {
     super(elementRef);
   }
 
-  ngOnInit() {
-    if (!this.datepicker._popupRef || this._positionChange) {
-      return;
-    }
-
-    const positionStrategy =
-      this.datepicker._popupRef.getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
-
-    this._positionChange = positionStrategy.positionChanges.subscribe(change => {
-      const isAbove = change.connectionPair.overlayY === 'bottom';
-
-      if (isAbove !== this._isAbove) {
-        this._ngZone.run(() => {
-          this._isAbove = isAbove;
-          this._changeDetectorRef.markForCheck();
-        });
-      }
-    });
-  }
-
-  ngAfterContentInit() {
-    this._focusActiveCell();
-  }
-
-  /** Focuses the active cell after the microtask queue is empty. */
-  private _focusActiveCell() {
-    this._ngZone.runOutsideAngular(() => {
-      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
-        this._elementRef.nativeElement.querySelector('.mat-calendar-body-active').focus();
-      });
-    });
-  }
-
-  ngOnDestroy() {
-    if (this._positionChange) {
-      this._positionChange.unsubscribe();
-      this._positionChange = null;
-    }
+  ngAfterViewInit() {
+    this._calendar.focusActiveCell();
   }
 }
 
@@ -484,6 +441,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   private _createPopupPositionStrategy(): PositionStrategy {
     return this._overlay.position()
       .flexibleConnectedTo(this._datepickerInput.getPopupConnectionElementRef())
+      .withTransformOriginOn('.mat-datepicker-content')
       .withFlexibleDimensions(false)
       .withViewportMargin(8)
       .withPush(false)

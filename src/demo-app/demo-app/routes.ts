@@ -29,7 +29,6 @@ import {InputDemo} from '../input/input-demo';
 import {ListDemo} from '../list/list-demo';
 import {LiveAnnouncerDemo} from '../live-announcer/live-announcer-demo';
 import {MenuDemo} from '../menu/menu-demo';
-import {OverlayDemo} from '../overlay/overlay-demo';
 import {PlatformDemo} from '../platform/platform-demo';
 import {PortalDemo} from '../portal/portal-demo';
 import {ProgressBarDemo} from '../progress-bar/progress-bar-demo';
@@ -51,12 +50,12 @@ import {TreeDemo} from '../tree/tree-demo';
 import {TypographyDemo} from '../typography/typography-demo';
 import {VirtualScrollDemo} from '../virtual-scroll/virtual-scroll-demo';
 import {DemoApp, Home} from './demo-app';
-import {TableDemoPage} from '../table/table-demo-page';
-import {TABLE_DEMO_ROUTES} from '../table/routes';
 import {BadgeDemo} from '../badge/badge-demo';
 import {ConnectedOverlayDemo} from '../connected-overlay/connected-overlay-demo';
 import {PaginatorDemo} from '../paginator/paginator-demo';
 
+import {ExamplesPage} from '../examples-page/examples-page';
+import {TableDemo} from '../table/table-demo';
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: DemoApp, children: [
@@ -82,7 +81,6 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'list', component: ListDemo},
     {path: 'live-announcer', component: LiveAnnouncerDemo},
     {path: 'menu', component: MenuDemo},
-    {path: 'overlay', component: OverlayDemo},
     {path: 'paginator', component: PaginatorDemo},
     {path: 'platform', component: PlatformDemo},
     {path: 'portal', component: PortalDemo},
@@ -96,7 +94,7 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'slider', component: SliderDemo},
     {path: 'snack-bar', component: SnackBarDemo},
     {path: 'stepper', component: StepperDemo},
-    {path: 'table', component: TableDemoPage, children: TABLE_DEMO_ROUTES},
+    {path: 'table', component: TableDemo},
     {path: 'tabs', component: TabsDemo, children: TABS_DEMO_ROUTES},
     {path: 'toolbar', component: ToolbarDemo},
     {path: 'tooltip', component: TooltipDemo},
@@ -107,6 +105,7 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'screen-type', component: ScreenTypeDemo},
     {path: 'connected-overlay', component: ConnectedOverlayDemo},
     {path: 'virtual-scroll', component: VirtualScrollDemo},
+    {path: 'examples', component: ExamplesPage},
   ]}
 ];
 

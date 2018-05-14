@@ -1,6 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {MatPaginator, MatSort} from '@angular/material';
 import {merge, Observable, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 
@@ -15,7 +15,7 @@ import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 export class TableHttpExample implements OnInit {
   displayedColumns = ['created', 'state', 'number', 'title'];
   exampleDatabase: ExampleHttpDao | null;
-  dataSource = new MatTableDataSource();
+  data: GithubIssue[] = [];
 
   resultsLength = 0;
   isLoadingResults = true;
@@ -54,7 +54,7 @@ export class TableHttpExample implements OnInit {
           this.isRateLimitReached = true;
           return observableOf([]);
         })
-      ).subscribe(data => this.dataSource.data = data);
+      ).subscribe(data => this.data = data);
   }
 }
 

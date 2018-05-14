@@ -23,10 +23,9 @@ import {
   Input,
   NgZone,
   OnDestroy,
-  OnInit,
   Output,
-  QueryList,
   TemplateRef,
+  QueryList,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -36,7 +35,7 @@ import {matMenuAnimations} from './menu-animations';
 import {MatMenuContent} from './menu-content';
 import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
 import {MatMenuItem} from './menu-item';
-import {MatMenuPanel} from './menu-panel';
+import {MAT_MENU_PANEL, MatMenuPanel} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
 
 
@@ -62,14 +61,18 @@ export interface MatMenuDefaultOptions {
 export const MAT_MENU_DEFAULT_OPTIONS =
     new InjectionToken<MatMenuDefaultOptions>('mat-menu-default-options', {
       providedIn: 'root',
-      factory: () => ({
-        overlapTrigger: true,
-        xPosition: 'after',
-        yPosition: 'below',
-        backdropClass: 'cdk-overlay-transparent-backdrop',
-      })
+      factory: MAT_MENU_DEFAULT_OPTIONS_FACTORY
     });
 
+/** @docs-private */
+export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
+  return {
+    overlapTrigger: true,
+    xPosition: 'after',
+    yPosition: 'below',
+    backdropClass: 'cdk-overlay-transparent-backdrop',
+  };
+}
 /**
  * Start elevation for the menu panel.
  * @docs-private
@@ -84,17 +87,26 @@ const MAT_MENU_BASE_ELEVATION = 2;
   styleUrls: ['menu.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  exportAs: 'matMenu',
   animations: [
     matMenuAnimations.transformMenu,
     matMenuAnimations.fadeInItems
   ],
-  exportAs: 'matMenu'
+  providers: [
+    {provide: MAT_MENU_PANEL, useExisting: MatMenu}
+  ]
 })
-export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestroy {
+export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnDestroy {
   private _keyManager: FocusKeyManager<MatMenuItem>;
   private _xPosition: MenuPositionX = this._defaultOptions.xPosition;
   private _yPosition: MenuPositionY = this._defaultOptions.yPosition;
   private _previousElevation: string;
+
+  /** Menu items inside the current menu. */
+  private _items: MatMenuItem[] = [];
+
+  /** Emits whenever the amount of menu items changes. */
+  private _itemChanges = new Subject<MatMenuItem[]>();
 
   /** Subscription to tab events on the menu panel */
   private _tabSubscription = Subscription.EMPTY;
@@ -106,7 +118,10 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
   _panelAnimationState: 'void' | 'enter' = 'void';
 
   /** Emits whenever an animation on the menu completes. */
-  _animationDone = new Subject<void>();
+  _animationDone = new Subject<AnimationEvent>();
+
+  /** Whether the menu is animating. */
+  _isAnimating: boolean;
 
   /** Parent menu of the current menu panel. */
   parentMenu: MatMenuPanel | undefined;
@@ -125,7 +140,6 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
       throwMatMenuInvalidPositionX();
     }
     this._xPosition = value;
-    this.setPositionClasses();
   }
 
   /** Position of the menu in the Y axis. */
@@ -136,13 +150,16 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
       throwMatMenuInvalidPositionY();
     }
     this._yPosition = value;
-    this.setPositionClasses();
   }
 
   /** @docs-private */
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
 
-  /** List of the items inside of a menu. */
+  /**
+   * List of the items inside of a menu.
+   * @deprecated
+   * @deletion-target 7.0.0
+   */
   @ContentChildren(MatMenuItem) items: QueryList<MatMenuItem>;
 
   /**
@@ -182,7 +199,6 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
       }, {});
 
       this._elementRef.nativeElement.className = '';
-      this.setPositionClasses();
     }
   }
 
@@ -213,12 +229,8 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
     private _ngZone: NgZone,
     @Inject(MAT_MENU_DEFAULT_OPTIONS) private _defaultOptions: MatMenuDefaultOptions) { }
 
-  ngOnInit() {
-    this.setPositionClasses();
-  }
-
   ngAfterContentInit() {
-    this._keyManager = new FocusKeyManager<MatMenuItem>(this.items).withWrap().withTypeAhead();
+    this._keyManager = new FocusKeyManager<MatMenuItem>(this._items).withWrap().withTypeAhead();
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close.emit('tab'));
   }
 
@@ -229,16 +241,10 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
 
   /** Stream that emits whenever the hovered menu item changes. */
   _hovered(): Observable<MatMenuItem> {
-    if (this.items) {
-      return this.items.changes.pipe(
-        startWith(this.items),
-        switchMap(items => merge(...items.map(item => item._hovered)))
-      );
-    }
-
-    return this._ngZone.onStable
-      .asObservable()
-      .pipe(take(1), switchMap(() => this._hovered()));
+    return this._itemChanges.pipe(
+      startWith(this._items),
+      switchMap(items => merge(...items.map(item => item._hovered)))
+    );
   }
 
   /** Handle a keyboard event from the menu, delegating to the appropriate action. */
@@ -293,17 +299,6 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
   }
 
   /**
-   * It's necessary to set position-based classes to ensure the menu panel animation
-   * folds out from the correct direction.
-   */
-  setPositionClasses(posX: MenuPositionX = this.xPosition, posY: MenuPositionY = this.yPosition) {
-    this._classList['mat-menu-before'] = posX === 'before';
-    this._classList['mat-menu-after'] = posX === 'after';
-    this._classList['mat-menu-above'] = posY === 'above';
-    this._classList['mat-menu-below'] = posY === 'below';
-  }
-
-  /**
    * Sets the menu panel elevation.
    * @param depth Number of parent menus that come before the menu.
    */
@@ -322,6 +317,35 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
     }
   }
 
+  /**
+   * Registers a menu item with the menu.
+   * @docs-private
+   */
+  addItem(item: MatMenuItem) {
+    // We register the items through this method, rather than picking them up through
+    // `ContentChildren`, because we need the items to be picked up by their closest
+    // `mat-menu` ancestor. If we used `@ContentChildren(MatMenuItem, {descendants: true})`,
+    // all descendant items will bleed into the top-level menu in the case where the consumer
+    // has `mat-menu` instances nested inside each other.
+    if (this._items.indexOf(item) === -1) {
+      this._items.push(item);
+      this._itemChanges.next(this._items);
+    }
+  }
+
+  /**
+   * Removes an item from the menu.
+   * @docs-private
+   */
+  removeItem(item: MatMenuItem) {
+    const index = this._items.indexOf(item);
+
+    if (this._items.indexOf(item) > -1) {
+      this._items.splice(index, 1);
+      this._itemChanges.next(this._items);
+    }
+  }
+
   /** Starts the enter animation. */
   _startAnimation() {
     // @deletion-target 7.0.0 Combine with _resetAnimation.
@@ -335,7 +359,8 @@ export class MatMenu implements OnInit, AfterContentInit, MatMenuPanel, OnDestro
   }
 
   /** Callback that is invoked when the panel animation completes. */
-  _onAnimationDone() {
-    this._animationDone.next();
+  _onAnimationDone(event: AnimationEvent) {
+    this._animationDone.next(event);
+    this._isAnimating = false;
   }
 }

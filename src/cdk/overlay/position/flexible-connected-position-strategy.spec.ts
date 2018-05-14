@@ -67,8 +67,13 @@ describe('FlexibleConnectedPositionStrategy', () => {
           originY: 'bottom'
         }]);
 
+    // Needs to be in the DOM for IE not to throw an "Unspecified error".
+    document.body.appendChild(origin.nativeElement);
     attachOverlay({positionStrategy});
+
     expect(() => attachOverlay({positionStrategy})).toThrow();
+
+    document.body.removeChild(origin.nativeElement);
   });
 
   it('should not throw when trying to apply after being disposed', () => {
@@ -82,10 +87,14 @@ describe('FlexibleConnectedPositionStrategy', () => {
           originY: 'bottom'
         }]);
 
+    // Needs to be in the DOM for IE not to throw an "Unspecified error".
+    document.body.appendChild(origin.nativeElement);
     attachOverlay({positionStrategy});
     overlayRef.dispose();
 
     expect(() => positionStrategy.apply()).not.toThrow();
+
+    document.body.removeChild(origin.nativeElement);
   });
 
   it('should not throw when trying to re-apply the last position after being disposed', () => {
@@ -99,10 +108,14 @@ describe('FlexibleConnectedPositionStrategy', () => {
           originY: 'bottom'
         }]);
 
+    // Needs to be in the DOM for IE not to throw an "Unspecified error".
+    document.body.appendChild(origin.nativeElement);
     attachOverlay({positionStrategy});
     overlayRef.dispose();
 
     expect(() => positionStrategy.reapplyLastPosition()).not.toThrow();
+
+    document.body.removeChild(origin.nativeElement);
   });
 
   describe('without flexible dimensions and pushing', () => {
@@ -503,6 +516,114 @@ describe('FlexibleConnectedPositionStrategy', () => {
         const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
         expect(Math.floor(overlayRect.bottom)).toBe(Math.floor(originRect.top - 100));
         expect(Math.floor(overlayRect.left)).toBe(Math.floor(originRect.left - 100));
+      });
+
+    });
+
+    describe('with transform origin', () => {
+      it('should set the proper transform-origin when aligning to start/bottom', () => {
+        positionStrategy.withTransformOriginOn('.transform-origin').withPositions([{
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top'
+        }]);
+
+        attachOverlay({positionStrategy});
+
+        const target = overlayRef.overlayElement.querySelector('.transform-origin')! as HTMLElement;
+
+        expect(target.style.transformOrigin).toContain('left top');
+      });
+
+      it('should set the proper transform-origin when aligning to end/bottom', () => {
+        positionStrategy.withTransformOriginOn('.transform-origin').withPositions([{
+          originX: 'end',
+          originY: 'bottom',
+          overlayX: 'end',
+          overlayY: 'top'
+        }]);
+
+        attachOverlay({positionStrategy});
+
+        const target = overlayRef.overlayElement.querySelector('.transform-origin')! as HTMLElement;
+
+        expect(target.style.transformOrigin).toContain('right top');
+      });
+
+      it('should set the proper transform-origin when centering vertically', () => {
+        positionStrategy.withTransformOriginOn('.transform-origin').withPositions([{
+          originX: 'start',
+          originY: 'center',
+          overlayX: 'start',
+          overlayY: 'center'
+        }]);
+
+        attachOverlay({positionStrategy});
+
+        const target = overlayRef.overlayElement.querySelector('.transform-origin')! as HTMLElement;
+
+        expect(target.style.transformOrigin).toContain('left center');
+      });
+
+      it('should set the proper transform-origin when centering horizontally', () => {
+        positionStrategy.withTransformOriginOn('.transform-origin').withPositions([{
+          originX: 'center',
+          originY: 'top',
+          overlayX: 'center',
+          overlayY: 'top'
+        }]);
+
+        attachOverlay({positionStrategy});
+
+        const target = overlayRef.overlayElement.querySelector('.transform-origin')! as HTMLElement;
+
+        expect(target.style.transformOrigin).toContain('center top');
+      });
+
+      it('should set the proper transform-origin when aligning to start/top', () => {
+        positionStrategy.withTransformOriginOn('.transform-origin').withPositions([{
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'bottom'
+        }]);
+
+        attachOverlay({positionStrategy});
+
+        const target = overlayRef.overlayElement.querySelector('.transform-origin')! as HTMLElement;
+
+        expect(target.style.transformOrigin).toContain('left bottom');
+      });
+
+      it('should set the proper transform-origin when aligning to start/bottom in rtl', () => {
+        positionStrategy.withTransformOriginOn('.transform-origin').withPositions([{
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top'
+        }]);
+
+        attachOverlay({positionStrategy, direction: 'rtl'});
+
+        const target = overlayRef.overlayElement.querySelector('.transform-origin')! as HTMLElement;
+
+        expect(target.style.transformOrigin).toContain('right top');
+      });
+
+      it('should set the proper transform-origin when aligning to end/bottom in rtl', () => {
+        positionStrategy.withTransformOriginOn('.transform-origin').withPositions([{
+          originX: 'end',
+          originY: 'bottom',
+          overlayX: 'end',
+          overlayY: 'top'
+        }]);
+
+        attachOverlay({positionStrategy, direction: 'rtl'});
+
+        const target = overlayRef.overlayElement.querySelector('.transform-origin')! as HTMLElement;
+
+        expect(target.style.transformOrigin).toContain('left top');
       });
 
     });
@@ -1604,6 +1725,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     });
 
     afterEach(() => {
+      document.body.removeChild(originElement);
       positionStrategy.dispose();
     });
 
@@ -1676,7 +1798,11 @@ function createOverflowContainerElement() {
 
 
 @Component({
-  template: `<div style="width: ${DEFAULT_WIDTH}px; height: ${DEFAULT_HEIGHT}px;"></div>`
+  template: `
+    <div
+      class="transform-origin"
+      style="width: ${DEFAULT_WIDTH}px; height: ${DEFAULT_HEIGHT}px;"></div>
+  `
 })
 class TestOverlay { }
 

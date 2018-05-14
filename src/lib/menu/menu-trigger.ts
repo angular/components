@@ -19,7 +19,6 @@ import {
   VerticalConnectionPos,
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
-import {filter, take} from 'rxjs/operators';
 import {
   AfterContentInit,
   Directive,
@@ -35,7 +34,8 @@ import {
   Self,
   ViewContainerRef,
 } from '@angular/core';
-import {Subscription, merge, of as observableOf} from 'rxjs';
+import {asapScheduler, merge, of as observableOf, Subscription} from 'rxjs';
+import {delay, filter, take, takeUntil} from 'rxjs/operators';
 import {MatMenu} from './menu-directive';
 import {throwMatMenuMissingError} from './menu-errors';
 import {MatMenuItem} from './menu-item';
@@ -46,11 +46,14 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
 export const MAT_MENU_SCROLL_STRATEGY =
     new InjectionToken<() => ScrollStrategy>('mat-menu-scroll-strategy', {
       providedIn: 'root',
-      factory: () => {
-        const overlay = inject(Overlay);
-        return () => overlay.scrollStrategies.reposition();
-      }
+      factory: MAT_MENU_SCROLL_STRATEGY_FACTORY,
     });
+
+/** @docs-private */
+export function MAT_MENU_SCROLL_STRATEGY_FACTORY(): () => ScrollStrategy {
+  const overlay = inject(Overlay);
+  return () => overlay.scrollStrategies.reposition();
+}
 
 /** Default top padding of the menu panel. */
 export const MENU_PANEL_TOP_PADDING = 8;
@@ -109,6 +112,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * @deprecated Switch to `menuOpened` instead
    * @deletion-target 7.0.0
    */
+  // tslint:disable-next-line:no-output-on-prefix
   @Output() readonly onMenuOpen: EventEmitter<void> = this.menuOpened;
 
   /** Event emitted when the associated menu is closed. */
@@ -119,6 +123,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * @deprecated Switch to `menuClosed` instead
    * @deletion-target 7.0.0
    */
+  // tslint:disable-next-line:no-output-on-prefix
   @Output() readonly onMenuClose: EventEmitter<void> = this.menuClosed;
 
   constructor(private _overlay: Overlay,
@@ -149,15 +154,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       }
     });
 
-    if (this.triggersSubmenu()) {
-      // Subscribe to changes in the hovered item in order to toggle the panel.
-      this._hoverSubscription = this._parentMenu._hovered()
-          .pipe(filter(active => active === this._menuItemInstance && !active.disabled))
-          .subscribe(() => {
-            this._openedByMouse = true;
-            this.openMenu();
-          });
-    }
+    this._handleHover();
   }
 
   ngOnDestroy() {
@@ -195,7 +192,9 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       return;
     }
 
-    this._createOverlay().attach(this._portal);
+    const overlayRef = this._createOverlay();
+    overlayRef.setDirection(this.dir);
+    overlayRef.attach(this._portal);
 
     if (this.menu.lazyContent) {
       this.menu.lazyContent.attach(this.menuData);
@@ -344,7 +343,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       positionStrategy: this._getPosition(),
       hasBackdrop: this.menu.hasBackdrop == null ? !this.triggersSubmenu() : this.menu.hasBackdrop,
       backdropClass: this.menu.backdropClass || 'cdk-overlay-transparent-backdrop',
-      direction: this.dir,
       scrollStrategy: this._scrollStrategy()
     });
   }
@@ -355,12 +353,14 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * correct, even if a fallback position is used for the overlay.
    */
   private _subscribeToPositions(position: FlexibleConnectedPositionStrategy): void {
-    position.positionChanges.subscribe(change => {
-      const posX: MenuPositionX = change.connectionPair.overlayX === 'start' ? 'after' : 'before';
-      const posY: MenuPositionY = change.connectionPair.overlayY === 'top' ? 'below' : 'above';
+    if (this.menu.setPositionClasses) {
+      position.positionChanges.subscribe(change => {
+        const posX: MenuPositionX = change.connectionPair.overlayX === 'start' ? 'after' : 'before';
+        const posY: MenuPositionY = change.connectionPair.overlayY === 'top' ? 'below' : 'above';
 
-      this.menu.setPositionClasses(posX, posY);
-    });
+        this.menu.setPositionClasses!(posX, posY);
+      });
+    }
   }
 
   /**
@@ -392,6 +392,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
     return this._overlay.position()
         .flexibleConnectedTo(this._element)
+        .withTransformOriginOn('.mat-menu-panel')
         .withPositions([
           {originX, originY, overlayX, overlayY, offsetY},
           {originX: originFallbackX, originY, overlayX: overlayFallbackX, overlayY, offsetY},
@@ -465,6 +466,37 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     } else {
       this.toggleMenu();
     }
+  }
+
+  /** Handles the cases where the user hovers over the trigger. */
+  private _handleHover() {
+    // Subscribe to changes in the hovered item in order to toggle the panel.
+    if (!this.triggersSubmenu()) {
+      return;
+    }
+
+    this._hoverSubscription = this._parentMenu._hovered()
+      // Since we might have multiple competing triggers for the same menu (e.g. a sub-menu
+      // with different data and triggers), we have to delay it by a tick to ensure that
+      // it won't be closed immediately after it is opened.
+      .pipe(
+        filter(active => active === this._menuItemInstance && !active.disabled),
+        delay(0, asapScheduler)
+      )
+      .subscribe(() => {
+        this._openedByMouse = true;
+
+        // If the same menu is used between multiple triggers, it might still be animating
+        // while the new trigger tries to re-open it. Wait for the animation to finish
+        // before doing so. Also interrupt if the user moves to another item.
+        if (this.menu instanceof MatMenu && this.menu._isAnimating) {
+          this.menu._animationDone
+            .pipe(take(1), takeUntil(this._parentMenu._hovered()))
+            .subscribe(() => this.openMenu());
+        } else {
+          this.openMenu();
+        }
+      });
   }
 
 }

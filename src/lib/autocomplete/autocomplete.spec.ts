@@ -455,6 +455,20 @@ describe('MatAutocomplete', () => {
       expect(fixture.componentInstance.closedSpy).not.toHaveBeenCalled();
     });
 
+    it('should not be able to open the panel if the autocomplete is disabled', () => {
+      expect(fixture.componentInstance.trigger.panelOpen)
+          .toBe(false, `Expected panel state to start out closed.`);
+
+      fixture.componentInstance.autocompleteDisabled = true;
+      fixture.detectChanges();
+
+      dispatchFakeEvent(input, 'focusin');
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.trigger.panelOpen)
+          .toBe(false, `Expected panel to remain closed.`);
+    });
+
   });
 
   it('should have the correct text direction in RTL', () => {
@@ -468,6 +482,30 @@ describe('MatAutocomplete', () => {
 
     const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
     expect(overlayPane.getAttribute('dir')).toEqual('rtl');
+  });
+
+  it('should update the panel direction if it changes for the trigger', () => {
+    const dirProvider = {value: 'rtl'};
+    const rtlFixture = createComponent(SimpleAutocomplete, [
+      {provide: Directionality, useFactory: () => dirProvider},
+    ]);
+
+    rtlFixture.detectChanges();
+    rtlFixture.componentInstance.trigger.openPanel();
+    rtlFixture.detectChanges();
+
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
+    expect(overlayPane.getAttribute('dir')).toEqual('rtl');
+
+    rtlFixture.componentInstance.trigger.closePanel();
+    rtlFixture.detectChanges();
+
+    dirProvider.value = 'ltr';
+    rtlFixture.componentInstance.trigger.openPanel();
+    rtlFixture.detectChanges();
+
+    overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
+    expect(overlayPane.getAttribute('dir')).toEqual('ltr');
   });
 
   describe('forms integration', () => {
@@ -1276,6 +1314,16 @@ describe('MatAutocomplete', () => {
       expect(document.activeElement).toBe(input, 'Expected focus to be restored to the input.');
     }));
 
+    it('should remove autocomplete-specific aria attributes when autocomplete is disabled', () => {
+      fixture.componentInstance.autocompleteDisabled = true;
+      fixture.detectChanges();
+
+      expect(input.getAttribute('role')).toBeFalsy();
+      expect(input.getAttribute('aria-autocomplete')).toBeFalsy();
+      expect(input.getAttribute('aria-expanded')).toBeFalsy();
+      expect(input.getAttribute('aria-owns')).toBeFalsy();
+    });
+
   });
 
   describe('Fallback positions', () => {
@@ -1935,7 +1983,12 @@ describe('MatAutocomplete', () => {
 @Component({
   template: `
     <mat-form-field [floatLabel]="floatLabel" [style.width.px]="width">
-      <input matInput placeholder="State" [matAutocomplete]="auto" [formControl]="stateCtrl">
+      <input
+        matInput
+        placeholder="State"
+        [matAutocomplete]="auto"
+        [matAutocompleteDisabled]="autocompleteDisabled"
+        [formControl]="stateCtrl">
     </mat-form-field>
 
     <mat-autocomplete class="class-one class-two" #auto="matAutocomplete" [displayWith]="displayFn"
@@ -1953,6 +2006,7 @@ class SimpleAutocomplete implements OnDestroy {
   floatLabel = 'auto';
   width: number;
   disableRipple = false;
+  autocompleteDisabled = false;
   openedSpy = jasmine.createSpy('autocomplete opened spy');
   closedSpy = jasmine.createSpy('autocomplete closed spy');
 
