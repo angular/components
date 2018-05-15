@@ -1,5 +1,5 @@
 import {dispatchMouseEvent} from '@angular/cdk/testing';
-import {Component, DebugElement, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {Component, DebugElement, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
@@ -19,6 +19,7 @@ describe('MatButtonToggle with forms', () => {
       declarations: [
         ButtonToggleGroupWithNgModel,
         ButtonToggleGroupWithFormControl,
+        ButtonToggleGroupMultipleWithFormControl,
       ],
     });
 
@@ -66,6 +67,46 @@ describe('MatButtonToggle with forms', () => {
 
       testComponent.control.registerOnChange(spy);
       testComponent.control.setValue('blue');
+
+      expect(spy).toHaveBeenCalled();
+    });
+  });
+
+  describe('multiple using FormControl', () => {
+    let fixture: ComponentFixture<ButtonToggleGroupMultipleWithFormControl>;
+    let groupDebugElement: DebugElement;
+    let groupInstance: MatButtonToggleGroup;
+    let testComponent: ButtonToggleGroupMultipleWithFormControl;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(ButtonToggleGroupMultipleWithFormControl);
+      fixture.detectChanges();
+
+      testComponent = fixture.debugElement.componentInstance;
+
+      groupDebugElement = fixture.debugElement.query(By.directive(MatButtonToggleGroup));
+      groupInstance = groupDebugElement.injector.get<MatButtonToggleGroup>(MatButtonToggleGroup);
+    }));
+
+    it('should initialize with falsy value', () => {
+      expect(groupInstance.value).toEqual([0, 1, 2]);
+    });
+
+    it('should set the value', () => {
+      testComponent.control.setValue([0, 1]);
+
+      expect(groupInstance.value).toEqual([0, 1]);
+
+      testComponent.control.setValue([3, 5]);
+
+      expect(groupInstance.value).toEqual([3, 5]);
+    });
+
+    it('should register the on change callback', () => {
+      let spy = jasmine.createSpy('onChange callback');
+
+      testComponent.control.registerOnChange(spy);
+      testComponent.control.setValue([0, 1]);
 
       expect(spy).toHaveBeenCalled();
     });
@@ -746,6 +787,32 @@ class ButtonToggleGroupWithNgModel {
 class ButtonTogglesInsideButtonToggleGroupMultiple {
   isGroupDisabled: boolean = false;
   isVertical: boolean = false;
+}
+
+@Component({
+  template: `
+  <mat-button-toggle-group [formControl]="control" multiple>
+    <mat-button-toggle *ngFor="let option of options" [value]="option.value">
+      {{option.label}}
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+  `
+})
+class ButtonToggleGroupMultipleWithFormControl implements OnInit {
+  control = new FormControl([]);
+  options = [
+    {value: 0, label: 'Sunday'},
+    {value: 1, label: 'Monday'},
+    {value: 2, label: 'Tuesday'},
+    {value: 3, label: 'Wednesday'},
+    {value: 4, label: 'Thursday'},
+    {value: 5, label: 'Friday'},
+    {value: 6, label: 'Saturday'},
+  ];
+
+  ngOnInit(): void {
+    this.control.patchValue([0, 1, 2]);
+  }
 }
 
 @Component({

@@ -264,7 +264,11 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase impleme
     }
 
     if (this.multiple && Array.isArray(this._rawValue)) {
-      return !!this._rawValue.find(value => toggle.value != null && value === toggle.value);
+      const correspondingOption = this._rawValue.find(value =>
+        toggle.value != null && value === toggle.value
+      );
+
+      return typeof correspondingOption !== 'undefined';
     }
 
     return toggle.value === this._rawValue;
@@ -303,7 +307,7 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase impleme
       return toggle.value != null && toggle.value === value;
     });
 
-    if (correspondingOption) {
+    if (typeof correspondingOption !== 'undefined') {
       correspondingOption.checked = true;
       this._selectionModel.select(correspondingOption);
     }
