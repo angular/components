@@ -6,6 +6,16 @@ import {buildConfig} from './build-config';
 export const dashCaseToCamelCase =
   (str: string) => str.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
 
+/** Generates rollup entry point mappings for the given package and entry points. */
+function generateRollupEntryPoints(packageName: string, entryPoints: string[]):
+    {[k: string]: string} {
+  return entryPoints.reduce((globals: {[k: string]: string}, entryPoint: string) => {
+    globals[`@angular/${packageName}/${entryPoint}`] =
+        `ng.${dashCaseToCamelCase(packageName)}.${dashCaseToCamelCase(entryPoint)}`;
+    return globals;
+  }, {});
+}
+
 /** List of potential secondary entry-points for the cdk package. */
 const cdkSecondaryEntryPoints = getSubdirectoryNames(join(buildConfig.packagesDir, 'cdk'));
 
@@ -17,24 +27,14 @@ const cdkExperimentalSecondaryEntryPoints =
     getSubdirectoryNames(join(buildConfig.packagesDir, 'cdk-experimental'));
 
 /** Object with all cdk entry points in the format of Rollup globals. */
-const rollupCdkEntryPoints = cdkSecondaryEntryPoints.reduce((globals: any, entryPoint: string) => {
-  globals[`@angular/cdk/${entryPoint}`] = `ng.cdk.${dashCaseToCamelCase(entryPoint)}`;
-  return globals;
-}, {});
+const rollupCdkEntryPoints = generateRollupEntryPoints('cdk', cdkSecondaryEntryPoints);
 
 /** Object with all material entry points in the format of Rollup globals. */
-const rollupMatEntryPoints = matSecondaryEntryPoints.reduce((globals: any, entryPoint: string) => {
-  globals[`@angular/material/${entryPoint}`] = `ng.material.${dashCaseToCamelCase(entryPoint)}`;
-  return globals;
-}, {});
+const rollupMatEntryPoints = generateRollupEntryPoints('material', matSecondaryEntryPoints);
 
 /** Object with all cdk-experimental entry points in the format of Rollup globals. */
 const rollupCdkExperimentalEntryPoints =
-    cdkExperimentalSecondaryEntryPoints.reduce((globals: any, entryPoint: string) => {
-      globals[`@angular/cdk-experimental/${entryPoint}`] =
-          `ng.cdkExperimental.${dashCaseToCamelCase(entryPoint)}`;
-      return globals;
-    }, {});
+    generateRollupEntryPoints('cdk-experimental', cdkExperimentalSecondaryEntryPoints);
 
 /** Map of globals that are used inside of the different packages. */
 export const rollupGlobals = {
