@@ -1,9 +1,11 @@
-import {Component} from '@angular/core';
-import {ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
+import {MutationObserverFactory} from '@angular/cdk/observers';
+import {Component, Input} from '@angular/core';
+import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {A11yModule} from '../index';
 import {LiveAnnouncer} from './live-announcer';
 import {LIVE_ANNOUNCER_ELEMENT_TOKEN} from './live-announcer-token';
+import Spy = jasmine.Spy;
 
 
 describe('LiveAnnouncer', () => {
@@ -111,6 +113,76 @@ describe('LiveAnnouncer', () => {
   });
 });
 
+describe('CdkAriaLive', () => {
+  let mutationCallbacks: Function[] = [];
+  let announcer: LiveAnnouncer;
+  let announcerSpy: Spy;
+  let fixture: ComponentFixture<DivWithCdkAriaLive>;
+
+  const invokeMutationCallbacks = () => mutationCallbacks.forEach(cb => cb());
+
+  beforeEach(fakeAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [A11yModule],
+      declarations: [DivWithCdkAriaLive],
+      providers: [{
+        provide: MutationObserverFactory,
+        useValue: {
+          create: function(callback: Function) {
+            mutationCallbacks.push(callback);
+
+            return {
+              observe: () => {},
+              disconnect: () => {}
+            };
+          }
+        }
+      }]
+    });
+  }));
+
+  beforeEach(fakeAsync(inject([LiveAnnouncer], (la: LiveAnnouncer) => {
+    announcer = la;
+    announcerSpy = spyOn(la, 'announce').and.callThrough();
+    fixture = TestBed.createComponent(DivWithCdkAriaLive);
+    fixture.detectChanges();
+    flush();
+  })));
+
+  afterEach(fakeAsync(() => {
+    // In our tests we always remove the current live element, in
+    // order to avoid having multiple announcer elements in the DOM.
+    announcer.ngOnDestroy();
+  }));
+
+  it('should dynamically update the politeness', fakeAsync(() => {
+    fixture.componentInstance.content = 'New content';
+    fixture.detectChanges();
+    invokeMutationCallbacks();
+    flush();
+
+    expect(announcer.announce).toHaveBeenCalledWith('New content', 'polite');
+
+    announcerSpy.calls.reset();
+    fixture.componentInstance.politeness = 'off';
+    fixture.componentInstance.content = 'Newer content';
+    fixture.detectChanges();
+    invokeMutationCallbacks();
+    flush();
+
+    expect(announcer.announce).not.toHaveBeenCalled();
+
+    announcerSpy.calls.reset();
+    fixture.componentInstance.politeness = 'assertive';
+    fixture.componentInstance.content = 'Newest content';
+    fixture.detectChanges();
+    invokeMutationCallbacks();
+    flush();
+
+    expect(announcer.announce).toHaveBeenCalledWith('Newest content', 'assertive');
+  }));
+});
+
 
 function getLiveElement(): Element {
   return document.body.querySelector('[aria-live]')!;
@@ -123,4 +195,10 @@ class TestApp {
   announceText(message: string) {
     this.live.announce(message);
   }
+}
+
+@Component({template: `<div [cdkAriaLive]="politeness">{{content}}</div>`})
+class DivWithCdkAriaLive {
+  @Input() politeness = 'polite';
+  @Input() content = 'Initial content';
 }
