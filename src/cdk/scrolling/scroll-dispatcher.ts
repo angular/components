@@ -115,11 +115,12 @@ export class ScrollDispatcher implements OnDestroy {
   /**
    * Returns an observable that emits whenever any of the
    * scrollable ancestors of an element are scrolled.
-   * @param elementRef Element whose ancestors to listen for.
+   * @param element Element whose ancestors to listen for.
    * @param auditTimeInMs Time to throttle the scroll events.
    */
-  ancestorScrolled(elementRef: ElementRef, auditTimeInMs?: number): Observable<CdkScrollable|void> {
-    const ancestors = this.getAncestorScrollContainers(elementRef);
+  ancestorScrolled(element: ElementRef | HTMLElement,
+                   auditTimeInMs?: number): Observable<CdkScrollable|void> {
+    const ancestors = this.getAncestorScrollContainers(element);
 
     return this.scrolled(auditTimeInMs).pipe(filter(target => {
       return !target || ancestors.indexOf(target) > -1;
@@ -127,11 +128,11 @@ export class ScrollDispatcher implements OnDestroy {
   }
 
   /** Returns all registered Scrollables that contain the provided element. */
-  getAncestorScrollContainers(elementRef: ElementRef): CdkScrollable[] {
+  getAncestorScrollContainers(element: ElementRef | HTMLElement): CdkScrollable[] {
     const scrollingContainers: CdkScrollable[] = [];
 
     this.scrollContainers.forEach((_subscription: Subscription, scrollable: CdkScrollable) => {
-      if (this._scrollableContainsElement(scrollable, elementRef)) {
+      if (this._scrollableContainsElement(scrollable, element)) {
         scrollingContainers.push(scrollable);
       }
     });
@@ -140,8 +141,9 @@ export class ScrollDispatcher implements OnDestroy {
   }
 
   /** Returns true if the element is contained within the provided Scrollable. */
-  private _scrollableContainsElement(scrollable: CdkScrollable, elementRef: ElementRef): boolean {
-    let element = elementRef.nativeElement;
+  private _scrollableContainsElement(scrollable: CdkScrollable,
+                                     startElement: ElementRef | HTMLElement): boolean {
+    let element = startElement instanceof ElementRef ? startElement.nativeElement : startElement;
     let scrollableElement = scrollable.getElementRef().nativeElement;
 
     // Traverse through the element parents until we reach null, checking if any of the elements
