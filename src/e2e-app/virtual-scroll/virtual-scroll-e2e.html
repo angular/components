@@ -1,9 +1,10 @@
 <section class="demo-virtual-scroll-uniform-size">
   <h3>Uniform size</h3>
   <cdk-virtual-scroll-viewport class="demo-viewport" autosize
-                               style="height:300px; width:300px; border:1px solid black">
+                               style="height:300px; width:300px; box-shadow:0 0 0 1px black">
     <div *cdkVirtualFor="let size of uniformItems; let i = index; let odd = odd" class="demo-item"
-         [style.height.px]="size" [style.background]="odd ? 'cyan' : 'magenta'">
+         [style.height.px]="size" [style.background]="odd ? 'cyan' : 'magenta'"
+         [attr.data-index]="i">
       Uniform Item #{{i}} - ({{size}}px)
     </div>
   </cdk-virtual-scroll-viewport>
@@ -12,9 +13,10 @@
 <section class="demo-virtual-scroll-variable-size">
   <h3>Random size</h3>
   <cdk-virtual-scroll-viewport class="demo-viewport" autosize
-                               style="height:300px; width:300px; border: 1px solid black">
+                               style="height:300px; width:300px; box-shadow:0 0 0 1px black">
     <div *cdkVirtualFor="let size of variableItems; let i = index; let odd = odd" class="demo-item"
-         [style.height.px]="size" [style.background]="odd ? 'cyan' : 'magenta'">
+         [style.height.px]="size" [style.background]="odd ? 'cyan' : 'magenta'"
+         [attr.data-index]="i">
       Variable Item #{{i}} - ({{size}}px)
     </div>
   </cdk-virtual-scroll-viewport>

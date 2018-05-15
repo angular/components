@@ -30,7 +30,7 @@ const rollupMatEntryPoints = matSecondaryEntryPoints.reduce((globals: any, entry
 
 /** Object with all cdk-experimental entry points in the format of Rollup globals. */
 const rollupCdkExperimentalEntryPoints =
-    cdkSecondaryEntryPoints.reduce((globals: any, entryPoint: string) => {
+    cdkExperimentalSecondaryEntryPoints.reduce((globals: any, entryPoint: string) => {
       globals[`@angular/cdk-experimental/${entryPoint}`] =
           `ng.cdkExperimental.${dashCaseToCamelCase(entryPoint)}`;
       return globals;

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 
 
-const itemSizeSample = [100, 25, 200, 50, 50, 100, 250, 75, 100, 50];
+const itemSizeSample = [100, 25, 50, 50, 100, 200, 75, 100, 50, 250];
 
 
 @Component({
