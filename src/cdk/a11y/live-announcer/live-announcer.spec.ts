@@ -5,7 +5,6 @@ import {By} from '@angular/platform-browser';
 import {A11yModule} from '../index';
 import {LiveAnnouncer} from './live-announcer';
 import {LIVE_ANNOUNCER_ELEMENT_TOKEN} from './live-announcer-token';
-import Spy = jasmine.Spy;
 
 
 describe('LiveAnnouncer', () => {
@@ -116,7 +115,7 @@ describe('LiveAnnouncer', () => {
 describe('CdkAriaLive', () => {
   let mutationCallbacks: Function[] = [];
   let announcer: LiveAnnouncer;
-  let announcerSpy: Spy;
+  let announcerSpy: jasmine.Spy;
   let fixture: ComponentFixture<DivWithCdkAriaLive>;
 
   const invokeMutationCallbacks = () => mutationCallbacks.forEach(cb => cb());
@@ -128,7 +127,7 @@ describe('CdkAriaLive', () => {
       providers: [{
         provide: MutationObserverFactory,
         useValue: {
-          create: function(callback: Function) {
+          create: (callback: Function) => {
             mutationCallbacks.push(callback);
 
             return {

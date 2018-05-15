@@ -92,9 +92,11 @@ export class LiveAnnouncer implements OnDestroy {
  * with a wider range of browsers and screen readers.
  */
 @Directive({
-  selector: '[cdkAriaLive]'
+  selector: '[cdkAriaLive]',
+  exportAs: 'cdkAriaLive',
 })
 export class CdkAriaLive implements OnDestroy {
+  /** The aria-live politeness level to use when announcing messages. */
   @Input('cdkAriaLive')
   get politeness(): AriaLivePoliteness { return this._politeness; }
   set politeness(value: AriaLivePoliteness) {
@@ -105,10 +107,12 @@ export class CdkAriaLive implements OnDestroy {
         this._subscription = null;
       }
     } else {
-      this._subscription = this._ngZone.runOutsideAngular(
-          () => this._contentObserver.observe(this._elementRef.nativeElement).subscribe(
-              () => this._liveAnnouncer.announce(
-                  this._elementRef.nativeElement.innerText, this._politeness)));
+      if (!this._subscription) {
+        this._subscription = this._ngZone.runOutsideAngular(
+            () => this._contentObserver.observe(this._elementRef.nativeElement).subscribe(
+                () => this._liveAnnouncer.announce(
+                    this._elementRef.nativeElement.innerText, this._politeness)));
+      }
     }
   }
   private _politeness: AriaLivePoliteness = 'off';
