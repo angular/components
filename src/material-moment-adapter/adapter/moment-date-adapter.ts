@@ -130,7 +130,7 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
       throw Error(`Invalid date "${date}". Date has to be greater than 0.`);
     }
 
-    let result = moment({year, month, date}).locale(this.locale);
+    let result = moment.utc({year, month, date}).locale(this.locale);
 
     // If the result isn't valid, the date must have been out of bounds for this month.
     if (!result.isValid()) {

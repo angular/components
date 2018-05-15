@@ -143,7 +143,7 @@ describe('MomentDateAdapter', () => {
   });
 
   it('should create Moment date', () => {
-    expect(adapter.createDate(2017, JAN, 1).format()).toEqual(moment([2017,  JAN,  1]).format());
+    expect(adapter.createDate(2017, JAN, 1).format()).toEqual(moment.utc([2017,  JAN,  1]).format());
   });
 
   it('should not create Moment date with month over/under-flow', () => {
@@ -162,6 +162,10 @@ describe('MomentDateAdapter', () => {
     expect(adapter.createDate(50, JAN, 1).year()).toBe(50);
     expect(adapter.createDate(99, JAN, 1).year()).toBe(99);
     expect(adapter.createDate(100, JAN, 1).year()).toBe(100);
+  });
+
+  it('should create Moment date in utc format', () => {
+    expect(adapter.createDate(2017, JAN, 5).isUTC()).toBeTruthy();
   });
 
   it("should get today's date", () => {
