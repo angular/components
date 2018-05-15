@@ -1,7 +1,9 @@
 import {browser, by, element, ElementFinder} from 'protractor';
 
+declare var window: any;
 
-fdescribe('cdk-virtual-scroll autosize', () => {
+
+fdescribe('autosize cdk-virtual-scroll', () => {
   let viewport: ElementFinder;
 
   beforeEach(() => {
@@ -11,12 +13,28 @@ fdescribe('cdk-virtual-scroll autosize', () => {
 
   describe('with uniform items', () => {
     it('should scroll down slowly', async () => {
-      await browser.executeScript(scrollViewportTo, viewport, 100);
-    })
+      await browser.executeAsyncScript(smoothScrollViewportTo, viewport, 100);
+    });
   });
 });
 
 
-function scrollViewportTo(viewportEl: any, offset: number) {
+function scrollViewportTo(viewportEl: any, offset: number, done: () => void) {
   viewportEl.scrollTop = offset;
+  window.requestAnimationFrame(() => done());
+}
+
+
+function smoothScrollViewportTo(viewportEl: any, offset: number, done: () => void) {
+  let promise = Promise.resolve();
+  let curOffset = viewportEl.offsetTop;
+  const delta = offset - curOffset;
+  do {
+    curOffset += Math.min(25, Math.max(-25, delta));
+    promise = promise.then(() => new Promise<void>(resolve => {
+      viewportEl.scrollTop = offset;
+      window.requestAnimationFrame(() => resolve());
+    }));
+  } while (curOffset != offset);
+  promise.then(() => done());
 }

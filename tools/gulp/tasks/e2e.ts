@@ -2,7 +2,7 @@ import {task} from 'gulp';
 import {join} from 'path';
 import {ngcBuildTask, copyTask, execNodeTask, serverTask} from '../util/task_helpers';
 import {copySync} from 'fs-extra';
-import {buildConfig, sequenceTask, watchFiles} from 'material2-build-tools';
+import {buildConfig, sequenceTask, triggerLivereload, watchFiles} from 'material2-build-tools';
 
 // There are no type definitions available for these imports.
 const gulpConnect = require('gulp-connect');
@@ -13,6 +13,7 @@ const {outputDir, packagesDir, projectDir} = buildConfig;
 const releasesDir = join(outputDir, 'releases');
 
 const appDir = join(packagesDir, 'e2e-app');
+const e2eTestDir = join(projectDir, 'e2e');
 const outDir = join(outputDir, 'packages', 'e2e-app');
 
 const PROTRACTOR_CONFIG_PATH = join(projectDir, 'test/protractor.conf.js');
@@ -30,6 +31,27 @@ task('e2e', sequenceTask(
   ':serve:e2eapp:stop',
   'screenshots',
 ));
+
+task('e2e:watch', sequenceTask(
+  [':test:protractor:setup', 'serve:e2eapp'],
+  [':test:protractor', 'material:watch', ':e2e:watch'],
+));
+
+task(':e2e:watch', () => {
+  watchFiles([join(appDir, '**/*.+(html|ts|css)'), join(e2eTestDir, '**/*.+(html|ts)')],
+      [':e2e:rerun'], false);
+});
+
+task(':e2e:rerun', sequenceTask(
+  'e2e-app:copy-assets',
+  'e2e-app:build-ts',
+  ':e2e:reload',
+  ':test:protractor'
+));
+
+task(':e2e:reload', () => {
+  return triggerLivereload();
+});
 
 /** Task that builds the e2e-app in AOT mode. */
 task('e2e-app:build', sequenceTask(
