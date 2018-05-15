@@ -10,6 +10,7 @@ $mat-list-avatar-size: 40px;
 
 // Normal list variables
 $mat-list-top-padding: 8px;
+$mat-list-bottom-padding: 8px;
 // height for single-line lists
 $mat-list-base-height: 48px;
 // height for single-line lists with avatars
@@ -198,6 +199,7 @@ $mat-list-item-inset-divider-offset: 72px;
 
 .mat-list, .mat-nav-list, .mat-selection-list {
   padding-top: $mat-list-top-padding;
+  padding-bottom: $mat-list-bottom-padding;
   display: block;
 
   .mat-subheader {
