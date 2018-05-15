@@ -57,7 +57,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
   }
 
   it('should throw when attempting to attach to multiple different overlays', () => {
-    const origin = new ElementRef(document.createElement('div'));
+    const origin = document.createElement('div');
     const positionStrategy = overlay.position()
         .flexibleConnectedTo(origin)
         .withPositions([{
@@ -67,12 +67,16 @@ describe('FlexibleConnectedPositionStrategy', () => {
           originY: 'bottom'
         }]);
 
+    // Needs to be in the DOM for IE not to throw an "Unspecified error".
+    document.body.appendChild(origin);
     attachOverlay({positionStrategy});
     expect(() => attachOverlay({positionStrategy})).toThrow();
+
+    document.body.removeChild(origin);
   });
 
   it('should not throw when trying to apply after being disposed', () => {
-    const origin = new ElementRef(document.createElement('div'));
+    const origin = document.createElement('div');
     const positionStrategy = overlay.position()
         .flexibleConnectedTo(origin)
         .withPositions([{
@@ -82,14 +86,18 @@ describe('FlexibleConnectedPositionStrategy', () => {
           originY: 'bottom'
         }]);
 
+    // Needs to be in the DOM for IE not to throw an "Unspecified error".
+    document.body.appendChild(origin);
     attachOverlay({positionStrategy});
     overlayRef.dispose();
 
     expect(() => positionStrategy.apply()).not.toThrow();
+
+    document.body.removeChild(origin);
   });
 
   it('should not throw when trying to re-apply the last position after being disposed', () => {
-    const origin = new ElementRef(document.createElement('div'));
+    const origin = document.createElement('div');
     const positionStrategy = overlay.position()
         .flexibleConnectedTo(origin)
         .withPositions([{
@@ -99,10 +107,14 @@ describe('FlexibleConnectedPositionStrategy', () => {
           originY: 'bottom'
         }]);
 
+    // Needs to be in the DOM for IE not to throw an "Unspecified error".
+    document.body.appendChild(origin);
     attachOverlay({positionStrategy});
     overlayRef.dispose();
 
     expect(() => positionStrategy.reapplyLastPosition()).not.toThrow();
+
+    document.body.removeChild(origin);
   });
 
   describe('without flexible dimensions and pushing', () => {
@@ -119,7 +131,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
       positionStrategy = overlay.position()
-          .flexibleConnectedTo(new ElementRef(originElement))
+          .flexibleConnectedTo(originElement)
           .withFlexibleDimensions(false)
           .withPush(false);
     });
@@ -863,7 +875,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
       positionStrategy = overlay.position()
-          .flexibleConnectedTo(new ElementRef(originElement))
+          .flexibleConnectedTo(originElement)
           .withFlexibleDimensions(false)
           .withPush();
     });
@@ -992,7 +1004,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     beforeEach(() => {
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
-      positionStrategy = overlay.position().flexibleConnectedTo(new ElementRef(originElement));
+      positionStrategy = overlay.position().flexibleConnectedTo(originElement);
     });
 
     afterEach(() => {
@@ -1411,7 +1423,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
       // Create a strategy with knowledge of the scrollable container
       const strategy = overlay.position()
-        .flexibleConnectedTo(new ElementRef(originElement))
+        .flexibleConnectedTo(originElement)
         .withPush(false)
         .withPositions([{
           originX: 'start',
@@ -1490,7 +1502,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     beforeEach(() => {
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
-      positionStrategy = overlay.position().flexibleConnectedTo(new ElementRef(originElement));
+      positionStrategy = overlay.position().flexibleConnectedTo(originElement);
     });
 
     afterEach(() => {
@@ -1600,7 +1612,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     beforeEach(() => {
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
-      positionStrategy = overlay.position().flexibleConnectedTo(new ElementRef(originElement));
+      positionStrategy = overlay.position().flexibleConnectedTo(originElement);
     });
 
     afterEach(() => {
