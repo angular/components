@@ -143,7 +143,8 @@ describe('MomentDateAdapter', () => {
   });
 
   it('should create Moment date', () => {
-    expect(adapter.createDate(2017, JAN, 1).format()).toEqual(moment.utc([2017,  JAN,  1]).format());
+    expect(adapter.createDate(2017, JAN, 1).format())
+      .toEqual(moment.utc([2017,  JAN,  1]).format());
   });
 
   it('should not create Moment date with month over/under-flow', () => {
