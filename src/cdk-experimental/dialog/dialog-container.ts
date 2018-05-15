@@ -80,9 +80,9 @@ export class CdkDialogContainer extends BasePortalOutlet {
   @HostBinding('attr.aria-label') get _ariaLabel() { return this._config.ariaLabel || null; }
 
   @HostBinding('attr.aria-describedby')
-  get _ariaDescribedBy() { return this._config ? this._config.ariaDescribedBy : null; }
+  get _ariaDescribedBy() { return this._config.ariaDescribedBy; }
 
-  @HostBinding('attr.role') get _role() { return this._config ? this._config.role : null; }
+  @HostBinding('attr.role') get _role() { return this._config.role; }
 
   @HostBinding('attr.tabindex') get _tabindex() { return -1; }
   // tslint:disable:no-host-decorator-in-concrete
@@ -102,14 +102,13 @@ export class CdkDialogContainer extends BasePortalOutlet {
   /** A subject emitting after the dialog exits the view. */
   _afterExit: Subject<void> = new Subject();
 
-  /** The dialog configuration. */
-  _config: DialogConfig;
-
   constructor(
     private _elementRef: ElementRef,
     private _focusTrapFactory: FocusTrapFactory,
     private _changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(DOCUMENT) private _document: any) {
+    @Optional() @Inject(DOCUMENT) private _document: any,
+    /** The dialog configuration. */
+    public _config: DialogConfig) {
     super();
   }
 

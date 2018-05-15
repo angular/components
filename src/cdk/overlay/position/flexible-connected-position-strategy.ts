@@ -22,7 +22,6 @@ import {isElementScrolledOutsideView, isElementClippedByScrolling} from './scrol
 import {coerceCssPixelValue} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 
-
 // TODO: refactor clipping detection into a separate thing (part of scrolling module)
 // TODO: attribute selector to specify the transform-origin inside the overlay content
 // TODO: flexible position + centering doesn't work on IE11 (works on Edge).
