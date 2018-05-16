@@ -132,8 +132,8 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onDataLengthChanged() {
     if (this._viewport) {
-      // TODO(mmalebra): Do something smarter here.
       this._setScrollOffset();
+      this._checkRenderedContentSize();
     }
   }
 
