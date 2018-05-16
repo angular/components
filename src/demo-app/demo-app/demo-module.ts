@@ -104,7 +104,6 @@ import {DEMO_APP_ROUTES} from './routes';
     DrawerDemo,
     ExampleBottomSheet,
     ExpansionDemo,
-    ExpansionDemo,
     FocusOriginDemo,
     FoggyTabContent,
     GesturesDemo,
@@ -140,10 +139,6 @@ import {DEMO_APP_ROUTES} from './routes';
     TooltipDemo,
     TypographyDemo,
     VirtualScrollDemo,
-    ExampleBottomSheet,
-    ExpansionDemo,
-    ConnectedOverlayDemo,
-    DemoOverlay,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
