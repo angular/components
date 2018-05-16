@@ -47,6 +47,8 @@ ts_library(
 
 ts_web_test(
   name = "unit_tests",
+  # TODO(mmalerba): re-enable once ngfactory issue is resolved.
+  tags = ["manual"],
   bootstrap = [
     "//:web_test_bootstrap_scripts",
   ],
