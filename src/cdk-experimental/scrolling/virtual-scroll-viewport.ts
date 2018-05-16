@@ -108,6 +108,8 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
 
   ngOnInit() {
     const viewportEl = this.elementRef.nativeElement;
+    // It's still too early to measure the viewport at this point. Deferring with a promise allows
+    // the Viewport to be rendered with the correct size before we measure.
     Promise.resolve().then(() => {
       this._viewportSize = this.orientation === 'horizontal' ?
           viewportEl.clientWidth : viewportEl.clientHeight;
@@ -157,7 +159,7 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
     // changes.
     this._forOf.dataStream.pipe(takeUntil(this._detachedSubject)).subscribe(data => {
       const len = data.length;
-      if (len != this._dataLength) {
+      if (len !== this._dataLength) {
         this._dataLength = len;
         this._scrollStrategy.onDataLengthChanged();
       }
@@ -197,7 +199,7 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
    * rendered.
    */
   setTotalContentSize(size: number) {
-    if (this._totalContentSize != size) {
+    if (this._totalContentSize !== size) {
       // Re-enter the Angular zone so we can mark for change detection.
       this._ngZone.run(() => {
         this._totalContentSize = size;
