@@ -111,7 +111,7 @@ describe('CdkVirtualScrollViewport', () => {
 
       const items = fixture.elementRef.nativeElement.querySelectorAll('.item');
       expect(items.length).toBe(1, 'Expected 1 item to be rendered');
-      expect(items[0].innerText).toBe('2 - 2', 'Expected item with index 2 to be rendered');
+      expect(items[0].innerText.trim()).toBe('2 - 2', 'Expected item with index 2 to be rendered');
     }));
 
     it('should set content offset to top of content', fakeAsync(() => {
