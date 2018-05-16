@@ -239,7 +239,7 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
     if (this._radios && !isAlreadySelected) {
       this._selected = null;
       this._radios.forEach(radio => {
-        radio.checked = this.value === radio.value;
+        radio.checked = radio._isCheckedFromValue(this.value);
         if (radio.checked) {
           this._selected = radio;
         }
@@ -363,9 +363,9 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
     const newCheckedState = coerceBooleanProperty(value);
     if (this._checked !== newCheckedState) {
       this._checked = newCheckedState;
-      if (newCheckedState && this.radioGroup && this.radioGroup.value !== this.value) {
+      if (newCheckedState && this.radioGroup && this.radioGroup.selected !== this) {
         this.radioGroup.selected = this;
-      } else if (!newCheckedState && this.radioGroup && this.radioGroup.value === this.value) {
+      } else if (!newCheckedState && this.radioGroup && this.radioGroup.selected === this) {
 
         // When unchecking the selected radio button, update the selected radio
         // property on the group.
@@ -388,8 +388,9 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
       this._value = value;
       if (this.radioGroup !== null) {
         if (!this.checked) {
-          // Update checked when the value changed to match the radio group's value
-          this.checked = this.radioGroup.value === value;
+          // Update checked when the value changed to match the radio group's value,
+          // but only, if there is not already another radio with the same value selected
+          this.checked = this._isCheckedFromValue(value);
         }
         if (this.checked) {
           this.radioGroup.selected = this;
@@ -506,7 +507,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   ngOnInit() {
     if (this.radioGroup) {
       // If the radio is inside a radio group, determine if it should be checked
-      this.checked = this.radioGroup.value === this._value;
+      this.checked = this._isCheckedFromValue(this._value);
       // Copy name from parent radio group
       this.name = this.radioGroup.name;
     }
@@ -553,7 +554,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
     // emit its event object to the `change` output.
     event.stopPropagation();
 
-    const groupValueChanged = this.radioGroup && this.value !== this.radioGroup.value;
+    const groupValueChanged = this.radioGroup && this !== this.radioGroup.selected;
     this.checked = true;
     this._emitChangeEvent();
 
@@ -564,6 +565,32 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
         this.radioGroup._emitChangeEvent();
       }
     }
+  }
+
+  /**
+   * Return whether this MatRadioButton should be checked based on the given value
+   *
+   * Returns true if the radioGroup's value fits the given value and no other radio
+   * is selected yet with the same value
+   * @docs-private
+   */
+  _isCheckedFromValue(value: any) {
+    if (this.value !== value) {
+      return false;
+    }
+
+    if (!this.radioGroup && this.value === value) {
+      return true;
+    }
+
+    if (this.radioGroup && this.radioGroup.value === value &&
+      (!this.radioGroup.selected ||
+        this.radioGroup.selected === this ||
+        this.radioGroup.selected.value !== value)) {
+      return true;
+    }
+
+    return false;
   }
 
   /** Function is called whenever the focus changes for the input element. */
@@ -582,5 +609,4 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
       }
     }
   }
-
 }

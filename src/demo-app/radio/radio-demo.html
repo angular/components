@@ -13,6 +13,15 @@
   <mat-radio-button name="group2" color="warn">Warn</mat-radio-button>
 </section>
 
+<h1>Multiple same Values Example</h1>
+<section class="demo-section">
+  <mat-radio-group [value]="'foo'">
+    <mat-radio-button [value]="val" *ngFor="let val of ['foo','bar','baz','foo']">
+      {{val}}
+    </mat-radio-button>
+  </mat-radio-group>
+</section>
+
 <h1>Dynamic Example</h1>
 <section class="demo-section">
   <div>
