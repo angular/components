@@ -133,7 +133,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   onDataLengthChanged() {
     if (this._viewport) {
       this._setScrollOffset();
-      this._updateRenderedContentAfterScroll();
+      this._checkRenderedContentSize();
     }
   }
 
