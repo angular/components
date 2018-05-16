@@ -56,19 +56,15 @@ describe('CdkVirtualScrollViewport', () => {
 
       expect(viewport.getViewportSize()).toBe(testComponent.viewportSize);
     }));
-    
+
     it('should update viewport size', fakeAsync(() => {
-      viewport.elementRef.nativeElement.style['height'] = '300px';
+      testComponent.viewportSize = 300;
       viewport.updateViewportSize();
-      const size = viewport.getViewportSize();
+      expect(viewport.getViewportSize()).toBe(300);
 
-      expect(size).toBe(300);
-
-      viewport.elementRef.nativeElement.style['height'] = '500px';
+      testComponent.viewportSize = 500;
       viewport.updateViewportSize();
-      const newSize = viewport.getViewportSize();
-
-      expect(newSize).toBe(500);
+      expect(viewport.getViewportSize()).toBe(500);
     }));
 
     it('should get the rendered range', fakeAsync(() => {
@@ -503,12 +499,9 @@ describe('CdkVirtualScrollViewport', () => {
       expect(contentWrapper.children.length).toBe(4,
           'should render 4 items to fill 200px space based on 50px estimate from first item');
     }));
-    
+
     // TODO(mmalerba): Add test that it corrects the initial render if it didn't render enough,
     // once it actually does that.
-    expect((viewport._renderedContentTransform as any).changingThisBreaksApplicationSecurity)
-        .toEqual('translateY(NaNpx)');
-  }));
 });
 
 
