@@ -106,14 +106,14 @@ app-component-sidenav {
 }
 
 .docs-component-sidenav-inner-content {
-  display: flex; 
+  display: flex;
   flex-direction: column;
   flex: 1;
 }
 
 .docs-component-sidenav-body-content {
   display: flex;
-  flex: 1;
+  flex: 1 1 auto;
 }
 
 @media (max-width: $small-breakpoint-width) {
