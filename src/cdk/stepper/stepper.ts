@@ -112,6 +112,9 @@ export class CdkStep implements OnChanges {
    */
   @Input('aria-labelledby') ariaLabelledby: string;
 
+  /** Alert message when there's an error. */
+  @Input() alertMessage: string;
+
   /** Whether the user can return to this step once it has been marked as complted. */
   @Input()
   get editable(): boolean { return this._editable; }
