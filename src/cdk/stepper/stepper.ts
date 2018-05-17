@@ -65,6 +65,17 @@ export class StepperSelectionEvent {
   previouslySelectedStep: CdkStep;
 }
 
+/** The state of each step. */
+export type StepState = 'number' | 'edit' | 'done' | 'error';
+
+/** Enum to represent the different states of the steps. */
+export const STEP_STATE = {
+  NUMBER: 'number',
+  EDIT: 'edit',
+  DONE: 'done',
+  ERROR: 'error'
+};
+
 @Component({
   moduleId: module.id,
   selector: 'cdk-step',
@@ -88,6 +99,9 @@ export class CdkStep implements OnChanges {
 
   /** Plain text label of the step. */
   @Input() label: string;
+
+  /** Alert message when there's an error. */
+  @Input() alertMessage: string;
 
   /** Aria label for the tab. */
   @Input('aria-label') ariaLabel: string;
@@ -114,8 +128,15 @@ export class CdkStep implements OnChanges {
   }
   private _optional = false;
 
-  /** Whether step is marked as completed. */
+  /** State of the step. */
   @Input()
+  get state(): StepState | string | null { return this._state; }
+  set state(value: StepState | string | null) {
+    this._state = value;
+  }
+  private _state: StepState | string | null = null;
+
+  /** Whether step is marked as completed. */
   get completed(): boolean {
     return this._customCompleted == null ? this._defaultCompleted() : this._customCompleted;
   }
@@ -126,6 +147,19 @@ export class CdkStep implements OnChanges {
 
   private _defaultCompleted() {
     return this.stepControl ? this.stepControl.valid && this.interacted : this.interacted;
+  }
+
+  /** Whether step has error. */
+  get hasError(): boolean {
+    return this._customError == null ? this._defaultError : this._customError;
+  }
+  set hasError(value: boolean) {
+    this._customError = coerceBooleanProperty(value);
+  }
+  private _customError: boolean | null = null;
+
+  private get _defaultError() {
+    return this.stepControl && this.stepControl.invalid;
   }
 
   constructor(@Inject(forwardRef(() => CdkStepper)) private _stepper: CdkStepper) { }
@@ -141,6 +175,10 @@ export class CdkStep implements OnChanges {
 
     if (this._customCompleted != null) {
       this._customCompleted = false;
+    }
+
+    if (this._customError != null) {
+      this._customError = false;
     }
 
     if (this.stepControl) {
@@ -301,13 +339,25 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   }
 
   /** Returns the type of icon to be displayed. */
-  _getIndicatorType(index: number): 'number' | 'edit' | 'done' {
+  _getIndicatorType(index: number, state: StepState | string | null = null): StepState | string {
     const step = this._steps.toArray()[index];
-    if (!step.completed || this._selectedIndex == index) {
-      return 'number';
+    const isCurrentStep = this._isCurrentStep(index);
+
+    if (step.hasError && !isCurrentStep) {
+      return STEP_STATE.ERROR;
+    } else if (step.completed && !isCurrentStep) {
+      return STEP_STATE.DONE;
+    } else if (step.completed && isCurrentStep) {
+      return state || STEP_STATE.NUMBER;
+    } else if (step.editable && isCurrentStep) {
+      return STEP_STATE.EDIT;
     } else {
-      return step.editable ? 'edit' : 'done';
+      return state || STEP_STATE.NUMBER;
     }
+  }
+
+  private _isCurrentStep(index: number) {
+    return this._selectedIndex === index;
   }
 
   /** Returns the index of the currently-focused step header. */

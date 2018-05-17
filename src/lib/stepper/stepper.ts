@@ -94,14 +94,7 @@ export class MatStepper extends _CdkStepper implements AfterContentInit {
 
   ngAfterContentInit() {
     const icons = this._icons.toArray();
-
-    ['edit', 'done', 'number'].forEach(name => {
-      const override = icons.find(icon => icon.name === name);
-
-      if (override) {
-        this._iconOverrides[name] = override.templateRef;
-      }
-    });
+    icons.forEach(({name, templateRef}) => this._iconOverrides[name] = templateRef);
 
     // Mark the component for change detection whenever the content children query changes
     this._steps.changes.pipe(takeUntil(this._destroyed)).subscribe(() => this._stateChanged());

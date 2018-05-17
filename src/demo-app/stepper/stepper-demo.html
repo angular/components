@@ -3,7 +3,11 @@
 <h3>Linear Vertical Stepper Demo using a single form</h3>
 <form [formGroup]="formGroup">
   <mat-vertical-stepper #linearVerticalStepper="matVerticalStepper" formArrayName="formArray" [linear]="!isNonLinear">
-    <mat-step formGroupName="0" [stepControl]="formArray?.get([0])">
+    <mat-step
+      formGroupName="0"
+      [stepControl]="formArray?.get([0])"
+      alertMessage="Some fields are required"
+    >
       <ng-template matStepLabel>Fill out your name</ng-template>
       <mat-form-field>
         <mat-label>First name</mat-label>
@@ -21,7 +25,12 @@
       </div>
     </mat-step>
 
-    <mat-step formGroupName="1" [stepControl]="formArray?.get([1])" optional>
+    <mat-step
+      formGroupName="1"
+      [stepControl]="formArray?.get([1])"
+      optional
+      alertMessage="The input is invalid"
+    >
       <ng-template matStepLabel>
         <div>Fill out your email address</div>
       </ng-template>
@@ -223,3 +232,64 @@
   </mat-step>
 </mat-horizontal-stepper>
 
+<h3>Stepper with customized state</h3>
+<mat-horizontal-stepper [linear]="true">
+  <mat-step label="Step 1" state="shopping_cart">
+    <p>Go to your shopping cart.</p>
+    <div>
+      <button mat-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+  <mat-step label="Step 2" state="credit_card">
+    <p>Enter your credit card information.</p>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+  <mat-step label="Step 3" state="receipt">
+    <p>Get your receipt.</p>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+  <mat-step label="Step 4" state="print">
+    <p>Print your receipt.</p>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+  <mat-step label="Step 5">
+    <p>You've successfully completed your purchase!</p>
+  </mat-step>
+</mat-horizontal-stepper>
+
+<h3>Stepper with customized state with icon overrides</h3>
+<mat-horizontal-stepper [linear]="true">
+  <mat-step label="Step 1" state="phone">
+    <p>Put down your phones.</p>
+    <div>
+      <button mat-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+  <mat-step label="Step 2" state="chat">
+    <p>Socialize with each other.</p>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+  <mat-step label="Step 3">
+    <p>You're welcome.</p>
+  </mat-step>
+
+  <!-- Icon overrides. -->
+  <ng-template matStepperIcon="phone">
+    <mat-icon>call_end</mat-icon>
+  </ng-template>
+  <ng-template matStepperIcon="chat">
+    <mat-icon>forum</mat-icon>
+  </ng-template>
+</mat-horizontal-stepper>
