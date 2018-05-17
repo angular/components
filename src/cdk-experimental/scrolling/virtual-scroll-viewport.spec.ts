@@ -502,6 +502,7 @@ describe('CdkVirtualScrollViewport', () => {
 
     // TODO(mmalerba): Add test that it corrects the initial render if it didn't render enough,
     // once it actually does that.
+  });
 });
 
 
