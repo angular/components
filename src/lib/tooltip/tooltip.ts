@@ -32,7 +32,6 @@ import {
   Directive,
   ElementRef,
   Inject,
-  inject,
   InjectionToken,
   Input,
   NgZone,
@@ -60,16 +59,19 @@ export function getMatTooltipInvalidPositionError(position: string) {
 
 /** Injection token that determines the scroll handling while a tooltip is visible. */
 export const MAT_TOOLTIP_SCROLL_STRATEGY =
-    new InjectionToken<() => ScrollStrategy>('mat-tooltip-scroll-strategy', {
-      providedIn: 'root',
-      factory: MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY,
-    });
+    new InjectionToken<() => ScrollStrategy>('mat-tooltip-scroll-strategy');
 
 /** @docs-private */
-export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(): () => ScrollStrategy {
-  const overlay = inject(Overlay);
+export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
   return () => overlay.scrollStrategies.reposition({scrollThrottle: SCROLL_THROTTLE_MS});
 }
+
+/** @docs-private */
+export const MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
+  provide: MAT_TOOLTIP_SCROLL_STRATEGY,
+  deps: [Overlay],
+  useFactory: MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY,
+};
 
 /** Default `matTooltip` options that can be overridden. */
 export interface MatTooltipDefaultOptions {
@@ -262,6 +264,7 @@ export class MatTooltip implements OnDestroy {
     const overlayRef = this._createOverlay();
 
     this._detach();
+    overlayRef.setDirection(this._dir ? this._dir.value : 'ltr');
     this._portal = this._portal || new ComponentPortal(TooltipComponent, this._viewContainerRef);
     this._tooltipInstance = overlayRef.attach(this._portal).instance;
     this._tooltipInstance.afterHidden()
@@ -308,20 +311,12 @@ export class MatTooltip implements OnDestroy {
       return this._overlayRef;
     }
 
-    const origin = this._getOrigin();
-    const overlay = this._getOverlayPosition();
-    const direction = this._dir ? this._dir.value : 'ltr';
-
     // Create connected position strategy that listens for scroll events to reposition.
     const strategy = this._overlay.position()
       .flexibleConnectedTo(this._elementRef)
       .withTransformOriginOn('.mat-tooltip')
       .withFlexibleDimensions(false)
-      .withViewportMargin(8)
-      .withPositions([
-        {...origin.main, ...overlay.main},
-        {...origin.fallback, ...overlay.fallback}
-      ]);
+      .withViewportMargin(8);
 
     const scrollableAncestors = this._scrollDispatcher
       .getAncestorScrollContainers(this._elementRef);
@@ -339,11 +334,12 @@ export class MatTooltip implements OnDestroy {
     });
 
     this._overlayRef = this._overlay.create({
-      direction,
       positionStrategy: strategy,
       panelClass: TOOLTIP_PANEL_CLASS,
       scrollStrategy: this._scrollStrategy()
     });
+
+    this._updatePosition();
 
     this._overlayRef.detachments()
       .pipe(takeUntil(this._destroyed))
@@ -368,11 +364,10 @@ export class MatTooltip implements OnDestroy {
     const origin = this._getOrigin();
     const overlay = this._getOverlayPosition();
 
-    position
-      .withPositions([
-        {...origin.main, ...overlay.main},
-        {...origin.fallback, ...overlay.fallback}
-      ]);
+    position.withPositions([
+      {...origin.main, ...overlay.main},
+      {...origin.fallback, ...overlay.fallback}
+    ]);
   }
 
   /**
