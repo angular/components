@@ -14,7 +14,6 @@ describe('material-nav-schematic', () => {
   });
 
   it('should remove the temp directory', () => {
-    console.log('!!!!!!!!!!!!!')
     const tree = runner.runSchematic('update', {}, createTestApp());
     const files = tree.files;
 
