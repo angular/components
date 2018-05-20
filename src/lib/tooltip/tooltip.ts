@@ -7,12 +7,11 @@
  */
 import {AnimationEvent} from '@angular/animations';
 import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 import {
-  ConnectionPositionPair,
   FlexibleConnectedPositionStrategy,
   HorizontalConnectionPos,
   OriginConnectionPosition,
@@ -33,7 +32,6 @@ import {
   Directive,
   ElementRef,
   Inject,
-  inject,
   InjectionToken,
   Input,
   NgZone,
@@ -61,16 +59,19 @@ export function getMatTooltipInvalidPositionError(position: string) {
 
 /** Injection token that determines the scroll handling while a tooltip is visible. */
 export const MAT_TOOLTIP_SCROLL_STRATEGY =
-    new InjectionToken<() => ScrollStrategy>('mat-tooltip-scroll-strategy', {
-      providedIn: 'root',
-      factory: MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY,
-    });
+    new InjectionToken<() => ScrollStrategy>('mat-tooltip-scroll-strategy');
 
 /** @docs-private */
-export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(): () => ScrollStrategy {
-  const overlay = inject(Overlay);
+export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
   return () => overlay.scrollStrategies.reposition({scrollThrottle: SCROLL_THROTTLE_MS});
 }
+
+/** @docs-private */
+export const MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
+  provide: MAT_TOOLTIP_SCROLL_STRATEGY,
+  deps: [Overlay],
+  useFactory: MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY,
+};
 
 /** Default `matTooltip` options that can be overridden. */
 export interface MatTooltipDefaultOptions {
@@ -129,7 +130,7 @@ export class MatTooltip implements OnDestroy {
         this._updatePosition();
 
         if (this._tooltipInstance) {
-          this._tooltipInstance!.show(value, 0);
+          this._tooltipInstance!.show(0);
         }
 
         this._overlayRef.updatePosition();
@@ -263,6 +264,7 @@ export class MatTooltip implements OnDestroy {
     const overlayRef = this._createOverlay();
 
     this._detach();
+    overlayRef.setDirection(this._dir ? this._dir.value : 'ltr');
     this._portal = this._portal || new ComponentPortal(TooltipComponent, this._viewContainerRef);
     this._tooltipInstance = overlayRef.attach(this._portal).instance;
     this._tooltipInstance.afterHidden()
@@ -270,7 +272,7 @@ export class MatTooltip implements OnDestroy {
       .subscribe(() => this._detach());
     this._setTooltipClass(this._tooltipClass);
     this._updateTooltipMessage();
-    this._tooltipInstance!.show(this._position, delay);
+    this._tooltipInstance!.show(delay);
   }
 
   /** Hides the tooltip after the delay in ms, defaults to tooltip-delay-hide or 0ms if no input */
@@ -309,19 +311,12 @@ export class MatTooltip implements OnDestroy {
       return this._overlayRef;
     }
 
-    const origin = this._getOrigin();
-    const overlay = this._getOverlayPosition();
-    const direction = this._dir ? this._dir.value : 'ltr';
-
     // Create connected position strategy that listens for scroll events to reposition.
     const strategy = this._overlay.position()
       .flexibleConnectedTo(this._elementRef)
+      .withTransformOriginOn('.mat-tooltip')
       .withFlexibleDimensions(false)
-      .withViewportMargin(8)
-      .withPositions([
-        {...origin.main, ...overlay.main},
-        {...origin.fallback, ...overlay.fallback}
-      ]);
+      .withViewportMargin(8);
 
     const scrollableAncestors = this._scrollDispatcher
       .getAncestorScrollContainers(this._elementRef);
@@ -334,19 +329,17 @@ export class MatTooltip implements OnDestroy {
           // After position changes occur and the overlay is clipped by
           // a parent scrollable then close the tooltip.
           this._ngZone.run(() => this.hide(0));
-        } else {
-          // Otherwise recalculate the origin based on the new position.
-          this._tooltipInstance._setTransformOrigin(change.connectionPair, direction);
         }
       }
     });
 
     this._overlayRef = this._overlay.create({
-      direction,
       positionStrategy: strategy,
       panelClass: TOOLTIP_PANEL_CLASS,
       scrollStrategy: this._scrollStrategy()
     });
+
+    this._updatePosition();
 
     this._overlayRef.detachments()
       .pipe(takeUntil(this._destroyed))
@@ -371,11 +364,10 @@ export class MatTooltip implements OnDestroy {
     const origin = this._getOrigin();
     const overlay = this._getOverlayPosition();
 
-    position
-      .withPositions([
-        {...origin.main, ...overlay.main},
-        {...origin.fallback, ...overlay.fallback}
-      ]);
+    position.withPositions([
+      {...origin.main, ...overlay.main},
+      {...origin.fallback, ...overlay.fallback}
+    ]);
   }
 
   /**
@@ -531,12 +523,6 @@ export class TooltipComponent {
   /** Whether interactions on the page should close the tooltip */
   private _closeOnInteraction: boolean = false;
 
-  /** The transform origin used in the animation for showing and hiding the tooltip */
-  _transformOrigin: 'top' | 'bottom' | 'left' | 'right' = 'bottom';
-
-  /** Current position of the tooltip. */
-  private _position: TooltipPosition;
-
   /** Subject for notifying that the tooltip has been hidden from the view */
   private readonly _onHide: Subject<any> = new Subject();
 
@@ -549,10 +535,9 @@ export class TooltipComponent {
 
   /**
    * Shows the tooltip with an animation originating from the provided origin
-   * @param position Position of the tooltip.
    * @param delay Amount of milliseconds to the delay showing the tooltip.
    */
-  show(position: TooltipPosition, delay: number): void {
+  show(delay: number): void {
     // Cancel the delayed hide if it is scheduled
     if (this._hideTimeoutId) {
       clearTimeout(this._hideTimeoutId);
@@ -560,7 +545,6 @@ export class TooltipComponent {
 
     // Body interactions should cancel the tooltip if there is a delay in showing.
     this._closeOnInteraction = true;
-    this._position = position;
     this._showTimeoutId = setTimeout(() => {
       this._visibility = 'visible';
 
@@ -597,22 +581,6 @@ export class TooltipComponent {
   /** Whether the tooltip is being displayed. */
   isVisible(): boolean {
     return this._visibility === 'visible';
-  }
-
-  /** Sets the tooltip transform origin according to the position of the tooltip overlay. */
-  _setTransformOrigin(overlayPosition: ConnectionPositionPair, direction: Direction) {
-    const axis = (this._position === 'above' || this._position === 'below') ? 'Y' : 'X';
-    const position = axis == 'X' ? overlayPosition.overlayX : overlayPosition.overlayY;
-
-    if (position === 'top' || position === 'bottom') {
-      this._transformOrigin = position;
-    } else if (position === 'start') {
-      this._transformOrigin = direction === 'ltr' ? 'left' : 'right';
-    } else if (position === 'end') {
-      this._transformOrigin = direction === 'ltr' ? 'right' : 'left';
-    } else {
-      throw getMatTooltipInvalidPositionError(this._position);
-    }
   }
 
   _animationStart() {

@@ -24,7 +24,7 @@ import {ButtonDemo} from '../button/button-demo';
 import {CardDemo} from '../card/card-demo';
 import {CheckboxDemo, MatCheckboxDemoNestedChecklist} from '../checkbox/checkbox-demo';
 import {ChipsDemo} from '../chips/chips-demo';
-import {ConnectedOverlayDemo, DemoOverlay} from '../connected-overlay/connected-overlay-demo';
+import {ConnectedOverlayDemo} from '../connected-overlay/connected-overlay-demo';
 import {CustomHeader, DatepickerDemo} from '../datepicker/datepicker-demo';
 import {DemoMaterialModule} from '../demo-material-module';
 import {ContentElementDialog, DialogDemo, IFrameDialog, JazzDialog} from '../dialog/dialog-demo';
@@ -38,12 +38,6 @@ import {InputDemo} from '../input/input-demo';
 import {ListDemo} from '../list/list-demo';
 import {LiveAnnouncerDemo} from '../live-announcer/live-announcer-demo';
 import {MenuDemo} from '../menu/menu-demo';
-import {
-  KeyboardTrackingPanel,
-  OverlayDemo,
-  RotiniPanel,
-  SpaghettiPanel
-} from '../overlay/overlay-demo';
 import {PlatformDemo} from '../platform/platform-demo';
 import {PortalDemo, ScienceJoke} from '../portal/portal-demo';
 import {ProgressBarDemo} from '../progress-bar/progress-bar-demo';
@@ -101,7 +95,6 @@ import {MaterialExampleModule} from '../example/example-module';
     CustomHeader,
     DatepickerDemo,
     DemoApp,
-    DemoOverlay,
     DialogDemo,
     DrawerDemo,
     ExampleBottomSheet,
@@ -116,12 +109,10 @@ import {MaterialExampleModule} from '../example/example-module';
     IconDemo,
     InputDemo,
     JazzDialog,
-    KeyboardTrackingPanel,
     ListDemo,
     LiveAnnouncerDemo,
     MatCheckboxDemoNestedChecklist,
     MenuDemo,
-    OverlayDemo,
     PaginatorDemo,
     PlatformDemo,
     PortalDemo,
@@ -130,7 +121,6 @@ import {MaterialExampleModule} from '../example/example-module';
     RadioDemo,
     RainyTabContent,
     RippleDemo,
-    RotiniPanel,
     ScienceJoke,
     ScreenTypeDemo,
     SelectDemo,
@@ -138,7 +128,6 @@ import {MaterialExampleModule} from '../example/example-module';
     SlideToggleDemo,
     SliderDemo,
     SnackBarDemo,
-    SpaghettiPanel,
     StepperDemo,
     SunnyTabContent,
     TabsDemo,
@@ -153,14 +142,10 @@ import {MaterialExampleModule} from '../example/example-module';
     ContentElementDialog,
     CustomHeader,
     DemoApp,
-    DemoOverlay,
     ExampleBottomSheet,
     IFrameDialog,
     JazzDialog,
-    KeyboardTrackingPanel,
-    RotiniPanel,
     ScienceJoke,
-    SpaghettiPanel,
   ],
 })
 export class DemoModule {

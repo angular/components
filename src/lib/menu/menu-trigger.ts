@@ -19,14 +19,12 @@ import {
   VerticalConnectionPos,
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
-import {filter, take, delay, takeUntil} from 'rxjs/operators';
 import {
   AfterContentInit,
   Directive,
   ElementRef,
   EventEmitter,
   Inject,
-  inject,
   InjectionToken,
   Input,
   OnDestroy,
@@ -35,7 +33,8 @@ import {
   Self,
   ViewContainerRef,
 } from '@angular/core';
-import {Subscription, merge, of as observableOf, asapScheduler} from 'rxjs';
+import {asapScheduler, merge, of as observableOf, Subscription} from 'rxjs';
+import {delay, filter, take, takeUntil} from 'rxjs/operators';
 import {MatMenu} from './menu-directive';
 import {throwMatMenuMissingError} from './menu-errors';
 import {MatMenuItem} from './menu-item';
@@ -44,16 +43,19 @@ import {MenuPositionX, MenuPositionY} from './menu-positions';
 
 /** Injection token that determines the scroll handling while the menu is open. */
 export const MAT_MENU_SCROLL_STRATEGY =
-    new InjectionToken<() => ScrollStrategy>('mat-menu-scroll-strategy', {
-      providedIn: 'root',
-      factory: MAT_MENU_SCROLL_STRATEGY_FACTORY,
-    });
+    new InjectionToken<() => ScrollStrategy>('mat-menu-scroll-strategy');
 
 /** @docs-private */
-export function MAT_MENU_SCROLL_STRATEGY_FACTORY(): () => ScrollStrategy {
-  const overlay = inject(Overlay);
+export function MAT_MENU_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
   return () => overlay.scrollStrategies.reposition();
 }
+
+/** @docs-private */
+export const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER = {
+  provide: MAT_MENU_SCROLL_STRATEGY,
+  deps: [Overlay],
+  useFactory: MAT_MENU_SCROLL_STRATEGY_FACTORY,
+};
 
 /** Default top padding of the menu panel. */
 export const MENU_PANEL_TOP_PADDING = 8;
@@ -112,6 +114,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * @deprecated Switch to `menuOpened` instead
    * @deletion-target 7.0.0
    */
+  // tslint:disable-next-line:no-output-on-prefix
   @Output() readonly onMenuOpen: EventEmitter<void> = this.menuOpened;
 
   /** Event emitted when the associated menu is closed. */
@@ -122,6 +125,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * @deprecated Switch to `menuClosed` instead
    * @deletion-target 7.0.0
    */
+  // tslint:disable-next-line:no-output-on-prefix
   @Output() readonly onMenuClose: EventEmitter<void> = this.menuClosed;
 
   constructor(private _overlay: Overlay,
@@ -351,12 +355,14 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * correct, even if a fallback position is used for the overlay.
    */
   private _subscribeToPositions(position: FlexibleConnectedPositionStrategy): void {
-    position.positionChanges.subscribe(change => {
-      const posX: MenuPositionX = change.connectionPair.overlayX === 'start' ? 'after' : 'before';
-      const posY: MenuPositionY = change.connectionPair.overlayY === 'top' ? 'below' : 'above';
+    if (this.menu.setPositionClasses) {
+      position.positionChanges.subscribe(change => {
+        const posX: MenuPositionX = change.connectionPair.overlayX === 'start' ? 'after' : 'before';
+        const posY: MenuPositionY = change.connectionPair.overlayY === 'top' ? 'below' : 'above';
 
-      this.menu.setPositionClasses(posX, posY);
-    });
+        this.menu.setPositionClasses!(posX, posY);
+      });
+    }
   }
 
   /**
@@ -388,6 +394,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
     return this._overlay.position()
         .flexibleConnectedTo(this._element)
+        .withTransformOriginOn('.mat-menu-panel')
         .withPositions([
           {originX, originY, overlayX, overlayY, offsetY},
           {originX: originFallbackX, originY, overlayX: overlayFallbackX, overlayY, offsetY},

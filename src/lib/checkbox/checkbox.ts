@@ -39,6 +39,7 @@ import {
   RippleRef,
 } from '@angular/material/core';
 import {MAT_CHECKBOX_CLICK_ACTION, MatCheckboxClickAction} from './checkbox-config';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
 // Increasing integer for generating unique ids for checkbox components.
@@ -93,7 +94,7 @@ export const _MatCheckboxMixinBase =
  * disabled. Note that all additional accessibility attributes are taken care of by the component,
  * so there is no need to provide them yourself. However, if you want to omit a label and still
  * have the checkbox be accessible, you may supply an [aria-label] input.
- * See: https://www.google.com/design/spec/components/selection-controls.html
+ * See: https://material.io/design/components/selection-controls.html
  */
 @Component({
   moduleId: module.id,
@@ -108,9 +109,10 @@ export const _MatCheckboxMixinBase =
     '[class.mat-checkbox-checked]': 'checked',
     '[class.mat-checkbox-disabled]': 'disabled',
     '[class.mat-checkbox-label-before]': 'labelPosition == "before"',
+    '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
   },
   providers: [MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR],
-  inputs: ['disabled', 'disableRipple', 'color', 'tabIndex'],
+  inputs: ['disableRipple', 'color', 'tabIndex'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -184,7 +186,8 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
               private _focusMonitor: FocusMonitor,
               @Attribute('tabindex') tabIndex: string,
               @Optional() @Inject(MAT_CHECKBOX_CLICK_ACTION)
-                  private _clickAction: MatCheckboxClickAction) {
+                  private _clickAction: MatCheckboxClickAction,
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     super(elementRef);
 
     this.tabIndex = parseInt(tabIndex) || 0;
@@ -212,6 +215,20 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     }
   }
   private _checked: boolean = false;
+
+  /**
+   * Whether the checkbox is disabled. This fully overrides the implementation provided by
+   * mixinDisabled, but the mixin is still required because mixinTabIndex requires it.
+   */
+  @Input()
+  get disabled() { return this._disabled; }
+  set disabled(value: any) {
+    if (value != this.disabled) {
+      this._disabled = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+  private _disabled: boolean = false;
 
   /**
    * Whether the checkbox is indeterminate. This is also known as "mixed" mode and can be used to
@@ -267,7 +284,6 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   // Implemented as part of ControlValueAccessor.
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
-    this._changeDetectorRef.markForCheck();
   }
 
   _getAriaChecked(): 'true' | 'false' | 'mixed' {
@@ -309,7 +325,11 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     if (!this._focusRipple && focusOrigin === 'keyboard') {
       this._focusRipple = this.ripple.launch(0, 0, {persistent: true});
     } else if (!focusOrigin) {
-      this._removeFocusRipple();
+      if (this._focusRipple) {
+        this._focusRipple.fadeOut();
+        this._focusRipple = null;
+      }
+
       this._onTouched();
     }
   }
@@ -377,6 +397,11 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
   private _getAnimationClassForCheckStateTransition(
       oldState: TransitionCheckState, newState: TransitionCheckState): string {
+    // Don't transition if animations are disabled.
+    if (this._animationMode === 'NoopAnimations') {
+      return '';
+    }
+
     let animSuffix: string = '';
 
     switch (oldState) {
@@ -406,13 +431,5 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     }
 
     return `mat-checkbox-anim-${animSuffix}`;
-  }
-
-  /** Fades out the focus state ripple. */
-  private _removeFocusRipple(): void {
-    if (this._focusRipple) {
-      this._focusRipple.fadeOut();
-      this._focusRipple = null;
-    }
   }
 }

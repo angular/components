@@ -130,7 +130,14 @@ export class MatSnackBar {
    */
   private _attachSnackBarContainer(overlayRef: OverlayRef,
                                    config: MatSnackBarConfig): MatSnackBarContainer {
-    const containerPortal = new ComponentPortal(MatSnackBarContainer, config.viewContainerRef);
+
+    const userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
+    const injector = new PortalInjector(userInjector || this._injector, new WeakMap([
+      [MatSnackBarConfig, config]
+    ]));
+
+    const containerPortal =
+        new ComponentPortal(MatSnackBarContainer, config.viewContainerRef, injector);
     const containerRef: ComponentRef<MatSnackBarContainer> = overlayRef.attach(containerPortal);
     containerRef.instance.snackBarConfig = config;
     return containerRef.instance;
@@ -142,7 +149,7 @@ export class MatSnackBar {
   private _attach<T>(content: ComponentType<T> | TemplateRef<T>, userConfig?: MatSnackBarConfig):
     MatSnackBarRef<T | EmbeddedViewRef<any>> {
 
-    const config = {...this._defaultConfig, ...userConfig};
+    const config = {...new MatSnackBarConfig(), ...this._defaultConfig, ...userConfig};
     const overlayRef = this._createOverlay(config);
     const container = this._attachSnackBarContainer(overlayRef, config);
     const snackBarRef = new MatSnackBarRef<T | EmbeddedViewRef<any>>(container, overlayRef);
@@ -257,11 +264,10 @@ export class MatSnackBar {
       snackBarRef: MatSnackBarRef<T>): PortalInjector {
 
     const userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
-    const injectionTokens = new WeakMap();
 
-    injectionTokens.set(MatSnackBarRef, snackBarRef);
-    injectionTokens.set(MAT_SNACK_BAR_DATA, config.data);
-
-    return new PortalInjector(userInjector || this._injector, injectionTokens);
+    return new PortalInjector(userInjector || this._injector, new WeakMap<any, any>([
+      [MatSnackBarRef, snackBarRef],
+      [MAT_SNACK_BAR_DATA, config.data]
+    ]));
   }
 }

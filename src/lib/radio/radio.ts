@@ -28,6 +28,7 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
+  Inject,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -42,6 +43,8 @@ import {
   mixinTabIndex,
   RippleRef,
 } from '@angular/material/core';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+
 
 // Increasing integer for generating unique ids for radio components.
 let nextUniqueId = 0;
@@ -324,6 +327,7 @@ export const _MatRadioButtonMixinBase =
     'class': 'mat-radio-button',
     '[class.mat-radio-checked]': 'checked',
     '[class.mat-radio-disabled]': 'disabled',
+    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
     '[attr.id]': 'id',
     // Note: under normal conditions focus shouldn't land on this element, however it may be
     // programmatically set, for example inside of a focus trap, in this case we want to forward
@@ -410,7 +414,11 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
     return this._disabled || (this.radioGroup !== null && this.radioGroup.disabled);
   }
   set disabled(value: boolean) {
-    this._disabled = coerceBooleanProperty(value);
+    const newDisabledState = coerceBooleanProperty(value);
+    if (this._disabled !== newDisabledState) {
+      this._disabled = newDisabledState;
+      this._changeDetector.markForCheck();
+    }
   }
 
   /** Whether the radio button is required. */
@@ -463,7 +471,8 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
               elementRef: ElementRef,
               private _changeDetector: ChangeDetectorRef,
               private _focusMonitor: FocusMonitor,
-              private _radioDispatcher: UniqueSelectionDispatcher) {
+              private _radioDispatcher: UniqueSelectionDispatcher,
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     super(elementRef);
 
     // Assertions. Ideally these should be stripped out by the compiler.
