@@ -30,6 +30,13 @@
       "factory": "./nav/index",
       "schema": "./nav/schema.json",
       "aliases": [ "material-nav" ]
+    },
+    // Creates a address form component
+    "form": {
+      "description": "Create a component with a address form",
+      "factory": "./form/index",
+      "schema": "./form/schema.json",
+      "aliases": []
     }
   }
 }
