@@ -18,6 +18,6 @@ export const docVersions: VersionInfo[] = [
   },
   {
     url: `http://material.angular.io`,
-    title: '6.0.1'
+    title: '6.1.0'
   }
 ];
