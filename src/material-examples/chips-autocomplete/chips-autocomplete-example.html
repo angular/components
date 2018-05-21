@@ -4,7 +4,8 @@
       *ngFor="let fruit of fruits"
       [selectable]="selectable"
       [removable]="removable"
-      (removed)="remove(fruit)">
+      (removed)="remove(fruit)"
+      [aria-label]="fruit + '. Press backspace to delete, press enter to select.'">
       {{fruit}}
       <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
     </mat-chip>
