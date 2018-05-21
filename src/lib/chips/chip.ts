@@ -74,7 +74,10 @@ const CHIP_ATTRIBUTE_NAMES = ['mat-basic-chip'];
  */
 @Directive({
   selector: 'mat-chip-avatar, [matChipAvatar]',
-  host: {'class': 'mat-chip-avatar'}
+  host: {
+    'aria-hidden': 'true',
+    'class': 'mat-chip-avatar'
+  }
 })
 export class MatChipAvatar {}
 
@@ -97,8 +100,8 @@ export class MatChipTrailingIcon {}
   exportAs: 'matChip',
   host: {
     'class': 'mat-chip',
-    '[attr.tabindex]': 'disabled ? null : -1',
-    'role': 'option',
+    'role': 'gridcell',
+    'aria-readonly': 'true',
     '[class.mat-chip-selected]': 'selected',
     '[class.mat-chip-with-avatar]': 'avatar',
     '[class.mat-chip-with-trailing-icon]': 'trailingIcon || removeIcon',
@@ -106,6 +109,9 @@ export class MatChipTrailingIcon {}
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-selected]': 'ariaSelected',
+    '[attr.aria-label]': 'ariaLabel',
+    '[attr.aria-labelledby]': 'ariaLabelledby',
+    '[attr.tabindex]': 'disabled ? null : -1',
     '(click)': '_handleClick($event)',
     '(keydown)': '_handleKeydown($event)',
     '(focus)': 'focus()',
@@ -149,6 +155,17 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
   /** The chip's remove toggler. */
   @ContentChild(forwardRef(() => MatChipRemove)) removeIcon: MatChipRemove;
+
+  /**
+   * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
+   * take precedence so this may be omitted.
+   */
+  @Input('aria-label') ariaLabel: string;
+
+  /**
+   * Users can specify the `aria-labelledby` attribute
+   */
+  @Input('aria-labelledby') ariaLabelledby: string | null = null;
 
   /** Whether the chip is selected. */
   @Input()

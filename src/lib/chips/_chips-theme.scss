@@ -63,7 +63,9 @@ $mat-chip-remove-font-size: 18px;
     line-height: $mat-chip-line-height;
 
     .mat-chip-trailing-icon.mat-icon,
-    .mat-chip-remove.mat-icon {
+    .mat-chip-remove.mat-icon,
+    .mat-chip-trailing-icon .mat-icon,
+    .mat-chip-remove .mat-icon {
       font-size: $mat-chip-remove-font-size;
     }
   }

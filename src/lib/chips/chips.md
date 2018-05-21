@@ -90,5 +90,18 @@ use a neutral background color based on the current theme (light or dark). This 
 `'primary'`, `'accent'`, or `'warn'`.
 
 ### Accessibility
-A chip-list behaves as a `role="listbox"`, with each chip being a `role="option"`. The chip input
-should have a placeholder or be given a meaningful label via `aria-label` or `aria-labelledby`.
+A chip-list behaves as a `role="grid"`, with each chip being a `role="gridcell"`. The chip input
+and chip list should have a placeholder or be given a meaningful label via `aria-label` or
+`aria-labelledby`.
+
+For standalone chips without a chip list, developers are responsible for assigning proper `role`
+for the standalone chips, depending on the usage.
+
+If the chip is deletable, the `aria-label` or `aria-labelledby` should be set correctly so screen
+reader users are aware that the chip is deletable. For example, if a chip is deletable and has no
+other actions, the `aria-label` can be `Remove {{chip content}}`.
+
+If the chip is deletable and has its own actions, the `aria-label` or `aria-labelledby` should be
+set correctly so screen reader users are aware that the chip is deletable and has extra action. For
+example, if the chip is deletable and selectable, the `aria-label` can be
+`{{chip content}}, not selected. Press enter to select, and press backspace to remove`.

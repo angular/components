@@ -18,7 +18,7 @@ import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatInputModule} from '../input/index';
 import {MatChip} from './chip';
-import {MatChipInputEvent} from './chip-input';
+import {MatChipInputEvent, MatChipInput} from './chip-input';
 import {MatChipList, MatChipsModule} from './index';
 
 
@@ -68,15 +68,15 @@ describe('MatChipList', () => {
         expect(instanceChips[2].selected).toBe(true, 'Expected third option to be selected.');
       });
 
-      it('should have role listbox', () => {
-        expect(chipListNativeElement.getAttribute('role')).toBe('listbox');
+      it('should have role grid', () => {
+        expect(chipListNativeElement.getAttribute('role')).toBe('grid');
       });
 
-      it('should not have role when empty', () => {
+      it('should have role grid when empty', () => {
         fixture.componentInstance.foods = [];
         fixture.detectChanges();
 
-        expect(chipListNativeElement.getAttribute('role')).toBeNull('Expect no role attribute');
+        expect(chipListNativeElement.getAttribute('role')).toBe('grid');
       });
     });
 
@@ -900,6 +900,47 @@ describe('MatChipList', () => {
           expect(manager.activeItemIndex).toEqual(chips.length - 1);
         });
 
+        it('should focus the last chip when press LEFT_ARROW', () => {
+          const nativeInput = fixture.nativeElement.querySelector('input');
+          const LEFT_EVENT: KeyboardEvent =
+            createKeyboardEvent('keydown', LEFT_ARROW, nativeInput);
+          const inputInstance = fixture.componentInstance.chipInput;
+
+          // Focus the input
+          nativeInput.focus();
+          expect(manager.activeItemIndex).toBe(-1);
+
+          // Press the LEFT_ARROW key
+          inputInstance._keydown(LEFT_EVENT);
+          fixture.detectChanges();
+
+          // It focuses the last chip
+          expect(manager.activeItemIndex).toEqual(chips.length - 1);
+        });
+      });
+
+      describe('when the last chip has focus', () => {
+        it('should focus on input when press RIGHT_ARROW', () => {
+          const nativeChipElements = chipListNativeElement.querySelectorAll('mat-chip');
+          let lastNativeChip = nativeChipElements[nativeChipElements.length - 1] as HTMLElement;
+
+          let RIGHT_EVENT: KeyboardEvent =
+            createKeyboardEvent('keydown', RIGHT_ARROW, lastNativeChip);
+          let array = chips.toArray();
+          let lastIndex = array.length - 1;
+          let lastItem = array[lastIndex];
+
+          // Focus the last item in the array
+          lastItem.focus();
+          expect(manager.activeItemIndex).toEqual(lastIndex);
+
+          // Press the RIGHT_ARROW key
+          chipListInstance._keydown(RIGHT_EVENT);
+          fixture.detectChanges();
+
+          // It doesn't focus the last chip
+          expect(manager.activeItemIndex).toEqual(-1);
+        });
       });
     });
   });
@@ -1229,6 +1270,7 @@ class InputChipList {
 
   @ViewChild(MatChipList) chipList: MatChipList;
   @ViewChildren(MatChip) chips: QueryList<MatChip>;
+  @ViewChild(MatChipInput) chipInput: MatChipInput;
 }
 
 @Component({
