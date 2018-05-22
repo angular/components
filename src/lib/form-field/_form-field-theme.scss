@@ -86,6 +86,10 @@
 
     .mat-form-field-ripple {
       background-color: $underline-color-warn;
+
+      &.mat-accent {
+        background-color: $underline-color-warn;
+      }
     }
   }
 
