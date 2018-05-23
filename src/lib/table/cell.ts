@@ -71,6 +71,12 @@ export class MatFooterCellDef extends CdkFooterCellDef {
 export class MatColumnDef extends CdkColumnDef {
   /** Unique name for this column. */
   @Input('matColumnDef') name: string;
+
+  /** Whether this column should be sticky positioned on the left of the right */
+  @Input() stickyLeft: boolean;
+
+  /** Whether this column should be sticky positioned on the right of the right */
+  @Input() stickyRight: boolean;
 }
 
 /** Header cell template container that adds the right classes and role. */

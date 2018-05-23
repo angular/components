@@ -7,6 +7,8 @@
  */
 
 import {ContentChild, Directive, ElementRef, Input, TemplateRef} from '@angular/core';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {HasStickyState, mixinHasStickyInput} from './has-sticky-state';
 
 /** Base interface for a cell definition. Captures a column's cell template definition. */
 export interface CellDef {
@@ -40,12 +42,17 @@ export class CdkFooterCellDef implements CellDef {
   constructor(/** @docs-private */ public template: TemplateRef<any>) { }
 }
 
+// Boilerplate for applying mixins to CdkColumnDef.
+/** @docs-private */
+export class CdkColumnDefBase {}
+export const _CdkColumnDefBase = mixinHasStickyInput(CdkColumnDefBase);
+
 /**
  * Column definition for the CDK table.
  * Defines a set of cells available for a table column.
  */
 @Directive({selector: '[cdkColumnDef]'})
-export class CdkColumnDef {
+export class CdkColumnDef extends _CdkColumnDefBase implements HasStickyState {
   /** Unique name for this column. */
   @Input('cdkColumnDef')
   get name(): string { return this._name; }
@@ -58,6 +65,26 @@ export class CdkColumnDef {
     this.cssClassFriendlyName = name.replace(/[^a-z0-9_-]/ig, '-');
   }
   _name: string;
+
+  /** Whether this column should be sticky positioned on the left of the row */
+  @Input('stickyLeft')
+  get stickyLeft(): boolean { return this._stickyLeft; }
+  set stickyLeft(v: boolean) {
+    const prevValue = this._stickyLeft;
+    this._stickyLeft = coerceBooleanProperty(v);
+    this._hasStickyChanged = prevValue !== this._stickyLeft;
+  }
+  _stickyLeft: boolean = false;
+
+  /** Whether this column should be sticky positioned on the right of the right */
+  @Input('stickyRight')
+  get stickyRight(): boolean { return this._stickyRight; }
+  set stickyRight(v: boolean) {
+    const prevValue = this._stickyRight;
+    this._stickyRight = coerceBooleanProperty(v);
+    this._hasStickyChanged = prevValue !== this._stickyRight;
+  }
+  _stickyRight: boolean = false;
 
   /** @docs-private */
   @ContentChild(CdkCellDef) cell: CdkCellDef;

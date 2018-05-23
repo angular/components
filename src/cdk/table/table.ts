@@ -17,6 +17,7 @@ import {
   Directive,
   ElementRef,
   EmbeddedViewRef,
+  InjectionToken,
   Input,
   isDevMode,
   IterableChangeRecord,
@@ -24,7 +25,9 @@ import {
   IterableDiffers,
   OnDestroy,
   OnInit,
+  Optional,
   QueryList,
+  SkipSelf,
   TemplateRef,
   TrackByFunction,
   ViewChild,
@@ -52,6 +55,7 @@ import {
   getTableUnknownDataSourceError
 } from './table-errors';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {StickyStyler} from './sticky-styler';
 
 /** Interface used to provide an outlet for rows to be inserted into. */
 export interface RowOutlet {
@@ -245,6 +249,21 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    */
   private _cachedRenderRowsMap = new Map<T, WeakMap<CdkRowDef<T>, RenderRow<T>[]>>();
 
+  /** Whether the table is applied to a native `<table>`. */
+  private _usesNativeHtmlTable: boolean;
+
+  /**
+   * Utility class that is responsible for applying the appropriate sticky positioning styles to
+   * the table's rows and cells.
+   */
+  private _stickyStyler: StickyStyler;
+
+  /**
+   * CSS class added to any row or cell that has sticky positioning applied. May be overriden by
+   * table subclasses.
+   */
+  protected stickyCssClass: string = 'cdk-sticky';
+
   /**
    * Tracking function that will be used to check the differences in data changes. Used similarly
    * to `ngFor` `trackBy` function. Optimize row operations by identifying a row based on its data
@@ -344,10 +363,14 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     if (!role) {
       this._elementRef.nativeElement.setAttribute('role', 'grid');
     }
+
+    this._usesNativeHtmlTable = this._elementRef.nativeElement.nodeName === 'TABLE';
   }
 
   ngOnInit() {
-    if (this._elementRef.nativeElement.nodeName === 'TABLE') {
+    this._stickyStyler = new StickyStyler(this._usesNativeHtmlTable, this.stickyCssClass);
+
+    if (this._usesNativeHtmlTable) {
       this._applyNativeTableSections();
     }
 
@@ -389,6 +412,8 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     if (this.dataSource && this._rowDefs.length > 0 && !this._renderChangeSubscription) {
       this._observeRenderChanges();
     }
+
+    this._checkStickyStates();
   }
 
   ngOnDestroy() {
@@ -443,6 +468,8 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
       const rowView = <RowViewRef<T>>viewContainer.get(record.currentIndex!);
       rowView.context.$implicit = record.item.data;
     });
+
+    this.updateStickyColumnStyles();
   }
 
   /**
@@ -513,6 +540,88 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   removeFooterRowDef(footerRowDef: CdkFooterRowDef) {
     this._customFooterRowDefs.delete(footerRowDef);
     this._footerRowDefChanged = true;
+  }
+
+  /**
+   * Updates the header sticky styles. First resets all applied styles with respect to the cells
+   * sticking to the top, left, and right. Then, evaluating which cells need to be stuck to the top.
+   * Then, adding sticky left and sticky right according to the column definitions for each cell
+   * in each row. This is automatically called when the header row changes its displayed set of
+   * columns, if its sticky input changes, or when any column definition changes its sticky input.
+   * May be called manually for cases where the cell content changes outside of these events.
+   */
+  updateStickyHeaderRowStyles() {
+    const headerRows = this._getRenderedRows(this._headerRowOutlet);
+    this._stickyStyler.clearStickyPositioningStyles(headerRows, ['top']);
+
+    const stickyStates = this._headerRowDefs.map(def => def.sticky);
+    this._stickyStyler.stickRows(headerRows, stickyStates, 'top');
+
+    // Reset the dirty state of the sticky input change since it has been used.
+    this._headerRowDefs.forEach(def => def.resetStickyChanged());
+  }
+
+  /**
+   * Updates the footer sticky styles. First resets all applied styles with respect to the cells
+   * sticking to the bottom, left, and right. Then, evaluating which cells need to be stuck to the
+   * bottom. Then, adding sticky left and sticky right according to the column definitions for each
+   * cell in each row. This is automatically called when the footer row changes its displayed set of
+   * columns, if its sticky input changes, or when any column definition changes its sticky input.
+   * May be called manually for cases where the cell content changes outside of these events.
+   */
+  updateStickyFooterRowStyles() {
+    const footerRows = this._getRenderedRows(this._footerRowOutlet);
+    this._stickyStyler.clearStickyPositioningStyles(footerRows, ['bottom']);
+
+    const stickyStates = this._footerRowDefs.map(def => def.sticky);
+    this._stickyStyler.stickRows(footerRows, stickyStates, 'bottom');
+    this._stickyStyler.updateStickyFooterContainer(this._elementRef.nativeElement, stickyStates);
+
+    // Reset the dirty state of the sticky input change since it has been used.
+    this._footerRowDefs.forEach(def => def.resetStickyChanged());
+  }
+
+  /**
+   * Updates the column sticky styles. First resets all applied styles with respect to the cells
+   * sticking to the left and right. Then sticky styles are added for the left and right according
+   * to the column definitions for each cell in each row. This is automatically called when
+   * the data source provides a new set of data or when a column definition changes its sticky
+   * input. May be called manually for cases where the cell content changes outside of these events.
+   */
+  updateStickyColumnStyles() {
+    const headerRows = this._getRenderedRows(this._headerRowOutlet);
+    const dataRows = this._getRenderedRows(this._rowOutlet);
+    const footerRows = this._getRenderedRows(this._footerRowOutlet);
+
+    // Clear the left and right positioning for all columns
+    this._stickyStyler.clearStickyPositioningStyles(
+        [...headerRows, ...dataRows, ...footerRows], ['left', 'right']);
+
+    // Update the sticky styles for each header row depending on the def's sticky state
+    headerRows.forEach((headerRow, i) => {
+      this._updateStickyColumnStyles([headerRow], this._headerRowDefs[i]);
+    });
+
+    // Update the sticky styles for each data row depending on its def's sticky state
+    this._rowDefs.forEach(rowDef => {
+      // Collect all the rows rendered with this row definition.
+      const rows: HTMLElement[] = [];
+      for (let i = 0; i < dataRows.length; i++) {
+        if (this._renderRows[i].rowDef === rowDef) {
+          rows.push(dataRows[i]);
+        }
+      }
+
+      this._updateStickyColumnStyles(rows, rowDef);
+    });
+
+    // Update the sticky styles for each footer row depending on the def's sticky state
+    footerRows.forEach((footerRow, i) => {
+      this._updateStickyColumnStyles([footerRow], this._footerRowDefs[i]);
+    });
+
+    // Reset the dirty state of the sticky input change since it has been used.
+    Array.from(this._columnDefsByName.values()).forEach(def => def.resetStickyChanged());
   }
 
   /**
@@ -606,21 +715,24 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   }
 
   /**
-   * Check if the header, data, or footer rows have changed what columns they want to display.
-   * If there is a diff, then re-render that section.
+   * Check if the header, data, or footer rows have changed what columns they want to display or
+   * whether the sticky states have changed for the header or footer. If there is a diff, then
+   * re-render that section.
    */
   private _renderUpdatedColumns() {
-    const defColumnsDiffReducer = (accumulator, def) => accumulator || !!def.getColumnsDiff();
+    const columnsDiffReducer = (acc: boolean, def: BaseRowDef) => acc || !!def.getColumnsDiff();
 
-    if (this._rowDefs.reduce(defColumnsDiffReducer, false)) {
+    // Force re-render data rows if the list of column definitions have changed.
+    if (this._rowDefs.reduce(columnsDiffReducer, false)) {
       this._forceRenderDataRows();
     }
 
-    if (this._headerRowDefs.reduce(defColumnsDiffReducer, false)) {
+    // Force re-render header/footer rows if the list of column definitions have changed..
+    if (this._headerRowDefs.reduce(columnsDiffReducer, false)) {
       this._forceRenderHeaderRows();
     }
 
-    if (this._footerRowDefs.reduce(defColumnsDiffReducer, false)) {
+    if (this._footerRowDefs.reduce(columnsDiffReducer, false)) {
       this._forceRenderFooterRows();
     }
   }
@@ -664,7 +776,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     // Cannot check this.dataSource['connect'] due to potential property renaming, nor can it
     // checked as an instanceof DataSource<T> since the table should allow for data sources
     // that did not explicitly extend DataSource<T>.
-    if ((this.dataSource as DataSource<T>).connect  instanceof Function) {
+    if ((this.dataSource as DataSource<T>).connect instanceof Function) {
       dataStream = (this.dataSource as DataSource<T>).connect(this);
     } else if (this.dataSource instanceof Observable) {
       dataStream = this.dataSource;
@@ -689,14 +801,15 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * in the outlet using the header row definition.
    */
   private _forceRenderHeaderRows() {
-    // Clear the footer row outlet if any content exists.
+    // Clear the header row outlet if any content exists.
     if (this._headerRowOutlet.viewContainer.length > 0) {
       this._headerRowOutlet.viewContainer.clear();
     }
 
     this._headerRowDefs.forEach((def, i) => this._renderRow(this._headerRowOutlet, def, i));
+    this.updateStickyHeaderRowStyles();
+    this.updateStickyColumnStyles();
   }
-
   /**
    * Clears any existing content in the footer row outlet and creates a new embedded view
    * in the outlet using the footer row definition.
@@ -708,6 +821,28 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     }
 
     this._footerRowDefs.forEach((def, i) => this._renderRow(this._footerRowOutlet, def, i));
+    this.updateStickyFooterRowStyles();
+    this.updateStickyColumnStyles();
+  }
+
+  /** Updates the sticky column styles for the rows according to the columns' stick states. */
+  private _updateStickyColumnStyles(rows: HTMLElement[], rowDef: BaseRowDef) {
+    const columnDefs = Array.from(rowDef.columns || []).map(c => this._columnDefsByName.get(c)!);
+    const stickyLeftStates = columnDefs.map(columnDef => columnDef.stickyLeft);
+    const stickyRightStates = columnDefs.map(columnDef => columnDef.stickyRight);
+    this._stickyStyler.updateStickyColumns(rows, stickyLeftStates, stickyRightStates);
+  }
+
+  /** Gets the list of rows that have been rendered in the row outlet. */
+  _getRenderedRows(rowOutlet: RowOutlet) {
+    const renderedRows: HTMLElement[] = [];
+
+    for (let i = 0; i < rowOutlet.viewContainer.length; i++) {
+      const viewRef = (rowOutlet.viewContainer.get(i)! as EmbeddedViewRef<any>);
+      renderedRows.push(viewRef.rootNodes[0]);
+    }
+
+    return renderedRows;
   }
 
   /**
@@ -828,6 +963,30 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     this._dataDiffer.diff([]);
     this._rowOutlet.viewContainer.clear();
     this.renderRows();
+    this.updateStickyColumnStyles();
+  }
+
+  /**
+   * Checks if there has been a change in sticky states since last check and applies the correct
+   * sticky styles. Since checking resets the "dirty" state, this should only be performed once
+   * during a change detection and after the inputs are settled (after content check).
+   */
+  private _checkStickyStates() {
+    const stickyCheckReducer = (acc: boolean, d: CdkHeaderRowDef|CdkFooterRowDef|CdkColumnDef) => {
+      return acc || d.checkStickyChanged();
+    };
+
+    if (this._headerRowDefs.reduce(stickyCheckReducer, false)) {
+      this.updateStickyHeaderRowStyles();
+    }
+
+    if (this._footerRowDefs.reduce(stickyCheckReducer, false)) {
+      this.updateStickyFooterRowStyles();
+    }
+
+    if (Array.from(this._columnDefsByName.values()).reduce(stickyCheckReducer, false)) {
+      this.updateStickyColumnStyles();
+    }
   }
 }
 
