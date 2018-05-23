@@ -59,11 +59,11 @@ describe('CdkVirtualScrollViewport', () => {
 
     it('should update viewport size', fakeAsync(() => {
       testComponent.viewportSize = 300;
-      viewport.updateViewportSize();
+      viewport.checkViewportSize();
       expect(viewport.getViewportSize()).toBe(300);
 
       testComponent.viewportSize = 500;
-      viewport.updateViewportSize();
+      viewport.checkViewportSize();
       expect(viewport.getViewportSize()).toBe(500);
     }));
 
