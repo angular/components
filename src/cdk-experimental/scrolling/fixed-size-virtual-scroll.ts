@@ -77,6 +77,11 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onRenderedOffsetChanged() { /* no-op */ }
 
+  /** Get the offset for the given index. */
+  getOffsetForIndex(index: number) {
+    return index * this._itemSize;
+  }
+
   /** Update the viewport's total content size. */
   private _updateTotalContentSize() {
     if (!this._viewport) {

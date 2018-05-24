@@ -151,6 +151,11 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     }
   }
 
+  /** Get the offset for the given index. */
+  getOffsetForIndex(index: number) {
+    return index * this._averager.getAverageItemSize();
+  }
+
   /**
    * Update the buffer parameters.
    * @param minBufferPx The minimum amount of buffer rendered beyond the viewport (in pixels).

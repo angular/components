@@ -145,6 +145,15 @@ describe('CdkVirtualScrollViewport', () => {
       expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
     }));
 
+    it('should scroll to offset', fakeAsync(() => {
+      finishInit(fixture);
+      viewport.scrollToOffset(testComponent.itemSize * 2);
+      fixture.detectChanges();
+
+      expect(viewport.elementRef.nativeElement.scrollTop).toBe(testComponent.itemSize * 2);
+      expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
+    }));
+
     it('should update viewport as user scrolls down', fakeAsync(() => {
       finishInit(fixture);
 
