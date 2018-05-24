@@ -134,24 +134,19 @@ export class MatMultiYearView<D> implements AfterContentInit {
   _init() {
     this._todayYear = this._dateAdapter.getYear(this._dateAdapter.today());
     let activeYear = this._dateAdapter.getYear(this._activeDate);
-
     // Default Behavior for Offset
-    let activeOffset = activeYear % yearsPerPage;
-
+    let activeOffset = yearsPerPage / 2;
     if (!this._maxDate && this._minDate) {
       activeOffset = 0;
     }
 
     if (this._maxDate) {
       const maxYear = this._dateAdapter.getYear(this._maxDate);
+      const yearOffset = (maxYear - activeYear) + 1;
+      const currentYearOffsetFromEnd = yearOffset % yearsPerPage;
+      const currentYearOffsetFromStart = yearsPerPage - currentYearOffsetFromEnd;
 
-        const yearOffset = (maxYear - activeYear) / yearsPerPage;
-        const currentYearOffsetFromEnd = (yearOffset - Math.floor(yearOffset)) * yearsPerPage;
-        const currentYearOffsetFromStart = yearsPerPage - 1 - currentYearOffsetFromEnd;
-
-        activeOffset = this._minDate
-          ? currentYearOffsetFromStart
-          : (24 % currentYearOffsetFromEnd) - 1;
+      activeOffset = currentYearOffsetFromStart;
     }
 
     this._years = [];
