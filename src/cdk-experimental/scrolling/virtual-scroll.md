@@ -8,12 +8,13 @@ scroll viewport renders each item as needed when the user scrolls it into view. 
 render items inside of the viewport. It also requires that a `VirtualScrollStrategy` be provided.
 The easiest way to provide a strategy is with one of the directives `itemSize` or `autosize`.
 
+<!-- TODO(mmalerba): Add embedded examples once this is available in @angular/cdk -->
 For some example usages, 
 [see the demo app](https://github.com/angular/material2/tree/master/src/demo-app/virtual-scroll).
 
 ### Creating items in the viewport
 `*cdkVirtualFor` should be used instead of `*ngFor` to create items in the
-`<cdk-virtual-scroll-viewport>`. `*cdkVirtualFor` supports most of the same features as `*ngFor`.
+`<cdk-virtual-scroll-viewport>`. `*cdkVirtualFor` supports all of the same features as `*ngFor`.
 The simplest usage just specifies the list of items:
 
 ```html
@@ -53,10 +54,9 @@ portion.
 
 #### View recycling
 In order to improve performance `*cdkVirtualFor` saves the views it creates in a cache when they are
-no longer needed. This way the next time a new view is needed once can be recycled from the cache
+no longer needed. This way the next time a new view is needed one can be recycled from the cache
 rather than being created from scratch. The size of this cache can be adjusted using the
-`templateCacheSize` input. The cache size defaults to `20` and caching can be disabled by setting it
-to `0`.
+`templateCacheSize` input. Caching can be disabled by setting it to `0`.
 
 ```html
 <cdk-virtual-scroll-viewport itemSize="50">
@@ -85,8 +85,7 @@ directive.
 ```
 
 The fixed size strategy also supports setting the buffer size, i.e. the number of items rendered
-beyond the edge of the viewport. This can be adjusted by setting the `bufferSize` input. If not
-specified, the `bufferSize` defaults to `5`.
+beyond the edge of the viewport. This can be adjusted by setting the `bufferSize` input.
 
 ```html
 <cdk-virtual-scroll-viewport itemSize="50" bufferSize="1">
@@ -96,6 +95,10 @@ specified, the `bufferSize` defaults to `5`.
 
 **Note: The fixed size strategy will likely be changed to allow specifying a separate
 `minBufferPx` and `addBufferPx` like the autosize strategy**
+
+The fixed size viewport strategy is less flexible than the autosize strategy because it requires all
+items to be the same size, but the advantage of this constraint is that it allows for better
+performance, since items do not need to be measured as they are rendered. 
 
 ### Scrolling over items with different sizes
 If you're scrolling over a list of items with different sizes, you can use the
@@ -114,7 +117,7 @@ should try to maintain on either side of the viewport. The `addBufferPx` is the 
 (in pixels) that the viewport should try to render out when it detects that the buffer has dropped
 below the `minBufferPx`. It's helpful for this to be a little larger than the `minBufferPx` as it
 allows the viewport to render out new buffer items in batches rather than constantly needing to
-render new ones. By default the `minBufferPx` is `100` and the default `addBufferPx` is `200`.
+render new ones.
 
 ```html
 <cdk-virtual-scroll-viewport autosize minBufferPx="50" addBufferPx="100">

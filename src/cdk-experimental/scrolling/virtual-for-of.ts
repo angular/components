@@ -109,6 +109,10 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
     }
   }
 
+  /**
+   * The size of the cache used to store templates that are not being used for re-use later.
+   * Setting the cache size to `0` will disable caching. The default cache size is 20.
+   */
   @Input() cdkVirtualForTemplateCacheSize: number = 20;
 
   /** Emits whenever the data in the current DataSource changes. */
