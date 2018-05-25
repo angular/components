@@ -6,88 +6,107 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-/** Directions that can be used when setting sticky positioning. */
+/**
+ * Directions that can be used when setting sticky positioning.
+ * @docs-private
+ */
 export type StickyDirection = 'top' | 'bottom' | 'left' | 'right';
 
 /**
- * Z-index values that should be used when sticking row cells to the top and bottom. If one of those
- * cells are also stuck to the left or right, their z-index should be incremented by one. In doing
- * this, it is guaranteed that header cells will always cover footer cells, and both will always
- * cover data rows.
+ * List of all possible directions that can be used for sticky positioning.
+ * @docs-private
  */
-export enum StickyRowZIndex {
-  Top = 100,
-  Bottom = 10,
-  Left = 1,
-  Right = 1,
-}
+export const STICKY_DIRECTIONS: StickyDirection[] = ['top', 'bottom', 'left', 'right'];
 
-/** Applies and removes sticky positioning styles to the `CdkTable` rows and columns cells. */
+/**
+ * Applies and removes sticky positioning styles to the `CdkTable` rows and columns cells.
+ * @docs-private
+ */
 export class StickyStyler {
-  constructor(private usesNativeHtmlTable: boolean, private stickyCellCSS: string) { }
+  /**
+   * @param isNativeHtmlTable Whether the sticky logic should be based on a table
+   *     that uses the native `<table>` element.
+   * @param stickCellCSS The CSS class that will be applied to every row/cell that has
+   *     sticky positioning applied.
+   */
+  constructor(private isNativeHtmlTable: boolean, private stickCellCSS: string) { }
 
   /**
    * Clears the sticky positioning styles from the row and its cells by resetting the `position`
    * style, setting the zIndex to 0, and unsetting each provided sticky direction.
+   * @param rows The list of rows that should be cleared from sticking in the provided directions
+   * @param stickyDirections The directions that should no longer be set as sticky on the rows.
    */
-  clearStickyPositioningStyles(rows: HTMLElement[], stickyDirections: StickyDirection[]) {
-    rows.forEach(row => {
+  clearStickyPositioning(rows: HTMLElement[], stickyDirections: StickyDirection[]) {
+    for (let row of rows) {
       this._removeStickyStyle(row, stickyDirections);
       for (let i = 0; i < row.children.length; i++) {
         const cell = row.children[i] as HTMLElement;
         this._removeStickyStyle(cell, stickyDirections);
       }
-    });
+    }
   }
 
   /**
    * Applies sticky left and right positions to the cells of each row according to the sticky
    * states of the rendered column definitions.
+   * @param rows The rows that should have its set of cells stuck according to the sticky states.
+   * @param stickyStartStates A list of boolean states where each state represents whether the cell
+   *     in this index position should be stuck to the start of the row.
+   * @param stickyEndStates A list of boolean states where each state represents whether the cell
+   *     in this index position should be stuck to the end of the row.
    */
   updateStickyColumns(
-      rows: HTMLElement[], stickyLeftStates: boolean[], stickyRightStates: boolean[]) {
+      rows: HTMLElement[], stickyStartStates: boolean[], stickyEndStates: boolean[]) {
     const hasStickyColumns =
-        stickyLeftStates.some(state => state) || stickyRightStates.some(state => state);
+        stickyStartStates.some(state => state) || stickyEndStates.some(state => state);
     if (!rows.length || !hasStickyColumns) {
       return;
     }
 
+    const numCells = rows[0].children.length;
     const cellWidths: number[] = this._getCellWidths(rows[0]);
-    const leftPositions = this._getStickyLeftColumnPositions(cellWidths, stickyLeftStates);
-    const rightPositions = this._getStickyRightColumnPositions(cellWidths, stickyRightStates);
+    const startPositions = this._getStickyStartColumnPositions(cellWidths, stickyStartStates);
+    const endPositions = this._getStickyEndColumnPositions(cellWidths, stickyEndStates);
 
-    rows.forEach(row => {
-      for (let i = 0; i < row.children.length; i++) {
+    for (let row of rows) {
+      for (let i = 0; i < numCells; i++) {
         const cell = row.children[i] as HTMLElement;
-        if (stickyLeftStates[i]) {
-          this._addStickyStyle(cell, 'left', leftPositions[i]);
+        if (stickyStartStates[i]) {
+          this._addStickyStyle(cell, 'left', startPositions[i]);
         }
 
-        if (stickyRightStates[i]) {
-          this._addStickyStyle(cell, 'right', rightPositions[i]);
+        if (stickyEndStates[i]) {
+          this._addStickyStyle(cell, 'right', endPositions[i]);
         }
       }
-    });
+    }
   }
 
   /**
    * Applies sticky positioning to the row's cells if using the native table layout, and to the
    * row itself otherwise.
+   * @param rowsToStick The list of rows that should be stuck according to their corresponding
+   *     sticky state and to the provided top or bottom position.
+   * @param stickyStates A list of boolean states where each state represents whether the row
+   *     should be stuck in the particular top or bottom position.
+   * @param position The position direction in which the row should be stuck if that row should be
+   *     sticky.
+   *
    */
-  stickRows(rows: HTMLElement[], stickyStates: boolean[], position: 'top' | 'bottom') {
-    // Bottom-positions rows should stick in reverse order
-    // (e.g. last stuck item will be bottom: 0px)
-    if (position === 'bottom') {
-      rows = rows.reverse();
-    }
+  stickRows(rowsToStick: HTMLElement[], stickyStates: boolean[], position: 'top' | 'bottom') {
+    // If positioning the rows to the bottom, reverse their order when evaluating the sticky
+    // position such that the last row stuck will be "bottom: 0px" and so on.
+    const rows = position === 'bottom' ? rowsToStick.reverse() : rowsToStick;
 
     let stickyHeight = 0;
-    rows.forEach((row, i) => {
-      if (!stickyStates[i]) {
-        return;
+    for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+      if (!stickyStates[rowIndex]) {
+        continue;
       }
 
-      if (this.usesNativeHtmlTable) {
+      const row = rows[rowIndex];
+      if (this.isNativeHtmlTable) {
         for (let j = 0; j < row.children.length; j++) {
           const cell = row.children[j] as HTMLElement;
           this._addStickyStyle(cell, position, stickyHeight);
@@ -99,7 +118,7 @@ export class StickyStyler {
       }
 
       stickyHeight += row.getBoundingClientRect().height;
-    });
+    }
   }
 
   /**
@@ -109,7 +128,7 @@ export class StickyStyler {
    * the tfoot element.
    */
   updateStickyFooterContainer(tableElement: Element, stickyStates: boolean[]) {
-    if (!this.usesNativeHtmlTable) {
+    if (!this.isNativeHtmlTable) {
       return;
     }
 
@@ -127,15 +146,17 @@ export class StickyStyler {
    * sticky position if there are no more directions.
    */
   _removeStickyStyle(element: HTMLElement, stickyDirections: StickyDirection[]) {
-    stickyDirections.forEach(dir => element.style[dir] = '');
+    for (let dir of stickyDirections) {
+      element.style[dir] = '';
+    }
     element.style.zIndex = this._getCalculatedZIndex(element);
 
     // If the element no longer has any more sticky directions, remove sticky positioning and
     // the sticky CSS class.
-    const hasDirection = ['top', 'bottom', 'left', 'right'].some(dir => element.style[dir]);
+    const hasDirection = STICKY_DIRECTIONS.some(dir => !!element.style[dir]);
     if (!hasDirection) {
       element.style.position = '';
-      element.classList.remove(this.stickyCellCSS);
+      element.classList.remove(this.stickCellCSS);
     }
   }
 
@@ -145,18 +166,22 @@ export class StickyStyler {
    * direction and value.
    */
   _addStickyStyle(element: HTMLElement, dir: StickyDirection, dirValue: number) {
-    element.classList.add(this.stickyCellCSS);
+    element.classList.add(this.stickCellCSS);
     element.style[dir] = `${dirValue}px`;
     element.style.cssText += 'position: -webkit-sticky; position: sticky; ';
     element.style.zIndex = this._getCalculatedZIndex(element);
   }
 
   /**
-   * Calculate what the z-index should be for the element depending on the sticky directions styles
-   * that it has set. It should be the case that elements with a top direction should always be at
-   * the forefront, followed by bottom direction elements. Finally, anything with left or right
-   * direction should come behind those. All else should be the lowest and not have any increased
-   * z-index.
+   * Calculate what the z-index should be for the element, depending on what directions (top,
+   * bottom, left, right) have been set. It should be true that elements with a top direction
+   * should have the highest index since these are elements like a table header. If any of those
+   * elements are also sticky in another direction, then they should appear above other elements
+   * that are only sticky top (e.g. a sticky column on a sticky header). Bottom-sticky elements
+   * (e.g. footer rows) should then be next in the ordering such that they are below the header
+   * but above any non-sticky elements. Finally, left/right sticky elements (e.g. sticky columns)
+   * should minimally increment so that they are above non-sticky elements but below top and bottom
+   * elements.
    */
   _getCalculatedZIndex(element: HTMLElement): string {
     const zIndexIncrements = {
@@ -167,13 +192,13 @@ export class StickyStyler {
     };
 
     let zIndex = 0;
-    ['top', 'bottom', 'left', 'right'].forEach(dir => {
+    for (let dir of STICKY_DIRECTIONS) {
       if (element.style[dir]) {
         zIndex += zIndexIncrements[dir];
       }
-    });
+    }
 
-    return String(zIndex);
+    return `${zIndex}`;
   }
 
   /** Gets the widths for each cell in the provided row. */
@@ -193,7 +218,7 @@ export class StickyStyler {
    * accumulation of all sticky column cell widths to the left and right, respectively.
    * Non-sticky cells do not need to have a value set since their positions will not be applied.
    */
-  _getStickyLeftColumnPositions(widths: number[], stickyStates: boolean[]): number[] {
+  _getStickyStartColumnPositions(widths: number[], stickyStates: boolean[]): number[] {
     const positions: number[] = [];
     let nextPosition = 0;
 
@@ -212,7 +237,7 @@ export class StickyStyler {
    * accumulation of all sticky column cell widths to the left and right, respectively.
    * Non-sticky cells do not need to have a value set since their positions will not be applied.
    */
-  _getStickyRightColumnPositions(widths: number[], stickyStates: boolean[]): number[] {
+  _getStickyEndColumnPositions(widths: number[], stickyStates: boolean[]): number[] {
     const positions: number[] = [];
     let nextPosition = 0;
 

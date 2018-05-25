@@ -2,7 +2,7 @@
   <table mat-table [dataSource]="dataSource">
 
     <!-- Name Column -->
-    <ng-container matColumnDef="name" stickyLeft>
+    <ng-container matColumnDef="name" sticky>
       <th mat-header-cell *matHeaderCellDef> Name </th>
       <td mat-cell *matCellDef="let element"> {{element.name}} </td>
     </ng-container>
@@ -26,7 +26,7 @@
     </ng-container>
 
     <!-- Star Column -->
-    <ng-container matColumnDef="star" stickyRight>
+    <ng-container matColumnDef="star" stickyEnd>
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element">
         <mat-icon>more_vert</mat-icon>

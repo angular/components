@@ -21,7 +21,7 @@ import {
 } from '@angular/core';
 import {CdkCellDef, CdkColumnDef} from './cell';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {HasStickyState, mixinHasStickyInput} from './has-sticky-state';
+import {CanStick, mixinHasStickyInput} from './can-stick';
 
 /**
  * The row template that can be used by the mat-table. Should not be used outside of the
@@ -86,13 +86,13 @@ export const _CdkHeaderRowDefBase = mixinHasStickyInput(CdkHeaderRowDefBase);
   selector: '[cdkHeaderRowDef]',
   inputs: ['columns: cdkHeaderRowDef', 'sticky: cdkHeaderRowDefSticky'],
 })
-export class CdkHeaderRowDef extends _CdkHeaderRowDefBase implements HasStickyState {
+export class CdkHeaderRowDef extends _CdkHeaderRowDefBase implements CanStick {
+  get sticky(): boolean { return this._sticky; }
   set sticky(v: boolean) {
     const prevValue = this._sticky;
     this._sticky = coerceBooleanProperty(v);
     this._hasStickyChanged = prevValue !== this._sticky;
   }
-  get sticky(): boolean { return this._sticky; }
   _sticky: boolean;
 
   constructor(template: TemplateRef<any>, _differs: IterableDiffers) {
@@ -113,13 +113,13 @@ export const _CdkFooterRowDefBase = mixinHasStickyInput(CdkFooterRowDefBase);
   selector: '[cdkFooterRowDef]',
   inputs: ['columns: cdkFooterRowDef', 'sticky: cdkFooterRowDefSticky'],
 })
-export class CdkFooterRowDef extends _CdkFooterRowDefBase implements HasStickyState {
+export class CdkFooterRowDef extends _CdkFooterRowDefBase implements CanStick {
+  get sticky(): boolean { return this._sticky; }
   set sticky(v: boolean) {
     const prevValue = this._sticky;
     this._sticky = coerceBooleanProperty(v);
     this._hasStickyChanged = prevValue !== this._sticky;
   }
-  get sticky(): boolean { return this._sticky; }
   _sticky: boolean;
 
   constructor(template: TemplateRef<any>, _differs: IterableDiffers) {

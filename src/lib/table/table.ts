@@ -34,7 +34,7 @@ import {CDK_TABLE_TEMPLATE, CdkTable} from '@angular/cdk/table';
 })
 export class MatTable<T> extends CdkTable<T> {
   /** Overrides the sticky CSS class set by the `CdkTable`. */
-  protected stickyCssClass = 'mat-sticky';
+  protected stickyCssClass = 'mat-table-sticky';
 
   // TODO(andrewseguin): Remove this explicitly set constructor when the compiler knows how to
   // properly build the es6 version of the class. Currently sets ctorParameters to empty due to a

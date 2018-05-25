@@ -8,7 +8,7 @@
 
 import {ContentChild, Directive, ElementRef, Input, TemplateRef} from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {HasStickyState, mixinHasStickyInput} from './has-sticky-state';
+import {CanStick, mixinHasStickyInput} from './can-stick';
 
 /** Base interface for a cell definition. Captures a column's cell template definition. */
 export interface CellDef {
@@ -52,7 +52,7 @@ export const _CdkColumnDefBase = mixinHasStickyInput(CdkColumnDefBase);
  * Defines a set of cells available for a table column.
  */
 @Directive({selector: '[cdkColumnDef]'})
-export class CdkColumnDef extends _CdkColumnDefBase implements HasStickyState {
+export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
   /** Unique name for this column. */
   @Input('cdkColumnDef')
   get name(): string { return this._name; }
@@ -66,25 +66,25 @@ export class CdkColumnDef extends _CdkColumnDefBase implements HasStickyState {
   }
   _name: string;
 
-  /** Whether this column should be sticky positioned on the left of the row */
-  @Input('stickyLeft')
-  get stickyLeft(): boolean { return this._stickyLeft; }
-  set stickyLeft(v: boolean) {
-    const prevValue = this._stickyLeft;
-    this._stickyLeft = coerceBooleanProperty(v);
-    this._hasStickyChanged = prevValue !== this._stickyLeft;
+  /** Whether this column should be sticky positioned on the start of the row */
+  @Input('sticky')
+  get sticky(): boolean { return this._sticky; }
+  set sticky(v: boolean) {
+    const prevValue = this._sticky;
+    this._sticky = coerceBooleanProperty(v);
+    this._hasStickyChanged = prevValue !== this._sticky;
   }
-  _stickyLeft: boolean = false;
+  _sticky: boolean = false;
 
-  /** Whether this column should be sticky positioned on the right of the right */
-  @Input('stickyRight')
-  get stickyRight(): boolean { return this._stickyRight; }
-  set stickyRight(v: boolean) {
-    const prevValue = this._stickyRight;
-    this._stickyRight = coerceBooleanProperty(v);
-    this._hasStickyChanged = prevValue !== this._stickyRight;
+  /** Whether this column should be sticky positioned on the end of the row */
+  @Input('stickyEnd')
+  get stickyEnd(): boolean { return this._stickyEnd; }
+  set stickyEnd(v: boolean) {
+    const prevValue = this._stickyEnd;
+    this._stickyEnd = coerceBooleanProperty(v);
+    this._hasStickyChanged = prevValue !== this._stickyEnd;
   }
-  _stickyRight: boolean = false;
+  _stickyEnd: boolean = false;
 
   /** @docs-private */
   @ContentChild(CdkCellDef) cell: CdkCellDef;

@@ -15,12 +15,14 @@ export type Constructor<T> = new(...args: any[]) => T;
  * sticky value.
  * @docs-private
  */
-export interface HasStickyState {
-  /** State of whether the sticky input has changed since it was last checked. */
+export interface CanStick {
+  /** Whether the sticky input has changed since it was last checked. */
   _hasStickyChanged: boolean;
 
-  checkStickyChanged(): boolean;
+  /** Whether the sticky value has changed since this was last called. */
+  hasStickyChanged(): boolean;
 
+  /** Resets the dirty check for cases where the sticky state has been used without checking. */
   resetStickyChanged(): void;
 }
 
@@ -30,13 +32,13 @@ export interface HasStickyState {
  * sticky value.
  */
 export function mixinHasStickyInput<T extends Constructor<{}>>(base: T):
-    Constructor<HasStickyState> & T {
+    Constructor<CanStick> & T {
   return class extends base {
-    /** State of whether the sticky input has changed since it was last checked. */
+    /** Whether the sticky input has changed since it was last checked. */
     _hasStickyChanged: boolean = false;
 
     /** Whether the sticky value has changed since this was last called. */
-    checkStickyChanged(): boolean {
+    hasStickyChanged(): boolean {
       const hasStickyChanged = this._hasStickyChanged;
       this._hasStickyChanged = false;
       return hasStickyChanged;

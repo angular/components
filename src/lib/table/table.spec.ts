@@ -124,7 +124,7 @@ describe('MatTable', () => {
     fixture.detectChanges();
 
     const stuckCellElement = fixture.nativeElement.querySelector('.mat-table th')!;
-    expect(stuckCellElement.classList).toContain('mat-sticky');
+    expect(stuckCellElement.classList).toContain('mat-table-sticky');
   });
 
   describe('with MatTableDataSource and sort/pagination/filter', () => {

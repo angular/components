@@ -704,7 +704,7 @@ describe('CdkTable', () => {
 
     function expectNoStickyStyles(elements: any[]) {
       elements.forEach(element => {
-        expect(element.classList.contains('cdk-sticky'));
+        expect(element.classList.contains('cdk-table-sticky'));
         expect(element.style.position).toBe('');
         expect(element.style.zIndex || '0').toBe('0');
         ['top', 'bottom', 'left', 'right'].forEach(d => {
@@ -730,7 +730,7 @@ describe('CdkTable', () => {
       });
     }
 
-    describe('on flex layout', () => {
+    describe('on "display: flex" table style', () => {
       let dataRows: Element[];
       let headerRows: Element[];
       let footerRows: Element[];
@@ -772,7 +772,7 @@ describe('CdkTable', () => {
       });
 
       it('should stick and unstick left columns', () => {
-        component.stickyLeftColumns = ['column-1', 'column-3'];
+        component.stickyStartColumns = ['column-1', 'column-3'];
         fixture.detectChanges();
 
         headerRows.forEach(row => {
@@ -794,7 +794,7 @@ describe('CdkTable', () => {
           expectNoStickyStyles([cells[1], cells[3], cells[4], cells[5]]);
         });
 
-        component.stickyLeftColumns = [];
+        component.stickyStartColumns = [];
         fixture.detectChanges();
         headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
         dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
@@ -802,7 +802,7 @@ describe('CdkTable', () => {
       });
 
       it('should stick and unstick right columns', () => {
-        component.stickyRightColumns = ['column-4', 'column-6'];
+        component.stickyEndColumns = ['column-4', 'column-6'];
         fixture.detectChanges();
 
         headerRows.forEach(row => {
@@ -824,7 +824,7 @@ describe('CdkTable', () => {
           expectNoStickyStyles([cells[0], cells[1], cells[2], cells[4]]);
         });
 
-        component.stickyRightColumns = [];
+        component.stickyEndColumns = [];
         fixture.detectChanges();
         headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
         dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
@@ -834,8 +834,8 @@ describe('CdkTable', () => {
       it('should stick and unstick combination of sticky header, footer, and columns', () => {
         component.stickyHeaders = ['header-1'];
         component.stickyFooters = ['footer-3'];
-        component.stickyLeftColumns = ['column-1'];
-        component.stickyRightColumns = ['column-6'];
+        component.stickyStartColumns = ['column-1'];
+        component.stickyEndColumns = ['column-6'];
         fixture.detectChanges();
 
         let headerCells = getHeaderCells(headerRows[0]);
@@ -861,8 +861,8 @@ describe('CdkTable', () => {
 
         component.stickyHeaders = [];
         component.stickyFooters = [];
-        component.stickyLeftColumns = [];
-        component.stickyRightColumns = [];
+        component.stickyStartColumns = [];
+        component.stickyEndColumns = [];
         fixture.detectChanges();
 
         headerRows.forEach(row => expectNoStickyStyles([row, ...getHeaderCells(row)]));
@@ -940,7 +940,7 @@ describe('CdkTable', () => {
       });
 
       it('should stick and unstick left columns', () => {
-        component.stickyLeftColumns = ['column-1', 'column-3'];
+        component.stickyStartColumns = ['column-1', 'column-3'];
         fixture.detectChanges();
 
         headerRows.forEach(row => {
@@ -962,7 +962,7 @@ describe('CdkTable', () => {
           expectNoStickyStyles([cells[1], cells[3], cells[4], cells[5]]);
         });
 
-        component.stickyLeftColumns = [];
+        component.stickyStartColumns = [];
         fixture.detectChanges();
         headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
         dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
@@ -970,7 +970,7 @@ describe('CdkTable', () => {
       });
 
       it('should stick and unstick right columns', () => {
-        component.stickyRightColumns = ['column-4', 'column-6'];
+        component.stickyEndColumns = ['column-4', 'column-6'];
         fixture.detectChanges();
 
         headerRows.forEach(row => {
@@ -992,7 +992,7 @@ describe('CdkTable', () => {
           expectNoStickyStyles([cells[0], cells[1], cells[2], cells[4]]);
         });
 
-        component.stickyRightColumns = [];
+        component.stickyEndColumns = [];
         fixture.detectChanges();
         headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
         dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
@@ -1002,8 +1002,8 @@ describe('CdkTable', () => {
       it('should stick and unstick combination of sticky header, footer, and columns', () => {
         component.stickyHeaders = ['header-1'];
         component.stickyFooters = ['footer-3'];
-        component.stickyLeftColumns = ['column-1'];
-        component.stickyRightColumns = ['column-6'];
+        component.stickyStartColumns = ['column-1'];
+        component.stickyEndColumns = ['column-6'];
         fixture.detectChanges();
 
         const headerCells = getHeaderCells(headerRows[0]);
@@ -1033,8 +1033,8 @@ describe('CdkTable', () => {
 
         component.stickyHeaders = [];
         component.stickyFooters = [];
-        component.stickyLeftColumns = [];
-        component.stickyRightColumns = [];
+        component.stickyStartColumns = [];
+        component.stickyEndColumns = [];
         fixture.detectChanges();
 
         headerRows.forEach(row => expectNoStickyStyles([row, ...getHeaderCells(row)]));
@@ -1712,8 +1712,8 @@ class TrackByCdkTableApp {
   template: `
     <cdk-table [dataSource]="dataSource">
       <ng-container [cdkColumnDef]="column" *ngFor="let column of columns"
-                    [stickyLeft]="isStuck(stickyLeftColumns, column)"
-                    [stickyRight]="isStuck(stickyRightColumns, column)">
+                    [sticky]="isStuck(stickyStartColumns, column)"
+                    [stickyEnd]="isStuck(stickyEndColumns, column)">
         <cdk-header-cell *cdkHeaderCellDef> Header {{column}} </cdk-header-cell>
         <cdk-cell *cdkCellDef="let row"> {{column}} </cdk-cell>
         <cdk-footer-cell *cdkFooterCellDef> Footer {{column}} </cdk-footer-cell>
@@ -1751,8 +1751,8 @@ class StickyFlexLayoutCdkTableApp {
 
   stickyHeaders: string[] = [];
   stickyFooters: string[] = [];
-  stickyLeftColumns: string[] = [];
-  stickyRightColumns: string[] = [];
+  stickyStartColumns: string[] = [];
+  stickyEndColumns: string[] = [];
 
   isStuck(list: string[], id: string) {
     return list.indexOf(id) != -1;
@@ -1763,8 +1763,8 @@ class StickyFlexLayoutCdkTableApp {
   template: `
     <table cdk-table [dataSource]="dataSource">
       <ng-container [cdkColumnDef]="column" *ngFor="let column of columns"
-                    [stickyLeft]="isStuck(stickyLeftColumns, column)"
-                    [stickyRight]="isStuck(stickyRightColumns, column)">
+                    [sticky]="isStuck(stickyStartColumns, column)"
+                    [stickyEnd]="isStuck(stickyEndColumns, column)">
         <th cdk-header-cell *cdkHeaderCellDef> Header {{column}} </th>
         <td cdk-cell *cdkCellDef="let row"> {{column}} </td>
         <td cdk-footer-cell *cdkFooterCellDef> Footer {{column}} </td>
@@ -1803,8 +1803,8 @@ class StickyNativeLayoutCdkTableApp {
 
   stickyHeaders: string[] = [];
   stickyFooters: string[] = [];
-  stickyLeftColumns: string[] = [];
-  stickyRightColumns: string[] = [];
+  stickyStartColumns: string[] = [];
+  stickyEndColumns: string[] = [];
 
   isStuck(list: string[], id: string) {
     return list.indexOf(id) != -1;

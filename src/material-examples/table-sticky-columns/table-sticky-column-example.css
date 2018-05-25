@@ -17,10 +17,10 @@ th.mat-column-position, td.mat-column-position {
   padding-left: 8px;
 }
 
-.mat-sticky:first-child {
+.mat-table-sticky:first-child {
   border-right: 1px solid #e0e0e0;
 }
 
-.mat-sticky:last-child {
+.mat-table-sticky:last-child {
   border-left: 1px solid #e0e0e0;
 }

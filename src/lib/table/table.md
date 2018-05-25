@@ -309,8 +309,8 @@ rendered footer rows.
 
 <!--- example(table-sticky-footer) -->
 
-It is also possible to fix cell columns to the left or right of the scrolling viewport. To do this, 
-add the `stickyLeft` or `stickyRight` directive to the `ng-container` column definition.
+It is also possible to fix cell columns to the start or end of the horizontally scrolling viewport.
+To do this, add the `sticky` or `stickyEnd` directive to the `ng-container` column definition.
 
 <!--- example(table-sticky-columns) -->
 
