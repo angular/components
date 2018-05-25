@@ -36,6 +36,7 @@ export class SelectDemo {
   drinksTheme = 'primary';
   pokemonTheme = 'primary';
   compareByValue = true;
+  reachBottom = false;
 
   foods = [
     {value: null, viewValue: 'None'},
@@ -134,5 +135,13 @@ export class SelectDemo {
 
   compareByReference(o1: any, o2: any) {
     return o1 === o2;
+  }
+
+  exampleScrollFunction(event: any): void {
+    if (event) {
+      this.reachBottom = true;
+    } else {
+    this.reachBottom = false;
+    }
   }
 }

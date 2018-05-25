@@ -219,6 +219,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   /** The scroll position of the overlay panel, calculated to center the selected option. */
   private _scrollTop = 0;
 
+  /** The Scroll position of the overlay panel, calculated to top of panel */
+  private _scrollTopOffset = 0;
+
   /** The placeholder displayed in the trigger of the select. */
   private _placeholder: string;
 
@@ -438,6 +441,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    * @docs-private
    */
   @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
+
+  /** Event that emits 'true' when the scrollbar reach bottom. */
+  @Output() reachedBottom: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(
     private _viewportRuler: ViewportRuler,
@@ -671,6 +677,25 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
           manager.activeItemIndex !== previouslyFocusedIndex) {
         manager.activeItem._selectViaInteraction();
       }
+    }
+  }
+
+  /**
+   * When the scrollbar in panel is at the bottom, _onScroll() emits an event
+   * reachedBottom that will pass 'true' in callback function defined in template
+   */
+  _onScroll(): void {
+    const itemHeight = this._getItemHeight();
+    const items = this._getItemCount();
+    const panelHeight = Math.min(items * itemHeight, SELECT_PANEL_MAX_HEIGHT);
+    const scrollContainerHeight = items * itemHeight;
+    const maxScroll = scrollContainerHeight - panelHeight;
+    this._scrollTopOffset = this.panel.nativeElement.scrollTop;
+
+    if (Math.ceil(this._scrollTopOffset) >= maxScroll) {
+      this.reachedBottom.emit(true);
+    } else {
+      this.reachedBottom.emit(false);
     }
   }
 

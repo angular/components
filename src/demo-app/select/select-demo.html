@@ -9,7 +9,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <mat-form-field [floatLabel]="floatLabel" [color]="drinksTheme">
       <mat-label>Drink</mat-label>
       <mat-select [(ngModel)]="currentDrink" [required]="drinksRequired"
-        [disabled]="drinksDisabled" #drinkControl="ngModel">
+        [disabled]="drinksDisabled" #drinkControl="ngModel" (reachedBottom)="exampleScrollFunction($event)">
         <mat-option>None</mat-option>
         <mat-option *ngFor="let drink of drinks" [value]="drink.value" [disabled]="drink.disabled">
           {{ drink.viewValue }}
@@ -39,6 +39,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         </option>
       </select>
     </p>
+    <p> Reach bottom: {{ reachBottom }}</p>
 
     <button mat-button (click)="currentDrink='water-2'">SET VALUE</button>
     <button mat-button (click)="drinksRequired=!drinksRequired">TOGGLE REQUIRED</button>
