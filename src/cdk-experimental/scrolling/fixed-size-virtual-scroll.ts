@@ -152,7 +152,7 @@ export class CdkFixedSizeVirtualScroll implements OnChanges {
 
   /**
    * The number of extra elements to render on either side of the scrolling viewport.
-   * The default buffer size is 5.
+   * Defaults to 5 elements.
    */
   @Input()
   get bufferSize(): number { return this._bufferSize; }
