@@ -39,13 +39,15 @@
   position: relative;
   overflow: hidden;
   display: flex;
+  flex-grow: 1;
   transition: height $mat-tab-animation-duration $ease-in-out-curve-function;
 }
 
 // Wraps each tab body
 .mat-tab-body {
   @include mat-fill;
-  display: block;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 
   // Fix for auto content wrapping in IE11
