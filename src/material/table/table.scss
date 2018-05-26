@@ -63,7 +63,20 @@ mat-cell, mat-header-cell, mat-footer-cell {
   align-items: center;
   overflow: hidden;
   word-wrap: break-word;
+
+  // This required in order for cells with a
+  // background to span the height of the row.
   min-height: inherit;
+
+  // In some cases `align-items` won't work on something with a `min-height`. This is a workaround
+  // to get centering to work. This can also be fixed by setting the height of the cell to something
+  // less than the `min-height`, however this approach is less prone to breaking if we decide to
+  // remove the `min-height`.
+  &::after {
+    content: '';
+    font-size: 0;
+    min-height: inherit;
+  }
 }
 
 /**
