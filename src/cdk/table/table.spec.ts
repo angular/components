@@ -24,6 +24,7 @@ import {
   getTableUnknownColumnError,
   getTableUnknownDataSourceError
 } from './table-errors';
+import {BidiModule} from '@angular/cdk/bidi';
 
 describe('CdkTable', () => {
   let fixture: ComponentFixture<any>;
@@ -33,7 +34,7 @@ describe('CdkTable', () => {
   function createComponent<T>(componentType: Type<T>, declarations: any[] = []):
       ComponentFixture<T> {
     TestBed.configureTestingModule({
-      imports: [CdkTableModule],
+      imports: [CdkTableModule, BidiModule],
       declarations: [componentType, ...declarations],
     }).compileComponents();
 
@@ -829,6 +830,36 @@ describe('CdkTable', () => {
         headerRows.forEach(row => expectNoStickyStyles(getHeaderCells(row)));
         dataRows.forEach(row => expectNoStickyStyles(getCells(row)));
         footerRows.forEach(row => expectNoStickyStyles(getFooterCells(row)));
+      });
+
+      it('should reverse directions for sticky columns in rtl', () => {
+        component.dir = 'rtl';
+        component.stickyStartColumns = ['column-1', 'column-2'];
+        component.stickyEndColumns = ['column-5', 'column-6'];
+        fixture.detectChanges();
+
+        const firstColumnWidth = getHeaderCells(headerRows[0])[0].getBoundingClientRect().width;
+        const lastColumnWidth = getHeaderCells(headerRows[0])[5].getBoundingClientRect().width;
+
+        let headerCells = getHeaderCells(headerRows[0]);
+        expectStickyStyles(headerCells[0], '1', {right: '0px'});
+        expectStickyStyles(headerCells[1], '1', {right: `${firstColumnWidth}px`});
+        expectStickyStyles(headerCells[4], '1', {left: `${lastColumnWidth}px`});
+        expectStickyStyles(headerCells[5], '1', {left: '0px'});
+
+        dataRows.forEach(row => {
+          let cells = getCells(row);
+          expectStickyStyles(cells[0], '1', {right: '0px'});
+          expectStickyStyles(cells[1], '1', {right: `${firstColumnWidth}px`});
+          expectStickyStyles(cells[4], '1', {left: `${lastColumnWidth}px`});
+          expectStickyStyles(cells[5], '1', {left: '0px'});
+        });
+
+        let footerCells = getFooterCells(footerRows[0]);
+        expectStickyStyles(footerCells[0], '1', {right: '0px'});
+        expectStickyStyles(footerCells[1], '1', {right: `${firstColumnWidth}px`});
+        expectStickyStyles(footerCells[4], '1', {left: `${lastColumnWidth}px`});
+        expectStickyStyles(footerCells[5], '1', {left: '0px'});
       });
 
       it('should stick and unstick combination of sticky header, footer, and columns', () => {
@@ -1710,7 +1741,7 @@ class TrackByCdkTableApp {
 
 @Component({
   template: `
-    <cdk-table [dataSource]="dataSource">
+    <cdk-table [dataSource]="dataSource" [dir]="dir">
       <ng-container [cdkColumnDef]="column" *ngFor="let column of columns"
                     [sticky]="isStuck(stickyStartColumns, column)"
                     [stickyEnd]="isStuck(stickyEndColumns, column)">
@@ -1749,6 +1780,7 @@ class StickyFlexLayoutCdkTableApp {
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
 
+  dir = 'ltr';
   stickyHeaders: string[] = [];
   stickyFooters: string[] = [];
   stickyStartColumns: string[] = [];

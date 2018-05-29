@@ -24,6 +24,7 @@ import {
   IterableDiffers,
   OnDestroy,
   OnInit,
+  Optional,
   QueryList,
   TemplateRef,
   TrackByFunction,
@@ -53,6 +54,7 @@ import {
 } from './table-errors';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {StickyStyler} from './sticky-styler';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 
 /** Interface used to provide an outlet for rows to be inserted into. */
 export interface RowOutlet {
@@ -356,7 +358,8 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   constructor(protected readonly _differs: IterableDiffers,
               protected readonly _changeDetectorRef: ChangeDetectorRef,
               protected readonly _elementRef: ElementRef,
-              @Attribute('role') role: string) {
+              @Attribute('role') role: string,
+              @Optional() protected readonly _dir: Directionality) {
     if (!role) {
       this._elementRef.nativeElement.setAttribute('role', 'grid');
     }
@@ -365,7 +368,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   }
 
   ngOnInit() {
-    this._stickyStyler = new StickyStyler(this._isNativeHtmlTable, this.stickyCssClass);
+    this._setupStickyStyler();
 
     if (this._isNativeHtmlTable) {
       this._applyNativeTableSections();
@@ -987,6 +990,22 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     if (Array.from(this._columnDefsByName.values()).reduce(stickyCheckReducer, false)) {
       this.updateStickyColumnStyles();
     }
+  }
+
+  /**
+   * Creates the sticky styler that will be used for sticky rows and columns. Listens
+   * for directionality changes and provides the latest direction to the styler. Re-applies column
+   * stickiness when directionality changes.
+   */
+  private _setupStickyStyler() {
+    const direction: Direction = this._dir ? this._dir.value : 'ltr';
+    this._stickyStyler = new StickyStyler(this._isNativeHtmlTable, this.stickyCssClass, direction);
+    (this._dir ? this._dir.change : observableOf<Direction>())
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe(value => {
+          this._stickyStyler.direction = value;
+          this.updateStickyColumnStyles();
+        });
   }
 }
 

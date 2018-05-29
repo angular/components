@@ -10,6 +10,8 @@
  * Directions that can be used when setting sticky positioning.
  * @docs-private
  */
+import {Direction} from '@angular/cdk/bidi';
+
 export type StickyDirection = 'top' | 'bottom' | 'left' | 'right';
 
 /**
@@ -28,8 +30,12 @@ export class StickyStyler {
    *     that uses the native `<table>` element.
    * @param stickCellCSS The CSS class that will be applied to every row/cell that has
    *     sticky positioning applied.
+   * @param direction The directionality context of the table (ltr/rtl); affects column positioning
+   *     by reversing left/right positions.
    */
-  constructor(private isNativeHtmlTable: boolean, private stickCellCSS: string) { }
+  constructor(private isNativeHtmlTable: boolean,
+              private stickCellCSS: string,
+              public direction: Direction) { }
 
   /**
    * Clears the sticky positioning styles from the row and its cells by resetting the `position`
@@ -68,16 +74,17 @@ export class StickyStyler {
     const cellWidths: number[] = this._getCellWidths(rows[0]);
     const startPositions = this._getStickyStartColumnPositions(cellWidths, stickyStartStates);
     const endPositions = this._getStickyEndColumnPositions(cellWidths, stickyEndStates);
+    const isLtr = this.direction === 'ltr';
 
     for (let row of rows) {
       for (let i = 0; i < numCells; i++) {
         const cell = row.children[i] as HTMLElement;
         if (stickyStartStates[i]) {
-          this._addStickyStyle(cell, 'left', startPositions[i]);
+          this._addStickyStyle(cell, isLtr ? 'left' : 'right', startPositions[i]);
         }
 
         if (stickyEndStates[i]) {
-          this._addStickyStyle(cell, 'right', endPositions[i]);
+          this._addStickyStyle(cell, isLtr ? 'right' : 'left', endPositions[i]);
         }
       }
     }

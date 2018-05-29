@@ -13,9 +13,11 @@ import {
   Component,
   ElementRef,
   IterableDiffers,
+  Optional,
   ViewEncapsulation
 } from '@angular/core';
 import {CDK_TABLE_TEMPLATE, CdkTable} from '@angular/cdk/table';
+import {Directionality} from '@angular/cdk/bidi';
 
 /**
  * Wrapper for the CdkTable with Material design styles.
@@ -44,7 +46,8 @@ export class MatTable<T> extends CdkTable<T> {
   constructor(protected _differs: IterableDiffers,
               protected _changeDetectorRef: ChangeDetectorRef,
               protected _elementRef: ElementRef,
-              @Attribute('role') role: string) {
-    super(_differs, _changeDetectorRef, _elementRef, role);
+              @Attribute('role') role: string,
+              @Optional() protected readonly _dir: Directionality) {
+    super(_differs, _changeDetectorRef, _elementRef, role, _dir);
   }
 }

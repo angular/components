@@ -8,6 +8,7 @@ ng_module(
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/cdk/table",
   deps = [
+    "//src/cdk/bidi",
     "//src/cdk/collections",
     "//src/cdk/coercion",
     "@rxjs",
