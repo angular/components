@@ -51,7 +51,10 @@ export const _CdkColumnDefBase = mixinHasStickyInput(CdkColumnDefBase);
  * Column definition for the CDK table.
  * Defines a set of cells available for a table column.
  */
-@Directive({selector: '[cdkColumnDef]'})
+@Directive({
+  selector: '[cdkColumnDef]',
+  inputs: ['sticky']
+})
 export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
   /** Unique name for this column. */
   @Input('cdkColumnDef')
@@ -66,17 +69,11 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
   }
   _name: string;
 
-  /** Whether this column should be sticky positioned on the start of the row */
-  @Input('sticky')
-  get sticky(): boolean { return this._sticky; }
-  set sticky(v: boolean) {
-    const prevValue = this._sticky;
-    this._sticky = coerceBooleanProperty(v);
-    this._hasStickyChanged = prevValue !== this._sticky;
-  }
-  _sticky: boolean = false;
-
-  /** Whether this column should be sticky positioned on the end of the row */
+  /**
+   * Whether this column should be sticky positioned on the end of the row. Should make sure
+   * that it mimics the `CanStick` mixin such that `_hasStickyChanged` is set to true if the value
+   * has been changed.
+   */
   @Input('stickyEnd')
   get stickyEnd(): boolean { return this._stickyEnd; }
   set stickyEnd(v: boolean) {

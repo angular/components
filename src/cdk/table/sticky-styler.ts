@@ -28,13 +28,13 @@ export class StickyStyler {
   /**
    * @param isNativeHtmlTable Whether the sticky logic should be based on a table
    *     that uses the native `<table>` element.
-   * @param stickCellCSS The CSS class that will be applied to every row/cell that has
+   * @param stickCellCss The CSS class that will be applied to every row/cell that has
    *     sticky positioning applied.
    * @param direction The directionality context of the table (ltr/rtl); affects column positioning
    *     by reversing left/right positions.
    */
   constructor(private isNativeHtmlTable: boolean,
-              private stickCellCSS: string,
+              private stickCellCss: string,
               public direction: Direction) { }
 
   /**
@@ -163,7 +163,7 @@ export class StickyStyler {
     const hasDirection = STICKY_DIRECTIONS.some(dir => !!element.style[dir]);
     if (!hasDirection) {
       element.style.position = '';
-      element.classList.remove(this.stickCellCSS);
+      element.classList.remove(this.stickCellCss);
     }
   }
 
@@ -173,7 +173,7 @@ export class StickyStyler {
    * direction and value.
    */
   _addStickyStyle(element: HTMLElement, dir: StickyDirection, dirValue: number) {
-    element.classList.add(this.stickCellCSS);
+    element.classList.add(this.stickCellCss);
     element.style[dir] = `${dirValue}px`;
     element.style.cssText += 'position: -webkit-sticky; position: sticky; ';
     element.style.zIndex = this._getCalculatedZIndex(element);

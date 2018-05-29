@@ -20,7 +20,6 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {CdkCellDef, CdkColumnDef} from './cell';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {CanStick, mixinHasStickyInput} from './can-stick';
 
 /**
@@ -87,14 +86,6 @@ export const _CdkHeaderRowDefBase = mixinHasStickyInput(CdkHeaderRowDefBase);
   inputs: ['columns: cdkHeaderRowDef', 'sticky: cdkHeaderRowDefSticky'],
 })
 export class CdkHeaderRowDef extends _CdkHeaderRowDefBase implements CanStick {
-  get sticky(): boolean { return this._sticky; }
-  set sticky(v: boolean) {
-    const prevValue = this._sticky;
-    this._sticky = coerceBooleanProperty(v);
-    this._hasStickyChanged = prevValue !== this._sticky;
-  }
-  _sticky: boolean;
-
   constructor(template: TemplateRef<any>, _differs: IterableDiffers) {
     super(template, _differs);
   }
@@ -114,14 +105,6 @@ export const _CdkFooterRowDefBase = mixinHasStickyInput(CdkFooterRowDefBase);
   inputs: ['columns: cdkFooterRowDef', 'sticky: cdkFooterRowDefSticky'],
 })
 export class CdkFooterRowDef extends _CdkFooterRowDefBase implements CanStick {
-  get sticky(): boolean { return this._sticky; }
-  set sticky(v: boolean) {
-    const prevValue = this._sticky;
-    this._sticky = coerceBooleanProperty(v);
-    this._hasStickyChanged = prevValue !== this._sticky;
-  }
-  _sticky: boolean;
-
   constructor(template: TemplateRef<any>, _differs: IterableDiffers) {
     super(template, _differs);
   }
