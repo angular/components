@@ -33,6 +33,11 @@ export class SelectionModel<T> {
     return this._selected;
   }
 
+  /** Whether multiple values can be selected. */
+  get multiple() {
+    return this._multiple;
+  }
+
   /** Event emitted when the value has changed. */
   onChange: Subject<SelectionChange<T>> | null = this._emitChanges ? new Subject() : null;
 
@@ -111,7 +116,7 @@ export class SelectionModel<T> {
    * Sorts the selected values based on a predicate function.
    */
   sort(predicate?: (a: T, b: T) => number): void {
-    if (this._multiple && this._selected) {
+    if (this.multiple && this._selected) {
       this._selected.sort(predicate);
     }
   }
@@ -138,7 +143,7 @@ export class SelectionModel<T> {
   /** Selects a value. */
   private _markSelected(value: T) {
     if (!this.isSelected(value)) {
-      if (!this._multiple) {
+      if (!this.multiple) {
         this._unmarkAll();
       }
 
@@ -173,7 +178,7 @@ export class SelectionModel<T> {
    * including multiple values while the selection model is not supporting multiple values.
    */
   private _verifyValueAssignment(values: T[]) {
-    if (values.length > 1 && !this._multiple) {
+    if (values.length > 1 && !this.multiple) {
       throw getMultipleValuesInSingleSelectionError();
     }
   }
