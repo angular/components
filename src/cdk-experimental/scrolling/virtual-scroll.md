@@ -61,8 +61,8 @@ memory you may wish to reduce this number to avoid spending too much memory on t
 </cdk-virtual-scroll-viewport>
 ```
 
-#### Specifying items with an Observable or DataSource
-`*cdkVirtualFor` is set up to accept data from an `Array`, `Observable`, or `DataSource`. The
+#### Specifying data
+`*cdkVirtualFor` accepts data from an `Array`, `Observable<Array>`, or `DataSource`. The
 `DataSource` for the virtual scroll is the same one used by the table and tree components. A
 `DataSource` is simply an abstract class that has two methods: `connect` and `disconnect`. The
 `connect` method will be called by the virtual scroll viewport to receive a stream that emits the
@@ -71,11 +71,11 @@ destroyed, which may be the right time to clean up any subscriptions that were r
 connect process.
 
 ### Scrolling over fixed size items
-If you're scrolling over a list of items that are all the same fixed size, you can use the
-`FixedSizeVirtualScrollStrategy`. This can be easily added to your viewport using the `itemSize`
-directive. The fixed size viewport strategy is less flexible than the autosize strategy because it
-requires all items to be the same size, but the advantage of this constraint is that it allows for
-better performance, since items do not need to be measured as they are rendered. 
+When all items are the same fixed size,, you can use the `FixedSizeVirtualScrollStrategy`. This can
+be easily added to your viewport using the `itemSize` directive. The fixed size viewport strategy is
+less flexible than the autosize strategy because it requires all items to be the same size, but the
+advantage of this constraint is that it allows for better performance, since items do not need to be
+measured as they are rendered. 
 
 ```html
 <cdk-virtual-scroll-viewport itemSize="50">
@@ -96,9 +96,8 @@ beyond the edge of the viewport. This can be adjusted by setting the `bufferSize
 `minBufferPx` and `addBufferPx` like the autosize strategy**
 
 ### Scrolling over items with different sizes
-If you're scrolling over a list of items with different sizes, you can use the
-`AutoSizeVirtualScrollStrategy`. This can be added to your viewport by using the `autosize`
-directive.
+When the items have different or unknown sizes, you can use the `AutoSizeVirtualScrollStrategy`.
+This can be added to your viewport by using the `autosize` directive.
 
 ```html
 <cdk-virtual-scroll-viewport autosize>
