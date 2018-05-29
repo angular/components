@@ -247,9 +247,13 @@ describe('MatDatepicker', () => {
         }));
 
       it('clicking the currently selected date should close the calendar ' +
-         'without firing selectedChanged', fakeAsync(() => {
+         'without firing selectedChanged but should fire userSelection ' +
+         'on every call', fakeAsync(() => {
         const selectedChangedSpy =
             spyOn(testComponent.datepicker._selectedChanged, 'next').and.callThrough();
+
+        const userSelectionSpy =
+            spyOn(testComponent.datepicker.userSelection, 'emit').and.callThrough();
 
         for (let changeCount = 1; changeCount < 3; changeCount++) {
           const currentDay = changeCount;
@@ -265,6 +269,7 @@ describe('MatDatepicker', () => {
           flush();
         }
 
+        expect(userSelectionSpy.calls.count()).toEqual(2);
         expect(selectedChangedSpy.calls.count()).toEqual(1);
         expect(document.querySelector('mat-dialog-container')).toBeNull();
         expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 2));

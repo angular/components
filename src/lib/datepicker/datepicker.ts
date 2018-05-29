@@ -209,6 +209,9 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** Emits when the datepicker has been closed. */
   @Output('closed') closedStream: EventEmitter<void> = new EventEmitter<void>();
 
+  /** Emits when any date is selected */
+  @Output('userSelection') userSelection: EventEmitter<void> = new EventEmitter<void>();
+
 
   /** Whether the calendar is open. */
   @Input()
@@ -296,6 +299,12 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
       this._selectedChanged.next(date);
     }
+  }
+
+  /** Emits userSelection and closes datepicker */
+  _userSelection(): void {
+    this.close();
+    this.userSelection.emit();
   }
 
   /** Emits the selected year in multiyear view */
