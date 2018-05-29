@@ -2,7 +2,7 @@
 time**
 
 `<cdk-virtual-scroll-viewport>` displays large lists of elements performantly by only
-rendering the items that appear on-screen. This components works with `*cdkVirtualFor`,
+rendering the items that fit on-screen. This components works with `*cdkVirtualFor`,
 a virtualized replacement for `*ngFor`.
 
 <!-- TODO(mmalerba): Add embedded examples once this is available in @angular/cdk -->
@@ -10,8 +10,8 @@ For some example usages,
 [see the demo app](https://github.com/angular/material2/tree/master/src/demo-app/virtual-scroll).
 
 ### Creating items in the viewport
-`*cdkVirtualFor` should be used instead of `*ngFor` to create items in the
-`<cdk-virtual-scroll-viewport>`. `*cdkVirtualFor` supports all of the same features as `*ngFor`.
+`*cdkVirtualFor` replaces `*ngFor` inside of a `<cdk-virtual-scroll-viewport>`, supporting the exact
+same API as [`*ngFor`](https://angular.io/api/common/NgForOf).
 The simplest usage just specifies the list of items:
 
 ```html
@@ -21,12 +21,15 @@ The simplest usage just specifies the list of items:
 ```
 
 `*cdkVirtualFor` makes the following context variables available to the template:
-* `index` - The index of the item in the data source.
-* `count` - The total number of items in the data source.
-* `first` - Whether this is the first item in the data source.
-* `last` - Whether this is the last item in the data source.
-* `even` - Whether the `index` is even.
-* `odd` - Whether the `index` is odd.
+
+| Context variable | Description                                        |
+|------------------|----------------------------------------------------|
+| `index`          | The index of the item in the data source.          |
+| `count`          | The total number of items in the data source.      |
+| `first`          | Whether this is the first item in the data source. |
+| `last`           | Whether this is the last item in the data source.  |
+| `even`           | Whether the `index` is even.                       |
+| `odd`            | Whether the `index` is odd.                        |
 
 All of these apply to the index of the item in the data source, not the index in the rendered
 portion of the data.
@@ -35,12 +38,8 @@ portion of the data.
 <cdk-virtual-scroll-viewport itemSize="50">
   <div *cdkVirtualFor="let item of items;
                        let index = index;
-                       let count = count;
-                       let first = first;
-                       let last = last;
-                       let even = even;
-                       let odd = odd">
-    {{item}} - {{index}} - {{count}} - {{first}} - {{last}} - {{even}} - {{odd}}
+                       let count = count">
+    {{item}} ({{index}} of {{count}})
   </div>
 </cdk-virtual-scroll-viewport>
 ```
