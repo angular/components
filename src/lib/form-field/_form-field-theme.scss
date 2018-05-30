@@ -84,12 +84,9 @@
       }
     }
 
-    .mat-form-field-ripple {
+    .mat-form-field-ripple,
+    .mat-form-field-ripple.mat-accent {
       background-color: $underline-color-warn;
-
-      &.mat-accent {
-        background-color: $underline-color-warn;
-      }
     }
   }
 
