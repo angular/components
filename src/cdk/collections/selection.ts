@@ -117,7 +117,7 @@ export class SelectionModel<T> {
   }
 
   /**
-   * Determines whether multiple values can be selected.
+   * Gets whether multiple values can be selected.
    */
   isMultipleSelection() {
     return this._multiple;
