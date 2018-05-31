@@ -3,8 +3,7 @@
 @import '../../cdk/a11y/a11y';
 
 
-$mat-dialog-padding: 24px !default;
-$mat-dialog-border-radius: 2px !default;
+$mat-dialog-border-radius: 4px !default;
 $mat-dialog-max-height: 65vh !default;
 $mat-dialog-button-margin: 8px !default;
 
@@ -12,7 +11,6 @@ $mat-dialog-button-margin: 8px !default;
   @include mat-elevation(24);
 
   display: block;
-  padding: $mat-dialog-padding;
   border-radius: $mat-dialog-border-radius;
   box-sizing: border-box;
   overflow: auto;
@@ -34,25 +32,23 @@ $mat-dialog-button-margin: 8px !default;
 
 .mat-dialog-content {
   display: block;
-  margin: 0 $mat-dialog-padding * -1;
-  padding: 0 $mat-dialog-padding;
+  margin-bottom: -8px !important;
+  padding: 18px 24px 28px 24px !important;
   max-height: $mat-dialog-max-height;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
 
 .mat-dialog-title {
-  margin: 0 0 20px;
+  padding: 18px 24px 0 24px;
+  margin-bottom: -6px !important;
   display: block;
 }
 
 .mat-dialog-actions {
-  padding: $mat-dialog-padding / 2 0;
+  padding: 8px;
   display: flex;
   flex-wrap: wrap;
-
-  // Pull the actions down to avoid their padding stacking with the dialog's padding.
-  margin-bottom: -$mat-dialog-padding;
 
   &[align='end'] {
     justify-content: flex-end;
