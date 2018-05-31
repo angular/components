@@ -85,9 +85,15 @@ export const _CdkHeaderRowDefBase = mixinHasStickyInput(CdkHeaderRowDefBase);
   selector: '[cdkHeaderRowDef]',
   inputs: ['columns: cdkHeaderRowDef', 'sticky: cdkHeaderRowDefSticky'],
 })
-export class CdkHeaderRowDef extends _CdkHeaderRowDefBase implements CanStick {
+export class CdkHeaderRowDef extends _CdkHeaderRowDefBase implements CanStick, OnChanges {
   constructor(template: TemplateRef<any>, _differs: IterableDiffers) {
     super(template, _differs);
+  }
+
+  // Prerender fails to recognize that ngOnChanges in a part of this class through inheritance.
+  // Explicitly define it so that the method is called as part of the Angular lifecycle.
+  ngOnChanges(changes: SimpleChanges): void {
+    super.ngOnChanges(changes);
   }
 }
 
@@ -104,9 +110,15 @@ export const _CdkFooterRowDefBase = mixinHasStickyInput(CdkFooterRowDefBase);
   selector: '[cdkFooterRowDef]',
   inputs: ['columns: cdkFooterRowDef', 'sticky: cdkFooterRowDefSticky'],
 })
-export class CdkFooterRowDef extends _CdkFooterRowDefBase implements CanStick {
+export class CdkFooterRowDef extends _CdkFooterRowDefBase implements CanStick, OnChanges {
   constructor(template: TemplateRef<any>, _differs: IterableDiffers) {
     super(template, _differs);
+  }
+
+  // Prerender fails to recognize that ngOnChanges in a part of this class through inheritance.
+  // Explicitly define it so that the method is called as part of the Angular lifecycle.
+  ngOnChanges(changes: SimpleChanges): void {
+    super.ngOnChanges(changes);
   }
 }
 

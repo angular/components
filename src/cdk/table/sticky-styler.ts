@@ -74,17 +74,17 @@ export class StickyStyler {
     const cellWidths: number[] = this._getCellWidths(rows[0]);
     const startPositions = this._getStickyStartColumnPositions(cellWidths, stickyStartStates);
     const endPositions = this._getStickyEndColumnPositions(cellWidths, stickyEndStates);
-    const isLtr = this.direction === 'ltr';
+    const isRtl = this.direction === 'rtl';
 
     for (let row of rows) {
       for (let i = 0; i < numCells; i++) {
         const cell = row.children[i] as HTMLElement;
         if (stickyStartStates[i]) {
-          this._addStickyStyle(cell, isLtr ? 'left' : 'right', startPositions[i]);
+          this._addStickyStyle(cell, isRtl ? 'right' : 'left', startPositions[i]);
         }
 
         if (stickyEndStates[i]) {
-          this._addStickyStyle(cell, isLtr ? 'right' : 'left', endPositions[i]);
+          this._addStickyStyle(cell, isRtl ? 'left' : 'right', endPositions[i]);
         }
       }
     }
