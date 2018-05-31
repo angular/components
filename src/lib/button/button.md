@@ -8,11 +8,11 @@ and accessible experience for users. A `<button>` element should be used wheneve
 is performed. An `<a>` element should be used whenever the user will _navigate_ to another view.
 
 
-There are seven button variants, each applied as an attribute:
+There are several button variants, each applied as an attribute:
 
 | Attribute            | Description                                                              |
 |----------------------|--------------------------------------------------------------------------|
-| `mat-button`         | Rectangular text button w/ no elevation.                                 |
+| `mat-button`         | Rectangular text button w/ no elevation                                  |
 | `mat-raised-button`  | Rectangular contained button w/ elevation                                |
 | `mat-flat-button`    | Rectangular contained button w/ no elevation                             |
 | `mat-stroked-button` | Rectangular outlined button w/ no elevation                              |
