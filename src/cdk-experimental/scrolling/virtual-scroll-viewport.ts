@@ -281,7 +281,7 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
     let shouldScroll = true;
     if (options.lazy) {
       const currentOffset = this.measureScrollOffset();
-      const currentOffsetEnd = currentOffset + this.measureRenderedContentSize();
+      const currentOffsetEnd = currentOffset + this.getViewportSize();
       shouldScroll = offset < currentOffset || offset > currentOffsetEnd;
     }
 
