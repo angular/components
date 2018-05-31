@@ -298,7 +298,7 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
   /** Scroll the viewport to the specified index. */
   scrollToIndex(index: number,  options = { smooth: false, lazy: false }) {
     const contentSize = this.measureRenderedContentSize();
-    const offset = this._scrollStrategy.getOffsetForIndex(index);
+    const offset = this._scrollStrategy.getScrollOffsetForIndex(index);
     this.scrollToOffset(offset, options);
   }
 

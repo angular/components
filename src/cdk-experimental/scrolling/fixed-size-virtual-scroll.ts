@@ -78,7 +78,7 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   onRenderedOffsetChanged() { /* no-op */ }
 
   /** Get the offset for the given index. */
-  getOffsetForIndex(index: number) {
+  getScrollOffsetForIndex(index: number) {
     return index * this._itemSize;
   }
 

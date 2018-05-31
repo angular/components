@@ -28,7 +28,7 @@ export function supportsPassiveEventListeners(): boolean {
 }
 
 /** Cached result of whether the user's browser supports scroll behaviors. */
-let scrollSupport = true;
+let scrollSupport: boolean;
 
 /**
  * Check whether the browser supports scroll behaviors.
@@ -38,6 +38,7 @@ export function supportsSmoothScroll(): boolean {
   if (scrollSupport == null && typeof window !== 'undefined') {
     try {
       window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+      scrollSupport = true;
     } catch {
       scrollSupport = false;
     }

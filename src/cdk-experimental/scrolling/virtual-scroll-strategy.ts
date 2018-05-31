@@ -39,5 +39,5 @@ export interface VirtualScrollStrategy {
   onRenderedOffsetChanged();
 
   /** Get the offset for the given index. */
-  getOffsetForIndex(index: number);
+  getScrollOffsetForIndex(index: number);
 }
