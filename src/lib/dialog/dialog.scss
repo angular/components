@@ -32,16 +32,16 @@ $mat-dialog-button-margin: 8px !default;
 
 .mat-dialog-content {
   display: block;
-  margin-bottom: -8px !important;
-  padding: 18px 24px 28px 24px !important;
+  margin-bottom: -8px;
+  padding: 18px 24px 28px;
   max-height: $mat-dialog-max-height;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
 
 .mat-dialog-title {
-  padding: 18px 24px 0 24px;
-  margin-bottom: -6px !important;
+  padding: 18px 24px 0;
+  margin-bottom: -6px;
   display: block;
 }
 
