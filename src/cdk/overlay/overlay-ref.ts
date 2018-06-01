@@ -55,6 +55,9 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
         };
       });
 
+  /** Whether animations are disabled for this overlay. */
+  private readonly _animationsDisabled: boolean;
+
   /** Stream of keydown events dispatched to this overlay. */
   _keydownEvents = new Subject<KeyboardEvent>();
 
@@ -70,7 +73,12 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
       private _keyboardDispatcher: OverlayKeyboardDispatcher,
       private _document: Document,
       // @breaking-change 8.0.0 `_location` parameter to be made required.
-      private _location?: Location) {
+      private _location?: Location,
+      /**
+       * @deprecated `animationMode` parameter to be made required.
+       * @breaking-change 8.0.0
+       */
+      animationMode?: string) {
 
     if (_config.scrollStrategy) {
       this._scrollStrategy = _config.scrollStrategy;
@@ -78,6 +86,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     }
 
     this._positionStrategy = _config.positionStrategy;
+    this._animationsDisabled = animationMode === 'NoopAnimations';
   }
 
   /** The overlay's HTML element */
@@ -380,6 +389,10 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     this._backdropElement = this._document.createElement('div');
     this._backdropElement.classList.add('cdk-overlay-backdrop');
 
+    if (this._animationsDisabled) {
+      this._backdropElement.classList.add('cdk-overlay-backdrop-transition-disabled');
+    }
+
     if (this._config.backdropClass) {
       this._toggleClasses(this._backdropElement, this._config.backdropClass, true);
     }
@@ -449,20 +462,26 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
       clearTimeout(timeoutId);
     };
 
-    backdropToDetach.classList.remove('cdk-overlay-backdrop-showing');
+    if (this._animationsDisabled) {
+      // When the animations are disabled via the `NoopAnimationsModule`, we can be
+      // fairly certain that they won't happen so we can remove the element immediately.
+      finishDetach();
+    } else {
+      backdropToDetach.classList.remove('cdk-overlay-backdrop-showing');
 
-    this._ngZone.runOutsideAngular(() => {
-      backdropToDetach!.addEventListener('transitionend', finishDetach);
-    });
+      this._ngZone.runOutsideAngular(() => {
+        backdropToDetach!.addEventListener('transitionend', finishDetach);
+      });
 
-    // If the backdrop doesn't have a transition, the `transitionend` event won't fire.
-    // In this case we make it unclickable and we try to remove it after a delay.
-    backdropToDetach.style.pointerEvents = 'none';
+      // If the backdrop doesn't have a transition, the `transitionend` event won't fire.
+      // In this case we make it unclickable and we try to remove it after a delay.
+      backdropToDetach.style.pointerEvents = 'none';
 
-    // Run this outside the Angular zone because there's nothing that Angular cares about.
-    // If it were to run inside the Angular zone, every test that used Overlay would have to be
-    // either async or fakeAsync.
-    timeoutId = this._ngZone.runOutsideAngular(() => setTimeout(finishDetach, 500));
+      // Run this outside the Angular zone because there's nothing that Angular cares about.
+      // If it were to run inside the Angular zone, every test that used Overlay would have to be
+      // either async or fakeAsync.
+      timeoutId = this._ngZone.runOutsideAngular(() => setTimeout(finishDetach, 500));
+    }
   }
 
   /** Toggles a single CSS class or an array of classes on an element. */

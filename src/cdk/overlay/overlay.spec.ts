@@ -29,6 +29,7 @@ import {
   ScrollStrategy,
 } from './index';
 import {OverlayReference} from './overlay-reference';
+import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 
 describe('Overlay', () => {
@@ -701,6 +702,64 @@ describe('Overlay', () => {
 
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
       expect(backdrop.classList).toContain('cdk-overlay-transparent-backdrop');
+    });
+
+    it('should not disable the backdrop transition if animations are enabled', () => {
+      overlayContainer.ngOnDestroy();
+
+      TestBed
+        .resetTestingModule()
+        .configureTestingModule({
+          imports: [OverlayModule, PortalModule, OverlayTestModule, BrowserAnimationsModule],
+        })
+        .compileComponents();
+
+      inject([Overlay, OverlayContainer], (o: Overlay, oc: OverlayContainer) => {
+        overlay = o;
+        overlayContainer = oc;
+        overlayContainerElement = oc.getContainerElement();
+      })();
+
+      let fixture = TestBed.createComponent(TestComponentWithTemplatePortals);
+      fixture.detectChanges();
+      componentPortal = new ComponentPortal(PizzaMsg, fixture.componentInstance.viewContainerRef);
+      viewContainerFixture = fixture;
+
+      let overlayRef = overlay.create(config);
+      overlayRef.attach(componentPortal);
+      viewContainerFixture.detectChanges();
+
+      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+      expect(backdrop.classList).not.toContain('cdk-overlay-backdrop-transition-disabled');
+    });
+
+    it('should disable the backdrop transition when animations are disabled', () => {
+      overlayContainer.ngOnDestroy();
+
+      TestBed
+        .resetTestingModule()
+        .configureTestingModule({
+          imports: [OverlayModule, PortalModule, OverlayTestModule, NoopAnimationsModule],
+        })
+        .compileComponents();
+
+      inject([Overlay, OverlayContainer], (o: Overlay, oc: OverlayContainer) => {
+        overlay = o;
+        overlayContainer = oc;
+        overlayContainerElement = oc.getContainerElement();
+      })();
+
+      let fixture = TestBed.createComponent(TestComponentWithTemplatePortals);
+      fixture.detectChanges();
+      componentPortal = new ComponentPortal(PizzaMsg, fixture.componentInstance.viewContainerRef);
+      viewContainerFixture = fixture;
+
+      let overlayRef = overlay.create(config);
+      overlayRef.attach(componentPortal);
+      viewContainerFixture.detectChanges();
+
+      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+      expect(backdrop.classList).toContain('cdk-overlay-backdrop-transition-disabled');
     });
 
     it('should apply multiple custom classes to the overlay', () => {

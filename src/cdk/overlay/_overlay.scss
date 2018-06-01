@@ -90,6 +90,13 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     }
   }
 
+  .cdk-overlay-backdrop-transition-disabled {
+    // Reset the transition by overriding, rather than adding
+    // the `transition` conditionally, so we can cover the case
+    // where consumers specified their own transition.
+    transition: none;
+  }
+
   .cdk-overlay-dark-backdrop {
     background: $cdk-overlay-dark-backdrop-background;
   }

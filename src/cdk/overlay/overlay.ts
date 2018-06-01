@@ -24,6 +24,7 @@ import {OverlayContainer} from './overlay-container';
 import {OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {ScrollStrategyOptions} from './scroll/index';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
 /** Next overlay unique ID. */
@@ -56,7 +57,12 @@ export class Overlay {
               @Inject(DOCUMENT) private _document: any,
               private _directionality: Directionality,
               // @breaking-change 8.0.0 `_location` parameter to be made required.
-              @Optional() private _location?: Location) { }
+              @Optional() private _location?: Location,
+              /**
+               * @deprecated `animationMode` parameter to be made required.
+               * @breaking-change 8.0.0
+               */
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string) { }
 
   /**
    * Creates an overlay.
@@ -72,7 +78,7 @@ export class Overlay {
     overlayConfig.direction = overlayConfig.direction || this._directionality.value;
 
     return new OverlayRef(portalOutlet, host, pane, overlayConfig, this._ngZone,
-      this._keyboardDispatcher, this._document, this._location);
+      this._keyboardDispatcher, this._document, this._location, this._animationMode);
   }
 
   /**
