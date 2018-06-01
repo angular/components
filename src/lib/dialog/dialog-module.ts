@@ -11,7 +11,7 @@ import {PortalModule} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
-import {MAT_DIALOG_SCROLL_STRATEGY_PROVIDER, MatDialog} from './dialog';
+import {MAT_DIALOG_SCROLL_STRATEGY_PROVIDER} from './dialog';
 import {MatDialogContainer} from './dialog-container';
 import {
   MatDialogActions,
@@ -19,6 +19,7 @@ import {
   MatDialogContent,
   MatDialogTitle,
 } from './dialog-content-directives';
+import {MatDialogInjectionModule} from './dialog-injectable-module';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import {
     OverlayModule,
     PortalModule,
     MatCommonModule,
+    MatDialogInjectionModule,
   ],
   exports: [
     MatDialogContainer,
@@ -43,10 +45,7 @@ import {
     MatDialogActions,
     MatDialogContent,
   ],
-  providers: [
-    MatDialog,
-    MAT_DIALOG_SCROLL_STRATEGY_PROVIDER,
-  ],
+  providers: [MAT_DIALOG_SCROLL_STRATEGY_PROVIDER],
   entryComponents: [MatDialogContainer],
 })
 export class MatDialogModule {}

@@ -29,6 +29,7 @@ import {defer, Observable, of as observableOf, Subject} from 'rxjs';
 import {startWith} from 'rxjs/operators';
 import {MatDialogConfig} from './dialog-config';
 import {MatDialogContainer} from './dialog-container';
+import {MatDialogInjectionModule} from './dialog-injectable-module';
 import {MatDialogRef} from './dialog-ref';
 
 
@@ -65,7 +66,7 @@ export const MAT_DIALOG_SCROLL_STRATEGY_PROVIDER = {
 /**
  * Service to open Material Design modal dialogs.
  */
-@Injectable()
+@Injectable({providedIn: MatDialogInjectionModule})
 export class MatDialog {
   private _openDialogsAtThisLevel: MatDialogRef<any>[] = [];
   private readonly _afterAllClosedAtThisLevel = new Subject<void>();
