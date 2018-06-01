@@ -32,7 +32,7 @@
                 "input": "src/main.scss"
               },
               {
-                "input": "src/highlightjs/material-light.css"
+                "input": "src/highlightjs/material-light.scss"
               },
               {
                 "input": "src/assets/pink-bluegrey.css",
@@ -108,7 +108,7 @@
                 "input": "src/main.scss"
               },
               {
-                "input": "src/highlightjs/material-light.css"
+                "input": "src/highlightjs/material-light.scss"
               },
               {
                 "input": "src/assets/pink-bluegrey.css",

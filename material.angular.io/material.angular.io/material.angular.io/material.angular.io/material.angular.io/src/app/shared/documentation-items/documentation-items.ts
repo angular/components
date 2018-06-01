@@ -71,7 +71,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
           examples: [
             'input-overview',
             'input-error-state-matcher',
-            'input-autosize-textarea',
+            'text-field-autosize-textarea',
             'input-clearable',
             'input-errors',
             'input-form',
