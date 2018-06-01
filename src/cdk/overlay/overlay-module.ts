@@ -18,15 +18,15 @@ import {
   CdkConnectedOverlay,
   CdkOverlayOrigin,
 } from './overlay-directives';
+import {OverlayInjectionModule} from './overlay-injection-module';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
 
 
 @NgModule({
-  imports: [BidiModule, PortalModule, ScrollDispatchModule],
+  imports: [BidiModule, PortalModule, ScrollDispatchModule, OverlayInjectionModule],
   exports: [CdkConnectedOverlay, CdkOverlayOrigin, ScrollDispatchModule],
   declarations: [CdkConnectedOverlay, CdkOverlayOrigin],
   providers: [
-    Overlay,
     CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER,
   ],
 })

@@ -20,6 +20,7 @@ import {
 import {OverlayKeyboardDispatcher} from './keyboard/overlay-keyboard-dispatcher';
 import {OverlayConfig} from './overlay-config';
 import {OverlayContainer} from './overlay-container';
+import {OverlayInjectionModule} from './overlay-injection-module';
 import {OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {ScrollStrategyOptions} from './scroll/index';
@@ -39,7 +40,7 @@ let nextUniqueId = 0;
  *
  * An overlay *is* a PortalOutlet, so any kind of Portal can be loaded into one.
  */
-@Injectable()
+@Injectable({providedIn: OverlayInjectionModule})
 export class Overlay {
   private _appRef: ApplicationRef;
 
