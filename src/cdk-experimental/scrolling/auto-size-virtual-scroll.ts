@@ -152,8 +152,8 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   }
 
   /** Get the offset for the given index. */
-  getScrollOffsetForIndex(index: number) {
-    return index * this._averager.getAverageItemSize();
+  getScrollOffsetForIndex() {
+    throw new Error('Offset location is not supported with autosize.');
   }
 
   /**
