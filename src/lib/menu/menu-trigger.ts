@@ -195,7 +195,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     }
 
     const overlayRef = this._createOverlay();
-    overlayRef.setDirection(this.dir);
     overlayRef.attach(this._portal);
 
     if (this.menu.lazyContent) {
@@ -235,7 +234,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
     const menu = this.menu;
 
-    this._resetMenu();
     this._closeSubscription.unsubscribe();
     this._overlayRef.detach();
 
@@ -245,11 +243,20 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       if (menu.lazyContent) {
         // Wait for the exit animation to finish before detaching the content.
         menu._animationDone
-          .pipe(take(1))
-          .subscribe(() => menu.lazyContent!.detach());
+          .pipe(filter(event => event.toState === 'void'), take(1))
+          .subscribe(() => {
+            menu.lazyContent!.detach();
+            this._resetMenu();
+          });
+      } else {
+        this._resetMenu();
       }
-    } else if (menu.lazyContent) {
-      menu.lazyContent.detach();
+    } else {
+      this._resetMenu();
+
+      if (menu.lazyContent) {
+        menu.lazyContent.detach();
+      }
     }
   }
 
@@ -345,7 +352,8 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       positionStrategy: this._getPosition(),
       hasBackdrop: this.menu.hasBackdrop == null ? !this.triggersSubmenu() : this.menu.hasBackdrop,
       backdropClass: this.menu.backdropClass || 'cdk-overlay-transparent-backdrop',
-      scrollStrategy: this._scrollStrategy()
+      scrollStrategy: this._scrollStrategy(),
+      direction: this._dir
     });
   }
 

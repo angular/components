@@ -6,6 +6,7 @@ import {
   ViewContainerRef,
   ErrorHandler,
   Injectable,
+  EventEmitter,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {
@@ -155,7 +156,7 @@ describe('Overlay', () => {
     const overlayRef = overlay.create();
 
     overlayRef.attach(componentPortal);
-    expect(overlayRef.overlayElement.getAttribute('dir')).toBe('rtl');
+    expect(overlayRef.hostElement.getAttribute('dir')).toBe('rtl');
   });
 
   it('should set the direction', () => {
@@ -164,7 +165,7 @@ describe('Overlay', () => {
 
     overlayRef.attach(componentPortal);
 
-    expect(overlayRef.overlayElement.getAttribute('dir')).toEqual('rtl');
+    expect(overlayRef.hostElement.getAttribute('dir')).toEqual('rtl');
   });
 
   it('should emit when an overlay is attached', () => {
@@ -316,6 +317,15 @@ describe('Overlay', () => {
       });
 
     expect(() => TestBed.compileComponents()).not.toThrow();
+  });
+
+  it('should keep the direction in sync with the passed in Directionality', () => {
+    const customDirectionality = {value: 'rtl', change: new EventEmitter()};
+    const overlayRef = overlay.create({direction: customDirectionality as Directionality});
+
+    expect(overlayRef.getDirection()).toBe('rtl');
+    customDirectionality.value = 'ltr';
+    expect(overlayRef.getDirection()).toBe('ltr');
   });
 
   describe('positioning', () => {

@@ -241,8 +241,9 @@ describe('MatMenu', () => {
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
 
-    const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
-    expect(overlayPane.getAttribute('dir')).toEqual('rtl');
+    const boundingBox =
+        overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
+    expect(boundingBox.getAttribute('dir')).toEqual('rtl');
   });
 
   it('should update the panel direction if the trigger direction changes', () => {
@@ -255,8 +256,9 @@ describe('MatMenu', () => {
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
 
-    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
-    expect(overlayPane.getAttribute('dir')).toEqual('rtl');
+    let boundingBox =
+        overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
+    expect(boundingBox.getAttribute('dir')).toEqual('rtl');
 
     fixture.componentInstance.trigger.closeMenu();
     fixture.detectChanges();
@@ -265,8 +267,9 @@ describe('MatMenu', () => {
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
 
-    overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
-    expect(overlayPane.getAttribute('dir')).toEqual('ltr');
+    boundingBox =
+        overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
+    expect(boundingBox.getAttribute('dir')).toEqual('ltr');
   });
 
   it('should transfer any custom classes from the host to the overlay', () => {
@@ -417,6 +420,31 @@ describe('MatMenu', () => {
 
       expect(fixture.componentInstance.items.length).toBe(0);
     }));
+
+    it('should wait for the close animation to finish before considering the panel as closed',
+      fakeAsync(() => {
+        const fixture = createComponent(SimpleLazyMenu);
+        fixture.detectChanges();
+        const trigger = fixture.componentInstance.trigger;
+
+        expect(trigger.menuOpen).toBe(false, 'Expected menu to start off closed');
+
+        trigger.openMenu();
+        fixture.detectChanges();
+        tick(500);
+
+        expect(trigger.menuOpen).toBe(true, 'Expected menu to be open');
+
+        trigger.closeMenu();
+        fixture.detectChanges();
+
+        expect(trigger.menuOpen)
+            .toBe(true, 'Expected menu to be considered open while the close animation is running');
+        tick(500);
+        fixture.detectChanges();
+
+        expect(trigger.menuOpen).toBe(false, 'Expected menu to be closed');
+      }));
 
     it('should focus the first menu item when opening a lazy menu via keyboard', fakeAsync(() => {
       let zone: MockNgZone;
