@@ -80,7 +80,8 @@ function addBodyMarginToStyles(options: Schema) {
     const buffer = host.read(stylesPath);
     if (buffer) {
       const src = buffer.toString();
-      const insertion = new InsertChange(stylesPath, src.length, `\nbody { margin: 0; font-family: 'Roboto', sans-serif; }\n`);
+      const insertion = new InsertChange(stylesPath, src.length,
+        `\nhtml, body { height: 100%; }\nbody { margin: 0; font-family: 'Roboto', sans-serif; }\n`);
       const recorder = host.beginUpdate(stylesPath);
       recorder.insertLeft(insertion.pos, insertion.toAdd);
       host.commitUpdate(recorder);
