@@ -11,7 +11,7 @@ import {async, inject, TestBed} from '@angular/core/testing';
 import {DateAdapter, DEC, FEB, JAN, MAR, MAT_DATE_LOCALE} from '@angular/material/core';
 import * as moment from 'moment';
 import {MomentDateModule} from './index';
-import {MomentDateAdapter} from './moment-date-adapter';
+import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from './moment-date-adapter';
 
 
 describe('MomentDateAdapter', () => {
@@ -144,7 +144,7 @@ describe('MomentDateAdapter', () => {
 
   it('should create Moment date', () => {
     expect(adapter.createDate(2017, JAN, 1).format())
-      .toEqual(moment.utc([2017,  JAN,  1]).format());
+      .toEqual(moment([2017,  JAN,  1]).format());
   });
 
   it('should not create Moment date with month over/under-flow', () => {
@@ -165,8 +165,8 @@ describe('MomentDateAdapter', () => {
     expect(adapter.createDate(100, JAN, 1).year()).toBe(100);
   });
 
-  it('should create Moment date in utc format', () => {
-    expect(adapter.createDate(2017, JAN, 5).isUTC()).toBeTruthy();
+  it('should not create Moment date in utc format', () => {
+    expect(adapter.createDate(2017, JAN, 5).isUTC()).toEqual(false);
   });
 
   it("should get today's date", () => {
@@ -411,5 +411,26 @@ describe('MomentDateAdapter with LOCALE_ID override', () => {
 
   it('should take the default locale id from the LOCALE_ID injection token', () => {
     expect(adapter.format(moment([2017,  JAN,  2]), 'll')).toEqual('2 janv. 2017');
+  });
+});
+
+describe('MomentDateAdapter with MAT_MOMENT_DATE_ADAPTER_OPTIONS override', () => {
+  let adapter: MomentDateAdapter;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [MomentDateModule],
+      providers: [
+        { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }
+      ]
+    }).compileComponents();
+  }));
+
+  beforeEach(inject([DateAdapter], (d: MomentDateAdapter) => {
+    adapter = d;
+  }));
+
+  it('should create Moment date in utc format if option useUtc is set', () => {
+    expect(adapter.createDate(2017, JAN, 5).isUTC()).toBeTruthy();
   });
 });
