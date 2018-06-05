@@ -44,7 +44,7 @@ export class StickyStyler {
    * @param stickyDirections The directions that should no longer be set as sticky on the rows.
    */
   clearStickyPositioning(rows: HTMLElement[], stickyDirections: StickyDirection[]) {
-    for (let row of rows) {
+    for (const row of rows) {
       this._removeStickyStyle(row, stickyDirections);
       for (let i = 0; i < row.children.length; i++) {
         const cell = row.children[i] as HTMLElement;
@@ -70,13 +70,15 @@ export class StickyStyler {
       return;
     }
 
-    const numCells = rows[0].children.length;
-    const cellWidths: number[] = this._getCellWidths(rows[0]);
+    const firstRow = rows[0];
+    const numCells = firstRow.children.length;
+    const cellWidths: number[] = this._getCellWidths(firstRow);
+
     const startPositions = this._getStickyStartColumnPositions(cellWidths, stickyStartStates);
     const endPositions = this._getStickyEndColumnPositions(cellWidths, stickyEndStates);
     const isRtl = this.direction === 'rtl';
 
-    for (let row of rows) {
+    for (const row of rows) {
       for (let i = 0; i < numCells; i++) {
         const cell = row.children[i] as HTMLElement;
         if (stickyStartStates[i]) {
@@ -153,7 +155,7 @@ export class StickyStyler {
    * sticky position if there are no more directions.
    */
   _removeStickyStyle(element: HTMLElement, stickyDirections: StickyDirection[]) {
-    for (let dir of stickyDirections) {
+    for (const dir of stickyDirections) {
       element.style[dir] = '';
     }
     element.style.zIndex = this._getCalculatedZIndex(element);
@@ -199,7 +201,7 @@ export class StickyStyler {
     };
 
     let zIndex = 0;
-    for (let dir of STICKY_DIRECTIONS) {
+    for (const dir of STICKY_DIRECTIONS) {
       if (element.style[dir]) {
         zIndex += zIndexIncrements[dir];
       }
