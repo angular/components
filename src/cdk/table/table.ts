@@ -145,11 +145,11 @@ export interface RenderRow<T> {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
-  /** Subject that emits when the component has been destroyed. */
-  private _onDestroy = new Subject<void>();
-
   /** Latest data provided by the data source. */
   protected _data: T[];
+
+  /** Subject that emits when the component has been destroyed. */
+  private _onDestroy = new Subject<void>();
 
   /** List of the rendered rows as identified by their `RenderRow` object. */
   private _renderRows: RenderRow<T>[];
