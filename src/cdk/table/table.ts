@@ -149,7 +149,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   private _onDestroy = new Subject<void>();
 
   /** Latest data provided by the data source. */
-  private _data: T[];
+  protected _data: T[];
 
   /** List of the rendered rows as identified by their `RenderRow` object. */
   private _renderRows: RenderRow<T>[];
