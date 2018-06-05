@@ -124,7 +124,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     this._togglePointerEvents(true);
 
     if (this._config.hasBackdrop) {
-      this._attachBackdrop();
+      this.attachBackdrop();
     }
 
     if (this._config.panelClass) {
@@ -213,6 +213,10 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     return this._portalOutlet.hasAttached();
   }
 
+  backdropClicks() {
+    return this._backdropClick;
+  }
+
   /** Gets an observable that emits when the backdrop has been clicked. */
   backdropClick(): Observable<MouseEvent> {
     return this._backdropClick.asObservable();
@@ -293,7 +297,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   }
 
   /** Attaches a backdrop for this overlay. */
-  private _attachBackdrop() {
+  attachBackdrop() {
     const showingClass = 'cdk-overlay-backdrop-showing';
 
     this._backdropElement = this._document.createElement('div');

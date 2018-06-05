@@ -114,6 +114,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _offsetX: number;
   private _offsetY: number;
   private _position: FlexibleConnectedPositionStrategy;
+  private _disableClose = false;
+  private _open = false;
 
   /** Origin for the connected overlay. */
   @Input('cdkConnectedOverlayOrigin') origin: CdkOverlayOrigin;
@@ -165,8 +167,15 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   @Input('cdkConnectedOverlayScrollStrategy') scrollStrategy: ScrollStrategy =
       this._scrollStrategy();
 
+  /** Whether the overlay closes when the user pressed the Escape key. */
+  @Input('cdkConnectedOverlayDisableClose')
+  get disableClose() { return this._disableClose; }
+  set disableClose(value: any) { this._disableClose = coerceBooleanProperty(value); }
+
   /** Whether the overlay is open. */
-  @Input('cdkConnectedOverlayOpen') open: boolean = false;
+  @Input('cdkConnectedOverlayOpen')
+  get open() { return this._open; }
+  set open(value: any) { this._open = coerceBooleanProperty(value); }
 
   /** Whether or not the overlay should attach a backdrop. */
   @Input('cdkConnectedOverlayHasBackdrop')
@@ -340,7 +349,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       this._overlayRef!.keydownEvents().subscribe((event: KeyboardEvent) => {
         this.overlayKeydown.next(event);
 
-        if (event.keyCode === ESCAPE) {
+        if (!this.disableClose && event.keyCode === ESCAPE) {
           this._detachOverlay();
         }
       });
@@ -359,11 +368,9 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       this.attach.emit();
     }
 
-    if (this.hasBackdrop) {
-      this._backdropSubscription = this._overlayRef.backdropClick().subscribe(event => {
-        this.backdropClick.emit(event);
-      });
-    }
+    this._backdropSubscription = this._overlayRef.backdropClicks().subscribe(event => {
+      this.backdropClick.emit(event);
+    });
   }
 
   /** Detaches the overlay and unsubscribes to backdrop clicks if backdrop exists */

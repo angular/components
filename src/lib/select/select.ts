@@ -14,6 +14,7 @@ import {
   DOWN_ARROW,
   END,
   ENTER,
+  ESCAPE,
   HOME,
   LEFT_ARROW,
   RIGHT_ARROW,
@@ -195,7 +196,7 @@ export class MatSelectTrigger {}
     '[attr.aria-required]': 'required.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': 'errorState',
-    '[attr.aria-owns]': 'panelOpen ? _optionIds : null',
+    '[attr.aria-owns]': '_optionIds',
     '[attr.aria-multiselectable]': 'multiple',
     '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-activedescendant]': '_getAriaActiveDescendant()',
@@ -560,25 +561,32 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     // Note: The computed font-size will be a string pixel value (e.g. "16px").
     // `parseInt` ignores the trailing 'px' and converts this to a number.
     this._triggerFontSize = parseInt(getComputedStyle(this.trigger.nativeElement)['font-size']);
+    if (this._triggerFontSize && this.overlayDir.overlayRef &&
+      this.overlayDir.overlayRef.overlayElement) {
+      this.overlayDir.overlayRef.overlayElement.style.fontSize = `${this._triggerFontSize}px`;
+    }
 
     this._panelOpen = true;
     this._keyManager.withHorizontalOrientation(null);
     this._calculateOverlayPosition();
     this._highlightCorrectOption();
-    this._changeDetectorRef.markForCheck();
 
-    // Set the font size on the panel element once it exists.
-    this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
-      if (this._triggerFontSize && this.overlayDir.overlayRef &&
-          this.overlayDir.overlayRef.overlayElement) {
-        this.overlayDir.overlayRef.overlayElement.style.fontSize = `${this._triggerFontSize}px`;
-      }
-    });
+    this.overlayDir.overlayRef.updateSize({minWidth: `${this._triggerRect.width}px`});
+    if (this._dir) {
+      this.overlayDir.overlayRef.setDirection(this._dir);
+    }
+    this.overlayDir.overlayRef.updatePosition();
+
+    this._changeDetectorRef.detectChanges();
+    this._calculateOverlayOffsetX();
+    this.panel.nativeElement.scrollTop = this._scrollTop;
+    this._showBackdrop();
   }
 
   /** Closes the overlay panel and focuses the host element. */
   close(): void {
     if (this._panelOpen) {
+      this._hideBackdrop();
       this._panelOpen = false;
       this._keyManager.withHorizontalOrientation(this._isRtl() ? 'rtl' : 'ltr');
       this._changeDetectorRef.markForCheck();
@@ -662,6 +670,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     return this._selectionModel.selected[0].viewValue;
   }
 
+  /** The animation transform for overlay panel. */
+  get _transformPanel() {
+    return this.panelOpen ? (this.multiple ? 'showing-multiple' : 'showing') : 'void';
+  }
+
+
   /** Whether the element is in RTL mode. */
   _isRtl(): boolean {
     return this._dir ? this._dir.value === 'rtl' : false;
@@ -710,6 +724,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       event.preventDefault();
       const hasDeselectedOptions = this.options.some(option => !option.selected);
       this.options.forEach(option => hasDeselectedOptions ? option.select() : option.deselect());
+    } else if (keyCode === ESCAPE) {
+      event.preventDefault();
+      this.close();
     } else {
       const previouslyFocusedIndex = manager.activeItemIndex;
 
@@ -771,6 +788,22 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   /** Whether the select has a value. */
   get empty(): boolean {
     return !this._selectionModel || this._selectionModel.isEmpty();
+  }
+
+  /** Show the backdrop of the overlay. */
+  private _showBackdrop() {
+    if (this.overlayDir.overlayRef.backdropElement) {
+      this.overlayDir.overlayRef.backdropElement.style.display = 'block';
+    } else {
+      this.overlayDir.overlayRef.attachBackdrop();
+    }
+  }
+
+  /** Hide the backdrop of the overlay. */
+  private _hideBackdrop() {
+    if (this.overlayDir.overlayRef.backdropElement) {
+      this.overlayDir.overlayRef.backdropElement.style.display = 'none';
+    }
   }
 
   private _initializeSelection(): void {
