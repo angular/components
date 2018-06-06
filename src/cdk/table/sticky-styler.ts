@@ -150,8 +150,8 @@ export class StickyStyler {
   }
 
   /**
-   * Removes the sticky style on the element by removing the sticky cell CSS class, resetting the
-   * z-index back to 0, removing each of the provided sticky directions, and removing the
+   * Removes the sticky style on the element by removing the sticky cell CSS class, re-evaluating
+   * the zIndex, removing each of the provided sticky directions, and removing the
    * sticky position if there are no more directions.
    */
   _removeStickyStyle(element: HTMLElement, stickyDirections: StickyDirection[]) {
@@ -207,7 +207,7 @@ export class StickyStyler {
       }
     }
 
-    return `${zIndex}`;
+    return zIndex ? `${zIndex}` : '';
   }
 
   /** Gets the widths for each cell in the provided row. */

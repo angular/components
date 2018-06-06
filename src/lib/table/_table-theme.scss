@@ -10,10 +10,10 @@
     background: mat-color($background, 'card');
   }
 
-  // TODO(andrewseguin): Only needed for sticky styles, maybe have it triggered only then?
   .mat-table thead, .mat-table tbody, .mat-table tfoot,
-  .mat-header-row, .mat-row, .mat-footer-row,
-  .mat-header-cell, .mat-cell, .mat-footer-cell {
+  mat-header-row, mat-row, mat-footer-row,
+  [mat-header-row], [mat-row], [mat-footer-row],
+  .mat-table-sticky {
     background: inherit;
   }
 
