@@ -121,6 +121,7 @@ export class SelectionModel<T> {
    */
   isMultipleSelection() {
     return this._multiple;
+    
   }
 
   /** Emits a change event and clears the records of selected and deselected values. */
