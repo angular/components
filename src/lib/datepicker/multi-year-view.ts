@@ -101,6 +101,9 @@ export class MatMultiYearView<D> implements AfterContentInit {
   /** Emits the selected year. This doesn't imply a change on the selected date */
   @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
 
+  /** Emits when any date is activated. */
+  @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
+
   /** The body of calendar table */
   @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
 
@@ -131,7 +134,21 @@ export class MatMultiYearView<D> implements AfterContentInit {
   _init() {
     this._todayYear = this._dateAdapter.getYear(this._dateAdapter.today());
     let activeYear = this._dateAdapter.getYear(this._activeDate);
-    let activeOffset = activeYear % yearsPerPage;
+    // Default Behavior for Offset
+    let activeOffset = yearsPerPage / 2;
+    if (!this._maxDate && this._minDate) {
+      activeOffset = 0;
+    }
+
+    if (this._maxDate) {
+      const maxYear = this._dateAdapter.getYear(this._maxDate);
+      const yearOffset = (maxYear - activeYear) + 1;
+      const currentYearOffsetFromEnd = yearOffset % yearsPerPage;
+      const currentYearOffsetFromStart = yearsPerPage - currentYearOffsetFromEnd;
+
+      activeOffset = currentYearOffsetFromStart;
+    }
+
     this._years = [];
     for (let i = 0, row: number[] = []; i < yearsPerPage; i++) {
       row.push(activeYear - activeOffset + i);
@@ -159,6 +176,7 @@ export class MatMultiYearView<D> implements AfterContentInit {
     // disabled ones from being selected. This may not be ideal, we should look into whether
     // navigation should skip over disabled dates, and if so, how to implement that efficiently.
 
+    const oldActiveDate = this._activeDate;
     const isRtl = this._isRtl();
 
     switch (event.keyCode) {
@@ -198,6 +216,10 @@ export class MatMultiYearView<D> implements AfterContentInit {
       default:
         // Don't prevent default or focus active cell on keys that we don't explicitly handle.
         return;
+    }
+
+    if (this._dateAdapter.compareDate(oldActiveDate, this.activeDate)) {
+      this.activeDateChange.emit(this.activeDate);
     }
 
     this._focusActiveCell();
