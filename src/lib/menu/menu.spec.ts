@@ -1714,7 +1714,7 @@ class CustomMenu {
       [matMenuTriggerFor]="levelTwo"
       #alternateTrigger="matMenuTrigger">Toggle alternate menu</button>
 
-    <mat-menu #root="matMenu" (close)="rootCloseCallback($event)">
+    <mat-menu #root="matMenu" (closed)="rootCloseCallback($event)">
       <button mat-menu-item
         id="level-one-trigger"
         [matMenuTriggerFor]="levelOne"
@@ -1727,7 +1727,7 @@ class CustomMenu {
         #lazyTrigger="matMenuTrigger">Three</button>
     </mat-menu>
 
-    <mat-menu #levelOne="matMenu" (close)="levelOneCloseCallback($event)">
+    <mat-menu #levelOne="matMenu" (closed)="levelOneCloseCallback($event)">
       <button mat-menu-item>Four</button>
       <button mat-menu-item
         id="level-two-trigger"
@@ -1736,7 +1736,7 @@ class CustomMenu {
       <button mat-menu-item>Six</button>
     </mat-menu>
 
-    <mat-menu #levelTwo="matMenu" (close)="levelTwoCloseCallback($event)">
+    <mat-menu #levelTwo="matMenu" (closed)="levelTwoCloseCallback($event)">
       <button mat-menu-item>Seven</button>
       <button mat-menu-item>Eight</button>
       <button mat-menu-item>Nine</button>

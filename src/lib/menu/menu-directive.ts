@@ -239,7 +239,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
 
   ngAfterContentInit() {
     this._keyManager = new FocusKeyManager<MatMenuItem>(this._items).withWrap().withTypeAhead();
-    this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close.emit('tab'));
+    this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.closed.emit('tab'));
   }
 
   ngOnDestroy() {
