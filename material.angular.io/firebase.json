@@ -2,6 +2,13 @@
   "hosting": {
     "public": "dist",
     "cleanUrls": true,
+    "headers": [{
+        "source": "**/*.@(js|html|css)",
+        "headers": [{
+          "key": "Cache-Control",
+          "value": "max-age=604800"
+        }]
+    }],
     "rewrites": [
       {
         "source": "/**/!(*.@(js|ts|html|css|json|svg|png|jpg|jpeg))",
