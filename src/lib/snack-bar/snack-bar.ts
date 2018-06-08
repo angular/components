@@ -236,7 +236,9 @@ export class MatSnackBar {
       config.horizontalPosition === 'left' ||
       (config.horizontalPosition === 'start' && !isRtl) ||
       (config.horizontalPosition === 'end' && isRtl));
-    const isRight = !isLeft && config.horizontalPosition !== 'center';
+    const isRight = (!isLeft &&
+      config.horizontalPosition !== 'center' &&
+      config.horizontalPosition !== 'stretch');
     if (isLeft) {
       positionStrategy.left('0');
     } else if (isRight) {
@@ -244,11 +246,15 @@ export class MatSnackBar {
     } else {
       positionStrategy.centerHorizontally();
     }
-    // Set horizontal position.
+    // Set vertical position.
     if (config.verticalPosition === 'top') {
       positionStrategy.top('0');
     } else {
       positionStrategy.bottom('0');
+    }
+
+    if (config.horizontalPosition === 'stretch') {
+      overlayConfig.panelClass = 'mat-snack-bar-stretch';
     }
 
     overlayConfig.positionStrategy = positionStrategy;

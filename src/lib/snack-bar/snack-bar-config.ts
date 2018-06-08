@@ -14,7 +14,8 @@ import {Direction} from '@angular/cdk/bidi';
 export const MAT_SNACK_BAR_DATA = new InjectionToken<any>('MatSnackBarData');
 
 /** Possible values for horizontalPosition on MatSnackBarConfig. */
-export type MatSnackBarHorizontalPosition = 'start' | 'center' | 'end' | 'left' | 'right';
+export type MatSnackBarHorizontalPosition =
+  'start' | 'center' | 'end' | 'left' | 'right' | 'stretch';
 
 /** Possible values for verticalPosition on MatSnackBarConfig. */
 export type MatSnackBarVerticalPosition = 'top' | 'bottom';

@@ -713,6 +713,22 @@ describe('MatSnackBar Positioning', () => {
     expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
    }));
 
+   it('should be in the bottom and stretched across the screen', fakeAsync(() => {
+    snackBar.open(simpleMessage, simpleActionLabel, {
+      verticalPosition: 'bottom',
+      horizontalPosition: 'stretch'
+    });
+
+    viewContainerFixture.detectChanges();
+    flush();
+
+    const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
+    const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(containerEl.classList.contains('mat-snack-bar-top')).toBeFalsy();
+    expect(overlayPaneEl.classList.contains('mat-snack-bar-stretch')).toBeTruthy();
+   }));
+
    it('should be in the top left corner', fakeAsync(() => {
     snackBar.open(simpleMessage, simpleActionLabel, {
       verticalPosition: 'top',
@@ -772,6 +788,23 @@ describe('MatSnackBar Positioning', () => {
     expect(overlayPaneEl.style.marginRight).toBe('', 'Expected margin-right to be ""');
     expect(overlayPaneEl.style.marginLeft).toBe('', 'Expected margin-left  to be ""');
    }));
+
+   it('should be in the top and stretched across the screen', fakeAsync(() => {
+    snackBar.open(simpleMessage, simpleActionLabel, {
+      verticalPosition: 'top',
+      horizontalPosition: 'stretch'
+    });
+
+    viewContainerFixture.detectChanges();
+    flush();
+
+    const containerEl = overlayContainerEl.querySelector('snack-bar-container') as HTMLElement;
+    const overlayPaneEl = overlayContainerEl.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(containerEl.classList.contains('mat-snack-bar-top')).toBeTruthy();
+    expect(overlayPaneEl.classList.contains('mat-snack-bar-stretch')).toBeTruthy();
+   }));
+
 
    it('should handle start based on direction (rtl)', fakeAsync(() => {
     snackBar.open(simpleMessage, simpleActionLabel, {

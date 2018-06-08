@@ -49,7 +49,8 @@ $mat-snack-bar-spacing-margin: 24px !default;
  * The mat-snack-bar-handset class will be applied to the overlay
  * element causing styling to both it and the snack bar container.
  */
-.mat-snack-bar-handset {
+.mat-snack-bar-handset,
+.mat-snack-bar-stretch {
   width: 100%;
 
   .mat-snack-bar-container {
