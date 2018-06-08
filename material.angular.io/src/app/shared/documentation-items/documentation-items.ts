@@ -176,7 +176,17 @@ const DOCS: {[key: string]: DocCategory[]} = {
         {id: 'bottom-sheet', name: 'Bottom Sheet', examples: ['bottom-sheet-overview']},
         {id: 'dialog', name: 'Dialog', examples: ['dialog-overview']},
         {id: 'snack-bar', name: 'Snackbar', examples: ['snack-bar-component']},
-        {id: 'tooltip', name: 'Tooltip', examples: ['tooltip-position']},
+        {id: 'tooltip', name: 'Tooltip', examples: [
+            'tooltip-overview',
+            'tooltip-position',
+            'tooltip-custom-class',
+            'tooltip-delay',
+            'tooltip-disabled',
+            'tooltip-manual',
+            'tooltip-message',
+            'tooltip-modified-defaults',
+            'tooltip-auto-hide',
+          ]},
       ]
     },
     {
@@ -186,11 +196,24 @@ const DOCS: {[key: string]: DocCategory[]} = {
         {id: 'paginator', name: 'Paginator', examples: ['paginator-configurable']},
         {id: 'sort', name: 'Sort header', examples: ['sort-overview']},
         {id: 'table', name: 'Table', examples: [
-          'table-filtering',
-          'table-pagination',
-          'table-sorting',
-          'table-http',
-          'table-overview',
+            'table-basic',
+            'table-basic-flex',
+            'table-dynamic-columns',
+            'table-expandable-rows',
+            'table-filtering',
+            'table-footer-row',
+            'table-http',
+            'table-multiple-header-footer',
+            'table-overview',
+            'table-pagination',
+            'table-row-context',
+            'table-selection',
+            'table-sorting',
+
+            // Expose these examples with 6.3.0 release (sticky table)
+            // 'table-sticky-column',
+            // 'table-sticky-footer',
+            // 'table-sticky-header',
         ]},
       ]
     }
