@@ -1,6 +1,7 @@
 import './polyfills';
 
 import {CdkTableModule} from '@angular/cdk/table';
+import {CdkTreeModule} from '@angular/cdk/tree';
 import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -49,6 +50,7 @@ import {MaterialDocsExample} from './app/material-docs-example';
 @NgModule({
   exports: [
     CdkTableModule,
+    CdkTreeModule,
     MatAutocompleteModule,
     MatBadgeModule,
     MatBottomSheetModule,
