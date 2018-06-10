@@ -286,11 +286,14 @@ export class CdkVirtualScrollViewport implements DoCheck, OnInit, OnDestroy {
     }
 
     if (shouldScroll) {
-      const smooth = options.smooth && supportsSmoothScroll();
-      if (smooth) {
+      if (options.smooth && supportsSmoothScroll()) {
         viewportElement.scrollTo({ left, top, behavior: 'smooth' });
       } else {
-        viewportElement.scrollTo(left, top);
+        if (this.orientation === 'vertical') {
+          viewportElement.scrollTop = top;
+        } else {
+          viewportElement.scrollLeft = left;
+        }
       }
     }
   }

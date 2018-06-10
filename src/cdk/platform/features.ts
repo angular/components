@@ -27,24 +27,11 @@ export function supportsPassiveEventListeners(): boolean {
   return supportsPassiveEvents;
 }
 
-/** Cached result of whether the user's browser supports scroll behaviors. */
-let scrollSupport: boolean;
-
 /**
  * Check whether the browser supports scroll behaviors.
- * https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollTo
  */
 export function supportsSmoothScroll(): boolean {
-  if (scrollSupport == null && typeof window !== 'undefined') {
-    try {
-      window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
-      scrollSupport = true;
-    } catch {
-      scrollSupport = false;
-    }
-  }
-
-  return scrollSupport;
+  return 'scrollBehavior' in document.documentElement.style;
 }
 
 /** Cached result Set of input types support by the current browser. */
