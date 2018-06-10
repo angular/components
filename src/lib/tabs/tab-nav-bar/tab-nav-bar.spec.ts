@@ -16,7 +16,6 @@ describe('MatTabNavBar', () => {
       imports: [MatTabsModule],
       declarations: [
         SimpleTabNavBarTestApp,
-        TabLink,
         TabLinkWithNgIf,
         TabLinkWithTabIndexBinding,
         TabLinkWithNativeTabindexAttr,
@@ -67,7 +66,23 @@ describe('MatTabNavBar', () => {
       fixture.detectChanges();
       expect(tabLinkElements[0].classList.contains('mat-tab-label-active')).toBeFalsy();
       expect(tabLinkElements[1].classList.contains('mat-tab-label-active')).toBeTruthy();
+    });
 
+    it('should toggle aria-current based on active state', () => {
+      let tabLink1 = fixture.debugElement.queryAll(By.css('a'))[0];
+      let tabLink2 = fixture.debugElement.queryAll(By.css('a'))[1];
+      const tabLinkElements = fixture.debugElement.queryAll(By.css('a'))
+        .map(tabLinkDebugEl => tabLinkDebugEl.nativeElement);
+
+      tabLink1.nativeElement.click();
+      fixture.detectChanges();
+      expect(tabLinkElements[0].getAttribute('aria-current')).toEqual('true');
+      expect(tabLinkElements[1].getAttribute('aria-current')).toEqual('false');
+
+      tabLink2.nativeElement.click();
+      fixture.detectChanges();
+      expect(tabLinkElements[0].getAttribute('aria-current')).toEqual('false');
+      expect(tabLinkElements[1].getAttribute('aria-current')).toEqual('true');
     });
 
     it('should add the disabled class if disabled', () => {
@@ -274,16 +289,6 @@ describe('MatTabNavBar', () => {
 
     expect(tabLink.tabIndex).toBe(3, 'Expected the tabIndex to be have been set to 3.');
   });
-
-  it('should set role on tablist and tab', () => {
-    const fixture = TestBed.createComponent(TabLink);
-    fixture.detectChanges();
-
-    const tabList = fixture.debugElement.query(By.css('.mat-tab-links'));
-    expect(tabList.nativeElement.getAttribute('role')).toEqual('tablist');
-    const tabLinkElement = tabList.query(By.directive(MatTabLink)).nativeElement;
-    expect(tabLinkElement.getAttribute('role')).toEqual('tab');
-  });
 });
 
 @Component({
@@ -311,15 +316,6 @@ class SimpleTabNavBarTestApp {
 
   activeIndex = 0;
 }
-
-@Component({
-  template: `
-    <nav mat-tab-nav-bar>
-      <a mat-tab-link role="willbeoverridden">Link</a>
-    </nav>
-  `
-})
-class TabLink {}
 
 @Component({
   template: `

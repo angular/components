@@ -23,12 +23,16 @@ export class TableDemo {
     'table-filtering',
     'table-footer-row',
     'table-http',
-    'table-native-only',
     'table-overview',
     'table-pagination',
     'table-row-context',
     'table-selection',
     'table-sorting',
     'table-expandable-rows',
+    'table-sticky-header',
+    'table-sticky-columns',
+    'table-sticky-footer',
+    'table-sticky-complex',
+    'table-sticky-complex-flex',
   ];
 }
