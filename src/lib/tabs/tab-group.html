@@ -36,7 +36,7 @@
                [content]="tab.content"
                [position]="tab.position"
                [origin]="tab.origin"
-               (onSwipe)="_bodyContentSwiped($event)"
+               (swipe)="_bodyContentSwiped($event)"
                (_onCentered)="_removeTabBodyWrapperHeight()"
                (_onCentering)="_setTabBodyWrapperHeight($event)">
   </mat-tab-body>

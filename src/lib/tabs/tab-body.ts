@@ -132,7 +132,7 @@ export class MatTabBody implements OnInit {
   @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
 
   /** Event emitted when the tab body is swiped left/right */
-  @Output() onSwipe: EventEmitter<HammerInput> = new EventEmitter<HammerInput>();
+  @Output() swipe: EventEmitter<HammerInput> = new EventEmitter<HammerInput>();
 
   /** The tab body content to display. */
   @Input('content') _content: TemplatePortal;

@@ -1,6 +1,6 @@
 <!-- touch-action workaround for https://github.com/angular/material2/issues/6484 -->
 <div class="mat-tab-body-content" #content
-     (swipe)="onSwipe.emit($event)"
+     (swipe)="swipe.emit($event)"
      [style.touch-action]="'pan-y'"
      [@translateTab]="_position"
      (@translateTab.start)="_onTranslateTabStarted($event)"

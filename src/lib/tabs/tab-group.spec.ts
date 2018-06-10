@@ -1,16 +1,14 @@
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
-// tslint:disable-next-line:no-unused-variable
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {TestGestureConfig} from '../core/gestures/test-gesture-config';
 import {Observable} from 'rxjs';
 import {MatTab, MatTabGroup, MatTabHeaderPosition, MatTabsModule} from './index';
-import {HammerDirection} from '@angular/material/core';
+import {HammerDirection} from '../core/gestures/gesture-annotations';
+// tslint:disable-next-line:no-unused-variable
+import {ViewportRuler} from '@angular/cdk/scrolling';
 
 describe('MatTabGroup', () => {
   let gestureConfig: TestGestureConfig;
