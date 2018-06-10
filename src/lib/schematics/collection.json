@@ -9,7 +9,6 @@
       "schema": "./shell/schema.json",
       "aliases": ["material-shell"]
     },
-
     // Create a dashboard component
     "materialDashboard": {
       "description": "Create a card-based dashboard component",
@@ -30,6 +29,13 @@
       "factory": "./nav/index",
       "schema": "./nav/schema.json",
       "aliases": [ "material-nav" ]
+    },
+    // Create a file tree component
+    "tree": {
+      "description": "Create a file tree component.",
+      "factory": "./tree/index",
+      "schema": "./tree/schema.json",
+      "aliases": []
     }
   }
 }
