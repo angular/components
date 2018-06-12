@@ -1,4 +1,4 @@
-import { Component<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
+import { Component<% if (!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if (changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { of as observableOf } from 'rxjs';
 import { FlatTreeControl } from '@angular/cdk/tree';
@@ -20,7 +20,7 @@ export interface TreeNode {
 }
 
 @Component({
-  selector: '<%= selector %>',<% if(inlineTemplate) { %>
+  selector: '<%= selector %>',<% if (inlineTemplate) { %>
   template: `
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
@@ -39,13 +39,13 @@ export interface TreeNode {
           </mat-icon>
         </button>
         <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">
-          {{ node.type ==='file' ? 'description' : 'folder' }}
+          {{ node.type === 'file' ? 'description' : 'folder' }}
         </mat-icon>
         {{node.name}}
       </mat-tree-node>
     </mat-tree>
   `,<% } else { %>
-  templateUrl: './<%= dasherize(name) %>.component.html',<% } if(inlineStyle) { %>
+  templateUrl: './<%= dasherize(name) %>.component.html',<% } if (inlineStyle) { %>
   styles: [
     `
     .type-icon {
@@ -54,7 +54,7 @@ export interface TreeNode {
     }
   `
   ]<% } else { %>
-  styleUrls: ['./<%= dasherize(name) %>.component.<%= styleext %>']<% } %><% if(!!viewEncapsulation) { %>,
+  styleUrls: ['./<%= dasherize(name) %>.component.<%= styleext %>']<% } %><% if (!!viewEncapsulation) { %>,
   encapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } if (changeDetection !== 'Default') { %>,
   changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %>
 })
@@ -96,7 +96,7 @@ export class <%= classify(name) %>Component {
     return node.level;
   }
 
-  /** Return whether the node is expanded or not. */
+  /** Get whether the node is expanded or not. */
   isExpandable(node: TreeNode) {
     return node.expandable;
   };

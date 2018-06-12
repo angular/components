@@ -4,7 +4,7 @@ import {addModuleImportToModule, findModuleFromOptions} from '../utils/ast';
 import {buildComponent} from '../utils/devkit-utils/component';
 
 /**
- * Scaffolds a new navigation component.
+ * Scaffolds a new tree component.
  * Internally it bootstraps the base component schematic
  */
 export default function(options: Schema): Rule {
