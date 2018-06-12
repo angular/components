@@ -7,7 +7,6 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs';
 import {CdkDatepickerIntl} from '@angular/cdk/datepicker/datepicker-intl';
 
 
