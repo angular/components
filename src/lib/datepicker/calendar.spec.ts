@@ -14,7 +14,7 @@ import {DEC, FEB, JAN, MatNativeDateModule, NOV} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {MatCalendar} from './calendar';
-import {CdkDatepickerIntl} from '@angular/cdk/datepicker/datepicker-intl';
+import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerModule} from './datepicker-module';
 
 describe('MatCalendar', () => {
@@ -34,7 +34,7 @@ describe('MatCalendar', () => {
         CalendarWithDateFilter,
       ],
       providers: [
-        CdkDatepickerIntl,
+        MatDatepickerIntl,
         {provide: NgZone, useFactory: () => zone = new MockNgZone()},
         {provide: Directionality, useFactory: () => dir = {value: 'ltr'}}
       ],
@@ -111,7 +111,7 @@ describe('MatCalendar', () => {
     });
 
     it('should re-render when the i18n labels have changed',
-      inject([CdkDatepickerIntl], (intl: CdkDatepickerIntl) => {
+      inject([MatDatepickerIntl], (intl: MatDatepickerIntl) => {
         const button = fixture.debugElement.nativeElement
             .querySelector('.mat-calendar-period-button');
 

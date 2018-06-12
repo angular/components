@@ -22,7 +22,7 @@ import {
 } from '@angular/core';
 import {merge, of as observableOf, Subscription} from 'rxjs';
 import {MatDatepicker} from './datepicker';
-import {CdkDatepickerIntl} from '@angular/cdk/datepicker/datepicker-intl';
+import {MatDatepickerIntl} from './datepicker-intl';
 
 
 /** Can be used to override the icon of a `matDatepickerToggle`. */
@@ -66,7 +66,7 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   /** Custom icon set by the consumer. */
   @ContentChild(MatDatepickerToggleIcon) _customIcon: MatDatepickerToggleIcon;
 
-  constructor(public _intl: CdkDatepickerIntl, private _changeDetectorRef: ChangeDetectorRef) {}
+  constructor(public _intl: MatDatepickerIntl, private _changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.datepicker) {

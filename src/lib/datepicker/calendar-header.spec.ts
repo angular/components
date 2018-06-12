@@ -1,7 +1,7 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {MatDatepickerModule} from './datepicker-module';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {CdkDatepickerIntl} from '@angular/cdk/datepicker/datepicker-intl';
+import {MatDatepickerIntl} from './datepicker-intl';
 import {DEC, FEB, JAN, MatNativeDateModule} from '@angular/material/core';
 import {Component} from '@angular/core';
 import {MatCalendar} from './calendar';
@@ -22,7 +22,7 @@ describe('MatCalendarHeader', () => {
         StandardCalendar,
       ],
       providers: [
-        CdkDatepickerIntl,
+        MatDatepickerIntl,
         {provide: Directionality, useFactory: () => dir = {value: 'ltr'}}
       ],
     });

@@ -28,7 +28,7 @@ import {
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
-import {CdkDatepickerIntl} from '@angular/cdk/datepicker/datepicker-intl';
+import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
 import {MatMultiYearView, yearsPerPage} from './multi-year-view';
 import {MatYearView} from './year-view';
@@ -49,7 +49,7 @@ export type MatCalendarView = 'month' | 'year' | 'multi-year';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCalendarHeader<D> {
-  constructor(private _intl: CdkDatepickerIntl,
+  constructor(private _intl: MatDatepickerIntl,
               @Inject(forwardRef(() => MatCalendar)) public calendar: MatCalendar<D>,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
@@ -274,7 +274,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
    */
   stateChanges = new Subject<void>();
 
-  constructor(_intl: CdkDatepickerIntl,
+  constructor(_intl: MatDatepickerIntl,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               changeDetectorRef: ChangeDetectorRef) {
