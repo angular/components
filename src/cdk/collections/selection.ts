@@ -34,12 +34,13 @@ export class SelectionModel<T> {
   }
 
   /** Event emitted when the value has changed. */
-  onChange: Subject<SelectionChange<T>> | null = this._emitChanges ? new Subject() : null;
+  change: Subject<SelectionChange<T>> | null = this._emitChanges ? new Subject() : null;
 
   constructor(
     private _multiple = false,
     initiallySelectedValues?: T[],
-    private _emitChanges = true) {
+    private _emitChanges = true,
+    private _trackBy?: (model) => any) {
 
     if (initiallySelectedValues && initiallySelectedValues.length) {
       if (_multiple) {
@@ -74,8 +75,8 @@ export class SelectionModel<T> {
   /**
    * Toggles a value between selected and deselected.
    */
-  toggle(value: T): void {
-    this.isSelected(value) ? this.deselect(value) : this.select(value);
+  toggle(...value: T[]): void {
+    value.forEach(v => this.isSelected(v) ? this.deselect(v) : this.select(v))
   }
 
   /**
@@ -86,11 +87,21 @@ export class SelectionModel<T> {
     this._emitChangeEvent();
   }
 
-  /**
-   * Determines whether a value is selected.
-   */
+  /** Determines whether a value is selected. */
   isSelected(value: T): boolean {
-    return this._selection.has(value);
+    if (!this._trackBy) {
+      return this._selection.has(value);
+    } else {
+      let has = false;
+      this._selection.forEach(v => {
+        const found = compareFn(this._trackBy, v, value);
+        if (found) {
+          has = true;
+          return false;
+        }
+      });
+      return has;
+    }
   }
 
   /**
@@ -129,8 +140,8 @@ export class SelectionModel<T> {
     this._selected = null;
 
     if (this._selectedToEmit.length || this._deselectedToEmit.length) {
-      if (this.onChange) {
-        this.onChange.next({
+      if (this.change) {
+        this.change.next({
           source: this,
           added: this._selectedToEmit,
           removed: this._deselectedToEmit
@@ -205,4 +216,14 @@ export interface SelectionChange<T> {
  */
 export function getMultipleValuesInSingleSelectionError() {
   return Error('Cannot pass multiple values into SelectionModel with single-value mode.');
+}
+
+/** A function to compare values using a callback tracker. */
+export function compareFn(trackBy, current, next) {
+  if (trackBy) {
+    current = trackBy(current);
+    next = trackBy(next);
+  }
+
+  return current === next;
 }

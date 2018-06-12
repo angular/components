@@ -320,7 +320,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
     }
 
     // Sync external changes to the model back to the options.
-    this._modelChanges = this.selectedOptions.onChange!.subscribe(event => {
+    this._modelChanges = this.selectedOptions.change!.subscribe(event => {
       if (event.added) {
         for (let item of event.added) {
           item.selected = true;
