@@ -42,12 +42,12 @@ import {SlideToggleDemo} from '../slide-toggle/slide-toggle-demo';
 import {SliderDemo} from '../slider/slider-demo';
 import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
 import {StepperDemo} from '../stepper/stepper-demo';
-import {TABS_DEMO_ROUTES} from '../tabs/routes';
 import {TabsDemo} from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
 import {TreeDemo} from '../tree/tree-demo';
 import {TypographyDemo} from '../typography/typography-demo';
+import {VirtualScrollDemo} from '../virtual-scroll/virtual-scroll-demo';
 import {DemoApp, Home} from './demo-app';
 import {BadgeDemo} from '../badge/badge-demo';
 import {ConnectedOverlayDemo} from '../connected-overlay/connected-overlay-demo';
@@ -94,7 +94,7 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'snack-bar', component: SnackBarDemo},
     {path: 'stepper', component: StepperDemo},
     {path: 'table', component: TableDemo},
-    {path: 'tabs', component: TabsDemo, children: TABS_DEMO_ROUTES},
+    {path: 'tabs', component: TabsDemo},
     {path: 'toolbar', component: ToolbarDemo},
     {path: 'tooltip', component: TooltipDemo},
     {path: 'tree', component: TreeDemo},
@@ -103,7 +103,8 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'stepper', component: StepperDemo},
     {path: 'screen-type', component: ScreenTypeDemo},
     {path: 'connected-overlay', component: ConnectedOverlayDemo},
-    {path: 'examples', component: ExamplesPage}
+    {path: 'virtual-scroll', component: VirtualScrollDemo},
+    {path: 'examples', component: ExamplesPage},
   ]}
 ];
 

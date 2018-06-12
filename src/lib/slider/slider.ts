@@ -34,6 +34,7 @@ import {
   Output,
   ViewChild,
   ViewEncapsulation,
+  Inject,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -46,6 +47,7 @@ import {
   mixinTabIndex,
 } from '@angular/material/core';
 import {Subscription} from 'rxjs';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 /**
  * Visually, a 30px separation between tick marks looks best. This is very subjective but it is
@@ -126,6 +128,7 @@ export const _MatSliderMixinBase =
     '[class.mat-slider-vertical]': 'vertical',
     '[class.mat-slider-min-value]': '_isMinValue',
     '[class.mat-slider-hide-last-tick]': 'disabled || _isMinValue && _thumbGap && _invertAxis',
+    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
@@ -221,7 +224,15 @@ export class MatSlider extends _MatSliderMixinBase
   }
   set value(v: number | null) {
     if (v !== this._value) {
-      this._value = coerceNumberProperty(v);
+      let value = coerceNumberProperty(v);
+
+      // While incrementing by a decimal we can end up with values like 33.300000000000004.
+      // Truncate it to ensure that it matches the label and to make it easier to work with.
+      if (this._roundToDecimal) {
+        value = parseFloat(value.toFixed(this._roundToDecimal));
+      }
+
+      this._value = value;
       this._percent = this._calculatePercentage(this._value);
 
       // Since this also modifies the percentage, we need to let the change detection know.
@@ -431,7 +442,9 @@ export class MatSlider extends _MatSliderMixinBase
               private _focusMonitor: FocusMonitor,
               private _changeDetectorRef: ChangeDetectorRef,
               @Optional() private _dir: Directionality,
-              @Attribute('tabindex') tabIndex: string) {
+              @Attribute('tabindex') tabIndex: string,
+              // @deletion-target 7.0.0 `_animationMode` parameter to be made required.
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     super(elementRef);
 
     this.tabIndex = parseInt(tabIndex) || 0;
@@ -633,17 +646,11 @@ export class MatSlider extends _MatSliderMixinBase
     } else if (percent === 1) {
       this.value = this.max;
     } else {
-      let exactValue = this._calculateValue(percent);
+      const exactValue = this._calculateValue(percent);
 
       // This calculation finds the closest step by finding the closest
       // whole number divisible by the step relative to the min.
-      let closestValue = Math.round((exactValue - this.min) / this.step) * this.step + this.min;
-
-      // If we've got a step with a decimal, we may end up with something like 33.300000000000004.
-      // Truncate the value to ensure that it matches the label and to make it easier to work with.
-      if (this._roundToDecimal) {
-        closestValue = parseFloat(closestValue.toFixed(this._roundToDecimal));
-      }
+      const closestValue = Math.round((exactValue - this.min) / this.step) * this.step + this.min;
 
       // The value needs to snap to the min and max.
       this.value = this._clamp(closestValue, this.min, this.max);
@@ -734,7 +741,7 @@ export class MatSlider extends _MatSliderMixinBase
   }
 
   /**
-   * Registers a callback to eb triggered when the value has changed.
+   * Registers a callback to be triggered when the value has changed.
    * Implemented as part of ControlValueAccessor.
    * @param fn Callback to be registered.
    */

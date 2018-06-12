@@ -75,7 +75,15 @@ import {
 } from '@angular/material/core';
 import {MatFormField, MatFormFieldControl} from '@angular/material/form-field';
 import {defer, merge, Observable, Subject} from 'rxjs';
-import {filter, map, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
+import {
+  filter,
+  map,
+  startWith,
+  switchMap,
+  take,
+  takeUntil,
+  distinctUntilChanged,
+} from 'rxjs/operators';
 import {matSelectAnimations} from './select-animations';
 import {
   getMatSelectDynamicMultipleError,
@@ -263,6 +271,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** Whether the panel's animation is done. */
   _panelDoneAnimating: boolean = false;
+
+  /** Emits when the panel element is finished transforming in. */
+  _panelDoneAnimatingStream = new Subject<string>();
 
   /** Strategy that will be used to handle scrolling while the select panel is open. */
   _scrollStrategy = this._scrollStrategyFactory();
@@ -470,6 +481,23 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   ngOnInit() {
     this._selectionModel = new SelectionModel<MatOption>(this.multiple, undefined, false);
     this.stateChanges.next();
+
+    // We need `distinctUntilChanged` here, because some browsers will
+    // fire the animation end event twice for the same animation. See:
+    // https://github.com/angular/angular/issues/24084
+    this._panelDoneAnimatingStream
+      .pipe(distinctUntilChanged(), takeUntil(this._destroy))
+      .subscribe(() => {
+        if (this.panelOpen) {
+          this._scrollTop = 0;
+          this.openedChange.emit(true);
+        } else {
+          this.openedChange.emit(false);
+          this._panelDoneAnimating = false;
+          this.overlayDir.offsetX = 0;
+          this._changeDetectorRef.markForCheck();
+        }
+      });
   }
 
   ngAfterContentInit() {
@@ -671,22 +699,6 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
           manager.activeItemIndex !== previouslyFocusedIndex) {
         manager.activeItem._selectViaInteraction();
       }
-    }
-  }
-
-  /**
-   * When the panel element is finished transforming in (though not fading in), it
-   * emits an event and focuses an option if the panel is open.
-   */
-  _onPanelDone(): void {
-    if (this.panelOpen) {
-      this._scrollTop = 0;
-      this.openedChange.emit(true);
-    } else {
-      this.openedChange.emit(false);
-      this._panelDoneAnimating = false;
-      this.overlayDir.offsetX = 0;
-      this._changeDetectorRef.markForCheck();
     }
   }
 
@@ -1085,8 +1097,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     }
 
     // Set the offset directly in order to avoid having to go through change detection and
-    // potentially triggering "changed after it was checked" errors.
-    this.overlayDir.offsetX = offsetX;
+    // potentially triggering "changed after it was checked" errors. Round the value to avoid
+    // blurry content in some browsers.
+    this.overlayDir.offsetX = Math.round(offsetX);
     this.overlayDir.overlayRef.updatePosition();
   }
 
@@ -1130,10 +1143,10 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       optionOffsetFromPanelTop = scrollBuffer - itemHeight / 2;
     }
 
-    // The final offset is the option's offset from the top, adjusted for the height
-    // difference, multiplied by -1 to ensure that the overlay moves in the correct
-    // direction up the page.
-    return optionOffsetFromPanelTop * -1 - optionHeightAdjustment;
+    // The final offset is the option's offset from the top, adjusted for the height difference,
+    // multiplied by -1 to ensure that the overlay moves in the correct direction up the page.
+    // The value is rounded to prevent some browsers from blurring the content.
+    return Math.round(optionOffsetFromPanelTop * -1 - optionHeightAdjustment);
   }
 
   /**

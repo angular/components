@@ -3,8 +3,8 @@
     #drawer
     class="sidenav"
     fixedInViewport="true"
-    [attr.role]="isHandset$ | async ? 'dialog' : 'navigation'"
-    [mode]="isHandset$ | async ? 'over' : 'side'"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="!(isHandset$ | async)">
     <mat-toolbar color="primary">Menu</mat-toolbar>
     <mat-nav-list>
@@ -23,7 +23,8 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>Application Title</span>
+      <span><%= project %></span>
     </mat-toolbar>
+    <!-- Add Content Here -->
   </mat-sidenav-content>
 </mat-sidenav-container>

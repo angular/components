@@ -21,6 +21,7 @@ import {
   Inject,
   InjectionToken,
   Input,
+  NgZone,
   Optional,
   QueryList,
   ViewChild,
@@ -49,6 +50,7 @@ import {MatPlaceholder} from './placeholder';
 import {MatPrefix} from './prefix';
 import {MatSuffix} from './suffix';
 import {Platform} from '@angular/cdk/platform';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
 let nextUniqueId = 0;
@@ -56,23 +58,35 @@ const floatingLabelScale = 0.75;
 const outlineGapPadding = 5;
 
 
-// Boilerplate for applying mixins to MatFormField.
-/** @docs-private */
+/**
+ * Boilerplate for applying mixins to MatFormField.
+ * @docs-private
+ */
 export class MatFormFieldBase {
   constructor(public _elementRef: ElementRef) { }
 }
 
-
+/**
+ * Base class to which we're applying the form field mixins.
+ * @docs-private
+ */
 export const _MatFormFieldMixinBase = mixinColor(MatFormFieldBase, 'primary');
 
-
+/** Possible appearance styles for the form field. */
 export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill' | 'outline';
 
-
+/**
+ * Represents the default options form the form field that can be configured
+ * using the `MAT_FORM_FIELD_DEFAULT_OPTIONS` injection token.
+ */
 export interface MatFormFieldDefaultOptions {
   appearance?: MatFormFieldAppearance;
 }
 
+/**
+ * Injection token that can be used to configure the
+ * default options for all form field within an app.
+ */
 export const MAT_FORM_FIELD_DEFAULT_OPTIONS =
     new InjectionToken<MatFormFieldDefaultOptions>('MAT_FORM_FIELD_DEFAULT_OPTIONS');
 
@@ -117,6 +131,7 @@ export const MAT_FORM_FIELD_DEFAULT_OPTIONS =
     '[class.ng-valid]': '_shouldForward("valid")',
     '[class.ng-invalid]': '_shouldForward("invalid")',
     '[class.ng-pending]': '_shouldForward("pending")',
+    '[class._mat-animation-noopable]': '!_animationsEnabled',
   },
   inputs: ['color'],
   encapsulation: ViewEncapsulation.None,
@@ -191,10 +206,11 @@ export class MatFormField extends _MatFormFieldMixinBase
   }
   private _floatLabel: FloatLabelType;
 
+  /** Whether the Angular animations are enabled. */
+  _animationsEnabled: boolean;
+
   _outlineGapWidth = 0;
-
   _outlineGapStart = 0;
-
   _initialGapCalculated = false;
 
   /**
@@ -221,12 +237,15 @@ export class MatFormField extends _MatFormFieldMixinBase
       @Optional() private _dir: Directionality,
       @Optional() @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS) private _defaultOptions:
           MatFormFieldDefaultOptions,
-      // @deletion-target 7.0.0 _platform to be made required.
-      private _platform?: Platform) {
+      // @deletion-target 7.0.0 _platform, _ngZone and _animationMode to be made required.
+      private _platform?: Platform,
+      private _ngZone?: NgZone,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) _animationMode?: string) {
     super(_elementRef);
 
     this._labelOptions = labelOptions ? labelOptions : {};
     this.floatLabel = this._labelOptions.float || 'auto';
+    this._animationsEnabled = _animationMode !== 'NoopAnimations';
   }
 
   /**
@@ -271,8 +290,19 @@ export class MatFormField extends _MatFormFieldMixinBase
 
   ngAfterContentChecked() {
     this._validateControlChild();
+
     if (!this._initialGapCalculated) {
-      Promise.resolve().then(() => this.updateOutlineGap());
+      // @deletion-target 7.0.0 Remove this check and else block once _ngZone is required.
+      if (this._ngZone) {
+        // It's important that we run this outside the `_ngZone`, because the `Promise.resolve`
+        // can kick us into an infinite change detection loop, if the `_initialGapCalculated`
+        // wasn't flipped on for some reason.
+        this._ngZone.runOutsideAngular(() => {
+          Promise.resolve().then(() => this.updateOutlineGap());
+        });
+      } else {
+        Promise.resolve().then(() => this.updateOutlineGap());
+      }
     }
   }
 
@@ -284,8 +314,8 @@ export class MatFormField extends _MatFormFieldMixinBase
 
   /** Determines whether a class from the NgControl should be forwarded to the host element. */
   _shouldForward(prop: string): boolean {
-    let ngControl = this._control ? this._control.ngControl : null;
-    return ngControl && (ngControl as any)[prop];
+    const ngControl = this._control ? this._control.ngControl : null;
+    return ngControl && ngControl[prop];
   }
 
   _hasPlaceholder() {
@@ -320,13 +350,17 @@ export class MatFormField extends _MatFormFieldMixinBase
   /** Animates the placeholder up and locks it in position. */
   _animateAndLockLabel(): void {
     if (this._hasFloatingLabel() && this._canLabelFloat) {
-      this._showAlwaysAnimate = true;
+      // If animations are disabled, we shouldn't go in here,
+      // because the `transitionend` will never fire.
+      if (this._animationsEnabled) {
+        this._showAlwaysAnimate = true;
+
+        fromEvent(this._label.nativeElement, 'transitionend').pipe(take(1)).subscribe(() => {
+          this._showAlwaysAnimate = false;
+        });
+      }
+
       this.floatLabel = 'always';
-
-      fromEvent(this._label.nativeElement, 'transitionend').pipe(take(1)).subscribe(() => {
-        this._showAlwaysAnimate = false;
-      });
-
       this._changeDetectorRef.markForCheck();
     }
   }
