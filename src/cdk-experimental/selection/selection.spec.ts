@@ -32,7 +32,7 @@ describe('CdkSelection', () => {
   });
 
   it('should select multiple', () => {
-    testComponent.strategy = 'multiple';
+    testComponent.mode = 'multiple';
     fixture.detectChanges();
 
     testComponent.clickITem('item-1');
@@ -45,7 +45,8 @@ describe('CdkSelection', () => {
   });
 
   it('should select one with modifier multipler', () => {
-    testComponent.strategy = 'modifierMultiple';
+    testComponent.mode = 'multiple';
+    testComponent.modifier = true;
     fixture.detectChanges();
 
     testComponent.clickITem('item-1');
@@ -58,7 +59,8 @@ describe('CdkSelection', () => {
   });
 
   it('should select multiple with modifier multipler', () => {
-    testComponent.strategy = 'modifierMultiple';
+    testComponent.mode = 'multiple';
+    testComponent.modifier = true;
     fixture.detectChanges();
 
     testComponent.clickITem('item-1');
@@ -71,7 +73,8 @@ describe('CdkSelection', () => {
   });
 
   it('should select multiple range with modifier multipler', () => {
-    testComponent.strategy = 'modifierMultiple';
+    testComponent.mode = 'multiple';
+    testComponent.modifier = true;
     fixture.detectChanges();
 
     testComponent.clickITem('item-0');
@@ -84,7 +87,7 @@ describe('CdkSelection', () => {
   });
 
   it('should not clear single after selection', () => {
-    testComponent.clearable = false;
+    testComponent.deselectable = false;
     fixture.detectChanges();
 
     testComponent.clickITem('item-1');
@@ -97,8 +100,8 @@ describe('CdkSelection', () => {
   });
 
   it('should not clear multiple after selection', () => {
-    testComponent.clearable = false;
-    testComponent.strategy = 'multiple';
+    testComponent.deselectable = false;
+    testComponent.mode = 'multiple';
     fixture.detectChanges();
 
     testComponent.clickITem('item-1');
@@ -111,8 +114,9 @@ describe('CdkSelection', () => {
   });
 
   it('should not clear modifier multiple after selection', () => {
-    testComponent.clearable = false;
-    testComponent.strategy = 'modifierMultiple';
+    testComponent.deselectable = false;
+    testComponent.mode = 'multiple';
+    testComponent.modifier = true;
     fixture.detectChanges();
 
     testComponent.clickITem('item-1');
@@ -126,7 +130,7 @@ describe('CdkSelection', () => {
 
   it('should not select more than max allow', () => {
     testComponent.max = 2;
-    testComponent.strategy = 'multiple';
+    testComponent.mode = 'multiple';
     fixture.detectChanges();
 
     testComponent.clickITem('item-0');
@@ -162,9 +166,10 @@ describe('CdkSelection', () => {
   template: `
     <ul
       [cdkSelection]="selections"
-      [cdkSelectionStrategy]="strategy"
+      [cdkSelectionMode]="mode"
+      [cdkSelectRequireModifier]="modifier"
       [cdkSelectionMaxSelections]="max"
-      [cdkSelectionClearable]="clearable">
+      [cdkSelectionDeselectable]="deselectable">
       <li *ngFor="let item of items; let i = index;">
         <button [cdkSelectionToggle]="item.value" [id]="'item-' + i" [disabled]="i === 3">
           {{item.label}}
@@ -185,8 +190,9 @@ class Selection {
   ];
 
   selections: string[] = [];
-  clearable = true;
-  strategy = 'single';
+  deselectable = true;
+  modifier = false;
+  mode = 'single';
   max: number;
 
   constructor(public elementRef: ElementRef) {}

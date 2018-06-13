@@ -24,6 +24,8 @@ import {takeUntil} from 'rxjs/operators';
     '(click)': '_onToggle()',
     '(contextmenu)': '_onToggle()',
     '(keydown.enter)': '_onToggle()',
+    '(keydown.shift)': '_onShift()',
+    '(blur)': '_onBlur()',
   }
 })
 export class CdkSelectionToggle<T> implements OnInit, OnDestroy {
@@ -104,6 +106,16 @@ export class CdkSelectionToggle<T> implements OnInit, OnDestroy {
     }
 
     this._cd.markForCheck();
+  }
+
+  /** Shift key was captured to set user selection. */
+  _onShift() {
+    this._selection.setTextSelection('none');
+  }
+
+  /** Element was blurred, lets reset user selection. */
+  _onBlur() {
+    setTimeout(() => this._selection.setTextSelection('initial'), 200);
   }
 
 }

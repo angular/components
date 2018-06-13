@@ -12,7 +12,7 @@ default selections pass an array of the selections to this option like:
 with the `cdkSelectionToggle` directive with an argument of the item's value property.
 
 ```html
-<ul cdkSelection cdkSelectionStrategy="single">
+<ul cdkSelection cdkSelectionMode="single">
   <li *ngFor="let item of items">
     <button  [cdkSelectionToggle]="item.value">
       {{item.label}}
@@ -21,15 +21,19 @@ with the `cdkSelectionToggle` directive with an argument of the item's value pro
 </ul>
 ```
 
-### Strategies
-The selection directive has 3 different strategies for selection:
+### Modes
+The selection directive has 2 different modes for selection:
 
 - Single: Only one item can be selected at a time.
-- Multiple: Multiple items can be selected by clicking
-- Modifier Multiple: Multiple items can be select using keyboard modifiers such as shift or ctrl.
+- Multiple: Multiple items can be selected.
 
-### Clearable
-The ability to clear a selection that has been made can be prevented using the `cdkSelectionClearable`.
+### Key Modifier
+When multi-selection mode is enabled anytime a user clicks a toggle element it will be selected.
+The `requireModifier` property will only allow multi-selection when using key modifiers. For example,
+CTRL/Command + Click would select multiples and SHIFT + Click would select a range.
+
+### Deselectable
+The ability to deselect a selection that has been made can be prevented using the `cdkSelectionDeselectable`.
 This means that after a selection (or many selections) have been made users can deselect
 all but one of the selections. This concept can be related to radio buttons selection strategy.
 
@@ -42,7 +46,7 @@ return a identifying attribute for the object.
 ```TS
 @Component({
   template: `
-    <ul cdkSelection cdkSelectionStrategy="multiple" [cdkSelectionTrackBy]=""trackBy>
+    <ul cdkSelection cdkSelectionMode="multiple" [cdkSelectionTrackBy]=""trackBy>
       <li *ngFor="let item of items">
         <button [cdkSelectionToggle]="item">
           {{item.label}}

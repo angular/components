@@ -25,16 +25,19 @@ export class CdkSelection<T> implements OnInit {
    * - Multiple: Multiple items can be selected.
    * - Modifier Multiple: Multiple items can be selected using modifier keys such as ctrl or shift.
    */
-  @Input('cdkSelectionStrategy') strategy: 'single' | 'multiple' | 'modifierMultiple' = 'single';
+  @Input('cdkSelectionMode') mode: 'single' | 'multiple' = 'single';
+
+  /** When multi select is enabled, require a key modifier to select multiples. */
+  @Input('cdkSelectRequireModifier') requireModifier: boolean = false;
 
   /** Track by used for selection matching. */
   @Input('cdkSelectionTrackBy') trackBy: (model: T) => any;
 
   /** Whether the selections can be cleared after selection. */
-  @Input('cdkSelectionClearable')
-  get clearable(): boolean { return this._clearable; }
-  set clearable(val) { this._clearable = coerceBooleanProperty(val); }
-  private _clearable: boolean = true;
+  @Input('cdkSelectionDeselectable')
+  get deselectable(): boolean { return this._deselectable; }
+  set deselectable(val) { this._deselectable = coerceBooleanProperty(val); }
+  private _deselectable: boolean = true;
 
   /** The max number of selections that can be selected */
   @Input('cdkSelectionMaxSelections')
@@ -68,7 +71,7 @@ export class CdkSelection<T> implements OnInit {
 
   ngOnInit() {
     this. _selectionModel = new SelectionModel<T>(
-      this.getIsMultiple(),
+      this.mode === 'multiple',
       this.selections,
       true,
       this.trackBy
@@ -95,11 +98,6 @@ export class CdkSelection<T> implements OnInit {
     }
   }
 
-  /** Returns whether the control is multi select or not. */
-  getIsMultiple() {
-    return this.strategy === 'multiple' || this.strategy === 'modifierMultiple';
-  }
-
   /** Toggle the selection of a item. */
   toggle(ctrl: any) {
     if (this.disabled) {
@@ -107,7 +105,7 @@ export class CdkSelection<T> implements OnInit {
     }
 
     if (Array.isArray(ctrl.model)) {
-      if (this.getIsMultiple() &&
+      if (this.mode === 'multiple' &&
           (this.maxSelections === undefined ||
           (ctrl.model.length + this._selectionModel.selected.length) < this.maxSelections)) {
         this._selectionModel.clear();
@@ -119,6 +117,14 @@ export class CdkSelection<T> implements OnInit {
     }
   }
 
+  /** Set the user selection for the element. */
+  setTextSelection(type: string) {
+    const elm = this._elementRef.nativeElement;
+    elm.style.userSelect = type;
+    elm.style.webkitUserSelect = type;
+    elm.style.MozUserSelect = type;
+  }
+
   /** Update the selections given the arguments. */
   private _setSelections(ctrl: any) {
     const ctrls = this._getSortedSet();
@@ -126,15 +132,15 @@ export class CdkSelection<T> implements OnInit {
     const { modifier, model } = ctrl;
     const selections = this._selectionModel.selected;
 
-    if (this.getIsMultiple() && modifier === 'shift') {
+    if (this.mode === 'multiple' && modifier === 'shift') {
       if (index > -1) {
         this._selectRange(ctrls, this._previousSelectedIndex, index);
       }
-    } else if (this.getIsMultiple()) {
+    } else if (this.mode === 'multiple') {
       const isSelected = this._selectionModel.isSelected(model);
-      if (this.strategy === 'modifierMultiple' && modifier !== 'meta') {
+      if (this.requireModifier && modifier !== 'meta') {
         this._selectionModel.clear();
-        if (!isSelected || !this.clearable) {
+        if (!isSelected || !this.deselectable) {
           this._selectionModel.select(model);
         }
       } else {
@@ -142,7 +148,7 @@ export class CdkSelection<T> implements OnInit {
           if (this.maxSelections === undefined || selections.length < this.maxSelections) {
             this._selectionModel.select(model);
           }
-        } else if (this.clearable || (!this.clearable && selections.length > 1)) {
+        } else if (this.deselectable || (!this.deselectable && selections.length > 1)) {
           this._selectionModel.deselect(model);
         }
       }
@@ -150,7 +156,7 @@ export class CdkSelection<T> implements OnInit {
       const isSelected = this._selectionModel.isSelected(model);
       if (!isSelected) {
         this._selectionModel.select(model);
-      } else if(this.clearable) {
+      } else if(this.deselectable) {
         this._selectionModel.deselect(model);
       }
     }
