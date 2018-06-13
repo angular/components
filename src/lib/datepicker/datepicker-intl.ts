@@ -14,9 +14,6 @@ import {CdkDatepickerIntl} from '@angular/cdk/datepicker/datepicker-intl';
 @Injectable({providedIn: 'root'})
 export class MatDatepickerIntl extends CdkDatepickerIntl {
 
-    /** A label for the calendar popup (used by screen readers). */
-    calendarLabel: string = 'Calendar';
-
     /** A label for the button used to open the calendar popup (used by screen readers). */
     openCalendarLabel: string = 'Open calendar';
 }

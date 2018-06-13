@@ -19,6 +19,9 @@ export class CdkDatepickerIntl {
      */
     readonly changes: Subject<void> = new Subject<void>();
 
+    /** A label for the calendar popup (used by screen readers). */
+    calendarLabel: string = 'Calendar';
+
     /** A label for the previous month button (used by screen readers). */
     prevMonthLabel: string = 'Previous month';
 

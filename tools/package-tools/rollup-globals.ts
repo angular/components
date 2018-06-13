@@ -22,10 +22,6 @@ const cdkSecondaryEntryPoints = getSubdirectoryNames(join(buildConfig.packagesDi
 /** List of potential secondary entry-points for the material package. */
 const matSecondaryEntryPoints = getSubdirectoryNames(join(buildConfig.packagesDir, 'lib'));
 
-/** List of potential secondary entry-points for the datepicker package. */
-const datepickerSecondaryEntryPoints = getSubdirectoryNames(join(buildConfig.packagesDir,
-    'datepicker'));
-
 /** List of potential secondary entry-points for the cdk-experimental package. */
 const cdkExperimentalSecondaryEntryPoints =
     getSubdirectoryNames(join(buildConfig.packagesDir, 'cdk-experimental'));
@@ -39,10 +35,6 @@ const rollupMatEntryPoints = generateRollupEntryPoints('material', matSecondaryE
 /** Object with all cdk-experimental entry points in the format of Rollup globals. */
 const rollupCdkExperimentalEntryPoints =
     generateRollupEntryPoints('cdk-experimental', cdkExperimentalSecondaryEntryPoints);
-
-/** Object with all datepicker entry points in the format of Rollup globals. */
-const rollupDatepickerEntryPoints = generateRollupEntryPoints(
-    'datepicker', datepickerSecondaryEntryPoints);
 
 /** Map of globals that are used inside of the different packages. */
 export const rollupGlobals = {
@@ -78,7 +70,6 @@ export const rollupGlobals = {
     ...rollupCdkEntryPoints,
     ...rollupMatEntryPoints,
     ...rollupCdkExperimentalEntryPoints,
-    ...rollupDatepickerEntryPoints,
 
     'rxjs': 'rxjs',
     'rxjs/operators': 'rxjs.operators',
