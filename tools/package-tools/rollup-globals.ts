@@ -4,16 +4,16 @@ import {buildConfig} from './build-config';
 
 /** Method that converts dash-case strings to a camel-based string. */
 export const dashCaseToCamelCase =
-  (str: string) => str.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+    (str: string) => str.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
 
 /** Generates rollup entry point mappings for the given package and entry points. */
 function generateRollupEntryPoints(packageName: string, entryPoints: string[]):
-    {[k: string]: string} {
-  return entryPoints.reduce((globals: {[k: string]: string}, entryPoint: string) => {
-    globals[`@angular/${packageName}/${entryPoint}`] =
-        `ng.${dashCaseToCamelCase(packageName)}.${dashCaseToCamelCase(entryPoint)}`;
-    return globals;
-  }, {});
+    { [k: string]: string } {
+    return entryPoints.reduce((globals: { [k: string]: string }, entryPoint: string) => {
+        globals[`@angular/${packageName}/${entryPoint}`] =
+            `ng.${dashCaseToCamelCase(packageName)}.${dashCaseToCamelCase(entryPoint)}`;
+        return globals;
+    }, {});
 }
 
 /** List of potential secondary entry-points for the cdk package. */
@@ -38,37 +38,39 @@ const rollupCdkExperimentalEntryPoints =
 
 /** Map of globals that are used inside of the different packages. */
 export const rollupGlobals = {
-  'moment': 'moment',
-  'tslib': 'tslib',
+    'moment': 'moment',
+    'tslib': 'tslib',
 
-  '@angular/animations': 'ng.animations',
-  '@angular/common': 'ng.common',
-  '@angular/common/http': 'ng.common.http',
-  '@angular/common/http/testing': 'ng.common.http.testing',
-  '@angular/common/testing': 'ng.common.testing',
-  '@angular/core': 'ng.core',
-  '@angular/core/testing': 'ng.core.testing',
-  '@angular/forms': 'ng.forms',
-  '@angular/platform-browser': 'ng.platformBrowser',
-  '@angular/platform-browser-dynamic': 'ng.platformBrowserDynamic',
-  '@angular/platform-browser-dynamic/testing': 'ng.platformBrowserDynamic.testing',
-  '@angular/platform-browser/animations': 'ng.platformBrowser.animations',
-  '@angular/platform-server': 'ng.platformServer',
-  '@angular/router': 'ng.router',
+    '@angular/animations': 'ng.animations',
+    '@angular/cdk/datepicker/datepicker-intl': 'ng.cdk.datepicker.datepickerIntl',
+    '@angular/common': 'ng.common',
+    '@angular/common/http': 'ng.common.http',
+    '@angular/common/http/testing': 'ng.common.http.testing',
+    '@angular/common/testing': 'ng.common.testing',
+    '@angular/core': 'ng.core',
+    '@angular/core/testing': 'ng.core.testing',
+    '@angular/forms': 'ng.forms',
+    '@angular/platform-browser': 'ng.platformBrowser',
+    '@angular/platform-browser-dynamic': 'ng.platformBrowserDynamic',
+    '@angular/platform-browser-dynamic/testing': 'ng.platformBrowserDynamic.testing',
+    '@angular/platform-browser/animations': 'ng.platformBrowser.animations',
+    '@angular/platform-server': 'ng.platformServer',
+    '@angular/router': 'ng.router',
 
-  // Some packages are not really needed for the UMD bundles, but for the missingRollupGlobals rule.
-  '@angular/cdk': 'ng.cdk',
-  '@angular/cdk-experimental': 'ng.cdkExperimental',
-  '@angular/material': 'ng.material',
-  '@angular/material-examples': 'ng.materialExamples',
-  '@angular/material-experimental': 'ng.materialExperimental',
-  '@angular/material-moment-adapter': 'ng.materialMomentAdapter',
+    // Some packages are not really needed for the UMD bundles, but for the missingRollupGlobals
+    // rule.
+    '@angular/cdk': 'ng.cdk',
+    '@angular/cdk-experimental': 'ng.cdkExperimental',
+    '@angular/material': 'ng.material',
+    '@angular/material-examples': 'ng.materialExamples',
+    '@angular/material-experimental': 'ng.materialExperimental',
+    '@angular/material-moment-adapter': 'ng.materialMomentAdapter',
 
-  // Include secondary entry-points of the cdk and material packages
-  ...rollupCdkEntryPoints,
-  ...rollupMatEntryPoints,
-  ...rollupCdkExperimentalEntryPoints,
+    // Include secondary entry-points of the cdk and material packages
+    ...rollupCdkEntryPoints,
+    ...rollupMatEntryPoints,
+    ...rollupCdkExperimentalEntryPoints,
 
-  'rxjs': 'rxjs',
-  'rxjs/operators': 'rxjs.operators',
+    'rxjs': 'rxjs',
+    'rxjs/operators': 'rxjs.operators',
 };
