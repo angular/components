@@ -910,6 +910,27 @@ describe('MatSelect', () => {
 
         const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
         expect(pane.style.minWidth).toBe('200px');
+
+        const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel');
+        const scrollContainerWidth = scrollContainer!.getBoundingClientRect().width;
+        expect(scrollContainerWidth).toBeCloseTo(200 + 32, 0,
+            'Expected select panel width to be 100% + 32px of the select field trigger');
+      }));
+
+      it('should set the width of the overlay based on the trigger width exceeding the panel minimum width', fakeAsync(() => {
+          trigger.style.width = '400px';
+
+          trigger.click();
+          fixture.detectChanges();
+          flush();
+
+          const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+          expect(pane.style.minWidth).toBe('400px');
+
+          const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel');
+          const scrollContainerWidth = scrollContainer!.getBoundingClientRect().width;
+          expect(scrollContainerWidth).toBeCloseTo(400 + 32, 0,
+              'Expected select panel width to be 100% + 32px of the select field trigger');
       }));
 
       it('should not attempt to open a select that does not have any options', fakeAsync(() => {
@@ -3002,6 +3023,7 @@ describe('MatSelect', () => {
 
         checkTriggerAlignedWithOption(7, groupFixture.componentInstance.select);
       }));
+
     });
 
     describe('limited space to open vertically', () => {
