@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, EventEmitter, OnInit, Input, ElementRef} from '@angular/core';
+import {Directive, EventEmitter, OnInit, Input, ElementRef, Output} from '@angular/core';
 import {SelectionChange, SelectionModel, compareFn} from '@angular/cdk/collections';
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 
@@ -17,13 +17,12 @@ import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion
 export class CdkSelection<T> implements OnInit {
 
   /** List of all active selections. */
-  @Input('cdkSelection') selections: T[] = [];
+  @Input('cdkSelection') selectedItems: T[] = [];
 
   /**
-   * Different selection strategies to apply.
+   * Different selection modes to apply.
    * - Single: Only one item can be selected at a time.
    * - Multiple: Multiple items can be selected.
-   * - Modifier Multiple: Multiple items can be selected using modifier keys such as ctrl or shift.
    */
   @Input('cdkSelectionMode') mode: 'single' | 'multiple' = 'single';
 
@@ -40,7 +39,7 @@ export class CdkSelection<T> implements OnInit {
   private _deselectable: boolean = true;
 
   /** The max number of selections that can be selected */
-  @Input('cdkSelectionMaxSelections')
+  @Input('cdkSelectionMaxSelected')
   get maxSelections(): number { return this._maxSelections; }
   set maxSelections(val) {
     if (val !== undefined && val !== null) {
@@ -56,13 +55,13 @@ export class CdkSelection<T> implements OnInit {
   private _disabled: boolean;
 
   /** Event fired when a selection/deselection occurs. */
-  selectionChange = new EventEmitter<SelectionChange<T>>();
+  @Output() selectionChange = new EventEmitter<SelectionChange<T>>();
 
   /** The model backing of the component. */
   _selectionModel: SelectionModel<T>;
 
   /** Set of registered toggle components. */
-  _set: any[] = [];
+  _toggleDirectives: any[] = [];
 
   /** Previously selected index used for range selection. */
   _previousSelectedIndex = -1;
@@ -72,48 +71,48 @@ export class CdkSelection<T> implements OnInit {
   ngOnInit() {
     this. _selectionModel = new SelectionModel<T>(
       this.mode === 'multiple',
-      this.selections,
+      this.selectedItems,
       true,
       this.trackBy
     );
 
     if (this._selectionModel.change) {
       this._selectionModel.change.subscribe(e => {
-        this.selections = this._selectionModel.selected;
+        this.selectedItems = this._selectionModel.selected;
         this.selectionChange.emit(e);
       });
     }
   }
 
-  /** Register the control. */
-  register(ctrl) {
-    this._set.push(ctrl);
+  /** Register the toggle directive. */
+  registerToggle(toggle) {
+    this._toggleDirectives.push(toggle);
   }
 
-  /** Deregister a control from the set. */
-  deregister(ctrl) {
-    const idx = this._set.indexOf(ctrl);
-    if (idx > -1) {
-      this._set.splice(idx, 1);
+  /** Deregister the toggle directivet. */
+  deregisterToggle(toggle) {
+    const toggleIndex = this._toggleDirectives.indexOf(toggle);
+    if (toggleIndex > -1) {
+      this._toggleDirectives.splice(toggleIndex, 1);
     }
   }
 
   /** Toggle the selection of a item. */
-  toggle(ctrl: any) {
+  toggle(toggle) {
     if (this.disabled) {
       return;
     }
 
-    if (Array.isArray(ctrl.model)) {
+    if (Array.isArray(toggle.model)) {
       if (this.mode === 'multiple' &&
           (this.maxSelections === undefined ||
-          (ctrl.model.length + this._selectionModel.selected.length) < this.maxSelections)) {
+          (toggle.model.length + this._selectionModel.selected.length) < this.maxSelections)) {
         this._selectionModel.clear();
-        this._selectionModel.toggle(...ctrl.model);
+        this._selectionModel.toggle(...toggle.model);
       }
     } else {
 
-      this._setSelections(ctrl);
+      this._setSelections(toggle);
     }
   }
 
@@ -125,11 +124,11 @@ export class CdkSelection<T> implements OnInit {
     elm.style.MozUserSelect = type;
   }
 
-  /** Update the selections given the arguments. */
-  private _setSelections(ctrl: any) {
+  /** Set the selection state given a toggle directive and its activated options. */
+  private _setSelections(toggle) {
     const ctrls = this._getSortedSet();
-    const index = this._getIndex(ctrls, ctrl);
-    const { modifier, model } = ctrl;
+    const index = this._getToggleIndex(ctrls, toggle);
+    const { modifier, model } = toggle;
     const selections = this._selectionModel.selected;
 
     if (this.mode === 'multiple' && modifier === 'shift') {
@@ -194,7 +193,7 @@ export class CdkSelection<T> implements OnInit {
   }
 
   /** Get the index of the given element in the dom tree relative to the other toggles. */
-  private _getIndex(sortedSet: any[], sourceCtrl: any) {
+  private _getToggleIndex(sortedSet: any[], sourceCtrl: any) {
     let idx = 0;
     let foundIdx = -1;
 
@@ -212,7 +211,7 @@ export class CdkSelection<T> implements OnInit {
   /** Get the set of controls sorted by DOM order. */
   private _getSortedSet(): any[] {
     const elements = this._getElements();
-    return [...this._set].sort((a, b) =>
+    return [...this._toggleDirectives].sort((a, b) =>
       elements.indexOf(a.elementRef.nativeElement) - elements.indexOf(b.elementRef.nativeElement));
   }
 

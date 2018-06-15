@@ -10,33 +10,35 @@ import {Directive, Input, OnInit, OnDestroy, ElementRef, ChangeDetectorRef} from
 import {CdkSelection} from './selection';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 
 @Directive({
   selector: '[cdkSelectionToggle]',
   host: {
     'class': 'cdk-selection-toggle',
-    'role': 'option',
     'tabindex': '-1',
-    '[attr.aria-selected]': 'selected',
     '[class.cdk-selection-selected]': 'selected',
-    '(mousedown)': '_onMouseDown($event)',
+    '(mousedown)': '_setModifiers($event)',
     '(click)': '_onToggle()',
     '(contextmenu)': '_onToggle()',
     '(keydown.enter)': '_onToggle()',
-    '(keydown.shift)': '_onShift()',
-    '(blur)': '_onBlur()',
+    '(keydown.shift)': '_disableTextSelection()',
+    '(blur)': '_enableTextSelection()',
   }
 })
 export class CdkSelectionToggle<T> implements OnInit, OnDestroy {
 
-  /** Model of the item to toggle selection. */
+  /** The value(s) that represent the selection of this directive. */
   @Input('cdkSelectionToggle') model: T | T[];
 
   /** Whether the selection is disabled or not. */
-  @Input() disabled: boolean;
+  @Input()
+  get disabled(): boolean { return this._disabled; }
+  set disabled(val) { this._disabled = coerceBooleanProperty(val); }
+  private _disabled: boolean;
 
-  /** Whether the toggle is selected or not. */
+  /** Whether the toggle is selected. */
   selected: boolean;
 
   /** The modifier that was invoked. */
@@ -47,28 +49,23 @@ export class CdkSelectionToggle<T> implements OnInit, OnDestroy {
   constructor(
     public elementRef: ElementRef,
     private _selection: CdkSelection<T>,
-    private _cd: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this._selection.selectionChange
       .pipe(takeUntil(this._destroy))
-      .subscribe(() => this._checkSelected());
+      .subscribe(() => this._updateSelected());
 
-    this._checkSelected();
-    this._selection.register(this);
+    this._updateSelected();
+    this._selection.registerToggle(this);
   }
 
   ngOnDestroy() {
     this._destroy.next();
     this._destroy.complete();
 
-    this._selection.deregister(this);
-  }
-
-  /** Mousedown even to capture modifiers. */
-  _onMouseDown(event: MouseEvent) {
-    this._setModifiers(event);
+    this._selection.deregisterToggle(this);
   }
 
   /** Invoke toggle on the parent selection directive. */
@@ -90,8 +87,8 @@ export class CdkSelectionToggle<T> implements OnInit, OnDestroy {
     setTimeout(() => this.modifier = null, 200);
   }
 
-  /** Check whether the toggle's model(s) are selected and set state. */
-  _checkSelected() {
+  /** Update the state of the selection based on the selection model. */
+  _updateSelected() {
     if (Array.isArray(this.model)) {
       let has = true;
       for (const model of this.model) {
@@ -105,16 +102,16 @@ export class CdkSelectionToggle<T> implements OnInit, OnDestroy {
       this.selected = this._selection._selectionModel.isSelected(this.model);
     }
 
-    this._cd.markForCheck();
+    this._changeDetectorRef.markForCheck();
   }
 
   /** Shift key was captured to set user selection. */
-  _onShift() {
+  _disableTextSelection() {
     this._selection.setTextSelection('none');
   }
 
   /** Element was blurred, lets reset user selection. */
-  _onBlur() {
+  _enableTextSelection() {
     setTimeout(() => this._selection.setTextSelection('initial'), 200);
   }
 

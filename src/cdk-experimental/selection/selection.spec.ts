@@ -24,11 +24,11 @@ describe('CdkSelection', () => {
 
     testComponent.clickITem('item-1');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(1);
+    expect(testComponent.selection.selectedItems.length).toBe(1);
 
     testComponent.clickITem('item-2');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(1);
+    expect(testComponent.selection.selectedItems.length).toBe(1);
   });
 
   it('should select multiple', () => {
@@ -37,11 +37,11 @@ describe('CdkSelection', () => {
 
     testComponent.clickITem('item-1');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(1);
+    expect(testComponent.selection.selectedItems.length).toBe(1);
 
     testComponent.clickITem('item-2');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(2);
+    expect(testComponent.selection.selectedItems.length).toBe(2);
   });
 
   it('should select one with modifier multipler', () => {
@@ -51,11 +51,11 @@ describe('CdkSelection', () => {
 
     testComponent.clickITem('item-1');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(1);
+    expect(testComponent.selection.selectedItems.length).toBe(1);
 
     testComponent.clickITem('item-2');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(1);
+    expect(testComponent.selection.selectedItems.length).toBe(1);
   });
 
   it('should select multiple with modifier multipler', () => {
@@ -65,11 +65,11 @@ describe('CdkSelection', () => {
 
     testComponent.clickITem('item-1');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(1);
+    expect(testComponent.selection.selectedItems.length).toBe(1);
 
     testComponent.clickITem('item-2', 'meta');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(2);
+    expect(testComponent.selection.selectedItems.length).toBe(2);
   });
 
   it('should select multiple range with modifier multipler', () => {
@@ -79,11 +79,11 @@ describe('CdkSelection', () => {
 
     testComponent.clickITem('item-0');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(1);
+    expect(testComponent.selection.selectedItems.length).toBe(1);
 
     testComponent.clickITem('item-2', 'shift');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(3);
+    expect(testComponent.selection.selectedItems.length).toBe(3);
   });
 
   it('should not clear single after selection', () => {
@@ -92,11 +92,11 @@ describe('CdkSelection', () => {
 
     testComponent.clickITem('item-1');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(1);
+    expect(testComponent.selection.selectedItems.length).toBe(1);
 
     testComponent.clickITem('item-1');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(1);
+    expect(testComponent.selection.selectedItems.length).toBe(1);
   });
 
   it('should not clear multiple after selection', () => {
@@ -106,11 +106,11 @@ describe('CdkSelection', () => {
 
     testComponent.clickITem('item-1');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(1);
+    expect(testComponent.selection.selectedItems.length).toBe(1);
 
     testComponent.clickITem('item-1');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(1);
+    expect(testComponent.selection.selectedItems.length).toBe(1);
   });
 
   it('should not clear modifier multiple after selection', () => {
@@ -121,11 +121,11 @@ describe('CdkSelection', () => {
 
     testComponent.clickITem('item-1');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(1);
+    expect(testComponent.selection.selectedItems.length).toBe(1);
 
     testComponent.clickITem('item-1');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(1);
+    expect(testComponent.selection.selectedItems.length).toBe(1);
   });
 
   it('should not select more than max allow', () => {
@@ -135,21 +135,21 @@ describe('CdkSelection', () => {
 
     testComponent.clickITem('item-0');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(1);
+    expect(testComponent.selection.selectedItems.length).toBe(1);
 
     testComponent.clickITem('item-1');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(2);
+    expect(testComponent.selection.selectedItems.length).toBe(2);
 
     testComponent.clickITem('item-2');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(2);
+    expect(testComponent.selection.selectedItems.length).toBe(2);
   });
 
   it('should have yellow selected', () => {
     testComponent.selections = ['yellow'];
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(1);
+    expect(testComponent.selection.selectedItems.length).toBe(1);
   });
 
   it('should not select a disabled selection', () => {
@@ -157,7 +157,7 @@ describe('CdkSelection', () => {
 
     testComponent.clickITem('item-3');
     fixture.detectChanges();
-    expect(testComponent.selection.selections.length).toBe(0);
+    expect(testComponent.selection.selectedItems.length).toBe(0);
   });
 
 });
@@ -168,7 +168,7 @@ describe('CdkSelection', () => {
       [cdkSelection]="selections"
       [cdkSelectionMode]="mode"
       [cdkSelectRequireModifier]="modifier"
-      [cdkSelectionMaxSelections]="max"
+      [cdkSelectionMaxSelected]="max"
       [cdkSelectionDeselectable]="deselectable">
       <li *ngFor="let item of items; let i = index;">
         <button [cdkSelectionToggle]="item.value" [id]="'item-' + i" [disabled]="i === 3">
