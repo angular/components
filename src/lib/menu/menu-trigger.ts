@@ -70,6 +70,7 @@ export const MENU_PANEL_TOP_PADDING = 8;
   selector: `[mat-menu-trigger-for], [matMenuTriggerFor]`,
   host: {
     'aria-haspopup': 'true',
+    '[attr.aria-expanded]': 'menuOpen || null',
     '(mousedown)': '_handleMousedown($event)',
     '(keydown)': '_handleKeydown($event)',
     '(click)': '_handleClick($event)',
@@ -433,7 +434,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _menuClosingActions() {
     const backdrop = this._overlayRef!.backdropClick();
     const detachments = this._overlayRef!.detachments();
-    const parentClose = this._parentMenu ? this._parentMenu.close : observableOf();
+    const parentClose = this._parentMenu ? this._parentMenu.closed : observableOf();
     const hover = this._parentMenu ? this._parentMenu._hovered().pipe(
       filter(active => active !== this._menuItemInstance),
       filter(() => this._menuOpen)
