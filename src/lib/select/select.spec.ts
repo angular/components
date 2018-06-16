@@ -917,7 +917,9 @@ describe('MatSelect', () => {
             'Expected select panel width to be 100% + 32px of the select field trigger');
       }));
 
-      it('should set the width of the overlay based on the trigger width exceeding the panel minimum width', fakeAsync(() => {
+      it('should set the width of the overlay based on a larger trigger width',
+        fakeAsync(() => {
+            // the trigger width exceeds the minimum width of the mat-select-panel
           trigger.style.width = '400px';
 
           trigger.click();
