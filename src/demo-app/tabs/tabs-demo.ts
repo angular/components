@@ -24,6 +24,7 @@ export class TabsDemo {
     'tab-group-theme',
     'tab-group-lazy-loaded',
     'tab-group-dynamic',
+    'tab-group-minimal-animation',
     'tab-nav-bar-basic',
   ];
 }

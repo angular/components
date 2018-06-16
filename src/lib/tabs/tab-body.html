@@ -1,6 +1,17 @@
-<div class="mat-tab-body-content" #content
-     [@translateTab]="_position"
-     (@translateTab.start)="_onTranslateTabStarted($event)"
-     (@translateTab.done)="_onTranslateTabComplete($event)">
-  <ng-template matTabBodyHost></ng-template>
-</div>
+<div *ngIf="_minimalAnimation;then min else full" class="mat-tab-body-content" #content></div>
+
+<ng-template #min>
+  <div [@translateTabMinimalAnimation]="_position"
+    (@translateTabMinimalAnimation.start)="_onTranslateTabStarted($event)"
+    (@translateTabMinimalAnimation.done)="_onTranslateTabComplete($event)">
+    <ng-template matTabBodyHost></ng-template>
+  </div>
+</ng-template>
+
+<ng-template #full>
+  <div [@translateTab]="_position"
+    (@translateTab.start)="_onTranslateTabStarted($event)"
+    (@translateTab.done)="_onTranslateTabComplete($event)">
+    <ng-template matTabBodyHost></ng-template>
+  </div>
+</ng-template>

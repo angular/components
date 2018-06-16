@@ -108,7 +108,7 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
   styleUrls: ['tab-body.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [matTabsAnimations.translateTab],
+  animations: [matTabsAnimations.translateTab, matTabsAnimations.translateTabMinimalAnimation],
   host: {
     'class': 'mat-tab-body',
   },
@@ -131,6 +131,9 @@ export class MatTabBody implements OnInit {
 
   /** The tab body content to display. */
   @Input('content') _content: TemplatePortal;
+
+  /** Whether to use full animation or minimal one */
+  @Input('minimalAnimation') _minimalAnimation: boolean;
 
   /** The shifted index position of the tab body, where zero represents the active center tab. */
   @Input()
