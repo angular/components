@@ -168,6 +168,31 @@ describe('MatCalendar', () => {
           expect(activeCell.focus).not.toHaveBeenCalled();
         });
 
+        it('should update today\'s date after update of the active date', () => {
+
+          // TODO: How can we actually check that today's date was updated correctly?
+          // TODO: The test only changes the active date, but not today's date.
+          // today's date is set by the data adapter's today() method
+
+          const newActiveDate = new Date();
+
+          // today's date is also the active date
+          let todaysDay = newActiveDate.getDate();
+
+          calendarInstance.activeDate = newActiveDate;
+          fixture.detectChanges();
+
+          calendarInstance._dateSelected(newActiveDate);
+
+          calendarInstance.updateTodaysDate();
+
+          let todayCell = calendarBodyEl.querySelector('.mat-calendar-body-today')!;
+
+          expect(todayCell).not.toBeNull();
+          expect(todayCell.innerHTML.trim()).toContain(todaysDay.toString());
+
+        });
+
         it('should move focus to the active cell when the view changes', () => {
           const activeCell =
               calendarBodyEl.querySelector('.mat-calendar-body-active')! as HTMLElement;
