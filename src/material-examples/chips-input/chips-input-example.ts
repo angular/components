@@ -17,7 +17,7 @@ export class ChipsInputExample {
   addOnBlur: boolean = true;
 
   // Enter, comma
-  separatorKeysCodes = [ENTER, COMMA];
+  readonly separatorKeysCodes = [ENTER, COMMA];
 
   fruits = [
     { name: 'Lemon' },
