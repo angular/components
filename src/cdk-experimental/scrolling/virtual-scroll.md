@@ -2,8 +2,12 @@
 time**
 
 `<cdk-virtual-scroll-viewport>` displays large lists of elements performantly by only
-rendering the items that fit on-screen. This components works with `*cdkVirtualFor`,
-a virtualized replacement for `*ngFor`.
+rendering the items that fit on-screen. Loading hundreds of elements can be slow in any browser;
+virtual scrolling enables a performant way to simulate all items being rendered by making the
+height of the container element the same as the height of total number of elements to be rendered,
+and then only rendering the items in view. Virtual scrolling is different from strategies like
+infinite scroll where it renders a set amount of elements and then when you hit the end renders the
+rest.
 
 <!-- TODO(mmalerba): Add embedded examples once this is available in @angular/cdk -->
 For some example usages, 
@@ -71,7 +75,7 @@ destroyed, which may be the right time to clean up any subscriptions that were r
 connect process.
 
 ### Scrolling over fixed size items
-When all items are the same fixed size,, you can use the `FixedSizeVirtualScrollStrategy`. This can
+When all items are the same fixed size, you can use the `FixedSizeVirtualScrollStrategy`. This can
 be easily added to your viewport using the `itemSize` directive. The fixed size viewport strategy is
 less flexible than the autosize strategy because it requires all items to be the same size, but the
 advantage of this constraint is that it allows for better performance, since items do not need to be
@@ -84,7 +88,8 @@ measured as they are rendered.
 ```
 
 The fixed size strategy also supports setting the buffer size, i.e. the number of items rendered
-beyond the edge of the viewport. This can be adjusted by setting the `bufferSize` input.
+beyond the edge of the viewport. This can be adjusted by setting the `bufferSize` input. If
+`bufferSize` is not specified it defaults to 5 items.
 
 ```html
 <cdk-virtual-scroll-viewport itemSize="50" bufferSize="1">
@@ -133,7 +138,7 @@ out horizontally via CSS. To do this you may want to target CSS at
 content.
 
 ```html
-<cdk-virtual-scroll-viewport autosize orientation="horizontal">
+<cdk-virtual-scroll-viewport itemSize="50" orientation="horizontal">
   ...
 </cdk-virtual-scroll-viewport>
 ```
