@@ -41,7 +41,8 @@ const DAYS_PER_WEEK = 7;
 
 
 /**
- * An internal component used to display a single month in the datepicker.
+ * An internal component used to display a single month in the datepicker. This component will be an
+ * extension of the CalendarView component in the datepicker CDK.
  * @docs-private
  */
 @Component({
