@@ -7,30 +7,26 @@
  */
 
 import {Subject} from 'rxjs';
+import {Output} from '@angular/core';
 
 /**
  * An abstract calendar that is used as part of the datepicker. This abstract calendar class
- * contains all necessary parts needed for a generic datepicker component. The material calendar,
- * month, year, and multi-year views will all extend this abstract calendar to provide overall
- * functionality of a datepicker component.
- * @docs-private
+ * contains all necessary parts needed for a generic datepicker component.
  */
 export abstract class CalendarView<D> {
 
-    /** A date representing when to start the calendar. */
-    abstract set activeDate(value: D);
+    /** The date representing when to start the calendar. */
+    abstract activeDate: D;
 
     /** The minimum selectable date. */
-    abstract set minDate(value: D | null);
+    abstract minDate: D | null;
 
     /** The maximum selectable date. */
-    abstract set maxDate(value: D | null);
+    abstract maxDate: D | null;
 
     /** The currently selected date. */
-    abstract set selected(value: D | null);
+    abstract selected: D | null;
 
-    /**
-     * Emits whenever there is a state change that needs to be responded to.
-     */
-    stateChanges = new Subject<D>();
+    /** Emits when a new date is selected. */
+    @Output() abstract readonly selectedChange = new Subject<D | null>();
 }
