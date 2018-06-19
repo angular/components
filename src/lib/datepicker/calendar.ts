@@ -25,6 +25,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import {CalendarView} from '@angular/cdk/datepicker';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -169,7 +170,7 @@ export class MatCalendarHeader<D> {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
+export class MatCalendar<D> extends CalendarView<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
   /** An input indicating the type of the header component, if set. */
   @Input() headerComponent: ComponentType<any>;
 
@@ -278,6 +279,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               private _changeDetectorRef: ChangeDetectorRef) {
+    super();
 
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
