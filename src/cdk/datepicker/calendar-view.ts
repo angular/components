@@ -14,24 +14,20 @@ import {Subject} from 'rxjs';
  */
 export abstract class CalendarView<D> {
 
-    /** The date representing when to start the calendar. */
-    abstract get activeDate();
-    abstract set activeDate(value: D);
+  /** The date representing when to start the calendar. */
+  abstract activeDate: D;
 
-    /** The minimum selectable date. */
-    abstract get minDate();
-    abstract set minDate(value: D | null);
+  /** The minimum selectable date. */
+  abstract minDate: D | null;
 
-    /** The maximum selectable date. */
-    abstract get maxDate();
-    abstract set maxDate(value: D | null);
+  /** The maximum selectable date. */
+  abstract maxDate: D | null;
 
-    /** The currently selected date. */
-    abstract get selected();
-    abstract set selected(value: D | null);
+  /** The currently selected date. */
+  abstract selected: D | null;
 
-    /**
-     * Emits whenever there is a state change that needs to be responded to.
-     */
-    readonly changes = new Subject<D>();
+  /**
+   * Emits whenever there is a state change that needs to be responded to.
+   */
+  readonly changes = new Subject<D>();
 }
