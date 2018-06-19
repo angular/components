@@ -12,7 +12,7 @@ import {NgModule} from '@angular/core';
 const EXPORTED_DECLARATIONS = [];
 
 @NgModule({
-    exports: EXPORTED_DECLARATIONS,
-    declarations: EXPORTED_DECLARATIONS,
+  exports: EXPORTED_DECLARATIONS,
+  declarations: EXPORTED_DECLARATIONS,
 })
 export class CdkDatepickerModule {}
