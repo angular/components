@@ -37,7 +37,8 @@ import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 
 /**
- * An internal component used to display a single year in the datepicker.
+ * An internal component used to display a single year in the datepicker. This component will be an
+ * extension of the CalendarView component in the datepicker CDK.
  * @docs-private
  */
 @Component({
