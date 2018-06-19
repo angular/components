@@ -32,5 +32,5 @@ export abstract class CalendarView<D> {
     /**
      * Emits whenever there is a state change that needs to be responded to.
      */
-    stateChanges = new Subject<D>();
+    changes = new Subject<D>();
 }
