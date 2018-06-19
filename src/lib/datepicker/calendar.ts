@@ -155,7 +155,8 @@ export class MatCalendarHeader<D> {
 }
 
 /**
- * A calendar that is used as part of the datepicker.
+ * A calendar that is used as part of the datepicker. This component will be an
+ * extension of the CalendarView component in the datepicker CDK.
  * @docs-private
  */
 @Component({

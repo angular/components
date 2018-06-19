@@ -10,27 +10,28 @@ import {Subject} from 'rxjs';
 
 /**
  * An abstract calendar that is used as part of the datepicker. This abstract calendar class
- * contains all necessary parts needed for a generic datepicker component. The material calendar,
- * month, year, and multi-year views will all extend this abstract calendar to provide overall
- * functionality of a datepicker component.
- * @docs-private
+ * contains all necessary parts needed for a generic datepicker component.
  */
 export abstract class CalendarView<D> {
 
-    /** A date representing when to start the calendar. */
+    /** The date representing when to start the calendar. */
+    abstract get activeDate();
     abstract set activeDate(value: D);
 
     /** The minimum selectable date. */
+    abstract get minDate();
     abstract set minDate(value: D | null);
 
     /** The maximum selectable date. */
+    abstract get maxDate();
     abstract set maxDate(value: D | null);
 
     /** The currently selected date. */
+    abstract get selected();
     abstract set selected(value: D | null);
 
     /**
      * Emits whenever there is a state change that needs to be responded to.
      */
-    changes = new Subject<D>();
+    readonly changes = new Subject<D>();
 }

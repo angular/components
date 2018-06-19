@@ -41,7 +41,8 @@ export const yearsPerRow = 4;
 
 
 /**
- * An internal component used to display a year selector in the datepicker.
+ * An internal component used to display a year selector in the datepicker. This component will be
+ * an extension of the CalendarView component in the datepicker CDK.
  * @docs-private
  */
 @Component({
