@@ -7,6 +7,7 @@
  */
 
 import {Subject} from 'rxjs';
+import {Output} from '@angular/core';
 
 /**
  * An abstract calendar that is used as part of the datepicker. This abstract calendar class
@@ -26,8 +27,6 @@ export abstract class CalendarView<D> {
   /** The currently selected date. */
   abstract selected: D | null;
 
-  /**
-   * Emits whenever there is a state change that needs to be responded to.
-   */
-  readonly changes = new Subject<D>();
+  /** Emits when a new date is selected. */
+  @Output() abstract readonly selectedChange = new Subject<D | null>();
 }
