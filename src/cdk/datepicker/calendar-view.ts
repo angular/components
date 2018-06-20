@@ -28,5 +28,5 @@ export abstract class CalendarView<D> {
   abstract selected: D | null;
 
   /** Emits when a new date is selected. */
-  @Output() abstract readonly selectedChange = new Subject<D | null>();
+  abstract readonly selectedChange = new Subject<D | null>();
 }
