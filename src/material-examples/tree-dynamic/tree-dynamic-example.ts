@@ -1,36 +1,33 @@
-import {Component, Injectable} from '@angular/core';
-import {FlatTreeControl} from '@angular/cdk/tree';
 import {CollectionViewer, SelectionChange} from '@angular/cdk/collections';
-import {BehaviorSubject, Observable, merge} from 'rxjs';
+import {FlatTreeControl} from '@angular/cdk/tree';
+import {Component, Injectable} from '@angular/core';
+import {BehaviorSubject, merge, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-
 
 /** Flat node with expandable and level information */
 export class DynamicFlatNode {
-  constructor(public item: string, public level: number = 1, public expandable: boolean = false,
-              public isLoading: boolean = false) {}
+  constructor(public item: string, public level = 1, public expandable = false,
+              public isLoading = false) {}
 }
-
 
 /**
  * Database for dynamic data. When expanding a node in the tree, the data source will need to fetch
  * the descendants data from the database.
  */
 export class DynamicDatabase {
-  dataMap = new Map([
+  dataMap = new Map<string, string[]>([
     ['Fruits', ['Apple', 'Orange', 'Banana']],
     ['Vegetables', ['Tomato', 'Potato', 'Onion']],
     ['Apple', ['Fuji', 'Macintosh']],
     ['Onion', ['Yellow', 'White', 'Purple']]
   ]);
 
-  rootLevelNodes = ['Fruits', 'Vegetables'];
+  rootLevelNodes: string[] = ['Fruits', 'Vegetables'];
 
   /** Initial data from database */
   initialData(): DynamicFlatNode[] {
     return this.rootLevelNodes.map(name => new DynamicFlatNode(name, 0, true));
   }
-
 
   getChildren(node: string): string[] | undefined {
     return this.dataMap.get(node);
@@ -50,7 +47,7 @@ export class DynamicDatabase {
 @Injectable()
 export class DynamicDataSource {
 
-  dataChange: BehaviorSubject<DynamicFlatNode[]> = new BehaviorSubject<DynamicFlatNode[]>([]);
+  dataChange = new BehaviorSubject<DynamicFlatNode[]>([]);
 
   get data(): DynamicFlatNode[] { return this.dataChange.value; }
   set data(value: DynamicFlatNode[]) {
@@ -75,10 +72,10 @@ export class DynamicDataSource {
   /** Handle expand/collapse behaviors */
   handleTreeControl(change: SelectionChange<DynamicFlatNode>) {
     if (change.added) {
-      change.added.forEach((node) => this.toggleNode(node, true));
+      change.added.forEach(node => this.toggleNode(node, true));
     }
     if (change.removed) {
-      change.removed.reverse().forEach((node) => this.toggleNode(node, false));
+      change.removed.slice().reverse().forEach(node => this.toggleNode(node, false));
     }
   }
 
@@ -100,7 +97,10 @@ export class DynamicDataSource {
           new DynamicFlatNode(name, node.level + 1, this.database.isExpandable(name)));
         this.data.splice(index + 1, 0, ...nodes);
       } else {
-        this.data.splice(index + 1, children.length);
+        let count = 0;
+        for (let i = index + 1; i < this.data.length
+          && this.data[i].level > node.level; i++, count++) {}
+        this.data.splice(index + 1, count);
       }
 
       // notify the change
@@ -120,7 +120,6 @@ export class DynamicDataSource {
   providers: [DynamicDatabase]
 })
 export class TreeDynamicExample {
-
   constructor(database: DynamicDatabase) {
     this.treeControl = new FlatTreeControl<DynamicFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new DynamicDataSource(this.treeControl, database);
@@ -132,9 +131,9 @@ export class TreeDynamicExample {
 
   dataSource: DynamicDataSource;
 
-  getLevel = (node: DynamicFlatNode) => { return node.level; };
+  getLevel = (node: DynamicFlatNode) => node.level;
 
-  isExpandable = (node: DynamicFlatNode) => { return node.expandable; };
+  isExpandable = (node: DynamicFlatNode) => node.expandable;
 
-  hasChild = (_: number, _nodeData: DynamicFlatNode) => { return _nodeData.expandable; };
+  hasChild = (_: number, _nodeData: DynamicFlatNode) => _nodeData.expandable;
 }
