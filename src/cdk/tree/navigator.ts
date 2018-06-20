@@ -21,9 +21,9 @@ import {Directive, Optional} from '@angular/core';
 import {TreeControl} from './control/tree-control';
 
 /**
- * Keyboard interaction for CDK tree component. Use keyboard to navigate through the tree nodes.
- * This directive maintaining a list of data/nodes and it's updated when the tree insert/move/remove
- * a node in the node outlet of the tree, or the node outlet of parent tree node in the nested tree.
+ * Directive that adds keyboard interaction to a CdkTree component instance.
+ * This directive maintains a list of data/nodes, updated either when nodes are
+ * inserted/moved/removed or the node outlet of parent tree node in the nested tree.
  * Focus of the tree node is moved based on keyboard interaction. It moves the focus to
  * correct position or expand/collapse nodes.
  *   `HOME` moves the focus to first node in the tree
