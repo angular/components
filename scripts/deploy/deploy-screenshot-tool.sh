@@ -25,7 +25,7 @@ firebaseBin=$(npm bin)/firebase
 cd ${screenshotToolFolder}
 
 # Install node_modules for the application and afterwards build the application in production.
-(npm install; $(npm bin)/ng build --aot -prod) &
+(npm install; $(npm bin)/ng build --aot) &
 
 # Install node modules for screenshot-tool functions. Firebase CLI needs to execute the functions
 # to collect all function names before it can deploy them.
