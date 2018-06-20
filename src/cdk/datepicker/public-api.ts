@@ -7,4 +7,6 @@
  */
 
 export * from './calendar-view';
+export * from './datepicker';
+export * from './datepicker-input';
 export * from './datepicker-module';

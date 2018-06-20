@@ -7,6 +7,7 @@
  */
 
 import {A11yModule} from '@angular/cdk/a11y';
+import {CdkDatepickerModule} from '@angular/cdk/datepicker';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {PortalModule} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
@@ -30,6 +31,7 @@ import {MatYearView} from './year-view';
 
 @NgModule({
   imports: [
+    CdkDatepickerModule,
     CommonModule,
     MatButtonModule,
     MatDialogModule,
