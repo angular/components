@@ -7,7 +7,6 @@
  */
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {DOWN_ARROW} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   Directive,
@@ -30,40 +29,37 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
+import {CdkDatepicker} from './datepicker';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
-import {MatDatepicker} from './datepicker';
-import {createMissingDateImplError} from './datepicker-errors';
 
-
-export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
+export const CDK_DATEPICKER_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MatDatepickerInput),
+  useExisting: forwardRef(() => CdkDatepickerInput),
   multi: true
 };
 
 
-export const MAT_DATEPICKER_VALIDATORS: any = {
+export const CDK_DATEPICKER_VALIDATORS: any = {
   provide: NG_VALIDATORS,
-  useExisting: forwardRef(() => MatDatepickerInput),
+  useExisting: forwardRef(() => CdkDatepickerInput),
   multi: true
 };
 
 
 /**
- * An event used for datepicker input and change events. We don't always have access to a native
- * input or change event because the event may have been triggered by the user clicking on the
- * calendar popup. For consistency, we always use MatDatepickerInputEvent instead.
+ * An event used for datepicker input and change events. For consistency, we \
+ * always use CdkDatepickerInputEvent instead.
  */
-export class MatDatepickerInputEvent<D> {
+export class CdkDatepickerInputEvent<D> {
   /** The new value for the target datepicker input. */
   value: D | null;
 
   constructor(
       /** Reference to the datepicker input component that emitted the event. */
-      public target: MatDatepickerInput<D>,
+      public target: CdkDatepickerInput<D>,
       /** Reference to the native input element associated with the datepicker input. */
       public targetElement: HTMLElement) {
     this.value = this.target.value;
@@ -71,46 +67,44 @@ export class MatDatepickerInputEvent<D> {
 }
 
 
-/** Directive used to connect an input to a MatDatepicker. */
+/** Directive used to connect an input to a CdkDatepicker. */
 @Directive({
-  selector: 'input[matDatepicker]',
+  selector: 'input[cdkDatepicker]',
   providers: [
-    MAT_DATEPICKER_VALUE_ACCESSOR,
-    MAT_DATEPICKER_VALIDATORS,
-    {provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: MatDatepickerInput},
+    CDK_DATEPICKER_VALUE_ACCESSOR,
+    CDK_DATEPICKER_VALIDATORS,
+    {provide: CDK_INPUT_VALUE_ACCESSOR, useExisting: CdkDatepickerInput},
   ],
   host: {
-    '[attr.aria-haspopup]': 'true',
-    '[attr.aria-owns]': '(_datepicker?.opened && _datepicker.id) || null',
+    '[attr.aria-owns]': '(_datepicker.id) || null',
     '[attr.min]': 'min ? _dateAdapter.toIso8601(min) : null',
     '[attr.max]': 'max ? _dateAdapter.toIso8601(max) : null',
     '[disabled]': 'disabled',
     '(input)': '_onInput($event.target.value)',
     '(change)': '_onChange()',
     '(blur)': '_onBlur()',
-    '(keydown)': '_onKeydown($event)',
   },
-  exportAs: 'matDatepickerInput',
+  exportAs: 'cdkDatepickerInput',
 })
-export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
+export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
     Validator {
   /** The datepicker that this input is associated with. */
   @Input()
-  set matDatepicker(value: MatDatepicker<D>) {
+  set cdkDatepicker(value: CdkDatepicker<D>) {
     this.registerDatepicker(value);
   }
-  _datepicker: MatDatepicker<D>;
+  _datepicker: CdkDatepicker<D>;
 
-  private registerDatepicker(value: MatDatepicker<D>) {
+  private registerDatepicker(value: CdkDatepicker<D>) {
     if (value) {
       this._datepicker = value;
-      this._datepicker._registerInput(this);
+      this._datepicker._registerCdkInput(this);
     }
   }
 
   /** Function that can be used to filter out dates within the datepicker. */
   @Input()
-  set matDatepickerFilter(value: (date: D | null) => boolean) {
+  set cdkDatepickerFilter(value: (date: D | null) => boolean) {
     this._dateFilter = value;
     this._validatorOnChange();
   }
@@ -174,12 +168,12 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   private _disabled: boolean;
 
   /** Emits when a `change` event is fired on this `<input>`. */
-  @Output() readonly dateChange: EventEmitter<MatDatepickerInputEvent<D>> =
-      new EventEmitter<MatDatepickerInputEvent<D>>();
+  @Output() readonly dateChange: EventEmitter<CdkDatepickerInputEvent<D>> =
+      new EventEmitter<CdkDatepickerInputEvent<D>>();
 
   /** Emits when an `input` event is fired on this `<input>`. */
-  @Output() readonly dateInput: EventEmitter<MatDatepickerInputEvent<D>> =
-      new EventEmitter<MatDatepickerInputEvent<D>>();
+  @Output() readonly dateInput: EventEmitter<CdkDatepickerInputEvent<D>> =
+      new EventEmitter<CdkDatepickerInputEvent<D>>();
 
   /** Emits when the value changes (either due to user input or programmatic change). */
   _valueChange = new EventEmitter<D | null>();
@@ -240,10 +234,10 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
       @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
       @Optional() private _formField: MatFormField) {
     if (!this._dateAdapter) {
-      throw createMissingDateImplError('DateAdapter');
+      throw Error('CdkDatepicker: No provider found for DateAdapter.')
     }
     if (!this._dateFormats) {
-      throw createMissingDateImplError('MAT_DATE_FORMATS');
+      throw Error('CdkDatepicker: No provider found for MAT_DATE_FORMATS');
     }
 
     // Update the displayed date when the locale changes.
@@ -258,8 +252,8 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
         this.value = selected;
         this._cvaOnChange(selected);
         this._onTouched();
-        this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-        this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+        this.dateInput.emit(new CdkDatepickerInputEvent(this, this._elementRef.nativeElement));
+        this.dateChange.emit(new CdkDatepickerInputEvent(this, this._elementRef.nativeElement));
       });
     }
   }
@@ -279,22 +273,6 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   /** @docs-private */
   validate(c: AbstractControl): ValidationErrors | null {
     return this._validator ? this._validator(c) : null;
-  }
-
-  /**
-   * @deprecated
-   * @deletion-target 7.0.0 Use `getConnectedOverlayOrigin` instead
-   */
-  getPopupConnectionElementRef(): ElementRef {
-    return this.getConnectedOverlayOrigin();
-  }
-
-  /**
-   * Gets the element that the datepicker popup should be connected to.
-   * @return The element to connect the popup to.
-   */
-  getConnectedOverlayOrigin(): ElementRef {
-    return this._formField ? this._formField.getConnectedOverlayOrigin() : this._elementRef;
   }
 
   // Implemented as part of ControlValueAccessor.
@@ -317,13 +295,6 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this.disabled = isDisabled;
   }
 
-  _onKeydown(event: KeyboardEvent) {
-    if (event.altKey && event.keyCode === DOWN_ARROW) {
-      this._datepicker.open();
-      event.preventDefault();
-    }
-  }
-
   _onInput(value: string) {
     let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
     this._lastValueValid = !date || this._dateAdapter.isValid(date);
@@ -333,17 +304,12 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
       this._value = date;
       this._cvaOnChange(date);
       this._valueChange.emit(date);
-      this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+      this.dateInput.emit(new CdkDatepickerInputEvent(this, this._elementRef.nativeElement));
     }
   }
 
   _onChange() {
-    this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-  }
-
-  /** Returns the palette used by the input's form field, if any. */
-  _getThemePalette() {
-    return this._formField ? this._formField.color : undefined;
+    this.dateChange.emit(new CdkDatepickerInputEvent(this, this._elementRef.nativeElement));
   }
 
   /** Handles blur events on the input. */
@@ -366,7 +332,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
    * @param obj The object to check.
    * @returns The given object if it is both a date instance and valid, otherwise null.
    */
-  private _getValidDateOrNull(obj: any): D | null {
+  protected _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
   }
 }

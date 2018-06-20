@@ -92,7 +92,7 @@ export class MatDatepickerInputEvent<D> {
   },
   exportAs: 'matDatepickerInput',
 })
-export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
+export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
     Validator {
   /** The datepicker that this input is associated with. */
   @Input()
@@ -116,63 +116,6 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   }
   _dateFilter: (date: D | null) => boolean;
 
-  /** The value of the input. */
-  @Input()
-  get value(): D | null { return this._value; }
-  set value(value: D | null) {
-    value = this._dateAdapter.deserialize(value);
-    this._lastValueValid = !value || this._dateAdapter.isValid(value);
-    value = this._getValidDateOrNull(value);
-    const oldDate = this.value;
-    this._value = value;
-    this._formatValue(value);
-
-    if (!this._dateAdapter.sameDate(oldDate, value)) {
-      this._valueChange.emit(value);
-    }
-  }
-  private _value: D | null;
-
-  /** The minimum valid date. */
-  @Input()
-  get min(): D | null { return this._min; }
-  set min(value: D | null) {
-    this._min = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._validatorOnChange();
-  }
-  private _min: D | null;
-
-  /** The maximum valid date. */
-  @Input()
-  get max(): D | null { return this._max; }
-  set max(value: D | null) {
-    this._max = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._validatorOnChange();
-  }
-  private _max: D | null;
-
-  /** Whether the datepicker-input is disabled. */
-  @Input()
-  get disabled(): boolean { return !!this._disabled; }
-  set disabled(value: boolean) {
-    const newValue = coerceBooleanProperty(value);
-    const element = this._elementRef.nativeElement;
-
-    if (this._disabled !== newValue) {
-      this._disabled = newValue;
-      this._disabledChange.emit(newValue);
-    }
-
-    // We need to null check the `blur` method, because it's undefined during SSR.
-    if (newValue && element.blur) {
-      // Normally, native input elements automatically blur if they turn disabled. This behavior
-      // is problematic, because it would mean that it triggers another change detection cycle,
-      // which then causes a changed after checked error if the input element was focused before.
-      element.blur();
-    }
-  }
-  private _disabled: boolean;
-
   /** Emits when a `change` event is fired on this `<input>`. */
   @Output() readonly dateChange: EventEmitter<MatDatepickerInputEvent<D>> =
       new EventEmitter<MatDatepickerInputEvent<D>>();
@@ -180,12 +123,6 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   /** Emits when an `input` event is fired on this `<input>`. */
   @Output() readonly dateInput: EventEmitter<MatDatepickerInputEvent<D>> =
       new EventEmitter<MatDatepickerInputEvent<D>>();
-
-  /** Emits when the value changes (either due to user input or programmatic change). */
-  _valueChange = new EventEmitter<D | null>();
-
-  /** Emits when the disabled state has changed */
-  _disabledChange = new EventEmitter<boolean>();
 
   _onTouched = () => {};
 
@@ -360,13 +297,5 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   private _formatValue(value: D | null) {
     this._elementRef.nativeElement.value =
         value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
-  }
-
-  /**
-   * @param obj The object to check.
-   * @returns The given object if it is both a date instance and valid, otherwise null.
-   */
-  private _getValidDateOrNull(obj: any): D | null {
-    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
   }
 }
