@@ -107,7 +107,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this._dateFilter = value;
     this._validatorOnChange();
   }
-  protected _dateFilter: (date: D | null) => boolean;
+  _dateFilter: (date: D | null) => boolean;
 
   /** The value of the input. */
   @Input()
