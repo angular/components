@@ -6,25 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
   ContentChild,
-  EventEmitter,
   Input,
-  NgZone,
-  Optional,
-  Output,
-  ViewContainerRef,
-  ViewEncapsulation,
   OnDestroy,
+  ViewEncapsulation,
 } from '@angular/core';
-import {CalendarView} from '@angular/cdk/datepicker/calendar-view';
+import {CalendarView} from './calendar-view';
 import {CdkDatepickerInput} from './datepicker-input';
 import {DateAdapter} from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
-
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -47,7 +40,7 @@ export class CdkDatepicker<D> implements OnDestroy {
   get startAt(): D | null {
     // If an explicit startAt is set we start there, otherwise we start at whatever the currently
     // selected value is.
-    return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
+    return this._startAt || (this._cdkDatepickerInput ? this._cdkDatepickerInput.value : null);
   }
   set startAt(value: D | null) {
     this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
@@ -66,23 +59,23 @@ export class CdkDatepicker<D> implements OnDestroy {
 
   /** The minimum selectable date. */
   get _minDate(): D | null {
-    return this._datepickerInput && this._datepickerInput.min;
+    return this._cdkDatepickerInput && this._cdkDatepickerInput.min;
   }
 
   /** The maximum selectable date. */
   get _maxDate(): D | null {
-    return this._datepickerInput && this._datepickerInput.max;
+    return this._cdkDatepickerInput && this._cdkDatepickerInput.max;
   }
 
   get _dateFilter(): (date: D | null) => boolean {
-    return this._datepickerInput && this._datepickerInput._dateFilter;
+    return this._cdkDatepickerInput && this._cdkDatepickerInput._dateFilter;
   }
 
   /** Subscription to value changes in the associated input element. */
-  private _inputSubscription = Subscription.EMPTY;
+  private _inputCdkSubscription = Subscription.EMPTY;
 
   /** The input element this datepicker is associated with. */
-  _datepickerInput: CdkDatepickerInput<D>;
+  _cdkDatepickerInput: CdkDatepickerInput<D>;
 
   /** Emits when the datepicker is disabled. */
   readonly _disabledChange = new Subject<boolean>();
@@ -90,14 +83,24 @@ export class CdkDatepicker<D> implements OnDestroy {
   /** Emits new selected date when selected date changes. */
   readonly _selectedChanged = new Subject<D>();
 
-  constructor(@Optional() private _dateAdapter: DateAdapter<D>) {
+  protected _dateAdapter: DateAdapter<D>;
+
+  constructor() {
     if (!this._dateAdapter) {
       throw Error('CdkDatepicker: No provider found for DateAdapter.');
     }
   }
 
   ngOnDestroy() {
-    this._inputSubscription.unsubscribe();
+    this.destroy();
+  }
+
+  destroy() {
+    this.cdkDatepickerDestroy(this._inputCdkSubscription);
+  }
+
+  cdkDatepickerDestroy(subscription: Subscription) {
+    subscription.unsubscribe();
     this._disabledChange.complete();
   }
 
@@ -106,12 +109,13 @@ export class CdkDatepicker<D> implements OnDestroy {
    * @param input The datepicker input to register with this datepicker.
    */
   _registerCdkInput(input: CdkDatepickerInput<D>): void {
-    if (this._datepickerInput) {
+    if (this._cdkDatepickerInput) {
       throw Error('A CdkDatepicker can only be associated with a single input.');
     }
-    this._datepickerInput = input;
-    this._inputSubscription =
-        this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
+    this._cdkDatepickerInput = input;
+    this._inputCdkSubscription =
+        this._cdkDatepickerInput._valueChange.subscribe(
+            (value: D | null) => this._selected = value);
   }
 
   /**

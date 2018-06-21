@@ -171,7 +171,8 @@ export class MatCalendarHeader<D> {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatCalendar<D> extends CalendarView<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
+export class MatCalendar<D> extends CalendarView<D> implements AfterContentInit, AfterViewChecked,
+    OnDestroy, OnChanges {
   /** An input indicating the type of the header component, if set. */
   @Input() headerComponent: ComponentType<any>;
 

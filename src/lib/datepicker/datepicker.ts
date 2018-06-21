@@ -37,10 +37,10 @@ import {
   ViewEncapsulation,
   OnDestroy,
 } from '@angular/core';
-import {CanColor, DateAdapter, mixinColor, ThemePalette} from '@angular/material/core';
+import {CanColor, mixinColor, ThemePalette} from '@angular/material/core';
+import {CdkDatepicker} from '@angular/cdk/datepicker';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {merge, Subject, Subscription} from 'rxjs';
-import {createMissingDateImplError} from './datepicker-errors';
+import {merge, Subscription} from 'rxjs';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatCalendar} from './calendar';
 import {matDatepickerAnimations} from './datepicker-animations';
@@ -128,6 +128,7 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   selector: 'mat-datepicker',
   template: '',
   exportAs: 'matDatepicker',
+  inputs: ['startAt'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
@@ -232,19 +233,14 @@ export class MatDatepicker<D> extends CdkDatepicker<D> implements OnDestroy, Can
               private _ngZone: NgZone,
               private _viewContainerRef: ViewContainerRef,
               @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) private _scrollStrategy,
-              @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
               @Optional() @Inject(DOCUMENT) private _document: any) {
-    super(_dateAdapter);
-    if (!this._dateAdapter) {
-      throw createMissingDateImplError('DateAdapter');
-    }
+    super();
   }
 
-  ngOnDestroy() {
+  destroy() {
     this.close();
-    this._inputSubscription.unsubscribe();
-    this._disabledChange.complete();
+    this.cdkDatepickerDestroy(this._inputSubscription);
 
     if (this._popupRef) {
       this._popupRef.dispose();
