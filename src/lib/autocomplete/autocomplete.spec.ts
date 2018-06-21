@@ -1922,6 +1922,21 @@ describe('MatAutocomplete', () => {
     expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(400);
   }));
 
+  it('should have panel width set to auto', () => {
+      const widthFixture = createComponent(SimpleAutocomplete);
+
+      widthFixture.componentInstance.width = 300;
+      widthFixture.detectChanges();
+
+      widthFixture.componentInstance.trigger.autocomplete.panelWidthAuto = true;
+      widthFixture.componentInstance.trigger.openPanel();
+      widthFixture.detectChanges();
+
+      const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+      expect(overlayPane.style.width).toBe('auto');
+  });
+
   it('should show the panel when the options are initialized later within a component with ' +
     'OnPush change detection', fakeAsync(() => {
       let fixture = createComponent(AutocompleteWithOnPushDelay);
