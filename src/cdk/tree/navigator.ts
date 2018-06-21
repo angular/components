@@ -17,7 +17,8 @@ import {
   RIGHT_ARROW,
   UP_ARROW
 } from '@angular/cdk/keycodes';
-import {Directive, Optional} from '@angular/core';
+import {Directive, OnDestroy, Optional, Output} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
 import {TreeControl} from './control/tree-control';
 
 /**
@@ -41,7 +42,7 @@ import {TreeControl} from './control/tree-control';
     'class': 'cdk-tree-keyboard-interaction',
   },
 })
-export class CdkTreeKeyboardInteraction<T> {
+export class CdkTreeKeyboardInteraction<T> implements OnDestroy {
   /** The node map map data nodes to CdkTreeNodes */
   protected nodeMap: Map<T, FocusableOption> = new Map<T, FocusableOption>();
 
@@ -52,12 +53,29 @@ export class CdkTreeKeyboardInteraction<T> {
   protected parentMap: Map<T, T> = new Map<T, T>();
 
   /** Current focused node data. */
-  focusedData: T;
+  protected _focusedData: T;
 
   /** Tree control is used to expand or collapse nodes. */
-  treeControl: TreeControl<T>;
+  protected _treeControl: TreeControl<T>;
+
+  /** Get current focused data */
+  get focusedData() {
+    return this._focusedData;
+  }
+
+  /** Get the  tree control */
+  set treeControl(treeControl: TreeControl<T>) {
+    this._treeControl = treeControl;
+  }
+
+  /** Change events of focused data */
+  @Output() focusedDataChange = new BehaviorSubject<T | undefined>(undefined);
 
   constructor(@Optional() protected dir: Directionality) {}
+
+  ngOnDestroy() {
+    this.focusedDataChange.complete();
+  }
 
   /** Add tree node to data list based on owner of parent view container. */
   insert(index: number, data: T, node: FocusableOption, parentData?: T) {
@@ -72,7 +90,7 @@ export class CdkTreeKeyboardInteraction<T> {
   remove(index: number, parentData?: T) {
     const nodeList = this._getNodeList(parentData);
     const removed = nodeList.splice(index, 1)[0];
-    if (removed && removed === this.focusedData) {
+    if (removed && removed === this._focusedData) {
       this._changeFocusedData(this._getNext());
     }
     this.nodeMap.delete(removed);
@@ -89,12 +107,12 @@ export class CdkTreeKeyboardInteraction<T> {
 
   /** When a tree node is focused, update the current focused data. */
   updateFocusedData(newFocusedData: T) {
-    this.focusedData = newFocusedData;
+    this._focusedData = newFocusedData;
   }
 
   /** Focus first node when the tree is focused */
   focus() {
-    this.focusedData ? this._changeFocusedData(this.focusedData) : this.focusFirst();
+    this._focusedData ? this._changeFocusedData(this._focusedData) : this.focusFirst();
   }
 
   /** Change focus to first visible node in the tree. */
@@ -109,7 +127,7 @@ export class CdkTreeKeyboardInteraction<T> {
 
   /** Change focus to previous visible node. */
   focusPreviousVisibleNode() {
-    if (!this.focusedData) {
+    if (!this._focusedData) {
       return this.focusLast();
     }
     this._changeFocusedData(this._getPrevious());
@@ -117,7 +135,7 @@ export class CdkTreeKeyboardInteraction<T> {
 
   /** Change focus to next visible node. */
   focusNextVisibleNode() {
-    if (!this.focusedData) {
+    if (!this._focusedData) {
       return this.focusFirst();
     }
     this._changeFocusedData(this._getNext());
@@ -125,9 +143,9 @@ export class CdkTreeKeyboardInteraction<T> {
 
   /** Collapse the current node if it's expanded. Otherwise move to parent. */
   collapseCurrentFocusedNode() {
-    if (this.focusedData && this.treeControl) {
-      if (this.treeControl.isExpanded(this.focusedData)) {
-        this.treeControl.collapse(this.focusedData);
+    if (this._focusedData && this._treeControl) {
+      if (this._treeControl.isExpanded(this._focusedData)) {
+        this._treeControl.collapse(this._focusedData);
       } else {
         this._changeFocusedData(this._getParent());
       }
@@ -136,9 +154,9 @@ export class CdkTreeKeyboardInteraction<T> {
 
   /** Expand the current node if it's not expanded. Otherwise move to its first child. */
   expandCurrentFocusedNode() {
-    if (this.focusedData && this.treeControl) {
-      if (!this.treeControl.isExpanded(this.focusedData)) {
-        this.treeControl.expand(this.focusedData);
+    if (this._focusedData && this._treeControl) {
+      if (!this._treeControl.isExpanded(this._focusedData)) {
+        this._treeControl.expand(this._focusedData);
       } else {
         this._changeFocusedData(this._getNext());
       }
@@ -147,15 +165,15 @@ export class CdkTreeKeyboardInteraction<T> {
 
   /** Expand all the nodes in the tree */
   expandAll() {
-    if (this.treeControl) {
-      this.treeControl.expandAll();
+    if (this._treeControl) {
+      this._treeControl.expandAll();
     }
   }
 
   /** Expand the current node if it's not expanded. Otherwise move to its first child. */
   toggleCurrentFocusedNode() {
-    if (this.focusedData && this.treeControl) {
-      this.treeControl.toggle(this.focusedData);
+    if (this._focusedData && this._treeControl) {
+      this._treeControl.toggle(this._focusedData);
     }
   }
 
@@ -201,11 +219,12 @@ export class CdkTreeKeyboardInteraction<T> {
   /** Focus the tree node component with new focused data. */
   _changeFocusedData(newFocused: T | undefined) {
     if (newFocused) {
-      this.focusedData = newFocused;
-      if (this.nodeMap.has(this.focusedData)) {
-        this.nodeMap.get(this.focusedData)!.focus();
+      this._focusedData = newFocused;
+      if (this.nodeMap.has(this._focusedData)) {
+        this.nodeMap.get(this._focusedData)!.focus();
       }
     }
+    this.focusedDataChange.next(newFocused);
   }
 
   /** Returns the data of the first visible tree node in the tree. */
@@ -222,12 +241,12 @@ export class CdkTreeKeyboardInteraction<T> {
 
   /** Returns the previous visible tree node of current focused data. */
   _getPrevious(): T | undefined {
-    if (!this.focusedData) {
+    if (!this._focusedData) {
       return;
     }
-    const parent = this.parentMap.get(this.focusedData);
+    const parent = this.parentMap.get(this._focusedData);
     const nodeList = this.nodeListMap.get(parent);
-    const index = nodeList!.indexOf(this.focusedData);
+    const index = nodeList!.indexOf(this._focusedData);
     if (index === 0) {
       return parent;
     } else if (index > 0) {
@@ -237,19 +256,19 @@ export class CdkTreeKeyboardInteraction<T> {
 
   /** Returns the next visible tree node data of current focused data. */
   _getNext(): T | undefined {
-    if (!this.focusedData) {
+    if (!this._focusedData) {
       return;
     }
     // Always return first child if the node is expanded
-    if (this.nodeListMap.has(this.focusedData) &&
-        this.treeControl && this.treeControl.isExpanded(this.focusedData)) {
-      const childNodeList = this._getNodeList(this.focusedData);
+    if (this.nodeListMap.has(this._focusedData) &&
+        this._treeControl && this._treeControl.isExpanded(this._focusedData)) {
+      const childNodeList = this._getNodeList(this._focusedData);
       if (childNodeList.length) {
         return childNodeList[0];
       }
     }
     // Or return next sibling / parent's next child if any
-    let currentData: T | undefined = this.focusedData;
+    let currentData: T | undefined = this._focusedData;
     while (currentData) {
       const parent = this.parentMap.get(currentData);
       const nodeList = this.nodeListMap.get(parent);
@@ -265,19 +284,19 @@ export class CdkTreeKeyboardInteraction<T> {
 
   /** Returns the parent of current focused node. */
   _getParent(): T | undefined {
-    if (this.parentMap.has(this.focusedData)) {
+    if (this.parentMap.has(this._focusedData)) {
       // For nested tree
-      this._changeFocusedData(this.parentMap.get(this.focusedData));
-    } else if (this.treeControl.getLevel) {
+      this._changeFocusedData(this.parentMap.get(this._focusedData));
+    } else if (this._treeControl.getLevel) {
       // For flat tree
       const nodeList = this._getNodeList();
-      const index = nodeList.indexOf(this.focusedData);
-      const level = this.treeControl.getLevel(this.focusedData) - 1;
+      const index = nodeList.indexOf(this._focusedData);
+      const level = this._treeControl.getLevel(this._focusedData) - 1;
       if (index <= 0) {
         return;
       }
       for (let i = index - 1; i >= 0; i--) {
-        if (this.treeControl.getLevel(nodeList[i]) === level) {
+        if (this._treeControl.getLevel(nodeList[i]) === level) {
           return nodeList[i];
         }
       }
@@ -301,7 +320,7 @@ export class CdkTreeKeyboardInteraction<T> {
   _getLastChild(targetNode: T) {
     let currentData = targetNode;
     while (currentData && this.nodeListMap.has(currentData) &&
-        this.treeControl && this.treeControl.isExpanded(currentData)) {
+        this._treeControl && this._treeControl.isExpanded(currentData)) {
       const childNodeList = this._getNodeList(currentData);
       if (childNodeList.length) {
         currentData = childNodeList[childNodeList.length - 1];

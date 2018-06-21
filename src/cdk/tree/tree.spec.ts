@@ -1566,7 +1566,7 @@ class CdkTreeAppWithTrackBy {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" cdkTreeNavigator>
+    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" cdkTreeKeyboardInteraction>
       <cdk-tree-node *cdkTreeNodeDef="let node">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
       </cdk-tree-node>
@@ -1619,7 +1619,7 @@ class NestedCdkTreeAppWithTrackBy {
 
 @Component({
   template: `
-    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" cdkTreeNavigator>
+    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" cdkTreeKeyboardInteraction>
       <cdk-nested-tree-node *cdkTreeNodeDef="let node">
                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
         <div *ngIf="treeControl.isExpanded(node)">
