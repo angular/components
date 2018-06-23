@@ -106,8 +106,8 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
   }
 
   /** Function that can be used to filter out dates within the datepicker. */
-  @Input('matDatepickerFilter')
-  set filter(value: (date: D | null) => boolean) {
+  @Input()
+  set matDatepickerFilter(value: (date: D | null) => boolean) {
     this._dateFilter = value;
     this._validatorOnChange();
   }
