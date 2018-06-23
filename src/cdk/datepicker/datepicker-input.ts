@@ -34,6 +34,9 @@ import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
 
+/**
+ * Provider that allows the datepicker to register as a ControlValueAccessor.
+ */
 export const CDK_DATEPICKER_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => CdkDatepickerInput),
@@ -41,6 +44,9 @@ export const CDK_DATEPICKER_VALUE_ACCESSOR: any = {
 };
 
 
+/**
+ * Provider that allows the datepicker to register as a ControlValueAccessor.
+ */
 export const CDK_DATEPICKER_VALIDATORS: any = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => CdkDatepickerInput),
@@ -72,7 +78,6 @@ export class CdkDatepickerInputEvent<D> {
   providers: [
     CDK_DATEPICKER_VALUE_ACCESSOR,
     CDK_DATEPICKER_VALIDATORS,
-    {provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: CdkDatepickerInput},
   ],
   host: {
     '[attr.aria-owns]': '(_datepicker.id) || null',
@@ -90,11 +95,11 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   /** The datepicker that this input is associated with. */
   @Input()
   set cdkDatepicker(value: CdkDatepicker<D>) {
-    this.registerCdkDatepicker(value);
+    this._registerCdkDatepicker(value);
   }
   _cdkDatepicker: CdkDatepicker<D>;
 
-  private registerCdkDatepicker(value: CdkDatepicker<D>) {
+  private _registerCdkDatepicker(value: CdkDatepicker<D>) {
     if (value) {
       this._cdkDatepicker = value;
       this._cdkDatepicker._registerCdkInput(this);
@@ -102,8 +107,8 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   }
 
   /** Function that can be used to filter out dates within the datepicker. */
-  @Input()
-  set cdkDatepickerFilter(value: (date: D | null) => boolean) {
+  @Input('cdkDatepickerFilter')
+  set filter(value: (date: D | null) => boolean) {
     this._dateFilter = value;
     this._validatorOnChange();
   }
@@ -167,27 +172,34 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   private _disabled: boolean;
 
   /** Emits when a `change` event is fired on this `<input>`. */
-  @Output() readonly cdkDateChange: EventEmitter<CdkDatepickerInputEvent<D>> =
+  @Output('cdkDatepickerChange')
+  readonly change: EventEmitter<CdkDatepickerInputEvent<D>> =
       new EventEmitter<CdkDatepickerInputEvent<D>>();
 
   /** Emits when an `input` event is fired on this `<input>`. */
-  @Output() readonly cdkDateInput: EventEmitter<CdkDatepickerInputEvent<D>> =
+  @Output('cdkDatepickerInput')
+  readonly input: EventEmitter<CdkDatepickerInputEvent<D>> =
       new EventEmitter<CdkDatepickerInputEvent<D>>();
 
   /** Emits when the value changes (either due to user input or programmatic change). */
   _valueChange = new EventEmitter<D | null>();
 
-  /** Emits when the disabled state has changed */
+  /** Emits when the disabled state has changed. */
   _disabledChange = new EventEmitter<boolean>();
 
+  /** Implemented as part of ControlValueAccessor. */
   _onTouched = () => {};
 
-  private _cvaOnChange: (value: any) => void = () => {};
+  /** Implemented as part of ControlValueAccessor. */
+  private _controlValAccOnChange: (value: any) => void = () => {};
 
+  /** Implemented as part of ControlValueAccessor. */
   protected _validatorOnChange = () => {};
 
+  /** Implemented for datepicker CDK subscription. */
   private _cdkDatepickerSubscription = Subscription.EMPTY;
 
+  /** Implemented for datepicker locale subscription. */
   private _localeSubscription = Subscription.EMPTY;
 
   /** The form control validator for whether the input parses. */
@@ -229,10 +241,13 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   /** Whether the last value set on the input was valid. */
   protected _lastValueValid = false;
 
+  /** Element reference associated with this input. */
   protected _elementRef: ElementRef;
 
+  /** DateAdapter associated with this input. */
   _dateAdapter: DateAdapter<D>;
 
+  /** DateFormats associated with this input. */
   @Inject(MAT_DATE_FORMATS)
   private _dateFormats: MatDateFormats;
 
@@ -250,6 +265,10 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     });
   }
 
+  /**
+   * Initializes datepicker with subscription and ControlValueAccessor
+   * implementations.
+   */
   init() {
     if (this._cdkDatepicker) {
       this._cdkDatepickerSubscription = this._cdkDatepicker._selectedChanged.subscribe(
@@ -261,9 +280,10 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     }
   }
 
+  /** Initializes datepicker with ControlValueAccessor implementations. */
   emitChange(selected: D) {
     this.value = selected;
-    this._cvaOnChange(selected);
+    this._controlValAccOnChange(selected);
     this._onTouched();
   }
 
@@ -271,6 +291,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this.init();
   }
 
+  /** Unsubscribes datepicker subscription. */
   destroy() {
     this._cdkDatepickerSubscription.unsubscribe();
   }
@@ -299,7 +320,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   // Implemented as part of ControlValueAccessor.
   registerOnChange(fn: (value: any) => void): void {
-    this._cvaOnChange = fn;
+    this._controlValAccOnChange = fn;
   }
 
   // Implemented as part of ControlValueAccessor.
@@ -319,18 +340,20 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
     if (!this._dateAdapter.sameDate(date, this._value)) {
       this._value = date;
-      this._cvaOnChange(date);
+      this._controlValAccOnChange(date);
       this._valueChange.emit(date);
       this.emitDateInput();
     }
   }
 
+  /** Emits new datepicker input event when the input event is emitted. */
   emitDateInput() {
-    this.cdkDateInput.emit(new CdkDatepickerInputEvent(this, this._elementRef.nativeElement));
+    this.input.emit(new CdkDatepickerInputEvent(this, this._elementRef.nativeElement));
   }
 
+  /** Emits new datepicker change event when the change event is emitted. */
   emitDateChange() {
-    this.cdkDateChange.emit(new CdkDatepickerInputEvent(this, this._elementRef.nativeElement));
+    this.change.emit(new CdkDatepickerInputEvent(this, this._elementRef.nativeElement));
   }
 
   _onChange() {
