@@ -13,6 +13,7 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  Inject,
   Input,
   OnDestroy,
   Optional,
@@ -29,11 +30,15 @@ import {
   Validators
 } from '@angular/forms';
 import {CdkDatepickerInput} from '@angular/cdk/datepicker';
+import {MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {MatDatepicker} from './datepicker';
 import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
 
+/**
+ * Provider that allows the datepicker to register as a ControlValueAccessor.
+ */
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => MatDatepickerInput),
@@ -41,6 +46,9 @@ export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
 };
 
 
+/**
+ * Provider that allows the datepicker to register as a ControlValueAccessor.
+ */
 export const MAT_DATEPICKER_VALIDATORS: any = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => MatDatepickerInput),
@@ -82,7 +90,7 @@ export class MatDatepickerInputEvent<D> {
     '[attr.max]': 'max ? _dateAdapter.toIso8601(max) : null',
     '[disabled]': 'disabled',
     '(input)': '_onInput($event.target.value)',
-    '(change)': '_onChange()',
+    '(change)': 'emitDateChange()',
     '(blur)': '_onBlur()',
     '(keydown)': '_onKeydown($event)',
   },
@@ -98,10 +106,19 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
   }
   _datepicker: MatDatepicker<D>;
 
+  /** Register material datepicker to input. */
   private _registerDatepicker(value: MatDatepicker<D>) {
     if (value) {
       this._datepicker = value;
       this._datepicker._registerInput(this);
+    }
+  }
+
+  // Formats value and emits the value change if the dates differ. */
+  emitValue(oldDate: D | null, value: D | null) {
+    this._formatValue(value);
+    if (!this._dateAdapter.sameDate(oldDate, value)) {
+      this._valueChange.emit(value);
     }
   }
 
@@ -120,6 +137,7 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
   @Output() readonly dateInput: EventEmitter<MatDatepickerInputEvent<D>> =
       new EventEmitter<MatDatepickerInputEvent<D>>();
 
+  /** Implemented for material datepicker subscription. */
   private _datepickerSubscription = Subscription.EMPTY;
 
   /** The form control validator for whether the input parses. */
@@ -157,14 +175,38 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
           [this._parseValidator, this._minValidator, this._maxValidator,
               this._filterValidator]);
 
-  constructor(@Optional() private _formField: MatFormField) {
+  /** Constructor for material datepicker input. */
+  constructor(@Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
+      @Optional() private _formField: MatFormField) {
     super();
+    if (!this._dateFormats) {
+      throw Error('MatDatepicker: No provider found for MAT_DATE_FORMATS');
+    }
   }
 
+  /** Unsubscribes datepicker subscription. */
   destroy() {
     this._datepickerSubscription.unsubscribe();
   }
 
+  /** Formats date of input and emits change detection. */
+  _onInput(value: string) {
+    let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
+    this._lastValueValid = !date || this._dateAdapter.isValid(date);
+    date = this._getValidDateOrNull(date);
+
+    if (!this._dateAdapter.sameDate(date, this._value)) {
+      this._value = date;
+      this._controlValAccOnChange(date);
+      this._valueChange.emit(date);
+      this.emitDateInput();
+    }
+  }
+
+  /**
+   * Initializes datepicker with subscription and ControlValueAccessor
+   * implementations.
+   */
   init() {
     if (this._datepicker) {
       this._datepickerSubscription = this._datepicker._selectedChanged.subscribe(
@@ -173,6 +215,14 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
         this.emitDateInput();
         this.emitDateChange();
       });
+    }
+  }
+
+  /** Format value if it exists. */
+  formatIfValueExists() {
+    // Reformat the input only if we have a valid value.
+    if (this.value) {
+      this._formatValue(this.value);
     }
   }
 
@@ -197,6 +247,7 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
     return this._formField ? this._formField.getConnectedOverlayOrigin() : this._elementRef;
   }
 
+  /** Opens datepicker on keydown event */
   _onKeydown(event: KeyboardEvent) {
     if (event.altKey && event.keyCode === DOWN_ARROW) {
       this._datepicker.open();
@@ -204,12 +255,20 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
     }
   }
 
+  /** Emits new datepicker input event when the input event is emitted. */
   emitDateInput() {
     this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
   }
 
+  /** Emits new datepicker change event when the change event is emitted. */
   emitDateChange() {
     this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+  }
+
+  /** Formats a value and sets it on the input element. */
+  protected _formatValue(value: D | null) {
+    this._elementRef.nativeElement.value =
+        value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
   }
 
   /** Returns the palette used by the input's form field, if any. */

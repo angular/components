@@ -11,8 +11,6 @@ ng_module(
     "@rxjs",
     "//src/cdk/coercion",
     "//src/lib/core",
-    "//src/lib/form-field",
-    "//src/lib/input",
   ],
   tsconfig = "//src/cdk:tsconfig-build.json",
 )

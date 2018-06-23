@@ -29,7 +29,7 @@ import {
   Validators
 } from '@angular/forms';
 import {CdkDatepicker} from './datepicker';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {DateAdapter} from '@angular/material/core';
 import {Subscription} from 'rxjs';
 
 /**
@@ -77,8 +77,8 @@ export interface CdkDatepickerInputEvent<D> {
     '[attr.min]': 'min ? _dateAdapter.toIso8601(min) : null',
     '[attr.max]': 'max ? _dateAdapter.toIso8601(max) : null',
     '[disabled]': 'disabled',
-    '(input)': '_onInput($event.target.value)',
-    '(change)': '_onChange()',
+    '(input)': 'emitDateInput()',
+    '(change)': 'emitDateChange()',
     '(blur)': '_onBlur()',
   },
   exportAs: 'cdkDatepickerInput',
@@ -92,6 +92,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   }
   _cdkDatepicker: CdkDatepicker<D>;
 
+  /** Register datepicker CDK to input. */
   private _registerCdkDatepicker(value: CdkDatepicker<D>) {
     if (value) {
       this._cdkDatepicker = value;
@@ -116,13 +117,17 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     value = this._getValidDateOrNull(value);
     const oldDate = this.value;
     this._value = value;
-    this._formatValue(value);
+    this.emitValue(oldDate, value);
 
+  }
+  protected _value: D | null;
+
+  /** Emit value change if dates are different. */
+  emitValue(oldDate: D| null, value: D| null) {
     if (!this._dateAdapter.sameDate(oldDate, value)) {
       this._valueChange.emit(value);
     }
   }
-  private _value: D | null;
 
   /** The minimum valid date. */
   @Input()
@@ -184,7 +189,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   _onTouched = () => {};
 
   /** Implemented as part of ControlValueAccessor. */
-  private _controlValAccOnChange: (value: any) => void = () => {};
+  protected _controlValAccOnChange: (value: any) => void = () => {};
 
   /** Implemented as part of ControlValueAccessor. */
   protected _validatorOnChange = () => {};
@@ -243,16 +248,10 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   /** DateAdapter associated with this input. */
   _dateAdapter: DateAdapter<D>;
 
-  /** DateFormats associated with this input. */
-  @Inject(MAT_DATE_FORMATS)
-  private _dateFormats: MatDateFormats;
-
+  /** Constructor for the datepicker input component. */
   constructor() {
     if (!this._dateAdapter) {
       throw Error('CdkDatepicker: No provider found for DateAdapter.');
-    }
-    if (!this._dateFormats) {
-      throw Error('CdkDatepicker: No provider found for MAT_DATE_FORMATS');
     }
 
     this._inputElement = this._elementRef.nativeElement as HTMLInputElement;
@@ -285,6 +284,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this._onTouched();
   }
 
+  /** Content initialization. */
   ngAfterContentInit() {
     this.init();
   }
@@ -294,6 +294,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this._cdkDatepickerSubscription.unsubscribe();
   }
 
+  /** Destroy events and subscriptions. */
   ngOnDestroy() {
     this.destroy();
     this._localeSubscription.unsubscribe();
@@ -331,19 +332,6 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this.disabled = isDisabled;
   }
 
-  _onInput(value: string) {
-    let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-    this._lastValueValid = !date || this._dateAdapter.isValid(date);
-    date = this._getValidDateOrNull(date);
-
-    if (!this._dateAdapter.sameDate(date, this._value)) {
-      this._value = date;
-      this._controlValAccOnChange(date);
-      this._valueChange.emit(date);
-      this.emitDateInput();
-    }
-  }
-
   /** Emits new datepicker input event when the input event is emitted. */
   emitDateInput() {
     this.input.emit({ input: this._inputElement, value: this._inputElement.value});
@@ -354,25 +342,14 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this.change.emit( {input: this._inputElement, value: this._inputElement.value});
   }
 
-  _onChange() {
-    this.emitDateChange();
-  }
-
   /** Handles blur events on the input. */
   _onBlur() {
-    // Reformat the input only if we have a valid value.
-    if (this.value) {
-      this._formatValue(this.value);
-    }
-
+    this.formatIfValueExists();
     this._onTouched();
   }
 
-  /** Formats a value and sets it on the input element. */
-  protected _formatValue(value: D | null) {
-    this._elementRef.nativeElement.value =
-        value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
-  }
+  /** Format value if it exists. */
+  formatIfValueExists(){}
 
   /**
    * @param obj The object to check.
