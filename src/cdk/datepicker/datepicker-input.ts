@@ -349,7 +349,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   }
 
   /** Format value if it exists. */
-  formatIfValueExists(){}
+  formatIfValueExists() {}
 
   /**
    * @param obj The object to check.

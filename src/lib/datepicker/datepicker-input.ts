@@ -114,7 +114,7 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
     }
   }
 
-  // Formats value and emits the value change if the dates differ. */
+  /** Formats value and emits the value change if the dates differ. */
   emitValue(oldDate: D | null, value: D | null) {
     this._formatValue(value);
     if (!this._dateAdapter.sameDate(oldDate, value)) {
