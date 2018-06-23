@@ -58,17 +58,12 @@ export const CDK_DATEPICKER_VALIDATORS: any = {
  * An event used for datepicker input and change events. For consistency, we always use
  * CdkDatepickerInputEvent instead.
  */
-export class CdkDatepickerInputEvent<D> {
+export interface CdkDatepickerInputEvent<D> {
   /** The new value for the target datepicker input. */
-  value: D | null;
+  value: string;
 
-  constructor(
-      /** Reference to the datepicker input component that emitted the event. */
-      public target: CdkDatepickerInput<D>,
-      /** Reference to the native input element associated with the datepicker input. */
-      public targetElement: HTMLElement) {
-    this.value = this.target.value;
-  }
+  /** The native `<input>` element that the event is being fired for. */
+  input: HTMLInputElement;
 }
 
 
@@ -202,6 +197,9 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   /** Implemented for datepicker locale subscription. */
   private _localeSubscription = Subscription.EMPTY;
 
+  /** The native input element to which this directive is attached. */
+  protected _inputElement: HTMLInputElement;
+
   /** The form control validator for whether the input parses. */
   private _parseCdkValidator: ValidatorFn = (): ValidationErrors | null => {
     return this._lastValueValid ?
@@ -258,6 +256,8 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     if (!this._dateFormats) {
       throw Error('CdkDatepicker: No provider found for MAT_DATE_FORMATS');
     }
+
+    this._inputElement = this._elementRef.nativeElement as HTMLInputElement;
 
     // Update the displayed date when the locale changes.
     this._localeSubscription = this._dateAdapter.localeChanges.subscribe(() => {
@@ -348,12 +348,12 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** Emits new datepicker input event when the input event is emitted. */
   emitDateInput() {
-    this.input.emit(new CdkDatepickerInputEvent(this, this._elementRef.nativeElement));
+    this.input.emit({ input: this._inputElement, value: this._inputElement.value});
   }
 
   /** Emits new datepicker change event when the change event is emitted. */
   emitDateChange() {
-    this.change.emit(new CdkDatepickerInputEvent(this, this._elementRef.nativeElement));
+    this.change.emit( {input: this._inputElement, value: this._inputElement.value});
   }
 
   _onChange() {
