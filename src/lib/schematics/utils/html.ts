@@ -10,10 +10,6 @@ import {Project} from './devkit-utils/config';
  * @param src the src path of the html file to parse
  */
 export function getHeadTag(host: Tree, src: string) {
-  if (!parse5) {
-    throw new SchematicsException('parse5 depedency not found! Please install parse5 from npm to continue.');
-  }
-
   const document = parse5.parse(src,
     {locationInfo: true}) as parse5.AST.Default.Document;
 
