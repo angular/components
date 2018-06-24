@@ -86,7 +86,7 @@ describe('MatSelect', () => {
    * overall test time.
    * @param declarations Components to declare for this block
    */
-  function configureMatSelectTestingModule(declarations) {
+  function configureMatSelectTestingModule(declarations: any[]) {
     TestBed.configureTestingModule({
       imports: [
         MatFormFieldModule,
@@ -124,6 +124,7 @@ describe('MatSelect', () => {
         MultiSelect,
         SelectWithGroups,
         SelectWithGroupsAndNgContainer,
+        SelectWithFormFieldLabel,
       ]);
     }));
 
@@ -229,6 +230,29 @@ describe('MatSelect', () => {
           fixture.detectChanges();
           expect(select.getAttribute('tabindex')).toEqual('0');
         }));
+
+        it('should set `aria-labelledby` to form field label if there is no placeholder', () => {
+          fixture.destroy();
+
+          const labelFixture = TestBed.createComponent(SelectWithFormFieldLabel);
+          labelFixture.detectChanges();
+          select = labelFixture.debugElement.query(By.css('mat-select')).nativeElement;
+
+          expect(select.getAttribute('aria-labelledby')).toBeTruthy();
+          expect(select.getAttribute('aria-labelledby'))
+              .toBe(labelFixture.nativeElement.querySelector('label').getAttribute('id'));
+        });
+
+        it('should not set `aria-labelledby` if there is a placeholder', () => {
+          fixture.destroy();
+
+          const labelFixture = TestBed.createComponent(SelectWithFormFieldLabel);
+          labelFixture.componentInstance.placeholder = 'Thing selector';
+          labelFixture.detectChanges();
+          select = labelFixture.debugElement.query(By.css('mat-select')).nativeElement;
+
+          expect(select.getAttribute('aria-labelledby')).toBeFalsy();
+        });
 
         it('should select options via the UP/DOWN arrow keys on a closed select', fakeAsync(() => {
           const formControl = fixture.componentInstance.control;
@@ -1047,6 +1071,26 @@ describe('MatSelect', () => {
         expect(document.querySelectorAll('.cdk-overlay-container mat-option').length)
             .toBeGreaterThan(0, 'Expected at least one option to be rendered.');
       }));
+
+      it('should not consider itself as blurred if the trigger loses focus while the ' +
+        'panel is still open', fakeAsync(() => {
+          const selectElement = fixture.nativeElement.querySelector('.mat-select');
+          const selectInstance = fixture.componentInstance.select;
+
+          dispatchFakeEvent(selectElement, 'focus');
+          fixture.detectChanges();
+
+          expect(selectInstance.focused).toBe(true, 'Expected select to be focused.');
+
+          selectInstance.open();
+          fixture.detectChanges();
+          flush();
+          dispatchFakeEvent(selectElement, 'blur');
+          fixture.detectChanges();
+
+          expect(selectInstance.focused).toBe(true, 'Expected select element to remain focused.');
+        }));
+
     });
 
     describe('selection logic', () => {
@@ -1094,6 +1138,23 @@ describe('MatSelect', () => {
         expect(fixture.componentInstance.options.first.selected).toBe(true);
         expect(fixture.componentInstance.select.selected)
             .toBe(fixture.componentInstance.options.first);
+      }));
+
+      it('should be able to select an option using the MatOption API', fakeAsync(() => {
+        trigger.click();
+        fixture.detectChanges();
+        flush();
+
+        const optionInstances = fixture.componentInstance.options.toArray();
+        const optionNodes: NodeListOf<HTMLElement> =
+            overlayContainerElement.querySelectorAll('mat-option');
+
+        optionInstances[1].select();
+        fixture.detectChanges();
+
+        expect(optionNodes[1].classList).toContain('mat-selected');
+        expect(optionInstances[1].selected).toBe(true);
+        expect(fixture.componentInstance.select.selected).toBe(optionInstances[1]);
       }));
 
       it('should deselect other options when one is selected', fakeAsync(() => {
@@ -3806,6 +3867,28 @@ describe('MatSelect', () => {
       expect(fixture.componentInstance.select._keyManager.activeItemIndex).toBe(2);
     }));
 
+    it('should be to select an option with a `null` value', fakeAsync(() => {
+      fixture.componentInstance.foods = [
+        { value: null, viewValue: 'Steak' },
+        { value: 'pizza-1', viewValue: 'Pizza' },
+        { value: null, viewValue: 'Tacos' },
+      ];
+
+      fixture.detectChanges();
+      trigger.click();
+      fixture.detectChanges();
+
+      const options = overlayContainerElement.querySelectorAll('mat-option') as
+          NodeListOf<HTMLElement>;
+
+      options[0].click();
+      options[1].click();
+      options[2].click();
+      fixture.detectChanges();
+
+      expect(testInstance.control.value).toEqual([null, 'pizza-1', null]);
+    }));
+
   });
 });
 
@@ -4543,4 +4626,19 @@ class SelectWithoutOptionCentering {
 
   @ViewChild(MatSelect) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
+}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <mat-label>Select a thing</mat-label>
+
+      <mat-select [placeholder]="placeholder">
+        <mat-option value="thing">A thing</mat-option>
+      </mat-select>
+    </mat-form-field>
+  `
+})
+class SelectWithFormFieldLabel {
+  placeholder: string;
 }

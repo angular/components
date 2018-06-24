@@ -70,6 +70,7 @@ export const MENU_PANEL_TOP_PADDING = 8;
   selector: `[mat-menu-trigger-for], [matMenuTriggerFor]`,
   host: {
     'aria-haspopup': 'true',
+    '[attr.aria-expanded]': 'menuOpen || null',
     '(mousedown)': '_handleMousedown($event)',
     '(keydown)': '_handleKeydown($event)',
     '(click)': '_handleClick($event)',
@@ -195,6 +196,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     }
 
     const overlayRef = this._createOverlay();
+    this._setPosition(overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy);
     overlayRef.attach(this._portal);
 
     if (this.menu.lazyContent) {
@@ -349,7 +351,9 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    */
   private _getOverlayConfig(): OverlayConfig {
     return new OverlayConfig({
-      positionStrategy: this._getPosition(),
+      positionStrategy: this._overlay.position()
+          .flexibleConnectedTo(this._element)
+          .withTransformOriginOn('.mat-menu-panel'),
       hasBackdrop: this.menu.hasBackdrop == null ? !this.triggersSubmenu() : this.menu.hasBackdrop,
       backdropClass: this.menu.backdropClass || 'cdk-overlay-transparent-backdrop',
       scrollStrategy: this._scrollStrategy(),
@@ -374,11 +378,11 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   }
 
   /**
-   * This method builds the position strategy for the overlay, so the menu is properly connected
-   * to the trigger.
-   * @returns ConnectedPositionStrategy
+   * Sets the appropriate positions on a position strategy
+   * so the overlay connects with the trigger correctly.
+   * @param positionStrategy Strategy whose position to update.
    */
-  private _getPosition(): FlexibleConnectedPositionStrategy {
+  private _setPosition(positionStrategy: FlexibleConnectedPositionStrategy) {
     let [originX, originFallbackX]: HorizontalConnectionPos[] =
         this.menu.xPosition === 'before' ? ['end', 'start'] : ['start', 'end'];
 
@@ -400,27 +404,24 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       originFallbackY = overlayFallbackY === 'top' ? 'bottom' : 'top';
     }
 
-    return this._overlay.position()
-        .flexibleConnectedTo(this._element)
-        .withTransformOriginOn('.mat-menu-panel')
-        .withPositions([
-          {originX, originY, overlayX, overlayY, offsetY},
-          {originX: originFallbackX, originY, overlayX: overlayFallbackX, overlayY, offsetY},
-          {
-            originX,
-            originY: originFallbackY,
-            overlayX,
-            overlayY: overlayFallbackY,
-            offsetY: -offsetY
-          },
-          {
-            originX: originFallbackX,
-            originY: originFallbackY,
-            overlayX: overlayFallbackX,
-            overlayY: overlayFallbackY,
-            offsetY: -offsetY
-          }
-        ]);
+    positionStrategy.withPositions([
+      {originX, originY, overlayX, overlayY, offsetY},
+      {originX: originFallbackX, originY, overlayX: overlayFallbackX, overlayY, offsetY},
+      {
+        originX,
+        originY: originFallbackY,
+        overlayX,
+        overlayY: overlayFallbackY,
+        offsetY: -offsetY
+      },
+      {
+        originX: originFallbackX,
+        originY: originFallbackY,
+        overlayX: overlayFallbackX,
+        overlayY: overlayFallbackY,
+        offsetY: -offsetY
+      }
+    ]);
   }
 
   /** Cleans up the active subscriptions. */
