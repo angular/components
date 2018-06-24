@@ -160,6 +160,46 @@ describe('CdkSelection', () => {
     expect(testComponent.selection.selectedItems.length).toBe(0);
   });
 
+  it('should select all selections', () => {
+    testComponent.mode = 'multiple';
+    fixture.detectChanges();
+
+    testComponent.selection.selectAll();
+    fixture.detectChanges();
+    expect(testComponent.selection.selectedItems.length).toBe(5);
+  });
+
+  it('should not select all selections in single mode', () => {
+    fixture.detectChanges();
+
+    testComponent.selection.selectAll();
+    fixture.detectChanges();
+    expect(testComponent.selection.selectedItems.length).toBe(0);
+  });
+
+  it('should not select all selections with 2 max selections', () => {
+    testComponent.mode = 'multiple';
+    testComponent.max = 2;
+    fixture.detectChanges();
+
+    testComponent.selection.selectAll();
+    fixture.detectChanges();
+    expect(testComponent.selection.selectedItems.length).toBe(0);
+  });
+
+  it('should deselect all selections', () => {
+    fixture.detectChanges();
+
+    testComponent.clickItem('item-0');
+    testComponent.clickItem('item-1');
+    fixture.detectChanges();
+
+    testComponent.selection.deselectAll();
+    fixture.detectChanges();
+
+    expect(testComponent.selection.selectedItems.length).toBe(0);
+  });
+
 });
 
 @Component({

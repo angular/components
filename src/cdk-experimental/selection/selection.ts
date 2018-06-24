@@ -84,6 +84,16 @@ export class CdkSelection<T> implements OnInit {
     }
   }
 
+  /** Selects all of the options. */
+  selectAll() {
+    this._setAllOptionsSelected(true);
+  }
+
+  /** Deselects all of the options. */
+  deselectAll() {
+    this._setAllOptionsSelected(false);
+  }
+
   /** Register the toggle directive. */
   registerToggle(toggle) {
     this._toggleDirectives.push(toggle);
@@ -104,9 +114,7 @@ export class CdkSelection<T> implements OnInit {
     }
 
     if (Array.isArray(toggle.model)) {
-      if (this.mode === 'multiple' &&
-          (!this.maxSelections ||
-          (toggle.model.length + this._selectionModel.selected.length) < this.maxSelections)) {
+      if (this.mode === 'multiple' && this._hasMaxSelections(toggle.model)) {
         this._selectionModel.clear();
         this._selectionModel.toggle(...toggle.model);
       }
@@ -124,6 +132,24 @@ export class CdkSelection<T> implements OnInit {
     nativeElement.style.userSelect = type;
     nativeElement.style.webkitUserSelect = type;
     nativeElement.style.MozUserSelect = type;
+  }
+
+  /** Gets whether the max selections will be exceeded. */
+  private _hasMaxSelections(model) {
+    return !this.maxSelections ||
+      (model.length + this._selectionModel.selected.length) < this.maxSelections;
+  }
+
+  /** Sets the selected state on all of the options. */
+  private _setAllOptionsSelected(select: boolean) {
+    if (select && this.mode === 'multiple') {
+      const models = this._toggleDirectives.map(toggle => toggle.model);
+      if (this._hasMaxSelections(models)) {
+        this._selectionModel.select(...models);
+      }
+    } else if (!select) {
+      this._selectionModel.clear();
+    }
   }
 
   /** Set the selection state given a toggle directive and its activated options. */
@@ -145,7 +171,7 @@ export class CdkSelection<T> implements OnInit {
     const isSelected = this._selectionModel.isSelected(model);
     if (!isSelected) {
       this._selectionModel.select(model);
-    } else if(this.deselectable) {
+    } else if (this.deselectable) {
       this._selectionModel.deselect(model);
     }
   }
