@@ -24,6 +24,7 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
     /** Right click should select item. */
     '(contextmenu)': 'toggle()',
     '(keydown.enter)': 'toggle()',
+    '(keydown.space)': 'toggle()',
     '(keydown.shift)': '_disableTextSelection()',
     '(blur)': '_enableTextSelection()',
   }
