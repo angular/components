@@ -20,9 +20,10 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
     'tabindex': '-1',
     '[class.cdk-selection-selected]': 'selected',
     '(mousedown)': '_setModifiers($event)',
-    '(click)': '_onToggle()',
-    '(contextmenu)': '_onToggle()',
-    '(keydown.enter)': '_onToggle()',
+    '(click)': '_toggle()',
+    /** Right click should select item. */
+    '(contextmenu)': '_toggle()',
+    '(keydown.enter)': '_toggle()',
     '(keydown.shift)': '_disableTextSelection()',
     '(blur)': '_enableTextSelection()',
   }
@@ -44,7 +45,7 @@ export class CdkSelectionToggle<T> implements OnInit, OnDestroy {
   /** The modifier that was invoked. */
   modifier: 'shift' | 'meta' | null;
 
-  private _destroy = new Subject();
+  private _destroyed = new Subject();
 
   constructor(
     public elementRef: ElementRef,
@@ -54,7 +55,7 @@ export class CdkSelectionToggle<T> implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._selection.selectionChange
-      .pipe(takeUntil(this._destroy))
+      .pipe(takeUntil(this._destroyed))
       .subscribe(() => this._updateSelected());
 
     this._updateSelected();
@@ -62,14 +63,14 @@ export class CdkSelectionToggle<T> implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._destroy.next();
-    this._destroy.complete();
+    this._destroyed.next();
+    this._destroyed.complete();
 
     this._selection.deregisterToggle(this);
   }
 
   /** Invoke toggle on the parent selection directive. */
-  _onToggle() {
+  _toggle() {
     if (!this.disabled) {
       this._selection.toggle(this);
     }

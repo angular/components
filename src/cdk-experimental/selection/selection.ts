@@ -105,37 +105,62 @@ export class CdkSelection<T> implements OnInit {
 
     if (Array.isArray(toggle.model)) {
       if (this.mode === 'multiple' &&
-          (this.maxSelections === undefined ||
+          (!this.maxSelections ||
           (toggle.model.length + this._selectionModel.selected.length) < this.maxSelections)) {
         this._selectionModel.clear();
         this._selectionModel.toggle(...toggle.model);
       }
     } else {
-
       this._setSelections(toggle);
     }
   }
 
-  /** Set the user selection for the element. */
+  /**
+   * Set the text selection of the element. When selecting this disables selection
+   * so scenarios like shift+click doesn't select the text.
+   */
   setTextSelection(type: string) {
-    const elm = this._elementRef.nativeElement;
-    elm.style.userSelect = type;
-    elm.style.webkitUserSelect = type;
-    elm.style.MozUserSelect = type;
+    const nativeElement = this._elementRef.nativeElement;
+    nativeElement.style.userSelect = type;
+    nativeElement.style.webkitUserSelect = type;
+    nativeElement.style.MozUserSelect = type;
   }
 
   /** Set the selection state given a toggle directive and its activated options. */
   private _setSelections(toggle) {
-    const ctrls = this._getSortedSet();
-    const index = this._getToggleIndex(ctrls, toggle);
+    const toggleControls = this._getSortedElements();
+    const selectedToggleIndex = this._getToggleIndex(toggleControls, toggle);
+
+    if (this.mode === 'multiple') {
+      this._setMultipleSelections(toggleControls, selectedToggleIndex, toggle);
+    } else {
+      this._setSingleSelections(toggle.model);
+    }
+
+    this._previousSelectedIndex = selectedToggleIndex;
+  }
+
+  /** Set the selection state for a single mode. */
+  private _setSingleSelections(model: T) {
+    const isSelected = this._selectionModel.isSelected(model);
+    if (!isSelected) {
+      this._selectionModel.select(model);
+    } else if(this.deselectable) {
+      this._selectionModel.deselect(model);
+    }
+  }
+
+  /** Set the selection state for a multiple mode. */
+  private _setMultipleSelections(
+      toggleControls: any[], selectedToggleIndex: number, toggle: any) {
     const { modifier, model } = toggle;
     const selections = this._selectionModel.selected;
 
-    if (this.mode === 'multiple' && modifier === 'shift') {
-      if (index > -1) {
-        this._selectRange(ctrls, this._previousSelectedIndex, index);
+    if (modifier === 'shift') {
+      if (selectedToggleIndex > -1) {
+        this._selectRange(toggleControls, this._previousSelectedIndex, selectedToggleIndex);
       }
-    } else if (this.mode === 'multiple') {
+    } else {
       const isSelected = this._selectionModel.isSelected(model);
       if (this.requireModifier && modifier !== 'meta') {
         this._selectionModel.clear();
@@ -144,39 +169,34 @@ export class CdkSelection<T> implements OnInit {
         }
       } else {
         if (!isSelected) {
-          if (this.maxSelections === undefined || selections.length < this.maxSelections) {
+          if (!this.maxSelections || selections.length < this.maxSelections) {
             this._selectionModel.select(model);
           }
         } else if (this.deselectable || (!this.deselectable && selections.length > 1)) {
           this._selectionModel.deselect(model);
         }
       }
-    } else {
-      const isSelected = this._selectionModel.isSelected(model);
-      if (!isSelected) {
-        this._selectionModel.select(model);
-      } else if(this.deselectable) {
-        this._selectionModel.deselect(model);
-      }
     }
-
-    this._previousSelectedIndex = index;
   }
 
-  /** Selects a collection of values between two indexes. */
+  /**
+   * Selects a collection of values between two indexes.
+   * @param ctrls List of select toggle controls.
+   * @param sourceIndex The first index to start select from.
+   * @param targetIndex The target index to select to.
+   */
   private _selectRange(ctrls: any[], sourceIndex: number, targetIndex: number) {
     const selections = this._selectionModel.selected;
 
     // On init we don't have a previous index, find it based on the first selection
-    if (sourceIndex === undefined && selections.length) {
+    if (sourceIndex === null && selections.length) {
       const [selection] = selections;
-      const idx = ctrls.findIndex(sel => compareFn(this.trackBy, sel.model, selection));
-      sourceIndex = idx;
+      sourceIndex = ctrls.findIndex(sel => compareFn(this.trackBy, sel.model, selections[0]));
     }
 
     const reverse = targetIndex < sourceIndex;
-    const start = reverse ? targetIndex : sourceIndex;
-    const end = reverse ? sourceIndex : targetIndex;
+    const start = Math.max((reverse ? targetIndex : sourceIndex), 0);
+    const end = Math.min((reverse ? sourceIndex : targetIndex), ctrls.length - 1);
     const result: any[] = [];
 
     for (let i = start; i <= end; i++) {
@@ -186,8 +206,7 @@ export class CdkSelection<T> implements OnInit {
       }
     }
 
-    if (this.maxSelections === undefined ||
-        (result.length + selections.length) < this.maxSelections) {
+    if (!this.maxSelections || (result.length + selections.length) < this.maxSelections) {
       this._selectionModel.select(...result);
     }
   }
@@ -209,7 +228,7 @@ export class CdkSelection<T> implements OnInit {
   }
 
   /** Get the set of controls sorted by DOM order. */
-  private _getSortedSet(): any[] {
+  private _getSortedElements(): any[] {
     const elements = this._getElements();
     return [...this._toggleDirectives].sort((a, b) =>
       elements.indexOf(a.elementRef.nativeElement) - elements.indexOf(b.elementRef.nativeElement));

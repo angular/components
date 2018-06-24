@@ -22,11 +22,11 @@ describe('CdkSelection', () => {
   it('should select one', () => {
     fixture.detectChanges();
 
-    testComponent.clickITem('item-1');
+    testComponent.clickItem('item-1');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(1);
 
-    testComponent.clickITem('item-2');
+    testComponent.clickItem('item-2');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(1);
   });
@@ -35,11 +35,11 @@ describe('CdkSelection', () => {
     testComponent.mode = 'multiple';
     fixture.detectChanges();
 
-    testComponent.clickITem('item-1');
+    testComponent.clickItem('item-1');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(1);
 
-    testComponent.clickITem('item-2');
+    testComponent.clickItem('item-2');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(2);
   });
@@ -49,11 +49,11 @@ describe('CdkSelection', () => {
     testComponent.modifier = true;
     fixture.detectChanges();
 
-    testComponent.clickITem('item-1');
+    testComponent.clickItem('item-1');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(1);
 
-    testComponent.clickITem('item-2');
+    testComponent.clickItem('item-2');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(1);
   });
@@ -63,11 +63,11 @@ describe('CdkSelection', () => {
     testComponent.modifier = true;
     fixture.detectChanges();
 
-    testComponent.clickITem('item-1');
+    testComponent.clickItem('item-1');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(1);
 
-    testComponent.clickITem('item-2', 'meta');
+    testComponent.clickItem('item-2', 'meta');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(2);
   });
@@ -77,11 +77,11 @@ describe('CdkSelection', () => {
     testComponent.modifier = true;
     fixture.detectChanges();
 
-    testComponent.clickITem('item-0');
+    testComponent.clickItem('item-0');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(1);
 
-    testComponent.clickITem('item-2', 'shift');
+    testComponent.clickItem('item-2', 'shift');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(3);
   });
@@ -90,11 +90,11 @@ describe('CdkSelection', () => {
     testComponent.deselectable = false;
     fixture.detectChanges();
 
-    testComponent.clickITem('item-1');
+    testComponent.clickItem('item-1');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(1);
 
-    testComponent.clickITem('item-1');
+    testComponent.clickItem('item-1');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(1);
   });
@@ -104,11 +104,11 @@ describe('CdkSelection', () => {
     testComponent.mode = 'multiple';
     fixture.detectChanges();
 
-    testComponent.clickITem('item-1');
+    testComponent.clickItem('item-1');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(1);
 
-    testComponent.clickITem('item-1');
+    testComponent.clickItem('item-1');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(1);
   });
@@ -119,11 +119,11 @@ describe('CdkSelection', () => {
     testComponent.modifier = true;
     fixture.detectChanges();
 
-    testComponent.clickITem('item-1');
+    testComponent.clickItem('item-1');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(1);
 
-    testComponent.clickITem('item-1');
+    testComponent.clickItem('item-1');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(1);
   });
@@ -133,15 +133,15 @@ describe('CdkSelection', () => {
     testComponent.mode = 'multiple';
     fixture.detectChanges();
 
-    testComponent.clickITem('item-0');
+    testComponent.clickItem('item-0');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(1);
 
-    testComponent.clickITem('item-1');
+    testComponent.clickItem('item-1');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(2);
 
-    testComponent.clickITem('item-2');
+    testComponent.clickItem('item-2');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(2);
   });
@@ -155,7 +155,7 @@ describe('CdkSelection', () => {
   it('should not select a disabled selection', () => {
     fixture.detectChanges();
 
-    testComponent.clickITem('item-3');
+    testComponent.clickItem('item-3');
     fixture.detectChanges();
     expect(testComponent.selection.selectedItems.length).toBe(0);
   });
@@ -182,11 +182,11 @@ class Selection {
   @ViewChild(CdkSelection) selection: CdkSelection<any>;
 
   items = [
-    { label: 'Yellow', value: 'yellow' },
-    { label: 'Blue', value: 'blue' },
-    { label: 'Green', value: 'green' },
-    { label: 'Pink', value: 'pink' },
-    { label: 'Red', value: 'red' },
+    {label: 'Yellow', value: 'yellow'},
+    {label: 'Blue', value: 'blue'},
+    {label: 'Green', value: 'green'},
+    {label: 'Pink', value: 'pink'},
+    {label: 'Red', value: 'red'},
   ];
 
   selections: string[] = [];
@@ -197,7 +197,7 @@ class Selection {
 
   constructor(public elementRef: ElementRef) {}
 
-  clickITem(id: string, modifier?: 'meta' | 'shift') {
+  clickItem(id: string, modifier?: 'meta' | 'shift') {
     const toggleElement = this.elementRef.nativeElement.querySelector(`#${id}`);
 
     if (modifier) {
