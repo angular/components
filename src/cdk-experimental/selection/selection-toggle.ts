@@ -48,6 +48,7 @@ export class CdkSelectionToggle<T> implements OnInit, OnDestroy {
   private _destroyed = new Subject();
 
   constructor(
+    /** @docs-private */
     public elementRef: ElementRef,
     private _selection: CdkSelection<T>,
     private _changeDetectorRef: ChangeDetectorRef
