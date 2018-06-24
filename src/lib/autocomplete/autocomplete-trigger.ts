@@ -358,11 +358,13 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     // filter out all of the extra events, we save the value on focus and between
     // `input` events, and we check whether it changed.
     // See: https://connect.microsoft.com/IE/feedback/details/885747/
-    if (this._canOpen() && this._previousValue !== value &&
-      document.activeElement === event.target) {
+    if (this._previousValue !== value && document.activeElement === event.target) {
       this._previousValue = value;
       this._onChange(value);
-      this.openPanel();
+
+      if (this._canOpen()) {
+        this.openPanel();
+      }
     }
   }
 
@@ -528,7 +530,6 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     } else {
       // Update the panel width and direction, in case anything has changed.
       this._overlayRef.updateSize({width: this._getHostWidth()});
-      this._overlayRef.setDirection(this._getDirection());
     }
 
     if (this._overlayRef && !this._overlayRef.hasAttached()) {
@@ -553,7 +554,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       positionStrategy: this._getOverlayPosition(),
       scrollStrategy: this._scrollStrategy(),
       width: this._getHostWidth(),
-      direction: this._getDirection()
+      direction: this._dir
     });
   }
 
@@ -568,10 +569,6 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       ]);
 
     return this._positionStrategy;
-  }
-
-  private _getDirection() {
-    return this._dir ? this._dir.value : 'ltr';
   }
 
   private _getConnectedElement(): ElementRef {

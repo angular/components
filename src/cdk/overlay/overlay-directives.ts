@@ -232,7 +232,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (this._position) {
-      if (changes['positions'] || changes['_deprecatedPositions']) {
+      if (changes['positions']) {
         this._position.withPositions(this.positions);
       }
 
@@ -240,7 +240,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
         this._position.withLockedPosition(this.lockPosition);
       }
 
-      if (changes['origin'] || changes['_deprecatedOrigin']) {
+      if (changes['origin']) {
         this._position.setOrigin(this.origin.elementRef);
 
         if (this.open) {
@@ -249,7 +249,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       }
     }
 
-    if (changes['open'] || changes['_deprecatedOpen']) {
+    if (changes['open']) {
       this.open ? this._attachOverlay() : this._detachOverlay();
     }
   }
@@ -267,6 +267,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _buildConfig(): OverlayConfig {
     const positionStrategy = this._position = this._createPositionStrategy();
     const overlayConfig = new OverlayConfig({
+      direction: this._dir,
       positionStrategy,
       scrollStrategy: this.scrollStrategy,
       hasBackdrop: this.hasBackdrop
@@ -347,8 +348,6 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
         minHeight: this.minHeight,
       });
     }
-
-    this._overlayRef.setDirection(this.dir);
 
     if (!this._overlayRef.hasAttached()) {
       this._overlayRef.attach(this._templatePortal);

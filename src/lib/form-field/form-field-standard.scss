@@ -1,5 +1,6 @@
 @import '../core/style/variables';
 @import '../core/style/vendor-prefixes';
+@import '../../cdk/a11y/a11y';
 
 
 // Styles that only apply to the standard appearance of the form-field.
@@ -20,11 +21,22 @@ $mat-form-field-standard-padding-top: 0.75em !default;
   // The ripple is the blue animation coming on top of it.
   .mat-form-field-underline {
     height: $mat-form-field-standard-underline-height;
+
+    @include cdk-high-contrast {
+      height: 0;
+      border-top: solid $mat-form-field-standard-underline-height;
+    }
   }
 
   .mat-form-field-ripple {
+    $height: $mat-form-field-standard-underline-height * 2;
     bottom: 0;
-    height: $mat-form-field-standard-underline-height * 2;
+    height: $height;
+
+    @include cdk-high-contrast {
+      height: 0;
+      border-top: $height;
+    }
   }
 
   &.mat-form-field-disabled .mat-form-field-underline {
@@ -39,6 +51,12 @@ $mat-form-field-standard-padding-top: 0.75em !default;
       opacity: 1;
       transform: none;
       transition: opacity 600ms $swift-ease-out-timing-function;
+    }
+  }
+
+  &._mat-animation-noopable:not(.mat-form-field-disabled) .mat-form-field-flex:hover {
+    & ~ .mat-form-field-underline .mat-form-field-ripple {
+      transition: none;
     }
   }
 }

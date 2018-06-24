@@ -53,11 +53,14 @@ describe('MatTabHeader', () => {
   }));
 
   describe('focusing', () => {
+    let tabListContainer: HTMLElement;
+
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleTabHeaderApp);
       fixture.detectChanges();
 
       appComponent = fixture.componentInstance;
+      tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
     });
 
     it('should initialize to the selected index', () => {
@@ -89,12 +92,12 @@ describe('MatTabHeader', () => {
 
       // Move focus right, verify that the disabled tab is 1 and should be skipped
       expect(appComponent.disabledTabIndex).toBe(1);
-      appComponent.tabHeader._focusNextTab();
+      dispatchKeyboardEvent(tabListContainer, 'keydown', RIGHT_ARROW);
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(2);
 
       // Move focus right to index 3
-      appComponent.tabHeader._focusNextTab();
+      dispatchKeyboardEvent(tabListContainer, 'keydown', RIGHT_ARROW);
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(3);
     });
@@ -105,13 +108,13 @@ describe('MatTabHeader', () => {
       expect(appComponent.tabHeader.focusIndex).toBe(3);
 
       // Move focus left to index 3
-      appComponent.tabHeader._focusPreviousTab();
+      dispatchKeyboardEvent(tabListContainer, 'keydown', LEFT_ARROW);
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(2);
 
       // Move focus left, verify that the disabled tab is 1 and should be skipped
       expect(appComponent.disabledTabIndex).toBe(1);
-      appComponent.tabHeader._focusPreviousTab();
+      dispatchKeyboardEvent(tabListContainer, 'keydown', LEFT_ARROW);
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(0);
     });
@@ -120,8 +123,6 @@ describe('MatTabHeader', () => {
       appComponent.tabHeader.focusIndex = 0;
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(0);
-
-      let tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
 
       // Move focus right to 2
       dispatchKeyboardEvent(tabListContainer, 'keydown', RIGHT_ARROW);
@@ -153,7 +154,6 @@ describe('MatTabHeader', () => {
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(3);
 
-      const tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
       const event = dispatchKeyboardEvent(tabListContainer, 'keydown', HOME);
       fixture.detectChanges();
 
@@ -167,7 +167,6 @@ describe('MatTabHeader', () => {
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(3);
 
-      const tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
       dispatchKeyboardEvent(tabListContainer, 'keydown', HOME);
       fixture.detectChanges();
 
@@ -180,7 +179,6 @@ describe('MatTabHeader', () => {
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(0);
 
-      const tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
       const event = dispatchKeyboardEvent(tabListContainer, 'keydown', END);
       fixture.detectChanges();
 
@@ -194,7 +192,6 @@ describe('MatTabHeader', () => {
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(0);
 
-      const tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
       dispatchKeyboardEvent(tabListContainer, 'keydown', END);
       fixture.detectChanges();
 

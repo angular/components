@@ -1,3 +1,179 @@
+<a name="6.3.0"></a>
+# [6.3.0 tourmaline-transom](https://github.com/angular/material2/compare/6.2.0...6.3.0) (2018-06-18)
+
+
+### Bug Fixes
+
+* **autocomplete:** model not being updated when typing in input with disabled autocomplete ([#11695](https://github.com/angular/material2/issues/11695)) ([429d3bc](https://github.com/angular/material2/commit/429d3bc)), closes [#11678](https://github.com/angular/material2/issues/11678)
+* **autofill:** listen for animation events outside the zone, but emit autofill events inside ([#11798](https://github.com/angular/material2/issues/11798)) ([48dda50](https://github.com/angular/material2/commit/48dda50))
+* **badge:** remove badge margins ([#11599](https://github.com/angular/material2/issues/11599)) ([f042068](https://github.com/angular/material2/commit/f042068)), closes [#11596](https://github.com/angular/material2/issues/11596)
+* **badge, tooltip:** Add A11yModule ([#11586](https://github.com/angular/material2/issues/11586)) ([75d116d](https://github.com/angular/material2/commit/75d116d))
+* **checkbox:** high contrast accessibility improvements ([#11633](https://github.com/angular/material2/issues/11633)) ([6220b72](https://github.com/angular/material2/commit/6220b72)), closes [#11623](https://github.com/angular/material2/issues/11623)
+* **datepicker:** inconsistent arrow color between popup and touch modes ([#11535](https://github.com/angular/material2/issues/11535)) ([bb297c9](https://github.com/angular/material2/commit/bb297c9))
+* **datepicker:** make date range aria-live and fix active date logic ([#11144](https://github.com/angular/material2/issues/11144)) ([8063c26](https://github.com/angular/material2/commit/8063c26))
+* **dialog:** inconsistently resetting dimensions ([#11723](https://github.com/angular/material2/issues/11723)) ([e95623d](https://github.com/angular/material2/commit/e95623d))
+* **dialog:** not closing correctly when detached externally ([#11516](https://github.com/angular/material2/issues/11516)) ([be1b5e6](https://github.com/angular/material2/commit/be1b5e6))
+* **expansion:** expansion panel blending in with background in high contrast mode ([#11659](https://github.com/angular/material2/issues/11659)) ([8842fb2](https://github.com/angular/material2/commit/8842fb2))
+* **form-field:** fix wrong underline color in error state ([#11447](https://github.com/angular/material2/issues/11447)) ([3681ddf](https://github.com/angular/material2/commit/3681ddf)), closes [#11436](https://github.com/angular/material2/issues/11436)
+* **form-field:** inaccessible in high contrast mode ([#11736](https://github.com/angular/material2/issues/11736)) ([0a39595](https://github.com/angular/material2/commit/0a39595)), closes [#6257](https://github.com/angular/material2/issues/6257) [#6383](https://github.com/angular/material2/issues/6383) [#9009](https://github.com/angular/material2/issues/9009)
+* **icon:** IE/Edge ignoring style tags inside inline SVG ([#11531](https://github.com/angular/material2/issues/11531)) ([555d8f4](https://github.com/angular/material2/commit/555d8f4)), closes [#11458](https://github.com/angular/material2/issues/11458)
+* **menu:** reintroduce panel position classes ([#11612](https://github.com/angular/material2/issues/11612)) ([703da89](https://github.com/angular/material2/commit/703da89)), closes [#11597](https://github.com/angular/material2/issues/11597)
+* **menu:** toggle aria-expanded attribute on menu trigger ([#11751](https://github.com/angular/material2/issues/11751)) ([bf88702](https://github.com/angular/material2/commit/bf88702))
+* **overlay:** flexible overlay with push not handling scroll offset and position locking ([#11421](https://github.com/angular/material2/issues/11421)) ([55aaa03](https://github.com/angular/material2/commit/55aaa03))
+* **overlay:** global overlay incorrectly handling left/right position when RTL is set on body ([#11412](https://github.com/angular/material2/issues/11412)) ([2a51565](https://github.com/angular/material2/commit/2a51565)), closes [#11393](https://github.com/angular/material2/issues/11393)
+* **overlay:** unable to reset overlay size properties to initial value ([#11592](https://github.com/angular/material2/issues/11592)) ([ba4f2af](https://github.com/angular/material2/commit/ba4f2af))
+* **paginator:** page size selections being truncated with outline and fill appearances ([#11722](https://github.com/angular/material2/issues/11722)) ([255c10a](https://github.com/angular/material2/commit/255c10a)), closes [#11681](https://github.com/angular/material2/issues/11681)
+* **progress-bar:** not usable in high contrast mode ([#11651](https://github.com/angular/material2/issues/11651)) ([ff78ade](https://github.com/angular/material2/commit/ff78ade)), closes [#11623](https://github.com/angular/material2/issues/11623)
+* **progress-spinner:** animation not working when default size is set via token ([#11688](https://github.com/angular/material2/issues/11688)) ([7c1db46](https://github.com/angular/material2/commit/7c1db46)), closes [#11687](https://github.com/angular/material2/issues/11687)
+* **schematics:** add app prefix to components ([#11738](https://github.com/angular/material2/issues/11738)) ([84634cc](https://github.com/angular/material2/commit/84634cc))
+* **schematics:** remove temp path [#11198](https://github.com/angular/material2/issues/11198) ([#11424](https://github.com/angular/material2/issues/11424)) ([b349de3](https://github.com/angular/material2/commit/b349de3))
+* **scrolling:** scrollable elementScrolled stream not being completed on destroy ([#11518](https://github.com/angular/material2/issues/11518)) ([9ab6cd0](https://github.com/angular/material2/commit/9ab6cd0))
+* **select:** disable all animations when using NoopAnimationsModule ([#11594](https://github.com/angular/material2/issues/11594)) ([fa60fe4](https://github.com/angular/material2/commit/fa60fe4)), closes [#10590](https://github.com/angular/material2/issues/10590)
+* **select:** handle null values in multi-select ([#11792](https://github.com/angular/material2/issues/11792)) ([dd8c807](https://github.com/angular/material2/commit/dd8c807))
+* **select:** inconsistent openedChange event dispatched between browsers ([#11461](https://github.com/angular/material2/issues/11461)) ([4ef9cb0](https://github.com/angular/material2/commit/4ef9cb0))
+* **select:** label not being read out when using mat-label in mat-form-field ([#11710](https://github.com/angular/material2/issues/11710)) ([e349fe4](https://github.com/angular/material2/commit/e349fe4))
+* **select:** multi-select checkbox not having an outline in high contrast mode ([#11667](https://github.com/angular/material2/issues/11667)) ([082efa3](https://github.com/angular/material2/commit/082efa3))
+* **select:** unable to use the MatOption select/deselect API to toggle options ([#11528](https://github.com/angular/material2/issues/11528)) ([81537af](https://github.com/angular/material2/commit/81537af)), closes [#9314](https://github.com/angular/material2/issues/9314)
+* **selection-list:** support selecting all via ctrl + a ([#11502](https://github.com/angular/material2/issues/11502)) ([e6d9494](https://github.com/angular/material2/commit/e6d9494))
+* **sidenav:** scrollable instance not exposed when explicitly specifying content element ([#11517](https://github.com/angular/material2/issues/11517)) ([436ac7d](https://github.com/angular/material2/commit/436ac7d)), closes [#10884](https://github.com/angular/material2/issues/10884)
+* **slider:** value not being rounded when using keyboard and decimal step ([#11574](https://github.com/angular/material2/issues/11574)) ([61f0f2a](https://github.com/angular/material2/commit/61f0f2a)), closes [#10951](https://github.com/angular/material2/issues/10951)
+* **stepper:** reading out wrong amount of options with NVDA on Firefox ([#11711](https://github.com/angular/material2/issues/11711)) ([56e703f](https://github.com/angular/material2/commit/56e703f)), closes [#11694](https://github.com/angular/material2/issues/11694)
+* **table:** minor styling fix to expandable rows ([#11569](https://github.com/angular/material2/issues/11569)) ([3d6f326](https://github.com/angular/material2/commit/3d6f326))
+* **tabs:** Add role to mat-tab-nav-bar and mat-tab-link ([#11410](https://github.com/angular/material2/issues/11410)) ([fd23c02](https://github.com/angular/material2/commit/fd23c02))
+* **tabs:** Set initial ink bar width as 0 width ([#11585](https://github.com/angular/material2/issues/11585)) ([c977763](https://github.com/angular/material2/commit/c977763))
+* **tabs:** tab position and amount of tabs not being read out by screen reader ([#11694](https://github.com/angular/material2/issues/11694)) ([260afcf](https://github.com/angular/material2/commit/260afcf)), closes [#11369](https://github.com/angular/material2/issues/11369)
+* **tabs:** update mat-tab-link to set aria-current when active ([#11409](https://github.com/angular/material2/issues/11409)) ([103acc4](https://github.com/angular/material2/commit/103acc4))
+* **tooltip:** don't open for mouse and touch focus ([#10728](https://github.com/angular/material2/issues/10728)) ([74f4364](https://github.com/angular/material2/commit/74f4364))
+* **tooltip:** long continuous strings overflowing tooltip container ([#11363](https://github.com/angular/material2/issues/11363)) ([2786b34](https://github.com/angular/material2/commit/2786b34))
+
+
+### Features
+
+* **table:** support sticky headers, footers, and columns ([#11483](https://github.com/angular/material2/issues/11483)) ([edbbc1b](https://github.com/angular/material2/commit/edbbc1b))
+* **bottom-sheet:** switch to providedIn syntax ([59554c4](https://github.com/angular/material2/commit/59554c4))
+* **collections:** add isMultipleSelection function to SelectionModel ([#11560](https://github.com/angular/material2/issues/11560)) ([0675e05](https://github.com/angular/material2/commit/0675e05))
+* **schematics:** add address form schematic ([#11425](https://github.com/angular/material2/issues/11425)) ([9b80a4c](https://github.com/angular/material2/commit/9b80a4c))
+* **snackbar:** switch to providedIn syntax ([a21a4f2](https://github.com/angular/material2/commit/a21a4f2))
+
+
+<a name="6.2.1"></a>
+## [6.2.1 crystal-caribou](https://github.com/angular/material2/compare/6.2.0...6.2.1) (2018-06-04)
+
+
+### Bug Fixes
+
+* **datepicker:** inconsistent arrow color between popup and touch modes ([#11535](https://github.com/angular/material2/issues/11535)) ([f974324](https://github.com/angular/material2/commit/f974324))
+* **dialog:** not closing correctly when detached externally ([#11516](https://github.com/angular/material2/issues/11516)) ([bbb1d39](https://github.com/angular/material2/commit/bbb1d39))
+* **tooltip:** don't open for mouse and touch focus ([a003b9a](https://github.com/angular/material2/commit/a003b9a)), closes [#10709](https://github.com/angular/material2/issues/10709)
+* **tooltip:** long continuous strings overflowing tooltip container ([#11363](https://github.com/angular/material2/issues/11363)) ([c5f1293](https://github.com/angular/material2/commit/c5f1293))
+
+
+
+<a name="6.2.0"></a>
+# [6.2.0 bamboo-shampoo](https://github.com/angular/material2/compare/6.1.0...6.2.0) (2018-05-29)
+
+
+### Highlights
+
+* An initial implementation of virtual scrolling is now available in @angular/cdk-experimental.
+  Please note that, since these components are still experimental, they may have bugs and the API
+  is subject to change.
+
+### Bug Fixes
+
+* **autosize:** textarea receiving focus on init ([#11460](https://github.com/angular/material2/issues/11460)) ([7d447c2](https://github.com/angular/material2/commit/7d447c2)), closes [#11451](https://github.com/angular/material2/issues/11451) [#11308](https://github.com/angular/material2/issues/11308)
+* **button:** disable all animations when using the NoopAnimationsModule ([#11477](https://github.com/angular/material2/issues/11477)) ([1a75152](https://github.com/angular/material2/commit/1a75152)), closes [#10590](https://github.com/angular/material2/issues/10590)
+* **checkbox, radio:** remove webkit tap highlights ([#11349](https://github.com/angular/material2/issues/11349)) ([4b2cc1a](https://github.com/angular/material2/commit/4b2cc1a))
+* **form-field:** disable all animations when using NoopAnimationsModule ([#11371](https://github.com/angular/material2/issues/11371)) ([9062640](https://github.com/angular/material2/commit/9062640)), closes [#10590](https://github.com/angular/material2/issues/10590)
+* **form-field:** infinite loop when using outline appearance and element isn't in the DOM ([#11406](https://github.com/angular/material2/issues/11406)) ([e592615](https://github.com/angular/material2/commit/e592615)), closes [#11329](https://github.com/angular/material2/issues/11329)
+* **menu:** lazy-rendered content being duplicated when toggling quickly ([#11348](https://github.com/angular/material2/issues/11348)) ([fb5cdb2](https://github.com/angular/material2/commit/fb5cdb2)), closes [#11331](https://github.com/angular/material2/issues/11331)
+* **nav-schematics:** update isHandset$ type and fix template expression ([#11448](https://github.com/angular/material2/issues/11448)) ([b9041e3](https://github.com/angular/material2/commit/b9041e3)), closes [#11445](https://github.com/angular/material2/issues/11445) [#11441](https://github.com/angular/material2/issues/11441)
+* **overlay:** incorrect position when using flexible positioning and rtl on the body ([#11393](https://github.com/angular/material2/issues/11393)) ([acc24c4](https://github.com/angular/material2/commit/acc24c4)), closes [#11387](https://github.com/angular/material2/issues/11387)
+* **accordion, expansion:** prevent nested expansion panels from registering to the same accordion ([#11342](https://github.com/angular/material2/issues/11342)) ([9bf720a](https://github.com/angular/material2/commit/9bf720a))
+* **select:** panel content blurry in some browsers ([#11434](https://github.com/angular/material2/issues/11434)) ([3dc3fcd](https://github.com/angular/material2/commit/3dc3fcd))
+* **slide-toggle:** disable animations when using NoopAnimationsModule ([#11414](https://github.com/angular/material2/issues/11414)) ([1d96d5a](https://github.com/angular/material2/commit/1d96d5a)), closes [#10590](https://github.com/angular/material2/issues/10590)
+* **slider:** disable animations when using NoopAnimationsModule ([#11422](https://github.com/angular/material2/issues/11422)) ([cf17ef7](https://github.com/angular/material2/commit/cf17ef7)), closes [#10590](https://github.com/angular/material2/issues/10590)
+* **table:** data source not unsubscribing from render changes subscription ([#11394](https://github.com/angular/material2/issues/11394)) ([9313f18](https://github.com/angular/material2/commit/9313f18)), closes [#11382](https://github.com/angular/material2/issues/11382)
+
+
+### Features
+
+* **a11y:** add cdkAriaLive directive ([#11352](https://github.com/angular/material2/issues/11352)) ([64a70ad](https://github.com/angular/material2/commit/64a70ad))
+* **expansion:** allow expansion indicator positioning ([#8199](https://github.com/angular/material2/issues/8199)) ([51d859f](https://github.com/angular/material2/commit/51d859f))
+* **overlay:** allow for Directionality instance to be passed in ([#11411](https://github.com/angular/material2/issues/11411)) ([be577b1](https://github.com/angular/material2/commit/be577b1))
+* **progress-spinner:** add injection token for configuring the diameter and stroke globally ([#11493](https://github.com/angular/material2/issues/11493)) ([c3899cf](https://github.com/angular/material2/commit/c3899cf)), closes [#11490](https://github.com/angular/material2/issues/11490)
+* **collections:** add ArrayDataSource, a DataSource wrapper for Array and Observable<Array> ([#11354](https://github.com/angular/material2/issues/11354)) ([f59658d](https://github.com/angular/material2/commit/f59658d))
+
+
+### Performance Improvements
+
+* **overlay:** only compute and emit position changes if there are subscribers ([#11431](https://github.com/angular/material2/issues/11431)) ([c68ccc9](https://github.com/angular/material2/commit/c68ccc9))
+
+
+
+<a name="6.1.0"></a>
+# [6.1.0 plaster-parliament](https://github.com/angular/material2/compare/6.0.0...6.1.0) (2018-05-21)
+
+
+### Features
+
+* **autocomplete:** add the ability to set a different panel connection element ([#11284](https://github.com/angular/material2/issues/11284)) ([efe37f5](https://github.com/angular/material2/commit/efe37f5)), closes [#11269](https://github.com/angular/material2/issues/11269)
+* **autocomplete:** allow autocomplete panel to be disabled ([#11142](https://github.com/angular/material2/issues/11142)) ([e8bc0e9](https://github.com/angular/material2/commit/e8bc0e9))
+* **button:** add isIconButton and isRoundButton properties ([#11226](https://github.com/angular/material2/issues/11226)) ([318d699](https://github.com/angular/material2/commit/318d699))
+* **cdk-input:** change autosize to be bindable ([#9884](https://github.com/angular/material2/issues/9884)) ([#11167](https://github.com/angular/material2/issues/11167)) ([2d227b7](https://github.com/angular/material2/commit/2d227b7))
+* **elevation:** add $opacity argument to elevation mixins ([#10877](https://github.com/angular/material2/issues/10877)) ([fbf5648](https://github.com/angular/material2/commit/fbf5648))
+* **observe-content:** refactor so logic can be used without directive ([#11170](https://github.com/angular/material2/issues/11170)) ([ba57852](https://github.com/angular/material2/commit/ba57852))
+* **overlay:** add support for automatically setting the transform-origin based on the current position ([#10868](https://github.com/angular/material2/issues/10868)) ([d26735c](https://github.com/angular/material2/commit/d26735c))
+* **overlay:** expose flexible overlay features through CdkConnectedOverlay ([#11069](https://github.com/angular/material2/issues/11069)) ([ef0229c](https://github.com/angular/material2/commit/ef0229c))
+* **table:** allow multiple header/footer rows ([#11245](https://github.com/angular/material2/issues/11245)) ([641edc3](https://github.com/angular/material2/commit/641edc3))
+* **table:** enable multiple data rows ([#11116](https://github.com/angular/material2/issues/11116)) ([c15e307](https://github.com/angular/material2/commit/c15e307))
+* **tree:** Add support for trackBy ([#11267](https://github.com/angular/material2/issues/11267)) ([ff34dac](https://github.com/angular/material2/commit/ff34dac))
+
+
+### Bug Fixes
+
+* **animations:** prevent animations when in a noopanimations module ([#10881](https://github.com/angular/material2/issues/10881)) ([81b6a78](https://github.com/angular/material2/commit/81b6a78))
+* **autocomplete:** panel blending in with background in high contrast mode ([#11190](https://github.com/angular/material2/issues/11190)) ([9e9daf8](https://github.com/angular/material2/commit/9e9daf8))
+* **autocomplete:** return consistent output from panelClosingActions ([#8533](https://github.com/angular/material2/issues/8533)) ([2815607](https://github.com/angular/material2/commit/2815607)), closes [#7553](https://github.com/angular/material2/issues/7553)
+* **autosize:** error thrown by IE in some cases when component is destroyed ([#11109](https://github.com/angular/material2/issues/11109)) ([af09c8f](https://github.com/angular/material2/commit/af09c8f))
+* **button:** ripples not being clipped by button border radius ([#11181](https://github.com/angular/material2/issues/11181)) ([6e026d7](https://github.com/angular/material2/commit/6e026d7)), closes [#11160](https://github.com/angular/material2/issues/11160)
+* **button-toggle:** fix button toggle with 0 value not checked ([#11292](https://github.com/angular/material2/issues/11292)) ([9a8cd4d](https://github.com/angular/material2/commit/9a8cd4d))
+* **checkbox:** disable animations when using NoopAnimationsModule ([#11249](https://github.com/angular/material2/issues/11249)) ([93b5892](https://github.com/angular/material2/commit/93b5892)), closes [#11205](https://github.com/angular/material2/issues/11205)
+* **checkbox:** update MatCheckbox disabled setter to trigger change detection ([#11098](https://github.com/angular/material2/issues/11098)) ([ce1b517](https://github.com/angular/material2/commit/ce1b517))
+* **chips:** stacked chips overflowing chip list ([#11143](https://github.com/angular/material2/issues/11143)) ([d3c8cc5](https://github.com/angular/material2/commit/d3c8cc5))
+* **datepicker:** dateInput event being fired if the value hasn't changed ([#10952](https://github.com/angular/material2/issues/10952)) ([a62cdb6](https://github.com/angular/material2/commit/a62cdb6))
+* **datepicker:** don't autofocus calendar cell if used outside of overlay ([#11049](https://github.com/angular/material2/issues/11049)) ([2897797](https://github.com/angular/material2/commit/2897797))
+* **dialog:** min-height and max-height not having an effect on dialog container ([#11235](https://github.com/angular/material2/issues/11235)) ([a20dfd3](https://github.com/angular/material2/commit/a20dfd3))
+* **dialog,bottom-sheet:** don't provide directionality if no direction is set ([#11285](https://github.com/angular/material2/issues/11285)) ([cd37a54](https://github.com/angular/material2/commit/cd37a54)), closes [#11262](https://github.com/angular/material2/issues/11262)
+* **expansion-panel:** inconsistent margin for nested panels ([#11305](https://github.com/angular/material2/issues/11305)) ([1bf5c41](https://github.com/angular/material2/commit/1bf5c41)), closes [#11254](https://github.com/angular/material2/issues/11254)
+* **focus-monitor:** don't null-out focus until after event is finished with capture & bubble ([#10721](https://github.com/angular/material2/issues/10721)) ([0b7572b](https://github.com/angular/material2/commit/0b7572b))
+* **focus-monitor:** reenter ngzone before emitting ([#10549](https://github.com/angular/material2/issues/10549)) ([37193d8](https://github.com/angular/material2/commit/37193d8))
+* **form-field:** error on IE11 when using outline appearance ([#11108](https://github.com/angular/material2/issues/11108)) ([c9bd05c](https://github.com/angular/material2/commit/c9bd05c))
+* **icon:** log full error message when icon set fails to load ([#10915](https://github.com/angular/material2/issues/10915)) ([fbf06bb](https://github.com/angular/material2/commit/fbf06bb))
+* **icon:** remove duplicate icon registry provider ([#11214](https://github.com/angular/material2/issues/11214)) ([67a6aa1](https://github.com/angular/material2/commit/67a6aa1))
+* **nav-schematics:** Subscribe to breakpoint observable ([#11310](https://github.com/angular/material2/issues/11310)) ([d52acc9](https://github.com/angular/material2/commit/d52acc9))
+* **ng-add:** install added packages ([#11163](https://github.com/angular/material2/issues/11163)) ([be08eb9](https://github.com/angular/material2/commit/be08eb9))
+* **overlay:** injection errors for scroll strategy providers in lazy-loaded modules ([#11213](https://github.com/angular/material2/issues/11213)) ([0cda47c](https://github.com/angular/material2/commit/0cda47c)), closes [#10820](https://github.com/angular/material2/issues/10820)
+* **radio:** disable animations when using NoopAnimationsModule ([#11296](https://github.com/angular/material2/issues/11296)) ([af78b97](https://github.com/angular/material2/commit/af78b97))
+* **radio:** update set disabled directly on MatRadioButton to trigger change detection ([#11056](https://github.com/angular/material2/issues/11056)) ([860ce13](https://github.com/angular/material2/commit/860ce13))
+* **ripple:** disable ripple animations when using NoopAnimationsModule ([#11205](https://github.com/angular/material2/issues/11205)) ([9715928](https://github.com/angular/material2/commit/9715928))
+* **sidenav:** disable all sidenav animations when using NoopAnimationsModule ([#11180](https://github.com/angular/material2/issues/11180)) ([03e749a](https://github.com/angular/material2/commit/03e749a))
+* **sidenav-demo:** trigger event opened ([#11225](https://github.com/angular/material2/issues/11225)) ([853b04c](https://github.com/angular/material2/commit/853b04c))
+* **snack-bar:** snack bar not animating in if no positions are passed in ([#11230](https://github.com/angular/material2/issues/11230)) ([f5377dd](https://github.com/angular/material2/commit/f5377dd)), closes [#11197](https://github.com/angular/material2/issues/11197)
+* **stepper:** error being thrown if selected step is accessed too early ([#11186](https://github.com/angular/material2/issues/11186)) ([4638833](https://github.com/angular/material2/commit/4638833)), closes [#11158](https://github.com/angular/material2/issues/11158)
+* **stepper:** handle keyboard interactions if direction changes after init ([#11067](https://github.com/angular/material2/issues/11067)) ([116ee60](https://github.com/angular/material2/commit/116ee60))
+* **table:** add missing constructors ([#11252](https://github.com/angular/material2/issues/11252)) ([8e7dd80](https://github.com/angular/material2/commit/8e7dd80))
+* **tabs:** handle long tab labels in mat-tab-nav-bar ([#10903](https://github.com/angular/material2/issues/10903)) ([61dd937](https://github.com/angular/material2/commit/61dd937))
+* **tooltip:** not handling direction changes after the first open ([#11324](https://github.com/angular/material2/issues/11324)) ([abc3d38](https://github.com/angular/material2/commit/abc3d38))
+* add custom theme using string ref in angular.json ([#11189](https://github.com/angular/material2/issues/11189)) ([33b5df4](https://github.com/angular/material2/commit/33b5df4)), closes [#11188](https://github.com/angular/material2/issues/11188)
+
+
+### Performance Improvements
+
+* **sidenav:** avoid hitting zone continuously when using autosize option ([#11231](https://github.com/angular/material2/issues/11231)) ([c936bc9](https://github.com/angular/material2/commit/c936bc9)), closes [#11215](https://github.com/angular/material2/issues/11215)
+
+
+
 <a name="6.0.2"></a>
 ## [6.0.2 chocolate-reality](https://github.com/angular/material2/compare/6.0.1...6.0.2) (2018-05-14)
 

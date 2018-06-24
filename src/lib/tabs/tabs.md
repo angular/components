@@ -6,7 +6,7 @@ of the header, pagination controls appear to let the user scroll left and right 
 The active tab may be set using the `selectedIndex` input or when the user selects one of the
 tab labels in the header.
 
-<!-- example(tabs-overview) -->
+<!-- example(tab-group-basic) -->
 
 ### Events
 
@@ -121,5 +121,4 @@ Tabs without text or labels should be given a meaningful label via `aria-label` 
 | `RIGHT_ARROW`        | Move focus to next tab     |
 | `HOME`               | Move focus to first tab    |
 | `END`                | Move focus to last tab     |
-| `RIGHT_ARROW`        | Move focus to next tab     |
 | `SPACE` or `ENTER`   | Switch to focused tab      |

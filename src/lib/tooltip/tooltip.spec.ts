@@ -21,8 +21,9 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {OverlayContainer, OverlayModule, CdkScrollable} from '@angular/cdk/overlay';
 import {Platform} from '@angular/cdk/platform';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing';
+import {dispatchFakeEvent, dispatchKeyboardEvent, patchElementFocus} from '@angular/cdk/testing';
 import {ESCAPE} from '@angular/cdk/keycodes';
+import {FocusMonitor} from '@angular/cdk/a11y';
 import {
   MatTooltip,
   MatTooltipModule,
@@ -39,6 +40,7 @@ describe('MatTooltip', () => {
   let overlayContainerElement: HTMLElement;
   let dir: {value: Direction};
   let platform: {IOS: boolean, isBrowser: boolean};
+  let focusMonitor: FocusMonitor;
 
   beforeEach(async(() => {
     // Set the default Platform override that can be updated before component creation.
@@ -63,9 +65,10 @@ describe('MatTooltip', () => {
 
     TestBed.compileComponents();
 
-    inject([OverlayContainer], (oc: OverlayContainer) => {
+    inject([OverlayContainer, FocusMonitor], (oc: OverlayContainer, fm: FocusMonitor) => {
       overlayContainer = oc;
       overlayContainerElement = oc.getContainerElement();
+      focusMonitor = fm;
     })();
   }));
 
@@ -497,7 +500,8 @@ describe('MatTooltip', () => {
       tick(0);
       fixture.detectChanges();
 
-      const tooltipWrapper = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
+      const tooltipWrapper =
+          overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
 
       expect(tooltipWrapper).toBeTruthy('Expected tooltip to be shown.');
       expect(tooltipWrapper.getAttribute('dir')).toBe('rtl', 'Expected tooltip to be in RTL mode.');
@@ -509,7 +513,8 @@ describe('MatTooltip', () => {
       tick();
       fixture.detectChanges();
 
-      let tooltipWrapper = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
+      let tooltipWrapper =
+          overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
       expect(tooltipWrapper.getAttribute('dir')).toBe('rtl', 'Expected tooltip to be in RTL.');
 
       tooltipDirective.hide(0);
@@ -521,7 +526,8 @@ describe('MatTooltip', () => {
       tick();
       fixture.detectChanges();
 
-      tooltipWrapper = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
+      tooltipWrapper =
+          overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
       expect(tooltipWrapper.getAttribute('dir')).toBe('ltr', 'Expected tooltip to be in LTR.');
     }));
 
@@ -573,9 +579,10 @@ describe('MatTooltip', () => {
     }));
 
     it('should not show the tooltip on progammatic focus', fakeAsync(() => {
+      patchElementFocus(buttonElement);
       assertTooltipInstance(tooltipDirective, false);
 
-      buttonElement.focus();
+      focusMonitor.focusVia(buttonElement, 'program');
       tick(0);
       fixture.detectChanges();
       tick(500);
@@ -583,6 +590,29 @@ describe('MatTooltip', () => {
       expect(overlayContainerElement.querySelector('.mat-tooltip')).toBeNull();
     }));
 
+    it('should not show the tooltip on mouse focus', fakeAsync(() => {
+      patchElementFocus(buttonElement);
+      assertTooltipInstance(tooltipDirective, false);
+
+      focusMonitor.focusVia(buttonElement, 'mouse');
+      tick(0);
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlayContainerElement.querySelector('.mat-tooltip')).toBeNull();
+    }));
+
+    it('should not show the tooltip on touch focus', fakeAsync(() => {
+      patchElementFocus(buttonElement);
+      assertTooltipInstance(tooltipDirective, false);
+
+      focusMonitor.focusVia(buttonElement, 'touch');
+      tick(0);
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlayContainerElement.querySelector('.mat-tooltip')).toBeNull();
+    }));
 
   });
 
