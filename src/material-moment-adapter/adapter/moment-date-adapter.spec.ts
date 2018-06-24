@@ -8,7 +8,8 @@
 
 import {LOCALE_ID} from '@angular/core';
 import {async, inject, TestBed} from '@angular/core/testing';
-import {DateAdapter, DEC, FEB, JAN, MAR, MAT_DATE_LOCALE} from '@angular/material/core';
+import {DateAdapter, DATE_LOCALE} from '@angular/cdk/dateadapter';
+import { DEC, FEB, JAN, MAR } from '@angular/cdk/testing';
 import * as moment from 'moment';
 import {MomentDateModule} from './index';
 import {MomentDateAdapter} from './moment-date-adapter';
@@ -371,13 +372,13 @@ describe('MomentDateAdapter', () => {
   });
 });
 
-describe('MomentDateAdapter with MAT_DATE_LOCALE override', () => {
+describe('MomentDateAdapter with DATE_LOCALE override', () => {
   let adapter: MomentDateAdapter;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MomentDateModule],
-      providers: [{provide: MAT_DATE_LOCALE, useValue: 'ja-JP'}]
+      providers: [{provide: DATE_LOCALE, useValue: 'ja-JP'}]
     }).compileComponents();
   }));
 
@@ -385,7 +386,7 @@ describe('MomentDateAdapter with MAT_DATE_LOCALE override', () => {
     adapter = d;
   }));
 
-  it('should take the default locale id from the MAT_DATE_LOCALE injection token', () => {
+  it('should take the default locale id from the DATE_LOCALE injection token', () => {
     expect(adapter.format(moment([2017,  JAN,  2]), 'll')).toEqual('2017年1月2日');
   });
 });

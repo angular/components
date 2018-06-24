@@ -7,7 +7,7 @@
  */
 
 import {Inject, Injectable, Optional} from '@angular/core';
-import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material';
+import {DateAdapter, DATE_LOCALE} from '@angular/cdk/dateadapter';
 // Depending on whether rollup is used, moment needs to be imported differently.
 // Since Moment.js doesn't have a default export, we normally need to import using the `* as`
 // syntax. However, rollup creates a synthetic default module and we thus need to import it using
@@ -48,7 +48,7 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     narrowDaysOfWeek: string[]
   };
 
-  constructor(@Optional() @Inject(MAT_DATE_LOCALE) dateLocale: string) {
+  constructor(@Optional() @Inject(DATE_LOCALE) dateLocale: string) {
     super();
     this.setLocale(dateLocale || moment.locale());
   }

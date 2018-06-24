@@ -8,7 +8,7 @@
 
 import {Platform} from '@angular/cdk/platform';
 import {Inject, Injectable, Optional} from '@angular/core';
-import {DateAdapter, MAT_DATE_LOCALE} from './date-adapter';
+import {DateAdapter, DATE_LOCALE} from './date-adapter';
 
 // TODO(mmalerba): Remove when we no longer support safari 9.
 /** Whether the browser supports the Intl API. */
@@ -75,7 +75,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
    */
   useUtcForDisplay: boolean = true;
 
-  constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string, platform: Platform) {
+  constructor(@Optional() @Inject(DATE_LOCALE) matDateLocale: string, platform: Platform) {
     super();
     super.setLocale(matDateLocale);
 
