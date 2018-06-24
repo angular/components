@@ -20,10 +20,10 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
     'tabindex': '-1',
     '[class.cdk-selection-selected]': 'selected',
     '(mousedown)': '_setModifiers($event)',
-    '(click)': '_toggle()',
+    '(click)': 'toggle()',
     /** Right click should select item. */
-    '(contextmenu)': '_toggle()',
-    '(keydown.enter)': '_toggle()',
+    '(contextmenu)': 'toggle()',
+    '(keydown.enter)': 'toggle()',
     '(keydown.shift)': '_disableTextSelection()',
     '(blur)': '_enableTextSelection()',
   }
@@ -70,8 +70,8 @@ export class CdkSelectionToggle<T> implements OnInit, OnDestroy {
     this._selection.deregisterToggle(this);
   }
 
-  /** Invoke toggle on the parent selection directive. */
-  _toggle() {
+  /** Toggle the selection. */
+  toggle() {
     if (!this.disabled) {
       this._selection.toggle(this);
     }
