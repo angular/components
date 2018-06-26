@@ -7,15 +7,14 @@
  */
 import {Injectable, NgZone, OnDestroy} from '@angular/core';
 import {MediaMatcher} from './media-matcher';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
-import {RxChain, map, startWith, takeUntil} from '@angular/cdk/rxjs';
+import {combineLatest, fromEventPattern, Observable, Subject} from 'rxjs';
+import {map, startWith, takeUntil} from 'rxjs/operators';
 import {coerceArray} from '@angular/cdk/coercion';
-import {combineLatest} from 'rxjs/observable/combineLatest';
-import {fromEventPattern} from 'rxjs/observable/fromEventPattern';
+
 
 /** The current state of a layout breakpoint. */
 export interface BreakpointState {
+  /** Whether the breakpoint is currently matching. */
   matches: boolean;
 }
 
@@ -24,10 +23,8 @@ interface Query {
   mql: MediaQueryList;
 }
 
-/**
- * Utility for checking the matching state of @media queries.
- */
-@Injectable()
+/** Utility for checking the matching state of @media queries. */
+@Injectable({providedIn: 'root'})
 export class BreakpointObserver implements OnDestroy {
   /**  A map of all media queries currently being listened for. */
   private _queries: Map<string, Query> = new Map();
@@ -42,25 +39,31 @@ export class BreakpointObserver implements OnDestroy {
     this._destroySubject.complete();
   }
 
-  /** Whether the query currently is matched. */
+  /**
+   * Whether one or more media queries match the current viewport size.
+   * @param value One or more media queries to check.
+   * @returns Whether any of the media queries match.
+   */
   isMatched(value: string | string[]): boolean {
-    let queries = coerceArray(value);
+    const queries = splitQueries(coerceArray(value));
     return queries.some(mediaQuery => this._registerQuery(mediaQuery).mql.matches);
   }
 
   /**
    * Gets an observable of results for the given queries that will emit new results for any changes
    * in matching of the given queries.
+   * @param value One or more media queries to check.
+   * @returns A stream of matches for the given queries.
    */
   observe(value: string | string[]): Observable<BreakpointState> {
-    let queries = coerceArray(value);
-    let observables = queries.map(query => this._registerQuery(query).observable);
+    const queries = splitQueries(coerceArray(value));
+    const observables = queries.map(query => this._registerQuery(query).observable);
 
-    return combineLatest(observables, (a: BreakpointState, b: BreakpointState) => {
+    return combineLatest(observables).pipe(map((breakpointStates: BreakpointState[]) => {
       return {
-        matches: !!((a && a.matches) || (b && b.matches)),
+        matches: breakpointStates.some(state => state && state.matches)
       };
-    });
+    }));
   }
 
   /** Registers a specific query to be listened for. */
@@ -70,9 +73,9 @@ export class BreakpointObserver implements OnDestroy {
       return this._queries.get(query)!;
     }
 
-    let mql: MediaQueryList = this.mediaMatcher.matchMedia(query);
+    const mql: MediaQueryList = this.mediaMatcher.matchMedia(query);
     // Create callback for match changes and add it is as a listener.
-    let queryObservable = RxChain.from(fromEventPattern(
+    const queryObservable = fromEventPattern(
       // Listener callback methods are wrapped to be placed back in ngZone. Callbacks must be placed
       // back into the zone because matchMedia is only included in Zone.js by loading the
       // webapis-media-query.js file alongside the zone.js file.  Additionally, some browsers do not
@@ -83,15 +86,26 @@ export class BreakpointObserver implements OnDestroy {
       },
       (listener: MediaQueryListListener) => {
         mql.removeListener((e: MediaQueryList) => this.zone.run(() => listener(e)));
-      }))
-      .call(takeUntil, this._destroySubject)
-      .call(startWith, mql)
-      .call(map, (nextMql: MediaQueryList) => ({matches: nextMql.matches}))
-      .result();
+      })
+      .pipe(
+        takeUntil(this._destroySubject),
+        startWith(mql),
+        map((nextMql: MediaQueryList) => ({matches: nextMql.matches}))
+      );
 
     // Add the MediaQueryList to the set of queries.
-    let output = {observable: queryObservable, mql: mql};
+    const output = {observable: queryObservable, mql: mql};
     this._queries.set(query, output);
     return output;
   }
+}
+
+/**
+ * Split each query string into separate query strings if two queries are provided as comma
+ * separated.
+ */
+function splitQueries(queries: string[]): string[] {
+  return queries.map((query: string) => query.split(','))
+                .reduce((a1: string[], a2: string[]) => a1.concat(a2))
+                .map(query => query.trim());
 }

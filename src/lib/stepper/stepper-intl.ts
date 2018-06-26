@@ -7,18 +7,18 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 
 
 /** Stepper data that is required for internationalization. */
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class MatStepperIntl {
   /**
    * Stream that emits whenever the labels here are changed. Use this to notify
    * components if the labels have changed after initialization.
    */
-  changes: Subject<void> = new Subject<void>();
+  readonly changes: Subject<void> = new Subject<void>();
 
   /** Label that is rendered below optional steps. */
-  optionalLabel = 'Optional';
+  optionalLabel: string = 'Optional';
 }

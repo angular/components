@@ -1,7 +1,16 @@
-import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {Component, ViewChild} from '@angular/core';
 import {FormControl, NgModel} from '@angular/forms';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/map';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+
 
 export interface State {
   code: string;
@@ -18,8 +27,6 @@ export interface StateGroup {
   selector: 'autocomplete-demo',
   templateUrl: 'autocomplete-demo.html',
   styleUrls: ['autocomplete-demo.css'],
-  encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
 })
 export class AutocompleteDemo {
   stateCtrl: FormControl;
@@ -27,8 +34,8 @@ export class AutocompleteDemo {
   currentGroupedState = '';
   topHeightCtrl = new FormControl(0);
 
-  reactiveStates: any;
-  tdStates: any[];
+  reactiveStates: Observable<State[]>;
+  tdStates: State[];
 
   tdDisabled = false;
 
@@ -93,22 +100,25 @@ export class AutocompleteDemo {
     this.tdStates = this.states;
     this.stateCtrl = new FormControl({code: 'CA', name: 'California'});
     this.reactiveStates = this.stateCtrl.valueChanges
-        .startWith(this.stateCtrl.value)
-        .map(val => this.displayFn(val))
-        .map(name => this.filterStates(name));
+      .pipe(
+        startWith(this.stateCtrl.value),
+        map(val => this.displayFn(val)),
+        map(name => this.filterStates(name))
+      );
 
-    this.filteredGroupedStates = this.groupedStates = this.states.reduce((groups, state) => {
-      let group = groups.find(g => g.letter === state.name[0]);
+    this.filteredGroupedStates = this.groupedStates =
+        this.states.reduce<StateGroup[]>((groups, state) => {
+          let group = groups.find(g => g.letter === state.name[0]);
 
-      if (!group) {
-        group = { letter: state.name[0], states: [] };
-        groups.push(group);
-      }
+          if (!group) {
+            group = { letter: state.name[0], states: [] };
+            groups.push(group);
+          }
 
-      group.states.push({ code: state.code, name: state.name });
+          group.states.push({ code: state.code, name: state.name });
 
-      return groups;
-    }, [] as StateGroup[]);
+          return groups;
+        }, []);
   }
 
   displayFn(value: any): string {

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Component, ViewChild} from '@angular/core';
 import {MatRipple} from '@angular/material';
 
@@ -21,10 +29,18 @@ export class RippleDemo {
 
   disableButtonRipples = false;
 
-  launchRipple(persistent = false) {
-    if (this.ripple) {
-      this.ripple.launch(0, 0, { centered: true, persistent });
+  launchRipple(persistent = false, disableAnimation = false) {
+    if (!this.ripple) {
+      return;
     }
+
+    const rippleConfig = {
+      centered: true,
+      persistent: persistent,
+      animation: disableAnimation ? {enterDuration: 0, exitDuration: 0} : undefined
+    };
+
+    this.ripple.launch(0, 0, rippleConfig);
   }
 
   fadeOutAll() {

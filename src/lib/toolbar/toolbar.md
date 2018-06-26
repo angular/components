@@ -2,24 +2,37 @@
 
 <!-- example(toolbar-overview) -->
 
-### Multiple rows
-Toolbars can have multiple rows using `<mat-toolbar-row>` elements. Any content outside of an 
-`<mat-toolbar-row>` element are automatically placed inside of one at the beginning of the toolbar.
-Each toolbar row is a `display: flex` container.
+### Single row
+
+In the most situations, a toolbar will be placed at the top of your application and will only 
+have a single row that includes the title of your application.
 
 ```html
 <mat-toolbar>
-  <span>First Row</span>
+  <span>My Application</span>
+</mat-toolbar>
+```
+
+### Multiple rows
+
+The Material Design specifications describe that toolbars can also have multiple rows. Creating
+toolbars with multiple rows in Angular Material can be done by placing `<mat-toolbar-row>` elements
+inside of a `<mat-toolbar>`.
+
+```html
+<mat-toolbar>  
+  <mat-toolbar-row>
+    <span>First Row</span>
+  </mat-toolbar-row>
   
   <mat-toolbar-row>
     <span>Second Row</span>
   </mat-toolbar-row>
-  
-  <mat-toolbar-row>
-    <span>Third Row</span>
-  </mat-toolbar-row>
 </mat-toolbar>
 ```
+
+**Note**: Placing content outside of a `<mat-toolbar-row>` when multiple rows are specified is not
+supported.
 
 ### Positioning toolbar content
 The toolbar does not perform any positioning of its content. This gives the user full power to 
@@ -39,8 +52,8 @@ easily accomplished with `display: flex`:
 ```
 ```scss
 .example-fill-remaining-space {
-  // This fills the remaining space, by using flexbox. 
-  // Every toolbar row uses a flexbox row layout.
+  /* This fills the remaining space, by using flexbox. 
+     Every toolbar row uses a flexbox row layout. */
   flex: 1 1 auto;
 }
 ```
@@ -55,7 +68,7 @@ By default, the toolbar assumes that it will be used in a purely decorative fash
 no roles, ARIA attributes, or keyboard shortcuts. This is equivalent to having a sequence of `<div>`
 elements on the page.
 
-Generally, the toolbar is used as a header where `role="header"` would be appropriate.
+Generally, the toolbar is used as a header where `role="heading"` would be appropriate.
 
 Only if the use-case of the toolbar match that of role="toolbar", the user should add the role and
 an appropriate label via `aria-label` or `aria-labelledby`.

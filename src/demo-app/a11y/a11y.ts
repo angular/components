@@ -1,6 +1,15 @@
-import {Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation} from '@angular/core';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
+
 
 @Component({
   moduleId: module.id,
@@ -14,11 +23,9 @@ export class AccessibilityHome {}
   selector: 'accessibility-demo',
   templateUrl: 'a11y.html',
   styleUrls: ['a11y.css'],
-  encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
 })
 export class AccessibilityDemo implements OnDestroy {
-  currentComponent: string = '';
+  currentComponent = '';
 
   fullscreen = false;
 
@@ -41,6 +48,7 @@ export class AccessibilityDemo implements OnDestroy {
     {name: 'Grid list', route: 'grid-list'},
     {name: 'Icon', route: 'icon'},
     {name: 'Input', route: 'input'},
+    {name: 'List', route: 'list'},
     {name: 'Menu', route: 'menu'},
     {name: 'Progress bar', route: 'progress-bar'},
     {name: 'Progress spinner', route: 'progress-spinner'},
@@ -50,6 +58,7 @@ export class AccessibilityDemo implements OnDestroy {
     {name: 'Slide toggle', route: 'slide-toggle'},
     {name: 'Slider', route: 'slider'},
     {name: 'Snack bar', route: 'snack-bar'},
+    {name: 'Table', route: 'table'},
     {name: 'Tabs', route: 'tabs'},
     {name: 'Toolbar', route: 'toolbar'},
     {name: 'Tooltip', route: 'tooltip'},
@@ -58,8 +67,8 @@ export class AccessibilityDemo implements OnDestroy {
   constructor(router: Router) {
     this._routerSubscription = router.events.subscribe((e) => {
       if (e instanceof NavigationEnd) {
-        let fragments = e.url.split('/');
-        let nav = this.navItems.find(navItem => {
+        const fragments = e.url.split('/');
+        const nav = this.navItems.find(navItem => {
           return fragments[fragments.length - 1] === navItem.route;
         });
         this.currentComponent = nav ? nav.name : '';

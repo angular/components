@@ -83,7 +83,8 @@
 }
 
 @mixin _mat-tab-label-focus($tab-focus-color) {
-  .mat-tab-label:focus, .mat-tab-link:focus {
+  .mat-tab-label:not(.mat-tab-disabled):focus,
+  .mat-tab-link:not(.mat-tab-disabled):focus {
     background-color: mat-color($tab-focus-color, lighter, 0.3);
   }
 }
@@ -110,6 +111,12 @@
 
   .mat-tab-header-pagination-disabled .mat-tab-header-pagination-chevron {
     border-color: mat-color($background-color, default-contrast, 0.4);
+  }
+
+  // Set ripples color to be the contrast color of the new background. Otherwise the ripple
+  // color will be based on the app background color.
+  .mat-ripple-element {
+    background-color: mat-color($background-color, default-contrast, 0.12);
   }
 }
 

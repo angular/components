@@ -89,6 +89,14 @@
   <mat-datepicker #birthday></mat-datepicker>
 </mat-form-field>
 
+<h2>Disabled datepicker</h2>
+
+<mat-form-field>
+  <input type="text" disabled matInput [matDatepicker]="departureDate" placeholder="Departure date">
+  <mat-datepicker-toggle matSuffix [for]="departureDate"></mat-datepicker-toggle>
+  <mat-datepicker #departureDate></mat-datepicker>
+</mat-form-field>
+
 <h2>Grid list</h2>
 
 <mat-grid-list cols="4">
@@ -102,6 +110,19 @@
 <mat-icon>ligature</mat-icon>
 
 <h2>Input</h2>
+
+<mat-form-field floatLabel="never">
+  <input matInput placeholder="name" type="text">
+</mat-form-field>
+
+<mat-form-field appearance="outline">
+  <mat-label>Surname</mat-label>
+  <input matInput value="Baggins">
+</mat-form-field>
+
+<mat-form-field>
+  <textarea matInput placeholder="description"></textarea>
+</mat-form-field>
 
 <mat-form-field>
   <input type="number" matInput placeholder="amount">
@@ -173,7 +194,10 @@
 
 <h2>Sidenav</h2>
 <mat-sidenav-container>
-  <mat-sidenav opened>On the side</mat-sidenav>
+  <mat-sidenav opened>
+    On the side
+    <button>Button for testing focus trapping</button>
+  </mat-sidenav>
   Main content
   <button>Click me</button>
 </mat-sidenav-container>
@@ -243,7 +267,7 @@
 <button matTooltip="Action!">Go</button>
 
 <h2>Autosize textarea</h2>
-<textarea matTextareaAutosize matAutosizeMaxRows="10"></textarea>
+<textarea cdkTextareaAutosize cdkAutosizeMaxRows="10"></textarea>
 
 <h2>Expansion Panel</h2>
 <mat-expansion-panel>
@@ -313,3 +337,15 @@
   <mat-step label="Step 1">Content 1</mat-step>
   <mat-step label="Step 2">Content 2</mat-step>
 </mat-horizontal-stepper>
+
+<h2>Focus trap</h2>
+
+<div cdkTrapFocus cdkTrapFocusAutoCapture>
+  <button>Oh no, I'm trapped!</button>
+</div>
+
+<h2>Badge</h2>
+
+<button mat-raised-button matBadge="Clicked 1337 times">
+  Clicky thing
+</button>

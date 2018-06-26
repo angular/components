@@ -1,14 +1,22 @@
-import {Component, NgModule} from '@angular/core';
-import {ServerModule} from '@angular/platform-server';
-import {BrowserModule} from '@angular/platform-browser';
-import {Observable} from 'rxjs/Observable';
+import {ViewportRuler} from '@angular/cdk/scrolling';
+import {
+  CdkTableModule,
+  DataSource
+} from '@angular/cdk/table';
+import {Component, ElementRef, NgModule} from '@angular/core';
 import {
   MatAutocompleteModule,
+  MatBadgeModule,
+  MatBottomSheetModule,
   MatButtonModule,
+  MatButtonToggleModule,
   MatCardModule,
+  MatCheckboxModule,
   MatChipsModule,
   MatDatepickerModule,
+  MatDialog,
   MatDialogModule,
+  MatDividerModule,
   MatExpansionModule,
   MatFormFieldModule,
   MatGridListModule,
@@ -26,20 +34,35 @@ import {
   MatSidenavModule,
   MatSliderModule,
   MatSlideToggleModule,
+  MatSnackBar,
   MatSnackBarModule,
   MatSortModule,
+  MatStepperModule,
   MatTableModule,
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
-  MatStepperModule,
+  MatBottomSheet,
 } from '@angular/material';
-import {
-  CdkTableModule,
-  DataSource
-} from '@angular/cdk/table';
+import {BrowserModule} from '@angular/platform-browser';
+import {ServerModule} from '@angular/platform-server';
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {Observable, of as observableOf} from 'rxjs';
 
-import 'rxjs/add/observable/of';
+export class TableDataSource extends DataSource<any> {
+  connect(): Observable<any> {
+    return observableOf([{userId: 1}, {userId: 2}]);
+  }
+
+  disconnect() {}
+}
+
+
+@Component({
+  template: `<button>Do the thing</button>`
+})
+export class TestEntryComponent {}
+
 
 @Component({
   selector: 'kitchen-sink',
@@ -52,14 +75,25 @@ export class KitchenSink {
   tableColumns = ['userId'];
 
   /** Data source for the CDK and Material table. */
-  tableDataSource: DataSource<any> = {
-    connect: () => Observable.of([
-      { userId: 1 },
-      { userId: 2 }
-    ]),
-    disconnect: () => {}
-  };
+  tableDataSource = new TableDataSource();
 
+  constructor(
+    snackBar: MatSnackBar,
+    dialog: MatDialog,
+    viewportRuler: ViewportRuler,
+    focusMonitor: FocusMonitor,
+    elementRef: ElementRef<HTMLElement>,
+    bottomSheet: MatBottomSheet) {
+    focusMonitor.focusVia(elementRef.nativeElement, 'program');
+    snackBar.open('Hello there');
+    dialog.open(TestEntryComponent);
+    bottomSheet.open(TestEntryComponent);
+
+    // Do a sanity check on the viewport ruler.
+    viewportRuler.getViewportRect();
+    viewportRuler.getViewportSize();
+    viewportRuler.getViewportScrollPosition();
+  }
 }
 
 
@@ -67,14 +101,16 @@ export class KitchenSink {
   imports: [
     BrowserModule.withServerTransition({appId: 'kitchen-sink'}),
     MatAutocompleteModule,
+    MatBadgeModule,
+    MatBottomSheetModule,
     MatButtonModule,
-    // Button toggle and checkbox can't work due to https://github.com/angular/angular/issues/17050
-    // MatButtonToggleModule,
+    MatButtonToggleModule,
     MatCardModule,
-    // MatCheckboxModule,
+    MatCheckboxModule,
     MatChipsModule,
     MatDatepickerModule,
     MatDialogModule,
+    MatDividerModule,
     MatFormFieldModule,
     MatGridListModule,
     MatIconModule,
@@ -104,7 +140,8 @@ export class KitchenSink {
     CdkTableModule
   ],
   bootstrap: [KitchenSink],
-  declarations: [KitchenSink],
+  declarations: [KitchenSink, TestEntryComponent],
+  entryComponents: [TestEntryComponent],
 })
 export class KitchenSinkClientModule { }
 

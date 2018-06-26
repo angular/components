@@ -13,14 +13,18 @@
     "moduleResolution": "node",
     "outDir": "../../dist/packages/cdk",
     "rootDir": ".",
+    "rootDirs": [
+      ".",
+      "../../dist/packages/cdk"
+    ],
     "sourceMap": true,
     "inlineSources": true,
     "target": "es2015",
     "lib": ["es2015", "dom"],
     "skipLibCheck": true,
-    "types": [],
+    "types": ["jasmine", "tslib"],
     "paths": {
-      "@angular/cdk/*": ["../../dist/packages/cdk/*/public-api"]
+      "@angular/cdk/*": ["../../dist/packages/cdk/*"]
     }
   },
   "files": [
@@ -32,6 +36,10 @@
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
     "flatModuleId": "@angular/cdk",
-    "skipTemplateCodegen": true
+    "skipTemplateCodegen": true,
+    "fullTemplateTypeCheck": true
+  },
+  "bazelOptions": {
+    "suppressTsconfigOverrideWarnings": true
   }
 }

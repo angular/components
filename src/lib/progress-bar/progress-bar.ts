@@ -5,15 +5,34 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-
-import {Component, ChangeDetectionStrategy, Input, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ElementRef,
+  Inject,
+  Input,
+  Optional,
+  ViewEncapsulation
+} from '@angular/core';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import {CanColor, mixinColor} from '@angular/material/core';
 
 // TODO(josephperrott): Benchpress tests.
-// TODO(josephperrott): Add ARIA attributes for progressbar "for".
+// TODO(josephperrott): Add ARIA attributes for progress bar "for".
 
+// Boilerplate for applying mixins to MatProgressBar.
+/** @docs-private */
+export class MatProgressBarBase {
+  constructor(public _elementRef: ElementRef) { }
+}
+
+export const _MatProgressBarMixinBase = mixinColor(MatProgressBarBase, 'primary');
+
+/** Counter used to generate unique IDs for progress bars. */
+let progressbarId = 0;
 
 /**
- * <mat-progress-bar> component.
+ * `<mat-progress-bar>` component.
  */
 @Component({
   moduleId: module.id,
@@ -25,34 +44,34 @@ import {Component, ChangeDetectionStrategy, Input, ViewEncapsulation} from '@ang
     'aria-valuemax': '100',
     '[attr.aria-valuenow]': 'value',
     '[attr.mode]': 'mode',
-    '[class.mat-primary]': 'color == "primary"',
-    '[class.mat-accent]': 'color == "accent"',
-    '[class.mat-warn]': 'color == "warn"',
     'class': 'mat-progress-bar',
+    '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
   },
+  inputs: ['color'],
   templateUrl: 'progress-bar.html',
   styleUrls: ['progress-bar.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
 })
-export class MatProgressBar {
-  /** Color of the progress bar. */
-  @Input() color: 'primary' | 'accent' | 'warn' = 'primary';
+export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor {
 
-  private _value: number = 0;
 
-  /** Value of the progressbar. Defaults to zero. Mirrored to aria-valuenow. */
+  constructor(public _elementRef: ElementRef,
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+    super(_elementRef);
+  }
+
+  /** Value of the progress bar. Defaults to zero. Mirrored to aria-valuenow. */
   @Input()
-  get value() { return this._value; }
+  get value(): number { return this._value; }
   set value(v: number) { this._value = clamp(v || 0); }
-
-  private _bufferValue: number = 0;
+  private _value: number = 0;
 
   /** Buffer value of the progress bar. Defaults to zero. */
   @Input()
-  get bufferValue() { return this._bufferValue; }
+  get bufferValue(): number { return this._bufferValue; }
   set bufferValue(v: number) { this._bufferValue = clamp(v || 0); }
+  private _bufferValue: number = 0;
 
   /**
    * Mode of the progress bar.
@@ -63,19 +82,22 @@ export class MatProgressBar {
    */
   @Input() mode: 'determinate' | 'indeterminate' | 'buffer' | 'query' = 'determinate';
 
+  /** The id of the progress bar. */
+  progressbarId = `mat-progress-bar-${progressbarId++}`;
+
   /** Gets the current transform value for the progress bar's primary indicator. */
   _primaryTransform() {
-    let scale = this.value / 100;
+    const scale = this.value / 100;
     return {transform: `scaleX(${scale})`};
   }
 
   /**
-   * Gets the current transform value for the progress bar's buffer indicator.  Only used if the
+   * Gets the current transform value for the progress bar's buffer indicator. Only used if the
    * progress mode is set to buffer, otherwise returns an undefined, causing no transformation.
    */
   _bufferTransform() {
-    if (this.mode == 'buffer') {
-      let scale = this.bufferValue / 100;
+    if (this.mode === 'buffer') {
+      const scale = this.bufferValue / 100;
       return {transform: `scaleX(${scale})`};
     }
   }

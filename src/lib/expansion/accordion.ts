@@ -10,9 +10,6 @@ import {Directive, Input} from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {CdkAccordion} from '@angular/cdk/accordion';
 
-/** Workaround for https://github.com/angular/angular/issues/17849 */
-export const _CdkAccordion = CdkAccordion;
-
 /** MatAccordion's display modes. */
 export type MatAccordionDisplayMode = 'default' | 'flat';
 
@@ -26,16 +23,17 @@ export type MatAccordionDisplayMode = 'default' | 'flat';
     class: 'mat-accordion'
   }
 })
-export class MatAccordion extends _CdkAccordion {
+export class MatAccordion extends CdkAccordion {
   /** Whether the expansion indicator should be hidden. */
-  @Input() get hideToggle(): boolean { return this._hideToggle; }
+  @Input()
+  get hideToggle(): boolean { return this._hideToggle; }
   set hideToggle(show: boolean) { this._hideToggle = coerceBooleanProperty(show); }
-  private  _hideToggle: boolean = false;
+  private _hideToggle: boolean = false;
 
   /**
    * The display mode used for all expansion panels in the accordion. Currently two display
    * modes exist:
-   *   default - a gutter-like spacing is placed around any expanded panel, placing the expanded
+   *  default - a gutter-like spacing is placed around any expanded panel, placing the expanded
    *     panel at a different elevation from the reset of the accordion.
    *  flat - no spacing is placed around expanded panels, showing all panels at the same
    *     elevation.

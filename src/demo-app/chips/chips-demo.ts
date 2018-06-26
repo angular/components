@@ -1,8 +1,15 @@
-import {ENTER} from '@angular/cdk/keycodes';
-import {Component} from '@angular/core';
-import {MatChipInputEvent} from '@angular/material';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 
-const COMMA = 188;
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {Component} from '@angular/core';
+import {MatChipInputEvent, ThemePalette} from '@angular/material';
+
 
 export interface Person {
   name: string;
@@ -10,7 +17,7 @@ export interface Person {
 
 export interface DemoColor {
   name: string;
-  color: string;
+  color: ThemePalette;
 }
 
 @Component({
@@ -20,13 +27,13 @@ export interface DemoColor {
   styleUrls: ['chips-demo.css']
 })
 export class ChipsDemo {
-  tabIndex: number = 0;
-  visible: boolean = true;
-  color: string = '';
-  selectable: boolean = true;
-  removable: boolean = true;
-  addOnBlur: boolean = true;
-  message: string = '';
+  tabIndex = 0;
+  visible = true;
+  color = '';
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  message = '';
 
   // Enter, comma, semi-colon
   separatorKeysCodes = [ENTER, COMMA, 186];
@@ -34,19 +41,19 @@ export class ChipsDemo {
   selectedPeople = null;
 
   people: Person[] = [
-    { name: 'Kara' },
-    { name: 'Jeremy' },
-    { name: 'Topher' },
-    { name: 'Elad' },
-    { name: 'Kristiyan' },
-    { name: 'Paul' }
+    {name: 'Kara'},
+    {name: 'Jeremy'},
+    {name: 'Topher'},
+    {name: 'Elad'},
+    {name: 'Kristiyan'},
+    {name: 'Paul'}
   ];
 
   availableColors: DemoColor[] = [
-    { name: 'none', color: '' },
-    { name: 'Primary', color: 'primary' },
-    { name: 'Accent', color: 'accent' },
-    { name: 'Warn', color: 'warn' }
+    {name: 'none', color: undefined},
+    {name: 'Primary', color: 'primary'},
+    {name: 'Accent', color: 'accent'},
+    {name: 'Warn', color: 'warn'}
   ];
 
   displayMessage(message: string): void {
@@ -54,8 +61,7 @@ export class ChipsDemo {
   }
 
   add(event: MatChipInputEvent): void {
-    let input = event.input;
-    let value = event.value;
+    const {input, value} = event;
 
     // Add our person
     if ((value || '').trim()) {
@@ -69,7 +75,7 @@ export class ChipsDemo {
   }
 
   remove(person: Person): void {
-    let index = this.people.indexOf(person);
+    const index = this.people.indexOf(person);
 
     if (index >= 0) {
       this.people.splice(index, 1);
@@ -93,6 +99,6 @@ export class ChipsDemo {
   toggleVisible(): void {
     this.visible = false;
   }
-  selectedColors: any[] = ['Primary', 'Warn'];
+  selectedColors: string[] = ['Primary', 'Warn'];
   selectedColor = 'Accent';
 }

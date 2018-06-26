@@ -12,7 +12,7 @@
  * @docs-private
  */
 export function getTableUnknownColumnError(id: string) {
-  return Error(`cdk-table: Could not find column with id "${id}".`);
+  return Error(`Could not find column with id "${id}".`);
 }
 
 /**
@@ -20,7 +20,7 @@ export function getTableUnknownColumnError(id: string) {
  * @docs-private
  */
 export function getTableDuplicateColumnNameError(name: string) {
-  return Error(`cdk-table: Duplicate column definition name provided: "${name}".`);
+  return Error(`Duplicate column definition name provided: "${name}".`);
 }
 
 /**
@@ -28,13 +28,31 @@ export function getTableDuplicateColumnNameError(name: string) {
  * @docs-private
  */
 export function getTableMultipleDefaultRowDefsError() {
-  return Error(`cdk-table: There can only be one default row without a when predicate function.`);
+  return Error(`There can only be one default row without a when predicate function.`);
 }
 
 /**
  * Returns an error to be thrown when there are no matching row defs for a particular set of data.
  * @docs-private
  */
-export function getTableMissingMatchingRowDefError() {
-  return Error(`cdk-table: Could not find a matching row definition for the provided row data.`);
+export function getTableMissingMatchingRowDefError(data: any) {
+  return Error(`Could not find a matching row definition for the` +
+      `provided row data: ${JSON.stringify(data)}`);
+}
+
+/**
+ * Returns an error to be thrown when there is no row definitions present in the content.
+ * @docs-private
+ */
+export function getTableMissingRowDefsError() {
+  return Error('Missing definitions for header, footer, and row; ' +
+      'cannot determine which columns should be rendered.');
+}
+
+/**
+ * Returns an error to be thrown when the data source does not match the compatible types.
+ * @docs-private
+ */
+export function getTableUnknownDataSourceError() {
+  return Error(`Provided data source did not match an array, Observable, or DataSource`);
 }

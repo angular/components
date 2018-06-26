@@ -1,31 +1,53 @@
-import {fakeAsync, flushMicrotasks, inject} from '@angular/core/testing';
-import {GlobalPositionStrategy} from './global-position-strategy';
-import {OverlayRef} from '../overlay-ref';
+import {NgModule, NgZone, Component} from '@angular/core';
+import {TestBed, inject} from '@angular/core/testing';
+import {MockNgZone} from '@angular/cdk/testing';
+import {PortalModule, ComponentPortal} from '@angular/cdk/portal';
+import {OverlayModule, Overlay, OverlayConfig, OverlayRef, OverlayContainer} from '../index';
 
 
 describe('GlobalPositonStrategy', () => {
-  let element: HTMLElement;
-  let strategy: GlobalPositionStrategy;
+  let overlayRef: OverlayRef;
+  let overlay: Overlay;
+  let zone: MockNgZone;
 
   beforeEach(() => {
-    element = document.createElement('div');
-    strategy = new GlobalPositionStrategy();
-    document.body.appendChild(element);
-    strategy.attach({overlayElement: element} as OverlayRef);
+    TestBed.configureTestingModule({
+      imports: [GlobalOverlayTestModule],
+      providers: [{provide: NgZone, useFactory: () => zone = new MockNgZone()}]
+    });
+
+    inject([Overlay], (o: Overlay) => {
+      overlay = o;
+    })();
   });
 
-  afterEach(() => {
-    element.parentNode!.removeChild(element);
-    strategy.dispose();
-  });
+  afterEach(inject([OverlayContainer], (overlayContainer: OverlayContainer) => {
+    if (overlayRef) {
+      overlayRef.dispose();
+      overlayRef = null!;
+    }
 
-  it('should position the element to the (top, left) with an offset', fakeAsyncTest(() => {
-    strategy.top('10px').left('40px').apply();
+    overlayContainer.ngOnDestroy();
+  }));
 
-    flushMicrotasks();
+  function attachOverlay(config: OverlayConfig): OverlayRef {
+    const portal = new ComponentPortal(BlankPortal);
+    overlayRef = overlay.create(config);
+    overlayRef.attach(portal);
+    zone.simulateZoneExit();
+    return overlayRef;
+  }
 
-    let elementStyle = element.style;
-    let parentStyle = (element.parentNode as HTMLElement).style;
+  it('should position the element to the (top, left) with an offset', () => {
+    attachOverlay({
+      positionStrategy: overlay.position()
+        .global()
+        .top('10px')
+        .left('40px')
+    });
+
+    const elementStyle = overlayRef.overlayElement.style;
+    const parentStyle = (overlayRef.overlayElement.parentNode as HTMLElement).style;
 
     expect(elementStyle.marginTop).toBe('10px');
     expect(elementStyle.marginLeft).toBe('40px');
@@ -34,15 +56,18 @@ describe('GlobalPositonStrategy', () => {
 
     expect(parentStyle.justifyContent).toBe('flex-start');
     expect(parentStyle.alignItems).toBe('flex-start');
-  }));
+  });
 
-  it('should position the element to the (bottom, right) with an offset', fakeAsyncTest(() => {
-    strategy.bottom('70px').right('15em').apply();
+  it('should position the element to the (bottom, right) with an offset', () => {
+    attachOverlay({
+      positionStrategy: overlay.position()
+        .global()
+        .bottom('70px')
+        .right('15em')
+    });
 
-    flushMicrotasks();
-
-    let elementStyle = element.style;
-    let parentStyle = (element.parentNode as HTMLElement).style;
+    const elementStyle = overlayRef.overlayElement.style;
+    const parentStyle = (overlayRef.overlayElement.parentNode as HTMLElement).style;
 
     expect(elementStyle.marginTop).toBe('');
     expect(elementStyle.marginLeft).toBe('');
@@ -51,17 +76,20 @@ describe('GlobalPositonStrategy', () => {
 
     expect(parentStyle.justifyContent).toBe('flex-end');
     expect(parentStyle.alignItems).toBe('flex-end');
-  }));
+  });
 
-  it('should overwrite previously applied positioning', fakeAsyncTest(() => {
-    strategy.centerHorizontally().centerVertically().apply();
-    flushMicrotasks();
+  it('should overwrite previously applied positioning', () => {
+    const positionStrategy = overlay.position()
+      .global()
+      .centerHorizontally()
+      .centerVertically();
 
-    strategy.top('10px').left('40%').apply();
-    flushMicrotasks();
+    attachOverlay({positionStrategy});
+    positionStrategy.top('10px').left('40%');
+    overlayRef.updatePosition();
 
-    let elementStyle = element.style;
-    let parentStyle = (element.parentNode as HTMLElement).style;
+    const elementStyle = overlayRef.overlayElement.style;
+    const parentStyle = (overlayRef.overlayElement.parentNode as HTMLElement).style;
 
     expect(elementStyle.marginTop).toBe('10px');
     expect(elementStyle.marginLeft).toBe('40%');
@@ -71,111 +99,206 @@ describe('GlobalPositonStrategy', () => {
     expect(parentStyle.justifyContent).toBe('flex-start');
     expect(parentStyle.alignItems).toBe('flex-start');
 
-    strategy.bottom('70px').right('15em').apply();
+    positionStrategy.bottom('70px').right('15em');
+    overlayRef.updatePosition();
 
-    flushMicrotasks();
-
-    expect(element.style.marginTop).toBe('');
-    expect(element.style.marginLeft).toBe('');
-    expect(element.style.marginBottom).toBe('70px');
-    expect(element.style.marginRight).toBe('15em');
+    expect(elementStyle.marginTop).toBe('');
+    expect(elementStyle.marginLeft).toBe('');
+    expect(elementStyle.marginBottom).toBe('70px');
+    expect(elementStyle.marginRight).toBe('15em');
 
     expect(parentStyle.justifyContent).toBe('flex-end');
     expect(parentStyle.alignItems).toBe('flex-end');
-  }));
+  });
 
-  it('should center the element', fakeAsyncTest(() => {
-    strategy.centerHorizontally().centerVertically().apply();
+  it('should center the element', () => {
+    attachOverlay({
+      positionStrategy: overlay.position()
+        .global()
+        .centerHorizontally()
+        .centerVertically()
+    });
 
-    flushMicrotasks();
-
-    let parentStyle = (element.parentNode as HTMLElement).style;
+    const parentStyle = (overlayRef.overlayElement.parentNode as HTMLElement).style;
 
     expect(parentStyle.justifyContent).toBe('center');
     expect(parentStyle.alignItems).toBe('center');
-  }));
+  });
 
-  it('should center the element with an offset', fakeAsyncTest(() => {
-    strategy.centerHorizontally('10px').centerVertically('15px').apply();
+  it('should center the element with an offset', () => {
+    attachOverlay({
+      positionStrategy: overlay.position()
+        .global()
+        .centerHorizontally('10px')
+        .centerVertically('15px')
+    });
 
-    flushMicrotasks();
-
-    let elementStyle = element.style;
-    let parentStyle = (element.parentNode as HTMLElement).style;
+    const elementStyle = overlayRef.overlayElement.style;
+    const parentStyle = (overlayRef.overlayElement.parentNode as HTMLElement).style;
 
     expect(elementStyle.marginLeft).toBe('10px');
     expect(elementStyle.marginTop).toBe('15px');
 
     expect(parentStyle.justifyContent).toBe('center');
     expect(parentStyle.alignItems).toBe('center');
-  }));
+  });
 
-  it('should make the element position: static', fakeAsyncTest(() => {
-    strategy.apply();
+  it('should make the element position: static', () => {
+    attachOverlay({
+      positionStrategy: overlay.position().global()
+    });
 
-    flushMicrotasks();
+    expect(overlayRef.overlayElement.style.position).toBe('static');
+  });
 
-    expect(element.style.position).toBe('static');
-  }));
+  it('should wrap the element in a `cdk-global-overlay-wrapper`', () => {
+    attachOverlay({
+      positionStrategy: overlay.position().global()
+    });
 
-  it('should wrap the element in a `cdk-global-overlay-wrapper`', fakeAsyncTest(() => {
-    strategy.apply();
-
-    flushMicrotasks();
-
-    let parent = element.parentNode as HTMLElement;
+    const parent = overlayRef.overlayElement.parentNode as HTMLElement;
 
     expect(parent.classList.contains('cdk-global-overlay-wrapper')).toBe(true);
-  }));
+  });
 
+  it('should remove the parent wrapper from the DOM', () => {
+    attachOverlay({
+      positionStrategy: overlay.position().global()
+    });
 
-  it('should remove the parent wrapper from the DOM', fakeAsync(() => {
-    strategy.apply();
+    const parent = overlayRef.overlayElement.parentNode!;
 
-    flushMicrotasks();
+    expect(document.body.contains(parent)).toBe(true);
 
-    expect(document.body.contains(element.parentNode!)).toBe(true);
+    overlayRef.dispose();
 
-    strategy.dispose();
+    expect(document.body.contains(parent)).toBe(false);
+  });
 
-    expect(document.body.contains(element.parentNode!)).toBe(false);
-  }));
+  it('should set the element width', () => {
+    attachOverlay({
+      positionStrategy: overlay.position().global().width('100px')
+    });
 
-  it('should set the element width', fakeAsync(() => {
-    strategy.width('100px').apply();
+    expect(overlayRef.overlayElement.style.width).toBe('100px');
+  });
 
-    flushMicrotasks();
+  it('should set the element height', () => {
+    attachOverlay({
+      positionStrategy: overlay.position().global().height('100px')
+    });
 
-    expect(element.style.width).toBe('100px');
-  }));
+    expect(overlayRef.overlayElement.style.height).toBe('100px');
+  });
 
-  it('should set the element height', fakeAsync(() => {
-    strategy.height('100px').apply();
+  it('should reset the horizontal position and offset when the width is 100%', () => {
+    attachOverlay({
+      positionStrategy: overlay.position()
+        .global()
+        .centerHorizontally()
+        .width('100%')
+    });
 
-    flushMicrotasks();
+    const elementStyle = overlayRef.overlayElement.style;
+    const parentStyle = (overlayRef.overlayElement.parentNode as HTMLElement).style;
 
-    expect(element.style.height).toBe('100px');
-  }));
+    expect(elementStyle.marginLeft).toBe('0px');
+    expect(parentStyle.justifyContent).toBe('flex-start');
+  });
 
-  it('should reset the horizontal position and offset when the width is 100%', fakeAsync(() => {
-    strategy.centerHorizontally().width('100%').apply();
+  it('should reset the vertical position and offset when the height is 100%', () => {
+    attachOverlay({
+      positionStrategy: overlay.position()
+        .global()
+        .centerVertically()
+        .height('100%')
+    });
 
-    flushMicrotasks();
+    const elementStyle = overlayRef.overlayElement.style;
+    const parentStyle = (overlayRef.overlayElement.parentNode as HTMLElement).style;
 
-    expect(element.style.marginLeft).toBe('0px');
-    expect((element.parentNode as HTMLElement).style.justifyContent).toBe('flex-start');
-  }));
+    expect(elementStyle.marginTop).toBe('0px');
+    expect(parentStyle.alignItems).toBe('flex-start');
+  });
 
-  it('should reset the vertical position and offset when the height is 100%', fakeAsync(() => {
-    strategy.centerVertically().height('100%').apply();
+  it('should not throw when attempting to apply after the overlay has been disposed', () => {
+    const positionStrategy = overlay.position().global();
 
-    flushMicrotasks();
+    attachOverlay({positionStrategy});
 
-    expect(element.style.marginTop).toBe('0px');
-    expect((element.parentNode as HTMLElement).style.alignItems).toBe('flex-start');
-  }));
+    positionStrategy.dispose();
+
+    expect(() => positionStrategy.apply()).not.toThrow();
+  });
+
+  it('should take its width and height from the overlay config', () => {
+    attachOverlay({
+      positionStrategy: overlay.position().global(),
+      width: '500px',
+      height: '300px'
+    });
+
+    const elementStyle = overlayRef.overlayElement.style;
+
+    expect(elementStyle.width).toBe('500px');
+    expect(elementStyle.height).toBe('300px');
+  });
+
+  it('should update the overlay size when setting it through the position strategy', () => {
+    attachOverlay({
+      positionStrategy: overlay.position()
+        .global()
+        .width('500px')
+        .height('300px'),
+    });
+
+    expect(overlayRef.getConfig().width).toBe('500px');
+    expect(overlayRef.getConfig().height).toBe('300px');
+  });
+
+  it('should take the dimensions from the overlay config, when they are set both in the ' +
+    'config and the strategy', () => {
+      attachOverlay({
+        positionStrategy: overlay.position().global().width('200px').height('100px'),
+        width: '500px',
+        height: '300px'
+      });
+
+      const elementStyle = overlayRef.overlayElement.style;
+
+      expect(elementStyle.width).toBe('500px');
+      expect(elementStyle.height).toBe('300px');
+    });
+
+  it('should invert `justify-content` when using `left` in RTL', () => {
+    attachOverlay({
+      positionStrategy: overlay.position().global().left('0'),
+      direction: 'rtl'
+    });
+
+    const parentStyle = (overlayRef.overlayElement.parentNode as HTMLElement).style;
+    expect(parentStyle.justifyContent).toBe('flex-end');
+  });
+
+  it('should invert `justify-content` when using `right` in RTL', () => {
+    attachOverlay({
+      positionStrategy: overlay.position().global().right('0'),
+      direction: 'rtl'
+    });
+
+    const parentStyle = (overlayRef.overlayElement.parentNode as HTMLElement).style;
+    expect(parentStyle.justifyContent).toBe('flex-start');
+  });
 });
 
-function fakeAsyncTest(fn: () => void) {
-  return inject([], fakeAsync(fn));
-}
+
+@Component({template: ''})
+class BlankPortal {}
+
+@NgModule({
+  imports: [OverlayModule, PortalModule],
+  exports: [BlankPortal],
+  declarations: [BlankPortal],
+  entryComponents: [BlankPortal],
+})
+class GlobalOverlayTestModule {}

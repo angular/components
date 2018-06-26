@@ -1,0 +1,38 @@
+package(default_visibility=["//visibility:public"])
+load("@angular//:index.bzl", "ng_module")
+load("@io_bazel_rules_sass//sass:sass.bzl", "sass_library", "sass_binary")
+
+
+ng_module(
+  name = "menu",
+  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
+  module_name = "@angular/material/menu",
+  assets = [":menu.css"] + glob(["**/*.html"]),
+  deps = [
+    "//src/lib/core",
+    "//src/cdk/a11y",
+    "//src/cdk/bidi",
+    "//src/cdk/coercion",
+    "//src/cdk/keycodes",
+    "//src/cdk/overlay",
+    "//src/cdk/portal",
+  ],
+  tsconfig = "//src/lib:tsconfig-build.json",
+)
+
+# TODO(jelbourn): replace this w/ sass_library when it supports acting like a filegroup
+filegroup(
+  name = "menu_scss_partials",
+  srcs = glob(["**/_*.scss"]),
+)
+
+sass_binary(
+  name = "menu_scss",
+  src = "menu.scss",
+  deps = ["//src/lib/core:core_scss_lib"],
+)
+
+sass_library(
+  name = "theme",
+  srcs = glob(["**/*-theme.scss"]),
+)

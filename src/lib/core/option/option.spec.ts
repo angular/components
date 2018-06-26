@@ -13,6 +13,64 @@ describe('MatOption component', () => {
     }).compileComponents();
   }));
 
+  it('should complete the `stateChanges` stream on destroy', () => {
+    const fixture = TestBed.createComponent(OptionWithDisable);
+    fixture.detectChanges();
+
+    const optionInstance: MatOption =
+        fixture.debugElement.query(By.directive(MatOption)).componentInstance;
+    const completeSpy = jasmine.createSpy('complete spy');
+    const subscription = optionInstance._stateChanges.subscribe(undefined, undefined, completeSpy);
+
+    fixture.destroy();
+    expect(completeSpy).toHaveBeenCalled();
+    subscription.unsubscribe();
+  });
+
+  it('should not emit to `onSelectionChange` if selecting an already-selected option', () => {
+    const fixture = TestBed.createComponent(OptionWithDisable);
+    fixture.detectChanges();
+
+    const optionInstance: MatOption =
+        fixture.debugElement.query(By.directive(MatOption)).componentInstance;
+
+    optionInstance.select();
+    expect(optionInstance.selected).toBe(true);
+
+    const spy = jasmine.createSpy('selection change spy');
+    const subscription = optionInstance.onSelectionChange.subscribe(spy);
+
+    optionInstance.select();
+    fixture.detectChanges();
+
+    expect(optionInstance.selected).toBe(true);
+    expect(spy).not.toHaveBeenCalled();
+
+    subscription.unsubscribe();
+  });
+
+  it('should not emit to `onSelectionChange` if deselecting an unselected option', () => {
+    const fixture = TestBed.createComponent(OptionWithDisable);
+    fixture.detectChanges();
+
+    const optionInstance: MatOption =
+        fixture.debugElement.query(By.directive(MatOption)).componentInstance;
+
+    optionInstance.deselect();
+    expect(optionInstance.selected).toBe(false);
+
+    const spy = jasmine.createSpy('selection change spy');
+    const subscription = optionInstance.onSelectionChange.subscribe(spy);
+
+    optionInstance.deselect();
+    fixture.detectChanges();
+
+    expect(optionInstance.selected).toBe(false);
+    expect(spy).not.toHaveBeenCalled();
+
+    subscription.unsubscribe();
+  });
+
   describe('ripples', () => {
     let fixture: ComponentFixture<OptionWithDisable>;
     let optionDebugElement: DebugElement;
@@ -29,7 +87,7 @@ describe('MatOption component', () => {
     });
 
     it('should show ripples by default', () => {
-      expect(optionInstance.disableRipple).toBe(false, 'Expected ripples to be enabled by default');
+      expect(optionInstance.disableRipple).toBeFalsy('Expected ripples to be enabled by default');
       expect(optionNativeElement.querySelectorAll('.mat-ripple-element').length)
         .toBe(0, 'Expected no ripples to show up initially');
 
@@ -54,20 +112,6 @@ describe('MatOption component', () => {
         .toBe(0, 'Expected no ripples to show up after click on a disabled option.');
     });
 
-    it('should not show ripples if the ripples are disabled using disableRipple', () => {
-      expect(optionNativeElement.querySelectorAll('.mat-ripple-element').length)
-        .toBe(0, 'Expected no ripples to show up initially');
-
-      optionInstance.disableRipple = true;
-      fixture.detectChanges();
-
-      dispatchFakeEvent(optionNativeElement, 'mousedown');
-      dispatchFakeEvent(optionNativeElement, 'mouseup');
-
-      expect(optionNativeElement.querySelectorAll('.mat-ripple-element').length)
-        .toBe(0, 'Expected no ripples to show up after click when ripples are disabled.');
-    });
-
   });
 
 });
@@ -75,6 +119,6 @@ describe('MatOption component', () => {
 @Component({
   template: `<mat-option [disabled]="disabled"></mat-option>`
 })
-export class OptionWithDisable {
+class OptionWithDisable {
   disabled: boolean;
 }

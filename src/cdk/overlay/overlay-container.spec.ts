@@ -1,19 +1,11 @@
 import {async, inject, TestBed} from '@angular/core/testing';
 import {Component, NgModule, ViewChild, ViewContainerRef} from '@angular/core';
-import {PortalModule, TemplatePortalDirective} from '@angular/cdk/portal';
+import {PortalModule, CdkPortal} from '@angular/cdk/portal';
 import {Overlay, OverlayContainer, OverlayModule} from './index';
 
 describe('OverlayContainer', () => {
   let overlay: Overlay;
   let overlayContainer: OverlayContainer;
-
-  beforeAll(() => {
-    // Remove any stale overlay containers from previous tests that didn't clean up correctly.
-    const staleContainers = document.querySelectorAll('.cdk-overlay-container');
-    for (let i = staleContainers.length - 1; i >= 0; i--) {
-      staleContainers[i].parentNode!.removeChild(staleContainers[i]);
-    }
-  });
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -37,7 +29,7 @@ describe('OverlayContainer', () => {
     overlayRef.attach(fixture.componentInstance.templatePortal);
     fixture.detectChanges();
 
-    expect(document.querySelectorAll('.cdk-overlay-container'))
+    expect(document.querySelector('.cdk-overlay-container'))
         .not.toBeNull('Expected the overlay container to be in the DOM after opening an overlay');
 
     // Manually call `ngOnDestroy` because there is no way to force Angular to destroy an
@@ -68,7 +60,7 @@ describe('OverlayContainer', () => {
   providers: [Overlay],
 })
 class TestComponentWithTemplatePortals {
-  @ViewChild(TemplatePortalDirective) templatePortal: TemplatePortalDirective;
+  @ViewChild(CdkPortal) templatePortal: CdkPortal;
 
   constructor(public viewContainerRef: ViewContainerRef) { }
 }

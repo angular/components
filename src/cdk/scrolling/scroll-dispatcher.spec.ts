@@ -3,7 +3,7 @@ import {NgModule, Component, ViewChild, ElementRef} from '@angular/core';
 import {CdkScrollable, ScrollDispatcher, ScrollDispatchModule} from './public-api';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 
-describe('Scroll Dispatcher', () => {
+describe('ScrollDispatcher', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -67,24 +67,15 @@ describe('Scroll Dispatcher', () => {
     }));
 
     it('should not execute the global events in the Angular zone', () => {
-      const spy = jasmine.createSpy('zone unstable callback');
-      const subscription = fixture.ngZone!.onUnstable.subscribe(spy);
-
       scroll.scrolled(0).subscribe(() => {});
       dispatchFakeEvent(document, 'scroll', false);
 
-      expect(spy).not.toHaveBeenCalled();
-      subscription.unsubscribe();
+      expect(fixture.ngZone!.isStable).toBe(true);
     });
 
     it('should not execute the scrollable events in the Angular zone', () => {
-      const spy = jasmine.createSpy('zone unstable callback');
-      const subscription = fixture.ngZone!.onUnstable.subscribe(spy);
-
-      dispatchFakeEvent(fixture.componentInstance.scrollingElement.nativeElement, 'scroll', false);
-
-      expect(spy).not.toHaveBeenCalled();
-      subscription.unsubscribe();
+      dispatchFakeEvent(fixture.componentInstance.scrollingElement.nativeElement, 'scroll');
+      expect(fixture.ngZone!.isStable).toBe(true);
     });
 
     it('should be able to unsubscribe from the global scrollable', () => {
@@ -99,6 +90,28 @@ describe('Scroll Dispatcher', () => {
 
       expect(spy).toHaveBeenCalledTimes(1);
     });
+
+    it('should complete the `scrolled` stream on destroy', () => {
+      const completeSpy = jasmine.createSpy('complete spy');
+      const subscription = scroll.scrolled(0).subscribe(undefined, undefined, completeSpy);
+
+      scroll.ngOnDestroy();
+
+      expect(completeSpy).toHaveBeenCalled();
+
+      subscription.unsubscribe();
+    });
+
+    it('should complete the scrollable stream when it is destroyed', () => {
+      const scrollable = fixture.componentInstance.scrollable;
+      const spy = jasmine.createSpy('complete spy');
+      const subscription = scrollable.elementScrolled().subscribe(undefined, undefined, spy);
+
+      fixture.destroy();
+      expect(spy).toHaveBeenCalled();
+      subscription.unsubscribe();
+    });
+
   });
 
   describe('Nested scrollables', () => {
@@ -187,6 +200,22 @@ describe('Scroll Dispatcher', () => {
           'Expected global listeners to have been removed after the subscription has stopped.');
       expect(scroll.scrollContainers.size)
           .toBe(4, 'Expected scrollable count to stay the same');
+    });
+
+    it('should remove the global subscription on destroy', () => {
+      expect(scroll._globalSubscription).toBeNull('Expected no global listeners on init.');
+
+      const subscription = scroll.scrolled(0).subscribe(() => {});
+
+      expect(scroll._globalSubscription).toBeTruthy(
+          'Expected global listeners after a subscription has been added.');
+
+      scroll.ngOnDestroy();
+
+      expect(scroll._globalSubscription).toBeNull(
+          'Expected global listeners to have been removed after the subscription has stopped.');
+
+      subscription.unsubscribe();
     });
 
   });

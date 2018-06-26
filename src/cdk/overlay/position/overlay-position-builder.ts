@@ -6,18 +6,24 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ElementRef, Injectable} from '@angular/core';
 import {ViewportRuler} from '@angular/cdk/scrolling';
+import {DOCUMENT} from '@angular/common';
+import {ElementRef, Inject, Injectable, Optional} from '@angular/core';
+import {OriginConnectionPosition, OverlayConnectionPosition} from './connected-position';
 import {ConnectedPositionStrategy} from './connected-position-strategy';
+import {FlexibleConnectedPositionStrategy} from './flexible-connected-position-strategy';
 import {GlobalPositionStrategy} from './global-position-strategy';
-import {OverlayConnectionPosition, OriginConnectionPosition} from './connected-position';
-
+import {Platform} from '@angular/cdk/platform';
 
 
 /** Builder for overlay position strategy. */
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class OverlayPositionBuilder {
-  constructor(private _viewportRuler: ViewportRuler) { }
+  constructor(
+    private _viewportRuler: ViewportRuler,
+    @Inject(DOCUMENT) private _document: any,
+    // @deletion-target 7.0.0 `_platform` parameter to be made required.
+    @Optional() private _platform?: Platform) { }
 
   /**
    * Creates a global position strategy.
@@ -31,11 +37,25 @@ export class OverlayPositionBuilder {
    * @param elementRef
    * @param originPos
    * @param overlayPos
+   * @deprecated Use `flexibleConnectedTo` instead.
+   * @deletion-target 7.0.0
    */
   connectedTo(
       elementRef: ElementRef,
       originPos: OriginConnectionPosition,
       overlayPos: OverlayConnectionPosition): ConnectedPositionStrategy {
-    return new ConnectedPositionStrategy(originPos, overlayPos, elementRef, this._viewportRuler);
+
+    return new ConnectedPositionStrategy(originPos, overlayPos, elementRef, this._viewportRuler,
+        this._document);
   }
+
+  /**
+   * Creates a flexible position strategy.
+   * @param elementRef
+   */
+  flexibleConnectedTo(elementRef: ElementRef | HTMLElement): FlexibleConnectedPositionStrategy {
+    return new FlexibleConnectedPositionStrategy(elementRef, this._viewportRuler, this._document,
+        this._platform);
+  }
+
 }

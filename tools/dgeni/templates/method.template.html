@@ -1,19 +1,25 @@
+{% import "macros.html" as macros %}
+
 <table class="docs-api-method-table">
   <thead>
     <tr class="docs-api-method-name-row">
       <th colspan="2" class="docs-api-method-name-cell">
         {%- if method.isDeprecated -%}
-          <div class="docs-api-deprecated-marker">Deprecated</div>
+          <div class="docs-api-deprecated-marker" {$ macros.deprecationTitle(method) $}>
+            Deprecated
+          </div>
         {%- endif -%}   
         {$ method.name $}
       </th>
     </tr>
   </thead>
+  {%- if method.description -%}
   <tr class="docs-api-method-description-row">
     <td colspan="2" class="docs-api-method-description-cell">
       {$ method.description | marked | safe $}
     </td>
   </tr>
+  {%- endif -%}
 
   {%- if method.params.length -%}
   <thead>
@@ -49,7 +55,7 @@
   </thead>
   <tr>
     <td class="docs-api-method-returns-type-cell">
-      <code class="docs-api-method-returns-type">{$ method.returnType $}</code>
+      <code class="docs-api-method-returns-type">{$ method.type $}</code>
     </td>
     <td class="docs-api-method-returns-description-cell">
       <p class="docs-api-method-returns-description">

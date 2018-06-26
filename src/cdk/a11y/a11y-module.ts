@@ -6,26 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {FocusTrapDeprecatedDirective, FocusTrapDirective, FocusTrapFactory} from './focus-trap';
-import {LIVE_ANNOUNCER_PROVIDER} from './live-announcer';
-import {InteractivityChecker} from './interactivity-checker';
-import {CommonModule} from '@angular/common';
+import {ObserversModule} from '@angular/cdk/observers';
 import {PlatformModule} from '@angular/cdk/platform';
-import {AriaDescriber, ARIA_DESCRIBER_PROVIDER} from './aria-describer';
-import {CdkMonitorFocus, FOCUS_MONITOR_PROVIDER} from './focus-monitor';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CdkMonitorFocus} from './focus-monitor/focus-monitor';
+import {CdkTrapFocus} from './focus-trap/focus-trap';
+import {CdkAriaLive} from './live-announcer/live-announcer';
 
 @NgModule({
-  imports: [CommonModule, PlatformModule],
-  declarations: [FocusTrapDirective, FocusTrapDeprecatedDirective, CdkMonitorFocus],
-  exports: [FocusTrapDirective, FocusTrapDeprecatedDirective, CdkMonitorFocus],
-  providers: [
-    InteractivityChecker,
-    FocusTrapFactory,
-    AriaDescriber,
-    LIVE_ANNOUNCER_PROVIDER,
-    ARIA_DESCRIBER_PROVIDER,
-    FOCUS_MONITOR_PROVIDER,
-  ]
+  imports: [CommonModule, PlatformModule, ObserversModule],
+  declarations: [CdkAriaLive, CdkTrapFocus, CdkMonitorFocus],
+  exports: [CdkAriaLive, CdkTrapFocus, CdkMonitorFocus],
 })
 export class A11yModule {}

@@ -1,0 +1,46 @@
+// TypeScript config file that is used to compile the experimental package into ES2015.
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "declaration": true,
+    "stripInternal": false,
+    "experimentalDecorators": true,
+    "noUnusedParameters": true,
+    "strictNullChecks": true,
+    "importHelpers": true,
+    "newLine": "lf",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "outDir": "../../dist/packages/cdk-experimental",
+    "rootDir": ".",
+    "rootDirs": [
+      ".",
+      "../../dist/packages/cdk-experimental"
+    ],
+    "sourceMap": true,
+    "inlineSources": true,
+    "target": "es2015",
+    "lib": ["es2015", "dom"],
+    "skipLibCheck": true,
+    "types": ["jasmine", "tslib"],
+    "paths": {
+      "@angular/cdk/*": ["../../dist/packages/cdk/*"],
+      "@angular/cdk-experimental/*": ["../../dist/packages/cdk-experimental/*"]
+    }
+  },
+  "files": [
+    "public-api.ts",
+    "typings.d.ts"
+  ],
+  "angularCompilerOptions": {
+    "annotateForClosureCompiler": true,
+    "strictMetadataEmit": true,
+    "flatModuleOutFile": "index.js",
+    "flatModuleId": "@angular/cdk-experimental",
+    "skipTemplateCodegen": true,
+    "fullTemplateTypeCheck": true
+  },
+  "bazelOptions": {
+    "suppressTsconfigOverrideWarnings": true
+  }
+}

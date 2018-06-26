@@ -16,17 +16,20 @@
     color: mat-color($foreground, 'text');
 
     &[disabled] {
-      color: mat-color($foreground, 'disabled');
+      &, &::after {
+        color: mat-color($foreground, 'disabled');
+      }
     }
   }
 
-  .mat-menu-item .mat-icon,
+  .mat-menu-item .mat-icon:not([color]),
   .mat-menu-item-submenu-trigger::after {
     color: mat-color($foreground, 'icon');
   }
 
   .mat-menu-item:hover,
-  .mat-menu-item:focus,
+  .mat-menu-item.cdk-program-focused,
+  .mat-menu-item.cdk-keyboard-focused,
   .mat-menu-item-highlighted {
     &:not([disabled]) {
       background: mat-color($background, 'hover');

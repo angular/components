@@ -6,8 +6,37 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Renderer2, ElementRef, NgZone} from '@angular/core';
+import {Directive, ElementRef, Inject, InjectionToken, NgZone} from '@angular/core';
 
+
+/**
+ * Interface for a a MatInkBar positioner method, defining the positioning and width of the ink
+ * bar in a set of tabs.
+ */
+// tslint:disable-next-line class-name Using leading underscore to denote internal interface.
+export interface _MatInkBarPositioner {
+  (element: HTMLElement): { left: string, width: string };
+}
+
+/** Injection token for the MatInkBar's Positioner. */
+export const _MAT_INK_BAR_POSITIONER =
+  new InjectionToken<_MatInkBarPositioner>('MatInkBarPositioner', {
+    providedIn: 'root',
+    factory: _MAT_INK_BAR_POSITIONER_FACTORY
+  });
+
+/**
+ * The default positioner function for the MatInkBar.
+ * @docs-private
+ */
+export function _MAT_INK_BAR_POSITIONER_FACTORY(): _MatInkBarPositioner {
+  const method = (element: HTMLElement) => ({
+    left: element ? (element.offsetLeft || 0) + 'px' : '0',
+    width: element ? (element.offsetWidth || 0) + 'px' : '0',
+  });
+
+  return method;
+}
 
 /**
  * The ink-bar is used to display and animate the line underneath the current active tab label.
@@ -21,9 +50,9 @@ import {Directive, Renderer2, ElementRef, NgZone} from '@angular/core';
 })
 export class MatInkBar {
   constructor(
-    private _renderer: Renderer2,
     private _elementRef: ElementRef,
-    private _ngZone: NgZone) {}
+    private _ngZone: NgZone,
+    @Inject(_MAT_INK_BAR_POSITIONER) private _inkBarPositioner: _MatInkBarPositioner) { }
 
   /**
    * Calculates the styles from the provided element in order to align the ink-bar to that element.
@@ -44,12 +73,12 @@ export class MatInkBar {
 
   /** Shows the ink bar. */
   show(): void {
-    this._renderer.setStyle(this._elementRef.nativeElement, 'visibility', 'visible');
+    this._elementRef.nativeElement.style.visibility = 'visible';
   }
 
   /** Hides the ink bar. */
   hide(): void {
-    this._renderer.setStyle(this._elementRef.nativeElement, 'visibility', 'hidden');
+    this._elementRef.nativeElement.style.visibility = 'hidden';
   }
 
   /**
@@ -57,10 +86,10 @@ export class MatInkBar {
    * @param element
    */
   private _setStyles(element: HTMLElement) {
-    const left = element ? (element.offsetLeft || 0) + 'px' : '0';
-    const width = element ? (element.offsetWidth || 0) + 'px' : '0';
+    const positions = this._inkBarPositioner(element);
+    const inkBar: HTMLElement = this._elementRef.nativeElement;
 
-    this._renderer.setStyle(this._elementRef.nativeElement, 'left', left);
-    this._renderer.setStyle(this._elementRef.nativeElement, 'width', width);
+    inkBar.style.left = positions.left;
+    inkBar.style.width = positions.width;
   }
 }

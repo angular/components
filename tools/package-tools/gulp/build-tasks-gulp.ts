@@ -18,8 +18,12 @@ const htmlMinifierOptions = {
   removeAttributeQuotes: false
 };
 
-/** Creates a set of gulp tasks that can build the specified package. */
-export function createPackageBuildTasks(buildPackage: BuildPackage) {
+/**
+ * Creates a set of gulp tasks that can build the specified package.
+ * @param buildPackage Build package for which the gulp tasks will be generated
+ * @param preBuildTasks List of gulp tasks that should run before building the package.
+ */
+export function createPackageBuildTasks(buildPackage: BuildPackage, preBuildTasks: string[] = []) {
   // Name of the package build tasks for Gulp.
   const taskName = buildPackage.name;
 
@@ -42,10 +46,13 @@ export function createPackageBuildTasks(buildPackage: BuildPackage) {
   task(`${taskName}:clean-build`, sequenceTask('clean', `${taskName}:build`));
 
   task(`${taskName}:build`, sequenceTask(
+    // Run the pre build gulp tasks.
+    ...preBuildTasks,
     // Build all required packages before building.
     ...dependencyNames.map(pkgName => `${pkgName}:build`),
     // Build ESM and assets output.
-    [`${taskName}:build:esm`, `${taskName}:assets`],
+    `${taskName}:assets`,
+    `${taskName}:build:esm`,
     // Inline assets into ESM output.
     `${taskName}:assets:inline`,
     // Build bundles on top of inlined ESM output.
@@ -53,8 +60,6 @@ export function createPackageBuildTasks(buildPackage: BuildPackage) {
   ));
 
   task(`${taskName}:build-no-bundles`, sequenceTask(
-    // Build all required tests before building.
-    ...dependencyNames.map(pkgName => `${pkgName}:build-no-bundles`),
     // Build the ESM output that includes all test files. Also build assets for the package.
     [`${taskName}:build:esm:tests`, `${taskName}:assets`],
     // Inline assets into ESM output.
@@ -78,7 +83,7 @@ export function createPackageBuildTasks(buildPackage: BuildPackage) {
   task(`${taskName}:build:bundles`, () => buildPackage.createBundles());
 
   /**
-   * Asset tasks. Building SASS files and inlining CSS, HTML files into the ESM output.
+   * Asset tasks. Building Sass files and inlining CSS, HTML files into the ESM output.
    */
   task(`${taskName}:assets`, [
     `${taskName}:assets:scss`,

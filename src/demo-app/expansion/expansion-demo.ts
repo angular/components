@@ -1,15 +1,25 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {Component, ViewChild} from '@angular/core';
+import {MatAccordion} from '@angular/material';
+
 
 @Component({
   moduleId: module.id,
   selector: 'expansion-demo',
   styleUrls: ['expansion-demo.css'],
   templateUrl: 'expansion-demo.html',
-  encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
 })
 export class ExpansionDemo {
-  displayMode: string = 'default';
+  @ViewChild(MatAccordion) accordion: MatAccordion;
+
+  displayMode = 'default';
   multi = false;
   hideToggle = false;
   disabled = false;

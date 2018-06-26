@@ -1,6 +1,6 @@
 import {TestBed, inject, fakeAsync, tick} from '@angular/core/testing';
 import {ScrollDispatchModule} from './public-api';
-import {ViewportRuler, VIEWPORT_RULER_PROVIDER} from './viewport-ruler';
+import {ViewportRuler} from './viewport-ruler';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 
 
@@ -25,7 +25,7 @@ describe('ViewportRuler', () => {
 
   beforeEach(() => TestBed.configureTestingModule({
     imports: [ScrollDispatchModule],
-    providers: [VIEWPORT_RULER_PROVIDER]
+    providers: [ViewportRuler]
   }));
 
   beforeEach(inject([ViewportRuler], (viewportRuler: ViewportRuler) => {
@@ -35,6 +35,12 @@ describe('ViewportRuler', () => {
 
   afterEach(() => {
     ruler.ngOnDestroy();
+  });
+
+  it('should get the viewport size', () => {
+    let size = ruler.getViewportSize();
+    expect(size.width).toBe(window.innerWidth);
+    expect(size.height).toBe(window.innerHeight);
   });
 
   it('should get the viewport bounds when the page is not scrolled', () => {
@@ -49,8 +55,6 @@ describe('ViewportRuler', () => {
     document.body.appendChild(veryLargeElement);
 
     scrollTo(1500, 2000);
-    // Force an update of the cached viewport geometries because IE11 emits the scroll event later.
-    ruler._cacheViewportGeometry();
 
     let bounds = ruler.getViewportRect();
 
@@ -87,8 +91,6 @@ describe('ViewportRuler', () => {
     document.body.appendChild(veryLargeElement);
 
     scrollTo(1500, 2000);
-    // Force an update of the cached viewport geometries because IE11 emits the scroll event later.
-    ruler._cacheViewportGeometry();
 
     // In the iOS simulator (BrowserStack & SauceLabs), adding the content to the
     // body causes karma's iframe for the test to stretch to fit that content once we attempt to

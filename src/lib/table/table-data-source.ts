@@ -6,13 +6,20 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {_isNumberValue} from '@angular/cdk/coercion';
 import {DataSource} from '@angular/cdk/table';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {Subscription} from 'rxjs/Subscription';
-import {combineLatest, map, RxChain, startWith} from '@angular/cdk/rxjs';
-import {empty} from 'rxjs/observable/empty';
+import {
+  BehaviorSubject,
+  combineLatest,
+  merge,
+  Observable,
+  of as observableOf,
+  Subscription
+} from 'rxjs';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import {MatSort, Sort} from '@angular/material/sort';
+import {map} from 'rxjs/operators';
+
 
 /**
  * Data source that accepts a client-side data array and includes native support of filtering,
@@ -22,42 +29,50 @@ import {empty} from 'rxjs/observable/empty';
  * properties are accessed. Also allows for filter customization by overriding filterTermAccessor,
  * which defines how row data is converted to a string for filter matching.
  */
-export class MatTableDataSource<T> implements DataSource<T> {
+export class MatTableDataSource<T> extends DataSource<T> {
   /** Stream that emits when a new data array is set on the data source. */
-  private _data: BehaviorSubject<T[]>;
+  private readonly _data: BehaviorSubject<T[]>;
 
   /** Stream emitting render data to the table (depends on ordered data changes). */
-  private _renderData = new BehaviorSubject<T[]>([]);
+  private readonly _renderData = new BehaviorSubject<T[]>([]);
 
   /** Stream that emits when a new filter string is set on the data source. */
-  private _filter = new BehaviorSubject<string>('');
+  private readonly _filter = new BehaviorSubject<string>('');
 
   /**
    * Subscription to the changes that should trigger an update to the table's rendered rows, such
    * as filtering, sorting, pagination, or base data changes.
    */
-  _renderChangesSubscription: Subscription;
+  _renderChangesSubscription = Subscription.EMPTY;
+
+  /**
+   * The filtered set of data that has been matched by the filter string, or all the data if there
+   * is no filter. Useful for knowing the set of data the table represents.
+   * For example, a 'selectAll()' function would likely want to select the set of filtered data
+   * shown to the user rather than all the data.
+   */
+  filteredData: T[];
 
   /** Array of data that should be rendered by the table, where each object represents one row. */
-  set data(data: T[]) { this._data.next(data); }
   get data() { return this._data.value; }
+  set data(data: T[]) { this._data.next(data); }
 
   /**
    * Filter term that should be used to filter out objects from the data array. To override how
-   * the filter matches data objects, provide a custom function on filterTermAccessor.
+   * data objects match to this filter string, provide a custom function for filterPredicate.
    */
-  set filter(filter: string) { this._filter.next(filter); }
   get filter(): string { return this._filter.value; }
+  set filter(filter: string) { this._filter.next(filter); }
 
   /**
    * Instance of the MatSort directive used by the table to control its sorting. Sort changes
    * emitted by the MatSort will trigger an update to the table's rendered data.
    */
+  get sort(): MatSort | null { return this._sort; }
   set sort(sort: MatSort|null) {
     this._sort = sort;
     this._updateChangeSubscription();
   }
-  get sort(): MatSort|null { return this._sort; }
   private _sort: MatSort|null;
 
   /**
@@ -70,38 +85,91 @@ export class MatTableDataSource<T> implements DataSource<T> {
    * e.g. `[pageLength]=100` or `[pageIndex]=1`, then be sure that the paginator's view has been
    * initialized before assigning it to this data source.
    */
+  get paginator(): MatPaginator | null { return this._paginator; }
   set paginator(paginator: MatPaginator|null) {
     this._paginator = paginator;
     this._updateChangeSubscription();
   }
-  get paginator(): MatPaginator|null { return this._paginator; }
   private _paginator: MatPaginator|null;
 
   /**
-   * Data accessor function that is used for accessing data properties for sorting.
+   * Data accessor function that is used for accessing data properties for sorting through
+   * the default sortData function.
    * This default function assumes that the sort header IDs (which defaults to the column name)
    * matches the data's properties (e.g. column Xyz represents data['Xyz']).
    * May be set to a custom function for different behavior.
    * @param data Data object that is being accessed.
    * @param sortHeaderId The name of the column that represents the data.
    */
-  sortingDataAccessor = (data: T, sortHeaderId: string): string|number => {
-    const value: number|string = data[sortHeaderId];
-    return isNaN(+value) ? value : +value;
+  sortingDataAccessor: ((data: T, sortHeaderId: string) => string|number) =
+      (data: T, sortHeaderId: string): string|number => {
+    const value: any = data[sortHeaderId];
+    return _isNumberValue(value) ? Number(value) : value;
   }
 
   /**
-   * Transforms data objects into a filter term that will be used to check against the filter if
-   * a filter is set. By default, the function will iterate over the values of the data object
-   * and convert them to a lowercase string.
-   * @param data Data object to convert to a string that checked for containing the filter term.
+   * Gets a sorted copy of the data array based on the state of the MatSort. Called
+   * after changes are made to the filtered data or when sort changes are emitted from MatSort.
+   * By default, the function retrieves the active sort and its direction and compares data
+   * by retrieving data using the sortingDataAccessor. May be overridden for a custom implementation
+   * of data ordering.
+   * @param data The array of data that should be sorted.
+   * @param sort The connected MatSort that holds the current sort state.
    */
-  filterTermAccessor: ((data: T) => string) = (data: T): string => {
+  sortData: ((data: T[], sort: MatSort) => T[]) = (data: T[], sort: MatSort): T[] => {
+    const active = sort.active;
+    const direction = sort.direction;
+    if (!active || direction == '') { return data; }
+
+    return data.sort((a, b) => {
+      let valueA = this.sortingDataAccessor(a, active);
+      let valueB = this.sortingDataAccessor(b, active);
+
+      // If both valueA and valueB exist (truthy), then compare the two. Otherwise, check if
+      // one value exists while the other doesn't. In this case, existing value should come first.
+      // This avoids inconsistent results when comparing values to undefined/null.
+      // If neither value exists, return 0 (equal).
+      let comparatorResult = 0;
+      if (valueA != null && valueB != null) {
+        // Check if one value is greater than the other; if equal, comparatorResult should remain 0.
+        if (valueA > valueB) {
+          comparatorResult = 1;
+        } else if (valueA < valueB) {
+          comparatorResult = -1;
+        }
+      } else if (valueA != null) {
+        comparatorResult = 1;
+      } else if (valueB != null) {
+        comparatorResult = -1;
+      }
+
+      return comparatorResult * (direction == 'asc' ? 1 : -1);
+    });
+  }
+
+  /**
+   * Checks if a data object matches the data source's filter string. By default, each data object
+   * is converted to a string of its properties and returns true if the filter has
+   * at least one occurrence in that string. By default, the filter string has its whitespace
+   * trimmed and the match is case-insensitive. May be overridden for a custom implementation of
+   * filter matching.
+   * @param data Data object used to check against the filter.
+   * @param filter Filter string that has been set on the data source.
+   * @returns Whether the filter matches against the data
+   */
+  filterPredicate: ((data: T, filter: string) => boolean) = (data: T, filter: string): boolean => {
+    // Transform the data into a lowercase string of all property values.
     const accumulator = (currentTerm, key) => currentTerm + data[key];
-    return Object.keys(data).reduce(accumulator, '').toLowerCase();
+    const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
+
+    // Transform the filter by converting it to lowercase and removing whitespace.
+    const transformedFilter = filter.trim().toLowerCase();
+
+    return dataStr.indexOf(transformedFilter) != -1;
   }
 
   constructor(initialData: T[] = []) {
+    super();
     this._data = new BehaviorSubject<T[]>(initialData);
     this._updateChangeSubscription();
   }
@@ -113,23 +181,31 @@ export class MatTableDataSource<T> implements DataSource<T> {
    */
   _updateChangeSubscription() {
     // Sorting and/or pagination should be watched if MatSort and/or MatPaginator are provided.
-    // Otherwise, use an empty observable stream to take their place.
-    const sortChange = this._sort ? this._sort.sortChange : empty();
-    const pageChange = this._paginator ? this._paginator.page : empty();
+    // The events should emit whenever the component emits a change or initializes, or if no
+    // component is provided, a stream with just a null event should be provided.
+    // The `sortChange` and `pageChange` acts as a signal to the combineLatests below so that the
+    // pipeline can progress to the next step. Note that the value from these streams are not used,
+    // they purely act as a signal to progress in the pipeline.
+    const sortChange: Observable<Sort|null> = this._sort ?
+        merge<Sort>(this._sort.sortChange, this._sort.initialized) :
+        observableOf(null);
+    const pageChange: Observable<PageEvent|null> = this._paginator ?
+        merge<PageEvent>(this._paginator.page, this._paginator.initialized) :
+        observableOf(null);
 
-    if (this._renderChangesSubscription) { this._renderChangesSubscription.unsubscribe(); }
-    this._renderChangesSubscription = RxChain.from(this._data)
+    const dataStream = this._data;
     // Watch for base data or filter changes to provide a filtered set of data.
-        .call(combineLatest, this._filter)
-        .call(map, ([data]) => this._filterData(data))
-        // Watch for filtered data or sort changes to provide an ordered set of data.
-        .call(combineLatest, startWith.call(sortChange, null))
-        .call(map, ([data]) => this._orderData(data))
-        // Watch for ordered data or page changes to provide a paged set of data.
-        .call(combineLatest, startWith.call(pageChange, null))
-        .call(map, ([data]) => this._pageData(data))
-        // Watched for paged data changes and send the result to the table to render.
-        .subscribe(data => this._renderData.next(data));
+    const filteredData = combineLatest(dataStream, this._filter)
+      .pipe(map(([data]) => this._filterData(data)));
+    // Watch for filtered data or sort changes to provide an ordered set of data.
+    const orderedData = combineLatest(filteredData, sortChange)
+      .pipe(map(([data]) => this._orderData(data)));
+    // Watch for ordered data or page changes to provide a paged set of data.
+    const paginatedData = combineLatest(orderedData, pageChange)
+      .pipe(map(([data]) => this._pageData(data)));
+    // Watched for paged data changes and send the result to the table to render.
+    this._renderChangesSubscription.unsubscribe();
+    this._renderChangesSubscription = paginatedData.subscribe(data => this._renderData.next(data));
   }
 
   /**
@@ -140,14 +216,13 @@ export class MatTableDataSource<T> implements DataSource<T> {
   _filterData(data: T[]) {
     // If there is a filter string, filter out data that does not contain it.
     // Each data object is converted to a string using the function defined by filterTermAccessor.
-    // May be overriden for customization.
-    const filteredData = !this.filter ? data : data.filter(obj => {
-      return this.filterTermAccessor(obj).indexOf(this.filter) != -1;
-    });
+    // May be overridden for customization.
+    this.filteredData =
+        !this.filter ? data : data.filter(obj => this.filterPredicate(obj, this.filter));
 
-    if (this.paginator) { this._updatePaginator(filteredData.length); }
+    if (this.paginator) { this._updatePaginator(this.filteredData.length); }
 
-    return filteredData;
+    return this.filteredData;
   }
 
   /**
@@ -157,16 +232,9 @@ export class MatTableDataSource<T> implements DataSource<T> {
    */
   _orderData(data: T[]): T[] {
     // If there is no active sort or direction, return the data without trying to sort.
-    if (!this.sort || !this.sort.active || this.sort.direction == '') { return data; }
+    if (!this.sort) { return data; }
 
-    const active = this.sort.active;
-    const direction = this.sort.direction;
-
-    return data.slice().sort((a, b) => {
-      let valueA = this.sortingDataAccessor(a, active);
-      let valueB = this.sortingDataAccessor(b, active);
-      return (valueA < valueB ? -1 : 1) * (direction == 'asc' ? 1 : -1);
-    });
+    return this.sortData(data.slice(), this.sort);
   }
 
   /**

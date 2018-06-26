@@ -6,10 +6,31 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+/** Cached result of whether the user's browser supports passive event listeners. */
+let supportsPassiveEvents: boolean;
+
+/**
+ * Checks whether the user's browser supports passive event listeners.
+ * See: https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
+ */
+export function supportsPassiveEventListeners(): boolean {
+  if (supportsPassiveEvents == null && typeof window !== 'undefined') {
+    try {
+      window.addEventListener('test', null!, Object.defineProperty({}, 'passive', {
+        get: () => supportsPassiveEvents = true
+      }));
+    } finally {
+      supportsPassiveEvents = supportsPassiveEvents || false;
+    }
+  }
+
+  return supportsPassiveEvents;
+}
+
 /** Cached result Set of input types support by the current browser. */
 let supportedInputTypes: Set<string>;
 
-/** Types of <input> that *might* be supported. */
+/** Types of `<input>` that *might* be supported. */
 const candidateInputTypes = [
   // `color` must come first. Chrome 56 shows a warning if we change the type to `color` after
   // first changing it to something else:

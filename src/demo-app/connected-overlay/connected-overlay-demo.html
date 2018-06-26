@@ -1,0 +1,112 @@
+<div style="height: 500px"></div>
+
+<div class="demo-options mat-typography">
+  <div>
+    <h2>Origin X</h2>
+    <mat-radio-group [(ngModel)]="originX">
+      <mat-radio-button value="start">start</mat-radio-button>
+      <mat-radio-button value="center">center</mat-radio-button>
+      <mat-radio-button value="end">end</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <div>
+    <h2>Origin Y</h2>
+    <mat-radio-group [(ngModel)]="originY">
+      <mat-radio-button value="top">top</mat-radio-button>
+      <mat-radio-button value="center">center</mat-radio-button>
+      <mat-radio-button value="bottom">bottom</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <div>
+    <h2>Overlay X</h2>
+    <mat-radio-group [(ngModel)]="overlayX">
+      <mat-radio-button value="start">start</mat-radio-button>
+      <mat-radio-button value="center">center</mat-radio-button>
+      <mat-radio-button value="end">end</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <div>
+    <h2>Overlay Y</h2>
+    <mat-radio-group [(ngModel)]="overlayY">
+      <mat-radio-button value="top">top</mat-radio-button>
+      <mat-radio-button value="center">center</mat-radio-button>
+      <mat-radio-button value="bottom">bottom</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <div>
+    <h2>Offsets</h2>
+
+    <p>
+      <label>
+        offsetX
+        <input type="number" [(ngModel)]="offsetX">
+      </label>
+    </p>
+
+    <p>
+      <label>
+        offsetY
+        <input type="number" [(ngModel)]="offsetY">
+      </label>
+    </p>
+  </div>
+
+  <div>
+    <h2>Options</h2>
+
+    <p>
+      <label>
+        Number of items in the overlay
+        <input type="number" [(ngModel)]="itemCount">
+      </label>
+    </p>
+
+    <p>
+      <label>
+        Item text
+        <input [(ngModel)]="itemText">
+      </label>
+    </p>
+
+    <div>
+      <mat-checkbox [(ngModel)]="isFlexible">Allow flexible dimensions</mat-checkbox>
+    </div>
+
+    <div>
+      <mat-checkbox [(ngModel)]="canPush">Allow push</mat-checkbox>
+    </div>
+
+    <div>
+      <mat-checkbox [checked]="showBoundingBox" [disabled]="!overlayRef"
+          (click)="toggleShowBoundingBox()">
+        Show bounding box
+      </mat-checkbox>
+    </div>
+  </div>
+
+  <div>
+    <button mat-raised-button type="button" (click)="close()" [disabled]="!overlayRef">Close</button>
+  </div>
+</div>
+
+<div class="demo-trigger">
+  <button mat-raised-button
+      cdkOverlayOrigin
+      type="button"
+      [disabled]="overlayRef"
+      (click)="openWithConfig()">Open</button>
+</div>
+
+<div style="height: 500px"></div>
+
+<ng-template #overlay>
+  <div class="demo-overlay">
+    <div style="overflow: auto;">
+      <ul><li *ngFor="let item of itemArray; index as i">{{itemText}} {{i}}</li></ul>
+    </div>
+  </div>
+</ng-template>

@@ -6,25 +6,25 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 
 /**
  * Class to be used to power selecting one or more options from a list.
  */
 export class SelectionModel<T> {
   /** Currently-selected values. */
-  private _selection: Set<T> = new Set();
+  private _selection = new Set<T>();
 
   /** Keeps track of the deselected options that haven't been emitted by the change event. */
   private _deselectedToEmit: T[] = [];
 
-  /** Keeps track of the selected option that haven't been emitted by the change event. */
+  /** Keeps track of the selected options that haven't been emitted by the change event. */
   private _selectedToEmit: T[] = [];
 
   /** Cache for the array value of the selected items. */
   private _selected: T[] | null;
 
-  /** Selected value(s). */
+  /** Selected values. */
   get selected(): T[] {
     if (!this._selected) {
       this._selected = Array.from(this._selection.values());
@@ -37,12 +37,12 @@ export class SelectionModel<T> {
   onChange: Subject<SelectionChange<T>> | null = this._emitChanges ? new Subject() : null;
 
   constructor(
-    private _isMulti = false,
+    private _multiple = false,
     initiallySelectedValues?: T[],
     private _emitChanges = true) {
 
-    if (initiallySelectedValues) {
-      if (_isMulti) {
+    if (initiallySelectedValues && initiallySelectedValues.length) {
+      if (_multiple) {
         initiallySelectedValues.forEach(value => this._markSelected(value));
       } else {
         this._markSelected(initiallySelectedValues[0]);
@@ -111,31 +111,41 @@ export class SelectionModel<T> {
    * Sorts the selected values based on a predicate function.
    */
   sort(predicate?: (a: T, b: T) => number): void {
-    if (this._isMulti && this._selected) {
-      this._selected.sort(predicate);
+    if (this._multiple && this.selected) {
+      this._selected!.sort(predicate);
     }
+  }
+
+  /**
+   * Gets whether multiple values can be selected.
+   */
+  isMultipleSelection() {
+    return this._multiple;
   }
 
   /** Emits a change event and clears the records of selected and deselected values. */
   private _emitChangeEvent() {
-    if (this._selectedToEmit.length || this._deselectedToEmit.length) {
-      let eventData = new SelectionChange(this._selectedToEmit, this._deselectedToEmit);
+    // Clear the selected values so they can be re-cached.
+    this._selected = null;
 
+    if (this._selectedToEmit.length || this._deselectedToEmit.length) {
       if (this.onChange) {
-        this.onChange.next(eventData);
+        this.onChange.next({
+          source: this,
+          added: this._selectedToEmit,
+          removed: this._deselectedToEmit
+        });
       }
 
       this._deselectedToEmit = [];
       this._selectedToEmit = [];
     }
-
-    this._selected = null;
   }
 
   /** Selects a value. */
   private _markSelected(value: T) {
     if (!this.isSelected(value)) {
-      if (!this._isMulti) {
+      if (!this._multiple) {
         this._unmarkAll();
       }
 
@@ -170,18 +180,23 @@ export class SelectionModel<T> {
    * including multiple values while the selection model is not supporting multiple values.
    */
   private _verifyValueAssignment(values: T[]) {
-    if (values.length > 1 && !this._isMulti) {
+    if (values.length > 1 && !this._multiple) {
       throw getMultipleValuesInSingleSelectionError();
     }
   }
 }
 
 /**
- * Describes an event emitted when the value of a MatSelectionModel has changed.
+ * Event emitted when the value of a MatSelectionModel has changed.
  * @docs-private
  */
-export class SelectionChange<T> {
-  constructor(public added?: T[], public removed?: T[]) { }
+export interface SelectionChange<T> {
+  /** Model that dispatched the event. */
+  source: SelectionModel<T>;
+  /** Options that were added to the model. */
+  added: T[];
+  /** Options that were removed from the model. */
+  removed: T[];
 }
 
 /**

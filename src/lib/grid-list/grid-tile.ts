@@ -9,7 +9,6 @@
 import {
   Component,
   ViewEncapsulation,
-  Renderer2,
   ElementRef,
   Input,
   ContentChildren,
@@ -31,31 +30,30 @@ import {coerceToNumber} from './grid-list-measure';
   templateUrl: 'grid-tile.html',
   styleUrls: ['grid-list.css'],
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatGridTile {
   _rowspan: number = 1;
   _colspan: number = 1;
 
-  constructor(private _renderer: Renderer2, private _element: ElementRef) {}
+  constructor(private _element: ElementRef) {}
 
   /** Amount of rows that the grid tile takes up. */
   @Input()
   get rowspan(): number { return this._rowspan; }
-  set rowspan(value) { this._rowspan = coerceToNumber(value); }
+  set rowspan(value: number) { this._rowspan = coerceToNumber(value); }
 
   /** Amount of columns that the grid tile takes up. */
   @Input()
   get colspan(): number { return this._colspan; }
-  set colspan(value) { this._colspan = coerceToNumber(value); }
+  set colspan(value: number) { this._colspan = coerceToNumber(value); }
 
   /**
    * Sets the style of the grid-tile element.  Needs to be set manually to avoid
    * "Changed after checked" errors that would occur with HostBinding.
    */
   _setStyle(property: string, value: any): void {
-    this._renderer.setStyle(this._element.nativeElement, property, value);
+    this._element.nativeElement.style[property] = value;
   }
 }
 
@@ -65,7 +63,6 @@ export class MatGridTile {
   templateUrl: 'grid-tile-text.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
 })
 export class MatGridTileText implements AfterContentInit {
   /**
@@ -75,10 +72,10 @@ export class MatGridTileText implements AfterContentInit {
   _lineSetter: MatLineSetter;
   @ContentChildren(MatLine) _lines: QueryList<MatLine>;
 
-  constructor(private _renderer: Renderer2, private _element: ElementRef) {}
+  constructor(private _element: ElementRef) {}
 
   ngAfterContentInit() {
-    this._lineSetter = new MatLineSetter(this._lines, this._renderer, this._element);
+    this._lineSetter = new MatLineSetter(this._lines, this._element);
   }
 }
 

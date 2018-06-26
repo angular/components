@@ -1,6 +1,15 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatSelectChange} from '@angular/material';
+
 
 @Component({
     moduleId: module.id,
@@ -21,7 +30,7 @@ export class SelectDemo {
   currentPokemonFromGroup: string;
   currentDigimon: string;
   latestChangeEvent: MatSelectChange;
-  floatPlaceholder: string = 'auto';
+  floatLabel = 'auto';
   foodControl = new FormControl('pizza-1');
   topHeightCtrl = new FormControl(0);
   drinksTheme = 'primary';
@@ -52,7 +61,7 @@ export class SelectDemo {
     {value: 'charizard-1', viewValue: 'Charizard'},
     {value: 'squirtle-2', viewValue: 'Squirtle'},
     {value: 'pikachu-3', viewValue: 'Pikachu'},
-    {value: 'eevee-4', viewValue: 'Eevee'},
+    {value: 'jigglypuff-4', viewValue: 'Jigglypuff with a really long name that will truncate'},
     {value: 'ditto-5', viewValue: 'Ditto'},
     {value: 'psyduck-6', viewValue: 'Psyduck'},
   ];
@@ -67,44 +76,44 @@ export class SelectDemo {
     {
       name: 'Grass',
       pokemon: [
-        { value: 'bulbasaur-0', viewValue: 'Bulbasaur' },
-        { value: 'oddish-1', viewValue: 'Oddish' },
-        { value: 'bellsprout-2', viewValue: 'Bellsprout' }
+        {value: 'bulbasaur-0', viewValue: 'Bulbasaur'},
+        {value: 'oddish-1', viewValue: 'Oddish'},
+        {value: 'bellsprout-2', viewValue: 'Bellsprout'}
       ]
     },
     {
       name: 'Water',
       pokemon: [
-        { value: 'squirtle-3', viewValue: 'Squirtle' },
-        { value: 'psyduck-4', viewValue: 'Psyduck' },
-        { value: 'horsea-5', viewValue: 'Horsea' }
+        {value: 'squirtle-3', viewValue: 'Squirtle'},
+        {value: 'psyduck-4', viewValue: 'Psyduck'},
+        {value: 'horsea-5', viewValue: 'Horsea'}
       ]
     },
     {
       name: 'Fire',
       disabled: true,
       pokemon: [
-        { value: 'charmander-6', viewValue: 'Charmander' },
-        { value: 'vulpix-7', viewValue: 'Vulpix' },
-        { value: 'flareon-8', viewValue: 'Flareon' }
+        {value: 'charmander-6', viewValue: 'Charmander'},
+        {value: 'vulpix-7', viewValue: 'Vulpix'},
+        {value: 'flareon-8', viewValue: 'Flareon'}
       ]
     },
     {
       name: 'Psychic',
       pokemon: [
-        { value: 'mew-9', viewValue: 'Mew' },
-        { value: 'mewtwo-10', viewValue: 'Mewtwo' },
+        {value: 'mew-9', viewValue: 'Mew'},
+        {value: 'mewtwo-10', viewValue: 'Mewtwo'},
       ]
     }
   ];
 
   digimon = [
-    { value: 'mihiramon-0', viewValue: 'Mihiramon' },
-    { value: 'sandiramon-1', viewValue: 'Sandiramon' },
-    { value: 'sinduramon-2', viewValue: 'Sinduramon' },
-    { value: 'pajiramon-3', viewValue: 'Pajiramon' },
-    { value: 'vajiramon-4', viewValue: 'Vajiramon' },
-    { value: 'indramon-5', viewValue: 'Indramon' }
+    {value: 'mihiramon-0', viewValue: 'Mihiramon'},
+    {value: 'sandiramon-1', viewValue: 'Sandiramon'},
+    {value: 'sinduramon-2', viewValue: 'Sinduramon'},
+    {value: 'pajiramon-3', viewValue: 'Pajiramon'},
+    {value: 'vajiramon-4', viewValue: 'Vajiramon'},
+    {value: 'indramon-5', viewValue: 'Indramon'}
   ];
 
   toggleDisabled() {
@@ -112,7 +121,7 @@ export class SelectDemo {
   }
 
   setPokemonValue() {
-    this.currentPokemon = ['eevee-4', 'psyduck-6'];
+    this.currentPokemon = ['jigglypuff-4', 'psyduck-6'];
   }
 
   reassignDrinkByCopy() {

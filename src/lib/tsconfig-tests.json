@@ -13,8 +13,17 @@
       "@angular/cdk/*": ["../../dist/packages/cdk/*/public-api"]
     }
   },
+  "angularCompilerOptions": {
+    "strictMetadataEmit": true,
+    "skipTemplateCodegen": true,
+    "emitDecoratorMetadata": true,
+    "fullTemplateTypeCheck": true
+  },
   "include": [
     "**/*.spec.ts",
     "index.ts"
-  ]
+  ],
+  "exclude": [
+    "**/schematics/**/*.ts",
+  ],
 }

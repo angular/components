@@ -6,15 +6,26 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {InjectionToken, LOCALE_ID} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
-
+import {inject, InjectionToken, LOCALE_ID} from '@angular/core';
+import {Observable, Subject} from 'rxjs';
 
 /** InjectionToken for datepicker that can be used to override default locale code. */
-export const MAT_DATE_LOCALE = new InjectionToken<string>('MAT_DATE_LOCALE');
+export const MAT_DATE_LOCALE = new InjectionToken<string>('MAT_DATE_LOCALE', {
+  providedIn: 'root',
+  factory: MAT_DATE_LOCALE_FACTORY,
+});
 
-/** Provider for MAT_DATE_LOCALE injection token. */
+/** @docs-private */
+export function MAT_DATE_LOCALE_FACTORY(): string {
+  return inject(LOCALE_ID);
+}
+
+/**
+ * No longer needed since MAT_DATE_LOCALE has been changed to a scoped injectable.
+ * If you are importing and providing this in your code you can simply remove it.
+ * @deprecated
+ * @deletion-target 7.0.0
+ */
 export const MAT_DATE_LOCALE_PROVIDER = {provide: MAT_DATE_LOCALE, useExisting: LOCALE_ID};
 
 /** Adapts type `D` to be usable as a date by cdk-based components that work with dates. */
@@ -24,7 +35,7 @@ export abstract class DateAdapter<D> {
 
   /** A stream that emits when the locale changes. */
   get localeChanges(): Observable<void> { return this._localeChanges; }
-  protected _localeChanges= new Subject<void>();
+  protected _localeChanges = new Subject<void>();
 
   /**
    * Gets the year component of the given date.
@@ -118,7 +129,7 @@ export abstract class DateAdapter<D> {
   abstract today(): D;
 
   /**
-   * Parses a date from a value.
+   * Parses a date from a user-provided value.
    * @param value The value to parse.
    * @param parseFormat The expected format of the value being parsed
    *     (type is implementation-dependent).
@@ -127,7 +138,7 @@ export abstract class DateAdapter<D> {
   abstract parse(value: any, parseFormat: any): D | null;
 
   /**
-   * Formats a date as a string.
+   * Formats a date as a string according to the given format.
    * @param date The value to format.
    * @param displayFormat The format to use to display the date as a string.
    * @returns The formatted date string.
@@ -165,17 +176,12 @@ export abstract class DateAdapter<D> {
 
   /**
    * Gets the RFC 3339 compatible string (https://tools.ietf.org/html/rfc3339) for the given date.
+   * This method is used to generate date strings that are compatible with native HTML attributes
+   * such as the `min` or `max` attribute of an `<input>`.
    * @param date The date to get the ISO date string for.
    * @returns The ISO date string date string.
    */
   abstract toIso8601(date: D): string;
-
-  /**
-   * Creates a date from an RFC 3339 compatible string (https://tools.ietf.org/html/rfc3339).
-   * @param iso8601String The ISO date string to create a date from
-   * @returns The date created from the ISO date string.
-   */
-  abstract fromIso8601(iso8601String: string): D | null;
 
   /**
    * Checks whether the given object is considered a date instance by this DateAdapter.
@@ -190,6 +196,31 @@ export abstract class DateAdapter<D> {
    * @returns Whether the date is valid.
    */
   abstract isValid(date: D): boolean;
+
+  /**
+   * Gets date instance that is not valid.
+   * @returns An invalid date.
+   */
+  abstract invalid(): D;
+
+  /**
+   * Attempts to deserialize a value to a valid date object. This is different from parsing in that
+   * deserialize should only accept non-ambiguous, locale-independent formats (e.g. a ISO 8601
+   * string). The default implementation does not allow any deserialization, it simply checks that
+   * the given value is already a valid date object or null. The `<mat-datepicker>` will call this
+   * method on all of it's `@Input()` properties that accept dates. It is therefore possible to
+   * support passing values from your backend directly to these properties by overriding this method
+   * to also deserialize the format used by your backend.
+   * @param value The value to be deserialized into a date object.
+   * @returns The deserialized date object, either a valid date, null if the value can be
+   *     deserialized into a null date (e.g. the empty string), or an invalid date.
+   */
+  deserialize(value: any): D | null {
+    if (value == null || this.isDateInstance(value) && this.isValid(value)) {
+      return value;
+    }
+    return this.invalid();
+  }
 
   /**
    * Sets the locale used for all dates.
@@ -217,11 +248,19 @@ export abstract class DateAdapter<D> {
    * Checks if two dates are equal.
    * @param first The first date to check.
    * @param second The second date to check.
-   * @returns {boolean} Whether the two dates are equal.
+   * @returns Whether the two dates are equal.
    *     Null dates are considered equal to other null dates.
    */
   sameDate(first: D | null, second: D | null): boolean {
-    return first && second ? !this.compareDate(first, second) : first == second;
+    if (first && second) {
+      let firstValid = this.isValid(first);
+      let secondValid = this.isValid(second);
+      if (firstValid && secondValid) {
+        return !this.compareDate(first, second);
+      }
+      return firstValid == secondValid;
+    }
+    return first == second;
   }
 
   /**

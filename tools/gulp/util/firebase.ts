@@ -5,7 +5,7 @@ const cloudStorage = require('@google-cloud/storage');
 // Firebase configuration for the Screenshot project. Use the config from the screenshot functions.
 const screenshotFirebaseConfig = require('../../screenshot-test/functions/config.json');
 
-/** Database URL of the dashboard firebase project.*/
+/** Database URL of the dashboard firebase project. */
 const dashboardDatabaseUrl = 'https://material2-board.firebaseio.com';
 
 /** Opens a connection to the Firebase dashboard app using a service account. */
@@ -19,7 +19,7 @@ export function openFirebaseDashboardApp() {
       client_email: 'material2-board@appspot.gserviceaccount.com',
       // In Travis CI the private key will be incorrect because the line-breaks are escaped.
       // The line-breaks need to persist in the service account private key.
-      private_key: decode(process.env['MATERIAL2_BOARD_FIREBASE_SERVICE_KEY'])
+      private_key: decode(process.env['MATERIAL2_BOARD_FIREBASE_SERVICE_KEY']!)
     }),
   });
 }
@@ -38,7 +38,7 @@ export function openScreenshotsBucket() {
     projectId: 'material2-screenshots',
     credentials: {
       client_email: 'firebase-adminsdk-t4209@material2-screenshots.iam.gserviceaccount.com',
-      private_key: decode(process.env['MATERIAL2_SCREENSHOT_FIREBASE_KEY'])
+      private_key: decode(process.env['MATERIAL2_SCREENSHOT_FIREBASE_KEY']!)
     },
   });
 

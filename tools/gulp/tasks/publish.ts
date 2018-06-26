@@ -11,11 +11,24 @@ import * as minimist from 'minimist';
 export const releasePackages = [
   'cdk',
   'material',
+  'cdk-experimental',
+  'material-experimental',
   'material-moment-adapter'
 ];
 
+/** Regular Expression that matches valid version numbers of Angular Material. */
+export const validVersionRegex = /^\d+\.\d+\.\d+(-(alpha|beta|rc)\.\d+)?$/;
+
 /** Parse command-line arguments for release task. */
 const argv = minimist(process.argv.slice(3));
+
+task('publish', sequenceTask(
+  ':publish:whoami',
+  ':publish:build-releases',
+  'validate-release:check-bundles',
+  ':publish',
+  ':publish:logout',
+));
 
 /** Task that builds all releases that will be published. */
 task(':publish:build-releases', sequenceTask(
@@ -31,8 +44,55 @@ task(':publish:whoami', execTask('npm', ['whoami'], {
 
 task(':publish:logout', execTask('npm', ['logout']));
 
+task(':publish', async () => {
+  const tag = argv['tag'];
+  const version = buildConfig.projectVersion;
+  const currentDir = process.cwd();
 
-function _execNpmPublish(label: string, packageName: string): Promise<{}> | undefined {
+  if (!version.match(validVersionRegex)) {
+    console.log(red(`Error: Cannot publish due to an invalid version name. Version "${version}" ` +
+      `is not following our semver format.`));
+    console.log(yellow(`A version should follow this format: d.d.d, d.d.d-beta.x, d.d.d-alpha.x, ` +
+        `d.d.d-rc.x`));
+    return;
+  }
+
+  console.log('');
+  if (!tag) {
+    console.log(grey('> You can specify the tag by passing --tag=labelName.\n'));
+    console.log(green(`Publishing version "${version}" to the latest tag...`));
+  } else {
+    console.log(yellow(`Publishing version "${version}" to the ${tag} tag...`));
+  }
+  console.log('');
+
+
+  if (version.match(/(alpha|beta|rc)/) && (!tag || tag === 'latest')) {
+    console.log(red(`Publishing ${version} to the "latest" tag is not allowed.`));
+    console.log(red(`Alpha, Beta or RC versions shouldn't be published to "latest".`));
+    console.log();
+    return;
+  }
+
+  if (releasePackages.length > 1) {
+    console.warn(red('Warning: Multiple packages will be released if proceeding.'));
+    console.warn(red('Warning: Packages to be released:', releasePackages.join(', ')));
+    console.log();
+  }
+
+  console.log(yellow('> Make sure to check the "angularVersion" in the build config.'));
+  console.log(yellow('> The version in the config defines the peer dependency of Angular.'));
+  console.log();
+
+  // Iterate over every declared release package and publish it on NPM.
+  for (const packageName of releasePackages) {
+    await _execNpmPublish(tag, packageName);
+  }
+
+  process.chdir(currentDir);
+});
+
+function _execNpmPublish(tag: string, packageName: string): Promise<{}> | undefined {
   const packageDir = join(buildConfig.outputDir, 'releases', packageName);
 
   if (!statSync(packageDir).isDirectory()) {
@@ -53,8 +113,8 @@ function _execNpmPublish(label: string, packageName: string): Promise<{}> | unde
   const command = 'npm';
   const args = ['publish', '--access', 'public'];
 
-  if (label) {
-    args.push('--tag', label);
+  if (tag) {
+    args.push('--tag', tag);
   }
 
   return new Promise((resolve, reject) => {
@@ -81,37 +141,3 @@ function _execNpmPublish(label: string, packageName: string): Promise<{}> | unde
     });
   });
 }
-
-task(':publish', async () => {
-  const label = argv['tag'];
-  const currentDir = process.cwd();
-
-  console.log('');
-  if (!label) {
-    console.log(yellow('You can use a label with --tag=labelName.'));
-    console.log(yellow('Publishing using the latest tag.'));
-  } else {
-    console.log(yellow(`Publishing using the ${label} tag.`));
-  }
-  console.log('');
-
-  if (releasePackages.length > 1) {
-    console.warn(red('Warning: Multiple packages will be released if proceeding.'));
-    console.warn(red('Warning: Packages to be released: ', releasePackages.join(', ')));
-  }
-
-  // Iterate over every declared release package and publish it on NPM.
-  for (const packageName of releasePackages) {
-    await _execNpmPublish(label, packageName);
-  }
-
-  process.chdir(currentDir);
-});
-
-task('publish', sequenceTask(
-  ':publish:whoami',
-  ':publish:build-releases',
-  'validate-release:check-bundles',
-  ':publish',
-  ':publish:logout',
-));

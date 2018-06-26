@@ -6,16 +6,20 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {OverlayRef} from '../overlay-ref';
+import {OverlayReference} from '../overlay-reference';
 
 /**
- * Describes a strategy that will be used by an overlay
- * to handle scroll events while it is open.
+ * Describes a strategy that will be used by an overlay to handle scroll events while it is open.
  */
 export interface ScrollStrategy {
+  /** Enable this scroll strategy (called when the attached overlay is attached to a portal). */
   enable: () => void;
+
+  /** Disable this scroll strategy (called when the attached overlay is detached from a portal). */
   disable: () => void;
-  attach: (overlayRef: OverlayRef) => void;
+
+  /** Attaches this `ScrollStrategy` to an overlay. */
+  attach: (overlayRef: OverlayReference) => void;
 }
 
 /**

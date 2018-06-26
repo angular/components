@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterViewInit,
@@ -16,10 +17,11 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  Inject,
   Input,
   OnDestroy,
+  Optional,
   Output,
-  Renderer2,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -36,7 +38,8 @@ import {
   mixinTabIndex,
   RippleRef,
 } from '@angular/material/core';
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {MAT_CHECKBOX_CLICK_ACTION, MatCheckboxClickAction} from './checkbox-config';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
 // Increasing integer for generating unique ids for checkbox components.
@@ -79,7 +82,7 @@ export class MatCheckboxChange {
 // Boilerplate for applying mixins to MatCheckbox.
 /** @docs-private */
 export class MatCheckboxBase {
-  constructor(public _renderer: Renderer2, public _elementRef: ElementRef) {}
+  constructor(public _elementRef: ElementRef) {}
 }
 export const _MatCheckboxMixinBase =
   mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatCheckboxBase)), 'accent'));
@@ -91,7 +94,7 @@ export const _MatCheckboxMixinBase =
  * disabled. Note that all additional accessibility attributes are taken care of by the component,
  * so there is no need to provide them yourself. However, if you want to omit a label and still
  * have the checkbox be accessible, you may supply an [aria-label] input.
- * See: https://www.google.com/design/spec/components/selection-controls.html
+ * See: https://material.io/design/components/selection-controls.html
  */
 @Component({
   moduleId: module.id,
@@ -106,11 +109,11 @@ export const _MatCheckboxMixinBase =
     '[class.mat-checkbox-checked]': 'checked',
     '[class.mat-checkbox-disabled]': 'disabled',
     '[class.mat-checkbox-label-before]': 'labelPosition == "before"',
+    '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
   },
   providers: [MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR],
-  inputs: ['disabled', 'disableRipple', 'color', 'tabIndex'],
+  inputs: ['disableRipple', 'color', 'tabIndex'],
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAccessor,
@@ -135,27 +138,11 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   /** Returns the unique id for the visual hidden input. */
   get inputId(): string { return `${this.id || this._uniqueId}-input`; }
 
-  private _required: boolean;
-
   /** Whether the checkbox is required. */
   @Input()
   get required(): boolean { return this._required; }
-  set required(value) { this._required = coerceBooleanProperty(value); }
-
-  /**
-   * Whether or not the checkbox should appear before or after the label.
-   * @deprecated
-   */
-  @Input()
-  get align(): 'start' | 'end' {
-    // align refers to the checkbox relative to the label, while labelPosition refers to the
-    // label relative to the checkbox. As such, they are inverted.
-    return this.labelPosition == 'after' ? 'start' : 'end';
-  }
-
-  set align(v) {
-    this.labelPosition = (v == 'start') ? 'after' : 'before';
-  }
+  set required(value: boolean) { this._required = coerceBooleanProperty(value); }
+  private _required: boolean;
 
   /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
   @Input() labelPosition: 'before' | 'after' = 'after';
@@ -164,52 +151,51 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   @Input() name: string | null = null;
 
   /** Event emitted when the checkbox's `checked` value changes. */
-  @Output() change: EventEmitter<MatCheckboxChange> = new EventEmitter<MatCheckboxChange>();
+  @Output() readonly change: EventEmitter<MatCheckboxChange> =
+      new EventEmitter<MatCheckboxChange>();
 
   /** Event emitted when the checkbox's `indeterminate` value changes. */
-  @Output() indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() readonly indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** The value attribute of the native input element */
   @Input() value: string;
 
-  /** The native `<input type="checkbox"> element */
+  /** The native `<input type="checkbox">` element */
   @ViewChild('input') _inputElement: ElementRef;
 
-  /** Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor. */
-  @ViewChild(MatRipple) _ripple: MatRipple;
+  /** Reference to the ripple instance of the checkbox. */
+  @ViewChild(MatRipple) ripple: MatRipple;
 
   /**
    * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
    * @docs-private
    */
-  onTouched: () => any = () => {};
+  _onTouched: () => any = () => {};
 
   private _currentAnimationClass: string = '';
 
   private _currentCheckState: TransitionCheckState = TransitionCheckState.Init;
-
-  private _checked: boolean = false;
-
-  private _indeterminate: boolean = false;
 
   private _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
   /** Reference to the focused state ripple. */
   private _focusRipple: RippleRef | null;
 
-  constructor(renderer: Renderer2,
-              elementRef: ElementRef,
+  constructor(elementRef: ElementRef,
               private _changeDetectorRef: ChangeDetectorRef,
               private _focusMonitor: FocusMonitor,
-              @Attribute('tabindex') tabIndex: string) {
-    super(renderer, elementRef);
+              @Attribute('tabindex') tabIndex: string,
+              @Optional() @Inject(MAT_CHECKBOX_CLICK_ACTION)
+                  private _clickAction: MatCheckboxClickAction,
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+    super(elementRef);
 
     this.tabIndex = parseInt(tabIndex) || 0;
   }
 
   ngAfterViewInit() {
     this._focusMonitor
-      .monitor(this._inputElement.nativeElement, this._renderer, false)
+      .monitor(this._inputElement.nativeElement)
       .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
   }
 
@@ -220,16 +206,29 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   /**
    * Whether the checkbox is checked.
    */
-  @Input() get checked() {
-    return this._checked;
-  }
-
-  set checked(checked: boolean) {
-    if (checked != this.checked) {
-      this._checked = checked;
+  @Input()
+  get checked(): boolean { return this._checked; }
+  set checked(value: boolean) {
+    if (value != this.checked) {
+      this._checked = value;
       this._changeDetectorRef.markForCheck();
     }
   }
+  private _checked: boolean = false;
+
+  /**
+   * Whether the checkbox is disabled. This fully overrides the implementation provided by
+   * mixinDisabled, but the mixin is still required because mixinTabIndex requires it.
+   */
+  @Input()
+  get disabled() { return this._disabled; }
+  set disabled(value: any) {
+    if (value != this.disabled) {
+      this._disabled = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+  private _disabled: boolean = false;
 
   /**
    * Whether the checkbox is indeterminate. This is also known as "mixed" mode and can be used to
@@ -237,13 +236,11 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
    * checkable items. Note that whenever checkbox is manually clicked, indeterminate is immediately
    * set to false.
    */
-  @Input() get indeterminate() {
-    return this._indeterminate;
-  }
-
-  set indeterminate(indeterminate: boolean) {
-    let changed =  indeterminate != this._indeterminate;
-    this._indeterminate = indeterminate;
+  @Input()
+  get indeterminate(): boolean { return this._indeterminate; }
+  set indeterminate(value: boolean) {
+    const changed = value != this._indeterminate;
+    this._indeterminate = value;
 
     if (changed) {
       if (this._indeterminate) {
@@ -255,6 +252,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
       this.indeterminateChange.emit(this._indeterminate);
     }
   }
+  private _indeterminate: boolean = false;
 
   _isRippleDisabled() {
     return this.disableRipple || this.disabled;
@@ -268,51 +266,39 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     this._changeDetectorRef.markForCheck();
   }
 
-  /**
-   * Sets the model value. Implemented as part of ControlValueAccessor.
-   * @param value Value to be set to the model.
-   */
+  // Implemented as part of ControlValueAccessor.
   writeValue(value: any) {
     this.checked = !!value;
   }
 
-  /**
-   * Registers a callback to be triggered when the value has changed.
-   * Implemented as part of ControlValueAccessor.
-   * @param fn Function to be called on change.
-   */
+  // Implemented as part of ControlValueAccessor.
   registerOnChange(fn: (value: any) => void) {
     this._controlValueAccessorChangeFn = fn;
   }
 
-  /**
-   * Registers a callback to be triggered when the control has been touched.
-   * Implemented as part of ControlValueAccessor.
-   * @param fn Callback to be triggered when the checkbox is touched.
-   */
+  // Implemented as part of ControlValueAccessor.
   registerOnTouched(fn: any) {
-    this.onTouched = fn;
+    this._onTouched = fn;
   }
 
-  /**
-   * Sets the checkbox's disabled state. Implemented as a part of ControlValueAccessor.
-   * @param isDisabled Whether the checkbox should be disabled.
-   */
+  // Implemented as part of ControlValueAccessor.
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
-    this._changeDetectorRef.markForCheck();
+  }
+
+  _getAriaChecked(): 'true' | 'false' | 'mixed' {
+    return this.checked ? 'true' : (this.indeterminate ? 'mixed' : 'false');
   }
 
   private _transitionCheckState(newState: TransitionCheckState) {
     let oldState = this._currentCheckState;
-    let renderer = this._renderer;
-    let elementRef = this._elementRef;
+    let element: HTMLElement = this._elementRef.nativeElement;
 
     if (oldState === newState) {
       return;
     }
     if (this._currentAnimationClass.length > 0) {
-      renderer.removeClass(elementRef.nativeElement, this._currentAnimationClass);
+      element.classList.remove(this._currentAnimationClass);
     }
 
     this._currentAnimationClass = this._getAnimationClassForCheckStateTransition(
@@ -320,7 +306,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     this._currentCheckState = newState;
 
     if (this._currentAnimationClass.length > 0) {
-      renderer.addClass(elementRef.nativeElement, this._currentAnimationClass);
+      element.classList.add(this._currentAnimationClass);
     }
   }
 
@@ -335,11 +321,16 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
   /** Function is called whenever the focus changes for the input element. */
   private _onInputFocusChange(focusOrigin: FocusOrigin) {
+    // TODO(paul): support `program`. See https://github.com/angular/material2/issues/9889
     if (!this._focusRipple && focusOrigin === 'keyboard') {
-      this._focusRipple = this._ripple.launch(0, 0, {persistent: true, centered: true});
+      this._focusRipple = this.ripple.launch(0, 0, {persistent: true});
     } else if (!focusOrigin) {
-      this._removeFocusRipple();
-      this.onTouched();
+      if (this._focusRipple) {
+        this._focusRipple.fadeOut();
+        this._focusRipple = null;
+      }
+
+      this._onTouched();
     }
   }
 
@@ -365,11 +356,11 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     // Preventing bubbling for the second event will solve that issue.
     event.stopPropagation();
 
-    this._removeFocusRipple();
-
-    if (!this.disabled) {
+    // If resetIndeterminate is false, and the current state is indeterminate, do nothing on click
+    if (!this.disabled && this._clickAction !== 'noop') {
       // When user manually click on the checkbox, `indeterminate` is set to false.
-      if (this._indeterminate) {
+      if (this.indeterminate && this._clickAction !== 'check') {
+
         Promise.resolve().then(() => {
           this._indeterminate = false;
           this.indeterminateChange.emit(this._indeterminate);
@@ -378,12 +369,17 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
       this.toggle();
       this._transitionCheckState(
-        this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
+          this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
 
       // Emit our custom change event if the native input emitted one.
       // It is important to only emit it, if the native input triggered one, because
       // we don't want to trigger a change event, when the `checked` variable changes for example.
       this._emitChangeEvent();
+    } else if (!this.disabled && this._clickAction === 'noop') {
+      // Reset native input when clicked with noop. The native checkbox becomes checked after
+      // click, reset it to be align with `checked` value of `mat-checkbox`.
+      this._inputElement.nativeElement.checked = this.checked;
+      this._inputElement.nativeElement.indeterminate = this.indeterminate;
     }
   }
 
@@ -401,6 +397,11 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
   private _getAnimationClassForCheckStateTransition(
       oldState: TransitionCheckState, newState: TransitionCheckState): string {
+    // Don't transition if animations are disabled.
+    if (this._animationMode === 'NoopAnimations') {
+      return '';
+    }
+
     let animSuffix: string = '';
 
     switch (oldState) {
@@ -430,13 +431,5 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     }
 
     return `mat-checkbox-anim-${animSuffix}`;
-  }
-
-  /** Fades out the focus state ripple. */
-  private _removeFocusRipple(): void {
-    if (this._focusRipple) {
-      this._focusRipple.fadeOut();
-      this._focusRipple = null;
-    }
   }
 }

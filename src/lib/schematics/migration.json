@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    // Update from v5 to v6
+    "migration-01": {
+      "version": "6.0.0-rc.12",
+      "description": "Updates Angular Material from v5 to v6",
+      "factory": "./update/update"
+    },
+    "ng-post-update": {
+      "description": "Performs cleanup after ng-update.",
+      "factory": "./update/update#postUpdate",
+      "private": true
+    },
+    "ng-post-post-update": {
+      "description": "Logs completion message for ng-update after ng-post-update.",
+      "factory": "./update/update#postPostUpdate",
+      "private": true
+    }
+  }
+}

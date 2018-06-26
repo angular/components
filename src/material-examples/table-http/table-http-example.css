@@ -1,40 +1,16 @@
 /* Structure */
 .example-container {
-  display: flex;
-  flex-direction: column;
-  max-height: 500px;
-  min-width: 300px;
   position: relative;
 }
 
-.example-header {
-  min-height: 64px;
-  display: flex;
-  align-items: center;
-  padding-left: 24px;
-  font-size: 20px;
-}
-
-.example-table {
+.example-table-container {
+  position: relative;
+  max-height: 400px;
   overflow: auto;
-  min-height: 300px;
 }
 
-.mat-column-title {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
-  overflow: hidden;
-}
-
-/* Column Widths */
-.mat-column-number,
-.mat-column-state {
-  max-width: 64px;
-}
-
-.mat-column-created {
-  max-width: 124px;
+table {
+  width: 100%;
 }
 
 .example-loading-shade {
@@ -54,4 +30,14 @@
   color: #980000;
   max-width: 360px;
   text-align: center;
+}
+
+/* Column Widths */
+.mat-column-number,
+.mat-column-state {
+  max-width: 64px;
+}
+
+.mat-column-created {
+  max-width: 124px;
 }

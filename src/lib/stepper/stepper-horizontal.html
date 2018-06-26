@@ -3,16 +3,19 @@
     <mat-step-header  class="mat-horizontal-stepper-header"
                      (click)="step.select()"
                      (keydown)="_onKeydown($event)"
-                     [tabIndex]="_focusIndex === i ? 0 : -1"
+                     [tabIndex]="_getFocusIndex() === i ? 0 : -1"
                      [id]="_getStepLabelId(i)"
+                     [attr.aria-posinset]="i + 1"
+                     [attr.aria-setsize]="_steps.length"
                      [attr.aria-controls]="_getStepContentId(i)"
                      [attr.aria-selected]="selectedIndex == i"
                      [index]="i"
-                     [icon]="_getIndicatorType(i)"
+                     [state]="_getIndicatorType(i)"
                      [label]="step.stepLabel || step.label"
                      [selected]="selectedIndex === i"
                      [active]="step.completed || selectedIndex === i || !linear"
-                     [optional]="step.optional">
+                     [optional]="step.optional"
+                     [iconOverrides]="_iconOverrides">
     </mat-step-header>
     <div *ngIf="!isLast" class="mat-stepper-horizontal-line"></div>
   </ng-container>
@@ -22,6 +25,7 @@
   <div *ngFor="let step of _steps; let i = index"
        class="mat-horizontal-stepper-content" role="tabpanel"
        [@stepTransition]="_getAnimationDirection(i)"
+       (@stepTransition.done)="_animationDone($event)"
        [id]="_getStepContentId(i)"
        [attr.aria-labelledby]="_getStepLabelId(i)"
        [attr.aria-expanded]="selectedIndex === i">

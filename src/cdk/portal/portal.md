@@ -1,36 +1,38 @@
+The `portals` package provides a flexible system for rendering dynamic content into an application.
+
 ### Portals
-A `Portal `is a piece of UI that can be dynamically rendered to an open slot on the page.
+A `Portal` is a piece of UI that can be dynamically rendered to an open slot on the page.
 
-The "piece of UI" can be either a `Component` or a `TemplateRef` and the "open slot" is 
-a `PortalHost`.
+The "piece of UI" can be either a `Component` or a `TemplateRef` and the "open slot" is
+a `PortalOutlet`.
 
-Portals and PortalHosts are low-level building blocks that other concepts, such as overlays, are
+Portals and PortalOutlets are low-level building blocks that other concepts, such as overlays, are
 built upon.
 
 ##### `Portal<T>`
-| Method | Description |
-| --- | --- |
-| `attach(PortalHost): Promise<T>` | Attaches the portal to a host. |
-| `detach(): Promise<void>` | Detaches the portal from its host. |
-| `isAttached: boolean` | Whether the portal is attached. |
+| Method                      | Description                         |
+| --------------------------- | ----------------------------------- |
+| `attach(PortalOutlet): T`   | Attaches the portal to a host.      |
+| `detach(): void`            | Detaches the portal from its host.  |
+| `isAttached: boolean`       | Whether the portal is attached.     |
 
-##### `PortalHost`
-| Method | Description |
-| --- | --- |
-| `attach(Portal): Promise<void>` | Attaches a portal to the host. |
-| `detach(): Promise<void>` | Detaches the portal from the host. |
-| `dispose(): Promise<void>` | Permanently dispose the host. |
-| `hasAttached: boolean` | Whether a portal is attached to the host. |
+##### `PortalOutlet`
+| Method                  | Description                                 |
+| ----------------------- | ------------------------------------------- |
+| `attach(Portal): any`   | Attaches a portal to the host.              |
+| `detach(): any`         | Detaches the portal from the host.          |
+| `dispose(): void`       | Permanently dispose the host.               |
+| `hasAttached: boolean`  | Whether a portal is attached to the host.   |
 
 
 #### Portals in practice
 
-##### `TemplatePortalDirective`
-Used to get a portal from an `<ng-template>`. `TemplatePortalDirectives` *is* a `Portal`.
+##### `CdkPortal`
+Used to get a portal from an `<ng-template>`. `CdkPortal` *is* a `Portal`.
 
 Usage:
 ```html
-<ng-template cdk-portal>
+<ng-template cdkPortal>
   <p>The content of this template is captured by the portal.</p>
 </ng-template>
 
@@ -43,7 +45,7 @@ Usage:
 ```
 
 A component can use `@ViewChild` or `@ViewChildren` to get a reference to a
-`TemplatePortalDirective`.
+`CdkPortal`.
 
 ##### `ComponentPortal`
 Used to create a portal from a component type. When a component is dynamically created using
@@ -55,11 +57,11 @@ this.userSettingsPortal = new ComponentPortal(UserSettingsComponent);
 ```
 
 
-##### `PortalHostDirective`
-Used to add a portal host to a template. `PortalHostDirective` *is* a `PortalHost`.
+##### `CdkPortalOutlet`
+Used to add a portal outlet to a template. `CdkPortalOutlet` *is* a `PortalOutlet`.
 
 Usage:
 ```html
 <!-- Attaches the `userSettingsPortal` from the previous example. -->
-<ng-template [cdkPortalHost]="userSettingsPortal"></ng-template>
+<ng-template [cdkPortalOutlet]="userSettingsPortal"></ng-template>
 ```

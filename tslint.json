@@ -1,6 +1,7 @@
 {
   "rulesDirectory": [
-    "./tools/tslint-rules/"
+    "./tools/tslint-rules/",
+    "node_modules/codelyzer"
   ],
   "rules": {
     "max-line-length": [true, 100],
@@ -76,37 +77,59 @@
       ["fdescribe"],
       ["xit"],
       ["xdescribe"],
-      { "name": "HostBinding", "message": "Use `host` in the component definition instead." },
-      { "name": "HostListener", "message": "Use `host` in the component definition instead." }
+      {"name": "Object.assign", "message": "Use the spread operator instead."}
     ],
-    // Disallows importing the whole RxJS library. Submodules can be still imported.
-    "import-blacklist": [true, "rxjs"],
     // Avoids inconsistent linebreak styles in source files. Forces developers to use LF linebreaks.
     "linebreak-style": [true, "LF"],
+    // Namespaces are no allowed, because of Closure compiler.
+    "no-namespace": true,
+    "jsdoc-format": [true, "check-multiline-start"],
+    "no-duplicate-imports": true,
+
+    // Codelyzer
+    "banana-in-box": true,
+    "contextual-life-cycle": true,
+    "decorator-not-allowed": true,
+    "no-output-on-prefix": true,
+    "templates-no-negated-async": true,
+    "use-life-cycle-interface": true,
 
     // Custom Rules
     "ts-loader": true,
     "no-exposed-todo": true,
+    "setters-after-getters": true,
+    "rxjs-imports": true,
+    "no-host-decorator-in-concrete": [
+      true,
+      "HostBinding",
+      "HostListener"
+    ],
     "validate-decorators": [true, {
       "Component": {
+        "!host": "\\[class\\]",
+        "!preserveWhitespaces": ".*",
+        "!styles": ".*",
+        "changeDetection": "\\.OnPush$",
         "encapsulation": "\\.None$",
-        "moduleId": "^module\\.id$",
-        "preserveWhitespaces": "false$",
-        "changeDetection": "\\.OnPush$"
+        "moduleId": "^module\\.id$"
+      },
+      "Directive": {
+        "!host": "\\[class\\]"
       }
-    }, "src/+(lib|cdk)/**/!(*.spec).ts"],
+    }, "src/+(lib|cdk|material-experimental|cdk-experimental)/**/!(*.spec).ts"],
     "require-license-banner": [
       true,
-      "src/+(lib|cdk)/**/!(*.spec).ts"
-    ],
-    "no-rxjs-patch-imports": [
-      true,
-      "src/+(lib|cdk)/**/*.ts"
+      "src/+(lib|cdk|material-experimental|cdk-experimental|demo-app)/**/!(*.spec).ts"
     ],
     "missing-rollup-globals": [
       true,
       "./tools/package-tools/rollup-globals.ts",
-      "src/+(lib|cdk|material-examples)/**/*.ts"
-    ]
+      "src/+(lib|cdk|material-examples|material-experimental|cdk-experimental)/**/*.ts"
+    ],
+    "deletion-target": true,
+    "no-unescaped-html-tag": true
+  },
+  "linterOptions": {
+    "exclude": ["src/lib/schematics/**/*"]
   }
 }

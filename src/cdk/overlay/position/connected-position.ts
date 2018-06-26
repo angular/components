@@ -28,9 +28,13 @@ export interface OverlayConnectionPosition {
 
 /** The points of the origin element and the overlay element to connect. */
 export class ConnectionPositionPair {
+  /** X-axis attachment point for connected overlay origin. Can be 'start', 'end', or 'center'. */
   originX: HorizontalConnectionPos;
+  /** Y-axis attachment point for connected overlay origin. Can be 'top', 'bottom', or 'center'. */
   originY: VerticalConnectionPos;
+  /** X-axis attachment point for connected overlay. Can be 'start', 'end', or 'center'. */
   overlayX: HorizontalConnectionPos;
+  /** Y-axis attachment point for connected overlay. Can be 'top', 'bottom', or 'center'. */
   overlayY: VerticalConnectionPos;
 
   constructor(
@@ -68,6 +72,8 @@ export class ConnectionPositionPair {
  *  |      Scrollable        |
  *  |                        |
  *  --------------------------
+ *
+ *  @docs-private
  */
 export class ScrollingVisibility {
   isOriginClipped: boolean;
@@ -78,6 +84,35 @@ export class ScrollingVisibility {
 
 /** The change event emitted by the strategy when a fallback position is used. */
 export class ConnectedOverlayPositionChange {
-  constructor(public connectionPair: ConnectionPositionPair,
-              @Optional() public scrollableViewProperties: ScrollingVisibility) {}
+  constructor(
+      /** The position used as a result of this change. */
+      public connectionPair: ConnectionPositionPair,
+      /** @docs-private */
+      @Optional() public scrollableViewProperties: ScrollingVisibility) {}
+}
+
+/**
+ * Validates whether a vertical position property matches the expected values.
+ * @param property Name of the property being validated.
+ * @param value Value of the property being validated.
+ * @docs-private
+ */
+export function validateVerticalPosition(property: string, value: VerticalConnectionPos) {
+  if (value !== 'top' && value !== 'bottom' && value !== 'center') {
+    throw Error(`ConnectedPosition: Invalid ${property} "${value}". ` +
+                `Expected "top", "bottom" or "center".`);
+  }
+}
+
+/**
+ * Validates whether a horizontal position property matches the expected values.
+ * @param property Name of the property being validated.
+ * @param value Value of the property being validated.
+ * @docs-private
+ */
+export function validateHorizontalPosition(property: string, value: HorizontalConnectionPos) {
+  if (value !== 'start' && value !== 'end' && value !== 'center') {
+    throw Error(`ConnectedPosition: Invalid ${property} "${value}". ` +
+                `Expected "start", "end" or "center".`);
+  }
 }

@@ -3,13 +3,15 @@
 @import '../core/style/checkbox-common';
 @import '../core/ripple/ripple';
 @import '../core/style/layout-common';
+@import '../core/style/noop-animation';
+@import '../../cdk/a11y/a11y';
 
 // Manual calculation done on SVG
 $_mat-checkbox-mark-path-length: 22.910259;
 $_mat-checkbox-indeterminate-checked-easing-function: cubic-bezier(0.14, 0, 0, 1);
 
 // The ripple size of the checkbox
-$_mat-checkbox-ripple-size: 15px;
+$_mat-checkbox-ripple-radius: 25px;
 
 // The amount of spacing between the checkbox and its label.
 $_mat-checkbox-item-spacing: $mat-toggle-padding;
@@ -179,11 +181,14 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
 }
 
 .mat-checkbox {
+  @include _noop-animation();
+
   // Animation
   transition: background $swift-ease-out-duration $swift-ease-out-timing-function,
               mat-elevation-transition-property-value();
 
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mat-checkbox-layout {
@@ -234,6 +239,10 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
     width: $mat-checkbox-border-width;
     style: solid;
   }
+
+  ._mat-animation-noopable & {
+    transition: none;
+  }
 }
 
 .mat-checkbox-background {
@@ -245,6 +254,10 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
   transition: background-color $mat-checkbox-transition-duration
                   $mat-linear-out-slow-in-timing-function,
               opacity $mat-checkbox-transition-duration $mat-linear-out-slow-in-timing-function;
+
+  ._mat-animation-noopable & {
+    transition: none;
+  }
 }
 
 .mat-checkbox-checkmark {
@@ -263,11 +276,18 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
 }
 
 .mat-checkbox-mixedmark {
-  @extend %mat-checkbox-mark;
+  $height: floor($_mat-checkbox-mark-stroke-size);
 
-  height: floor($_mat-checkbox-mark-stroke-size);
+  @extend %mat-checkbox-mark;
+  height: $height;
   opacity: 0;
   transform: scaleX(0) rotate(0deg);
+
+  @include cdk-high-contrast {
+    height: 0;
+    border-top: solid $height;
+    margin-top: $height;
+  }
 }
 
 .mat-checkbox-label-before {
@@ -413,11 +433,10 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
 
 .mat-checkbox-ripple {
   position: absolute;
-  left: -$_mat-checkbox-ripple-size;
-  top: -$_mat-checkbox-ripple-size;
-  right: -$_mat-checkbox-ripple-size;
-  bottom: -$_mat-checkbox-ripple-size;
-  border-radius: 50%;
+  left: calc(50% - #{$_mat-checkbox-ripple-radius});
+  top: calc(50% - #{$_mat-checkbox-ripple-radius});
+  height: $_mat-checkbox-ripple-radius * 2;
+  width: $_mat_checkbox-ripple-radius * 2;
   z-index: 1;
   pointer-events: none;
 }
