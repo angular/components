@@ -103,6 +103,12 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   set dynamicHeight(value: boolean) { this._dynamicHeight = coerceBooleanProperty(value); }
   private _dynamicHeight: boolean = false;
 
+  /** Whether to use full animation or minimal one */
+  @Input()
+  get minimalAnimation(): boolean { return this._minimalAnimation; }
+  set minimalAnimation(value: boolean) { this._minimalAnimation = coerceBooleanProperty(value); }
+  private _minimalAnimation: boolean = false;
+
   /** The index of the active tab. */
   @Input()
   get selectedIndex(): number | null { return this._selectedIndex; }

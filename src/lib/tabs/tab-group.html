@@ -33,6 +33,7 @@
   <mat-tab-body role="tabpanel"
                *ngFor="let tab of _tabs; let i = index"
                [id]="_getTabContentId(i)"
+               [minimalAnimation]="minimalAnimation"
                [attr.aria-labelledby]="_getTabLabelId(i)"
                [class.mat-tab-body-active]="selectedIndex == i"
                [content]="tab.content"

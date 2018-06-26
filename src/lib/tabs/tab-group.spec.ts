@@ -415,6 +415,214 @@ describe('MatTabGroup', () => {
     }));
    });
 
+   describe('minimal animation', () => {
+    let fixture: ComponentFixture<SimpleTabsMinimalAnimationTestApp>;
+    let element: HTMLElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SimpleTabsTestApp);
+      element = fixture.nativeElement;
+    });
+
+    it('should default to the first tab', () => {
+      checkSelectedIndex(1, fixture);
+    });
+
+    it('will properly load content on first change detection pass', () => {
+      fixture.detectChanges();
+      expect(element.querySelectorAll('.mat-tab-body')[1].querySelectorAll('span').length).toBe(3);
+    });
+
+    it('should change selected index on click', () => {
+      let component = fixture.debugElement.componentInstance;
+      component.selectedIndex = 0;
+      checkSelectedIndex(0, fixture);
+
+      // select the second tab
+      let tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+      tabLabel.nativeElement.click();
+      checkSelectedIndex(1, fixture);
+
+      // select the third tab
+      tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[2];
+      tabLabel.nativeElement.click();
+      checkSelectedIndex(2, fixture);
+    });
+
+    it('should support two-way binding for selectedIndex', fakeAsync(() => {
+      let component = fixture.componentInstance;
+      component.selectedIndex = 0;
+
+      fixture.detectChanges();
+
+      let tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+      tabLabel.nativeElement.click();
+      fixture.detectChanges();
+      tick();
+
+      expect(component.selectedIndex).toBe(1);
+    }));
+
+    // Note: needs to be `async` in order to fail when we expect it to.
+    it('should set to correct tab on fast change', async(() => {
+      let component = fixture.componentInstance;
+      component.selectedIndex = 0;
+      fixture.detectChanges();
+
+      setTimeout(() => {
+        component.selectedIndex = 1;
+        fixture.detectChanges();
+
+        setTimeout(() => {
+          component.selectedIndex = 0;
+          fixture.detectChanges();
+          fixture.whenStable().then(() => {
+            expect(component.selectedIndex).toBe(0);
+          });
+        }, 1);
+      }, 1);
+    }));
+
+    it('should change tabs based on selectedIndex', fakeAsync(() => {
+      let component = fixture.componentInstance;
+      let tabComponent = fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
+
+      spyOn(component, 'handleSelection').and.callThrough();
+
+      checkSelectedIndex(1, fixture);
+
+      tabComponent.selectedIndex = 2;
+
+      checkSelectedIndex(2, fixture);
+      tick();
+
+      expect(component.handleSelection).toHaveBeenCalledTimes(1);
+      expect(component.selectEvent.index).toBe(2);
+    }));
+
+    it('should update tab positions when selected index is changed', () => {
+      fixture.detectChanges();
+      const component: MatTabGroup =
+          fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
+      const tabs: MatTab[] = component._tabs.toArray();
+
+      expect(tabs[0].position).toBeLessThan(0);
+      expect(tabs[1].position).toBe(0);
+      expect(tabs[2].position).toBeGreaterThan(0);
+
+      // Move to third tab
+      component.selectedIndex = 2;
+      fixture.detectChanges();
+      expect(tabs[0].position).toBeLessThan(0);
+      expect(tabs[1].position).toBeLessThan(0);
+      expect(tabs[2].position).toBe(0);
+
+      // Move to the first tab
+      component.selectedIndex = 0;
+      fixture.detectChanges();
+      expect(tabs[0].position).toBe(0);
+      expect(tabs[1].position).toBeGreaterThan(0);
+      expect(tabs[2].position).toBeGreaterThan(0);
+    });
+
+    it('should clamp the selected index to the size of the number of tabs', () => {
+      fixture.detectChanges();
+      const component: MatTabGroup =
+          fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
+
+      // Set the index to be negative, expect first tab selected
+      fixture.componentInstance.selectedIndex = -1;
+      fixture.detectChanges();
+      expect(component.selectedIndex).toBe(0);
+
+      // Set the index beyond the size of the tabs, expect last tab selected
+      fixture.componentInstance.selectedIndex = 3;
+      fixture.detectChanges();
+      expect(component.selectedIndex).toBe(2);
+    });
+
+    it('should not crash when setting the selected index to NaN', () => {
+      let component = fixture.debugElement.componentInstance;
+
+      expect(() => {
+        component.selectedIndex = NaN;
+        fixture.detectChanges();
+      }).not.toThrow();
+    });
+
+    it('should show ripples for tab-group labels', () => {
+      fixture.detectChanges();
+
+      const testElement = fixture.nativeElement;
+      const tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+
+      expect(testElement.querySelectorAll('.mat-ripple-element').length)
+        .toBe(0, 'Expected no ripples to show up initially.');
+
+      dispatchFakeEvent(tabLabel.nativeElement, 'mousedown');
+      dispatchFakeEvent(tabLabel.nativeElement, 'mouseup');
+
+      expect(testElement.querySelectorAll('.mat-ripple-element').length)
+        .toBe(1, 'Expected one ripple to show up on label mousedown.');
+    });
+
+    it('should allow disabling ripples for tab-group labels', () => {
+      fixture.componentInstance.disableRipple = true;
+      fixture.detectChanges();
+
+      const testElement = fixture.nativeElement;
+      const tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+
+      expect(testElement.querySelectorAll('.mat-ripple-element').length)
+        .toBe(0, 'Expected no ripples to show up initially.');
+
+      dispatchFakeEvent(tabLabel.nativeElement, 'mousedown');
+      dispatchFakeEvent(tabLabel.nativeElement, 'mouseup');
+
+      expect(testElement.querySelectorAll('.mat-ripple-element').length)
+        .toBe(0, 'Expected no ripple to show up on label mousedown.');
+    });
+
+    it('should set the isActive flag on each of the tabs', () => {
+      fixture.detectChanges();
+
+      const tabs = fixture.componentInstance.tabs.toArray();
+
+      expect(tabs[0].isActive).toBe(false);
+      expect(tabs[1].isActive).toBe(true);
+      expect(tabs[2].isActive).toBe(false);
+
+      fixture.componentInstance.selectedIndex = 2;
+      fixture.detectChanges();
+
+      expect(tabs[0].isActive).toBe(false);
+      expect(tabs[1].isActive).toBe(false);
+      expect(tabs[2].isActive).toBe(true);
+    });
+
+    it('should fire animation done event', fakeAsync(() => {
+      fixture.detectChanges();
+
+      spyOn(fixture.componentInstance, 'animationDone');
+      let tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+      tabLabel.nativeElement.click();
+      fixture.detectChanges();
+      tick();
+
+      expect(fixture.componentInstance.animationDone).toHaveBeenCalled();
+    }));
+
+    it('should add the proper `aria-setsize` and `aria-posinset`', () => {
+      fixture.detectChanges();
+
+      const labels = Array.from(element.querySelectorAll('.mat-tab-label'));
+
+      expect(labels.map(label => label.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
+      expect(labels.every(label => label.getAttribute('aria-setsize') === '3')).toBe(true);
+    });
+
+  });
+
   /**
    * Checks that the `selectedIndex` has been updated; checks that the label and body have their
    * respective `active` classes
@@ -661,3 +869,43 @@ class NestedTabs {}
   `,
  })
  class TemplateTabs {}
+ @Component({
+  template: `
+    <mat-tab-group class="tab-group"
+        [(selectedIndex)]="selectedIndex"
+        [headerPosition]="headerPosition"
+        [minimalAnimation]="true"
+        [disableRipple]="disableRipple"
+        (animationDone)="animationDone()"
+        (focusChange)="handleFocus($event)"
+        (selectedTabChange)="handleSelection($event)">
+      <mat-tab>
+        <ng-template mat-tab-label>Tab One</ng-template>
+        Tab one content
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>Tab Two</ng-template>
+        <span>Tab </span><span>two</span><span>content</span>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>Tab Three</ng-template>
+        Tab three content
+      </mat-tab>
+    </mat-tab-group>
+  `
+})
+class SimpleTabsMinimalAnimationTestApp {
+  @ViewChildren(MatTab) tabs: QueryList<MatTab>;
+  selectedIndex: number = 1;
+  focusEvent: any;
+  selectEvent: any;
+  disableRipple: boolean = false;
+  headerPosition: MatTabHeaderPosition = 'above';
+  handleFocus(event: any) {
+    this.focusEvent = event;
+  }
+  handleSelection(event: any) {
+    this.selectEvent = event;
+  }
+  animationDone() { }
+}
