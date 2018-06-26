@@ -1922,19 +1922,48 @@ describe('MatAutocomplete', () => {
     expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(400);
   }));
 
-  it('should have panel width set to auto', () => {
-      const widthFixture = createComponent(SimpleAutocomplete);
+  it('should have panel width match host width by default', () => {
+    const widthFixture = createComponent(SimpleAutocomplete);
 
-      widthFixture.componentInstance.width = 300;
-      widthFixture.detectChanges();
+    widthFixture.componentInstance.width = 300;
+    widthFixture.detectChanges();
 
-      widthFixture.componentInstance.trigger.autocomplete.panelWidthAuto = true;
-      widthFixture.componentInstance.trigger.openPanel();
-      widthFixture.detectChanges();
+    widthFixture.componentInstance.trigger.openPanel();
+    widthFixture.detectChanges();
 
-      const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+    const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-      expect(overlayPane.style.width).toBe('auto');
+    expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
+  });
+
+  it('should have panel width set to string value', () => {
+    const widthFixture = createComponent(SimpleAutocomplete);
+
+    widthFixture.componentInstance.width = 300;
+    widthFixture.detectChanges();
+
+    widthFixture.componentInstance.trigger.autocomplete.panelWidth = 'auto';
+    widthFixture.componentInstance.trigger.openPanel();
+    widthFixture.detectChanges();
+
+    const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.width).toBe('auto');
+  });
+
+  it('should have panel width set to number value', () => {
+    const widthFixture = createComponent(SimpleAutocomplete);
+
+    widthFixture.componentInstance.width = 300;
+    widthFixture.detectChanges();
+
+    widthFixture.componentInstance.trigger.autocomplete.panelWidth = 400;
+    widthFixture.componentInstance.trigger.openPanel();
+    widthFixture.detectChanges();
+
+    const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(400);
   });
 
   it('should show the panel when the options are initialized later within a component with ' +

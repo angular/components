@@ -523,13 +523,13 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       if (this._viewportRuler) {
         this._viewportSubscription = this._viewportRuler.change().subscribe(() => {
           if (this.panelOpen && this._overlayRef) {
-            this._overlayRef.updateSize({width: this._getWidth()});
+            this._overlayRef.updateSize({width: this._getPanelWidth()});
           }
         });
       }
     } else {
       // Update the panel width and direction, in case anything has changed.
-      this._overlayRef.updateSize({width: this._getWidth()});
+      this._overlayRef.updateSize({width: this._getPanelWidth()});
     }
 
     if (this._overlayRef && !this._overlayRef.hasAttached()) {
@@ -553,7 +553,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     return new OverlayConfig({
       positionStrategy: this._getOverlayPosition(),
       scrollStrategy: this._scrollStrategy(),
-      width: this._getWidth(),
+      width: this._getPanelWidth(),
       direction: this._dir
     });
   }
@@ -579,8 +579,8 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     return this._formField ? this._formField.getConnectedOverlayOrigin() : this._element;
   }
 
-  private _getWidth(): number | string {
-    return this.autocomplete.panelWidthAuto ? 'auto' : this._getHostWidth();
+  private _getPanelWidth(): number | string {
+    return this.autocomplete.panelWidth || this._getHostWidth();
   }
 
   /** Returns the width of the input element, so the panel width can match it. */
