@@ -31,7 +31,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {CalendarView} from '@angular/cdk/datepicker';
-import {DateAdapter} from '@angular/cdk/dateadapter';
+import {DateAdapter} from '@angular/cdk/datetime';
 import {MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';

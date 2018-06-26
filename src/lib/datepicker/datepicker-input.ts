@@ -30,7 +30,7 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import {DateAdapter} from '@angular/cdk/dateadapter';
+import {DateAdapter} from '@angular/cdk/datetime';
 import {MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';

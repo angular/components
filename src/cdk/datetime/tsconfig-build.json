@@ -7,7 +7,7 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/cdk/dateadapter",
+    "flatModuleId": "@angular/cdk/datetime",
     "skipTemplateCodegen": true,
     "fullTemplateTypeCheck": true
   }

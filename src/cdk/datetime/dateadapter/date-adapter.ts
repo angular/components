@@ -10,23 +10,23 @@ import {inject, InjectionToken, LOCALE_ID} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 
 /** InjectionToken for datepicker that can be used to override default locale code. */
-export const DATE_LOCALE = new InjectionToken<string>('DATE_LOCALE', {
+export const CDK_DATE_LOCALE = new InjectionToken<string>('CDK_DATE_LOCALE', {
   providedIn: 'root',
-  factory: DATE_LOCALE_FACTORY,
+  factory: CDK_DATE_LOCALE_FACTORY,
 });
 
 /** @docs-private */
-export function DATE_LOCALE_FACTORY(): string {
+export function CDK_DATE_LOCALE_FACTORY(): string {
   return inject(LOCALE_ID);
 }
 
 /**
- * No longer needed since DATE_LOCALE has been changed to a scoped injectable.
+ * No longer needed since CDK_DATE_LOCALE has been changed to a scoped injectable.
  * If you are importing and providing this in your code you can simply remove it.
  * @deprecated
  * @deletion-target 7.0.0
  */
-export const DATE_LOCALE_PROVIDER = {provide: DATE_LOCALE, useExisting: LOCALE_ID};
+export const CDK_DATE_LOCALE_PROVIDER = {provide: CDK_DATE_LOCALE, useExisting: LOCALE_ID};
 
 /** Adapts type `D` to be usable as a date by cdk-based components that work with dates. */
 export abstract class DateAdapter<D> {

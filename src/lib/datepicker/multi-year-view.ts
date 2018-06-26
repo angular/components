@@ -30,7 +30,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {CalendarView} from '@angular/cdk/datepicker';
-import {DateAdapter} from '@angular/cdk/dateadapter';
+import {DateAdapter} from '@angular/cdk/datetime';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';

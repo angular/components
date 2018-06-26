@@ -9,7 +9,7 @@
 import {NgModule} from '@angular/core';
 import {MAT_DATE_FORMATS} from './date-formats';
 import {MAT_NATIVE_DATE_FORMATS} from './native-date-formats';
-import {NativeDateModule} from '@angular/cdk/dateadapter';
+import {NativeDateModule} from '@angular/cdk/datetime';
 
 export * from './date-formats';
 export * from './native-date-formats';
