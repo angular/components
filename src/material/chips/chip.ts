@@ -8,7 +8,7 @@
 
 import {FocusableOption} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/keycodes';
+import {BACKSPACE, DELETE, SPACE, ENTER} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
 import {
   ContentChild,
@@ -393,12 +393,18 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 @Directive({
   selector: '[matChipRemove]',
   host: {
+    '[attr.tabindex]': 'tabIndex == null ? (_parentChip._hasFocus ? 0 : -1) : tabIndex',
     'class': 'mat-chip-remove mat-chip-trailing-icon',
     '(click)': '_handleClick($event)',
+    '(keydown)': '_handleKeydown($event)',
   }
 })
 export class MatChipRemove {
-  constructor(protected _parentChip: MatChip) {}
+  /** Tabindex for the remove icon. */
+  @Input() tabIndex: number;
+
+  constructor(public _parentChip: MatChip) {
+  }
 
   /** Calls the parent chip's public `remove()` method if applicable. */
   _handleClick(event: Event): void {
@@ -414,5 +420,15 @@ export class MatChipRemove {
     // the parent click listener of the `MatChip` would prevent propagation, but it can happen
     // that the chip is being removed before the event bubbles up.
     event.stopPropagation();
+  }
+
+  /** Handles key events on the chip remove button. */
+  _handleKeydown(event: KeyboardEvent) {
+    // Since the element might not be a button, we have to handle key events ourselves.
+    if (event.keyCode === ENTER && this._parentChip.removable) {
+      event.preventDefault();
+      event.stopPropagation();
+      this._parentChip.remove();
+    }
   }
 }
