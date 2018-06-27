@@ -246,7 +246,7 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Can
    * SVG filters in Safari/Firefox
    */
   private _updateUrlPaths(svg: SVGElement) {
-    const currentPath = location.prepareExternalUrl(location.path());
+    const currentPath = this._location.prepareExternalUrl(this._location.path());
     
     svg.outerHTML = svg.outerHTML.replace(/url\((.*)\)/, `url(${currentPath}$1)`);
     
