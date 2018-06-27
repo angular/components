@@ -18,6 +18,7 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
+import {Location} from '@angular/common'
 import {CanColor, mixinColor} from '@angular/material/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {MatIconRegistry} from './icon-registry';
@@ -112,6 +113,7 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Can
 
   constructor(
       elementRef: ElementRef,
+      private _location: Location,
       private _iconRegistry: MatIconRegistry,
       @Attribute('aria-hidden') ariaHidden: string) {
     super(elementRef);
@@ -244,7 +246,9 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Can
    * SVG filters in Safari/Firefox
    */
   private _updateUrlPaths(svg: SVGElement) {
-    svg.outerHTML = svg.outerHTML.replace(/url\((.*)\)/, `url(${window.location.href}$1)`);
+    const currentPath = location.prepareExternalUrl(location.path());
+    
+    svg.outerHTML = svg.outerHTML.replace(/url\((.*)\)/, `url(${currentPath}$1)`);
     
     return svg
   }
