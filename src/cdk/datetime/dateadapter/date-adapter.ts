@@ -20,14 +20,6 @@ export function CDK_DATE_LOCALE_FACTORY(): string {
   return inject(LOCALE_ID);
 }
 
-/**
- * No longer needed since CDK_DATE_LOCALE has been changed to a scoped injectable.
- * If you are importing and providing this in your code you can simply remove it.
- * @deprecated
- * @deletion-target 7.0.0
- */
-export const CDK_DATE_LOCALE_PROVIDER = {provide: CDK_DATE_LOCALE, useExisting: LOCALE_ID};
-
 /** Adapts type `D` to be usable as a date by cdk-based components that work with dates. */
 export abstract class DateAdapter<D> {
   /** The locale to use for all dates. */
