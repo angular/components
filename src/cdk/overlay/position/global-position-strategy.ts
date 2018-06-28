@@ -178,6 +178,8 @@ export class GlobalPositionStrategy implements PositionStrategy {
         parentStyles.justifyContent = 'flex-end';
       } else if (this._justifyContent === 'flex-end') {
         parentStyles.justifyContent = 'flex-start';
+      } else {
+        parentStyles.justifyContent = this._justifyContent;
       }
     } else {
       parentStyles.justifyContent = this._justifyContent;
