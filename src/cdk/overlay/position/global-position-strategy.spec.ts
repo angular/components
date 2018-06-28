@@ -289,6 +289,16 @@ describe('GlobalPositonStrategy', () => {
     const parentStyle = (overlayRef.overlayElement.parentNode as HTMLElement).style;
     expect(parentStyle.justifyContent).toBe('flex-start');
   });
+
+  it('should use `justify-content` to center when using center horizontally in RTL', () => {
+    attachOverlay({
+      positionStrategy: overlay.position().global().centerHorizontally(),
+      direction: 'rtl'
+    });
+
+    const parentStyle = (overlayRef.overlayElement.parentNode as HTMLElement).style;
+    expect(parentStyle.justifyContent).toBe('center');
+  });
 });
 
 
