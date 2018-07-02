@@ -28,10 +28,18 @@ const DOCS: {[key: string]: DocCategory[]} = {
       id: 'forms',
       name: 'Form Controls',
       items: [
-        {id: 'autocomplete', name: 'Autocomplete', examples: [
-          'autocomplete-overview',
-          'autocomplete-optgroup',
-        ]},
+        {
+          id: 'autocomplete',
+          name: 'Autocomplete',
+          examples: [
+            'autocomplete-overview',
+            'autocomplete-simple',
+            'autocomplete-display',
+            'autocomplete-filter',
+            'autocomplete-optgroup',
+            'autocomplete-auto-active-first-option',
+          ]
+        },
         {id: 'checkbox', name: 'Checkbox', examples: ['checkbox-configurable']},
         {
           id: 'datepicker',
