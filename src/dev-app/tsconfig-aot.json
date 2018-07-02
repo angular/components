@@ -3,7 +3,6 @@
 {
   "extends": "./tsconfig-build",
   "compilerOptions": {
-    // Needed for Moment.js since it doesn't have a default export.
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "noUnusedParameters": true,
@@ -39,6 +38,7 @@
   ],
   "angularCompilerOptions": {
     "skipTemplateCodegen": false,
-    "fullTemplateTypeCheck": true
+    "fullTemplateTypeCheck": false,
+    "enableIvy": "ngtsc"
   }
 }

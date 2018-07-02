@@ -27,6 +27,8 @@ export class PaginatorDemo {
   showFirstLastButtons = true;
   disabled = false;
 
+  EMPTY_ARRAY = [];
+
   pageEvent: PageEvent;
 
   handlePageEvent(e: PageEvent) {

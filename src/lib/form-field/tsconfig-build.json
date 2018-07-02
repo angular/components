@@ -1,15 +1,15 @@
 {
   "extends": "../tsconfig-build",
   "files": [
-    "public-api.ts",
+    "index.ts",
     "../typings.d.ts"
   ],
   "angularCompilerOptions": {
-    "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
     "flatModuleId": "@angular/material/form-field",
     "skipTemplateCodegen": true,
-    "fullTemplateTypeCheck": true
+    "fullTemplateTypeCheck": true,
+    "enableIvy": "ngtsc"
   }
 }

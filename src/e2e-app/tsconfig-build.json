@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noUnusedParameters": true,
+    "strictNullChecks": false,
+    "strictFunctionTypes": true,
+    "noImplicitThis": true,
+    "lib": ["es6", "es2015", "dom"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "rootDirs": [
+      "../..",
+      "./"
+    ],
+    "outDir": "../../dist/",
+    "sourceMap": true,
+    "target": "es5",
+    "typeRoots": [
+      "../../node_modules/@types/!(node)"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@angular/cdk/*": ["../../dist/releases/cdk/*"],
+      "@angular/material": ["../../dist/releases/material"],
+      "@angular/material/*": ["../../dist/releases/material/*"],
+      "@angular/material-experimental/*": ["../../dist/releases/material-experimental/*"],
+      "@angular/material-experimental": ["../../dist/releases/material-experimental/"],
+      "@angular/cdk-experimental/*": ["../../dist/releases/cdk-experimental/*"],
+      "@angular/cdk-experimental": ["../../dist/releases/cdk-experimental/"],
+      "@angular/material-moment-adapter": ["../../dist/releases/material-moment-adapter"],
+      "@angular/material-examples": ["../../dist/releases/material-examples"]
+    }
+  },
+  "files": [
+    "./e2e-app-module.ts",
+    "./e2e-app-types.d.ts",
+    "./main.ts",
+    "./system-config.ts"
+  ],
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": false,
+    "enableResourceInlining": true,
+    "skipMetadataEmit": true,
+    "enableIvy": "ngtsc"
+  }
+}
