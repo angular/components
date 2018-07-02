@@ -1,21 +1,15 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
     "declaration": true,
     "stripInternal": false,
     "experimentalDecorators": true,
     "noUnusedParameters": true,
-    "noUnusedLocals": true,
     "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
     "importHelpers": true,
-    "newLine": "lf",
     "module": "es2015",
     "moduleResolution": "node",
-    "outDir": "../../dist/packages/material-moment-adapter",
+    "outDir": "../../dist/packages/ivy-examples",
     "rootDir": ".",
     "sourceMap": true,
     "inlineSources": true,
@@ -26,12 +20,19 @@
     ],
     "skipLibCheck": true,
     "types": [],
+    "baseUrl": ".",
     "paths": {
       "@angular/material/*": [
         "../../dist/packages/material/*"
       ],
       "@angular/material": [
-        "../../dist/packages/material"
+        "../../dist/packages/material/public-api"
+      ],
+      "@angular/material-examples": [
+        "../../dist/packages/material-examples"
+      ],
+      "@angular/material-moment-adapter": [
+        "../../dist/packages/material-moment-adapter"
       ],
       "@angular/cdk/*": [
         "../../dist/packages/cdk/*"
@@ -39,17 +40,14 @@
     }
   },
   "files": [
-    "index.ts"
+    "main.ts"
   ],
   "angularCompilerOptions": {
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/material-moment-adapter",
+    "flatModuleId": "@angular/ivy-examples",
     "skipTemplateCodegen": true,
-    "fullTemplateTypeCheck": true,
+    "fullTemplateTypeCheck": false,
     "enableIvy": "ngtsc"
-  },
-  "bazelOptions": {
-    "suppressTsconfigOverrideWarnings": true
   }
 }

@@ -1,13 +1,9 @@
-// TypeScript config file that is used to compile the e2e-app. Protractor will run all specs
-// against the e2e-app in the browser and therefore the code needs to be ES5 compatible.
 {
   "compilerOptions": {
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noUnusedParameters": true,
-    // Don't use strict nulls for the e2e-app because the material-examples are not
-    // strict-null compliant.
     "strictNullChecks": false,
     "strictFunctionTypes": true,
     "noImplicitThis": true,
@@ -46,7 +42,9 @@
     "./system-config.ts"
   ],
   "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
-    "enableResourceInlining": true
+    "fullTemplateTypeCheck": false,
+    "enableResourceInlining": true,
+    "skipMetadataEmit": true,
+    "enableIvy": "ngtsc"
   }
 }

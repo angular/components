@@ -2,14 +2,13 @@
   "extends": "../tsconfig-build",
   "files": [
     "index.ts",
-    "./typings.d.ts"
+    "../typings.d.ts"
   ],
   "angularCompilerOptions": {
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/cdk/drag-drop",
+    "flatModuleId": "@angular/cdk/testing",
     "skipTemplateCodegen": true,
-    "fullTemplateTypeCheck": true,
     "enableIvy": "ngtsc"
   }
 }

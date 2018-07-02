@@ -1,14 +1,14 @@
 {
   "extends": "../tsconfig-build",
   "files": [
-    "public-api.ts"
+    "index.ts"
   ],
   "angularCompilerOptions": {
-    "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
     "flatModuleId": "@angular/cdk/layout",
     "skipTemplateCodegen": true,
-    "fullTemplateTypeCheck": true
+    "fullTemplateTypeCheck": true,
+    "enableIvy": "ngtsc"
   }
 }

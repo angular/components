@@ -135,6 +135,8 @@
     "sorcery": "^0.10.0",
     "source-map-support": "^0.5.9",
     "stylelint": "^9.9.0",
+    "stylelint": "^8.4.0",
+    "systemjs-builder": "^0.16.13",
     "ts-node": "^3.0.4",
     "tsconfig-paths": "^2.3.0",
     "tslint": "^5.12.0",

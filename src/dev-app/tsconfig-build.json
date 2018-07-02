@@ -2,7 +2,6 @@
 // since the dev-app will be served in the browser.
 {
   "compilerOptions": {
-    // Needed for Moment.js since it doesn't have a default export.
     "allowSyntheticDefaultImports": true,
     "declaration": false,
     "emitDecoratorMetadata": true,
@@ -27,16 +26,36 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@angular/material/*": ["../../dist/packages/material/*"],
-      "@angular/material": ["../../dist/packages/material"],
-      "@angular/cdk/*": ["../../dist/packages/cdk/*"],
-      "@angular/cdk": ["../../dist/packages/cdk"],
-      "@angular/material-experimental/*": ["../../dist/packages/material-experimental/*"],
-      "@angular/material-experimental": ["../../dist/packages/material-experimental"],
-      "@angular/cdk-experimental/*": ["../../dist/packages/cdk-experimental/*"],
-      "@angular/cdk-experimental": ["../../dist/packages/cdk-experimental"],
-      "@angular/material-moment-adapter": ["../../dist/packages/material-moment-adapter"],
-      "@angular/material-examples": ["../../dist/packages/material-examples"]
+      "@angular/material/*": [
+        "../../dist/packages/material/*"
+      ],
+      "@angular/material": [
+        "../../dist/packages/material"
+      ],
+      "@angular/cdk/*": [
+        "../../dist/packages/cdk/*"
+      ],
+      "@angular/cdk": [
+        "../../dist/packages/cdk"
+      ],
+      "@angular/material-experimental/*": [
+        "../../dist/packages/material-experimental/*"
+      ],
+      "@angular/material-experimental": [
+        "../../dist/packages/material-experimental"
+      ],
+      "@angular/cdk-experimental/*": [
+        "../../dist/packages/cdk-experimental/*"
+      ],
+      "@angular/cdk-experimental": [
+        "../../dist/packages/cdk-experimental"
+      ],
+      "@angular/material-moment-adapter": [
+        "../../dist/packages/material-moment-adapter"
+      ],
+      "@angular/material-examples": [
+        "../../dist/packages/material-examples"
+      ]
     }
   },
   "files": [
@@ -45,5 +64,8 @@
     "./system-rxjs-operators.ts",
     "./system-config.ts",
     "./main.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "enableIvy": "ngtsc"
+  }
 }

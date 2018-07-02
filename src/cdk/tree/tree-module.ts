@@ -30,6 +30,6 @@ const EXPORTED_DECLARATIONS = [
   imports: [CommonModule],
   exports: EXPORTED_DECLARATIONS,
   declarations: EXPORTED_DECLARATIONS,
-  providers: [FocusMonitor, CdkTreeNodeDef]
+  providers: [FocusMonitor]
 })
 export class CdkTreeModule {}
