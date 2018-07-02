@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
-import {MAT_DATE_FORMATS} from '@angular/material/core';
-import {DateAdapter, CDK_DATE_LOCALE} from '@angular/cdk/datetime';
+import {DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS} from '@angular/material/core';
 
 /** @title Datepicker with different locale */
 @Component({
@@ -11,12 +10,12 @@ import {DateAdapter, CDK_DATE_LOCALE} from '@angular/cdk/datetime';
   providers: [
     // The locale would typically be provided on the root module of your application. We do it at
     // the component level here, due to limitations of our example generation script.
-    {provide: CDK_DATE_LOCALE, useValue: 'ja-JP'},
+    {provide: MAT_DATE_LOCALE, useValue: 'ja-JP'},
 
     // `MomentDateAdapter` and `MAT_MOMENT_DATE_FORMATS` can be automatically provided by importing
     // `MatMomentDateModule` in your applications root module. We provide it at the component level
     // here, due to limitations of our example generation script.
-    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [CDK_DATE_LOCALE]},
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
     {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
   ],
 })

@@ -9,7 +9,6 @@ ng_module(
   module_name = "@angular/cdk/datetime",
   deps = [
     "@rxjs",
-    "//src/lib/core",
     "//src/cdk/platform",
   ],
   tsconfig = "//src/cdk:tsconfig-build.json",
@@ -21,8 +20,8 @@ ts_library(
   srcs = glob(["**/*.spec.ts"]),
   deps = [
     ":datetime",
-    "//src/lib/core",
     "//src/cdk/platform",
+    "//src/cdk/testing",
     "@rxjs",
   ],
   tsconfig = "//src/cdk:tsconfig-build.json",

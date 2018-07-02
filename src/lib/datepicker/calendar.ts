@@ -26,8 +26,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {CalendarView} from '@angular/cdk/datepicker';
-import {DateAdapter} from '@angular/cdk/datetime';
-import {MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerIntl} from './datepicker-intl';

@@ -18,5 +18,3 @@ export * from './label/label-options';
 export * from './ripple/index';
 export * from './selection/index';
 
-// TODO: don't have this
-export * from './testing/month-constants';

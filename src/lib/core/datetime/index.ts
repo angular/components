@@ -13,6 +13,7 @@ import {NativeDateModule} from '@angular/cdk/datetime';
 
 export * from './date-formats';
 export * from './native-date-formats';
+export * from './public-api';
 
 
 @NgModule({

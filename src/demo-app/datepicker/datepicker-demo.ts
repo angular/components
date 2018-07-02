@@ -16,11 +16,10 @@ import {
 } from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatCalendar} from '@angular/material';
-import {MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {DateAdapter} from '@angular/cdk/datetime';
 
 
 @Component({

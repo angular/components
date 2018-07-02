@@ -37,8 +37,7 @@ import {
   ViewEncapsulation,
   OnDestroy,
 } from '@angular/core';
-import {DateAdapter} from '@angular/cdk/datetime';
-import {CanColor, mixinColor, ThemePalette} from '@angular/material/core';
+import {DateAdapter, CanColor, mixinColor, ThemePalette} from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {merge, Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
