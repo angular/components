@@ -1,29 +1,33 @@
-// TypeScript config file that extends the default tsconfig file for the library. This config is
-// used to compile the tests for Karma. Since the code will run inside of the browser, the target
-// needs to be ES5. The format needs to be CommonJS since Karma only supports that module format.
 {
   "extends": "./tsconfig-build",
   "compilerOptions": {
     "importHelpers": false,
     "module": "commonjs",
     "target": "es5",
-    "types": ["jasmine"],
+    "types": [
+      "jasmine"
+    ],
     "paths": {
-      "@angular/material/*": ["./*"],
-      "@angular/cdk/*": ["../../dist/packages/cdk/*/public-api"]
+      "@angular/material/*": [
+        "./*"
+      ],
+      "@angular/cdk/*": [
+        "../../dist/packages/cdk/*/public-api"
+      ]
     }
   },
   "angularCompilerOptions": {
     "strictMetadataEmit": true,
     "skipTemplateCodegen": true,
     "emitDecoratorMetadata": true,
-    "fullTemplateTypeCheck": true
+    "fullTemplateTypeCheck": true,
+    "enableIvy": "ngtsc"
   },
   "include": [
     "**/*.spec.ts",
     "index.ts"
   ],
   "exclude": [
-    "**/schematics/**/*.ts",
-  ],
+    "**/schematics/**/*.ts"
+  ]
 }

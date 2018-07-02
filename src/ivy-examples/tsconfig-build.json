@@ -9,7 +9,7 @@
     "importHelpers": true,
     "module": "es2015",
     "moduleResolution": "node",
-    "outDir": "../../dist/packages/material-examples",
+    "outDir": "../../dist/packages/ivy-examples",
     "rootDir": ".",
     "sourceMap": true,
     "inlineSources": true,
@@ -26,7 +26,10 @@
         "../../dist/packages/material/*"
       ],
       "@angular/material": [
-        "../../dist/packages/material"
+        "../../dist/packages/material/public-api"
+      ],
+      "@angular/material-examples": [
+        "../../dist/packages/material-examples"
       ],
       "@angular/material-moment-adapter": [
         "../../dist/packages/material-moment-adapter"
@@ -37,12 +40,12 @@
     }
   },
   "files": [
-    "index.ts"
+    "main.ts"
   ],
   "angularCompilerOptions": {
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/material-examples",
+    "flatModuleId": "@angular/ivy-examples",
     "skipTemplateCodegen": true,
     "fullTemplateTypeCheck": false,
     "enableIvy": "ngtsc"

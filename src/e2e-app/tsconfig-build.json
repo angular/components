@@ -1,15 +1,15 @@
-// TypeScript config file that is used to compile the e2e-app. Protractor will run all specs
-// against the e2e-app in the browser and therefore the code needs to be ES5 compatible.
 {
   "compilerOptions": {
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noUnusedParameters": true,
-    // Don't use strict nulls for the e2e-app because the material-examples are not
-    // strict-null compliant.
     "strictNullChecks": false,
-    "lib": ["es6", "es2015", "dom"],
+    "lib": [
+      "es6",
+      "es2015",
+      "dom"
+    ],
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,
@@ -23,15 +23,33 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@angular/cdk/*": ["./cdk/*"],
-      "@angular/material": ["./material"],
-      "@angular/material/*": ["./material/*"],
-      "@angular/material-experimental/*": ["./material-experimental/*"],
-      "@angular/material-experimental": ["./material-experimental/"],
-      "@angular/cdk-experimental/*": ["./cdk-experimental/*"],
-      "@angular/cdk-experimental": ["./cdk-experimental/"],
-      "@angular/material-moment-adapter": ["./material-moment-adapter"],
-      "@angular/material-examples": ["./material-examples"]
+      "@angular/cdk/*": [
+        "./cdk/*"
+      ],
+      "@angular/material": [
+        "./material"
+      ],
+      "@angular/material/*": [
+        "./material/*"
+      ],
+      "@angular/material-experimental/*": [
+        "./material-experimental/*"
+      ],
+      "@angular/material-experimental": [
+        "./material-experimental/"
+      ],
+      "@angular/cdk-experimental/*": [
+        "./cdk-experimental/*"
+      ],
+      "@angular/cdk-experimental": [
+        "./cdk-experimental/"
+      ],
+      "@angular/material-moment-adapter": [
+        "./material-moment-adapter"
+      ],
+      "@angular/material-examples": [
+        "./material-examples"
+      ]
     }
   },
   "files": [
@@ -42,7 +60,7 @@
   ],
   "angularCompilerOptions": {
     "skipMetadataEmit": true,
-    // TODO: disabled for now due to @angular/forms
-    "fullTemplateTypeCheck": false
+    "fullTemplateTypeCheck": false,
+    "enableIvy": "ngtsc"
   }
 }

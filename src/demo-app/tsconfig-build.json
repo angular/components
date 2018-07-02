@@ -1,15 +1,16 @@
-// TypeScript config file that is used to compile the demo-app. Target environment will be ES5,
-// since the demo-app will be served in the browser.
 {
   "compilerOptions": {
-    // Needed for Moment.js since it doesn't have a default export.
     "allowSyntheticDefaultImports": true,
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noUnusedParameters": true,
     "strictNullChecks": true,
-    "lib": ["es6", "es2015", "dom"],
+    "lib": [
+      "es6",
+      "es2015",
+      "dom"
+    ],
     "skipLibCheck": true,
     "module": "commonjs",
     "moduleResolution": "node",
@@ -24,16 +25,36 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@angular/material/*": ["../../dist/packages/material/*"],
-      "@angular/material": ["../../dist/packages/material"],
-      "@angular/cdk/*": ["../../dist/packages/cdk/*"],
-      "@angular/cdk": ["../../dist/packages/cdk"],
-      "@angular/material-experimental/*": ["../../dist/packages/material-experimental/*"],
-      "@angular/material-experimental": ["../../dist/packages/material-experimental"],
-      "@angular/cdk-experimental/*": ["../../dist/packages/cdk-experimental/*"],
-      "@angular/cdk-experimental": ["../../dist/packages/cdk-experimental"],
-      "@angular/material-moment-adapter": ["../../dist/packages/material-moment-adapter"],
-      "@angular/material-examples": ["../../dist/packages/material-examples"]
+      "@angular/material/*": [
+        "../../dist/packages/material/*"
+      ],
+      "@angular/material": [
+        "../../dist/packages/material"
+      ],
+      "@angular/cdk/*": [
+        "../../dist/packages/cdk/*"
+      ],
+      "@angular/cdk": [
+        "../../dist/packages/cdk"
+      ],
+      "@angular/material-experimental/*": [
+        "../../dist/packages/material-experimental/*"
+      ],
+      "@angular/material-experimental": [
+        "../../dist/packages/material-experimental"
+      ],
+      "@angular/cdk-experimental/*": [
+        "../../dist/packages/cdk-experimental/*"
+      ],
+      "@angular/cdk-experimental": [
+        "../../dist/packages/cdk-experimental"
+      ],
+      "@angular/material-moment-adapter": [
+        "../../dist/packages/material-moment-adapter"
+      ],
+      "@angular/material-examples": [
+        "../../dist/packages/material-examples"
+      ]
     }
   },
   "files": [
@@ -41,5 +62,8 @@
     "./demo-app-module.ts",
     "./system-config.ts",
     "./main.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "enableIvy": "ngtsc"
+  }
 }
