@@ -26,6 +26,8 @@ export class PaginatorDemo {
   showPageSizeOptions = true;
   showFirstLastButtons = true;
 
+  EMPTY_ARRAY = [];
+
   pageEvent: PageEvent;
 
   handlePageEvent(e: PageEvent) {

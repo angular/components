@@ -16,7 +16,7 @@
       window.customElements.forcePolyfill = true;
     }
   </script>
-  <script src="node_modules/@webcomponents/custom-elements/custom-elements.min.js"></script>
+  <script src="custom-elements.min.js"></script>
 
   <!-- FontAwesome for mat-icon demo. -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -24,15 +24,9 @@
 <body>
   <entry-app>Loading...</entry-app>
 
-  <script src="node_modules/core-js/client/core.js"></script>
-  <script src="node_modules/systemjs/dist/system.src.js"></script>
-  <script src="node_modules/zone.js/dist/zone.js"></script>
-  <script src="node_modules/hammerjs/hammer.min.js"></script>
-
-  <script>
-    System.import('system-config.js').then(function () {
-      System.import('main');
-    }).catch(console.error.bind(console));
-  </script>
+  <script src="core.js"></script>
+  <script src="zone.js"></script>
+  <script src="hammer.min.js"></script>
+  <script src="bundle.js"></script>
 </body>
 </html>

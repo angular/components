@@ -1,22 +1,16 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "allowSyntheticDefaultImports": true,
     "declaration": true,
     "stripInternal": false,
     "experimentalDecorators": true,
     "noUnusedParameters": true,
     "strictNullChecks": true,
-    "strictFunctionTypes": true,
     "importHelpers": true,
-    "newLine": "lf",
     "module": "es2015",
     "moduleResolution": "node",
-    "outDir": "../../dist/packages/material-experimental",
+    "outDir": "../../dist/packages/ivy-examples",
     "rootDir": ".",
-    "rootDirs": [
-      ".",
-      "../../dist/packages/material-experimental"
-    ],
     "sourceMap": true,
     "inlineSources": true,
     "target": "es2015",
@@ -26,40 +20,34 @@
     ],
     "skipLibCheck": true,
     "types": [],
+    "baseUrl": ".",
     "paths": {
       "@angular/material/*": [
         "../../dist/packages/material/*"
       ],
       "@angular/material": [
-        "../../dist/packages/material"
+        "../../dist/packages/material/public-api"
+      ],
+      "@angular/material-examples": [
+        "../../dist/packages/material-examples"
+      ],
+      "@angular/material-moment-adapter": [
+        "../../dist/packages/material-moment-adapter"
       ],
       "@angular/cdk/*": [
         "../../dist/packages/cdk/*"
-      ],
-      "@angular/cdk": [
-        "../../dist/packages/cdk"
-      ],
-      "@angular/cdk-experimental/*": [
-        "../../dist/packages/cdk-experimental/*"
-      ],
-      "@angular/cdk-experimental": [
-        "../../dist/packages/cdk-experimental"
       ]
     }
   },
   "files": [
-    "index.ts",
-    "typings.d.ts"
+    "main.ts"
   ],
   "angularCompilerOptions": {
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
-    "flatModuleId": "@angular/material-experimental",
+    "flatModuleId": "@angular/ivy-examples",
     "skipTemplateCodegen": true,
-    "fullTemplateTypeCheck": true,
+    "fullTemplateTypeCheck": false,
     "enableIvy": "ngtsc"
-  },
-  "bazelOptions": {
-    "suppressTsconfigOverrideWarnings": true
   }
 }
