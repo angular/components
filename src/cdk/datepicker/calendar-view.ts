@@ -7,7 +7,7 @@
  */
 
 import {Subject} from 'rxjs';
-import {Output} from "@angular/core";
+import {Output} from '@angular/core';
 
 /**
  * An abstract calendar that is used as part of the datepicker. This abstract calendar class
