@@ -670,7 +670,7 @@ describe('MatDrawerContainer', () => {
       // Close the drawer and resolve the close animation.
       fixture.componentInstance.drawer.close();
       fixture.detectChanges();
-      tick();
+      flush();
       fixture.detectChanges();
 
       expect(content.style.marginLeft).toBe('', 'Margin should be removed after drawer close.');
