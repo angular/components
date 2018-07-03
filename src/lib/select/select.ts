@@ -209,7 +209,8 @@ export class MatSelectTrigger {}
   },
   animations: [
     matSelectAnimations.transformPanel,
-    matSelectAnimations.fadeInContent
+    matSelectAnimations.fadeInContent,
+    matSelectAnimations.transformArrow
   ],
   providers: [
     {provide: MatFormFieldControl, useExisting: MatSelect},

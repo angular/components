@@ -12,7 +12,8 @@
     </span>
   </div>
 
-  <div class="mat-select-arrow-wrapper"><div class="mat-select-arrow"></div></div>
+  <div class="mat-select-arrow-wrapper"
+       [@transformArrow]="empty ? 'empty' : 'showing'"><div class="mat-select-arrow"></div></div>
 </div>
 
 <ng-template

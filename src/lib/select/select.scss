@@ -46,9 +46,8 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
   display: table-cell;
   vertical-align: middle;
 
-  // When used in a box or standard appearance form-field the arrow should be shifted up 50%.
-  .mat-form-field-appearance-fill &,
-  .mat-form-field-appearance-standard & {
+  // When used in a box appearance form-field the arrow should be shifted up 50%.
+  .mat-form-field-appearance-fill & {
     transform: translateY(-50%);
   }
 
