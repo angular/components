@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run build-themes && ng serve",
     "start-jit": "npm run build-themes && ng serve --aot=false",
-    "lint": "tslint \"src/**/*.ts\"",
+    "lint": "tslint -p src/tsconfig.json",
     "test": "ng test",
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",
