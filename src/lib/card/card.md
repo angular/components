@@ -70,6 +70,6 @@ the card content should follow normal best practices for tab order.
 
 
 
- [0]: https://www.w3.org/TR/wai-aria/roles#group
- [1]: https://www.w3.org/TR/wai-aria/roles#region
- [2]: https://www.w3.org/TR/wai-aria/roles#landmark
+ [0]: https://www.w3.org/TR/wai-aria/#group
+ [1]: https://www.w3.org/TR/wai-aria/#region
+ [2]: https://www.w3.org/TR/wai-aria/#landmark
