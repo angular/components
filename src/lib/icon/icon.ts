@@ -200,7 +200,7 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Can
 
     // Remove existing non-element child nodes and SVGs, and add the new SVG element. Note that
     // we can't use innerHTML, because IE will throw if the element has a data binding.
-    for (let i = 0; i < childCount; i++) {
+    for (let i = childCount - 1; i >= 0; i--) {
       const child = layoutElement.childNodes[i];
 
       // 1 corresponds to Node.ELEMENT_NODE. We remove all non-element nodes in order to get rid
