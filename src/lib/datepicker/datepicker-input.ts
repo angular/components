@@ -86,12 +86,12 @@ export class MatDatepickerInputEvent<D> {
   host: {
     '[attr.aria-haspopup]': 'true',
     '[attr.aria-owns]': '(_datepicker?.opened && _datepicker.id) || null',
-    '[attr.min]': 'min ? _dateAdapter.toIso8601(min) : null',
-    '[attr.max]': 'max ? _dateAdapter.toIso8601(max) : null',
+    '[attr.min]': 'min ? dateAdapter.toIso8601(min) : null',
+    '[attr.max]': 'max ? dateAdapter.toIso8601(max) : null',
     '[disabled]': 'disabled',
     '(input)': '_onInput($event.target.value)',
     '(change)': 'emitDateChange()',
-    '(blur)': '_onBlur()',
+    '(blur)': 'onBlur()',
     '(keydown)': '_onKeydown($event)',
   },
   inputs: ['value', 'min', 'max', 'disabled'],
@@ -104,7 +104,7 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
   set matDatepicker(value: MatDatepicker<D>) {
     this._registerDatepicker(value);
   }
-  _datepicker: MatDatepicker<D>;
+  private _datepicker: MatDatepicker<D>;
 
   /** Register material datepicker to input. */
   private _registerDatepicker(value: MatDatepicker<D>) {
@@ -117,16 +117,16 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
   /** Formats value and emits the value change if the dates differ. */
   emitValue(oldDate: D | null, value: D | null) {
     this._formatValue(value);
-    if (!this._dateAdapter.sameDate(oldDate, value)) {
-      this._valueChange.emit(value);
+    if (!this.dateAdapter.sameDate(oldDate, value)) {
+      this.valueChange.emit(value);
     }
   }
 
   /** Function that can be used to filter out dates within the datepicker. */
   @Input()
   set matDatepickerFilter(value: (date: D | null) => boolean) {
-    this._dateFilter = value;
-    this._validatorOnChange();
+    this.dateFilter = value;
+    this.validatorOnChange();
   }
 
   /** Emits when a `change` event is fired on this `<input>`. */
@@ -142,30 +142,30 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
 
   /** The form control validator for whether the input parses. */
   private _parseValidator: ValidatorFn = (): ValidationErrors | null => {
-    return this._lastValueValid ?
-        null : {'matDatepickerParse': {'text': this._elementRef.nativeElement.value}};
+    return this.lastValueValid ?
+        null : {'matDatepickerParse': {'text': this.inputElement.value}};
   }
 
   /** The form control validator for the min date. */
   private _minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
+    const controlValue = this.getValidDateOrNull(this.dateAdapter.deserialize(control.value));
     return (!this.min || !controlValue ||
-        this._dateAdapter.compareDate(this.min, controlValue) <= 0) ?
+        this.dateAdapter.compareDate(this.min, controlValue) <= 0) ?
         null : {'matDatepickerMin': {'min': this.min, 'actual': controlValue}};
   }
 
   /** The form control validator for the max date. */
   private _maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
+    const controlValue = this.getValidDateOrNull(this.dateAdapter.deserialize(control.value));
     return (!this.max || !controlValue ||
-        this._dateAdapter.compareDate(this.max, controlValue) >= 0) ?
+        this.dateAdapter.compareDate(this.max, controlValue) >= 0) ?
         null : {'matDatepickerMax': {'max': this.max, 'actual': controlValue}};
   }
 
   /** The form control validator for the date filter. */
   private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
-    return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ?
+    const controlValue = this.getValidDateOrNull(this.dateAdapter.deserialize(control.value));
+    return !this.dateFilter || !controlValue || this.dateFilter(controlValue) ?
         null : {'matDatepickerFilter': true};
   }
 
@@ -191,14 +191,14 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
 
   /** Formats date of input and emits change detection. */
   _onInput(value: string) {
-    let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-    this._lastValueValid = !date || this._dateAdapter.isValid(date);
-    date = this._getValidDateOrNull(date);
+    let date = this.dateAdapter.parse(value, this._dateFormats.parse.dateInput);
+    this.lastValueValid = !date || this.dateAdapter.isValid(date);
+    date = this.getValidDateOrNull(date);
 
-    if (!this._dateAdapter.sameDate(date, this._value)) {
-      this._value = date;
-      this._controlValAccOnChange(date);
-      this._valueChange.emit(date);
+    if (!this.dateAdapter.sameDate(date, this.value)) {
+      this.value = date;
+      this.controlValAccOnChange(date);
+      this.valueChange.emit(date);
       this.emitDateInput();
     }
   }
@@ -244,7 +244,7 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
    * @return The element to connect the popup to.
    */
   getConnectedOverlayOrigin(): ElementRef {
-    return this._formField ? this._formField.getConnectedOverlayOrigin() : this._elementRef;
+    return this._formField ? this._formField.getConnectedOverlayOrigin() : this.elementRef;
   }
 
   /** Opens datepicker on keydown event */
@@ -257,18 +257,18 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
 
   /** Emits new datepicker input event when the input event is emitted. */
   emitDateInput() {
-    this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+    this.dateInput.emit(new MatDatepickerInputEvent(this, this.inputElement));
   }
 
   /** Emits new datepicker change event when the change event is emitted. */
   emitDateChange() {
-    this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+    this.dateChange.emit(new MatDatepickerInputEvent(this, this.inputElement));
   }
 
   /** Formats a value and sets it on the input element. */
-  protected _formatValue(value: D | null) {
-    this._elementRef.nativeElement.value =
-        value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
+  private _formatValue(value: D | null) {
+    this.inputElement.value =
+        value ? this.dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
   }
 
   /** Returns the palette used by the input's form field, if any. */

@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import {CalendarView} from './calendar-view';
 import {CdkDatepickerInput} from './datepicker-input';
-import {DateAdapter} from '@angular/material/core';
+import {DateAdapter} from '@angular/cdk/datetime';
 import {Subject, Subscription} from 'rxjs';
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -43,7 +43,7 @@ export class CdkDatepicker<D> implements OnDestroy {
     return this._startAt || (this._cdkDatepickerInput ? this._cdkDatepickerInput.value : null);
   }
   set startAt(value: D | null) {
-    this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    this._startAt = this.getValidDateOrNull(this.dateAdapter.deserialize(value));
   }
   private _startAt: D | null;
 
@@ -68,14 +68,14 @@ export class CdkDatepicker<D> implements OnDestroy {
   }
 
   get _dateFilter(): (date: D | null) => boolean {
-    return this._cdkDatepickerInput && this._cdkDatepickerInput._dateFilter;
+    return this._cdkDatepickerInput && this._cdkDatepickerInput.dateFilter;
   }
 
   /** Subscription to value changes in the associated input element. */
   private _inputCdkSubscription = Subscription.EMPTY;
 
   /** The input element this datepicker is associated with. */
-  _cdkDatepickerInput: CdkDatepickerInput<D>;
+  private _cdkDatepickerInput: CdkDatepickerInput<D>;
 
   /** Emits when the datepicker is disabled. */
   readonly _disabledChange = new Subject<boolean>();
@@ -83,10 +83,10 @@ export class CdkDatepicker<D> implements OnDestroy {
   /** Emits new selected date when selected date changes. */
   readonly _selectedChanged = new Subject<D>();
 
-  protected _dateAdapter: DateAdapter<D>;
+  protected dateAdapter: DateAdapter<D>;
 
   constructor() {
-    if (!this._dateAdapter) {
+    if (!this.dateAdapter) {
       throw Error('CdkDatepicker: No provider found for DateAdapter.');
     }
   }
@@ -114,7 +114,7 @@ export class CdkDatepicker<D> implements OnDestroy {
     }
     this._cdkDatepickerInput = input;
     this._inputCdkSubscription =
-        this._cdkDatepickerInput._valueChange.subscribe(
+        this._cdkDatepickerInput.valueChange.subscribe(
             (value: D | null) => this._selected = value);
   }
 
@@ -122,7 +122,7 @@ export class CdkDatepicker<D> implements OnDestroy {
    * @param obj The object to check.
    * @returns The given object if it is both a date instance and valid, otherwise null.
    */
-  protected _getValidDateOrNull(obj: any): D | null {
-    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  protected getValidDateOrNull(obj: any): D | null {
+    return (this.dateAdapter.isDateInstance(obj) && this.dateAdapter.isValid(obj)) ? obj : null;
   }
 }

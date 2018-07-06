@@ -252,7 +252,7 @@ export class MatDatepicker<D> extends CdkDatepicker<D> implements OnDestroy, Can
   _select(date: D): void {
     let oldValue = this._selected;
     this._selected = date;
-    if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
+    if (!this.dateAdapter.sameDate(oldValue, this._selected)) {
       this._selectedChanged.next(date);
     }
   }
@@ -277,7 +277,7 @@ export class MatDatepicker<D> extends CdkDatepicker<D> implements OnDestroy, Can
     }
     this._datepickerInput = input;
     this._inputSubscription =
-        this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
+        this._datepickerInput.valueChange.subscribe((value: D | null) => this._selected = value);
   }
 
   /** Open the calendar. */

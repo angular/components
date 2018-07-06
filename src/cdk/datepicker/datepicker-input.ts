@@ -8,15 +8,14 @@
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
-  AfterContentInit,
-  Directive,
-  ElementRef,
-  EventEmitter,
-  forwardRef,
-  Inject,
-  Input,
-  OnDestroy,
-  Output,
+    AfterContentInit,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    Input,
+    OnDestroy,
+    Output,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -29,7 +28,7 @@ import {
   Validators
 } from '@angular/forms';
 import {CdkDatepicker} from './datepicker';
-import {DateAdapter} from '@angular/material/core';
+import {DateAdapter} from '@angular/cdk/datetime';
 import {Subscription} from 'rxjs';
 
 /**
@@ -73,24 +72,25 @@ export interface CdkDatepickerInputEvent<D> {
     CDK_DATEPICKER_VALIDATORS,
   ],
   host: {
-    '[attr.aria-owns]': '(_datepicker.id) || null',
-    '[attr.min]': 'min ? _dateAdapter.toIso8601(min) : null',
-    '[attr.max]': 'max ? _dateAdapter.toIso8601(max) : null',
+    '[attr.aria-owns]': '(_cdkDatepicker.id) || null',
+    '[attr.min]': 'min ? dateAdapter.toIso8601(min) : null',
+    '[attr.max]': 'max ? dateAdapter.toIso8601(max) : null',
     '[disabled]': 'disabled',
     '(input)': 'emitDateInput()',
     '(change)': 'emitDateChange()',
-    '(blur)': '_onBlur()',
+    '(blur)': 'onBlur()',
   },
   exportAs: 'cdkDatepickerInput',
 })
 export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
     Validator {
   /** The datepicker that this input is associated with. */
-  @Input()
-  set cdkDatepicker(value: CdkDatepicker<D>) {
+  @Input('cdkDatepicker')
+  get datepicker(): CdkDatepicker<D> { return this._cdkDatepicker; }
+  set datepicker(value: CdkDatepicker<D>) {
     this._registerCdkDatepicker(value);
   }
-  _cdkDatepicker: CdkDatepicker<D>;
+  private _cdkDatepicker: CdkDatepicker<D>;
 
   /** Register datepicker CDK to input. */
   private _registerCdkDatepicker(value: CdkDatepicker<D>) {
@@ -103,29 +103,28 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   /** Function that can be used to filter out dates within the datepicker. */
   @Input('cdkDatepickerFilter')
   set filter(value: (date: D | null) => boolean) {
-    this._dateFilter = value;
-    this._validatorOnChange();
+    this.dateFilter = value;
+    this.validatorOnChange();
   }
-  _dateFilter: (date: D | null) => boolean;
+  public dateFilter: (date: D | null) => boolean;
 
   /** The value of the input. */
   @Input()
   get value(): D | null { return this._value; }
   set value(value: D | null) {
-    value = this._dateAdapter.deserialize(value);
-    this._lastValueValid = !value || this._dateAdapter.isValid(value);
-    value = this._getValidDateOrNull(value);
-    const oldDate = this.value;
+    value = this.dateAdapter.deserialize(value);
+    this.lastValueValid = !value || this.dateAdapter.isValid(value);
+    value = this.getValidDateOrNull(value);
+    const oldDate = this._value;
     this._value = value;
     this.emitValue(oldDate, value);
-
   }
-  protected _value: D | null;
+  private _value: D | null;
 
   /** Emit value change if dates are different. */
   emitValue(oldDate: D| null, value: D| null) {
-    if (!this._dateAdapter.sameDate(oldDate, value)) {
-      this._valueChange.emit(value);
+    if (!this.dateAdapter.sameDate(oldDate, value)) {
+      this.valueChange.emit(value);
     }
   }
 
@@ -133,8 +132,8 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   @Input()
   get min(): D | null { return this._min; }
   set min(value: D | null) {
-    this._min = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._validatorOnChange();
+    this._min = this.getValidDateOrNull(this.dateAdapter.deserialize(value));
+    this.validatorOnChange();
   }
   private _min: D | null;
 
@@ -142,8 +141,8 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   @Input()
   get max(): D | null { return this._max; }
   set max(value: D | null) {
-    this._max = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._validatorOnChange();
+    this._max = this.getValidDateOrNull(this.dateAdapter.deserialize(value));
+    this.validatorOnChange();
   }
   private _max: D | null;
 
@@ -152,7 +151,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   get disabled(): boolean { return !!this._disabled; }
   set disabled(value: boolean) {
     const newValue = coerceBooleanProperty(value);
-    const element = this._elementRef.nativeElement;
+    const element = this.inputElement;
 
     if (this._disabled !== newValue) {
       this._disabled = newValue;
@@ -180,19 +179,19 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
       new EventEmitter<CdkDatepickerInputEvent<D>>();
 
   /** Emits when the value changes (either due to user input or programmatic change). */
-  _valueChange = new EventEmitter<D | null>();
+  public valueChange = new EventEmitter<D | null>();
 
   /** Emits when the disabled state has changed. */
-  _disabledChange = new EventEmitter<boolean>();
+  private _disabledChange = new EventEmitter<boolean>();
 
   /** Implemented as part of ControlValueAccessor. */
-  _onTouched = () => {};
+  private _onTouched = () => {};
 
   /** Implemented as part of ControlValueAccessor. */
-  protected _controlValAccOnChange: (value: any) => void = () => {};
+  protected controlValAccOnChange: (value: any) => void = () => {};
 
   /** Implemented as part of ControlValueAccessor. */
-  protected _validatorOnChange = () => {};
+  protected validatorOnChange = () => {};
 
   /** Implemented for datepicker CDK subscription. */
   private _cdkDatepickerSubscription = Subscription.EMPTY;
@@ -201,64 +200,64 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   private _localeSubscription = Subscription.EMPTY;
 
   /** The native input element to which this directive is attached. */
-  protected _inputElement: HTMLInputElement;
+  protected inputElement: HTMLInputElement;
 
   /** The form control validator for whether the input parses. */
   private _parseCdkValidator: ValidatorFn = (): ValidationErrors | null => {
-    return this._lastValueValid ?
-        null : {'cdkDatepickerParse': {'text': this._elementRef.nativeElement.value}};
+    return this.lastValueValid ?
+        null : {'cdkDatepickerParse': {'text': this.inputElement.value}};
   }
 
   /** The form control validator for the min date. */
   private _minCdkValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
+    const controlValue = this.getValidDateOrNull(this.dateAdapter.deserialize(control.value));
     return (!this.min || !controlValue ||
-        this._dateAdapter.compareDate(this.min, controlValue) <= 0) ?
+        this.dateAdapter.compareDate(this.min, controlValue) <= 0) ?
         null : {'cdkDatepickerMin': {'min': this.min, 'actual': controlValue}};
   }
 
   /** The form control validator for the max date. */
   private _maxCdkValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
+    const controlValue = this.getValidDateOrNull(this.dateAdapter.deserialize(control.value));
     return (!this.max || !controlValue ||
-        this._dateAdapter.compareDate(this.max, controlValue) >= 0) ?
+        this.dateAdapter.compareDate(this.max, controlValue) >= 0) ?
         null : {'cdkDatepickerMax': {'max': this.max, 'actual': controlValue}};
   }
 
   /** The form control validator for the date filter. */
   private _filterCdkValidator: ValidatorFn = (control: AbstractControl):
       ValidationErrors | null => {
-    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
-    return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ?
+    const controlValue = this.getValidDateOrNull(this.dateAdapter.deserialize(control.value));
+    return !this.dateFilter || !controlValue || this.dateFilter(controlValue) ?
         null : {'cdkDatepickerFilter': true};
   }
 
   /** The combined form control validator for this input. */
-  private _cdkValidator: ValidatorFn | null =
+  private _combinedValidator: ValidatorFn | null =
       Validators.compose(
           [this._parseCdkValidator, this._minCdkValidator, this._maxCdkValidator,
               this._filterCdkValidator]);
 
   /** Whether the last value set on the input was valid. */
-  protected _lastValueValid = false;
-
-  /** Element reference associated with this input. */
-  protected _elementRef: ElementRef;
+  protected lastValueValid = false;
 
   /** DateAdapter associated with this input. */
-  _dateAdapter: DateAdapter<D>;
+  protected dateAdapter: DateAdapter<D>;
+
+  /** Element referenece associated with this input. */
+  protected elementRef: ElementRef;
 
   /** Constructor for the datepicker input component. */
   constructor() {
-    if (!this._dateAdapter) {
+    if (!this.dateAdapter) {
       throw Error('CdkDatepicker: No provider found for DateAdapter.');
     }
 
-    this._inputElement = this._elementRef.nativeElement as HTMLInputElement;
+    this.inputElement = this.elementRef.nativeElement as HTMLInputElement;
 
     // Update the displayed date when the locale changes.
-    this._localeSubscription = this._dateAdapter.localeChanges.subscribe(() => {
-      this.value = this.value;
+    this._localeSubscription = this.dateAdapter.localeChanges.subscribe(() => {
+      this._value = this._value;
     });
   }
 
@@ -270,17 +269,18 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     if (this._cdkDatepicker) {
       this._cdkDatepickerSubscription = this._cdkDatepicker._selectedChanged.subscribe(
           (selected: D) => {
-        this.emitChange(selected);
-        this.emitDateInput();
-        this.emitDateChange();
-      });
+          this.emitChange(selected);
+          this.emitDateInput();
+          this.emitDateChange();
+        }
+      );
     }
   }
 
   /** Initializes datepicker with ControlValueAccessor implementations. */
   emitChange(selected: D) {
-    this.value = selected;
-    this._controlValAccOnChange(selected);
+    this._value = selected;
+    this.controlValAccOnChange(selected);
     this._onTouched();
   }
 
@@ -298,28 +298,28 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   ngOnDestroy() {
     this.destroy();
     this._localeSubscription.unsubscribe();
-    this._valueChange.complete();
+    this.valueChange.complete();
     this._disabledChange.complete();
   }
 
   /** @docs-private */
   registerOnValidatorChange(fn: () => void): void {
-    this._validatorOnChange = fn;
+    this.validatorOnChange = fn;
   }
 
   /** @docs-private */
   validate(c: AbstractControl): ValidationErrors | null {
-    return this._cdkValidator ? this._cdkValidator(c) : null;
+    return this._combinedValidator ? this._combinedValidator(c) : null;
   }
 
   // Implemented as part of ControlValueAccessor.
   writeValue(value: D): void {
-    this.value = value;
+    this._value = value;
   }
 
   // Implemented as part of ControlValueAccessor.
   registerOnChange(fn: (value: any) => void): void {
-    this._controlValAccOnChange = fn;
+    this.controlValAccOnChange = fn;
   }
 
   // Implemented as part of ControlValueAccessor.
@@ -334,16 +334,16 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** Emits new datepicker input event when the input event is emitted. */
   emitDateInput() {
-    this.input.emit({ input: this._inputElement, value: this._inputElement.value});
+    this.input.emit({ input: this.inputElement, value: this.inputElement.value});
   }
 
   /** Emits new datepicker change event when the change event is emitted. */
   emitDateChange() {
-    this.change.emit( {input: this._inputElement, value: this._inputElement.value});
+    this.change.emit( {input: this.inputElement, value: this.inputElement.value});
   }
 
   /** Handles blur events on the input. */
-  _onBlur() {
+  onBlur() {
     this.formatIfValueExists();
     this._onTouched();
   }
@@ -355,7 +355,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
    * @param obj The object to check.
    * @returns The given object if it is both a date instance and valid, otherwise null.
    */
-  protected _getValidDateOrNull(obj: any): D | null {
-    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  protected getValidDateOrNull(obj: any): D | null {
+    return (this.dateAdapter.isDateInstance(obj) && this.dateAdapter.isValid(obj)) ? obj : null;
   }
 }
