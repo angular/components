@@ -2,7 +2,7 @@
   <h2>To do</h2>
   <cdk-drop
     #one
-    (cdkDragDropped)="drop($event)"
+    (dropped)="drop($event)"
     [data]="todo"
     [connectedTo]="[two]">
     <div *ngFor="let item of todo" cdkDrag>
@@ -16,7 +16,7 @@
   <h2>Done</h2>
   <cdk-drop
     #two
-    (cdkDragDropped)="drop($event)"
+    (dropped)="drop($event)"
     [data]="done"
     [connectedTo]="[one]">
     <div *ngFor="let item of done" cdkDrag>
