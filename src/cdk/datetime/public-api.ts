@@ -6,6 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export * from './dateadapter/date-adapter';
+export * from './date-adapter';
 export * from './datetime-module';
-export * from './dateadapter/native-date-adapter';
+export * from './native-date-adapter';

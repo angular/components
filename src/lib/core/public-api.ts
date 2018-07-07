@@ -18,3 +18,5 @@ export * from './label/label-options';
 export * from './ripple/index';
 export * from './selection/index';
 
+// TODO(vwei): Eventually remove
+export {DEC, FEB, JAN, MAR, JUL, JUN, SEP, NOV} from '@angular/cdk/testing';

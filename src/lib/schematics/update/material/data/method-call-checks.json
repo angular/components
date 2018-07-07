@@ -1,5 +1,22 @@
 [
   {
+    "pr": "https://github.com/angular/material2/pull/9190",
+    "changes": [
+      {
+        "className": "NativeDateAdapter",
+        "method": "constructor",
+        "invalidArgCounts": [
+          {
+            "count": 1,
+            "message": "\"g{{platform}}\" is now required as a second argument"
+          }
+        ]
+      }
+    ]
+  },
+
+
+  {
     "pr": "https://github.com/angular/material2/pull/10319",
     "changes": [
       {

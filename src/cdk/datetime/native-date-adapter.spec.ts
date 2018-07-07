@@ -2,7 +2,7 @@ import {Platform} from '@angular/cdk/platform';
 import {LOCALE_ID} from '@angular/core';
 import {async, inject, TestBed} from '@angular/core/testing';
 import {DEC, FEB, JAN, MAR} from '@angular/cdk/testing';
-import {DateAdapter, CDK_DATE_LOCALE, NativeDateAdapter, NativeDateModule} from '../index';
+import {DateAdapter, CDK_DATE_LOCALE, NativeDateAdapter, NativeDateModule} from './index';
 
 const SUPPORTS_INTL = typeof Intl != 'undefined';
 
