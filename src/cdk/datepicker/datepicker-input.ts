@@ -188,7 +188,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   private _onTouched = () => {};
 
   /** Implemented as part of ControlValueAccessor. */
-  protected controlValAccOnChange: (value: any) => void = () => {};
+  protected controlValueAccessorOnChange: (value: any) => void = () => {};
 
   /** Implemented as part of ControlValueAccessor. */
   protected validatorOnChange = () => {};
@@ -241,14 +241,8 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   /** Whether the last value set on the input was valid. */
   protected lastValueValid = false;
 
-  /** DateAdapter associated with this input. */
-  protected dateAdapter: DateAdapter<D>;
-
-  /** Element referenece associated with this input. */
-  protected elementRef: ElementRef;
-
   /** Constructor for the datepicker input component. */
-  constructor() {
+  constructor(protected dateAdapter: DateAdapter<D>, protected elementRef: ElementRef) {
     if (!this.dateAdapter) {
       throw Error('CdkDatepicker: No provider found for DateAdapter.');
     }
@@ -280,7 +274,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   /** Initializes datepicker with ControlValueAccessor implementations. */
   emitChange(selected: D) {
     this._value = selected;
-    this.controlValAccOnChange(selected);
+    this.controlValueAccessorOnChange(selected);
     this._onTouched();
   }
 
@@ -319,7 +313,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   // Implemented as part of ControlValueAccessor.
   registerOnChange(fn: (value: any) => void): void {
-    this.controlValAccOnChange = fn;
+    this.controlValueAccessorOnChange = fn;
   }
 
   // Implemented as part of ControlValueAccessor.

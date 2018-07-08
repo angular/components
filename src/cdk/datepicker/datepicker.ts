@@ -83,9 +83,7 @@ export class CdkDatepicker<D> implements OnDestroy {
   /** Emits new selected date when selected date changes. */
   readonly _selectedChanged = new Subject<D>();
 
-  protected dateAdapter: DateAdapter<D>;
-
-  constructor() {
+  constructor(protected dateAdapter: DateAdapter<D>) {
     if (!this.dateAdapter) {
       throw Error('CdkDatepicker: No provider found for DateAdapter.');
     }

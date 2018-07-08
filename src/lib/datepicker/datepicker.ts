@@ -39,6 +39,7 @@ import {
 } from '@angular/core';
 import {CanColor, mixinColor, ThemePalette} from '@angular/material/core';
 import {CdkDatepicker} from '@angular/cdk/datepicker';
+import {DateAdapter} from '@angular/cdk/datetime';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {merge, Subscription} from 'rxjs';
 import {MatDatepickerInput} from './datepicker-input';
@@ -234,8 +235,8 @@ export class MatDatepicker<D> extends CdkDatepicker<D> implements OnDestroy, Can
               private _viewContainerRef: ViewContainerRef,
               @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) private _scrollStrategy,
               @Optional() private _dir: Directionality,
-              @Optional() @Inject(DOCUMENT) private _document: any) {
-    super();
+              @Optional() @Inject(DOCUMENT) private _document: any, dateAdapter: DateAdapter<D>) {
+    super(dateAdapter);
   }
 
   destroy() {

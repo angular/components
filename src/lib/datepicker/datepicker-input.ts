@@ -30,6 +30,7 @@ import {
   Validators
 } from '@angular/forms';
 import {CdkDatepickerInput} from '@angular/cdk/datepicker';
+import {DateAdapter} from '@angular/cdk/datetime';
 import {MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {MatDatepicker} from './datepicker';
 import {MatFormField} from '@angular/material/form-field';
@@ -177,8 +178,8 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
 
   /** Constructor for material datepicker input. */
   constructor(@Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-      @Optional() private _formField: MatFormField) {
-    super();
+      @Optional() private _formField: MatFormField, dateAdapter: DateAdapter<D>, elementRef: ElementRef) {
+    super(dateAdapter, elementRef);
     if (!this._dateFormats) {
       throw Error('MatDatepicker: No provider found for MAT_DATE_FORMATS');
     }
@@ -197,7 +198,7 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
 
     if (!this.dateAdapter.sameDate(date, this.value)) {
       this.value = date;
-      this.controlValAccOnChange(date);
+      this.controlValueAccessorOnChange(date);
       this.valueChange.emit(date);
       this.emitDateInput();
     }
