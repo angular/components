@@ -27,7 +27,6 @@ import {
 export const matSelectAnimations: {
   readonly transformPanel: AnimationTriggerMetadata;
   readonly fadeInContent: AnimationTriggerMetadata;
-  readonly transformArrow: AnimationTriggerMetadata;
 } = {
   /**
    * This animation transforms the select's overlay panel on and off the page.
@@ -73,18 +72,6 @@ export const matSelectAnimations: {
     transition('void => showing', [
       style({opacity: 0}),
       animate('150ms 100ms cubic-bezier(0.55, 0, 0.55, 0.2)')
-    ])
-  ]),
-
-  /**
-   * This animation moves the panel toggle arrow up whenever the select is not empty to match the
-   * visual middle. This affects only mat-selects with appearance='standard'.
-   */
-  transformArrow: trigger('transformArrow', [
-    state('empty', style({})),
-    state('showing', style({transform: 'translateY(-50%)'})),
-    transition('showing => empty', [
-      animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)')
     ])
   ])
 };
