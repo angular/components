@@ -10,7 +10,6 @@ export interface VersionInfo {
 }
 
 /** Doc site versions. We update the urls and titles manually */
-// TODO(tinayuangao): Update the title with actual versions
 export const docVersions: VersionInfo[] = [
   {
     url: 'https://v5.material.angular.io/',
@@ -18,6 +17,6 @@ export const docVersions: VersionInfo[] = [
   },
   {
     url: `https://material.angular.io/`,
-    title: '6.3.2'
+    title: materialVersion
   }
 ];
