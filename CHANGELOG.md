@@ -1,5 +1,5 @@
 <a name="6.3.3"></a>
-## [6.3.3](https://github.com/angular/material2/compare/6.3.2...6.3.3) (2018-07-09)
+## [6.3.3 chrome-tarantula](https://github.com/angular/material2/compare/6.3.2...6.3.3) (2018-07-09)
 
 
 ### Highlights
@@ -18,7 +18,7 @@
 
 
 <a name="6.3.2"></a>
-## [6.3.2](https://github.com/angular/material2/compare/6.3.0...6.3.2) (2018-07-02)
+## [6.3.2 ruby-robot](https://github.com/angular/material2/compare/6.3.0...6.3.2) (2018-07-02)
 
 
 ### Bug Fixes
