@@ -14,6 +14,7 @@ import {TextFieldModule} from '@angular/cdk/text-field';
 import {ObserversModule} from '@angular/cdk/observers';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {PlatformModule} from '@angular/cdk/platform';
+import {NativeDateModule} from '@angular/cdk/datetime';
 import {PortalModule} from '@angular/cdk/portal';
 import {CdkTableModule} from '@angular/cdk/table';
 import {CdkTreeModule} from '@angular/cdk/tree';
@@ -108,6 +109,7 @@ import {
     ObserversModule,
     OverlayModule,
     PlatformModule,
+    NativeDateModule,
     PortalModule,
     ScrollingModule,
   ]
