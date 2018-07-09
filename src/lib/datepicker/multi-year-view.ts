@@ -97,9 +97,6 @@ export class MatMultiYearView<D> extends CalendarView<D> implements AfterContent
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
 
-  /** Emits when a new year is selected. */
-  @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
-
   /** Emits the selected year. This doesn't imply a change on the selected date */
   @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
 
