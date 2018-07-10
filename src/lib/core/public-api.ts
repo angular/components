@@ -22,4 +22,5 @@ export * from './selection/index';
  * @deprecated Create own month constants for application.
  * @deletion-target 8.0.0
  */
-export const JAN = 0, FEB = 1, MAR = 2, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9, NOV = 10, DEC = 11;
+export const JAN = 0, FEB = 1, MAR = 2, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9,
+  NOV = 10, DEC = 11;

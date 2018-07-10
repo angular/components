@@ -12,7 +12,7 @@ import {MAT_NATIVE_DATE_FORMATS} from './native-date-formats';
 import {NativeDateModule} from '@angular/cdk/datetime';
 
 @NgModule({
-    imports: [NativeDateModule],
-    providers: [{provide: MAT_DATE_FORMATS, useValue: MAT_NATIVE_DATE_FORMATS}],
+  imports: [NativeDateModule],
+  providers: [{provide: MAT_DATE_FORMATS, useValue: MAT_NATIVE_DATE_FORMATS}],
 })
 export class MatNativeDateModule {}

@@ -16,7 +16,7 @@ export {
     NativeDateModule,
     CDK_DATE_LOCALE as MAT_DATE_LOCALE,
     CDK_DATE_LOCALE_FACTORY as MAT_DATE_LOCAL_FACTORY,
-} from '@angular/cdk/datetime'
+} from '@angular/cdk/datetime';
 export * from './date-formats';
 export * from './datetime-module';
 export * from './native-date-formats';

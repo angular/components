@@ -12,9 +12,9 @@ import {NgModule} from '@angular/core';
 import {PlatformModule} from '@angular/cdk/platform';
 
 @NgModule({
-    imports: [PlatformModule],
-    providers: [
-        {provide: DateAdapter, useClass: NativeDateAdapter},
-    ],
+  imports: [PlatformModule],
+  providers: [
+    {provide: DateAdapter, useClass: NativeDateAdapter},
+  ],
 })
 export class NativeDateModule {}
