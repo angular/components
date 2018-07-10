@@ -11,11 +11,11 @@
  * @deletion-target 8.0.0
  */
 export {
-    DateAdapter,
-    NativeDateAdapter,
-    NativeDateModule,
-    CDK_DATE_LOCALE as MAT_DATE_LOCALE,
-    CDK_DATE_LOCALE_FACTORY as MAT_DATE_LOCAL_FACTORY,
+  DateAdapter,
+  NativeDateAdapter,
+  NativeDateModule,
+  CDK_DATE_LOCALE as MAT_DATE_LOCALE,
+  CDK_DATE_LOCALE_FACTORY as MAT_DATE_LOCAL_FACTORY,
 } from '@angular/cdk/datetime';
 export * from './date-formats';
 export * from './datetime-module';
