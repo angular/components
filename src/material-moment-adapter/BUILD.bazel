@@ -8,7 +8,10 @@ ts_library(
   name = "material-moment-adapter",
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/material-moment-adapter",
-  deps = ["//src/lib:material"],
+  deps = [
+    "//src/lib:material",
+    "//src/cdk/datetime",
+  ],
   tsconfig = "//src/material-moment-adapter:tsconfig-build.json",
 )
 
