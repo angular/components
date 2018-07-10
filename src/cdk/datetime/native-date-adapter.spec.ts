@@ -1,8 +1,8 @@
 import {Platform} from '@angular/cdk/platform';
 import {LOCALE_ID} from '@angular/core';
 import {async, inject, TestBed} from '@angular/core/testing';
-import {DEC, FEB, JAN, MAR} from '../testing/month-constants';
-import {DateAdapter, MAT_DATE_LOCALE, NativeDateAdapter, NativeDateModule} from './index';
+import {DEC, FEB, JAN, MAR} from '@angular/cdk/testing';
+import {DateAdapter, CDK_DATE_LOCALE, NativeDateAdapter, NativeDateModule} from './index';
 
 const SUPPORTS_INTL = typeof Intl != 'undefined';
 
@@ -372,13 +372,13 @@ describe('NativeDateAdapter', () => {
 });
 
 
-describe('NativeDateAdapter with MAT_DATE_LOCALE override', () => {
+describe('NativeDateAdapter with CDK_DATE_LOCALE override', () => {
   let adapter: NativeDateAdapter;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [NativeDateModule],
-      providers: [{provide: MAT_DATE_LOCALE, useValue: 'da-DK'}]
+      providers: [{provide: CDK_DATE_LOCALE, useValue: 'da-DK'}]
     }).compileComponents();
   }));
 
@@ -386,7 +386,7 @@ describe('NativeDateAdapter with MAT_DATE_LOCALE override', () => {
     adapter = d;
   }));
 
-  it('should take the default locale id from the MAT_DATE_LOCALE injection token', () => {
+  it('should take the default locale id from the CDK_DATE_LOCALE injection token', () => {
     const expectedValue = SUPPORTS_INTL ?
         ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'] :
         ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -410,7 +410,7 @@ describe('NativeDateAdapter with LOCALE_ID override', () => {
     adapter = d;
   }));
 
-  it('should cascade locale id from the LOCALE_ID injection token to MAT_DATE_LOCALE', () => {
+  it('should cascade locale id from the LOCALE_ID injection token to CDK_DATE_LOCALE', () => {
     const expectedValue = SUPPORTS_INTL ?
         ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'] :
         ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];

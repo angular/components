@@ -12,6 +12,7 @@ import {DragDropModule} from '@angular/cdk-experimental/drag-drop';
 import {A11yModule} from '@angular/cdk/a11y';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {BidiModule} from '@angular/cdk/bidi';
+import {CdkDatepickerModule, NativeDateModule} from '@angular/cdk/datetime';
 import {TextFieldModule} from '@angular/cdk/text-field';
 import {ObserversModule} from '@angular/cdk/observers';
 import {OverlayModule} from '@angular/cdk/overlay';
@@ -105,11 +106,13 @@ import {
     CdkTreeModule,
     A11yModule,
     BidiModule,
+    CdkDatepickerModule,
     CdkAccordionModule,
     TextFieldModule,
     ObserversModule,
     OverlayModule,
     PlatformModule,
+    NativeDateModule,
     PortalModule,
     ScrollingModule,
     DialogModule,
