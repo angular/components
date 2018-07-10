@@ -10,6 +10,7 @@ import {ScrollingModule} from '@angular/cdk-experimental';
 import {A11yModule} from '@angular/cdk/a11y';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {BidiModule} from '@angular/cdk/bidi';
+import {CdkDatepickerModule} from '@angular/cdk/datepicker';
 import {TextFieldModule} from '@angular/cdk/text-field';
 import {ObserversModule} from '@angular/cdk/observers';
 import {OverlayModule} from '@angular/cdk/overlay';
@@ -104,6 +105,7 @@ import {
     CdkTreeModule,
     A11yModule,
     BidiModule,
+    CdkDatepickerModule,
     CdkAccordionModule,
     TextFieldModule,
     ObserversModule,
