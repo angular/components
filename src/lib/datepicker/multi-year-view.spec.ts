@@ -12,10 +12,10 @@ import {By} from '@angular/platform-browser';
 import {Component, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, async} from '@angular/core/testing';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {JAN, MatNativeDateModule} from '@angular/material/core';
+import {MatNativeDateModule} from '@angular/material/core';
 import {MatCalendarBody} from './calendar-body';
 import {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
-import {dispatchKeyboardEvent, dispatchFakeEvent} from '@angular/cdk/testing';
+import {dispatchKeyboardEvent, dispatchFakeEvent, JAN} from '@angular/cdk/testing';
 
 describe('MatMultiYearView', () => {
   let dir: {value: Direction};
