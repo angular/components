@@ -11,10 +11,10 @@
 }
 
 /** Styles to make the demo look better. */
-mat-checkbox {
+.example-ripple-checkbox {
   margin: 6px 12px 6px 0;
 }
 
-mat-form-field {
+.example-ripple-form-field {
   margin: 0 12px 0 0;
 }
