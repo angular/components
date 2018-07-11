@@ -38,8 +38,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import {CanColor, mixinColor, ThemePalette} from '@angular/material/core';
-import {CdkDatepicker} from '@angular/cdk/datepicker';
-import {DateAdapter} from '@angular/cdk/datetime';
+import {CdkDatepicker, DateAdapter} from '@angular/cdk/datetime';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {merge, Subscription} from 'rxjs';
 import {MatDatepickerInput} from './datepicker-input';
