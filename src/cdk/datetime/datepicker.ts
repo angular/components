@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import {CalendarView} from './calendar-view';
 import {CdkDatepickerInput} from './datepicker-input';
-import {DateAdapter} from '@angular/cdk/datetime';
+import {DateAdapter} from 'datetime/index';
 import {Subject, Subscription} from 'rxjs';
 
 /** Used to generate a unique ID for each datepicker instance. */

@@ -30,7 +30,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {CalendarView} from '@angular/cdk/datepicker';
+import {CalendarView} from '@angular/cdk/datetime';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';

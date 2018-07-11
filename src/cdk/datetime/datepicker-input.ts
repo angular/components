@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty} from 'coercion/index';
 import {
     AfterContentInit,
     Directive,
@@ -28,7 +28,7 @@ import {
   Validators
 } from '@angular/forms';
 import {CdkDatepicker} from './datepicker';
-import {DateAdapter} from '@angular/cdk/datetime';
+import {DateAdapter} from 'datetime/index';
 import {Subscription} from 'rxjs';
 
 /**
