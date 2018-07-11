@@ -11,7 +11,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  DoCheck,
   ElementRef,
   Inject,
   Input,
@@ -124,6 +123,8 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
           // scroll events in the same frame we only need to recheck our layout once.
           .pipe(sampleTime(0, animationFrameScheduler), takeUntil(this._destroyed))
           .subscribe(() => this._scrollStrategy.onContentScrolled());
+
+      this._markForCheck();
     }));
   }
 
@@ -317,7 +318,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
         this.elementRef.nativeElement.scrollTop = this._pendingScrollOffset;
       }
     }
-    for(let fn of this._runAfterCheck) {
+    for (let fn of this._runAfterCheck) {
       fn();
     }
     this._runAfterCheck = [];
