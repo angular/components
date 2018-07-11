@@ -6,7 +6,7 @@ import {animationFrameScheduler, Subject} from 'rxjs';
 import {CdkVirtualScrollViewport, CdkVirtualForOf, ScrollingModule} from './index';
 
 
-fdescribe('CdkVirtualScrollViewport', () => {
+describe('CdkVirtualScrollViewport', () => {
   describe ('with FixedSizeVirtualScrollStrategy', () => {
     let fixture: ComponentFixture<FixedSizeVirtualScroll>;
     let testComponent: FixedSizeVirtualScroll;

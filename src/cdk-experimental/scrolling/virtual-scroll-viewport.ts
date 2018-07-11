@@ -102,10 +102,10 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   private _destroyed = new Subject<void>();
 
   /** Whether there is a pending change detection cycle. */
-  private _checkPending = false;
+  private _isChangeDetectionPending = false;
 
   /** A list of functions to run after the next change detection cycle. */
-  private _runAfterCheck: Function[] = [];
+  private _runAfterChangeDetection: Function[] = [];
 
   constructor(public elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef,
               private _ngZone: NgZone, private _sanitizer: DomSanitizer,
@@ -113,7 +113,9 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
 
   ngOnInit() {
     // It's still too early to measure the viewport at this point. Deferring with a promise allows
-    // the Viewport to be rendered with the correct size before we measure.
+    // the Viewport to be rendered with the correct size before we measure. We run this outside the
+    // zone to avoid causing more change detection cycles. We handle the change detection loop
+    // ourselves instead.
     this._ngZone.runOutsideAngular(() => Promise.resolve().then(() => {
       this._measureViewportSize();
       this._scrollStrategy.attach(this);
@@ -124,7 +126,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
           .pipe(sampleTime(0, animationFrameScheduler), takeUntil(this._destroyed))
           .subscribe(() => this._scrollStrategy.onContentScrolled());
 
-      this._markForCheck();
+      this._markChangeDetectionNeeded();
     }));
   }
 
@@ -146,13 +148,14 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
     }
 
     // Subscribe to the data stream of the CdkVirtualForOf to keep track of when the data length
-    // changes.
+    // changes. Run outside the zone to avoid triggering change detection, since we're managing the
+    // change detection loop ourselves.
     this._ngZone.runOutsideAngular(() => {
       this._forOf = forOf;
       this._forOf.dataStream.pipe(takeUntil(this._detachedSubject)).subscribe(data => {
-        const len = data.length;
-        if (len !== this._dataLength) {
-          this._dataLength = len;
+        const newLength = data.length;
+        if (newLength !== this._dataLength) {
+          this._dataLength = newLength;
           this._scrollStrategy.onDataLengthChanged();
         }
       });
@@ -192,7 +195,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   setTotalContentSize(size: number) {
     if (this._totalContentSize !== size) {
       this._totalContentSize = size;
-      this._markForCheck();
+      this._markChangeDetectionNeeded();
     }
   }
 
@@ -200,7 +203,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   setRenderedRange(range: ListRange) {
     if (!rangesEqual(this._renderedRange, range)) {
       this._renderedRangeSubject.next(this._renderedRange = range);
-      this._markForCheck(() => this._scrollStrategy.onContentRendered());
+      this._markChangeDetectionNeeded(() => this._scrollStrategy.onContentRendered());
     }
   }
 
@@ -231,7 +234,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
       // into the string.
       this._rawRenderedContentTransform = transform;
       this._renderedContentTransform = this._sanitizer.bypassSecurityTrustStyle(transform);
-      this._markForCheck(() => {
+      this._markChangeDetectionNeeded(() => {
         if (this._renderedContentOffsetNeedsRewrite) {
           this._renderedContentOffset -= this.measureRenderedContentSize();
           this._renderedContentOffsetNeedsRewrite = false;
@@ -248,7 +251,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
     // Rather than setting the offset immediately, we batch it up to be applied along with other DOM
     // writes during the next change detection cycle.
     this._pendingScrollOffset = offset;
-    this._markForCheck();
+    this._markChangeDetectionNeeded();
   }
 
   /** Gets the current scroll offset of the viewport (in pixels). */
@@ -289,28 +292,32 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   }
 
   /** Queue up change detection to run. */
-  private _markForCheck(runAfter?: Function) {
+  private _markChangeDetectionNeeded(runAfter?: Function) {
     if (runAfter) {
-      this._runAfterCheck.push(runAfter);
+      this._runAfterChangeDetection.push(runAfter);
     }
-    if (!this._checkPending) {
-      this._checkPending = true;
+
+    // Use a Promise to batch together calls to `_doChangeDetection`. This way if we set a bunch of
+    // properties sequentially we only have to run `_doChangeDetection` once at the end.
+    if (!this._isChangeDetectionPending) {
+      this._isChangeDetectionPending = true;
       this._ngZone.runOutsideAngular(() => Promise.resolve().then(() => {
         if (this._ngZone.isStable) {
-           this._doCheck();
+           this._doChangeDetection();
         } else {
-          this._ngZone.onStable.pipe(take(1)).subscribe(() => this._doCheck());
+          this._ngZone.onStable.pipe(take(1)).subscribe(() => this._doChangeDetection());
         }
       }));
     }
   }
 
   /** Run change detection. */
-  private _doCheck() {
-    this._checkPending = false;
+  private _doChangeDetection() {
+    this._isChangeDetectionPending = false;
+
+    // Apply changes to Angular bindings.
     this._ngZone.run(() => this._changeDetectorRef.detectChanges());
-    // In order to batch setting the scroll offset together with other DOM writes, we wait until a
-    // change detection cycle to actually apply it.
+    // Apply the pending scroll offset separately, since it can't be set up as an Angular binding.
     if (this._pendingScrollOffset != null) {
       if (this.orientation === 'horizontal') {
         this.elementRef.nativeElement.scrollLeft = this._pendingScrollOffset;
@@ -318,9 +325,10 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
         this.elementRef.nativeElement.scrollTop = this._pendingScrollOffset;
       }
     }
-    for (let fn of this._runAfterCheck) {
+
+    for (let fn of this._runAfterChangeDetection) {
       fn();
     }
-    this._runAfterCheck = [];
+    this._runAfterChangeDetection = [];
   }
 }
