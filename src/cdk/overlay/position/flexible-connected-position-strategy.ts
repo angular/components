@@ -468,11 +468,26 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       overlayStartY = pos.overlayY == 'top' ? 0 : -overlayRect.height;
     }
 
+    // On iOS, the .cdk-overlay-container will be positioned absolute instead of fixed.
+    // Adjust the y coordinate in that case by the scroll amount.
+    const overlayScrollY = this._getOverlayScrollY();
+
     // The (x, y) coordinates of the overlay.
     return {
       x: originPoint.x + overlayStartX,
-      y: originPoint.y + overlayStartY,
+      y: originPoint.y + overlayScrollY + overlayStartY,
     };
+  }
+
+  /**
+   * Gets the y coordinates of the overlay host element. On iOS when the keyboard is visible,
+   * .cdk-overlay-container will have an absolute position instead of fixed. When that happens,
+   * this will return a non-zero value.
+   */
+  private _getOverlayScrollY(): number {
+    const clientRect = this._overlayRef.hostElement.getBoundingClientRect();
+
+    return Math.abs(clientRect.top);
   }
 
   /** Gets how well an overlay at the given point will fit within the viewport. */
