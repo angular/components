@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import {CalendarView} from './calendar-view';
 import {CdkDatepickerInput} from './datepicker-input';
-import {DateAdapter} from 'datetime/index';
+import {DateAdapter} from '@angular/cdk/datetime';
 import {Subject, Subscription} from 'rxjs';
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -47,6 +47,7 @@ export class CdkDatepicker<D> implements OnDestroy {
   }
   private _startAt: D | null;
 
+  /** The child of the datepicker. */
   @ContentChild(CalendarView) view: CalendarView<D>;
 
   /** The id for the datepicker calendar. */
@@ -67,6 +68,7 @@ export class CdkDatepicker<D> implements OnDestroy {
     return this._cdkDatepickerInput && this._cdkDatepickerInput.max;
   }
 
+  /** The filtering of the date. */
   get _dateFilter(): (date: D | null) => boolean {
     return this._cdkDatepickerInput && this._cdkDatepickerInput.dateFilter;
   }
@@ -78,12 +80,12 @@ export class CdkDatepicker<D> implements OnDestroy {
   private _cdkDatepickerInput: CdkDatepickerInput<D>;
 
   /** Emits when the datepicker is disabled. */
-  readonly _disabledChange = new Subject<boolean>();
+  readonly disabledChange = new Subject<boolean>();
 
   /** Emits new selected date when selected date changes. */
-  readonly _selectedChanged = new Subject<D>();
+  readonly selectedChanged = new Subject<D>();
 
-  constructor(protected dateAdapter: DateAdapter<D>) {
+  constructor(public dateAdapter: DateAdapter<D>) {
     if (!this.dateAdapter) {
       throw Error('CdkDatepicker: No provider found for DateAdapter.');
     }
@@ -99,7 +101,7 @@ export class CdkDatepicker<D> implements OnDestroy {
 
   cdkDatepickerDestroy(subscription: Subscription) {
     subscription.unsubscribe();
-    this._disabledChange.complete();
+    this.disabledChange.complete();
   }
 
   /**
@@ -112,8 +114,8 @@ export class CdkDatepicker<D> implements OnDestroy {
     }
     this._cdkDatepickerInput = input;
     this._inputCdkSubscription =
-        this._cdkDatepickerInput.valueChange.subscribe(
-            (value: D | null) => this._selected = value);
+      this._cdkDatepickerInput.valueChange.subscribe(
+        (value: D | null) => this._selected = value);
   }
 
   /**

@@ -172,7 +172,7 @@ export class MatDatepicker<D> extends CdkDatepicker<D> implements OnDestroy, Can
 
     if (newValue !== this._disabled) {
       this._disabled = newValue;
-      this._disabledChange.next(newValue);
+      this.disabledChange.next(newValue);
     }
   }
   private _disabled: boolean;
@@ -234,7 +234,8 @@ export class MatDatepicker<D> extends CdkDatepicker<D> implements OnDestroy, Can
               private _viewContainerRef: ViewContainerRef,
               @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) private _scrollStrategy,
               @Optional() private _dir: Directionality,
-              @Optional() @Inject(DOCUMENT) private _document: any, dateAdapter: DateAdapter<D>) {
+              @Optional() @Inject(DOCUMENT) private _document: any,
+              public dateAdapter: DateAdapter<D>) {
     super(dateAdapter);
   }
 
@@ -253,7 +254,7 @@ export class MatDatepicker<D> extends CdkDatepicker<D> implements OnDestroy, Can
     let oldValue = this._selected;
     this._selected = date;
     if (!this.dateAdapter.sameDate(oldValue, this._selected)) {
-      this._selectedChanged.next(date);
+      this.selectedChanged.next(date);
     }
   }
 

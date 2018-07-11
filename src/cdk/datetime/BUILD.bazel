@@ -10,6 +10,7 @@ ng_module(
   deps = [
     "@rxjs",
     "//src/cdk/platform",
+    "//src/cdk/coercion",
   ],
   tsconfig = "//src/cdk:tsconfig-build.json",
 )

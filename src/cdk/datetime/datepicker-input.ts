@@ -6,16 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty} from 'coercion/index';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
-    AfterContentInit,
-    Directive,
-    ElementRef,
-    EventEmitter,
-    forwardRef,
-    Input,
-    OnDestroy,
-    Output,
+  AfterContentInit,
+  Directive,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnDestroy,
+  Output,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -25,11 +25,12 @@ import {
   ValidationErrors,
   Validator,
   ValidatorFn,
-  Validators
+  Validators,
 } from '@angular/forms';
 import {CdkDatepicker} from './datepicker';
-import {DateAdapter} from 'datetime/index';
+import {DateAdapter} from '@angular/cdk/datetime';
 import {Subscription} from 'rxjs';
+
 
 /**
  * Provider that allows the datepicker to register as a ControlValueAccessor.
@@ -106,7 +107,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this.dateFilter = value;
     this.validatorOnChange();
   }
-  public dateFilter: (date: D | null) => boolean;
+  dateFilter: (date: D | null) => boolean;
 
   /** The value of the input. */
   @Input()
@@ -155,7 +156,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
     if (this._disabled !== newValue) {
       this._disabled = newValue;
-      this._disabledChange.emit(newValue);
+      this.disabledChange.emit(newValue);
     }
 
     // We need to null check the `blur` method, because it's undefined during SSR.
@@ -171,18 +172,18 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   /** Emits when a `change` event is fired on this `<input>`. */
   @Output('cdkDatepickerChange')
   readonly change: EventEmitter<CdkDatepickerInputEvent<D>> =
-      new EventEmitter<CdkDatepickerInputEvent<D>>();
+    new EventEmitter<CdkDatepickerInputEvent<D>>();
 
   /** Emits when an `input` event is fired on this `<input>`. */
   @Output('cdkDatepickerInput')
   readonly input: EventEmitter<CdkDatepickerInputEvent<D>> =
-      new EventEmitter<CdkDatepickerInputEvent<D>>();
+    new EventEmitter<CdkDatepickerInputEvent<D>>();
 
   /** Emits when the value changes (either due to user input or programmatic change). */
-  public valueChange = new EventEmitter<D | null>();
+  valueChange = new EventEmitter<D | null>();
 
   /** Emits when the disabled state has changed. */
-  private _disabledChange = new EventEmitter<boolean>();
+  disabledChange = new EventEmitter<boolean>();
 
   /** Implemented as part of ControlValueAccessor. */
   private _onTouched = () => {};
@@ -205,14 +206,14 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   /** The form control validator for whether the input parses. */
   private _parseCdkValidator: ValidatorFn = (): ValidationErrors | null => {
     return this.lastValueValid ?
-        null : {'cdkDatepickerParse': {'text': this.inputElement.value}};
+      null : {'cdkDatepickerParse': {'text': this.inputElement.value}};
   }
 
   /** The form control validator for the min date. */
   private _minCdkValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const controlValue = this.getValidDateOrNull(this.dateAdapter.deserialize(control.value));
     return (!this.min || !controlValue ||
-        this.dateAdapter.compareDate(this.min, controlValue) <= 0) ?
+      this.dateAdapter.compareDate(this.min, controlValue) <= 0) ?
         null : {'cdkDatepickerMin': {'min': this.min, 'actual': controlValue}};
   }
 
@@ -220,7 +221,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   private _maxCdkValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const controlValue = this.getValidDateOrNull(this.dateAdapter.deserialize(control.value));
     return (!this.max || !controlValue ||
-        this.dateAdapter.compareDate(this.max, controlValue) >= 0) ?
+      this.dateAdapter.compareDate(this.max, controlValue) >= 0) ?
         null : {'cdkDatepickerMax': {'max': this.max, 'actual': controlValue}};
   }
 
@@ -229,20 +230,20 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
       ValidationErrors | null => {
     const controlValue = this.getValidDateOrNull(this.dateAdapter.deserialize(control.value));
     return !this.dateFilter || !controlValue || this.dateFilter(controlValue) ?
-        null : {'cdkDatepickerFilter': true};
+      null : {'cdkDatepickerFilter': true};
   }
 
   /** The combined form control validator for this input. */
   private _combinedValidator: ValidatorFn | null =
-      Validators.compose(
-          [this._parseCdkValidator, this._minCdkValidator, this._maxCdkValidator,
-              this._filterCdkValidator]);
+    Validators.compose(
+      [this._parseCdkValidator, this._minCdkValidator, this._maxCdkValidator,
+        this._filterCdkValidator]);
 
   /** Whether the last value set on the input was valid. */
   protected lastValueValid = false;
 
   /** Constructor for the datepicker input component. */
-  constructor(protected dateAdapter: DateAdapter<D>, protected elementRef: ElementRef) {
+  constructor(public dateAdapter: DateAdapter<D>, protected elementRef: ElementRef) {
     if (!this.dateAdapter) {
       throw Error('CdkDatepicker: No provider found for DateAdapter.');
     }
@@ -261,7 +262,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
    */
   init() {
     if (this._cdkDatepicker) {
-      this._cdkDatepickerSubscription = this._cdkDatepicker._selectedChanged.subscribe(
+      this._cdkDatepickerSubscription = this._cdkDatepicker.selectedChanged.subscribe(
           (selected: D) => {
           this.emitChange(selected);
           this.emitDateInput();
@@ -293,7 +294,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this.destroy();
     this._localeSubscription.unsubscribe();
     this.valueChange.complete();
-    this._disabledChange.complete();
+    this.disabledChange.complete();
   }
 
   /** @docs-private */
