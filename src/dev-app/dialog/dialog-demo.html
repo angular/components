@@ -6,9 +6,13 @@
 <button mat-raised-button color="accent" (click)="openContentElement()">
   Open dialog with content elements
 </button>
-<button mat-raised-button color="accent" (click)="openTemplate()">
+<button mat-raised-button color="accent" (click)="openTemplate(templateDialog)">
   Open dialog with template content
 </button>
+<button mat-raised-button color="accent" (click)="openTemplate(templateDialogWithContent)">
+  Open template dialog with content elements
+</button>
+
 
 <mat-card class="demo-dialog-card">
   <mat-card-content>
@@ -111,7 +115,7 @@
 <p>Last afterClosed result: {{lastAfterClosedResult}}</p>
 <p>Last beforeClose result: {{lastBeforeCloseResult}}</p>
 
-<ng-template let-data let-dialogRef="dialogRef">
+<ng-template #templateDialog let-data let-dialogRef="dialogRef">
   I'm a template dialog. I've been opened {{numTemplateOpens}} times!
 
   <p>It's Jazz!</p>
@@ -124,4 +128,32 @@
   <p> {{ data.message }} </p>
   <button type="button" (click)="dialogRef.close(howMuch.value)">Close dialog</button>
   <button (click)="dialogRef.updateSize('500px', '500px').updatePosition({top: '25px', left: '25px'});">Change dimensions</button>
+</ng-template>
+
+<ng-template #templateDialogWithContent let-data let-dialogRef="dialogRef">
+  <h2 mat-dialog-title>Saturn</h2>
+
+  <mat-dialog-content>
+    <img style="max-width: 100%;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Saturn_during_Equinox.jpg/1920px-Saturn_during_Equinox.jpg" alt="Saturn">
+    Saturn is the sixth planet from the Sun and the second-largest in the Solar System, after
+    Jupiter. It is a gas giant with an average radius about nine times that of Earth. It has
+    only one-eighth the average density of Earth, but with its larger volume Saturn is over
+    95 times more massive. Saturn is named after the Roman god of agriculture; its astronomical
+    symbol (♄) represents the god's sickle.
+
+    Saturn's interior is probably composed of a core of iron–nickel and rock
+    (silicon and oxygen compounds). This core is surrounded by a deep layer of metallic hydrogen,
+    an intermediate layer of liquid hydrogen and liquid helium, and finally a gaseous outer layer.
+    Saturn has a pale yellow hue due to ammonia crystals in its upper atmosphere. Electrical
+    current within the metallic hydrogen layer is thought to give rise to Saturn's planetary
+    magnetic field, which is weaker than Earth's, but has a magnetic moment 580 times that of
+    Earth due to Saturn's larger size. Saturn's magnetic field strength is around one-twentieth
+    of Jupiter's. The outer atmosphere is generally bland and lacking in contrast, although
+    long-lived features can appear. Wind speeds on Saturn can reach 1,800 km/h (1,100 mph),
+    higher than on Jupiter, but not as high as those on Neptune.
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="dialogRef.close()">Close dialog</button>
+  </mat-dialog-actions>
 </ng-template>

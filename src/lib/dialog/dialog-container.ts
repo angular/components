@@ -114,7 +114,15 @@ export class MatDialogContainer extends BasePortalOutlet {
     }
 
     this._savePreviouslyFocusedElement();
-    return this._portalOutlet.attachComponentPortal(portal);
+
+    const componentRef = this._portalOutlet.attachComponentPortal(portal);
+
+    // We need to add an extra class to the root of the instantiated component, which
+    // allows us to propagate some width/height overrides down from the overlay pane.
+    componentRef.location.nativeElement.classList.add('mat-dialog-component-host');
+    this._toggleScrollableContentClass();
+
+    return componentRef;
   }
 
   /**
@@ -127,7 +135,9 @@ export class MatDialogContainer extends BasePortalOutlet {
     }
 
     this._savePreviouslyFocusedElement();
-    return this._portalOutlet.attachTemplatePortal(portal);
+    const viewRef = this._portalOutlet.attachTemplatePortal(portal);
+    this._toggleScrollableContentClass();
+    return viewRef;
   }
 
   /** Moves the focus inside the focus trap. */
@@ -196,5 +206,20 @@ export class MatDialogContainer extends BasePortalOutlet {
     // Mark the container for check so it can react if the
     // view container is using OnPush change detection.
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Toggles a class on the host element, depending on whether it has
+   * scrollable content. Used to activate particular flexbox styling.
+   */
+  private _toggleScrollableContentClass() {
+    const element: HTMLElement = this._elementRef.nativeElement;
+    const cssClass = 'mat-dialog-container-scrollable';
+
+    if (element.querySelector('.mat-dialog-content')) {
+      element.classList.add(cssClass);
+    } else {
+      element.classList.remove(cssClass);
+    }
   }
 }
