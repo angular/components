@@ -100,22 +100,24 @@ export class CdkOverlayOrigin {
  */
 @Directive({
   selector: '[cdk-connected-overlay], [connected-overlay], [cdkConnectedOverlay]',
-  exportAs: 'cdkConnectedOverlay'
+  exportAs: 'cdkConnectedOverlay',
 })
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
+  private readonly _templatePortal: TemplatePortal;
   private _overlayRef: OverlayRef;
-  private _templatePortal: TemplatePortal;
   private _hasBackdrop = false;
   private _lockPosition = false;
   private _growAfterOpen = false;
   private _flexibleDimensions = false;
   private _push = false;
   private _backdropSubscription = Subscription.EMPTY;
+  private _keydownSubscription: Subscription | null = null;
   private _offsetX: number;
   private _offsetY: number;
   private _position: FlexibleConnectedPositionStrategy;
   private _disableClose = false;
   private _open = false;
+  private _hidden = false;
 
   /** Origin for the connected overlay. */
   @Input('cdkConnectedOverlayOrigin') origin: CdkOverlayOrigin;
@@ -176,6 +178,15 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   @Input('cdkConnectedOverlayOpen')
   get open() { return this._open; }
   set open(value: any) { this._open = coerceBooleanProperty(value); }
+  
+  /** Whether the overlay is hidden, but still in the DOM. */
+  @Input('cdkConnectedOverlayHidden')
+  get hidden() { return this._hidden; }
+  set hidden(value: any) {
+    this._hidden = coerceBooleanProperty(value);
+    this._updateKeydownSubscription();
+    this._updateOverlayElementVisibility();
+  }
 
   /** Whether or not the overlay should attach a backdrop. */
   @Input('cdkConnectedOverlayHasBackdrop')
@@ -345,14 +356,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _attachOverlay() {
     if (!this._overlayRef) {
       this._createOverlay();
-
-      this._overlayRef!.keydownEvents().subscribe((event: KeyboardEvent) => {
-        this.overlayKeydown.next(event);
-
-        if (!this.disableClose && event.keyCode === ESCAPE) {
-          this._detachOverlay();
-        }
-      });
+      this._updateKeydownSubscription();
+      this._updateOverlayElementVisibility();
     } else {
       // Update the overlay size, in case the directive's inputs have changed
       this._overlayRef.updateSize({
@@ -373,6 +378,37 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     });
   }
 
+  /**
+   * Sets up keydown handlers if the overlay is attached and visible, or removes keydown
+   * handlers if the overlay is detached or hidden.
+   */
+  private _updateKeydownSubscription() {
+    if (!this._hidden && this._overlayRef && !this._keydownSubscription) {
+      this._keydownSubscription = this._overlayRef!.keydownEvents().subscribe(event => {
+        this.overlayKeydown.next(event);
+
+        if (!this.disableClose && event.keyCode === ESCAPE) {
+          this._detachOverlay();
+        }
+      });
+    } else if (this._keydownSubscription) {
+      this._keydownSubscription.unsubscribe();
+      this._keydownSubscription = null;
+    }
+  }
+
+  /**
+   * Updates the visibility of the overlay element by adding or removing the `cdk-visually-hidden`
+   * css class based on the `hidden` property of this directive.
+   */
+  private _updateOverlayElementVisibility() {
+    if (this._overlayRef && this._overlayRef.hasAttached() && this._overlayRef.overlayElement) {
+      const classList = this._overlayRef.overlayElement.classList;
+      const hiddenClass = 'cdk-visually-hidden';
+      this._hidden ? classList.add(hiddenClass) : classList.remove(hiddenClass);
+    }
+  }
+
   /** Detaches the overlay and unsubscribes to backdrop clicks if backdrop exists */
   private _detachOverlay() {
     if (this._overlayRef) {
@@ -390,6 +426,9 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     }
 
     this._backdropSubscription.unsubscribe();
+    if (this._keydownSubscription) {
+      this._keydownSubscription.unsubscribe();
+    }
   }
 }
 

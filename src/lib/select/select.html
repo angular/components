@@ -26,13 +26,13 @@
   [cdkConnectedOverlayPositions]="_positions"
   [cdkConnectedOverlayMinWidth]="_triggerRect?.width"
   [cdkConnectedOverlayOffsetY]="_offsetY"
+  [cdkConnectedOverlayHidden]="!panelOpen"
   (backdropClick)="close()"
   (attach)="_onAttached()"
   (detach)="close()">
   <div
     #panel
     class="mat-select-panel {{ _getPanelTheme() }}"
-    [class.cdk-visually-hidden]="!panelOpen"
     [ngClass]="panelClass"
     [@transformPanel]="_transformPanel"
     (@transformPanel.done)="_panelDoneAnimatingStream.next($event.toState)"
