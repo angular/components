@@ -30,7 +30,7 @@ let datepickerUid = 0;
 @Component({
   moduleId: module.id,
   selector: 'cdk-datepicker',
-  template: '',
+  template: '<ng-content></ng-content>',
   exportAs: 'cdkDatepicker',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
