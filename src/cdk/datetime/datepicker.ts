@@ -23,9 +23,6 @@ import {CalendarView} from './calendar-view';
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
 
-// TODO(vwei): We use a component instead of a directive here so the user can use implicit
-// template reference variables (e.g. #d vs #d="cdkDatepicker"). We can change this to a directive
-// if angular adds support for `exportAs: '$implicit'` on directives.
 /** Component responsible for managing the datepicker CDK. */
 @Component({
   moduleId: module.id,
