@@ -314,7 +314,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
     // Apply changes to Angular bindings.
     this._ngZone.run(() => this._changeDetectorRef.detectChanges());
     // Apply the content transform. The transform can't be set via an Angular binding because
-    // bypassSecurityTrustStyle is banned in google3. However the value is safe, it's composed of
+    // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
     // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
     // the `Number` function first to coerce it to a numeric value.
     this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
