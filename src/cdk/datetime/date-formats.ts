@@ -9,6 +9,9 @@
 import {InjectionToken} from '@angular/core';
 
 
+/**
+ * Collection of formats the datepicker uses when displaying and parsing dates.
+ */
 export type CdkDateFormats = {
   parse: {
     dateInput: any
@@ -19,4 +22,7 @@ export type CdkDateFormats = {
 };
 
 
+/**
+ * Injection token for formats the datepicker uses when displaying and parsing dates.
+ */
 export const CDK_DATE_FORMATS = new InjectionToken<CdkDateFormats>('cdk-date-formats');

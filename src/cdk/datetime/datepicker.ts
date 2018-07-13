@@ -19,7 +19,7 @@ import {Subject, Subscription} from 'rxjs';
 import {DateAdapter} from './date-adapter';
 import {CdkDatepickerInput} from './datepicker-input';
 import {CalendarView} from './calendar-view';
-import {coerceBooleanProperty} from "@angular/cdk/coercion";
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -29,7 +29,7 @@ let datepickerUid = 0;
   moduleId: module.id,
   selector: 'cdk-datepicker',
   host: {
-    '[attr.id]': 'id',
+    '[id]': 'id',
   },
   template: '<ng-content></ng-content>',
   exportAs: 'cdkDatepicker',
@@ -52,7 +52,7 @@ export class CdkDatepicker<D> implements OnDestroy {
   /** Whether the datepicker should be disabled. */
   @Input()
   get disabled(): boolean {
-    return this._disabled === undefined && this._datepickerInput ?
+    return this._disabled == null && this._datepickerInput ?
         this._datepickerInput.disabled : !!this._disabled;
   }
   set disabled(value: boolean) {

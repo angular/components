@@ -8,12 +8,7 @@
 
 import {CdkDateFormats} from './date-formats';
 
-
 export const CDK_NATIVE_DATE_FORMATS: CdkDateFormats = {
-    parse: {
-        dateInput: null,
-    },
-    display: {
-        dateInput: {year: 'numeric', month: 'numeric', day: 'numeric'},
-    }
+  parse: {dateInput: null},
+  display: {dateInput: {year: 'numeric', month: 'numeric', day: 'numeric'}},
 };
