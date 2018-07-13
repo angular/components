@@ -16,10 +16,48 @@ cdk-virtual-scroll-viewport {
 
 .cdk-virtual-scroll-orientation-horizontal .cdk-virtual-scroll-content-wrapper {
   bottom: 0;
+
+  & > dl,
+  & > ol,
+  & > table,
+  & > ul {
+    padding: {
+      left: 0;
+      right: 0
+    };
+    margin: {
+      left: 0;
+      right: 0
+    };
+    border: {
+      left-width: 0;
+      right-width: 0
+    };
+    outline: none;
+  }
 }
 
 .cdk-virtual-scroll-orientation-vertical .cdk-virtual-scroll-content-wrapper {
   right: 0;
+
+  & > dl,
+  & > ol,
+  & > table,
+  & > ul {
+    padding: {
+      top: 0;
+      bottom: 0
+    };
+    margin: {
+      top: 0;
+      bottom: 0
+    };
+    border: {
+      top-width: 0;
+      bottom-width: 0
+    };
+    outline: none;
+  }
 }
 
 // Spacer element that whose width or height will be adjusted to match the size of the entire data
