@@ -19,21 +19,25 @@ import {Subject, Subscription} from 'rxjs';
 import {DateAdapter} from './date-adapter';
 import {CdkDatepickerInput} from './datepicker-input';
 import {CalendarView} from './calendar-view';
+import {coerceBooleanProperty} from "@angular/cdk/coercion";
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
 
-/** Component responsible for managing the datepicker CDK. */
+/** Component used to wire together the datepicker input and calendar view. */
 @Component({
   moduleId: module.id,
   selector: 'cdk-datepicker',
+  host: {
+    '[attr.id]': 'id',
+  },
   template: '<ng-content></ng-content>',
   exportAs: 'cdkDatepicker',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class CdkDatepicker<D> implements OnDestroy {
-  /** The initial date of the datepicker CDK. */
+  /** The initial date of the datepicker. */
   @Input()
   get startAt(): D | null {
     // If an explicit startAt is set we start there, otherwise we start at whatever the currently
@@ -45,11 +49,30 @@ export class CdkDatepicker<D> implements OnDestroy {
   }
   private _startAt: D | null;
 
-  /** The child of the datepicker */
+  /** Whether the datepicker should be disabled. */
+  @Input()
+  get disabled(): boolean {
+    return this._disabled === undefined && this._datepickerInput ?
+        this._datepickerInput.disabled : !!this._disabled;
+  }
+  set disabled(value: boolean) {
+    const newValue = coerceBooleanProperty(value);
+
+    if (newValue !== this._disabled) {
+      this._disabled = newValue;
+      this._disabledChange.next(newValue);
+    }
+  }
+  private _disabled: boolean;
+
+  /** The calendar view displayed in this datepicker. */
   @ContentChild(CalendarView) view: CalendarView<D>;
 
+  /** The unique id for the datepicker. */
+  private _uniqueId: string = `cdk-datepicker-${datepickerUid++}`;
+
   /** The id for the datepicker calendar. */
-  id: string = `cdk-datepicker-${datepickerUid++}`;
+  @Input() id: string = this._uniqueId;
 
   /** The currently selected date. */
   get _selected(): D | null { return this._validSelected; }
@@ -66,7 +89,7 @@ export class CdkDatepicker<D> implements OnDestroy {
     return this._datepickerInput && this._datepickerInput.max;
   }
 
-  /** The filtering of the date. */
+  /** The filtering of which dates are selectable. */
   get _dateFilter(): (date: D | null) => boolean {
     return this._datepickerInput && this._datepickerInput._dateFilter;
   }
@@ -77,20 +100,18 @@ export class CdkDatepicker<D> implements OnDestroy {
   /** The input element this datepicker is associated with. */
   _datepickerInput: CdkDatepickerInput<D>;
 
-  /** Emits when the datepicker is disabled. */
+  /** Emits when the datepicker's disabled state changes. */
   readonly _disabledChange = new Subject<boolean>();
 
   /** Emits new selected date when selected date changes. */
   readonly _selectedChanged = new Subject<D>();
 
-  /** Constructor for datepicker. */
-  constructor(@Optional() private _dateAdapter: DateAdapter<D>) {
+  constructor(@Optional() protected _dateAdapter: DateAdapter<D>) {
     if (!this._dateAdapter) {
       throw Error('CdkDatepicker: No provider found for DateAdapter.');
     }
   }
 
-  /** Destroys subscriptions and change detection. */
   ngOnDestroy() {
     this._inputSubscription.unsubscribe();
     this._disabledChange.complete();

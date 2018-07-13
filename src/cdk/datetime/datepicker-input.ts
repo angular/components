@@ -197,7 +197,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   private _validatorOnChange = () => {};
 
   /** Implemented for datepicker CDK and locale subscriptions. */
-  private readonly subscriptions = new Subscription();
+  private readonly _subscriptions = new Subscription();
 
   /** The form control validator for whether the input parses. */
   private _parseValidator: ValidatorFn = (): ValidationErrors | null => {
@@ -236,7 +236,6 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   /** Whether the last value set on the input was valid. */
   private _lastValueValid = false;
 
-  /** Constructor for datepicker input. */
   constructor(
       protected _elementRef: ElementRef,
       @Optional() public _dateAdapter: DateAdapter<D>,
@@ -249,15 +248,14 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
       throw Error('CdkDatepicker: No provider found for CDK_DATE_FORMATS.');
     }
     // Update the displayed date when the locale changes.
-    this.subscriptions.add(_dateAdapter.localeChanges.subscribe(() => {
+    this._subscriptions.add(_dateAdapter.localeChanges.subscribe(() => {
       this.value = this.value;
     }));
   }
 
-  /** Content initialization. */
   ngAfterContentInit() {
     if (this._datepicker) {
-      this.subscriptions.add(this._datepicker._selectedChanged.subscribe((selected: D) => {
+      this._subscriptions.add(this._datepicker._selectedChanged.subscribe((selected: D) => {
         this.value = selected;
         this._controlValueAccessorOnChange(selected);
         this._onTouched();
@@ -267,9 +265,8 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     }
   }
 
-  /** Destroys subscriptions and change detection. */
   ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    this._subscriptions.unsubscribe();
     this._valueChange.complete();
     this._disabledChange.complete();
   }
@@ -304,7 +301,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this.disabled = isDisabled;
   }
 
-  /** Emits new datepicker change event when the change event is emitted. */
+  /** Handles change events on the input. */
   _onChange() {
     this.dateChange.emit(new DatepickerInputEvent(this, this._elementRef.nativeElement));
   }
