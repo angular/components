@@ -7,7 +7,7 @@
  */
 
 export * from './drop';
-export {CDK_DROP_CONTAINER} from './drop-container';
+export * from './drop-container';
 export * from './drag';
 export * from './drag-handle';
 export * from './drag-events';
