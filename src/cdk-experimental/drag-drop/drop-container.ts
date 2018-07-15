@@ -53,6 +53,5 @@ export interface CdkDropContainer<T = any> {
 /**
  * Injection token that is used to provide a CdkDrop instance to CdkDrag.
  * Used for avoiding circular imports.
- * @docs-private
  */
 export const CDK_DROP_CONTAINER = new InjectionToken<CdkDropContainer>('CDK_DROP_CONTAINER');
