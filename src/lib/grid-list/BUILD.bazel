@@ -1,0 +1,33 @@
+package(default_visibility=["//visibility:public"])
+load("@angular//:index.bzl", "ng_module")
+load("@io_bazel_rules_sass//sass:sass.bzl", "sass_library", "sass_binary")
+
+
+ng_module(
+  name = "grid-list",
+  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
+  module_name = "@angular/material/grid-list",
+  assets = [":grid-list.css"] + glob(["**/*.html"]),
+  deps = [
+    "//src/lib/core",
+    "//src/cdk/bidi",
+  ],
+  tsconfig = "//src/lib:tsconfig-build.json",
+)
+
+# TODO(jelbourn): replace this w/ sass_library when it supports acting like a filegroup
+filegroup(
+  name = "grid_list_scss_partials",
+  srcs = glob(["**/_*.scss"]),
+)
+
+sass_binary(
+  name = "grid_list_scss",
+  src = "grid-list.scss",
+  deps = ["//src/lib/core:core_scss_lib"],
+)
+
+sass_library(
+  name = "theme",
+  srcs = glob(["**/*-theme.scss"]),
+)

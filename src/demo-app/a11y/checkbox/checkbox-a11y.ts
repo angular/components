@@ -1,4 +1,13 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Component} from '@angular/core';
+
 
 export interface Task {
   name: string;
@@ -19,30 +28,26 @@ export class CheckboxAccessibilityDemo {
       name: 'Reminders',
       completed: false,
       subtasks: [
-        { name: 'Cook Dinner', completed: false },
-        { name: 'Read the Material Design Spec', completed: false },
-        { name: 'Upgrade Application to Angular', completed: false }
+        {name: 'Cook Dinner', completed: false},
+        {name: 'Read the Material Design Spec', completed: false},
+        {name: 'Upgrade Application to Angular', completed: false}
       ]
     },
     {
       name: 'Groceries',
       completed: false,
       subtasks: [
-        { name: 'Organic Eggs', completed: false },
-        { name: 'Protein Powder', completed: false },
-        { name: 'Almond Meal Flour', completed: false }
+        {name: 'Organic Eggs', completed: false},
+        {name: 'Protein Powder', completed: false},
+        {name: 'Almond Meal Flour', completed: false}
       ]
     }
   ];
 
   allComplete(task: Task): boolean {
-    let subtasks = task.subtasks;
+    const subtasks = task.subtasks;
 
-    if (!subtasks) {
-      return false;
-    }
-
-    return subtasks.every(t => t.completed);
+    return task.completed || (subtasks != null && subtasks.every(t => t.completed));
   }
 
   someComplete(tasks: Task[]): boolean {

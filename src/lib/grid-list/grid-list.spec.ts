@@ -3,6 +3,7 @@ import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatGridList, MatGridListModule} from './index';
 import {MatGridTile, MatGridTileText} from './grid-tile';
+import {Directionality} from '@angular/cdk/bidi';
 
 
 describe('MatGridList', () => {
@@ -28,6 +29,9 @@ describe('MatGridList', () => {
         GridListWithComplexLayout,
         GridListWithFootersWithoutLines,
         GridListWithFooterContainingTwoLines,
+        GridListWithoutMatchingGap,
+        GridListWithEmptyDirectionality,
+        GridListWithRtl,
       ],
     });
 
@@ -287,6 +291,32 @@ describe('MatGridList', () => {
     expect(getStyle(tile, 'height')).toBe('400px');
   });
 
+  it('should ensure that all tiles are inside the grid when there are no matching gaps', () => {
+    const fixture = TestBed.createComponent(GridListWithoutMatchingGap);
+    const tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
+
+    fixture.detectChanges();
+    expect(tiles.every(tile => getComputedLeft(tile) >= 0))
+        .toBe(true, 'Expected none of the tiles to have a negative `left`');
+  });
+
+  it('should default to LTR if empty directionality is given', () => {
+    const fixture = TestBed.createComponent(GridListWithEmptyDirectionality);
+    const tile: HTMLElement = fixture.debugElement.query(By.css('mat-grid-tile')).nativeElement;
+    fixture.detectChanges();
+
+    expect(tile.style.left).toBe('0px');
+    expect(tile.style.right).toBe('');
+  });
+
+  it('should set `right` styles for RTL', () => {
+    const fixture = TestBed.createComponent(GridListWithRtl);
+    const tile: HTMLElement = fixture.debugElement.query(By.css('mat-grid-tile')).nativeElement;
+    fixture.detectChanges();
+
+    expect(tile.style.left).toBe('');
+    expect(tile.style.right).toBe('0px');
+  });
 });
 
 
@@ -298,14 +328,13 @@ function getStyle(el: DebugElement, prop: string): string {
 function getComputedLeft(element: DebugElement): number {
   // While the other properties in this test use `getComputedStyle`, we use `getBoundingClientRect`
   // for left because iOS Safari doesn't support using `getComputedStyle` to get the calculated
-  // `left` balue when using CSS `calc`. We subtract the `left` of the document body because
+  // `left` value when using CSS `calc`. We subtract the `left` of the document body because
   // browsers, by default, add a margin to the body (typically 8px).
   let elementRect = element.nativeElement.getBoundingClientRect();
   let bodyRect = document.body.getBoundingClientRect();
 
   return elementRect.left - bodyRect.left;
 }
-
 
 
 @Component({template: '<mat-grid-list></mat-grid-list>'})
@@ -458,3 +487,25 @@ class GridListWithFootersWithoutLines { }
       </mat-grid-tile>
     </mat-grid-list>`})
 class GridListWithFooterContainingTwoLines { }
+
+@Component({template: `
+  <mat-grid-list cols="5">
+    <mat-grid-tile [rowspan]="1" [colspan]="3">1</mat-grid-tile>
+    <mat-grid-tile [rowspan]="2" [colspan]="2">2</mat-grid-tile>
+    <mat-grid-tile [rowspan]="1" [colspan]="2">3</mat-grid-tile>
+    <mat-grid-tile [rowspan]="2" [colspan]="2">4</mat-grid-tile>
+  </mat-grid-list>
+`})
+class GridListWithoutMatchingGap { }
+
+@Component({
+  template: `<mat-grid-list cols="1"><mat-grid-tile>Hello</mat-grid-tile></mat-grid-list>`,
+  providers: [{provide: Directionality, useValue: {}}]
+})
+class GridListWithEmptyDirectionality { }
+
+@Component({
+  template: `<mat-grid-list cols="1"><mat-grid-tile>Hello</mat-grid-tile></mat-grid-list>`,
+  providers: [{provide: Directionality, useValue: {value: 'rtl'}}]
+})
+class GridListWithRtl { }

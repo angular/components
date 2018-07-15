@@ -11,6 +11,7 @@ import {CanDisable} from './disabled';
 
 /** @docs-private */
 export interface HasTabIndex {
+  /** Tabindex of the component. */
   tabIndex: number;
 }
 
@@ -31,4 +32,3 @@ export function mixinTabIndex<T extends Constructor<CanDisable>>(base: T, defaul
     }
   };
 }
-

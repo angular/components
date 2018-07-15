@@ -6,13 +6,23 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, Optional, SkipSelf, OnDestroy} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
+import {
+  Inject,
+  Injectable,
+  InjectionToken,
+  OnDestroy,
+  Optional,
+  SkipSelf,
+} from '@angular/core';
 
 
 /** Container inside which all overlays will render. */
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class OverlayContainer implements OnDestroy {
   protected _containerElement: HTMLElement;
+
+  constructor(@Inject(DOCUMENT) protected _document: any) {}
 
   ngOnDestroy() {
     if (this._containerElement && this._containerElement.parentNode) {
@@ -36,23 +46,28 @@ export class OverlayContainer implements OnDestroy {
    * with the 'cdk-overlay-container' class on the document body.
    */
   protected _createContainer(): void {
-    let container = document.createElement('div');
-    container.classList.add('cdk-overlay-container');
+    const container = this._document.createElement('div');
 
-    document.body.appendChild(container);
+    container.classList.add('cdk-overlay-container');
+    this._document.body.appendChild(container);
     this._containerElement = container;
   }
 }
 
-/** @docs-private */
-export function OVERLAY_CONTAINER_PROVIDER_FACTORY(parentContainer: OverlayContainer) {
-  return parentContainer || new OverlayContainer();
+
+/** @docs-private @deprecated @deletion-target 7.0.0 */
+export function OVERLAY_CONTAINER_PROVIDER_FACTORY(parentContainer: OverlayContainer,
+  _document: any) {
+  return parentContainer || new OverlayContainer(_document);
 }
 
-/** @docs-private */
+/** @docs-private @deprecated @deletion-target 7.0.0 */
 export const OVERLAY_CONTAINER_PROVIDER = {
   // If there is already an OverlayContainer available, use that. Otherwise, provide a new one.
   provide: OverlayContainer,
-  deps: [[new Optional(), new SkipSelf(), OverlayContainer]],
+  deps: [
+    [new Optional(), new SkipSelf(), OverlayContainer],
+    DOCUMENT as InjectionToken<any> // We need to use the InjectionToken somewhere to keep TS happy
+  ],
   useFactory: OVERLAY_CONTAINER_PROVIDER_FACTORY
 };

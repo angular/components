@@ -47,14 +47,18 @@ For more details about the theming functions, see the comments in the
 #### Best practices using `@mixin`
 When using `@mixin`, the theme file should only contain the definitions that are affected by the passed-in theme.
 
-All styles that are not affected by the theme should be placed in a `candy-carousel.scss` file. This file should contain everything that is not affected by the theme like sizes, transitions...
+All styles that are not affected by the theme should be placed in a `candy-carousel.scss` file.
+This file should contain everything that is not affected by the theme like sizes, transitions...
 
-Styles that are affected by the theme should be placed in a separated theming file as `_candy-carousel-theme.scss` and the file should have a `_` before the name. This file should contain the `@mixin` function responsible for applying the theme to the component.
+Styles that are affected by the theme should be placed in a separated theming file as
+`_candy-carousel-theme.scss` and the file should have a `_` before the name. This file should
+contain the `@mixin` function responsible for applying the theme to the component.
 
 
 ### Using colors from a palette
-You can consume the theming functions and Material palette variables from `@angular/material/theming`.
-You can use the `mat-color` function to extract a specific color from a palette. For example:
+You can consume the theming functions and Material palette variables from
+`@angular/material/theming`. You can use the `mat-color` function to extract a specific color
+from a palette. For example:
 
 ```scss
 // Import theming functions
@@ -63,8 +67,14 @@ You can use the `mat-color` function to extract a specific color from a palette.
 @import 'src/unicorn-app-theme.scss';
 
 // Use mat-color to extract individual colors from a palette as necessary.
+// The hue can be one of the standard values (500, A400, etc.), one of the three preconfigured
+// hues (default, lighter, darker), or any of the aforementioned prefixed with "-contrast".
+// For example a hue of "darker-contrast" gives a light color to contrast with a "darker" hue.
+// Note that quotes are needed when using a numeric hue with the "-contrast" modifier.
+// Available color palettes: https://material.io/design/color/
 .candy-carousel {
   background-color: mat-color($candy-app-primary);
   border-color: mat-color($candy-app-accent, A400);
+  color: mat-color($candy-app-primary, '100-contrast');
 }
 ```

@@ -1,4 +1,5 @@
 @import '../core/style/variables';
+@import '../core/style/noop-animation';
 
 
 // Animation config
@@ -22,16 +23,19 @@ $_mat-progress-spinner-default-circumference: $pi * $_mat-progress-spinner-defau
   }
 
   circle {
+    @include _noop-animation();
     fill: transparent;
     transform-origin: center;
     transition: stroke-dashoffset 225ms linear;
   }
 
   &.mat-progress-spinner-indeterminate-animation[mode='indeterminate'] {
+    @include _noop-animation();
     animation: mat-progress-spinner-linear-rotate $swift-ease-in-out-duration * 4
         linear infinite;
 
     circle {
+      @include _noop-animation();
       transition-property: stroke;
       // Note: we multiply the duration by 8, because the animation is spread out in 8 stages.
       animation-duration: $swift-ease-in-out-duration * 8;
@@ -41,12 +45,14 @@ $_mat-progress-spinner-default-circumference: $pi * $_mat-progress-spinner-defau
   }
 
   &.mat-progress-spinner-indeterminate-fallback-animation[mode='indeterminate'] {
+    @include _noop-animation();
     animation: mat-progress-spinner-stroke-rotate-fallback
                $mat-progress-spinner-stroke-rotate-fallback-duration
                $mat-progress-spinner-stroke-rotate-fallback-ease
                infinite;
 
     circle {
+      @include _noop-animation();
       transition-property: stroke;
     }
   }
@@ -69,24 +75,31 @@ $_mat-progress-spinner-default-circumference: $pi * $_mat-progress-spinner-defau
       stylelint-disable declaration-block-single-line-max-declarations,
         declaration-block-semicolon-space-after
     */
+
+    // .0001 percentage difference is necessary in order to avoid unwanted animation frames
+    // for example because the animation duration is 4 seconds, .1% accounts to 4ms
+    // which are enough to see the flicker described in
+    // https://github.com/angular/material2/issues/8984
+    //
+    // NOTE: this is replaced by js for any diameter other that 100
     0%      { stroke-dashoffset: $start;  transform: rotate(0); }
     12.5%   { stroke-dashoffset: $end;    transform: rotate(0); }
-    12.51%  { stroke-dashoffset: $end;    transform: rotateX(180deg) rotate(72.5deg); }
+    12.5001%  { stroke-dashoffset: $end;    transform: rotateX(180deg) rotate(72.5deg); }
     25%     { stroke-dashoffset: $start;  transform: rotateX(180deg) rotate(72.5deg); }
 
-    25.1%   { stroke-dashoffset: $start;  transform: rotate(270deg); }
+    25.0001%   { stroke-dashoffset: $start;  transform: rotate(270deg); }
     37.5%   { stroke-dashoffset: $end;    transform: rotate(270deg); }
-    37.51%  { stroke-dashoffset: $end;    transform: rotateX(180deg) rotate(161.5deg); }
+    37.5001%  { stroke-dashoffset: $end;    transform: rotateX(180deg) rotate(161.5deg); }
     50%     { stroke-dashoffset: $start;  transform: rotateX(180deg) rotate(161.5deg); }
 
-    50.01%  { stroke-dashoffset: $start;  transform: rotate(180deg); }
+    50.0001%  { stroke-dashoffset: $start;  transform: rotate(180deg); }
     62.5%   { stroke-dashoffset: $end;    transform: rotate(180deg); }
-    62.51%  { stroke-dashoffset: $end;    transform: rotateX(180deg) rotate(251.5deg); }
+    62.5001%  { stroke-dashoffset: $end;    transform: rotateX(180deg) rotate(251.5deg); }
     75%     { stroke-dashoffset: $start;  transform: rotateX(180deg) rotate(251.5deg); }
 
-    75.01%  { stroke-dashoffset: $start;  transform: rotate(90deg); }
+    75.0001%  { stroke-dashoffset: $start;  transform: rotate(90deg); }
     87.5%   { stroke-dashoffset: $end;    transform: rotate(90deg); }
-    87.51%  { stroke-dashoffset: $end;    transform: rotateX(180deg) rotate(341.5deg); }
+    87.5001%  { stroke-dashoffset: $end;    transform: rotateX(180deg) rotate(341.5deg); }
     100%    { stroke-dashoffset: $start;  transform: rotateX(180deg) rotate(341.5deg); }
     // stylelint-enable
   }

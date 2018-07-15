@@ -1,14 +1,14 @@
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
-import {Observable} from 'rxjs/Observable';
+import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {Observable} from 'rxjs';
 import {MatTab, MatTabGroup, MatTabHeaderPosition, MatTabsModule} from './index';
 
 
 describe('MatTabGroup', () => {
-  beforeEach(async(() => {
+  beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatTabsModule, NoopAnimationsModule],
       declarations: [
@@ -18,6 +18,8 @@ describe('MatTabGroup', () => {
         AsyncTabsTestApp,
         DisabledTabsTestApp,
         TabGroupWithSimpleApi,
+        TemplateTabs,
+        TabGroupWithAriaInputs,
       ],
     });
 
@@ -26,13 +28,20 @@ describe('MatTabGroup', () => {
 
   describe('basic behavior', () => {
     let fixture: ComponentFixture<SimpleTabsTestApp>;
+    let element: HTMLElement;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleTabsTestApp);
+      element = fixture.nativeElement;
     });
 
     it('should default to the first tab', () => {
       checkSelectedIndex(1, fixture);
+    });
+
+    it('will properly load content on first change detection pass', () => {
+      fixture.detectChanges();
+      expect(element.querySelectorAll('.mat-tab-body')[1].querySelectorAll('span').length).toBe(3);
     });
 
     it('should change selected index on click', () => {
@@ -51,7 +60,7 @@ describe('MatTabGroup', () => {
       checkSelectedIndex(2, fixture);
     });
 
-    it('should support two-way binding for selectedIndex', async(() => {
+    it('should support two-way binding for selectedIndex', fakeAsync(() => {
       let component = fixture.componentInstance;
       component.selectedIndex = 0;
 
@@ -59,13 +68,13 @@ describe('MatTabGroup', () => {
 
       let tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
       tabLabel.nativeElement.click();
-
       fixture.detectChanges();
-      fixture.whenStable().then(() => {
-        expect(component.selectedIndex).toBe(1);
-      });
+      tick();
+
+      expect(component.selectedIndex).toBe(1);
     }));
 
+    // Note: needs to be `async` in order to fail when we expect it to.
     it('should set to correct tab on fast change', async(() => {
       let component = fixture.componentInstance;
       component.selectedIndex = 0;
@@ -201,6 +210,68 @@ describe('MatTabGroup', () => {
       expect(tabs[1].isActive).toBe(false);
       expect(tabs[2].isActive).toBe(true);
     });
+
+    it('should fire animation done event', fakeAsync(() => {
+      fixture.detectChanges();
+
+      spyOn(fixture.componentInstance, 'animationDone');
+      let tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+      tabLabel.nativeElement.click();
+      fixture.detectChanges();
+      tick();
+
+      expect(fixture.componentInstance.animationDone).toHaveBeenCalled();
+    }));
+
+    it('should add the proper `aria-setsize` and `aria-posinset`', () => {
+      fixture.detectChanges();
+
+      const labels = Array.from(element.querySelectorAll('.mat-tab-label'));
+
+      expect(labels.map(label => label.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
+      expect(labels.every(label => label.getAttribute('aria-setsize') === '3')).toBe(true);
+    });
+
+  });
+
+  describe('aria labelling', () => {
+    let fixture: ComponentFixture<TabGroupWithAriaInputs>;
+    let tab: HTMLElement;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(TabGroupWithAriaInputs);
+      fixture.detectChanges();
+      tick();
+      tab = fixture.nativeElement.querySelector('.mat-tab-label');
+    }));
+
+    it('should not set aria-label or aria-labelledby attributes if they are not passed in', () => {
+      expect(tab.hasAttribute('aria-label')).toBe(false);
+      expect(tab.hasAttribute('aria-labelledby')).toBe(false);
+    });
+
+    it('should set the aria-label attribute', () => {
+      fixture.componentInstance.ariaLabel = 'Fruit';
+      fixture.detectChanges();
+
+      expect(tab.getAttribute('aria-label')).toBe('Fruit');
+    });
+
+    it('should set the aria-labelledby attribute', () => {
+      fixture.componentInstance.ariaLabelledby = 'fruit-label';
+      fixture.detectChanges();
+
+      expect(tab.getAttribute('aria-labelledby')).toBe('fruit-label');
+    });
+
+    it('should not be able to set both an aria-label and aria-labelledby', () => {
+      fixture.componentInstance.ariaLabel = 'Fruit';
+      fixture.componentInstance.ariaLabelledby = 'fruit-label';
+      fixture.detectChanges();
+
+      expect(tab.getAttribute('aria-label')).toBe('Fruit');
+      expect(tab.hasAttribute('aria-labelledby')).toBe(false);
+    });
   });
 
   describe('disable tabs', () => {
@@ -235,74 +306,134 @@ describe('MatTabGroup', () => {
   describe('dynamic binding tabs', () => {
     let fixture: ComponentFixture<SimpleDynamicTabsTestApp>;
 
-    beforeEach(async(() => {
+    beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(SimpleDynamicTabsTestApp);
+      fixture.detectChanges();
+      tick();
       fixture.detectChanges();
     }));
 
-    it('should be able to add a new tab, select it, and have correct origin position', () => {
-      fixture.detectChanges();
-      const component: MatTabGroup =
-          fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
+    it('should be able to add a new tab, select it, and have correct origin position',
+      fakeAsync(() => {
+        const component: MatTabGroup =
+            fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
 
-      let tabs: MatTab[] = component._tabs.toArray();
-      expect(tabs[0].origin).toBe(null);
-      expect(tabs[1].origin).toBe(0);
-      expect(tabs[2].origin).toBe(null);
+        let tabs: MatTab[] = component._tabs.toArray();
+        expect(tabs[0].origin).toBe(null);
+        expect(tabs[1].origin).toBe(0);
+        expect(tabs[2].origin).toBe(null);
 
-      // Add a new tab on the right and select it, expect an origin >= than 0 (animate right)
-      fixture.componentInstance.tabs.push({label: 'New tab', content: 'to right of index'});
-      fixture.componentInstance.selectedIndex = 4;
-      fixture.detectChanges();
+        // Add a new tab on the right and select it, expect an origin >= than 0 (animate right)
+        fixture.componentInstance.tabs.push({label: 'New tab', content: 'to right of index'});
+        fixture.componentInstance.selectedIndex = 4;
+        fixture.detectChanges();
+        tick();
 
-      tabs = component._tabs.toArray();
-      expect(tabs[3].origin).toBeGreaterThanOrEqual(0);
+        tabs = component._tabs.toArray();
+        expect(tabs[3].origin).toBeGreaterThanOrEqual(0);
 
-      // Add a new tab in the beginning and select it, expect an origin < than 0 (animate left)
-      fixture.componentInstance.tabs.push({label: 'New tab', content: 'to left of index'});
-      fixture.componentInstance.selectedIndex = 0;
-      fixture.detectChanges();
+        // Add a new tab in the beginning and select it, expect an origin < than 0 (animate left)
+        fixture.componentInstance.selectedIndex = 0;
+        fixture.detectChanges();
+        tick();
 
-      tabs = component._tabs.toArray();
-      expect(tabs[0].origin).toBeLessThan(0);
-    });
+        fixture.componentInstance.tabs.push({label: 'New tab', content: 'to left of index'});
+        fixture.detectChanges();
+        tick();
+
+        tabs = component._tabs.toArray();
+        expect(tabs[0].origin).toBeLessThan(0);
+    }));
 
 
-    it('should update selected index if the last tab removed while selected', () => {
-      fixture.detectChanges();
+    it('should update selected index if the last tab removed while selected', fakeAsync(() => {
       const component: MatTabGroup =
           fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
 
       const numberOfTabs = component._tabs.length;
       fixture.componentInstance.selectedIndex = numberOfTabs - 1;
       fixture.detectChanges();
+      tick();
 
       // Remove last tab while last tab is selected, expect next tab over to be selected
       fixture.componentInstance.tabs.pop();
       fixture.detectChanges();
+      tick();
 
       expect(component.selectedIndex).toBe(numberOfTabs - 2);
+    }));
+
+
+    it('should maintain the selected tab if a new tab is added', () => {
+      fixture.detectChanges();
+      const component: MatTabGroup =
+          fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
+
+      fixture.componentInstance.selectedIndex = 1;
+      fixture.detectChanges();
+
+      // Add a new tab at the beginning.
+      fixture.componentInstance.tabs.unshift({label: 'New tab', content: 'at the start'});
+      fixture.detectChanges();
+
+      expect(component.selectedIndex).toBe(2);
+      expect(component._tabs.toArray()[2].isActive).toBe(true);
     });
+
+
+    it('should maintain the selected tab if a tab is removed', () => {
+      // Add a couple of tabs so we have more to work with.
+      fixture.componentInstance.tabs.push(
+        {label: 'New tab', content: 'with new content'},
+        {label: 'Another new tab', content: 'with newer content'}
+      );
+
+      // Select the second-to-last tab.
+      fixture.componentInstance.selectedIndex = 3;
+      fixture.detectChanges();
+
+      const component: MatTabGroup =
+          fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
+
+      // Remove a tab right before the selected one.
+      fixture.componentInstance.tabs.splice(2, 1);
+      fixture.detectChanges();
+
+      expect(component.selectedIndex).toBe(1);
+      expect(component._tabs.toArray()[1].isActive).toBe(true);
+    });
+
+    it('should not fire `selectedTabChange` when the amount of tabs changes', fakeAsync(() => {
+      fixture.detectChanges();
+      fixture.componentInstance.selectedIndex = 1;
+      fixture.detectChanges();
+
+      // Add a new tab at the beginning.
+      spyOn(fixture.componentInstance, 'handleSelection');
+      fixture.componentInstance.tabs.unshift({label: 'New tab', content: 'at the start'});
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.handleSelection).not.toHaveBeenCalled();
+    }));
 
   });
 
   describe('async tabs', () => {
     let fixture: ComponentFixture<AsyncTabsTestApp>;
 
-    it('should show tabs when they are available', async(() => {
+    it('should show tabs when they are available', fakeAsync(() => {
       fixture = TestBed.createComponent(AsyncTabsTestApp);
 
-      let labels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
-
-      expect(labels.length).toBe(0);
+      expect(fixture.debugElement.queryAll(By.css('.mat-tab-label')).length).toBe(0);
 
       fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+      tick();
 
-      fixture.whenStable().then(() => {
-        fixture.detectChanges();
-        labels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
-        expect(labels.length).toBe(2);
-      });
+      expect(fixture.debugElement.queryAll(By.css('.mat-tab-label')).length).toBe(2);
     }));
   });
 
@@ -310,20 +441,22 @@ describe('MatTabGroup', () => {
     let fixture: ComponentFixture<TabGroupWithSimpleApi>;
     let tabGroup: MatTabGroup;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(TabGroupWithSimpleApi);
       fixture.detectChanges();
+      tick();
 
       tabGroup =
           fixture.debugElement.query(By.directive(MatTabGroup)).componentInstance as MatTabGroup;
-    });
+    }));
 
-    it('should support a tab-group with the simple api', () => {
+    it('should support a tab-group with the simple api', fakeAsync(() => {
       expect(getSelectedLabel(fixture).textContent).toMatch('Junk food');
       expect(getSelectedContent(fixture).textContent).toMatch('Pizza, fries');
 
       tabGroup.selectedIndex = 2;
       fixture.detectChanges();
+      tick();
 
       expect(getSelectedLabel(fixture).textContent).toMatch('Fruit');
       expect(getSelectedContent(fixture).textContent).toMatch('Apples, grapes');
@@ -334,11 +467,23 @@ describe('MatTabGroup', () => {
 
       expect(getSelectedLabel(fixture).textContent).toMatch('Chips');
       expect(getSelectedContent(fixture).textContent).toMatch('Salt, vinegar');
-    });
+    }));
 
     it('should support @ViewChild in the tab content', () => {
       expect(fixture.componentInstance.legumes).toBeTruthy();
     });
+
+    it('should only have the active tab in the DOM', fakeAsync(() => {
+      expect(fixture.nativeElement.textContent).toContain('Pizza, fries');
+      expect(fixture.nativeElement.textContent).not.toContain('Peanuts');
+
+      tabGroup.selectedIndex = 3;
+      fixture.detectChanges();
+      tick();
+
+      expect(fixture.nativeElement.textContent).not.toContain('Pizza, fries');
+      expect(fixture.nativeElement.textContent).toContain('Peanuts');
+    }));
 
     it('should support setting the header position', () => {
       let tabGroupNode = fixture.debugElement.query(By.css('mat-tab-group')).nativeElement;
@@ -351,6 +496,23 @@ describe('MatTabGroup', () => {
       expect(tabGroupNode.classList).toContain('mat-tab-group-inverted-header');
     });
   });
+
+  describe('lazy loaded tabs', () => {
+    it('should lazy load the second tab', fakeAsync(() => {
+      const fixture = TestBed.createComponent(TemplateTabs);
+      fixture.detectChanges();
+      tick();
+
+      const secondLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+      secondLabel.nativeElement.click();
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      const child = fixture.debugElement.query(By.css('.child'));
+      expect(child.nativeElement).toBeDefined();
+    }));
+   });
 
   /**
    * Checks that the `selectedIndex` has been updated; checks that the label and body have their
@@ -383,7 +545,7 @@ describe('MatTabGroup', () => {
 
 
 describe('nested MatTabGroup with enabled animations', () => {
-  beforeEach(async(() => {
+  beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatTabsModule, BrowserAnimationsModule],
       declarations: [NestedTabs]
@@ -392,10 +554,11 @@ describe('nested MatTabGroup with enabled animations', () => {
     TestBed.compileComponents();
   }));
 
-  it('should not throw when creating a component with nested tab groups', async(() => {
+  it('should not throw when creating a component with nested tab groups', fakeAsync(() => {
     expect(() => {
       let fixture = TestBed.createComponent(NestedTabs);
       fixture.detectChanges();
+      tick();
     }).not.toThrow();
   }));
 });
@@ -407,6 +570,7 @@ describe('nested MatTabGroup with enabled animations', () => {
         [(selectedIndex)]="selectedIndex"
         [headerPosition]="headerPosition"
         [disableRipple]="disableRipple"
+        (animationDone)="animationDone()"
         (focusChange)="handleFocus($event)"
         (selectedTabChange)="handleSelection($event)">
       <mat-tab>
@@ -415,7 +579,7 @@ describe('nested MatTabGroup with enabled animations', () => {
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>Tab Two</ng-template>
-        Tab two content
+        <span>Tab </span><span>two</span><span>content</span>
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>Tab Three</ng-template>
@@ -437,6 +601,7 @@ class SimpleTabsTestApp {
   handleSelection(event: any) {
     this.selectEvent = event;
   }
+  animationDone() { }
 }
 
 @Component({
@@ -528,7 +693,7 @@ class DisabledTabsTestApp {
    </mat-tab-group>
   `
 })
-class AsyncTabsTestApp {
+class AsyncTabsTestApp implements OnInit {
   private _tabs = [
     { label: 'one', content: 'one' },
     { label: 'two', content: 'two' }
@@ -539,7 +704,7 @@ class AsyncTabsTestApp {
   ngOnInit() {
     // Use ngOnInit because there is some issue with scheduling the async task in the constructor.
     this.tabs = Observable.create((observer: any) => {
-      requestAnimationFrame(() => observer.next(this._tabs));
+      setTimeout(() => observer.next(this._tabs));
     });
   }
 }
@@ -579,3 +744,32 @@ class TabGroupWithSimpleApi {
 })
 class NestedTabs {}
 
+@Component({
+  selector: 'template-tabs',
+  template: `
+    <mat-tab-group>
+      <mat-tab label="One">
+        Eager
+      </mat-tab>
+      <mat-tab label="Two">
+        <ng-template matTabContent>
+          <div class="child">Hi</div>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  `,
+ })
+ class TemplateTabs {}
+
+
+ @Component({
+  template: `
+  <mat-tab-group>
+    <mat-tab [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby"></mat-tab>
+  </mat-tab-group>
+  `
+})
+class TabGroupWithAriaInputs {
+  ariaLabel: string;
+  ariaLabelledby: string;
+}

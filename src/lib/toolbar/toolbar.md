@@ -52,8 +52,8 @@ easily accomplished with `display: flex`:
 ```
 ```scss
 .example-fill-remaining-space {
-  // This fills the remaining space, by using flexbox. 
-  // Every toolbar row uses a flexbox row layout.
+  /* This fills the remaining space, by using flexbox. 
+     Every toolbar row uses a flexbox row layout. */
   flex: 1 1 auto;
 }
 ```
@@ -68,7 +68,7 @@ By default, the toolbar assumes that it will be used in a purely decorative fash
 no roles, ARIA attributes, or keyboard shortcuts. This is equivalent to having a sequence of `<div>`
 elements on the page.
 
-Generally, the toolbar is used as a header where `role="header"` would be appropriate.
+Generally, the toolbar is used as a header where `role="heading"` would be appropriate.
 
 Only if the use-case of the toolbar match that of role="toolbar", the user should add the role and
 an appropriate label via `aria-label` or `aria-labelledby`.

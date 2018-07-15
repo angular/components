@@ -126,21 +126,6 @@ class ConfigBuilder {
 }
 ```
 
-#### RxJS
-When dealing with RxJS operators, import the lettable operator (e.g.
-`import {map} from 'rxjs/operators/map'`), as opposed to using the "patch" imports which pollute the
-user's global Observable object (e.g. `import 'rxjs/add/operator/map'`):
-
-```ts
-// NO
-import 'rxjs/add/operator/map';
-someObservable.map(...).subscribe(...);
-
-// YES
-import {map} from 'rxjs/operators/map';
-someObservable.pipe(map(...)).subscribe(...);
-```
-
 #### Access modifiers
 * Omit the `public` keyword as it is the default behavior.
 * Use `private` when appropriate and possible, prefixing the name with an underscore.
@@ -153,6 +138,24 @@ be part of the user-facing API. This typically applies to symbols used in templa
 
 Additionally, the `@docs-private` JsDoc annotation can be used to hide any symbol from the public
 API docs.
+
+
+#### Getters and Setters
+* Avoid long or complex getters and setters. If the logic of an accessor would take more than
+three lines, introduce a new method to contain the logic.
+* A getter should immediately precede its corresponding setter.
+* Decorators such as `@Input` should be applied to the getter and not the setter.
+* Always use a `readonly` property instead of a getter (with no setter) when possible.
+  ```ts
+  /** YES */
+  readonly active: boolean;
+
+  /** NO */
+  get active(): boolean {
+    // Using a getter solely to make the property read-only.
+    return this._active;
+  }
+  ```
 
 #### JsDoc comments
 

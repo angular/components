@@ -14,7 +14,7 @@ let supportsPassiveEvents: boolean;
  * See: https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
  */
 export function supportsPassiveEventListeners(): boolean {
-  if (supportsPassiveEvents == null) {
+  if (supportsPassiveEvents == null && typeof window !== 'undefined') {
     try {
       window.addEventListener('test', null!, Object.defineProperty({}, 'passive', {
         get: () => supportsPassiveEvents = true
@@ -30,7 +30,7 @@ export function supportsPassiveEventListeners(): boolean {
 /** Cached result Set of input types support by the current browser. */
 let supportedInputTypes: Set<string>;
 
-/** Types of <input> that *might* be supported. */
+/** Types of `<input>` that *might* be supported. */
 const candidateInputTypes = [
   // `color` must come first. Chrome 56 shows a warning if we change the type to `color` after
   // first changing it to something else:

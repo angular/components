@@ -1,9 +1,14 @@
-import {CategorizedClassDoc} from './categorizer';
 import {DocCollection, Document, Processor} from 'dgeni';
+import {InterfaceExportDoc} from 'dgeni-packages/typescript/api-doc-types/InterfaceExportDoc';
+import {TypeAliasExportDoc} from 'dgeni-packages/typescript/api-doc-types/TypeAliasExportDoc';
+import {CategorizedClassDoc} from '../common/dgeni-definitions';
 import * as path from 'path';
 
 /** Component group data structure. */
 export class ComponentGroup {
+
+  /** Unique document type for Dgeni. */
+  docType = 'componentGroup';
 
   /** Name of the component group. */
   name: string;
@@ -24,32 +29,29 @@ export class ComponentGroup {
   id: string;
 
   /** Known aliases for the component group. */
-  aliases: string[];
-
-  /** Unique document type for Dgeni. */
-  docType: string;
+  aliases: string[] = [];
 
   /** List of categorized class docs that are defining a directive. */
-  directives: CategorizedClassDoc[];
+  directives: CategorizedClassDoc[] = [];
 
   /** List of categorized class docs that are defining a service. */
-  services: CategorizedClassDoc[];
+  services: CategorizedClassDoc[] = [];
 
   /** Additional classes that belong to the component group. */
-  additionalClasses: CategorizedClassDoc[];
+  additionalClasses: CategorizedClassDoc[] = [];
+
+  /** Additional interfaces that belong to the component group. */
+  additionalInterfaces: InterfaceExportDoc[] = [];
+
+  /** Additional type aliases that belong to the component group. */
+  additionalTypeAliases: TypeAliasExportDoc[] = [];
 
   /** NgModule that defines the current component group. */
-  ngModule: CategorizedClassDoc | null;
+  ngModule: CategorizedClassDoc | null = null;
 
   constructor(name: string) {
     this.name = name;
     this.id = `component-group-${name}`;
-    this.aliases = [];
-    this.docType = 'componentGroup';
-    this.directives = [];
-    this.services = [];
-    this.additionalClasses = [];
-    this.ngModule = null;
   }
 }
 
@@ -95,8 +97,12 @@ export class ComponentGrouper implements Processor {
         group.services.push(doc);
       } else if (doc.isNgModule) {
         group.ngModule = doc;
-      } else if (doc.docType == 'class') {
+      } else if (doc.docType === 'class') {
         group.additionalClasses.push(doc);
+      } else if (doc.docType === 'interface') {
+        group.additionalInterfaces.push(doc);
+      } else if (doc.docType === 'type-alias') {
+        group.additionalTypeAliases.push(doc);
       }
     });
 

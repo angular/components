@@ -14,12 +14,9 @@ export * from './gestures/gesture-annotations';
 export * from './gestures/gesture-config';
 export * from './line/line';
 export * from './option/index';
-export * from './placeholder/placeholder-options';
+export * from './label/label-options';
 export * from './ripple/index';
 export * from './selection/index';
-export * from './style/index';
-export * from './util/object-extend';
-
 
 // TODO: don't have this
 export * from './testing/month-constants';

@@ -1,9 +1,13 @@
 import {Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/map';
+export interface State {
+  flag: string;
+  name: string;
+  population: string;
+}
 
 /**
  * @title Autocomplete overview
@@ -11,13 +15,13 @@ import 'rxjs/add/operator/map';
 @Component({
   selector: 'autocomplete-overview-example',
   templateUrl: 'autocomplete-overview-example.html',
-  styleUrls: ['autocomplete-overview-example.css']
+  styleUrls: ['autocomplete-overview-example.css'],
 })
 export class AutocompleteOverviewExample {
-  stateCtrl: FormControl;
-  filteredStates: Observable<any[]>;
+  stateCtrl = new FormControl();
+  filteredStates: Observable<State[]>;
 
-  states: any[] = [
+  states: State[] = [
     {
       name: 'Arkansas',
       population: '2.978M',
@@ -45,15 +49,16 @@ export class AutocompleteOverviewExample {
   ];
 
   constructor() {
-    this.stateCtrl = new FormControl();
     this.filteredStates = this.stateCtrl.valueChanges
-        .startWith(null)
-        .map(state => state ? this.filterStates(state) : this.states.slice());
+      .pipe(
+        startWith(''),
+        map(state => state ? this._filterStates(state) : this.states.slice())
+      );
   }
 
-  filterStates(name: string) {
-    return this.states.filter(state =>
-      state.name.toLowerCase().indexOf(name.toLowerCase()) === 0);
-  }
+  private _filterStates(value: string): State[] {
+    const filterValue = value.toLowerCase();
 
+    return this.states.filter(state => state.name.toLowerCase().indexOf(filterValue) === 0);
+  }
 }

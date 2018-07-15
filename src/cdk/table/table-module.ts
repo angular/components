@@ -8,9 +8,15 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {HeaderRowPlaceholder, RowPlaceholder, CdkTable} from './table';
-import {CdkCellOutlet, CdkHeaderRow, CdkHeaderRowDef, CdkRow, CdkRowDef} from './row';
-import {CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCell, CdkCellDef} from './cell';
+import {HeaderRowOutlet, DataRowOutlet, CdkTable, FooterRowOutlet} from './table';
+import {
+  CdkCellOutlet, CdkFooterRow, CdkFooterRowDef, CdkHeaderRow, CdkHeaderRowDef, CdkRow,
+  CdkRowDef
+} from './row';
+import {
+  CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCell, CdkCellDef,
+  CdkFooterCellDef, CdkFooterCell
+} from './cell';
 
 const EXPORTED_DECLARATIONS = [
   CdkTable,
@@ -18,20 +24,25 @@ const EXPORTED_DECLARATIONS = [
   CdkCellDef,
   CdkCellOutlet,
   CdkHeaderCellDef,
+  CdkFooterCellDef,
   CdkColumnDef,
   CdkCell,
   CdkRow,
   CdkHeaderCell,
+  CdkFooterCell,
   CdkHeaderRow,
   CdkHeaderRowDef,
-  RowPlaceholder,
-  HeaderRowPlaceholder,
+  CdkFooterRow,
+  CdkFooterRowDef,
+  DataRowOutlet,
+  HeaderRowOutlet,
+  FooterRowOutlet,
 ];
 
 @NgModule({
   imports: [CommonModule],
-  exports: [EXPORTED_DECLARATIONS],
-  declarations: [EXPORTED_DECLARATIONS]
+  exports: EXPORTED_DECLARATIONS,
+  declarations: EXPORTED_DECLARATIONS
 
 })
 export class CdkTableModule { }

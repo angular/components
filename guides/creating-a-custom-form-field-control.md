@@ -1,3 +1,5 @@
+# Creating a custom form field control
+
 It is possible to create custom form field controls that can be used inside `<mat-form-field>`. This
 can be useful if you need to create a component that shares a lot of common behavior with a form
 field, but adds some additional logic.
@@ -58,7 +60,7 @@ class MyTelInput {
     tel = tel || new MyTel('', '', '');
     this.parts.setValue({area: tel.area, exchange: tel.exchange, subscriber: tel.subscriber});
   }
-  
+
   constructor(fb: FormBuilder) {
     this.parts =  fb.group({
       'area': '',
@@ -98,7 +100,7 @@ the `MatFormFieldControl` interface, see the
 #### `value`
 
 This property allows someone to set or get the value of our control. Its type should be the same
-type we used for the type parameter when we implemented `MatFormFieldControl`. Since our component 
+type we used for the type parameter when we implemented `MatFormFieldControl`. Since our component
 already has a value property, we don't need to do anything for this one.
 
 #### `stateChanges`
@@ -157,22 +159,42 @@ private _placeholder: string;
 
 #### `ngControl`
 
-This property allows the form field control to specify the `@angular/forms` control that is bound to
-this component. Since we haven't set up our component to act as a `ControlValueAccessor`, we'll just
-set this to `null` in our component. In any real component, you would probably want to implement
-`ControlValueAccessor` so that your component can work with `formControl` and `ngModel`.
+This property allows the form field control to specify the `@angular/forms` control that is bound to this component. Since we haven't set up our component to act as a `ControlValueAccessor`, we'll just set this to `null` in our component. 
 
 ```ts
-ngControl = null;
+ngControl: NgControl = null;
 ```
 
-If you did implement `ControlValueAccessor`, you could simply inject the `NgControl` and make it
-publicly available. (For additional information about `ControlValueAccessor` see the
-[API docs](https://angular.io/api/forms/ControlValueAccessor).)
+It is likely you will want to implement `ControlValueAccessor` so that your component can work with `formControl` and `ngModel`. If you do implement `ControlValueAccessor` you will need to get a reference to the `NgControl` associated with your control and make it publicly available. 
+
+The easy way is to add it as a public property to your constructor and let dependency injection handle it:
 
 ```ts
-constructor(..., @Optional() @Self() public ngControl: NgControl) { ... }
+constructor(
+  ..., 
+  @Optional() @Self() public ngControl: NgControl,
+  ...,
+) { }
 ```
+
+Note that if your component implements `ControlValueAccessor`, it may already be set up to provide `NG_VALUE_ACCESSOR` (in the `providers` part of the component's decorator, or possibly in a module declaration). If so you may get a *cannot instantiate cyclic dependency* error. 
+
+To resolve this, remove the `NG_VALUE_ACCESSOR` provider and instead set the value accessor directly:
+
+```ts
+constructor(
+  ..., 
+  @Optional() @Self() public ngControl: NgControl,
+  ...,
+) {
+  // Setting the value accessor directly (instead of using
+  // the providers) to avoid running into a circular import.
+  if (this.ngControl != null) { this.ngControl.valueAccessor = this; }
+}
+```
+
+For additional information about `ControlValueAccessor` see the [API docs](https://angular.io/api/forms/ControlValueAccessor).
+
 
 #### `focused`
 
@@ -185,10 +207,9 @@ need to remember to emit on the `stateChanges` stream so change detection can ha
 ```ts
 focused = false;
 
-constructor(fb: FormBuilder, private fm: FocusMonitor, private elRef: ElementRef,
-            renderer: Renderer2) {
+constructor(fb: FormBuilder, private fm: FocusMonitor, private elRef: ElementRef) {
   ...
-  fm.monitor(elRef.nativeElement, renderer, true).subscribe(origin => {
+  fm.monitor(elRef.nativeElement, true).subscribe(origin => {
     this.focused = !!origin;
     this.stateChanges.next();
   });
@@ -212,16 +233,16 @@ get empty() {
 }
 ```
 
-#### `shouldPlaceholderFloat`
+#### `shouldLabelFloat`
 
-This property is used to indicate whether the placeholder should be in the floating position. We'll
+This property is used to indicate whether the label should be in the floating position. We'll
 use the same logic as `matInput` and float the placeholder when the input is focused or non-empty.
 Since the placeholder will be overlapping our control when when it's not floating, we should hide
 the `–` characters when it's not floating.
 
 ```ts
 @HostBinding('class.floating')
-get shouldPlaceholderFloat() {
+get shouldLabelFloat() {
   return this.focused || !this.empty;
 }
 ```
@@ -299,7 +320,7 @@ we'll use `my-tel-input` as our control type which will result in the form field
 controlType = 'my-tel-input';
 ```
 
-#### `setAriaDescribedByIds(ids: string[])`
+#### `setDescribedByIds(ids: string[])`
 
 This method is used by the `<mat-form-field>` to specify the IDs that should be used for the
 `aria-describedby` attribute of your component. The method has one parameter, the list of IDs, we
@@ -307,7 +328,7 @@ just need to apply the given IDs to our host element.
 
 ```ts
 @HostBinding('attr.aria-describedby') describedBy = '';
-  
+
 setDescribedByIds(ids: string[]) {
   this.describedBy = ids.join(' ');
 }

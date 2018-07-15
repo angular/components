@@ -6,27 +6,50 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, Optional} from '@angular/core';
+import {Injectable, InjectionToken, Inject, Optional} from '@angular/core';
 import {HammerGestureConfig} from '@angular/platform-browser';
 import {MatCommonModule} from '../common-behaviors/common-module';
-import {HammerInstance, HammerStatic, Recognizer, RecognizerStatic} from './gesture-annotations';
+import {
+  HammerStatic,
+  HammerInstance,
+  Recognizer,
+  RecognizerStatic,
+  HammerOptions,
+} from './gesture-annotations';
 
-/* Adjusts configuration of our gesture library, Hammer. */
+/**
+ * Injection token that can be used to provide options to the Hammerjs instance.
+ * More info at http://hammerjs.github.io/api/.
+ */
+export const MAT_HAMMER_OPTIONS = new InjectionToken<HammerOptions>('MAT_HAMMER_OPTIONS');
+
+const ANGULAR_MATERIAL_SUPPORTED_HAMMER_GESTURES = [
+  'longpress',
+  'slide',
+  'slidestart',
+  'slideend',
+  'slideright',
+  'slideleft'
+];
+
+/**
+ * Fake HammerInstance that is used when a Hammer instance is requested when HammerJS has not
+ * been loaded on the page.
+ */
+const noopHammerInstance: HammerInstance = {
+  on: () => {},
+  off: () => {},
+};
+
+/** Adjusts configuration of our gesture library, Hammer. */
 @Injectable()
 export class GestureConfig extends HammerGestureConfig {
-  private _hammer: HammerStatic = typeof window !== 'undefined' ? (window as any).Hammer : null;
+  /** List of new event names to add to the gesture support list */
+  events = ANGULAR_MATERIAL_SUPPORTED_HAMMER_GESTURES;
 
-  /* List of new event names to add to the gesture support list */
-  events: string[] = this._hammer ? [
-    'longpress',
-    'slide',
-    'slidestart',
-    'slideend',
-    'slideright',
-    'slideleft'
-  ] : [];
-
-  constructor(@Optional() commonModule?: MatCommonModule) {
+  constructor(
+    @Optional() @Inject(MAT_HAMMER_OPTIONS) private _hammerOptions?: HammerOptions,
+    @Optional() commonModule?: MatCommonModule) {
     super();
     if (commonModule) {
       commonModule._checkHammerIsAvailable();
@@ -37,7 +60,7 @@ export class GestureConfig extends HammerGestureConfig {
    * Builds Hammer instance manually to add custom recognizers that match the Material Design spec.
    *
    * Our gesture names come from the Material Design gestures spec:
-   * https://www.google.com/design/spec/patterns/gestures.html#gestures-touch-mechanics
+   * https://material.io/design/#gestures-touch-mechanics
    *
    * More information on default recognizers can be found in Hammer docs:
    * http://hammerjs.github.io/recognizer-pan/
@@ -47,18 +70,32 @@ export class GestureConfig extends HammerGestureConfig {
    * @returns Newly-created HammerJS instance.
    */
   buildHammer(element: HTMLElement): HammerInstance {
-    const mc = new this._hammer(element);
+    const hammer: HammerStatic = typeof window !== 'undefined' ? (window as any).Hammer : null;
+
+    if (!hammer) {
+      // If HammerJS is not loaded here, return the noop HammerInstance. This is necessary to
+      // ensure that omitting HammerJS completely will not cause any errors while *also* supporting
+      // the lazy-loading of HammerJS via the HAMMER_LOADER token introduced in Angular 6.1.
+      // Because we can't depend on HAMMER_LOADER's existance until 7.0, we have to always set
+      // `this.events` to the set we support, instead of conditionally setting it to `[]` if
+      // `HAMMER_LOADER` is present (and then throwing an Error here if `window.Hammer` is
+      // undefined).
+      // @deletion-target 7.0.0
+      return noopHammerInstance;
+    }
+
+    const mc = new hammer(element, this._hammerOptions || undefined);
 
     // Default Hammer Recognizers.
-    let pan = new this._hammer.Pan();
-    let swipe = new this._hammer.Swipe();
-    let press = new this._hammer.Press();
+    const pan = new hammer.Pan();
+    const swipe = new hammer.Swipe();
+    const press = new hammer.Press();
 
     // Notice that a HammerJS recognizer can only depend on one other recognizer once.
     // Otherwise the previous `recognizeWith` will be dropped.
     // TODO: Confirm threshold numbers with Material Design UX Team
-    let slide = this._createRecognizer(pan, {event: 'slide', threshold: 0}, swipe);
-    let longpress = this._createRecognizer(press, {event: 'longpress', time: 500});
+    const slide = this._createRecognizer(pan, {event: 'slide', threshold: 0}, swipe);
+    const longpress = this._createRecognizer(press, {event: 'longpress', time: 500});
 
     // Overwrite the default `pan` event to use the swipe event.
     pan.recognizeWith(swipe);

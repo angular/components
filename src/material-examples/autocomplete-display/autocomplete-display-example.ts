@@ -1,11 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/map';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
-export class User {
-  constructor(public name: string) { }
+export interface User {
+  name: string;
 }
 
 /**
@@ -14,34 +13,33 @@ export class User {
 @Component({
   selector: 'autocomplete-display-example',
   templateUrl: 'autocomplete-display-example.html',
-  styleUrls: ['autocomplete-display-example.css']
+  styleUrls: ['autocomplete-display-example.css'],
 })
-export class AutocompleteDisplayExample {
-
+export class AutocompleteDisplayExample implements OnInit {
   myControl = new FormControl();
-
-  options = [
-    new User('Mary'),
-    new User('Shelley'),
-    new User('Igor')
+  options: User[] = [
+    {name: 'Mary'},
+    {name: 'Shelley'},
+    {name: 'Igor'}
   ];
-
   filteredOptions: Observable<User[]>;
 
   ngOnInit() {
     this.filteredOptions = this.myControl.valueChanges
-        .startWith(null)
-        .map(user => user && typeof user === 'object' ? user.name : user)
-        .map(name => name ? this.filter(name) : this.options.slice());
+      .pipe(
+        startWith<string | User>(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(name => name ? this._filter(name) : this.options.slice())
+      );
   }
 
-  filter(name: string): User[] {
-    return this.options.filter(option =>
-      option.name.toLowerCase().indexOf(name.toLowerCase()) === 0);
+  displayFn(user?: User): string | undefined {
+    return user ? user.name : undefined;
   }
 
-  displayFn(user: User): string {
-    return user ? user.name : user;
-  }
+  private _filter(name: string): User[] {
+    const filterValue = name.toLowerCase();
 
+    return this.options.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
+  }
 }

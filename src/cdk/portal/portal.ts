@@ -23,7 +23,7 @@ import {
     throwUnknownPortalTypeError
 } from './portal-errors';
 
-
+/** Interface that can be used to generically type a class. */
 export interface ComponentType<T> {
   new (...args: any[]): T;
 }
@@ -107,22 +107,21 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
 /**
  * A `TemplatePortal` is a portal that represents some embedded template (TemplateRef).
  */
-export class TemplatePortal<C> extends Portal<C> {
+export class TemplatePortal<C = any> extends Portal<C> {
   /** The embedded template that will be used to instantiate an embedded View in the host. */
   templateRef: TemplateRef<C>;
 
   /** Reference to the ViewContainer into which the template will be stamped out. */
   viewContainerRef: ViewContainerRef;
 
+  /** Contextual data to be passed in to the embedded view. */
   context: C | undefined;
 
-  constructor(template: TemplateRef<any>, viewContainerRef: ViewContainerRef, context?: C) {
+  constructor(template: TemplateRef<C>, viewContainerRef: ViewContainerRef, context?: C) {
     super();
     this.templateRef = template;
     this.viewContainerRef = viewContainerRef;
-    if (context) {
-      this.context = context;
-    }
+    this.context = context;
   }
 
   get origin(): ElementRef {
@@ -146,16 +145,18 @@ export class TemplatePortal<C> extends Portal<C> {
 }
 
 
-/**
- * A `PortalOutlet` is an space that can contain a single `Portal`.
- */
+/** A `PortalOutlet` is an space that can contain a single `Portal`. */
 export interface PortalOutlet {
+  /** Attaches a portal to this outlet. */
   attach(portal: Portal<any>): any;
 
+  /** Detaches the currently attached portal from this outlet. */
   detach(): any;
 
+  /** Performs cleanup before the outlet is destroyed. */
   dispose(): void;
 
+  /** Whether there is currently a portal attached to this outlet. */
   hasAttached(): boolean;
 }
 
@@ -166,7 +167,7 @@ export interface PortalOutlet {
  */
 export abstract class BasePortalOutlet implements PortalOutlet {
   /** The portal currently attached to the host. */
-  private _attachedPortal: Portal<any> | null;
+  protected _attachedPortal: Portal<any> | null;
 
   /** A function that will permanently dispose this host. */
   private _disposeFn: (() => void) | null;
@@ -178,6 +179,10 @@ export abstract class BasePortalOutlet implements PortalOutlet {
   hasAttached(): boolean {
     return !!this._attachedPortal;
   }
+
+  attach<T>(portal: ComponentPortal<T>): ComponentRef<T>;
+  attach<T>(portal: TemplatePortal<T>): EmbeddedViewRef<T>;
+  attach(portal: any): any;
 
   /** Attaches a portal. */
   attach(portal: Portal<any>): any {

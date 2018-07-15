@@ -7,14 +7,6 @@ describe('OverlayContainer', () => {
   let overlay: Overlay;
   let overlayContainer: OverlayContainer;
 
-  beforeAll(() => {
-    // Remove any stale overlay containers from previous tests that didn't clean up correctly.
-    const staleContainers = document.querySelectorAll('.cdk-overlay-container');
-    for (let i = staleContainers.length - 1; i >= 0; i--) {
-      staleContainers[i].parentNode!.removeChild(staleContainers[i]);
-    }
-  });
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [OverlayTestModule]
@@ -37,7 +29,7 @@ describe('OverlayContainer', () => {
     overlayRef.attach(fixture.componentInstance.templatePortal);
     fixture.detectChanges();
 
-    expect(document.querySelectorAll('.cdk-overlay-container'))
+    expect(document.querySelector('.cdk-overlay-container'))
         .not.toBeNull('Expected the overlay container to be in the DOM after opening an overlay');
 
     // Manually call `ngOnDestroy` because there is no way to force Angular to destroy an

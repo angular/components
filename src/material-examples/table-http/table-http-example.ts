@@ -1,13 +1,8 @@
-import {Component, AfterViewInit, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/switchMap';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator, MatSort} from '@angular/material';
+import {merge, Observable, of as observableOf} from 'rxjs';
+import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 
 /**
  * @title Table retrieving data through HTTP
@@ -17,13 +12,13 @@ import 'rxjs/add/operator/switchMap';
   styleUrls: ['table-http-example.css'],
   templateUrl: 'table-http-example.html',
 })
-export class TableHttpExample implements AfterViewInit {
-  displayedColumns = ['created', 'state', 'number', 'title'];
+export class TableHttpExample implements OnInit {
+  displayedColumns: string[] = ['created', 'state', 'number', 'title'];
   exampleDatabase: ExampleHttpDao | null;
-  dataSource = new MatTableDataSource();
+  data: GithubIssue[] = [];
 
   resultsLength = 0;
-  isLoadingResults = false;
+  isLoadingResults = true;
   isRateLimitReached = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -31,34 +26,35 @@ export class TableHttpExample implements AfterViewInit {
 
   constructor(private http: HttpClient) {}
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.exampleDatabase = new ExampleHttpDao(this.http);
 
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
-    Observable.merge(this.sort.sortChange, this.paginator.page)
-        .startWith(null)
-        .switchMap(() => {
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
           this.isLoadingResults = true;
           return this.exampleDatabase!.getRepoIssues(
-              this.sort.active, this.sort.direction, this.paginator.pageIndex);
-        })
-        .map(data => {
+            this.sort.active, this.sort.direction, this.paginator.pageIndex);
+        }),
+        map(data => {
           // Flip flag to show that loading has finished.
           this.isLoadingResults = false;
           this.isRateLimitReached = false;
           this.resultsLength = data.total_count;
 
           return data.items;
-        })
-        .catch(() => {
+        }),
+        catchError(() => {
           this.isLoadingResults = false;
           // Catch if the GitHub API has reached its rate limit. Return empty data.
           this.isRateLimitReached = true;
-          return Observable.of([]);
+          return observableOf([]);
         })
-        .subscribe(data => this.dataSource.data = data);
+      ).subscribe(data => this.data = data);
   }
 }
 

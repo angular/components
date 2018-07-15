@@ -1,8 +1,17 @@
-import {Component, ViewChild} from '@angular/core';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {DataSource} from '@angular/cdk/table';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
-import {MatSort, MatPaginator} from '@angular/material';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator, MatSort} from '@angular/material';
+import {BehaviorSubject, merge, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+
 
 export interface UserData {
   name: string;
@@ -25,7 +34,7 @@ const exampleData = [
   templateUrl: 'table-a11y.html',
   styleUrls: ['table-a11y.css'],
 })
-export class TableAccessibilityDemo {
+export class TableAccessibilityDemo implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) pager: MatPaginator;
 
@@ -70,21 +79,19 @@ export class SortDataSource extends DataSource<UserData> {
       this._sort.sortChange,
     ];
 
-    return Observable.merge(...displayDataChanges).map(() => {
-      return this.getSortedData();
-    });
+    return merge(...displayDataChanges).pipe(map(() => this.getSortedData()));
   }
 
   disconnect() {}
 
   getSortedData(): UserData[] {
     const data = [...exampleData];
-    if (!this._sort.active || this._sort.direction == '') {
+    if (!this._sort.active || this._sort.direction === '') {
       return data;
     }
 
     return data.sort((a: UserData, b: UserData) => {
-      return (a.age < b.age ? -1 : 1) * (this._sort.direction == 'asc' ? 1 : -1);
+      return (a.age < b.age ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1);
     });
   }
 }
@@ -103,11 +110,14 @@ export class PaginatedDataSource extends DataSource<UserData> {
       this._paginator.page,
     ];
 
-    return Observable.merge(...displayDataChanges).map(() => {
-      const data = [...exampleData];
-      const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
-      return data.splice(startIndex, this._paginator.pageSize);
-    });
+    return merge(...displayDataChanges)
+      .pipe(
+        map(() => {
+          const data = [...exampleData];
+          const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
+          return data.splice(startIndex, this._paginator.pageSize);
+        })
+      );
   }
 
   disconnect() {}

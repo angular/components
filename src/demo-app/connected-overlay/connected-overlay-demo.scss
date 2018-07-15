@@ -1,0 +1,31 @@
+.demo-options {
+  display: flex;
+  margin: 20px;
+
+  & > div {
+    margin: 16px;
+  }
+
+  .mat-radio-button {
+    display: block;
+    margin-bottom: 5px;
+  }
+}
+
+.demo-overlay {
+  display: block;
+
+  background: lightblue;
+  min-width: 50px;
+  min-height: 50px;
+
+  max-height: 100%;
+  overflow: auto;
+}
+
+.demo-trigger {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}

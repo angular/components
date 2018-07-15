@@ -1,32 +1,29 @@
 import {TestBed, inject} from '@angular/core/testing';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {ESCAPE} from '@angular/cdk/keycodes';
-import {Overlay} from '../overlay';
-import {OverlayContainer} from '../overlay-container';
-import {OverlayModule} from '../index';
+import {Component, NgModule} from '@angular/core';
+import {OverlayModule, OverlayContainer, Overlay} from '../index';
 import {OverlayKeyboardDispatcher} from './overlay-keyboard-dispatcher';
+import {ComponentPortal} from '@angular/cdk/portal';
+
 
 describe('OverlayKeyboardDispatcher', () => {
   let keyboardDispatcher: OverlayKeyboardDispatcher;
   let overlay: Overlay;
-  let overlayContainerElement: HTMLElement;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule],
-      providers: [
-        {provide: OverlayContainer, useFactory: () => {
-          overlayContainerElement = document.createElement('div');
-          return {getContainerElement: () => overlayContainerElement};
-        }}
-      ],
+      imports: [OverlayModule, TestComponentModule],
     });
+
+    inject([OverlayKeyboardDispatcher, Overlay], (kbd: OverlayKeyboardDispatcher, o: Overlay) => {
+      keyboardDispatcher = kbd;
+      overlay = o;
+    })();
   });
 
-  beforeEach(inject([OverlayKeyboardDispatcher, Overlay],
-        (kbd: OverlayKeyboardDispatcher, o: Overlay) => {
-    keyboardDispatcher = kbd;
-    overlay = o;
+  afterEach(inject([OverlayContainer], (overlayContainer: OverlayContainer) => {
+    overlayContainer.ngOnDestroy();
   }));
 
   it('should track overlays in order as they are attached and detached', () => {
@@ -56,7 +53,7 @@ describe('OverlayKeyboardDispatcher', () => {
     const overlayOne = overlay.create();
     const overlayTwo = overlay.create();
     const overlayOneSpy = jasmine.createSpy('overlayOne keyboard event spy');
-    const overlayTwoSpy = jasmine.createSpy('overlayOne keyboard event spy');
+    const overlayTwoSpy = jasmine.createSpy('overlayTwo keyboard event spy');
 
     overlayOne.keydownEvents().subscribe(overlayOneSpy);
     overlayTwo.keydownEvents().subscribe(overlayTwoSpy);
@@ -72,26 +69,108 @@ describe('OverlayKeyboardDispatcher', () => {
     expect(overlayTwoSpy).toHaveBeenCalled();
   });
 
-  it('should dispatch targeted keyboard events to the overlay containing that target', () => {
+  it('should dispatch keyboard events when propagation is stopped', () => {
+    const overlayRef = overlay.create();
+    const spy = jasmine.createSpy('keyboard event spy');
+    const button = document.createElement('button');
+
+    document.body.appendChild(button);
+    button.addEventListener('keydown', event => event.stopPropagation());
+
+    overlayRef.keydownEvents().subscribe(spy);
+    keyboardDispatcher.add(overlayRef);
+    dispatchKeyboardEvent(button, 'keydown', ESCAPE);
+
+    expect(spy).toHaveBeenCalled();
+
+    button.parentNode!.removeChild(button);
+  });
+
+  it('should complete the keydown stream on dispose', () => {
+    const overlayRef = overlay.create();
+    const completeSpy = jasmine.createSpy('keydown complete spy');
+
+    overlayRef.keydownEvents().subscribe(undefined, undefined, completeSpy);
+
+    overlayRef.dispose();
+
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should stop emitting events to detached overlays', () => {
+    const instance = overlay.create();
+    const spy = jasmine.createSpy('keyboard event spy');
+
+    instance.attach(new ComponentPortal(TestComponent));
+    instance.keydownEvents().subscribe(spy);
+
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE, instance.overlayElement);
+    expect(spy).toHaveBeenCalledTimes(1);
+
+    instance.detach();
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE, instance.overlayElement);
+
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should stop emitting events to disposed overlays', () => {
+    const instance = overlay.create();
+    const spy = jasmine.createSpy('keyboard event spy');
+
+    instance.attach(new ComponentPortal(TestComponent));
+    instance.keydownEvents().subscribe(spy);
+
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE, instance.overlayElement);
+    expect(spy).toHaveBeenCalledTimes(1);
+
+    instance.dispose();
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE, instance.overlayElement);
+
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should dispose of the global keyboard event handler correctly', () => {
+    const overlayRef = overlay.create();
+    const body = document.body;
+
+    spyOn(body, 'addEventListener');
+    spyOn(body, 'removeEventListener');
+
+    keyboardDispatcher.add(overlayRef);
+    expect(body.addEventListener).toHaveBeenCalledWith('keydown', jasmine.any(Function), true);
+
+    overlayRef.dispose();
+    expect(body.removeEventListener).toHaveBeenCalledWith('keydown', jasmine.any(Function), true);
+  });
+
+  it('should skip overlays that do not have keydown event subscriptions', () => {
     const overlayOne = overlay.create();
     const overlayTwo = overlay.create();
     const overlayOneSpy = jasmine.createSpy('overlayOne keyboard event spy');
-    const overlayTwoSpy = jasmine.createSpy('overlayOne keyboard event spy');
 
     overlayOne.keydownEvents().subscribe(overlayOneSpy);
-    overlayTwo.keydownEvents().subscribe(overlayTwoSpy);
-
-    // Attach overlays
     keyboardDispatcher.add(overlayOne);
     keyboardDispatcher.add(overlayTwo);
 
-    const overlayOnePane = overlayOne.overlayElement;
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
 
-    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE, overlayOnePane);
-
-    // Targeted overlay should receive event
     expect(overlayOneSpy).toHaveBeenCalled();
-    expect(overlayTwoSpy).not.toHaveBeenCalled();
   });
 
 });
+
+
+@Component({
+  template: 'Hello'
+})
+class TestComponent { }
+
+
+// Create a real (non-test) NgModule as a workaround for
+// https://github.com/angular/angular/issues/10760
+@NgModule({
+  exports: [TestComponent],
+  declarations: [TestComponent],
+  entryComponents: [TestComponent],
+})
+class TestComponentModule { }

@@ -6,19 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {MatCommonModule, MatRippleModule} from '@angular/material/core';
-import {A11yModule} from '@angular/cdk/a11y';
-import {
-  MatAnchor,
-  MatButton,
-  MatMiniFab,
-  MatButtonCssMatStyler,
-  MatFab,
-  MatIconButtonCssMatStyler,
-  MatRaisedButtonCssMatStyler
-} from './button';
+import {MatAnchor, MatButton} from './button';
 
 
 @NgModule({
@@ -26,26 +17,15 @@ import {
     CommonModule,
     MatRippleModule,
     MatCommonModule,
-    A11yModule,
   ],
   exports: [
     MatButton,
     MatAnchor,
-    MatMiniFab,
-    MatFab,
     MatCommonModule,
-    MatButtonCssMatStyler,
-    MatRaisedButtonCssMatStyler,
-    MatIconButtonCssMatStyler,
   ],
   declarations: [
     MatButton,
     MatAnchor,
-    MatMiniFab,
-    MatFab,
-    MatButtonCssMatStyler,
-    MatRaisedButtonCssMatStyler,
-    MatIconButtonCssMatStyler,
   ],
 })
 export class MatButtonModule {}

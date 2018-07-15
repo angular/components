@@ -7,6 +7,3 @@
  */
 
 export * from './observe-content';
-
-/** @deprecated Use CdkObserveContent */
-export {CdkObserveContent as ObserveContent} from './observe-content';

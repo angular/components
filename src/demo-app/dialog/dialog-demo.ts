@@ -1,6 +1,15 @@
-import {Component, Inject, ViewChild, TemplateRef} from '@angular/core';
-import {DOCUMENT} from '@angular/platform-browser';
-import {MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {DOCUMENT} from '@angular/common';
+import {Component, Inject, TemplateRef, ViewChild} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material';
+
 
 const defaultDialogConfig = new MatDialogConfig();
 
@@ -67,7 +76,7 @@ export class DialogDemo {
   }
 
   openContentElement() {
-    let dialogRef = this.dialog.open(ContentElementDialog, this.config);
+    const dialogRef = this.dialog.open(ContentElementDialog, this.config);
     dialogRef.componentInstance.actionsAlignment = this.actionsAlignment;
   }
 
@@ -84,7 +93,8 @@ export class DialogDemo {
   <p>It's Jazz!</p>
 
   <mat-form-field>
-    <input matInput placeholder="How much?" #howMuch>
+    <mat-label>How much?</mat-label>
+    <input matInput #howMuch>
   </mat-form-field>
 
   <p> {{ data.message }} </p>
@@ -116,11 +126,11 @@ export class JazzDialog {
 
 @Component({
   selector: 'demo-content-element-dialog',
-  styles: [
-    `img {
+  styles: [`
+    img {
       max-width: 100%;
-    }`
-  ],
+    }
+  `],
   template: `
     <h2 mat-dialog-title>Neptune</h2>
 
@@ -170,11 +180,11 @@ export class ContentElementDialog {
 
 @Component({
   selector: 'demo-iframe-dialog',
-  styles: [
-    `iframe {
+  styles: [`
+    iframe {
       width: 800px;
-    }`
-  ],
+    }
+  `],
   template: `
     <h2 mat-dialog-title>Neptune</h2>
 
@@ -190,5 +200,4 @@ export class ContentElementDialog {
     </mat-dialog-actions>
   `
 })
-export class IFrameDialog {
-}
+export class IFrameDialog {}

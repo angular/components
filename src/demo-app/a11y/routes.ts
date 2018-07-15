@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Routes} from '@angular/router';
 import {AutocompleteAccessibilityDemo} from './autocomplete/autocomplete-a11y';
 import {ButtonAccessibilityDemo} from './button/button-a11y';
@@ -14,6 +22,7 @@ import {ToolbarAccessibilityDemo} from './toolbar/toolbar-a11y';
 import {DatepickerAccessibilityDemo} from './datepicker/datepicker-a11y';
 import {IconAccessibilityDemo} from './icon/icon-a11y';
 import {InputAccessibilityDemo} from './input/input-a11y';
+import {ListAccessibilityDemo} from './list/list-a11y';
 import {MenuAccessibilityDemo} from './menu/menu-a11y';
 import {ProgressBarAccessibilityDemo} from './progress-bar/progress-bar-a11y';
 import {ProgressSpinnerAccessibilityDemo} from './progress-spinner/progress-spinner-a11y';
@@ -44,6 +53,7 @@ export const ACCESSIBILITY_DEMO_ROUTES: Routes = [
   {path: 'grid-list', component: GridListAccessibilityDemo},
   {path: 'icon', component: IconAccessibilityDemo},
   {path: 'input', component: InputAccessibilityDemo},
+  {path: 'list', component: ListAccessibilityDemo},
   {path: 'menu', component: MenuAccessibilityDemo},
   {path: 'progress-bar', component: ProgressBarAccessibilityDemo},
   {path: 'progress-spinner', component: ProgressSpinnerAccessibilityDemo},

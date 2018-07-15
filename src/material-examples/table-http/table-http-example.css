@@ -1,23 +1,16 @@
 /* Structure */
 .example-container {
-  display: flex;
-  flex-direction: column;
-  max-height: 500px;
-  min-width: 300px;
   position: relative;
 }
 
-.example-header {
-  min-height: 64px;
-  display: flex;
-  align-items: center;
-  padding-left: 24px;
-  font-size: 20px;
+.example-table-container {
+  position: relative;
+  max-height: 400px;
+  overflow: auto;
 }
 
-.example-table {
-  overflow: auto;
-  min-height: 300px;
+table {
+  width: 100%;
 }
 
 .example-loading-shade {

@@ -1,6 +1,7 @@
 @import './variables';
 @import './elevation';
 @import './list-common';
+@import './vendor-prefixes';
 
 /** The mixins below are shared between mat-menu and mat-select */
 
@@ -15,6 +16,7 @@ $mat-menu-icon-margin: 16px !default;
 
 @mixin mat-menu-base($default-elevation) {
   @include mat-overridable-elevation($default-elevation);
+
   min-width: $mat-menu-overlay-min-width;
   max-width: $mat-menu-overlay-max-width;
   overflow: auto;
@@ -43,50 +45,15 @@ $mat-menu-icon-margin: 16px !default;
 
   .mat-icon {
     margin-right: $mat-menu-icon-margin;
+    vertical-align: middle;
+
+    svg {
+      vertical-align: top;
+    }
 
     [dir='rtl'] & {
       margin-left: $mat-menu-icon-margin;
       margin-right: 0;
-    }
-  }
-}
-
-/**
- * This mixin adds the correct panel transform styles based
- * on the direction that the menu panel opens.
- */
-@mixin mat-menu-positions() {
-  &.mat-menu-after.mat-menu-below {
-    transform-origin: left top;
-  }
-
-  &.mat-menu-after.mat-menu-above {
-    transform-origin: left bottom;
-  }
-
-  &.mat-menu-before.mat-menu-below {
-    transform-origin: right top;
-  }
-
-  &.mat-menu-before.mat-menu-above {
-    transform-origin: right bottom;
-  }
-
-  [dir='rtl'] & {
-    &.mat-menu-after.mat-menu-below {
-      transform-origin: right top;
-    }
-
-    &.mat-menu-after.mat-menu-above {
-      transform-origin: right bottom;
-    }
-
-    &.mat-menu-before.mat-menu-below {
-      transform-origin: left top;
-    }
-
-    &.mat-menu-before.mat-menu-above {
-      transform-origin: left bottom;
     }
   }
 }

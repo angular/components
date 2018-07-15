@@ -1,13 +1,15 @@
 <h1>Single Expansion Panel</h1>
 
-<mat-expansion-panel class="mat-expansion-demo-width" #myPanel>
+<mat-expansion-panel class="demo-expansion-width" #myPanel>
   <mat-expansion-panel-header [expandedHeight]="expandedHeight" [collapsedHeight]="collapsedHeight">
     <mat-panel-description>This is a panel description.</mat-panel-description>
     <mat-panel-title>Panel Title</mat-panel-title>
   </mat-expansion-panel-header>
 
+  <ng-template matExpansionPanelContent>
     This is the content text that makes sense here.
     <mat-checkbox>Trigger a ripple</mat-checkbox>
+  </ng-template>
 
   <mat-action-row>
     <button mat-button (click)="myPanel.expanded = false">CANCEL</button>
@@ -17,11 +19,13 @@
 
 <br>
 <mat-form-field>
-  <input matInput [(ngModel)]="collapsedHeight" placeholder="Collapsed height">
+  <mat-label>Collapsed height</mat-label>
+  <input matInput [(ngModel)]="collapsedHeight">
 </mat-form-field>
 
 <mat-form-field>
-  <input matInput [(ngModel)]="expandedHeight" placeholder="Expanded height">
+  <mat-label>Expanded height</mat-label>
+  <input matInput [(ngModel)]="expandedHeight">
 </mat-form-field>
 <br>
 
@@ -39,6 +43,11 @@
     <mat-radio-button value="default">Default</mat-radio-button>
     <mat-radio-button value="flat">Flat</mat-radio-button>
   </mat-radio-group>
+  <p>Accordion Actions <sup>('Multi Expansion' mode only)</sup></p>
+  <div>
+    <button mat-button (click)="accordion.openAll()" [disabled]="!multi">Expand All</button>
+    <button mat-button (click)="accordion.closeAll()" [disabled]="!multi">Collapse All</button>
+  </div>
   <p>Accordion Panel(s)</p>
   <div>
     <mat-checkbox [(ngModel)]="panel1.expanded">Panel 1</mat-checkbox>
@@ -47,7 +56,7 @@
 </div>
 <br>
 <mat-accordion [displayMode]="displayMode" [multi]="multi"
-              class="mat-expansion-demo-width">
+              class="demo-expansion-width">
   <mat-expansion-panel #panel1  [hideToggle]="hideToggle">
     <mat-expansion-panel-header>Section 1</mat-expansion-panel-header>
     <p>This is the content text that makes sense here.</p>
@@ -65,15 +74,15 @@
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
-<!--
-<h1>CdkAccordion</h1>
+
+<h1>cdkAccordion</h1>
 <div>
   <p>Accordion Options</p>
   <div>
     <mat-slide-toggle [(ngModel)]="accordion1.multi">Allow Multi Expansion</mat-slide-toggle>
   </div>
 </div>
-<cdk-accordion class="mat-expansion-demo-width" #accordion1="cdkAccordion">
+<cdk-accordion class="demo-expansion-width" #accordion1="cdkAccordion">
   <cdk-accordion-item #item1="cdkAccordionItem">
     <p>
       Item 1:
@@ -99,4 +108,4 @@
     <p *ngIf="item3.expanded">I only show if item 3 is expanded</p>
   </cdk-accordion-item>
 </cdk-accordion>
- -->
+
