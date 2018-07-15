@@ -1,4 +1,4 @@
-import {ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
@@ -162,6 +162,25 @@ describe('MatMenu', () => {
     tick(500);
 
     expect(document.activeElement).toBe(triggerEl);
+  }));
+
+  it('should scroll the panel to the top on open, when it is scrollable', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+
+    // Add 50 items to make the menu scrollable
+    fixture.componentInstance.extraItems = new Array(50).fill('Hello there');
+    fixture.detectChanges();
+
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+    dispatchFakeEvent(triggerEl, 'mousedown');
+    triggerEl.click();
+    fixture.detectChanges();
+
+    // Flush due to the additional tick that is necessary for the FocusMonitor.
+    flush();
+
+    expect(overlayContainerElement.querySelector('.mat-menu-panel')!.scrollTop).toBe(0);
   }));
 
   it('should set the proper focus origin when restoring focus after opening by keyboard',
@@ -381,7 +400,9 @@ describe('MatMenu', () => {
 
       dispatchKeyboardEvent(panel, 'keydown', DOWN_ARROW);
       fixture.detectChanges();
-      tick();
+
+      // Flush due to the additional tick that is necessary for the FocusMonitor.
+      flush();
 
       // We skip to the third item, because the second one is disabled.
       expect(items[2].classList).toContain('cdk-focused');
@@ -478,7 +499,9 @@ describe('MatMenu', () => {
       fixture.detectChanges();
       tick(500);
       zone!.simulateZoneExit();
-      tick();
+
+      // Flush due to the additional tick that is necessary for the FocusMonitor.
+      flush();
 
       const item = document.querySelector('.mat-menu-panel [mat-menu-item]')!;
 
@@ -1674,6 +1697,7 @@ describe('MatMenu default overrides', () => {
         <fake-icon>unicorn</fake-icon>
         Item with an icon
       </button>
+      <button *ngFor="let item of extraItems" mat-menu-item> {{item}} </button>
     </mat-menu>
   `
 })
@@ -1682,6 +1706,7 @@ class SimpleMenu {
   @ViewChild('triggerEl') triggerEl: ElementRef;
   @ViewChild(MatMenu) menu: MatMenu;
   @ViewChildren(MatMenuItem) items: QueryList<MatMenuItem>;
+  extraItems: string[] = [];
   closeCallback = jasmine.createSpy('menu closed callback');
   backdropClass: string;
 }
