@@ -522,6 +522,25 @@ describe('MatAutocomplete', () => {
     expect(boundingBox.getAttribute('dir')).toEqual('ltr');
   });
 
+  it('should be able to set a custom value for the `autocomplete` attribute', () => {
+    const fixture = createComponent(AutocompleteWithNativeAutocompleteAttribute);
+    const input = fixture.nativeElement.querySelector('input');
+
+    fixture.detectChanges();
+
+    expect(input.getAttribute('autocomplete')).toBe('changed');
+  });
+
+  it('should not throw when typing in an element with a null and disabled autocomplete', () => {
+    const fixture = createComponent(InputWithoutAutocompleteAndDisabled);
+    fixture.detectChanges();
+
+    expect(() => {
+      dispatchKeyboardEvent(fixture.nativeElement.querySelector('input'), 'keydown', SPACE);
+      fixture.detectChanges();
+    }).not.toThrow();
+  });
+
   describe('forms integration', () => {
     let fixture: ComponentFixture<SimpleAutocomplete>;
     let input: HTMLInputElement;
@@ -1597,6 +1616,39 @@ describe('MatAutocomplete', () => {
       subscription!.unsubscribe();
     }));
 
+    it('should reposition the panel when the amount of options changes', fakeAsync(() => {
+      let formField = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
+      let inputReference = formField.querySelector('.mat-form-field-flex');
+      let input = inputReference.querySelector('input');
+
+      formField.style.bottom = '100px';
+      formField.style.position = 'fixed';
+
+      typeInElement('Cali', input);
+      fixture.detectChanges();
+      tick();
+      zone.simulateZoneExit();
+      fixture.detectChanges();
+
+      const inputBottom = inputReference.getBoundingClientRect().bottom;
+      const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel')!;
+      const panelTop = panel.getBoundingClientRect().top;
+
+      expect(Math.floor(inputBottom)).toBe(Math.floor(panelTop),
+          `Expected panel top to match input bottom when there is only one option.`);
+
+      typeInElement('', input);
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      const inputTop = inputReference.getBoundingClientRect().top;
+      const panelBottom = panel.getBoundingClientRect().bottom;
+
+      expect(Math.floor(inputTop)).toBe(Math.floor(panelBottom),
+          `Expected panel switch to the above position if the options no longer fit.`);
+    }));
+
   });
 
   describe('panel closing', () => {
@@ -1921,6 +1973,50 @@ describe('MatAutocomplete', () => {
 
     expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(400);
   }));
+
+  it('should have panel width match host width by default', () => {
+    const widthFixture = createComponent(SimpleAutocomplete);
+
+    widthFixture.componentInstance.width = 300;
+    widthFixture.detectChanges();
+
+    widthFixture.componentInstance.trigger.openPanel();
+    widthFixture.detectChanges();
+
+    const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
+  });
+
+  it('should have panel width set to string value', () => {
+    const widthFixture = createComponent(SimpleAutocomplete);
+
+    widthFixture.componentInstance.width = 300;
+    widthFixture.detectChanges();
+
+    widthFixture.componentInstance.trigger.autocomplete.panelWidth = 'auto';
+    widthFixture.componentInstance.trigger.openPanel();
+    widthFixture.detectChanges();
+
+    const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.width).toBe('auto');
+  });
+
+  it('should have panel width set to number value', () => {
+    const widthFixture = createComponent(SimpleAutocomplete);
+
+    widthFixture.componentInstance.width = 300;
+    widthFixture.detectChanges();
+
+    widthFixture.componentInstance.trigger.autocomplete.panelWidth = 400;
+    widthFixture.componentInstance.trigger.openPanel();
+    widthFixture.detectChanges();
+
+    const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(400);
+  });
 
   it('should show the panel when the options are initialized later within a component with ' +
     'OnPush change detection', fakeAsync(() => {
@@ -2376,4 +2472,20 @@ class AutocompleteWithDifferentOrigin {
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
   selectedValue: string;
   values = ['one', 'two', 'three'];
+}
+
+@Component({
+  template: `
+    <input autocomplete="changed" [(ngModel)]="value" [matAutocomplete]="auto"/>
+    <mat-autocomplete #auto="matAutocomplete"></mat-autocomplete>
+  `
+})
+class AutocompleteWithNativeAutocompleteAttribute {
+  value: string;
+}
+
+@Component({
+  template: '<input [matAutocomplete]="null" matAutocompleteDisabled>'
+})
+class InputWithoutAutocompleteAndDisabled {
 }
