@@ -9,7 +9,6 @@
 import {InjectionToken, QueryList} from '@angular/core';
 import {CdkDrag} from './drag';
 
-/** @docs-private */
 export interface CdkDropContainer<T = any> {
   /** Arbitrary data to attach to all events emitted by this container. */
   data: T;
