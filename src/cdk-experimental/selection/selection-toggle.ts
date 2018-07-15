@@ -21,7 +21,7 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
     '[class.cdk-selection-selected]': 'selected',
     '(mousedown)': '_setModifiers($event)',
     '(click)': 'toggle()',
-    /** Right click should select item. */
+    // Right click should select item.
     '(contextmenu)': 'toggle()',
     '(keydown.enter)': 'toggle()',
     '(keydown.space)': 'toggle()',
