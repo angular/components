@@ -42,6 +42,7 @@ $mat-button-toggle-border-radius: 2px !default;
 .mat-button-toggle {
   white-space: nowrap;
   position: relative;
+  -webkit-tap-highlight-color: transparent;
 
   // Similar to components like the checkbox, slide-toggle and radio, we cannot show the focus
   // overlay for `.cdk-program-focused` because mouse clicks on the <label> element would be always
@@ -105,8 +106,8 @@ $mat-button-toggle-border-radius: 2px !default;
   border: 0;
   background: none;
   color: inherit;
-  padding: inherit;
-  margin: inherit;
+  padding: 0;
+  margin: 0;
   font: inherit;
   outline: none;
 }

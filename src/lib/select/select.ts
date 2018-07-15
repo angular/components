@@ -19,6 +19,7 @@ import {
   RIGHT_ARROW,
   SPACE,
   UP_ARROW,
+  A,
 } from '@angular/cdk/keycodes';
 import {
   CdkConnectedOverlay,
@@ -705,6 +706,10 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     } else if ((keyCode === ENTER || keyCode === SPACE) && manager.activeItem) {
       event.preventDefault();
       manager.activeItem._selectViaInteraction();
+    } else if (this._multiple && keyCode === A && event.ctrlKey) {
+      event.preventDefault();
+      const hasDeselectedOptions = this.options.some(option => !option.selected);
+      this.options.forEach(option => hasDeselectedOptions ? option.select() : option.deselect());
     } else {
       const previouslyFocusedIndex = manager.activeItemIndex;
 
@@ -887,12 +892,14 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     } else {
       option.selected ? this._selectionModel.select(option) : this._selectionModel.deselect(option);
 
+      if (isUserInput) {
+        this._keyManager.setActiveItem(option);
+      }
+
       if (this.multiple) {
         this._sortValues();
 
         if (isUserInput) {
-          this._keyManager.setActiveItem(option);
-
           // In case the user selected the option with their mouse, we
           // want to restore focus back to the trigger, in order to
           // prevent the select keyboard controls from clashing with
