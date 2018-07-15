@@ -1,10 +1,8 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {FakeViewportRuler} from '@angular/cdk/testing';
-import {MatButtonModule} from './index';
-import {MatRipple} from '@angular/material/core';
+import {MatButtonModule, MatButton} from './index';
+import {MatRipple, ThemePalette} from '@angular/material/core';
 
 
 describe('MatButton', () => {
@@ -13,9 +11,6 @@ describe('MatButton', () => {
     TestBed.configureTestingModule({
       imports: [MatButtonModule],
       declarations: [TestApp],
-      providers: [
-        {provide: ViewportRuler, useClass: FakeViewportRuler},
-      ]
     });
 
     TestBed.compileComponents();
@@ -44,6 +39,13 @@ describe('MatButton', () => {
 
     expect(buttonDebugElement.nativeElement.classList).not.toContain('mat-accent');
     expect(aDebugElement.nativeElement.classList).not.toContain('mat-accent');
+  });
+
+  it('should expose the ripple instance', () => {
+    const fixture = TestBed.createComponent(TestApp);
+    const button = fixture.debugElement.query(By.css('button')).componentInstance as MatButton;
+
+    expect(button.ripple).toBeTruthy();
   });
 
   it('should should not clear previous defined classes', () => {
@@ -180,6 +182,24 @@ describe('MatButton', () => {
       expect(buttonDebugElement.nativeElement.getAttribute('disabled'))
         .toBeNull('Expect no disabled');
     });
+
+    it('should be able to set a custom tabindex', () => {
+      let fixture = TestBed.createComponent(TestApp);
+      let testComponent = fixture.debugElement.componentInstance;
+      let buttonElement = fixture.debugElement.query(By.css('a')).nativeElement;
+
+      fixture.componentInstance.tabIndex = 3;
+      fixture.detectChanges();
+
+      expect(buttonElement.getAttribute('tabIndex'))
+          .toBe('3', 'Expected custom tabindex to be set');
+
+      testComponent.isDisabled = true;
+      fixture.detectChanges();
+
+      expect(buttonElement.getAttribute('tabIndex'))
+          .toBe('-1', 'Expected custom tabindex to be overwritten when disabled.');
+    });
   });
 
   // Ripple tests.
@@ -242,11 +262,12 @@ describe('MatButton', () => {
 @Component({
   selector: 'test-app',
   template: `
-    <button mat-button type="button" (click)="increment()"
+    <button [tabIndex]="tabIndex" mat-button type="button" (click)="increment()"
       [disabled]="isDisabled" [color]="buttonColor" [disableRipple]="rippleDisabled">
       Go
     </button>
-    <a href="http://www.google.com" mat-button [disabled]="isDisabled" [color]="buttonColor">
+    <a [tabIndex]="tabIndex" href="http://www.google.com" mat-button [disabled]="isDisabled"
+      [color]="buttonColor">
       Link
     </a>
     <button mat-fab>Fab Button</button>
@@ -257,6 +278,8 @@ class TestApp {
   clickCount: number = 0;
   isDisabled: boolean = false;
   rippleDisabled: boolean = false;
+  buttonColor: ThemePalette;
+  tabIndex: number;
 
   increment() {
     this.clickCount++;

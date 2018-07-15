@@ -1,5 +1,5 @@
 import {MediaMatcher} from '@angular/cdk/layout';
-import {ChangeDetectorRef, Component} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 
 /** @title Responsive sidenav */
 @Component({
@@ -7,12 +7,12 @@ import {ChangeDetectorRef, Component} from '@angular/core';
   templateUrl: 'sidenav-responsive-example.html',
   styleUrls: ['sidenav-responsive-example.css'],
 })
-export class SidenavResponsiveExample {
+export class SidenavResponsiveExample implements OnDestroy {
   mobileQuery: MediaQueryList;
 
-  fillerNav = Array(50).fill(0).map((_, i) => `Nav Item ${i + 1}`);
+  fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
 
-  fillerContent = Array(50).fill(0).map(() =>
+  fillerContent = Array.from({length: 50}, () =>
       `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in

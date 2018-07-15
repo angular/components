@@ -7,18 +7,19 @@
  */
 
 import {
-  NgModule,
+  ComponentFactoryResolver,
   ComponentRef,
   Directive,
   EmbeddedViewRef,
-  TemplateRef,
-  ComponentFactoryResolver,
-  ViewContainerRef,
+  EventEmitter,
+  NgModule,
   OnDestroy,
   OnInit,
-  Input,
+  Output,
+  TemplateRef,
+  ViewContainerRef,
 } from '@angular/core';
-import {Portal, TemplatePortal, ComponentPortal, BasePortalOutlet} from './portal';
+import {BasePortalOutlet, ComponentPortal, Portal, TemplatePortal} from './portal';
 
 
 /**
@@ -29,11 +30,16 @@ import {Portal, TemplatePortal, ComponentPortal, BasePortalOutlet} from './porta
   selector: '[cdk-portal], [cdkPortal], [portal]',
   exportAs: 'cdkPortal',
 })
-export class CdkPortal extends TemplatePortal<any> {
+export class CdkPortal extends TemplatePortal {
   constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef) {
     super(templateRef, viewContainerRef);
   }
 }
+
+/**
+ * Possible attached references to the CdkPortalOutlet.
+ */
+export type CdkPortalOutletAttachedRef = ComponentRef<any> | EmbeddedViewRef<any> | null;
 
 
 /**
@@ -41,7 +47,7 @@ export class CdkPortal extends TemplatePortal<any> {
  * directly attached to it, enabling declarative use.
  *
  * Usage:
- * <ng-template [cdkPortalOutlet]="greeting"></ng-template>
+ * `<ng-template [cdkPortalOutlet]="greeting"></ng-template>`
  */
 @Directive({
   selector: '[cdkPortalOutlet], [cdkPortalHost], [portalHost]',
@@ -52,21 +58,14 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
   /** Whether the portal component is initialized. */
   private _isInitialized = false;
 
+  /** Reference to the currently-attached component/view ref. */
+  private _attachedRef: CdkPortalOutletAttachedRef;
+
   constructor(
       private _componentFactoryResolver: ComponentFactoryResolver,
       private _viewContainerRef: ViewContainerRef) {
     super();
   }
-
-  /** @deprecated */
-  @Input('portalHost')
-  get _deprecatedPortal() { return this.portal; }
-  set _deprecatedPortal(v) { this.portal = v; }
-
-  /** @deprecated */
-  @Input('cdkPortalHost')
-  get _deprecatedPortalHost() { return this.portal; }
-  set _deprecatedPortalHost(v) { this.portal = v; }
 
   /** Portal associated with the Portal outlet. */
   get portal(): Portal<any> | null {
@@ -93,6 +92,14 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
     this._attachedPortal = portal;
   }
 
+  @Output() attached: EventEmitter<CdkPortalOutletAttachedRef> =
+      new EventEmitter<CdkPortalOutletAttachedRef>();
+
+  /** Component or view reference that is attached to the portal. */
+  get attachedRef(): CdkPortalOutletAttachedRef {
+    return this._attachedRef;
+  }
+
   ngOnInit() {
     this._isInitialized = true;
   }
@@ -100,6 +107,7 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
   ngOnDestroy() {
     super.dispose();
     this._attachedPortal = null;
+    this._attachedRef = null;
   }
 
   /**
@@ -125,6 +133,8 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
 
     super.setDisposeFn(() => ref.destroy());
     this._attachedPortal = portal;
+    this._attachedRef = ref;
+    this.attached.emit(ref);
 
     return ref;
   }
@@ -140,6 +150,8 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
     super.setDisposeFn(() => this._viewContainerRef.clear());
 
     this._attachedPortal = portal;
+    this._attachedRef = viewRef;
+    this.attached.emit(viewRef);
 
     return viewRef;
   }

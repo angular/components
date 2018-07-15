@@ -11,19 +11,20 @@ import {
   EventEmitter,
   Input,
   isDevMode,
-  Output,
   OnChanges,
   OnDestroy,
+  OnInit,
+  Output,
 } from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {CanDisable, mixinDisabled} from '@angular/material/core';
+import {CanDisable, HasInitialized, mixinDisabled, mixinInitialized} from '@angular/material/core';
 import {SortDirection} from './sort-direction';
 import {
-  getSortInvalidDirectionError,
   getSortDuplicateSortableIdError,
-  getSortHeaderMissingIdError
+  getSortHeaderMissingIdError,
+  getSortInvalidDirectionError
 } from './sort-errors';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 
 /** Interface for a directive that holds sorting state consumed by `MatSortHeader`. */
 export interface MatSortable {
@@ -49,7 +50,7 @@ export interface Sort {
 // Boilerplate for applying mixins to MatSort.
 /** @docs-private */
 export class MatSortBase {}
-export const _MatSortMixinBase = mixinDisabled(MatSortBase);
+export const _MatSortMixinBase = mixinInitialized(mixinDisabled(MatSortBase));
 
 /** Container for MatSortables to manage the sort state and provide default sort parameters. */
 @Directive({
@@ -57,12 +58,13 @@ export const _MatSortMixinBase = mixinDisabled(MatSortBase);
   exportAs: 'matSort',
   inputs: ['disabled: matSortDisabled']
 })
-export class MatSort extends _MatSortMixinBase implements CanDisable, OnChanges, OnDestroy {
+export class MatSort extends _MatSortMixinBase
+    implements CanDisable, HasInitialized, OnChanges, OnDestroy, OnInit {
   /** Collection of all registered sortables that this directive manages. */
   sortables = new Map<string, MatSortable>();
 
   /** Used to notify any child components listening to state changes. */
-  _stateChanges = new Subject<void>();
+  readonly _stateChanges = new Subject<void>();
 
   /** The id of the most recently sorted MatSortable. */
   @Input('matSortActive') active: string;
@@ -75,13 +77,13 @@ export class MatSort extends _MatSortMixinBase implements CanDisable, OnChanges,
 
   /** The sort direction of the currently active MatSortable. */
   @Input('matSortDirection')
+  get direction(): SortDirection { return this._direction; }
   set direction(direction: SortDirection) {
     if (isDevMode() && direction && direction !== 'asc' && direction !== 'desc') {
       throw getSortInvalidDirectionError(direction);
     }
     this._direction = direction;
   }
-  get direction(): SortDirection { return this._direction; }
   private _direction: SortDirection = '';
 
   /**
@@ -89,18 +91,18 @@ export class MatSort extends _MatSortMixinBase implements CanDisable, OnChanges,
    * May be overriden by the MatSortable's disable clear input.
    */
   @Input('matSortDisableClear')
-  get disableClear() { return this._disableClear; }
+  get disableClear(): boolean { return this._disableClear; }
   set disableClear(v: boolean) { this._disableClear = coerceBooleanProperty(v); }
   private _disableClear: boolean;
 
   /** Event emitted when the user changes either the active sort or sort direction. */
-  @Output('matSortChange') readonly sortChange = new EventEmitter<Sort>();
+  @Output('matSortChange') readonly sortChange: EventEmitter<Sort> = new EventEmitter<Sort>();
 
   /**
    * Register function to be used by the contained MatSortables. Adds the MatSortable to the
    * collection of MatSortables.
    */
-  register(sortable: MatSortable) {
+  register(sortable: MatSortable): void {
     if (!sortable.id) {
       throw getSortHeaderMissingIdError();
     }
@@ -115,12 +117,12 @@ export class MatSort extends _MatSortMixinBase implements CanDisable, OnChanges,
    * Unregister function to be used by the contained MatSortables. Removes the MatSortable from the
    * collection of contained MatSortables.
    */
-  deregister(sortable: MatSortable) {
+  deregister(sortable: MatSortable): void {
     this.sortables.delete(sortable.id);
   }
 
   /** Sets the active sort id and determines the new sort direction. */
-  sort(sortable: MatSortable) {
+  sort(sortable: MatSortable): void {
     if (this.active != sortable.id) {
       this.active = sortable.id;
       this.direction = sortable.start ? sortable.start : this.start;
@@ -128,7 +130,7 @@ export class MatSort extends _MatSortMixinBase implements CanDisable, OnChanges,
       this.direction = this.getNextSortDirection(sortable);
     }
 
-    this.sortChange.next({active: this.active, direction: this.direction});
+    this.sortChange.emit({active: this.active, direction: this.direction});
   }
 
   /** Returns the next sort direction of the active sortable, checking for potential overrides. */
@@ -143,6 +145,10 @@ export class MatSort extends _MatSortMixinBase implements CanDisable, OnChanges,
     let nextDirectionIndex = sortDirectionCycle.indexOf(this.direction) + 1;
     if (nextDirectionIndex >= sortDirectionCycle.length) { nextDirectionIndex = 0; }
     return sortDirectionCycle[nextDirectionIndex];
+  }
+
+  ngOnInit() {
+    this._markInitialized();
   }
 
   ngOnChanges() {

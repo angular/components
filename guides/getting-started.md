@@ -5,17 +5,31 @@ For existing apps, follow these steps to begin using Angular Material.
 
 ### Step 1: Install Angular Material and Angular CDK
 
+You can use either the npm or yarn command-line tool to install packages. Use whichever is appropriate for your project in the examples below.
+
+#### NPM
 ```bash
 npm install --save @angular/material @angular/cdk
 ```
+#### Yarn
+```bash
+yarn add @angular/material @angular/cdk
+```
+
 
 #### Alternative: Snapshot Build
 
 A snapshot build with the latest changes from master is also available. Note that this snapshot
 build should not be considered stable and may break between releases.
 
+#### NPM
 ```bash
 npm install --save angular/material2-builds angular/cdk-builds
+```
+
+#### Yarn
+```bash
+yarn add angular/material2-builds angular/cdk-builds
 ```
 
 ### Step 2: Animations
@@ -24,13 +38,15 @@ Some Material components depend on the Angular animations module in order to be 
 more advanced transitions. If you want these animations to work in your app, you have to
 install the `@angular/animations` module and include the `BrowserAnimationsModule` in your app.
 
+#### NPM
 ```bash
 npm install --save @angular/animations
 ```
 
-**Note:** `@angular/animations` uses the WebAnimation API that isn't supported by all browsers yet.
-If you want to support Material component animations in these browsers, you'll have to
-[include a polyfill](https://github.com/web-animations/web-animations-js).
+#### Yarn
+```bash
+yarn add @angular/animations
+```
 
 ```ts
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -115,8 +131,15 @@ You can add HammerJS to your application via [npm](https://www.npmjs.com/package
 directly from your app.
 
 To install via npm, use the following command:
+
+#### NPM
 ```bash
 npm install --save hammerjs
+```
+
+#### Yarn
+```bash
+yarn add hammerjs
 ```
 
 After installing, import it on your app's entry point (e.g. `src/main.ts`).
@@ -162,6 +185,12 @@ System.config({
     '@angular/cdk/platform': 'npm:@angular/cdk/bundles/cdk-platform.umd.js',
     '@angular/cdk/a11y': 'npm:@angular/cdk/bundles/cdk-a11y.umd.js',
     // ...
+    'hammerjs': 'npm:hammerjs',
+  },
+  packages: {
+    //...
+    hammerjs: {main: './hammer.min.js', defaultExtension: 'js'}
+    //...
   }
 });
 ```

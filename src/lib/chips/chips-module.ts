@@ -6,17 +6,34 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {ENTER} from '@angular/cdk/keycodes';
 import {NgModule} from '@angular/core';
 import {ErrorStateMatcher} from '@angular/material/core';
-import {MatChipList} from './chip-list';
-import {MatBasicChip, MatChip, MatChipRemove} from './chip';
+import {MatChip, MatChipAvatar, MatChipRemove, MatChipTrailingIcon} from './chip';
+import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-options';
 import {MatChipInput} from './chip-input';
+import {MatChipList} from './chip-list';
 
+const CHIP_DECLARATIONS = [
+  MatChipList,
+  MatChip,
+  MatChipInput,
+  MatChipRemove,
+  MatChipAvatar,
+  MatChipTrailingIcon,
+];
 
 @NgModule({
-  imports: [],
-  exports: [MatChipList, MatChip, MatChipInput, MatChipRemove, MatChipRemove, MatBasicChip],
-  declarations: [MatChipList, MatChip, MatChipInput, MatChipRemove,  MatChipRemove, MatBasicChip],
-  providers: [ErrorStateMatcher]
+  exports: CHIP_DECLARATIONS,
+  declarations: CHIP_DECLARATIONS,
+  providers: [
+    ErrorStateMatcher,
+    {
+      provide: MAT_CHIPS_DEFAULT_OPTIONS,
+      useValue: {
+        separatorKeyCodes: [ENTER]
+      } as MatChipsDefaultOptions
+    }
+  ]
 })
 export class MatChipsModule {}

@@ -3,6 +3,8 @@
 @import '../core/style/checkbox-common';
 @import '../core/ripple/ripple';
 @import '../core/style/layout-common';
+@import '../core/style/noop-animation';
+@import '../../cdk/a11y/a11y';
 
 // Manual calculation done on SVG
 $_mat-checkbox-mark-path-length: 22.910259;
@@ -179,11 +181,14 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
 }
 
 .mat-checkbox {
+  @include _noop-animation();
+
   // Animation
   transition: background $swift-ease-out-duration $swift-ease-out-timing-function,
               mat-elevation-transition-property-value();
 
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mat-checkbox-layout {
@@ -234,6 +239,10 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
     width: $mat-checkbox-border-width;
     style: solid;
   }
+
+  ._mat-animation-noopable & {
+    transition: none;
+  }
 }
 
 .mat-checkbox-background {
@@ -245,6 +254,10 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
   transition: background-color $mat-checkbox-transition-duration
                   $mat-linear-out-slow-in-timing-function,
               opacity $mat-checkbox-transition-duration $mat-linear-out-slow-in-timing-function;
+
+  ._mat-animation-noopable & {
+    transition: none;
+  }
 }
 
 .mat-checkbox-checkmark {
@@ -263,11 +276,18 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
 }
 
 .mat-checkbox-mixedmark {
-  @extend %mat-checkbox-mark;
+  $height: floor($_mat-checkbox-mark-stroke-size);
 
-  height: floor($_mat-checkbox-mark-stroke-size);
+  @extend %mat-checkbox-mark;
+  height: $height;
   opacity: 0;
   transform: scaleX(0) rotate(0deg);
+
+  @include cdk-high-contrast {
+    height: 0;
+    border-top: solid $height;
+    margin-top: $height;
+  }
 }
 
 .mat-checkbox-label-before {
@@ -413,8 +433,8 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
 
 .mat-checkbox-ripple {
   position: absolute;
-  left: $mat-checkbox-size / 2 - $_mat-checkbox-ripple-radius;
-  top: $mat-checkbox-size / 2 - $_mat-checkbox-ripple-radius;
+  left: calc(50% - #{$_mat-checkbox-ripple-radius});
+  top: calc(50% - #{$_mat-checkbox-ripple-radius});
   height: $_mat-checkbox-ripple-radius * 2;
   width: $_mat_checkbox-ripple-radius * 2;
   z-index: 1;

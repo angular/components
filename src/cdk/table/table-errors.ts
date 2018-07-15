@@ -35,8 +35,9 @@ export function getTableMultipleDefaultRowDefsError() {
  * Returns an error to be thrown when there are no matching row defs for a particular set of data.
  * @docs-private
  */
-export function getTableMissingMatchingRowDefError() {
-  return Error(`Could not find a matching row definition for the provided row data.`);
+export function getTableMissingMatchingRowDefError(data: any) {
+  return Error(`Could not find a matching row definition for the` +
+      `provided row data: ${JSON.stringify(data)}`);
 }
 
 /**
@@ -44,6 +45,14 @@ export function getTableMissingMatchingRowDefError() {
  * @docs-private
  */
 export function getTableMissingRowDefsError() {
-  return Error('Missing definitions for header and row, ' +
+  return Error('Missing definitions for header, footer, and row; ' +
       'cannot determine which columns should be rendered.');
+}
+
+/**
+ * Returns an error to be thrown when the data source does not match the compatible types.
+ * @docs-private
+ */
+export function getTableUnknownDataSourceError() {
+  return Error(`Provided data source did not match an array, Observable, or DataSource`);
 }

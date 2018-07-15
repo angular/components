@@ -7,7 +7,7 @@
  */
 
 import {PositionStrategy} from './position-strategy';
-import {OverlayRef} from '../overlay-ref';
+import {OverlayReference} from '../overlay-reference';
 
 
 /**
@@ -18,8 +18,7 @@ import {OverlayRef} from '../overlay-ref';
  */
 export class GlobalPositionStrategy implements PositionStrategy {
   /** The overlay to which this strategy is attached. */
-  private _overlayRef: OverlayRef;
-
+  private _overlayRef: OverlayReference;
   private _cssPosition: string = 'static';
   private _topOffset: string = '';
   private _bottomOffset: string = '';
@@ -30,13 +29,20 @@ export class GlobalPositionStrategy implements PositionStrategy {
   private _width: string = '';
   private _height: string = '';
 
-  /* A lazily-created wrapper for the overlay element that is used as a flex container.  */
-  private _wrapper: HTMLElement | null = null;
+  attach(overlayRef: OverlayReference): void {
+    const config = overlayRef.getConfig();
 
-  constructor(private _document: any) {}
-
-  attach(overlayRef: OverlayRef): void {
     this._overlayRef = overlayRef;
+
+    if (this._width && !config.width) {
+      overlayRef.updateSize({width: this._width});
+    }
+
+    if (this._height && !config.height) {
+      overlayRef.updateSize({height: this._height});
+    }
+
+    overlayRef.hostElement.classList.add('cdk-global-overlay-wrapper');
   }
 
   /**
@@ -86,14 +92,14 @@ export class GlobalPositionStrategy implements PositionStrategy {
   /**
    * Sets the overlay width and clears any previously set width.
    * @param value New width for the overlay
+   * @deprecated Pass the `width` through the `OverlayConfig`.
+   * @deletion-target 7.0.0
    */
   width(value: string = ''): this {
-    this._width = value;
-
-    // When the width is 100%, we should reset the `left` and the offset,
-    // in order to ensure that the element is flush against the viewport edge.
-    if (value === '100%') {
-      this.left('0px');
+    if (this._overlayRef) {
+      this._overlayRef.updateSize({width: value});
+    } else {
+      this._width = value;
     }
 
     return this;
@@ -102,14 +108,14 @@ export class GlobalPositionStrategy implements PositionStrategy {
   /**
    * Sets the overlay height and clears any previously set height.
    * @param value New height for the overlay
+   * @deprecated Pass the `height` through the `OverlayConfig`.
+   * @deletion-target 7.0.0
    */
   height(value: string = ''): this {
-    this._height = value;
-
-    // When the height is 100%, we should reset the `top` and the offset,
-    // in order to ensure that the element is flush against the viewport edge.
-    if (value === '100%') {
-      this.top('0px');
+    if (this._overlayRef) {
+      this._overlayRef.updateSize({height: value});
+    } else {
+      this._height = value;
     }
 
     return this;
@@ -142,39 +148,49 @@ export class GlobalPositionStrategy implements PositionStrategy {
   /**
    * Apply the position to the element.
    * @docs-private
-   *
-   * @returns Resolved when the styles have been applied.
    */
   apply(): void {
-    const element = this._overlayRef.overlayElement;
-
-    if (!this._wrapper && element.parentNode) {
-      this._wrapper = this._document.createElement('div');
-      this._wrapper!.classList.add('cdk-global-overlay-wrapper');
-      element.parentNode.insertBefore(this._wrapper!, element);
-      this._wrapper!.appendChild(element);
+    // Since the overlay ref applies the strategy asynchronously, it could
+    // have been disposed before it ends up being applied. If that is the
+    // case, we shouldn't do anything.
+    if (!this._overlayRef.hasAttached()) {
+      return;
     }
 
-    let styles = element.style;
-    let parentStyles = (element.parentNode as HTMLElement).style;
+    const styles = this._overlayRef.overlayElement.style;
+    const parentStyles = this._overlayRef.hostElement.style;
+    const config = this._overlayRef.getConfig();
 
     styles.position = this._cssPosition;
-    styles.marginTop = this._topOffset;
-    styles.marginLeft = this._leftOffset;
+    styles.marginLeft = config.width === '100%' ? '0' : this._leftOffset;
+    styles.marginTop = config.height === '100%' ? '0' : this._topOffset;
     styles.marginBottom = this._bottomOffset;
     styles.marginRight = this._rightOffset;
-    styles.width = this._width;
-    styles.height = this._height;
 
-    parentStyles.justifyContent = this._justifyContent;
-    parentStyles.alignItems = this._alignItems;
-  }
-
-  /** Removes the wrapper element from the DOM. */
-  dispose(): void {
-    if (this._wrapper && this._wrapper.parentNode) {
-      this._wrapper.parentNode.removeChild(this._wrapper);
-      this._wrapper = null;
+    if (config.width === '100%') {
+      parentStyles.justifyContent = 'flex-start';
+    } else if (this._justifyContent === 'center') {
+        parentStyles.justifyContent = 'center';
+    } else if (this._overlayRef.getConfig().direction === 'rtl') {
+      // In RTL the browser will invert `flex-start` and `flex-end` automatically, but we
+      // don't want that because our positioning is explicitly `left` and `right`, hence
+      // why we do another inversion to ensure that the overlay stays in the same position.
+      // TODO: reconsider this if we add `start` and `end` methods.
+      if (this._justifyContent === 'flex-start') {
+        parentStyles.justifyContent = 'flex-end';
+      } else if (this._justifyContent === 'flex-end') {
+        parentStyles.justifyContent = 'flex-start';
+      }
+    } else {
+      parentStyles.justifyContent = this._justifyContent;
     }
+
+    parentStyles.alignItems = config.height === '100%' ? 'flex-start' : this._alignItems;
   }
+
+  /**
+   * Noop implemented as a part of the PositionStrategy interface.
+   * @docs-private
+   */
+  dispose(): void { }
 }

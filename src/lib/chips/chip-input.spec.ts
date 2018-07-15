@@ -7,6 +7,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatChipInput, MatChipInputEvent} from './chip-input';
 import {MatChipsModule} from './index';
+import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-options';
 
 
 describe('MatChipInput', () => {
@@ -15,7 +16,6 @@ describe('MatChipInput', () => {
   let inputDebugElement: DebugElement;
   let inputNativeElement: HTMLElement;
   let chipInputDirective: MatChipInput;
-
   let dir = 'ltr';
 
   beforeEach(async(() => {
@@ -44,12 +44,25 @@ describe('MatChipInput', () => {
 
   describe('basic behavior', () => {
     it('emits the (chipEnd) on enter keyup', () => {
-      let ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement) as any;
+      let ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement);
 
       spyOn(testChipInput, 'add');
 
       chipInputDirective._keydown(ENTER_EVENT);
       expect(testChipInput.add).toHaveBeenCalled();
+    });
+
+    it('should have a default id', () => {
+      expect(inputNativeElement.getAttribute('id')).toBeTruthy();
+    });
+
+    it('should allow binding to the `placeholder` input', () => {
+      expect(inputNativeElement.hasAttribute('placeholder')).toBe(false);
+
+      testChipInput.placeholder = 'bound placeholder';
+      fixture.detectChanges();
+
+      expect(inputNativeElement.getAttribute('placeholder')).toBe('bound placeholder');
     });
   });
 
@@ -75,12 +88,12 @@ describe('MatChipInput', () => {
     });
   });
 
-  describe('[separatorKeysCodes]', () => {
+  describe('[separatorKeyCodes]', () => {
     it('does not emit (chipEnd) when a non-separator key is pressed', () => {
-      let ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement) as any;
+      let ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement);
       spyOn(testChipInput, 'add');
 
-      testChipInput.separatorKeys = [COMMA];
+      chipInputDirective.separatorKeyCodes = [COMMA];
       fixture.detectChanges();
 
       chipInputDirective._keydown(ENTER_EVENT);
@@ -88,15 +101,46 @@ describe('MatChipInput', () => {
     });
 
     it('emits (chipEnd) when a custom separator keys is pressed', () => {
-      let COMMA_EVENT = createKeyboardEvent('keydown', COMMA, inputNativeElement) as any;
+      let COMMA_EVENT = createKeyboardEvent('keydown', COMMA, inputNativeElement);
       spyOn(testChipInput, 'add');
 
-      testChipInput.separatorKeys = [COMMA];
+      chipInputDirective.separatorKeyCodes = [COMMA];
       fixture.detectChanges();
 
       chipInputDirective._keydown(COMMA_EVENT);
       expect(testChipInput.add).toHaveBeenCalled();
     });
+
+    it('emits (chipEnd) when the separator keys are configured globally', () => {
+      fixture.destroy();
+
+      TestBed
+        .resetTestingModule()
+        .configureTestingModule({
+          imports: [MatChipsModule, PlatformModule],
+          declarations: [TestChipInput],
+          providers: [{
+            provide: MAT_CHIPS_DEFAULT_OPTIONS,
+            useValue: ({separatorKeyCodes: [COMMA]} as MatChipsDefaultOptions)
+          }]
+        })
+        .compileComponents();
+
+      fixture = TestBed.createComponent(TestChipInput);
+      testChipInput = fixture.debugElement.componentInstance;
+      fixture.detectChanges();
+
+      inputDebugElement = fixture.debugElement.query(By.directive(MatChipInput));
+      chipInputDirective = inputDebugElement.injector.get(MatChipInput) as MatChipInput;
+      inputNativeElement = inputDebugElement.nativeElement;
+
+      spyOn(testChipInput, 'add');
+      fixture.detectChanges();
+
+      chipInputDirective._keydown(createKeyboardEvent('keydown', COMMA, inputNativeElement));
+      expect(testChipInput.add).toHaveBeenCalled();
+    });
+
   });
 });
 
@@ -106,13 +150,13 @@ describe('MatChipInput', () => {
     </mat-chip-list>
     <input matInput [matChipInputFor]="chipList"
               [matChipInputAddOnBlur]="addOnBlur"
-              [matChipInputSeparatorKeyCodes]="separatorKeys"
-              (matChipInputTokenEnd)="add($event)" />
+              (matChipInputTokenEnd)="add($event)"
+              [placeholder]="placeholder" />
   `
 })
 class TestChipInput {
   addOnBlur: boolean = false;
-  separatorKeys: number[] = [ENTER];
+  placeholder = '';
 
   add(_: MatChipInputEvent) {
   }

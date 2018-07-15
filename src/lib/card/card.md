@@ -19,7 +19,7 @@ provides a number of preset sections that you can use inside of an `<mat-card>`:
 
 These elements primary serve as pre-styled content containers without any additional APIs. 
 However, the `align` property on `<mat-card-actions>` can be used to position the actions at the 
-`'start'` or `'end` of the container.  
+`'start'` or `'end'` of the container.  
 
 
 ### Card headers
@@ -51,7 +51,7 @@ used.
 #### Group, region, and landmarks
 There are several ARIA roles that communicate that a portion of the UI represents some semantically
 meaningful whole. Depending on what the content of the card means to your application,
-[`role="group"`][0], [`role="region"`][1], or [one of the landmark roles][3] should typically be
+[`role="group"`][0], [`role="region"`][1], or [one of the landmark roles][2] should typically be
 applied to the `<mat-card>` element.
 
 A role is not necessary when the card is used as a purely decorative container that does not
@@ -70,6 +70,6 @@ the card content should follow normal best practices for tab order.
 
 
 
- [0]: https://www.w3.org/TR/wai-aria/roles#group
- [1]: https://www.w3.org/TR/wai-aria/roles#region
- [2]: https://www.w3.org/TR/wai-aria/roles#landmark
+ [0]: https://www.w3.org/TR/wai-aria/#group
+ [1]: https://www.w3.org/TR/wai-aria/#region
+ [2]: https://www.w3.org/TR/wai-aria/#landmark

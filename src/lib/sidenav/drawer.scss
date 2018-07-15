@@ -13,7 +13,7 @@ $mat-drawer-over-drawer-z-index: 4;
 // Mixin that creates a new stacking context.
 // see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context
 // stylelint-enable
-@mixin mat-drawer-stacking-context($z-index:1) {
+@mixin mat-drawer-stacking-context($z-index: 1) {
   position: relative;
 
   // Use a z-index to create a new stacking context. (We can't use transform because it breaks fixed
@@ -44,6 +44,12 @@ $mat-drawer-over-drawer-z-index: 4;
     &.mat-drawer-opened {
       overflow: hidden;
     }
+  }
+
+  // When the consumer explicitly enabled the backdrop,
+  // we have to pull the side drawers above it.
+  &.mat-drawer-container-explicit-backdrop .mat-drawer-side {
+    z-index: $mat-drawer-backdrop-z-index;
   }
 }
 
@@ -80,9 +86,6 @@ $mat-drawer-over-drawer-z-index: 4;
 }
 
 .mat-drawer-content {
-  // `backface-visibility` prevents the element from repainting on scroll. This is the
-  // equivalent of using `translateZ(0)`, but it doesn't create a new stacking context.
-  @include backface-visibility(hidden);
   @include mat-drawer-stacking-context($mat-drawer-content-z-index);
 
   display: block;
@@ -99,6 +102,8 @@ $mat-drawer-over-drawer-z-index: 4;
 }
 
 .mat-drawer {
+  $high-contrast-border: solid 1px currentColor;
+
   @include mat-drawer-stacking-context($mat-drawer-over-drawer-z-index);
 
   display: block;
@@ -110,6 +115,19 @@ $mat-drawer-over-drawer-z-index: 4;
   box-sizing: border-box;
   overflow-y: auto; // TODO(kara): revisit scrolling behavior for drawers
   transform: translate3d(-100%, 0, 0);
+
+  &, [dir='rtl'] &.mat-drawer-end {
+    @include cdk-high-contrast {
+      border-right: $high-contrast-border;
+    }
+  }
+
+  [dir='rtl'] &, &.mat-drawer-end {
+    @include cdk-high-contrast {
+      border-left: $high-contrast-border;
+      border-right: none;
+    }
+  }
 
   &.mat-drawer-side {
     z-index: $mat-drawer-side-drawer-z-index;

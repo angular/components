@@ -6,29 +6,36 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, SkipSelf, Optional } from '@angular/core';
-import {Subject} from 'rxjs/Subject';
+import {Injectable, Optional, SkipSelf} from '@angular/core';
+import {Subject} from 'rxjs';
+
 
 /**
  * To modify the labels and text displayed, create a new instance of MatPaginatorIntl and
  * include it in a custom provider
  */
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class MatPaginatorIntl {
   /**
    * Stream that emits whenever the labels here are changed. Use this to notify
    * components if the labels have changed after initialization.
    */
-  changes: Subject<void> = new Subject<void>();
+  readonly changes: Subject<void> = new Subject<void>();
 
   /** A label for the page size selector. */
-  itemsPerPageLabel = 'Items per page:';
+  itemsPerPageLabel: string = 'Items per page:';
 
   /** A label for the button that increments the current page. */
-  nextPageLabel = 'Next page';
+  nextPageLabel: string = 'Next page';
 
   /** A label for the button that decrements the current page. */
-  previousPageLabel = 'Previous page';
+  previousPageLabel: string = 'Previous page';
+
+  /** A label for the button that moves to the first page. */
+  firstPageLabel: string = 'First page';
+
+  /** A label for the button that moves to the last page. */
+  lastPageLabel: string = 'Last page';
 
   /** A label for the range of items within the current page and the length of the whole list. */
   getRangeLabel = (page: number, pageSize: number, length: number) => {

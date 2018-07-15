@@ -17,8 +17,8 @@ forms.
 
 <!-- example(select-value-binding) -->
 
-The `<mat-select>` also supports all of the form directives from the core `FormsModule` and
-`ReactiveFormsModule` (`ngModel`, `formControl`, etc.) As with native `<select>`, `<mat-select>`
+The `<mat-select>` also supports all of the form directives from the core `FormsModule` (`NgModel`) and
+`ReactiveFormsModule` (`FormControl`, `FormGroup`, etc.) As with native `<select>`, `<mat-select>`
 also supports a `compareWith` function. (Additional information about using a custom `compareWith`
 function can be found in the
 [Angular forms documentation](https://angular.io/api/forms/SelectControlValueAccessor#caveat-option-selection)).
@@ -36,12 +36,11 @@ these features, see the
 
 ### Setting a static placeholder
 
-The placeholder is a text label displayed in the select trigger area when no value is selected. When
-a value is selected, the placeholder will float above the select trigger area. The placeholder can
-be specified either via a `placeholder` attribute on the `<mat-select>` or a `<mat-placeholder>`
-element in the same form field as the `<mat-select>`. The `<mat-form-field>` also has additional
-options for changing the behavior of the placeholder. For more information see the
-[form field placeholder documentation](https://material.angular.io/components/form-field/overview#floating-placeholder).
+The placeholder is text shown when the `<mat-form-field>` label is floating but the `<mat-select>`
+is empty. It is used to give the user an additional hint about the value they should select. The
+placeholder can be specified by setting the `placeholder` attribute on the `<mat-select>` element.
+In some cases that `<mat-form-field>` may use the placeholder as the label (see the
+[form field label documentation](https://material.angular.io/components/form-field/overview#floating-label)).
 
 ### Disabling the select or individual options
 
@@ -67,7 +66,7 @@ on the group.
 
 ### Multiple selection
 
-`<mat-select>` defaults to single-selection mode, but can be configured to allow multiple selection 
+`<mat-select>` defaults to single-selection mode, but can be configured to allow multiple selection
 by setting the `multiple` property. This will allow the user to select multiple values at once. When
 using the `<mat-select>` in multiple selection mode, its value will be a sorted list of all selected
 values rather than a single value.

@@ -6,10 +6,11 @@ ng_module(
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/cdk/stepper",
   deps = [
+    "//src/cdk/a11y",
     "//src/cdk/bidi",
     "//src/cdk/coercion",
     "//src/cdk/keycodes",
     "@rxjs",
   ],
-  tsconfig = ":tsconfig-build.json",
+  tsconfig = "//src/cdk:tsconfig-build.json",
 )

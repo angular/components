@@ -9,19 +9,22 @@
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
+  Inject,
+  InjectionToken,
   Input,
+  OnDestroy,
   Optional,
   Output,
   QueryList,
   ViewEncapsulation,
-  InjectionToken,
-  Inject,
 } from '@angular/core';
+import {Subject} from 'rxjs';
 import {MatOptgroup} from './optgroup';
 
 /**
@@ -76,16 +79,17 @@ export const MAT_OPTION_PARENT_COMPONENT =
     '(keydown)': '_handleKeydown($event)',
     'class': 'mat-option',
   },
+  styleUrls: ['option.css'],
   templateUrl: 'option.html',
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatOption {
+export class MatOption implements AfterViewChecked, OnDestroy {
   private _selected = false;
   private _active = false;
   private _disabled = false;
   private _id = `mat-option-${_uniqueIdCounter++}`;
+  private _mostRecentViewValue = '';
 
   /** Whether the wrapping component is in multiple selection mode. */
   get multiple() { return this._parent && this._parent.multiple; }
@@ -108,7 +112,11 @@ export class MatOption {
   get disableRipple() { return this._parent && this._parent.disableRipple; }
 
   /** Event emitted when the option is selected or deselected. */
-  @Output() onSelectionChange = new EventEmitter<MatOptionSelectionChange>();
+  // tslint:disable-next-line:no-output-on-prefix
+  @Output() readonly onSelectionChange = new EventEmitter<MatOptionSelectionChange>();
+
+  /** Emits when the state of the option changes and any parents have to be notified. */
+  readonly _stateChanges = new Subject<void>();
 
   constructor(
     private _element: ElementRef,
@@ -137,16 +145,20 @@ export class MatOption {
 
   /** Selects the option. */
   select(): void {
-    this._selected = true;
-    this._changeDetectorRef.markForCheck();
-    this._emitSelectionChangeEvent();
+    if (!this._selected) {
+      this._selected = true;
+      this._changeDetectorRef.markForCheck();
+      this._emitSelectionChangeEvent();
+    }
   }
 
   /** Deselects the option. */
   deselect(): void {
-    this._selected = false;
-    this._changeDetectorRef.markForCheck();
-    this._emitSelectionChangeEvent();
+    if (this._selected) {
+      this._selected = false;
+      this._changeDetectorRef.markForCheck();
+      this._emitSelectionChangeEvent();
+    }
   }
 
   /** Sets focus onto this option. */
@@ -198,8 +210,8 @@ export class MatOption {
   }
 
   /**
-   * Selects the option while indicating the selection came from the user. Used to
-   * determine if the select's view -> model callback should be invoked.
+   * `Selects the option while indicating the selection came from the user. Used to
+   * determine if the select's view -> model callback should be invoked.`
    */
   _selectViaInteraction(): void {
     if (!this.disabled) {
@@ -219,35 +231,79 @@ export class MatOption {
     return this._element.nativeElement;
   }
 
+  ngAfterViewChecked() {
+    // Since parent components could be using the option's label to display the selected values
+    // (e.g. `mat-select`) and they don't have a way of knowing if the option's label has changed
+    // we have to check for changes in the DOM ourselves and dispatch an event. These checks are
+    // relatively cheap, however we still limit them only to selected options in order to avoid
+    // hitting the DOM too often.
+    if (this._selected) {
+      const viewValue = this.viewValue;
+
+      if (viewValue !== this._mostRecentViewValue) {
+        this._mostRecentViewValue = viewValue;
+        this._stateChanges.next();
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this._stateChanges.complete();
+  }
+
   /** Emits the selection change event. */
   private _emitSelectionChangeEvent(isUserInput = false): void {
     this.onSelectionChange.emit(new MatOptionSelectionChange(this, isUserInput));
   }
+}
 
-  /**
-   * Counts the amount of option group labels that precede the specified option.
-   * @param optionIndex Index of the option at which to start counting.
-   * @param options Flat list of all of the options.
-   * @param optionGroups Flat list of all of the option groups.
-   */
-  static countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<MatOption>,
-    optionGroups: QueryList<MatOptgroup>): number {
+/**
+ * Counts the amount of option group labels that precede the specified option.
+ * @param optionIndex Index of the option at which to start counting.
+ * @param options Flat list of all of the options.
+ * @param optionGroups Flat list of all of the option groups.
+ * @docs-private
+ */
+export function _countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<MatOption>,
+  optionGroups: QueryList<MatOptgroup>): number {
 
-    if (optionGroups.length) {
-      let optionsArray = options.toArray();
-      let groups = optionGroups.toArray();
-      let groupCounter = 0;
+  if (optionGroups.length) {
+    let optionsArray = options.toArray();
+    let groups = optionGroups.toArray();
+    let groupCounter = 0;
 
-      for (let i = 0; i < optionIndex + 1; i++) {
-        if (optionsArray[i].group && optionsArray[i].group === groups[groupCounter]) {
-          groupCounter++;
-        }
+    for (let i = 0; i < optionIndex + 1; i++) {
+      if (optionsArray[i].group && optionsArray[i].group === groups[groupCounter]) {
+        groupCounter++;
       }
-
-      return groupCounter;
     }
 
-    return 0;
+    return groupCounter;
   }
 
+  return 0;
 }
+
+/**
+ * Determines the position to which to scroll a panel in order for an option to be into view.
+ * @param optionIndex Index of the option to be scrolled into the view.
+ * @param optionHeight Height of the options.
+ * @param currentScrollPosition Current scroll position of the panel.
+ * @param panelHeight Height of the panel.
+ * @docs-private
+ */
+export function _getOptionScrollPosition(optionIndex: number, optionHeight: number,
+    currentScrollPosition: number, panelHeight: number): number {
+  const optionOffset = optionIndex * optionHeight;
+
+  if (optionOffset < currentScrollPosition) {
+    return optionOffset;
+  }
+
+  if (optionOffset + optionHeight > currentScrollPosition + panelHeight) {
+    return Math.max(0, optionOffset - panelHeight + optionHeight);
+  }
+
+  return currentScrollPosition;
+}
+

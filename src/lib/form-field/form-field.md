@@ -13,19 +13,51 @@ The following Angular Material components are designed to work inside a `<mat-fo
 
 <!-- example(form-field-overview) -->
 
+### Form field appearance variants
+The `mat-form-field` supports 4 different appearance variants which can be set via the `appearance`
+input. The `legacy` appearance is the default style that the `mat-form-field` has traditionally had.
+It shows the input box with an underline underneath it. The `standard` appearance is a slightly
+updated version of the `legacy` appearance that has spacing that is more consistent with the `fill`
+and `outline` appearances. The `fill` appearance displays the form field with a filled background
+box in addition to the underline. Finally the `outline` appearance shows the form field with a
+border all the way around, not just an underline.
+
+There are a couple differences to be aware of between the `legacy` appearance and the newer
+`standard`, `fill`, and `outline` appearances. The `matPrefix` and `matSuffix` elements are center
+aligned by default for the newer appearances. The Material Design spec shows this as being the
+standard way to align prefix and suffix icons in the newer appearance variants. We do not recommend
+using text prefix and suffixes in the new variants because the label and input do not have the same
+alignment. It is therefore impossible to align the prefix or suffix in a way that looks good when
+compared with both the label and input text.
+
+The second important difference is that the `standard`, `fill`, and `outline` appearances do not
+promote placeholders to labels. For the `legacy` appearance specifying
+`<input placeholder="placeholder">` will result in a floating label being added to the
+`mat-form-field`. For the newer variants it will just add a normal placeholder to the input. If you
+want a floating label, add a `<mat-label>` to the `mat-form-field`.
+
+<!-- example(form-field-appearance) -->
+
 ### Floating label
 
 The floating label is a text label displayed on top of the form field control when
 the control does not contain any text. By default, when text is present the floating label
-floats above the form field control. The label for a form field can be defined either through a
-`mat-label` element, by setting the `placeholder` attribute on the form control or using the
-`mat-placeholder` element. If there are multiple clashing values (e.g. a `placeholder` and a
-label) the `mat-label` will take precedence and the `placeholder` will be shown only when there is
-no value.
+floats above the form field control. The label for a form field can be specified by adding a
+`mat-label` element.
 
-Placeholder text can be specified using the `placeholder` property on the form field control, or
-by adding a `<mat-placeholder>` element inside the form field. Only one of these options should be
-used, specifying both will raise an error.
+In the legacy version of the `<mat-form-field>` (one that has no `appearance` attribute or has
+`appearance="legacy"`) if a label is not specified, the `placeholder` attribute on the form control
+is promoted to a label. If a label is specified, the `placeholder` will be displayed as a normal
+placeholder. The `placeholder` will never be promoted to a label for `standard`, `fill`, and
+`outline` form fields. If you want to create a legacy form field with a placeholder but no label,
+you will need to specify an empty label to prevent the `placeholder` from being promoted.
+
+```html
+<mat-form-field>
+  <mat-label></mat-label>
+  <input placeholder="Just a placeholder">
+</mat-form-field>
+```
 
 If the form field control is marked with a `required` attribute, an asterisk will be appended to the
 label to indicate the fact that it is a required field. If unwanted, this can be disabled by
@@ -38,7 +70,7 @@ present in the form field control. It can also be set to `auto` to restore the d
 
 <!-- example(form-field-label) -->
 
-Global default label options can be specified by setting providing a value for
+Global default label options can be specified by providing a value for
 `MAT_LABEL_GLOBAL_OPTIONS` in your application's root module. Like the property, the global
 setting can be either `always`, `never`, or `auto`.
 
@@ -129,7 +161,8 @@ Any errors and hints added to the form field are automatically added to the form
 
 This error occurs when you have specified two conflicting placeholders. Make sure that you haven't
 included both a `placeholder` property on your form field control and a `<mat-placeholder>`
-element.
+element. The `<mat-placeholder>` element is deprecated, you should use `placeholder` for
+placeholders and `<mat-label>` for labels.
 
 #### Error: A hint was already declared for align="..."
 
@@ -140,5 +173,6 @@ This error occurs if you have added multiple hints for the same side. Keep in mi
 
 This error occurs when you have not added a form field control to your form field. If your form
 field contains a native `<input>` or `<textarea>` element, make sure you've added the `matInput`
-directive to it. Other components that can act as a form field control include `<mat-select>`,
-`<mat-chip-list>`, and any custom form field controls you've created.
+directive to it and have imported `MatInputModule`. Other components that can act as a form field
+control include `<mat-select>`, `<mat-chip-list>`, and any custom form field controls you've
+created.

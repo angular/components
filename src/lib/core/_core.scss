@@ -2,13 +2,12 @@
 // up into a single flat scss file for material.
 @import '../../cdk/overlay/overlay';
 @import '../../cdk/a11y/a11y';
+@import '../../cdk/text-field/text-field';
 
 // Core styles that can be used to apply material design treatments to any element.
 @import 'style/elevation';
 @import 'ripple/ripple';
-@import 'option/option';
 @import 'option/option-theme';
-@import 'option/optgroup';
 @import 'option/optgroup-theme';
 @import 'selection/pseudo-checkbox/pseudo-checkbox-theme';
 @import 'typography/all-typography';
@@ -26,10 +25,9 @@
 
   @include angular-material-typography($typography-config);
   @include mat-ripple();
-  @include mat-option();
-  @include mat-optgroup();
   @include cdk-a11y();
   @include cdk-overlay();
+  @include cdk-text-field();
 }
 
 // Mixin that renders all of the core styles that depend on the theme.
@@ -39,15 +37,21 @@
   @include mat-optgroup-theme($theme);
   @include mat-pseudo-checkbox-theme($theme);
 
-  // Wrapper element that provides the theme background when the
-  // user's content isn't inside of a `mat-sidenav-container`.
-  .mat-app-background {
+  // Wrapper element that provides the theme background when the user's content isn't
+  // inside of a `mat-sidenav-container`. Note that we need to exclude the ampersand
+  // selector in case the mixin is included at the top level.
+  .mat-app-background#{if(&, ', &.mat-app-background', '')} {
     $background: map-get($theme, background);
+    $foreground: map-get($theme, foreground);
+
     background-color: mat-color($background, background);
+    color: mat-color($foreground, text);
   }
 
   // Marker that is used to determine whether the user has added a theme to their page.
-  .mat-theme-loaded-marker {
-    display: none;
+  @at-root {
+    .mat-theme-loaded-marker {
+      display: none;
+    }
   }
 }

@@ -13,33 +13,33 @@ module.exports = (config) => {
       require('karma-chrome-launcher'),
       require('karma-firefox-launcher'),
       require('karma-sourcemap-loader'),
-      require('karma-coverage')
+      require('karma-coverage'),
     ],
     files: [
-      {pattern: 'node_modules/core-js/client/core.js', included: true, watched: false},
+      {pattern: 'node_modules/core-js/client/core.min.js', included: true, watched: false},
       {pattern: 'node_modules/tslib/tslib.js', included: true, watched: false},
-      {pattern: 'node_modules/systemjs/dist/system.src.js', included: true, watched: false},
-      {pattern: 'node_modules/zone.js/dist/zone.js', included: true, watched: false},
-      {pattern: 'node_modules/zone.js/dist/proxy.js', included: true, watched: false},
+      {pattern: 'node_modules/systemjs/dist/system.js', included: true, watched: false},
+      {pattern: 'node_modules/zone.js/dist/zone.min.js', included: true, watched: false},
+      {pattern: 'node_modules/zone.js/dist/proxy.min.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/sync-test.js', included: true, watched: false},
-      {pattern: 'node_modules/zone.js/dist/jasmine-patch.js', included: true, watched: false},
+      {pattern: 'node_modules/zone.js/dist/jasmine-patch.min.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/async-test.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/fake-async-test.js', included: true, watched: false},
       {pattern: 'node_modules/hammerjs/hammer.min.js', included: true, watched: false},
-      {pattern: 'node_modules/hammerjs/hammer.min.js.map', included: false, watched: false},
       {pattern: 'node_modules/moment/min/moment-with-locales.min.js', included: true, watched: false},
 
       // Include all Angular dependencies
       {pattern: 'node_modules/@angular/**/*', included: false, watched: false},
       {pattern: 'node_modules/rxjs/**/*', included: false, watched: false},
 
+      {pattern: 'test/karma-system-config.js', included: true, watched: false},
       {pattern: 'test/karma-test-shim.js', included: true, watched: false},
 
       // Include a Material theme in the test suite.
       {pattern: 'dist/packages/**/core/theming/prebuilt/indigo-pink.css', included: true, watched: true},
 
       // Includes all package tests and source files into karma. Those files will be watched.
-      // This pattern also matches all all sourcemap files and TypeScript files for debugging.
+      // This pattern also matches all sourcemap files and TypeScript files for debugging.
       {pattern: 'dist/packages/**/*', included: false, watched: true},
     ],
 
@@ -59,7 +59,7 @@ module.exports = (config) => {
     },
 
     sauceLabs: {
-      testName: 'material2',
+      testName: 'Angular Material Unit Tests',
       startConnect: false,
       recordVideo: false,
       recordScreenshots: false,
@@ -69,20 +69,23 @@ module.exports = (config) => {
     },
 
     browserStack: {
-      project: 'material2',
+      project: 'Angular Material Unit Tests',
       startTunnel: false,
-      retryLimit: 1,
-      timeout: 600,
-      pollingTimeout: 20000,
+      retryLimit: 3,
+      timeout: 1800,
       video: false,
     },
 
-    browserDisconnectTimeout: 20000,
-    browserNoActivityTimeout: 240000,
-    captureTimeout: 120000,
-    browsers: ['ChromeHeadlessLocal'],
+    browserDisconnectTimeout: 180000,
+    browserDisconnectTolerance: 3,
+    browserNoActivityTimeout: 300000,
+    captureTimeout: 180000,
 
+    browsers: ['ChromeHeadlessLocal'],
     singleRun: false,
+
+    // Try Websocket for a faster transmission first. Fallback to polling if necessary.
+    transports: ['websocket', 'polling'],
 
     browserConsoleLogOptions: {
       terminal: true,
@@ -94,7 +97,7 @@ module.exports = (config) => {
         // TODO(jelbourn): re-enable random test order once we can de-flake existing issues.
         random: false
       }
-    }
+    },
   });
 
   if (process.env['TRAVIS']) {
@@ -121,6 +124,12 @@ module.exports = (config) => {
       config.browserStack.tunnelIdentifier = process.env.TRAVIS_JOB_ID;
     } else if (platform !== 'travis') {
       throw new Error(`Platform "${platform}" unknown, but Travis specified. Exiting.`);
+    }
+
+    if (platform !== 'travis') {
+      // To guarantee a better stability for tests running on external browsers, we disable
+      // concurrency. Stability is compared to speed more important.
+      config.concurrency = 1;
     }
 
     config.browsers = platformMap[platform][target.toLowerCase()];

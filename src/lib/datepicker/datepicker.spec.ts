@@ -1,5 +1,5 @@
-import {ENTER, ESCAPE, RIGHT_ARROW} from '@angular/cdk/keycodes';
-import {OverlayContainer} from '@angular/cdk/overlay';
+import {ENTER, ESCAPE, RIGHT_ARROW, UP_ARROW} from '@angular/cdk/keycodes';
+import {Overlay, OverlayContainer, ScrollDispatcher} from '@angular/cdk/overlay';
 import {
   createKeyboardEvent,
   dispatchEvent,
@@ -7,8 +7,8 @@ import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
 } from '@angular/cdk/testing';
-import {Component, ViewChild} from '@angular/core';
-import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {Component, FactoryProvider, Type, ValueProvider, ViewChild} from '@angular/core';
+import {ComponentFixture, fakeAsync, flush, inject, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
   DEC,
@@ -20,69 +20,71 @@ import {
   NativeDateModule,
   SEP,
 } from '@angular/material/core';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {Subject} from 'rxjs';
 import {MatInputModule} from '../input/index';
 import {MatDatepicker} from './datepicker';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerToggle} from './datepicker-toggle';
-import {MatDatepickerIntl, MatDatepickerModule} from './index';
+import {MAT_DATEPICKER_SCROLL_STRATEGY, MatDatepickerIntl, MatDatepickerModule} from './index';
+import {Directionality} from '@angular/cdk/bidi';
+import {BrowserDynamicTestingModule} from '@angular/platform-browser-dynamic/testing';
 
 describe('MatDatepicker', () => {
   const SUPPORTS_INTL = typeof Intl != 'undefined';
 
+  // Creates a test component fixture.
+  function createComponent(
+    component: Type<any>,
+    imports: Type<any>[] = [],
+    providers: (FactoryProvider | ValueProvider)[] = [],
+    entryComponents: Type<any>[] = []): ComponentFixture<any> {
+
+    TestBed.configureTestingModule({
+      imports: [
+        FormsModule,
+        MatDatepickerModule,
+        MatFormFieldModule,
+        MatInputModule,
+        NoopAnimationsModule,
+        ReactiveFormsModule,
+        ...imports
+      ],
+      providers,
+      declarations: [component, ...entryComponents],
+    });
+
+    TestBed.overrideModule(BrowserDynamicTestingModule, {
+      set: {
+        entryComponents: [entryComponents]
+      }
+    }).compileComponents();
+
+    return TestBed.createComponent(component);
+  }
+
   afterEach(inject([OverlayContainer], (container: OverlayContainer) => {
-    container.getContainerElement().parentNode!.removeChild(container.getContainerElement());
+    container.ngOnDestroy();
   }));
 
   describe('with MatNativeDateModule', () => {
-    beforeEach(async(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          FormsModule,
-          MatDatepickerModule,
-          MatFormFieldModule,
-          MatInputModule,
-          MatNativeDateModule,
-          NoopAnimationsModule,
-          ReactiveFormsModule,
-        ],
-        declarations: [
-          DatepickerWithChangeAndInputEvents,
-          DatepickerWithFilterAndValidation,
-          DatepickerWithFormControl,
-          DatepickerWithISOStrings,
-          DatepickerWithMinAndMaxValidation,
-          DatepickerWithNgModel,
-          DatepickerWithStartAt,
-          DatepickerWithStartView,
-          DatepickerWithToggle,
-          FormFieldDatepicker,
-          MultiInputDatepicker,
-          NoInputDatepicker,
-          StandardDatepicker,
-          DatepickerWithEvents,
-        ],
-      });
-
-      TestBed.compileComponents();
-    }));
-
     describe('standard datepicker', () => {
       let fixture: ComponentFixture<StandardDatepicker>;
       let testComponent: StandardDatepicker;
 
-      beforeEach(async(() => {
-        fixture = TestBed.createComponent(StandardDatepicker);
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(StandardDatepicker, [MatNativeDateModule]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
       }));
 
-      afterEach(async(() => {
+      afterEach(fakeAsync(() => {
         testComponent.datepicker.close();
         fixture.detectChanges();
+        flush();
       }));
 
       it('should initialize with correct value shown in input', () => {
@@ -113,17 +115,19 @@ describe('MatDatepicker', () => {
             .not.toBeNull();
       });
 
-      it('should open datepicker if opened input is set to true', () => {
+      it('should open datepicker if opened input is set to true', fakeAsync(() => {
         testComponent.opened = true;
         fixture.detectChanges();
+        flush();
 
         expect(document.querySelector('.mat-datepicker-content')).not.toBeNull();
 
         testComponent.opened = false;
         fixture.detectChanges();
+        flush();
 
         expect(document.querySelector('.mat-datepicker-content')).toBeNull();
-      });
+      }));
 
       it('open in disabled mode should not open the calendar', () => {
         testComponent.disabled = true;
@@ -152,42 +156,46 @@ describe('MatDatepicker', () => {
         expect(document.querySelector('.cdk-overlay-pane')).not.toBeNull();
       });
 
-      it('close should close popup', () => {
+      it('close should close popup', fakeAsync(() => {
         testComponent.datepicker.open();
         fixture.detectChanges();
+        flush();
 
-        let popup = document.querySelector('.cdk-overlay-pane')!;
+        const popup = document.querySelector('.cdk-overlay-pane')!;
         expect(popup).not.toBeNull();
         expect(parseInt(getComputedStyle(popup).height as string)).not.toBe(0);
 
         testComponent.datepicker.close();
         fixture.detectChanges();
+        flush();
 
         expect(parseInt(getComputedStyle(popup).height as string)).toBe(0);
-      });
+      }));
 
-      it('should close the popup when pressing ESCAPE', () => {
+      it('should close the popup when pressing ESCAPE', fakeAsync(() => {
         testComponent.datepicker.open();
         fixture.detectChanges();
 
-        let content = document.querySelector('.cdk-overlay-pane mat-datepicker-content')!;
-        expect(content).toBeTruthy('Expected datepicker to be open.');
+        expect(testComponent.datepicker.opened).toBe(true, 'Expected datepicker to be open.');
 
-        const keyboardEvent = createKeyboardEvent('keydown', ESCAPE);
-        const stopPropagationSpy = spyOn(keyboardEvent, 'stopPropagation').and.callThrough();
-
-        dispatchEvent(content, keyboardEvent);
+        dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
         fixture.detectChanges();
+        flush();
 
-        content = document.querySelector('.cdk-overlay-pane mat-datepicker-content')!;
+        expect(testComponent.datepicker.opened).toBe(false, 'Expected datepicker to be closed.');
+      }));
 
-        expect(content).toBeFalsy('Expected datepicker to be closed.');
-        expect(stopPropagationSpy).toHaveBeenCalled();
-        expect(keyboardEvent.defaultPrevented)
-            .toBe(true, 'Expected default ESCAPE action to be prevented.');
-      });
+      it('should set the proper role on the popup', fakeAsync(() => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        flush();
 
-      it('close should close dialog', async(() => {
+        const popup = document.querySelector('.cdk-overlay-pane')!;
+        expect(popup).toBeTruthy();
+        expect(popup.getAttribute('role')).toBe('dialog');
+      }));
+
+      it('close should close dialog', fakeAsync(() => {
         testComponent.touch = true;
         fixture.detectChanges();
 
@@ -198,18 +206,18 @@ describe('MatDatepicker', () => {
 
         testComponent.datepicker.close();
         fixture.detectChanges();
+        flush();
 
-        fixture.whenStable().then(() => {
-          expect(document.querySelector('mat-dialog-container')).toBeNull();
-        });
+        expect(document.querySelector('mat-dialog-container')).toBeNull();
       }));
 
-      it('setting selected via click should update input and close calendar', async(() => {
+      it('setting selected via click should update input and close calendar', fakeAsync(() => {
         testComponent.touch = true;
         fixture.detectChanges();
 
         testComponent.datepicker.open();
         fixture.detectChanges();
+        flush();
 
         expect(document.querySelector('mat-dialog-container')).not.toBeNull();
         expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 1));
@@ -217,40 +225,41 @@ describe('MatDatepicker', () => {
         let cells = document.querySelectorAll('.mat-calendar-body-cell');
         dispatchMouseEvent(cells[1], 'click');
         fixture.detectChanges();
+        flush();
 
-        fixture.whenStable().then(() => {
-          expect(document.querySelector('mat-dialog-container')).toBeNull();
-          expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 2));
-        });
+        expect(document.querySelector('mat-dialog-container')).toBeNull();
+        expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 2));
       }));
 
-      it('setting selected via enter press should update input and close calendar', () => {
-        testComponent.touch = true;
-        fixture.detectChanges();
+      it('setting selected via enter press should update input and close calendar',
+        fakeAsync(() => {
+          testComponent.touch = true;
+          fixture.detectChanges();
 
-        testComponent.datepicker.open();
-        fixture.detectChanges();
+          testComponent.datepicker.open();
+          fixture.detectChanges();
+          flush();
 
-        expect(document.querySelector('mat-dialog-container')).not.toBeNull();
-        expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 1));
+          expect(document.querySelector('mat-dialog-container')).not.toBeNull();
+          expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 1));
 
-        let calendarBodyEl = document.querySelector('.mat-calendar-content') as HTMLElement;
+          let calendarBodyEl = document.querySelector('.mat-calendar-body') as HTMLElement;
 
-        dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
-        fixture.detectChanges();
-        dispatchKeyboardEvent(calendarBodyEl, 'keydown', ENTER);
-        fixture.detectChanges();
+          dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
+          fixture.detectChanges();
+          flush();
+          dispatchKeyboardEvent(calendarBodyEl, 'keydown', ENTER);
+          fixture.detectChanges();
+          flush();
 
-        fixture.whenStable().then(() => {
           expect(document.querySelector('mat-dialog-container')).toBeNull();
           expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 2));
-        });
-      });
+        }));
 
       it('clicking the currently selected date should close the calendar ' +
-         'without firing selectedChanged', () => {
+         'without firing selectedChanged', fakeAsync(() => {
         const selectedChangedSpy =
-            spyOn(testComponent.datepicker.selectedChanged, 'emit').and.callThrough();
+            spyOn(testComponent.datepicker._selectedChanged, 'next').and.callThrough();
 
         for (let changeCount = 1; changeCount < 3; changeCount++) {
           const currentDay = changeCount;
@@ -263,22 +272,23 @@ describe('MatDatepicker', () => {
           let cells = document.querySelectorAll('.mat-calendar-body-cell');
           dispatchMouseEvent(cells[1], 'click');
           fixture.detectChanges();
+          flush();
         }
 
         expect(selectedChangedSpy.calls.count()).toEqual(1);
         expect(document.querySelector('mat-dialog-container')).toBeNull();
         expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 2));
-      });
+      }));
 
       it('pressing enter on the currently selected date should close the calendar without ' +
          'firing selectedChanged', () => {
         const selectedChangedSpy =
-            spyOn(testComponent.datepicker.selectedChanged, 'emit').and.callThrough();
+            spyOn(testComponent.datepicker._selectedChanged, 'next').and.callThrough();
 
         testComponent.datepicker.open();
         fixture.detectChanges();
 
-        let calendarBodyEl = document.querySelector('.mat-calendar-content') as HTMLElement;
+        let calendarBodyEl = document.querySelector('.mat-calendar-body') as HTMLElement;
         expect(calendarBodyEl).not.toBeNull();
         expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 1));
 
@@ -297,17 +307,18 @@ describe('MatDatepicker', () => {
       });
 
       it('should attach popup to native input', () => {
-        let attachToRef = testComponent.datepickerInput.getPopupConnectionElementRef();
+        let attachToRef = testComponent.datepickerInput.getConnectedOverlayOrigin();
         expect(attachToRef.nativeElement.tagName.toLowerCase())
             .toBe('input', 'popup should be attached to native input');
       });
 
-      it('input should aria-owns calendar after opened in non-touch mode', () => {
+      it('input should aria-owns calendar after opened in non-touch mode', fakeAsync(() => {
         let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
         expect(inputEl.getAttribute('aria-owns')).toBeNull();
 
         testComponent.datepicker.open();
         fixture.detectChanges();
+        flush();
 
         let ownedElementId = inputEl.getAttribute('aria-owns');
         expect(ownedElementId).not.toBeNull();
@@ -315,7 +326,7 @@ describe('MatDatepicker', () => {
         let ownedElement = document.getElementById(ownedElementId);
         expect(ownedElement).not.toBeNull();
         expect((ownedElement as Element).tagName.toLowerCase()).toBe('mat-calendar');
-      });
+      }));
 
       it('input should aria-owns calendar after opened in touch mode', () => {
         testComponent.touch = true;
@@ -340,11 +351,92 @@ describe('MatDatepicker', () => {
 
         expect(() => fixture.detectChanges()).not.toThrow();
       });
+
+      it('should clear out the backdrop subscriptions on close', fakeAsync(() => {
+        for (let i = 0; i < 3; i++) {
+          testComponent.datepicker.open();
+          fixture.detectChanges();
+
+          testComponent.datepicker.close();
+          fixture.detectChanges();
+        }
+
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+
+        const spy = jasmine.createSpy('close event spy');
+        const subscription = testComponent.datepicker.closedStream.subscribe(spy);
+        const backdrop = document.querySelector('.cdk-overlay-backdrop')! as HTMLElement;
+
+        backdrop.click();
+        fixture.detectChanges();
+        flush();
+
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(testComponent.datepicker.opened).toBe(false);
+        subscription.unsubscribe();
+      }));
+
+      it('should reset the datepicker when it is closed externally',
+        fakeAsync(inject([OverlayContainer], (oldOverlayContainer: OverlayContainer) => {
+
+          // Destroy the old container manually since resetting the testing module won't do it.
+          oldOverlayContainer.ngOnDestroy();
+          TestBed.resetTestingModule();
+
+          const scrolledSubject = new Subject();
+
+          // Stub out a `CloseScrollStrategy` so we can trigger a detachment via the `OverlayRef`.
+          fixture = createComponent(StandardDatepicker, [MatNativeDateModule], [
+            {
+              provide: ScrollDispatcher,
+              useValue: {scrolled: () => scrolledSubject}
+            },
+            {
+              provide: MAT_DATEPICKER_SCROLL_STRATEGY,
+              deps: [Overlay],
+              useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close()
+            }
+          ]);
+
+          fixture.detectChanges();
+          testComponent = fixture.componentInstance;
+
+          testComponent.datepicker.open();
+          fixture.detectChanges();
+
+          expect(testComponent.datepicker.opened).toBe(true);
+
+          scrolledSubject.next();
+          flush();
+          fixture.detectChanges();
+
+          expect(testComponent.datepicker.opened).toBe(false);
+        }))
+      );
+
+      it('should close the datpeicker using ALT + UP_ARROW', fakeAsync(() => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        flush();
+
+        expect(testComponent.datepicker.opened).toBe(true);
+
+        const event = createKeyboardEvent('keydown', UP_ARROW);
+        Object.defineProperty(event, 'altKey', {get: () => true});
+
+        dispatchEvent(document.body, event);
+        fixture.detectChanges();
+        flush();
+
+        expect(testComponent.datepicker.opened).toBe(false);
+      }));
+
     });
 
     describe('datepicker with too many inputs', () => {
-      it('should throw when multiple inputs registered', async(() => {
-        let fixture = TestBed.createComponent(MultiInputDatepicker);
+      it('should throw when multiple inputs registered', fakeAsync(() => {
+        let fixture = createComponent(MultiInputDatepicker, [MatNativeDateModule]);
         expect(() => fixture.detectChanges()).toThrow();
       }));
     });
@@ -353,14 +445,14 @@ describe('MatDatepicker', () => {
       let fixture: ComponentFixture<NoInputDatepicker>;
       let testComponent: NoInputDatepicker;
 
-      beforeEach(async(() => {
-        fixture = TestBed.createComponent(NoInputDatepicker);
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(NoInputDatepicker, [MatNativeDateModule]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
       }));
 
-      afterEach(async(() => {
+      afterEach(fakeAsync(() => {
         testComponent.datepicker.close();
         fixture.detectChanges();
       }));
@@ -369,7 +461,7 @@ describe('MatDatepicker', () => {
         expect(() => testComponent.datepicker.disabled).not.toThrow();
       });
 
-      it('should throw when opened with no registered inputs', async(() => {
+      it('should throw when opened with no registered inputs', fakeAsync(() => {
         expect(() => testComponent.datepicker.open()).toThrow();
       }));
     });
@@ -378,14 +470,14 @@ describe('MatDatepicker', () => {
       let fixture: ComponentFixture<DatepickerWithStartAt>;
       let testComponent: DatepickerWithStartAt;
 
-      beforeEach(async(() => {
-        fixture = TestBed.createComponent(DatepickerWithStartAt);
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(DatepickerWithStartAt, [MatNativeDateModule]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
       }));
 
-      afterEach(async(() => {
+      afterEach(fakeAsync(() => {
         testComponent.datepicker.close();
         fixture.detectChanges();
       }));
@@ -395,20 +487,21 @@ describe('MatDatepicker', () => {
       });
     });
 
-    describe('datepicker with startView', () => {
-      let fixture: ComponentFixture<DatepickerWithStartView>;
-      let testComponent: DatepickerWithStartView;
+    describe('datepicker with startView set to year', () => {
+      let fixture: ComponentFixture<DatepickerWithStartViewYear>;
+      let testComponent: DatepickerWithStartViewYear;
 
-      beforeEach(async(() => {
-        fixture = TestBed.createComponent(DatepickerWithStartView);
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(DatepickerWithStartViewYear, [MatNativeDateModule]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
       }));
 
-      afterEach(async(() => {
+      afterEach(fakeAsync(() => {
         testComponent.datepicker.close();
         fixture.detectChanges();
+        flush();
       }));
 
       it('should start at the specified view', () => {
@@ -422,14 +515,81 @@ describe('MatDatepicker', () => {
         expect(firstCalendarCell.textContent)
             .toBe('JAN', 'Expected the calendar to be in year-view');
       });
+
+      it('should fire yearSelected when user selects calendar year in year view',
+        fakeAsync(() => {
+          spyOn(testComponent, 'onYearSelection');
+          expect(testComponent.onYearSelection).not.toHaveBeenCalled();
+
+          testComponent.datepicker.open();
+          fixture.detectChanges();
+
+          const cells = document.querySelectorAll('.mat-calendar-body-cell');
+
+          dispatchMouseEvent(cells[0], 'click');
+          fixture.detectChanges();
+          flush();
+
+          expect(testComponent.onYearSelection).toHaveBeenCalled();
+        })
+      );
+    });
+
+    describe('datepicker with startView set to multiyear', () => {
+      let fixture: ComponentFixture<DatepickerWithStartViewMultiYear>;
+      let testComponent: DatepickerWithStartViewMultiYear;
+
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(DatepickerWithStartViewMultiYear, [MatNativeDateModule]);
+        fixture.detectChanges();
+
+        testComponent = fixture.componentInstance;
+
+        spyOn(testComponent, 'onMultiYearSelection');
+      }));
+
+      afterEach(fakeAsync(() => {
+        testComponent.datepicker.close();
+        fixture.detectChanges();
+        flush();
+      }));
+
+      it('should start at the specified view', () => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+
+        const firstCalendarCell = document.querySelector('.mat-calendar-body-cell')!;
+
+        // When the calendar is in year view, the first cell should be for a month rather than
+        // for a date.
+        expect(firstCalendarCell.textContent)
+            .toBe('2016', 'Expected the calendar to be in multi-year-view');
+      });
+
+      it('should fire yearSelected when user selects calendar year in multiyear view',
+        fakeAsync(() => {
+          expect(testComponent.onMultiYearSelection).not.toHaveBeenCalled();
+
+          testComponent.datepicker.open();
+          fixture.detectChanges();
+
+          const cells = document.querySelectorAll('.mat-calendar-body-cell');
+
+          dispatchMouseEvent(cells[0], 'click');
+          fixture.detectChanges();
+          flush();
+
+          expect(testComponent.onMultiYearSelection).toHaveBeenCalled();
+        })
+      );
     });
 
     describe('datepicker with ngModel', () => {
       let fixture: ComponentFixture<DatepickerWithNgModel>;
       let testComponent: DatepickerWithNgModel;
 
-      beforeEach(async(() => {
-        fixture = TestBed.createComponent(DatepickerWithNgModel);
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(DatepickerWithNgModel, [MatNativeDateModule]);
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
@@ -439,41 +599,37 @@ describe('MatDatepicker', () => {
         });
       }));
 
-      afterEach(async(() => {
+      afterEach(fakeAsync(() => {
         testComponent.datepicker.close();
         fixture.detectChanges();
       }));
 
-      it('should update datepicker when model changes', async(() => {
+      it('should update datepicker when model changes', fakeAsync(() => {
         expect(testComponent.datepickerInput.value).toBeNull();
         expect(testComponent.datepicker._selected).toBeNull();
 
         let selected = new Date(2017, JAN, 1);
         testComponent.selected = selected;
         fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
-
-          expect(testComponent.datepickerInput.value).toEqual(selected);
-          expect(testComponent.datepicker._selected).toEqual(selected);
-        });
+        expect(testComponent.datepickerInput.value).toEqual(selected);
+        expect(testComponent.datepicker._selected).toEqual(selected);
       }));
 
-      it('should update model when date is selected', async(() => {
+      it('should update model when date is selected', fakeAsync(() => {
         expect(testComponent.selected).toBeNull();
         expect(testComponent.datepickerInput.value).toBeNull();
 
         let selected = new Date(2017, JAN, 1);
         testComponent.datepicker._select(selected);
         fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
-
-          expect(testComponent.selected).toEqual(selected);
-          expect(testComponent.datepickerInput.value).toEqual(selected);
-        });
+        expect(testComponent.selected).toEqual(selected);
+        expect(testComponent.datepickerInput.value).toEqual(selected);
       }));
 
       it('should mark input dirty after input event', () => {
@@ -481,40 +637,37 @@ describe('MatDatepicker', () => {
 
         expect(inputEl.classList).toContain('ng-pristine');
 
+        inputEl.value = '2001-01-01';
         dispatchFakeEvent(inputEl, 'input');
         fixture.detectChanges();
 
         expect(inputEl.classList).toContain('ng-dirty');
       });
 
-      it('should mark input dirty after date selected', async(() => {
+      it('should mark input dirty after date selected', fakeAsync(() => {
         let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
         expect(inputEl.classList).toContain('ng-pristine');
 
         testComponent.datepicker._select(new Date(2017, JAN, 1));
         fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
-
-          expect(inputEl.classList).toContain('ng-dirty');
-        });
+        expect(inputEl.classList).toContain('ng-dirty');
       }));
 
-      it('should not mark dirty after model change', async(() => {
+      it('should not mark dirty after model change', fakeAsync(() => {
         let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
         expect(inputEl.classList).toContain('ng-pristine');
 
         testComponent.selected = new Date(2017, JAN, 1);
         fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
-
-          expect(inputEl.classList).toContain('ng-pristine');
-        });
+        expect(inputEl.classList).toContain('ng-pristine');
       }));
 
       it('should mark input touched on blur', () => {
@@ -533,19 +686,49 @@ describe('MatDatepicker', () => {
         expect(inputEl.classList).toContain('ng-touched');
       });
 
-      it('should mark input touched on calendar selection', async(() => {
+      it('should reformat the input value on blur', () => {
+        if (SUPPORTS_INTL) {
+          // Skip this test if the internationalization API is not supported in the current
+          // browser. Browsers like Safari 9 do not support the "Intl" API.
+          return;
+        }
+
+        const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+
+        inputEl.value = '2001-01-01';
+        dispatchFakeEvent(inputEl, 'input');
+        fixture.detectChanges();
+
+        dispatchFakeEvent(inputEl, 'blur');
+        fixture.detectChanges();
+
+        expect(inputEl.value).toBe('1/1/2001');
+      });
+
+      it('should not reformat invalid dates on blur', () => {
+        const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+
+        inputEl.value = 'very-valid-date';
+        dispatchFakeEvent(inputEl, 'input');
+        fixture.detectChanges();
+
+        dispatchFakeEvent(inputEl, 'blur');
+        fixture.detectChanges();
+
+        expect(inputEl.value).toBe('very-valid-date');
+      });
+
+      it('should mark input touched on calendar selection', fakeAsync(() => {
         let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
         expect(inputEl.classList).toContain('ng-untouched');
 
         testComponent.datepicker._select(new Date(2017, JAN, 1));
         fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
-
-          expect(inputEl.classList).toContain('ng-touched');
-        });
+        expect(inputEl.classList).toContain('ng-touched');
       }));
     });
 
@@ -553,14 +736,14 @@ describe('MatDatepicker', () => {
       let fixture: ComponentFixture<DatepickerWithFormControl>;
       let testComponent: DatepickerWithFormControl;
 
-      beforeEach(async(() => {
-        fixture = TestBed.createComponent(DatepickerWithFormControl);
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(DatepickerWithFormControl, [MatNativeDateModule]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
       }));
 
-      afterEach(async(() => {
+      afterEach(fakeAsync(() => {
         testComponent.datepicker.close();
         fixture.detectChanges();
       }));
@@ -614,17 +797,25 @@ describe('MatDatepicker', () => {
       let fixture: ComponentFixture<DatepickerWithToggle>;
       let testComponent: DatepickerWithToggle;
 
-      beforeEach(async(() => {
-        fixture = TestBed.createComponent(DatepickerWithToggle);
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(DatepickerWithToggle, [MatNativeDateModule]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
       }));
 
-      afterEach(async(() => {
+      afterEach(fakeAsync(() => {
         testComponent.datepicker.close();
         fixture.detectChanges();
+        flush();
       }));
+
+      it('should set `aria-haspopup` on the toggle button', () => {
+        const button = fixture.debugElement.query(By.css('button'));
+
+        expect(button).toBeTruthy();
+        expect(button.nativeElement.getAttribute('aria-haspopup')).toBe('true');
+      });
 
       it('should open calendar when toggle clicked', () => {
         expect(document.querySelector('mat-dialog-container')).toBeNull();
@@ -710,29 +901,55 @@ describe('MatDatepicker', () => {
 
           expect(toggle.getAttribute('aria-label')).toBe('Open the calendar, perhaps?');
         }));
+
+      it('should toggle the active state of the datepicker toggle', fakeAsync(() => {
+        const toggle = fixture.debugElement.query(By.css('mat-datepicker-toggle')).nativeElement;
+
+        expect(toggle.classList).not.toContain('mat-datepicker-toggle-active');
+
+        fixture.componentInstance.datepicker.open();
+        fixture.detectChanges();
+        flush();
+
+        expect(toggle.classList).toContain('mat-datepicker-toggle-active');
+
+        fixture.componentInstance.datepicker.close();
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(toggle.classList).not.toContain('mat-datepicker-toggle-active');
+      }));
+    });
+
+    describe('datepicker with custom mat-datepicker-toggle icon', () => {
+      it('should be able to override the mat-datepicker-toggle icon', fakeAsync(() => {
+        const fixture = createComponent(DatepickerWithCustomIcon, [MatNativeDateModule]);
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelector('.mat-datepicker-toggle .custom-icon'))
+            .toBeTruthy('Expected custom icon to be rendered.');
+
+        expect(fixture.nativeElement.querySelector('.mat-datepicker-toggle mat-icon'))
+            .toBeFalsy('Expected default icon to be removed.');
+      }));
     });
 
     describe('datepicker inside mat-form-field', () => {
       let fixture: ComponentFixture<FormFieldDatepicker>;
       let testComponent: FormFieldDatepicker;
 
-      beforeEach(async(() => {
-        fixture = TestBed.createComponent(FormFieldDatepicker);
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(FormFieldDatepicker, [MatNativeDateModule]);
         fixture.detectChanges();
-
         testComponent = fixture.componentInstance;
       }));
 
-      afterEach(async(() => {
+      afterEach(fakeAsync(() => {
         testComponent.datepicker.close();
         fixture.detectChanges();
+        flush();
       }));
-
-      it('should attach popup to mat-form-field underline', () => {
-        let attachToRef = testComponent.datepickerInput.getPopupConnectionElementRef();
-        expect(attachToRef.nativeElement.classList.contains('mat-form-field-underline'))
-            .toBe(true, 'popup should be attached to mat-form-field underline');
-      });
 
       it('should float the placeholder when an invalid value is entered', () => {
         testComponent.datepickerInput.value = 'totally-not-a-date' as any;
@@ -743,20 +960,57 @@ describe('MatDatepicker', () => {
           .toContain('mat-form-field-should-float');
       });
 
+      it('should pass the form field theme color to the overlay', fakeAsync(() => {
+        testComponent.formField.color = 'primary';
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        flush();
+
+        let contentEl = document.querySelector('.mat-datepicker-content')!;
+
+        expect(contentEl.classList).toContain('mat-primary');
+
+        testComponent.datepicker.close();
+        fixture.detectChanges();
+        flush();
+
+        testComponent.formField.color = 'warn';
+        testComponent.datepicker.open();
+
+        contentEl = document.querySelector('.mat-datepicker-content')!;
+        fixture.detectChanges();
+        flush();
+
+        expect(contentEl.classList).toContain('mat-warn');
+        expect(contentEl.classList).not.toContain('mat-primary');
+      }));
+
+      it('should prefer the datepicker color over the form field one', fakeAsync(() => {
+        testComponent.datepicker.color = 'accent';
+        testComponent.formField.color = 'warn';
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        flush();
+
+        const contentEl = document.querySelector('.mat-datepicker-content')!;
+
+        expect(contentEl.classList).toContain('mat-accent');
+        expect(contentEl.classList).not.toContain('mat-warn');
+      }));
     });
 
     describe('datepicker with min and max dates and validation', () => {
       let fixture: ComponentFixture<DatepickerWithMinAndMaxValidation>;
       let testComponent: DatepickerWithMinAndMaxValidation;
 
-      beforeEach(async(() => {
-        fixture = TestBed.createComponent(DatepickerWithMinAndMaxValidation);
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(DatepickerWithMinAndMaxValidation, [MatNativeDateModule]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
       }));
 
-      afterEach(async(() => {
+      afterEach(fakeAsync(() => {
         testComponent.datepicker.close();
         fixture.detectChanges();
       }));
@@ -766,64 +1020,55 @@ describe('MatDatepicker', () => {
         expect(testComponent.datepicker._maxDate).toEqual(new Date(2020, JAN, 1));
       });
 
-      it('should mark invalid when value is before min', async(() => {
+      it('should mark invalid when value is before min', fakeAsync(() => {
         testComponent.date = new Date(2009, DEC, 31);
         fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
-
-          expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-              .toContain('ng-invalid');
-        });
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+            .toContain('ng-invalid');
       }));
 
-      it('should mark invalid when value is after max', async(() => {
+      it('should mark invalid when value is after max', fakeAsync(() => {
         testComponent.date = new Date(2020, JAN, 2);
         fixture.detectChanges();
+        flush();
 
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
+        fixture.detectChanges();
 
-          expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-              .toContain('ng-invalid');
-        });
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+            .toContain('ng-invalid');
       }));
 
-      it('should not mark invalid when value equals min', async(() => {
+      it('should not mark invalid when value equals min', fakeAsync(() => {
         testComponent.date = testComponent.datepicker._minDate;
         fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
-
-          expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-              .not.toContain('ng-invalid');
-        });
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+            .not.toContain('ng-invalid');
       }));
 
-      it('should not mark invalid when value equals max', async(() => {
+      it('should not mark invalid when value equals max', fakeAsync(() => {
         testComponent.date = testComponent.datepicker._maxDate;
         fixture.detectChanges();
-
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
-
-          expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-              .not.toContain('ng-invalid');
-        });
-      }));
-
-      it('should not mark invalid when value is between min and max', async(() => {
-        testComponent.date = new Date(2010, JAN, 2);
+        flush();
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+            .not.toContain('ng-invalid');
+      }));
 
-          expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-              .not.toContain('ng-invalid');
-        });
+      it('should not mark invalid when value is between min and max', fakeAsync(() => {
+        testComponent.date = new Date(2010, JAN, 2);
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+            .not.toContain('ng-invalid');
       }));
     });
 
@@ -831,38 +1076,35 @@ describe('MatDatepicker', () => {
       let fixture: ComponentFixture<DatepickerWithFilterAndValidation>;
       let testComponent: DatepickerWithFilterAndValidation;
 
-      beforeEach(async(() => {
-        fixture = TestBed.createComponent(DatepickerWithFilterAndValidation);
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(DatepickerWithFilterAndValidation, [MatNativeDateModule]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
       }));
 
-      afterEach(async(() => {
+      afterEach(fakeAsync(() => {
         testComponent.datepicker.close();
         fixture.detectChanges();
+        flush();
       }));
 
-      it('should mark input invalid', async(() => {
+      it('should mark input invalid', fakeAsync(() => {
         testComponent.date = new Date(2017, JAN, 1);
         fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+            .toContain('ng-invalid');
 
-          expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-              .toContain('ng-invalid');
+        testComponent.date = new Date(2017, JAN, 2);
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
 
-          testComponent.date = new Date(2017, JAN, 2);
-          fixture.detectChanges();
-
-          fixture.whenStable().then(() => {
-            fixture.detectChanges();
-
-            expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-                .not.toContain('ng-invalid');
-          });
-        });
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
+            .not.toContain('ng-invalid');
       }));
 
       it('should disable filtered calendar cells', () => {
@@ -884,8 +1126,8 @@ describe('MatDatepicker', () => {
       let testComponent: DatepickerWithChangeAndInputEvents;
       let inputEl: HTMLInputElement;
 
-      beforeEach(async(() => {
-        fixture = TestBed.createComponent(DatepickerWithChangeAndInputEvents);
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(DatepickerWithChangeAndInputEvents, [MatNativeDateModule]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
@@ -897,7 +1139,7 @@ describe('MatDatepicker', () => {
         spyOn(testComponent, 'onDateInput');
       }));
 
-      afterEach(async(() => {
+      afterEach(fakeAsync(() => {
         testComponent.datepicker.close();
         fixture.detectChanges();
       }));
@@ -908,6 +1150,7 @@ describe('MatDatepicker', () => {
         expect(testComponent.onInput).not.toHaveBeenCalled();
         expect(testComponent.onDateInput).not.toHaveBeenCalled();
 
+        inputEl.value = '2001-01-01';
         dispatchFakeEvent(inputEl, 'input');
         fixture.detectChanges();
 
@@ -932,51 +1175,70 @@ describe('MatDatepicker', () => {
         expect(testComponent.onDateInput).not.toHaveBeenCalled();
       });
 
-      it('should fire dateChange and dateInput events when user selects calendar date', () => {
-        expect(testComponent.onChange).not.toHaveBeenCalled();
-        expect(testComponent.onDateChange).not.toHaveBeenCalled();
-        expect(testComponent.onInput).not.toHaveBeenCalled();
+      it('should fire dateChange and dateInput events when user selects calendar date',
+        fakeAsync(() => {
+          expect(testComponent.onChange).not.toHaveBeenCalled();
+          expect(testComponent.onDateChange).not.toHaveBeenCalled();
+          expect(testComponent.onInput).not.toHaveBeenCalled();
+          expect(testComponent.onDateInput).not.toHaveBeenCalled();
+
+          testComponent.datepicker.open();
+          fixture.detectChanges();
+
+          expect(document.querySelector('mat-dialog-container')).not.toBeNull();
+
+          const cells = document.querySelectorAll('.mat-calendar-body-cell');
+          dispatchMouseEvent(cells[0], 'click');
+          fixture.detectChanges();
+          flush();
+
+          expect(testComponent.onChange).not.toHaveBeenCalled();
+          expect(testComponent.onDateChange).toHaveBeenCalled();
+          expect(testComponent.onInput).not.toHaveBeenCalled();
+          expect(testComponent.onDateInput).toHaveBeenCalled();
+        })
+      );
+
+      it('should not fire the dateInput event if the value has not changed', () => {
         expect(testComponent.onDateInput).not.toHaveBeenCalled();
 
-        testComponent.datepicker.open();
+        inputEl.value = '12/12/2012';
+        dispatchFakeEvent(inputEl, 'input');
         fixture.detectChanges();
 
-        expect(document.querySelector('mat-dialog-container')).not.toBeNull();
+        expect(testComponent.onDateInput).toHaveBeenCalledTimes(1);
 
-        let cells = document.querySelectorAll('.mat-calendar-body-cell');
-        dispatchMouseEvent(cells[0], 'click');
+        dispatchFakeEvent(inputEl, 'input');
         fixture.detectChanges();
 
-        expect(testComponent.onChange).not.toHaveBeenCalled();
-        expect(testComponent.onDateChange).toHaveBeenCalled();
-        expect(testComponent.onInput).not.toHaveBeenCalled();
-        expect(testComponent.onDateInput).toHaveBeenCalled();
+        expect(testComponent.onDateInput).toHaveBeenCalledTimes(1);
       });
+
     });
 
     describe('with ISO 8601 strings as input', () => {
       let fixture: ComponentFixture<DatepickerWithISOStrings>;
       let testComponent: DatepickerWithISOStrings;
 
-      beforeEach(async(() => {
-        fixture = TestBed.createComponent(DatepickerWithISOStrings);
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(DatepickerWithISOStrings, [MatNativeDateModule]);
         testComponent = fixture.componentInstance;
       }));
 
-      afterEach(async(() => {
+      afterEach(fakeAsync(() => {
         testComponent.datepicker.close();
         fixture.detectChanges();
       }));
 
-      it('should coerce ISO strings', async(() => {
+      it('should coerce ISO strings', fakeAsync(() => {
         expect(() => fixture.detectChanges()).not.toThrow();
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
-          expect(testComponent.datepicker.startAt).toEqual(new Date(2017, JUL, 1));
-          expect(testComponent.datepickerInput.value).toEqual(new Date(2017, JUN, 1));
-          expect(testComponent.datepickerInput.min).toEqual(new Date(2017, JAN, 1));
-          expect(testComponent.datepickerInput.max).toEqual(new Date(2017, DEC, 31));
-        });
+        flush();
+        fixture.detectChanges();
+
+        expect(testComponent.datepicker.startAt).toEqual(new Date(2017, JUL, 1));
+        expect(testComponent.datepickerInput.value).toEqual(new Date(2017, JUN, 1));
+        expect(testComponent.datepickerInput.min).toEqual(new Date(2017, JAN, 1));
+        expect(testComponent.datepickerInput.max).toEqual(new Date(2017, DEC, 31));
       }));
     });
 
@@ -984,8 +1246,8 @@ describe('MatDatepicker', () => {
       let fixture: ComponentFixture<DatepickerWithEvents>;
       let testComponent: DatepickerWithEvents;
 
-      beforeEach(async(() => {
-        fixture = TestBed.createComponent(DatepickerWithEvents);
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(DatepickerWithEvents, [MatNativeDateModule]);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
       }));
@@ -997,14 +1259,123 @@ describe('MatDatepicker', () => {
         expect(testComponent.openedSpy).toHaveBeenCalled();
       });
 
-      it('should dispatch an event when a datepicker is closed', () => {
+      it('should dispatch an event when a datepicker is closed', fakeAsync(() => {
         testComponent.datepicker.open();
         fixture.detectChanges();
 
         testComponent.datepicker.close();
+        flush();
         fixture.detectChanges();
 
         expect(testComponent.closedSpy).toHaveBeenCalled();
+      }));
+
+    });
+
+    describe('datepicker that opens on focus', () => {
+      let fixture: ComponentFixture<DatepickerOpeningOnFocus>;
+      let testComponent: DatepickerOpeningOnFocus;
+      let input: HTMLInputElement;
+
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(DatepickerOpeningOnFocus, [MatNativeDateModule]);
+        fixture.detectChanges();
+        testComponent = fixture.componentInstance;
+        input = fixture.debugElement.query(By.css('input')).nativeElement;
+      }));
+
+      it('should not reopen if the browser fires the focus event asynchronously', fakeAsync(() => {
+        // Stub out the real focus method so we can call it reliably.
+        spyOn(input, 'focus').and.callFake(() => {
+          // Dispatch the event handler async to simulate the IE11 behavior.
+          Promise.resolve().then(() => dispatchFakeEvent(input, 'focus'));
+        });
+
+        // Open initially by focusing.
+        input.focus();
+        fixture.detectChanges();
+        flush();
+
+        // Due to some browser limitations we can't install a stub on `document.activeElement`
+        // so instead we have to override the previously-focused element manually.
+        (fixture.componentInstance.datepicker as any)._focusedElementBeforeOpen = input;
+
+        // Ensure that the datepicker is actually open.
+        expect(testComponent.datepicker.opened).toBe(true, 'Expected datepicker to be open.');
+
+        // Close the datepicker.
+        testComponent.datepicker.close();
+        fixture.detectChanges();
+
+        // Schedule the input to be focused asynchronously.
+        input.focus();
+        fixture.detectChanges();
+
+        // Flush out the scheduled tasks.
+        flush();
+
+        expect(testComponent.datepicker.opened).toBe(false, 'Expected datepicker to be closed.');
+      }));
+    });
+
+    describe('datepicker directionality', () => {
+      it('should pass along the directionality to the popup', () => {
+        const fixture = createComponent(StandardDatepicker, [MatNativeDateModule], [{
+          provide: Directionality,
+          useValue: ({value: 'rtl'})
+        }]);
+
+        fixture.detectChanges();
+        fixture.componentInstance.datepicker.open();
+        fixture.detectChanges();
+
+        const overlay = document.querySelector('.cdk-overlay-connected-position-bounding-box')!;
+
+        expect(overlay.getAttribute('dir')).toBe('rtl');
+      });
+
+      it('should update the popup direction if the directionality value changes', fakeAsync(() => {
+        const dirProvider = {value: 'ltr'};
+        const fixture = createComponent(StandardDatepicker, [MatNativeDateModule], [{
+          provide: Directionality,
+          useFactory: () => dirProvider
+        }]);
+
+        fixture.detectChanges();
+        fixture.componentInstance.datepicker.open();
+        fixture.detectChanges();
+
+        let overlay = document.querySelector('.cdk-overlay-connected-position-bounding-box')!;
+
+        expect(overlay.getAttribute('dir')).toBe('ltr');
+
+        fixture.componentInstance.datepicker.close();
+        fixture.detectChanges();
+        flush();
+
+        dirProvider.value = 'rtl';
+        fixture.componentInstance.datepicker.open();
+        fixture.detectChanges();
+
+        overlay = document.querySelector('.cdk-overlay-connected-position-bounding-box')!;
+
+        expect(overlay.getAttribute('dir')).toBe('rtl');
+      }));
+
+      it('should pass along the directionality to the dialog in touch mode', () => {
+        const fixture = createComponent(StandardDatepicker, [MatNativeDateModule], [{
+          provide: Directionality,
+          useValue: ({value: 'rtl'})
+        }]);
+
+        fixture.componentInstance.touch = true;
+        fixture.detectChanges();
+        fixture.componentInstance.datepicker.open();
+        fixture.detectChanges();
+
+        const overlay = document.querySelector('.cdk-global-overlay-wrapper')!;
+
+        expect(overlay.getAttribute('dir')).toBe('rtl');
       });
 
     });
@@ -1012,25 +1383,9 @@ describe('MatDatepicker', () => {
   });
 
   describe('with missing DateAdapter and MAT_DATE_FORMATS', () => {
-    beforeEach(async(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          FormsModule,
-          MatDatepickerModule,
-          MatFormFieldModule,
-          MatInputModule,
-          NoopAnimationsModule,
-          ReactiveFormsModule,
-        ],
-        declarations: [StandardDatepicker],
-      });
-
-      TestBed.compileComponents();
-    }));
-
     it('should throw when created', () => {
-      expect(() => TestBed.createComponent(StandardDatepicker))
-          .toThrowError(/MatDatepicker: No provider found for .*/);
+      expect(() => createComponent(StandardDatepicker))
+        .toThrowError(/MatDatepicker: No provider found for .*/);
     });
   });
 
@@ -1039,19 +1394,8 @@ describe('MatDatepicker', () => {
     let testComponent: StandardDatepicker;
     let input: HTMLElement;
 
-    beforeEach(async(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          MatDatepickerModule,
-          MatFormFieldModule,
-          MatInputModule,
-          MatNativeDateModule,
-          NoopAnimationsModule
-        ],
-        declarations: [StandardDatepicker],
-      }).compileComponents();
-
-      fixture = TestBed.createComponent(StandardDatepicker);
+    beforeEach(fakeAsync(() => {
+      fixture = createComponent(StandardDatepicker, [MatNativeDateModule]);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       input = fixture.debugElement.query(By.css('input')).nativeElement;
@@ -1121,28 +1465,15 @@ describe('MatDatepicker', () => {
     let testComponent: DatepickerWithi18n;
     let input: HTMLInputElement;
 
-    beforeEach(async(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          MatDatepickerModule,
-          MatFormFieldModule,
-          MatInputModule,
-          MatNativeDateModule,
-          NoopAnimationsModule,
-          NativeDateModule,
-          FormsModule
-        ],
-        providers: [{provide: MAT_DATE_LOCALE, useValue: 'de-DE'}],
-        declarations: [DatepickerWithi18n],
-      }).compileComponents();
-
-      fixture = TestBed.createComponent(DatepickerWithi18n);
+    beforeEach(fakeAsync(() => {
+      fixture = createComponent(DatepickerWithi18n, [MatNativeDateModule, NativeDateModule],
+        [{provide: MAT_DATE_LOCALE, useValue: 'de-DE'}]);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
     }));
 
-    it('should have the correct input value even when inverted date format', async(() => {
+    it('should have the correct input value even when inverted date format', fakeAsync(() => {
       if (typeof Intl === 'undefined') {
         // Skip this test if the internationalization API is not supported in the current
         // browser. Browsers like Safari 9 do not support the "Intl" API.
@@ -1152,16 +1483,42 @@ describe('MatDatepicker', () => {
       const selected = new Date(2017, SEP, 1);
       testComponent.date = selected;
       fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
 
-      fixture.whenStable().then(() => {
-        fixture.detectChanges();
+      // Normally the proper date format would 01.09.2017, but some browsers seem format the
+      // date without the leading zero. (e.g. 1.9.2017).
+      expect(input.value).toMatch(/0?1\.0?9\.2017/);
+      expect(testComponent.datepickerInput.value).toBe(selected);
+    }));
+  });
 
-        // Normally the proper date format would 01.09.2017, but some browsers seem format the
-        // date without the leading zero. (e.g. 1.9.2017).
-        expect(input.value).toMatch(/0?1\.0?9\.2017/);
+  describe('datepicker with custom header', () => {
+    let fixture: ComponentFixture<DatepickerWithCustomHeader>;
+    let testComponent: DatepickerWithCustomHeader;
 
-        expect(testComponent.datepickerInput.value).toBe(selected);
-      });
+    beforeEach(fakeAsync(() => {
+      fixture = createComponent(
+        DatepickerWithCustomHeader,
+        [MatNativeDateModule],
+        [],
+        [CustomHeaderForDatepicker]
+      );
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('should instantiate a datepicker with a custom header', fakeAsync(() => {
+      expect(testComponent).toBeTruthy();
+    }));
+
+    it('should find the standard header element', fakeAsync(() => {
+      testComponent.datepicker.open();
+      fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
+
+      expect(document.querySelector('mat-calendar-header')).toBeTruthy();
     }));
   });
 });
@@ -1215,12 +1572,29 @@ class DatepickerWithStartAt {
 @Component({
   template: `
     <input [matDatepicker]="d" [value]="date">
-    <mat-datepicker #d startView="year"></mat-datepicker>
+    <mat-datepicker #d startView="year" (monthSelected)="onYearSelection()"></mat-datepicker>
   `,
 })
-class DatepickerWithStartView {
+class DatepickerWithStartViewYear {
   date = new Date(2020, JAN, 1);
   @ViewChild('d') datepicker: MatDatepicker<Date>;
+
+  onYearSelection() {}
+}
+
+
+@Component({
+  template: `
+    <input [matDatepicker]="d" [value]="date">
+    <mat-datepicker #d startView="multi-year"
+        (yearSelected)="onMultiYearSelection()"></mat-datepicker>
+  `,
+})
+class DatepickerWithStartViewMultiYear {
+  date = new Date(2020, JAN, 1);
+  @ViewChild('d') datepicker: MatDatepicker<Date>;
+
+  onMultiYearSelection() {}
 }
 
 
@@ -1268,6 +1642,18 @@ class DatepickerWithToggle {
 
 @Component({
   template: `
+    <input [matDatepicker]="d">
+    <mat-datepicker-toggle [for]="d">
+      <div class="custom-icon" matDatepickerToggleIcon></div>
+    </mat-datepicker-toggle>
+    <mat-datepicker #d></mat-datepicker>
+  `,
+})
+class DatepickerWithCustomIcon {}
+
+
+@Component({
+  template: `
       <mat-form-field>
         <input matInput [matDatepicker]="d">
         <mat-datepicker #d></mat-datepicker>
@@ -1277,6 +1663,7 @@ class DatepickerWithToggle {
 class FormFieldDatepicker {
   @ViewChild('d') datepicker: MatDatepicker<Date>;
   @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+  @ViewChild(MatFormField) formField: MatFormField;
 }
 
 
@@ -1328,6 +1715,7 @@ class DatepickerWithChangeAndInputEvents {
   onDateInput() {}
 }
 
+
 @Component({
   template: `
     <input [matDatepicker]="d" [(ngModel)]="date">
@@ -1339,6 +1727,7 @@ class DatepickerWithi18n {
   @ViewChild('d') datepicker: MatDatepicker<Date>;
   @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
 }
+
 
 @Component({
   template: `
@@ -1355,6 +1744,7 @@ class DatepickerWithISOStrings {
   @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
 }
 
+
 @Component({
   template: `
     <input [(ngModel)]="selected" [matDatepicker]="d">
@@ -1367,3 +1757,33 @@ class DatepickerWithEvents {
   closedSpy = jasmine.createSpy('closed spy');
   @ViewChild('d') datepicker: MatDatepicker<Date>;
 }
+
+
+@Component({
+  template: `
+    <input (focus)="d.open()" [matDatepicker]="d">
+    <mat-datepicker #d="matDatepicker"></mat-datepicker>
+  `,
+})
+class DatepickerOpeningOnFocus {
+  @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;
+}
+
+
+@Component({
+  template: `
+    <input [matDatepicker]="ch">
+    <mat-datepicker #ch [calendarHeaderComponent]="CustomHeaderForDatepicker"></mat-datepicker>
+  `,
+})
+class DatepickerWithCustomHeader {
+  @ViewChild('ch') datepicker: MatDatepicker<Date>;
+}
+
+@Component({
+  template: `
+    <div>Custom element</div>
+    <mat-calendar-header></mat-calendar-header>
+  `,
+})
+class CustomHeaderForDatepicker {}

@@ -1,5 +1,4 @@
 import {Key, protractor, browser, by, element, ExpectedConditions} from 'protractor';
-import {screenshot} from '../screenshot';
 import {
   expectToExist,
   expectAlignedWith,
@@ -24,33 +23,28 @@ describe('menu', () => {
 
     expectToExist(menuSelector);
     expect(await page.menu().getText()).toEqual('One\nTwo\nThree\nFour');
-    screenshot();
   });
 
   it('should close menu when menu item is clicked', () => {
     page.trigger().click();
     page.items(0).click();
     expectToExist(menuSelector, false);
-    screenshot();
   });
 
   it('should run click handlers on regular menu items', async () => {
     page.trigger().click();
     page.items(0).click();
     expect(await page.getResultText()).toEqual('one');
-    screenshot('one');
 
     page.trigger().click();
     page.items(1).click();
     expect(await page.getResultText()).toEqual('two');
-    screenshot('two');
   });
 
   it('should run not run click handlers on disabled menu items', async () => {
     page.trigger().click();
     page.items(2).click();
     expect(await page.getResultText()).toEqual('');
-    screenshot();
   });
 
   it('should support multiple triggers opening the same menu', async () => {
@@ -97,9 +91,9 @@ describe('menu', () => {
       expectFocusOn(page.items(0));
     });
 
-    it('should focus the panel when opened by mouse', () => {
+    it('should focus the first item when opened by mouse', () => {
       page.trigger().click();
-      expectFocusOn(page.menu());
+      expectFocusOn(page.items(0));
     });
 
     it('should focus subsequent items when down arrow is pressed', () => {
@@ -168,7 +162,7 @@ describe('menu', () => {
       const trigger = await page.beforeTrigger().getLocation();
 
       // the menu's right corner must be attached to the trigger's right corner.
-      // menu = 112px wide. trigger = 60px wide.  112 - 60 =  52px of menu to the left of trigger.
+      // menu = 112px wide. trigger = 60px wide. 112 - 60 = 52px of menu to the left of trigger.
       // trigger.x (left corner) - 52px (menu left of trigger) = expected menu.x (left corner)
       // menu.y should equal trigger.y because only x position has changed.
       expectLocation(page.beforeMenu(), {x: trigger.x - 52, y: trigger.y});

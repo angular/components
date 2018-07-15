@@ -17,6 +17,7 @@ task(':test:build', sequenceTask(
   'clean',
   'cdk:build-no-bundles',
   'material:build-no-bundles',
+  'cdk-experimental:build-no-bundles',
   'material-experimental:build-no-bundles',
   'material-moment-adapter:build-no-bundles'
 ));

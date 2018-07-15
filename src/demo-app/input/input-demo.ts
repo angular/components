@@ -23,12 +23,13 @@ const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA
   styleUrls: ['input-demo.css'],
 })
 export class InputDemo {
-  floatingLabel: string = 'auto';
+  floatingLabel = 'auto';
   color: boolean;
   requiredField: boolean;
   hideRequiredMarker: boolean;
   ctrlDisabled = false;
   textareaNgModelValue: string;
+  textareaAutosizeEnabled = false;
   placeholderTestControl = new FormControl('', Validators.required);
 
   name: string;
@@ -39,18 +40,25 @@ export class InputDemo {
   dividerColorExample1: string;
   dividerColorExample2: string;
   dividerColorExample3: string;
-  items: any[] = [
-    { value: 10 },
-    { value: 20 },
-    { value: 30 },
-    { value: 40 },
-    { value: 50 },
+  items: {value: number}[] = [
+    {value: 10},
+    {value: 20},
+    {value: 30},
+    {value: 40},
+    {value: 50},
   ];
   rows = 8;
   formControl = new FormControl('hello', Validators.required);
   emailFormControl = new FormControl('', [Validators.required, Validators.pattern(EMAIL_REGEX)]);
   delayedFormControl = new FormControl('');
   model = 'hello';
+  isAutofilled = false;
+  customAutofillStyle = true;
+
+  legacyAppearance: string;
+  standardAppearance: string;
+  fillAppearance: string;
+  outlineAppearance: string;
 
   constructor() {
     setTimeout(() => this.delayedFormControl.setValue('hello'), 100);

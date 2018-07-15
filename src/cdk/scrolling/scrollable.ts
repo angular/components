@@ -7,8 +7,7 @@
  */
 
 import {Directive, ElementRef, OnInit, OnDestroy, NgZone} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import {Observable, Subject} from 'rxjs';
 import {ScrollDispatcher} from './scroll-dispatcher';
 
 
@@ -42,6 +41,8 @@ export class CdkScrollable implements OnInit, OnDestroy {
     if (this._scrollListener) {
       this.getElementRef().nativeElement.removeEventListener('scroll', this._scrollListener);
     }
+
+    this._elementScrolled.complete();
   }
 
   /**

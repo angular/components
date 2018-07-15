@@ -1,19 +1,24 @@
-import {
-  async, ComponentFixture, TestBed, fakeAsync, tick, discardPeriodicTasks
-} from '@angular/core/testing';
-import {Component, ViewChild} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {By} from '@angular/platform-browser';
-import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
-import {PortalModule} from '@angular/cdk/portal';
 import {Direction, Directionality} from '@angular/cdk/bidi';
+import {END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
+import {PortalModule} from '@angular/cdk/portal';
+import {ScrollDispatchModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing';
-import {MatTabHeader} from './tab-header';
+import {CommonModule} from '@angular/common';
+import {Component, ViewChild} from '@angular/core';
+import {
+  async,
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import {MatRippleModule} from '@angular/material/core';
+import {By} from '@angular/platform-browser';
 import {MatInkBar} from './ink-bar';
+import {MatTabHeader} from './tab-header';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
-import {Subject} from 'rxjs/Subject';
-import {VIEWPORT_RULER_PROVIDER, ScrollDispatchModule} from '@angular/cdk/scrolling';
+import {Subject} from 'rxjs';
 
 
 describe('MatTabHeader', () => {
@@ -33,7 +38,7 @@ describe('MatTabHeader', () => {
         SimpleTabHeaderApp,
       ],
       providers: [
-        VIEWPORT_RULER_PROVIDER,
+        ViewportRuler,
         {provide: Directionality, useFactory: () => ({value: dir, change: change.asObservable()})},
       ]
     });
@@ -42,11 +47,14 @@ describe('MatTabHeader', () => {
   }));
 
   describe('focusing', () => {
+    let tabListContainer: HTMLElement;
+
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleTabHeaderApp);
       fixture.detectChanges();
 
       appComponent = fixture.componentInstance;
+      tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
     });
 
     it('should initialize to the selected index', () => {
@@ -78,12 +86,12 @@ describe('MatTabHeader', () => {
 
       // Move focus right, verify that the disabled tab is 1 and should be skipped
       expect(appComponent.disabledTabIndex).toBe(1);
-      appComponent.tabHeader._focusNextTab();
+      dispatchKeyboardEvent(tabListContainer, 'keydown', RIGHT_ARROW);
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(2);
 
       // Move focus right to index 3
-      appComponent.tabHeader._focusNextTab();
+      dispatchKeyboardEvent(tabListContainer, 'keydown', RIGHT_ARROW);
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(3);
     });
@@ -94,13 +102,13 @@ describe('MatTabHeader', () => {
       expect(appComponent.tabHeader.focusIndex).toBe(3);
 
       // Move focus left to index 3
-      appComponent.tabHeader._focusPreviousTab();
+      dispatchKeyboardEvent(tabListContainer, 'keydown', LEFT_ARROW);
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(2);
 
       // Move focus left, verify that the disabled tab is 1 and should be skipped
       expect(appComponent.disabledTabIndex).toBe(1);
-      appComponent.tabHeader._focusPreviousTab();
+      dispatchKeyboardEvent(tabListContainer, 'keydown', LEFT_ARROW);
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(0);
     });
@@ -109,8 +117,6 @@ describe('MatTabHeader', () => {
       appComponent.tabHeader.focusIndex = 0;
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(0);
-
-      let tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
 
       // Move focus right to 2
       dispatchKeyboardEvent(tabListContainer, 'keydown', RIGHT_ARROW);
@@ -136,6 +142,56 @@ describe('MatTabHeader', () => {
       expect(appComponent.selectedIndex).toBe(0);
       expect(spaceEvent.defaultPrevented).toBe(true);
     });
+
+    it('should move focus to the first tab when pressing HOME', () => {
+      appComponent.tabHeader.focusIndex = 3;
+      fixture.detectChanges();
+      expect(appComponent.tabHeader.focusIndex).toBe(3);
+
+      const event = dispatchKeyboardEvent(tabListContainer, 'keydown', HOME);
+      fixture.detectChanges();
+
+      expect(appComponent.tabHeader.focusIndex).toBe(0);
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    it('should skip disabled items when moving focus using HOME', () => {
+      appComponent.tabHeader.focusIndex = 3;
+      appComponent.tabs[0].disabled = true;
+      fixture.detectChanges();
+      expect(appComponent.tabHeader.focusIndex).toBe(3);
+
+      dispatchKeyboardEvent(tabListContainer, 'keydown', HOME);
+      fixture.detectChanges();
+
+      // Note that the second tab is disabled by default already.
+      expect(appComponent.tabHeader.focusIndex).toBe(2);
+    });
+
+    it('should move focus to the last tab when pressing END', () => {
+      appComponent.tabHeader.focusIndex = 0;
+      fixture.detectChanges();
+      expect(appComponent.tabHeader.focusIndex).toBe(0);
+
+      const event = dispatchKeyboardEvent(tabListContainer, 'keydown', END);
+      fixture.detectChanges();
+
+      expect(appComponent.tabHeader.focusIndex).toBe(3);
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    it('should skip disabled items when moving focus using END', () => {
+      appComponent.tabHeader.focusIndex = 0;
+      appComponent.tabs[3].disabled = true;
+      fixture.detectChanges();
+      expect(appComponent.tabHeader.focusIndex).toBe(0);
+
+      dispatchKeyboardEvent(tabListContainer, 'keydown', END);
+      fixture.detectChanges();
+
+      expect(appComponent.tabHeader.focusIndex).toBe(2);
+    });
+
   });
 
   describe('pagination', () => {

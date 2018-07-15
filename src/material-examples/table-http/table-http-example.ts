@@ -1,13 +1,8 @@
-import {Component, AfterViewInit, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {Observable} from 'rxjs/Observable';
-import {merge} from 'rxjs/observable/merge';
-import {of as observableOf} from 'rxjs/observable/of';
-import {catchError} from 'rxjs/operators/catchError';
-import {map} from 'rxjs/operators/map';
-import {startWith} from 'rxjs/operators/startWith';
-import {switchMap} from 'rxjs/operators/switchMap';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator, MatSort} from '@angular/material';
+import {merge, Observable, of as observableOf} from 'rxjs';
+import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 
 /**
  * @title Table retrieving data through HTTP
@@ -17,13 +12,13 @@ import {switchMap} from 'rxjs/operators/switchMap';
   styleUrls: ['table-http-example.css'],
   templateUrl: 'table-http-example.html',
 })
-export class TableHttpExample implements AfterViewInit {
-  displayedColumns = ['created', 'state', 'number', 'title'];
+export class TableHttpExample implements OnInit {
+  displayedColumns: string[] = ['created', 'state', 'number', 'title'];
   exampleDatabase: ExampleHttpDao | null;
-  dataSource = new MatTableDataSource();
+  data: GithubIssue[] = [];
 
   resultsLength = 0;
-  isLoadingResults = false;
+  isLoadingResults = true;
   isRateLimitReached = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -31,7 +26,7 @@ export class TableHttpExample implements AfterViewInit {
 
   constructor(private http: HttpClient) {}
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.exampleDatabase = new ExampleHttpDao(this.http);
 
     // If the user changes the sort order, reset back to the first page.
@@ -59,7 +54,7 @@ export class TableHttpExample implements AfterViewInit {
           this.isRateLimitReached = true;
           return observableOf([]);
         })
-      ).subscribe(data => this.dataSource.data = data);
+      ).subscribe(data => this.data = data);
   }
 }
 

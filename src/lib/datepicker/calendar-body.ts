@@ -9,12 +9,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   Output,
-  ViewEncapsulation
+  ViewEncapsulation,
+  NgZone,
 } from '@angular/core';
-
+import {take} from 'rxjs/operators';
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
@@ -39,10 +41,11 @@ export class MatCalendarCell {
   styleUrls: ['calendar-body.css'],
   host: {
     'class': 'mat-calendar-body',
+    'role': 'grid',
+    'attr.aria-readonly': 'true'
   },
   exportAs: 'matCalendarBody',
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCalendarBody {
@@ -77,7 +80,9 @@ export class MatCalendarBody {
   @Input() cellAspectRatio = 1;
 
   /** Emits when a new value is selected. */
-  @Output() selectedValueChange = new EventEmitter<number>();
+  @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
+
+  constructor(private _elementRef: ElementRef, private _ngZone: NgZone) { }
 
   _cellClicked(cell: MatCalendarCell): void {
     if (!this.allowDisabledSelection && !cell.enabled) {
@@ -101,5 +106,14 @@ export class MatCalendarBody {
     }
 
     return cellNumber == this.activeCell;
+  }
+
+  /** Focuses the active cell after the microtask queue is empty. */
+  _focusActiveCell() {
+    this._ngZone.runOutsideAngular(() => {
+      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
+        this._elementRef.nativeElement.querySelector('.mat-calendar-body-active').focus();
+      });
+    });
   }
 }

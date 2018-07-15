@@ -9,12 +9,12 @@ const browserConfig = {
   'FirefoxHeadless':   { unitTest: {target: 'TC', required: true  }},
   'ChromeBeta':        { unitTest: {target: null, required: false }},
   'FirefoxBeta':       { unitTest: {target: null, required: false }},
-  'ChromeDev':         { unitTest: {target: null, required: true  }},
-  'FirefoxDev':        { unitTest: {target: null, required: true  }},
+  'ChromeDev':         { unitTest: {target: null, required: false  }},
+  'FirefoxDev':        { unitTest: {target: null, required: false  }},
   'IE9':               { unitTest: {target: null, required: false }},
-  'IE10':              { unitTest: {target: null, required: true  }},
-  'IE11':              { unitTest: {target: 'SL', required: true  }},
-  'Edge':              { unitTest: {target: 'SL', required: true  }},
+  'IE10':              { unitTest: {target: null, required: false  }},
+  'IE11':              { unitTest: {target: null, required: false  }},
+  'Edge':              { unitTest: {target: 'BS', required: true  }},
   'Android4.1':        { unitTest: {target: null, required: false }},
   'Android4.2':        { unitTest: {target: null, required: false }},
   'Android4.3':        { unitTest: {target: null, required: false }},
@@ -22,12 +22,15 @@ const browserConfig = {
   'Android5':          { unitTest: {target: null, required: false }},
   'Safari7':           { unitTest: {target: null, required: false }},
   'Safari8':           { unitTest: {target: null, required: false }},
-  'Safari9':           { unitTest: {target: 'SL', required: true  }},
+  'Safari9':           { unitTest: {target: null, required: false }},
   'Safari10':          { unitTest: {target: 'BS', required: true  }},
   'iOS7':              { unitTest: {target: null, required: false }},
   'iOS8':              { unitTest: {target: null, required: false }},
   'iOS9':              { unitTest: {target: null, required: false }},
-  'iOS10':             { unitTest: {target: 'BS', required: true  }},
+  'iOS10':             { unitTest: {target: null, required: false  }},
+  // Don't use Browserstack until our open-source license includes automate testing on
+  // mobile devices. For now, we need to use Saucelabs to keep our coverage.
+  'iOS11':             { unitTest: {target: 'SL', required: true  }},
   'WindowsPhone':      { unitTest: {target: null, required: false }}
 };
 

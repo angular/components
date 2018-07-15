@@ -1,0 +1,23 @@
+.demo-tree-container {
+  .demo-tree-node {
+    display: block;
+  }
+
+  .demo-tree-nested-node {
+    padding-left: 20px;
+  }
+
+  .demo-tree-invisible {
+    display: none;
+  }
+
+  ul, li {
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    list-style-type: none;
+  }
+
+  .mat-card {
+    margin: 16px;
+  }
+}

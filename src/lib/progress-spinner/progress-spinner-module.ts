@@ -6,12 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {NgModule} from '@angular/core';
-import {PlatformModule} from '@angular/cdk/platform';
+import {CommonModule} from '@angular/common';
 import {MatCommonModule} from '@angular/material/core';
 import {MatProgressSpinner, MatSpinner} from './progress-spinner';
 
+
 @NgModule({
-  imports: [MatCommonModule, PlatformModule],
+  imports: [MatCommonModule, CommonModule],
   exports: [
     MatProgressSpinner,
     MatSpinner,

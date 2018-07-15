@@ -13,6 +13,8 @@ $mat-step-header-icon-size: 16px !default;
   outline: none;
   cursor: pointer;
   position: relative;
+  box-sizing: content-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mat-step-optional {
@@ -27,6 +29,7 @@ $mat-step-header-icon-size: 16px !default;
   align-items: center;
   justify-content: center;
   display: flex;
+  flex-shrink: 0;
 }
 
 .mat-step-icon .mat-icon {

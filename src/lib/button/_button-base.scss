@@ -1,6 +1,7 @@
 @import '../core/style/variables';
 @import '../core/style/elevation';
 @import '../core/style/button-common';
+@import '../core/style/noop-animation';
 
 
 // Flat and raised button standards
@@ -11,6 +12,12 @@ $mat-button-line-height: 36px !default;
 $mat-button-border-radius: 2px !default;
 $mat-button-focus-transition: opacity 200ms $swift-ease-in-out-timing-function,
                               background-color 200ms $swift-ease-in-out-timing-function !default;
+
+// Stroked Button standards
+$mat-stroked-button-line-height: $mat-button-line-height - 2;
+// Stroked button padding is 1px less horizontally than default/flat/raised
+// button's padding.
+$mat-stroked-button-padding: 0 15px;
 
 // Icon Button standards
 $mat-icon-button-size: 40px !default;
@@ -26,7 +33,7 @@ $mat-mini-fab-size: 40px !default;
 $mat-mini-fab-padding: 8px !default;
 
 // Applies base styles to all button types.
-%mat-button-base {
+@mixin mat-button-base {
   box-sizing: border-box;
   position: relative;
 
@@ -47,6 +54,10 @@ $mat-mini-fab-padding: 8px !default;
   padding: $mat-button-padding;
   border-radius: $mat-button-border-radius;
 
+  // Explicitly set the default overflow to `visible`. It is already set
+  // on most browsers except on IE11 where it defaults to `hidden`.
+  overflow: visible;
+
   &[disabled] {
     cursor: default;
   }
@@ -63,10 +74,10 @@ $mat-mini-fab-padding: 8px !default;
 }
 
 // Applies styles to buttons with backgrounds: raised, fab, and mini-fab
-%mat-raised-button {
-  @extend %mat-button-base;
-
+@mixin mat-raised-button {
+  @include mat-button-base;
   @include mat-overridable-elevation(2);
+  @include _noop-animation();
 
   // Force hardware acceleration.
   transform: translate3d(0, 0, 0);
@@ -86,8 +97,7 @@ $mat-mini-fab-padding: 8px !default;
 
 // Applies styles to fab and mini-fab button types only
 @mixin mat-fab($size, $padding) {
-  @extend %mat-raised-button;
-
+  @include mat-raised-button;
   @include mat-overridable-elevation(6);
 
   // Reset the min-width from the button base.

@@ -1,5 +1,6 @@
 @import '../core/style/variables';
 @import '../core/ripple/ripple';
+@import '../../cdk/a11y/a11y';
 
 
 $mat-radio-size: $mat-toggle-size !default;
@@ -8,6 +9,7 @@ $mat-radio-ripple-radius: 25px;
 // Top-level host container.
 .mat-radio-button {
   display: inline-block;
+  -webkit-tap-highlight-color: transparent;
 }
 
 // Inner label container, wrapping entire element.
@@ -46,6 +48,10 @@ $mat-radio-ripple-radius: 25px;
     style: solid;
     radius: 50%;
   }
+
+  ._mat-animation-noopable & {
+    transition: none;
+  }
 }
 
 // The inner circle for the radio, shown when checked.
@@ -63,8 +69,18 @@ $mat-radio-ripple-radius: 25px;
   // IE to flash the entire circle for a couple of frames, throwing off the entire animation.
   transform: scale(0.001);
 
+  ._mat-animation-noopable & {
+    transition: none;
+  }
+
   .mat-radio-checked & {
     transform: scale(0.5);
+
+    @include cdk-high-contrast {
+      // Since we use a background color to render the circle, it won't be
+      // displayed in high contrast mode. Use a border as a fallback.
+      border: solid $mat-radio-size / 2;
+    }
   }
 }
 
@@ -101,8 +117,8 @@ $mat-radio-ripple-radius: 25px;
 
 .mat-radio-ripple {
   position: absolute;
-  left: $mat-radio-size / 2 - $mat-radio-ripple-radius;
-  top: $mat-radio-size / 2 - $mat-radio-ripple-radius;
+  left: calc(50% - #{$mat-radio-ripple-radius});
+  top: calc(50% - #{$mat-radio-ripple-radius});
   height: $mat-radio-ripple-radius * 2;
   width: $mat-radio-ripple-radius * 2;
   z-index: 1;

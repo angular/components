@@ -6,13 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ViewChild} from '@angular/core';
 import {DataSource} from '@angular/cdk/table';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
-import {MatSort, MatPaginator} from '@angular/material';
-import {merge} from 'rxjs/observable/merge';
-import {map} from 'rxjs/operators/map';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator, MatSort} from '@angular/material';
+import {BehaviorSubject, merge, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+
 
 export interface UserData {
   name: string;
@@ -35,7 +34,7 @@ const exampleData = [
   templateUrl: 'table-a11y.html',
   styleUrls: ['table-a11y.css'],
 })
-export class TableAccessibilityDemo {
+export class TableAccessibilityDemo implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) pager: MatPaginator;
 
@@ -87,12 +86,12 @@ export class SortDataSource extends DataSource<UserData> {
 
   getSortedData(): UserData[] {
     const data = [...exampleData];
-    if (!this._sort.active || this._sort.direction == '') {
+    if (!this._sort.active || this._sort.direction === '') {
       return data;
     }
 
     return data.sort((a: UserData, b: UserData) => {
-      return (a.age < b.age ? -1 : 1) * (this._sort.direction == 'asc' ? 1 : -1);
+      return (a.age < b.age ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1);
     });
   }
 }

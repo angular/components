@@ -7,7 +7,7 @@
  */
 
 import {Dir} from '@angular/cdk/bidi';
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {
   MatSnackBar,
   MatSnackBarConfig,
@@ -21,16 +21,15 @@ import {
   selector: 'snack-bar-demo',
   styleUrls: ['snack-bar-demo.css'],
   templateUrl: 'snack-bar-demo.html',
-  encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
 })
 export class SnackBarDemo {
-  message: string = 'Snack Bar opened.';
-  actionButtonLabel: string = 'Retry';
-  action: boolean = false;
-  setAutoHide: boolean = true;
-  autoHide: number = 10000;
-  addExtraClass: boolean = false;
+  @ViewChild('template') template: TemplateRef<any>;
+  message = 'Snack Bar opened.';
+  actionButtonLabel = 'Retry';
+  action = false;
+  setAutoHide = true;
+  autoHide = 10000;
+  addExtraClass = false;
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
@@ -38,12 +37,22 @@ export class SnackBarDemo {
   }
 
   open() {
-    let config = new MatSnackBarConfig();
+    const config = this._createConfig();
+    this.snackBar.open(this.message, this.action ? this.actionButtonLabel : undefined, config);
+  }
+
+  openTemplate() {
+    const config = this._createConfig();
+    this.snackBar.openFromTemplate(this.template, config);
+  }
+
+  private _createConfig() {
+    const config = new MatSnackBarConfig();
     config.verticalPosition = this.verticalPosition;
     config.horizontalPosition = this.horizontalPosition;
     config.duration = this.setAutoHide ? this.autoHide : 0;
-    config.panelClass = this.addExtraClass ? ['party'] : undefined;
+    config.panelClass = this.addExtraClass ? ['demo-party'] : undefined;
     config.direction = this.dir.value;
-    this.snackBar.open(this.message, this.action ? this.actionButtonLabel : undefined, config);
+    return config;
   }
 }

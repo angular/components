@@ -117,7 +117,15 @@ If no `mode` is specified, `over` is used by default.
 
 <!-- example(sidenav-mode) -->
 
-`<mat-drawer>` also supports all of these same modes.
+The `over` and `push` sidenav modes show a backdrop by default, while the `side` mode does not. This
+can be customized by setting the `hasBackdrop` property on `mat-sidenav-container`. Explicitly
+setting `hasBackdrop` to `true` or `false` will override the default backdrop visibility setting for
+all sidenavs regadless of mode. Leaving the property unset or setting it to `null` will use the
+default backdrop visibility for each mode.
+
+<!-- example(sidenav-backdrop) -->
+
+`<mat-drawer>` also supports all of these same modes and options.
 
 ### Disabling automatic close
 
@@ -171,6 +179,21 @@ the element that scrolls; this allows the address bar to auto-hide. The sidenav 
 CSS to adjust to either type of device.
 
 <!-- example(sidenav-responsive) -->
+
+### Reacting to scroll events inside the sidenav container
+
+To react to scrolling inside the `<mat-sidenav-container>`, you can get a hold of the underlying
+`CdkScrollable` instance through the `MatSidenavContainer`.
+
+```ts
+class YourComponent {
+  @ViewChild(MatSidenavContainer) sidenavContainer: MatSidenavContainer;
+
+  constructor() {
+    this.sidenavContainer.scrollable.elementScrolled().subscribe(() => /* react to scrolling */);
+  }
+}
+```
 
 ### Accessibility
 

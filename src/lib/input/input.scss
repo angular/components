@@ -1,7 +1,6 @@
 @import '../core/style/variables';
 @import '../core/style/vendor-prefixes';
 
-
 // The Input element proper.
 .mat-input-element {
   // Font needs to be inherited, because by default <input> has a system font.
@@ -26,6 +25,12 @@
   // Needed to make last line of the textarea line up with the baseline.
   vertical-align: bottom;
 
+  // User agent stylesheets set the text-align of inputs explicitly to "start". Those can be
+  // easily overwritten by targeting the input element using a simple CSS selector, but since
+  // the text-align will be applied most of the time on the `mat-form-field` to also align the
+  // placeholder, the alignment should be inherited here.
+  text-align: inherit;
+
   // Undo the red box-shadow glow added by Firefox on invalid inputs.
   // See https://developer.mozilla.org/en-US/docs/Web/CSS/:-moz-ui-invalid
   &:-moz-ui-invalid {
@@ -33,8 +38,17 @@
   }
 
   // Remove IE's default clear and reveal icons.
-  &::-ms-clear, &::-ms-reveal {
+  &::-ms-clear,
+  &::-ms-reveal {
     display: none;
+  }
+
+  // Also clear Safari's autofill icons. Note that this can't be in the
+  // same selector as the IE ones, otherwise Safari will ignore it.
+  &::-webkit-contacts-auto-fill-button,
+  &::-webkit-caps-lock-indicator,
+  &::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
   }
 
   // Fixes an issue on iOS where the following input types will collapse to 1px,
@@ -69,6 +83,11 @@
       // input color in IE, if the consumer overrides it with a higher specificity.
       color: transparent !important;
 
+      // Overwrite browser specific CSS properties that can overwrite the `color` property.
+      // Some developers seem to use this approach to easily overwrite the placeholder and
+      // label color. See: https://github.com/angular/material2/issues/12074
+      -webkit-text-fill-color: transparent;
+
       // Remove the transition to prevent the placeholder
       // from overlapping when the label comes back down.
       transition: none;
@@ -81,10 +100,15 @@ textarea.mat-input-element {
   // Only allow resizing along the Y axis.
   resize: vertical;
   overflow: auto;
+
+  &.cdk-textarea-autosize {
+    resize: none;
+  }
 }
 
-// Remove the resize handle on autosizing textareas, because whatever height
-// the user resized to will be overwritten once they start typing again.
-textarea.mat-autosize {
-  resize: none;
+textarea.mat-input-element {
+  // The 2px padding prevents scrollbars from appearing on Chrome even when they aren't needed.
+  // We also add a negative margin to negate the effect of the padding on the layout.
+  padding: 2px 0;
+  margin: -2px 0;
 }

@@ -1,0 +1,32 @@
+package(default_visibility=["//visibility:public"])
+load("@angular//:index.bzl", "ng_module")
+load("@io_bazel_rules_sass//sass:sass.bzl", "sass_library", "sass_binary")
+
+ng_module(
+  name = "text-field",
+  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
+  module_name = "@angular/cdk/text-field",
+  deps = [
+    "@rxjs",
+    "//src/cdk/coercion",
+    "//src/cdk/platform",
+  ],
+  tsconfig = "//src/lib:tsconfig-build.json",
+)
+
+# TODO(jelbourn): replace this w/ sass_library when it supports acting like a filegroup
+filegroup(
+  name = "text_field_scss_partials",
+  srcs = glob(["**/_*.scss"]),
+)
+
+sass_library(
+  name = "text_field_scss_lib",
+  srcs = [":text_field_scss_partials"],
+)
+
+sass_binary(
+  name = "text_field_prebuilt_scss",
+  src = "text-field-prebuilt.scss",
+  deps = [":text_field_scss_lib"],
+)

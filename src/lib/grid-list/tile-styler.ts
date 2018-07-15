@@ -106,7 +106,7 @@ export abstract class TileStyler {
 
     // The width and horizontal position of each tile is always calculated the same way, but the
     // height and vertical position depends on the rowMode.
-    let side = this._direction === 'ltr' ? 'left' : 'right';
+    let side = this._direction === 'rtl' ? 'right' : 'left';
     tile._setStyle(side, this.getTilePosition(baseTileWidth, colIndex));
     tile._setStyle('width', calc(this.getTileSize(baseTileWidth, tile.colspan)));
   }
@@ -152,7 +152,7 @@ export abstract class TileStyler {
 
 /**
  * This type of styler is instantiated when the user passes in a fixed row height.
- * Example <mat-grid-list cols="3" rowHeight="100px">
+ * Example `<mat-grid-list cols="3" rowHeight="100px">`
  * @docs-private
  */
 export class FixedTileStyler extends TileStyler {
@@ -188,12 +188,12 @@ export class FixedTileStyler extends TileStyler {
 
 /**
  * This type of styler is instantiated when the user passes in a width:height ratio
- * for the row height.  Example <mat-grid-list cols="3" rowHeight="3:1">
+ * for the row height.  Example `<mat-grid-list cols="3" rowHeight="3:1">`
  * @docs-private
  */
 export class RatioTileStyler extends TileStyler {
 
-  /** Ratio width:height given by user to determine row height.*/
+  /** Ratio width:height given by user to determine row height. */
   rowHeightRatio: number;
   baseTileHeight: string;
 
@@ -210,22 +210,22 @@ export class RatioTileStyler extends TileStyler {
     // Use padding-top and margin-top to maintain the given aspect ratio, as
     // a percentage-based value for these properties is applied versus the *width* of the
     // containing block. See http://www.w3.org/TR/CSS2/box.html#margin-properties
-    tile._setStyle('margin-top', this.getTilePosition(this.baseTileHeight, rowIndex));
-    tile._setStyle('padding-top', calc(this.getTileSize(this.baseTileHeight, tile.rowspan)));
+    tile._setStyle('marginTop', this.getTilePosition(this.baseTileHeight, rowIndex));
+    tile._setStyle('paddingTop', calc(this.getTileSize(this.baseTileHeight, tile.rowspan)));
   }
 
   getComputedHeight(): [string, string] {
     return [
-      'padding-bottom', calc(`${this.getTileSpan(this.baseTileHeight)} + ${this.getGutterSpan()}`)
+      'paddingBottom', calc(`${this.getTileSpan(this.baseTileHeight)} + ${this.getGutterSpan()}`)
     ];
   }
 
   reset(list: MatGridList) {
-    list._setListStyle(['padding-bottom', null]);
+    list._setListStyle(['paddingBottom', null]);
 
     list._tiles.forEach(tile => {
-      tile._setStyle('margin-top', null);
-      tile._setStyle('padding-top', null);
+      tile._setStyle('marginTop', null);
+      tile._setStyle('paddingTop', null);
     });
   }
 
@@ -243,7 +243,7 @@ export class RatioTileStyler extends TileStyler {
 /**
  * This type of styler is instantiated when the user selects a "fit" row height mode.
  * In other words, the row height will reflect the total height of the container divided
- * by the number of rows.  Example <mat-grid-list cols="3" rowHeight="fit">
+ * by the number of rows.  Example `<mat-grid-list cols="3" rowHeight="fit">`
  *
  * @docs-private
  */

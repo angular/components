@@ -6,35 +6,28 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {MatCommonModule} from '@angular/material/core';
 import {OverlayModule} from '@angular/cdk/overlay';
-import {MatMenu, MAT_MENU_DEFAULT_OPTIONS} from './menu-directive';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {MatCommonModule, MatRippleModule} from '@angular/material/core';
+import {MatMenuContent} from './menu-content';
+import {MatMenu} from './menu-directive';
 import {MatMenuItem} from './menu-item';
-import {MatMenuTrigger, MAT_MENU_SCROLL_STRATEGY_PROVIDER} from './menu-trigger';
-import {MatRippleModule} from '@angular/material/core';
+import {
+  MatMenuTrigger,
+  MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER,
+} from './menu-trigger';
 
 
 @NgModule({
   imports: [
-    OverlayModule,
     CommonModule,
-    MatRippleModule,
     MatCommonModule,
+    MatRippleModule,
+    OverlayModule,
   ],
-  exports: [MatMenu, MatMenuItem, MatMenuTrigger, MatCommonModule],
-  declarations: [MatMenu, MatMenuItem, MatMenuTrigger],
-  providers: [
-    MAT_MENU_SCROLL_STRATEGY_PROVIDER,
-    {
-      provide: MAT_MENU_DEFAULT_OPTIONS,
-      useValue: {
-        overlapTrigger: true,
-        xPosition: 'after',
-        yPosition: 'below',
-      },
-    }
-  ],
+  exports: [MatMenu, MatMenuItem, MatMenuTrigger, MatMenuContent, MatCommonModule],
+  declarations: [MatMenu, MatMenuItem, MatMenuTrigger, MatMenuContent],
+  providers: [MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER]
 })
 export class MatMenuModule {}

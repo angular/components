@@ -18,6 +18,11 @@
   @return _mat-get-type-value($config, $level, font-weight);
 }
 
+// Gets the letter spacing for a level inside a typography config.
+@function mat-letter-spacing($config, $level) {
+  @return _mat-get-type-value($config, $level, letter-spacing);
+}
+
 // Gets the font-family from a typography config and removes the quotes around it.
 @function mat-font-family($config, $level: null) {
   $font-family: map-get($config, font-family);
@@ -26,7 +31,34 @@
     $font-family: _mat-get-type-value($config, $level, font-family);
   }
 
-  @return unquote($font-family);
+  @return if($font-family == null, $font-family, unquote($font-family));
+}
+
+// Outputs the shorthand `font` CSS property, based on a set of typography values. Falls back to
+// the individual properties if a value that isn't allowed in the shorthand is passed in.
+@mixin mat-typography-font-shorthand($font-size, $font-weight, $line-height, $font-family) {
+  // If any of the values are set to `inherit`, we can't use the shorthand
+  // so we fall back to passing in the individual properties.
+  @if ($font-size == inherit or
+       $font-weight == inherit or
+       $line-height == inherit or
+       $font-family == inherit or
+       $font-size == null or
+       $font-weight == null or
+       $line-height == null or
+       $font-family == null) {
+
+    font-size: $font-size;
+    font-weight: $font-weight;
+    line-height: $line-height;
+    font-family: $font-family;
+  }
+  @else {
+    // Otherwise use the shorthand `font`, because it's the least amount of bytes. Note
+    // that we need to use interpolation for `font-size/line-height` in order to prevent
+    // Sass from dividing the two values.
+    font: $font-weight #{$font-size}/#{$line-height} $font-family;
+  }
 }
 
 // Converts a typography level into CSS styles.
@@ -36,8 +68,6 @@
   $line-height: mat-line-height($config, $level);
   $font-family: mat-font-family($config, $level);
 
-  // Use the shorthand `font` to represent a typography level, because it's the shortest. Notes that
-  // we need to use interpolation for `font-size/line-height` in order to prevent SASS from dividing
-  // the two values.
-  font: $font-weight #{$font-size}/#{$line-height} $font-family;
+  @include mat-typography-font-shorthand($font-size, $font-weight, $line-height, $font-family);
+  letter-spacing: mat-letter-spacing($config, $level);
 }

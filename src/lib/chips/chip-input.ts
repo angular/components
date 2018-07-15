@@ -7,9 +7,9 @@
  */
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ENTER} from '@angular/cdk/keycodes';
-import {Directive, ElementRef, EventEmitter, Input, Output} from '@angular/core';
+import {Directive, ElementRef, EventEmitter, Input, Output, Inject} from '@angular/core';
 import {MatChipList} from './chip-list';
+import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-options';
 
 
 /** Represents an input event on a `matChipInput`. */
@@ -21,9 +21,12 @@ export interface MatChipInputEvent {
   value: string;
 }
 
+// Increasing integer for generating unique ids.
+let nextUniqueId = 0;
+
 /**
- * Directive that adds chip-specific behaviors to an input element inside <mat-form-field>.
- * May be placed inside or outside of an <mat-chip-list>.
+ * Directive that adds chip-specific behaviors to an input element inside `<mat-form-field>`.
+ * May be placed inside or outside of an `<mat-chip-list>`.
  */
 @Directive({
   selector: 'input[matChipInputFor]',
@@ -34,9 +37,12 @@ export interface MatChipInputEvent {
     '(blur)': '_blur()',
     '(focus)': '_focus()',
     '(input)': '_onInput()',
+    '[id]': 'id',
+    '[attr.placeholder]': 'placeholder || null',
   }
 })
 export class MatChipInput {
+  /** Whether the control is focused. */
   focused: boolean = false;
   _chipList: MatChipList;
 
@@ -53,7 +59,7 @@ export class MatChipInput {
    * Whether or not the chipEnd event will be emitted when the input is blurred.
    */
   @Input('matChipInputAddOnBlur')
-  get addOnBlur() { return this._addOnBlur; }
+  get addOnBlur(): boolean { return this._addOnBlur; }
   set addOnBlur(value: boolean) { this._addOnBlur = coerceBooleanProperty(value); }
   _addOnBlur: boolean = false;
 
@@ -63,25 +69,32 @@ export class MatChipInput {
    * Defaults to `[ENTER]`.
    */
   // TODO(tinayuangao): Support Set here
-  @Input('matChipInputSeparatorKeyCodes') separatorKeyCodes: number[] = [ENTER];
+  @Input('matChipInputSeparatorKeyCodes')
+  separatorKeyCodes: number[] = this._defaultOptions.separatorKeyCodes;
 
   /** Emitted when a chip is to be added. */
   @Output('matChipInputTokenEnd')
-  chipEnd = new EventEmitter<MatChipInputEvent>();
+  chipEnd: EventEmitter<MatChipInputEvent> = new EventEmitter<MatChipInputEvent>();
 
-  /** The input's placeholder text. */
+  /**
+   * The input's placeholder text.
+   * @deprecated Bind to the `placeholder` attribute directly.
+   * @deletion-target 7.0.0
+   */
   @Input() placeholder: string = '';
 
+  /** Unique id for the input. */
+  @Input() id: string = `mat-chip-list-input-${nextUniqueId++}`;
+
   /** Whether the input is empty. */
-  get empty(): boolean {
-    let value: string | null = this._inputElement.value;
-    return (value == null || value === '');
-  }
+  get empty(): boolean { return !this._inputElement.value; }
 
   /** The native input element to which this directive is attached. */
   protected _inputElement: HTMLInputElement;
 
-  constructor(protected _elementRef: ElementRef) {
+  constructor(
+    protected _elementRef: ElementRef,
+    @Inject(MAT_CHIPS_DEFAULT_OPTIONS) private _defaultOptions: MatChipsDefaultOptions) {
     this._inputElement = this._elementRef.nativeElement as HTMLInputElement;
   }
 
@@ -127,5 +140,6 @@ export class MatChipInput {
     this._chipList.stateChanges.next();
   }
 
-  focus() { this._inputElement.focus(); }
+  /** Focuses the input. */
+  focus(): void { this._inputElement.focus(); }
 }

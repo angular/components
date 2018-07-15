@@ -11,48 +11,30 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
-import {Component, DebugElement, ViewChild} from '@angular/core';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {Component, DebugElement, ViewChild, Type} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MatSlider, MatSliderModule} from './index';
 import {TestGestureConfig} from './test-gesture-config';
 
-
-describe('MatSlider without forms', () => {
+describe('MatSlider', () => {
   let gestureConfig: TestGestureConfig;
 
-  beforeEach(async(() => {
+  function createComponent<T>(component: Type<T>): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [MatSliderModule, ReactiveFormsModule, FormsModule, BidiModule],
-      declarations: [
-        StandardSlider,
-        DisabledSlider,
-        SliderWithMinAndMax,
-        SliderWithValue,
-        SliderWithStep,
-        SliderWithAutoTickInterval,
-        SliderWithSetTickInterval,
-        SliderWithThumbLabel,
-        SliderWithOneWayBinding,
-        SliderWithValueSmallerThanMin,
-        SliderWithValueGreaterThanMax,
-        SliderWithChangeHandler,
-        SliderWithDirAndInvert,
-        SliderWithTabIndexBinding,
-        SliderWithNativeTabindexAttr,
-        VerticalSlider,
-      ],
+      declarations: [component],
       providers: [
         {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
           gestureConfig = new TestGestureConfig();
           return gestureConfig;
         }}
-      ],
-    });
+      ]
+    }).compileComponents();
 
-    TestBed.compileComponents();
-  }));
+    return TestBed.createComponent<T>(component);
+  }
 
   describe('standard slider', () => {
     let fixture: ComponentFixture<StandardSlider>;
@@ -60,10 +42,9 @@ describe('MatSlider without forms', () => {
     let sliderNativeElement: HTMLElement;
     let sliderInstance: MatSlider;
     let trackFillElement: HTMLElement;
-    let sliderWrapperElement: HTMLElement;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(StandardSlider);
+      fixture = createComponent(StandardSlider);
       fixture.detectChanges();
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
@@ -71,7 +52,6 @@ describe('MatSlider without forms', () => {
       sliderInstance = sliderDebugElement.componentInstance;
 
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
     });
 
     it('should set the default values', () => {
@@ -113,21 +93,21 @@ describe('MatSlider without forms', () => {
     });
 
     it('should update the track fill on click', () => {
-      expect(trackFillElement.style.transform).toContain('scaleX(0)');
+      expect(trackFillElement.style.transform).toContain('scale3d(0, 1, 1)');
 
       dispatchClickEventSequence(sliderNativeElement, 0.39);
       fixture.detectChanges();
 
-      expect(trackFillElement.style.transform).toContain('scaleX(0.39)');
+      expect(trackFillElement.style.transform).toContain('scale3d(0.39, 1, 1)');
     });
 
     it('should update the track fill on slide', () => {
-      expect(trackFillElement.style.transform).toContain('scaleX(0)');
+      expect(trackFillElement.style.transform).toContain('scale3d(0, 1, 1)');
 
       dispatchSlideEventSequence(sliderNativeElement, 0, 0.86, gestureConfig);
       fixture.detectChanges();
 
-      expect(trackFillElement.style.transform).toContain('scaleX(0.86)');
+      expect(trackFillElement.style.transform).toContain('scale3d(0.86, 1, 1)');
     });
 
     it('should add and remove the mat-slider-sliding class when sliding', () => {
@@ -208,23 +188,33 @@ describe('MatSlider without forms', () => {
     it('should have aria-orientation horizontal', () => {
       expect(sliderNativeElement.getAttribute('aria-orientation')).toEqual('horizontal');
     });
+
+    it('should slide to the max value when the steps do not divide evenly into it', () => {
+      sliderInstance.min = 5;
+      sliderInstance.max = 100;
+      sliderInstance.step = 15;
+
+      dispatchSlideEventSequence(sliderNativeElement, 0, 1, gestureConfig);
+      fixture.detectChanges();
+
+      expect(sliderInstance.value).toBe(100);
+    });
+
   });
 
   describe('disabled slider', () => {
     let fixture: ComponentFixture<StandardSlider>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
-    let sliderWrapperElement: HTMLElement;
     let sliderInstance: MatSlider;
     let trackFillElement: HTMLElement;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(DisabledSlider);
+      fixture = createComponent(DisabledSlider);
       fixture.detectChanges();
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
       sliderInstance = sliderDebugElement.componentInstance;
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
     });
@@ -247,6 +237,15 @@ describe('MatSlider without forms', () => {
       dispatchSlideEventSequence(sliderNativeElement, 0, 0.5, gestureConfig);
 
       expect(sliderInstance.value).toBe(0);
+    });
+
+    it('should not emit change when disabled', () => {
+      const onChangeSpy = jasmine.createSpy('slider onChange');
+      sliderInstance.change.subscribe(onChangeSpy);
+
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.5, gestureConfig);
+
+      expect(onChangeSpy).toHaveBeenCalledTimes(0);
     });
 
     it('should not add the mat-slider-active class on click when disabled', () => {
@@ -281,21 +280,19 @@ describe('MatSlider without forms', () => {
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
     let sliderInstance: MatSlider;
-    let sliderWrapperElement: HTMLElement;
     let trackFillElement: HTMLElement;
     let ticksContainerElement: HTMLElement;
     let ticksElement: HTMLElement;
     let testComponent: SliderWithMinAndMax;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithMinAndMax);
+      fixture = createComponent(SliderWithMinAndMax);
       fixture.detectChanges();
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       testComponent = fixture.debugElement.componentInstance;
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
       ticksContainerElement =
           <HTMLElement>sliderNativeElement.querySelector('.mat-slider-ticks-container');
@@ -333,7 +330,7 @@ describe('MatSlider without forms', () => {
       fixture.detectChanges();
 
       // The closest snap is halfway on the slider.
-      expect(trackFillElement.style.transform).toContain('scaleX(0.5)');
+      expect(trackFillElement.style.transform).toContain('scale3d(0.5, 1, 1)');
     });
 
     it('should snap the fill to the nearest value on slide', () => {
@@ -341,7 +338,7 @@ describe('MatSlider without forms', () => {
       fixture.detectChanges();
 
       // The closest snap is at the halfway point on the slider.
-      expect(trackFillElement.style.transform).toContain('scaleX(0.5)');
+      expect(trackFillElement.style.transform).toContain('scale3d(0.5, 1, 1)');
     });
 
     it('should adjust fill and ticks on mouse enter when min changes', () => {
@@ -351,7 +348,7 @@ describe('MatSlider without forms', () => {
       dispatchMouseenterEvent(sliderNativeElement);
       fixture.detectChanges();
 
-      expect(trackFillElement.style.transform).toContain('scaleX(0.75)');
+      expect(trackFillElement.style.transform).toContain('scale3d(0.75, 1, 1)');
       expect(ticksElement.style.backgroundSize).toBe('75% 2px');
       // Make sure it cuts off the last half tick interval.
       expect(ticksElement.style.transform).toContain('translateX(37.5%)');
@@ -368,7 +365,7 @@ describe('MatSlider without forms', () => {
       dispatchMouseenterEvent(sliderNativeElement);
       fixture.detectChanges();
 
-      expect(trackFillElement.style.transform).toContain('scaleX(0.5)');
+      expect(trackFillElement.style.transform).toContain('scale3d(0.5, 1, 1)');
       expect(ticksElement.style.backgroundSize).toBe('50% 2px');
       // Make sure it cuts off the last half tick interval.
       expect(ticksElement.style.transform).toContain('translateX(25%)');
@@ -381,16 +378,14 @@ describe('MatSlider without forms', () => {
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
     let sliderInstance: MatSlider;
-    let sliderWrapperElement: HTMLElement;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithValue);
+      fixture = createComponent(SliderWithValue);
       fixture.detectChanges();
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
     });
 
     it('should set the default value from the attribute', () => {
@@ -419,17 +414,15 @@ describe('MatSlider without forms', () => {
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
     let sliderInstance: MatSlider;
-    let sliderWrapperElement: HTMLElement;
     let trackFillElement: HTMLElement;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithStep);
+      fixture = createComponent(SliderWithStep);
       fixture.detectChanges();
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
     });
 
@@ -447,7 +440,7 @@ describe('MatSlider without forms', () => {
       fixture.detectChanges();
 
       // The closest step is at 75% of the slider.
-      expect(trackFillElement.style.transform).toContain('scaleX(0.75)');
+      expect(trackFillElement.style.transform).toContain('scale3d(0.75, 1, 1)');
     });
 
     it('should set the correct step value on slide', () => {
@@ -462,7 +455,7 @@ describe('MatSlider without forms', () => {
       fixture.detectChanges();
 
       // The closest snap is at the end of the slider.
-      expect(trackFillElement.style.transform).toContain('scaleX(1)');
+      expect(trackFillElement.style.transform).toContain('scale3d(1, 1, 1)');
     });
 
     it('should round the value inside the label based on the provided step', () => {
@@ -487,6 +480,27 @@ describe('MatSlider without forms', () => {
 
       expect(sliderDebugElement.componentInstance.displayValue).toBe(100);
     });
+
+    it('should truncate long decimal values when using a decimal step', () => {
+      fixture.componentInstance.step = 0.1;
+      fixture.detectChanges();
+
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.333333, gestureConfig);
+
+      expect(sliderInstance.value).toBe(33.3);
+    });
+
+    it('should truncate long decimal values when using a decimal step and the arrow keys', () => {
+      fixture.componentInstance.step = 0.1;
+      fixture.detectChanges();
+
+      for (let i = 0; i < 3; i++) {
+        dispatchKeyboardEvent(sliderNativeElement, 'keydown', UP_ARROW);
+      }
+
+      expect(sliderInstance.value).toBe(0.3);
+    });
+
   });
 
   describe('slider with auto ticks', () => {
@@ -497,7 +511,7 @@ describe('MatSlider without forms', () => {
     let ticksElement: HTMLElement;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithAutoTickInterval);
+      fixture = createComponent(SliderWithAutoTickInterval);
       fixture.detectChanges();
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
@@ -527,7 +541,7 @@ describe('MatSlider without forms', () => {
     let ticksElement: HTMLElement;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithSetTickInterval);
+      fixture = createComponent(SliderWithSetTickInterval);
       fixture.detectChanges();
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
@@ -566,17 +580,15 @@ describe('MatSlider without forms', () => {
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
     let sliderInstance: MatSlider;
-    let sliderWrapperElement: HTMLElement;
     let thumbLabelTextElement: Element;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithThumbLabel);
+      fixture = createComponent(SliderWithThumbLabel);
       fixture.detectChanges();
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
       thumbLabelTextElement = sliderNativeElement.querySelector('.mat-slider-thumb-label-text')!;
     });
 
@@ -605,17 +617,48 @@ describe('MatSlider without forms', () => {
     });
   });
 
+  describe('slider with custom thumb label formatting', () => {
+    let fixture: ComponentFixture<SliderWithCustomThumbLabelFormatting>;
+    let sliderInstance: MatSlider;
+    let thumbLabelTextElement: Element;
+
+    beforeEach(() => {
+      fixture = createComponent(SliderWithCustomThumbLabelFormatting);
+      fixture.detectChanges();
+
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      const sliderNativeElement = sliderDebugElement.nativeElement;
+      sliderInstance = sliderDebugElement.componentInstance;
+      thumbLabelTextElement = sliderNativeElement.querySelector('.mat-slider-thumb-label-text')!;
+    });
+
+    it('should invoke the passed-in `displayWith` function with the value', () => {
+      spyOn(fixture.componentInstance, 'displayWith').and.callThrough();
+
+      sliderInstance.value = 1337;
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.displayWith).toHaveBeenCalledWith(1337);
+    });
+
+    it('should format the thumb label based on the passed-in `displayWith` function', () => {
+      sliderInstance.value = 200000;
+      fixture.detectChanges();
+
+      expect(thumbLabelTextElement.textContent).toBe('200k');
+    });
+  });
+
   describe('slider with value property binding', () => {
     let fixture: ComponentFixture<SliderWithOneWayBinding>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
     let sliderInstance: MatSlider;
-    let sliderWrapperElement: HTMLElement;
     let testComponent: SliderWithOneWayBinding;
     let trackFillElement: HTMLElement;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithOneWayBinding);
+      fixture = createComponent(SliderWithOneWayBinding);
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
@@ -623,13 +666,12 @@ describe('MatSlider without forms', () => {
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
     });
 
     it('should initialize based on bound value', () => {
       expect(sliderInstance.value).toBe(50);
-      expect(trackFillElement.style.transform).toContain('scaleX(0.5)');
+      expect(trackFillElement.style.transform).toContain('scale3d(0.5, 1, 1)');
     });
 
     it('should update when bound value changes', () => {
@@ -637,7 +679,7 @@ describe('MatSlider without forms', () => {
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(75);
-      expect(trackFillElement.style.transform).toContain('scaleX(0.75)');
+      expect(trackFillElement.style.transform).toContain('scale3d(0.75, 1, 1)');
     });
   });
 
@@ -646,17 +688,15 @@ describe('MatSlider without forms', () => {
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
     let sliderInstance: MatSlider;
-    let sliderWrapperElement: HTMLElement;
     let trackFillElement: HTMLElement;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithValueSmallerThanMin);
+      fixture = createComponent(SliderWithValueSmallerThanMin);
       fixture.detectChanges();
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
     });
 
@@ -667,7 +707,7 @@ describe('MatSlider without forms', () => {
     });
 
     it('should set the fill to the min value', () => {
-      expect(trackFillElement.style.transform).toContain('scaleX(0)');
+      expect(trackFillElement.style.transform).toContain('scale3d(0, 1, 1)');
     });
   });
 
@@ -676,17 +716,15 @@ describe('MatSlider without forms', () => {
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
     let sliderInstance: MatSlider;
-    let sliderWrapperElement: HTMLElement;
     let trackFillElement: HTMLElement;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithValueGreaterThanMax);
+      fixture = createComponent(SliderWithValueGreaterThanMax);
       fixture.detectChanges();
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
     });
 
@@ -697,7 +735,7 @@ describe('MatSlider without forms', () => {
     });
 
     it('should set the fill to the max value', () => {
-      expect(trackFillElement.style.transform).toContain('scaleX(1)');
+      expect(trackFillElement.style.transform).toContain('scale3d(1, 1, 1)');
     });
   });
 
@@ -705,11 +743,10 @@ describe('MatSlider without forms', () => {
     let fixture: ComponentFixture<SliderWithChangeHandler>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
-    let sliderWrapperElement: HTMLElement;
     let testComponent: SliderWithChangeHandler;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithChangeHandler);
+      fixture = createComponent(SliderWithChangeHandler);
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
@@ -718,7 +755,6 @@ describe('MatSlider without forms', () => {
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
     });
 
     it('should emit change on click', () => {
@@ -778,11 +814,10 @@ describe('MatSlider without forms', () => {
     let fixture: ComponentFixture<SliderWithChangeHandler>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
-    let sliderWrapperElement: HTMLElement;
     let testComponent: SliderWithChangeHandler;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithChangeHandler);
+      fixture = createComponent(SliderWithChangeHandler);
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
@@ -791,7 +826,6 @@ describe('MatSlider without forms', () => {
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
     });
 
     it('should emit an input event while sliding', () => {
@@ -827,12 +861,11 @@ describe('MatSlider without forms', () => {
     let fixture: ComponentFixture<SliderWithChangeHandler>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
-    let sliderWrapperElement: HTMLElement;
     let testComponent: SliderWithChangeHandler;
     let sliderInstance: MatSlider;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithChangeHandler);
+      fixture = createComponent(SliderWithChangeHandler);
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
@@ -841,7 +874,6 @@ describe('MatSlider without forms', () => {
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
     });
 
@@ -968,19 +1000,17 @@ describe('MatSlider without forms', () => {
     let fixture: ComponentFixture<SliderWithDirAndInvert>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
-    let sliderWrapperElement: HTMLElement;
     let sliderInstance: MatSlider;
     let testComponent: SliderWithDirAndInvert;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithDirAndInvert);
+      fixture = createComponent(SliderWithDirAndInvert);
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
     });
 
     it('works in inverted mode', () => {
@@ -1110,20 +1140,18 @@ describe('MatSlider without forms', () => {
     let fixture: ComponentFixture<VerticalSlider>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
-    let sliderWrapperElement: HTMLElement;
     let trackFillElement: HTMLElement;
     let sliderInstance: MatSlider;
     let testComponent: VerticalSlider;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(VerticalSlider);
+      fixture = createComponent(VerticalSlider);
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
     });
 
@@ -1145,24 +1173,24 @@ describe('MatSlider without forms', () => {
     });
 
     it('should update the track fill on click', () => {
-      expect(trackFillElement.style.transform).toContain('scaleY(0)');
+      expect(trackFillElement.style.transform).toContain('scale3d(1, 0, 1)');
 
       dispatchClickEventSequence(sliderNativeElement, 0.39);
       fixture.detectChanges();
 
-      expect(trackFillElement.style.transform).toContain('scaleY(0.61)');
+      expect(trackFillElement.style.transform).toContain('scale3d(1, 0.61, 1)');
     });
 
     it('should update the track fill on click in inverted mode', () => {
       testComponent.invert = true;
       fixture.detectChanges();
 
-      expect(trackFillElement.style.transform).toContain('scaleY(0)');
+      expect(trackFillElement.style.transform).toContain('scale3d(1, 0, 1)');
 
       dispatchClickEventSequence(sliderNativeElement, 0.39);
       fixture.detectChanges();
 
-      expect(trackFillElement.style.transform).toContain('scaleY(0.39)');
+      expect(trackFillElement.style.transform).toContain('scale3d(1, 0.39, 1)');
     });
 
     it('should have aria-orientation vertical', () => {
@@ -1173,7 +1201,7 @@ describe('MatSlider without forms', () => {
   describe('tabindex', () => {
 
     it('should allow setting the tabIndex through binding', () => {
-      const fixture = TestBed.createComponent(SliderWithTabIndexBinding);
+      const fixture = createComponent(SliderWithTabIndexBinding);
       fixture.detectChanges();
 
       const slider = fixture.debugElement.query(By.directive(MatSlider)).componentInstance;
@@ -1187,7 +1215,7 @@ describe('MatSlider without forms', () => {
     });
 
     it('should detect the native tabindex attribute', () => {
-      const fixture = TestBed.createComponent(SliderWithNativeTabindexAttr);
+      const fixture = createComponent(SliderWithNativeTabindexAttr);
       fixture.detectChanges();
 
       const slider = fixture.debugElement.query(By.directive(MatSlider)).componentInstance;
@@ -1196,47 +1224,21 @@ describe('MatSlider without forms', () => {
         .toBe(5, 'Expected the tabIndex to be set to the value of the native attribute.');
     });
   });
-});
-
-describe('MatSlider with forms module', () => {
-  let gestureConfig: TestGestureConfig;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [MatSliderModule, ReactiveFormsModule, FormsModule, BidiModule],
-      declarations: [
-        SliderWithFormControl,
-        SliderWithNgModel,
-      ],
-      providers: [
-        {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
-          gestureConfig = new TestGestureConfig();
-          return gestureConfig;
-        }}
-      ],
-    });
-
-    TestBed.compileComponents();
-  }));
 
   describe('slider with ngModel', () => {
     let fixture: ComponentFixture<SliderWithNgModel>;
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
-    let sliderInstance: MatSlider;
-    let sliderWrapperElement: HTMLElement;
     let testComponent: SliderWithNgModel;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithNgModel);
+      fixture = createComponent(SliderWithNgModel);
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
-      sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
     });
 
     it('should update the model on click', () => {
@@ -1265,6 +1267,23 @@ describe('MatSlider with forms module', () => {
 
       expect(testComponent.val).toBe(1);
     });
+
+    it('should be able to reset a slider by setting the model back to undefined', fakeAsync(() => {
+      expect(testComponent.slider.value).toBe(0);
+
+      testComponent.val = 5;
+      fixture.detectChanges();
+      flush();
+
+      expect(testComponent.slider.value).toBe(5);
+
+      testComponent.val = undefined;
+      fixture.detectChanges();
+      flush();
+
+      expect(testComponent.slider.value).toBe(0);
+    }));
+
   });
 
   describe('slider as a custom form control', () => {
@@ -1272,11 +1291,10 @@ describe('MatSlider with forms module', () => {
     let sliderDebugElement: DebugElement;
     let sliderNativeElement: HTMLElement;
     let sliderInstance: MatSlider;
-    let sliderWrapperElement: HTMLElement;
     let testComponent: SliderWithFormControl;
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(SliderWithFormControl);
+      fixture = createComponent(SliderWithFormControl);
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
@@ -1284,7 +1302,6 @@ describe('MatSlider with forms module', () => {
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
-      sliderWrapperElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-wrapper');
     });
 
     it('should not update the control when the value is updated', () => {
@@ -1369,6 +1386,38 @@ describe('MatSlider with forms module', () => {
     });
   });
 
+  describe('slider with a two-way binding', () => {
+    let fixture: ComponentFixture<SliderWithTwoWayBinding>;
+    let testComponent: SliderWithTwoWayBinding;
+    let sliderNativeElement: HTMLElement;
+
+    beforeEach(() => {
+      fixture = createComponent(SliderWithTwoWayBinding);
+      fixture.detectChanges();
+
+      testComponent = fixture.componentInstance;
+      let sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderNativeElement = sliderDebugElement.nativeElement;
+    });
+
+    it('should sync the value binding in both directions', () => {
+      expect(testComponent.value).toBe(0);
+      expect(testComponent.slider.value).toBe(0);
+
+      dispatchClickEventSequence(sliderNativeElement, 0.1);
+      fixture.detectChanges();
+
+      expect(testComponent.value).toBe(10);
+      expect(testComponent.slider.value).toBe(10);
+
+      testComponent.value = 20;
+      fixture.detectChanges();
+
+      expect(testComponent.value).toBe(20);
+      expect(testComponent.slider.value).toBe(20);
+    });
+  });
+
 });
 
 // Disable animations and make the slider an even 100px (+ 8px padding on either side)
@@ -1434,6 +1483,26 @@ class SliderWithSetTickInterval {
 })
 class SliderWithThumbLabel { }
 
+
+@Component({
+  template: `<mat-slider min="1" max="100000" [displayWith]="displayWith" thumbLabel></mat-slider>`,
+  styles: [styles],
+})
+class SliderWithCustomThumbLabelFormatting {
+  displayWith(value: number | null) {
+    if (!value) {
+      return 0;
+    }
+
+    if (value >= 1000) {
+      return (value / 1000) + 'k';
+    }
+
+    return value;
+  }
+}
+
+
 @Component({
   template: `<mat-slider [value]="val"></mat-slider>`,
   styles: [styles],
@@ -1455,7 +1524,8 @@ class SliderWithFormControl {
   styles: [styles],
 })
 class SliderWithNgModel {
-  val = 0;
+  @ViewChild(MatSlider) slider: MatSlider;
+  val: number | undefined = 0;
 }
 
 @Component({
@@ -1512,6 +1582,15 @@ class SliderWithTabIndexBinding {
 })
 class SliderWithNativeTabindexAttr {
   tabIndex: number;
+}
+
+@Component({
+  template: '<mat-slider [(value)]="value"></mat-slider>',
+  styles: [styles],
+})
+class SliderWithTwoWayBinding {
+  @ViewChild(MatSlider) slider: MatSlider;
+  value = 0;
 }
 
 /**

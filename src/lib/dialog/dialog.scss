@@ -22,6 +22,11 @@ $mat-dialog-button-margin: 8px !default;
   width: 100%;
   height: 100%;
 
+  // Since the dialog won't stretch to fit the parent, if the height
+  // isn't set, we have to inherit the min and max values explicitly.
+  min-height: inherit;
+  max-height: inherit;
+
   @include cdk-high-contrast {
     outline: solid 1px;
   }
@@ -34,9 +39,6 @@ $mat-dialog-button-margin: 8px !default;
   max-height: $mat-dialog-max-height;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-
-  // Promote the content to a new GPU layer to avoid repaints on scroll.
-  @include backface-visibility(hidden);
 }
 
 .mat-dialog-title {
@@ -49,12 +51,8 @@ $mat-dialog-button-margin: 8px !default;
   display: flex;
   flex-wrap: wrap;
 
-  &:last-child {
-    // If the actions are the last element in a dialog, we need to pull them down
-    // over the dialog padding, in order to avoid the action's padding stacking
-    // with the dialog's.
-    margin-bottom: -$mat-dialog-padding;
-  }
+  // Pull the actions down to avoid their padding stacking with the dialog's padding.
+  margin-bottom: -$mat-dialog-padding;
 
   &[align='end'] {
     justify-content: flex-end;
