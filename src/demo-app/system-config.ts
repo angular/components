@@ -37,8 +37,7 @@ System.config({
     '@angular/platform-browser-dynamic':
       'node:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
 
-    // TODO(devversion): replace once the index.ts file for the Material package has been added.
-    '@angular/material': 'dist/packages/material/public-api.js',
+    '@angular/material': 'dist/packages/material/index.js',
     '@angular/material-experimental': 'dist/packages/material-experimental/index.js',
     '@angular/material-examples': 'dist/packages/material-examples/index.js',
     '@angular/material-moment-adapter': 'dist/packages/material-moment-adapter/index.js',
@@ -63,6 +62,9 @@ System.config({
     '@angular/cdk/tree': 'dist/packages/cdk/tree/index.js',
 
     '@angular/cdk-experimental/scrolling': 'dist/packages/cdk-experimental/scrolling/index.js',
+    '@angular/cdk-experimental/dialog': 'dist/packages/cdk-experimental/dialog/index.js',
+    '@angular/cdk-experimental/drag-drop':
+        'dist/packages/cdk-experimental/drag-drop/index.js',
 
     '@angular/material/autocomplete': 'dist/packages/material/autocomplete/index.js',
     '@angular/material/bottom-sheet': 'dist/packages/material/bottom-sheet/index.js',

@@ -1,4 +1,6 @@
-import {ScrollingModule} from '@angular/cdk-experimental';
+import {ScrollingModule} from '@angular/cdk-experimental/scrolling';
+import {DialogModule} from '@angular/cdk-experimental/dialog';
+import {DragDropModule} from '@angular/cdk-experimental/drag-drop';
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
 import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -69,6 +71,8 @@ import {VirtualScrollE2E} from './virtual-scroll/virtual-scroll-e2e';
     MatTabsModule,
     MatNativeDateModule,
     ScrollingModule,
+    DialogModule,
+    DragDropModule,
   ]
 })
 export class E2eMaterialModule {}
