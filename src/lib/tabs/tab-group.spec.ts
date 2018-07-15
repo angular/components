@@ -19,6 +19,7 @@ describe('MatTabGroup', () => {
         DisabledTabsTestApp,
         TabGroupWithSimpleApi,
         TemplateTabs,
+        TabGroupWithAriaInputs,
       ],
     });
 
@@ -221,6 +222,56 @@ describe('MatTabGroup', () => {
 
       expect(fixture.componentInstance.animationDone).toHaveBeenCalled();
     }));
+
+    it('should add the proper `aria-setsize` and `aria-posinset`', () => {
+      fixture.detectChanges();
+
+      const labels = Array.from(element.querySelectorAll('.mat-tab-label'));
+
+      expect(labels.map(label => label.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
+      expect(labels.every(label => label.getAttribute('aria-setsize') === '3')).toBe(true);
+    });
+
+  });
+
+  describe('aria labelling', () => {
+    let fixture: ComponentFixture<TabGroupWithAriaInputs>;
+    let tab: HTMLElement;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(TabGroupWithAriaInputs);
+      fixture.detectChanges();
+      tick();
+      tab = fixture.nativeElement.querySelector('.mat-tab-label');
+    }));
+
+    it('should not set aria-label or aria-labelledby attributes if they are not passed in', () => {
+      expect(tab.hasAttribute('aria-label')).toBe(false);
+      expect(tab.hasAttribute('aria-labelledby')).toBe(false);
+    });
+
+    it('should set the aria-label attribute', () => {
+      fixture.componentInstance.ariaLabel = 'Fruit';
+      fixture.detectChanges();
+
+      expect(tab.getAttribute('aria-label')).toBe('Fruit');
+    });
+
+    it('should set the aria-labelledby attribute', () => {
+      fixture.componentInstance.ariaLabelledby = 'fruit-label';
+      fixture.detectChanges();
+
+      expect(tab.getAttribute('aria-labelledby')).toBe('fruit-label');
+    });
+
+    it('should not be able to set both an aria-label and aria-labelledby', () => {
+      fixture.componentInstance.ariaLabel = 'Fruit';
+      fixture.componentInstance.ariaLabelledby = 'fruit-label';
+      fixture.detectChanges();
+
+      expect(tab.getAttribute('aria-label')).toBe('Fruit');
+      expect(tab.hasAttribute('aria-labelledby')).toBe(false);
+    });
   });
 
   describe('disable tabs', () => {
@@ -282,14 +333,17 @@ describe('MatTabGroup', () => {
         expect(tabs[3].origin).toBeGreaterThanOrEqual(0);
 
         // Add a new tab in the beginning and select it, expect an origin < than 0 (animate left)
-        fixture.componentInstance.tabs.push({label: 'New tab', content: 'to left of index'});
         fixture.componentInstance.selectedIndex = 0;
+        fixture.detectChanges();
+        tick();
+
+        fixture.componentInstance.tabs.push({label: 'New tab', content: 'to left of index'});
         fixture.detectChanges();
         tick();
 
         tabs = component._tabs.toArray();
         expect(tabs[0].origin).toBeLessThan(0);
-      }));
+    }));
 
 
     it('should update selected index if the last tab removed while selected', fakeAsync(() => {
@@ -307,6 +361,61 @@ describe('MatTabGroup', () => {
       tick();
 
       expect(component.selectedIndex).toBe(numberOfTabs - 2);
+    }));
+
+
+    it('should maintain the selected tab if a new tab is added', () => {
+      fixture.detectChanges();
+      const component: MatTabGroup =
+          fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
+
+      fixture.componentInstance.selectedIndex = 1;
+      fixture.detectChanges();
+
+      // Add a new tab at the beginning.
+      fixture.componentInstance.tabs.unshift({label: 'New tab', content: 'at the start'});
+      fixture.detectChanges();
+
+      expect(component.selectedIndex).toBe(2);
+      expect(component._tabs.toArray()[2].isActive).toBe(true);
+    });
+
+
+    it('should maintain the selected tab if a tab is removed', () => {
+      // Add a couple of tabs so we have more to work with.
+      fixture.componentInstance.tabs.push(
+        {label: 'New tab', content: 'with new content'},
+        {label: 'Another new tab', content: 'with newer content'}
+      );
+
+      // Select the second-to-last tab.
+      fixture.componentInstance.selectedIndex = 3;
+      fixture.detectChanges();
+
+      const component: MatTabGroup =
+          fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
+
+      // Remove a tab right before the selected one.
+      fixture.componentInstance.tabs.splice(2, 1);
+      fixture.detectChanges();
+
+      expect(component.selectedIndex).toBe(1);
+      expect(component._tabs.toArray()[1].isActive).toBe(true);
+    });
+
+    it('should not fire `selectedTabChange` when the amount of tabs changes', fakeAsync(() => {
+      fixture.detectChanges();
+      fixture.componentInstance.selectedIndex = 1;
+      fixture.detectChanges();
+
+      // Add a new tab at the beginning.
+      spyOn(fixture.componentInstance, 'handleSelection');
+      fixture.componentInstance.tabs.unshift({label: 'New tab', content: 'at the start'});
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.handleSelection).not.toHaveBeenCalled();
     }));
 
   });
@@ -651,3 +760,16 @@ class NestedTabs {}
   `,
  })
  class TemplateTabs {}
+
+
+ @Component({
+  template: `
+  <mat-tab-group>
+    <mat-tab [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby"></mat-tab>
+  </mat-tab-group>
+  `
+})
+class TabGroupWithAriaInputs {
+  ariaLabel: string;
+  ariaLabelledby: string;
+}

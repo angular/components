@@ -51,6 +51,7 @@ describe('MatIcon', () => {
         IconWithAriaHiddenFalse,
         IconWithBindingAndNgIf,
         InlineIcon,
+        SvgIconWithUserContent,
       ]
     });
 
@@ -397,6 +398,26 @@ describe('MatIcon', () => {
 
       expect(icon.querySelector('svg')).toBeFalsy();
     });
+
+    it('should keep non-SVG user content inside the icon element', fakeAsync(() => {
+      iconRegistry.addSvgIcon('fido', trustUrl('dog.svg'));
+
+      const fixture = TestBed.createComponent(SvgIconWithUserContent);
+      const testComponent = fixture.componentInstance;
+      const iconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
+
+      testComponent.iconName = 'fido';
+      fixture.detectChanges();
+      http.expectOne('dog.svg').flush(FAKE_SVGS.dog);
+
+      const userDiv = iconElement.querySelector('div');
+
+      expect(userDiv).toBeTruthy();
+      expect(iconElement.textContent.trim()).toContain('Hello');
+
+      tick();
+    }));
+
   });
 
   describe('Icons from HTML string', () => {
@@ -539,6 +560,26 @@ describe('MatIcon', () => {
       verifyPathChildElement(svgElement, 'left');
       expect(svgElement.getAttribute('viewBox')).toBeFalsy();
     });
+
+    it('should add an extra string to the end of `style` tags inside SVG', fakeAsync(() => {
+      iconRegistry.addSvgIconLiteral('fido', trustHtml(`
+        <svg>
+          <style>#woof {color: blue;}</style>
+          <path id="woof" name="woof"></path>
+        </svg>
+      `));
+
+      const fixture = TestBed.createComponent(IconFromSvgName);
+      fixture.componentInstance.iconName = 'fido';
+      fixture.detectChanges();
+      const styleTag = fixture.nativeElement.querySelector('mat-icon svg style');
+
+      // Note the extra whitespace at the end which is what we're testing for. This is a
+      // workaround for IE and Edge ignoring `style` tags in dynamically-created SVGs.
+      expect(styleTag.textContent).toBe('#woof {color: blue;} ');
+
+      tick();
+    }));
   });
 
   describe('custom fonts', () => {
@@ -685,4 +726,9 @@ class IconWithBindingAndNgIf {
 @Component({template: `<mat-icon [inline]="inline">{{iconName}}</mat-icon>`})
 class InlineIcon {
   inline = false;
+}
+
+@Component({template: `<mat-icon [svgIcon]="iconName"><div>Hello</div></mat-icon>`})
+class SvgIconWithUserContent {
+  iconName: string | undefined = '';
 }

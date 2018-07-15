@@ -11,7 +11,7 @@ export function createMouseEvent(type: string, x = 0, y = 0) {
   const event = document.createEvent('MouseEvent');
 
   event.initMouseEvent(type,
-    false, /* canBubble */
+    true, /* canBubble */
     false, /* cancelable */
     window, /* view */
     0, /* detail */
@@ -41,7 +41,8 @@ export function createTouchEvent(type: string, pageX = 0, pageY = 0) {
   // Most of the browsers don't have a "initTouchEvent" method that can be used to define
   // the touch details.
   Object.defineProperties(event, {
-    touches: {value: [touchDetails]}
+    touches: {value: [touchDetails]},
+    targetTouches: {value: [touchDetails]}
   });
 
   return event;

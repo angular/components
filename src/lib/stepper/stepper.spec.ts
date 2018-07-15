@@ -54,6 +54,7 @@ describe('MatStepper', () => {
         SimpleStepperWithStepControlAndCompletedBinding,
         SimpleMatHorizontalStepperApp,
         LinearStepperWithValidOptionalStep,
+        StepperWithAriaInputs,
       ],
       providers: [
         {provide: Directionality, useFactory: () => dir}
@@ -363,6 +364,14 @@ describe('MatStepper', () => {
 
       expect(() => stepperComponent.selected = null!).not.toThrow();
       expect(stepperComponent.selectedIndex).toBe(-1);
+    });
+
+    it('should set the correct aria-posinset and aria-setsize', () => {
+      const headers =
+          Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('.mat-step-header'));
+
+      expect(headers.map(header => header.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
+      expect(headers.every(header => header.getAttribute('aria-setsize') === '3')).toBe(true);
     });
 
   });
@@ -828,6 +837,46 @@ describe('MatStepper', () => {
       expect(stepper.selectedIndex).toBe(2);
     });
   });
+
+  describe('aria labelling', () => {
+    let fixture: ComponentFixture<StepperWithAriaInputs>;
+    let stepHeader: HTMLElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(StepperWithAriaInputs);
+      fixture.detectChanges();
+      stepHeader = fixture.nativeElement.querySelector('.mat-step-header');
+    });
+
+    it('should not set aria-label or aria-labelledby attributes if they are not passed in', () => {
+      expect(stepHeader.hasAttribute('aria-label')).toBe(false);
+      expect(stepHeader.hasAttribute('aria-labelledby')).toBe(false);
+    });
+
+    it('should set the aria-label attribute', () => {
+      fixture.componentInstance.ariaLabel = 'First step';
+      fixture.detectChanges();
+
+      expect(stepHeader.getAttribute('aria-label')).toBe('First step');
+    });
+
+    it('should set the aria-labelledby attribute', () => {
+      fixture.componentInstance.ariaLabelledby = 'first-step-label';
+      fixture.detectChanges();
+
+      expect(stepHeader.getAttribute('aria-labelledby')).toBe('first-step-label');
+    });
+
+    it('should not be able to set both an aria-label and aria-labelledby', () => {
+      fixture.componentInstance.ariaLabel = 'First step';
+      fixture.componentInstance.ariaLabelledby = 'first-step-label';
+      fixture.detectChanges();
+
+      expect(stepHeader.getAttribute('aria-label')).toBe('First step');
+      expect(stepHeader.hasAttribute('aria-labelledby')).toBe(false);
+    });
+
+  });
 });
 
 /** Asserts that keyboard interaction works correctly. */
@@ -1149,4 +1198,17 @@ class IconOverridesStepper {
 class LinearStepperWithValidOptionalStep {
   controls = [0, 0, 0].map(() => new FormControl());
   step2Optional = false;
+}
+
+
+@Component({
+  template: `
+    <mat-horizontal-stepper>
+      <mat-step [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby" label="One"></mat-step>
+    </mat-horizontal-stepper>
+  `
+})
+class StepperWithAriaInputs {
+  ariaLabel: string;
+  ariaLabelledby: string;
 }

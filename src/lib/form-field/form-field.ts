@@ -50,6 +50,7 @@ import {MatPlaceholder} from './placeholder';
 import {MatPrefix} from './prefix';
 import {MatSuffix} from './suffix';
 import {Platform} from '@angular/cdk/platform';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
 let nextUniqueId = 0;
@@ -130,6 +131,7 @@ export const MAT_FORM_FIELD_DEFAULT_OPTIONS =
     '[class.ng-valid]': '_shouldForward("valid")',
     '[class.ng-invalid]': '_shouldForward("invalid")',
     '[class.ng-pending]': '_shouldForward("pending")',
+    '[class._mat-animation-noopable]': '!_animationsEnabled',
   },
   inputs: ['color'],
   encapsulation: ViewEncapsulation.None,
@@ -146,6 +148,11 @@ export class MatFormField extends _MatFormFieldMixinBase
     return this._appearance || this._defaultOptions && this._defaultOptions.appearance || 'legacy';
   }
   set appearance(value: MatFormFieldAppearance) {
+    // If we're switching to `outline` from another appearance, we have to recalculate the gap.
+    if (value !== this._appearance && value === 'outline') {
+      this._initialGapCalculated = false;
+    }
+
     this._appearance = value;
   }
   _appearance: MatFormFieldAppearance;
@@ -184,6 +191,9 @@ export class MatFormField extends _MatFormFieldMixinBase
   // Unique id for the hint label.
   _hintLabelId: string = `mat-hint-${nextUniqueId++}`;
 
+  // Unique id for the internal form field label.
+  _labelId = `mat-form-field-label-${nextUniqueId++}`;
+
   /**
    * Whether the label should always float, never float or float as the user types.
    *
@@ -204,10 +214,11 @@ export class MatFormField extends _MatFormFieldMixinBase
   }
   private _floatLabel: FloatLabelType;
 
+  /** Whether the Angular animations are enabled. */
+  _animationsEnabled: boolean;
+
   _outlineGapWidth = 0;
-
   _outlineGapStart = 0;
-
   _initialGapCalculated = false;
 
   /**
@@ -234,13 +245,15 @@ export class MatFormField extends _MatFormFieldMixinBase
       @Optional() private _dir: Directionality,
       @Optional() @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS) private _defaultOptions:
           MatFormFieldDefaultOptions,
-      // @deletion-target 7.0.0 _platform and _ngZone to be made required.
+      // @deletion-target 7.0.0 _platform, _ngZone and _animationMode to be made required.
       private _platform?: Platform,
-      private _ngZone?: NgZone) {
+      private _ngZone?: NgZone,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) _animationMode?: string) {
     super(_elementRef);
 
     this._labelOptions = labelOptions ? labelOptions : {};
     this.floatLabel = this._labelOptions.float || 'auto';
+    this._animationsEnabled = _animationMode !== 'NoopAnimations';
   }
 
   /**
@@ -345,13 +358,17 @@ export class MatFormField extends _MatFormFieldMixinBase
   /** Animates the placeholder up and locks it in position. */
   _animateAndLockLabel(): void {
     if (this._hasFloatingLabel() && this._canLabelFloat) {
-      this._showAlwaysAnimate = true;
+      // If animations are disabled, we shouldn't go in here,
+      // because the `transitionend` will never fire.
+      if (this._animationsEnabled) {
+        this._showAlwaysAnimate = true;
+
+        fromEvent(this._label.nativeElement, 'transitionend').pipe(take(1)).subscribe(() => {
+          this._showAlwaysAnimate = false;
+        });
+      }
+
       this.floatLabel = 'always';
-
-      fromEvent(this._label.nativeElement, 'transitionend').pipe(take(1)).subscribe(() => {
-        this._showAlwaysAnimate = false;
-      });
-
       this._changeDetectorRef.markForCheck();
     }
   }

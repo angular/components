@@ -28,6 +28,7 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
+  OnInit,
 } from '@angular/core';
 import {merge, Observable, Subject, Subscription} from 'rxjs';
 import {startWith, switchMap, take} from 'rxjs/operators';
@@ -97,7 +98,7 @@ const MAT_MENU_BASE_ELEVATION = 2;
     {provide: MAT_MENU_PANEL, useExisting: MatMenu}
   ]
 })
-export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnDestroy {
+export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy {
   private _keyManager: FocusKeyManager<MatMenuItem>;
   private _xPosition: MenuPositionX = this._defaultOptions.xPosition;
   private _yPosition: MenuPositionY = this._defaultOptions.yPosition;
@@ -141,6 +142,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnD
       throwMatMenuInvalidPositionX();
     }
     this._xPosition = value;
+    this.setPositionClasses();
   }
 
   /** Position of the menu in the Y axis. */
@@ -151,6 +153,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnD
       throwMatMenuInvalidPositionY();
     }
     this._yPosition = value;
+    this.setPositionClasses();
   }
 
   /** @docs-private */
@@ -230,9 +233,13 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnD
     private _ngZone: NgZone,
     @Inject(MAT_MENU_DEFAULT_OPTIONS) private _defaultOptions: MatMenuDefaultOptions) { }
 
+  ngOnInit() {
+    this.setPositionClasses();
+  }
+
   ngAfterContentInit() {
     this._keyManager = new FocusKeyManager<MatMenuItem>(this._items).withWrap().withTypeAhead();
-    this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.close.emit('tab'));
+    this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.closed.emit('tab'));
   }
 
   ngOnDestroy() {
@@ -347,6 +354,21 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnD
     }
   }
 
+  /**
+   * Adds classes to the menu panel based on its position. Can be used by
+   * consumers to add specific styling based on the position.
+   * @param posX Position of the menu along the x axis.
+   * @param posY Position of the menu along the y axis.
+   * @docs-private
+   */
+  setPositionClasses(posX: MenuPositionX = this.xPosition, posY: MenuPositionY = this.yPosition) {
+    const classes = this._classList;
+    classes['mat-menu-before'] = posX === 'before';
+    classes['mat-menu-after'] = posX === 'after';
+    classes['mat-menu-above'] = posY === 'above';
+    classes['mat-menu-below'] = posY === 'below';
+  }
+
   /** Starts the enter animation. */
   _startAnimation() {
     // @deletion-target 7.0.0 Combine with _resetAnimation.
@@ -363,5 +385,15 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnD
   _onAnimationDone(event: AnimationEvent) {
     this._animationDone.next(event);
     this._isAnimating = false;
+
+    // Scroll the content element to the top once the animation is done. This is necessary, because
+    // we move focus to the first item while it's still being animated, which can throw the browser
+    // off when it determines the scroll position. Alternatively we can move focus when the
+    // animation is done, however moving focus asynchronously will interrupt screen readers
+    // which are in the process of reading out the menu already. We take the `element` from
+    // the `event` since we can't use a `ViewChild` to access the pane.
+    if (event.toState === 'enter' && this._keyManager.activeItemIndex === 0) {
+      event.element.scrollTop = 0;
+    }
   }
 }

@@ -14,6 +14,7 @@ import {take} from 'rxjs/operators';
 import {OverlayKeyboardDispatcher} from './keyboard/overlay-keyboard-dispatcher';
 import {OverlayConfig} from './overlay-config';
 import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
+import {OverlayReference} from './overlay-reference';
 
 
 /** An object where all of its properties cannot be written. */
@@ -25,14 +26,26 @@ export type ImmutableObject<T> = {
  * Reference to an overlay that has been created with the Overlay service.
  * Used to manipulate or dispose of said overlay.
  */
-export class OverlayRef implements PortalOutlet {
+export class OverlayRef implements PortalOutlet, OverlayReference {
   private _backdropElement: HTMLElement | null = null;
   private _backdropClick: Subject<MouseEvent> = new Subject();
   private _attachments = new Subject<void>();
   private _detachments = new Subject<void>();
+  private _keydownEventsObservable: Observable<KeyboardEvent> = Observable.create(observer => {
+    const subscription = this._keydownEvents.subscribe(observer);
+    this._keydownEventSubscriptions++;
+
+    return () => {
+      subscription.unsubscribe();
+      this._keydownEventSubscriptions--;
+    };
+  });
 
   /** Stream of keydown events dispatched to this overlay. */
   _keydownEvents = new Subject<KeyboardEvent>();
+
+  /** Amount of subscriptions to the keydown events. */
+  _keydownEventSubscriptions = 0;
 
   constructor(
       private _portalOutlet: PortalOutlet,
@@ -151,12 +164,16 @@ export class OverlayRef implements PortalOutlet {
       this._config.scrollStrategy.disable();
     }
 
+    if (this._config.panelClass) {
+      this._toggleClasses(this._pane, this._config.panelClass, false);
+    }
+
     const detachmentResult = this._portalOutlet.detach();
 
     // Only emit after everything is detached.
     this._detachments.next();
 
-    // Remove this overlay from keyboard dispatcher tracking
+    // Remove this overlay from keyboard dispatcher tracking.
     this._keyboardDispatcher.remove(this);
 
     return detachmentResult;
@@ -217,7 +234,7 @@ export class OverlayRef implements PortalOutlet {
 
   /** Gets an observable of keydown events targeted to this overlay. */
   keydownEvents(): Observable<KeyboardEvent> {
-    return this._keydownEvents.asObservable();
+    return this._keydownEventsObservable;
   }
 
   /** Gets the the current overlay configuration, which is immutable. */
@@ -264,29 +281,14 @@ export class OverlayRef implements PortalOutlet {
 
   /** Updates the size of the overlay element based on the overlay config. */
   private _updateElementSize() {
-    if (this._config.width || this._config.width === 0) {
-      this._pane.style.width = coerceCssPixelValue(this._config.width);
-    }
+    const style = this._pane.style;
 
-    if (this._config.height || this._config.height === 0) {
-      this._pane.style.height = coerceCssPixelValue(this._config.height);
-    }
-
-    if (this._config.minWidth || this._config.minWidth === 0) {
-      this._pane.style.minWidth = coerceCssPixelValue(this._config.minWidth);
-    }
-
-    if (this._config.minHeight || this._config.minHeight === 0) {
-      this._pane.style.minHeight = coerceCssPixelValue(this._config.minHeight);
-    }
-
-    if (this._config.maxWidth || this._config.maxWidth === 0) {
-      this._pane.style.maxWidth = coerceCssPixelValue(this._config.maxWidth);
-    }
-
-    if (this._config.maxHeight || this._config.maxHeight === 0) {
-      this._pane.style.maxHeight = coerceCssPixelValue(this._config.maxHeight);
-    }
+    style.width = coerceCssPixelValue(this._config.width);
+    style.height = coerceCssPixelValue(this._config.height);
+    style.minWidth = coerceCssPixelValue(this._config.minWidth);
+    style.minHeight = coerceCssPixelValue(this._config.minHeight);
+    style.maxWidth = coerceCssPixelValue(this._config.maxWidth);
+    style.maxHeight = coerceCssPixelValue(this._config.maxHeight);
   }
 
   /** Toggles the pointer events for the overlay pane element. */
@@ -346,6 +348,7 @@ export class OverlayRef implements PortalOutlet {
     let backdropToDetach = this._backdropElement;
 
     if (backdropToDetach) {
+      let timeoutId: number;
       let finishDetach = () => {
         // It may not be attached to anything in certain cases (e.g. unit tests).
         if (backdropToDetach && backdropToDetach.parentNode) {
@@ -358,6 +361,8 @@ export class OverlayRef implements PortalOutlet {
         if (this._backdropElement == backdropToDetach) {
           this._backdropElement = null;
         }
+
+        clearTimeout(timeoutId);
       };
 
       backdropToDetach.classList.remove('cdk-overlay-backdrop-showing');
@@ -366,7 +371,9 @@ export class OverlayRef implements PortalOutlet {
         this._toggleClasses(backdropToDetach, this._config.backdropClass, false);
       }
 
-      backdropToDetach.addEventListener('transitionend', finishDetach);
+      this._ngZone.runOutsideAngular(() => {
+        backdropToDetach!.addEventListener('transitionend', finishDetach);
+      });
 
       // If the backdrop doesn't have a transition, the `transitionend` event won't fire.
       // In this case we make it unclickable and we try to remove it after a delay.
@@ -375,7 +382,7 @@ export class OverlayRef implements PortalOutlet {
       // Run this outside the Angular zone because there's nothing that Angular cares about.
       // If it were to run inside the Angular zone, every test that used Overlay would have to be
       // either async or fakeAsync.
-      this._ngZone.runOutsideAngular(() => setTimeout(finishDetach, 500));
+      timeoutId = this._ngZone.runOutsideAngular(() => setTimeout(finishDetach, 500));
     }
   }
 

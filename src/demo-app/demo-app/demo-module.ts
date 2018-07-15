@@ -55,13 +55,7 @@ import {SliderDemo} from '../slider/slider-demo';
 import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
 import {StepperDemo} from '../stepper/stepper-demo';
 import {TableDemoModule} from '../table/table-demo-module';
-import {
-  Counter,
-  FoggyTabContent,
-  RainyTabContent,
-  SunnyTabContent,
-  TabsDemo
-} from '../tabs/tabs-demo';
+import {TabsDemo} from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
 import {TreeDemoModule} from '../tree/tree-demo-module';
@@ -69,6 +63,7 @@ import {TypographyDemo} from '../typography/typography-demo';
 import {VirtualScrollDemo} from '../virtual-scroll/virtual-scroll-demo';
 import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
+import {DragAndDropDemo} from '../drag-drop/drag-drop-demo';
 
 @NgModule({
   imports: [
@@ -96,16 +91,15 @@ import {DEMO_APP_ROUTES} from './routes';
     ChipsDemo,
     ConnectedOverlayDemo,
     ContentElementDialog,
-    Counter,
     CustomHeader,
     DatepickerDemo,
     DemoApp,
     DialogDemo,
     DrawerDemo,
     ExampleBottomSheet,
+    DragAndDropDemo,
     ExpansionDemo,
     FocusOriginDemo,
-    FoggyTabContent,
     GesturesDemo,
     GridListDemo,
     Home,
@@ -123,7 +117,6 @@ import {DEMO_APP_ROUTES} from './routes';
     ProgressBarDemo,
     ProgressSpinnerDemo,
     RadioDemo,
-    RainyTabContent,
     RippleDemo,
     ScienceJoke,
     ScreenTypeDemo,
@@ -133,7 +126,6 @@ import {DEMO_APP_ROUTES} from './routes';
     SliderDemo,
     SnackBarDemo,
     StepperDemo,
-    SunnyTabContent,
     TabsDemo,
     ToolbarDemo,
     TooltipDemo,
