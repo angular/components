@@ -11,3 +11,5 @@ export * from './datetime-module';
 export * from './native-date-adapter';
 export * from './calendar-view';
 export * from './datepicker-module';
+export * from './date-formats';
+export * from './native-date-formats';

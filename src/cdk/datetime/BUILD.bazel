@@ -9,6 +9,7 @@ ng_module(
   module_name = "@angular/cdk/datetime",
   deps = [
     "@rxjs",
+    "//src/cdk/coercion",
     "//src/cdk/platform",
   ],
   tsconfig = "//src/cdk:tsconfig-build.json",
