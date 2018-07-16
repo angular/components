@@ -120,7 +120,7 @@ export class MatTabBody implements OnInit, OnDestroy {
   private _positionIndex: number;
 
   /** Subscription to the directionality change observable. */
-  private _dirChangeSubscription: Subscription = Subscription.EMPTY;
+  private _dirChangeSubscription = Subscription.EMPTY;
 
   /** Tab body position state. Used by the animation trigger for the current state. */
   _position: MatTabBodyPositionState;
@@ -155,11 +155,13 @@ export class MatTabBody implements OnInit, OnDestroy {
 
   constructor(private _elementRef: ElementRef,
               @Optional() private _dir: Directionality,
-              // TODO(paul): make the changeDetectorRef required when doing breaking changes.
+              /**
+               * @deletion-target 7.0.0 changeDetectorRef to be made required.
+               */
               changeDetectorRef?: ChangeDetectorRef) {
 
     if (this._dir && changeDetectorRef) {
-      this._dir.change.subscribe(dir => {
+      this._dirChangeSubscription = this._dir.change.subscribe(dir => {
         this._computePositionAnimationState(dir);
         changeDetectorRef.markForCheck();
       });
@@ -231,8 +233,8 @@ export class MatTabBody implements OnInit, OnDestroy {
 
     if ((dir == 'ltr' && this.origin <= 0) || (dir == 'rtl' && this.origin > 0)) {
       return 'left-origin-center';
-    } else {
-      return 'right-origin-center';
     }
+
+    return 'right-origin-center';
   }
 }
