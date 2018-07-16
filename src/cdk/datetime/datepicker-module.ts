@@ -7,8 +7,13 @@
  */
 
 import {NgModule} from '@angular/core';
+import {CdkDatepicker} from './datepicker';
+import {CdkDatepickerInput} from './datepicker-input';
 
-const EXPORTED_DECLARATIONS = [];
+const EXPORTED_DECLARATIONS = [
+  CdkDatepicker,
+  CdkDatepickerInput,
+];
 
 @NgModule({
   exports: EXPORTED_DECLARATIONS,
