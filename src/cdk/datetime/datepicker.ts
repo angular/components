@@ -52,7 +52,7 @@ export class CdkDatepicker<D> implements OnDestroy {
   /** Whether the datepicker should be disabled. */
   @Input()
   get disabled(): boolean {
-    return this._disabled == null && this._datepickerInput ?
+    return this._disabled === undefined && this._datepickerInput ?
         this._datepickerInput.disabled : !!this._disabled;
   }
   set disabled(value: boolean) {
@@ -68,11 +68,8 @@ export class CdkDatepicker<D> implements OnDestroy {
   /** The calendar view displayed in this datepicker. */
   @ContentChild(CalendarView) view: CalendarView<D>;
 
-  /** The unique id for the datepicker. */
-  private _uniqueId: string = `cdk-datepicker-${datepickerUid++}`;
-
   /** The id for the datepicker calendar. */
-  @Input() id: string = this._uniqueId;
+  @Input() id: string = `cdk-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
   get _selected(): D | null { return this._validSelected; }
@@ -89,7 +86,7 @@ export class CdkDatepicker<D> implements OnDestroy {
     return this._datepickerInput && this._datepickerInput.max;
   }
 
-  /** The filtering of which dates are selectable. */
+  /** The filter function used to determine which dates are selectable. */
   get _dateFilter(): (date: D | null) => boolean {
     return this._datepickerInput && this._datepickerInput._dateFilter;
   }
@@ -136,7 +133,7 @@ export class CdkDatepicker<D> implements OnDestroy {
     }
     this._datepickerInput = input;
     this._inputSubscription =
-      this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
+        this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
   }
 
   /**
