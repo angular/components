@@ -1,7 +1,5 @@
-import {
-  ENTER,
-  RIGHT_ARROW,
-} from '@angular/cdk/keycodes';
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {ENTER, RIGHT_ARROW,} from '@angular/cdk/keycodes';
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
@@ -9,12 +7,9 @@ import {
   MockNgZone,
 } from '@angular/cdk/testing';
 import {Component, NgZone} from '@angular/core';
-import {ComponentFixture, TestBed, async, inject} from '@angular/core/testing';
-import {
-  DEC, FEB, JAN, MatNativeDateModule, NOV, JUL, NativeDateAdapter
-} from '@angular/material/core';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {DateAdapter, DEC, FEB, JAN, JUL, MatNativeDateModule, NOV} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
-import {Direction, Directionality} from '@angular/cdk/bidi';
 import {MatCalendar} from './calendar';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerModule} from './datepicker-module';
@@ -38,7 +33,6 @@ describe('MatCalendar', () => {
       ],
       providers: [
         MatDatepickerIntl,
-        NativeDateAdapter,
         {provide: NgZone, useFactory: () => zone = new MockNgZone()},
         {provide: Directionality, useFactory: () => dir = {value: 'ltr'}}
       ],
@@ -65,6 +59,27 @@ describe('MatCalendar', () => {
       calendarInstance = calendarDebugElement.componentInstance;
       testComponent = fixture.componentInstance;
     });
+
+    it(`should update today's date`, inject([DateAdapter], (adapter: DateAdapter<Date>) => {
+      let fakeToday = new Date(2018, 0, 1);
+      spyOn(adapter, 'today').and.callFake(() => fakeToday);
+
+      calendarInstance.activeDate = fakeToday;
+      calendarInstance.updateTodaysDate();
+      fixture.detectChanges();
+
+      let todayCell = calendarElement.querySelector('.mat-calendar-body-today')!;
+      expect(todayCell).not.toBeNull();
+      expect(todayCell.innerHTML.trim()).toBe('1');
+
+      fakeToday = new Date(2018, 0, 10);
+      calendarInstance.updateTodaysDate();
+      fixture.detectChanges();
+
+      todayCell = calendarElement.querySelector('.mat-calendar-body-today')!;
+      expect(todayCell).not.toBeNull();
+      expect(todayCell.innerHTML.trim()).toBe('10');
+    }));
 
     it('should be in month view with specified month active', () => {
       expect(calendarInstance.currentView).toBe('month');
@@ -171,30 +186,6 @@ describe('MatCalendar', () => {
 
           expect(activeCell.focus).not.toHaveBeenCalled();
         });
-
-        it('should update today\'s date after update of the active date',
-          inject([NativeDateAdapter], (adapter: NativeDateAdapter) => {
-
-            spyOn(adapter, 'today').and.callFake(() => {
-              return new Date(2018, 11, 24, 10, 33, 30, 0);
-            });
-
-            // fake today: December 24th 2018
-            let fakeToday: Date = adapter.today();
-
-            calendarInstance.activeDate = fakeToday;
-            fixture.detectChanges();
-
-            calendarInstance.updateTodaysDate();
-
-            let todayCell = calendarBodyEl.querySelector('.mat-calendar-body-today')!;
-
-            console.log(todayCell);
-
-            expect(todayCell).not.toBeNull();
-            expect(todayCell.innerHTML.trim()).toContain(fakeToday.getDate().toString());
-
-        }));
 
         it('should move focus to the active cell when the view changes', () => {
           const activeCell =
