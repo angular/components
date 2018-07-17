@@ -30,6 +30,7 @@ import {
   ViewEncapsulation,
   ViewChild,
 } from '@angular/core';
+import {CalendarView} from '@angular/cdk/datetime';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
@@ -40,7 +41,8 @@ const DAYS_PER_WEEK = 7;
 
 
 /**
- * An internal component used to display a single month in the datepicker.
+ * An internal component used to display a single month in the datepicker. This component will be an
+ * extension of the CalendarView component in the datepicker CDK.
  * @docs-private
  */
 @Component({
@@ -51,7 +53,7 @@ const DAYS_PER_WEEK = 7;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MatMonthView<D> implements AfterContentInit {
+export class MatMonthView<D> extends CalendarView<D> implements AfterContentInit {
   /**
    * The date to display in this month view (everything other than the month and year is ignored).
    */
@@ -133,6 +135,7 @@ export class MatMonthView<D> implements AfterContentInit {
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               @Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
+    super();
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }

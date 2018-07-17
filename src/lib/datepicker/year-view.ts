@@ -30,13 +30,15 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import {CalendarView} from '@angular/cdk/datetime';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 
 /**
- * An internal component used to display a single year in the datepicker.
+ * An internal component used to display a single year in the datepicker. This component will be an
+ * extension of the CalendarView component in the datepicker CDK.
  * @docs-private
  */
 @Component({
@@ -47,7 +49,7 @@ import {createMissingDateImplError} from './datepicker-errors';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MatYearView<D> implements AfterContentInit {
+export class MatYearView<D> extends CalendarView<D> implements AfterContentInit {
   /** The date to display in this year view (everything other than the year is ignored). */
   @Input()
   get activeDate(): D { return this._activeDate; }
@@ -121,6 +123,7 @@ export class MatYearView<D> implements AfterContentInit {
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               @Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
+    super();
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }

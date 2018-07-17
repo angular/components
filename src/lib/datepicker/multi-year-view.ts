@@ -29,6 +29,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import {CalendarView} from '@angular/cdk/datetime';
 import {DateAdapter} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
@@ -40,7 +41,8 @@ export const yearsPerRow = 4;
 
 
 /**
- * An internal component used to display a year selector in the datepicker.
+ * An internal component used to display a year selector in the datepicker. This component will be
+ * an extension of the CalendarView component in the datepicker CDK.
  * @docs-private
  */
 @Component({
@@ -51,7 +53,7 @@ export const yearsPerRow = 4;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MatMultiYearView<D> implements AfterContentInit {
+export class MatMultiYearView<D> extends CalendarView<D> implements AfterContentInit {
   /** The date to display in this multi-year view (everything other than the year is ignored). */
   @Input()
   get activeDate(): D { return this._activeDate; }
@@ -119,6 +121,7 @@ export class MatMultiYearView<D> implements AfterContentInit {
   constructor(private _changeDetectorRef: ChangeDetectorRef,
               @Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
+    super();
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }

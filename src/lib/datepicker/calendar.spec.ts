@@ -7,10 +7,15 @@ import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
   MockNgZone,
+  DEC,
+  FEB,
+  JAN,
+  NOV,
+  JUL,
 } from '@angular/cdk/testing';
 import {Component, NgZone} from '@angular/core';
 import {ComponentFixture, TestBed, async, inject} from '@angular/core/testing';
-import {DEC, FEB, JAN, MatNativeDateModule, NOV, JUL} from '@angular/material/core';
+import {MatNativeDateModule} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {MatCalendar} from './calendar';
