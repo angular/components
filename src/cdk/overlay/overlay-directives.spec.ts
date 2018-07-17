@@ -120,6 +120,18 @@ describe('Overlay directives', () => {
         'Expected overlay to have been detached.');
   });
 
+  it('should not close when pressing escape when changed the setting of "disableClose"', () => {
+    fixture.componentInstance.isOpen = true;
+    fixture.componentInstance.disableClose = true;
+    fixture.detectChanges();
+
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent!.trim()).not.toBe('',
+      'Expected overlay to have not been detached.');
+  });
+
   it('should not depend on the order in which the `origin` and `open` are set', async(() => {
     fixture.destroy();
 
@@ -479,6 +491,7 @@ describe('Overlay directives', () => {
             [cdkConnectedOverlayFlexibleDimensions]="flexibleDimensions"
             [cdkConnectedOverlayGrowAfterOpen]="growAfterOpen"
             [cdkConnectedOverlayPush]="push"
+            [cdkConnectedOverlayDisableClose]="disableClose"
             cdkConnectedOverlayBackdropClass="mat-test-class"
             (backdropClick)="backdropClickHandler($event)"
             [cdkConnectedOverlayOffsetX]="offsetX"
@@ -511,6 +524,7 @@ class ConnectedOverlayDirectiveTest {
   flexibleDimensions: boolean;
   growAfterOpen: boolean;
   push: boolean;
+  disableClose: boolean = false;
   backdropClickHandler = jasmine.createSpy('backdropClick handler');
   positionChangeHandler = jasmine.createSpy('positionChange handler');
   keydownHandler = jasmine.createSpy('keydown handler');
