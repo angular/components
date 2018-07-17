@@ -632,6 +632,20 @@ describe('MatDatepicker', () => {
         expect(testComponent.datepickerInput.value).toEqual(selected);
       }));
 
+      it('should update model when date is selected using the public method', fakeAsync(() => {
+        expect(testComponent.selected).toBeNull();
+        expect(testComponent.datepickerInput.value).toBeNull();
+
+        let selected = new Date(2017, JAN, 1);
+        testComponent.datepicker.select(selected);
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(testComponent.selected).toEqual(selected);
+        expect(testComponent.datepickerInput.value).toEqual(selected);
+      }));
+
       it('should mark input dirty after input event', () => {
         let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 

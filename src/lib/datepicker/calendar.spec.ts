@@ -10,7 +10,9 @@ import {
 } from '@angular/cdk/testing';
 import {Component, NgZone} from '@angular/core';
 import {ComponentFixture, TestBed, async, inject} from '@angular/core/testing';
-import {DEC, FEB, JAN, MatNativeDateModule, NOV, JUL} from '@angular/material/core';
+import {
+  DEC, FEB, JAN, MatNativeDateModule, NOV, JUL, NativeDateAdapter
+} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {MatCalendar} from './calendar';
@@ -36,6 +38,7 @@ describe('MatCalendar', () => {
       ],
       providers: [
         MatDatepickerIntl,
+        NativeDateAdapter,
         {provide: NgZone, useFactory: () => zone = new MockNgZone()},
         {provide: Directionality, useFactory: () => dir = {value: 'ltr'}}
       ],
@@ -169,30 +172,29 @@ describe('MatCalendar', () => {
           expect(activeCell.focus).not.toHaveBeenCalled();
         });
 
-        it('should update today\'s date after update of the active date', () => {
+        it('should update today\'s date after update of the active date',
+          inject([NativeDateAdapter], (adapter: NativeDateAdapter) => {
 
-          // TODO: How can we actually check that today's date was updated correctly?
-          // TODO: The test only changes the active date, but not today's date.
-          // today's date is set by the data adapter's today() method
+            spyOn(adapter, 'today').and.callFake(() => {
+              return new Date(2018, 11, 24, 10, 33, 30, 0);
+            });
 
-          const newActiveDate = new Date();
+            // fake today: December 24th 2018
+            let fakeToday: Date = adapter.today();
 
-          // today's date is also the active date
-          let todaysDay = newActiveDate.getDate();
+            calendarInstance.activeDate = fakeToday;
+            fixture.detectChanges();
 
-          calendarInstance.activeDate = newActiveDate;
-          fixture.detectChanges();
+            calendarInstance.updateTodaysDate();
 
-          calendarInstance._dateSelected(newActiveDate);
+            let todayCell = calendarBodyEl.querySelector('.mat-calendar-body-today')!;
 
-          calendarInstance.updateTodaysDate();
+            console.log(todayCell);
 
-          let todayCell = calendarBodyEl.querySelector('.mat-calendar-body-today')!;
+            expect(todayCell).not.toBeNull();
+            expect(todayCell.innerHTML.trim()).toContain(fakeToday.getDate().toString());
 
-          expect(todayCell).not.toBeNull();
-          expect(todayCell.innerHTML.trim()).toContain(todaysDay.toString());
-
-        });
+        }));
 
         it('should move focus to the active cell when the view changes', () => {
           const activeCell =

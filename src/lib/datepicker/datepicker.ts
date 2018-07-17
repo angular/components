@@ -289,6 +289,11 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     }
   }
 
+  /** Public method to select a date in the Datepicker */
+  select(date: D): void {
+    this._select(date);
+  }
+
   /** Selects the given date */
   _select(date: D): void {
     let oldValue = this._selected;
