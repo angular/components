@@ -68,8 +68,8 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   _totalContentSize = 0;
 
   /**
-   * The the rendered content transform, used to move the rendered portion of the content to the
-   * correct place in the viewport.
+   * The CSS transform applied to the rendered subset of items so that they appear within the bounds
+   * of the visible viewport.
    */
   private _renderedContentTransform: string;
 

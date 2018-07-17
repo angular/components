@@ -147,7 +147,7 @@ content.
 Some HTML elements such as `<tr>` and `<li>` have limitations on the kinds of parent elements they
 can be placed inside. To enable virtual scrolling over these type of elements, place the elements in
 their proper parent, and then wrap the whole thing in a `cdk-virtual-scroll-viewport`. Be careful
-that the parent does not introduce additional space (e.g. via `margin` or `padding`) as it may
+that the parent does not introduce additional space (e.g. via `margin` or `padding`) as it will
 interfere with the scrolling.
 
 ```html
