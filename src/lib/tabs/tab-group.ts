@@ -159,9 +159,9 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
    * a new selected tab should transition in (from the left or right).
    */
   ngAfterContentChecked() {
-    // Clamp the `indexToSelect` not immediately in the setter because it can happen that
+    // Don't clamp the `indexToSelect` immediately in the setter because it can happen that
     // the amount of tabs changes before the actual change detection runs.
-    const indexToSelect = this._indexToSelect = this._clampIndexToSelect();
+    const indexToSelect = this._indexToSelect = this._clampTabIndex(this._indexToSelect);
 
     // If there is a change in selected index, emit a change event. Should not trigger if
     // the selected index has not yet been initialized.
@@ -197,7 +197,7 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
     // Subscribe to changes in the amount of tabs, in order to be
     // able to re-render the content as new tabs are added or removed.
     this._tabsSubscription = this._tabs.changes.subscribe(() => {
-      const indexToSelect = this._clampIndexToSelect();
+      const indexToSelect = this._clampTabIndex(this._indexToSelect);
 
       // Maintain the previously-selected tab if a new tab is added or removed and there is no
       // explicit change that selects a different tab.
@@ -263,12 +263,12 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
     });
   }
 
-  /** Clamps the indexToSelect to the bounds of 0 and the tabs length. */
-  private _clampIndexToSelect(): number {
+  /** Clamps the given index to the bounds of 0 and the tabs length. */
+  private _clampTabIndex(index: number | null): number {
     // Note the `|| 0`, which ensures that values like NaN can't get through
     // and which would otherwise throw the component into an infinite loop
     // (since Math.max(NaN, 0) === NaN).
-    return Math.min(this._tabs.length - 1, Math.max(this._indexToSelect || 0, 0));
+    return Math.min(this._tabs.length - 1, Math.max(index || 0, 0));
   }
 
   /** Returns a unique id for each tab label element */
