@@ -623,20 +623,6 @@ describe('MatDatepicker', () => {
         expect(testComponent.datepickerInput.value).toBeNull();
 
         let selected = new Date(2017, JAN, 1);
-        testComponent.datepicker._select(selected);
-        fixture.detectChanges();
-        flush();
-        fixture.detectChanges();
-
-        expect(testComponent.selected).toEqual(selected);
-        expect(testComponent.datepickerInput.value).toEqual(selected);
-      }));
-
-      it('should update model when date is selected using the public method', fakeAsync(() => {
-        expect(testComponent.selected).toBeNull();
-        expect(testComponent.datepickerInput.value).toBeNull();
-
-        let selected = new Date(2017, JAN, 1);
         testComponent.datepicker.select(selected);
         fixture.detectChanges();
         flush();
@@ -663,7 +649,7 @@ describe('MatDatepicker', () => {
 
         expect(inputEl.classList).toContain('ng-pristine');
 
-        testComponent.datepicker._select(new Date(2017, JAN, 1));
+        testComponent.datepicker.select(new Date(2017, JAN, 1));
         fixture.detectChanges();
         flush();
         fixture.detectChanges();
@@ -737,7 +723,7 @@ describe('MatDatepicker', () => {
 
         expect(inputEl.classList).toContain('ng-untouched');
 
-        testComponent.datepicker._select(new Date(2017, JAN, 1));
+        testComponent.datepicker.select(new Date(2017, JAN, 1));
         fixture.detectChanges();
         flush();
         fixture.detectChanges();
@@ -779,7 +765,7 @@ describe('MatDatepicker', () => {
         expect(testComponent.datepickerInput.value).toBeNull();
 
         let selected = new Date(2017, JAN, 1);
-        testComponent.datepicker._select(selected);
+        testComponent.datepicker.select(selected);
         fixture.detectChanges();
 
         expect(testComponent.formControl.value).toEqual(selected);
