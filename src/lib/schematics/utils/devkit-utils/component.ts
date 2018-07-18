@@ -1,4 +1,6 @@
-import {normalize, strings} from '@angular-devkit/core';
+/* tslint:disable */
+
+import {strings} from '@angular-devkit/core';
 import {
   apply,
   branchAndMerge,
