@@ -23,23 +23,11 @@ describe('CdkVirtualScrollViewport', () => {
       viewport = testComponent.viewport;
     });
 
-    it('should sanitize transform inputs', fakeAsync(() => {
-      finishInit(fixture);
-      viewport.orientation = 'arbitrary string as orientation' as any;
-      viewport.setRenderedContentOffset(
-          'arbitrary string as offset' as any, 'arbitrary string as to' as any);
-      fixture.detectChanges();
-      flush();
-
-      expect((viewport._renderedContentTransform as any).changingThisBreaksApplicationSecurity)
-          .toBe('translateY(NaNpx)');
-    }));
-
     it('should render initial state', fakeAsync(() => {
       finishInit(fixture);
 
       const contentWrapper =
-          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper');
+          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper')!;
       expect(contentWrapper.children.length)
           .toBe(4, 'should render 4 50px items to fill 200px space');
     }));
@@ -543,7 +531,7 @@ describe('CdkVirtualScrollViewport', () => {
       finishInit(fixture);
 
       const contentWrapper =
-          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper');
+          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper')!;
       expect(contentWrapper.children.length)
           .toBe(4, 'should render 4 50px items to fill 200px space');
     }));
@@ -553,7 +541,7 @@ describe('CdkVirtualScrollViewport', () => {
       finishInit(fixture);
 
       const contentWrapper =
-          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper');
+          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper')!;
       expect(contentWrapper.children.length).toBe(4,
           'should render 4 items to fill 200px space based on 50px estimate from first item');
     }));
