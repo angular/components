@@ -27,10 +27,8 @@ export function supportsPassiveEventListeners(): boolean {
   return supportsPassiveEvents;
 }
 
-/**
- * Check whether the browser supports scroll behaviors.
- */
-export function supportsSmoothScroll(): boolean {
+/** Check whether the browser supports scroll behaviors. */
+export function supportsScrollBehavior(): boolean {
   return 'scrollBehavior' in document.documentElement.style;
 }
 

@@ -7,6 +7,7 @@
  */
 
 import {ListRange} from '@angular/cdk/collections';
+import {supportsScrollBehavior} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -25,7 +26,6 @@ import {animationFrameScheduler, fromEvent, Observable, Subject} from 'rxjs';
 import {sampleTime, take, takeUntil} from 'rxjs/operators';
 import {CdkVirtualForOf} from './virtual-for-of';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
-import { supportsSmoothScroll } from '@angular/cdk/platform';
 
 
 /** Checks if the given ranges are equal. */
@@ -248,36 +248,24 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   }
 
   /**  Scrolls to the offset on the viewport. */
-  scrollToOffset(offset: number, options = { smooth: false, lazy: false }) {
+  scrollToOffset(offset: number, behavior: ScrollBehavior = 'auto') {
     const viewportElement = this.elementRef.nativeElement;
-    const top = this.orientation === 'vertical' ? offset : 0;
-    const left = this.orientation === 'horizontal' ? offset : 0;
+    const offsetDirection = this.orientation === 'horizontal' ? 'left' : 'top';
 
-    let shouldScroll = true;
-    if (options.lazy) {
-      const currentOffset = this.measureScrollOffset();
-      const currentOffsetEnd = currentOffset + this.getViewportSize();
-      shouldScroll = offset < currentOffset || offset > currentOffsetEnd;
-    }
-
-    if (shouldScroll) {
-      if (options.smooth && supportsSmoothScroll()) {
-        viewportElement.scrollTo({ left, top, behavior: 'smooth' });
+    if (supportsScrollBehavior()) {
+      viewportElement.scrollTo({[offsetDirection]: offset, behavior});
+    } else {
+      if (this.orientation === 'horizontal') {
+        viewportElement.scrollLeft = offset;
       } else {
-        if (this.orientation === 'vertical') {
-          viewportElement.scrollTop = top;
-        } else {
-          viewportElement.scrollLeft = left;
-        }
+        viewportElement.scrollTop = offset;
       }
     }
   }
 
   /** Scroll the viewport to the specified index. */
-  scrollToIndex(index: number,  options = { smooth: false, lazy: false }) {
-    const contentSize = this.measureRenderedContentSize();
-    const offset = this._scrollStrategy.getScrollOffsetForIndex(index);
-    this.scrollToOffset(offset, options);
+  scrollToIndex(index: number,  behavior: ScrollBehavior = 'auto') {
+    this._scrollStrategy.scrollToIndex(index, behavior);
   }
 
   /** Internal method to set the scroll offset on the viewport. */

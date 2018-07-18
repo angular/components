@@ -151,9 +151,11 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     }
   }
 
-  /** Get the offset for the given index. */
-  getScrollOffsetForIndex() {
-    throw new Error('Offset location is not supported with autosize.');
+  /** Scroll to the offset for the given index. */
+  scrollToIndex() {
+    // TODO(mmalerba): Implement.
+    throw new Error('cdk-virtual-scroll: scrollToIndex is currently not supported for the autosize'
+        + ' scroll strategy');
   }
 
   /**
