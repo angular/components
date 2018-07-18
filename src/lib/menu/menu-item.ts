@@ -72,19 +72,16 @@ export class MatMenuItem extends _MatMenuItemMixinBase
 
   constructor(
     private _elementRef: ElementRef<HTMLElement>,
-    @Inject(DOCUMENT) document?: any,
-    private _focusMonitor?: FocusMonitor,
+    @Inject(DOCUMENT) document: any,
+    private _focusMonitor: FocusMonitor,
     @Inject(MAT_MENU_PANEL) @Optional() private _parentMenu?: MatMenuPanel<MatMenuItem>) {
 
-    // @breaking-change 7.0.0 make `_focusMonitor` and `document` required params.
     super();
 
-    if (_focusMonitor) {
-      // Start monitoring the element so it gets the appropriate focused classes. We want
-      // to show the focus style for menu items only when the focus was not caused by a
-      // mouse or touch interaction.
-      _focusMonitor.monitor(this._elementRef, false);
-    }
+    // Start monitoring the element so it gets the appropriate focused classes. We want
+    // to show the focus style for menu items only when the focus was not caused by a
+    // mouse or touch interaction.
+    _focusMonitor.monitor(this._elementRef, false);
 
     if (_parentMenu && _parentMenu.addItem) {
       _parentMenu.addItem(this);
@@ -103,9 +100,7 @@ export class MatMenuItem extends _MatMenuItemMixinBase
   }
 
   ngOnDestroy() {
-    if (this._focusMonitor) {
-      this._focusMonitor.stopMonitoring(this._elementRef);
-    }
+    this._focusMonitor.stopMonitoring(this._elementRef);
 
     if (this._parentMenu && this._parentMenu.removeItem) {
       this._parentMenu.removeItem(this);

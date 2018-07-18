@@ -67,7 +67,7 @@ export const MENU_PANEL_TOP_PADDING = 8;
  * responsible for toggling the display of the provided menu instance.
  */
 @Directive({
-  selector: `[mat-menu-trigger-for], [matMenuTriggerFor]`,
+  selector: `[matMenuTriggerFor]`,
   host: {
     'aria-haspopup': 'true',
     '[attr.aria-expanded]': 'menuOpen || null',
@@ -88,19 +88,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   // the first item of the list when the menu is opened via the keyboard
   private _openedByMouse: boolean = false;
 
-  /**
-   * @deprecated
-   * @breaking-change 7.0.0
-   */
-  @Input('mat-menu-trigger-for')
-  get _deprecatedMatMenuTriggerFor(): MatMenuPanel {
-    return this.menu;
-  }
-
-  set _deprecatedMatMenuTriggerFor(v: MatMenuPanel) {
-    this.menu = v;
-  }
-
   /** References the menu instance that the trigger is associated with. */
   @Input('matMenuTriggerFor') menu: MatMenuPanel;
 
@@ -110,24 +97,8 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /** Event emitted when the associated menu is opened. */
   @Output() readonly menuOpened: EventEmitter<void> = new EventEmitter<void>();
 
-  /**
-   * Event emitted when the associated menu is opened.
-   * @deprecated Switch to `menuOpened` instead
-   * @breaking-change 7.0.0
-   */
-  // tslint:disable-next-line:no-output-on-prefix
-  @Output() readonly onMenuOpen: EventEmitter<void> = this.menuOpened;
-
   /** Event emitted when the associated menu is closed. */
   @Output() readonly menuClosed: EventEmitter<void> = new EventEmitter<void>();
-
-  /**
-   * Event emitted when the associated menu is closed.
-   * @deprecated Switch to `menuClosed` instead
-   * @breaking-change 7.0.0
-   */
-  // tslint:disable-next-line:no-output-on-prefix
-  @Output() readonly onMenuClose: EventEmitter<void> = this.menuClosed;
 
   constructor(private _overlay: Overlay,
               private _element: ElementRef<HTMLElement>,
@@ -136,9 +107,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
               @Optional() private _parentMenu: MatMenu,
               @Optional() @Self() private _menuItemInstance: MatMenuItem,
               @Optional() private _dir: Directionality,
-              // TODO(crisbeto): make the _focusMonitor required when doing breaking changes.
-              // @breaking-change 7.0.0
-              private _focusMonitor?: FocusMonitor) {
+              private _focusMonitor: FocusMonitor) {
 
     if (_menuItemInstance) {
       _menuItemInstance._triggersSubmenu = this.triggersSubmenu();
@@ -223,11 +192,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * @param origin Source of the menu trigger's focus.
    */
   focus(origin: FocusOrigin = 'program') {
-    if (this._focusMonitor) {
-      this._focusMonitor.focusVia(this._element, origin);
-    } else {
-      this._element.nativeElement.focus();
-    }
+    this._focusMonitor.focusVia(this._element, origin);
   }
 
   /** Closes the menu and does the necessary cleanup. */

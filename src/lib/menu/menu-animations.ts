@@ -61,15 +61,3 @@ export const matMenuAnimations: {
     ])
   ])
 };
-
-/**
- * @deprecated
- * @breaking-change 7.0.0
- */
-export const fadeInItems = matMenuAnimations.fadeInItems;
-
-/**
- * @deprecated
- * @breaking-change 7.0.0
- */
-export const transformMenu = matMenuAnimations.transformMenu;
