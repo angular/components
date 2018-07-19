@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import {DatepickerInputEvent} from '@angular/cdk/datetime';
 
 /** @title Datepicker input and change events */
 @Component({
@@ -10,7 +10,7 @@ import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 export class DatepickerEventsExample {
   events: string[] = [];
 
-  addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
+  addEvent(type: string, event: DatepickerInputEvent<Date>) {
     this.events.push(`${type}: ${event.value}`);
   }
 }
