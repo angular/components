@@ -17,7 +17,7 @@ import {
 import {FormControl} from '@angular/forms';
 import {MatCalendar} from '@angular/material';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
-import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import {DatepickerInputEvent} from '@angular/cdk/datetime';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -48,8 +48,8 @@ export class DatepickerDemo {
   dateFilter =
       (date: Date) => !(date.getFullYear() % 2) && (date.getMonth() % 2) && !(date.getDate() % 2)
 
-  onDateInput = (e: MatDatepickerInputEvent<Date>) => this.lastDateInput = e.value;
-  onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
+  onDateInput = (e: DatepickerInputEvent<Date>) => this.lastDateInput = e.value;
+  onDateChange = (e: DatepickerInputEvent<Date>) => this.lastDateChange = e.value;
 
   // pass custom header component type as input
   customHeader = CustomHeader;

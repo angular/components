@@ -1379,13 +1379,6 @@ describe('MatDatepicker', () => {
 
   });
 
-  describe('with missing DateAdapter and MAT_DATE_FORMATS', () => {
-    it('should throw when created', () => {
-      expect(() => createComponent(StandardDatepicker))
-        .toThrowError(/MatDatepicker: No provider found for .*/);
-    });
-  });
-
   describe('popup positioning', () => {
     let fixture: ComponentFixture<StandardDatepicker>;
     let testComponent: StandardDatepicker;
