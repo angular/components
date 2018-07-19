@@ -81,6 +81,10 @@ tr.mat-row, tr.mat-footer-row {
 
 th.mat-header-cell {
   text-align: left;
+
+  [dir='rtl'] & {
+    text-align: right;
+  }
 }
 
 th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
@@ -91,8 +95,18 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
 
 th.mat-header-cell:first-child, td.mat-cell:first-child, td.mat-footer-cell:first-child {
   padding-left: $mat-row-horizontal-padding;
+
+  [dir='rtl'] & {
+    padding-left: 0;
+    padding-right: $mat-row-horizontal-padding;
+  }
 }
 
 th.mat-header-cell:last-child, td.mat-cell:last-child, td.mat-footer-cell:last-child {
   padding-right: $mat-row-horizontal-padding;
+
+  [dir='rtl'] & {
+    padding-right: 0;
+    padding-left: $mat-row-horizontal-padding;
+  }
 }
