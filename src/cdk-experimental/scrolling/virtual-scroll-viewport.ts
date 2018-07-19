@@ -249,9 +249,9 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   /**  Scrolls to the offset on the viewport. */
   scrollToOffset(offset: number, behavior: ScrollBehavior = 'auto') {
     const viewportElement = this.elementRef.nativeElement;
-    const offsetDirection = this.orientation === 'horizontal' ? 'left' : 'top';
 
     if (supportsScrollBehavior()) {
+      const offsetDirection = this.orientation === 'horizontal' ? 'left' : 'top';
       viewportElement.scrollTo({[offsetDirection]: offset, behavior});
     } else {
       if (this.orientation === 'horizontal') {
