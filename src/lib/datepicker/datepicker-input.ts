@@ -92,7 +92,7 @@ export class MatDatepickerInputEvent<D> {
 export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements ControlValueAccessor,
     OnDestroy, Validator {
   /** Prefix for form control validator properties. */
-  protected _prefix = 'mat';
+  protected _formControlValidatorPrefix = 'mat';
 
   /** The datepicker that this input is associated with. */
   @Input()

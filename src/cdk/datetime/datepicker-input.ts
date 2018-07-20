@@ -205,12 +205,12 @@ export class CdkDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   private _localeSubscription = Subscription.EMPTY;
 
   /** Prefix for form control validator properties. */
-  protected _prefix = 'cdk';
+  protected _formControlValidatorPrefix = 'cdk';
 
   /** The form control validator for whether the input parses. */
   private _parseValidator: ValidatorFn = (): ValidationErrors | null => {
     return this._lastValueValid ?
-        null : {[`${this._prefix}DatepickerParse`]: {'text': this._elementRef.nativeElement.value}};
+        null : {[`${this._formControlValidatorPrefix}DatepickerParse`]: {'text': this._elementRef.nativeElement.value}};
   }
 
   /** The form control validator for the min date. */
@@ -218,7 +218,7 @@ export class CdkDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
     return (!this.min || !controlValue ||
         this._dateAdapter.compareDate(this.min, controlValue) <= 0) ?
-        null : {[`${this._prefix}DatepickerMin`]: {'min': this.min, 'actual': controlValue}};
+        null : {[`${this._formControlValidatorPrefix}DatepickerMin`]: {'min': this.min, 'actual': controlValue}};
   }
 
   /** The form control validator for the max date. */
@@ -226,14 +226,14 @@ export class CdkDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
     return (!this.max || !controlValue ||
         this._dateAdapter.compareDate(this.max, controlValue) >= 0) ?
-        null : {[`${this._prefix}DatepickerMax`]: {'max': this.max, 'actual': controlValue}};
+        null : {[`${this._formControlValidatorPrefix}DatepickerMax`]: {'max': this.max, 'actual': controlValue}};
   }
 
   /** The form control validator for the date filter. */
   private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
     return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ?
-        null : {[`${this._prefix}DatepickerFilter`]: true};
+        null : {[`${this._formControlValidatorPrefix}DatepickerFilter`]: true};
   }
 
   /** The combined form control validator for this input. */
