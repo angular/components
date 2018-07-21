@@ -1,0 +1,15 @@
+<p>
+  <input [cdkDatepicker]="picker1" placeholder="Angular forms" [formControl]="date">
+  <cdk-datepicker #picker1><mat-month-view></mat-month-view></cdk-datepicker>
+</p>
+
+<p>
+  <input [cdkDatepicker]="picker2" placeholder="Angular forms (w/ deserialization)"
+    [formControl]="serializedDate">
+  <cdk-datepicker #picker2><mat-month-view></mat-month-view></cdk-datepicker>
+</p>
+
+<p>
+  <input [cdkDatepicker]="picker3" placeholder="Value binding" [value]="date.value">
+  <cdk-datepicker #picker3><mat-month-view></mat-month-view></cdk-datepicker>
+</p>
