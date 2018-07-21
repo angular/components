@@ -27,6 +27,13 @@ export function supportsPassiveEventListeners(): boolean {
   return supportsPassiveEvents;
 }
 
+/**
+ * Check whether the browser supports scroll behaviors.
+ */
+export function supportsSmoothScroll(): boolean {
+  return 'scrollBehavior' in document.documentElement.style;
+}
+
 /** Cached result Set of input types support by the current browser. */
 let supportedInputTypes: Set<string>;
 

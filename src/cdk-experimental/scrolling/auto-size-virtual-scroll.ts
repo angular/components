@@ -151,6 +151,11 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     }
   }
 
+  /** Get the offset for the given index. */
+  getScrollOffsetForIndex() {
+    throw new Error('Offset location is not supported with autosize.');
+  }
+
   /**
    * Update the buffer parameters.
    * @param minBufferPx The minimum amount of buffer rendered beyond the viewport (in pixels).
