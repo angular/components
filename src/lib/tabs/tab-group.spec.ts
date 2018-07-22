@@ -1,4 +1,5 @@
-import {dispatchFakeEvent} from '@angular/cdk/testing';
+import {LEFT_ARROW} from '@angular/cdk/keycodes';
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -278,6 +279,46 @@ describe('MatTabGroup', () => {
       expect(labels.every(label => label.getAttribute('aria-setsize') === '3')).toBe(true);
     });
 
+    it('should emit focusChange event on click', () => {
+      spyOn(fixture.componentInstance, 'handleFocus');
+      fixture.detectChanges();
+
+      const tabLabels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
+
+      expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(0);
+
+      tabLabels[1].nativeElement.click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(1);
+      expect(fixture.componentInstance.handleFocus)
+        .toHaveBeenCalledWith(jasmine.objectContaining({index: 1}));
+    });
+
+    it('should emit focusChange on arrow key navigation', () => {
+      spyOn(fixture.componentInstance, 'handleFocus');
+      fixture.detectChanges();
+
+      const tabLabels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
+      const tabLabelContainer = fixture.debugElement
+        .query(By.css('.mat-tab-label-container')).nativeElement as HTMLElement;
+
+      expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(0);
+
+      // In order to verify that the `focusChange` event also fires with the correct
+      // index, we focus the second tab before testing the keyboard navigation.
+      tabLabels[1].nativeElement.click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(1);
+
+      dispatchKeyboardEvent(tabLabelContainer, 'keydown', LEFT_ARROW);
+
+      expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(2);
+      expect(fixture.componentInstance.handleFocus)
+        .toHaveBeenCalledWith(jasmine.objectContaining({index: 0}));
+    });
+
   });
 
   describe('aria labelling', () => {
@@ -330,6 +371,7 @@ describe('MatTabGroup', () => {
       fixture.detectChanges();
       const labels = fixture.debugElement.queryAll(By.css('.mat-tab-disabled'));
       expect(labels.length).toBe(1);
+      expect(labels[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
     });
 
     it('should set the disabled flag on tab', () => {
@@ -339,6 +381,7 @@ describe('MatTabGroup', () => {
       let labels = fixture.debugElement.queryAll(By.css('.mat-tab-disabled'));
       expect(tabs[2].disabled).toBe(false);
       expect(labels.length).toBe(1);
+      expect(labels[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
 
       fixture.componentInstance.isDisabled = true;
       fixture.detectChanges();
@@ -346,6 +389,8 @@ describe('MatTabGroup', () => {
       expect(tabs[2].disabled).toBe(true);
       labels = fixture.debugElement.queryAll(By.css('.mat-tab-disabled'));
       expect(labels.length).toBe(2);
+      expect(labels.every(label => label.nativeElement.getAttribute('aria-disabled') === 'true'))
+          .toBe(true);
     });
   });
 
@@ -428,25 +473,35 @@ describe('MatTabGroup', () => {
 
 
     it('should maintain the selected tab if a tab is removed', () => {
-      // Add a couple of tabs so we have more to work with.
-      fixture.componentInstance.tabs.push(
-        {label: 'New tab', content: 'with new content'},
-        {label: 'Another new tab', content: 'with newer content'}
-      );
-
-      // Select the second-to-last tab.
-      fixture.componentInstance.selectedIndex = 3;
+      // Select the second tab.
+      fixture.componentInstance.selectedIndex = 1;
       fixture.detectChanges();
 
       const component: MatTabGroup =
           fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
 
-      // Remove a tab right before the selected one.
-      fixture.componentInstance.tabs.splice(2, 1);
+      // Remove the first tab that is right before the selected one.
+      fixture.componentInstance.tabs.splice(0, 1);
       fixture.detectChanges();
 
-      expect(component.selectedIndex).toBe(1);
-      expect(component._tabs.toArray()[1].isActive).toBe(true);
+      // Since the first tab has been removed and the second one was selected before, the selected
+      // tab moved one position to the right. Meaning that the tab is now the first tab.
+      expect(component.selectedIndex).toBe(0);
+      expect(component._tabs.toArray()[0].isActive).toBe(true);
+    });
+
+    it('should be able to select a new tab after creation', () => {
+      fixture.detectChanges();
+      const component: MatTabGroup =
+        fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
+
+      fixture.componentInstance.tabs.push({label: 'Last tab', content: 'at the end'});
+      fixture.componentInstance.selectedIndex = 3;
+
+      fixture.detectChanges();
+
+      expect(component.selectedIndex).toBe(3);
+      expect(component._tabs.toArray()[3].isActive).toBe(true);
     });
 
     it('should not fire `selectedTabChange` when the amount of tabs changes', fakeAsync(() => {
