@@ -34,7 +34,7 @@ export class SelectionModel<T> {
   }
 
   /** Event emitted when the value has changed. */
-  change: Subject<SelectionChange<T>> | null = this._emitChanges ? new Subject() : null;
+  onChange: Subject<SelectionChange<T>> | null = this._emitChanges ? new Subject() : null;
 
   constructor(
     private _multiple = false,
@@ -76,7 +76,7 @@ export class SelectionModel<T> {
    * Toggles a value between selected and deselected.
    */
   toggle(...value: T[]): void {
-    value.forEach(v => this.isSelected(v) ? this.deselect(v) : this.select(v))
+    value.forEach(v => this.isSelected(v) ? this.deselect(v) : this.select(v));
   }
 
   /**
@@ -140,8 +140,8 @@ export class SelectionModel<T> {
     this._selected = null;
 
     if (this._selectedToEmit.length || this._deselectedToEmit.length) {
-      if (this.change) {
-        this.change.next({
+      if (this.onChange) {
+        this.onChange.next({
           source: this,
           added: this._selectedToEmit,
           removed: this._deselectedToEmit

@@ -76,8 +76,8 @@ export class CdkSelection<T> implements OnInit {
       this.trackBy
     );
 
-    if (this._selectionModel.change) {
-      this._selectionModel.change.subscribe(e => {
+    if (this._selectionModel.onChange) {
+      this._selectionModel.onChange.subscribe(e => {
         this.selectedItems = this._selectionModel.selected;
         this.selectionChange.emit(e);
       });
