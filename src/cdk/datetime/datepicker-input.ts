@@ -178,10 +178,12 @@ export class CdkDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   private _disabled: boolean;
 
   /** Emits when a `change` event is fired on this `<input>`. */
-  @Output() readonly dateChange = new EventEmitter<DatepickerInputEvent<D>>();
+  @Output() readonly dateChange: EventEmitter<DatepickerInputEvent<D>> =
+      new EventEmitter<DatepickerInputEvent<D>>();
 
   /** Emits when an `input` event is fired on this `<input>`. */
-  @Output() readonly dateInput = new EventEmitter<DatepickerInputEvent<D>>();
+  @Output() readonly dateInput: EventEmitter<DatepickerInputEvent<D>>  =
+      new EventEmitter<DatepickerInputEvent<D>>();
 
   /** Emits when the value changes (either due to user input or programmatic change). */
   _valueChange = new EventEmitter<D | null>();
@@ -210,7 +212,8 @@ export class CdkDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   /** The form control validator for whether the input parses. */
   private _parseValidator: ValidatorFn = (): ValidationErrors | null => {
     return this._lastValueValid ?
-        null : {[`${this._formControlValidatorPrefix}DatepickerParse`]: {'text': this._elementRef.nativeElement.value}};
+        null : {[`${this._formControlValidatorPrefix}DatepickerParse`]:
+            {'text': this._elementRef.nativeElement.value}};
   }
 
   /** The form control validator for the min date. */
@@ -218,7 +221,8 @@ export class CdkDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
     return (!this.min || !controlValue ||
         this._dateAdapter.compareDate(this.min, controlValue) <= 0) ?
-        null : {[`${this._formControlValidatorPrefix}DatepickerMin`]: {'min': this.min, 'actual': controlValue}};
+        null : {[`${this._formControlValidatorPrefix}DatepickerMin`]:
+            {'min': this.min, 'actual': controlValue}};
   }
 
   /** The form control validator for the max date. */
@@ -226,7 +230,8 @@ export class CdkDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
     return (!this.max || !controlValue ||
         this._dateAdapter.compareDate(this.max, controlValue) >= 0) ?
-        null : {[`${this._formControlValidatorPrefix}DatepickerMax`]: {'max': this.max, 'actual': controlValue}};
+        null : {[`${this._formControlValidatorPrefix}DatepickerMax`]:
+            {'max': this.max, 'actual': controlValue}};
   }
 
   /** The form control validator for the date filter. */

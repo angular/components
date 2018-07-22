@@ -33,6 +33,10 @@ import {
 } from '@angular/cdk/datetime';
 
 
+/**
+ * @deprecated Removing export.
+ * @breaking-change 8.0.0
+ */
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => MatDatepickerInput),
@@ -40,6 +44,10 @@ export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
 };
 
 
+/**
+ * @deprecated Removing export.
+ * @breaking-change 8.0.0
+ */
 export const MAT_DATEPICKER_VALIDATORS: any = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => MatDatepickerInput),
@@ -48,6 +56,9 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
 
 
 /**
+ * @deprecated Use `DatepickerInputEvent<D>` instead.
+ * @breaking-change 8.0.0
+ *
  * An event used for datepicker input and change events. We don't always have access to a native
  * input or change event because the event may have been triggered by the user clicking on the
  * calendar popup. For consistency, we always use MatDatepickerInputEvent instead.
