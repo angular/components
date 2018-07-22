@@ -14,15 +14,13 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {CdkDatepicker} from './datepicker';
 import {CdkDatepickerInput} from './datepicker-input';
 import {CdkDatepickerModule} from './index';
-import {BrowserDynamicTestingModule} from '@angular/platform-browser-dynamic/testing';
 
 describe('CdkDatepicker', () => {
   // Creates a test component fixture.
   function createComponent(
       component: Type<any>,
       imports: Type<any>[] = [],
-      providers: (FactoryProvider | ValueProvider)[] = [],
-      entryComponents: Type<any>[] = []): ComponentFixture<any> {
+      providers: (FactoryProvider | ValueProvider)[] = []): ComponentFixture<any> {
 
     TestBed.configureTestingModule({
       imports: [
@@ -33,13 +31,7 @@ describe('CdkDatepicker', () => {
         ...imports
       ],
       providers,
-      declarations: [component, ...entryComponents],
-    });
-
-    TestBed.overrideModule(BrowserDynamicTestingModule, {
-      set: {
-        entryComponents: [entryComponents]
-      }
+      declarations: [component],
     }).compileComponents();
 
     return TestBed.createComponent(component);
@@ -132,11 +124,9 @@ describe('CdkDatepicker', () => {
         fixture = createComponent(DatepickerWithNgModel, [NativeDateModule]);
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
-
-          testComponent = fixture.componentInstance;
-        });
+        flush();
+        fixture.detectChanges();
+        testComponent = fixture.componentInstance;
       }));
 
       afterEach(fakeAsync(() => {
@@ -172,7 +162,7 @@ describe('CdkDatepicker', () => {
       }));
 
       it('should mark input dirty after input event', () => {
-        let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+        const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
         expect(inputEl.classList).toContain('ng-pristine');
 
@@ -184,7 +174,7 @@ describe('CdkDatepicker', () => {
       });
 
       it('should mark input dirty after date selected', fakeAsync(() => {
-        let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+        const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
         expect(inputEl.classList).toContain('ng-pristine');
 
@@ -197,7 +187,7 @@ describe('CdkDatepicker', () => {
       }));
 
       it('should not mark dirty after model change', fakeAsync(() => {
-        let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+        const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
         expect(inputEl.classList).toContain('ng-pristine');
 
@@ -210,7 +200,7 @@ describe('CdkDatepicker', () => {
       }));
 
       it('should mark input touched on blur', () => {
-        let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+        const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
         expect(inputEl.classList).toContain('ng-untouched');
 
@@ -239,7 +229,7 @@ describe('CdkDatepicker', () => {
       });
 
       it('should mark input touched on calendar selection', fakeAsync(() => {
-        let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+        const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
         expect(inputEl.classList).toContain('ng-untouched');
 
@@ -292,7 +282,7 @@ describe('CdkDatepicker', () => {
       });
 
       it('should disable input when form control disabled', () => {
-        let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+        const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
         expect(inputEl.disabled).toBe(false);
 
@@ -421,11 +411,6 @@ describe('CdkDatepicker', () => {
 
         testComponent = fixture.componentInstance;
         inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
-
-        spyOn(testComponent, 'onChange');
-        spyOn(testComponent, 'onInput');
-        spyOn(testComponent, 'onDateChange');
-        spyOn(testComponent, 'onDateInput');
       }));
 
       afterEach(fakeAsync(() => {
@@ -620,13 +605,13 @@ class DatepickerWithFilterAndValidation {
 class DatepickerWithChangeAndInputEvents {
   @ViewChild('d') datepicker: CdkDatepicker<Date>;
 
-  onChange() {}
+  onChange = jasmine.createSpy('onChange spy');
 
-  onInput() {}
+  onInput = jasmine.createSpy('onInput spy');
 
-  onDateChange() {}
+  onDateChange = jasmine.createSpy('onDateChange spy');
 
-  onDateInput() {}
+  onDateInput = jasmine.createSpy('onDateInput spy');
 }
 
 
