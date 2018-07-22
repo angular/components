@@ -2,7 +2,7 @@ The `collections` package provides a set of utilities for managing collections.
 
 ### `SelectionModel`
 `SelectionModel` is a utility for powering selection of one or more options from a list.
-This utility is used in components such as the selection list, table selections and chip lists.
+This model is used in components such as the selection list, table selections and chip lists.
 
 #### Basic Usage
 ```javascript
