@@ -50,7 +50,6 @@ describe('CdkDatepicker', () => {
       }));
 
       afterEach(fakeAsync(() => {
-        fixture.detectChanges();
         flush();
       }));
 
@@ -87,10 +86,6 @@ describe('CdkDatepicker', () => {
         testComponent = fixture.componentInstance;
       }));
 
-      afterEach(fakeAsync(() => {
-        fixture.detectChanges();
-      }));
-
       it('should not throw when accessing disabled property', () => {
         expect(() => testComponent.datepicker.disabled).not.toThrow();
       });
@@ -105,10 +100,6 @@ describe('CdkDatepicker', () => {
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
-      }));
-
-      afterEach(fakeAsync(() => {
-        fixture.detectChanges();
       }));
 
       it('explicit startAt should override input value', () => {
@@ -127,10 +118,6 @@ describe('CdkDatepicker', () => {
         flush();
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-      }));
-
-      afterEach(fakeAsync(() => {
-        fixture.detectChanges();
       }));
 
       it('should update datepicker when model changes', fakeAsync(() => {
@@ -253,10 +240,6 @@ describe('CdkDatepicker', () => {
         testComponent = fixture.componentInstance;
       }));
 
-      afterEach(fakeAsync(() => {
-        fixture.detectChanges();
-      }));
-
       it('should update datepicker when formControl changes', () => {
         expect(testComponent.datepickerInput.value).toBeNull();
         expect(testComponent.datepicker._selected).toBeNull();
@@ -302,10 +285,6 @@ describe('CdkDatepicker', () => {
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
-      }));
-
-      afterEach(fakeAsync(() => {
-        fixture.detectChanges();
       }));
 
       it('should use min and max dates specified by the input', () => {
@@ -377,7 +356,6 @@ describe('CdkDatepicker', () => {
       }));
 
       afterEach(fakeAsync(() => {
-        fixture.detectChanges();
         flush();
       }));
 
@@ -411,10 +389,6 @@ describe('CdkDatepicker', () => {
 
         testComponent = fixture.componentInstance;
         inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
-      }));
-
-      afterEach(fakeAsync(() => {
-        fixture.detectChanges();
       }));
 
       it('should fire input and dateInput events when user types input', () => {
@@ -471,10 +445,6 @@ describe('CdkDatepicker', () => {
       beforeEach(fakeAsync(() => {
         fixture = createComponent(DatepickerWithISOStrings, [NativeDateModule]);
         testComponent = fixture.componentInstance;
-      }));
-
-      afterEach(fakeAsync(() => {
-        fixture.detectChanges();
       }));
 
       it('should coerce ISO strings', fakeAsync(() => {
