@@ -209,7 +209,7 @@ export class MatDatepicker<D> extends CdkDatepicker<D> implements OnDestroy, Can
               private _ngZone: NgZone,
               private _viewContainerRef: ViewContainerRef,
               @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) private _scrollStrategy,
-              @Optional() protected _dateAdapter: DateAdapter<D>,
+              @Optional() _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
               @Optional() @Inject(DOCUMENT) private _document: any) {
     super(_dateAdapter);
