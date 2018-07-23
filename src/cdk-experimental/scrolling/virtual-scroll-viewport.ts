@@ -310,7 +310,9 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   private _doChangeDetection() {
     this._isChangeDetectionPending = false;
 
-    // Apply changes to Angular bindings.
+    // Apply changes to Angular bindings. Note: We must call `markForCheck` to run change detection
+    // from the root, since the repeated items are content projected in. Calling `detectChanges`
+    // instead does not properly check the projected content.
     this._ngZone.run(() => this._changeDetectorRef.markForCheck());
     // Apply the content transform. The transform can't be set via an Angular binding because
     // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
