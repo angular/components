@@ -15,7 +15,7 @@ mode=${2:-dev}
 projectId=${PROJECT_ID[$version, $mode]}
 
 npm run build-themes
-$(npm bin)/ng build --aot --prod
+$(npm bin)/ng build --aot --prod --build-optimizer=false
 $(npm bin)/firebase use $projectId
 $(npm bin)/firebase deploy
 
