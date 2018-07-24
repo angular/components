@@ -86,8 +86,7 @@ export class MatDatepickerInputEvent<D> {
     MAT_DATEPICKER_VALIDATORS,
     {provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: MatDatepickerInput},
   ],
-  inputs: ['value', 'min', 'max', 'disabled', 'matDatepickerFilter: cdkDatepickerFilter',
-      'matDatepicker: cdkDatepicker'],
+  inputs: ['value', 'min', 'max', 'disabled'],
   outputs: ['dateChange', 'dateInput'],
   host: {
     '[attr.aria-haspopup]': 'true',

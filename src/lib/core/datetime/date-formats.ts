@@ -7,10 +7,9 @@
  */
 
 import {InjectionToken} from '@angular/core';
-import {CdkDateFormats} from '@angular/cdk/datetime';
 
 
-export type MatDateFormats = CdkDateFormats & {
+export type MatDateFormats = {
   display: {
     monthYearLabel: any,
     dateA11yLabel: any,
