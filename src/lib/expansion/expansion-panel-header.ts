@@ -58,13 +58,13 @@ import {
     '[class.mat-expanded]': '_isExpanded()',
     '(click)': '_toggle()',
     '(keydown)': '_keydown($event)',
-    '[@expansionHeight]': `{
-        value: _getExpandedState(),
-        params: {
-          collapsedHeight: collapsedHeight,
-          expandedHeight: expandedHeight
-        }
-    }`,
+    // '[@expansionHeight]': `{
+    //     value: _getExpandedState(),
+    //     params: {
+    //       collapsedHeight: collapsedHeight,
+    //       expandedHeight: expandedHeight
+    //     }
+    // }`,
   },
 })
 export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
