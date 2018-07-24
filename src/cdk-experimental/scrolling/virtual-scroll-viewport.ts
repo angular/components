@@ -328,9 +328,10 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
       }
     }
 
-    for (const fn of this._runAfterChangeDetection) {
+    const runAfterChangeDetection = this._runAfterChangeDetection;
+    this._runAfterChangeDetection = [];
+    for (const fn of runAfterChangeDetection) {
       fn();
     }
-    this._runAfterChangeDetection = [];
   }
 }
