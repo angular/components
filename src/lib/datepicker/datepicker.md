@@ -1,6 +1,10 @@
 The datepicker allows users to enter a date either through text input, or by choosing a date from
 the calendar. It is made up of several components and directives that work together.
 
+Material datepicker builds on the foundation of the CDK datepicker that is responsible for the 
+basic functionality needed for a basic datepicker. Material datepicker extends the CDK datepicker
+and has Material Design styling.
+
 <!-- example(datepicker-overview) -->
 
 ### Connecting a datepicker to an input
