@@ -7,9 +7,10 @@
  */
 
 import {MatDateFormats} from '@angular/material';
+import {CdkDateFormats} from '@angular/cdk/datetime';
 
 
-export const MAT_MOMENT_DATE_FORMATS: MatDateFormats = {
+export const MAT_MOMENT_DATE_FORMATS: CdkDateFormats & MatDateFormats = {
   parse: {
     dateInput: 'l',
   },

@@ -1019,6 +1019,13 @@ describe('MatDatepicker', () => {
 
   });
 
+  describe('with missing DateAdapter and CDK_DATE_FORMATS', () => {
+    it('should throw when created', () => {
+      expect(() => createComponent(StandardDatepicker))
+          .toThrowError(/CdkDatepicker: No provider found for .*/);
+    });
+  });
+
   describe('popup positioning', () => {
     let fixture: ComponentFixture<StandardDatepicker>;
     let testComponent: StandardDatepicker;
