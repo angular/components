@@ -1,10 +1,11 @@
-const path = require('path');
+import {join} from 'path';
+import {ConfigOptions} from 'karma';
+
 const {customLaunchers, platformMap} = require('./browser-providers');
 
-module.exports = (config) => {
-
+export default (config: any) => {
   config.set({
-    basePath: path.join(__dirname, '..'),
+    basePath: join(__dirname, '..'),
     frameworks: ['jasmine'],
     plugins: [
       require('karma-jasmine'),
@@ -26,7 +27,11 @@ module.exports = (config) => {
       {pattern: 'node_modules/zone.js/dist/async-test.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/fake-async-test.js', included: true, watched: false},
       {pattern: 'node_modules/hammerjs/hammer.min.js', included: true, watched: false},
-      {pattern: 'node_modules/moment/min/moment-with-locales.min.js', included: true, watched: false},
+      {
+        pattern: 'node_modules/moment/min/moment-with-locales.min.js',
+        included: true,
+        watched: false
+      },
 
       // Include all Angular dependencies
       {pattern: 'node_modules/@angular/**/*', included: false, watched: false},
@@ -36,7 +41,11 @@ module.exports = (config) => {
       {pattern: 'test/karma-test-shim.js', included: true, watched: false},
 
       // Include a Material theme in the test suite.
-      {pattern: 'dist/packages/**/core/theming/prebuilt/indigo-pink.css', included: true, watched: true},
+      {
+        pattern: 'dist/packages/**/core/theming/prebuilt/indigo-pink.css',
+        included: true,
+        watched: true
+      },
 
       // Includes all package tests and source files into karma. Those files will be watched.
       // This pattern also matches all sourcemap files and TypeScript files for debugging.
@@ -98,13 +107,13 @@ module.exports = (config) => {
         random: false
       }
     },
-  });
+  } as ConfigOptions);
 
   if (process.env['TRAVIS']) {
     const buildId = `TRAVIS #${process.env.TRAVIS_BUILD_NUMBER} (${process.env.TRAVIS_BUILD_ID})`;
 
     if (process.env['TRAVIS_PULL_REQUEST'] === 'false' &&
-        process.env['MODE'] === "travis_required") {
+        process.env['MODE'] === 'travis_required') {
 
       config.preprocessors['dist/packages/**/!(*+(.|-)spec).js'] = ['coverage'];
       config.reporters.push('coverage');
@@ -114,7 +123,7 @@ module.exports = (config) => {
     // It will look like <platform>_<target>, where platform is one of 'saucelabs', 'browserstack'
     // or 'travis'. The target is a reference to different collections of browsers that can run
     // in the previously specified platform.
-    const [platform, target] = process.env.MODE.split('_');
+    const [platform, target] = process.env.MODE ? process.env.MODE.split('_') : [null, null];
 
     if (platform === 'saucelabs') {
       config.sauceLabs.build = buildId;
@@ -127,11 +136,13 @@ module.exports = (config) => {
     }
 
     if (platform !== 'travis') {
-      // To guarantee a better stability for tests running on external browsers, we disable
-      // concurrency. Stability is compared to speed more important.
+      // To guarantee better stability for tests running on external browsers, we disable
+      // concurrency. Stability is more important than speed.
       config.concurrency = 1;
     }
 
-    config.browsers = platformMap[platform][target.toLowerCase()];
+    if (target) {
+      config.browsers = platformMap[platform][target.toLowerCase()];
+    }
   }
 };

@@ -62,6 +62,7 @@
     "@types/gulp": "3.8.32",
     "@types/hammerjs": "^2.0.35",
     "@types/jasmine": "^2.8.8",
+    "@types/karma": "^1.7.5",
     "@types/merge2": "^0.3.30",
     "@types/minimist": "^1.2.0",
     "@types/node": "^7.0.21",

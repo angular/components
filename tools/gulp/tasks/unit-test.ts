@@ -7,7 +7,7 @@ const runSequence = require('run-sequence');
 
 // Default Karma options.
 const defaultOptions = {
-  configFile: join(buildConfig.projectDir, 'test/karma.conf.js'),
+  configFile: join(buildConfig.projectDir, 'test/karma.conf.ts'),
   autoWatch: false,
   singleRun: false
 };
