@@ -186,6 +186,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
         {id: 'progress-spinner', name: 'Progress spinner',
             examples: ['progress-spinner-configurable']},
         {id: 'progress-bar', name: 'Progress bar', examples: ['progress-bar-configurable']},
+        {id: 'ripple', name: 'Ripples', examples: ['ripple-overview']}
       ]
     },
     {
