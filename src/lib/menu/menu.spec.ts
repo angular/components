@@ -1,4 +1,4 @@
-import {ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
@@ -50,7 +50,8 @@ describe('MatMenu', () => {
   let overlayContainerElement: HTMLElement;
   let focusMonitor: FocusMonitor;
 
-  function createComponent<T>(component: Type<T>, providers: Provider[] = [],
+  function createComponent<T>(component: Type<T>,
+                              providers: Provider[] = [],
                               declarations: any[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [MatMenuModule, NoopAnimationsModule],
@@ -161,6 +162,25 @@ describe('MatMenu', () => {
     tick(500);
 
     expect(document.activeElement).toBe(triggerEl);
+  }));
+
+  it('should scroll the panel to the top on open, when it is scrollable', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+
+    // Add 50 items to make the menu scrollable
+    fixture.componentInstance.extraItems = new Array(50).fill('Hello there');
+    fixture.detectChanges();
+
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+    dispatchFakeEvent(triggerEl, 'mousedown');
+    triggerEl.click();
+    fixture.detectChanges();
+
+    // Flush due to the additional tick that is necessary for the FocusMonitor.
+    flush();
+
+    expect(overlayContainerElement.querySelector('.mat-menu-panel')!.scrollTop).toBe(0);
   }));
 
   it('should set the proper focus origin when restoring focus after opening by keyboard',
@@ -380,12 +400,32 @@ describe('MatMenu', () => {
 
       dispatchKeyboardEvent(panel, 'keydown', DOWN_ARROW);
       fixture.detectChanges();
-      tick();
+
+      // Flush due to the additional tick that is necessary for the FocusMonitor.
+      flush();
 
       // We skip to the third item, because the second one is disabled.
       expect(items[2].classList).toContain('cdk-focused');
       expect(items[2].classList).toContain('cdk-keyboard-focused');
     }));
+
+  it('should toggle the aria-expanded attribute on the trigger', () => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+
+    expect(triggerEl.hasAttribute('aria-expanded')).toBe(false);
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    expect(triggerEl.getAttribute('aria-expanded')).toBe('true');
+
+    fixture.componentInstance.trigger.closeMenu();
+    fixture.detectChanges();
+
+    expect(triggerEl.hasAttribute('aria-expanded')).toBe(false);
+  });
 
   describe('lazy rendering', () => {
     it('should be able to render the menu content lazily', fakeAsync(() => {
@@ -459,7 +499,9 @@ describe('MatMenu', () => {
       fixture.detectChanges();
       tick(500);
       zone!.simulateZoneExit();
-      tick();
+
+      // Flush due to the additional tick that is necessary for the FocusMonitor.
+      flush();
 
       const item = document.querySelector('.mat-menu-panel [mat-menu-item]')!;
 
@@ -489,6 +531,103 @@ describe('MatMenu', () => {
 
       expect(item.textContent!.trim()).toBe('two');
     }));
+  });
+
+  describe('positions', () => {
+    let fixture: ComponentFixture<PositionedMenu>;
+    let trigger: HTMLElement;
+
+    beforeEach(() => {
+      fixture = createComponent(PositionedMenu);
+      fixture.detectChanges();
+
+      trigger = fixture.componentInstance.triggerEl.nativeElement;
+
+      // Push trigger to the bottom edge of viewport,so it has space to open "above"
+      trigger.style.position = 'fixed';
+      trigger.style.top = '600px';
+
+      // Push trigger to the right, so it has space to open "before"
+      trigger.style.left = '100px';
+    });
+
+    it('should append mat-menu-before if the x position is changed', () => {
+      fixture.componentInstance.trigger.openMenu();
+      fixture.detectChanges();
+
+      const panel = overlayContainerElement.querySelector('.mat-menu-panel') as HTMLElement;
+
+      expect(panel.classList).toContain('mat-menu-before');
+      expect(panel.classList).not.toContain('mat-menu-after');
+
+      fixture.componentInstance.xPosition = 'after';
+      fixture.detectChanges();
+
+      expect(panel.classList).toContain('mat-menu-after');
+      expect(panel.classList).not.toContain('mat-menu-before');
+    });
+
+    it('should append mat-menu-above if the y position is changed', () => {
+      fixture.componentInstance.trigger.openMenu();
+      fixture.detectChanges();
+
+      const panel = overlayContainerElement.querySelector('.mat-menu-panel') as HTMLElement;
+
+      expect(panel.classList).toContain('mat-menu-above');
+      expect(panel.classList).not.toContain('mat-menu-below');
+
+      fixture.componentInstance.yPosition = 'below';
+      fixture.detectChanges();
+
+      expect(panel.classList).toContain('mat-menu-below');
+      expect(panel.classList).not.toContain('mat-menu-above');
+    });
+
+    it('should default to the "below" and "after" positions', () => {
+      overlayContainer.ngOnDestroy();
+      fixture.destroy();
+      TestBed.resetTestingModule();
+
+      const newFixture = createComponent(SimpleMenu, [], [FakeIcon]);
+
+      newFixture.detectChanges();
+      newFixture.componentInstance.trigger.openMenu();
+      newFixture.detectChanges();
+      const panel = overlayContainerElement.querySelector('.mat-menu-panel') as HTMLElement;
+
+      expect(panel.classList).toContain('mat-menu-below');
+      expect(panel.classList).toContain('mat-menu-after');
+    });
+
+    it('should be able to update the position after the first open', () => {
+      trigger.style.position = 'fixed';
+      trigger.style.top = '200px';
+
+      fixture.componentInstance.yPosition = 'above';
+      fixture.detectChanges();
+
+      fixture.componentInstance.trigger.openMenu();
+      fixture.detectChanges();
+
+      let panel = overlayContainerElement.querySelector('.mat-menu-panel') as HTMLElement;
+
+      expect(Math.floor(panel.getBoundingClientRect().bottom))
+          .toBe(Math.floor(trigger.getBoundingClientRect().bottom), 'Expected menu to open above');
+
+      fixture.componentInstance.trigger.closeMenu();
+      fixture.detectChanges();
+
+      fixture.componentInstance.yPosition = 'below';
+      fixture.detectChanges();
+
+      fixture.componentInstance.trigger.openMenu();
+      fixture.detectChanges();
+      panel = overlayContainerElement.querySelector('.mat-menu-panel') as HTMLElement;
+
+      expect(Math.floor(panel.getBoundingClientRect().top))
+          .toBe(Math.floor(trigger.getBoundingClientRect().top), 'Expected menu to open below');
+    });
+
   });
 
   describe('fallback positions', () => {
@@ -695,6 +834,14 @@ describe('MatMenu', () => {
         expect(Math.floor(subject.overlayRect.bottom))
             .toBe(Math.floor(subject.triggerRect.top),
                 `Expected menu to open in "above" position if "below" position wouldn't fit.`);
+      });
+
+      it('repositions the origin to be below, so the menu opens from the trigger', () => {
+        subject.openMenu();
+        subject.fixture.detectChanges();
+
+        expect(subject.menuPanel!.classList).toContain('mat-menu-below');
+        expect(subject.menuPanel!.classList).not.toContain('mat-menu-above');
       });
     });
   });
@@ -1550,6 +1697,7 @@ describe('MatMenu default overrides', () => {
         <fake-icon>unicorn</fake-icon>
         Item with an icon
       </button>
+      <button *ngFor="let item of extraItems" mat-menu-item> {{item}} </button>
     </mat-menu>
   `
 })
@@ -1558,6 +1706,7 @@ class SimpleMenu {
   @ViewChild('triggerEl') triggerEl: ElementRef;
   @ViewChild(MatMenu) menu: MatMenu;
   @ViewChildren(MatMenuItem) items: QueryList<MatMenuItem>;
+  extraItems: string[] = [];
   closeCallback = jasmine.createSpy('menu closed callback');
   backdropClass: string;
 }
@@ -1643,7 +1792,7 @@ class CustomMenu {
       [matMenuTriggerFor]="levelTwo"
       #alternateTrigger="matMenuTrigger">Toggle alternate menu</button>
 
-    <mat-menu #root="matMenu" (close)="rootCloseCallback($event)">
+    <mat-menu #root="matMenu" (closed)="rootCloseCallback($event)">
       <button mat-menu-item
         id="level-one-trigger"
         [matMenuTriggerFor]="levelOne"
@@ -1656,7 +1805,7 @@ class CustomMenu {
         #lazyTrigger="matMenuTrigger">Three</button>
     </mat-menu>
 
-    <mat-menu #levelOne="matMenu" (close)="levelOneCloseCallback($event)">
+    <mat-menu #levelOne="matMenu" (closed)="levelOneCloseCallback($event)">
       <button mat-menu-item>Four</button>
       <button mat-menu-item
         id="level-two-trigger"
@@ -1665,7 +1814,7 @@ class CustomMenu {
       <button mat-menu-item>Six</button>
     </mat-menu>
 
-    <mat-menu #levelTwo="matMenu" (close)="levelTwoCloseCallback($event)">
+    <mat-menu #levelTwo="matMenu" (closed)="levelTwoCloseCallback($event)">
       <button mat-menu-item>Seven</button>
       <button mat-menu-item>Eight</button>
       <button mat-menu-item>Nine</button>

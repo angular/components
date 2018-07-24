@@ -148,6 +148,11 @@ export class MatFormField extends _MatFormFieldMixinBase
     return this._appearance || this._defaultOptions && this._defaultOptions.appearance || 'legacy';
   }
   set appearance(value: MatFormFieldAppearance) {
+    // If we're switching to `outline` from another appearance, we have to recalculate the gap.
+    if (value !== this._appearance && value === 'outline') {
+      this._initialGapCalculated = false;
+    }
+
     this._appearance = value;
   }
   _appearance: MatFormFieldAppearance;
@@ -185,6 +190,9 @@ export class MatFormField extends _MatFormFieldMixinBase
 
   // Unique id for the hint label.
   _hintLabelId: string = `mat-hint-${nextUniqueId++}`;
+
+  // Unique id for the internal form field label.
+  _labelId = `mat-form-field-label-${nextUniqueId++}`;
 
   /**
    * Whether the label should always float, never float or float as the user types.

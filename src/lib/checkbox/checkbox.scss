@@ -4,6 +4,7 @@
 @import '../core/ripple/ripple';
 @import '../core/style/layout-common';
 @import '../core/style/noop-animation';
+@import '../../cdk/a11y/a11y';
 
 // Manual calculation done on SVG
 $_mat-checkbox-mark-path-length: 22.910259;
@@ -275,11 +276,18 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
 }
 
 .mat-checkbox-mixedmark {
-  @extend %mat-checkbox-mark;
+  $height: floor($_mat-checkbox-mark-stroke-size);
 
-  height: floor($_mat-checkbox-mark-stroke-size);
+  @extend %mat-checkbox-mark;
+  height: $height;
   opacity: 0;
   transform: scaleX(0) rotate(0deg);
+
+  @include cdk-high-contrast {
+    height: 0;
+    border-top: solid $height;
+    margin-top: $height;
+  }
 }
 
 .mat-checkbox-label-before {
@@ -423,7 +431,9 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
   left: 50%;
 }
 
-.mat-checkbox-ripple {
+// Increase specificity because ripple styles are part of the `mat-core` mixin and can
+// potentially overwrite the absolute position of the container.
+.mat-checkbox .mat-checkbox-ripple {
   position: absolute;
   left: calc(50% - #{$_mat-checkbox-ripple-radius});
   top: calc(50% - #{$_mat-checkbox-ripple-radius});

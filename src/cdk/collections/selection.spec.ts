@@ -82,6 +82,14 @@ describe('SelectionModel', () => {
 
       expect(model.selected).toEqual([1, 2, 3]);
     });
+
+    it('should sort values if `selected` has not been accessed before', () => {
+      model = new SelectionModel(true, [2, 3, 1]);
+
+      // Important: don't assert `selected` before sorting so the getter isn't invoked
+      model.sort();
+      expect(model.selected).toEqual([1, 2, 3]);
+    });
   });
 
   describe('onChange event', () => {
@@ -268,5 +276,13 @@ describe('SelectionModel', () => {
 
   it('should be empty if an empty array is passed for the preselected values', () => {
     expect(new SelectionModel(false, []).selected).toEqual([]);
+  });
+
+  it('should be able to determine whether multiple values can be selected', () => {
+    let multipleSelectionModel = new SelectionModel(true);
+    expect(multipleSelectionModel.isMultipleSelection()).toBe(true);
+
+    let singleSelectionModel = new SelectionModel();
+    expect(singleSelectionModel.isMultipleSelection()).toBe(false);
   });
 });

@@ -42,7 +42,6 @@ import {SlideToggleDemo} from '../slide-toggle/slide-toggle-demo';
 import {SliderDemo} from '../slider/slider-demo';
 import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
 import {StepperDemo} from '../stepper/stepper-demo';
-import {TABS_DEMO_ROUTES} from '../tabs/routes';
 import {TabsDemo} from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
@@ -56,6 +55,7 @@ import {PaginatorDemo} from '../paginator/paginator-demo';
 
 import {ExamplesPage} from '../examples-page/examples-page';
 import {TableDemo} from '../table/table-demo';
+import {DragAndDropDemo} from '../drag-drop/drag-drop-demo';
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: DemoApp, children: [
@@ -72,6 +72,7 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'datepicker', component: DatepickerDemo},
     {path: 'dialog', component: DialogDemo},
     {path: 'drawer', component: DrawerDemo},
+    {path: 'drag-drop', component: DragAndDropDemo},
     {path: 'expansion', component: ExpansionDemo},
     {path: 'focus-origin', component: FocusOriginDemo},
     {path: 'gestures', component: GesturesDemo},
@@ -95,7 +96,7 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'snack-bar', component: SnackBarDemo},
     {path: 'stepper', component: StepperDemo},
     {path: 'table', component: TableDemo},
-    {path: 'tabs', component: TabsDemo, children: TABS_DEMO_ROUTES},
+    {path: 'tabs', component: TabsDemo},
     {path: 'toolbar', component: ToolbarDemo},
     {path: 'tooltip', component: TooltipDemo},
     {path: 'tree', component: TreeDemo},

@@ -21,6 +21,7 @@ describe('MatTable', () => {
         NativeHtmlTableApp,
         MatTableWithSortApp,
         MatTableWithPaginatorApp,
+        StickyTableApp,
       ],
     }).compileComponents();
   }));
@@ -116,6 +117,14 @@ describe('MatTable', () => {
       [data[1].a, data[1].b, data[1].c],
       [data[2].a, data[2].b, data[2].c],
     ]);
+  });
+
+  it('should apply custom sticky CSS class to sticky cells', () => {
+    let fixture = TestBed.createComponent(StickyTableApp);
+    fixture.detectChanges();
+
+    const stuckCellElement = fixture.nativeElement.querySelector('.mat-table th')!;
+    expect(stuckCellElement.classList).toContain('mat-table-sticky');
   });
 
   describe('with MatTableDataSource and sort/pagination/filter', () => {
@@ -391,6 +400,38 @@ describe('MatTable', () => {
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
     }));
+
+    it('should sort strings with numbers larger than MAX_SAFE_INTEGER correctly', () => {
+      const large = '9563256840123535';
+      const larger = '9563256840123536';
+      const largest = '9563256840123537';
+
+      dataSource.data[0].a = largest;
+      dataSource.data[1].a = larger;
+      dataSource.data[2].a = large;
+
+      component.sort.sort(component.sortHeader);
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        [large, 'b_3', 'c_3'],
+        [larger, 'b_2', 'c_2'],
+        [largest, 'b_1', 'c_1'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+
+
+      component.sort.sort(component.sortHeader);
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        [largest, 'b_1', 'c_1'],
+        [larger, 'b_2', 'c_2'],
+        [large, 'b_3', 'c_3'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+    });
+
   });
 });
 
@@ -496,6 +537,26 @@ class MatTableApp {
 class NativeHtmlTableApp {
   dataSource: FakeDataSource | null = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
+
+  @ViewChild(MatTable) table: MatTable<TestData>;
+}
+
+@Component({
+  template: `
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="column_a">
+        <th mat-header-cell *matHeaderCellDef> Column A </th>
+        <td mat-cell *matCellDef="let row"> {{row.a}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnsToRender; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnsToRender"></tr>
+    </table>
+  `
+})
+class StickyTableApp {
+  dataSource = new FakeDataSource();
+  columnsToRender = ['column_a'];
 
   @ViewChild(MatTable) table: MatTable<TestData>;
 }

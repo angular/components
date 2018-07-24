@@ -9,6 +9,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
+import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {
   ComponentPortal,
   PortalModule,
@@ -165,7 +166,7 @@ describe('Overlay', () => {
 
     overlayRef.attach(componentPortal);
 
-    expect(overlayRef.hostElement.getAttribute('dir')).toEqual('rtl');
+    expect(overlayRef.hostElement.getAttribute('dir')).toBe('rtl');
   });
 
   it('should emit when an overlay is attached', () => {
@@ -292,6 +293,19 @@ describe('Overlay', () => {
     expect(overlayRef.backdropElement).toBeFalsy('Expected backdrop element not to be referenced.');
   }));
 
+  it('should clear the backdrop timeout if the transition finishes first', fakeAsync(() => {
+    const overlayRef = overlay.create({hasBackdrop: true});
+
+    overlayRef.attach(componentPortal);
+    overlayRef.detach();
+
+    const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop')!;
+    dispatchFakeEvent(backdrop, 'transitionend');
+
+    // Note: we don't `tick` or `flush` here. The assertion is that
+    // `fakeAsync` will throw if we have an unflushed timer.
+  }));
+
   it('should be able to use the `Overlay` provider during app initialization', () => {
     /** Dummy provider that depends on `Overlay`. */
     @Injectable()
@@ -375,7 +389,7 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      expect(overlayRef.overlayElement.style.width).toEqual('500px');
+      expect(overlayRef.overlayElement.style.width).toBe('500px');
     });
 
     it('should support using other units if a string width is provided', () => {
@@ -384,7 +398,7 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      expect(overlayRef.overlayElement.style.width).toEqual('200%');
+      expect(overlayRef.overlayElement.style.width).toBe('200%');
     });
 
     it('should apply the height set in the config', () => {
@@ -393,7 +407,7 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      expect(overlayRef.overlayElement.style.height).toEqual('500px');
+      expect(overlayRef.overlayElement.style.height).toBe('500px');
     });
 
     it('should support using other units if a string height is provided', () => {
@@ -402,7 +416,7 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      expect(overlayRef.overlayElement.style.height).toEqual('100vh');
+      expect(overlayRef.overlayElement.style.height).toBe('100vh');
     });
 
     it('should apply the min width set in the config', () => {
@@ -411,9 +425,8 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      expect(overlayRef.overlayElement.style.minWidth).toEqual('200px');
+      expect(overlayRef.overlayElement.style.minWidth).toBe('200px');
     });
-
 
     it('should apply the min height set in the config', () => {
       config.minHeight = 500;
@@ -421,7 +434,7 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      expect(overlayRef.overlayElement.style.minHeight).toEqual('500px');
+      expect(overlayRef.overlayElement.style.minHeight).toBe('500px');
     });
 
     it('should apply the max width set in the config', () => {
@@ -430,7 +443,7 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      expect(overlayRef.overlayElement.style.maxWidth).toEqual('200px');
+      expect(overlayRef.overlayElement.style.maxWidth).toBe('200px');
     });
 
 
@@ -440,7 +453,7 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      expect(overlayRef.overlayElement.style.maxHeight).toEqual('500px');
+      expect(overlayRef.overlayElement.style.maxHeight).toBe('500px');
     });
 
     it('should support zero widths and heights', () => {
@@ -450,9 +463,45 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      expect(overlayRef.overlayElement.style.width).toEqual('0px');
-      expect(overlayRef.overlayElement.style.height).toEqual('0px');
+      expect(overlayRef.overlayElement.style.width).toBe('0px');
+      expect(overlayRef.overlayElement.style.height).toBe('0px');
     });
+
+    it('should be able to reset the various size properties', () => {
+      config.minWidth = config.minHeight = 100;
+      config.width = config.height = 200;
+      config.maxWidth = config.maxHeight = 300;
+
+      const overlayRef = overlay.create(config);
+      overlayRef.attach(componentPortal);
+      const style = overlayRef.overlayElement.style;
+
+      expect(style.minWidth).toBe('100px');
+      expect(style.minHeight).toBe('100px');
+      expect(style.width).toBe('200px');
+      expect(style.height).toBe('200px');
+      expect(style.maxWidth).toBe('300px');
+      expect(style.maxHeight).toBe('300px');
+
+      overlayRef.updateSize({
+        minWidth: '',
+        minHeight: '',
+        width: '',
+        height: '',
+        maxWidth: '',
+        maxHeight: ''
+      });
+
+      overlayRef.updatePosition();
+
+      expect(style.minWidth).toBeFalsy();
+      expect(style.minHeight).toBeFalsy();
+      expect(style.width).toBeFalsy();
+      expect(style.height).toBeFalsy();
+      expect(style.maxWidth).toBeFalsy();
+      expect(style.maxHeight).toBeFalsy();
+    });
+
   });
 
   describe('backdrop', () => {
@@ -579,6 +628,26 @@ describe('Overlay', () => {
       expect(pane.classList).toContain('custom-class-one');
       expect(pane.classList).toContain('custom-class-two');
     });
+
+    it('should remove the custom panel class when the overlay is detached', () => {
+      const config = new OverlayConfig({panelClass: 'custom-panel-class'});
+      const overlayRef = overlay.create(config);
+
+      overlayRef.attach(componentPortal);
+      viewContainerFixture.detectChanges();
+
+      const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      expect(pane.classList).toContain('custom-panel-class');
+
+      overlayRef.detach();
+      viewContainerFixture.detectChanges();
+      expect(pane.classList).not.toContain('custom-panel-class');
+
+      overlayRef.attach(componentPortal);
+      viewContainerFixture.detectChanges();
+      expect(pane.classList).toContain('custom-panel-class');
+    });
+
   });
 
   describe('scroll strategy', () => {

@@ -42,6 +42,9 @@ export class OverlayKeyboardDispatcher implements OnDestroy {
 
   /** Add a new overlay to the list of attached overlay refs. */
   add(overlayRef: OverlayRef): void {
+    // Ensure that we don't get the same overlay multiple times.
+    this.remove(overlayRef);
+
     // Lazily start dispatcher once first overlay is added
     if (!this._isAttached) {
       this._document.body.addEventListener('keydown', this._keydownListener, true);
@@ -75,11 +78,19 @@ export class OverlayKeyboardDispatcher implements OnDestroy {
 
   /** Keyboard event listener that will be attached to the body. */
   private _keydownListener = (event: KeyboardEvent) => {
-    if (this._attachedOverlays.length) {
-      // Dispatch the keydown event to the top overlay. We want to target the most recent overlay,
-      // rather than trying to match where the event came from, because some components might open
-      // an overlay, but keep focus on a trigger element (e.g. for select and autocomplete).
-      this._attachedOverlays[this._attachedOverlays.length - 1]._keydownEvents.next(event);
+    const overlays = this._attachedOverlays;
+
+    for (let i = overlays.length - 1; i > -1; i--) {
+      // Dispatch the keydown event to the top overlay which has subscribers to its keydown events.
+      // We want to target the most recent overlay, rather than trying to match where the event came
+      // from, because some components might open an overlay, but keep focus on a trigger element
+      // (e.g. for select and autocomplete). We skip overlays without keydown event subscriptions,
+      // because we don't want overlays that don't handle keyboard events to block the ones below
+      // them that do.
+      if (overlays[i]._keydownEventSubscriptions > 0) {
+        overlays[i]._keydownEvents.next(event);
+        break;
+      }
     }
   }
 }

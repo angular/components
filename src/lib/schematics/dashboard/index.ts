@@ -1,15 +1,28 @@
-import {chain, Rule, noop, Tree, SchematicContext} from '@angular-devkit/schematics';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {chain, Rule, noop, Tree} from '@angular-devkit/schematics';
 import {Schema} from './schema';
 import {addModuleImportToModule, findModuleFromOptions} from '../utils/ast';
 import {buildComponent} from '../utils/devkit-utils/component';
 
 /**
- * Scaffolds a new navigation component.
+ * Scaffolds a new dashboard component.
  * Internally it bootstraps the base component schematic
  */
 export default function(options: Schema): Rule {
   return chain([
-    buildComponent({ ...options }),
+    buildComponent({...options}, {
+      template: options.inlineTemplate &&
+      './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.html',
+      stylesheet: options.inlineStyle &&
+      './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.__styleext__',
+    }),
     options.skipImport ? noop() : addNavModulesToModule(options)
   ]);
 }
@@ -25,6 +38,7 @@ function addNavModulesToModule(options: Schema) {
     addModuleImportToModule(host, modulePath, 'MatMenuModule', '@angular/material');
     addModuleImportToModule(host, modulePath, 'MatIconModule', '@angular/material');
     addModuleImportToModule(host, modulePath, 'MatButtonModule', '@angular/material');
+    addModuleImportToModule(host, modulePath, 'LayoutModule', '@angular/cdk/layout');
     return host;
   };
 }

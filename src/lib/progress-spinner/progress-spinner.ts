@@ -50,6 +50,11 @@ export interface MatProgressSpinnerDefaultOptions {
   diameter?: number;
   /** Width of the spinner's stroke. */
   strokeWidth?: number;
+  /**
+   * Whether the animations should be force to be enabled, ignoring if the current environment is
+   * using NoopAnimationsModule.
+   */
+  _forceAnimations?: boolean;
 }
 
 /** Injection token to be used to override the default options for `mat-progress-spinner`. */
@@ -102,7 +107,7 @@ const INDETERMINATE_ANIMATION_TEMPLATE = `
   host: {
     'role': 'progressbar',
     'class': 'mat-progress-spinner',
-    '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
+    '[class._mat-animation-noopable]': `_noopAnimations`,
     '[style.width.px]': 'diameter',
     '[style.height.px]': 'diameter',
     '[attr.aria-valuemin]': 'mode === "determinate" ? 0 : null',
@@ -119,7 +124,7 @@ const INDETERMINATE_ANIMATION_TEMPLATE = `
 export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements CanColor {
 
   private _value = 0;
-  private _strokeWidth = this._defaults ? this._defaults.strokeWidth : undefined;
+  private _strokeWidth: number;
   private _fallbackAnimation = false;
 
   /** Tracks diameters of existing instances to de-dupe generated styles (default d = 100) */
@@ -131,6 +136,10 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
    */
   private static styleTag: HTMLStyleElement|null = null;
 
+  /** Whether the _mat-animation-noopable class should be applied, disabling animations.  */
+  _noopAnimations: boolean = this.animationMode === 'NoopAnimations' && (
+      !!this.defaults && !this.defaults._forceAnimations);
+
   /** The diameter of the progress spinner (will set width and height of svg). */
   @Input()
   get diameter(): number { return this._diameter; }
@@ -141,8 +150,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
       this._attachStyleNode();
     }
   }
-  private _diameter = this._defaults && this._defaults.diameter ?
-      this._defaults.diameter : BASE_SIZE;
+  private _diameter = BASE_SIZE;
 
   /** Stroke width of the progress spinner. */
   @Input()
@@ -168,13 +176,23 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   constructor(public _elementRef: ElementRef,
               platform: Platform,
               @Optional() @Inject(DOCUMENT) private _document: any,
-              // @deletion-target 7.0.0 _animationMode and _defaults parameters to be made required.
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+              // @deletion-target 7.0.0 animationMode and defaults parameters to be made required.
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) private animationMode?: string,
               @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS)
-                  private _defaults?: MatProgressSpinnerDefaultOptions) {
+                  private defaults?: MatProgressSpinnerDefaultOptions) {
 
     super(_elementRef);
     this._fallbackAnimation = platform.EDGE || platform.TRIDENT;
+
+    if (defaults) {
+      if (defaults.diameter) {
+        this.diameter = defaults.diameter;
+      }
+
+      if (defaults.strokeWidth) {
+        this.strokeWidth = defaults.strokeWidth;
+      }
+    }
 
     // On IE and Edge, we can't animate the `stroke-dashoffset`
     // reliably so we fall back to a non-spec animation.
@@ -260,7 +278,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
     'role': 'progressbar',
     'mode': 'indeterminate',
     'class': 'mat-spinner mat-progress-spinner',
-    '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
+    '[class._mat-animation-noopable]': `_noopAnimations`,
     '[style.width.px]': 'diameter',
     '[style.height.px]': 'diameter',
   },

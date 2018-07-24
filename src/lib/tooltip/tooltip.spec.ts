@@ -2,6 +2,7 @@ import {
   async,
   ComponentFixture,
   fakeAsync,
+  flush,
   flushMicrotasks,
   inject,
   TestBed,
@@ -53,7 +54,8 @@ describe('MatTooltip', () => {
         ScrollableTooltipDemo,
         OnPushTooltipDemo,
         DynamicTooltipsDemo,
-        TooltipOnTextFields
+        TooltipOnTextFields,
+        TooltipOnDraggableElement,
       ],
       providers: [
         {provide: Platform, useFactory: () => platform},
@@ -575,7 +577,8 @@ describe('MatTooltip', () => {
         fixture.detectChanges();
       }).not.toThrow();
 
-      tick(0);
+      // Flush due to the additional tick that is necessary for the FocusMonitor.
+      flush();
     }));
 
     it('should not show the tooltip on progammatic focus', fakeAsync(() => {
@@ -793,6 +796,15 @@ describe('MatTooltip', () => {
       expect(instance.textarea.nativeElement.style.userSelect).toBeFalsy();
       expect(instance.textarea.nativeElement.style.webkitUserSelect).toBeFalsy();
     });
+
+    it('should clear the `-webkit-user-drag` on draggable elements', () => {
+      const fixture = TestBed.createComponent(TooltipOnDraggableElement);
+
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.button.nativeElement.style.webkitUserDrag).toBeFalsy();
+    });
+
   });
 
 });
@@ -897,6 +909,20 @@ class TooltipOnTextFields {
   @ViewChild('input') input: ElementRef;
   @ViewChild('textarea') textarea: ElementRef;
 }
+
+@Component({
+  template: `
+    <button
+      #button
+      style="-webkit-user-drag: none;"
+      draggable="true"
+      matTooltip="Drag me"></button>
+  `,
+})
+class TooltipOnDraggableElement {
+  @ViewChild('button') button: ElementRef;
+}
+
 
 /** Asserts whether a tooltip directive has a tooltip instance. */
 function assertTooltipInstance(tooltip: MatTooltip, shouldExist: boolean): void {
