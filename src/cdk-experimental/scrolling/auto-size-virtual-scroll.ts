@@ -152,7 +152,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   }
 
   /** Scroll to the offset for the given index. */
-  scrollToIndex() {
+  scrollToIndex(): void {
     // TODO(mmalerba): Implement.
     throw new Error('cdk-virtual-scroll: scrollToIndex is currently not supported for the autosize'
         + ' scroll strategy');
