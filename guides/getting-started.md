@@ -34,9 +34,7 @@ yarn add angular/material2-builds angular/cdk-builds
 
 ### Step 2: Animations
 
-Some Material components depend on the Angular animations module in order to be able to do
-more advanced transitions. If you want these animations to work in your app, you have to
-install the `@angular/animations` module and include the `BrowserAnimationsModule` in your app.
+Animations package is required to build application with Material components, but you don't have to configure it unless you use animated components like Drawer, Bottom Sheet etc.
 
 #### NPM
 ```bash
@@ -47,6 +45,8 @@ npm install --save @angular/animations
 ```bash
 yarn add @angular/animations
 ```
+
+If you want to provide animations for these components include the `BrowserAnimationsModule` in your app.
 
 ```ts
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -59,7 +59,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 export class PizzaPartyAppModule { }
 ```
 
-If you don't want to add another dependency to your project, you can use the `NoopAnimationsModule`.
+If you want to disable animation for these components you can use the `NoopAnimationsModule`.
 
 ```ts
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
