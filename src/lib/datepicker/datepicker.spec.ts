@@ -1379,10 +1379,10 @@ describe('MatDatepicker', () => {
 
   });
 
-  describe('with missing DateAdapter and MAT_DATE_FORMATS', () => {
+  describe('with missing DateAdapter and CDK_DATE_FORMATS', () => {
     it('should throw when created', () => {
       expect(() => createComponent(StandardDatepicker))
-        .toThrowError(/MatDatepicker: No provider found for .*/);
+          .toThrowError(/CdkDatepicker: No provider found for .*/);
     });
   });
 

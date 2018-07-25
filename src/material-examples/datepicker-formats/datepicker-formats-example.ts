@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import {CDK_DATE_FORMATS} from '@angular/cdk/datetime';
 
 // Depending on whether rollup is used, moment needs to be imported differently.
 // Since Moment.js doesn't have a default export, we normally need to import using the `* as`
@@ -15,15 +16,20 @@ const moment = _rollupMoment || _moment;
 
 // See the Moment.js docs for the meaning of these formats:
 // https://momentjs.com/docs/#/displaying/format/
-export const MY_FORMATS = {
+export const MY_MAT_FORMATS = {
+  display: {
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+
+export const MY_CDK_FORMATS = {
   parse: {
     dateInput: 'LL',
   },
   display: {
     dateInput: 'LL',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
   },
 };
 
@@ -38,7 +44,8 @@ export const MY_FORMATS = {
     // our example generation script.
     {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
 
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    {provide: MAT_DATE_FORMATS, useValue: MY_MAT_FORMATS},
+    {provide: CDK_DATE_FORMATS, useValue: MY_CDK_FORMATS},
   ],
 })
 export class DatepickerFormatsExample {
