@@ -240,8 +240,7 @@ describe('Overlay directives', () => {
       fixture.componentInstance.isOpen = true;
       fixture.detectChanges();
 
-      const panel =
-        overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      const panel = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
       expect(panel.classList).toContain('cdk-test-panel-class');
     });
 
