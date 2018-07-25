@@ -317,17 +317,17 @@ describe('MatSnackBar', () => {
   }));
 
   it('should indicate in `afterClosed` whether it was dismissed by an action', fakeAsync(() => {
-    const closeSpy = jasmine.createSpy('dismiss spy');
+    const dismissSpy = jasmine.createSpy('dismiss spy');
     const snackBarRef = snackBar.open('Some content');
     viewContainerFixture.detectChanges();
 
-    snackBarRef.afterDismissed().subscribe(closeSpy);
+    snackBarRef.afterDismissed().subscribe(dismissSpy);
 
-    snackBarRef.closeWithAction();
+    snackBarRef.dismissWithAction();
     viewContainerFixture.detectChanges();
     tick();
 
-    expect(closeSpy).toHaveBeenCalledWith(jasmine.objectContaining({dismissedByAction: true}));
+    expect(dismissSpy).toHaveBeenCalledWith(jasmine.objectContaining({dismissedByAction: true}));
     tick(500);
   }));
 
@@ -391,7 +391,7 @@ describe('MatSnackBar', () => {
     snackBar.open(simpleMessage, simpleActionLabel, { direction: 'rtl' });
     viewContainerFixture.detectChanges();
 
-    let pane = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
+    let pane = overlayContainerElement.querySelector('.cdk-global-overlay-wrapper')!;
 
     expect(pane.getAttribute('dir')).toBe('rtl', 'Expected the pane to be in RTL mode.');
   });
@@ -420,6 +420,31 @@ describe('MatSnackBar', () => {
 
     expect(overlayContainerElement.querySelector('snack-bar-container')!.classList)
         .toContain('custom-class', 'Expected class applied through the defaults to be applied.');
+  }));
+
+  it('should position the snack bar correctly if no default position is defined', fakeAsync(() => {
+    overlayContainer.ngOnDestroy();
+    viewContainerFixture.destroy();
+
+    TestBed
+      .resetTestingModule()
+      .overrideProvider(MAT_SNACK_BAR_DEFAULT_OPTIONS, {
+        deps: [],
+        useFactory: () => ({politeness: 'polite'})
+      })
+      .configureTestingModule({imports: [MatSnackBarModule, NoopAnimationsModule]})
+      .compileComponents();
+
+    inject([MatSnackBar, OverlayContainer], (sb: MatSnackBar, oc: OverlayContainer) => {
+      snackBar = sb;
+      overlayContainer = oc;
+      overlayContainerElement = oc.getContainerElement();
+    })();
+
+    const snackBarRef = snackBar.open(simpleMessage);
+    flush();
+
+    expect(snackBarRef.containerInstance._animationState).toBe('visible-bottom');
   }));
 
   describe('with custom component', () => {

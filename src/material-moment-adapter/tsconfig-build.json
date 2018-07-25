@@ -23,7 +23,7 @@
     "types": [],
     "paths": {
       "@angular/material/*": ["../../dist/packages/material/*"],
-      "@angular/material": ["../../dist/packages/material/public-api"],
+      "@angular/material": ["../../dist/packages/material"],
       "@angular/cdk/*": ["../../dist/packages/cdk/*"]
     }
   },
@@ -32,10 +32,13 @@
   ],
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,
-    "strictMetadataEmit": false, // Workaround for Angular #22210
+    "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
     "flatModuleId": "@angular/material-moment-adapter",
     "skipTemplateCodegen": true,
     "fullTemplateTypeCheck": true
+  },
+  "bazelOptions": {
+    "suppressTsconfigOverrideWarnings": true
   }
 }

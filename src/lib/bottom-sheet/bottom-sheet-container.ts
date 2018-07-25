@@ -52,6 +52,7 @@ import {FocusTrap, FocusTrapFactory} from '@angular/cdk/a11y';
     'class': 'mat-bottom-sheet-container',
     'tabindex': '-1',
     'role': 'dialog',
+    'aria-modal': 'true',
     '[attr.aria-label]': 'bottomSheetConfig?.ariaLabel',
     '[@state]': '_animationState',
     '(@state.start)': '_onAnimationStart($event)',
@@ -70,9 +71,6 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
   /** Emits whenever the state of the animation changes. */
   _animationStateChanged = new EventEmitter<AnimationEvent>();
 
-  /** The bottom sheet configuration. */
-  bottomSheetConfig: MatBottomSheetConfig;
-
   /** The class that traps and manages focus within the bottom sheet. */
   private _focusTrap: FocusTrap;
 
@@ -90,7 +88,9 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
     private _changeDetectorRef: ChangeDetectorRef,
     private _focusTrapFactory: FocusTrapFactory,
     breakpointObserver: BreakpointObserver,
-    @Optional() @Inject(DOCUMENT) document: any) {
+    @Optional() @Inject(DOCUMENT) document: any,
+    /** The bottom sheet configuration. */
+    public bottomSheetConfig: MatBottomSheetConfig) {
     super();
 
     this._document = document;
@@ -144,10 +144,10 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
   }
 
   _onAnimationDone(event: AnimationEvent) {
-    if (event.toState === 'visible') {
-      this._trapFocus();
-    } else if (event.toState === 'hidden') {
+    if (event.toState === 'hidden') {
       this._restoreFocus();
+    } else if (event.toState === 'visible' && this.bottomSheetConfig.autoFocus) {
+      this._trapFocus();
     }
 
     this._animationStateChanged.emit(event);

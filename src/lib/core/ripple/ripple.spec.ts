@@ -6,6 +6,7 @@ import {defaultRippleAnimationConfig, RippleAnimationConfig} from './ripple-rend
 import {
   MatRipple, MatRippleModule, MAT_RIPPLE_GLOBAL_OPTIONS, RippleState, RippleGlobalOptions
 } from './index';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 /** Shorthands for the enter and exit duration of ripples. */
 const {enterDuration, exitDuration} = defaultRippleAnimationConfig;
@@ -230,6 +231,18 @@ describe('MatRipple', () => {
       expect(spy).not.toHaveBeenCalled();
       subscription.unsubscribe();
     });
+
+    it('should only persist the latest ripple on pointer down', fakeAsync(() => {
+      dispatchMouseEvent(rippleTarget, 'mousedown');
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
+
+      dispatchMouseEvent(rippleTarget, 'mousedown');
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(2);
+
+      tick(enterDuration + exitDuration);
+
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
+    }));
 
     describe('when page is scrolled', () => {
       let veryLargeElement: HTMLDivElement = document.createElement('div');
@@ -539,6 +552,29 @@ describe('MatRipple', () => {
       // will still exist. To properly finish all timers, we just wait the remaining time.
       tick(enterDuration - exitDuration);
     }));
+  });
+
+  describe('with disabled animations', () => {
+    let rippleDirective: MatRipple;
+
+    beforeEach(() => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [NoopAnimationsModule, MatRippleModule],
+        declarations: [BasicRippleContainer],
+      });
+
+      fixture = TestBed.createComponent(BasicRippleContainer);
+      fixture.detectChanges();
+
+      rippleTarget = fixture.nativeElement.querySelector('[mat-ripple]');
+      rippleDirective = fixture.componentInstance.ripple;
+    });
+
+    it('should set the animation durations to zero', () => {
+      expect(rippleDirective.rippleConfig.animation!.enterDuration).toBe(0);
+      expect(rippleDirective.rippleConfig.animation!.exitDuration).toBe(0);
+    });
   });
 
   describe('configuring behavior', () => {

@@ -1,5 +1,7 @@
 @import '../core/style/variables';
 @import '../core/style/vendor-prefixes';
+@import '../core/style/noop-animation';
+@import '../../cdk/a11y/a11y';
 
 $mat-progress-bar-height: 5px !default;
 $mat-progress-bar-full-animation-duration: 2000ms !default;
@@ -7,6 +9,7 @@ $mat-progress-bar-piece-animation-duration: 250ms !default;
 
 
 .mat-progress-bar {
+  @include _noop-animation();
   display: block;
   // Height is provided for mat-progress-bar to act as a default.
   height: $mat-progress-bar-height;
@@ -28,13 +31,23 @@ $mat-progress-bar-piece-animation-duration: 250ms !default;
     // The width is set to be 10px longer than the container as it will be translated 10px
     // during the background scroll animation.
     width: calc(100% + 10px);
+
+    @include cdk-high-contrast {
+      display: none;
+    }
   }
 
   // The progress bar buffer is the bar indicator showing the buffer value and is only visible
   // beyond the current value of the primary progress bar.
   .mat-progress-bar-buffer {
+    @include _noop-animation();
     transform-origin: top left;
     transition: transform $mat-progress-bar-piece-animation-duration ease;
+
+    @include cdk-high-contrast {
+      border-top: solid 5px;
+      opacity: 0.5;
+    }
   }
 
   // The secondary progress bar is only used in the indeterminate animation, because of this it
@@ -45,13 +58,19 @@ $mat-progress-bar-piece-animation-duration: 250ms !default;
 
   // The progress bar fill fills the progress bar with the indicator color.
   .mat-progress-bar-fill {
+    @include _noop-animation();
     animation: none;
     transform-origin: top left;
     transition: transform $mat-progress-bar-piece-animation-duration ease;
+
+    @include cdk-high-contrast {
+      border-top: solid $mat-progress-bar-height;
+    }
   }
 
   // A pseudo element is created for each progress bar bar that fills with the indicator color.
   .mat-progress-bar-fill::after {
+    @include _noop-animation();
     animation: none;
     content: '';
     display: inline-block;
@@ -76,10 +95,12 @@ $mat-progress-bar-piece-animation-duration: 250ms !default;
   &[mode='indeterminate'],
   &[mode='query'] {
     .mat-progress-bar-fill {
+      @include _noop-animation();
       transition: none;
     }
     .mat-progress-bar-primary {
       // Avoids stacked animation tearing in Firefox >= 57.
+      @include _noop-animation();
       @include backface-visibility(hidden);
       animation: mat-progress-bar-primary-indeterminate-translate
           $mat-progress-bar-full-animation-duration infinite linear;
@@ -87,12 +108,14 @@ $mat-progress-bar-piece-animation-duration: 250ms !default;
     }
     .mat-progress-bar-primary.mat-progress-bar-fill::after {
       // Avoids stacked animation tearing in Firefox >= 57.
+      @include _noop-animation();
       @include backface-visibility(hidden);
       animation: mat-progress-bar-primary-indeterminate-scale
           $mat-progress-bar-full-animation-duration infinite linear;
     }
     .mat-progress-bar-secondary {
       // Avoids stacked animation tearing in Firefox >= 57.
+      @include _noop-animation();
       @include backface-visibility(hidden);
       animation: mat-progress-bar-secondary-indeterminate-translate
           $mat-progress-bar-full-animation-duration infinite linear;
@@ -101,6 +124,7 @@ $mat-progress-bar-piece-animation-duration: 250ms !default;
     }
     .mat-progress-bar-secondary.mat-progress-bar-fill::after {
       // Avoids stacked animation tearing in Firefox >= 57.
+      @include _noop-animation();
       @include backface-visibility(hidden);
       animation: mat-progress-bar-secondary-indeterminate-scale
           $mat-progress-bar-full-animation-duration infinite linear;
@@ -110,9 +134,14 @@ $mat-progress-bar-piece-animation-duration: 250ms !default;
   &[mode='buffer'] {
     .mat-progress-bar-background {
       // Avoids stacked animation tearing in Firefox >= 57.
+      @include _noop-animation();
       @include backface-visibility(hidden);
       animation: mat-progress-bar-background-scroll
           $mat-progress-bar-piece-animation-duration infinite linear;
+
+      // Needs to be explicit here so it can overwrite the `display: none`
+      // in all other variants in high contrast mode.
+      display: block;
     }
   }
 }

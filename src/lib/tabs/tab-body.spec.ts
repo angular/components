@@ -1,15 +1,17 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {PortalModule, TemplatePortal} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
-import {Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {AfterContentInit, Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatRippleModule} from '@angular/material/core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTabBody, MatTabBodyPortal} from './tab-body';
+import {Subject} from 'rxjs';
 
 
 describe('MatTabBody', () => {
   let dir: Direction = 'ltr';
+  let dirChange: Subject<Direction> = new Subject<Direction>();
 
   beforeEach(async(() => {
     dir = 'ltr';
@@ -21,7 +23,7 @@ describe('MatTabBody', () => {
         SimpleTabBodyApp,
       ],
       providers: [
-        {provide: Directionality, useFactory: () => ({value: dir})}
+        {provide: Directionality, useFactory: () => ({value: dir, change: dirChange})}
       ]
     });
 
@@ -146,6 +148,22 @@ describe('MatTabBody', () => {
       expect(fixture.componentInstance.tabBody._position).toBe('left');
     });
   });
+
+  it('should update position if direction changed at runtime', () => {
+    const fixture = TestBed.createComponent(SimpleTabBodyApp);
+
+    fixture.componentInstance.position = 1;
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.tabBody._position).toBe('right');
+
+    dirChange.next('rtl');
+    dir = 'rtl';
+
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.tabBody._position).toBe('left');
+  });
 });
 
 
@@ -155,7 +173,7 @@ describe('MatTabBody', () => {
     <mat-tab-body [content]="content" [position]="position" [origin]="origin"></mat-tab-body>
   `
 })
-class SimpleTabBodyApp {
+class SimpleTabBodyApp implements AfterContentInit {
   content: TemplatePortal;
   position: number;
   origin: number;

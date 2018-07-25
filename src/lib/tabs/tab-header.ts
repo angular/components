@@ -8,7 +8,7 @@
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
-import {END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
+import {END, ENTER, HOME, SPACE} from '@angular/cdk/keycodes';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentChecked,
@@ -28,9 +28,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {CanDisableRipple, mixinDisableRipple} from '@angular/material/core';
-import {merge, of as observableOf, Subscription} from 'rxjs';
+import {merge, of as observableOf, Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 import {MatInkBar} from './ink-bar';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
+import {FocusKeyManager} from '@angular/cdk/a11y';
 
 
 /**
@@ -80,17 +82,14 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   @ViewChild('tabListContainer') _tabListContainer: ElementRef;
   @ViewChild('tabList') _tabList: ElementRef;
 
-  /** The tab index that is focused. */
-  private _focusIndex: number = 0;
-
   /** The distance in pixels that the tab labels should be translated to the left. */
   private _scrollDistance = 0;
 
   /** Whether the header should scroll to the selected index after the view has been checked. */
   private _selectedIndexChanged = false;
 
-  /** Combines listeners that will re-align the ink bar whenever they're invoked. */
-  private _realignInkBar = Subscription.EMPTY;
+  /** Emits when the component is destroyed. */
+  private readonly _destroyed = new Subject<void>();
 
   /** Whether the controls for pagination should be displayed */
   _showPaginationControls = false;
@@ -110,6 +109,9 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   /** Whether the scroll distance has changed and should be applied after the view is checked. */
   private _scrollDistanceChanged: boolean;
 
+  /** Used to manage focus between the tabs. */
+  private _keyManager: FocusKeyManager<MatTabLabelWrapper>;
+
   private _selectedIndex: number = 0;
 
   /** The index of the active tab. */
@@ -119,7 +121,10 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     value = coerceNumberProperty(value);
     this._selectedIndexChanged = this._selectedIndex != value;
     this._selectedIndex = value;
-    this._focusIndex = value;
+
+    if (this._keyManager) {
+      this._keyManager.updateActiveItemIndex(value);
+    }
   }
 
   /** Event emitted when the option is selected. */
@@ -164,18 +169,12 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
 
   _handleKeydown(event: KeyboardEvent) {
     switch (event.keyCode) {
-      case RIGHT_ARROW:
-        this._focusNextTab();
-        break;
-      case LEFT_ARROW:
-        this._focusPreviousTab();
-        break;
       case HOME:
-        this._focusFirstTab();
+        this._keyManager.setFirstItemActive();
         event.preventDefault();
         break;
       case END:
-        this._focusLastTab();
+        this._keyManager.setLastItemActive();
         event.preventDefault();
         break;
       case ENTER:
@@ -183,6 +182,8 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
         this.selectFocusedIndex.emit(this.focusIndex);
         event.preventDefault();
         break;
+      default:
+        this._keyManager.onKeydown(event);
     }
   }
 
@@ -197,14 +198,35 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
       this._alignInkBarToSelectedTab();
     };
 
+    this._keyManager = new FocusKeyManager(this._labelWrappers)
+      .withHorizontalOrientation(this._getLayoutDirection())
+      .withWrap();
+
+    this._keyManager.updateActiveItem(0);
+
     // Defer the first call in order to allow for slower browsers to lay out the elements.
     // This helps in cases where the user lands directly on a page with paginated tabs.
     typeof requestAnimationFrame !== 'undefined' ? requestAnimationFrame(realign) : realign();
-    this._realignInkBar = merge(dirChange, resize).subscribe(realign);
+
+    // On dir change or window resize, realign the ink bar and update the orientation of
+    // the key manager if the direction has changed.
+    merge(dirChange, resize).pipe(takeUntil(this._destroyed)).subscribe(() => {
+      realign();
+      this._keyManager.withHorizontalOrientation(this._getLayoutDirection());
+    });
+
+    // If there is a change in the focus key manager we need to emit the `indexFocused`
+    // event in order to provide a public event that notifies about focus changes. Also we realign
+    // the tabs container by scrolling the new focused tab into the visible section.
+    this._keyManager.change.pipe(takeUntil(this._destroyed)).subscribe(newFocusIndex => {
+      this.indexFocused.emit(newFocusIndex);
+      this._setTabFocus(newFocusIndex);
+    });
   }
 
   ngOnDestroy() {
-    this._realignInkBar.unsubscribe();
+    this._destroyed.next();
+    this._destroyed.complete();
   }
 
   /**
@@ -225,17 +247,19 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     this._updateTabScrollPosition();
   }
 
-  /** When the focus index is set, we must manually send focus to the correct label */
-  set focusIndex(value: number) {
-    if (!this._isValidIndex(value) || this._focusIndex == value) { return; }
-
-    this._focusIndex = value;
-    this.indexFocused.emit(value);
-    this._setTabFocus(value);
+  /** Tracks which element has focus; used for keyboard navigation */
+  get focusIndex(): number {
+    return this._keyManager ? this._keyManager.activeItemIndex! : 0;
   }
 
-  /** Tracks which element has focus; used for keyboard navigation */
-  get focusIndex(): number { return this._focusIndex; }
+  /** When the focus index is set, we must manually send focus to the correct label */
+  set focusIndex(value: number) {
+    if (!this._isValidIndex(value) || this.focusIndex === value || !this._keyManager) {
+      return;
+    }
+
+    this._keyManager.setActiveItem(value);
+  }
 
   /**
    * Determines if an index is valid.  If the tabs are not ready yet, we assume that the user is
@@ -274,53 +298,6 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     }
   }
 
-  /**
-   * Moves the focus towards the beginning or the end of the list depending on the offset provided.
-   * Valid offsets are 1 and -1.
-   */
-  _moveFocus(offset: number) {
-    if (this._labelWrappers) {
-      const tabs: MatTabLabelWrapper[] = this._labelWrappers.toArray();
-
-      for (let i = this.focusIndex + offset; i < tabs.length && i >= 0; i += offset) {
-        if (this._isValidIndex(i)) {
-          this.focusIndex = i;
-          return;
-        }
-      }
-    }
-  }
-
-  /** Increment the focus index by 1 until a valid tab is found. */
-  _focusNextTab(): void {
-    this._moveFocus(this._getLayoutDirection() == 'ltr' ? 1 : -1);
-  }
-
-  /** Decrement the focus index by 1 until a valid tab is found. */
-  _focusPreviousTab(): void {
-    this._moveFocus(this._getLayoutDirection() == 'ltr' ? -1 : 1);
-  }
-
-  /** Focuses the first tab. */
-  private _focusFirstTab(): void {
-    for (let i = 0; i < this._labelWrappers.length; i++) {
-      if (this._isValidIndex(i)) {
-        this.focusIndex = i;
-        break;
-      }
-    }
-  }
-
-  /** Focuses the last tab. */
-  private _focusLastTab(): void {
-    for (let i = this._labelWrappers.length - 1; i > -1; i--) {
-      if (this._isValidIndex(i)) {
-        this.focusIndex = i;
-        break;
-      }
-    }
-  }
-
   /** The layout direction of the containing app. */
   _getLayoutDirection(): Direction {
     return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
@@ -331,7 +308,11 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     const scrollDistance = this.scrollDistance;
     const translateX = this._getLayoutDirection() === 'ltr' ? -scrollDistance : scrollDistance;
 
-    this._tabList.nativeElement.style.transform = `translate3d(${translateX}px, 0, 0)`;
+    // Don't use `translate3d` here because we don't want to create a new layer. A new layer
+    // seems to cause flickering and overflow in Internet Explorer. For example, the ink bar
+    // and ripples will exceed the boundaries of the visible tab bar.
+    // See: https://github.com/angular/material2/issues/10276
+    this._tabList.nativeElement.style.transform = `translateX(${translateX}px)`;
   }
 
   /** Sets the distance in pixels that the tab header should be transformed in the X-axis. */

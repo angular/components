@@ -57,7 +57,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
   }
 
   it('should throw when attempting to attach to multiple different overlays', () => {
-    const origin = new ElementRef(document.createElement('div'));
+    const origin = document.createElement('div');
     const positionStrategy = overlay.position()
         .flexibleConnectedTo(origin)
         .withPositions([{
@@ -67,12 +67,17 @@ describe('FlexibleConnectedPositionStrategy', () => {
           originY: 'bottom'
         }]);
 
+    // Needs to be in the DOM for IE not to throw an "Unspecified error".
+    document.body.appendChild(origin);
     attachOverlay({positionStrategy});
+
     expect(() => attachOverlay({positionStrategy})).toThrow();
+
+    document.body.removeChild(origin);
   });
 
   it('should not throw when trying to apply after being disposed', () => {
-    const origin = new ElementRef(document.createElement('div'));
+    const origin = document.createElement('div');
     const positionStrategy = overlay.position()
         .flexibleConnectedTo(origin)
         .withPositions([{
@@ -82,14 +87,18 @@ describe('FlexibleConnectedPositionStrategy', () => {
           originY: 'bottom'
         }]);
 
+    // Needs to be in the DOM for IE not to throw an "Unspecified error".
+    document.body.appendChild(origin);
     attachOverlay({positionStrategy});
     overlayRef.dispose();
 
     expect(() => positionStrategy.apply()).not.toThrow();
+
+    document.body.removeChild(origin);
   });
 
   it('should not throw when trying to re-apply the last position after being disposed', () => {
-    const origin = new ElementRef(document.createElement('div'));
+    const origin = document.createElement('div');
     const positionStrategy = overlay.position()
         .flexibleConnectedTo(origin)
         .withPositions([{
@@ -99,10 +108,47 @@ describe('FlexibleConnectedPositionStrategy', () => {
           originY: 'bottom'
         }]);
 
+    // Needs to be in the DOM for IE not to throw an "Unspecified error".
+    document.body.appendChild(origin);
     attachOverlay({positionStrategy});
     overlayRef.dispose();
 
     expect(() => positionStrategy.reapplyLastPosition()).not.toThrow();
+
+    document.body.removeChild(origin);
+  });
+
+  it('should for the virtual keyboard offset when positioning the overlay', () => {
+    const originElement = createPositionedBlockElement();
+    document.body.appendChild(originElement);
+
+    // Position the element so it would have enough space to fit.
+    originElement.style.top = '200px';
+    originElement.style.left = '70px';
+
+    // Pull the element up ourselves to simulate what a mobile
+    // browser would do when the virtual keyboard is being shown.
+    overlayContainer.getContainerElement().style.top = '-100px';
+
+    attachOverlay({
+      positionStrategy: overlay.position()
+        .flexibleConnectedTo(originElement)
+        .withFlexibleDimensions(false)
+        .withPush(false)
+        .withPositions([{
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top'
+        }])
+    });
+
+    const originRect = originElement.getBoundingClientRect();
+    const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+
+    expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.bottom));
+
+    document.body.removeChild(originElement);
   });
 
   describe('without flexible dimensions and pushing', () => {
@@ -119,7 +165,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
       positionStrategy = overlay.position()
-          .flexibleConnectedTo(new ElementRef(originElement))
+          .flexibleConnectedTo(originElement)
           .withFlexibleDimensions(false)
           .withPush(false);
     });
@@ -507,6 +553,114 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
     });
 
+    describe('with transform origin', () => {
+      it('should set the proper transform-origin when aligning to start/bottom', () => {
+        positionStrategy.withTransformOriginOn('.transform-origin').withPositions([{
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top'
+        }]);
+
+        attachOverlay({positionStrategy});
+
+        const target = overlayRef.overlayElement.querySelector('.transform-origin')! as HTMLElement;
+
+        expect(target.style.transformOrigin).toContain('left top');
+      });
+
+      it('should set the proper transform-origin when aligning to end/bottom', () => {
+        positionStrategy.withTransformOriginOn('.transform-origin').withPositions([{
+          originX: 'end',
+          originY: 'bottom',
+          overlayX: 'end',
+          overlayY: 'top'
+        }]);
+
+        attachOverlay({positionStrategy});
+
+        const target = overlayRef.overlayElement.querySelector('.transform-origin')! as HTMLElement;
+
+        expect(target.style.transformOrigin).toContain('right top');
+      });
+
+      it('should set the proper transform-origin when centering vertically', () => {
+        positionStrategy.withTransformOriginOn('.transform-origin').withPositions([{
+          originX: 'start',
+          originY: 'center',
+          overlayX: 'start',
+          overlayY: 'center'
+        }]);
+
+        attachOverlay({positionStrategy});
+
+        const target = overlayRef.overlayElement.querySelector('.transform-origin')! as HTMLElement;
+
+        expect(target.style.transformOrigin).toContain('left center');
+      });
+
+      it('should set the proper transform-origin when centering horizontally', () => {
+        positionStrategy.withTransformOriginOn('.transform-origin').withPositions([{
+          originX: 'center',
+          originY: 'top',
+          overlayX: 'center',
+          overlayY: 'top'
+        }]);
+
+        attachOverlay({positionStrategy});
+
+        const target = overlayRef.overlayElement.querySelector('.transform-origin')! as HTMLElement;
+
+        expect(target.style.transformOrigin).toContain('center top');
+      });
+
+      it('should set the proper transform-origin when aligning to start/top', () => {
+        positionStrategy.withTransformOriginOn('.transform-origin').withPositions([{
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'bottom'
+        }]);
+
+        attachOverlay({positionStrategy});
+
+        const target = overlayRef.overlayElement.querySelector('.transform-origin')! as HTMLElement;
+
+        expect(target.style.transformOrigin).toContain('left bottom');
+      });
+
+      it('should set the proper transform-origin when aligning to start/bottom in rtl', () => {
+        positionStrategy.withTransformOriginOn('.transform-origin').withPositions([{
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top'
+        }]);
+
+        attachOverlay({positionStrategy, direction: 'rtl'});
+
+        const target = overlayRef.overlayElement.querySelector('.transform-origin')! as HTMLElement;
+
+        expect(target.style.transformOrigin).toContain('right top');
+      });
+
+      it('should set the proper transform-origin when aligning to end/bottom in rtl', () => {
+        positionStrategy.withTransformOriginOn('.transform-origin').withPositions([{
+          originX: 'end',
+          originY: 'bottom',
+          overlayX: 'end',
+          overlayY: 'top'
+        }]);
+
+        attachOverlay({positionStrategy, direction: 'rtl'});
+
+        const target = overlayRef.overlayElement.querySelector('.transform-origin')! as HTMLElement;
+
+        expect(target.style.transformOrigin).toContain('left top');
+      });
+
+    });
+
     it('should account for the `offsetX` pushing the overlay out of the screen', () => {
       // Position the element so it would have enough space to fit.
       originElement.style.top = '200px';
@@ -863,7 +1017,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
       positionStrategy = overlay.position()
-          .flexibleConnectedTo(new ElementRef(originElement))
+          .flexibleConnectedTo(originElement)
           .withFlexibleDimensions(false)
           .withPush();
     });
@@ -992,7 +1146,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     beforeEach(() => {
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
-      positionStrategy = overlay.position().flexibleConnectedTo(new ElementRef(originElement));
+      positionStrategy = overlay.position().flexibleConnectedTo(originElement);
     });
 
     afterEach(() => {
@@ -1411,7 +1565,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
       // Create a strategy with knowledge of the scrollable container
       const strategy = overlay.position()
-        .flexibleConnectedTo(new ElementRef(originElement))
+        .flexibleConnectedTo(originElement)
         .withPush(false)
         .withPositions([{
           originX: 'start',
@@ -1490,7 +1644,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     beforeEach(() => {
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
-      positionStrategy = overlay.position().flexibleConnectedTo(new ElementRef(originElement));
+      positionStrategy = overlay.position().flexibleConnectedTo(originElement);
     });
 
     afterEach(() => {
@@ -1593,6 +1747,58 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
   });
 
+  describe('validations', () => {
+    let originElement: HTMLElement;
+    let positionStrategy: FlexibleConnectedPositionStrategy;
+
+    beforeEach(() => {
+      originElement = createPositionedBlockElement();
+      document.body.appendChild(originElement);
+      positionStrategy = overlay.position().flexibleConnectedTo(originElement);
+    });
+
+    afterEach(() => {
+      document.body.removeChild(originElement);
+      positionStrategy.dispose();
+    });
+
+    it('should throw when attaching without any positions', () => {
+      expect(() => positionStrategy.withPositions([])).toThrow();
+    });
+
+    it('should throw when passing in something that is missing a connection point', () => {
+      expect(() => {
+        positionStrategy.withPositions([{
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'top'
+        } as any]);
+      }).toThrow();
+    });
+
+    it('should throw when passing in something that has an invalid X position', () => {
+      expect(() => {
+        positionStrategy.withPositions([{
+          originX: 'left',
+          originY: 'top',
+          overlayX: 'left',
+          overlayY: 'top'
+        } as any]);
+      }).toThrow();
+    });
+
+    it('should throw when passing in something that has an invalid Y position', () => {
+      expect(() => {
+        positionStrategy.withPositions([{
+          originX: 'start',
+          originY: 'middle',
+          overlayX: 'start',
+          overlayY: 'middle'
+        } as any]);
+      }).toThrow();
+    });
+  });
+
 });
 
 /** Creates an absolutely positioned, display: block element with a default size. */
@@ -1625,7 +1831,11 @@ function createOverflowContainerElement() {
 
 
 @Component({
-  template: `<div style="width: ${DEFAULT_WIDTH}px; height: ${DEFAULT_HEIGHT}px;"></div>`
+  template: `
+    <div
+      class="transform-origin"
+      style="width: ${DEFAULT_WIDTH}px; height: ${DEFAULT_HEIGHT}px;"></div>
+  `
 })
 class TestOverlay { }
 

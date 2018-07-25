@@ -13,16 +13,17 @@ import {
   ConnectedOverlayPositionChange,
   ConnectionPositionPair,
   ScrollingVisibility,
+  validateHorizontalPosition,
+  validateVerticalPosition,
 } from './connected-position';
 import {Observable, Subscription, Subject} from 'rxjs';
-import {OverlayRef} from '../overlay-ref';
+import {OverlayReference} from '../overlay-reference';
 import {isElementScrolledOutsideView, isElementClippedByScrolling} from './scroll-clip';
 import {coerceCssPixelValue} from '@angular/cdk/coercion';
-
+import {Platform} from '@angular/cdk/platform';
+import {OverlayContainer} from '../overlay-container';
 
 // TODO: refactor clipping detection into a separate thing (part of scrolling module)
-// TODO: attribute selector to specify the transform-origin inside the overlay content
-// TODO: flexible position + centering doesn't work on IE11 (works on Edge).
 // TODO: doesn't handle both flexible width and height when it has to scroll along both axis.
 
 /**
@@ -34,7 +35,7 @@ import {coerceCssPixelValue} from '@angular/cdk/coercion';
  */
 export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** The overlay to which this strategy is attached. */
-  private _overlayRef: OverlayRef;
+  private _overlayRef: OverlayReference;
 
   /** Whether we're performing the very first positioning of the overlay. */
   private _isInitialRender = true;
@@ -105,9 +106,22 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** Default offset for the overlay along the y axis. */
   private _offsetY = 0;
 
+  /** Selector to be used when finding the elements on which to set the transform origin. */
+  private _transformOriginSelector: string;
+
+  /** Amount of subscribers to the `positionChanges` stream. */
+  private _positionChangeSubscriptions = 0;
+
   /** Observable sequence of position changes. */
-  positionChanges: Observable<ConnectedOverlayPositionChange> =
-      this._positionChanges.asObservable();
+  positionChanges: Observable<ConnectedOverlayPositionChange> = Observable.create(observer => {
+    const subscription = this._positionChanges.subscribe(observer);
+    this._positionChangeSubscriptions++;
+
+    return () => {
+      subscription.unsubscribe();
+      this._positionChangeSubscriptions--;
+    };
+  });
 
   /** Ordered list of preferred positions, from most to least desirable. */
   get positions() {
@@ -115,22 +129,27 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   constructor(
-    private _connectedTo: ElementRef,
+    connectedTo: ElementRef | HTMLElement,
     private _viewportRuler: ViewportRuler,
-    private _document: Document) {
-    this._origin = this._connectedTo.nativeElement;
+    private _document: Document,
+    // @deletion-target 7.0.0 `_platform` and `_overlayContainer` parameters to be made required.
+    private _platform?: Platform,
+    private _overlayContainer?: OverlayContainer) {
+    this.setOrigin(connectedTo);
   }
 
   /** Attaches this position strategy to an overlay. */
-  attach(overlayRef: OverlayRef): void {
+  attach(overlayRef: OverlayReference): void {
     if (this._overlayRef && overlayRef !== this._overlayRef) {
       throw Error('This position strategy is already attached to an overlay');
     }
 
+    this._validatePositions();
+
     overlayRef.hostElement.classList.add('cdk-overlay-connected-position-bounding-box');
 
     this._overlayRef = overlayRef;
-    this._boundingBox = overlayRef.hostElement!;
+    this._boundingBox = overlayRef.hostElement;
     this._pane = overlayRef.overlayElement;
     this._resizeSubscription.unsubscribe();
     this._resizeSubscription = this._viewportRuler.change().subscribe(() => this.apply());
@@ -151,8 +170,9 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    * @docs-private
    */
   apply(): void {
-    // We shouldn't do anything if the strategy was disposed.
-    if (this._isDisposed) {
+    // We shouldn't do anything if the strategy was disposed or we're on the server.
+    // @deletion-target 7.0.0 Remove `_platform` null check once it's guaranteed to be defined.
+    if (this._isDisposed || (this._platform && !this._platform.isBrowser)) {
       return;
     }
 
@@ -281,7 +301,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    * allows one to re-align the panel without changing the orientation of the panel.
    */
   reapplyLastPosition(): void {
-    if (!this._isDisposed) {
+    if (!this._isDisposed && (!this._platform || this._platform.isBrowser)) {
       this._originRect = this._origin.getBoundingClientRect();
       this._overlayRect = this._pane.getBoundingClientRect();
       this._viewportRect = this._getNarrowedViewportRect();
@@ -303,7 +323,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /**
-   * Adds a new preferred fallback position.
+   * Adds new preferred positions.
    * @param positions List of positions options for this overlay.
    */
   withPositions(positions: ConnectedPosition[]): this {
@@ -315,11 +335,13 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       this._lastPosition = null;
     }
 
+    this._validatePositions();
+
     return this;
   }
 
   /**
-   * Sets a minimum distance the ovelray may be positioned to the edge of the viewport.
+   * Sets a minimum distance the overlay may be positioned to the edge of the viewport.
    * @param margin Required margin between the overlay and the viewport edge in pixels.
    */
   withViewportMargin(margin: number): this {
@@ -360,8 +382,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    * Sets the origin element, relative to which to position the overlay.
    * @param origin Reference to the new origin element.
    */
-  setOrigin(origin: ElementRef): this {
-    this._origin = origin.nativeElement;
+  setOrigin(origin: ElementRef | HTMLElement): this {
+    this._origin = origin instanceof ElementRef ? origin.nativeElement : origin;
     return this;
   }
 
@@ -380,6 +402,19 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    */
   withDefaultOffsetY(offset: number): this {
     this._offsetY = offset;
+    return this;
+  }
+
+  /**
+   * Configures that the position strategy should set a `transform-origin` on some elements
+   * inside the overlay, depending on the current position that is being applied. This is
+   * useful for the cases where the origin of an animation can change depending on the
+   * alignment of the overlay.
+   * @param selector CSS selector that will be used to find the target
+   *    elements onto which to set the transform origin.
+   */
+  withTransformOriginOn(selector: string): this {
+    this._transformOriginSelector = selector;
     return this;
   }
 
@@ -547,11 +582,11 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
   /**
    * Applies a computed position to the overlay and emits a position change.
-   *
    * @param position The position preference
    * @param originPoint The point on the origin element where the overlay is connected.
    */
   private _applyPosition(position: ConnectedPosition, originPoint: Point) {
+    this._setTransformOrigin(position);
     this._setOverlayElementStyles(originPoint, position);
     this._setBoundingBoxStyles(originPoint, position);
 
@@ -559,10 +594,39 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     this._lastPosition = position;
 
     // Notify that the position has been changed along with its change properties.
-    const scrollableViewProperties = this._getScrollVisibility();
-    const changeEvent = new ConnectedOverlayPositionChange(position, scrollableViewProperties);
-    this._positionChanges.next(changeEvent);
+    // We only emit if we've got any subscriptions, because the scroll visibility
+    // calculcations can be somewhat expensive.
+    if (this._positionChangeSubscriptions > 0) {
+      const scrollableViewProperties = this._getScrollVisibility();
+      const changeEvent = new ConnectedOverlayPositionChange(position, scrollableViewProperties);
+      this._positionChanges.next(changeEvent);
+    }
+
     this._isInitialRender = false;
+  }
+
+  /** Sets the transform origin based on the configured selector and the passed-in position.  */
+  private _setTransformOrigin(position: ConnectedPosition) {
+    if (!this._transformOriginSelector) {
+      return;
+    }
+
+    const elements: NodeListOf<HTMLElement> =
+        this._boundingBox!.querySelectorAll(this._transformOriginSelector);
+    let xOrigin: 'left' | 'right' | 'center';
+    let yOrigin: 'top' | 'bottom' | 'center' = position.overlayY;
+
+    if (position.overlayX === 'center') {
+      xOrigin = 'center';
+    } else if (this._isRtl()) {
+      xOrigin = position.overlayX === 'start' ? 'right' : 'left';
+    } else {
+      xOrigin = position.overlayX === 'start' ? 'left' : 'right';
+    }
+
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].style.transformOrigin = `${xOrigin} ${yOrigin}`;
+    }
   }
 
   /**
@@ -674,8 +738,6 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       // Push the pane content towards the proper direction.
       if (position.overlayX === 'center') {
         styles.alignItems = 'center';
-      } else if (this._isRtl()) {
-        styles.alignItems = position.overlayX === 'end' ? 'flex-start' : 'flex-end';
       } else {
         styles.alignItems = position.overlayX === 'end' ? 'flex-end' : 'flex-start';
       }
@@ -780,6 +842,18 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       overlayPoint = this._pushOverlayOnScreen(overlayPoint, this._overlayRect);
     }
 
+    // @deletion-target 7.0.0 Currently the `_overlayContainer` is optional in order to avoid a
+    // breaking change. The null check here can be removed once the `_overlayContainer` becomes
+    // a required parameter.
+    let virtualKeyboardOffset = this._overlayContainer ?
+        this._overlayContainer.getContainerElement().getBoundingClientRect().top : 0;
+
+    // Normally this would be zero, however when the overlay is attached to an input (e.g. in an
+    // autocomplete), mobile browsers will shift everything in order to put the input in the middle
+    // of the screen and to make space for the virtual keyboard. We need to account for this offset,
+    // otherwise our positioning will be thrown off.
+    overlayPoint.y -= virtualKeyboardOffset;
+
     // We want to set either `top` or `bottom` based on whether the overlay wants to appear
     // above or below the origin and the direction in which the element will expand.
     if (position.overlayY === 'bottom') {
@@ -883,7 +957,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
   /** Whether the we're dealing with an RTL context */
   private _isRtl() {
-    return this._overlayRef.getConfig().direction === 'rtl';
+    return this._overlayRef.getDirection() === 'rtl';
   }
 
   /** Determines whether the overlay uses exact or flexible positioning. */
@@ -900,6 +974,22 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     }
 
     return position.offsetY == null ? this._offsetY : position.offsetY;
+  }
+
+  /** Validates that the current position match the expected values. */
+  private _validatePositions(): void {
+    if (!this._preferredPositions.length) {
+      throw Error('FlexibleConnectedPositionStrategy: At least one position is required.');
+    }
+
+    // TODO(crisbeto): remove these once Angular's template type
+    // checking is advanced enough to catch these cases.
+    this._preferredPositions.forEach(pair => {
+      validateHorizontalPosition('originX', pair.originX);
+      validateVerticalPosition('originY', pair.originY);
+      validateHorizontalPosition('overlayX', pair.overlayX);
+      validateVerticalPosition('overlayY', pair.overlayY);
+    });
   }
 }
 

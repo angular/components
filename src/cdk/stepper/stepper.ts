@@ -33,7 +33,8 @@ import {
 } from '@angular/core';
 import {AbstractControl} from '@angular/forms';
 import {CdkStepLabel} from './step-label';
-import {Subject} from 'rxjs';
+import {Observable, Subject, of as obaservableOf} from 'rxjs';
+import {startWith, takeUntil} from 'rxjs/operators';
 
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;
@@ -83,8 +84,17 @@ export class CdkStep implements OnChanges {
   /** Whether user has seen the expanded step content or not. */
   interacted = false;
 
-  /** Label of the step. */
+  /** Plain text label of the step. */
   @Input() label: string;
+
+  /** Aria label for the tab. */
+  @Input('aria-label') ariaLabel: string;
+
+  /**
+   * Reference to the element that the tab is labelled by.
+   * Will be cleared if `aria-label` is set at the same time.
+   */
+  @Input('aria-labelledby') ariaLabelledby: string;
 
   /** Whether the user can return to this step once it has been marked as complted. */
   @Input()
@@ -189,9 +199,12 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
 
   /** The step that is selected. */
   @Input()
-  get selected(): CdkStep { return this._steps.toArray()[this.selectedIndex]; }
+  get selected(): CdkStep {
+    // @deletion-target 7.0.0 Change return type to `CdkStep | undefined`.
+    return this._steps ? this._steps.toArray()[this.selectedIndex] : undefined!;
+  }
   set selected(step: CdkStep) {
-    this.selectedIndex = this._steps.toArray().indexOf(step);
+    this.selectedIndex = this._steps ? this._steps.toArray().indexOf(step) : -1;
   }
 
   /** Event emitted when the selected step has changed. */
@@ -212,8 +225,11 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this._keyManager = new FocusKeyManager(this._stepHeader)
       .withWrap()
-      .withHorizontalOrientation(this._layoutDirection())
       .withVerticalOrientation(this._orientation === 'vertical');
+
+    (this._dir ? this._dir.change as Observable<Direction> : obaservableOf())
+      .pipe(startWith(this._layoutDirection()), takeUntil(this._destroyed))
+      .subscribe(direction => this._keyManager.withHorizontalOrientation(direction));
 
     this._keyManager.updateActiveItemIndex(this._selectedIndex);
   }

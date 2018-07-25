@@ -9,9 +9,12 @@
 import {LayoutModule} from '@angular/cdk/layout';
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
 import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
+import {Injector, NgModule} from '@angular/core';
+import {createCustomElement} from '@angular/elements';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {EXAMPLE_COMPONENTS, ExampleModule} from '@angular/material-examples';
 import {RouterModule} from '@angular/router';
+
 import {AutocompleteDemo} from '../autocomplete/autocomplete-demo';
 import {BadgeDemo} from '../badge/badge-demo';
 import {BaselineDemo} from '../baseline/baseline-demo';
@@ -21,11 +24,13 @@ import {ButtonDemo} from '../button/button-demo';
 import {CardDemo} from '../card/card-demo';
 import {CheckboxDemo, MatCheckboxDemoNestedChecklist} from '../checkbox/checkbox-demo';
 import {ChipsDemo} from '../chips/chips-demo';
-import {ConnectedOverlayDemo, DemoOverlay} from '../connected-overlay/connected-overlay-demo';
+import {ConnectedOverlayDemo} from '../connected-overlay/connected-overlay-demo';
 import {CustomHeader, DatepickerDemo} from '../datepicker/datepicker-demo';
 import {DemoMaterialModule} from '../demo-material-module';
 import {ContentElementDialog, DialogDemo, IFrameDialog, JazzDialog} from '../dialog/dialog-demo';
 import {DrawerDemo} from '../drawer/drawer-demo';
+import {MaterialExampleModule} from '../example/example-module';
+import {ExamplesPage} from '../examples-page/examples-page';
 import {ExpansionDemo} from '../expansion/expansion-demo';
 import {FocusOriginDemo} from '../focus-origin/focus-origin-demo';
 import {GesturesDemo} from '../gestures/gestures-demo';
@@ -35,12 +40,7 @@ import {InputDemo} from '../input/input-demo';
 import {ListDemo} from '../list/list-demo';
 import {LiveAnnouncerDemo} from '../live-announcer/live-announcer-demo';
 import {MenuDemo} from '../menu/menu-demo';
-import {
-  KeyboardTrackingPanel,
-  OverlayDemo,
-  RotiniPanel,
-  SpaghettiPanel
-} from '../overlay/overlay-demo';
+import {PaginatorDemo} from '../paginator/paginator-demo';
 import {PlatformDemo} from '../platform/platform-demo';
 import {PortalDemo, ScienceJoke} from '../portal/portal-demo';
 import {ProgressBarDemo} from '../progress-bar/progress-bar-demo';
@@ -55,19 +55,20 @@ import {SliderDemo} from '../slider/slider-demo';
 import {SnackBarDemo} from '../snack-bar/snack-bar-demo';
 import {StepperDemo} from '../stepper/stepper-demo';
 import {TableDemoModule} from '../table/table-demo-module';
-import {
-  Counter, FoggyTabContent, RainyTabContent, SunnyTabContent, TabsDemo
-} from '../tabs/tabs-demo';
+import {TabsDemo} from '../tabs/tabs-demo';
 import {ToolbarDemo} from '../toolbar/toolbar-demo';
 import {TooltipDemo} from '../tooltip/tooltip-demo';
 import {TreeDemoModule} from '../tree/tree-demo-module';
 import {TypographyDemo} from '../typography/typography-demo';
+import {VirtualScrollDemo} from '../virtual-scroll/virtual-scroll-demo';
 import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
-import {PaginatorDemo} from '../paginator/paginator-demo';
+import {DragAndDropDemo} from '../drag-drop/drag-drop-demo';
 
 @NgModule({
   imports: [
+    MaterialExampleModule,
+    ExampleModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -78,6 +79,7 @@ import {PaginatorDemo} from '../paginator/paginator-demo';
     TreeDemoModule,
   ],
   declarations: [
+    ExamplesPage,
     AutocompleteDemo,
     BadgeDemo,
     BaselineDemo,
@@ -89,18 +91,15 @@ import {PaginatorDemo} from '../paginator/paginator-demo';
     ChipsDemo,
     ConnectedOverlayDemo,
     ContentElementDialog,
-    Counter,
     CustomHeader,
     DatepickerDemo,
     DemoApp,
-    DemoOverlay,
     DialogDemo,
     DrawerDemo,
     ExampleBottomSheet,
-    ExpansionDemo,
+    DragAndDropDemo,
     ExpansionDemo,
     FocusOriginDemo,
-    FoggyTabContent,
     GesturesDemo,
     GridListDemo,
     Home,
@@ -108,21 +107,17 @@ import {PaginatorDemo} from '../paginator/paginator-demo';
     IconDemo,
     InputDemo,
     JazzDialog,
-    KeyboardTrackingPanel,
     ListDemo,
     LiveAnnouncerDemo,
     MatCheckboxDemoNestedChecklist,
     MenuDemo,
-    OverlayDemo,
     PaginatorDemo,
     PlatformDemo,
     PortalDemo,
     ProgressBarDemo,
     ProgressSpinnerDemo,
     RadioDemo,
-    RainyTabContent,
     RippleDemo,
-    RotiniPanel,
     ScienceJoke,
     ScreenTypeDemo,
     SelectDemo,
@@ -130,13 +125,12 @@ import {PaginatorDemo} from '../paginator/paginator-demo';
     SlideToggleDemo,
     SliderDemo,
     SnackBarDemo,
-    SpaghettiPanel,
     StepperDemo,
-    SunnyTabContent,
     TabsDemo,
     ToolbarDemo,
     TooltipDemo,
     TypographyDemo,
+    VirtualScrollDemo,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
@@ -145,14 +139,18 @@ import {PaginatorDemo} from '../paginator/paginator-demo';
     ContentElementDialog,
     CustomHeader,
     DemoApp,
-    DemoOverlay,
     ExampleBottomSheet,
     IFrameDialog,
     JazzDialog,
-    KeyboardTrackingPanel,
-    RotiniPanel,
     ScienceJoke,
-    SpaghettiPanel,
   ],
 })
-export class DemoModule {}
+export class DemoModule {
+  constructor(injector: Injector) {
+    // Register examples as custom elements so that they can be inserted into the DOM dynamically
+    Object.keys(EXAMPLE_COMPONENTS).forEach(key => {
+      const element = createCustomElement(EXAMPLE_COMPONENTS[key].component, {injector});
+      customElements.define(key, element);
+    });
+  }
+}

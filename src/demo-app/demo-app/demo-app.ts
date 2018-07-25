@@ -48,6 +48,7 @@ export class Home {}
 export class DemoApp {
   dark = false;
   navItems = [
+    {name: 'Examples', route: '/examples'},
     {name: 'Autocomplete', route: '/autocomplete'},
     {name: 'Badge', route: '/badge'},
     {name: 'Bottom sheet', route: '/bottom-sheet'},
@@ -61,6 +62,7 @@ export class DemoApp {
     {name: 'Datepicker', route: '/datepicker'},
     {name: 'Dialog', route: '/dialog'},
     {name: 'Drawer', route: '/drawer'},
+    {name: 'Drag and Drop', route: '/drag-drop'},
     {name: 'Expansion Panel', route: '/expansion'},
     {name: 'Focus Origin', route: '/focus-origin'},
     {name: 'Gestures', route: '/gestures'},
@@ -70,7 +72,6 @@ export class DemoApp {
     {name: 'List', route: '/list'},
     {name: 'Live Announcer', route: '/live-announcer'},
     {name: 'Menu', route: '/menu'},
-    {name: 'Overlay', route: '/overlay'},
     {name: 'Paginator', route: '/paginator'},
     {name: 'Platform', route: '/platform'},
     {name: 'Portal', route: '/portal'},
@@ -90,7 +91,8 @@ export class DemoApp {
     {name: 'Toolbar', route: '/toolbar'},
     {name: 'Tooltip', route: '/tooltip'},
     {name: 'Tree', route: '/tree'},
-    {name: 'Typography', route: '/typography'}
+    {name: 'Typography', route: '/typography'},
+    {name: 'Virtual Scrolling', route: '/virtual-scroll'},
   ];
 
   constructor(

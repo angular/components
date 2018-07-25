@@ -42,6 +42,9 @@ export class OverlayKeyboardDispatcher implements OnDestroy {
 
   /** Add a new overlay to the list of attached overlay refs. */
   add(overlayRef: OverlayRef): void {
+    // Ensure that we don't get the same overlay multiple times.
+    this.remove(overlayRef);
+
     // Lazily start dispatcher once first overlay is added
     if (!this._isAttached) {
       this._document.body.addEventListener('keydown', this._keydownListener, true);
@@ -65,18 +68,6 @@ export class OverlayKeyboardDispatcher implements OnDestroy {
     }
   }
 
-  /** Select the appropriate overlay from a keydown event. */
-  private _selectOverlayFromEvent(event: KeyboardEvent): OverlayRef {
-    // Check if any overlays contain the event
-    const targetedOverlay = this._attachedOverlays.find(overlay => {
-      return overlay.overlayElement === event.target ||
-          overlay.overlayElement.contains(event.target as HTMLElement);
-    });
-
-    // Use the overlay if it exists, otherwise choose the most recently attached one
-    return targetedOverlay || this._attachedOverlays[this._attachedOverlays.length - 1];
-  }
-
   /** Detaches the global keyboard event listener. */
   private _detach() {
     if (this._isAttached) {
@@ -87,9 +78,19 @@ export class OverlayKeyboardDispatcher implements OnDestroy {
 
   /** Keyboard event listener that will be attached to the body. */
   private _keydownListener = (event: KeyboardEvent) => {
-    if (this._attachedOverlays.length) {
-      // Dispatch keydown event to the correct overlay.
-      this._selectOverlayFromEvent(event)._keydownEvents.next(event);
+    const overlays = this._attachedOverlays;
+
+    for (let i = overlays.length - 1; i > -1; i--) {
+      // Dispatch the keydown event to the top overlay which has subscribers to its keydown events.
+      // We want to target the most recent overlay, rather than trying to match where the event came
+      // from, because some components might open an overlay, but keep focus on a trigger element
+      // (e.g. for select and autocomplete). We skip overlays without keydown event subscriptions,
+      // because we don't want overlays that don't handle keyboard events to block the ones below
+      // them that do.
+      if (overlays[i]._keydownEventSubscriptions > 0) {
+        overlays[i]._keydownEvents.next(event);
+        break;
+      }
     }
   }
 }

@@ -21,6 +21,8 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
+import {Location} from '@angular/common';
+import {SpyLocation} from '@angular/common/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatBottomSheet} from './bottom-sheet';
 import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetConfig} from './bottom-sheet-config';
@@ -36,19 +38,24 @@ describe('MatBottomSheet', () => {
 
   let testViewContainerRef: ViewContainerRef;
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
+  let mockLocation: SpyLocation;
 
   beforeEach(fakeAsync(() => {
     TestBed
-      .configureTestingModule({imports: [MatBottomSheetModule, BottomSheetTestModule]})
+      .configureTestingModule({
+        imports: [MatBottomSheetModule, BottomSheetTestModule],
+        providers: [{provide: Location, useClass: SpyLocation}]
+      })
       .compileComponents();
   }));
 
-  beforeEach(inject([MatBottomSheet, OverlayContainer, ViewportRuler],
-    (bs: MatBottomSheet, oc: OverlayContainer, vr: ViewportRuler) => {
+  beforeEach(inject([MatBottomSheet, OverlayContainer, ViewportRuler, Location],
+    (bs: MatBottomSheet, oc: OverlayContainer, vr: ViewportRuler, l: Location) => {
       bottomSheet = bs;
       overlayContainer = oc;
       viewportRuler = vr;
       overlayContainerElement = oc.getContainerElement();
+      mockLocation = l as SpyLocation;
     }));
 
   afterEach(() => {
@@ -211,7 +218,7 @@ describe('MatBottomSheet', () => {
 
     viewContainerFixture.detectChanges();
 
-    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
+    let overlayPane = overlayContainerElement.querySelector('.cdk-global-overlay-wrapper')!;
 
     expect(overlayPane.getAttribute('dir')).toBe('rtl');
   });
@@ -222,6 +229,14 @@ describe('MatBottomSheet', () => {
     viewContainerFixture.detectChanges();
 
     expect(bottomSheetRef.instance.directionality.value).toBe('rtl');
+  });
+
+  it('should fall back to injecting the global direction if none is passed by the config', () => {
+    const bottomSheetRef = bottomSheet.open(PizzaMsg, {});
+
+    viewContainerFixture.detectChanges();
+
+    expect(bottomSheetRef.instance.directionality.value).toBe('ltr');
   });
 
   it('should be able to set a custom panel class', () => {
@@ -341,6 +356,42 @@ describe('MatBottomSheet', () => {
     expect(spy).toHaveBeenCalledWith(1337);
   }));
 
+  it('should close the bottom sheet when going forwards/backwards in history', fakeAsync(() => {
+    bottomSheet.open(PizzaMsg);
+
+    expect(overlayContainerElement.querySelector('mat-bottom-sheet-container')).toBeTruthy();
+
+    mockLocation.simulateUrlPop('');
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.querySelector('mat-bottom-sheet-container')).toBeFalsy();
+  }));
+
+  it('should close the bottom sheet when the location hash changes', fakeAsync(() => {
+    bottomSheet.open(PizzaMsg);
+
+    expect(overlayContainerElement.querySelector('mat-bottom-sheet-container')).toBeTruthy();
+
+    mockLocation.simulateHashChange('');
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.querySelector('mat-bottom-sheet-container')).toBeFalsy();
+  }));
+
+  it('should allow the consumer to disable closing a bottom sheet on navigation', fakeAsync(() => {
+    bottomSheet.open(PizzaMsg, {closeOnNavigation: false});
+
+    expect(overlayContainerElement.querySelector('mat-bottom-sheet-container')).toBeTruthy();
+
+    mockLocation.simulateUrlPop('');
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.querySelector('mat-bottom-sheet-container')).toBeTruthy();
+  }));
+
   describe('passing in data', () => {
     it('should be able to pass in data', () => {
       const config = {
@@ -456,6 +507,18 @@ describe('MatBottomSheet', () => {
 
       expect(document.activeElement.tagName)
           .toBe('INPUT', 'Expected first tabbable element (input) in the sheet to be focused.');
+    }));
+
+    it('should allow disabling focus of the first tabbable element', fakeAsync(() => {
+      bottomSheet.open(PizzaMsg, {
+        viewContainerRef: testViewContainerRef,
+        autoFocus: false
+      });
+
+      viewContainerFixture.detectChanges();
+      flushMicrotasks();
+
+      expect(document.activeElement.tagName).not.toBe('INPUT');
     }));
 
     it('should re-focus trigger element when bottom sheet closes', fakeAsync(() => {

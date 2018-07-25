@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   Directive,
   ElementRef,
@@ -35,18 +36,22 @@ import {fromEvent, Subject} from 'rxjs';
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Keep track of the previous textarea value to avoid resizing when the value hasn't changed. */
   private _previousValue: string;
+  private _initialHeight: string | null;
   private readonly _destroyed = new Subject<void>();
 
   private _minRows: number;
   private _maxRows: number;
+  private _enabled: boolean = true;
+
+  private _textareaElement: HTMLTextAreaElement;
 
   /** Minimum amount of rows in the textarea. */
   @Input('cdkAutosizeMinRows')
+  get minRows(): number { return this._minRows; }
   set minRows(value: number) {
     this._minRows = value;
     this._setMinHeight();
   }
-  get minRows(): number { return this._minRows; }
 
   /** Maximum amount of rows in the textarea. */
   @Input('cdkAutosizeMaxRows')
@@ -56,13 +61,28 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     this._setMaxHeight();
   }
 
+  /** Whether autosizing is enabled or not */
+  @Input('cdkTextareaAutosize')
+  get enabled(): boolean { return this._enabled; }
+  set enabled(value: boolean) {
+    value = coerceBooleanProperty(value);
+
+    // Only act if the actual value changed. This specifically helps to not run
+    // resizeToFitContent too early (i.e. before ngAfterViewInit)
+    if (this._enabled !== value) {
+      (this._enabled = value) ? this.resizeToFitContent(true) : this.reset();
+    }
+  }
+
   /** Cached height of a textarea with a single row. */
   private _cachedLineHeight: number;
 
   constructor(
     private _elementRef: ElementRef,
     private _platform: Platform,
-    private _ngZone: NgZone) {}
+    private _ngZone: NgZone) {
+    this._textareaElement = this._elementRef.nativeElement as HTMLTextAreaElement;
+  }
 
   /** Sets the minimum height of the textarea as determined by minRows. */
   _setMinHeight(): void {
@@ -86,6 +106,9 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
   ngAfterViewInit() {
     if (this._platform.isBrowser) {
+      // Remember the height which we started with in case autosizing is disabled
+      this._initialHeight = this._textareaElement.style.height;
+
       this.resizeToFitContent();
 
       this._ngZone.runOutsideAngular(() => {
@@ -103,8 +126,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
   /** Sets a style property on the textarea element. */
   private _setTextareaStyle(property: string, value: string): void {
-    const textarea = this._elementRef.nativeElement as HTMLTextAreaElement;
-    textarea.style[property] = value;
+    this._textareaElement.style[property] = value;
   }
 
   /**
@@ -119,10 +141,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
       return;
     }
 
-    let textarea = this._elementRef.nativeElement as HTMLTextAreaElement;
-
     // Use a clone element because we have to override some styles.
-    let textareaClone = textarea.cloneNode(false) as HTMLTextAreaElement;
+    let textareaClone = this._textareaElement.cloneNode(false) as HTMLTextAreaElement;
     textareaClone.rows = 1;
 
     // Use `position: absolute` so that this doesn't cause a browser layout and use
@@ -143,9 +163,9 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     // See Firefox bug report: https://bugzilla.mozilla.org/show_bug.cgi?id=33654
     textareaClone.style.overflow = 'hidden';
 
-    textarea.parentNode!.appendChild(textareaClone);
+    this._textareaElement.parentNode!.appendChild(textareaClone);
     this._cachedLineHeight = textareaClone.clientHeight;
-    textarea.parentNode!.removeChild(textareaClone);
+    this._textareaElement.parentNode!.removeChild(textareaClone);
 
     // Min and max heights have to be re-calculated if the cached line height changes
     this._setMinHeight();
@@ -164,6 +184,11 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
    *    recalculated only if the value changed since the last call.
    */
   resizeToFitContent(force: boolean = false) {
+    // If autosizing is disabled, just skip everything else
+    if (!this._enabled) {
+      return;
+    }
+
     this._cacheTextareaLineHeight();
 
     // If we haven't determined the line-height yet, we know we're still hidden and there's no point
@@ -187,15 +212,16 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     // Long placeholders that are wider than the textarea width may lead to a bigger scrollHeight
     // value. To ensure that the scrollHeight is not bigger than the content, the placeholders
     // need to be removed temporarily.
-    textarea.style.height = 'auto';
-    textarea.style.overflow = 'hidden';
+    textarea.classList.add('cdk-textarea-autosize-measuring');
     textarea.placeholder = '';
 
-    const height = textarea.scrollHeight;
+    // The cdk-textarea-autosize-measuring class includes a 2px padding to workaround an issue with
+    // Chrome, so we account for that extra space here by subtracting 4 (2px top + 2px bottom).
+    const height = textarea.scrollHeight - 4;
 
     // Use the scrollHeight to know how large the textarea *would* be if fit its entire value.
     textarea.style.height = `${height}px`;
-    textarea.style.overflow = '';
+    textarea.classList.remove('cdk-textarea-autosize-measuring');
     textarea.placeholder = placeholderText;
 
     // On Firefox resizing the textarea will prevent it from scrolling to the caret position.
@@ -203,11 +229,32 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     if (typeof requestAnimationFrame !== 'undefined') {
       this._ngZone.runOutsideAngular(() => requestAnimationFrame(() => {
         const {selectionStart, selectionEnd} = textarea;
-        textarea.setSelectionRange(selectionStart, selectionEnd);
+
+        // IE will throw an "Unspecified error" if we try to set the selection range after the
+        // element has been removed from the DOM. Assert that the directive hasn't been destroyed
+        // between the time we requested the animation frame and when it was executed.
+        // Also note that we have to assert that the textarea is focused before we set the
+        // selection range. Setting the selection range on a non-focused textarea will cause
+        // it to receive focus on IE and Edge.
+        if (!this._destroyed.isStopped && document.activeElement === textarea) {
+          textarea.setSelectionRange(selectionStart, selectionEnd);
+        }
       }));
     }
 
     this._previousValue = value;
+  }
+
+  /**
+   * Resets the textarea to it's original size
+   */
+  reset() {
+    // Do not try to change the textarea, if the initialHeight has not been determined yet
+    // This might potentially remove styles when reset() is called before ngAfterViewInit
+    if (this._initialHeight === undefined) {
+      return;
+    }
+    this._textareaElement.style.height = this._initialHeight;
   }
 
   _noopInputHandler() {

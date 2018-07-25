@@ -13,12 +13,14 @@ import {
   IterableChanges,
   IterableDiffer,
   IterableDiffers,
+  OnChanges,
   SimpleChanges,
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {CdkCellDef} from './cell';
+import {CdkCellDef, CdkColumnDef} from './cell';
+import {CanStick, mixinHasStickyInput} from './can-stick';
 
 /**
  * The row template that can be used by the mat-table. Should not be used outside of the
@@ -30,7 +32,7 @@ export const CDK_ROW_TEMPLATE = `<ng-container cdkCellOutlet></ng-container>`;
  * Base class for the CdkHeaderRowDef and CdkRowDef that handles checking their columns inputs
  * for changes and notifying the table.
  */
-export abstract class BaseRowDef {
+export abstract class BaseRowDef implements OnChanges {
   /** The columns to be displayed on this row. */
   columns: Iterable<string>;
 
@@ -43,8 +45,8 @@ export abstract class BaseRowDef {
   ngOnChanges(changes: SimpleChanges): void {
     // Create a new columns differ if one does not yet exist. Initialize it based on initial value
     // of the columns property or an empty array if none is provided.
-    const columns = changes['columns'].currentValue || [];
     if (!this._columnsDiffer) {
+      const columns = (changes['columns'] && changes['columns'].currentValue) || [];
       this._columnsDiffer = this._differs.find(columns).create();
       this._columnsDiffer.diff(columns);
     }
@@ -57,7 +59,23 @@ export abstract class BaseRowDef {
   getColumnsDiff(): IterableChanges<any> | null {
     return this._columnsDiffer.diff(this.columns);
   }
+
+  /** Gets this row def's relevant cell template from the provided column def. */
+  extractCellTemplate(column: CdkColumnDef): TemplateRef<any> {
+    if (this instanceof CdkHeaderRowDef) {
+      return column.headerCell.template;
+    } if (this instanceof CdkFooterRowDef) {
+      return column.footerCell.template;
+    } else {
+      return column.cell.template;
+    }
+  }
 }
+
+// Boilerplate for applying mixins to CdkHeaderRowDef.
+/** @docs-private */
+export class CdkHeaderRowDefBase extends BaseRowDef {}
+export const _CdkHeaderRowDefBase = mixinHasStickyInput(CdkHeaderRowDefBase);
 
 /**
  * Header row definition for the CDK table.
@@ -65,11 +83,42 @@ export abstract class BaseRowDef {
  */
 @Directive({
   selector: '[cdkHeaderRowDef]',
-  inputs: ['columns: cdkHeaderRowDef'],
+  inputs: ['columns: cdkHeaderRowDef', 'sticky: cdkHeaderRowDefSticky'],
 })
-export class CdkHeaderRowDef extends BaseRowDef {
+export class CdkHeaderRowDef extends _CdkHeaderRowDefBase implements CanStick, OnChanges {
   constructor(template: TemplateRef<any>, _differs: IterableDiffers) {
     super(template, _differs);
+  }
+
+  // Prerender fails to recognize that ngOnChanges in a part of this class through inheritance.
+  // Explicitly define it so that the method is called as part of the Angular lifecycle.
+  ngOnChanges(changes: SimpleChanges): void {
+    super.ngOnChanges(changes);
+  }
+}
+
+// Boilerplate for applying mixins to CdkFooterRowDef.
+/** @docs-private */
+export class CdkFooterRowDefBase extends BaseRowDef {}
+export const _CdkFooterRowDefBase = mixinHasStickyInput(CdkFooterRowDefBase);
+
+/**
+ * Footer row definition for the CDK table.
+ * Captures the footer row's template and other footer properties such as the columns to display.
+ */
+@Directive({
+  selector: '[cdkFooterRowDef]',
+  inputs: ['columns: cdkFooterRowDef', 'sticky: cdkFooterRowDefSticky'],
+})
+export class CdkFooterRowDef extends _CdkFooterRowDefBase implements CanStick, OnChanges {
+  constructor(template: TemplateRef<any>, _differs: IterableDiffers) {
+    super(template, _differs);
+  }
+
+  // Prerender fails to recognize that ngOnChanges in a part of this class through inheritance.
+  // Explicitly define it so that the method is called as part of the Angular lifecycle.
+  ngOnChanges(changes: SimpleChanges): void {
+    super.ngOnChanges(changes);
   }
 }
 
@@ -98,13 +147,44 @@ export class CdkRowDef<T> extends BaseRowDef {
   }
 }
 
-/** Context provided to the row cells */
+/** Context provided to the row cells when `multiTemplateDataRows` is false */
 export interface CdkCellOutletRowContext<T> {
   /** Data for the row that this cell is located within. */
-  $implicit: T;
+  $implicit?: T;
 
-  /** Index location of the row that this cell is located within. */
+  /** Index of the data object in the provided data array. */
   index?: number;
+
+  /** Length of the number of total rows. */
+  count?: number;
+
+  /** True if this cell is contained in the first row. */
+  first?: boolean;
+
+  /** True if this cell is contained in the last row. */
+  last?: boolean;
+
+  /** True if this cell is contained in a row with an even-numbered index. */
+  even?: boolean;
+
+  /** True if this cell is contained in a row with an odd-numbered index. */
+  odd?: boolean;
+}
+
+/**
+ * Context provided to the row cells when `multiTemplateDataRows` is true. This context is the same
+ * as CdkCellOutletRowContext except that the single `index` value is replaced by `dataIndex` and
+ * `renderIndex`.
+ */
+export interface CdkCellOutletMultiRowContext<T> {
+  /** Data for the row that this cell is located within. */
+  $implicit?: T;
+
+  /** Index of the data object in the provided data array. */
+  dataIndex?: number;
+
+  /** Index location of the rendered row that this cell is located within. */
+  renderIndex?: number;
 
   /** Length of the number of total rows. */
   count?: number;
@@ -161,6 +241,21 @@ export class CdkCellOutlet {
   encapsulation: ViewEncapsulation.None,
 })
 export class CdkHeaderRow { }
+
+
+/** Footer template container that contains the cell outlet. Adds the right class and role. */
+@Component({
+  moduleId: module.id,
+  selector: 'cdk-footer-row, tr[cdk-footer-row]',
+  template: CDK_ROW_TEMPLATE,
+  host: {
+    'class': 'cdk-footer-row',
+    'role': 'row',
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+})
+export class CdkFooterRow { }
 
 /** Data row template container that contains the cell outlet. Adds the right class and role. */
 @Component({

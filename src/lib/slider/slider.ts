@@ -34,6 +34,7 @@ import {
   Output,
   ViewChild,
   ViewEncapsulation,
+  Inject,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -46,6 +47,7 @@ import {
   mixinTabIndex,
 } from '@angular/material/core';
 import {Subscription} from 'rxjs';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 /**
  * Visually, a 30px separation between tick marks looks best. This is very subjective but it is
@@ -126,6 +128,7 @@ export const _MatSliderMixinBase =
     '[class.mat-slider-vertical]': 'vertical',
     '[class.mat-slider-min-value]': '_isMinValue',
     '[class.mat-slider-hide-last-tick]': 'disabled || _isMinValue && _thumbGap && _invertAxis',
+    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
   },
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
@@ -179,7 +182,7 @@ export class MatSlider extends _MatSliderMixinBase
     this._step = coerceNumberProperty(v, this._step);
 
     if (this._step % 1 !== 0) {
-      this._roundLabelTo = this._step.toString().split('.').pop()!.length;
+      this._roundToDecimal = this._step.toString().split('.').pop()!.length;
     }
 
     // Since this could modify the label, we need to notify the change detection.
@@ -221,7 +224,15 @@ export class MatSlider extends _MatSliderMixinBase
   }
   set value(v: number | null) {
     if (v !== this._value) {
-      this._value = coerceNumberProperty(v);
+      let value = coerceNumberProperty(v);
+
+      // While incrementing by a decimal we can end up with values like 33.300000000000004.
+      // Truncate it to ensure that it matches the label and to make it easier to work with.
+      if (this._roundToDecimal) {
+        value = parseFloat(value.toFixed(this._roundToDecimal));
+      }
+
+      this._value = value;
       this._percent = this._calculatePercentage(this._value);
 
       // Since this also modifies the percentage, we need to let the change detection know.
@@ -251,6 +262,13 @@ export class MatSlider extends _MatSliderMixinBase
   /** Event emitted when the slider thumb moves. */
   @Output() readonly input: EventEmitter<MatSliderChange> = new EventEmitter<MatSliderChange>();
 
+  /**
+   * Emits when the raw value of the slider changes. This is here primarily
+   * to facilitate the two-way binding for the `value` input.
+   * @docs-private
+   */
+  @Output() readonly valueChange: EventEmitter<number | null> = new EventEmitter<number | null>();
+
   /** The value to be used for display purposes. */
   get displayValue(): string | number {
     if (this.displayWith) {
@@ -260,8 +278,8 @@ export class MatSlider extends _MatSliderMixinBase
     // Note that this could be improved further by rounding something like 0.999 to 1 or
     // 0.899 to 0.9, however it is very performance sensitive, because it gets called on
     // every change detection cycle.
-    if (this._roundLabelTo && this.value && this.value % 1 !== 0) {
-      return this.value.toFixed(this._roundLabelTo);
+    if (this._roundToDecimal && this.value && this.value % 1 !== 0) {
+      return this.value.toFixed(this._roundToDecimal);
     }
 
     return this.value || 0;
@@ -328,19 +346,25 @@ export class MatSlider extends _MatSliderMixinBase
 
   /** CSS styles for the track background element. */
   get _trackBackgroundStyles(): { [key: string]: string } {
-    let axis = this.vertical ? 'Y' : 'X';
-    let sign = this._invertMouseCoords ? '-' : '';
+    const axis = this.vertical ? 'Y' : 'X';
+    const scale = this.vertical ? `1, ${1 - this.percent}, 1` : `${1 - this.percent}, 1, 1`;
+    const sign = this._invertMouseCoords ? '-' : '';
+
     return {
-      'transform': `translate${axis}(${sign}${this._thumbGap}px) scale${axis}(${1 - this.percent})`
+      // scale3d avoids some rendering issues in Chrome. See #12071.
+      transform: `translate${axis}(${sign}${this._thumbGap}px) scale3d(${scale})`
     };
   }
 
   /** CSS styles for the track fill element. */
   get _trackFillStyles(): { [key: string]: string } {
-    let axis = this.vertical ? 'Y' : 'X';
-    let sign = this._invertMouseCoords ? '' : '-';
+    const axis = this.vertical ? 'Y' : 'X';
+    const scale = this.vertical ? `1, ${this.percent}, 1` : `${this.percent}, 1, 1`;
+    const sign = this._invertMouseCoords ? '' : '-';
+
     return {
-      'transform': `translate${axis}(${sign}${this._thumbGap}px) scale${axis}(${this.percent})`
+      // scale3d avoids some rendering issues in Chrome. See #12071.
+      transform: `translate${axis}(${sign}${this._thumbGap}px) scale3d(${scale})`
     };
   }
 
@@ -403,7 +427,7 @@ export class MatSlider extends _MatSliderMixinBase
   private _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
   /** Decimal places to round to, based on the step amount. */
-  private _roundLabelTo: number;
+  private _roundToDecimal: number;
 
   /** Subscription to the Directionality change EventEmitter. */
   private _dirChangeSubscription = Subscription.EMPTY;
@@ -431,7 +455,9 @@ export class MatSlider extends _MatSliderMixinBase
               private _focusMonitor: FocusMonitor,
               private _changeDetectorRef: ChangeDetectorRef,
               @Optional() private _dir: Directionality,
-              @Attribute('tabindex') tabIndex: string) {
+              @Attribute('tabindex') tabIndex: string,
+              // @deletion-target 7.0.0 `_animationMode` parameter to be made required.
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     super(elementRef);
 
     this.tabIndex = parseInt(tabIndex) || 0;
@@ -633,11 +659,11 @@ export class MatSlider extends _MatSliderMixinBase
     } else if (percent === 1) {
       this.value = this.max;
     } else {
-      let exactValue = this._calculateValue(percent);
+      const exactValue = this._calculateValue(percent);
 
       // This calculation finds the closest step by finding the closest
       // whole number divisible by the step relative to the min.
-      let closestValue = Math.round((exactValue - this.min) / this.step) * this.step + this.min;
+      const closestValue = Math.round((exactValue - this.min) / this.step) * this.step + this.min;
 
       // The value needs to snap to the min and max.
       this.value = this._clamp(closestValue, this.min, this.max);
@@ -647,6 +673,7 @@ export class MatSlider extends _MatSliderMixinBase
   /** Emits a change event if the current value is different from the last emitted value. */
   private _emitChangeEvent() {
     this._controlValueAccessorChangeFn(this.value);
+    this.valueChange.emit(this.value);
     this.change.emit(this._createChangeEvent());
   }
 
@@ -728,7 +755,7 @@ export class MatSlider extends _MatSliderMixinBase
   }
 
   /**
-   * Registers a callback to eb triggered when the value has changed.
+   * Registers a callback to be triggered when the value has changed.
    * Implemented as part of ControlValueAccessor.
    * @param fn Callback to be registered.
    */

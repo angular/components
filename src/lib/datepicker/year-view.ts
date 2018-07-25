@@ -96,8 +96,11 @@ export class MatYearView<D> implements AfterContentInit {
   /** Emits the selected month. This doesn't imply a change on the selected date */
   @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
+  /** Emits when any date is activated. */
+  @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
+
   /** The body of calendar table */
-  @ViewChild(MatCalendarBody) _matCalendarBody;
+  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
 
   /** Grid of calendar cells representing the months of the year. */
   _months: MatCalendarCell[][];
@@ -130,7 +133,6 @@ export class MatYearView<D> implements AfterContentInit {
 
   ngAfterContentInit() {
     this._init();
-    this._focusActiveCell();
   }
 
   /** Handles when a new month is selected. */
@@ -153,6 +155,7 @@ export class MatYearView<D> implements AfterContentInit {
     // disabled ones from being selected. This may not be ideal, we should look into whether
     // navigation should skip over disabled dates, and if so, how to implement that efficiently.
 
+    const oldActiveDate = this._activeDate;
     const isRtl = this._isRtl();
 
     switch (event.keyCode) {
@@ -192,6 +195,10 @@ export class MatYearView<D> implements AfterContentInit {
         return;
     }
 
+    if (this._dateAdapter.compareDate(oldActiveDate, this.activeDate)) {
+      this.activeDateChange.emit(this.activeDate);
+    }
+
     this._focusActiveCell();
     // Prevent unexpected default actions such as form submission.
     event.preventDefault();
@@ -211,7 +218,7 @@ export class MatYearView<D> implements AfterContentInit {
   }
 
   /** Focuses the active cell after the microtask queue is empty. */
-  private _focusActiveCell() {
+  _focusActiveCell() {
     this._matCalendarBody._focusActiveCell();
   }
 

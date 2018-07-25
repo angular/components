@@ -10,8 +10,15 @@
     background: mat-color($background, 'card');
   }
 
+  .mat-table thead, .mat-table tbody, .mat-table tfoot,
+  mat-header-row, mat-row, mat-footer-row,
+  [mat-header-row], [mat-row], [mat-footer-row],
+  .mat-table-sticky {
+    background: inherit;
+  }
 
-  mat-row, mat-header-row, th.mat-header-cell, td.mat-cell {
+  mat-row, mat-header-row, mat-footer-row,
+  th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
     border-bottom-color: mat-color($foreground, divider);
   }
 
@@ -19,7 +26,7 @@
     color: mat-color($foreground, secondary-text);
   }
 
-  .mat-cell {
+  .mat-cell, .mat-footer-cell {
     color: mat-color($foreground, text);
   }
 }
@@ -34,7 +41,7 @@
     font-weight: mat-font-weight($config, body-2);
   }
 
-  .mat-cell {
+  .mat-cell, .mat-footer-cell {
     font-size: mat-font-size($config, body-1);
   }
 }

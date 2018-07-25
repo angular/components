@@ -6,7 +6,7 @@ of the header, pagination controls appear to let the user scroll left and right 
 The active tab may be set using the `selectedIndex` input or when the user selects one of the
 tab labels in the header.
 
-<!-- example(tabs-overview) -->
+<!-- example(tab-group-basic) -->
 
 ### Events
 
@@ -80,7 +80,7 @@ The `tab-nav-bar` is not tied to any particular router; it works with normal `<a
 the `active` property to determine which tab is currently active. The corresponding
 `<router-outlet>` can be placed anywhere in the view.
 
-## Lazy Loading
+### Lazy Loading
 By default, the tab contents are eagerly loaded. Eagerly loaded tabs
 will initalize the child components but not inject them into the DOM
 until the tab is activated. 
@@ -121,5 +121,4 @@ Tabs without text or labels should be given a meaningful label via `aria-label` 
 | `RIGHT_ARROW`        | Move focus to next tab     |
 | `HOME`               | Move focus to first tab    |
 | `END`                | Move focus to last tab     |
-| `RIGHT_ARROW`        | Move focus to next tab     |
 | `SPACE` or `ENTER`   | Switch to focused tab      |

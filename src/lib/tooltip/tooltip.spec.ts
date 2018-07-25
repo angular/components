@@ -2,6 +2,7 @@ import {
   async,
   ComponentFixture,
   fakeAsync,
+  flush,
   flushMicrotasks,
   inject,
   TestBed,
@@ -21,8 +22,9 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {OverlayContainer, OverlayModule, CdkScrollable} from '@angular/cdk/overlay';
 import {Platform} from '@angular/cdk/platform';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing';
+import {dispatchFakeEvent, dispatchKeyboardEvent, patchElementFocus} from '@angular/cdk/testing';
 import {ESCAPE} from '@angular/cdk/keycodes';
+import {FocusMonitor} from '@angular/cdk/a11y';
 import {
   MatTooltip,
   MatTooltipModule,
@@ -39,6 +41,7 @@ describe('MatTooltip', () => {
   let overlayContainerElement: HTMLElement;
   let dir: {value: Direction};
   let platform: {IOS: boolean, isBrowser: boolean};
+  let focusMonitor: FocusMonitor;
 
   beforeEach(async(() => {
     // Set the default Platform override that can be updated before component creation.
@@ -51,7 +54,8 @@ describe('MatTooltip', () => {
         ScrollableTooltipDemo,
         OnPushTooltipDemo,
         DynamicTooltipsDemo,
-        TooltipOnTextFields
+        TooltipOnTextFields,
+        TooltipOnDraggableElement,
       ],
       providers: [
         {provide: Platform, useFactory: () => platform},
@@ -63,9 +67,10 @@ describe('MatTooltip', () => {
 
     TestBed.compileComponents();
 
-    inject([OverlayContainer], (oc: OverlayContainer) => {
+    inject([OverlayContainer, FocusMonitor], (oc: OverlayContainer, fm: FocusMonitor) => {
       overlayContainer = oc;
       overlayContainerElement = oc.getContainerElement();
+      focusMonitor = fm;
     })();
   }));
 
@@ -482,54 +487,6 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._getOverlayPosition().main).toEqual(rightOverlayPosition);
     });
 
-    it('should have consistent left transform origin in ltr', () => {
-      tooltipDirective.position = 'right';
-      tooltipDirective.show();
-      fixture.detectChanges();
-      expect(tooltipDirective._tooltipInstance!._transformOrigin).toBe('left');
-
-      tooltipDirective.position = 'after';
-      tooltipDirective.show();
-      fixture.detectChanges();
-      expect(tooltipDirective._tooltipInstance!._transformOrigin).toBe('left');
-    });
-
-    it('should have consistent left transform origin in rtl', () => {
-      dir.value = 'rtl';
-      tooltipDirective.position = 'before';
-      tooltipDirective.show();
-      fixture.detectChanges();
-      expect(tooltipDirective._tooltipInstance!._transformOrigin).toBe('left');
-    });
-
-    it('should have consistent right transform origin in ltr', () => {
-      // Move the button away from the edge of the screen so
-      // we don't get into the fallback positions.
-      fixture.componentInstance.button.nativeElement.style.margin = '300px';
-
-      tooltipDirective.position = 'left';
-      tooltipDirective.show();
-      fixture.detectChanges();
-      expect(tooltipDirective._tooltipInstance!._transformOrigin).toBe('right');
-
-      tooltipDirective.position = 'before';
-      tooltipDirective.show();
-      fixture.detectChanges();
-      expect(tooltipDirective._tooltipInstance!._transformOrigin).toBe('right');
-    });
-
-    it('should have consistent right transform origin in rtl', () => {
-      // Move the button away from the edge of the screen so
-      // we don't get into the fallback positions.
-      fixture.componentInstance.button.nativeElement.style.margin = '300px';
-
-      dir.value = 'rtl';
-      tooltipDirective.position = 'after';
-      tooltipDirective.show();
-      fixture.detectChanges();
-      expect(tooltipDirective._tooltipInstance!._transformOrigin).toBe('right');
-    });
-
     it('should throw when trying to assign an invalid position', () => {
       expect(() => {
         fixture.componentInstance.position = 'everywhere';
@@ -545,10 +502,35 @@ describe('MatTooltip', () => {
       tick(0);
       fixture.detectChanges();
 
-      const tooltipWrapper = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
+      const tooltipWrapper =
+          overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
 
       expect(tooltipWrapper).toBeTruthy('Expected tooltip to be shown.');
       expect(tooltipWrapper.getAttribute('dir')).toBe('rtl', 'Expected tooltip to be in RTL mode.');
+    }));
+
+    it('should keep the overlay direction in sync with the trigger direction', fakeAsync(() => {
+      dir.value = 'rtl';
+      tooltipDirective.show();
+      tick();
+      fixture.detectChanges();
+
+      let tooltipWrapper =
+          overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
+      expect(tooltipWrapper.getAttribute('dir')).toBe('rtl', 'Expected tooltip to be in RTL.');
+
+      tooltipDirective.hide(0);
+      tick();
+      fixture.detectChanges();
+
+      dir.value = 'ltr';
+      tooltipDirective.show();
+      tick();
+      fixture.detectChanges();
+
+      tooltipWrapper =
+          overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
+      expect(tooltipWrapper.getAttribute('dir')).toBe('ltr', 'Expected tooltip to be in LTR.');
     }));
 
     it('should be able to set the tooltip message as a number', fakeAsync(() => {
@@ -595,13 +577,15 @@ describe('MatTooltip', () => {
         fixture.detectChanges();
       }).not.toThrow();
 
-      tick(0);
+      // Flush due to the additional tick that is necessary for the FocusMonitor.
+      flush();
     }));
 
     it('should not show the tooltip on progammatic focus', fakeAsync(() => {
+      patchElementFocus(buttonElement);
       assertTooltipInstance(tooltipDirective, false);
 
-      buttonElement.focus();
+      focusMonitor.focusVia(buttonElement, 'program');
       tick(0);
       fixture.detectChanges();
       tick(500);
@@ -609,6 +593,29 @@ describe('MatTooltip', () => {
       expect(overlayContainerElement.querySelector('.mat-tooltip')).toBeNull();
     }));
 
+    it('should not show the tooltip on mouse focus', fakeAsync(() => {
+      patchElementFocus(buttonElement);
+      assertTooltipInstance(tooltipDirective, false);
+
+      focusMonitor.focusVia(buttonElement, 'mouse');
+      tick(0);
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlayContainerElement.querySelector('.mat-tooltip')).toBeNull();
+    }));
+
+    it('should not show the tooltip on touch focus', fakeAsync(() => {
+      patchElementFocus(buttonElement);
+      assertTooltipInstance(tooltipDirective, false);
+
+      focusMonitor.focusVia(buttonElement, 'touch');
+      tick(0);
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlayContainerElement.querySelector('.mat-tooltip')).toBeNull();
+    }));
 
   });
 
@@ -789,6 +796,15 @@ describe('MatTooltip', () => {
       expect(instance.textarea.nativeElement.style.userSelect).toBeFalsy();
       expect(instance.textarea.nativeElement.style.webkitUserSelect).toBeFalsy();
     });
+
+    it('should clear the `-webkit-user-drag` on draggable elements', () => {
+      const fixture = TestBed.createComponent(TooltipOnDraggableElement);
+
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.button.nativeElement.style.webkitUserDrag).toBeFalsy();
+    });
+
   });
 
 });
@@ -893,6 +909,20 @@ class TooltipOnTextFields {
   @ViewChild('input') input: ElementRef;
   @ViewChild('textarea') textarea: ElementRef;
 }
+
+@Component({
+  template: `
+    <button
+      #button
+      style="-webkit-user-drag: none;"
+      draggable="true"
+      matTooltip="Drag me"></button>
+  `,
+})
+class TooltipOnDraggableElement {
+  @ViewChild('button') button: ElementRef;
+}
+
 
 /** Asserts whether a tooltip directive has a tooltip instance. */
 function assertTooltipInstance(tooltip: MatTooltip, shouldExist: boolean): void {

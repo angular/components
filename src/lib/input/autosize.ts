@@ -12,7 +12,8 @@ import {Directive, Input} from '@angular/core';
 
 /**
  * Directive to automatically resize a textarea to fit its content.
- * @deletion-target 7.0.0 deprecate in favor of `cdkTextareaAutosize`.
+ * @deprecated Use `cdkTextareaAutosize` from `@angular/cdk/text-field` instead.
+ * @deletion-target 7.0.0
  */
 @Directive({
   selector: 'textarea[mat-autosize], textarea[matTextareaAutosize]',
@@ -34,4 +35,12 @@ export class MatTextareaAutosize extends CdkTextareaAutosize {
   @Input()
   get matAutosizeMaxRows(): number { return this.maxRows; }
   set matAutosizeMaxRows(value: number) { this.maxRows = value; }
+
+  @Input('mat-autosize')
+  get matAutosize(): boolean { return this.enabled; }
+  set matAutosize(value: boolean) { this.enabled = value; }
+
+  @Input()
+  get matTextareaAutosize(): boolean { return this.enabled; }
+  set matTextareaAutosize(value: boolean) { this.enabled = value; }
 }

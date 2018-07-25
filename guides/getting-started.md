@@ -48,10 +48,6 @@ npm install --save @angular/animations
 yarn add @angular/animations
 ```
 
-**Note:** `@angular/animations` uses the WebAnimation API that isn't supported by all browsers yet.
-If you want to support Material component animations in these browsers, you'll have to
-[include a polyfill](https://github.com/web-animations/web-animations-js).
-
 ```ts
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -189,6 +185,12 @@ System.config({
     '@angular/cdk/platform': 'npm:@angular/cdk/bundles/cdk-platform.umd.js',
     '@angular/cdk/a11y': 'npm:@angular/cdk/bundles/cdk-a11y.umd.js',
     // ...
+    'hammerjs': 'npm:hammerjs',
+  },
+  packages: {
+    //...
+    hammerjs: {main: './hammer.min.js', defaultExtension: 'js'}
+    //...
   }
 });
 ```

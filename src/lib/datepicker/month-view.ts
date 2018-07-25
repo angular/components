@@ -106,7 +106,7 @@ export class MatMonthView<D> implements AfterContentInit {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(MatCalendarBody) _matCalendarBody;
+  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
@@ -155,7 +155,6 @@ export class MatMonthView<D> implements AfterContentInit {
 
   ngAfterContentInit() {
     this._init();
-    this._focusActiveCell();
   }
 
   /** Handles when a new date is selected. */
@@ -178,8 +177,8 @@ export class MatMonthView<D> implements AfterContentInit {
     // navigation should skip over disabled dates, and if so, how to implement that efficiently.
 
     const oldActiveDate = this._activeDate;
-
     const isRtl = this._isRtl();
+
     switch (event.keyCode) {
       case LEFT_ARROW:
         this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate, isRtl ? 1 : -1);
@@ -253,7 +252,7 @@ export class MatMonthView<D> implements AfterContentInit {
   }
 
   /** Focuses the active cell after the microtask queue is empty. */
-  private _focusActiveCell() {
+  _focusActiveCell() {
     this._matCalendarBody._focusActiveCell();
   }
 

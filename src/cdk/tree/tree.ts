@@ -8,6 +8,7 @@
 import {FocusableOption} from '@angular/cdk/a11y';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {
+  AfterContentChecked,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -15,104 +16,29 @@ import {
   Directive,
   ElementRef,
   Input,
-  IterableDiffers,
-  IterableDiffer,
   IterableChangeRecord,
+  IterableDiffer,
+  IterableDiffers,
   OnDestroy,
   OnInit,
   QueryList,
   ViewChild,
   ViewContainerRef,
-  ViewEncapsulation
+  ViewEncapsulation,
+  TrackByFunction
 } from '@angular/core';
-import {of, BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {TreeControl} from './control/tree-control';
 import {CdkTreeNodeDef, CdkTreeNodeOutletContext} from './node';
 import {CdkTreeNodeOutlet} from './outlet';
-import {TreeControl} from './control/tree-control';
 import {
+  getTreeControlFunctionsMissingError,
   getTreeControlMissingError,
   getTreeMissingMatchingNodeDefError,
   getTreeMultipleDefaultNodeDefsError,
-  getTreeControlFunctionsMissingError,
   getTreeNoValidDataSourceError
 } from './tree-errors';
-
-/**
- * Tree node for CdkTree. It contains the data in the tree node.
- */
-@Directive({
-  selector: 'cdk-tree-node',
-  exportAs: 'cdkTreeNode',
-  host: {
-    '[attr.aria-expanded]': 'isExpanded',
-    '[attr.aria-level]': 'level',
-    '[attr.role]': 'role',
-    'class': 'cdk-tree-node',
-  },
-})
-export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
-  /**
-   * The most recently created `CdkTreeNode`. We save it in static variable so we can retrieve it
-   * in `CdkTree` and set the data to it.
-   */
-  static mostRecentTreeNode: CdkTreeNode<{}> | null = null;
-
-  /** Subject that emits when the component has been destroyed. */
-  protected _destroyed = new Subject<void>();
-
-  /** The tree node's data. */
-  get data(): T { return this._data; }
-  set data(value: T) {
-    this._data = value;
-    this._setRoleFromData();
-  }
-  protected _data: T;
-
-  get isExpanded(): boolean {
-    return this._tree.treeControl.isExpanded(this._data);
-  }
-
-  get level(): number {
-    return this._tree.treeControl.getLevel ? this._tree.treeControl.getLevel(this._data) : 0;
-  }
-
-  /**
-   * The role of the node should be 'group' if it's an internal node,
-   * and 'treeitem' if it's a leaf node.
-   */
-  @Input() role: 'treeitem' | 'group' = 'treeitem';
-
-  constructor(protected _elementRef: ElementRef,
-              protected _tree: CdkTree<T>) {
-    CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T>;
-  }
-
-  ngOnDestroy() {
-    this._destroyed.next();
-    this._destroyed.complete();
-  }
-
-  /** Focuses the menu item. Implements for FocusableOption. */
-  focus(): void {
-    this._elementRef.nativeElement.focus();
-  }
-
-  private _setRoleFromData(): void {
-    if (this._tree.treeControl.isExpandable) {
-      this.role = this._tree.treeControl.isExpandable(this._data) ? 'group' : 'treeitem';
-    } else {
-      if (!this._tree.treeControl.getChildren) {
-        throw getTreeControlFunctionsMissingError();
-      }
-      this._tree.treeControl.getChildren(this._data).pipe(takeUntil(this._destroyed))
-        .subscribe(children => {
-          this.role = children && children.length ? 'group' : 'treeitem';
-        });
-    }
-  }
-}
-
 
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
@@ -130,7 +56,8 @@ export class CdkTreeNode<T>  implements FocusableOption, OnDestroy {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
+export class CdkTree<T>
+    implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
   /** Subject that emits when the component has been destroyed. */
   private _onDestroy = new Subject<void>();
 
@@ -142,6 +69,9 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
 
   /** Data subscription */
   private _dataSubscription: Subscription | null;
+
+  /** Level of nodes */
+  private _levels: Map<T, number> = new Map<T, number>();
 
   /**
    * Provides a stream containing the latest data array to render. Influenced by the tree's
@@ -159,6 +89,14 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
 
   /** The tree controller */
   @Input() treeControl: TreeControl<T>;
+
+  /**
+   * Tracking function that will be used to check the differences in data changes. Used similarly
+   * to `ngFor` `trackBy` function. Optimize node operations by identifying a node based on its data
+   * relative to the function to know if a node should be added/removed/moved.
+   * Accepts a function that takes two parameters, `index` and `item`.
+   */
+  @Input() trackBy: TrackByFunction<T>;
 
   // Outlets within the tree's template where the dataNodes will be inserted.
   @ViewChild(CdkTreeNodeOutlet) _nodeOutlet: CdkTreeNodeOutlet;
@@ -179,7 +117,7 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
               private _changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this._dataDiffer = this._differs.find([]).create();
+    this._dataDiffer = this._differs.find([]).create(this.trackBy);
     if (!this.treeControl) {
       throw getTreeControlMissingError();
     }
@@ -254,7 +192,7 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
     } else if (this._dataSource instanceof Observable) {
       dataStream = this._dataSource;
     } else if (Array.isArray(this._dataSource)) {
-      dataStream = of(this._dataSource);
+      dataStream = observableOf(this._dataSource);
     }
 
     if (dataStream) {
@@ -267,21 +205,25 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
 
   /** Check for changes made in the data and render each change (node added/removed/moved). */
   renderNodeChanges(data: T[], dataDiffer: IterableDiffer<T> = this._dataDiffer,
-                    viewContainer: ViewContainerRef = this._nodeOutlet.viewContainer) {
+                    viewContainer: ViewContainerRef = this._nodeOutlet.viewContainer,
+                    parentData?: T) {
     const changes = dataDiffer.diff(data);
     if (!changes) { return; }
 
     changes.forEachOperation(
       (item: IterableChangeRecord<T>, adjustedPreviousIndex: number, currentIndex: number) => {
         if (item.previousIndex == null) {
-          this.insertNode(data[currentIndex], currentIndex, viewContainer);
+          this.insertNode(data[currentIndex], currentIndex, viewContainer, parentData);
         } else if (currentIndex == null) {
           viewContainer.remove(adjustedPreviousIndex);
+          this._levels.delete(item.item);
         } else {
           const view = viewContainer.get(adjustedPreviousIndex);
           viewContainer.move(view!, currentIndex);
         }
       });
+
+    this._changeDetectorRef.detectChanges();
   }
 
   /**
@@ -304,11 +246,22 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
    * Create the embedded view for the data node template and place it in the correct index location
    * within the data node view container.
    */
-  insertNode(nodeData: T, index: number, viewContainer?: ViewContainerRef) {
+  insertNode(nodeData: T, index: number, viewContainer?: ViewContainerRef, parentData?: T) {
     const node = this._getNodeDef(nodeData, index);
 
     // Node context that will be provided to created embedded view
     const context = new CdkTreeNodeOutletContext<T>(nodeData);
+
+    // If the tree is flat tree, then use the `getLevel` function in flat tree control
+    // Otherwise, use the level of parent node.
+    if (this.treeControl.getLevel) {
+      context.level = this.treeControl.getLevel(nodeData);
+    } else if (typeof parentData !== 'undefined' && this._levels.has(parentData)) {
+      context.level = this._levels.get(parentData)! + 1;
+    } else {
+      context.level = 0;
+    }
+    this._levels.set(nodeData, context.level);
 
     // Use default tree nodeOutlet, or nested node's nodeOutlet
     const container = viewContainer ? viewContainer : this._nodeOutlet.viewContainer;
@@ -320,7 +273,94 @@ export class CdkTree<T> implements CollectionViewer, OnInit, OnDestroy {
     if (CdkTreeNode.mostRecentTreeNode) {
       CdkTreeNode.mostRecentTreeNode.data = nodeData;
     }
+  }
+}
 
-    this._changeDetectorRef.detectChanges();
+
+/**
+ * Tree node for CdkTree. It contains the data in the tree node.
+ */
+@Directive({
+  selector: 'cdk-tree-node',
+  exportAs: 'cdkTreeNode',
+  host: {
+    '[attr.aria-expanded]': 'isExpanded',
+    '[attr.aria-level]': 'role === "treeitem" ? level : null',
+    '[attr.role]': 'role',
+    'class': 'cdk-tree-node',
+  },
+})
+export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
+  /**
+   * The most recently created `CdkTreeNode`. We save it in static variable so we can retrieve it
+   * in `CdkTree` and set the data to it.
+   */
+  static mostRecentTreeNode: CdkTreeNode<{}> | null = null;
+
+  /** Subject that emits when the component has been destroyed. */
+  protected _destroyed = new Subject<void>();
+
+  /** The tree node's data. */
+  get data(): T { return this._data; }
+  set data(value: T) {
+    this._data = value;
+    this._setRoleFromData();
+  }
+  protected _data: T;
+
+  get isExpanded(): boolean {
+    return this._tree.treeControl.isExpanded(this._data);
+  }
+
+  get level(): number {
+    return this._tree.treeControl.getLevel ? this._tree.treeControl.getLevel(this._data) : 0;
+  }
+
+  /**
+   * The role of the node should be 'group' if it's an internal node,
+   * and 'treeitem' if it's a leaf node.
+   */
+  @Input() role: 'treeitem' | 'group' = 'treeitem';
+
+  constructor(protected _elementRef: ElementRef,
+              protected _tree: CdkTree<T>) {
+    CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T>;
+  }
+
+  ngOnDestroy() {
+    // If this is the last tree node being destroyed,
+    // clear out the reference to avoid leaking memory.
+    if (CdkTreeNode.mostRecentTreeNode === this) {
+      CdkTreeNode.mostRecentTreeNode = null;
+    }
+
+    this._destroyed.next();
+    this._destroyed.complete();
+  }
+
+  /** Focuses the menu item. Implements for FocusableOption. */
+  focus(): void {
+    this._elementRef.nativeElement.focus();
+  }
+
+  protected _setRoleFromData(): void {
+    if (this._tree.treeControl.isExpandable) {
+      this.role = this._tree.treeControl.isExpandable(this._data) ? 'group' : 'treeitem';
+    } else {
+      if (!this._tree.treeControl.getChildren) {
+        throw getTreeControlFunctionsMissingError();
+      }
+      const childrenNodes = this._tree.treeControl.getChildren(this._data);
+      if (Array.isArray(childrenNodes)) {
+        this._setRoleFromChildren(childrenNodes as T[]);
+      } else if (childrenNodes instanceof Observable) {
+        childrenNodes.pipe(takeUntil(this._destroyed))
+            .subscribe(children => this._setRoleFromChildren(children));
+      }
+    }
+  }
+
+  protected _setRoleFromChildren(children: T[]) {
+    this.role = children && children.length ? 'group' : 'treeitem';
   }
 }

@@ -16,11 +16,11 @@ node is read through the `getLevel` method of the `TreeControl`; this level can 
 used to style the node such that it is indented to the appropriate level.
 
 
-```
+```html
 <mat-tree>
-    <mat-tree-node> parent node </mat-tree-node>
-    <mat-tree-node> -- child node1 </mat-tree-node>
-    <mat-tree-node> -- child node2 </mat-tree-node>
+  <mat-tree-node> parent node </mat-tree-node>
+  <mat-tree-node> -- child node1 </mat-tree-node>
+  <mat-tree-node> -- child node2 </mat-tree-node>
 </mat-tree>
 ```
 
@@ -35,12 +35,12 @@ scrolling variations, such as infinite or virtual scrolling
 In Nested tree, children nodes are placed inside their parent node in DOM. The parent node has an
 outlet to keep all the children nodes.
 
-```
+```html
 <mat-tree>
    <mat-nested-tree-node>
-       parent node
-       <mat-nested-tree-node> -- child node1 </mat-tree-node>
-       <mat-nested-tree-node> -- child node2 </mat-tree-node>
+     parent node
+     <mat-nested-tree-node> -- child node1 </mat-nested-tree-node>
+     <mat-nested-tree-node> -- child node2 </mat-nested-tree-node>
    </mat-nested-tree-node>
 </mat-tree>
 ```
@@ -63,8 +63,10 @@ rendered data (such as expand/collapse) should be propagated through the table's
 
 The `TreeControl` controls the expand/collapse state of tree nodes. Users can expand/collapse a tree
 node recursively through tree control. For nested tree node, `getChildren` function need to pass to
-the `NestedTreeControl` to make it work recursively. For flattened tree node, `getLevel` and
-`isExpandable` functions need to pass to the `FlatTreeControl` to make it work recursively.
+the `NestedTreeControl` to make it work recursively. The `getChildren` function may return an 
+observable of children for a given node, or an array of children. 
+For flattened tree node, `getLevel` and `isExpandable` functions need to pass to the 
+`FlatTreeControl` to make it work recursively.
 
 ### Toggle
 

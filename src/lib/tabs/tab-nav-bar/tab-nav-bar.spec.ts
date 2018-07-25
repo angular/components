@@ -66,7 +66,23 @@ describe('MatTabNavBar', () => {
       fixture.detectChanges();
       expect(tabLinkElements[0].classList.contains('mat-tab-label-active')).toBeFalsy();
       expect(tabLinkElements[1].classList.contains('mat-tab-label-active')).toBeTruthy();
+    });
 
+    it('should toggle aria-current based on active state', () => {
+      let tabLink1 = fixture.debugElement.queryAll(By.css('a'))[0];
+      let tabLink2 = fixture.debugElement.queryAll(By.css('a'))[1];
+      const tabLinkElements = fixture.debugElement.queryAll(By.css('a'))
+        .map(tabLinkDebugEl => tabLinkDebugEl.nativeElement);
+
+      tabLink1.nativeElement.click();
+      fixture.detectChanges();
+      expect(tabLinkElements[0].getAttribute('aria-current')).toEqual('true');
+      expect(tabLinkElements[1].getAttribute('aria-current')).toEqual('false');
+
+      tabLink2.nativeElement.click();
+      fixture.detectChanges();
+      expect(tabLinkElements[0].getAttribute('aria-current')).toEqual('false');
+      expect(tabLinkElements[1].getAttribute('aria-current')).toEqual('true');
     });
 
     it('should add the disabled class if disabled', () => {
@@ -97,18 +113,27 @@ describe('MatTabNavBar', () => {
         .toBe(true, 'Expected aria-disabled to be set to "true" if link is disabled.');
     });
 
-    it('should update the disableRipple property on each tab link', () => {
-      const tabLinkElements = fixture.debugElement.queryAll(By.directive(MatTabLink))
-        .map(tabLinkDebug => tabLinkDebug.componentInstance) as MatTabLink[];
-
-      expect(tabLinkElements.every(tabLink => !tabLink.disableRipple))
+    it('should disable the ripples on all tabs when they are disabled on the nav bar', () => {
+      expect(fixture.componentInstance.tabLinks.toArray().every(tabLink => !tabLink.rippleDisabled))
         .toBe(true, 'Expected every tab link to have ripples enabled');
 
-      fixture.componentInstance.disableRipple = true;
+      fixture.componentInstance.disableRippleOnBar = true;
       fixture.detectChanges();
 
-      expect(tabLinkElements.every(tabLink => tabLink.disableRipple))
+      expect(fixture.componentInstance.tabLinks.toArray().every(tabLink => tabLink.rippleDisabled))
         .toBe(true, 'Expected every tab link to have ripples disabled');
+    });
+
+    it('should have the `disableRipple` from the tab take precendence over the nav bar', () => {
+      const firstTab = fixture.componentInstance.tabLinks.first;
+
+      expect(firstTab.rippleDisabled).toBe(false, 'Expected ripples to be enabled on first tab');
+
+      firstTab.disableRipple = true;
+      fixture.componentInstance.disableRippleOnBar = false;
+      fixture.detectChanges();
+
+      expect(firstTab.rippleDisabled).toBe(true, 'Expected ripples to be disabled on first tab');
     });
 
     it('should update the tabindex if links are disabled', () => {
@@ -219,7 +244,7 @@ describe('MatTabNavBar', () => {
 
       spyOn(inkBar, 'hide');
 
-      fixture.componentInstance.links.forEach(link => link.active = false);
+      fixture.componentInstance.tabLinks.forEach(link => link.active = false);
       fixture.detectChanges();
 
       expect(inkBar.hide).toHaveBeenCalled();
@@ -269,7 +294,7 @@ describe('MatTabNavBar', () => {
 @Component({
   selector: 'test-app',
   template: `
-    <nav mat-tab-nav-bar [disableRipple]="disableRipple">
+    <nav mat-tab-nav-bar [disableRipple]="disableRippleOnBar">
       <a mat-tab-link
          *ngFor="let tab of tabs; let index = index"
          [active]="activeIndex === index"
@@ -282,11 +307,11 @@ describe('MatTabNavBar', () => {
 })
 class SimpleTabNavBarTestApp {
   @ViewChild(MatTabNav) tabNavBar: MatTabNav;
-  @ViewChildren(MatTabLink) links: QueryList<MatTabLink>;
+  @ViewChildren(MatTabLink) tabLinks: QueryList<MatTabLink>;
 
   label = '';
-  disabled: boolean = false;
-  disableRipple: boolean = false;
+  disabled = false;
+  disableRippleOnBar = false;
   tabs = [0, 1, 2];
 
   activeIndex = 0;

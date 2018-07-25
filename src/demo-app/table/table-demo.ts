@@ -7,24 +7,14 @@
  */
 
 import {Component} from '@angular/core';
-import {Element, ELEMENT_DATA} from './element-data';
+import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
+
 
 @Component({
   moduleId: module.id,
   templateUrl: 'table-demo.html',
-  styles: [`
-    mat-card {
-      max-height: 300px;
-      overflow: auto;
-      margin: 16px 0;
-    }
-
-    table {
-      width: 100%;
-    }
-  `]
 })
 export class TableDemo {
-  columns = ['name', 'weight', 'symbol', 'position'];
-  dataSource: Element[] = ELEMENT_DATA.slice();
+  examples = Object.keys(EXAMPLE_COMPONENTS)
+      .filter(example => example.startsWith('table-') || example.startsWith('cdk-table-'));
 }

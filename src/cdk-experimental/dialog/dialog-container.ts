@@ -6,30 +6,31 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  ElementRef,
-  HostBinding,
-  ViewChild,
-  ComponentRef,
-  EmbeddedViewRef,
-  ChangeDetectorRef,
-  Component,
-  Optional,
-  Inject,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import {trigger, state, style, transition, animate, AnimationEvent} from '@angular/animations';
+import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
+import {FocusTrapFactory} from '@angular/cdk/a11y';
 import {
   BasePortalOutlet,
-  PortalHostDirective,
   ComponentPortal,
+  PortalHostDirective,
   TemplatePortal
 } from '@angular/cdk/portal';
-import {FocusTrapFactory} from '@angular/cdk/a11y';
-import {DialogConfig} from './dialog-config';
+import {DOCUMENT} from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ComponentRef,
+  ElementRef,
+  EmbeddedViewRef,
+  HostBinding,
+  Inject,
+  OnDestroy,
+  Optional,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {Subject} from 'rxjs';
+import {DialogConfig} from './dialog-config';
 
 
 export function throwDialogContentAlreadyAttachedError() {
@@ -63,7 +64,7 @@ export function throwDialogContentAlreadyAttachedError() {
     '(@dialog.done)': '_onAnimationDone($event)',
   },
 })
-export class CdkDialogContainer extends BasePortalOutlet {
+export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
   /** State of the dialog animation. */
   _state: 'void' | 'enter' | 'exit' = 'enter';
 
@@ -80,9 +81,9 @@ export class CdkDialogContainer extends BasePortalOutlet {
   @HostBinding('attr.aria-label') get _ariaLabel() { return this._config.ariaLabel || null; }
 
   @HostBinding('attr.aria-describedby')
-  get _ariaDescribedBy() { return this._config ? this._config.ariaDescribedBy : null; }
+  get _ariaDescribedBy() { return this._config.ariaDescribedBy; }
 
-  @HostBinding('attr.role') get _role() { return this._config ? this._config.role : null; }
+  @HostBinding('attr.role') get _role() { return this._config.role; }
 
   @HostBinding('attr.tabindex') get _tabindex() { return -1; }
   // tslint:disable:no-host-decorator-in-concrete
@@ -102,14 +103,13 @@ export class CdkDialogContainer extends BasePortalOutlet {
   /** A subject emitting after the dialog exits the view. */
   _afterExit: Subject<void> = new Subject();
 
-  /** The dialog configuration. */
-  _config: DialogConfig;
-
   constructor(
     private _elementRef: ElementRef,
     private _focusTrapFactory: FocusTrapFactory,
     private _changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(DOCUMENT) private _document: any) {
+    @Optional() @Inject(DOCUMENT) private _document: any,
+    /** The dialog configuration. */
+    public _config: DialogConfig) {
     super();
   }
 
@@ -149,7 +149,7 @@ export class CdkDialogContainer extends BasePortalOutlet {
     if (event.toState === 'enter') {
       this._beforeEnter.next();
     }
-    if (event.toState === 'void' || event.toState === 'exit') {
+    if (event.fromState === 'enter' && (event.toState === 'void' || event.toState === 'exit')) {
       this._beforeExit.next();
     }
   }
@@ -160,7 +160,8 @@ export class CdkDialogContainer extends BasePortalOutlet {
       this._autoFocusFirstTabbableElement();
       this._afterEnter.next();
     }
-    if (event.toState === 'void' || event.toState === 'exit') {
+
+    if (event.fromState === 'enter' && (event.toState === 'void' || event.toState === 'exit')) {
       this._returnFocusAfterDialog();
       this._afterExit.next();
     }

@@ -1,5 +1,6 @@
 @import '../core/style/variables';
 @import '../core/style/vendor-prefixes';
+@import '../../cdk/a11y/a11y';
 
 
 // Styles that apply to all appearances of the form-field.
@@ -52,6 +53,14 @@ $mat-form-field-default-infix-width: 180px !default;
   flex: auto;
   min-width: 0;
   width: $mat-form-field-default-infix-width;
+
+  // In high contrast mode IE/Edge will render all of the borders, even if they're transparent.
+  // Since we can't remove the border altogether or replace it with a margin, because it'll throw
+  // off the baseline, and we can't use a base64-encoded 1x1 transparent image because of CSP,
+  // we work around it by setting a linear gradient that goes from `transparent` to `transparent`.
+  @include cdk-high-contrast {
+    border-image: linear-gradient(transparent, transparent);
+  }
 }
 
 // Used to hide the label overflow on IE, since IE doesn't take transform into account when
@@ -144,6 +153,13 @@ $mat-form-field-default-infix-width: 180px !default;
   width: 100%;
   // Need this so that the underline doesn't block the hover effect.
   pointer-events: none;
+  // We transform the height slightly higher to fix inconsistent underline height for some DPIs.
+  // Without this we observed that at zoom levels between 50% and 100% some form-field underlines
+  // would disappear. The issue appears to be related to fractional pixels since (e.g. underlines
+  // with their top at x.6 would disappear, but ones with there top at x.7 were fine). The exact
+  // fractions that caused problems seemed to depend on the screen resolution and zoom level. We
+  // experimentally discovered that adding a very slight scale factor fixes the issue.
+  transform: scaleY(1.0001);
 }
 
 .mat-form-field-ripple {
@@ -199,4 +215,11 @@ $mat-form-field-default-infix-width: 180px !default;
 // Single error message displayed beneath the form field underline.
 .mat-error {
   display: block;
+}
+
+.mat-form-field._mat-animation-noopable {
+  .mat-form-field-label,
+  .mat-form-field-ripple {
+    transition: none;
+  }
 }

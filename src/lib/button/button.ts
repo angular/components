@@ -15,6 +15,9 @@ import {
   OnDestroy,
   ViewChild,
   ViewEncapsulation,
+  Optional,
+  Inject,
+  Input,
 } from '@angular/core';
 import {
   CanColor,
@@ -25,6 +28,7 @@ import {
   mixinDisabled,
   mixinDisableRipple
 } from '@angular/material/core';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 /** Default color palette for round buttons (mat-fab and mat-mini-fab) */
 const DEFAULT_ROUND_BUTTON_COLOR = 'accent';
@@ -65,6 +69,7 @@ export const _MatButtonMixinBase = mixinColor(mixinDisabled(mixinDisableRipple(M
   exportAs: 'matButton',
   host: {
     '[disabled]': 'disabled || null',
+    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
   },
   templateUrl: 'button.html',
   styleUrls: ['button.css'],
@@ -76,10 +81,10 @@ export class MatButton extends _MatButtonMixinBase
     implements OnDestroy, CanDisable, CanColor, CanDisableRipple {
 
   /** Whether the button is round. */
-  _isRoundButton: boolean = this._hasHostAttributes('mat-fab', 'mat-mini-fab');
+  readonly isRoundButton: boolean = this._hasHostAttributes('mat-fab', 'mat-mini-fab');
 
   /** Whether the button is icon button. */
-  _isIconButton: boolean = this._hasHostAttributes('mat-icon-button');
+  readonly isIconButton: boolean = this._hasHostAttributes('mat-icon-button');
 
   /** Reference to the MatRipple instance of the button. */
   @ViewChild(MatRipple) ripple: MatRipple;
@@ -91,7 +96,9 @@ export class MatButton extends _MatButtonMixinBase
                */
               // tslint:disable-next-line:no-unused-variable
               private _platform: Platform,
-              private _focusMonitor: FocusMonitor) {
+              private _focusMonitor: FocusMonitor,
+              // @deletion-target 7.0.0 `_animationMode` parameter to be made required.
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     super(elementRef);
 
     // For each of the variant selectors that is prevent in the button's host
@@ -104,7 +111,7 @@ export class MatButton extends _MatButtonMixinBase
 
     this._focusMonitor.monitor(this._elementRef.nativeElement, true);
 
-    if (this._isRoundButton) {
+    if (this.isRoundButton) {
       this.color = DEFAULT_ROUND_BUTTON_COLOR;
     } else if (this._hasHostAttributes('mat-flat-button')) {
       this.color = DEFAULT_FLAT_BUTTON_COLOR;
@@ -143,10 +150,14 @@ export class MatButton extends _MatButtonMixinBase
              a[mat-mini-fab], a[mat-stroked-button], a[mat-flat-button]`,
   exportAs: 'matButton, matAnchor',
   host: {
-    '[attr.tabindex]': 'disabled ? -1 : 0',
+    // Note that we ignore the user-specified tabindex when it's disabled for
+    // consistency with the `mat-button` applied on native buttons where even
+    // though they have an index, they're not tabbable.
+    '[attr.tabindex]': 'disabled ? -1 : (tabIndex || 0)',
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
     '(click)': '_haltDisabledEvents($event)',
+    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
   },
   inputs: ['disabled', 'disableRipple', 'color'],
   templateUrl: 'button.html',
@@ -155,9 +166,16 @@ export class MatButton extends _MatButtonMixinBase
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatAnchor extends MatButton {
+  /** Tabindex of the button. */
+  @Input() tabIndex: number;
 
-  constructor(platform: Platform, focusMonitor: FocusMonitor, elementRef: ElementRef) {
-    super(elementRef, platform, focusMonitor);
+  constructor(
+    platform: Platform,
+    focusMonitor: FocusMonitor,
+    elementRef: ElementRef,
+    // @deletion-target 7.0.0 `animationMode` parameter to be made required.
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+    super(elementRef, platform, focusMonitor, animationMode);
   }
 
   _haltDisabledEvents(event: Event) {

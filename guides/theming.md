@@ -75,7 +75,7 @@ A typical theme file will look something like this:
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://www.google.com/design/spec/style/color.html
+// hue. Available color palettes: https://material.io/design/color/
 $candy-app-primary: mat-palette($mat-indigo);
 $candy-app-accent:  mat-palette($mat-pink, A200, A100, A400);
 
@@ -94,7 +94,7 @@ $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-
 You only need this single Sass file; you do not need to use Sass to style the rest of your app.
 
 If you are using the Angular CLI, support for compiling Sass to css is built-in; you only have to
-add a new entry to the `"styles"` list in `angular-cli.json` pointing to the theme
+add a new entry to the `"styles"` list in `angular.json` pointing to the theme
 file (e.g., `unicorn-app-theme.scss`).
 
 If you're not using the Angular CLI, you can use any existing Sass tooling to build the file (such

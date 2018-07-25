@@ -52,6 +52,10 @@ System.config({
     '@angular/material-examples': 'dist/bundles/material-examples.umd.js',
     '@angular/cdk/text-field': 'dist/bundles/cdk-text-field.umd.js',
 
+    '@angular/cdk-experimental/scrolling': 'dist/bundles/cdk-experimental-scrolling.umd.js',
+    '@angular/cdk-experimental/dialog': 'dist/bundles/cdk-experimental-dialog.umd.js',
+    '@angular/cdk-experimental/drag-drop': 'dist/bundles/cdk-experimental-drag-drop.umd.js',
+
     '@angular/material/autocomplete': 'dist/bundles/material-autocomplete.umd.js',
     '@angular/material/bottom-sheet': 'dist/bundles/material-bottom-sheet.umd.js',
     '@angular/material/button': 'dist/bundles/material-button.umd.js',
@@ -85,6 +89,7 @@ System.config({
     '@angular/material/tabs': 'dist/bundles/material-tabs.umd.js',
     '@angular/material/toolbar': 'dist/bundles/material-toolbar.umd.js',
     '@angular/material/tooltip': 'dist/bundles/material-tooltip.umd.js',
+    '@angular/material/badge': 'dist/bundles/material-badge.umd.js',
     '@angular/material/tree': 'dist/bundles/material-tree.umd.js',
   },
   packages: {

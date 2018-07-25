@@ -8,6 +8,7 @@ ng_module(
   module_name = "@angular/cdk/text-field",
   deps = [
     "@rxjs",
+    "//src/cdk/coercion",
     "//src/cdk/platform",
   ],
   tsconfig = "//src/lib:tsconfig-build.json",
@@ -28,13 +29,4 @@ sass_binary(
   name = "text_field_prebuilt_scss",
   src = "text-field-prebuilt.scss",
   deps = [":text_field_scss_lib"],
-)
-
-# TODO(jelbourn): remove this when sass_binary supports specifying an output filename and dir.
-# Copy the output of the sass_binary such that the filename and path match what we expect.
-genrule(
-  name = "text_field_prebuilt_css",
-  srcs = [":text_field_prebuilt_scss.css"],
-  outs = ["text-field-prebuilt.css"],
-  cmd = "cp $< $@",
 )

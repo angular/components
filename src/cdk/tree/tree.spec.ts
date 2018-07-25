@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, TrackByFunction} from '@angular/core';
 
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {combineLatest, BehaviorSubject, Observable} from 'rxjs';
@@ -17,7 +17,7 @@ import {TreeControl} from './control/tree-control';
 import {FlatTreeControl} from './control/flat-tree-control';
 import {NestedTreeControl} from './control/nested-tree-control';
 import {CdkTreeModule} from './index';
-import {CdkTree} from './tree';
+import {CdkTree, CdkTreeNode} from './tree';
 import {getTreeControlFunctionsMissingError} from './tree-errors';
 
 
@@ -34,6 +34,20 @@ describe('CdkTree', () => {
       declarations: declarations,
     }).compileComponents();
   }
+
+  it('should clear out the `mostRecentTreeNode` on destroy', () => {
+    configureCdkTreeTestingModule([SimpleCdkTreeApp]);
+    const fixture = TestBed.createComponent(SimpleCdkTreeApp);
+    fixture.detectChanges();
+
+    // Cast the assertions to a boolean to avoid Jasmine going into an
+    // infinite loop when stringifying the object, if the test starts failing.
+    expect(!!CdkTreeNode.mostRecentTreeNode).toBe(true);
+
+    fixture.destroy();
+
+    expect(!!CdkTreeNode.mostRecentTreeNode).toBe(false);
+  });
 
   describe('flat tree', () => {
     describe('should initialize', () => {
@@ -296,6 +310,97 @@ describe('CdkTree', () => {
           [`[topping_3] - [cheese_3] + [base_3]`]);
       });
     });
+
+    describe('with trackBy', () => {
+      let fixture: ComponentFixture<CdkTreeAppWithTrackBy>;
+      let component: CdkTreeAppWithTrackBy;
+
+      function createTrackByTestComponent(trackByStrategy: 'reference' | 'property' | 'index') {
+        configureCdkTreeTestingModule([CdkTreeAppWithTrackBy]);
+        fixture = TestBed.createComponent(CdkTreeAppWithTrackBy);
+        component = fixture.componentInstance;
+        component.trackByStrategy = trackByStrategy;
+        dataSource = component.dataSource as FakeDataSource;
+        tree = component.tree;
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+
+        fixture.detectChanges();
+
+        // Each node receives an attribute 'initialIndex' the element's original place
+        getNodes(treeElement).forEach((node: Element, index: number) => {
+          node.setAttribute('initialIndex', index.toString());
+        });
+
+        // Prove that the attributes match their indicies
+        const initialNodes = getNodes(treeElement);
+        expect(initialNodes[0].getAttribute('initialIndex')).toBe('0');
+        expect(initialNodes[1].getAttribute('initialIndex')).toBe('1');
+        expect(initialNodes[2].getAttribute('initialIndex')).toBe('2');
+      }
+
+      function mutateData() {
+        // Swap first and second data in data array
+        const copiedData = component.dataSource.data.slice();
+        const temp = copiedData[0];
+        copiedData[0] = copiedData[1];
+        copiedData[1] = temp;
+
+        // Remove the third element
+        copiedData.splice(2, 1);
+
+        // Add new data
+        component.dataSource.data = copiedData;
+        component.dataSource.addData();
+      }
+
+      it('should add/remove/move nodes with reference-based trackBy', () => {
+        createTrackByTestComponent('reference');
+        mutateData();
+
+        // Expect that the first and second nodes were swapped and that the last node is new
+        const changedNodes = getNodes(treeElement);
+        expect(changedNodes.length).toBe(3);
+        expect(changedNodes[0].getAttribute('initialIndex')).toBe('1');
+        expect(changedNodes[1].getAttribute('initialIndex')).toBe('0');
+        expect(changedNodes[2].getAttribute('initialIndex')).toBe(null);
+      });
+
+      it('should add/remove/move nodes with property-based trackBy', () => {
+        createTrackByTestComponent('property');
+        mutateData();
+
+        // Change each item reference to show that the trackby is checking the item properties.
+        // Otherwise this would cause them all to be removed/added.
+        component.dataSource.data = component.dataSource.data
+            .map(item => new TestData(item.pizzaTopping, item.pizzaCheese, item.pizzaBase, ));
+
+        // Expect that the first and second nodes were swapped and that the last node is new
+        const changedNodes = getNodes(treeElement);
+        expect(changedNodes.length).toBe(3);
+        expect(changedNodes[0].getAttribute('initialIndex')).toBe('1');
+        expect(changedNodes[1].getAttribute('initialIndex')).toBe('0');
+        expect(changedNodes[2].getAttribute('initialIndex')).toBe(null);
+      });
+
+      it('should add/remove/move nodes with index-based trackBy', () => {
+        createTrackByTestComponent('index');
+        mutateData();
+
+        // Change each item reference to show that the trackby is checking the index.
+        // Otherwise this would cause them all to be removed/added.
+        component.dataSource.data = component.dataSource.data
+            .map(item => new TestData(item.pizzaTopping, item.pizzaCheese, item.pizzaBase, ));
+
+        // Expect first two to be the same since they were swapped but indicies are consistent.
+        // The third element was removed and caught by the tree so it was removed before another
+        // item was added, so it is without an initial index.
+        const changedNodes = getNodes(treeElement);
+        expect(changedNodes.length).toBe(3);
+        expect(changedNodes[0].getAttribute('initialIndex')).toBe('0');
+        expect(changedNodes[1].getAttribute('initialIndex')).toBe('1');
+        expect(changedNodes[2].getAttribute('initialIndex')).toBe(null);
+      });
+    });
   });
 
   describe('nested tree', () => {
@@ -386,6 +491,33 @@ describe('CdkTree', () => {
             [`topping_3 - cheese_3 + base_3`]);
       });
     });
+
+    describe('with static children', () => {
+      let fixture: ComponentFixture<StaticNestedCdkTreeApp>;
+      let component: StaticNestedCdkTreeApp;
+
+      beforeEach(() => {
+      configureCdkTreeTestingModule([StaticNestedCdkTreeApp]);
+      fixture = TestBed.createComponent(StaticNestedCdkTreeApp);
+
+      component = fixture.componentInstance;
+      dataSource = component.dataSource as FakeDataSource;
+      tree = component.tree;
+      treeElement = fixture.nativeElement.querySelector('cdk-tree');
+
+      fixture.detectChanges();
+    });
+
+    it('with the right data', () => {
+      expectNestedTreeToMatch(treeElement,
+        [`topping_1 - cheese_1 + base_1`],
+        [`topping_2 - cheese_2 + base_2`],
+        [_, `topping_4 - cheese_4 + base_4`],
+        [_, _, `topping_5 - cheese_5 + base_5`],
+        [_, _, `topping_6 - cheese_6 + base_6`],
+        [`topping_3 - cheese_3 + base_3`]);
+    });
+  });
 
     describe('with when node', () => {
       let fixture: ComponentFixture<WhenNodeNestedCdkTreeApp>;
@@ -599,6 +731,128 @@ describe('CdkTree', () => {
       });
     });
 
+    describe('with trackBy', () => {
+      let fixture: ComponentFixture<NestedCdkTreeAppWithTrackBy>;
+      let component: NestedCdkTreeAppWithTrackBy;
+
+      function createTrackByTestComponent(trackByStrategy: 'reference' | 'property' | 'index') {
+        configureCdkTreeTestingModule([NestedCdkTreeAppWithTrackBy]);
+        fixture = TestBed.createComponent(NestedCdkTreeAppWithTrackBy);
+        component = fixture.componentInstance;
+        component.trackByStrategy = trackByStrategy;
+        dataSource = component.dataSource as FakeDataSource;
+
+        tree = component.tree;
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+
+        fixture.detectChanges();
+
+        // Each node receives an attribute 'initialIndex' the element's original place
+        getNodes(treeElement).forEach((node: Element, index: number) => {
+          node.setAttribute('initialIndex', index.toString());
+        });
+
+        // Prove that the attributes match their indicies
+        const initialNodes = getNodes(treeElement);
+        expect(initialNodes.length).toBe(3);
+        initialNodes.forEach((node, index) => {
+          expect(node.getAttribute('initialIndex')).toBe(`${index}`);
+        });
+
+        const parent = dataSource.data[0];
+        dataSource.addChild(parent, false);
+        dataSource.addChild(parent, false);
+        dataSource.addChild(parent, false);
+        getNodes(initialNodes[0]).forEach((node: Element, index: number) => {
+          node.setAttribute('initialIndex', `c${index}`);
+        });
+        getNodes(initialNodes[0]).forEach((node, index) => {
+          expect(node.getAttribute('initialIndex')).toBe(`c${index}`);
+        });
+      }
+
+      function mutateChildren(parent: TestData) {
+        // Swap first and second data in data array
+        const copiedData = parent.children.slice();
+        const temp = copiedData[0];
+        copiedData[0] = copiedData[1];
+        copiedData[1] = temp;
+
+        // Remove the third element
+        copiedData.splice(2, 1);
+
+        // Add new data
+        parent.children = copiedData;
+        parent.observableChildren.next(copiedData);
+        component.dataSource.addChild(parent, false);
+      }
+
+      it('should add/remove/move children nodes with reference-based trackBy', () => {
+        createTrackByTestComponent('reference');
+        mutateChildren(dataSource.data[0]);
+
+        const changedNodes = getNodes(treeElement);
+        expect(changedNodes.length).toBe(6);
+        expect(changedNodes[0].getAttribute('initialIndex')).toBe('0');
+
+        // Expect that the first and second child nodes were swapped and that the last node is new
+        expect(changedNodes[1].getAttribute('initialIndex')).toBe('c1');
+        expect(changedNodes[2].getAttribute('initialIndex')).toBe('c0');
+        expect(changedNodes[3].getAttribute('initialIndex')).toBe(null);
+
+        expect(changedNodes[4].getAttribute('initialIndex')).toBe('1');
+        expect(changedNodes[5].getAttribute('initialIndex')).toBe('2');
+      });
+
+      it('should add/remove/move children nodes with property-based trackBy', () => {
+        createTrackByTestComponent('property');
+        mutateChildren(dataSource.data[0]);
+
+        // Change each item reference to show that the trackby is checking the item properties.
+        // Otherwise this would cause them all to be removed/added.
+        dataSource.data[0].observableChildren.next(dataSource.data[0].children
+          .map(item => new TestData(item.pizzaTopping, item.pizzaCheese, item.pizzaBase)));
+
+        // Expect that the first and second nodes were swapped and that the last node is new
+        const changedNodes = getNodes(treeElement);
+        expect(changedNodes.length).toBe(6);
+        expect(changedNodes[0].getAttribute('initialIndex')).toBe('0');
+
+        // Expect that the first and second child nodes were swapped and that the last node is new
+        expect(changedNodes[1].getAttribute('initialIndex')).toBe('c1');
+        expect(changedNodes[2].getAttribute('initialIndex')).toBe('c0');
+        expect(changedNodes[3].getAttribute('initialIndex')).toBe(null);
+
+        expect(changedNodes[4].getAttribute('initialIndex')).toBe('1');
+        expect(changedNodes[5].getAttribute('initialIndex')).toBe('2');
+      });
+
+      it('should add/remove/move children nodes with index-based trackBy', () => {
+        createTrackByTestComponent('index');
+        mutateChildren(dataSource.data[0]);
+
+        // Change each item reference to show that the trackby is checking the index.
+        // Otherwise this would cause them all to be removed/added.
+        dataSource.data[0].observableChildren.next(dataSource.data[0].children
+          .map(item => new TestData(item.pizzaTopping, item.pizzaCheese, item.pizzaBase)));
+
+        const changedNodes = getNodes(treeElement);
+        expect(changedNodes.length).toBe(6);
+        expect(changedNodes[0].getAttribute('initialIndex')).toBe('0');
+
+        // Expect first two children to be the same since they were swapped
+        // but indicies are consistent.
+        // The third element was removed and caught by the tree so it was removed before another
+        // item was added, so it is without an initial index.
+        expect(changedNodes[1].getAttribute('initialIndex')).toBe('c0');
+        expect(changedNodes[2].getAttribute('initialIndex')).toBe('c1');
+        expect(changedNodes[3].getAttribute('initialIndex')).toBe(null);
+
+        expect(changedNodes[4].getAttribute('initialIndex')).toBe('1');
+        expect(changedNodes[5].getAttribute('initialIndex')).toBe('2');
+      });
+    });
+
     it('should throw an error when missing function in nested tree', fakeAsync(() => {
       configureCdkTreeTestingModule([NestedCdkErrorTreeApp]);
       expect(() => {
@@ -606,6 +860,8 @@ describe('CdkTree', () => {
           TestBed.createComponent(NestedCdkErrorTreeApp).detectChanges();
           flush();
         } catch {
+          flush();
+        } finally {
           flush();
         }
       }).toThrowError(getTreeControlFunctionsMissingError().message);
@@ -622,6 +878,39 @@ describe('CdkTree', () => {
         }
       }).toThrowError(getTreeControlFunctionsMissingError().message);
     }));
+  });
+
+  describe('with depth', () => {
+    let fixture: ComponentFixture<DepthNestedCdkTreeApp>;
+    let component: DepthNestedCdkTreeApp;
+
+    beforeEach(() => {
+      configureCdkTreeTestingModule([DepthNestedCdkTreeApp]);
+      fixture = TestBed.createComponent(DepthNestedCdkTreeApp);
+
+      component = fixture.componentInstance;
+      dataSource = component.dataSource as FakeDataSource;
+      tree = component.tree;
+      treeElement = fixture.nativeElement.querySelector('cdk-tree');
+
+      fixture.detectChanges();
+    });
+
+    it('should have correct depth for nested tree', () => {
+      let data = dataSource.data;
+      const child = dataSource.addChild(data[1], false);
+      dataSource.addChild(child, false);
+
+      fixture.detectChanges();
+
+      const depthElements = Array.from(treeElement.querySelectorAll('.tree-test-level')!);
+      const expectedLevels = ['0', '0', '1', '2', '0'];
+      depthElements.forEach((element, index) => {
+        const actualLevel = element.textContent!.trim();
+        expect(actualLevel).toBe(expectedLevels[index]);
+      });
+      expect(depthElements.length).toBe(5);
+    });
   });
 });
 
@@ -823,6 +1112,36 @@ class NestedCdkTreeApp {
   dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
+}
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
+      <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="customNodeClass">
+                     {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
+         <ng-template cdkTreeNodeOutlet></ng-template>
+      </cdk-nested-tree-node>
+    </cdk-tree>
+  `
+})
+class StaticNestedCdkTreeApp {
+  getChildren = (node: TestData) => node.children;
+
+  treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
+
+  dataSource: FakeDataSource;
+
+  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+
+  constructor() {
+    const dataSource = new FakeDataSource(this.treeControl);
+    const data = dataSource.data;
+    const child = dataSource.addChild(data[1], false);
+    dataSource.addChild(child, false);
+    dataSource.addChild(child, false);
+
+    this.dataSource = dataSource;
+  }
 }
 
 @Component({
@@ -1079,6 +1398,96 @@ class FlatCdkErrorTreeApp {
   treeControl: TreeControl<TestData> = new FakeTreeControl();
 
   dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
+
+  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+}
+
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="dataArray" [treeControl]="treeControl">
+      <cdk-nested-tree-node *cdkTreeNodeDef="let node; let level = level">
+          <span class="tree-test-level">{{level}}</span>
+           [{{node.pizzaTopping}}] - [{{node.pizzaCheese}}] + [{{node.pizzaBase}}]
+         <ng-template cdkTreeNodeOutlet></ng-template>
+      </cdk-nested-tree-node>
+    </cdk-tree>
+  `
+})
+class DepthNestedCdkTreeApp {
+
+  getChildren = (node: TestData) => node.observableChildren;
+
+  treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
+
+  dataSource: FakeDataSource = new FakeDataSource(this.treeControl);
+
+  get dataArray() {
+    return this.dataSource.data;
+  }
+
+  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+}
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" [trackBy]="trackByFn">
+      <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass">
+                     {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
+      </cdk-tree-node>
+    </cdk-tree>
+  `
+})
+class CdkTreeAppWithTrackBy {
+  trackByStrategy: 'reference' | 'property' | 'index' = 'reference';
+
+  trackByFn: TrackByFunction<TestData> = (index, item) => {
+    switch (this.trackByStrategy) {
+      case 'reference': return item;
+      case 'property': return item.pizzaBase;
+      case 'index': return index;
+    }
+  }
+
+  getLevel = (node: TestData) => node.level;
+  isExpandable = (node: TestData) => node.children.length > 0;
+
+  treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
+  dataSource: FakeDataSource = new FakeDataSource(this.treeControl);
+
+  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+}
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="dataArray" [treeControl]="treeControl" [trackBy]="trackByFn">
+      <cdk-nested-tree-node *cdkTreeNodeDef="let node">
+           [{{node.pizzaTopping}}] - [{{node.pizzaCheese}}] + [{{node.pizzaBase}}]
+         <ng-template cdkTreeNodeOutlet></ng-template>
+      </cdk-nested-tree-node>
+    </cdk-tree>
+  `
+})
+class NestedCdkTreeAppWithTrackBy {
+  trackByStrategy: 'reference' | 'property' | 'index' = 'reference';
+
+  trackByFn: TrackByFunction<TestData> = (index, item) => {
+    switch (this.trackByStrategy) {
+      case 'reference': return item;
+      case 'property': return item.pizzaBase;
+      case 'index': return index;
+    }
+  }
+
+  getChildren = (node: TestData) => node.observableChildren;
+
+  treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
+
+  dataSource: FakeDataSource = new FakeDataSource(this.treeControl);
+
+  get dataArray() {
+    return this.dataSource.data;
+  }
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
 }

@@ -1,6 +1,7 @@
 {
   "rulesDirectory": [
-    "./tools/tslint-rules/"
+    "./tools/tslint-rules/",
+    "node_modules/codelyzer"
   ],
   "rules": {
     "max-line-length": [true, 100],
@@ -85,9 +86,19 @@
     "jsdoc-format": [true, "check-multiline-start"],
     "no-duplicate-imports": true,
 
+    // Codelyzer
+    "banana-in-box": true,
+    "contextual-life-cycle": true,
+    "decorator-not-allowed": true,
+    "no-output-on-prefix": true,
+    "templates-no-negated-async": true,
+    "use-life-cycle-interface": true,
+
     // Custom Rules
     "ts-loader": true,
     "no-exposed-todo": true,
+    "setters-after-getters": true,
+    "rxjs-imports": true,
     "no-host-decorator-in-concrete": [
       true,
       "HostBinding",
@@ -113,12 +124,13 @@
     "missing-rollup-globals": [
       true,
       "./tools/package-tools/rollup-globals.ts",
-      "src/+(lib|cdk|material-examples|material-experimental|cdk-experimental)/**/*.ts"
+      "src/+(lib|cdk|material-examples|material-experimental|cdk-experimental)/!(schematics)**/*.ts"
     ],
     "deletion-target": true,
     "no-unescaped-html-tag": true
   },
   "linterOptions": {
-    "exclude": ["src/lib/schematics/**/*"]
+    // Exclude schematic template files that can't be linted.
+    "exclude": ["src/lib/schematics/**/files/**/*"]
   }
 }

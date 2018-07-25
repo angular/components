@@ -13,9 +13,13 @@ import {BidiModule} from '@angular/cdk/bidi';
 /** Injection token that configures whether the Material sanity checks are enabled. */
 export const MATERIAL_SANITY_CHECKS = new InjectionToken<boolean>('mat-sanity-checks', {
   providedIn: 'root',
-  factory: () => true,
+  factory: MATERIAL_SANITY_CHECKS_FACTORY,
 });
 
+/** @docs-private */
+export function MATERIAL_SANITY_CHECKS_FACTORY(): boolean {
+  return true;
+}
 
 /**
  * Module that captures anything that should be loaded and/or run for *all* Angular Material
@@ -68,7 +72,9 @@ export class MatCommonModule {
   }
 
   private _checkThemeIsPresent(): void {
-    if (this._document && typeof getComputedStyle === 'function') {
+    // We need to assert that the `body` is defined, because these checks run very early
+    // and the `body` won't be defined if the consumer put their scripts in the `head`.
+    if (this._document && this._document.body && typeof getComputedStyle === 'function') {
       const testElement = this._document.createElement('div');
 
       testElement.classList.add('mat-theme-loaded-marker');
@@ -76,7 +82,7 @@ export class MatCommonModule {
 
       const computedStyle = getComputedStyle(testElement);
 
-      // In some situations, the computed style of the test element can be null. For example in
+      // In some situations the computed style of the test element can be null. For example in
       // Firefox, the computed style is null if an application is running inside of a hidden iframe.
       // See: https://bugzilla.mozilla.org/show_bug.cgi?id=548397
       if (computedStyle && computedStyle.display !== 'none') {

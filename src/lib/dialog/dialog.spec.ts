@@ -24,7 +24,7 @@ import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatDialogContainer} from './dialog-container';
-import {OverlayContainer, ScrollStrategy} from '@angular/cdk/overlay';
+import {OverlayContainer, ScrollStrategy, ScrollDispatcher, Overlay} from '@angular/cdk/overlay';
 import {A, ESCAPE} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {
@@ -34,12 +34,14 @@ import {
   MatDialogRef,
   MAT_DIALOG_DEFAULT_OPTIONS
 } from './index';
+import {Subject} from 'rxjs';
 
 
 describe('MatDialog', () => {
   let dialog: MatDialog;
   let overlayContainer: OverlayContainer;
   let overlayContainerElement: HTMLElement;
+  let scrolledSubject = new Subject();
 
   let testViewContainerRef: ViewContainerRef;
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
@@ -49,7 +51,10 @@ describe('MatDialog', () => {
     TestBed.configureTestingModule({
       imports: [MatDialogModule, DialogTestModule],
       providers: [
-        {provide: Location, useClass: SpyLocation}
+        {provide: Location, useClass: SpyLocation},
+        {provide: ScrollDispatcher, useFactory: () => ({
+          scrolled: () => scrolledSubject.asObservable()
+        })},
       ],
     });
 
@@ -187,6 +192,26 @@ describe('MatDialog', () => {
     expect(afterCloseCallback).toHaveBeenCalledWith('Charmander');
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
   }));
+
+  it('should dispatch the beforeClose and afterClose events when the ' +
+    'overlay is detached externally', fakeAsync(inject([Overlay], (overlay: Overlay) => {
+      const dialogRef = dialog.open(PizzaMsg, {
+        viewContainerRef: testViewContainerRef,
+        scrollStrategy: overlay.scrollStrategies.close()
+      });
+      const beforeCloseCallback = jasmine.createSpy('beforeClosed callback');
+      const afterCloseCallback = jasmine.createSpy('afterClosed callback');
+
+      dialogRef.beforeClose().subscribe(beforeCloseCallback);
+      dialogRef.afterClosed().subscribe(afterCloseCallback);
+
+      scrolledSubject.next();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(beforeCloseCallback).toHaveBeenCalledTimes(1);
+      expect(afterCloseCallback).toHaveBeenCalledTimes(1);
+    })));
 
   it('should close a dialog and get back a result before it is closed', fakeAsync(() => {
     const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
@@ -512,12 +537,33 @@ describe('MatDialog', () => {
     expect(overlayPane.style.width).toBe('200px');
   });
 
+  it('should reset the overlay dimensions to their initial size', () => {
+    let dialogRef = dialog.open(PizzaMsg);
+
+    viewContainerFixture.detectChanges();
+
+    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
+    expect(overlayPane.style.width).toBeFalsy();
+    expect(overlayPane.style.height).toBeFalsy();
+
+    dialogRef.updateSize('200px', '200px');
+
+    expect(overlayPane.style.width).toBe('200px');
+    expect(overlayPane.style.height).toBe('200px');
+
+    dialogRef.updateSize();
+
+    expect(overlayPane.style.width).toBeFalsy();
+    expect(overlayPane.style.height).toBeFalsy();
+  });
+
   it('should allow setting the layout direction', () => {
     dialog.open(PizzaMsg, { direction: 'rtl' });
 
     viewContainerFixture.detectChanges();
 
-    let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
+    let overlayPane = overlayContainerElement.querySelector('.cdk-global-overlay-wrapper')!;
 
     expect(overlayPane.getAttribute('dir')).toBe('rtl');
   });
@@ -528,6 +574,14 @@ describe('MatDialog', () => {
     viewContainerFixture.detectChanges();
 
     expect(dialogRef.componentInstance.directionality.value).toBe('rtl');
+  });
+
+  it('should fall back to injecting the global direction if none is passed by the config', () => {
+    const dialogRef = dialog.open(PizzaMsg, {});
+
+    viewContainerFixture.detectChanges();
+
+    expect(dialogRef.componentInstance.directionality.value).toBe('ltr');
   });
 
   it('should close all of the dialogs', fakeAsync(() => {

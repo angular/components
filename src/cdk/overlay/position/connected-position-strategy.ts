@@ -10,18 +10,16 @@ import {Direction} from '@angular/cdk/bidi';
 import {CdkScrollable, ViewportRuler} from '@angular/cdk/scrolling';
 import {ElementRef} from '@angular/core';
 import {Observable} from 'rxjs';
-import {OverlayRef} from '../overlay-ref';
 import {
   ConnectedOverlayPositionChange,
   ConnectionPositionPair,
   OriginConnectionPosition,
   OverlayConnectionPosition,
-  validateHorizontalPosition,
-  validateVerticalPosition,
 } from './connected-position';
 import {FlexibleConnectedPositionStrategy} from './flexible-connected-position-strategy';
 import {PositionStrategy} from './position-strategy';
-
+import {Platform} from '@angular/cdk/platform';
+import {OverlayReference} from '../overlay-reference';
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an
@@ -40,13 +38,13 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   _positionStrategy: FlexibleConnectedPositionStrategy;
 
   /** The overlay to which this strategy is attached. */
-  private _overlayRef: OverlayRef;
+  private _overlayRef: OverlayReference;
 
   private _direction: Direction | null;
 
   /** Whether the we're dealing with an RTL context */
   get _isRtl() {
-    return this._overlayRef.getConfig().direction === 'rtl';
+    return this._overlayRef.getDirection() === 'rtl';
   }
 
   /** Ordered list of preferred positions, from most to least desirable. */
@@ -62,14 +60,16 @@ export class ConnectedPositionStrategy implements PositionStrategy {
       overlayPos: OverlayConnectionPosition,
       connectedTo: ElementRef,
       viewportRuler: ViewportRuler,
-      document: Document) {
+      document: Document,
+      // @deletion-target 7.0.0 `platform` parameter to be made required.
+      platform?: Platform) {
 
     // Since the `ConnectedPositionStrategy` is deprecated and we don't want to maintain
     // the extra logic, we create an instance of the positioning strategy that has some
     // defaults that make it behave as the old position strategy and to which we'll
     // proxy all of the API calls.
     this._positionStrategy =
-      new FlexibleConnectedPositionStrategy(connectedTo, viewportRuler, document)
+      new FlexibleConnectedPositionStrategy(connectedTo, viewportRuler, document, platform)
         .withFlexibleDimensions(false)
         .withPush(false)
         .withViewportMargin(0);
@@ -83,7 +83,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Attach this position strategy to an overlay. */
-  attach(overlayRef: OverlayRef): void {
+  attach(overlayRef: OverlayReference): void {
     this._overlayRef = overlayRef;
     this._positionStrategy.attach(overlayRef);
 
@@ -109,7 +109,6 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * @docs-private
    */
   apply(): void {
-    this._validatePositions();
     this._positionStrategy.apply();
   }
 
@@ -119,7 +118,6 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * allows one to re-align the panel without changing the orientation of the panel.
    */
   recalculateLastPosition(): void {
-    this._validatePositions();
     this._positionStrategy.reapplyLastPosition();
   }
 
@@ -212,22 +210,5 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   setOrigin(origin: ElementRef): this {
     this._positionStrategy.setOrigin(origin);
     return this;
-  }
-
-  /** Validates that the current position match the expected values. */
-  private _validatePositions(): void {
-    if (!this._preferredPositions.length) {
-      throw Error('ConnectedPositionStrategy: At least one position is required.');
-    }
-
-    // TODO(crisbeto): remove these once Angular's template type
-    // checking is advanced enough to catch these cases.
-    // TODO(crisbeto): port these checks into the flexible positioning.
-    this._preferredPositions.forEach(pair => {
-      validateHorizontalPosition('originX', pair.originX);
-      validateVerticalPosition('originY', pair.originY);
-      validateHorizontalPosition('overlayX', pair.overlayX);
-      validateVerticalPosition('overlayY', pair.overlayY);
-    });
   }
 }

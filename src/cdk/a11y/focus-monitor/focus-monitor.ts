@@ -18,7 +18,7 @@ import {
   Output,
   SkipSelf,
 } from '@angular/core';
-import {of as observableOf, Observable, Subject, Subscription} from 'rxjs';
+import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 
 
 // This is the value used by AngularJS Material. Through trial and error (on iPhone 6S) they found
@@ -27,6 +27,16 @@ export const TOUCH_BUFFER_MS = 650;
 
 
 export type FocusOrigin = 'touch' | 'mouse' | 'keyboard' | 'program' | null;
+
+
+/**
+ * Corresponds to the options that can be passed to the native `focus` event.
+ * via https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
+ */
+export interface FocusOptions {
+  /** Whether the browser should scroll to the element when it is focused. */
+  preventScroll?: boolean;
+}
 
 
 type MonitoredElementInfo = {
@@ -135,15 +145,17 @@ export class FocusMonitor implements OnDestroy {
 
   /**
    * Focuses the element via the specified focus origin.
-   * @param element The element to focus.
-   * @param origin The focus origin.
+   * @param element Element to focus.
+   * @param origin Focus origin.
+   * @param options Options that can be used to configure the focus behavior.
    */
-  focusVia(element: HTMLElement, origin: FocusOrigin): void {
+  focusVia(element: HTMLElement, origin: FocusOrigin, options?: FocusOptions): void {
     this._setOriginForCurrentEventQueue(origin);
 
     // `focus` isn't available on the server
     if (typeof element.focus === 'function') {
-      element.focus();
+      // Cast the element to `any`, because the TS typings don't have the `options` parameter yet.
+      (element as any).focus(options);
     }
   }
 
@@ -173,7 +185,7 @@ export class FocusMonitor implements OnDestroy {
     };
 
     // When the touchstart event fires the focus event is not yet in the event queue. This means
-    // we can't rely on the trick used above (setting timeout of 0ms). Instead we wait 650ms to
+    // we can't rely on the trick used above (setting timeout of 1ms). Instead we wait 650ms to
     // see if a focus happens.
     let documentTouchstartListener = (event: TouchEvent) => {
       if (this._touchTimeoutId != null) {
@@ -187,7 +199,7 @@ export class FocusMonitor implements OnDestroy {
     // focused element.
     let windowFocusListener = () => {
       this._windowFocused = true;
-      this._windowFocusTimeoutId = setTimeout(() => this._windowFocused = false, 0);
+      this._windowFocusTimeoutId = setTimeout(() => this._windowFocused = false);
     };
 
     // Note: we listen to events in the capture phase so we can detect them even if the user stops
@@ -246,7 +258,10 @@ export class FocusMonitor implements OnDestroy {
   private _setOriginForCurrentEventQueue(origin: FocusOrigin): void {
     this._ngZone.runOutsideAngular(() => {
       this._origin = origin;
-      this._originTimeoutId = setTimeout(() => this._origin = null, 0);
+      // Sometimes the focus origin won't be valid in Firefox because Firefox seems to focus *one*
+      // tick after the interaction event fired. To ensure the focus origin is always correct,
+      // the focus origin will be determined at the beginning of the next tick.
+      this._originTimeoutId = setTimeout(() => this._origin = null, 1);
     });
   }
 
@@ -302,20 +317,20 @@ export class FocusMonitor implements OnDestroy {
     // 2) It was caused by a touch event, in which case we mark the origin as 'touch'.
     // 3) The element was programmatically focused, in which case we should mark the origin as
     //    'program'.
-    if (!this._origin) {
+    let origin = this._origin;
+    if (!origin) {
       if (this._windowFocused && this._lastFocusOrigin) {
-        this._origin = this._lastFocusOrigin;
+        origin = this._lastFocusOrigin;
       } else if (this._wasCausedByTouch(event)) {
-        this._origin = 'touch';
+        origin = 'touch';
       } else {
-        this._origin = 'program';
+        origin = 'program';
       }
     }
 
-    this._setClasses(element, this._origin);
-    elementInfo.subject.next(this._origin);
-    this._lastFocusOrigin = this._origin;
-    this._origin = null;
+    this._setClasses(element, origin);
+    this._emitOrigin(elementInfo.subject, origin);
+    this._lastFocusOrigin = origin;
   }
 
   /**
@@ -334,7 +349,11 @@ export class FocusMonitor implements OnDestroy {
     }
 
     this._setClasses(element);
-    elementInfo.subject.next(null);
+    this._emitOrigin(elementInfo.subject, null);
+  }
+
+  private _emitOrigin(subject: Subject<FocusOrigin>, origin: FocusOrigin) {
+    this._ngZone.run(() => subject.next(origin));
   }
 
   private _incrementMonitoredElementCount() {
@@ -351,7 +370,6 @@ export class FocusMonitor implements OnDestroy {
       this._unregisterGlobalListeners = () => {};
     }
   }
-
 }
 
 

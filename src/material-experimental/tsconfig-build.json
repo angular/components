@@ -25,7 +25,7 @@
     "types": [],
     "paths": {
       "@angular/material/*": ["../../dist/packages/material/*"],
-      "@angular/material": ["../../dist/packages/material/public-api"],
+      "@angular/material": ["../../dist/packages/material"],
       "@angular/cdk/*": ["../../dist/packages/cdk/*"],
       "@angular/cdk": ["../../dist/packages/cdk"],
       "@angular/cdk-experimental/*": ["../../dist/packages/cdk-experimental/*"],
@@ -38,10 +38,13 @@
   ],
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,
-    "strictMetadataEmit": false, // Workaround for Angular #22210
+    "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",
     "flatModuleId": "@angular/material-experimental",
     "skipTemplateCodegen": true,
     "fullTemplateTypeCheck": true
+  },
+  "bazelOptions": {
+    "suppressTsconfigOverrideWarnings": true
   }
 }

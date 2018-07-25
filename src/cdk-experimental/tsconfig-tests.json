@@ -7,15 +7,20 @@
     "importHelpers": false,
     "module": "commonjs",
     "target": "es5",
-    "types": ["jasmine"]
+    "types": ["jasmine"],
+    "paths": {
+      "@angular/cdk/*": ["../../dist/packages/cdk/*/public-api"],
+      "@angular/cdk-experimental/*": ["./*"]
+    }
   },
   "angularCompilerOptions": {
-    "strictMetadataEmit": false, // Workaround for Angular #22210
+    "strictMetadataEmit": true,
     "skipTemplateCodegen": true,
     "emitDecoratorMetadata": true
   },
   "include": [
-    "**/*.spec.ts",
-    "index.ts"
+    // Include the index.ts for each secondary entry-point
+    "./*/index.ts",
+    "**/*.spec.ts"
   ]
 }
