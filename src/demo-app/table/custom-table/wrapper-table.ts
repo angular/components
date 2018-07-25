@@ -45,21 +45,9 @@ export class WrapperTable<T> implements AfterContentInit {
 
   @ViewChild(MatTable) table: MatTable<T>;
 
-  private _columns: string[];
-
-  // @Input() columns: string[];
-  @Input() set columns(vals: string[]) {
-    this._columns = vals;
-    this._changeDefRef.detectChanges();
-  }
-  get columns() {
-    return this._columns;
-  }
+  @Input() columns: string[];
 
   @Input() dataSource: DataSource<T>;
-
-  constructor(private _changeDefRef: ChangeDetectorRef) {
-  }
 
   ngAfterContentInit() {
     // Register the simple columns to the table
