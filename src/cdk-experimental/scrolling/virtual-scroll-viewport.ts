@@ -23,7 +23,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {animationFrameScheduler, fromEvent, Observable, Subject} from 'rxjs';
-import {sample, sampleTime, take, takeUntil} from 'rxjs/operators';
+import {sample, sampleTime, takeUntil} from 'rxjs/operators';
 import {CdkVirtualForOf} from './virtual-for-of';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 
@@ -123,7 +123,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
 
   constructor(public elementRef: ElementRef<HTMLElement>,
               private _changeDetectorRef: ChangeDetectorRef,
-              public _ngZone: NgZone,
+              private _ngZone: NgZone,
               @Inject(VIRTUAL_SCROLL_STRATEGY) private _scrollStrategy: VirtualScrollStrategy) {}
 
   ngOnInit() {
@@ -261,12 +261,16 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
     }
   }
 
-  /**  Scrolls to the offset on the viewport. */
+  /**
+   * Scrolls to the offset on the viewport.
+   * @param offset The offset to scroll to.
+   * @param behavior The ScrollBehavior to use when scrolling. Default is behavior is `auto`.
+   */
   scrollToOffset(offset: number, behavior: ScrollBehavior = 'auto') {
     const viewportElement = this.elementRef.nativeElement;
-    const offsetDirection = this.orientation === 'horizontal' ? 'left' : 'top';
 
     if (supportsScrollBehavior()) {
+      const offsetDirection = this.orientation === 'horizontal' ? 'left' : 'top';
       viewportElement.scrollTo({[offsetDirection]: offset, behavior});
     } else {
       if (this.orientation === 'horizontal') {
@@ -277,12 +281,16 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
     }
   }
 
-  /** Scroll the viewport to the specified index. */
+  /**
+   * Scrolls to the offset for the given index.
+   * @param index The index of the element to scroll to.
+   * @param behavior The ScrollBehavior to use when scrolling. Default is behavior is `auto`.
+   */
   scrollToIndex(index: number,  behavior: ScrollBehavior = 'auto') {
     this._scrollStrategy.scrollToIndex(index, behavior);
   }
 
-  /** Internal method to set the scroll offset on the viewport. */
+  /** @docs-private Internal method to set the scroll offset on the viewport. */
   setScrollOffset(offset: number) {
     // Rather than setting the offset immediately, we batch it up to be applied along with other DOM
     // writes during the next change detection cycle.
@@ -338,11 +346,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
     if (!this._isChangeDetectionPending) {
       this._isChangeDetectionPending = true;
       this._ngZone.runOutsideAngular(() => Promise.resolve().then(() => {
-        if (this._ngZone.isStable) {
-           this._doChangeDetection();
-        } else {
-          this._ngZone.onStable.pipe(take(1)).subscribe(() => this._doChangeDetection());
-        }
+        this._doChangeDetection();
       }));
     }
   }
@@ -351,8 +355,10 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   private _doChangeDetection() {
     this._isChangeDetectionPending = false;
 
-    // Apply changes to Angular bindings.
-    this._ngZone.run(() => this._changeDetectorRef.detectChanges());
+    // Apply changes to Angular bindings. Note: We must call `markForCheck` to run change detection
+    // from the root, since the repeated items are content projected in. Calling `detectChanges`
+    // instead does not properly check the projected content.
+    this._ngZone.run(() => this._changeDetectorRef.markForCheck());
     // Apply the content transform. The transform can't be set via an Angular binding because
     // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
     // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
@@ -367,10 +373,11 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
       }
     }
 
-    for (const fn of this._runAfterChangeDetection) {
+    const runAfterChangeDetection = this._runAfterChangeDetection;
+    this._runAfterChangeDetection = [];
+    for (const fn of runAfterChangeDetection) {
       fn();
     }
-    this._runAfterChangeDetection = [];
 
     this._ngZone.run(() => this._changeDetectionComplete.next());
   }

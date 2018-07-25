@@ -23,7 +23,7 @@ import {
   ContentChildren,
   QueryList,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/platform-browser';
+import {DOCUMENT} from '@angular/common';
 import {Directionality} from '@angular/cdk/bidi';
 import {CdkDragHandle} from './drag-handle';
 import {CdkDropContainer, CDK_DROP_CONTAINER} from './drop-container';
@@ -82,7 +82,7 @@ export class CdkDrag implements AfterContentInit, OnDestroy {
   private _activeTransform: Point = {x: 0, y: 0};
 
   /** Whether the element is being dragged. */
-  private _isDragging = false;
+  _isDragging = false;
 
   /** Whether the element has moved since the user started dragging it. */
   private _hasMoved = false;

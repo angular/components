@@ -42,6 +42,10 @@ export interface VirtualScrollStrategy {
   /** Called when the offset of the rendered items changed. */
   onRenderedOffsetChanged();
 
-  /** Scroll to the offset for the given index. */
-  scrollToIndex(index: number, behavior: ScrollBehavior);
+  /**
+   * Scroll to the offset for the given index.
+   * @param index The index of the element to scroll to.
+   * @param behavior The ScrollBehavior to use when scrolling.
+   */
+  scrollToIndex(index: number, behavior: ScrollBehavior): void;
 }
