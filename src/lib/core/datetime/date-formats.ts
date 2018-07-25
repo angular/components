@@ -10,7 +10,19 @@ import {InjectionToken} from '@angular/core';
 
 
 export type MatDateFormats = {
+  /**
+   * @deprecated Remove `parse` and use `CdkDateFormats` instead.
+   * @deletion-target 8.0.0
+   */
+  parse: {
+    dateInput: any,
+  },
   display: {
+    /**
+     * @deprecated Remove `dateInput` and use `CdkDateFormats` instead.
+     * @deletion-target 8.0.0
+     */
+    dateInput: any,
     monthYearLabel: any,
     dateA11yLabel: any,
     monthYearA11yLabel: any,
