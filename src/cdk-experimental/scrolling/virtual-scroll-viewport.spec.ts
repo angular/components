@@ -23,23 +23,11 @@ describe('CdkVirtualScrollViewport', () => {
       viewport = testComponent.viewport;
     });
 
-    it('should sanitize transform inputs', fakeAsync(() => {
-      finishInit(fixture);
-      viewport.orientation = 'arbitrary string as orientation' as any;
-      viewport.setRenderedContentOffset(
-          'arbitrary string as offset' as any, 'arbitrary string as to' as any);
-      fixture.detectChanges();
-      flush();
-
-      expect((viewport._renderedContentTransform as any).changingThisBreaksApplicationSecurity)
-          .toBe('translateY(NaNpx)');
-    }));
-
     it('should render initial state', fakeAsync(() => {
       finishInit(fixture);
 
       const contentWrapper =
-          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper');
+          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper')!;
       expect(contentWrapper.children.length)
           .toBe(4, 'should render 4 50px items to fill 200px space');
     }));
@@ -113,9 +101,10 @@ describe('CdkVirtualScrollViewport', () => {
 
     it('should set total content size', fakeAsync(() => {
       finishInit(fixture);
+
       viewport.setTotalContentSize(10000);
-      fixture.detectChanges();
       flush();
+      fixture.detectChanges();
 
       expect(viewport.elementRef.nativeElement.scrollHeight).toBe(10000);
     }));
@@ -164,6 +153,56 @@ describe('CdkVirtualScrollViewport', () => {
       flush();
 
       expect(viewport.elementRef.nativeElement.scrollTop).toBe(testComponent.itemSize * 2);
+      expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
+    }));
+
+    it('should scroll to offset', fakeAsync(() => {
+      finishInit(fixture);
+      viewport.scrollToOffset(testComponent.itemSize * 2);
+
+      triggerScroll(viewport);
+      fixture.detectChanges();
+      flush();
+
+      expect(viewport.elementRef.nativeElement.scrollTop).toBe(testComponent.itemSize * 2);
+      expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
+    }));
+
+    it('should scroll to index', fakeAsync(() => {
+      finishInit(fixture);
+      viewport.scrollToIndex(2);
+
+      triggerScroll(viewport);
+      fixture.detectChanges();
+      flush();
+
+      expect(viewport.elementRef.nativeElement.scrollTop).toBe(testComponent.itemSize * 2);
+      expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
+    }));
+
+    it('should scroll to offset in horizontal mode', fakeAsync(() => {
+      testComponent.orientation = 'horizontal';
+      finishInit(fixture);
+      viewport.scrollToOffset(testComponent.itemSize * 2);
+
+      triggerScroll(viewport);
+      fixture.detectChanges();
+      flush();
+
+      expect(viewport.elementRef.nativeElement.scrollLeft).toBe(testComponent.itemSize * 2);
+      expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
+    }));
+
+    it('should scroll to index in horizontal mode', fakeAsync(() => {
+      testComponent.orientation = 'horizontal';
+      finishInit(fixture);
+      viewport.scrollToIndex(2);
+
+      triggerScroll(viewport);
+      fixture.detectChanges();
+      flush();
+
+      expect(viewport.elementRef.nativeElement.scrollLeft).toBe(testComponent.itemSize * 2);
       expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
     }));
 
@@ -519,7 +558,7 @@ describe('CdkVirtualScrollViewport', () => {
       finishInit(fixture);
 
       const contentWrapper =
-          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper');
+          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper')!;
       expect(contentWrapper.children.length)
           .toBe(4, 'should render 4 50px items to fill 200px space');
     }));
@@ -529,7 +568,7 @@ describe('CdkVirtualScrollViewport', () => {
       finishInit(fixture);
 
       const contentWrapper =
-          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper');
+          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper')!;
       expect(contentWrapper.children.length).toBe(4,
           'should render 4 items to fill 200px space based on 50px estimate from first item');
     }));
