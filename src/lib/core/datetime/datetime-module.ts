@@ -9,13 +9,13 @@
 import {NgModule} from '@angular/core';
 import {MAT_DATE_FORMATS} from './date-formats';
 import {MAT_NATIVE_DATE_FORMATS} from './native-date-formats';
-import {NativeDateModule, CDK_DATE_FORMATS} from '@angular/cdk/datetime';
+import {NativeDateModule, CDK_DATE_FORMATS, CDK_NATIVE_DATE_FORMATS} from '@angular/cdk/datetime';
 
 @NgModule({
   imports: [NativeDateModule],
   providers: [
     {provide: MAT_DATE_FORMATS, useValue: MAT_NATIVE_DATE_FORMATS},
-    {provide: CDK_DATE_FORMATS, useValue: undefined},
+    {provide: CDK_DATE_FORMATS, useValue: CDK_NATIVE_DATE_FORMATS},
   ],
 })
 export class MatNativeDateModule {}
