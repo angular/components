@@ -3,6 +3,7 @@ import {FormControl} from '@angular/forms';
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MatDatepicker} from '@angular/material/datepicker';
+import {CDK_DATE_FORMATS} from '@angular/cdk/datetime';
 
 // Depending on whether rollup is used, moment needs to be imported differently.
 // Since Moment.js doesn't have a default export, we normally need to import using the `* as`
@@ -40,6 +41,7 @@ export const MY_FORMATS = {
     {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
 
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    {provide: CDK_DATE_FORMATS, useValue: undefined},
   ],
 })
 export class DatepickerViewsSelectionExample {
