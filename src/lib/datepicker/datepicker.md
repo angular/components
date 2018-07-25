@@ -3,6 +3,10 @@ the calendar. It is made up of several components and directives that work toget
 
 <!-- example(datepicker-overview) -->
 
+Material datepicker builds on the foundation of the CDK datepicker that is responsible for the basic functionality
+needed for a basic datepicker. Material datepicker extends the CDK datepicker and has Material Design
+styling.
+
 ### Connecting a datepicker to an input
 
 A datepicker is composed of a text input and a calendar pop-up, connected via the `matDatepicker`

@@ -30,7 +30,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {CalendarView} from '@angular/cdk/datepicker';
+import {CalendarView} from '@angular/cdk/datetime';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
@@ -91,9 +91,6 @@ export class MatYearView<D> extends CalendarView<D> implements AfterContentInit 
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
-
-  /** Emits when a new month is selected. */
-  @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** Emits the selected month. This doesn't imply a change on the selected date */
   @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();

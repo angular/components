@@ -37,10 +37,10 @@ import {
   ViewEncapsulation,
   OnDestroy,
 } from '@angular/core';
-import {CanColor, DateAdapter, mixinColor, ThemePalette} from '@angular/material/core';
+import {CanColor, mixinColor, ThemePalette} from '@angular/material/core';
+import {CdkDatepicker, DateAdapter} from '@angular/cdk/datetime';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {merge, Subject, Subscription} from 'rxjs';
-import {createMissingDateImplError} from './datepicker-errors';
+import {merge, Subscription} from 'rxjs';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatCalendar} from './calendar';
 import {matDatepickerAnimations} from './datepicker-animations';
@@ -128,24 +128,13 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   selector: 'mat-datepicker',
   template: '',
   exportAs: 'matDatepicker',
+  inputs: ['startAt'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatDatepicker<D> implements OnDestroy, CanColor {
+export class MatDatepicker<D> extends CdkDatepicker<D> implements OnDestroy, CanColor {
   /** An input indicating the type of the custom header component for the calendar, if set. */
   @Input() calendarHeaderComponent: ComponentType<any>;
-
-  /** The date to open the calendar to initially. */
-  @Input()
-  get startAt(): D | null {
-    // If an explicit startAt is set we start there, otherwise we start at whatever the currently
-    // selected value is.
-    return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
-  }
-  set startAt(value: D | null) {
-    this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-  }
-  private _startAt: D | null;
 
   /** The view that the calendar should start in. */
   @Input() startView: 'month' | 'year' = 'month';
@@ -183,7 +172,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
 
     if (newValue !== this._disabled) {
       this._disabled = newValue;
-      this._disabledChange.next(newValue);
+      this.disabledChange.next(newValue);
     }
   }
   private _disabled: boolean;
@@ -209,7 +198,6 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** Emits when the datepicker has been closed. */
   @Output('closed') closedStream: EventEmitter<void> = new EventEmitter<void>();
 
-
   /** Whether the calendar is open. */
   @Input()
   get opened(): boolean { return this._opened; }
@@ -218,25 +206,6 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
 
   /** The id for the datepicker calendar. */
   id: string = `mat-datepicker-${datepickerUid++}`;
-
-  /** The currently selected date. */
-  get _selected(): D | null { return this._validSelected; }
-  set _selected(value: D | null) { this._validSelected = value; }
-  private _validSelected: D | null = null;
-
-  /** The minimum selectable date. */
-  get _minDate(): D | null {
-    return this._datepickerInput && this._datepickerInput.min;
-  }
-
-  /** The maximum selectable date. */
-  get _maxDate(): D | null {
-    return this._datepickerInput && this._datepickerInput.max;
-  }
-
-  get _dateFilter(): (date: D | null) => boolean {
-    return this._datepickerInput && this._datepickerInput._dateFilter;
-  }
 
   /** A reference to the overlay when the calendar is opened as a popup. */
   _popupRef: OverlayRef;
@@ -259,29 +228,20 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** The input element this datepicker is associated with. */
   _datepickerInput: MatDatepickerInput<D>;
 
-  /** Emits when the datepicker is disabled. */
-  readonly _disabledChange = new Subject<boolean>();
-
-  /** Emits new selected date when selected date changes. */
-  readonly _selectedChanged = new Subject<D>();
-
   constructor(private _dialog: MatDialog,
               private _overlay: Overlay,
               private _ngZone: NgZone,
               private _viewContainerRef: ViewContainerRef,
               @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) private _scrollStrategy,
-              @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
-              @Optional() @Inject(DOCUMENT) private _document: any) {
-    if (!this._dateAdapter) {
-      throw createMissingDateImplError('DateAdapter');
-    }
+              @Optional() @Inject(DOCUMENT) private _document: any,
+              public dateAdapter: DateAdapter<D>) {
+    super(dateAdapter);
   }
 
-  ngOnDestroy() {
+  destroy() {
     this.close();
-    this._inputSubscription.unsubscribe();
-    this._disabledChange.complete();
+    this.cdkDatepickerDestroy(this._inputSubscription);
 
     if (this._popupRef) {
       this._popupRef.dispose();
@@ -293,8 +253,8 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   _select(date: D): void {
     let oldValue = this._selected;
     this._selected = date;
-    if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
-      this._selectedChanged.next(date);
+    if (!this.dateAdapter.sameDate(oldValue, this._selected)) {
+      this.selectedChanged.next(date);
     }
   }
 
@@ -318,7 +278,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     }
     this._datepickerInput = input;
     this._inputSubscription =
-        this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
+        this._datepickerInput.valueChange.subscribe((value: D | null) => this._selected = value);
   }
 
   /** Open the calendar. */
@@ -472,14 +432,6 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
           overlayY: 'bottom'
         }
       ]);
-  }
-
-  /**
-   * @param obj The object to check.
-   * @returns The given object if it is both a date instance and valid, otherwise null.
-   */
-  private _getValidDateOrNull(obj: any): D | null {
-    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
   }
 
   /** Passes the current theme color along to the calendar overlay. */

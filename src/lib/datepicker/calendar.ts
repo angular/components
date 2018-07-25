@@ -25,7 +25,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {CalendarView} from '@angular/cdk/datepicker';
+import {CalendarView} from '@angular/cdk/datetime';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -171,7 +171,8 @@ export class MatCalendarHeader<D> {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatCalendar<D> extends CalendarView<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
+export class MatCalendar<D> extends CalendarView<D> implements AfterContentInit, AfterViewChecked,
+    OnDestroy, OnChanges {
   /** An input indicating the type of the header component, if set. */
   @Input() headerComponent: ComponentType<any>;
 
@@ -224,9 +225,6 @@ export class MatCalendar<D> extends CalendarView<D> implements AfterContentInit,
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
-
-  /** Emits when the currently selected date changes. */
-  @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
 
   /**
    * Emits the year chosen in multiyear view.
