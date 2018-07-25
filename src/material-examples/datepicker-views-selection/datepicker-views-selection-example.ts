@@ -17,15 +17,20 @@ const moment = _rollupMoment || _moment;
 
 // See the Moment.js docs for the meaning of these formats:
 // https://momentjs.com/docs/#/displaying/format/
-export const MY_FORMATS = {
+export const MY_MAT_FORMATS = {
+  display: {
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+
+export const MY_CDK_FORMATS = {
   parse: {
     dateInput: 'MM/YYYY',
   },
   display: {
     dateInput: 'MM/YYYY',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
   },
 };
 
@@ -40,8 +45,8 @@ export const MY_FORMATS = {
     // our example generation script.
     {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
 
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
-    {provide: CDK_DATE_FORMATS, useValue: undefined},
+    {provide: MAT_DATE_FORMATS, useValue: MY_MAT_FORMATS},
+    {provide: CDK_DATE_FORMATS, useValue: MY_CDK_FORMATS},
   ],
 })
 export class DatepickerViewsSelectionExample {
