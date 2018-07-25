@@ -125,13 +125,14 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Cont
   constructor(
       _elementRef: ElementRef,
       @Optional() _dateAdapter: DateAdapter<D>,
-      @Optional() @Inject(CDK_DATE_FORMATS) _cdkDateFormats: CdkDateFormats,
       /**
        * @deprecated Removing `MAT_DATE_FORMATS`.
        * @deletion-target 8.0.0
        */
       @Optional() @Inject(MAT_DATE_FORMATS) _matDateFormats: MatDateFormats,
-      @Optional() private _formField: MatFormField) {
+      @Optional() private _formField: MatFormField,
+      /** @deletion-target 8.0.0 Make required. */
+      @Optional() @Inject(CDK_DATE_FORMATS) _cdkDateFormats?: CdkDateFormats) {
     super(_elementRef, _dateAdapter, _cdkDateFormats || _matDateFormats);
   }
 
