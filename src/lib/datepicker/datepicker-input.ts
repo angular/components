@@ -23,6 +23,10 @@ import {
   NG_VALUE_ACCESSOR,
   Validator,
 } from '@angular/forms';
+import {
+  MAT_DATE_FORMATS,
+  MatDateFormats,
+} from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {MatDatepicker} from './datepicker';
@@ -35,8 +39,8 @@ import {
 
 
 /**
- * @deprecated
- * @deletion-target 8.0.0 Removing export.
+ * @deprecated Removing export.
+ * @deletion-target 8.0.0
  */
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -46,8 +50,8 @@ export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
 
 
 /**
- * @deprecated
- * @deletion-target 8.0.0 Removing export.
+ * @deprecated Removing export.
+ * @deletion-target 8.0.0
  */
 export const MAT_DATEPICKER_VALIDATORS: any = {
   provide: NG_VALIDATORS,
@@ -57,8 +61,8 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
 
 
 /**
- * @deprecated
- * @deletion-target 8.0.0 Use `DatepickerInputEvent<D>` instead.
+ * @deprecated Use `DatepickerInputEvent<D>` instead.
+ * @deletion-target 8.0.0
  *
  * An event used for datepicker input and change events. We don't always have access to a native
  * input or change event because the event may have been triggered by the user clicking on the
@@ -86,7 +90,7 @@ export class MatDatepickerInputEvent<D> {
     MAT_DATEPICKER_VALIDATORS,
     {provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: MatDatepickerInput},
   ],
-  inputs: ['value', 'min', 'max', 'disabled', 'cdkDatepickerFilter', 'cdkDatepicker'],
+  inputs: ['value', 'min', 'max', 'disabled'],
   outputs: ['dateChange', 'dateInput'],
   host: {
     '[attr.aria-haspopup]': 'true',
@@ -104,7 +108,7 @@ export class MatDatepickerInputEvent<D> {
 export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements AfterContentInit,
     ControlValueAccessor, OnDestroy, Validator {
   /** Prefix for form control validator properties. */
-  protected _prefix = 'mat';
+  protected _formControlValidatorPrefix = 'mat';
 
   /** The datepicker that this input is associated with. */
   @Input()
@@ -122,14 +126,20 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
   constructor(
       _elementRef: ElementRef,
       @Optional() _dateAdapter: DateAdapter<D>,
-      @Optional() @Inject(CDK_DATE_FORMATS) _dateFormats: CdkDateFormats,
-      @Optional() private _formField: MatFormField) {
-    super(_elementRef, _dateAdapter, _dateFormats);
+      /**
+       * @deprecated Removing `MAT_DATE_FORMATS`.
+       * @deletion-target 8.0.0
+       */
+      @Optional() @Inject(MAT_DATE_FORMATS) _matDateFormats: MatDateFormats,
+      @Optional() private _formField: MatFormField,
+      /** @deletion-target 8.0.0 Make required. */
+      @Optional() @Inject(CDK_DATE_FORMATS) _cdkDateFormats?: CdkDateFormats) {
+    super(_elementRef, _dateAdapter, _cdkDateFormats || _matDateFormats);
   }
 
   /**
-   * @deprecated
-   * @deletion-target 7.0.0 Use `getConnectedOverlayOrigin` instead
+   * @deprecated Use `getConnectedOverlayOrigin` instead.
+   * @deletion-target 7.0.0
    */
   getPopupConnectionElementRef(): ElementRef {
     return this.getConnectedOverlayOrigin();

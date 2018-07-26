@@ -7,20 +7,26 @@
  */
 
 import {
+  ChangeDetectionStrategy,
   Component,
   ContentChildren,
+  ElementRef,
+  EventEmitter,
   forwardRef,
   Input,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
+  OnDestroy,
+  OnInit,
   Output,
-  EventEmitter,
-  ElementRef,
   QueryList,
+  ViewEncapsulation,
 } from '@angular/core';
 import {CdkDrag} from './drag';
 import {CdkDragExit, CdkDragEnter, CdkDragDrop} from './drag-events';
 import {CDK_DROP_CONTAINER} from './drop-container';
+import {CdkDragDropRegistry} from './drag-drop-registry';
+
+/** Counter used to generate unique ids for drop zones. */
+let _uniqueIdCounter = 0;
 
 /** Container that wraps a set of draggable items. */
 @Component({
@@ -36,40 +42,58 @@ import {CDK_DROP_CONTAINER} from './drop-container';
   ],
   host: {
     'class': 'cdk-drop',
+    '[id]': 'id',
     '[class.cdk-drop-dragging]': '_dragging'
   }
 })
-export class CdkDrop<T = any> {
+export class CdkDrop<T = any> implements OnInit, OnDestroy {
   /** Draggable items in the container. */
   @ContentChildren(forwardRef(() => CdkDrag)) _draggables: QueryList<CdkDrag>;
 
   /**
-   * Other draggable containers that this container is connected
-   * to and into which the container's items can be transferred.
+   * Other draggable containers that this container is connected to and into which the
+   * container's items can be transferred. Can either be references to other drop containers,
+   * or their unique IDs.
    */
-  @Input() connectedTo: CdkDrop[] = [];
+  @Input() connectedTo: (CdkDrop | string)[] = [];
 
-  /** Arbitrary data to attach to all events emitted by this container. */
+  /** Arbitrary data to attach to this container. */
   @Input() data: T;
 
   /** Direction in which the list is oriented. */
   @Input() orientation: 'horizontal' | 'vertical' = 'vertical';
 
+  /**
+   * Unique ID for the drop zone. Can be used as a reference
+   * in the `connectedTo` of another `CdkDrop`.
+   */
+  @Input() id: string = `cdk-drop-${_uniqueIdCounter++}`;
+
   /** Emits when the user drops an item inside the container. */
-  @Output() dropped = new EventEmitter<CdkDragDrop<T, any>>();
+  @Output() dropped: EventEmitter<CdkDragDrop<T, any>> = new EventEmitter<CdkDragDrop<T, any>>();
 
   /**
    * Emits when the user has moved a new drag item into this container.
    */
-  @Output() entered = new EventEmitter<CdkDragEnter<T>>();
+  @Output() entered: EventEmitter<CdkDragEnter<T>> = new EventEmitter<CdkDragEnter<T>>();
 
   /**
    * Emits when the user removes an item from the container
    * by dragging it into another container.
    */
-  @Output() exited = new EventEmitter<CdkDragExit<T>>();
+  @Output() exited: EventEmitter<CdkDragExit<T>> = new EventEmitter<CdkDragExit<T>>();
 
-  constructor(public element: ElementRef<HTMLElement>) {}
+  constructor(
+    public element: ElementRef<HTMLElement>,
+    private _dragDropRegistry: CdkDragDropRegistry) {}
+
+  ngOnInit() {
+    this._dragDropRegistry.register(this);
+  }
+
+  ngOnDestroy() {
+    this._dragDropRegistry.remove(this);
+  }
 
   /** Whether an item in the container is being dragged. */
   _dragging = false;
@@ -141,7 +165,9 @@ export class CdkDrop<T = any> {
     const siblings = this._positionCache.items;
     const newPosition = siblings.find(({drag, clientRect}) => {
       if (drag === item) {
-        return false;
+        // If there's only one left item in the container, it must be
+        // the dragged item itself so we use it as a reference.
+        return siblings.length < 2;
       }
 
       return this.orientation === 'horizontal' ?
@@ -153,7 +179,10 @@ export class CdkDrop<T = any> {
       return;
     }
 
-    const element = newPosition ? newPosition.drag.element.nativeElement : null;
+    // Don't take the element of a dragged item as a reference,
+    // because it has been moved down to the end of the body.
+    const element = (newPosition && !this._dragDropRegistry.isDragging(newPosition.drag)) ?
+        newPosition.drag.element.nativeElement : null;
     const next = element ? element!.nextSibling : null;
     const parent = element ? element.parentElement! : this.element.nativeElement;
     const placeholder = item.getPlaceholderElement();
@@ -190,6 +219,8 @@ export class CdkDrop<T = any> {
 
     // TODO: add filter here that ensures that the current container isn't being passed to itself.
     this._positionCache.siblings = this.connectedTo
+      .map(drop => typeof drop === 'string' ? this._dragDropRegistry.getDropContainer(drop)! : drop)
+      .filter(Boolean)
       .map(drop => ({drop, clientRect: drop.element.nativeElement.getBoundingClientRect()}));
   }
 

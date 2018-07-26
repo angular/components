@@ -139,7 +139,7 @@ describe('CdkDatepicker', () => {
         expect(testComponent.datepickerInput.value).toBeNull();
 
         let selected = new Date(2017, JAN, 1);
-        testComponent.datepicker._select(selected);
+        testComponent.datepicker.select(selected);
         fixture.detectChanges();
         flush();
         fixture.detectChanges();
@@ -165,7 +165,7 @@ describe('CdkDatepicker', () => {
 
         expect(inputEl.classList).toContain('ng-pristine');
 
-        testComponent.datepicker._select(new Date(2017, JAN, 1));
+        testComponent.datepicker.select(new Date(2017, JAN, 1));
         fixture.detectChanges();
         flush();
         fixture.detectChanges();
@@ -220,7 +220,7 @@ describe('CdkDatepicker', () => {
 
         expect(inputEl.classList).toContain('ng-untouched');
 
-        testComponent.datepicker._select(new Date(2017, JAN, 1));
+        testComponent.datepicker.select(new Date(2017, JAN, 1));
         fixture.detectChanges();
         flush();
         fixture.detectChanges();
@@ -257,7 +257,7 @@ describe('CdkDatepicker', () => {
         expect(testComponent.datepickerInput.value).toBeNull();
 
         let selected = new Date(2017, JAN, 1);
-        testComponent.datepicker._select(selected);
+        testComponent.datepicker.select(selected);
         fixture.detectChanges();
 
         expect(testComponent.formControl.value).toEqual(selected);
