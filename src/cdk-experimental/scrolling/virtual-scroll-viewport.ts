@@ -66,7 +66,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   // depending on how the strategy calculates the scrolled index, it may come at a cost to
   // performance.
   /** Emits when the index of the first element visible in the viewport changes. */
-  @Output() scrolledIndexChange =
+  @Output() scrolledIndexChange: Observable<number> =
       Observable.create(observer => this._scrollStrategy.scrolledIndexChange
           .pipe(sample(this._changeDetectionComplete))
           .subscribe(observer));

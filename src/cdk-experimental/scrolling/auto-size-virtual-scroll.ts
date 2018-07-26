@@ -69,7 +69,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   /** @docs-private Implemented as part of VirtualScrollStrategy. */
   scrolledIndexChange = Observable.create(() => {
     // TODO(mmalerba): Implement.
-    throw new Error('cdk-virtual-scroll: scrolledIndexChange is currently not supported for the' +
+    throw Error('cdk-virtual-scroll: scrolledIndexChange is currently not supported for the' +
         ' autosize scroll strategy');
   });
 
@@ -162,7 +162,7 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   /** Scroll to the offset for the given index. */
   scrollToIndex(): void {
     // TODO(mmalerba): Implement.
-    throw new Error('cdk-virtual-scroll: scrollToIndex is currently not supported for the autosize'
+    throw Error('cdk-virtual-scroll: scrollToIndex is currently not supported for the autosize'
         + ' scroll strategy');
   }
 
