@@ -836,14 +836,12 @@ describe('MatDatepicker', () => {
     describe('datepicker with change and input events', () => {
       let fixture: ComponentFixture<DatepickerWithChangeAndInputEvents>;
       let testComponent: DatepickerWithChangeAndInputEvents;
-      let inputEl: HTMLInputElement;
 
       beforeEach(fakeAsync(() => {
         fixture = createComponent(DatepickerWithChangeAndInputEvents, [MatNativeDateModule]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
-        inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
         spyOn(testComponent, 'onChange');
         spyOn(testComponent, 'onInput');
