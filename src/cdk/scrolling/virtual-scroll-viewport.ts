@@ -236,7 +236,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
    */
   setRenderedContentOffset(offset: number, to: 'to-start' | 'to-end' = 'to-start') {
     const axis = this.orientation === 'horizontal' ? 'X' : 'Y';
-    let transform = `translate${axis}(${Number(offset)}px)`;
+    let transform = `translateZ(0) translate${axis}(${Number(offset)}px)`;
     this._renderedContentOffset = offset;
     if (to === 'to-end') {
       transform += ` translate${axis}(-100%)`;

@@ -32,6 +32,8 @@ cdk-virtual-scroll-viewport {
   display: block;
   position: relative;
   overflow: auto;
+  contain: strict;
+  transform: translateZ(0);
 }
 
 // Wrapper element for the rendered content. This element will be transformed to push the rendered
@@ -40,6 +42,7 @@ cdk-virtual-scroll-viewport {
   position: absolute;
   top: 0;
   left: 0;
+  contain: content;
   will-change: contents, transform;
 }
 
