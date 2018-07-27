@@ -60,9 +60,14 @@ export class BreakpointObserver implements OnDestroy {
     const observables = queries.map(query => this._registerQuery(query).observable);
 
     return combineLatest(observables).pipe(map((breakpointStates: BreakpointState[]) => {
-      return {
-        matches: breakpointStates.some(state => state && state.matches)
-      };
+      const output: BreakpointState = {matches: false};
+      for (const state of breakpointStates) {
+        if (state.matches) {
+          output.matches = true;
+          break;
+        }
+      }
+      return output;
     }));
   }
 
