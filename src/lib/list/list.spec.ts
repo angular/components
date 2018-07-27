@@ -20,6 +20,7 @@ describe('MatList', () => {
         ListWithMultipleItems,
         ListWithManyLines,
         NavListWithOneAnchorItem,
+        ButtonListWithOneItem
       ],
     });
 
@@ -144,6 +145,14 @@ describe('MatList', () => {
     items.forEach(item => expect(item._isRippleDisabled()).toBe(true));
   });
 
+  it('button list should be created successfully', () => {
+    let fixture = TestBed.createComponent(ButtonListWithOneItem);
+    fixture.detectChanges();
+
+    const items = fixture.componentInstance.listItems;
+    expect(items.length).toBeGreaterThan(0);
+  });
+
   it('should allow disabling ripples for the whole nav-list', () => {
     let fixture = TestBed.createComponent(NavListWithOneAnchorItem);
     fixture.detectChanges();
@@ -193,6 +202,16 @@ class NavListWithOneAnchorItem extends BaseTestList {
   @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
   disableItemRipple: boolean = false;
   disableListRipple: boolean = false;
+}
+
+@Component({template: `
+  <mat-button-list>
+    <button mat-list-item>
+        Paprika
+    </button>
+  </mat-button-list>`})
+class ButtonListWithOneItem extends BaseTestList {
+  @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
 }
 
 @Component({template: `

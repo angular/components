@@ -210,7 +210,7 @@ $mat-list-item-inset-divider-offset: 72px;
   }
 }
 
-.mat-list, .mat-nav-list, .mat-selection-list {
+.mat-list, .mat-nav-list, .mat-button-list, .mat-selection-list {
   padding-top: $mat-list-top-padding;
   display: block;
   -webkit-tap-highlight-color: transparent;
@@ -265,6 +265,22 @@ $mat-list-item-inset-divider-offset: 72px;
   .mat-list-item {
     cursor: pointer;
     outline: none;
+  }
+}
+
+.mat-button-list {
+  //remove the native button look and make is look like a list item
+  button {
+    background: none;
+    color: inherit;
+    border: none;
+    font: inherit;
+    outline: inherit;
+  }
+
+  .mat-list-item {
+    cursor: pointer;
+    outline: inherit;
   }
 }
 

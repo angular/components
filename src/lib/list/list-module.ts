@@ -20,7 +20,7 @@ import {
   MatListAvatarCssMatStyler,
   MatListIconCssMatStyler,
   MatListItem,
-  MatListSubheaderCssMatStyler,
+  MatListSubheaderCssMatStyler, MatButtonList,
 } from './list';
 import {MatListOption, MatSelectionList} from './selection-list';
 import {MatDividerModule} from '@angular/material/divider';
@@ -31,6 +31,7 @@ import {MatDividerModule} from '@angular/material/divider';
   exports: [
     MatList,
     MatNavList,
+    MatButtonList,
     MatListItem,
     MatListAvatarCssMatStyler,
     MatLineModule,
@@ -45,6 +46,7 @@ import {MatDividerModule} from '@angular/material/divider';
   declarations: [
     MatList,
     MatNavList,
+    MatButtonList,
     MatListItem,
     MatListAvatarCssMatStyler,
     MatListIconCssMatStyler,

@@ -54,6 +54,23 @@ export const _MatListItemMixinBase: CanDisableRippleCtor & typeof MatListItemBas
 })
 export class MatNavList extends _MatListMixinBase implements CanDisableRipple {}
 
+
+@Component({
+  moduleId: module.id,
+  selector: 'mat-button-list',
+  exportAs: 'matButtonList',
+  host: {
+    'role': 'button list',
+    'class': 'mat-button-list'
+  },
+  templateUrl: 'list.html',
+  styleUrls: ['list.css'],
+  inputs: ['disableRipple'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MatButtonList extends _MatListMixinBase implements CanDisableRipple {}
+
 @Component({
   moduleId: module.id,
   selector: 'mat-list',
@@ -100,7 +117,7 @@ export class MatListSubheaderCssMatStyler {}
 /** An item within a Material Design list. */
 @Component({
   moduleId: module.id,
-  selector: 'mat-list-item, a[mat-list-item]',
+  selector: 'mat-list-item, a[mat-list-item], button[mat-list-item]',
   exportAs: 'matListItem',
   host: {
     'class': 'mat-list-item',
