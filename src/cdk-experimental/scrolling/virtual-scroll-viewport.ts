@@ -7,6 +7,7 @@
  */
 
 import {ListRange} from '@angular/cdk/collections';
+import {supportsScrollBehavior} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -17,11 +18,12 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {animationFrameScheduler, fromEvent, Observable, Subject} from 'rxjs';
-import {sampleTime, take, takeUntil} from 'rxjs/operators';
+import {sample, sampleTime, takeUntil} from 'rxjs/operators';
 import {CdkVirtualForOf} from './virtual-for-of';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 
@@ -53,8 +55,21 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   /** Emits when the rendered range changes. */
   private _renderedRangeSubject = new Subject<ListRange>();
 
+  /** Emits when a change detection cycle completes. */
+  private _changeDetectionComplete = new Subject<void>();
+
   /** The direction the viewport scrolls. */
   @Input() orientation: 'horizontal' | 'vertical' = 'vertical';
+
+  // Note: we don't use the typical EventEmitter here because we need to subscribe to the scroll
+  // strategy lazily (i.e. only if the user is actually listening to the events). We do this because
+  // depending on how the strategy calculates the scrolled index, it may come at a cost to
+  // performance.
+  /** Emits when the index of the first element visible in the viewport changes. */
+  @Output() scrolledIndexChange: Observable<number> =
+      Observable.create(observer => this._scrollStrategy.scrolledIndexChange
+          .pipe(sample(this._changeDetectionComplete))
+          .subscribe(observer));
 
   /** The element that wraps the rendered content. */
   @ViewChild('contentWrapper') _contentWrapper: ElementRef<HTMLElement>;
@@ -138,6 +153,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
     // Complete all subjects
     this._renderedRangeSubject.complete();
     this._detachedSubject.complete();
+    this._changeDetectionComplete.complete();
     this._destroyed.complete();
   }
 
@@ -245,7 +261,36 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
     }
   }
 
-  /** Sets the scroll offset on the viewport. */
+  /**
+   * Scrolls to the offset on the viewport.
+   * @param offset The offset to scroll to.
+   * @param behavior The ScrollBehavior to use when scrolling. Default is behavior is `auto`.
+   */
+  scrollToOffset(offset: number, behavior: ScrollBehavior = 'auto') {
+    const viewportElement = this.elementRef.nativeElement;
+
+    if (supportsScrollBehavior()) {
+      const offsetDirection = this.orientation === 'horizontal' ? 'left' : 'top';
+      viewportElement.scrollTo({[offsetDirection]: offset, behavior});
+    } else {
+      if (this.orientation === 'horizontal') {
+        viewportElement.scrollLeft = offset;
+      } else {
+        viewportElement.scrollTop = offset;
+      }
+    }
+  }
+
+  /**
+   * Scrolls to the offset for the given index.
+   * @param index The index of the element to scroll to.
+   * @param behavior The ScrollBehavior to use when scrolling. Default is behavior is `auto`.
+   */
+  scrollToIndex(index: number,  behavior: ScrollBehavior = 'auto') {
+    this._scrollStrategy.scrollToIndex(index, behavior);
+  }
+
+  /** @docs-private Internal method to set the scroll offset on the viewport. */
   setScrollOffset(offset: number) {
     // Rather than setting the offset immediately, we batch it up to be applied along with other DOM
     // writes during the next change detection cycle.
@@ -301,11 +346,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
     if (!this._isChangeDetectionPending) {
       this._isChangeDetectionPending = true;
       this._ngZone.runOutsideAngular(() => Promise.resolve().then(() => {
-        if (this._ngZone.isStable) {
-           this._doChangeDetection();
-        } else {
-          this._ngZone.onStable.pipe(take(1)).subscribe(() => this._doChangeDetection());
-        }
+        this._doChangeDetection();
       }));
     }
   }
@@ -314,8 +355,10 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   private _doChangeDetection() {
     this._isChangeDetectionPending = false;
 
-    // Apply changes to Angular bindings.
-    this._ngZone.run(() => this._changeDetectorRef.detectChanges());
+    // Apply changes to Angular bindings. Note: We must call `markForCheck` to run change detection
+    // from the root, since the repeated items are content projected in. Calling `detectChanges`
+    // instead does not properly check the projected content.
+    this._ngZone.run(() => this._changeDetectorRef.markForCheck());
     // Apply the content transform. The transform can't be set via an Angular binding because
     // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
     // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
@@ -330,9 +373,12 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
       }
     }
 
-    for (const fn of this._runAfterChangeDetection) {
+    const runAfterChangeDetection = this._runAfterChangeDetection;
+    this._runAfterChangeDetection = [];
+    for (const fn of runAfterChangeDetection) {
       fn();
     }
-    this._runAfterChangeDetection = [];
+
+    this._ngZone.run(() => this._changeDetectionComplete.next());
   }
 }

@@ -101,9 +101,10 @@ describe('CdkVirtualScrollViewport', () => {
 
     it('should set total content size', fakeAsync(() => {
       finishInit(fixture);
+
       viewport.setTotalContentSize(10000);
-      fixture.detectChanges();
       flush();
+      fixture.detectChanges();
 
       expect(viewport.elementRef.nativeElement.scrollHeight).toBe(10000);
     }));
@@ -153,6 +154,71 @@ describe('CdkVirtualScrollViewport', () => {
 
       expect(viewport.elementRef.nativeElement.scrollTop).toBe(testComponent.itemSize * 2);
       expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
+    }));
+
+    it('should scroll to offset', fakeAsync(() => {
+      finishInit(fixture);
+      viewport.scrollToOffset(testComponent.itemSize * 2);
+
+      triggerScroll(viewport);
+      fixture.detectChanges();
+      flush();
+
+      expect(viewport.elementRef.nativeElement.scrollTop).toBe(testComponent.itemSize * 2);
+      expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
+    }));
+
+    it('should scroll to index', fakeAsync(() => {
+      finishInit(fixture);
+      viewport.scrollToIndex(2);
+
+      triggerScroll(viewport);
+      fixture.detectChanges();
+      flush();
+
+      expect(viewport.elementRef.nativeElement.scrollTop).toBe(testComponent.itemSize * 2);
+      expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
+    }));
+
+    it('should scroll to offset in horizontal mode', fakeAsync(() => {
+      testComponent.orientation = 'horizontal';
+      finishInit(fixture);
+      viewport.scrollToOffset(testComponent.itemSize * 2);
+
+      triggerScroll(viewport);
+      fixture.detectChanges();
+      flush();
+
+      expect(viewport.elementRef.nativeElement.scrollLeft).toBe(testComponent.itemSize * 2);
+      expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
+    }));
+
+    it('should scroll to index in horizontal mode', fakeAsync(() => {
+      testComponent.orientation = 'horizontal';
+      finishInit(fixture);
+      viewport.scrollToIndex(2);
+
+      triggerScroll(viewport);
+      fixture.detectChanges();
+      flush();
+
+      expect(viewport.elementRef.nativeElement.scrollLeft).toBe(testComponent.itemSize * 2);
+      expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
+    }));
+
+    it('should output scrolled index', fakeAsync(() => {
+      finishInit(fixture);
+      triggerScroll(viewport, testComponent.itemSize * 2 - 1);
+      fixture.detectChanges();
+      flush();
+
+      expect(testComponent.scrolledToIndex).toBe(1);
+
+      triggerScroll(viewport, testComponent.itemSize * 2);
+      fixture.detectChanges();
+      flush();
+
+      expect(testComponent.scrolledToIndex).toBe(2);
     }));
 
     it('should update viewport as user scrolls down', fakeAsync(() => {
@@ -557,7 +623,8 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
   template: `
     <cdk-virtual-scroll-viewport
         [itemSize]="itemSize" [bufferSize]="bufferSize" [orientation]="orientation"
-        [style.height.px]="viewportHeight" [style.width.px]="viewportWidth">
+        [style.height.px]="viewportHeight" [style.width.px]="viewportWidth"
+        (scrolledIndexChange)="scrolledToIndex = $event">
       <div class="item"
            *cdkVirtualFor="let item of items; let i = index; trackBy: trackBy; \
                            templateCacheSize: templateCacheSize"
@@ -590,6 +657,8 @@ class FixedSizeVirtualScroll {
   @Input() items = Array(10).fill(0).map((_, i) => i);
   @Input() trackBy;
   @Input() templateCacheSize = 20;
+
+  scrolledToIndex = 0;
 
   get viewportWidth() {
     return this.orientation == 'horizontal' ? this.viewportSize : this.viewportCrossSize;
