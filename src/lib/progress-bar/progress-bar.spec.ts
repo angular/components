@@ -1,8 +1,10 @@
-import {TestBed, async, ComponentFixture} from '@angular/core/testing';
-import {Component} from '@angular/core';
+import {TestBed, async, ComponentFixture, fakeAsync, tick} from '@angular/core/testing';
+import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
+import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {Location} from '@angular/common';
 import {MatProgressBarModule} from './index';
+import { MatProgressBar } from './progress-bar';
 
 
 describe('MatProgressBar', () => {
@@ -116,6 +118,53 @@ describe('MatProgressBar', () => {
     it('should not modify the mode if a valid mode is provided.', () => {
       let progressElement = fixture.debugElement.query(By.css('mat-progress-bar'));
       expect(progressElement.componentInstance.mode).toBe('buffer');
+    });
+  });
+
+  describe('animation trigger on determinate setting', () => {
+    let fixture: ComponentFixture<BasicProgressBar>;
+    let progressComponent: MatProgressBar;
+    let primaryValueBar: DebugElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(BasicProgressBar);
+      fixture.detectChanges();
+
+      const progressElement = fixture.debugElement.query(By.css('mat-progress-bar'));
+      progressComponent = progressElement.componentInstance;
+      primaryValueBar = progressElement.query(By.css('.mat-progress-bar-primary'));
+    });
+
+    it('should trigger output event on primary value bar animation end', () => {
+      spyOn(progressComponent.valueAnimationEnd, "next");
+
+      progressComponent.value = 40;
+      dispatchFakeEvent(primaryValueBar.nativeElement, 'transitionend');
+      expect(progressComponent.valueAnimationEnd.next).toHaveBeenCalledWith(40);
+    });
+  });
+
+  describe('animation trigger on buffer setting', () => {
+    let fixture: ComponentFixture<BufferProgressBar>;
+    let progressComponent: MatProgressBar;
+    let primaryValueBar: DebugElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(BufferProgressBar);
+      fixture.detectChanges();
+
+      const progressElement = fixture.debugElement.query(By.css('mat-progress-bar'));
+      progressComponent = progressElement.componentInstance;
+      primaryValueBar = progressElement.query(By.css('.mat-progress-bar-primary'));
+    });
+
+    it('should trigger output event with value not bufferValue', () => {
+      spyOn(progressComponent.valueAnimationEnd, "next");
+
+      progressComponent.value = 40;
+      progressComponent.bufferValue = 70;
+      dispatchFakeEvent(primaryValueBar.nativeElement, 'transitionend');
+      expect(progressComponent.valueAnimationEnd.next).toHaveBeenCalledWith(40);
     });
   });
 });

@@ -11,10 +11,16 @@ import {
   ElementRef,
   Inject,
   Input,
+  Output,
+  EventEmitter,
   Optional,
-  ViewEncapsulation
+  ViewEncapsulation,
+  AfterViewInit,
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
 import {Location} from '@angular/common';
+import {fromEvent, Subscription} from 'rxjs';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {CanColor, mixinColor} from '@angular/material/core';
 
@@ -54,7 +60,7 @@ let progressbarId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor {
+export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor, AfterViewInit, OnDestroy {
   /**
    * Current page path. Used to prefix SVG references which
    * won't work on Safari unless they're prefixed with the path.
@@ -84,6 +90,18 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
   set bufferValue(v: number) { this._bufferValue = clamp(v || 0); }
   private _bufferValue: number = 0;
 
+  @ViewChild("primaryValueBar") primaryValueBar: ElementRef;
+
+  /** 
+   * Event that indicates animation end on value bar. Currently only support determinate and buffer. 
+   * Also note, if multiple event update is thrown in quick succession the last event completion is 
+   * the one firing the output.
+   */
+  @Output() valueAnimationEnd = new EventEmitter<number>();
+
+  /** Reference to animation end subscription to be unsubscribed on destroy. */
+  private _valueAnimationSubscription: Subscription | null;
+
   /**
    * Mode of the progress bar.
    *
@@ -110,6 +128,21 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
     if (this.mode === 'buffer') {
       const scale = this.bufferValue / 100;
       return {transform: `scaleX(${scale})`};
+    }
+  }
+
+  /** Attaches value bar element animation end listener. */
+  ngAfterViewInit() {
+    if(this.mode === 'determinate' || this.mode === 'buffer') {
+      this._valueAnimationSubscription = fromEvent(this.primaryValueBar.nativeElement, 'transitionend')
+                                          .subscribe(() => this.valueAnimationEnd.next(this.value));
+    }
+  }
+
+  /** Removes value bar element animation end listener. */
+  ngOnDestroy() {
+    if(this._valueAnimationSubscription) {
+      this._valueAnimationSubscription.unsubscribe();
     }
   }
 }

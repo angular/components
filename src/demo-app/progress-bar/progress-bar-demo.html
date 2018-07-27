@@ -8,12 +8,14 @@
 
 <div class="demo-progress-bar-controls">
   <span>Value: {{determinateProgressValue}}</span>
+  <br/>
+  <span>Last animation complete value: {{animationEndValue}}</span>
   <button mat-raised-button (click)="stepDeterminateProgressVal(10)">Increase</button>
   <button mat-raised-button (click)="stepDeterminateProgressVal(-10)">Decrease</button>
 </div>
 
 <div class="demo-progress-bar-container">
-  <mat-progress-bar mode="determinate" [value]="determinateProgressValue" [color]="color">
+  <mat-progress-bar mode="determinate" [value]="determinateProgressValue" [color]="color" (valueAnimationEnd)="logValue($event)">
   </mat-progress-bar>
 </div>
 
