@@ -10,8 +10,8 @@ filegroup(
 
 ts_library(
   name = "schematics",
-  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts", "**/files/**/*"]),
   module_name = "@angular/material/schematics",
+  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts", "**/files/**/*"]),
   tsconfig = ":tsconfig.json",
 )
 
