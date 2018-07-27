@@ -8,21 +8,14 @@ ng_module(
   name = "scrolling",
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/cdk-experimental/scrolling",
-  assets = [":virtual-scroll-viewport.css"] + glob(["**/*.html"]),
   deps = [
     "//src/cdk/coercion",
     "//src/cdk/collections",
-    "//src/cdk/platform",
+    "//src/cdk/scrolling",
     "@rxjs",
   ],
   tsconfig = "//src/cdk-experimental:tsconfig-build.json",
 )
-
-sass_binary(
-  name = "virtual_scroll_viewport_scss",
-  src = "virtual-scroll-viewport.scss",
-)
-
 
 ts_library(
   name = "scrolling_test_sources",
@@ -30,7 +23,7 @@ ts_library(
   srcs = glob(["**/*.spec.ts"]),
   deps = [
     ":scrolling",
-    "//src/cdk/collections",
+    "//src/cdk/scrolling",
     "//src/cdk/testing",
     "@rxjs",
   ],
@@ -42,8 +35,6 @@ ts_web_test(
   bootstrap = [
     "//:web_test_bootstrap_scripts",
   ],
-  tags = ["manual"],
-
   # Do not sort
   deps = [
     "//:tslib_bundle",

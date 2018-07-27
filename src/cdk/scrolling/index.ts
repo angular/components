@@ -7,3 +7,9 @@
  */
 
 export * from './public-api';
+
+/**
+ * @deprecated ScrollingModule has been renamed to ScrollingModule.
+ * @deletion-target 8.0.0
+ */
+export {ScrollingModule as ScrollDispatchModule} from './scrolling-module';
