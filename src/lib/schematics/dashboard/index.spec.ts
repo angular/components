@@ -18,8 +18,9 @@ describe('material-dashboard-schematic', () => {
     runner = new SchematicTestRunner('schematics', collectionPath);
   });
 
-  // Temporarily disabled because @angular-devkit/schematics does not properly resolve
-  // the files that should be copied to the project.
+  // TODO(devversion): Temporarily disabled because @angular-devkit/schematics is not able to
+  // find the template files for the schematic. As soon as we find a way to properly reference
+  // those files, we can re-enable this test.
   xit('should create dashboard files and add them to module', () => {
     const tree = runner.runSchematic('dashboard', { ...options }, createTestApp());
     const files = tree.files;

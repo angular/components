@@ -24,8 +24,8 @@
     "nav": {
       "description": "Create a component with a responsive sidenav for navigation",
       "factory": "./nav/index",
-      // TODO(paul): re-add `materialNav` alias if we have the latest schematics version that
-      // includes https://github.com/angular/angular-cli/pull/11390
+      // TODO(devversion): re-add `materialNav` alias if we have the latest schematics version
+      // that includes https://github.com/angular/angular-cli/pull/11390
       "aliases": [ "material-nav"]
     },
     // Create a file tree component
