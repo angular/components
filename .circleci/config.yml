@@ -10,22 +10,11 @@
 ## IMPORTANT
 # If you change the `docker_image` version, also change the `cache_key` suffix and the version of
 # `com_github_bazelbuild_buildtools` in the `/WORKSPACE` file.
-var_1: &docker_image angular/ngcontainer:0.3.0
-var_2: &cache_key v2-ng-mat-{{ .Branch }}-{{ checksum "package-lock.json" }}-0.3.0
-
-# Define common ENV vars
-var_3: &define_env_vars
-  run: echo "export PROJECT_ROOT=$(pwd)" >> $BASH_ENV
-
-# See remote cache documentation in /docs/BAZEL.md
-var_4: &setup-bazel-remote-cache
-  run:
-    name: Start up bazel remote cache proxy
-    command: ~/bazel-remote-proxy -backend circleci://
-    background: true
+var_1: &docker_image angular/ngcontainer:0.3.3
+var_2: &cache_key v2-ng-mat-{{ .Branch }}-{{ checksum "package-lock.json" }}-0.3.3
 
 # Settings common to each job
-anchor_1: &job_defaults
+var_3: &job_defaults
   working_directory: ~/ng
   docker:
     - image: *docker_image
@@ -34,8 +23,12 @@ anchor_1: &job_defaults
 # Similar to travis behavior, but not quite the same.
 # By default, PRs are not rebased on top of master, which we want.
 # See https://discuss.circleci.com/t/1662
-anchor_2: &post_checkout
+var_4: &post_checkout
   post: git pull --ff-only origin "refs/pull/${CI_PULL_REQUEST//*pull\//}/merge"
+
+# Run task that sets up the .circleci/bazel.rc file that should be specifically used
+# when running inside of Circle.
+var_5: &setup-circle-bazel-rc sudo cp .circleci/bazel.rc /etc/bazel.bazelrc
 
 version: 2
 jobs:
@@ -48,16 +41,17 @@ jobs:
       - restore_cache:
           key: *cache_key
 
+      - run: *setup-circle-bazel-rc
+
       - run: bazel run @nodejs//:npm install
-      # For some reason, circleci needs the postinstall to be run explicitly.
-      # This may be unnecessary once rules_nodejs uses nodejs 8
-      - run: bazel run @nodejs//:npm run postinstall
       - run: bazel build src/...
       - run: bazel test src/...
+
       - save_cache:
           key: *cache_key
           paths:
             - "node_modules"
+            - "~/bazel_repository_cache"
 
 workflows:
   version: 2
