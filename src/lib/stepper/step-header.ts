@@ -44,8 +44,8 @@ export class MatStepHeader implements OnDestroy {
   /** Label of the given step. */
   @Input() label: MatStepLabel | string;
 
-  /** Alert message when there's an error. */
-  @Input() alertMessage: string;
+  /** Error message to display when there's an error. */
+  @Input() errorMessage: string;
 
   /** Overrides for the header icons, passed in via the stepper. */
   @Input() iconOverrides: {[key: string]: TemplateRef<MatStepperIconContext>};

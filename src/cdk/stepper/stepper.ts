@@ -100,8 +100,8 @@ export class CdkStep implements OnChanges {
   /** Plain text label of the step. */
   @Input() label: string;
 
-  /** Alert message when there's an error. */
-  @Input() alertMessage: string;
+  /** Error message to display when there's an error. */
+  @Input() errorMessage: string;
 
   /** Aria label for the tab. */
   @Input('aria-label') ariaLabel: string;
@@ -111,9 +111,6 @@ export class CdkStep implements OnChanges {
    * Will be cleared if `aria-label` is set at the same time.
    */
   @Input('aria-labelledby') ariaLabelledby: string;
-
-  /** Alert message when there's an error. */
-  @Input() alertMessage: string;
 
   /** Whether the user can return to this step once it has been marked as complted. */
   @Input()
@@ -139,7 +136,16 @@ export class CdkStep implements OnChanges {
   }
   private _state: StepState | string | null = null;
 
+  /** Whether to show the step is in an error state. */
+  @Input()
+  get showError(): boolean { return this._showError; }
+  set showError(value: boolean) {
+    this._showError = value;
+  }
+  private _showError: boolean = false;
+
   /** Whether step is marked as completed. */
+  @Input()
   get completed(): boolean {
     return this._customCompleted == null ? this._defaultCompleted() : this._customCompleted;
   }
@@ -153,15 +159,16 @@ export class CdkStep implements OnChanges {
   }
 
   /** Whether step has error. */
+  @Input()
   get hasError(): boolean {
-    return this._customError == null ? this._defaultError : this._customError;
+    return this._customError == null ? this._getDefaultError : this._customError;
   }
   set hasError(value: boolean) {
     this._customError = coerceBooleanProperty(value);
   }
   private _customError: boolean | null = null;
 
-  private get _defaultError() {
+  private get _getDefaultError() {
     return this.stepControl && this.stepControl.invalid;
   }
 
@@ -346,7 +353,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
     const step = this._steps.toArray()[index];
     const isCurrentStep = this._isCurrentStep(index);
 
-    if (step.hasError && !isCurrentStep) {
+    if (step.showError && step.hasError && !isCurrentStep) {
       return STEP_STATE.ERROR;
     } else if (step.completed && !isCurrentStep) {
       return STEP_STATE.DONE;

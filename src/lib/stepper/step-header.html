@@ -57,6 +57,6 @@
   <div class="mat-step-text-label" *ngIf="_stringLabel()">{{label}}</div>
 
   <div class="mat-step-optional" *ngIf="optional && state != 'error'">{{_intl.optionalLabel}}</div>
-  <div class="mat-step-sub-label-error" *ngIf="state == 'error'">{{alertMessage}}</div>
+  <div class="mat-step-sub-label-error" *ngIf="state == 'error'">{{errorMessage}}</div>
 </div>
 

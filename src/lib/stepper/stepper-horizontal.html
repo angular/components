@@ -17,7 +17,7 @@
                      [selected]="selectedIndex === i"
                      [active]="step.completed || selectedIndex === i || !linear"
                      [optional]="step.optional"
-                     [alertMessage]="step.alertMessage"
+                     [errorMessage]="step.errorMessage"
                      [iconOverrides]="_iconOverrides">
     </mat-step-header>
     <div *ngIf="!isLast" class="mat-stepper-horizontal-line"></div>
