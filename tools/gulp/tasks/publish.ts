@@ -52,8 +52,8 @@ task(':publish', async () => {
   if (!version.match(validVersionRegex)) {
     console.log(red(`Error: Cannot publish due to an invalid version name. Version "${version}" ` +
       `is not following our semver format.`));
-    console.log(yellow(`A version should follow this format: d.d.d, d.d.d-beta.x, d.d.d-alpha.x, ` +
-        `d.d.d-rc.x`));
+    console.log(yellow(`A version should follow this format: X.X.X, X.X.X-beta.X, X.X.X-alpha.X, ` +
+        `X.X.X-rc.X`));
     return;
   }
 
