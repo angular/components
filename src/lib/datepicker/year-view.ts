@@ -92,9 +92,6 @@ export class MatYearView<D> extends CalendarView<D> implements AfterContentInit 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
 
-  /** Emits when a new month is selected. */
-  @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
-
   /** Emits the selected month. This doesn't imply a change on the selected date */
   @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 

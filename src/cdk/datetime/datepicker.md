@@ -36,3 +36,39 @@ needed. It's up to the user to decide whether or not they would like to implemen
 user-specified material datepicker input component or datepicker component, but it is not
 neccessary for datepicker implementation. The user will only have to implement their own
 calendar component as the bare minimum.
+
+### Connecting material calendar to datepicker CDK example.
+
+The user can simply create their own material calendar extended from `CalendarView` with all of 
+its abstract properties satisfied:
+
+```ts
+@Component({
+  ...
+})
+export class Calendar<D> extends CalendarView<D> {
+  activeDate = ...
+  minDate = ...
+  maxDate = ...
+  selected = ...
+  
+  constructor(dateAdapter: DateAdapter<D>) {
+    super();
+}
+```
+
+Whenever the selected date has changed, the user can also use the `selectedChange` in
+`CalendarView` to emit when the date has changed:
+
+```ts
+selectedChange.emit(newDate);
+```
+
+Finally, the user can use their newly-created `Calendar` component within the Datepicker CDK:
+
+```html
+<input [cdkDatepicker]="datepicker">
+<cdk-datepicker #datepicker><calendar></calendar></cdk-datepicker>
+```
+
+This is just one example of how the Datepicker CDK can be used.
