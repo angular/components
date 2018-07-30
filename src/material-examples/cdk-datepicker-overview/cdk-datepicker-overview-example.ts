@@ -15,7 +15,7 @@ export class CdkDatepickerOverviewExample {}
   selector: 'calendar',
   template: `<button (click)="firstSelected()">{{firstDate}}</button>
     <button (click)="secondSelected()">{{secondDate}}</button>
-    <div>{{selected}}</div>
+    <div>Date: {{selected}}</div>
   `,
 })
 export class Calendar<D> extends CalendarView<D> {

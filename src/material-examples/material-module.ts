@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 
 import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 import {A11yModule} from '@angular/cdk/a11y';
+import {CdkDatepickerModule} from '@angular/cdk/datetime';
 import {CdkTableModule} from '@angular/cdk/table';
 import {CdkTreeModule} from '@angular/cdk/tree';
 import {
@@ -17,6 +18,7 @@ import {
 @NgModule({
   imports: [
     A11yModule,
+    CdkDatepickerModule,
     CdkTableModule,
     CdkTreeModule,
     MatAutocompleteModule,
@@ -58,6 +60,7 @@ import {
   ],
   exports: [
     A11yModule,
+    CdkDatepickerModule,
     CdkTableModule,
     CdkTreeModule,
     MatAutocompleteModule,
