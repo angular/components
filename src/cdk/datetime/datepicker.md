@@ -67,8 +67,7 @@ selectedChange.emit(newDate);
 Finally, the user can use their newly-created `Calendar` component within the Datepicker CDK:
 
 ```html
-<input [cdkDatepicker]="datepicker">
-<cdk-datepicker #datepicker><calendar></calendar></cdk-datepicker>
+<cdk-datepicker><calendar (selectedChange)="..."></calendar></cdk-datepicker>
 ```
 
 This is just one example of how the Datepicker CDK can be used.
