@@ -6,15 +6,9 @@
 
 * **autocomplete:** remove aria-owns attribute while closed ([#12333](https://github.com/angular/material2/issues/12333)) ([2122b18](https://github.com/angular/material2/commit/2122b18)), closes [#12332](https://github.com/angular/material2/issues/12332)
 * **card:** incorrectly inverting inset divider in rtl ([#12285](https://github.com/angular/material2/issues/12285)) ([8a2dc60](https://github.com/angular/material2/commit/8a2dc60))
-* **drag-drop:** throwing off NgFor differ ([#12393](https://github.com/angular/material2/issues/12393)) ([485fcec](https://github.com/angular/material2/commit/485fcec)), closes [#12388](https://github.com/angular/material2/issues/12388)
 * **progress-bar:** query animation not working inside routes with named outlets ([#12350](https://github.com/angular/material2/issues/12350)) ([0c526d3](https://github.com/angular/material2/commit/0c526d3)), closes [#12014](https://github.com/angular/material2/issues/12014) [#12338](https://github.com/angular/material2/issues/12338)
 * **snack-bar:** prevent content from overriding configured aria-live message ([#12294](https://github.com/angular/material2/issues/12294)) ([b46689e](https://github.com/angular/material2/commit/b46689e))
-* **update:** support parenthesized directive metadata ([#12314](https://github.com/angular/material2/issues/12314)) ([66416f5](https://github.com/angular/material2/commit/66416f5))
-
-
-### Features
-
-* **drag-drop:** allow connecting containers via string ids, attaching data to drop instances and consolidate global event listeners ([#12315](https://github.com/angular/material2/issues/12315)) ([765421e](https://github.com/angular/material2/commit/765421e))
+* **ng-update:** support parenthesized directive metadata ([#12314](https://github.com/angular/material2/issues/12314)) ([66416f5](https://github.com/angular/material2/commit/66416f5))
 
 
 ### Performance Improvements
