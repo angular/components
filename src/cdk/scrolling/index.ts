@@ -10,6 +10,6 @@ export * from './public-api';
 
 /**
  * @deprecated ScrollingModule has been renamed to ScrollingModule.
- * @deletion-target 8.0.0
+ * @breaking-change 8.0.0 delete this re-export
  */
 export {ScrollingModule as ScrollDispatchModule} from './scrolling-module';
