@@ -42,6 +42,20 @@ element in an `<mat-list-item>`.
 </mat-nav-list>
 ```
 
+### Action lists
+
+Use `mat-action-list` tags for action lists (i.e. lists that have button tags).
+
+Simple action lists can use the `mat-list-item` attribute on button tag elements directly:
+
+```html
+<mat-action-list>
+  <button mat-list-item  *ngFor="let link of links" (click)="alertItem(link.name)">
+    {{link.name}}
+  </button>
+</mat-action-list>
+```
+
 ### Selection lists
 A selection list provides an interface for selecting values, where each list item is an option.
 
