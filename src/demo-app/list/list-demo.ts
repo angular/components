@@ -70,7 +70,7 @@ export class ListDemo {
     this.modelChangeEventCount++;
   }
 
-  onButtonClick(msg: string) {
+  alertItem(msg: string) {
     alert(msg);
   }
 }

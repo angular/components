@@ -54,26 +54,9 @@ export const _MatListItemMixinBase: CanDisableRippleCtor & typeof MatListItemBas
 })
 export class MatNavList extends _MatListMixinBase implements CanDisableRipple {}
 
-
 @Component({
   moduleId: module.id,
-  selector: 'mat-button-list',
-  exportAs: 'matButtonList',
-  host: {
-    'role': 'button list',
-    'class': 'mat-button-list'
-  },
-  templateUrl: 'list.html',
-  styleUrls: ['list.css'],
-  inputs: ['disableRipple'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class MatButtonList extends _MatListMixinBase implements CanDisableRipple {}
-
-@Component({
-  moduleId: module.id,
-  selector: 'mat-list',
+  selector: 'mat-list, mat-action-list',
   exportAs: 'matList',
   templateUrl: 'list.html',
   host: {'class': 'mat-list'},

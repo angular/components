@@ -20,7 +20,7 @@ describe('MatList', () => {
         ListWithMultipleItems,
         ListWithManyLines,
         NavListWithOneAnchorItem,
-        ButtonListWithOneItem
+        ActionListWithOneItem
       ],
     });
 
@@ -145,8 +145,8 @@ describe('MatList', () => {
     items.forEach(item => expect(item._isRippleDisabled()).toBe(true));
   });
 
-  it('button list should be created successfully', () => {
-    let fixture = TestBed.createComponent(ButtonListWithOneItem);
+  it('action list should be created successfully', () => {
+    let fixture = TestBed.createComponent(ActionListWithOneItem);
     fixture.detectChanges();
 
     const items = fixture.componentInstance.listItems;
@@ -205,12 +205,12 @@ class NavListWithOneAnchorItem extends BaseTestList {
 }
 
 @Component({template: `
-  <mat-button-list>
+  <mat-action-list>
     <button mat-list-item>
         Paprika
     </button>
-  </mat-button-list>`})
-class ButtonListWithOneItem extends BaseTestList {
+  </mat-action-list>`})
+class ActionListWithOneItem extends BaseTestList {
   @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
 }
 
