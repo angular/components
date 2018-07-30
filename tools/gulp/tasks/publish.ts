@@ -25,6 +25,7 @@ const argv = minimist(process.argv.slice(3));
 task('publish', sequenceTask(
   ':publish:whoami',
   ':publish:build-releases',
+  'validate-release:check-remote-tag',
   'validate-release:check-bundles',
   ':publish',
   ':publish:logout',

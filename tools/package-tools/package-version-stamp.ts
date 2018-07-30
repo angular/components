@@ -11,8 +11,9 @@ import {buildConfig} from './build-config';
 export function insertPackageJsonVersionStamp(packageJsonPath: string) {
   const packageJson = require(packageJsonPath);
 
-  packageJson['_gitCommitStamp'] = getCurrentCommitSha();
-  packageJson['_gitBranchStamp'] = getCurrentBranchName();
+  packageJson['releaseGitCommitSha'] = getCurrentCommitSha();
+  packageJson['releaseGitBranch'] = getCurrentBranchName();
+  packageJson['releaseGitUser'] = getCurrentGitUser();
 
   writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 }
@@ -27,4 +28,15 @@ function getCurrentCommitSha(): string {
 function getCurrentBranchName(): string {
   return spawnSync('git', ['symbolic-ref', '--short', 'HEAD'], {cwd: buildConfig.projectDir})
     .stdout.toString().trim();
+}
+
+/** Returns the name and email of the Git user that creates this release build. */
+function getCurrentGitUser() {
+  const userName = spawnSync('git', ['config', 'user.name'], {cwd: buildConfig.projectDir})
+    .stdout.toString().trim();
+
+  const userEmail = spawnSync('git', ['config', 'user.email'], {cwd: buildConfig.projectDir})
+    .stdout.toString().trim();
+
+  return `${userName} <${userEmail}>`;
 }
