@@ -50,9 +50,7 @@ Simple action lists can use the `mat-list-item` attribute on button tag elements
 
 ```html
 <mat-action-list>
-  <button mat-list-item  *ngFor="let link of links" (click)="alertItem(link.name)">
-    {{link.name}}
-  </button>
+  <button mat-list-item *ngFor="let link of links"> {{link.name}} </button>
 </mat-action-list>
 ```
 

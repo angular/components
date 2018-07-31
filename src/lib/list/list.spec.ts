@@ -145,7 +145,7 @@ describe('MatList', () => {
     items.forEach(item => expect(item._isRippleDisabled()).toBe(true));
   });
 
-  it('action list should be created successfully', () => {
+  it('should create an action list', () => {
     let fixture = TestBed.createComponent(ActionListWithOneItem);
     fixture.detectChanges();
 
@@ -207,7 +207,7 @@ class NavListWithOneAnchorItem extends BaseTestList {
 @Component({template: `
   <mat-action-list>
     <button mat-list-item>
-        Paprika
+      Paprika
     </button>
   </mat-action-list>`})
 class ActionListWithOneItem extends BaseTestList {
