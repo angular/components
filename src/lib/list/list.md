@@ -44,13 +44,15 @@ element in an `<mat-list-item>`.
 
 ### Action lists
 
-Use `mat-action-list` tags for action lists (i.e. lists that have button tags).
+Use the `<mat-action-list>` element when each item in the list performs some _action_. Each item
+in an action list is a `<button>` element.
 
 Simple action lists can use the `mat-list-item` attribute on button tag elements directly:
 
 ```html
 <mat-action-list>
-  <button mat-list-item *ngFor="let link of links"> {{link.name}} </button>
+  <button mat-list-item (click)="save()"> Save </button>
+  <button mat-list-item (click)="undo()"> Undo </button>
 </mat-action-list>
 ```
 

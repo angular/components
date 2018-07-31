@@ -127,6 +127,14 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
               @Optional() private _navList: MatNavList) {
     super();
     this._isNavList = !!_navList;
+
+    // If no type attributed is specified for <button>, set it to "button".
+    // If a type attribute is already specified, do nothing.
+    const element = this._getHostElement();
+    if (element.nodeName && element.nodeName.toLowerCase() === 'button'
+        && !element.hasAttribute('type')) {
+      element.setAttribute('type', 'button');
+    }
   }
 
   ngAfterContentInit() {

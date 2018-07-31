@@ -20,7 +20,8 @@ describe('MatList', () => {
         ListWithMultipleItems,
         ListWithManyLines,
         NavListWithOneAnchorItem,
-        ActionListWithOneItem
+        ActionListWithoutType,
+        ActionListWithType
       ],
     });
 
@@ -146,11 +147,27 @@ describe('MatList', () => {
   });
 
   it('should create an action list', () => {
-    let fixture = TestBed.createComponent(ActionListWithOneItem);
+    const fixture = TestBed.createComponent(ActionListWithoutType);
     fixture.detectChanges();
 
     const items = fixture.componentInstance.listItems;
     expect(items.length).toBeGreaterThan(0);
+  });
+
+  it('should set default type attribute to button for action list', () => {
+    const fixture = TestBed.createComponent(ActionListWithoutType);
+    fixture.detectChanges();
+
+    const listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
+    expect(listItemEl.nativeElement.getAttribute('type')).toBe('button');
+  });
+
+  it('should not change type attribute if it is already specified', () => {
+    const fixture = TestBed.createComponent(ActionListWithType);
+    fixture.detectChanges();
+
+    const listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
+    expect(listItemEl.nativeElement.getAttribute('type')).toBe('submit');
   });
 
   it('should allow disabling ripples for the whole nav-list', () => {
@@ -210,7 +227,17 @@ class NavListWithOneAnchorItem extends BaseTestList {
       Paprika
     </button>
   </mat-action-list>`})
-class ActionListWithOneItem extends BaseTestList {
+class ActionListWithoutType extends BaseTestList {
+  @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
+}
+
+@Component({template: `
+  <mat-action-list>
+    <button mat-list-item type="submit">
+      Paprika
+    </button>
+  </mat-action-list>`})
+class ActionListWithType extends BaseTestList {
   @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
 }
 
