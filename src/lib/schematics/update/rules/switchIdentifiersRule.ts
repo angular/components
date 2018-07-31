@@ -7,7 +7,6 @@
  */
 
 import {green, red} from 'chalk';
-import {relative} from 'path';
 import {RuleFailure, Rules, RuleWalker} from 'tslint';
 import * as ts from 'typescript';
 import {classNames} from '../material/data/class-names';
