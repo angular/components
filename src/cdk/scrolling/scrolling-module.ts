@@ -29,3 +29,13 @@ import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
   ],
 })
 export class ScrollingModule {}
+
+/**
+ * @deprecated ScrollDispatchModule has been renamed to ScrollingModule.
+ * @breaking-change 8.0.0 delete this alias
+ */
+@NgModule({
+  imports: [ScrollingModule],
+  exports: [ScrollingModule],
+})
+export class ScrollDispatchModule {}
