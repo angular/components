@@ -1,11 +1,14 @@
-The datepicker CDK provides a foundation upon which more concrete Material datepicker 
+The `datetime` package offers building blocks for custom date and time-based components.
+
+### CdkDatepicker Component
+The `CdkDatepicker` component provides a foundation upon which more concrete Material datepicker 
 implementations can be built. The datepicker CDK will be a generic datepicker with all of the
 necessary basic datepicker functionality needed for the definition of a datepicker. Users will be
 able to extend this datepicker CDK with all of the basic datepicker functionality as well as create
 their own views of the calendar. In this way, the users will be able to customized the datepicker
 to allow for more flexibility when utilizing the datepicker component in applications.
 
-### Behavior captured by CdkDatepicker
+#### Building a custom datepicker on top of CdkDatepicker
 The Datepicker CDK has a CalendarView component with five properties:
  * The date at which the datepicker will start at. The default value for this date is the current
  date.

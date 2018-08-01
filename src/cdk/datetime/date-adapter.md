@@ -1,5 +1,9 @@
-The CDK `DateAdapter` facilitates use of any date data structure for date and time-based components, such as the
-material datepicker, and gives a foundation for more concrete material `DateAdapter` implementations.
+The `datetime` package offers building blocks for custom date and time-based components.
+
+### DateAdapter
+The `DateAdapter` provides a uniform way to deal with different date representations. The CDK `DateAdapter` facilitates
+use of any date data structure for date and time-based components, such as the material datepicker, and gives a
+foundation for more concrete material `DateAdapter` implementations.
 
 ### Usages of CDK `DateAdapter`
 The base CDK version of the `DateAdapter` primarily manages the date functionality of the datepicker. In the CDK, there
