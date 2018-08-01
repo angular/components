@@ -1,10 +1,10 @@
-import {TestBed, async, ComponentFixture, fakeAsync, tick} from '@angular/core/testing';
+import {TestBed, async, ComponentFixture} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {Location} from '@angular/common';
 import {MatProgressBarModule} from './index';
-import { MatProgressBar } from './progress-bar';
+import {MatProgressBar} from './progress-bar';
 
 
 describe('MatProgressBar', () => {
@@ -136,11 +136,11 @@ describe('MatProgressBar', () => {
     });
 
     it('should trigger output event on primary value bar animation end', () => {
-      spyOn(progressComponent.valueAnimationEnd, "next");
+      spyOn(progressComponent.animationEnd, 'next');
 
       progressComponent.value = 40;
       dispatchFakeEvent(primaryValueBar.nativeElement, 'transitionend');
-      expect(progressComponent.valueAnimationEnd.next).toHaveBeenCalledWith(40);
+      expect(progressComponent.animationEnd.next).toHaveBeenCalledWith({ value: 40 });
     });
   });
 
@@ -159,12 +159,12 @@ describe('MatProgressBar', () => {
     });
 
     it('should trigger output event with value not bufferValue', () => {
-      spyOn(progressComponent.valueAnimationEnd, "next");
+      spyOn(progressComponent.animationEnd, 'next');
 
       progressComponent.value = 40;
       progressComponent.bufferValue = 70;
       dispatchFakeEvent(primaryValueBar.nativeElement, 'transitionend');
-      expect(progressComponent.valueAnimationEnd.next).toHaveBeenCalledWith(40);
+      expect(progressComponent.animationEnd.next).toHaveBeenCalledWith({ value: 40 });
     });
   });
 });

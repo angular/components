@@ -9,13 +9,14 @@
 <div class="demo-progress-bar-controls">
   <span>Value: {{determinateProgressValue}}</span>
   <br/>
-  <span>Last animation complete value: {{animationEndValue}}</span>
+  <span>Last animation complete value: {{determinateAnimationEndValue}}</span>
   <button mat-raised-button (click)="stepDeterminateProgressVal(10)">Increase</button>
   <button mat-raised-button (click)="stepDeterminateProgressVal(-10)">Decrease</button>
 </div>
 
 <div class="demo-progress-bar-container">
-  <mat-progress-bar mode="determinate" [value]="determinateProgressValue" [color]="color" (valueAnimationEnd)="logValue($event)">
+  <mat-progress-bar mode="determinate" [value]="determinateProgressValue" [color]="color"
+                    (animationEnd)="determinateAnimationEndValue = $event.value">
   </mat-progress-bar>
 </div>
 
@@ -23,6 +24,8 @@
 
 <div class="demo-progress-bar-controls">
   <span>Value: {{bufferProgressValue}}</span>
+  <br/>
+  <span>Last animation complete value: {{bufferAnimationEndValue}}</span>
   <button mat-raised-button (click)="stepBufferProgressVal(10)">Increase</button>
   <button mat-raised-button (click)="stepBufferProgressVal(-10)">Decrease</button>
   <span class="demo-progress-bar-spacer"></span>
@@ -33,7 +36,8 @@
 
 <div class="demo-progress-bar-container">
   <mat-progress-bar [value]="bufferProgressValue" [bufferValue]="bufferBufferValue" mode="buffer"
-                   [color]="color"></mat-progress-bar>
+                   [color]="color" (animationEnd)="bufferAnimationEndValue = $event.value">
+  </mat-progress-bar>
 </div>
 
 <h1>Indeterminate</h1>

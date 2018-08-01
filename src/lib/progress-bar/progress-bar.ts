@@ -33,6 +33,11 @@ export class MatProgressBarBase {
   constructor(public _elementRef: ElementRef) { }
 }
 
+/** Last animation end data. */
+export interface AnimationEndData {
+  value: number;
+}
+
 export const _MatProgressBarMixinBase = mixinColor(MatProgressBarBase, 'primary');
 
 /** Counter used to generate unique IDs for progress bars. */
@@ -60,7 +65,8 @@ let progressbarId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor, AfterViewInit, OnDestroy {
+export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor,
+                                                      AfterViewInit, OnDestroy {
   constructor(public _elementRef: ElementRef,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
               /**
@@ -88,17 +94,17 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
   set bufferValue(v: number) { this._bufferValue = clamp(v || 0); }
   private _bufferValue: number = 0;
 
-  @ViewChild("primaryValueBar") primaryValueBar: ElementRef;
+  @ViewChild('primaryValueBar') primaryValueBar: ElementRef;
 
-  /** 
-   * Event that indicates animation end on value bar. Currently only support determinate and buffer. 
-   * Also note, if multiple event update is thrown in quick succession the last event completion is 
-   * the one firing the output.
+  /**
+   * Event that indicates animation end on value bar. This event will not be emitted for
+   * animations that doesn't end, i.e. indeterminate and query. Also if animation is
+   * disabled, this event will not emit.
    */
-  @Output() valueAnimationEnd = new EventEmitter<number>();
+  @Output() animationEnd = new EventEmitter<AnimationEndData>();
 
   /** Reference to animation end subscription to be unsubscribed on destroy. */
-  private _valueAnimationSubscription: Subscription | null;
+  private _animationEndSubscription: Subscription = Subscription.EMPTY;
 
   /**
    * Mode of the progress bar.
@@ -132,18 +138,22 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
     }
   }
 
-  /** Attaches value bar element animation end listener. */
   ngAfterViewInit() {
-    if(this.mode === 'determinate' || this.mode === 'buffer') {
-      this._valueAnimationSubscription = fromEvent(this.primaryValueBar.nativeElement, 'transitionend')
-                                          .subscribe(() => this.valueAnimationEnd.next(this.value));
+    if (this._animationMode !== 'NoopAnimations') {
+      this._animationEndSubscription =
+            fromEvent(this.primaryValueBar.nativeElement, 'transitionend')
+            .subscribe(_ => this.emitAnimationEnd());
     }
   }
 
-  /** Removes value bar element animation end listener. */
   ngOnDestroy() {
-    if(this._valueAnimationSubscription) {
-      this._valueAnimationSubscription.unsubscribe();
+    this._animationEndSubscription.unsubscribe();
+  }
+
+  /** Callback function on animation end, emit animationEnd event on determinate and buffer mode. */
+  private emitAnimationEnd(): void {
+    if (this.mode === 'determinate' || this.mode === 'buffer') {
+      this.animationEnd.next({ value: this.value});
     }
   }
 }

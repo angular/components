@@ -20,7 +20,8 @@ import {Component} from '@angular/core';
 export class ProgressBarDemo {
   color: string = 'primary';
   determinateProgressValue: number = 30;
-  animationEndValue: number;
+  determinateAnimationEndValue: number;
+  bufferAnimationEndValue: number;
   bufferProgressValue: number = 30;
   bufferBufferValue: number = 40;
 
@@ -34,10 +35,6 @@ export class ProgressBarDemo {
 
   stepBufferBufferVal(val: number) {
     this.bufferBufferValue = this.clampValue(val + this.bufferBufferValue);
-  }
-
-  logValue(val: number) {
-    this.animationEndValue = val;
   }
 
   private clampValue(value: number) {
