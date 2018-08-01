@@ -238,6 +238,9 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
    */
   @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
+  /** Emits when viewed month changes. */
+  @Output() readonly activeMonthChange: EventEmitter<D> = new EventEmitter<D>();
+
   /** Emits when any date is selected. */
   @Output() readonly _userSelection: EventEmitter<void> = new EventEmitter<void>();
 
@@ -340,6 +343,11 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
             (this.currentView == 'year' ? this.yearView : this.multiYearView);
 
     view.ngAfterContentInit();
+  }
+
+  /** Change the viewed date for event */  
+  _activeMonthChange(date: D) {
+    this.activeMonthChange.emit(date)
   }
 
   /** Handles date selection in the month view. */

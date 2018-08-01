@@ -39,6 +39,7 @@ export class DatepickerDemo {
   maxDate: Date;
   startAt: Date;
   date: Date;
+  activeMonth: Date;
   lastDateInput: Date | null;
   lastDateChange: Date | null;
   color: ThemePalette;
@@ -50,6 +51,11 @@ export class DatepickerDemo {
 
   onDateInput = (e: MatDatepickerInputEvent<Date>) => this.lastDateInput = e.value;
   onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
+  
+  //Update active month in view
+  setActiveMonth(date: Date) {
+    this.activeMonth = date;
+  } 
 
   // pass custom header component type as input
   customHeader = CustomHeader;
