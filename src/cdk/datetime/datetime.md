@@ -1,5 +1,23 @@
 The `datetime` package offers building blocks for custom date and time-based components.
 
+### DateAdapter
+The `DateAdapter` provides a uniform way to deal with different date representations. The CDK `DateAdapter` facilitates
+use of any date data structure for date and time-based components, such as the material datepicker, and gives a
+foundation for more concrete material `DateAdapter` implementations.
+
+#### Usages of CDK `DateAdapter`
+The base CDK version of the `DateAdapter` primarily manages the date functionality of the datepicker. In the CDK, there
+already exists an extended version of the `DateAdapter`: `NativeDateAdapter`. Currently in material, there's also
+another way to use the `DateAdapter`: `MomentDateAdapter`. The user also has the choice of creating a `DateAdapter` 
+that will be used in the datepicker, if they wish to do so.
+
+#### Behavior captured by CDK `DateAdapter`
+The CDK `DateAdapter` is an abstract class that allows users to implement a `DateAdapter` as well as use existing 
+`DateAdapter`s. The functions of the `DateAdapter` include anything to do with date (month, year, day) and time 
+implementations of generic dates. Users can use the CDK `DateAdapter` by extending it and implementing the necessary 
+abstract methods. The `DateAdapter` also has functionality to format or deserialize dates, as well as other useful date
+manipulation methods.
+
 ### CdkDatepicker Component
 The `CdkDatepicker` component provides a foundation upon which more concrete Material datepicker 
 implementations can be built. The datepicker CDK will be a generic datepicker with all of the
@@ -40,7 +58,7 @@ user-specified material datepicker input component or datepicker component, but 
 neccessary for datepicker implementation. The user will only have to implement their own
 calendar component as the bare minimum.
 
-### Connecting material calendar to datepicker CDK example.
+#### Connecting material calendar to datepicker CDK example
 
 The user can simply create their own material calendar extended from `CalendarView` with all of 
 its abstract properties satisfied:
@@ -73,4 +91,4 @@ Finally, the user can use their newly-created `Calendar` component within the Da
 <cdk-datepicker><calendar (selectedChange)="..."></calendar></cdk-datepicker>
 ```
 
-This is just one example of how the Datepicker CDK can be used.
+This is just one example of how `CdkDatepicker` can be used.
