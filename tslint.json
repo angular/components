@@ -126,11 +126,16 @@
       "./tools/package-tools/rollup-globals.ts",
       "src/+(lib|cdk|material-examples|material-experimental|cdk-experimental)/!(schematics)**/*.ts"
     ],
-    "deletion-target": true,
+    "breaking-change": true,
     "no-unescaped-html-tag": true
   },
   "linterOptions": {
     // Exclude schematic template files that can't be linted.
-    "exclude": ["src/lib/schematics/**/files/**/*"]
+    "exclude": [
+      "src/lib/schematics/**/files/**/*",
+      // TODO(paul) re-renable specs once the devkit schematics properly work with Bazel and we
+      // can remove the `xit` calls.
+      "src/lib/schematics/**/*.spec.ts"
+    ]
   }
 }

@@ -72,6 +72,12 @@ export class CdkDrag<T = any> implements OnDestroy {
   private _pickupPositionOnPage: Point;
 
   /**
+   * Reference to the element that comes after the draggable in the DOM, at the time
+   * it was picked up. Used for restoring its initial position when it's dropped.
+   */
+  private _nextSibling: Node | null;
+
+  /**
    * CSS `transform` applied to the element when it isn't being dragged. We need a
    * passive transform in order for the dragged element to retain its new position
    * after the user has stopped dragging and because we need to know the relative
@@ -158,6 +164,7 @@ export class CdkDrag<T = any> implements OnDestroy {
       this._removeElement(this.element.nativeElement);
     }
 
+    this._nextSibling = null;
     this._dragDropRegistry.remove(this);
     this._destroyed.next();
     this._destroyed.complete();
@@ -220,6 +227,7 @@ export class CdkDrag<T = any> implements OnDestroy {
       // place will throw off the consumer's `:last-child` selectors. We can't remove the element
       // from the DOM completely, because iOS will stop firing all subsequent events in the chain.
       element.style.display = 'none';
+      this._nextSibling = element.nextSibling;
       this._document.body.appendChild(element.parentNode!.replaceChild(placeholder, element));
       this._document.body.appendChild(preview);
       this.dropContainer.start();
@@ -271,15 +279,25 @@ export class CdkDrag<T = any> implements OnDestroy {
 
   /** Cleans up the DOM artifacts that were added to facilitate the element being dragged. */
   private _cleanupDragArtifacts() {
-    this._destroyPreview();
-    this._placeholder.parentNode!.insertBefore(this.element.nativeElement, this._placeholder);
-    this._destroyPlaceholder();
+    const currentIndex = this._getElementIndexInDom(this._placeholder);
+
+    // Restore the element's visibility and insert it at its old position in the DOM.
+    // It's important that we maintain the position, because moving the element around in the DOM
+    // can throw off `NgFor` which does smart diffing and re-creates elements only when necessary,
+    // while moving the existing elements in all other cases.
     this.element.nativeElement.style.display = '';
+
+    if (this._nextSibling) {
+      this._nextSibling.parentNode!.insertBefore(this.element.nativeElement, this._nextSibling);
+    } else {
+      this._placeholder.parentNode!.appendChild(this.element.nativeElement);
+    }
+
+    this._destroyPreview();
+    this._destroyPlaceholder();
 
     // Re-enter the NgZone since we bound `document` events on the outside.
     this._ngZone.run(() => {
-      const currentIndex = this._getElementIndexInDom();
-
       this.ended.emit({source: this});
       this.dropped.emit({
         item: this,
@@ -368,14 +386,12 @@ export class CdkDrag<T = any> implements OnDestroy {
     return placeholder;
   }
 
-  /** Gets the index of the dragable element, based on its index in the DOM. */
-  private _getElementIndexInDom(): number {
+  /** Gets the index of an element, based on its index in the DOM. */
+  private _getElementIndexInDom(element: HTMLElement): number {
     // Note: we may be able to figure this in memory while sorting, but doing so won't be very
     // reliable when transferring between containers, because the new container doesn't have
     // the proper indices yet. Also this will work better for the case where the consumer
     // isn't using an `ngFor` to render the list.
-    const element = this.element.nativeElement;
-
     if (!element.parentElement) {
       return -1;
     }
@@ -446,7 +462,7 @@ export class CdkDrag<T = any> implements OnDestroy {
     // we need to trigger a style recalculation in order for the `cdk-drag-animating` class to
     // apply its style, we take advantage of the available info to figure out whether we need to
     // bind the event in the first place.
-    const duration = this._getTransitionDurationInMs(this._preview);
+    const duration = getTransitionDurationInMs(this._preview);
 
     if (duration === 0) {
       return Promise.resolve();
@@ -531,16 +547,24 @@ export class CdkDrag<T = any> implements OnDestroy {
 
     this._placeholder = this._placeholderRef = null!;
   }
-
-  /** Gets the `transition-duration` of an element in milliseconds. */
-  private _getTransitionDurationInMs(element: HTMLElement): number {
-    const rawDuration = getComputedStyle(element).getPropertyValue('transition-duration');
-
-    // Some browsers will return it in seconds, whereas others will return milliseconds.
-    const multiplier = rawDuration.toLowerCase().indexOf('ms') > -1 ? 1 : 1000;
-    return parseFloat(rawDuration) * multiplier;
-  }
 }
+
+/** Parses a CSS time value to milliseconds. */
+function parseCssTimeUnitsToMs(value: string): number {
+  // Some browsers will return it in seconds, whereas others will return milliseconds.
+  const multiplier = value.toLowerCase().indexOf('ms') > -1 ? 1 : 1000;
+  return parseFloat(value) * multiplier;
+}
+
+/** Gets the transition duration, including the delay, of an element in milliseconds. */
+function getTransitionDurationInMs(element: HTMLElement): number {
+  const computedStyle = getComputedStyle(element);
+  const rawDuration = computedStyle.getPropertyValue('transition-duration');
+  const rawDelay = computedStyle.getPropertyValue('transition-delay');
+
+  return parseCssTimeUnitsToMs(rawDuration) + parseCssTimeUnitsToMs(rawDelay);
+}
+
 
 /** Point on the page or within an element. */
 interface Point {

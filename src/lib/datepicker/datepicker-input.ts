@@ -138,8 +138,8 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
   }
 
   /**
-   * @deprecated Use `getConnectedOverlayOrigin` instead.
-   * @deletion-target 7.0.0
+   * @deprecated
+   * @breaking-change 7.0.0 Use `getConnectedOverlayOrigin` instead.
    */
   getPopupConnectionElementRef(): ElementRef {
     return this.getConnectedOverlayOrigin();

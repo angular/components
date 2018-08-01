@@ -10,14 +10,14 @@ import {FileEntry, Rule, SchematicContext, Tree} from '@angular-devkit/schematic
 import {
   NodePackageInstallTask,
   RunSchematicTask,
-  TslintFixTask
+  TslintFixTask,
 } from '@angular-devkit/schematics/tasks';
+import {getWorkspace} from '@schematics/angular/utility/config';
 import {existsSync, mkdtempSync} from 'fs';
 import * as path from 'path';
-import {getWorkspace} from '../utils/devkit-utils/config';
 
 const schematicsSrcPath = 'node_modules/@angular/material/schematics';
-const schematicsTmpPath = mkdtempSync('angular_material_schematics-');
+const schematicsTmpPath = mkdtempSync('angular_material_temp_schematics');
 
 /** Entry point for `ng update` from Angular CLI. */
 export default function(): Rule {
@@ -41,6 +41,7 @@ export default function(): Rule {
 
     const allTsConfigPaths = getTsConfigPaths(tree);
     const allUpdateTasks = [];
+
     for (const tsconfig of allTsConfigPaths) {
       // Run the update tslint rules.
       allUpdateTasks.push(context.addTask(new TslintFixTask({
@@ -87,10 +88,9 @@ export default function(): Rule {
     }), allUpdateTasks);
 
     // Delete the temporary schematics directory.
-    context.addTask(
-        new RunSchematicTask('ng-post-update', {
-          deletePath: schematicsTmpPath
-        }), [upgradeTask]);
+    context.addTask(new RunSchematicTask('ng-post-update', {
+      deletePath: schematicsTmpPath
+    }), [upgradeTask]);
   };
 }
 
@@ -120,12 +120,13 @@ function getTsConfigPaths(tree: Tree): string[] {
 
   // Add any tsconfig directly referenced in a build or test task of the angular.json workspace.
   const workspace = getWorkspace(tree);
+
   for (const project of Object.values(workspace.projects)) {
     if (project && project.architect) {
       for (const taskName of ['build', 'test']) {
         const task = project.architect[taskName];
         if (task && task.options && task.options.tsConfig) {
-          const tsConfigOption = project.architect.tsConfig;
+          const tsConfigOption = task.options.tsConfig;
           if (typeof tsConfigOption === 'string') {
             tsconfigPaths.push(tsConfigOption);
           } else if (Array.isArray(tsConfigOption)) {

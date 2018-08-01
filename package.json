@@ -20,7 +20,7 @@
     "docs": "gulp docs",
     "api": "gulp api-docs"
   },
-  "version": "6.4.1",
+  "version": "6.4.2",
   "license": "MIT",
   "engines": {
     "node": ">= 5.4.1"
@@ -42,8 +42,8 @@
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/core": "^0.5.12",
-    "@angular-devkit/schematics": "^0.5.12",
+    "@angular-devkit/core": "^0.7.1",
+    "@angular-devkit/schematics": "^0.7.1",
     "@angular/bazel": "6.0.0",
     "@angular/compiler-cli": "6.0.0",
     "@angular/http": "6.0.0",
@@ -53,7 +53,8 @@
     "@angular/upgrade": "6.0.0",
     "@bazel/ibazel": "0.3.1",
     "@google-cloud/storage": "^1.1.1",
-    "@schematics/angular": "^0.5.12",
+    "@octokit/rest": "^15.9.4",
+    "@schematics/angular": "^0.7.1",
     "@types/chalk": "^0.4.31",
     "@types/fs-extra": "^4.0.3",
     "@types/glob": "^5.0.33",
@@ -75,7 +76,6 @@
     "firebase-tools": "^3.11.0",
     "fs-extra": "^3.0.1",
     "git-semver-tags": "^2.0.0",
-    "github": "^12.0.3",
     "glob": "^7.1.2",
     "google-closure-compiler": "20170409.0.0",
     "gulp": "^3.9.1",
