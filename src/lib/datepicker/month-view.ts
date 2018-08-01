@@ -105,8 +105,14 @@ export class MatMonthView<D> implements AfterContentInit {
   /** Emits when any date is activated. */
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
+  /** Emits when viewed month changes. */
+  @Output() readonly activeMonthChange: EventEmitter<D> = new EventEmitter<D>();
+
   /** The body of calendar table */
   @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
+
+  /** The date of active month. */
+  activeMonth: D
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
@@ -240,6 +246,7 @@ export class MatMonthView<D> implements AfterContentInit {
     this._monthLabel =
         this._dateAdapter.getMonthNames('short')[this._dateAdapter.getMonth(this.activeDate)]
             .toLocaleUpperCase();
+    this._setActiveMonth(this.activeDate)
 
     let firstOfMonth = this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate),
         this._dateAdapter.getMonth(this.activeDate), 1);
@@ -254,6 +261,18 @@ export class MatMonthView<D> implements AfterContentInit {
   /** Focuses the active cell after the microtask queue is empty. */
   _focusActiveCell() {
     this._matCalendarBody._focusActiveCell();
+  }
+
+  /** Change the viewed date for event */
+  _setActiveMonth(date: D) {
+    if(this.activeMonth != null 
+      && this._dateAdapter.getYear(date) == this._dateAdapter.getYear(this.activeMonth)
+      && this._dateAdapter.getMonth(date) == this._dateAdapter.getMonth(this.activeMonth)) {
+      return
+    }
+
+    this.activeMonth = date
+    this.activeMonthChange.emit(date)
   }
 
   /** Creates MatCalendarCells for the dates in this month. */
