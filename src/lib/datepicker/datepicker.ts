@@ -303,7 +303,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
 
   /** Change the viewed date for event */  
   _activeMonthChange(date: D) {
-    this.activeMonthChange.emit(date)
+    this.activeMonthChange.emit(date);
   }
 
   /** Emits the selected year in multiyear view */
