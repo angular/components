@@ -1,0 +1,66 @@
+import {Tree} from '@angular-devkit/schematics';
+import {SchematicTestRunner} from '@angular-devkit/schematics/testing';
+import {getProjectFromWorkspace} from '../utils/get-project';
+import {getFileContent} from '@schematics/angular/utility/test';
+import {collectionPath, createTestApp} from '../utils/testing';
+import {getConfig, getAppFromConfig, getWorkspace} from '@schematics/angular/utility/config';
+import {getIndexHtmlPath} from '../utils/ast';
+import {normalize} from '@angular-devkit/core';
+
+describe('material-install-schematic', () => {
+  let runner: SchematicTestRunner;
+  let appTree: Tree;
+
+  beforeEach(() => {
+    appTree = createTestApp();
+    runner = new SchematicTestRunner('schematics', collectionPath);
+  });
+
+  it('should update package.json', () => {
+    const tree = runner.runSchematic('ng-add', {}, appTree);
+    const packageJson = JSON.parse(getFileContent(tree, '/package.json'));
+
+    expect(packageJson.dependencies['@angular/material']).toBeDefined();
+    expect(packageJson.dependencies['@angular/cdk']).toBeDefined();
+  });
+
+  it('should add default theme', () => {
+    const tree = runner.runSchematic('ng-add', {}, appTree);
+
+    const workspace = getWorkspace(tree);
+    const project = getProjectFromWorkspace(workspace);
+
+    console.log(tree.files);
+
+    expect(project.architect!['build']).toBeTruthy();
+    expect(project.architect!['build']['options']).toBeTruthy();
+    expect(project.architect!['build']['options']['styles']).toContain(
+      './node_modules/@angular/material/prebuilt-themes/indigo-pink.css');
+  });
+
+  it('should add custom theme', () => {
+    const tree = runner.runSchematic('ng-add', {theme: 'custom'}, appTree);
+
+    const workspace = getWorkspace(tree);
+    const project = getProjectFromWorkspace(workspace);
+    const expectedStylesPath = normalize(`/${project.root}/src/styles.scss`);
+
+    const buffer = tree.read(expectedStylesPath);
+    const src = buffer!.toString();
+
+    expect(src.indexOf(`@import '~@angular/material/theming';`)).toBeGreaterThan(-1);
+    expect(src.indexOf(`$app-primary`)).toBeGreaterThan(-1);
+  });
+
+  it('should add font links', () => {
+    const tree = runner.runSchematic('ng-add', {}, appTree);
+    const workspace = getWorkspace(tree);
+    const project = getProjectFromWorkspace(workspace);
+
+    const indexPath = getIndexHtmlPath(project);
+    const buffer: any = tree.read(indexPath);
+    const indexSrc = buffer.toString();
+
+    expect(indexSrc.indexOf('fonts.googleapis.com')).toBeGreaterThan(-1);
+  });
+});

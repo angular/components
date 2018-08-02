@@ -1,7 +1,15 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {bold, green, red} from 'chalk';
 import {ProgramAwareRuleWalker, RuleFailure, Rules} from 'tslint';
 import * as ts from 'typescript';
-import {propertyNames} from '../material/component-data';
+import {propertyNames} from '../material/data/property-names';
 
 /**
  * Rule that walks through every property access expression and updates properties that have

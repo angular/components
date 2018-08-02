@@ -1,10 +1,18 @@
 import {MutationObserverFactory} from '@angular/cdk/observers';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {Component} from '@angular/core';
-import {ComponentFixture, fakeAsync, flushMicrotasks, TestBed, tick} from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {defaultRippleAnimationConfig} from '@angular/material/core';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
+import {BidiModule, Direction} from '@angular/cdk/bidi';
 import {TestGestureConfig} from '../slider/test-gesture-config';
 import {MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS} from './slide-toggle-config';
 import {MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule} from './index';
@@ -18,7 +26,7 @@ describe('MatSlideToggle without forms', () => {
     mutationObserverCallbacks = [];
 
     TestBed.configureTestingModule({
-      imports: [MatSlideToggleModule],
+      imports: [MatSlideToggleModule, BidiModule],
       declarations: [
         SlideToggleBasic,
         SlideToggleWithTabindexAttr,
@@ -493,6 +501,29 @@ describe('MatSlideToggle without forms', () => {
       expect(slideThumbContainer.classList).not.toContain('mat-dragging');
     }));
 
+    it('should drag from start to end in RTL', fakeAsync(() => {
+      testComponent.direction = 'rtl';
+      fixture.detectChanges();
+
+      expect(slideToggle.checked).toBe(false);
+
+      gestureConfig.emitEventForElement('slidestart', slideThumbContainer);
+
+      expect(slideThumbContainer.classList).toContain('mat-dragging');
+
+      gestureConfig.emitEventForElement('slide', slideThumbContainer, {
+        deltaX: -200 // Arbitrary, large delta that will be clamped to the end of the slide-toggle.
+      });
+
+      gestureConfig.emitEventForElement('slideend', slideThumbContainer);
+
+      // Flush the timeout for the slide ending.
+      tick();
+
+      expect(slideToggle.checked).toBe(true);
+      expect(slideThumbContainer.classList).not.toContain('mat-dragging');
+    }));
+
     it('should drag from end to start', fakeAsync(() => {
       slideToggle.checked = true;
 
@@ -502,6 +533,29 @@ describe('MatSlideToggle without forms', () => {
 
       gestureConfig.emitEventForElement('slide', slideThumbContainer, {
         deltaX: -200 // Arbitrary, large delta that will be clamped to the end of the slide-toggle.
+      });
+
+      gestureConfig.emitEventForElement('slideend', slideThumbContainer);
+
+      // Flush the timeout for the slide ending.
+      tick();
+
+      expect(slideToggle.checked).toBe(false);
+      expect(slideThumbContainer.classList).not.toContain('mat-dragging');
+    }));
+
+    it('should drag from end to start in RTL', fakeAsync(() => {
+      testComponent.direction = 'rtl';
+      fixture.detectChanges();
+
+      slideToggle.checked = true;
+
+      gestureConfig.emitEventForElement('slidestart', slideThumbContainer);
+
+      expect(slideThumbContainer.classList).toContain('mat-dragging');
+
+      gestureConfig.emitEventForElement('slide', slideThumbContainer, {
+        deltaX: 200 // Arbitrary, large delta that will be clamped to the end of the slide-toggle.
       });
 
       gestureConfig.emitEventForElement('slideend', slideThumbContainer);
@@ -726,7 +780,7 @@ describe('MatSlideToggle with forms', () => {
       expect(slideToggleElement.classList).toContain('mat-checked');
     }));
 
-    it('should have the correct control state initially and after interaction', () => {
+    it('should have the correct control state initially and after interaction', fakeAsync(() => {
       // The control should start off valid, pristine, and untouched.
       expect(slideToggleModel.valid).toBe(true);
       expect(slideToggleModel.pristine).toBe(true);
@@ -748,13 +802,31 @@ describe('MatSlideToggle with forms', () => {
       // also turn touched.
       dispatchFakeEvent(inputElement, 'blur');
       fixture.detectChanges();
+      flushMicrotasks();
 
       expect(slideToggleModel.valid).toBe(true);
       expect(slideToggleModel.pristine).toBe(false);
       expect(slideToggleModel.touched).toBe(true);
-    });
+    }));
 
-    it('should not set the control to touched when changing the state programmatically', () => {
+    it('should not throw an error when disabling while focused', fakeAsync(() => {
+      expect(() => {
+        // Focus the input element because after disabling, the `blur` event should automatically
+        // fire and not result in a changed after checked exception. Related: #12323
+        inputElement.focus();
+
+        // Flush the two nested timeouts from the FocusMonitor that are being created on `focus`.
+        flush();
+
+        slideToggle.disabled = true;
+        fixture.detectChanges();
+        flushMicrotasks();
+      }).not.toThrow();
+    }));
+
+    it('should not set the control to touched when changing the state programmatically',
+        fakeAsync(() => {
+
       // The control should start off with being untouched.
       expect(slideToggleModel.touched).toBe(false);
 
@@ -768,10 +840,11 @@ describe('MatSlideToggle with forms', () => {
       // also turn touched.
       dispatchFakeEvent(inputElement, 'blur');
       fixture.detectChanges();
+      flushMicrotasks();
 
       expect(slideToggleModel.touched).toBe(true);
       expect(slideToggleElement.classList).toContain('mat-checked');
-    });
+    }));
 
     it('should not set the control to touched when changing the model', fakeAsync(() => {
       // The control should start off with being untouched.
@@ -943,7 +1016,7 @@ describe('MatSlideToggle with forms', () => {
 
 @Component({
   template: `
-    <mat-slide-toggle [required]="isRequired"
+    <mat-slide-toggle [dir]="direction" [required]="isRequired"
                      [disabled]="isDisabled"
                      [color]="slideColor"
                      [id]="slideId"
@@ -976,6 +1049,7 @@ class SlideToggleBasic {
   labelPosition: string;
   toggleTriggered: number = 0;
   dragTriggered: number = 0;
+  direction: Direction = 'ltr';
 
   onSlideClick: (event?: Event) => void = () => {};
   onSlideChange = (event: MatSlideToggleChange) => this.lastEvent = event;

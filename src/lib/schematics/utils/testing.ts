@@ -1,25 +1,38 @@
-import {join} from 'path';
-import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 
-const collectionPath = join('./node_modules/@schematics/angular/collection.json');
+import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
+import {join} from 'path';
+
+/** Path to the test collection file for the Material schematics */
+export const collectionPath = join(__dirname, '..', 'test-collection.json');
+
+/** Path to the test migration file for the Material update schematics */
+export const migrationCollection = join(__dirname, '..', 'test-migration.json');
 
 /**
  * Create a base app used for testing.
  */
 export function createTestApp(): UnitTestTree {
-  const baseRunner = new SchematicTestRunner('schematics', collectionPath);
-  return baseRunner.runSchematic('application', {
-    directory: '',
-    name: 'app',
-    prefix: 'app',
-    sourceDir: 'src',
+  const baseRunner = new SchematicTestRunner('material-schematics', collectionPath);
+
+  const workspaceTree = baseRunner.runExternalSchematic('@schematics/angular', 'workspace', {
+    name: 'workspace',
+    version: '6.0.0',
+    newProjectRoot: 'projects',
+  });
+
+  return baseRunner.runExternalSchematic('@schematics/angular', 'application', {
+    name: 'material',
     inlineStyle: false,
     inlineTemplate: false,
-    viewEncapsulation: 'None',
-    version: '1.2.3',
-    routing: true,
+    routing: false,
     style: 'scss',
     skipTests: false,
-    minimal: false,
-  });
+  }, workspaceTree);
 }

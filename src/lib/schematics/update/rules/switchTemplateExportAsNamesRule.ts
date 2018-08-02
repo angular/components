@@ -1,7 +1,15 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {green, red} from 'chalk';
 import {Replacement, RuleFailure, Rules} from 'tslint';
 import * as ts from 'typescript';
-import {exportAsNames} from '../material/component-data';
+import {exportAsNames} from '../material/data/export-as-names';
 import {ExternalResource} from '../tslint/component-file';
 import {ComponentWalker} from '../tslint/component-walker';
 import {findAll} from '../typescript/literal';
@@ -51,7 +59,7 @@ export class SwitchTemplateExportAsNamesWalker extends ComponentWalker {
               ` renamed to "${green(name.replaceWith)}"`,
               replacement
             });
-          })
+          });
     });
 
     return replacements;

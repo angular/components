@@ -15,7 +15,7 @@ import {dispatchMouseEvent, dispatchTouchEvent} from '@angular/cdk/testing';
 import {Directionality} from '@angular/cdk/bidi';
 import {CdkDrag} from './drag';
 import {CdkDragDrop} from './drag-events';
-import {moveItemInArray, transferArrayItem} from './drag-utils';
+import {moveItemInArray} from './drag-utils';
 import {CdkDrop} from './drop';
 import {CdkDragHandle} from './drag-handle';
 
@@ -265,6 +265,26 @@ describe('CdkDrag', () => {
       expect(fixture.componentInstance.dropInstance.data).toBe(fixture.componentInstance.items);
     });
 
+    it('should be able to attach data to a drag item', () => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.dragItems.first.data)
+          .toBe(fixture.componentInstance.items[0]);
+    });
+
+    it('should be able to overwrite the drop zone id', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+
+      fixture.componentInstance.dropZoneId = 'custom-id';
+      fixture.detectChanges();
+
+      const drop = fixture.componentInstance.dropInstance;
+
+      expect(drop.id).toBe('custom-id');
+      expect(drop.element.nativeElement.getAttribute('id')).toBe('custom-id');
+    }));
+
     it('should toggle a class when the user starts dragging an item', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
@@ -318,6 +338,29 @@ describe('CdkDrag', () => {
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
           .toEqual(['One', 'Two', 'Zero', 'Three']);
+    }));
+
+    it('should not move the original element from its initial DOM position', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+      const root = fixture.nativeElement as HTMLElement;
+      let dragElements = Array.from(root.querySelectorAll('.cdk-drag'));
+
+      expect(dragElements.map(el => el.textContent)).toEqual(['Zero', 'One', 'Two', 'Three']);
+
+      // Stub out the original call so the list doesn't get re-rendered.
+      // We're testing the DOM order explicitly.
+      fixture.componentInstance.droppedSpy.and.callFake(() => {});
+
+      const thirdItemRect = dragElements[2].getBoundingClientRect();
+
+      dragElementViaMouse(fixture, fixture.componentInstance.dragItems.first.element.nativeElement,
+          thirdItemRect.left + 1, thirdItemRect.top + 1);
+      flush();
+      fixture.detectChanges();
+
+      dragElements = Array.from(root.querySelectorAll('.cdk-drag'));
+      expect(dragElements.map(el => el.textContent)).toEqual(['Zero', 'One', 'Two', 'Three']);
     }));
 
     it('should dispatch the `dropped` event in a horizontal drop zone', fakeAsync(() => {
@@ -460,7 +503,9 @@ describe('CdkDrag', () => {
     it('should move the placeholder as an item is being sorted down', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
-      assertDownwardSorting(fixture);
+      assertDownwardSorting(fixture, fixture.componentInstance.dragItems.map(item => {
+        return item.element.nativeElement;
+      }));
     }));
 
     it('should move the placeholder as an item is being sorted down on a scrolled page',
@@ -470,14 +515,18 @@ describe('CdkDrag', () => {
         const cleanup = makePageScrollable();
 
         scrollTo(0, 500);
-        assertDownwardSorting(fixture);
+        assertDownwardSorting(fixture, fixture.componentInstance.dragItems.map(item => {
+          return item.element.nativeElement;
+        }));
         cleanup();
       }));
 
     it('should move the placeholder as an item is being sorted up', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
-      assertUpwardSorting(fixture);
+      assertUpwardSorting(fixture, fixture.componentInstance.dragItems.map(item => {
+        return item.element.nativeElement;
+      }));
     }));
 
     it('should move the placeholder as an item is being sorted up on a scrolled page',
@@ -487,7 +536,9 @@ describe('CdkDrag', () => {
         const cleanup = makePageScrollable();
 
         scrollTo(0, 500);
-        assertUpwardSorting(fixture);
+        assertUpwardSorting(fixture, fixture.componentInstance.dragItems.map(item => {
+          return item.element.nativeElement;
+        }));
         cleanup();
       }));
 
@@ -617,9 +668,221 @@ describe('CdkDrag', () => {
         const fixture = createComponent(ConnectedDropZones);
         fixture.detectChanges();
 
-        // TODO
-        // console.log(fixture.componentInstance.groupedDragItems.map(d => d.length));
+        const groups = fixture.componentInstance.groupedDragItems;
+        const item = groups[0][1];
+        const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+
+        dragElementViaMouse(fixture, item.element.nativeElement,
+            targetRect.left + 1, targetRect.top + 1);
+        flush();
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
+
+        const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
+
+        expect(event).toEqual({
+          previousIndex: 1,
+          currentIndex: 3,
+          item,
+          container: fixture.componentInstance.dropInstances.toArray()[1],
+          previousContainer: fixture.componentInstance.dropInstances.first
+        });
       }));
+
+    it('should be able to move the element over a new container and return it', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
+
+      const groups = fixture.componentInstance.groupedDragItems;
+      const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
+      const item = groups[0][1];
+      const initialRect = item.element.nativeElement.getBoundingClientRect();
+      const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+
+      dispatchMouseEvent(item.element.nativeElement, 'mousedown');
+      fixture.detectChanges();
+
+      const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
+
+      expect(placeholder).toBeTruthy();
+      expect(dropZones[0].contains(placeholder))
+          .toBe(true, 'Expected placeholder to be inside the first container.');
+
+      dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.detectChanges();
+
+      expect(dropZones[1].contains(placeholder))
+          .toBe(true, 'Expected placeholder to be inside second container.');
+
+      dispatchMouseEvent(document, 'mousemove', initialRect.left + 1, initialRect.top + 1);
+      fixture.detectChanges();
+
+      expect(dropZones[0].contains(placeholder))
+          .toBe(true, 'Expected placeholder to be back inside first container.');
+
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
+    }));
+
+    it('should transfer the DOM element from one drop zone to another', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
+
+      const groups = fixture.componentInstance.groupedDragItems.slice();
+      const element = groups[0][1].element.nativeElement;
+      const dropInstances = fixture.componentInstance.dropInstances.toArray();
+      const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+
+      dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
+      flush();
+      fixture.detectChanges();
+
+      const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
+
+      expect(event).toBeTruthy();
+      expect(event).toEqual({
+        previousIndex: 1,
+        currentIndex: 3,
+        item: groups[0][1],
+        container: dropInstances[1],
+        previousContainer: dropInstances[0]
+      });
+    }));
+
+    it('should not be able to transfer an item into a container that is not in `connectedTo`',
+      fakeAsync(() => {
+        const fixture = createComponent(ConnectedDropZones);
+
+        fixture.detectChanges();
+        fixture.componentInstance.dropInstances.forEach(d => d.connectedTo = []);
+        fixture.detectChanges();
+
+        const groups = fixture.componentInstance.groupedDragItems.slice();
+        const element = groups[0][1].element.nativeElement;
+        const dropInstances = fixture.componentInstance.dropInstances.toArray();
+        const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+
+        dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
+        flush();
+        fixture.detectChanges();
+
+        const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
+
+        expect(event).toBeTruthy();
+        expect(event).toEqual({
+          previousIndex: 1,
+          currentIndex: 1,
+          item: groups[0][1],
+          container: dropInstances[0],
+          previousContainer: dropInstances[0]
+        });
+      }));
+
+
+    it('should be able to start dragging after an item has been transferred', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
+
+      const groups = fixture.componentInstance.groupedDragItems;
+      const element = groups[0][1].element.nativeElement;
+      const dropZone = fixture.componentInstance.dropInstances.toArray()[1].element.nativeElement;
+      const targetRect = dropZone.getBoundingClientRect();
+
+      // Drag the element into the drop zone and move it to the top.
+      [1, -1].forEach(offset => {
+        dragElementViaMouse(fixture, element, targetRect.left + offset, targetRect.top + offset);
+        flush();
+        fixture.detectChanges();
+      });
+
+      assertDownwardSorting(fixture, Array.from(dropZone.querySelectorAll('.cdk-drag')));
+    }));
+
+    it('should be able to return the last item inside its initial container', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+
+      // Make sure there's only one item in the first list.
+      fixture.componentInstance.todo = ['things'];
+      fixture.detectChanges();
+
+      const groups = fixture.componentInstance.groupedDragItems;
+      const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
+      const item = groups[0][0];
+      const initialRect = item.element.nativeElement.getBoundingClientRect();
+      const targetRect = groups[1][0].element.nativeElement.getBoundingClientRect();
+
+      dispatchMouseEvent(item.element.nativeElement, 'mousedown');
+      fixture.detectChanges();
+
+      const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
+
+      expect(placeholder).toBeTruthy();
+
+      expect(dropZones[0].contains(placeholder))
+          .toBe(true, 'Expected placeholder to be inside the first container.');
+
+      dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.detectChanges();
+
+      expect(dropZones[1].contains(placeholder))
+          .toBe(true, 'Expected placeholder to be inside second container.');
+
+      dispatchMouseEvent(document, 'mousemove', initialRect.left + 1, initialRect.top + 1);
+      fixture.detectChanges();
+
+      expect(dropZones[0].contains(placeholder))
+          .toBe(true, 'Expected placeholder to be back inside first container.');
+
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
+    }));
+
+    it('should assign a default id on each drop zone', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.dropInstances.toArray().every(dropZone => {
+        return !!dropZone.id && !!dropZone.element.nativeElement.getAttribute('id');
+      })).toBe(true);
+    }));
+
+    it('should be able to connect two drop zones by id', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
+
+      const dropInstances = fixture.componentInstance.dropInstances.toArray();
+
+      dropInstances[0].id = 'todo';
+      dropInstances[1].id = 'done';
+      dropInstances[0].connectedTo = ['done'];
+      dropInstances[1].connectedTo = ['todo'];
+      fixture.detectChanges();
+
+      const groups = fixture.componentInstance.groupedDragItems;
+      const element = groups[0][1].element.nativeElement;
+      const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+
+      dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
+      flush();
+      fixture.detectChanges();
+
+      const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
+
+      expect(event).toBeTruthy();
+      expect(event).toEqual({
+        previousIndex: 1,
+        currentIndex: 3,
+        item: groups[0][1],
+        container: dropInstances[1],
+        previousContainer: dropInstances[0]
+      });
+    }));
+
   });
 
 });
@@ -699,11 +962,13 @@ export class StandaloneDraggableWithMultipleHandles {
   template: `
     <cdk-drop
       style="display: block; width: 100px; background: pink;"
+      [id]="dropZoneId"
       [data]="items"
       (dropped)="droppedSpy($event)">
       <div
         *ngFor="let item of items"
         cdkDrag
+        [data]="item"
         style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">{{item}}</div>
     </cdk-drop>
   `
@@ -712,6 +977,7 @@ export class DraggableInDropZone {
   @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
   @ViewChild(CdkDrop) dropInstance: CdkDrop;
   items = ['Zero', 'One', 'Two', 'Three'];
+  dropZoneId = 'items';
   droppedSpy = jasmine.createSpy('dropped spy').and.callFake((event: CdkDragDrop<string[]>) => {
     moveItemInArray(this.items, event.previousIndex, event.currentIndex);
   });
@@ -790,29 +1056,36 @@ export class DraggableInDropZoneWithCustomPlaceholder {
 
 
 @Component({
+  encapsulation: ViewEncapsulation.None,
+  styles: [`
+    .cdk-drop {
+      display: block;
+      width: 100px;
+      min-height: ${ITEM_HEIGHT}px;
+      background: hotpink;
+    }
+
+    .cdk-drag {
+      display: block;
+      height: ${ITEM_HEIGHT}px;
+      background: red;
+    }
+  `],
   template: `
     <cdk-drop
       #todoZone
-      style="display: block; width: 100px; background: pink;"
       [data]="todo"
       [connectedTo]="[doneZone]"
       (dropped)="droppedSpy($event)">
-      <div
-        *ngFor="let item of todo"
-        cdkDrag
-        style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">{{item}}</div>
+      <div *ngFor="let item of todo" cdkDrag>{{item}}</div>
     </cdk-drop>
 
     <cdk-drop
       #doneZone
-      style="display: block; width: 100px; background: purple;"
       [data]="done"
       [connectedTo]="[todoZone]"
       (dropped)="droppedSpy($event)">
-      <div
-        *ngFor="let item of done"
-        cdkDrag
-        style="width: 100%; height: ${ITEM_HEIGHT}px; background: green;">{{item}}</div>
+      <div *ngFor="let item of done" cdkDrag>{{item}}</div>
     </cdk-drop>
   `
 })
@@ -821,20 +1094,9 @@ export class ConnectedDropZones implements AfterViewInit {
   @ViewChildren(CdkDrop) dropInstances: QueryList<CdkDrop>;
 
   groupedDragItems: CdkDrag[][] = [];
-
   todo = ['Zero', 'One', 'Two', 'Three'];
   done = ['Four', 'Five', 'Six'];
-
-  droppedSpy = jasmine.createSpy('dropped spy').and.callFake((event: CdkDragDrop<string[]>) => {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(event.previousContainer.data,
-                        event.container.data,
-                        event.previousIndex,
-                        event.currentIndex);
-    }
-  });
+  droppedSpy = jasmine.createSpy('dropped spy');
 
   ngAfterViewInit() {
     this.dropInstances.forEach((dropZone, index) => {
@@ -913,10 +1175,10 @@ function makePageScrollable() {
 /**
  * Asserts that sorting an element down works correctly.
  * @param fixture Fixture against which to run the assertions.
+ * @param items Array of items against which to test sorting.
  */
-function assertDownwardSorting(fixture: ComponentFixture<DraggableInDropZone>) {
-  const items = fixture.componentInstance.dragItems.toArray();
-  const draggedItem = items[0].element.nativeElement;
+function assertDownwardSorting(fixture: ComponentFixture<any>, items: Element[]) {
+  const draggedItem = items[0];
   const {top, left} = draggedItem.getBoundingClientRect();
 
   dispatchMouseEvent(draggedItem, 'mousedown', left, top);
@@ -926,7 +1188,7 @@ function assertDownwardSorting(fixture: ComponentFixture<DraggableInDropZone>) {
 
   // Drag over each item one-by-one going downwards.
   for (let i = 0; i < items.length; i++) {
-    const elementRect = items[i].element.nativeElement.getBoundingClientRect();
+    const elementRect = items[i].getBoundingClientRect();
 
     // Add a few pixels to the top offset so we get some overlap.
     dispatchMouseEvent(document, 'mousemove', elementRect.left, elementRect.top + 5);
@@ -942,10 +1204,10 @@ function assertDownwardSorting(fixture: ComponentFixture<DraggableInDropZone>) {
 /**
  * Asserts that sorting an element up works correctly.
  * @param fixture Fixture against which to run the assertions.
+ * @param items Array of items against which to test sorting.
  */
-function assertUpwardSorting(fixture: ComponentFixture<DraggableInDropZone>) {
-  const items = fixture.componentInstance.dragItems.toArray();
-  const draggedItem = items[items.length - 1].element.nativeElement;
+function assertUpwardSorting(fixture: ComponentFixture<any>, items: Element[]) {
+  const draggedItem = items[items.length - 1];
   const {top, left} = draggedItem.getBoundingClientRect();
 
   dispatchMouseEvent(draggedItem, 'mousedown', left, top);
@@ -955,7 +1217,7 @@ function assertUpwardSorting(fixture: ComponentFixture<DraggableInDropZone>) {
 
   // Drag over each item one-by-one going upwards.
   for (let i = items.length - 1; i > -1; i--) {
-    const elementRect = items[i].element.nativeElement.getBoundingClientRect();
+    const elementRect = items[i].getBoundingClientRect();
 
     // Remove a few pixels from the bottom offset so we get some overlap.
     dispatchMouseEvent(document, 'mousemove', elementRect.left, elementRect.bottom - 5);

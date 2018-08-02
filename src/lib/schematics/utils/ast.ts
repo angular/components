@@ -1,11 +1,19 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {normalize} from '@angular-devkit/core';
 import {SchematicsException, Tree} from '@angular-devkit/schematics';
+import {addImportToModule} from '@schematics/angular/utility/ast-utils';
+import {InsertChange} from '@schematics/angular/utility/change';
+import {WorkspaceProject, getWorkspace} from '@schematics/angular/utility/config';
+import {getAppModulePath} from '@schematics/angular/utility/ng-ast-utils';
+import {findModuleFromOptions as internalFindModule} from '@schematics/angular/utility/find-module';
 import * as ts from 'typescript';
-import {addImportToModule} from './devkit-utils/ast-utils';
-import {InsertChange} from './devkit-utils/change';
-import {Project, getWorkspace} from './devkit-utils/config';
-import {findBootstrapModulePath, getAppModulePath} from './devkit-utils/ng-ast-utils';
-import {ModuleOptions, findModuleFromOptions as internalFindModule} from './devkit-utils/find-module';
 
 
 /** Reads file given path and returns TypeScript source file. */
@@ -19,7 +27,9 @@ export function getSourceFile(host: Tree, path: string): ts.SourceFile {
 }
 
 /** Import and add module to root app module. */
-export function addModuleImportToRootModule(host: Tree, moduleName: string, src: string, project: Project) {
+export function addModuleImportToRootModule(host: Tree, moduleName: string, src: string,
+                                            project: WorkspaceProject) {
+
   const modulePath = getAppModulePath(host, project.architect.build.options.main);
   addModuleImportToModule(host, modulePath, moduleName, src);
 }
@@ -52,7 +62,7 @@ export function addModuleImportToModule(
 }
 
 /** Gets the app index.html file */
-export function getIndexHtmlPath(host: Tree, project: Project): string {
+export function getIndexHtmlPath(project: WorkspaceProject): string {
   const buildTarget = project.architect.build.options;
 
   if (buildTarget.index && buildTarget.index.endsWith('index.html')) {
@@ -63,7 +73,7 @@ export function getIndexHtmlPath(host: Tree, project: Project): string {
 }
 
 /** Get the root stylesheet file. */
-export function getStylesPath(host: Tree, project: Project): string {
+export function getStylesPath(project: WorkspaceProject): string {
   const buildTarget = project.architect['build'];
 
   if (buildTarget.options && buildTarget.options.styles && buildTarget.options.styles.length) {

@@ -174,10 +174,12 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   private _disabled: boolean;
 
   /** Emits when a `change` event is fired on this `<input>`. */
-  @Output() readonly dateChange = new EventEmitter<DatepickerInputEvent<D>>();
+  @Output() readonly dateChange: EventEmitter<DatepickerInputEvent<D>> =
+      new EventEmitter<DatepickerInputEvent<D>>();
 
   /** Emits when an `input` event is fired on this `<input>`. */
-  @Output() readonly dateInput = new EventEmitter<DatepickerInputEvent<D>>();
+  @Output() readonly dateInput: EventEmitter<DatepickerInputEvent<D>>  =
+      new EventEmitter<DatepickerInputEvent<D>>();
 
   /** Emits when the value changes (either due to user input or programmatic change). */
   _valueChange = new EventEmitter<D | null>();

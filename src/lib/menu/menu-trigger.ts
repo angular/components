@@ -90,7 +90,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /**
    * @deprecated
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   @Input('mat-menu-trigger-for')
   get _deprecatedMatMenuTriggerFor(): MatMenuPanel {
@@ -113,7 +113,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /**
    * Event emitted when the associated menu is opened.
    * @deprecated Switch to `menuOpened` instead
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   // tslint:disable-next-line:no-output-on-prefix
   @Output() readonly onMenuOpen: EventEmitter<void> = this.menuOpened;
@@ -124,7 +124,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /**
    * Event emitted when the associated menu is closed.
    * @deprecated Switch to `menuClosed` instead
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   // tslint:disable-next-line:no-output-on-prefix
   @Output() readonly onMenuClose: EventEmitter<void> = this.menuClosed;
@@ -137,7 +137,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
               @Optional() @Self() private _menuItemInstance: MatMenuItem,
               @Optional() private _dir: Directionality,
               // TODO(crisbeto): make the _focusMonitor required when doing breaking changes.
-              // @deletion-target 7.0.0
+              // @breaking-change 7.0.0
               private _focusMonitor?: FocusMonitor) {
 
     if (_menuItemInstance) {
@@ -501,8 +501,10 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
         // while the new trigger tries to re-open it. Wait for the animation to finish
         // before doing so. Also interrupt if the user moves to another item.
         if (this.menu instanceof MatMenu && this.menu._isAnimating) {
+          // We need the `delay(0)` here in order to avoid
+          // 'changed after checked' errors in some cases. See #12194.
           this.menu._animationDone
-            .pipe(take(1), takeUntil(this._parentMenu._hovered()))
+            .pipe(take(1), delay(0, asapScheduler), takeUntil(this._parentMenu._hovered()))
             .subscribe(() => this.openMenu());
         } else {
           this.openMenu();

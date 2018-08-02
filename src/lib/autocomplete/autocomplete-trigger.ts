@@ -103,7 +103,7 @@ export function getMatAutocompleteMissingPanelError(): Error {
     '[attr.aria-autocomplete]': 'autocompleteDisabled ? null : "list"',
     '[attr.aria-activedescendant]': 'activeOption?.id',
     '[attr.aria-expanded]': 'autocompleteDisabled ? null : panelOpen.toString()',
-    '[attr.aria-owns]': 'autocompleteDisabled ? null : autocomplete?.id',
+    '[attr.aria-owns]': '(autocompleteDisabled || !panelOpen) ? null : autocomplete?.id',
     // Note: we use `focusin`, as opposed to `focus`, in order to open the panel
     // a little earlier. This avoids issues where IE delays the focusing of the input.
     '(focusin)': '_handleFocus()',
@@ -177,7 +177,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
               @Optional() private _dir: Directionality,
               @Optional() @Host() private _formField: MatFormField,
               @Optional() @Inject(DOCUMENT) private _document: any,
-              // @deletion-target 7.0.0 Make `_viewportRuler` required.
+              // @breaking-change 7.0.0 Make `_viewportRuler` required.
               private _viewportRuler?: ViewportRuler) {}
 
   ngOnDestroy() {

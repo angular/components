@@ -7,6 +7,7 @@
  */
 
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {
@@ -184,7 +185,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   constructor(elementRef: ElementRef,
               /**
                * @deprecated The `_platform` parameter to be removed.
-               * @deletion-target 7.0.0
+               * @breaking-change 7.0.0
                */
               _platform: Platform,
               private _focusMonitor: FocusMonitor,
@@ -193,7 +194,8 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
               private _ngZone: NgZone,
               @Inject(MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS)
                   public defaults: MatSlideToggleDefaultOptions,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+              @Optional() private _dir?: Directionality) {
     super(elementRef);
     this.tabIndex = parseInt(tabIndex) || 0;
   }
@@ -287,7 +289,12 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
       // For keyboard focus show a persistent ripple as focus indicator.
       this._focusRipple = this._ripple.launch(0, 0, {persistent: true});
     } else if (!focusOrigin) {
-      this.onTouched();
+      // When a focused element becomes disabled, the browser *immediately* fires a blur event.
+      // Angular does not expect events to be raised during change detection, so any state change
+      // (such as a form control's 'ng-touched') will cause a changed-after-checked error.
+      // See https://github.com/angular/angular/issues/17793. To work around this, we defer telling
+      // the form control it has been touched until the next tick.
+      Promise.resolve().then(() => this.onTouched());
 
       // Fade out and clear the focus ripple if one is currently present.
       if (this._focusRipple) {
@@ -330,9 +337,10 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
 
   _onDrag(event: HammerInput) {
     if (this._dragging) {
-      this._dragPercentage = this._getDragPercentage(event.deltaX);
+      const direction = this._dir && this._dir.value === 'rtl' ? -1 : 1;
+      this._dragPercentage = this._getDragPercentage(event.deltaX * direction);
       // Calculate the moved distance based on the thumb bar width.
-      const dragX = (this._dragPercentage / 100) * this._thumbBarWidth;
+      const dragX = (this._dragPercentage / 100) * this._thumbBarWidth * direction;
       this._thumbEl.nativeElement.style.transform = `translate3d(${dragX}px, 0, 0)`;
     }
   }

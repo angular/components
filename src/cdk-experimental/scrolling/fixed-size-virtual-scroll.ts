@@ -9,12 +9,19 @@
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {ListRange} from '@angular/cdk/collections';
 import {Directive, forwardRef, Input, OnChanges} from '@angular/core';
+import {Observable, Subject} from 'rxjs';
+import {distinctUntilChanged} from 'rxjs/operators';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
 
 /** Virtual scrolling strategy for lists with items of known fixed size. */
 export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
+  private _scrolledIndexChange = new Subject<number>();
+
+  /** @docs-private Implemented as part of VirtualScrollStrategy. */
+  scrolledIndexChange: Observable<number> = this._scrolledIndexChange.pipe(distinctUntilChanged());
+
   /** The attached viewport. */
   private _viewport: CdkVirtualScrollViewport | null = null;
 
@@ -45,6 +52,7 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
 
   /** Detaches this scroll strategy from the currently attached viewport. */
   detach() {
+    this._scrolledIndexChange.complete();
     this._viewport = null;
   }
 
@@ -77,6 +85,17 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   /** @docs-private Implemented as part of VirtualScrollStrategy. */
   onRenderedOffsetChanged() { /* no-op */ }
 
+  /**
+   * Scroll to the offset for the given index.
+   * @param index The index of the element to scroll to.
+   * @param behavior The ScrollBehavior to use when scrolling.
+   */
+  scrollToIndex(index: number, behavior: ScrollBehavior): void {
+    if (this._viewport) {
+      this._viewport.scrollToOffset(index * this._itemSize, behavior);
+    }
+  }
+
   /** Update the viewport's total content size. */
   private _updateTotalContentSize() {
     if (!this._viewport) {
@@ -102,6 +121,8 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
             this._bufferSize);
     this._viewport.setRenderedRange(range);
     this._viewport.setRenderedContentOffset(this._itemSize * range.start);
+
+    this._scrolledIndexChange.next(firstVisibleIndex);
   }
 
   /**

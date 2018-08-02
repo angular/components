@@ -1,3 +1,54 @@
+<a name="6.4.2"></a>
+## [6.4.2 chalk-window](https://github.com/angular/material2/compare/6.4.1...6.4.2) (2018-07-30)
+
+
+### Bug Fixes
+
+* **autocomplete:** remove aria-owns attribute while closed ([#12333](https://github.com/angular/material2/issues/12333)) ([2122b18](https://github.com/angular/material2/commit/2122b18)), closes [#12332](https://github.com/angular/material2/issues/12332)
+* **card:** incorrectly inverting inset divider in rtl ([#12285](https://github.com/angular/material2/issues/12285)) ([8a2dc60](https://github.com/angular/material2/commit/8a2dc60))
+* **progress-bar:** query animation not working inside routes with named outlets ([#12350](https://github.com/angular/material2/issues/12350)) ([0c526d3](https://github.com/angular/material2/commit/0c526d3)), closes [#12014](https://github.com/angular/material2/issues/12014) [#12338](https://github.com/angular/material2/issues/12338)
+* **snack-bar:** prevent content from overriding configured aria-live message ([#12294](https://github.com/angular/material2/issues/12294)) ([b46689e](https://github.com/angular/material2/commit/b46689e))
+* **ng-update:** support parenthesized directive metadata ([#12314](https://github.com/angular/material2/issues/12314)) ([66416f5](https://github.com/angular/material2/commit/66416f5))
+
+
+### Performance Improvements
+
+* **table:** leaking reference through mostRecentCellOutlet ([#12269](https://github.com/angular/material2/issues/12269)) ([7c8e892](https://github.com/angular/material2/commit/7c8e892)), closes [#12259](https://github.com/angular/material2/issues/12259)
+* **tree:** leaking reference through mostRecentTreeNode ([#12334](https://github.com/angular/material2/issues/12334)) ([b6f7205](https://github.com/angular/material2/commit/b6f7205)), closes [#12269](https://github.com/angular/material2/issues/12269)
+
+
+
+<a name="6.4.1"></a>
+## [6.4.1 elm-electrode](https://github.com/angular/material2/compare/6.4.0...6.4.1) (2018-07-23)
+
+
+### Bug Fixes
+
+* **autofill:** avoid firing unnecessary event on initial render of input ([#12116](https://github.com/angular/material2/issues/12116)) ([1fb1fab](https://github.com/angular/material2/commit/1fb1fab))
+* **badge:** hide badges with no content ([#12239](https://github.com/angular/material2/issues/12239)) ([1e847f1](https://github.com/angular/material2/commit/1e847f1))
+* **chips:** losing focus if active chip is deleted ([#11910](https://github.com/angular/material2/issues/11910)) ([646e378](https://github.com/angular/material2/commit/646e378))
+* **drag-drop:** disable text selection on draggable element ([#12204](https://github.com/angular/material2/issues/12204)) ([7a04609](https://github.com/angular/material2/commit/7a04609))
+* **drag-drop:** make `CDK_DROP_CONTAINER` public ([#12214](https://github.com/angular/material2/issues/12214)) ([b9cece4](https://github.com/angular/material2/commit/b9cece4))
+* **drag-drop:** unable to drag last item back into initial container ([#12261](https://github.com/angular/material2/issues/12261)) ([3e0e3c5](https://github.com/angular/material2/commit/3e0e3c5))
+* **menu:** collapse empty menu panel ([#12211](https://github.com/angular/material2/issues/12211)) ([aed3993](https://github.com/angular/material2/commit/aed3993))
+* **menu:** focus indication not visible in high contrast mode ([#12201](https://github.com/angular/material2/issues/12201)) ([6fb6216](https://github.com/angular/material2/commit/6fb6216))
+* **menu:** showing scrollbars on first open in Edge if item width is set ([#12141](https://github.com/angular/material2/issues/12141)) ([ff53295](https://github.com/angular/material2/commit/ff53295))
+* **moment-date-adapter:** not returning utc date when parsing ([#12029](https://github.com/angular/material2/issues/12029)) ([0304ac1](https://github.com/angular/material2/commit/0304ac1))
+* **overlay:** avoid same overlay being added to the keyboard event stack multiple times ([#12222](https://github.com/angular/material2/issues/12222)) ([e587f4b](https://github.com/angular/material2/commit/e587f4b))
+* **ripple:** don't hide directive host in high contrast ([#12168](https://github.com/angular/material2/issues/12168)) ([efedc9b](https://github.com/angular/material2/commit/efedc9b))
+* **schematics:** fix object iteration error in dashboard ([#12216](https://github.com/angular/material2/issues/12216)) ([f2acb51](https://github.com/angular/material2/commit/f2acb51))
+* **slide-toggle:** invert the thumb and slide gesture in rtl ([#12284](https://github.com/angular/material2/issues/12284)) ([fe193f5](https://github.com/angular/material2/commit/fe193f5))
+* **tab-group:** focus change event not firing for keyboard navigation ([#12192](https://github.com/angular/material2/issues/12192)) ([48ece27](https://github.com/angular/material2/commit/48ece27))
+* **table:** unable to sort large numbers in strings ([#12052](https://github.com/angular/material2/issues/12052)) ([dd31521](https://github.com/angular/material2/commit/dd31521))
+* **tabs:** content animation in RTL not working (chrome) ([#12215](https://github.com/angular/material2/issues/12215)) ([f700897](https://github.com/angular/material2/commit/f700897))
+* **tabs:** enable keyboard wrapping and mark disabled tabs ([#12218](https://github.com/angular/material2/issues/12218)) ([0e03aae](https://github.com/angular/material2/commit/0e03aae))
+* **tabs:** reposition tab body on direction change ([#12229](https://github.com/angular/material2/issues/12229)) ([4ac1be3](https://github.com/angular/material2/commit/4ac1be3))
+* **tabs:** ripple overflow in internet explorer ([#12036](https://github.com/angular/material2/issues/12036)) ([09f439a](https://github.com/angular/material2/commit/09f439a))
+* **tabs:** selectedIndex being overwritten if tabs are being added / removed ([#12245](https://github.com/angular/material2/issues/12245)) ([641ec85](https://github.com/angular/material2/commit/641ec85))
+* **tooltip:** interfering with native drag&drop ([#12200](https://github.com/angular/material2/issues/12200)) ([8a4f2c3](https://github.com/angular/material2/commit/8a4f2c3))
+
+
+
 <a name="6.4.0"></a>
 # [6.4.0 dimeritium-dandelion](https://github.com/angular/material2/compare/6.3.1...6.4.0) (2018-07-16)
 
@@ -691,9 +742,9 @@ ng update @angular/material
 <a name="6.0.0-beta.5"></a>
 # [6.0.0-beta.5](https://github.com/angular/material2/compare/5.2.4...6.0.0-beta.5) (2018-03-23)
 
-This release contains many breaking changes due to the deletion of deprecated targets. We are 
+This release contains many breaking changes due to the deletion of deprecated targets. We are
 currently working on a tool that will help migrate your app if you are affected by these changes.
-We expect to have the tool ready when we release version 6.0.0.  
+We expect to have the tool ready when we release version 6.0.0.
 
 
 ### BREAKING CHANGES
@@ -955,8 +1006,8 @@ We expect to have the tool ready when we release version 6.0.0.
 
 <a name="5.2.5"></a>
 # [5.2.5 cardboard-kangaroo](https://github.com/angular/material2/compare/5.2.4...5.2.5) (2018-04-17)
- 
- 
+
+
 ### Highlights
 * Tweak peer deps to avoid warnings when updating Angular to 6.0
 
