@@ -112,7 +112,7 @@ export class MatMonthView<D> implements AfterContentInit {
   @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
 
   /** The date of active month. */
-  activeMonth: D
+  activeMonth: D;
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
@@ -246,7 +246,7 @@ export class MatMonthView<D> implements AfterContentInit {
     this._monthLabel =
         this._dateAdapter.getMonthNames('short')[this._dateAdapter.getMonth(this.activeDate)]
             .toLocaleUpperCase();
-    this._setActiveMonth(this.activeDate)
+    this._setActiveMonth(this.activeDate);
 
     let firstOfMonth = this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate),
         this._dateAdapter.getMonth(this.activeDate), 1);
@@ -268,11 +268,11 @@ export class MatMonthView<D> implements AfterContentInit {
     if(this.activeMonth != null 
       && this._dateAdapter.getYear(date) == this._dateAdapter.getYear(this.activeMonth)
       && this._dateAdapter.getMonth(date) == this._dateAdapter.getMonth(this.activeMonth)) {
-      return
+      return;
     }
 
-    this.activeMonth = date
-    this.activeMonthChange.emit(date)
+    this.activeMonth = date;
+    this.activeMonthChange.emit(date);
   }
 
   /** Creates MatCalendarCells for the dates in this month. */
