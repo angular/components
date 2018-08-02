@@ -200,6 +200,9 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
    */
   @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
+  /** Emits when viewed month changes. */
+  @Output() readonly activeMonthChange: EventEmitter<D> = new EventEmitter<D>();
+
   /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
   @Input() panelClass: string | string[];
 
@@ -296,6 +299,11 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
       this._selectedChanged.next(date);
     }
+  }
+
+  /** Change the viewed date for event */  
+  _activeMonthChange(date: D) {
+    this.activeMonthChange.emit(date)
   }
 
   /** Emits the selected year in multiyear view */

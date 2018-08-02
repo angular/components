@@ -93,6 +93,18 @@
   </mat-datepicker>
 </p>
 
+<h2>Event when viewed month changes</h2>
+<p>Active month: {{activeMonth}}</p>
+<p>
+  <mat-datepicker-toggle [for]="datePickerMonthChange"></mat-datepicker-toggle>
+  <mat-form-field>
+    <mat-label>Input</mat-label>
+    <input matInput [matDatepicker]="datePickerMonthChange">
+    <mat-datepicker #datePickerMonthChange [startView]="'month'" (activeMonthChange)="setActiveMonth($event)">
+    </mat-datepicker>
+  </mat-form-field>
+</p>
+
 <h2>Input disabled datepicker</h2>
 <p>
   <mat-datepicker-toggle [for]="datePicker1"></mat-datepicker-toggle>

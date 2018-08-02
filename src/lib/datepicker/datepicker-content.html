@@ -10,6 +10,7 @@
     [selected]="datepicker._selected"
     [@fadeInCalendar]="'enter'"
     (selectedChange)="datepicker.select($event)"
+    (activeMonthChange)="datepicker._activeMonthChange($event)"
     (yearSelected)="datepicker._selectYear($event)"
     (monthSelected)="datepicker._selectMonth($event)"
     (_userSelection)="datepicker.close()">
