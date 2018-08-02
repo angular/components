@@ -14,6 +14,7 @@ import {
   Output,
   EventEmitter,
   Optional,
+  NgZone,
   ViewEncapsulation,
   AfterViewInit,
   ViewChild,
@@ -21,6 +22,7 @@ import {
 } from '@angular/core';
 import {Location} from '@angular/common';
 import {fromEvent, Subscription} from 'rxjs';
+import {filter} from 'rxjs/operators';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {CanColor, mixinColor} from '@angular/material/core';
 
@@ -57,7 +59,7 @@ let progressbarId = 0;
     '[attr.aria-valuenow]': 'value',
     '[attr.mode]': 'mode',
     'class': 'mat-progress-bar',
-    '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
+    '[class._mat-animation-noopable]': `_isNoopAnimation`,
   },
   inputs: ['color'],
   templateUrl: 'progress-bar.html',
@@ -67,7 +69,7 @@ let progressbarId = 0;
 })
 export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor,
                                                       AfterViewInit, OnDestroy {
-  constructor(public _elementRef: ElementRef,
+  constructor(public _elementRef: ElementRef, private _ngZone: NgZone,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
               /**
                * @deprecated `location` parameter to be made required.
@@ -80,12 +82,23 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
     // in Safari if the page has a `<base>` tag. Note that we need quotes inside the `url()`,
     // because named route URLs can contain parentheses (see #12338).
     this._rectangleFillValue = `url('${location ? location.path() : ''}#${this.progressbarId}')`;
+    this._isNoopAnimation = _animationMode === 'NoopAnimations';
   }
+
+  /** Flag that indicates whether NoopAnimations mode is set to true. */
+  _isNoopAnimation = false;
 
   /** Value of the progress bar. Defaults to zero. Mirrored to aria-valuenow. */
   @Input()
   get value(): number { return this._value; }
-  set value(v: number) { this._value = clamp(v || 0); }
+  set value(v: number) {
+    this._value = clamp(v || 0);
+
+    // When noop animation is set to true, trigger animationEnd directly.
+    if (this._isNoopAnimation) {
+      this.emitAnimationEnd();
+    }
+  }
   private _value: number = 0;
 
   /** Buffer value of the progress bar. Defaults to zero. */
@@ -94,12 +107,12 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
   set bufferValue(v: number) { this._bufferValue = clamp(v || 0); }
   private _bufferValue: number = 0;
 
-  @ViewChild('primaryValueBar') primaryValueBar: ElementRef;
+  @ViewChild('primaryValueBar') _primaryValueBar: ElementRef;
 
   /**
-   * Event that indicates animation end on value bar. This event will not be emitted for
-   * animations that doesn't end, i.e. indeterminate and query. Also if animation is
-   * disabled, this event will not emit.
+   * Event emitted when animation of the primary progress bar completes. This event will not
+   * be emitted when animations are disabled, nor will it be emitted for modes with continuous
+   * animations (indeterminate and query).
    */
   @Output() animationEnd = new EventEmitter<AnimationEndData>();
 
@@ -139,10 +152,16 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
   }
 
   ngAfterViewInit() {
-    if (this._animationMode !== 'NoopAnimations') {
-      this._animationEndSubscription =
-            fromEvent(this.primaryValueBar.nativeElement, 'transitionend')
-            .subscribe(_ => this.emitAnimationEnd());
+    if (!this._isNoopAnimation) {
+      // Run outside angular so change detection didn't get triggered on every transition end
+      // instead only on the animation that we care about (primary value bar's transitionend)
+      this._ngZone.runOutsideAngular((() => {
+        this._animationEndSubscription =
+            fromEvent(this._primaryValueBar.nativeElement, 'transitionend')
+            .pipe(filter(((e: TransitionEvent) =>
+              e.target === this._primaryValueBar.nativeElement)))
+            .subscribe(_ => this._ngZone.run(() => this.emitAnimationEnd()));
+      }));
     }
   }
 
@@ -153,7 +172,7 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
   /** Callback function on animation end, emit animationEnd event on determinate and buffer mode. */
   private emitAnimationEnd(): void {
     if (this.mode === 'determinate' || this.mode === 'buffer') {
-      this.animationEnd.next({ value: this.value});
+      this.animationEnd.next({value: this.value});
     }
   }
 }
