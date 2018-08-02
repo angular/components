@@ -36,7 +36,7 @@ export class MatProgressBarBase {
 }
 
 /** Last animation end data. */
-export interface AnimationEndData {
+export interface ProgressAnimationEnd {
   value: number;
 }
 
@@ -114,7 +114,7 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
    * be emitted when animations are disabled, nor will it be emitted for modes with continuous
    * animations (indeterminate and query).
    */
-  @Output() animationEnd = new EventEmitter<AnimationEndData>();
+  @Output() animationEnd = new EventEmitter<ProgressAnimationEnd>();
 
   /** Reference to animation end subscription to be unsubscribed on destroy. */
   private _animationEndSubscription: Subscription = Subscription.EMPTY;
