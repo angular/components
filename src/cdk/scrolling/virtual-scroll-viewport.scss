@@ -35,6 +35,7 @@ cdk-virtual-scroll-viewport {
   contain: strict;
   transform: translateZ(0);
   will-change: scroll-position;
+  -webkit-overflow-scrolling: touch;
 }
 
 // Wrapper element for the rendered content. This element will be transformed to push the rendered
@@ -45,6 +46,11 @@ cdk-virtual-scroll-viewport {
   left: 0;
   contain: content;
   will-change: transform;
+
+  [dir='rtl'] & {
+    right: 0;
+    left: auto;
+  }
 }
 
 .cdk-virtual-scroll-orientation-horizontal .cdk-virtual-scroll-content-wrapper {

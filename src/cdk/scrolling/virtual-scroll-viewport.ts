@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
 import {ListRange} from '@angular/cdk/collections';
 import {supportsScrollBehavior} from '@angular/cdk/platform';
 import {
@@ -18,12 +19,13 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
+  Optional,
   Output,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {animationFrameScheduler, fromEvent, Observable, Subject} from 'rxjs';
-import {sampleTime, takeUntil} from 'rxjs/operators';
+import {sampleTime, startWith, takeUntil} from 'rxjs/operators';
 import {CdkVirtualForOf} from './virtual-for-of';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 
@@ -99,9 +101,6 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   /** The size of the viewport (in pixels). */
   private _viewportSize = 0;
 
-  /** The pending scroll offset to be applied during the next change detection cycle. */
-  private _pendingScrollOffset: number | null;
-
   /** the currently attached CdkVirtualForOf. */
   private _forOf: CdkVirtualForOf<any> | null;
 
@@ -126,7 +125,8 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   constructor(public elementRef: ElementRef<HTMLElement>,
               private _changeDetectorRef: ChangeDetectorRef,
               private _ngZone: NgZone,
-              @Inject(VIRTUAL_SCROLL_STRATEGY) private _scrollStrategy: VirtualScrollStrategy) {}
+              @Inject(VIRTUAL_SCROLL_STRATEGY) private _scrollStrategy: VirtualScrollStrategy,
+              @Optional() private _dir: Directionality) {}
 
   ngOnInit() {
     // It's still too early to measure the viewport at this point. Deferring with a promise allows
@@ -138,9 +138,13 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
       this._scrollStrategy.attach(this);
 
       fromEvent(this.elementRef.nativeElement, 'scroll')
-          // Sample the scroll stream at every animation frame. This way if there are multiple
-          // scroll events in the same frame we only need to recheck our layout once.
-          .pipe(sampleTime(0, animationFrameScheduler), takeUntil(this._destroyed))
+          .pipe(
+              // Start off with a fake scroll event so we properly detect our initial position.
+              startWith(null!),
+              // Sample the scroll stream at every animation frame. This way if there are multiple
+              // scroll events in the same frame we only need to recheck our layout once.
+              sampleTime(0, animationFrameScheduler),
+              takeUntil(this._destroyed))
           .subscribe(() => this._scrollStrategy.onContentScrolled());
 
       this._markChangeDetectionNeeded();
@@ -238,8 +242,12 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
    * (in pixels).
    */
   setRenderedContentOffset(offset: number, to: 'to-start' | 'to-end' = 'to-start') {
+    // For a horizontal viewport in a right-to-left language we need to translate along the x-axis
+    // in the negative direction.
+    const axisDirection = this.orientation == 'horizontal' && this._dir && this._dir.value == 'rtl'
+        ? -1 : 1;
     const axis = this.orientation === 'horizontal' ? 'X' : 'Y';
-    let transform = `translate${axis}(${Number(offset)}px)`;
+    let transform = `translate${axis}(${Number(axisDirection * offset)}px)`;
     this._renderedContentOffset = offset;
     if (to === 'to-end') {
       transform += ` translate${axis}(-100%)`;
@@ -265,12 +273,19 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
   }
 
   /**
-   * Scrolls to the offset on the viewport.
+   * Scrolls to the given offset from the start of the viewport. Please note that this is not always
+   * the same as setting `scrollTop` or `scrollLeft`. In a horizontal viewport with right-to-left
+   * direction, this would be the equivalent of setting a fictional `scrollRight` property.
    * @param offset The offset to scroll to.
    * @param behavior The ScrollBehavior to use when scrolling. Default is behavior is `auto`.
    */
   scrollToOffset(offset: number, behavior: ScrollBehavior = 'auto') {
     const viewportElement = this.elementRef.nativeElement;
+
+    // For a horizontal viewport in a right-to-left language we need to calculate what `scrollRight`
+    // would be.
+    offset = this.orientation == 'horizontal' && this._dir && this._dir.value == 'rtl' ?
+        Math.max(0, this._totalContentSize - this._viewportSize - offset) : offset;
 
     if (supportsScrollBehavior()) {
       const offsetDirection = this.orientation === 'horizontal' ? 'left' : 'top';
@@ -293,18 +308,16 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
     this._scrollStrategy.scrollToIndex(index, behavior);
   }
 
-  /** @docs-private Internal method to set the scroll offset on the viewport. */
-  setScrollOffset(offset: number) {
-    // Rather than setting the offset immediately, we batch it up to be applied along with other DOM
-    // writes during the next change detection cycle.
-    this._pendingScrollOffset = offset;
-    this._markChangeDetectionNeeded();
-  }
-
-  /** Gets the current scroll offset of the viewport (in pixels). */
+  /** Gets the current scroll offset from the start of the viewport (in pixels). */
   measureScrollOffset(): number {
-    return this.orientation === 'horizontal' ?
-        this.elementRef.nativeElement.scrollLeft : this.elementRef.nativeElement.scrollTop;
+    if (this.orientation == 'horizontal') {
+      const offset = this.elementRef.nativeElement.scrollLeft;
+      // For a horizontal viewport in a right-to-left language we need to calculate what
+      // `scrollRight` would be.
+      return this._dir && this._dir.value == 'rtl' ?
+          Math.max(0, this._totalContentSize - this._viewportSize - offset) : offset;
+    }
+    return this.elementRef.nativeElement.scrollTop;
   }
 
   /** Measure the combined size of all of the rendered items. */
@@ -367,14 +380,6 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
     // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
     // the `Number` function first to coerce it to a numeric value.
     this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
-    // Apply the pending scroll offset separately, since it can't be set up as an Angular binding.
-    if (this._pendingScrollOffset != null) {
-      if (this.orientation === 'horizontal') {
-        this.elementRef.nativeElement.scrollLeft = this._pendingScrollOffset;
-      } else {
-        this.elementRef.nativeElement.scrollTop = this._pendingScrollOffset;
-      }
-    }
 
     const runAfterChangeDetection = this._runAfterChangeDetection;
     this._runAfterChangeDetection = [];
