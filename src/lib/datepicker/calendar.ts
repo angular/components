@@ -347,7 +347,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** Change the viewed date for event */  
   _activeMonthChange(date: D) {
-    this.activeMonthChange.emit(date)
+    this.activeMonthChange.emit(date);
   }
 
   /** Handles date selection in the month view. */
