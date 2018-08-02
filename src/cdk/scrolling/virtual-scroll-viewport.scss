@@ -69,7 +69,7 @@ cdk-virtual-scroll-viewport {
   transform-origin: 0 0;
   will-change: transform;
 
-  [dir="rtl"] & {
+  [dir='rtl'] & {
     right: 0;
     left: auto;
     transform-origin: 100% 0;
