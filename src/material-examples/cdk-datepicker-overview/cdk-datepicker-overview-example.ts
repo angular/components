@@ -11,7 +11,7 @@ import {CalendarView, DateAdapter} from '@angular/cdk/datetime';
 export class CdkDatepickerOverviewExample {
   messages: string[] = [];
   _dateSelected() {
-    this.messages.push('Date has changed \n');
+    this.messages.push('Date has changed. ');
   }
 }
 
