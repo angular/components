@@ -1,7 +1,14 @@
 import {ArrayDataSource} from '@angular/cdk/collections';
 import {CdkVirtualForOf, CdkVirtualScrollViewport, ScrollingModule} from '@angular/cdk/scrolling';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
-import {Component, Input, ViewChild, ViewContainerRef, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  Input,
+  TrackByFunction,
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {animationFrameScheduler, Subject} from 'rxjs';
 
@@ -727,7 +734,7 @@ class FixedSizeVirtualScroll {
   @Input() minBufferPx = 0;
   @Input() maxBufferPx = 0;
   @Input() items = Array(10).fill(0).map((_, i) => i);
-  @Input() trackBy;
+  @Input() trackBy: TrackByFunction<number>;
   @Input() templateCacheSize = 20;
 
   scrolledToIndex = 0;
@@ -777,7 +784,7 @@ class FixedSizeVirtualScrollWithRtlDirection {
   @Input() itemSize = 50;
   @Input() bufferSize = 0;
   @Input() items = Array(10).fill(0).map((_, i) => i);
-  @Input() trackBy;
+  @Input() trackBy: TrackByFunction<number>;
   @Input() templateCacheSize = 20;
 
   scrolledToIndex = 0;

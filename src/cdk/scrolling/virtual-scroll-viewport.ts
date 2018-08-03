@@ -285,7 +285,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
     // For a horizontal viewport in a right-to-left language we need to calculate what `scrollRight`
     // would be.
     offset = this.orientation == 'horizontal' && this._dir && this._dir.value == 'rtl' ?
-        Math.max(0, this._totalContentSize - this._viewportSize - offset) : offset;
+        this._getRightOffsetAsLeftOffset(offset) : offset;
 
     if (supportsScrollBehavior()) {
       const offsetDirection = this.orientation === 'horizontal' ? 'left' : 'top';
@@ -315,7 +315,7 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
       // For a horizontal viewport in a right-to-left language we need to calculate what
       // `scrollRight` would be.
       return this._dir && this._dir.value == 'rtl' ?
-          Math.max(0, this._totalContentSize - this._viewportSize - offset) : offset;
+          this._getRightOffsetAsLeftOffset(offset) : offset;
     }
     return this.elementRef.nativeElement.scrollTop;
   }
@@ -386,5 +386,10 @@ export class CdkVirtualScrollViewport implements OnInit, OnDestroy {
     for (const fn of runAfterChangeDetection) {
       fn();
     }
+  }
+
+  /** Expresses an offset from the right as the equivalent offset from the left. */
+  private _getRightOffsetAsLeftOffset(offset: number): number {
+    return Math.max(0, this._totalContentSize - this._viewportSize - offset);
   }
 }
