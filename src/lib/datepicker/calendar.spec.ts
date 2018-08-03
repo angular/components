@@ -13,7 +13,7 @@ import {
 } from '@angular/cdk/testing';
 import {DateAdapter} from '@angular/cdk/datetime';
 import {Component, NgZone} from '@angular/core';
-import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, async, inject} from '@angular/core/testing';
 import {MatNativeDateModule} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {MatCalendar} from './calendar';
