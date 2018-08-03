@@ -25,6 +25,7 @@ export class CdkDatepickerOverviewExample {
     </div>
     <div>Date: {{selected}}</div>
   `,
+  providers: [{provide: CalendarView, useExisting: MyCalendar}],
 })
 export class MyCalendar<D> extends CalendarView<D> {
   dates: D[] = [];
