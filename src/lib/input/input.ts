@@ -58,7 +58,7 @@ export const _MatInputMixinBase = mixinErrorState(MatInputBase);
 
 /** Directive that allows a native input to work inside a `MatFormField`. */
 @Directive({
-  selector: `input[matInput], textarea[matInput]`,
+  selector: `input[matInput], textarea[matInput], select[matControl]`,
   exportAs: 'matInput',
   host: {
     /**
@@ -72,7 +72,6 @@ export const _MatInputMixinBase = mixinErrorState(MatInputBase);
     '[attr.placeholder]': 'placeholder',
     '[disabled]': 'disabled',
     '[required]': 'required',
-    '[readonly]': 'readonly',
     '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-invalid]': 'errorState',
     '[attr.aria-required]': 'required.toString()',
@@ -92,6 +91,9 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
 
   /** Whether the component is being rendered on the server. */
   _isServer = false;
+
+  /** Whether the component is a native html select. */
+  _isNativeSelect = false;
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -251,6 +253,7 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     }
 
     this._isServer = !this._platform.isBrowser;
+    this._isNativeSelect = this._elementRef.nativeElement.nodeName.toLowerCase() === 'select';
   }
 
   ngOnInit() {
@@ -356,7 +359,18 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  get shouldLabelFloat(): boolean { return this.focused || !this.empty; }
+  get shouldLabelFloat(): boolean {
+    if (this._isNativeSelect) {
+      // For multi select, float mat input label
+      // If single select has value or has a option label or html, float mat input label to avoid
+      // mat input label to overlap with the select content.
+      const selectElement  = this._elementRef.nativeElement;
+      return selectElement.multiple || !this.empty || selectElement.options[0].label
+          || this.focused;
+    } else {
+      return this.focused || !this.empty;
+    }
+  }
 
   /**
    * Implemented as part of MatFormFieldControl.
