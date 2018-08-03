@@ -1,1 +1,9 @@
-<cdk-datepicker><calendar (selectedChange)="_dateSelected()"></calendar></cdk-datepicker>
+<cdk-datepicker>
+  <my-calendar (selectedChange)="_dateSelected()"></my-calendar>
+</cdk-datepicker>
+
+<div>
+  <span *ngFor="let message of messages" class="example-container">
+    {{message}}
+  </span>
+</div>

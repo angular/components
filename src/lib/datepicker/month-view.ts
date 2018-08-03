@@ -50,6 +50,7 @@ const DAYS_PER_WEEK = 7;
   selector: 'mat-month-view',
   templateUrl: 'month-view.html',
   exportAs: 'matMonthView',
+  outputs: ['selectedChange'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
