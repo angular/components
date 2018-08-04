@@ -61,7 +61,7 @@ function finishInit(fixture: ComponentFixture<any>) {
 @Component({
   template: `
     <cdk-virtual-scroll-viewport
-        autosize [minBufferPx]="minBufferSize" [addBufferPx]="addBufferSize"
+        autosize [minBufferPx]="minBufferPx" [maxBufferPx]="maxBufferPx"
         [orientation]="orientation" [style.height.px]="viewportHeight"
         [style.width.px]="viewportWidth">
       <div class="item" *cdkVirtualFor="let size of items; let i = index" [style.height.px]="size"
@@ -88,8 +88,8 @@ class AutoSizeVirtualScroll {
   @Input() orientation = 'vertical';
   @Input() viewportSize = 200;
   @Input() viewportCrossSize = 100;
-  @Input() minBufferSize = 0;
-  @Input() addBufferSize = 0;
+  @Input() minBufferPx = 0;
+  @Input() maxBufferPx = 0;
   @Input() items = Array(10).fill(50);
 
   get viewportWidth() {
