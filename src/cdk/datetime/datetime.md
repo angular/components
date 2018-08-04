@@ -38,19 +38,43 @@ export class MyDateAdapter<D> extends DateAdapter<D> {...}
 ```
 
 ### `CdkDatepicker` Component
-The `CdkDatepicker` component provides a foundation upon which more concrete datepicker implementations can be built.
-The `CdkDatepicker` will be a generic datepicker with all of the necessary basic datepicker functionality needed for the
-definition of a datepicker. Users will be able to utilize the `CdkDatepicker` to custom create their own calendar. In
-this way, the users will be able to customize the datepicker to allow for more flexibility when using the datepicker
-component in applications.
+The `CdkDatepicker` component facilitates use of any datepicker structure for date and time-based components and
+provides a foundation which more concrete datepicker implementations can be built upon.
 
-#### Building a custom calendar on top of `CdkDatepicker`
- * Create a component that extends `CalendarView` and implement all abstract properties (min, max, selected, and active
- date).
+#### Usages of `CdkDatepicker`
+A `CdkDatepicker` deals with providing a uniform datepicker amongst different datepicker implementations. Whenever a
+directive needs to read datepicker information, the `CdkDatepicker` will provide the properties needed. Users will be
+able to flexibly utilize the `CdkDatepicker` to custom create their own datepicker or calendar.
+
+A `CdkDatepickerInput` deals with providing optional input to the datepicker to provide for different datepicker
+implementations. This includes:
+ * Minimum date
+ * Maximum date
+ * Date filter
+ * Disabled datepicker-input
+
+A `CdkDatepickerInput` is required with the `CdkDatepicker` to register these uniform datepicker properties with their
+associate implementation.
+
+#### Pre-made datepicker
+
+##### `MatDatepicker`
+A material datepicker is available from the npm package `@angular/lib/datepicker`.
+
+#### Building custom components on top of `CdkDatepicker`
+
+##### Datepicker and datepicker input for `CdkDatepicker`
+When implementing a custom datepicker on top of `CdkDatepicker, extend `CdkDatepicker` to use its uniform properties.
+When implementing a custom datepicker input on top of `CdkDatepickerInput`, extend `CdkDatepickerInput` to use its
+uniform properties.
+
+##### Calendar on top of `CdkDatepicker`
+ * Create a component that extends `CalendarView` and implement all abstract properties (`minDate`, `maxDate`,
+ `selected`, and `activeDate`).
  * Invoke `selectedChange` from the `CalendarView` when the date has changed.
- * Nest the newly created component within the `CdkDatepicker` selector in the HTML.
+ * Nest the newly created component within the `CdkDatepicker` selector as its `ContentChild`.
 
-#### Connecting custom calendar to `CdkDatepicker` example
+#### Custom calendar on top of `CdkDatepicker` example
 
 The user can create their own calendar extended from `CalendarView` with all of its abstract properties satisfied:
 
@@ -76,11 +100,9 @@ date has changed:
 selectedChange.emit(newDate);
 ```
 
-Finally, the user can use their newly-created `MyCalendar` component within the `CdkDatepicker`:
+Finally, the user can use their newly-created `MyCalendar` component:
 
 ```html
 <input [cdkDatepicker]="picker">
 <cdk-datepicker #picker><my-calendar (selectedChange)="..."></my-calendar></cdk-datepicker>
 ```
-
-This is just one example of how `CdkDatepicker` can be used.
