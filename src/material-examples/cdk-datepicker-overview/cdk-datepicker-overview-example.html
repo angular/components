@@ -1,4 +1,5 @@
-<cdk-datepicker>
+<input [cdkDatepicker]="picker">
+<cdk-datepicker #picker>
   <my-calendar (selectedChange)="_dateSelected()"></my-calendar>
 </cdk-datepicker>
 
