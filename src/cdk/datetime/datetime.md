@@ -79,7 +79,7 @@ selectedChange.emit(newDate);
 Finally, the user can use their newly-created `MyCalendar` component within the `CdkDatepicker`:
 
 ```html
-<input [cdkDatepicker="picker">
+<input [cdkDatepicker]="picker">
 <cdk-datepicker #picker><my-calendar (selectedChange)="..."></my-calendar></cdk-datepicker>
 ```
 
