@@ -31,10 +31,8 @@ An adapter for [Moment.js](https://momentjs.com), `MomentDateAdapter`, is availa
 The user can create a custom adapter by extending from `DateAdapter` and implementing all of its abstract properties:
 
 ```ts
-@Component({
-  ...
-})
-export class MyDateAdapter<D> extends DateAdapter<D> {...}
+@Injectable()
+export class MyDateAdapter extends DateAdapter<Date> {...}
 ```
 
 ### `CdkDatepicker` Component

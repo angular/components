@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Input, Component} from '@angular/core';
 import {CalendarView, DateAdapter} from '@angular/cdk/datetime';
 
 
@@ -8,8 +8,15 @@ import {CalendarView, DateAdapter} from '@angular/cdk/datetime';
   templateUrl: 'cdk-datepicker-overview-example.html',
   styleUrls: ['cdk-datepicker-overview-example.css'],
 })
-export class CdkDatepickerOverviewExample {
+export class CdkDatepickerOverviewExample<D> {
+  dates: D[] = [];
   messages: string[] = [];
+
+  constructor(private _dateAdapter: DateAdapter<D>) {
+    this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 5));
+    this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 10));
+    this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 15));
+  }
   _dateSelected() {
     this.messages.push('Date has changed. ');
   }
@@ -21,14 +28,14 @@ export class CdkDatepickerOverviewExample {
   outputs: ['selectedChange'],
   template: `
     <div *ngFor="let date of dates">
-      <button (click)="_selected(date)">{{date}}}</button>
+      <button (click)="_selected(date)">{{date}}</button>
     </div>
     <div>Date: {{selected}}</div>
   `,
   providers: [{provide: CalendarView, useExisting: MyCalendar}],
 })
 export class MyCalendar<D> extends CalendarView<D> {
-  dates: D[] = [];
+  @Input() dates: D[];
 
   activeDate: D;
   minDate = null;
@@ -38,9 +45,6 @@ export class MyCalendar<D> extends CalendarView<D> {
   constructor(private _dateAdapter: DateAdapter<D>) {
     super();
     this.activeDate = this._dateAdapter.today();
-    this.dates.push(this._dateAdapter.addCalendarDays(this.activeDate, 5));
-    this.dates.push(this._dateAdapter.addCalendarDays(this.activeDate, 10));
-    this.dates.push(this._dateAdapter.addCalendarDays(this.activeDate, 15));
   }
 
   _selected(date: D) {
