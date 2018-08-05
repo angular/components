@@ -13,7 +13,8 @@ import {
   Optional,
   ViewEncapsulation,
   OnDestroy,
-  ContentChild,
+  QueryList,
+  ContentChildren,
 } from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import {DateAdapter} from './date-adapter';
@@ -65,8 +66,8 @@ export class CdkDatepicker<D> implements OnDestroy {
   }
   private _disabled: boolean;
 
-  /** The calendar view displayed in this datepicker. */
-  @ContentChild(CalendarView) view: CalendarView<D>;
+  /** The calendar views displayed in this datepicker. */
+  @ContentChildren(CalendarView) views: QueryList<CalendarView<D>>;
 
   /** The id for the datepicker calendar. */
   @Input() id: string = `cdk-datepicker-${datepickerUid++}`;

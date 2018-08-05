@@ -48,7 +48,8 @@ import {createMissingDateImplError} from './datepicker-errors';
   exportAs: 'matYearView',
   outputs: ['selectedChange'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{provide: CalendarView, useExisting: MatYearView}],
 })
 export class MatYearView<D> extends CalendarView<D> implements AfterContentInit {
   /** The date to display in this year view (everything other than the year is ignored). */
