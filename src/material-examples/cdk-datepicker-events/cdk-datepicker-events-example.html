@@ -1,7 +1,0 @@
-<input [cdkDatepicker]="picker" placeholder="Input & change events"
-    (dateInput)="addEvent('input', $event)" (dateChange)="addEvent('change', $event)">
-<cdk-datepicker #picker></cdk-datepicker>
-
-<div class="example-events">
-  <div *ngFor="let e of events">{{e}}</div>
-</div>
