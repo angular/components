@@ -4,10 +4,11 @@ The `datetime` package offers building blocks for custom date and time-based com
 The CDK `DateAdapter` facilitates use of any date data structure for date and time-based components and gives a
 foundation for more concrete `DateAdapter` implementations.
 
-#### Usages of `DateAdapter`
-A `DateAdapter` provides a uniform way to deal with different date representations. Whenever a directive needs to read
-any date information, it gets that information from the `DateAdapter`. The adapter then reads the information using the
-appropriate API from the underlying date implementation.
+#### Using of `DateAdapter`
+A `DateAdapter` provides a uniform way to deal with different date representations. Directives that deal with dates use
+a `DateAdapter` to avoid coupling with any particular date representation model. Whenever the directive would access
+some information from a date model, it instead uses the corresponding adapter API. For example, if you want to display
+the year from a datepicker's current value, you would get that year from the adapter's `getYear` method.
 
 #### Pre-made adapters
 
@@ -32,7 +33,7 @@ The user can create a custom adapter by extending from `DateAdapter` and impleme
 
 ```ts
 @Injectable()
-export class MyDateAdapter extends DateAdapter<Date> {...}
+export class MyDateAdapter extends DateAdapter<MyCustomDateRepresentation> {...}
 ```
 
 ### `CdkDatepicker` Component
