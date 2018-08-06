@@ -81,7 +81,7 @@ export const STEP_STATE = {
 export const MAT_STEPPER_GLOBAL_OPTIONS =
   new InjectionToken<StepperOptions>('mat-stepper-global-options');
 
-/** Configurable options for floating labels. */
+/** Configurable options for stepper. */
 export interface StepperOptions {
   /**
    * Whether the stepper should display an error state or not.

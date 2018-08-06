@@ -3,12 +3,7 @@
 <h3>Linear Vertical Stepper Demo using a single form</h3>
 <form [formGroup]="formGroup">
   <mat-vertical-stepper #linearVerticalStepper="matVerticalStepper" formArrayName="formArray" [linear]="!isNonLinear">
-    <mat-step
-      formGroupName="0"
-      [stepControl]="formArray?.get([0])"
-      errorMessage="Some fields are required"
-      [completed]="true"
-    >
+    <mat-step formGroupName="0" [stepControl]="formArray?.get([0])">
       <ng-template matStepLabel>Fill out your name</ng-template>
       <mat-form-field>
         <mat-label>First name</mat-label>
@@ -26,13 +21,7 @@
       </div>
     </mat-step>
 
-    <mat-step
-      formGroupName="1"
-      [stepControl]="formArray?.get([1])"
-      optional
-      errorMessage="The input is invalid"
-      [showError]="true"
-    >
+    <mat-step formGroupName="1" [stepControl]="formArray?.get([1])" optional>
       <ng-template matStepLabel>
         <div>Fill out your email address</div>
       </ng-template>
@@ -109,7 +98,7 @@
 <h3>Vertical Stepper Demo</h3>
 <mat-checkbox [(ngModel)]="isNonEditable">Make steps non-editable</mat-checkbox>
 <mat-vertical-stepper>
-  <mat-step [editable]="!isNonEditable" [completed]="false">
+  <mat-step [editable]="!isNonEditable">
     <ng-template matStepLabel>Fill out your name</ng-template>
     <mat-form-field>
       <mat-label>First name</mat-label>
@@ -125,7 +114,7 @@
     </div>
   </mat-step>
 
-  <mat-step [editable]="!isNonEditable" [completed]="false">
+  <mat-step [editable]="!isNonEditable">
     <ng-template matStepLabel>
       <div>Fill out your phone number</div>
     </ng-template>
@@ -139,7 +128,7 @@
     </div>
   </mat-step>
 
-  <mat-step [editable]="!isNonEditable" [completed]="false">
+  <mat-step [editable]="!isNonEditable">
     <ng-template matStepLabel>
       <div>Fill out your address</div>
     </ng-template>
@@ -153,7 +142,7 @@
     </div>
   </mat-step>
 
-  <mat-step [editable]="!isNonEditable" [completed]="false">
+  <mat-step>
     <ng-template matStepLabel>Confirm your information</ng-template>
     Everything seems correct.
     <div>
@@ -234,64 +223,3 @@
   </mat-step>
 </mat-horizontal-stepper>
 
-<h3>Stepper with customized state</h3>
-<mat-horizontal-stepper [linear]="true">
-  <mat-step label="Step 1" state="shopping_cart">
-    <p>Go to your shopping cart.</p>
-    <div>
-      <button mat-button matStepperNext>Next</button>
-    </div>
-  </mat-step>
-  <mat-step label="Step 2" state="credit_card">
-    <p>Enter your credit card information.</p>
-    <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button matStepperNext>Next</button>
-    </div>
-  </mat-step>
-  <mat-step label="Step 3" state="receipt">
-    <p>Get your receipt.</p>
-    <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button matStepperNext>Next</button>
-    </div>
-  </mat-step>
-  <mat-step label="Step 4" state="print">
-    <p>Print your receipt.</p>
-    <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button matStepperNext>Next</button>
-    </div>
-  </mat-step>
-  <mat-step label="Step 5">
-    <p>You've successfully completed your purchase!</p>
-  </mat-step>
-</mat-horizontal-stepper>
-
-<h3>Stepper with customized state with icon overrides</h3>
-<mat-horizontal-stepper [linear]="true">
-  <mat-step label="Step 1" state="phone">
-    <p>Put down your phones.</p>
-    <div>
-      <button mat-button matStepperNext>Next</button>
-    </div>
-  </mat-step>
-  <mat-step label="Step 2" state="chat">
-    <p>Socialize with each other.</p>
-    <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button matStepperNext>Next</button>
-    </div>
-  </mat-step>
-  <mat-step label="Step 3">
-    <p>You're welcome.</p>
-  </mat-step>
-
-  <!-- Icon overrides. -->
-  <ng-template matStepperIcon="phone">
-    <mat-icon>call_end</mat-icon>
-  </ng-template>
-  <ng-template matStepperIcon="chat">
-    <mat-icon>forum</mat-icon>
-  </ng-template>
-</mat-horizontal-stepper>
