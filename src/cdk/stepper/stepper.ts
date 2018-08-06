@@ -31,6 +31,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
+  InjectionToken,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {AbstractControl} from '@angular/forms';
@@ -66,7 +67,7 @@ export class StepperSelectionEvent {
 }
 
 /** The state of each step. */
-export type StepState = 'number' | 'edit' | 'done' | 'error';
+export type StepState = 'number' | 'edit' | 'done' | 'error' | string;
 
 /** Enum to represent the different states of the steps. */
 export const STEP_STATE = {
@@ -75,6 +76,26 @@ export const STEP_STATE = {
   DONE: 'done',
   ERROR: 'error'
 };
+
+/** InjectionToken that can be used to specify the global stepper options. */
+export const MAT_STEPPER_GLOBAL_OPTIONS =
+  new InjectionToken<StepperOptions>('mat-stepper-global-options');
+
+/** Configurable options for floating labels. */
+export interface StepperOptions {
+  /**
+   * Whether the stepper should display an error state or not.
+   * Default behavior is assumed to be false.
+   */
+  showError?: boolean;
+
+  /**
+   * Whether the stepper should use the Material UI guidelines when
+   * displaying the icons or not.
+   * Default behavior is assumed to be false.
+   */
+  useGuidelines?: boolean;
+}
 
 @Component({
   moduleId: module.id,
@@ -85,6 +106,10 @@ export const STEP_STATE = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkStep implements OnChanges {
+  private _stepperOptions: StepperOptions;
+  _showError: boolean;
+  _useGuidelines: boolean;
+
   /** Template for step label if it exists. */
   @ContentChild(CdkStepLabel) stepLabel: CdkStepLabel;
 
@@ -112,6 +137,9 @@ export class CdkStep implements OnChanges {
    */
   @Input('aria-labelledby') ariaLabelledby: string;
 
+  /** State of the step. */
+  @Input() state: StepState;
+
   /** Whether the user can return to this step once it has been marked as complted. */
   @Input()
   get editable(): boolean { return this._editable; }
@@ -128,51 +156,42 @@ export class CdkStep implements OnChanges {
   }
   private _optional = false;
 
-  /** State of the step. */
-  @Input()
-  get state(): StepState | string | null { return this._state; }
-  set state(value: StepState | string | null) {
-    this._state = value;
-  }
-  private _state: StepState | string | null = null;
-
-  /** Whether to show the step is in an error state. */
-  @Input()
-  get showError(): boolean { return this._showError; }
-  set showError(value: boolean) {
-    this._showError = value;
-  }
-  private _showError: boolean = false;
-
   /** Whether step is marked as completed. */
   @Input()
   get completed(): boolean {
-    return this._customCompleted == null ? this._defaultCompleted() : this._customCompleted;
+    return this._customCompleted == null ? this._getDefaultCompleted() : this._customCompleted;
   }
   set completed(value: boolean) {
     this._customCompleted = coerceBooleanProperty(value);
   }
   private _customCompleted: boolean | null = null;
 
-  private _defaultCompleted() {
+  private _getDefaultCompleted() {
     return this.stepControl ? this.stepControl.valid && this.interacted : this.interacted;
   }
 
   /** Whether step has error. */
   @Input()
   get hasError(): boolean {
-    return this._customError == null ? this._getDefaultError : this._customError;
+    return this._customError || this._getDefaultError();
   }
   set hasError(value: boolean) {
     this._customError = coerceBooleanProperty(value);
   }
   private _customError: boolean | null = null;
 
-  private get _getDefaultError() {
+  private _getDefaultError() {
     return this.stepControl && this.stepControl.invalid;
   }
 
-  constructor(@Inject(forwardRef(() => CdkStepper)) private _stepper: CdkStepper) { }
+  constructor(
+    @Inject(forwardRef(() => CdkStepper)) private _stepper: CdkStepper,
+    @Optional() @Inject(MAT_STEPPER_GLOBAL_OPTIONS) stepperOptions: StepperOptions
+  ) {
+    this._stepperOptions = stepperOptions ? stepperOptions : {};
+    this._showError = !!this._stepperOptions.showError;
+    this._useGuidelines = !!this._stepperOptions.useGuidelines;
+  }
 
   /** Selects this step component. */
   select(): void {
@@ -349,20 +368,41 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   }
 
   /** Returns the type of icon to be displayed. */
-  _getIndicatorType(index: number, state: StepState | string | null = null): StepState | string {
+  _getIndicatorType(index: number, state: StepState = STEP_STATE.NUMBER): StepState {
     const step = this._steps.toArray()[index];
     const isCurrentStep = this._isCurrentStep(index);
 
-    if (step.showError && step.hasError && !isCurrentStep) {
+    if (step._useGuidelines) {
+      return this._getGuidelineLogic(step, isCurrentStep, state);
+    } else {
+      return this._getDefaultIndicatorLogic(step, isCurrentStep);
+    }
+  }
+
+  private _getDefaultIndicatorLogic(step: CdkStep, isCurrentStep: boolean): StepState {
+    if (step._showError && step.hasError && !isCurrentStep) {
+      return STEP_STATE.ERROR;
+    } else if (!step.completed || isCurrentStep) {
+      return STEP_STATE.NUMBER;
+    } else {
+      return step.editable ? STEP_STATE.EDIT : STEP_STATE.DONE;
+    }
+  }
+
+  private _getGuidelineLogic(
+    step: CdkStep,
+    isCurrentStep: boolean,
+    state: StepState = STEP_STATE.NUMBER): StepState {
+    if (step._showError && step.hasError && !isCurrentStep) {
       return STEP_STATE.ERROR;
     } else if (step.completed && !isCurrentStep) {
       return STEP_STATE.DONE;
     } else if (step.completed && isCurrentStep) {
-      return state || STEP_STATE.NUMBER;
+      return state;
     } else if (step.editable && isCurrentStep) {
       return STEP_STATE.EDIT;
     } else {
-      return state || STEP_STATE.NUMBER;
+      return state;
     }
   }
 
