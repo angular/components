@@ -331,10 +331,10 @@ describe('MatSelectionList without forms', () => {
       dispatchEvent(selectionList.nativeElement, event);
       fixture.detectChanges();
 
-      expect(listOptions.every(option => option.componentInstance.selected)).toBe(true);
+      expect(listOptions.filter(option => option.componentInstance.selected).length).toBe(3);
     });
 
-    it('should select all items using ctrl + a if some items are selected', () => {
+    it('should select all items using ctrl + a if some options are selected', () => {
       const event = createKeyboardEvent('keydown', A, selectionList.nativeElement);
       Object.defineProperty(event, 'ctrlKey', {get: () => true});
 
@@ -364,6 +364,23 @@ describe('MatSelectionList without forms', () => {
       expect(listOptions.every(option => option.componentInstance.selected)).toBe(false);
     });
 
+    it('should select only non-disabled options when using ctrl + a', () => {
+      const event = createKeyboardEvent('keydown', A, selectionList.nativeElement);
+      Object.defineProperty(event, 'ctrlKey', {get: () => true});
+
+      const selectList =
+          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+
+      expect(selectList.selected.length).toBe(0);
+      expect(listOptions[0].componentInstance.selected).toBe(false);
+
+      dispatchEvent(selectionList.nativeElement, event);
+      fixture.detectChanges();
+
+      expect(selectList.selected.length).toBe(3);
+      expect(listOptions[0].componentInstance.selected).toBe(false);
+    });
+
     it('should be able to jump focus down to an item by typing', fakeAsync(() => {
       const listEl = selectionList.nativeElement;
       const manager = selectionList.componentInstance._keyManager;
@@ -391,7 +408,7 @@ describe('MatSelectionList without forms', () => {
       list.selectAll();
       fixture.detectChanges();
 
-      expect(list.options.toArray().every(option => option.selected)).toBe(true);
+      expect(list.options.toArray().filter(option => option.selected).length).toBe(3);
     });
 
     it('should be able to deselect all options', () => {
@@ -623,6 +640,21 @@ describe('MatSelectionList without forms', () => {
       expect(selectList.selected.length).toBe(0);
 
       testListItem._handleClick();
+      fixture.detectChanges();
+
+      expect(selectList.selected.length).toBe(0);
+    });
+
+    it('should not allow select all using ctrl + a on disabled selection-list', () => {
+      const event = createKeyboardEvent('keydown', A, selectionList.nativeElement);
+      Object.defineProperty(event, 'ctrlKey', {get: () => true});
+
+      const selectList =
+          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+
+      expect(selectList.selected.length).toBe(0);
+
+      dispatchEvent(selectionList.nativeElement, event);
       fixture.detectChanges();
 
       expect(selectList.selected.length).toBe(0);

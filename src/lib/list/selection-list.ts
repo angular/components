@@ -423,7 +423,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
         event.preventDefault();
         break;
       case A:
-        if (event.ctrlKey) {
+        if (event.ctrlKey && !this.disabled) {
           this.options.find(option => !option.selected) ? this.selectAll() : this.deselectAll();
           event.preventDefault();
         }
@@ -519,7 +519,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
     let hasChanged = false;
 
     this.options.forEach(option => {
-      if (option._setSelected(isSelected)) {
+      if (!option.disabled && option._setSelected(isSelected)) {
         hasChanged = true;
       }
     });
