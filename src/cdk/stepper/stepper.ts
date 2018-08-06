@@ -392,7 +392,8 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   private _getGuidelineLogic(
     step: CdkStep,
     isCurrentStep: boolean,
-    state: StepState = STEP_STATE.NUMBER): StepState {
+    state: StepState = STEP_STATE.NUMBER
+  ): StepState {
     if (step._showError && step.hasError && !isCurrentStep) {
       return STEP_STATE.ERROR;
     } else if (step.completed && !isCurrentStep) {

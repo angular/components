@@ -7,7 +7,13 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {CdkStep, CdkStepper, StepContentPositionState, MAT_STEPPER_GLOBAL_OPTIONS, StepperOptions} from '@angular/cdk/stepper';
+import {
+  CdkStep,
+  CdkStepper,
+  StepContentPositionState,
+  MAT_STEPPER_GLOBAL_OPTIONS,
+  StepperOptions
+} from '@angular/cdk/stepper';
 import {AnimationEvent} from '@angular/animations';
 import {
   AfterContentInit,
