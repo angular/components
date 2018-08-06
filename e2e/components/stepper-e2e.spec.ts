@@ -18,12 +18,12 @@ describe('stepper', () => {
       const nextButton = element.all(by.buttonText('Next'));
 
       expect(await element(by.css('mat-step-header[aria-selected="true"]')).getText())
-          .toBe('create\nFill out your name');
+          .toBe('1\nFill out your name');
 
       nextButton.get(0).click();
 
       expect(await element(by.css('mat-step-header[aria-selected="true"]')).getText())
-          .toBe('create\nFill out your address');
+          .toBe('2\nFill out your address');
 
       await browser.wait(ExpectedConditions.not(
           ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))));
@@ -31,7 +31,7 @@ describe('stepper', () => {
       previousButton.get(0).click();
 
       expect(await element(by.css('mat-step-header[aria-selected="true"]')).getText())
-          .toBe('create\nFill out your name');
+          .toBe('1\nFill out your name');
 
       await browser.wait(ExpectedConditions.not(
           ExpectedConditions.presenceOf(element(by.css('div.mat-ripple-element')))));
@@ -73,7 +73,7 @@ describe('stepper', () => {
       nextButton.get(0).click();
 
       expect(await element(by.css('mat-step-header[aria-selected="true"]')).getText())
-          .toBe('create\nFill out your name');
+          .toBe('1\nFill out your name');
     });
   });
 });

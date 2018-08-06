@@ -9,7 +9,7 @@ import {
   SPACE,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {StepperOrientation, STEP_STATE} from '@angular/cdk/stepper';
+import {StepperOrientation} from '@angular/cdk/stepper';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {Component, DebugElement, EventEmitter, OnInit} from '@angular/core';
 import {async, ComponentFixture, fakeAsync, flush, inject, TestBed} from '@angular/core/testing';
@@ -292,62 +292,28 @@ describe('MatStepper', () => {
       expect(stepperComponent.selectedIndex).toBe(0);
     });
 
-    describe('with custom state', () => {
-      it('should set the custom icon when the step is completed and on selected step', () => {
-        let stepperComponent = fixture.debugElement
-          .query(By.directive(MatStepper)).componentInstance;
-        const firstStep = stepperComponent._steps.toArray()[0];
-
-        expect(stepperComponent._getIndicatorType(0, 'warning')).toBe(STEP_STATE.EDIT);
-
-        stepperComponent.selectedIndex = 0;
-        firstStep.completed = true;
-        fixture.detectChanges();
-
-        expect(stepperComponent._getIndicatorType(0, 'warning')).toBe('warning');
-      });
-    });
-
-    it('should set error icon if step has error', () => {
+    it('should set create icon if step is editable and completed', () => {
       let stepperComponent = fixture.debugElement.query(By.directive(MatStepper)).componentInstance;
       let nextButtonNativeEl = fixture.debugElement
           .queryAll(By.directive(MatStepperNext))[0].nativeElement;
-      const firstStep = stepperComponent._steps.toArray()[0];
-
-      expect(stepperComponent._getIndicatorType(0)).toBe(STEP_STATE.EDIT);
-
-      firstStep.hasError = true;
+      expect(stepperComponent._getIndicatorType(0)).toBe('number');
+      stepperComponent._steps.toArray()[0].editable = true;
       nextButtonNativeEl.click();
       fixture.detectChanges();
 
-      expect(stepperComponent._getIndicatorType(0)).toBe(STEP_STATE.ERROR);
+      expect(stepperComponent._getIndicatorType(0)).toBe('edit');
     });
 
-    it('should set done icon if step is completed', () => {
+    it('should set done icon if step is not editable and is completed', () => {
       let stepperComponent = fixture.debugElement.query(By.directive(MatStepper)).componentInstance;
       let nextButtonNativeEl = fixture.debugElement
           .queryAll(By.directive(MatStepperNext))[0].nativeElement;
-      const firstStep = stepperComponent._steps.toArray()[0];
-
-      expect(stepperComponent._getIndicatorType(0)).toBe(STEP_STATE.EDIT);
-
-      firstStep.completed = true;
+      expect(stepperComponent._getIndicatorType(0)).toBe('number');
+      stepperComponent._steps.toArray()[0].editable = false;
       nextButtonNativeEl.click();
       fixture.detectChanges();
 
-      expect(stepperComponent._getIndicatorType(0)).toBe(STEP_STATE.DONE);
-    });
-
-    it('should set number icon if step is completed and on selected step', () => {
-      let stepperComponent = fixture.debugElement.query(By.directive(MatStepper)).componentInstance;
-      const firstStep = stepperComponent._steps.toArray()[0];
-
-      expect(stepperComponent._getIndicatorType(0)).toBe(STEP_STATE.EDIT);
-
-      firstStep.completed = true;
-      fixture.detectChanges();
-
-      expect(stepperComponent._getIndicatorType(0)).toBe(STEP_STATE.NUMBER);
+      expect(stepperComponent._getIndicatorType(0)).toBe('done');
     });
 
     it('should re-render when the i18n labels change', inject([MatStepperIntl],
@@ -450,23 +416,12 @@ describe('MatStepper', () => {
       fixture.detectChanges();
     });
 
-    it('should override any icon', () => {
-      const stepperDebugElement = fixture.debugElement.query(By.directive(MatStepper));
-      const stepperComponent: MatStepper = stepperDebugElement.componentInstance;
-
-      stepperComponent._steps.toArray()[3].completed = true;
-      fixture.detectChanges();
-
-      const headers = stepperDebugElement.nativeElement.querySelectorAll('mat-step-header');
-
-      expect(headers[3].textContent).toContain('Custom warning');
-    });
-
     it('should allow for the `edit` icon to be overridden', () => {
       const stepperDebugElement = fixture.debugElement.query(By.directive(MatStepper));
       const stepperComponent: MatStepper = stepperDebugElement.componentInstance;
 
       stepperComponent._steps.toArray()[0].editable = true;
+      stepperComponent.next();
       fixture.detectChanges();
 
       const header = stepperDebugElement.nativeElement.querySelector('mat-step-header');
@@ -763,13 +718,12 @@ describe('MatStepper', () => {
 
         const stepper: MatHorizontalStepper = noStepControlFixture.debugElement
             .query(By.directive(MatHorizontalStepper)).componentInstance;
-        const firstStep = stepper._steps.toArray()[0];
+
         const headers = noStepControlFixture.debugElement
             .queryAll(By.css('.mat-horizontal-stepper-header'));
 
         expect(stepper.selectedIndex).toBe(0);
 
-        firstStep.completed = false;
         headers[1].nativeElement.click();
         noStepControlFixture.detectChanges();
 
@@ -786,16 +740,16 @@ describe('MatStepper', () => {
           controlAndBindingFixture.detectChanges();
 
           expect(controlAndBindingFixture.componentInstance.steps[0].control.valid).toBe(true);
+          expect(controlAndBindingFixture.componentInstance.steps[0].completed).toBe(false);
 
           const stepper: MatHorizontalStepper = controlAndBindingFixture.debugElement
               .query(By.directive(MatHorizontalStepper)).componentInstance;
-          const firstStep = stepper._steps.toArray()[0];
+
           const headers = controlAndBindingFixture.debugElement
               .queryAll(By.css('.mat-horizontal-stepper-header'));
 
           expect(stepper.selectedIndex).toBe(0);
 
-          firstStep.completed = false;
           headers[1].nativeElement.click();
           controlAndBindingFixture.detectChanges();
 
@@ -1202,16 +1156,16 @@ class SimplePreselectedMatHorizontalStepperApp {
     <mat-horizontal-stepper linear>
       <mat-step
         *ngFor="let step of steps"
-        [label]="step.label">
-      </mat-step>
+        [label]="step.label"
+        [completed]="step.completed"></mat-step>
     </mat-horizontal-stepper>
   `
 })
 class SimpleStepperWithoutStepControl {
   steps = [
-    {label: 'One'},
-    {label: 'Two'},
-    {label: 'Three'}
+    {label: 'One', completed: false},
+    {label: 'Two', completed: false},
+    {label: 'Three', completed: false}
   ];
 }
 
@@ -1221,16 +1175,16 @@ class SimpleStepperWithoutStepControl {
       <mat-step
         *ngFor="let step of steps"
         [label]="step.label"
-        [stepControl]="step.control">
-      </mat-step>
+        [stepControl]="step.control"
+        [completed]="step.completed"></mat-step>
     </mat-horizontal-stepper>
   `
 })
 class SimpleStepperWithStepControlAndCompletedBinding {
   steps = [
-    {label: 'One', control: new FormControl()},
-    {label: 'Two', control: new FormControl()},
-    {label: 'Three', control: new FormControl()}
+    {label: 'One', completed: false, control: new FormControl()},
+    {label: 'Two', completed: false, control: new FormControl()},
+    {label: 'Three', completed: false, control: new FormControl()}
   ];
 }
 
@@ -1242,12 +1196,10 @@ class SimpleStepperWithStepControlAndCompletedBinding {
       <ng-template matStepperIcon="number" let-index="index">
         {{getRomanNumeral(index + 1)}}
       </ng-template>
-      <ng-template matStepperIcon="warning">Custom warning</ng-template>
 
       <mat-step>Content 1</mat-step>
       <mat-step>Content 2</mat-step>
       <mat-step>Content 3</mat-step>
-      <mat-step state="warning">Content 4</mat-step>
     </mat-horizontal-stepper>
 `
 })
