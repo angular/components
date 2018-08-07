@@ -169,7 +169,7 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
     this._animationEndSubscription.unsubscribe();
   }
 
-  /** Callback function on animation end, emit animationEnd event on determinate and buffer mode. */
+  /** Emit an animationEnd event if in determinate or buffer mode. */
   private emitAnimationEnd(): void {
     if (this.mode === 'determinate' || this.mode === 'buffer') {
       this.animationEnd.next({value: this.value});
