@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {EventEmitter, OnDestroy, Output} from '@angular/core';
+import {EventEmitter, OnDestroy} from '@angular/core';
 
 /**
  * An abstract calendar that is used as part of the datepicker. This abstract calendar class
@@ -27,7 +27,7 @@ export abstract class CalendarView<D> implements OnDestroy {
   abstract selected: D | null;
 
   /** Emits when a new date is selected. */
-  @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
+  readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
 
   /** Destroys change detection. */
   ngOnDestroy() {
