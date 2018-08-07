@@ -14,6 +14,7 @@ import {
   ViewEncapsulation,
   OnDestroy,
   ContentChild,
+  AfterContentInit,
 } from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import {DateAdapter} from './date-adapter';
@@ -36,16 +37,28 @@ let datepickerUid = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class CdkDatepicker<D> implements OnDestroy {
+export class CdkDatepicker<D> implements OnDestroy, AfterContentInit {
   /** The initial date of the datepicker. */
   @Input()
   get startAt(): D | null {
     // If an explicit startAt is set we start there, otherwise we start at whatever the currently
     // selected value is.
-    return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
+    if (this._startAt) {
+      return this._startAt;
+    }
+    if (this._datepickerInput) {
+      if (this.view) {
+        this.view.activeDate = this._datepickerInput.value;
+      }
+      return this._datepickerInput.value;
+    }
+    return null;
   }
   set startAt(value: D | null) {
     this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    if (this.view) {
+      this.view.activeDate = this._startAt;
+    }
   }
   private _startAt: D | null;
 
@@ -73,7 +86,12 @@ export class CdkDatepicker<D> implements OnDestroy {
 
   /** The currently selected date. */
   get _selected(): D | null { return this._validSelected; }
-  set _selected(value: D | null) { this._validSelected = value; }
+  set _selected(value: D | null) {
+    this._validSelected = value;
+    if (this.view) {
+      this.view.selected = value;
+    }
+  }
   private _validSelected: D | null = null;
 
   /** The minimum selectable date. */
@@ -109,13 +127,21 @@ export class CdkDatepicker<D> implements OnDestroy {
     }
   }
 
+  ngAfterContentInit() {
+    if (this.view) {
+      this.view.selectedChange.subscribe((date: D) => {
+        this.select(date);
+      });
+    }
+  }
+
   ngOnDestroy() {
     this._inputSubscription.unsubscribe();
     this._disabledChange.complete();
   }
 
   /** Selects the given date */
-  _select(date: D): void {
+  select(date: D): void {
     let oldValue = this._selected;
     this._selected = date;
     if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
