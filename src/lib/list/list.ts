@@ -36,7 +36,7 @@ export const _MatListItemMixinBase = mixinDisableRipple(MatListItemBase);
   exportAs: 'matNavList',
   host: {
     'role': 'navigation',
-    'class': 'mat-nav-list'
+    'class': 'mat-nav-list mat-list-base'
   },
   templateUrl: 'list.html',
   styleUrls: ['list.css'],
@@ -51,7 +51,9 @@ export class MatNavList extends _MatListMixinBase implements CanDisableRipple {}
   selector: 'mat-list',
   exportAs: 'matList',
   templateUrl: 'list.html',
-  host: {'class': 'mat-list'},
+  host: {
+    'class': 'mat-list mat-list-base'
+  },
   styleUrls: ['list.css'],
   inputs: ['disableRipple'],
   encapsulation: ViewEncapsulation.None,
