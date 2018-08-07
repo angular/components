@@ -118,7 +118,7 @@ export class TreeNestedOverviewExample {
 
   constructor(database: FileDatabase) {
     this.nestedTreeControl = new NestedTreeControl<FileNode>(this._getChildren);
-    this.nestedDataSource = new MatTreeNestedDataSource();
+    this.nestedDataSource = new MatTreeNestedDataSource(this.nestedTreeControl);
 
     database.dataChange.subscribe(data => this.nestedDataSource.data = data);
   }

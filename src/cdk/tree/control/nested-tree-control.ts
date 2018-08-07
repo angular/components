@@ -7,6 +7,7 @@
  */
 import {Observable} from 'rxjs';
 import {take} from 'rxjs/operators';
+import {getTreeControlMissingDataNodesError} from '../tree-errors';
 import {BaseTreeControl} from './base-tree-control';
 
 /** Nested tree control. Able to expand/collapse a subtree recursively for NestedNode type. */
@@ -24,6 +25,10 @@ export class NestedTreeControl<T> extends BaseTreeControl<T> {
    * data nodes of the tree.
    */
   expandAll(): void {
+    if (!this.dataNodes) {
+      throw getTreeControlMissingDataNodesError();
+    }
+
     this.expansionModel.clear();
     const allNodes = this.dataNodes.reduce((accumulator, dataNode) =>
         [...accumulator, ...this.getDescendants(dataNode), dataNode], []);

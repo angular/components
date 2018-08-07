@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {getTreeControlMissingDataNodesError} from '../tree-errors';
 import {BaseTreeControl} from './base-tree-control';
 
 /** Flat tree control. Able to expand/collapse a subtree recursively for flattened tree. */
@@ -24,6 +25,10 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
    * with correct levels.
    */
   getDescendants(dataNode: T): T[] {
+    if (!this.dataNodes) {
+      throw getTreeControlMissingDataNodesError();
+    }
+
     const startIndex = this.dataNodes.indexOf(dataNode);
     const results: T[] = [];
 
@@ -48,6 +53,10 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
    * data nodes of the tree.
    */
   expandAll(): void {
+    if (!this.dataNodes) {
+      throw getTreeControlMissingDataNodesError();
+    }
+
     this.expansionModel.select(...this.dataNodes);
   }
 }

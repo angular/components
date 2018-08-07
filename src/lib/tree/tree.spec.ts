@@ -408,6 +408,33 @@ describe('MatTree', () => {
           [`topping_2 - cheese_2 + base_2`],
           [`topping_3 - cheese_3 + base_3`]);
       });
+
+      it('should be able to expand all nodes from tree control', () => {
+        const treeControl = component.treeControl;
+        const data = underlyingDataSource.data;
+
+        component.toggleRecursively = false;
+        fixture.detectChanges();
+
+        // Adds a child node to the first and second root node.
+        underlyingDataSource.addChild(data[0]);
+        underlyingDataSource.addChild(data[1]);
+
+        expectNestedTreeToMatch(treeElement,
+          [`topping_1 - cheese_1 + base_1`],
+          [`topping_2 - cheese_2 + base_2`],
+          [`topping_3 - cheese_3 + base_3`]);
+
+        treeControl.expandAll();
+        fixture.detectChanges();
+
+        expectNestedTreeToMatch(treeElement,
+          [`topping_1 - cheese_1 + base_1`],
+          [_, `topping_4 - cheese_4 + base_4`],
+          [`topping_2 - cheese_2 + base_2`],
+          [_, `topping_5 - cheese_5 + base_5`],
+          [`topping_3 - cheese_3 + base_3`]);
+      });
     });
   });
 });
@@ -655,7 +682,7 @@ class NestedMatTreeApp {
   `
 })
 class WhenNodeNestedMatTreeApp {
-  isSpecial = (_: number, node: TestData) =>  node.isSpecial;
+  isSpecial = (_: number, node: TestData) => node.isSpecial;
 
   getChildren = (node: TestData) => node.observableChildren;
 
@@ -732,7 +759,7 @@ class NestedMatTreeAppWithToggle {
   getChildren = (node: TestData) => node.observableChildren;
 
   treeControl = new NestedTreeControl(this.getChildren);
-  dataSource = new MatTreeNestedDataSource();
+  dataSource = new MatTreeNestedDataSource(this.treeControl);
   underlyingDataSource = new FakeDataSource();
 
   @ViewChild(MatTree) tree: MatTree<TestData>;

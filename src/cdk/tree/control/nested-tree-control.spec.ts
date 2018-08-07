@@ -1,4 +1,5 @@
 import {of as observableOf} from 'rxjs';
+import {getTreeControlMissingDataNodesError} from '../tree-errors';
 import {NestedTreeControl} from './nested-tree-control';
 
 
@@ -90,6 +91,14 @@ describe('CdkNestedTreeControl', () => {
         + numNodes * numChildren * numGrandChildren;
       expect(treeControl.expansionModel.selected.length)
         .toBe(totalNumber, `Expect ${totalNumber} expanded nodes`);
+    });
+
+    describe('with no data nodes', () => {
+
+      it('should throw if control tries to expand all nodes', () => {
+        expect(() => treeControl.expandAll())
+          .toThrowError(getTreeControlMissingDataNodesError().message);
+      });
     });
 
     describe('with children array', () => {

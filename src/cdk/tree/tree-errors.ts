@@ -45,3 +45,13 @@ export function getTreeControlMissingError() {
 export function getTreeControlFunctionsMissingError() {
   return Error(`Could not find functions for nested/flat tree in tree control.`);
 }
+
+/**
+ * Returns an error that should be thrown when the tree control tries to expand all nodes
+ * or determine descendants if no data nodes are being set.
+ * @docs-private
+ */
+export function getTreeControlMissingDataNodesError() {
+  return Error('Data nodes are not set in tree control. Cannot expand all nodes or get ' +
+    'descendants.');
+}

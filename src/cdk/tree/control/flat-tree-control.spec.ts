@@ -1,3 +1,4 @@
+import {getTreeControlMissingDataNodesError} from '../tree-errors';
 import {FlatTreeControl} from './flat-tree-control';
 
 describe('CdkFlatTreeControl', () => {
@@ -138,6 +139,21 @@ describe('CdkFlatTreeControl', () => {
           + numNodes * numChildren * numGrandChildren;
       expect(treeControl.expansionModel.selected.length)
         .toBe(totalNumber, `Expect ${totalNumber} expanded nodes`);
+    });
+  });
+
+  describe('with no data nodes', () => {
+
+    it('should throw if control tries to expand all nodes', () => {
+      expect(() => treeControl.expandAll())
+        .toThrowError(getTreeControlMissingDataNodesError().message);
+    });
+
+    it('should throw if tree control tries to find all descendants', () => {
+      const nodes = generateData(2, 2, 2);
+
+      expect(() => treeControl.getDescendants(nodes[0]))
+        .toThrowError(getTreeControlMissingDataNodesError().message);
     });
   });
 });
