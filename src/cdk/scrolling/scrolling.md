@@ -94,7 +94,7 @@ that it allows for better performance, since items do not need to be measured as
 </cdk-virtual-scroll-viewport>
 ```
 
-The fixed size strategy also supports setting a couple buffer parameters that determine how much
+The fixed size strategy also supports setting a couple of buffer parameters that determine how much
 extra content is rendered beyond what is visible in the viewport. The first of these parameters is
 `minBufferPx`. The `minBufferPx` is the minimum amount of content buffer (in pixels) that the
 viewport must render. If the viewport ever detects that there is less buffered content it will

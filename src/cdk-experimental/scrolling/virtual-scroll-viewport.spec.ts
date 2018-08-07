@@ -40,6 +40,12 @@ describe('CdkVirtualScrollViewport', () => {
           'should render 4 items to fill 200px space based on 50px estimate from first item');
     }));
 
+    it('should throw if maxBufferPx is less than minBufferPx', fakeAsync(() => {
+      testComponent.minBufferPx = 100;
+      testComponent.maxBufferPx = 99;
+      expect(() => finishInit(fixture)).toThrow();
+    }));
+
     // TODO(mmalerba): Add test that it corrects the initial render if it didn't render enough,
     // once it actually does that.
   });

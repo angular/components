@@ -67,6 +67,9 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    * @param maxBufferPx The amount of buffer (in pixels) to render when rendering more.
    */
   updateItemAndBufferSize(itemSize: number, minBufferPx: number, maxBufferPx: number) {
+    if (maxBufferPx < minBufferPx) {
+      throw Error('CDK virtual scroll: maxBufferPx must be greater than or equal to minBufferPx');
+    }
     this._itemSize = itemSize;
     this._minBufferPx = minBufferPx;
     this._maxBufferPx = maxBufferPx;
@@ -119,30 +122,31 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
 
     const scrollOffset = this._viewport.measureScrollOffset();
     const firstVisibleIndex = scrollOffset / this._itemSize;
-    const range = {...this._viewport.getRenderedRange()};
+    const renderedRange = this._viewport.getRenderedRange();
+    const newRange = {start: renderedRange.start, end: renderedRange.end};
+    const viewportSize = this._viewport.getViewportSize();
+    const dataLength = this._viewport.getDataLength();
 
-    const startBuffer = scrollOffset - range.start * this._itemSize;
-    if (startBuffer < this._minBufferPx && range.start != 0) {
+    const startBuffer = scrollOffset - newRange.start * this._itemSize;
+    if (startBuffer < this._minBufferPx && newRange.start != 0) {
       const expandStart = Math.ceil((this._maxBufferPx - startBuffer) / this._itemSize);
-      range.start = Math.max(0, range.start - expandStart);
-      range.end = Math.min(this._viewport.getDataLength(),
-          Math.ceil(firstVisibleIndex +
-              (this._viewport.getViewportSize() + this._minBufferPx) / this._itemSize));
+      newRange.start = Math.max(0, newRange.start - expandStart);
+      newRange.end = Math.min(dataLength,
+          Math.ceil(firstVisibleIndex + (viewportSize + this._minBufferPx) / this._itemSize));
     } else {
-      const endBuffer =
-          range.end * this._itemSize - (scrollOffset + this._viewport.getViewportSize());
-      if (endBuffer < this._minBufferPx && range.end != this._viewport.getDataLength()) {
+      const endBuffer = newRange.end * this._itemSize - (scrollOffset + viewportSize);
+      if (endBuffer < this._minBufferPx && newRange.end != dataLength) {
         const expandEnd = Math.ceil((this._maxBufferPx - endBuffer) / this._itemSize);
         if (expandEnd > 0) {
-          range.end = Math.min(this._viewport.getDataLength(), range.end + expandEnd);
-          range.start = Math.max(0,
+          newRange.end = Math.min(dataLength, newRange.end + expandEnd);
+          newRange.start = Math.max(0,
               Math.floor(firstVisibleIndex - this._minBufferPx / this._itemSize));
         }
       }
     }
 
-    this._viewport.setRenderedRange(range);
-    this._viewport.setRenderedContentOffset(this._itemSize * range.start);
+    this._viewport.setRenderedRange(newRange);
+    this._viewport.setRenderedContentOffset(this._itemSize * newRange.start);
     this._scrolledIndexChange.next(Math.floor(firstVisibleIndex));
   }
 }

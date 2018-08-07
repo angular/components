@@ -576,7 +576,13 @@ describe('CdkVirtualScrollViewport', () => {
       flush();
 
       expect(viewport.getRenderedRange())
-          .toEqual({start: 0, end: 8}, 'should not render 2 more buffer items');
+          .toEqual({start: 0, end: 8}, 'should render 2 more buffer items');
+    }));
+
+    it('should throw if maxBufferPx is less than minBufferPx', fakeAsync(() => {
+      testComponent.minBufferPx = 100;
+      testComponent.maxBufferPx = 99;
+      expect(() => finishInit(fixture)).toThrow();
     }));
   });
 });
