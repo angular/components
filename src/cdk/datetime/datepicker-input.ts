@@ -139,10 +139,8 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   set min(value: D | null) {
     this._min = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._validatorOnChange();
-    if (this._datepicker) {
-      if (this._datepicker.view) {
-        this._datepicker.view.minDate = this._min;
-      }
+    if (this._datepicker && this._datepicker.view) {
+      this._datepicker.view.minDate = this._min;
     }
   }
   private _min: D | null;
@@ -153,10 +151,8 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   set max(value: D | null) {
     this._max = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._validatorOnChange();
-    if (this._datepicker) {
-      if (this._datepicker.view) {
-        this._datepicker.view.maxDate = this._max;
-      }
+    if (this._datepicker && this._datepicker.view) {
+      this._datepicker.view.maxDate = this._max;
     }
   }
   private _max: D | null;
