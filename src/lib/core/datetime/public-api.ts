@@ -8,7 +8,7 @@
 
 /**
  * @deprecated Import from `src/cdk/datetime` instead.
- * @deletion-target 8.0.0
+ * @breaking-change 8.0.0
  */
 export {
   DateAdapter,

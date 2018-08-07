@@ -40,7 +40,7 @@ import {
 
 /**
  * @deprecated Removing export.
- * @deletion-target 8.0.0
+ * @breaking-change 8.0.0
  */
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -51,7 +51,7 @@ export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
 
 /**
  * @deprecated Removing export.
- * @deletion-target 8.0.0
+ * @breaking-change 8.0.0
  */
 export const MAT_DATEPICKER_VALIDATORS: any = {
   provide: NG_VALIDATORS,
@@ -62,7 +62,7 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
 
 /**
  * @deprecated Use `DatepickerInputEvent<D>` instead.
- * @deletion-target 8.0.0
+ * @breaking-change 8.0.0
  *
  * An event used for datepicker input and change events. We don't always have access to a native
  * input or change event because the event may have been triggered by the user clicking on the
@@ -128,18 +128,18 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
       @Optional() _dateAdapter: DateAdapter<D>,
       /**
        * @deprecated Removing `MAT_DATE_FORMATS`.
-       * @deletion-target 8.0.0
+       * @breaking-change 8.0.0
        */
       @Optional() @Inject(MAT_DATE_FORMATS) _matDateFormats: MatDateFormats,
       @Optional() private _formField: MatFormField,
-      /** @deletion-target 8.0.0 Make required. */
+      /** @breaking-change 8.0.0 Make required. */
       @Optional() @Inject(CDK_DATE_FORMATS) _cdkDateFormats?: CdkDateFormats) {
     super(_elementRef, _dateAdapter, _cdkDateFormats || _matDateFormats);
   }
 
   /**
    * @deprecated
-   * @breaking-change 7.0.0 Use `getConnectedOverlayOrigin` instead
+   * @breaking-change 7.0.0 Use `getConnectedOverlayOrigin` instead.
    */
   getPopupConnectionElementRef(): ElementRef {
     return this.getConnectedOverlayOrigin();
