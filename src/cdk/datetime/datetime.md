@@ -43,7 +43,7 @@ which more concrete datepicker implementations can be built upon. The `CdkDatepi
 between a custom calendar implementation and an input where the users can type dates. The `CdkDatepicker` can be used
 to create more concrete datepickers by supplying a calendar that you want the `CdkDatepicker` component to work with.
 
-#### Usages of `CdkDatepicker`
+#### Using a `CdkDatepicker`
 A `CdkDatepicker` deals with providing a uniform datepicker amongst different datepicker implementations. Whenever a
 directive needs to read datepicker information, the `CdkDatepicker` will provide the properties needed. Users will be
 able to flexibly utilize the `CdkDatepicker` to custom create their own datepicker or calendar.
@@ -63,9 +63,10 @@ A reference material datepicker implementation is available from the npm package
 
 #### Building a custom calendar that works with the `CdkDatepicker`
  * Create a component that extends `CalendarView` and implement all abstract properties:
-    * The minimum, maximum, and active dates are set by the datepicker and will update the calendar accordingly.
-    * The selected date can be set by the user. The selected date will emit on a stream when the date has changed, and
-    the datepicker will update accordingly.
+    * The minimum, maximum, selected, and active dates are initially set by the datepicker and will update the calendar
+    accordingly.
+    * The selected date can be set by the calendar. The selected date will emit on a stream when the date has changed,
+    and the datepicker will subscribe to this stream and update accordingly.
  * Emit on `selectedChange` from the `CalendarView` when the date has changed.
  * Provide the newly created component as the `CalendarView` injection token in the component decorator.
 

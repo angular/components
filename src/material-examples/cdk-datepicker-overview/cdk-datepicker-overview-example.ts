@@ -1,5 +1,5 @@
 import {Input, Component} from '@angular/core';
-import {CalendarView, DateAdapter} from '@angular/cdk/datetime';
+import {CalendarView, DateAdapter, CdkDatepicker} from '@angular/cdk/datetime';
 
 
 /** @title Basic CDK datepicker */
@@ -23,14 +23,22 @@ export class CdkDatepickerOverviewExample<D> {
 }
 
 
-@Component( {
+@Component({
+  selector: 'my-cdk-datepicker',
+  template: `
+    <div>Date: {{this._selected}}</div>
+  `
+})
+export class MyCdkDatepicker<D> extends CdkDatepicker<D> {}
+
+
+@Component({
   selector: 'my-calendar',
   outputs: ['selectedChange'],
   template: `
     <div *ngFor="let date of dates">
       <button (click)="_selected(date)">{{date}}</button>
     </div>
-    <div>Date: {{selected}}</div>
   `,
   providers: [{provide: CalendarView, useExisting: MyCalendar}],
 })
