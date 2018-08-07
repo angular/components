@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {DatepickerInputEvent} from '@angular/cdk/datetime';
+import {DatepickerInputEvent, CalendarView} from '@angular/cdk/datetime';
 
 /** @title CDK Datepicker input and change events */
 @Component({
@@ -13,4 +13,18 @@ export class CdkDatepickerEventsExample {
   addEvent(type: string, event: DatepickerInputEvent<Date>) {
     this.events.push(`${type}: ${event.value}`);
   }
+}
+
+
+@Component({
+  selector: 'my-events-calendar',
+  outputs: ['selectedChange'],
+  template: '',
+  providers: [{provide: CalendarView, useExisting: MyEventsCalendar}],
+})
+class MyEventsCalendar<Date> extends CalendarView<Date> {
+  activeDate = null;
+  minDate = null;
+  maxDate = null;
+  selected = null;
 }

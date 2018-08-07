@@ -1,5 +1,5 @@
 import {Component, Optional} from '@angular/core';
-import {DateAdapter, CdkDatepicker} from '@angular/cdk/datetime';
+import {DateAdapter, CdkDatepicker, CalendarView} from '@angular/cdk/datetime';
 
 /** @title CDK Disabled datepicker */
 @Component({
@@ -24,4 +24,18 @@ export class MyDisabledDatepicker<D> extends CdkDatepicker<D> {
     super(_dateAdapter);
     this.dateAdapter = this._dateAdapter;
   }
+}
+
+
+@Component({
+  selector: 'my-disabled-calendar',
+  outputs: ['selectedChange'],
+  template: '',
+  providers: [{provide: CalendarView, useExisting: MyDisabledCalendar}],
+})
+class MyDisabledCalendar<Date> extends CalendarView<Date> {
+  activeDate = null;
+  minDate = null;
+  maxDate = null;
+  selected = null;
 }
