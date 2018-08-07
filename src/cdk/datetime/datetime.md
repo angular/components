@@ -4,7 +4,7 @@ The `datetime` package offers building blocks for custom date and time-based com
 The CDK `DateAdapter` facilitates use of any date data structure for date and time-based components and gives a
 foundation for more concrete `DateAdapter` implementations.
 
-#### Using of `DateAdapter`
+#### Using a `DateAdapter`
 A `DateAdapter` provides a uniform way to deal with different date representations. Directives that deal with dates use
 a `DateAdapter` to avoid coupling with any particular date representation model. Whenever the directive would access
 some information from a date model, it instead uses the corresponding adapter API. For example, if you want to display
@@ -29,7 +29,8 @@ An adapter for [Moment.js](https://momentjs.com), `MomentDateAdapter`, is availa
 `@angular/material-moment-adapter`.
 
 #### Building a custom adapter
-The user can create a custom adapter by extending from `DateAdapter` and implementing all of its abstract properties:
+The user can create a custom adapter by extending from `DateAdapter` and implementing all of its abstract methods and
+properties:
 
 ```ts
 @Injectable()
@@ -37,41 +38,45 @@ export class MyDateAdapter extends DateAdapter<MyCustomDateRepresentation> {...}
 ```
 
 ### `CdkDatepicker` Component
-The `CdkDatepicker` component facilitates use of any datepicker structure for date and time-based components and
-provides a foundation which more concrete datepicker implementations can be built upon.
+The `CdkDatepicker` component facilitates use of any datepicker structure for date components and provides a foundation
+which more concrete datepicker implementations can be built upon. The `CdkDatepicker` abstracts out communication
+between a custom calendar implementation and an input where the users can type dates. The `CdkDatepicker` can be used
+to create more concrete datepickers by supplying a calendar that you want the `CdkDatepicker` component to work with.
 
 #### Usages of `CdkDatepicker`
 A `CdkDatepicker` deals with providing a uniform datepicker amongst different datepicker implementations. Whenever a
 directive needs to read datepicker information, the `CdkDatepicker` will provide the properties needed. Users will be
 able to flexibly utilize the `CdkDatepicker` to custom create their own datepicker or calendar.
 
-A `CdkDatepickerInput` deals with providing optional input to the datepicker to provide for different datepicker
-implementations. This includes:
- * Minimum date
- * Maximum date
- * Date filter
- * Disabled datepicker-input
+A `CdkDatepickerInput` is a directive that's used to decorate a native input so that it can work with a `CdkDatepicker`.
+The `CdkDatepickerInput` provides optional input to the datepicker to provide for different datepicker implementations:
+ * Minimum & maximum dates - The minimum and maximum dates can be set by the `CdkDatepickerInput` and will update the
+ calendar accordingly to clamp the dates of the datepicker.
+ * Date filter - Given a function set by the `CdkDatepickerInput`, the date filter will evaluate that function and
+ update the calendar accordingly to filter out dates of the datepicker.
+ * Disabled - This input provides the option to disable the `CdkDatepickerInput` directive from feeding inputs into the
+ datepicker.
 
-A `CdkDatepickerInput` is required with the `CdkDatepicker` to register these uniform datepicker properties with their
-associate implementation.
+Each `CdkDatepicker` must be associated with a `CdkDatepickerInput` to work properly.
 
-#### Pre-made datepicker
+A reference material datepicker implementation is available from the npm package `@angular/material/datepicker`.
 
-##### `MatDatepicker`
-A material datepicker is available from the npm package `@angular/lib/datepicker`.
+#### Building a custom calendar that works with the `CdkDatepicker`
+ * Create a component that extends `CalendarView` and implement all abstract properties:
+    * The minimum, maximum, and active dates are set by the datepicker and will update the calendar accordingly.
+    * The selected date can be set by the user. The selected date will emit on a stream when the date has changed, and
+    the datepicker will update accordingly.
+ * Emit on `selectedChange` from the `CalendarView` when the date has changed.
+ * Provide the newly created component as the `CalendarView` injection token in the component decorator.
 
-#### Building custom components on top of `CdkDatepicker`
+```ts
+@Component({
+  providers: [{provide: CalendarView, useExisting: MyCalendar}],
+  ...
+})
+```
 
-##### Datepicker and datepicker input for `CdkDatepicker`
-When implementing a custom datepicker on top of `CdkDatepicker, extend `CdkDatepicker` to use its uniform properties.
-When implementing a custom datepicker input on top of `CdkDatepickerInput`, extend `CdkDatepickerInput` to use its
-uniform properties.
-
-##### Calendar on top of `CdkDatepicker`
- * Create a component that extends `CalendarView` and implement all abstract properties (`minDate`, `maxDate`,
- `selected`, and `activeDate`).
- * Invoke `selectedChange` from the `CalendarView` when the date has changed.
- * Nest the newly created component within the `CdkDatepicker` selector as its `ContentChild`.
+ <!-- example(cdk-datepicker-overview) -->
 
 #### Custom calendar on top of `CdkDatepicker` example
 
@@ -79,6 +84,7 @@ The user can create their own calendar extended from `CalendarView` with all of 
 
 ```ts
 @Component({
+  providers: [{provide: CalendarView, useExisting: MyCalendar}],
   ...
 })
 export class MyCalendar<D> extends CalendarView<D> {
@@ -99,7 +105,7 @@ date has changed:
 selectedChange.emit(newDate);
 ```
 
-Finally, the user can use their newly-created `MyCalendar` component:
+Finally, the user can use their custom `MyCalendar` component:
 
 ```html
 <input [cdkDatepicker]="picker">
