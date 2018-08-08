@@ -34,8 +34,6 @@ describe('CdkDatepicker', () => {
       declarations: [MyCalendar, component],
     }).compileComponents();
 
-    TestBed.createComponent(MyCalendar);
-
     return TestBed.createComponent(component);
   }
 
@@ -61,7 +59,6 @@ describe('CdkDatepicker', () => {
 
       it('startAt should fallback to input value', () => {
         expect(testComponent.datepicker.startAt).toEqual(new Date(2020, JAN, 1));
-        expect(testComponent.datepicker.view.activeDate).toEqual(new Date(2020, JAN, 1));
       });
 
       it('should not throw when given wrong data type', () => {
