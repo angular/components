@@ -43,11 +43,10 @@ export class CdkDatepickerFormatsExample {
 
 @Component({
   selector: 'my-formats-calendar',
-  outputs: ['selectedChange'],
   template: '',
   providers: [{provide: CalendarView, useExisting: MyFormatsCalendar}],
 })
-class MyFormatsCalendar<Date> extends CalendarView<Date> {
+export class MyFormatsCalendar<Date> extends CalendarView<Date> {
   activeDate = null;
   minDate = null;
   maxDate = null;

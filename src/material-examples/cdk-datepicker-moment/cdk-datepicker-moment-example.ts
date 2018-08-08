@@ -34,11 +34,10 @@ export class CdkDatepickerMomentExample {
 
 @Component({
   selector: 'my-moment-calendar',
-  outputs: ['selectedChange'],
   template: '',
   providers: [{provide: CalendarView, useExisting: MyMomentCalendar}],
 })
-class MyMomentCalendar<Date> extends CalendarView<Date> {
+export class MyMomentCalendar<Date> extends CalendarView<Date> {
   activeDate = null;
   minDate = null;
   maxDate = null;

@@ -16,11 +16,10 @@ export class CdkDatepickerValueExample {
 
 @Component({
   selector: 'my-value-calendar',
-  outputs: ['selectedChange'],
   template: '',
   providers: [{provide: CalendarView, useExisting: MyValueCalendar}],
 })
-class MyValueCalendar<Date> extends CalendarView<Date> {
+export class MyValueCalendar<Date> extends CalendarView<Date> {
   activeDate = null;
   minDate = null;
   maxDate = null;
