@@ -36,6 +36,24 @@ export type _YAxis = _XOR<_Top, _Bottom>;
  */
 export type ExtendedScrollToOptions = _XAxis & _YAxis & ScrollOptions;
 
+export interface ExtendedScrollOptions extends ScrollOptions {
+  /** A distance relative to the right edge of the viewport. */
+  right?: number,
+  /**
+   * A distance relative to the start edge of the viewport (left in ltr languages, right in rtl
+   * languages).
+   */
+  start?: number,
+  /**
+   * A distance relative to the end edge of the viewport (right in ltr languages, left in rtl
+   * languages).
+   */
+  end?: number,
+  /** A distance relative to the bottom edge of the viewport. */
+  bottom?: number,
+}
+
+
 /**
  * Sends an event when the directive's element is scrolled. Registers itself with the
  * ScrollDispatcher service to include itself as part of its collection of scrolling events that it
@@ -187,4 +205,10 @@ export class CdkScrollable implements OnInit, OnDestroy {
       }
     }
   }
+
+  scrollTo(options: ExtendedScrollOptions): void {}
+
+  scrollBy(options: ExtendedScrollOptions): void {}
+
+  measureScrollOffset(from: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number {}
 }
