@@ -5,7 +5,7 @@ import {
   JUL,
   JUN,
 } from '@angular/cdk/testing';
-import {NativeDateModule} from '@angular/cdk/datetime';
+import {NativeDateModule, CalendarView} from '@angular/cdk/datetime';
 import {Component, FactoryProvider, Type, ValueProvider, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -31,7 +31,7 @@ describe('CdkDatepicker', () => {
         ...imports
       ],
       providers,
-      declarations: [component],
+      declarations: [MyCalendar, component],
     }).compileComponents();
 
     return TestBed.createComponent(component);
@@ -104,6 +104,7 @@ describe('CdkDatepicker', () => {
 
       it('explicit startAt should override input value', () => {
         expect(testComponent.datepicker.startAt).toEqual(new Date(2010, JAN, 1));
+        expect(testComponent.datepicker.view.activeDate).toEqual(new Date(2010, JAN, 1));
       });
     });
 
@@ -123,6 +124,7 @@ describe('CdkDatepicker', () => {
       it('should update datepicker when model changes', fakeAsync(() => {
         expect(testComponent.datepickerInput.value).toBeNull();
         expect(testComponent.datepicker._selected).toBeNull();
+        expect(testComponent.datepicker.view.selected).toBeNull();
 
         let selected = new Date(2017, JAN, 1);
         testComponent.selected = selected;
@@ -132,20 +134,23 @@ describe('CdkDatepicker', () => {
 
         expect(testComponent.datepickerInput.value).toEqual(selected);
         expect(testComponent.datepicker._selected).toEqual(selected);
+        expect(testComponent.datepicker.view.selected).toEqual(selected);
       }));
 
       it('should update model when date is selected', fakeAsync(() => {
         expect(testComponent.selected).toBeNull();
         expect(testComponent.datepickerInput.value).toBeNull();
+        expect(testComponent.datepicker.view.selected).toBeNull();
 
         let selected = new Date(2017, JAN, 1);
-        testComponent.datepicker._select(selected);
+        testComponent.datepicker.select(selected);
         fixture.detectChanges();
         flush();
         fixture.detectChanges();
 
         expect(testComponent.selected).toEqual(selected);
         expect(testComponent.datepickerInput.value).toEqual(selected);
+        expect(testComponent.datepicker.view.selected).toEqual(selected);
       }));
 
       it('should mark input dirty after input event', () => {
@@ -165,7 +170,7 @@ describe('CdkDatepicker', () => {
 
         expect(inputEl.classList).toContain('ng-pristine');
 
-        testComponent.datepicker._select(new Date(2017, JAN, 1));
+        testComponent.datepicker.select(new Date(2017, JAN, 1));
         fixture.detectChanges();
         flush();
         fixture.detectChanges();
@@ -220,7 +225,7 @@ describe('CdkDatepicker', () => {
 
         expect(inputEl.classList).toContain('ng-untouched');
 
-        testComponent.datepicker._select(new Date(2017, JAN, 1));
+        testComponent.datepicker.select(new Date(2017, JAN, 1));
         fixture.detectChanges();
         flush();
         fixture.detectChanges();
@@ -243,6 +248,7 @@ describe('CdkDatepicker', () => {
       it('should update datepicker when formControl changes', () => {
         expect(testComponent.datepickerInput.value).toBeNull();
         expect(testComponent.datepicker._selected).toBeNull();
+        expect(testComponent.datepicker.view.selected).toBeNull();
 
         let selected = new Date(2017, JAN, 1);
         testComponent.formControl.setValue(selected);
@@ -250,18 +256,21 @@ describe('CdkDatepicker', () => {
 
         expect(testComponent.datepickerInput.value).toEqual(selected);
         expect(testComponent.datepicker._selected).toEqual(selected);
+        expect(testComponent.datepicker.view.selected).toEqual(selected);
       });
 
       it('should update formControl when date is selected', () => {
         expect(testComponent.formControl.value).toBeNull();
         expect(testComponent.datepickerInput.value).toBeNull();
+        expect(testComponent.datepicker.view.selected).toBeNull();
 
         let selected = new Date(2017, JAN, 1);
-        testComponent.datepicker._select(selected);
+        testComponent.datepicker.select(selected);
         fixture.detectChanges();
 
         expect(testComponent.formControl.value).toEqual(selected);
         expect(testComponent.datepickerInput.value).toEqual(selected);
+        expect(testComponent.datepicker.view.selected).toEqual(selected);
       });
 
       it('should disable input when form control disabled', () => {
@@ -290,6 +299,8 @@ describe('CdkDatepicker', () => {
       it('should use min and max dates specified by the input', () => {
         expect(testComponent.datepicker._minDate).toEqual(new Date(2010, JAN, 1));
         expect(testComponent.datepicker._maxDate).toEqual(new Date(2020, JAN, 1));
+        expect(testComponent.datepicker.view.minDate).toEqual(new Date(2010, JAN, 1));
+        expect(testComponent.datepicker.view.maxDate).toEqual(new Date(2020, JAN, 1));
       });
 
       it('should mark invalid when value is before min', fakeAsync(() => {
@@ -456,6 +467,10 @@ describe('CdkDatepicker', () => {
         expect(testComponent.datepickerInput.value).toEqual(new Date(2017, JUN, 1));
         expect(testComponent.datepickerInput.min).toEqual(new Date(2017, JAN, 1));
         expect(testComponent.datepickerInput.max).toEqual(new Date(2017, DEC, 31));
+        expect(testComponent.datepicker.view.activeDate).toEqual(new Date(2017, JUL, 1));
+        expect(testComponent.datepicker.view.selected).toEqual(new Date(2017, JUN, 1));
+        expect(testComponent.datepicker.view.minDate).toEqual(new Date(2017, JAN, 1));
+        expect(testComponent.datepicker.view.maxDate).toEqual(new Date(2017, DEC, 31));
       }));
     });
   });
@@ -470,9 +485,26 @@ describe('CdkDatepicker', () => {
 
 
 @Component({
+    selector: 'my-calendar',
+    outputs: ['selectedChange'],
+    template: '',
+    providers: [{provide: CalendarView, useExisting: MyCalendar}],
+})
+class MyCalendar<Date> extends CalendarView<Date> {
+    activeDate = null;
+    minDate = null;
+    maxDate = null;
+    selected = null;
+    dateFilter = () => true;
+}
+
+
+@Component({
   template: `
     <input [cdkDatepicker]="d" [value]="date">
-    <cdk-datepicker #d [disabled]="disabled"></cdk-datepicker>
+    <cdk-datepicker #d [disabled]="disabled">
+      <my-calendar></my-calendar>
+    </cdk-datepicker>
   `,
 })
 class StandardDatepicker {
@@ -485,14 +517,17 @@ class StandardDatepicker {
 
 @Component({
   template: `
-    <input [cdkDatepicker]="d"><input [cdkDatepicker]="d"><cdk-datepicker #d></cdk-datepicker>
+    <input [cdkDatepicker]="d"><input [cdkDatepicker]="d">
+    <cdk-datepicker #d>
+      <my-calendar></my-calendar>
+    </cdk-datepicker>
   `,
 })
 class MultiInputDatepicker {}
 
 
 @Component({
-  template: `<cdk-datepicker #d></cdk-datepicker>`,
+  template: `<cdk-datepicker #d><my-calendar></my-calendar></cdk-datepicker>`,
 })
 class NoInputDatepicker {
   @ViewChild('d') datepicker: CdkDatepicker<Date>;
@@ -502,7 +537,9 @@ class NoInputDatepicker {
 @Component({
   template: `
     <input [cdkDatepicker]="d" [value]="date">
-    <cdk-datepicker #d [startAt]="startDate"></cdk-datepicker>
+    <cdk-datepicker #d [startAt]="startDate">
+      <my-calendar></my-calendar>
+    </cdk-datepicker>
   `,
 })
 class DatepickerWithStartAt {
@@ -515,7 +552,7 @@ class DatepickerWithStartAt {
 @Component({
   template: `
     <input [(ngModel)]="selected" [cdkDatepicker]="d">
-    <cdk-datepicker #d></cdk-datepicker>
+    <cdk-datepicker #d><my-calendar></my-calendar></cdk-datepicker>
   `,
 })
 class DatepickerWithNgModel {
@@ -528,7 +565,7 @@ class DatepickerWithNgModel {
 @Component({
   template: `
     <input [formControl]="formControl" [cdkDatepicker]="d">
-    <cdk-datepicker #d></cdk-datepicker>
+    <cdk-datepicker #d><my-calendar></my-calendar></cdk-datepicker>
   `,
 })
 class DatepickerWithFormControl {
@@ -541,7 +578,9 @@ class DatepickerWithFormControl {
 @Component({
   template: `
     <input [cdkDatepicker]="d" [(ngModel)]="date" [min]="minDate" [max]="maxDate">
-    <cdk-datepicker #d></cdk-datepicker>
+    <cdk-datepicker #d>
+      <my-calendar></my-calendar>
+    </cdk-datepicker>
   `,
 })
 class DatepickerWithMinAndMaxValidation {
@@ -555,7 +594,7 @@ class DatepickerWithMinAndMaxValidation {
 @Component({
   template: `
     <input [cdkDatepicker]="d" [(ngModel)]="date" [cdkDatepickerFilter]="filter">
-    <cdk-datepicker #d></cdk-datepicker>
+    <cdk-datepicker #d><my-calendar></my-calendar></cdk-datepicker>
   `,
 })
 class DatepickerWithFilterAndValidation {
@@ -569,7 +608,7 @@ class DatepickerWithFilterAndValidation {
   template: `
     <input [cdkDatepicker]="d" (change)="onChange()" (input)="onInput()"
         (dateChange)="onDateChange()" (dateInput)="onDateInput()">
-    <cdk-datepicker #d></cdk-datepicker>
+    <cdk-datepicker #d><my-calendar></my-calendar></cdk-datepicker>
   `
 })
 class DatepickerWithChangeAndInputEvents {
@@ -588,7 +627,7 @@ class DatepickerWithChangeAndInputEvents {
 @Component({
   template: `
     <input [cdkDatepicker]="d" [(ngModel)]="value" [min]="min" [max]="max">
-    <cdk-datepicker #d [startAt]="startAt"></cdk-datepicker>
+    <cdk-datepicker #d [startAt]="startAt"><my-calendar></my-calendar></cdk-datepicker>
   `
 })
 class DatepickerWithISOStrings {

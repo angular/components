@@ -51,7 +51,9 @@ export const yearsPerRow = 4;
   templateUrl: 'multi-year-view.html',
   exportAs: 'matMultiYearView',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{provide: CalendarView, useExisting: MatMultiYearView}],
+  outputs: ['selectedChange'],
 })
 export class MatMultiYearView<D> extends CalendarView<D> implements AfterContentInit {
   /** The date to display in this multi-year view (everything other than the year is ignored). */
@@ -96,9 +98,6 @@ export class MatMultiYearView<D> extends CalendarView<D> implements AfterContent
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
-
-  /** Emits when a new year is selected. */
-  @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** Emits the selected year. This doesn't imply a change on the selected date */
   @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();

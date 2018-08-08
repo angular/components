@@ -11,6 +11,7 @@ import {
   NOV,
   JUL,
 } from '@angular/cdk/testing';
+import {DateAdapter} from '@angular/cdk/datetime';
 import {Component, NgZone} from '@angular/core';
 import {ComponentFixture, TestBed, async, inject} from '@angular/core/testing';
 import {MatNativeDateModule} from '@angular/material/core';

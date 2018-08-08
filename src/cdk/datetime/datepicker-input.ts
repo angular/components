@@ -112,6 +112,9 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   @Input('cdkDatepickerFilter')
   set filter(value: (date: D | null) => boolean) {
     this._dateFilter = value;
+    if (this._datepicker) {
+      this._datepicker.dateFilter = this._dateFilter;
+    }
     this._validatorOnChange();
   }
   _dateFilter: (date: D | null) => boolean;
@@ -138,6 +141,9 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   get min(): D | null { return this._min; }
   set min(value: D | null) {
     this._min = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    if (this._datepicker) {
+      this._datepicker.minDate = this._min;
+    }
     this._validatorOnChange();
   }
   private _min: D | null;
@@ -147,6 +153,9 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   get max(): D | null { return this._max; }
   set max(value: D | null) {
     this._max = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    if (this._datepicker) {
+      this._datepicker.maxDate = this._max;
+    }
     this._validatorOnChange();
   }
   private _max: D | null;
