@@ -1,9 +1,9 @@
 <input [cdkDatepicker]="picker1" placeholder="Angular forms" [formControl]="date">
-<cdk-datepicker #picker1></cdk-datepicker>
+<cdk-datepicker #picker1><my-value-calendar></my-value-calendar></cdk-datepicker>
 
 <input [cdkDatepicker]="picker2" placeholder="Angular forms (w/ deserialization)"
     [formControl]="serializedDate">
-<cdk-datepicker #picker2></cdk-datepicker>
+<cdk-datepicker #picker2><my-value-calendar></my-value-calendar></cdk-datepicker>
 
 <input [cdkDatepicker]="picker3" placeholder="Value binding" [value]="date.value">
-<cdk-datepicker #picker3></cdk-datepicker>
+<cdk-datepicker #picker3><my-value-calendar></my-value-calendar></cdk-datepicker>

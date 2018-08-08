@@ -4,7 +4,7 @@ import {
   MomentDateAdapter,
   CDK_MOMENT_DATE_FORMATS,
 } from '@angular/material-moment-adapter';
-import {DateAdapter, CDK_DATE_FORMATS, CDK_DATE_LOCALE} from '@angular/cdk/datetime';
+import {DateAdapter, CDK_DATE_FORMATS, CDK_DATE_LOCALE, CalendarView} from '@angular/cdk/datetime';
 
 // Depending on whether rollup is used, moment needs to be imported differently.
 // Since Moment.js doesn't have a default export, we normally need to import using the `* as`
@@ -29,4 +29,18 @@ const moment = _rollupMoment || _moment;
 export class CdkDatepickerMomentExample {
   // CDK Datepicker takes `Moment` objects instead of `Date` objects.
   date = new FormControl(moment([2017, 0, 1]));
+}
+
+
+@Component({
+  selector: 'my-moment-calendar',
+  outputs: ['selectedChange'],
+  template: '',
+  providers: [{provide: CalendarView, useExisting: MyMomentCalendar}],
+})
+class MyMomentCalendar<Date> extends CalendarView<Date> {
+  activeDate = null;
+  minDate = null;
+  maxDate = null;
+  selected = null;
 }
