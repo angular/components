@@ -47,7 +47,9 @@ import {createMissingDateImplError} from './datepicker-errors';
   templateUrl: 'year-view.html',
   exportAs: 'matYearView',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{provide: CalendarView, useExisting: MatYearView}],
+  outputs: ['selectedChange'],
 })
 export class MatYearView<D> extends CalendarView<D> implements AfterContentInit {
   /** The date to display in this year view (everything other than the year is ignored). */
@@ -91,9 +93,6 @@ export class MatYearView<D> extends CalendarView<D> implements AfterContentInit 
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
-
-  /** Emits when a new month is selected. */
-  @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** Emits the selected month. This doesn't imply a change on the selected date */
   @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
