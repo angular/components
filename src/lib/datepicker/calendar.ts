@@ -170,6 +170,8 @@ export class MatCalendarHeader<D> {
   exportAs: 'matCalendar',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{provide: CalendarView, useExisting: MatCalendar}],
+  outputs: ['selectedChange'],
 })
 export class MatCalendar<D> extends CalendarView<D> implements AfterContentInit, AfterViewChecked,
     OnDestroy, OnChanges {

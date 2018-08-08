@@ -15,6 +15,7 @@ import {
   OnDestroy,
   QueryList,
   ContentChildren,
+  AfterContentInit,
 } from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import {DateAdapter} from './date-adapter';
@@ -37,7 +38,7 @@ let datepickerUid = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class CdkDatepicker<D> implements OnDestroy {
+export class CdkDatepicker<D> implements OnDestroy, AfterContentInit {
   /** The initial date of the datepicker. */
   @Input()
   get startAt(): D | null {
@@ -47,6 +48,11 @@ export class CdkDatepicker<D> implements OnDestroy {
   }
   set startAt(value: D | null) {
     this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    if (this.views) {
+      this.views.forEach(calendarInstance => {
+        calendarInstance.activeDate = this._startAt;
+      });
+    }
   }
   private _startAt: D | null;
 
@@ -73,18 +79,30 @@ export class CdkDatepicker<D> implements OnDestroy {
   @Input() id: string = `cdk-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
-  get _selected(): D | null { return this._validSelected; }
-  set _selected(value: D | null) { this._validSelected = value; }
-  private _validSelected: D | null = null;
+  _selected: D | null = null;
 
   /** The minimum selectable date. */
   get _minDate(): D | null {
     return this._datepickerInput && this._datepickerInput.min;
   }
+  set minDate(date: D | null) {
+    if (this.views) {
+      this.views.forEach(calendarInstance => {
+        calendarInstance.minDate = date;
+      });
+    }
+  }
 
   /** The maximum selectable date. */
   get _maxDate(): D | null {
     return this._datepickerInput && this._datepickerInput.max;
+  }
+  set maxDate(date: D | null) {
+    if (this.views) {
+      this.views.forEach(calendarInstance => {
+        calendarInstance.maxDate = date;
+      });
+    }
   }
 
   /** The filter function used to determine which dates are selectable. */
@@ -110,17 +128,46 @@ export class CdkDatepicker<D> implements OnDestroy {
     }
   }
 
+  ngAfterContentInit() {
+    if (this.views) {
+      this.views.forEach(calendarInstance => {
+        calendarInstance.selectedChange.subscribe( (date: D) => {
+          this._selectInInput(date);
+          this.views.forEach(instance => {
+            if (instance.selected != date) {
+              instance.selected = date;
+            }
+          });
+        });
+      });
+    }
+  }
+
   ngOnDestroy() {
     this._inputSubscription.unsubscribe();
     this._disabledChange.complete();
   }
 
-  /** Selects the given date */
+  /** Selects the given date. */
   select(date: D): void {
-    let oldValue = this._selected;
+    this._selectInInput(date);
+    this._selectInView(date);
     this._selected = date;
-    if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
+  }
+
+  /** Selects the given date from view in input. */
+  private _selectInInput(date: D): void {
+    if (!this._dateAdapter.sameDate(this._selected, date)) {
       this._selectedChanged.next(date);
+    }
+  }
+
+  /** Selects the given date from input in view. */
+  private _selectInView(value: D | null): void {
+    if (this.views) {
+      this.views.forEach(calendarInstance => {
+        calendarInstance.selected = value;
+      })
     }
   }
 
@@ -134,7 +181,10 @@ export class CdkDatepicker<D> implements OnDestroy {
     }
     this._datepickerInput = input;
     this._inputSubscription =
-        this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
+        this._datepickerInput._valueChange.subscribe((value: D | null) => {
+          this._selectInView(value);
+          this._selected = value;
+        });
   }
 
   /**
