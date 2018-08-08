@@ -464,6 +464,34 @@ describe('MatPaginator', () => {
     expect(paginator.showFirstLastButtons).toBe(true);
   });
 
+  it('should emit the `page` event when the pageIndex is changed', () => {
+    const fixture = createComponent(MatPaginatorApp);
+    fixture.componentInstance.paginator.pageIndex = 2;
+
+    expect(fixture.componentInstance.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
+      previousPageIndex: 0,
+      pageIndex: 2
+    }));
+  });
+
+  it('should emit the `page` event when the length is changed', () => {
+    const fixture = createComponent(MatPaginatorApp);
+    fixture.componentInstance.paginator.length = 1337;
+
+    expect(fixture.componentInstance.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
+      length: 1337
+    }));
+  });
+
+  it('should emit the `page` event when the pageSize is changed', () => {
+    const fixture = createComponent(MatPaginatorApp);
+    fixture.componentInstance.paginator.pageSize = 27;
+
+    expect(fixture.componentInstance.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
+      pageSize: 27
+    }));
+  });
+
 });
 
 function getPreviousButton(fixture: ComponentFixture<any>) {
