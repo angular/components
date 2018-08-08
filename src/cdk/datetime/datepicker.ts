@@ -102,6 +102,11 @@ export class CdkDatepicker<D> implements OnDestroy, AfterContentInit {
   get _dateFilter(): (date: D | null) => boolean {
     return this._datepickerInput && this._datepickerInput._dateFilter;
   }
+  set dateFilter(value: (date: D | null) => boolean) {
+    if (this.view) {
+      this.view.dateFilter = value;
+    }
+  }
 
   /** Subscription to value changes in the associated input element. */
   private _inputSubscription = Subscription.EMPTY;

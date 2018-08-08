@@ -26,6 +26,9 @@ export abstract class CalendarView<D> implements OnDestroy {
   /** The currently selected date. */
   abstract selected: D | null;
 
+  /** A function used to filter which dates are selectable. */
+  abstract dateFilter: (date: D) => boolean;
+
   /** Emits when a new date is selected. */
   readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
 
