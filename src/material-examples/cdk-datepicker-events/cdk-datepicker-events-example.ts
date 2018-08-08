@@ -18,11 +18,10 @@ export class CdkDatepickerEventsExample {
 
 @Component({
   selector: 'my-events-calendar',
-  outputs: ['selectedChange'],
   template: '',
   providers: [{provide: CalendarView, useExisting: MyEventsCalendar}],
 })
-class MyEventsCalendar<Date> extends CalendarView<Date> {
+export class MyEventsCalendar<Date> extends CalendarView<Date> {
   activeDate = null;
   minDate = null;
   maxDate = null;
