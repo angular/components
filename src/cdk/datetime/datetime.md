@@ -38,12 +38,10 @@ export class MyDateAdapter extends DateAdapter<MyCustomDateRepresentation> {...}
 ```
 
 ### `CdkDatepicker` Component
-The `CdkDatepicker` component facilitates use of any datepicker structure for date components and provides a foundation
-which more concrete datepicker implementations can be built upon. The `CdkDatepicker` abstracts out communication
-between a custom calendar implementation and an input where the users can type dates. The `CdkDatepicker` can be used
-to create more concrete datepickers by supplying a calendar that you want the `CdkDatepicker` component to work with.
+The `CdkDatepicker` lets you create a datepicker with a custom calendar. The `CdkDatepicker` abstracts out 
+communication between a custom calendar implementation and an input where the users can type dates.
 
-#### Using a `CdkDatepicker`
+#### Supported features for `CdkDatepicker`
 A `CdkDatepicker` deals with providing a uniform datepicker amongst different datepicker implementations. Whenever a
 directive needs to read datepicker information, the `CdkDatepicker` will provide the properties needed. Users will be
 able to flexibly utilize the `CdkDatepicker` to custom create their own datepicker or calendar.
@@ -80,7 +78,6 @@ A reference material datepicker implementation is available from the npm package
  <!-- example(cdk-datepicker-overview) -->
 
 #### Custom calendar on top of `CdkDatepicker` example
-
 The user can create their own calendar extended from `CalendarView` with all of its abstract properties satisfied:
 
 ```ts
