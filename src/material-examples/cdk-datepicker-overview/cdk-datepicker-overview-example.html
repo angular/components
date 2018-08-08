@@ -1,7 +1,7 @@
 <input [cdkDatepicker]="picker">
-<my-cdk-datepicker #picker>
+<cdk-datepicker #picker>
   <my-calendar [dates]="dates" (selectedChange)="_dateSelected()"></my-calendar>
-</my-cdk-datepicker>
+</cdk-datepicker>
 
 <div>
   <span *ngFor="let message of messages" class="example-container">
