@@ -50,7 +50,9 @@ export class CdkDatepicker<D> implements OnDestroy, AfterContentInit {
     this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     if (this.views) {
       this.views.forEach(calendarInstance => {
-        calendarInstance.activeDate = this._startAt;
+        if (calendarInstance) {
+          calendarInstance.activeDate = this._startAt;
+        }
       });
     }
   }
@@ -88,7 +90,9 @@ export class CdkDatepicker<D> implements OnDestroy, AfterContentInit {
   set minDate(date: D | null) {
     if (this.views) {
       this.views.forEach(calendarInstance => {
-        calendarInstance.minDate = date;
+        if (calendarInstance) {
+          calendarInstance.minDate = date;
+        }
       });
     }
   }
@@ -100,7 +104,9 @@ export class CdkDatepicker<D> implements OnDestroy, AfterContentInit {
   set maxDate(date: D | null) {
     if (this.views) {
       this.views.forEach(calendarInstance => {
-        calendarInstance.maxDate = date;
+        if (calendarInstance) {
+          calendarInstance.maxDate = date;
+        }
       });
     }
   }
@@ -108,6 +114,15 @@ export class CdkDatepicker<D> implements OnDestroy, AfterContentInit {
   /** The filter function used to determine which dates are selectable. */
   get _dateFilter(): (date: D | null) => boolean {
     return this._datepickerInput && this._datepickerInput._dateFilter;
+  }
+  set dateFilter(value: (date: D | null) => boolean) {
+    if (this.views) {
+      this.views.forEach(calendarInstance => {
+        if (calendarInstance) {
+          calendarInstance.dateFilter = value;
+        }
+      });
+    }
   }
 
   /** Subscription to value changes in the associated input element. */
@@ -131,14 +146,16 @@ export class CdkDatepicker<D> implements OnDestroy, AfterContentInit {
   ngAfterContentInit() {
     if (this.views) {
       this.views.forEach(calendarInstance => {
-        calendarInstance.selectedChange.subscribe( (date: D) => {
-          this._selectInInput(date);
-          this.views.forEach(instance => {
-            if (instance.selected != date) {
-              instance.selected = date;
-            }
+        if (calendarInstance) {
+          calendarInstance.selectedChange.subscribe((date: D) => {
+            this._selectInInput(date);
+            this.views.forEach(instance => {
+              if (instance && instance.selected != date) {
+                instance.selected = date;
+              }
+            });
           });
-        });
+        }
       });
     }
   }
@@ -166,8 +183,10 @@ export class CdkDatepicker<D> implements OnDestroy, AfterContentInit {
   private _selectInView(value: D | null): void {
     if (this.views) {
       this.views.forEach(calendarInstance => {
-        calendarInstance.selected = value;
-      })
+        if (calendarInstance) {
+          calendarInstance.selected = value;
+        }
+      });
     }
   }
 
