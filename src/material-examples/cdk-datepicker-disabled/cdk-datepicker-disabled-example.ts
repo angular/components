@@ -20,4 +20,5 @@ export class MyDisabledCalendar<Date> extends CalendarView<Date> {
   minDate = null;
   maxDate = null;
   selected = null;
+  dateFilter = () => true;
 }
