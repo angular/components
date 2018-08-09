@@ -44,7 +44,7 @@ export class MyDisabledCalendar<D> extends CalendarView<D> {
 
   constructor(private _dateAdapter: DateAdapter<D>) {
     super();
-    this.activeDate = this._dateAdapter.today();
+    this.activeDate = this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 5);
   }
 
   _selected(date: D) {
