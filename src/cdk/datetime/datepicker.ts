@@ -131,6 +131,8 @@ export class CdkDatepicker<D> implements OnDestroy, AfterContentInit {
       this.view.selectedChange.subscribe((date: D) => {
         this._selectInInput(date);
       });
+    } else {
+      throw Error('CdkDatepicker: No view found for CdkDatepicker.');
     }
   }
 
