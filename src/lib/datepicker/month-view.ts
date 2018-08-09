@@ -51,7 +51,9 @@ const DAYS_PER_WEEK = 7;
   templateUrl: 'month-view.html',
   exportAs: 'matMonthView',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{provide: CalendarView, useExisting: MatMonthView}],
+  outputs: ['selectedChange'],
 })
 export class MatMonthView<D> extends CalendarView<D> implements AfterContentInit {
   /**
