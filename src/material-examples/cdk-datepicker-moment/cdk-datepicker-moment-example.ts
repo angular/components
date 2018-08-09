@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {
   MomentDateAdapter,
@@ -26,21 +26,50 @@ const moment = _rollupMoment || _moment;
     {provide: CDK_DATE_FORMATS, useValue: CDK_MOMENT_DATE_FORMATS},
   ],
 })
-export class CdkDatepickerMomentExample {
+export class CdkDatepickerMomentExample<D> {
   // CDK Datepicker takes `Moment` objects instead of `Date` objects.
   date = new FormControl(moment([2017, 0, 1]));
+  dates: D[] = [];
+  messages: string[] = [];
+
+  constructor(private _dateAdapter: DateAdapter<D>) {
+    this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 5));
+    this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 10));
+    this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 15));
+  }
+  _dateSelected() {
+    this.messages.push('Date has changed. ');
+  }
 }
 
 
 @Component({
   selector: 'my-moment-calendar',
-  template: '',
+  outputs: ['selectedChange'],
+  template: `
+    <div *ngFor="let date of dates">
+      <button (click)="_selected(date)">{{date}}</button>
+    </div>
+    <div>Date: {{this.selected}}</div>
+  `,
   providers: [{provide: CalendarView, useExisting: MyMomentCalendar}],
 })
-export class MyMomentCalendar<Date> extends CalendarView<Date> {
-  activeDate = null;
+export class MyMomentCalendar<D> extends CalendarView<D> {
+  @Input() dates: D[];
+
+  activeDate: D;
   minDate = null;
   maxDate = null;
-  selected = null;
+  selected: D | null = null;
   dateFilter = () => true;
+
+  constructor(private _dateAdapter: DateAdapter<D>) {
+    super();
+    this.activeDate = this._dateAdapter.today();
+  }
+
+  _selected(date: D) {
+    this.selected = date;
+    this.selectedChange.emit(date);
+  }
 }
