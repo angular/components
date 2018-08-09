@@ -24,4 +24,5 @@ export class MyValueCalendar<Date> extends CalendarView<Date> {
   minDate = null;
   maxDate = null;
   selected = null;
+  dateFilter = () => true;
 }
