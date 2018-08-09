@@ -39,16 +39,17 @@ export const MY_CDK_FORMATS = {
     {provide: CDK_DATE_FORMATS, useValue: MY_CDK_FORMATS},
   ],
 })
-export class CdkDatepickerFormatsExample<D> {
+export class CdkDatepickerFormatsExample {
   date = new FormControl(moment());
-  dates: D[] = [];
+  dates: Date[] = [];
   messages: string[] = [];
 
-  constructor(private _dateAdapter: DateAdapter<D>) {
+  constructor(private _dateAdapter: DateAdapter<Date>) {
     this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 5));
     this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 10));
     this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 15));
   }
+
   _dateSelected() {
     this.messages.push('Date has changed. ');
   }
@@ -77,7 +78,7 @@ export class MyFormatsCalendar<D> extends CalendarView<D> {
 
   constructor(private _dateAdapter: DateAdapter<D>) {
     super();
-    this.activeDate = this._dateAdapter.today();
+    this.activeDate = this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 5);
   }
 
   _selected(date: D) {
