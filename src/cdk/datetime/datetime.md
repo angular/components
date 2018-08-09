@@ -51,9 +51,10 @@ marked with the `CdkDatepickerInput` directive.
 ```
 
 #### Building a custom calendar that works with the `CdkDatepicker`
- * Create a custom calendar component that extends `CalendarView`, implementing all abstract members:
-    * The minimum, maximum, selected, and active dates are initially set by the datepicker and
-    will update the calendar accordingly.
+ * Create a custom calendar component that extends `CalendarView`, implementing all abstract
+ members and methods:
+    * The minimum, maximum, selected, date filter, and active dates are initially set by the 
+    datepicker and will update the calendar accordingly.
     * The selected date can be set by the calendar. The selected date will emit on a stream when
     the date has changed, and the datepicker will subscribe to this stream and update accordingly.
     
@@ -63,6 +64,7 @@ marked with the `CdkDatepickerInput` directive.
    minDate = ...
    maxDate = ...
    selected = ...
+   dateFilter = ...
    
    constructor(dateAdapter: DateAdapter<D>) {
      super();

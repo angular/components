@@ -41,6 +41,7 @@ export class MyCalendar<D> extends CalendarView<D> {
   minDate = null;
   maxDate = null;
   selected: D | null = null;
+  dateFilter = () => true;
 
   constructor(private _dateAdapter: DateAdapter<D>) {
     super();

@@ -70,7 +70,7 @@ describe('CdkDatepicker', () => {
 
     describe('datepicker with too many inputs', () => {
       it('should throw when multiple inputs registered', fakeAsync(() => {
-        let fixture = createComponent(MultiInputDatepicker, [NativeDateModule]);
+        const fixture = createComponent(MultiInputDatepicker, [NativeDateModule]);
         expect(() => fixture.detectChanges()).toThrow();
       }));
     });
