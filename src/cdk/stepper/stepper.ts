@@ -170,7 +170,7 @@ export class CdkStep implements OnChanges {
     return this.stepControl ? this.stepControl.valid && this.interacted : this.interacted;
   }
 
-  /** Whether step has error. */
+  /** Whether step has an error. */
   @Input()
   get hasError(): boolean {
     return this._customError || this._getDefaultError();
@@ -186,8 +186,7 @@ export class CdkStep implements OnChanges {
 
   constructor(
     @Inject(forwardRef(() => CdkStepper)) private _stepper: CdkStepper,
-    @Optional() @Inject(MAT_STEPPER_GLOBAL_OPTIONS) stepperOptions: StepperOptions
-  ) {
+    @Optional() @Inject(MAT_STEPPER_GLOBAL_OPTIONS) stepperOptions: StepperOptions) {
     this._stepperOptions = stepperOptions ? stepperOptions : {};
     this._showError = !!this._stepperOptions.showError;
     this._useGuidelines = !!this._stepperOptions.useGuidelines;
@@ -392,8 +391,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   private _getGuidelineLogic(
     step: CdkStep,
     isCurrentStep: boolean,
-    state: StepState = STEP_STATE.NUMBER
-  ): StepState {
+    state: StepState = STEP_STATE.NUMBER): StepState {
     if (step._showError && step.hasError && !isCurrentStep) {
       return STEP_STATE.ERROR;
     } else if (step.completed && !isCurrentStep) {
