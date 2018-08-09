@@ -8,7 +8,6 @@
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
-  AfterContentInit,
   Directive,
   ElementRef,
   EventEmitter,
@@ -91,27 +90,35 @@ export class DatepickerInputEvent<D> {
   },
   exportAs: 'cdkDatepickerInput',
 })
-export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
-  Validator {
+export class CdkDatepickerInput<D> implements ControlValueAccessor, OnDestroy, Validator {
   /** The datepicker that this input is associated with. */
   @Input('cdkDatepicker')
   set datepicker(value: CdkDatepicker<D>) {
-    this._registerDatepicker(value);
+    if (!value) {
+      return;
+    }
+
+    this._datepicker = value;
+    this._datepicker._registerInput(this);
+    this._datepickerSubscription.unsubscribe();
+
+    this._datepickerSubscription = this._datepicker._selectedChanged.subscribe((selected: D) => {
+      this.value = selected;
+      this._controlValueAccessorOnChange(selected);
+      this._onTouched();
+      this.dateInput.emit(new DatepickerInputEvent(this, this._elementRef.nativeElement));
+      this.dateChange.emit(new DatepickerInputEvent(this, this._elementRef.nativeElement));
+    });
   }
   _datepicker: CdkDatepicker<D>;
-
-  /** Registering datepicker with this input. */
-  private _registerDatepicker(value: CdkDatepicker<D>) {
-    if (value) {
-      this._datepicker = value;
-      this._datepicker._registerInput(this);
-    }
-  }
 
   /** Function that can be used to filter out dates within the datepicker. */
   @Input('cdkDatepickerFilter')
   set filter(value: (date: D | null) => boolean) {
     this._dateFilter = value;
+    if (this._datepicker) {
+      this._datepicker.dateFilter = this._dateFilter;
+    }
     this._validatorOnChange();
   }
   _dateFilter: (date: D | null) => boolean;
@@ -138,6 +145,9 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   get min(): D | null { return this._min; }
   set min(value: D | null) {
     this._min = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    if (this._datepicker) {
+      this._datepicker.minDate = this._min;
+    }
     this._validatorOnChange();
   }
   private _min: D | null;
@@ -147,6 +157,9 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   get max(): D | null { return this._max; }
   set max(value: D | null) {
     this._max = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    if (this._datepicker) {
+      this._datepicker.maxDate = this._max;
+    }
     this._validatorOnChange();
   }
   private _max: D | null;
@@ -196,8 +209,11 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   /** Implemented as part of ControlValueAccessor. */
   private _validatorOnChange = () => {};
 
-  /** Implemented for datepicker CDK and locale subscriptions. */
-  private readonly _subscriptions = new Subscription();
+  /** Implemented for datepicker subscription. */
+  private _datepickerSubscription = Subscription.EMPTY;
+
+  /** Implemented for locale subscription. */
+  private _localeSubscription = Subscription.EMPTY;
 
   /** Prefix for form control validator properties. */
   protected _formControlValidatorPrefix = 'cdk';
@@ -254,25 +270,14 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
       throw Error('CdkDatepicker: No provider found for CDK_DATE_FORMATS.');
     }
     // Update the displayed date when the locale changes.
-    this._subscriptions.add(_dateAdapter.localeChanges.subscribe(() => {
+    this._localeSubscription = _dateAdapter.localeChanges.subscribe(() => {
       this.value = this.value;
-    }));
-  }
-
-  ngAfterContentInit() {
-    if (this._datepicker) {
-      this._subscriptions.add(this._datepicker._selectedChanged.subscribe((selected: D) => {
-        this.value = selected;
-        this._controlValueAccessorOnChange(selected);
-        this._onTouched();
-        this.dateInput.emit(new DatepickerInputEvent(this, this._elementRef.nativeElement));
-        this.dateChange.emit(new DatepickerInputEvent(this, this._elementRef.nativeElement));
-      }));
-    }
+    });
   }
 
   ngOnDestroy() {
-    this._subscriptions.unsubscribe();
+    this._datepickerSubscription.unsubscribe();
+    this._localeSubscription.unsubscribe();
     this._valueChange.complete();
     this._disabledChange.complete();
   }
