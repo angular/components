@@ -92,11 +92,6 @@ export class MyMinMaxCalendar<D> extends CalendarView<D> {
   dateFilter = () => true;
   validDate: string = "";
 
-  constructor(private _dateAdapter: DateAdapter<D>) {
-    super();
-    this.activeDate = this._dateAdapter.today();
-  }
-
   _selected(d: D) {
     if (this.minDate && this.maxDate) {
       if (this.minDate < d && d < this.maxDate) {
