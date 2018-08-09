@@ -13,6 +13,9 @@ export interface CdkDropContainer<T = any> {
   /** Arbitrary data to attach to all events emitted by this container. */
   data: T;
 
+  /** Unique ID for the drop zone. */
+  id: string;
+
   /** Direction in which the list is oriented. */
   orientation: 'horizontal' | 'vertical';
 
@@ -30,8 +33,10 @@ export interface CdkDropContainer<T = any> {
   /**
    * Emits an event to indicate that the user moved an item into the container.
    * @param item Item that was moved into the container.
+   * @param xOffset Position of the item along the X axis.
+   * @param yOffset Position of the item along the Y axis.
    */
-  enter(item: CdkDrag): void;
+  enter(item: CdkDrag, xOffset: number, yOffset: number): void;
 
   /**
    * Removes an item from the container after it was dragged into another container by the user.

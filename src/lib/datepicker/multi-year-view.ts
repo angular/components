@@ -50,9 +50,10 @@ export const yearsPerRow = 4;
   selector: 'mat-multi-year-view',
   templateUrl: 'multi-year-view.html',
   exportAs: 'matMultiYearView',
-  outputs: ['selectedChange'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{provide: CalendarView, useExisting: MatMultiYearView}],
+  outputs: ['selectedChange'],
 })
 export class MatMultiYearView<D> extends CalendarView<D> implements AfterContentInit {
   /** The date to display in this multi-year view (everything other than the year is ignored). */

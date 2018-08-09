@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {EventEmitter, OnDestroy, Output} from '@angular/core';
+import {OnDestroy, EventEmitter} from '@angular/core';
 
 /**
  * An abstract calendar that is used as part of the datepicker. This abstract calendar class
@@ -15,7 +15,7 @@ import {EventEmitter, OnDestroy, Output} from '@angular/core';
 export abstract class CalendarView<D> implements OnDestroy {
 
   /** The date representing when to start the calendar. */
-  abstract activeDate: D;
+  abstract activeDate: D | null;
 
   /** The minimum selectable date. */
   abstract minDate: D | null;
@@ -26,10 +26,12 @@ export abstract class CalendarView<D> implements OnDestroy {
   /** The currently selected date. */
   abstract selected: D | null;
 
-  /** Emits when a new date is selected. */
-  @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
+  /** A function used to filter which dates are selectable. */
+  abstract dateFilter: (date: D) => boolean;
 
-  /** Destroys change detection. */
+  /** Emits when a new date is selected. */
+  readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
+
   ngOnDestroy() {
     this.selectedChange.complete();
   }

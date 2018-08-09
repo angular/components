@@ -1,15 +1,15 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ENTER, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {
-  DEC,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
+  MockNgZone,
+  DEC,
   FEB,
   JAN,
-  JUL,
-  MockNgZone,
   NOV,
+  JUL,
 } from '@angular/cdk/testing';
 import {DateAdapter} from '@angular/cdk/datetime';
 import {Component, NgZone} from '@angular/core';

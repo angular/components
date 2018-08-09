@@ -8,7 +8,6 @@
 
 import {DOWN_ARROW} from '@angular/cdk/keycodes';
 import {
-  AfterContentInit,
   Directive,
   ElementRef,
   forwardRef,
@@ -105,8 +104,8 @@ export class MatDatepickerInputEvent<D> {
   },
   exportAs: 'matDatepickerInput',
 })
-export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements AfterContentInit,
-    ControlValueAccessor, OnDestroy, Validator {
+export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements ControlValueAccessor,
+    OnDestroy, Validator {
   /** Prefix for form control validator properties. */
   protected _formControlValidatorPrefix = 'mat';
 
@@ -154,7 +153,7 @@ export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements Afte
   }
 
   _onKeydown(event: KeyboardEvent) {
-    if (event.altKey && event.keyCode === DOWN_ARROW) {
+    if (this._datepicker && event.altKey && event.keyCode === DOWN_ARROW) {
       this._datepicker.open();
       event.preventDefault();
     }
