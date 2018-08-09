@@ -8,6 +8,7 @@
 
 /** Cached result of whether the user's browser supports passive event listeners. */
 let supportsPassiveEvents: boolean;
+let rtlScrollAxisType: 'normal' | 'negated' | 'inverted';
 
 /**
  * Checks whether the user's browser supports passive event listeners.
@@ -88,4 +89,46 @@ export function getSupportedInputTypes(): Set<string> {
   }));
 
   return supportedInputTypes;
+}
+
+/**
+ * Checks the type of RTL scroll axis used by this browser. The possible values are
+ * - normal: scrollLeft is 0 when scrolled all the way left and (scrollWidth - clientWidth) when
+ *     scrolled all the way right.
+ * - negated: scrollLeft is -(scrollWidth - clientWidth) when scrolled all the way left and 0 when
+ *     scrolled all the way right.
+ * - inverted: scrollLeft is (scrollWidth - clientWidth) when scrolled all the way left and 0 when
+ *     scrolled all the way right.
+ */
+export function getRtlScrollAxisType(): 'normal' | 'negated' | 'inverted' {
+  // We can't check unless we're on the browser. Just assume 'normal' if we're not.
+  if (typeof document !== 'object' || !document) {
+    return 'normal';
+  }
+
+  if (!rtlScrollAxisType) {
+    const viewport = document.createElement('div');
+    viewport.dir = 'rtl';
+    viewport.style.height = '1px';
+    viewport.style.width = '1px';
+    viewport.style.overflow = 'auto';
+    viewport.style.visibility = 'hidden';
+    viewport.style.pointerEvents = 'none';
+    viewport.style.position = 'absolute';
+
+    const content = document.createElement('div');
+    content.style.width = '2px';
+    content.style.height = '1px';
+
+    viewport.appendChild(content);
+    document.body.appendChild(viewport);
+
+    rtlScrollAxisType = 'normal';
+    if (viewport.scrollLeft == 0) {
+      viewport.scrollLeft = 1;
+      rtlScrollAxisType = viewport.scrollLeft == 0 ? 'negated' : 'inverted';
+    }
+    document.body.removeChild(viewport);
+  }
+  return rtlScrollAxisType;
 }
