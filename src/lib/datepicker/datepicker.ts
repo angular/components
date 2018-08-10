@@ -36,6 +36,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
   OnDestroy,
+  TemplateRef,
 } from '@angular/core';
 import {CanColor, mixinColor, ThemePalette} from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
@@ -78,7 +79,7 @@ export const _MatDatepickerContentMixinBase = mixinColor(MatDatepickerContentBas
 @Component({
   moduleId: module.id,
   selector: 'mat-datepicker-content',
-  templateUrl: 'datepicker-content.html',
+  template: '<ng-container [ngTemplateOutlet]="content"></ng-container>',
   styleUrls: ['datepicker-content.css'],
   host: {
     'class': 'mat-datepicker-content',
@@ -100,6 +101,8 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   /** Reference to the internal calendar component. */
   @ViewChild(MatCalendar) _calendar: MatCalendar<D>;
 
+  content: TemplateRef<MatDatepickerContent<D>>;
+
   /** Reference to the datepicker that created the overlay. */
   datepicker: MatDatepicker<D>;
 
@@ -115,7 +118,6 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   }
 }
 
-
 // TODO(mmalerba): We use a component instead of a directive here so the user can use implicit
 // template reference variables (e.g. #d vs #d="matDatepicker"). We can change this to a directive
 // if angular adds support for `exportAs: '$implicit'` on directives.
@@ -123,7 +125,7 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
 @Component({
   moduleId: module.id,
   selector: 'mat-datepicker',
-  template: '',
+  template: '<ng-template><mat-calendar cdkTrapFocus></mat-calendar></ng-template>',
   exportAs: 'matDatepicker',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -185,6 +187,8 @@ export class MatDatepicker<D> extends CdkDatepicker<D> implements OnDestroy, Can
   get opened(): boolean { return this._opened; }
   set opened(value: boolean) { value ? this.open() : this.close(); }
   private _opened = false;
+
+  @ViewChild(MatCalendar) calTemplate: MatCalendar<D>;
 
   /** A reference to the overlay when the calendar is opened as a popup. */
   _popupRef: OverlayRef;
@@ -301,6 +305,7 @@ export class MatDatepicker<D> extends CdkDatepicker<D> implements OnDestroy, Can
 
     this._dialogRef.afterClosed().subscribe(() => this.close());
     this._dialogRef.componentInstance.datepicker = this;
+    this._dialogRef.componentInstance._calendar = this.calTemplate;
     this._setColor();
   }
 

@@ -481,6 +481,13 @@ describe('CdkDatepicker', () => {
           .toThrowError(/CdkDatepicker: No provider found for .*/);
     });
   });
+
+  describe('with missing view', () => {
+    it('should throw after content init', () => {
+      expect(() => createComponent(DatepickerWithNoView))
+          .toThrowError(/CdkDatepicker: No view found for .*/);
+    })
+  })
 });
 
 
@@ -635,6 +642,18 @@ class DatepickerWithISOStrings {
   min = new Date(2017, JAN, 1).toISOString();
   max = new Date (2017, DEC, 31).toISOString();
   startAt = new Date(2017, JUL, 1).toISOString();
+  @ViewChild('d') datepicker: CdkDatepicker<Date>;
+  @ViewChild(CdkDatepickerInput) datepickerInput: CdkDatepickerInput<Date>;
+}
+
+
+@Component({
+  template: `
+    <input [cdkDatepicker]="d">
+    <cdk-datepicker #d></cdk-datepicker>
+  `
+})
+class DatepickerWithNoView {
   @ViewChild('d') datepicker: CdkDatepicker<Date>;
   @ViewChild(CdkDatepickerInput) datepickerInput: CdkDatepickerInput<Date>;
 }
