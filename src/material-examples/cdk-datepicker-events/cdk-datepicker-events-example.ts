@@ -1,31 +1,30 @@
-import {Input, Component} from '@angular/core';
-import {CalendarView, DateAdapter} from '@angular/cdk/datetime';
+import {Component, Input} from '@angular/core';
+import {DatepickerInputEvent, CalendarView, DateAdapter} from '@angular/cdk/datetime';
 
-
-/** @title Basic CDK datepicker */
+/** @title CDK Datepicker input and change events */
 @Component({
-  selector: 'cdk-datepicker-overview-example',
-  templateUrl: 'cdk-datepicker-overview-example.html',
-  styleUrls: ['cdk-datepicker-overview-example.css'],
+  selector: 'cdk-datepicker-events-example',
+  templateUrl: 'cdk-datepicker-events-example.html',
+  styleUrls: ['cdk-datepicker-events-example.css'],
 })
-export class CdkDatepickerOverviewExample<D> {
-  dates: D[] = [];
-  disabled: boolean = false;
+export class CdkDatepickerEventsExample {
+  events: string[] = [];
+  dates: Date[] = [];
 
-  constructor(private _dateAdapter: DateAdapter<D>) {
+  addEvent(type: string, event: DatepickerInputEvent<Date>) {
+    this.events.push(`${type}: ${event.value}`);
+  }
+
+  constructor(private _dateAdapter: DateAdapter<Date>) {
     this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 5));
     this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 10));
     this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 15));
-  }
-
-  _setDisabled(disabled: boolean) {
-    this.disabled = !disabled;
   }
 }
 
 
 @Component({
-  selector: 'my-calendar',
+  selector: 'my-events-calendar',
   outputs: ['selectedChange'],
   styles: [`
     .calendar {
@@ -39,21 +38,20 @@ export class CdkDatepickerOverviewExample<D> {
       padding: 10px;
     }
   `],
-  template: `      
+  template: `
     <div class="calendar">
       <div>Date: {{selected}}</div>
       <br>
       <div>Choose an appointment date:</div>
       <div *ngFor="let date of dates">
-        <button [disabled]="disabled" (click)="_selected(date)">{{date}}</button>
+        <button (click)="_selected(date)">{{date}}</button>
       </div>
     </div>
   `,
-  providers: [{provide: CalendarView, useExisting: MyCalendar}],
+  providers: [{provide: CalendarView, useExisting: MyEventsCalendar}],
 })
-export class MyCalendar<D> extends CalendarView<D> {
+export class MyEventsCalendar<D> extends CalendarView<D> {
   @Input() dates: D[];
-  @Input() disabled: boolean;
 
   activeDate: D | null = null;
   minDate = null;
