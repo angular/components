@@ -35,29 +35,25 @@ export class CdkDatepickerRestrictingAvailableDatesExample {
   selector: 'my-filter-calendar',
   outputs: ['selectedChange'],
   template: `
+    <div>Date: {{selected}}</div>
     <div *ngFor="let date of dates">
-      <button [disabled]="!myFilter(date)">{{date}}</button>
+      <button (click)="_dateSelected(date)" [disabled]="!dateFilter(date)">{{date}}</button>
     </div>
   `,
   providers: [{provide: CalendarView, useExisting: MyFilterCalendar}],
 })
-export class MyFilterCalendar extends CalendarView<Date> {
+export class MyFilterCalendar<D> extends CalendarView<D> {
   @Input() dates: Date[];
 
   activeDate = null;
   minDate = null;
   maxDate = null;
-  selected = null;
-  dateFilter = () => true;
+  selected: D;
+  dateFilter: (date: D) => boolean;
 
-  myFilter(d: Date): boolean {
-    if (d) {
-      const day = d.getDay();
-      // Prevent Saturday and Sunday from being selected.
-      return day !== 0 && day !== 6;
-    } else {
-      return true;
-    }
+  _dateSelected(date: D) {
+    this.selected = date;
+    this.selectedChange.emit(date);
   }
 }
 
@@ -87,39 +83,6 @@ export class MyMinMaxCalendar<D> extends CalendarView<D> {
       return !(this.minDate < d && d < this.maxDate);
     }
     return false;
-  }
-
-  _selected(d: D) {
-    this.selected = d;
-    this.selectedChange.emit(d);
-  }
-}
-
-
-@Component({
-  selector: 'my-start-date-calendar',
-  outputs: ['selectedChange'],
-  template: `
-    <div>Date: {{selected}}</div>
-    <div *ngFor="let date of dates">
-      <div *ngIf="_isFocused(date)">*Start at date below*</div>
-      <button (click)="_selected(date)">{{date}}</button>
-    </div>
-  `,
-  providers: [{provide: CalendarView, useExisting: MyStartDateCalendar}],
-})
-export class MyStartDateCalendar<D> extends CalendarView<D> {
-  @Input() dates: Date[];
-
-  activeDate: D | null;
-  minDate: D | null = null;
-  maxDate: D | null = null;
-  selected: D | null = null;
-  dateFilter = () => true;
-  active: Date = new Date(2018, 8, 9);
-
-  _isFocused(d: Date) {
-    return d.getMonth() == this.active.getMonth() && d.getDay() == this.active.getDay();
   }
 
   _selected(d: D) {

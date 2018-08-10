@@ -7,10 +7,3 @@
   <input [min]="minDate" [max]="maxDate" [cdkDatepicker]="picker2" placeholder="Choose a date">
   <cdk-datepicker #picker2><my-min-max-calendar [dates]="dates"></my-min-max-calendar></cdk-datepicker>
 </div>
-<br>
-<div>Start At Validation
-  <input [cdkDatepicker]="picker3" placeholder="Choose a date">
-  <cdk-datepicker #picker3 [startAt]="startDate">
-    <my-start-date-calendar [dates]="dates"></my-start-date-calendar>
-  </cdk-datepicker>
-</div>
