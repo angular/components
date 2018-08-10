@@ -3,23 +3,24 @@ import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-function checkIntersecting(r1: {top: number, left: number, bottom: number, right: number},
-                           r2: {top: number, left: number, bottom: number, right: number},
-                           expected = true) {
+function expectOverlapping(el1: ElementRef<Element>, el2: ElementRef<Element>, expected = true) {
+  const r1 = el1.nativeElement.getBoundingClientRect();
+  const r2 = el2.nativeElement.getBoundingClientRect();
   const actual =
       r1.left < r2.right && r1.right > r2.left && r1.top < r2.bottom && r1.bottom > r2.top;
   if (expected) {
     expect(actual)
-        .toBe(expected, `${JSON.stringify(r1)} should intersect with ${JSON.stringify(r2)}`);
+        .toBe(expected, `${JSON.stringify(r1)} should overlap with ${JSON.stringify(r2)}`);
   } else {
     expect(actual)
-        .toBe(expected, `${JSON.stringify(r1)} should not intersect with ${JSON.stringify(r2)}`);
+        .toBe(expected, `${JSON.stringify(r1)} should not overlap with ${JSON.stringify(r2)}`);
   }
 }
 
 describe('CdkScrollable', () => {
   let fixture: ComponentFixture<ScrollableViewport>;
   let testComponent: ScrollableViewport;
+  let maxOffset = 0;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -32,23 +33,17 @@ describe('CdkScrollable', () => {
   }));
 
   describe('in LTR context', () => {
-    let maxOffset = 0;
-
     beforeEach(() => {
       fixture.detectChanges();
-      maxOffset = testComponent.viewport.nativeElement.scrollHeight -
-          testComponent.viewport.nativeElement.clientHeight;
+      maxOffset = testComponent.scrollContainer.nativeElement.scrollHeight -
+          testComponent.scrollContainer.nativeElement.clientHeight;
     });
 
     it('should initially be scrolled to top-left', () => {
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topStart.nativeElement.getBoundingClientRect(), true);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topEnd.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomStart.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomEnd.nativeElement.getBoundingClientRect(), false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, true);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowEnd, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowStart, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowEnd, false);
 
       expect(testComponent.scrollable.measureScrollOffset('top')).toBe(0);
       expect(testComponent.scrollable.measureScrollOffset('bottom')).toBe(maxOffset);
@@ -61,14 +56,10 @@ describe('CdkScrollable', () => {
     it('should scrollTo top-left', () => {
       testComponent.scrollable.scrollTo({top: 0, left: 0});
 
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topStart.nativeElement.getBoundingClientRect(), true);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topEnd.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomStart.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomEnd.nativeElement.getBoundingClientRect(), false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, true);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowEnd, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowStart, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowEnd, false);
 
       expect(testComponent.scrollable.measureScrollOffset('top')).toBe(0);
       expect(testComponent.scrollable.measureScrollOffset('bottom')).toBe(maxOffset);
@@ -81,14 +72,10 @@ describe('CdkScrollable', () => {
     it('should scrollTo bottom-right', () => {
       testComponent.scrollable.scrollTo({bottom: 0, right: 0});
 
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topStart.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topEnd.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomStart.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomEnd.nativeElement.getBoundingClientRect(), true);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowEnd, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowStart, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowEnd, true);
 
       expect(testComponent.scrollable.measureScrollOffset('top')).toBe(maxOffset);
       expect(testComponent.scrollable.measureScrollOffset('bottom')).toBe(0);
@@ -101,14 +88,10 @@ describe('CdkScrollable', () => {
     it('should scroll to top-end', () => {
       testComponent.scrollable.scrollTo({top: 0, end: 0});
 
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topStart.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topEnd.nativeElement.getBoundingClientRect(), true);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomStart.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomEnd.nativeElement.getBoundingClientRect(), false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowEnd, true);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowStart, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowEnd, false);
 
       expect(testComponent.scrollable.measureScrollOffset('top')).toBe(0);
       expect(testComponent.scrollable.measureScrollOffset('bottom')).toBe(maxOffset);
@@ -121,14 +104,10 @@ describe('CdkScrollable', () => {
     it('should scroll to bottom-start', () => {
       testComponent.scrollable.scrollTo({bottom: 0, start: 0});
 
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topStart.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topEnd.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomStart.nativeElement.getBoundingClientRect(), true);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomEnd.nativeElement.getBoundingClientRect(), false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowEnd, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowStart, true);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowEnd, false);
 
       expect(testComponent.scrollable.measureScrollOffset('top')).toBe(maxOffset);
       expect(testComponent.scrollable.measureScrollOffset('bottom')).toBe(0);
@@ -140,24 +119,18 @@ describe('CdkScrollable', () => {
   });
 
   describe('in RTL context', () => {
-    let maxOffset = 0;
-
     beforeEach(() => {
       testComponent.dir = 'rtl';
       fixture.detectChanges();
-      maxOffset = testComponent.viewport.nativeElement.scrollHeight -
-          testComponent.viewport.nativeElement.clientHeight;
+      maxOffset = testComponent.scrollContainer.nativeElement.scrollHeight -
+          testComponent.scrollContainer.nativeElement.clientHeight;
     });
 
     it('should initially be scrolled to top-right', () => {
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topStart.nativeElement.getBoundingClientRect(), true);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topEnd.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomStart.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomEnd.nativeElement.getBoundingClientRect(), false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, true);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowEnd, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowStart, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowEnd, false);
 
       expect(testComponent.scrollable.measureScrollOffset('top')).toBe(0);
       expect(testComponent.scrollable.measureScrollOffset('bottom')).toBe(maxOffset);
@@ -170,14 +143,10 @@ describe('CdkScrollable', () => {
     it('should scrollTo top-left', () => {
       testComponent.scrollable.scrollTo({top: 0, left: 0});
 
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topStart.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topEnd.nativeElement.getBoundingClientRect(), true);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomStart.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomEnd.nativeElement.getBoundingClientRect(), false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowEnd, true);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowStart, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowEnd, false);
 
       expect(testComponent.scrollable.measureScrollOffset('top')).toBe(0);
       expect(testComponent.scrollable.measureScrollOffset('bottom')).toBe(maxOffset);
@@ -190,14 +159,10 @@ describe('CdkScrollable', () => {
     it('should scrollTo bottom-right', () => {
       testComponent.scrollable.scrollTo({bottom: 0, right: 0});
 
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topStart.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topEnd.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomStart.nativeElement.getBoundingClientRect(), true);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomEnd.nativeElement.getBoundingClientRect(), false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowEnd, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowStart, true);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowEnd, false);
 
       expect(testComponent.scrollable.measureScrollOffset('top')).toBe(maxOffset);
       expect(testComponent.scrollable.measureScrollOffset('bottom')).toBe(0);
@@ -210,14 +175,10 @@ describe('CdkScrollable', () => {
     it('should scroll to top-end', () => {
       testComponent.scrollable.scrollTo({top: 0, end: 0});
 
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topStart.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topEnd.nativeElement.getBoundingClientRect(), true);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomStart.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomEnd.nativeElement.getBoundingClientRect(), false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowEnd, true);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowStart, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowEnd, false);
 
       expect(testComponent.scrollable.measureScrollOffset('top')).toBe(0);
       expect(testComponent.scrollable.measureScrollOffset('bottom')).toBe(maxOffset);
@@ -230,14 +191,10 @@ describe('CdkScrollable', () => {
     it('should scroll to bottom-start', () => {
       testComponent.scrollable.scrollTo({bottom: 0, start: 0});
 
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topStart.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.topEnd.nativeElement.getBoundingClientRect(), false);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomStart.nativeElement.getBoundingClientRect(), true);
-      checkIntersecting(testComponent.viewport.nativeElement.getBoundingClientRect(),
-          testComponent.bottomEnd.nativeElement.getBoundingClientRect(), false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.firstRowEnd, false);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowStart, true);
+      expectOverlapping(testComponent.scrollContainer, testComponent.lastRowEnd, false);
 
       expect(testComponent.scrollable.measureScrollOffset('top')).toBe(maxOffset);
       expect(testComponent.scrollable.measureScrollOffset('bottom')).toBe(0);
@@ -251,18 +208,18 @@ describe('CdkScrollable', () => {
 
 @Component({
   template: `
-    <div #viewport class="viewport" cdkScrollable [dir]="dir">
+    <div #scrollContainer class="scroll-container" cdkScrollable [dir]="dir">
       <div class="row">
-        <div #topStart class="cell"></div>
-        <div #topEnd class="cell"></div>
+        <div #firstRowStart class="cell"></div>
+        <div #firstRowEnd class="cell"></div>
       </div>
       <div class="row">
-        <div #bottomStart class="cell"></div>
-        <div #bottomEnd class="cell"></div>
+        <div #lastRowStart class="cell"></div>
+        <div #lastRowEnd class="cell"></div>
       </div>
     </div>`,
   styles: [`
-    .viewport {
+    .scroll-container {
       width: 100px;
       height: 100px;
       overflow: auto;
@@ -283,9 +240,9 @@ describe('CdkScrollable', () => {
 class ScrollableViewport {
   @Input() dir: Direction;
   @ViewChild(CdkScrollable) scrollable: CdkScrollable;
-  @ViewChild('viewport') viewport: ElementRef<HTMLElement>;
-  @ViewChild('topStart') topStart: ElementRef<HTMLElement>;
-  @ViewChild('topEnd') topEnd: ElementRef<HTMLElement>;
-  @ViewChild('bottomStart') bottomStart: ElementRef<HTMLElement>;
-  @ViewChild('bottomEnd') bottomEnd: ElementRef<HTMLElement>;
+  @ViewChild('scrollContainer') scrollContainer: ElementRef<Element>;
+  @ViewChild('firstRowStart') firstRowStart: ElementRef<Element>;
+  @ViewChild('firstRowEnd') firstRowEnd: ElementRef<Element>;
+  @ViewChild('lastRowStart') lastRowStart: ElementRef<Element>;
+  @ViewChild('lastRowEnd') lastRowEnd: ElementRef<Element>;
 }

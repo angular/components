@@ -7,36 +7,34 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {getRtlScrollAxisType, supportsScrollBehavior} from '@angular/cdk/platform';
+import {
+  getRtlScrollAxisType,
+  RtlScrollAxisType,
+  supportsScrollBehavior
+} from '@angular/cdk/platform';
 import {Directive, ElementRef, NgZone, OnDestroy, OnInit, Optional} from '@angular/core';
 import {fromEvent, Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {ScrollDispatcher} from './scroll-dispatcher';
 
+export type _Without<T> = {[P in keyof T]?: never};
+export type _XOR<T, U> = (_Without<T> & U) | (_Without<U> & T);
+export type _Top = {top?: number};
+export type _Bottom = {bottom?: number};
+export type _Left = {left?: number};
+export type _Right = {right?: number};
+export type _Start = {start?: number};
+export type _End = {end?: number};
+export type _XAxis = _XOR<_XOR<_Left, _Right>, _XOR<_Start, _End>>;
+export type _YAxis = _XOR<_Top, _Bottom>;
 
 /**
  * An extended version of ScrollToOptions that allows expressing scroll offsets relative to the
  * top, bottom, left, right, start, or end of the viewport rather than just the top and left.
- * Please note: the top and bottom properties are mutually exclusuive, as are the left, right,
+ * Please note: the top and bottom properties are mutually exclusive, as are the left, right,
  * start, and end properties.
  */
-export interface ExtendedScrollToOptions extends ScrollToOptions {
-  /** A distance relative to the right edge of the viewport. */
-  right?: number;
-  /**
-   * A distance relative to the start edge of the viewport (left in ltr languages, right in rtl
-   * languages).
-   */
-  start?: number;
-  /**
-   * A distance relative to the end edge of the viewport (right in ltr languages, left in rtl
-   * languages).
-   */
-  end?: number;
-  /** A distance relative to the bottom edge of the viewport. */
-  bottom?: number;
-}
-
+export type ExtendedScrollToOptions = _XAxis & _YAxis & ScrollOptions;
 
 /**
  * Sends an event when the directive's element is scrolled. Registers itself with the
@@ -80,7 +78,11 @@ export class CdkScrollable implements OnInit, OnDestroy {
   }
 
   /**
-   * Scrolls to the specified offsets.
+   * Scrolls to the specified offsets. This is a normalized version of the browser's native scrollTo
+   * method, since browsers are not consistent about what scrollLeft means in RTL. For this method
+   * left and right always refer to the left and right side of the scrolling container irrespective
+   * of the layout direction. start and end refer to left and right in an LTR context and vice-versa
+   * in an RTL context.
    * @param options specified the offsets to scroll to.
    */
   scrollTo(options: ExtendedScrollToOptions): void {
@@ -97,14 +99,14 @@ export class CdkScrollable implements OnInit, OnDestroy {
     }
 
     // Rewrite the right offset as a left offset.
-    if (isRtl && getRtlScrollAxisType() != 'normal') {
+    if (isRtl && getRtlScrollAxisType() != RtlScrollAxisType.NORMAL) {
       if (options.left != null) {
         options.right = el.scrollWidth - el.clientWidth - options.left;
       }
 
-      if (getRtlScrollAxisType() == 'inverted') {
+      if (getRtlScrollAxisType() == RtlScrollAxisType.INVERTED) {
         options.left = options.right;
-      } else if (getRtlScrollAxisType() == 'negated') {
+      } else if (getRtlScrollAxisType() == RtlScrollAxisType.NEGATED) {
         options.left = options.right ? -options.right : options.right;
       }
     } else {
@@ -113,10 +115,10 @@ export class CdkScrollable implements OnInit, OnDestroy {
       }
     }
 
-    this._scrollTo(options);
+    this._applyScrollToOptions(options);
   }
 
-  private _scrollTo(options: ScrollToOptions): void {
+  private _applyScrollToOptions(options: ScrollToOptions): void {
     const el = this._elementRef.nativeElement;
 
     if (supportsScrollBehavior()) {
@@ -132,10 +134,17 @@ export class CdkScrollable implements OnInit, OnDestroy {
   }
 
   /**
-   * Measures the scroll offset relative to the specified edge of the viewport.
+   * Measures the scroll offset relative to the specified edge of the viewport. This method can be
+   * used instead of directly checking scrollLeft or scrollTop, since browsers are not consistent
+   * about what scrollLeft means in RTL. The values returned by this method are normalized such that
+   * left and right always refer to the left and right side of the scrolling container irrespective
+   * of the layout direction. start and end refer to left and right in an LTR context and vice-versa
+   * in an RTL context.
    * @param from The edge to measure from.
    */
   measureScrollOffset(from: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number {
+    const LEFT = 'left';
+    const RIGHT = 'right';
     const el = this._elementRef.nativeElement;
     if (from == 'top') {
       return el.scrollTop;
@@ -147,25 +156,31 @@ export class CdkScrollable implements OnInit, OnDestroy {
     // Rewrite start & end as left or right offsets.
     const isRtl = this._dir && this._dir.value == 'rtl';
     if (from == 'start') {
-      from = isRtl ? 'right' : 'left';
+      from = isRtl ? RIGHT : LEFT;
     } else if (from == 'end') {
-      from = isRtl ? 'left' : 'right';
+      from = isRtl ? LEFT : RIGHT;
     }
 
-    if (isRtl && getRtlScrollAxisType() == 'inverted') {
-      if (from == 'left') {
+    if (isRtl && getRtlScrollAxisType() == RtlScrollAxisType.INVERTED) {
+      // For INVERTED, scrollLeft is (scrollWidth - clientWidth) when scrolled all the way left and
+      // 0 when scrolled all the way right.
+      if (from == LEFT) {
         return el.scrollWidth - el.clientWidth - el.scrollLeft;
       } else {
         return el.scrollLeft;
       }
-    } else if (isRtl && getRtlScrollAxisType() == 'negated') {
-      if (from == 'left') {
+    } else if (isRtl && getRtlScrollAxisType() == RtlScrollAxisType.NEGATED) {
+      // For NEGATED, scrollLeft is -(scrollWidth - clientWidth) when scrolled all the way left and
+      // 0 when scrolled all the way right.
+      if (from == LEFT) {
         return el.scrollLeft + el.scrollWidth - el.clientWidth;
       } else {
         return -el.scrollLeft;
       }
     } else {
-      if (from == 'left') {
+      // For NORMAL, as well as non-RTL contexts, scrollLeft is 0 when scrolled all the way left and
+      // (scrollWidth - clientWidth) when scrolled all the way right.
+      if (from == LEFT) {
         return el.scrollLeft;
       } else {
         return el.scrollWidth - el.clientWidth - el.scrollLeft;
