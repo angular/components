@@ -410,7 +410,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
     switch (keyCode) {
       case SPACE:
       case ENTER:
-        this._toggleFocusedOptionIfEnabled();
+        this._toggleFocusedOption();
         // Always prevent space from scrolling the page since the list has focus
         event.preventDefault();
         break;
@@ -431,7 +431,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
 
     if ((keyCode === UP_ARROW || keyCode === DOWN_ARROW) && event.shiftKey &&
         manager.activeItemIndex !== previousFocusIndex) {
-      this._toggleFocusedOptionIfEnabled();
+      this._toggleFocusedOption();
     }
   }
 
@@ -490,7 +490,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   }
 
   /** Toggles the state of the currently focused option if enabled. */
-  private _toggleFocusedOptionIfEnabled(): void {
+  private _toggleFocusedOption(): void {
     let focusedIndex = this._keyManager.activeItemIndex;
 
     if (focusedIndex != null && this._isValidIndex(focusedIndex)) {
