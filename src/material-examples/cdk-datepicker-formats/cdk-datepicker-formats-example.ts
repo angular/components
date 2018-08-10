@@ -60,7 +60,7 @@ export class CdkDatepickerFormatsExample {
   selector: 'my-formats-calendar',
   outputs: ['selectedChange'],
   template: `
-    <div>Date: {{this.selected}}</div>
+    <div>Date: {{selected}}</div>
     <div *ngFor="let date of dates">
       <button (click)="_selected(date)">{{date}}</button>
     </div>
