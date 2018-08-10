@@ -4,14 +4,3 @@
   border: 1px solid #555;
   overflow: auto;
 }
-
-.calendar {
-  width: 400px;
-  height: 150px;
-  margin-top: 20px;
-  margin-left: 15px;
-  overflow: auto;
-  background-color: #eeeeee;
-  border-radius: 5px;
-  padding: 10px;
-}

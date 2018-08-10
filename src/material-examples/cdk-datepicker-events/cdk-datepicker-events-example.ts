@@ -26,7 +26,18 @@ export class CdkDatepickerEventsExample {
 @Component({
   selector: 'my-events-calendar',
   outputs: ['selectedChange'],
-  styleUrls: ['cdk-datepicker-events-example.css'],
+  styles: [`
+    .calendar {
+      width: 400px;
+      height: 150px;
+      margin-top: 20px;
+      margin-left: 15px;
+      overflow: auto;
+      background-color: #eee;
+      border-radius: 5px;
+      padding: 10px;
+    }
+  `],
   template: `
     <div class="calendar">
       <div>Date: {{selected}}</div>
