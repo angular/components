@@ -26,10 +26,15 @@ export class CdkDatepickerEventsExample {
 @Component({
   selector: 'my-events-calendar',
   outputs: ['selectedChange'],
+  styleUrls: ['cdk-datepicker-events-example.css'],
   template: `
-    <div>Date: {{selected}}</div>
-    <div *ngFor="let date of dates">
-      <button (click)="_selected(date)">{{date}}</button>
+    <div class="calendar">
+      <div>Date: {{selected}}</div>
+      <br>
+      <div>Choose an appointment date:</div>
+      <div *ngFor="let date of dates">
+        <button (click)="_selected(date)">{{date}}</button>
+      </div>
     </div>
   `,
   providers: [{provide: CalendarView, useExisting: MyEventsCalendar}],

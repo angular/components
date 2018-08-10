@@ -10,7 +10,6 @@ import {CalendarView, DateAdapter} from '@angular/cdk/datetime';
 })
 export class CdkDatepickerOverviewExample<D> {
   dates: D[] = [];
-  messages: string[] = [];
   disabled: boolean = false;
 
   constructor(private _dateAdapter: DateAdapter<D>) {
@@ -19,17 +18,8 @@ export class CdkDatepickerOverviewExample<D> {
     this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 15));
   }
 
-  _dateSelected() {
-    this.messages.push('Date has changed.');
-  }
-
-  _disabledChanged() {
-    this.messages.push('Disabled property has changed.');
-  }
-
   _setDisabled(disabled: boolean) {
     this.disabled = !disabled;
-    this._disabledChanged();
   }
 }
 
@@ -37,10 +27,15 @@ export class CdkDatepickerOverviewExample<D> {
 @Component({
   selector: 'my-calendar',
   outputs: ['selectedChange'],
-  template: `
-    <div>Date: {{selected}}</div>
-    <div *ngFor="let date of dates">
-      <button (click)="_selected(date)">{{date}}</button>
+  styleUrls: ['cdk-datepicker-overview-example.css'],
+  template: `      
+    <div class="calendar">
+      <div>Date: {{selected}}</div>
+      <br>
+      <div>Choose an appointment date:</div>
+      <div *ngFor="let date of dates">
+        <button [disabled]="disabled" (click)="_selected(date)">{{date}}</button>
+      </div>
     </div>
   `,
   providers: [{provide: CalendarView, useExisting: MyCalendar}],
@@ -56,9 +51,7 @@ export class MyCalendar<D> extends CalendarView<D> {
   dateFilter = () => true;
 
   _selected(date: D) {
-    if (!this.disabled) {
-      this.selected = date;
-      this.selectedChange.emit(date);
-    }
+    this.selected = date;
+    this.selectedChange.emit(date);
   }
 }
