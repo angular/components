@@ -55,7 +55,7 @@ export class MyValueCalendar<D> extends CalendarView<D> {
   minDate = null;
   maxDate = null;
   selected: D | null = null;
-  dateFilter = () => true;
+  dateFilter: (date: D) => boolean;
 
   _selected(date: D) {
     this.selected = date;
