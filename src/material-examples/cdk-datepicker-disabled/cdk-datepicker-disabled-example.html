@@ -1,6 +1,12 @@
 <p>
-  <input [cdkDatepicker]="dp1" placeholder="Completely disabled" disabled>
+  <button (click)="_setDisabled(this.disabled)">
+    <div *ngIf="this.disabled">Enable</div>
+    <div *ngIf="!this.disabled">Disable</div>
+  </button>
+  <input [cdkDatepicker]="dp1" placeholder="Input" [disabled]="this.disabled">
   <cdk-datepicker #dp1>
-    <my-disabled-calendar [dates]="dates"></my-disabled-calendar>
+    <my-disabled-calendar [disabled]="this.disabled" [dates]="dates"></my-disabled-calendar>
   </cdk-datepicker>
 </p>
+
+<div *ngFor="let message of this.messages">{{message}}</div>
