@@ -39,7 +39,7 @@ export class MatStepHeader implements OnDestroy {
   private _intlSubscription: Subscription;
 
   /** State of the given step. */
-  @Input() state: StepState | string;
+  @Input() state: StepState;
 
   /** Label of the given step. */
   @Input() label: MatStepLabel | string;
