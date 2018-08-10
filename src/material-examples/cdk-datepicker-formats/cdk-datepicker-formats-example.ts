@@ -9,7 +9,7 @@ import {DateAdapter, CDK_DATE_FORMATS, CDK_DATE_LOCALE, CalendarView} from '@ang
 // the `default as` syntax.
 import * as _moment from 'moment';
 // tslint:disable-next-line:no-duplicate-imports
-import {default as _rollupMoment} from 'moment';
+import {default as _rollupMoment, Moment} from 'moment';
 
 const moment = _rollupMoment || _moment;
 
@@ -41,16 +41,16 @@ export const MY_CDK_FORMATS = {
 })
 export class CdkDatepickerFormatsExample {
   date = new FormControl(moment());
-  dates: Date[] = [];
+  dates: Moment[] = [];
   messages: string[] = [];
 
   constructor() {
-    this.dates.push(new Date(2018, 8, 8));
-    this.dates.push(new Date(2018, 9, 10));
-    this.dates.push(new Date(2018, 10, 12));
+    this.dates.push(moment([2018, 8, 8]));
+    this.dates.push(moment([2018, 9, 20]));
+    this.dates.push(moment([2018, 10, 3]));
   }
 
-  _dateSelected(d: Date) {
+  _dateSelected(d: Moment) {
     this.messages.push(`Date has changed to ${d.toString()}`);
   }
 }

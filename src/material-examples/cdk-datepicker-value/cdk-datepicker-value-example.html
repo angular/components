@@ -1,14 +1,13 @@
 <input [cdkDatepicker]="picker1" (dateChange)="_dateSelected($event.value)"
     placeholder="Angular forms" [formControl]="date">
 <cdk-datepicker #picker1><my-value-calendar [dates]="dates"></my-value-calendar></cdk-datepicker>
-<div *ngFor="let message of messages">{{message}}</div>
 <br>
 <input [cdkDatepicker]="picker2" (dateChange)="_dateSelected($event.value)"
     placeholder="Angular forms (w/ deserialization)" [formControl]="serializedDate">
 <cdk-datepicker #picker2><my-value-calendar [dates]="dates"></my-value-calendar></cdk-datepicker>
-<div *ngFor="let message of messages">{{message}}</div>
 <br>
 <input [cdkDatepicker]="picker3" (dateChange)="_dateSelected($event.value)"
     placeholder="Value binding" [value]="date.value">
 <cdk-datepicker #picker3><my-value-calendar [dates]="dates"></my-value-calendar></cdk-datepicker>
+<br>
 <div *ngFor="let message of messages">{{message}}</div>
