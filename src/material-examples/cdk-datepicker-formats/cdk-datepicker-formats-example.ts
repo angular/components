@@ -42,16 +42,11 @@ export const MY_CDK_FORMATS = {
 export class CdkDatepickerFormatsExample {
   date = new FormControl(moment());
   dates: Moment[] = [];
-  messages: string[] = [];
 
   constructor() {
     this.dates.push(moment([2018, 8, 8]));
     this.dates.push(moment([2018, 9, 20]));
     this.dates.push(moment([2018, 10, 3]));
-  }
-
-  _dateSelected(d: Moment) {
-    this.messages.push(`Date has changed to ${d.toString()}`);
   }
 }
 
@@ -59,10 +54,15 @@ export class CdkDatepickerFormatsExample {
 @Component({
   selector: 'my-formats-calendar',
   outputs: ['selectedChange'],
+  styleUrls: ['cdk-datepicker-formats-example.css'],
   template: `
-    <div>Date: {{selected}}</div>
-    <div *ngFor="let date of dates">
-      <button (click)="_selected(date)">{{date}}</button>
+    <div class="calendar">
+      <div>Date: {{selected}}</div>
+      <br>
+      <div>Choose an appointment date:</div>
+      <div *ngFor="let date of dates">
+        <button (click)="_selected(date)">{{date}}</button>
+      </div>
     </div>
   `,
   providers: [{provide: CalendarView, useExisting: MyFormatsCalendar}],

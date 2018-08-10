@@ -1,6 +1,4 @@
-<input [cdkDatepicker]="dp" (dateChange)="_dateSelected($event.value)"
-    placeholder="Verbose w/ Moment.js datepicker" [formControl]="date">
-<cdk-datepicker #dp><my-formats-calendar [dates]="dates"></my-formats-calendar></cdk-datepicker>
-<div *ngFor="let message of messages">
-  {{message}}
-</div>
+<mat-card>
+  <input [cdkDatepicker]="dp" placeholder="Verbose w/ Moment.js datepicker" [formControl]="date">
+  <cdk-datepicker #dp><my-formats-calendar [dates]="dates"></my-formats-calendar></cdk-datepicker>
+</mat-card>
