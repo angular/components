@@ -157,7 +157,7 @@ by placing a `matStepperIcon` for each of the icons that you want to override. T
 Note that you aren't limited to using the `mat-icon` component when providing custom icons.
 
 #### Step States
-You can set the state of a step to whatever you want. The given state by default maps to an icon. However, it can be overridden the same way as metioned above.
+You can set the state of a step to whatever you want. The given state by default maps to an icon. However, it can be overridden the same way as mentioned above.
 
 ```html
 <mat-horizontal-stepper>
@@ -186,6 +186,35 @@ You can set the state of a step to whatever you want. The given state by default
     <mat-icon>forum</mat-icon>
   </ng-template>
 </mat-horizontal-stepper>
+```
+
+In order to use the custom step states, you must add the `useGuidelines` option to the global default stepper options which can be specified by providing a value for
+`MAT_STEPPER_GLOBAL_OPTIONS` in your application's root module.
+
+```ts
+@NgModule({
+  providers: [
+    {
+      provide: MAT_STEPPER_GLOBAL_OPTIONS,
+      useValue: { useGuidelines: true }
+    }
+  ]
+})
+```
+
+### Error State
+
+The stepper can now show error states by simply providing the `showError` option to the `MAT_STEPPER_GLOBAL_OPTIONS` in your application's root module as mentioned above.
+
+```ts
+@NgModule({
+  providers: [
+    {
+      provide: MAT_STEPPER_GLOBAL_OPTIONS,
+      useValue: { showError: true }
+    }
+  ]
+})
 ```
 
 ### Keyboard interaction
