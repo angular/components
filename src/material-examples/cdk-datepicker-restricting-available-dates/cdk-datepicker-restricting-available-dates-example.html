@@ -1,0 +1,15 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Filter Validation</mat-card-title>
+  </mat-card-header>
+  <input [cdkDatepickerFilter]="myFilter" [cdkDatepicker]="picker1" placeholder="Choose a date">
+  <cdk-datepicker #picker1><my-filter-calendar [dates]="dates"></my-filter-calendar></cdk-datepicker>
+</mat-card>
+<br>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Min and max Validation</mat-card-title>
+  </mat-card-header>
+  <input [min]="minDate" [max]="maxDate" [cdkDatepicker]="picker2" placeholder="Choose a date">
+  <cdk-datepicker #picker2><my-min-max-calendar [dates]="dates"></my-min-max-calendar></cdk-datepicker>
+</mat-card>
