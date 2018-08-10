@@ -33,7 +33,18 @@ export class CdkDatepickerRestrictingAvailableDatesExample {
 @Component({
   selector: 'my-filter-calendar',
   outputs: ['selectedChange'],
-  styleUrls: ['cdk-datepicker-restricting-available-dates-example.css'],
+  styles: [`
+    .calendar {
+      width: 400px;
+      height: 150px;
+      margin-top: 20px;
+      margin-left: 15px;
+      overflow: auto;
+      background-color: #eee;
+      border-radius: 5px;
+      padding: 10px;
+    }
+  `],
   template: `
     <div class="calendar">
       <div>Date: {{selected}}</div>
@@ -65,7 +76,18 @@ export class MyFilterCalendar<D> extends CalendarView<D> {
 @Component({
   selector: 'my-min-max-calendar',
   outputs: ['selectedChange'],
-  styleUrls: ['cdk-datepicker-restricting-available-dates-example.css'],
+  styles: [`
+    .calendar {
+      width: 400px;
+      height: 150px;
+      margin-top: 20px;
+      margin-left: 15px;
+      overflow: auto;
+      background-color: #eee;
+      border-radius: 5px;
+      padding: 10px;
+    }
+  `],
   template: `
     <div class="calendar">
       <div>Date: {{selected}}</div>
