@@ -1,0 +1,24 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Angular forms</mat-card-title>
+  </mat-card-header>
+  <input [cdkDatepicker]="picker1" placeholder="Angular forms" [formControl]="date">
+  <cdk-datepicker #picker1><my-value-calendar [dates]="dates"></my-value-calendar></cdk-datepicker>
+</mat-card>
+<br>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Angular forms w/ deserialization</mat-card-title>
+  </mat-card-header>
+  <input [cdkDatepicker]="picker2" placeholder="Angular forms (w/ deserialization)"
+      [formControl]="serializedDate">
+  <cdk-datepicker #picker2><my-value-calendar [dates]="dates"></my-value-calendar></cdk-datepicker>
+</mat-card>
+<br>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Value binding</mat-card-title>
+  </mat-card-header>
+  <input [cdkDatepicker]="picker3" placeholder="Value binding" [value]="date.value">
+  <cdk-datepicker #picker3><my-value-calendar [dates]="dates"></my-value-calendar></cdk-datepicker>
+</mat-card>
