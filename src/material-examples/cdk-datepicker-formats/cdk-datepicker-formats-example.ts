@@ -50,8 +50,8 @@ export class CdkDatepickerFormatsExample {
     this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 15));
   }
 
-  _dateSelected() {
-    this.messages.push('Date has changed. ');
+  _dateSelected(d: Date) {
+    this.messages.push(`Date has changed to ${d.toString()}`);
   }
 }
 
@@ -60,26 +60,21 @@ export class CdkDatepickerFormatsExample {
   selector: 'my-formats-calendar',
   outputs: ['selectedChange'],
   template: `
+    <div>Date: {{this.selected}}</div>
     <div *ngFor="let date of dates">
       <button (click)="_selected(date)">{{date}}</button>
     </div>
-    <div>Date: {{this.selected}}</div>
   `,
   providers: [{provide: CalendarView, useExisting: MyFormatsCalendar}],
 })
 export class MyFormatsCalendar<D> extends CalendarView<D> {
   @Input() dates: D[];
 
-  activeDate: D;
+  activeDate: D | null = null;
   minDate = null;
   maxDate = null;
   selected: D | null = null;
   dateFilter = () => true;
-
-  constructor(private _dateAdapter: DateAdapter<D>) {
-    super();
-    this.activeDate = this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 5);
-  }
 
   _selected(date: D) {
     this.selected = date;
