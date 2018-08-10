@@ -14,9 +14,9 @@ export class CdkDatepickerRestrictingAvailableDatesExample {
   startDate = new Date(1990, 0, 1);
 
   constructor() {
-    this.dates.push(new Date(1800,8,9));
-    this.dates.push(new Date(2018,8,9, 0,0,0,0));
-    this.dates.push(new Date(2018,8,15));
+    this.dates.push(new Date(1800, 8, 9));
+    this.dates.push(new Date(2018, 8, 9));
+    this.dates.push(new Date(2018, 8, 15));
   }
 
   myFilter = (d: Date): boolean => {
@@ -116,7 +116,7 @@ export class MyStartDateCalendar<D> extends CalendarView<D> {
   maxDate: D | null = null;
   selected: D | null = null;
   dateFilter = () => true;
-  active: Date = new Date(2018,8,9,0,0,0,0);
+  active: Date = new Date(2018, 8, 9);
 
   _isFocused(d: Date) {
     return d.getMonth() == this.active.getMonth() && d.getDay() == this.active.getDay();
