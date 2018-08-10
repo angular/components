@@ -1,10 +1,13 @@
-<input [cdkDatepicker]="picker">
+<button (click)="_setDisabled(this.disabled)">
+  <div *ngIf="this.disabled">Enable</div>
+  <div *ngIf="!this.disabled">Disable</div>
+</button>
+<input [cdkDatepicker]="picker" [disabled]="this.disabled">
 <cdk-datepicker #picker>
-  <my-calendar [dates]="dates" (selectedChange)="_dateSelected()"></my-calendar>
+  <my-calendar [dates]="dates" [disabled]="this.disabled" (selectedChange)="_dateSelected()">
+  </my-calendar>
 </cdk-datepicker>
 
-<div>
-  <span *ngFor="let message of messages" class="example-container">
+<div *ngFor="let message of this.messages" class="example-container">
     {{message}}
-  </span>
 </div>

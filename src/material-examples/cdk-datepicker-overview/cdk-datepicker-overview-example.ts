@@ -11,14 +11,25 @@ import {CalendarView, DateAdapter} from '@angular/cdk/datetime';
 export class CdkDatepickerOverviewExample<D> {
   dates: D[] = [];
   messages: string[] = [];
+  disabled: boolean = false;
 
   constructor(private _dateAdapter: DateAdapter<D>) {
     this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 5));
     this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 10));
     this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 15));
   }
+
   _dateSelected() {
-    this.messages.push('Date has changed. ');
+    this.messages.push('Date has changed.');
+  }
+
+  _disabledChanged() {
+    this.messages.push('Disabled property has changed.');
+  }
+
+  _setDisabled(disabled: boolean) {
+    this.disabled = !disabled;
+    this._disabledChanged();
   }
 }
 
@@ -27,15 +38,16 @@ export class CdkDatepickerOverviewExample<D> {
   selector: 'my-calendar',
   outputs: ['selectedChange'],
   template: `
+    <div>Date: {{this.selected}}</div>
     <div *ngFor="let date of dates">
       <button (click)="_selected(date)">{{date}}</button>
     </div>
-    <div>Date: {{this.selected}}</div>
   `,
   providers: [{provide: CalendarView, useExisting: MyCalendar}],
 })
 export class MyCalendar<D> extends CalendarView<D> {
   @Input() dates: D[];
+  @Input() disabled: boolean;
 
   activeDate: D;
   minDate = null;
@@ -49,7 +61,9 @@ export class MyCalendar<D> extends CalendarView<D> {
   }
 
   _selected(date: D) {
-    this.selected = date;
-    this.selectedChange.emit(date);
+    if (this.disabled) {} else {
+      this.selected = date;
+      this.selectedChange.emit(date);
+    }
   }
 }
