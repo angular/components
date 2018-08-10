@@ -56,7 +56,7 @@ export class MyCalendar<D> extends CalendarView<D> {
   dateFilter = () => true;
 
   _selected(date: D) {
-    if (this.disabled) {} else {
+    if (!this.disabled) {
       this.selected = date;
       this.selectedChange.emit(date);
     }
