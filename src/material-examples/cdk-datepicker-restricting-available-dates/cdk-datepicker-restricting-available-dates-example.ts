@@ -11,7 +11,6 @@ export class CdkDatepickerRestrictingAvailableDatesExample {
   dates: Date[] = [];
   minDate = new Date(2000, 0, 1);
   maxDate = new Date(2020, 0, 1);
-  startDate = new Date(1990, 0, 1);
 
   constructor() {
     this.dates.push(new Date(1800, 8, 9));
@@ -34,10 +33,15 @@ export class CdkDatepickerRestrictingAvailableDatesExample {
 @Component({
   selector: 'my-filter-calendar',
   outputs: ['selectedChange'],
+  styleUrls: ['cdk-datepicker-restricting-available-dates-example.css'],
   template: `
-    <div>Date: {{selected}}</div>
-    <div *ngFor="let date of dates">
-      <button (click)="_dateSelected(date)" [disabled]="!dateFilter(date)">{{date}}</button>
+    <div class="calendar">
+      <div>Date: {{selected}}</div>
+      <br>
+      <div>Choose an appointment date:</div>
+      <div *ngFor="let date of dates">
+        <button (click)="_dateSelected(date)" [disabled]="!dateFilter(date)">{{date}}</button>
+      </div>
     </div>
   `,
   providers: [{provide: CalendarView, useExisting: MyFilterCalendar}],
@@ -61,10 +65,15 @@ export class MyFilterCalendar<D> extends CalendarView<D> {
 @Component({
   selector: 'my-min-max-calendar',
   outputs: ['selectedChange'],
+  styleUrls: ['cdk-datepicker-restricting-available-dates-example.css'],
   template: `
-    <div>Date: {{selected}}</div>
-    <div *ngFor="let date of dates">
-      <button [disabled]="_isDisabled(date)" (click)="_selected(date)">{{date}}</button>
+    <div class="calendar">
+      <div>Date: {{selected}}</div>
+      <br>
+      <div>Choose an appointment date:</div>
+      <div *ngFor="let date of dates">
+        <button [disabled]="_isDisabled(date)" (click)="_selected(date)">{{date}}</button>
+      </div>
     </div>
   `,
   providers: [{provide: CalendarView, useExisting: MyMinMaxCalendar}],
