@@ -44,10 +44,10 @@ export class CdkDatepickerFormatsExample {
   dates: Date[] = [];
   messages: string[] = [];
 
-  constructor(private _dateAdapter: DateAdapter<Date>) {
-    this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 5));
-    this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 10));
-    this.dates.push(this._dateAdapter.addCalendarDays(this._dateAdapter.today(), 15));
+  constructor() {
+    this.dates.push(new Date(2018, 8, 8));
+    this.dates.push(new Date(2018, 9, 10));
+    this.dates.push(new Date(2018, 10, 12));
   }
 
   _dateSelected(d: Date) {
