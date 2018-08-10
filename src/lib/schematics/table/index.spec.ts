@@ -42,8 +42,7 @@ describe('material-table-schematic', () => {
   });
 
   it('should support passing the style extension option', () => {
-    const tree = runner.runSchematic('table', {styleext: 'scss', ...baseOptions},
-      createTestApp());
+    const tree = runner.runSchematic('table', {styleext: 'scss', ...baseOptions}, createTestApp());
 
     expect(tree.files).toContain('/projects/material/src/app/foo/foo.component.scss');
   });

@@ -47,8 +47,7 @@ describe('material-nav-schematic', () => {
   });
 
   it('should support passing the style extension option', () => {
-    const tree = runner.runSchematic('nav', {styleext: 'scss', ...baseOptions},
-      createTestApp());
+    const tree = runner.runSchematic('nav', {styleext: 'scss', ...baseOptions}, createTestApp());
 
     expect(tree.files).toContain('/projects/material/src/app/foo/foo.component.scss');
   });
