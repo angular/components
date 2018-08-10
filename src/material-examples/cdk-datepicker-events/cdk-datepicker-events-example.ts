@@ -10,7 +10,6 @@ import {DatepickerInputEvent, CalendarView, DateAdapter} from '@angular/cdk/date
 export class CdkDatepickerEventsExample {
   events: string[] = [];
   dates: Date[] = [];
-  messages: string[] = [];
 
   addEvent(type: string, event: DatepickerInputEvent<Date>) {
     this.events.push(`${type}: ${event.value}`);
@@ -28,7 +27,7 @@ export class CdkDatepickerEventsExample {
   selector: 'my-events-calendar',
   outputs: ['selectedChange'],
   template: `
-    <div>Date: {{this.selected}}</div>
+    <div>Date: {{selected}}</div>
     <div *ngFor="let date of dates">
       <button (click)="_selected(date)">{{date}}</button>
     </div>
@@ -38,7 +37,7 @@ export class CdkDatepickerEventsExample {
 export class MyEventsCalendar<D> extends CalendarView<D> {
   @Input() dates: D[];
 
-  activeDate: D;
+  activeDate: D | null = null;
   minDate = null;
   maxDate = null;
   selected: D | null = null;

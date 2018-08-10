@@ -38,7 +38,7 @@ export class CdkDatepickerOverviewExample<D> {
   selector: 'my-calendar',
   outputs: ['selectedChange'],
   template: `
-    <div>Date: {{this.selected}}</div>
+    <div>Date: {{selected}}</div>
     <div *ngFor="let date of dates">
       <button (click)="_selected(date)">{{date}}</button>
     </div>
@@ -49,16 +49,11 @@ export class MyCalendar<D> extends CalendarView<D> {
   @Input() dates: D[];
   @Input() disabled: boolean;
 
-  activeDate: D;
+  activeDate: D | null = null;
   minDate = null;
   maxDate = null;
   selected: D | null = null;
   dateFilter = () => true;
-
-  constructor(private _dateAdapter: DateAdapter<D>) {
-    super();
-    this.activeDate = this._dateAdapter.today();
-  }
 
   _selected(date: D) {
     if (this.disabled) {} else {
