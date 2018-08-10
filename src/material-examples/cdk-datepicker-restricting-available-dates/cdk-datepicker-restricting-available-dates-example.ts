@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {CalendarView, DateAdapter} from '@angular/cdk/datetime';
+import {CalendarView} from '@angular/cdk/datetime';
 
 /** @title CDK Datepicker with filter, min and max, and start date validation */
 @Component({
@@ -15,7 +15,7 @@ export class CdkDatepickerRestrictingAvailableDatesExample {
 
   constructor() {
     this.dates.push(new Date(1800,8,9));
-    this.dates.push(new Date(1999,8,8));
+    this.dates.push(new Date(2018,8,9, 0,0,0,0));
     this.dates.push(new Date(2018,8,15));
   }
 
@@ -48,7 +48,6 @@ export class MyFilterCalendar extends CalendarView<Date> {
   minDate = null;
   maxDate = null;
   selected = null;
-  validDate: string = "";
   dateFilter = () => true;
 
   myFilter(d: Date): boolean {
@@ -67,7 +66,7 @@ export class MyFilterCalendar extends CalendarView<Date> {
   selector: 'my-min-max-calendar',
   outputs: ['selectedChange'],
   template: `
-    <div>Date: {{this.selected}}</div>
+    <div>Date: {{selected}}</div>
     <div *ngFor="let date of dates">
       <button [disabled]="_isDisabled(date)" (click)="_selected(date)">{{date}}</button>
     </div>
@@ -82,11 +81,10 @@ export class MyMinMaxCalendar<D> extends CalendarView<D> {
   maxDate: D | null = null;
   selected: D | null = null;
   dateFilter = () => true;
-  validDate: string = "";
 
   _isDisabled(d: D): boolean {
     if (this.minDate && this.maxDate) {
-      return this.minDate < d && d < this.maxDate;
+      return !(this.minDate < d && d < this.maxDate);
     }
     return false;
   }
@@ -102,25 +100,26 @@ export class MyMinMaxCalendar<D> extends CalendarView<D> {
   selector: 'my-start-date-calendar',
   outputs: ['selectedChange'],
   template: `
-    <div>Date: {{this.selected}}</div>
+    <div>Date: {{selected}}</div>
     <div *ngFor="let date of dates">
-      <button [autofocus]="_isFocused(date)" (click)="_selected(date)">{{date}}</button>
+      <div *ngIf="_isFocused(date)">*Start at date below*</div>
+      <button (click)="_selected(date)">{{date}}</button>
     </div>
   `,
   providers: [{provide: CalendarView, useExisting: MyStartDateCalendar}],
 })
 export class MyStartDateCalendar<D> extends CalendarView<D> {
-  @Input() dates: D[];
+  @Input() dates: Date[];
 
   activeDate: D | null;
   minDate: D | null = null;
   maxDate: D | null = null;
   selected: D | null = null;
   dateFilter = () => true;
-  validDate: string = "";
+  active: Date = new Date(2018,8,9,0,0,0,0);
 
-  _isFocused(d: D) {
-    return d == this.activeDate;
+  _isFocused(d: Date) {
+    return d.getMonth() == this.active.getMonth() && d.getDay() == this.active.getDay();
   }
 
   _selected(d: D) {
