@@ -18,6 +18,7 @@ export class CdkDatepickerRestrictingAvailableDatesExample {
     this.dates.push(new Date(1999,8,8));
     this.dates.push(new Date(2018,8,15));
   }
+
   myFilter = (d: Date): boolean => {
     if (d) {
       const day = d.getDay();
@@ -35,13 +36,12 @@ export class CdkDatepickerRestrictingAvailableDatesExample {
   outputs: ['selectedChange'],
   template: `
     <div *ngFor="let date of dates">
-      <button (click)="_selected(date)">{{date}}</button>
+      <button [disabled]="!myFilter(date)">{{date}}</button>
     </div>
-    <div>{{this.validDate}}</div>
   `,
   providers: [{provide: CalendarView, useExisting: MyFilterCalendar}],
 })
-export class MyFilterCalendar<D> extends CalendarView<D> {
+export class MyFilterCalendar extends CalendarView<Date> {
   @Input() dates: Date[];
 
   activeDate = null;
@@ -59,14 +59,6 @@ export class MyFilterCalendar<D> extends CalendarView<D> {
     } else {
       return true;
     }
-  };
-
-  _selected(d: Date) {
-    if (this.myFilter(d)) {
-      this.validDate = "This is a valid date.";
-    } else {
-      this.validDate = "This is not a valid date.";
-    }
   }
 }
 
@@ -75,10 +67,10 @@ export class MyFilterCalendar<D> extends CalendarView<D> {
   selector: 'my-min-max-calendar',
   outputs: ['selectedChange'],
   template: `
+    <div>Date: {{this.selected}}</div>
     <div *ngFor="let date of dates">
-      <button (click)="_selected(date)">{{date}}</button>
+      <button [disabled]="_isDisabled(date)" (click)="_selected(date)">{{date}}</button>
     </div>
-    <div>Date: {{this.validDate}}</div>
   `,
   providers: [{provide: CalendarView, useExisting: MyMinMaxCalendar}],
 })
@@ -92,14 +84,16 @@ export class MyMinMaxCalendar<D> extends CalendarView<D> {
   dateFilter = () => true;
   validDate: string = "";
 
-  _selected(d: D) {
+  _isDisabled(d: D): boolean {
     if (this.minDate && this.maxDate) {
-      if (this.minDate < d && d < this.maxDate) {
-        this.validDate = "This is a valid date.";
-      } else {
-        this.validDate = "This is not a valid date.";
-      }
+      return this.minDate < d && d < this.maxDate;
     }
+    return false;
+  }
+
+  _selected(d: D) {
+    this.selected = d;
+    this.selectedChange.emit(d);
   }
 }
 
@@ -108,10 +102,10 @@ export class MyMinMaxCalendar<D> extends CalendarView<D> {
   selector: 'my-start-date-calendar',
   outputs: ['selectedChange'],
   template: `
+    <div>Date: {{this.selected}}</div>
     <div *ngFor="let date of dates">
-      <button (click)="_selected(date)">{{date}}</button>
+      <button [autofocus]="_isFocused(date)" (click)="_selected(date)">{{date}}</button>
     </div>
-    <div>Date: {{this.validDate}}</div>
   `,
   providers: [{provide: CalendarView, useExisting: MyStartDateCalendar}],
 })
@@ -125,13 +119,12 @@ export class MyStartDateCalendar<D> extends CalendarView<D> {
   dateFilter = () => true;
   validDate: string = "";
 
+  _isFocused(d: D) {
+    return d == this.activeDate;
+  }
+
   _selected(d: D) {
-    if (this.activeDate) {
-      if (d < this.activeDate) {
-        this.validDate = "This is not a valid date.";
-      } else {
-        this.validDate = "This a valid date.";
-      }
-    }
+    this.selected = d;
+    this.selectedChange.emit(d);
   }
 }
