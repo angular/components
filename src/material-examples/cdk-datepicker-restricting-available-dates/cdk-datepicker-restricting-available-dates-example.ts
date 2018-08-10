@@ -107,7 +107,7 @@ export class MyMinMaxCalendar<D> extends CalendarView<D> {
   minDate: D | null = null;
   maxDate: D | null = null;
   selected: D | null = null;
-  dateFilter = () => true;
+  dateFilter: (date: D) => boolean;
 
   _isDisabled(d: D): boolean {
     if (this.minDate && this.maxDate) {
