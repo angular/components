@@ -482,7 +482,7 @@ describe('MatDatepicker', () => {
         testComponent.assignedDatepicker = testComponent.datepicker;
         fixture.detectChanges();
 
-        testComponent.assignedDatepicker.select(toSelect);
+        testComponent.assignedDatepicker._select(toSelect);
         fixture.detectChanges();
         flush();
         fixture.detectChanges();
