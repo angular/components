@@ -1,3 +1,24 @@
+<a name="6.4.4"></a>
+## [6.4.4 mithril-magnet](https://github.com/angular/material2/compare/6.4.3...6.4.4) (2018-08-13)
+
+
+### Bug Fixes
+
+* **button:** allow transition for the button focus overlay for all buttons ([#12552](https://github.com/angular/material2/issues/12552)) ([0a56cf7](https://github.com/angular/material2/commit/0a56cf7))
+* **button-toggle:** forward tabindex to underlying button ([#12538](https://github.com/angular/material2/issues/12538)) ([dcae875](https://github.com/angular/material2/commit/dcae875))
+* **breakpoint-observer:** Emit matching state of each query provided ([#12506](https://github.com/angular/material2/issues/12506)) ([cb3f760](https://github.com/angular/material2/commit/cb3f760))
+* **datepicker:** input not picking up changes if datepicker is assigned after init ([#12546](https://github.com/angular/material2/issues/12546)) ([d10a6c4](https://github.com/angular/material2/commit/d10a6c4))
+* **drag-drop:** add support for sorting animations ([#12530](https://github.com/angular/material2/issues/12530)) ([7d0e69b](https://github.com/angular/material2/commit/7d0e69b))
+* **drag-drop:** ignore self inside connectedTo ([#12626](https://github.com/angular/material2/issues/12626)) ([7e7e873](https://github.com/angular/material2/commit/7e7e873))
+* **drag-drop:** remove circular dependencies ([#12554](https://github.com/angular/material2/issues/12554)) ([fd70c07](https://github.com/angular/material2/commit/fd70c07))
+* **list:** disable hover styling on touch devices ([#12520](https://github.com/angular/material2/issues/12520)) ([6048f6f](https://github.com/angular/material2/commit/6048f6f))
+* **overlay:** flexible overlay with push not handling scroll offset and position locking ([#11628](https://github.com/angular/material2/issues/11628)) ([a192907](https://github.com/angular/material2/commit/a192907))
+* **paginator:** inconsistently disabling tooltips between browsers ([#12539](https://github.com/angular/material2/issues/12539)) ([35bdd00](https://github.com/angular/material2/commit/35bdd00))
+* **snackbar:** wrap simple snackbar text in span ([#12599](https://github.com/angular/material2/issues/12599)) ([11b97e4](https://github.com/angular/material2/commit/11b97e4))
+* **tabs:** animation running after initialization ([#12549](https://github.com/angular/material2/issues/12549)) ([2798084](https://github.com/angular/material2/commit/2798084))
+* **tree:** include constructors on MatTree classes to allow es6 builds ([#12556](https://github.com/angular/material2/issues/12556)) ([5b0eed3](https://github.com/angular/material2/commit/5b0eed3))
+
+
 <a name="6.4.3"></a>
 ## [6.4.3 monelite-meeple](https://github.com/angular/material2/compare/6.4.2...6.4.3) (2018-08-07)
 
