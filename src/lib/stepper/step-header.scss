@@ -39,9 +39,9 @@ $mat-step-header-icon-size: 16px !default;
 }
 
 .mat-step-icon-error .mat-icon {
-  font-size: $mat-step-header-icon-size+8;
-  height: $mat-step-header-icon-size+8;
-  width: $mat-step-header-icon-size+8;
+  font-size: $mat-step-header-icon-size + 8;
+  height: $mat-step-header-icon-size + 8;
+  width: $mat-step-header-icon-size + 8;
 }
 
 .mat-step-label {

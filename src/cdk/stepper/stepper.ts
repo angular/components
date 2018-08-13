@@ -90,11 +90,11 @@ export interface StepperOptions {
   showError?: boolean;
 
   /**
-   * Whether the stepper should use the Material UI guidelines when
-   * displaying the icons or not.
-   * Default behavior is assumed to be false.
+   * Whether the stepper should display the default indicator type
+   * or not.
+   * Default behavior is assumed to be true.
    */
-  useGuidelines?: boolean;
+  displayDefaultIndicatorType?: boolean;
 }
 
 @Component({
@@ -108,7 +108,7 @@ export interface StepperOptions {
 export class CdkStep implements OnChanges {
   private _stepperOptions: StepperOptions;
   _showError: boolean;
-  _useGuidelines: boolean;
+  _displayDefaultIndicatorType: boolean;
 
   /** Template for step label if it exists. */
   @ContentChild(CdkStepLabel) stepLabel: CdkStepLabel;
@@ -189,7 +189,7 @@ export class CdkStep implements OnChanges {
     @Optional() @Inject(MAT_STEPPER_GLOBAL_OPTIONS) stepperOptions: StepperOptions) {
     this._stepperOptions = stepperOptions ? stepperOptions : {};
     this._showError = !!this._stepperOptions.showError;
-    this._useGuidelines = !!this._stepperOptions.useGuidelines;
+    this._displayDefaultIndicatorType = this._stepperOptions.displayDefaultIndicatorType !== false;
   }
 
   /** Selects this step component. */
@@ -371,11 +371,9 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
     const step = this._steps.toArray()[index];
     const isCurrentStep = this._isCurrentStep(index);
 
-    if (step._useGuidelines) {
-      return this._getGuidelineLogic(step, isCurrentStep, state);
-    } else {
-      return this._getDefaultIndicatorLogic(step, isCurrentStep);
-    }
+    return step._displayDefaultIndicatorType
+      ? this._getDefaultIndicatorLogic(step, isCurrentStep)
+      : this._getGuidelineLogic(step, isCurrentStep, state);
   }
 
   private _getDefaultIndicatorLogic(step: CdkStep, isCurrentStep: boolean): StepState {

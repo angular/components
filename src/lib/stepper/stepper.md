@@ -188,7 +188,7 @@ You can set the state of a step to whatever you want. The given state by default
 </mat-horizontal-stepper>
 ```
 
-In order to use the custom step states, you must add the `useGuidelines` option to the global default stepper options which can be specified by providing a value for
+In order to use the custom step states, you must add the `displayDefaultIndicatorType` option to the global default stepper options which can be specified by providing a value for
 `MAT_STEPPER_GLOBAL_OPTIONS` in your application's root module.
 
 ```ts
@@ -196,7 +196,7 @@ In order to use the custom step states, you must add the `useGuidelines` option 
   providers: [
     {
       provide: MAT_STEPPER_GLOBAL_OPTIONS,
-      useValue: { useGuidelines: true }
+      useValue: { displayDefaultIndicatorType: false }
     }
   ]
 })

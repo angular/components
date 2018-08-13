@@ -923,7 +923,7 @@ describe('MatStepper', () => {
           .queryAll(By.directive(MatStepperNext))[0].nativeElement;
 
       stepper.selectedIndex = 1;
-      stepper._steps.toArray()[0].hasError = true;
+      stepper._steps.first.hasError = true;
       nextButtonNativeEl.click();
       fixture.detectChanges();
 
@@ -940,7 +940,7 @@ describe('MatStepper', () => {
         MatHorizontalStepperWithErrorsApp,
         [{
           provide: MAT_STEPPER_GLOBAL_OPTIONS,
-          useValue: {useGuidelines: true}
+          useValue: {displayDefaultIndicatorType: false}
         }],
         [MatFormFieldModule, MatInputModule]
       );
@@ -954,7 +954,7 @@ describe('MatStepper', () => {
           .queryAll(By.directive(MatStepperNext))[0].nativeElement;
 
       stepper.selectedIndex = 1;
-      stepper._steps.toArray()[0].completed = true;
+      stepper._steps.first.completed = true;
       nextButtonNativeEl.click();
       fixture.detectChanges();
 
