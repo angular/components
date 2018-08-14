@@ -1,5 +1,10 @@
 import {ArrayDataSource} from '@angular/cdk/collections';
-import {CdkVirtualForOf, CdkVirtualScrollViewport, ScrollingModule} from '@angular/cdk/scrolling';
+import {
+  CdkVirtualForOf,
+  CdkVirtualScrollViewport,
+  ScrollDispatcher,
+  ScrollingModule
+} from '@angular/cdk/scrolling';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {
   Component,
@@ -9,7 +14,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, inject, TestBed} from '@angular/core/testing';
 import {animationFrameScheduler, Subject} from 'rxjs';
 
 
@@ -577,6 +582,16 @@ describe('CdkVirtualScrollViewport', () => {
       testComponent.maxBufferPx = 99;
       expect(() => finishInit(fixture)).toThrow();
     }));
+
+    it('should register and degregister with ScrollDispatcher',
+        fakeAsync(inject([ScrollDispatcher], (dispatcher: ScrollDispatcher) => {
+          spyOn(dispatcher, 'register').and.callThrough();
+          spyOn(dispatcher, 'deregister').and.callThrough();
+          finishInit(fixture);
+          expect(dispatcher.register).toHaveBeenCalledWith(testComponent.viewport);
+          fixture.destroy();
+          expect(dispatcher.deregister).toHaveBeenCalledWith(testComponent.viewport);
+        })));
   });
 
   describe('with RTL direction', () => {
@@ -751,9 +766,9 @@ class FixedSizeVirtualScroll {
 @Component({
   template: `
     <cdk-virtual-scroll-viewport dir="rtl"
-        [itemSize]="itemSize" [bufferSize]="bufferSize" [orientation]="orientation"
-        [style.height.px]="viewportHeight" [style.width.px]="viewportWidth"
-        (scrolledIndexChange)="scrolledToIndex = $event">
+        [itemSize]="itemSize" [minBufferPx]="minBufferPx" [maxBufferPx]="maxBufferPx" 
+        [orientation]="orientation" [style.height.px]="viewportHeight" 
+        [style.width.px]="viewportWidth" (scrolledIndexChange)="scrolledToIndex = $event">
       <div class="item"
            *cdkVirtualFor="let item of items; let i = index; trackBy: trackBy; \
                            templateCacheSize: templateCacheSize"
@@ -782,7 +797,8 @@ class FixedSizeVirtualScrollWithRtlDirection {
   @Input() viewportSize = 200;
   @Input() viewportCrossSize = 100;
   @Input() itemSize = 50;
-  @Input() bufferSize = 0;
+  @Input() minBufferPx = 0;
+  @Input() maxBufferPx = 0;
   @Input() items = Array(10).fill(0).map((_, i) => i);
   @Input() trackBy: TrackByFunction<number>;
   @Input() templateCacheSize = 20;
