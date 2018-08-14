@@ -47,21 +47,17 @@ export function appendElementToHead(host: Tree, project: WorkspaceProject, eleme
 /** Parses the given HTML file and returns the head element if available. */
 export function getHeadTagElement(src: string): DefaultTreeElement | null {
   const document = parseHtml(src, {sourceCodeLocationInfo: true}) as DefaultTreeDocument;
-  let head: DefaultTreeElement | null = null;
+  const nodeQueue = [...document.childNodes];
 
-  const visitNodes = nodes => {
-    nodes.forEach(node => {
-      if (node.tagName === 'head') {
-        head = node;
-      } else {
-        if (node.childNodes) {
-          visitNodes(node.childNodes);
-        }
-      }
-    });
-  };
+  while (nodeQueue.length) {
+    const node = nodeQueue.shift() as DefaultTreeElement;
 
-  visitNodes(document.childNodes);
+    if (node.nodeName.toLowerCase() === 'head') {
+      return node;
+    } else if (node.childNodes) {
+      nodeQueue.push(...node.childNodes);
+    }
+  }
 
-  return head;
+  return null;
 }
