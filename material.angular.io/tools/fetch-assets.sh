@@ -6,6 +6,11 @@
 
 cd $(dirname ${0})/../
 
+# Branch on the docs-content repository that includes the docs assets. The branch can
+# be specified because in some situations we do not always want the docs-content of the
+# master branch (e.g. if `master` reflects the next major version).
+docsContentBranch=${1:-'master'}
+
 # Directory where documentation assets should be copied to (overviews, api docs)
 documentsDestination=./src/assets/documents/
 
@@ -33,8 +38,10 @@ mkdir -p ${materialExamplesDestination}
 # Remove previous repository if directory is present.
 rm -Rf ${docsContentPath}
 
+echo "Pulling docs-content assets for the branch: ${docsContentBranch}."
+
 # Clone the docs-content repository.
-git clone ${docsContentRepoUrl} ${docsContentPath} --depth 1
+git clone ${docsContentRepoUrl} ${docsContentPath} --depth 1 --branch ${docsContentBranch}
 
 # Copy all document assets (API, overview and guides).
 cp -R ${docsContentPath}/api ${documentsDestination}
