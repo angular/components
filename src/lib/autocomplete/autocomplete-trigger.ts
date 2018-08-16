@@ -249,7 +249,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this.optionSelections,
       this.autocomplete._keyManager.tabOut.pipe(filter(() => this._overlayAttached)),
       this._closeKeyEventStream,
-      this._outsideClickStream,
+      this._getOutsideClickStream(),
       this._overlayRef ?
           this._overlayRef.detachments().pipe(filter(() => this._overlayAttached)) :
           observableOf()
@@ -282,7 +282,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   }
 
   /** Stream of clicks outside of the autocomplete panel. */
-  private get _outsideClickStream(): Observable<any> {
+  private _getOutsideClickStream(): Observable<any> {
     if (!this._document) {
       return observableOf(null);
     }
