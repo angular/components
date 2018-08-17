@@ -202,6 +202,8 @@ In order to use the custom step states, you must add the `displayDefaultIndicato
 })
 ```
 
+<!-- example(stepper-states) -->
+
 ### Error State
 
 The stepper can now show error states by simply providing the `showError` option to the `MAT_STEPPER_GLOBAL_OPTIONS` in your application's root module as mentioned above.
@@ -216,6 +218,8 @@ The stepper can now show error states by simply providing the `showError` option
   ]
 })
 ```
+
+<!-- example(stepper-errors) -->
 
 ### Keyboard interaction
 - <kbd>LEFT_ARROW</kbd>: Focuses the previous step header
