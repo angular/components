@@ -1,107 +1,88 @@
-import {FileEntry, Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
-import {
-  NodePackageInstallTask,
-  RunSchematicTask,
-  TslintFixTask
-} from '@angular-devkit/schematics/tasks';
-import {existsSync, mkdtempSync} from 'fs';
-import * as path from 'path';
-import {getWorkspace} from '../utils/devkit-utils/config';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 
-const schematicsSrcPath = 'node_modules/@angular/material/schematics';
-const schematicsTmpPath = mkdtempSync('angular_material_schematics-');
+import {Rule, SchematicContext, TaskId, Tree} from '@angular-devkit/schematics';
+import {RunSchematicTask, TslintFixTask} from '@angular-devkit/schematics/tasks';
+import {getWorkspace} from '@schematics/angular/utility/config';
+import * as path from 'path';
 
 /** Entry point for `ng update` from Angular CLI. */
 export default function(): Rule {
   return (tree: Tree, context: SchematicContext) => {
-    // If this script failed in an earlier run, clear out the temporary files from that failed
-    // run before doing anything else.
-    tree.getDir(schematicsTmpPath).visit((_, entry) => tree.delete(entry.path));
-
-    // Copy the update schematics to a temporary directory.
-    const updateSrcs: FileEntry[] = [];
-    tree.getDir(schematicsSrcPath).visit((_, entry) => updateSrcs.push(entry));
-    for (let src of updateSrcs) {
-      tree.create(src.path.replace(schematicsSrcPath, schematicsTmpPath), src.content);
-    }
-
-    // Downgrade @angular/cdk and @angular/material to 5.x. This allows us to use the 5.x type
-    // information in the update script.
-    const downgradeTask = context.addTask(new NodePackageInstallTask({
-      packageName: '@angular/cdk@">=5 <6" @angular/material@">=5 <6"'
-    }));
 
     const allTsConfigPaths = getTsConfigPaths(tree);
-    const allUpdateTasks = [];
+    const tslintFixTasks: TaskId[] = [];
+
+    if (!allTsConfigPaths.length) {
+      throw new Error('Could not find any tsconfig file. Please submit an issue on the Angular ' +
+        'Material repository that includes the name of your TypeScript configuration.');
+    }
+
     for (const tsconfig of allTsConfigPaths) {
       // Run the update tslint rules.
-      allUpdateTasks.push(context.addTask(new TslintFixTask({
-        rulesDirectory: path.join(schematicsTmpPath, 'update/rules'),
+      tslintFixTasks.push(context.addTask(new TslintFixTask({
+        rulesDirectory: [
+          path.join(__dirname, 'rules/'),
+          path.join(__dirname, 'rules/attribute-selectors'),
+        ],
         rules: {
           // Automatic fixes.
-          "switch-identifiers": true,
-          "switch-property-names": true,
-          "switch-string-literal-attribute-selectors": true,
-          "switch-string-literal-css-names": true,
-          "switch-string-literal-element-selectors": true,
-          "switch-stylesheet-attribute-selectors": true,
-          "switch-stylesheet-css-names": true,
-          "switch-stylesheet-element-selectors": true,
-          "switch-stylesheet-input-names": true,
-          "switch-stylesheet-output-names": true,
-          "switch-template-attribute-selectors": true,
-          "switch-template-css-names": true,
-          "switch-template-element-selectors": true,
-          "switch-template-export-as-names": true,
-          "switch-template-input-names": true,
-          "switch-template-output-names": true,
+          'switch-identifiers': true,
+          'switch-property-names': true,
+          'switch-string-literal-css-names': true,
+          'switch-string-literal-element-selectors': true,
+          'switch-stylesheet-css-names': true,
+          'switch-stylesheet-element-selectors': true,
+          'switch-stylesheet-input-names': true,
+          'switch-stylesheet-output-names': true,
+          'switch-template-css-names': true,
+          'switch-template-element-selectors': true,
+          'switch-template-export-as-names': true,
+          'switch-template-input-names': true,
+          'switch-template-output-names': true,
+
+          // Attribute selector update rules.
+          'attribute-selectors-string-literal': true,
+          'attribute-selectors-stylesheet': true,
+          'attribute-selectors-template': true,
 
           // Additional issues we can detect but not automatically fix.
-          "check-class-declaration-misc": true,
-          "check-identifier-misc": true,
-          "check-import-misc": true,
-          "check-inheritance": true,
-          "check-method-calls": true,
-          "check-property-access-misc": true,
-          "check-template-misc": true
+          'check-class-declaration-misc': true,
+          'check-identifier-misc': true,
+          'check-import-misc': true,
+          'check-inheritance': true,
+          'check-method-calls': true,
+          'check-property-access-misc': true,
+          'check-template-misc': true
         }
       }, {
         silent: false,
         ignoreErrors: true,
         tsConfigPath: tsconfig,
-      }), [downgradeTask]));
+      })));
     }
 
-    // Upgrade @angular/material back to 6.x.
-    const upgradeTask = context.addTask(new NodePackageInstallTask({
-      // TODO(mmalerba): Change "next" to ">=6 <7".
-      packageName: '@angular/cdk@next @angular/material@next'
-    }), allUpdateTasks);
-
     // Delete the temporary schematics directory.
-    context.addTask(
-        new RunSchematicTask('ng-post-update', {
-          deletePath: schematicsTmpPath
-        }), [upgradeTask]);
+    context.addTask(new RunSchematicTask('ng-post-update', {}), tslintFixTasks);
   };
 }
 
-/** Post-update schematic to be called when ng update is finished. */
-export function postUpdate(options: {deletePath: string}): Rule {
-  return (tree: Tree, context: SchematicContext) => {
-    tree.delete(options.deletePath);
-    context.addTask(new RunSchematicTask('ng-post-post-update', {}));
-  };
-}
-
-/** Post-post-update schematic to be called when post-update is finished. */
-export function postPostUpdate(): Rule {
+/** Post-update schematic to be called when update is finished. */
+export function postUpdate(): Rule {
   return () => console.log(
       '\nComplete! Please check the output above for any issues that were detected but could not' +
       ' be automatically fixed.');
 }
 
-/** Gets the first tsconfig path from possibile locations based on the history of the CLI. */
+/**
+ * Gets all tsconfig paths from a CLI project by reading the workspace configuration
+ * and looking for common tsconfig locations.
+ */
 function getTsConfigPaths(tree: Tree): string[] {
   // Start with some tsconfig paths that are generally used.
   const tsconfigPaths = [
@@ -112,12 +93,13 @@ function getTsConfigPaths(tree: Tree): string[] {
 
   // Add any tsconfig directly referenced in a build or test task of the angular.json workspace.
   const workspace = getWorkspace(tree);
+
   for (const project of Object.values(workspace.projects)) {
     if (project && project.architect) {
       for (const taskName of ['build', 'test']) {
         const task = project.architect[taskName];
         if (task && task.options && task.options.tsConfig) {
-          const tsConfigOption = project.architect.tsConfig;
+          const tsConfigOption = task.options.tsConfig;
           if (typeof tsConfigOption === 'string') {
             tsconfigPaths.push(tsConfigOption);
           } else if (Array.isArray(tsConfigOption)) {
@@ -130,6 +112,6 @@ function getTsConfigPaths(tree: Tree): string[] {
 
   // Filter out tsconfig files that don't exist and remove any duplicates.
   return tsconfigPaths
-      .filter(p => existsSync(p))
+      .filter(p => tree.exists(p))
       .filter((value, index, self) => self.indexOf(value) === index);
 }

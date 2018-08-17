@@ -29,6 +29,16 @@ export const TOUCH_BUFFER_MS = 650;
 export type FocusOrigin = 'touch' | 'mouse' | 'keyboard' | 'program' | null;
 
 
+/**
+ * Corresponds to the options that can be passed to the native `focus` event.
+ * via https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
+ */
+export interface FocusOptions {
+  /** Whether the browser should scroll to the element when it is focused. */
+  preventScroll?: boolean;
+}
+
+
 type MonitoredElementInfo = {
   unlisten: Function,
   checkChildren: boolean,
@@ -135,15 +145,17 @@ export class FocusMonitor implements OnDestroy {
 
   /**
    * Focuses the element via the specified focus origin.
-   * @param element The element to focus.
-   * @param origin The focus origin.
+   * @param element Element to focus.
+   * @param origin Focus origin.
+   * @param options Options that can be used to configure the focus behavior.
    */
-  focusVia(element: HTMLElement, origin: FocusOrigin): void {
+  focusVia(element: HTMLElement, origin: FocusOrigin, options?: FocusOptions): void {
     this._setOriginForCurrentEventQueue(origin);
 
     // `focus` isn't available on the server
     if (typeof element.focus === 'function') {
-      element.focus();
+      // Cast the element to `any`, because the TS typings don't have the `options` parameter yet.
+      (element as any).focus(options);
     }
   }
 
@@ -173,7 +185,7 @@ export class FocusMonitor implements OnDestroy {
     };
 
     // When the touchstart event fires the focus event is not yet in the event queue. This means
-    // we can't rely on the trick used above (setting timeout of 0ms). Instead we wait 650ms to
+    // we can't rely on the trick used above (setting timeout of 1ms). Instead we wait 650ms to
     // see if a focus happens.
     let documentTouchstartListener = (event: TouchEvent) => {
       if (this._touchTimeoutId != null) {
@@ -246,7 +258,10 @@ export class FocusMonitor implements OnDestroy {
   private _setOriginForCurrentEventQueue(origin: FocusOrigin): void {
     this._ngZone.runOutsideAngular(() => {
       this._origin = origin;
-      this._originTimeoutId = setTimeout(() => this._origin = null);
+      // Sometimes the focus origin won't be valid in Firefox because Firefox seems to focus *one*
+      // tick after the interaction event fired. To ensure the focus origin is always correct,
+      // the focus origin will be determined at the beginning of the next tick.
+      this._originTimeoutId = setTimeout(() => this._origin = null, 1);
     });
   }
 
@@ -387,13 +402,13 @@ export class CdkMonitorFocus implements OnDestroy {
   }
 }
 
-/** @docs-private @deprecated @deletion-target 7.0.0 */
+/** @docs-private @deprecated @breaking-change 7.0.0 */
 export function FOCUS_MONITOR_PROVIDER_FACTORY(
     parentDispatcher: FocusMonitor, ngZone: NgZone, platform: Platform) {
   return parentDispatcher || new FocusMonitor(ngZone, platform);
 }
 
-/** @docs-private @deprecated @deletion-target 7.0.0 */
+/** @docs-private @deprecated @breaking-change 7.0.0 */
 export const FOCUS_MONITOR_PROVIDER = {
   // If there is already a FocusMonitor available, use that. Otherwise, provide a new one.
   provide: FocusMonitor,

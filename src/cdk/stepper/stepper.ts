@@ -84,8 +84,17 @@ export class CdkStep implements OnChanges {
   /** Whether user has seen the expanded step content or not. */
   interacted = false;
 
-  /** Label of the step. */
+  /** Plain text label of the step. */
   @Input() label: string;
+
+  /** Aria label for the tab. */
+  @Input('aria-label') ariaLabel: string;
+
+  /**
+   * Reference to the element that the tab is labelled by.
+   * Will be cleared if `aria-label` is set at the same time.
+   */
+  @Input('aria-labelledby') ariaLabelledby: string;
 
   /** Whether the user can return to this step once it has been marked as complted. */
   @Input()
@@ -191,7 +200,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   /** The step that is selected. */
   @Input()
   get selected(): CdkStep {
-    // @deletion-target 7.0.0 Change return type to `CdkStep | undefined`.
+    // @breaking-change 7.0.0 Change return type to `CdkStep | undefined`.
     return this._steps ? this._steps.toArray()[this.selectedIndex] : undefined!;
   }
   set selected(step: CdkStep) {

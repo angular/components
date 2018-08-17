@@ -73,7 +73,7 @@ const defaultPositionList: ConnectedPosition[] = [
 export const CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY =
     new InjectionToken<() => ScrollStrategy>('cdk-connected-overlay-scroll-strategy');
 
-/** @docs-private @deprecated @deletion-target 7.0.0 */
+/** @docs-private @deprecated @breaking-change 7.0.0 */
 export function CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_FACTORY(overlay: Overlay):
   () => ScrollStrategy {
   return (config?: RepositionScrollStrategyConfig) => overlay.scrollStrategies.reposition(config);
@@ -205,6 +205,9 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   /** Event emitted when the overlay has been detached. */
   @Output() detach = new EventEmitter<void>();
 
+  /** Emits when there are keyboard events that are targeted at the overlay. */
+  @Output() overlayKeydown = new EventEmitter<KeyboardEvent>();
+
   // TODO(jelbourn): inputs for size, scroll behavior, animation, etc.
 
   constructor(
@@ -335,6 +338,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       this._createOverlay();
 
       this._overlayRef!.keydownEvents().subscribe((event: KeyboardEvent) => {
+        this.overlayKeydown.next(event);
+
         if (event.keyCode === ESCAPE) {
           this._detachOverlay();
         }

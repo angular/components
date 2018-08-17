@@ -90,7 +90,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /**
    * @deprecated
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   @Input('mat-menu-trigger-for')
   get _deprecatedMatMenuTriggerFor(): MatMenuPanel {
@@ -113,7 +113,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /**
    * Event emitted when the associated menu is opened.
    * @deprecated Switch to `menuOpened` instead
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   // tslint:disable-next-line:no-output-on-prefix
   @Output() readonly onMenuOpen: EventEmitter<void> = this.menuOpened;
@@ -124,7 +124,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /**
    * Event emitted when the associated menu is closed.
    * @deprecated Switch to `menuClosed` instead
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   // tslint:disable-next-line:no-output-on-prefix
   @Output() readonly onMenuClose: EventEmitter<void> = this.menuClosed;
@@ -137,7 +137,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
               @Optional() @Self() private _menuItemInstance: MatMenuItem,
               @Optional() private _dir: Directionality,
               // TODO(crisbeto): make the _focusMonitor required when doing breaking changes.
-              // @deletion-target 7.0.0
+              // @breaking-change 7.0.0
               private _focusMonitor?: FocusMonitor) {
 
     if (_menuItemInstance) {
@@ -196,6 +196,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     }
 
     const overlayRef = this._createOverlay();
+    this._setPosition(overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy);
     overlayRef.attach(this._portal);
 
     if (this.menu.lazyContent) {
@@ -244,9 +245,14 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       if (menu.lazyContent) {
         // Wait for the exit animation to finish before detaching the content.
         menu._animationDone
-          .pipe(filter(event => event.toState === 'void'), take(1))
-          .subscribe(() => {
-            menu.lazyContent!.detach();
+          .pipe(
+            filter(event => event.toState === 'void'),
+            take(1),
+            // Interrupt if the content got re-attached.
+            takeUntil(menu.lazyContent._attached)
+          )
+          .subscribe(() => menu.lazyContent!.detach(), undefined, () => {
+            // No matter whether the content got re-attached, reset the menu.
             this._resetMenu();
           });
       } else {
@@ -350,7 +356,9 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    */
   private _getOverlayConfig(): OverlayConfig {
     return new OverlayConfig({
-      positionStrategy: this._getPosition(),
+      positionStrategy: this._overlay.position()
+          .flexibleConnectedTo(this._element)
+          .withTransformOriginOn('.mat-menu-panel'),
       hasBackdrop: this.menu.hasBackdrop == null ? !this.triggersSubmenu() : this.menu.hasBackdrop,
       backdropClass: this.menu.backdropClass || 'cdk-overlay-transparent-backdrop',
       scrollStrategy: this._scrollStrategy(),
@@ -375,11 +383,11 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   }
 
   /**
-   * This method builds the position strategy for the overlay, so the menu is properly connected
-   * to the trigger.
-   * @returns ConnectedPositionStrategy
+   * Sets the appropriate positions on a position strategy
+   * so the overlay connects with the trigger correctly.
+   * @param positionStrategy Strategy whose position to update.
    */
-  private _getPosition(): FlexibleConnectedPositionStrategy {
+  private _setPosition(positionStrategy: FlexibleConnectedPositionStrategy) {
     let [originX, originFallbackX]: HorizontalConnectionPos[] =
         this.menu.xPosition === 'before' ? ['end', 'start'] : ['start', 'end'];
 
@@ -401,27 +409,24 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       originFallbackY = overlayFallbackY === 'top' ? 'bottom' : 'top';
     }
 
-    return this._overlay.position()
-        .flexibleConnectedTo(this._element)
-        .withTransformOriginOn('.mat-menu-panel')
-        .withPositions([
-          {originX, originY, overlayX, overlayY, offsetY},
-          {originX: originFallbackX, originY, overlayX: overlayFallbackX, overlayY, offsetY},
-          {
-            originX,
-            originY: originFallbackY,
-            overlayX,
-            overlayY: overlayFallbackY,
-            offsetY: -offsetY
-          },
-          {
-            originX: originFallbackX,
-            originY: originFallbackY,
-            overlayX: overlayFallbackX,
-            overlayY: overlayFallbackY,
-            offsetY: -offsetY
-          }
-        ]);
+    positionStrategy.withPositions([
+      {originX, originY, overlayX, overlayY, offsetY},
+      {originX: originFallbackX, originY, overlayX: overlayFallbackX, overlayY, offsetY},
+      {
+        originX,
+        originY: originFallbackY,
+        overlayX,
+        overlayY: overlayFallbackY,
+        offsetY: -offsetY
+      },
+      {
+        originX: originFallbackX,
+        originY: originFallbackY,
+        overlayX: overlayFallbackX,
+        overlayY: overlayFallbackY,
+        offsetY: -offsetY
+      }
+    ]);
   }
 
   /** Cleans up the active subscriptions. */
@@ -501,8 +506,10 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
         // while the new trigger tries to re-open it. Wait for the animation to finish
         // before doing so. Also interrupt if the user moves to another item.
         if (this.menu instanceof MatMenu && this.menu._isAnimating) {
+          // We need the `delay(0)` here in order to avoid
+          // 'changed after checked' errors in some cases. See #12194.
           this.menu._animationDone
-            .pipe(take(1), takeUntil(this._parentMenu._hovered()))
+            .pipe(take(1), delay(0, asapScheduler), takeUntil(this._parentMenu._hovered()))
             .subscribe(() => this.openMenu());
         } else {
           this.openMenu();

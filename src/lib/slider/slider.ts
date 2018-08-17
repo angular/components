@@ -262,6 +262,13 @@ export class MatSlider extends _MatSliderMixinBase
   /** Event emitted when the slider thumb moves. */
   @Output() readonly input: EventEmitter<MatSliderChange> = new EventEmitter<MatSliderChange>();
 
+  /**
+   * Emits when the raw value of the slider changes. This is here primarily
+   * to facilitate the two-way binding for the `value` input.
+   * @docs-private
+   */
+  @Output() readonly valueChange: EventEmitter<number | null> = new EventEmitter<number | null>();
+
   /** The value to be used for display purposes. */
   get displayValue(): string | number {
     if (this.displayWith) {
@@ -339,19 +346,25 @@ export class MatSlider extends _MatSliderMixinBase
 
   /** CSS styles for the track background element. */
   get _trackBackgroundStyles(): { [key: string]: string } {
-    let axis = this.vertical ? 'Y' : 'X';
-    let sign = this._invertMouseCoords ? '-' : '';
+    const axis = this.vertical ? 'Y' : 'X';
+    const scale = this.vertical ? `1, ${1 - this.percent}, 1` : `${1 - this.percent}, 1, 1`;
+    const sign = this._invertMouseCoords ? '-' : '';
+
     return {
-      'transform': `translate${axis}(${sign}${this._thumbGap}px) scale${axis}(${1 - this.percent})`
+      // scale3d avoids some rendering issues in Chrome. See #12071.
+      transform: `translate${axis}(${sign}${this._thumbGap}px) scale3d(${scale})`
     };
   }
 
   /** CSS styles for the track fill element. */
   get _trackFillStyles(): { [key: string]: string } {
-    let axis = this.vertical ? 'Y' : 'X';
-    let sign = this._invertMouseCoords ? '' : '-';
+    const axis = this.vertical ? 'Y' : 'X';
+    const scale = this.vertical ? `1, ${this.percent}, 1` : `${this.percent}, 1, 1`;
+    const sign = this._invertMouseCoords ? '' : '-';
+
     return {
-      'transform': `translate${axis}(${sign}${this._thumbGap}px) scale${axis}(${this.percent})`
+      // scale3d avoids some rendering issues in Chrome. See #12071.
+      transform: `translate${axis}(${sign}${this._thumbGap}px) scale3d(${scale})`
     };
   }
 
@@ -443,7 +456,7 @@ export class MatSlider extends _MatSliderMixinBase
               private _changeDetectorRef: ChangeDetectorRef,
               @Optional() private _dir: Directionality,
               @Attribute('tabindex') tabIndex: string,
-              // @deletion-target 7.0.0 `_animationMode` parameter to be made required.
+              // @breaking-change 7.0.0 `_animationMode` parameter to be made required.
               @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     super(elementRef);
 
@@ -660,6 +673,7 @@ export class MatSlider extends _MatSliderMixinBase
   /** Emits a change event if the current value is different from the last emitted value. */
   private _emitChangeEvent() {
     this._controlValueAccessorChangeFn(this.value);
+    this.valueChange.emit(this.value);
     this.change.emit(this._createChangeEvent());
   }
 

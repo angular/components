@@ -1,11 +1,19 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {green, red} from 'chalk';
 import {sync as globSync} from 'glob';
 import {IOptions, Replacement, RuleFailure, Rules} from 'tslint';
-import * as ts from 'typescript';
-import {inputNames} from '../material/component-data';
+import {inputNames} from '../material/data/input-names';
 import {ExternalResource} from '../tslint/component-file';
 import {ComponentWalker} from '../tslint/component-walker';
-import {findAll} from '../typescript/literal';
+import {findAllSubstringIndices} from '../typescript/literal';
+import * as ts from 'typescript';
 
 /**
  * Rule that walks through every component decorator and updates their inline or external
@@ -58,14 +66,15 @@ export class SwitchStylesheetInputNamesWalker extends ComponentWalker {
     inputNames.forEach(name => {
       if (!name.whitelist || name.whitelist.css) {
         const bracketedName = {replace: `[${name.replace}]`, replaceWith: `[${name.replaceWith}]`};
-        this.createReplacementsForOffsets(node, name,
-            findAll(stylesheetContent, bracketedName.replace)).forEach(replacement => {
-              replacements.push({
-                message: `Found deprecated @Input() "${red(name.replace)}" which has been renamed` +
-                    ` to "${green(name.replaceWith)}"`,
-                replacement
-              });
-            });
+        const foundOffsets = findAllSubstringIndices(stylesheetContent, bracketedName.replace);
+
+        this.createReplacementsForOffsets(node, name, foundOffsets).forEach(replacement => {
+          replacements.push({
+            message: `Found deprecated @Input() "${red(name.replace)}" which has been renamed` +
+                ` to "${green(name.replaceWith)}"`,
+            replacement
+          });
+        });
       }
     });
 

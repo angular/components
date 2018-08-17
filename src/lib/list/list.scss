@@ -41,6 +41,7 @@ $mat-list-item-inset-divider-offset: 72px;
   // being `inline` by default.
   display: block;
   height: $base-height;
+  -webkit-tap-highlight-color: transparent;
 
   .mat-list-item-content {
     display: flex;
@@ -102,27 +103,36 @@ $mat-list-item-inset-divider-offset: 72px;
     padding: 0;
   }
 
-  // There can be a secondary item (e.g. avatar-icon, checkbox) at the start of the
-  // list-item. This means that there should be a padding for the mat-list-text on the start-side.
-  .mat-list-item-content .mat-list-text:not(:nth-child(2)) {
-    padding-right: 0;
-    padding-left: $mat-list-side-padding;
-
-    [dir='rtl'] & {
-      padding-right: $mat-list-side-padding;
-      padding-left: 0;
-    }
-  }
-
-  // Reversed content is mainly used by the MatSelectionList for displaying the checkbox at the
-  // end of the list option. Since there is a secondary item (checkbox) at the end of the
-  // option, there needs to be a padding for the mat-list-text on the end-side.
-  .mat-list-item-content-reverse .mat-list-text:not(:nth-child(2)) {
-    padding-left: 0;
-    padding-right: $mat-list-side-padding;
-
-    [dir='rtl'] & {
+  &.mat-list-item-with-avatar,
+  &.mat-list-option {
+    .mat-list-item-content .mat-list-text {
       padding-right: 0;
+      padding-left: $mat-list-side-padding;
+
+      [dir='rtl'] & {
+        padding-right: $mat-list-side-padding;
+        padding-left: 0;
+      }
+    }
+
+    // Reversed content is mainly used by the MatSelectionList for displaying the checkbox at the
+    // end of the list option. Since there is a secondary item (checkbox) at the end of the
+    // option, there needs to be a padding for the mat-list-text on the end-side.
+    .mat-list-item-content-reverse .mat-list-text {
+      padding-left: 0;
+      padding-right: $mat-list-side-padding;
+
+      [dir='rtl'] & {
+        padding-right: 0;
+        padding-left: $mat-list-side-padding;
+      }
+    }
+   }
+
+  &.mat-list-item-with-avatar.mat-list-option {
+    .mat-list-item-content-reverse .mat-list-text,
+    .mat-list-item-content .mat-list-text {
+      padding-right: $mat-list-side-padding;
       padding-left: $mat-list-side-padding;
     }
   }
@@ -199,6 +209,7 @@ $mat-list-item-inset-divider-offset: 72px;
 .mat-list, .mat-nav-list, .mat-selection-list {
   padding-top: $mat-list-top-padding;
   display: block;
+  -webkit-tap-highlight-color: transparent;
 
   .mat-subheader {
     @include mat-subheader-spacing($mat-list-top-padding, $mat-list-base-height);
@@ -218,8 +229,9 @@ $mat-list-item-inset-divider-offset: 72px;
 }
 
 
-.mat-list[dense], .mat-nav-list[dense], .mat-selection-list[dense] {
-
+.mat-list[dense],
+.mat-nav-list[dense],
+.mat-selection-list[dense] {
   padding-top: $mat-dense-top-padding;
   display: block;
 
@@ -255,4 +267,17 @@ $mat-list-item-inset-divider-offset: 72px;
 .mat-list-option:not(.mat-list-item-disabled) {
   cursor: pointer;
   outline: none;
+}
+
+
+// Disable the hover styles on non-hover devices. Since this is more of a progressive
+// enhancement and not all desktop browsers support this kind of media query, we can't
+// use something like `@media (hover)`.
+@media (hover: none) {
+  .mat-list-option,
+  .mat-nav-list .mat-list-item {
+    &:hover {
+      background: none;
+    }
+  }
 }

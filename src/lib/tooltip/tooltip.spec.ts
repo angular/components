@@ -2,6 +2,7 @@ import {
   async,
   ComponentFixture,
   fakeAsync,
+  flush,
   flushMicrotasks,
   inject,
   TestBed,
@@ -53,7 +54,8 @@ describe('MatTooltip', () => {
         ScrollableTooltipDemo,
         OnPushTooltipDemo,
         DynamicTooltipsDemo,
-        TooltipOnTextFields
+        TooltipOnTextFields,
+        TooltipOnDraggableElement,
       ],
       providers: [
         {provide: Platform, useFactory: () => platform},
@@ -510,21 +512,24 @@ describe('MatTooltip', () => {
     it('should keep the overlay direction in sync with the trigger direction', fakeAsync(() => {
       dir.value = 'rtl';
       tooltipDirective.show();
-      tick();
+      tick(0);
       fixture.detectChanges();
+      tick(500);
 
       let tooltipWrapper =
           overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
       expect(tooltipWrapper.getAttribute('dir')).toBe('rtl', 'Expected tooltip to be in RTL.');
 
       tooltipDirective.hide(0);
-      tick();
+      tick(0);
       fixture.detectChanges();
+      tick(500);
 
       dir.value = 'ltr';
       tooltipDirective.show();
-      tick();
+      tick(0);
       fixture.detectChanges();
+      tick(500);
 
       tooltipWrapper =
           overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
@@ -575,7 +580,8 @@ describe('MatTooltip', () => {
         fixture.detectChanges();
       }).not.toThrow();
 
-      tick(0);
+      // Flush due to the additional tick that is necessary for the FocusMonitor.
+      flush();
     }));
 
     it('should not show the tooltip on progammatic focus', fakeAsync(() => {
@@ -793,6 +799,15 @@ describe('MatTooltip', () => {
       expect(instance.textarea.nativeElement.style.userSelect).toBeFalsy();
       expect(instance.textarea.nativeElement.style.webkitUserSelect).toBeFalsy();
     });
+
+    it('should clear the `-webkit-user-drag` on draggable elements', () => {
+      const fixture = TestBed.createComponent(TooltipOnDraggableElement);
+
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.button.nativeElement.style.webkitUserDrag).toBeFalsy();
+    });
+
   });
 
 });
@@ -897,6 +912,20 @@ class TooltipOnTextFields {
   @ViewChild('input') input: ElementRef;
   @ViewChild('textarea') textarea: ElementRef;
 }
+
+@Component({
+  template: `
+    <button
+      #button
+      style="-webkit-user-drag: none;"
+      draggable="true"
+      matTooltip="Drag me"></button>
+  `,
+})
+class TooltipOnDraggableElement {
+  @ViewChild('button') button: ElementRef;
+}
+
 
 /** Asserts whether a tooltip directive has a tooltip instance. */
 function assertTooltipInstance(tooltip: MatTooltip, shouldExist: boolean): void {

@@ -19,6 +19,7 @@ import {
   RIGHT_ARROW,
   SPACE,
   UP_ARROW,
+  A,
 } from '@angular/cdk/keycodes';
 import {
   CdkConnectedOverlay,
@@ -310,7 +311,17 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   private _disableOptionCentering: boolean = false;
 
   /** Whether the select is focused. */
-  focused: boolean = false;
+  get focused(): boolean {
+    return this._focused || this._panelOpen;
+  }
+  /**
+   * @deprecated Setter to be removed as this property is intended to be readonly.
+   * @breaking-change 8.0.0
+   */
+  set focused(value: boolean) {
+    this._focused = value;
+  }
+  private _focused = false;
 
   /** A name for this control that can be used by `mat-form-field`. */
   controlType = 'mat-select';
@@ -371,7 +382,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   }
 
   /**
-   * A function to compare the option values with the selected values. The first argument
+   * Function to compare the option values with the selected values. The first argument
    * is a value from an option. The second is a value from the selection. A boolean
    * should be returned.
    */
@@ -405,8 +416,14 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   /** Input that can be used to specify the `aria-labelledby` attribute. */
   @Input('aria-labelledby') ariaLabelledby: string;
 
-  /** An object used to control when error messages are shown. */
+  /** Object used to control when error messages are shown. */
   @Input() errorStateMatcher: ErrorStateMatcher;
+
+  /**
+   * Function used to sort the values in a select in multiple mode.
+   * Follows the same logic as `Array.prototype.sort`.
+   */
+  @Input() sortComparator: (a: MatOption, b: MatOption, options: MatOption[]) => number;
 
   /** Unique id of the element. */
   @Input()
@@ -428,8 +445,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       .pipe(take(1), switchMap(() => this.optionSelectionChanges));
   });
 
-   /** Event emitted when the select panel has been toggled. */
-   @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  /** Event emitted when the select panel has been toggled. */
+  @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** Event emitted when the select has been opened. */
   @Output('opened') readonly _openedStream: Observable<void> =
@@ -695,6 +712,10 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     } else if ((keyCode === ENTER || keyCode === SPACE) && manager.activeItem) {
       event.preventDefault();
       manager.activeItem._selectViaInteraction();
+    } else if (this._multiple && keyCode === A && event.ctrlKey) {
+      event.preventDefault();
+      const hasDeselectedOptions = this.options.some(option => !option.selected);
+      this.options.forEach(option => hasDeselectedOptions ? option.select() : option.deselect());
     } else {
       const previouslyFocusedIndex = manager.activeItemIndex;
 
@@ -718,7 +739,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   _onFocus() {
     if (!this.disabled) {
-      this.focused = true;
+      this._focused = true;
       this.stateChanges.next();
     }
   }
@@ -728,7 +749,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    * "blur" to the panel when it opens, causing a false positive.
    */
   _onBlur() {
-    this.focused = false;
+    this._focused = false;
 
     if (!this.disabled && !this.panelOpen) {
       this._onTouched();
@@ -871,17 +892,20 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     const wasSelected = this._selectionModel.isSelected(option);
 
     if (option.value == null && !this._multiple) {
+      option.deselect();
       this._selectionModel.clear();
       this._propagateChanges(option.value);
     } else {
       option.selected ? this._selectionModel.select(option) : this._selectionModel.deselect(option);
 
+      if (isUserInput) {
+        this._keyManager.setActiveItem(option);
+      }
+
       if (this.multiple) {
         this._sortValues();
 
         if (isUserInput) {
-          this._keyManager.setActiveItem(option);
-
           // In case the user selected the option with their mouse, we
           // want to restore focus back to the trigger, in order to
           // prevent the select keyboard controls from clashing with
@@ -902,7 +926,11 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   private _sortValues() {
     if (this.multiple) {
       const options = this.options.toArray();
-      this._selectionModel.sort((a, b) => options.indexOf(a) - options.indexOf(b));
+
+      this._selectionModel.sort((a, b) => {
+        return this.sortComparator ? this.sortComparator(a, b, options) :
+                                     options.indexOf(a) - options.indexOf(b);
+      });
       this.stateChanges.next();
     }
   }

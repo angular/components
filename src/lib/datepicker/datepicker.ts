@@ -290,7 +290,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   }
 
   /** Selects the given date */
-  _select(date: D): void {
+  select(date: D): void {
     let oldValue = this._selected;
     this._selected = date;
     if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
@@ -426,6 +426,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     });
 
     this._popupRef = this._overlay.create(overlayConfig);
+    this._popupRef.overlayElement.setAttribute('role', 'dialog');
 
     merge(
       this._popupRef.backdropClick(),
@@ -441,7 +442,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** Create the popup PositionStrategy. */
   private _createPopupPositionStrategy(): PositionStrategy {
     return this._overlay.position()
-      .flexibleConnectedTo(this._datepickerInput.getPopupConnectionElementRef())
+      .flexibleConnectedTo(this._datepickerInput.getConnectedOverlayOrigin())
       .withTransformOriginOn('.mat-datepicker-content')
       .withFlexibleDimensions(false)
       .withViewportMargin(8)

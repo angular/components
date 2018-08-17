@@ -53,7 +53,7 @@ describe('OverlayKeyboardDispatcher', () => {
     const overlayOne = overlay.create();
     const overlayTwo = overlay.create();
     const overlayOneSpy = jasmine.createSpy('overlayOne keyboard event spy');
-    const overlayTwoSpy = jasmine.createSpy('overlayOne keyboard event spy');
+    const overlayTwoSpy = jasmine.createSpy('overlayTwo keyboard event spy');
 
     overlayOne.keydownEvents().subscribe(overlayOneSpy);
     overlayTwo.keydownEvents().subscribe(overlayTwoSpy);
@@ -141,6 +141,41 @@ describe('OverlayKeyboardDispatcher', () => {
 
     overlayRef.dispose();
     expect(body.removeEventListener).toHaveBeenCalledWith('keydown', jasmine.any(Function), true);
+  });
+
+  it('should skip overlays that do not have keydown event subscriptions', () => {
+    const overlayOne = overlay.create();
+    const overlayTwo = overlay.create();
+    const overlayOneSpy = jasmine.createSpy('overlayOne keyboard event spy');
+
+    overlayOne.keydownEvents().subscribe(overlayOneSpy);
+    keyboardDispatcher.add(overlayOne);
+    keyboardDispatcher.add(overlayTwo);
+
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+
+    expect(overlayOneSpy).toHaveBeenCalled();
+  });
+
+  it('should not add the same overlay to the stack multiple times', () => {
+    const overlayOne = overlay.create();
+    const overlayTwo = overlay.create();
+    const overlayOneSpy = jasmine.createSpy('overlayOne keyboard event spy');
+    const overlayTwoSpy = jasmine.createSpy('overlayTwo keyboard event spy');
+
+    overlayOne.keydownEvents().subscribe(overlayOneSpy);
+    overlayTwo.keydownEvents().subscribe(overlayTwoSpy);
+
+    keyboardDispatcher.add(overlayOne);
+    keyboardDispatcher.add(overlayTwo);
+    keyboardDispatcher.add(overlayOne);
+
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+
+    expect(keyboardDispatcher._attachedOverlays).toEqual([overlayTwo, overlayOne]);
+
+    expect(overlayTwoSpy).not.toHaveBeenCalled();
+    expect(overlayOneSpy).toHaveBeenCalled();
   });
 
 });

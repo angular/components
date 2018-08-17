@@ -31,8 +31,9 @@ export interface RippleGlobalOptions {
   disabled?: boolean;
 
   /**
-   * Configuration for the animation duration of the ripples.
-   * There are two phases with different durations for the ripples.
+   * Configuration for the animation duration of the ripples. There are two phases with different
+   * durations for the ripples. The animation durations will be overwritten if the
+   * `NoopAnimationsModule` is being used.
    */
   animation?: RippleAnimationConfig;
 
@@ -41,7 +42,7 @@ export interface RippleGlobalOptions {
    * setting it to 0.5 will cause the ripple fade-in animation to take twice as long.
    * A changed speedFactor will not affect the fade-out duration of the ripples.
    * @deprecated Use the `animation` global option instead.
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   baseSpeedFactor?: number;
 
@@ -90,13 +91,14 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
    * setting it to 0.5 will cause the animations to take twice as long.
    * A changed speedFactor will not modify the fade-out duration of the ripples.
    * @deprecated Use the [matRippleAnimation] binding instead.
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   @Input('matRippleSpeedFactor') speedFactor: number = 1;
 
   /**
    * Configuration for the ripple animation. Allows modifying the enter and exit animation
-   * duration of the ripples.
+   * duration of the ripples. The animation durations will be overwritten if the
+   * `NoopAnimationsModule` is being used.
    */
   @Input('matRippleAnimation') animation: RippleAnimationConfig;
 
@@ -137,10 +139,14 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
               ngZone: NgZone,
               platform: Platform,
               @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalOptions: RippleGlobalOptions,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string) {
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
 
     this._globalOptions = globalOptions || {};
     this._rippleRenderer = new RippleRenderer(this, ngZone, _elementRef, platform);
+
+    if (animationMode === 'NoopAnimations') {
+      this._globalOptions.animation = {enterDuration: 0, exitDuration: 0};
+    }
   }
 
   ngOnInit() {
@@ -157,21 +163,25 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
     this._rippleRenderer.fadeOutAll();
   }
 
-  /** Ripple configuration from the directive's input values. */
+  /**
+   * Ripple configuration from the directive's input values.
+   * @docs-private Implemented as part of RippleTarget
+   */
   get rippleConfig(): RippleConfig {
     return {
       centered: this.centered,
       radius: this.radius,
       color: this.color,
-      animation: this._animationMode === 'NoopAnimations' ?
-          {enterDuration: 0, exitDuration: 0} :
-          {...this._globalOptions.animation, ...this.animation},
+      animation: {...this._globalOptions.animation, ...this.animation},
       terminateOnPointerUp: this._globalOptions.terminateOnPointerUp,
       speedFactor: this.speedFactor * (this._globalOptions.baseSpeedFactor || 1),
     };
   }
 
-  /** Whether ripples on pointer-down are disabled or not. */
+  /**
+   * Whether ripples on pointer-down are disabled or not.
+   * @docs-private Implemented as part of RippleTarget
+   */
   get rippleDisabled(): boolean {
     return this.disabled || !!this._globalOptions.disabled;
   }

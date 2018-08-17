@@ -13,6 +13,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed, tick, flush} from '@angular/core/testing';
+import {MatRipple} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {
   MatListModule,
@@ -208,6 +209,21 @@ describe('MatSelectionList without forms', () => {
 
       expect(selectList.selected.length).toBe(1);
       expect(ENTER_EVENT.defaultPrevented).toBe(true);
+    });
+
+    it('should not be able to toggle a disabled option using SPACE', () => {
+      const testListItem = listOptions[1].nativeElement as HTMLElement;
+      const selectionModel = selectionList.componentInstance.selectedOptions;
+
+      expect(selectionModel.selected.length).toBe(0);
+
+      listOptions[1].componentInstance.disabled = true;
+
+      dispatchFakeEvent(testListItem, 'focus');
+      selectionList.componentInstance._keydown(createKeyboardEvent('keydown', SPACE, testListItem));
+      fixture.detectChanges();
+
+      expect(selectionModel.selected.length).toBe(0);
     });
 
     it('should restore focus if active option is destroyed', () => {
@@ -454,7 +470,7 @@ describe('MatSelectionList without forms', () => {
     }));
 
     it('should set its initial selected state in the selectedOptions', () => {
-      let optionEl = listItemEl.injector.get(MatListOption);
+      let optionEl = listItemEl.injector.get<MatListOption>(MatListOption);
       let selectedOptions = selectionList.componentInstance.selectedOptions;
       expect(selectedOptions.isSelected(optionEl)).toBeTruthy();
     });
@@ -625,6 +641,24 @@ describe('MatSelectionList without forms', () => {
       fixture.detectChanges();
 
       expect(selectList.selected.length).toBe(0);
+    });
+
+    it('should update state of options if list state has changed', () => {
+      // To verify that the template of the list options has been re-rendered after the disabled
+      // property of the selection list has been updated, the ripple directive can be used.
+      // Inspecting the host classes of the options doesn't work because those update as part
+      // of the parent template (of the selection-list).
+      const listOptionRipple = listOption[2].query(By.directive(MatRipple))
+          .injector.get<MatRipple>(MatRipple);
+
+      expect(listOptionRipple.disabled)
+        .toBe(true, 'Expected ripples of list option to be disabled');
+
+      fixture.componentInstance.disabled = false;
+      fixture.detectChanges();
+
+      expect(listOptionRipple.disabled)
+        .toBe(false, 'Expected ripples of list option to be enabled');
     });
   });
 
@@ -822,16 +856,33 @@ describe('MatSelectionList with forms', () => {
   describe('and formControl', () => {
     let fixture: ComponentFixture<SelectionListWithFormControl>;
     let listOptions: MatListOption[];
+    let selectionList: MatSelectionList;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SelectionListWithFormControl);
       fixture.detectChanges();
 
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList)).componentInstance;
       listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
         .map(optionDebugEl => optionDebugEl.componentInstance);
     });
 
     it('should be able to disable options from the control', () => {
+      expect(selectionList.disabled)
+        .toBe(false, 'Expected the selection list to be enabled.');
+      expect(listOptions.every(option => !option.disabled))
+        .toBe(true, 'Expected every list option to be enabled.');
+
+      fixture.componentInstance.formControl.disable();
+      fixture.detectChanges();
+
+      expect(selectionList.disabled)
+        .toBe(true, 'Expected the selection list to be disabled.');
+      expect(listOptions.every(option => option.disabled))
+        .toBe(true, 'Expected every list option to be disabled.');
+    });
+
+    it('should be able to update the disabled property after form control disabling', () => {
       expect(listOptions.every(option => !option.disabled))
         .toBe(true, 'Expected every list option to be enabled.');
 
@@ -840,6 +891,16 @@ describe('MatSelectionList with forms', () => {
 
       expect(listOptions.every(option => option.disabled))
         .toBe(true, 'Expected every list option to be disabled.');
+
+      // Previously the selection list has been disabled through FormControl#disable. Now we
+      // want to verify that we can still change the disabled state through updating the disabled
+      // property. Calling FormControl#disable should not lock the disabled property.
+      // See: https://github.com/angular/material2/issues/12107
+      selectionList.disabled = false;
+      fixture.detectChanges();
+
+      expect(listOptions.every(option => !option.disabled))
+        .toBe(true, 'Expected every list option to be enabled.');
     });
 
     it('should be able to set the value through the form control', () => {
@@ -977,7 +1038,7 @@ class SelectionListWithCheckboxPositionAfter {
 }
 
 @Component({template: `
-  <mat-selection-list id="selection-list-3" [disabled]=true>
+  <mat-selection-list id="selection-list-3" [disabled]="disabled">
     <mat-list-option checkboxPosition="after">
       Inbox (disabled selection-option)
     </mat-list-option>
@@ -992,6 +1053,7 @@ class SelectionListWithCheckboxPositionAfter {
     </mat-list-option>
   </mat-selection-list>`})
 class SelectionListWithListDisabled {
+  disabled: boolean = true;
 }
 
 @Component({template: `

@@ -14,6 +14,7 @@ import {
   Optional,
   ViewEncapsulation
 } from '@angular/core';
+import {Location} from '@angular/common';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {CanColor, mixinColor} from '@angular/material/core';
 
@@ -54,11 +55,19 @@ let progressbarId = 0;
   encapsulation: ViewEncapsulation.None,
 })
 export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor {
-
-
   constructor(public _elementRef: ElementRef,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+              /**
+               * @deprecated `location` parameter to be made required.
+               * @breaking-change 8.0.0
+               */
+              @Optional() location?: Location) {
     super(_elementRef);
+
+    // We need to prefix the SVG reference with the current path, otherwise they won't work
+    // in Safari if the page has a `<base>` tag. Note that we need quotes inside the `url()`,
+    // because named route URLs can contain parentheses (see #12338).
+    this._rectangleFillValue = `url('${location ? location.path() : ''}#${this.progressbarId}')`;
   }
 
   /** Value of the progress bar. Defaults to zero. Mirrored to aria-valuenow. */
@@ -82,8 +91,11 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
    */
   @Input() mode: 'determinate' | 'indeterminate' | 'buffer' | 'query' = 'determinate';
 
-  /** The id of the progress bar. */
+  /** ID of the progress bar. */
   progressbarId = `mat-progress-bar-${progressbarId++}`;
+
+  /** Attribute to be used for the `fill` attribute on the internal `rect` element. */
+  _rectangleFillValue: string;
 
   /** Gets the current transform value for the progress bar's primary indicator. */
   _primaryTransform() {

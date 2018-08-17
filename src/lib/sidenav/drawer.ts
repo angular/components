@@ -11,7 +11,7 @@ import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
-import {CdkScrollable} from '@angular/cdk/scrolling';
+import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterContentChecked,
@@ -75,10 +75,14 @@ export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatDrawerContent implements AfterContentInit {
+export class MatDrawerContent extends CdkScrollable implements AfterContentInit {
   constructor(
       private _changeDetectorRef: ChangeDetectorRef,
-      @Inject(forwardRef(() => MatDrawerContainer)) public _container: MatDrawerContainer) {
+      @Inject(forwardRef(() => MatDrawerContainer)) public _container: MatDrawerContainer,
+      elementRef: ElementRef<HTMLElement>,
+      scrollDispatcher: ScrollDispatcher,
+      ngZone: NgZone) {
+    super(elementRef, scrollDispatcher, ngZone);
   }
 
   ngAfterContentInit() {
@@ -401,6 +405,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
 export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy {
   @ContentChildren(MatDrawer) _drawers: QueryList<MatDrawer>;
   @ContentChild(MatDrawerContent) _content: MatDrawerContent;
+  @ViewChild(MatDrawerContent) _userContent: MatDrawerContent;
 
   /** The drawer child with the `start` position. */
   get start(): MatDrawer | null { return this._start; }
@@ -471,7 +476,9 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
   readonly _contentMarginChanges = new Subject<{left: number|null, right: number|null}>();
 
   /** Reference to the CdkScrollable instance that wraps the scrollable content. */
-  @ViewChild(CdkScrollable) scrollable: CdkScrollable;
+  get scrollable(): CdkScrollable {
+    return this._userContent || this._content;
+  }
 
   constructor(@Optional() private _dir: Directionality,
               private _element: ElementRef,
@@ -701,6 +708,13 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
         left -= width;
       }
     }
+
+    // If either `right` or `left` is zero, don't set a style to the element. This
+    // allows users to specify a custom size via CSS class in SSR scenarios where the
+    // measured widths will always be zero. Note that we reset to `null` here, rather
+    // than below, in order to ensure that the types in the `if` below are consistent.
+    left = left || null!;
+    right = right || null!;
 
     if (left !== this._contentMargins.left || right !== this._contentMargins.right) {
       this._contentMargins = {left, right};

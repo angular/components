@@ -1,10 +1,18 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {green, red} from 'chalk';
 import {Replacement, RuleFailure, Rules} from 'tslint';
 import * as ts from 'typescript';
-import {elementSelectors} from '../material/component-data';
+import {elementSelectors} from '../material/data/element-selectors';
 import {ExternalResource} from '../tslint/component-file';
 import {ComponentWalker} from '../tslint/component-walker';
-import {findAll} from '../typescript/literal';
+import {findAllSubstringIndices} from '../typescript/literal';
 
 /**
  * Rule that walks through every component decorator and updates their inline or external
@@ -47,14 +55,15 @@ export class SwitchTemplateElementSelectorsWalker extends ComponentWalker {
       // Being more aggressive with that replacement here allows us to also handle inline
       // style elements. Normally we would check if the selector is surrounded by the HTML tag
       // characters.
-      this.createReplacementsForOffsets(node, selector, findAll(templateContent, selector.replace))
-          .forEach(replacement => {
-            replacements.push({
-              message: `Found deprecated element selector "${red(selector.replace)}" which has` +
-                  ` been renamed to "${green(selector.replaceWith)}"`,
-              replacement
-            });
-          });
+      const foundOffsets = findAllSubstringIndices(templateContent, selector.replace);
+
+      this.createReplacementsForOffsets(node, selector, foundOffsets).forEach(replacement => {
+        replacements.push({
+          message: `Found deprecated element selector "${red(selector.replace)}" which has` +
+              ` been renamed to "${green(selector.replaceWith)}"`,
+          replacement
+        });
+      });
     });
 
     return replacements;

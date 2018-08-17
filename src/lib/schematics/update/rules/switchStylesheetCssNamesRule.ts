@@ -1,11 +1,19 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {green, red} from 'chalk';
 import {sync as globSync} from 'glob';
 import {IOptions, Replacement, RuleFailure, Rules} from 'tslint';
 import * as ts from 'typescript';
-import {cssNames} from '../material/component-data';
+import {cssNames} from '../material/data/css-names';
 import {ExternalResource} from '../tslint/component-file';
 import {ComponentWalker} from '../tslint/component-walker';
-import {findAll} from '../typescript/literal';
+import {findAllSubstringIndices} from '../typescript/literal';
 
 /**
  * Rule that walks through every component decorator and updates their inline or external
@@ -56,14 +64,15 @@ export class SwitchStylesheetCssNamesWalker extends ComponentWalker {
 
     cssNames.forEach(name => {
       if (!name.whitelist || name.whitelist.css) {
-        this.createReplacementsForOffsets(node, name, findAll(stylesheetContent, name.replace))
-            .forEach(replacement => {
-              replacements.push({
-                message: `Found CSS class "${red(name.replace)}" which has been renamed to` +
-                    ` "${green(name.replaceWith)}"`,
-                replacement
-              });
-            });
+        const foundOffsets = findAllSubstringIndices(stylesheetContent, name.replace);
+
+        this.createReplacementsForOffsets(node, name, foundOffsets).forEach(replacement => {
+          replacements.push({
+            message: `Found CSS class "${red(name.replace)}" which has been renamed to` +
+              ` "${green(name.replaceWith)}"`,
+            replacement
+          });
+        });
       }
     });
 

@@ -1,8 +1,16 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {green, red} from 'chalk';
 import {Replacement, RuleFailure, Rules, RuleWalker} from 'tslint';
 import * as ts from 'typescript';
-import {cssNames} from '../material/component-data';
-import {findAll} from '../typescript/literal';
+import {cssNames} from '../material/data/css-names';
+import {findAllSubstringIndices} from '../typescript/literal';
 
 /**
  * Rule that walks through every string literal, which includes the outdated Material name and
@@ -26,12 +34,12 @@ export class SwitchStringLiteralCssNamesWalker extends RuleWalker {
     cssNames.forEach(name => {
       if (!name.whitelist || name.whitelist.strings) {
         this.createReplacementsForOffsets(stringLiteral, name,
-            findAll(stringLiteralText, name.replace)).forEach(replacement => {
+            findAllSubstringIndices(stringLiteralText, name.replace)).forEach(replacement => {
           this.addFailureAtNode(
               stringLiteral,
               `Found deprecated CSS class "${red(name.replace)}" which has been renamed to` +
               ` "${green(name.replaceWith)}"`,
-              replacement)
+              replacement);
         });
       }
     });

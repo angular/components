@@ -1,8 +1,16 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {green, red} from 'chalk';
 import {Replacement, RuleFailure, Rules, RuleWalker} from 'tslint';
 import * as ts from 'typescript';
-import {elementSelectors} from '../material/component-data';
-import {findAll} from '../typescript/literal';
+import {elementSelectors} from '../material/data/element-selectors';
+import {findAllSubstringIndices} from '../typescript/literal';
 
 /**
  * Rule that walks through every string literal, which includes the outdated Material name and
@@ -25,7 +33,7 @@ export class SwitchStringLiteralElementSelectorsWalker extends RuleWalker {
 
     elementSelectors.forEach(selector => {
       this.createReplacementsForOffsets(stringLiteral, selector,
-          findAll(stringLiteralText, selector.replace)).forEach(replacement => {
+          findAllSubstringIndices(stringLiteralText, selector.replace)).forEach(replacement => {
         this.addFailureAtNode(
             stringLiteral,
             `Found deprecated element selector "${red(selector.replace)}" which has been` +

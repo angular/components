@@ -29,15 +29,17 @@ export type AriaLivePoliteness = 'off' | 'polite' | 'assertive';
 
 @Injectable({providedIn: 'root'})
 export class LiveAnnouncer implements OnDestroy {
-  private readonly _liveElement: Element;
+  private readonly _liveElement: HTMLElement;
+  private _document: Document;
 
   constructor(
       @Optional() @Inject(LIVE_ANNOUNCER_ELEMENT_TOKEN) elementToken: any,
-      @Inject(DOCUMENT) private _document: any) {
+      @Inject(DOCUMENT) _document: any) {
 
-    // We inject the live element as `any` because the constructor signature cannot reference
-    // browser globals (HTMLElement) on non-browser environments, since having a class decorator
-    // causes TypeScript to preserve the constructor signature types.
+    // We inject the live element and document as `any` because the constructor signature cannot
+    // reference browser globals (HTMLElement, Document) on non-browser environments, since having
+    // a class decorator causes TypeScript to preserve the constructor signature types.
+    this._document = _document;
     this._liveElement = elementToken || this._createLiveElement();
   }
 
@@ -72,10 +74,19 @@ export class LiveAnnouncer implements OnDestroy {
     }
   }
 
-  private _createLiveElement(): Element {
-    let liveEl = this._document.createElement('div');
+  private _createLiveElement(): HTMLElement {
+    const elementClass = 'cdk-live-announcer-element';
+    const previousElements = this._document.getElementsByClassName(elementClass);
 
+    // Remove any old containers. This can happen when coming in from a server-side-rendered page.
+    for (let i = 0; i < previousElements.length; i++) {
+      previousElements[i].parentNode!.removeChild(previousElements[i]);
+    }
+
+    const liveEl = this._document.createElement('div');
+    liveEl.classList.add(elementClass);
     liveEl.classList.add('cdk-visually-hidden');
+
     liveEl.setAttribute('aria-atomic', 'true');
     liveEl.setAttribute('aria-live', 'polite');
 
@@ -130,14 +141,14 @@ export class CdkAriaLive implements OnDestroy {
 }
 
 
-/** @docs-private @deprecated @deletion-target 7.0.0 */
+/** @docs-private @deprecated @breaking-change 7.0.0 */
 export function LIVE_ANNOUNCER_PROVIDER_FACTORY(
     parentDispatcher: LiveAnnouncer, liveElement: any, _document: any) {
   return parentDispatcher || new LiveAnnouncer(liveElement, _document);
 }
 
 
-/** @docs-private @deprecated @deletion-target 7.0.0 */
+/** @docs-private @deprecated @breaking-change 7.0.0 */
 export const LIVE_ANNOUNCER_PROVIDER: Provider = {
   // If there is already a LiveAnnouncer available, use that. Otherwise, provide a new one.
   provide: LiveAnnouncer,

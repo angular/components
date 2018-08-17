@@ -1,14 +1,19 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {green, red} from 'chalk';
 import {Replacement, RuleFailure, Rules} from 'tslint';
 import * as ts from 'typescript';
-import {outputNames} from '../material/component-data';
+import {findOutputsOnElementWithAttr, findOutputsOnElementWithTag} from '../html/angular';
+import {outputNames} from '../material/data/output-names';
 import {ExternalResource} from '../tslint/component-file';
 import {ComponentWalker} from '../tslint/component-walker';
-import {
-  findAll,
-  findAllOutputsInElWithAttr,
-  findAllOutputsInElWithTag
-} from '../typescript/literal';
+import {findAllSubstringIndices} from '../typescript/literal';
 
 /**
  * Rule that walks through every component decorator and updates their inline or external
@@ -49,15 +54,15 @@ export class SwitchTemplateOutputNamesWalker extends ComponentWalker {
     outputNames.forEach(name => {
       let offsets: number[] = [];
       if (name.whitelist && name.whitelist.attributes && name.whitelist.attributes.length) {
-        offsets = offsets.concat(findAllOutputsInElWithAttr(
+        offsets = offsets.concat(findOutputsOnElementWithAttr(
             templateContent, name.replace, name.whitelist.attributes));
       }
       if (name.whitelist && name.whitelist.elements && name.whitelist.elements.length) {
-        offsets = offsets.concat(findAllOutputsInElWithTag(
+        offsets = offsets.concat(findOutputsOnElementWithTag(
             templateContent, name.replace, name.whitelist.elements));
       }
       if (!name.whitelist) {
-        offsets = offsets.concat(findAll(templateContent, name.replace));
+        offsets = offsets.concat(findAllSubstringIndices(templateContent, name.replace));
       }
       this.createReplacementsForOffsets(node, name, offsets).forEach(replacement => {
         replacements.push({

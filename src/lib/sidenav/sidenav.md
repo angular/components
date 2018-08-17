@@ -28,7 +28,7 @@ to specify which end of the main content to place the side content on. `position
 `start` or `end` which places the side content on the left or right respectively in left-to-right
 languages. If the `position` is not set, the default value of `start` will be assumed. A
 `<mat-sidenav-container>` can have up to two `<mat-sidenav>` elements total, but only one for any
-given side.
+given side. The `<mat-sidenav>` must be placed as an immediate child of the `<mat-sidenav-container>`.
 
 The main content should be wrapped in a `<mat-sidenav-content>`. If no `<mat-sidenav-content>` is
 specified for a `<mat-sidenav-container>`, one will be created implicitly and all of the content
@@ -109,8 +109,8 @@ The `<mat-sidenav>` can render in one of three different ways based on the `mode
 
 | Mode   | Description                                                                             |
 |--------|-----------------------------------------------------------------------------------------|
-| `over` | Sidenav floats over the primary content, which is covered by a backdrop               |
-| `push` | Sidenav pushes the primary content out of its way, also covering it with a backdrop   |
+| `over` | Sidenav floats over the primary content, which is covered by a backdrop                 |
+| `push` | Sidenav pushes the primary content out of its way, also covering it with a backdrop     |
 | `side` | Sidenav appears side-by-side with the main content, shrinking the main content's width to make space for the sidenav. |
 
 If no `mode` is specified, `over` is used by default.
@@ -186,10 +186,10 @@ To react to scrolling inside the `<mat-sidenav-container>`, you can get a hold o
 `CdkScrollable` instance through the `MatSidenavContainer`.
 
 ```ts
-class YourComponent {
+class YourComponent implements AfterViewInit {
   @ViewChild(MatSidenavContainer) sidenavContainer: MatSidenavContainer;
 
-  constructor() {
+  ngAfterViewInit() {
     this.sidenavContainer.scrollable.elementScrolled().subscribe(() => /* react to scrolling */);
   }
 }

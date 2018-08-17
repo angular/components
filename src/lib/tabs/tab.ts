@@ -53,10 +53,19 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
   /** Template inside the MatTab view that contains an `<ng-content>`. */
   @ViewChild(TemplateRef) _implicitContent: TemplateRef<any>;
 
-  /** The plain text label for the tab, used when there is no template label. */
+  /** Plain text label for the tab, used when there is no template label. */
   @Input('label') textLabel: string = '';
 
-  /** The portal that will be the hosted content of the tab */
+  /** Aria label for the tab. */
+  @Input('aria-label') ariaLabel: string;
+
+  /**
+   * Reference to the element that the tab is labelled by.
+   * Will be cleared if `aria-label` is set at the same time.
+   */
+  @Input('aria-labelledby') ariaLabelledby: string;
+
+  /** Portal that will be the hosted content of the tab */
   private _contentPortal: TemplatePortal | null = null;
 
   /** @docs-private */
@@ -64,11 +73,8 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
     return this._contentPortal;
   }
 
-  /** Emits whenever the label changes. */
-  readonly _labelChange = new Subject<void>();
-
-  /** Emits whenever the disable changes */
-  readonly _disableChange = new Subject<void>();
+  /** Emits whenever the internal state of the tab changes. */
+  readonly _stateChanges = new Subject<void>();
 
   /**
    * The relatively indexed position where 0 represents the center, negative is left, and positive
@@ -92,18 +98,13 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.hasOwnProperty('textLabel')) {
-      this._labelChange.next();
-    }
-
-    if (changes.hasOwnProperty('disabled')) {
-      this._disableChange.next();
+    if (changes.hasOwnProperty('textLabel') || changes.hasOwnProperty('disabled')) {
+      this._stateChanges.next();
     }
   }
 
   ngOnDestroy(): void {
-    this._disableChange.complete();
-    this._labelChange.complete();
+    this._stateChanges.complete();
   }
 
   ngOnInit(): void {

@@ -9,11 +9,12 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {ComponentRef, EmbeddedViewRef, NgZone} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
-import {take} from 'rxjs/operators';
+import {Observable, Subject, merge} from 'rxjs';
+import {take, takeUntil} from 'rxjs/operators';
 import {OverlayKeyboardDispatcher} from './keyboard/overlay-keyboard-dispatcher';
 import {OverlayConfig} from './overlay-config';
 import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
+import {OverlayReference} from './overlay-reference';
 
 
 /** An object where all of its properties cannot be written. */
@@ -25,14 +26,32 @@ export type ImmutableObject<T> = {
  * Reference to an overlay that has been created with the Overlay service.
  * Used to manipulate or dispose of said overlay.
  */
-export class OverlayRef implements PortalOutlet {
+export class OverlayRef implements PortalOutlet, OverlayReference {
   private _backdropElement: HTMLElement | null = null;
   private _backdropClick: Subject<MouseEvent> = new Subject();
   private _attachments = new Subject<void>();
   private _detachments = new Subject<void>();
 
+  /**
+   * Reference to the parent of the `_host` at the time it was detached. Used to restore
+   * the `_host` to its original position in the DOM when it gets re-attached.
+   */
+  private _previousHostParent: HTMLElement;
+  private _keydownEventsObservable: Observable<KeyboardEvent> = Observable.create(observer => {
+    const subscription = this._keydownEvents.subscribe(observer);
+    this._keydownEventSubscriptions++;
+
+    return () => {
+      subscription.unsubscribe();
+      this._keydownEventSubscriptions--;
+    };
+  });
+
   /** Stream of keydown events dispatched to this overlay. */
   _keydownEvents = new Subject<KeyboardEvent>();
+
+  /** Amount of subscriptions to the keydown events. */
+  _keydownEventSubscriptions = 0;
 
   constructor(
       private _portalOutlet: PortalOutlet,
@@ -86,6 +105,10 @@ export class OverlayRef implements PortalOutlet {
     }
 
     // Update the pane element with the given configuration.
+    if (!this._host.parentElement && this._previousHostParent) {
+      this._previousHostParent.appendChild(this._host);
+    }
+
     this._updateStackingOrder();
     this._updateElementSize();
     this._updateElementDirection();
@@ -151,13 +174,37 @@ export class OverlayRef implements PortalOutlet {
       this._config.scrollStrategy.disable();
     }
 
+    if (this._config.panelClass) {
+      this._toggleClasses(this._pane, this._config.panelClass, false);
+    }
+
     const detachmentResult = this._portalOutlet.detach();
 
     // Only emit after everything is detached.
     this._detachments.next();
 
-    // Remove this overlay from keyboard dispatcher tracking
+    // Remove this overlay from keyboard dispatcher tracking.
     this._keyboardDispatcher.remove(this);
+
+    // Keeping the host element in DOM the can cause scroll jank, because it still gets rendered,
+    // even though it's transparent and unclickable. We can't remove the host here immediately,
+    // because the overlay pane's content might still be animating. This stream helps us avoid
+    // interrupting the animation by waiting for the pane to become empty.
+    const subscription = this._ngZone.onStable
+      .asObservable()
+      .pipe(takeUntil(merge(this._attachments, this._detachments)))
+      .subscribe(() => {
+        // Needs a couple of checks for the pane and host, because
+        // they may have been removed by the time the zone stabilizes.
+        if (!this._pane || !this._host || this._pane.children.length === 0) {
+          if (this._host && this._host.parentElement) {
+            this._previousHostParent = this._host.parentElement;
+            this._previousHostParent.removeChild(this._host);
+          }
+
+          subscription.unsubscribe();
+        }
+      });
 
     return detachmentResult;
   }
@@ -186,7 +233,7 @@ export class OverlayRef implements PortalOutlet {
       this._host = null!;
     }
 
-    this._pane = null!;
+    this._previousHostParent = this._pane = null!;
 
     if (isAttached) {
       this._detachments.next();
@@ -217,7 +264,7 @@ export class OverlayRef implements PortalOutlet {
 
   /** Gets an observable of keydown events targeted to this overlay. */
   keydownEvents(): Observable<KeyboardEvent> {
-    return this._keydownEvents.asObservable();
+    return this._keydownEventsObservable;
   }
 
   /** Gets the the current overlay configuration, which is immutable. */
@@ -331,6 +378,7 @@ export class OverlayRef implements PortalOutlet {
     let backdropToDetach = this._backdropElement;
 
     if (backdropToDetach) {
+      let timeoutId: number;
       let finishDetach = () => {
         // It may not be attached to anything in certain cases (e.g. unit tests).
         if (backdropToDetach && backdropToDetach.parentNode) {
@@ -343,6 +391,8 @@ export class OverlayRef implements PortalOutlet {
         if (this._backdropElement == backdropToDetach) {
           this._backdropElement = null;
         }
+
+        clearTimeout(timeoutId);
       };
 
       backdropToDetach.classList.remove('cdk-overlay-backdrop-showing');
@@ -351,7 +401,9 @@ export class OverlayRef implements PortalOutlet {
         this._toggleClasses(backdropToDetach, this._config.backdropClass, false);
       }
 
-      backdropToDetach.addEventListener('transitionend', finishDetach);
+      this._ngZone.runOutsideAngular(() => {
+        backdropToDetach!.addEventListener('transitionend', finishDetach);
+      });
 
       // If the backdrop doesn't have a transition, the `transitionend` event won't fire.
       // In this case we make it unclickable and we try to remove it after a delay.
@@ -360,7 +412,7 @@ export class OverlayRef implements PortalOutlet {
       // Run this outside the Angular zone because there's nothing that Angular cares about.
       // If it were to run inside the Angular zone, every test that used Overlay would have to be
       // either async or fakeAsync.
-      this._ngZone.runOutsideAngular(() => setTimeout(finishDetach, 500));
+      timeoutId = this._ngZone.runOutsideAngular(() => setTimeout(finishDetach, 500));
     }
   }
 

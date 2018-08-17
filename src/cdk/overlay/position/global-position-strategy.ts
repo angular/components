@@ -93,7 +93,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Sets the overlay width and clears any previously set width.
    * @param value New width for the overlay
    * @deprecated Pass the `width` through the `OverlayConfig`.
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   width(value: string = ''): this {
     if (this._overlayRef) {
@@ -109,7 +109,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * Sets the overlay height and clears any previously set height.
    * @param value New height for the overlay
    * @deprecated Pass the `height` through the `OverlayConfig`.
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   height(value: string = ''): this {
     if (this._overlayRef) {
@@ -169,6 +169,8 @@ export class GlobalPositionStrategy implements PositionStrategy {
 
     if (config.width === '100%') {
       parentStyles.justifyContent = 'flex-start';
+    } else if (this._justifyContent === 'center') {
+        parentStyles.justifyContent = 'center';
     } else if (this._overlayRef.getConfig().direction === 'rtl') {
       // In RTL the browser will invert `flex-start` and `flex-end` automatically, but we
       // don't want that because our positioning is explicitly `left` and `right`, hence

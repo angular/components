@@ -41,7 +41,7 @@ version: 2
 jobs:
   build:
     <<: *job_defaults
-    resource_class: large
+    resource_class: xlarge
     steps:
       - checkout:
           <<: *post_checkout
@@ -69,3 +69,7 @@ general:
   branches:
     only:
       - master
+      # 5.2.x, 6.0.x, etc
+      - /\d+\.\d+\.x/
+      # 5.x, 6.x, etc
+      - /\d+\.x/
