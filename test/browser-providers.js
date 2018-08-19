@@ -14,7 +14,7 @@ const browserConfig = {
   'IE9':               { unitTest: {target: null, required: false }},
   'IE10':              { unitTest: {target: null, required: false  }},
   'IE11':              { unitTest: {target: null, required: false  }},
-  'Edge':              { unitTest: {target: 'BS', required: true  }},
+  'Edge':              { unitTest: {target: 'SL', required: true  }},
   'Android4.1':        { unitTest: {target: null, required: false }},
   'Android4.2':        { unitTest: {target: null, required: false }},
   'Android4.3':        { unitTest: {target: null, required: false }},
@@ -28,9 +28,7 @@ const browserConfig = {
   'iOS8':              { unitTest: {target: null, required: false }},
   'iOS9':              { unitTest: {target: null, required: false }},
   'iOS10':             { unitTest: {target: null, required: false  }},
-  // Don't use Browserstack until our open-source license includes automate testing on
-  // mobile devices. For now, we need to use Saucelabs to keep our coverage.
-  'iOS11':             { unitTest: {target: 'SL', required: true  }},
+  'iOS11':             { unitTest: {target: 'BS', required: true  }},
   'WindowsPhone':      { unitTest: {target: null, required: false }}
 };
 
