@@ -86,8 +86,8 @@ export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any = {
 };
 
 /**
- * @docs-private
  * Creates an error to be thrown when attempting to use an autocomplete trigger without a panel.
+ * @docs-private
  */
 export function getMatAutocompleteMissingPanelError(): Error {
   return Error('Attempting to open an undefined instance of `mat-autocomplete`. ' +

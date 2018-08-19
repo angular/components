@@ -43,8 +43,8 @@ import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
 /**
- * @docs-private
  * Throws an exception when two MatDrawer are matching the same position.
+ * @docs-private
  */
 export function throwMatDuplicatedDrawerError(position: string) {
   throw Error(`A drawer was already declared for 'position="${position}"'`);

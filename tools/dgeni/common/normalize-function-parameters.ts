@@ -36,9 +36,7 @@ export function normalizeFunctionParameters(doc: NormalizedFunctionDoc) {
         parameterName = parameterName.replace('?', '');
       }
 
-      if (!doc.params) {
-        doc.params = [];
-      }
+      doc.params = doc.params || [];
 
       if (!parameterType) {
         console.warn(`Missing parameter type information (${parameterName}) in ` +

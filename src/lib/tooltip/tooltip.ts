@@ -53,8 +53,8 @@ export const SCROLL_THROTTLE_MS = 20;
 export const TOOLTIP_PANEL_CLASS = 'mat-tooltip-panel';
 
 /**
- * @docs-private
  * Creates an error to be thrown if the user supplied an invalid tooltip position.
+ * @docs-private
  */
 export function getMatTooltipInvalidPositionError(position: string) {
   return Error(`Tooltip position "${position}" is invalid.`);
