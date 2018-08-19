@@ -6,8 +6,6 @@ TUNNEL_FILE="sc-4.5.0-linux.tar.gz"
 TUNNEL_URL="https://saucelabs.com/downloads/${TUNNEL_FILE}"
 TUNNEL_DIR="/tmp/saucelabs-connect"
 
-TUNNEL_LOG="${LOGS_DIR}/saucelabs-tunnel.log"
-
 SAUCE_ACCESS_KEY=`echo ${SAUCE_ACCESS_KEY} | rev`
 
 # Cleanup and create the folder structure for the tunnel connector.
@@ -36,6 +34,6 @@ if [ ! -z "${BROWSER_PROVIDER_READY_FILE}" ]; then
   ARGS="${ARGS} --readyfile ${BROWSER_PROVIDER_READY_FILE}"
 fi
 
-echo "Starting Sauce Connect in the background, logging into: ${TUNNEL_LOG}"
+echo "Starting Sauce Connect in the background, logging to dev/stdout."
 
-sauce-connect/bin/sc -u ${SAUCE_USERNAME} -k ${SAUCE_ACCESS_KEY} ${ARGS} 2>&1 >> ${TUNNEL_LOG} &
+sauce-connect/bin/sc -u ${SAUCE_USERNAME} -k ${SAUCE_ACCESS_KEY} ${ARGS} &
