@@ -200,6 +200,7 @@ export interface SelectionChange<T> {
 }
 
 /**
+ * @docs-private
  * Returns an error that reports that multiple values are passed into a selection model
  * with a single value.
  */
