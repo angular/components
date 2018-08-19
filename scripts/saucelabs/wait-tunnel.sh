@@ -1,14 +1,6 @@
 #!/bin/bash
 
-TUNNEL_LOG="$LOGS_DIR/saucelabs-tunnel.log"
 WAIT_DELAY=30
-
-# Method that prints the logfile output of the saucelabs tunnel.
-printLog() {
-  echo "Logfile output of Saucelabs tunnel (${TUNNEL_LOG}):"
-  echo ""
-  cat ${TUNNEL_LOG}
-}
 
 # Wait for Saucelabs Connect to be ready before exiting
 # Time out if we wait for more than 2 minutes, so the process won't run forever.
@@ -22,7 +14,6 @@ while [ ! -f $BROWSER_PROVIDER_READY_FILE ]; do
   if [ $counter -gt $[${WAIT_DELAY} * 2] ]; then
     echo ""
     echo "Timed out after 2 minutes waiting for tunnel ready file"
-    printLog
     exit 5
   fi
 
