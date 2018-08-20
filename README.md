@@ -54,7 +54,7 @@ High level stuff planned for Q3 2018 (July - September):
 | expansion-panel  |                                                        |   [Docs][32] |
 | grid-list        |                                                        |   [Docs][9]  |
 | icon             |                                                        |   [Docs][10] |
-| input            |                                                        |   [Docs][5]  |
+| input            |                            Will not support file input |   [Docs][5]  |
 | list             |                               Action list planned 2018 |   [Docs][8]  |
 | menu             |                                                        |   [Docs][17] |
 | paginator        |                                                        |   [Docs][29] |
