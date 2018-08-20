@@ -58,7 +58,8 @@ export const _MatInputMixinBase = mixinErrorState(MatInputBase);
 
 /** Directive that allows a native input to work inside a `MatFormField`. */
 @Directive({
-  selector: `input[matInput], textarea[matInput], select[matControl]`,
+  selector: `input[matInput], textarea[matInput], select[matNativeControl],
+      input[matNativeControl], textarea[matNativeControl]`,
   exportAs: 'matInput',
   host: {
     /**
@@ -72,6 +73,7 @@ export const _MatInputMixinBase = mixinErrorState(MatInputBase);
     '[attr.placeholder]': 'placeholder',
     '[disabled]': 'disabled',
     '[required]': 'required',
+    '[attr.readonly]': 'readonly && !_isNativeSelect || null',
     '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-invalid]': 'errorState',
     '[attr.aria-required]': 'required.toString()',
@@ -361,12 +363,12 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
    */
   get shouldLabelFloat(): boolean {
     if (this._isNativeSelect) {
-      // For multi select, float mat input label
-      // If single select has value or has a option label or html, float mat input label to avoid
-      // mat input label to overlap with the select content.
-      const selectElement  = this._elementRef.nativeElement;
-      return selectElement.multiple || !this.empty || selectElement.options[0].label
-          || this.focused;
+      // For a single-selection `<select>`, the label should float when the selected option has
+      // a non-empty display value. For a `<select multiple>`, the label *always* floats to avoid
+      // overlapping the label with the options.
+      const selectElement = this._elementRef.nativeElement;
+      return selectElement.multiple || !this.empty || selectElement.options[0].label ||
+          this.focused;
     } else {
       return this.focused || !this.empty;
     }

@@ -8,12 +8,13 @@ To add options to the select, add `<mat-option>` elements to the `<mat-select>`.
 has a `value` property that can be used to set the value that will be selected if the user chooses
 this option. The content of the `<mat-option>` is what will be shown to the user.
 
-Angular Material also supports use of native `<select>` element inside of
+Angular Material also supports use of the native `<select>` element inside of
 `<mat-form-field>`. The native control has several performance, accessibility,
 and usability advantages. See [the documentation for
 form-field](https://material.angular.io/components/form-field) for more information.
 
-To use native select inside `<mat-form-field>`, add `matInput` as an attribute to native html select. 
+To use a native select inside `<mat-form-field>`, add  the `matNativeControl` attribute
+to the `<select>` element. 
 
 <!-- example(select-overview) -->
 
@@ -52,7 +53,7 @@ In some cases that `<mat-form-field>` may use the placeholder as the label (see 
 ### Disabling the select or individual options
 
 It is possible to disable the entire select or individual options in the select by using the
-disabled property on the `<select>` or `<mat-select>` and the `<option>` or <mat-option>` components respectively.
+disabled property on the `<select>` or `<mat-select>` and the `<option>` or <mat-option>` elements respectively.
 
 <!-- example(select-disabled) -->
 
@@ -78,7 +79,9 @@ by setting the `multiple` property. This will allow the user to select multiple 
 using the `<mat-select>` in multiple selection mode, its value will be a sorted list of all selected
 values rather than a single value.
 
-Multiple select with `<select multiple>` is not recommended.
+Using multiple selection with a native select element (`<select multiple>`) is discouraged
+inside `<mat-form-field>`, as the inline listbox appearance is inconsistent with other
+Material Design components.
 
 <!-- example(select-multiple) -->
 
@@ -144,7 +147,7 @@ The `<mat-select>` component without text or label should be given a meaningful 
 
 The `<mat-select>` component has `role="listbox"` and options inside select have `role="option"`.
 
-The `<select>` offers better accessibility by supporting all the native html accessibility capability.
+The native `<select>` offers the best accessibility because it is supported directly by screen-readers.
 
 ### Troubleshooting
 

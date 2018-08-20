@@ -10,7 +10,7 @@
   <p> Selected food: {{selectedValue}} </p>
   <h4>native html select</h4>
   <mat-form-field>
-    <select matControl placeholder="Favorite car" [(ngModel)]="selectedCar" name="car">
+    <select matNativeControl placeholder="Favorite car" [(ngModel)]="selectedCar" name="car">
       <option value="" disabled selected></option>
       <option *ngFor="let car of cars" [value]="car.value">
         {{car.viewValue}}
