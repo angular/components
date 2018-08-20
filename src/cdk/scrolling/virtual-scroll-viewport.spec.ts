@@ -162,7 +162,7 @@ describe('CdkVirtualScrollViewport', () => {
       fixture.detectChanges();
       flush();
 
-      expect(viewport.elementRef.nativeElement.scrollTop).toBe(testComponent.itemSize * 2);
+      expect(viewport.measureScrollOffset()).toBe(testComponent.itemSize * 2);
       expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
     }));
 
@@ -174,7 +174,7 @@ describe('CdkVirtualScrollViewport', () => {
       fixture.detectChanges();
       flush();
 
-      expect(viewport.elementRef.nativeElement.scrollTop).toBe(testComponent.itemSize * 2);
+      expect(viewport.measureScrollOffset()).toBe(testComponent.itemSize * 2);
       expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
     }));
 
@@ -187,7 +187,7 @@ describe('CdkVirtualScrollViewport', () => {
       fixture.detectChanges();
       flush();
 
-      expect(viewport.elementRef.nativeElement.scrollLeft).toBe(testComponent.itemSize * 2);
+      expect(viewport.measureScrollOffset()).toBe(testComponent.itemSize * 2);
       expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
     }));
 
@@ -200,7 +200,7 @@ describe('CdkVirtualScrollViewport', () => {
       fixture.detectChanges();
       flush();
 
-      expect(viewport.elementRef.nativeElement.scrollLeft).toBe(testComponent.itemSize * 2);
+      expect(viewport.measureScrollOffset()).toBe(testComponent.itemSize * 2);
       expect(viewport.getRenderedRange()).toEqual({start: 2, end: 6});
     }));
 
@@ -620,10 +620,9 @@ describe('CdkVirtualScrollViewport', () => {
           testComponent.orientation = 'horizontal';
           finishInit(fixture);
 
-          expect(viewportEl.scrollLeft).toBe(
-              testComponent.itemSize * testComponent.items.length - testComponent.viewportSize);
+          expect(viewport.measureScrollOffset('right')).toBe(0);
           expect(contentWrapperEl.style.transform).toMatch(/translateX\(0(px)?\)/);
-          expect((contentWrapperEl.children[0] as HTMLElement).innerText).toBe('0 - 0');
+          expect((contentWrapperEl.children[0] as HTMLElement).innerText.trim()).toBe('0 - 0');
         }));
 
     it('should scroll through items as user scrolls to the left in horizontal mode',
@@ -631,12 +630,12 @@ describe('CdkVirtualScrollViewport', () => {
           testComponent.orientation = 'horizontal';
           finishInit(fixture);
 
-          triggerScroll(viewport, 0);
+          triggerScroll(viewport, testComponent.itemSize * testComponent.items.length);
           fixture.detectChanges();
           flush();
 
           expect(contentWrapperEl.style.transform).toBe('translateX(-300px)');
-          expect((contentWrapperEl.children[0] as HTMLElement).innerText).toBe('6 - 6');
+          expect((contentWrapperEl.children[0] as HTMLElement).innerText.trim()).toBe('6 - 6');
         }));
 
     it('should interpret scrollToOffset amount as an offset from the right in horizontal mode',
@@ -649,8 +648,7 @@ describe('CdkVirtualScrollViewport', () => {
           fixture.detectChanges();
           flush();
 
-          expect(viewportEl.scrollLeft).toBe(testComponent.itemSize * testComponent.items.length -
-              testComponent.viewportSize - 100);
+          expect(viewport.measureScrollOffset('right')).toBe(100);
         }));
 
     it('should scroll to the correct index in horizontal mode', fakeAsync(() => {
@@ -662,7 +660,7 @@ describe('CdkVirtualScrollViewport', () => {
       fixture.detectChanges();
       flush();
 
-      expect((contentWrapperEl.children[0] as HTMLElement).innerText).toBe('2 - 2');
+      expect((contentWrapperEl.children[0] as HTMLElement).innerText.trim()).toBe('2 - 2');
     }));
 
     it('should emit the scrolled to index in horizontal mode', fakeAsync(() => {
@@ -701,11 +699,7 @@ function finishInit(fixture: ComponentFixture<any>) {
 /** Trigger a scroll event on the viewport (optionally setting a new scroll offset). */
 function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
   if (offset !== undefined) {
-    if (viewport.orientation == 'horizontal') {
-      viewport.elementRef.nativeElement.scrollLeft = offset;
-    } else {
-      viewport.elementRef.nativeElement.scrollTop = offset;
-    }
+    viewport.scrollToOffset(offset);
   }
   dispatchFakeEvent(viewport.elementRef.nativeElement, 'scroll');
   animationFrameScheduler.flush();
@@ -766,8 +760,8 @@ class FixedSizeVirtualScroll {
 @Component({
   template: `
     <cdk-virtual-scroll-viewport dir="rtl"
-        [itemSize]="itemSize" [minBufferPx]="minBufferPx" [maxBufferPx]="maxBufferPx" 
-        [orientation]="orientation" [style.height.px]="viewportHeight" 
+        [itemSize]="itemSize" [minBufferPx]="minBufferPx" [maxBufferPx]="maxBufferPx"
+        [orientation]="orientation" [style.height.px]="viewportHeight"
         [style.width.px]="viewportWidth" (scrolledIndexChange)="scrolledToIndex = $event">
       <div class="item"
            *cdkVirtualFor="let item of items; let i = index; trackBy: trackBy; \
