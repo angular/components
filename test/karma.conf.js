@@ -12,6 +12,7 @@ module.exports = (config) => {
       require('karma-sauce-launcher'),
       require('karma-chrome-launcher'),
       require('karma-firefox-launcher'),
+      require('karma-safari-launcher'),
       require('karma-sourcemap-loader'),
       require('karma-coverage'),
     ],
