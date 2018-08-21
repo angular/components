@@ -8,9 +8,6 @@ WAIT_RETRIES=2
 
 start_tunnel() {
   case "$MODE" in
-    saucelabs*)
-      ./scripts/saucelabs/start-tunnel.sh
-      ;;
     browserstack*)
       ./scripts/browserstack/start-tunnel.sh
       ;;
@@ -21,9 +18,6 @@ start_tunnel() {
 
 wait_for_tunnel() {
   case "$MODE" in
-    saucelabs*)
-      retryCall ${WAIT_RETRIES} ./scripts/saucelabs/wait-tunnel.sh
-      ;;
     browserstack*)
       retryCall ${WAIT_RETRIES} ./scripts/browserstack/wait-tunnel.sh
       ;;
@@ -34,9 +28,6 @@ wait_for_tunnel() {
 
 teardown_tunnel() {
   case "$MODE" in
-    saucelabs*)
-      ./scripts/saucelabs/stop-tunnel.sh
-      ;;
     browserstack*)
       ./scripts/browserstack/stop-tunnel.sh
       ;;

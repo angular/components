@@ -75,8 +75,8 @@ function decodeToken(token) {
 }
 
 
-/** Ensures that the Travis access keys work properly. */
-if (process.env.TRAVIS) {
+/** Ensures that the access keys work properly inside of Travis and CircleCI. */
+if (process.env.TRAVIS || process.env.CIRCLECI) {
   process.env.SAUCE_ACCESS_KEY = decodeToken(process.env.SAUCE_ACCESS_KEY);
   process.env.BROWSER_STACK_ACCESS_KEY = decodeToken(process.env.BROWSER_STACK_ACCESS_KEY);
 }
