@@ -19,10 +19,12 @@ describe('material-install-schematic', () => {
 
   /** Expects the given file to be in the styles of the specified workspace project. */
   function expectProjectStyleFile(project: WorkspaceProject, filePath: string) {
-    expect(project.architect!['build']).toBeTruthy();
-    expect(project.architect!['build']['options']).toBeTruthy();
-    expect(project.architect!['build']['options']['styles']).toContain(
-      filePath, `Expected "${filePath}" to be added to the project styles in the workspace.`);
+    const architect = project.architect!;
+
+    expect(architect!['build']).toBeTruthy();
+    expect(architect!['build']['options']).toBeTruthy();
+    expect(architect!['build']['options']['styles']).toContain(filePath,
+        `Expected "${filePath}" to be added to the project styles in the workspace.`);
   }
 
   it('should update package.json', () => {
