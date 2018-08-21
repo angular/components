@@ -45,7 +45,9 @@ cdk-virtual-scroll-viewport {
   top: 0;
   left: 0;
   contain: content;
-  will-change: transform;
+
+  // Note: We can't put `will-change: transform;` here because it causes Safari to not update the
+  // viewport's `scrollHeight` when the spacer's transform changes.
 
   [dir='rtl'] & {
     right: 0;
@@ -73,7 +75,9 @@ cdk-virtual-scroll-viewport {
   height: 1px;
   width: 1px;
   transform-origin: 0 0;
-  will-change: transform;
+
+  // Note: We can't put `will-change: transform;` here because it causes Safari to not update the
+  // viewport's `scrollHeight` when the spacer's transform changes.
 
   [dir='rtl'] & {
     right: 0;

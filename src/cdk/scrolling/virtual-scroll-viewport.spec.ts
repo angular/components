@@ -121,6 +121,17 @@ describe('CdkVirtualScrollViewport', () => {
       expect(viewport.elementRef.nativeElement.scrollHeight).toBe(10000);
     }));
 
+    it('should set total content size in horizontal mode', fakeAsync(() => {
+      testComponent.orientation = 'horizontal';
+      finishInit(fixture);
+
+      viewport.setTotalContentSize(10000);
+      flush();
+      fixture.detectChanges();
+
+      expect(viewport.elementRef.nativeElement.scrollWidth).toBe(10000);
+    }));
+
     it('should set rendered range', fakeAsync(() => {
       finishInit(fixture);
       viewport.setRenderedRange({start: 2, end: 3});
@@ -675,6 +686,27 @@ describe('CdkVirtualScrollViewport', () => {
       flush();
 
       expect(testComponent.scrolledToIndex).toBe(2);
+    }));
+
+    it('should set total content size', fakeAsync(() => {
+      finishInit(fixture);
+
+      viewport.setTotalContentSize(10000);
+      flush();
+      fixture.detectChanges();
+
+      expect(viewport.elementRef.nativeElement.scrollHeight).toBe(10000);
+    }));
+
+    it('should set total content size in horizontal mode', fakeAsync(() => {
+      testComponent.orientation = 'horizontal';
+      finishInit(fixture);
+
+      viewport.setTotalContentSize(10000);
+      flush();
+      fixture.detectChanges();
+
+      expect(viewport.elementRef.nativeElement.scrollWidth).toBe(10000);
     }));
   });
 });
