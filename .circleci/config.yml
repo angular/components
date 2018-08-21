@@ -13,16 +13,12 @@
 var_1: &docker_image angular/ngcontainer:0.3.0
 var_2: &cache_key v2-ng-mat-{{ .Branch }}-{{ checksum "package-lock.json" }}-0.3.0
 
-# Define common ENV vars
-var_3: &define_env_vars
-  run: echo "export PROJECT_ROOT=$(pwd)" >> $BASH_ENV
-
-# See remote cache documentation in /docs/BAZEL.md
-var_4: &setup-bazel-remote-cache
-  run:
-    name: Start up bazel remote cache proxy
-    command: ~/bazel-remote-proxy -backend circleci://
-    background: true
+# Command config that sets up the Saucelabs environment variables.
+var_3: &saucelabs_env_variables
+    name: Setup Saucelabs envrionment variables
+    command: |
+      echo 'export SAUCE_USERNAME=angular-ci' >> $BASH_ENV
+      echo 'export SAUCE_ACCESS_KEY=9b988f434ff8-fbca-8aa4-4ae3-35442987' >> $BASH_ENV
 
 # Settings common to each job
 anchor_1: &job_defaults
@@ -59,11 +55,31 @@ jobs:
           paths:
             - "node_modules"
 
+  test_saucelabs:
+    <<: *job_defaults
+    resource_class: xlarge
+    steps:
+      - checkout:
+          <<: *post_checkout
+      - restore_cache:
+          key: *cache_key
+
+      - run: *saucelabs_env_variables
+      - run: npm install
+
+      - run: ./scripts/saucelabs/start-tunnel.sh
+      - run: ./scripts/saucelabs/wait-tunnel.sh
+      - run: $(npm bin)/gulp ci:test
+      - run: ./scripts/saucelabs/stop-tunnel.sh
+
 workflows:
   version: 2
   default_workflow:
     jobs:
       - build
+  test_workflow:
+    jobs:
+      - test_saucelabs
 
 general:
   branches:

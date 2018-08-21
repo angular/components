@@ -105,21 +105,17 @@ module.exports = (config) => {
 
     if (process.env['TRAVIS_PULL_REQUEST'] === 'false' &&
         process.env['MODE'] === "travis_required") {
-
       config.preprocessors['dist/packages/**/!(*+(.|-)spec).js'] = ['coverage'];
       config.reporters.push('coverage');
     }
 
     // The MODE variable is the indicator of what row in the test matrix we're running.
-    // It will look like <platform>_<target>, where platform is one of 'saucelabs', 'browserstack'
-    // or 'travis'. The target is a reference to different collections of browsers that can run
-    // in the previously specified platform.
+    // It will look like <platform>_<target>, where platform is one of 'browserstack'or 'travis'.
+    // The target is a reference to different collections of browsers that can run in the
+    // previously specified platform.
     const [platform, target] = process.env.MODE.split('_');
 
-    if (platform === 'saucelabs') {
-      config.sauceLabs.build = buildId;
-      config.sauceLabs.tunnelIdentifier = process.env.TRAVIS_JOB_ID;
-    } else if (platform === 'browserstack') {
+    if (platform === 'browserstack') {
       config.browserStack.build = buildId;
       config.browserStack.tunnelIdentifier = process.env.TRAVIS_JOB_ID;
     } else if (platform !== 'travis') {
@@ -133,5 +129,10 @@ module.exports = (config) => {
     }
 
     config.browsers = platformMap[platform][target.toLowerCase()];
+  } else if (process.env['CIRCLECI']) {
+    config.sauceLabs.build = `CircleCI Angular Material ${process.env.CIRCLE_BUILD_NUM}`;
+    config.concurrency = 1;
+    config.browsers = platformMap['saucelabs']['required'];
+
   }
 };
