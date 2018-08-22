@@ -5,6 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+
 import {
   animate,
   animateChild,
@@ -53,7 +54,7 @@ export const matExpansionAnimations: {
 
   /** Animation that expands and collapses the panel content. */
   bodyExpansion: trigger('bodyExpansion', [
-    state('collapsed', style({height: '0px', visibility: 'hidden'})),
+    state('collapsed', style({height: '0px', visibility: 'collapse'})),
     state('expanded', style({height: '*', visibility: 'visible'})),
     transition('expanded <=> collapsed', animate(EXPANSION_PANEL_ANIMATION_TIMING)),
   ])
