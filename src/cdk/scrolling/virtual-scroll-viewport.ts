@@ -246,9 +246,10 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   setRenderedContentOffset(offset: number, to: 'to-start' | 'to-end' = 'to-start') {
     // For a horizontal viewport in a right-to-left language we need to translate along the x-axis
     // in the negative direction.
-    const axisDirection = this.orientation == 'horizontal' && this.dir && this.dir.value == 'rtl'
-        ? -1 : 1;
-    const axis = this.orientation === 'horizontal' ? 'X' : 'Y';
+    const isRtl = this.dir && this.dir.value == 'rtl';
+    const isHorizontal = this.orientation == 'horizontal';
+    const axis = isHorizontal ? 'X' : 'Y';
+    const axisDirection = isHorizontal && isRtl ? -1 : 1;
     let transform = `translate${axis}(${Number(axisDirection * offset)}px)`;
     this._renderedContentOffset = offset;
     if (to === 'to-end') {
