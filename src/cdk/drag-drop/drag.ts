@@ -341,8 +341,6 @@ export class CdkDrag<T = any> implements OnDestroy {
     // while moving the existing elements in all other cases.
     this.element.nativeElement.style.display = '';
 
-    console.log('cleaning up');
-
     if (this._nextSibling) {
       this._nextSibling.parentNode!.insertBefore(this.element.nativeElement, this._nextSibling);
     } else {
