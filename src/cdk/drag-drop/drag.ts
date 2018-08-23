@@ -256,6 +256,11 @@ export class CdkDrag<T = any> implements OnDestroy {
 
     if (this.dropContainer) {
       const element = this.element.nativeElement;
+
+      // Grab the `nextSibling` before the preview and placeholder
+      // have been created so we don't get the preview by accident.
+      this._nextSibling = element.nextSibling;
+
       const preview = this._preview = this._createPreviewElement();
       const placeholder = this._placeholder = this._createPlaceholderElement();
 
@@ -263,7 +268,6 @@ export class CdkDrag<T = any> implements OnDestroy {
       // place will throw off the consumer's `:last-child` selectors. We can't remove the element
       // from the DOM completely, because iOS will stop firing all subsequent events in the chain.
       element.style.display = 'none';
-      this._nextSibling = element.nextSibling;
       this._document.body.appendChild(element.parentNode!.replaceChild(placeholder, element));
       this._document.body.appendChild(preview);
       this.dropContainer.start();
@@ -336,6 +340,8 @@ export class CdkDrag<T = any> implements OnDestroy {
     // can throw off `NgFor` which does smart diffing and re-creates elements only when necessary,
     // while moving the existing elements in all other cases.
     this.element.nativeElement.style.display = '';
+
+    console.log('cleaning up');
 
     if (this._nextSibling) {
       this._nextSibling.parentNode!.insertBefore(this.element.nativeElement, this._nextSibling);
