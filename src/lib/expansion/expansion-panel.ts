@@ -11,6 +11,7 @@ import {CdkAccordionItem} from '@angular/cdk/accordion';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {TemplatePortal} from '@angular/cdk/portal';
+import {DOCUMENT} from '@angular/common';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -18,12 +19,15 @@ import {
   Component,
   ContentChild,
   Directive,
+  ElementRef,
+  Inject,
   Input,
   OnChanges,
   OnDestroy,
   Optional,
   SimpleChanges,
   SkipSelf,
+  ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
@@ -70,8 +74,13 @@ let uniqueId = 0;
     '[class.mat-expansion-panel-spacing]': '_hasSpacing()',
   }
 })
-export class MatExpansionPanel extends _CdkAccordionItem
-  implements AfterContentInit, OnChanges, OnDestroy {
+export class MatExpansionPanel extends CdkAccordionItem implements AfterContentInit, OnChanges,
+  OnDestroy {
+
+  // @breaking-change 8.0.0 Remove `| undefined` from here
+  // when the `_document` constructor param is required.
+  private _document: Document | undefined;
+
   /** Whether the toggle indicator should be hidden. */
   @Input()
   get hideToggle(): boolean {
@@ -91,6 +100,9 @@ export class MatExpansionPanel extends _CdkAccordionItem
   /** Content that will be rendered lazily. */
   @ContentChild(MatExpansionPanelContent) _lazyContent: MatExpansionPanelContent;
 
+  /** Element containing the panel's user-provided content. */
+  @ViewChild('body') _body: ElementRef<HTMLElement>;
+
   /** Portal holding the user's content. */
   _portal: TemplatePortal;
 
@@ -100,9 +112,11 @@ export class MatExpansionPanel extends _CdkAccordionItem
   constructor(@Optional() @SkipSelf() accordion: MatAccordion,
               _changeDetectorRef: ChangeDetectorRef,
               _uniqueSelectionDispatcher: UniqueSelectionDispatcher,
-              private _viewContainerRef: ViewContainerRef) {
+              private _viewContainerRef: ViewContainerRef,
+              @Inject(DOCUMENT) _document?: any) {
     super(accordion, _changeDetectorRef, _uniqueSelectionDispatcher);
     this.accordion = accordion;
+    this._document = _document;
   }
 
   /** Determines whether the expansion panel should have spacing between it and its siblings. */
@@ -157,6 +171,17 @@ export class MatExpansionPanel extends _CdkAccordionItem
     } else if (phaseName === 'start' && toState === 'collapsed') {
       classList.remove(cssClass);
     }
+  }
+
+  /** Checks whether the expansion panel's content contains the currently-focused element. */
+  _containsFocus(): boolean {
+    if (this._body && this._document) {
+      const focusedElement = this._document.activeElement;
+      const bodyElement = this._body.nativeElement;
+      return focusedElement === bodyElement || bodyElement.contains(focusedElement);
+    }
+
+    return false;
   }
 }
 

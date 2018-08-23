@@ -83,7 +83,12 @@ export class MatExpansionPanelHeader implements OnDestroy {
     )
     .subscribe(() => this._changeDetectorRef.markForCheck());
 
-    _focusMonitor.monitor(_element.nativeElement);
+    // Avoids focus being lost if the panel contained the focused element and was closed.
+    panel.closed
+      .pipe(filter(() => panel._containsFocus()))
+      .subscribe(() => _focusMonitor.focusVia(_element.nativeElement, 'program'));
+
+      _focusMonitor.monitor(_element.nativeElement);
   }
 
   /** Height of the header while the panel is expanded. */
