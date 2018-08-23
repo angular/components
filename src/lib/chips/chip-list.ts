@@ -10,7 +10,7 @@ import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
-import {BACKSPACE} from '@angular/cdk/keycodes';
+import {BACKSPACE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -69,7 +69,7 @@ export class MatChipListChange {
 @Component({
   moduleId: module.id,
   selector: 'mat-chip-list',
-  template: `<div class="mat-chip-list-wrapper"><ng-content></ng-content></div>`,
+  template: `<div class="mat-chip-list-wrapper" role="row"><ng-content></ng-content></div>`,
   exportAs: 'matChipList',
   host: {
     '[attr.tabindex]': 'disabled ? null : _tabIndex',
@@ -77,8 +77,10 @@ export class MatChipListChange {
     '[attr.aria-required]': 'required.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': 'errorState',
+    '[attr.aria-label]': 'ariaLabel',
+    '[attr.aria-labelledby]': 'ariaLabelledby',
     '[attr.aria-multiselectable]': 'multiple',
-    '[attr.role]': 'role',
+    'role': 'grid',
     '[class.mat-chip-list-disabled]': 'disabled',
     '[class.mat-chip-list-invalid]': 'errorState',
     '[class.mat-chip-list-required]': 'required',
@@ -161,10 +163,21 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   }
 
   /** The ARIA role applied to the chip list. */
-  get role(): string | null { return this.empty ? null : 'listbox'; }
+  get role(): string | null { return this.empty ? null : 'grid'; }
 
   /** An object used to control when error messages are shown. */
   @Input() errorStateMatcher: ErrorStateMatcher;
+
+  /**
+   * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
+   * take precedence so this may be omitted.
+   */
+  @Input('aria-label') ariaLabel: string;
+
+  /**
+   * Users can specify the `aria-labelledby` attribute
+   */
+  @Input('aria-labelledby') ariaLabelledby: string | null = null;
 
   /** Whether the user should be allowed to select multiple chips. */
   @Input()
@@ -344,7 +357,6 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
 
   ngAfterContentInit() {
     this._keyManager = new FocusKeyManager<MatChip>(this.chips)
-      .withWrap()
       .withVerticalOrientation()
       .withHorizontalOrientation(this._dir ? this._dir.value : 'ltr');
 
@@ -477,11 +489,16 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
    */
   _keydown(event: KeyboardEvent) {
     const target = event.target as HTMLElement;
+    const isRtl = this._dir && this._dir.value === 'rtl';
+    const isNextKey = event.keyCode === (isRtl ? LEFT_ARROW : RIGHT_ARROW);
+    const isTargetLastChip = this._keyManager.activeItemIndex === this.chips.length - 1;
 
     // If they are on an empty input and hit backspace, focus the last chip
     if (event.keyCode === BACKSPACE && this._isInputEmpty(target)) {
       this._keyManager.setLastItemActive();
       event.preventDefault();
+    } else if (isTargetLastChip && isNextKey && this._chipInput) {
+      this._chipInput.focus();
     } else if (target && target.classList.contains('mat-chip')) {
       this._keyManager.onKeydown(event);
       this.stateChanges.next();
@@ -510,12 +527,11 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
         // Check whether the chip is not the last item
         if (chipIndex < this.chips.length - 1) {
           this._keyManager.setActiveItem(chipIndex);
+          // Only set last destroyed index when the chip to be deleted is focused.
+          this._lastDestroyedIndex = chipIndex;
         } else if (chipIndex - 1 >= 0) {
           this._keyManager.setActiveItem(chipIndex - 1);
         }
-      }
-      if (this._keyManager.activeItemIndex === chipIndex) {
-        this._lastDestroyedIndex = chipIndex;
       }
     }
   }
@@ -527,8 +543,8 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   protected _updateFocusForDestroyedChips() {
     const chipsArray = this.chips.toArray();
 
-    if (this._lastDestroyedIndex != null && chipsArray.length > 0 && (this.focused ||
-      (this._keyManager.activeItem && chipsArray.indexOf(this._keyManager.activeItem) === -1))) {
+    if (this._lastDestroyedIndex != null && chipsArray.length > 0 &&
+        this._keyManager.activeItem && chipsArray.indexOf(this._keyManager.activeItem) === -1) {
       // Check whether the destroyed chip was the last item
       const newFocusIndex = Math.min(this._lastDestroyedIndex, chipsArray.length - 1);
       this._keyManager.setActiveItem(newFocusIndex);
