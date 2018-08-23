@@ -316,7 +316,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   }
   /**
    * @deprecated Setter to be removed as this property is intended to be readonly.
-   * @deletion-target 8.0.0
+   * @breaking-change 8.0.0
    */
   set focused(value: boolean) {
     this._focused = value;
@@ -445,8 +445,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       .pipe(take(1), switchMap(() => this.optionSelectionChanges));
   });
 
-   /** Event emitted when the select panel has been toggled. */
-   @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  /** Event emitted when the select panel has been toggled. */
+  @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** Event emitted when the select has been opened. */
   @Output('opened') readonly _openedStream: Observable<void> =

@@ -11,7 +11,7 @@ import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
-import {CdkScrollable} from '@angular/cdk/scrolling';
+import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterContentChecked,
@@ -42,7 +42,10 @@ import {matDrawerAnimations} from './drawer-animations';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
-/** Throws an exception when two MatDrawer are matching the same position. */
+/**
+ * Throws an exception when two MatDrawer are matching the same position.
+ * @docs-private
+ */
 export function throwMatDuplicatedDrawerError(position: string) {
   throw Error(`A drawer was already declared for 'position="${position}"'`);
 }
@@ -75,10 +78,14 @@ export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatDrawerContent implements AfterContentInit {
+export class MatDrawerContent extends CdkScrollable implements AfterContentInit {
   constructor(
       private _changeDetectorRef: ChangeDetectorRef,
-      @Inject(forwardRef(() => MatDrawerContainer)) public _container: MatDrawerContainer) {
+      @Inject(forwardRef(() => MatDrawerContainer)) public _container: MatDrawerContainer,
+      elementRef: ElementRef<HTMLElement>,
+      scrollDispatcher: ScrollDispatcher,
+      ngZone: NgZone) {
+    super(elementRef, scrollDispatcher, ngZone);
   }
 
   ngAfterContentInit() {
@@ -401,6 +408,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
 export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy {
   @ContentChildren(MatDrawer) _drawers: QueryList<MatDrawer>;
   @ContentChild(MatDrawerContent) _content: MatDrawerContent;
+  @ViewChild(MatDrawerContent) _userContent: MatDrawerContent;
 
   /** The drawer child with the `start` position. */
   get start(): MatDrawer | null { return this._start; }
@@ -471,7 +479,9 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
   readonly _contentMarginChanges = new Subject<{left: number|null, right: number|null}>();
 
   /** Reference to the CdkScrollable instance that wraps the scrollable content. */
-  @ViewChild(CdkScrollable) scrollable: CdkScrollable;
+  get scrollable(): CdkScrollable {
+    return this._userContent || this._content;
+  }
 
   constructor(@Optional() private _dir: Directionality,
               private _element: ElementRef,

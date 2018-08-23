@@ -52,7 +52,10 @@ export const SCROLL_THROTTLE_MS = 20;
 /** CSS class that will be attached to the overlay panel. */
 export const TOOLTIP_PANEL_CLASS = 'mat-tooltip-panel';
 
-/** Creates an error to be thrown if the user supplied an invalid tooltip position. */
+/**
+ * Creates an error to be thrown if the user supplied an invalid tooltip position.
+ * @docs-private
+ */
 export function getMatTooltipInvalidPositionError(position: string) {
   return Error(`Tooltip position "${position}" is invalid.`);
 }
@@ -87,6 +90,7 @@ export const MAT_TOOLTIP_DEFAULT_OPTIONS =
       factory: MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY
     });
 
+/** @docs-private */
 export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions {
   return {
     showDelay: 0,
@@ -230,7 +234,7 @@ export class MatTooltip implements OnDestroy {
       element.style['webkitUserDrag'] = '';
     }
 
-    _focusMonitor.monitor(element).pipe(takeUntil(this._destroyed)).subscribe(origin => {
+    _focusMonitor.monitor(_elementRef).pipe(takeUntil(this._destroyed)).subscribe(origin => {
       // Note that the focus monitor runs outside the Angular zone.
       if (!origin) {
         _ngZone.run(() => this.hide(0));
@@ -261,7 +265,7 @@ export class MatTooltip implements OnDestroy {
     this._destroyed.complete();
 
     this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this.message);
-    this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
+    this._focusMonitor.stopMonitoring(this._elementRef);
   }
 
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */

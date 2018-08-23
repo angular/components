@@ -2,12 +2,15 @@ import {Directionality} from '@angular/cdk/bidi';
 import {ENTER, COMMA} from '@angular/cdk/keycodes';
 import {PlatformModule} from '@angular/cdk/platform';
 import {createKeyboardEvent} from '@angular/cdk/testing';
-import {Component, DebugElement} from '@angular/core';
+import {Component, DebugElement, ViewChild} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatChipInput, MatChipInputEvent} from './chip-input';
 import {MatChipsModule} from './index';
 import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-options';
+import {MatChipList} from './chip-list';
 
 
 describe('MatChipInput', () => {
@@ -20,7 +23,7 @@ describe('MatChipInput', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MatChipsModule, PlatformModule],
+      imports: [PlatformModule, MatChipsModule, MatFormFieldModule, NoopAnimationsModule],
       declarations: [TestChipInput],
       providers: [{
         provide: Directionality, useFactory: () => {
@@ -64,6 +67,33 @@ describe('MatChipInput', () => {
 
       expect(inputNativeElement.getAttribute('placeholder')).toBe('bound placeholder');
     });
+
+    it('should propagate the dynamic `placeholder` value to the form field', () => {
+      fixture.componentInstance.placeholder = 'add a chip';
+      fixture.detectChanges();
+
+      const label: HTMLElement = fixture.nativeElement.querySelector('.mat-form-field-label');
+
+      expect(label).toBeTruthy();
+      expect(label.textContent).toContain('add a chip');
+
+      fixture.componentInstance.placeholder = 'or don\'t';
+      fixture.detectChanges();
+
+      expect(label.textContent).toContain('or don\'t');
+    });
+
+    it('should become disabled if the chip list is disabled', () => {
+      expect(inputNativeElement.hasAttribute('disabled')).toBe(false);
+      expect(chipInputDirective.disabled).toBe(false);
+
+      fixture.componentInstance.chipListInstance.disabled = true;
+      fixture.detectChanges();
+
+      expect(inputNativeElement.getAttribute('disabled')).toBe('true');
+      expect(chipInputDirective.disabled).toBe(true);
+    });
+
   });
 
   describe('[addOnBlur]', () => {
@@ -111,13 +141,24 @@ describe('MatChipInput', () => {
       expect(testChipInput.add).toHaveBeenCalled();
     });
 
+    it('emits accepts the custom separator keys in a Set', () => {
+      let COMMA_EVENT = createKeyboardEvent('keydown', COMMA, inputNativeElement);
+      spyOn(testChipInput, 'add');
+
+      chipInputDirective.separatorKeyCodes = new Set([COMMA]);
+      fixture.detectChanges();
+
+      chipInputDirective._keydown(COMMA_EVENT);
+      expect(testChipInput.add).toHaveBeenCalled();
+    });
+
     it('emits (chipEnd) when the separator keys are configured globally', () => {
       fixture.destroy();
 
       TestBed
         .resetTestingModule()
         .configureTestingModule({
-          imports: [MatChipsModule, PlatformModule],
+          imports: [MatChipsModule, MatFormFieldModule, PlatformModule, NoopAnimationsModule],
           declarations: [TestChipInput],
           providers: [{
             provide: MAT_CHIPS_DEFAULT_OPTIONS,
@@ -146,15 +187,18 @@ describe('MatChipInput', () => {
 
 @Component({
   template: `
-    <mat-chip-list #chipList>
-    </mat-chip-list>
-    <input matInput [matChipInputFor]="chipList"
-              [matChipInputAddOnBlur]="addOnBlur"
-              (matChipInputTokenEnd)="add($event)"
-              [placeholder]="placeholder" />
+    <mat-form-field>
+      <mat-chip-list #chipList>
+      </mat-chip-list>
+      <input matInput [matChipInputFor]="chipList"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="add($event)"
+                [placeholder]="placeholder" />
+    </mat-form-field>
   `
 })
 class TestChipInput {
+  @ViewChild(MatChipList) chipListInstance: MatChipList;
   addOnBlur: boolean = false;
   placeholder = '';
 
