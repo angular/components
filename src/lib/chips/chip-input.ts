@@ -6,8 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Directive, ElementRef, EventEmitter, Input, Output, Inject, OnChanges} from '@angular/core';
+import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {mixinTabIndex, mixinDisabled, HasTabIndex, CanDisable} from '@angular/material/core';
+import {
+  Attribute,
+  Directive,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Optional,
+  Output,
+  Inject
+} from '@angular/core';
 import {MatChipList} from './chip-list';
 import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-options';
 
@@ -21,6 +34,11 @@ export interface MatChipInputEvent {
   value: string;
 }
 
+// Boilerplate for applying mixins to MatChipInput.
+/** @docs-private */
+export class MatChipInputBase {}
+export const _MatChipInputMixinBase = mixinTabIndex(mixinDisabled(MatChipInputBase));
+
 // Increasing integer for generating unique ids.
 let nextUniqueId = 0;
 
@@ -31,6 +49,7 @@ let nextUniqueId = 0;
 @Directive({
   selector: 'input[matChipInputFor]',
   exportAs: 'matChipInput, matChipInputFor',
+  inputs: ['tabIndex', 'disabled'],
   host: {
     'class': 'mat-chip-input mat-input-element',
     '(keydown)': '_keydown($event)',
@@ -40,12 +59,14 @@ let nextUniqueId = 0;
     '[id]': 'id',
     '[attr.disabled]': 'disabled || null',
     '[attr.placeholder]': 'placeholder || null',
+    '[attr.tabIndex]': 'tabIndex',
   }
 })
-export class MatChipInput implements OnChanges {
+export class MatChipInput extends _MatChipInputMixinBase implements HasTabIndex, CanDisable, OnChanges {
   /** Whether the control is focused. */
   focused: boolean = false;
   _chipList: MatChipList;
+  _tabIndex = -1;
 
   /** Register input for chip list */
   @Input('matChipInputFor')
@@ -95,9 +116,13 @@ export class MatChipInput implements OnChanges {
   protected _inputElement: HTMLInputElement;
 
   constructor(
-    protected _elementRef: ElementRef,
-    @Inject(MAT_CHIPS_DEFAULT_OPTIONS) private _defaultOptions: MatChipsDefaultOptions) {
+      protected _elementRef: ElementRef,
+      @Inject(MAT_CHIPS_DEFAULT_OPTIONS) private _defaultOptions: MatChipsDefaultOptions,
+      @Attribute('tabindex') tabIndex: string,
+      @Optional() private _dir: Directionality) {
+    super();
     this._inputElement = this._elementRef.nativeElement as HTMLInputElement;
+    this.tabIndex = parseInt(tabIndex) || -1;
   }
 
   ngOnChanges() {
@@ -130,7 +155,14 @@ export class MatChipInput implements OnChanges {
   /** Checks to see if the (chipEnd) event needs to be emitted. */
   _emitChipEnd(event?: KeyboardEvent) {
     if (!this._inputElement.value && !!event) {
-      this._chipList._keydown(event);
+      const isRtl = this._dir && this._dir.value === 'rtl';
+      const isPreviousKey = event && event.keyCode === (isRtl ? RIGHT_ARROW : LEFT_ARROW);
+      if (isPreviousKey) {
+        // Focus on the last chip
+        this._chipList._keyManager.setActiveItem(this._chipList.chips.length - 1);
+      } else {
+        this._chipList._keydown(event);
+      }
     }
     if (!event || this._isSeparatorKey(event.keyCode)) {
       this.chipEnd.emit({ input: this._inputElement, value: this._inputElement.value });

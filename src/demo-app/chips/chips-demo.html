@@ -66,7 +66,7 @@
           Mal
         </mat-chip>
 
-        <mat-chip selected="true" color="warn">
+        <mat-chip selected="true" color="warn" aria-label="Remove Husi">
           <img src="https://material.angularjs.org/material2_assets/ngconf/Husi.png" matChipAvatar>
           Husi
           <mat-icon matChipRemove>cancel</mat-icon>
@@ -103,7 +103,10 @@
           <mat-chip  *ngFor="let person of people" [color]="color" [selectable]="selectable"
                    [removable]="removable" (removed)="remove(person)">
             {{person.name}}
-            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            <button mat-icon-button matChipRemove *ngIf="removable"
+                    tabindex="-1" aria-label="remove">
+              <mat-icon>cancel</mat-icon>
+            </button>
           </mat-chip>
           <input placeholder="New Contributor..."
                  [matChipInputFor]="chipList1"

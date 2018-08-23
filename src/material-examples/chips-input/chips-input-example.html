@@ -1,7 +1,8 @@
 <mat-form-field class="example-chip-list">
   <mat-chip-list #chipList>
     <mat-chip *ngFor="let fruit of fruits" [selectable]="selectable"
-             [removable]="removable" (removed)="remove(fruit)">
+             [removable]="removable" (removed)="remove(fruit)"
+             [aria-label]="fruit.name + '. Press backspace to delete, press enter to select.'">
       {{fruit.name}}
       <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
     </mat-chip>

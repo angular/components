@@ -70,6 +70,9 @@ describe('Chips', () => {
     });
 
     describe('basic behaviors', () => {
+      it('has role gridcell', () => {
+        expect(chipNativeElement.getAttribute('role')).toBe('gridcell');
+      });
 
       it('adds the `mat-chip` class', () => {
         expect(chipNativeElement.classList).toContain('mat-chip');

@@ -35,9 +35,12 @@ $mat-chip-remove-size: 18px;
   align-items: center;
   cursor: default;
 
-  .mat-chip-remove.mat-icon {
+  .mat-chip-remove.mat-icon,
+  .mat-chip-remove .mat-icon,
+  button.mat-chip-remove {
     width: $mat-chip-remove-size;
     height: $mat-chip-remove-size;
+    line-height: $mat-chip-remove-size;
   }
 
   &:focus {
