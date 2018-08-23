@@ -19,7 +19,7 @@ import {
   OnDestroy,
   ViewEncapsulation,
 } from '@angular/core';
-import {merge, Subscription} from 'rxjs';
+import {merge, Subscription, EMPTY} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {matExpansionAnimations} from './expansion-animations';
 import {MatExpansionPanel} from './expansion-panel';
@@ -65,21 +65,25 @@ export class MatExpansionPanelHeader implements OnDestroy {
   private _parentChangeSubscription = Subscription.EMPTY;
 
   constructor(
-    @Host() public panel: MatExpansionPanel,
-    private _element: ElementRef,
-    private _focusMonitor: FocusMonitor,
-    private _changeDetectorRef: ChangeDetectorRef) {
+      @Host() public panel: MatExpansionPanel,
+      private _element: ElementRef,
+      private _focusMonitor: FocusMonitor,
+      private _changeDetectorRef: ChangeDetectorRef) {
+
+    const accordionHideToggleChange = panel.accordion ?
+      panel.accordion._stateChanges.pipe(filter(changes => !!changes.hideToggle)) : EMPTY;
 
     // Since the toggle state depends on an @Input on the panel, we
-    // need to  subscribe and trigger change detection manually.
+    // need to subscribe and trigger change detection manually.
     this._parentChangeSubscription = merge(
       panel.opened,
       panel.closed,
+      accordionHideToggleChange,
       panel._inputChanges.pipe(filter(changes => !!(changes.hideToggle || changes.disabled)))
     )
     .subscribe(() => this._changeDetectorRef.markForCheck());
 
-    _focusMonitor.monitor(_element.nativeElement);
+    _focusMonitor.monitor(_element);
   }
 
   /** Height of the header while the panel is expanded. */
@@ -129,7 +133,7 @@ export class MatExpansionPanelHeader implements OnDestroy {
 
   ngOnDestroy() {
     this._parentChangeSubscription.unsubscribe();
-    this._focusMonitor.stopMonitoring(this._element.nativeElement);
+    this._focusMonitor.stopMonitoring(this._element);
   }
 }
 

@@ -16,6 +16,8 @@ describe('test cases', () => {
    */
   const testCases = [
     'v5/attribute-selectors',
+    'v5/css-names',
+    'v5/element-selectors',
     'v5/ts-class-names',
   ];
 
