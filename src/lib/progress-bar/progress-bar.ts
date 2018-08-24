@@ -109,7 +109,7 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
     // we can't tell the difference between whether
     // the consumer is using the hash location strategy or not, because `Location` normalizes
     // both `/#/foo/bar` and `/foo/bar` to the same thing.
-    const path = location ? location.pathname.split('#')[0] : '';
+    const path = location && location.pathname ? location.pathname.split('#')[0] : '';
     this._rectangleFillValue = `url('${path}#${this.progressbarId}')`;
     this._isNoopAnimation = _animationMode === 'NoopAnimations';
   }
