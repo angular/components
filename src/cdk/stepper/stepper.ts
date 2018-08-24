@@ -181,7 +181,7 @@ export class CdkStep implements OnChanges {
   private _customError: boolean | null = null;
 
   private _getDefaultError() {
-    return this.stepControl && this.stepControl.invalid;
+    return this.stepControl && this.stepControl.invalid && this.interacted;
   }
 
   /** @breaking-change 8.0.0 remove the `?` after `stepperOptions` */
@@ -189,8 +189,8 @@ export class CdkStep implements OnChanges {
     @Inject(forwardRef(() => CdkStepper)) private _stepper: CdkStepper,
     @Optional() @Inject(MAT_STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions) {
     this._stepperOptions = stepperOptions ? stepperOptions : {};
-    this._showError = !!this._stepperOptions.showError;
     this._displayDefaultIndicatorType = this._stepperOptions.displayDefaultIndicatorType !== false;
+    this._showError = !!this._stepperOptions.showError;
   }
 
   /** Selects this step component. */
