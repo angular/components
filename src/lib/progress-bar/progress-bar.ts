@@ -51,8 +51,8 @@ export interface MatProgressBarLocation {
 
 /** @docs-private */
 export function MAT_PROGRESS_BAR_LOCATION_FACTORY(): MatProgressBarLocation {
-  const doc = inject(DOCUMENT);
-  const pathname = (doc && doc.location && doc.location.pathname) || '';
+  const _document = inject(DOCUMENT);
+  const pathname = (_document && _document.location && _document.location.pathname) || '';
   return {pathname};
 }
 
