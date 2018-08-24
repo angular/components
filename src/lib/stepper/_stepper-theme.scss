@@ -29,7 +29,8 @@
       color: mat-color($primary, default-contrast);
     }
 
-    .mat-step-icon-not-selected {
+    /** @breaking-change 8.0.0 rename `mat-step-icon-not-touched` to `mat-step-icon-not-selected` */
+    .mat-step-icon-not-touched {
       background-color: mat-color($foreground, disabled-text);
       color: mat-color($primary, default-contrast);
     }

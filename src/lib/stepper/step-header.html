@@ -1,7 +1,8 @@
 <div class="mat-step-header-ripple" mat-ripple [matRippleTrigger]="_getHostElement()"></div>
+<!-- @breaking-change 8.0.0 rename `mat-step-icon-not-touched` to `mat-step-icon-not-selected` -->
 <div class="mat-step-icon"
      [class.mat-step-icon-selected]="selected || state == 'done'"
-     [class.mat-step-icon-not-selected]="!selected && state != 'done'"
+     [class.mat-step-icon-not-touched]="!selected && state != 'done'"
      [class.mat-step-icon-error]="state == 'error'"
      [ngSwitch]="state">
 
