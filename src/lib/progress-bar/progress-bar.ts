@@ -13,7 +13,8 @@ import {
   Input,
   Optional,
   ViewEncapsulation,
-  InjectionToken, inject
+  InjectionToken,
+  inject,
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {CanColor, mixinColor} from '@angular/material/core';
