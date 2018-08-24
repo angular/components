@@ -13,10 +13,11 @@ import {
   Input,
   Optional,
   ViewEncapsulation,
-  InjectionToken
+  InjectionToken, inject
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {CanColor, mixinColor} from '@angular/material/core';
+import {DOCUMENT} from '@angular/common';
 
 // TODO(josephperrott): Benchpress tests.
 // TODO(josephperrott): Add ARIA attributes for progress bar "for".
@@ -49,7 +50,9 @@ export interface MatProgressBarLocation {
 
 /** @docs-private */
 export function MAT_PROGRESS_BAR_LOCATION_FACTORY(): MatProgressBarLocation {
-  return typeof window !== 'undefined' ? window.location : {pathname: ''};
+  const doc = inject(DOCUMENT);
+  const pathname = (doc && doc.location && doc.location.pathname) || '';
+  return {pathname};
 }
 
 
