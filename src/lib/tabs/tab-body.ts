@@ -156,7 +156,7 @@ export class MatTabBody implements OnInit, OnDestroy {
   constructor(private _elementRef: ElementRef,
               @Optional() private _dir: Directionality,
               /**
-               * @deletion-target 7.0.0 changeDetectorRef to be made required.
+               * @breaking-change 7.0.0 changeDetectorRef to be made required.
                */
               changeDetectorRef?: ChangeDetectorRef) {
 
@@ -173,7 +173,7 @@ export class MatTabBody implements OnInit, OnDestroy {
    * special position states that transition the tab from the left or right before centering.
    */
   ngOnInit() {
-    if (this._position == 'center' && this.origin !== undefined) {
+    if (this._position == 'center' && this.origin != null) {
       this._position = this._computePositionFromOrigin();
     }
   }

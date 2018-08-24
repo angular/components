@@ -259,6 +259,20 @@ describe('MatStepper', () => {
       expect(stepHeaderEl.focus).not.toHaveBeenCalled();
     });
 
+    it('should focus next step header if focus is inside the stepper', () => {
+      let stepperComponent = fixture.debugElement.query(By.directive(MatStepper)).componentInstance;
+      let stepHeaderEl = fixture.debugElement.queryAll(By.css('mat-step-header'))[1].nativeElement;
+      let nextButtonNativeEl = fixture.debugElement
+          .queryAll(By.directive(MatStepperNext))[0].nativeElement;
+      spyOn(stepHeaderEl, 'focus');
+      nextButtonNativeEl.focus();
+      nextButtonNativeEl.click();
+      fixture.detectChanges();
+
+      expect(stepperComponent.selectedIndex).toBe(1);
+      expect(stepHeaderEl.focus).toHaveBeenCalled();
+    });
+
     it('should only be able to return to a previous step if it is editable', () => {
       let stepperComponent = fixture.debugElement.query(By.directive(MatStepper)).componentInstance;
 
@@ -372,6 +386,24 @@ describe('MatStepper', () => {
 
       expect(headers.map(header => header.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
       expect(headers.every(header => header.getAttribute('aria-setsize') === '3')).toBe(true);
+    });
+
+    it('should adjust the index when removing a step before the current one', () => {
+      const stepperComponent: MatVerticalStepper = fixture.debugElement
+          .query(By.css('mat-vertical-stepper')).componentInstance;
+
+      stepperComponent.selectedIndex = 2;
+      fixture.detectChanges();
+
+      // Re-assert since the setter has some extra logic.
+      expect(stepperComponent.selectedIndex).toBe(2);
+
+      expect(() => {
+        fixture.componentInstance.showStepTwo = false;
+        fixture.detectChanges();
+      }).not.toThrow();
+
+      expect(stepperComponent.selectedIndex).toBe(1);
     });
 
   });
@@ -1024,7 +1056,7 @@ class SimpleMatHorizontalStepperApp {
           <button mat-button matStepperNext>Next</button>
         </div>
       </mat-step>
-      <mat-step>
+      <mat-step *ngIf="showStepTwo">
         <ng-template matStepLabel>Step 2</ng-template>
         Content 2
         <div>
@@ -1044,6 +1076,7 @@ class SimpleMatHorizontalStepperApp {
 })
 class SimpleMatVerticalStepperApp {
   inputLabel = 'Step 3';
+  showStepTwo = true;
 }
 
 @Component({

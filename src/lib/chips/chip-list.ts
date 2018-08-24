@@ -10,7 +10,7 @@ import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
-import {BACKSPACE} from '@angular/cdk/keycodes';
+import {BACKSPACE, HOME, END} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -72,7 +72,7 @@ export class MatChipListChange {
   template: `<div class="mat-chip-list-wrapper"><ng-content></ng-content></div>`,
   exportAs: 'matChipList',
   host: {
-    '[attr.tabindex]': '_tabIndex',
+    '[attr.tabindex]': 'disabled ? null : _tabIndex',
     '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-required]': 'required.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
@@ -261,7 +261,13 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
    */
   @Input()
   get disabled(): boolean { return this.ngControl ? !!this.ngControl.disabled : this._disabled; }
-  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+  set disabled(value: boolean) {
+    this._disabled = coerceBooleanProperty(value);
+
+    if (this.chips) {
+      this.chips.forEach(chip => chip.disabled = this._disabled);
+    }
+  }
   protected _disabled: boolean = false;
 
   /** Orientation of the chip list. */
@@ -275,6 +281,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   get selectable(): boolean { return this._selectable; }
   set selectable(value: boolean) {
     this._selectable = coerceBooleanProperty(value);
+
     if (this.chips) {
       this.chips.forEach(chip => chip.chipListSelectable = this._selectable);
     }
@@ -441,6 +448,10 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
    * are no eligible chips.
    */
   focus(): void {
+    if (this.disabled) {
+      return;
+    }
+
     // TODO: ARIA says this should focus the first `selected` chip if any are selected.
     // Focus on first element if there's no chipInput inside chip-list
     if (this._chipInput && this._chipInput.focused) {
@@ -472,7 +483,16 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
       this._keyManager.setLastItemActive();
       event.preventDefault();
     } else if (target && target.classList.contains('mat-chip')) {
-      this._keyManager.onKeydown(event);
+      if (event.keyCode === HOME) {
+        this._keyManager.setFirstItemActive();
+        event.preventDefault();
+      } else if (event.keyCode === END) {
+        this._keyManager.setLastItemActive();
+        event.preventDefault();
+      } else {
+        this._keyManager.onKeydown(event);
+      }
+
       this.stateChanges.next();
     }
   }

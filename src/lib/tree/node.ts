@@ -6,12 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  CdkNestedTreeNode,
-  CdkTree,
-  CdkTreeNode,
-  CdkTreeNodeDef,
-} from '@angular/cdk/tree';
+import {CdkNestedTreeNode, CdkTree, CdkTreeNode, CdkTreeNodeDef} from '@angular/cdk/tree';
 import {
   AfterContentInit,
   Attribute,
@@ -21,11 +16,13 @@ import {
   Input,
   IterableDiffers,
   OnDestroy,
-  QueryList
+  QueryList,
 } from '@angular/core';
 import {CanDisable, HasTabIndex, mixinDisabled, mixinTabIndex} from '@angular/material/core';
 import {MatTreeNodeOutlet} from './outlet';
 
+// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
+export const _CdkTreeNodeDef = CdkTreeNodeDef;
 
 export const _MatTreeNodeMixinBase = mixinTabIndex(mixinDisabled(CdkTreeNode));
 export const _MatNestedTreeNodeMixinBase = mixinTabIndex(mixinDisabled(CdkNestedTreeNode));
@@ -68,7 +65,7 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
   ],
   providers: [{provide: CdkTreeNodeDef, useExisting: MatTreeNodeDef}]
 })
-export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
+export class MatTreeNodeDef<T> extends _CdkTreeNodeDef<T> {
   @Input('matTreeNode') data: T;
 }
 

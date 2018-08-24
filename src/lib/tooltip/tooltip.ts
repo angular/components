@@ -52,7 +52,10 @@ export const SCROLL_THROTTLE_MS = 20;
 /** CSS class that will be attached to the overlay panel. */
 export const TOOLTIP_PANEL_CLASS = 'mat-tooltip-panel';
 
-/** Creates an error to be thrown if the user supplied an invalid tooltip position. */
+/**
+ * Creates an error to be thrown if the user supplied an invalid tooltip position.
+ * @docs-private
+ */
 export function getMatTooltipInvalidPositionError(position: string) {
   return Error(`Tooltip position "${position}" is invalid.`);
 }
@@ -87,6 +90,7 @@ export const MAT_TOOLTIP_DEFAULT_OPTIONS =
       factory: MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY
     });
 
+/** @docs-private */
 export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions {
   return {
     showDelay: 0,
@@ -185,7 +189,7 @@ export class MatTooltip implements OnDestroy {
     }
   }
 
-  private _manualListeners = new Map<string, Function>();
+  private _manualListeners = new Map<string, EventListenerOrEventListenerObject>();
 
   /** Emits when the component is destroyed. */
   private readonly _destroyed = new Subject<void>();
@@ -206,15 +210,14 @@ export class MatTooltip implements OnDestroy {
 
     const element: HTMLElement = _elementRef.nativeElement;
 
-    // The mouse events shouldn't be bound on iOS devices, because
-    // they can prevent the first tap from firing its click event.
-    if (!_platform.IOS) {
-      this._manualListeners.set('mouseenter', () => this.show());
-      this._manualListeners.set('mouseleave', () => this.hide());
-
+    // The mouse events shouldn't be bound on mobile devices, because they can prevent the
+    // first tap from firing its click event or can cause the tooltip to open for clicks.
+    if (!_platform.IOS && !_platform.ANDROID) {
       this._manualListeners
-        .forEach((listener, event) => _elementRef.nativeElement.addEventListener(event, listener));
-    } else if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
+        .set('mouseenter', () => this.show())
+        .set('mouseleave', () => this.hide())
+        .forEach((listener, event) => element.addEventListener(event, listener));
+    } else if (_platform.IOS && (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA')) {
       // When we bind a gesture event on an element (in this case `longpress`), HammerJS
       // will add some inline styles by default, including `user-select: none`. This is
       // problematic on iOS, because it will prevent users from typing in inputs. If
@@ -230,7 +233,7 @@ export class MatTooltip implements OnDestroy {
       element.style['webkitUserDrag'] = '';
     }
 
-    _focusMonitor.monitor(element).pipe(takeUntil(this._destroyed)).subscribe(origin => {
+    _focusMonitor.monitor(_elementRef).pipe(takeUntil(this._destroyed)).subscribe(origin => {
       // Note that the focus monitor runs outside the Angular zone.
       if (!origin) {
         _ngZone.run(() => this.hide(0));
@@ -261,7 +264,7 @@ export class MatTooltip implements OnDestroy {
     this._destroyed.complete();
 
     this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this.message);
-    this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
+    this._focusMonitor.stopMonitoring(this._elementRef);
   }
 
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */

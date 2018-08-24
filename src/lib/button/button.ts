@@ -33,9 +33,6 @@ import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 /** Default color palette for round buttons (mat-fab and mat-mini-fab) */
 const DEFAULT_ROUND_BUTTON_COLOR = 'accent';
 
-/** Default color palette for flat buttons (mat-flat-button) */
-const DEFAULT_FLAT_BUTTON_COLOR = 'primary';
-
 /**
  * List of classes to add to MatButton instances based on host attributes to
  * style as different variants.
@@ -92,12 +89,12 @@ export class MatButton extends _MatButtonMixinBase
   constructor(elementRef: ElementRef,
               /**
                * @deprecated Platform checks for SSR are no longer needed
-               * @deletion-target 7.0.0
+               * @breaking-change 7.0.0
                */
               // tslint:disable-next-line:no-unused-variable
               private _platform: Platform,
               private _focusMonitor: FocusMonitor,
-              // @deletion-target 7.0.0 `_animationMode` parameter to be made required.
+              // @breaking-change 7.0.0 `_animationMode` parameter to be made required.
               @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     super(elementRef);
 
@@ -109,17 +106,15 @@ export class MatButton extends _MatButtonMixinBase
       }
     }
 
-    this._focusMonitor.monitor(this._elementRef.nativeElement, true);
+    this._focusMonitor.monitor(this._elementRef, true);
 
     if (this.isRoundButton) {
       this.color = DEFAULT_ROUND_BUTTON_COLOR;
-    } else if (this._hasHostAttributes('mat-flat-button')) {
-      this.color = DEFAULT_FLAT_BUTTON_COLOR;
     }
   }
 
   ngOnDestroy() {
-    this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
+    this._focusMonitor.stopMonitoring(this._elementRef);
   }
 
   /** Focuses the button. */
@@ -173,7 +168,7 @@ export class MatAnchor extends MatButton {
     platform: Platform,
     focusMonitor: FocusMonitor,
     elementRef: ElementRef,
-    // @deletion-target 7.0.0 `animationMode` parameter to be made required.
+    // @breaking-change 7.0.0 `animationMode` parameter to be made required.
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, platform, focusMonitor, animationMode);
   }

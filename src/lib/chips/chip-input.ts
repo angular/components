@@ -7,7 +7,7 @@
  */
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Directive, ElementRef, EventEmitter, Input, Output, Inject} from '@angular/core';
+import {Directive, ElementRef, EventEmitter, Input, Output, Inject, OnChanges} from '@angular/core';
 import {MatChipList} from './chip-list';
 import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-options';
 
@@ -38,10 +38,11 @@ let nextUniqueId = 0;
     '(focus)': '_focus()',
     '(input)': '_onInput()',
     '[id]': 'id',
+    '[attr.disabled]': 'disabled || null',
     '[attr.placeholder]': 'placeholder || null',
   }
 })
-export class MatChipInput {
+export class MatChipInput implements OnChanges {
   /** Whether the control is focused. */
   focused: boolean = false;
   _chipList: MatChipList;
@@ -68,23 +69,24 @@ export class MatChipInput {
    *
    * Defaults to `[ENTER]`.
    */
-  // TODO(tinayuangao): Support Set here
   @Input('matChipInputSeparatorKeyCodes')
-  separatorKeyCodes: number[] = this._defaultOptions.separatorKeyCodes;
+  separatorKeyCodes: number[] | Set<number> = this._defaultOptions.separatorKeyCodes;
 
   /** Emitted when a chip is to be added. */
   @Output('matChipInputTokenEnd')
   chipEnd: EventEmitter<MatChipInputEvent> = new EventEmitter<MatChipInputEvent>();
 
-  /**
-   * The input's placeholder text.
-   * @deprecated Bind to the `placeholder` attribute directly.
-   * @deletion-target 7.0.0
-   */
+  /** The input's placeholder text. */
   @Input() placeholder: string = '';
 
   /** Unique id for the input. */
   @Input() id: string = `mat-chip-list-input-${nextUniqueId++}`;
+
+  /** Whether the input is disabled. */
+  @Input()
+  get disabled(): boolean { return this._disabled || (this._chipList && this._chipList.disabled); }
+  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
+  private _disabled: boolean = false;
 
   /** Whether the input is empty. */
   get empty(): boolean { return !this._inputElement.value; }
@@ -96,6 +98,10 @@ export class MatChipInput {
     protected _elementRef: ElementRef,
     @Inject(MAT_CHIPS_DEFAULT_OPTIONS) private _defaultOptions: MatChipsDefaultOptions) {
     this._inputElement = this._elementRef.nativeElement as HTMLInputElement;
+  }
+
+  ngOnChanges() {
+    this._chipList.stateChanges.next();
   }
 
   /** Utility method to make host definition/tests more clear. */
@@ -126,7 +132,7 @@ export class MatChipInput {
     if (!this._inputElement.value && !!event) {
       this._chipList._keydown(event);
     }
-    if (!event || this.separatorKeyCodes.indexOf(event.keyCode) > -1) {
+    if (!event || this._isSeparatorKey(event.keyCode)) {
       this.chipEnd.emit({ input: this._inputElement, value: this._inputElement.value });
 
       if (event) {
@@ -141,5 +147,13 @@ export class MatChipInput {
   }
 
   /** Focuses the input. */
-  focus(): void { this._inputElement.focus(); }
+  focus(): void {
+    this._inputElement.focus();
+  }
+
+  /** Checks whether a keycode is one of the configured separators. */
+  private _isSeparatorKey(keyCode: number) {
+    const separators = this.separatorKeyCodes;
+    return Array.isArray(separators) ? separators.indexOf(keyCode) > -1 : separators.has(keyCode);
+  }
 }

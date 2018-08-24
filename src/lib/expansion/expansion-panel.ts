@@ -18,21 +18,29 @@ import {
   Component,
   ContentChild,
   Directive,
+  EventEmitter,
+  ElementRef,
   Input,
+  Inject,
   OnChanges,
   OnDestroy,
   Optional,
+  Output,
   SimpleChanges,
   SkipSelf,
   ViewContainerRef,
   ViewEncapsulation,
+  ViewChild,
 } from '@angular/core';
+import {DOCUMENT} from '@angular/common';
 import {Subject} from 'rxjs';
 import {filter, startWith, take} from 'rxjs/operators';
 import {MatAccordion} from './accordion';
 import {matExpansionAnimations} from './expansion-animations';
 import {MatExpansionPanelContent} from './expansion-panel-content';
 
+// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
+export const _CdkAccordionItem = CdkAccordionItem;
 
 /** MatExpansionPanel's states. */
 export type MatExpansionPanelState = 'expanded' | 'collapsed';
@@ -68,15 +76,28 @@ let uniqueId = 0;
     '[class.mat-expansion-panel-spacing]': '_hasSpacing()',
   }
 })
-export class MatExpansionPanel extends CdkAccordionItem
-    implements AfterContentInit, OnChanges, OnDestroy {
+export class MatExpansionPanel extends CdkAccordionItem implements AfterContentInit, OnChanges,
+  OnDestroy {
+
+  // @breaking-change 8.0.0 Remove `| undefined` from here
+  // when the `_document` constructor param is required.
+  private _document: Document | undefined;
+
   /** Whether the toggle indicator should be hidden. */
   @Input()
-  get hideToggle(): boolean { return this._hideToggle; }
+  get hideToggle(): boolean {
+    return this._hideToggle || (this.accordion && this.accordion.hideToggle);
+  }
   set hideToggle(value: boolean) {
     this._hideToggle = coerceBooleanProperty(value);
   }
   private _hideToggle = false;
+
+  /** An event emitted after the body's expansion animation happens. */
+  @Output() afterExpand = new EventEmitter<void>();
+
+  /** An event emitted after the body's collapse animation happens. */
+  @Output() afterCollapse = new EventEmitter<void>();
 
   /** Stream that emits for changes in `@Input` properties. */
   readonly _inputChanges = new Subject<SimpleChanges>();
@@ -87,6 +108,9 @@ export class MatExpansionPanel extends CdkAccordionItem
   /** Content that will be rendered lazily. */
   @ContentChild(MatExpansionPanelContent) _lazyContent: MatExpansionPanelContent;
 
+  /** Element containing the panel's user-provided content. */
+  @ViewChild('body') _body: ElementRef<HTMLElement>;
+
   /** Portal holding the user's content. */
   _portal: TemplatePortal;
 
@@ -96,22 +120,19 @@ export class MatExpansionPanel extends CdkAccordionItem
   constructor(@Optional() @SkipSelf() accordion: MatAccordion,
               _changeDetectorRef: ChangeDetectorRef,
               _uniqueSelectionDispatcher: UniqueSelectionDispatcher,
-              private _viewContainerRef: ViewContainerRef) {
+              private _viewContainerRef: ViewContainerRef,
+              @Inject(DOCUMENT) _document?: any) {
     super(accordion, _changeDetectorRef, _uniqueSelectionDispatcher);
     this.accordion = accordion;
-  }
-
-  /** Whether the expansion indicator should be hidden. */
-  _getHideToggle(): boolean {
-    if (this.accordion) {
-      return this.accordion.hideToggle;
-    }
-    return this.hideToggle;
+    this._document = _document;
   }
 
   /** Determines whether the expansion panel should have spacing between it and its siblings. */
   _hasSpacing(): boolean {
     if (this.accordion) {
+      // We don't need to subscribe to the `stateChanges` of the parent accordion because each time
+      // the [displayMode] input changes, the change detection will also cover the host bindings
+      // of this expansion panel.
       return (this.expanded ? this.accordion.displayMode : this._getExpandedState()) === 'default';
     }
     return false;
@@ -147,7 +168,7 @@ export class MatExpansionPanel extends CdkAccordionItem
   _bodyAnimation(event: AnimationEvent) {
     const classList = event.element.classList;
     const cssClass = 'mat-expanded';
-    const {phaseName, toState} = event;
+    const {phaseName, toState, fromState} = event;
 
     // Toggle the body's `overflow: hidden` class when closing starts or when expansion ends in
     // order to prevent the cases where switching too early would cause the animation to jump.
@@ -155,9 +176,28 @@ export class MatExpansionPanel extends CdkAccordionItem
     // with doing it via change detection.
     if (phaseName === 'done' && toState === 'expanded') {
       classList.add(cssClass);
-    } else if (phaseName === 'start' && toState === 'collapsed') {
+    }
+    if (phaseName === 'start' && toState === 'collapsed') {
       classList.remove(cssClass);
     }
+
+    if (phaseName === 'done' && toState === 'expanded' && fromState !== 'void') {
+      this.afterExpand.emit();
+    }
+    if (phaseName === 'done' && toState === 'collapsed' && fromState !== 'void') {
+      this.afterCollapse.emit();
+    }
+  }
+
+  /** Checks whether the expansion panel's content contains the currently-focused element. */
+  _containsFocus(): boolean {
+    if (this._body && this._document) {
+      const focusedElement = this._document.activeElement;
+      const bodyElement = this._body.nativeElement;
+      return focusedElement === bodyElement || bodyElement.contains(focusedElement);
+    }
+
+    return false;
   }
 }
 

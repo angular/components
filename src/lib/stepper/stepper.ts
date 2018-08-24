@@ -17,6 +17,7 @@ import {
   ContentChild,
   ContentChildren,
   Directive,
+  ElementRef,
   EventEmitter,
   forwardRef,
   Inject,
@@ -29,6 +30,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
+import {DOCUMENT} from '@angular/common';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
@@ -36,6 +38,8 @@ import {takeUntil} from 'rxjs/operators';
 import {matStepperAnimations} from './stepper-animations';
 import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
 
+// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
+export const _CdkStepper = CdkStepper;
 
 @Component({
   moduleId: module.id,
@@ -72,7 +76,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
 @Directive({
   selector: '[matStepper]'
 })
-export class MatStepper extends CdkStepper implements AfterContentInit {
+export class MatStepper extends _CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */
   @ViewChildren(MatStepHeader) _stepHeader: QueryList<MatStepHeader>;
 
@@ -147,8 +151,13 @@ export class MatHorizontalStepper extends MatStepper { }
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatVerticalStepper extends MatStepper {
-  constructor(@Optional() dir: Directionality, changeDetectorRef: ChangeDetectorRef) {
-    super(dir, changeDetectorRef);
+  constructor(
+    @Optional() dir: Directionality,
+    changeDetectorRef: ChangeDetectorRef,
+    // @breaking-change 8.0.0 `elementRef` and `_document` parameters to become required.
+    elementRef?: ElementRef<HTMLElement>,
+    @Inject(DOCUMENT) _document?: any) {
+    super(dir, changeDetectorRef, elementRef, _document);
     this._orientation = 'vertical';
   }
 }
