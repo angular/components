@@ -36,7 +36,6 @@ describe('MatProgressBar', () => {
       it('should define default values for value and bufferValue attributes', () => {
         const fixture = createComponent(BasicProgressBar);
         fixture.detectChanges();
-
         const progressElement = fixture.debugElement.query(By.css('mat-progress-bar'));
         expect(progressElement.componentInstance.value).toBe(0);
         expect(progressElement.componentInstance.bufferValue).toBe(0);
