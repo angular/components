@@ -105,7 +105,7 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
     // We need to prefix the SVG reference with the current path, otherwise they won't work
     // in Safari if the page has a `<base>` tag. Note that we need quotes inside the `url()`,
 
-    // because named route URLs can contain parentheses (see #12338). Also we don't use since 
+    // because named route URLs can contain parentheses (see #12338). Also we don't use since
     // we can't tell the difference between whether
     // the consumer is using the hash location strategy or not, because `Location` normalizes
     // both `/#/foo/bar` and `/foo/bar` to the same thing.
