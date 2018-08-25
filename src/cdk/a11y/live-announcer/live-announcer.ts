@@ -9,10 +9,12 @@
 import {ContentObserver} from '@angular/cdk/observers';
 import {DOCUMENT} from '@angular/common';
 import {
+  defineInjectable,
   Directive,
   ElementRef,
   Inject,
-  Injectable,
+  inject,
+  InjectFlags,
   Input,
   NgZone,
   OnDestroy,
@@ -27,8 +29,19 @@ import {LIVE_ANNOUNCER_ELEMENT_TOKEN} from './live-announcer-token';
 /** Possible politeness levels. */
 export type AriaLivePoliteness = 'off' | 'polite' | 'assertive';
 
-@Injectable({providedIn: 'root'})
+/**
+ * Utility for making announcments to screen-reader users via `aria-live` region.
+ * @dynamic
+ */
 export class LiveAnnouncer implements OnDestroy {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new LiveAnnouncer(
+        inject(LIVE_ANNOUNCER_ELEMENT_TOKEN, InjectFlags.Optional), inject(DOCUMENT)),
+  });
+
   private readonly _liveElement: HTMLElement;
   private _document: Document;
 
@@ -155,5 +168,5 @@ export const LIVE_ANNOUNCER_PROVIDER: Provider = {
     [new Optional(), new Inject(LIVE_ANNOUNCER_ELEMENT_TOKEN)],
     DOCUMENT,
   ],
-  useFactory: LIVE_ANNOUNCER_PROVIDER_FACTORY
+  useFactory: LIVE_ANNOUNCER_PROVIDER_FACTORY,
 };

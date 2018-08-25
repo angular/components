@@ -8,7 +8,7 @@
 
 import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable, NgZone} from '@angular/core';
+import {defineInjectable, inject, Inject, NgZone} from '@angular/core';
 import {BlockScrollStrategy} from './block-scroll-strategy';
 import {CloseScrollStrategy, CloseScrollStrategyConfig} from './close-scroll-strategy';
 import {NoopScrollStrategy} from './noop-scroll-strategy';
@@ -23,9 +23,17 @@ import {
  *
  * Users can provide a custom value for `ScrollStrategyOptions` to replace the default
  * behaviors. This class primarily acts as a factory for ScrollStrategy instances.
+ * @dynamic
  */
-@Injectable({providedIn: 'root'})
 export class ScrollStrategyOptions {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new ScrollStrategyOptions(
+        inject(ScrollDispatcher), inject(ViewportRuler), inject(NgZone), inject(DOCUMENT)),
+  });
+
   private _document: Document;
 
   constructor(
@@ -44,7 +52,7 @@ export class ScrollStrategyOptions {
    * @param config Configuration to be used inside the scroll strategy.
    */
   close = (config?: CloseScrollStrategyConfig) => new CloseScrollStrategy(this._scrollDispatcher,
-      this._ngZone, this._viewportRuler, config)
+      this._ngZone, this._viewportRuler, config);
 
   /** Block scrolling. */
   block = () => new BlockScrollStrategy(this._viewportRuler, this._document);
@@ -55,5 +63,5 @@ export class ScrollStrategyOptions {
    * Allows debouncing the reposition calls.
    */
   reposition = (config?: RepositionScrollStrategyConfig) => new RepositionScrollStrategy(
-      this._scrollDispatcher, this._viewportRuler, this._ngZone, config)
+      this._scrollDispatcher, this._viewportRuler, this._ngZone, config);
 }

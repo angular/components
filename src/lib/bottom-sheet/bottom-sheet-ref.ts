@@ -42,7 +42,7 @@ export class MatBottomSheetRef<T = any, R = any> {
   constructor(
     containerInstance: MatBottomSheetContainer,
     private _overlayRef: OverlayRef,
-    location?: Location) {
+    location?: Location | null) {
     this.containerInstance = containerInstance;
 
     // Emit when opening animation completes

@@ -8,8 +8,9 @@
 
 import {DOCUMENT} from '@angular/common';
 import {
+  defineInjectable,
   Inject,
-  Injectable,
+  inject,
   InjectionToken,
   OnDestroy,
   Optional,
@@ -22,9 +23,15 @@ import {OverlayRef} from '../overlay-ref';
  * Service for dispatching keyboard events that land on the body to appropriate overlay ref,
  * if any. It maintains a list of attached overlays to determine best suited overlay based
  * on event target and order of overlay opens.
+ * @dynamic
  */
-@Injectable({providedIn: 'root'})
 export class OverlayKeyboardDispatcher implements OnDestroy {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new OverlayKeyboardDispatcher(inject(DOCUMENT)),
+  });
 
   /** Currently attached overlays in the order they were attached. */
   _attachedOverlays: OverlayRef[] = [];
@@ -92,7 +99,7 @@ export class OverlayKeyboardDispatcher implements OnDestroy {
         break;
       }
     }
-  }
+  };
 }
 
 
@@ -112,7 +119,7 @@ export const OVERLAY_KEYBOARD_DISPATCHER_PROVIDER = {
 
     // Coerce to `InjectionToken` so that the `deps` match the "shape"
     // of the type expected by Angular
-    DOCUMENT as InjectionToken<any>
+    DOCUMENT as InjectionToken<any>,
   ],
-  useFactory: OVERLAY_KEYBOARD_DISPATCHER_PROVIDER_FACTORY
+  useFactory: OVERLAY_KEYBOARD_DISPATCHER_PROVIDER_FACTORY,
 };

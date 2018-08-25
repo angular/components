@@ -6,10 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, NgZone, OnDestroy, Inject} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
 import {supportsPassiveEventListeners} from '@angular/cdk/platform';
+import {DOCUMENT} from '@angular/common';
+import {defineInjectable, Inject, inject, NgZone, OnDestroy} from '@angular/core';
 import {Subject} from 'rxjs';
+
 
 /** Event options that can be used to bind an active event. */
 const activeEventOptions = supportsPassiveEventListeners() ? {passive: false} : false;
@@ -17,16 +18,24 @@ const activeEventOptions = supportsPassiveEventListeners() ? {passive: false} : 
 /** Handler for a pointer event callback. */
 type PointerEventHandler = (event: TouchEvent | MouseEvent) => void;
 
+// Note: DragDropRegistory is generic, rather than referencing CdkDrag and CdkDrop directly,
+// in order to avoid circular imports. If we were to reference them here, importing the registry
+// into the classes that are registering themselves will introduce a circular import.
+
 /**
  * Service that keeps track of all the drag item and drop container
  * instances, and manages global event listeners on the `document`.
  * @docs-private
+ * @dynamic
  */
-// Note: this class is generic, rather than referencing CdkDrag and CdkDrop directly, in order to
-// avoid circular imports. If we were to reference them here, importing the registry into the
-// classes that are registering themselves will introduce a circular import.
-@Injectable({providedIn: 'root'})
 export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new DragDropRegistry(inject(NgZone), inject(DOCUMENT)),
+  });
+
   private _document: Document;
 
   /** Registered drop container instances. */
@@ -163,7 +172,7 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
     if (this._activeDragInstances.size) {
       event.preventDefault();
     }
-  }
+  };
 
   /** Clears out the global event listeners from the `document`. */
   private _clearGlobalListeners() {

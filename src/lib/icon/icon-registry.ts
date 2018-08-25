@@ -9,14 +9,16 @@
 import {DOCUMENT} from '@angular/common';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {
+  defineInjectable,
   Inject,
-  Injectable,
+  inject,
+  InjectFlags,
   InjectionToken,
   Optional,
   SecurityContext,
   SkipSelf,
 } from '@angular/core';
-import {DomSanitizer, SafeResourceUrl, SafeHtml} from '@angular/platform-browser';
+import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
 import {forkJoin, Observable, of as observableOf, throwError as observableThrow} from 'rxjs';
 import {catchError, finalize, map, share, tap} from 'rxjs/operators';
 
@@ -91,9 +93,16 @@ class SvgIconConfig {
  * - Registers icon set URLs by namespace.
  * - Registers aliases for CSS classes, for use with icon fonts.
  * - Loads icons from URLs and extracts individual icons from icon sets.
+ * @dynamic
  */
-@Injectable({providedIn: 'root'})
 export class MatIconRegistry {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new MatIconRegistry(inject(HttpClient, InjectFlags.Optional), inject(DomSanitizer as any), inject(DOCUMENT, InjectFlags.Optional)),
+  });
+
   private _document: Document;
 
   /**
@@ -124,7 +133,7 @@ export class MatIconRegistry {
   private _defaultFontSetClass = 'material-icons';
 
   constructor(
-    @Optional() private _httpClient: HttpClient,
+    @Optional() private _httpClient: HttpClient | null,
     private _sanitizer: DomSanitizer,
     @Optional() @Inject(DOCUMENT) document: any) {
       this._document = document;
@@ -360,7 +369,7 @@ export class MatIconRegistry {
             // combined Observable won't necessarily fail.
             console.error(`Loading icon set URL: ${url} failed: ${err.message}`);
             return observableOf(null);
-          })
+          }),
         );
       });
 

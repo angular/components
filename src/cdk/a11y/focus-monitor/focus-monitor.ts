@@ -8,10 +8,11 @@
 
 import {Platform, supportsPassiveEventListeners} from '@angular/cdk/platform';
 import {
+  defineInjectable,
   Directive,
   ElementRef,
   EventEmitter,
-  Injectable,
+  inject,
   NgZone,
   OnDestroy,
   Optional,
@@ -46,9 +47,18 @@ type MonitoredElementInfo = {
 };
 
 
-/** Monitors mouse and keyboard events to determine the cause of focus events. */
-@Injectable({providedIn: 'root'})
+/**
+ * Monitors mouse and keyboard events to determine the cause of focus events.
+ * @dynamic
+ */
 export class FocusMonitor implements OnDestroy {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new FocusMonitor(inject(NgZone), inject(Platform))
+  });
+
   /** The focus origin that the next focus event is a result of. */
   private _origin: FocusOrigin = null;
 

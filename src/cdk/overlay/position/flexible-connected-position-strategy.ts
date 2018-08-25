@@ -136,8 +136,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     private _viewportRuler: ViewportRuler,
     private _document: Document,
     // @breaking-change 7.0.0 `_platform` and `_overlayContainer` parameters to be made required.
-    private _platform?: Platform,
-    private _overlayContainer?: OverlayContainer) {
+    private _platform?: Platform | null,
+    private _overlayContainer?: OverlayContainer | null) {
     this.setOrigin(connectedTo);
   }
 

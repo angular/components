@@ -7,7 +7,7 @@
  */
 
 import {Platform} from '@angular/cdk/platform';
-import {Injectable} from '@angular/core';
+import {defineInjectable, inject} from '@angular/core';
 
 
 // The InteractivityChecker leans heavily on the ally.js accessibility utilities.
@@ -17,9 +17,15 @@ import {Injectable} from '@angular/core';
 /**
  * Utility for checking the interactivity of an element, such as whether is is focusable or
  * tabbable.
+ * @dynamic
  */
-@Injectable({providedIn: 'root'})
 export class InteractivityChecker {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new InteractivityChecker(inject(Platform)),
+  });
 
   constructor(private _platform: Platform) {}
 

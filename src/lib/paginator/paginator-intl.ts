@@ -6,16 +6,23 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, Optional, SkipSelf} from '@angular/core';
+import {defineInjectable, Optional, SkipSelf} from '@angular/core';
 import {Subject} from 'rxjs';
 
 
 /**
  * To modify the labels and text displayed, create a new instance of MatPaginatorIntl and
  * include it in a custom provider
+ * @dynamic
  */
-@Injectable({providedIn: 'root'})
 export class MatPaginatorIntl {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new MatPaginatorIntl(),
+  });
+
   /**
    * Stream that emits whenever the labels here are changed. Use this to notify
    * components if the labels have changed after initialization.
@@ -51,7 +58,7 @@ export class MatPaginatorIntl {
         startIndex + pageSize;
 
     return `${startIndex + 1} - ${endIndex} of ${length}`;
-  }
+  };
 }
 
 /** @docs-private */
@@ -64,5 +71,5 @@ export const MAT_PAGINATOR_INTL_PROVIDER = {
   // If there is already an MatPaginatorIntl available, use that. Otherwise, provide a new one.
   provide: MatPaginatorIntl,
   deps: [[new Optional(), new SkipSelf(), MatPaginatorIntl]],
-  useFactory: MAT_PAGINATOR_INTL_PROVIDER_FACTORY
+  useFactory: MAT_PAGINATOR_INTL_PROVIDER_FACTORY,
 };
