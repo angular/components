@@ -636,6 +636,20 @@ describe('MatDialog', () => {
     expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(0);
   }));
 
+  it('should close all of the dialogs when the injectable is destroyed', fakeAsync(() => {
+    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsg);
+
+    expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(3);
+
+    dialog.ngOnDestroy();
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(0);
+  }));
+
   it('should allow the consumer to disable closing a dialog on navigation', fakeAsync(() => {
     dialog.open(PizzaMsg);
     dialog.open(PizzaMsg, {closeOnNavigation: false});
@@ -1230,6 +1244,22 @@ describe('MatDialog with a parent MatDialog', () => {
     flush();
 
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
+  }));
+
+  it('should not close the parent dialogs when a child is destroyed', fakeAsync(() => {
+    parentDialog.open(PizzaMsg);
+    fixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.textContent)
+        .toContain('Pizza', 'Expected a dialog to be opened');
+
+    childDialog.ngOnDestroy();
+    fixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.textContent)
+        .toContain('Pizza', 'Expected a dialog to be opened');
   }));
 });
 
