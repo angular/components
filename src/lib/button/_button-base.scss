@@ -1,7 +1,6 @@
 @import '../core/style/variables';
 @import '../core/style/elevation';
 @import '../core/style/button-common';
-@import '../core/style/noop-animation';
 
 
 // Flat and raised button standards
@@ -76,7 +75,6 @@ $mat-mini-fab-padding: 8px !default;
 // Applies styles to buttons with backgrounds: raised, fab, and mini-fab
 @mixin mat-raised-button {
   @include mat-button-base;
-  @include _noop-animation();
 
   // Force hardware acceleration.
   transform: translate3d(0, 0, 0);
@@ -84,6 +82,10 @@ $mat-mini-fab-padding: 8px !default;
   // Animation.
   transition: background $swift-ease-out-duration $swift-ease-out-timing-function,
               mat-elevation-transition-property-value();
+
+  &._mat-animation-noopable, .ng-animate-disabled & {
+    transition: none;
+  }
 }
 
 // Applies styles to fab and mini-fab button types only

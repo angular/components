@@ -222,7 +222,7 @@ $mat-form-field-default-infix-width: 180px !default;
   position: relative;
 }
 
-.mat-form-field._mat-animation-noopable {
+.mat-form-field._mat-animation-noopable, .ng-animate-disabled .mat-form-field {
   .mat-form-field-label,
   .mat-form-field-ripple {
     transition: none;

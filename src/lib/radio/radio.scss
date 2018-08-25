@@ -49,7 +49,7 @@ $mat-radio-ripple-radius: 20px;
     radius: 50%;
   }
 
-  ._mat-animation-noopable & {
+  ._mat-animation-noopable &, .ng-animate-disabled & {
     transition: none;
   }
 }
@@ -69,7 +69,7 @@ $mat-radio-ripple-radius: 20px;
   // IE to flash the entire circle for a couple of frames, throwing off the entire animation.
   transform: scale(0.001);
 
-  ._mat-animation-noopable & {
+  ._mat-animation-noopable &, .ng-animate-disabled & {
     transition: none;
   }
 

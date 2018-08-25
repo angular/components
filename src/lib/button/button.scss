@@ -112,7 +112,7 @@
 
   transition: $mat-button-focus-transition;
 
-  ._mat-animation-noopable & {
+  ._mat-animation-noopable &, .ng-animate-disabled & {
     transition: none;
   }
 

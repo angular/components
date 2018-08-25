@@ -1,6 +1,5 @@
 @import '../core/style/variables';
 @import '../core/style/vendor-prefixes';
-@import '../core/style/noop-animation';
 @import '../../cdk/a11y/a11y';
 
 $mat-progress-bar-height: 4px !default;
@@ -9,7 +8,6 @@ $mat-progress-bar-piece-animation-duration: 250ms !default;
 
 
 .mat-progress-bar {
-  @include _noop-animation();
   display: block;
   // Height is provided for mat-progress-bar to act as a default.
   height: $mat-progress-bar-height;
@@ -17,6 +15,10 @@ $mat-progress-bar-piece-animation-duration: 250ms !default;
   position: relative;
   transition: opacity $mat-progress-bar-piece-animation-duration linear;
   width: 100%;
+
+  &._mat-animation-noopable, .ng-animate-disabled & {
+    transition: none;
+  }
 
   // Base styles that are re-used across all of the progress bar children.
   .mat-progress-bar-element, .mat-progress-bar-fill::after {
@@ -137,7 +139,7 @@ $mat-progress-bar-piece-animation-duration: 250ms !default;
   }
 
   // Disabled animations handling.
-  &._mat-animation-noopable {
+  &._mat-animation-noopable, .ng-animate-disabled & {
     .mat-progress-bar-fill,
     .mat-progress-bar-fill::after,
     .mat-progress-bar-buffer,

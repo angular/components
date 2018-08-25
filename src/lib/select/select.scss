@@ -68,7 +68,8 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
     transition: transform $swift-ease-out-duration $swift-ease-out-timing-function;
   }
 
-  ._mat-animation-noopable.mat-form-field-appearance-standard .mat-select.mat-select-empty & {
+  ._mat-animation-noopable.mat-form-field-appearance-standard .mat-select.mat-select-empty &,
+  .ng-animate-disabled .mat-form-field-appearance-standard .mat-select.mat-select-empty & {
     transition: none;
   }
 }
@@ -121,7 +122,7 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
   transition: color $swift-ease-out-duration $swift-ease-out-duration / 3
       $swift-ease-out-timing-function;
 
-  ._mat-animation-noopable & {
+  ._mat-animation-noopable &, .ng-animate-disabled & {
     transition: none;
   }
 

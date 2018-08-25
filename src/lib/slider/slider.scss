@@ -470,7 +470,8 @@ $mat-slider-focus-ring-size: 30px !default;
 }
 
 // Slider inside a component with disabled animations.
-.mat-slider._mat-animation-noopable {
+.mat-slider._mat-animation-noopable,
+.ng-animate-disabled .mat-slider {
   .mat-slider-track-fill,
   .mat-slider-track-background,
   .mat-slider-ticks,

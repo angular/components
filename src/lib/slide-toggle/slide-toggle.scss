@@ -118,7 +118,7 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
     transition-duration: 0ms;
   }
 
-  ._mat-animation-noopable & {
+  ._mat-animation-noopable &, .ng-animate-disabled & {
     transition: none;
   }
 
@@ -173,7 +173,7 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
   transition-property: background-color;
   transition-delay: 50ms;
 
-  ._mat-animation-noopable & {
+  ._mat-animation-noopable &, .ng-animate-disabled & {
     transition: none;
   }
 }
