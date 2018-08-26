@@ -67,7 +67,8 @@ export interface RowOutlet {
  */
 @Directive({selector: '[rowOutlet]'})
 export class DataRowOutlet implements RowOutlet {
-  constructor(public viewContainer: ViewContainerRef, public elementRef: ElementRef) { }
+  constructor(public viewContainer: ViewContainerRef,
+              public elementRef: ElementRef) { }
 }
 
 /**
@@ -76,7 +77,8 @@ export class DataRowOutlet implements RowOutlet {
  */
 @Directive({selector: '[headerRowOutlet]'})
 export class HeaderRowOutlet implements RowOutlet {
-  constructor(public viewContainer: ViewContainerRef, public elementRef: ElementRef) { }
+  constructor(public viewContainer: ViewContainerRef,
+              public elementRef: ElementRef) { }
 }
 
 /**
@@ -85,7 +87,8 @@ export class HeaderRowOutlet implements RowOutlet {
  */
 @Directive({selector: '[footerRowOutlet]'})
 export class FooterRowOutlet implements RowOutlet {
-  constructor(public viewContainer: ViewContainerRef, public elementRef: ElementRef) { }
+  constructor(public viewContainer: ViewContainerRef,
+              public elementRef: ElementRef) { }
 }
 
 /**
