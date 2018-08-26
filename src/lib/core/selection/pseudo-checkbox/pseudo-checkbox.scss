@@ -35,7 +35,7 @@ $_mat-pseudo-checkmark-size: $mat-checkbox-size - (2 * $_mat-pseudo-checkbox-pad
     border-color: transparent;
   }
 
-  &._mat-animation-noopable, .ng-animate-disabled & {
+  &._mat-animation-noopable, &.ng-animate-disabled, .ng-animate-disabled & {
     transition: none;
 
     &::after {

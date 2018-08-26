@@ -16,7 +16,7 @@ $mat-progress-bar-piece-animation-duration: 250ms !default;
   transition: opacity $mat-progress-bar-piece-animation-duration linear;
   width: 100%;
 
-  &._mat-animation-noopable, .ng-animate-disabled & {
+  &._mat-animation-noopable, &.ng-animate-disabled, .ng-animate-disabled & {
     transition: none;
   }
 
@@ -139,7 +139,7 @@ $mat-progress-bar-piece-animation-duration: 250ms !default;
   }
 
   // Disabled animations handling.
-  &._mat-animation-noopable, .ng-animate-disabled & {
+  &._mat-animation-noopable, &.ng-animate-disabled, .ng-animate-disabled & {
     .mat-progress-bar-fill,
     .mat-progress-bar-fill::after,
     .mat-progress-bar-buffer,

@@ -68,9 +68,12 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
     transition: transform $swift-ease-out-duration $swift-ease-out-timing-function;
   }
 
-  ._mat-animation-noopable.mat-form-field-appearance-standard .mat-select.mat-select-empty &,
-  .ng-animate-disabled .mat-form-field-appearance-standard .mat-select.mat-select-empty & {
-    transition: none;
+  .mat-form-field-appearance-standard {
+    .ng-animate-disabled &, &.ng-animate-disabled, &._mat-animation-noopable {
+      .mat-select.mat-select-empty {
+        transition: none;
+      }
+    }
   }
 }
 

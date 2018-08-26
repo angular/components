@@ -83,7 +83,7 @@ $mat-mini-fab-padding: 8px !default;
   transition: background $swift-ease-out-duration $swift-ease-out-timing-function,
               mat-elevation-transition-property-value();
 
-  &._mat-animation-noopable, .ng-animate-disabled & {
+  &._mat-animation-noopable, &.ng-animate-disabled, .ng-animate-disabled & {
     transition: none;
   }
 }

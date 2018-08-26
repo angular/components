@@ -63,7 +63,7 @@ $mat-form-field-fill-subscript-padding:
   }
 
   &:not(.mat-form-field-disabled) {
-    &._mat-animation-noopable, .ng-animate-disabled & {
+    &._mat-animation-noopable, &.ng-animate-disabled, .ng-animate-disabled & {
       .mat-form-field-flex:hover ~ .mat-form-field-underline .mat-form-field-ripple {
         transition: none;
       }
