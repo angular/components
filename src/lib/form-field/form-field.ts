@@ -141,15 +141,16 @@ export const MAT_FORM_FIELD_DEFAULT_OPTIONS =
 export class MatFormField extends _MatFormFieldMixinBase
     implements AfterContentInit, AfterContentChecked, AfterViewInit, CanColor {
   private _labelOptions: LabelOptions;
+  private _outlineGapCalculationNeeded = false;
 
   /** The form-field appearance style. */
   @Input()
-  get appearance(): MatFormFieldAppearance {
-    return this._appearance || this._defaultOptions && this._defaultOptions.appearance || 'legacy';
-  }
+  get appearance(): MatFormFieldAppearance { return this._appearance; }
   set appearance(value: MatFormFieldAppearance) {
     const oldValue = this._appearance;
-    this._appearance = value;
+
+    this._appearance = value || (this._defaults && this._defaults.appearance) || 'legacy';
+
     if (this._appearance === 'outline' && oldValue !== value) {
       // @breaking-change 7.0.0 Remove this check and else block once _ngZone is required.
       if (this._ngZone) {
@@ -245,8 +246,8 @@ export class MatFormField extends _MatFormFieldMixinBase
       private _changeDetectorRef: ChangeDetectorRef,
       @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) labelOptions: LabelOptions,
       @Optional() private _dir: Directionality,
-      @Optional() @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS) private _defaultOptions:
-          MatFormFieldDefaultOptions,
+      @Optional() @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS)
+          private _defaults: MatFormFieldDefaultOptions,
       // @breaking-change 7.0.0 _platform, _ngZone and _animationMode to be made required.
       private _platform?: Platform,
       private _ngZone?: NgZone,
@@ -256,6 +257,9 @@ export class MatFormField extends _MatFormFieldMixinBase
     this._labelOptions = labelOptions ? labelOptions : {};
     this.floatLabel = this._labelOptions.float || 'auto';
     this._animationsEnabled = _animationMode !== 'NoopAnimations';
+
+    // Set the default through here so we invoke the setter on the first run.
+    this.appearance = (_defaults && _defaults.appearance) ? _defaults.appearance : 'legacy';
   }
 
   /**
@@ -300,6 +304,9 @@ export class MatFormField extends _MatFormFieldMixinBase
 
   ngAfterContentChecked() {
     this._validateControlChild();
+    if (this._outlineGapCalculationNeeded) {
+      this.updateOutlineGap();
+    }
   }
 
   ngAfterViewInit() {
@@ -451,6 +458,17 @@ export class MatFormField extends _MatFormFieldMixinBase
       return;
     }
 
+    if (this._platform && !this._platform.isBrowser) {
+      // getBoundingClientRect isn't available on the server.
+      return;
+    }
+    // If the element is not present in the DOM, the outline gap will need to be calculated
+    // the next time it is checked and in the DOM.
+    if (!document.documentElement.contains(this._elementRef.nativeElement)) {
+      this._outlineGapCalculationNeeded = true;
+      return;
+    }
+
     let startWidth = 0;
     let gapWidth = 0;
     const startEls = this._connectionContainerRef.nativeElement.querySelectorAll<HTMLElement>(
@@ -458,14 +476,6 @@ export class MatFormField extends _MatFormFieldMixinBase
     const gapEls = this._connectionContainerRef.nativeElement.querySelectorAll<HTMLElement>(
         '.mat-form-field-outline-gap');
     if (this._label && this._label.nativeElement.children.length) {
-      if (this._platform && !this._platform.isBrowser) {
-        // getBoundingClientRect isn't available on the server.
-        return;
-      }
-      if (!document.documentElement.contains(this._elementRef.nativeElement)) {
-        return;
-      }
-
       const containerStart = this._getStartEnd(
           this._connectionContainerRef.nativeElement.getBoundingClientRect());
       const labelStart = this._getStartEnd(labelEl.children[0].getBoundingClientRect());
@@ -484,6 +494,8 @@ export class MatFormField extends _MatFormFieldMixinBase
     for (let i = 0; i < gapEls.length; i++) {
       gapEls.item(i).style.width = `${gapWidth}px`;
     }
+
+    this._outlineGapCalculationNeeded = false;
   }
 
   /** Gets the start end of the rect considering the current directionality. */

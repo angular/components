@@ -19,12 +19,14 @@ import {
   AfterViewInit,
   ViewChild,
   OnDestroy,
-  InjectionToken
+  InjectionToken,
+  inject,
 } from '@angular/core';
 import {fromEvent, Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {CanColor, mixinColor} from '@angular/material/core';
+import {DOCUMENT} from '@angular/common';
 
 // TODO(josephperrott): Benchpress tests.
 // TODO(josephperrott): Add ARIA attributes for progress bar "for".
@@ -62,7 +64,9 @@ export interface MatProgressBarLocation {
 
 /** @docs-private */
 export function MAT_PROGRESS_BAR_LOCATION_FACTORY(): MatProgressBarLocation {
-  return typeof window !== 'undefined' ? window.location : {pathname: ''};
+  const _document = inject(DOCUMENT);
+  const pathname = (_document && _document.location && _document.location.pathname) || '';
+  return {pathname};
 }
 
 

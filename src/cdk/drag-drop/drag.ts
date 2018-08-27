@@ -46,12 +46,19 @@ import {takeUntil} from 'rxjs/operators';
 // TODO(crisbeto): add an API for moving a draggable up/down the
 // list programmatically. Useful for keyboard controls.
 
+/**
+ * Amount the pixels the user should drag before we
+ * consider them to have changed the drag direction.
+ */
+const POINTER_DIRECTION_CHANGE_THRESHOLD = 5;
+
 /** Element that can be moved inside a CdkDrop container. */
 @Directive({
   selector: '[cdkDrag]',
   exportAs: 'cdkDrag',
   host: {
     'class': 'cdk-drag',
+    '[class.cdk-drag-dragging]': '_isDragging()',
     '(mousedown)': '_startDragging($event)',
     '(touchstart)': '_startDragging($event)',
   }
@@ -112,6 +119,12 @@ export class CdkDrag<T = any> implements OnDestroy {
    * hitting the zone if the consumer didn't subscribe to it.
    */
   private _moveEventSubscriptions = 0;
+
+  /** Keeps track of the direction in which the user is dragging along each axis. */
+  private _pointerDirectionDelta: {x: -1 | 0 | 1, y: -1 | 0 | 1};
+
+  /** Pointer position at which the last change in the delta occurred. */
+  private _pointerPositionAtLastDirectionChange: Point;
 
   /** Elements that can be used to drag the draggable item. */
   @ContentChildren(CdkDragHandle) _handles: QueryList<CdkDragHandle>;
@@ -189,7 +202,7 @@ export class CdkDrag<T = any> implements OnDestroy {
 
     // Do this check before removing from the registry since it'll
     // stop being considered as dragged once it is removed.
-    if (this._dragDropRegistry.isDragging(this)) {
+    if (this._isDragging()) {
       // Since we move out the element to the end of the body while it's being
       // dragged, we have to make sure that it's removed if it gets destroyed.
       this._removeElement(this.element.nativeElement);
@@ -220,11 +233,16 @@ export class CdkDrag<T = any> implements OnDestroy {
     }
   }
 
+  /** Checks whether the element is currently being dragged. */
+  _isDragging() {
+    return this._dragDropRegistry.isDragging(this);
+  }
+
   /** Handler for when the pointer is pressed down on the element or the handle. */
   private _pointerDown = (referenceElement: ElementRef<HTMLElement>,
                           event: MouseEvent | TouchEvent) => {
 
-    const isDragging = this._dragDropRegistry.isDragging(this);
+    const isDragging = this._isDragging();
 
     // Abort if the user is already dragging or is using a mouse button other than the primary one.
     if (isDragging || (!this._isTouchEvent(event) && event.button !== 0)) {
@@ -249,13 +267,21 @@ export class CdkDrag<T = any> implements OnDestroy {
     // extra `getBoundingClientRect` calls and just move the preview next to the cursor.
     this._pickupPositionInElement = this._previewTemplate ? {x: 0, y: 0} :
         this._getPointerPositionInElement(referenceElement, event);
-    this._pickupPositionOnPage = this._getPointerPositionOnPage(event);
+    const pointerPosition = this._pickupPositionOnPage = this._getPointerPositionOnPage(event);
+
+    this._pointerDirectionDelta = {x: 0, y: 0};
+    this._pointerPositionAtLastDirectionChange = {x: pointerPosition.x, y: pointerPosition.y};
 
     // Emit the event on the item before the one on the container.
     this.started.emit({source: this});
 
     if (this.dropContainer) {
       const element = this.element.nativeElement;
+
+      // Grab the `nextSibling` before the preview and placeholder
+      // have been created so we don't get the preview by accident.
+      this._nextSibling = element.nextSibling;
+
       const preview = this._preview = this._createPreviewElement();
       const placeholder = this._placeholder = this._createPlaceholderElement();
 
@@ -263,7 +289,6 @@ export class CdkDrag<T = any> implements OnDestroy {
       // place will throw off the consumer's `:last-child` selectors. We can't remove the element
       // from the DOM completely, because iOS will stop firing all subsequent events in the chain.
       element.style.display = 'none';
-      this._nextSibling = element.nextSibling;
       this._document.body.appendChild(element.parentNode!.replaceChild(placeholder, element));
       this._document.body.appendChild(preview);
       this.dropContainer.start();
@@ -274,7 +299,7 @@ export class CdkDrag<T = any> implements OnDestroy {
   private _pointerMove = (event: MouseEvent | TouchEvent) => {
     // TODO(crisbeto): this should start dragging after a certain threshold,
     // otherwise we risk interfering with clicks on the element.
-    if (!this._dragDropRegistry.isDragging(this)) {
+    if (!this._isDragging()) {
       return;
     }
 
@@ -282,6 +307,7 @@ export class CdkDrag<T = any> implements OnDestroy {
     event.preventDefault();
 
     const pointerPosition = this._getConstrainedPointerPosition(event);
+    this._updatePointerDirectionDelta(pointerPosition);
 
     if (this.dropContainer) {
       this._updateActiveDropContainer(pointerPosition);
@@ -310,7 +336,7 @@ export class CdkDrag<T = any> implements OnDestroy {
 
   /** Handler that is invoked when the user lifts their pointer up, after initiating a drag. */
   private _pointerUp = () => {
-    if (!this._dragDropRegistry.isDragging(this)) {
+    if (!this._isDragging()) {
       return;
     }
 
@@ -382,7 +408,7 @@ export class CdkDrag<T = any> implements OnDestroy {
       });
     }
 
-    this.dropContainer._sortItem(this, x, y);
+    this.dropContainer._sortItem(this, x, y, this._pointerDirectionDelta);
     this._setTransform(this._preview,
                        x - this._pickupPositionInElement.x,
                        y - this._pickupPositionInElement.y);
@@ -579,6 +605,31 @@ export class CdkDrag<T = any> implements OnDestroy {
     }
 
     this._placeholder = this._placeholderRef = null!;
+  }
+
+  /** Updates the current drag delta, based on the user's current pointer position on the page. */
+  private _updatePointerDirectionDelta(pointerPositionOnPage: Point) {
+    const {x, y} = pointerPositionOnPage;
+    const delta = this._pointerDirectionDelta;
+    const positionSinceLastChange = this._pointerPositionAtLastDirectionChange;
+
+    // Amount of pixels the user has dragged since the last time the direction changed.
+    const changeX = Math.abs(x - positionSinceLastChange.x);
+    const changeY = Math.abs(y - positionSinceLastChange.y);
+
+    // Because we handle pointer events on a per-pixel basis, we don't want the delta
+    // to change for every pixel, otherwise anything that depends on it can look erratic.
+    // To make the delta more consistent, we track how much the user has moved since the last
+    // delta change and we only update it after it has reached a certain threshold.
+    if (changeX > POINTER_DIRECTION_CHANGE_THRESHOLD) {
+      delta.x = x > positionSinceLastChange.x ? 1 : -1;
+      positionSinceLastChange.x = x;
+    }
+
+    if (changeY > POINTER_DIRECTION_CHANGE_THRESHOLD) {
+      delta.y = y > positionSinceLastChange.y ? 1 : -1;
+      positionSinceLastChange.y = y;
+    }
   }
 }
 
