@@ -1,12 +1,21 @@
-import {TestBed, ComponentFixture, fakeAsync, tick, inject} from '@angular/core/testing';
-import {Component, ViewChild} from '@angular/core';
 import {Platform} from '@angular/cdk/platform';
-import {dispatchMouseEvent, dispatchTouchEvent} from '@angular/cdk/testing';
-import {defaultRippleAnimationConfig, RippleAnimationConfig} from './ripple-renderer';
 import {
-  MatRipple, MatRippleModule, MAT_RIPPLE_GLOBAL_OPTIONS, RippleState, RippleGlobalOptions
-} from './index';
+  createMouseEvent,
+  dispatchEvent,
+  dispatchMouseEvent,
+  dispatchTouchEvent,
+} from '@angular/cdk/testing';
+import {Component, ViewChild} from '@angular/core';
+import {ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {
+  MAT_RIPPLE_GLOBAL_OPTIONS,
+  MatRipple,
+  MatRippleModule,
+  RippleGlobalOptions,
+  RippleState,
+} from './index';
+import {defaultRippleAnimationConfig, RippleAnimationConfig} from './ripple-renderer';
 
 /** Shorthands for the enter and exit duration of ripples. */
 const {enterDuration, exitDuration} = defaultRippleAnimationConfig;
@@ -133,6 +142,15 @@ describe('MatRipple', () => {
       tick(exitDuration);
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+    }));
+
+    it('should ignore fake mouse events from screen readers', () => fakeAsync(() => {
+      const event = createMouseEvent('mousedown');
+      Object.defineProperty(event, 'buttons', {get: () => 0});
+
+      dispatchEvent(rippleTarget, event);
+      tick(enterDuration);
+      expect(rippleTarget.querySelector('.mat-ripple-element')).toBeFalsy();
     }));
 
     it('removes ripple after timeout', fakeAsync(() => {
