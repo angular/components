@@ -344,10 +344,17 @@ export class MatFormField extends _MatFormFieldMixinBase
     return this._hasLabel() || this.appearance === 'legacy' && this._hasPlaceholder();
   }
 
-  /** Determines whether to display hints or errors. */
-  _getDisplayedMessages(): 'error' | 'hint' {
-    return (this._errorChildren && this._errorChildren.length > 0 &&
-        this._control.errorState) ? 'error' : 'hint';
+  /** Determines whether to display hints, errors or none. */
+  _getDisplayedMessages(): 'error' | 'hint' | 'none' {
+    return this.areErrorMessagesVisible() ? 'error' : this.areHintsVisible() ? 'hint' : 'none';
+  }
+
+  private areErrorMessagesVisible(): boolean {
+    return this._errorChildren && this._errorChildren.length > 0 && this._control.errorState;
+  }
+
+  private areHintsVisible(): boolean {
+    return this._hintChildren && this._hintChildren.length > 0 && !this._control.errorState;
   }
 
   /** Animates the placeholder up and locks it in position. */
