@@ -8,19 +8,24 @@
 
 import {Tree} from '@angular-devkit/schematics';
 
+/** Function that sorts the keys of the specified object and returns the result as a new object. */
+const sortObjectByKeys = (obj: any) => Object.keys(obj).sort()
+    .reduce((result, key) => (result[key] = obj[key]) && result, {});
+
 /** Adds a package to the package.json in the given host tree. */
-export function addPackageToPackageJson(host: Tree, type: string, pkg: string,
-                                        version: string): Tree {
+export function addPackageToPackageJson(host: Tree, pkg: string, version: string): Tree {
 
   if (host.exists('package.json')) {
     const sourceText = host.read('package.json')!.toString('utf-8');
     const json = JSON.parse(sourceText);
-    if (!json[type]) {
-      json[type] = {};
+
+    if (!json.dependencies) {
+      json.dependencies = {};
     }
 
-    if (!json[type][pkg]) {
-      json[type][pkg] = version;
+    if (!json.dependencies[pkg]) {
+      json.dependencies[pkg] = version;
+      json.dependencies = sortObjectByKeys(json.dependencies);
     }
 
     host.overwrite('package.json', JSON.stringify(json, null, 2));
