@@ -329,7 +329,6 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
       return;
     }
 
-    event.preventDefault();
     event.stopPropagation();
   }
 
