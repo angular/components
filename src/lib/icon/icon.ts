@@ -18,6 +18,7 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
+import {Location} from '@angular/common'
 import {CanColor, mixinColor} from '@angular/material/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {MatIconRegistry} from './icon-registry';
@@ -111,6 +112,7 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Can
 
   constructor(
       elementRef: ElementRef,
+      private _location: Location,
       private _iconRegistry: MatIconRegistry,
       @Attribute('aria-hidden') ariaHidden: string) {
     super(elementRef);
@@ -186,10 +188,12 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Can
     // See: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/10898469/
     // Do this before inserting the element into the DOM, in order to avoid a style recalculation.
     const styleTags = svg.querySelectorAll('style') as NodeListOf<HTMLStyleElement>;
-
+        
     for (let i = 0; i < styleTags.length; i++) {
       styleTags[i].textContent += ' ';
     }
+    
+    this._updateUrlPaths(svg.outerHTML);
 
     this._elementRef.nativeElement.appendChild(svg);
   }
@@ -241,7 +245,19 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Can
       this._previousFontIconClass = this.fontIcon;
     }
   }
-
+ 
+  /**
+   * Updates the url paths with current paths append to icon which fixes
+   * SVG filters in Safari/Firefox
+   */
+  private _updateUrlPaths(svg: SVGElement) {
+    const currentPath = this._location.prepareExternalUrl(this._location.path());
+    
+    svg.outerHTML = svg.outerHTML.replace(/url\((.*)\)/, `url(${currentPath}$1)`);
+    
+    return svg
+  }
+  
   /**
    * Cleans up a value to be used as a fontIcon or fontSet.
    * Since the value ends up being assigned as a CSS class, we
