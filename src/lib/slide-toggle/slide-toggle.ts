@@ -120,10 +120,10 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   private _dragPercentage: number;
 
   /** Reference to the thumb HTMLElement. */
-  @ViewChild('thumbContainer') _thumbEl: ElementRef<HTMLElement>;
+  @ViewChild('thumbContainer') _thumbEl: ElementRef;
 
   /** Reference to the thumb bar HTMLElement. */
-  @ViewChild('toggleBar') _thumbBarEl: ElementRef<HTMLElement>;
+  @ViewChild('toggleBar') _thumbBarEl: ElementRef;
 
   /** Name value will be applied to the input element if present */
   @Input() name: string | null = null;
@@ -177,7 +177,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   get inputId(): string { return `${this.id || this._uniqueId}-input`; }
 
   /** Reference to the underlying input element. */
-  @ViewChild('input') _inputElement: ElementRef;
+  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
 
   /** Reference to the ripple directive on the thumb container. */
   @ViewChild(MatRipple) _ripple: MatRipple;
