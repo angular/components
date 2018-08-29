@@ -39,7 +39,7 @@ import {validateHtmlSelector, validateName} from '@schematics/angular/utility/va
 import {readFileSync} from 'fs';
 import {dirname, join, resolve} from 'path';
 import * as ts from 'typescript';
-import {setDefaultSchematicOptions} from './schematic-options';
+import {getDefaultComponentOptions} from './schematic-options';
 
 function readIntoSourceFile(host: Tree, modulePath: string): ts.SourceFile {
   const text = host.read(modulePath);
@@ -163,12 +163,17 @@ export function buildComponent(options: ComponentOptions,
   return (host: Tree, context: FileSystemSchematicContext) => {
     const workspace = getWorkspace(host);
     const project = workspace.projects[options.project || workspace.defaultProject];
+    const defaultComponentOptions = getDefaultComponentOptions(project);
 
     const schematicFilesUrl = './files';
     const schematicFilesPath = resolve(dirname(context.schematic.description.path),
         schematicFilesUrl);
 
-    setDefaultSchematicOptions(project, options);
+    // Add the default component option values to the options if an option is not explicitly
+    // specified but a default component option is available.
+    Object.keys(options)
+      .filter(optionName => options[optionName] == null && defaultComponentOptions[optionName])
+      .forEach(optionName => options[optionName] = defaultComponentOptions[optionName]);
 
     if (options.path === undefined) {
       options.path = buildDefaultPath(project);
