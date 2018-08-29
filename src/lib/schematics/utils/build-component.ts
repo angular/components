@@ -36,10 +36,10 @@ import {buildRelativePath, findModuleFromOptions} from '@schematics/angular/util
 import {parseName} from '@schematics/angular/utility/parse-name';
 import {buildDefaultPath} from '@schematics/angular/utility/project';
 import {validateHtmlSelector, validateName} from '@schematics/angular/utility/validation';
-import {resolve, dirname, join} from 'path';
 import {readFileSync} from 'fs';
+import {dirname, join, resolve} from 'path';
 import * as ts from 'typescript';
-import {determineDefaultStyleExt} from './default-style-ext';
+import {setDefaultSchematicOptions} from './schematic-options';
 
 function readIntoSourceFile(host: Tree, modulePath: string): ts.SourceFile {
   const text = host.read(modulePath);
@@ -168,9 +168,7 @@ export function buildComponent(options: ComponentOptions,
     const schematicFilesPath = resolve(dirname(context.schematic.description.path),
         schematicFilesUrl);
 
-    if (!options.styleext) {
-      options.styleext = determineDefaultStyleExt(project);
-    }
+    setDefaultSchematicOptions(project, options);
 
     if (options.path === undefined) {
       options.path = buildDefaultPath(project);
