@@ -24,7 +24,7 @@
   "engines": {
     "node": ">= 5.4.1"
   },
-  "version": "6.4.6",
+  "version": "6.4.7",
   "requiredAngularVersion": ">=6.0.0 <7.0.0",
   "dependencies": {
     "@angular/animations": "6.0.0",
