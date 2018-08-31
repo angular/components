@@ -183,8 +183,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   /** Whether the overlay's width and height can be constrained to fit within the viewport. */
   @Input('cdkConnectedOverlayFlexibleDimensions')
-  get flexibleDiemsions() { return this._flexibleDimensions; }
-  set flexibleDiemsions(value: boolean) { this._flexibleDimensions = coerceBooleanProperty(value); }
+  get flexibleDimensions() { return this._flexibleDimensions; }
+  set flexibleDimensions(value: boolean) { this._flexibleDimensions = coerceBooleanProperty(value); }
 
   /** Whether the overlay can grow after the initial open when flexible positioning is turned on. */
   @Input('cdkConnectedOverlayGrowAfterOpen')
