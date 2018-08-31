@@ -312,7 +312,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _createPositionStrategy(): FlexibleConnectedPositionStrategy {
     const strategy = this._overlay.position()
       .flexibleConnectedTo(this.origin.elementRef)
-      .withFlexibleDimensions(this.flexibleDiemsions)
+      .withFlexibleDimensions(this.flexibleDimensions)
       .withPush(this.push)
       .withGrowAfterOpen(this.growAfterOpen)
       .withViewportMargin(this.viewportMargin)
