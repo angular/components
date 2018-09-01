@@ -76,7 +76,9 @@ function createDedupeWriterOptions() {
     finalizeContext: (context: any) => {
       context.commitGroups.forEach((group: any) => {
         group.commits = group.commits.filter((commit: any) => {
-          if (previousContent.includes(commit.hash)) {
+          // Note that we cannot compare the SHA's because the commits will have a different SHA
+          // if they are being cherry-picked into a different branch.
+          if (previousContent.includes(commit.header)) {
             console.log(grey(`Skipping: "${commit.header}" (${commit.hash})`));
             return false;
           }
