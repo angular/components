@@ -126,6 +126,10 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
       const isTouchEvent = event.type.startsWith('touch');
       const moveEvent = isTouchEvent ? 'touchmove' : 'mousemove';
       const upEvent = isTouchEvent ? 'touchend' : 'mouseup';
+      const upConfig = {
+        handler: (e: Event) => this.pointerUp.next(e as TouchEvent | MouseEvent),
+        options: true
+      };
 
       // We explicitly bind __active__ listeners here, because newer browsers will default to
       // passive ones for `mousemove` and `touchmove`. The events need to be active, because we
@@ -150,6 +154,13 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
           handler: this._preventDefaultWhileDragging,
           options: activeCapturingEventOptions
         });
+
+      if (isTouchEvent) {
+        // Treat `touchcancel` events the same as `touchend`. `touchcancel` will fire for cases
+        // like an OS-level event interrupting the touch sequence or the user putting too many
+        // finger on the screen at the same time.
+        this._globalListeners.set('touchcancel', upConfig);
+      }
 
       this._ngZone.runOutsideAngular(() => {
         this._globalListeners.forEach((config, name) => {

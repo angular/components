@@ -69,9 +69,9 @@ describe('DragDropRegistry', () => {
     const subscription = registry.pointerMove.subscribe(spy);
 
     registry.startDragging(testComponent.dragItems.first, createMouseEvent('mousedown'));
-    dispatchMouseEvent(document, 'mousemove');
+    const event = dispatchMouseEvent(document, 'mousemove');
 
-    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(event);
 
     subscription.unsubscribe();
   });
@@ -82,9 +82,9 @@ describe('DragDropRegistry', () => {
 
     registry.startDragging(testComponent.dragItems.first,
         createTouchEvent('touchstart') as TouchEvent);
-    dispatchTouchEvent(document, 'touchmove');
+    const event = dispatchTouchEvent(document, 'touchmove');
 
-    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(event);
 
     subscription.unsubscribe();
   });
@@ -107,9 +107,9 @@ describe('DragDropRegistry', () => {
     const subscription = registry.pointerUp.subscribe(spy);
 
     registry.startDragging(testComponent.dragItems.first, createMouseEvent('mousedown'));
-    dispatchMouseEvent(document, 'mouseup');
+    const event = dispatchMouseEvent(document, 'mouseup');
 
-    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(event);
 
     subscription.unsubscribe();
   });
@@ -120,9 +120,22 @@ describe('DragDropRegistry', () => {
 
     registry.startDragging(testComponent.dragItems.first,
         createTouchEvent('touchstart') as TouchEvent);
-    dispatchTouchEvent(document, 'touchend');
+    const event = dispatchTouchEvent(document, 'touchend');
 
-    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(event);
+
+    subscription.unsubscribe();
+  });
+
+  it('should dispatch `touchcancel` events if the drag was interrupted', () => {
+    const spy = jasmine.createSpy('pointerUp spy');
+    const subscription = registry.pointerUp.subscribe(spy);
+
+    registry.startDragging(testComponent.dragItems.first,
+        createTouchEvent('touchstart') as TouchEvent);
+    const event = dispatchTouchEvent(document, 'touchcancel');
+
+    expect(spy).toHaveBeenCalledWith(event);
 
     subscription.unsubscribe();
   });
