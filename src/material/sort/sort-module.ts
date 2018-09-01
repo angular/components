@@ -7,6 +7,8 @@
  */
 
 import {NgModule} from '@angular/core';
+import {GestureConfig} from '@angular/material/core';
+import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MatSortHeader} from './sort-header';
 import {MatSort} from './sort';
 import {MAT_SORT_HEADER_INTL_PROVIDER} from './sort-header-intl';
@@ -17,6 +19,9 @@ import {CommonModule} from '@angular/common';
   imports: [CommonModule],
   exports: [MatSort, MatSortHeader],
   declarations: [MatSort, MatSortHeader],
-  providers: [MAT_SORT_HEADER_INTL_PROVIDER]
+  providers: [
+    MAT_SORT_HEADER_INTL_PROVIDER,
+    {provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig},
+  ]
 })
 export class MatSortModule {}
