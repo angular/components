@@ -107,6 +107,9 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /** Data to be passed along to any lazily-rendered content. */
   @Input('matMenuTriggerData') menuData: any;
 
+  /** Whether the menu should open when the trigger is hovered over. */
+  @Input() openOnHover: boolean = true;
+
   /** Event emitted when the associated menu is opened. */
   @Output() readonly menuOpened: EventEmitter<void> = new EventEmitter<void>();
 
@@ -503,6 +506,9 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
         delay(0, asapScheduler)
       )
       .subscribe(() => {
+        if (!this.openOnHover) {
+          return;
+        }
         this._openedByMouse = true;
 
         // If the same menu is used between multiple triggers, it might still be animating

@@ -951,6 +951,46 @@ describe('MatMenu', () => {
     });
   });
 
+  describe('openOnHover', () => {
+    let fixture: ComponentFixture<MenuTriggerWithNoHover>;
+    it('should not open the menu when openOnHover is false', fakeAsync(() => {
+      fixture = createComponent(MenuTriggerWithNoHover);
+      fixture.detectChanges();
+      fixture.componentInstance.trigger.openMenu();
+      fixture.detectChanges();
+      const overlay = overlayContainerElement;
+      expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(1, 'Expected one open menu');
+
+      const items = Array.from(overlay.querySelectorAll('.mat-menu-panel [mat-menu-item]'));
+      expect(items.length).toBe(2, 'Expected two menu items');
+
+      dispatchMouseEvent(items[0], 'mouseenter');
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      expect(items[0].classList)
+          .not.toContain('mat-menu-item-highlighted', 'Expected the trigger to not be highlighted');
+      expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(1, 'Expected one open menu');
+
+      (items[0] as HTMLElement).click();
+      fixture.detectChanges();
+
+      // Clicking should still open the submenu.
+      expect(items[0].classList)
+          .toContain('mat-menu-item-highlighted', 'Expected the trigger to be highlighted');
+      expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(2, 'Expected two open menus');
+
+      dispatchMouseEvent(items[1], 'mouseenter');
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlay.querySelectorAll('.mat-menu-panel').length).toBe(1, 'Expected one open menu');
+      expect(items[0].classList)
+          .not.toContain('mat-menu-item-highlighted', 'Expected the trigger to not be highlighted');
+    }));
+  });
+
   describe('nested menu', () => {
     let fixture: ComponentFixture<NestedMenu>;
     let instance: NestedMenu;
@@ -1970,3 +2010,21 @@ class LazyMenuWithContext {
   @ViewChild('triggerTwo') triggerTwo: MatMenuTrigger;
 }
 
+@Component({
+  template: `
+  <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
+  <mat-menu #menu="matMenu">
+    <button
+      mat-menu-item
+      [matMenuTriggerFor]="subMenu" [openOnHover]="false">foo</button>
+    <button mat-menu-item>bar</button>
+  </mat-menu>
+
+  <mat-menu #subMenu="matMenu">
+    <button mat-menu-item>baz</button>
+  </mat-menu>
+  `
+})
+class MenuTriggerWithNoHover {
+  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+}
