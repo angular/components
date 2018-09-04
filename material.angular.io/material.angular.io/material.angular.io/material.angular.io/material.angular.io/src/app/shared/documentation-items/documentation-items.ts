@@ -247,8 +247,10 @@ const DOCS: {[key: string]: DocCategory[]} = {
         {id: 'layout', name: 'Layout', examples: []},
         {id: 'observers', name: 'Observers', examples: []},
         {id: 'overlay', name: 'Overlay', examples: []},
+        {id: 'platform', name: 'Platform', examples: []},
         {id: 'portal', name: 'Portal', examples: []},
         {id: 'scrolling', name: 'Scrolling', examples: []},
+        {id: 'text-field', name: 'Text field', examples: []},
       ]
     },
     {
@@ -258,7 +260,6 @@ const DOCS: {[key: string]: DocCategory[]} = {
         {id: 'stepper', name: 'Stepper', examples: []},
         {id: 'table', name: 'Table', examples: []},
         {id: 'tree', name: 'Tree', examples: []},
-
       ]
     },
     // TODO(jelbourn): re-add utilities and a11y as top-level categories once we can generate
