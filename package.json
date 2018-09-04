@@ -18,7 +18,8 @@
     "deploy": "gulp deploy:devapp",
     "webdriver-manager": "webdriver-manager",
     "docs": "gulp docs",
-    "api": "gulp api-docs"
+    "api": "gulp api-docs",
+    "breaking-changes": "gulp breaking-changes"
   },
   "license": "MIT",
   "engines": {

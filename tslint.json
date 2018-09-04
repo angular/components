@@ -99,6 +99,7 @@
     "no-exposed-todo": true,
     "setters-after-getters": true,
     "rxjs-imports": true,
+    "require-breaking-change-version": true,
     "no-host-decorator-in-concrete": [
       true,
       "HostBinding",
