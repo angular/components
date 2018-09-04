@@ -36,7 +36,7 @@ export class ChipsAutocompleteExample {
   add(event: MatChipInputEvent): void {
     // Add fruit only when MatAutocomplete is not open
     // To make sure this does not conflict with OptionSelected Event
-    if(!this.matAutocomplete.isOpen) {
+    if (!this.matAutocomplete.isOpen) {
       const input = event.input;
       const value = event.value;
 
