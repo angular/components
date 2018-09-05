@@ -16,6 +16,7 @@ import {Observable, combineLatest, Subscription} from 'rxjs';
 export class ComponentCategoryList implements OnInit, OnDestroy {
   params: Observable<Params>;
   routeParamSubscription: Subscription;
+  _categoryListSummary: string;
 
   constructor(public docItems: DocumentationItems,
               public _componentPageTitle: ComponentPageTitle,
@@ -30,7 +31,9 @@ export class ComponentCategoryList implements OnInit, OnDestroy {
     // title on topbar navigation
     this.routeParamSubscription = this.params.subscribe(params => {
       const sectionName = params['section'];
-      this._componentPageTitle.title = SECTIONS[sectionName];
+      const section = SECTIONS[sectionName];
+      this._componentPageTitle.title = section.name;
+      this._categoryListSummary = section.summary;
     });
   }
 

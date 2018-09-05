@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 export interface DocItem {
   id: string;
   name: string;
+  summary?: string;
   packageName?: string;
   examples?: string[];
 }
@@ -14,11 +15,27 @@ export interface DocCategory {
   summary?: string;
 }
 
+export interface DocSection {
+  name: string;
+  summary: string;
+}
+
 const CDK = 'cdk';
 const COMPONENTS = 'components';
-export const SECTIONS = {
-  [COMPONENTS]: 'Components',
-  [CDK]: 'CDK',
+export const SECTIONS: {[key: string]: DocSection} = {
+  [COMPONENTS]: {
+    name: 'Components',
+    summary: 'Angular Material comprises a range of components which implement common ' +
+    'interaction patterns according to the Material Design specification.'
+  },
+  [CDK]: {
+    name: 'CDK',
+    summary: 'The Component Dev Kit (CDK) is a set of tools that implement common interaction ' +
+    'patterns whilst being unopinionated about their presentation. It represents an abstraction ' +
+    'of the core functionalities found in the Angular Material library, without any styling ' +
+    'specific to Material Design. Think of the CDK as a blank state of well-tested functionality ' +
+    'upon which you can develop your own bespoke components.'
+  },
 };
 
 
@@ -27,10 +44,12 @@ const DOCS: {[key: string]: DocCategory[]} = {
     {
       id: 'forms',
       name: 'Form Controls',
+      summary: 'Controls that collect and validate user input.',
       items: [
         {
           id: 'autocomplete',
           name: 'Autocomplete',
+          summary: 'Suggests relevant options as the user types.',
           examples: [
             'autocomplete-overview',
             'autocomplete-simple',
@@ -40,10 +59,16 @@ const DOCS: {[key: string]: DocCategory[]} = {
             'autocomplete-auto-active-first-option',
           ]
         },
-        {id: 'checkbox', name: 'Checkbox', examples: ['checkbox-configurable']},
+        {
+          id: 'checkbox',
+          name: 'Checkbox',
+          summary: 'Captures boolean input with an optional indeterminate mode.',
+          examples: ['checkbox-configurable']
+        },
         {
           id: 'datepicker',
           name: 'Datepicker',
+          summary: 'Captures dates, agnostic about their internal representation.',
           examples: [
             'datepicker-overview',
             'datepicker-start-view',
@@ -63,6 +88,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
         {
           id: 'form-field',
           name: 'Form field',
+          summary: 'Wraps input fields so they are displayed consistently.',
           examples: [
             'form-field-overview',
             'form-field-label',
@@ -76,6 +102,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
         {
           id: 'input',
           name: 'Input',
+          summary: 'Enables native inputs to be used within a Form field.',
           examples: [
             'input-overview',
             'input-error-state-matcher',
@@ -87,10 +114,16 @@ const DOCS: {[key: string]: DocCategory[]} = {
             'input-prefix-suffix',
           ]
         },
-        {id: 'radio', name: 'Radio button', examples: ['radio-ng-model']},
+        {
+          id: 'radio',
+          name: 'Radio button',
+          summary: 'Allows the user to select one option from a group.',
+          examples: ['radio-ng-model']
+        },
         {
           id: 'select',
           name: 'Select',
+          summary: 'Allows the user to select one or more options using a dropdown.',
           examples: [
             'select-overview',
             'select-value-binding',
@@ -106,18 +139,29 @@ const DOCS: {[key: string]: DocCategory[]} = {
             'select-error-state-matcher',
           ]
         },
-        {id: 'slider', name: 'Slider', examples: ['slider-configurable']},
-        {id: 'slide-toggle', name: 'Slide toggle', examples: ['slide-toggle-configurable']},
+        {
+          id: 'slider',
+          name: 'Slider',
+          summary: 'Allows the user to input a value by dragging along a slider.',
+          examples: ['slider-configurable']
+        },
+        {
+          id: 'slide-toggle',
+          name: 'Slide toggle',
+          summary: 'Captures boolean values as a clickable and draggable switch.',
+          examples: ['slide-toggle-configurable']
+        },
       ]
     },
     {
       id: 'nav',
       name: 'Navigation',
-      summary: 'Sidenavs, toolbars, menus',
+      summary: 'Menus, sidenavs and toolbars that organise your content.',
       items: [
         {
           id: 'menu',
           name: 'Menu',
+          summary: 'A floating panel of nestable options.',
           examples: [
             'menu-overview',
             'menu-icons',
@@ -127,6 +171,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
         {
           id: 'sidenav',
           name: 'Sidenav',
+          summary: 'A container for content that is fixed to one side of the screen.',
           examples: [
             'sidenav-overview',
             'sidenav-drawer-overview',
@@ -139,21 +184,60 @@ const DOCS: {[key: string]: DocCategory[]} = {
             'sidenav-responsive'
           ]
         },
-        {id: 'toolbar', name: 'Toolbar', examples: ['toolbar-multirow']},
+        {
+          id: 'toolbar',
+          name: 'Toolbar',
+          summary: 'A container for top-level titles and controls.',
+          examples: ['toolbar-multirow']
+        },
       ]
     },
     {
       id: 'layout',
       name: 'Layout',
+      summary: 'Essential building blocks for presenting your content.',
       items: [
-        {id: 'card', name: 'Card', examples: ['card-fancy']},
-        {id: 'divider', name: 'Divider', examples: ['divider-overview']},
-        {id: 'expansion', name: 'Expansion Panel',
-            examples: ['expansion-overview', 'expansion-steps']},
-        {id: 'grid-list', name: 'Grid list', examples: ['grid-list-dynamic']},
-        {id: 'list', name: 'List', examples: ['list-sections']},
-        {id: 'stepper', name: 'Stepper', examples: ['stepper-overview']},
-        {id: 'tabs', name: 'Tabs', examples: [
+        {
+          id: 'card',
+          name: 'Card',
+          summary: 'A styled container for pieces of itemized content.',
+          examples: ['card-fancy']
+        },
+        {
+          id: 'divider',
+          name: 'Divider',
+          summary: 'A vertical or horizontal visual divider.',
+          examples: ['divider-overview']
+        },
+        {
+          id: 'expansion',
+          name: 'Expansion Panel',
+          summary: 'A container which can be expanded to reveal more content.',
+          examples: ['expansion-overview', 'expansion-steps']
+        },
+        {
+          id: 'grid-list',
+          name: 'Grid list',
+          summary: 'A flexible structure for presenting content items in a grid.',
+          examples: ['grid-list-dynamic']
+        },
+        {
+          id: 'list',
+          name: 'List',
+          summary: 'Presents conventional lists of items.',
+          examples: ['list-sections']
+        },
+        {
+          id: 'stepper',
+          name: 'Stepper',
+          summary: 'Presents content as steps through which to progress.',
+          examples: ['stepper-overview']
+        },
+        {
+          id: 'tabs',
+          name: 'Tabs',
+          summary: 'Only presents one view at a time from a provided set of views.',
+          examples: [
             'tab-group-basic',
             'tab-group-custom-label',
             'tab-group-dynamic-height',
@@ -165,7 +249,11 @@ const DOCS: {[key: string]: DocCategory[]} = {
             'tab-group-async',
             'tab-nav-bar-basic',
           ]},
-        {id: 'tree', name: 'Tree', examples: [
+        {
+          id: 'tree',
+          name: 'Tree',
+          summary: 'Presents hierarchical content as an expandable tree.',
+          examples: [
           'tree-dynamic',
           'tree-flat-overview',
           'tree-checklist',
@@ -177,25 +265,79 @@ const DOCS: {[key: string]: DocCategory[]} = {
     {
       id: 'buttons',
       name: 'Buttons & Indicators',
+      summary: 'Buttons, toggles, status and progress indicators.',
       items: [
-        {id: 'button', name: 'Button', examples: ['button-types']},
-        {id: 'button-toggle', name: 'Button toggle', examples: ['button-toggle-exclusive']},
-        {id: 'badge', name: 'Badge', examples: ['badge-overview']},
-        {id: 'chips', name: 'Chips', examples: ['chips-stacked']},
-        {id: 'icon', name: 'Icon', examples: ['icon-svg']},
-        {id: 'progress-spinner', name: 'Progress spinner',
-            examples: ['progress-spinner-configurable']},
-        {id: 'progress-bar', name: 'Progress bar', examples: ['progress-bar-configurable']},
+        {
+          id: 'button',
+          name: 'Button',
+          summary: 'An interactive button with a range of presentation options.',
+          examples: ['button-types']},
+        {
+          id: 'button-toggle',
+          name: 'Button toggle',
+          summary: 'A groupable on/off toggle for enabling and disabling options.',
+          examples: ['button-toggle-exclusive']
+        },
+        {
+          id: 'badge',
+          name: 'Badge',
+          summary: 'A small value indicator that can be overlaid on another object.',
+          examples: ['badge-overview']
+        },
+        {
+          id: 'chips',
+          name: 'Chips',
+          summary: 'Presents a list of items as a set of small, tactile entities.',
+          examples: ['chips-stacked']
+        },
+        {
+          id: 'icon',
+          name: 'Icon',
+          summary: 'Renders a specified icon.',
+          examples: ['icon-svg']
+        },
+        {
+          id: 'progress-spinner',
+          name: 'Progress spinner',
+          summary: 'A circular progress indicator.',
+          examples: ['progress-spinner-configurable']
+        },
+        {
+          id: 'progress-bar',
+          name: 'Progress bar',
+          summary: 'A linear progress indicator.',
+          examples: ['progress-bar-configurable']
+        },
       ]
     },
     {
       id: 'modals',
       name: 'Popups & Modals',
+      summary: 'Floating components that can be dynamically shown or hidden.',
       items: [
-        {id: 'bottom-sheet', name: 'Bottom Sheet', examples: ['bottom-sheet-overview']},
-        {id: 'dialog', name: 'Dialog', examples: ['dialog-overview']},
-        {id: 'snack-bar', name: 'Snackbar', examples: ['snack-bar-component']},
-        {id: 'tooltip', name: 'Tooltip', examples: [
+        {
+          id: 'bottom-sheet',
+          name: 'Bottom Sheet',
+          summary: 'A large interactive panel primarily for mobile devices.',
+          examples: ['bottom-sheet-overview']
+        },
+        {
+          id: 'dialog',
+          name: 'Dialog',
+          summary: 'A configurable modal that displays dynamic content.',
+          examples: ['dialog-overview']
+        },
+        {
+          id: 'snack-bar',
+          name: 'Snackbar',
+          summary: 'Displays short actionable messages as an uninvasive alert.',
+          examples: ['snack-bar-component']
+        },
+        {
+          id: 'tooltip',
+          name: 'Tooltip',
+          summary: 'Displays floating content when an object is hovered.',
+          examples: [
             'tooltip-overview',
             'tooltip-position',
             'tooltip-custom-class',
@@ -205,16 +347,32 @@ const DOCS: {[key: string]: DocCategory[]} = {
             'tooltip-message',
             'tooltip-modified-defaults',
             'tooltip-auto-hide',
-          ]},
+          ]
+        },
       ]
     },
     {
       id: 'tables',
       name: 'Data table',
+      summary: 'Tools for displaying and interacting with tabular data.',
       items: [
-        {id: 'paginator', name: 'Paginator', examples: ['paginator-configurable']},
-        {id: 'sort', name: 'Sort header', examples: ['sort-overview']},
-        {id: 'table', name: 'Table', examples: [
+        {
+          id: 'paginator',
+          name: 'Paginator',
+          summary: 'Controls for displaying paged data.',
+          examples: ['paginator-configurable']
+        },
+        {
+          id: 'sort',
+          name: 'Sort header',
+          summary: 'Allows the user to configure how tabular data is sorted.',
+          examples: ['sort-overview']
+        },
+        {
+          id: 'table',
+          name: 'Table',
+          summary: 'A configurable component for displaying tabular data.',
+          examples: [
             'table-basic',
             'table-basic-flex',
             'table-dynamic-columns',
@@ -241,25 +399,86 @@ const DOCS: {[key: string]: DocCategory[]} = {
     {
       id: 'component-composition',
       name: 'Common Behaviors',
+      summary: 'Tools for implementing common application features.',
       items: [
-        {id: 'a11y', name: 'Accessibility', examples: []},
-        {id: 'bidi', name: 'Bidirectionality', examples: []},
-        {id: 'layout', name: 'Layout', examples: []},
-        {id: 'observers', name: 'Observers', examples: []},
-        {id: 'overlay', name: 'Overlay', examples: []},
-        {id: 'platform', name: 'Platform', examples: []},
-        {id: 'portal', name: 'Portal', examples: []},
-        {id: 'scrolling', name: 'Scrolling', examples: []},
-        {id: 'text-field', name: 'Text field', examples: []},
+        {
+          id: 'a11y',
+          name: 'Accessibility',
+          summary: 'Utilities for screen readers, focus and more.',
+          examples: []
+        },
+        {
+          id: 'bidi',
+          name: 'Bidirectionality',
+          summary: 'Utilities to respond to changes in LTR/RTL layout direction.',
+          examples: []
+        },
+        {
+          id: 'layout',
+          name: 'Layout',
+          summary: 'Utilities to respond to changes in viewport size.',
+          examples: []
+        },
+        {
+          id: 'observers',
+          name: 'Observers',
+          summary: 'Utilities to respond to changes to element properties.',
+          examples: []
+        },
+        {
+          id: 'overlay',
+          name: 'Overlay',
+          summary: 'Utilities for dynamically displaying floating content.',
+          examples: []
+        },
+        {
+          id: 'platform',
+          name: 'Platform',
+          summary: 'Provides information about the user\'s platform.',
+          examples: []
+        },
+        {
+          id: 'portal',
+          name: 'Portal',
+          summary: 'Utilities for dynamically displaying content into a target.',
+          examples: []
+        },
+        {
+          id: 'scrolling',
+          name: 'Scrolling',
+          summary: 'Directives for managing scroll events.',
+          examples: []
+        },
+        {
+          id: 'text-field',
+          name: 'Text field',
+          summary: 'Utilities for working with text input fields.',
+          examples: []
+        },
       ]
     },
     {
       id: 'components',
       name: 'Components',
+      summary: 'Unstyled components with useful functionality.',
       items: [
-        {id: 'stepper', name: 'Stepper', examples: []},
-        {id: 'table', name: 'Table', examples: []},
-        {id: 'tree', name: 'Tree', examples: []},
+        {id: 'stepper',
+          name: 'Stepper',
+          summary: 'Presents content as steps through which to progress.',
+          examples: []
+        },
+        {
+          id: 'table',
+          name: 'Table',
+          summary: 'A configurable component for displaying tabular data.',
+          examples: []
+        },
+        {
+          id: 'tree',
+          name: 'Tree',
+          summary: 'Presents hierarchical content as an expandable tree.',
+          examples: []
+        },
       ]
     },
     // TODO(jelbourn): re-add utilities and a11y as top-level categories once we can generate

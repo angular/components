@@ -5,7 +5,7 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  .docs-component-list-item {
+  .docs-component-list-card-summary {
     color: mat-color($foreground, secondary-text);
   }
 }

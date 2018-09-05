@@ -30,12 +30,16 @@
 }
 
 .docs-component-list-card-title {
-  margin: 0;
+  margin: 0 0 0 -8px;
 }
 
-.docs-component-list-card {
-  display: flex;
+.docs-component-list-card-header {
   align-items: center;
+}
+
+.docs-component-list-card-summary {
+  min-height: 2.4em;
+  margin-top: 20px;
 }
 
 .docs-component-list-item-icon {
