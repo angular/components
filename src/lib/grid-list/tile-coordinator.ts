@@ -91,6 +91,8 @@ export class TileCoordinator {
       // If we've reached the end of the row, go to the next row.
       if (this.columnIndex + tileCols > this.tracker.length) {
         this._nextRow();
+        gapStartIndex = this.tracker.indexOf(0, this.columnIndex);
+        gapEndIndex = this._findGapEndIndex(gapStartIndex);
         continue;
       }
 
@@ -99,6 +101,8 @@ export class TileCoordinator {
       // If there are no more empty spaces in this row at all, move on to the next row.
       if (gapStartIndex == -1) {
         this._nextRow();
+        gapStartIndex = this.tracker.indexOf(0, this.columnIndex);
+        gapEndIndex = this._findGapEndIndex(gapStartIndex);
         continue;
       }
 
