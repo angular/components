@@ -24,14 +24,15 @@
       color: mat-color($primary, default-contrast);
     }
 
-    .mat-step-icon-selected {
-      background-color: mat-color($primary);
+    .mat-step-icon-selected,
+    .mat-step-icon-state-done,
+    .mat-step-icon-state-edit {
+      background-color: mat-color($primary) !important;
       color: mat-color($primary, default-contrast);
     }
 
-    /** @breaking-change 8.0.0 remove `mat-step-icon-not-touched` */
-    .mat-step-icon-not-touched {
-      background-color: mat-color($foreground, disabled-text);
+    .mat-step-icon-state-number {
+      background-color: mat-color($primary);
       color: mat-color($primary, default-contrast);
     }
 
@@ -40,7 +41,7 @@
       color: mat-color($primary, default-contrast);
     }
 
-    .mat-step-icon-error {
+    .mat-step-icon-state-error {
       background-color: transparent;
       color: mat-color($warn);
     }
