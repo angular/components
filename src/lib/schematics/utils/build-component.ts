@@ -67,8 +67,11 @@ function addDeclarationToNgModule(options: ComponentOptions): Rule {
     const relativePath = buildRelativePath(modulePath, componentPath);
     const classifiedName = strings.classify(`${options.name}Component`);
 
+    // TODO(devversion): Cast to any because the Bazel typescript rules seem to incorrectly resolve
+    // the the required TypeScript version for the @schematics/angular utility functions. Meaning
+    // that is a type signature mismatch at compilation which is not valid.
     const declarationChanges = addDeclarationToModule(
-      source,
+      source as any,
       modulePath,
       classifiedName,
       relativePath);
@@ -86,7 +89,12 @@ function addDeclarationToNgModule(options: ComponentOptions): Rule {
       const source = readIntoSourceFile(host, modulePath);
       const exportRecorder = host.beginUpdate(modulePath);
 
-      const exportChanges = addExportToModule(source, modulePath,
+      // TODO(devversion): Cast to any because the Bazel typescript rules seem to incorrectly resolve
+      // the the required TypeScript version for the @schematics/angular utility functions. Meaning
+      // that is a type signature mismatch at compilation which is not valid.
+      const exportChanges = addExportToModule(
+        source as any,
+        modulePath,
         strings.classify(`${options.name}Component`),
         relativePath);
 
@@ -103,8 +111,11 @@ function addDeclarationToNgModule(options: ComponentOptions): Rule {
       const source = readIntoSourceFile(host, modulePath);
       const entryComponentRecorder = host.beginUpdate(modulePath);
 
+      // TODO(devversion): Cast to any because the Bazel typescript rules seem to incorrectly resolve
+      // the the required TypeScript version for the @schematics/angular utility functions. Meaning
+      // that is a type signature mismatch at compilation which is not valid.
       const entryComponentChanges = addEntryComponentToModule(
-        source,
+        source as any,
         modulePath,
         strings.classify(`${options.name}Component`),
         relativePath);
