@@ -33,7 +33,7 @@ export function appendElementToHead(host: Tree, project: WorkspaceProject, eleme
     throw `Could not find '<head>' element in HTML file: ${indexPath}`;
   }
 
-  const endTagOffset = headTag.sourceCodeLocation.endTag.startOffset;
+  const endTagOffset = headTag.sourceCodeLocation!.endTag.startOffset;
   const indentationOffset = getChildElementIndentation(headTag);
   const insertion = `${' '.repeat(indentationOffset)}${elementHtml}`;
 

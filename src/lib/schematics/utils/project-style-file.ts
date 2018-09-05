@@ -20,10 +20,14 @@ const validStyleFileRegex = /\.(c|le|sc)ss/;
  * extension is specified, any style file with a valid extension will be returned.
  */
 export function getProjectStyleFile(project: WorkspaceProject, extension?: string): string | null {
-  const buildTarget = project.architect['build'];
+  if (!project.architect || !project.architect['build']) {
+    return null;
+  }
 
-  if (buildTarget.options && buildTarget.options.styles && buildTarget.options.styles.length) {
-    const styles = buildTarget.options.styles.map(s => typeof s === 'string' ? s : s.input);
+  const target = project.architect['build'];
+
+  if (target.options && target.options.styles && target.options.styles.length) {
+    const styles = target.options.styles.map(s => typeof s === 'string' ? s : s.input);
 
     // Look for the default style file that is generated for new projects by the Angular CLI. This
     // default style file is usually called `styles.ext` unless it has been changed explicitly.

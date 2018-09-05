@@ -49,12 +49,17 @@ function insertCustomTheme(project: WorkspaceProject, projectName: string, host:
   const themeContent = createCustomTheme(projectName);
 
   if (!stylesPath) {
+    if (!project.sourceRoot) {
+      throw new Error(`Could not find source root for project: "${projectName}". Please make ` +
+        `sure that the "sourceRoot" property is set in the workspace config.`);
+    }
+
     // Normalize the path through the devkit utilities because we want to avoid having
     // unnecessary path segments and windows backslash delimiters.
     const customThemePath = normalize(join(project.sourceRoot, 'custom-theme.scss'));
 
     host.create(customThemePath, themeContent);
-    addStyleToTarget(project.architect['build'], host, customThemePath, workspace);
+    addStyleToTarget(project.architect!['build'], host, customThemePath, workspace);
     return;
   }
 

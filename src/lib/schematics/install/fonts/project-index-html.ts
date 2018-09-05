@@ -11,11 +11,11 @@ import {WorkspaceProject} from '@schematics/angular/utility/config';
 
 /** Looks for the index HTML file in the given project and returns its path. */
 export function getIndexHtmlPath(project: WorkspaceProject): string {
-  const buildTarget = project.architect.build.options;
+  const buildTarget = project.architect!.build.options;
 
   if (buildTarget.index && buildTarget.index.endsWith('index.html')) {
     return buildTarget.index;
   }
 
-  throw new SchematicsException('No index.html file was found.');
+  throw new SchematicsException('No project "index.html" file could be found.');
 }

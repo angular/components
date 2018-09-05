@@ -11,7 +11,7 @@ import {WorkspaceProject} from '@schematics/angular/utility/config';
 
 /** Looks for the main TypeScript file in the given project and returns its path. */
 export function getProjectMainFile(project: WorkspaceProject): string {
-  const buildTarget = project.architect.build.options;
+  const buildTarget = project.architect!.build.options;
 
   if (buildTarget.main) {
     return buildTarget.main;
