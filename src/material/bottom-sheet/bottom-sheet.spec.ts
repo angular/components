@@ -383,7 +383,7 @@ describe('MatBottomSheet', () => {
   }));
 
   it('should be able to pass a result back to the dismissed stream', fakeAsync(() => {
-    const bottomSheetRef = bottomSheet.open<PizzaMsg, any, number>(PizzaMsg);
+    const bottomSheetRef = bottomSheet.open<PizzaMsg>(PizzaMsg);
     const spy = jasmine.createSpy('afterDismissed spy');
 
     bottomSheetRef.afterDismissed().subscribe(spy);

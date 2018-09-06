@@ -125,8 +125,8 @@ export class MatDialog implements OnDestroy {
    * @param config Extra configuration options.
    * @returns Reference to the newly-opened dialog.
    */
-  open<T, D = any, R = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
-          config?: MatDialogConfig<D>): MatDialogRef<T, R> {
+  open<T, D = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
+                   config?: MatDialogConfig<D>): MatDialogRef<T, {}> {
 
     config = _applyConfigDefaults(config, this._defaultOptions || new MatDialogConfig());
 
@@ -136,10 +136,10 @@ export class MatDialog implements OnDestroy {
 
     const overlayRef = this._createOverlay(config);
     const dialogContainer = this._attachDialogContainer(overlayRef, config);
-    const dialogRef = this._attachDialogContent<T, R>(componentOrTemplateRef,
-                                                      dialogContainer,
-                                                      overlayRef,
-                                                      config);
+    const dialogRef = this._attachDialogContent<T>(componentOrTemplateRef,
+                                                   dialogContainer,
+                                                   overlayRef,
+                                                   config);
 
     // If this is the first dialog that we're opening, hide all the non-overlay content.
     if (!this.openDialogs.length) {
@@ -239,16 +239,15 @@ export class MatDialog implements OnDestroy {
    * @param config The dialog configuration.
    * @returns A promise resolving to the MatDialogRef that should be returned to the user.
    */
-  private _attachDialogContent<T, R>(
+  private _attachDialogContent<T>(
       componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
       dialogContainer: MatDialogContainer,
       overlayRef: OverlayRef,
-      config: MatDialogConfig): MatDialogRef<T, R> {
+      config: MatDialogConfig): MatDialogRef<T> {
 
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
-    const dialogRef =
-        new MatDialogRef<T, R>(overlayRef, dialogContainer, this._location, config.id);
+    const dialogRef = new MatDialogRef<T>(overlayRef, dialogContainer, this._location, config.id);
 
     // When the dialog backdrop is clicked, we want to close it.
     if (config.hasBackdrop) {
@@ -347,20 +346,21 @@ export class MatDialog implements OnDestroy {
     const overlayContainer = this._overlayContainer.getContainerElement();
 
     // Ensure that the overlay container is attached to the DOM.
-    if (overlayContainer.parentElement) {
-      const siblings = overlayContainer.parentElement.children;
+    if (!overlayContainer.parentElement) {
+      return;
+    }
 
-      for (let i = siblings.length - 1; i > -1; i--) {
-        let sibling = siblings[i];
+    const siblings = overlayContainer.parentElement.children;
 
-        if (sibling !== overlayContainer &&
+    for (let i = siblings.length - 1; i > -1; i--) {
+      let sibling = siblings[i];
+
+      if (sibling !== overlayContainer &&
           sibling.nodeName !== 'SCRIPT' &&
           sibling.nodeName !== 'STYLE' &&
           !sibling.hasAttribute('aria-live')) {
-
-          this._ariaHiddenElements.set(sibling, sibling.getAttribute('aria-hidden'));
-          sibling.setAttribute('aria-hidden', 'true');
-        }
+        this._ariaHiddenElements.set(sibling, sibling.getAttribute('aria-hidden'));
+        sibling.setAttribute('aria-hidden', 'true');
       }
     }
   }
