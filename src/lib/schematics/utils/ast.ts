@@ -7,13 +7,14 @@
  */
 
 import {SchematicsException, Tree} from '@angular-devkit/schematics';
+import {Schema as ComponentOptions} from '@schematics/angular/component/schema';
 import {addImportToModule} from '@schematics/angular/utility/ast-utils';
 import {InsertChange} from '@schematics/angular/utility/change';
 import {getWorkspace, WorkspaceProject} from '@schematics/angular/utility/config';
 import {findModuleFromOptions as internalFindModule} from '@schematics/angular/utility/find-module';
 import {getAppModulePath} from '@schematics/angular/utility/ng-ast-utils';
-import {Schema as ComponentOptions} from '@schematics/angular/component/schema';
 import * as ts from 'typescript';
+import {getProjectMainFile} from './project-main-file';
 
 
 /** Reads file given path and returns TypeScript source file. */
@@ -29,8 +30,7 @@ export function getSourceFile(host: Tree, path: string): ts.SourceFile {
 /** Import and add module to root app module. */
 export function addModuleImportToRootModule(host: Tree, moduleName: string, src: string,
                                             project: WorkspaceProject) {
-
-  const modulePath = getAppModulePath(host, project.architect!.build.options.main);
+  const modulePath = getAppModulePath(host, getProjectMainFile(project));
   addModuleImportToModule(host, modulePath, moduleName, src);
 }
 

@@ -8,6 +8,7 @@
 
 import {normalize} from '@angular-devkit/core';
 import {WorkspaceProject} from '@schematics/angular/utility/config';
+import {getArchitectOptions} from './architect-options';
 
 /** Regular expression that matches all possible Angular CLI default style files. */
 const defaultStyleFileRegex = /styles\.(c|le|sc)ss/;
@@ -20,14 +21,10 @@ const validStyleFileRegex = /\.(c|le|sc)ss/;
  * extension is specified, any style file with a valid extension will be returned.
  */
 export function getProjectStyleFile(project: WorkspaceProject, extension?: string): string | null {
-  if (!project.architect || !project.architect['build']) {
-    return null;
-  }
+  const buildOptions = getArchitectOptions(project, 'build');
 
-  const target = project.architect['build'];
-
-  if (target.options && target.options.styles && target.options.styles.length) {
-    const styles = target.options.styles.map(s => typeof s === 'string' ? s : s.input);
+  if (buildOptions.styles && buildOptions.styles.length) {
+    const styles = buildOptions.styles.map(s => typeof s === 'string' ? s : s.input);
 
     // Look for the default style file that is generated for new projects by the Angular CLI. This
     // default style file is usually called `styles.ext` unless it has been changed explicitly.

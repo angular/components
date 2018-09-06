@@ -13,6 +13,11 @@ export function getChildElementIndentation(element: DefaultTreeElement) {
   const childElement = element.childNodes
     .find(node => node['tagName']) as DefaultTreeElement | null;
 
+  if ((childElement && !childElement.sourceCodeLocation) || !element.sourceCodeLocation) {
+    throw new Error('Cannot determine child element indentation because the specified Parse5 ' +
+        'element does not have any source code location metadata.');
+  }
+
   const startColumns = childElement ?
     // In case there are child elements inside of the element, we assume that their
     // indentation is also applicable for other child elements.

@@ -59,8 +59,10 @@ function insertCustomTheme(project: WorkspaceProject, projectName: string, host:
     const customThemePath = normalize(join(project.sourceRoot, 'custom-theme.scss'));
 
     host.create(customThemePath, themeContent);
-    addStyleToTarget(project.architect!['build'], host, customThemePath, workspace);
-    return;
+
+    // Architect is always defined because we initially asserted if the default builder
+    // configuration is set up or not.
+    return addStyleToTarget(project.architect!['build'], host, customThemePath, workspace);
   }
 
   const insertion = new InsertChange(stylesPath, 0, themeContent);
@@ -77,12 +79,10 @@ function insertPrebuiltTheme(project: WorkspaceProject, host: Tree, theme: strin
   // Path needs to be always relative to the `package.json` or workspace root.
   const themePath =  `./node_modules/@angular/material/prebuilt-themes/${theme}.css`;
 
-  if (project.architect) {
-    addStyleToTarget(project.architect['build'], host, themePath, workspace);
-    addStyleToTarget(project.architect['test'], host, themePath, workspace);
-  } else {
-    throw new SchematicsException(`${projectName} does not have an architect configuration`);
-  }
+  // Architect is always defined because we initially asserted if the default builder
+  // configuration is set up or not.
+  addStyleToTarget(project.architect!['build'], host, themePath, workspace);
+  addStyleToTarget(project.architect!['test'], host, themePath, workspace);
 }
 
 /** Adds a style entry to the given target. */
