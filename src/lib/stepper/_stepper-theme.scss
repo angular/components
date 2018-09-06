@@ -25,30 +25,16 @@
       color: mat-color($primary, default-contrast);
     }
 
-    .mat-step-icon-selected {
+    .mat-step-icon-selected,
+    .mat-step-icon-state-done,
+    .mat-step-icon-state-edit {
       background-color: mat-color($primary);
-      color: mat-color($primary, default-contrast);
-    }
-
-    .mat-step-icon-state-number {
-      background-color: mat-color($primary);
-      color: mat-color($primary, default-contrast);
-    }
-
-    .mat-step-icon-not-selected {
-      background-color: mat-color($foreground, disabled-text);
       color: mat-color($primary, default-contrast);
     }
 
     .mat-step-icon-state-error {
       background-color: transparent;
       color: mat-color($warn);
-    }
-
-    .mat-step-icon-state-done,
-    .mat-step-icon-state-edit {
-      background-color: mat-color($primary);
-      color: mat-color($primary, default-contrast);
     }
 
     .mat-step-label.mat-step-label-active {
