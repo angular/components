@@ -536,6 +536,11 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     this._customRowDefs.delete(rowDef);
   }
 
+  /** Removes all row definitions that was not included as part of the content children. */
+  clearRowDef() {
+    this._customRowDefs.clear();
+  }
+
   /** Adds a header row definition that was not included as part of the content children. */
   addHeaderRowDef(headerRowDef: CdkHeaderRowDef) {
     this._customHeaderRowDefs.add(headerRowDef);
@@ -548,6 +553,12 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     this._headerRowDefChanged = true;
   }
 
+  /** Removes all header row definitions that was not included as part of the content children. */
+  clearHeaderRowDef() {
+    this._customHeaderRowDefs.clear();
+    this._headerRowDefChanged = true;
+  }
+
   /** Adds a footer row definition that was not included as part of the content children. */
   addFooterRowDef(footerRowDef: CdkFooterRowDef) {
     this._customFooterRowDefs.add(footerRowDef);
@@ -557,6 +568,12 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   /** Removes a footer row definition that was not included as part of the content children. */
   removeFooterRowDef(footerRowDef: CdkFooterRowDef) {
     this._customFooterRowDefs.delete(footerRowDef);
+    this._footerRowDefChanged = true;
+  }
+
+  /** Removes all footer row definitions that was not included as part of the content children. */
+  clearFooterRowDef() {
+    this._customFooterRowDefs.clear();
     this._footerRowDefChanged = true;
   }
 
