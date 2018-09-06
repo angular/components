@@ -31,7 +31,7 @@ export function addThemeToAppStyles(options: Schema): (host: Tree) => Tree {
     if (themeName === 'custom') {
       insertCustomTheme(project, options.project, host, workspace);
     } else {
-      insertPrebuiltTheme(project, host, themeName, workspace, options.project);
+      insertPrebuiltTheme(project, host, themeName, workspace);
     }
 
     return host;
@@ -74,7 +74,7 @@ function insertCustomTheme(project: WorkspaceProject, projectName: string, host:
 
 /** Insert a pre-built theme into the angular.json file. */
 function insertPrebuiltTheme(project: WorkspaceProject, host: Tree, theme: string,
-                             workspace: WorkspaceSchema, projectName: string) {
+                             workspace: WorkspaceSchema) {
 
   // Path needs to be always relative to the `package.json` or workspace root.
   const themePath =  `./node_modules/@angular/material/prebuilt-themes/${theme}.css`;
