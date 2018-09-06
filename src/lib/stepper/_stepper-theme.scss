@@ -36,14 +36,14 @@
       color: mat-color($primary, default-contrast);
     }
 
-    .mat-step-icon-not-selected {
+    .mat-step-icon:not(.mat-step-icon-selected) {
       background-color: mat-color($foreground, disabled-text);
       color: mat-color($primary, default-contrast);
     }
 
     .mat-step-icon-state-error {
-      background-color: transparent;
-      color: mat-color($warn);
+      background-color: transparent !important;
+      color: mat-color($warn) !important;
     }
 
     .mat-step-label.mat-step-label-active {
