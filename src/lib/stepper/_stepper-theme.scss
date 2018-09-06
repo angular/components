@@ -21,13 +21,12 @@
     }
 
     .mat-step-icon {
+      background-color: mat-color($foreground, disabled-text);
       color: mat-color($primary, default-contrast);
     }
 
-    .mat-step-icon-selected,
-    .mat-step-icon-state-done,
-    .mat-step-icon-state-edit {
-      background-color: mat-color($primary) !important;
+    .mat-step-icon-selected {
+      background-color: mat-color($primary);
       color: mat-color($primary, default-contrast);
     }
 
@@ -36,14 +35,20 @@
       color: mat-color($primary, default-contrast);
     }
 
-    .mat-step-icon:not(.mat-step-icon-selected) {
+    .mat-step-icon-not-selected {
       background-color: mat-color($foreground, disabled-text);
       color: mat-color($primary, default-contrast);
     }
 
     .mat-step-icon-state-error {
-      background-color: transparent !important;
-      color: mat-color($warn) !important;
+      background-color: transparent;
+      color: mat-color($warn);
+    }
+
+    .mat-step-icon-state-done,
+    .mat-step-icon-state-edit {
+      background-color: mat-color($primary);
+      color: mat-color($primary, default-contrast);
     }
 
     .mat-step-label.mat-step-label-active {

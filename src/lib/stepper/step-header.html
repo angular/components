@@ -1,6 +1,5 @@
 <div class="mat-step-header-ripple" mat-ripple [matRippleTrigger]="_getHostElement()"></div>
-<div [ngClass]="{'mat-step-icon-selected': selected}"
-     class="mat-step-icon-state-{{state}} mat-step-icon"
+<div class="mat-step-icon-{{selected ? 'selected': 'not-selected'}} mat-step-icon-state-{{state}} mat-step-icon"
      [ngSwitch]="state">
 
   <ng-container *ngSwitchCase="'number'" [ngSwitch]="!!(iconOverrides && iconOverrides.number)">
