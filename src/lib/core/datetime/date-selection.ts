@@ -31,6 +31,14 @@ export interface DateRange<D> {
 export class MatSingleDateSelection<D> extends MatDateSelection<D> {
   private date: D | null = null;
 
+  constructor(adapter: DateAdapter<D>, date?: D | null) {
+    super(adapter);
+
+    if (date) {
+      this.date = date;
+    }
+  }
+
   add(date: D) {
     this.date = date;
   }
@@ -72,6 +80,18 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
 export class MatRangeDateSelection<D> extends MatDateSelection<D> {
   private start: D | null = null;
   private end: D | null = null;
+
+  constructor(adapter: DateAdapter<D>, start?: D | null, end?: D | null) {
+    super(adapter);
+
+    if (start) {
+      this.start = start;
+    }
+
+    if (end) {
+      this.end = end;
+    }
+  }
 
   /**
    * Adds an additional date to the range. If no date is set thus far, it will set it to the
