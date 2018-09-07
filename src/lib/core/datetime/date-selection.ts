@@ -9,15 +9,20 @@
 import {DateAdapter} from '@angular/material/core';
 
 export abstract class MatDateSelection<D> {
+  constructor(protected readonly adapter: DateAdapter<D>) {}
+
   abstract add(date: D): void;
-  abstract clone(adaptor: DateAdapter<D>): MatDateSelection<D>;
+  abstract clone(): MatDateSelection<D>;
   abstract getFirstSelectedDate(): D|null;
   abstract getLastSelectedDate(): D|null;
   abstract isComplete(): boolean;
-  abstract isSame(adapter: DateAdapter<D>, other: MatDateSelection<D>): boolean;
-  abstract isValid(adapter: DateAdapter<D>): boolean;
+  abstract isSame(other: MatDateSelection<D>): boolean;
+  abstract isValid(): boolean;
 }
 
+/**
+ * Concrete implementation of a MatDateSelection that holds a single date.
+ */
 export class MatSingleDateSelection<D> extends MatDateSelection<D> {
   private date: D | null = null;
 
@@ -25,11 +30,11 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
     this.date = date;
   }
 
-  clone(adapter: DateAdapter<D>): MatDateSelection<D> {
-    const copy = new MatSingleDateSelection<D>();
+  clone(): MatDateSelection<D> {
+    const copy = new MatSingleDateSelection<D>(this.adapter);
 
     if (this.date) {
-      copy.add(adapter.clone(this.date));
+      copy.add(this.adapter.clone(this.date));
     }
 
     return copy as MatDateSelection<D>;
@@ -41,20 +46,29 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
 
   isComplete() { return !!this.date; }
 
-  isSame(adapter: DateAdapter<D>, other: MatDateSelection<D>): boolean {
+  isSame(other: MatDateSelection<D>): boolean {
     return other instanceof MatSingleDateSelection &&
-        adapter.sameDate(other.getFirstSelectedDate(), this.getFirstSelectedDate());
+        this.adapter.sameDate(other.getFirstSelectedDate(), this.getFirstSelectedDate());
   }
 
-  isValid(adapter: DateAdapter<D>): boolean {
-    return !!(this.date && adapter.isValid(this.date));
+  isValid(): boolean {
+    return !!(this.date && this.adapter.isValid(this.date));
   }
 }
 
+/**
+ * Concrete implementation of a MatDateSelection that holds a date range, represented by
+ * a start date and an end date.
+ */
 export class MatRangeDateSelection<D> extends MatDateSelection<D> {
   private start: D | null = null;
   private end: D | null = null;
 
+  /**
+   * Adds an additional date to the range. If no date is set thus far, it will set it to the
+   * beginning. If the beginning is set, it will set it to the end.
+   * If add is called on a complete selection, it will empty the selection and set it as the start.
+   */
   add(date: D): void {
     if (!this.start) {
       this.start = date;
@@ -67,15 +81,15 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
   }
 
 
-  clone(adapter: DateAdapter<D>): MatDateSelection<D> {
-    const copy = new MatRangeDateSelection<D>();
+  clone(): MatDateSelection<D> {
+    const copy = new MatRangeDateSelection<D>(this.adapter);
 
     if (this.start) {
-      copy.setFirstSelectedDate(adapter.clone(this.start));
+      copy.setFirstSelectedDate(this.adapter.clone(this.start));
     }
 
     if (this.end) {
-      copy.setLastSelectedDate(adapter.clone(this.end));
+      copy.setLastSelectedDate(this.adapter.clone(this.end));
     }
 
     return copy as MatDateSelection<D>;
@@ -83,7 +97,7 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
 
   getFirstSelectedDate() { return this.start; }
 
-  getLastSelectedDate() { return this.start; }
+  getLastSelectedDate() { return this.end; }
 
   setFirstSelectedDate(value: D | null) { this.start = value; }
 
@@ -93,13 +107,14 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
     return !!(this.start && this.end);
   }
 
-  isSame(adapter: DateAdapter<D>, other: MatDateSelection<D>): boolean {
+  isSame(other: MatDateSelection<D>): boolean {
     return other instanceof MatRangeDateSelection &&
-        adapter.sameDate(this.getFirstSelectedDate(), other.getFirstSelectedDate()) &&
-        adapter.sameDate(this.getLastSelectedDate(), other.getLastSelectedDate());
+        this.adapter.sameDate(this.getFirstSelectedDate(), other.getFirstSelectedDate()) &&
+        this.adapter.sameDate(this.getLastSelectedDate(), other.getLastSelectedDate());
   }
 
-  isValid(adapter: DateAdapter<D>): boolean {
-    return !!(this.start && this.end && adapter.isValid(this.start!) && adapter.isValid(this.end!));
+  isValid(): boolean {
+    return !!(this.start && this.end &&
+        this.adapter.isValid(this.start!) && this.adapter.isValid(this.end!));
   }
 }
