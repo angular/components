@@ -56,8 +56,8 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
     if (date && otherDate) {
       return this.adapter.compareDate(date, otherDate);
     }
-    throw Error
 
+    throw Error;
   }
 
   clone(): MatDateSelection<D> {
@@ -76,11 +76,13 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
   }
 
   isValid(): boolean {
-    return !!(this.date && this.adapter.isDateInstance(this.date) && this.adapter.isValid(this.date));
+    return !!(this.date &&
+      this.adapter.isDateInstance(this.date) &&
+      this.adapter.isValid(this.date));
   }
 
   asDate(): D | null {
-    return (this.isValid()) ? this.adapter.deserialize(this.date): null;
+    return (this.isValid()) ? this.adapter.deserialize(this.date) : null;
   }
 }
 
