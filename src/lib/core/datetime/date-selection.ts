@@ -20,6 +20,11 @@ export abstract class MatDateSelection<D> {
   abstract isValid(): boolean;
 }
 
+export interface DateRange<D> {
+  start: D | null;
+  end: D | null;
+}
+
 /**
  * Concrete implementation of a MatDateSelection that holds a single date.
  */
@@ -53,6 +58,10 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
 
   isValid(): boolean {
     return !!(this.date && this.adapter.isValid(this.date));
+  }
+
+  asDate(): D | null {
+    return this.date;
   }
 }
 
@@ -116,5 +125,12 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
   isValid(): boolean {
     return !!(this.start && this.end &&
         this.adapter.isValid(this.start!) && this.adapter.isValid(this.end!));
+  }
+
+  asRange(): DateRange<D> {
+    return {
+      start: this.start,
+      end: this.end,
+    };
   }
 }
