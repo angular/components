@@ -55,13 +55,14 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
     const otherDate = other.asDate();
     if (date && otherDate) {
       return this.adapter.compareDate(date, otherDate);
-    } 
+    }
     throw Error
 
   }
 
   clone(): MatDateSelection<D> {
     return new MatSingleDateSelection<D>(this.adapter, this.date);
+
   }
 
   getFirstSelectedDate() { return this.date; }
@@ -88,6 +89,7 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
  * Concrete implementation of a MatDateSelection that holds a date range, represented by
  * a start date and an end date.
  */
+
 export class MatRangeDateSelection<D> extends MatDateSelection<D> {
   private start: D | null = null;
   private end: D | null = null;
@@ -109,7 +111,7 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
    * beginning. If the beginning is set, it will set it to the end.
    * If add is called on a complete selection, it will empty the selection and set it as the start.
    */
-  add(date: D | null): void {
+  add(date: D): void {
     if (!this.start) {
       this.start = date;
     } else if (!this.end) {
@@ -122,9 +124,9 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
     this.valueChanges.next();
   }
 
-
   clone(): MatDateSelection<D> {
     return new MatRangeDateSelection<D>(this.adapter, this.start, this.end);
+
   }
 
   getFirstSelectedDate() { return this.start; }
