@@ -14,6 +14,10 @@ export abstract class MatDateSelection<D> {
 
   constructor(protected readonly adapter: DateAdapter<D>) {}
 
+  dispose() {
+    this.valueChanges.complete();
+  }
+
   abstract add(date: D): void;
   abstract clone(): MatDateSelection<D>;
   abstract getFirstSelectedDate(): D|null;
