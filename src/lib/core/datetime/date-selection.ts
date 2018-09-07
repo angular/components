@@ -7,9 +7,16 @@
  */
 
 import {DateAdapter} from '@angular/material/core';
+import {Subject} from 'rxjs';
 
 export abstract class MatDateSelection<D> {
+  valueChanges = new Subject<void>();
+
   constructor(protected readonly adapter: DateAdapter<D>) {}
+
+  dispose() {
+    this.valueChanges.complete();
+  }
 
   abstract add(date: D): void;
   abstract clone(): MatDateSelection<D>;
@@ -41,16 +48,11 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
 
   add(date: D) {
     this.date = date;
+    this.valueChanges.next();
   }
 
   clone(): MatDateSelection<D> {
-    const copy = new MatSingleDateSelection<D>(this.adapter);
-
-    if (this.date) {
-      copy.add(this.adapter.clone(this.date));
-    }
-
-    return copy as MatDateSelection<D>;
+    return new MatSingleDateSelection<D>(this.adapter, this.date);
   }
 
   getFirstSelectedDate() { return this.date; }
@@ -107,21 +109,13 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
       this.start = date;
       this.end = null;
     }
+
+    this.valueChanges.next();
   }
 
 
   clone(): MatDateSelection<D> {
-    const copy = new MatRangeDateSelection<D>(this.adapter);
-
-    if (this.start) {
-      copy.setFirstSelectedDate(this.adapter.clone(this.start));
-    }
-
-    if (this.end) {
-      copy.setLastSelectedDate(this.adapter.clone(this.end));
-    }
-
-    return copy as MatDateSelection<D>;
+    return new MatRangeDateSelection<D>(this.adapter, this.start, this.end);
   }
 
   getFirstSelectedDate() { return this.start; }
