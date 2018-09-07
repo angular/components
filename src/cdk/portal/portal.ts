@@ -34,7 +34,7 @@ export interface ComponentType<T> {
  * It can be attach to / detached from a `PortalOutlet`.
  */
 export abstract class Portal<T> {
-  private _attachedHost: PortalOutlet | null;
+  _attachedHost: PortalOutlet | null;
 
   /** Attach this portal to a host. */
   attach(host: PortalOutlet): T {
@@ -45,8 +45,6 @@ export abstract class Portal<T> {
     if (host.hasAttached()) {
       throwPortalAlreadyAttachedError();
     }
-
-    this._attachedHost = host;
     return <T> host.attach(this);
   }
 
@@ -64,7 +62,7 @@ export abstract class Portal<T> {
 
   /** Whether this portal is attached to a host. */
   get isAttached(): boolean {
-    return this._attachedHost != null;
+    return !!this._attachedHost;
   }
 
   /**
@@ -138,7 +136,7 @@ export class TemplatePortal<C = any> extends Portal<C> {
   }
 
   /**
-   * Attach the the portal to the provided `PortalOutlet`.
+   * Attach the portal to the provided `PortalOutlet`.
    * When a context is provided it will override the `context` property of the `TemplatePortal`
    * instance.
    */
@@ -209,9 +207,11 @@ export abstract class BasePortalOutlet implements PortalOutlet {
 
     if (portal instanceof ComponentPortal) {
       this._attachedPortal = portal;
+      portal._attachedHost = this;
       return this.attachComponentPortal(portal);
     } else if (portal instanceof TemplatePortal) {
       this._attachedPortal = portal;
+      portal._attachedHost = this;
       return this.attachTemplatePortal(portal);
     }
 

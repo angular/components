@@ -330,6 +330,21 @@ describe('Portals', () => {
       expect(spy).toHaveBeenCalled();
     });
 
+    it('should set the attachedHost when attaching to a ComponentPortal', () => {
+      const portal = new ComponentPortal(PizzaMsg);
+      expect(portal._attachedHost).toBeUndefined();
+      fixture.componentInstance.portalOutlet.attach(portal);
+      expect(portal._attachedHost).toBe(fixture.componentInstance.portalOutlet);
+    });
+
+    it('should set the attachedHost when attaching to a TemplatePortal', () => {
+      const instance = fixture.componentInstance;
+      const portal = new TemplatePortal(instance.templateRef, null!);
+      expect(portal._attachedHost).toBeUndefined();
+      instance.portalOutlet.attach(portal);
+      expect(portal._attachedHost).toBe(fixture.componentInstance.portalOutlet);
+    });
+
   });
 
   describe('DomPortalOutlet', () => {
