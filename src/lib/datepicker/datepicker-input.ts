@@ -134,20 +134,21 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   /** The value of the input. */
   @Input()
   get value(): D | null {
-    return this._selectionModel ? this._selectionModel.getFirstSelectedDate() : null;
+    return this._selectionModel ? this._selectionModel.getSelection() : null;
   }
   set value(value: D | null) {
-    const oldDate = this._selectionModel.getFirstSelectedDate();
+    value = this._dateAdapter.deserialize(value);
+    const oldDate = this._selectionModel.getSelection();
 
     if (!this._selectionModel) {
       throw new Error('Input has no MatDatePicker associated with it.');
     }
 
-    if (!this._dateAdapter.sameDate(value, this._selectionModel.getFirstSelectedDate())) {
+    if (!this._dateAdapter.sameDate(value, oldDate)) {
       this._selectionModel.setSelection(value);
     }
 
-    this._lastValueValid = !this._selectionModel || this._selectionModel.isValid();
+    this._lastValueValid = this._selectionModel.isValid();
 
     this._formatValue(this._selectionModel.getFirstSelectedDate());
 
@@ -339,17 +340,14 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   }
 
   _onInput(value: string) {
-    const date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
+    let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
     const current = this._selectionModel.getFirstSelectedDate();
-
-    if (!date) {
-      return;
-    }
+    date = this._getValidDateOrNull(date);
 
     if (!this._dateAdapter.sameDate(current, date)) {
-      this._selectionModel.add(date);
-      this._cvaOnChange(this._selectionModel.getFirstSelectedDate());
-      this._valueChange.emit(this._selectionModel.getFirstSelectedDate());
+      this._selectionModel.setSelection(date);
+      this._formatValue(date);
+      this._cvaOnChange(date);
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
     }
   }
@@ -380,7 +378,8 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     }
 
     this._elementRef.nativeElement.value =
-        value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
+        value && this._getValidDateOrNull(value) ?
+            this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
   }
 
   /**

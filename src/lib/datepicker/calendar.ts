@@ -24,6 +24,7 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
+  SkipSelf,
 } from '@angular/core';
 import {
   DateAdapter,

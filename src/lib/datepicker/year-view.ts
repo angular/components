@@ -27,11 +27,11 @@ import {
   EventEmitter,
   Inject,
   Input,
-  OnDestroy,
   Optional,
   Output,
   ViewChild,
   ViewEncapsulation,
+  OnDestroy,
 } from '@angular/core';
 import {
   DateAdapter,
@@ -41,9 +41,9 @@ import {
   MatDateSelectionModel,
   MatSingleDateSelectionModel
 } from '@angular/material/core';
-import {Subscription} from 'rxjs';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
+import {Subscription} from 'rxjs';
 
 /**
  * An internal component used to display a single year in the datepicker.

@@ -1,12 +1,16 @@
 import {Component} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+import {MatNativeDateModule} from '@angular/material/core';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 
 
 describe('MatCalendarBody', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        MatNativeDateModule,
+      ],
       declarations: [
         MatCalendarBody,
 
@@ -70,6 +74,7 @@ describe('MatCalendarBody', () => {
           .toBe(cellEls.length - 1, 'Expected remaining cells to be marked as deselected.');
     });
 
+    // tslint:disable-next-line:ban
     it('places label in first row if space is available', () => {
       testComponent.rows[0] = testComponent.rows[0].slice(3);
       testComponent.rows = testComponent.rows.slice();
