@@ -31,7 +31,13 @@ import {
   ViewEncapsulation,
   ViewChild,
 } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MatDateFormats,
+  MatDateSelection,
+  MatSingleDateSelection
+} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -71,12 +77,13 @@ export class MatMonthView<D> implements AfterContentInit {
 
   /** The currently selected date. */
   @Input()
-  get selected(): D | null { return this._selected; }
-  set selected(value: D | null) {
-    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._selectedDate = this._getDateInCurrentMonth(this._selected);
+  get selected(): MatDateSelection<D> { return this._selected; }
+  set selected(value: MatDateSelection<D>) {
+    this._selected = value;
+    // this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    this._selectedDate = this._getDateInCurrentMonth(this._selected.getFirstSelectedDate());
   }
-  private _selected: D | null;
+  private _selected: MatDateSelection<D> = new MatSingleDateSelection<D>(this._dateAdapter);
 
   /** The minimum selectable date. */
   @Input()
@@ -237,7 +244,7 @@ export class MatMonthView<D> implements AfterContentInit {
 
   /** Initializes this month view. */
   _init() {
-    this._selectedDate = this._getDateInCurrentMonth(this.selected);
+    this._selectedDate = this._getDateInCurrentMonth(this.selected.getFirstSelectedDate());
     this._todayDate = this._getDateInCurrentMonth(this._dateAdapter.today());
     this._monthLabel =
         this._dateAdapter.getMonthNames('short')[this._dateAdapter.getMonth(this.activeDate)]

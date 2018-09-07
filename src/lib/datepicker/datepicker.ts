@@ -42,6 +42,8 @@ import {
   DateAdapter,
   mixinColor,
   ThemePalette,
+  MatDateSelection,
+  MatSingleDateSelection,
 } from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {merge, Subject, Subscription} from 'rxjs';
@@ -229,9 +231,9 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   id: string = `mat-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
-  get _selected(): D | null { return this._validSelected; }
-  set _selected(value: D | null) { this._validSelected = value; }
-  private _validSelected: D | null = null;
+  get _selected(): MatDateSelection<D> { return this._validSelected; }
+  set _selected(value: MatDateSelection<D>) { this._validSelected = value; }
+  private _validSelected: MatDateSelection<D> = new MatSingleDateSelection<D>(this._dateAdapter);
 
   /** The minimum selectable date. */
   get _minDate(): D | null {
@@ -272,7 +274,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   readonly _disabledChange = new Subject<boolean>();
 
   /** Emits new selected date when selected date changes. */
-  readonly _selectedChanged = new Subject<D>();
+  readonly _selectedChanged = new Subject<MatDateSelection<D>>();
 
   constructor(private _dialog: MatDialog,
               private _overlay: Overlay,
@@ -301,11 +303,11 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   }
 
   /** Selects the given date */
-  select(date: D): void {
+  select(date: MatDateSelection<D>): void {
     let oldValue = this._selected;
     this._selected = date;
-    if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
-      this._selectedChanged.next(date);
+    if (!this._selected.isSame(oldValue)) {
+      this._selectedChanged.next(this._selected);
     }
   }
 
@@ -328,8 +330,8 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       throw Error('A MatDatepicker can only be associated with a single input.');
     }
     this._datepickerInput = input;
-    this._inputSubscription =
-        this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
+    this._inputSubscription = this._datepickerInput._valueChange.subscribe(
+          (value: MatDateSelection<D>) => this._selected = value);
   }
 
   /** Open the calendar. */
