@@ -112,8 +112,9 @@ export class TileCoordinator {
       // gap on the next iteration.
       this.columnIndex = gapStartIndex + 1;
 
-      // Continue iterating until we find a gap wide enough for this tile.
-    } while (gapEndIndex - gapStartIndex < tileCols);
+      // Continue iterating until we find a gap wide enough for this tile. Since gapEndIndex is
+      // exclusive, gapEndIndex is 0 means we didn''t find a gap and should continue.
+    } while ((gapEndIndex - gapStartIndex < tileCols) || (gapEndIndex == 0));
 
     // If we still didn't manage to find a gap, ensure that the index is
     // at least zero so the tile doesn't get pulled out of the grid.
