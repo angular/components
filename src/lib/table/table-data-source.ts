@@ -107,18 +107,28 @@ export class MatTableDataSource<T> extends DataSource<T> {
    * @param sortHeaderId The name of the column that represents the data.
    */
   sortingDataAccessor: ((data: T, sortHeaderId: string) => string|number) =
-      (data: T, sortHeaderId: string): string|number => {
-    const value: any = data[sortHeaderId];
+      (data: T, path: string): string|number => {
+        const ns = path.split('.');
+        let value = data.hasOwnProperty(ns[0]) ? data[ns[0]] : null;
+        for (let i in ns) {
+          if (!value) {
+            break;
+          }
+          if (i == '0') {
+            continue;
+          }
+          value = value.hasOwnProperty(ns[i]) ? value[ns[i]] : null;
+        }
 
-    if (_isNumberValue(value)) {
-      const numberValue = Number(value);
+        if (_isNumberValue(value)) {
+          const numberValue = Number(value);
 
-      // Numbers beyond `MAX_SAFE_INTEGER` can't be compared reliably so we
-      // leave them as strings. For more info: https://goo.gl/y5vbSg
-      return numberValue < MAX_SAFE_INTEGER ? numberValue : value;
-    }
+          // Numbers beyond `MAX_SAFE_INTEGER` can't be compared reliably so we
+          // leave them as strings. For more info: https://goo.gl/y5vbSg
+          return numberValue < MAX_SAFE_INTEGER ? numberValue : value;
+        }
 
-    return value;
+        return value;
   }
 
   /**
@@ -172,14 +182,63 @@ export class MatTableDataSource<T> extends DataSource<T> {
    * @returns Whether the filter matches against the data
    */
   filterPredicate: ((data: T, filter: string) => boolean) = (data: T, filter: string): boolean => {
-    // Transform the data into a lowercase string of all property values.
-    const accumulator = (currentTerm, key) => currentTerm + data[key];
-    const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
-
     // Transform the filter by converting it to lowercase and removing whitespace.
     const transformedFilter = filter.trim().toLowerCase();
 
-    return dataStr.indexOf(transformedFilter) != -1;
+    return this.filterAny(data, transformedFilter);
+  }
+
+  private filterAny(data: any, filter: string): boolean {
+    if (typeof data === 'string') {
+      if (this.filterString(data, filter)) {
+        return true;
+      }
+    } else if (Array.isArray(data)) {
+      if (this.filterArray(data, filter)) {
+        return true;
+      }
+    }
+    if (typeof data === 'object') {
+      if (this.filterObject(data, filter)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private filterObject(data: object, filter: string): boolean {
+    for (const prop in data) {
+      if (!data.hasOwnProperty(prop)) {
+        continue;
+      }
+
+      const value = data[prop];
+      if (this.filterAny(value, filter)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private filterArray(data: Array<any>, filter): boolean {
+    for (const value of data) {
+      if (typeof value === 'string') {
+        if (this.filterString(value, filter)) {
+          return true;
+        }
+      }
+
+      if (typeof value === 'object') {
+        if (this.filterObject(value, filter)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  private filterString(data: string, filter: string): boolean {
+    return data.toLowerCase().includes(filter);
   }
 
   constructor(initialData: T[] = []) {
