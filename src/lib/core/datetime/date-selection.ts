@@ -42,13 +42,23 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
     super(adapter);
 
     if (date) {
-      this.date = date;
+      this.date = adapter.deserialize(date);
     }
   }
 
   add(date: D) {
     this.date = date;
     this.valueChanges.next();
+  }
+
+  compareDate(other: MatSingleDateSelection<D>) {
+    const date = this.asDate();
+    const otherDate = other.asDate();
+    if (date && otherDate) {
+      return this.adapter.compareDate(date, otherDate);
+    } 
+    throw Error
+
   }
 
   clone(): MatDateSelection<D> {
@@ -67,11 +77,11 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
   }
 
   isValid(): boolean {
-    return !!(this.date && this.adapter.isValid(this.date));
+    return !!(this.date && this.adapter.isValid(this.date) && this.adapter.isDateInstance(this.date));
   }
 
   asDate(): D | null {
-    return this.date;
+    return (this.isValid()) ? this.date: null;
   }
 }
 
