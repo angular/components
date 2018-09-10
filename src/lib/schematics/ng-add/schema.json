@@ -20,13 +20,13 @@
       "enum": ["indigo-pink", "deeppurple-amber", "pink-bluegrey", "purple-green", "custom"],
       "default": "indigo-pink",
       "description": "The theme to apply",
-      "x-prompt": "What theme would you like to generate?"
+      "x-prompt": "Enter a prebuilt theme name, or \"custom\" for a custom theme:"
     },
     "gestures": {
       "type": "boolean",
       "default": true,
       "description": "Whether gesture support should be set up or not.",
-      "x-prompt": "Would you like to set up gesture support?"
+      "x-prompt": "Set up HammerJS for gesture recognition?"
     }
   },
   "required": []
