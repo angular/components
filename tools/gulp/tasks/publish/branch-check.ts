@@ -3,7 +3,7 @@ import {spawnSync} from 'child_process';
 import {buildConfig} from 'material2-build-tools';
 
 /** Regular expression that matches version names and the individual version segments. */
-export const versionNameRegex = /^(\d+)\.(\d+)\.(\d+)(?:-(alpha|beta|rc)\.(\d)+)?/;
+export const versionNameRegex = /^(\d+)\.(\d+)\.(\d+)(?:-(alpha|beta|rc)\.(\d)+)?$/;
 
 /** Regular expression that matches publish branch names and their Semver digits. */
 const publishBranchNameRegex = /^([0-9]+)\.([x0-9]+)(?:\.([x0-9]+))?$/;
