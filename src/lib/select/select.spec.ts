@@ -495,7 +495,6 @@ describe('MatSelect', () => {
           expect(formControl.pristine).toBe(true, 'Expected form control to be clean.');
 
           dispatchKeyboardEvent(select, 'keydown', 16); // Press a random key.
-
           expect(formControl.value).toBeNull('Expected form control value to stay empty.');
           expect(formControl.pristine).toBe(true, 'Expected form control to stay clean.');
         }));
@@ -660,7 +659,6 @@ describe('MatSelect', () => {
 
         it('should be able to focus the select trigger', fakeAsync(() => {
           document.body.focus(); // ensure that focus isn't on the trigger already
-
           fixture.componentInstance.select.focus();
 
           expect(document.activeElement).toBe(select, 'Expected select element to be focused.');
@@ -1672,14 +1670,11 @@ describe('MatSelect', () => {
 
     describe('animations', () => {
       let fixture: ComponentFixture<BasicSelect>;
-      let trigger: HTMLElement;
       let formField: HTMLElement;
 
       beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(BasicSelect);
         fixture.detectChanges();
-
-        trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
         formField = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
       }));
 
@@ -1702,19 +1697,6 @@ describe('MatSelect', () => {
             'Expected placeholder to animate back down to normal position.');
       }));
 
-      it('should add a class to the panel when the menu is done animating', fakeAsync(() => {
-        trigger.click();
-        fixture.detectChanges();
-
-        const panel = overlayContainerElement.querySelector('.mat-select-panel')!;
-
-        expect(panel.classList).not.toContain('mat-select-panel-done-animating');
-
-        flush();
-        fixture.detectChanges();
-
-        expect(panel.classList).toContain('mat-select-panel-done-animating');
-      }));
     });
 
     describe('keyboard scrolling', () => {
@@ -4617,7 +4599,6 @@ class InvalidSelectInForm {
           <mat-option value="steak-0">Steak</mat-option>
           <mat-option value="pizza-1">Pizza</mat-option>
         </mat-select>
-
         <mat-error>This field is required</mat-error>
       </mat-form-field>
     </form>
@@ -4834,7 +4815,6 @@ class SelectWithoutOptionCentering {
   template: `
     <mat-form-field>
       <mat-label>Select a thing</mat-label>
-
       <mat-select [placeholder]="placeholder">
         <mat-option value="thing">A thing</mat-option>
       </mat-select>
