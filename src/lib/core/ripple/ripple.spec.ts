@@ -142,32 +142,6 @@ describe('MatRipple', () => {
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
     }));
 
-    it('should launch multiple ripples for multi-touch', fakeAsync(() => {
-      const touchEvent = createTouchEvent('touchstart');
-
-      Object.defineProperties(touchEvent, {
-        changedTouches: {
-          value: [
-            {pageX: 0, pageY: 0},
-            {pageX: 10, pageY: 10},
-            {pageX: 20, pageY: 20}
-          ]
-        }
-      });
-
-      dispatchEvent(rippleTarget, touchEvent);
-      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(3);
-
-      tick(enterDuration);
-      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(3);
-
-      dispatchTouchEvent(rippleTarget, 'touchend');
-
-      tick(exitDuration);
-
-      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
-    }));
-
     it('should ignore synthetic mouse events after touchstart', () => fakeAsync(() => {
       dispatchTouchEvent(rippleTarget, 'touchstart');
       dispatchTouchEvent(rippleTarget, 'mousedown');

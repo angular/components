@@ -385,6 +385,10 @@ export class FocusMonitor implements OnDestroy {
       this._unregisterGlobalListeners = () => {};
     }
   }
+
+  private _getNativeElement(element: HTMLElement | ElementRef<HTMLElement>): HTMLElement {
+    return element instanceof ElementRef ? element.nativeElement : element;
+  }
 }
 
 
