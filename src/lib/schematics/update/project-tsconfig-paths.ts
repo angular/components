@@ -6,9 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {WorkspaceTool} from '@angular-devkit/core/src/workspace';
 import {Tree} from '@angular-devkit/schematics';
-import {getWorkspace, WorkspaceProject} from '@schematics/angular/utility/config';
+import {getWorkspace} from '@schematics/angular/utility/config';
 
 /**
  * Gets all tsconfig paths from a CLI project by reading the workspace configuration
