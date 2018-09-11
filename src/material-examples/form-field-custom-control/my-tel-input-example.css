@@ -1,8 +1,8 @@
-div {
+.my-tel-input-container {
   display: flex;
 }
 
-input {
+.my-tel-input-element {
   border: none;
   background: none;
   padding: 0;
@@ -11,11 +11,11 @@ input {
   text-align: center;
 }
 
-span {
+.my-tel-input-spacer {
   opacity: 0;
   transition: opacity 200ms;
 }
 
-:host.floating span {
+:host.floating .my-tel-input-spacer {
   opacity: 1;
 }
