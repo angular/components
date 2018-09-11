@@ -8,7 +8,9 @@
 
 import {DOCUMENT} from '@angular/common';
 import {
+  defineInjectable,
   Inject,
+  inject,
   Injectable,
   InjectionToken,
   OnDestroy,
@@ -53,9 +55,16 @@ let messagesContainer: HTMLElement | null = null;
  * want to use aria-describedby to further describe themselves without adding additional visual
  * content.
  * @docs-private
+ * @dynamic
  */
-@Injectable({providedIn: 'root'})
 export class AriaDescriber implements OnDestroy {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new AriaDescriber(inject(DOCUMENT)),
+  });
+
   private _document: Document;
 
   constructor(@Inject(DOCUMENT) _document: any) {
@@ -236,7 +245,7 @@ export const ARIA_DESCRIBER_PROVIDER = {
   provide: AriaDescriber,
   deps: [
     [new Optional(), new SkipSelf(), AriaDescriber],
-    DOCUMENT as InjectionToken<any>
+    DOCUMENT as InjectionToken<any>,
   ],
-  useFactory: ARIA_DESCRIBER_PROVIDER_FACTORY
+  useFactory: ARIA_DESCRIBER_PROVIDER_FACTORY,
 };

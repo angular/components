@@ -9,10 +9,11 @@
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
+  defineInjectable,
   Directive,
   ElementRef,
   EventEmitter,
-  Injectable,
+  inject,
   Input,
   NgModule,
   NgZone,
@@ -22,21 +23,38 @@ import {
 import {Observable, Subject, Subscription} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 
+
 /**
  * Factory that creates a new MutationObserver and allows us to stub it out in unit tests.
  * @docs-private
+ * @dynamic
  */
-@Injectable({providedIn: 'root'})
 export class MutationObserverFactory {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new MutationObserverFactory(),
+  });
+
   create(callback: MutationCallback): MutationObserver | null {
     return typeof MutationObserver === 'undefined' ? null : new MutationObserver(callback);
   }
 }
 
 
-/** An injectable service that allows watching elements for changes to their content. */
-@Injectable({providedIn: 'root'})
+/**
+ * An injectable service that allows watching elements for changes to their content.
+ * @dynamic
+ */
 export class ContentObserver implements OnDestroy {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new ContentObserver(inject(MutationObserverFactory)),
+  });
+
   /** Keeps track of the existing MutationObservers so they can be reused. */
   private _observedElements = new Map<Element, {
     observer: MutationObserver | null,
@@ -88,7 +106,7 @@ export class ContentObserver implements OnDestroy {
         observer.observe(element, {
           characterData: true,
           childList: true,
-          subtree: true
+          subtree: true,
         });
       }
       this._observedElements.set(element, {observer, stream, count: 1});
@@ -199,6 +217,6 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
 @NgModule({
   exports: [CdkObserveContent],
   declarations: [CdkObserveContent],
-  providers: [MutationObserverFactory]
+  providers: [MutationObserverFactory],
 })
 export class ObserversModule {}

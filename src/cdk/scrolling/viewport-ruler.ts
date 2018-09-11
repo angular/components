@@ -7,8 +7,8 @@
  */
 
 import {Platform} from '@angular/cdk/platform';
-import {Injectable, NgZone, OnDestroy, Optional, SkipSelf} from '@angular/core';
-import {merge, of as observableOf, fromEvent, Observable, Subscription} from 'rxjs';
+import {defineInjectable, inject, NgZone, OnDestroy, Optional, SkipSelf} from '@angular/core';
+import {fromEvent, merge, Observable, of as observableOf, Subscription} from 'rxjs';
 import {auditTime} from 'rxjs/operators';
 
 /** Time in ms to throttle the resize events by default. */
@@ -23,9 +23,16 @@ export interface ViewportScrollPosition {
 /**
  * Simple utility for getting the bounds of the browser viewport.
  * @docs-private
+ * @dynamic
  */
-@Injectable({providedIn: 'root'})
 export class ViewportRuler implements OnDestroy {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new ViewportRuler(inject(Platform), inject(NgZone)),
+  });
+
   /** Cached viewport dimensions. */
   private _viewportSize: {width: number; height: number};
 
@@ -141,5 +148,5 @@ export const VIEWPORT_RULER_PROVIDER = {
   // If there is already a ViewportRuler available, use that. Otherwise, provide a new one.
   provide: ViewportRuler,
   deps: [[new Optional(), new SkipSelf(), ViewportRuler], Platform, NgZone],
-  useFactory: VIEWPORT_RULER_PROVIDER_FACTORY
+  useFactory: VIEWPORT_RULER_PROVIDER_FACTORY,
 };

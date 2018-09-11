@@ -6,13 +6,22 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable} from '@angular/core';
+import {defineInjectable} from '@angular/core';
 import {Subject} from 'rxjs';
 
 
-/** Datepicker data that requires internationalization. */
-@Injectable({providedIn: 'root'})
+/**
+ * Datepicker data that requires internationalization.
+ * @dynamic
+ */
 export class MatDatepickerIntl {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new MatDatepickerIntl(),
+  });
+
   /**
    * Stream that emits whenever the labels here are changed. Use this to notify
    * components if the labels have changed after initialization.

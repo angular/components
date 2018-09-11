@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {EventEmitter, Inject, Injectable, Optional, OnDestroy} from '@angular/core';
+import {defineInjectable, EventEmitter, inject, Inject, OnDestroy, Optional} from '@angular/core';
 import {DIR_DOCUMENT} from './dir-document-token';
 
 
@@ -16,9 +16,16 @@ export type Direction = 'ltr' | 'rtl';
 /**
  * The directionality (LTR / RTL) context for the application (or a subtree of it).
  * Exposes the current direction and a stream of direction changes.
+ * @dynamic
  */
-@Injectable({providedIn: 'root'})
 export class Directionality implements OnDestroy {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new Directionality(inject(DIR_DOCUMENT)),
+  });
+
   /** The current 'ltr' or 'rtl' value. */
   readonly value: Direction = 'ltr';
 

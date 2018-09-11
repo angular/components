@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Inject, Injectable, Optional, PLATFORM_ID} from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
+import {defineInjectable, inject, Inject, InjectFlags, Optional, PLATFORM_ID} from '@angular/core';
 
 
 // Whether the current platform supports the V8 Break Iterator. The V8 check
@@ -17,9 +17,16 @@ const hasV8BreakIterator = (typeof Intl !== 'undefined' && (Intl as any).v8Break
 /**
  * Service to detect the current platform by comparing the userAgent strings and
  * checking browser-specific global properties.
+ * @dynamic
  */
-@Injectable({providedIn: 'root'})
 export class Platform {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new Platform(inject(PLATFORM_ID, InjectFlags.Optional)),
+  });
+
   /**
    * Whether the Angular application is being rendered in the browser.
    * We want to use the Angular platform check because if the Document is shimmed
@@ -70,7 +77,6 @@ export class Platform {
   /**
    * @breaking-change v7.0.0 remove optional decorator
    */
-  constructor(@Optional() @Inject(PLATFORM_ID) private _platformId?: Object) {
-  }
+  constructor(@Optional() @Inject(PLATFORM_ID) private _platformId?: Object | null) {}
 }
 

@@ -12,9 +12,11 @@ import {Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {ComponentPortal, ComponentType, PortalInjector, TemplatePortal} from '@angular/cdk/portal';
 import {
   ComponentRef,
+  defineInjectable,
   EmbeddedViewRef,
   Inject,
-  Injectable,
+  inject,
+  InjectFlags,
   InjectionToken,
   Injector,
   Optional,
@@ -43,9 +45,22 @@ export function MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY(): MatSnackBarConfig {
 
 /**
  * Service to dispatch Material Design snack bar messages.
+ * @dynamic
  */
-@Injectable({providedIn: MatSnackBarModule})
 export class MatSnackBar {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: MatSnackBarModule,
+    factory: () => new MatSnackBar(
+        inject(Overlay),
+        inject(LiveAnnouncer),
+        inject(Injector as any),
+        inject(BreakpointObserver),
+        inject(MatSnackBar, InjectFlags.Optional & InjectFlags.SkipSelf),
+        inject(MAT_SNACK_BAR_DEFAULT_OPTIONS)),
+  });
+
   /**
    * Reference to the current snack bar in the view *at this level* (in the Angular injector tree).
    * If there is a parent snack-bar service, all operations should delegate to that parent
@@ -72,7 +87,7 @@ export class MatSnackBar {
       private _live: LiveAnnouncer,
       private _injector: Injector,
       private _breakpointObserver: BreakpointObserver,
-      @Optional() @SkipSelf() private _parentSnackBar: MatSnackBar,
+      @Optional() @SkipSelf() private _parentSnackBar: MatSnackBar | null,
       @Inject(MAT_SNACK_BAR_DEFAULT_OPTIONS) private _defaultConfig: MatSnackBarConfig) {}
 
   /**
@@ -137,7 +152,7 @@ export class MatSnackBar {
 
     const userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
     const injector = new PortalInjector(userInjector || this._injector, new WeakMap([
-      [MatSnackBarConfig, config]
+      [MatSnackBarConfig, config],
     ]));
 
     const containerPortal =
@@ -161,7 +176,7 @@ export class MatSnackBar {
     if (content instanceof TemplateRef) {
       const portal = new TemplatePortal(content, null!, {
         $implicit: config.data,
-        snackBarRef
+        snackBarRef,
       } as any);
 
       snackBarRef.instance = container.attachTemplatePortal(portal);
@@ -178,7 +193,7 @@ export class MatSnackBar {
     // appropriate. This class is applied to the overlay element because the overlay must expand to
     // fill the width of the screen for full width snackbars.
     this._breakpointObserver.observe(Breakpoints.Handset).pipe(
-      takeUntil(overlayRef.detachments().pipe(take(1)))
+      takeUntil(overlayRef.detachments().pipe(take(1))),
     ).subscribe(state => {
       if (state.matches) {
         overlayRef.overlayElement.classList.add('mat-snack-bar-handset');
@@ -271,7 +286,7 @@ export class MatSnackBar {
 
     return new PortalInjector(userInjector || this._injector, new WeakMap<any, any>([
       [MatSnackBarRef, snackBarRef],
-      [MAT_SNACK_BAR_DATA, config.data]
+      [MAT_SNACK_BAR_DATA, config.data],
     ]));
   }
 }

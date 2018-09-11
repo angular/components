@@ -8,8 +8,9 @@
 
 import {DOCUMENT} from '@angular/common';
 import {
+  defineInjectable,
+  inject,
   Inject,
-  Injectable,
   InjectionToken,
   OnDestroy,
   Optional,
@@ -17,9 +18,18 @@ import {
 } from '@angular/core';
 
 
-/** Container inside which all overlays will render. */
-@Injectable({providedIn: 'root'})
+/**
+ * Container inside which all overlays will render.
+ * @dynamic
+ */
 export class OverlayContainer implements OnDestroy {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new OverlayContainer(inject(DOCUMENT)),
+  });
+
   protected _containerElement: HTMLElement;
 
   constructor(@Inject(DOCUMENT) protected _document: any) {}
@@ -67,7 +77,7 @@ export const OVERLAY_CONTAINER_PROVIDER = {
   provide: OverlayContainer,
   deps: [
     [new Optional(), new SkipSelf(), OverlayContainer],
-    DOCUMENT as InjectionToken<any> // We need to use the InjectionToken somewhere to keep TS happy
+    DOCUMENT as InjectionToken<any>, // We need to use the InjectionToken somewhere to keep TS happy
   ],
-  useFactory: OVERLAY_CONTAINER_PROVIDER_FACTORY
+  useFactory: OVERLAY_CONTAINER_PROVIDER_FACTORY,
 };

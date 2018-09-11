@@ -8,14 +8,15 @@
 
 import {Platform} from '@angular/cdk/platform';
 import {
+  defineInjectable,
   ElementRef,
-  Injectable,
+  inject,
   NgZone,
   OnDestroy,
   Optional,
   SkipSelf,
 } from '@angular/core';
-import {fromEvent, of as observableOf, Subject, Subscription, Observable} from 'rxjs';
+import {fromEvent, Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {auditTime, filter} from 'rxjs/operators';
 import {CdkScrollable} from './scrollable';
 
@@ -26,9 +27,16 @@ export const DEFAULT_SCROLL_TIME = 20;
 /**
  * Service contained all registered Scrollable references and emits an event when any one of the
  * Scrollable references emit a scrolled event.
+ * @dynamic
  */
-@Injectable({providedIn: 'root'})
 export class ScrollDispatcher implements OnDestroy {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new ScrollDispatcher(inject(NgZone), inject(Platform)),
+  });
+
   constructor(private _ngZone: NgZone, private _platform: Platform) { }
 
   /** Subject for notifying that a registered scrollable reference element has been scrolled. */
@@ -181,5 +189,5 @@ export const SCROLL_DISPATCHER_PROVIDER = {
   // If there is already a ScrollDispatcher available, use that. Otherwise, provide a new one.
   provide: ScrollDispatcher,
   deps: [[new Optional(), new SkipSelf(), ScrollDispatcher], NgZone, Platform],
-  useFactory: SCROLL_DISPATCHER_PROVIDER_FACTORY
+  useFactory: SCROLL_DISPATCHER_PROVIDER_FACTORY,
 };

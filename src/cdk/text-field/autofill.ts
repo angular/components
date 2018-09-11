@@ -8,10 +8,11 @@
 
 import {Platform, supportsPassiveEventListeners} from '@angular/cdk/platform';
 import {
+  defineInjectable,
   Directive,
   ElementRef,
   EventEmitter,
-  Injectable,
+  inject,
   NgZone,
   OnDestroy,
   OnInit,
@@ -44,9 +45,16 @@ const listenerOptions: any = supportsPassiveEventListeners() ? {passive: true} :
  * An injectable service that can be used to monitor the autofill state of an input.
  * Based on the following blog post:
  * https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7
+ * @dynamic
  */
-@Injectable({providedIn: 'root'})
 export class AutofillMonitor implements OnDestroy {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new AutofillMonitor(inject(Platform), inject(NgZone)),
+  });
+
   private _monitoredElements = new Map<Element, MonitoredElementInfo>();
 
   constructor(private _platform: Platform, private _ngZone: NgZone) {}
@@ -103,7 +111,7 @@ export class AutofillMonitor implements OnDestroy {
       subject: result,
       unlisten: () => {
         element.removeEventListener('animationstart', listener, listenerOptions);
-      }
+      },
     });
 
     return result.asObservable();

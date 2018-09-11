@@ -5,8 +5,10 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {Injectable} from '@angular/core';
+
+import {defineInjectable, inject} from '@angular/core';
 import {Platform} from '@angular/cdk/platform';
+
 
 /** Global registry for all dynamically-created, injected media queries. */
 const mediaQueriesForWebkitCompatibility: Set<string> = new Set<string>();
@@ -14,9 +16,19 @@ const mediaQueriesForWebkitCompatibility: Set<string> = new Set<string>();
 /** Style tag that holds all of the dynamically-created media queries. */
 let mediaQueryStyleNode: HTMLStyleElement | undefined;
 
-/** A utility for calling matchMedia queries. */
-@Injectable({providedIn: 'root'})
+
+/**
+ * Utility for calling matchMedia queries.
+ * @dynamic
+ */
 export class MediaMatcher {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new MediaMatcher(inject(Platform)),
+  });
+
   /** The internal matchMedia method to return back a MediaQueryList like object. */
   private _matchMedia: (query: string) => MediaQueryList;
 

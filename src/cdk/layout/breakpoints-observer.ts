@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, NgZone, OnDestroy} from '@angular/core';
-import {MediaMatcher} from './media-matcher';
+import {coerceArray} from '@angular/cdk/coercion';
+import {defineInjectable, inject, NgZone, OnDestroy} from '@angular/core';
 import {asapScheduler, combineLatest, fromEventPattern, Observable, Subject} from 'rxjs';
 import {debounceTime, map, startWith, takeUntil} from 'rxjs/operators';
-import {coerceArray} from '@angular/cdk/coercion';
+import {MediaMatcher} from './media-matcher';
 
 
 /** The current state of a layout breakpoint. */
@@ -39,9 +39,19 @@ interface Query {
   mql: MediaQueryList;
 }
 
-/** Utility for checking the matching state of @media queries. */
-@Injectable({providedIn: 'root'})
+
+/**
+ * Utility for checking the matching state of @media queries.
+ * @dynamic
+ */
 export class BreakpointObserver implements OnDestroy {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new BreakpointObserver(inject(MediaMatcher), inject(NgZone)),
+  });
+
   /**  A map of all media queries currently being listened for. */
   private _queries = new Map<string, Query>();
   /** A subject for all other observables to takeUntil based on. */

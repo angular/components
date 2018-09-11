@@ -9,8 +9,17 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {ComponentPortal, ComponentType, PortalInjector, TemplatePortal} from '@angular/cdk/portal';
-import {ComponentRef, Injectable, Injector, Optional, SkipSelf, TemplateRef} from '@angular/core';
 import {Location} from '@angular/common';
+import {
+  ComponentRef,
+  defineInjectable,
+  inject,
+  InjectFlags,
+  Injector,
+  Optional,
+  SkipSelf,
+  TemplateRef,
+} from '@angular/core';
 import {of as observableOf} from 'rxjs';
 import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetConfig} from './bottom-sheet-config';
 import {MatBottomSheetContainer} from './bottom-sheet-container';
@@ -20,9 +29,20 @@ import {MatBottomSheetRef} from './bottom-sheet-ref';
 
 /**
  * Service to trigger Material Design bottom sheets.
+ * @dynamic
  */
-@Injectable({providedIn: MatBottomSheetModule})
 export class MatBottomSheet {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: MatBottomSheetModule,
+    factory: () => new MatBottomSheet(
+        inject(Overlay),
+        inject(Injector as any),
+        inject(MatBottomSheet, InjectFlags.Optional & InjectFlags.SkipSelf),
+        inject(Location, InjectFlags.Optional)),
+  });
+
   private _bottomSheetRefAtThisLevel: MatBottomSheetRef<any> | null = null;
 
   /** Reference to the currently opened bottom sheet. */
@@ -42,8 +62,8 @@ export class MatBottomSheet {
   constructor(
       private _overlay: Overlay,
       private _injector: Injector,
-      @Optional() @SkipSelf() private _parentBottomSheet: MatBottomSheet,
-      @Optional() private _location?: Location) {}
+      @Optional() @SkipSelf() private _parentBottomSheet: MatBottomSheet | null,
+      @Optional() private _location?: Location | null) {}
 
   open<T, D = any, R = any>(component: ComponentType<T>,
                    config?: MatBottomSheetConfig<D>): MatBottomSheetRef<T, R>;
@@ -61,7 +81,7 @@ export class MatBottomSheet {
     if (componentOrTemplateRef instanceof TemplateRef) {
       container.attachTemplatePortal(new TemplatePortal<T>(componentOrTemplateRef, null!, {
         $implicit: _config.data,
-        bottomSheetRef: ref
+        bottomSheetRef: ref,
       } as any));
     } else {
       const portal = new ComponentPortal(componentOrTemplateRef, undefined,
@@ -110,7 +130,7 @@ export class MatBottomSheet {
 
     const userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
     const injector = new PortalInjector(userInjector || this._injector, new WeakMap([
-      [MatBottomSheetConfig, config]
+      [MatBottomSheetConfig, config],
     ]));
 
     const containerPortal =
@@ -132,7 +152,7 @@ export class MatBottomSheet {
       positionStrategy: this._overlay.position()
         .global()
         .centerHorizontally()
-        .bottom('0')
+        .bottom('0'),
     });
 
     if (config.backdropClass) {
@@ -153,14 +173,14 @@ export class MatBottomSheet {
     const userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
     const injectionTokens = new WeakMap<any, any>([
       [MatBottomSheetRef, bottomSheetRef],
-      [MAT_BOTTOM_SHEET_DATA, config.data]
+      [MAT_BOTTOM_SHEET_DATA, config.data],
     ]);
 
     if (config.direction &&
         (!userInjector || !userInjector.get<Directionality | null>(Directionality, null))) {
       injectionTokens.set(Directionality, {
         value: config.direction,
-        change: observableOf()
+        change: observableOf(),
       });
     }
 

@@ -10,14 +10,15 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterContentInit,
+  defineInjectable,
   Directive,
+  DoCheck,
   ElementRef,
   Inject,
-  Injectable,
+  inject,
   Input,
   NgZone,
   OnDestroy,
-  DoCheck,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
@@ -295,9 +296,19 @@ export class FocusTrap {
 }
 
 
-/** Factory that allows easy instantiation of focus traps. */
-@Injectable({providedIn: 'root'})
+/**
+ * Factory that allows easy instantiation of focus traps.
+ * @dynamic
+ */
 export class FocusTrapFactory {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new FocusTrapFactory(
+        inject(InteractivityChecker), inject(NgZone), inject(DOCUMENT)),
+  });
+
   private _document: Document;
 
   constructor(

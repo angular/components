@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, OnDestroy} from '@angular/core';
+import {defineInjectable, OnDestroy} from '@angular/core';
 
 
 // Users of the Dispatcher never need to see this type, but TypeScript requires it to be exported.
@@ -20,9 +20,16 @@ export type UniqueSelectionDispatcherListener = (id: string, name: string) => vo
  *
  * This service does not *store* any IDs and names because they may change at any time, so it is
  * less error-prone if they are simply passed through when the events occur.
+ * @dynamic
  */
-@Injectable({providedIn: 'root'})
 export class UniqueSelectionDispatcher implements OnDestroy {
+  // This is what the Angular compiler would generate for the @Injectable decorator. See #23917.
+  /** @nocollapse */
+  static ngInjectableDef = defineInjectable({
+    providedIn: 'root',
+    factory: () => new UniqueSelectionDispatcher(),
+  });
+
   private _listeners: UniqueSelectionDispatcherListener[] = [];
 
   /**
