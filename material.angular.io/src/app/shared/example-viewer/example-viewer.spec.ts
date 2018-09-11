@@ -61,12 +61,12 @@ describe('ExampleViewer', () => {
     expect(data).toEqual(EXAMPLE_COMPONENTS[exampleKey] as any);
   }));
 
-  it('should log message about missing example', async(() => {
-    spyOn(console, 'log');
+  it('should print an error message about missing example', async(() => {
+    spyOn(console, 'error');
     component.example = 'foobar';
     fixture.detectChanges();
-    expect(console.log).toHaveBeenCalled();
-    expect(console.log).toHaveBeenCalledWith('MISSING EXAMPLE: ', 'foobar');
+    expect(console.error).toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalledWith('Could not find example: foobar');
   }));
 
   it('should return assets path for example based on extension', async(() => {
@@ -77,12 +77,37 @@ describe('ExampleViewer', () => {
     // get example file path for each extension
     const extensions = ['ts', 'css', 'html'];
     const basePath = '/assets/examples/';
-    extensions.forEach(ext => {
-      const expected = `${basePath}${exampleKey}-example-${ext}.html`;
-      const actual = component.exampleFileUrl(ext);
+
+    extensions.forEach(extension => {
+      const expected = `${basePath}${exampleKey}-example-${extension}.html`;
+      const actual = component.exampleTabs[extension.toUpperCase()];
+
       expect(actual).toEqual(expected);
     });
   }));
+
+  describe('view-source tab group', () => {
+
+    it('should only render HTML, TS and CSS files if no additional files are specified', () => {
+      component.example = exampleKey;
+      fixture.detectChanges();
+
+      expect(component._getExampleTabNames()).toEqual(['HTML', 'TS', 'CSS']);
+    });
+
+    it('should be able to render additional files', () => {
+      EXAMPLE_COMPONENTS['additional-files'] = {
+        additionalFiles: ['some-additional-file.html'],
+        ...EXAMPLE_COMPONENTS[exampleKey]
+      };
+
+      component.example = 'additional-files';
+      fixture.detectChanges();
+
+      expect(component._getExampleTabNames())
+        .toEqual(['HTML', 'TS', 'CSS', 'some-additional-file.html']);
+    });
+  });
 
   describe('copy button', () => {
     let button: HTMLElement;

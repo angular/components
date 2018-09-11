@@ -5,6 +5,8 @@ import {ComponentPortal} from '@angular/cdk/portal';
 import {EXAMPLE_COMPONENTS, LiveExample} from '@angular/material-examples';
 import {CopierService} from '../copier/copier.service';
 
+/** Regular expression that matches a file name and its extension */
+const fileExtensionRegex = /(.*)\.(\w+)/;
 
 @Component({
   selector: 'example-viewer',
@@ -15,39 +17,34 @@ export class ExampleViewer {
   /** Component portal for the currently displayed example. */
   selectedPortal: ComponentPortal<any>;
 
-  /** String key of the currently displayed example. */
-  _example: string;
+  /** Map of example files that should be displayed in the view-source tab. */
+  exampleTabs: {[tabName: string]: string};
 
+  /** Data for the currently selected example. */
   exampleData: LiveExample;
 
   /** Whether the source for the example is being displayed. */
   showSource = false;
 
-  constructor(
-    private snackbar: MatSnackBar,
-    private copier: CopierService) { }
-
-  get example() {
-    return this._example;
-  }
-
+  /** String key of the currently displayed example. */
   @Input()
-  set example(example: string) {
-    if (example && EXAMPLE_COMPONENTS[example]) {
-      this._example = example;
-      this.exampleData = EXAMPLE_COMPONENTS[example];
+  get example() { return this._example; }
+  set example(exampleName: string) {
+    if (exampleName && EXAMPLE_COMPONENTS[exampleName]) {
+      this._example = exampleName;
+      this.exampleData = EXAMPLE_COMPONENTS[exampleName];
       this.selectedPortal = new ComponentPortal(this.exampleData.component);
+      this._generateExampleTabs();
     } else {
-      console.log('MISSING EXAMPLE: ', example);
+      console.error(`Could not find example: ${exampleName}`);
     }
   }
+  private _example: string;
+
+  constructor(private snackbar: MatSnackBar,private copier: CopierService) {}
 
   toggleSourceView(): void {
     this.showSource = !this.showSource;
-  }
-
-  exampleFileUrl(extension: string) {
-    return `/assets/examples/${this.example}-example-${extension.toLowerCase()}.html`;
   }
 
   copySource(text: string) {
@@ -56,5 +53,30 @@ export class ExampleViewer {
     } else {
       this.snackbar.open('Copy failed. Please try again!', '', {duration: 2500});
     }
+  }
+
+  _getExampleTabNames() {
+    return Object.keys(this.exampleTabs);
+  }
+
+  private resolveExampleFile(fileName: string) {
+    return `/assets/examples/${fileName}`;
+  }
+
+  private _generateExampleTabs() {
+    this.exampleTabs = {
+      HTML: this.resolveExampleFile(`${this.example}-example-html.html`),
+      TS: this.resolveExampleFile(`${this.example}-example-ts.html`),
+      CSS: this.resolveExampleFile(`${this.example}-example-css.html`),
+    };
+
+    const additionalFiles = this.exampleData.additionalFiles || [];
+
+    additionalFiles.forEach(fileName => {
+      // Since the additional files refer to the original file name, we need to transform
+      // the file name to match the highlighted HTML file that displays the source.
+      const fileSourceName = fileName.replace(fileExtensionRegex, '$1-$2.html');
+      this.exampleTabs[fileName] = this.resolveExampleFile(fileSourceName);
+    })
   }
 }
