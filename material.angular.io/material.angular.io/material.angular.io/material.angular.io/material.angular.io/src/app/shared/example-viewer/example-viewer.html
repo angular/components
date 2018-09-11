@@ -17,8 +17,7 @@
 
   <div class="docs-example-viewer-source" *ngIf="showSource">
     <mat-tab-group>
-      <!-- TODO(jelbourn): don't hard-code the html + ts + css structure -->
-      <mat-tab *ngFor="let extension of ['HTML', 'TS', 'CSS']" [label]="extension">
+      <mat-tab *ngFor="let tabName of _getExampleTabNames()" [label]="tabName">
         <div class="docs-example-source-wrapper">
           <button mat-icon-button type="button" class="docs-example-source-copy"
                   title="Copy example source" aria-label="Copy example source to clipboard"
@@ -26,7 +25,7 @@
             <mat-icon>content_copy</mat-icon>
           </button>
           <pre class="docs-example-source"><doc-viewer
-              #viewer [documentUrl]="exampleFileUrl(extension)"></doc-viewer></pre>
+              #viewer [documentUrl]="exampleTabs[tabName]"></doc-viewer></pre>
         </div>
       </mat-tab>
     </mat-tab-group>
