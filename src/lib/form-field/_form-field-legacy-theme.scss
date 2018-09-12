@@ -48,8 +48,8 @@ $mat-form-field-legacy-dedupe: 0;
   translateZ(0.001px + $mat-form-field-legacy-dedupe);
   // The tricks above used to smooth out the animation on chrome and firefox actually make things
   // worse on IE, so we don't include them in the IE version.
-  -ms-transform: translateY(-$infix-margin-top - $infix-padding + $mat-form-field-legacy-dedupe) 
-  scale($font-scale);
+  -ms-transform: translateY(-$infix-margin-top - $infix-padding + $mat-form-field-legacy-dedupe)
+                  scale($font-scale);
 
   width: 100% / $font-scale + $mat-form-field-legacy-dedupe;
 
@@ -60,7 +60,8 @@ $mat-form-field-legacy-dedupe: 0;
 @mixin _mat-form-field-legacy-label-floating-print($font-scale, $infix-padding, $infix-margin-top) {
   // This results in a small jitter after the label floats on Firefox, which the
   // translateZ fixes.
-  transform: translateY(-$infix-margin-top - $infix-padding + $mat-form-field-legacy-dedupe) scale($font-scale);
+  transform: translateY(-$infix-margin-top - $infix-padding + $mat-form-field-legacy-dedupe) 
+                  scale($font-scale);
   // The tricks above used to smooth out the animation on chrome and firefox actually make things
   // worse on IE, so we don't include them in the IE version.
   $mat-form-field-legacy-dedupe: $mat-form-field-legacy-dedupe + 0.00001 !global;
