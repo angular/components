@@ -28,14 +28,14 @@ export const matExpansionAnimations: {
 } = {
   /** Animation that rotates the indicator arrow. */
   indicatorRotate: trigger('indicatorRotate', [
-    state('collapsed', style({transform: 'rotate(0deg)'})),
+    state('collapsed, void', style({transform: 'rotate(0deg)'})),
     state('expanded', style({transform: 'rotate(180deg)'})),
-    transition('expanded <=> collapsed', animate(EXPANSION_PANEL_ANIMATION_TIMING)),
+    transition('* <=> *', animate(EXPANSION_PANEL_ANIMATION_TIMING)),
   ]),
 
   /** Animation that expands and collapses the panel header height. */
   expansionHeaderHeight: trigger('expansionHeight', [
-    state('collapsed', style({
+    state('collapsed, void', style({
       height: '{{collapsedHeight}}',
     }), {
       params: {collapsedHeight: '48px'},
@@ -45,7 +45,7 @@ export const matExpansionAnimations: {
     }), {
       params: {expandedHeight: '64px'}
     }),
-    transition('expanded <=> collapsed', group([
+    transition('* <=> *', group([
       query('@indicatorRotate', animateChild(), {optional: true}),
       animate(EXPANSION_PANEL_ANIMATION_TIMING),
     ])),
@@ -53,8 +53,8 @@ export const matExpansionAnimations: {
 
   /** Animation that expands and collapses the panel content. */
   bodyExpansion: trigger('bodyExpansion', [
-    state('collapsed', style({height: '0px', visibility: 'hidden'})),
+    state('collapsed, void', style({height: '0px', visibility: 'hidden'})),
     state('expanded', style({height: '*', visibility: 'visible'})),
-    transition('expanded <=> collapsed', animate(EXPANSION_PANEL_ANIMATION_TIMING)),
+    transition('* <=> *', animate(EXPANSION_PANEL_ANIMATION_TIMING)),
   ])
 };
