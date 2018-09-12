@@ -1,14 +1,11 @@
 import {Platform} from '@angular/cdk/platform';
 import {InteractivityChecker} from './interactivity-checker';
 
-
 describe('InteractivityChecker', () => {
+  const platform: Platform = new Platform();
+
   let testContainerElement: HTMLElement;
   let checker: InteractivityChecker;
-  // TODO: refactor this to be injected with the platformId
-  // Needs to be done carefully due to the runIf checks below executing
-  // before injection
-  let platform: Platform = new Platform();
 
   beforeEach(() => {
     testContainerElement = document.createElement('div');
@@ -329,7 +326,7 @@ describe('InteractivityChecker', () => {
         appendElements([iframe]);
 
         iframe.setAttribute('tabindex', '-1');
-        iframe.contentDocument.body.appendChild(button);
+        iframe.contentDocument!.body.appendChild(button);
 
         expect(checker.isTabbable(iframe)).toBe(false);
         expect(checker.isTabbable(button)).toBe(false);
@@ -347,7 +344,7 @@ describe('InteractivityChecker', () => {
         appendElements([iframe]);
 
         iframe.setAttribute('tabindex', '-1');
-        iframe.contentDocument.body.appendChild(button);
+        iframe.contentDocument!.body.appendChild(button);
 
         // Some browsers explicitly prevent overwriting of properties on a `Window` object.
         if (!platform.SAFARI) {
@@ -395,7 +392,7 @@ describe('InteractivityChecker', () => {
 
         // This is a hack to create an empty contentDocument for the frame element.
         objectEl.type = 'text/html';
-        objectEl.contentDocument.body.appendChild(button);
+        objectEl.contentDocument!.body.appendChild(button);
 
         expect(checker.isTabbable(objectEl)).toBe(false);
         expect(checker.isTabbable(button)).toBe(false);
@@ -408,7 +405,7 @@ describe('InteractivityChecker', () => {
         appendElements([iframe]);
 
         iframe.style.display = 'none';
-        iframe.contentDocument.body.appendChild(button);
+        iframe.contentDocument!.body.appendChild(button);
 
         expect(checker.isTabbable(iframe)).toBe(false);
         expect(checker.isTabbable(button)).toBe(false);

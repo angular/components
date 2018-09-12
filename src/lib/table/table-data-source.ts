@@ -20,6 +20,11 @@ import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {MatSort, Sort} from '@angular/material/sort';
 import {map} from 'rxjs/operators';
 
+/**
+ * Corresponds to `Number.MAX_SAFE_INTEGER`. Moved out into a variable here due to
+ * flaky browser support and the value not being defined in Closure's typings.
+ */
+const MAX_SAFE_INTEGER = 9007199254740991;
 
 /**
  * Data source that accepts a client-side data array and includes native support of filtering,
@@ -104,7 +109,16 @@ export class MatTableDataSource<T> extends DataSource<T> {
   sortingDataAccessor: ((data: T, sortHeaderId: string) => string|number) =
       (data: T, sortHeaderId: string): string|number => {
     const value: any = data[sortHeaderId];
-    return _isNumberValue(value) ? Number(value) : value;
+
+    if (_isNumberValue(value)) {
+      const numberValue = Number(value);
+
+      // Numbers beyond `MAX_SAFE_INTEGER` can't be compared reliably so we
+      // leave them as strings. For more info: https://goo.gl/y5vbSg
+      return numberValue < MAX_SAFE_INTEGER ? numberValue : value;
+    }
+
+    return value;
   }
 
   /**
@@ -186,11 +200,11 @@ export class MatTableDataSource<T> extends DataSource<T> {
     // The `sortChange` and `pageChange` acts as a signal to the combineLatests below so that the
     // pipeline can progress to the next step. Note that the value from these streams are not used,
     // they purely act as a signal to progress in the pipeline.
-    const sortChange: Observable<Sort|null> = this._sort ?
-        merge<Sort>(this._sort.sortChange, this._sort.initialized) :
+    const sortChange: Observable<Sort|null|void> = this._sort ?
+        merge<Sort|void>(this._sort.sortChange, this._sort.initialized) :
         observableOf(null);
-    const pageChange: Observable<PageEvent|null> = this._paginator ?
-        merge<PageEvent>(this._paginator.page, this._paginator.initialized) :
+    const pageChange: Observable<PageEvent|null|void> = this._paginator ?
+        merge<PageEvent|void>(this._paginator.page, this._paginator.initialized) :
         observableOf(null);
 
     const dataStream = this._data;

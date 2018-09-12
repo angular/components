@@ -1,7 +1,6 @@
 @import '../core/style/variables';
 @import '../core/style/vendor-prefixes';
 
-
 // The Input element proper.
 .mat-input-element {
   // Font needs to be inherited, because by default <input> has a system font.
@@ -39,8 +38,26 @@
   }
 
   // Remove IE's default clear and reveal icons.
-  &::-ms-clear, &::-ms-reveal {
+  &::-ms-clear,
+  &::-ms-reveal {
     display: none;
+  }
+
+  // Clear Safari's decorations for search fields.
+  &,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-decoration,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+  }
+
+  // Also clear Safari's autofill icons. Note that this can't be in the
+  // same selector as the IE ones, otherwise Safari will ignore it.
+  &::-webkit-contacts-auto-fill-button,
+  &::-webkit-caps-lock-indicator,
+  &::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
   }
 
   // Fixes an issue on iOS where the following input types will collapse to 1px,
@@ -75,6 +92,11 @@
       // input color in IE, if the consumer overrides it with a higher specificity.
       color: transparent !important;
 
+      // Overwrite browser specific CSS properties that can overwrite the `color` property.
+      // Some developers seem to use this approach to easily overwrite the placeholder and
+      // label color. See: https://github.com/angular/material2/issues/12074
+      -webkit-text-fill-color: transparent;
+
       // Remove the transition to prevent the placeholder
       // from overlapping when the label comes back down.
       transition: none;
@@ -99,3 +121,29 @@ textarea.mat-input-element {
   padding: 2px 0;
   margin: -2px 0;
 }
+
+// Encoded material design select arrow svg
+/* stylelint-disable max-line-length */
+$mat-native-select-arrow-svg: 'data:image/svg+xml;charset=utf8,%3Csvg%20width%3D%2210%22%20height%3D%225%22%20viewBox%3D%227%2010%2010%205%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20fill%3D%22%230%22%20fill-rule%3D%22evenodd%22%20opacity%3D%22.54%22%20d%3D%22M7%2010l5%205%205-5z%22%2F%3E%3C%2Fsvg%3E';
+/* stylelint-enable */
+
+// Remove the native select down arrow and replace it with material design arrow
+select.mat-input-element {
+  &::-ms-expand {
+    display: none;
+  }
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  background-color: transparent;
+  background-image: url($mat-native-select-arrow-svg);
+  background-repeat: no-repeat;
+  display: inline-flex;
+  box-sizing: border-box;
+  background-position: right center;
+
+  [dir='rtl'] & {
+    background-position: left center;
+  }
+}
+

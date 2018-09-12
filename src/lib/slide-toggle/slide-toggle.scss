@@ -9,7 +9,7 @@ $mat-slide-toggle-thumb-size: 20px !default;
 $mat-slide-toggle-bar-border-radius: 8px !default;
 $mat-slide-toggle-height: 24px !default;
 $mat-slide-toggle-spacing: 8px !default;
-$mat-slide-toggle-ripple-radius: 23px !default;
+$mat-slide-toggle-ripple-radius: 20px !default;
 $mat-slide-toggle-bar-width: 36px !default;
 $mat-slide-toggle-bar-height: 14px !default;
 $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-toggle-thumb-size;
@@ -21,18 +21,22 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
   max-width: 100%;
 
   line-height: $mat-slide-toggle-height;
-
   white-space: nowrap;
+  outline: none;
 
   // Disable user selection to ensure that dragging is smooth without grabbing
   // some elements accidentally.
   @include user-select(none);
 
-  outline: none;
+  -webkit-tap-highlight-color: transparent;
 
   &.mat-checked {
     .mat-slide-toggle-thumb-container {
       transform: translate3d($mat-slide-toggle-bar-track-width, 0, 0);
+
+      [dir='rtl'] & {
+        transform: translate3d(-$mat-slide-toggle-bar-track-width, 0, 0);
+      }
     }
   }
 
@@ -115,6 +119,11 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
   ._mat-animation-noopable & {
     transition: none;
   }
+
+  [dir='rtl'] & {
+    left: auto;
+    right: 0;
+  }
 }
 
 // The visual thumb element that moves inside of the thumb bar.
@@ -125,11 +134,6 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
   border-radius: 50%;
 
   @include mat-elevation(1);
-
-  @include cdk-high-contrast {
-    background: #fff;
-    border: solid 1px #000;
-  }
 }
 
 // Horizontal bar for the slide-toggle.
@@ -145,10 +149,6 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
   flex-shrink: 0;
 
   border-radius: $mat-slide-toggle-bar-border-radius;
-
-  @include cdk-high-contrast {
-    background: #fff;
-  }
 }
 
 // The slide toggle shows a visually hidden input inside of the component, which is used
@@ -156,8 +156,15 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
 .mat-slide-toggle-input {
   // Move the input to the bottom and in the middle of the thumb.
   // Visual improvement to properly show browser popups when being required.
+  $horizontal-offset: $mat-slide-toggle-thumb-size / 2;
+
   bottom: 0;
-  left: $mat-slide-toggle-thumb-size / 2;
+  left: $horizontal-offset;
+
+  [dir='rtl'] & {
+    left: auto;
+    right: $horizontal-offset;
+  }
 }
 
 .mat-slide-toggle-bar,
@@ -172,7 +179,9 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
 }
 
 // Ripple positioning for the slide-toggle. Moves the ripple container into the center of the thumb.
-.mat-slide-toggle-ripple {
+// Increase specificity because ripple styles are part of the `mat-core` mixin and can
+// potentially overwrite the absolute position of the container.
+.mat-slide-toggle .mat-slide-toggle-ripple {
   position: absolute;
   top: calc(50% - #{$mat-slide-toggle-ripple-radius});
   left: calc(50% - #{$mat-slide-toggle-ripple-radius});
@@ -180,4 +189,57 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
   width: $mat-slide-toggle-ripple-radius * 2;
   z-index: 1;
   pointer-events: none;
+
+  .mat-ripple-element:not(.mat-slide-toggle-persistent-ripple) {
+    // Although the specs describe an opacity of 16% for ripples if the slide-toggle is being
+    // pressed, we need to reduce the opacity a bit because besides the transient ripples,
+    // the persistent ripple will still show up and blend with the transient ripple.
+    opacity: 0.12;
+  }
+}
+
+.mat-slide-toggle-persistent-ripple {
+  width: 100%;
+  height: 100%;
+  transform: none;
+
+  .mat-slide-toggle-bar:hover & {
+    opacity: 0.04;
+  }
+
+  .mat-slide-toggle.cdk-focused & {
+    opacity: 0.12;
+  }
+
+  // We do this here, rather than having a `:not(.mat-slide-toggle-disabled)`
+  // above in the `:hover`, because the `:not` will bump the specificity
+  // a lot and will cause it to overide the focus styles.
+  &, .mat-slide-toggle.mat-disabled .mat-slide-toggle-bar:hover & {
+    opacity: 0;
+  }
+}
+
+/** Custom styling to make the slide-toggle usable in high contrast mode. */
+@include cdk-high-contrast() {
+  .mat-slide-toggle-thumb {
+    background: #fff;
+    border: 1px solid #000;
+
+    .mat-slide-toggle.mat-checked & {
+      background: #000;
+      border: 1px solid #fff;
+    }
+  }
+
+  .mat-slide-toggle-bar {
+    background: #fff;
+  }
+}
+
+// Since the bar with a white background will be placed on a white background, we need to a black
+// border in order to make sure that the bar is visible.
+@include cdk-high-contrast(black-on-white) {
+  .mat-slide-toggle-bar {
+    border: 1px solid #000;
+  }
 }

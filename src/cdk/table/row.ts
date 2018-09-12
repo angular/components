@@ -14,13 +14,14 @@ import {
   IterableDiffer,
   IterableDiffers,
   OnChanges,
+  OnDestroy,
   SimpleChanges,
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
+import {CanStick, CanStickCtor, mixinHasStickyInput} from './can-stick';
 import {CdkCellDef, CdkColumnDef} from './cell';
-import {CanStick, mixinHasStickyInput} from './can-stick';
 
 /**
  * The row template that can be used by the mat-table. Should not be used outside of the
@@ -75,7 +76,8 @@ export abstract class BaseRowDef implements OnChanges {
 // Boilerplate for applying mixins to CdkHeaderRowDef.
 /** @docs-private */
 export class CdkHeaderRowDefBase extends BaseRowDef {}
-export const _CdkHeaderRowDefBase = mixinHasStickyInput(CdkHeaderRowDefBase);
+export const _CdkHeaderRowDefBase: CanStickCtor & typeof CdkHeaderRowDefBase =
+    mixinHasStickyInput(CdkHeaderRowDefBase);
 
 /**
  * Header row definition for the CDK table.
@@ -100,7 +102,8 @@ export class CdkHeaderRowDef extends _CdkHeaderRowDefBase implements CanStick, O
 // Boilerplate for applying mixins to CdkFooterRowDef.
 /** @docs-private */
 export class CdkFooterRowDefBase extends BaseRowDef {}
-export const _CdkFooterRowDefBase = mixinHasStickyInput(CdkFooterRowDefBase);
+export const _CdkFooterRowDefBase: CanStickCtor & typeof CdkFooterRowDefBase =
+    mixinHasStickyInput(CdkFooterRowDefBase);
 
 /**
  * Footer row definition for the CDK table.
@@ -207,7 +210,7 @@ export interface CdkCellOutletMultiRowContext<T> {
  * @docs-private
  */
 @Directive({selector: '[cdkCellOutlet]'})
-export class CdkCellOutlet {
+export class CdkCellOutlet implements OnDestroy {
   /** The ordered list of cells to render within this outlet's view container */
   cells: CdkCellDef[];
 
@@ -225,6 +228,14 @@ export class CdkCellOutlet {
 
   constructor(public _viewContainer: ViewContainerRef) {
     CdkCellOutlet.mostRecentCellOutlet = this;
+  }
+
+  ngOnDestroy() {
+    // If this was the last outlet being rendered in the view, remove the reference
+    // from the static property after it has been destroyed to avoid leaking memory.
+    if (CdkCellOutlet.mostRecentCellOutlet === this) {
+      CdkCellOutlet.mostRecentCellOutlet = null;
+    }
   }
 }
 

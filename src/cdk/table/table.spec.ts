@@ -14,7 +14,7 @@ import {BehaviorSubject, combineLatest, Observable, of as observableOf} from 'rx
 import {map} from 'rxjs/operators';
 import {CdkColumnDef} from './cell';
 import {CdkTableModule} from './index';
-import {CdkHeaderRowDef, CdkRowDef} from './row';
+import {CdkHeaderRowDef, CdkRowDef, CdkCellOutlet} from './row';
 import {CdkTable} from './table';
 import {
   getTableDuplicateColumnNameError,
@@ -135,6 +135,17 @@ describe('CdkTable', () => {
       getRows(tableElement).forEach(row => {
         expect(getCells(row).length).toBe(component.columnsToRender.length);
       });
+    });
+
+    it('should clear the `mostRecentCellOutlet` on destroy', () => {
+      // Note: we cast the assertions here to booleans, because they may
+      // contain circular objects which will throw Jasmine into an infinite
+      // when its tries to stringify them to show a test failure.
+      expect(!!CdkCellOutlet.mostRecentCellOutlet).toBe(true);
+
+      fixture.destroy();
+
+      expect(!!CdkCellOutlet.mostRecentCellOutlet).toBe(false);
     });
 
     describe('should correctly use the differ to add/remove/move rows', () => {
@@ -726,8 +737,16 @@ describe('CdkTable', () => {
           return;
         }
 
-        expect(element.style[d])
-            .toBe(directions[d], `Expected direction ${d} to be ${directions[d]}`);
+        const expectationMessage = `Expected direction ${d} to be ${directions[d]}`;
+
+        // If the direction contains `px`, we parse the number to be able to avoid deviations
+        // caused by individual browsers.
+        if (directions[d].includes('px')) {
+          expect(Math.round(parseInt(element.style[d])))
+            .toBe(Math.round(parseInt(directions[d])), expectationMessage);
+        } else {
+          expect(element.style[d]).toBe(directions[d], expectationMessage);
+        }
       });
     }
 

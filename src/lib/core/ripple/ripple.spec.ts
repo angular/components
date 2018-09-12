@@ -1,7 +1,13 @@
 import {TestBed, ComponentFixture, fakeAsync, tick, inject} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 import {Platform} from '@angular/cdk/platform';
-import {dispatchMouseEvent, dispatchTouchEvent} from '@angular/cdk/testing';
+import {
+  dispatchEvent,
+  createTouchEvent,
+  dispatchMouseEvent,
+  dispatchTouchEvent,
+  createMouseEvent,
+} from '@angular/cdk/testing';
 import {defaultRippleAnimationConfig, RippleAnimationConfig} from './ripple-renderer';
 import {
   MatRipple, MatRippleModule, MAT_RIPPLE_GLOBAL_OPTIONS, RippleState, RippleGlobalOptions
@@ -121,6 +127,43 @@ describe('MatRipple', () => {
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
     }));
 
+    it('should clear ripples if the touch sequence is cancelled', fakeAsync(() => {
+      dispatchTouchEvent(rippleTarget, 'touchstart');
+      tick(enterDuration);
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
+
+      dispatchTouchEvent(rippleTarget, 'touchcancel');
+      tick(exitDuration);
+
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+    }));
+
+    it('should launch multiple ripples for multi-touch', fakeAsync(() => {
+      const touchEvent = createTouchEvent('touchstart');
+
+      Object.defineProperties(touchEvent, {
+        changedTouches: {
+          value: [
+            {pageX: 0, pageY: 0},
+            {pageX: 10, pageY: 10},
+            {pageX: 20, pageY: 20}
+          ]
+        }
+      });
+
+      dispatchEvent(rippleTarget, touchEvent);
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(3);
+
+      tick(enterDuration);
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(3);
+
+      dispatchTouchEvent(rippleTarget, 'touchend');
+
+      tick(exitDuration);
+
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+    }));
+
     it('should ignore synthetic mouse events after touchstart', () => fakeAsync(() => {
       dispatchTouchEvent(rippleTarget, 'touchstart');
       dispatchTouchEvent(rippleTarget, 'mousedown');
@@ -133,6 +176,15 @@ describe('MatRipple', () => {
       tick(exitDuration);
 
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+    }));
+
+    it('should ignore fake mouse events from screen readers', fakeAsync(() => {
+      const event = createMouseEvent('mousedown');
+      Object.defineProperty(event, 'buttons', {get: () => 0});
+
+      dispatchEvent(rippleTarget, event);
+      tick(enterDuration);
+      expect(rippleTarget.querySelector('.mat-ripple-element')).toBeFalsy();
     }));
 
     it('removes ripple after timeout', fakeAsync(() => {

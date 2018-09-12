@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {FocusMonitor} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
@@ -20,6 +20,7 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
@@ -28,20 +29,21 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  Inject,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   CanColor,
+  CanColorCtor,
   CanDisable,
+  CanDisableCtor,
   CanDisableRipple,
+  CanDisableRippleCtor,
   HasTabIndex,
-  MatRipple,
+  HasTabIndexCtor,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple,
   mixinTabIndex,
-  RippleRef,
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
@@ -73,7 +75,8 @@ export class MatRadioChange {
 // Boilerplate for applying mixins to MatRadioGroup.
 /** @docs-private */
 export class MatRadioGroupBase { }
-export const _MatRadioGroupMixinBase = mixinDisabled(MatRadioGroupBase);
+export const _MatRadioGroupMixinBase: CanDisableCtor & typeof MatRadioGroupBase =
+    mixinDisabled(MatRadioGroupBase);
 
 /**
  * A group of radio buttons. May contain one or more `<mat-radio-button>` elements.
@@ -90,12 +93,8 @@ export const _MatRadioGroupMixinBase = mixinDisabled(MatRadioGroupBase);
 })
 export class MatRadioGroup extends _MatRadioGroupMixinBase
     implements AfterContentInit, ControlValueAccessor, CanDisable {
-  /**
-   * Selected value for group. Should equal the value of the selected radio button if there *is*
-   * a corresponding radio button with a matching value. If there is *not* such a corresponding
-   * radio button, this value persists to be applied in case a new radio button is added with a
-   * matching value.
-   */
+
+  /** Selected value for the radio group. */
   private _value: any = null;
 
   /** The HTML name attribute applied to radio buttons in this group. */
@@ -154,7 +153,12 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
     this._markRadiosForCheck();
   }
 
-  /** Value of the radio button. */
+  /**
+   * Value for the radio-group. Should equal the value of the selected radio button if there is
+   * a corresponding radio button with a matching value. If there is not such a corresponding
+   * radio button, this value persists to be applied in case a new radio button is added with a
+   * matching value.
+   */
   @Input()
   get value(): any { return this._value; }
   set value(newValue: any) {
@@ -173,7 +177,10 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
     }
   }
 
-  /** Whether the radio button is selected. */
+  /**
+   * The currently selected radio button. If set to a new radio button, the radio group value
+   * will be updated to match the new selected button.
+   */
   @Input()
   get selected() { return this._selected; }
   set selected(selected: MatRadioButton | null) {
@@ -309,8 +316,9 @@ export class MatRadioButtonBase {
 }
 // As per Material design specifications the selection control radio should use the accent color
 // palette by default. https://material.io/guidelines/components/selection-controls.html
-export const _MatRadioButtonMixinBase =
-    mixinColor(mixinDisableRipple(mixinTabIndex(MatRadioButtonBase)), 'accent');
+export const _MatRadioButtonMixinBase:
+    CanColorCtor & CanDisableRippleCtor & HasTabIndexCtor & typeof MatRadioButtonBase =
+        mixinColor(mixinDisableRipple(mixinTabIndex(MatRadioButtonBase)), 'accent');
 
 /**
  * A Material design radio-button. Typically placed inside of `<mat-radio-group>` elements.
@@ -455,17 +463,11 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   /** Value assigned to this radio. */
   private _value: any = null;
 
-  /** The child ripple instance. */
-  @ViewChild(MatRipple) _ripple: MatRipple;
-
-  /** Reference to the current focus ripple. */
-  private _focusRipple: RippleRef | null;
-
   /** Unregister function for _radioDispatcher */
   private _removeUniqueSelectionListener: () => void = () => {};
 
   /** The native `<input type=radio>` element */
-  @ViewChild('input') _inputElement: ElementRef;
+  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
 
   constructor(@Optional() radioGroup: MatRadioGroup,
               elementRef: ElementRef,
@@ -489,7 +491,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
 
   /** Focuses the radio button. */
   focus(): void {
-    this._focusMonitor.focusVia(this._inputElement.nativeElement, 'keyboard');
+    this._focusMonitor.focusVia(this._inputElement, 'keyboard');
   }
 
   /**
@@ -514,12 +516,16 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
 
   ngAfterViewInit() {
     this._focusMonitor
-      .monitor(this._inputElement.nativeElement)
-      .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
+      .monitor(this._elementRef, true)
+      .subscribe(focusOrigin => {
+        if (!focusOrigin && this.radioGroup) {
+          this.radioGroup._touch();
+        }
+      });
   }
 
   ngOnDestroy() {
-    this._focusMonitor.stopMonitoring(this._inputElement.nativeElement);
+    this._focusMonitor.stopMonitoring(this._elementRef);
     this._removeUniqueSelectionListener();
   }
 
@@ -562,23 +568,6 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
       this.radioGroup._touch();
       if (groupValueChanged) {
         this.radioGroup._emitChangeEvent();
-      }
-    }
-  }
-
-  /** Function is called whenever the focus changes for the input element. */
-  private _onInputFocusChange(focusOrigin: FocusOrigin) {
-    // TODO(paul): support `program`. See https://github.com/angular/material2/issues/9889
-    if (!this._focusRipple && focusOrigin === 'keyboard') {
-      this._focusRipple = this._ripple.launch(0, 0, {persistent: true});
-    } else if (!focusOrigin) {
-      if (this.radioGroup) {
-        this.radioGroup._touch();
-      }
-
-      if (this._focusRipple) {
-        this._focusRipple.fadeOut();
-        this._focusRipple = null;
       }
     }
   }

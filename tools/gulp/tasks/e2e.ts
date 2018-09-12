@@ -26,8 +26,7 @@ const assetsGlob = join(appDir, '**/*.+(html|css|json|ts)');
 task('e2e', sequenceTask(
   [':test:protractor:setup', 'serve:e2eapp'],
   ':test:protractor',
-  ':serve:e2eapp:stop',
-  'screenshots',
+  ':serve:e2eapp:stop'
 ));
 
 /**
@@ -115,4 +114,3 @@ task('e2e-app:copy-release', () => {
   copySync(join(releasesDir, 'material-examples'), join(outDir, 'material-examples'));
   copySync(join(releasesDir, 'material-moment-adapter'), join(outDir, 'material-moment-adapter'));
 });
-

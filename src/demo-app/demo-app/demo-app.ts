@@ -62,6 +62,7 @@ export class DemoApp {
     {name: 'Datepicker', route: '/datepicker'},
     {name: 'Dialog', route: '/dialog'},
     {name: 'Drawer', route: '/drawer'},
+    {name: 'Drag and Drop', route: '/drag-drop'},
     {name: 'Expansion Panel', route: '/expansion'},
     {name: 'Focus Origin', route: '/focus-origin'},
     {name: 'Gestures', route: '/gestures'},
@@ -95,11 +96,12 @@ export class DemoApp {
   ];
 
   constructor(
-    private _element: ElementRef,
+    private _element: ElementRef<HTMLElement>,
     private _overlayContainer: OverlayContainer) {}
 
   toggleFullscreen() {
-    const elem = this._element.nativeElement.querySelector('.demo-content');
+    // Cast to `any`, because the typings don't include the browser-prefixed methods.
+    const elem = this._element.nativeElement.querySelector('.demo-content') as any;
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
     } else if (elem.webkitRequestFullScreen) {

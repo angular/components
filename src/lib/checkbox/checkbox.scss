@@ -431,12 +431,14 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
   left: 50%;
 }
 
-.mat-checkbox-ripple {
+// Increase specificity because ripple styles are part of the `mat-core` mixin and can
+// potentially overwrite the absolute position of the container.
+.mat-checkbox .mat-checkbox-ripple {
   position: absolute;
   left: calc(50% - #{$_mat-checkbox-ripple-radius});
   top: calc(50% - #{$_mat-checkbox-ripple-radius});
   height: $_mat-checkbox-ripple-radius * 2;
-  width: $_mat_checkbox-ripple-radius * 2;
+  width: $_mat-checkbox-ripple-radius * 2;
   z-index: 1;
   pointer-events: none;
 }

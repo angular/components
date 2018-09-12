@@ -49,6 +49,7 @@
     "shorthand-property-no-redundant-values": true,
 
     "property-case": "lower",
+    "no-duplicate-at-import-rules": true,
 
     "declaration-block-no-duplicate-properties": [true, {
       "ignore": ["consecutive-duplicates-with-different-values"]
@@ -82,6 +83,7 @@
     "selector-type-case": "lower",
     "selector-max-id": 0,
     "no-missing-end-of-source-newline": true,
+    "no-eol-whitespace": true,
     "max-line-length": 100
   }
 }

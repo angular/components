@@ -1,22 +1,23 @@
 # List of all components / subpackages.
 
 CDK_PACKAGES = [
-  "coercion",
-  "keycodes",
-  "scrolling",
-  "accordion",
-  "observers",
   "a11y",
+  "accordion",
+  "bidi",
+  "coercion",
+  "collections",
+  "drag-drop",
+  "keycodes",
+  "layout",
+  "observers",
   "overlay",
   "platform",
-  "bidi",
-  "table",
-  "tree",
   "portal",
-  "layout",
+  "scrolling",
   "stepper",
+  "table",
   "text-field",
-  "collections",
+  "tree",
 ]
 
 CDK_TARGETS = ["//src/cdk"] + ["//src/cdk/%s" % p for p in CDK_PACKAGES]

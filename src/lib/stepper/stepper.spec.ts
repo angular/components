@@ -54,6 +54,7 @@ describe('MatStepper', () => {
         SimpleStepperWithStepControlAndCompletedBinding,
         SimpleMatHorizontalStepperApp,
         LinearStepperWithValidOptionalStep,
+        StepperWithAriaInputs,
       ],
       providers: [
         {provide: Directionality, useFactory: () => dir}
@@ -258,6 +259,20 @@ describe('MatStepper', () => {
       expect(stepHeaderEl.focus).not.toHaveBeenCalled();
     });
 
+    it('should focus next step header if focus is inside the stepper', () => {
+      let stepperComponent = fixture.debugElement.query(By.directive(MatStepper)).componentInstance;
+      let stepHeaderEl = fixture.debugElement.queryAll(By.css('mat-step-header'))[1].nativeElement;
+      let nextButtonNativeEl = fixture.debugElement
+          .queryAll(By.directive(MatStepperNext))[0].nativeElement;
+      spyOn(stepHeaderEl, 'focus');
+      nextButtonNativeEl.focus();
+      nextButtonNativeEl.click();
+      fixture.detectChanges();
+
+      expect(stepperComponent.selectedIndex).toBe(1);
+      expect(stepHeaderEl.focus).toHaveBeenCalled();
+    });
+
     it('should only be able to return to a previous step if it is editable', () => {
       let stepperComponent = fixture.debugElement.query(By.directive(MatStepper)).componentInstance;
 
@@ -371,6 +386,24 @@ describe('MatStepper', () => {
 
       expect(headers.map(header => header.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
       expect(headers.every(header => header.getAttribute('aria-setsize') === '3')).toBe(true);
+    });
+
+    it('should adjust the index when removing a step before the current one', () => {
+      const stepperComponent: MatVerticalStepper = fixture.debugElement
+          .query(By.css('mat-vertical-stepper')).componentInstance;
+
+      stepperComponent.selectedIndex = 2;
+      fixture.detectChanges();
+
+      // Re-assert since the setter has some extra logic.
+      expect(stepperComponent.selectedIndex).toBe(2);
+
+      expect(() => {
+        fixture.componentInstance.showStepTwo = false;
+        fixture.detectChanges();
+      }).not.toThrow();
+
+      expect(stepperComponent.selectedIndex).toBe(1);
     });
 
   });
@@ -836,6 +869,46 @@ describe('MatStepper', () => {
       expect(stepper.selectedIndex).toBe(2);
     });
   });
+
+  describe('aria labelling', () => {
+    let fixture: ComponentFixture<StepperWithAriaInputs>;
+    let stepHeader: HTMLElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(StepperWithAriaInputs);
+      fixture.detectChanges();
+      stepHeader = fixture.nativeElement.querySelector('.mat-step-header');
+    });
+
+    it('should not set aria-label or aria-labelledby attributes if they are not passed in', () => {
+      expect(stepHeader.hasAttribute('aria-label')).toBe(false);
+      expect(stepHeader.hasAttribute('aria-labelledby')).toBe(false);
+    });
+
+    it('should set the aria-label attribute', () => {
+      fixture.componentInstance.ariaLabel = 'First step';
+      fixture.detectChanges();
+
+      expect(stepHeader.getAttribute('aria-label')).toBe('First step');
+    });
+
+    it('should set the aria-labelledby attribute', () => {
+      fixture.componentInstance.ariaLabelledby = 'first-step-label';
+      fixture.detectChanges();
+
+      expect(stepHeader.getAttribute('aria-labelledby')).toBe('first-step-label');
+    });
+
+    it('should not be able to set both an aria-label and aria-labelledby', () => {
+      fixture.componentInstance.ariaLabel = 'First step';
+      fixture.componentInstance.ariaLabelledby = 'first-step-label';
+      fixture.detectChanges();
+
+      expect(stepHeader.getAttribute('aria-label')).toBe('First step');
+      expect(stepHeader.hasAttribute('aria-labelledby')).toBe(false);
+    });
+
+  });
 });
 
 /** Asserts that keyboard interaction works correctly. */
@@ -983,7 +1056,7 @@ class SimpleMatHorizontalStepperApp {
           <button mat-button matStepperNext>Next</button>
         </div>
       </mat-step>
-      <mat-step>
+      <mat-step *ngIf="showStepTwo">
         <ng-template matStepLabel>Step 2</ng-template>
         Content 2
         <div>
@@ -1003,6 +1076,7 @@ class SimpleMatHorizontalStepperApp {
 })
 class SimpleMatVerticalStepperApp {
   inputLabel = 'Step 3';
+  showStepTwo = true;
 }
 
 @Component({
@@ -1157,4 +1231,17 @@ class IconOverridesStepper {
 class LinearStepperWithValidOptionalStep {
   controls = [0, 0, 0].map(() => new FormControl());
   step2Optional = false;
+}
+
+
+@Component({
+  template: `
+    <mat-horizontal-stepper>
+      <mat-step [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby" label="One"></mat-step>
+    </mat-horizontal-stepper>
+  `
+})
+class StepperWithAriaInputs {
+  ariaLabel: string;
+  ariaLabelledby: string;
 }

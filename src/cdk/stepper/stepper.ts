@@ -19,6 +19,7 @@ import {
   ContentChildren,
   Directive,
   EventEmitter,
+  ElementRef,
   forwardRef,
   Inject,
   Input,
@@ -31,6 +32,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import {DOCUMENT} from '@angular/common';
 import {AbstractControl} from '@angular/forms';
 import {CdkStepLabel} from './step-label';
 import {Observable, Subject, of as obaservableOf} from 'rxjs';
@@ -84,8 +86,17 @@ export class CdkStep implements OnChanges {
   /** Whether user has seen the expanded step content or not. */
   interacted = false;
 
-  /** Label of the step. */
+  /** Plain text label of the step. */
   @Input() label: string;
+
+  /** Aria label for the tab. */
+  @Input('aria-label') ariaLabel: string;
+
+  /**
+   * Reference to the element that the tab is labelled by.
+   * Will be cleared if `aria-label` is set at the same time.
+   */
+  @Input('aria-labelledby') ariaLabelledby: string;
 
   /** Whether the user can return to this step once it has been marked as complted. */
   @Input()
@@ -106,14 +117,14 @@ export class CdkStep implements OnChanges {
   /** Whether step is marked as completed. */
   @Input()
   get completed(): boolean {
-    return this._customCompleted == null ? this._defaultCompleted : this._customCompleted;
+    return this._customCompleted == null ? this._defaultCompleted() : this._customCompleted;
   }
   set completed(value: boolean) {
     this._customCompleted = coerceBooleanProperty(value);
   }
   private _customCompleted: boolean | null = null;
 
-  private get _defaultCompleted() {
+  private _defaultCompleted() {
     return this.stepControl ? this.stepControl.valid && this.interacted : this.interacted;
   }
 
@@ -155,6 +166,12 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   /** Used for managing keyboard focus. */
   private _keyManager: FocusKeyManager<FocusableOption>;
 
+  /**
+   * @breaking-change 8.0.0 Remove `| undefined` once the `_document`
+   * constructor param is required.
+   */
+  private _document: Document | undefined;
+
   /** The list of step components that the stepper is holding. */
   @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
 
@@ -191,7 +208,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   /** The step that is selected. */
   @Input()
   get selected(): CdkStep {
-    // @deletion-target 7.0.0 Change return type to `CdkStep | undefined`.
+    // @breaking-change 7.0.0 Change return type to `CdkStep | undefined`.
     return this._steps ? this._steps.toArray()[this.selectedIndex] : undefined!;
   }
   set selected(step: CdkStep) {
@@ -209,8 +226,12 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
 
   constructor(
     @Optional() private _dir: Directionality,
-    private _changeDetectorRef: ChangeDetectorRef) {
+    private _changeDetectorRef: ChangeDetectorRef,
+    // @breaking-change 8.0.0 `_elementRef` and `_document` parameters to become required.
+    private _elementRef?: ElementRef<HTMLElement>,
+    @Inject(DOCUMENT) _document?: any) {
     this._groupId = nextId++;
+    this._document = _document;
   }
 
   ngAfterViewInit() {
@@ -218,11 +239,17 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
       .withWrap()
       .withVerticalOrientation(this._orientation === 'vertical');
 
-    (this._dir ? this._dir.change as Observable<Direction> : obaservableOf())
+    (this._dir ? this._dir.change as Observable<Direction> : obaservableOf<Direction>())
       .pipe(startWith(this._layoutDirection()), takeUntil(this._destroyed))
       .subscribe(direction => this._keyManager.withHorizontalOrientation(direction));
 
     this._keyManager.updateActiveItemIndex(this._selectedIndex);
+
+    this._steps.changes.pipe(takeUntil(this._destroyed)).subscribe(() => {
+      if (!this.selected) {
+        this._selectedIndex = Math.max(this._selectedIndex - 1, 0);
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -296,7 +323,14 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
       selectedStep: stepsArray[newIndex],
       previouslySelectedStep: stepsArray[this._selectedIndex],
     });
-    this._keyManager.updateActiveItemIndex(newIndex);
+
+    // If focus is inside the stepper, move it to the next header, otherwise it may become
+    // lost when the active step content is hidden. We can't be more granular with the check
+    // (e.g. checking whether focus is inside the active step), because we don't have a
+    // reference to the elements that are rendering out the content.
+    this._containsFocus() ? this._keyManager.setActiveItem(newIndex) :
+                            this._keyManager.updateActiveItemIndex(newIndex);
+
     this._selectedIndex = newIndex;
     this._stateChanged();
   }
@@ -338,5 +372,16 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
 
   private _layoutDirection(): Direction {
     return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
+  }
+
+  /** Checks whether the stepper contains the focused element. */
+  private _containsFocus(): boolean {
+    if (!this._document || !this._elementRef) {
+      return false;
+    }
+
+    const stepperElement = this._elementRef.nativeElement;
+    const focusedElement = this._document.activeElement;
+    return stepperElement === focusedElement || stepperElement.contains(focusedElement);
   }
 }

@@ -9,7 +9,16 @@
 import {AriaDescriber} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {DOCUMENT} from '@angular/common';
-import {Directive, ElementRef, Inject, Input, NgZone, OnDestroy, Optional} from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  Inject,
+  Input,
+  NgZone,
+  OnDestroy,
+  Optional,
+  Renderer2,
+} from '@angular/core';
 import {ThemePalette} from '@angular/material/core';
 
 
@@ -31,10 +40,12 @@ export type MatBadgeSize = 'small' | 'medium' | 'large';
     '[class.mat-badge-small]': 'size === "small"',
     '[class.mat-badge-medium]': 'size === "medium"',
     '[class.mat-badge-large]': 'size === "large"',
-    '[class.mat-badge-hidden]': 'hidden',
+    '[class.mat-badge-hidden]': 'hidden || !_hasContent',
   },
 })
 export class MatBadge implements OnDestroy {
+  /** Whether the badge has any content. */
+  _hasContent = false;
 
   /** The color of the badge. Can be `primary`, `accent`, or `warn`. */
   @Input('matBadgeColor')
@@ -62,8 +73,9 @@ export class MatBadge implements OnDestroy {
   /** The content for the badge */
   @Input('matBadge')
   get content(): string { return this._content; }
-  set content(val: string) {
-    this._content = val;
+  set content(value: string) {
+    this._content = value;
+    this._hasContent = value != null && `${value}`.trim().length > 0;
     this._updateTextContent();
   }
   private _content: string;
@@ -98,8 +110,10 @@ export class MatBadge implements OnDestroy {
   constructor(
       @Optional() @Inject(DOCUMENT) private _document: any,
       private _ngZone: NgZone,
-      private _elementRef: ElementRef,
-      private _ariaDescriber: AriaDescriber) {}
+      private _elementRef: ElementRef<HTMLElement>,
+      private _ariaDescriber: AriaDescriber,
+      /** @breaking-change 8.0.0 Make _renderer a required param and remove _document. */
+      private _renderer?: Renderer2) {}
 
   /** Whether the badge is above the host or not */
   isAbove(): boolean {
@@ -129,7 +143,9 @@ export class MatBadge implements OnDestroy {
 
   /** Creates the badge element */
   private _createBadgeElement(): HTMLElement {
-    const badgeElement = this._document.createElement('span');
+    // @breaking-change 8.0.0 Remove null check for _renderer
+    const rootNode = this._renderer || this._document;
+    const badgeElement = rootNode.createElement('span');
     const activeClass = 'mat-badge-active';
 
     badgeElement.setAttribute('id', `mat-badge-content-${this._id}`);

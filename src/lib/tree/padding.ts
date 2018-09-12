@@ -8,6 +8,8 @@
 import {CdkTreeNodePadding} from '@angular/cdk/tree';
 import {Directive, Input} from '@angular/core';
 
+// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
+export const _CdkTreeNodePadding = CdkTreeNodePadding;
 
 /**
  * Wrapper for the CdkTree padding with Material design styles.
@@ -16,7 +18,7 @@ import {Directive, Input} from '@angular/core';
   selector: '[matTreeNodePadding]',
   providers: [{provide: CdkTreeNodePadding, useExisting: MatTreeNodePadding}]
 })
-export class MatTreeNodePadding<T> extends CdkTreeNodePadding<T> {
+export class MatTreeNodePadding<T> extends _CdkTreeNodePadding<T> {
 
   /** The level of depth of the tree node. The padding will be `level * indent` pixels. */
   @Input('matTreeNodePadding') level: number;

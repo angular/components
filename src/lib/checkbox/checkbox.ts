@@ -9,6 +9,7 @@
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
+  AfterViewChecked,
   AfterViewInit,
   Attribute,
   ChangeDetectionStrategy,
@@ -19,6 +20,7 @@ import {
   forwardRef,
   Inject,
   Input,
+  NgZone,
   OnDestroy,
   Optional,
   Output,
@@ -28,9 +30,13 @@ import {
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   CanColor,
+  CanColorCtor,
   CanDisable,
+  CanDisableCtor,
   CanDisableRipple,
+  CanDisableRippleCtor,
   HasTabIndex,
+  HasTabIndexCtor,
   MatRipple,
   mixinColor,
   mixinDisabled,
@@ -38,12 +44,17 @@ import {
   mixinTabIndex,
   RippleRef,
 } from '@angular/material/core';
-import {MAT_CHECKBOX_CLICK_ACTION, MatCheckboxClickAction} from './checkbox-config';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import {MAT_CHECKBOX_CLICK_ACTION, MatCheckboxClickAction} from './checkbox-config';
 
 
 // Increasing integer for generating unique ids for checkbox components.
 let nextUniqueId = 0;
+
+// TODO(josephperrott): Revert to constants for ripple radius once 2018 Checkbox updates have
+// landed.
+// The radius for the checkbox's ripple, in pixels.
+let calculatedRippleRadius = 0;
 
 /**
  * Provider Expression that allows mat-checkbox to register as a ControlValueAccessor.
@@ -84,8 +95,13 @@ export class MatCheckboxChange {
 export class MatCheckboxBase {
   constructor(public _elementRef: ElementRef) {}
 }
-export const _MatCheckboxMixinBase =
-  mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatCheckboxBase)), 'accent'));
+export const _MatCheckboxMixinBase:
+    HasTabIndexCtor &
+    CanColorCtor &
+    CanDisableRippleCtor &
+    CanDisableCtor &
+    typeof MatCheckboxBase =
+        mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatCheckboxBase)), 'accent'));
 
 
 /**
@@ -117,7 +133,8 @@ export const _MatCheckboxMixinBase =
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAccessor,
-    AfterViewInit, OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple {
+    AfterViewChecked, AfterViewInit, OnDestroy, CanColor, CanDisable, HasTabIndex,
+    CanDisableRipple {
 
   /**
    * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
@@ -161,7 +178,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   @Input() value: string;
 
   /** The native `<input type="checkbox">` element */
-  @ViewChild('input') _inputElement: ElementRef;
+  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
 
   /** Reference to the ripple instance of the checkbox. */
   @ViewChild(MatRipple) ripple: MatRipple;
@@ -181,9 +198,10 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   /** Reference to the focused state ripple. */
   private _focusRipple: RippleRef | null;
 
-  constructor(elementRef: ElementRef,
+  constructor(elementRef: ElementRef<HTMLElement>,
               private _changeDetectorRef: ChangeDetectorRef,
               private _focusMonitor: FocusMonitor,
+              private _ngZone: NgZone,
               @Attribute('tabindex') tabIndex: string,
               @Optional() @Inject(MAT_CHECKBOX_CLICK_ACTION)
                   private _clickAction: MatCheckboxClickAction,
@@ -195,12 +213,16 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
   ngAfterViewInit() {
     this._focusMonitor
-      .monitor(this._inputElement.nativeElement)
+      .monitor(this._inputElement)
       .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
   }
 
+  ngAfterViewChecked() {
+    this._calculateRippleRadius();
+  }
+
   ngOnDestroy() {
-    this._focusMonitor.stopMonitoring(this._inputElement.nativeElement);
+    this._focusMonitor.stopMonitoring(this._inputElement);
   }
 
   /**
@@ -307,6 +329,15 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
     if (this._currentAnimationClass.length > 0) {
       element.classList.add(this._currentAnimationClass);
+
+      // Remove the animation class to avoid animation when the checkbox is moved between containers
+      const animationClass = this._currentAnimationClass;
+
+      this._ngZone.runOutsideAngular(() => {
+        setTimeout(() => {
+          element.classList.remove(animationClass);
+        }, 1000);
+      });
     }
   }
 
@@ -330,7 +361,12 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
         this._focusRipple = null;
       }
 
-      this._onTouched();
+      // When a focused element becomes disabled, the browser *immediately* fires a blur event.
+      // Angular does not expect events to be raised during change detection, so any state change
+      // (such as a form control's 'ng-touched') will cause a changed-after-checked error.
+      // See https://github.com/angular/angular/issues/17793. To work around this, we defer telling
+      // the form control it has been touched until the next tick.
+      Promise.resolve().then(() => this._onTouched());
     }
   }
 
@@ -385,7 +421,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
   /** Focuses the checkbox. */
   focus(): void {
-    this._focusMonitor.focusVia(this._inputElement.nativeElement, 'keyboard');
+    this._focusMonitor.focusVia(this._inputElement, 'keyboard');
   }
 
   _onInteractionEvent(event: Event) {
@@ -431,5 +467,20 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     }
 
     return `mat-checkbox-anim-${animSuffix}`;
+  }
+
+  // TODO(josephperrott): Revert to constants for ripple radius once 2018 Checkbox updates have
+  // landed.
+  /**
+   * Calculate the radius for the ripple based on the ripple elements width.  Only calculated once
+   * for the application.
+   */
+  private _calculateRippleRadius() {
+    if (!calculatedRippleRadius) {
+      const rippleWidth =
+          this._elementRef.nativeElement.querySelector('.mat-checkbox-ripple').clientWidth || 0;
+      calculatedRippleRadius = rippleWidth / 2;
+    }
+    this.ripple.radius = calculatedRippleRadius;
   }
 }

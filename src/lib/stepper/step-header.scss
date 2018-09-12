@@ -14,6 +14,7 @@ $mat-step-header-icon-size: 16px !default;
   cursor: pointer;
   position: relative;
   box-sizing: content-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mat-step-optional {
@@ -25,10 +26,16 @@ $mat-step-header-icon-size: 16px !default;
   border-radius: 50%;
   height: $mat-stepper-label-header-height;
   width: $mat-stepper-label-header-height;
-  align-items: center;
-  justify-content: center;
-  display: flex;
   flex-shrink: 0;
+  position: relative;
+}
+
+.mat-step-icon-content {
+  // Use absolute positioning to center the content, because it works better with text.
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .mat-step-icon .mat-icon {
@@ -51,7 +58,9 @@ $mat-step-header-icon-size: 16px !default;
   overflow: hidden;
 }
 
-.mat-step-header-ripple {
+// Increase specificity because ripple styles are part of the `mat-core` mixin and can
+// potentially overwrite the absolute position of the container.
+.mat-step-header .mat-step-header-ripple {
   @include mat-fill;
   pointer-events: none;
 }

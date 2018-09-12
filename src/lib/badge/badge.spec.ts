@@ -1,5 +1,5 @@
 import {ComponentFixture, TestBed, fakeAsync} from '@angular/core/testing';
-import {Component, DebugElement} from '@angular/core';
+import {Component, DebugElement, ViewEncapsulation} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatBadge, MatBadgeModule} from './index';
 import {ThemePalette} from '@angular/material/core';
@@ -114,10 +114,53 @@ describe('MatBadge', () => {
     expect(badgeContent.getAttribute('aria-describedby')).toBeFalsy();
   });
 
+  it('should toggle visibility based on whether the badge has content', () => {
+    const classList = badgeNativeElement.classList;
+
+    expect(classList.contains('mat-badge-hidden')).toBe(false);
+
+    testComponent.badgeContent = '';
+    fixture.detectChanges();
+
+    expect(classList.contains('mat-badge-hidden')).toBe(true);
+
+    testComponent.badgeContent = 'hello';
+    fixture.detectChanges();
+
+    expect(classList.contains('mat-badge-hidden')).toBe(false);
+
+    testComponent.badgeContent = ' ';
+    fixture.detectChanges();
+
+    expect(classList.contains('mat-badge-hidden')).toBe(true);
+
+    testComponent.badgeContent = 0;
+    fixture.detectChanges();
+
+    expect(classList.contains('mat-badge-hidden')).toBe(false);
+  });
+
+  it('should apply view encapsulation on create badge content', () => {
+    const badge = badgeNativeElement.querySelector('.mat-badge-content')!;
+    let encapsulationAttr: Attr | undefined;
+
+    for (let i = 0; i < badge.attributes.length; i++) {
+      if (badge.attributes[i].name.startsWith('_ngcontent-')) {
+        encapsulationAttr = badge.attributes[i];
+        break;
+      }
+    }
+
+    expect(encapsulationAttr).toBeTruthy();
+  });
+
 });
 
 /** Test component that contains a MatBadge. */
 @Component({
+  // Explicitly set the view encapsulation since we have a test that checks for it.
+  encapsulation: ViewEncapsulation.Emulated,
+  styles: ['span { color: hotpink; }'],
   template: `
     <span [matBadge]="badgeContent"
           [matBadgeColor]="badgeColor"
@@ -132,7 +175,7 @@ describe('MatBadge', () => {
 })
 class BadgeTestApp {
   badgeColor: ThemePalette;
-  badgeContent = '1';
+  badgeContent: string | number = '1';
   badgeDirection = 'above after';
   badgeHidden = false;
   badgeSize = 'medium';

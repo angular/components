@@ -1,12 +1,20 @@
 /**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+/**
  * TSLint custom walker implementation that also visits external and inline templates.
  */
-import {existsSync, readFileSync} from 'fs'
+import {existsSync, readFileSync} from 'fs';
 import {dirname, join, resolve} from 'path';
-import {Fix, IOptions, RuleFailure, RuleWalker} from 'tslint';
+import {IOptions, RuleWalker} from 'tslint';
 import * as ts from 'typescript';
 import {getLiteralTextWithoutQuotes} from '../typescript/literal';
-import {createComponentFile, ExternalResource} from "./component-file";
+import {createComponentFile, ExternalResource} from './component-file';
 
 /**
  * Custom TSLint rule walker that identifies Angular components and visits specific parts of
@@ -14,17 +22,18 @@ import {createComponentFile, ExternalResource} from "./component-file";
  */
 export class ComponentWalker extends RuleWalker {
 
-  protected visitInlineTemplate(template: ts.StringLiteral) {}
-  protected visitInlineStylesheet(stylesheet: ts.StringLiteral) {}
+  protected visitInlineTemplate(_template: ts.StringLiteral) {}
+  protected visitInlineStylesheet(_stylesheet: ts.StringLiteral) {}
 
-  protected visitExternalTemplate(template: ExternalResource) {}
-  protected visitExternalStylesheet(stylesheet: ExternalResource) {}
+  protected visitExternalTemplate(_template: ExternalResource) {}
+  protected visitExternalStylesheet(_stylesheet: ExternalResource) {}
 
-  private skipFiles: Set<string>;
+  private extraFiles: Set<string>;
 
-  constructor(sourceFile: ts.SourceFile, options: IOptions, skipFiles: string[] = []) {
+  constructor(sourceFile: ts.SourceFile, options: IOptions, extraFiles: string[] = []) {
     super(sourceFile, options);
-    this.skipFiles = new Set(skipFiles.map(p => resolve(p)));
+
+    this.extraFiles = new Set(extraFiles.map(p => resolve(p)));
   }
 
   visitNode(node: ts.Node) {
@@ -41,7 +50,13 @@ export class ComponentWalker extends RuleWalker {
   }
 
   private _visitDirectiveCallExpression(callExpression: ts.CallExpression) {
-    const directiveMetadata = callExpression.arguments[0] as ts.ObjectLiteralExpression;
+    // If the call expressions does not have the correct amount of arguments, we can assume that
+    // this call expression is not related to Angular and just uses a similar decorator name.
+    if (callExpression.arguments.length !== 1) {
+      return;
+    }
+
+    const directiveMetadata = this._findMetadataFromExpression(callExpression.arguments[0]);
 
     if (!directiveMetadata) {
       return;
@@ -52,7 +67,7 @@ export class ComponentWalker extends RuleWalker {
       const initializerKind = property.initializer.kind;
 
       if (propertyName === 'template') {
-        this.visitInlineTemplate(property.initializer as ts.StringLiteral)
+        this.visitInlineTemplate(property.initializer as ts.StringLiteral);
       }
 
       if (propertyName === 'templateUrl' && initializerKind === ts.SyntaxKind.StringLiteral) {
@@ -63,7 +78,8 @@ export class ComponentWalker extends RuleWalker {
         this._reportInlineStyles(property.initializer as ts.ArrayLiteralExpression);
       }
 
-      if (propertyName === 'styleUrls' && initializerKind === ts.SyntaxKind.ArrayLiteralExpression) {
+      if (propertyName === 'styleUrls' &&
+          initializerKind === ts.SyntaxKind.ArrayLiteralExpression) {
         this._visitExternalStylesArrayLiteral(property.initializer as ts.ArrayLiteralExpression);
       }
     }
@@ -80,17 +96,19 @@ export class ComponentWalker extends RuleWalker {
       const styleUrl = getLiteralTextWithoutQuotes(styleUrlLiteral as ts.StringLiteral);
       const stylePath = resolve(join(dirname(this.getSourceFile().fileName), styleUrl));
 
-      if (!this.skipFiles.has(stylePath)) {
+      // Do not report the specified additional files multiple times.
+      if (!this.extraFiles.has(stylePath)) {
         this._reportExternalStyle(stylePath);
       }
-    })
+    });
   }
 
   private _reportExternalTemplate(templateUrlLiteral: ts.StringLiteral) {
     const templateUrl = getLiteralTextWithoutQuotes(templateUrlLiteral);
     const templatePath = resolve(join(dirname(this.getSourceFile().fileName), templateUrl));
 
-    if (this.skipFiles.has(templatePath)) {
+    // Do not report the specified additional files multiple times.
+    if (this.extraFiles.has(templatePath)) {
       return;
     }
 
@@ -107,7 +125,7 @@ export class ComponentWalker extends RuleWalker {
     this.visitExternalTemplate(templateFile);
   }
 
-  public _reportExternalStyle(stylePath: string) {
+  _reportExternalStyle(stylePath: string) {
     // Check if the external stylesheet file exists before proceeding.
     if (!existsSync(stylePath)) {
       console.error(`PARSE ERROR: ${this.getSourceFile().fileName}:` +
@@ -121,11 +139,27 @@ export class ComponentWalker extends RuleWalker {
     this.visitExternalStylesheet(stylesheetFile);
   }
 
-  /** Creates a TSLint rule failure for the given external resource. */
-  protected addExternalResourceFailure(file: ExternalResource, message: string, fix?: Fix) {
-    const ruleFailure = new RuleFailure(file, file.getStart(), file.getEnd(),
-        message, this.getRuleName(), fix);
+  /** Reports all extra files that have been specified at initialization. */
+  // TODO(devversion): this should be done automatically but deferred because
+  // the base class "data" property member is not ready at initialization.
+  _reportExtraStylesheetFiles() {
+    this.extraFiles.forEach(file => this._reportExternalStyle(file));
+  }
 
-    this.addFailure(ruleFailure);
+  /**
+   * Recursively searches for the metadata object literal expression inside of a directive call
+   * expression. Since expression calls can be nested through *parenthesized* expressions, we
+   * need to recursively visit and check every expression inside of a parenthesized expression.
+   *
+   * e.g. @Component((({myMetadataExpression}))) will return `myMetadataExpression`.
+   */
+  private _findMetadataFromExpression(node: ts.Expression): ts.ObjectLiteralExpression | null {
+    if (node.kind === ts.SyntaxKind.ObjectLiteralExpression) {
+      return node as ts.ObjectLiteralExpression;
+    } else if (node.kind === ts.SyntaxKind.ParenthesizedExpression) {
+      return this._findMetadataFromExpression((node as ts.ParenthesizedExpression).expression);
+    }
+
+    return null;
   }
 }

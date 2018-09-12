@@ -18,7 +18,6 @@ import {
 } from '@angular/cdk/overlay';
 import {ComponentPortal, ComponentType} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
-import {take, filter} from 'rxjs/operators';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -30,20 +29,27 @@ import {
   InjectionToken,
   Input,
   NgZone,
+  OnDestroy,
   Optional,
   Output,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
-  OnDestroy,
 } from '@angular/core';
-import {CanColor, DateAdapter, mixinColor, ThemePalette} from '@angular/material/core';
+import {
+  CanColor,
+  CanColorCtor,
+  DateAdapter,
+  mixinColor,
+  ThemePalette,
+} from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {merge, Subject, Subscription} from 'rxjs';
-import {createMissingDateImplError} from './datepicker-errors';
-import {MatDatepickerInput} from './datepicker-input';
+import {filter, take} from 'rxjs/operators';
 import {MatCalendar} from './calendar';
 import {matDatepickerAnimations} from './datepicker-animations';
+import {createMissingDateImplError} from './datepicker-errors';
+import {MatDatepickerInput} from './datepicker-input';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -69,7 +75,8 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 export class MatDatepickerContentBase {
   constructor(public _elementRef: ElementRef) { }
 }
-export const _MatDatepickerContentMixinBase = mixinColor(MatDatepickerContentBase);
+export const _MatDatepickerContentMixinBase: CanColorCtor & typeof MatDatepickerContentBase =
+    mixinColor(MatDatepickerContentBase);
 
 /**
  * Component used as the content for the datepicker dialog and popup. We use this instead of using
@@ -148,7 +155,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   private _startAt: D | null;
 
   /** The view that the calendar should start in. */
-  @Input() startView: 'month' | 'year' = 'month';
+  @Input() startView: 'month' | 'year' | 'multi-year' = 'month';
 
   /** Color palette to use on the datepicker's calendar. */
   @Input()
@@ -290,7 +297,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   }
 
   /** Selects the given date */
-  _select(date: D): void {
+  select(date: D): void {
     let oldValue = this._selected;
     this._selected = date;
     if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
@@ -380,6 +387,14 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
 
   /** Open the calendar as a dialog. */
   private _openAsDialog(): void {
+    // Usually this would be handled by `open` which ensures that we can only have one overlay
+    // open at a time, however since we reset the variables in async handlers some overlays
+    // may slip through if the user opens and closes multiple times in quick succession (e.g.
+    // by holding down the enter key).
+    if (this._dialogRef) {
+      this._dialogRef.close();
+    }
+
     this._dialogRef = this._dialog.open<MatDatepickerContent<D>>(MatDatepickerContent, {
       direction: this._dir ? this._dir.value : 'ltr',
       viewContainerRef: this._viewContainerRef,
@@ -426,6 +441,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     });
 
     this._popupRef = this._overlay.create(overlayConfig);
+    this._popupRef.overlayElement.setAttribute('role', 'dialog');
 
     merge(
       this._popupRef.backdropClick(),
@@ -441,7 +457,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** Create the popup PositionStrategy. */
   private _createPopupPositionStrategy(): PositionStrategy {
     return this._overlay.position()
-      .flexibleConnectedTo(this._datepickerInput.getPopupConnectionElementRef())
+      .flexibleConnectedTo(this._datepickerInput.getConnectedOverlayOrigin())
       .withTransformOriginOn('.mat-datepicker-content')
       .withFlexibleDimensions(false)
       .withViewportMargin(8)

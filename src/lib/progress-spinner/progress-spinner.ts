@@ -6,21 +6,22 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Inject,
-  Input,
-  ElementRef,
-  ViewEncapsulation,
-  Optional,
-  InjectionToken,
-} from '@angular/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {CanColor, mixinColor} from '@angular/material/core';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
-import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Inject,
+  InjectionToken,
+  Input,
+  Optional,
+  ViewEncapsulation,
+} from '@angular/core';
+import {CanColor, CanColorCtor, mixinColor} from '@angular/material/core';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+
 
 /** Possible mode for a progress spinner. */
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
@@ -42,7 +43,8 @@ const BASE_STROKE_WIDTH = 10;
 export class MatProgressSpinnerBase {
   constructor(public _elementRef: ElementRef) {}
 }
-export const _MatProgressSpinnerMixinBase = mixinColor(MatProgressSpinnerBase, 'primary');
+export const _MatProgressSpinnerMixinBase: CanColorCtor & typeof MatProgressSpinnerBase =
+    mixinColor(MatProgressSpinnerBase, 'primary');
 
 /** Default `mat-progress-spinner` options that can be overridden. */
 export interface MatProgressSpinnerDefaultOptions {
@@ -50,6 +52,11 @@ export interface MatProgressSpinnerDefaultOptions {
   diameter?: number;
   /** Width of the spinner's stroke. */
   strokeWidth?: number;
+  /**
+   * Whether the animations should be force to be enabled, ignoring if the current environment is
+   * using NoopAnimationsModule.
+   */
+  _forceAnimations?: boolean;
 }
 
 /** Injection token to be used to override the default options for `mat-progress-spinner`. */
@@ -102,7 +109,7 @@ const INDETERMINATE_ANIMATION_TEMPLATE = `
   host: {
     'role': 'progressbar',
     'class': 'mat-progress-spinner',
-    '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
+    '[class._mat-animation-noopable]': `_noopAnimations`,
     '[style.width.px]': 'diameter',
     '[style.height.px]': 'diameter',
     '[attr.aria-valuemin]': 'mode === "determinate" ? 0 : null',
@@ -130,6 +137,10 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
    * @dynamic
    */
   private static styleTag: HTMLStyleElement|null = null;
+
+  /** Whether the _mat-animation-noopable class should be applied, disabling animations.  */
+  _noopAnimations: boolean = this.animationMode === 'NoopAnimations' && (
+      !!this.defaults && !this.defaults._forceAnimations);
 
   /** The diameter of the progress spinner (will set width and height of svg). */
   @Input()
@@ -167,10 +178,10 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   constructor(public _elementRef: ElementRef,
               platform: Platform,
               @Optional() @Inject(DOCUMENT) private _document: any,
-              // @deletion-target 7.0.0 _animationMode and defaults parameters to be made required.
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+              // @breaking-change 7.0.0 animationMode and defaults parameters to be made required.
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) private animationMode?: string,
               @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS)
-                  defaults?: MatProgressSpinnerDefaultOptions) {
+                  private defaults?: MatProgressSpinnerDefaultOptions) {
 
     super(_elementRef);
     this._fallbackAnimation = platform.EDGE || platform.TRIDENT;
@@ -269,7 +280,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
     'role': 'progressbar',
     'mode': 'indeterminate',
     'class': 'mat-spinner mat-progress-spinner',
-    '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
+    '[class._mat-animation-noopable]': `_noopAnimations`,
     '[style.width.px]': 'diameter',
     '[style.height.px]': 'diameter',
   },
@@ -282,7 +293,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
 export class MatSpinner extends MatProgressSpinner {
   constructor(elementRef: ElementRef, platform: Platform,
               @Optional() @Inject(DOCUMENT) document: any,
-              // @deletion-targets 7.0.0 animationMode and defaults parameters to be made required.
+              // @breaking-changes 7.0.0 animationMode and defaults parameters to be made required.
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
               @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS)
                   defaults?: MatProgressSpinnerDefaultOptions) {

@@ -7,12 +7,14 @@
  */
 
 import {Directive, ElementRef} from '@angular/core';
-import {CanDisable, mixinDisabled} from '@angular/material/core';
+import {CanDisable, CanDisableCtor, mixinDisabled} from '@angular/material/core';
+
 
 // Boilerplate for applying mixins to MatTabLabelWrapper.
 /** @docs-private */
 export class MatTabLabelWrapperBase {}
-export const _MatTabLabelWrapperMixinBase = mixinDisabled(MatTabLabelWrapperBase);
+export const _MatTabLabelWrapperMixinBase: CanDisableCtor & typeof MatTabLabelWrapperBase =
+    mixinDisabled(MatTabLabelWrapperBase);
 
 /**
  * Used in the `mat-tab-group` view to display tab labels.
@@ -22,7 +24,8 @@ export const _MatTabLabelWrapperMixinBase = mixinDisabled(MatTabLabelWrapperBase
   selector: '[matTabLabelWrapper]',
   inputs: ['disabled'],
   host: {
-    '[class.mat-tab-disabled]': 'disabled'
+    '[class.mat-tab-disabled]': 'disabled',
+    '[attr.aria-disabled]': '!!disabled',
   }
 })
 export class MatTabLabelWrapper extends _MatTabLabelWrapperMixinBase implements CanDisable {

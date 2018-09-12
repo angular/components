@@ -1,7 +1,7 @@
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {MatAutocompleteSelectedEvent, MatChipInputEvent} from '@angular/material';
+import {MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete} from '@angular/material';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 
@@ -11,58 +11,50 @@ import {map, startWith} from 'rxjs/operators';
 @Component({
   selector: 'chips-autocomplete-example',
   templateUrl: 'chips-autocomplete-example.html',
-  styleUrls: ['chips-autocomplete-example.css']
+  styleUrls: ['chips-autocomplete-example.css'],
 })
 export class ChipsAutocompleteExample {
-  visible: boolean = true;
-  selectable: boolean = true;
-  removable: boolean = true;
-  addOnBlur: boolean = false;
-
-  separatorKeysCodes = [ENTER, COMMA];
-
+  visible = true;
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
   fruitCtrl = new FormControl();
+  filteredFruits: Observable<string[]>;
+  fruits: string[] = ['Lemon'];
+  allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
 
-  filteredFruits: Observable<any[]>;
-
-  fruits = [
-    'Lemon',
-  ];
-
-  allFruits = [
-    'Apple',
-    'Lemon',
-    'Lime',
-    'Orange',
-    'Strawberry'
-  ];
-
-  @ViewChild('fruitInput') fruitInput: ElementRef;
+  @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   constructor() {
     this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
         startWith(null),
-        map((fruit: string | null) => fruit ? this.filter(fruit) : this.allFruits.slice()));
+        map((fruit: string | null) => fruit ? this._filter(fruit) : this.allFruits.slice()));
   }
 
   add(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
+    // Add fruit only when MatAutocomplete is not open
+    // To make sure this does not conflict with OptionSelected Event
+    if (!this.matAutocomplete.isOpen) {
+      const input = event.input;
+      const value = event.value;
 
-    // Add our fruit
-    if ((value || '').trim()) {
-      this.fruits.push(value.trim());
+      // Add our fruit
+      if ((value || '').trim()) {
+        this.fruits.push(value.trim());
+      }
+
+      // Reset the input value
+      if (input) {
+        input.value = '';
+      }
+
+      this.fruitCtrl.setValue(null);
     }
-
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
-
-    this.fruitCtrl.setValue(null);
   }
 
-  remove(fruit: any): void {
+  remove(fruit: string): void {
     const index = this.fruits.indexOf(fruit);
 
     if (index >= 0) {
@@ -70,14 +62,15 @@ export class ChipsAutocompleteExample {
     }
   }
 
-  filter(name: string) {
-    return this.allFruits.filter(fruit =>
-        fruit.toLowerCase().indexOf(name.toLowerCase()) === 0);
-  }
-
   selected(event: MatAutocompleteSelectedEvent): void {
     this.fruits.push(event.option.viewValue);
     this.fruitInput.nativeElement.value = '';
     this.fruitCtrl.setValue(null);
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.allFruits.filter(fruit => fruit.toLowerCase().indexOf(filterValue) === 0);
   }
 }

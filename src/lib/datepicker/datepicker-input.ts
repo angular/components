@@ -9,7 +9,6 @@
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {DOWN_ARROW} from '@angular/cdk/keycodes';
 import {
-  AfterContentInit,
   Directive,
   ElementRef,
   EventEmitter,
@@ -28,9 +27,9 @@ import {
   ValidationErrors,
   Validator,
   ValidatorFn,
-  Validators
+  Validators,
 } from '@angular/forms';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
@@ -92,21 +91,27 @@ export class MatDatepickerInputEvent<D> {
   },
   exportAs: 'matDatepickerInput',
 })
-export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
-    Validator {
+export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, Validator {
   /** The datepicker that this input is associated with. */
   @Input()
   set matDatepicker(value: MatDatepicker<D>) {
-    this.registerDatepicker(value);
+    if (!value) {
+      return;
+    }
+
+    this._datepicker = value;
+    this._datepicker._registerInput(this);
+    this._datepickerSubscription.unsubscribe();
+
+    this._datepickerSubscription = this._datepicker._selectedChanged.subscribe((selected: D) => {
+      this.value = selected;
+      this._cvaOnChange(selected);
+      this._onTouched();
+      this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+      this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+    });
   }
   _datepicker: MatDatepicker<D>;
-
-  private registerDatepicker(value: MatDatepicker<D>) {
-    if (value) {
-      this._datepicker = value;
-      this._datepicker._registerInput(this);
-    }
-  }
 
   /** Function that can be used to filter out dates within the datepicker. */
   @Input()
@@ -235,7 +240,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   private _lastValueValid = false;
 
   constructor(
-      private _elementRef: ElementRef,
+      private _elementRef: ElementRef<HTMLInputElement>,
       @Optional() public _dateAdapter: DateAdapter<D>,
       @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
       @Optional() private _formField: MatFormField) {
@@ -250,18 +255,6 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this._localeSubscription = _dateAdapter.localeChanges.subscribe(() => {
       this.value = this.value;
     });
-  }
-
-  ngAfterContentInit() {
-    if (this._datepicker) {
-      this._datepickerSubscription = this._datepicker._selectedChanged.subscribe((selected: D) => {
-        this.value = selected;
-        this._cvaOnChange(selected);
-        this._onTouched();
-        this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-        this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-      });
-    }
   }
 
   ngOnDestroy() {
@@ -283,7 +276,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /**
    * @deprecated
-   * @deletion-target 7.0.0 Use `getConnectedOverlayOrigin` instead
+   * @breaking-change 7.0.0 Use `getConnectedOverlayOrigin` instead
    */
   getPopupConnectionElementRef(): ElementRef {
     return this.getConnectedOverlayOrigin();
@@ -318,7 +311,9 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   }
 
   _onKeydown(event: KeyboardEvent) {
-    if (event.altKey && event.keyCode === DOWN_ARROW) {
+    const isAltDownArrow = event.altKey && event.keyCode === DOWN_ARROW;
+
+    if (this._datepicker && isAltDownArrow && !this._elementRef.nativeElement.readOnly) {
       this._datepicker.open();
       event.preventDefault();
     }
@@ -342,7 +337,7 @@ export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   }
 
   /** Returns the palette used by the input's form field, if any. */
-  _getThemePalette() {
+  _getThemePalette(): ThemePalette {
     return this._formField ? this._formField.color : undefined;
   }
 

@@ -277,7 +277,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   constructor(_intl: MatDatepickerIntl,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-              changeDetectorRef: ChangeDetectorRef) {
+              private _changeDetectorRef: ChangeDetectorRef) {
 
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
@@ -288,7 +288,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     }
 
     this._intlChanges = _intl.changes.subscribe(() => {
-      changeDetectorRef.markForCheck();
+      _changeDetectorRef.markForCheck();
       this.stateChanges.next();
     });
   }
@@ -320,6 +320,9 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
       const view = this._getCurrentViewComponent();
 
       if (view) {
+        // We need to `detectChanges` manually here, because the `minDate`, `maxDate` etc. are
+        // passed down to the view via data bindings which won't be up-to-date when we call `_init`.
+        this._changeDetectorRef.detectChanges();
         view._init();
       }
     }
@@ -329,6 +332,14 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   focusActiveCell() {
     this._getCurrentViewComponent()._focusActiveCell();
+  }
+
+  /** Updates today's date after an update of the active date */
+  updateTodaysDate() {
+    let view = this.currentView == 'month' ? this.monthView :
+            (this.currentView == 'year' ? this.yearView : this.multiYearView);
+
+    view.ngAfterContentInit();
   }
 
   /** Handles date selection in the month view. */

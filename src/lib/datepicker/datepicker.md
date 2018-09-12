@@ -65,7 +65,7 @@ set to something like `new Date(2017, MM, dd)` when the calendar was opened (the
 irrelevant in this case).
 
 Notice that the emitted value does not affect the current value in the connected `<input>`, which
-is only bound to the selection made in the `month` view. So if the end user closes the calendar 
+is only bound to the selection made in the `month` view. So if the end user closes the calendar
 after choosing a year in `multi-view` mode (by pressing the `ESC` key, for example), the selected
 year, emitted by `yearSelected` output, will not cause any change in the value of the date in the
 associated `<input>`.
@@ -246,6 +246,17 @@ export class MyComponent {
 
 <!-- example(datepicker-moment) -->
 
+By default the `MomentDateAdapter` will creates dates in your time zone specific locale. You can change the default behaviour to parse dates as UTC by providing the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` and setting it to `useUtc: true`.
+
+```ts
+@NgModule({
+  imports: [MatDatepickerModule, MatMomentDateModule],
+  providers: [
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }
+  ]
+})
+```
+
 It is also possible to create your own `DateAdapter` that works with any date format your app
 requires. This is accomplished by subclassing `DateAdapter` and providing your subclass as the
 `DateAdapter` implementation. You will also want to make sure that the `MAT_DATE_FORMATS` provided
@@ -319,8 +330,9 @@ export class MyApp {}
 
 ### Accessibility
 
-The `MatDatepickerInput` directive adds `aria-haspopup` attribute to the native input element, and it
-triggers a calendar dialog with `role="dialog"`.
+The `MatDatepickerInput` and `MatDatepickerToggle` directives add the `aria-haspopup` attribute to
+the native input and toggle button elements respectively, and they trigger a calendar dialog with
+`role="dialog"`.
 
 `MatDatepickerIntl` includes strings that are used for `aria-label`s. The datepicker input
 should have a placeholder or be given a meaningful label via `aria-label`, `aria-labelledby` or

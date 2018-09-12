@@ -11,6 +11,7 @@ import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {
+  A,
   DOWN_ARROW,
   END,
   ENTER,
@@ -60,10 +61,14 @@ import {
   _countGroupLabelsBeforeOption,
   _getOptionScrollPosition,
   CanDisable,
+  CanDisableCtor,
   CanDisableRipple,
+  CanDisableRippleCtor,
   CanUpdateErrorState,
+  CanUpdateErrorStateCtor,
   ErrorStateMatcher,
   HasTabIndex,
+  HasTabIndexCtor,
   MAT_OPTION_PARENT_COMPONENT,
   MatOptgroup,
   MatOption,
@@ -76,13 +81,13 @@ import {
 import {MatFormField, MatFormFieldControl} from '@angular/material/form-field';
 import {defer, merge, Observable, Subject} from 'rxjs';
 import {
+  distinctUntilChanged,
   filter,
   map,
   startWith,
   switchMap,
   take,
   takeUntil,
-  distinctUntilChanged,
 } from 'rxjs/operators';
 import {matSelectAnimations} from './select-animations';
 import {
@@ -163,8 +168,13 @@ export class MatSelectBase {
               public _parentFormGroup: FormGroupDirective,
               public ngControl: NgControl) {}
 }
-export const _MatSelectMixinBase = mixinDisableRipple(
-    mixinTabIndex(mixinDisabled(mixinErrorState(MatSelectBase))));
+export const _MatSelectMixinBase:
+    CanDisableCtor &
+    HasTabIndexCtor &
+    CanDisableRippleCtor &
+    CanUpdateErrorStateCtor &
+    typeof MatSelectBase =
+        mixinDisableRipple(mixinTabIndex(mixinDisabled(mixinErrorState(MatSelectBase))));
 
 
 /**
@@ -201,14 +211,14 @@ export class MatSelectTrigger {}
     '[class.mat-select-disabled]': 'disabled',
     '[class.mat-select-invalid]': 'errorState',
     '[class.mat-select-required]': 'required',
+    '[class.mat-select-empty]': 'empty',
     'class': 'mat-select',
     '(keydown)': '_handleKeydown($event)',
     '(focus)': '_onFocus()',
     '(blur)': '_onBlur()',
   },
   animations: [
-    matSelectAnimations.transformPanel,
-    matSelectAnimations.fadeInContent
+    matSelectAnimations.transformPanel
   ],
   providers: [
     {provide: MatFormFieldControl, useExisting: MatSelect},
@@ -269,9 +279,6 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   /** The value of the select panel's transform-origin property. */
   _transformOrigin: string = 'top';
 
-  /** Whether the panel's animation is done. */
-  _panelDoneAnimating: boolean = false;
-
   /** Emits when the panel element is finished transforming in. */
   _panelDoneAnimatingStream = new Subject<string>();
 
@@ -310,7 +317,17 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   private _disableOptionCentering: boolean = false;
 
   /** Whether the select is focused. */
-  focused: boolean = false;
+  get focused(): boolean {
+    return this._focused || this._panelOpen;
+  }
+  /**
+   * @deprecated Setter to be removed as this property is intended to be readonly.
+   * @breaking-change 8.0.0
+   */
+  set focused(value: boolean) {
+    this._focused = value;
+  }
+  private _focused = false;
 
   /** A name for this control that can be used by `mat-form-field`. */
   controlType = 'mat-select';
@@ -371,7 +388,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   }
 
   /**
-   * A function to compare the option values with the selected values. The first argument
+   * Function to compare the option values with the selected values. The first argument
    * is a value from an option. The second is a value from the selection. A boolean
    * should be returned.
    */
@@ -405,8 +422,14 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   /** Input that can be used to specify the `aria-labelledby` attribute. */
   @Input('aria-labelledby') ariaLabelledby: string;
 
-  /** An object used to control when error messages are shown. */
+  /** Object used to control when error messages are shown. */
   @Input() errorStateMatcher: ErrorStateMatcher;
+
+  /**
+   * Function used to sort the values in a select in multiple mode.
+   * Follows the same logic as `Array.prototype.sort`.
+   */
+  @Input() sortComparator: (a: MatOption, b: MatOption, options: MatOption[]) => number;
 
   /** Unique id of the element. */
   @Input()
@@ -428,8 +451,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       .pipe(take(1), switchMap(() => this.optionSelectionChanges));
   });
 
-   /** Event emitted when the select panel has been toggled. */
-   @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  /** Event emitted when the select panel has been toggled. */
+  @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** Event emitted when the select has been opened. */
   @Output('opened') readonly _openedStream: Observable<void> =
@@ -493,7 +516,6 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
           this.openedChange.emit(true);
         } else {
           this.openedChange.emit(false);
-          this._panelDoneAnimating = false;
           this.overlayDir.offsetX = 0;
           this._changeDetectorRef.markForCheck();
         }
@@ -695,6 +717,15 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     } else if ((keyCode === ENTER || keyCode === SPACE) && manager.activeItem) {
       event.preventDefault();
       manager.activeItem._selectViaInteraction();
+    } else if (this._multiple && keyCode === A && event.ctrlKey) {
+      event.preventDefault();
+      const hasDeselectedOptions = this.options.some(opt => !opt.disabled && !opt.selected);
+
+      this.options.forEach(option => {
+        if (!option.disabled) {
+          hasDeselectedOptions ? option.select() : option.deselect();
+        }
+      });
     } else {
       const previouslyFocusedIndex = manager.activeItemIndex;
 
@@ -707,18 +738,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     }
   }
 
-  /**
-   * When the panel content is done fading in, the _panelDoneAnimating property is
-   * set so the proper class can be added to the panel.
-   */
-  _onFadeInDone(): void {
-    this._panelDoneAnimating = this.panelOpen;
-    this._changeDetectorRef.markForCheck();
-  }
-
   _onFocus() {
     if (!this.disabled) {
-      this.focused = true;
+      this._focused = true;
       this.stateChanges.next();
     }
   }
@@ -728,7 +750,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    * "blur" to the panel when it opens, causing a false positive.
    */
   _onBlur() {
-    this.focused = false;
+    this._focused = false;
 
     if (!this.disabled && !this.panelOpen) {
       this._onTouched();
@@ -871,17 +893,20 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     const wasSelected = this._selectionModel.isSelected(option);
 
     if (option.value == null && !this._multiple) {
+      option.deselect();
       this._selectionModel.clear();
       this._propagateChanges(option.value);
     } else {
       option.selected ? this._selectionModel.select(option) : this._selectionModel.deselect(option);
 
+      if (isUserInput) {
+        this._keyManager.setActiveItem(option);
+      }
+
       if (this.multiple) {
         this._sortValues();
 
         if (isUserInput) {
-          this._keyManager.setActiveItem(option);
-
           // In case the user selected the option with their mouse, we
           // want to restore focus back to the trigger, in order to
           // prevent the select keyboard controls from clashing with
@@ -902,7 +927,11 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   private _sortValues() {
     if (this.multiple) {
       const options = this.options.toArray();
-      this._selectionModel.sort((a, b) => options.indexOf(a) - options.indexOf(b));
+
+      this._selectionModel.sort((a, b) => {
+        return this.sortComparator ? this.sortComparator(a, b, options) :
+                                     options.indexOf(a) - options.indexOf(b);
+      });
       this.stateChanges.next();
     }
   }
@@ -964,7 +993,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** Gets the index of the provided option in the option list. */
   private _getOptionIndex(option: MatOption): number | undefined {
-    return this.options.reduce((result: number, current: MatOption, index: number) => {
+    return this.options.reduce((result: number | undefined, current: MatOption, index: number) => {
       return result === undefined ? (option === current ? index : undefined) : result;
     }, undefined);
   }
@@ -1031,7 +1060,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
     // Note: we use `_getAriaLabel` here, because we want to check whether there's a
     // computed label. `this.ariaLabel` is only the user-specified label.
-    if (!this._parentFormField || this._getAriaLabel()) {
+    if (!this._parentFormField || !this._parentFormField._hasFloatingLabel() ||
+      this._getAriaLabel()) {
       return null;
     }
 

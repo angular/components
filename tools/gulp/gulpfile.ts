@@ -16,6 +16,7 @@ createPackageBuildTasks(examplesPackage, ['build-examples-module']);
 createPackageBuildTasks(momentAdapterPackage);
 
 import './tasks/aot';
+import './tasks/breaking-changes';
 import './tasks/changelog';
 import './tasks/ci';
 import './tasks/clean';
@@ -28,8 +29,9 @@ import './tasks/example-module';
 import './tasks/lint';
 import './tasks/material-release';
 import './tasks/payload';
-import './tasks/publish';
-import './tasks/screenshots';
 import './tasks/unit-test';
 import './tasks/universal';
-import './tasks/validate-release';
+
+import './tasks/publish/publish-task';
+import './tasks/publish/sanity-checks';
+import './tasks/publish/validate-release';

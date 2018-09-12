@@ -4,7 +4,6 @@
 /dist
 /tmp
 /deploy
-/screenshots
 /bazel-out
 
 # Example module file will be auto-generated.
@@ -28,6 +27,7 @@ node_modules
 # IDEs
 /.idea
 /.vscode
+/*.iml
 
 # misc
 .DS_Store
@@ -39,6 +39,7 @@ npm-debug.log
 testem.log
 /.chrome
 /.git
+/.firebase
 
 # schematics
 /src/lib/schematics/**/*.js

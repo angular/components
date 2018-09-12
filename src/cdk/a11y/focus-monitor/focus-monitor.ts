@@ -29,6 +29,16 @@ export const TOUCH_BUFFER_MS = 650;
 export type FocusOrigin = 'touch' | 'mouse' | 'keyboard' | 'program' | null;
 
 
+/**
+ * Corresponds to the options that can be passed to the native `focus` event.
+ * via https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
+ */
+export interface FocusOptions {
+  /** Whether the browser should scroll to the element when it is focused. */
+  preventScroll?: boolean;
+}
+
+
 type MonitoredElementInfo = {
   unlisten: Function,
   checkChildren: boolean,
@@ -78,14 +88,29 @@ export class FocusMonitor implements OnDestroy {
    * @returns An observable that emits when the focus state of the element changes.
    *     When the element is blurred, null will be emitted.
    */
-  monitor(element: HTMLElement, checkChildren: boolean = false): Observable<FocusOrigin> {
+  monitor(element: HTMLElement, checkChildren?: boolean): Observable<FocusOrigin>;
+
+  /**
+   * Monitors focus on an element and applies appropriate CSS classes.
+   * @param element The element to monitor
+   * @param checkChildren Whether to count the element as focused when its children are focused.
+   * @returns An observable that emits when the focus state of the element changes.
+   *     When the element is blurred, null will be emitted.
+   */
+  monitor(element: ElementRef<HTMLElement>, checkChildren?: boolean): Observable<FocusOrigin>;
+
+  monitor(element: HTMLElement | ElementRef<HTMLElement>,
+          checkChildren: boolean = false): Observable<FocusOrigin> {
     // Do nothing if we're not on the browser platform.
     if (!this._platform.isBrowser) {
       return observableOf(null);
     }
+
+    const nativeElement = this._getNativeElement(element);
+
     // Check if we're already monitoring this element.
-    if (this._elementInfo.has(element)) {
-      let cachedInfo = this._elementInfo.get(element);
+    if (this._elementInfo.has(nativeElement)) {
+      let cachedInfo = this._elementInfo.get(nativeElement);
       cachedInfo!.checkChildren = checkChildren;
       return cachedInfo!.subject.asObservable();
     }
@@ -96,21 +121,21 @@ export class FocusMonitor implements OnDestroy {
       checkChildren: checkChildren,
       subject: new Subject<FocusOrigin>()
     };
-    this._elementInfo.set(element, info);
+    this._elementInfo.set(nativeElement, info);
     this._incrementMonitoredElementCount();
 
     // Start listening. We need to listen in capture phase since focus events don't bubble.
-    let focusListener = (event: FocusEvent) => this._onFocus(event, element);
-    let blurListener = (event: FocusEvent) => this._onBlur(event, element);
+    let focusListener = (event: FocusEvent) => this._onFocus(event, nativeElement);
+    let blurListener = (event: FocusEvent) => this._onBlur(event, nativeElement);
     this._ngZone.runOutsideAngular(() => {
-      element.addEventListener('focus', focusListener, true);
-      element.addEventListener('blur', blurListener, true);
+      nativeElement.addEventListener('focus', focusListener, true);
+      nativeElement.addEventListener('blur', blurListener, true);
     });
 
     // Create an unlisten function for later.
     info.unlisten = () => {
-      element.removeEventListener('focus', focusListener, true);
-      element.removeEventListener('blur', blurListener, true);
+      nativeElement.removeEventListener('focus', focusListener, true);
+      nativeElement.removeEventListener('blur', blurListener, true);
     };
 
     return info.subject.asObservable();
@@ -120,30 +145,56 @@ export class FocusMonitor implements OnDestroy {
    * Stops monitoring an element and removes all focus classes.
    * @param element The element to stop monitoring.
    */
-  stopMonitoring(element: HTMLElement): void {
-    const elementInfo = this._elementInfo.get(element);
+  stopMonitoring(element: HTMLElement): void;
+
+  /**
+   * Stops monitoring an element and removes all focus classes.
+   * @param element The element to stop monitoring.
+   */
+  stopMonitoring(element: ElementRef<HTMLElement>): void;
+
+  stopMonitoring(element: HTMLElement | ElementRef<HTMLElement>): void {
+    const nativeElement = this._getNativeElement(element);
+    const elementInfo = this._elementInfo.get(nativeElement);
 
     if (elementInfo) {
       elementInfo.unlisten();
       elementInfo.subject.complete();
 
-      this._setClasses(element);
-      this._elementInfo.delete(element);
+      this._setClasses(nativeElement);
+      this._elementInfo.delete(nativeElement);
       this._decrementMonitoredElementCount();
     }
   }
 
   /**
    * Focuses the element via the specified focus origin.
-   * @param element The element to focus.
-   * @param origin The focus origin.
+   * @param element Element to focus.
+   * @param origin Focus origin.
+   * @param options Options that can be used to configure the focus behavior.
    */
-  focusVia(element: HTMLElement, origin: FocusOrigin): void {
+  focusVia(element: HTMLElement, origin: FocusOrigin, options?: FocusOptions): void;
+
+  /**
+   * Focuses the element via the specified focus origin.
+   * @param element Element to focus.
+   * @param origin Focus origin.
+   * @param options Options that can be used to configure the focus behavior.
+   */
+  focusVia(element: ElementRef<HTMLElement>, origin: FocusOrigin, options?: FocusOptions): void;
+
+  focusVia(element: HTMLElement | ElementRef<HTMLElement>,
+          origin: FocusOrigin,
+          options?: FocusOptions): void {
+
+    const nativeElement = this._getNativeElement(element);
+
     this._setOriginForCurrentEventQueue(origin);
 
     // `focus` isn't available on the server
-    if (typeof element.focus === 'function') {
-      element.focus();
+    if (typeof nativeElement.focus === 'function') {
+      // Cast the element to `any`, because the TS typings don't have the `options` parameter yet.
+      (nativeElement as any).focus(options);
     }
   }
 
@@ -173,7 +224,7 @@ export class FocusMonitor implements OnDestroy {
     };
 
     // When the touchstart event fires the focus event is not yet in the event queue. This means
-    // we can't rely on the trick used above (setting timeout of 0ms). Instead we wait 650ms to
+    // we can't rely on the trick used above (setting timeout of 1ms). Instead we wait 650ms to
     // see if a focus happens.
     let documentTouchstartListener = (event: TouchEvent) => {
       if (this._touchTimeoutId != null) {
@@ -246,7 +297,10 @@ export class FocusMonitor implements OnDestroy {
   private _setOriginForCurrentEventQueue(origin: FocusOrigin): void {
     this._ngZone.runOutsideAngular(() => {
       this._origin = origin;
-      this._originTimeoutId = setTimeout(() => this._origin = null);
+      // Sometimes the focus origin won't be valid in Firefox because Firefox seems to focus *one*
+      // tick after the interaction event fired. To ensure the focus origin is always correct,
+      // the focus origin will be determined at the beginning of the next tick.
+      this._originTimeoutId = setTimeout(() => this._origin = null, 1);
     });
   }
 
@@ -355,6 +409,10 @@ export class FocusMonitor implements OnDestroy {
       this._unregisterGlobalListeners = () => {};
     }
   }
+
+  private _getNativeElement(element: HTMLElement | ElementRef<HTMLElement>): HTMLElement {
+    return element instanceof ElementRef ? element.nativeElement : element;
+  }
 }
 
 
@@ -374,26 +432,26 @@ export class CdkMonitorFocus implements OnDestroy {
   private _monitorSubscription: Subscription;
   @Output() cdkFocusChange = new EventEmitter<FocusOrigin>();
 
-  constructor(private _elementRef: ElementRef, private _focusMonitor: FocusMonitor) {
+  constructor(private _elementRef: ElementRef<HTMLElement>, private _focusMonitor: FocusMonitor) {
     this._monitorSubscription = this._focusMonitor.monitor(
-        this._elementRef.nativeElement,
+        this._elementRef,
         this._elementRef.nativeElement.hasAttribute('cdkMonitorSubtreeFocus'))
         .subscribe(origin => this.cdkFocusChange.emit(origin));
   }
 
   ngOnDestroy() {
-    this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
+    this._focusMonitor.stopMonitoring(this._elementRef);
     this._monitorSubscription.unsubscribe();
   }
 }
 
-/** @docs-private @deprecated @deletion-target 7.0.0 */
+/** @docs-private @deprecated @breaking-change 7.0.0 */
 export function FOCUS_MONITOR_PROVIDER_FACTORY(
     parentDispatcher: FocusMonitor, ngZone: NgZone, platform: Platform) {
   return parentDispatcher || new FocusMonitor(ngZone, platform);
 }
 
-/** @docs-private @deprecated @deletion-target 7.0.0 */
+/** @docs-private @deprecated @breaking-change 7.0.0 */
 export const FOCUS_MONITOR_PROVIDER = {
   // If there is already a FocusMonitor available, use that. Otherwise, provide a new one.
   provide: FocusMonitor,

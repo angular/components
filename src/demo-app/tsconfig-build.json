@@ -9,6 +9,7 @@
     "experimentalDecorators": true,
     "noUnusedParameters": true,
     "strictNullChecks": true,
+    "strictFunctionTypes": true,
     "lib": ["es6", "es2015", "dom"],
     "skipLibCheck": true,
     "module": "commonjs",
@@ -25,7 +26,7 @@
     "baseUrl": ".",
     "paths": {
       "@angular/material/*": ["../../dist/packages/material/*"],
-      "@angular/material": ["../../dist/packages/material/public-api"],
+      "@angular/material": ["../../dist/packages/material"],
       "@angular/cdk/*": ["../../dist/packages/cdk/*"],
       "@angular/cdk": ["../../dist/packages/cdk"],
       "@angular/material-experimental/*": ["../../dist/packages/material-experimental/*"],

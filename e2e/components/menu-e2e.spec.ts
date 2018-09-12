@@ -1,5 +1,4 @@
 import {Key, protractor, browser, by, element, ExpectedConditions} from 'protractor';
-import {screenshot} from '../screenshot';
 import {
   expectToExist,
   expectAlignedWith,
@@ -24,33 +23,28 @@ describe('menu', () => {
 
     expectToExist(menuSelector);
     expect(await page.menu().getText()).toEqual('One\nTwo\nThree\nFour');
-    screenshot();
   });
 
   it('should close menu when menu item is clicked', () => {
     page.trigger().click();
     page.items(0).click();
     expectToExist(menuSelector, false);
-    screenshot();
   });
 
   it('should run click handlers on regular menu items', async () => {
     page.trigger().click();
     page.items(0).click();
     expect(await page.getResultText()).toEqual('one');
-    screenshot('one');
 
     page.trigger().click();
     page.items(1).click();
     expect(await page.getResultText()).toEqual('two');
-    screenshot('two');
   });
 
   it('should run not run click handlers on disabled menu items', async () => {
     page.trigger().click();
     page.items(2).click();
     expect(await page.getResultText()).toEqual('');
-    screenshot();
   });
 
   it('should support multiple triggers opening the same menu', async () => {
@@ -162,7 +156,7 @@ describe('menu', () => {
       await expectAlignedWith(page.menu(), '#trigger');
     });
 
-    it('should align overlay end to origin end when x-position is "before"', async() => {
+    it('should align overlay end to origin end when x-position is "before"', async () => {
       page.beforeTrigger().click();
 
       const trigger = await page.beforeTrigger().getLocation();

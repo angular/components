@@ -16,23 +16,23 @@ import {
   styleUrls: ['focus-monitor-overview-example.css']
 })
 export class FocusMonitorOverviewExample implements OnDestroy, OnInit {
-  @ViewChild('element') element: ElementRef;
-  @ViewChild('subtree') subtree: ElementRef;
+  @ViewChild('element') element: ElementRef<HTMLElement>;
+  @ViewChild('subtree') subtree: ElementRef<HTMLElement>;
 
-  elementOrigin: string = this.formatOrigin(null);
-  subtreeOrigin: string = this.formatOrigin(null);
+  elementOrigin = this.formatOrigin(null);
+  subtreeOrigin = this.formatOrigin(null);
 
   constructor(private focusMonitor: FocusMonitor,
               private cdr: ChangeDetectorRef,
               private ngZone: NgZone) {}
 
   ngOnInit() {
-    this.focusMonitor.monitor(this.element.nativeElement)
+    this.focusMonitor.monitor(this.element)
         .subscribe(origin => this.ngZone.run(() => {
           this.elementOrigin = this.formatOrigin(origin);
           this.cdr.markForCheck();
         }));
-    this.focusMonitor.monitor(this.subtree.nativeElement, true)
+    this.focusMonitor.monitor(this.subtree, true)
         .subscribe(origin => this.ngZone.run(() => {
           this.subtreeOrigin = this.formatOrigin(origin);
           this.cdr.markForCheck();
@@ -40,8 +40,8 @@ export class FocusMonitorOverviewExample implements OnDestroy, OnInit {
   }
 
   ngOnDestroy() {
-    this.focusMonitor.stopMonitoring(this.element.nativeElement);
-    this.focusMonitor.stopMonitoring(this.subtree.nativeElement);
+    this.focusMonitor.stopMonitoring(this.element);
+    this.focusMonitor.stopMonitoring(this.subtree);
   }
 
   formatOrigin(origin: FocusOrigin): string {

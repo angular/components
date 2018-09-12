@@ -84,7 +84,7 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
   private _destroyed: boolean;
 
   constructor(
-    private _elementRef: ElementRef,
+    private _elementRef: ElementRef<HTMLElement>,
     private _changeDetectorRef: ChangeDetectorRef,
     private _focusTrapFactory: FocusTrapFactory,
     breakpointObserver: BreakpointObserver,
@@ -144,10 +144,10 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
   }
 
   _onAnimationDone(event: AnimationEvent) {
-    if (event.toState === 'visible') {
-      this._trapFocus();
-    } else if (event.toState === 'hidden') {
+    if (event.toState === 'hidden') {
       this._restoreFocus();
+    } else if (event.toState === 'visible' && this.bottomSheetConfig.autoFocus) {
+      this._trapFocus();
     }
 
     this._animationStateChanged.emit(event);

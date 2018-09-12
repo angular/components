@@ -1,7 +1,15 @@
-import {chain, Rule, noop, Tree, SchematicContext} from '@angular-devkit/schematics';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {chain, Rule, noop, Tree} from '@angular-devkit/schematics';
+import {buildComponent} from '../utils/build-component';
 import {Schema} from './schema';
 import {addModuleImportToModule, findModuleFromOptions} from '../utils/ast';
-import {buildComponent} from '../utils/devkit-utils/component';
 
 /**
  * Scaffolds a new navigation component.
@@ -9,7 +17,10 @@ import {buildComponent} from '../utils/devkit-utils/component';
  */
 export default function(options: Schema): Rule {
   return chain([
-    buildComponent({ ...options }),
+    buildComponent({...options}, {
+      template: './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.html',
+      stylesheet: './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.__styleext__',
+    }),
     options.skipImport ? noop() : addNavModulesToModule(options)
   ]);
 }
@@ -19,7 +30,7 @@ export default function(options: Schema): Rule {
  */
 function addNavModulesToModule(options: Schema) {
   return (host: Tree) => {
-    const modulePath = findModuleFromOptions(host, options);
+    const modulePath = findModuleFromOptions(host, options)!;
     addModuleImportToModule(host, modulePath, 'LayoutModule', '@angular/cdk/layout');
     addModuleImportToModule(host, modulePath, 'MatToolbarModule', '@angular/material');
     addModuleImportToModule(host, modulePath, 'MatButtonModule', '@angular/material');

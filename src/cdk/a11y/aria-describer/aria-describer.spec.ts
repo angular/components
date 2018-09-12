@@ -121,6 +121,17 @@ describe('AriaDescriber', () => {
     const node: any = document.createComment('Not an element node');
     expect(() => ariaDescriber.describe(node, 'This looks like an element')).not.toThrow();
   });
+
+  it('should clear any pre-existing containers', () => {
+    const extraContainer = document.createElement('div');
+    extraContainer.id = MESSAGES_CONTAINER_ID;
+    document.body.appendChild(extraContainer);
+
+    ariaDescriber.describe(component.element1, 'Hello');
+
+    // Use `querySelectorAll` with an attribute since `getElementById` will stop at the first match.
+    expect(document.querySelectorAll(`[id='${MESSAGES_CONTAINER_ID}']`).length).toBe(1);
+  });
 });
 
 function getMessagesContainer() {
@@ -170,16 +181,16 @@ function expectMessage(el: Element, message: string) {
   `,
 })
 class TestApp {
-  @ViewChild('element1') _element1: ElementRef;
+  @ViewChild('element1') _element1: ElementRef<HTMLElement>;
   get element1(): Element { return this._element1.nativeElement; }
 
-  @ViewChild('element2') _element2: ElementRef;
+  @ViewChild('element2') _element2: ElementRef<HTMLElement>;
   get element2(): Element { return this._element2.nativeElement; }
 
-  @ViewChild('element3') _element3: ElementRef;
+  @ViewChild('element3') _element3: ElementRef<HTMLElement>;
   get element3(): Element { return this._element3.nativeElement; }
 
-  @ViewChild('element4') _element4: ElementRef;
+  @ViewChild('element4') _element4: ElementRef<HTMLElement>;
   get element4(): Element { return this._element4.nativeElement; }
 
 

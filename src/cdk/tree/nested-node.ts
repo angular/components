@@ -15,6 +15,7 @@ import {
   OnDestroy,
   QueryList,
 } from '@angular/core';
+import {Observable} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 import {CdkTree, CdkTreeNode} from './tree';
@@ -62,7 +63,7 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
   /** The children node placeholder. */
   @ContentChildren(CdkTreeNodeOutlet) nodeOutlet: QueryList<CdkTreeNodeOutlet>;
 
-  constructor(protected _elementRef: ElementRef,
+  constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>,
               protected _differs: IterableDiffers) {
     super(_elementRef, _tree);
@@ -73,11 +74,13 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
     if (!this._tree.treeControl.getChildren) {
       throw getTreeControlFunctionsMissingError();
     }
-    this._tree.treeControl.getChildren(this.data).pipe(takeUntil(this._destroyed))
-        .subscribe(result => {
-          this._children = result;
-          this.updateChildrenNodes();
-        });
+    const childrenNodes = this._tree.treeControl.getChildren(this.data);
+    if (Array.isArray(childrenNodes)) {
+      this.updateChildrenNodes(childrenNodes as T[]);
+    } else if (childrenNodes instanceof Observable) {
+      childrenNodes.pipe(takeUntil(this._destroyed))
+        .subscribe(result => this.updateChildrenNodes(result));
+    }
     this.nodeOutlet.changes.pipe(takeUntil(this._destroyed))
         .subscribe(() => this.updateChildrenNodes());
   }
@@ -88,7 +91,10 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
   }
 
   /** Add children dataNodes to the NodeOutlet */
-  protected updateChildrenNodes(): void {
+  protected updateChildrenNodes(children?: T[]): void {
+    if (children) {
+      this._children = children;
+    }
     if (this.nodeOutlet.length && this._children) {
       const viewContainer = this.nodeOutlet.first.viewContainer;
       this._tree.renderNodeChanges(this._children, this._dataDiffer, viewContainer, this._data);

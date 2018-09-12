@@ -87,6 +87,7 @@ export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any = {
 
 /**
  * Creates an error to be thrown when attempting to use an autocomplete trigger without a panel.
+ * @docs-private
  */
 export function getMatAutocompleteMissingPanelError(): Error {
   return Error('Attempting to open an undefined instance of `mat-autocomplete`. ' +
@@ -98,12 +99,12 @@ export function getMatAutocompleteMissingPanelError(): Error {
 @Directive({
   selector: `input[matAutocomplete], textarea[matAutocomplete]`,
   host: {
-    'autocomplete': 'off',
+    '[attr.autocomplete]': 'autocompleteAttribute',
     '[attr.role]': 'autocompleteDisabled ? null : "combobox"',
     '[attr.aria-autocomplete]': 'autocompleteDisabled ? null : "list"',
     '[attr.aria-activedescendant]': 'activeOption?.id',
     '[attr.aria-expanded]': 'autocompleteDisabled ? null : panelOpen.toString()',
-    '[attr.aria-owns]': 'autocompleteDisabled ? null : autocomplete?.id',
+    '[attr.aria-owns]': '(autocompleteDisabled || !panelOpen) ? null : autocomplete?.id',
     // Note: we use `focusin`, as opposed to `focus`, in order to open the panel
     // a little earlier. This avoids issues where IE delays the focusing of the input.
     '(focusin)': '_handleFocus()',
@@ -135,8 +136,27 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   /** Subscription to viewport size changes. */
   private _viewportSubscription = Subscription.EMPTY;
 
+  /**
+   * Whether the autocomplete can open the next time it is focused. Used to prevent a focused,
+   * closed autocomplete from being reopened if the user switches to another browser tab and then
+   * comes back.
+   */
+  private _canOpenOnNextFocus = true;
+
   /** Stream of keyboard events that can close the panel. */
   private readonly _closeKeyEventStream = new Subject<void>();
+
+  /**
+   * Event handler for when the window is blurred. Needs to be an
+   * arrow function in order to preserve the context.
+   */
+  private _windowBlurHandler = () => {
+    // If the user blurred the window while the autocomplete is focused, it means that it'll be
+    // refocused when they come back. In this case we want to skip the first focus event, if the
+    // pane was closed, in order to avoid reopening it unintentionally.
+    this._canOpenOnNextFocus =
+        document.activeElement !== this._element.nativeElement || this.panelOpen;
+  }
 
   /** `View -> model callback called when value changes` */
   _onChange: (value: any) => void = () => {};
@@ -154,6 +174,12 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   @Input('matAutocompleteConnectedTo') connectedTo: MatAutocompleteOrigin;
 
   /**
+   * `autocomplete` attribute to be set on the input element.
+   * @docs-private
+   */
+  @Input('autocomplete') autocompleteAttribute: string = 'off';
+
+  /**
    * Whether the autocomplete is disabled. When disabled, the element will
    * act as a regular input and the user won't be able to open the panel.
    */
@@ -163,7 +189,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     this._autocompleteDisabled = coerceBooleanProperty(value);
   }
 
-  constructor(private _element: ElementRef, private _overlay: Overlay,
+  constructor(private _element: ElementRef<HTMLInputElement>, private _overlay: Overlay,
               private _viewContainerRef: ViewContainerRef,
               private _zone: NgZone,
               private _changeDetectorRef: ChangeDetectorRef,
@@ -171,10 +197,21 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
               @Optional() private _dir: Directionality,
               @Optional() @Host() private _formField: MatFormField,
               @Optional() @Inject(DOCUMENT) private _document: any,
-              // @deletion-target 7.0.0 Make `_viewportRuler` required.
-              private _viewportRuler?: ViewportRuler) {}
+              // @breaking-change 7.0.0 Make `_viewportRuler` required.
+              private _viewportRuler?: ViewportRuler) {
+
+    if (typeof window !== 'undefined') {
+      _zone.runOutsideAngular(() => {
+        window.addEventListener('blur', this._windowBlurHandler);
+      });
+    }
+  }
 
   ngOnDestroy() {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('blur', this._windowBlurHandler);
+    }
+
     this._viewportSubscription.unsubscribe();
     this._componentDestroyed = true;
     this._destroyPanel();
@@ -225,6 +262,16 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   }
 
   /**
+   * Updates the position of the autocomplete suggestion panel to ensure that it fits all options
+   * within the viewport.
+   */
+  updatePosition(): void {
+    if (this._overlayAttached) {
+      this._overlayRef!.updatePosition();
+    }
+  }
+
+  /**
    * A stream of actions that should close the autocomplete panel, including
    * when an option is selected, on blur, and when TAB is pressed.
    */
@@ -233,7 +280,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this.optionSelections,
       this.autocomplete._keyManager.tabOut.pipe(filter(() => this._overlayAttached)),
       this._closeKeyEventStream,
-      this._outsideClickStream,
+      this._getOutsideClickStream(),
       this._overlayRef ?
           this._overlayRef.detachments().pipe(filter(() => this._overlayAttached)) :
           observableOf()
@@ -266,16 +313,16 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   }
 
   /** Stream of clicks outside of the autocomplete panel. */
-  private get _outsideClickStream(): Observable<any> {
+  private _getOutsideClickStream(): Observable<any> {
     if (!this._document) {
       return observableOf(null);
     }
 
     return merge(
-      fromEvent(this._document, 'click'),
-      fromEvent(this._document, 'touchend')
+      fromEvent<MouseEvent>(this._document, 'click'),
+      fromEvent<TouchEvent>(this._document, 'touchend')
     )
-    .pipe(filter((event: MouseEvent | TouchEvent) => {
+    .pipe(filter(event => {
       const clickTarget = event.target as HTMLElement;
       const formField = this._formField ?
           this._formField._elementRef.nativeElement : null;
@@ -328,7 +375,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this.activeOption._selectViaInteraction();
       this._resetActiveItem();
       event.preventDefault();
-    } else {
+    } else if (this.autocomplete) {
       const prevActiveItem = this.autocomplete._keyManager.activeItem;
       const isArrowKey = keyCode === UP_ARROW || keyCode === DOWN_ARROW;
 
@@ -369,7 +416,9 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   }
 
   _handleFocus(): void {
-    if (this._canOpen()) {
+    if (!this._canOpenOnNextFocus) {
+      this._canOpenOnNextFocus = true;
+    } else if (this._canOpen()) {
       this._previousValue = this._element.nativeElement.value;
       this._attachOverlay();
       this._floatLabel(true);
@@ -447,6 +496,11 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
         switchMap(() => {
           this._resetActiveItem();
           this.autocomplete._setVisibility();
+
+          if (this.panelOpen) {
+            this._overlayRef!.updatePosition();
+          }
+
           return this.panelClosingActions;
         }),
         // when the first closing event occurs...
@@ -523,13 +577,13 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       if (this._viewportRuler) {
         this._viewportSubscription = this._viewportRuler.change().subscribe(() => {
           if (this.panelOpen && this._overlayRef) {
-            this._overlayRef.updateSize({width: this._getHostWidth()});
+            this._overlayRef.updateSize({width: this._getPanelWidth()});
           }
         });
       }
     } else {
       // Update the panel width and direction, in case anything has changed.
-      this._overlayRef.updateSize({width: this._getHostWidth()});
+      this._overlayRef.updateSize({width: this._getPanelWidth()});
     }
 
     if (this._overlayRef && !this._overlayRef.hasAttached()) {
@@ -553,7 +607,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     return new OverlayConfig({
       positionStrategy: this._getOverlayPosition(),
       scrollStrategy: this._scrollStrategy(),
-      width: this._getHostWidth(),
+      width: this._getPanelWidth(),
       direction: this._dir
     });
   }
@@ -564,8 +618,23 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       .withFlexibleDimensions(false)
       .withPush(false)
       .withPositions([
-        {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top'},
-        {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom'}
+        {
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top'
+        },
+        {
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'bottom',
+
+          // The overlay edge connected to the trigger should have squared corners, while
+          // the opposite end has rounded corners. We apply a CSS class to swap the
+          // border-radius based on the overlay position.
+          panelClass: 'mat-autocomplete-panel-above'
+        }
       ]);
 
     return this._positionStrategy;
@@ -577,6 +646,10 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     }
 
     return this._formField ? this._formField.getConnectedOverlayOrigin() : this._element;
+  }
+
+  private _getPanelWidth(): number | string {
+    return this.autocomplete.panelWidth || this._getHostWidth();
   }
 
   /** Returns the width of the input element, so the panel width can match it. */
@@ -594,8 +667,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   /** Determines whether the panel can be opened. */
   private _canOpen(): boolean {
-    const element: HTMLInputElement = this._element.nativeElement;
+    const element = this._element.nativeElement;
     return !element.readOnly && !element.disabled && !this._autocompleteDisabled;
   }
-
 }

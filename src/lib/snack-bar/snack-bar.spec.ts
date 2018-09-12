@@ -75,21 +75,21 @@ describe('MatSnackBar', () => {
         .toBe('alert', 'Expected snack bar container to have role="alert"');
    });
 
-   it('should open and close a snackbar without a ViewContainerRef', fakeAsync(() => {
-      let snackBarRef = snackBar.open('Snack time!', 'Chew');
-      viewContainerFixture.detectChanges();
+  it('should open and close a snackbar without a ViewContainerRef', fakeAsync(() => {
+    let snackBarRef = snackBar.open('Snack time!', 'Chew');
+    viewContainerFixture.detectChanges();
 
-      let messageElement = overlayContainerElement.querySelector('snack-bar-container')!;
-      expect(messageElement.textContent).toContain('Snack time!',
-         'Expected snack bar to show a message without a ViewContainerRef');
+    let messageElement = overlayContainerElement.querySelector('snack-bar-container')!;
+    expect(messageElement.textContent).toContain('Snack time!',
+       'Expected snack bar to show a message without a ViewContainerRef');
 
-      snackBarRef.dismiss();
-      viewContainerFixture.detectChanges();
-      flush();
+    snackBarRef.dismiss();
+    viewContainerFixture.detectChanges();
+    flush();
 
-      expect(overlayContainerElement.childNodes.length)
-          .toBe(0, 'Expected snack bar to be dismissed without a ViewContainerRef');
-   }));
+    expect(overlayContainerElement.childNodes.length)
+        .toBe(0, 'Expected snack bar to be dismissed without a ViewContainerRef');
+  }));
 
   it('should open a simple message with a button', () => {
     let config: MatSnackBarConfig = {viewContainerRef: testViewContainerRef};
@@ -153,6 +153,36 @@ describe('MatSnackBar', () => {
         .toBe(0, 'Expected the overlay container element to have no child elements');
   }));
 
+
+  it('should default to the passed message for the announcement message', fakeAsync(() => {
+    spyOn(liveAnnouncer, 'announce');
+
+    snackBar.open(simpleMessage);
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.childElementCount)
+      .toBe(1, 'Expected the overlay with the default announcement message to be added');
+
+    // Expect the live announcer to have been called with the display message and some
+    // string for the politeness. We do not want to test for the default politeness here.
+    expect(liveAnnouncer.announce).toHaveBeenCalledWith(simpleMessage, jasmine.any(String));
+  }));
+
+  it('should be able to specify a custom announcement message', fakeAsync(() => {
+    spyOn(liveAnnouncer, 'announce');
+
+    snackBar.open(simpleMessage, '', {
+      announcementMessage: 'Custom announcement',
+      politeness: 'assertive'
+    });
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.childElementCount)
+      .toBe(1, 'Expected the overlay with a custom `announcementMessage` to be added');
+
+    expect(liveAnnouncer.announce).toHaveBeenCalledWith('Custom announcement', 'assertive');
+  }));
+
   it('should be able to get dismissed through the service', fakeAsync(() => {
     snackBar.open(simpleMessage);
     viewContainerFixture.detectChanges();
@@ -184,12 +214,12 @@ describe('MatSnackBar', () => {
 
     viewContainerFixture.detectChanges();
     expect(snackBarRef.containerInstance._animationState)
-        .toBe('visible-bottom', `Expected the animation state would be 'visible-bottom'.`);
+        .toBe('visible', `Expected the animation state would be 'visible'.`);
     snackBarRef.dismiss();
 
     viewContainerFixture.detectChanges();
     expect(snackBarRef.containerInstance._animationState)
-        .toBe('hidden-bottom', `Expected the animation state would be 'hidden-bottom'.`);
+        .toBe('hidden', `Expected the animation state would be 'hidden'.`);
   });
 
   it('should set the animation state to complete on exit', () => {
@@ -199,7 +229,7 @@ describe('MatSnackBar', () => {
 
     viewContainerFixture.detectChanges();
     expect(snackBarRef.containerInstance._animationState)
-        .toBe('hidden-bottom', `Expected the animation state would be 'hidden-bottom'.`);
+        .toBe('hidden', `Expected the animation state would be 'hidden'.`);
   });
 
   it(`should set the old snack bar animation state to complete and the new snack bar animation
@@ -210,7 +240,7 @@ describe('MatSnackBar', () => {
 
     viewContainerFixture.detectChanges();
     expect(snackBarRef.containerInstance._animationState)
-        .toBe('visible-bottom', `Expected the animation state would be 'visible-bottom'.`);
+        .toBe('visible', `Expected the animation state would be 'visible'.`);
 
     let config2 = {viewContainerRef: testViewContainerRef};
     let snackBarRef2 = snackBar.open(simpleMessage, undefined, config2);
@@ -221,9 +251,9 @@ describe('MatSnackBar', () => {
 
     expect(dismissCompleteSpy).toHaveBeenCalled();
     expect(snackBarRef.containerInstance._animationState)
-        .toBe('hidden-bottom', `Expected the animation state would be 'hidden-bottom'.`);
+        .toBe('hidden', `Expected the animation state would be 'hidden'.`);
     expect(snackBarRef2.containerInstance._animationState)
-        .toBe('visible-bottom', `Expected the animation state would be 'visible-bottom'.`);
+        .toBe('visible', `Expected the animation state would be 'visible'.`);
   }));
 
   it('should open a new snackbar after dismissing a previous snackbar', fakeAsync(() => {
@@ -243,7 +273,7 @@ describe('MatSnackBar', () => {
     // Wait for the snackbar open animation to finish.
     flush();
     expect(snackBarRef.containerInstance._animationState)
-        .toBe('visible-bottom', `Expected the animation state would be 'visible-bottom'.`);
+        .toBe('visible', `Expected the animation state would be 'visible'.`);
   }));
 
   it('should remove past snackbars when opening new snackbars', fakeAsync(() => {
@@ -420,31 +450,6 @@ describe('MatSnackBar', () => {
 
     expect(overlayContainerElement.querySelector('snack-bar-container')!.classList)
         .toContain('custom-class', 'Expected class applied through the defaults to be applied.');
-  }));
-
-  it('should position the snack bar correctly if no default position is defined', fakeAsync(() => {
-    overlayContainer.ngOnDestroy();
-    viewContainerFixture.destroy();
-
-    TestBed
-      .resetTestingModule()
-      .overrideProvider(MAT_SNACK_BAR_DEFAULT_OPTIONS, {
-        deps: [],
-        useFactory: () => ({politeness: 'polite'})
-      })
-      .configureTestingModule({imports: [MatSnackBarModule, NoopAnimationsModule]})
-      .compileComponents();
-
-    inject([MatSnackBar, OverlayContainer], (sb: MatSnackBar, oc: OverlayContainer) => {
-      snackBar = sb;
-      overlayContainer = oc;
-      overlayContainerElement = oc.getContainerElement();
-    })();
-
-    const snackBarRef = snackBar.open(simpleMessage);
-    flush();
-
-    expect(snackBarRef.containerInstance._animationState).toBe('visible-bottom');
   }));
 
   describe('with custom component', () => {

@@ -62,15 +62,15 @@ export class MatStepHeader implements OnDestroy {
   constructor(
     public _intl: MatStepperIntl,
     private _focusMonitor: FocusMonitor,
-    private _element: ElementRef,
+    private _element: ElementRef<HTMLElement>,
     changeDetectorRef: ChangeDetectorRef) {
-    _focusMonitor.monitor(_element.nativeElement, true);
+    _focusMonitor.monitor(_element, true);
     this._intlSubscription = _intl.changes.subscribe(() => changeDetectorRef.markForCheck());
   }
 
   ngOnDestroy() {
     this._intlSubscription.unsubscribe();
-    this._focusMonitor.stopMonitoring(this._element.nativeElement);
+    this._focusMonitor.stopMonitoring(this._element);
   }
 
   /** Returns string label of given step if it is a text label. */

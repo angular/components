@@ -8,6 +8,7 @@
     "experimentalDecorators": true,
     "noUnusedParameters": true,
     "strictNullChecks": true,
+    "strictFunctionTypes": true,
     "outDir": "../../dist/packages/demo-app",
     "rootDirs": [
       ".",
@@ -33,7 +34,6 @@
   ],
   "angularCompilerOptions": {
     "skipTemplateCodegen": false,
-    // TODO: disabled for now due to @angular/forms
-    "fullTemplateTypeCheck": false
+    "fullTemplateTypeCheck": true
   }
 }
