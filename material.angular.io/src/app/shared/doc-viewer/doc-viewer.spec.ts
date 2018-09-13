@@ -45,22 +45,27 @@ describe('DocViewer', () => {
   });
 
   it('should show error message when doc not found', () => {
-    let fixture = TestBed.createComponent(DocViewerTestComponent);
+    spyOn(console, 'log');
+
+    const fixture = TestBed.createComponent(DocViewerTestComponent);
+    const docViewer = fixture.debugElement.query(By.directive(DocViewer));
     fixture.detectChanges();
 
     const url = fixture.componentInstance.documentUrl;
     http.expectOne(url).flush(FAKE_DOCS[url]);
 
-    fixture.componentInstance.documentUrl = 'http://material.angular.io/error-doc.html';
+    const errorUrl = 'http://material.angular.io/error-doc.html';
+
+    fixture.componentInstance.documentUrl = errorUrl;
     fixture.detectChanges();
 
-    const errorUrl = fixture.componentInstance.documentUrl;
     http.expectOne(errorUrl).flush('Not found', {status: 404, statusText: 'Not found'});
 
-    let docViewer = fixture.debugElement.query(By.directive(DocViewer));
+
     expect(docViewer).not.toBeNull();
     expect(docViewer.nativeElement.innerHTML).toContain(
         'Failed to load document: http://material.angular.io/error-doc.html');
+    expect(console.log).toHaveBeenCalledTimes(1);
   });
 
   // TODO(mmalerba): Add test that example-viewer is instantiated.

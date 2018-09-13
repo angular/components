@@ -13,5 +13,5 @@ export async function unregisterServiceWorkers(): Promise<boolean> {
   // service workers from previous versions of the Angular Material docs.
   registrations.forEach(registration => registration.unregister());
 
-  return registrations.length > 0
+  return registrations.length > 0;
 }

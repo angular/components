@@ -6,10 +6,14 @@
 
 cd $(dirname ${0})/../
 
+# Default publish branch that is associated to the currently installed Angular Material
+# version.
+defaultPublishBranch=$(node ./tools/print-publish-branch)
+
 # Branch on the docs-content repository that includes the docs assets. The branch can
-# be specified because in some situations we do not always want the docs-content of the
-# master branch (e.g. if `master` reflects the next major version).
-docsContentBranch=${1:-'master'}
+# be specified because in some situations we do not always want the docs content that
+# is associated with the currently installed version of Material.
+docsContentBranch=${1:-${defaultPublishBranch}}
 
 # Directory where documentation assets should be copied to (overviews, api docs)
 documentsDestination=./src/assets/documents/

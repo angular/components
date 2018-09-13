@@ -4,36 +4,25 @@ sudo: false
 node_js:
   # Use the explicit NodeJS LTS version 8.9.4 to avoid any automatic upgrade of the version.
   # This ensures that all Travis jobs run consistently and don't have different Node versions.
-  - '8.9.4'
+  - '8.12.0'
 
 branches:
   only:
   - master
 
+addons:
+  chrome: stable
+  firefox: latest
+
 env:
-  global:
-  - LOGS_DIR=/tmp/material-angular-io-build/logs
-  - SAUCE_USERNAME=angular-ci
-  - SAUCE_ACCESS_KEY=9b988f434ff8-fbca-8aa4-4ae3-35442987
-  - BROWSER_STACK_USERNAME=angularteam1
-  - BROWSER_STACK_ACCESS_KEY=CaXMeMHD9pr5PHg8N7Jq
-  - BROWSER_PROVIDER_READY_FILE=/tmp/material-angular-io-build/readyfile
-  - BROWSER_PROVIDER_ERROR_FILE=/tmp/material-angular-io-build/errorfile
   matrix:
     - MODE=lint
     # TODO(josephperrott): Add e2e tests
     # - MODE=e2e
-    - MODE=saucelabs
-    - MODE=browserstack
-
-matrix:
-  fast_finish: true
+    - MODE=test
 
 install:
   - npm install
-
-before_script:
-  - mkdir -p $LOGS_DIR
 
 script:
   - ./scripts/ci/build-and-test.sh

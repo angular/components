@@ -70,7 +70,7 @@ export class DocViewer implements OnDestroy {
     this.contentLoaded.next();
   }
 
-  /** Show an error that ocurred when fetching a document. */
+  /** Show an error that occurred when fetching a document. */
   private showError(url: string, error: HttpErrorResponse) {
     console.log(error);
     this._elementRef.nativeElement.innerText =

@@ -1,15 +1,26 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {of as observableOf} from 'rxjs';
+import {ActivatedRoute, Params} from '@angular/router';
+import {BehaviorSubject} from 'rxjs';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 import {ComponentCategoryList, ComponentCategoryListModule} from './component-category-list';
 
-
 describe('ComponentCategoryList', () => {
   let fixture: ComponentFixture<ComponentCategoryList>;
+  let params: BehaviorSubject<Params>;
 
   beforeEach(async(() => {
+    params = new BehaviorSubject<Params>({});
+
+    const fakeActivatedRoute = {
+      snapshot: {},
+      pathFromRoot: [{params}]
+    };
+
     TestBed.configureTestingModule({
       imports: [ComponentCategoryListModule, DocsAppTestingModule],
+      providers: [
+        {provide: ActivatedRoute, useValue: fakeActivatedRoute}
+      ]
     }).compileComponents();
   }));
 
@@ -17,19 +28,13 @@ describe('ComponentCategoryList', () => {
     fixture = TestBed.createComponent(ComponentCategoryList);
   });
 
-  it('should set set up base param observable on init', () => {
-    const component = fixture.componentInstance;
-    spyOn(component, 'ngOnInit').and.callThrough();
-    fixture.detectChanges();
-    expect(component.ngOnInit).toHaveBeenCalled();
-    expect(component.params).toBeDefined();
-  });
-
   it('should render a card for every category', () => {
+    // Usually the component category list component won't be instantiated if the activated
+    // route does not contain a `section` param. In case there is no section param before
+    // `ngOnInit` subscribes to the activated route params, and an error will be raised.
+    params.next({section: 'components'});
     fixture.detectChanges();
-    // Params is replaced after ngOnit runs since params is set on init.
-    fixture.componentInstance.params = observableOf({'section': 'components'});
-    fixture.detectChanges();
+
     const component = fixture.componentInstance;
     const categories = component.docItems.getCategories('components');
     const cards = fixture
