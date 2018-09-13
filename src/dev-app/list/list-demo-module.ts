@@ -11,6 +11,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
 import {RouterModule} from '@angular/router';
@@ -22,6 +23,7 @@ import {ListDemo} from './list-demo';
     FormsModule,
     MatButtonModule,
     MatCheckboxModule,
+    MatFormFieldModule,
     MatIconModule,
     MatListModule,
     RouterModule.forChild([{path: '', component: ListDemo}]),

@@ -102,6 +102,21 @@
         </button>
       </mat-list-item>
     </mat-nav-list>
+    <mat-form-field>
+      <mat-label>Selected Nav List Item</mat-label>
+      <input matInput type="number" [value]="activeLinkIndex"
+             (change)="activeLinkIndex = $event.target.value" max="3" min="0">
+    </mat-form-field>
+    <mat-nav-list>
+      <mat-list-item *ngFor="let link of links; let i = index"
+                     (click)="activeLinkIndex = i"
+                     [active]="activeLinkIndex == i">
+        <a mat-line>{{ link.name }}</a>
+        <button mat-icon-button (click)="infoClicked=!infoClicked">
+          <mat-icon class="material-icons">info</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-nav-list>
   </div>
 
   <div>

@@ -17,7 +17,10 @@ export declare class MatListIconCssMatStyler {
 export declare class MatListItem extends _MatListItemMixinBase implements AfterContentInit, CanDisableRipple, OnDestroy {
     _avatar: MatListAvatarCssMatStyler;
     _icon: MatListIconCssMatStyler;
+    _lastMouseDownEvent: MouseEvent | null;
     _lines: QueryList<MatLine>;
+    active: boolean;
+    ripple: MatRipple;
     constructor(_element: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, navList?: MatNavList, list?: MatList);
     _getHostElement(): HTMLElement;
     _isRippleDisabled(): boolean;

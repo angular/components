@@ -65,6 +65,7 @@ export class ListDemo {
   selectedOptions: string[] = ['apples'];
   changeEventCount = 0;
   modelChangeEventCount = 0;
+  activeLinkIndex = 0;
 
   onSelectedOptionsChange(values: string[]) {
     this.selectedOptions = values;
