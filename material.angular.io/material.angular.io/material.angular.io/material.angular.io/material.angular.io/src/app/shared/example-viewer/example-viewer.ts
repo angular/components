@@ -41,7 +41,7 @@ export class ExampleViewer {
   }
   private _example: string;
 
-  constructor(private snackbar: MatSnackBar,private copier: CopierService) {}
+  constructor(private snackbar: MatSnackBar, private copier: CopierService) {}
 
   toggleSourceView(): void {
     this.showSource = !this.showSource;
@@ -77,6 +77,6 @@ export class ExampleViewer {
       // the file name to match the highlighted HTML file that displays the source.
       const fileSourceName = fileName.replace(fileExtensionRegex, '$1-$2.html');
       this.exampleTabs[fileName] = this.resolveExampleFile(fileSourceName);
-    })
+    });
   }
 }
