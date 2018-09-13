@@ -14,7 +14,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angula
 const defaultDialogConfig = new MatDialogConfig();
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'dialog-demo',
   templateUrl: 'dialog-demo.html',
   styleUrls: ['dialog-demo.css'],

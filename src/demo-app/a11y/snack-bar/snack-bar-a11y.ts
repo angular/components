@@ -11,7 +11,7 @@ import {MatSnackBar} from '@angular/material';
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'snack-bar-a11y',
   templateUrl: 'snack-bar-a11y.html',
 })

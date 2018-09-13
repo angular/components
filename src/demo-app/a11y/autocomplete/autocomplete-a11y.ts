@@ -10,7 +10,7 @@ import {Component} from '@angular/core';
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'autocomplete-a11y',
   templateUrl: 'autocomplete-a11y.html',
   styleUrls: ['autocomplete-a11y.css'],

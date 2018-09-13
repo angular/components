@@ -34,7 +34,7 @@ export class MatDatepickerToggleIcon {}
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-datepicker-toggle',
   templateUrl: 'datepicker-toggle.html',
   styleUrls: ['datepicker-toggle.css'],

@@ -17,7 +17,7 @@ import {BehaviorSubject} from 'rxjs';
  * Checklist demo with flat tree
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'checklist-tree-demo',
   templateUrl: 'checklist-tree-demo.html',
   styleUrls: ['checklist-tree-demo.css'],

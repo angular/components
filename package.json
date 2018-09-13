@@ -54,6 +54,7 @@
     "@angular/router": "7.0.0-beta.4",
     "@angular/upgrade": "7.0.0-beta.4",
     "@bazel/ibazel": "0.3.1",
+    "@bazel/typescript": "0.16.2",
     "@google-cloud/storage": "^1.1.1",
     "@octokit/rest": "^15.9.4",
     "@schematics/angular": "^0.9.0-beta.2",

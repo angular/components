@@ -23,6 +23,10 @@ ng_module(
     "//src/cdk/keycodes",
     "//src/cdk/platform",
     "@rxjs",
+    "@angular//packages/core",
+    "@angular//packages/common",
+    "@angular//packages/platform-browser/animations",
+    "@angular//packages/forms",
   ],
   tsconfig = "//src/lib:tsconfig-build.json",
 )

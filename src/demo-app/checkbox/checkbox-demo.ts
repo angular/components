@@ -16,7 +16,7 @@ export interface Task {
 }
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-checkbox-demo-nested-checklist',
   styles: [`
     li {
@@ -64,7 +64,7 @@ export class MatCheckboxDemoNestedChecklist {
 }
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-checkbox-demo',
   templateUrl: 'checkbox-demo.html',
   styleUrls: ['checkbox-demo.css'],

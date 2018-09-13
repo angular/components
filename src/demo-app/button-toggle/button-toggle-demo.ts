@@ -10,7 +10,7 @@ import {Component} from '@angular/core';
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'button-toggle-demo',
   templateUrl: 'button-toggle-demo.html',
 })

@@ -17,7 +17,7 @@ export const _CdkTree = CdkTree;
  * Wrapper for the CdkTable with Material design styles.
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-tree',
   exportAs: 'matTree',
   template: `<ng-container matTreeNodeOutlet></ng-container>`,

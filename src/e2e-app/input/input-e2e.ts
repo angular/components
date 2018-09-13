@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'input-e2e',
   templateUrl: 'input-e2e.html',
 })

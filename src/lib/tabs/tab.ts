@@ -34,7 +34,7 @@ export const _MatTabMixinBase: CanDisableCtor & typeof MatTabBase =
     mixinDisabled(MatTabBase);
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-tab',
   templateUrl: 'tab.html',
   inputs: ['disabled'],

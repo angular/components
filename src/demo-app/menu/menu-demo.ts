@@ -10,7 +10,7 @@ import {Component} from '@angular/core';
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'menu-demo',
   templateUrl: 'menu-demo.html',
   styleUrls: ['menu-demo.css'],

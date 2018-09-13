@@ -1,64 +1,87 @@
 workspace(name = "angular_material")
 
-# Add nodejs rules
+BAZEL_BUILDTOOLS_VERSION = "82b21607e00913b16fe1c51bec80232d9d6de31c"
+
 http_archive(
-  name = "build_bazel_rules_nodejs",
-  url = "https://github.com/bazelbuild/rules_nodejs/archive/0.10.1.zip",
-  strip_prefix = "rules_nodejs-0.10.1",
-  sha256 = "634206524d90dc03c52392fa3f19a16637d2bcf154910436fe1d669a0d9d7b9c",
+    name = "com_github_bazelbuild_buildtools",
+    url = "https://github.com/bazelbuild/buildtools/archive/%s.zip" % BAZEL_BUILDTOOLS_VERSION,
+    strip_prefix = "buildtools-%s" % BAZEL_BUILDTOOLS_VERSION,
+    sha256 = "edb24c2f9c55b10a820ec74db0564415c0cf553fa55e9fc709a6332fb6685eff",
 )
 
-# NOTE: this rule installs nodejs, npm, and yarn, but does NOT install
-# your npm dependencies. You must still run the package manager.
-load("@build_bazel_rules_nodejs//:defs.bzl", "check_bazel_version", "node_repositories")
-
-check_bazel_version("0.15.0")
-node_repositories(package_json = ["//:package.json"])
-
-# Add sass rules
 http_archive(
-  name = "io_bazel_rules_sass",
-  url = "https://github.com/bazelbuild/rules_sass/archive/0.1.0.zip",
-  strip_prefix = "rules_sass-0.1.0",
-  sha256 = "b243c4d64f054c174051785862ab079050d90b37a1cef7da93821c6981cb9ad4",
+    name = "build_bazel_rules_nodejs",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/archive/0.12.2.zip"],
+    strip_prefix = "rules_nodejs-0.12.2",
+    sha256 = "b691443ee5877214bfce3b006204528ef92ee57c2c5d21aec6a757bc6f58a7b8",
 )
+
+# Runs the TypeScript compiler
+local_repository(
+    name = "build_bazel_rules_typescript",
+    path = "node_modules/@bazel/typescript",
+)
+
+load("@build_bazel_rules_typescript//:package.bzl", "rules_typescript_dependencies")
+rules_typescript_dependencies()
+
+# Runs the Sass CSS preprocessor
+http_archive(
+    name = "io_bazel_rules_sass",
+    url = "https://github.com/bazelbuild/rules_sass/archive/1.11.0.zip",
+    strip_prefix = "rules_sass-1.11.0",
+    sha256 = "dbe9fb97d5a7833b2a733eebc78c9c1e3880f676ac8af16e58ccf2139cbcad03",
+)
+
+# The @angular repo contains rule for building Angular applications
+http_archive(
+    name = "angular",
+    url = "https://github.com/angular/angular/archive/7.0.0-beta.4.zip",
+    strip_prefix = "angular-7.0.0-beta.4",
+    sha256 = "8b124b71b8059c97009de3f20977f7798e80c2f3185fe1d1bb4ed0549baf03e0",
+)
+
+# The @rxjs repo contains targets for building rxjs with bazel
+local_repository(
+    name = "rxjs",
+    path = "node_modules/rxjs/src",
+)
+
+####################################
+# Load and install our dependencies downloaded above.
+
+load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories", "yarn_install")
+
+node_repositories(
+    package_json = ["//:package.json"],
+    preserve_symlinks = True,
+)
+
+load("@io_bazel_rules_go//go:def.bzl", "go_rules_dependencies", "go_register_toolchains")
+
+go_rules_dependencies()
+go_register_toolchains()
+
+load("@io_bazel_rules_webtesting//web:repositories.bzl", "browser_repositories", "web_test_repositories")
+
+web_test_repositories()
+browser_repositories(
+    chromium = True,
+    firefox = True,
+)
+
+load("@build_bazel_rules_typescript//:defs.bzl", "ts_setup_workspace", "check_rules_typescript_version")
+ts_setup_workspace()
+
+# 0.16.0: tsc_wrapped uses user's typescript version & check_rules_typescript_version
+check_rules_typescript_version("0.16.0")
 
 load("@io_bazel_rules_sass//sass:sass_repositories.bzl", "sass_repositories")
 sass_repositories()
 
-# Add TypeScript rules
-http_archive(
-  name = "build_bazel_rules_typescript",
-  url = "https://github.com/bazelbuild/rules_typescript/archive/0.15.1.zip",
-  strip_prefix = "rules_typescript-0.15.1",
-  sha256 = "3792cc20ef13bb1d1d8b1760894c3320f02a87843e3a04fed7e8e454a75328b6",
-)
+#
+# Load and install our dependencies from local repositories
+#
 
-http_archive(
-  name = "io_bazel_rules_webtesting",
-  url = "https://github.com/bazelbuild/rules_webtesting/archive/7ffe970bbf380891754487f66c3d680c087d67f2.zip",
-  strip_prefix = "rules_webtesting-7ffe970bbf380891754487f66c3d680c087d67f2",
-  sha256 = "4fb0dca8c9a90547891b7ef486592775a523330fc4555c88cd8f09270055c2ce",
-)
-
-# Setup TypeScript Bazel workspace
-load("@build_bazel_rules_typescript//:defs.bzl", "ts_setup_workspace")
-ts_setup_workspace()
-
-# Add Angular rules
-local_repository(
-  name = "angular",
-  path = "node_modules/@angular/bazel",
-)
-
-# Add rxjs
-local_repository(
-  name = "rxjs",
-  path = "node_modules/rxjs/src",
-)
-
-
-# This commit matches the version of buildifier in angular/ngcontainer
-# If you change this, also check if it matches the version in the angular/ngcontainer
-# version in /.circleci/config.yml
-BAZEL_BUILDTOOLS_VERSION = "82b21607e00913b16fe1c51bec80232d9d6de31c"
+load("@angular//:index.bzl", "ng_setup_workspace")
+ng_setup_workspace()

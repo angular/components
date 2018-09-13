@@ -16,7 +16,7 @@ let max = 5;
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'input-demo',
   templateUrl: 'input-demo.html',

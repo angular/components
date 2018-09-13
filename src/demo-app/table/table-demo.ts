@@ -11,7 +11,7 @@ import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   templateUrl: 'table-demo.html',
 })
 export class TableDemo {

@@ -12,7 +12,7 @@ import {Observable} from 'rxjs';
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'screen-type',
   templateUrl: 'screen-type-demo.html',
   styleUrls: ['screen-type-demo.css'],

@@ -24,7 +24,7 @@ import {MatStepperIconContext} from './stepper-icon';
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-step-header',
   templateUrl: 'step-header.html',
   styleUrls: ['step-header.css'],

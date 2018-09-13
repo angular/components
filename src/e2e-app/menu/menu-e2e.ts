@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'menu-e2e',
   templateUrl: 'menu-e2e.html',
   styles: [`

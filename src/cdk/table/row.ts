@@ -241,7 +241,7 @@ export class CdkCellOutlet implements OnDestroy {
 
 /** Header template container that contains the cell outlet. Adds the right class and role. */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'cdk-header-row, tr[cdk-header-row]',
   template: CDK_ROW_TEMPLATE,
   host: {
@@ -256,7 +256,7 @@ export class CdkHeaderRow { }
 
 /** Footer template container that contains the cell outlet. Adds the right class and role. */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'cdk-footer-row, tr[cdk-footer-row]',
   template: CDK_ROW_TEMPLATE,
   host: {
@@ -270,7 +270,7 @@ export class CdkFooterRow { }
 
 /** Data row template container that contains the cell outlet. Adds the right class and role. */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'cdk-row, tr[cdk-row]',
   template: CDK_ROW_TEMPLATE,
   host: {

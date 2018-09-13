@@ -12,7 +12,7 @@ import {Component} from '@angular/core';
 // TODO(josephperrott): Add an automatically filling example progress bar.
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'progress-bar-demo',
   templateUrl: 'progress-bar-demo.html',
   styleUrls: ['progress-bar-demo.css'],

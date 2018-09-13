@@ -23,7 +23,7 @@ export interface StateGroup {
 }
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'autocomplete-demo',
   templateUrl: 'autocomplete-demo.html',
   styleUrls: ['autocomplete-demo.css'],

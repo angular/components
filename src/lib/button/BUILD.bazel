@@ -12,6 +12,9 @@ ng_module(
     "//src/lib/core",
     "//src/cdk/a11y",
     "//src/cdk/platform",
+    "@angular//packages/core",
+    "@angular//packages/common",
+    "@angular//packages/platform-browser/animations:animations"
   ],
   tsconfig = "//src/lib:tsconfig-build.json",
 )

@@ -83,7 +83,7 @@ const MAT_MENU_BASE_ELEVATION = 4;
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-menu',
   templateUrl: 'menu.html',
   styleUrls: ['menu.css'],

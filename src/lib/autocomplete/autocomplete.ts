@@ -76,7 +76,7 @@ export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefau
 }
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-autocomplete',
   templateUrl: 'autocomplete.html',
   styleUrls: ['autocomplete.css'],

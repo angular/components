@@ -12,14 +12,14 @@ import {Subscription} from 'rxjs';
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'accessibility-home',
   template: `<p>Welcome to the accessibility demos for Angular Material!</p>`,
 })
 export class AccessibilityHome {}
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'accessibility-demo',
   templateUrl: 'a11y.html',
   styleUrls: ['a11y.css'],

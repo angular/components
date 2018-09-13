@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'progress-bar-e2e',
   templateUrl: 'progress-bar-e2e.html',
   styles: [`

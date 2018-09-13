@@ -41,7 +41,7 @@ import {FocusTrap, FocusTrapFactory} from '@angular/cdk/a11y';
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-bottom-sheet-container',
   templateUrl: 'bottom-sheet-container.html',
   styleUrls: ['bottom-sheet-container.css'],

@@ -15,7 +15,7 @@ export interface Person {
 }
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'chips-a11y',
   templateUrl: 'chips-a11y.html',
   styleUrls: ['chips-a11y.css'],

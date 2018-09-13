@@ -42,7 +42,7 @@ import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
 export const _CdkStepper = CdkStepper;
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-step',
   templateUrl: 'step.html',
   providers: [{provide: ErrorStateMatcher, useExisting: MatStep}],
@@ -115,7 +115,7 @@ export class MatStepper extends _CdkStepper implements AfterContentInit {
 }
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-horizontal-stepper',
   exportAs: 'matHorizontalStepper',
   templateUrl: 'stepper-horizontal.html',
@@ -134,7 +134,7 @@ export class MatStepper extends _CdkStepper implements AfterContentInit {
 export class MatHorizontalStepper extends MatStepper { }
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-vertical-stepper',
   exportAs: 'matVerticalStepper',
   templateUrl: 'stepper-vertical.html',

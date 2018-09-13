@@ -10,7 +10,7 @@ import {Component} from '@angular/core';
 import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'tabs-demo',
   templateUrl: 'tabs-demo.html',
 })

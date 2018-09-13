@@ -11,7 +11,7 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'toolbar-demo',
   templateUrl: 'live-announcer-demo.html',
 })

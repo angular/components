@@ -501,7 +501,7 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-tooltip-component',
   templateUrl: 'tooltip.html',
   styleUrls: ['tooltip.css'],

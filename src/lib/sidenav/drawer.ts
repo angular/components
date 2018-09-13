@@ -67,7 +67,7 @@ export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean {
 }
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-drawer-content',
   template: '<ng-content></ng-content>',
   host: {
@@ -100,7 +100,7 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
  * This component corresponds to a drawer that can be opened on the drawer container.
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-drawer',
   exportAs: 'matDrawer',
   template: '<ng-content></ng-content>',
@@ -393,7 +393,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
  * and coordinates the backdrop and content styling.
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-drawer-container',
   exportAs: 'matDrawerContainer',
   templateUrl: 'drawer-container.html',

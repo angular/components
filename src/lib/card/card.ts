@@ -149,7 +149,7 @@ export class MatCardAvatar {}
  * - mat-card-footer
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-card',
   exportAs: 'matCard',
   templateUrl: 'card.html',
@@ -167,7 +167,7 @@ export class MatCard {}
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-card-header',
   templateUrl: 'card-header.html',
   encapsulation: ViewEncapsulation.None,
@@ -183,7 +183,7 @@ export class MatCardHeader {}
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-card-title-group',
   templateUrl: 'card-title-group.html',
   encapsulation: ViewEncapsulation.None,

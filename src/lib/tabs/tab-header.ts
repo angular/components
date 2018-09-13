@@ -63,7 +63,7 @@ export const _MatTabHeaderMixinBase: CanDisableRippleCtor & typeof MatTabHeaderB
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-tab-header',
   templateUrl: 'tab-header.html',
   styleUrls: ['tab-header.css'],

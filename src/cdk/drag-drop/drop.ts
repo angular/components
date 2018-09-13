@@ -39,7 +39,7 @@ const DROP_PROXIMITY_THRESHOLD = 0.05;
 
 /** Container that wraps a set of draggable items. */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'cdk-drop',
   exportAs: 'cdkDrop',
   template: '<ng-content></ng-content>',

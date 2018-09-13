@@ -9,7 +9,7 @@ import {Component} from '@angular/core';
 import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'tooltip-demo',
   templateUrl: 'tooltip-demo.html',
 })

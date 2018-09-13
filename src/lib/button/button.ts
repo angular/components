@@ -64,7 +64,7 @@ export const _MatButtonMixinBase:
  * Material design button.
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: `button[mat-button], button[mat-raised-button], button[mat-icon-button],
              button[mat-fab], button[mat-mini-fab], button[mat-stroked-button],
              button[mat-flat-button]`,
@@ -145,7 +145,7 @@ export class MatButton extends _MatButtonMixinBase
  * Raised Material design button.
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: `a[mat-button], a[mat-raised-button], a[mat-icon-button], a[mat-fab],
              a[mat-mini-fab], a[mat-stroked-button], a[mat-flat-button]`,
   exportAs: 'matButton, matAnchor',

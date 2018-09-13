@@ -37,7 +37,7 @@ export const _MatMenuItemMixinBase: CanDisableRippleCtor & CanDisableCtor & type
  * It exists mostly to set the role attribute.
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: '[mat-menu-item]',
   exportAs: 'matMenuItem',
   inputs: ['disabled', 'disableRipple'],

@@ -79,7 +79,7 @@ export const _MatSlideToggleMixinBase:
 
 /** Represents a slidable "switch" toggle that can be moved between on and off. */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-slide-toggle',
   exportAs: 'matSlideToggle',
   host: {

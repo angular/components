@@ -7,6 +7,9 @@ ng_module(
   name = "keycodes",
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/cdk/keycodes",
-  deps = ["@rxjs"],
+  deps = [
+    "@rxjs",
+    "@angular//packages/core",
+  ],
   tsconfig = "//src/cdk:tsconfig-build.json",
 )

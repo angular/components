@@ -319,7 +319,7 @@ export const _MatButtonToggleMixinBase: CanDisableRippleCtor & typeof MatButtonT
 
 /** Single button inside of a toggle group. */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-button-toggle',
   templateUrl: 'button-toggle.html',
   styleUrls: ['button-toggle.css'],

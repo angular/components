@@ -23,7 +23,7 @@ let _uniqueOptgroupIdCounter = 0;
  * Component that is used to group instances of `mat-option`.
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-optgroup',
   exportAs: 'matOptgroup',
   templateUrl: 'optgroup.html',

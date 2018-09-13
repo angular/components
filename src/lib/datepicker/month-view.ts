@@ -44,7 +44,7 @@ const DAYS_PER_WEEK = 7;
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-month-view',
   templateUrl: 'month-view.html',
   exportAs: 'matMonthView',

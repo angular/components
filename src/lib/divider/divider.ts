@@ -10,7 +10,7 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-divider',
   host: {
     'role': 'separator',

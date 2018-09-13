@@ -324,7 +324,7 @@ export const _MatRadioButtonMixinBase:
  * A Material design radio-button. Typically placed inside of `<mat-radio-group>` elements.
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-radio-button',
   templateUrl: 'radio.html',
   styleUrls: ['radio.css'],

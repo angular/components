@@ -43,7 +43,7 @@ export function throwDialogContentAlreadyAttachedError() {
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'cdk-dialog-container',
   templateUrl: './dialog-container.html',
   styleUrls: ['dialog-container.css'],

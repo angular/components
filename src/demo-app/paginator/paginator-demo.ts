@@ -10,7 +10,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
 import {PageEvent} from '@angular/material';
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'paginator-demo',
   templateUrl: 'paginator-demo.html',
   styleUrls: ['paginator-demo.css'],

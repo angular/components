@@ -21,7 +21,7 @@ export interface DemoColor {
 }
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'chips-demo',
   templateUrl: 'chips-demo.html',
   styleUrls: ['chips-demo.css']

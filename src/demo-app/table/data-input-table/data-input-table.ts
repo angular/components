@@ -16,7 +16,7 @@ import {DataSource} from '@angular/cdk/collections';
 export type TrackByStrategy = 'position' | 'reference' | 'index';
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'data-input-table-demo',
   templateUrl: 'data-input-table.html',
   styleUrls: ['data-input-table.css'],

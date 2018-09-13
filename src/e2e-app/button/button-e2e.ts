@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'button-e2e',
   templateUrl: 'button-e2e.html',
 })

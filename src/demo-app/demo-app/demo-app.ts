@@ -17,7 +17,7 @@ import {Component, ElementRef, ViewEncapsulation} from '@angular/core';
  * as our entry point.
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'entry-app',
   template: '<router-outlet></router-outlet>',
 })
@@ -39,7 +39,7 @@ export class Home {}
  * DemoApp with toolbar and sidenav.
  */
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'demo-app',
   templateUrl: 'demo-app.html',
   styleUrls: ['demo-app.css'],

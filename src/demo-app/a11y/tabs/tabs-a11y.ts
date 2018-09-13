@@ -9,7 +9,7 @@
 import {Component} from '@angular/core';
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'tabs-a11y',
   templateUrl: 'tabs-a11y.html',
   styleUrls: ['tabs-a11y.css'],
@@ -50,7 +50,7 @@ export class TabsAccessibilityDemo {
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'sunny-routed-content',
   template: 'Having a lot of light from the sun.',
 })
@@ -58,7 +58,7 @@ export class SunnyTabContent {}
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'rainy-routed-content',
   template: 'A rainy period of time is one when it rains a lot',
 })
@@ -66,7 +66,7 @@ export class RainyTabContent {}
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'foggy-routed-content',
   template: 'If the weather is foggy, there is fog',
 })

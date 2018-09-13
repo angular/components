@@ -12,7 +12,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 
 
 @Component({
-  moduleId: module.id,
+  // moduleId: module.id,,
   selector: 'mat-icon-demo',
   templateUrl: 'icon-demo.html',
   styleUrls: ['icon-demo.css'],

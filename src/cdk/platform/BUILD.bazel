@@ -5,6 +5,10 @@ ng_module(
   name = "platform",
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/cdk/platform",
-  deps = ["@rxjs"],
+  deps = [
+    "@rxjs",
+    "@angular//packages/core",
+    "@angular//packages/common",
+  ],
   tsconfig = "//src/cdk:tsconfig-build.json",
 )
