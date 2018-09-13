@@ -30,7 +30,7 @@ export const matExpansionAnimations: {
   indicatorRotate: trigger('indicatorRotate', [
     state('collapsed', style({transform: 'rotate(0deg)'})),
     state('expanded', style({transform: 'rotate(180deg)'})),
-    transition('collapsed <=> expanded', animate(EXPANSION_PANEL_ANIMATION_TIMING)),
+    transition('* <=> *', animate(EXPANSION_PANEL_ANIMATION_TIMING)),
   ]),
 
   /** Animation that expands and collapses the panel header height. */
