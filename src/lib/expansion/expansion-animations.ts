@@ -27,19 +27,19 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,
  * causes the animation state of moved components to become `void` upon exit, and not update again
  * upon reentry into the DOM.  This can lead a to situation for the expansion panel where the state
  * of the panel is `expanded` or `collapsed` but the animation state is `void`.
- * 
+ *
  * To correctly handle animating to the next state, we animate between `void` and `collapsed` which
  * are defined to have the same styles. Since angular animates from the current styles to the
  * destination state's style definition, in situations where we are moving from `void`'s styles to
  * `collapsed` this acts a noop since no style values change.
- * 
+ *
  * In the case where angular's animation state is out of sync with the expansion panel's state, the
  * expansion panel being `expanded` and angular animations being`void`, the animation from the
- * `expanded`'s effective styles (though in a `void` animation state) to the collapsed state will 
+ * `expanded`'s effective styles (though in a `void` animation state) to the collapsed state will
  * occur as expected.
- * 
+ *
  * Angular Bug: https://github.com/angular/angular/issues/18847
- **/
+ */
 export const matExpansionAnimations: {
   readonly indicatorRotate: AnimationTriggerMetadata;
   readonly expansionHeaderHeight: AnimationTriggerMetadata;
