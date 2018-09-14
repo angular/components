@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {DateAdapter} from '@angular/material/core';
 import {Subject} from 'rxjs';
+import {DateAdapter} from './date-adapter';
 
 export abstract class MatDateSelection<D> {
   valueChanges = new Subject<void>();
