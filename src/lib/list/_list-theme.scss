@@ -56,7 +56,7 @@
     }
 
     .mat-subheader {
-      font-family: mat-font-family($config, body-2);
+      @include mat-font-family-css-var($config, body-2);
       font-size: mat-font-size($config, body-2);
       font-weight: mat-font-weight($config, body-2);
     }

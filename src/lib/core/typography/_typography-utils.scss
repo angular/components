@@ -37,8 +37,8 @@
 }
 
 // Creates a CSS rule for font-family using the --mat-font-family css variable
-@mixin mat-font-family-css-var($config) {
-  @include mat-css-var(font-family, font-family, mat-font-family($config));
+@mixin mat-font-family-css-var($config, $level: null) {
+  @include mat-css-var(font-family, font-family, mat-font-family($config, $level));
 }
 
 // Outputs the shorthand `font` CSS property, based on a set of typography values. Falls back to
