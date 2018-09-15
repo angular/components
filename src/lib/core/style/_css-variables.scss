@@ -1,0 +1,21 @@
+// Creates a css rule for the property setting it first to the value
+// and then to the provided css variable with the provided value as a fallback
+//
+// @param $property The property to set
+// @param $variable The name of the css variable to use (without the "--mat-" prefix)
+// @param $fallback The value to use when the css variable is not set
+//                  or not supported by the browser
+@mixin mat-css-var($property, $variable, $fallback) {
+  // browsers which do not support css variables will fallback to this value
+  #{$property}: $fallback;
+  #{$property}: var(--mat-#{$variable}, $fallback);
+}
+
+// Wraps the provided fallback value in a css variable declaration
+//
+// @param $variable The name of the css variable to use (without the "--mat-" prefix)
+// @param $fallback The value to use when the css variable is not set
+//                  or not supported by the browser
+@function css-var($variable, $fallback) {
+  @return var(--mat-#{$variable}, $fallback);
+}

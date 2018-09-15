@@ -38,11 +38,11 @@
   $font-family: mat-font-family($config);
 
   .mat-list-item {
-    font-family: $font-family;
+    @include mat-font-family-css-var($config);
   }
 
   .mat-list-option {
-    font-family: $font-family;
+    @include mat-font-family-css-var($config);
   }
 
   // Default list
@@ -77,7 +77,7 @@
     }
 
     .mat-subheader {
-      font-family: $font-family;
+      @include mat-font-family-css-var($config);
       font-size: mat-font-size($config, caption);
       font-weight: mat-font-weight($config, body-2);
     }

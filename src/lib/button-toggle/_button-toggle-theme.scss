@@ -31,6 +31,6 @@
 
 @mixin mat-button-toggle-typography($config) {
   .mat-button-toggle {
-    font-family: mat-font-family($config);
+    @include mat-font-family-css-var($config);
   }
 }

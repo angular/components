@@ -34,8 +34,7 @@
   $caption:           mat-typography-level(12px, 20px, 400),
   $button:            mat-typography-level(14px, 14px, 500),
   // Line-height must be unit-less fraction of the font-size.
-  $input:             mat-typography-level(inherit, 1.125, 400),
-  $use-css-variables: false
+  $input:             mat-typography-level(inherit, 1.125, 400)
 ) {
 
   // Declare an initial map with all of the levels.
@@ -65,10 +64,7 @@
   }
 
   // Add the base font family to the config.
-  @return map-merge($config, (
-    font-family: $font-family,
-    use-css-variables: $use-css-variables
-  ));
+  @return map-merge($config, (font-family: $font-family));
 }
 
 // Adds the base typography styles, based on a config.

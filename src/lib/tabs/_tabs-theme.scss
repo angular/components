@@ -127,7 +127,7 @@
 
 @mixin mat-tabs-typography($config) {
   .mat-tab-group {
-    font-family: mat-font-family($config);
+    @include mat-font-family-css-var($config);
   }
 
   .mat-tab-label, .mat-tab-link {
