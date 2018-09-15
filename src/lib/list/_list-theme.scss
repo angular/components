@@ -35,8 +35,6 @@
 }
 
 @mixin mat-list-typography($config) {
-  $font-family: mat-font-family($config);
-
   .mat-list-item {
     @include mat-font-family-css-var($config);
   }
