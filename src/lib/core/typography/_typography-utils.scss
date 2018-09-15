@@ -24,6 +24,9 @@
 }
 
 // Gets the font-family from a typography config and removes the quotes around it.
+// If the config has $use-css-variables set to true the font-family will be
+// wrapped with the --mat-font-family css variable.
+// Example: var(--mat-font-family, Roboto, "Helvetica Neue", sans-serif)
 @function mat-font-family($config, $level: null) {
   $font-family: map-get($config, font-family);
 
@@ -31,7 +34,15 @@
     $font-family: _mat-get-type-value($config, $level, font-family);
   }
 
-  @return if($font-family == null, $font-family, unquote($font-family));
+  @return if(
+    $font-family == null,
+    $font-family,
+    if(
+      map-get($config, use-css-variables),
+      var(--mat-font-family, unquote($font-family)),
+      $font-family
+    )
+  );
 }
 
 // Outputs the shorthand `font` CSS property, based on a set of typography values. Falls back to
