@@ -288,7 +288,12 @@ const DOCS: {[key: string]: DocCategory[]} = {
           id: 'chips',
           name: 'Chips',
           summary: 'Presents a list of items as a set of small, tactile entities.',
-          examples: ['chips-stacked']
+          examples: [
+            'chips-overview',
+            'chips-autocomplete',
+            'chips-input',
+            'chips-stacked',
+          ]
         },
         {
           id: 'icon',
