@@ -86,6 +86,6 @@
 
 @mixin mat-slide-toggle-typography($config) {
   .mat-slide-toggle-content {
-    font-family: mat-font-family($config);
+    @include mat-font-family-css-var($config);
   }
 }

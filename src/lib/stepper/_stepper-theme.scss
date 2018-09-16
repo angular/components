@@ -61,7 +61,7 @@
 
 @mixin mat-stepper-typography($config) {
   .mat-stepper-vertical, .mat-stepper-horizontal {
-    font-family: mat-font-family($config);
+    @include mat-font-family-css-var($config);
   }
 
   .mat-step-label {

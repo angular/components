@@ -19,7 +19,7 @@ $mat-tooltip-handset-vertical-padding:
 
 @mixin mat-tooltip-typography($config) {
   .mat-tooltip {
-    font-family: mat-font-family($config);
+    @include mat-font-family-css-var($config);
     font-size: $mat-tooltip-font-size;
     padding-top: $mat-tooltip-vertical-padding;
     padding-bottom: $mat-tooltip-vertical-padding;

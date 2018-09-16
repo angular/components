@@ -1,3 +1,5 @@
+@import '../style/css-variables';
+
 // Utility for fetching a nested value from a typography config.
 @function _mat-get-type-value($config, $level, $name) {
   @return map-get(map-get($config, $level), $name);
@@ -34,6 +36,11 @@
   @return if($font-family == null, $font-family, unquote($font-family));
 }
 
+// Creates a CSS rule for font-family using the --mat-font-family css variable
+@mixin mat-font-family-css-var($config, $level: null) {
+  @include mat-css-var(font-family, font-family, mat-font-family($config, $level));
+}
+
 // Outputs the shorthand `font` CSS property, based on a set of typography values. Falls back to
 // the individual properties if a value that isn't allowed in the shorthand is passed in.
 @mixin mat-typography-font-shorthand($font-size, $font-weight, $line-height, $font-family) {
@@ -52,12 +59,18 @@
     font-weight: $font-weight;
     line-height: $line-height;
     font-family: $font-family;
+
+    // Browsers that do not support CSS variables will fallback to the above css rule
+    font-family: css-var(font-family, $font-family);
   }
   @else {
     // Otherwise use the shorthand `font`, because it's the least amount of bytes. Note
     // that we need to use interpolation for `font-size/line-height` in order to prevent
     // Sass from dividing the two values.
     font: $font-weight #{$font-size}/#{$line-height} $font-family;
+
+    // Browsers that do not support CSS variables will fallback to the above css rule
+    font: $font-weight #{$font-size}/#{$line-height} css-var(font-family, $font-family);
   }
 }
 
@@ -71,3 +84,4 @@
   @include mat-typography-font-shorthand($font-size, $font-weight, $line-height, $font-family);
   letter-spacing: mat-letter-spacing($config, $level);
 }
+

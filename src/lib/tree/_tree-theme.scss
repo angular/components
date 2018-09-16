@@ -18,7 +18,7 @@
 
 @mixin mat-tree-typography($config) {
   .mat-tree {
-    font-family: mat-font-family($config);
+    @include mat-font-family-css-var($config);
   }
 
   .mat-tree-node,

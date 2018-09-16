@@ -65,7 +65,7 @@
   $line-height: mat-line-height($config, input);
 
   .mat-select {
-    font-family: mat-font-family($config);
+    @include mat-font-family-css-var($config);
   }
 
   .mat-select-trigger {

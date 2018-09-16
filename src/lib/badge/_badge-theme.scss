@@ -161,7 +161,7 @@ $mat-badge-large-size: $mat-badge-default-size + 6;
   .mat-badge-content {
     font-weight: $mat-badge-font-weight;
     font-size: $mat-badge-font-size;
-    font-family: mat-font-family($config);
+    @include mat-font-family-css-var($config);
   }
 
   .mat-badge-small .mat-badge-content {

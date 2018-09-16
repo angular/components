@@ -107,7 +107,7 @@
 
 @mixin mat-checkbox-typography($config) {
   .mat-checkbox {
-    font-family: mat-font-family($config);
+    @include mat-font-family-css-var($config);
   }
 
   // TODO(kara): Remove this style when fixing vertical baseline

@@ -68,6 +68,6 @@
 
 @mixin mat-radio-typography($config) {
   .mat-radio-button {
-    font-family: mat-font-family($config);
+    @include mat-font-family-css-var($config);
   }
 }
