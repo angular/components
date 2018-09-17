@@ -313,6 +313,12 @@ const DOCS: {[key: string]: DocCategory[]} = {
           summary: 'A linear progress indicator.',
           examples: ['progress-bar-configurable']
         },
+        {
+          id: 'ripple',
+          name: 'Ripples',
+          summary: 'Directive for adding Material Design ripple effects',
+          examples: ['ripple-overview']
+        }
       ]
     },
     {
