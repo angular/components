@@ -20,6 +20,7 @@ import {
 } from '@angular/core';
 import {CanDisable, CanDisableCtor, mixinDisabled} from '@angular/material/core';
 import {merge, Subscription} from 'rxjs';
+import {filter} from 'rxjs/operators';
 import {MatSort, MatSortable} from './sort';
 import {matSortAnimations} from './sort-animations';
 import {SortDirection} from './sort-direction';
@@ -152,19 +153,28 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
     }
 
     this._rerenderSubscription = merge(_sort.sortChange, _sort._stateChanges, _intl.changes)
-        .subscribe(() => {
-          if (this._isSorted()) {
-            this._updateArrowDirection();
-          }
+      .pipe(filter(() => !!this.id))
+      .subscribe(() => {
+        const viewState = this._viewState;
 
-          // If this header was recently active and now no longer sorted, animate away the arrow.
-          if (!this._isSorted() && this._viewState && this._viewState.toState === 'active') {
-            this._disableViewStateAnimation = false;
-            this._setAnimationTransitionState({fromState: 'active', toState: this._arrowDirection});
-          }
+        // Do not show the animation if the header was already shown in the right position.
+        if (viewState && viewState.toState === 'hint' || viewState.toState === 'active') {
+          this._disableViewStateAnimation = true;
+        }
 
-          changeDetectorRef.markForCheck();
-        });
+        if (this._isSorted()) {
+          this._updateArrowDirection();
+
+          this._setAnimationTransitionState({fromState: this._arrowDirection, toState: 'active'});
+        } else if (viewState && viewState.toState === 'active') {
+          // This header was recently active and now no longer sorted, animate away the arrow.
+          this._disableViewStateAnimation = false;
+
+          this._setAnimationTransitionState({fromState: 'active', toState: this._arrowDirection});
+        }
+
+        changeDetectorRef.markForCheck();
+      });
   }
 
   ngOnInit() {
@@ -225,18 +235,6 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
     if (this._isDisabled()) { return; }
 
     this._sort.sort(this);
-
-    // Do not show the animation if the header was already shown in the right position.
-    if (this._viewState.toState === 'hint' || this._viewState.toState === 'active') {
-      this._disableViewStateAnimation = true;
-    }
-
-    // If the arrow is now sorted, animate the arrow into place. Otherwise, animate it away into
-    // the direction it is facing.
-    const viewState: ArrowViewStateTransition = this._isSorted() ?
-        {fromState: this._arrowDirection, toState: 'active'} :
-        {fromState: 'active', toState: this._arrowDirection};
-    this._setAnimationTransitionState(viewState);
 
     this._showIndicatorHint = false;
   }

@@ -188,6 +188,19 @@ describe('MatSort', () => {
       component.expectViewAndDirectionStates(expectedStates);
     });
 
+    it('should be correct when sort has changed programmatically while a header is active', () => {
+      // Sort the first header to set up
+      component.sort('defaultA');
+      expectedStates.set('defaultA', {viewState: 'asc-to-active', arrowDirection: 'active-asc'});
+      component.expectViewAndDirectionStates(expectedStates);
+
+      // Sort the second header programmatically and verify that the first header animated away
+      component.matSort.sort({id: 'defaultB', start: 'asc', disableClear: false});
+      expectedStates.set('defaultA', {viewState: 'active-to-asc', arrowDirection: 'asc'});
+      expectedStates.set('defaultB', {viewState: 'asc-to-active', arrowDirection: 'active-asc'});
+      component.expectViewAndDirectionStates(expectedStates);
+    });
+
     it('should be correct when sort has been disabled', () => {
       // Mousing over the first sort should set the view state to hint
       component.disabledColumnSort = true;
