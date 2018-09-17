@@ -10,12 +10,18 @@ $mat-ripple-color-opacity: 0.1;
   .mat-ripple {
     overflow: hidden;
 
+    // Limit style recalculations to the ripple container, as much as possible.
+    contain: strict;
+
     // By default, every ripple container should have position: relative in favor of creating an
     // easy API for developers using the MatRipple directive.
     position: relative;
   }
 
   .mat-ripple.mat-ripple-unbounded {
+    // For unbounded ripples we can't contain `paint`,
+    // because it stops `overflow` from working.
+    contain: size layout style;
     overflow: visible;
   }
 
