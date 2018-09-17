@@ -5,3 +5,7 @@ table {
 th.mat-sort-header-sorted {
   color: black;
 }
+
+.mat-form-field {
+  margin: 16px 8px;
+}

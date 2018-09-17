@@ -1,12 +1,15 @@
 import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSelectModule} from '@angular/material/select';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTableModule} from '@angular/material/table';
 import {TableBasicFlexExample} from './table-basic-flex/table-basic-flex-example';
@@ -54,13 +57,16 @@ const EXAMPLES = [
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatCheckboxModule,
+    MatFormFieldModule,
     MatIconModule,
     MatInputModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
     MatSortModule,
     MatTableModule,
   ],

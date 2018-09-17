@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatSort} from '@angular/material/sort';
+import {Sort, MatSort, MatSortable} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 
 export interface PeriodicElement {
@@ -31,6 +31,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
   templateUrl: 'table-sorting-example.html',
 })
 export class TableSortingExample implements OnInit {
+  sortActive = 'position';
+  sortDirection = 'asc';
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
@@ -38,5 +40,18 @@ export class TableSortingExample implements OnInit {
 
   ngOnInit() {
     this.dataSource.sort = this.sort;
+  }
+
+  sortTable(): void {
+    this.sort.sort(<MatSortable>{
+      id: this.sortActive,
+      start: this.sortDirection,
+      disableClear: true,
+    });
+  }
+
+  handleSortChange(sort: Sort): void {
+    this.sortActive = sort.active;
+    this.sortDirection = sort.direction;
   }
 }

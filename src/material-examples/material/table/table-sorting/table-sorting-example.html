@@ -1,4 +1,27 @@
-<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+<mat-form-field>
+  <mat-select [(ngModel)]="sortActive" placeholder="Active" (selectionChange)="sortTable()">
+    <mat-option *ngFor="let option of displayedColumns" [value]="option">
+      {{option}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field>
+  <mat-select [(ngModel)]="sortDirection" placeholder="Direction" (selectionChange)="sortTable()">
+    <mat-option value="asc">
+      asc
+    </mat-option>
+    <mat-option value="desc">
+      desc
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<table mat-table
+       [dataSource]="dataSource"
+       matSort matSortDisableClear [matSortActive]="sortActive" [matSortDirection]="sortDirection"
+       (matSortChange)="handleSortChange($event)"
+       class="mat-elevation-z8">
 
   <!-- Position Column -->
   <ng-container matColumnDef="position">
