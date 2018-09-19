@@ -17,16 +17,18 @@ import {
   NgZone,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
+import {MatDateSelection} from '@angular/material/core';
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
  * @docs-private
  */
-export class MatCalendarCell {
+export class MatCalendarCell<D> {
   constructor(public value: number,
               public displayValue: string,
               public ariaLabel: string,
-              public enabled: boolean) {}
+              public enabled: boolean,
+              public date: D) {}
 }
 
 
@@ -48,18 +50,18 @@ export class MatCalendarCell {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatCalendarBody {
+export class MatCalendarBody<D> {
   /** The label for the table. (e.g. "Jan 2017"). */
   @Input() label: string;
 
   /** The cells to display in the table. */
-  @Input() rows: MatCalendarCell[][];
+  @Input() rows: MatCalendarCell<D>[][];
 
   /** The value in the table that corresponds to today. */
   @Input() todayValue: number;
 
   /** The value in the table that is currently selected. */
-  @Input() selectedValue: number;
+  @Input() selectedValue: MatDateSelection<D>;
 
   /** The minimum number of free cells needed to fit the label in the first row. */
   @Input() labelMinRequiredCells: number;
@@ -77,14 +79,16 @@ export class MatCalendarBody {
   @Input() cellAspectRatio = 1;
 
   /** Emits when a new value is selected. */
-  @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
+  // this should no longer be necessary since the date selection handles changes internally.
+  // @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) { }
 
-  _cellClicked(cell: MatCalendarCell): void {
-    if (cell.enabled) {
-      this.selectedValueChange.emit(cell.value);
+  _cellClicked(cell: MatCalendarCell<D>): void {
+    if (!cell.enabled) {
+      return;
     }
+    // this.selectedValueChange.emit(cell.value);
   }
 
   /** The number of blank cells to put at the beginning for the first row. */
@@ -102,6 +106,10 @@ export class MatCalendarBody {
     }
 
     return cellNumber == this.activeCell;
+  }
+
+  _isSelected(item: MatCalendarCell<D>): boolean {
+    return this.selectedValue.contains(item.date);
   }
 
   /** Focuses the active cell after the microtask queue is empty. */

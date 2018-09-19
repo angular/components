@@ -114,13 +114,13 @@ export class MatMonthView<D> implements AfterContentInit {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
+  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody<D>;
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
 
   /** Grid of calendar cells representing the dates of the month. */
-  _weeks: MatCalendarCell[][];
+  _weeks: MatCalendarCell<D>[][];
 
   /** The number of blank cells in the first row before the 1st of the month. */
   _firstWeekOffset: number;
@@ -281,7 +281,7 @@ export class MatMonthView<D> implements AfterContentInit {
       const enabled = this._shouldEnableDate(date);
       const ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
       this._weeks[this._weeks.length - 1]
-          .push(new MatCalendarCell(i + 1, dateNames[i], ariaLabel, enabled));
+          .push(new MatCalendarCell<D>(i + 1, dateNames[i], ariaLabel, enabled, date));
     }
   }
 

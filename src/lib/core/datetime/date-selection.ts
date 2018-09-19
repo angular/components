@@ -25,6 +25,7 @@ export abstract class MatDateSelection<D> {
   abstract isComplete(): boolean;
   abstract isSame(other: MatDateSelection<D>): boolean;
   abstract isValid(): boolean;
+  abstract contains(value: D): boolean;
 }
 
 export interface DateRange<D> {
@@ -83,6 +84,10 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
 
   asDate(): D | null {
     return (this.isValid()) ? this.adapter.deserialize(this.date) : null;
+  }
+
+  contains(value: D): boolean {
+    return !!(this.date && this.adapter.sameDate(value, this.date));
   }
 }
 
@@ -156,5 +161,16 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
       start: this.start,
       end: this.end,
     };
+  }
+
+  contains(value: D): boolean {
+    if (this.start && this.end) {
+      return this.adapter.compareDate(this.start, value) <= 0 &&
+          this.adapter.compareDate(this.end, value) >= 0;
+    } else if (this.start) {
+      return this.adapter.sameDate(this.start, value);
+    }
+
+    return false;
   }
 }

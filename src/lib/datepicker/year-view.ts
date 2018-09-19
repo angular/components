@@ -101,10 +101,10 @@ export class MatYearView<D> implements AfterContentInit {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
+  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody<D>;
 
   /** Grid of calendar cells representing the months of the year. */
-  _months: MatCalendarCell[][];
+  _months: MatCalendarCell<D>[][];
 
   /** The label for this year (e.g. "2017"). */
   _yearLabel: string;
@@ -235,11 +235,10 @@ export class MatYearView<D> implements AfterContentInit {
 
   /** Creates an MatCalendarCell for the given month. */
   private _createCellForMonth(month: number, monthName: string) {
-    let ariaLabel = this._dateAdapter.format(
-        this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1),
-        this._dateFormats.display.monthYearA11yLabel);
+    const date = this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1);
+    const ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.monthYearA11yLabel);
     return new MatCalendarCell(
-        month, monthName.toLocaleUpperCase(), ariaLabel, this._shouldEnableMonth(month));
+        month, monthName.toLocaleUpperCase(), ariaLabel, this._shouldEnableMonth(month), date);
   }
 
   /** Whether the given month is enabled. */

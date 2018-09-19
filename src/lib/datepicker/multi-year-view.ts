@@ -106,10 +106,10 @@ export class MatMultiYearView<D> implements AfterContentInit {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
+  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody<D>;
 
   /** Grid of calendar cells representing the currently displayed years. */
-  _years: MatCalendarCell[][];
+  _years: MatCalendarCell<D>[][];
 
   /** The year that today falls on. */
   _todayYear: number;
@@ -226,8 +226,9 @@ export class MatMultiYearView<D> implements AfterContentInit {
 
   /** Creates an MatCalendarCell for the given year. */
   private _createCellForYear(year: number) {
-    let yearName = this._dateAdapter.getYearName(this._dateAdapter.createDate(year, 0, 1));
-    return new MatCalendarCell(year, yearName, yearName, this._shouldEnableYear(year));
+    const date = this._dateAdapter.createDate(year, 0, 1);
+    const yearName = this._dateAdapter.getYearName(date);
+    return new MatCalendarCell(year, yearName, yearName, this._shouldEnableYear(year), date);
   }
 
   /** Whether the given year is enabled. */
