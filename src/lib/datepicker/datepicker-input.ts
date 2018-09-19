@@ -123,16 +123,20 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /** The value of the input. */
   @Input()
-  get value(): D | null { return this._value? this._value.asDate(): null; }
+  get value(): D | null { return this._value ? this._value.asDate() : null; }
   set value(value: D | null) {
-    const oldDate = this._value;
-    this._value = new MatSingleDateSelection(this._dateAdapter, value);
-    this._lastValueValid = this._value.isValid(); // TODO(sgoldblatt): is this right?
+    const oldDate = this._value? this._value.clone(): null;
+    if (this._value) {
+      this._value.add(value);
+    } else {
+      this._value = new MatSingleDateSelection(this._dateAdapter, value);
+    }   
+    this._lastValueValid = !this._value || this._value.isValid();
     
-    this._formatValue(this._value.asDate());
+    if (this._value) this._formatValue(this._value.asDate());
 
-    if (!this._value.isSame(oldDate)) {
-      this._valueChange.emit(this._value.asDate());
+    if (!oldDate || !this._value.isSame(oldDate)) {
+      this._valueChange.emit(this.value);
     }
   }
   private _value: MatSingleDateSelection<D>;
@@ -141,7 +145,11 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   @Input()
   get min(): D | null { return this._min? this._min.asDate(): null; }
   set min(value: D | null) {
-    this._min = new MatSingleDateSelection(this._dateAdapter, value);
+    if (this._min) {
+      this._min.add(value);
+    } else {
+      this._min = new MatSingleDateSelection(this._dateAdapter, value);
+    }
     this._validatorOnChange();
   }
   private _min: MatSingleDateSelection<D>;
@@ -150,7 +158,11 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   @Input()
   get max(): D | null { return this._max? this._max.asDate(): null; }
   set max(value: D | null) {
-    this._max = new MatSingleDateSelection(this._dateAdapter, value);
+    if (this._max) {
+      this._max.add(value);
+    } else {
+      this._max = new MatSingleDateSelection(this._dateAdapter, value);
+    }
     this._validatorOnChange();
   }
   private _max: MatSingleDateSelection<D>;
