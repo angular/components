@@ -35,7 +35,7 @@
       [class.mat-calendar-body-active]="_isActiveCell(rowIndex, colIndex)"
       [attr.aria-label]="item.ariaLabel"
       [attr.aria-disabled]="!item.enabled || null"
-      [attr.aria-selected]="_isSelected(item.value)"
+      [attr.aria-selected]="_isSelected(item)"
       (click)="_cellClicked(item)"
       [style.width.%]="100 / numCols"
       [style.paddingTop.%]="50 * cellAspectRatio / numCols"
