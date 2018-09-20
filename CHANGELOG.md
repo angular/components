@@ -2,6 +2,12 @@
 # 7.0.0-beta.2 (2018-09-20)
 
 
+### Highlights
+
+* This release includes a number of changes to bring the components more in line with the 2018
+  Material Design update. If you are overriding the default styles, you may find that you need to
+  tweak them to look right after these changes.
+
 ### Bug Fixes
 
 * **card:** better scaling for avatar image ([#13032](https://github.com/angular/material2/issues/13032)) ([19ce1a1](https://github.com/angular/material2/commit/19ce1a1))
