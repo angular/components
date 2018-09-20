@@ -13,7 +13,9 @@
     "project": {
       "type": "string",
       "description": "The name of the project.",
-      "visible": false
+      "$default": {
+        "$source": "projectName"
+      }
     },
     "name": {
       "type": "string",
@@ -26,18 +28,16 @@
     "inlineStyle": {
       "description": "Specifies if the style will be in the ts file.",
       "type": "boolean",
-      "default": false,
       "alias": "s"
     },
     "inlineTemplate": {
       "description": "Specifies if the template will be in the ts file.",
       "type": "boolean",
-      "default": false,
       "alias": "t"
     },
     "viewEncapsulation": {
       "description": "Specifies the view encapsulation strategy.",
-      "enum": ["Emulated", "Native", "None"],
+      "enum": ["Emulated", "None"],
       "type": "string",
       "alias": "v"
     },
@@ -56,13 +56,11 @@
     },
     "styleext": {
       "description": "The file extension to be used for style files.",
-      "type": "string",
-      "default": "css"
+      "type": "string"
     },
     "spec": {
       "type": "boolean",
-      "description": "Specifies if a spec file is generated.",
-      "default": true
+      "description": "Specifies if a spec file is generated."
     },
     "flat": {
       "type": "boolean",
@@ -88,6 +86,12 @@
       "type": "boolean",
       "default": false,
       "description": "Specifies if declaring module exports the component."
+    },
+    "entryComponent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Specifies if the component is an entry component of declaring module."
     }
-  }
+  },
+  "required": []
 }

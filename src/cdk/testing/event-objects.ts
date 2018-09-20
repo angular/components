@@ -7,7 +7,7 @@
  */
 
 /** Creates a browser MouseEvent with the specified options. */
-export function createMouseEvent(type: string, x = 0, y = 0) {
+export function createMouseEvent(type: string, x = 0, y = 0, button = 0) {
   const event = document.createEvent('MouseEvent');
 
   event.initMouseEvent(type,
@@ -23,8 +23,12 @@ export function createMouseEvent(type: string, x = 0, y = 0) {
     false, /* altKey */
     false, /* shiftKey */
     false, /* metaKey */
-    0, /* button */
+    button, /* button */
     null /* relatedTarget */);
+
+  // `initMouseEvent` doesn't allow us to pass the `buttons` and
+  // defaults it to 0 which looks like a fake event.
+  Object.defineProperty(event, 'buttons', {get: () => 1});
 
   return event;
 }
@@ -42,7 +46,8 @@ export function createTouchEvent(type: string, pageX = 0, pageY = 0) {
   // the touch details.
   Object.defineProperties(event, {
     touches: {value: [touchDetails]},
-    targetTouches: {value: [touchDetails]}
+    targetTouches: {value: [touchDetails]},
+    changedTouches: {value: [touchDetails]}
   });
 
   return event;

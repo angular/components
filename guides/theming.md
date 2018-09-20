@@ -16,7 +16,7 @@ a theme consists of:
 In Angular Material, all theme styles are generated _statically_ at build-time so that your
 app doesn't have to spend cycles generating theme styles on startup.
 
-[1]: https://material.google.com/style/color.html#color-color-palette
+[1]: https://material.io/archive/guidelines/style/color.html#color-color-palette
 
 ### Using a pre-built theme
 Angular Material comes prepackaged with several pre-built theme css files. These theme files also
@@ -94,7 +94,7 @@ $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-
 You only need this single Sass file; you do not need to use Sass to style the rest of your app.
 
 If you are using the Angular CLI, support for compiling Sass to css is built-in; you only have to
-add a new entry to the `"styles"` list in `angular-cli.json` pointing to the theme
+add a new entry to the `"styles"` list in `angular.json` pointing to the theme
 file (e.g., `unicorn-app-theme.scss`).
 
 If you're not using the Angular CLI, you can use any existing Sass tooling to build the file (such

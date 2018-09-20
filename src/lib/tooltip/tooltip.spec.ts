@@ -22,7 +22,12 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {OverlayContainer, OverlayModule, CdkScrollable} from '@angular/cdk/overlay';
 import {Platform} from '@angular/cdk/platform';
-import {dispatchFakeEvent, dispatchKeyboardEvent, patchElementFocus} from '@angular/cdk/testing';
+import {
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
+  patchElementFocus,
+  dispatchMouseEvent,
+} from '@angular/cdk/testing';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {
@@ -40,12 +45,12 @@ describe('MatTooltip', () => {
   let overlayContainer: OverlayContainer;
   let overlayContainerElement: HTMLElement;
   let dir: {value: Direction};
-  let platform: {IOS: boolean, isBrowser: boolean};
+  let platform: {IOS: boolean, isBrowser: boolean, ANDROID: boolean};
   let focusMonitor: FocusMonitor;
 
   beforeEach(async(() => {
     // Set the default Platform override that can be updated before component creation.
-    platform = {IOS: false, isBrowser: true};
+    platform = {IOS: false, isBrowser: true, ANDROID: false};
 
     TestBed.configureTestingModule({
       imports: [MatTooltipModule, OverlayModule, NoopAnimationsModule],
@@ -512,21 +517,24 @@ describe('MatTooltip', () => {
     it('should keep the overlay direction in sync with the trigger direction', fakeAsync(() => {
       dir.value = 'rtl';
       tooltipDirective.show();
-      tick();
+      tick(0);
       fixture.detectChanges();
+      tick(500);
 
       let tooltipWrapper =
           overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
       expect(tooltipWrapper.getAttribute('dir')).toBe('rtl', 'Expected tooltip to be in RTL.');
 
       tooltipDirective.hide(0);
-      tick();
+      tick(0);
       fixture.detectChanges();
+      tick(500);
 
       dir.value = 'ltr';
       tooltipDirective.show();
-      tick();
+      tick(0);
       fixture.detectChanges();
+      tick(500);
 
       tooltipWrapper =
           overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
@@ -782,9 +790,8 @@ describe('MatTooltip', () => {
   });
 
   describe('special cases', () => {
-    it('should clear the `user-select` when a tooltip is set on a text field in iOS', () => {
-      platform.IOS = true;
 
+    it('should clear the `user-select` when a tooltip is set on a text field', () => {
       const fixture = TestBed.createComponent(TooltipOnTextFields);
       const instance = fixture.componentInstance;
 
@@ -792,9 +799,11 @@ describe('MatTooltip', () => {
 
       expect(instance.input.nativeElement.style.userSelect).toBeFalsy();
       expect(instance.input.nativeElement.style.webkitUserSelect).toBeFalsy();
+      expect(instance.input.nativeElement.style.msUserSelect).toBeFalsy();
 
       expect(instance.textarea.nativeElement.style.userSelect).toBeFalsy();
       expect(instance.textarea.nativeElement.style.webkitUserSelect).toBeFalsy();
+      expect(instance.textarea.nativeElement.style.msUserSelect).toBeFalsy();
     });
 
     it('should clear the `-webkit-user-drag` on draggable elements', () => {
@@ -803,6 +812,30 @@ describe('MatTooltip', () => {
       fixture.detectChanges();
 
       expect(fixture.componentInstance.button.nativeElement.style.webkitUserDrag).toBeFalsy();
+    });
+
+    it('should not open on `mouseenter` on iOS', () => {
+      platform.IOS = true;
+
+      const fixture = TestBed.createComponent(BasicTooltipDemo);
+
+      fixture.detectChanges();
+      dispatchMouseEvent(fixture.componentInstance.button.nativeElement, 'mouseenter');
+      fixture.detectChanges();
+
+      assertTooltipInstance(fixture.componentInstance.tooltip, false);
+    });
+
+    it('should not open on `mouseenter` on Android', () => {
+      platform.ANDROID = true;
+
+      const fixture = TestBed.createComponent(BasicTooltipDemo);
+
+      fixture.detectChanges();
+      dispatchMouseEvent(fixture.componentInstance.button.nativeElement, 'mouseenter');
+      fixture.detectChanges();
+
+      assertTooltipInstance(fixture.componentInstance.tooltip, false);
     });
 
   });
@@ -826,7 +859,7 @@ class BasicTooltipDemo {
   showButton: boolean = true;
   showTooltipClass = false;
   @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('button') button: ElementRef;
+  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
 }
 
 @Component({
@@ -885,7 +918,7 @@ class OnPushTooltipDemo {
 class DynamicTooltipsDemo {
   tooltips: Array<string> = [];
 
-  constructor(private _elementRef: ElementRef) {}
+  constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
   getButtons() {
     return this._elementRef.nativeElement.querySelectorAll('button');
@@ -906,8 +939,8 @@ class DynamicTooltipsDemo {
   `,
 })
 class TooltipOnTextFields {
-  @ViewChild('input') input: ElementRef;
-  @ViewChild('textarea') textarea: ElementRef;
+  @ViewChild('input') input: ElementRef<HTMLInputElement>;
+  @ViewChild('textarea') textarea: ElementRef<HTMLTextAreaElement>;
 }
 
 @Component({

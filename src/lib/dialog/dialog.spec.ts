@@ -24,7 +24,8 @@ import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatDialogContainer} from './dialog-container';
-import {OverlayContainer, ScrollStrategy, ScrollDispatcher, Overlay} from '@angular/cdk/overlay';
+import {OverlayContainer, ScrollStrategy, Overlay} from '@angular/cdk/overlay';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {A, ESCAPE} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {
@@ -122,7 +123,7 @@ describe('MatDialog', () => {
     const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
     const spy = jasmine.createSpy('afterOpen spy');
 
-    dialogRef.afterOpen().subscribe(spy);
+    dialogRef.afterOpened().subscribe(spy);
 
     viewContainerFixture.detectChanges();
 
@@ -225,7 +226,7 @@ describe('MatDialog', () => {
           .not.toBeNull('dialog container exists when beforeClose is called');
     });
 
-    dialogRef.beforeClose().subscribe(beforeCloseHandler);
+    dialogRef.beforeClosed().subscribe(beforeCloseHandler);
     dialogRef.close('Bulbasaur');
     viewContainerFixture.detectChanges();
     flush();
@@ -328,7 +329,7 @@ describe('MatDialog', () => {
   }));
 
   it('should notify the observers if a dialog has been opened', () => {
-    dialog.afterOpen.subscribe(ref => {
+    dialog.afterOpened.subscribe(ref => {
       expect(dialog.open(PizzaMsg, {
         viewContainerRef: testViewContainerRef
       })).toBe(ref);
@@ -630,6 +631,20 @@ describe('MatDialog', () => {
     expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(2);
 
     mockLocation.simulateHashChange('');
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(0);
+  }));
+
+  it('should close all of the dialogs when the injectable is destroyed', fakeAsync(() => {
+    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsg);
+
+    expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(3);
+
+    dialog.ngOnDestroy();
     viewContainerFixture.detectChanges();
     flush();
 
@@ -1009,6 +1024,37 @@ describe('MatDialog', () => {
             .toBe('MAT-DIALOG-CONTAINER', 'Expected dialog container to be focused.');
       }));
 
+    it('should be able to disable focus restoration', fakeAsync(() => {
+      // Create a element that has focus before the dialog is opened.
+      const button = document.createElement('button');
+      button.id = 'dialog-trigger';
+      document.body.appendChild(button);
+      button.focus();
+
+      const dialogRef = dialog.open(PizzaMsg, {
+        viewContainerRef: testViewContainerRef,
+        restoreFocus: false
+      });
+
+      flushMicrotasks();
+      viewContainerFixture.detectChanges();
+      flushMicrotasks();
+
+      expect(document.activeElement.id)
+          .not.toBe('dialog-trigger', 'Expected the focus to change when dialog was opened.');
+
+      dialogRef.close();
+      flushMicrotasks();
+      viewContainerFixture.detectChanges();
+      tick(500);
+
+      expect(document.activeElement.id).not.toBe('dialog-trigger',
+          'Expected focus not to have been restored.');
+
+      document.body.removeChild(button);
+    }));
+
+
   });
 
   describe('dialog content elements', () => {
@@ -1199,6 +1245,22 @@ describe('MatDialog with a parent MatDialog', () => {
     flush();
 
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
+  }));
+
+  it('should not close the parent dialogs when a child is destroyed', fakeAsync(() => {
+    parentDialog.open(PizzaMsg);
+    fixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.textContent)
+        .toContain('Pizza', 'Expected a dialog to be opened');
+
+    childDialog.ngOnDestroy();
+    fixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.textContent)
+        .toContain('Pizza', 'Expected a dialog to be opened');
   }));
 });
 

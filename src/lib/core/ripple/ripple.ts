@@ -42,7 +42,7 @@ export interface RippleGlobalOptions {
    * setting it to 0.5 will cause the ripple fade-in animation to take twice as long.
    * A changed speedFactor will not affect the fade-out duration of the ripples.
    * @deprecated Use the `animation` global option instead.
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   baseSpeedFactor?: number;
 
@@ -91,7 +91,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
    * setting it to 0.5 will cause the animations to take twice as long.
    * A changed speedFactor will not modify the fade-out duration of the ripples.
    * @deprecated Use the [matRippleAnimation] binding instead.
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   @Input('matRippleSpeedFactor') speedFactor: number = 1;
 
@@ -135,7 +135,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   /** Whether ripple directive is initialized and the input bindings are set. */
   private _isInitialized: boolean = false;
 
-  constructor(private _elementRef: ElementRef,
+  constructor(private _elementRef: ElementRef<HTMLElement>,
               ngZone: NgZone,
               platform: Platform,
               @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalOptions: RippleGlobalOptions,
@@ -163,7 +163,10 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
     this._rippleRenderer.fadeOutAll();
   }
 
-  /** Ripple configuration from the directive's input values. */
+  /**
+   * Ripple configuration from the directive's input values.
+   * @docs-private Implemented as part of RippleTarget
+   */
   get rippleConfig(): RippleConfig {
     return {
       centered: this.centered,
@@ -175,7 +178,10 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
     };
   }
 
-  /** Whether ripples on pointer-down are disabled or not. */
+  /**
+   * Whether ripples on pointer-down are disabled or not.
+   * @docs-private Implemented as part of RippleTarget
+   */
   get rippleDisabled(): boolean {
     return this.disabled || !!this._globalOptions.disabled;
   }

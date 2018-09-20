@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {
@@ -29,17 +30,15 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
-  CanColor,
-  CanDisable,
-  CanDisableRipple,
+  CanColor, CanColorCtor,
+  CanDisable, CanDisableCtor,
+  CanDisableRipple, CanDisableRippleCtor,
   HammerInput,
-  HasTabIndex,
-  MatRipple,
+  HasTabIndex, HasTabIndexCtor,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple,
   mixinTabIndex,
-  RippleRef,
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
@@ -70,8 +69,13 @@ export class MatSlideToggleChange {
 export class MatSlideToggleBase {
   constructor(public _elementRef: ElementRef) {}
 }
-export const _MatSlideToggleMixinBase =
-  mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatSlideToggleBase)), 'accent'));
+export const _MatSlideToggleMixinBase:
+    HasTabIndexCtor &
+    CanColorCtor &
+    CanDisableRippleCtor &
+    CanDisableCtor &
+    typeof MatSlideToggleBase =
+        mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatSlideToggleBase)), 'accent'));
 
 /** Represents a slidable "switch" toggle that can be moved between on and off. */
 @Component({
@@ -103,9 +107,6 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   private _required: boolean = false;
   private _checked: boolean = false;
 
-  /** Reference to the focus state ripple. */
-  private _focusRipple: RippleRef | null;
-
   /** Whether the thumb is currently being dragged. */
   private _dragging = false;
 
@@ -119,10 +120,10 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   private _dragPercentage: number;
 
   /** Reference to the thumb HTMLElement. */
-  @ViewChild('thumbContainer') _thumbEl: ElementRef<HTMLElement>;
+  @ViewChild('thumbContainer') _thumbEl: ElementRef;
 
   /** Reference to the thumb bar HTMLElement. */
-  @ViewChild('toggleBar') _thumbBarEl: ElementRef<HTMLElement>;
+  @ViewChild('toggleBar') _thumbBarEl: ElementRef;
 
   /** Name value will be applied to the input element if present */
   @Input() name: string | null = null;
@@ -176,15 +177,12 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   get inputId(): string { return `${this.id || this._uniqueId}-input`; }
 
   /** Reference to the underlying input element. */
-  @ViewChild('input') _inputElement: ElementRef;
-
-  /** Reference to the ripple directive on the thumb container. */
-  @ViewChild(MatRipple) _ripple: MatRipple;
+  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
 
   constructor(elementRef: ElementRef,
               /**
                * @deprecated The `_platform` parameter to be removed.
-               * @deletion-target 7.0.0
+               * @breaking-change 7.0.0
                */
               _platform: Platform,
               private _focusMonitor: FocusMonitor,
@@ -193,19 +191,29 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
               private _ngZone: NgZone,
               @Inject(MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS)
                   public defaults: MatSlideToggleDefaultOptions,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+              @Optional() private _dir?: Directionality) {
     super(elementRef);
     this.tabIndex = parseInt(tabIndex) || 0;
   }
 
   ngAfterContentInit() {
     this._focusMonitor
-      .monitor(this._inputElement.nativeElement)
-      .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
+      .monitor(this._elementRef, true)
+      .subscribe(focusOrigin => {
+        if (!focusOrigin) {
+          // When a focused element becomes disabled, the browser *immediately* fires a blur event.
+          // Angular does not expect events to be raised during change detection, so any state
+          // change (such as a form control's 'ng-touched') will cause a changed-after-checked
+          // error. See https://github.com/angular/angular/issues/17793. To work around this,
+          // we defer telling the form control it has been touched until the next tick.
+          Promise.resolve().then(() => this.onTouched());
+        }
+      });
   }
 
   ngOnDestroy() {
-    this._focusMonitor.stopMonitoring(this._inputElement.nativeElement);
+    this._focusMonitor.stopMonitoring(this._elementRef);
   }
 
   /** Method being called whenever the underlying input emits a change event. */
@@ -271,30 +279,13 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
 
   /** Focuses the slide-toggle. */
   focus(): void {
-    this._focusMonitor.focusVia(this._inputElement.nativeElement, 'keyboard');
+    this._focusMonitor.focusVia(this._inputElement, 'keyboard');
   }
 
   /** Toggles the checked state of the slide-toggle. */
   toggle(): void {
     this.checked = !this.checked;
     this.onChange(this.checked);
-  }
-
-  /** Function is called whenever the focus changes for the input element. */
-  private _onInputFocusChange(focusOrigin: FocusOrigin) {
-    // TODO(paul): support `program`. See https://github.com/angular/material2/issues/9889
-    if (!this._focusRipple && focusOrigin === 'keyboard') {
-      // For keyboard focus show a persistent ripple as focus indicator.
-      this._focusRipple = this._ripple.launch(0, 0, {persistent: true});
-    } else if (!focusOrigin) {
-      this.onTouched();
-
-      // Fade out and clear the focus ripple if one is currently present.
-      if (this._focusRipple) {
-        this._focusRipple.fadeOut();
-        this._focusRipple = null;
-      }
-    }
   }
 
   /**
@@ -330,9 +321,10 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
 
   _onDrag(event: HammerInput) {
     if (this._dragging) {
-      this._dragPercentage = this._getDragPercentage(event.deltaX);
+      const direction = this._dir && this._dir.value === 'rtl' ? -1 : 1;
+      this._dragPercentage = this._getDragPercentage(event.deltaX * direction);
       // Calculate the moved distance based on the thumb bar width.
-      const dragX = (this._dragPercentage / 100) * this._thumbBarWidth;
+      const dragX = (this._dragPercentage / 100) * this._thumbBarWidth * direction;
       this._thumbEl.nativeElement.style.transform = `translate3d(${dragX}px, 0, 0)`;
     }
   }
@@ -366,9 +358,11 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
 
   /** Method being called whenever the label text changes. */
   _onLabelTextChange() {
-    // This method is getting called whenever the label of the slide-toggle changes.
-    // Since the slide-toggle uses the OnPush strategy we need to notify it about the change
-    // that has been recognized by the cdkObserveContent directive.
-    this._changeDetectorRef.markForCheck();
+    // Since the event of the `cdkObserveContent` directive runs outside of the zone, the
+    // slide-toggle component will be only marked for check, but no actual change detection runs
+    // automatically. Instead of going back into the zone in order to trigger a change detection
+    // which causes *all* components to be checked (if explicitly marked or not using OnPush),
+    // we only trigger an explicit change detection for the slide-toggle view and it's children.
+    this._changeDetectorRef.detectChanges();
   }
 }

@@ -69,7 +69,7 @@ export const MAT_MENU_DEFAULT_OPTIONS =
 /** @docs-private */
 export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
   return {
-    overlapTrigger: true,
+    overlapTrigger: false,
     xPosition: 'after',
     yPosition: 'below',
     backdropClass: 'cdk-overlay-transparent-backdrop',
@@ -79,7 +79,7 @@ export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
  * Start elevation for the menu panel.
  * @docs-private
  */
-const MAT_MENU_BASE_ELEVATION = 2;
+const MAT_MENU_BASE_ELEVATION = 4;
 
 
 @Component({
@@ -162,7 +162,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   /**
    * List of the items inside of a menu.
    * @deprecated
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   @ContentChildren(MatMenuItem) items: QueryList<MatMenuItem>;
 
@@ -211,7 +211,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
    * menu template that displays in the overlay container.  Otherwise, it's difficult
    * to style the containing menu from outside the component.
    * @deprecated Use `panelClass` instead.
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   @Input()
   get classList(): string { return this.panelClass; }
@@ -224,12 +224,12 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   /**
    * Event emitted when the menu is closed.
    * @deprecated Switch to `closed` instead
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   @Output() close = this.closed;
 
   constructor(
-    private _elementRef: ElementRef,
+    private _elementRef: ElementRef<HTMLElement>,
     private _ngZone: NgZone,
     @Inject(MAT_MENU_DEFAULT_OPTIONS) private _defaultOptions: MatMenuDefaultOptions) { }
 
@@ -371,13 +371,13 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
 
   /** Starts the enter animation. */
   _startAnimation() {
-    // @deletion-target 7.0.0 Combine with _resetAnimation.
+    // @breaking-change 7.0.0 Combine with _resetAnimation.
     this._panelAnimationState = 'enter';
   }
 
   /** Resets the panel animation to its initial state. */
   _resetAnimation() {
-    // @deletion-target 7.0.0 Combine with _startAnimation.
+    // @breaking-change 7.0.0 Combine with _startAnimation.
     this._panelAnimationState = 'void';
   }
 

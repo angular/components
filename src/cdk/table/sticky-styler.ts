@@ -32,10 +32,12 @@ export class StickyStyler {
    *     sticky positioning applied.
    * @param direction The directionality context of the table (ltr/rtl); affects column positioning
    *     by reversing left/right positions.
+   * @param _isBrowser Whether the table is currently being rendered on the server or the client.
    */
   constructor(private isNativeHtmlTable: boolean,
               private stickCellCss: string,
-              public direction: Direction) { }
+              public direction: Direction,
+              private _isBrowser = true) { }
 
   /**
    * Clears the sticky positioning styles from the row and its cells by resetting the `position`
@@ -45,7 +47,14 @@ export class StickyStyler {
    */
   clearStickyPositioning(rows: HTMLElement[], stickyDirections: StickyDirection[]) {
     for (const row of rows) {
+      // If the row isn't an element (e.g. if it's an `ng-container`),
+      // it won't have inline styles or `children` so we skip it.
+      if (row.nodeType !== row.ELEMENT_NODE) {
+        continue;
+      }
+
       this._removeStickyStyle(row, stickyDirections);
+
       for (let i = 0; i < row.children.length; i++) {
         const cell = row.children[i] as HTMLElement;
         this._removeStickyStyle(cell, stickyDirections);
@@ -66,7 +75,7 @@ export class StickyStyler {
       rows: HTMLElement[], stickyStartStates: boolean[], stickyEndStates: boolean[]) {
     const hasStickyColumns =
         stickyStartStates.some(state => state) || stickyEndStates.some(state => state);
-    if (!rows.length || !hasStickyColumns) {
+    if (!rows.length || !hasStickyColumns || !this._isBrowser) {
       return;
     }
 
@@ -104,6 +113,11 @@ export class StickyStyler {
    *
    */
   stickRows(rowsToStick: HTMLElement[], stickyStates: boolean[], position: 'top' | 'bottom') {
+    // Since we can't measure the rows on the server, we can't stick the rows properly.
+    if (!this._isBrowser) {
+      return;
+    }
+
     // If positioning the rows to the bottom, reverse their order when evaluating the sticky
     // position such that the last row stuck will be "bottom: 0px" and so on.
     const rows = position === 'bottom' ? rowsToStick.reverse() : rowsToStick;

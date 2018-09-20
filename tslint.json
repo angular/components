@@ -97,8 +97,11 @@
     // Custom Rules
     "ts-loader": true,
     "no-exposed-todo": true,
+    "no-import-spacing": true,
+    "no-private-getters": true,
     "setters-after-getters": true,
     "rxjs-imports": true,
+    "require-breaking-change-version": true,
     "no-host-decorator-in-concrete": [
       true,
       "HostBinding",
@@ -126,11 +129,13 @@
       "./tools/package-tools/rollup-globals.ts",
       "src/+(lib|cdk|material-examples|material-experimental|cdk-experimental)/!(schematics)**/*.ts"
     ],
-    "deletion-target": true,
     "no-unescaped-html-tag": true
   },
   "linterOptions": {
-    // Exclude schematic template files that can't be linted.
-    "exclude": ["src/lib/schematics/**/files/**/*"]
+    "exclude": [
+      // Exclude schematic template files and test cases that can't be linted.
+      "src/lib/schematics/**/files/**/*",
+      "src/lib/schematics/update/test-cases/**/*"
+    ]
   }
 }

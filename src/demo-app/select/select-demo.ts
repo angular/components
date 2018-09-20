@@ -7,9 +7,18 @@
  */
 
 import {Component} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {MatSelectChange} from '@angular/material';
+import {FormControl, Validators} from '@angular/forms';
+import {ErrorStateMatcher, MatSelectChange} from '@angular/material';
 
+/** Error any time control is invalid */
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null): boolean {
+    if (control) {
+      return control.invalid;
+    }
+    return false;
+  }
+}
 
 @Component({
     moduleId: module.id,
@@ -29,6 +38,7 @@ export class SelectDemo {
   currentPokemon: string[];
   currentPokemonFromGroup: string;
   currentDigimon: string;
+  currentAppearanceValue: string | null;
   latestChangeEvent: MatSelectChange;
   floatLabel = 'auto';
   foodControl = new FormControl('pizza-1');
@@ -36,6 +46,7 @@ export class SelectDemo {
   drinksTheme = 'primary';
   pokemonTheme = 'primary';
   compareByValue = true;
+  selectFormControl = new FormControl('', Validators.required);
 
   foods = [
     {value: null, viewValue: 'None'},
@@ -134,5 +145,11 @@ export class SelectDemo {
 
   compareByReference(o1: any, o2: any) {
     return o1 === o2;
+  }
+
+  matcher = new MyErrorStateMatcher();
+
+  toggleSelected() {
+    this.currentAppearanceValue = this.currentAppearanceValue ? null : this.digimon[0].value;
   }
 }

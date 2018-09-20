@@ -1,5 +1,4 @@
 @import '../core/style/variables';
-@import '../core/style/elevation';
 @import '../core/style/layout-common';
 @import '../core/style/vendor-prefixes';
 @import '../../cdk/a11y/a11y';
@@ -50,6 +49,13 @@ $mat-drawer-over-drawer-z-index: 4;
   // we have to pull the side drawers above it.
   &.mat-drawer-container-explicit-backdrop .mat-drawer-side {
     z-index: $mat-drawer-backdrop-z-index;
+  }
+
+  // Note that the `NoopAnimationsModule` is being handled inside of the component code.
+  &.ng-animate-disabled, .ng-animate-disabled & {
+    .mat-drawer-backdrop, .mat-drawer-content {
+      transition: none;
+    }
   }
 }
 
@@ -147,12 +153,17 @@ $mat-drawer-over-drawer-z-index: 4;
       transform: translate3d(-100%, 0, 0);
     }
   }
+}
 
-  &:not(.mat-drawer-side) {
-    // The elevation of z-16 is noted in the design specifications.
-    // See https://material.io/guidelines/patterns/navigation-drawer.html#
-    @include mat-elevation(16);
-  }
+// Note that this div isn't strictly necessary on all browsers, however we need it in
+// order to avoid a layout issue in Chrome. The issue is that in RTL mode the browser doesn't
+// account for the sidenav's scrollbar while positioning, which ends up pushing it partially
+// out of the screen. We work around the issue by having the scrollbar be on this inner container.
+.mat-drawer-inner-container {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .mat-sidenav-fixed {

@@ -14,6 +14,12 @@ import {auditTime} from 'rxjs/operators';
 /** Time in ms to throttle the resize events by default. */
 export const DEFAULT_RESIZE_TIME = 20;
 
+/** Object that holds the scroll position of the viewport in each direction. */
+export interface ViewportScrollPosition {
+  top: number;
+  left: number;
+}
+
 /**
  * Simple utility for getting the bounds of the browser viewport.
  * @docs-private
@@ -82,7 +88,7 @@ export class ViewportRuler implements OnDestroy {
   }
 
   /** Gets the (top, left) scroll position of the viewport. */
-  getViewportScrollPosition() {
+  getViewportScrollPosition(): ViewportScrollPosition {
     // While we can get a reference to the fake document
     // during SSR, it doesn't have getBoundingClientRect.
     if (!this._platform.isBrowser) {
@@ -123,14 +129,14 @@ export class ViewportRuler implements OnDestroy {
 }
 
 
-/** @docs-private @deprecated @deletion-target 7.0.0 */
+/** @docs-private @deprecated @breaking-change 7.0.0 */
 export function VIEWPORT_RULER_PROVIDER_FACTORY(parentRuler: ViewportRuler,
                                                 platform: Platform,
                                                 ngZone: NgZone) {
   return parentRuler || new ViewportRuler(platform, ngZone);
 }
 
-/** @docs-private @deprecated @deletion-target 7.0.0 */
+/** @docs-private @deprecated @breaking-change 7.0.0 */
 export const VIEWPORT_RULER_PROVIDER = {
   // If there is already a ViewportRuler available, use that. Otherwise, provide a new one.
   provide: ViewportRuler,

@@ -73,7 +73,7 @@ const defaultPositionList: ConnectedPosition[] = [
 export const CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY =
     new InjectionToken<() => ScrollStrategy>('cdk-connected-overlay-scroll-strategy');
 
-/** @docs-private @deprecated @deletion-target 7.0.0 */
+/** @docs-private @deprecated @breaking-change 7.0.0 */
 export function CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_FACTORY(overlay: Overlay):
   () => ScrollStrategy {
   return (config?: RepositionScrollStrategyConfig) => overlay.scrollStrategies.reposition(config);
@@ -158,6 +158,9 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   /** The custom class to be set on the backdrop element. */
   @Input('cdkConnectedOverlayBackdropClass') backdropClass: string;
 
+  /** The custom class to add to the overlay pane element. */
+  @Input('cdkConnectedOverlayPanelClass') panelClass: string | string[];
+
   /** Margin between the overlay and the viewport edges. */
   @Input('cdkConnectedOverlayViewportMargin') viewportMargin: number = 0;
 
@@ -180,8 +183,10 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   /** Whether the overlay's width and height can be constrained to fit within the viewport. */
   @Input('cdkConnectedOverlayFlexibleDimensions')
-  get flexibleDiemsions() { return this._flexibleDimensions; }
-  set flexibleDiemsions(value: boolean) { this._flexibleDimensions = coerceBooleanProperty(value); }
+  get flexibleDimensions() { return this._flexibleDimensions; }
+  set flexibleDimensions(value: boolean) {
+    this._flexibleDimensions = coerceBooleanProperty(value);
+  }
 
   /** Whether the overlay can grow after the initial open when flexible positioning is turned on. */
   @Input('cdkConnectedOverlayGrowAfterOpen')
@@ -296,6 +301,10 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       overlayConfig.backdropClass = this.backdropClass;
     }
 
+    if (this.panelClass) {
+      overlayConfig.panelClass = this.panelClass;
+    }
+
     return overlayConfig;
   }
 
@@ -303,7 +312,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _createPositionStrategy(): FlexibleConnectedPositionStrategy {
     const strategy = this._overlay.position()
       .flexibleConnectedTo(this.origin.elementRef)
-      .withFlexibleDimensions(this.flexibleDiemsions)
+      .withFlexibleDimensions(this.flexibleDimensions)
       .withPush(this.push)
       .withGrowAfterOpen(this.growAfterOpen)
       .withViewportMargin(this.viewportMargin)

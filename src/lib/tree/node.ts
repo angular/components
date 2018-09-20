@@ -6,12 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  CdkNestedTreeNode,
-  CdkTree,
-  CdkTreeNode,
-  CdkTreeNodeDef,
-} from '@angular/cdk/tree';
+import {CdkNestedTreeNode, CdkTree, CdkTreeNode, CdkTreeNodeDef} from '@angular/cdk/tree';
 import {
   AfterContentInit,
   Attribute,
@@ -21,14 +16,26 @@ import {
   Input,
   IterableDiffers,
   OnDestroy,
-  QueryList
+  QueryList,
 } from '@angular/core';
-import {CanDisable, HasTabIndex, mixinDisabled, mixinTabIndex} from '@angular/material/core';
+import {
+  CanDisable, CanDisableCtor,
+  HasTabIndex,
+  HasTabIndexCtor,
+  mixinDisabled,
+  mixinTabIndex,
+} from '@angular/material/core';
 import {MatTreeNodeOutlet} from './outlet';
 
+// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
+export const _CdkTreeNodeDef = CdkTreeNodeDef;
 
-export const _MatTreeNodeMixinBase = mixinTabIndex(mixinDisabled(CdkTreeNode));
-export const _MatNestedTreeNodeMixinBase = mixinTabIndex(mixinDisabled(CdkNestedTreeNode));
+export const _MatTreeNodeMixinBase: HasTabIndexCtor & CanDisableCtor & typeof CdkTreeNode =
+    mixinTabIndex(mixinDisabled(CdkTreeNode));
+
+export const _MatNestedTreeNodeMixinBase:
+    HasTabIndexCtor & CanDisableCtor & typeof CdkNestedTreeNode =
+        mixinTabIndex(mixinDisabled(CdkNestedTreeNode));
 
 /**
  * Wrapper for the CdkTree node with Material design styles.
@@ -49,7 +56,7 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
     implements CanDisable, HasTabIndex {
   @Input() role: 'treeitem' | 'group' = 'treeitem';
 
-  constructor(protected _elementRef: ElementRef,
+  constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>,
               @Attribute('tabindex') tabIndex: string) {
     super(_elementRef, _tree);
@@ -68,7 +75,7 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
   ],
   providers: [{provide: CdkTreeNodeDef, useExisting: MatTreeNodeDef}]
 })
-export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
+export class MatTreeNodeDef<T> extends _CdkTreeNodeDef<T> {
   @Input('matTreeNode') data: T;
 }
 
@@ -96,7 +103,7 @@ export class MatNestedTreeNode<T> extends _MatNestedTreeNodeMixinBase<T>
 
   @ContentChildren(MatTreeNodeOutlet) nodeOutlet: QueryList<MatTreeNodeOutlet>;
 
-  constructor(protected _elementRef: ElementRef,
+  constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>,
               protected _differs: IterableDiffers,
               @Attribute('tabindex') tabIndex: string) {

@@ -7,9 +7,10 @@ import {
   ErrorHandler,
   Injectable,
   EventEmitter,
+  NgZone,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {dispatchFakeEvent} from '@angular/cdk/testing';
+import {dispatchFakeEvent, MockNgZone} from '@angular/cdk/testing';
 import {
   ComponentPortal,
   PortalModule,
@@ -25,6 +26,7 @@ import {
   PositionStrategy,
   ScrollStrategy,
 } from './index';
+import {OverlayReference} from './overlay-reference';
 
 
 describe('Overlay', () => {
@@ -35,19 +37,26 @@ describe('Overlay', () => {
   let overlayContainer: OverlayContainer;
   let viewContainerFixture: ComponentFixture<TestComponentWithTemplatePortals>;
   let dir: Direction;
+  let zone: MockNgZone;
 
   beforeEach(async(() => {
     dir = 'ltr';
     TestBed.configureTestingModule({
       imports: [OverlayModule, PortalModule, OverlayTestModule],
-      providers: [{
-        provide: Directionality,
-        useFactory: () => {
-          const fakeDirectionality = {};
-          Object.defineProperty(fakeDirectionality, 'value', {get: () => dir});
-          return fakeDirectionality;
-        }
-      }],
+      providers: [
+        {
+          provide: Directionality,
+          useFactory: () => {
+            const fakeDirectionality = {};
+            Object.defineProperty(fakeDirectionality, 'value', {get: () => dir});
+            return fakeDirectionality;
+          }
+        },
+        {
+          provide: NgZone,
+          useFactory: () => zone = new MockNgZone()
+        },
+      ],
     }).compileComponents();
   }));
 
@@ -334,12 +343,39 @@ describe('Overlay', () => {
   });
 
   it('should keep the direction in sync with the passed in Directionality', () => {
-    const customDirectionality = {value: 'rtl', change: new EventEmitter()};
+    const customDirectionality = {value: 'rtl', change: new EventEmitter<Direction>()};
     const overlayRef = overlay.create({direction: customDirectionality as Directionality});
 
     expect(overlayRef.getDirection()).toBe('rtl');
     customDirectionality.value = 'ltr';
     expect(overlayRef.getDirection()).toBe('ltr');
+  });
+
+  it('should add and remove the overlay host as the ref is being attached and detached', () => {
+    const overlayRef = overlay.create();
+
+    overlayRef.attach(componentPortal);
+    viewContainerFixture.detectChanges();
+
+    expect(overlayRef.hostElement.parentElement)
+        .toBeTruthy('Expected host element to be in the DOM.');
+
+    overlayRef.detach();
+
+    expect(overlayRef.hostElement.parentElement)
+        .toBeTruthy('Expected host element not to have been removed immediately.');
+
+    viewContainerFixture.detectChanges();
+    zone.simulateZoneExit();
+
+    expect(overlayRef.hostElement.parentElement)
+        .toBeFalsy('Expected host element to have been removed once the zone stabilizes.');
+
+    overlayRef.attach(componentPortal);
+    viewContainerFixture.detectChanges();
+
+    expect(overlayRef.hostElement.parentElement)
+        .toBeTruthy('Expected host element to be back in the DOM.');
   });
 
   describe('positioning', () => {
@@ -354,6 +390,7 @@ describe('Overlay', () => {
 
       overlay.create(config).attach(componentPortal);
       viewContainerFixture.detectChanges();
+      zone.simulateZoneExit();
       tick();
 
       expect(overlayContainerElement.querySelectorAll('.fake-positioned').length).toBe(1);
@@ -730,9 +767,9 @@ class FakePositionStrategy implements PositionStrategy {
 
 class FakeScrollStrategy implements ScrollStrategy {
   isEnabled = false;
-  overlayRef: OverlayRef;
+  overlayRef: OverlayReference;
 
-  attach(overlayRef: OverlayRef) {
+  attach(overlayRef: OverlayReference) {
     this.overlayRef = overlayRef;
   }
 

@@ -1,6 +1,11 @@
 import {Platform, PlatformModule} from '@angular/cdk/platform';
-import {createFakeEvent, dispatchFakeEvent, wrappedErrorMessage} from '@angular/cdk/testing';
-import {ChangeDetectionStrategy, Component, ViewChild, Type, Provider} from '@angular/core';
+import {
+  createFakeEvent,
+  dispatchFakeEvent,
+  wrappedErrorMessage,
+  MockNgZone,
+} from '@angular/cdk/testing';
+import {ChangeDetectionStrategy, Component, ViewChild, Type, Provider, NgZone} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {
   FormControl,
@@ -28,10 +33,10 @@ import {
 } from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatInputModule} from './index';
-import {MatInput} from './input';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatInputModule} from './index';
+import {MatInput} from './input';
 import {MatTextareaAutosize} from './autosize';
 
 describe('MatInput without forms', () => {
@@ -438,6 +443,26 @@ describe('MatInput without forms', () => {
     expect(inputEl.disabled).toBe(true);
   }));
 
+  it('supports the disabled attribute as binding for select', fakeAsync(() => {
+    const fixture = createComponent(MatInputSelect);
+    fixture.detectChanges();
+
+    const formFieldEl =
+        fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
+    const selectEl = fixture.debugElement.query(By.css('select')).nativeElement;
+
+    expect(formFieldEl.classList.contains('mat-form-field-disabled'))
+        .toBe(false, `Expected form field not to start out disabled.`);
+    expect(selectEl.disabled).toBe(false);
+
+    fixture.componentInstance.disabled = true;
+    fixture.detectChanges();
+
+    expect(formFieldEl.classList.contains('mat-form-field-disabled'))
+        .toBe(true, `Expected form field to look disabled after property is set.`);
+    expect(selectEl.disabled).toBe(true);
+  }));
+
   it('supports the required attribute as binding', fakeAsync(() => {
     let fixture = createComponent(MatInputWithRequired);
     fixture.detectChanges();
@@ -450,6 +475,20 @@ describe('MatInput without forms', () => {
     fixture.detectChanges();
 
     expect(inputEl.required).toBe(true);
+  }));
+
+  it('supports the required attribute as binding for select', fakeAsync(() => {
+    const fixture = createComponent(MatInputSelect);
+    fixture.detectChanges();
+
+    const selectEl = fixture.debugElement.query(By.css('select')).nativeElement;
+
+    expect(selectEl.required).toBe(false);
+
+    fixture.componentInstance.required = true;
+    fixture.detectChanges();
+
+    expect(selectEl.required).toBe(true);
   }));
 
   it('supports the type attribute as binding', fakeAsync(() => {
@@ -472,6 +511,14 @@ describe('MatInput without forms', () => {
 
     const textarea: HTMLTextAreaElement = fixture.nativeElement.querySelector('textarea');
     expect(textarea).not.toBeNull();
+  }));
+
+  it('supports select', fakeAsync(() => {
+    const fixture = createComponent(MatInputSelect);
+    fixture.detectChanges();
+
+    const nativeSelect: HTMLTextAreaElement = fixture.nativeElement.querySelector('select');
+    expect(nativeSelect).not.toBeNull();
   }));
 
   it('sets the aria-describedby when a hintLabel is set', fakeAsync(() => {
@@ -572,6 +619,41 @@ describe('MatInput without forms', () => {
     expect(formFieldEl.classList).toContain('mat-form-field-should-float');
   }));
 
+  it('should float labels when select has value', fakeAsync(() => {
+    const fixture = createComponent(MatInputSelect);
+    fixture.detectChanges();
+
+    const formFieldEl = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
+    expect(formFieldEl.classList).toContain('mat-form-field-should-float');
+  }));
+
+  it('should not float labels when select has no value, no option label, ' +
+      'no option innerHtml', fakeAsync(() => {
+    const fixture = createComponent(MatInputSelectWithNoLabelNoValue);
+    fixture.detectChanges();
+
+    const formFieldEl = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
+    expect(formFieldEl.classList).not.toContain('mat-form-field-should-float');
+  }));
+
+  it('should floating labels when select has no value but has option label',
+      fakeAsync(() => {
+    const fixture = createComponent(MatInputSelectWithLabel);
+    fixture.detectChanges();
+
+    const formFieldEl = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
+    expect(formFieldEl.classList).toContain('mat-form-field-should-float');
+  }));
+
+  it('should floating labels when select has no value but has option innerHTML',
+      fakeAsync(() => {
+    const fixture = createComponent(MatInputSelectWithInnerHtml);
+    fixture.detectChanges();
+
+    const formFieldEl = fixture.debugElement.query(By.css('.mat-form-field'))
+        .nativeElement;
+    expect(formFieldEl.classList).toContain('mat-form-field-should-float');
+  }));
 
   it('should never float the label when floatLabel is set to false', fakeAsync(() => {
     let fixture = createComponent(MatInputWithDynamicLabel);
@@ -1151,6 +1233,54 @@ describe('MatInput with appearance', () => {
     expect(parseInt(outlineStart.style.width)).toBeGreaterThan(0);
     expect(parseInt(outlineGap.style.width)).toBeGreaterThan(0);
   }));
+
+  it('should not set an outline gap if the label is empty', fakeAsync(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
+
+    const outlineFixture = createComponent(MatInputWithAppearanceAndLabel);
+
+    outlineFixture.componentInstance.labelContent = '';
+    outlineFixture.detectChanges();
+    outlineFixture.componentInstance.appearance = 'outline';
+    outlineFixture.detectChanges();
+    flush();
+    outlineFixture.detectChanges();
+
+    const outlineGap = outlineFixture.nativeElement.querySelector('.mat-form-field-outline-gap');
+
+    expect(parseInt(outlineGap.style.width)).toBeFalsy();
+  }));
+
+  it('should calculate the gaps if the default appearance is provided through DI', fakeAsync(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
+
+    let zone: MockNgZone;
+    const labelFixture = createComponent(MatInputWithLabel, [
+      {
+        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+        useValue: {appearance: 'outline'}
+      },
+      {
+        provide: NgZone,
+        useFactory: () => zone = new MockNgZone()
+      }
+    ]);
+
+    labelFixture.detectChanges();
+    zone!.simulateZoneExit();
+    flush();
+    labelFixture.detectChanges();
+
+    const wrapperElement = labelFixture.nativeElement;
+    const outlineStart = wrapperElement.querySelector('.mat-form-field-outline-start');
+    const outlineGap = wrapperElement.querySelector('.mat-form-field-outline-gap');
+
+    expect(parseInt(outlineStart.style.width)).toBeGreaterThan(0);
+    expect(parseInt(outlineGap.style.width)).toBeGreaterThan(0);
+  }));
+
 });
 
 describe('MatFormField default options', () => {
@@ -1243,7 +1373,7 @@ function createComponent<T>(component: Type<T>,
 @Component({
   template: `
     <mat-form-field>
-      <input matInput id="test-id" placeholder="test">
+      <input matNativeControl id="test-id" placeholder="test">
     </mat-form-field>`
 })
 class MatInputWithId {}
@@ -1450,7 +1580,8 @@ class MatInputWithDynamicLabel {
 @Component({
   template: `
     <mat-form-field>
-      <textarea matInput [rows]="rows" [cols]="cols" [wrap]="wrap" placeholder="Snacks"></textarea>
+      <textarea matNativeControl [rows]="rows" [cols]="cols" [wrap]="wrap" placeholder="Snacks">
+      </textarea>
     </mat-form-field>`
 })
 class MatInputTextareaWithBindings {
@@ -1569,6 +1700,16 @@ class MatInputWithReadonlyInput {}
 
 @Component({
   template: `
+    <mat-form-field>
+      <mat-label>Label</mat-label>
+      <input matInput>
+    </mat-form-field>
+  `
+})
+class MatInputWithLabel {}
+
+@Component({
+  template: `
     <mat-form-field [floatLabel]="floatLabel">
       <mat-label>Label</mat-label>
       <input matInput placeholder="Placeholder">
@@ -1594,13 +1735,14 @@ class MatInputWithAppearance {
 @Component({
   template: `
     <mat-form-field [appearance]="appearance">
-      <mat-label>Label</mat-label>
+      <mat-label>{{labelContent}}</mat-label>
       <input matInput>
     </mat-form-field>
   `
 })
 class MatInputWithAppearanceAndLabel {
   appearance: MatFormFieldAppearance;
+  labelContent = 'Label';
 }
 
 @Component({
@@ -1662,3 +1804,58 @@ class AutosizeTextareaInATab {}
   `
 })
 class AutosizeTextareaInAStep {}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <select matNativeControl id="test-id" [disabled]="disabled" [required]="required">
+        <option value="volvo">Volvo</option>
+        <option value="saab">Saab</option>
+        <option value="mercedes">Mercedes</option>
+        <option value="audi">Audi</option>
+      </select>
+    </mat-form-field>`
+})
+class MatInputSelect {
+  disabled: boolean;
+  required: boolean;
+}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <select matNativeControl>
+        <option value="" disabled selected></option>
+        <option value="saab">Saab</option>
+        <option value="mercedes">Mercedes</option>
+        <option value="audi">Audi</option>
+      </select>
+    </mat-form-field>`
+})
+class MatInputSelectWithNoLabelNoValue {}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <select matNativeControl>
+        <option value="" label="select a car"></option>
+        <option value="saab">Saab</option>
+        <option value="mercedes">Mercedes</option>
+        <option value="audi">Audi</option>
+      </select>
+    </mat-form-field>`
+})
+class MatInputSelectWithLabel {}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <select matNativeControl>
+        <option value="">select a car</option>
+        <option value="saab">Saab</option>
+        <option value="mercedes">Mercedes</option>
+        <option value="audi">Audi</option>
+      </select>
+    </mat-form-field>`
+})
+class MatInputSelectWithInnerHtml {}

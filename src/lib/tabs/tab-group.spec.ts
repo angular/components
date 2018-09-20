@@ -1,8 +1,10 @@
-import {dispatchFakeEvent} from '@angular/cdk/testing';
+import {LEFT_ARROW} from '@angular/cdk/keycodes';
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
 import {MatTab, MatTabGroup, MatTabHeaderPosition, MatTabsModule} from './index';
 
@@ -10,7 +12,7 @@ import {MatTab, MatTabGroup, MatTabHeaderPosition, MatTabsModule} from './index'
 describe('MatTabGroup', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTabsModule, NoopAnimationsModule],
+      imports: [MatTabsModule, CommonModule, NoopAnimationsModule],
       declarations: [
         SimpleTabsTestApp,
         SimpleDynamicTabsTestApp,
@@ -20,6 +22,7 @@ describe('MatTabGroup', () => {
         TabGroupWithSimpleApi,
         TemplateTabs,
         TabGroupWithAriaInputs,
+        TabGroupWithIsActiveBinding,
       ],
     });
 
@@ -194,8 +197,9 @@ describe('MatTabGroup', () => {
         .toBe(0, 'Expected no ripple to show up on label mousedown.');
     });
 
-    it('should set the isActive flag on each of the tabs', () => {
+    it('should set the isActive flag on each of the tabs', fakeAsync(() => {
       fixture.detectChanges();
+      tick();
 
       const tabs = fixture.componentInstance.tabs.toArray();
 
@@ -205,11 +209,12 @@ describe('MatTabGroup', () => {
 
       fixture.componentInstance.selectedIndex = 2;
       fixture.detectChanges();
+      tick();
 
       expect(tabs[0].isActive).toBe(false);
       expect(tabs[1].isActive).toBe(false);
       expect(tabs[2].isActive).toBe(true);
-    });
+    }));
 
     it('should fire animation done event', fakeAsync(() => {
       fixture.detectChanges();
@@ -230,6 +235,46 @@ describe('MatTabGroup', () => {
 
       expect(labels.map(label => label.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
       expect(labels.every(label => label.getAttribute('aria-setsize') === '3')).toBe(true);
+    });
+
+    it('should emit focusChange event on click', () => {
+      spyOn(fixture.componentInstance, 'handleFocus');
+      fixture.detectChanges();
+
+      const tabLabels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
+
+      expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(0);
+
+      tabLabels[1].nativeElement.click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(1);
+      expect(fixture.componentInstance.handleFocus)
+        .toHaveBeenCalledWith(jasmine.objectContaining({index: 1}));
+    });
+
+    it('should emit focusChange on arrow key navigation', () => {
+      spyOn(fixture.componentInstance, 'handleFocus');
+      fixture.detectChanges();
+
+      const tabLabels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
+      const tabLabelContainer = fixture.debugElement
+        .query(By.css('.mat-tab-label-container')).nativeElement as HTMLElement;
+
+      expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(0);
+
+      // In order to verify that the `focusChange` event also fires with the correct
+      // index, we focus the second tab before testing the keyboard navigation.
+      tabLabels[1].nativeElement.click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(1);
+
+      dispatchKeyboardEvent(tabLabelContainer, 'keydown', LEFT_ARROW);
+
+      expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(2);
+      expect(fixture.componentInstance.handleFocus)
+        .toHaveBeenCalledWith(jasmine.objectContaining({index: 0}));
     });
 
   });
@@ -386,26 +431,37 @@ describe('MatTabGroup', () => {
 
 
     it('should maintain the selected tab if a tab is removed', () => {
-      // Add a couple of tabs so we have more to work with.
-      fixture.componentInstance.tabs.push(
-        {label: 'New tab', content: 'with new content'},
-        {label: 'Another new tab', content: 'with newer content'}
-      );
-
-      // Select the second-to-last tab.
-      fixture.componentInstance.selectedIndex = 3;
+      // Select the second tab.
+      fixture.componentInstance.selectedIndex = 1;
       fixture.detectChanges();
 
       const component: MatTabGroup =
           fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
 
-      // Remove a tab right before the selected one.
-      fixture.componentInstance.tabs.splice(2, 1);
+      // Remove the first tab that is right before the selected one.
+      fixture.componentInstance.tabs.splice(0, 1);
       fixture.detectChanges();
 
-      expect(component.selectedIndex).toBe(1);
-      expect(component._tabs.toArray()[1].isActive).toBe(true);
+      // Since the first tab has been removed and the second one was selected before, the selected
+      // tab moved one position to the right. Meaning that the tab is now the first tab.
+      expect(component.selectedIndex).toBe(0);
+      expect(component._tabs.toArray()[0].isActive).toBe(true);
     });
+
+    it('should be able to select a new tab after creation', fakeAsync(() => {
+      fixture.detectChanges();
+      const component: MatTabGroup =
+        fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
+
+      fixture.componentInstance.tabs.push({label: 'Last tab', content: 'at the end'});
+      fixture.componentInstance.selectedIndex = 3;
+
+      fixture.detectChanges();
+      tick();
+
+      expect(component.selectedIndex).toBe(3);
+      expect(component._tabs.toArray()[3].isActive).toBe(true);
+    }));
 
     it('should not fire `selectedTabChange` when the amount of tabs changes', fakeAsync(() => {
       fixture.detectChanges();
@@ -516,7 +572,21 @@ describe('MatTabGroup', () => {
       const child = fixture.debugElement.query(By.css('.child'));
       expect(child.nativeElement).toBeDefined();
     }));
-   });
+  });
+
+  describe('special cases', () => {
+    it('should not throw an error when binding isActive to the view', fakeAsync(() => {
+      const fixture = TestBed.createComponent(TabGroupWithIsActiveBinding);
+
+      expect(() => {
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+      }).not.toThrow();
+
+      expect(fixture.nativeElement.textContent).toContain('pizza is active');
+    }));
+  });
 
   /**
    * Checks that the `selectedIndex` has been updated; checks that the label and body have their
@@ -776,4 +846,18 @@ class NestedTabs {}
 class TabGroupWithAriaInputs {
   ariaLabel: string;
   ariaLabelledby: string;
+}
+
+
+@Component({
+  template: `
+    <mat-tab-group>
+      <mat-tab label="Junk food" #pizza> Pizza, fries </mat-tab>
+      <mat-tab label="Vegetables"> Broccoli, spinach </mat-tab>
+    </mat-tab-group>
+
+    <div *ngIf="pizza.isActive">pizza is active</div>
+  `
+})
+class TabGroupWithIsActiveBinding {
 }

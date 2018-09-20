@@ -22,10 +22,7 @@ import {MatGridTile} from './grid-tile';
 import {TileCoordinator} from './tile-coordinator';
 import {TileStyler, FitTileStyler, RatioTileStyler, FixedTileStyler} from './tile-styler';
 import {Directionality} from '@angular/cdk/bidi';
-import {
-  coerceToString,
-  coerceToNumber,
-} from './grid-list-measure';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 
 
 // TODO(kara): Conditional (responsive) column count / row size.
@@ -65,24 +62,27 @@ export class MatGridList implements OnInit, AfterContentChecked {
   private _tileStyler: TileStyler;
 
   /** Query list of tiles that are being rendered. */
-  @ContentChildren(MatGridTile) _tiles: QueryList<MatGridTile>;
+  @ContentChildren(MatGridTile, {descendants: true}) _tiles: QueryList<MatGridTile>;
 
-  constructor(private _element: ElementRef, @Optional() private _dir: Directionality) {}
+  constructor(private _element: ElementRef<HTMLElement>,
+              @Optional() private _dir: Directionality) {}
 
   /** Amount of columns in the grid list. */
   @Input()
   get cols(): number { return this._cols; }
-  set cols(value: number) { this._cols = coerceToNumber(value); }
+  set cols(value: number) {
+    this._cols = Math.max(1, Math.round(coerceNumberProperty(value)));
+  }
 
   /** Size of the grid list's gutter in pixels. */
   @Input()
   get gutterSize(): string { return this._gutter; }
-  set gutterSize(value: string) { this._gutter = coerceToString(value); }
+  set gutterSize(value: string) { this._gutter = `${value || ''}`; }
 
   /** Set internal representation of row height from the user-provided value. */
   @Input()
   set rowHeight(value: string | number) {
-    const newValue = coerceToString(value);
+    const newValue = `${value || ''}`;
 
     if (newValue !== this._rowHeight) {
       this._rowHeight = newValue;

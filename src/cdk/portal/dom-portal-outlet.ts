@@ -36,7 +36,8 @@ export class DomPortalOutlet extends BasePortalOutlet {
    * @returns Reference to the created component.
    */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
-    let componentFactory = this._componentFactoryResolver.resolveComponentFactory(portal.component);
+    const resolver = portal.componentFactoryResolver || this._componentFactoryResolver;
+    const componentFactory = resolver.resolveComponentFactory(portal.component);
     let componentRef: ComponentRef<T>;
 
     // If the portal specifies a ViewContainerRef, we will use that as the attachment point
@@ -47,7 +48,7 @@ export class DomPortalOutlet extends BasePortalOutlet {
       componentRef = portal.viewContainerRef.createComponent(
           componentFactory,
           portal.viewContainerRef.length,
-          portal.injector || portal.viewContainerRef.parentInjector);
+          portal.injector || portal.viewContainerRef.injector);
 
       this.setDisposeFn(() => componentRef.destroy());
     } else {

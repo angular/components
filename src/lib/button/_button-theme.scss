@@ -1,4 +1,5 @@
 @import '../core/theming/theming';
+@import '../core/style/elevation';
 @import '../core/typography/typography-utils';
 
 // Applies a focus style to an mat-button element for each of the supported palettes.
@@ -8,15 +9,15 @@
   $warn: map-get($theme, warn);
 
   &.mat-primary .mat-button-focus-overlay {
-    background-color: mat-color($primary, 0.12);
+    background-color: mat-color($primary);
   }
 
   &.mat-accent .mat-button-focus-overlay {
-    background-color: mat-color($accent, 0.12);
+    background-color: mat-color($accent);
   }
 
   &.mat-warn .mat-button-focus-overlay {
-    background-color: mat-color($warn, 0.12);
+    background-color: mat-color($warn);
   }
 
   &[disabled] .mat-button-focus-overlay {
@@ -91,6 +92,16 @@
     @include _mat-button-ripple-color($theme, default);
   }
 
+  .mat-button-focus-overlay {
+    background: map_get($foreground, base);
+  }
+
+  // Note: this needs a bit extra specificity, because we're not guaranteed the inclusion
+  // order of the theme styles and the button reset may end up resetting this as well.
+  .mat-stroked-button:not(.mat-button-disabled) {
+    border-color: mat-color($foreground, divider);
+  }
+
   .mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab {
     // Default font and background color when not using any color palette.
     color: mat-color($foreground, text);
@@ -105,6 +116,34 @@
   // than the default value.
   .mat-icon-button {
     @include _mat-button-ripple-color($theme, default, 0.2);
+  }
+
+  .mat-stroked-button, .mat-flat-button {
+    @include _mat-theme-overridable-elevation(0, $theme);
+  }
+
+  .mat-raised-button {
+    @include _mat-theme-overridable-elevation(2, $theme);
+
+    &:not([disabled]):active {
+      @include _mat-theme-overridable-elevation(8, $theme);
+    }
+
+    &[disabled] {
+      @include _mat-theme-overridable-elevation(0, $theme);
+    }
+  }
+
+  .mat-fab, .mat-mini-fab {
+    @include _mat-theme-overridable-elevation(6, $theme);
+
+    &:not([disabled]):active {
+      @include _mat-theme-overridable-elevation(12, $theme);
+    }
+
+    &[disabled] {
+      @include _mat-theme-overridable-elevation(0, $theme);
+    }
   }
 }
 

@@ -6,8 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Input} from '@angular/core';
 import {CdkTreeNodeToggle} from '@angular/cdk/tree';
+import {Directive, Input} from '@angular/core';
+
+// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
+export const _CdkTreeNodeToggle = CdkTreeNodeToggle;
 
 /**
  * Wrapper for the CdkTree's toggle with Material design styles.
@@ -19,6 +22,6 @@ import {CdkTreeNodeToggle} from '@angular/cdk/tree';
   },
   providers: [{provide: CdkTreeNodeToggle, useExisting: MatTreeNodeToggle}]
 })
-export class MatTreeNodeToggle<T> extends CdkTreeNodeToggle<T> {
+export class MatTreeNodeToggle<T> extends _CdkTreeNodeToggle<T> {
   @Input('matTreeNodeToggleRecursive') recursive: boolean = false;
 }

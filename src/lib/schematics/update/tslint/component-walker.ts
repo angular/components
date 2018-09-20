@@ -6,14 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-/**
- * TSLint custom walker implementation that also visits external and inline templates.
- */
 import {existsSync, readFileSync} from 'fs';
-import {dirname, join, resolve} from 'path';
-import {Fix, IOptions, RuleFailure, RuleWalker} from 'tslint';
+import {dirname, resolve} from 'path';
+import {RuleWalker} from 'tslint';
 import * as ts from 'typescript';
-import {getLiteralTextWithoutQuotes} from '../typescript/literal';
 import {createComponentFile, ExternalResource} from './component-file';
 
 /**
@@ -22,18 +18,18 @@ import {createComponentFile, ExternalResource} from './component-file';
  */
 export class ComponentWalker extends RuleWalker {
 
-  protected visitInlineTemplate(_template: ts.StringLiteral) {}
-  protected visitInlineStylesheet(_stylesheet: ts.StringLiteral) {}
+  visitInlineTemplate(_template: ts.StringLiteralLike) {}
+  visitInlineStylesheet(_stylesheet: ts.StringLiteralLike) {}
 
-  protected visitExternalTemplate(_template: ExternalResource) {}
-  protected visitExternalStylesheet(_stylesheet: ExternalResource) {}
+  visitExternalTemplate(_template: ExternalResource) {}
+  visitExternalStylesheet(_stylesheet: ExternalResource) {}
 
-  private skipFiles: Set<string>;
-
-  constructor(sourceFile: ts.SourceFile, options: IOptions, skipFiles: string[] = []) {
-    super(sourceFile, options);
-    this.skipFiles = new Set(skipFiles.map(p => resolve(p)));
-  }
+  /**
+   * We keep track of all visited stylesheet files because we allow manually reporting external
+   * stylesheets which couldn't be detected by the component walker. Reporting these files multiple
+   * times will result in duplicated TSLint failures and replacements.
+   */
+  private _visitedStylesheetFiles: Set<string> = new Set<string>();
 
   visitNode(node: ts.Node) {
     if (node.kind === ts.SyntaxKind.CallExpression) {
@@ -49,7 +45,13 @@ export class ComponentWalker extends RuleWalker {
   }
 
   private _visitDirectiveCallExpression(callExpression: ts.CallExpression) {
-    const directiveMetadata = callExpression.arguments[0] as ts.ObjectLiteralExpression;
+    // If the call expressions does not have the correct amount of arguments, we can assume that
+    // this call expression is not related to Angular and just uses a similar decorator name.
+    if (callExpression.arguments.length !== 1) {
+      return;
+    }
+
+    const directiveMetadata = this._findMetadataFromExpression(callExpression.arguments[0]);
 
     if (!directiveMetadata) {
       return;
@@ -57,57 +59,32 @@ export class ComponentWalker extends RuleWalker {
 
     for (const property of directiveMetadata.properties as ts.NodeArray<ts.PropertyAssignment>) {
       const propertyName = property.name.getText();
-      const initializerKind = property.initializer.kind;
 
-      if (propertyName === 'template') {
-        this.visitInlineTemplate(property.initializer as ts.StringLiteral);
+      if (propertyName === 'template' && ts.isStringLiteralLike(property.initializer)) {
+        this.visitInlineTemplate(property.initializer);
       }
 
-      if (propertyName === 'templateUrl' && initializerKind === ts.SyntaxKind.StringLiteral) {
-        this._reportExternalTemplate(property.initializer as ts.StringLiteral);
+      if (propertyName === 'templateUrl' && ts.isStringLiteralLike(property.initializer)) {
+        this._reportExternalTemplate(property.initializer);
       }
 
-      if (propertyName === 'styles' && initializerKind === ts.SyntaxKind.ArrayLiteralExpression) {
-        this._reportInlineStyles(property.initializer as ts.ArrayLiteralExpression);
+      if (propertyName === 'styles' && ts.isArrayLiteralExpression(property.initializer)) {
+        this._reportInlineStyles(property.initializer);
       }
 
-      if (propertyName === 'styleUrls' &&
-          initializerKind === ts.SyntaxKind.ArrayLiteralExpression) {
-        this._visitExternalStylesArrayLiteral(property.initializer as ts.ArrayLiteralExpression);
+      if (propertyName === 'styleUrls' && ts.isArrayLiteralExpression(property.initializer)) {
+        this._visitExternalStylesArrayLiteral(property.initializer);
       }
     }
   }
 
-  private _reportInlineStyles(inlineStyles: ts.ArrayLiteralExpression) {
-    inlineStyles.elements.forEach(element => {
-      this.visitInlineStylesheet(element as ts.StringLiteral);
-    });
-  }
-
-  private _visitExternalStylesArrayLiteral(styleUrls: ts.ArrayLiteralExpression) {
-    styleUrls.elements.forEach(styleUrlLiteral => {
-      const styleUrl = getLiteralTextWithoutQuotes(styleUrlLiteral as ts.StringLiteral);
-      const stylePath = resolve(join(dirname(this.getSourceFile().fileName), styleUrl));
-
-      if (!this.skipFiles.has(stylePath)) {
-        this._reportExternalStyle(stylePath);
-      }
-    });
-  }
-
-  private _reportExternalTemplate(templateUrlLiteral: ts.StringLiteral) {
-    const templateUrl = getLiteralTextWithoutQuotes(templateUrlLiteral);
-    const templatePath = resolve(join(dirname(this.getSourceFile().fileName), templateUrl));
-
-    if (this.skipFiles.has(templatePath)) {
-      return;
-    }
+  private _reportExternalTemplate(node: ts.StringLiteralLike) {
+    const templatePath = resolve(dirname(this.getSourceFile().fileName), node.text);
 
     // Check if the external template file exists before proceeding.
     if (!existsSync(templatePath)) {
-      console.error(`PARSE ERROR: ${this.getSourceFile().fileName}:` +
-        ` Could not find template: "${templatePath}".`);
-      process.exit(1);
+      this._createResourceNotFoundFailure(node, templatePath);
+      return;
     }
 
     // Create a fake TypeScript source file that includes the template content.
@@ -116,13 +93,38 @@ export class ComponentWalker extends RuleWalker {
     this.visitExternalTemplate(templateFile);
   }
 
-  _reportExternalStyle(stylePath: string) {
-    // Check if the external stylesheet file exists before proceeding.
-    if (!existsSync(stylePath)) {
-      console.error(`PARSE ERROR: ${this.getSourceFile().fileName}:` +
-        ` Could not find stylesheet: "${stylePath}".`);
-      process.exit(1);
+  private _reportInlineStyles(expression: ts.ArrayLiteralExpression) {
+    expression.elements.forEach(node => {
+      if (ts.isStringLiteralLike(node)) {
+        this.visitInlineStylesheet(node);
+      }
+    });
+  }
+
+  private _visitExternalStylesArrayLiteral(expression: ts.ArrayLiteralExpression) {
+    expression.elements.forEach(node => {
+      if (ts.isStringLiteralLike(node)) {
+        const stylePath = resolve(dirname(this.getSourceFile().fileName), node.text);
+
+        // Check if the external stylesheet file exists before proceeding.
+        if (!existsSync(stylePath)) {
+          return this._createResourceNotFoundFailure(node, stylePath);
+        }
+
+        this._reportExternalStyle(stylePath);
+      }
+    });
+  }
+
+  private _reportExternalStyle(stylePath: string) {
+    // Keep track of all reported external stylesheets because we allow reporting additional
+    // stylesheet files which couldn't be detected by the component walker. This allows us to
+    // ensure that no stylesheet files are visited multiple times.
+    if (this._visitedStylesheetFiles.has(stylePath)) {
+      return;
     }
+
+    this._visitedStylesheetFiles.add(stylePath);
 
     // Create a fake TypeScript source file that includes the stylesheet content.
     const stylesheetFile = createComponentFile(stylePath, readFileSync(stylePath, 'utf8'));
@@ -130,11 +132,34 @@ export class ComponentWalker extends RuleWalker {
     this.visitExternalStylesheet(stylesheetFile);
   }
 
-  /** Creates a TSLint rule failure for the given external resource. */
-  protected addExternalResourceFailure(file: ExternalResource, message: string, fix?: Fix) {
-    const ruleFailure = new RuleFailure(file, file.getStart(), file.getEnd(),
-        message, this.getRuleName(), fix);
+  /**
+   * Recursively searches for the metadata object literal expression inside of a directive call
+   * expression. Since expression calls can be nested through *parenthesized* expressions, we
+   * need to recursively visit and check every expression inside of a parenthesized expression.
+   *
+   * e.g. @Component((({myMetadataExpression}))) will return `myMetadataExpression`.
+   */
+  private _findMetadataFromExpression(node: ts.Expression): ts.ObjectLiteralExpression | null {
+    if (node.kind === ts.SyntaxKind.ObjectLiteralExpression) {
+      return node as ts.ObjectLiteralExpression;
+    } else if (node.kind === ts.SyntaxKind.ParenthesizedExpression) {
+      return this._findMetadataFromExpression((node as ts.ParenthesizedExpression).expression);
+    }
 
-    this.addFailure(ruleFailure);
+    return null;
+  }
+
+  /**
+   * Creates a TSLint failure that reports that the resource file that belongs to the specified
+   * TypeScript node could not be resolved in the file system.
+   */
+  private _createResourceNotFoundFailure(node: ts.Node, resourceUrl: string) {
+    this.addFailureAtNode(node, `Could not resolve resource file: "${resourceUrl}". ` +
+        `Skipping automatic upgrade for this file.`);
+  }
+
+  /** Reports the specified additional stylesheets. */
+  _reportExtraStylesheetFiles(filePaths: string[]) {
+    filePaths.forEach(filePath => this._reportExternalStyle(resolve(filePath)));
   }
 }

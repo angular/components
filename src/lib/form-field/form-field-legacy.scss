@@ -49,6 +49,10 @@ $mat-form-field-legacy-underline-height: 1px !default;
     top: 0;
     height: $height;
 
+    // In some browsers like Microsoft Edge, the `scaleX` transform causes overflow that exceeds
+    // the desired form-field ripple height. See: angular/material2#6351
+    overflow: hidden;
+
     @include cdk-high-contrast {
       height: 0;
       border-top: solid $height;
@@ -58,6 +62,11 @@ $mat-form-field-legacy-underline-height: 1px !default;
   &.mat-form-field-disabled .mat-form-field-underline {
     background-position: 0;
     background-color: transparent;
+
+    @include cdk-high-contrast {
+      border-top-style: dotted;
+      border-top-width: 2px;
+    }
   }
 
   &.mat-form-field-invalid:not(.mat-focused) .mat-form-field-ripple {

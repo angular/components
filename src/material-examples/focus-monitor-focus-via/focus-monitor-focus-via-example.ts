@@ -16,7 +16,7 @@ import {
   styleUrls: ['focus-monitor-focus-via-example.css']
 })
 export class FocusMonitorFocusViaExample implements OnDestroy, OnInit {
-  @ViewChild('monitored') monitoredEl: ElementRef;
+  @ViewChild('monitored') monitoredEl: ElementRef<HTMLElement>;
 
   origin = this.formatOrigin(null);
 
@@ -25,7 +25,7 @@ export class FocusMonitorFocusViaExample implements OnDestroy, OnInit {
               private ngZone: NgZone) {}
 
   ngOnInit() {
-    this.focusMonitor.monitor(this.monitoredEl.nativeElement)
+    this.focusMonitor.monitor(this.monitoredEl)
         .subscribe(origin => this.ngZone.run(() => {
           this.origin = this.formatOrigin(origin);
           this.cdr.markForCheck();
@@ -33,7 +33,7 @@ export class FocusMonitorFocusViaExample implements OnDestroy, OnInit {
   }
 
   ngOnDestroy() {
-    this.focusMonitor.stopMonitoring(this.monitoredEl.nativeElement);
+    this.focusMonitor.stopMonitoring(this.monitoredEl);
   }
 
   formatOrigin(origin: FocusOrigin): string {

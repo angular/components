@@ -5,9 +5,9 @@
     // Adds Angular Material to an application without changing any templates
     "ng-add": {
       "description": "Adds Angular Material to the application without affecting any templates",
-      "factory": "./install",
-      "schema": "./install/schema.json",
-      "aliases": ["material-shell"]
+      "factory": "./ng-add/index",
+      "schema": "./ng-add/schema.json",
+      "aliases": ["material-shell", "install"]
     },
     // Create a dashboard component
     "dashboard": {
@@ -28,20 +28,21 @@
       "description": "Create a component with a responsive sidenav for navigation",
       "factory": "./nav/index",
       "schema": "./nav/schema.json",
-      "aliases": [ "material-nav", "materialNav" ]
+      "aliases": ["material-nav", "materialNav"]
     },
     // Create a file tree component
     "tree": {
       "description": "Create a file tree component.",
       "factory": "./tree/index",
-      "schema": "./tree/schema.json"
+      "schema": "./tree/schema.json",
+      "aliases": ["material-tree"]
     },
     // Creates a address form component
     "addressForm": {
       "description": "Create a component with a address form",
       "factory": "./address-form/index",
       "schema": "./address-form/schema.json",
-      "aliases": ["address-form"]
+      "aliases": ["address-form", "material-address-form", "material-addressForm"]
     }
   }
 }
