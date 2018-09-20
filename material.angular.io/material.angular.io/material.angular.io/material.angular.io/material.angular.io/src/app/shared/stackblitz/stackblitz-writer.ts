@@ -18,7 +18,8 @@ const TEMPLATE_FILES = [
   'styles.css',
   'polyfills.ts',
   '.angular-cli.json',
-  'main.ts'
+  'main.ts',
+  'material-module.ts',
 ];
 
 const TAGS: string[] = ['angular', 'material', 'example'];
