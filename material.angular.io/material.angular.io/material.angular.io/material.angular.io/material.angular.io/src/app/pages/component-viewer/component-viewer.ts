@@ -65,7 +65,7 @@ export class ComponentViewer implements OnDestroy {
   encapsulation: ViewEncapsulation.None,
 })
 export class ComponentOverview implements OnInit {
-  @ViewChild('intialFocusTarget') focusTarget: ElementRef;
+  @ViewChild('initialFocusTarget') focusTarget: ElementRef;
   @ViewChild('toc') tableOfContents: TableOfContents;
   showToc: Observable<boolean>;
 
@@ -76,10 +76,10 @@ export class ComponentOverview implements OnInit {
 
   ngOnInit() {
     // 100ms timeout is used to allow the page to settle before moving focus for screen readers.
-    setTimeout(() => this.focusTarget.nativeElement.focus(), 100);
+    setTimeout(() => this.focusTarget.nativeElement.focus({preventScroll: true}), 100);
   }
 
-  onContentLoaded() {
+  scrollToSelectedContentSection() {
     if (this.tableOfContents) {
       this.tableOfContents.updateScrollPosition();
     }

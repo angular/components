@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Router} from '@angular/router';
 
 /**
@@ -19,27 +19,31 @@ import {Router} from '@angular/router';
   template: `
     <a
       title="Link to this heading"
-      [attr.aria-describedby]="example"
-      class="docs-markdown-a"
       aria-label="Link to this heading"
-      [href]="url">
+      class="docs-markdown-a"
+      [attr.aria-describedby]="example"
+      [href]="_getFragmentUrl()">
       <mat-icon>link</mat-icon>
     </a>
   `
 })
-export class HeaderLink implements OnInit {
+export class HeaderLink {
 
+  /**
+   * Id of the anchor element. Note that is uses "example" because we instantiate the
+   * header link components through the ComponentPortal.
+   */
   @Input() example: string;
 
-  url: string;
-  private _rootUrl: string;
+  /** Base URL that is used to build an absolute fragment URL. */
+  private _baseUrl: string;
 
   constructor(router: Router) {
-    this._rootUrl = router.url.split('#')[0];
+    this._baseUrl = router.url.split('#')[0];
   }
 
-  ngOnInit(): void {
-    this.url = `${this._rootUrl}#${this.example}`;
+  _getFragmentUrl(): string {
+    return `${this._baseUrl}#${this.example}`;
   }
 
 }

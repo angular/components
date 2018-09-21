@@ -1,9 +1,9 @@
-<span class="cdk-visually-hidden" tabindex="-1" #intialFocusTarget>
+<span class="cdk-visually-hidden" tabindex="-1" #initialFocusTarget>
   Overview for {{componentViewer.componentDocItem.id}}
 </span>
 <doc-viewer
     documentUrl="/assets/documents/overview/{{componentViewer.componentDocItem.packageName}}-{{componentViewer.componentDocItem.id}}.html"
     class="docs-component-view-text-content docs-component-overview"
-    (contentLoaded)="onContentLoaded()">
+    (contentRendered)="scrollToSelectedContentSection()">
 </doc-viewer>
 <table-of-contents #toc container=".mat-drawer-content" *ngIf="showToc | async"></table-of-contents>
