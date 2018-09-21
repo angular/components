@@ -12,10 +12,12 @@ import {
   Component,
   Host,
   Inject,
+  ViewChild,
+  Optional,
   OnDestroy
 } from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {MatCalendar} from '@angular/material';
+import {MatCalendar, MatCalendarHeader} from '@angular/material';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {Subject} from 'rxjs';
@@ -53,6 +55,7 @@ export class DatepickerDemo {
 
   // pass custom header component type as input
   customHeader = CustomHeader;
+  customHeaderNgContent = CustomHeaderNgContent;
 }
 
 // Custom header component for datepicker
@@ -97,4 +100,36 @@ export class CustomHeader<D> implements OnDestroy {
         this._dateAdapter.addCalendarMonths(this._calendar.activeDate, 1) :
         this._dateAdapter.addCalendarYears(this._calendar.activeDate, 1);
   }
+}
+
+@Component({
+    moduleId: module.id,
+    selector: 'customer-header-ng-content',
+    template: `
+        <mat-calendar-header #header>
+            <button mat-button type="button" class="mat-calendar-today-button"
+                    (click)="todayClicked()" [attr.aria-label]="todayButtonLabel"
+                    cdkAriaLive="polite">
+                {{todayButtonLabel}}
+            </button>
+        </mat-calendar-header>
+    `
+})
+export class CustomHeaderNgContent<D> {
+
+  @ViewChild(MatCalendarHeader)
+  header: MatCalendarHeader<D>;
+
+  constructor(@Optional() private _dateAdapter: DateAdapter<D>) {}
+
+    get todayButtonLabel() {
+        return 'TODAY';
+    }
+
+    todayClicked() {
+      let calendar = this.header.calendar;
+
+      calendar.activeDate = this._dateAdapter.today();
+      calendar.currentView = 'month';
+    }
 }

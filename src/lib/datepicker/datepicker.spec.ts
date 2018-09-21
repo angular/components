@@ -1632,6 +1632,53 @@ describe('MatDatepicker', () => {
 
       expect(document.querySelector('mat-calendar-header')).toBeTruthy();
     }));
+
+    it('should find the custom element', fakeAsync(() => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(document.querySelector('.custom-element')).toBeTruthy();
+    }));
+  });
+
+  describe('datepicker with custom header using ng-content', () => {
+    let fixture: ComponentFixture<DatepickerWithCustomHeaderNgContent>;
+    let testComponent: DatepickerWithCustomHeaderNgContent;
+
+    beforeEach(fakeAsync(() => {
+      fixture = createComponent(
+        DatepickerWithCustomHeaderNgContent,
+        [MatNativeDateModule],
+        [],
+        [CustomHeaderForDatepickerNgContent]
+      );
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('should instantiate a datepicker with a custom header', fakeAsync(() => {
+      expect(testComponent).toBeTruthy();
+    }));
+
+    it('should find the standard header element', fakeAsync(() => {
+      testComponent.datepicker.open();
+      fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
+
+      expect(document.querySelector('mat-calendar-header')).toBeTruthy();
+    }));
+
+    it('should find the custom element', fakeAsync(() => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(document.querySelector('.custom-element-ng-content')).toBeTruthy();
+    }));
   });
 });
 
@@ -1885,22 +1932,42 @@ class DatepickerOpeningOnFocus {
 @Component({
   template: `
     <input [matDatepicker]="ch">
-    <mat-datepicker #ch [calendarHeaderComponent]="CustomHeaderForDatepicker"></mat-datepicker>
+    <mat-datepicker #ch [calendarHeaderComponent]="customHeaderForDatePicker"></mat-datepicker>
   `,
 })
 class DatepickerWithCustomHeader {
   @ViewChild('ch') datepicker: MatDatepicker<Date>;
+  customHeaderForDatePicker = CustomHeaderForDatepicker;
 }
 
 @Component({
   template: `
-    <div>Custom element</div>
+    <div class="custom-element">Custom element</div>
     <mat-calendar-header></mat-calendar-header>
   `,
 })
 class CustomHeaderForDatepicker {}
 
+@Component({
+  template: `
+    <input [matDatepicker]="chngcontent">
+    <mat-datepicker #chngcontent [calendarHeaderComponent]="customHeaderForDatepickerNgContent">
+    </mat-datepicker>
+  `,
+})
+class DatepickerWithCustomHeaderNgContent {
+  @ViewChild('chngcontent') datepicker: MatDatepicker<Date>;
+  customHeaderForDatepickerNgContent = CustomHeaderForDatepickerNgContent;
+}
 
+@Component({
+  template: `
+    <mat-calendar-header>
+        <p class="custom-element-ng-content">Custom Element</p>
+    </mat-calendar-header>
+  `,
+})
+class CustomHeaderForDatepickerNgContent {}
 
 @Component({
   template: `
