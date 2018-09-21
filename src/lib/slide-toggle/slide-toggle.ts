@@ -30,11 +30,11 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
-  CanColor,
-  CanDisable,
-  CanDisableRipple,
+  CanColor, CanColorCtor,
+  CanDisable, CanDisableCtor,
+  CanDisableRipple, CanDisableRippleCtor,
   HammerInput,
-  HasTabIndex,
+  HasTabIndex, HasTabIndexCtor,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple,
@@ -69,8 +69,13 @@ export class MatSlideToggleChange {
 export class MatSlideToggleBase {
   constructor(public _elementRef: ElementRef) {}
 }
-export const _MatSlideToggleMixinBase =
-  mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatSlideToggleBase)), 'accent'));
+export const _MatSlideToggleMixinBase:
+    HasTabIndexCtor &
+    CanColorCtor &
+    CanDisableRippleCtor &
+    CanDisableCtor &
+    typeof MatSlideToggleBase =
+        mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatSlideToggleBase)), 'accent'));
 
 /** Represents a slidable "switch" toggle that can be moved between on and off. */
 @Component({
@@ -115,10 +120,10 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   private _dragPercentage: number;
 
   /** Reference to the thumb HTMLElement. */
-  @ViewChild('thumbContainer') _thumbEl: ElementRef<HTMLElement>;
+  @ViewChild('thumbContainer') _thumbEl: ElementRef;
 
   /** Reference to the thumb bar HTMLElement. */
-  @ViewChild('toggleBar') _thumbBarEl: ElementRef<HTMLElement>;
+  @ViewChild('toggleBar') _thumbBarEl: ElementRef;
 
   /** Name value will be applied to the input element if present */
   @Input() name: string | null = null;
@@ -172,7 +177,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   get inputId(): string { return `${this.id || this._uniqueId}-input`; }
 
   /** Reference to the underlying input element. */
-  @ViewChild('input') _inputElement: ElementRef;
+  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
 
   constructor(elementRef: ElementRef,
               /**
@@ -274,7 +279,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
 
   /** Focuses the slide-toggle. */
   focus(): void {
-    this._focusMonitor.focusVia(this._inputElement.nativeElement, 'keyboard');
+    this._focusMonitor.focusVia(this._inputElement, 'keyboard');
   }
 
   /** Toggles the checked state of the slide-toggle. */
@@ -353,9 +358,11 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
 
   /** Method being called whenever the label text changes. */
   _onLabelTextChange() {
-    // This method is getting called whenever the label of the slide-toggle changes.
-    // Since the slide-toggle uses the OnPush strategy we need to notify it about the change
-    // that has been recognized by the cdkObserveContent directive.
-    this._changeDetectorRef.markForCheck();
+    // Since the event of the `cdkObserveContent` directive runs outside of the zone, the
+    // slide-toggle component will be only marked for check, but no actual change detection runs
+    // automatically. Instead of going back into the zone in order to trigger a change detection
+    // which causes *all* components to be checked (if explicitly marked or not using OnPush),
+    // we only trigger an explicit change detection for the slide-toggle view and it's children.
+    this._changeDetectorRef.detectChanges();
   }
 }

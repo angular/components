@@ -103,7 +103,7 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
   moduleId: module.id,
   selector: 'mat-drawer',
   exportAs: 'matDrawer',
-  template: '<ng-content></ng-content>',
+  templateUrl: 'drawer.html',
   animations: [matDrawerAnimations.transformDrawer],
   host: {
     'class': 'mat-drawer',
@@ -221,7 +221,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
     return this.opened && this.mode !== 'side';
   }
 
-  constructor(private _elementRef: ElementRef,
+  constructor(private _elementRef: ElementRef<HTMLElement>,
               private _focusTrapFactory: FocusTrapFactory,
               private _focusMonitor: FocusMonitor,
               private _platform: Platform,
@@ -248,9 +248,9 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
      * and we don't have close disabled.
      */
     this._ngZone.runOutsideAngular(() => {
-        fromEvent(this._elementRef.nativeElement, 'keydown').pipe(
-            filter((event: KeyboardEvent) => event.keyCode === ESCAPE && !this.disableClose)
-        ).subscribe((event) => this._ngZone.run(() => {
+        fromEvent<KeyboardEvent>(this._elementRef.nativeElement, 'keydown').pipe(
+            filter(event => event.keyCode === ESCAPE && !this.disableClose)
+        ).subscribe(event => this._ngZone.run(() => {
             this.close();
             event.stopPropagation();
         }));
@@ -484,7 +484,7 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
   }
 
   constructor(@Optional() private _dir: Directionality,
-              private _element: ElementRef,
+              private _element: ElementRef<HTMLElement>,
               private _ngZone: NgZone,
               private _changeDetectorRef: ChangeDetectorRef,
               @Inject(MAT_DRAWER_DEFAULT_AUTOSIZE) defaultAutosize = false,

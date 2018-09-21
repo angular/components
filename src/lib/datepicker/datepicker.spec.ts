@@ -1,5 +1,6 @@
 import {ENTER, ESCAPE, RIGHT_ARROW, UP_ARROW, DOWN_ARROW} from '@angular/cdk/keycodes';
-import {Overlay, OverlayContainer, ScrollDispatcher} from '@angular/cdk/overlay';
+import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
   createKeyboardEvent,
   dispatchEvent,
@@ -454,7 +455,7 @@ describe('MatDatepicker', () => {
         expect(testComponent.datepicker.opened).toBe(false);
       }));
 
-      it('should open the datpeicker using ALT + DOWN_ARROW', fakeAsync(() => {
+      it('should open the datepicker using ALT + DOWN_ARROW', fakeAsync(() => {
         expect(testComponent.datepicker.opened).toBe(false);
 
         const event = createKeyboardEvent('keydown', DOWN_ARROW);
@@ -466,6 +467,24 @@ describe('MatDatepicker', () => {
 
         expect(testComponent.datepicker.opened).toBe(true);
         expect(event.defaultPrevented).toBe(true);
+      }));
+
+      it('should not open for ALT + DOWN_ARROW on readonly input', fakeAsync(() => {
+        const input = fixture.nativeElement.querySelector('input');
+
+        expect(testComponent.datepicker.opened).toBe(false);
+
+        input.setAttribute('readonly', 'true');
+
+        const event = createKeyboardEvent('keydown', DOWN_ARROW);
+        Object.defineProperty(event, 'altKey', {get: () => true});
+
+        dispatchEvent(input, event);
+        fixture.detectChanges();
+        flush();
+
+        expect(testComponent.datepicker.opened).toBe(false);
+        expect(event.defaultPrevented).toBe(false);
       }));
 
     });
@@ -1006,6 +1025,26 @@ describe('MatDatepicker', () => {
         expect(fixture.nativeElement.querySelector('.mat-datepicker-toggle mat-icon'))
             .toBeFalsy('Expected default icon to be removed.');
       }));
+    });
+
+    describe('datepicker with tabindex on mat-datepicker-toggle', () => {
+      it('should forward the tabindex to the underlying button', () => {
+        const fixture = createComponent(DatepickerWithTabindexOnToggle, [MatNativeDateModule]);
+        fixture.detectChanges();
+
+        const button = fixture.nativeElement.querySelector('.mat-datepicker-toggle button');
+
+        expect(button.getAttribute('tabindex')).toBe('7');
+      });
+
+      it('should clear the tabindex from the mat-datepicker-toggle host', () => {
+        const fixture = createComponent(DatepickerWithTabindexOnToggle, [MatNativeDateModule]);
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement.querySelector('.mat-datepicker-toggle');
+
+        expect(host.hasAttribute('tabindex')).toBe(false);
+      });
     });
 
     describe('datepicker inside mat-form-field', () => {
@@ -1875,3 +1914,16 @@ class DelayedDatepicker {
   date: Date | null;
   assignedDatepicker: MatDatepicker<Date>;
 }
+
+
+
+@Component({
+  template: `
+    <input [matDatepicker]="d">
+    <mat-datepicker-toggle tabIndex="7" [for]="d">
+      <div class="custom-icon" matDatepickerToggleIcon></div>
+    </mat-datepicker-toggle>
+    <mat-datepicker #d></mat-datepicker>
+  `,
+})
+class DatepickerWithTabindexOnToggle {}

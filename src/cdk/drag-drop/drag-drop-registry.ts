@@ -39,7 +39,10 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
   private _activeDragInstances = new Set<I>();
 
   /** Keeps track of the event listeners that we've bound to the `document`. */
-  private _globalListeners = new Map<string, {handler: PointerEventHandler, options?: any}>();
+  private _globalListeners = new Map<'touchmove' | 'mousemove' | 'touchend' | 'mouseup', {
+    handler: PointerEventHandler,
+    options?: any
+  }>();
 
   /**
    * Emits the `touchmove` or `mousemove` events that are dispatched
@@ -113,6 +116,10 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
       const moveEvent = isTouchEvent ? 'touchmove' : 'mousemove';
       const upEvent = isTouchEvent ? 'touchend' : 'mouseup';
 
+      // We need to disable the native interactions on the entire body, because
+      // the user can start marking text if they drag too far in Safari.
+      this._document.body.classList.add('cdk-drag-drop-disable-native-interactions');
+
       // We explicitly bind __active__ listeners here, because newer browsers will default to
       // passive ones for `mousemove` and `touchmove`. The events need to be active, because we
       // use `preventDefault` to prevent the page from scrolling while the user is dragging.
@@ -133,6 +140,7 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
 
     if (this._activeDragInstances.size === 0) {
       this._clearGlobalListeners();
+      this._document.body.classList.remove('cdk-drag-drop-disable-native-interactions');
     }
   }
 

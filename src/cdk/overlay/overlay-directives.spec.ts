@@ -232,6 +232,15 @@ describe('Overlay directives', () => {
       expect(backdrop.classList).toContain('mat-test-class');
     });
 
+    it('should set the custom panel class', () => {
+      fixture.componentInstance.isOpen = true;
+      fixture.detectChanges();
+
+      const panel
+        = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      expect(panel.classList).toContain('cdk-test-panel-class');
+    });
+
     it('should set the offsetX', () => {
       fixture.componentInstance.offsetX = 5;
       fixture.componentInstance.isOpen = true;
@@ -373,12 +382,12 @@ describe('Overlay directives', () => {
     });
 
     it('should allow for flexible positioning to be enabled', () => {
-      expect(fixture.componentInstance.connectedOverlayDirective.flexibleDiemsions).not.toBe(true);
+      expect(fixture.componentInstance.connectedOverlayDirective.flexibleDimensions).not.toBe(true);
 
       fixture.componentInstance.flexibleDimensions = true;
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.connectedOverlayDirective.flexibleDiemsions).toBe(true);
+      expect(fixture.componentInstance.connectedOverlayDirective.flexibleDimensions).toBe(true);
     });
 
     it('should allow for growing after open to be enabled', () => {
@@ -478,6 +487,7 @@ describe('Overlay directives', () => {
             [cdkConnectedOverlayGrowAfterOpen]="growAfterOpen"
             [cdkConnectedOverlayPush]="push"
             cdkConnectedOverlayBackdropClass="mat-test-class"
+            cdkConnectedOverlayPanelClass="cdk-test-panel-class"
             (backdropClick)="backdropClickHandler($event)"
             [cdkConnectedOverlayOffsetX]="offsetX"
             [cdkConnectedOverlayOffsetY]="offsetY"

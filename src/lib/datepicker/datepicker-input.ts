@@ -27,9 +27,9 @@ import {
   ValidationErrors,
   Validator,
   ValidatorFn,
-  Validators
+  Validators,
 } from '@angular/forms';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
@@ -240,7 +240,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   private _lastValueValid = false;
 
   constructor(
-      private _elementRef: ElementRef,
+      private _elementRef: ElementRef<HTMLInputElement>,
       @Optional() public _dateAdapter: DateAdapter<D>,
       @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
       @Optional() private _formField: MatFormField) {
@@ -311,7 +311,9 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   }
 
   _onKeydown(event: KeyboardEvent) {
-    if (this._datepicker && event.altKey && event.keyCode === DOWN_ARROW) {
+    const isAltDownArrow = event.altKey && event.keyCode === DOWN_ARROW;
+
+    if (this._datepicker && isAltDownArrow && !this._elementRef.nativeElement.readOnly) {
       this._datepicker.open();
       event.preventDefault();
     }
@@ -335,7 +337,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   }
 
   /** Returns the palette used by the input's form field, if any. */
-  _getThemePalette() {
+  _getThemePalette(): ThemePalette {
     return this._formField ? this._formField.color : undefined;
   }
 

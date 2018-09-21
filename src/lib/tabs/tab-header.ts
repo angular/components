@@ -20,6 +20,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  NgZone,
   OnDestroy,
   Optional,
   Output,
@@ -27,7 +28,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanDisableRipple, mixinDisableRipple} from '@angular/material/core';
+import {CanDisableRipple, CanDisableRippleCtor, mixinDisableRipple} from '@angular/material/core';
 import {merge, of as observableOf, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {MatInkBar} from './ink-bar';
@@ -51,7 +52,8 @@ const EXAGGERATED_OVERSCROLL = 60;
 // Boilerplate for applying mixins to MatTabHeader.
 /** @docs-private */
 export class MatTabHeaderBase {}
-export const _MatTabHeaderMixinBase = mixinDisableRipple(MatTabHeaderBase);
+export const _MatTabHeaderMixinBase: CanDisableRippleCtor & typeof MatTabHeaderBase =
+    mixinDisableRipple(MatTabHeaderBase);
 
 /**
  * The header of the tab group which displays a list of all the tabs in the tab group. Includes
@@ -136,7 +138,9 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   constructor(private _elementRef: ElementRef,
               private _changeDetectorRef: ChangeDetectorRef,
               private _viewportRuler: ViewportRuler,
-              @Optional() private _dir: Directionality) {
+              @Optional() private _dir: Directionality,
+              // @breaking-change 8.0.0 `_ngZone` parameter to be made required.
+              private _ngZone?: NgZone) {
     super();
   }
 
@@ -233,9 +237,16 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
    * Callback for when the MutationObserver detects that the content has changed.
    */
   _onContentChanges() {
-    this._updatePagination();
-    this._alignInkBarToSelectedTab();
-    this._changeDetectorRef.markForCheck();
+    const zoneCallback = () => {
+      this._updatePagination();
+      this._alignInkBarToSelectedTab();
+      this._changeDetectorRef.markForCheck();
+    };
+
+    // The content observer runs outside the `NgZone` by default, which
+    // means that we need to bring the callback back in ourselves.
+    // @breaking-change 8.0.0 Remove null check for `_ngZone` once it's a required parameter.
+    this._ngZone ? this._ngZone.run(zoneCallback) : zoneCallback();
   }
 
   /**
@@ -434,6 +445,6 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
         this._labelWrappers.toArray()[this.selectedIndex].elementRef.nativeElement :
         null;
 
-    this._inkBar.alignToElement(selectedLabelWrapper);
+    this._inkBar.alignToElement(selectedLabelWrapper!);
   }
 }

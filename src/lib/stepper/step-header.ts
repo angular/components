@@ -21,7 +21,7 @@ import {Subscription} from 'rxjs';
 import {MatStepLabel} from './step-label';
 import {MatStepperIntl} from './stepper-intl';
 import {MatStepperIconContext} from './stepper-icon';
-
+import {StepState} from '@angular/cdk/stepper';
 
 @Component({
   moduleId: module.id,
@@ -39,10 +39,13 @@ export class MatStepHeader implements OnDestroy {
   private _intlSubscription: Subscription;
 
   /** State of the given step. */
-  @Input() state: string;
+  @Input() state: StepState;
 
   /** Label of the given step. */
   @Input() label: MatStepLabel | string;
+
+  /** Error message to display when there's an error. */
+  @Input() errorMessage: string;
 
   /** Overrides for the header icons, passed in via the stepper. */
   @Input() iconOverrides: {[key: string]: TemplateRef<MatStepperIconContext>};
@@ -62,7 +65,7 @@ export class MatStepHeader implements OnDestroy {
   constructor(
     public _intl: MatStepperIntl,
     private _focusMonitor: FocusMonitor,
-    private _element: ElementRef,
+    private _element: ElementRef<HTMLElement>,
     changeDetectorRef: ChangeDetectorRef) {
     _focusMonitor.monitor(_element, true);
     this._intlSubscription = _intl.changes.subscribe(() => changeDetectorRef.markForCheck());

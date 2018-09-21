@@ -33,11 +33,12 @@ import {
   ViewChild,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
 import {filter, startWith, take} from 'rxjs/operators';
-import {MatAccordion} from './accordion';
 import {matExpansionAnimations} from './expansion-animations';
 import {MatExpansionPanelContent} from './expansion-panel-content';
+import {MAT_ACCORDION, MatAccordionBase} from './accordion-base';
 
 // TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
 export const _CdkAccordionItem = CdkAccordionItem;
@@ -68,11 +69,12 @@ let uniqueId = 0;
   providers: [
     // Provide MatAccordion as undefined to prevent nested expansion panels from registering
     // to the same accordion.
-    {provide: MatAccordion, useValue: undefined},
+    {provide: MAT_ACCORDION, useValue: undefined},
   ],
   host: {
     'class': 'mat-expansion-panel',
     '[class.mat-expanded]': 'expanded',
+    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
     '[class.mat-expansion-panel-spacing]': '_hasSpacing()',
   }
 })
@@ -103,7 +105,7 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
   readonly _inputChanges = new Subject<SimpleChanges>();
 
   /** Optionally defined accordion the expansion panel belongs to. */
-  accordion: MatAccordion;
+  accordion: MatAccordionBase;
 
   /** Content that will be rendered lazily. */
   @ContentChild(MatExpansionPanelContent) _lazyContent: MatExpansionPanelContent;
@@ -117,11 +119,13 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
   /** ID for the associated header element. Used for a11y labelling. */
   _headerId = `mat-expansion-panel-header-${uniqueId++}`;
 
-  constructor(@Optional() @SkipSelf() accordion: MatAccordion,
+  constructor(@Optional() @SkipSelf() @Inject(MAT_ACCORDION) accordion: MatAccordionBase,
               _changeDetectorRef: ChangeDetectorRef,
               _uniqueSelectionDispatcher: UniqueSelectionDispatcher,
               private _viewContainerRef: ViewContainerRef,
-              @Inject(DOCUMENT) _document?: any) {
+              // @breaking-change 8.0.0 _document and _animationMode to be made required
+              @Inject(DOCUMENT) _document?: any,
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     super(accordion, _changeDetectorRef, _uniqueSelectionDispatcher);
     this.accordion = accordion;
     this._document = _document;
@@ -147,7 +151,7 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
     if (this._lazyContent) {
       // Render the content as soon as the panel becomes open.
       this.opened.pipe(
-        startWith(null!),
+        startWith<void>(null!),
         filter(() => this.expanded && !this._portal),
         take(1)
       ).subscribe(() => {

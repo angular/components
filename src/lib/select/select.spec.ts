@@ -126,6 +126,7 @@ describe('MatSelect', () => {
         SelectWithGroups,
         SelectWithGroupsAndNgContainer,
         SelectWithFormFieldLabel,
+        SelectWithChangeEvent,
       ]);
     }));
 
@@ -249,6 +250,16 @@ describe('MatSelect', () => {
 
           const labelFixture = TestBed.createComponent(SelectWithFormFieldLabel);
           labelFixture.componentInstance.placeholder = 'Thing selector';
+          labelFixture.detectChanges();
+          select = labelFixture.debugElement.query(By.css('mat-select')).nativeElement;
+
+          expect(select.getAttribute('aria-labelledby')).toBeFalsy();
+        });
+
+        it('should not set `aria-labelledby` if there is no form field label', () => {
+          fixture.destroy();
+
+          const labelFixture = TestBed.createComponent(SelectWithChangeEvent);
           labelFixture.detectChanges();
           select = labelFixture.debugElement.query(By.css('mat-select')).nativeElement;
 
@@ -1661,14 +1672,11 @@ describe('MatSelect', () => {
 
     describe('animations', () => {
       let fixture: ComponentFixture<BasicSelect>;
-      let trigger: HTMLElement;
       let formField: HTMLElement;
 
       beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(BasicSelect);
         fixture.detectChanges();
-
-        trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
         formField = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
       }));
 
@@ -1691,19 +1699,6 @@ describe('MatSelect', () => {
             'Expected placeholder to animate back down to normal position.');
       }));
 
-      it('should add a class to the panel when the menu is done animating', fakeAsync(() => {
-        trigger.click();
-        fixture.detectChanges();
-
-        const panel = overlayContainerElement.querySelector('.mat-select-panel')!;
-
-        expect(panel.classList).not.toContain('mat-select-panel-done-animating');
-
-        flush();
-        fixture.detectChanges();
-
-        expect(panel.classList).toContain('mat-select-panel-done-animating');
-      }));
     });
 
     describe('keyboard scrolling', () => {
@@ -3574,7 +3569,7 @@ describe('MatSelect', () => {
 
         // 44px accounts for the checkbox size, margin and the panel's padding.
         expect(Math.floor(firstOptionLeft))
-            .toEqual(Math.floor(triggerLeft - 44),
+            .toEqual(Math.floor(triggerLeft - 40),
                 `Expected trigger label to align along x-axis, accounting for the checkbox.`);
       }));
 
@@ -3590,7 +3585,7 @@ describe('MatSelect', () => {
 
         // 44px accounts for the checkbox size, margin and the panel's padding.
         expect(Math.floor(firstOptionRight))
-            .toEqual(Math.floor(triggerRight + 44),
+            .toEqual(Math.floor(triggerRight + 40),
                 `Expected trigger label to align along x-axis, accounting for the checkbox.`);
       }));
     });

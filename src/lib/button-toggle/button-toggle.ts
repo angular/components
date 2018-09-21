@@ -8,8 +8,10 @@
 
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {SelectionModel} from '@angular/cdk/collections';
 import {
   AfterContentInit,
+  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -26,24 +28,17 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  Attribute,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
-  CanDisable,
   CanDisableRipple,
-  mixinDisabled,
-  mixinDisableRipple
+  mixinDisableRipple,
+  CanDisableRippleCtor,
 } from '@angular/material/core';
-import {SelectionModel} from '@angular/cdk/collections';
+
 
 /** Acceptable types for a button toggle. */
 export type ToggleType = 'checkbox' | 'radio';
-
-// Boilerplate for applying mixins to MatButtonToggleGroup and MatButtonToggleGroupMultiple
-/** @docs-private */
-export class MatButtonToggleGroupBase {}
-export const _MatButtonToggleGroupMixinBase = mixinDisabled(MatButtonToggleGroupBase);
 
 /**
  * Provider Expression that allows mat-button-toggle-group to register as a ControlValueAccessor.
@@ -81,24 +76,24 @@ export class MatButtonToggleChange {
     MAT_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR,
     {provide: MatButtonToggleGroupMultiple, useExisting: MatButtonToggleGroup},
   ],
-  inputs: ['disabled'],
   host: {
     'role': 'group',
     'class': 'mat-button-toggle-group',
+    '[attr.aria-disabled]': 'disabled',
     '[class.mat-button-toggle-vertical]': 'vertical'
   },
   exportAs: 'matButtonToggleGroup',
 })
-export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase implements
-  ControlValueAccessor, CanDisable, OnInit, AfterContentInit {
+export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
 
   private _vertical = false;
   private _multiple = false;
+  private _disabled = false;
   private _selectionModel: SelectionModel<MatButtonToggle>;
 
   /**
    * Reference to the raw value that the consumer tried to assign. The real
-   * value will exaclude any values from this one that don't correspond to a
+   * value will exclude any values from this one that don't correspond to a
    * toggle. Useful for the cases where the value is assigned before the toggles
    * have been initialized or at the same that they're being swapped out.
    */
@@ -171,13 +166,22 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase impleme
     this._multiple = coerceBooleanProperty(value);
   }
 
+  /** Whether multiple button toggle group is disabled. */
+  @Input()
+  get disabled(): boolean { return this._disabled; }
+  set disabled(value: boolean) {
+    this._disabled = coerceBooleanProperty(value);
+
+    if (this._buttonToggles) {
+      this._buttonToggles.forEach(toggle => toggle._markForCheck());
+    }
+  }
+
   /** Event emitted when the group's value changes. */
   @Output() readonly change: EventEmitter<MatButtonToggleChange> =
       new EventEmitter<MatButtonToggleChange>();
 
-  constructor(private _changeDetector: ChangeDetectorRef) {
-    super();
-  }
+  constructor(private _changeDetector: ChangeDetectorRef) {}
 
   ngOnInit() {
     this._selectionModel = new SelectionModel<MatButtonToggle>(this.multiple, undefined, false);
@@ -209,10 +213,6 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase impleme
   // Implemented as part of ControlValueAccessor.
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
-
-    if (this._buttonToggles) {
-      this._buttonToggles.forEach(toggle => toggle._markForCheck());
-    }
   }
 
   /** Dispatch change event with current selection and group value. */
@@ -314,7 +314,8 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase impleme
 // Boilerplate for applying mixins to the MatButtonToggle class.
 /** @docs-private */
 export class MatButtonToggleBase {}
-export const _MatButtonToggleMixinBase = mixinDisableRipple(MatButtonToggleBase);
+export const _MatButtonToggleMixinBase: CanDisableRippleCtor & typeof MatButtonToggleBase =
+    mixinDisableRipple(MatButtonToggleBase);
 
 /** Single button inside of a toggle group. */
 @Component({

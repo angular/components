@@ -130,7 +130,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   @Output() readonly onMenuClose: EventEmitter<void> = this.menuClosed;
 
   constructor(private _overlay: Overlay,
-              private _element: ElementRef,
+              private _element: ElementRef<HTMLElement>,
               private _viewContainerRef: ViewContainerRef,
               @Inject(MAT_MENU_SCROLL_STRATEGY) private _scrollStrategy,
               @Optional() private _parentMenu: MatMenu,
@@ -224,7 +224,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    */
   focus(origin: FocusOrigin = 'program') {
     if (this._focusMonitor) {
-      this._focusMonitor.focusVia(this._element.nativeElement, origin);
+      this._focusMonitor.focusVia(this._element, origin);
     } else {
       this._element.nativeElement.focus();
     }
@@ -360,6 +360,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     return new OverlayConfig({
       positionStrategy: this._overlay.position()
           .flexibleConnectedTo(this._element)
+          .withLockedPosition()
           .withTransformOriginOn('.mat-menu-panel'),
       hasBackdrop: this.menu.hasBackdrop == null ? !this.triggersSubmenu() : this.menu.hasBackdrop,
       backdropClass: this.menu.backdropClass || 'cdk-overlay-transparent-backdrop',

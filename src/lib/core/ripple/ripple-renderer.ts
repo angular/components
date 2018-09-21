@@ -7,6 +7,7 @@
  */
 import {ElementRef, NgZone} from '@angular/core';
 import {Platform, supportsPassiveEventListeners} from '@angular/cdk/platform';
+import {isFakeMousedownFromScreenReader} from '@angular/cdk/a11y';
 import {RippleRef, RippleState} from './ripple-ref';
 
 export type RippleConfig = {
@@ -101,7 +102,7 @@ export class RippleRenderer {
 
   constructor(private _target: RippleTarget,
               private _ngZone: NgZone,
-              elementRef: ElementRef,
+              elementRef: ElementRef<HTMLElement>,
               platform: Platform) {
 
     // Only do anything if we're on the browser.
@@ -109,12 +110,14 @@ export class RippleRenderer {
       this._containerElement = elementRef.nativeElement;
 
       // Specify events which need to be registered on the trigger.
-      this._triggerEvents.set('mousedown', this.onMousedown);
-      this._triggerEvents.set('mouseup', this.onPointerUp);
-      this._triggerEvents.set('mouseleave', this.onPointerUp);
+      this._triggerEvents
+        .set('mousedown', this.onMousedown)
+        .set('mouseup', this.onPointerUp)
+        .set('mouseleave', this.onPointerUp)
 
-      this._triggerEvents.set('touchstart', this.onTouchStart);
-      this._triggerEvents.set('touchend', this.onPointerUp);
+        .set('touchstart', this.onTouchStart)
+        .set('touchend', this.onPointerUp)
+        .set('touchcancel', this.onPointerUp);
     }
   }
 
@@ -246,10 +249,13 @@ export class RippleRenderer {
 
   /** Function being called whenever the trigger is being pressed using mouse. */
   private onMousedown = (event: MouseEvent) => {
+    // Screen readers will fire fake mouse events for space/enter. Skip launching a
+    // ripple in this case for consistency with the non-screen-reader experience.
+    const isFakeMousedown = isFakeMousedownFromScreenReader(event);
     const isSyntheticEvent = this._lastTouchStartEvent &&
         Date.now() < this._lastTouchStartEvent + ignoreMouseEventsTimeout;
 
-    if (!this._target.rippleDisabled && !isSyntheticEvent) {
+    if (!this._target.rippleDisabled && !isFakeMousedown && !isSyntheticEvent) {
       this._isPointerDown = true;
       this.fadeInRipple(event.clientX, event.clientY, this._target.rippleConfig);
     }

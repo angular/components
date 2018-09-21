@@ -11,6 +11,7 @@ import {Replacement, RuleFailure, Rules} from 'tslint';
 import * as ts from 'typescript';
 import {findInputsOnElementWithAttr, findInputsOnElementWithTag} from '../../html/angular';
 import {inputNames} from '../../material/data/input-names';
+import {getChangesForTarget} from '../../material/transform-change-data';
 import {ExternalResource} from '../../tslint/component-file';
 import {ComponentWalker} from '../../tslint/component-walker';
 import {
@@ -30,7 +31,10 @@ export class Rule extends Rules.AbstractRule {
 
 export class Walker extends ComponentWalker {
 
-  visitInlineTemplate(template: ts.StringLiteral) {
+  /** Change data that upgrades to the specified target version. */
+  data = getChangesForTarget(this.getOptions()[0], inputNames);
+
+  visitInlineTemplate(template: ts.StringLiteralLike) {
     this._createReplacementsForContent(template, template.getText())
       .forEach(data => addFailureAtReplacement(this, data.failureMessage, data.replacement));
   }
@@ -49,18 +53,18 @@ export class Walker extends ComponentWalker {
   private _createReplacementsForContent(node: ts.Node, templateContent: string) {
     const replacements: {failureMessage: string, replacement: Replacement}[] = [];
 
-    inputNames.forEach(name => {
+    this.data.forEach(name => {
       const whitelist = name.whitelist;
-      const relativeOffsets = [];
+      const relativeOffsets: number[] = [];
       const failureMessage = `Found deprecated @Input() "${red(name.replace)}"` +
         ` which has been renamed to "${green(name.replaceWith)}"`;
 
-      if (!whitelist || whitelist.attributes) {
+      if (whitelist.attributes) {
         relativeOffsets.push(
           ...findInputsOnElementWithAttr(templateContent, name.replace, whitelist.attributes));
       }
 
-      if (!whitelist || whitelist.elements) {
+      if (whitelist.elements) {
         relativeOffsets.push(
           ...findInputsOnElementWithTag(templateContent, name.replace, whitelist.elements));
       }

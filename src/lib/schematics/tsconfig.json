@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    "lib": ["es2017", "dom"],
+    "lib": ["es2017"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "../../../dist/schematics",
+    "outDir": "../../../dist/packages/material/schematics",
     "noEmitOnError": false,
+    "strictNullChecks": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "sourceMap": true,
@@ -12,7 +13,11 @@
     "types": [
       "jasmine",
       "node"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@angular/cdk/schematics": ["../../../dist/packages/cdk/schematics/"]
+    }
   },
   "exclude": [
     "**/*.spec.ts",
@@ -22,5 +27,8 @@
     "*/files/**/*",
     // Exclude all test-case files because those should not be included in the schematics output.
     "update/test-cases/**/*"
-  ]
+  ],
+  "bazelOptions": {
+    "suppressTsconfigOverrideWarnings": true
+  }
 }

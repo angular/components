@@ -145,11 +145,7 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
   get disabled() { return this._disabled; }
   set disabled(value: any) {
     this._disabled = coerceBooleanProperty(value);
-    if (this._disabled) {
-      this._unsubscribe();
-    } else {
-      this._subscribe();
-    }
+    this._disabled ? this._unsubscribe() : this._subscribe();
   }
   private _disabled = false;
 
@@ -164,7 +160,8 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
 
   private _currentSubscription: Subscription | null = null;
 
-  constructor(private _contentObserver: ContentObserver, private _elementRef: ElementRef,
+  constructor(private _contentObserver: ContentObserver,
+              private _elementRef: ElementRef<HTMLElement>,
               private _ngZone: NgZone) {}
 
   ngAfterContentInit() {

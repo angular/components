@@ -17,10 +17,10 @@ import {
   Optional,
 } from '@angular/core';
 import {
-  CanDisable,
-  CanDisableRipple,
+  CanDisable, CanDisableCtor,
+  CanDisableRipple, CanDisableRippleCtor,
   mixinDisabled,
-  mixinDisableRipple
+  mixinDisableRipple,
 } from '@angular/material/core';
 import {Subject} from 'rxjs';
 import {DOCUMENT} from '@angular/common';
@@ -29,7 +29,8 @@ import {MAT_MENU_PANEL, MatMenuPanel} from './menu-panel';
 // Boilerplate for applying mixins to MatMenuItem.
 /** @docs-private */
 export class MatMenuItemBase {}
-export const _MatMenuItemMixinBase = mixinDisableRipple(mixinDisabled(MatMenuItemBase));
+export const _MatMenuItemMixinBase: CanDisableRippleCtor & CanDisableCtor & typeof MatMenuItemBase =
+    mixinDisableRipple(mixinDisabled(MatMenuItemBase));
 
 /**
  * This directive is intended to be used inside an mat-menu tag.
@@ -70,7 +71,7 @@ export class MatMenuItem extends _MatMenuItemMixinBase
   _triggersSubmenu: boolean = false;
 
   constructor(
-    private _elementRef: ElementRef,
+    private _elementRef: ElementRef<HTMLElement>,
     @Inject(DOCUMENT) document?: any,
     private _focusMonitor?: FocusMonitor,
     @Inject(MAT_MENU_PANEL) @Optional() private _parentMenu?: MatMenuPanel<MatMenuItem>) {

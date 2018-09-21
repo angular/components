@@ -52,21 +52,6 @@ describe('MatSelectionList without forms', () => {
       selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
     }));
 
-    it('should add and remove focus class on focus/blur', () => {
-      // Use the second list item, because the first one is always disabled.
-      const listItem = listOptions[1].nativeElement;
-
-      expect(listItem.classList).not.toContain('mat-list-item-focus');
-
-      dispatchFakeEvent(listItem, 'focus');
-      fixture.detectChanges();
-      expect(listItem.className).toContain('mat-list-item-focus');
-
-      dispatchFakeEvent(listItem, 'blur');
-      fixture.detectChanges();
-      expect(listItem.className).not.toContain('mat-list-item-focus');
-    });
-
     it('should be able to set a value on a list option', () => {
       const optionValues = ['inbox', 'starred', 'sent-mail', 'drafts'];
 
@@ -519,45 +504,6 @@ describe('MatSelectionList without forms', () => {
     });
   });
 
-  describe('with single option', () => {
-    let fixture: ComponentFixture<SelectionListWithOnlyOneOption>;
-    let listOption: DebugElement;
-    let listItemEl: DebugElement;
-
-    beforeEach(async(() => {
-      TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [
-          SelectionListWithListOptions,
-          SelectionListWithCheckboxPositionAfter,
-          SelectionListWithListDisabled,
-          SelectionListWithOnlyOneOption
-        ],
-      });
-
-      TestBed.compileComponents();
-    }));
-
-    beforeEach(async(() => {
-      fixture = TestBed.createComponent(SelectionListWithOnlyOneOption);
-      listOption = fixture.debugElement.query(By.directive(MatListOption));
-      listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
-      fixture.detectChanges();
-    }));
-
-    it('should be focused when focus on nativeElements', () => {
-      dispatchFakeEvent(listOption.nativeElement, 'focus');
-      fixture.detectChanges();
-
-      expect(listItemEl.nativeElement.className).toContain('mat-list-item-focus');
-
-      dispatchFakeEvent(listOption.nativeElement, 'blur');
-      fixture.detectChanges();
-
-      expect(listItemEl.nativeElement.className).not.toContain('mat-list-item-focus');
-    });
-  });
-
   describe('with option disabled', () => {
     let fixture: ComponentFixture<SelectionListWithDisabledOption>;
     let listOptionEl: HTMLElement;
@@ -687,6 +633,34 @@ describe('MatSelectionList without forms', () => {
     it('should be able to customize checkbox position', () => {
       let listItemContent = fixture.debugElement.query(By.css('.mat-list-item-content'));
       expect(listItemContent.nativeElement.classList).toContain('mat-list-item-content-reverse');
+    });
+  });
+
+  describe('with list item elements', () => {
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [
+          SelectionListWithAvatar,
+          SelectionListWithIcon,
+        ],
+      }).compileComponents();
+    }));
+
+    it('should add a class to reflect that it has an avatar', () => {
+      const fixture = TestBed.createComponent(SelectionListWithIcon);
+      fixture.detectChanges();
+
+      const listOption = fixture.nativeElement.querySelector('.mat-list-option');
+      expect(listOption.classList).toContain('mat-list-item-with-avatar');
+    });
+
+    it('should add a class to reflect that it has an icon', () => {
+      const fixture = TestBed.createComponent(SelectionListWithIcon);
+      fixture.detectChanges();
+
+      const listOption = fixture.nativeElement.querySelector('.mat-list-option');
+      expect(listOption.classList).toContain('mat-list-item-with-avatar');
     });
   });
 });
@@ -1177,4 +1151,31 @@ class SelectionListWithCustomComparator {
     {id: 2, label: 'Two'},
     {id: 3, label: 'Three'}
   ];
+}
+
+
+@Component({
+  template: `
+    <mat-selection-list>
+      <mat-list-option>
+        <div mat-list-avatar>I</div>
+        Inbox
+      </mat-list-option>
+    </mat-selection-list>
+  `
+})
+class SelectionListWithAvatar {
+}
+
+@Component({
+  template: `
+    <mat-selection-list>
+      <mat-list-option>
+        <div mat-list-icon>I</div>
+        Inbox
+      </mat-list-option>
+    </mat-selection-list>
+  `
+})
+class SelectionListWithIcon {
 }

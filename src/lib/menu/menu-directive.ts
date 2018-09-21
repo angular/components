@@ -69,7 +69,7 @@ export const MAT_MENU_DEFAULT_OPTIONS =
 /** @docs-private */
 export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
   return {
-    overlapTrigger: true,
+    overlapTrigger: false,
     xPosition: 'after',
     yPosition: 'below',
     backdropClass: 'cdk-overlay-transparent-backdrop',
@@ -79,7 +79,7 @@ export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
  * Start elevation for the menu panel.
  * @docs-private
  */
-const MAT_MENU_BASE_ELEVATION = 2;
+const MAT_MENU_BASE_ELEVATION = 4;
 
 
 @Component({
@@ -229,7 +229,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   @Output() close = this.closed;
 
   constructor(
-    private _elementRef: ElementRef,
+    private _elementRef: ElementRef<HTMLElement>,
     private _ngZone: NgZone,
     @Inject(MAT_MENU_DEFAULT_OPTIONS) private _defaultOptions: MatMenuDefaultOptions) { }
 

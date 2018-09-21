@@ -1,3 +1,4 @@
+import {animate, style, transition, trigger} from '@angular/animations';
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Directionality, Direction} from '@angular/cdk/bidi';
 import {
@@ -15,28 +16,29 @@ import {
   createKeyboardEvent,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
+  dispatchMouseEvent,
+  typeInElement,
   MockNgZone,
 } from '@angular/cdk/testing';
 import {
   Component,
   DebugElement,
+  NgZone,
+  Provider,
   QueryList,
+  Type,
   ViewChild,
   ViewChildren,
-  Type,
-  Provider,
-  NgZone,
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule, BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatInputModule} from '../input/index';
 import {MatChip} from './chip';
 import {MatChipInputEvent} from './chip-input';
-import {MatChipList, MatChipsModule} from './index';
-import {trigger, transition, style, animate} from '@angular/animations';
+import {MatChipEvent, MatChipList, MatChipRemove, MatChipsModule} from './index';
 
 
 describe('MatChipList', () => {
@@ -45,7 +47,7 @@ describe('MatChipList', () => {
   let chipListNativeElement: HTMLElement;
   let chipListInstance: MatChipList;
   let testComponent: StandardChipList;
-  let chips: QueryList<any>;
+  let chips: QueryList<MatChip>;
   let manager: FocusKeyManager<MatChip>;
   let zone: MockNgZone;
 
@@ -168,6 +170,7 @@ describe('MatChipList', () => {
       });
 
       describe('on chip destroy', () => {
+
         it('should focus the next item', () => {
           let array = chips.toArray();
           let midItem = array[2];
@@ -182,7 +185,6 @@ describe('MatChipList', () => {
           // It focuses the 4th item (now at index 2)
           expect(manager.activeItemIndex).toEqual(2);
         });
-
 
         it('should focus the previous item', () => {
           let array = chips.toArray();
@@ -267,6 +269,7 @@ describe('MatChipList', () => {
 
           // Press the LEFT arrow
           chipListInstance._keydown(LEFT_EVENT);
+          chipListInstance._blur(); // Simulate focus leaving the list and going to the chip.
           fixture.detectChanges();
 
           // It focuses the next-to-last item
@@ -288,6 +291,7 @@ describe('MatChipList', () => {
 
           // Press the RIGHT arrow
           chipListInstance._keydown(RIGHT_EVENT);
+          chipListInstance._blur(); // Simulate focus leaving the list and going to the chip.
           fixture.detectChanges();
 
           // It focuses the next-to-last item
@@ -360,6 +364,7 @@ describe('MatChipList', () => {
 
           // Press the RIGHT arrow
           chipListInstance._keydown(RIGHT_EVENT);
+          chipListInstance._blur(); // Simulate focus leaving the list and going to the chip.
           fixture.detectChanges();
 
           // It focuses the next-to-last item
@@ -381,6 +386,7 @@ describe('MatChipList', () => {
 
           // Press the LEFT arrow
           chipListInstance._keydown(LEFT_EVENT);
+          chipListInstance._blur(); // Simulate focus leaving the list and going to the chip.
           fixture.detectChanges();
 
           // It focuses the next-to-last item
@@ -503,6 +509,32 @@ describe('MatChipList', () => {
       expect(label.getAttribute('aria-owns')).toBe(input.getAttribute('id'));
     });
 
+  });
+
+  describe('with chip remove', () => {
+    let chipList: MatChipList;
+    let chipRemoveDebugElements: DebugElement[];
+
+    beforeEach(() => {
+      fixture = createComponent(ChipListWithRemove);
+      fixture.detectChanges();
+
+      chipList = fixture.debugElement.query(By.directive(MatChipList)).componentInstance;
+      chipRemoveDebugElements = fixture.debugElement.queryAll(By.directive(MatChipRemove));
+      chips = chipList.chips;
+    });
+
+    it('should properly focus next item if chip is removed through click', () => {
+      chips.toArray()[2].focus();
+
+      // Destroy the third focused chip by dispatching a bubbling click event on the
+      // associated chip remove element.
+      dispatchMouseEvent(chipRemoveDebugElements[2].nativeElement, 'click');
+      fixture.detectChanges();
+
+      expect(chips.toArray()[2].value).not.toBe(2, 'Expected the third chip to be removed.');
+      expect(chipList._keyManager.activeItemIndex).toBe(2);
+    });
   });
 
   describe('selection logic', () => {
@@ -744,6 +776,22 @@ describe('MatChipList', () => {
 
         expect(chipArray[4].focus).not.toHaveBeenCalled();
       });
+
+      it('should blur the form field when the active chip is blurred', fakeAsync(() => {
+        const formField: HTMLElement = fixture.nativeElement.querySelector('.mat-form-field');
+
+        nativeChips[0].focus();
+        fixture.detectChanges();
+
+        expect(formField.classList).toContain('mat-focused');
+
+        nativeChips[0].blur();
+        fixture.detectChanges();
+        zone.simulateZoneExit();
+        fixture.detectChanges();
+
+        expect(formField.classList).not.toContain('mat-focused');
+      }));
     });
 
     describe('multiple selection', () => {
@@ -965,6 +1013,32 @@ describe('MatChipList', () => {
       expect(requiredMarker)
         .not.toBeNull(`Expected placeholder to have an asterisk, as control was required.`);
     });
+
+    it('should keep focus on the input after adding the first chip', fakeAsync(() => {
+      const nativeInput = fixture.nativeElement.querySelector('input');
+      const chipEls = Array.from<HTMLElement>(
+          fixture.nativeElement.querySelectorAll('.mat-chip')).reverse();
+
+      // Remove the chips via backspace to simulate the user removing them.
+      chipEls.forEach(chip => {
+        chip.focus();
+        dispatchKeyboardEvent(chip, 'keydown', BACKSPACE);
+        fixture.detectChanges();
+        tick();
+      });
+
+      nativeInput.focus();
+      expect(fixture.componentInstance.foods).toEqual([], 'Expected all chips to be removed.');
+      expect(document.activeElement).toBe(nativeInput, 'Expected input to be focused.');
+
+      typeInElement('123', nativeInput);
+      fixture.detectChanges();
+      dispatchKeyboardEvent(nativeInput, 'keydown', ENTER);
+      fixture.detectChanges();
+      tick();
+
+      expect(document.activeElement).toBe(nativeInput, 'Expected input to remain focused.');
+    }));
 
     describe('keyboard behavior', () => {
       beforeEach(() => {
@@ -1295,7 +1369,7 @@ class MultiSelectionChipList {
     <mat-form-field>
       <mat-chip-list [multiple]="true"
                     placeholder="Food" [formControl]="control" [required]="isRequired" #chipList1>
-        <mat-chip *ngFor="let food of foods" [value]="food.value">
+        <mat-chip *ngFor="let food of foods" [value]="food.value" (removed)="remove(food)">
           {{ food.viewValue }}
         </mat-chip>
       </mat-chip-list>
@@ -1339,6 +1413,14 @@ class InputChipList {
     // Reset the input value
     if (input) {
       input.value = '';
+    }
+  }
+
+  remove(food: any): void {
+    const index = this.foods.indexOf(food);
+
+    if (index > -1) {
+      this.foods.splice(index, 1);
     }
   }
 
@@ -1438,3 +1520,24 @@ class StandardChipListWithAnimations {
   }
 }
 
+@Component({
+  template: `
+    <mat-form-field>
+      <mat-chip-list>
+        <div *ngFor="let i of chips">
+          <mat-chip [value]="i" (removed)="removeChip($event)">
+            Chip {{i + 1}}
+            <span matChipRemove>Remove</span>
+          </mat-chip>
+        </div>
+      </mat-chip-list>
+    </mat-form-field>
+  `
+})
+class ChipListWithRemove {
+  chips = [0, 1, 2, 3, 4];
+
+  removeChip(event: MatChipEvent) {
+    this.chips.splice(event.chip.value, 1);
+  }
+}

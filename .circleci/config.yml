@@ -10,8 +10,8 @@
 ## IMPORTANT
 # If you change the `docker_image` version, also change the `cache_key` suffix and the version of
 # `com_github_bazelbuild_buildtools` in the `/WORKSPACE` file.
-var_1: &docker_image angular/ngcontainer:0.3.0
-var_2: &cache_key v2-ng-mat-{{ .Branch }}-{{ checksum "package-lock.json" }}-0.3.0
+var_1: &docker_image angular/ngcontainer:0.3.3
+var_2: &cache_key v2-ng-mat-{{ .Branch }}-{{ checksum "package-lock.json" }}-0.3.3
 
 # Define common ENV vars
 var_3: &define_env_vars
@@ -49,8 +49,9 @@ jobs:
           key: *cache_key
 
       - run: bazel run @nodejs//:npm install
-      - run: bazel build src/...
-      - run: bazel test src/...
+        # TODO(jelbourn): Update this command to run all tests if the Bazel issues have been fixed.
+      - run: bazel test src/lib/schematics:unit_tests
+
       - save_cache:
           key: *cache_key
           paths:

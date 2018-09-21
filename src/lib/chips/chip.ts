@@ -25,8 +25,11 @@ import {
 } from '@angular/core';
 import {
   CanColor,
+  CanColorCtor,
   CanDisable,
+  CanDisableCtor,
   CanDisableRipple,
+  CanDisableRippleCtor,
   MAT_RIPPLE_GLOBAL_OPTIONS,
   mixinColor,
   mixinDisabled,
@@ -34,7 +37,7 @@ import {
   RippleConfig,
   RippleGlobalOptions,
   RippleRenderer,
-  RippleTarget
+  RippleTarget,
 } from '@angular/material/core';
 import {Subject} from 'rxjs';
 import {take} from 'rxjs/operators';
@@ -64,8 +67,9 @@ export class MatChipBase {
   constructor(public _elementRef: ElementRef) {}
 }
 
-export const _MatChipMixinBase =
-    mixinColor(mixinDisableRipple(mixinDisabled(MatChipBase)), 'primary');
+export const _MatChipMixinBase:
+    CanColorCtor & CanDisableRippleCtor & CanDisableCtor & typeof MatChipBase =
+        mixinColor(mixinDisableRipple(mixinDisabled(MatChipBase)), 'primary');
 
 const CHIP_ATTRIBUTE_NAMES = ['mat-basic-chip'];
 
@@ -322,15 +326,13 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
     }
   }
 
-  /** Ensures events fire properly upon click. */
+  /** Handles click events on the chip. */
   _handleClick(event: Event) {
-    // Check disabled
     if (this.disabled) {
-      return;
+      event.preventDefault();
+    } else {
+      event.stopPropagation();
     }
-
-    event.preventDefault();
-    event.stopPropagation();
   }
 
   /** Handle custom key presses. */
@@ -367,9 +369,12 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
     this._ngZone.onStable
       .asObservable()
       .pipe(take(1))
-      .subscribe(() => this._hasFocus = false);
-
-    this._onBlur.next({chip: this});
+      .subscribe(() => {
+        this._ngZone.run(() => {
+          this._hasFocus = false;
+          this._onBlur.next({chip: this});
+        });
+      });
   }
 }
 
@@ -391,17 +396,23 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
   selector: '[matChipRemove]',
   host: {
     'class': 'mat-chip-remove mat-chip-trailing-icon',
-    '(click)': '_handleClick()',
+    '(click)': '_handleClick($event)',
   }
 })
 export class MatChipRemove {
-  constructor(protected _parentChip: MatChip) {
-  }
+  constructor(protected _parentChip: MatChip) {}
 
   /** Calls the parent chip's public `remove()` method if applicable. */
-  _handleClick(): void {
+  _handleClick(event: Event): void {
     if (this._parentChip.removable) {
       this._parentChip.remove();
     }
+
+    // We need to stop event propagation because otherwise the event will bubble up to the
+    // form field and cause the `onContainerClick` method to be invoked. This method would then
+    // reset the focused chip that has been focused after chip removal. Usually the parent
+    // the parent click listener of the `MatChip` would prevent propagation, but it can happen
+    // that the chip is being removed before the event bubbles up.
+    event.stopPropagation();
   }
 }

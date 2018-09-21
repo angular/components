@@ -88,20 +88,19 @@ export class MatOption implements AfterViewChecked, OnDestroy {
   private _selected = false;
   private _active = false;
   private _disabled = false;
-  private _id = `mat-option-${_uniqueIdCounter++}`;
   private _mostRecentViewValue = '';
 
   /** Whether the wrapping component is in multiple selection mode. */
   get multiple() { return this._parent && this._parent.multiple; }
-
-  /** The unique ID of the option. */
-  get id(): string { return this._id; }
 
   /** Whether or not the option is currently selected. */
   get selected(): boolean { return this._selected; }
 
   /** The form value of the option. */
   @Input() value: any;
+
+  /** The unique ID of the option. */
+  @Input() id: string = `mat-option-${_uniqueIdCounter++}`;
 
   /** Whether the option is disabled. */
   @Input()
@@ -119,7 +118,7 @@ export class MatOption implements AfterViewChecked, OnDestroy {
   readonly _stateChanges = new Subject<void>();
 
   constructor(
-    private _element: ElementRef,
+    private _element: ElementRef<HTMLElement>,
     private _changeDetectorRef: ChangeDetectorRef,
     @Optional() @Inject(MAT_OPTION_PARENT_COMPONENT) private _parent: MatOptionParentComponent,
     @Optional() readonly group: MatOptgroup) {}

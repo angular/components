@@ -6,10 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {InjectionToken, QueryList} from '@angular/core';
+import {InjectionToken, QueryList, ElementRef} from '@angular/core';
 import {CdkDrag} from './drag';
 
+
 export interface CdkDropContainer<T = any> {
+  /** DOM node that corresponds to the drop container. */
+  element: ElementRef<HTMLElement>;
+
   /** Arbitrary data to attach to all events emitted by this container. */
   data: T;
 
@@ -36,10 +40,10 @@ export interface CdkDropContainer<T = any> {
   /**
    * Emits an event to indicate that the user moved an item into the container.
    * @param item Item that was moved into the container.
-   * @param xOffset Position of the item along the X axis.
-   * @param yOffset Position of the item along the Y axis.
+   * @param pointerX Position of the item along the X axis.
+   * @param pointerY Position of the item along the Y axis.
    */
-  enter(item: CdkDrag, xOffset: number, yOffset: number): void;
+  enter(item: CdkDrag, pointerX: number, pointerY: number): void;
 
   /**
    * Removes an item from the container after it was dragged into another container by the user.
@@ -52,7 +56,7 @@ export interface CdkDropContainer<T = any> {
    * @param item Item whose index should be determined.
    */
   getItemIndex(item: CdkDrag): number;
-  _sortItem(item: CdkDrag, xOffset: number, yOffset: number): void;
+  _sortItem(item: CdkDrag, pointerX: number, pointerY: number, delta: {x: number, y: number}): void;
   _draggables: QueryList<CdkDrag>;
   _getSiblingContainerFromPosition(item: CdkDrag, x: number, y: number): CdkDropContainer | null;
 }

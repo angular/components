@@ -14,7 +14,6 @@ import {
   OverlayRef,
   PositionStrategy,
   ScrollStrategy,
-  ViewportRuler,
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
@@ -33,6 +32,7 @@ import {
   Optional,
   ViewContainerRef,
 } from '@angular/core';
+import {ViewportRuler} from '@angular/cdk/scrolling';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   _countGroupLabelsBeforeOption,
@@ -189,7 +189,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     this._autocompleteDisabled = coerceBooleanProperty(value);
   }
 
-  constructor(private _element: ElementRef, private _overlay: Overlay,
+  constructor(private _element: ElementRef<HTMLInputElement>, private _overlay: Overlay,
               private _viewContainerRef: ViewContainerRef,
               private _zone: NgZone,
               private _changeDetectorRef: ChangeDetectorRef,
@@ -319,10 +319,10 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     }
 
     return merge(
-      fromEvent(this._document, 'click'),
-      fromEvent(this._document, 'touchend')
+      fromEvent<MouseEvent>(this._document, 'click'),
+      fromEvent<TouchEvent>(this._document, 'touchend')
     )
-    .pipe(filter((event: MouseEvent | TouchEvent) => {
+    .pipe(filter(event => {
       const clickTarget = event.target as HTMLElement;
       const formField = this._formField ?
           this._formField._elementRef.nativeElement : null;
@@ -618,19 +618,24 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       .withFlexibleDimensions(false)
       .withPush(false)
       .withPositions([
-        {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top'},
-        {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom'}
-      ]);
+        {
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top'
+        },
+        {
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'bottom',
 
-    // The overlay edge connected to the trigger should have squared corners, while
-    // the opposite end has rounded corners. We apply a CSS class to swap the
-    // border-radius based on the overlay position.
-    this._positionStrategy.positionChanges.subscribe(({connectionPair}) => {
-      if (this.autocomplete) {
-        this.autocomplete._classList['mat-autocomplete-panel-above'] =
-            connectionPair.originY === 'top';
-      }
-    });
+          // The overlay edge connected to the trigger should have squared corners, while
+          // the opposite end has rounded corners. We apply a CSS class to swap the
+          // border-radius based on the overlay position.
+          panelClass: 'mat-autocomplete-panel-above'
+        }
+      ]);
 
     return this._positionStrategy;
   }
@@ -662,7 +667,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   /** Determines whether the panel can be opened. */
   private _canOpen(): boolean {
-    const element: HTMLInputElement = this._element.nativeElement;
+    const element = this._element.nativeElement;
     return !element.readOnly && !element.disabled && !this._autocompleteDisabled;
   }
 }

@@ -101,6 +101,7 @@
     "no-private-getters": true,
     "setters-after-getters": true,
     "rxjs-imports": true,
+    "require-breaking-change-version": true,
     "no-host-decorator-in-concrete": [
       true,
       "HostBinding",
@@ -128,7 +129,6 @@
       "./tools/package-tools/rollup-globals.ts",
       "src/+(lib|cdk|material-examples|material-experimental|cdk-experimental)/!(schematics)**/*.ts"
     ],
-    "breaking-change": true,
     "no-unescaped-html-tag": true
   },
   "linterOptions": {

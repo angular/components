@@ -29,10 +29,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  CanColor,
-  CanDisable,
-  CanDisableRipple,
-  HasTabIndex,
+  CanColor, CanColorCtor,
+  CanDisable, CanDisableCtor,
+  CanDisableRipple, CanDisableRippleCtor,
+  HasTabIndex, HasTabIndexCtor,
   MAT_RIPPLE_GLOBAL_OPTIONS,
   mixinColor,
   mixinDisabled,
@@ -54,7 +54,8 @@ import {FocusMonitor} from '@angular/cdk/a11y';
 export class MatTabNavBase {
   constructor(public _elementRef: ElementRef) {}
 }
-export const _MatTabNavMixinBase = mixinDisableRipple(mixinColor(MatTabNavBase, 'primary'));
+export const _MatTabNavMixinBase: CanDisableRippleCtor & CanColorCtor & typeof MatTabNavBase =
+    mixinDisableRipple(mixinColor(MatTabNavBase, 'primary'));
 
 /**
  * Navigation component matching the styles of the tab group header.
@@ -78,7 +79,7 @@ export class MatTabNav extends _MatTabNavMixinBase
   private readonly _onDestroy = new Subject<void>();
 
   private _activeLinkChanged: boolean;
-  private _activeLinkElement: ElementRef | null;
+  private _activeLinkElement: ElementRef<HTMLElement> | null;
 
   @ViewChild(MatInkBar) _inkBar: MatInkBar;
 
@@ -161,8 +162,9 @@ export class MatTabNav extends _MatTabNavMixinBase
 
 // Boilerplate for applying mixins to MatTabLink.
 export class MatTabLinkBase {}
-export const _MatTabLinkMixinBase =
-  mixinTabIndex(mixinDisableRipple(mixinDisabled(MatTabLinkBase)));
+export const _MatTabLinkMixinBase:
+    HasTabIndexCtor & CanDisableRippleCtor & CanDisableCtor & typeof MatTabLinkBase =
+        mixinTabIndex(mixinDisableRipple(mixinDisabled(MatTabLinkBase)));
 
 /**
  * Link inside of a `mat-tab-nav-bar`.

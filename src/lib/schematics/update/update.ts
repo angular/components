@@ -8,72 +8,31 @@
 
 import {Rule, SchematicContext, TaskId, Tree} from '@angular-devkit/schematics';
 import {RunSchematicTask, TslintFixTask} from '@angular-devkit/schematics/tasks';
-import {getWorkspace} from '@schematics/angular/utility/config';
-import * as path from 'path';
+import {sync as globSync} from 'glob';
+import {TargetVersion} from './index';
+import {getProjectTsConfigPaths} from './project-tsconfig-paths';
+import {createTslintConfig} from './tslint-config';
 
 /** Entry point for `ng update` from Angular CLI. */
-export default function(): Rule {
+export function createUpdateRule(targetVersion: TargetVersion): Rule {
   return (tree: Tree, context: SchematicContext) => {
 
-    const allTsConfigPaths = getTsConfigPaths(tree);
+    const projectTsConfigPaths = getProjectTsConfigPaths(tree);
     const tslintFixTasks: TaskId[] = [];
 
-    if (!allTsConfigPaths.length) {
+    if (!projectTsConfigPaths.length) {
       throw new Error('Could not find any tsconfig file. Please submit an issue on the Angular ' +
         'Material repository that includes the name of your TypeScript configuration.');
     }
+    // In some applications, developers will have global stylesheets which are not specified in any
+    // Angular component. Therefore we glob up all CSS and SCSS files outside of node_modules and
+    // dist. The files will be read by the individual stylesheet rules and checked.
+    const extraStyleFiles = globSync('!(node_modules|dist)/**/*.+(css|scss)', {absolute: true});
+    const tslintConfig = createTslintConfig(targetVersion, extraStyleFiles);
 
-    for (const tsconfig of allTsConfigPaths) {
+    for (const tsconfig of projectTsConfigPaths) {
       // Run the update tslint rules.
-      tslintFixTasks.push(context.addTask(new TslintFixTask({
-        rulesDirectory: [
-          path.join(__dirname, 'rules/'),
-          path.join(__dirname, 'rules/attribute-selectors'),
-          path.join(__dirname, 'rules/class-names'),
-          path.join(__dirname, 'rules/css-names'),
-          path.join(__dirname, 'rules/input-names'),
-          path.join(__dirname, 'rules/output-names'),
-        ],
-        rules: {
-          // Automatic fixes.
-          'switch-property-names': true,
-          'switch-template-export-as-names': true,
-
-          // Attribute selector update rules.
-          'attribute-selectors-string-literal': true,
-          'attribute-selectors-stylesheet': true,
-          'attribute-selectors-template': true,
-
-          // Class name update rules
-          'class-names-identifier': true,
-          'class-names-identifier-misc': true,
-
-          // CSS class name update rules
-          'css-names-string-literal': true,
-          'css-names-stylesheet': true,
-          'css-names-template': true,
-
-          // Element selector update rules
-          'element-selectors-string-literal': true,
-          'element-selectors-stylesheet': true,
-          'element-selectors-template': true,
-
-          // Input name update rules
-          'input-names-stylesheet': true,
-          'input-names-template': true,
-
-          // Output name update rules
-          'output-names-template': true,
-
-          // Additional issues we can detect but not automatically fix.
-          'check-class-declaration-misc': true,
-          'check-import-misc': true,
-          'check-inheritance': true,
-          'check-method-calls': true,
-          'check-property-access-misc': true,
-          'check-template-misc': true
-        }
-      }, {
+      tslintFixTasks.push(context.addTask(new TslintFixTask(tslintConfig, {
         silent: false,
         ignoreErrors: true,
         tsConfigPath: tsconfig,
@@ -83,48 +42,4 @@ export default function(): Rule {
     // Delete the temporary schematics directory.
     context.addTask(new RunSchematicTask('ng-post-update', {}), tslintFixTasks);
   };
-}
-
-/** Post-update schematic to be called when update is finished. */
-export function postUpdate(): Rule {
-  return () => console.log(
-      '\nComplete! Please check the output above for any issues that were detected but could not' +
-      ' be automatically fixed.');
-}
-
-/**
- * Gets all tsconfig paths from a CLI project by reading the workspace configuration
- * and looking for common tsconfig locations.
- */
-function getTsConfigPaths(tree: Tree): string[] {
-  // Start with some tsconfig paths that are generally used.
-  const tsconfigPaths = [
-    './tsconfig.json',
-    './src/tsconfig.json',
-    './src/tsconfig.app.json',
-  ];
-
-  // Add any tsconfig directly referenced in a build or test task of the angular.json workspace.
-  const workspace = getWorkspace(tree);
-
-  for (const project of Object.values(workspace.projects)) {
-    if (project && project.architect) {
-      for (const taskName of ['build', 'test']) {
-        const task = project.architect[taskName];
-        if (task && task.options && task.options.tsConfig) {
-          const tsConfigOption = task.options.tsConfig;
-          if (typeof tsConfigOption === 'string') {
-            tsconfigPaths.push(tsConfigOption);
-          } else if (Array.isArray(tsConfigOption)) {
-            tsconfigPaths.push(...tsConfigOption);
-          }
-        }
-      }
-    }
-  }
-
-  // Filter out tsconfig files that don't exist and remove any duplicates.
-  return tsconfigPaths
-      .filter(p => tree.exists(p))
-      .filter((value, index, self) => self.indexOf(value) === index);
 }

@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceArray} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -20,15 +21,21 @@ import {
   QueryList,
   ViewEncapsulation,
 } from '@angular/core';
-import {coerceArray} from '@angular/cdk/coercion';
 import {CdkDrag} from './drag';
-import {CdkDragExit, CdkDragEnter, CdkDragDrop} from './drag-events';
-import {CDK_DROP_CONTAINER} from './drop-container';
 import {DragDropRegistry} from './drag-drop-registry';
+import {CdkDragDrop, CdkDragEnter, CdkDragExit} from './drag-events';
 import {moveItemInArray} from './drag-utils';
+import {CDK_DROP_CONTAINER} from './drop-container';
+
 
 /** Counter used to generate unique ids for drop zones. */
 let _uniqueIdCounter = 0;
+
+/**
+ * Proximity, as a ratio to width/height, at which a
+ * dragged item will affect the drop container.
+ */
+const DROP_PROXIMITY_THRESHOLD = 0.05;
 
 /** Container that wraps a set of draggable items. */
 @Component({
@@ -112,7 +119,8 @@ export class CdkDrop<T = any> implements OnInit, OnDestroy {
   /** Cache of the dimensions of all the items and the sibling containers. */
   private _positionCache = {
     items: [] as {drag: CdkDrag, clientRect: ClientRect, offset: number}[],
-    siblings: [] as {drop: CdkDrop, clientRect: ClientRect}[]
+    siblings: [] as {drop: CdkDrop, clientRect: ClientRect}[],
+    self: {} as ClientRect
   };
 
   /**
@@ -121,6 +129,12 @@ export class CdkDrop<T = any> implements OnInit, OnDestroy {
    * been dropped yet.
    */
   private _activeDraggables: CdkDrag[];
+
+  /**
+   * Keeps track of the item that was last swapped with the dragged item, as
+   * well as what direction the pointer was moving in when the swap occured.
+   */
+  private _previousSwap = {drag: null as CdkDrag | null, delta: 0};
 
   /** Starts dragging an item. */
   start(): void {
@@ -150,16 +164,16 @@ export class CdkDrop<T = any> implements OnInit, OnDestroy {
   /**
    * Emits an event to indicate that the user moved an item into the container.
    * @param item Item that was moved into the container.
-   * @param xOffset Position of the item along the X axis.
-   * @param yOffset Position of the item along the Y axis.
+   * @param pointerX Position of the item along the X axis.
+   * @param pointerY Position of the item along the Y axis.
    */
-  enter(item: CdkDrag, xOffset: number, yOffset: number): void {
+  enter(item: CdkDrag, pointerX: number, pointerY: number): void {
     this.entered.emit({item, container: this});
     this.start();
 
     // We use the coordinates of where the item entered the drop
     // zone to figure out at which index it should be inserted.
-    const newIndex = this._getItemIndexFromPointerPosition(item, xOffset, yOffset);
+    const newIndex = this._getItemIndexFromPointerPosition(item, pointerX, pointerY);
     const currentIndex = this._activeDraggables.indexOf(item);
     const newPositionReference = this._activeDraggables[newIndex];
     const placeholder = item.getPlaceholderElement();
@@ -173,7 +187,7 @@ export class CdkDrop<T = any> implements OnInit, OnDestroy {
     // Don't use items that are being dragged as a reference, because
     // their element has been moved down to the bottom of the body.
     if (newPositionReference && !this._dragDropRegistry.isDragging(newPositionReference)) {
-      const element = newPositionReference.element.nativeElement;
+      const element = newPositionReference.getRootElement();
       element.parentElement!.insertBefore(placeholder, element);
       this._activeDraggables.splice(newIndex, 0, item);
     } else {
@@ -204,29 +218,40 @@ export class CdkDrop<T = any> implements OnInit, OnDestroy {
    */
   getItemIndex(item: CdkDrag): number {
     return this._dragging ?
-        this._positionCache.items.findIndex(currentItem => currentItem.drag === item) :
+        findIndex(this._positionCache.items, currentItem => currentItem.drag === item) :
         this._draggables.toArray().indexOf(item);
   }
 
   /**
    * Sorts an item inside the container based on its position.
    * @param item Item to be sorted.
-   * @param xOffset Position of the item along the X axis.
-   * @param yOffset Position of the item along the Y axis.
+   * @param pointerX Position of the item along the X axis.
+   * @param pointerY Position of the item along the Y axis.
+   * @param pointerDeta Direction in which the pointer is moving along each axis.
    */
-  _sortItem(item: CdkDrag, xOffset: number, yOffset: number): void {
+  _sortItem(item: CdkDrag, pointerX: number, pointerY: number,
+            pointerDelta: {x: number, y: number}): void {
+    // Don't sort the item if it's out of range.
+    if (!this._isPointerNearDropContainer(pointerX, pointerY)) {
+      return;
+    }
+
     const siblings = this._positionCache.items;
-    const newIndex = this._getItemIndexFromPointerPosition(item, xOffset, yOffset);
+    const newIndex = this._getItemIndexFromPointerPosition(item, pointerX, pointerY, pointerDelta);
 
     if (newIndex === -1 && siblings.length > 0) {
       return;
     }
 
     const isHorizontal = this.orientation === 'horizontal';
-    const currentIndex = siblings.findIndex(currentItem => currentItem.drag === item);
+    const currentIndex = findIndex(siblings, currentItem => currentItem.drag === item);
+    const siblingAtNewPosition = siblings[newIndex];
     const currentPosition = siblings[currentIndex].clientRect;
-    const newPosition = siblings[newIndex].clientRect;
+    const newPosition = siblingAtNewPosition.clientRect;
     const delta = currentIndex > newIndex ? 1 : -1;
+
+    this._previousSwap.drag = siblingAtNewPosition.drag;
+    this._previousSwap.delta = isHorizontal ? pointerDelta.x : pointerDelta.y;
 
     // How many pixels the item's placeholder should be offset.
     const itemOffset = isHorizontal ? newPosition.left - currentPosition.left :
@@ -252,7 +277,7 @@ export class CdkDrop<T = any> implements OnInit, OnDestroy {
       const isDraggedItem = sibling.drag === item;
       const offset = isDraggedItem ? itemOffset : siblingOffset;
       const elementToOffset = isDraggedItem ? item.getPlaceholderElement() :
-                                              sibling.drag.element.nativeElement;
+                                              sibling.drag.getRootElement();
 
       // Update the offset to reflect the new position.
       sibling.offset += offset;
@@ -289,13 +314,14 @@ export class CdkDrop<T = any> implements OnInit, OnDestroy {
 
   /** Refreshes the position cache of the items and sibling containers. */
   private _cachePositions() {
+    const isHorizontal = this.orientation === 'horizontal';
     this._positionCache.items = this._activeDraggables
       .map(drag => {
         const elementToMeasure = this._dragDropRegistry.isDragging(drag) ?
             // If the element is being dragged, we have to measure the
             // placeholder, because the element is hidden.
             drag.getPlaceholderElement() :
-            drag.element.nativeElement;
+            drag.getRootElement();
         const clientRect = elementToMeasure.getBoundingClientRect();
 
         return {
@@ -315,12 +341,17 @@ export class CdkDrop<T = any> implements OnInit, OnDestroy {
           }
         };
       })
-      .sort((a, b) => a.clientRect.top - b.clientRect.top);
+      .sort((a, b) => {
+        return isHorizontal ? a.clientRect.left - b.clientRect.left :
+                              a.clientRect.top - b.clientRect.top;
+      });
 
     this._positionCache.siblings = coerceArray(this.connectedTo)
       .map(drop => typeof drop === 'string' ? this._dragDropRegistry.getDropContainer(drop)! : drop)
       .filter(drop => drop && drop !== this)
       .map(drop => ({drop, clientRect: drop.element.nativeElement.getBoundingClientRect()}));
+
+    this._positionCache.self = this.element.nativeElement.getBoundingClientRect();
   }
 
   /** Resets the container to its initial state. */
@@ -328,10 +359,12 @@ export class CdkDrop<T = any> implements OnInit, OnDestroy {
     this._dragging = false;
 
     // TODO(crisbeto): may have to wait for the animations to finish.
-    this._activeDraggables.forEach(item => item.element.nativeElement.style.transform = '');
+    this._activeDraggables.forEach(item => item.getRootElement().style.transform = '');
     this._activeDraggables = [];
     this._positionCache.items = [];
     this._positionCache.siblings = [];
+    this._previousSwap.drag = null;
+    this._previousSwap.delta = 0;
   }
 
   /**
@@ -351,22 +384,70 @@ export class CdkDrop<T = any> implements OnInit, OnDestroy {
   /**
    * Gets the index of an item in the drop container, based on the position of the user's pointer.
    * @param item Item that is being sorted.
-   * @param xOffset Position of the user's pointer along the X axis.
-   * @param yOffset Position of the user's pointer along the Y axis.
+   * @param pointerX Position of the user's pointer along the X axis.
+   * @param pointerY Position of the user's pointer along the Y axis.
+   * @param delta Direction in which the user is moving their pointer.
    */
-  private _getItemIndexFromPointerPosition(item: CdkDrag, xOffset: number, yOffset: number) {
-    return this._positionCache.items.findIndex(({drag, clientRect}, _, array) => {
+  private _getItemIndexFromPointerPosition(item: CdkDrag, pointerX: number, pointerY: number,
+                                           delta?: {x: number, y: number}) {
+
+    const isHorizontal = this.orientation === 'horizontal';
+
+    return findIndex(this._positionCache.items, ({drag, clientRect}, _, array) => {
       if (drag === item) {
         // If there's only one item left in the container, it must be
         // the dragged item itself so we use it as a reference.
         return array.length < 2;
       }
 
-      return this.orientation === 'horizontal' ?
+      if (delta) {
+        const direction = isHorizontal ? delta.x : delta.y;
+
+        // If the user is still hovering over the same item as last time, and they didn't change
+        // the direction in which they're dragging, we don't consider it a direction swap.
+        if (drag === this._previousSwap.drag && direction === this._previousSwap.delta) {
+          return false;
+        }
+      }
+
+      return isHorizontal ?
           // Round these down since most browsers report client rects with
-          // sub-pixel precision, whereas the mouse coordinates are rounded to pixels.
-          xOffset >= Math.floor(clientRect.left) && xOffset <= Math.floor(clientRect.right) :
-          yOffset >= Math.floor(clientRect.top) && yOffset <= Math.floor(clientRect.bottom);
+          // sub-pixel precision, whereas the pointer coordinates are rounded to pixels.
+          pointerX >= Math.floor(clientRect.left) && pointerX <= Math.floor(clientRect.right) :
+          pointerY >= Math.floor(clientRect.top) && pointerY <= Math.floor(clientRect.bottom);
     });
   }
+
+  /**
+   * Checks whether the pointer coordinates are close to the drop container.
+   * @param pointerX Coordinates along the X axis.
+   * @param pointerY Coordinates along the Y axis.
+   */
+  private _isPointerNearDropContainer(pointerX: number, pointerY: number): boolean {
+    const {top, right, bottom, left, width, height} = this._positionCache.self;
+    const xThreshold = width * DROP_PROXIMITY_THRESHOLD;
+    const yThreshold = height * DROP_PROXIMITY_THRESHOLD;
+
+    return pointerY > top - yThreshold && pointerY < bottom + yThreshold &&
+           pointerX > left - xThreshold && pointerX < right + xThreshold;
+  }
+}
+
+
+/**
+ * Finds the index of an item that matches a predicate function. Used as an equivalent
+ * of `Array.prototype.find` which isn't part of the standard Google typings.
+ * @param array Array in which to look for matches.
+ * @param predicate Function used to determine whether an item is a match.
+ */
+function findIndex<T>(array: T[],
+                      predicate: (value: T, index: number, obj: T[]) => boolean): number {
+
+  for (let i = 0; i < array.length; i++) {
+    if (predicate(array[i], i, array)) {
+      return i;
+    }
+  }
+
+  return -1;
 }

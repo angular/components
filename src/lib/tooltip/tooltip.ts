@@ -18,10 +18,10 @@ import {
   Overlay,
   OverlayConnectionPosition,
   OverlayRef,
-  ScrollDispatcher,
   ScrollStrategy,
   VerticalConnectionPos,
 } from '@angular/cdk/overlay';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {Platform} from '@angular/cdk/platform';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {take, takeUntil} from 'rxjs/operators';
@@ -196,7 +196,7 @@ export class MatTooltip implements OnDestroy {
 
   constructor(
     private _overlay: Overlay,
-    private _elementRef: ElementRef,
+    private _elementRef: ElementRef<HTMLElement>,
     private _scrollDispatcher: ScrollDispatcher,
     private _viewContainerRef: ViewContainerRef,
     private _ngZone: NgZone,
@@ -217,13 +217,15 @@ export class MatTooltip implements OnDestroy {
         .set('mouseenter', () => this.show())
         .set('mouseleave', () => this.hide())
         .forEach((listener, event) => element.addEventListener(event, listener));
-    } else if (_platform.IOS && (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA')) {
+    }
+
+    if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
       // When we bind a gesture event on an element (in this case `longpress`), HammerJS
       // will add some inline styles by default, including `user-select: none`. This is
-      // problematic on iOS, because it will prevent users from typing in inputs. If
-      // we're on iOS and the tooltip is attached on an input or textarea, we clear
-      // the `user-select` to avoid these issues.
-      element.style.webkitUserSelect = element.style.userSelect = '';
+      // problematic on iOS and in Safari, because it will prevent users from typing in inputs.
+      // Since `user-select: none` is not needed for the `longpress` event and can cause unexpected
+      // behavior for text fields, we always clear the `user-select` to avoid such issues.
+      element.style.webkitUserSelect = element.style.userSelect = element.style.msUserSelect = '';
     }
 
     // Hammer applies `-webkit-user-drag: none` on all elements by default,

@@ -790,9 +790,8 @@ describe('MatTooltip', () => {
   });
 
   describe('special cases', () => {
-    it('should clear the `user-select` when a tooltip is set on a text field in iOS', () => {
-      platform.IOS = true;
 
+    it('should clear the `user-select` when a tooltip is set on a text field', () => {
       const fixture = TestBed.createComponent(TooltipOnTextFields);
       const instance = fixture.componentInstance;
 
@@ -800,9 +799,11 @@ describe('MatTooltip', () => {
 
       expect(instance.input.nativeElement.style.userSelect).toBeFalsy();
       expect(instance.input.nativeElement.style.webkitUserSelect).toBeFalsy();
+      expect(instance.input.nativeElement.style.msUserSelect).toBeFalsy();
 
       expect(instance.textarea.nativeElement.style.userSelect).toBeFalsy();
       expect(instance.textarea.nativeElement.style.webkitUserSelect).toBeFalsy();
+      expect(instance.textarea.nativeElement.style.msUserSelect).toBeFalsy();
     });
 
     it('should clear the `-webkit-user-drag` on draggable elements', () => {
@@ -858,7 +859,7 @@ class BasicTooltipDemo {
   showButton: boolean = true;
   showTooltipClass = false;
   @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('button') button: ElementRef;
+  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
 }
 
 @Component({
@@ -917,7 +918,7 @@ class OnPushTooltipDemo {
 class DynamicTooltipsDemo {
   tooltips: Array<string> = [];
 
-  constructor(private _elementRef: ElementRef) {}
+  constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
   getButtons() {
     return this._elementRef.nativeElement.querySelectorAll('button');
@@ -938,8 +939,8 @@ class DynamicTooltipsDemo {
   `,
 })
 class TooltipOnTextFields {
-  @ViewChild('input') input: ElementRef;
-  @ViewChild('textarea') textarea: ElementRef;
+  @ViewChild('input') input: ElementRef<HTMLInputElement>;
+  @ViewChild('textarea') textarea: ElementRef<HTMLTextAreaElement>;
 }
 
 @Component({
