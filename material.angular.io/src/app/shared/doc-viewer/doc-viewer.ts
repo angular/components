@@ -8,12 +8,13 @@ import {
   EventEmitter,
   Injector,
   Input,
+  NgZone,
   OnDestroy,
   Output,
   ViewContainerRef,
 } from '@angular/core';
-import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
+import {take} from 'rxjs/operators';
 import {ExampleViewer} from '../example-viewer/example-viewer';
 import {HeaderLink} from './header-link';
 
@@ -31,7 +32,7 @@ export class DocViewer implements OnDestroy {
     this._fetchDocument(url);
   }
 
-  @Output() contentLoaded = new EventEmitter<void>();
+  @Output() contentRendered = new EventEmitter<void>();
 
   /** The document text. It should not be HTML encoded. */
   textContent = '';
@@ -42,7 +43,8 @@ export class DocViewer implements OnDestroy {
               private _http: HttpClient,
               private _injector: Injector,
               private _viewContainerRef: ViewContainerRef,
-              private _router: Router) {}
+              private _ngZone: NgZone) {
+  }
 
   /** Fetch a document by URL. */
   private _fetchDocument(url: string) {
@@ -66,8 +68,13 @@ export class DocViewer implements OnDestroy {
     this.textContent = this._elementRef.nativeElement.textContent;
     this._loadComponents('material-docs-example', ExampleViewer);
     this._loadComponents('header-link', HeaderLink);
-    this._fixFragmentUrls();
-    this.contentLoaded.next();
+
+    // Resolving and creating components dynamically in Angular happens synchronously, but since
+    // we want to emit the output if the components are actually rendered completely, we wait
+    // until the Angular zone becomes stable.
+    this._ngZone.onStable
+      .pipe(take(1))
+      .subscribe(() => this.contentRendered.next());
   }
 
   /** Show an error that occurred when fetching a document. */
@@ -75,15 +82,6 @@ export class DocViewer implements OnDestroy {
     console.log(error);
     this._elementRef.nativeElement.innerText =
       `Failed to load document: ${url}. Error: ${error.statusText}`;
-  }
-
-  releadLiveExamples() {
-    // When the example viewer is dynamically loaded inside of md-tabs, they somehow end up in
-    // the wrong place in the DOM after switching tabs. This function is a workaround to
-    // put the live examples back in the right place.
-    this._clearLiveExamples();
-    this._loadComponents('material-docs-example', ExampleViewer);
-    this._loadComponents('header-link', HeaderLink);
   }
 
   /** Instantiate a ExampleViewer for each example. */
@@ -106,25 +104,6 @@ export class DocViewer implements OnDestroy {
   private _clearLiveExamples() {
     this._portalHosts.forEach(h => h.dispose());
     this._portalHosts = [];
-  }
-
-  /**
-   * A fragment link is a link that references a specific element on the page that should be
-   * scrolled into the viewport on page load or click.
-   *
-   * By default those links refer to the root page of the documentation and the fragment links
-   * won't work properly. Those links need to be updated to be relative to the current base URL.
-   */
-  private _fixFragmentUrls() {
-    const baseUrl = this._router.url.split('#')[0];
-    const anchorElements =
-      [].slice.call(this._elementRef.nativeElement.querySelectorAll('a')) as HTMLAnchorElement[];
-
-    // Update hash links that are referring to the same page and host. Links that are referring
-    // to a different destination shouldn't be updated. For example the Google Fonts URL.
-    anchorElements
-      .filter(anchorEl => anchorEl.hash && anchorEl.host === location.host)
-      .forEach(anchorEl => anchorEl.href = `${baseUrl}${anchorEl.hash}`);
   }
 
   ngOnDestroy() {
