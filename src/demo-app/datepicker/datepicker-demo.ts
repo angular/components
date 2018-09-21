@@ -106,13 +106,9 @@ export class CustomHeader<D> implements OnDestroy {
     moduleId: module.id,
     selector: 'customer-header-ng-content',
     template: `
-        <mat-calendar-header #header>
-            <button mat-button type="button" class="mat-calendar-today-button"
-                    (click)="todayClicked()" [attr.aria-label]="todayButtonLabel"
-                    cdkAriaLive="polite">
-                {{todayButtonLabel}}
-            </button>
-        </mat-calendar-header>
+      <mat-calendar-header #header>
+        <button mat-button type="button" (click)="todayClicked()">TODAY</button>
+      </mat-calendar-header>
     `
 })
 export class CustomHeaderNgContent<D> {
@@ -122,14 +118,10 @@ export class CustomHeaderNgContent<D> {
 
   constructor(@Optional() private _dateAdapter: DateAdapter<D>) {}
 
-    get todayButtonLabel() {
-        return 'TODAY';
-    }
+  todayClicked() {
+    let calendar = this.header.calendar;
 
-    todayClicked() {
-      let calendar = this.header.calendar;
-
-      calendar.activeDate = this._dateAdapter.today();
-      calendar.currentView = 'month';
-    }
+    calendar.activeDate = this._dateAdapter.today();
+    calendar.currentView = 'month';
+  }
 }
