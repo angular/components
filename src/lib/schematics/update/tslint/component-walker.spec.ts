@@ -125,7 +125,7 @@ describe('ComponentWalker', () => {
     const stylesheetPath = './shared-styles/global.css';
 
     spyOn(walker, 'visitExternalStylesheet').and.callFake(node => {
-      expect(node.getFullText()).toBe('external');
+      expect(node.getText()).toBe('external');
     });
 
     mockFs({[stylesheetPath]: 'external'});
@@ -146,12 +146,37 @@ describe('ComponentWalker', () => {
     const stylePath = join(dirname(sourceFile.fileName), 'my-component.css');
 
     spyOn(walker, 'visitExternalStylesheet').and.callFake(node => {
-      expect(node.getFullText()).toBe('external');
+      expect(node.getText()).toBe('external');
     });
 
     mockFs({[stylePath]: 'external'});
 
     walker._reportExtraStylesheetFiles([stylePath]);
+    walker.walk(sourceFile);
+
+    expect(walker.visitExternalStylesheet).toHaveBeenCalledTimes(1);
+  });
+
+  it('should create external source files with proper offsets', () => {
+    const sourceFile = createSourceFile(`
+      @Component({
+        styleUrls: ['./my-component.css']
+      })
+      export class MyComponent {}
+    `);
+    const walker = new ComponentWalker(sourceFile, defaultRuleOptions);
+    const stylePath = join(dirname(sourceFile.fileName), 'my-component.css');
+    const styleContent = 'external stylesheet';
+
+    spyOn(walker, 'visitExternalStylesheet').and.callFake(node => {
+      expect(node.getStart()).toBe(0);
+      expect(node.getEnd()).toBe(styleContent.length);
+      expect(node.getWidth()).toBe(styleContent.length);
+      expect(node.getFullWidth()).toBe(styleContent.length);
+    });
+
+    mockFs({[stylePath]: styleContent});
+
     walker.walk(sourceFile);
 
     expect(walker.visitExternalStylesheet).toHaveBeenCalledTimes(1);
