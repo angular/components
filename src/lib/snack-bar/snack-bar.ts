@@ -20,6 +20,7 @@ import {
   Optional,
   SkipSelf,
   TemplateRef,
+  OnDestroy,
 } from '@angular/core';
 import {take, takeUntil} from 'rxjs/operators';
 import {SimpleSnackBar} from './simple-snack-bar';
@@ -45,7 +46,7 @@ export function MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY(): MatSnackBarConfig {
  * Service to dispatch Material Design snack bar messages.
  */
 @Injectable({providedIn: MatSnackBarModule})
-export class MatSnackBar {
+export class MatSnackBar implements OnDestroy {
   /**
    * Reference to the current snack bar in the view *at this level* (in the Angular injector tree).
    * If there is a parent snack-bar service, all operations should delegate to that parent
@@ -112,7 +113,10 @@ export class MatSnackBar {
     // Since the user doesn't have access to the component, we can
     // override the data to pass in our own message and action.
     _config.data = {message, action};
-    _config.announcementMessage = message;
+
+    if (!_config.announcementMessage) {
+      _config.announcementMessage = message;
+    }
 
     return this.openFromComponent(SimpleSnackBar, _config);
   }
@@ -123,6 +127,13 @@ export class MatSnackBar {
   dismiss(): void {
     if (this._openedSnackBarRef) {
       this._openedSnackBarRef.dismiss();
+    }
+  }
+
+  ngOnDestroy() {
+    // Only dismiss the snack bar at the current level on destroy.
+    if (this._snackBarRefAtThisLevel) {
+      this._snackBarRefAtThisLevel.dismiss();
     }
   }
 

@@ -7,8 +7,11 @@
  */
 
 import {chain, noop, Rule, Tree} from '@angular-devkit/schematics';
-import {addModuleImportToModule, findModuleFromOptions} from '../utils/ast';
-import {buildComponent} from '../utils/devkit-utils/component';
+import {
+  addModuleImportToModule,
+  buildComponent,
+  findModuleFromOptions,
+} from '@angular/cdk/schematics';
 import {Schema} from './schema';
 
 /**
@@ -17,7 +20,10 @@ import {Schema} from './schema';
  */
 export default function(options: Schema): Rule {
   return chain([
-    buildComponent({ ...options }),
+    buildComponent({...options}, {
+      template: './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.html',
+      stylesheet: './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.__styleext__',
+    }),
     options.skipImport ? noop() : addTreeModulesToModule(options)
   ]);
 }
@@ -27,7 +33,7 @@ export default function(options: Schema): Rule {
  */
 function addTreeModulesToModule(options: Schema) {
   return (host: Tree) => {
-    const modulePath = findModuleFromOptions(host, options);
+    const modulePath = findModuleFromOptions(host, options)!;
     addModuleImportToModule(host, modulePath, 'MatTreeModule', '@angular/material');
     addModuleImportToModule(host, modulePath, 'MatIconModule', '@angular/material');
     addModuleImportToModule(host, modulePath, 'MatButtonModule', '@angular/material');

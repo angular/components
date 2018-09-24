@@ -6,9 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation} from '@angular/core';
 import {CdkTree} from '@angular/cdk/tree';
+import {ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation} from '@angular/core';
 import {MatTreeNodeOutlet} from './outlet';
+
+// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
+export const _CdkTree = CdkTree;
 
 /**
  * Wrapper for the CdkTable with Material design styles.
@@ -27,7 +30,7 @@ import {MatTreeNodeOutlet} from './outlet';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: CdkTree, useExisting: MatTree}]
 })
-export class MatTree<T> extends CdkTree<T> {
+export class MatTree<T> extends _CdkTree<T> {
   // Outlets within the tree's template where the dataNodes will be inserted.
   @ViewChild(MatTreeNodeOutlet) _nodeOutlet: MatTreeNodeOutlet;
 }

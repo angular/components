@@ -5,6 +5,7 @@ import {Component, ViewChild} from '@angular/core';
 import {MatPaginatorIntl} from './paginator-intl';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {dispatchMouseEvent} from '@angular/cdk/testing';
+import {ThemePalette} from '@angular/material/core';
 
 
 describe('MatPaginator', () => {
@@ -167,6 +168,18 @@ describe('MatPaginator', () => {
     expect(paginator.pageIndex).toBeGreaterThanOrEqual(0);
   });
 
+  it('should be able to set the color of the form field', () => {
+    const formField: HTMLElement = fixture.nativeElement.querySelector('.mat-form-field');
+
+    expect(formField.classList).toContain('mat-primary');
+
+    component.color = 'accent';
+    fixture.detectChanges();
+
+    expect(formField.classList).not.toContain('mat-primary');
+    expect(formField.classList).toContain('mat-accent');
+  });
+
   describe('when showing the first and last button', () => {
 
     beforeEach(() => {
@@ -325,6 +338,23 @@ describe('MatPaginator', () => {
     }));
   });
 
+  it('should keep track of the right number of pages', () => {
+    component.pageSize = 10;
+    component.length = 100;
+    fixture.detectChanges();
+    expect(paginator.getNumberOfPages()).toBe(10);
+
+    component.pageSize = 10;
+    component.length = 0;
+    fixture.detectChanges();
+    expect(paginator.getNumberOfPages()).toBe(0);
+
+    component.pageSize = 10;
+    component.length = 10;
+    fixture.detectChanges();
+    expect(paginator.getNumberOfPages()).toBe(1);
+  });
+
   it('should show a select only if there are multiple options', () => {
     expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 100]);
     expect(fixture.nativeElement.querySelector('.mat-select')).not.toBeNull();
@@ -387,6 +417,7 @@ function getLastButton(fixture: ComponentFixture<any>) {
                    [hidePageSize]="hidePageSize"
                    [showFirstLastButtons]="showFirstLastButtons"
                    [length]="length"
+                   [color]="color"
                    (page)="pageEvent($event)">
     </mat-paginator>
   `,
@@ -399,6 +430,7 @@ class MatPaginatorApp {
   showFirstLastButtons = false;
   length = 100;
   pageEvent = jasmine.createSpy('page event');
+  color: ThemePalette;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 

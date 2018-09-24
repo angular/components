@@ -8,24 +8,29 @@
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {getSupportedInputTypes, Platform} from '@angular/cdk/platform';
+import {AutofillMonitor} from '@angular/cdk/text-field';
 import {
   Directive,
   DoCheck,
   ElementRef,
   Inject,
   Input,
+  NgZone,
   OnChanges,
   OnDestroy,
   OnInit,
   Optional,
   Self,
-  NgZone,
 } from '@angular/core';
 import {FormGroupDirective, NgControl, NgForm} from '@angular/forms';
-import {CanUpdateErrorState, ErrorStateMatcher, mixinErrorState} from '@angular/material/core';
+import {
+  CanUpdateErrorState,
+  CanUpdateErrorStateCtor,
+  ErrorStateMatcher,
+  mixinErrorState,
+} from '@angular/material/core';
 import {MatFormFieldControl} from '@angular/material/form-field';
 import {Subject} from 'rxjs';
-import {AutofillMonitor} from '@angular/cdk/text-field';
 import {getMatInputUnsupportedTypeError} from './input-errors';
 import {MAT_INPUT_VALUE_ACCESSOR} from './input-value-accessor';
 
@@ -54,15 +59,17 @@ export class MatInputBase {
               /** @docs-private */
               public ngControl: NgControl) {}
 }
-export const _MatInputMixinBase = mixinErrorState(MatInputBase);
+export const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
+    mixinErrorState(MatInputBase);
 
 /** Directive that allows a native input to work inside a `MatFormField`. */
 @Directive({
-  selector: `input[matInput], textarea[matInput]`,
+  selector: `input[matInput], textarea[matInput], select[matNativeControl],
+      input[matNativeControl], textarea[matNativeControl]`,
   exportAs: 'matInput',
   host: {
     /**
-     * @deletion-target 7.0.0 remove .mat-form-field-autofill-control in favor of AutofillMonitor.
+     * @breaking-change 7.0.0 remove .mat-form-field-autofill-control in favor of AutofillMonitor.
      */
     'class': 'mat-input-element mat-form-field-autofill-control',
     '[class.mat-input-server]': '_isServer',
@@ -72,7 +79,7 @@ export const _MatInputMixinBase = mixinErrorState(MatInputBase);
     '[attr.placeholder]': 'placeholder',
     '[disabled]': 'disabled',
     '[required]': 'required',
-    '[readonly]': 'readonly',
+    '[attr.readonly]': 'readonly && !_isNativeSelect || null',
     '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-invalid]': 'errorState',
     '[attr.aria-required]': 'required.toString()',
@@ -92,6 +99,9 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
 
   /** Whether the component is being rendered on the server. */
   _isServer = false;
+
+  /** Whether the component is a native html select. */
+  _isNativeSelect = false;
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -175,7 +185,7 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     // input element. To ensure that bindings for `type` work, we need to sync the setter
     // with the native property. Textarea elements don't support the type property or attribute.
     if (!this._isTextarea() && getSupportedInputTypes().has(this._type)) {
-      this._elementRef.nativeElement.type = this._type;
+      (this._elementRef.nativeElement as HTMLInputElement).type = this._type;
     }
   }
   protected _type = 'text';
@@ -211,16 +221,17 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     'week'
   ].filter(t => getSupportedInputTypes().has(t));
 
-  constructor(protected _elementRef: ElementRef,
-              protected _platform: Platform,
-              /** @docs-private */
-              @Optional() @Self() public ngControl: NgControl,
-              @Optional() _parentForm: NgForm,
-              @Optional() _parentFormGroup: FormGroupDirective,
-              _defaultErrorStateMatcher: ErrorStateMatcher,
-              @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
-              private _autofillMonitor: AutofillMonitor,
-              ngZone: NgZone) {
+  constructor(
+    protected _elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+    protected _platform: Platform,
+    /** @docs-private */
+    @Optional() @Self() public ngControl: NgControl,
+    @Optional() _parentForm: NgForm,
+    @Optional() _parentFormGroup: FormGroupDirective,
+    _defaultErrorStateMatcher: ErrorStateMatcher,
+    @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
+    private _autofillMonitor: AutofillMonitor,
+    ngZone: NgZone) {
     super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
     // If no input value accessor was explicitly specified, use the element as the input value
     // accessor.
@@ -251,13 +262,16 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     }
 
     this._isServer = !this._platform.isBrowser;
+    this._isNativeSelect = this._elementRef.nativeElement.nodeName.toLowerCase() === 'select';
   }
 
   ngOnInit() {
-    this._autofillMonitor.monitor(this._elementRef.nativeElement).subscribe(event => {
-      this.autofilled = event.isAutofilled;
-      this.stateChanges.next();
-    });
+    if (this._platform.isBrowser) {
+      this._autofillMonitor.monitor(this._elementRef.nativeElement).subscribe(event => {
+        this.autofilled = event.isAutofilled;
+        this.stateChanges.next();
+      });
+    }
   }
 
   ngOnChanges() {
@@ -266,7 +280,10 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
 
   ngOnDestroy() {
     this.stateChanges.complete();
-    this._autofillMonitor.stopMonitoring(this._elementRef.nativeElement);
+
+    if (this._platform.isBrowser) {
+      this._autofillMonitor.stopMonitoring(this._elementRef.nativeElement);
+    }
   }
 
   ngDoCheck() {
@@ -351,7 +368,19 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  get shouldLabelFloat(): boolean { return this.focused || !this.empty; }
+  get shouldLabelFloat(): boolean {
+    if (this._isNativeSelect) {
+      // For a single-selection `<select>`, the label should float when the selected option has
+      // a non-empty display value. For a `<select multiple>`, the label *always* floats to avoid
+      // overlapping the label with the options.
+      const selectElement = this._elementRef.nativeElement as HTMLSelectElement;
+
+      return selectElement.multiple || !this.empty || !!selectElement.options[0].label ||
+          this.focused;
+    } else {
+      return this.focused || !this.empty;
+    }
+  }
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -363,5 +392,12 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  onContainerClick() { this.focus(); }
+  onContainerClick() {
+    // Do not re-focus the input element if the element is already focused. Otherwise it can happen
+    // that someone clicks on a time input and the cursor resets to the "hours" field while the
+    // "minutes" field was actually clicked. See: https://github.com/angular/material2/issues/12849
+    if (!this.focused) {
+      this.focus();
+    }
+  }
 }

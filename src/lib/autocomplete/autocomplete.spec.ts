@@ -1329,7 +1329,16 @@ describe('MatAutocomplete', () => {
       const panel = fixture.debugElement.query(By.css('.mat-autocomplete-panel')).nativeElement;
 
       expect(input.getAttribute('aria-owns'))
-          .toEqual(panel.getAttribute('id'), 'Expected aria-owns to match attached autocomplete.');
+          .toBe(panel.getAttribute('id'), 'Expected aria-owns to match attached autocomplete.');
+    });
+
+    it('should not set aria-owns while the autocomplete is closed', () => {
+      expect(input.getAttribute('aria-owns')).toBeFalsy();
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+
+      expect(input.getAttribute('aria-owns')).toBeTruthy();
     });
 
     it('should restore focus to the input when clicking to select a value', fakeAsync(() => {
@@ -1368,6 +1377,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      fixture.detectChanges();
 
       const inputBottom = inputReference.getBoundingClientRect().bottom;
       const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel')!;
@@ -1375,6 +1385,7 @@ describe('MatAutocomplete', () => {
 
       expect(Math.floor(inputBottom))
           .toEqual(Math.floor(panelTop), `Expected panel top to match input bottom by default.`);
+      expect(panel.classList).not.toContain('mat-autocomplete-panel-above');
     }));
 
     it('should reposition the panel on scroll', () => {
@@ -1421,6 +1432,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      fixture.detectChanges();
 
       const inputTop = inputReference.getBoundingClientRect().top;
       const panel = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
@@ -1428,6 +1440,8 @@ describe('MatAutocomplete', () => {
 
       expect(Math.floor(inputTop))
           .toEqual(Math.floor(panelBottom), `Expected panel to fall back to above position.`);
+
+      expect(panel.classList).toContain('mat-autocomplete-panel-above');
     }));
 
     it('should allow the panel to expand when the number of results increases', fakeAsync(() => {
@@ -1497,6 +1511,56 @@ describe('MatAutocomplete', () => {
           .toEqual(Math.floor(panelBottom), `Expected panel to stay aligned after filtering.`);
     }));
 
+    it('should fall back to above position when requested if options are added while ' +
+        'the panel is open', fakeAsync(() => {
+      let fixture = createComponent(SimpleAutocomplete);
+      fixture.componentInstance.states = fixture.componentInstance.states.slice(0, 1);
+      fixture.componentInstance.filteredStates = fixture.componentInstance.states.slice();
+      fixture.detectChanges();
+
+      let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+      let inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex')).nativeElement;
+
+      // Push the element down so it has a little bit of space, but not enough to render.
+      inputReference.style.bottom = '75px';
+      inputReference.style.position = 'fixed';
+
+      dispatchFakeEvent(inputEl, 'focusin');
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+      fixture.detectChanges();
+
+      let panel = overlayContainerElement.querySelector('.mat-autocomplete-panel')!;
+      let inputRect = inputReference.getBoundingClientRect();
+      let panelRect = panel.getBoundingClientRect();
+
+      expect(Math.floor(panelRect.top))
+        .toBe(Math.floor(inputRect.bottom),
+          `Expected panel top to be below input before repositioning.`);
+
+      for (let i = 0; i < 20; i++) {
+        fixture.componentInstance.filteredStates.push({code: 'FK', name: 'Fake State'});
+        fixture.detectChanges();
+      }
+
+      // Request a position update now that there are too many suggestions to fit in the viewport.
+      fixture.componentInstance.trigger.updatePosition();
+
+      inputRect = inputReference.getBoundingClientRect();
+      panelRect = panel.getBoundingClientRect();
+
+      expect(Math.floor(panelRect.bottom))
+        .toBe(Math.floor(inputRect.top),
+          `Expected panel to fall back to above position after repositioning.`);
+      tick();
+    }));
+
+    it('should not throw if a panel reposition is requested while the panel is closed', () => {
+        let fixture = createComponent(SimpleAutocomplete);
+        fixture.detectChanges();
+
+        expect(() => fixture.componentInstance.trigger.updatePosition()).not.toThrow();
+    });
   });
 
   describe('Option selection', () => {
@@ -1952,6 +2016,36 @@ describe('MatAutocomplete', () => {
     expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(500);
   });
 
+  it('should not reopen a closed autocomplete when returning to a blurred tab', () => {
+    const fixture = createComponent(SimpleAutocomplete);
+    fixture.detectChanges();
+
+    const trigger = fixture.componentInstance.trigger;
+    const input = fixture.debugElement.query(By.css('input')).nativeElement;
+
+    input.focus();
+    fixture.detectChanges();
+
+    expect(trigger.panelOpen).toBe(true, 'Expected panel to be open.');
+
+    trigger.closePanel();
+    fixture.detectChanges();
+
+    expect(trigger.panelOpen).toBe(false, 'Expected panel to be closed.');
+
+    // Simulate the user going to a different tab.
+    dispatchFakeEvent(window, 'blur');
+    input.blur();
+    fixture.detectChanges();
+
+    // Simulate the user coming back.
+    dispatchFakeEvent(window, 'focus');
+    input.focus();
+    fixture.detectChanges();
+
+    expect(trigger.panelOpen).toBe(false, 'Expected panel to remain closed.');
+  });
+
   it('should update the panel width if the window is resized', fakeAsync(() => {
     const widthFixture = createComponent(SimpleAutocomplete);
 
@@ -2294,6 +2388,7 @@ class AutocompleteWithNumbers {
   `
 })
 class AutocompleteWithOnPushDelay implements OnInit {
+  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
   options: string[];
 
   ngOnInit() {

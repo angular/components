@@ -69,7 +69,7 @@ describe('LiveAnnouncer', () => {
       // Call the lifecycle hook manually since Angular won't do it in tests.
       announcer.ngOnDestroy();
 
-      expect(document.body.querySelector('[aria-live]'))
+      expect(document.body.querySelector('.cdk-live-announcer-element'))
           .toBeFalsy('Expected that the aria-live element was remove from the DOM.');
     }));
 
@@ -81,6 +81,33 @@ describe('LiveAnnouncer', () => {
       tick(100);
       expect(spy).toHaveBeenCalled();
     }));
+
+    it('should ensure that there is only one live element at a time', fakeAsync(() => {
+      announcer.ngOnDestroy();
+      fixture.destroy();
+
+      TestBed.resetTestingModule().configureTestingModule({
+        imports: [A11yModule],
+        declarations: [TestApp],
+      });
+
+      const extraElement = document.createElement('div');
+      extraElement.classList.add('cdk-live-announcer-element');
+      document.body.appendChild(extraElement);
+
+      inject([LiveAnnouncer], (la: LiveAnnouncer) => {
+        announcer = la;
+        ariaLiveElement = getLiveElement();
+        fixture = TestBed.createComponent(TestApp);
+      })();
+
+      announcer.announce('Hey Google');
+      tick(100);
+
+      expect(document.body.querySelectorAll('.cdk-live-announcer-element').length)
+          .toBe(1, 'Expected only one live announcer element in the DOM.');
+    }));
+
   });
 
   describe('with a custom element', () => {
@@ -184,7 +211,7 @@ describe('CdkAriaLive', () => {
 
 
 function getLiveElement(): Element {
-  return document.body.querySelector('[aria-live]')!;
+  return document.body.querySelector('.cdk-live-announcer-element')!;
 }
 
 @Component({template: `<button (click)="announceText('Test')">Announce</button>`})

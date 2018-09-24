@@ -141,14 +141,14 @@ export class ScrollDispatcher implements OnDestroy {
 
   /** Returns true if the element is contained within the provided Scrollable. */
   private _scrollableContainsElement(scrollable: CdkScrollable, elementRef: ElementRef): boolean {
-    let element = elementRef.nativeElement;
+    let element: HTMLElement | null = elementRef.nativeElement;
     let scrollableElement = scrollable.getElementRef().nativeElement;
 
     // Traverse through the element parents until we reach null, checking if any of the elements
     // are the scrollable's element.
     do {
       if (element == scrollableElement) { return true; }
-    } while (element = element.parentElement);
+    } while (element = element!.parentElement);
 
     return false;
   }
@@ -170,13 +170,13 @@ export class ScrollDispatcher implements OnDestroy {
 }
 
 
-/** @docs-private @deprecated @deletion-target 7.0.0 */
+/** @docs-private @deprecated @breaking-change 7.0.0 */
 export function SCROLL_DISPATCHER_PROVIDER_FACTORY(
     parentDispatcher: ScrollDispatcher, ngZone: NgZone, platform: Platform) {
   return parentDispatcher || new ScrollDispatcher(ngZone, platform);
 }
 
-/** @docs-private @deprecated @deletion-target 7.0.0 */
+/** @docs-private @deprecated @breaking-change 7.0.0 */
 export const SCROLL_DISPATCHER_PROVIDER = {
   // If there is already a ScrollDispatcher available, use that. Otherwise, provide a new one.
   provide: ScrollDispatcher,

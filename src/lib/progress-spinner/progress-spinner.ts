@@ -6,21 +6,22 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Inject,
-  Input,
-  ElementRef,
-  ViewEncapsulation,
-  Optional,
-  InjectionToken,
-} from '@angular/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {CanColor, mixinColor} from '@angular/material/core';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
-import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Inject,
+  InjectionToken,
+  Input,
+  Optional,
+  ViewEncapsulation,
+} from '@angular/core';
+import {CanColor, CanColorCtor, mixinColor} from '@angular/material/core';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+
 
 /** Possible mode for a progress spinner. */
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
@@ -42,7 +43,8 @@ const BASE_STROKE_WIDTH = 10;
 export class MatProgressSpinnerBase {
   constructor(public _elementRef: ElementRef) {}
 }
-export const _MatProgressSpinnerMixinBase = mixinColor(MatProgressSpinnerBase, 'primary');
+export const _MatProgressSpinnerMixinBase: CanColorCtor & typeof MatProgressSpinnerBase =
+    mixinColor(MatProgressSpinnerBase, 'primary');
 
 /** Default `mat-progress-spinner` options that can be overridden. */
 export interface MatProgressSpinnerDefaultOptions {
@@ -176,7 +178,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   constructor(public _elementRef: ElementRef,
               platform: Platform,
               @Optional() @Inject(DOCUMENT) private _document: any,
-              // @deletion-target 7.0.0 animationMode and defaults parameters to be made required.
+              // @breaking-change 7.0.0 animationMode and defaults parameters to be made required.
               @Optional() @Inject(ANIMATION_MODULE_TYPE) private animationMode?: string,
               @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS)
                   private defaults?: MatProgressSpinnerDefaultOptions) {
@@ -291,7 +293,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
 export class MatSpinner extends MatProgressSpinner {
   constructor(elementRef: ElementRef, platform: Platform,
               @Optional() @Inject(DOCUMENT) document: any,
-              // @deletion-targets 7.0.0 animationMode and defaults parameters to be made required.
+              // @breaking-changes 7.0.0 animationMode and defaults parameters to be made required.
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
               @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS)
                   defaults?: MatProgressSpinnerDefaultOptions) {

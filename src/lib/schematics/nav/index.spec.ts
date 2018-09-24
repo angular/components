@@ -1,25 +1,14 @@
 import {SchematicTestRunner} from '@angular-devkit/schematics/testing';
-import {join} from 'path';
-import {createTestApp} from '../utils/testing';
+import {Schema} from './schema';
 import {getFileContent} from '@schematics/angular/utility/test';
-
-const collectionPath = join(__dirname, '../collection.json');
+import {collectionPath, createTestApp} from '../test-setup/test-app';
 
 describe('material-nav-schematic', () => {
   let runner: SchematicTestRunner;
-  const options = {
+
+  const baseOptions: Schema = {
     name: 'foo',
-    path: 'app',
-    sourceDir: 'src',
-    inlineStyle: false,
-    inlineTemplate: false,
-    changeDetection: 'Default',
-    styleext: 'css',
-    spec: true,
-    module: undefined,
-    export: false,
-    prefix: undefined,
-    viewEncapsulation: undefined,
+    project: 'material',
   };
 
   beforeEach(() => {
@@ -27,22 +16,22 @@ describe('material-nav-schematic', () => {
   });
 
   it('should create nav files and add them to module', () => {
-    const tree = runner.runSchematic('nav', { ...options }, createTestApp());
+    const tree = runner.runSchematic('nav', baseOptions, createTestApp());
     const files = tree.files;
 
-    expect(files).toContain('/src/app/foo/foo.component.css');
-    expect(files).toContain('/src/app/foo/foo.component.html');
-    expect(files).toContain('/src/app/foo/foo.component.spec.ts');
-    expect(files).toContain('/src/app/foo/foo.component.ts');
+    expect(files).toContain('/projects/material/src/app/foo/foo.component.css');
+    expect(files).toContain('/projects/material/src/app/foo/foo.component.html');
+    expect(files).toContain('/projects/material/src/app/foo/foo.component.spec.ts');
+    expect(files).toContain('/projects/material/src/app/foo/foo.component.ts');
 
-    const moduleContent = getFileContent(tree, '/src/app/app.module.ts');
+    const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
     expect(moduleContent).toMatch(/import.*Foo.*from '.\/foo\/foo.component'/);
     expect(moduleContent).toMatch(/declarations:\s*\[[^\]]+?,\r?\n\s+FooComponent\r?\n/m);
   });
 
   it('should add nav imports to module', () => {
-    const tree = runner.runSchematic('nav', { ...options }, createTestApp());
-    const moduleContent = getFileContent(tree, '/src/app/app.module.ts');
+    const tree = runner.runSchematic('nav', baseOptions, createTestApp());
+    const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
 
     expect(moduleContent).toContain('LayoutModule');
     expect(moduleContent).toContain('MatToolbarModule');
@@ -53,8 +42,65 @@ describe('material-nav-schematic', () => {
 
     expect(moduleContent).toContain(`import { LayoutModule } from '@angular/cdk/layout';`);
     expect(moduleContent).toContain(
-      // tslint:disable-next-line
-      `import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule } from '@angular/material';`);
+      `import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, ` +
+      `MatListModule } from '@angular/material';`);
   });
 
+  describe('styleext option', () => {
+    it('should respect the option value', () => {
+      const tree = runner.runSchematic('nav', {styleext: 'scss', ...baseOptions}, createTestApp());
+
+      expect(tree.files).toContain('/projects/material/src/app/foo/foo.component.scss');
+    });
+
+    it('should fallback to the @schematics/angular:component option value', () => {
+      const tree = runner.runSchematic('nav', baseOptions, createTestApp({style: 'less'}));
+
+      expect(tree.files).toContain('/projects/material/src/app/foo/foo.component.less');
+    });
+  });
+
+  describe('inlineStyle option', () => {
+    it('should respect the option value', () => {
+      const tree = runner.runSchematic(
+          'nav', {inlineStyle: true, ...baseOptions}, createTestApp());
+
+      expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.css');
+    });
+
+    it('should fallback to the @schematics/angular:component option value', () => {
+      const tree = runner.runSchematic('nav', baseOptions, createTestApp({inlineStyle: true}));
+
+      expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.css');
+    });
+  });
+
+  describe('inlineTemplate option', () => {
+    it('should respect the option value', () => {
+      const tree = runner.runSchematic(
+          'nav', {inlineTemplate: true, ...baseOptions}, createTestApp());
+
+      expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.html');
+    });
+
+    it('should fallback to the @schematics/angular:component option value', () => {
+      const tree = runner.runSchematic('nav', baseOptions, createTestApp({inlineTemplate: true}));
+
+      expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.html');
+    });
+  });
+
+  describe('spec option', () => {
+    it('should respect the option value', () => {
+      const tree = runner.runSchematic('nav', {spec: false, ...baseOptions}, createTestApp());
+
+      expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.spec.ts');
+    });
+
+    it('should fallback to the @schematics/angular:component option value', () => {
+      const tree = runner.runSchematic('nav', baseOptions, createTestApp({skipTests: true}));
+
+      expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.spec.ts');
+    });
+  });
 });

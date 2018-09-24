@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusMonitor} from '@angular/cdk/a11y';
+import {FocusMonitor, FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {
   ChangeDetectionStrategy,
@@ -19,7 +19,7 @@ import {
   OnDestroy,
   ViewEncapsulation,
 } from '@angular/core';
-import {merge, Subscription} from 'rxjs';
+import {merge, Subscription, EMPTY} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {matExpansionAnimations} from './expansion-animations';
 import {MatExpansionPanel} from './expansion-panel';
@@ -45,7 +45,7 @@ import {MatExpansionPanel} from './expansion-panel';
     'class': 'mat-expansion-panel-header',
     'role': 'button',
     '[attr.id]': 'panel._headerId',
-    '[attr.tabindex]': 'panel.disabled ? -1 : 0',
+    '[attr.tabindex]': 'disabled ? -1 : 0',
     '[attr.aria-controls]': '_getPanelId()',
     '[attr.aria-expanded]': '_isExpanded()',
     '[attr.aria-disabled]': 'panel.disabled',
@@ -61,25 +61,38 @@ import {MatExpansionPanel} from './expansion-panel';
     }`,
   },
 })
-export class MatExpansionPanelHeader implements OnDestroy {
+export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
   private _parentChangeSubscription = Subscription.EMPTY;
 
   constructor(
-    @Host() public panel: MatExpansionPanel,
-    private _element: ElementRef,
-    private _focusMonitor: FocusMonitor,
-    private _changeDetectorRef: ChangeDetectorRef) {
+      @Host() public panel: MatExpansionPanel,
+      private _element: ElementRef,
+      private _focusMonitor: FocusMonitor,
+      private _changeDetectorRef: ChangeDetectorRef) {
+
+    const accordionHideToggleChange = panel.accordion ?
+      panel.accordion._stateChanges.pipe(filter(changes => !!changes.hideToggle)) : EMPTY;
 
     // Since the toggle state depends on an @Input on the panel, we
-    // need to  subscribe and trigger change detection manually.
+    // need to subscribe and trigger change detection manually.
     this._parentChangeSubscription = merge(
       panel.opened,
       panel.closed,
+      accordionHideToggleChange,
       panel._inputChanges.pipe(filter(changes => !!(changes.hideToggle || changes.disabled)))
     )
     .subscribe(() => this._changeDetectorRef.markForCheck());
 
-    _focusMonitor.monitor(_element.nativeElement);
+    // Avoids focus being lost if the panel contained the focused element and was closed.
+    panel.closed
+      .pipe(filter(() => panel._containsFocus()))
+      .subscribe(() => _focusMonitor.focusVia(_element, 'program'));
+
+    _focusMonitor.monitor(_element).subscribe(origin => {
+      if (origin && panel.accordion) {
+        panel.accordion._handleHeaderFocus(this);
+      }
+    });
   }
 
   /** Height of the header while the panel is expanded. */
@@ -87,6 +100,14 @@ export class MatExpansionPanelHeader implements OnDestroy {
 
   /** Height of the header while the panel is collapsed. */
   @Input() collapsedHeight: string;
+
+  /**
+   * Whether the associated panel is disabled. Implemented as a part of `FocusableOption`.
+   * @docs-private
+   */
+  get disabled() {
+    return this.panel.disabled;
+  }
 
   /** Toggles the expanded state of the panel. */
   _toggle(): void {
@@ -123,13 +144,26 @@ export class MatExpansionPanelHeader implements OnDestroy {
         this._toggle();
         break;
       default:
+        if (this.panel.accordion) {
+          this.panel.accordion._handleHeaderKeydown(event);
+        }
+
         return;
     }
   }
 
+  /**
+   * Focuses the panel header. Implemented as a part of `FocusableOption`.
+   * @param origin Origin of the action that triggered the focus.
+   * @docs-private
+   */
+  focus(origin: FocusOrigin = 'program') {
+    this._focusMonitor.focusVia(this._element, origin);
+  }
+
   ngOnDestroy() {
     this._parentChangeSubscription.unsubscribe();
-    this._focusMonitor.stopMonitoring(this._element.nativeElement);
+    this._focusMonitor.stopMonitoring(this._element);
   }
 }
 
@@ -140,7 +174,7 @@ export class MatExpansionPanelHeader implements OnDestroy {
  */
 @Directive({
   selector: 'mat-panel-description',
-  host : {
+  host: {
     class: 'mat-expansion-panel-header-description'
   }
 })
@@ -153,7 +187,7 @@ export class MatExpansionPanelDescription {}
  */
 @Directive({
   selector: 'mat-panel-title',
-  host : {
+  host: {
     class: 'mat-expansion-panel-header-title'
   }
 })

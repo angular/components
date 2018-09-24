@@ -6,10 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {FocusMonitor} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
-  AfterViewInit,
   Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -25,26 +24,35 @@ import {
   Output,
   ViewChild,
   ViewEncapsulation,
+  AfterViewChecked,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   CanColor,
+  CanColorCtor,
   CanDisable,
+  CanDisableCtor,
   CanDisableRipple,
+  CanDisableRippleCtor,
   HasTabIndex,
+  HasTabIndexCtor,
   MatRipple,
   mixinColor,
   mixinDisabled,
   mixinDisableRipple,
   mixinTabIndex,
-  RippleRef,
 } from '@angular/material/core';
-import {MAT_CHECKBOX_CLICK_ACTION, MatCheckboxClickAction} from './checkbox-config';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import {MAT_CHECKBOX_CLICK_ACTION, MatCheckboxClickAction} from './checkbox-config';
 
 
 // Increasing integer for generating unique ids for checkbox components.
 let nextUniqueId = 0;
+
+// TODO(josephperrott): Revert to constants for ripple radius once 2018 Checkbox updates have
+// landed.
+// The radius for the checkbox's ripple, in pixels.
+let calculatedRippleRadius = 0;
 
 /**
  * Provider Expression that allows mat-checkbox to register as a ControlValueAccessor.
@@ -85,8 +93,13 @@ export class MatCheckboxChange {
 export class MatCheckboxBase {
   constructor(public _elementRef: ElementRef) {}
 }
-export const _MatCheckboxMixinBase =
-  mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatCheckboxBase)), 'accent'));
+export const _MatCheckboxMixinBase:
+    HasTabIndexCtor &
+    CanColorCtor &
+    CanDisableRippleCtor &
+    CanDisableCtor &
+    typeof MatCheckboxBase =
+        mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatCheckboxBase)), 'accent'));
 
 
 /**
@@ -118,7 +131,7 @@ export const _MatCheckboxMixinBase =
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAccessor,
-    AfterViewInit, OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple {
+    AfterViewChecked, OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple {
 
   /**
    * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
@@ -162,7 +175,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   @Input() value: string;
 
   /** The native `<input type="checkbox">` element */
-  @ViewChild('input') _inputElement: ElementRef;
+  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
 
   /** Reference to the ripple instance of the checkbox. */
   @ViewChild(MatRipple) ripple: MatRipple;
@@ -179,10 +192,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
   private _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
-  /** Reference to the focused state ripple. */
-  private _focusRipple: RippleRef | null;
-
-  constructor(elementRef: ElementRef,
+  constructor(elementRef: ElementRef<HTMLElement>,
               private _changeDetectorRef: ChangeDetectorRef,
               private _focusMonitor: FocusMonitor,
               private _ngZone: NgZone,
@@ -193,16 +203,25 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     super(elementRef);
 
     this.tabIndex = parseInt(tabIndex) || 0;
+
+    this._focusMonitor.monitor(elementRef, true).subscribe(focusOrigin => {
+      if (!focusOrigin) {
+        // When a focused element becomes disabled, the browser *immediately* fires a blur event.
+        // Angular does not expect events to be raised during change detection, so any state change
+        // (such as a form control's 'ng-touched') will cause a changed-after-checked error.
+        // See https://github.com/angular/angular/issues/17793. To work around this, we defer
+        // telling the form control it has been touched until the next tick.
+        Promise.resolve().then(() => this._onTouched());
+      }
+    });
   }
 
-  ngAfterViewInit() {
-    this._focusMonitor
-      .monitor(this._inputElement.nativeElement)
-      .subscribe(focusOrigin => this._onInputFocusChange(focusOrigin));
+  ngAfterViewChecked() {
+    this._calculateRippleRadius();
   }
 
   ngOnDestroy() {
-    this._focusMonitor.stopMonitoring(this._inputElement.nativeElement);
+    this._focusMonitor.stopMonitoring(this._elementRef);
   }
 
   /**
@@ -262,10 +281,12 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
   /** Method being called whenever the label text changes. */
   _onLabelTextChange() {
-    // This method is getting called whenever the label of the checkbox changes.
-    // Since the checkbox uses the OnPush strategy we need to notify it about the change
-    // that has been recognized by the cdkObserveContent directive.
-    this._changeDetectorRef.markForCheck();
+    // Since the event of the `cdkObserveContent` directive runs outside of the zone, the checkbox
+    // component will be only marked for check, but no actual change detection runs automatically.
+    // Instead of going back into the zone in order to trigger a change detection which causes
+    // *all* components to be checked (if explicitly marked or not using OnPush), we only trigger
+    // an explicit change detection for the checkbox view and it's children.
+    this._changeDetectorRef.detectChanges();
   }
 
   // Implemented as part of ControlValueAccessor.
@@ -322,27 +343,12 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   }
 
   private _emitChangeEvent() {
-    let event = new MatCheckboxChange();
+    const event = new MatCheckboxChange();
     event.source = this;
     event.checked = this.checked;
 
     this._controlValueAccessorChangeFn(this.checked);
     this.change.emit(event);
-  }
-
-  /** Function is called whenever the focus changes for the input element. */
-  private _onInputFocusChange(focusOrigin: FocusOrigin) {
-    // TODO(paul): support `program`. See https://github.com/angular/material2/issues/9889
-    if (!this._focusRipple && focusOrigin === 'keyboard') {
-      this._focusRipple = this.ripple.launch(0, 0, {persistent: true});
-    } else if (!focusOrigin) {
-      if (this._focusRipple) {
-        this._focusRipple.fadeOut();
-        this._focusRipple = null;
-      }
-
-      this._onTouched();
-    }
   }
 
   /** Toggles the `checked` state of the checkbox. */
@@ -396,7 +402,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
   /** Focuses the checkbox. */
   focus(): void {
-    this._focusMonitor.focusVia(this._inputElement.nativeElement, 'keyboard');
+    this._focusMonitor.focusVia(this._inputElement, 'keyboard');
   }
 
   _onInteractionEvent(event: Event) {
@@ -442,5 +448,20 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     }
 
     return `mat-checkbox-anim-${animSuffix}`;
+  }
+
+  // TODO(josephperrott): Revert to constants for ripple radius once 2018 Checkbox updates have
+  // landed.
+  /**
+   * Calculate the radius for the ripple based on the ripple elements width.  Only calculated once
+   * for the application.
+   */
+  private _calculateRippleRadius() {
+    if (!calculatedRippleRadius) {
+      const rippleWidth =
+          this._elementRef.nativeElement.querySelector('.mat-checkbox-ripple').clientWidth || 0;
+      calculatedRippleRadius = rippleWidth / 2;
+    }
+    this.ripple.radius = calculatedRippleRadius;
   }
 }

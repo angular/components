@@ -1,5 +1,4 @@
 @import './variables';
-@import './elevation';
 @import './list-common';
 @import './vendor-prefixes';
 
@@ -14,9 +13,7 @@ $mat-menu-side-padding: 16px !default;
 $mat-menu-icon-margin: 16px !default;
 
 
-@mixin mat-menu-base($default-elevation) {
-  @include mat-overridable-elevation($default-elevation);
-
+@mixin mat-menu-base() {
   min-width: $mat-menu-overlay-min-width;
   max-width: $mat-menu-overlay-max-width;
   overflow: auto;
@@ -34,6 +31,9 @@ $mat-menu-icon-margin: 16px !default;
 
   text-align: left;
   text-decoration: none;   // necessary to reset anchor tags
+
+  // Required for Edge not to show scrollbars when setting the width manually. See #12112.
+  max-width: 100%;
 
   &[disabled] {
     cursor: default;

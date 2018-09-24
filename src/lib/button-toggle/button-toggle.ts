@@ -8,8 +8,10 @@
 
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {SelectionModel} from '@angular/cdk/collections';
 import {
   AfterContentInit,
+  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -29,20 +31,14 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
-  CanDisable,
   CanDisableRipple,
-  mixinDisabled,
-  mixinDisableRipple
+  mixinDisableRipple,
+  CanDisableRippleCtor,
 } from '@angular/material/core';
-import {SelectionModel} from '@angular/cdk/collections';
+
 
 /** Acceptable types for a button toggle. */
 export type ToggleType = 'checkbox' | 'radio';
-
-// Boilerplate for applying mixins to MatButtonToggleGroup and MatButtonToggleGroupMultiple
-/** @docs-private */
-export class MatButtonToggleGroupBase {}
-export const _MatButtonToggleGroupMixinBase = mixinDisabled(MatButtonToggleGroupBase);
 
 /**
  * Provider Expression that allows mat-button-toggle-group to register as a ControlValueAccessor.
@@ -57,7 +53,7 @@ export const MAT_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any = {
 
 /**
  * @deprecated Use `MatButtonToggleGroup` instead.
- * @deletion-target 7.0.0
+ * @breaking-change 7.0.0
  */
 export class MatButtonToggleGroupMultiple {}
 
@@ -80,24 +76,24 @@ export class MatButtonToggleChange {
     MAT_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR,
     {provide: MatButtonToggleGroupMultiple, useExisting: MatButtonToggleGroup},
   ],
-  inputs: ['disabled'],
   host: {
     'role': 'group',
     'class': 'mat-button-toggle-group',
+    '[attr.aria-disabled]': 'disabled',
     '[class.mat-button-toggle-vertical]': 'vertical'
   },
   exportAs: 'matButtonToggleGroup',
 })
-export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase implements
-  ControlValueAccessor, CanDisable, OnInit, AfterContentInit {
+export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
 
   private _vertical = false;
   private _multiple = false;
+  private _disabled = false;
   private _selectionModel: SelectionModel<MatButtonToggle>;
 
   /**
    * Reference to the raw value that the consumer tried to assign. The real
-   * value will exaclude any values from this one that don't correspond to a
+   * value will exclude any values from this one that don't correspond to a
    * toggle. Useful for the cases where the value is assigned before the toggles
    * have been initialized or at the same that they're being swapped out.
    */
@@ -170,13 +166,22 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase impleme
     this._multiple = coerceBooleanProperty(value);
   }
 
+  /** Whether multiple button toggle group is disabled. */
+  @Input()
+  get disabled(): boolean { return this._disabled; }
+  set disabled(value: boolean) {
+    this._disabled = coerceBooleanProperty(value);
+
+    if (this._buttonToggles) {
+      this._buttonToggles.forEach(toggle => toggle._markForCheck());
+    }
+  }
+
   /** Event emitted when the group's value changes. */
   @Output() readonly change: EventEmitter<MatButtonToggleChange> =
       new EventEmitter<MatButtonToggleChange>();
 
-  constructor(private _changeDetector: ChangeDetectorRef) {
-    super();
-  }
+  constructor(private _changeDetector: ChangeDetectorRef) {}
 
   ngOnInit() {
     this._selectionModel = new SelectionModel<MatButtonToggle>(this.multiple, undefined, false);
@@ -208,10 +213,6 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase impleme
   // Implemented as part of ControlValueAccessor.
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
-
-    if (this._buttonToggles) {
-      this._buttonToggles.forEach(toggle => toggle._markForCheck());
-    }
   }
 
   /** Dispatch change event with current selection and group value. */
@@ -313,7 +314,8 @@ export class MatButtonToggleGroup extends _MatButtonToggleGroupMixinBase impleme
 // Boilerplate for applying mixins to the MatButtonToggle class.
 /** @docs-private */
 export class MatButtonToggleBase {}
-export const _MatButtonToggleMixinBase = mixinDisableRipple(MatButtonToggleBase);
+export const _MatButtonToggleMixinBase: CanDisableRippleCtor & typeof MatButtonToggleBase =
+    mixinDisableRipple(MatButtonToggleBase);
 
 /** Single button inside of a toggle group. */
 @Component({
@@ -330,6 +332,8 @@ export const _MatButtonToggleMixinBase = mixinDisableRipple(MatButtonToggleBase)
     '[class.mat-button-toggle-checked]': 'checked',
     '[class.mat-button-toggle-disabled]': 'disabled',
     'class': 'mat-button-toggle',
+    // Clear out the native tabindex here since we forward it to the underlying button
+    '[attr.tabindex]': 'null',
     '[attr.id]': 'id',
   }
 })
@@ -370,6 +374,9 @@ export class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit
   /** MatButtonToggleGroup reads this to assign its own value. */
   @Input() value: any;
 
+  /** Tabindex for the toggle. */
+  @Input() tabIndex: number | null;
+
   /** Whether the button is checked. */
   @Input()
   get checked(): boolean {
@@ -404,9 +411,13 @@ export class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit
   constructor(@Optional() toggleGroup: MatButtonToggleGroup,
               private _changeDetectorRef: ChangeDetectorRef,
               private _elementRef: ElementRef<HTMLElement>,
-              private _focusMonitor: FocusMonitor) {
+              private _focusMonitor: FocusMonitor,
+              // @breaking-change 8.0.0 `defaultTabIndex` to be made a required parameter.
+              @Attribute('tabindex') defaultTabIndex: string) {
     super();
 
+    const parsedTabIndex = Number(defaultTabIndex);
+    this.tabIndex = (parsedTabIndex || parsedTabIndex === 0) ? parsedTabIndex : null;
     this.buttonToggleGroup = toggleGroup;
   }
 
@@ -423,11 +434,11 @@ export class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit
       this.checked = true;
     }
 
-    this._focusMonitor.monitor(this._elementRef.nativeElement, true);
+    this._focusMonitor.monitor(this._elementRef, true);
   }
 
   ngOnDestroy() {
-    this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
+    this._focusMonitor.stopMonitoring(this._elementRef);
   }
 
   /** Focuses the button. */

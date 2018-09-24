@@ -1,5 +1,5 @@
 import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
-import {CdkScrollable, ScrollDispatchModule} from '@angular/cdk/scrolling';
+import {CdkScrollable, ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {MockNgZone} from '@angular/cdk/testing';
 import {Component, ElementRef, NgModule, NgZone} from '@angular/core';
 import {inject, TestBed} from '@angular/core/testing';
@@ -13,7 +13,6 @@ import {
   OverlayContainer,
   OverlayModule,
   OverlayRef,
-  ViewportRuler,
 } from '../index';
 
 
@@ -30,7 +29,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ScrollDispatchModule, OverlayModule, OverlayTestModule],
+      imports: [ScrollingModule, OverlayModule, OverlayTestModule],
       providers: [{provide: NgZone, useFactory: () => zone = new MockNgZone()}]
     });
 
@@ -149,6 +148,46 @@ describe('FlexibleConnectedPositionStrategy', () => {
     expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.bottom));
 
     document.body.removeChild(originElement);
+  });
+
+  it('should clean up after itself when disposed', () => {
+    const origin = document.createElement('div');
+    const positionStrategy = overlay.position()
+        .flexibleConnectedTo(origin)
+        .withPositions([{
+          overlayX: 'start',
+          overlayY: 'top',
+          originX: 'start',
+          originY: 'bottom'
+        }]);
+
+    // Needs to be in the DOM for IE not to throw an "Unspecified error".
+    document.body.appendChild(origin);
+    attachOverlay({positionStrategy});
+
+    const boundingBox = overlayRef.hostElement;
+    const pane = overlayRef.overlayElement;
+
+    positionStrategy.dispose();
+
+    expect(boundingBox.style.top).toBeFalsy();
+    expect(boundingBox.style.bottom).toBeFalsy();
+    expect(boundingBox.style.left).toBeFalsy();
+    expect(boundingBox.style.right).toBeFalsy();
+    expect(boundingBox.style.width).toBeFalsy();
+    expect(boundingBox.style.height).toBeFalsy();
+    expect(boundingBox.style.alignItems).toBeFalsy();
+    expect(boundingBox.style.justifyContent).toBeFalsy();
+    expect(boundingBox.classList).not.toContain('cdk-overlay-connected-position-bounding-box');
+
+    expect(pane.style.top).toBeFalsy();
+    expect(pane.style.bottom).toBeFalsy();
+    expect(pane.style.left).toBeFalsy();
+    expect(pane.style.right).toBeFalsy();
+    expect(pane.style.position).toBeFalsy();
+
+    overlayRef.dispose();
+    document.body.removeChild(origin);
   });
 
   describe('without flexible dimensions and pushing', () => {
@@ -1134,6 +1173,165 @@ describe('FlexibleConnectedPositionStrategy', () => {
       expect(Math.floor(overlayRect.top)).toBe(15);
     });
 
+    it('should not mess with the left offset when pushing from the top', () => {
+      originElement.style.top = `${-OVERLAY_HEIGHT * 2}px`;
+      originElement.style.left = '200px';
+
+      positionStrategy.withPositions([{
+        originX: 'start',
+        originY: 'bottom',
+        overlayX: 'start',
+        overlayY: 'top'
+      }]);
+
+      attachOverlay({positionStrategy});
+
+      const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+      expect(Math.floor(overlayRect.left)).toBe(200);
+    });
+
+    it('should align to the trigger if the overlay is wider than the viewport, but the trigger ' +
+      'is still within the viewport', () => {
+        originElement.style.top = '200px';
+        originElement.style.left = '150px';
+
+        positionStrategy.withPositions([
+          {
+            originX: 'start',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top'
+          },
+          {
+            originX: 'end',
+            originY: 'bottom',
+            overlayX: 'end',
+            overlayY: 'top'
+          }
+        ]);
+
+        attachOverlay({
+          width: viewport.getViewportRect().width + 100,
+          positionStrategy
+        });
+
+        const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+        const originRect = originElement.getBoundingClientRect();
+
+        expect(Math.floor(overlayRect.left)).toBe(Math.floor(originRect.left));
+      });
+
+    it('should push into the viewport if the overlay is wider than the viewport and the trigger' +
+      'out of the viewport', () => {
+        originElement.style.top = '200px';
+        originElement.style.left = `-${DEFAULT_WIDTH / 2}px`;
+
+        positionStrategy.withPositions([
+          {
+            originX: 'start',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top'
+          },
+          {
+            originX: 'end',
+            originY: 'bottom',
+            overlayX: 'end',
+            overlayY: 'top'
+          }
+        ]);
+
+        attachOverlay({
+          width: viewport.getViewportRect().width + 100,
+          positionStrategy
+        });
+
+        const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+        expect(Math.floor(overlayRect.left)).toBe(0);
+      });
+
+    it('should keep the element inside the viewport as the user is scrolling, ' +
+      'with position locking disabled', () => {
+        const veryLargeElement = document.createElement('div');
+
+        originElement.style.top = `${-OVERLAY_HEIGHT * 2}px`;
+        originElement.style.left = '200px';
+
+        veryLargeElement.style.width = '100%';
+        veryLargeElement.style.height = '2000px';
+        document.body.appendChild(veryLargeElement);
+
+        positionStrategy
+          .withLockedPosition(false)
+          .withViewportMargin(0)
+          .withPositions([{
+            overlayY: 'top',
+            overlayX: 'start',
+            originY: 'top',
+            originX: 'start'
+          }]);
+
+        attachOverlay({positionStrategy});
+
+        let overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+        expect(Math.floor(overlayRect.top))
+            .toBe(0, 'Expected overlay to be in the viewport initially.');
+
+        window.scroll(0, 100);
+        overlayRef.updatePosition();
+        zone.simulateZoneExit();
+
+        overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+        expect(Math.floor(overlayRect.top))
+            .toBe(0, 'Expected overlay to stay in the viewport after scrolling.');
+
+        window.scroll(0, 0);
+        document.body.removeChild(veryLargeElement);
+      });
+
+      it('should not continue pushing the overlay as the user scrolls, if position ' +
+        'locking is enabled', () => {
+        const veryLargeElement = document.createElement('div');
+
+        originElement.style.top = `${-OVERLAY_HEIGHT * 2}px`;
+        originElement.style.left = '200px';
+
+        veryLargeElement.style.width = '100%';
+        veryLargeElement.style.height = '2000px';
+        document.body.appendChild(veryLargeElement);
+
+        positionStrategy
+          .withLockedPosition()
+          .withViewportMargin(0)
+          .withPositions([{
+            overlayY: 'top',
+            overlayX: 'start',
+            originY: 'top',
+            originX: 'start'
+          }]);
+
+        attachOverlay({positionStrategy});
+
+        const scrollBy = 100;
+        let initialOverlayTop = Math.floor(overlayRef.overlayElement.getBoundingClientRect().top);
+
+        expect(initialOverlayTop).toBe(0, 'Expected overlay to be inside the viewport initially.');
+
+        window.scroll(0, scrollBy);
+        overlayRef.updatePosition();
+        zone.simulateZoneExit();
+
+        let currentOverlayTop = Math.floor(overlayRef.overlayElement.getBoundingClientRect().top);
+
+        expect(currentOverlayTop).toBeLessThan(0,
+            'Expected overlay to no longer be completely inside the viewport.');
+        expect(currentOverlayTop).toBe(initialOverlayTop - scrollBy,
+            'Expected overlay to maintain its previous position.');
+
+        window.scroll(0, 0);
+        document.body.removeChild(veryLargeElement);
+      });
+
   });
 
   describe('with flexible dimensions', () => {
@@ -1575,7 +1773,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
         }]);
 
       strategy.withScrollableContainers([
-        new CdkScrollable(new ElementRef(scrollable), null!, null!)
+        new CdkScrollable(new ElementRef<HTMLElement>(scrollable), null!, null!)
       ]);
 
       positionChangeHandler = jasmine.createSpy('positionChange handler');
@@ -1797,6 +1995,149 @@ describe('FlexibleConnectedPositionStrategy', () => {
         } as any]);
       }).toThrow();
     });
+  });
+
+  describe('panel classes', () => {
+    let originElement: HTMLElement;
+    let positionStrategy: FlexibleConnectedPositionStrategy;
+
+    beforeEach(() => {
+      originElement = createPositionedBlockElement();
+      document.body.appendChild(originElement);
+      positionStrategy = overlay.position()
+          .flexibleConnectedTo(originElement)
+          .withFlexibleDimensions(false)
+          .withPush(false);
+    });
+
+    afterEach(() => {
+      document.body.removeChild(originElement);
+    });
+
+    it('should be able to apply a class based on the position', () => {
+      positionStrategy.withPositions([{
+        originX: 'start',
+        originY: 'bottom',
+        overlayX: 'start',
+        overlayY: 'top',
+        panelClass: 'is-below'
+      }]);
+
+      attachOverlay({positionStrategy});
+
+      expect(overlayRef.overlayElement.classList).toContain('is-below');
+    });
+
+    it('should be able to apply multiple classes based on the position', () => {
+      positionStrategy.withPositions([{
+        originX: 'start',
+        originY: 'bottom',
+        overlayX: 'start',
+        overlayY: 'top',
+        panelClass: ['is-below', 'is-under']
+      }]);
+
+      attachOverlay({positionStrategy});
+
+      expect(overlayRef.overlayElement.classList).toContain('is-below');
+      expect(overlayRef.overlayElement.classList).toContain('is-under');
+    });
+
+    it('should remove the panel class when detaching', () => {
+      positionStrategy.withPositions([{
+        originX: 'start',
+        originY: 'bottom',
+        overlayX: 'start',
+        overlayY: 'top',
+        panelClass: 'is-below'
+      }]);
+
+      attachOverlay({positionStrategy});
+      expect(overlayRef.overlayElement.classList).toContain('is-below');
+
+      overlayRef.detach();
+      expect(overlayRef.overlayElement.classList).not.toContain('is-below');
+    });
+
+    it('should clear the previous classes when the position changes', () => {
+      originElement.style.top = '200px';
+      originElement.style.right = '25px';
+
+      positionStrategy.withPositions([
+        {
+          originX: 'end',
+          originY: 'center',
+          overlayX: 'start',
+          overlayY: 'center',
+          panelClass: ['is-center', 'is-in-the-middle']
+        },
+        {
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'end',
+          overlayY: 'top',
+          panelClass: 'is-below'
+        }
+      ]);
+
+      attachOverlay({positionStrategy});
+
+      const overlayClassList = overlayRef.overlayElement.classList;
+
+      expect(overlayClassList).not.toContain('is-center');
+      expect(overlayClassList).not.toContain('is-in-the-middle');
+      expect(overlayClassList).toContain('is-below');
+
+      // Move the element so another position is applied.
+      originElement.style.top = '200px';
+      originElement.style.left = '200px';
+
+      overlayRef.updatePosition();
+
+      expect(overlayClassList).toContain('is-center');
+      expect(overlayClassList).toContain('is-in-the-middle');
+      expect(overlayClassList).not.toContain('is-below');
+    });
+
+    it('should not clear the existing `panelClass` from the `OverlayRef`', () => {
+      originElement.style.top = '200px';
+      originElement.style.right = '25px';
+
+      positionStrategy.withPositions([
+        {
+          originX: 'end',
+          originY: 'center',
+          overlayX: 'start',
+          overlayY: 'center',
+          panelClass: ['is-center', 'is-in-the-middle']
+        },
+        {
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'end',
+          overlayY: 'top',
+          panelClass: 'is-below'
+        }
+      ]);
+
+      attachOverlay({
+        panelClass: 'custom-panel-class',
+        positionStrategy
+      });
+
+      const overlayClassList = overlayRef.overlayElement.classList;
+
+      expect(overlayClassList).toContain('custom-panel-class');
+
+      // Move the element so another position is applied.
+      originElement.style.top = '200px';
+      originElement.style.left = '200px';
+
+      overlayRef.updatePosition();
+
+      expect(overlayClassList).toContain('custom-panel-class');
+    });
+
   });
 
 });

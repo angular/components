@@ -1,10 +1,15 @@
-import {ComponentFixture, fakeAsync, TestBed, tick, flush} from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  flush,
+  flushMicrotasks,
+} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {Component, DebugElement, ViewChild, Type} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {MatCheckbox, MatCheckboxChange, MatCheckboxModule} from './index';
-import {defaultRippleAnimationConfig} from '@angular/material/core';
 import {MAT_CHECKBOX_CLICK_ACTION} from './checkbox-config';
 import {MutationObserverFactory} from '@angular/cdk/observers';
 
@@ -12,10 +17,10 @@ import {MutationObserverFactory} from '@angular/cdk/observers';
 describe('MatCheckbox', () => {
   let fixture: ComponentFixture<any>;
 
-  function createComponent<T>(componentType: Type<T>): ComponentFixture<T> {
+  function createComponent<T>(componentType: Type<T>, extraDeclarations: Type<any>[] = []) {
     TestBed.configureTestingModule({
       imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule],
-      declarations: [componentType],
+      declarations: [componentType, ...extraDeclarations],
     }).compileComponents();
 
     return TestBed.createComponent<T>(componentType);
@@ -372,25 +377,6 @@ describe('MatCheckbox', () => {
       expect(inputElement.value).toBe('basic_checkbox');
     });
 
-    it('should show a ripple when focused by a keyboard action', fakeAsync(() => {
-      expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
-          .toBe(0, 'Expected no ripples on load.');
-
-      dispatchFakeEvent(inputElement, 'keydown');
-      dispatchFakeEvent(inputElement, 'focus');
-
-      tick(defaultRippleAnimationConfig.enterDuration);
-
-      expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
-          .toBe(1, 'Expected ripple after element is focused.');
-
-      dispatchFakeEvent(checkboxInstance._inputElement.nativeElement, 'blur');
-      tick(defaultRippleAnimationConfig.exitDuration);
-
-      expect(fixture.nativeElement.querySelectorAll('.mat-ripple-element').length)
-          .toBe(0, 'Expected no ripple after element is blurred.');
-    }));
-
     it('should remove the SVG checkmark from the tab order', () => {
       expect(checkboxNativeElement.querySelector('svg')!.getAttribute('focusable')).toBe('false');
     });
@@ -398,22 +384,25 @@ describe('MatCheckbox', () => {
     describe('ripple elements', () => {
 
       it('should show ripples on label mousedown', () => {
-        expect(checkboxNativeElement.querySelector('.mat-ripple-element')).toBeFalsy();
+        const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
+
+        expect(checkboxNativeElement.querySelector(rippleSelector)).toBeFalsy();
 
         dispatchFakeEvent(labelElement, 'mousedown');
         dispatchFakeEvent(labelElement, 'mouseup');
 
-        expect(checkboxNativeElement.querySelectorAll('.mat-ripple-element').length).toBe(1);
+        expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(1);
       });
 
       it('should not show ripples when disabled', () => {
+        const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
         testComponent.isDisabled = true;
         fixture.detectChanges();
 
         dispatchFakeEvent(labelElement, 'mousedown');
         dispatchFakeEvent(labelElement, 'mouseup');
 
-        expect(checkboxNativeElement.querySelectorAll('.mat-ripple-element').length).toBe(0);
+        expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(0);
 
         testComponent.isDisabled = false;
         fixture.detectChanges();
@@ -421,17 +410,18 @@ describe('MatCheckbox', () => {
         dispatchFakeEvent(labelElement, 'mousedown');
         dispatchFakeEvent(labelElement, 'mouseup');
 
-        expect(checkboxNativeElement.querySelectorAll('.mat-ripple-element').length).toBe(1);
+        expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(1);
       });
 
       it('should remove ripple if matRippleDisabled input is set', () => {
+        const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
         testComponent.disableRipple = true;
         fixture.detectChanges();
 
         dispatchFakeEvent(labelElement, 'mousedown');
         dispatchFakeEvent(labelElement, 'mouseup');
 
-        expect(checkboxNativeElement.querySelectorAll('.mat-ripple-element').length).toBe(0);
+        expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(0);
 
         testComponent.disableRipple = false;
         fixture.detectChanges();
@@ -439,7 +429,7 @@ describe('MatCheckbox', () => {
         dispatchFakeEvent(labelElement, 'mousedown');
         dispatchFakeEvent(labelElement, 'mouseup');
 
-        expect(checkboxNativeElement.querySelectorAll('.mat-ripple-element').length).toBe(1);
+        expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(1);
       });
     });
 
@@ -835,19 +825,20 @@ describe('MatCheckbox', () => {
     });
 
     it('should toggle checkbox ripple disabledness correctly', () => {
+      const rippleSelector = '.mat-ripple-element:not(.mat-checkbox-persistent-ripple)';
       const labelElement = checkboxNativeElement.querySelector('label') as HTMLLabelElement;
 
       testComponent.isDisabled = true;
       fixture.detectChanges();
       dispatchFakeEvent(labelElement, 'mousedown');
       dispatchFakeEvent(labelElement, 'mouseup');
-      expect(checkboxNativeElement.querySelectorAll('.mat-ripple-element').length).toBe(0);
+      expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(0);
 
       testComponent.isDisabled = false;
       fixture.detectChanges();
       dispatchFakeEvent(labelElement, 'mousedown');
       dispatchFakeEvent(labelElement, 'mouseup');
-      expect(checkboxNativeElement.querySelectorAll('.mat-ripple-element').length).toBe(1);
+      expect(checkboxNativeElement.querySelectorAll(rippleSelector).length).toBe(1);
     });
   });
 
@@ -873,29 +864,63 @@ describe('MatCheckbox', () => {
     let checkboxNativeElement: HTMLElement;
     let checkboxInstance: MatCheckbox;
     let inputElement: HTMLInputElement;
+    let ngModel: NgModel;
 
     beforeEach(() => {
-      fixture = createComponent(CheckboxWithFormDirectives);
+      fixture = createComponent(CheckboxWithNgModel);
+
+      fixture.componentInstance.isRequired = false;
       fixture.detectChanges();
 
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox));
       checkboxNativeElement = checkboxDebugElement.nativeElement;
       checkboxInstance = checkboxDebugElement.componentInstance;
       inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
+      ngModel = checkboxDebugElement.injector.get<NgModel>(NgModel);
     });
 
-    it('should be in pristine, untouched, and valid states initially', fakeAsync(() => {
-      flush();
-
-      let checkboxElement = fixture.debugElement.query(By.directive(MatCheckbox));
-      let ngModel = checkboxElement.injector.get<NgModel>(NgModel);
-
+    it('should be pristine, untouched, and valid initially', () => {
       expect(ngModel.valid).toBe(true);
       expect(ngModel.pristine).toBe(true);
       expect(ngModel.touched).toBe(false);
+    });
 
-      // TODO(jelbourn): test that `touched` and `pristine` state are modified appropriately.
-      // This is currently blocked on issues with async() and fakeAsync().
+    it('should have correct control states after interaction', fakeAsync(() => {
+      inputElement.click();
+      fixture.detectChanges();
+
+      // Flush the timeout that is being created whenever a `click` event has been fired by
+      // the underlying input.
+      flush();
+
+      // After the value change through interaction, the control should be dirty, but remain
+      // untouched as long as the focus is still on the underlying input.
+      expect(ngModel.pristine).toBe(false);
+      expect(ngModel.touched).toBe(false);
+
+      // If the input element loses focus, the control should remain dirty but should
+      // also turn touched.
+      dispatchFakeEvent(inputElement, 'blur');
+      fixture.detectChanges();
+      flushMicrotasks();
+
+      expect(ngModel.pristine).toBe(false);
+      expect(ngModel.touched).toBe(true);
+    }));
+
+    it('should not throw an error when disabling while focused', fakeAsync(() => {
+      expect(() => {
+        // Focus the input element because after disabling, the `blur` event should automatically
+        // fire and not result in a changed after checked exception. Related: #12323
+        inputElement.focus();
+
+        // Flush the two nested timeouts from the FocusMonitor that are being created on `focus`.
+        flush();
+
+        checkboxInstance.disabled = true;
+        fixture.detectChanges();
+        flushMicrotasks();
+      }).not.toThrow();
     }));
 
     it('should toggle checked state on click', () => {
@@ -911,29 +936,9 @@ describe('MatCheckbox', () => {
 
       expect(checkboxInstance.checked).toBe(false);
     });
-  });
-
-  describe('with required ngModel', () => {
-    let checkboxInstance: MatCheckbox;
-    let inputElement: HTMLInputElement;
-    let testComponent: CheckboxWithNgModel;
-
-    beforeEach(() => {
-      fixture = createComponent(CheckboxWithNgModel);
-      fixture.detectChanges();
-
-      let checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox));
-      let checkboxNativeElement = checkboxDebugElement.nativeElement;
-      testComponent = fixture.debugElement.componentInstance;
-      checkboxInstance = checkboxDebugElement.componentInstance;
-      inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
-    });
 
     it('should validate with RequiredTrue validator', () => {
-      let checkboxElement = fixture.debugElement.query(By.directive(MatCheckbox));
-      let ngModel = checkboxElement.injector.get<NgModel>(NgModel);
-
-      testComponent.isRequired = true;
+      fixture.componentInstance.isRequired = true;
       inputElement.click();
       fixture.detectChanges();
 
@@ -1083,7 +1088,37 @@ describe('MatCheckbox', () => {
       fixture.detectChanges();
       expect(checkboxInnerContainer.querySelector('input')!.hasAttribute('value')).toBe(false);
     });
+  });
 
+  describe('label margin', () => {
+    it('should properly update margin if label content is projected', () => {
+      const mutationCallbacks: Function[] = [];
+
+      TestBed.configureTestingModule({
+        providers: [
+          {provide: MutationObserverFactory, useValue: {
+            create: (callback: Function) => {
+              mutationCallbacks.push(callback);
+              return {observe: () => {}, disconnect: () => {}};
+            }
+          }}
+        ]
+      });
+
+      fixture = createComponent(CheckboxWithProjectedLabel, [TextBindingComponent]);
+      fixture.detectChanges();
+
+      const checkboxInnerContainer = fixture.debugElement
+        .query(By.css('.mat-checkbox-inner-container')).nativeElement;
+
+      // Do not run the change detection for the fixture manually because we want to verify
+      // that the checkbox properly toggles the margin class even if the observe content output
+      // fires outside of the zone.
+      mutationCallbacks.forEach(callback => callback());
+
+      expect(checkboxInnerContainer.classList).not
+        .toContain('mat-checkbox-inner-container-no-side-margin');
+    });
   });
 });
 
@@ -1122,18 +1157,6 @@ class SingleCheckbox {
 
   onCheckboxClick: (event?: Event) => void = () => {};
   onCheckboxChange: (event?: MatCheckboxChange) => void = () => {};
-}
-
-/** Simple component for testing an MatCheckbox with ngModel in a form. */
-@Component({
-  template: `
-    <form>
-      <mat-checkbox name="cb" [(ngModel)]="isGood">Be good</mat-checkbox>
-    </form>
-  `,
-})
-class CheckboxWithFormDirectives {
-  isGood: boolean = false;
 }
 
 /** Simple component for testing an MatCheckbox with required ngModel. */
@@ -1229,3 +1252,18 @@ class CheckboxWithoutLabel {
   template: `<mat-checkbox tabindex="5"></mat-checkbox>`
 })
 class CheckboxWithTabindexAttr {}
+
+/** Test component that uses another component for its label. */
+@Component({
+  template: `<mat-checkbox><some-text></some-text></mat-checkbox>`
+})
+class CheckboxWithProjectedLabel {}
+
+/** Component that renders some text through a binding. */
+@Component({
+  selector: 'some-text',
+  template: '<span>{{text}}</span>'
+})
+class TextBindingComponent {
+  text: string = 'Some text';
+}

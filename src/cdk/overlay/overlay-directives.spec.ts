@@ -51,15 +51,11 @@ describe('Overlay directives', () => {
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent).toContain('Menu content');
-    expect(getPaneElement().style.pointerEvents)
-      .toBe('auto', 'Expected the overlay pane to enable pointerEvents when attached.');
 
     fixture.componentInstance.isOpen = false;
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent).toBe('');
-    expect(getPaneElement().style.pointerEvents)
-      .toBe('none', 'Expected the overlay pane to disable pointerEvents when detached.');
   });
 
   it('should destroy the overlay when the directive is destroyed', () => {
@@ -236,6 +232,15 @@ describe('Overlay directives', () => {
       expect(backdrop.classList).toContain('mat-test-class');
     });
 
+    it('should set the custom panel class', () => {
+      fixture.componentInstance.isOpen = true;
+      fixture.detectChanges();
+
+      const panel
+        = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      expect(panel.classList).toContain('cdk-test-panel-class');
+    });
+
     it('should set the offsetX', () => {
       fixture.componentInstance.offsetX = 5;
       fixture.componentInstance.isOpen = true;
@@ -327,6 +332,7 @@ describe('Overlay directives', () => {
         // TODO(jelbourn) figure out why, when compiling with bazel, these offsets are required.
         offsetX: 0,
         offsetY: 0,
+        panelClass: 'custom-class'
       }];
 
       fixture.componentInstance.isOpen = true;
@@ -352,7 +358,8 @@ describe('Overlay directives', () => {
         overlayX: 'start',
         overlayY: 'top',
         offsetX: 20,
-        offsetY: 10
+        offsetY: 10,
+        panelClass: 'custom-class'
       }];
 
       fixture.componentInstance.isOpen = true;
@@ -375,12 +382,12 @@ describe('Overlay directives', () => {
     });
 
     it('should allow for flexible positioning to be enabled', () => {
-      expect(fixture.componentInstance.connectedOverlayDirective.flexibleDiemsions).not.toBe(true);
+      expect(fixture.componentInstance.connectedOverlayDirective.flexibleDimensions).not.toBe(true);
 
       fixture.componentInstance.flexibleDimensions = true;
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.connectedOverlayDirective.flexibleDiemsions).toBe(true);
+      expect(fixture.componentInstance.connectedOverlayDirective.flexibleDimensions).toBe(true);
     });
 
     it('should allow for growing after open to be enabled', () => {
@@ -480,6 +487,7 @@ describe('Overlay directives', () => {
             [cdkConnectedOverlayGrowAfterOpen]="growAfterOpen"
             [cdkConnectedOverlayPush]="push"
             cdkConnectedOverlayBackdropClass="mat-test-class"
+            cdkConnectedOverlayPanelClass="cdk-test-panel-class"
             (backdropClick)="backdropClickHandler($event)"
             [cdkConnectedOverlayOffsetX]="offsetX"
             [cdkConnectedOverlayOffsetY]="offsetY"

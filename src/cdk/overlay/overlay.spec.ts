@@ -7,9 +7,10 @@ import {
   ErrorHandler,
   Injectable,
   EventEmitter,
+  NgZone,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {dispatchFakeEvent} from '@angular/cdk/testing';
+import {dispatchFakeEvent, MockNgZone} from '@angular/cdk/testing';
 import {
   ComponentPortal,
   PortalModule,
@@ -25,6 +26,7 @@ import {
   PositionStrategy,
   ScrollStrategy,
 } from './index';
+import {OverlayReference} from './overlay-reference';
 
 
 describe('Overlay', () => {
@@ -35,19 +37,26 @@ describe('Overlay', () => {
   let overlayContainer: OverlayContainer;
   let viewContainerFixture: ComponentFixture<TestComponentWithTemplatePortals>;
   let dir: Direction;
+  let zone: MockNgZone;
 
   beforeEach(async(() => {
     dir = 'ltr';
     TestBed.configureTestingModule({
       imports: [OverlayModule, PortalModule, OverlayTestModule],
-      providers: [{
-        provide: Directionality,
-        useFactory: () => {
-          const fakeDirectionality = {};
-          Object.defineProperty(fakeDirectionality, 'value', {get: () => dir});
-          return fakeDirectionality;
-        }
-      }],
+      providers: [
+        {
+          provide: Directionality,
+          useFactory: () => {
+            const fakeDirectionality = {};
+            Object.defineProperty(fakeDirectionality, 'value', {get: () => dir});
+            return fakeDirectionality;
+          }
+        },
+        {
+          provide: NgZone,
+          useFactory: () => zone = new MockNgZone()
+        },
+      ],
     }).compileComponents();
   }));
 
@@ -334,12 +343,39 @@ describe('Overlay', () => {
   });
 
   it('should keep the direction in sync with the passed in Directionality', () => {
-    const customDirectionality = {value: 'rtl', change: new EventEmitter()};
+    const customDirectionality = {value: 'rtl', change: new EventEmitter<Direction>()};
     const overlayRef = overlay.create({direction: customDirectionality as Directionality});
 
     expect(overlayRef.getDirection()).toBe('rtl');
     customDirectionality.value = 'ltr';
     expect(overlayRef.getDirection()).toBe('ltr');
+  });
+
+  it('should add and remove the overlay host as the ref is being attached and detached', () => {
+    const overlayRef = overlay.create();
+
+    overlayRef.attach(componentPortal);
+    viewContainerFixture.detectChanges();
+
+    expect(overlayRef.hostElement.parentElement)
+        .toBeTruthy('Expected host element to be in the DOM.');
+
+    overlayRef.detach();
+
+    expect(overlayRef.hostElement.parentElement)
+        .toBeTruthy('Expected host element not to have been removed immediately.');
+
+    viewContainerFixture.detectChanges();
+    zone.simulateZoneExit();
+
+    expect(overlayRef.hostElement.parentElement)
+        .toBeFalsy('Expected host element to have been removed once the zone stabilizes.');
+
+    overlayRef.attach(componentPortal);
+    viewContainerFixture.detectChanges();
+
+    expect(overlayRef.hostElement.parentElement)
+        .toBeTruthy('Expected host element to be back in the DOM.');
   });
 
   describe('positioning', () => {
@@ -354,6 +390,7 @@ describe('Overlay', () => {
 
       overlay.create(config).attach(componentPortal);
       viewContainerFixture.detectChanges();
+      zone.simulateZoneExit();
       tick();
 
       expect(overlayContainerElement.querySelectorAll('.fake-positioned').length).toBe(1);
@@ -372,6 +409,70 @@ describe('Overlay', () => {
       tick();
 
       expect(config.positionStrategy.apply).not.toHaveBeenCalled();
+    }));
+
+    it('should be able to swap position strategies', fakeAsync(() => {
+      const firstStrategy = new FakePositionStrategy();
+      const secondStrategy = new FakePositionStrategy();
+
+      [firstStrategy, secondStrategy].forEach(strategy => {
+        spyOn(strategy, 'attach');
+        spyOn(strategy, 'apply');
+        spyOn(strategy, 'dispose');
+      });
+
+      config.positionStrategy = firstStrategy;
+
+      const overlayRef = overlay.create(config);
+      overlayRef.attach(componentPortal);
+      viewContainerFixture.detectChanges();
+      zone.simulateZoneExit();
+      tick();
+
+      expect(firstStrategy.attach).toHaveBeenCalledTimes(1);
+      expect(firstStrategy.apply).toHaveBeenCalledTimes(1);
+
+      expect(secondStrategy.attach).not.toHaveBeenCalled();
+      expect(secondStrategy.apply).not.toHaveBeenCalled();
+
+      overlayRef.updatePositionStrategy(secondStrategy);
+      viewContainerFixture.detectChanges();
+      tick();
+
+      expect(firstStrategy.attach).toHaveBeenCalledTimes(1);
+      expect(firstStrategy.apply).toHaveBeenCalledTimes(1);
+      expect(firstStrategy.dispose).toHaveBeenCalledTimes(1);
+
+      expect(secondStrategy.attach).toHaveBeenCalledTimes(1);
+      expect(secondStrategy.apply).toHaveBeenCalledTimes(1);
+    }));
+
+    it('should not do anything when trying to swap a strategy with itself', fakeAsync(() => {
+      const strategy = new FakePositionStrategy();
+
+      spyOn(strategy, 'attach');
+      spyOn(strategy, 'apply');
+      spyOn(strategy, 'dispose');
+
+      config.positionStrategy = strategy;
+
+      const overlayRef = overlay.create(config);
+      overlayRef.attach(componentPortal);
+      viewContainerFixture.detectChanges();
+      zone.simulateZoneExit();
+      tick();
+
+      expect(strategy.attach).toHaveBeenCalledTimes(1);
+      expect(strategy.apply).toHaveBeenCalledTimes(1);
+      expect(strategy.dispose).not.toHaveBeenCalled();
+
+      overlayRef.updatePositionStrategy(strategy);
+      viewContainerFixture.detectChanges();
+      tick();
+
+      expect(strategy.attach).toHaveBeenCalledTimes(1);
+      expect(strategy.apply).toHaveBeenCalledTimes(1);
+      expect(strategy.dispose).not.toHaveBeenCalled();
     }));
 
   });
@@ -730,9 +831,9 @@ class FakePositionStrategy implements PositionStrategy {
 
 class FakeScrollStrategy implements ScrollStrategy {
   isEnabled = false;
-  overlayRef: OverlayRef;
+  overlayRef: OverlayReference;
 
-  attach(overlayRef: OverlayRef) {
+  attach(overlayRef: OverlayReference) {
     this.overlayRef = overlayRef;
   }
 

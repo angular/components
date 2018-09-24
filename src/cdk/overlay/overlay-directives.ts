@@ -73,7 +73,7 @@ const defaultPositionList: ConnectedPosition[] = [
 export const CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY =
     new InjectionToken<() => ScrollStrategy>('cdk-connected-overlay-scroll-strategy');
 
-/** @docs-private @deprecated @deletion-target 7.0.0 */
+/** @docs-private @deprecated @breaking-change 7.0.0 */
 export function CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_FACTORY(overlay: Overlay):
   () => ScrollStrategy {
   return (config?: RepositionScrollStrategyConfig) => overlay.scrollStrategies.reposition(config);
@@ -128,7 +128,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     this._offsetX = offsetX;
 
     if (this._position) {
-      this._setPositions(this._position);
+      this._updatePositionStrategy(this._position);
     }
   }
 
@@ -139,7 +139,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     this._offsetY = offsetY;
 
     if (this._position) {
-      this._setPositions(this._position);
+      this._updatePositionStrategy(this._position);
     }
   }
 
@@ -157,6 +157,9 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   /** The custom class to be set on the backdrop element. */
   @Input('cdkConnectedOverlayBackdropClass') backdropClass: string;
+
+  /** The custom class to add to the overlay pane element. */
+  @Input('cdkConnectedOverlayPanelClass') panelClass: string | string[];
 
   /** Margin between the overlay and the viewport edges. */
   @Input('cdkConnectedOverlayViewportMargin') viewportMargin: number = 0;
@@ -180,8 +183,10 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   /** Whether the overlay's width and height can be constrained to fit within the viewport. */
   @Input('cdkConnectedOverlayFlexibleDimensions')
-  get flexibleDiemsions() { return this._flexibleDimensions; }
-  set flexibleDiemsions(value: boolean) { this._flexibleDimensions = coerceBooleanProperty(value); }
+  get flexibleDimensions() { return this._flexibleDimensions; }
+  set flexibleDimensions(value: boolean) {
+    this._flexibleDimensions = coerceBooleanProperty(value);
+  }
 
   /** Whether the overlay can grow after the initial open when flexible positioning is turned on. */
   @Input('cdkConnectedOverlayGrowAfterOpen')
@@ -235,20 +240,10 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (this._position) {
-      if (changes['positions']) {
-        this._position.withPositions(this.positions);
-      }
+      this._updatePositionStrategy(this._position);
 
-      if (changes['lockPosition']) {
-        this._position.withLockedPosition(this.lockPosition);
-      }
-
-      if (changes['origin']) {
-        this._position.setOrigin(this.origin.elementRef);
-
-        if (this.open) {
-          this._position.apply();
-        }
+      if (changes['origin'] && this.open) {
+        this._position.apply();
       }
     }
 
@@ -264,6 +259,14 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     }
 
     this._overlayRef = this._overlay.create(this._buildConfig());
+
+    this._overlayRef.keydownEvents().subscribe((event: KeyboardEvent) => {
+      this.overlayKeydown.next(event);
+
+      if (event.keyCode === ESCAPE) {
+        this._detachOverlay();
+      }
+    });
   }
 
   /** Builds the overlay config based on the directive's inputs */
@@ -296,54 +299,48 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       overlayConfig.backdropClass = this.backdropClass;
     }
 
+    if (this.panelClass) {
+      overlayConfig.panelClass = this.panelClass;
+    }
+
     return overlayConfig;
   }
 
-  /** Returns the position strategy of the overlay to be set on the overlay config */
-  private _createPositionStrategy(): FlexibleConnectedPositionStrategy {
-    const strategy = this._overlay.position()
-      .flexibleConnectedTo(this.origin.elementRef)
-      .withFlexibleDimensions(this.flexibleDiemsions)
+  /** Updates the state of a position strategy, based on the values of the directive inputs. */
+  private _updatePositionStrategy(positionStrategy: FlexibleConnectedPositionStrategy) {
+    const positions: ConnectedPosition[] = this.positions.map(currentPosition => ({
+      originX: currentPosition.originX,
+      originY: currentPosition.originY,
+      overlayX: currentPosition.overlayX,
+      overlayY: currentPosition.overlayY,
+      offsetX: currentPosition.offsetX || this.offsetX,
+      offsetY: currentPosition.offsetY || this.offsetY
+    }));
+
+    return positionStrategy
+      .setOrigin(this.origin.elementRef)
+      .withPositions(positions)
+      .withFlexibleDimensions(this.flexibleDimensions)
       .withPush(this.push)
       .withGrowAfterOpen(this.growAfterOpen)
       .withViewportMargin(this.viewportMargin)
       .withLockedPosition(this.lockPosition);
+  }
 
-    this._setPositions(strategy);
+  /** Returns the position strategy of the overlay to be set on the overlay config */
+  private _createPositionStrategy(): FlexibleConnectedPositionStrategy {
+    const strategy = this._overlay.position().flexibleConnectedTo(this.origin.elementRef);
+
+    this._updatePositionStrategy(strategy);
     strategy.positionChanges.subscribe(p => this.positionChange.emit(p));
 
     return strategy;
-  }
-
-  /**
-   * Sets the primary and fallback positions of a positions strategy,
-   * based on the current directive inputs.
-   */
-  private _setPositions(positionStrategy: FlexibleConnectedPositionStrategy) {
-    const positions: ConnectedPosition[] = this.positions.map(pos => ({
-      originX: pos.originX,
-      originY: pos.originY,
-      overlayX: pos.overlayX,
-      overlayY: pos.overlayY,
-      offsetX: pos.offsetX || this.offsetX,
-      offsetY: pos.offsetY || this.offsetY
-    }));
-
-    positionStrategy.withPositions(positions);
   }
 
   /** Attaches the overlay and subscribes to backdrop clicks if backdrop exists */
   private _attachOverlay() {
     if (!this._overlayRef) {
       this._createOverlay();
-
-      this._overlayRef!.keydownEvents().subscribe((event: KeyboardEvent) => {
-        this.overlayKeydown.next(event);
-
-        if (event.keyCode === ESCAPE) {
-          this._detachOverlay();
-        }
-      });
     } else {
       // Update the overlay size, in case the directive's inputs have changed
       this._overlayRef.updateSize({

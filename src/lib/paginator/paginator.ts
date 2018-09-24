@@ -20,7 +20,12 @@ import {
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {MatPaginatorIntl} from './paginator-intl';
-import {HasInitialized, mixinInitialized} from '@angular/material/core';
+import {
+  HasInitialized,
+  HasInitializedCtor,
+  mixinInitialized,
+  ThemePalette,
+} from '@angular/material/core';
 
 /** The default page size if there is no page size and there are no provided page size options. */
 const DEFAULT_PAGE_SIZE = 50;
@@ -35,7 +40,7 @@ export class PageEvent {
 
   /**
    * Index of the page that was selected previously.
-   * @deletion-target 7.0.0 To be made into a required property.
+   * @breaking-change 7.0.0 To be made into a required property.
    */
   previousPageIndex?: number;
 
@@ -49,7 +54,8 @@ export class PageEvent {
 // Boilerplate for applying mixins to MatPaginator.
 /** @docs-private */
 export class MatPaginatorBase {}
-export const _MatPaginatorBase = mixinInitialized(MatPaginatorBase);
+export const _MatPaginatorBase: HasInitializedCtor & typeof MatPaginatorBase =
+    mixinInitialized(MatPaginatorBase);
 
 /**
  * Component to provide navigation between paged information. Displays the size of the current
@@ -71,6 +77,9 @@ export const _MatPaginatorBase = mixinInitialized(MatPaginatorBase);
 export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy, HasInitialized {
   private _initialized: boolean;
   private _intlChanges: Subscription;
+
+  /** Theme color to be used for the underlying form controls. */
+  @Input() color: ThemePalette;
 
   /** The zero-based page index of the displayed list of items. Defaulted to 0. */
   @Input()
@@ -181,7 +190,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
     if (!this.hasNextPage()) { return; }
 
     const previousPageIndex = this.pageIndex;
-    this.pageIndex = this.getNumberOfPages();
+    this.pageIndex = this.getNumberOfPages() - 1;
     this._emitPageEvent(previousPageIndex);
   }
 
@@ -192,13 +201,17 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
 
   /** Whether there is a next page. */
   hasNextPage(): boolean {
-    const numberOfPages = this.getNumberOfPages();
-    return this.pageIndex < numberOfPages && this.pageSize != 0;
+    const maxPageIndex = this.getNumberOfPages() - 1;
+    return this.pageIndex < maxPageIndex && this.pageSize != 0;
   }
 
   /** Calculate the number of pages */
   getNumberOfPages(): number {
-    return Math.ceil(this.length / this.pageSize) - 1;
+    if (!this.pageSize) {
+      return 0;
+    }
+
+    return Math.ceil(this.length / this.pageSize);
   }
 
 

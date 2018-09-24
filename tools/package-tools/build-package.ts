@@ -32,6 +32,9 @@ export class BuildPackage {
   /** Whether the secondary entry-point styles should be copied to the release output. */
   copySecondaryEntryPointStylesToRoot = false;
 
+  /** Whether the build package has schematics or not. */
+  hasSchematics = false;
+
   /** Path to the entry file of the package in the output directory. */
   readonly entryFilePath: string;
 
@@ -39,7 +42,7 @@ export class BuildPackage {
   private bundler = new PackageBundler(this);
 
   /** Secondary entry-points partitioned by their build depth. */
-  private get secondaryEntryPointsByDepth(): string[][] {
+  get secondaryEntryPointsByDepth(): string[][] {
     this.cacheSecondaryEntryPoints();
     return this._secondaryEntryPointsByDepth;
   }

@@ -90,7 +90,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /**
    * @deprecated
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   @Input('mat-menu-trigger-for')
   get _deprecatedMatMenuTriggerFor(): MatMenuPanel {
@@ -113,7 +113,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /**
    * Event emitted when the associated menu is opened.
    * @deprecated Switch to `menuOpened` instead
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   // tslint:disable-next-line:no-output-on-prefix
   @Output() readonly onMenuOpen: EventEmitter<void> = this.menuOpened;
@@ -124,20 +124,20 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   /**
    * Event emitted when the associated menu is closed.
    * @deprecated Switch to `menuClosed` instead
-   * @deletion-target 7.0.0
+   * @breaking-change 7.0.0
    */
   // tslint:disable-next-line:no-output-on-prefix
   @Output() readonly onMenuClose: EventEmitter<void> = this.menuClosed;
 
   constructor(private _overlay: Overlay,
-              private _element: ElementRef,
+              private _element: ElementRef<HTMLElement>,
               private _viewContainerRef: ViewContainerRef,
               @Inject(MAT_MENU_SCROLL_STRATEGY) private _scrollStrategy,
               @Optional() private _parentMenu: MatMenu,
               @Optional() @Self() private _menuItemInstance: MatMenuItem,
               @Optional() private _dir: Directionality,
               // TODO(crisbeto): make the _focusMonitor required when doing breaking changes.
-              // @deletion-target 7.0.0
+              // @breaking-change 7.0.0
               private _focusMonitor?: FocusMonitor) {
 
     if (_menuItemInstance) {
@@ -195,6 +195,8 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       return;
     }
 
+    this._checkMenu();
+
     const overlayRef = this._createOverlay();
     this._setPosition(overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy);
     overlayRef.attach(this._portal);
@@ -222,7 +224,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    */
   focus(origin: FocusOrigin = 'program') {
     if (this._focusMonitor) {
-      this._focusMonitor.focusVia(this._element.nativeElement, origin);
+      this._focusMonitor.focusVia(this._element, origin);
     } else {
       this._element.nativeElement.focus();
     }
@@ -245,9 +247,14 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       if (menu.lazyContent) {
         // Wait for the exit animation to finish before detaching the content.
         menu._animationDone
-          .pipe(filter(event => event.toState === 'void'), take(1))
-          .subscribe(() => {
-            menu.lazyContent!.detach();
+          .pipe(
+            filter(event => event.toState === 'void'),
+            take(1),
+            // Interrupt if the content got re-attached.
+            takeUntil(menu.lazyContent._attached)
+          )
+          .subscribe(() => menu.lazyContent!.detach(), undefined, () => {
+            // No matter whether the content got re-attached, reset the menu.
             this._resetMenu();
           });
       } else {
@@ -353,6 +360,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     return new OverlayConfig({
       positionStrategy: this._overlay.position()
           .flexibleConnectedTo(this._element)
+          .withLockedPosition()
           .withTransformOriginOn('.mat-menu-panel'),
       hasBackdrop: this.menu.hasBackdrop == null ? !this.triggersSubmenu() : this.menu.hasBackdrop,
       backdropClass: this.menu.backdropClass || 'cdk-overlay-transparent-backdrop',

@@ -7,6 +7,7 @@
  */
 import {ElementRef, NgZone} from '@angular/core';
 import {Platform, supportsPassiveEventListeners} from '@angular/cdk/platform';
+import {isFakeMousedownFromScreenReader} from '@angular/cdk/a11y';
 import {RippleRef, RippleState} from './ripple-ref';
 
 export type RippleConfig = {
@@ -16,11 +17,6 @@ export type RippleConfig = {
   persistent?: boolean;
   animation?: RippleAnimationConfig;
   terminateOnPointerUp?: boolean;
-  /**
-   * @deprecated Use the `animation` property instead.
-   * @deletion-target 7.0.0
-   */
-  speedFactor?: number;
 };
 
 /**
@@ -101,7 +97,7 @@ export class RippleRenderer {
 
   constructor(private _target: RippleTarget,
               private _ngZone: NgZone,
-              elementRef: ElementRef,
+              elementRef: ElementRef<HTMLElement>,
               platform: Platform) {
 
     // Only do anything if we're on the browser.
@@ -109,12 +105,14 @@ export class RippleRenderer {
       this._containerElement = elementRef.nativeElement;
 
       // Specify events which need to be registered on the trigger.
-      this._triggerEvents.set('mousedown', this.onMousedown);
-      this._triggerEvents.set('mouseup', this.onPointerUp);
-      this._triggerEvents.set('mouseleave', this.onPointerUp);
+      this._triggerEvents
+        .set('mousedown', this.onMousedown)
+        .set('mouseup', this.onPointerUp)
+        .set('mouseleave', this.onPointerUp)
 
-      this._triggerEvents.set('touchstart', this.onTouchStart);
-      this._triggerEvents.set('touchend', this.onPointerUp);
+        .set('touchstart', this.onTouchStart)
+        .set('touchend', this.onPointerUp)
+        .set('touchcancel', this.onPointerUp);
     }
   }
 
@@ -137,7 +135,7 @@ export class RippleRenderer {
     const radius = config.radius || distanceToFurthestCorner(x, y, containerRect);
     const offsetX = x - containerRect.left;
     const offsetY = y - containerRect.top;
-    const duration = animationConfig.enterDuration / (config.speedFactor || 1);
+    const duration = animationConfig.enterDuration;
 
     const ripple = document.createElement('div');
     ripple.classList.add('mat-ripple-element');
@@ -246,10 +244,13 @@ export class RippleRenderer {
 
   /** Function being called whenever the trigger is being pressed using mouse. */
   private onMousedown = (event: MouseEvent) => {
+    // Screen readers will fire fake mouse events for space/enter. Skip launching a
+    // ripple in this case for consistency with the non-screen-reader experience.
+    const isFakeMousedown = isFakeMousedownFromScreenReader(event);
     const isSyntheticEvent = this._lastTouchStartEvent &&
         Date.now() < this._lastTouchStartEvent + ignoreMouseEventsTimeout;
 
-    if (!this._target.rippleDisabled && !isSyntheticEvent) {
+    if (!this._target.rippleDisabled && !isFakeMousedown && !isSyntheticEvent) {
       this._isPointerDown = true;
       this.fadeInRipple(event.clientX, event.clientY, this._target.rippleConfig);
     }
@@ -264,8 +265,13 @@ export class RippleRenderer {
       this._lastTouchStartEvent = Date.now();
       this._isPointerDown = true;
 
-      this.fadeInRipple(
-          event.touches[0].clientX, event.touches[0].clientY, this._target.rippleConfig);
+      // Use `changedTouches` so we skip any touches where the user put
+      // their finger down, but used another finger to tap the element again.
+      const touches = event.changedTouches;
+
+      for (let i = 0; i < touches.length; i++) {
+        this.fadeInRipple(touches[i].clientX, touches[i].clientY, this._target.rippleConfig);
+      }
     }
   }
 
