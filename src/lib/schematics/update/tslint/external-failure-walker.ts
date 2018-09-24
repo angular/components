@@ -9,6 +9,10 @@
 import {Fix, Replacement, RuleFailure, RuleWalker} from 'tslint';
 import {ExternalResource} from './component-file';
 
+/**
+ * Enhanced TSLint rule walker that makes it easier to create rule failures that don't belong to
+ * the source file that has been passed to the rule walker.
+ */
 export class ExternalFailureWalker extends RuleWalker {
 
   /** Adds a failure for the external resource at the specified position with the given width. */
