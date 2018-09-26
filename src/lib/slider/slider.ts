@@ -323,13 +323,13 @@ export class MatSlider extends _MatSliderMixinBase
         new EventEmitter<number | number[] | null>();
 
     /** The value to be used for display purposes. */
-    get displayValue(): string | number | (string | number)[] {
+    get displayValueLeft(): string | number {
+        if (this.value == null) {
+            return '';
+        }
         if (this.displayWith) {
             if (this.value instanceof Array) {
-                return [
-                    this.displayWith(this.value[0]),
-                    this.displayWith(this.value[1])
-                ];
+                return this.displayWith(this.value[0]);
             } else {
                 return this.displayWith(this.value);
             }
@@ -341,10 +341,7 @@ export class MatSlider extends _MatSliderMixinBase
         if (this.value instanceof Array) {
             if (this._roundToDecimal && this.value &&
                 (this.value[0] % 1 !== 0 || this.value[1] % 1 !== 0)) {
-                return [
-                    this.value[0].toFixed(this._roundToDecimal),
-                    this.value[1].toFixed(this._roundToDecimal)
-                ];
+                return this.value[0].toFixed(this._roundToDecimal);
             }
         } else {
             if (this._roundToDecimal && this.value && this.value % 1 !== 0) {
@@ -352,7 +349,26 @@ export class MatSlider extends _MatSliderMixinBase
             }
         }
 
-        return this.value || 0;
+        return this.value[0] || 0;
+    }
+
+    /** The value to be used for display purposes. */
+    get displayValueRight(): string | number {
+        if (this.value == null) {
+            return '';
+        }
+        if (this.displayWith) {
+            return this.displayWith(this.value[1]);
+        }
+
+        // Note that this could be improved further by rounding something like 0.999 to 1 or
+        // 0.899 to 0.9, however it is very performance sensitive, because it gets called on
+        // every change detection cycle.
+        if (this._roundToDecimal && this.value && this.value != null && this.value[1] % 1 !== 0) {
+            return this.value[1].toFixed(this._roundToDecimal);
+        }
+
+        return this.value[1] || 0;
     }
 
     /** set focus to the host element */
