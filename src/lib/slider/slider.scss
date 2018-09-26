@@ -222,6 +222,10 @@ $mat-slider-focus-ring-size: 30px !default;
     transform-origin: 100% 100%;
   }
 
+  .mat-slider-track-fill.range-slider {
+    transform-origin: 0 0;
+  }
+
   .mat-slider-track-background-left {
     transform-origin: 100% 100%;
   }

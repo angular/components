@@ -494,7 +494,7 @@ export class MatSlider extends _MatSliderMixinBase
             !this._invertAxis : this._invertAxis;
         let offset: number = 0;
         if (this.percent instanceof Array) {
-            offset = (invertOffset ? 1 - this.percent[0] : this.percent[0]) * 100;
+            offset = (invertOffset ? 1 - this.percent[1] : this.percent[0]) * 100;
         } else {
             offset = 0;
         }
