@@ -117,6 +117,9 @@ export const _MatSliderMixinBase:
         '(keydown)': '_onKeydown($event)',
         '(keyup)': '_onKeyup()',
         '(mouseenter)': '_onMouseenter()',
+        '(slide)': '_onSlide($event)',
+        '(slidestart)': '_onSlideStart($event)',
+        '(slideend)': '_onSlideEnd()',
         'class': 'mat-slider',
         'role': 'slider',
         '[tabIndex]': 'tabIndex',
@@ -498,10 +501,19 @@ export class MatSlider extends _MatSliderMixinBase
         } else {
             offset = 0;
         }
-        return {
-            // scale3d avoids some rendering issues in Chrome. See #12071.
-            transform: `translate${axis}(${offset}%) scale3d(${scale})`
-        };
+        const sign = this._shouldInvertMouseCoords() ? '' : '-';
+
+        if (this.isRangeSlider()) {
+            return {
+                // scale3d avoids some rendering issues in Chrome. See #12071.
+                transform: `translate${axis}(${offset}%) scale3d(${scale})`
+            };
+        } else {
+            return {
+                // scale3d avoids some rendering issues in Chrome. See #12071.
+                transform: `translate${axis}(${sign}${this._thumbGap}px) scale3d(${scale})`
+            };
+        }
     }
 
     /** CSS styles for the ticks container element. */
@@ -599,7 +611,7 @@ export class MatSlider extends _MatSliderMixinBase
     /** Reference to the inner slider wrapper element. */
     @ViewChild('sliderWrapper') private _sliderWrapper: ElementRef;
 
-    private currentSliderDir;
+    private currentSliderDir = 'l';
 
     /**
      * Whether mouse events should be converted to a slider position by calculating their distance
@@ -666,6 +678,26 @@ export class MatSlider extends _MatSliderMixinBase
         this._isSliding = false;
         this._focusHostElement();
 
+        if (!this._sliderDimensions) {
+            return;
+        }
+        let offset = this.vertical ? this._sliderDimensions.top : this._sliderDimensions.left;
+        let size = this.vertical ? this._sliderDimensions.height : this._sliderDimensions.width;
+        let posComponent = this.vertical ? event.clientY : event.clientX;
+
+        // The exact value is calculated from the event and used to find the closest snap value.
+        let percent = Number(this._clamp((posComponent - offset) / size));
+
+        if (this._shouldInvertMouseCoords()) {
+            percent = 1 - percent;
+        }
+
+        if (percent <= this.percent[0] + (this.percent[1] - this.percent[0]) / 2) {
+            this.currentSliderDir = 'l';
+        } else {
+            this.currentSliderDir = 'r';
+        }
+
         if (this.currentSliderDir === 'l') {
             this._updateValueFromPositionLeft({x: event.clientX, y: event.clientY});
         } else {
@@ -679,7 +711,7 @@ export class MatSlider extends _MatSliderMixinBase
         }
     }
 
-    _onSlide(event: HammerInput, dir) {
+    _onSlide(event: HammerInput, dir?) {
         if (this.disabled) {
             return;
         }
@@ -687,7 +719,7 @@ export class MatSlider extends _MatSliderMixinBase
         // The slide start event sometimes fails to fire on iOS, so if we're not already in the
         // sliding state, call the slide start handler manually.
         if (!this._isSliding) {
-            this._onSlideStart(null, dir);
+            this._onSlideStart(event, dir);
         }
 
         // Prevent the slide from selecting anything else.
@@ -695,10 +727,14 @@ export class MatSlider extends _MatSliderMixinBase
 
         let oldValue = this.value;
 
-        if (dir === 'l') {
+        if (this.currentSliderDir === 'l') {
             this._updateValueFromPositionLeft({x: event.center.x, y: event.center.y});
-        } else {
+        } else if (this.currentSliderDir === 'r') {
             this._updateValueFromPositionRight({x: event.center.x, y: event.center.y});
+        } else {
+            if (!this.isRangeSlider()) {
+                this._updateValueFromPositionLeft({x: event.center.x, y: event.center.y});
+            }
         }
 
         // Native range elements always emit `input` events when the value changed while sliding.
@@ -707,12 +743,34 @@ export class MatSlider extends _MatSliderMixinBase
         }
     }
 
-    _onSlideStart(event: HammerInput | null, dir) {
+    _onSlideStart(event: HammerInput | null, dir?) {
         if (this.disabled || this._isSliding) {
             return;
         }
 
-        this.currentSliderDir = dir;
+        if (event && !dir) {
+            if (!this._sliderDimensions) {
+                return;
+            }
+            let offset = this.vertical ? this._sliderDimensions.top : this._sliderDimensions.left;
+            let size = this.vertical ? this._sliderDimensions.height : this._sliderDimensions.width;
+            let posComponent = this.vertical ? event.center.y : event.center.x;
+
+            // The exact value is calculated from the event and used to find the closest snap value.
+            let percent = Number(this._clamp((posComponent - offset) / size));
+
+            if (this._shouldInvertMouseCoords()) {
+                percent = 1 - percent;
+            }
+
+            if (percent <= this.percent[0] + (this.percent[1] - this.percent[0]) / 2) {
+                this.currentSliderDir = 'l';
+            } else {
+                this.currentSliderDir = 'r';
+            }
+        } else {
+            this.currentSliderDir = dir;
+        }
 
         // Simulate mouseenter in case this is a mobile device.
         this._onMouseenter();
@@ -722,7 +780,7 @@ export class MatSlider extends _MatSliderMixinBase
         this._valueOnSlideStart = this.value;
 
         if (event) {
-            if (dir === 'l') {
+            if (this.currentSliderDir === 'l') {
                 this._updateValueFromPositionLeft({x: event.center.x, y: event.center.y});
             } else {
                 this._updateValueFromPositionRight({x: event.center.x, y: event.center.y});
