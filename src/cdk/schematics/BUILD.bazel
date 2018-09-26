@@ -6,7 +6,7 @@ load("//:packages.bzl", "VERSION_PLACEHOLDER_REPLACEMENTS")
 
 filegroup(
   name = "schematics_assets",
-  srcs = ["README.md"],
+  srcs = glob(["**/*.json"]) + ["README.md"],
 )
 
 ts_library(
@@ -29,7 +29,9 @@ npm_package(
 jasmine_node_test(
   name = "unit_tests",
   srcs = [":schematics_test_sources"],
-  data = [":schematics_assets"]
+  data = [":schematics_assets"],
+  # TODO(devversion): switch to fine-grained dependencies.
+  node_modules = "@//:node_modules",
 )
 
 ts_library(

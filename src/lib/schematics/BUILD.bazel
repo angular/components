@@ -36,6 +36,8 @@ jasmine_node_test(
   name = "unit_tests",
   srcs = [":schematics_test_sources"],
   data = [":schematics_assets", ":schematics_test_cases"],
+  # TODO(devversion): switch to fine-grained dependencies.
+  node_modules = "@//:node_modules",
 )
 
 ts_library(

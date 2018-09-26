@@ -1,19 +1,16 @@
 workspace(name = "angular_material")
 
-# Add nodejs rules
+# Add TypeScript rules
 http_archive(
-  name = "build_bazel_rules_nodejs",
-  url = "https://github.com/bazelbuild/rules_nodejs/archive/0.10.1.zip",
-  strip_prefix = "rules_nodejs-0.10.1",
-  sha256 = "634206524d90dc03c52392fa3f19a16637d2bcf154910436fe1d669a0d9d7b9c",
+  name = "build_bazel_rules_typescript",
+  url = "https://github.com/bazelbuild/rules_typescript/archive/0.17.0.zip",
+  strip_prefix = "rules_typescript-0.17.0",
+  sha256 = "1626ee2cc9770af6950bfc77dffa027f9aedf330fe2ea2ee7e504428927bd95d",
 )
 
-# NOTE: this rule installs nodejs, npm, and yarn, but does NOT install
-# your npm dependencies. You must still run the package manager.
-load("@build_bazel_rules_nodejs//:defs.bzl", "check_bazel_version", "node_repositories")
-
-check_bazel_version("0.15.0")
-node_repositories(package_json = ["//:package.json"])
+# Fetch transient dependencies of the TypeScript bazel rules.
+load("@build_bazel_rules_typescript//:package.bzl", "rules_typescript_dependencies")
+rules_typescript_dependencies()
 
 # Add sass rules
 http_archive(
@@ -26,19 +23,16 @@ http_archive(
 load("@io_bazel_rules_sass//sass:sass_repositories.bzl", "sass_repositories")
 sass_repositories()
 
-# Add TypeScript rules
-http_archive(
-  name = "build_bazel_rules_typescript",
-  url = "https://github.com/bazelbuild/rules_typescript/archive/0.15.1.zip",
-  strip_prefix = "rules_typescript-0.15.1",
-  sha256 = "3792cc20ef13bb1d1d8b1760894c3320f02a87843e3a04fed7e8e454a75328b6",
-)
+# NOTE: this rule installs nodejs, npm, and yarn, but does NOT install
+# your npm dependencies. You must still run the package manager.
+load("@build_bazel_rules_nodejs//:defs.bzl", "check_bazel_version", "node_repositories")
 
-http_archive(
-  name = "io_bazel_rules_webtesting",
-  url = "https://github.com/bazelbuild/rules_webtesting/archive/7ffe970bbf380891754487f66c3d680c087d67f2.zip",
-  strip_prefix = "rules_webtesting-7ffe970bbf380891754487f66c3d680c087d67f2",
-  sha256 = "4fb0dca8c9a90547891b7ef486592775a523330fc4555c88cd8f09270055c2ce",
+check_bazel_version("0.15.0")
+node_repositories(
+  package_json = ["//:package.json"],
+  # Disabled until we use fine-grained dependencies. This was previously disabled but is now
+  # enabled by default.
+  preserve_symlinks = False,
 )
 
 # Setup TypeScript Bazel workspace
@@ -56,7 +50,6 @@ local_repository(
   name = "rxjs",
   path = "node_modules/rxjs/src",
 )
-
 
 # This commit matches the version of buildifier in angular/ngcontainer
 # If you change this, also check if it matches the version in the angular/ngcontainer
