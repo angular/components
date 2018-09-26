@@ -349,7 +349,11 @@ export class MatSlider extends _MatSliderMixinBase
             }
         }
 
-        return this.value[0] || 0;
+        if (this.value instanceof Array) {
+            return this.value[0] || 0;
+        } else {
+            return this.value || 0;
+        }
     }
 
     /** The value to be used for display purposes. */

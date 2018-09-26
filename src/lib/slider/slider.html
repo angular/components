@@ -18,7 +18,7 @@
             <span class="mat-slider-thumb-label-text">{{displayValueLeft}}</span>
         </div>
     </div>
-    <div class="mat-slider-thumb-container" #rightSlider
+    <div *ngIf="isRangeSlider()" class="mat-slider-thumb-container" #rightSlider
          (slide)="_onSlide($event, 'r')"
          (slidestart)="_onSlideStart($event,'r')"
          (slideend)="_onSlideEnd()"
