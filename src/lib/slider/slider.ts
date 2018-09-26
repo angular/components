@@ -326,7 +326,7 @@ export class MatSlider extends _MatSliderMixinBase
         new EventEmitter<number | number[] | null>();
 
     /** The value to be used for display purposes. */
-    get displayValueLeft(): string | number {
+    get displayValue(): string | number {
         if (this.value == null) {
             return '';
         }
@@ -719,7 +719,8 @@ export class MatSlider extends _MatSliderMixinBase
         // The slide start event sometimes fails to fire on iOS, so if we're not already in the
         // sliding state, call the slide start handler manually.
         if (!this._isSliding) {
-            this._onSlideStart(event, dir);
+            this.calculateInitialSlideDirection(event);
+            this._onSlideStart(null, dir);
         }
 
         // Prevent the slide from selecting anything else.
@@ -749,26 +750,8 @@ export class MatSlider extends _MatSliderMixinBase
         }
 
         if (event && !dir) {
-            if (!this._sliderDimensions) {
-                return;
-            }
-            let offset = this.vertical ? this._sliderDimensions.top : this._sliderDimensions.left;
-            let size = this.vertical ? this._sliderDimensions.height : this._sliderDimensions.width;
-            let posComponent = this.vertical ? event.center.y : event.center.x;
-
-            // The exact value is calculated from the event and used to find the closest snap value.
-            let percent = Number(this._clamp((posComponent - offset) / size));
-
-            if (this._shouldInvertMouseCoords()) {
-                percent = 1 - percent;
-            }
-
-            if (percent <= this.percent[0] + (this.percent[1] - this.percent[0]) / 2) {
-                this.currentSliderDir = 'l';
-            } else {
-                this.currentSliderDir = 'r';
-            }
-        } else {
+            this.calculateInitialSlideDirection(event);
+        } else if (dir) {
             this.currentSliderDir = dir;
         }
 
@@ -1126,5 +1109,27 @@ export class MatSlider extends _MatSliderMixinBase
 
     isRangeSlider() {
         return this.value instanceof Array;
+    }
+
+    private calculateInitialSlideDirection(event: HammerInput) {
+        if (!this._sliderDimensions) {
+            return;
+        }
+        let offset = this.vertical ? this._sliderDimensions.top : this._sliderDimensions.left;
+        let size = this.vertical ? this._sliderDimensions.height : this._sliderDimensions.width;
+        let posComponent = this.vertical ? event.center.y : event.center.x;
+
+        // The exact value is calculated from the event and used to find the closest snap value.
+        let percent = Number(this._clamp((posComponent - offset) / size));
+
+        if (this._shouldInvertMouseCoords()) {
+            percent = 1 - percent;
+        }
+
+        if (percent <= this.percent[0] + (this.percent[1] - this.percent[0]) / 2) {
+            this.currentSliderDir = 'l';
+        } else {
+            this.currentSliderDir = 'r';
+        }
     }
 }
