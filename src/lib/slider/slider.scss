@@ -55,12 +55,20 @@ $mat-slider-focus-ring-size: 30px !default;
               background-color $swift-ease-out-duration $swift-ease-out-timing-function;
 }
 
-.mat-slider-track-background {
+.mat-slider-track-background-left {
   position: absolute;
-  transform-origin: 100% 100%;
+  transform-origin: 0 0;
   transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
               background-color $swift-ease-out-duration $swift-ease-out-timing-function;
 }
+
+.mat-slider-track-background-right {
+  position: absolute;
+  transform-origin: 100% 100%;
+  transition: transform $swift-ease-out-duration $swift-ease-out-timing-function,
+  background-color $swift-ease-out-duration $swift-ease-out-timing-function;
+}
+
 
 .mat-slider-ticks-container {
   position: absolute;
@@ -158,7 +166,8 @@ $mat-slider-focus-ring-size: 30px !default;
 // Slider sliding state.
 .mat-slider-sliding {
   .mat-slider-track-fill,
-  .mat-slider-track-background,
+  .mat-slider-track-background-left,
+  .mat-slider-track-background-right,
   .mat-slider-thumb-container {
     // Must use `transition-duration: 0ms` to disable animation rather than `transition: none`.
     // On Mobile Safari `transition: none` causes the slider thumb to appear stuck.
@@ -213,7 +222,11 @@ $mat-slider-focus-ring-size: 30px !default;
     transform-origin: 100% 100%;
   }
 
-  .mat-slider-track-background {
+  .mat-slider-track-background-left {
+    transform-origin: 100% 100%;
+  }
+
+  .mat-slider-track-background-right {
     transform-origin: 0 0;
   }
 }
@@ -294,7 +307,8 @@ $mat-slider-focus-ring-size: 30px !default;
     transform: scaleX(0);
   }
 
-  .mat-slider-track-background {
+  .mat-slider-track-background-left,
+  .mat-slider-track-background-right {
     height: $mat-slider-track-thickness;
     width: 100%;
     transform: scaleX(1);
@@ -384,7 +398,8 @@ $mat-slider-focus-ring-size: 30px !default;
     transform: scaleY(0);
   }
 
-  .mat-slider-track-background {
+  .mat-slider-track-background-left,
+  .mat-slider-track-background-right {
     height: 100%;
     width: $mat-slider-track-thickness;
     transform: scaleY(1);
@@ -453,8 +468,12 @@ $mat-slider-focus-ring-size: 30px !default;
       transform-origin: 100% 100%;
     }
 
-    .mat-slider-track-background {
+    .mat-slider-track-background-left {
       transform-origin: 0 0;
+    }
+
+    .mat-slider-track-background-right {
+      transform-origin: 100% 100%;
     }
 
     &.mat-slider-axis-inverted {
@@ -462,8 +481,12 @@ $mat-slider-focus-ring-size: 30px !default;
         transform-origin: 0 0;
       }
 
-      .mat-slider-track-background {
+      .mat-slider-track-background-left {
         transform-origin: 100% 100%;
+      }
+
+      .mat-slider-track-background-right {
+        transform-origin: 0 0;
       }
     }
   }
@@ -472,7 +495,8 @@ $mat-slider-focus-ring-size: 30px !default;
 // Slider inside a component with disabled animations.
 .mat-slider._mat-animation-noopable {
   .mat-slider-track-fill,
-  .mat-slider-track-background,
+  .mat-slider-track-background-left,
+  .mat-slider-track-background-right,
   .mat-slider-ticks,
   .mat-slider-thumb-container,
   .mat-slider-focus-ring,

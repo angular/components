@@ -1,5 +1,6 @@
 <h1>Default Slider</h1>
-Label <mat-slider #slidey aria-label="Basic slider"></mat-slider>
+Label
+<mat-slider #slidey aria-label="Basic slider"></mat-slider>
 {{slidey.value}}
 
 <h1>Colors</h1>
@@ -50,7 +51,7 @@ Label <mat-slider #slidey aria-label="Basic slider"></mat-slider>
 
 <h1>Inverted vertical slider</h1>
 <mat-slider vertical invert thumbLabel tickInterval="auto" value="50"
-           aria-label="Inverted vertical slider">
+            aria-label="Inverted vertical slider">
 </mat-slider>
 
 <h1>Set/lost focus to show thumblabel programmatically</h1>
@@ -58,8 +59,11 @@ Label <mat-slider #slidey aria-label="Basic slider"></mat-slider>
 <button (click)="demoSlider.focus()">Focus Slider</button>
 <button (click)="demoSlider.blur()">Blur Slider</button>
 
+<h1>Slider with range</h1>
+<mat-slider [value]="[20, 50]" aria-label="Range slider"></mat-slider>
+
 <mat-tab-group>
-  <mat-tab label="One">
-    <mat-slider min="1" max="5" value="3" aria-label="Slider in a tab"></mat-slider>
-  </mat-tab>
+    <mat-tab label="One">
+        <mat-slider min="1" max="5" value="3" aria-label="Slider in a tab"></mat-slider>
+    </mat-tab>
 </mat-tab-group>
