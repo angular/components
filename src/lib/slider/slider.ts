@@ -136,6 +136,7 @@ export const _MatSliderMixinBase:
         '[class.mat-slider-thumb-label-showing]': 'thumbLabel',
         '[class.mat-slider-vertical]': 'vertical',
         '[class.mat-slider-min-value]': '_isMinValue',
+        '[class.mat-range-slider]': 'isRangeSlider()',
         '[class.mat-slider-hide-last-tick]': 'disabled || _isMinValue && _thumbGap && _invertAxis',
         '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
     },
@@ -1142,8 +1143,8 @@ export class MatSlider extends _MatSliderMixinBase
         this.disabled = isDisabled;
     }
 
-    isRangeSlider() {
-        return this.value instanceof Array;
+    isRangeSlider(): boolean {
+        return (this.value instanceof Array);
     }
 
     private calculateInitialSlideDirection(event: HammerInput) {

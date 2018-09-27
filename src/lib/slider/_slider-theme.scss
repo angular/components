@@ -77,7 +77,7 @@
       background-color: $mat-slider-focus-ring-min-value-color;
     }
 
-    &.mat-slider-thumb-label-showing {
+    &.mat-slider-thumb-label-showing:not(.mat-range-slider) {
       .mat-slider-thumb,
       .mat-slider-thumb-label {
         background-color: $mat-slider-labeled-min-value-thumb-color;
@@ -91,7 +91,7 @@
       }
     }
 
-    &:not(.mat-slider-thumb-label-showing) {
+    &:not(.mat-slider-thumb-label-showing):not(.mat-range-slider) {
       .mat-slider-thumb {
         border-color: $mat-slider-off-color;
         background-color: transparent;
