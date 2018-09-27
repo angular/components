@@ -259,8 +259,9 @@ export class MatSlider extends _MatSliderMixinBase
     }
 
     set value(v: number | number[] | null) {
-        if (v !== this._value) {
-
+        if (v !== this._value ||
+            (v instanceof Array && this._value != null &&
+                (v[0] !== this._value[0] || v[1] !== this._value[1]))) {
             let value: number | number[] | null = null;
             if (v instanceof Array) {
                 value = [coerceNumberProperty(v[0]), coerceNumberProperty(v[1])];
@@ -669,7 +670,13 @@ export class MatSlider extends _MatSliderMixinBase
             return;
         }
 
-        let oldValue = this.value;
+        let oldValue;
+        if (this.value instanceof Array) {
+            oldValue = [this.value[0], this.value[1]];
+        } else {
+            oldValue = this.value;
+        }
+
         this._isSliding = false;
         this._focusHostElement();
 
@@ -700,9 +707,16 @@ export class MatSlider extends _MatSliderMixinBase
         }
 
         // Emit a change and input event if the value changed.
-        if (oldValue != this.value) {
-            this._emitInputEvent();
-            this._emitChangeEvent();
+        if (this.value instanceof Array) {
+            if (oldValue[0] != this.value[0] || oldValue[1] != this.value[1]) {
+                this._emitInputEvent();
+                this._emitChangeEvent();
+            }
+        } else {
+            if (oldValue != this.value) {
+                this._emitInputEvent();
+                this._emitChangeEvent();
+            }
         }
     }
 
@@ -721,7 +735,12 @@ export class MatSlider extends _MatSliderMixinBase
         // Prevent the slide from selecting anything else.
         event.preventDefault();
 
-        let oldValue = this.value;
+        let oldValue;
+        if (this.value instanceof Array) {
+            oldValue = [this.value[0], this.value[1]];
+        } else {
+            oldValue = this.value;
+        }
 
         if (this.currentSliderDir === 'l') {
             this._updateValueFromPositionLeft({x: event.center.x, y: event.center.y});
@@ -734,8 +753,14 @@ export class MatSlider extends _MatSliderMixinBase
         }
 
         // Native range elements always emit `input` events when the value changed while sliding.
-        if (oldValue != this.value) {
-            this._emitInputEvent();
+        if (this.value instanceof Array) {
+            if (oldValue[0] != this.value[0] || oldValue[1] != this.value[1]) {
+                this._emitInputEvent();
+            }
+        } else {
+            if (oldValue != this.value) {
+                this._emitInputEvent();
+            }
         }
     }
 
@@ -758,10 +783,14 @@ export class MatSlider extends _MatSliderMixinBase
         this._valueOnSlideStart = this.value;
 
         if (event) {
-            if (this.currentSliderDir === 'l') {
-                this._updateValueFromPositionLeft({x: event.center.x, y: event.center.y});
+            if (this.value instanceof Array) {
+                if (this.currentSliderDir === 'l') {
+                    this._updateValueFromPositionLeft({x: event.center.x, y: event.center.y});
+                } else if (this.currentSliderDir === 'r') {
+                    this._updateValueFromPositionRight({x: event.center.x, y: event.center.y});
+                }
             } else {
-                this._updateValueFromPositionRight({x: event.center.x, y: event.center.y});
+                this._updateValueFromPositionLeft({x: event.center.x, y: event.center.y});
             }
             event.preventDefault();
         }
@@ -792,7 +821,12 @@ export class MatSlider extends _MatSliderMixinBase
             return;
         }
 
-        let oldValue = this.value;
+        let oldValue;
+        if (this.value instanceof Array) {
+            oldValue = [this.value[0], this.value[1]];
+        } else {
+            oldValue = this.value;
+        }
 
         switch (event.keyCode) {
             case PAGE_UP:
@@ -834,9 +868,16 @@ export class MatSlider extends _MatSliderMixinBase
                 return;
         }
 
-        if (oldValue != this.value) {
-            this._emitInputEvent();
-            this._emitChangeEvent();
+        if (this.value instanceof Array) {
+            if (oldValue[0] != this.value[0] || oldValue[1] != this.value[1]) {
+                this._emitInputEvent();
+                this._emitChangeEvent();
+            }
+        } else {
+            if (oldValue != this.value) {
+                this._emitInputEvent();
+                this._emitChangeEvent();
+            }
         }
 
         this._isSliding = true;
@@ -884,13 +925,13 @@ export class MatSlider extends _MatSliderMixinBase
         // follows the user's pointer closer.
         if (percent === 0) {
             if (this.value instanceof Array) {
-                this.value[0] = this.min;
+                this.value = [this.min, this.value[1]];
             } else {
                 this.value = this.min;
             }
         } else if (percent === 1) {
             if (this.value instanceof Array) {
-                this.value[0] = this.max;
+                this.value = [this.max, this.value[1]];
             } else {
                 this.value = this.max;
             }
@@ -937,13 +978,13 @@ export class MatSlider extends _MatSliderMixinBase
         // follows the user's pointer closer.
         if (percent === 0) {
             if (this.value instanceof Array) {
-                this.value[1] = this.min;
+                this.value = [this.value[0], this.min];
             } else {
                 this.value = this.min;
             }
         } else if (percent === 1) {
             if (this.value instanceof Array) {
-                this.value[1] = this.max;
+                this.value = [this.value[0], this.max];
             } else {
                 this.value = this.max;
             }
