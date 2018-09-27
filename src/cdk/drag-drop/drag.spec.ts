@@ -569,6 +569,45 @@ describe('CdkDrag', () => {
           .toEqual(['One', 'Two', 'Zero', 'Three']);
     }));
 
+    it('should dispatch the correct `dropped` event in RTL horizontal drop zone', fakeAsync(() => {
+      const fixture = createComponent(DraggableInHorizontalDropZone, [{
+        provide: Directionality,
+        useValue: ({value: 'rtl'})
+      }]);
+
+      fixture.nativeElement.setAttribute('dir', 'rtl');
+      fixture.detectChanges();
+      const dragItems = fixture.componentInstance.dragItems;
+
+      expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
+          .toEqual(['Zero', 'One', 'Two', 'Three']);
+
+      const firstItem = dragItems.first;
+      const thirdItemRect = dragItems.toArray()[2].element.nativeElement.getBoundingClientRect();
+
+      dragElementViaMouse(fixture, firstItem.element.nativeElement,
+          thirdItemRect.right - 1, thirdItemRect.top + 1);
+      flush();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
+
+      const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
+
+      // Assert the event like this, rather than `toHaveBeenCalledWith`, because Jasmine will
+      // go into an infinite loop trying to stringify the event, if the test fails.
+      expect(event).toEqual({
+        previousIndex: 0,
+        currentIndex: 2,
+        item: firstItem,
+        container: fixture.componentInstance.dropInstance,
+        previousContainer: fixture.componentInstance.dropInstance
+      });
+
+      expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
+          .toEqual(['One', 'Two', 'Zero', 'Three']);
+    }));
+
     it('should not move items in a horizontal list if pointer is too far away', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalDropZone);
       fixture.detectChanges();
@@ -1505,6 +1544,49 @@ describe('CdkDrag', () => {
           'Expected DOM element to be returned to first container');
       expect(item.dropContainer).toBe(fixture.componentInstance.dropInstances.first,
           'Expected CdkDrag to be returned to first container in memory');
+    }));
+
+    it('should be able to return an element to its initial container in the same sequence, ' +
+      'even if it is not connected to the current container', fakeAsync(() => {
+        const fixture = createComponent(ConnectedDropZones);
+        fixture.detectChanges();
+
+        const groups = fixture.componentInstance.groupedDragItems;
+        const dropInstances = fixture.componentInstance.dropInstances.toArray();
+        const dropZones = dropInstances.map(d => d.element.nativeElement);
+        const item = groups[0][1];
+        const initialRect = item.element.nativeElement.getBoundingClientRect();
+        const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+
+        // Change the `connectedTo` so the containers are only connected one-way.
+        dropInstances[0].connectedTo = dropInstances[1];
+        dropInstances[1].connectedTo = [];
+
+        dispatchMouseEvent(item.element.nativeElement, 'mousedown');
+        fixture.detectChanges();
+
+        const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
+
+        expect(placeholder).toBeTruthy();
+        expect(dropZones[0].contains(placeholder))
+            .toBe(true, 'Expected placeholder to be inside the first container.');
+
+        dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+        fixture.detectChanges();
+
+        expect(dropZones[1].contains(placeholder))
+            .toBe(true, 'Expected placeholder to be inside second container.');
+
+        dispatchMouseEvent(document, 'mousemove', initialRect.left + 1, initialRect.top + 1);
+        fixture.detectChanges();
+
+        expect(dropZones[0].contains(placeholder))
+            .toBe(true, 'Expected placeholder to be back inside first container.');
+
+        dispatchMouseEvent(document, 'mouseup');
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
     }));
 
   });

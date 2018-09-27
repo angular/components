@@ -5,7 +5,15 @@ import {
   wrappedErrorMessage,
   MockNgZone,
 } from '@angular/cdk/testing';
-import {ChangeDetectionStrategy, Component, ViewChild, Type, Provider, NgZone} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewChild,
+  Type,
+  Provider,
+  NgZone,
+  Directive,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {
   FormControl,
@@ -35,8 +43,7 @@ import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatTabsModule} from '@angular/material/tabs';
-import {MatInputModule} from './index';
-import {MatInput} from './input';
+import {MatInputModule, MatInput, MAT_INPUT_VALUE_ACCESSOR} from './index';
 import {MatTextareaAutosize} from './autosize';
 
 describe('MatInput without forms', () => {
@@ -218,51 +225,51 @@ describe('MatInput without forms', () => {
     const labelElement: HTMLInputElement =
         fixture.debugElement.query(By.css('label')).nativeElement;
 
-        expect(inputElement.id).toBe('test-id');
-        expect(labelElement.getAttribute('for')).toBe('test-id');
-      }));
+    expect(inputElement.id).toBe('test-id');
+    expect(labelElement.getAttribute('for')).toBe('test-id');
+  }));
 
-      it('validates there\'s only one hint label per side', fakeAsync(() => {
-        let fixture = createComponent(MatInputInvalidHintTestController);
+  it('validates there\'s only one hint label per side', fakeAsync(() => {
+    let fixture = createComponent(MatInputInvalidHintTestController);
 
-        expect(() => {
-          try {
-            fixture.detectChanges();
-            flush();
-          } catch {
-            flush();
-          }
-        }).toThrowError(
-            wrappedErrorMessage(getMatFormFieldDuplicatedHintError('start')));
-      }));
+    expect(() => {
+      try {
+        fixture.detectChanges();
+        flush();
+      } catch {
+        flush();
+      }
+    }).toThrowError(
+        wrappedErrorMessage(getMatFormFieldDuplicatedHintError('start')));
+  }));
 
-      it('validates there\'s only one hint label per side (attribute)', fakeAsync(() => {
-        let fixture = createComponent(MatInputInvalidHint2TestController);
+  it('validates there\'s only one hint label per side (attribute)', fakeAsync(() => {
+    let fixture = createComponent(MatInputInvalidHint2TestController);
 
-        expect(() => {
-          try {
-            fixture.detectChanges();
-            flush();
-          } catch {
-            flush();
-          }
-        }).toThrowError(
-            wrappedErrorMessage(getMatFormFieldDuplicatedHintError('start')));
-      }));
+    expect(() => {
+      try {
+        fixture.detectChanges();
+        flush();
+      } catch {
+        flush();
+      }
+    }).toThrowError(
+        wrappedErrorMessage(getMatFormFieldDuplicatedHintError('start')));
+  }));
 
-      it('validates there\'s only one placeholder', fakeAsync(() => {
-        let fixture = createComponent(MatInputInvalidPlaceholderTestController);
+  it('validates there\'s only one placeholder', fakeAsync(() => {
+    let fixture = createComponent(MatInputInvalidPlaceholderTestController);
 
-        expect(() => {
-          try {
-            fixture.detectChanges();
-            flush();
-          } catch {
-            flush();
-          }
-        }).toThrowError(
-            wrappedErrorMessage(getMatFormFieldPlaceholderConflictError()));
-      }));
+    expect(() => {
+      try {
+        fixture.detectChanges();
+        flush();
+      } catch {
+        flush();
+      }
+    }).toThrowError(
+        wrappedErrorMessage(getMatFormFieldPlaceholderConflictError()));
+  }));
 
   it('validates that matInput child is present', fakeAsync(() => {
     let fixture = createComponent(MatInputMissingMatInputTestController);
@@ -461,6 +468,15 @@ describe('MatInput without forms', () => {
     expect(formFieldEl.classList.contains('mat-form-field-disabled'))
         .toBe(true, `Expected form field to look disabled after property is set.`);
     expect(selectEl.disabled).toBe(true);
+  }));
+
+  it('should add a class to the form field if it has a native select', fakeAsync(() => {
+    const fixture = createComponent(MatInputSelect);
+    fixture.detectChanges();
+
+    const formField = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
+
+    expect(formField.classList).toContain('mat-form-field-type-mat-native-select');
   }));
 
   it('supports the required attribute as binding', fakeAsync(() => {
@@ -871,6 +887,28 @@ describe('MatInput without forms', () => {
     expect(container.classList).toContain('mat-form-field-hide-placeholder');
     expect(container.classList).not.toContain('mat-form-field-should-float');
   });
+
+  it('should not add the native select class if the control is not a native select', () => {
+    const fixture = createComponent(MatInputWithId);
+    fixture.detectChanges();
+    const formField = fixture.debugElement.query(By.css('mat-form-field')).nativeElement;
+
+    expect(formField.classList).not.toContain('mat-form-field-type-mat-native-select');
+  });
+
+  it('should use the native input value when determining whether ' +
+    'the element is empty with a custom accessor', fakeAsync(() => {
+      let fixture = createComponent(MatInputWithCustomAccessor, [], [], [CustomMatInputAccessor]);
+      fixture.detectChanges();
+      let label = fixture.debugElement.query(By.css('label')).nativeElement;
+
+      expect(label.classList).toContain('mat-form-field-empty');
+
+      fixture.nativeElement.querySelector('input').value = 'abc';
+      fixture.detectChanges();
+
+      expect(label.classList).not.toContain('mat-form-field-empty');
+    }));
 
 });
 
@@ -1351,7 +1389,8 @@ describe('MatInput with textarea autosize', () => {
 
 function createComponent<T>(component: Type<T>,
                             providers: Provider[] = [],
-                            imports: any[] = []): ComponentFixture<T> {
+                            imports: any[] = [],
+                            declarations: any[] = []): ComponentFixture<T> {
   TestBed.configureTestingModule({
     imports: [
       FormsModule,
@@ -1362,7 +1401,7 @@ function createComponent<T>(component: Type<T>,
       ReactiveFormsModule,
       ...imports
     ],
-    declarations: [component],
+    declarations: [component, ...declarations],
     providers,
   }).compileComponents();
 
@@ -1859,3 +1898,26 @@ class MatInputSelectWithLabel {}
     </mat-form-field>`
 })
 class MatInputSelectWithInnerHtml {}
+
+@Component({
+  template: `
+    <mat-form-field floatLabel="never">
+      <input matInput customInputAccessor placeholder="Placeholder">
+    </mat-form-field>`
+})
+class MatInputWithCustomAccessor {}
+
+
+/** Custom component that never has a value. Used for testing the `MAT_INPUT_VALUE_ACCESSOR`. */
+@Directive({
+  selector: 'input[customInputAccessor]',
+  providers: [{
+    provide: MAT_INPUT_VALUE_ACCESSOR,
+    useExisting: CustomMatInputAccessor
+  }]
+})
+class CustomMatInputAccessor {
+  get value() { return this._value; }
+  set value(_value: any) {}
+  private _value = null;
+}

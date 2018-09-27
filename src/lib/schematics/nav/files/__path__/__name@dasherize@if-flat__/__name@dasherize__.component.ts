@@ -29,7 +29,7 @@ export class <%= classify(name) %>Component implements OnDestroy {
         takeUntil(this._destroyed)
       ).subscribe(result => {
         this.isHandset = result.matches;
-    });
+      });
   }
 
   ngOnDestroy() {

@@ -7,3 +7,5 @@
  */
 
 export * from './utils';
+export * from './testing';
+export * from './ng-update/public-api';
