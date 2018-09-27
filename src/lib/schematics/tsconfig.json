@@ -3,7 +3,7 @@
     "lib": ["es2017"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "../../../dist/schematics",
+    "outDir": "../../../dist/packages/material/schematics",
     "noEmitOnError": false,
     "strictNullChecks": true,
     "skipDefaultLibCheck": true,
@@ -13,7 +13,11 @@
     "types": [
       "jasmine",
       "node"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@angular/cdk/schematics": ["../../cdk/schematics/"]
+    }
   },
   "exclude": [
     "**/*.spec.ts",
@@ -22,7 +26,7 @@
     // Exclude template files that will be copied by the schematics. Those are not valid TS.
     "*/files/**/*",
     // Exclude all test-case files because those should not be included in the schematics output.
-    "update/test-cases/**/*"
+    "ng-update/test-cases/**/*"
   ],
   "bazelOptions": {
     "suppressTsconfigOverrideWarnings": true

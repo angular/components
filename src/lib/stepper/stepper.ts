@@ -7,7 +7,13 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {CdkStep, CdkStepper, StepContentPositionState} from '@angular/cdk/stepper';
+import {
+  CdkStep,
+  CdkStepper,
+  StepContentPositionState,
+  MAT_STEPPER_GLOBAL_OPTIONS,
+  StepperOptions
+} from '@angular/cdk/stepper';
 import {AnimationEvent} from '@angular/animations';
 import {
   AfterContentInit,
@@ -21,6 +27,7 @@ import {
   EventEmitter,
   forwardRef,
   Inject,
+  Input,
   Optional,
   Output,
   QueryList,
@@ -32,9 +39,10 @@ import {
 import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {DOCUMENT} from '@angular/common';
 import {ErrorStateMatcher} from '@angular/material/core';
+import {takeUntil} from 'rxjs/operators';
+
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
-import {takeUntil} from 'rxjs/operators';
 import {matStepperAnimations} from './stepper-animations';
 import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
 
@@ -54,9 +62,11 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
   /** Content for step label given by `<ng-template matStepLabel>`. */
   @ContentChild(MatStepLabel) stepLabel: MatStepLabel;
 
+  /** @breaking-change 8.0.0 remove the `?` after `stepperOptions` */
   constructor(@Inject(forwardRef(() => MatStepper)) stepper: MatStepper,
-              @SkipSelf() private _errorStateMatcher: ErrorStateMatcher) {
-    super(stepper);
+              @SkipSelf() private _errorStateMatcher: ErrorStateMatcher,
+              @Optional() @Inject(MAT_STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions) {
+    super(stepper, stepperOptions);
   }
 
   /** Custom error state matcher that additionally checks for validity of interacted form. */
@@ -94,14 +104,7 @@ export class MatStepper extends _CdkStepper implements AfterContentInit {
 
   ngAfterContentInit() {
     const icons = this._icons.toArray();
-
-    ['edit', 'done', 'number'].forEach(name => {
-      const override = icons.find(icon => icon.name === name);
-
-      if (override) {
-        this._iconOverrides[name] = override.templateRef;
-      }
-    });
+    icons.forEach(({name, templateRef}) => this._iconOverrides[name] = templateRef);
 
     // Mark the component for change detection whenever the content children query changes
     this._steps.changes.pipe(takeUntil(this._destroyed)).subscribe(() => this._stateChanged());
@@ -123,6 +126,8 @@ export class MatStepper extends _CdkStepper implements AfterContentInit {
   inputs: ['selectedIndex'],
   host: {
     'class': 'mat-stepper-horizontal',
+    '[class.mat-stepper-label-position-end]': 'labelPosition == "end"',
+    '[class.mat-stepper-label-position-bottom]': 'labelPosition == "bottom"',
     'aria-orientation': 'horizontal',
     'role': 'tablist',
   },
@@ -131,7 +136,11 @@ export class MatStepper extends _CdkStepper implements AfterContentInit {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatHorizontalStepper extends MatStepper { }
+export class MatHorizontalStepper extends MatStepper {
+  /** Whether the label should display in bottom or end position. */
+  @Input()
+  labelPosition: 'bottom' | 'end' = 'end';
+}
 
 @Component({
   moduleId: module.id,

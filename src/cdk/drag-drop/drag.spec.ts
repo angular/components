@@ -683,6 +683,39 @@ describe('CdkDrag', () => {
           .toBeFalsy('Expected preview to be removed from the DOM if the transition timed out');
     }));
 
+    it('should reset immediately when failed drag happens after a successful one', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+
+      const itemInstance = fixture.componentInstance.dragItems.toArray()[1];
+      const item = itemInstance.element.nativeElement;
+      const spy = jasmine.createSpy('dropped spy');
+      const subscription = itemInstance.dropped.asObservable().subscribe(spy);
+
+      // Do an initial drag and drop sequence.
+      dragElementViaMouse(fixture, item, 50, 50);
+      tick(0); // Important to tick with 0 since we don't want to flush any pending timeouts.
+
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      // Start another drag.
+      dispatchMouseEvent(item, 'mousedown');
+      fixture.detectChanges();
+
+      // Add a duration since the tests won't include one.
+      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      preview.style.transitionDuration = '500ms';
+
+      // Dispatch the mouseup immediately to simulate the user not moving the element.
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
+      tick(0); // Important to tick with 0 since we don't want to flush any pending timeouts.
+
+      expect(spy).toHaveBeenCalledTimes(2);
+
+      subscription.unsubscribe();
+    }));
+
     it('should not wait for transition that are not on the `transform` property', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
@@ -1472,6 +1505,49 @@ describe('CdkDrag', () => {
           'Expected DOM element to be returned to first container');
       expect(item.dropContainer).toBe(fixture.componentInstance.dropInstances.first,
           'Expected CdkDrag to be returned to first container in memory');
+    }));
+
+    it('should be able to return an element to its initial container in the same sequence, ' +
+      'even if it is not connected to the current container', fakeAsync(() => {
+        const fixture = createComponent(ConnectedDropZones);
+        fixture.detectChanges();
+
+        const groups = fixture.componentInstance.groupedDragItems;
+        const dropInstances = fixture.componentInstance.dropInstances.toArray();
+        const dropZones = dropInstances.map(d => d.element.nativeElement);
+        const item = groups[0][1];
+        const initialRect = item.element.nativeElement.getBoundingClientRect();
+        const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+
+        // Change the `connectedTo` so the containers are only connected one-way.
+        dropInstances[0].connectedTo = dropInstances[1];
+        dropInstances[1].connectedTo = [];
+
+        dispatchMouseEvent(item.element.nativeElement, 'mousedown');
+        fixture.detectChanges();
+
+        const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
+
+        expect(placeholder).toBeTruthy();
+        expect(dropZones[0].contains(placeholder))
+            .toBe(true, 'Expected placeholder to be inside the first container.');
+
+        dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+        fixture.detectChanges();
+
+        expect(dropZones[1].contains(placeholder))
+            .toBe(true, 'Expected placeholder to be inside second container.');
+
+        dispatchMouseEvent(document, 'mousemove', initialRect.left + 1, initialRect.top + 1);
+        fixture.detectChanges();
+
+        expect(dropZones[0].contains(placeholder))
+            .toBe(true, 'Expected placeholder to be back inside first container.');
+
+        dispatchMouseEvent(document, 'mouseup');
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
     }));
 
   });

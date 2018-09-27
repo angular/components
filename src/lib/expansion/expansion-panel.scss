@@ -5,7 +5,6 @@
 .mat-expansion-panel {
   $border-radius: 4px;
 
-  @include mat-overridable-elevation(2);
   box-sizing: content-box;
   display: block;
   margin: 0;
@@ -31,6 +30,12 @@
 
   @include cdk-high-contrast {
     outline: solid 1px;
+  }
+
+  &.ng-animate-disabled,
+  .ng-animate-disabled &,
+  &._mat-animation-noopable {
+    transition: none;
   }
 }
 

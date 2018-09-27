@@ -17,6 +17,8 @@ import {
   TemplatePortal,
   CdkPortal
 } from '@angular/cdk/portal';
+import {Location} from '@angular/common';
+import {SpyLocation} from '@angular/common/testing';
 import {
   Overlay,
   OverlayContainer,
@@ -38,6 +40,7 @@ describe('Overlay', () => {
   let viewContainerFixture: ComponentFixture<TestComponentWithTemplatePortals>;
   let dir: Direction;
   let zone: MockNgZone;
+  let mockLocation: SpyLocation;
 
   beforeEach(async(() => {
     dir = 'ltr';
@@ -56,21 +59,27 @@ describe('Overlay', () => {
           provide: NgZone,
           useFactory: () => zone = new MockNgZone()
         },
+        {
+          provide: Location,
+          useClass: SpyLocation
+        },
       ],
     }).compileComponents();
   }));
 
-  beforeEach(inject([Overlay, OverlayContainer], (o: Overlay, oc: OverlayContainer) => {
-    overlay = o;
-    overlayContainer = oc;
-    overlayContainerElement = oc.getContainerElement();
+  beforeEach(inject([Overlay, OverlayContainer, Location],
+    (o: Overlay, oc: OverlayContainer, l: Location) => {
+      overlay = o;
+      overlayContainer = oc;
+      overlayContainerElement = oc.getContainerElement();
 
-    let fixture = TestBed.createComponent(TestComponentWithTemplatePortals);
-    fixture.detectChanges();
-    templatePortal = fixture.componentInstance.templatePortal;
-    componentPortal = new ComponentPortal(PizzaMsg, fixture.componentInstance.viewContainerRef);
-    viewContainerFixture = fixture;
-  }));
+      const fixture = TestBed.createComponent(TestComponentWithTemplatePortals);
+      fixture.detectChanges();
+      templatePortal = fixture.componentInstance.templatePortal;
+      componentPortal = new ComponentPortal(PizzaMsg, fixture.componentInstance.viewContainerRef);
+      viewContainerFixture = fixture;
+      mockLocation = l as SpyLocation;
+    }));
 
   afterEach(() => {
     overlayContainer.ngOnDestroy();
@@ -378,6 +387,17 @@ describe('Overlay', () => {
         .toBeTruthy('Expected host element to be back in the DOM.');
   });
 
+  it('should be able to dispose an overlay on navigation', () => {
+    const overlayRef = overlay.create({disposeOnNavigation: true});
+    overlayRef.attach(componentPortal);
+
+    expect(overlayContainerElement.textContent).toContain('Pizza');
+
+    mockLocation.simulateUrlPop('');
+    expect(overlayContainerElement.childNodes.length).toBe(0);
+    expect(overlayContainerElement.textContent).toBe('');
+  });
+
   describe('positioning', () => {
     let config: OverlayConfig;
 
@@ -409,6 +429,70 @@ describe('Overlay', () => {
       tick();
 
       expect(config.positionStrategy.apply).not.toHaveBeenCalled();
+    }));
+
+    it('should be able to swap position strategies', fakeAsync(() => {
+      const firstStrategy = new FakePositionStrategy();
+      const secondStrategy = new FakePositionStrategy();
+
+      [firstStrategy, secondStrategy].forEach(strategy => {
+        spyOn(strategy, 'attach');
+        spyOn(strategy, 'apply');
+        spyOn(strategy, 'dispose');
+      });
+
+      config.positionStrategy = firstStrategy;
+
+      const overlayRef = overlay.create(config);
+      overlayRef.attach(componentPortal);
+      viewContainerFixture.detectChanges();
+      zone.simulateZoneExit();
+      tick();
+
+      expect(firstStrategy.attach).toHaveBeenCalledTimes(1);
+      expect(firstStrategy.apply).toHaveBeenCalledTimes(1);
+
+      expect(secondStrategy.attach).not.toHaveBeenCalled();
+      expect(secondStrategy.apply).not.toHaveBeenCalled();
+
+      overlayRef.updatePositionStrategy(secondStrategy);
+      viewContainerFixture.detectChanges();
+      tick();
+
+      expect(firstStrategy.attach).toHaveBeenCalledTimes(1);
+      expect(firstStrategy.apply).toHaveBeenCalledTimes(1);
+      expect(firstStrategy.dispose).toHaveBeenCalledTimes(1);
+
+      expect(secondStrategy.attach).toHaveBeenCalledTimes(1);
+      expect(secondStrategy.apply).toHaveBeenCalledTimes(1);
+    }));
+
+    it('should not do anything when trying to swap a strategy with itself', fakeAsync(() => {
+      const strategy = new FakePositionStrategy();
+
+      spyOn(strategy, 'attach');
+      spyOn(strategy, 'apply');
+      spyOn(strategy, 'dispose');
+
+      config.positionStrategy = strategy;
+
+      const overlayRef = overlay.create(config);
+      overlayRef.attach(componentPortal);
+      viewContainerFixture.detectChanges();
+      zone.simulateZoneExit();
+      tick();
+
+      expect(strategy.attach).toHaveBeenCalledTimes(1);
+      expect(strategy.apply).toHaveBeenCalledTimes(1);
+      expect(strategy.dispose).not.toHaveBeenCalled();
+
+      overlayRef.updatePositionStrategy(strategy);
+      viewContainerFixture.detectChanges();
+      tick();
+
+      expect(strategy.attach).toHaveBeenCalledTimes(1);
+      expect(strategy.apply).toHaveBeenCalledTimes(1);
+      expect(strategy.dispose).not.toHaveBeenCalled();
     }));
 
   });

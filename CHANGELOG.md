@@ -1,3 +1,117 @@
+<a name="7.0.0-beta.2"></a>
+# 7.0.0-beta.2 (2018-09-20)
+
+
+### Highlights
+
+* This release includes a number of changes to bring the components more in line with the 2018
+  Material Design update. If you are overriding the default styles, you may find that you need to
+  tweak them to look right after these changes.
+
+### Bug Fixes
+
+* **card:** better scaling for avatar image ([#13032](https://github.com/angular/material2/issues/13032)) ([19ce1a1](https://github.com/angular/material2/commit/19ce1a1))
+* **checkbox, slide-toggle:** no margin if content is projected ([#12973](https://github.com/angular/material2/issues/12973)) ([4636a98](https://github.com/angular/material2/commit/4636a98)), closes [#4720](https://github.com/angular/material2/issues/4720)
+* **chips:** arrow keys resetting focus to first chip ([#12987](https://github.com/angular/material2/issues/12987)) ([959c827](https://github.com/angular/material2/commit/959c827))
+* **dialog:** clean up open dialogs on destroy ([#12835](https://github.com/angular/material2/issues/12835)) ([4e15ba9](https://github.com/angular/material2/commit/4e15ba9))
+* **expansion:** MatExpansionHeader transition animations ([#13088](https://github.com/angular/material2/issues/13088)) ([4a96539](https://github.com/angular/material2/commit/4a96539)), closes [#11990](https://github.com/angular/material2/issues/11990) [#11990](https://github.com/angular/material2/issues/11990) [#11990](https://github.com/angular/material2/issues/11990) [#11990](https://github.com/angular/material2/issues/11990) [#11990](https://github.com/angular/material2/issues/11990) [#11990](https://github.com/angular/material2/issues/11990) [#11990](https://github.com/angular/material2/issues/11990) [#11990](https://github.com/angular/material2/issues/11990)
+* **form-field:** Make labels show while printing ([#12766](https://github.com/angular/material2/issues/12766)) ([e88271a](https://github.com/angular/material2/commit/e88271a))
+* **table:** incorrect padding and text alignment in rtl ([#12280](https://github.com/angular/material2/issues/12280)) ([2b89342](https://github.com/angular/material2/commit/2b89342)), closes [#12276](https://github.com/angular/material2/issues/12276)
+
+
+### Features
+
+* **button:** align with 2018 material design spec ([#13083](https://github.com/angular/material2/issues/13083)) ([79801e0](https://github.com/angular/material2/commit/79801e0)), closes [#12537](https://github.com/angular/material2/issues/12537) [#13011](https://github.com/angular/material2/issues/13011)
+* **card:** align with 2018 material design spec ([#12731](https://github.com/angular/material2/issues/12731)) ([484dc8b](https://github.com/angular/material2/commit/484dc8b))
+* **checkbox:** align with 2018 material design spec ([#12493](https://github.com/angular/material2/issues/12493)) ([95acccc](https://github.com/angular/material2/commit/95acccc))
+* **chips:** align with 2018 material design spec ([#12838](https://github.com/angular/material2/issues/12838)) ([3cc9c67](https://github.com/angular/material2/commit/3cc9c67))
+* **dialog:** align with 2018 material design spec ([#12705](https://github.com/angular/material2/issues/12705)) ([00b7233](https://github.com/angular/material2/commit/00b7233))
+* **elevation:** move elevation rules into theme stylesheets ([#11344](https://github.com/angular/material2/issues/11344)) ([9c075f5](https://github.com/angular/material2/commit/9c075f5)), closes [#11343](https://github.com/angular/material2/issues/11343)
+
+
+### BREAKING CHANGES
+
+* **dialog:** * The `matDialogAnimations.slideDialog` symbol has been renamed to `matDialogAnimations.dialogContainer`.
+
+![angular_material_-_google_chrome_2018-08-16_20-43-44](https://user-images.githubusercontent.com/4450522/44231568-da0d2780-a19e-11e8-9836-4f1b15f9bcc2.png)
+![angular_material_-_google_chrome_2018-08-16_21-30-17](https://user-images.githubusercontent.com/4450522/44231576-e09b9f00-a19e-11e8-9fae-8ad9cf0be8e5.png)
+* **elevation:** Because `mat-elevation` usages have been moved out of component stylesheets, users who have
+not invoked a theme mixin will not see any elevation shadows on Material components.
+However, users that have created a custom theme which lacks the `elevation` property will
+still see the default black shadows.
+
+Additionally, users who want to use themed elevations in their custom components can create
+their own shorthand mixin:
+
+```
+@import '~angular/material/theming';
+
+$myTheme: ...
+
+@mixin my-elevation($zValue) {
+  @include mat-theme-elevation($zValue, $myTheme);
+}
+
+```
+
+and then invoke `angular-material-theme` with the `$myTheme` variable.
+
+
+
+<a name="7.0.0-beta.1"></a>
+# 7.0.0-beta.1 (2018-09-17)
+
+
+### Bug Fixes
+
+* **button-toggle:** underlying input not disabled when group is disabled ([#11610](https://github.com/angular/material2/issues/11610)) ([bd21f21](https://github.com/angular/material2/commit/bd21f21)), closes [#11608](https://github.com/angular/material2/issues/11608)
+* **chips:** default click action on chip being prevented ([#12856](https://github.com/angular/material2/issues/12856)) ([ae3ce4a](https://github.com/angular/material2/commit/ae3ce4a)), closes [#9032](https://github.com/angular/material2/issues/9032)
+* **datepicker:** allow calendar cell selection via the space key ([#13098](https://github.com/angular/material2/issues/13098)) ([5c4a334](https://github.com/angular/material2/commit/5c4a334))
+* **drag-drop:** DOM element not being returned to initial container on drop ([#12948](https://github.com/angular/material2/issues/12948)) ([fb7bf90](https://github.com/angular/material2/commit/fb7bf90)), closes [#12944](https://github.com/angular/material2/issues/12944)
+* **drag-drop:** dragging class not being applied on drop container ([#12921](https://github.com/angular/material2/issues/12921)) ([ec0de52](https://github.com/angular/material2/commit/ec0de52))
+* **drag-drop:** incorrectly calculating index when sorting horizontally ([#13082](https://github.com/angular/material2/issues/13082)) ([664ef4c](https://github.com/angular/material2/commit/664ef4c)), closes [#13072](https://github.com/angular/material2/issues/13072)
+* **drag-drop:** incorrectly calculating pointer position inside element, in some cases ([#13111](https://github.com/angular/material2/issues/13111)) ([22cd3ed](https://github.com/angular/material2/commit/22cd3ed)), closes [#13107](https://github.com/angular/material2/issues/13107)
+* **drag-drop:** incorrectly picking up transitions on non-transform properties ([#12966](https://github.com/angular/material2/issues/12966)) ([951add9](https://github.com/angular/material2/commit/951add9))
+* **drag-drop:** not dropping immediately for failed drag after a successful one ([#13097](https://github.com/angular/material2/issues/13097)) ([32a0010](https://github.com/angular/material2/commit/32a0010)), closes [#13091](https://github.com/angular/material2/issues/13091)
+* **drag-drop:** text selection not disabled on safari if user drags out of the viewport ([#12864](https://github.com/angular/material2/issues/12864)) ([8ee5fb6](https://github.com/angular/material2/commit/8ee5fb6))
+* **drawer:** respect `NoopAnimationsModule` and `@.disabled` binding ([#12839](https://github.com/angular/material2/issues/12839)) ([23df492](https://github.com/angular/material2/commit/23df492))
+* **expansion:** disable all animations when using NoopAnimationsModule ([#12855](https://github.com/angular/material2/issues/12855)) ([3e22641](https://github.com/angular/material2/commit/3e22641)), closes [#10590](https://github.com/angular/material2/issues/10590)
+* **form-field:** don't set up mutation observer on non-outline appearances ([#12976](https://github.com/angular/material2/issues/12976)) ([cbfbade](https://github.com/angular/material2/commit/cbfbade))
+* **form-field:** remove chevron from native multi-select ([#13009](https://github.com/angular/material2/issues/13009)) ([b62343a](https://github.com/angular/material2/commit/b62343a))
+* **grid-list:** better handling of negative columns ([#12939](https://github.com/angular/material2/issues/12939)) ([cfb83a0](https://github.com/angular/material2/commit/cfb83a0))
+* **input:** do not focus input element twice ([#12851](https://github.com/angular/material2/issues/12851)) ([7d586e4](https://github.com/angular/material2/commit/7d586e4)), closes [#12849](https://github.com/angular/material2/issues/12849)
+* **ng-update:** do not throw if imports without named bindings are used ([#12866](https://github.com/angular/material2/issues/12866)) ([#12984](https://github.com/angular/material2/issues/12984)) ([fe64211](https://github.com/angular/material2/commit/fe64211)), closes [#11571](https://github.com/angular/material2/issues/11571)
+* **overlay:** correct misspelled flexibleDiemsions property ([#12927](https://github.com/angular/material2/issues/12927)) ([5d1643a](https://github.com/angular/material2/commit/5d1643a)), closes [#12925](https://github.com/angular/material2/issues/12925)
+* **overlay:** infinite loop when used together with zone-patch-rxjs ([#13081](https://github.com/angular/material2/issues/13081)) ([c2e502c](https://github.com/angular/material2/commit/c2e502c)), closes [#12686](https://github.com/angular/material2/issues/12686)
+* **platform:** wrap MSStream property detection as string to prevent Closure property renaming ([#13117](https://github.com/angular/material2/issues/13117)) ([aef61eb](https://github.com/angular/material2/commit/aef61eb)), closes [#12223](https://github.com/angular/material2/issues/12223)
+* **portal:** remove dependency on deprecated parentInjector ([#12986](https://github.com/angular/material2/issues/12986)) ([f39e091](https://github.com/angular/material2/commit/f39e091))
+* **progress-bar:** buffer background animation stuttering ([#13114](https://github.com/angular/material2/issues/13114)) ([2f2e116](https://github.com/angular/material2/commit/2f2e116))
+* **ripple:** ripples not being cleared if touch sequence is canceled ([#12936](https://github.com/angular/material2/issues/12936)) ([948e563](https://github.com/angular/material2/commit/948e563))
+* **sidenav:** not positioning correctly in rtl ([#12741](https://github.com/angular/material2/issues/12741)) ([9d3d95f](https://github.com/angular/material2/commit/9d3d95f))
+* **snack-bar:** dismiss snack bar on destroy ([#13042](https://github.com/angular/material2/issues/13042)) ([50be24b](https://github.com/angular/material2/commit/50be24b))
+* **tabs:** pagination state not updated when tab content changes ([#12911](https://github.com/angular/material2/issues/12911)) ([a7de64a](https://github.com/angular/material2/commit/a7de64a)), closes [#12901](https://github.com/angular/material2/issues/12901)
+* **tooltip:** not showing up on touch devices ([#12940](https://github.com/angular/material2/issues/12940)) ([722dfb3](https://github.com/angular/material2/commit/722dfb3)), closes [#12917](https://github.com/angular/material2/issues/12917)
+* **tooltip:** text fields not editable if tooltip is applied in safari ([#12959](https://github.com/angular/material2/issues/12959)) ([0389d12](https://github.com/angular/material2/commit/0389d12)), closes [#12953](https://github.com/angular/material2/issues/12953)
+* **tree:** theming nested notes ([#12938](https://github.com/angular/material2/issues/12938)) ([e24f24a](https://github.com/angular/material2/commit/e24f24a))
+* **typings:** update typings to support more strict typings in RxJS 6.3.2 ([#12979](https://github.com/angular/material2/issues/12979)) ([0a25fca](https://github.com/angular/material2/commit/0a25fca))
+
+
+### Features
+
+* **list:** add new `<mat-action-list>`  ([#12415](https://github.com/angular/material2/issues/12415)) ([69fa762](https://github.com/angular/material2/commit/69fa762))
+* **menu:** align with 2018 material design spec ([#12331](https://github.com/angular/material2/issues/12331)) ([c812268](https://github.com/angular/material2/commit/c812268))
+* **ng-add:** add x-prompts to install schematics ([#13058](https://github.com/angular/material2/issues/13058)) ([a5bc79c](https://github.com/angular/material2/commit/a5bc79c))
+* **schematics:** compatibility with Angular CLI 6.2.0 ([#13078](https://github.com/angular/material2/issues/13078)) ([714c205](https://github.com/angular/material2/commit/714c205)), closes [#11438](https://github.com/angular/material2/issues/11438)
+* **select:** align panel appearance and animation with 2018 material design spec ([#12975](https://github.com/angular/material2/issues/12975)) ([18d0fa8](https://github.com/angular/material2/commit/18d0fa8))
+* **stepper:** Create MAT_STEPPER_GLOBAL_OPTIONS InjectionToken ([#11457](https://github.com/angular/material2/issues/11457)) ([9ab2c90](https://github.com/angular/material2/commit/9ab2c90))
+
+
+### BREAKING CHANGES
+
+* **overlay:** The `flexibleDiemsions` property on `CdkConnectedOverlay` has been renamed to `flexibleDimensions`
+
+
+
 <a name="7.0.0-beta.0"></a>
 # [7.0.0-beta.0](https://github.com/angular/material2/compare/6.4.0...7.0.0-beta.0) (2018-08-30)
 
@@ -237,7 +351,7 @@ You can view a beta version of the docs at https://beta-angular-material-io.fire
 * **tabs:** disable focus overlay for touch focus ([#12249](https://github.com/angular/material2/issues/12249)) ([d3af441](https://github.com/angular/material2/commit/d3af441)), closes [#12247](https://github.com/angular/material2/issues/12247)
 * **tabs:** only target direct descendants with mat-stretch-tabs ([#12198](https://github.com/angular/material2/issues/12198)) ([6bb0ffe](https://github.com/angular/material2/commit/6bb0ffe)), closes [#12196](https://github.com/angular/material2/issues/12196)
 * **tooltip:** opening after click on android ([#12250](https://github.com/angular/material2/issues/12250)) ([a6b8a06](https://github.com/angular/material2/commit/a6b8a06)), closes [#12223](https://github.com/angular/material2/issues/12223)
-* ensure all components work with ES2015 in jit mode. ([#12759](https://github.com/angular/material2/issues/12759)) ([0c4a1b4](https://github.com/angular/material2/commit/0c4a1b4)), closes [/github.com/angular/angular/pull/22356#issuecomment-387756794](https://github.com//github.com/angular/angular/pull/22356/issues/issuecomment-387756794) [#9329](https://github.com/angular/material2/issues/9329)
+* ensure all components work with ES2015 in jit mode. ([#12759](https://github.com/angular/material2/issues/12759)) ([0c4a1b4](https://github.com/angular/material2/commit/0c4a1b4)), closes [#12760](https://github.com/angular/material2/issues/12760), [#9329](https://github.com/angular/material2/issues/9329)
 
 <a name="6.4.6"></a>
 ## [6.4.6 argon-aftershave](https://github.com/angular/material2/compare/6.4.5...6.4.6) (2018-08-20)

@@ -103,7 +103,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
   private _activeTransform: Point = {x: 0, y: 0};
 
   /** Whether the element has moved since the user started dragging it. */
-  private _hasMoved = false;
+  private _hasMoved: boolean;
 
   /** Drop container in which the CdkDrag resided when dragging began. */
   private _initialContainer: CdkDropContainer;
@@ -284,6 +284,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
 
     const endedOrDestroyed = merge(this.ended, this._destroyed);
 
+    this._hasMoved = false;
     this._dragDropRegistry.pointerMove
       .pipe(takeUntil(endedOrDestroyed))
       .subscribe(this._pointerMove);
@@ -429,7 +430,16 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
    */
   private _updateActiveDropContainer({x, y}) {
     // Drop container that draggable has been moved into.
-    const newContainer = this.dropContainer._getSiblingContainerFromPosition(this, x, y);
+    let newContainer = this.dropContainer._getSiblingContainerFromPosition(this, x, y);
+
+    // If we couldn't find a new container to move the item into, and the item has left it's
+    // initial container, check whether the it's allowed to return into its original container.
+    // This handles the case where two containers are connected one way and the user tries to
+    // undo dragging an item into a new container.
+    if (!newContainer && this.dropContainer !== this._initialContainer &&
+        this._initialContainer._canReturnItem(this, x, y)) {
+      newContainer = this._initialContainer;
+    }
 
     if (newContainer) {
       this._ngZone.run(() => {
@@ -437,8 +447,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
         this.exited.emit({item: this, container: this.dropContainer});
         this.dropContainer.exit(this);
         // Notify the new container that the item has entered.
-        this.entered.emit({item: this, container: newContainer});
-        this.dropContainer = newContainer;
+        this.entered.emit({item: this, container: newContainer!});
+        this.dropContainer = newContainer!;
         this.dropContainer.enter(this, x, y);
       });
     }
@@ -507,12 +517,9 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     const elementRect = this._rootElement.getBoundingClientRect();
     const handleElement = referenceElement === this._rootElement ? null : referenceElement;
     const referenceRect = handleElement ? handleElement.getBoundingClientRect() : elementRect;
-    const x = this._isTouchEvent(event) ?
-        event.targetTouches[0].pageX - referenceRect.left - this._scrollPosition.left :
-        event.offsetX;
-    const y = this._isTouchEvent(event) ?
-        event.targetTouches[0].pageY - referenceRect.top - this._scrollPosition.top :
-        event.offsetY;
+    const point = this._isTouchEvent(event) ? event.targetTouches[0] : event;
+    const x = point.pageX - referenceRect.left - this._scrollPosition.left;
+    const y = point.pageY - referenceRect.top - this._scrollPosition.top;
 
     return {
       x: referenceRect.left - elementRect.left + x,
@@ -672,10 +679,13 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
   /** Gets the root draggable element, based on the `rootElementSelector`. */
   private _getRootElement(): HTMLElement {
     if (this.rootElementSelector) {
+      const selector = this.rootElementSelector;
       let currentElement = this.element.nativeElement.parentElement as HTMLElement | null;
 
       while (currentElement) {
-        if (currentElement.matches(this.rootElementSelector)) {
+        // IE doesn't support `matches` so we have to fall back to `msMatchesSelector`.
+        if (currentElement.matches ? currentElement.matches(selector) :
+            currentElement.msMatchesSelector(selector)) {
           return currentElement;
         }
 
