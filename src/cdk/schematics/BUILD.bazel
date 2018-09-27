@@ -14,6 +14,19 @@ ts_library(
   module_name = "@angular/cdk/schematics",
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
   tsconfig = ":tsconfig.json",
+  deps = [
+    "@npm//:@schematics/angular",
+    "@npm//:@angular-devkit/schematics",
+     # TODO(devversion): Only include jasmine for test sources.
+    "@npm//:@types/jasmine",
+    "@npm//:@types/node",
+    "@npm//:glob",
+    "@npm//:jasmine",
+    "@npm//:parse5",
+    "@npm//:rxjs",
+    "@npm//:tslint",
+    "@npm//:typescript"
+  ],
 )
 
 # This package is intended to be combined into the main @angular/cdk package as a dep.
@@ -30,14 +43,22 @@ jasmine_node_test(
   name = "unit_tests",
   srcs = [":schematics_test_sources"],
   data = [":schematics_assets"],
-  # TODO(devversion): switch to fine-grained dependencies.
-  node_modules = "@//:node_modules",
+  deps = ["@npm//:jasmine"],
 )
 
 ts_library(
   name = "schematics_test_sources",
   srcs = glob(["**/*.spec.ts"]),
-  deps = [":schematics"],
+  deps = [
+    ":schematics",
+    "@npm//:@schematics/angular",
+    "@npm//:@angular-devkit/schematics",
+    "@npm//:@types/jasmine",
+    "@npm//:@types/node",
+    "@npm//:mock-fs",
+    "@npm//:tslint",
+    "@npm//:typescript",
+  ],
   tsconfig = ":tsconfig.json",
   testonly = True,
 )

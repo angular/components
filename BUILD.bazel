@@ -4,43 +4,9 @@ package(default_visibility = ["//visibility:public"])
 
 # TODO: Replace with fine-grained node_modules using `npm_install` / `yarn_install`.
 # TODO: See https://github.com/bazelbuild/rules_nodejs/wiki#migrating-to-rules_nodejs-013
-filegroup(
+alias(
   name = "node_modules",
-  srcs = glob(["/".join(["node_modules", pkg, "**", ext]) for pkg in [
-    "@angular",
-    "@angular-devkit",
-    "@schematics",
-    "@types",
-    "bytebuffer",
-    "chalk",
-    "fs-extra",
-    "glob",
-    "hammerjs",
-    "jasmine",
-    "minimist",
-    "moment",
-    "mock-fs",
-    "parse5",
-    "protobufjs",
-    "protractor",
-    "reflect-metadata",
-    "rxjs",
-    "tsickle",
-    "tslib",
-    "tslint",
-    "tsutils",
-    "typescript",
-    "zone.js",
-  ] for ext in [
-    "*.js",
-    "*.json",
-    "*.d.ts",
-  ]] + [
-    "node_modules/http-server/**",
-    # Reference all files of the "@schematics/angular" package because the schematic
-    # tests depend on the template files of the angular schematics.
-    "node_modules/@schematics/angular/**",
-  ]),
+  actual = "@npm//:node_modules",
 )
 
 # Glob pattern that matches all Angular testing bundles.
