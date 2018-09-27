@@ -425,8 +425,11 @@ export class MatSlider extends _MatSliderMixinBase
 
     /** Whether the slider is at its minimum value. */
     get _isMinValue() {
-        // TODO:
-        return this.percent === 0;
+        if (this.value instanceof Array) {
+            return this.percent[0] === 0;
+        } else {
+            return this.percent === 0;
+        }
     }
 
     /**
@@ -446,8 +449,6 @@ export class MatSlider extends _MatSliderMixinBase
     /** CSS styles for the track background element. */
     get _trackBackgroundStylesLeft(): { [key: string]: string } {
         const axis = this.vertical ? 'Y' : 'X';
-        // TODO: check if this is right
-        // const scale = this.vertical ? `1, ${1 - this.percent}, 1` : `${1 - this.percent}, 1, 1`;
         let scale: string = '';
         if (this.percent instanceof Array) {
             scale = this.vertical ? `1, ${this.percent[0]}, 1` : `${this.percent[0]}, 1, 1`;
@@ -464,8 +465,6 @@ export class MatSlider extends _MatSliderMixinBase
 
     get _trackBackgroundStylesRight(): { [key: string]: string } {
         const axis = this.vertical ? 'Y' : 'X';
-        // TODO: check if this is right
-        // const scale = this.vertical ? `1, ${this.percent}, 1` : `${this.percent}, 1, 1`;
         let scale: string = '';
         if (this.percent instanceof Array) {
             scale = this.vertical ? `1, ${1 - this.percent[1]}, 1` : `${1 - this.percent[1]}, 1, 1`;
@@ -482,8 +481,6 @@ export class MatSlider extends _MatSliderMixinBase
     /** CSS styles for the track fill element. */
     get _trackFillStyles(): { [key: string]: string } {
         const axis = this.vertical ? 'Y' : 'X';
-        // TODO: check if this is right
-        // const scale = this.vertical ? `1, ${this.percent}, 1` : `${this.percent}, 1, 1`;
         let scale: string = '';
         if (this.percent instanceof Array) {
             scale = this.vertical ?
@@ -560,7 +557,6 @@ export class MatSlider extends _MatSliderMixinBase
         // instead of the right edge to avoid causing a horizontal scrollbar to appear.
         let invertOffset = (this._getDirection() == 'rtl' && !this.vertical) ?
             !this._invertAxis : this._invertAxis;
-        // TODO: check if this is right
         let offset: number = 0;
         if (this.percent instanceof Array) {
             offset = (invertOffset ? this.percent[0] : 1 - this.percent[0]) * 100;
@@ -578,7 +574,6 @@ export class MatSlider extends _MatSliderMixinBase
         // instead of the right edge to avoid causing a horizontal scrollbar to appear.
         let invertOffset = (this._getDirection() == 'rtl' && !this.vertical) ?
             !this._invertAxis : this._invertAxis;
-        // TODO: check if this is right
         let offset: number = 0;
         if (this.percent instanceof Array) {
             offset = (invertOffset ? this.percent[1] : 1 - this.percent[1]) * 100;
@@ -854,7 +849,6 @@ export class MatSlider extends _MatSliderMixinBase
 
     /** Increments the slider by the given number of steps (negative number decrements). */
     private _increment(numSteps: number) {
-        // TODO: check if this is correct
         if (this.value instanceof Array) {
             this.value =
                 this._clamp([
