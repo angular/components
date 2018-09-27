@@ -29,7 +29,7 @@
   (backdropClick)="close()"
   (attach)="_onAttached()"
   (detach)="close()">
-  <div class="mat-select-panel-wrap">
+  <div class="mat-select-panel-wrap" [@transformPanelWrap]>
     <div
       #panel
       class="mat-select-panel {{ _getPanelTheme() }}"
