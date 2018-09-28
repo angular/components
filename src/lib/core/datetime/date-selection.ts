@@ -40,9 +40,8 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
 
   constructor(adapter: DateAdapter<D>, date?: D | null) {
     super(adapter);
-
     if (date) {
-      this.date = adapter.deserialize(date);
+      this.date = date;
     }
   }
 
@@ -81,7 +80,7 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
   }
 
   asDate(): D | null {
-    return (this.isValid()) ? this.date: null;
+    return (this.isValid()) ? this.adapter.deserialize(this.date): null;
   }
 }
 

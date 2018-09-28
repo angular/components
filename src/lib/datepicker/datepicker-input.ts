@@ -143,7 +143,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /** The minimum valid date. */
   @Input()
-  get min(): D | null { return this._min? this._min.asDate(): null; }
+  get min(): D | null { return this._min ? this._min.asDate() : null; }
   set min(value: D | null) {
     if (this._min) {
       this._min.add(value);
@@ -156,7 +156,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /** The maximum valid date. */
   @Input()
-  get max(): D | null { return this._max? this._max.asDate(): null; }
+  get max(): D | null { return this._max ? this._max.asDate() : null; }
   set max(value: D | null) {
     if (this._max) {
       this._max.add(value);
