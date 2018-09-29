@@ -874,6 +874,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    */
   private _selectValue(value: any): MatOption | undefined {
     const correspondingOption = this.options.find((option: MatOption) => {
+      // Skip options that are already in the model. This allows us to handle cases
+      // where the same primitive value is selected multiple times.
+      if (this._selectionModel.isSelected(option)) {
+        return false;
+      }
+
       try {
         // Treat null as a special reset value.
         return option.value != null && this._compareWith(option.value,  value);
