@@ -127,6 +127,29 @@ describe('MatChipList', () => {
         expect(manager.activeItemIndex).toBe(0);
       });
 
+      it('should focus the first selected chip, if any', () => {
+        chips.toArray()[2].selected = true;
+        fixture.detectChanges();
+
+        chipListInstance.focus();
+        fixture.detectChanges();
+
+        expect(manager.activeItemIndex).toBe(2);
+      });
+
+      it('should not focus the selected chip, if it is disabled', () => {
+        const thirdChip = chips.toArray()[2];
+
+        thirdChip.disabled = true;
+        thirdChip.selected = true;
+        fixture.detectChanges();
+
+        chipListInstance.focus();
+        fixture.detectChanges();
+
+        expect(manager.activeItemIndex).toBe(0);
+      });
+
       it('should watch for chip focus', () => {
         let array = chips.toArray();
         let lastIndex = array.length - 1;
