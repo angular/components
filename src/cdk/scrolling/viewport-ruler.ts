@@ -36,11 +36,16 @@ export class ViewportRuler implements OnDestroy {
   private _invalidateCache: Subscription;
 
   constructor(private _platform: Platform, ngZone: NgZone) {
-    this._change = _platform.isBrowser ? ngZone.runOutsideAngular(() => {
-      return merge<Event>(fromEvent(window, 'resize'), fromEvent(window, 'orientationchange'));
-    }) : observableOf();
-
-    this._invalidateCache = this.change().subscribe(() => this._updateViewportSize());
+    if (_platform.isBrowser) {
+      ngZone.runOutsideAngular(() => {
+        this._change = merge<Event>(fromEvent(window, 'resize'), fromEvent(window, 'orientationchange'));
+        // since RXJS is lazy, we must subscribe to the source outside of angular zone
+        this._invalidateCache = this.change().subscribe(() => this._updateViewportSize());
+      });
+    } else {
+      this._change = observableOf();
+      this._invalidateCache = this.change().subscribe(() => this._updateViewportSize());
+    }
   }
 
   ngOnDestroy() {
