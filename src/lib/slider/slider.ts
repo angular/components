@@ -553,7 +553,7 @@ export class MatSlider extends _MatSliderMixinBase
         return styles;
     }
 
-    get _thumbContainerStyles(): { [key: string]: string } {
+    get _thumbContainerStylesLeft(): { [key: string]: string } {
         let axis = this.vertical ? 'Y' : 'X';
         // For a horizontal slider in RTL languages we push the thumb container off the left edge
         // instead of the right edge to avoid causing a horizontal scrollbar to appear.
@@ -570,7 +570,7 @@ export class MatSlider extends _MatSliderMixinBase
         };
     }
 
-    get _thumbContainerStyles2(): { [key: string]: string } {
+    get _thumbContainerStylesRight(): { [key: string]: string } {
         let axis = this.vertical ? 'Y' : 'X';
         // For a horizontal slider in RTL languages we push the thumb container off the left edge
         // instead of the right edge to avoid causing a horizontal scrollbar to appear.
@@ -608,7 +608,8 @@ export class MatSlider extends _MatSliderMixinBase
     /** Reference to the inner slider wrapper element. */
     @ViewChild('sliderWrapper') private _sliderWrapper: ElementRef;
 
-    private currentSliderDir = 'l';
+    /** The slider thumb which is currently used (left or right) */
+    private _currentSliderDir = 'l';
 
     /**
      * Whether mouse events should be converted to a slider position by calculating their distance
@@ -696,12 +697,12 @@ export class MatSlider extends _MatSliderMixinBase
         }
 
         if (percent <= this.percent[0] + (this.percent[1] - this.percent[0]) / 2) {
-            this.currentSliderDir = 'l';
+            this._currentSliderDir = 'l';
         } else {
-            this.currentSliderDir = 'r';
+            this._currentSliderDir = 'r';
         }
 
-        if (this.currentSliderDir === 'l') {
+        if (this._currentSliderDir === 'l') {
             this._updateValueFromPositionLeft({x: event.clientX, y: event.clientY});
         } else {
             this._updateValueFromPositionRight({x: event.clientX, y: event.clientY});
@@ -743,9 +744,9 @@ export class MatSlider extends _MatSliderMixinBase
             oldValue = this.value;
         }
 
-        if (this.currentSliderDir === 'l') {
+        if (this._currentSliderDir === 'l') {
             this._updateValueFromPositionLeft({x: event.center.x, y: event.center.y});
-        } else if (this.currentSliderDir === 'r') {
+        } else if (this._currentSliderDir === 'r') {
             this._updateValueFromPositionRight({x: event.center.x, y: event.center.y});
         } else {
             if (!this.isRangeSlider()) {
@@ -773,7 +774,7 @@ export class MatSlider extends _MatSliderMixinBase
         if (event && !dir) {
             this.calculateInitialSlideDirection(event);
         } else if (dir) {
-            this.currentSliderDir = dir;
+            this._currentSliderDir = dir;
         }
 
         // Simulate mouseenter in case this is a mobile device.
@@ -785,9 +786,9 @@ export class MatSlider extends _MatSliderMixinBase
 
         if (event) {
             if (this.value instanceof Array) {
-                if (this.currentSliderDir === 'l') {
+                if (this._currentSliderDir === 'l') {
                     this._updateValueFromPositionLeft({x: event.center.x, y: event.center.y});
-                } else if (this.currentSliderDir === 'r') {
+                } else if (this._currentSliderDir === 'r') {
                     this._updateValueFromPositionRight({x: event.center.x, y: event.center.y});
                 }
             } else {
@@ -1163,9 +1164,9 @@ export class MatSlider extends _MatSliderMixinBase
         }
 
         if (percent <= this.percent[0] + (this.percent[1] - this.percent[0]) / 2) {
-            this.currentSliderDir = 'l';
+            this._currentSliderDir = 'l';
         } else {
-            this.currentSliderDir = 'r';
+            this._currentSliderDir = 'r';
         }
     }
 }

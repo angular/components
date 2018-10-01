@@ -1051,7 +1051,7 @@ describe('MatSlider', () => {
       let initialTrackFillStyles = sliderInstance._trackFillStyles;
       let initialTicksContainerStyles = sliderInstance._ticksContainerStyles;
       let initialTicksStyles = sliderInstance._ticksStyles;
-      let initialThumbContainerStyles = sliderInstance._thumbContainerStyles;
+      let initialThumbContainerStyles = sliderInstance._thumbContainerStylesLeft;
 
       testComponent.dir = 'ltr';
       fixture.detectChanges();
@@ -1059,7 +1059,7 @@ describe('MatSlider', () => {
       expect(initialTrackFillStyles).not.toEqual(sliderInstance._trackFillStyles);
       expect(initialTicksContainerStyles).not.toEqual(sliderInstance._ticksContainerStyles);
       expect(initialTicksStyles).not.toEqual(sliderInstance._ticksStyles);
-      expect(initialThumbContainerStyles).not.toEqual(sliderInstance._thumbContainerStyles);
+      expect(initialThumbContainerStyles).not.toEqual(sliderInstance._thumbContainerStylesLeft);
     });
 
     it('should increment inverted slider by 1 on right arrow pressed', () => {
