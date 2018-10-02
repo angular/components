@@ -18,7 +18,7 @@ export abstract class MatDateSelection<D> {
     this.valueChanges.complete();
   }
 
-  abstract add(date: D): void;
+  abstract add(date: D | null): void;
   abstract clone(): MatDateSelection<D>;
   abstract getFirstSelectedDate(): D|null;
   abstract getLastSelectedDate(): D|null;
@@ -40,15 +40,24 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
 
   constructor(adapter: DateAdapter<D>, date?: D | null) {
     super(adapter);
-
     if (date) {
       this.date = date;
     }
   }
 
-  add(date: D) {
+  add(date: D | null) {
     this.date = date;
     this.valueChanges.next();
+  }
+
+  compareDate(other: MatSingleDateSelection<D>) {
+    const date = this.asDate();
+    const otherDate = other.asDate();
+    if (date && otherDate) {
+      return this.adapter.compareDate(date, otherDate);
+    } 
+    throw Error
+
   }
 
   clone(): MatDateSelection<D> {
@@ -67,11 +76,11 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
   }
 
   isValid(): boolean {
-    return !!(this.date && this.adapter.isValid(this.date));
+    return !!(this.date && this.adapter.isDateInstance(this.date) && this.adapter.isValid(this.date));
   }
 
   asDate(): D | null {
-    return this.date;
+    return (this.isValid()) ? this.adapter.deserialize(this.date): null;
   }
 }
 
@@ -100,7 +109,7 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
    * beginning. If the beginning is set, it will set it to the end.
    * If add is called on a complete selection, it will empty the selection and set it as the start.
    */
-  add(date: D): void {
+  add(date: D | null): void {
     if (!this.start) {
       this.start = date;
     } else if (!this.end) {
