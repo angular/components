@@ -29,7 +29,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, MatSingleDateSelection, MatDateFormats, ThemePalette, MatDateSelection} from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
@@ -123,38 +123,49 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /** The value of the input. */
   @Input()
-  get value(): D | null { return this._value; }
+  get value(): D | null { return this._value ? this._value.asDate() : null; }
   set value(value: D | null) {
-    value = this._dateAdapter.deserialize(value);
-    this._lastValueValid = !value || this._dateAdapter.isValid(value);
-    value = this._getValidDateOrNull(value);
-    const oldDate = this.value;
-    this._value = value;
-    this._formatValue(value);
+    const oldDate = this._value? this._value.clone(): null;
+    if (this._value) {
+      this._value.add(value);
+    } else {
+      this._value = new MatSingleDateSelection(this._dateAdapter, value);
+    }   
+    this._lastValueValid = !this._value || this._value.isValid();
+    
+    if (this._value) this._formatValue(this._value.asDate());
 
-    if (!this._dateAdapter.sameDate(oldDate, value)) {
-      this._valueChange.emit(value);
+    if (!oldDate || !this._value.isSame(oldDate)) {
+      this._valueChange.emit(this.value);
     }
   }
-  private _value: D | null;
+  private _value: MatSingleDateSelection<D>;
 
   /** The minimum valid date. */
   @Input()
-  get min(): D | null { return this._min; }
+  get min(): D | null { return this._min ? this._min.asDate() : null; }
   set min(value: D | null) {
-    this._min = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    if (this._min) {
+      this._min.add(value);
+    } else {
+      this._min = new MatSingleDateSelection(this._dateAdapter, value);
+    }
     this._validatorOnChange();
   }
-  private _min: D | null;
+  private _min: MatSingleDateSelection<D>;
 
   /** The maximum valid date. */
   @Input()
-  get max(): D | null { return this._max; }
+  get max(): D | null { return this._max ? this._max.asDate() : null; }
   set max(value: D | null) {
-    this._max = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    if (this._max) {
+      this._max.add(value);
+    } else {
+      this._max = new MatSingleDateSelection(this._dateAdapter, value);
+    }
     this._validatorOnChange();
   }
-  private _max: D | null;
+  private _max: MatSingleDateSelection<D>;
 
   /** Whether the datepicker-input is disabled. */
   @Input()
@@ -210,24 +221,24 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /** The form control validator for the min date. */
   private _minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
-    return (!this.min || !controlValue ||
-        this._dateAdapter.compareDate(this.min, controlValue) <= 0) ?
-        null : {'matDatepickerMin': {'min': this.min, 'actual': controlValue}};
+    const controlValueSelection = new MatSingleDateSelection(this._dateAdapter, control.value);
+    return (!this.min || !controlValueSelection.isValid() ||
+        this._min.compareDate(controlValueSelection) <= 0) ?
+        null : {'matDatepickerMin': {'min': this.min, 'actual': controlValueSelection.asDate()}};
   }
 
   /** The form control validator for the max date. */
   private _maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
-    return (!this.max || !controlValue ||
-        this._dateAdapter.compareDate(this.max, controlValue) >= 0) ?
-        null : {'matDatepickerMax': {'max': this.max, 'actual': controlValue}};
+    const controlValueSelection = new MatSingleDateSelection(this._dateAdapter, control.value);
+    return (!this.max || !controlValueSelection.isValid() ||
+        this._max.compareDate(controlValueSelection) >= 0) ?
+        null : {'matDatepickerMax': {'max': this.max, 'actual': controlValueSelection.asDate}};
   }
 
   /** The form control validator for the date filter. */
   private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
-    return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ?
+    const controlValueSelection = new MatSingleDateSelection(this._dateAdapter, control.value);
+    return !this._dateFilter || !controlValueSelection.isValid() || this._dateFilter(controlValueSelection.asDate()) ?
         null : {'matDatepickerFilter': true};
   }
 
@@ -320,14 +331,14 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   }
 
   _onInput(value: string) {
-    let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-    this._lastValueValid = !date || this._dateAdapter.isValid(date);
-    date = this._getValidDateOrNull(date);
+    const dateSelection = new MatSingleDateSelection(this._dateAdapter, 
+      this._dateAdapter.parse(value, this._dateFormats.parse.dateInput));
+    this._lastValueValid = dateSelection.isValid();
 
-    if (!this._dateAdapter.sameDate(date, this._value)) {
-      this._value = date;
-      this._cvaOnChange(date);
-      this._valueChange.emit(date);
+    if (!dateSelection.isSame(this._value)) {
+      this._value = dateSelection;
+      this._cvaOnChange(dateSelection.asDate());
+      this._valueChange.emit(dateSelection.asDate());
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
     }
   }
@@ -353,15 +364,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /** Formats a value and sets it on the input element. */
   private _formatValue(value: D | null) {
-    this._elementRef.nativeElement.value =
+    this._elementRef.nativeElement.value = 
         value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
-  }
-
-  /**
-   * @param obj The object to check.
-   * @returns The given object if it is both a date instance and valid, otherwise null.
-   */
-  private _getValidDateOrNull(obj: any): D | null {
-    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
   }
 }
