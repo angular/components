@@ -30,7 +30,7 @@
       *ngSwitchCase="true"
       [ngTemplateOutlet]="iconOverrides.error"
       [ngTemplateOutletContext]="_getIconContext()"></ng-container>
-    <mat-icon *ngSwitchDefault>warning</mat-icon>
+    <mat-icon class="mat-step-icon-content" *ngSwitchDefault>warning</mat-icon>
   </ng-container>
 
   <!-- Custom state. -->
@@ -39,7 +39,7 @@
       *ngSwitchCase="true"
       [ngTemplateOutlet]="iconOverrides[state]"
       [ngTemplateOutletContext]="_getIconContext()"></ng-container>
-    <mat-icon *ngSwitchDefault>{{state}}</mat-icon>
+    <mat-icon class="mat-step-icon-content" *ngSwitchDefault>{{state}}</mat-icon>
   </ng-container>
 </div>
 <div class="mat-step-label"
