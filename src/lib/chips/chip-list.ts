@@ -448,16 +448,16 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
    * are no eligible chips.
    */
   focus(): void {
-    if (this.disabled) {
+    if (this.disabled || (this._chipInput && this._chipInput.focused)) {
       return;
     }
 
-    // TODO: ARIA says this should focus the first `selected` chip if any are selected.
-    // Focus on first element if there's no chipInput inside chip-list
-    if (this._chipInput && this._chipInput.focused) {
-      // do nothing
-    } else if (this.chips.length > 0) {
-      this._keyManager.setFirstItemActive();
+    // Focus the first selected and enabled chip, otherwise fall back to focusing the first chip.
+    if (this.chips.length > 0) {
+      const manager = this._keyManager;
+      const selectedChip = this.chips.find(chip => chip.selected && !chip.disabled);
+
+      selectedChip ? manager.setActiveItem(selectedChip) : manager.setFirstItemActive();
       this.stateChanges.next();
     } else {
       this._focusInput();
