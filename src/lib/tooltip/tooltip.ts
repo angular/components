@@ -255,7 +255,7 @@ export class MatTooltip implements OnDestroy {
     }
 
     // Clean up the event listeners set in the constructor
-    if (!_platform.IOS && !_platform.ANDROID) {
+    if (!this._platform.IOS && !this._platform.ANDROID) {
       this._manualListeners.forEach((listener, event) =>
         this._elementRef.nativeElement.removeEventListener(event, listener));
 
