@@ -1,6 +1,5 @@
 import {Platform} from '@angular/cdk/platform';
 import {
-  createTouchEvent,
   createMouseEvent,
   dispatchEvent,
   dispatchMouseEvent,
@@ -17,6 +16,7 @@ import {
   RippleState,
 } from './index';
 import {defaultRippleAnimationConfig, RippleAnimationConfig} from './ripple-renderer';
+
 
 /** Shorthands for the enter and exit duration of ripples. */
 const {enterDuration, exitDuration} = defaultRippleAnimationConfig;
