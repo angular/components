@@ -36,7 +36,8 @@ sass_repositories()
 load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories", "yarn_install")
 
 node_repositories(
-  # For deterministic builds, specify explicit NodeJS and Yarn versions.
+  # For deterministic builds, specify explicit NodeJS and Yarn versions. Keep the Yarn version
+  # in sync with the version of Travis.
   node_version = "10.10.0",
   yarn_version = "1.9.4",
 )
