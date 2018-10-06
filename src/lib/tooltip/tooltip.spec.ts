@@ -625,6 +625,26 @@ describe('MatTooltip', () => {
       expect(overlayContainerElement.querySelector('.mat-tooltip')).toBeNull();
     }));
 
+    it('should not hide the tooltip when calling `show` twice in a row', fakeAsync(() => {
+      tooltipDirective.show();
+      tick(0);
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+      fixture.detectChanges();
+      tick(500);
+
+      const overlayRef = tooltipDirective._overlayRef!;
+
+      spyOn(overlayRef, 'detach').and.callThrough();
+
+      tooltipDirective.show();
+      tick(0);
+      expect(tooltipDirective._isTooltipVisible()).toBe(true);
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlayRef.detach).not.toHaveBeenCalled();
+    }));
+
   });
 
   describe('fallback positions', () => {
@@ -790,9 +810,8 @@ describe('MatTooltip', () => {
   });
 
   describe('special cases', () => {
-    it('should clear the `user-select` when a tooltip is set on a text field in iOS', () => {
-      platform.IOS = true;
 
+    it('should clear the `user-select` when a tooltip is set on a text field', () => {
       const fixture = TestBed.createComponent(TooltipOnTextFields);
       const instance = fixture.componentInstance;
 
@@ -800,9 +819,11 @@ describe('MatTooltip', () => {
 
       expect(instance.input.nativeElement.style.userSelect).toBeFalsy();
       expect(instance.input.nativeElement.style.webkitUserSelect).toBeFalsy();
+      expect(instance.input.nativeElement.style.msUserSelect).toBeFalsy();
 
       expect(instance.textarea.nativeElement.style.userSelect).toBeFalsy();
       expect(instance.textarea.nativeElement.style.webkitUserSelect).toBeFalsy();
+      expect(instance.textarea.nativeElement.style.msUserSelect).toBeFalsy();
     });
 
     it('should clear the `-webkit-user-drag` on draggable elements', () => {

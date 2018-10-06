@@ -104,9 +104,9 @@ export class MatTableDataSource<T> extends DataSource<T> {
    * matches the data's properties (e.g. column Xyz represents data['Xyz']).
    * May be set to a custom function for different behavior.
    * @param data Data object that is being accessed.
-   * @param sortHeaderId The name of the column that represents the data.
+   * @param path The path to the property of data.
    */
-  sortingDataAccessor: ((data: T, sortHeaderId: string) => string|number) =
+  sortingDataAccessor: ((data: T, path: string) => string|number) =
       (data: T, path: string): string|number => {
         const ns = path.split('.');
         let value = data.hasOwnProperty(ns[0]) ? data[ns[0]] : null;
@@ -220,8 +220,14 @@ export class MatTableDataSource<T> extends DataSource<T> {
     return false;
   }
 
-  private filterArray(data: Array<any>, filter): boolean {
+  private filterArray(data: Array<any>, filter: string): boolean {
     for (const value of data) {
+      if (typeof value === 'number') {
+        if (this.filterString(String(value), filter)) {
+          return true;
+        }
+      }
+      
       if (typeof value === 'string') {
         if (this.filterString(value, filter)) {
           return true;
@@ -259,11 +265,11 @@ export class MatTableDataSource<T> extends DataSource<T> {
     // The `sortChange` and `pageChange` acts as a signal to the combineLatests below so that the
     // pipeline can progress to the next step. Note that the value from these streams are not used,
     // they purely act as a signal to progress in the pipeline.
-    const sortChange: Observable<Sort|null> = this._sort ?
-        merge<Sort>(this._sort.sortChange, this._sort.initialized) :
+    const sortChange: Observable<Sort|null|void> = this._sort ?
+        merge<Sort|void>(this._sort.sortChange, this._sort.initialized) :
         observableOf(null);
-    const pageChange: Observable<PageEvent|null> = this._paginator ?
-        merge<PageEvent>(this._paginator.page, this._paginator.initialized) :
+    const pageChange: Observable<PageEvent|null|void> = this._paginator ?
+        merge<PageEvent|void>(this._paginator.page, this._paginator.initialized) :
         observableOf(null);
 
     const dataStream = this._data;

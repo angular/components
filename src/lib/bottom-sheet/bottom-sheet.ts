@@ -9,7 +9,17 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
 import {ComponentPortal, ComponentType, PortalInjector, TemplatePortal} from '@angular/cdk/portal';
-import {ComponentRef, Injectable, Injector, Optional, SkipSelf, TemplateRef} from '@angular/core';
+import {
+  ComponentRef,
+  Injectable,
+  Injector,
+  Optional,
+  SkipSelf,
+  TemplateRef,
+  InjectionToken,
+  Inject,
+  OnDestroy,
+} from '@angular/core';
 import {Location} from '@angular/common';
 import {of as observableOf} from 'rxjs';
 import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetConfig} from './bottom-sheet-config';
@@ -18,11 +28,15 @@ import {MatBottomSheetModule} from './bottom-sheet-module';
 import {MatBottomSheetRef} from './bottom-sheet-ref';
 
 
+/** Injection token that can be used to specify default bottom sheet options. */
+export const MAT_BOTTOM_SHEET_DEFAULT_OPTIONS =
+    new InjectionToken<MatBottomSheetConfig>('mat-bottom-sheet-default-options');
+
 /**
  * Service to trigger Material Design bottom sheets.
  */
 @Injectable({providedIn: MatBottomSheetModule})
-export class MatBottomSheet {
+export class MatBottomSheet implements OnDestroy {
   private _bottomSheetRefAtThisLevel: MatBottomSheetRef<any> | null = null;
 
   /** Reference to the currently opened bottom sheet. */
@@ -43,7 +57,9 @@ export class MatBottomSheet {
       private _overlay: Overlay,
       private _injector: Injector,
       @Optional() @SkipSelf() private _parentBottomSheet: MatBottomSheet,
-      @Optional() private _location?: Location) {}
+      @Optional() private _location?: Location,
+      @Optional() @Inject(MAT_BOTTOM_SHEET_DEFAULT_OPTIONS)
+          private _defaultOptions?: MatBottomSheetConfig) {}
 
   open<T, D = any, R = any>(component: ComponentType<T>,
                    config?: MatBottomSheetConfig<D>): MatBottomSheetRef<T, R>;
@@ -53,7 +69,8 @@ export class MatBottomSheet {
   open<T, D = any, R = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
                    config?: MatBottomSheetConfig<D>): MatBottomSheetRef<T, R> {
 
-    const _config = _applyConfigDefaults(config);
+    const _config =
+        _applyConfigDefaults(this._defaultOptions || new MatBottomSheetConfig(), config);
     const overlayRef = this._createOverlay(_config);
     const container = this._attachContainer(overlayRef, _config);
     const ref = new MatBottomSheetRef<T, R>(container, overlayRef, this._location);
@@ -102,6 +119,12 @@ export class MatBottomSheet {
     }
   }
 
+  ngOnDestroy() {
+    if (this._bottomSheetRefAtThisLevel) {
+      this._bottomSheetRefAtThisLevel.dismiss();
+    }
+  }
+
   /**
    * Attaches the bottom sheet container component to the overlay.
    */
@@ -127,6 +150,7 @@ export class MatBottomSheet {
     const overlayConfig = new OverlayConfig({
       direction: config.direction,
       hasBackdrop: config.hasBackdrop,
+      disposeOnNavigation: config.closeOnNavigation,
       maxWidth: '100%',
       scrollStrategy: this._overlay.scrollStrategies.block(),
       positionStrategy: this._overlay.position()
@@ -170,9 +194,11 @@ export class MatBottomSheet {
 
 /**
  * Applies default options to the bottom sheet config.
+ * @param defaults Object containing the default values to which to fall back.
  * @param config The configuration to which the defaults will be applied.
  * @returns The new configuration object with defaults applied.
  */
-function _applyConfigDefaults(config?: MatBottomSheetConfig): MatBottomSheetConfig {
-  return {...new MatBottomSheetConfig(), ...config};
+function _applyConfigDefaults(defaults: MatBottomSheetConfig,
+                              config?: MatBottomSheetConfig): MatBottomSheetConfig {
+  return {...defaults, ...config};
 }

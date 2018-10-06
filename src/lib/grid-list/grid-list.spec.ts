@@ -1,5 +1,5 @@
 import {TestBed, ComponentFixture} from '@angular/core/testing';
-import {Component, DebugElement, Type} from '@angular/core';
+import {Component, DebugElement, Type, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatGridList, MatGridListModule} from './index';
 import {MatGridTile, MatGridTileText} from './grid-tile';
@@ -32,6 +32,32 @@ describe('MatGridList', () => {
     const fixture = createComponent(GridListWithTooWideColspan);
 
     expect(() => fixture.detectChanges()).toThrowError(/tile with colspan 5 is wider than grid/);
+  });
+
+  it('should not throw when setting the `rowHeight` programmatically before init', () => {
+    const fixture = createComponent(GridListWithUnspecifiedRowHeight);
+    const gridList = fixture.debugElement.query(By.directive(MatGridList));
+
+    expect(() => {
+      // Set the row height twice so the tile styler is initialized.
+      gridList.componentInstance.rowHeight = 12.3;
+      gridList.componentInstance.rowHeight = 32.1;
+      fixture.detectChanges();
+    }).not.toThrow();
+  });
+
+  it('should set the columns to zero if a negative number is passed in', () => {
+    const fixture = createComponent(GridListWithDynamicCols);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.gridList.cols).toBe(2);
+
+    expect(() => {
+      fixture.componentInstance.cols = -2;
+      fixture.detectChanges();
+    }).not.toThrow();
+
+    expect(fixture.componentInstance.gridList.cols).toBe(1);
   });
 
   it('should default to 1:1 row height if undefined ', () => {
@@ -111,6 +137,18 @@ describe('MatGridList', () => {
     // check vertical gutter
     expect(getStyle(tiles[0], 'height')).toBe('100px');
     expect(getStyle(tiles[2], 'top')).toBe('101px');
+  });
+
+  it('should lay out the tiles correctly for a nested grid list', () => {
+    const fixture = createComponent(NestedGridList);
+    fixture.detectChanges();
+
+    const innerTiles = fixture.debugElement.queryAll(
+        By.css('mat-grid-tile mat-grid-list mat-grid-tile'));
+
+    expect(getStyle(innerTiles[0], 'top')).toBe('0px');
+    expect(getStyle(innerTiles[1], 'top')).toBe('101px');
+    expect(getStyle(innerTiles[2], 'top')).toBe('202px');
   });
 
   it('should set the gutter size if passed', () => {
@@ -220,6 +258,65 @@ describe('MatGridList', () => {
     expect(getStyle(tiles[3], 'top')).toBe('101px');
   });
 
+  it('should lay out tiles correctly', () => {
+    const fixture = createComponent(GridListWithLayout);
+
+    fixture.detectChanges();
+    const tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
+
+    expect(getStyle(tiles[0], 'width')).toBe('40px');
+    expect(getStyle(tiles[0], 'height')).toBe('40px');
+    expect(getComputedLeft(tiles[0])).toBe(0);
+    expect(getStyle(tiles[0], 'top')).toBe('0px');
+
+    expect(getStyle(tiles[1], 'width')).toBe('20px');
+    expect(getStyle(tiles[1], 'height')).toBe('20px');
+    expect(getComputedLeft(tiles[1])).toBe(40);
+    expect(getStyle(tiles[1], 'top')).toBe('0px');
+
+    expect(getStyle(tiles[2], 'width')).toBe('40px');
+    expect(getStyle(tiles[2], 'height')).toBe('40px');
+    expect(getComputedLeft(tiles[2])).toBe(60);
+    expect(getStyle(tiles[2], 'top')).toBe('0px');
+
+    expect(getStyle(tiles[3], 'width')).toBe('40px');
+    expect(getStyle(tiles[3], 'height')).toBe('40px');
+    expect(getComputedLeft(tiles[3])).toBe(0);
+    expect(getStyle(tiles[3], 'top')).toBe('40px');
+
+    expect(getStyle(tiles[4], 'width')).toBe('40px');
+    expect(getStyle(tiles[4], 'height')).toBe('40px');
+    expect(getComputedLeft(tiles[4])).toBe(40);
+    expect(getStyle(tiles[4], 'top')).toBe('40px');
+  });
+
+  it('should lay out tiles correctly when single cell to be placed at the beginning',
+        () => {
+    const fixture = createComponent(GridListWithSingleCellAtBeginning);
+
+    fixture.detectChanges();
+    const tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
+
+    expect(getStyle(tiles[0], 'width')).toBe('40px');
+    expect(getStyle(tiles[0], 'height')).toBe('40px');
+    expect(getComputedLeft(tiles[0])).toBe(0);
+    expect(getStyle(tiles[0], 'top')).toBe('0px');
+
+    expect(getStyle(tiles[1], 'width')).toBe('20px');
+    expect(getStyle(tiles[1], 'height')).toBe('40px');
+    expect(getComputedLeft(tiles[1])).toBe(40);
+    expect(getStyle(tiles[1], 'top')).toBe('0px');
+
+    expect(getStyle(tiles[2], 'width')).toBe('40px');
+    expect(getStyle(tiles[2], 'height')).toBe('40px');
+    expect(getComputedLeft(tiles[2])).toBe(60);
+    expect(getStyle(tiles[2], 'top')).toBe('0px');
+
+    expect(getStyle(tiles[3], 'height')).toBe('20px');
+    expect(getComputedLeft(tiles[3])).toBe(0);
+    expect(getStyle(tiles[3], 'top')).toBe('40px');
+  });
+
   it('should add not add any classes to footers without lines', () => {
     const fixture = createComponent(GridListWithFootersWithoutLines);
     fixture.detectChanges();
@@ -304,6 +401,17 @@ describe('MatGridList', () => {
     expect(getStyle(tile, 'padding-top')).toBe('200px');
   });
 
+  it('should throw if an invalid value is set as the `rowHeight`', () => {
+    const fixture = createComponent(GridListWithUnspecifiedRowHeight);
+    const gridList = fixture.debugElement.query(By.directive(MatGridList));
+
+    expect(() => {
+      // Note the semicolon at the end which will be an invalid value on some browsers (see #13252).
+      gridList.componentInstance.rowHeight = '350px;';
+      fixture.detectChanges();
+    }).toThrowError(/^Invalid value/);
+  });
+
 });
 
 
@@ -333,6 +441,12 @@ class GridListWithInvalidRowHeightRatio { }
 @Component({template:
     '<mat-grid-list cols="4"><mat-grid-tile colspan="5"></mat-grid-tile></mat-grid-list>'})
 class GridListWithTooWideColspan { }
+
+@Component({template: '<mat-grid-list [cols]="cols"></mat-grid-list>'})
+class GridListWithDynamicCols {
+  @ViewChild(MatGridList) gridList: MatGridList;
+  cols = 2;
+}
 
 @Component({template: `
     <div style="width:200px">
@@ -455,6 +569,29 @@ class GridListWithComplexLayout {
 }
 
 @Component({template: `
+  <div style="width:100px">
+    <mat-grid-list [cols]="10" gutterSize="0px" rowHeight="10px">
+      <mat-grid-tile [colspan]="4" [rowspan]="4"></mat-grid-tile>
+      <mat-grid-tile [colspan]="2" [rowspan]="2"></mat-grid-tile>
+      <mat-grid-tile [colspan]="4" [rowspan]="4"></mat-grid-tile>
+      <mat-grid-tile [colspan]="4" [rowspan]="4"></mat-grid-tile>
+      <mat-grid-tile [colspan]="4" [rowspan]="4"></mat-grid-tile>
+    </mat-grid-list>
+  </div>`})
+class GridListWithLayout {}
+
+@Component({template: `
+  <div style="width:100px">
+    <mat-grid-list [cols]="10" gutterSize="0px" rowHeight="10px">
+      <mat-grid-tile [colspan]="4" [rowspan]="4"></mat-grid-tile>
+      <mat-grid-tile [colspan]="2" [rowspan]="4"></mat-grid-tile>
+      <mat-grid-tile [colspan]="4" [rowspan]="4"></mat-grid-tile>
+      <mat-grid-tile [colspan]="1" [rowspan]="2"></mat-grid-tile>
+    </mat-grid-list>
+  </div>`})
+class GridListWithSingleCellAtBeginning {}
+
+@Component({template: `
     <mat-grid-list cols="1">
       <mat-grid-tile>
         <mat-grid-tile-footer>
@@ -510,3 +647,19 @@ class GridListWithRtl { }
   `
 })
 class GridListWithIndirectTileDescendants {}
+
+
+@Component({template: `
+    <div style="width:200px">
+      <mat-grid-list cols="2" rowHeight="100px">
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile>
+          <mat-grid-list cols="1" rowHeight="100px">
+            <mat-grid-tile></mat-grid-tile>
+            <mat-grid-tile></mat-grid-tile>
+            <mat-grid-tile></mat-grid-tile>
+          </mat-grid-list>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>`})
+class NestedGridList { }

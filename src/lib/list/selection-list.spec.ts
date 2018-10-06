@@ -52,21 +52,6 @@ describe('MatSelectionList without forms', () => {
       selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
     }));
 
-    it('should add and remove focus class on focus/blur', () => {
-      // Use the second list item, because the first one is always disabled.
-      const listItem = listOptions[1].nativeElement;
-
-      expect(listItem.classList).not.toContain('mat-list-item-focus');
-
-      dispatchFakeEvent(listItem, 'focus');
-      fixture.detectChanges();
-      expect(listItem.className).toContain('mat-list-item-focus');
-
-      dispatchFakeEvent(listItem, 'blur');
-      fixture.detectChanges();
-      expect(listItem.className).not.toContain('mat-list-item-focus');
-    });
-
     it('should be able to set a value on a list option', () => {
       const optionValues = ['inbox', 'starred', 'sent-mail', 'drafts'];
 
@@ -446,6 +431,11 @@ describe('MatSelectionList without forms', () => {
 
       expect(item.selected).toBe(true);
     });
+
+    it('should set aria-multiselectable to true on the selection list element', () => {
+      expect(selectionList.nativeElement.getAttribute('aria-multiselectable')).toBe('true');
+    });
+
   });
 
   describe('with list option selected', () => {
@@ -516,45 +506,6 @@ describe('MatSelectionList without forms', () => {
 
       expect(selectionList.componentInstance.tabIndex)
         .toBe(3, 'Expected the tabIndex to be still set to "3".');
-    });
-  });
-
-  describe('with single option', () => {
-    let fixture: ComponentFixture<SelectionListWithOnlyOneOption>;
-    let listOption: DebugElement;
-    let listItemEl: DebugElement;
-
-    beforeEach(async(() => {
-      TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [
-          SelectionListWithListOptions,
-          SelectionListWithCheckboxPositionAfter,
-          SelectionListWithListDisabled,
-          SelectionListWithOnlyOneOption
-        ],
-      });
-
-      TestBed.compileComponents();
-    }));
-
-    beforeEach(async(() => {
-      fixture = TestBed.createComponent(SelectionListWithOnlyOneOption);
-      listOption = fixture.debugElement.query(By.directive(MatListOption));
-      listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
-      fixture.detectChanges();
-    }));
-
-    it('should be focused when focus on nativeElements', () => {
-      dispatchFakeEvent(listOption.nativeElement, 'focus');
-      fixture.detectChanges();
-
-      expect(listItemEl.nativeElement.className).toContain('mat-list-item-focus');
-
-      dispatchFakeEvent(listOption.nativeElement, 'blur');
-      fixture.detectChanges();
-
-      expect(listItemEl.nativeElement.className).not.toContain('mat-list-item-focus');
     });
   });
 
@@ -838,7 +789,7 @@ describe('MatSelectionList with forms', () => {
 
       expect(fixture.componentInstance.selectedOptions).toEqual(['opt2', 'opt3']);
 
-      fixture.componentInstance.renderLastOption = false;
+      fixture.componentInstance.options.pop();
       fixture.detectChanges();
       tick();
 
@@ -878,6 +829,20 @@ describe('MatSelectionList with forms', () => {
       expect(fixture.componentInstance.modelChangeSpy).not.toHaveBeenCalled();
     });
 
+    it('should be able to programmatically set an array with duplicate values', fakeAsync(() => {
+      fixture.componentInstance.options = ['one', 'two', 'two', 'two', 'three'];
+      fixture.detectChanges();
+      tick();
+
+      listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
+          .map(optionDebugEl => optionDebugEl.componentInstance);
+
+      fixture.componentInstance.selectedOptions = ['one', 'two', 'two'];
+      fixture.detectChanges();
+      tick();
+
+      expect(listOptions.map(option => option.selected)).toEqual([true, true, true, false, false]);
+    }));
 
   });
 
@@ -1010,7 +975,7 @@ describe('MatSelectionList with forms', () => {
       const fixture = TestBed.createComponent(SelectionListWithCustomComparator);
       const testComponent = fixture.componentInstance;
 
-      testComponent.compareWith = jasmine.createSpy('comparator', (o1, o2) => {
+      testComponent.compareWith = jasmine.createSpy('comparator', (o1: any, o2: any) => {
         return o1 && o2 && o1.id === o2.id;
       }).and.callThrough();
 
@@ -1125,15 +1090,13 @@ class SelectionListWithTabindexBinding {
 @Component({
   template: `
     <mat-selection-list [(ngModel)]="selectedOptions" (ngModelChange)="modelChangeSpy()">
-      <mat-list-option value="opt1">Option 1</mat-list-option>
-      <mat-list-option value="opt2">Option 2</mat-list-option>
-      <mat-list-option value="opt3" *ngIf="renderLastOption">Option 3</mat-list-option>
+      <mat-list-option *ngFor="let option of options" [value]="option">{{option}}</mat-list-option>
     </mat-selection-list>`
 })
 class SelectionListWithModel {
   modelChangeSpy = jasmine.createSpy('model change spy');
   selectedOptions: string[] = [];
-  renderLastOption = true;
+  options = ['opt1', 'opt2', 'opt3'];
 }
 
 @Component({

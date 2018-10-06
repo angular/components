@@ -9,12 +9,14 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {ComponentRef, EmbeddedViewRef, NgZone} from '@angular/core';
-import {Observable, Subject, merge} from 'rxjs';
+import {Location} from '@angular/common';
+import {Observable, Subject, merge, SubscriptionLike, Subscription, Observer} from 'rxjs';
 import {take, takeUntil} from 'rxjs/operators';
 import {OverlayKeyboardDispatcher} from './keyboard/overlay-keyboard-dispatcher';
 import {OverlayConfig} from './overlay-config';
 import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
 import {OverlayReference} from './overlay-reference';
+import {PositionStrategy} from './position/position-strategy';
 
 
 /** An object where all of its properties cannot be written. */
@@ -31,21 +33,25 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   private _backdropClick: Subject<MouseEvent> = new Subject();
   private _attachments = new Subject<void>();
   private _detachments = new Subject<void>();
+  private _positionStrategy: PositionStrategy | undefined;
+  private _locationChanges: SubscriptionLike = Subscription.EMPTY;
 
   /**
    * Reference to the parent of the `_host` at the time it was detached. Used to restore
    * the `_host` to its original position in the DOM when it gets re-attached.
    */
   private _previousHostParent: HTMLElement;
-  private _keydownEventsObservable: Observable<KeyboardEvent> = Observable.create(observer => {
-    const subscription = this._keydownEvents.subscribe(observer);
-    this._keydownEventSubscriptions++;
 
-    return () => {
-      subscription.unsubscribe();
-      this._keydownEventSubscriptions--;
-    };
-  });
+  private _keydownEventsObservable: Observable<KeyboardEvent> =
+      Observable.create((observer: Observer<KeyboardEvent>) => {
+        const subscription = this._keydownEvents.subscribe(observer);
+        this._keydownEventSubscriptions++;
+
+        return () => {
+          subscription.unsubscribe();
+          this._keydownEventSubscriptions--;
+        };
+      });
 
   /** Stream of keydown events dispatched to this overlay. */
   _keydownEvents = new Subject<KeyboardEvent>();
@@ -60,11 +66,15 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
       private _config: ImmutableObject<OverlayConfig>,
       private _ngZone: NgZone,
       private _keyboardDispatcher: OverlayKeyboardDispatcher,
-      private _document: Document) {
+      private _document: Document,
+      // @breaking-change 8.0.0 `_location` parameter to be made required.
+      private _location?: Location) {
 
     if (_config.scrollStrategy) {
       _config.scrollStrategy.attach(this);
     }
+
+    this._positionStrategy = _config.positionStrategy;
   }
 
   /** The overlay's HTML element */
@@ -100,8 +110,8 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   attach(portal: Portal<any>): any {
     let attachResult = this._portalOutlet.attach(portal);
 
-    if (this._config.positionStrategy) {
-      this._config.positionStrategy.attach(this);
+    if (this._positionStrategy) {
+      this._positionStrategy.attach(this);
     }
 
     // Update the pane element with the given configuration.
@@ -147,6 +157,12 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     // Track this overlay by the keyboard dispatcher
     this._keyboardDispatcher.add(this);
 
+    // @breaking-change 8.0.0 remove the null check for `_location`
+    // once the constructor parameter is made required.
+    if (this._config.disposeOnNavigation && this._location) {
+      this._locationChanges = this._location.subscribe(() => this.dispose());
+    }
+
     return attachResult;
   }
 
@@ -166,16 +182,12 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     // pointer events therefore. Depends on the position strategy and the applied pane boundaries.
     this._togglePointerEvents(false);
 
-    if (this._config.positionStrategy && this._config.positionStrategy.detach) {
-      this._config.positionStrategy.detach();
+    if (this._positionStrategy && this._positionStrategy.detach) {
+      this._positionStrategy.detach();
     }
 
     if (this._config.scrollStrategy) {
       this._config.scrollStrategy.disable();
-    }
-
-    if (this._config.panelClass) {
-      this._toggleClasses(this._pane, this._config.panelClass, false);
     }
 
     const detachmentResult = this._portalOutlet.detach();
@@ -186,25 +198,12 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     // Remove this overlay from keyboard dispatcher tracking.
     this._keyboardDispatcher.remove(this);
 
-    // Keeping the host element in DOM the can cause scroll jank, because it still gets rendered,
-    // even though it's transparent and unclickable. We can't remove the host here immediately,
-    // because the overlay pane's content might still be animating. This stream helps us avoid
-    // interrupting the animation by waiting for the pane to become empty.
-    const subscription = this._ngZone.onStable
-      .asObservable()
-      .pipe(takeUntil(merge(this._attachments, this._detachments)))
-      .subscribe(() => {
-        // Needs a couple of checks for the pane and host, because
-        // they may have been removed by the time the zone stabilizes.
-        if (!this._pane || !this._host || this._pane.children.length === 0) {
-          if (this._host && this._host.parentElement) {
-            this._previousHostParent = this._host.parentElement;
-            this._previousHostParent.removeChild(this._host);
-          }
+    // Keeping the host element in DOM the can cause scroll jank, because it still gets
+    // rendered, even though it's transparent and unclickable which is why we remove it.
+    this._detachContentWhenStable();
 
-          subscription.unsubscribe();
-        }
-      });
+    // Stop listening for location changes.
+    this._locationChanges.unsubscribe();
 
     return detachmentResult;
   }
@@ -213,8 +212,8 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   dispose(): void {
     const isAttached = this.hasAttached();
 
-    if (this._config.positionStrategy) {
-      this._config.positionStrategy.dispose();
+    if (this._positionStrategy) {
+      this._positionStrategy.dispose();
     }
 
     if (this._config.scrollStrategy) {
@@ -222,6 +221,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     }
 
     this.detachBackdrop();
+    this._locationChanges.unsubscribe();
     this._keyboardDispatcher.remove(this);
     this._portalOutlet.dispose();
     this._attachments.complete();
@@ -274,8 +274,26 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
 
   /** Updates the position of the overlay based on the position strategy. */
   updatePosition() {
-    if (this._config.positionStrategy) {
-      this._config.positionStrategy.apply();
+    if (this._positionStrategy) {
+      this._positionStrategy.apply();
+    }
+  }
+
+  /** Switches to a new position strategy and updates the overlay position. */
+  updatePositionStrategy(strategy: PositionStrategy) {
+    if (strategy === this._positionStrategy) {
+      return;
+    }
+
+    if (this._positionStrategy) {
+      this._positionStrategy.dispose();
+    }
+
+    this._positionStrategy = strategy;
+
+    if (this.hasAttached()) {
+      strategy.attach(this);
+      this.updatePosition();
     }
   }
 
@@ -423,6 +441,37 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     coerceArray(cssClasses).forEach(cssClass => {
       // We can't do a spread here, because IE doesn't support setting multiple classes.
       isAdd ? classList.add(cssClass) : classList.remove(cssClass);
+    });
+  }
+
+  /** Detaches the overlay content next time the zone stabilizes. */
+  private _detachContentWhenStable() {
+    // Normally we wouldn't have to explicitly run this outside the `NgZone`, however
+    // if the consumer is using `zone-patch-rxjs`, the `Subscription.unsubscribe` call will
+    // be patched to run inside the zone, which will throw us into an infinite loop.
+    this._ngZone.runOutsideAngular(() => {
+      // We can't remove the host here immediately, because the overlay pane's content
+      // might still be animating. This stream helps us avoid interrupting the animation
+      // by waiting for the pane to become empty.
+      const subscription = this._ngZone.onStable
+        .asObservable()
+        .pipe(takeUntil(merge(this._attachments, this._detachments)))
+        .subscribe(() => {
+          // Needs a couple of checks for the pane and host, because
+          // they may have been removed by the time the zone stabilizes.
+          if (!this._pane || !this._host || this._pane.children.length === 0) {
+            if (this._pane && this._config.panelClass) {
+              this._toggleClasses(this._pane, this._config.panelClass, false);
+            }
+
+            if (this._host && this._host.parentElement) {
+              this._previousHostParent = this._host.parentElement;
+              this._previousHostParent.removeChild(this._host);
+            }
+
+            subscription.unsubscribe();
+          }
+        });
     });
   }
 }

@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {QueryList} from '@angular/core';
 import {MatGridTile} from './grid-tile';
 
 /**
@@ -44,7 +43,7 @@ export class TileCoordinator {
    * Ex: A list with 1 row that contains a tile with rowspan 2 will have a total rowspan of 2.
    */
   get rowspan() {
-    let lastRowMax = Math.max(...this.tracker);
+    const lastRowMax = Math.max(...this.tracker);
     // if any of the tiles has a rowspan that pushes it beyond the total row count,
     // add the difference to the rowcount
     return lastRowMax > 1 ? this.rowCount + lastRowMax - 1 : this.rowCount;
@@ -53,17 +52,23 @@ export class TileCoordinator {
   /** The computed (row, col) position of each tile (the output). */
   positions: TilePosition[];
 
-  constructor(numColumns: number, tiles: QueryList<MatGridTile>) {
+  /**
+   * Updates the tile positions.
+   * @param numColumns Amount of columns in the grid.
+   */
+  update(numColumns: number, tiles: MatGridTile[]) {
+    this.columnIndex = 0;
+    this.rowIndex = 0;
+
     this.tracker = new Array(numColumns);
     this.tracker.fill(0, 0, this.tracker.length);
-
     this.positions = tiles.map(tile => this._trackTile(tile));
   }
 
   /** Calculates the row and col position of a tile. */
   private _trackTile(tile: MatGridTile): TilePosition {
     // Find a gap large enough for this tile.
-    let gapStartIndex = this._findMatchingGap(tile.colspan);
+    const gapStartIndex = this._findMatchingGap(tile.colspan);
 
     // Place tile in the resulting gap.
     this._markTilePosition(gapStartIndex, tile);
@@ -91,6 +96,8 @@ export class TileCoordinator {
       // If we've reached the end of the row, go to the next row.
       if (this.columnIndex + tileCols > this.tracker.length) {
         this._nextRow();
+        gapStartIndex = this.tracker.indexOf(0, this.columnIndex);
+        gapEndIndex = this._findGapEndIndex(gapStartIndex);
         continue;
       }
 
@@ -99,6 +106,8 @@ export class TileCoordinator {
       // If there are no more empty spaces in this row at all, move on to the next row.
       if (gapStartIndex == -1) {
         this._nextRow();
+        gapStartIndex = this.tracker.indexOf(0, this.columnIndex);
+        gapEndIndex = this._findGapEndIndex(gapStartIndex);
         continue;
       }
 
@@ -108,8 +117,9 @@ export class TileCoordinator {
       // gap on the next iteration.
       this.columnIndex = gapStartIndex + 1;
 
-      // Continue iterating until we find a gap wide enough for this tile.
-    } while (gapEndIndex - gapStartIndex < tileCols);
+      // Continue iterating until we find a gap wide enough for this tile. Since gapEndIndex is
+      // exclusive, gapEndIndex is 0 means we didn't find a gap and should continue.
+    } while ((gapEndIndex - gapStartIndex < tileCols) || (gapEndIndex == 0));
 
     // If we still didn't manage to find a gap, ensure that the index is
     // at least zero so the tile doesn't get pulled out of the grid.

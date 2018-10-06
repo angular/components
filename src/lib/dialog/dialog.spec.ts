@@ -24,7 +24,8 @@ import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatDialogContainer} from './dialog-container';
-import {OverlayContainer, ScrollStrategy, ScrollDispatcher, Overlay} from '@angular/cdk/overlay';
+import {OverlayContainer, ScrollStrategy, Overlay} from '@angular/cdk/overlay';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {A, ESCAPE} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {
@@ -636,6 +637,20 @@ describe('MatDialog', () => {
     expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(0);
   }));
 
+  it('should close all of the dialogs when the injectable is destroyed', fakeAsync(() => {
+    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsg);
+
+    expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(3);
+
+    dialog.ngOnDestroy();
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(0);
+  }));
+
   it('should allow the consumer to disable closing a dialog on navigation', fakeAsync(() => {
     dialog.open(PizzaMsg);
     dialog.open(PizzaMsg, {closeOnNavigation: false});
@@ -921,7 +936,7 @@ describe('MatDialog', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.tagName)
+      expect(document.activeElement!.tagName)
           .toBe('INPUT', 'Expected first tabbable element (input) in the dialog to be focused.');
     }));
 
@@ -934,7 +949,7 @@ describe('MatDialog', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.tagName).not.toBe('INPUT');
+      expect(document.activeElement!.tagName).not.toBe('INPUT');
     }));
 
     it('should re-focus trigger element when dialog closes', fakeAsync(() => {
@@ -950,18 +965,18 @@ describe('MatDialog', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.id)
+      expect(document.activeElement!.id)
           .not.toBe('dialog-trigger', 'Expected the focus to change when dialog was opened.');
 
       dialogRef.close();
-      expect(document.activeElement.id).not.toBe('dialog-trigger',
+      expect(document.activeElement!.id).not.toBe('dialog-trigger',
           'Expcted the focus not to have changed before the animation finishes.');
 
       flushMicrotasks();
       viewContainerFixture.detectChanges();
       tick(500);
 
-      expect(document.activeElement.id).toBe('dialog-trigger',
+      expect(document.activeElement!.id).toBe('dialog-trigger',
           'Expected that the trigger was refocused after the dialog is closed.');
 
       document.body.removeChild(button);
@@ -991,7 +1006,7 @@ describe('MatDialog', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.id).toBe('input-to-be-focused',
+      expect(document.activeElement!.id).toBe('input-to-be-focused',
           'Expected that the trigger was refocused after the dialog is closed.');
 
       document.body.removeChild(button);
@@ -1005,7 +1020,7 @@ describe('MatDialog', () => {
         viewContainerFixture.detectChanges();
         flushMicrotasks();
 
-        expect(document.activeElement.tagName)
+        expect(document.activeElement!.tagName)
             .toBe('MAT-DIALOG-CONTAINER', 'Expected dialog container to be focused.');
       }));
 
@@ -1025,7 +1040,7 @@ describe('MatDialog', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.id)
+      expect(document.activeElement!.id)
           .not.toBe('dialog-trigger', 'Expected the focus to change when dialog was opened.');
 
       dialogRef.close();
@@ -1033,7 +1048,7 @@ describe('MatDialog', () => {
       viewContainerFixture.detectChanges();
       tick(500);
 
-      expect(document.activeElement.id).not.toBe('dialog-trigger',
+      expect(document.activeElement!.id).not.toBe('dialog-trigger',
           'Expected focus not to have been restored.');
 
       document.body.removeChild(button);
@@ -1231,6 +1246,22 @@ describe('MatDialog with a parent MatDialog', () => {
 
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
   }));
+
+  it('should not close the parent dialogs when a child is destroyed', fakeAsync(() => {
+    parentDialog.open(PizzaMsg);
+    fixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.textContent)
+        .toContain('Pizza', 'Expected a dialog to be opened');
+
+    childDialog.ngOnDestroy();
+    fixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.textContent)
+        .toContain('Pizza', 'Expected a dialog to be opened');
+  }));
 });
 
 describe('MatDialog with default options', () => {
@@ -1292,7 +1323,7 @@ describe('MatDialog with default options', () => {
     dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeTruthy();
 
-    expect(document.activeElement.tagName).not.toBe('INPUT');
+    expect(document.activeElement!.tagName).not.toBe('INPUT');
 
     let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
     expect(overlayPane.style.width).toBe('100px');

@@ -18,6 +18,7 @@ import {
   EmbeddedViewRef,
   EventEmitter,
   Inject,
+  InjectionToken,
   Input,
   NgZone,
   OnDestroy,
@@ -27,8 +28,8 @@ import {
   SkipSelf,
   ViewContainerRef,
 } from '@angular/core';
-import {merge, Observable, Subject} from 'rxjs';
-import {takeUntil, take} from 'rxjs/operators';
+import {Observable, Subject, Subscription, Observer} from 'rxjs';
+import {take} from 'rxjs/operators';
 import {DragDropRegistry} from './drag-drop-registry';
 import {
   CdkDragDrop,
@@ -42,17 +43,38 @@ import {CdkDragHandle} from './drag-handle';
 import {CdkDragPlaceholder} from './drag-placeholder';
 import {CdkDragPreview} from './drag-preview';
 import {CDK_DROP_CONTAINER, CdkDropContainer} from './drop-container';
+import {getTransformTransitionDurationInMs} from './transition-duration';
 
 
 // TODO(crisbeto): add auto-scrolling functionality.
 // TODO(crisbeto): add an API for moving a draggable up/down the
 // list programmatically. Useful for keyboard controls.
 
-/**
- * Amount the pixels the user should drag before we
- * consider them to have changed the drag direction.
- */
-const POINTER_DIRECTION_CHANGE_THRESHOLD = 5;
+/** Object that can be used to configure the behavior of CdkDrag. */
+export interface CdkDragConfig {
+  /**
+   * Minimum amount of pixels that the user should
+   * drag, before the CDK initiates a drag sequence.
+   */
+  dragStartThreshold: number;
+
+  /**
+   * Amount the pixels the user should drag before the CDK
+   * considers them to have changed the drag direction.
+   */
+  pointerDirectionChangeThreshold: number;
+}
+
+/** Injection token that can be used to configure the behavior of `CdkDrag`. */
+export const CDK_DRAG_CONFIG = new InjectionToken<CdkDragConfig>('CDK_DRAG_CONFIG', {
+  providedIn: 'root',
+  factory: CDK_DRAG_CONFIG_FACTORY
+});
+
+/** @docs-private */
+export function CDK_DRAG_CONFIG_FACTORY(): CdkDragConfig {
+  return {dragStartThreshold: 5, pointerDirectionChangeThreshold: 5};
+}
 
 /** Element that can be moved inside a CdkDrop container. */
 @Directive({
@@ -60,12 +82,11 @@ const POINTER_DIRECTION_CHANGE_THRESHOLD = 5;
   exportAs: 'cdkDrag',
   host: {
     'class': 'cdk-drag',
-    '[class.cdk-drag-dragging]': '_isDragging()',
+    '[class.cdk-drag-dragging]': '_hasStartedDragging && _isDragging()',
   }
 })
 export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
   private _document: Document;
-  private _destroyed = new Subject<void>();
 
   /** Element displayed next to the user's pointer while the element is dragged. */
   private _preview: HTMLElement;
@@ -102,8 +123,14 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
   /** CSS `transform` that is applied to the element while it's being dragged. */
   private _activeTransform: Point = {x: 0, y: 0};
 
+  /**
+   * Whether the dragging sequence has been started. Doesn't
+   * necessarily mean that the element has been moved.
+   */
+  _hasStartedDragging: boolean;
+
   /** Whether the element has moved since the user started dragging it. */
-  private _hasMoved = false;
+  private _hasMoved: boolean;
 
   /** Drop container in which the CdkDrag resided when dragging began. */
   private _initialContainer: CdkDropContainer;
@@ -128,6 +155,12 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
 
   /** Root element that will be dragged by the user. */
   private _rootElement: HTMLElement;
+
+  /** Subscription to pointer movement events. */
+  private _pointerMoveSubscription = Subscription.EMPTY;
+
+  /** Subscription to the event that is dispatched when the user lifts their pointer. */
+  private _pointerUpSubscription = Subscription.EMPTY;
 
   /** Elements that can be used to drag the draggable item. */
   @ContentChildren(CdkDragHandle) _handles: QueryList<CdkDragHandle>;
@@ -173,15 +206,16 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
    * Emits as the user is dragging the item. Use with caution,
    * because this event will fire for every pixel that the user has dragged.
    */
-  @Output('cdkDragMoved') moved: Observable<CdkDragMove<T>> = Observable.create(observer => {
-    const subscription = this._moveEvents.subscribe(observer);
-    this._moveEventSubscriptions++;
+  @Output('cdkDragMoved') moved: Observable<CdkDragMove<T>> =
+      Observable.create((observer: Observer<CdkDragMove<T>>) => {
+        const subscription = this._moveEvents.subscribe(observer);
+        this._moveEventSubscriptions++;
 
-    return () => {
-      subscription.unsubscribe();
-      this._moveEventSubscriptions--;
-    };
-  });
+        return () => {
+          subscription.unsubscribe();
+          this._moveEventSubscriptions--;
+        };
+      });
 
   constructor(
     /** Element that the draggable is attached to. */
@@ -193,6 +227,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     private _viewContainerRef: ViewContainerRef,
     private _viewportRuler: ViewportRuler,
     private _dragDropRegistry: DragDropRegistry<CdkDrag<T>, CdkDropContainer>,
+    @Inject(CDK_DRAG_CONFIG) private _config: CdkDragConfig,
     @Optional() private _dir: Directionality) {
       this._document = document;
       _dragDropRegistry.registerDragItem(this);
@@ -218,14 +253,14 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     // their original DOM position and then they get transferred to the portal.
     this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
       const rootElement = this._rootElement = this._getRootElement();
-      rootElement.addEventListener('mousedown', this._startDragging);
-      rootElement.addEventListener('touchstart', this._startDragging);
+      rootElement.addEventListener('mousedown', this._pointerDown);
+      rootElement.addEventListener('touchstart', this._pointerDown);
     });
   }
 
   ngOnDestroy() {
-    this._rootElement.removeEventListener('mousedown', this._startDragging);
-    this._rootElement.removeEventListener('touchstart', this._startDragging);
+    this._rootElement.removeEventListener('mousedown', this._pointerDown);
+    this._rootElement.removeEventListener('touchstart', this._pointerDown);
     this._destroyPreview();
     this._destroyPlaceholder();
 
@@ -239,13 +274,17 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
 
     this._nextSibling = null;
     this._dragDropRegistry.removeDragItem(this);
+    this._removeSubscriptions();
     this._moveEvents.complete();
-    this._destroyed.next();
-    this._destroyed.complete();
   }
 
-  /** Starts the dragging sequence. */
-  _startDragging = (event: MouseEvent | TouchEvent) => {
+  /** Checks whether the element is currently being dragged. */
+  _isDragging() {
+    return this._dragDropRegistry.isDragging(this);
+  }
+
+  /** Handler for the `mousedown`/`touchstart` events. */
+  _pointerDown = (event: MouseEvent | TouchEvent) => {
     // Delegate the event based on whether it started from a handle or the element itself.
     if (this._handles.length) {
       const targetHandle = this._handles.find(handle => {
@@ -255,22 +294,20 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
       });
 
       if (targetHandle) {
-        this._pointerDown(targetHandle.element.nativeElement, event);
+        this._initializeDragSequence(targetHandle.element.nativeElement, event);
       }
     } else {
-      this._pointerDown(this._rootElement, event);
+      this._initializeDragSequence(this._rootElement, event);
     }
   }
 
-  /** Checks whether the element is currently being dragged. */
-  _isDragging() {
-    return this._dragDropRegistry.isDragging(this);
-  }
-
-  /** Handler for when the pointer is pressed down on the element or the handle. */
-  private _pointerDown = (referenceElement: HTMLElement,
-                          event: MouseEvent | TouchEvent) => {
-
+  /**
+   * Sets up the different variables and subscriptions
+   * that will be necessary for the dragging sequence.
+   * @param referenceElement Element that started the drag sequence.
+   * @param event Browser event object that started the sequence.
+   */
+  private _initializeDragSequence(referenceElement: HTMLElement, event: MouseEvent | TouchEvent) {
     const isDragging = this._isDragging();
 
     // Abort if the user is already dragging or is using a mouse button other than the primary one.
@@ -278,18 +315,10 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const endedOrDestroyed = merge(this.ended, this._destroyed);
-
-    this._dragDropRegistry.pointerMove
-      .pipe(takeUntil(endedOrDestroyed))
-      .subscribe(this._pointerMove);
-
-    this._dragDropRegistry.pointerUp
-      .pipe(takeUntil(endedOrDestroyed))
-      .subscribe(this._pointerUp);
-
-    this._dragDropRegistry.startDragging(this, event);
+    this._hasStartedDragging = this._hasMoved = false;
     this._initialContainer = this.dropContainer;
+    this._pointerMoveSubscription = this._dragDropRegistry.pointerMove.subscribe(this._pointerMove);
+    this._pointerUpSubscription = this._dragDropRegistry.pointerUp.subscribe(this._pointerUp);
     this._scrollPosition = this._viewportRuler.getViewportScrollPosition();
 
     // If we have a custom preview template, the element won't be visible anyway so we avoid the
@@ -297,10 +326,13 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     this._pickupPositionInElement = this._previewTemplate ? {x: 0, y: 0} :
         this._getPointerPositionInElement(referenceElement, event);
     const pointerPosition = this._pickupPositionOnPage = this._getPointerPositionOnPage(event);
-
     this._pointerDirectionDelta = {x: 0, y: 0};
     this._pointerPositionAtLastDirectionChange = {x: pointerPosition.x, y: pointerPosition.y};
+    this._dragDropRegistry.startDragging(this, event);
+  }
 
+  /** Starts the dragging sequence. */
+  private _startDragSequence() {
     // Emit the event on the item before the one on the container.
     this.started.emit({source: this});
 
@@ -326,16 +358,27 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
 
   /** Handler that is invoked when the user moves their pointer after they've initiated a drag. */
   private _pointerMove = (event: MouseEvent | TouchEvent) => {
-    // TODO(crisbeto): this should start dragging after a certain threshold,
-    // otherwise we risk interfering with clicks on the element.
-    if (!this._isDragging()) {
+    const pointerPosition = this._getConstrainedPointerPosition(event);
+
+    if (!this._hasStartedDragging) {
+      const distanceX = Math.abs(pointerPosition.x - this._pickupPositionOnPage.x);
+      const distanceY = Math.abs(pointerPosition.y - this._pickupPositionOnPage.y);
+      const minimumDistance = this._config.dragStartThreshold;
+
+      // Only start dragging after the user has moved more than the minimum distance in either
+      // direction. Note that this is preferrable over doing something like `skip(minimumDistance)`
+      // in the `pointerMove` subscription, because we're not guaranteed to have one move event
+      // per pixel of movement (e.g. if the user moves their pointer quickly).
+      if (distanceX + distanceY >= minimumDistance) {
+        this._hasStartedDragging = true;
+        this._ngZone.run(() => this._startDragSequence());
+      }
+
       return;
     }
 
     this._hasMoved = true;
     event.preventDefault();
-
-    const pointerPosition = this._getConstrainedPointerPosition(event);
     this._updatePointerDirectionDelta(pointerPosition);
 
     if (this.dropContainer) {
@@ -351,13 +394,14 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
 
     // Since this event gets fired for every pixel while dragging, we only
     // want to fire it if the consumer opted into it. Also we have to
-    // re-enter the zone becaus we run all of the events on the outside.
+    // re-enter the zone because we run all of the events on the outside.
     if (this._moveEventSubscriptions > 0) {
       this._ngZone.run(() => {
         this._moveEvents.next({
           source: this,
           pointerPosition,
-          event
+          event,
+          delta: this._pointerDirectionDelta
         });
       });
     }
@@ -369,7 +413,12 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
       return;
     }
 
+    this._removeSubscriptions();
     this._dragDropRegistry.stopDragging(this);
+
+    if (!this._hasStartedDragging) {
+      return;
+    }
 
     if (!this.dropContainer) {
       // Convert the active transform into a passive one. This means that next time
@@ -395,7 +444,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     if (this._nextSibling) {
       this._nextSibling.parentNode!.insertBefore(this._rootElement, this._nextSibling);
     } else {
-      this._placeholder.parentNode!.appendChild(this._rootElement);
+      this._initialContainer.element.nativeElement.appendChild(this._rootElement);
     }
 
     this._destroyPreview();
@@ -414,6 +463,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
         previousContainer: this._initialContainer
       });
       this.dropContainer.drop(this, currentIndex, this._initialContainer);
+      this.dropContainer = this._initialContainer;
     });
   }
 
@@ -421,9 +471,18 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
    * Updates the item's position in its drop container, or moves it
    * into a new one, depending on its current drag position.
    */
-  private _updateActiveDropContainer({x, y}) {
+  private _updateActiveDropContainer({x, y}: Point) {
     // Drop container that draggable has been moved into.
-    const newContainer = this.dropContainer._getSiblingContainerFromPosition(this, x, y);
+    let newContainer = this.dropContainer._getSiblingContainerFromPosition(this, x, y);
+
+    // If we couldn't find a new container to move the item into, and the item has left it's
+    // initial container, check whether the it's allowed to return into its original container.
+    // This handles the case where two containers are connected one way and the user tries to
+    // undo dragging an item into a new container.
+    if (!newContainer && this.dropContainer !== this._initialContainer &&
+        this._initialContainer._canReturnItem(this, x, y)) {
+      newContainer = this._initialContainer;
+    }
 
     if (newContainer) {
       this._ngZone.run(() => {
@@ -431,8 +490,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
         this.exited.emit({item: this, container: this.dropContainer});
         this.dropContainer.exit(this);
         // Notify the new container that the item has entered.
-        this.entered.emit({item: this, container: newContainer});
-        this.dropContainer = newContainer;
+        this.entered.emit({item: this, container: newContainer!});
+        this.dropContainer = newContainer!;
         this.dropContainer.enter(this, x, y);
       });
     }
@@ -501,12 +560,9 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     const elementRect = this._rootElement.getBoundingClientRect();
     const handleElement = referenceElement === this._rootElement ? null : referenceElement;
     const referenceRect = handleElement ? handleElement.getBoundingClientRect() : elementRect;
-    const x = this._isTouchEvent(event) ?
-        event.targetTouches[0].pageX - referenceRect.left - this._scrollPosition.left :
-        event.offsetX;
-    const y = this._isTouchEvent(event) ?
-        event.targetTouches[0].pageY - referenceRect.top - this._scrollPosition.top :
-        event.offsetY;
+    const point = this._isTouchEvent(event) ? event.targetTouches[0] : event;
+    const x = point.pageX - referenceRect.left - this._scrollPosition.left;
+    const y = point.pageY - referenceRect.top - this._scrollPosition.top;
 
     return {
       x: referenceRect.left - elementRect.left + x,
@@ -536,7 +592,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     // we need to trigger a style recalculation in order for the `cdk-drag-animating` class to
     // apply its style, we take advantage of the available info to figure out whether we need to
     // bind the event in the first place.
-    const duration = getTransitionDurationInMs(this._preview);
+    const duration = getTransformTransitionDurationInMs(this._preview);
 
     if (duration === 0) {
       return Promise.resolve();
@@ -545,7 +601,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     return this._ngZone.runOutsideAngular(() => {
       return new Promise(resolve => {
         const handler = ((event: TransitionEvent) => {
-          if (!event || event.target === this._preview) {
+          if (!event || (event.target === this._preview && event.propertyName === 'transform')) {
             this._preview.removeEventListener('transitionend', handler);
             resolve();
             clearTimeout(timeout);
@@ -555,7 +611,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
         // If a transition is short enough, the browser might not fire the `transitionend` event.
         // Since we know how long it's supposed to take, add a timeout with a 50% buffer that'll
         // fire if the transition hasn't completed when it was supposed to.
-        const timeout = setTimeout(handler, duration * 1.5);
+        const timeout = setTimeout(handler as Function, duration * 1.5);
         this._preview.addEventListener('transitionend', handler);
       });
     });
@@ -650,24 +706,29 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     // to change for every pixel, otherwise anything that depends on it can look erratic.
     // To make the delta more consistent, we track how much the user has moved since the last
     // delta change and we only update it after it has reached a certain threshold.
-    if (changeX > POINTER_DIRECTION_CHANGE_THRESHOLD) {
+    if (changeX > this._config.pointerDirectionChangeThreshold) {
       delta.x = x > positionSinceLastChange.x ? 1 : -1;
       positionSinceLastChange.x = x;
     }
 
-    if (changeY > POINTER_DIRECTION_CHANGE_THRESHOLD) {
+    if (changeY > this._config.pointerDirectionChangeThreshold) {
       delta.y = y > positionSinceLastChange.y ? 1 : -1;
       positionSinceLastChange.y = y;
     }
+
+    return delta;
   }
 
   /** Gets the root draggable element, based on the `rootElementSelector`. */
   private _getRootElement(): HTMLElement {
     if (this.rootElementSelector) {
+      const selector = this.rootElementSelector;
       let currentElement = this.element.nativeElement.parentElement as HTMLElement | null;
 
       while (currentElement) {
-        if (currentElement.matches(this.rootElementSelector)) {
+        // IE doesn't support `matches` so we have to fall back to `msMatchesSelector`.
+        if (currentElement.matches ? currentElement.matches(selector) :
+            (currentElement as any).msMatchesSelector(selector)) {
           return currentElement;
         }
 
@@ -677,22 +738,12 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
 
     return this.element.nativeElement;
   }
-}
 
-/** Parses a CSS time value to milliseconds. */
-function parseCssTimeUnitsToMs(value: string): number {
-  // Some browsers will return it in seconds, whereas others will return milliseconds.
-  const multiplier = value.toLowerCase().indexOf('ms') > -1 ? 1 : 1000;
-  return parseFloat(value) * multiplier;
-}
-
-/** Gets the transition duration, including the delay, of an element in milliseconds. */
-function getTransitionDurationInMs(element: HTMLElement): number {
-  const computedStyle = getComputedStyle(element);
-  const rawDuration = computedStyle.getPropertyValue('transition-duration');
-  const rawDelay = computedStyle.getPropertyValue('transition-delay');
-
-  return parseCssTimeUnitsToMs(rawDuration) + parseCssTimeUnitsToMs(rawDelay);
+  /** Unsubscribes from the global subscriptions. */
+  private _removeSubscriptions() {
+    this._pointerMoveSubscription.unsubscribe();
+    this._pointerUpSubscription.unsubscribe();
+  }
 }
 
 /** Point on the page or within an element. */

@@ -1,15 +1,17 @@
 import {Package} from 'dgeni';
 import {Host} from 'dgeni-packages/typescript/services/ts-host/host';
+import {HighlightNunjucksExtension} from './nunjucks-tags/highlight';
 import {patchLogService} from './patch-log-service';
 import {DocsPrivateFilter} from './processors/docs-private-filter';
 import {Categorizer} from './processors/categorizer';
 import {FilterDuplicateExports} from './processors/filter-duplicate-exports';
 import {MergeInheritedProperties} from './processors/merge-inherited-properties';
-import {ComponentGrouper} from './processors/component-grouper';
+import {EntryPointGrouper} from './processors/entry-point-grouper';
 import {ReadTypeScriptModules} from 'dgeni-packages/typescript/processors/readTypeScriptModules';
 import {TsParser} from 'dgeni-packages/typescript/services/TsParser';
 import {sync as globSync} from 'glob';
 import * as path from 'path';
+import {NoTruncateConstTypeProcessor} from './processors/no-truncate-const-type';
 
 // Dgeni packages that the Material docs package depends on.
 const jsdocPackage = require('dgeni-packages/jsdoc');
@@ -50,6 +52,9 @@ export const apiDocsPackage = new Package('material2-api-docs', [
   typescriptPackage,
 ]);
 
+// Processor that ensures that Dgeni const docs don't truncate the resolved type string.
+apiDocsPackage.processor(new NoTruncateConstTypeProcessor());
+
 // Processor that filters out duplicate exports that should not be shown in the docs.
 apiDocsPackage.processor(new FilterDuplicateExports());
 
@@ -62,8 +67,8 @@ apiDocsPackage.processor(new DocsPrivateFilter());
 // Processor that appends categorization flags to the docs, e.g. `isDirective`, `isNgModule`, etc.
 apiDocsPackage.processor(new Categorizer());
 
-// Processor to group components into top-level groups such as "Tabs", "Sidenav", etc.
-apiDocsPackage.processor(new ComponentGrouper());
+// Processor to group docs into top-level entry-points such as "tabs", "sidenav", etc.
+apiDocsPackage.processor(new EntryPointGrouper());
 
 // Configure the log level of the API docs dgeni package.
 apiDocsPackage.config((log: any) => log.level = 'info');
@@ -82,7 +87,7 @@ apiDocsPackage.config((log: any) => patchLogService(log));
 // Configure the output path for written files (i.e., file names).
 apiDocsPackage.config((computePathsProcessor: any) => {
   computePathsProcessor.pathTemplates = [{
-    docTypes: ['componentGroup'],
+    docTypes: ['entry-point'],
     pathTemplate: '${name}',
     outputPathTemplate: '${name}.html',
   }];
@@ -163,4 +168,6 @@ apiDocsPackage.config((templateFinder: any, templateEngine: any) => {
     variableStart: '{$',
     variableEnd: '$}'
   };
+
+  templateEngine.tags.push(new HighlightNunjucksExtension());
 });

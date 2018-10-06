@@ -49,6 +49,7 @@ import {
 // Increasing integer for generating unique ids for slide-toggle components.
 let nextUniqueId = 0;
 
+/** @docs-private */
 export const MAT_SLIDE_TOGGLE_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => MatSlideToggle),
@@ -85,6 +86,7 @@ export const _MatSlideToggleMixinBase:
   host: {
     'class': 'mat-slide-toggle',
     '[id]': 'id',
+    '[attr.tabindex]': 'null',
     '[class.mat-checked]': 'checked',
     '[class.mat-disabled]': 'disabled',
     '[class.mat-slide-toggle-label-before]': 'labelPosition == "before"',
@@ -133,8 +135,6 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
 
   /** Whether the label should appear after or before the slide-toggle. Defaults to 'after' */
   @Input() labelPosition: 'before' | 'after' = 'after';
-
-  /** Whether the slide-toggle element is checked or not */
 
   /** Used to set the aria-label attribute on the underlying input element. */
   @Input('aria-label') ariaLabel: string | null = null;
@@ -279,7 +279,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
 
   /** Focuses the slide-toggle. */
   focus(): void {
-    this._focusMonitor.focusVia(this._inputElement.nativeElement, 'keyboard');
+    this._focusMonitor.focusVia(this._inputElement, 'keyboard');
   }
 
   /** Toggles the checked state of the slide-toggle. */
@@ -358,9 +358,11 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
 
   /** Method being called whenever the label text changes. */
   _onLabelTextChange() {
-    // This method is getting called whenever the label of the slide-toggle changes.
-    // Since the slide-toggle uses the OnPush strategy we need to notify it about the change
-    // that has been recognized by the cdkObserveContent directive.
-    this._changeDetectorRef.markForCheck();
+    // Since the event of the `cdkObserveContent` directive runs outside of the zone, the
+    // slide-toggle component will be only marked for check, but no actual change detection runs
+    // automatically. Instead of going back into the zone in order to trigger a change detection
+    // which causes *all* components to be checked (if explicitly marked or not using OnPush),
+    // we only trigger an explicit change detection for the slide-toggle view and it's children.
+    this._changeDetectorRef.detectChanges();
   }
 }

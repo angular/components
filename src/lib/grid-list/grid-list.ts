@@ -23,6 +23,7 @@ import {TileCoordinator} from './tile-coordinator';
 import {TileStyler, FitTileStyler, RatioTileStyler, FixedTileStyler} from './tile-styler';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {MAT_GRID_LIST, MatGridListBase} from './grid-list-base';
 
 
 // TODO(kara): Conditional (responsive) column count / row size.
@@ -40,12 +41,19 @@ const MAT_FIT_MODE = 'fit';
   host: {
     'class': 'mat-grid-list',
   },
+  providers: [{
+    provide: MAT_GRID_LIST,
+    useExisting: MatGridList
+  }],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatGridList implements OnInit, AfterContentChecked {
+export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked {
   /** Number of columns being rendered. */
   private _cols: number;
+
+  /** Used for determiningthe position of each tile in the grid. */
+  private _tileCoordinator: TileCoordinator;
 
   /**
    * Row height value passed in by user. This can be one of three types:
@@ -70,7 +78,9 @@ export class MatGridList implements OnInit, AfterContentChecked {
   /** Amount of columns in the grid list. */
   @Input()
   get cols(): number { return this._cols; }
-  set cols(value: number) { this._cols = Math.round(coerceNumberProperty(value)); }
+  set cols(value: number) {
+    this._cols = Math.max(1, Math.round(coerceNumberProperty(value)));
+  }
 
   /** Size of the grid list's gutter in pixels. */
   @Input()
@@ -133,11 +143,19 @@ export class MatGridList implements OnInit, AfterContentChecked {
 
   /** Computes and applies the size and position for all children grid tiles. */
   private _layoutTiles(): void {
-    const tracker = new TileCoordinator(this.cols, this._tiles);
+    if (!this._tileCoordinator) {
+      this._tileCoordinator = new TileCoordinator();
+    }
+
+
+    const tracker = this._tileCoordinator;
+    const tiles = this._tiles.filter(tile => !tile._gridList || tile._gridList === this);
     const direction = this._dir ? this._dir.value : 'ltr';
+
+    this._tileCoordinator.update(this.cols, tiles);
     this._tileStyler.init(this.gutterSize, tracker, this.cols, direction);
 
-    this._tiles.forEach((tile, index) => {
+    tiles.forEach((tile, index) => {
       const pos = tracker.positions[index];
       this._tileStyler.setStyle(tile, pos.row, pos.col);
     });
@@ -148,7 +166,7 @@ export class MatGridList implements OnInit, AfterContentChecked {
   /** Sets style on the main grid-list element, given the style name and value. */
   _setListStyle(style: [string, string | null] | null): void {
     if (style) {
-      this._element.nativeElement.style[style[0]] = style[1];
+      (this._element.nativeElement.style as any)[style[0]] = style[1];
     }
   }
 }

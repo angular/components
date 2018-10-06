@@ -33,6 +33,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
 import {filter, startWith, take} from 'rxjs/operators';
 import {matExpansionAnimations} from './expansion-animations';
@@ -73,6 +74,7 @@ let uniqueId = 0;
   host: {
     'class': 'mat-expansion-panel',
     '[class.mat-expanded]': 'expanded',
+    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
     '[class.mat-expansion-panel-spacing]': '_hasSpacing()',
   }
 })
@@ -121,7 +123,9 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
               _changeDetectorRef: ChangeDetectorRef,
               _uniqueSelectionDispatcher: UniqueSelectionDispatcher,
               private _viewContainerRef: ViewContainerRef,
-              @Inject(DOCUMENT) _document?: any) {
+              // @breaking-change 8.0.0 _document and _animationMode to be made required
+              @Inject(DOCUMENT) _document?: any,
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     super(accordion, _changeDetectorRef, _uniqueSelectionDispatcher);
     this.accordion = accordion;
     this._document = _document;
@@ -166,20 +170,7 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
   }
 
   _bodyAnimation(event: AnimationEvent) {
-    const classList = event.element.classList;
-    const cssClass = 'mat-expanded';
     const {phaseName, toState, fromState} = event;
-
-    // Toggle the body's `overflow: hidden` class when closing starts or when expansion ends in
-    // order to prevent the cases where switching too early would cause the animation to jump.
-    // Note that we do it directly on the DOM element to avoid the slight delay that comes
-    // with doing it via change detection.
-    if (phaseName === 'done' && toState === 'expanded') {
-      classList.add(cssClass);
-    }
-    if (phaseName === 'start' && toState === 'collapsed') {
-      classList.remove(cssClass);
-    }
 
     if (phaseName === 'done' && toState === 'expanded' && fromState !== 'void') {
       this.afterExpand.emit();

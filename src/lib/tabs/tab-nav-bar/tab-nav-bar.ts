@@ -180,7 +180,6 @@ export const _MatTabLinkMixinBase:
     '[attr.tabIndex]': 'tabIndex',
     '[class.mat-tab-disabled]': 'disabled',
     '[class.mat-tab-label-active]': 'active',
-    '(click)': '_handleClick($event)'
   }
 })
 export class MatTabLink extends _MatTabLinkMixinBase
@@ -239,11 +238,10 @@ export class MatTabLink extends _MatTabLinkMixinBase
     this.tabIndex = parseInt(tabIndex) || 0;
 
     if (globalOptions) {
+      // TODO(paul): Do not copy each option manually. Allow dynamic global option changes: #9729
       this._ripplesGloballyDisabled = !!globalOptions.disabled;
-      // TODO(paul): Once the speedFactor is removed, we no longer need to copy each single option.
       this.rippleConfig = {
         terminateOnPointerUp: globalOptions.terminateOnPointerUp,
-        speedFactor: globalOptions.baseSpeedFactor,
         animation: globalOptions.animation,
       };
     }
@@ -258,15 +256,6 @@ export class MatTabLink extends _MatTabLinkMixinBase
 
     if (this._focusMonitor) {
       this._focusMonitor.stopMonitoring(this._elementRef);
-    }
-  }
-
-  /**
-   * Handles the click event, preventing default navigation if the tab link is disabled.
-   */
-  _handleClick(event: MouseEvent) {
-    if (this.disabled) {
-      event.preventDefault();
     }
   }
 }

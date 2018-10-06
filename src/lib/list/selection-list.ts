@@ -85,7 +85,6 @@ export class MatSelectionListChange {
     '(click)': '_handleClick()',
     'tabindex': '-1',
     '[class.mat-list-item-disabled]': 'disabled',
-    '[class.mat-list-item-focus]': '_hasFocus',
     '[class.mat-list-item-with-avatar]': '_avatar || _icon',
     '[attr.aria-selected]': 'selected.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
@@ -99,9 +98,6 @@ export class MatListOption extends _MatListOptionMixinBase
 
   private _selected = false;
   private _disabled = false;
-
-  /** Whether the option has focus. */
-  _hasFocus: boolean = false;
 
   @ContentChild(MatListAvatarCssMatStyler) _avatar: MatListAvatarCssMatStyler;
   @ContentChild(MatListIconCssMatStyler) _icon: MatListIconCssMatStyler;
@@ -212,12 +208,10 @@ export class MatListOption extends _MatListOptionMixinBase
   }
 
   _handleFocus() {
-    this._hasFocus = true;
     this.selectionList._setFocusedOption(this);
   }
 
   _handleBlur() {
-    this._hasFocus = false;
     this.selectionList._onTouched();
   }
 
@@ -270,6 +264,7 @@ export class MatListOption extends _MatListOptionMixinBase
     '(focus)': 'focus()',
     '(blur)': '_onTouched()',
     '(keydown)': '_keydown($event)',
+    'aria-multiselectable': 'true',
     '[attr.aria-disabled]': 'disabled.toString()',
   },
   template: '<ng-content></ng-content>',
@@ -351,7 +346,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
     }
 
     // Sync external changes to the model back to the options.
-    this._modelChanges = this.selectedOptions.onChange!.subscribe(event => {
+    this._modelChanges = this.selectedOptions.onChange.subscribe(event => {
       if (event.added) {
         for (let item of event.added) {
           item.selected = true;
@@ -392,9 +387,9 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
 
   /** Removes an option from the selection list and updates the active item. */
   _removeOptionFromList(option: MatListOption) {
-    if (option._hasFocus) {
-      const optionIndex = this._getOptionIndex(option);
+    const optionIndex = this._getOptionIndex(option);
 
+    if (optionIndex > -1 && this._keyManager.activeItemIndex === optionIndex) {
       // Check whether the option is the last item
       if (optionIndex > 0) {
         this._keyManager.setPreviousItemActive();
@@ -478,13 +473,21 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   private _setOptionsFromValues(values: string[]) {
     this.options.forEach(option => option._setSelected(false));
 
-    values
-      .map(value => {
-        return this.options.find(option =>
-            this.compareWith ? this.compareWith(option.value, value) : option.value === value);
-      })
-      .filter(Boolean)
-      .forEach(option => option!._setSelected(true));
+    values.forEach(value => {
+      const correspondingOption = this.options.find(option => {
+        // Skip options that are already in the model. This allows us to handle cases
+        // where the same primitive value is selected multiple times.
+        if (option.selected) {
+          return false;
+        }
+
+        return this.compareWith ? this.compareWith(option.value, value) : option.value === value;
+      });
+
+      if (correspondingOption) {
+        correspondingOption._setSelected(true);
+      }
+    });
   }
 
   /** Returns the values of the selected options. */

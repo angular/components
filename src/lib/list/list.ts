@@ -56,7 +56,7 @@ export class MatNavList extends _MatListMixinBase implements CanDisableRipple {}
 
 @Component({
   moduleId: module.id,
-  selector: 'mat-list',
+  selector: 'mat-list, mat-action-list',
   exportAs: 'matList',
   templateUrl: 'list.html',
   host: {'class': 'mat-list'},
@@ -100,15 +100,13 @@ export class MatListSubheaderCssMatStyler {}
 /** An item within a Material Design list. */
 @Component({
   moduleId: module.id,
-  selector: 'mat-list-item, a[mat-list-item]',
+  selector: 'mat-list-item, a[mat-list-item], button[mat-list-item]',
   exportAs: 'matListItem',
   host: {
     'class': 'mat-list-item',
     // @breaking-change 7.0.0 Remove `mat-list-item-avatar` in favor of `mat-list-item-with-avatar`.
     '[class.mat-list-item-avatar]': '_avatar || _icon',
     '[class.mat-list-item-with-avatar]': '_avatar || _icon',
-    '(focus)': '_handleFocus()',
-    '(blur)': '_handleBlur()',
   },
   inputs: ['disableRipple'],
   templateUrl: 'list-item.html',
@@ -127,6 +125,14 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
               @Optional() private _navList: MatNavList) {
     super();
     this._isNavList = !!_navList;
+
+    // If no type attributed is specified for <button>, set it to "button".
+    // If a type attribute is already specified, do nothing.
+    const element = this._getHostElement();
+    if (element.nodeName && element.nodeName.toLowerCase() === 'button'
+        && !element.hasAttribute('type')) {
+      element.setAttribute('type', 'button');
+    }
   }
 
   ngAfterContentInit() {
@@ -138,14 +144,6 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
   /** Whether this list item should show a ripple effect when clicked. */
   _isRippleDisabled() {
     return !this._isNavList || this.disableRipple || this._navList.disableRipple;
-  }
-
-  _handleFocus() {
-    this._element.nativeElement.classList.add('mat-list-item-focus');
-  }
-
-  _handleBlur() {
-    this._element.nativeElement.classList.remove('mat-list-item-focus');
   }
 
   /** Retrieves the DOM element of the component host. */

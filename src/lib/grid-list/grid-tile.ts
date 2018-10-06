@@ -11,14 +11,17 @@ import {
   ViewEncapsulation,
   ElementRef,
   Input,
+  Optional,
   ContentChildren,
   QueryList,
   AfterContentInit,
   Directive,
   ChangeDetectionStrategy,
+  Inject,
 } from '@angular/core';
 import {MatLine, MatLineSetter} from '@angular/material/core';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {MAT_GRID_LIST, MatGridListBase} from './grid-list-base';
 
 @Component({
   moduleId: module.id,
@@ -36,7 +39,9 @@ export class MatGridTile {
   _rowspan: number = 1;
   _colspan: number = 1;
 
-  constructor(private _element: ElementRef<HTMLElement>) {}
+  constructor(
+    private _element: ElementRef<HTMLElement>,
+    @Optional() @Inject(MAT_GRID_LIST) public _gridList?: MatGridListBase) {}
 
   /** Amount of rows that the grid tile takes up. */
   @Input()
@@ -53,7 +58,7 @@ export class MatGridTile {
    * "Changed after checked" errors that would occur with HostBinding.
    */
   _setStyle(property: string, value: any): void {
-    this._element.nativeElement.style[property] = value;
+    (this._element.nativeElement.style as any)[property] = value;
   }
 }
 
