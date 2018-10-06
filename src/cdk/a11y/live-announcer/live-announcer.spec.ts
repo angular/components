@@ -207,6 +207,22 @@ describe('CdkAriaLive', () => {
 
     expect(announcer.announce).toHaveBeenCalledWith('Newest content', 'assertive');
   }));
+
+  it('should not announce the same text multiple times', fakeAsync(() => {
+    fixture.componentInstance.content = 'Content';
+    fixture.detectChanges();
+    invokeMutationCallbacks();
+    flush();
+
+    expect(announcer.announce).toHaveBeenCalledTimes(1);
+
+    fixture.detectChanges();
+    invokeMutationCallbacks();
+    flush();
+
+    expect(announcer.announce).toHaveBeenCalledTimes(1);
+  }));
+
 });
 
 
