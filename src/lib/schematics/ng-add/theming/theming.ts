@@ -68,9 +68,15 @@ function insertCustomTheme(project: WorkspaceProject, projectName: string, host:
     // unnecessary path segments and windows backslash delimiters.
     const customThemePath = normalize(join(project.sourceRoot, defaultCustomThemeFilename));
 
-    host.create(customThemePath, themeContent);
+    if (host.exists(customThemePath)) {
+      console.warn(red(`Cannot create a custom Angular Material theme because
+          "${customThemePath}" already exists. Skipping custom theme generation.`));
+      return;
+    }
 
-    return addThemeStyleToTarget(project, 'build', host, customThemePath, workspace);
+    host.create(customThemePath, themeContent);
+    addThemeStyleToTarget(project, 'build', host, customThemePath, workspace);
+    return;
   }
 
   const insertion = new InsertChange(stylesPath, 0, themeContent);

@@ -247,7 +247,7 @@ describe('ng-add schematic', () => {
 
     it('should not replace existing custom theme files', () => {
       spyOn(console, 'warn');
-      writeStyleFileToWorkspace(appTree, 'custom-theme.scss');
+      writeStyleFileToWorkspace(appTree, './projects/material/custom-theme.scss');
 
       const tree = runner.runSchematic('ng-add-setup-project', {}, appTree);
       const workspace = getWorkspace(tree);
@@ -270,6 +270,14 @@ describe('ng-add schematic', () => {
 
       expect(styles).toEqual(['projects/material/src/styles.css', defaultPrebuiltThemePath],
           'Expected the "styles.css" file and default prebuilt theme to be the only styles');
+    });
+
+    it('should not overwrite existing custom theme files', () => {
+      appTree.create('/projects/material/custom-theme.scss', 'custom-theme');
+      const tree = runner.runSchematic('ng-add-setup-project', {theme: 'custom'}, appTree);
+
+      expect(tree.readContent('/projects/material/custom-theme.scss')).toBe('custom-theme',
+          'Expected the old custom theme content to be unchanged.');
     });
   });
 });
