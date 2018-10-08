@@ -11,8 +11,11 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {CdkAccordion} from '@angular/cdk/accordion';
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {HOME, END} from '@angular/cdk/keycodes';
+import {startWith} from 'rxjs/operators';
+import {asyncScheduler} from 'rxjs';
 import {MAT_ACCORDION, MatAccordionBase, MatAccordionDisplayMode} from './accordion-base';
 import {MatExpansionPanelHeader} from './expansion-panel-header';
+import {MatExpansionPanel} from './expansion-panel';
 
 /**
  * Directive for a Material Design Accordion.
@@ -35,6 +38,9 @@ export class MatAccordion extends CdkAccordion implements MatAccordionBase, Afte
   @ContentChildren(MatExpansionPanelHeader, {descendants: true})
   _headers: QueryList<MatExpansionPanelHeader>;
 
+  @ContentChildren(MatExpansionPanel, {descendants: true})
+  private _panels: QueryList<MatExpansionPanel>;
+
   /** Whether the expansion indicator should be hidden. */
   @Input()
   get hideToggle(): boolean { return this._hideToggle; }
@@ -53,6 +59,16 @@ export class MatAccordion extends CdkAccordion implements MatAccordionBase, Afte
 
   ngAfterContentInit() {
     this._keyManager = new FocusKeyManager(this._headers).withWrap();
+
+    this._panels.changes
+      .pipe(startWith(null, asyncScheduler))
+      .subscribe(() => {
+        this._panels.toArray().reduce((prevPanel: MatExpansionPanel, nextPanel: MatExpansionPanel) => {
+          prevPanel._nextPanel = nextPanel;
+          nextPanel._prevPanel = prevPanel;
+          return nextPanel;
+        }); 
+      });
   }
 
   /** Handles keyboard events coming in from the panel headers. */

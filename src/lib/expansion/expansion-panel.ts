@@ -73,11 +73,12 @@ let uniqueId = 0;
     '[class.mat-expanded]': 'expanded',
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
     '[class.mat-expansion-panel-spacing]': '_hasSpacing()',
+    '[class.mat-expansion-panel-previous-expanded]': '!_prevPanel || _prevPanel.expanded',
+    '[class.mat-expansion-panel-next-expanded]': '!_nextPanel || _nextPanel.expanded',
   }
 })
 export class MatExpansionPanel extends CdkAccordionItem implements AfterContentInit, OnChanges,
   OnDestroy {
-
   // @breaking-change 8.0.0 Remove `| undefined` from here
   // when the `_document` constructor param is required.
   private _document: Document | undefined;
@@ -118,6 +119,18 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
 
   /** Stream of body animation done events. */
   _bodyAnimationDone = new Subject<AnimationEvent>();
+  
+  /** 
+   * If the panel is part of an accordion, the expansion panel before this panel in the accordion
+   * unless the panel is the first in the accordion.
+   */
+  _prevPanel: MatExpansionPanel | undefined;
+  
+  /** 
+   * If the panel is part of an accordion, the expansion panel after this panel in the accordion
+   * unless the panel is the last in the accordion.
+   */
+  _nextPanel: MatExpansionPanel | undefined;
 
   constructor(@Optional() @SkipSelf() @Inject(MAT_ACCORDION) accordion: MatAccordionBase,
               _changeDetectorRef: ChangeDetectorRef,

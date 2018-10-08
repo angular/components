@@ -18,12 +18,12 @@
       border-radius: 0;
     }
 
-    &:first-of-type {
+    &.mat-expansion-panel-previous-expanded:not(.mat-expanded) {
       border-top-right-radius: $border-radius;
       border-top-left-radius: $border-radius;
     }
 
-    &:last-of-type {
+    &.mat-expansion-panel-next-expanded:not(.mat-expanded) {
       border-bottom-right-radius: $border-radius;
       border-bottom-left-radius: $border-radius;
     }
