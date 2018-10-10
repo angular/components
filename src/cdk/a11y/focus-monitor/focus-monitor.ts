@@ -241,22 +241,28 @@ export class FocusMonitor implements OnDestroy {
       this._windowFocusTimeoutId = setTimeout(() => this._windowFocused = false);
     };
 
-    const eventListenerOptions = supportsPassiveEventListeners() ?
+    // Event listener options that enable capturing and also mark the the listener as passive
+    // if the browser supports it.
+    const captureEventListenerOptions = supportsPassiveEventListeners() ?
       {passive: true, capture: true} : true;
 
     // Note: we listen to events in the capture phase so we can detect them even if the user stops
     // propagation.
     this._ngZone.runOutsideAngular(() => {
-      document.addEventListener('keydown', documentKeydownListener, eventListenerOptions);
-      document.addEventListener('mousedown', documentMousedownListener, eventListenerOptions);
-      document.addEventListener('touchstart', documentTouchstartListener, eventListenerOptions);
+      document.addEventListener('keydown', documentKeydownListener, captureEventListenerOptions);
+      document.addEventListener('mousedown', documentMousedownListener,
+        captureEventListenerOptions);
+      document.addEventListener('touchstart', documentTouchstartListener,
+        captureEventListenerOptions);
       window.addEventListener('focus', windowFocusListener);
     });
 
     this._unregisterGlobalListeners = () => {
-      document.removeEventListener('keydown', documentKeydownListener, eventListenerOptions);
-      document.removeEventListener('mousedown', documentMousedownListener, eventListenerOptions);
-      document.removeEventListener('touchstart', documentTouchstartListener, eventListenerOptions);
+      document.removeEventListener('keydown', documentKeydownListener, captureEventListenerOptions);
+      document.removeEventListener('mousedown', documentMousedownListener,
+        captureEventListenerOptions);
+      document.removeEventListener('touchstart', documentTouchstartListener,
+        captureEventListenerOptions);
       window.removeEventListener('focus', windowFocusListener);
 
       // Clear timeouts for all potentially pending timeouts to prevent the leaks.
