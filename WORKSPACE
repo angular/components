@@ -42,10 +42,14 @@ http_archive(
   sha256 = "a59c85426048cc95f51937d0c26f4d1143b7bef730152b68ac4b79d1438e746b",
 )
 
-# Add RxJS from the node modules.
-local_repository(
+# Add RxJS as repository because those are needed in order to build Angular from source.
+# Also we cannot refer to the RxJS version from the node modules because self-managed
+# node modules are not guaranteed to be installed.
+http_archive(
   name = "rxjs",
-  path = "node_modules/rxjs/src",
+  url = "https://registry.yarnpkg.com/rxjs/-/rxjs-6.3.3.tgz",
+  strip_prefix = "package/src",
+  sha256 = "72b0b4e517f43358f554c125e40e39f67688cd2738a8998b4a266981ed32f403",
 )
 
 # NOTE: this rule installs nodejs, npm, and yarn, but does NOT install
