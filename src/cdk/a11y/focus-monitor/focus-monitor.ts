@@ -241,21 +241,22 @@ export class FocusMonitor implements OnDestroy {
       this._windowFocusTimeoutId = setTimeout(() => this._windowFocused = false);
     };
 
+    const eventListenerOptions = supportsPassiveEventListeners() ?
+      {passive: true, capture: true} : true;
+
     // Note: we listen to events in the capture phase so we can detect them even if the user stops
     // propagation.
     this._ngZone.runOutsideAngular(() => {
-      document.addEventListener('keydown', documentKeydownListener, true);
-      document.addEventListener('mousedown', documentMousedownListener, true);
-      document.addEventListener('touchstart', documentTouchstartListener,
-          supportsPassiveEventListeners() ? ({passive: true, capture: true} as any) : true);
+      document.addEventListener('keydown', documentKeydownListener, eventListenerOptions);
+      document.addEventListener('mousedown', documentMousedownListener, eventListenerOptions);
+      document.addEventListener('touchstart', documentTouchstartListener, eventListenerOptions);
       window.addEventListener('focus', windowFocusListener);
     });
 
     this._unregisterGlobalListeners = () => {
-      document.removeEventListener('keydown', documentKeydownListener, true);
-      document.removeEventListener('mousedown', documentMousedownListener, true);
-      document.removeEventListener('touchstart', documentTouchstartListener,
-          supportsPassiveEventListeners() ? ({passive: true, capture: true} as any) : true);
+      document.removeEventListener('keydown', documentKeydownListener, eventListenerOptions);
+      document.removeEventListener('mousedown', documentMousedownListener, eventListenerOptions);
+      document.removeEventListener('touchstart', documentTouchstartListener, eventListenerOptions);
       window.removeEventListener('focus', windowFocusListener);
 
       // Clear timeouts for all potentially pending timeouts to prevent the leaks.
