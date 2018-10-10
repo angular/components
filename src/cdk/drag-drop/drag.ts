@@ -599,8 +599,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     const point = this._isTouchEvent(event) ? event.touches[0] : event;
 
     return {
-      x: point.pageX - this._scrollPosition.left,
-      y: point.pageY - this._scrollPosition.top
+      x: point.pageX,
+      y: point.pageY
     };
   }
 
