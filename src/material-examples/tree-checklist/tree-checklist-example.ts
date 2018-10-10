@@ -168,20 +168,13 @@ export class TreeChecklistExample {
     return flatNode;
   }
 
-  /**
-   * Whether all the descendants of the node are selected.
-   * And remove the node from this.checklistSelection if it isn't selected.
-   */
+  /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: TodoItemFlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
     const descAllSelected = descendants.every(child =>
       this.checklistSelection.isSelected(child)
     );
-    if (this.checklistSelection.isSelected(node) && !descAllSelected) {
-      this.checklistSelection.deselect(node);
-    } else if(!this.checklistSelection.isSelected(node) && descAllSelected) {
-      this.checklistSelection.select(node);
-    }
+    this.checkRootNodeSelection(node, descAllSelected);
     return descAllSelected;
   }
 
@@ -199,6 +192,16 @@ export class TreeChecklistExample {
     this.checklistSelection.isSelected(node)
       ? this.checklistSelection.select(...descendants)
       : this.checklistSelection.deselect(...descendants);
+  }
+
+  /** Check root node checked state and change it accordingly */
+  checkRootNodeSelection(node: TodoItemFlatNode, descAllSelected: boolean): void {
+    const nodeSelected = this.checklistSelection.isSelected(node);
+    if (nodeSelected && !descAllSelected) {
+      this.checklistSelection.deselect(node);
+    } else if (!nodeSelected && descAllSelected) {
+      this.checklistSelection.select(node);
+    }
   }
 
   /** Select the category so we can insert the new item. */
