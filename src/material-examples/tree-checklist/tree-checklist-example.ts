@@ -179,6 +179,8 @@ export class TreeChecklistExample {
     );
     if (this.checklistSelection.isSelected(node) && !descAllSelected) {
       this.checklistSelection.deselect(node);
+    } else if(!this.checklistSelection.isSelected(node) && descAllSelected) {
+      this.checklistSelection.select(node);
     }
     return descAllSelected;
   }
