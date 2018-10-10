@@ -170,7 +170,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
    * An event will be dispatched each time the slide-toggle is dragged.
    * This event is always emitted when the user drags the slide toggle to make a change greater
    * than 50%. It does not mean the slide toggle's value is changed. The event is not emitted when
-   * the user toggles the slide toggle to change the slide toggle's value.
+   * the user toggles the slide toggle to change its value.
    */
   @Output() readonly dragChange: EventEmitter<void> = new EventEmitter<void>();
 
