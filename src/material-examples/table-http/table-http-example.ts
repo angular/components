@@ -38,7 +38,7 @@ export class TableHttpExample implements OnInit {
         switchMap(() => {
           this.isLoadingResults = true;
           return this.exampleDatabase!.getRepoIssues(
-            this.sort.active, this.sort.direction, this.paginator.pageIndex);
+            this.sort.active as string, this.sort.direction as string, this.paginator.pageIndex);
         }),
         map(data => {
           // Flip flag to show that loading has finished.

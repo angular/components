@@ -18,16 +18,19 @@ import {Element, ELEMENT_DATA} from '../element-data';
   styleUrls: ['custom-table.css']
 })
 export class CustomTableDemo implements OnInit {
-  columnsToDisplay = ['name', 'weight', 'symbol', 'position'];
+  columnsToDisplay = ['name', 'weight', 'symbol', 'position', 'type'];
   simpleTableDataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
   wrapperTableDataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
+  simpleTableDataSourceMultiSorting = new MatTableDataSource<Element>(ELEMENT_DATA);
   getWeight = (data: Element) => '~' + data.weight;
 
   @ViewChild('simpleTableSort') simpleTableSort: MatSort;
   @ViewChild('wrapperTableSort') wrapperTableSort: MatSort;
+  @ViewChild('simpleTableMultiSort') simpleTableMultiSort: MatSort;
 
   ngOnInit() {
     this.simpleTableDataSource.sort = this.simpleTableSort;
     this.wrapperTableDataSource.sort = this.wrapperTableSort;
+    this.simpleTableDataSourceMultiSorting.sort = this.simpleTableMultiSort;
   }
 }

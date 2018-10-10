@@ -131,34 +131,55 @@ export class MatTableDataSource<T> extends DataSource<T> {
    * @param sort The connected MatSort that holds the current sort state.
    */
   sortData: ((data: T[], sort: MatSort) => T[]) = (data: T[], sort: MatSort): T[] => {
-    const active = sort.active;
-    const direction = sort.direction;
-    if (!active || direction == '') { return data; }
+
+    const active = Array.isArray(sort.active) ? sort.active : [sort.active];
+    if (!active[0]) { return data; }
+
+    const direction = typeof sort.direction !== 'object' ?
+       { [active[0]]: sort.direction } :
+       sort.direction;
+    if (!direction) { return data; }
 
     return data.sort((a, b) => {
-      let valueA = this.sortingDataAccessor(a, active);
-      let valueB = this.sortingDataAccessor(b, active);
-
-      // If both valueA and valueB exist (truthy), then compare the two. Otherwise, check if
-      // one value exists while the other doesn't. In this case, existing value should come first.
-      // This avoids inconsistent results when comparing values to undefined/null.
-      // If neither value exists, return 0 (equal).
-      let comparatorResult = 0;
-      if (valueA != null && valueB != null) {
-        // Check if one value is greater than the other; if equal, comparatorResult should remain 0.
-        if (valueA > valueB) {
-          comparatorResult = 1;
-        } else if (valueA < valueB) {
-          comparatorResult = -1;
+      // Get effective sort value after comparing all sorted properties, if values were equal for
+      // previous propery then compare the next pair
+      return active.reduce((previous, sortId) => {
+        if (previous !== 0) {
+          return previous;
         }
-      } else if (valueA != null) {
+
+        let valueA = this.sortingDataAccessor(a, sortId);
+        let valueB = this.sortingDataAccessor(b, sortId);
+
+        return this.compareValues(valueA, valueB, direction[sortId]);
+      }, 0);
+    });
+  }
+
+  // If both valueA and valueB exist (truthy), then compare the two. Otherwise, check if
+  // one value exists while the other doesn't. In this case, existing value should come first.
+  // This avoids inconsistent results when comparing values to undefined/null.
+  // If neither value exists, return 0 (equal).
+  compareValues(valueA: string | number, valueB: string | number, direction: string) {
+    let comparatorResult = 0;
+    if (direction == '') {
+      return comparatorResult;
+    }
+
+    if (valueA != null && valueB != null) {
+      // Check if one value is greater than the other; if equal, comparatorResult should remain 0.
+      if (valueA > valueB) {
         comparatorResult = 1;
-      } else if (valueB != null) {
+      } else if (valueA < valueB) {
         comparatorResult = -1;
       }
+    } else if (valueA != null) {
+      comparatorResult = 1;
+    } else if (valueB != null) {
+      comparatorResult = -1;
+    }
 
-      return comparatorResult * (direction == 'asc' ? 1 : -1);
-    });
+    return comparatorResult * (direction == 'asc' ? 1 : -1);
   }
 
   /**

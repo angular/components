@@ -13,6 +13,8 @@
     <!-- Name doesn't match desired header text; define a custom label -->
     <simple-column name="symbol" label="SYMBOL!"></simple-column>
 
+    <simple-column name="type"></simple-column>
+
     <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
     <tr mat-row *matRowDef="let data; columns: columnsToDisplay;"></tr>
   </table>
@@ -34,7 +36,32 @@
     <!-- Position (simple column) -->
     <simple-column name="position"></simple-column>
 
+    <simple-column name="type"></simple-column>
+
     <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
     <tr mat-row *matRowDef="let row; columns: columnsToDisplay; "></tr>
   </wrapper-table>
+</mat-card>
+
+
+
+<mat-card>
+  <h3> MatTable with Simple Columns and multi-column sorting</h3>
+
+  <table mat-table [dataSource]="simpleTableDataSourceMultiSorting"
+             matSort #simpleTableMultiSort="matSort"
+             [matMultiColumn]="true">
+    <!-- Basic column: name is used for header label AND data property -->
+    <simple-column name="name" sortable></simple-column>
+    <simple-column name="position"></simple-column>
+
+    <!-- Name doesn't match the data property (or transform needed); define a custom data accessor -->
+    <simple-column name="weight" [dataAccessor]="getWeight"></simple-column>
+
+    <simple-column name="symbol"></simple-column>
+    <simple-column name="type"></simple-column>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let data; columns: columnsToDisplay;"></tr>
+  </table>
 </mat-card>

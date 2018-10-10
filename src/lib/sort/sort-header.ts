@@ -234,8 +234,13 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
 
   /** Whether this MatSortHeader is currently sorted in either ascending or descending order. */
   _isSorted() {
+    const isMultisort = Array.isArray(this._sort.active);
+    if (isMultisort) {
+      return this._sort.active.indexOf(this.id) > -1 && typeof this._sort.direction == 'object' &&
+          (this._sort.direction[this.id] === 'asc' || this._sort.direction[this.id] === 'desc');
+    }
     return this._sort.active == this.id &&
-        (this._sort.direction === 'asc' || this._sort.direction === 'desc');
+          (this._sort.direction === 'asc' || this._sort.direction === 'desc');
   }
 
   /** Returns the animation state for the arrow direction (indicator and pointers). */
@@ -260,9 +265,13 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
    * only be changed once the arrow displays again (hint or activation).
    */
   _updateArrowDirection() {
-    this._arrowDirection = this._isSorted() ?
-        this._sort.direction :
-        (this.start || this._sort.start);
+    if (this._isSorted()) {
+      this._arrowDirection = (typeof this._sort.direction === 'object' ?
+          this._sort.direction[this.id] :
+          this._sort.direction);
+    } else {
+      this._arrowDirection = (this.start || this._sort.start);
+    }
   }
 
   _isDisabled() {
@@ -279,5 +288,21 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
     if (!this._isSorted()) { return null; }
 
     return this._sort.direction == 'asc' ? 'ascending' : 'descending';
+  }
+
+  /**
+   * Gets the sort counter that will display whenever multisort is enabled. It shows the order
+   * in which sort is applied, whenever there are multiple columns being used for sorting.
+   */
+  _getSortCounter(): string {
+    const isMultisort = Array.isArray(this._sort.active);
+    if (!isMultisort || this._sort.active.length < 2) {
+      return '';
+    }
+    const index = this._sort.active.indexOf(this.id);
+    if (index === -1) {
+      return '';
+    }
+    return (index + 1).toString();
   }
 }

@@ -99,19 +99,24 @@ describe('MatTable', () => {
     ]);
   });
 
-  it('should render with MatTableDataSource and sort', () => {
-    let fixture = TestBed.createComponent(MatTableWithSortApp);
-    fixture.detectChanges();
+  const multiColumnStates = [false, true];
+  for (let i = 0; i < multiColumnStates.length; i++) {
+    it('should render with MatTableDataSource and sort' + (multiColumnStates[i] ?
+    'with matMultiColumn' : ''), () => {
+      let fixture = TestBed.createComponent(MatTableWithSortApp);
+      fixture.componentInstance.multiColumnSort = multiColumnStates[i];
+      fixture.detectChanges();
 
-    const tableElement = fixture.nativeElement.querySelector('.mat-table')!;
-    const data = fixture.componentInstance.dataSource!.data;
-    expectTableToMatchContent(tableElement, [
-      ['Column A', 'Column B', 'Column C'],
-      [data[0].a, data[0].b, data[0].c],
-      [data[1].a, data[1].b, data[1].c],
-      [data[2].a, data[2].b, data[2].c],
-    ]);
-  });
+      const tableElement = fixture.nativeElement.querySelector('.mat-table')!;
+      const data = fixture.componentInstance.dataSource!.data;
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        [data[0].a, data[0].b, data[0].c],
+        [data[1].a, data[1].b, data[1].c],
+        [data[2].a, data[2].b, data[2].c],
+      ]);
+    });
+  }
 
   it('should render with MatTableDataSource and pagination', () => {
     let fixture = TestBed.createComponent(MatTableWithPaginatorApp);
@@ -450,6 +455,31 @@ describe('MatTable', () => {
       ]);
     });
 
+    it('should sort by multiple columns', () => {
+      component.multiColumnSort = true;
+      fixture.detectChanges();
+
+      dataSource.data[0].a = 0;
+      dataSource.data[1].a = -1;
+      dataSource.data[2].a = 0;
+
+      dataSource.data[0].b = 'f';
+      dataSource.data[1].b = 'c';
+      dataSource.data[2].b = 'b';
+
+      // Sort by column A and then by column B
+      component.sort.sort(component.sortHeader);
+      component.sort.sort(component.sortHeader2);
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A1', 'Column B2', 'Column C'], // Sorting precedence is added to the header
+        ['-1', 'c', 'c_2'],
+        ['0', 'b', 'c_3'],
+        ['0', 'f', 'c_1'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+    });
+
   });
 });
 
@@ -611,15 +641,15 @@ class MatTableWithWhenRowApp {
 
 @Component({
   template: `
-    <mat-table [dataSource]="dataSource" matSort>
+    <mat-table [dataSource]="dataSource" matSort [matMultiColumn]="multiColumnSort">
       <ng-container matColumnDef="column_a">
-        <mat-header-cell *matHeaderCellDef mat-sort-header="a"> Column A</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef #aSort mat-sort-header="a"> Column A</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.a}}</mat-cell>
         <mat-footer-cell *matFooterCellDef> Footer A</mat-footer-cell>
       </ng-container>
 
       <ng-container matColumnDef="column_b">
-        <mat-header-cell *matHeaderCellDef> Column B</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef #bSort mat-sort-header="b"> Column B</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.b}}</mat-cell>
         <mat-footer-cell *matFooterCellDef> Footer B</mat-footer-cell>
       </ng-container>
@@ -642,11 +672,13 @@ class ArrayDataSourceMatTableApp implements OnInit {
   underlyingDataSource = new FakeDataSource();
   dataSource = new MatTableDataSource<TestData>();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
+  multiColumnSort = false;
 
   @ViewChild(MatTable) table: MatTable<TestData>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatSortHeader) sortHeader: MatSortHeader;
+  @ViewChild('aSort') sortHeader: MatSortHeader;
+  @ViewChild('bSort') sortHeader2: MatSortHeader;
 
   constructor() {
     this.underlyingDataSource.data = [];
@@ -670,7 +702,7 @@ class ArrayDataSourceMatTableApp implements OnInit {
 
 @Component({
   template: `
-    <mat-table [dataSource]="dataSource" matSort>
+    <mat-table [dataSource]="dataSource" matSort [matMultiColumn]="multiColumnSort">
       <ng-container matColumnDef="column_a">
         <mat-header-cell *matHeaderCellDef mat-sort-header="a"> Column A</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.a}}</mat-cell>
@@ -695,6 +727,7 @@ class MatTableWithSortApp implements OnInit {
   underlyingDataSource = new FakeDataSource();
   dataSource = new MatTableDataSource<TestData>();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
+  multiColumnSort = false;
 
   @ViewChild(MatTable) table: MatTable<TestData>;
   @ViewChild(MatSort) sort: MatSort;

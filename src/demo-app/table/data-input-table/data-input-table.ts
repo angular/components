@@ -56,7 +56,8 @@ export class DataInputTableDemo {
       name: 'new',
       weight: Math.floor(Math.random() * 25),
       symbol: 'New',
-      position: Math.floor(Math.random() * 25)
+      position: Math.floor(Math.random() * 25),
+      type: 'new'
     });
 
     this.matTableDataSource.data = this.data;

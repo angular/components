@@ -22,6 +22,9 @@ export function getSortHeaderMissingIdError(): Error {
 }
 
 /** @docs-private */
-export function getSortInvalidDirectionError(direction: string): Error {
-  return Error(`${direction} is not a valid sort direction ('asc' or 'desc').`);
+export function getSortInvalidDirectionError(direction: string | { [id: string]: string }): Error {
+  let values = typeof direction === 'object' ?
+    Object.keys(direction).map((id) => direction[id]) :
+    direction;
+  return Error(`${values} is not a valid sort direction ('asc' or 'desc').`);
 }
