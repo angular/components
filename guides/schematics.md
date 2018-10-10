@@ -37,17 +37,22 @@ The Angular Material `ng add` schematic helps you setup an Angular CLI project t
 In addition to the install schematic, Angular Material comes with multiple schematics that can be
 used to easily generate Material Design components:
 
-- [Address form](#address-form-schematic)
-- [Dashboard](#dashboard-schematic)
-- [Navigation](#navigation-schematic)
-- [Table](#table-schematic)
-- [Tree](#tree-schematic)
+
+| Name           | Description                                                                                            |
+|----------------|--------------------------------------------------------------------------------------------------------|
+| `address-form` | Component with a form group that uses Material Design form controls to prompt for a shipping address   |
+| `navigation`   | Creates a component with a responsive Material Design sidenav and a toolbar for showing the app name   |
+| `dashboard`    | Component with multiple Material Design cards and menus which are aligned in a grid layout             |
+| `table`        | Generates a component with a Material Design data table that supports sorting and pagination           |
+| `tree`         | Component that interactively visualizes a nested folder structure by using the `<mat-tree>` component  |
 
 
 Additionally the Angular CDK also comes with a collection of component schematics:
 
-* [Drag and Drop](#drag-and-drop-schematic)
 
+| Name           | Description                                                                                        |
+|----------------|----------------------------------------------------------------------------------------------------|
+| `drag-drop`    | Component that uses the `@angular/cdk/drag-drop` directives for creating an interactive to-do list |
 
 #### Address form schematic
 
