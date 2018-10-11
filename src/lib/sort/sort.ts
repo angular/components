@@ -123,7 +123,7 @@ export class MatSort extends _MatSortMixinBase
   private _disableClear: boolean;
 
   /**
-   * The direction to set when an MatSortable is initially sorted.
+   * Whether to enable sorting by multiple columns.
    */
   @Input('matMultiColumn') multiColumn: boolean = false;
 
