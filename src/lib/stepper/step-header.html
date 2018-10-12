@@ -1,12 +1,12 @@
 <div class="mat-step-header-ripple" mat-ripple [matRippleTrigger]="_getHostElement()"></div>
-<div class="mat-step-icon-state-{{state}} mat-step-icon" [class.mat-step-icon-selected]="selected"
+<div class="mat-step-icon-state-{{state}} mat-step-icon mat-step-icon-content" [class.mat-step-icon-selected]="selected"
      [ngSwitch]="state">
   <ng-container *ngSwitchCase="'number'" [ngSwitch]="!!(iconOverrides && iconOverrides.number)">
     <ng-container
       *ngSwitchCase="true"
       [ngTemplateOutlet]="iconOverrides.number"
       [ngTemplateOutletContext]="_getIconContext()"></ng-container>
-    <span class="mat-step-icon-content" *ngSwitchDefault>{{index + 1}}</span>
+    <span *ngSwitchDefault>{{index + 1}}</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="'edit'" [ngSwitch]="!!(iconOverrides && iconOverrides.edit)">
@@ -14,7 +14,7 @@
       *ngSwitchCase="true"
       [ngTemplateOutlet]="iconOverrides.edit"
       [ngTemplateOutletContext]="_getIconContext()"></ng-container>
-    <mat-icon class="mat-step-icon-content" *ngSwitchDefault>create</mat-icon>
+    <mat-icon *ngSwitchDefault>create</mat-icon>
   </ng-container>
 
   <ng-container *ngSwitchCase="'done'" [ngSwitch]="!!(iconOverrides && iconOverrides.done)">
@@ -22,7 +22,7 @@
       *ngSwitchCase="true"
       [ngTemplateOutlet]="iconOverrides.done"
       [ngTemplateOutletContext]="_getIconContext()"></ng-container>
-    <mat-icon class="mat-step-icon-content" *ngSwitchDefault>done</mat-icon>
+    <mat-icon *ngSwitchDefault>done</mat-icon>
   </ng-container>
 
   <ng-container *ngSwitchCase="'error'" [ngSwitch]="!!(iconOverrides && iconOverrides.error)">
