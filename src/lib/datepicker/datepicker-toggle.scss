@@ -11,9 +11,11 @@
   .mat-form-field-prefix,
   .mat-form-field-suffix {
     .mat-datepicker-toggle-default-icon {
-      display: block;
+      display: inline-block ;
+      top: 5px;
       width: 1.5em;
       height: 1.5em;
+      
     }
 
     .mat-icon-button .mat-datepicker-toggle-default-icon {
