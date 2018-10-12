@@ -727,8 +727,8 @@ describe('CdkVirtualScrollViewport', () => {
     });
 
     it('should fail on construction', fakeAsync(() => {
-      expect(() => TestBed.createComponent(VirtualScrollWithNoStrategy))
-          .toThrowError(/Error cdk-virtual-scroll-viewport:/);
+      expect(() => TestBed.createComponent(VirtualScrollWithNoStrategy)).toThrowError(
+          'Error: cdk-virtual-scroll-viewport requires the "itemSize" property to be set.');
     }));
   });
 });

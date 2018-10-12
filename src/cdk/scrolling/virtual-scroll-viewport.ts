@@ -131,10 +131,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
     super(elementRef, scrollDispatcher, ngZone, dir);
 
     if (!this._scrollStrategy) {
-      throw Error('Error cdk-virtual-scroll-viewport: You must specify a VirtualScrollStrategy.' +
-                  ' Either set the itemSize property or see the "Scrolling strategies" section at' +
-                  ' https://material.angular.io/cdk/scrolling for more on setting a virtual' +
-                  ' scrolling strategy');
+      throw Error('Error: cdk-virtual-scroll-viewport requires the "itemSize" property to be set.');
     }
   }
 
