@@ -124,10 +124,18 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   constructor(public elementRef: ElementRef<HTMLElement>,
               private _changeDetectorRef: ChangeDetectorRef,
               ngZone: NgZone,
-              @Inject(VIRTUAL_SCROLL_STRATEGY) private _scrollStrategy: VirtualScrollStrategy,
+              @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY)
+                  private _scrollStrategy: VirtualScrollStrategy,
               @Optional() dir: Directionality,
               scrollDispatcher: ScrollDispatcher) {
     super(elementRef, scrollDispatcher, ngZone, dir);
+
+    if (!this._scrollStrategy) {
+      throw Error('Error cdk-virtual-scroll-viewport: You must specify a VirtualScrollStrategy.' +
+                  ' Either set the itemSize property or see the "Scrolling strategies" section at' +
+                  ' https://material.angular.io/cdk/scrolling for more on setting a virtual' +
+                  ' scrolling strategy');
+    }
   }
 
   ngOnInit() {
@@ -183,6 +191,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
           this._dataLength = newLength;
           this._scrollStrategy.onDataLengthChanged();
         }
+        this._doChangeDetection();
       });
     });
   }
