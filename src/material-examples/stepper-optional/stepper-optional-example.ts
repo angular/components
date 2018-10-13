@@ -10,8 +10,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
   styleUrls: ['stepper-optional-example.css']
 })
 export class StepperOptionalExample implements OnInit {
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
+  firstFormGroup!: FormGroup;
+  secondFormGroup!: FormGroup;
   isOptional = false;
 
   constructor(private _formBuilder: FormBuilder) {}

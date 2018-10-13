@@ -60,13 +60,13 @@ export class MatFooterCellDef extends _CdkFooterCellDef {}
 })
 export class MatColumnDef extends CdkColumnDef {
   /** Unique name for this column. */
-  @Input('matColumnDef') name: string;
+  @Input('matColumnDef') name: string = '';
 
   /** Whether this column should be sticky positioned at the start of the row */
-  @Input() sticky: boolean;
+  @Input() sticky: boolean = false;
 
   /** Whether this column should be sticky positioned on the end of the row */
-  @Input() stickyEnd: boolean;
+  @Input() stickyEnd: boolean = false;
 }
 
 /** Header cell template container that adds the right classes and role. */

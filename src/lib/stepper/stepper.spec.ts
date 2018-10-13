@@ -1121,7 +1121,7 @@ function createComponent<T>(component: Type<T>,
   `
 })
 class MatHorizontalStepperWithErrorsApp implements OnInit {
-  formGroup: FormGroup;
+  formGroup!: FormGroup;
 
   constructor(private _formBuilder: FormBuilder) { }
 
@@ -1240,9 +1240,9 @@ class SimpleMatVerticalStepperApp {
   `
 })
 class LinearMatVerticalStepperApp implements OnInit {
-  oneGroup: FormGroup;
-  twoGroup: FormGroup;
-  threeGroup: FormGroup;
+  oneGroup!: FormGroup;
+  twoGroup!: FormGroup;
+  threeGroup!: FormGroup;
 
   validationTrigger = new Subject<void>();
 
@@ -1365,6 +1365,6 @@ class LinearStepperWithValidOptionalStep {
   `
 })
 class StepperWithAriaInputs {
-  ariaLabel: string;
-  ariaLabelledby: string;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
 }

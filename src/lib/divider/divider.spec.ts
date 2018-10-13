@@ -69,6 +69,6 @@ describe('MatDivider', () => {
   template: `<mat-divider [vertical]="vertical" [inset]="inset"></mat-divider>`
 })
 class MatDividerTestComponent {
-  vertical: boolean;
-  inset: boolean;
+  vertical?: boolean;
+  inset?: boolean;
 }

@@ -20,10 +20,10 @@ const defaultDialogConfig = new MatDialogConfig();
   styleUrls: ['dialog-demo.css'],
 })
 export class DialogDemo {
-  dialogRef: MatDialogRef<JazzDialog> | null;
-  lastAfterClosedResult: string;
-  lastBeforeCloseResult: string;
-  actionsAlignment: string;
+  dialogRef: MatDialogRef<JazzDialog> | null = null;
+  lastAfterClosedResult = '';
+  lastBeforeCloseResult = '';
+  actionsAlignment = '';
   config = {
     disableClose: false,
     panelClass: 'custom-overlay-pane-class',
@@ -47,7 +47,7 @@ export class DialogDemo {
   };
   numTemplateOpens = 0;
 
-  @ViewChild(TemplateRef) template: TemplateRef<any>;
+  @ViewChild(TemplateRef) template!: TemplateRef<any>;
 
   constructor(public dialog: MatDialog, @Inject(DOCUMENT) doc: any) {
     // Possible useful example for the open and closeAll events.
@@ -172,7 +172,7 @@ export class JazzDialog {
   `
 })
 export class ContentElementDialog {
-  actionsAlignment: string;
+  actionsAlignment = '';
 
   constructor(public dialog: MatDialog) { }
 

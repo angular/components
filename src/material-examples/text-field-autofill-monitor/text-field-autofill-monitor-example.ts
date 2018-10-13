@@ -8,10 +8,10 @@ import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core
   styleUrls: ['./text-field-autofill-monitor-example.css'],
 })
 export class TextFieldAutofillMonitorExample implements OnDestroy, OnInit {
-  @ViewChild('first', {read: ElementRef}) firstName: ElementRef<HTMLElement>;
-  @ViewChild('last', {read: ElementRef}) lastName: ElementRef<HTMLElement>;
-  firstNameAutofilled: boolean;
-  lastNameAutofilled: boolean;
+  @ViewChild('first', {read: ElementRef}) firstName!: ElementRef<HTMLElement>;
+  @ViewChild('last', {read: ElementRef}) lastName!: ElementRef<HTMLElement>;
+  firstNameAutofilled: boolean = false;
+  lastNameAutofilled: boolean = false;
 
   constructor(private autofill: AutofillMonitor) {}
 

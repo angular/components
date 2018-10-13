@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 
@@ -15,7 +15,7 @@ import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/form
   selector: 'stepper-demo',
   templateUrl: 'stepper-demo.html',
 })
-export class StepperDemo implements OnInit {
+export class StepperDemo {
   formGroup: FormGroup;
   isNonLinear = false;
   isNonEditable = false;
@@ -33,9 +33,7 @@ export class StepperDemo implements OnInit {
   /** Returns a FormArray with the name 'formArray'. */
   get formArray(): AbstractControl | null { return this.formGroup.get('formArray'); }
 
-  constructor(private _formBuilder: FormBuilder) { }
-
-  ngOnInit() {
+  constructor(private _formBuilder: FormBuilder) {
     this.formGroup = this._formBuilder.group({
       formArray: this._formBuilder.array([
         this._formBuilder.group({

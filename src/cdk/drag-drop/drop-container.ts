@@ -24,7 +24,7 @@ export interface CdkDropContainer<T = any> {
   orientation: 'horizontal' | 'vertical';
 
   /** Locks the position of the draggable elements inside the container along the specified axis. */
-  lockAxis: 'x' | 'y';
+  lockAxis?: 'x' | 'y';
 
   /** Starts dragging an item. */
   start(): void;

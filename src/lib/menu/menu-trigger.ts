@@ -78,7 +78,7 @@ export const MENU_PANEL_TOP_PADDING = 8;
   exportAs: 'matMenuTrigger'
 })
 export class MatMenuTrigger implements AfterContentInit, OnDestroy {
-  private _portal: TemplatePortal;
+  private _portal!: TemplatePortal;
   private _overlayRef: OverlayRef | null = null;
   private _menuOpen: boolean = false;
   private _closeSubscription = Subscription.EMPTY;
@@ -103,7 +103,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   }
 
   /** References the menu instance that the trigger is associated with. */
-  @Input('matMenuTriggerFor') menu: MatMenuPanel;
+  @Input('matMenuTriggerFor') menu!: MatMenuPanel;
 
   /** Data to be passed along to any lazily-rendered content. */
   @Input('matMenuTriggerData') menuData: any;

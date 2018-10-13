@@ -39,28 +39,28 @@ export class MatStepHeader implements OnDestroy {
   private _intlSubscription: Subscription;
 
   /** State of the given step. */
-  @Input() state: StepState;
+  @Input() state: StepState = '';
 
   /** Label of the given step. */
-  @Input() label: MatStepLabel | string;
+  @Input() label: MatStepLabel | string | null = null;
 
   /** Error message to display when there's an error. */
-  @Input() errorMessage: string;
+  @Input() errorMessage?: string;
 
   /** Overrides for the header icons, passed in via the stepper. */
-  @Input() iconOverrides: {[key: string]: TemplateRef<MatStepperIconContext>};
+  @Input() iconOverrides: {[key: string]: TemplateRef<MatStepperIconContext>} = {};
 
   /** Index of the given step. */
-  @Input() index: number;
+  @Input() index: number = -1;
 
   /** Whether the given step is selected. */
-  @Input() selected: boolean;
+  @Input() selected: boolean = false;
 
   /** Whether the given step label is active. */
-  @Input() active: boolean;
+  @Input() active: boolean = false;
 
   /** Whether the given step is optional. */
-  @Input() optional: boolean;
+  @Input() optional: boolean = false;
 
   constructor(
     public _intl: MatStepperIntl,

@@ -39,8 +39,8 @@ export class DataInputTableDemo {
 
   dataSource: DataSource<Element> | Observable<Element[]> | Element[] | null = this.data;
 
-  @ViewChild(CdkTable) cdkTable: CdkTable<Element>;
-  @ViewChild(MatTable) matTable: MatTable<Element>;
+  @ViewChild(CdkTable) cdkTable!: CdkTable<Element>;
+  @ViewChild(MatTable) matTable!: MatTable<Element>;
 
   changeInput(e: MatRadioChange) {
     this.inputType = e.value;

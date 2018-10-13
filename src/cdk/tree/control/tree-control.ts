@@ -51,14 +51,14 @@ export interface TreeControl<T> {
   collapseDescendants(dataNode: T): void;
 
   /** Get depth of a given data node, return the level number. This is for flat tree node. */
-  readonly getLevel: (dataNode: T) => number;
+  readonly getLevel?: (dataNode: T) => number;
 
   /**
    * Whether the data node is expandable. Returns true if expandable.
    * This is for flat tree node.
    */
-  readonly isExpandable: (dataNode: T) => boolean;
+  readonly isExpandable?: (dataNode: T) => boolean;
 
   /** Gets a stream that emits whenever the given data node's children change. */
-  readonly getChildren: (dataNode: T) => Observable<T[]> | T[];
+  readonly getChildren?: (dataNode: T) => Observable<T[]> | T[];
 }

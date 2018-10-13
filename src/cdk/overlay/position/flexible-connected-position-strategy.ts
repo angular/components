@@ -38,10 +38,10 @@ const boundingBoxClass = 'cdk-overlay-connected-position-bounding-box';
  */
 export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** The overlay to which this strategy is attached. */
-  private _overlayRef: OverlayReference;
+  private _overlayRef!: OverlayReference;
 
   /** Whether we're performing the very first positioning of the overlay. */
-  private _isInitialRender: boolean;
+  private _isInitialRender: boolean = true;
 
   /** Last size used for the bounding box. Used to avoid resizing the overlay after open. */
   private _lastBoundingBoxSize = {width: 0, height: 0};
@@ -62,13 +62,13 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _positionLocked = false;
 
   /** Cached origin dimensions */
-  private _originRect: ClientRect;
+  private _originRect!: ClientRect;
 
   /** Cached overlay dimensions */
-  private _overlayRect: ClientRect;
+  private _overlayRect!: ClientRect;
 
   /** Cached viewport dimensions */
-  private _viewportRect: ClientRect;
+  private _viewportRect!: ClientRect;
 
   /** Amount of space that must be maintained between the overlay and the edge of the viewport. */
   private _viewportMargin = 0;
@@ -80,22 +80,22 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   _preferredPositions: ConnectionPositionPair[] = [];
 
   /** The origin element against which the overlay will be positioned. */
-  private _origin: HTMLElement;
+  private _origin!: HTMLElement;
 
   /** The overlay pane element. */
-  private _pane: HTMLElement;
+  private _pane!: HTMLElement;
 
   /** Whether the strategy has been disposed of already. */
-  private _isDisposed: boolean;
+  private _isDisposed: boolean = false;
 
   /**
    * Parent element for the overlay panel used to constrain the overlay panel's size to fit
    * within the viewport.
    */
-  private _boundingBox: HTMLElement | null;
+  private _boundingBox: HTMLElement | null = null;
 
   /** The last position to have been calculated as the best fit position. */
-  private _lastPosition: ConnectedPosition | null;
+  private _lastPosition: ConnectedPosition | null = null;
 
   /** Subject that emits whenever the position changes. */
   private _positionChanges = new Subject<ConnectedOverlayPositionChange>();
@@ -110,7 +110,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _offsetY = 0;
 
   /** Selector to be used when finding the elements on which to set the transform origin. */
-  private _transformOriginSelector: string;
+  private _transformOriginSelector: string = '';
 
   /** Amount of subscribers to the `positionChanges` stream. */
   private _positionChangeSubscriptions = 0;
@@ -119,7 +119,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _appliedPanelClasses: string[] = [];
 
   /** Amount by which the overlay was pushed in each axis during the last time it was positioned. */
-  private _previousPushAmount: {x: number, y: number} | null;
+  private _previousPushAmount: {x: number, y: number} | null = null;
 
   /** Observable sequence of position changes. */
   positionChanges: Observable<ConnectedOverlayPositionChange> =
@@ -997,12 +997,12 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       return scrollable.getElementRef().nativeElement.getBoundingClientRect();
     });
 
-    return {
-      isOriginClipped: isElementClippedByScrolling(originBounds, scrollContainerBounds),
-      isOriginOutsideView: isElementScrolledOutsideView(originBounds, scrollContainerBounds),
-      isOverlayClipped: isElementClippedByScrolling(overlayBounds, scrollContainerBounds),
-      isOverlayOutsideView: isElementScrolledOutsideView(overlayBounds, scrollContainerBounds),
-    };
+    return new ScrollingVisibility(
+      isElementClippedByScrolling(originBounds, scrollContainerBounds),
+      isElementScrolledOutsideView(originBounds, scrollContainerBounds),
+      isElementClippedByScrolling(overlayBounds, scrollContainerBounds),
+      isElementScrolledOutsideView(overlayBounds, scrollContainerBounds)
+    );
   }
 
   /** Subtracts the amount that an element is overflowing on an axis from it's length. */

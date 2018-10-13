@@ -157,7 +157,7 @@ export class MatFormField extends _MatFormFieldMixinBase
       this._updateOutlineGapOnStable();
     }
   }
-  _appearance: MatFormFieldAppearance;
+  _appearance: MatFormFieldAppearance = 'legacy';
 
   /** Whether the required marker should be hidden. */
   @Input()
@@ -165,7 +165,7 @@ export class MatFormField extends _MatFormFieldMixinBase
   set hideRequiredMarker(value: boolean) {
     this._hideRequiredMarker = coerceBooleanProperty(value);
   }
-  private _hideRequiredMarker: boolean;
+  private _hideRequiredMarker: boolean = false;
 
   /** Override for the logic that disables the label animation in certain cases. */
   private _showAlwaysAnimate = false;
@@ -214,7 +214,7 @@ export class MatFormField extends _MatFormFieldMixinBase
       this._changeDetectorRef.markForCheck();
     }
   }
-  private _floatLabel: FloatLabelType;
+  private _floatLabel: FloatLabelType = 'auto';
 
   /** Whether the Angular animations are enabled. */
   _animationsEnabled: boolean;
@@ -223,18 +223,18 @@ export class MatFormField extends _MatFormFieldMixinBase
    * @deprecated
    * @breaking-change 7.0.0
    */
-  @ViewChild('underline') underlineRef: ElementRef;
+  @ViewChild('underline') underlineRef!: ElementRef;
 
-  @ViewChild('connectionContainer') _connectionContainerRef: ElementRef;
-  @ViewChild('inputContainer') _inputContainerRef: ElementRef;
-  @ViewChild('label') private _label: ElementRef;
-  @ContentChild(MatFormFieldControl) _control: MatFormFieldControl<any>;
-  @ContentChild(MatPlaceholder) _placeholderChild: MatPlaceholder;
-  @ContentChild(MatLabel) _labelChild: MatLabel;
-  @ContentChildren(MatError) _errorChildren: QueryList<MatError>;
-  @ContentChildren(MatHint) _hintChildren: QueryList<MatHint>;
-  @ContentChildren(MatPrefix) _prefixChildren: QueryList<MatPrefix>;
-  @ContentChildren(MatSuffix) _suffixChildren: QueryList<MatSuffix>;
+  @ViewChild('connectionContainer') _connectionContainerRef!: ElementRef;
+  @ViewChild('inputContainer') _inputContainerRef!: ElementRef;
+  @ViewChild('label') private _label!: ElementRef;
+  @ContentChild(MatFormFieldControl) _control!: MatFormFieldControl<any>;
+  @ContentChild(MatPlaceholder) _placeholderChild?: MatPlaceholder;
+  @ContentChild(MatLabel) _labelChild?: MatLabel;
+  @ContentChildren(MatError) _errorChildren!: QueryList<MatError>;
+  @ContentChildren(MatHint) _hintChildren!: QueryList<MatHint>;
+  @ContentChildren(MatPrefix) _prefixChildren!: QueryList<MatPrefix>;
+  @ContentChildren(MatSuffix) _suffixChildren!: QueryList<MatSuffix>;
 
   constructor(
       public _elementRef: ElementRef,

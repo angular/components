@@ -22,7 +22,7 @@ export class AutocompleteDisplayExample implements OnInit {
     {name: 'Shelley'},
     {name: 'Igor'}
   ];
-  filteredOptions: Observable<User[]>;
+  filteredOptions!: Observable<User[]>;
 
   ngOnInit() {
     this.filteredOptions = this.myControl.valueChanges

@@ -30,10 +30,10 @@ import {MatExpansionPanelHeader} from './expansion-panel-header';
   }
 })
 export class MatAccordion extends CdkAccordion implements MatAccordionBase, AfterContentInit {
-  private _keyManager: FocusKeyManager<MatExpansionPanelHeader>;
+  private _keyManager!: FocusKeyManager<MatExpansionPanelHeader>;
 
   @ContentChildren(MatExpansionPanelHeader, {descendants: true})
-  _headers: QueryList<MatExpansionPanelHeader>;
+  _headers!: QueryList<MatExpansionPanelHeader>;
 
   /** Whether the expansion indicator should be hidden. */
   @Input()

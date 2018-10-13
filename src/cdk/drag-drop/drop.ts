@@ -52,7 +52,7 @@ const DROP_PROXIMITY_THRESHOLD = 0.05;
 })
 export class CdkDrop<T = any> implements OnInit, OnDestroy {
   /** Draggable items in the container. */
-  @ContentChildren(forwardRef(() => CdkDrag)) _draggables: QueryList<CdkDrag>;
+  @ContentChildren(forwardRef(() => CdkDrag)) _draggables!: QueryList<CdkDrag>;
 
   /**
    * Other draggable containers that this container is connected to and into which the
@@ -62,7 +62,7 @@ export class CdkDrop<T = any> implements OnInit, OnDestroy {
   @Input('cdkDropConnectedTo') connectedTo: (CdkDrop | string)[] | CdkDrop | string = [];
 
   /** Arbitrary data to attach to this container. */
-  @Input('cdkDropData') data: T;
+  @Input('cdkDropData') data!: T;
 
   /** Direction in which the list is oriented. */
   @Input('cdkDropOrientation') orientation: 'horizontal' | 'vertical' = 'vertical';
@@ -74,7 +74,7 @@ export class CdkDrop<T = any> implements OnInit, OnDestroy {
   @Input() id: string = `cdk-drop-${_uniqueIdCounter++}`;
 
   /** Locks the position of the draggable elements inside the container along the specified axis. */
-  @Input('cdkDropLockAxis') lockAxis: 'x' | 'y';
+  @Input('cdkDropLockAxis') lockAxis?: 'x' | 'y';
 
   /**
    * Function that is used to determine whether an item
@@ -128,7 +128,7 @@ export class CdkDrop<T = any> implements OnInit, OnDestroy {
    * from `_draggables`, as well as any items that have been dragged in, but haven't
    * been dropped yet.
    */
-  private _activeDraggables: CdkDrag[];
+  private _activeDraggables: CdkDrag[] = [];
 
   /**
    * Keeps track of the item that was last swapped with the dragged item, as

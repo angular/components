@@ -1657,8 +1657,8 @@ class StandardDatepicker {
   touch = false;
   disabled = false;
   date: Date | null = new Date(2020, JAN, 1);
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput) datepickerInput!: MatDatepickerInput<Date>;
 }
 
 
@@ -1674,7 +1674,7 @@ class MultiInputDatepicker {}
   template: `<mat-datepicker #d></mat-datepicker>`,
 })
 class NoInputDatepicker {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
 }
 
 
@@ -1687,7 +1687,7 @@ class NoInputDatepicker {
 class DatepickerWithStartAt {
   date = new Date(2020, JAN, 1);
   startDate = new Date(2010, JAN, 1);
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
 }
 
 
@@ -1699,7 +1699,7 @@ class DatepickerWithStartAt {
 })
 class DatepickerWithStartViewYear {
   date = new Date(2020, JAN, 1);
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
 
   onYearSelection() {}
 }
@@ -1714,7 +1714,7 @@ class DatepickerWithStartViewYear {
 })
 class DatepickerWithStartViewMultiYear {
   date = new Date(2020, JAN, 1);
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
 
   onMultiYearSelection() {}
 }
@@ -1728,8 +1728,8 @@ class DatepickerWithStartViewMultiYear {
 })
 class DatepickerWithNgModel {
   selected: Date | null = null;
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput) datepickerInput!: MatDatepickerInput<Date>;
 }
 
 
@@ -1742,9 +1742,9 @@ class DatepickerWithNgModel {
 })
 class DatepickerWithFormControl {
   formControl = new FormControl();
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
-  @ViewChild(MatDatepickerToggle) datepickerToggle: MatDatepickerToggle<Date>;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput) datepickerInput!: MatDatepickerInput<Date>;
+  @ViewChild(MatDatepickerToggle) datepickerToggle!: MatDatepickerToggle<Date>;
 }
 
 
@@ -1756,8 +1756,8 @@ class DatepickerWithFormControl {
   `,
 })
 class DatepickerWithToggle {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) input: MatDatepickerInput<Date>;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput) input!: MatDatepickerInput<Date>;
   touchUI = true;
 }
 
@@ -1783,9 +1783,9 @@ class DatepickerWithCustomIcon {}
   `,
 })
 class FormFieldDatepicker {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
-  @ViewChild(MatFormField) formField: MatFormField;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput) datepickerInput!: MatDatepickerInput<Date>;
+  @ViewChild(MatFormField) formField!: MatFormField;
 }
 
 
@@ -1797,8 +1797,8 @@ class FormFieldDatepicker {
   `,
 })
 class DatepickerWithMinAndMaxValidation {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  date: Date | null;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
+  date: Date | null = null;
   minDate = new Date(2010, JAN, 1);
   maxDate = new Date(2020, JAN, 1);
 }
@@ -1812,8 +1812,8 @@ class DatepickerWithMinAndMaxValidation {
   `,
 })
 class DatepickerWithFilterAndValidation {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  date: Date;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
+  date?: Date;
   filter = (date: Date) => date.getDate() != 1;
 }
 
@@ -1826,7 +1826,7 @@ class DatepickerWithFilterAndValidation {
   `
 })
 class DatepickerWithChangeAndInputEvents {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
 
   onChange() {}
 
@@ -1846,8 +1846,8 @@ class DatepickerWithChangeAndInputEvents {
 })
 class DatepickerWithi18n {
   date: Date | null = new Date(2010, JAN, 1);
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput) datepickerInput!: MatDatepickerInput<Date>;
 }
 
 
@@ -1862,8 +1862,8 @@ class DatepickerWithISOStrings {
   min = new Date(2017, JAN, 1).toISOString();
   max = new Date (2017, DEC, 31).toISOString();
   startAt = new Date(2017, JUL, 1).toISOString();
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput) datepickerInput!: MatDatepickerInput<Date>;
 }
 
 
@@ -1877,7 +1877,7 @@ class DatepickerWithEvents {
   selected: Date | null = null;
   openedSpy = jasmine.createSpy('opened spy');
   closedSpy = jasmine.createSpy('closed spy');
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
 }
 
 
@@ -1888,7 +1888,7 @@ class DatepickerWithEvents {
   `,
 })
 class DatepickerOpeningOnFocus {
-  @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepicker) datepicker!: MatDatepicker<Date>;
 }
 
 
@@ -1899,7 +1899,7 @@ class DatepickerOpeningOnFocus {
   `,
 })
 class DatepickerWithCustomHeader {
-  @ViewChild('ch') datepicker: MatDatepicker<Date>;
+  @ViewChild('ch') datepicker!: MatDatepicker<Date>;
   customHeaderForDatePicker = CustomHeaderForDatepicker;
 }
 
@@ -1918,10 +1918,10 @@ class CustomHeaderForDatepicker {}
   `,
 })
 class DelayedDatepicker {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
-  date: Date | null;
-  assignedDatepicker: MatDatepicker<Date>;
+  @ViewChild('d') datepicker!: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput) datepickerInput!: MatDatepickerInput<Date>;
+  date: Date | null = null;
+  assignedDatepicker!: MatDatepicker<Date>;
 }
 
 

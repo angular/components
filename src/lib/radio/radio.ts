@@ -133,7 +133,7 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
 
   /** Child radio buttons. */
   @ContentChildren(forwardRef(() => MatRadioButton), { descendants: true })
-  _radios: QueryList<MatRadioButton>;
+  _radios!: QueryList<MatRadioButton>;
 
   /** Name of the radio button group. All radio buttons inside this group will use this name. */
   @Input()
@@ -309,8 +309,9 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
 export class MatRadioButtonBase {
   // Since the disabled property is manually defined for the MatRadioButton and isn't set up in
   // the mixin base class. To be able to use the tabindex mixin, a disabled property must be
-  // defined to properly work.
-  disabled: boolean;
+  // defined to properly work. Note that we can't set a default value here, because it'll
+  // end up invoking the getter before everything is initialized.
+  disabled!: boolean;
 
   constructor(public _elementRef: ElementRef) {}
 }
@@ -354,16 +355,16 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   @Input() id: string = this._uniqueId;
 
   /** Analog to HTML 'name' attribute used to group radios for unique selection. */
-  @Input() name: string;
+  @Input() name!: string;
 
   /** Used to set the 'aria-label' attribute on the underlying input element. */
-  @Input('aria-label') ariaLabel: string;
+  @Input('aria-label') ariaLabel?: string;
 
   /** The 'aria-labelledby' attribute takes precedence as the element's text alternative. */
-  @Input('aria-labelledby') ariaLabelledby: string;
+  @Input('aria-labelledby') ariaLabelledby?: string;
 
   /** The 'aria-describedby' attribute is read after the element's label and field type. */
-  @Input('aria-describedby') ariaDescribedby: string;
+  @Input('aria-describedby') ariaDescribedby?: string;
 
   /** Whether this radio button is checked. */
   @Input()
@@ -415,7 +416,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   set labelPosition(value) {
     this._labelPosition = value;
   }
-  private _labelPosition: 'before' | 'after';
+  private _labelPosition?: 'before' | 'after';
 
   /** Whether the radio button is disabled. */
   @Input()
@@ -456,10 +457,10 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   private _checked: boolean = false;
 
   /** Whether this radio is disabled. */
-  private _disabled: boolean;
+  private _disabled: boolean = false;
 
   /** Whether this radio is required. */
-  private _required: boolean;
+  private _required: boolean = false;
 
   /** Value assigned to this radio. */
   private _value: any = null;
@@ -468,7 +469,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   private _removeUniqueSelectionListener: () => void = () => {};
 
   /** The native `<input type=radio>` element */
-  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
+  @ViewChild('input') _inputElement!: ElementRef<HTMLInputElement>;
 
   constructor(@Optional() radioGroup: MatRadioGroup,
               elementRef: ElementRef,

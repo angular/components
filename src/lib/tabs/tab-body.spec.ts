@@ -188,12 +188,12 @@ describe('MatTabBody', () => {
   `
 })
 class SimpleTabBodyApp implements AfterContentInit {
-  content: TemplatePortal;
-  position: number;
-  origin: number | null;
+  content!: TemplatePortal;
+  position?: number;
+  origin: number | null = null;
 
-  @ViewChild(MatTabBody) tabBody: MatTabBody;
-  @ViewChild(TemplateRef) template: TemplateRef<any>;
+  @ViewChild(MatTabBody) tabBody!: MatTabBody;
+  @ViewChild(TemplateRef) template!: TemplateRef<any>;
 
   constructor(private _viewContainerRef: ViewContainerRef) { }
 

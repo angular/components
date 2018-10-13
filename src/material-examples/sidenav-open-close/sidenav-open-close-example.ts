@@ -8,7 +8,7 @@ import {Component} from '@angular/core';
 })
 export class SidenavOpenCloseExample {
   events: string[] = [];
-  opened: boolean;
+  opened: boolean = false;
 
   shouldRun = [/(^|\.)plnkr\.co$/, /(^|\.)stackblitz\.io$/].some(h => h.test(window.location.host));
 }

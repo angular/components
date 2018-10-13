@@ -22,7 +22,7 @@ export interface MatSnackBarDismiss {
  */
 export class MatSnackBarRef<T> {
   /** The instance of the component making up the content of the snack bar. */
-  instance: T;
+  instance!: T;
 
   /**
    * The instance of the component making up the content of the snack bar.
@@ -43,7 +43,7 @@ export class MatSnackBarRef<T> {
    * Timeout ID for the duration setTimeout call. Used to clear the timeout if the snackbar is
    * dismissed before the duration passes.
    */
-  private _durationTimeoutId: number;
+  private _durationTimeoutId?: number;
 
   /** Whether the snack bar was dismissed using the action button. */
   private _dismissedByAction = false;

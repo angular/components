@@ -109,7 +109,7 @@ describe('MatCalendar', () => {
 
       (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
 
-      const normalizedMonth: Date = fixture.componentInstance.selectedMonth;
+      const normalizedMonth: Date = fixture.componentInstance.selectedMonth!;
       expect(normalizedMonth.getMonth()).toEqual(0);
     });
 
@@ -124,7 +124,7 @@ describe('MatCalendar', () => {
 
       fixture.detectChanges();
 
-      const normalizedYear: Date = fixture.componentInstance.selectedYear;
+      const normalizedYear: Date = fixture.componentInstance.selectedYear!;
       expect(normalizedYear.getFullYear()).toEqual(2017);
     });
 
@@ -566,9 +566,9 @@ describe('MatCalendar', () => {
     </mat-calendar>`
 })
 class StandardCalendar {
-  selected: Date;
-  selectedYear: Date;
-  selectedMonth: Date;
+  selected?: Date;
+  selectedYear?: Date;
+  selectedMonth?: Date;
   startDate = new Date(2017, JAN, 31);
 }
 
@@ -579,7 +579,7 @@ class StandardCalendar {
   `
 })
 class CalendarWithMinMax {
-  startAt: Date;
+  startAt?: Date;
   minDate = new Date(2016, JAN, 1);
   maxDate = new Date(2018, JAN, 1);
 }
@@ -592,7 +592,7 @@ class CalendarWithMinMax {
   `
 })
 class CalendarWithDateFilter {
-  selected: Date;
+  selected?: Date;
   startDate = new Date(2017, JAN, 1);
 
   dateFilter (date: Date) {
@@ -613,8 +613,8 @@ class CalendarWithDateFilter {
 })
 class CalendarWithSelectableMinDate {
   startAt = new Date(2018, JUL, 0);
-  selected: Date;
-  minDate: Date;
+  selected!: Date;
+  minDate!: Date;
 
   constructor() {
     this.select(new Date(2018, JUL, 10));

@@ -185,7 +185,7 @@ describe('FocusTrap', () => {
     `
 })
 class SimpleFocusTrap {
-  @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+  @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
 }
 
 @Component({
@@ -198,7 +198,7 @@ class SimpleFocusTrap {
     `
 })
 class FocusTrapWithAutoCapture {
-  @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+  @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
   showTrappedRegion = false;
 }
 
@@ -212,7 +212,7 @@ class FocusTrapWithAutoCapture {
     `
 })
 class FocusTrapWithBindings {
-  @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+  @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
   renderFocusTrap = true;
   _isFocusTrapEnabled = true;
 }
@@ -232,7 +232,7 @@ class FocusTrapWithBindings {
     `
 })
 class FocusTrapTargets {
-  @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+  @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
 }
 
 
@@ -246,7 +246,7 @@ class FocusTrapTargets {
     `
 })
 class FocusTrapWithSvg {
-  @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+  @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
 }
 
 @Component({
@@ -257,5 +257,5 @@ class FocusTrapWithSvg {
     `
 })
 class FocusTrapWithoutFocusableElements {
-  @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+  @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
 }

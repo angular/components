@@ -4128,17 +4128,17 @@ class BasicSelect {
     { value: 'sushi-7', viewValue: 'Sushi' },
   ];
   control = new FormControl();
-  isRequired: boolean;
+  isRequired?: boolean;
   heightAbove = 0;
   heightBelow = 0;
-  tabIndexOverride: number;
-  ariaLabel: string;
-  ariaLabelledby: string;
+  tabIndexOverride?: number;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
   panelClass = ['custom-one', 'custom-two'];
-  disableRipple: boolean;
+  disableRipple?: boolean;
 
-  @ViewChild(MatSelect) select: MatSelect;
-  @ViewChildren(MatOption) options: QueryList<MatOption>;
+  @ViewChild(MatSelect) select!: MatSelect;
+  @ViewChildren(MatOption) options!: QueryList<MatOption>;
 }
 
 @Component({
@@ -4159,10 +4159,10 @@ class NgModelSelect {
     { value: 'pizza-1', viewValue: 'Pizza' },
     { value: 'tacos-2', viewValue: 'Tacos' },
   ];
-  isDisabled: boolean;
+  isDisabled?: boolean;
 
-  @ViewChild(MatSelect) select: MatSelect;
-  @ViewChildren(MatOption) options: QueryList<MatOption>;
+  @ViewChild(MatSelect) select!: MatSelect;
+  @ViewChildren(MatOption) options!: QueryList<MatOption>;
 }
 
 @Component({
@@ -4207,7 +4207,7 @@ class NgIfSelect {
   ];
   control = new FormControl('pizza-1');
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect) select!: MatSelect;
 }
 
 @Component({
@@ -4248,11 +4248,11 @@ class SelectWithChangeEvent {
   `
 })
 class SelectInitWithoutOptions {
-  foods: any[];
+  foods: any[] = [];
   control = new FormControl('pizza-1');
 
-  @ViewChild(MatSelect) select: MatSelect;
-  @ViewChildren(MatOption) options: QueryList<MatOption>;
+  @ViewChild(MatSelect) select!: MatSelect;
+  @ViewChildren(MatOption) options!: QueryList<MatOption>;
 
   addOptions() {
     this.foods = [
@@ -4273,7 +4273,7 @@ class SelectInitWithoutOptions {
   }]
 })
 class CustomSelectAccessor implements ControlValueAccessor {
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect) select!: MatSelect;
 
   writeValue: (value?: any) => void = () => {};
   registerOnChange: (changeFn?: (value: any) => void) => void = () => {};
@@ -4291,7 +4291,7 @@ class CustomSelectAccessor implements ControlValueAccessor {
 })
 class CompWithCustomSelect {
   ctrl = new FormControl('initial value');
-  @ViewChild(CustomSelectAccessor) customAccessor: CustomSelectAccessor;
+  @ViewChild(CustomSelectAccessor) customAccessor!: CustomSelectAccessor;
 }
 
 @Component({
@@ -4304,7 +4304,7 @@ class CompWithCustomSelect {
   `
 })
 class SelectWithErrorSibling {
-  value: string;
+  value?: string;
 }
 
 @Component({
@@ -4382,7 +4382,7 @@ class FloatLabelSelect {
     { value: 'tacos-2', viewValue: 'Tacos'}
   ];
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect) select!: MatSelect;
 }
 
 @Component({
@@ -4411,9 +4411,9 @@ class MultiSelect {
   ];
   control = new FormControl();
 
-  @ViewChild(MatSelect) select: MatSelect;
-  @ViewChildren(MatOption) options: QueryList<MatOption>;
-  sortComparator: (a: MatOption, b: MatOption, options: MatOption[]) => number;
+  @ViewChild(MatSelect) select!: MatSelect;
+  @ViewChildren(MatOption) options!: QueryList<MatOption>;
+  sortComparator?: (a: MatOption, b: MatOption, options: MatOption[]) => number;
 }
 
 @Component({
@@ -4471,8 +4471,8 @@ class BasicSelectNoPlaceholder { }
   `
 })
 class BasicSelectWithTheming {
-  @ViewChild(MatSelect) select: MatSelect;
-  theme: string;
+  @ViewChild(MatSelect) select!: MatSelect;
+  theme?: string;
 }
 
 @Component({
@@ -4499,7 +4499,7 @@ class ResetValuesSelect {
   ];
   control = new FormControl();
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect) select!: MatSelect;
 }
 
 @Component({
@@ -4519,7 +4519,7 @@ class FalsyValueSelect {
     { value: 1, viewValue: 'Pizza' },
   ];
   control = new FormControl();
-  @ViewChildren(MatOption) options: QueryList<MatOption>;
+  @ViewChildren(MatOption) options!: QueryList<MatOption>;
 }
 
 @Component({
@@ -4575,8 +4575,8 @@ class SelectWithGroups {
     }
   ];
 
-  @ViewChild(MatSelect) select: MatSelect;
-  @ViewChildren(MatOption) options: QueryList<MatOption>;
+  @ViewChild(MatSelect) select!: MatSelect;
+  @ViewChildren(MatOption) options!: QueryList<MatOption>;
 }
 
 @Component({
@@ -4631,8 +4631,8 @@ class InvalidSelectInForm {
   `
 })
 class SelectInsideFormGroup {
-  @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(FormGroupDirective) formGroupDirective!: FormGroupDirective;
+  @ViewChild(MatSelect) select!: MatSelect;
   formControl = new FormControl('', Validators.required);
   formGroup = new FormGroup({
     food: this.formControl
@@ -4651,14 +4651,14 @@ class SelectInsideFormGroup {
   `
 })
 class BasicSelectWithoutForms {
-  selectedFood: string | null;
+  selectedFood: string | null = null;
   foods: any[] = [
     { value: 'steak-0', viewValue: 'Steak' },
     { value: 'pizza-1', viewValue: 'Pizza' },
     { value: 'sandwich-2', viewValue: 'Sandwich' },
   ];
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect) select!: MatSelect;
 }
 
 @Component({
@@ -4679,7 +4679,7 @@ class BasicSelectWithoutFormsPreselected {
     { value: 'pizza-1', viewValue: 'Pizza' },
   ];
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect) select!: MatSelect;
 }
 
 @Component({
@@ -4694,14 +4694,14 @@ class BasicSelectWithoutFormsPreselected {
   `
 })
 class BasicSelectWithoutFormsMultiple {
-  selectedFoods: string[];
+  selectedFoods?: string[];
   foods: any[] = [
     { value: 'steak-0', viewValue: 'Steak' },
     { value: 'pizza-1', viewValue: 'Pizza' },
     { value: 'sandwich-2', viewValue: 'Sandwich' },
   ];
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect) select!: MatSelect;
 }
 
 @Component({
@@ -4747,8 +4747,8 @@ class NgModelCompareWithSelect {
   selectedFood: {value: string, viewValue: string} = { value: 'pizza-1', viewValue: 'Pizza' };
   comparator: ((f1: any, f2: any) => boolean)|null = this.compareByValue;
 
-  @ViewChild(MatSelect) select: MatSelect;
-  @ViewChildren(MatOption) options: QueryList<MatOption>;
+  @ViewChild(MatSelect) select!: MatSelect;
+  @ViewChildren(MatOption) options!: QueryList<MatOption>;
 
   useCompareByValue() { this.comparator = this.compareByValue; }
 
@@ -4775,13 +4775,13 @@ class NgModelCompareWithSelect {
   `
 })
 class CustomErrorBehaviorSelect {
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect) select!: MatSelect;
   control = new FormControl();
   foods: any[] = [
     { value: 'steak-0', viewValue: 'Steak' },
     { value: 'pizza-1', viewValue: 'Pizza' },
   ];
-  errorStateMatcher: ErrorStateMatcher;
+  errorStateMatcher?: ErrorStateMatcher;
 }
 
 @Component({
@@ -4804,8 +4804,8 @@ class SingleSelectWithPreselectedArrayValues {
 
   selectedFoods = this.foods[1].value;
 
-  @ViewChild(MatSelect) select: MatSelect;
-  @ViewChildren(MatOption) options: QueryList<MatOption>;
+  @ViewChild(MatSelect) select!: MatSelect;
+  @ViewChildren(MatOption) options!: QueryList<MatOption>;
 }
 
 @Component({
@@ -4833,8 +4833,8 @@ class SelectWithoutOptionCentering {
   ];
   control = new FormControl('pizza-1');
 
-  @ViewChild(MatSelect) select: MatSelect;
-  @ViewChildren(MatOption) options: QueryList<MatOption>;
+  @ViewChild(MatSelect) select!: MatSelect;
+  @ViewChildren(MatOption) options!: QueryList<MatOption>;
 }
 
 @Component({
@@ -4849,5 +4849,5 @@ class SelectWithoutOptionCentering {
   `
 })
 class SelectWithFormFieldLabel {
-  placeholder: string;
+  placeholder?: string;
 }

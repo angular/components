@@ -76,7 +76,7 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
   providers: [{provide: CdkTreeNodeDef, useExisting: MatTreeNodeDef}]
 })
 export class MatTreeNodeDef<T> extends _CdkTreeNodeDef<T> {
-  @Input('matTreeNode') data: T;
+  @Input('matTreeNode') data?: T;
 }
 
 /**
@@ -99,9 +99,9 @@ export class MatTreeNodeDef<T> extends _CdkTreeNodeDef<T> {
 export class MatNestedTreeNode<T> extends _MatNestedTreeNodeMixinBase<T>
     implements AfterContentInit, CanDisable, HasTabIndex, OnDestroy {
 
-  @Input('matNestedTreeNode') node: T;
+  @Input('matNestedTreeNode') node?: T;
 
-  @ContentChildren(MatTreeNodeOutlet) nodeOutlet: QueryList<MatTreeNodeOutlet>;
+  @ContentChildren(MatTreeNodeOutlet) nodeOutlet!: QueryList<MatTreeNodeOutlet>;
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>,

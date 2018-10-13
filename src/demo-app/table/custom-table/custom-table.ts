@@ -23,8 +23,8 @@ export class CustomTableDemo implements OnInit {
   wrapperTableDataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
   getWeight = (data: Element) => '~' + data.weight;
 
-  @ViewChild('simpleTableSort') simpleTableSort: MatSort;
-  @ViewChild('wrapperTableSort') wrapperTableSort: MatSort;
+  @ViewChild('simpleTableSort') simpleTableSort!: MatSort;
+  @ViewChild('wrapperTableSort') wrapperTableSort!: MatSort;
 
   ngOnInit() {
     this.simpleTableDataSource.sort = this.simpleTableSort;

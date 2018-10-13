@@ -53,15 +53,15 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
 })
 export class ExampleList {
   /** Type of examples being displayed. */
-  @Input() type: string;
+  @Input() type: string = '';
 
   /** IDs of the examples to display. */
-  @Input() ids: string[];
+  @Input() ids: string[] = [];
 
   @Input()
   get expandAll(): boolean { return this._expandAll; }
   set expandAll(v: boolean) { this._expandAll = coerceBooleanProperty(v); }
-  _expandAll: boolean;
+  _expandAll = false;
 
   exampleComponents = EXAMPLE_COMPONENTS;
 }

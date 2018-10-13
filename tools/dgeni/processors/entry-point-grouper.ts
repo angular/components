@@ -57,9 +57,19 @@ export class EntryPointDoc {
   /** NgModule that defines the current entry-point. */
   ngModule: CategorizedClassDoc | null = null;
 
-  constructor(name: string) {
+  constructor(
+    name: string,
+    displayName: string,
+    moduleImportPath: string,
+    packageName: string,
+    packageDisplayName: string
+  ) {
     this.name = name;
     this.id = `entry-point-${name}`;
+    this.displayName = displayName;
+    this.moduleImportPath = moduleImportPath;
+    this.packageName = packageName;
+    this.packageDisplayName = packageDisplayName;
   }
 }
 
@@ -87,15 +97,21 @@ export class EntryPointGrouper implements Processor {
       let entryPoint;
       if (entryPoints.has(entryPointName)) {
         entryPoint = entryPoints.get(entryPointName)!;
+        entryPoint.displayName = documentInfo.name;
+        entryPoint.moduleImportPath = moduleImportPath;
+        entryPoint.packageName = packageName;
+        entryPoint.packageDisplayName = packageDisplayName;
       } else {
-        entryPoint = new EntryPointDoc(entryPointName);
+        entryPoint = new EntryPointDoc(
+          entryPointName,
+          documentInfo.name,
+          moduleImportPath,
+          packageName,
+          packageDisplayName
+        );
+
         entryPoints.set(entryPointName, entryPoint);
       }
-
-      entryPoint.displayName = documentInfo.name;
-      entryPoint.moduleImportPath = moduleImportPath;
-      entryPoint.packageName = packageName;
-      entryPoint.packageDisplayName = packageDisplayName;
 
       // Put this doc into the appropriate list in the entry-point doc.
       if (doc.isDirective) {

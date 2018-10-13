@@ -7,9 +7,9 @@ import {MatDialog, MatDialogRef, MatDialogConfig} from '@angular/material';
   templateUrl: 'dialog-e2e.html'
 })
 export class DialogE2E {
-  dialogRef: MatDialogRef<TestDialog> | null;
+  dialogRef: MatDialogRef<TestDialog> | null = null;
 
-  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
 
   constructor (private _dialog: MatDialog) { }
 

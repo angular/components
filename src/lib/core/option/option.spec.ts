@@ -131,6 +131,6 @@ describe('MatOption component', () => {
   template: `<mat-option [id]="id" [disabled]="disabled"></mat-option>`
 })
 class BasicOption {
-  disabled: boolean;
-  id: string;
+  disabled?: boolean;
+  id?: string;
 }

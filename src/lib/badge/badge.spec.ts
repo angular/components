@@ -192,6 +192,6 @@ class BadgeTestApp {
   badgeHidden = false;
   badgeSize = 'medium';
   badgeOverlap = false;
-  badgeDescription: string;
+  badgeDescription?: string;
   badgeDisabled = false;
 }

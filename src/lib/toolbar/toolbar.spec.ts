@@ -97,7 +97,7 @@ describe('MatToolbar', () => {
   `
 })
 class ToolbarSingleRow {
-  toolbarColor: string;
+  toolbarColor?: string;
 }
 
 @Component({

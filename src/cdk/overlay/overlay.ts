@@ -42,7 +42,7 @@ let nextUniqueId = 0;
  */
 @Injectable()
 export class Overlay {
-  private _appRef: ApplicationRef;
+  private _appRef?: ApplicationRef;
 
   constructor(
               /** Scrolling strategies that can be used when creating an overlay. */

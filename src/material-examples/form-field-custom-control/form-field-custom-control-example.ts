@@ -56,7 +56,7 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, OnDestroy {
     this._placeholder = value;
     this.stateChanges.next();
   }
-  private _placeholder: string;
+  private _placeholder: string = '';
 
   @Input()
   get required(): boolean { return this._required; }

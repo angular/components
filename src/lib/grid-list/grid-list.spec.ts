@@ -444,7 +444,7 @@ class GridListWithTooWideColspan { }
 
 @Component({template: '<mat-grid-list [cols]="cols"></mat-grid-list>'})
 class GridListWithDynamicCols {
-  @ViewChild(MatGridList) gridList: MatGridList;
+  @ViewChild(MatGridList) gridList!: MatGridList;
   cols = 2;
 }
 
@@ -463,7 +463,7 @@ class GridListWithUnspecifiedRowHeight { }
       </mat-grid-list>
     </div>`})
 class GirdListWithRowHeightRatio {
-  rowHeight: string;
+  rowHeight?: string;
 }
 
 @Component({template: `
@@ -472,7 +472,7 @@ class GirdListWithRowHeightRatio {
       <mat-grid-tile></mat-grid-tile>
     </mat-grid-list>`})
 class GridListWithFitRowHeightMode {
-  totalHeight: string;
+  totalHeight?: string;
 }
 
 @Component({template: `
@@ -480,7 +480,7 @@ class GridListWithFitRowHeightMode {
       <mat-grid-tile></mat-grid-tile>
     </mat-grid-list>`})
 class GridListWithFixedRowHeightMode {
-  rowHeight: string;
+  rowHeight?: string;
 }
 
 @Component({template: `
@@ -488,7 +488,7 @@ class GridListWithFixedRowHeightMode {
       <mat-grid-tile></mat-grid-tile>
     </mat-grid-list>`})
 class GridListWithUnitlessFixedRowHeight {
-  rowHeight: string;
+  rowHeight?: string;
 }
 
 @Component({template: `
@@ -544,7 +544,7 @@ class GridListWithFixRowHeightAndMultipleRows { }
       </mat-grid-list>
     </div>`})
 class GridListWithColspanBinding {
-  colspan: number;
+  colspan?: number;
 }
 
 @Component({template: `
@@ -552,7 +552,7 @@ class GridListWithColspanBinding {
       <mat-grid-tile [rowspan]="rowspan"></mat-grid-tile>
     </mat-grid-list>`})
 class GridListWithRowspanBinding {
-  rowspan: number;
+  rowspan?: number;
 }
 
 @Component({template: `
@@ -565,7 +565,7 @@ class GridListWithRowspanBinding {
       </mat-grid-list>
     </div>`})
 class GridListWithComplexLayout {
-  tiles: any[];
+  tiles: any[] = [];
 }
 
 @Component({template: `

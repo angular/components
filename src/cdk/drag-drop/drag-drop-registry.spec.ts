@@ -167,8 +167,8 @@ describe('DragDropRegistry', () => {
   `
 })
 class SimpleDropZone {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  @ViewChildren(CdkDrop) dropInstances: QueryList<CdkDrop>;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
+  @ViewChildren(CdkDrop) dropInstances!: QueryList<CdkDrop>;
   items = ['Zero', 'One', 'Two', 'Three'];
   showDuplicateContainer = false;
 }

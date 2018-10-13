@@ -117,13 +117,13 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
 export class MatTabBody implements OnInit, OnDestroy {
 
   /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
-  private _positionIndex: number;
+  private _positionIndex!: number;
 
   /** Subscription to the directionality change observable. */
   private _dirChangeSubscription = Subscription.EMPTY;
 
   /** Tab body position state. Used by the animation trigger for the current state. */
-  _position: MatTabBodyPositionState;
+  _position!: MatTabBodyPositionState;
 
   /** Event emitted when the tab begins to animate towards the center as the active tab. */
   @Output() readonly _onCentering: EventEmitter<number> = new EventEmitter<number>();
@@ -138,13 +138,13 @@ export class MatTabBody implements OnInit, OnDestroy {
   @Output() readonly _onCentered: EventEmitter<void> = new EventEmitter<void>(true);
 
    /** The portal host inside of this container into which the tab body content will be loaded. */
-  @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
+  @ViewChild(PortalHostDirective) _portalHost!: PortalHostDirective;
 
   /** The tab body content to display. */
-  @Input('content') _content: TemplatePortal;
+  @Input('content') _content?: TemplatePortal;
 
   /** Position that will be used when the tab is immediately becoming visible after creation. */
-  @Input() origin: number;
+  @Input() origin!: number;
 
   /** The shifted index position of the tab body, where zero represents the active center tab. */
   @Input()

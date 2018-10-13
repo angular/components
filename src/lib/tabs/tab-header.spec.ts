@@ -413,12 +413,12 @@ interface Tab {
 class SimpleTabHeaderApp {
   disableRipple: boolean = false;
   selectedIndex: number = 0;
-  focusedIndex: number;
+  focusedIndex?: number;
   disabledTabIndex = 1;
   tabs: Tab[] = [{label: 'tab one'}, {label: 'tab one'}, {label: 'tab one'}, {label: 'tab one'}];
   dir: Direction = 'ltr';
 
-  @ViewChild(MatTabHeader) tabHeader: MatTabHeader;
+  @ViewChild(MatTabHeader) tabHeader!: MatTabHeader;
 
   constructor() {
     this.tabs[this.disabledTabIndex].disabled = true;

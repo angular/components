@@ -50,10 +50,10 @@ const MAT_FIT_MODE = 'fit';
 })
 export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked {
   /** Number of columns being rendered. */
-  private _cols: number;
+  private _cols!: number;
 
   /** Used for determiningthe position of each tile in the grid. */
-  private _tileCoordinator: TileCoordinator;
+  private _tileCoordinator!: TileCoordinator;
 
   /**
    * Row height value passed in by user. This can be one of three types:
@@ -61,16 +61,16 @@ export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked
    * - Ratio value (ex: "4:3"): sets the row height based on width:height ratio
    * - "Fit" mode (ex: "fit"): sets the row height to total height divided by number of rows
    */
-  private _rowHeight: string;
+  private _rowHeight?: string;
 
   /** The amount of space between tiles. This will be something like '5px' or '2em'. */
   private _gutter: string = '1px';
 
   /** Sets position and size styles for a tile */
-  private _tileStyler: TileStyler;
+  private _tileStyler!: TileStyler;
 
   /** Query list of tiles that are being rendered. */
-  @ContentChildren(MatGridTile, {descendants: true}) _tiles: QueryList<MatGridTile>;
+  @ContentChildren(MatGridTile, {descendants: true}) _tiles!: QueryList<MatGridTile>;
 
   constructor(private _element: ElementRef<HTMLElement>,
               @Optional() private _dir: Directionality) {}

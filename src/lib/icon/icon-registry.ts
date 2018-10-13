@@ -69,8 +69,8 @@ export function getMatIconFailedToSanitizeLiteralError(literal: SafeHtml): Error
  * @docs-private
  */
 class SvgIconConfig {
-  url: SafeResourceUrl | null;
-  svgElement: SVGElement | null;
+  url: SafeResourceUrl | null = null;
+  svgElement: SVGElement | null = null;
 
   constructor(url: SafeResourceUrl);
   constructor(svgElement: SVGElement);

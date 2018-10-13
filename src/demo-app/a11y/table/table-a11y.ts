@@ -35,13 +35,13 @@ const exampleData = [
   styleUrls: ['table-a11y.css'],
 })
 export class TableAccessibilityDemo implements OnInit {
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) pager: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) pager!: MatPaginator;
 
   displayedColumns = ['name', 'color', 'age'];
-  basicDataSource: BasicDataSource;
-  sortDataSource: SortDataSource;
-  paginatedDataSource: PaginatedDataSource;
+  basicDataSource!: BasicDataSource;
+  sortDataSource!: SortDataSource;
+  paginatedDataSource!: PaginatedDataSource;
 
   ngOnInit(): void {
     this.basicDataSource = new BasicDataSource();

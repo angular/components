@@ -175,7 +175,7 @@ class CalendarBodyWithDisabledCells {
     return cell;
   }));
   allowDisabledSelection = false;
-  selected: number;
+  selected?: number;
 }
 
 

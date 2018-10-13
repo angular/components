@@ -526,7 +526,7 @@ class MatTableApp {
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   isFourthRow = (i: number, _rowData: TestData) => i == 3;
 
-  @ViewChild(MatTable) table: MatTable<TestData>;
+  @ViewChild(MatTable) table!: MatTable<TestData>;
 }
 
 @Component({
@@ -556,7 +556,7 @@ class NativeHtmlTableApp {
   dataSource: FakeDataSource | null = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(MatTable) table: MatTable<TestData>;
+  @ViewChild(MatTable) table!: MatTable<TestData>;
 }
 
 @Component({
@@ -576,7 +576,7 @@ class StickyTableApp {
   dataSource = new FakeDataSource();
   columnsToRender = ['column_a'];
 
-  @ViewChild(MatTable) table: MatTable<TestData>;
+  @ViewChild(MatTable) table!: MatTable<TestData>;
 }
 
 
@@ -605,7 +605,7 @@ class MatTableWithWhenRowApp {
   dataSource: FakeDataSource | null = new FakeDataSource();
   isFourthRow = (i: number, _rowData: TestData) => i == 3;
 
-  @ViewChild(MatTable) table: MatTable<TestData>;
+  @ViewChild(MatTable) table!: MatTable<TestData>;
 }
 
 
@@ -643,10 +643,10 @@ class ArrayDataSourceMatTableApp implements OnInit {
   dataSource = new MatTableDataSource<TestData>();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(MatTable) table: MatTable<TestData>;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatSortHeader) sortHeader: MatSortHeader;
+  @ViewChild(MatTable) table!: MatTable<TestData>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatSortHeader) sortHeader!: MatSortHeader;
 
   constructor() {
     this.underlyingDataSource.data = [];
@@ -696,8 +696,8 @@ class MatTableWithSortApp implements OnInit {
   dataSource = new MatTableDataSource<TestData>();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(MatTable) table: MatTable<TestData>;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatTable) table!: MatTable<TestData>;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor() {
     this.underlyingDataSource.data = [];
@@ -747,8 +747,8 @@ class MatTableWithPaginatorApp implements OnInit {
   dataSource = new MatTableDataSource<TestData>();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(MatTable) table: MatTable<TestData>;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatTable) table!: MatTable<TestData>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor() {
     this.underlyingDataSource.data = [];

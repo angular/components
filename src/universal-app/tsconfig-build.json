@@ -9,6 +9,7 @@
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "noImplicitAny": true,
+    "strictPropertyInitialization": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": ".",

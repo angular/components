@@ -36,12 +36,12 @@ export interface ListKeyManagerOption {
  */
 export class ListKeyManager<T extends ListKeyManagerOption> {
   private _activeItemIndex = -1;
-  private _activeItem: T;
+  private _activeItem: T | null = null;
   private _wrap = false;
   private _letterKeyStream = new Subject<string>();
   private _typeaheadSubscription = Subscription.EMPTY;
   private _vertical = true;
-  private _horizontal: 'ltr' | 'rtl' | null;
+  private _horizontal: 'ltr' | 'rtl' | null = null;
 
   /**
    * Predicate function that can be used to check whether an item should be skipped

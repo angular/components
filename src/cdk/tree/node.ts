@@ -15,7 +15,7 @@ export class CdkTreeNodeOutletContext<T> {
   $implicit: T;
 
   /** Depth of the node. */
-  level: number;
+  level: number = 0;
 
   /** Index location of the node. */
   index?: number;
@@ -46,7 +46,7 @@ export class CdkTreeNodeDef<T> {
    * For every node, there must be at least one when function that passes or an undefined to
    * default.
    */
-  when: (index: number, nodeData: T) => boolean;
+  when?: (index: number, nodeData: T) => boolean;
 
   /** @docs-private */
   constructor(public template: TemplateRef<any>) {}

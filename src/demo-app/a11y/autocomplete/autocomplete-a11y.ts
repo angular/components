@@ -69,7 +69,7 @@ export class AutocompleteAccessibilityDemo {
     {code: 'WY', name: 'Wyoming'},
   ];
 
-  value: string;
+  value = '';
   filteredStates = this.states;
 
   filter(value: string) {

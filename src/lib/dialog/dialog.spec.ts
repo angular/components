@@ -1372,7 +1372,7 @@ class ComponentWithOnPushViewContainer {
   template: `<dir-with-view-container></dir-with-view-container>`,
 })
 class ComponentWithChildViewContainer {
-  @ViewChild(DirectiveWithViewContainer) childWithViewContainer: DirectiveWithViewContainer;
+  @ViewChild(DirectiveWithViewContainer) childWithViewContainer!: DirectiveWithViewContainer;
 
   get childViewContainer() {
     return this.childWithViewContainer.viewContainerRef;
@@ -1385,10 +1385,10 @@ class ComponentWithChildViewContainer {
       Cheese {{localValue}} {{data?.value}}{{setDialogRef(dialogRef)}}</ng-template>`,
 })
 class ComponentWithTemplateRef {
-  localValue: string;
-  dialogRef: MatDialogRef<any>;
+  localValue?: string;
+  dialogRef?: MatDialogRef<any>;
 
-  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
 
   setDialogRef(dialogRef: MatDialogRef<any>): string {
     this.dialogRef = dialogRef;
@@ -1439,7 +1439,7 @@ class ContentElementDialog {}
   `
 })
 class ComponentWithContentElementTemplateRef {
-  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
 }
 
 @Component({

@@ -15,9 +15,8 @@ export interface DialogData {
   styleUrls: ['dialog-overview-example.css'],
 })
 export class DialogOverviewExample {
-
-  animal: string;
-  name: string;
+  animal?: string;
+  name?: string;
 
   constructor(public dialog: MatDialog) {}
 

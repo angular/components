@@ -46,7 +46,7 @@ let nextUniqueId = 0;
 export class MatChipInput implements OnChanges {
   /** Whether the control is focused. */
   focused: boolean = false;
-  _chipList: MatChipList;
+  _chipList!: MatChipList;
 
   /** Register input for chip list */
   @Input('matChipInputFor')

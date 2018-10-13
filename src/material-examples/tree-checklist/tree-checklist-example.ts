@@ -8,15 +8,16 @@ import {BehaviorSubject} from 'rxjs';
  * Node for to-do item
  */
 export class TodoItemNode {
-  children: TodoItemNode[];
-  item: string;
+  children: TodoItemNode[] = [];
+  constructor(public item: string) {}
 }
 
 /** Flat to-do item node with expandable and level information */
 export class TodoItemFlatNode {
-  item: string;
-  level: number;
-  expandable: boolean;
+  constructor(
+    public item: string,
+    public level: number,
+    public expandable: boolean = true) {}
 }
 
 /**
@@ -71,8 +72,7 @@ export class ChecklistDatabase {
   buildFileTree(obj: {[key: string]: any}, level: number): TodoItemNode[] {
     return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {
       const value = obj[key];
-      const node = new TodoItemNode();
-      node.item = key;
+      const node = new TodoItemNode(key);
 
       if (value != null) {
         if (typeof value === 'object') {
@@ -159,10 +159,7 @@ export class TreeChecklistExample {
     const existingNode = this.nestedNodeMap.get(node);
     const flatNode = existingNode && existingNode.item === node.item
         ? existingNode
-        : new TodoItemFlatNode();
-    flatNode.item = node.item;
-    flatNode.level = level;
-    flatNode.expandable = !!node.children;
+        : new TodoItemFlatNode(node.item, level, !!node.children);
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
     return flatNode;

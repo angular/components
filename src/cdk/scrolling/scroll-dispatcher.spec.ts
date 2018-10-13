@@ -227,8 +227,8 @@ describe('ScrollDispatcher', () => {
   template: `<div #scrollingElement cdk-scrollable style="height: 9999px"></div>`
 })
 class ScrollingComponent {
-  @ViewChild(CdkScrollable) scrollable: CdkScrollable;
-  @ViewChild('scrollingElement') scrollingElement: ElementRef<HTMLElement>;
+  @ViewChild(CdkScrollable) scrollable!: CdkScrollable;
+  @ViewChild('scrollingElement') scrollingElement!: ElementRef<HTMLElement>;
 }
 
 
@@ -245,7 +245,7 @@ class ScrollingComponent {
   `
 })
 class NestedScrollingComponent {
-  @ViewChild('interestingElement') interestingElement: ElementRef<HTMLElement>;
+  @ViewChild('interestingElement') interestingElement!: ElementRef<HTMLElement>;
 }
 
 const TEST_COMPONENTS = [ScrollingComponent, NestedScrollingComponent];

@@ -60,7 +60,7 @@ export const _CdkStepper = CdkStepper;
 })
 export class MatStep extends CdkStep implements ErrorStateMatcher {
   /** Content for step label given by `<ng-template matStepLabel>`. */
-  @ContentChild(MatStepLabel) stepLabel: MatStepLabel;
+  @ContentChild(MatStepLabel) stepLabel?: MatStepLabel;
 
   /** @breaking-change 8.0.0 remove the `?` after `stepperOptions` */
   constructor(@Inject(forwardRef(() => MatStepper)) stepper: MatStepper,
@@ -88,13 +88,13 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
 })
 export class MatStepper extends _CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */
-  @ViewChildren(MatStepHeader) _stepHeader: QueryList<MatStepHeader>;
+  @ViewChildren(MatStepHeader) _stepHeader!: QueryList<MatStepHeader>;
 
   /** Steps that the stepper holds. */
-  @ContentChildren(MatStep) _steps: QueryList<MatStep>;
+  @ContentChildren(MatStep) _steps!: QueryList<MatStep>;
 
   /** Custom icon overrides passed in by the consumer. */
-  @ContentChildren(MatStepperIcon) _icons: QueryList<MatStepperIcon>;
+  @ContentChildren(MatStepperIcon) _icons!: QueryList<MatStepperIcon>;
 
   /** Event emitted when the current step is done transitioning in. */
   @Output() readonly animationDone: EventEmitter<void> = new EventEmitter<void>();

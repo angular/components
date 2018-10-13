@@ -141,7 +141,7 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Can
   private _inline: boolean = false;
 
   /** Name of the icon in the SVG icon set. */
-  @Input() svgIcon: string;
+  @Input() svgIcon?: string;
 
   /** Font set that the icon is a part of. */
   @Input()
@@ -149,7 +149,7 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Can
   set fontSet(value: string) {
     this._fontSet = this._cleanupFontValue(value);
   }
-  private _fontSet: string;
+  private _fontSet: string = '';
 
   /** Name of an icon within a font set. */
   @Input()
@@ -157,10 +157,10 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Can
   set fontIcon(value: string) {
     this._fontIcon = this._cleanupFontValue(value);
   }
-  private _fontIcon: string;
+  private _fontIcon: string = '';
 
-  private _previousFontSetClass: string;
-  private _previousFontIconClass: string;
+  private _previousFontSetClass?: string;
+  private _previousFontIconClass?: string;
 
   constructor(
       elementRef: ElementRef<HTMLElement>,

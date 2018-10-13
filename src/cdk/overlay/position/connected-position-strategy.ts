@@ -38,9 +38,9 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   _positionStrategy: FlexibleConnectedPositionStrategy;
 
   /** The overlay to which this strategy is attached. */
-  private _overlayRef: OverlayReference;
+  private _overlayRef!: OverlayReference;
 
-  private _direction: Direction | null;
+  private _direction: Direction | null = null;
 
   /** Whether the we're dealing with an RTL context */
   get _isRtl() {

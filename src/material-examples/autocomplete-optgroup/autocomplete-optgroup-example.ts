@@ -89,7 +89,7 @@ export class AutocompleteOptgroupExample implements OnInit {
     names: ['Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
   }];
 
-  stateGroupOptions: Observable<StateGroup[]>;
+  stateGroupOptions!: Observable<StateGroup[]>;
 
   constructor(private fb: FormBuilder) {}
 

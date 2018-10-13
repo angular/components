@@ -16,9 +16,9 @@ import {Component} from '@angular/core';
   styleUrls: ['select-a11y.css'],
 })
 export class SelectAccessibilityDemo {
-  selectedColor: string;
-  selectedTopping: string[];
-  selectedPokemon: string;
+  selectedColor = '';
+  selectedTopping: string[] = [];
+  selectedPokemon = '';
 
   colors = [
     {value: 'red', label: 'Red'},

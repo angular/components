@@ -56,12 +56,7 @@ export class TreeDemo {
   }
 
   transformer = (node: FileNode, level: number) => {
-    const flatNode = new FileFlatNode();
-    flatNode.filename = node.filename;
-    flatNode.type = node.type;
-    flatNode.level = level;
-    flatNode.expandable = !!node.children;
-    return flatNode;
+    return new FileFlatNode(node.filename, node.type, level, !!node.children);
   }
 
   getLevel = (node: FileFlatNode) => { return node.level; };

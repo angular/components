@@ -31,7 +31,7 @@ export class WhenRowsDemo {
   whenFn = (_i: number, d: DemoDataObject) => d.value;
   trackByValue = (_i: number, d: DemoDataObject) => d.value;
 
-  @ViewChild(MatTable) table: MatTable<any>;
+  @ViewChild(MatTable) table!: MatTable<any>;
 
   constructor() {
     this.changeRandomNumber();

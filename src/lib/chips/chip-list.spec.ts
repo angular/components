@@ -1279,7 +1279,7 @@ describe('MatChipList', () => {
 class StandardChipList {
   name: string = 'Test';
   selectable: boolean = true;
-  remove: number;
+  remove?: number;
   chipSelect: (index?: number) => void = () => {};
   chipDeselect: (index?: number) => void = () => {};
   tabIndex: number = 0;
@@ -1334,12 +1334,12 @@ class BasicChipList {
     {value: 'sushi-7', viewValue: 'Sushi'},
   ];
   control = new FormControl();
-  isRequired: boolean;
-  tabIndexOverride: number;
-  selectable: boolean;
+  isRequired?: boolean;
+  tabIndexOverride?: number;
+  selectable?: boolean;
 
-  @ViewChild(MatChipList) chipList: MatChipList;
-  @ViewChildren(MatChip) chips: QueryList<MatChip>;
+  @ViewChild(MatChipList) chipList!: MatChipList;
+  @ViewChildren(MatChip) chips!: QueryList<MatChip>;
 }
 
 
@@ -1369,12 +1369,12 @@ class MultiSelectionChipList {
     {value: 'sushi-7', viewValue: 'Sushi'},
   ];
   control = new FormControl();
-  isRequired: boolean;
-  tabIndexOverride: number;
-  selectable: boolean;
+  isRequired?: boolean;
+  tabIndexOverride?: number;
+  selectable?: boolean;
 
-  @ViewChild(MatChipList) chipList: MatChipList;
-  @ViewChildren(MatChip) chips: QueryList<MatChip>;
+  @ViewChild(MatChipList) chipList!: MatChipList;
+  @ViewChildren(MatChip) chips!: QueryList<MatChip>;
 }
 
 @Component({
@@ -1410,7 +1410,7 @@ class InputChipList {
 
   separatorKeyCodes = [ENTER, SPACE];
   addOnBlur: boolean = true;
-  isRequired: boolean;
+  isRequired?: boolean;
 
   add(event: MatChipInputEvent): void {
     let input = event.input;
@@ -1438,8 +1438,8 @@ class InputChipList {
     }
   }
 
-  @ViewChild(MatChipList) chipList: MatChipList;
-  @ViewChildren(MatChip) chips: QueryList<MatChip>;
+  @ViewChild(MatChipList) chipList!: MatChipList;
+  @ViewChildren(MatChip) chips!: QueryList<MatChip>;
 }
 
 @Component({
@@ -1457,7 +1457,7 @@ class FalsyValueChipList {
     {value: 1, viewValue: 'Pizza'},
   ];
   control = new FormControl();
-  @ViewChildren(MatChip) chips: QueryList<MatChip>;
+  @ViewChildren(MatChip) chips!: QueryList<MatChip>;
 }
 
 @Component({
@@ -1475,7 +1475,7 @@ class SelectedChipList {
     {value: 1, viewValue: 'Pizza', selected: false},
     {value: 2, viewValue: 'Pasta', selected: true},
   ];
-  @ViewChildren(MatChip) chips: QueryList<MatChip>;
+  @ViewChildren(MatChip) chips!: QueryList<MatChip>;
 }
 
 @Component({
@@ -1499,9 +1499,9 @@ class ChipListWithFormErrorMessages {
     {value: 1, viewValue: 'Pizza', selected: false},
     {value: 2, viewValue: 'Pasta', selected: true},
   ];
-  @ViewChildren(MatChip) chips: QueryList<MatChip>;
+  @ViewChildren(MatChip) chips!: QueryList<MatChip>;
 
-  @ViewChild('form') form: NgForm;
+  @ViewChild('form') form!: NgForm;
   formControl = new FormControl('', Validators.required);
 }
 

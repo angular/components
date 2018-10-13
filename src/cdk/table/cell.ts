@@ -69,7 +69,7 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
     this._name = name;
     this.cssClassFriendlyName = name.replace(/[^a-z0-9_-]/ig, '-');
   }
-  _name: string;
+  _name: string = '';
 
   /**
    * Whether this column should be sticky positioned on the end of the row. Should make sure
@@ -86,20 +86,20 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
   _stickyEnd: boolean = false;
 
   /** @docs-private */
-  @ContentChild(CdkCellDef) cell: CdkCellDef;
+  @ContentChild(CdkCellDef) cell!: CdkCellDef;
 
   /** @docs-private */
-  @ContentChild(CdkHeaderCellDef) headerCell: CdkHeaderCellDef;
+  @ContentChild(CdkHeaderCellDef) headerCell!: CdkHeaderCellDef;
 
   /** @docs-private */
-  @ContentChild(CdkFooterCellDef) footerCell: CdkFooterCellDef;
+  @ContentChild(CdkFooterCellDef) footerCell!: CdkFooterCellDef;
 
   /**
    * Transformed version of the column name that can be used as part of a CSS classname. Excludes
    * all non-alphanumeric characters and the special characters '-' and '_'. Any characters that
    * do not match are replaced by the '-' character.
    */
-  cssClassFriendlyName: string;
+  cssClassFriendlyName: string = '';
 }
 
 /** Base class for the cells. Adds a CSS classname that identifies the column it renders in. */

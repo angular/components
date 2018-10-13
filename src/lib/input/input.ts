@@ -76,7 +76,7 @@ export const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
     // Native input properties that are overwritten by Angular inputs need to be synced with
     // the native input element. Otherwise property bindings for those don't work.
     '[attr.id]': 'id',
-    '[attr.placeholder]': 'placeholder',
+    '[attr.placeholder]': 'placeholder || null',
     '[disabled]': 'disabled',
     '[required]': 'required',
     '[attr.readonly]': 'readonly && !_isNativeSelect || null',
@@ -95,7 +95,7 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
   protected _previousNativeValue: any;
   private _inputValueAccessor: {value: any};
   /** The aria-describedby attribute on the input for improved a11y. */
-  _ariaDescribedby: string;
+  _ariaDescribedby?: string;
 
   /** Whether the component is being rendered on the server. */
   _isServer = false;
@@ -157,13 +157,13 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
   @Input()
   get id(): string { return this._id; }
   set id(value: string) { this._id = value || this._uid; }
-  protected _id: string;
+  protected _id: string = '';
 
   /**
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  @Input() placeholder: string;
+  @Input() placeholder: string = '';
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -191,7 +191,7 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
   protected _type = 'text';
 
   /** An object used to control when error messages are shown. */
-  @Input() errorStateMatcher: ErrorStateMatcher;
+  @Input() errorStateMatcher?: ErrorStateMatcher;
 
   /**
    * Implemented as part of MatFormFieldControl.

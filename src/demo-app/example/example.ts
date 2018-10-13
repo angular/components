@@ -45,14 +45,14 @@ import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
 })
 export class Example implements OnInit {
   /** ID of the material example to display. */
-  @Input() id: string;
+  @Input() id = '';
 
   @Input()
   get showLabel(): boolean { return this._showLabel; }
   set showLabel(v: boolean) { this._showLabel = coerceBooleanProperty(v); }
-  _showLabel: boolean;
+  _showLabel = false;
 
-  title: string;
+  title = '';
 
   constructor(private elementRef: ElementRef, private injector: Injector) { }
 

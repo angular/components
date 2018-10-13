@@ -32,6 +32,6 @@ export const _CdkTree = CdkTree;
 })
 export class MatTree<T> extends _CdkTree<T> {
   // Outlets within the tree's template where the dataNodes will be inserted.
-  @ViewChild(MatTreeNodeOutlet) _nodeOutlet: MatTreeNodeOutlet;
+  @ViewChild(MatTreeNodeOutlet) _nodeOutlet!: MatTreeNodeOutlet;
 }
 

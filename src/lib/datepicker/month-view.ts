@@ -76,7 +76,7 @@ export class MatMonthView<D> implements AfterContentInit {
     this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._selectedDate = this._getDateInCurrentMonth(this._selected);
   }
-  private _selected: D | null;
+  private _selected: D | null = null;
 
   /** The minimum selectable date. */
   @Input()
@@ -84,7 +84,7 @@ export class MatMonthView<D> implements AfterContentInit {
   set minDate(value: D | null) {
     this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _minDate: D | null;
+  private _minDate: D | null = null;
 
   /** The maximum selectable date. */
   @Input()
@@ -92,10 +92,10 @@ export class MatMonthView<D> implements AfterContentInit {
   set maxDate(value: D | null) {
     this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _maxDate: D | null;
+  private _maxDate: D | null = null;
 
   /** A function used to filter which dates are selectable. */
-  @Input() dateFilter: (date: D) => boolean;
+  @Input() dateFilter?: (date: D) => boolean;
 
   /** Emits when a new date is selected. */
   @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
@@ -107,25 +107,25 @@ export class MatMonthView<D> implements AfterContentInit {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
+  @ViewChild(MatCalendarBody) _matCalendarBody!: MatCalendarBody;
 
   /** The label for this month (e.g. "January 2017"). */
-  _monthLabel: string;
+  _monthLabel!: string;
 
   /** Grid of calendar cells representing the dates of the month. */
-  _weeks: MatCalendarCell[][];
+  _weeks: MatCalendarCell[][] = [];
 
   /** The number of blank cells in the first row before the 1st of the month. */
-  _firstWeekOffset: number;
+  _firstWeekOffset!: number;
 
   /**
    * The date of the month that the currently selected Date falls on.
    * Null if the currently selected Date is in another month.
    */
-  _selectedDate: number | null;
+  _selectedDate: number | null = null;
 
   /** The date of the month that today falls on. Null if today is in another month. */
-  _todayDate: number | null;
+  _todayDate: number | null = null;
 
   /** The names of the weekdays. */
   _weekdays: {long: string, narrow: string}[];

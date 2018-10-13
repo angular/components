@@ -69,7 +69,7 @@ export class RippleRenderer {
   private _containerElement: HTMLElement;
 
   /** Element which triggers the ripple elements on mouse events. */
-  private _triggerElement: HTMLElement | null;
+  private _triggerElement: HTMLElement | null = null;
 
   /** Whether the pointer is currently down or not. */
   private _isPointerDown = false;
@@ -81,10 +81,10 @@ export class RippleRenderer {
   private _activeRipples = new Set<RippleRef>();
 
   /** Latest non-persistent ripple that was triggered. */
-  private _mostRecentTransientRipple: RippleRef | null;
+  private _mostRecentTransientRipple: RippleRef | null = null;
 
   /** Time in milliseconds when the last touchstart event happened. */
-  private _lastTouchStartEvent: number;
+  private _lastTouchStartEvent: number = 0;
 
   /** Options that apply to all the event listeners that are bound by the renderer. */
   private _eventOptions = supportsPassiveEventListeners() ? ({passive: true} as any) : false;
@@ -93,17 +93,17 @@ export class RippleRenderer {
    * Cached dimensions of the ripple container. Set when the first
    * ripple is shown and cleared once no more ripples are visible.
    */
-  private _containerRect: ClientRect | null;
+  private _containerRect: ClientRect | null = null;
 
   constructor(private _target: RippleTarget,
               private _ngZone: NgZone,
               elementRef: ElementRef<HTMLElement>,
               platform: Platform) {
 
+    this._containerElement = elementRef.nativeElement;
+
     // Only do anything if we're on the browser.
     if (platform.isBrowser) {
-      this._containerElement = elementRef.nativeElement;
-
       // Specify events which need to be registered on the trigger.
       this._triggerEvents
         .set('mousedown', this.onMousedown)

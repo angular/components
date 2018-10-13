@@ -35,20 +35,21 @@ const DEFAULT_PAGE_SIZE = 50;
  * different page size or navigates to another page.
  */
 export class PageEvent {
-  /** The current page index. */
-  pageIndex: number;
+  constructor(
+    /** The current page index. */
+    public pageIndex: number,
 
-  /**
-   * Index of the page that was selected previously.
-   * @breaking-change 7.0.0 To be made into a required property.
-   */
-  previousPageIndex?: number;
+    /** The current page size */
+    public pageSize: number,
 
-  /** The current page size */
-  pageSize: number;
+    /** The current total number of items being paged */
+    public length: number,
 
-  /** The current total number of items being paged */
-  length: number;
+    /**
+     * Index of the page that was selected previously.
+     * @breaking-change 7.0.0 To be made into a required property.
+     */
+    public previousPageIndex?: number) {}
 }
 
 // Boilerplate for applying mixins to MatPaginator.
@@ -75,7 +76,7 @@ export const _MatPaginatorBase: HasInitializedCtor & typeof MatPaginatorBase =
   encapsulation: ViewEncapsulation.None,
 })
 export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy, HasInitialized {
-  private _initialized: boolean;
+  private _initialized: boolean = false;
   private _intlChanges: Subscription;
 
   /** Theme color to be used for the underlying form controls. */
@@ -106,7 +107,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
     this._pageSize = Math.max(coerceNumberProperty(value), 0);
     this._updateDisplayedPageSizeOptions();
   }
-  private _pageSize: number;
+  private _pageSize: number = 0;
 
   /** The set of provided page size options to display to the user. */
   @Input()
@@ -138,7 +139,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
   @Output() readonly page: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
 
   /** Displayed set of page size options. Will be sorted and include current page size. */
-  _displayedPageSizeOptions: number[];
+  _displayedPageSizeOptions: number[] = [];
 
   constructor(public _intl: MatPaginatorIntl,
               private _changeDetectorRef: ChangeDetectorRef) {
@@ -261,11 +262,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
 
   /** Emits an event notifying that a change of the paginator's properties has been triggered. */
   private _emitPageEvent(previousPageIndex: number) {
-    this.page.emit({
-      previousPageIndex,
-      pageIndex: this.pageIndex,
-      pageSize: this.pageSize,
-      length: this.length
-    });
+    const event = new PageEvent(this.pageIndex, this.pageSize, this.length, previousPageIndex);
+    this.page.emit(event);
   }
 }

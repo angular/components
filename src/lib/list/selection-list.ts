@@ -99,12 +99,12 @@ export class MatListOption extends _MatListOptionMixinBase
   private _selected = false;
   private _disabled = false;
 
-  @ContentChild(MatListAvatarCssMatStyler) _avatar: MatListAvatarCssMatStyler;
-  @ContentChild(MatListIconCssMatStyler) _icon: MatListIconCssMatStyler;
-  @ContentChildren(MatLine) _lines: QueryList<MatLine>;
+  @ContentChild(MatListAvatarCssMatStyler) _avatar?: MatListAvatarCssMatStyler;
+  @ContentChild(MatListIconCssMatStyler) _icon?: MatListIconCssMatStyler;
+  @ContentChildren(MatLine) _lines!: QueryList<MatLine>;
 
   /** DOM element containing the item's text. */
-  @ViewChild('text') _text: ElementRef;
+  @ViewChild('text') _text!: ElementRef;
 
   /** Whether the label should appear before or after the checkbox. Defaults to 'after' */
   @Input() checkboxPosition: 'before' | 'after' = 'after';
@@ -277,10 +277,10 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
     CanDisableRipple, AfterContentInit, ControlValueAccessor, OnDestroy {
 
   /** The FocusKeyManager which handles focus. */
-  _keyManager: FocusKeyManager<MatListOption>;
+  _keyManager!: FocusKeyManager<MatListOption>;
 
   /** The option components contained within this selection-list. */
-  @ContentChildren(MatListOption) options: QueryList<MatListOption>;
+  @ContentChildren(MatListOption) options!: QueryList<MatListOption>;
 
   /** Emits a change event whenever the selected state of an option changes. */
   @Output() readonly selectionChange: EventEmitter<MatSelectionListChange> =
@@ -294,7 +294,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
    * options should appear as selected. The first argument is the value of an options. The second
    * one is a value from the selected value. A boolean must be returned.
    */
-  @Input() compareWith: (o1: any, o2: any) => boolean;
+  @Input() compareWith?: (o1: any, o2: any) => boolean;
 
   /** Whether the selection list is disabled. */
   @Input()
@@ -319,7 +319,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   private _onChange: (value: any) => void = (_: any) => {};
 
   /** Used for storing the values that were assigned before the options were initialized. */
-  private _tempValues: string[]|null;
+  private _tempValues: string[]|null = null;
 
   /** Subscription to sync value changes in the SelectionModel back to the SelectionList. */
   private _modelChanges = Subscription.EMPTY;

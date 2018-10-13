@@ -9,6 +9,6 @@ import {Component} from '@angular/core';
   styleUrls: ['radio-ng-model-example.css'],
 })
 export class RadioNgModelExample {
-  favoriteSeason: string;
+  favoriteSeason?: string;
   seasons: string[] = ['Winter', 'Spring', 'Summer', 'Autumn'];
 }

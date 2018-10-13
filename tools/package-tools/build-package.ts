@@ -44,16 +44,16 @@ export class BuildPackage {
   /** Secondary entry-points partitioned by their build depth. */
   get secondaryEntryPointsByDepth(): string[][] {
     this.cacheSecondaryEntryPoints();
-    return this._secondaryEntryPointsByDepth;
+    return this._secondaryEntryPointsByDepth!;
   }
-  private _secondaryEntryPointsByDepth: string[][];
+  private _secondaryEntryPointsByDepth?: string[][];
 
   /** Secondary entry points for the package. */
   get secondaryEntryPoints(): string[] {
     this.cacheSecondaryEntryPoints();
-    return this._secondaryEntryPoints;
+    return this._secondaryEntryPoints!;
   }
-  private _secondaryEntryPoints: string[];
+  private _secondaryEntryPoints?: string[];
 
   constructor(readonly name: string, readonly dependencies: BuildPackage[] = []) {
     this.sourceDir = join(packagesDir, name);

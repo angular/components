@@ -20,8 +20,8 @@ import {Component} from '@angular/core';
 export class ProgressBarDemo {
   color: string = 'primary';
   determinateProgressValue: number = 30;
-  determinateAnimationEndValue: number;
-  bufferAnimationEndValue: number;
+  determinateAnimationEndValue = 0;
+  bufferAnimationEndValue = 0;
   bufferProgressValue: number = 30;
   bufferBufferValue: number = 40;
 

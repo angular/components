@@ -78,14 +78,14 @@ export class MatTabNav extends _MatTabNavMixinBase
   /** Subject that emits when the component has been destroyed. */
   private readonly _onDestroy = new Subject<void>();
 
-  private _activeLinkChanged: boolean;
-  private _activeLinkElement: ElementRef<HTMLElement> | null;
+  private _activeLinkChanged = false;
+  private _activeLinkElement: ElementRef<HTMLElement> | null = null;
 
-  @ViewChild(MatInkBar) _inkBar: MatInkBar;
+  @ViewChild(MatInkBar) _inkBar!: MatInkBar;
 
   /** Query list of all tab links of the tab navigation. */
   @ContentChildren(forwardRef(() => MatTabLink), {descendants: true})
-  _tabLinks: QueryList<MatTabLink>;
+  _tabLinks!: QueryList<MatTabLink>;
 
   /** Background color of the tab nav. */
   @Input()

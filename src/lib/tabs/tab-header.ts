@@ -79,10 +79,10 @@ export const _MatTabHeaderMixinBase: CanDisableRippleCtor & typeof MatTabHeaderB
 export class MatTabHeader extends _MatTabHeaderMixinBase
     implements AfterContentChecked, AfterContentInit, OnDestroy, CanDisableRipple {
 
-  @ContentChildren(MatTabLabelWrapper) _labelWrappers: QueryList<MatTabLabelWrapper>;
-  @ViewChild(MatInkBar) _inkBar: MatInkBar;
-  @ViewChild('tabListContainer') _tabListContainer: ElementRef;
-  @ViewChild('tabList') _tabList: ElementRef;
+  @ContentChildren(MatTabLabelWrapper) _labelWrappers!: QueryList<MatTabLabelWrapper>;
+  @ViewChild(MatInkBar) _inkBar!: MatInkBar;
+  @ViewChild('tabListContainer') _tabListContainer!: ElementRef;
+  @ViewChild('tabList') _tabList!: ElementRef;
 
   /** The distance in pixels that the tab labels should be translated to the left. */
   private _scrollDistance = 0;
@@ -106,13 +106,13 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
    * The number of tab labels that are displayed on the header. When this changes, the header
    * should re-evaluate the scroll position.
    */
-  private _tabLabelCount: number;
+  private _tabLabelCount = 0;
 
   /** Whether the scroll distance has changed and should be applied after the view is checked. */
-  private _scrollDistanceChanged: boolean;
+  private _scrollDistanceChanged = false;
 
   /** Used to manage focus between the tabs. */
-  private _keyManager: FocusKeyManager<MatTabLabelWrapper>;
+  private _keyManager!: FocusKeyManager<MatTabLabelWrapper>;
 
   private _selectedIndex: number = 0;
 

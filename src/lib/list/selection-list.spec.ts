@@ -1083,8 +1083,8 @@ class SelectionListWithTabindexAttr {}
   template: `<mat-selection-list [tabIndex]="tabIndex" [disabled]="disabled"></mat-selection-list>`
 })
 class SelectionListWithTabindexBinding {
-  tabIndex: number;
-  disabled: boolean;
+  tabIndex?: number;
+  disabled?: boolean;
 }
 
 @Component({
@@ -1121,7 +1121,7 @@ class SelectionListWithFormControl {
     </mat-selection-list>`
 })
 class SelectionListWithPreselectedOption {
-  selectedOptions: string[];
+  selectedOptions: string[] = [];
 }
 
 
@@ -1160,7 +1160,7 @@ class SelectionListWithPreselectedFormControlOnPush {
     </mat-selection-list>`
 })
 class SelectionListWithCustomComparator {
-  @ViewChildren(MatListOption) optionInstances: QueryList<MatListOption>;
+  @ViewChildren(MatListOption) optionInstances!: QueryList<MatListOption>;
   selectedOptions: {id: number, label: string}[] = [];
   compareWith?: (o1: any, o2: any) => boolean;
   options = [

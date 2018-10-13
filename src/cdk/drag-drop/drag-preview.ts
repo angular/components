@@ -17,6 +17,6 @@ import {Directive, TemplateRef, Input} from '@angular/core';
 })
 export class CdkDragPreview<T = any> {
   /** Context data to be added to the preview template instance. */
-  @Input() data: T;
+  @Input() data?: T;
   constructor(public templateRef: TemplateRef<T>) {}
 }

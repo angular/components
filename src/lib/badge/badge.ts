@@ -87,7 +87,7 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, CanDisabl
     this._hasContent = value != null && `${value}`.trim().length > 0;
     this._updateTextContent();
   }
-  private _content: string;
+  private _content: string = '';
 
   /** Message used to describe the decorated element via aria-describedby */
   @Input('matBadgeDescription')
@@ -98,7 +98,7 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, CanDisabl
       this._description = newDescription;
     }
   }
-  private _description: string;
+  private _description: string = '';
 
   /** Size of the badge. Can be 'small', 'medium', or 'large'. */
   @Input('matBadgeSize') size: MatBadgeSize = 'medium';
@@ -109,12 +109,12 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, CanDisabl
   set hidden(val: boolean) {
     this._hidden = coerceBooleanProperty(val);
   }
-  private _hidden: boolean;
+  private _hidden: boolean = false;
 
   /** Unique id for the badge */
   _id: number = nextId++;
 
-  private _badgeElement: HTMLElement;
+  private _badgeElement: HTMLElement | null = null;
 
   constructor(
       @Optional() @Inject(DOCUMENT) private _document: any,

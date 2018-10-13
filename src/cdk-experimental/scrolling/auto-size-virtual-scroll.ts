@@ -89,13 +89,13 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   private _averager: ItemSizeAverager;
 
   /** The last measured scroll offset of the viewport. */
-  private _lastScrollOffset: number;
+  private _lastScrollOffset: number = 0;
 
   /** The last measured size of the rendered content in the viewport. */
-  private _lastRenderedContentSize: number;
+  private _lastRenderedContentSize: number = 0;
 
   /** The last measured size of the rendered content in the viewport. */
-  private _lastRenderedContentOffset: number;
+  private _lastRenderedContentOffset: number = 0;
 
   /**
    * The number of consecutive cycles where removing extra items has failed. Failure here means that

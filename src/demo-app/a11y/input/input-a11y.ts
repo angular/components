@@ -17,13 +17,13 @@ const USD_TO_JPY = 110.29;
   templateUrl: 'input-a11y.html',
 })
 export class InputAccessibilityDemo {
-  firstName: string;
-  lastName: string;
-  password: string;
+  firstName = '';
+  lastName = '';
+  password = '';
   showPassword = false;
-  email: string;
-  usd: number;
-  comment: string;
+  email = '';
+  usd = 0;
+  comment = '';
   commentMax = 200;
 
   get passwordType() { return this.showPassword ? 'text' : 'password'; }

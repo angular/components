@@ -80,11 +80,12 @@ export const MAT_SLIDER_VALUE_ACCESSOR: any = {
 
 /** A simple change event emitted by the MatSlider component. */
 export class MatSliderChange {
-  /** The MatSlider that changed. */
-  source: MatSlider;
+  constructor(
+    /** The MatSlider that changed. */
+    public source: MatSlider,
 
-  /** The new value of the source slider. */
-  value: number | null;
+    /** The new value of the source slider. */
+    public value: number | null) {}
 }
 
 
@@ -254,7 +255,7 @@ export class MatSlider extends _MatSliderMixinBase
    * in the thumb label. Can be used to format very large number in order
    * for them to fit into the slider thumb.
    */
-  @Input() displayWith: (value: number | null) => string | number;
+  @Input() displayWith?: (value: number | null) => string | number;
 
   /** Whether the slider is vertical. */
   @Input()
@@ -435,16 +436,16 @@ export class MatSlider extends _MatSliderMixinBase
   private _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
   /** Decimal places to round to, based on the step amount. */
-  private _roundToDecimal: number;
+  private _roundToDecimal?: number;
 
   /** Subscription to the Directionality change EventEmitter. */
   private _dirChangeSubscription = Subscription.EMPTY;
 
   /** The value of the slider when the slide start event fires. */
-  private _valueOnSlideStart: number | null;
+  private _valueOnSlideStart: number | null = null;
 
   /** Reference to the inner slider wrapper element. */
-  @ViewChild('sliderWrapper') private _sliderWrapper: ElementRef;
+  @ViewChild('sliderWrapper') private _sliderWrapper!: ElementRef;
 
   /**
    * Whether mouse events should be converted to a slider position by calculating their distance
@@ -709,12 +710,7 @@ export class MatSlider extends _MatSliderMixinBase
 
   /** Creates a slider change object from the specified value. */
   private _createChangeEvent(value = this.value): MatSliderChange {
-    let event = new MatSliderChange();
-
-    event.source = this;
-    event.value = value;
-
-    return event;
+    return new MatSliderChange(this, value);
   }
 
   /** Calculates the percentage of the slider that a value is. */

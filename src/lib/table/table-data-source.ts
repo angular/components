@@ -56,7 +56,7 @@ export class MatTableDataSource<T> extends DataSource<T> {
    * For example, a 'selectAll()' function would likely want to select the set of filtered data
    * shown to the user rather than all the data.
    */
-  filteredData: T[];
+  filteredData: T[] = [];
 
   /** Array of data that should be rendered by the table, where each object represents one row. */
   get data() { return this._data.value; }
@@ -74,11 +74,11 @@ export class MatTableDataSource<T> extends DataSource<T> {
    * emitted by the MatSort will trigger an update to the table's rendered data.
    */
   get sort(): MatSort | null { return this._sort; }
-  set sort(sort: MatSort|null) {
+  set sort(sort: MatSort | null) {
     this._sort = sort;
     this._updateChangeSubscription();
   }
-  private _sort: MatSort|null;
+  private _sort: MatSort | null = null;
 
   /**
    * Instance of the MatPaginator component used by the table to control what page of the data is
@@ -91,11 +91,11 @@ export class MatTableDataSource<T> extends DataSource<T> {
    * initialized before assigning it to this data source.
    */
   get paginator(): MatPaginator | null { return this._paginator; }
-  set paginator(paginator: MatPaginator|null) {
+  set paginator(paginator: MatPaginator | null) {
     this._paginator = paginator;
     this._updateChangeSubscription();
   }
-  private _paginator: MatPaginator|null;
+  private _paginator: MatPaginator | null = null;
 
   /**
    * Data accessor function that is used for accessing data properties for sorting through

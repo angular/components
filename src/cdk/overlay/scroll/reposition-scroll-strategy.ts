@@ -29,7 +29,7 @@ export interface RepositionScrollStrategyConfig {
  */
 export class RepositionScrollStrategy implements ScrollStrategy {
   private _scrollSubscription: Subscription|null = null;
-  private _overlayRef: OverlayReference;
+  private _overlayRef!: OverlayReference;
 
   constructor(
     private _scrollDispatcher: ScrollDispatcher,

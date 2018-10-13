@@ -74,8 +74,8 @@ export class MatGridTileText implements AfterContentInit {
    *  Helper that watches the number of lines in a text area and sets
    * a class on the host element that matches the line count.
    */
-  _lineSetter: MatLineSetter;
-  @ContentChildren(MatLine) _lines: QueryList<MatLine>;
+  _lineSetter!: MatLineSetter;
+  @ContentChildren(MatLine) _lines!: QueryList<MatLine>;
 
   constructor(private _element: ElementRef<HTMLElement>) {}
 

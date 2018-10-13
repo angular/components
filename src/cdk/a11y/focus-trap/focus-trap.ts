@@ -31,8 +31,8 @@ import {InteractivityChecker} from '../interactivity-checker/interactivity-check
  * Things like `tabIndex > 0`, flex `order`, and shadow roots can cause to two to misalign.
  */
 export class FocusTrap {
-  private _startAnchor: HTMLElement | null;
-  private _endAnchor: HTMLElement | null;
+  private _startAnchor: HTMLElement | null = null;
+  private _endAnchor: HTMLElement | null = null;
   private _hasAttached = false;
 
   /** Whether the focus trap is active. */
@@ -359,7 +359,7 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, DoCheck {
   @Input('cdkTrapFocusAutoCapture')
   get autoCapture(): boolean { return this._autoCapture; }
   set autoCapture(value: boolean) { this._autoCapture = coerceBooleanProperty(value); }
-  private _autoCapture: boolean;
+  private _autoCapture: boolean = false;
 
   constructor(
       private _elementRef: ElementRef<HTMLElement>,

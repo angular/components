@@ -70,7 +70,7 @@ export class MatYearView<D> implements AfterContentInit {
     this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._selectedMonth = this._getMonthInCurrentYear(this._selected);
   }
-  private _selected: D | null;
+  private _selected: D | null = null;
 
   /** The minimum selectable date. */
   @Input()
@@ -78,7 +78,7 @@ export class MatYearView<D> implements AfterContentInit {
   set minDate(value: D | null) {
     this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _minDate: D | null;
+  private _minDate: D | null = null;
 
   /** The maximum selectable date. */
   @Input()
@@ -86,10 +86,10 @@ export class MatYearView<D> implements AfterContentInit {
   set maxDate(value: D | null) {
     this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _maxDate: D | null;
+  private _maxDate: D | null = null;
 
   /** A function used to filter which dates are selectable. */
-  @Input() dateFilter: (date: D) => boolean;
+  @Input() dateFilter?: (date: D) => boolean;
 
   /** Emits when a new month is selected. */
   @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
@@ -101,22 +101,22 @@ export class MatYearView<D> implements AfterContentInit {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
+  @ViewChild(MatCalendarBody) _matCalendarBody!: MatCalendarBody;
 
   /** Grid of calendar cells representing the months of the year. */
-  _months: MatCalendarCell[][];
+  _months: MatCalendarCell[][] = [];
 
   /** The label for this year (e.g. "2017"). */
-  _yearLabel: string;
+  _yearLabel!: string;
 
   /** The month in this year that today falls on. Null if today is in a different year. */
-  _todayMonth: number | null;
+  _todayMonth: number | null = null;
 
   /**
    * The month in this year that the selected Date falls on.
    * Null if the selected Date is in a different year.
    */
-  _selectedMonth: number | null;
+  _selectedMonth: number | null = null;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,

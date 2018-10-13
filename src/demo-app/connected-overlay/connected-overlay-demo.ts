@@ -25,8 +25,8 @@ import {Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core
   styleUrls: ['connected-overlay-demo.css'],
 })
 export class ConnectedOverlayDemo {
-  @ViewChild(CdkOverlayOrigin) _overlayOrigin: CdkOverlayOrigin;
-  @ViewChild('overlay') overlayTemplate: TemplateRef<any>;
+  @ViewChild(CdkOverlayOrigin) _overlayOrigin!: CdkOverlayOrigin;
+  @ViewChild('overlay') overlayTemplate!: TemplateRef<any>;
 
   originX: HorizontalConnectionPos = 'start';
   originY: VerticalConnectionPos = 'bottom';
@@ -40,7 +40,7 @@ export class ConnectedOverlayDemo {
   itemCount = 25;
   itemArray: any[] = [];
   itemText = 'Item with a long name';
-  overlayRef: OverlayRef | null;
+  overlayRef: OverlayRef | null = null;
 
   constructor(
       public overlay: Overlay,

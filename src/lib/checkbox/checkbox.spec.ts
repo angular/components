@@ -1206,7 +1206,7 @@ class CheckboxWithTabIndex {
     <mat-checkbox></mat-checkbox>`,
 })
 class CheckboxUsingViewChild {
-  @ViewChild(MatCheckbox) checkbox: MatCheckbox;
+  @ViewChild(MatCheckbox) checkbox!: MatCheckbox;
 
   set isDisabled(value: boolean) {
     this.checkbox.disabled = value;
@@ -1236,7 +1236,7 @@ class CheckboxWithNameAttribute {}
   template: `<mat-checkbox (change)="lastEvent = $event"></mat-checkbox>`
 })
 class CheckboxWithChangeEvent {
-  lastEvent: MatCheckboxChange;
+  lastEvent!: MatCheckboxChange;
 }
 
 /** Test component with reactive forms */
@@ -1252,7 +1252,7 @@ class CheckboxWithFormControl {
   template: `<mat-checkbox>{{ label }}</mat-checkbox>`
 })
 class CheckboxWithoutLabel {
-  label: string;
+  label?: string;
 }
 
 /** Test component with the native tabindex attribute. */

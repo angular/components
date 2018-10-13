@@ -230,9 +230,9 @@ describe('MatAccordion', () => {
     </mat-expansion-panel>
   </mat-accordion>`})
 class SetOfItems {
-  @ViewChild(MatAccordion) accordion: MatAccordion;
-  @ViewChildren(MatExpansionPanel) panels: QueryList<MatExpansionPanel>;
-  @ViewChildren(MatExpansionPanelHeader) headers: QueryList<MatExpansionPanelHeader>;
+  @ViewChild(MatAccordion) accordion!: MatAccordion;
+  @ViewChildren(MatExpansionPanel) panels!: QueryList<MatExpansionPanel>;
+  @ViewChildren(MatExpansionPanelHeader) headers!: QueryList<MatExpansionPanelHeader>;
 
   multi: boolean = false;
 }
@@ -248,8 +248,8 @@ class SetOfItems {
     </mat-expansion-panel>
   </mat-accordion>`})
 class NestedPanel {
-  @ViewChild('outerPanel') outerPanel: MatExpansionPanel;
-  @ViewChild('innerPanel') innerPanel: MatExpansionPanel;
+  @ViewChild('outerPanel') outerPanel!: MatExpansionPanel;
+  @ViewChild('innerPanel') innerPanel!: MatExpansionPanel;
 }
 
 @Component({template: `

@@ -24,22 +24,22 @@ const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA
 })
 export class InputDemo {
   floatingLabel = 'auto';
-  color: boolean;
-  requiredField: boolean;
-  hideRequiredMarker: boolean;
+  color: boolean = false;
+  requiredField: boolean = false;
+  hideRequiredMarker: boolean = false;
   ctrlDisabled = false;
-  textareaNgModelValue: string;
+  textareaNgModelValue = '';
   textareaAutosizeEnabled = false;
   placeholderTestControl = new FormControl('', Validators.required);
 
-  name: string;
-  errorMessageExample1: string;
-  errorMessageExample2: string;
-  errorMessageExample3: string;
-  errorMessageExample4: string;
-  dividerColorExample1: string;
-  dividerColorExample2: string;
-  dividerColorExample3: string;
+  name = '';
+  errorMessageExample1 = '';
+  errorMessageExample2 = '';
+  errorMessageExample3 = '';
+  errorMessageExample4 = '';
+  dividerColorExample1 = '';
+  dividerColorExample2 = '';
+  dividerColorExample3 = '';
   items: {value: number}[] = [
     {value: 10},
     {value: 20},
@@ -55,10 +55,10 @@ export class InputDemo {
   isAutofilled = false;
   customAutofillStyle = true;
 
-  legacyAppearance: string;
-  standardAppearance: string;
-  fillAppearance: string;
-  outlineAppearance: string;
+  legacyAppearance = '';
+  standardAppearance = '';
+  fillAppearance = '';
+  outlineAppearance = '';
 
   constructor() {
     setTimeout(() => this.delayedFormControl.setValue('hello'), 100);

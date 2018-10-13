@@ -103,7 +103,7 @@ export class CdkOverlayOrigin {
   exportAs: 'cdkConnectedOverlay'
 })
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
-  private _overlayRef: OverlayRef;
+  private _overlayRef!: OverlayRef;
   private _templatePortal: TemplatePortal;
   private _hasBackdrop = false;
   private _lockPosition = false;
@@ -111,16 +111,16 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _flexibleDimensions = false;
   private _push = false;
   private _backdropSubscription = Subscription.EMPTY;
-  private _offsetX: number;
-  private _offsetY: number;
-  private _position: FlexibleConnectedPositionStrategy;
+  private _offsetX: number = 0;
+  private _offsetY: number = 0;
+  private _position!: FlexibleConnectedPositionStrategy;
   private _scrollStrategyFactory: () => ScrollStrategy;
 
   /** Origin for the connected overlay. */
-  @Input('cdkConnectedOverlayOrigin') origin: CdkOverlayOrigin;
+  @Input('cdkConnectedOverlayOrigin') origin!: CdkOverlayOrigin;
 
   /** Registered connected position pairs. */
-  @Input('cdkConnectedOverlayPositions') positions: ConnectedPosition[];
+  @Input('cdkConnectedOverlayPositions') positions: ConnectedPosition[] = [];
 
   /** The offset in pixels for the overlay connection point on the x-axis */
   @Input('cdkConnectedOverlayOffsetX')
@@ -145,22 +145,22 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   }
 
   /** The width of the overlay panel. */
-  @Input('cdkConnectedOverlayWidth') width: number | string;
+  @Input('cdkConnectedOverlayWidth') width?: number | string;
 
   /** The height of the overlay panel. */
-  @Input('cdkConnectedOverlayHeight') height: number | string;
+  @Input('cdkConnectedOverlayHeight') height?: number | string;
 
   /** The min width of the overlay panel. */
-  @Input('cdkConnectedOverlayMinWidth') minWidth: number | string;
+  @Input('cdkConnectedOverlayMinWidth') minWidth?: number | string;
 
   /** The min height of the overlay panel. */
-  @Input('cdkConnectedOverlayMinHeight') minHeight: number | string;
+  @Input('cdkConnectedOverlayMinHeight') minHeight?: number | string;
 
   /** The custom class to be set on the backdrop element. */
-  @Input('cdkConnectedOverlayBackdropClass') backdropClass: string;
+  @Input('cdkConnectedOverlayBackdropClass') backdropClass?: string;
 
   /** The custom class to add to the overlay pane element. */
-  @Input('cdkConnectedOverlayPanelClass') panelClass: string | string[];
+  @Input('cdkConnectedOverlayPanelClass') panelClass?: string | string[];
 
   /** Margin between the overlay and the viewport edges. */
   @Input('cdkConnectedOverlayViewportMargin') viewportMargin: number = 0;

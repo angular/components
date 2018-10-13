@@ -60,7 +60,7 @@ describe('OverlayContainer', () => {
   providers: [Overlay],
 })
 class TestComponentWithTemplatePortals {
-  @ViewChild(CdkPortal) templatePortal: CdkPortal;
+  @ViewChild(CdkPortal) templatePortal!: CdkPortal;
 
   constructor(public viewContainerRef: ViewContainerRef) { }
 }

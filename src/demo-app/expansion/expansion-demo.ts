@@ -17,15 +17,15 @@ import {MatAccordion} from '@angular/material';
   templateUrl: 'expansion-demo.html',
 })
 export class ExpansionDemo {
-  @ViewChild(MatAccordion) accordion: MatAccordion;
+  @ViewChild(MatAccordion) accordion!: MatAccordion;
 
   displayMode = 'default';
   multi = false;
   hideToggle = false;
   disabled = false;
   showPanel3 = true;
-  expandedHeight: string;
-  collapsedHeight: string;
+  expandedHeight?: string;
+  collapsedHeight?: string;
   events: string[] = [];
 
   addEvent(eventName: string) {

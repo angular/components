@@ -878,8 +878,8 @@ class BasicTooltipDemo {
   message: any = initialTooltipMessage;
   showButton: boolean = true;
   showTooltipClass = false;
-  @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
+  @ViewChild(MatTooltip) tooltip!: MatTooltip;
+  @ViewChild('button') button!: ElementRef<HTMLButtonElement>;
 }
 
 @Component({
@@ -899,7 +899,7 @@ class ScrollableTooltipDemo {
  message: string = initialTooltipMessage;
  showButton: boolean = true;
 
- @ViewChild(CdkScrollable) scrollingContainer: CdkScrollable;
+ @ViewChild(CdkScrollable) scrollingContainer!: CdkScrollable;
 
  scrollDown() {
      const scrollingContainerEl = this.scrollingContainer.getElementRef().nativeElement;
@@ -959,8 +959,8 @@ class DynamicTooltipsDemo {
   `,
 })
 class TooltipOnTextFields {
-  @ViewChild('input') input: ElementRef<HTMLInputElement>;
-  @ViewChild('textarea') textarea: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('input') input!: ElementRef<HTMLInputElement>;
+  @ViewChild('textarea') textarea!: ElementRef<HTMLTextAreaElement>;
 }
 
 @Component({
@@ -973,7 +973,7 @@ class TooltipOnTextFields {
   `,
 })
 class TooltipOnDraggableElement {
-  @ViewChild('button') button: ElementRef;
+  @ViewChild('button') button!: ElementRef;
 }
 
 

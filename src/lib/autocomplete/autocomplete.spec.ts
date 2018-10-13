@@ -2220,16 +2220,16 @@ class SimpleAutocomplete implements OnDestroy {
   filteredStates: any[];
   valueSub: Subscription;
   floatLabel = 'auto';
-  width: number;
+  width?: number;
   disableRipple = false;
   autocompleteDisabled = false;
   openedSpy = jasmine.createSpy('autocomplete opened spy');
   closedSpy = jasmine.createSpy('autocomplete closed spy');
 
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
-  @ViewChild(MatAutocomplete) panel: MatAutocomplete;
-  @ViewChild(MatFormField) formField: MatFormField;
-  @ViewChildren(MatOption) options: QueryList<MatOption>;
+  @ViewChild(MatAutocompleteTrigger) trigger!: MatAutocompleteTrigger;
+  @ViewChild(MatAutocomplete) panel!: MatAutocomplete;
+  @ViewChild(MatFormField) formField!: MatFormField;
+  @ViewChildren(MatOption) options!: QueryList<MatOption>;
 
   states = [
     {code: 'AL', name: 'Alabama'},
@@ -2283,8 +2283,8 @@ class NgIfAutocomplete {
   isVisible = true;
   options = ['One', 'Two', 'Three'];
 
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
-  @ViewChildren(MatOption) matOptions: QueryList<MatOption>;
+  @ViewChild(MatAutocompleteTrigger) trigger!: MatAutocompleteTrigger;
+  @ViewChildren(MatOption) matOptions!: QueryList<MatOption>;
 
   constructor() {
     this.filteredOptions = this.optionCtrl.valueChanges.pipe(
@@ -2341,7 +2341,7 @@ class AutocompleteWithoutForms {
 })
 class AutocompleteWithNgModel {
   filteredStates: any[];
-  selectedState: string;
+  selectedState?: string;
   states = ['New York', 'Washington', 'Oregon'];
 
   constructor() {
@@ -2367,7 +2367,7 @@ class AutocompleteWithNgModel {
   `
 })
 class AutocompleteWithNumbers {
-  selectedNumber: number;
+  selectedNumber?: number;
   numbers = [0, 1, 2];
 }
 
@@ -2384,8 +2384,8 @@ class AutocompleteWithNumbers {
   `
 })
 class AutocompleteWithOnPushDelay implements OnInit {
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
-  options: string[];
+  @ViewChild(MatAutocompleteTrigger) trigger!: MatAutocompleteTrigger;
+  options: string[] = [];
 
   ngOnInit() {
     setTimeout(() => {
@@ -2410,8 +2410,8 @@ class AutocompleteWithNativeInput {
   filteredOptions: Observable<any>;
   options = ['En', 'To', 'Tre', 'Fire', 'Fem'];
 
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
-  @ViewChildren(MatOption) matOptions: QueryList<MatOption>;
+  @ViewChild(MatAutocompleteTrigger) trigger!: MatAutocompleteTrigger;
+  @ViewChildren(MatOption) matOptions!: QueryList<MatOption>;
 
   constructor() {
     this.filteredOptions = this.optionCtrl.valueChanges.pipe(
@@ -2428,7 +2428,7 @@ class AutocompleteWithNativeInput {
   template: `<input placeholder="Choose" [matAutocomplete]="auto" [formControl]="control">`
 })
 class AutocompleteWithoutPanel {
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocompleteTrigger) trigger!: MatAutocompleteTrigger;
   control = new FormControl();
 }
 
@@ -2465,8 +2465,8 @@ class AutocompleteWithFormsAndNonfloatingLabel {
   `
 })
 class AutocompleteWithGroups {
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
-  selectedState: string;
+  @ViewChild(MatAutocompleteTrigger) trigger!: MatAutocompleteTrigger;
+  selectedState?: string;
   stateGroups = [
     {
       title: 'One',
@@ -2497,12 +2497,12 @@ class AutocompleteWithGroups {
   `
 })
 class AutocompleteWithSelectEvent {
-  selectedState: string;
+  selectedState?: string;
   states = ['New York', 'Washington', 'Oregon'];
   optionSelected = jasmine.createSpy('optionSelected callback');
 
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
-  @ViewChild(MatAutocomplete) autocomplete: MatAutocomplete;
+  @ViewChild(MatAutocompleteTrigger) trigger!: MatAutocompleteTrigger;
+  @ViewChild(MatAutocomplete) autocomplete!: MatAutocomplete;
 }
 
 
@@ -2529,7 +2529,7 @@ class PlainAutocompleteInputWithFormControl {
   `
 })
 class AutocompleteWithNumberInputAndNgModel {
-  selectedValue: number;
+  selectedValue?: number;
   values = [1, 2, 3];
 }
 
@@ -2560,8 +2560,8 @@ class AutocompleteWithNumberInputAndNgModel {
   `
 })
 class AutocompleteWithDifferentOrigin {
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
-  selectedValue: string;
+  @ViewChild(MatAutocompleteTrigger) trigger!: MatAutocompleteTrigger;
+  selectedValue?: string;
   values = ['one', 'two', 'three'];
 }
 
@@ -2572,7 +2572,7 @@ class AutocompleteWithDifferentOrigin {
   `
 })
 class AutocompleteWithNativeAutocompleteAttribute {
-  value: string;
+  value?: string;
 }
 
 @Component({

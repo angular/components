@@ -35,12 +35,12 @@ import {fromEvent, Subject} from 'rxjs';
 })
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Keep track of the previous textarea value to avoid resizing when the value hasn't changed. */
-  private _previousValue: string;
-  private _initialHeight: string | null;
+  private _previousValue: string = '';
+  private _initialHeight: string | null = null;
   private readonly _destroyed = new Subject<void>();
 
-  private _minRows: number;
-  private _maxRows: number;
+  private _minRows: number = 0;
+  private _maxRows: number = 0;
   private _enabled: boolean = true;
 
   private _textareaElement: HTMLTextAreaElement;
@@ -75,7 +75,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   }
 
   /** Cached height of a textarea with a single row. */
-  private _cachedLineHeight: number;
+  private _cachedLineHeight: number = 0;
 
   constructor(
     private _elementRef: ElementRef<HTMLElement>,

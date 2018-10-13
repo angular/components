@@ -13,40 +13,40 @@ import {NgControl} from '@angular/forms';
 /** An interface which allows a control to work inside of a `MatFormField`. */
 export abstract class MatFormFieldControl<T> {
   /** The value of the control. */
-  value: T | null;
+  value: T | null = null;
 
   /**
    * Stream that emits whenever the state of the control changes such that the parent `MatFormField`
    * needs to run change detection.
    */
-  readonly stateChanges: Observable<void>;
+  readonly stateChanges!: Observable<void>;
 
   /** The element ID for this control. */
-  readonly id: string;
+  readonly id!: string;
 
   /** The placeholder for this control. */
-  readonly placeholder: string;
+  readonly placeholder: string = '';
 
   /** Gets the NgControl for this control. */
-  readonly ngControl: NgControl | null;
+  readonly ngControl: NgControl | null = null;
 
   /** Whether the control is focused. */
-  readonly focused: boolean;
+  readonly focused: boolean = false;
 
   /** Whether the control is empty. */
-  readonly empty: boolean;
+  readonly empty: boolean = false;
 
   /** Whether the `MatFormField` label should try to float. */
-  readonly shouldLabelFloat: boolean;
+  readonly shouldLabelFloat: boolean = true;
 
   /** Whether the control is required. */
-  readonly required: boolean;
+  readonly required: boolean = false;
 
   /** Whether the control is disabled. */
-  readonly disabled: boolean;
+  readonly disabled: boolean = false;
 
   /** Whether the control is in an error state. */
-  readonly errorState: boolean;
+  readonly errorState: boolean = false;
 
   /**
    * An optional name for the control type that can be used to distinguish `mat-form-field` elements

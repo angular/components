@@ -117,9 +117,9 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
     CanDisableRipple {
   private _isNavList: boolean = false;
 
-  @ContentChildren(MatLine) _lines: QueryList<MatLine>;
-  @ContentChild(MatListAvatarCssMatStyler) _avatar: MatListAvatarCssMatStyler;
-  @ContentChild(MatListIconCssMatStyler) _icon: MatListIconCssMatStyler;
+  @ContentChildren(MatLine) _lines!: QueryList<MatLine>;
+  @ContentChild(MatListAvatarCssMatStyler) _avatar?: MatListAvatarCssMatStyler;
+  @ContentChild(MatListIconCssMatStyler) _icon?: MatListIconCssMatStyler;
 
   constructor(private _element: ElementRef<HTMLElement>,
               @Optional() private _navList: MatNavList) {

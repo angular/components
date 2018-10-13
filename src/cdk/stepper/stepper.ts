@@ -53,17 +53,19 @@ export type StepperOrientation = 'horizontal' | 'vertical';
 
 /** Change event emitted on selection changes. */
 export class StepperSelectionEvent {
-  /** Index of the step now selected. */
-  selectedIndex: number;
+  constructor(
+    /** Index of the step now selected. */
+    public selectedIndex: number,
 
-  /** Index of the step previously selected. */
-  previouslySelectedIndex: number;
+    /** Index of the step previously selected. */
+    public previouslySelectedIndex: number,
 
-  /** The step instance now selected. */
-  selectedStep: CdkStep;
+    /** The step instance now selected. */
+    public selectedStep: CdkStep,
 
-  /** The step instance previously selected. */
-  previouslySelectedStep: CdkStep;
+    /** The step instance previously selected. */
+    public previouslySelectedStep: CdkStep
+  ) {}
 }
 
 /** The state of each step. */
@@ -111,34 +113,34 @@ export class CdkStep implements OnChanges {
   _displayDefaultIndicatorType: boolean;
 
   /** Template for step label if it exists. */
-  @ContentChild(CdkStepLabel) stepLabel: CdkStepLabel;
+  @ContentChild(CdkStepLabel) stepLabel?: CdkStepLabel;
 
   /** Template for step content. */
-  @ViewChild(TemplateRef) content: TemplateRef<any>;
+  @ViewChild(TemplateRef) content!: TemplateRef<any>;
 
   /** The top level abstract control of the step. */
-  @Input() stepControl: AbstractControl;
+  @Input() stepControl?: AbstractControl;
 
   /** Whether user has seen the expanded step content or not. */
   interacted = false;
 
   /** Plain text label of the step. */
-  @Input() label: string;
+  @Input() label: string = '';
 
   /** Error message to display when there's an error. */
-  @Input() errorMessage: string;
+  @Input() errorMessage: string = '';
 
   /** Aria label for the tab. */
-  @Input('aria-label') ariaLabel: string;
+  @Input('aria-label') ariaLabel: string | null = null;
 
   /**
    * Reference to the element that the tab is labelled by.
    * Will be cleared if `aria-label` is set at the same time.
    */
-  @Input('aria-labelledby') ariaLabelledby: string;
+  @Input('aria-labelledby') ariaLabelledby: string | null = null;
 
   /** State of the step. */
-  @Input() state: StepState;
+  @Input() state?: StepState;
 
   /** Whether the user can return to this step once it has been marked as complted. */
   @Input()
@@ -181,7 +183,7 @@ export class CdkStep implements OnChanges {
   private _customError: boolean | null = null;
 
   private _getDefaultError() {
-    return this.stepControl && this.stepControl.invalid && this.interacted;
+    return !!(this.stepControl && this.stepControl.invalid && this.interacted);
   }
 
   /** @breaking-change 8.0.0 remove the `?` after `stepperOptions` */
@@ -231,7 +233,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   protected _destroyed = new Subject<void>();
 
   /** Used for managing keyboard focus. */
-  private _keyManager: FocusKeyManager<FocusableOption>;
+  private _keyManager!: FocusKeyManager<FocusableOption>;
 
   /**
    * @breaking-change 8.0.0 Remove `| undefined` once the `_document`
@@ -240,10 +242,10 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   private _document: Document | undefined;
 
   /** The list of step components that the stepper is holding. */
-  @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
+  @ContentChildren(CdkStep) _steps!: QueryList<CdkStep>;
 
   /** The list of step headers of the steps in the stepper. */
-  _stepHeader: QueryList<FocusableOption>;
+  _stepHeader!: QueryList<FocusableOption>;
 
   /** Whether the validity of previous steps should be checked or not. */
   @Input()

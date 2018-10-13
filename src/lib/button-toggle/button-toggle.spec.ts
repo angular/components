@@ -107,7 +107,7 @@ describe('MatButtonToggle with forms', () => {
 
       tick();
       expect(testComponent.modelValue).toBe('red');
-      expect(testComponent.lastEvent.value).toBe('red');
+      expect(testComponent.lastEvent!.value).toBe('red');
     }));
 
     it('should set individual radio names based on the group name', () => {
@@ -782,7 +782,7 @@ describe('MatButtonToggle without forms', () => {
 class ButtonTogglesInsideButtonToggleGroup {
   isGroupDisabled: boolean = false;
   isVertical: boolean = false;
-  groupValue: string;
+  groupValue?: string;
 }
 
 @Component({
@@ -796,13 +796,13 @@ class ButtonTogglesInsideButtonToggleGroup {
   `
 })
 class ButtonToggleGroupWithNgModel {
-  modelValue: string;
+  modelValue?: string;
   options = [
     {label: 'Red', value: 'red'},
     {label: 'Green', value: 'green'},
     {label: 'Blue', value: 'blue'},
   ];
-  lastEvent: MatButtonToggleChange;
+  lastEvent?: MatButtonToggleChange;
   disableRipple = false;
 }
 
@@ -832,7 +832,7 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
 })
 class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
   value: ('' | number | null | undefined | boolean)[] = [0];
-  @ViewChildren(MatButtonToggle) toggles: QueryList<MatButtonToggle>;
+  @ViewChildren(MatButtonToggle) toggles!: QueryList<MatButtonToggle>;
 }
 
 @Component({
@@ -851,7 +851,7 @@ class StandaloneButtonToggle { }
   `
 })
 class ButtonToggleGroupWithInitialValue {
-  lastEvent: MatButtonToggleChange;
+  lastEvent!: MatButtonToggleChange;
 }
 
 @Component({
@@ -890,8 +890,8 @@ class ButtonToggleWithAriaLabelledby {}
   `
 })
 class RepeatedButtonTogglesWithPreselectedValue {
-  @ViewChild(MatButtonToggleGroup) toggleGroup: MatButtonToggleGroup;
-  @ViewChildren(MatButtonToggle) toggles: QueryList<MatButtonToggle>;
+  @ViewChild(MatButtonToggleGroup) toggleGroup!: MatButtonToggleGroup;
+  @ViewChildren(MatButtonToggle) toggles!: QueryList<MatButtonToggle>;
 
   possibleValues = ['One', 'Two', 'Three'];
   value = 'Two';

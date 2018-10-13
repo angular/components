@@ -103,7 +103,7 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
    * position through the animation. If animations are currently disabled, the fromState is removed
    * so that there is no animation displayed.
    */
-  _viewState: ArrowViewStateTransition;
+  _viewState!: ArrowViewStateTransition;
 
   /** The direction the arrow should be facing according to the current state. */
   _arrowDirection: SortDirection = '';
@@ -117,19 +117,19 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
    * ID of this sort header. If used within the context of a CdkColumnDef, this will default to
    * the column's name.
    */
-  @Input('mat-sort-header') id: string;
+  @Input('mat-sort-header') id!: string;
 
   /** Sets the position of the arrow that displays when sorted. */
   @Input() arrowPosition: 'before' | 'after' = 'after';
 
   /** Overrides the sort start value of the containing MatSort for this MatSortable. */
-  @Input() start: 'asc' | 'desc';
+  @Input() start!: 'asc' | 'desc';
 
   /** Overrides the disable clear value of the containing MatSort for this MatSortable. */
   @Input()
   get disableClear(): boolean { return this._disableClear; }
   set disableClear(v) { this._disableClear = coerceBooleanProperty(v); }
-  private _disableClear: boolean;
+  private _disableClear!: boolean;
 
   constructor(public _intl: MatSortHeaderIntl,
               changeDetectorRef: ChangeDetectorRef,

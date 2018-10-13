@@ -14,7 +14,7 @@ import {map, startWith} from 'rxjs/operators';
 export class AutocompleteFilterExample implements OnInit {
   myControl = new FormControl();
   options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<string[]>;
+  filteredOptions!: Observable<string[]>;
 
   ngOnInit() {
     this.filteredOptions = this.myControl.valueChanges

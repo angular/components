@@ -14,17 +14,19 @@ import {BehaviorSubject} from 'rxjs';
  * Each node has a filename, and a type or a list of children.
  */
 export class FileNode {
-  children: FileNode[];
-  filename: string;
+  children: FileNode[] = [];
   type: any;
+
+  constructor(public filename: string) {}
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-  filename: string;
-  type: any;
-  level: number;
-  expandable: boolean;
+  constructor(
+    public filename: string,
+    public type: any,
+    public level: number,
+    public expandable: boolean) {}
 }
 
 /**
@@ -104,8 +106,7 @@ export class FileDatabase {
     const data: FileNode[] = [];
     for (let k in value) {
       const v = value[k];
-      const node = new FileNode();
-      node.filename = `${k}`;
+      const node = new FileNode(`${k}`);
       if (v === null || v === undefined) {
         // no action
       } else if (typeof v === 'object') {

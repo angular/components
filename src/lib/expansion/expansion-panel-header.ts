@@ -96,10 +96,10 @@ export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
   }
 
   /** Height of the header while the panel is expanded. */
-  @Input() expandedHeight: string;
+  @Input() expandedHeight?: string;
 
   /** Height of the header while the panel is collapsed. */
-  @Input() collapsedHeight: string;
+  @Input() collapsedHeight?: string;
 
   /**
    * Whether the associated panel is disabled. Implemented as a part of `FocusableOption`.

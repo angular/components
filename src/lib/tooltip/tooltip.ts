@@ -115,13 +115,13 @@ export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions 
   },
 })
 export class MatTooltip implements OnDestroy {
-  _overlayRef: OverlayRef | null;
-  _tooltipInstance: TooltipComponent | null;
+  _overlayRef: OverlayRef | null = null;
+  _tooltipInstance: TooltipComponent | null = null;
 
-  private _portal: ComponentPortal<TooltipComponent>;
+  private _portal!: ComponentPortal<TooltipComponent>;
   private _position: TooltipPosition = 'below';
   private _disabled: boolean = false;
-  private _tooltipClass: string|string[]|Set<string>|{[key: string]: any};
+  private _tooltipClass!: string|string[]|Set<string>|{[key: string]: any};
   private _scrollStrategy: () => ScrollStrategy;
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
@@ -524,16 +524,16 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
 })
 export class TooltipComponent {
   /** Message to display in the tooltip */
-  message: string;
+  message: string = '';
 
   /** Classes to be added to the tooltip. Supports the same syntax as `ngClass`. */
-  tooltipClass: string|string[]|Set<string>|{[key: string]: any};
+  tooltipClass!: string|string[]|Set<string>|{[key: string]: any};
 
   /** The timeout ID of any current timer set to show the tooltip */
-  _showTimeoutId: number | null;
+  _showTimeoutId?: number;
 
   /** The timeout ID of any current timer set to hide the tooltip */
-  _hideTimeoutId: number | null;
+  _hideTimeoutId?: number;
 
   /** Property watched by the animation framework to show or hide the tooltip */
   _visibility: TooltipVisibility = 'initial';
@@ -559,14 +559,14 @@ export class TooltipComponent {
     // Cancel the delayed hide if it is scheduled
     if (this._hideTimeoutId) {
       clearTimeout(this._hideTimeoutId);
-      this._hideTimeoutId = null;
+      this._hideTimeoutId = undefined;
     }
 
     // Body interactions should cancel the tooltip if there is a delay in showing.
     this._closeOnInteraction = true;
     this._showTimeoutId = setTimeout(() => {
       this._visibility = 'visible';
-      this._showTimeoutId = null;
+      this._showTimeoutId = undefined;
 
       // Mark for check so if any parent component has set the
       // ChangeDetectionStrategy to OnPush it will be checked anyways
@@ -582,12 +582,12 @@ export class TooltipComponent {
     // Cancel the delayed show if it is scheduled
     if (this._showTimeoutId) {
       clearTimeout(this._showTimeoutId);
-      this._showTimeoutId = null;
+      this._showTimeoutId = undefined;
     }
 
     this._hideTimeoutId = setTimeout(() => {
       this._visibility = 'hidden';
-      this._hideTimeoutId = null;
+      this._hideTimeoutId = undefined;
 
       // Mark for check so if any parent component has set the
       // ChangeDetectionStrategy to OnPush it will be checked anyways

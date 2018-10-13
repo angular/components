@@ -7,6 +7,6 @@ import {Component} from '@angular/core';
   styleUrls: ['./text-field-autofill-directive-example.css'],
 })
 export class TextFieldAutofillDirectiveExample {
-  firstNameAutofilled: boolean;
-  lastNameAutofilled: boolean;
+  firstNameAutofilled: boolean = false;
+  lastNameAutofilled: boolean = false;
 }

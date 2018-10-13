@@ -1524,7 +1524,7 @@ class SliderWithFormControl {
   styles: [styles],
 })
 class SliderWithNgModel {
-  @ViewChild(MatSlider) slider: MatSlider;
+  @ViewChild(MatSlider) slider!: MatSlider;
   val: number | undefined = 0;
 }
 
@@ -1548,7 +1548,7 @@ class SliderWithChangeHandler {
   onChange() { }
   onInput() { }
 
-  @ViewChild(MatSlider) slider: MatSlider;
+  @ViewChild(MatSlider) slider!: MatSlider;
 }
 
 @Component({
@@ -1573,7 +1573,7 @@ class VerticalSlider {
   styles: [styles],
 })
 class SliderWithTabIndexBinding {
-  tabIndex: number;
+  tabIndex?: number;
 }
 
 @Component({
@@ -1581,7 +1581,7 @@ class SliderWithTabIndexBinding {
   styles: [styles],
 })
 class SliderWithNativeTabindexAttr {
-  tabIndex: number;
+  tabIndex?: number;
 }
 
 @Component({
@@ -1589,7 +1589,7 @@ class SliderWithNativeTabindexAttr {
   styles: [styles],
 })
 class SliderWithTwoWayBinding {
-  @ViewChild(MatSlider) slider: MatSlider;
+  @ViewChild(MatSlider) slider!: MatSlider;
   value = 0;
 }
 

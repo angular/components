@@ -116,6 +116,6 @@ export class MatSidenav extends MatDrawer {
   encapsulation: ViewEncapsulation.None,
 })
 export class MatSidenavContainer extends MatDrawerContainer {
-  @ContentChildren(MatSidenav) _drawers: QueryList<MatSidenav>;
-  @ContentChild(MatSidenavContent) _content: MatSidenavContent;
+  @ContentChildren(MatSidenav) _drawers!: QueryList<MatSidenav>;
+  @ContentChild(MatSidenavContent) _content?: MatSidenavContent;
 }

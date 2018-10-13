@@ -663,7 +663,7 @@ describe('nested MatTabGroup with enabled animations', () => {
   `
 })
 class SimpleTabsTestApp {
-  @ViewChildren(MatTab) tabs: QueryList<MatTab>;
+  @ViewChildren(MatTab) tabs!: QueryList<MatTab>;
   selectedIndex: number = 1;
   focusEvent: any;
   selectEvent: any;
@@ -753,7 +753,7 @@ class BindedTabsTestApp {
   `,
 })
 class DisabledTabsTestApp {
-  @ViewChildren(MatTab) tabs: QueryList<MatTab>;
+  @ViewChildren(MatTab) tabs!: QueryList<MatTab>;
   isDisabled = false;
 }
 
@@ -773,7 +773,7 @@ class AsyncTabsTestApp implements OnInit {
     { label: 'two', content: 'two' }
   ];
 
-  tabs: Observable<any>;
+  tabs!: Observable<any>;
 
   ngOnInit() {
     // Use ngOnInit because there is some issue with scheduling the async task in the constructor.
@@ -844,8 +844,8 @@ class NestedTabs {}
   `
 })
 class TabGroupWithAriaInputs {
-  ariaLabel: string;
-  ariaLabelledby: string;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
 }
 
 

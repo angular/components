@@ -37,7 +37,7 @@ export class CdkTreeNodePadding<T> implements OnDestroy {
     this._level = coerceNumberProperty(value);
     this._setPadding();
   }
-  _level: number;
+  _level: number = 0;
 
   /**
    * The indent for each level. Can be a number or a CSS string.

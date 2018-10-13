@@ -42,10 +42,11 @@ let nextId = 0;
 
 /** A simple change event emitted on focus or selection changes. */
 export class MatTabChangeEvent {
-  /** Index of the currently-selected tab. */
-  index: number;
-  /** Reference to the currently-selected tab. */
-  tab: MatTab;
+  constructor(
+    /** Index of the currently-selected tab. */
+    public index: number,
+    /** Reference to the currently-selected tab. */
+    public tab?: MatTab) {}
 }
 
 /** Possible positions for the tab header. */
@@ -82,11 +83,11 @@ export const _MatTabGroupMixinBase: CanColorCtor & CanDisableRippleCtor & typeof
 export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentInit,
     AfterContentChecked, OnDestroy, CanColor, CanDisableRipple {
 
-  @ContentChildren(MatTab) _tabs: QueryList<MatTab>;
+  @ContentChildren(MatTab) _tabs!: QueryList<MatTab>;
 
-  @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
+  @ViewChild('tabBodyWrapper') _tabBodyWrapper!: ElementRef;
 
-  @ViewChild('tabHeader') _tabHeader: MatTabHeader;
+  @ViewChild('tabHeader') _tabHeader!: MatTabHeader;
 
   /** The tab index that should be selected after the content has been checked. */
   private _indexToSelect: number | null = 0;
@@ -249,11 +250,12 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   }
 
   private _createChangeEvent(index: number): MatTabChangeEvent {
-    const event = new MatTabChangeEvent;
-    event.index = index;
+    const event = new MatTabChangeEvent(index);
+
     if (this._tabs && this._tabs.length) {
       event.tab = this._tabs.toArray()[index];
     }
+
     return event;
   }
 

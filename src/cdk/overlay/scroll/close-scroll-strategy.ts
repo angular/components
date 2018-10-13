@@ -24,8 +24,8 @@ export interface CloseScrollStrategyConfig {
  */
 export class CloseScrollStrategy implements ScrollStrategy {
   private _scrollSubscription: Subscription|null = null;
-  private _overlayRef: OverlayReference;
-  private _initialScrollPosition: number;
+  private _overlayRef!: OverlayReference;
+  private _initialScrollPosition: number = 0;
 
   constructor(
     private _scrollDispatcher: ScrollDispatcher,

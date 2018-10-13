@@ -30,7 +30,7 @@ export class OverlayKeyboardDispatcher implements OnDestroy {
   _attachedOverlays: OverlayRef[] = [];
 
   private _document: Document;
-  private _isAttached: boolean;
+  private _isAttached: boolean = false;
 
   constructor(@Inject(DOCUMENT) document: any) {
     this._document = document;

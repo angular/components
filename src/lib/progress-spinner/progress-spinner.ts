@@ -126,7 +126,7 @@ const INDETERMINATE_ANIMATION_TEMPLATE = `
 export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements CanColor {
 
   private _value = 0;
-  private _strokeWidth: number;
+  private _strokeWidth?: number;
   private _fallbackAnimation = false;
 
   /** Tracks diameters of existing instances to de-dupe generated styles (default d = 100) */

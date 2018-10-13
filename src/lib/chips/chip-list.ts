@@ -119,25 +119,25 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   private _destroyed = new Subject<void>();
 
   /** Subscription to focus changes in the chips. */
-  private _chipFocusSubscription: Subscription | null;
+  private _chipFocusSubscription: Subscription | null = null;
 
   /** Subscription to blur changes in the chips. */
-  private _chipBlurSubscription: Subscription | null;
+  private _chipBlurSubscription: Subscription | null = null;
 
   /** Subscription to selection changes in chips. */
-  private _chipSelectionSubscription: Subscription | null;
+  private _chipSelectionSubscription: Subscription | null = null;
 
   /** Subscription to remove changes in chips. */
-  private _chipRemoveSubscription: Subscription | null;
+  private _chipRemoveSubscription: Subscription | null = null;
 
   /** The chip input to add more chips */
-  protected _chipInput: MatChipInput;
+  protected _chipInput?: MatChipInput;
 
   /** Uid of the chip list */
   _uid: string = `mat-chip-list-${nextUniqueId++}`;
 
   /** The aria-describedby attribute on the chip list for improved a11y. */
-  _ariaDescribedby: string;
+  _ariaDescribedby?: string;
 
   /** Tab index for the chip list. */
   _tabIndex = 0;
@@ -149,7 +149,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   _userTabIndex: number | null = null;
 
   /** The FocusKeyManager which handles focus. */
-  _keyManager: FocusKeyManager<MatChip>;
+  _keyManager!: FocusKeyManager<MatChip>;
 
   /** Function when touched */
   _onTouched = () => {};
@@ -157,7 +157,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   /** Function when changed */
   _onChange: (value: any) => void = () => {};
 
-  _selectionModel: SelectionModel<MatChip>;
+  _selectionModel!: SelectionModel<MatChip>;
 
   /** The array of selected chips inside chip list. */
   get selected(): MatChip[] | MatChip {
@@ -168,7 +168,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   get role(): string | null { return this.empty ? null : 'listbox'; }
 
   /** An object used to control when error messages are shown. */
-  @Input() errorStateMatcher: ErrorStateMatcher;
+  @Input() errorStateMatcher?: ErrorStateMatcher;
 
   /** Whether the user should be allowed to select multiple chips. */
   @Input()
@@ -238,7 +238,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     this._placeholder = value;
     this.stateChanges.next();
   }
-  protected _placeholder: string;
+  protected _placeholder: string = '';
 
   /** Whether any chips or the matChipInput inside of this chip-list has focus. */
   get focused(): boolean {
@@ -330,7 +330,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
 
   /** The chip components contained within this chip list. */
-  @ContentChildren(MatChip) chips: QueryList<MatChip>;
+  @ContentChildren(MatChip) chips!: QueryList<MatChip>;
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               private _changeDetectorRef: ChangeDetectorRef,

@@ -760,7 +760,7 @@ class DrawerContainerNoDrawerTestApp { }
     </mat-drawer-container>`,
 })
 class DrawerContainerTwoDrawerTestApp {
-  @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
+  @ViewChild(MatDrawerContainer) drawerContainer!: MatDrawerContainer;
 }
 
 /** Test component that contains an MatDrawerContainer and one MatDrawer. */
@@ -786,10 +786,10 @@ class BasicTestApp {
   backdropClickedCount = 0;
   hasBackdrop: boolean | null = null;
 
-  @ViewChild('drawer') drawer: MatDrawer;
-  @ViewChild('drawerButton') drawerButton: ElementRef<HTMLButtonElement>;
-  @ViewChild('openButton') openButton: ElementRef<HTMLButtonElement>;
-  @ViewChild('closeButton') closeButton: ElementRef<HTMLButtonElement>;
+  @ViewChild('drawer') drawer!: MatDrawer;
+  @ViewChild('drawerButton') drawerButton!: ElementRef<HTMLButtonElement>;
+  @ViewChild('openButton') openButton!: ElementRef<HTMLButtonElement>;
+  @ViewChild('closeButton') closeButton!: ElementRef<HTMLButtonElement>;
 
   open() {
     this.openCount++;
@@ -892,7 +892,7 @@ class DrawerWithoutFocusableElements {}
   `,
 })
 class DrawerDelayed {
-  @ViewChild(MatDrawer) drawer: MatDrawer;
+  @ViewChild(MatDrawer) drawer!: MatDrawer;
   showDrawer = false;
 }
 
@@ -904,8 +904,8 @@ class DrawerDelayed {
     </mat-drawer-container>`,
 })
 class DrawerContainerStateChangesTestApp {
-  @ViewChild(MatDrawer) drawer: MatDrawer;
-  @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
+  @ViewChild(MatDrawer) drawer!: MatDrawer;
+  @ViewChild(MatDrawerContainer) drawerContainer!: MatDrawerContainer;
 
   direction: Direction = 'ltr';
   mode = 'side';
@@ -923,7 +923,7 @@ class DrawerContainerStateChangesTestApp {
     </mat-drawer-container>`,
 })
 class AutosizeDrawer {
-  @ViewChild(MatDrawer) drawer: MatDrawer;
+  @ViewChild(MatDrawer) drawer!: MatDrawer;
   fillerWidth = 0;
 }
 
@@ -937,5 +937,5 @@ class AutosizeDrawer {
   `,
 })
 class DrawerContainerWithContent {
-  @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
+  @ViewChild(MatDrawerContainer) drawerContainer!: MatDrawerContainer;
 }

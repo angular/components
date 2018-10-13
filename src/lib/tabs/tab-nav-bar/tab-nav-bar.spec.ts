@@ -300,8 +300,8 @@ describe('MatTabNavBar', () => {
   `
 })
 class SimpleTabNavBarTestApp {
-  @ViewChild(MatTabNav) tabNavBar: MatTabNav;
-  @ViewChildren(MatTabLink) tabLinks: QueryList<MatTabLink>;
+  @ViewChild(MatTabNav) tabNavBar!: MatTabNav;
+  @ViewChildren(MatTabLink) tabLinks!: QueryList<MatTabLink>;
 
   label = '';
   disabled = false;

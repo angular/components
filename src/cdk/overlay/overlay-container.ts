@@ -20,7 +20,7 @@ import {
 /** Container inside which all overlays will render. */
 @Injectable({providedIn: 'root'})
 export class OverlayContainer implements OnDestroy {
-  protected _containerElement: HTMLElement;
+  protected _containerElement: HTMLElement | null = null;
 
   constructor(@Inject(DOCUMENT) protected _document: any) {}
 
@@ -38,7 +38,7 @@ export class OverlayContainer implements OnDestroy {
    */
   getContainerElement(): HTMLElement {
     if (!this._containerElement) { this._createContainer(); }
-    return this._containerElement;
+    return this._containerElement!;
   }
 
   /**

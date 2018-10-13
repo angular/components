@@ -237,7 +237,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   private _scrollTop = 0;
 
   /** The placeholder displayed in the trigger of the select. */
-  private _placeholder: string;
+  private _placeholder = '';
 
   /** Whether the component is in multiple selection mode. */
   private _multiple: boolean = false;
@@ -252,19 +252,19 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   private readonly _destroy = new Subject<void>();
 
   /** The last measured value for the trigger's client bounding rect. */
-  _triggerRect: ClientRect;
+  _triggerRect!: ClientRect;
 
   /** The aria-describedby attribute on the select for improved a11y. */
-  _ariaDescribedby: string;
+  _ariaDescribedby?: string;
 
   /** The cached font-size of the trigger element. */
   _triggerFontSize = 0;
 
   /** Deals with the selection logic. */
-  _selectionModel: SelectionModel<MatOption>;
+  _selectionModel!: SelectionModel<MatOption>;
 
   /** Manages keyboard events for options in the panel. */
-  _keyManager: ActiveDescendantKeyManager<MatOption>;
+  _keyManager!: ActiveDescendantKeyManager<MatOption>;
 
   /** `View -> model callback called when value changes` */
   _onChange: (value: any) => void = () => {};
@@ -332,25 +332,25 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   controlType = 'mat-select';
 
   /** Trigger that opens the select. */
-  @ViewChild('trigger') trigger: ElementRef;
+  @ViewChild('trigger') trigger!: ElementRef;
 
   /** Panel containing the select options. */
-  @ViewChild('panel') panel: ElementRef;
+  @ViewChild('panel') panel!: ElementRef;
 
   /** Overlay pane containing the options. */
-  @ViewChild(CdkConnectedOverlay) overlayDir: CdkConnectedOverlay;
+  @ViewChild(CdkConnectedOverlay) overlayDir!: CdkConnectedOverlay;
 
   /** All of the defined select options. */
-  @ContentChildren(MatOption, { descendants: true }) options: QueryList<MatOption>;
+  @ContentChildren(MatOption, { descendants: true }) options!: QueryList<MatOption>;
 
   /** All of the defined groups of options. */
-  @ContentChildren(MatOptgroup) optionGroups: QueryList<MatOptgroup>;
+  @ContentChildren(MatOptgroup) optionGroups!: QueryList<MatOptgroup>;
 
   /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
-  @Input() panelClass: string|string[]|Set<string>|{[key: string]: any};
+  @Input() panelClass?: string|string[]|Set<string>|{[key: string]: any};
 
   /** User-supplied override of the trigger element. */
-  @ContentChild(MatSelectTrigger) customTrigger: MatSelectTrigger;
+  @ContentChild(MatSelectTrigger) customTrigger?: MatSelectTrigger;
 
   /** Placeholder to be shown if no value has been selected. */
   @Input()
@@ -416,19 +416,19 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   private _value: any;
 
   /** Aria label of the select. If not specified, the placeholder will be used as label. */
-  @Input('aria-label') ariaLabel: string = '';
+  @Input('aria-label') ariaLabel?: string;
 
   /** Input that can be used to specify the `aria-labelledby` attribute. */
-  @Input('aria-labelledby') ariaLabelledby: string;
+  @Input('aria-labelledby') ariaLabelledby?: string;
 
   /** Object used to control when error messages are shown. */
-  @Input() errorStateMatcher: ErrorStateMatcher;
+  @Input() errorStateMatcher?: ErrorStateMatcher;
 
   /**
    * Function used to sort the values in a select in multiple mode.
    * Follows the same logic as `Array.prototype.sort`.
    */
-  @Input() sortComparator: (a: MatOption, b: MatOption, options: MatOption[]) => number;
+  @Input() sortComparator?: (a: MatOption, b: MatOption, options: MatOption[]) => number;
 
   /** Unique id of the element. */
   @Input()
@@ -437,7 +437,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     this._id = value || this._uid;
     this.stateChanges.next();
   }
-  private _id: string;
+  private _id = '';
 
   /** Combined stream of all of the child options' change events. */
   readonly optionSelectionChanges: Observable<MatOptionSelectionChange> = defer(() => {

@@ -122,7 +122,7 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
   encapsulation: ViewEncapsulation.None,
 })
 export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestroy {
-  private _focusTrap: FocusTrap;
+  private _focusTrap!: FocusTrap;
   private _elementFocusedBeforeDrawerWasOpened: HTMLElement | null = null;
 
   /** Whether the drawer is initialized. Used for disabling the initial animation. */
@@ -163,7 +163,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   private _autoFocus: boolean = true;
 
   /** How the sidenav was opened (keypress, mouse click etc.) */
-  private _openedVia: FocusOrigin | null;
+  private _openedVia: FocusOrigin | null = null;
 
   /** Emits whenever the drawer has started animating. */
   _animationStarted = new EventEmitter<AnimationEvent>();
@@ -406,9 +406,9 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   encapsulation: ViewEncapsulation.None,
 })
 export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy {
-  @ContentChildren(MatDrawer) _drawers: QueryList<MatDrawer>;
-  @ContentChild(MatDrawerContent) _content: MatDrawerContent;
-  @ViewChild(MatDrawerContent) _userContent: MatDrawerContent;
+  @ContentChildren(MatDrawer) _drawers!: QueryList<MatDrawer>;
+  @ContentChild(MatDrawerContent) _content?: MatDrawerContent;
+  @ViewChild(MatDrawerContent) _userContent!: MatDrawerContent;
 
   /** The drawer child with the `start` position. */
   get start(): MatDrawer | null { return this._start; }
@@ -445,14 +445,14 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
   set hasBackdrop(value: any) {
     this._backdropOverride = value == null ? null : coerceBooleanProperty(value);
   }
-  _backdropOverride: boolean | null;
+  _backdropOverride: boolean | null = null;
 
   /** Event emitted when the drawer backdrop is clicked. */
   @Output() readonly backdropClick: EventEmitter<void> = new EventEmitter<void>();
 
   /** The drawer at the start/end position, independent of direction. */
-  private _start: MatDrawer | null;
-  private _end: MatDrawer | null;
+  private _start: MatDrawer | null = null;
+  private _end: MatDrawer | null = null;
 
   /**
    * The drawer at the left/right. When direction changes, these will change as well.
@@ -460,8 +460,8 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
    * In LTR, _left == _start and _right == _end.
    * In RTL, _left == _end and _right == _start.
    */
-  private _left: MatDrawer | null;
-  private _right: MatDrawer | null;
+  private _left: MatDrawer | null = null;
+  private _right: MatDrawer | null = null;
 
   /** Emits when the component is destroyed. */
   private readonly _destroyed = new Subject<void>();

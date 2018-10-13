@@ -1443,21 +1443,21 @@ class MatInputWithId {}
   template: `<mat-form-field><input matInput [disabled]="disabled"></mat-form-field>`
 })
 class MatInputWithDisabled {
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 @Component({
   template: `<mat-form-field><input matInput [required]="required"></mat-form-field>`
 })
 class MatInputWithRequired {
-  required: boolean;
+  required?: boolean;
 }
 
 @Component({
   template: `<mat-form-field><input matInput [type]="type"></mat-form-field>`
 })
 class MatInputWithType {
-  type: string;
+  type?: string;
 }
 
 @Component({
@@ -1554,8 +1554,8 @@ class MatInputInvalidHintTestController {}
     </mat-form-field>`
 })
 class MatInputMultipleHintTestController {
-  startId: string;
-  endId: string;
+  startId?: string;
+  endId?: string;
 }
 
 @Component({
@@ -1668,7 +1668,7 @@ class MatInputMissingMatInputTestController {}
   `
 })
 class MatInputWithFormErrorMessages {
-  @ViewChild('form') form: NgForm;
+  @ViewChild('form') form!: NgForm;
   formControl = new FormControl('', Validators.required);
   renderError = true;
 }
@@ -1710,7 +1710,7 @@ class MatInputWithCustomErrorStateMatcher {
   `
 })
 class MatInputWithFormGroupErrorMessages {
-  @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
+  @ViewChild(FormGroupDirective) formGroupDirective!: FormGroupDirective;
   formGroup = new FormGroup({
     name: new FormControl('', Validators.required)
   });
@@ -1778,7 +1778,7 @@ class MatInputWithLabel {}
   `
 })
 class MatInputWithLabelAndPlaceholder {
-  floatLabel: FloatLabelType;
+  floatLabel?: FloatLabelType;
 }
 
 @Component({
@@ -1789,8 +1789,8 @@ class MatInputWithLabelAndPlaceholder {
   `
 })
 class MatInputWithAppearance {
-  @ViewChild(MatFormField) formField: MatFormField;
-  appearance: MatFormFieldAppearance;
+  @ViewChild(MatFormField) formField!: MatFormField;
+  appearance?: MatFormFieldAppearance;
 }
 
 @Component({
@@ -1803,9 +1803,9 @@ class MatInputWithAppearance {
   `
 })
 class MatInputWithAppearanceAndLabel {
-  @ViewChild(MatFormField) formField: MatFormField;
-  appearance: MatFormFieldAppearance;
-  showPrefix: boolean;
+  @ViewChild(MatFormField) formField!: MatFormField;
+  appearance?: MatFormFieldAppearance;
+  showPrefix: boolean = false;
   labelContent = 'Label';
 }
 
@@ -1836,7 +1836,7 @@ const textareaStyleReset = `
 })
 class AutosizeTextareaWithLongPlaceholder {
   placeholder = 'Long Long Long Long Long Long Long Long Placeholder';
-  @ViewChild(MatTextareaAutosize) autosize: MatTextareaAutosize;
+  @ViewChild(MatTextareaAutosize) autosize!: MatTextareaAutosize;
 }
 
 @Component({
@@ -1881,8 +1881,8 @@ class AutosizeTextareaInAStep {}
     </mat-form-field>`
 })
 class MatInputSelect {
-  disabled: boolean;
-  required: boolean;
+  disabled?: boolean;
+  required?: boolean;
 }
 
 @Component({

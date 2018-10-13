@@ -134,7 +134,7 @@ export class CdkAriaLive implements OnDestroy {
   }
   private _politeness: AriaLivePoliteness = 'off';
 
-  private _subscription: Subscription | null;
+  private _subscription: Subscription | null = null;
 
   constructor(private _elementRef: ElementRef, private _liveAnnouncer: LiveAnnouncer,
               private _contentObserver: ContentObserver, private _ngZone: NgZone) {}

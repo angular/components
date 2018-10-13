@@ -54,7 +54,7 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   private _stateChanges = Subscription.EMPTY;
 
   /** Datepicker instance that the button will toggle. */
-  @Input('for') datepicker: MatDatepicker<D>;
+  @Input('for') datepicker!: MatDatepicker<D>;
 
   /** Tabindex for the toggle. */
   @Input() tabIndex: number | null;
@@ -67,10 +67,10 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
   }
-  private _disabled: boolean;
+  private _disabled?: boolean;
 
   /** Custom icon set by the consumer. */
-  @ContentChild(MatDatepickerToggleIcon) _customIcon: MatDatepickerToggleIcon;
+  @ContentChild(MatDatepickerToggleIcon) _customIcon?: MatDatepickerToggleIcon;
 
   constructor(
     public _intl: MatDatepickerIntl,

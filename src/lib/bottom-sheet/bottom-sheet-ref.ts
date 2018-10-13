@@ -19,7 +19,7 @@ import {MatBottomSheetContainer} from './bottom-sheet-container';
  */
 export class MatBottomSheetRef<T = any, R = any> {
   /** Instance of the component making up the content of the bottom sheet. */
-  instance: T;
+  instance!: T;
 
   /**
    * Instance of the component into which the bottom sheet content is projected.

@@ -238,11 +238,11 @@ describe('CdkScrollable', () => {
   `]
 })
 class ScrollableViewport {
-  @Input() dir: Direction;
-  @ViewChild(CdkScrollable) scrollable: CdkScrollable;
-  @ViewChild('scrollContainer') scrollContainer: ElementRef<Element>;
-  @ViewChild('firstRowStart') firstRowStart: ElementRef<Element>;
-  @ViewChild('firstRowEnd') firstRowEnd: ElementRef<Element>;
-  @ViewChild('lastRowStart') lastRowStart: ElementRef<Element>;
-  @ViewChild('lastRowEnd') lastRowEnd: ElementRef<Element>;
+  @Input() dir?: Direction;
+  @ViewChild(CdkScrollable) scrollable!: CdkScrollable;
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef<Element>;
+  @ViewChild('firstRowStart') firstRowStart!: ElementRef<Element>;
+  @ViewChild('firstRowEnd') firstRowEnd!: ElementRef<Element>;
+  @ViewChild('lastRowStart') lastRowStart!: ElementRef<Element>;
+  @ViewChild('lastRowEnd') lastRowEnd!: ElementRef<Element>;
 }

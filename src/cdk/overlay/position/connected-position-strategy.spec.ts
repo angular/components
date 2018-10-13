@@ -619,12 +619,12 @@ describe('ConnectedPositionStrategy', () => {
     it('should not have origin or overlay clipped or out of view without scroll', () => {
       expect(positionChangeHandler).toHaveBeenCalled();
       positionChange = positionChangeHandler.calls.mostRecent().args[0];
-      expect(positionChange.scrollableViewProperties).toEqual({
+      expect(positionChange.scrollableViewProperties).toEqual(jasmine.objectContaining({
         isOriginClipped: false,
         isOriginOutsideView: false,
         isOverlayClipped: false,
         isOverlayOutsideView: false
-      });
+      }));
     });
 
     it('should evaluate if origin is clipped if scrolled slightly down', () => {
@@ -633,12 +633,12 @@ describe('ConnectedPositionStrategy', () => {
 
       expect(positionChangeHandler).toHaveBeenCalled();
       positionChange = positionChangeHandler.calls.mostRecent().args[0];
-      expect(positionChange.scrollableViewProperties).toEqual({
+      expect(positionChange.scrollableViewProperties).toEqual(jasmine.objectContaining({
         isOriginClipped: true,
         isOriginOutsideView: false,
         isOverlayClipped: false,
         isOverlayOutsideView: false
-      });
+      }));
     });
 
     it('should evaluate if origin is out of view and overlay is clipped if scrolled enough', () => {
@@ -647,12 +647,12 @@ describe('ConnectedPositionStrategy', () => {
 
       expect(positionChangeHandler).toHaveBeenCalled();
       positionChange = positionChangeHandler.calls.mostRecent().args[0];
-      expect(positionChange.scrollableViewProperties).toEqual({
+      expect(positionChange.scrollableViewProperties).toEqual(jasmine.objectContaining({
         isOriginClipped: true,
         isOriginOutsideView: true,
         isOverlayClipped: true,
         isOverlayOutsideView: false
-      });
+      }));
     });
 
     it('should evaluate the overlay and origin are both out of the view', () => {
@@ -661,12 +661,12 @@ describe('ConnectedPositionStrategy', () => {
 
       expect(positionChangeHandler).toHaveBeenCalled();
       positionChange = positionChangeHandler.calls.mostRecent().args[0];
-      expect(positionChange.scrollableViewProperties).toEqual({
+      expect(positionChange.scrollableViewProperties).toEqual(jasmine.objectContaining({
         isOriginClipped: true,
         isOriginOutsideView: true,
         isOverlayClipped: true,
         isOverlayOutsideView: true
-      });
+      }));
     });
   });
 

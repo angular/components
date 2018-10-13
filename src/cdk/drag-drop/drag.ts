@@ -90,28 +90,28 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
   private _document: Document;
 
   /** Element displayed next to the user's pointer while the element is dragged. */
-  private _preview: HTMLElement;
+  private _preview!: HTMLElement;
 
   /** Reference to the view of the preview element. */
-  private _previewRef: EmbeddedViewRef<any> | null;
+  private _previewRef: EmbeddedViewRef<any> | null = null;
 
   /** Reference to the view of the placeholder element. */
-  private _placeholderRef: EmbeddedViewRef<any> | null;
+  private _placeholderRef: EmbeddedViewRef<any> | null = null;
 
   /** Element that is rendered instead of the draggable item while it is being sorted. */
-  private _placeholder: HTMLElement;
+  private _placeholder!: HTMLElement;
 
   /** Coordinates within the element at which the user picked up the element. */
-  private _pickupPositionInElement: Point;
+  private _pickupPositionInElement: Point = {x: 0, y: 0};
 
   /** Coordinates on the page at which the user picked up the element. */
-  private _pickupPositionOnPage: Point;
+  private _pickupPositionOnPage: Point = {x: 0, y: 0};
 
   /**
    * Reference to the element that comes after the draggable in the DOM, at the time
    * it was picked up. Used for restoring its initial position when it's dropped.
    */
-  private _nextSibling: Node | null;
+  private _nextSibling: Node | null = null;
 
   /**
    * CSS `transform` applied to the element when it isn't being dragged. We need a
@@ -128,16 +128,16 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
    * Whether the dragging sequence has been started. Doesn't
    * necessarily mean that the element has been moved.
    */
-  _hasStartedDragging: boolean;
+  _hasStartedDragging: boolean = false;
 
   /** Whether the element has moved since the user started dragging it. */
-  private _hasMoved: boolean;
+  private _hasMoved: boolean = false;
 
   /** Drop container in which the CdkDrag resided when dragging began. */
-  private _initialContainer: CdkDropContainer;
+  private _initialContainer!: CdkDropContainer;
 
   /** Cached scroll position on the page when the element was picked up. */
-  private _scrollPosition: {top: number, left: number};
+  private _scrollPosition: {top: number, left: number} = {top: 0, left: 0};
 
   /** Emits when the item is being moved. */
   private _moveEvents = new Subject<CdkDragMove<T>>();
@@ -149,13 +149,13 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
   private _moveEventSubscriptions = 0;
 
   /** Keeps track of the direction in which the user is dragging along each axis. */
-  private _pointerDirectionDelta: {x: -1 | 0 | 1, y: -1 | 0 | 1};
+  private _pointerDirectionDelta: {x: -1 | 0 | 1, y: -1 | 0 | 1} = {x: 0, y: 0};
 
   /** Pointer position at which the last change in the delta occurred. */
-  private _pointerPositionAtLastDirectionChange: Point;
+  private _pointerPositionAtLastDirectionChange: Point = {x: 0, y: 0};
 
   /** Root element that will be dragged by the user. */
-  private _rootElement: HTMLElement;
+  private _rootElement!: HTMLElement;
 
   /** Subscription to pointer movement events. */
   private _pointerMoveSubscription = Subscription.EMPTY;
@@ -164,26 +164,26 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
   private _pointerUpSubscription = Subscription.EMPTY;
 
   /** Elements that can be used to drag the draggable item. */
-  @ContentChildren(CdkDragHandle) _handles: QueryList<CdkDragHandle>;
+  @ContentChildren(CdkDragHandle) _handles!: QueryList<CdkDragHandle>;
 
   /** Element that will be used as a template to create the draggable item's preview. */
-  @ContentChild(CdkDragPreview) _previewTemplate: CdkDragPreview;
+  @ContentChild(CdkDragPreview) _previewTemplate: CdkDragPreview | null = null;
 
   /** Template for placeholder element rendered to show where a draggable would be dropped. */
-  @ContentChild(CdkDragPlaceholder) _placeholderTemplate: CdkDragPlaceholder;
+  @ContentChild(CdkDragPlaceholder) _placeholderTemplate: CdkDragPlaceholder | null = null;
 
   /** Arbitrary data to attach to this drag instance. */
-  @Input('cdkDragData') data: T;
+  @Input('cdkDragData') data?: T;
 
   /** Locks the position of the dragged element along the specified axis. */
-  @Input('cdkDragLockAxis') lockAxis: 'x' | 'y';
+  @Input('cdkDragLockAxis') lockAxis?: 'x' | 'y';
 
   /**
    * Selector that will be used to determine the root draggable element, starting from
    * the `cdkDrag` element and going up the DOM. Passing an alternate root element is useful
    * when trying to enable dragging on an element that you might not have access to.
    */
-  @Input('cdkDragRootElement') rootElementSelector: string;
+  @Input('cdkDragRootElement') rootElementSelector?: string;
 
   /** Emits when the user starts dragging the item. */
   @Output('cdkDragStarted') started: EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();

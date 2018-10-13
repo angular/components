@@ -88,7 +88,7 @@ describe('MatMultiYearView', () => {
       (cellEls[1] as HTMLElement).click();
       fixture.detectChanges();
 
-      const normalizedYear: Date = fixture.componentInstance.selectedYear;
+      const normalizedYear: Date = fixture.componentInstance.selectedYear!;
       expect(normalizedYear.getFullYear()).toEqual(2017);
     });
 
@@ -252,9 +252,9 @@ describe('MatMultiYearView', () => {
 class StandardMultiYearView {
   date = new Date(2017, JAN, 1);
   selected = new Date(2020, JAN, 1);
-  selectedYear: Date;
+  selectedYear?: Date;
 
-  @ViewChild(MatMultiYearView) multiYearView: MatMultiYearView<Date>;
+  @ViewChild(MatMultiYearView) multiYearView!: MatMultiYearView<Date>;
 }
 
 @Component({

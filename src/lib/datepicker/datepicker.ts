@@ -108,13 +108,13 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   implements AfterViewInit, CanColor {
 
   /** Reference to the internal calendar component. */
-  @ViewChild(MatCalendar) _calendar: MatCalendar<D>;
+  @ViewChild(MatCalendar) _calendar!: MatCalendar<D>;
 
   /** Reference to the datepicker that created the overlay. */
-  datepicker: MatDatepicker<D>;
+  datepicker!: MatDatepicker<D>;
 
   /** Whether the datepicker is above or below the input. */
-  _isAbove: boolean;
+  _isAbove: boolean = false;
 
   constructor(elementRef: ElementRef) {
     super(elementRef);
@@ -142,7 +142,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   private _scrollStrategy: () => ScrollStrategy;
 
   /** An input indicating the type of the custom header component for the calendar, if set. */
-  @Input() calendarHeaderComponent: ComponentType<any>;
+  @Input() calendarHeaderComponent?: ComponentType<any>;
 
   /** The date to open the calendar to initially. */
   @Input()
@@ -154,7 +154,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   set startAt(value: D | null) {
     this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _startAt: D | null;
+  private _startAt: D | null = null;
 
   /** The view that the calendar should start in. */
   @Input() startView: 'month' | 'year' | 'multi-year' = 'month';
@@ -195,7 +195,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       this._disabledChange.next(newValue);
     }
   }
-  private _disabled: boolean;
+  private _disabled?: boolean;
 
   /**
    * Emits selected year in multiyear view.
@@ -210,7 +210,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
   /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
-  @Input() panelClass: string | string[];
+  @Input() panelClass?: string | string[];
 
   /** Emits when the datepicker has been opened. */
   @Output('opened') openedStream: EventEmitter<void> = new EventEmitter<void>();
@@ -243,21 +243,21 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     return this._datepickerInput && this._datepickerInput.max;
   }
 
-  get _dateFilter(): (date: D | null) => boolean {
+  get _dateFilter(): ((date: D | null) => boolean) | undefined {
     return this._datepickerInput && this._datepickerInput._dateFilter;
   }
 
   /** A reference to the overlay when the calendar is opened as a popup. */
-  _popupRef: OverlayRef;
+  _popupRef: OverlayRef | null = null;
 
   /** A reference to the dialog when the calendar is opened as a dialog. */
-  private _dialogRef: MatDialogRef<MatDatepickerContent<D>> | null;
+  private _dialogRef: MatDialogRef<MatDatepickerContent<D>> | null = null;
 
   /** A portal containing the calendar for this datepicker. */
-  private _calendarPortal: ComponentPortal<MatDatepickerContent<D>>;
+  private _calendarPortal!: ComponentPortal<MatDatepickerContent<D>>;
 
   /** Reference to the component instantiated in popup mode. */
-  private _popupComponentRef: ComponentRef<MatDatepickerContent<D>> | null;
+  private _popupComponentRef: ComponentRef<MatDatepickerContent<D>> | null = null;
 
   /** The element that was focused before the datepicker was opened. */
   private _focusedElementBeforeOpen: HTMLElement | null = null;
@@ -266,7 +266,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   private _inputSubscription = Subscription.EMPTY;
 
   /** The input element this datepicker is associated with. */
-  _datepickerInput: MatDatepickerInput<D>;
+  _datepickerInput!: MatDatepickerInput<D>;
 
   /** Emits when the datepicker is disabled. */
   readonly _disabledChange = new Subject<boolean>();
@@ -421,14 +421,14 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       this._createPopup();
     }
 
-    if (!this._popupRef.hasAttached()) {
-      this._popupComponentRef = this._popupRef.attach(this._calendarPortal);
+    if (!this._popupRef!.hasAttached()) {
+      this._popupComponentRef = this._popupRef!.attach(this._calendarPortal);
       this._popupComponentRef.instance.datepicker = this;
       this._setColor();
 
       // Update the position once the calendar has rendered.
       this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
-        this._popupRef.updatePosition();
+        this._popupRef!.updatePosition();
       });
     }
   }

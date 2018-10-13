@@ -502,33 +502,33 @@ describe('Overlay directives', () => {
   </ng-template>`,
 })
 class ConnectedOverlayDirectiveTest {
-  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective: CdkConnectedOverlay;
-  @ViewChild('trigger') trigger: CdkOverlayOrigin;
-  @ViewChild('otherTrigger') otherTrigger: CdkOverlayOrigin;
+  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective!: CdkConnectedOverlay;
+  @ViewChild('trigger') trigger!: CdkOverlayOrigin;
+  @ViewChild('otherTrigger') otherTrigger!: CdkOverlayOrigin;
 
   isOpen = false;
-  width: number | string;
-  height: number | string;
-  minWidth: number | string;
-  minHeight: number | string;
-  offsetX: number;
-  offsetY: number;
-  triggerOverride: CdkOverlayOrigin;
-  hasBackdrop: boolean;
-  viewportMargin: number;
-  flexibleDimensions: boolean;
-  growAfterOpen: boolean;
-  push: boolean;
+  width?: number | string;
+  height?: number | string;
+  minWidth?: number | string;
+  minHeight?: number | string;
+  offsetX?: number;
+  offsetY?: number;
+  triggerOverride?: CdkOverlayOrigin;
+  hasBackdrop?: boolean;
+  viewportMargin?: number;
+  flexibleDimensions?: boolean;
+  growAfterOpen?: boolean;
+  push?: boolean;
   backdropClickHandler = jasmine.createSpy('backdropClick handler');
   positionChangeHandler = jasmine.createSpy('positionChange handler');
   keydownHandler = jasmine.createSpy('keydown handler');
-  positionOverrides: ConnectionPositionPair[];
+  positionOverrides?: ConnectionPositionPair[];
   attachHandler = jasmine.createSpy('attachHandler').and.callFake(() => {
     this.attachResult =
         this.connectedOverlayDirective.overlayRef.overlayElement.querySelector('p') as HTMLElement;
   });
   detachHandler = jasmine.createSpy('detachHandler');
-  attachResult: HTMLElement;
+  attachResult?: HTMLElement;
 }
 
 @Component({
@@ -537,6 +537,6 @@ class ConnectedOverlayDirectiveTest {
   <ng-template cdk-connected-overlay>Menu content</ng-template>`,
 })
 class ConnectedOverlayPropertyInitOrder {
-  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective: CdkConnectedOverlay;
-  @ViewChild('trigger') trigger: CdkOverlayOrigin;
+  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective!: CdkConnectedOverlay;
+  @ViewChild('trigger') trigger!: CdkOverlayOrigin;
 }

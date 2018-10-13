@@ -72,10 +72,10 @@ export function throwMatDialogContentAlreadyAttachedError() {
 })
 export class MatDialogContainer extends BasePortalOutlet {
   /** The portal outlet inside of this container into which the dialog content will be loaded. */
-  @ViewChild(CdkPortalOutlet) _portalOutlet: CdkPortalOutlet;
+  @ViewChild(CdkPortalOutlet) _portalOutlet!: CdkPortalOutlet;
 
   /** The class that traps and manages focus within the dialog. */
-  private _focusTrap: FocusTrap;
+  private _focusTrap!: FocusTrap;
 
   /** Element that was focused before the dialog was opened. Save this to restore upon close. */
   private _elementFocusedBeforeDialogWasOpened: HTMLElement | null = null;
@@ -90,7 +90,7 @@ export class MatDialogContainer extends BasePortalOutlet {
   _ariaLabelledBy: string | null = null;
 
   /** ID for the container DOM element. */
-  _id: string;
+  _id!: string;
 
   constructor(
     private _elementRef: ElementRef,

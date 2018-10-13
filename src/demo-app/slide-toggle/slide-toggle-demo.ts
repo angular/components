@@ -16,7 +16,7 @@ import {Component} from '@angular/core';
   styleUrls: ['slide-toggle-demo.css'],
 })
 export class SlideToggleDemo {
-  firstToggle: boolean;
+  firstToggle = false;
 
   onFormSubmit() {
     alert(`You submitted the form.`);

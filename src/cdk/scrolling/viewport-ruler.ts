@@ -27,13 +27,13 @@ export interface ViewportScrollPosition {
 @Injectable({providedIn: 'root'})
 export class ViewportRuler implements OnDestroy {
   /** Cached viewport dimensions. */
-  private _viewportSize: {width: number; height: number};
+  private _viewportSize: {width: number; height: number} | null = null;
 
   /** Stream of viewport change events. */
-  private _change: Observable<Event>;
+  private _change!: Observable<Event>;
 
   /** Subscription to streams that invalidate the cached viewport dimensions. */
-  private _invalidateCache: Subscription;
+  private _invalidateCache!: Subscription;
 
   constructor(private _platform: Platform, ngZone: NgZone) {
     ngZone.runOutsideAngular(() => {
@@ -53,15 +53,12 @@ export class ViewportRuler implements OnDestroy {
 
   /** Returns the viewport's width and height. */
   getViewportSize(): Readonly<{width: number, height: number}> {
-    if (!this._viewportSize) {
-      this._updateViewportSize();
-    }
-
-    const output = {width: this._viewportSize.width, height: this._viewportSize.height};
+    const viewportSize = this._viewportSize || this._updateViewportSize();
+    const output = {width: viewportSize.width, height: viewportSize.height};
 
     // If we're not on a browser, don't cache the size since it'll be mocked out anyway.
     if (!this._platform.isBrowser) {
-      this._viewportSize = null!;
+      this._viewportSize = null;
     }
 
     return output;
@@ -130,6 +127,7 @@ export class ViewportRuler implements OnDestroy {
     this._viewportSize = this._platform.isBrowser ?
         {width: window.innerWidth, height: window.innerHeight} :
         {width: 0, height: 0};
+    return this._viewportSize;
   }
 }
 

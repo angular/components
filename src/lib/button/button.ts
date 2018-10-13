@@ -89,7 +89,7 @@ export class MatButton extends _MatButtonMixinBase
   readonly isIconButton: boolean = this._hasHostAttributes('mat-icon-button');
 
   /** Reference to the MatRipple instance of the button. */
-  @ViewChild(MatRipple) ripple: MatRipple;
+  @ViewChild(MatRipple) ripple!: MatRipple;
 
   constructor(elementRef: ElementRef,
               /**
@@ -167,7 +167,7 @@ export class MatButton extends _MatButtonMixinBase
 })
 export class MatAnchor extends MatButton {
   /** Tabindex of the button. */
-  @Input() tabIndex: number;
+  @Input() tabIndex?: number;
 
   constructor(
     platform: Platform,

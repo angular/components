@@ -44,20 +44,20 @@ export class SimpleColumn<T> implements OnDestroy, OnInit {
     this._name = name;
     this.columnDef.name = name;
   }
-  _name: string;
+  _name = '';
 
   /**
    * Text label that should be used for the column header. If this property is not
    * set, the header text will default to the column name.
    */
-  @Input() label: string;
+  @Input() label = '';
 
   /**
    * Accessor function to retrieve the data should be provided to the cell. If this
    * property is not set, the data cells will assume that the column name is the same
    * as the data property the cells should display.
    */
-  @Input() dataAccessor: ((data: T, name: string) => string);
+  @Input() dataAccessor?: ((data: T, name: string) => string);
 
   /** Alignment of the cell values. */
   @Input() align: 'before' | 'after' = 'before';
@@ -68,11 +68,11 @@ export class SimpleColumn<T> implements OnDestroy, OnInit {
   set sortable(sortable: boolean) {
     this._sortable = coerceBooleanProperty(sortable);
   }
-  _sortable: boolean;
+  _sortable = false;
 
-  @ViewChild(MatColumnDef) columnDef: MatColumnDef;
+  @ViewChild(MatColumnDef) columnDef!: MatColumnDef;
 
-  @ViewChild(MatSortHeader) sortHeader: MatSortHeader;
+  @ViewChild(MatSortHeader) sortHeader!: MatSortHeader;
 
   constructor(@Optional() public table: MatTable<any>) { }
 

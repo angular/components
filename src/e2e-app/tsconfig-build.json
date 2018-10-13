@@ -10,6 +10,7 @@
     // strict-null compliant.
     "strictNullChecks": false,
     "strictFunctionTypes": true,
+    "strictPropertyInitialization": false,
     "lib": ["es6", "es2015", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",

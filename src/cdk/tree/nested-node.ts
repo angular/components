@@ -55,13 +55,13 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
 })
 export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContentInit, OnDestroy {
   /** Differ used to find the changes in the data provided by the data source. */
-  private _dataDiffer: IterableDiffer<T>;
+  private _dataDiffer!: IterableDiffer<T>;
 
   /** The children data dataNodes of current node. They will be placed in `CdkTreeNodeOutlet`. */
-  protected _children: T[];
+  protected _children: T[] = [];
 
   /** The children node placeholder. */
-  @ContentChildren(CdkTreeNodeOutlet) nodeOutlet: QueryList<CdkTreeNodeOutlet>;
+  @ContentChildren(CdkTreeNodeOutlet) nodeOutlet!: QueryList<CdkTreeNodeOutlet>;
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>,

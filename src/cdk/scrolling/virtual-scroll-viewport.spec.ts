@@ -773,9 +773,9 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
   encapsulation: ViewEncapsulation.None,
 })
 class FixedSizeVirtualScroll {
-  @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
-  @ViewChild(CdkVirtualForOf) virtualForOf: CdkVirtualForOf<any>;
-  @ViewChild(CdkVirtualForOf, {read: ViewContainerRef}) virtualForViewContainer: ViewContainerRef;
+  @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
+  @ViewChild(CdkVirtualForOf) virtualForOf!: CdkVirtualForOf<any>;
+  @ViewChild(CdkVirtualForOf, {read: ViewContainerRef}) virtualForViewContainer!: ViewContainerRef;
 
   @Input() orientation = 'vertical';
   @Input() viewportSize = 200;
@@ -784,7 +784,7 @@ class FixedSizeVirtualScroll {
   @Input() minBufferPx = 0;
   @Input() maxBufferPx = 0;
   @Input() items = Array(10).fill(0).map((_, i) => i);
-  @Input() trackBy: TrackByFunction<number>;
+  @Input() trackBy?: TrackByFunction<number>;
   @Input() templateCacheSize = 20;
 
   scrolledToIndex = 0;
@@ -825,8 +825,8 @@ class FixedSizeVirtualScroll {
   encapsulation: ViewEncapsulation.None,
 })
 class FixedSizeVirtualScrollWithRtlDirection {
-  @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
-  @ViewChild(CdkVirtualForOf, {read: ViewContainerRef}) virtualForViewContainer: ViewContainerRef;
+  @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
+  @ViewChild(CdkVirtualForOf, {read: ViewContainerRef}) virtualForViewContainer!: ViewContainerRef;
 
   @Input() orientation = 'vertical';
   @Input() viewportSize = 200;
@@ -835,7 +835,7 @@ class FixedSizeVirtualScrollWithRtlDirection {
   @Input() minBufferPx = 0;
   @Input() maxBufferPx = 0;
   @Input() items = Array(10).fill(0).map((_, i) => i);
-  @Input() trackBy: TrackByFunction<number>;
+  @Input() trackBy?: TrackByFunction<number>;
   @Input() templateCacheSize = 20;
 
   scrolledToIndex = 0;

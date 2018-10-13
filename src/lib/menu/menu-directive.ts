@@ -99,10 +99,10 @@ const MAT_MENU_BASE_ELEVATION = 4;
   ]
 })
 export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy {
-  private _keyManager: FocusKeyManager<MatMenuItem>;
+  private _keyManager!: FocusKeyManager<MatMenuItem>;
   private _xPosition: MenuPositionX = this._defaultOptions.xPosition;
   private _yPosition: MenuPositionY = this._defaultOptions.yPosition;
-  private _previousElevation: string;
+  private _previousElevation?: string;
 
   /** Menu items inside the current menu. */
   private _items: MatMenuItem[] = [];
@@ -123,13 +123,13 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   _animationDone = new Subject<AnimationEvent>();
 
   /** Whether the menu is animating. */
-  _isAnimating: boolean;
+  _isAnimating: boolean = false;
 
   /** Parent menu of the current menu panel. */
   parentMenu: MatMenuPanel | undefined;
 
   /** Layout direction of the menu. */
-  direction: Direction;
+  direction?: Direction;
 
   /** Class to be added to the backdrop element. */
   @Input() backdropClass: string = this._defaultOptions.backdropClass;
@@ -157,20 +157,20 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   }
 
   /** @docs-private */
-  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
 
   /**
    * List of the items inside of a menu.
    * @deprecated
    * @breaking-change 7.0.0
    */
-  @ContentChildren(MatMenuItem) items: QueryList<MatMenuItem>;
+  @ContentChildren(MatMenuItem) items!: QueryList<MatMenuItem>;
 
   /**
    * Menu content that will be rendered lazily.
    * @docs-private
    */
-  @ContentChild(MatMenuContent) lazyContent: MatMenuContent;
+  @ContentChild(MatMenuContent) lazyContent?: MatMenuContent;
 
   /** Whether the menu should overlap its trigger. */
   @Input()

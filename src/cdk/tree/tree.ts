@@ -62,13 +62,13 @@ export class CdkTree<T>
   private _onDestroy = new Subject<void>();
 
   /** Differ used to find the changes in the data provided by the data source. */
-  private _dataDiffer: IterableDiffer<T>;
+  private _dataDiffer!: IterableDiffer<T>;
 
   /** Stores the node definition that does not have a when predicate. */
-  private _defaultNodeDef: CdkTreeNodeDef<T> | null;
+  private _defaultNodeDef: CdkTreeNodeDef<T> | null = null;
 
   /** Data subscription */
-  private _dataSubscription: Subscription | null;
+  private _dataSubscription: Subscription | null = null;
 
   /** Level of nodes */
   private _levels: Map<T, number> = new Map<T, number>();
@@ -85,10 +85,10 @@ export class CdkTree<T>
       this._switchDataSource(dataSource);
     }
   }
-  private _dataSource: DataSource<T> | Observable<T[]> | T[];
+  private _dataSource!: DataSource<T> | Observable<T[]> | T[];
 
   /** The tree controller */
-  @Input() treeControl: TreeControl<T>;
+  @Input() treeControl!: TreeControl<T>;
 
   /**
    * Tracking function that will be used to check the differences in data changes. Used similarly
@@ -96,13 +96,13 @@ export class CdkTree<T>
    * relative to the function to know if a node should be added/removed/moved.
    * Accepts a function that takes two parameters, `index` and `item`.
    */
-  @Input() trackBy: TrackByFunction<T>;
+  @Input() trackBy?: TrackByFunction<T>;
 
   // Outlets within the tree's template where the dataNodes will be inserted.
-  @ViewChild(CdkTreeNodeOutlet) _nodeOutlet: CdkTreeNodeOutlet;
+  @ViewChild(CdkTreeNodeOutlet) _nodeOutlet!: CdkTreeNodeOutlet;
 
   /** The tree node template for the tree */
-  @ContentChildren(CdkTreeNodeDef) _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
+  @ContentChildren(CdkTreeNodeDef) _nodeDefs!: QueryList<CdkTreeNodeDef<T>>;
 
   // TODO(tinayuangao): Setup a listener for scrolling, emit the calculated view to viewChange.
   //     Remove the MAX_VALUE in viewChange
@@ -236,9 +236,12 @@ export class CdkTree<T>
   _getNodeDef(data: T, i: number): CdkTreeNodeDef<T> {
     if (this._nodeDefs.length === 1) { return this._nodeDefs.first; }
 
-    const nodeDef =
-      this._nodeDefs.find(def => def.when && def.when(i, data)) || this._defaultNodeDef;
-    if (!nodeDef) { throw getTreeMissingMatchingNodeDefError(); }
+    const nodeDef = this._nodeDefs.find(def => !!def.when && def.when(i, data)) ||
+                    this._defaultNodeDef;
+
+    if (!nodeDef) {
+      throw getTreeMissingMatchingNodeDefError();
+    }
 
     return nodeDef;
   }
@@ -307,7 +310,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
     this._data = value;
     this._setRoleFromData();
   }
-  protected _data: T;
+  protected _data!: T;
 
   get isExpanded(): boolean {
     return this._tree.treeControl.isExpanded(this._data);

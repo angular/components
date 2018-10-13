@@ -41,7 +41,7 @@ let _uniqueOptgroupIdCounter = 0;
 })
 export class MatOptgroup extends _MatOptgroupMixinBase implements CanDisable {
   /** Label for the option group. */
-  @Input() label: string;
+  @Input() label: string = '';
 
   /** Unique id for the underlying label. */
   _labelId: string = `mat-optgroup-label-${_uniqueOptgroupIdCounter++}`;

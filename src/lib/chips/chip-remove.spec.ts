@@ -57,7 +57,7 @@ describe('Chip Remove', () => {
   `
 })
 class TestChip {
-  removable: boolean;
+  removable?: boolean;
 
   didRemove() {}
 }

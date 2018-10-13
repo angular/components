@@ -108,13 +108,13 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
   accordion: MatAccordionBase;
 
   /** Content that will be rendered lazily. */
-  @ContentChild(MatExpansionPanelContent) _lazyContent: MatExpansionPanelContent;
+  @ContentChild(MatExpansionPanelContent) _lazyContent?: MatExpansionPanelContent;
 
   /** Element containing the panel's user-provided content. */
-  @ViewChild('body') _body: ElementRef<HTMLElement>;
+  @ViewChild('body') _body!: ElementRef<HTMLElement>;
 
   /** Portal holding the user's content. */
-  _portal: TemplatePortal;
+  _portal!: TemplatePortal;
 
   /** ID for the associated header element. Used for a11y labelling. */
   _headerId = `mat-expansion-panel-header-${uniqueId++}`;
@@ -155,7 +155,7 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
         filter(() => this.expanded && !this._portal),
         take(1)
       ).subscribe(() => {
-        this._portal = new TemplatePortal(this._lazyContent._template, this._viewContainerRef);
+        this._portal = new TemplatePortal(this._lazyContent!._template, this._viewContainerRef);
       });
     }
   }

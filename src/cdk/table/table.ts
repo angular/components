@@ -164,16 +164,16 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   private _document: Document;
 
   /** Latest data provided by the data source. */
-  protected _data: T[] | ReadonlyArray<T>;
+  protected _data: T[] | ReadonlyArray<T> = [];
 
   /** Subject that emits when the component has been destroyed. */
   private _onDestroy = new Subject<void>();
 
   /** List of the rendered rows as identified by their `RenderRow` object. */
-  private _renderRows: RenderRow<T>[];
+  private _renderRows: RenderRow<T>[] = [];
 
   /** Subscription that listens for the data provided by the data source. */
-  private _renderChangeSubscription: Subscription | null;
+  private _renderChangeSubscription: Subscription | null = null;
 
   /**
    * Map of all the user's defined columns (header, data, and footer cell template) identified by
@@ -186,27 +186,27 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * Set of all row definitions that can be used by this table. Populated by the rows gathered by
    * using `ContentChildren` as well as any custom row definitions added to `_customRowDefs`.
    */
-  private _rowDefs: CdkRowDef<T>[];
+  private _rowDefs: CdkRowDef<T>[] = [];
 
   /**
    * Set of all header row definitions that can be used by this table. Populated by the rows
    * gathered by using `ContentChildren` as well as any custom row definitions added to
    * `_customHeaderRowDefs`.
    */
-  private _headerRowDefs: CdkHeaderRowDef[];
+  private _headerRowDefs: CdkHeaderRowDef[] = [];
 
   /**
    * Set of all row definitions that can be used by this table. Populated by the rows gathered by
    * using `ContentChildren` as well as any custom row definitions added to
    * `_customFooterRowDefs`.
    */
-  private _footerRowDefs: CdkFooterRowDef[];
+  private _footerRowDefs: CdkFooterRowDef[] = [];
 
   /** Differ used to find the changes in the data provided by the data source. */
-  private _dataDiffer: IterableDiffer<RenderRow<T>>;
+  private _dataDiffer!: IterableDiffer<RenderRow<T>>;
 
   /** Stores the row definition that does not have a when predicate. */
-  private _defaultRowDef: CdkRowDef<T> | null;
+  private _defaultRowDef: CdkRowDef<T> | null = null;
 
   /**
    * Column definitions that were defined outside of the direct content children of the table.
@@ -270,7 +270,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * Utility class that is responsible for applying the appropriate sticky positioning styles to
    * the table's rows and cells.
    */
-  private _stickyStyler: StickyStyler;
+  private _stickyStyler!: StickyStyler;
 
   /**
    * CSS class added to any row or cell that has sticky positioning applied. May be overriden by
@@ -285,8 +285,8 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * Accepts a function that takes two parameters, `index` and `item`.
    */
   @Input()
-  get trackBy(): TrackByFunction<T> { return this._trackByFn; }
-  set trackBy(fn: TrackByFunction<T>) {
+  get trackBy(): TrackByFunction<T> | undefined { return this._trackByFn; }
+  set trackBy(fn: TrackByFunction<T> | undefined) {
     if (isDevMode() &&
         fn != null && typeof fn !== 'function' &&
         <any>console && <any>console.warn) {
@@ -294,7 +294,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     }
     this._trackByFn = fn;
   }
-  private _trackByFn: TrackByFunction<T>;
+  private _trackByFn?: TrackByFunction<T>;
 
   /**
    * The table's source of data, which can be provided in three ways (in order of complexity):
@@ -323,7 +323,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
       this._switchDataSource(dataSource);
     }
   }
-  private _dataSource: CdkTableDataSourceInput<T>;
+  private _dataSource!: CdkTableDataSourceInput<T>;
 
   /**
    * Whether to allow multiple rows per data object by evaluating which rows evaluate their 'when'
@@ -351,24 +351,24 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
       new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
 
   // Outlets in the table's template where the header, data rows, and footer will be inserted.
-  @ViewChild(DataRowOutlet) _rowOutlet: DataRowOutlet;
-  @ViewChild(HeaderRowOutlet) _headerRowOutlet: HeaderRowOutlet;
-  @ViewChild(FooterRowOutlet) _footerRowOutlet: FooterRowOutlet;
+  @ViewChild(DataRowOutlet) _rowOutlet!: DataRowOutlet;
+  @ViewChild(HeaderRowOutlet) _headerRowOutlet!: HeaderRowOutlet;
+  @ViewChild(FooterRowOutlet) _footerRowOutlet!: FooterRowOutlet;
 
   /**
    * The column definitions provided by the user that contain what the header, data, and footer
    * cells should render for each column.
    */
-  @ContentChildren(CdkColumnDef) _contentColumnDefs: QueryList<CdkColumnDef>;
+  @ContentChildren(CdkColumnDef) _contentColumnDefs!: QueryList<CdkColumnDef>;
 
   /** Set of data row definitions that were provided to the table as content children. */
-  @ContentChildren(CdkRowDef) _contentRowDefs: QueryList<CdkRowDef<T>>;
+  @ContentChildren(CdkRowDef) _contentRowDefs!: QueryList<CdkRowDef<T>>;
 
   /** Set of header row definitions that were provided to the table as content children. */
-  @ContentChildren(CdkHeaderRowDef) _contentHeaderRowDefs: QueryList<CdkHeaderRowDef>;
+  @ContentChildren(CdkHeaderRowDef) _contentHeaderRowDefs!: QueryList<CdkHeaderRowDef>;
 
   /** Set of footer row definitions that were provided to the table as content children. */
-  @ContentChildren(CdkFooterRowDef) _contentFooterRowDefs: QueryList<CdkFooterRowDef>;
+  @ContentChildren(CdkFooterRowDef) _contentFooterRowDefs!: QueryList<CdkFooterRowDef>;
 
   constructor(protected readonly _differs: IterableDiffers,
               protected readonly _changeDetectorRef: ChangeDetectorRef,
@@ -883,7 +883,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
       rowDefs = this._rowDefs.filter(def => !def.when || def.when(dataIndex, data));
     } else {
       let rowDef =
-          this._rowDefs.find(def => def.when && def.when(dataIndex, data)) || this._defaultRowDef;
+          this._rowDefs.find(def => !!def.when && def.when(dataIndex, data)) || this._defaultRowDef;
       if (rowDef) {
         rowDefs.push(rowDef);
       }

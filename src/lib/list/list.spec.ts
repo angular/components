@@ -189,7 +189,7 @@ class BaseTestList {
 class ListWithOneAnchorItem extends BaseTestList {
   // This needs to be declared directly on the class; if declared on the BaseTestList superclass,
   // it doesn't get populated.
-  @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
+  @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
 }
 
 @Component({template: `
@@ -199,7 +199,7 @@ class ListWithOneAnchorItem extends BaseTestList {
     </a>
   </mat-nav-list>`})
 class NavListWithOneAnchorItem extends BaseTestList {
-  @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
+  @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
   disableItemRipple: boolean = false;
   disableListRipple: boolean = false;
 }
@@ -211,7 +211,7 @@ class NavListWithOneAnchorItem extends BaseTestList {
     </button>
   </mat-action-list>`})
 class ActionListWithoutType extends BaseTestList {
-  @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
+  @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
 }
 
 @Component({template: `
@@ -221,7 +221,7 @@ class ActionListWithoutType extends BaseTestList {
     </button>
   </mat-action-list>`})
 class ActionListWithType extends BaseTestList {
-  @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
+  @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
 }
 
 @Component({template: `

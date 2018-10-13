@@ -19,22 +19,22 @@ export abstract class BaseTreeControl<T> implements TreeControl<T> {
   abstract expandAll(): void;
 
   /** Saved data node for `expandAll` action. */
-  dataNodes: T[];
+  dataNodes: T[] = [];
 
   /** A selection model with multi-selection to track expansion status. */
   expansionModel: SelectionModel<T> = new SelectionModel<T>(true);
 
   /** Get depth of a given data node, return the level number. This is for flat tree node. */
-  getLevel: (dataNode: T) => number;
+  getLevel?: (dataNode: T) => number;
 
   /**
    * Whether the data node is expandable. Returns true if expandable.
    * This is for flat tree node.
    */
-  isExpandable: (dataNode: T) => boolean;
+  isExpandable?: (dataNode: T) => boolean;
 
   /** Gets a stream that emits whenever the given data node's children change. */
-  getChildren: (dataNode: T) => (Observable<T[]> | T[]);
+  getChildren?: (dataNode: T) => (Observable<T[]> | T[]);
 
   /** Toggles one single data node's expanded/collapsed state. */
   toggle(dataNode: T): void {

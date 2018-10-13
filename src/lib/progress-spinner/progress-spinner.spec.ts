@@ -304,12 +304,12 @@ class BasicProgressSpinner {}
 
 @Component({template: '<mat-progress-spinner [strokeWidth]="strokeWidth"></mat-progress-spinner>'})
 class ProgressSpinnerCustomStrokeWidth {
-  strokeWidth: number;
+  strokeWidth?: number;
 }
 
 @Component({template: '<mat-progress-spinner [diameter]="diameter"></mat-progress-spinner>'})
 class ProgressSpinnerCustomDiameter {
-  diameter: number;
+  diameter?: number;
 }
 
 @Component({template: '<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>'})

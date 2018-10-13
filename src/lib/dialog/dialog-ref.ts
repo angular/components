@@ -25,7 +25,7 @@ let uniqueId = 0;
  */
 export class MatDialogRef<T, R = any> {
   /** The instance of component opened into the dialog. */
-  componentInstance: T;
+  componentInstance!: T;
 
   /** Whether the user is allowed to close the dialog. */
   disableClose: boolean | undefined = this._containerInstance._config.disableClose;

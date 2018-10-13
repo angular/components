@@ -1053,14 +1053,14 @@ class SlideToggleBasic {
   isRequired: boolean = false;
   disableRipple: boolean = false;
   slideChecked: boolean = false;
-  slideColor: string;
-  slideId: string | null;
-  slideName: string | null;
-  slideLabel: string | null;
-  slideLabelledBy: string | null;
-  slideTabindex: number;
-  lastEvent: MatSlideToggleChange;
-  labelPosition: string;
+  slideColor?: string;
+  slideId?: string | null;
+  slideName?: string | null;
+  slideLabel?: string | null;
+  slideLabelledBy?: string | null;
+  slideTabindex?: number;
+  lastEvent!: MatSlideToggleChange;
+  labelPosition?: string;
   toggleTriggered: number = 0;
   dragTriggered: number = 0;
   direction: Direction = 'ltr';
@@ -1109,14 +1109,14 @@ class SlideToggleWithTabindexAttr {}
   template: `<mat-slide-toggle>{{label}}</mat-slide-toggle>`
 })
 class SlideToggleWithoutLabel {
-  label: string;
+  label?: string;
 }
 
 @Component({
   template: `<mat-slide-toggle [(ngModel)]="checked" (change)="onChange()"></mat-slide-toggle>`
 })
 class SlideToggleWithModelAndChangeEvent {
-  checked: boolean;
+  checked?: boolean;
   onChange: () => void = () => {};
 }
 

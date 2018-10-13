@@ -82,10 +82,11 @@ export enum TransitionCheckState {
 
 /** Change event object emitted by MatCheckbox. */
 export class MatCheckboxChange {
-  /** The source MatCheckbox of the event. */
-  source: MatCheckbox;
-  /** The new `checked` value of the checkbox. */
-  checked: boolean;
+  constructor(
+    /** The source MatCheckbox of the event. */
+    public source: MatCheckbox,
+    /** The new `checked` value of the checkbox. */
+    public checked: boolean) {}
 }
 
 // Boilerplate for applying mixins to MatCheckbox.
@@ -157,7 +158,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   @Input()
   get required(): boolean { return this._required; }
   set required(value: boolean) { this._required = coerceBooleanProperty(value); }
-  private _required: boolean;
+  private _required: boolean = false;
 
   /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
   @Input() labelPosition: 'before' | 'after' = 'after';
@@ -173,13 +174,13 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   @Output() readonly indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** The value attribute of the native input element */
-  @Input() value: string;
+  @Input() value?: string;
 
   /** The native `<input type="checkbox">` element */
-  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
+  @ViewChild('input') _inputElement!: ElementRef<HTMLInputElement>;
 
   /** Reference to the ripple instance of the checkbox. */
-  @ViewChild(MatRipple) ripple: MatRipple;
+  @ViewChild(MatRipple) ripple!: MatRipple;
 
   /**
    * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
@@ -344,10 +345,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   }
 
   private _emitChangeEvent() {
-    const event = new MatCheckboxChange();
-    event.source = this;
-    event.checked = this.checked;
-
+    const event = new MatCheckboxChange(this, this.checked);
     this._controlValueAccessorChangeFn(this.checked);
     this.change.emit(event);
   }

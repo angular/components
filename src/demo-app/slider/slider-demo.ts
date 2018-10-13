@@ -15,7 +15,7 @@ import {Component} from '@angular/core';
   templateUrl: 'slider-demo.html',
 })
 export class SliderDemo {
-  demo: number;
+  demo: number = 0;
   val: number = 50;
   min: number = 0;
   max: number = 100;

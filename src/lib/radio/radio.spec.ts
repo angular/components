@@ -773,13 +773,13 @@ describe('MatRadio', () => {
   `
 })
 class RadiosInsideRadioGroup {
-  labelPos: 'before' | 'after';
+  labelPos?: 'before' | 'after';
   isFirstDisabled: boolean = false;
   isGroupDisabled: boolean = false;
   isGroupRequired: boolean = false;
   groupValue: string | null = null;
   disableRipple: boolean = false;
-  color: string | null;
+  color: string | null = null;
 }
 
 
@@ -822,20 +822,20 @@ class StandaloneRadioButtons {
   `
 })
 class RadioGroupWithNgModel {
-  modelValue: string;
+  modelValue?: string;
   options = [
     {label: 'Vanilla', value: 'vanilla'},
     {label: 'Chocolate', value: 'chocolate'},
     {label: 'Strawberry', value: 'strawberry'},
   ];
-  lastEvent: MatRadioChange;
+  lastEvent!: MatRadioChange;
 }
 
 @Component({
   template: `<mat-radio-button>One</mat-radio-button>`
 })
 class DisableableRadioButton {
-  @ViewChild(MatRadioButton) matRadioButton: MatRadioButton;
+  @ViewChild(MatRadioButton) matRadioButton!: MatRadioButton;
 
   set disabled(value: boolean) {
     this.matRadioButton.disabled = value;
@@ -857,7 +857,7 @@ class RadioGroupWithFormControl {
   template: `<mat-radio-button [tabIndex]="tabIndex"></mat-radio-button>`
 })
 class FocusableRadioButton {
-  tabIndex: number;
+  tabIndex?: number;
 }
 
 @Component({

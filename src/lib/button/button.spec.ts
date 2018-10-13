@@ -279,7 +279,7 @@ class TestApp {
   isDisabled: boolean = false;
   rippleDisabled: boolean = false;
   buttonColor: ThemePalette;
-  tabIndex: number;
+  tabIndex?: number;
 
   increment() {
     this.clickCount++;

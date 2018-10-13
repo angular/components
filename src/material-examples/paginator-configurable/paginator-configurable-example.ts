@@ -16,7 +16,7 @@ export class PaginatorConfigurableExample {
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
   // MatPaginator Output
-  pageEvent: PageEvent;
+  pageEvent!: PageEvent;
 
   setPageSizeOptions(setPageSizeOptionsInput: string) {
     this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);

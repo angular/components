@@ -63,7 +63,7 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
   private _breakpointSubscription: Subscription;
 
   /** The portal outlet inside of this container into which the content will be loaded. */
-  @ViewChild(CdkPortalOutlet) _portalOutlet: CdkPortalOutlet;
+  @ViewChild(CdkPortalOutlet) _portalOutlet!: CdkPortalOutlet;
 
   /** The state of the bottom sheet animations. */
   _animationState: 'void' | 'visible' | 'hidden' = 'void';
@@ -72,7 +72,7 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
   _animationStateChanged = new EventEmitter<AnimationEvent>();
 
   /** The class that traps and manages focus within the bottom sheet. */
-  private _focusTrap: FocusTrap;
+  private _focusTrap!: FocusTrap;
 
   /** Element that was focused before the bottom sheet was opened. */
   private _elementFocusedBeforeOpened: HTMLElement | null = null;
@@ -81,7 +81,7 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
   private _document: Document;
 
   /** Whether the component has been destroyed. */
-  private _destroyed: boolean;
+  private _destroyed = false;
 
   constructor(
     private _elementRef: ElementRef<HTMLElement>,

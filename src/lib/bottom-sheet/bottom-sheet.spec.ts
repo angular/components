@@ -729,7 +729,7 @@ class DirectiveWithViewContainer {
 
 @Component({template: `<dir-with-view-container></dir-with-view-container>`})
 class ComponentWithChildViewContainer {
-  @ViewChild(DirectiveWithViewContainer) childWithViewContainer: DirectiveWithViewContainer;
+  @ViewChild(DirectiveWithViewContainer) childWithViewContainer!: DirectiveWithViewContainer;
 
   get childViewContainer() {
     return this.childWithViewContainer.viewContainerRef;
@@ -742,10 +742,10 @@ class ComponentWithChildViewContainer {
       Cheese {{localValue}} {{data?.value}}{{setRef(bottomSheetRef)}}</ng-template>`,
 })
 class ComponentWithTemplateRef {
-  localValue: string;
-  bottomSheetRef: MatBottomSheetRef<any>;
+  localValue?: string;
+  bottomSheetRef?: MatBottomSheetRef<any>;
 
-  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
 
   setRef(bottomSheetRef: MatBottomSheetRef<any>): string {
     this.bottomSheetRef = bottomSheetRef;

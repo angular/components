@@ -116,23 +116,23 @@ export function getMatAutocompleteMissingPanelError(): Error {
   providers: [MAT_AUTOCOMPLETE_VALUE_ACCESSOR]
 })
 export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
-  private _overlayRef: OverlayRef | null;
-  private _portal: TemplatePortal;
+  private _overlayRef: OverlayRef | null = null;
+  private _portal!: TemplatePortal;
   private _componentDestroyed = false;
   private _autocompleteDisabled = false;
   private _scrollStrategy: () => ScrollStrategy;
 
   /** Old value of the native input. Used to work around issues with the `input` event on IE. */
-  private _previousValue: string | number | null;
+  private _previousValue: string | number | null = null;
 
   /** Strategy that is used to position the panel. */
-  private _positionStrategy: FlexibleConnectedPositionStrategy;
+  private _positionStrategy!: FlexibleConnectedPositionStrategy;
 
   /** Whether or not the label state is being overridden. */
   private _manuallyFloatingLabel = false;
 
   /** The subscription for closing actions (some are bound to document). */
-  private _closingActionsSubscription: Subscription;
+  private _closingActionsSubscription: Subscription = Subscription.EMPTY;
 
   /** Subscription to viewport size changes. */
   private _viewportSubscription = Subscription.EMPTY;
@@ -166,13 +166,13 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   _onTouched = () => {};
 
   /** The autocomplete panel to be attached to this trigger. */
-  @Input('matAutocomplete') autocomplete: MatAutocomplete;
+  @Input('matAutocomplete') autocomplete!: MatAutocomplete;
 
   /**
    * Reference relative to which to position the autocomplete panel.
    * Defaults to the autocomplete trigger element.
    */
-  @Input('matAutocompleteConnectedTo') connectedTo: MatAutocompleteOrigin;
+  @Input('matAutocompleteConnectedTo') connectedTo?: MatAutocompleteOrigin;
 
   /**
    * `autocomplete` attribute to be set on the input element.

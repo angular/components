@@ -113,19 +113,19 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   private _dragging = false;
 
   /** Previous checked state before drag started. */
-  private _previousChecked: boolean;
+  private _previousChecked?: boolean;
 
   /** Width of the thumb bar of the slide-toggle. */
-  private _thumbBarWidth: number;
+  private _thumbBarWidth = 0;
 
   /** Percentage of the thumb while dragging. Percentage as fraction of 100. */
-  private _dragPercentage: number;
+  private _dragPercentage = 0;
 
   /** Reference to the thumb HTMLElement. */
-  @ViewChild('thumbContainer') _thumbEl: ElementRef;
+  @ViewChild('thumbContainer') _thumbEl!: ElementRef;
 
   /** Reference to the thumb bar HTMLElement. */
-  @ViewChild('toggleBar') _thumbBarEl: ElementRef;
+  @ViewChild('toggleBar') _thumbBarEl!: ElementRef;
 
   /** Name value will be applied to the input element if present. */
   @Input() name: string | null = null;
@@ -178,7 +178,7 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   get inputId(): string { return `${this.id || this._uniqueId}-input`; }
 
   /** Reference to the underlying input element. */
-  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
+  @ViewChild('input') _inputElement!: ElementRef<HTMLInputElement>;
 
   constructor(elementRef: ElementRef,
               /**

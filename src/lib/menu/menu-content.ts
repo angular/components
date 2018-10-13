@@ -27,8 +27,8 @@ import {Subject} from 'rxjs';
   selector: 'ng-template[matMenuContent]'
 })
 export class MatMenuContent implements OnDestroy {
-  private _portal: TemplatePortal<any>;
-  private _outlet: DomPortalOutlet;
+  private _portal?: TemplatePortal<any>;
+  private _outlet?: DomPortalOutlet;
 
   /** Emits when the menu content has been attached. */
   _attached = new Subject<void>();
@@ -72,7 +72,7 @@ export class MatMenuContent implements OnDestroy {
    * @docs-private
    */
   detach() {
-    if (this._portal.isAttached) {
+    if (this._portal && this._portal.isAttached) {
       this._portal.detach();
     }
   }

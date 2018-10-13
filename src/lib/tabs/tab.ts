@@ -44,27 +44,27 @@ export const _MatTabMixinBase: CanDisableCtor & typeof MatTabBase =
 })
 export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
   /** Content for the tab label given by `<ng-template mat-tab-label>`. */
-  @ContentChild(MatTabLabel) templateLabel: MatTabLabel;
+  @ContentChild(MatTabLabel) templateLabel?: MatTabLabel;
 
   /**
    * Template provided in the tab content that will be used if present, used to enable lazy-loading
    */
-  @ContentChild(MatTabContent, {read: TemplateRef}) _explicitContent: TemplateRef<any>;
+  @ContentChild(MatTabContent, {read: TemplateRef}) _explicitContent?: TemplateRef<any>;
 
   /** Template inside the MatTab view that contains an `<ng-content>`. */
-  @ViewChild(TemplateRef) _implicitContent: TemplateRef<any>;
+  @ViewChild(TemplateRef) _implicitContent!: TemplateRef<any>;
 
   /** Plain text label for the tab, used when there is no template label. */
   @Input('label') textLabel: string = '';
 
   /** Aria label for the tab. */
-  @Input('aria-label') ariaLabel: string;
+  @Input('aria-label') ariaLabel?: string;
 
   /**
    * Reference to the element that the tab is labelled by.
    * Will be cleared if `aria-label` is set at the same time.
    */
-  @Input('aria-labelledby') ariaLabelledby: string;
+  @Input('aria-labelledby') ariaLabelledby?: string;
 
   /** Portal that will be the hosted content of the tab */
   private _contentPortal: TemplatePortal | null = null;

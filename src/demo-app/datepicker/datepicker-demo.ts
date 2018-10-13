@@ -32,17 +32,17 @@ import {takeUntil} from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerDemo {
-  touch: boolean;
-  filterOdd: boolean;
-  yearView: boolean;
-  inputDisabled: boolean;
-  datepickerDisabled: boolean;
-  minDate: Date;
-  maxDate: Date;
-  startAt: Date;
-  date: Date;
-  lastDateInput: Date | null;
-  lastDateChange: Date | null;
+  touch = false;
+  filterOdd = false;
+  yearView = false;
+  inputDisabled = false;
+  datepickerDisabled = false;
+  minDate?: Date;
+  maxDate?: Date;
+  startAt?: Date;
+  date?: Date;
+  lastDateInput: Date | null = null;
+  lastDateChange: Date | null = null;
   color: ThemePalette;
 
   dateCtrl = new FormControl();
@@ -112,9 +112,7 @@ export class CustomHeader<D> implements OnDestroy {
     `
 })
 export class CustomHeaderNgContent<D> {
-
-  @ViewChild(MatCalendarHeader)
-  header: MatCalendarHeader<D>;
+  @ViewChild(MatCalendarHeader) header!: MatCalendarHeader<D>;
 
   constructor(@Optional() private _dateAdapter: DateAdapter<D>) {}
 

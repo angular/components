@@ -75,7 +75,7 @@ export class MatSort extends _MatSortMixinBase
   readonly _stateChanges = new Subject<void>();
 
   /** The id of the most recently sorted MatSortable. */
-  @Input('matSortActive') active: string;
+  @Input('matSortActive') active: string = '';
 
   /**
    * The direction to set when an MatSortable is initially sorted.
@@ -101,7 +101,7 @@ export class MatSort extends _MatSortMixinBase
   @Input('matSortDisableClear')
   get disableClear(): boolean { return this._disableClear; }
   set disableClear(v: boolean) { this._disableClear = coerceBooleanProperty(v); }
-  private _disableClear: boolean;
+  private _disableClear!: boolean;
 
   /** Event emitted when the user changes either the active sort or sort direction. */
   @Output('matSortChange') readonly sortChange: EventEmitter<Sort> = new EventEmitter<Sort>();

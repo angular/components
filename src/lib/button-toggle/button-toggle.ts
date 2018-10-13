@@ -111,7 +111,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   private _vertical = false;
   private _multiple = false;
   private _disabled = false;
-  private _selectionModel: SelectionModel<MatButtonToggle>;
+  private _selectionModel!: SelectionModel<MatButtonToggle>;
 
   /**
    * Reference to the raw value that the consumer tried to assign. The real
@@ -131,7 +131,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   _onTouched: () => any = () => {};
 
   /** Child button toggle buttons. */
-  @ContentChildren(forwardRef(() => MatButtonToggle)) _buttonToggles: QueryList<MatButtonToggle>;
+  @ContentChildren(forwardRef(() => MatButtonToggle)) _buttonToggles!: QueryList<MatButtonToggle>;
 
   /** The appearance for all the buttons in the group. */
   @Input() appearance: MatButtonToggleAppearance;
@@ -380,7 +380,7 @@ export class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit
    * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
    * take precedence so this may be omitted.
    */
-  @Input('aria-label') ariaLabel: string;
+  @Input('aria-label') ariaLabel?: string;
 
   /**
    * Users can specify the `aria-labelledby` attribute which will be forwarded to the input element
@@ -388,9 +388,9 @@ export class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit
   @Input('aria-labelledby') ariaLabelledby: string | null = null;
 
   /** Type of the button toggle. Either 'radio' or 'checkbox'. */
-  _type: ToggleType;
+  _type!: ToggleType;
 
-  @ViewChild('button') _buttonElement: ElementRef<HTMLButtonElement>;
+  @ViewChild('button') _buttonElement!: ElementRef<HTMLButtonElement>;
 
   /** The parent button toggle group (exclusive selection). Optional. */
   buttonToggleGroup: MatButtonToggleGroup;
@@ -399,10 +399,10 @@ export class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit
   get buttonId(): string { return `${this.id}-button`; }
 
   /** The unique ID for this button toggle. */
-  @Input() id: string;
+  @Input() id!: string;
 
   /** HTML's 'name' attribute used to group radios for unique selection. */
-  @Input() name: string;
+  @Input() name!: string;
 
   /** MatButtonToggleGroup reads this to assign its own value. */
   @Input() value: any;
@@ -418,7 +418,7 @@ export class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit
   set appearance(value: MatButtonToggleAppearance) {
     this._appearance = value;
   }
-  private _appearance: MatButtonToggleAppearance;
+  private _appearance: MatButtonToggleAppearance = 'standard';
 
   /** Whether the button is checked. */
   @Input()

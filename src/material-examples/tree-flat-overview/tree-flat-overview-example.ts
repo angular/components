@@ -8,9 +8,10 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
  * Each node has a filename, and a type or a list of children.
  */
 export class FileNode {
-  children: FileNode[];
-  filename: string;
+  children: FileNode[] = [];
   type: any;
+
+  constructor(public filename: string) {}
 }
 
 /** Flat node with expandable and level information */
@@ -94,8 +95,7 @@ export class FileDatabase {
   buildFileTree(obj: {[key: string]: any}, level: number): FileNode[] {
     return Object.keys(obj).reduce<FileNode[]>((accumulator, key) => {
       const value = obj[key];
-      const node = new FileNode();
-      node.filename = key;
+      const node = new FileNode(key);
 
       if (value != null) {
         if (typeof value === 'object') {

@@ -842,7 +842,7 @@ class PizzaMsg { }
 /** Test-bed component that contains a TempatePortal and an ElementRef. */
 @Component({template: `<ng-template cdk-portal>Cake</ng-template>`})
 class TestComponentWithTemplatePortals {
-  @ViewChild(CdkPortal) templatePortal: CdkPortal;
+  @ViewChild(CdkPortal) templatePortal!: CdkPortal;
 
   constructor(public viewContainerRef: ViewContainerRef) { }
 }
@@ -859,7 +859,7 @@ const TEST_COMPONENTS = [PizzaMsg, TestComponentWithTemplatePortals];
 class OverlayTestModule { }
 
 class FakePositionStrategy implements PositionStrategy {
-  element: HTMLElement;
+  element!: HTMLElement;
 
   apply(): void {
     this.element.classList.add('fake-positioned');
@@ -875,7 +875,7 @@ class FakePositionStrategy implements PositionStrategy {
 
 class FakeScrollStrategy implements ScrollStrategy {
   isEnabled = false;
-  overlayRef: OverlayReference;
+  overlayRef!: OverlayReference;
 
   attach(overlayRef: OverlayReference) {
     this.overlayRef = overlayRef;

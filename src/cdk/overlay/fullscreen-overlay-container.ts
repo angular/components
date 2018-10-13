@@ -21,7 +21,7 @@ import {DOCUMENT} from '@angular/common';
 @Injectable()
 export class FullscreenOverlayContainer extends OverlayContainer implements OnDestroy {
   private _fullScreenEventName: string | undefined;
-  private _fullScreenListener: () => void;
+  private _fullScreenListener?: () => void;
 
   constructor(@Inject(DOCUMENT) _document: any) {
     super(_document);

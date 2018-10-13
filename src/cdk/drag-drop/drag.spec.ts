@@ -1664,8 +1664,8 @@ describe('CdkDrag', () => {
   `
 })
 class StandaloneDraggable {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag) dragInstance!: CdkDrag;
   startedSpy = jasmine.createSpy('started spy');
   endedSpy = jasmine.createSpy('ended spy');
 }
@@ -1679,8 +1679,8 @@ class StandaloneDraggable {
   `
 })
 class StandaloneDraggableWithHandle {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild('handleElement') handleElement: ElementRef<HTMLElement>;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChild('handleElement') handleElement!: ElementRef<HTMLElement>;
 }
 
 @Component({
@@ -1695,8 +1695,8 @@ class StandaloneDraggableWithHandle {
   `
 })
 class StandaloneDraggableWithDelayedHandle {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild('handleElement') handleElement: ElementRef<HTMLElement>;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChild('handleElement') handleElement!: ElementRef<HTMLElement>;
   showHandle = false;
 }
 
@@ -1720,8 +1720,8 @@ class StandaloneDraggableWithDelayedHandle {
   `
 })
 class StandaloneDraggableWithMultipleHandles {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChildren(CdkDragHandle) handles: QueryList<CdkDragHandle>;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChildren(CdkDragHandle) handles!: QueryList<CdkDragHandle>;
 }
 
 @Component({
@@ -1741,8 +1741,8 @@ class StandaloneDraggableWithMultipleHandles {
   `
 })
 class DraggableInDropZone {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  @ViewChild(CdkDrop) dropInstance: CdkDrop;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
+  @ViewChild(CdkDrop) dropInstance!: CdkDrop;
   items = ['Zero', 'One', 'Two', 'Three'];
   dropZoneId = 'items';
   droppedSpy = jasmine.createSpy('dropped spy').and.callFake((event: CdkDragDrop<string[]>) => {
@@ -1781,8 +1781,8 @@ class DraggableInDropZone {
   `
 })
 class DraggableInHorizontalDropZone {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  @ViewChild(CdkDrop) dropInstance: CdkDrop;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
+  @ViewChild(CdkDrop) dropInstance!: CdkDrop;
   items = ['Zero', 'One', 'Two', 'Three'];
   droppedSpy = jasmine.createSpy('dropped spy').and.callFake((event: CdkDragDrop<string[]>) => {
     moveItemInArray(this.items, event.previousIndex, event.currentIndex);
@@ -1801,8 +1801,8 @@ class DraggableInHorizontalDropZone {
   `
 })
 class DraggableInDropZoneWithCustomPreview {
-  @ViewChild(CdkDrop) dropInstance: CdkDrop;
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  @ViewChild(CdkDrop) dropInstance!: CdkDrop;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
   items = ['Zero', 'One', 'Two', 'Three'];
 }
 
@@ -1819,7 +1819,7 @@ class DraggableInDropZoneWithCustomPreview {
   `
 })
 class DraggableInDropZoneWithCustomPlaceholder {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
   items = ['Zero', 'One', 'Two', 'Three'];
 }
 
@@ -1861,8 +1861,8 @@ class DraggableInDropZoneWithCustomPlaceholder {
   `
 })
 class ConnectedDropZones implements AfterViewInit {
-  @ViewChildren(CdkDrag) rawDragItems: QueryList<CdkDrag>;
-  @ViewChildren(CdkDrop) dropInstances: QueryList<CdkDrop>;
+  @ViewChildren(CdkDrag) rawDragItems!: QueryList<CdkDrag>;
+  @ViewChildren(CdkDrop) dropInstances!: QueryList<CdkDrop>;
 
   groupedDragItems: CdkDrag[][] = [];
   todo = ['Zero', 'One', 'Two', 'Three'];
@@ -1893,9 +1893,9 @@ class ConnectedDropZones implements AfterViewInit {
   `
 })
 class DraggableWithAlternateRoot {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild('dragRoot') dragRoot: ElementRef<HTMLElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+  @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
+  @ViewChild('dragRoot') dragRoot!: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag) dragInstance!: CdkDrag;
 }
 
 
@@ -1934,8 +1934,8 @@ class DraggableWithAlternateRoot {
   `
 })
 class ConnectedDropZonesWithSingleItems {
-  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  @ViewChildren(CdkDrop) dropInstances: QueryList<CdkDrop>;
+  @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
+  @ViewChildren(CdkDrop) dropInstances!: QueryList<CdkDrop>;
 
   droppedSpy = jasmine.createSpy('dropped spy');
 }

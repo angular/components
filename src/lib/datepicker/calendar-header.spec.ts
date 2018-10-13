@@ -161,8 +161,8 @@ describe('MatCalendarHeader', () => {
     </mat-calendar>`
 })
 class StandardCalendar {
-  selected: Date;
-  selectedYear: Date;
-  selectedMonth: Date;
+  selected?: Date;
+  selectedYear?: Date;
+  selectedMonth?: Date;
   startDate = new Date(2017, JAN, 31);
 }

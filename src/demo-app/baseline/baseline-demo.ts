@@ -16,5 +16,5 @@ import {Component} from '@angular/core';
   styleUrls: ['baseline-demo.css'],
 })
 export class BaselineDemo {
-  name: string;
+  name = '';
 }

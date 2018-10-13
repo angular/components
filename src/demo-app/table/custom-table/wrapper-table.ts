@@ -37,17 +37,17 @@ import {SimpleColumn} from './simple-column';
 })
 export class WrapperTable<T> implements AfterContentInit {
   /** Different ways the client can add column definitions */
-  @ContentChildren(SimpleColumn) simpleColumns: QueryList<SimpleColumn<T>>;
-  @ContentChildren(MatColumnDef) columnDefs: QueryList<MatColumnDef>;
+  @ContentChildren(SimpleColumn) simpleColumns!: QueryList<SimpleColumn<T>>;
+  @ContentChildren(MatColumnDef) columnDefs!: QueryList<MatColumnDef>;
 
-  @ContentChild(MatHeaderRowDef) headerRowDef: MatHeaderRowDef;
-  @ContentChildren(MatRowDef) rowDefs: QueryList<MatRowDef<T>>;
+  @ContentChild(MatHeaderRowDef) headerRowDef!: MatHeaderRowDef;
+  @ContentChildren(MatRowDef) rowDefs!: QueryList<MatRowDef<T>>;
 
-  @ViewChild(MatTable) table: MatTable<T>;
+  @ViewChild(MatTable) table!: MatTable<T>;
 
-  @Input() columns: string[];
+  @Input() columns: string[] = [];
 
-  @Input() dataSource: DataSource<T>;
+  @Input() dataSource!: DataSource<T>;
 
   ngAfterContentInit() {
     // Register the simple columns to the table

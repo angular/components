@@ -31,8 +31,8 @@ export class AccessibilityDemo implements OnDestroy {
 
   private _routerSubscription = Subscription.EMPTY;
 
-  @ViewChild('maincontent') mainContent: ElementRef<HTMLElement>;
-  @ViewChild('header') sectionHeader: ElementRef<HTMLElement>;
+  @ViewChild('maincontent') mainContent!: ElementRef<HTMLElement>;
+  @ViewChild('header') sectionHeader!: ElementRef<HTMLElement>;
 
   navItems = [
     {name: 'Home', route: '.'},

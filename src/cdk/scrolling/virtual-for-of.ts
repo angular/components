@@ -88,7 +88,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
             value instanceof Observable ? value : Array.prototype.slice.call(value || []));
     this._dataSourceChanges.next(ds);
   }
-  _cdkVirtualForOf: DataSource<T> | Observable<T[]> | NgIterable<T>;
+  _cdkVirtualForOf!: DataSource<T> | Observable<T[]> | NgIterable<T>;
 
   /**
    * The `TrackByFunction` to use for tracking changes. The `TrackByFunction` takes the index and
@@ -139,13 +139,13 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   private _differ: IterableDiffer<T> | null = null;
 
   /** The most recent data emitted from the DataSource. */
-  private _data: T[] | ReadonlyArray<T>;
+  private _data!: T[] | ReadonlyArray<T>;
 
   /** The currently rendered items. */
-  private _renderedItems: T[];
+  private _renderedItems!: T[];
 
   /** The currently rendered range of indices. */
-  private _renderedRange: ListRange;
+  private _renderedRange!: ListRange;
 
   /**
    * The template cache used to hold on ot template instancess that have been stamped out, but don't

@@ -17,7 +17,7 @@ export interface CanUpdateErrorState {
   updateErrorState(): void;
   readonly stateChanges: Subject<void>;
   errorState: boolean;
-  errorStateMatcher: ErrorStateMatcher;
+  errorStateMatcher?: ErrorStateMatcher;
 }
 
 /** @docs-private */
@@ -47,7 +47,7 @@ export function mixinErrorState<T extends Constructor<HasErrorState>>(base: T)
      */
     readonly stateChanges = new Subject<void>();
 
-    errorStateMatcher: ErrorStateMatcher;
+    errorStateMatcher?: ErrorStateMatcher;
 
     updateErrorState() {
       const oldState = this.errorState;
