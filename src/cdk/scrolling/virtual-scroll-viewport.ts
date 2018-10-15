@@ -130,7 +130,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
               scrollDispatcher: ScrollDispatcher) {
     super(elementRef, scrollDispatcher, ngZone, dir);
 
-    if (!this._scrollStrategy) {
+    if (!_scrollStrategy) {
       throw Error('Error: cdk-virtual-scroll-viewport requires the "itemSize" property to be set.');
     }
   }

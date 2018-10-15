@@ -113,9 +113,9 @@ interfere with the scrolling.
 <!-- example(cdk-virtual-scroll-dl) -->
 
 ### Scrolling strategies
-In order to determine how large the overall content is and what porting of it actually needs to be
+In order to determine how large the overall content is and what portion of it actually needs to be
 rendered at any given time the viewport relies on a `VirtualScrollStrategy` being provided. The
-simplest way to provide this is to use the `itemSize` directive on the viewport
+simplest way to provide it is to use the `itemSize` directive on the viewport
 (e.g. `<cdk-virtual-scroll-viewport itemSize="50">`). However it is also possible to provide a 
 custom strategy by creating a class that implements the `VirtualScrollStrategy` interface and
 providing it as the `VIRTUAL_SCROLL_STRATEGY` on the component containing your viewport.
