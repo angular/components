@@ -23,7 +23,8 @@
     "docs": "gulp docs",
     "api": "gulp api-docs",
     "breaking-changes": "gulp breaking-changes",
-    "gulp": "gulp"
+    "gulp": "gulp",
+    "stage-release": "bash ./tools/release/stage-release-bin.sh"
   },
   "version": "7.0.0-rc.2",
   "requiredAngularVersion": ">=7.0.0-rc.0",

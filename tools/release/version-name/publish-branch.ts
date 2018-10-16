@@ -1,9 +1,9 @@
-import {VersionInfo} from './parse-version';
+import {Version} from './parse-version';
 
 export type VersionType = 'major' | 'minor' | 'patch';
 
 /** Determines the expected branch name for publishing the specified version. */
-export function getExpectedPublishBranch(version: VersionInfo): string {
+export function getExpectedPublishBranch(version: Version): string {
   const versionType = getSemverVersionType(version);
 
   if (versionType === 'major') {
@@ -15,8 +15,8 @@ export function getExpectedPublishBranch(version: VersionInfo): string {
   }
 }
 
-/** Determines the type of the specified semver version. */
-export function getSemverVersionType(version: VersionInfo): VersionType {
+/** Determines the type of the specified Semver version. */
+export function getSemverVersionType(version: Version): VersionType {
   if (version.minor === 0 && version.patch === 0) {
     return 'major';
   } else if (version.patch === 0) {

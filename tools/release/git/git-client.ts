@@ -1,33 +1,34 @@
 import {spawnSync} from 'child_process';
 
 /**
- * Class that can be used to execute Git commands within a given project directory. Relying
- * on the working directory of the current process is not good because it's not guaranteed
- * that the working directory is always the target project directory (e.g. w/ bazel run).
+ * Class that can be used to execute Git commands within a given project directory.
+ *
+ * Relying on the working directory of the current process is not good because it's not
+ * guaranteed that the working directory is always the target project directory.
  */
-export class GitCommandExecutor {
+export class GitClient {
 
-  constructor(public projectDir: string) {}
+  constructor(public projectDir: string, public remoteGitUrl: string) {}
 
-  /** Returns the currently checked out branch for the current working directory. */
+  /** Gets the currently checked out branch for the project directory. */
   getCurrentBranch() {
     return spawnSync('git', ['symbolic-ref', '--short', 'HEAD'], {cwd: this.projectDir})
       .stdout.toString().trim();
   }
 
-  /** Returns the commit SHA for the remote repository reference. */
-  getRemoteCommitSha(remoteRef: string, branchName: string): string {
-    return spawnSync('git', ['ls-remote', remoteRef, '-h', `refs/heads/${branchName}`],
+  /** Gets the commit SHA for the specified remote repository branch. */
+  getRemoteCommitSha(branchName: string): string {
+    return spawnSync('git', ['ls-remote', this.remoteGitUrl, '-h', `refs/heads/${branchName}`],
       {cwd: this.projectDir}).stdout.toString().trim();
   }
 
-  /** Returns the latest commit SHA for the specified git reference. */
+  /** Gets the latest commit SHA for the specified git reference. */
   getLocalCommitSha(refName: string) {
     return spawnSync('git', ['rev-parse', refName], {cwd: this.projectDir})
       .stdout.toString().trim();
   }
 
-  /** Whether the current Git repository has uncommitted changes. */
+  /** Gets whether the current Git repository has uncommitted changes. */
   hasUncommittedChanges(): boolean {
     return spawnSync('git', ['diff-index', '--quiet', 'HEAD'], {cwd: this.projectDir}).status !== 0;
   }

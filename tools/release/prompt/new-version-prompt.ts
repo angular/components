@@ -1,96 +1,57 @@
-import {parseVersionName, VersionInfo} from '../version-name/parse-version';
-import {bold, red, yellow} from 'chalk';
-import {ChoiceType, prompt} from 'inquirer';
-import {createNewVersion} from '../version-name/create-version';
-import {ReleaseType, validateExpectedVersion} from '../version-name/check-version';
+import {ChoiceType, prompt, Separator} from 'inquirer';
+import {createNewVersion, ReleaseType} from '../version-name/create-version';
+import {parseVersionName, Version} from '../version-name/parse-version';
 
 /** Answers that will be prompted for. */
 type VersionPromptAnswers = {
-  releaseType: ReleaseType;
   versionName: string;
-};
-
-/** Available options for selecting a release type. */
-const releaseTypeChoices = {
-  custom: {value: 'custom', name: 'Release w/ custom version.'},
-  stable: {value: 'stable', name: `Stable release`},
-  major: {value: 'major', name: 'Major release'},
-  minor: {value: 'minor', name: 'Minor release'},
-  patch: {value: 'patch', name: 'Patch release'},
+  manualCustomVersion: string;
 };
 
 /**
  * Prompts the current user-input interface for a new version name. The new version will be
  * validated to be a proper increment of the specified current version.
  */
-export async function promptForNewVersion(versionName: string): Promise<VersionInfo> {
-  const currentVersion = parseVersionName(versionName);
-  let allowedReleaseTypes: ChoiceType[] = [releaseTypeChoices.custom];
+export async function promptForNewVersion(currentVersion: Version): Promise<Version> {
+  const versionChoices: ChoiceType[] = [
+    new Separator(),
+    {value: 'custom-release', name: 'Release w/ custom version'}
+  ];
 
-  if (!currentVersion) {
-    console.warn(red(`Cannot parse current project version. This means that we cannot validate ` +
-      `the new ${bold('custom')} version that will be specified.`));
-  } else if (currentVersion.suffix) {
-    console.warn(yellow(`Since the current project version is a ` +
-      `"${bold(currentVersion.suffix)}", the new version can be either custom or just the ` +
-      `stable version.`));
-    allowedReleaseTypes.unshift(releaseTypeChoices.stable);
+  if (currentVersion.prereleaseLabel) {
+    versionChoices.unshift(
+      createVersionChoice(currentVersion, 'pre-release', 'Pre-release'),
+      createVersionChoice(currentVersion, 'stable-release', 'Stable release'));
   } else {
-    allowedReleaseTypes.unshift(
-      releaseTypeChoices.major, releaseTypeChoices.minor, releaseTypeChoices.patch);
+    versionChoices.unshift(
+      createVersionChoice(currentVersion, 'major', 'Major release'),
+      createVersionChoice(currentVersion, 'minor', 'Minor release'),
+      createVersionChoice(currentVersion, 'patch', 'Patch release'));
   }
 
   const answers = await prompt<VersionPromptAnswers>([{
     type: 'list',
-    name: 'releaseType',
+    name: 'versionName',
     message: `What's the type of the new release?`,
-    choices: allowedReleaseTypes,
+    choices: versionChoices,
   }, {
     type: 'input',
-    name: 'versionName',
-    message: 'Please provide the new release name:',
-    default: ({releaseType}) => createVersionSuggestion(releaseType, currentVersion!),
-    validate: (enteredVersion, {releaseType}) =>
-      validateNewVersionName(enteredVersion, currentVersion!, releaseType),
+    name: 'manualCustomVersion',
+    message: 'Please provide a custom release name:',
+    validate: enteredVersion =>
+      !!parseVersionName(enteredVersion) || 'This is not a valid Semver version',
+    when: ({versionName}) => versionName === 'custom-release'
   }]);
 
-  return parseVersionName(answers.versionName);
+  return parseVersionName(answers.manualCustomVersion || answers.versionName);
 }
 
-/** Creates a suggested version for the expected version type. */
-function createVersionSuggestion(releaseType: ReleaseType, currentVersion: VersionInfo) {
-  // In case the new version is expected to be custom, we can not make any suggestion because
-  // we don't know the reasoning for a new custom version.
-  if (releaseType === 'custom') {
-    return null;
-  } else if (releaseType === 'stable') {
-    return createNewVersion(currentVersion!).format();
-  }
+/** Creates a new choice for selecting a version inside of an Inquirer list prompt. */
+function createVersionChoice(currentVersion: Version, releaseType: ReleaseType, message: string) {
+  const versionName = createNewVersion(currentVersion, releaseType).format();
 
-  return createNewVersion(currentVersion!, releaseType).format();
-}
-
-/**
- * Validates the specified new version by ensuring that the new version is following the Semver
- * format and matches the specified target version type.
- */
-function validateNewVersionName(newVersionName: string, currentVersion: VersionInfo,
-                                releaseType: ReleaseType) {
-  const parsedVersion = parseVersionName(newVersionName);
-
-  if (!parsedVersion) {
-    return 'Version does not follow the Semver format.';
-  }
-
-  // In case the release type is custom, we just need to make sure that the new version
-  // is following the Semver format.
-  if (releaseType === 'custom') {
-    return true;
-  }
-
-  if (!validateExpectedVersion(parsedVersion, currentVersion, releaseType)) {
-    return `Version is not a proper increment for "${releaseType}"`;
-  }
-
-  return true;
+  return {
+    value: versionName,
+    name: `${message} (${versionName})`
+  };
 }

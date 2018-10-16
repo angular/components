@@ -1,27 +1,32 @@
-import {VersionInfo} from './parse-version';
+import {Version} from './parse-version';
 import {VersionType} from './publish-branch';
 
-/**
- * Creates a new version from the specified version based on the given target version type.
- * If no target version type has been specified, just the version suffix will be removed.
- */
-export function createNewVersion(currentVersion: VersionInfo, targetVersionType?: VersionType):
-    VersionInfo {
+/** Type of a new release */
+export type ReleaseType = VersionType | 'stable-release' | 'pre-release' | 'custom-release';
+
+/** Creates a new version that can be used for the given release type. */
+export function createNewVersion(currentVersion: Version, releaseType: ReleaseType):
+    Version {
   // Clone the version object in order to keep the original version info un-modified.
   const newVersion = currentVersion.clone();
 
-  // Since we increment the specified version, a suffix like `-beta.4` should be removed.
-  newVersion.suffix = null;
-  newVersion.suffixNumber = null;
+  if (releaseType === 'pre-release') {
+    newVersion.prereleaseNumber++;
+  } else {
+    // For all other release types, the pre-release label and number should be removed
+    // because the new version is not another pre-release.
+    newVersion.prereleaseLabel = null;
+    newVersion.prereleaseNumber = null;
+  }
 
-  if (targetVersionType === 'major') {
+  if (releaseType === 'major') {
     newVersion.major++;
     newVersion.minor = 0;
     newVersion.patch = 0;
-  } else if (targetVersionType === 'minor') {
+  } else if (releaseType === 'minor') {
     newVersion.minor++;
     newVersion.patch = 0;
-  } else if (targetVersionType === 'patch') {
+  } else if (releaseType === 'patch') {
     newVersion.patch++;
   }
 
