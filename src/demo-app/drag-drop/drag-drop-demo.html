@@ -1,13 +1,13 @@
 <div>
-  <div class="list">
+  <div class="demo-list">
     <h2>To do</h2>
     <div
-      cdkDrop
-      #one="cdkDrop"
-      (cdkDropDropped)="drop($event)"
-      [cdkDropLockAxis]="axisLock"
-      [cdkDropData]="todo"
-      [cdkDropConnectedTo]="[two]">
+      cdkDropList
+      #one="cdkDropList"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListLockAxis]="axisLock"
+      [cdkDropListData]="todo"
+      [cdkDropListConnectedTo]="[two]">
       <div *ngFor="let item of todo" cdkDrag>
         {{item}}
         <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
@@ -15,15 +15,15 @@
     </div>
   </div>
 
-  <div class="list">
+  <div class="demo-list">
     <h2>Done</h2>
     <div
-      cdkDrop
-      #two="cdkDrop"
-      (cdkDropDropped)="drop($event)"
-      [cdkDropLockAxis]="axisLock"
-      [cdkDropData]="done"
-      [cdkDropConnectedTo]="[one]">
+      cdkDropList
+      #two="cdkDropList"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListLockAxis]="axisLock"
+      [cdkDropListData]="done"
+      [cdkDropListConnectedTo]="[one]">
       <div *ngFor="let item of done" cdkDrag>
         {{item}}
         <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
@@ -33,14 +33,14 @@
 </div>
 
 <div>
-  <div class="list horizontal">
+  <div class="demo-list demo-list-horizontal">
     <h2>Horizontal list</h2>
     <div
-      cdkDrop
-      cdkDropOrientation="horizontal"
-      (cdkDropDropped)="drop($event)"
-      [cdkDropLockAxis]="axisLock"
-      [cdkDropData]="horizontalData">
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListLockAxis]="axisLock"
+      [cdkDropListData]="horizontalData">
       <div *ngFor="let item of horizontalData" cdkDrag>
         {{item}}
         <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
@@ -49,9 +49,9 @@
   </div>
 </div>
 
-<div class="list">
+<div class="demo-list">
   <h2>Free dragging</h2>
-  <div cdkDrag class="free-draggable" [cdkDragLockAxis]="axisLock">Drag me around</div>
+  <div cdkDrag class="demo-free-draggable" [cdkDragLockAxis]="axisLock">Drag me around</div>
 </div>
 
 <div>

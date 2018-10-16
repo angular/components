@@ -22,9 +22,10 @@
     "webdriver-manager": "webdriver-manager",
     "docs": "gulp docs",
     "api": "gulp api-docs",
-    "breaking-changes": "gulp breaking-changes"
+    "breaking-changes": "gulp breaking-changes",
+    "ci:lint": "gulp ci:lint"
   },
-  "version": "7.0.0-rc.1",
+  "version": "7.0.0-rc.2",
   "requiredAngularVersion": ">=7.0.0-rc.0",
   "dependencies": {
     "@angular/animations": "7.0.0-rc.0",
@@ -45,7 +46,6 @@
   "devDependencies": {
     "@angular-devkit/core": "7.0.0-rc.1",
     "@angular-devkit/schematics": "7.0.0-rc.1",
-    "@angular/bazel": "7.0.0-rc.0",
     "@angular/compiler-cli": "7.0.0-rc.0",
     "@angular/http": "7.0.0-rc.0",
     "@angular/platform-browser-dynamic": "7.0.0-rc.0",
@@ -53,7 +53,9 @@
     "@angular/router": "7.0.0-rc.0",
     "@angular/upgrade": "7.0.0-rc.0",
     "@bazel/ibazel": "0.3.1",
-    "@bazel/typescript": "^0.19.1",
+    "@bazel/karma": "0.20.2",
+    "@bazel/typescript": "0.20.2",
+    "@firebase/app-types": "^0.3.2",
     "@google-cloud/storage": "^1.1.1",
     "@octokit/rest": "^15.9.4",
     "@schematics/angular": "7.0.0-rc.1",
@@ -128,6 +130,7 @@
     "scss-bundle": "^2.0.1-beta.7",
     "selenium-webdriver": "^3.6.0",
     "sorcery": "^0.10.0",
+    "source-map-support": "^0.5.9",
     "stylelint": "^9.5.0",
     "ts-node": "^3.0.4",
     "tsconfig-paths": "^2.3.0",
