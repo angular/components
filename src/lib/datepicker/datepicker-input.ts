@@ -29,7 +29,14 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import {DateAdapter, MAT_DATE_FORMATS, MatSingleDateSelection, MatDateFormats, ThemePalette, MatDateSelection} from '@angular/material/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MatSingleDateSelection,
+  MatDateFormats,
+  ThemePalette,
+  MatDateSelection
+} from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
@@ -103,13 +110,15 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     this._datepicker._registerInput(this);
     this._datepickerSubscription.unsubscribe();
 
-    this._datepickerSubscription = this._datepicker._selectedChanged.subscribe((selected: D) => {
-      this.value = selected;
-      this._cvaOnChange(selected);
-      this._onTouched();
-      this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-      this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-    });
+    this._datepickerSubscription = this._datepicker._selectedChanged.subscribe(
+      (selected: MatDateSelection<D>) => {
+        this.value = selected.getFirstSelectedDate();
+        this._cvaOnChange(selected);
+        this._onTouched();
+        this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+        this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+      }
+    );
   }
   _datepicker: MatDatepicker<D>;
 
@@ -125,15 +134,17 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   @Input()
   get value(): D | null { return this._value ? this._value.asDate() : null; }
   set value(value: D | null) {
-    const oldDate = this._value? this._value.clone(): null;
+    const oldDate = this._value ? this._value.clone() : null;
     if (this._value) {
       this._value.add(value);
     } else {
       this._value = new MatSingleDateSelection(this._dateAdapter, value);
-    }   
+    }
     this._lastValueValid = !this._value || this._value.isValid();
-    
-    if (this._value) this._formatValue(this._value.asDate());
+
+    if (this._value) {
+      this._formatValue(this._value.asDate());
+    }
 
     if (!oldDate || !this._value.isSame(oldDate)) {
       this._valueChange.emit(this.value);
@@ -238,8 +249,11 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   /** The form control validator for the date filter. */
   private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const controlValueSelection = new MatSingleDateSelection(this._dateAdapter, control.value);
-    return !this._dateFilter || !controlValueSelection.isValid() || this._dateFilter(controlValueSelection.asDate()) ?
-        null : {'matDatepickerFilter': true};
+    return !this._dateFilter ||
+        !controlValueSelection.isValid() ||
+        this._dateFilter(controlValueSelection.asDate()) ?
+          null :
+          {'matDatepickerFilter': true};
   }
 
   /** The combined form control validator for this input. */
@@ -331,7 +345,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   }
 
   _onInput(value: string) {
-    const dateSelection = new MatSingleDateSelection(this._dateAdapter, 
+    const dateSelection = new MatSingleDateSelection(this._dateAdapter,
       this._dateAdapter.parse(value, this._dateFormats.parse.dateInput));
     this._lastValueValid = dateSelection.isValid();
 
@@ -364,7 +378,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /** Formats a value and sets it on the input element. */
   private _formatValue(value: D | null) {
-    this._elementRef.nativeElement.value = 
+    this._elementRef.nativeElement.value =
         value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
   }
 }
