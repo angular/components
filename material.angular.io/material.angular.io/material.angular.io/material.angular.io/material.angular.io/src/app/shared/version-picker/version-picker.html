@@ -1,5 +1,6 @@
 <button mat-button [matMenuTriggerFor]="versionPicker">
   {{materialVersion}}
+  <mat-icon>arrow_drop_down</mat-icon>
 </button>
 <mat-menu #versionPicker="matMenu">
   <button mat-menu-item *ngFor="let version of docVersions"
