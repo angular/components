@@ -1,34 +1,40 @@
 package(default_visibility = ["//visibility:public"])
 
 load("@build_bazel_rules_typescript//:defs.bzl", "ts_library")
-load("@build_bazel_rules_nodejs//:defs.bzl", "npm_package", "jasmine_node_test")
+load("@build_bazel_rules_nodejs//:defs.bzl", "npm_package")
 load("//:packages.bzl", "VERSION_PLACEHOLDER_REPLACEMENTS")
+load("//tools:defaults.bzl", "jasmine_node_test")
 
 # TODO(devversion): remove when https://github.com/bazelbuild/rules_nodejs/issues/352 is fixed
 exports_files(["#bazel_workaround.txt"])
 
 filegroup(
   name = "schematics_assets",
-  srcs = glob(["**/files/**/*", "**/*.json"]) + ["README.md"],
+  srcs = glob(["**/files/**/*", "**/*.json"]),
 )
 
 ts_library(
   name = "schematics",
   module_name = "@angular/cdk/schematics",
-  srcs = glob(["**/*.ts"], exclude=["**/files/**/*.ts", "**/*.spec.ts"]),
+  srcs = glob(["**/*.ts"], exclude=[
+    "**/files/**/*.ts",
+    "**/*.spec.ts",
+    "ng-update/test-cases/**/*",
+  ]),
   tsconfig = ":tsconfig.json",
   deps = [
-    "@npm//:@schematics/angular",
-    "@npm//:@angular-devkit/schematics",
-     # TODO(devversion): Only include jasmine for test sources.
-    "@npm//:@types/jasmine",
-    "@npm//:@types/node",
-    "@npm//:glob",
-    "@npm//:jasmine",
-    "@npm//:parse5",
-    "@npm//:rxjs",
-    "@npm//:tslint",
-    "@npm//:typescript"
+    "@npm//@schematics/angular",
+    "@npm//@angular-devkit/schematics",
+    # TODO(devversion): Only include jasmine for test sources (See: tsconfig types).
+    "@npm//@types/jasmine",
+    "@npm//@types/node",
+    # TODO(devversion): Similarly to "jasmine", we need to extract these into testing only.
+    "@npm//fs-extra",
+    "@npm//glob",
+    "@npm//parse5",
+    "@npm//rxjs",
+    "@npm//tslint",
+    "@npm//typescript"
   ],
 )
 
@@ -45,8 +51,7 @@ npm_package(
 jasmine_node_test(
   name = "unit_tests",
   srcs = [":schematics_test_sources"],
-  data = [":schematics_assets"],
-  deps = ["@npm//:jasmine"],
+  data = [":schematics_assets", ":schematics_test_cases"],
 )
 
 ts_library(
@@ -54,14 +59,23 @@ ts_library(
   srcs = glob(["**/*.spec.ts"], exclude = ["**/files/**/*.spec.ts"]),
   deps = [
     ":schematics",
-    "@npm//:@schematics/angular",
-    "@npm//:@angular-devkit/schematics",
-    "@npm//:@types/jasmine",
-    "@npm//:@types/node",
-    "@npm//:mock-fs",
-    "@npm//:tslint",
-    "@npm//:typescript",
+    "@npm//@schematics/angular",
+    "@npm//@angular-devkit/schematics",
+    "@npm//@types/jasmine",
+    "@npm//@types/node",
+    "@npm//mock-fs",
+    "@npm//tslint",
+    "@npm//typescript",
   ],
   tsconfig = ":tsconfig.json",
+  testonly = True,
+)
+
+filegroup(
+  name = "schematics_test_cases",
+  srcs = glob([
+    "ng-update/test-cases/**/*_input.ts",
+    "ng-update/test-cases/**/*_expected_output.ts"
+  ]),
   testonly = True,
 )

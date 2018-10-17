@@ -1,3 +1,22 @@
+<a name="7.0.0-rc.2"></a>
+# 7.0.0-rc.2 (2018-10-15)
+
+
+### Bug Fixes
+
+* **drag-drop:** enterPredicate being called with wrong drop container ([#13578](https://github.com/angular/material2/issues/13578)) ([60b4a58](https://github.com/angular/material2/commit/60b4a58))
+* **drag-drop:** rename cdkDrop to cdkDropList ([#13619](https://github.com/angular/material2/issues/13619)) ([160b688](https://github.com/angular/material2/commit/160b688))
+* **ng-add:** do not add theme file if existing theme is set up ([#13468](https://github.com/angular/material2/issues/13468)) ([d1e59a2](https://github.com/angular/material2/commit/d1e59a2))
+* **schematics:** template content exceeds max line length ([#13521](https://github.com/angular/material2/issues/13521)) ([b0a1daf](https://github.com/angular/material2/commit/b0a1daf))
+* **schematics:** tree folder icons do not have enough contrast ([#13462](https://github.com/angular/material2/issues/13462)) ([4a0eb2b](https://github.com/angular/material2/commit/4a0eb2b))
+* **virtual-scroll:** fix several small bugs ([#13597](https://github.com/angular/material2/issues/13597)) ([8cfaeea](https://github.com/angular/material2/commit/8cfaeea))
+
+### Features
+
+* **schematics:** prompt for name when generating component ([#13518](https://github.com/angular/material2/issues/13518)) ([9085de7](https://github.com/angular/material2/commit/9085de7))
+
+
+
 <a name="7.0.0-rc.1"></a>
 # 7.0.0-rc.1 (2018-10-09)
 
@@ -5,7 +24,7 @@
 ### Bug Fixes
 
 * **a11y:** not being able to escape disabled focus trap using arrow keys ([#13133](https://github.com/angular/material2/issues/13133)) ([3c55caa](https://github.com/angular/material2/commit/3c55caa)), closes [#13132](https://github.com/angular/material2/issues/13132)
-* **autocomplete:** closing parent overlay when pressing escpe ([#13413](https://github.com/angular/material2/issues/13413)) ([8dfd2ee](https://github.com/angular/material2/commit/8dfd2ee))
+* **autocomplete:** closing parent overlay when pressing escape (Esc) ([#13413](https://github.com/angular/material2/issues/13413)) ([8dfd2ee](https://github.com/angular/material2/commit/8dfd2ee))
 * **bottom-sheet:** dismiss bottom sheet on destroy ([#13120](https://github.com/angular/material2/issues/13120)) ([ffa4a06](https://github.com/angular/material2/commit/ffa4a06))
 * **button-toggle:** not setting proper border in vertical mode ([#13397](https://github.com/angular/material2/issues/13397)) ([d58db5d](https://github.com/angular/material2/commit/d58db5d))
 * **button-toggle:** remove extra focus indication added by firefox ([#13367](https://github.com/angular/material2/issues/13367)) ([3583913](https://github.com/angular/material2/commit/3583913))
