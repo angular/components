@@ -9,9 +9,10 @@ import {CommonModule} from '@angular/common';
 import {ComponentHeaderModule} from '../component-page-header/component-page-header';
 import {FooterModule} from '../../shared/footer/footer';
 import {Observable, Subject, combineLatest} from 'rxjs';
-import {switchMap, takeUntil, startWith} from 'rxjs/operators';
+import {switchMap, takeUntil, startWith, map} from 'rxjs/operators';
 import {trigger, animate, state, style, transition} from '@angular/animations';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
+import {BreakpointObserver} from '@angular/cdk/layout';
 
 const SMALL_WIDTH_BREAKPOINT = 720;
 
@@ -22,36 +23,26 @@ const SMALL_WIDTH_BREAKPOINT = 720;
   encapsulation: ViewEncapsulation.None,
 })
 export class ComponentSidenav implements OnInit {
-  private mediaMatcher: MediaQueryList = matchMedia(`(max-width: ${SMALL_WIDTH_BREAKPOINT}px)`);
-
   params: Observable<Params>;
+  isScreenSmall: Observable<boolean>;
 
   constructor(public docItems: DocumentationItems,
               private _route: ActivatedRoute,
-              private _router: Router,
-              zone: NgZone) {
-    // TODO(josephperrott): Move to CDK breakpoint management once available.
-    this.mediaMatcher.addListener(mql => zone.run(() => this.mediaMatcher = mql));
+              zone: NgZone,
+              breakpoints: BreakpointObserver) {
+    this.isScreenSmall = breakpoints.observe(`(max-width: ${SMALL_WIDTH_BREAKPOINT}px)`)
+        .pipe(map(breakpoint => breakpoint.matches));
   }
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
 
   ngOnInit() {
-    this._router.events.subscribe(() => {
-      if (this.isScreenSmall()) {
-        this.sidenav.close();
-      }
-    });
-
     // Combine params from all of the path into a single object.
     this.params = combineLatest(
       this._route.pathFromRoot.map(route => route.params),
       Object.assign);
   }
 
-  isScreenSmall(): boolean {
-    return this.mediaMatcher.matches;
-  }
 }
 
 @Component({
