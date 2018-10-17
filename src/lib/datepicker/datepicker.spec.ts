@@ -721,6 +721,7 @@ describe('MatDatepicker', () => {
 
         expect(inputEl.classList).toContain('ng-pristine');
 
+        inputEl.focus();
         inputEl.value = '2001-01-01';
         dispatchFakeEvent(inputEl, 'input');
         fixture.detectChanges();
@@ -1293,76 +1294,113 @@ describe('MatDatepicker', () => {
         fixture.detectChanges();
       }));
 
-      it('should fire input and dateInput events when user types input', () => {
-        expect(testComponent.onChange).not.toHaveBeenCalled();
-        expect(testComponent.onDateChange).not.toHaveBeenCalled();
-        expect(testComponent.onInput).not.toHaveBeenCalled();
-        expect(testComponent.onDateInput).not.toHaveBeenCalled();
+      describe('with focused input', () => {
+        beforeEach(() => {
+          inputEl.focus();
+        });
 
-        inputEl.value = '2001-01-01';
-        dispatchFakeEvent(inputEl, 'input');
-        fixture.detectChanges();
-
-        expect(testComponent.onChange).not.toHaveBeenCalled();
-        expect(testComponent.onDateChange).not.toHaveBeenCalled();
-        expect(testComponent.onInput).toHaveBeenCalled();
-        expect(testComponent.onDateInput).toHaveBeenCalled();
-      });
-
-      it('should fire change and dateChange events when user commits typed input', () => {
-        expect(testComponent.onChange).not.toHaveBeenCalled();
-        expect(testComponent.onDateChange).not.toHaveBeenCalled();
-        expect(testComponent.onInput).not.toHaveBeenCalled();
-        expect(testComponent.onDateInput).not.toHaveBeenCalled();
-
-        dispatchFakeEvent(inputEl, 'change');
-        fixture.detectChanges();
-
-        expect(testComponent.onChange).toHaveBeenCalled();
-        expect(testComponent.onDateChange).toHaveBeenCalled();
-        expect(testComponent.onInput).not.toHaveBeenCalled();
-        expect(testComponent.onDateInput).not.toHaveBeenCalled();
-      });
-
-      it('should fire dateChange and dateInput events when user selects calendar date',
-        fakeAsync(() => {
+        it('should fire input and dateInput events when user types input', () => {
           expect(testComponent.onChange).not.toHaveBeenCalled();
           expect(testComponent.onDateChange).not.toHaveBeenCalled();
           expect(testComponent.onInput).not.toHaveBeenCalled();
           expect(testComponent.onDateInput).not.toHaveBeenCalled();
 
-          testComponent.datepicker.open();
+          inputEl.value = '2001-01-01';
+          dispatchFakeEvent(inputEl, 'input');
           fixture.detectChanges();
-
-          expect(document.querySelector('mat-dialog-container')).not.toBeNull();
-
-          const cells = document.querySelectorAll('.mat-calendar-body-cell');
-          dispatchMouseEvent(cells[0], 'click');
-          fixture.detectChanges();
-          flush();
 
           expect(testComponent.onChange).not.toHaveBeenCalled();
+          expect(testComponent.onDateChange).not.toHaveBeenCalled();
+          expect(testComponent.onInput).toHaveBeenCalled();
+          expect(testComponent.onDateInput).toHaveBeenCalled();
+        });
+
+        it('should fire change and dateChange events when input changes', () => {
+          expect(testComponent.onChange).not.toHaveBeenCalled();
+          expect(testComponent.onDateChange).not.toHaveBeenCalled();
+          expect(testComponent.onInput).not.toHaveBeenCalled();
+          expect(testComponent.onDateInput).not.toHaveBeenCalled();
+
+          dispatchFakeEvent(inputEl, 'change');
+          fixture.detectChanges();
+
+          expect(testComponent.onChange).toHaveBeenCalled();
           expect(testComponent.onDateChange).toHaveBeenCalled();
           expect(testComponent.onInput).not.toHaveBeenCalled();
-          expect(testComponent.onDateInput).toHaveBeenCalled();
-        })
-      );
+          expect(testComponent.onDateInput).not.toHaveBeenCalled();
+        });
 
-      it('should not fire the dateInput event if the value has not changed', () => {
-        expect(testComponent.onDateInput).not.toHaveBeenCalled();
+        it('should fire dateChange and dateInput events when user selects calendar date',
+          fakeAsync(() => {
+            expect(testComponent.onChange).not.toHaveBeenCalled();
+            expect(testComponent.onDateChange).not.toHaveBeenCalled();
+            expect(testComponent.onInput).not.toHaveBeenCalled();
+            expect(testComponent.onDateInput).not.toHaveBeenCalled();
 
-        inputEl.value = '12/12/2012';
-        dispatchFakeEvent(inputEl, 'input');
-        fixture.detectChanges();
+            testComponent.datepicker.open();
+            fixture.detectChanges();
 
-        expect(testComponent.onDateInput).toHaveBeenCalledTimes(1);
+            expect(document.querySelector('mat-dialog-container')).not.toBeNull();
 
-        dispatchFakeEvent(inputEl, 'input');
-        fixture.detectChanges();
+            const cells = document.querySelectorAll('.mat-calendar-body-cell');
+            dispatchMouseEvent(cells[0], 'click');
+            fixture.detectChanges();
+            flush();
 
-        expect(testComponent.onDateInput).toHaveBeenCalledTimes(1);
+            expect(testComponent.onChange).not.toHaveBeenCalled();
+            expect(testComponent.onDateChange).toHaveBeenCalled();
+            expect(testComponent.onInput).not.toHaveBeenCalled();
+            expect(testComponent.onDateInput).toHaveBeenCalled();
+          })
+        );
+
+        it('should fire value change event when value changes', () => {
+          const spy = jasmine.createSpy('value change observer');
+
+          testComponent.datepickerInput._valueChange.subscribe(spy);
+
+          inputEl.value = '12/12/2012';
+          dispatchFakeEvent(inputEl, 'input');
+          fixture.detectChanges();
+
+          expect(spy).toHaveBeenCalled();
+        });
+
+        it('should not fire value change event when value has not changed', () => {
+          const spy = jasmine.createSpy('value change observer');
+
+          testComponent.datepickerInput._valueChange.subscribe(spy);
+
+          inputEl.value = '12/12/2012';
+          dispatchFakeEvent(inputEl, 'input');
+          fixture.detectChanges();
+
+          expect(spy).toHaveBeenCalledTimes(1);
+
+          dispatchFakeEvent(inputEl, 'input');
+          fixture.detectChanges();
+
+          expect(spy).toHaveBeenCalledTimes(1);
+        });
       });
 
+      describe('without focused input', () => {
+        it('should not fire input and dateInput events when user types input', () => {
+          expect(testComponent.onChange).not.toHaveBeenCalled();
+          expect(testComponent.onDateChange).not.toHaveBeenCalled();
+          expect(testComponent.onInput).not.toHaveBeenCalled();
+          expect(testComponent.onDateInput).not.toHaveBeenCalled();
+
+          inputEl.value = '2001-01-01';
+          dispatchFakeEvent(inputEl, 'input');
+          fixture.detectChanges();
+
+          expect(testComponent.onInput).toHaveBeenCalled();
+          expect(testComponent.onChange).not.toHaveBeenCalled();
+          expect(testComponent.onDateChange).not.toHaveBeenCalled();
+          expect(testComponent.onDateInput).not.toHaveBeenCalled();
+        });
+      });
     });
 
     describe('with ISO 8601 strings as input', () => {
@@ -1865,6 +1903,7 @@ class DatepickerWithFilterAndValidation {
 })
 class DatepickerWithChangeAndInputEvents {
   @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
 
   onChange() {}
 

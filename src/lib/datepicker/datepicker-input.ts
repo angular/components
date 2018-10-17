@@ -84,7 +84,7 @@ export class MatDatepickerInputEvent<D> {
     '[attr.min]': 'min ? _dateAdapter.toIso8601(min) : null',
     '[attr.max]': 'max ? _dateAdapter.toIso8601(max) : null',
     '[disabled]': 'disabled',
-    '(input)': '_onInput($event.target.value)',
+    '(input)': '_onInput($event.target)',
     '(change)': '_onChange()',
     '(blur)': '_onBlur()',
     '(keydown)': '_onKeydown($event)',
@@ -319,14 +319,20 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     }
   }
 
-  _onInput(value: string) {
-    let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
+  _onInput(target: HTMLInputElement): void {
+    if (document.activeElement !== target) {
+      return;
+    }
+
+    let date = this._dateAdapter.parse(target.value, this._dateFormats.parse.dateInput);
     this._lastValueValid = !date || this._dateAdapter.isValid(date);
     date = this._getValidDateOrNull(date);
 
-    if (!this._dateAdapter.sameDate(date, this._value)) {
+    this._cvaOnChange(date);
+    this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+
+    if (!this._dateAdapter.sameDate(this._value, date)) {
       this._value = date;
-      this._cvaOnChange(date);
       this._valueChange.emit(date);
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
     } else {
