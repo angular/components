@@ -126,6 +126,8 @@ and send the right paged data to the table.
 Otherwise if you are implementing the logic to paginate your data, you will want to listen to the
 paginator's `(page)` output and pass the right slice of data to your table.
 
+You will not be able to pass the datasource into the table component from a parent component using `@Input()` as you will need to populate the datasource in the component's constructor and then add the paginator to the datasource in `ngOnInit()`.
+
 For more information on using and configuring the `<mat-paginator>`, check out the 
 [mat-paginator docs](https://material.angular.io/components/paginator/overview).
 
