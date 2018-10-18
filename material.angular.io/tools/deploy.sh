@@ -7,6 +7,7 @@ declare -A PROJECT_ID
 # Firebase project ids
 PROJECT_ID["stable", "dev"]="material2-docs-dev"
 PROJECT_ID["stable", "prod"]="material-angular-io"
+PROJECT_ID["stable", "beta"]="beta-angular-material-io"
 PROJECT_ID["v5", "dev"]="material2-docs-5"
 PROJECT_ID["v5", "prod"]="v5-material-angular-io"
 PROJECT_ID["v6", "dev"]="material2-docs-6"
