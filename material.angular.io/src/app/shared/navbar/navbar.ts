@@ -14,6 +14,8 @@ const SECTIONS_KEYS = Object.keys(SECTIONS);
   styleUrls: ['./navbar.scss']
 })
 export class NavBar {
+  isNextVersion = location.hostname.startsWith('next.material.angular.io');
+
   get sections() {
     return SECTIONS;
   }

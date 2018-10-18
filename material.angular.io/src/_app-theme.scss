@@ -23,6 +23,7 @@
   $warn: map-get($theme, warn);
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
+  $next-theme: mat-palette($mat-red);
 
   .docs-app-background {
     background: mat-color($background, background);
@@ -39,6 +40,10 @@
   .docs-footer {
     background: mat-color($primary);
     color: mat-color($primary, default-contrast);
+  }
+
+  .is-next-version {
+    background: mat-color($next-theme, 900) !important;
   }
 
   @include component-category-list-theme($theme);
