@@ -1,5 +1,6 @@
 <!-- TODO: figure out if the <nav> should go inside of a <header> element. -->
-<nav class="docs-navbar-header">
+<nav class="docs-navbar-header"
+     [class.is-next-version]="isNextVersion">
   <a mat-button class="docs-button" routerLink="/" aria-label="Angular Material">
     <img class="docs-angular-logo"
          src="../../../assets/img/homepage/angular-white-transparent.svg"

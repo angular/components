@@ -7,6 +7,8 @@ import {materialVersion} from '../version/version';
   styleUrls: ['./footer.scss']
 })
 export class Footer {
+  isNextVersion = location.hostname.startsWith('next.material.angular.io');
+
   version = materialVersion;
 }
 
