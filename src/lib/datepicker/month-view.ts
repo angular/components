@@ -30,17 +30,20 @@ import {
   Output,
   ViewEncapsulation,
   ViewChild,
+  SkipSelf,
+  OnDestroy,
 } from '@angular/core';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
   MatDateFormats,
   MatDateSelection,
-  MatSingleDateSelection
+  MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY
 } from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
+import {Subscription} from 'rxjs';
 
 
 const DAYS_PER_WEEK = 7;
@@ -49,6 +52,7 @@ const DAYS_PER_WEEK = 7;
 /**
  * An internal component used to display a single month in the datepicker.
  * @docs-private
+ * @dynamic
  */
 @Component({
   moduleId: module.id,
@@ -56,9 +60,14 @@ const DAYS_PER_WEEK = 7;
   templateUrl: 'month-view.html',
   exportAs: 'matMonthView',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{
+    provide: MatDateSelection,
+    deps: [[new Optional(), new SkipSelf(), MatDateSelection], DateAdapter],
+    useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
+  }]
 })
-export class MatMonthView<D> implements AfterContentInit {
+export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   /**
    * The date to display in this month view (everything other than the month and year is ignored).
    */
@@ -81,9 +90,8 @@ export class MatMonthView<D> implements AfterContentInit {
   set selected(value: MatDateSelection<D>) {
     this._selected = value;
     // this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._selectedDate = this._getDateInCurrentMonth(this._selected.getFirstSelectedDate());
+    this.extractDate();
   }
-  private _selected: MatDateSelection<D> = new MatSingleDateSelection<D>(this._dateAdapter);
 
   /** The minimum selectable date. */
   @Input()
@@ -137,7 +145,10 @@ export class MatMonthView<D> implements AfterContentInit {
   /** The names of the weekdays. */
   _weekdays: {long: string, narrow: string}[];
 
+  private dateSubscription: Subscription;
+
   constructor(private _changeDetectorRef: ChangeDetectorRef,
+              private _selected: MatDateSelection<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               @Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
@@ -159,10 +170,17 @@ export class MatMonthView<D> implements AfterContentInit {
     this._weekdays = weekdays.slice(firstDayOfWeek).concat(weekdays.slice(0, firstDayOfWeek));
 
     this._activeDate = this._dateAdapter.today();
+
+    this.extractDate();
+    this.dateSubscription = _selected.valueChanges.subscribe(() => this.extractDate());
   }
 
   ngAfterContentInit() {
     this._init();
+  }
+
+  ngOnDestroy() {
+    this.dateSubscription.unsubscribe();
   }
 
   /** Handles when a new date is selected. */
@@ -172,6 +190,7 @@ export class MatMonthView<D> implements AfterContentInit {
       const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
       const selectedDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
 
+      this._selected.add(selectedDate);
       this.selectedChange.emit(selectedDate);
     }
 
@@ -283,6 +302,11 @@ export class MatMonthView<D> implements AfterContentInit {
       this._weeks[this._weeks.length - 1]
           .push(new MatCalendarCell<D>(i + 1, dateNames[i], ariaLabel, enabled, date));
     }
+  }
+
+  /** Extract selected date from current selection */
+  private extractDate() {
+    this._selectedDate = this._getDateInCurrentMonth(this._selected.getFirstSelectedDate());
   }
 
   /** Date filter for the month */

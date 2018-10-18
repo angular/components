@@ -24,12 +24,16 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
+  SkipSelf,
 } from '@angular/core';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
   MatDateFormats,
-  MatDateSelection
+  MatDateSelection,
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
+  MatSingleDateSelection,
+  MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY
 } from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -161,6 +165,7 @@ export class MatCalendarHeader<D> {
 /**
  * A calendar that is used as part of the datepicker.
  * @docs-private
+ * @dynamic
  */
 @Component({
   moduleId: module.id,
@@ -173,6 +178,11 @@ export class MatCalendarHeader<D> {
   exportAs: 'matCalendar',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{
+    provide: MatDateSelection,
+    deps: [[new Optional(), new SkipSelf(), MatDateSelection], DateAdapter],
+    useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
+  }],
 })
 export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
   /** An input indicating the type of the header component, if set. */
@@ -206,9 +216,10 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   get selected(): MatDateSelection<D> | null { return this._selected; }
   set selected(value: MatDateSelection<D> | null) {
     // this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._selected = value;
+    if (value) {
+      this._selected = value;
+    }
   }
-  private _selected: MatDateSelection<D> | null;
 
   /** The minimum selectable date. */
   @Input()
@@ -281,6 +292,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   stateChanges = new Subject<void>();
 
   constructor(_intl: MatDatepickerIntl,
+              private _selected: MatDateSelection<D>,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               private _changeDetectorRef: ChangeDetectorRef) {

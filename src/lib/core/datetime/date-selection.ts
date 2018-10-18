@@ -6,8 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FactoryProvider, Optional, SkipSelf} from '@angular/core';
 import {DateAdapter} from '@angular/material/core';
 import {Subject} from 'rxjs';
+
 
 export abstract class MatDateSelection<D> {
   valueChanges = new Subject<void>();
@@ -174,3 +176,14 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
     return false;
   }
 }
+
+export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY<D>(parent: MatSingleDateSelection<D>,
+                                                           adapter: DateAdapter<D>) {
+  return parent || new MatSingleDateSelection(adapter);
+}
+
+export const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
+  provide: MatDateSelection,
+  deps: [[new Optional(), new SkipSelf(), MatDateSelection], DateAdapter],
+  useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY
+};

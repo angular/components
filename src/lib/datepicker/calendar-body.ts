@@ -15,9 +15,15 @@ import {
   Output,
   ViewEncapsulation,
   NgZone,
+  Optional,
+  SkipSelf,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
-import {MatDateSelection} from '@angular/material/core';
+import {
+  MatDateSelection,
+  DateAdapter,
+  MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY
+} from '@angular/material/core';
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
@@ -49,6 +55,11 @@ export class MatCalendarCell<D> {
   exportAs: 'matCalendarBody',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{
+    provide: MatDateSelection,
+    deps: [[new Optional(), new SkipSelf(), MatDateSelection], DateAdapter],
+    useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
+  }],
 })
 export class MatCalendarBody<D> {
   /** The label for the table. (e.g. "Jan 2017"). */
@@ -80,15 +91,18 @@ export class MatCalendarBody<D> {
 
   /** Emits when a new value is selected. */
   // this should no longer be necessary since the date selection handles changes internally.
-  // @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
+  @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
 
-  constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) { }
+  constructor(private _elementRef: ElementRef<HTMLElement>,
+              private _ngZone: NgZone,
+              private _selected: MatDateSelection<D>) { }
 
   _cellClicked(cell: MatCalendarCell<D>): void {
     if (!cell.enabled) {
       return;
     }
-    // this.selectedValueChange.emit(cell.value);
+
+    this.selectedValueChange.emit(cell.value);
   }
 
   /** The number of blank cells to put at the beginning for the first row. */
@@ -109,7 +123,7 @@ export class MatCalendarBody<D> {
   }
 
   _isSelected(item: MatCalendarCell<D>): boolean {
-    return this.selectedValue.contains(item.date);
+    return this._selected.contains(item.date);
   }
 
   /** Focuses the active cell after the microtask queue is empty. */

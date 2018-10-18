@@ -131,7 +131,10 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
 // TODO(mmalerba): We use a component instead of a directive here so the user can use implicit
 // template reference variables (e.g. #d vs #d="matDatepicker"). We can change this to a directive
 // if angular adds support for `exportAs: '$implicit'` on directives.
-/** Component responsible for managing the datepicker popup/dialog. */
+/**
+ * Component responsible for managing the datepicker popup/dialog.
+ * @dynamic
+ */
 @Component({
   moduleId: module.id,
   selector: 'mat-datepicker',
@@ -139,6 +142,11 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   exportAs: 'matDatepicker',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  providers: [{
+    deps: [DateAdapter],
+    provide: MatDateSelection,
+    useFactory: (adapter: DateAdapter<D>) => new MatSingleDateSelection(adapter),
+  }]
 })
 export class MatDatepicker<D> implements OnDestroy, CanColor {
   private _scrollStrategy: () => ScrollStrategy;
@@ -280,6 +288,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
               private _overlay: Overlay,
               private _ngZone: NgZone,
               private _viewContainerRef: ViewContainerRef,
+              readonly _dateSelection: MatDateSelection<D>,
               @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
@@ -289,6 +298,8 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     }
 
     this._scrollStrategy = scrollStrategy;
+
+    _dateSelection.add(_dateAdapter.today());
   }
 
   ngOnDestroy() {

@@ -5,11 +5,9 @@
   <mat-month-view
       *ngSwitchCase="'month'"
       [(activeDate)]="activeDate"
-      [selected]="selected"
       [dateFilter]="dateFilter"
       [maxDate]="maxDate"
       [minDate]="minDate"
-      (selectedChange)="_dateSelected($event)"
       (_userSelection)="_userSelected()">
   </mat-month-view>
 
