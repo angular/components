@@ -72,7 +72,14 @@ def ng_test_library(deps = [], tsconfig = None, **kwargs):
     **kwargs
   )
 
-def ng_web_test_suite(deps = [], srcs = [], static_css = [], **kwargs):
+def ng_web_test_suite(deps = [], srcs = [], static_css = [], prebuilt_theme = False,
+                      bootstrap = [], **kwargs):
+
+  # We add a option for including a prebuilt theme in the test suite because otherwise there
+  # will be a lot of code duplication and it just requires more work to setup a test suite.
+  if prebuilt_theme:
+    static_css = static_css + ["//src/lib/prebuilt-themes:indigo-pink"]
+
   # Workaround for https://github.com/bazelbuild/rules_typescript/issues/301
   # Since some of our tests depend on CSS files which are not part of the `ng_module` rule,
   # we need to somehow load static CSS files within Karma (e.g. overlay prebuilt). Those styles
@@ -80,7 +87,7 @@ def ng_web_test_suite(deps = [], srcs = [], static_css = [], **kwargs):
   # allows JS files to be included and served within Karma, we need to create a JS file that
   # loads the given CSS file.
   for css_label in static_css:
-    css_id = "static-css-file-%s" % (css_label.strip(':').strip('/'))
+    css_id = "static-css-file-%s" % (css_label.replace("/", "_").replace(":", "-"))
     deps += [":%s" % css_id]
 
     native.genrule(
@@ -108,6 +115,7 @@ def ng_web_test_suite(deps = [], srcs = [], static_css = [], **kwargs):
     bootstrap = [
       "@npm//node_modules/zone.js:dist/zone-testing-bundle.js",
       "@npm//node_modules/reflect-metadata:Reflect.js",
-    ],
+      "@npm//node_modules/hammerjs:hammer.js",
+    ] + bootstrap,
     **kwargs
   )
