@@ -18,5 +18,5 @@ describe('NavBar', () => {
     fixture.detectChanges();
   });
 
-  // Note: Add tests is logic is added to navbar class.
+  // Note: Add tests as logic is added to navbar class.
 });
