@@ -298,8 +298,6 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     }
 
     this._scrollStrategy = scrollStrategy;
-
-    _dateSelection.add(_dateAdapter.today());
   }
 
   ngOnDestroy() {

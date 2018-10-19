@@ -22,7 +22,8 @@ import {take} from 'rxjs/operators';
 import {
   MatDateSelection,
   DateAdapter,
-  MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY
+  MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
+  DateRange
 } from '@angular/material/core';
 
 /**
@@ -34,7 +35,7 @@ export class MatCalendarCell<D> {
               public displayValue: string,
               public ariaLabel: string,
               public enabled: boolean,
-              public date: D) {}
+              public range: DateRange<D>) {}
 }
 
 
@@ -90,7 +91,6 @@ export class MatCalendarBody<D> {
   @Input() cellAspectRatio = 1;
 
   /** Emits when a new value is selected. */
-  // this should no longer be necessary since the date selection handles changes internally.
   @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(private _elementRef: ElementRef<HTMLElement>,
@@ -123,7 +123,7 @@ export class MatCalendarBody<D> {
   }
 
   _isSelected(item: MatCalendarCell<D>): boolean {
-    return this._selected.contains(item.date);
+    return this._selected.within(item.range);
   }
 
   /** Focuses the active cell after the microtask queue is empty. */

@@ -38,7 +38,8 @@ import {
   MAT_DATE_FORMATS,
   MatDateFormats,
   MatDateSelection,
-  MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY
+  MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
+  DateRange
 } from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
@@ -85,6 +86,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   private _activeDate: D;
 
   /** The currently selected date. */
+  // TODO rever this to original API;
   @Input()
   get selected(): MatDateSelection<D> { return this._selected; }
   set selected(value: MatDateSelection<D>) {
@@ -298,9 +300,10 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
             this._dateAdapter.getYear(this.activeDate),
             this._dateAdapter.getMonth(this.activeDate), i + 1);
       const enabled = this._shouldEnableDate(date);
+      const range: DateRange<D> = {start: date, end: date};
       const ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
       this._weeks[this._weeks.length - 1]
-          .push(new MatCalendarCell<D>(i + 1, dateNames[i], ariaLabel, enabled, date));
+          .push(new MatCalendarCell<D>(i + 1, dateNames[i], ariaLabel, enabled, range));
     }
   }
 

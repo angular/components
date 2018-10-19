@@ -30,11 +30,21 @@ import {
   Output,
   ViewChild,
   ViewEncapsulation,
+  SkipSelf,
+  OnDestroy,
 } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MatDateFormats,
+  MatDateSelection,
+  MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
+  DateRange
+} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
+import {Subscription} from 'rxjs';
 
 /**
  * An internal component used to display a single year in the datepicker.
@@ -46,9 +56,14 @@ import {createMissingDateImplError} from './datepicker-errors';
   templateUrl: 'year-view.html',
   exportAs: 'matYearView',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{
+    provide: MatDateSelection,
+    deps: [[new Optional(), new SkipSelf(), MatDateSelection], DateAdapter],
+    useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
+  }]
 })
-export class MatYearView<D> implements AfterContentInit {
+export class MatYearView<D> implements AfterContentInit, OnDestroy {
   /** The date to display in this year view (everything other than the year is ignored). */
   @Input()
   get activeDate(): D { return this._activeDate; }
@@ -65,12 +80,10 @@ export class MatYearView<D> implements AfterContentInit {
 
   /** The currently selected date. */
   @Input()
-  get selected(): D | null { return this._selected; }
+  get selected(): D | null { return this._selected.getFirstSelectedDate(); }
   set selected(value: D | null) {
-    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._selectedMonth = this._getMonthInCurrentYear(this._selected);
+    this._selected.add(value);
   }
-  private _selected: D | null;
 
   /** The minimum selectable date. */
   @Input()
@@ -118,7 +131,10 @@ export class MatYearView<D> implements AfterContentInit {
    */
   _selectedMonth: number | null;
 
+  private dateSubscription: Subscription;
+
   constructor(private _changeDetectorRef: ChangeDetectorRef,
+              private _selected: MatDateSelection<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               @Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
@@ -130,10 +146,17 @@ export class MatYearView<D> implements AfterContentInit {
     }
 
     this._activeDate = this._dateAdapter.today();
+
+    this.extractCurrentMonth();
+    this.dateSubscription = _selected.valueChanges.subscribe(() => this.extractCurrentMonth());
   }
 
   ngAfterContentInit() {
     this._init();
+  }
+
+  ngOnDestroy() {
+    this.dateSubscription.unsubscribe();
   }
 
   /** Handles when a new month is selected. */
@@ -235,10 +258,16 @@ export class MatYearView<D> implements AfterContentInit {
 
   /** Creates an MatCalendarCell for the given month. */
   private _createCellForMonth(month: number, monthName: string) {
-    const date = this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1);
-    const ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.monthYearA11yLabel);
+    const year = this._dateAdapter.getYear(this.activeDate);
+    const startDate = this._dateAdapter.createDate(year, month, 1);
+    const ariaLabel = this._dateAdapter.format(startDate,
+                                               this._dateFormats.display.monthYearA11yLabel);
+    const range: DateRange<D> = {
+      start: startDate,
+      end: this._dateAdapter.createDate(year, month, this._dateAdapter.getNumDaysInMonth(startDate))
+    };
     return new MatCalendarCell(
-        month, monthName.toLocaleUpperCase(), ariaLabel, this._shouldEnableMonth(month), date);
+        month, monthName.toLocaleUpperCase(), ariaLabel, this._shouldEnableMonth(month), range);
   }
 
   /** Whether the given month is enabled. */
@@ -310,5 +339,9 @@ export class MatYearView<D> implements AfterContentInit {
   /** Determines whether the user has the RTL layout direction. */
   private _isRtl() {
     return this._dir && this._dir.value === 'rtl';
+  }
+
+  private extractCurrentMonth() {
+    this._selectedMonth = this._getMonthInCurrentYear(this._selected.getFirstSelectedDate());
   }
 }

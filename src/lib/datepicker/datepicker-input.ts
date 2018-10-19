@@ -243,12 +243,9 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /** The form control validator for the date filter. */
   private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValueSelection = new MatSingleDateSelection(this._dateAdapter, control.value);
-    return !this._dateFilter ||
-        !controlValueSelection.isValid() ||
-        this._dateFilter(controlValueSelection.asDate()) ?
-          null :
-          {'matDatepickerFilter': true};
+    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
+    return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ?
+        null : {'matDatepickerFilter': true};
   }
 
   /** The combined form control validator for this input. */

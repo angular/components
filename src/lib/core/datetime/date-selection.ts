@@ -28,6 +28,7 @@ export abstract class MatDateSelection<D> {
   abstract isSame(other: MatDateSelection<D>): boolean;
   abstract isValid(): boolean;
   abstract contains(value: D): boolean;
+  abstract within(range: DateRange<D>): boolean;
 }
 
 export interface DateRange<D> {
@@ -90,6 +91,16 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
 
   contains(value: D): boolean {
     return !!(this.date && this.adapter.sameDate(value, this.date));
+  }
+
+  /**
+   * Determines if the single date is within a given date range. Retuns false if either dates of
+   * the range is null or if the selection is undefined.
+   */
+  within(range: DateRange<D>): boolean {
+    return !!(this.date && range.start && range.end &&
+      this.adapter.compareDate(range.start, this.date) <= 0 &&
+      this.adapter.compareDate(this.date, range.end) <= 0);
   }
 }
 
@@ -174,6 +185,12 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
     }
 
     return false;
+  }
+
+  within(range: DateRange<D>): boolean {
+    return !!(this.start && this.end && range.start && range.end &&
+        this.adapter.compareDate(range.start, this.start) <= 0 &&
+        this.adapter.compareDate(this.end, range.end) <= 0);
   }
 }
 
