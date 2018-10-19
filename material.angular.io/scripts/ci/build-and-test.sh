@@ -10,10 +10,12 @@ source ./scripts/ci/travis-mode.sh
 
 # Run the specified mode.
 if is_lint; then
-  $(npm bin)/ng lint
+  npm run lint
 elif is_e2e; then
-  $(npm bin)/ng e2e
+  bash ./tools/fetch-assets.sh
+  npm run e2e
 elif is_test; then
+  bash ./tools/fetch-assets.sh
   npm run build-themes
-  $(npm bin)/ng test --watch false --progress=false
+  npm run test -- --watch false --progress=false
 fi
