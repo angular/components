@@ -30,12 +30,15 @@ export class MaterialDocsApp {
   }
 }
 
-function isNavigationWithinComponentView(oldUrl: string, newUrl: string) {
-  const componentViewExpression = /components\/(\w+)/;
-  return oldUrl && newUrl
-      && componentViewExpression.test(oldUrl)
-      && componentViewExpression.test(newUrl)
-      && oldUrl.match(componentViewExpression)[1] === newUrl.match(componentViewExpression)[1];
+function isNavigationWithinComponentView(previousUrl: string, newUrl: string) {
+  const componentViewExpression = /(cdk|components)\/(\w+)/;
+
+  const previousUrlMatch = previousUrl.match(componentViewExpression);
+  const newUrlMatch = newUrl.match(componentViewExpression);
+
+  return previousUrl && newUrl && previousUrlMatch && newUrlMatch
+      && previousUrlMatch[0] === newUrlMatch[0]
+      && previousUrlMatch[1] === newUrlMatch[1];
 }
 
 function resetScrollPosition() {
