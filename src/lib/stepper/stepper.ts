@@ -46,9 +46,6 @@ import {MatStepLabel} from './step-label';
 import {matStepperAnimations} from './stepper-animations';
 import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
 
-// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
-export const _CdkStepper = CdkStepper;
-
 @Component({
   moduleId: module.id,
   selector: 'mat-step',
@@ -86,7 +83,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
 @Directive({
   selector: '[matStepper]'
 })
-export class MatStepper extends _CdkStepper implements AfterContentInit {
+export class MatStepper extends CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */
   @ViewChildren(MatStepHeader) _stepHeader: QueryList<MatStepHeader>;
 
@@ -116,6 +113,9 @@ export class MatStepper extends _CdkStepper implements AfterContentInit {
     }
   }
 }
+
+// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
+(MatStepper as any)['ctorParameters'] = () => (CdkStepper as any)['ctorParameters'];
 
 @Component({
   moduleId: module.id,
