@@ -12,7 +12,11 @@
  * @param fromIndex Starting index of the item.
  * @param toIndex Index to which the item should be moved.
  */
-export function moveItemInArray<T = any>(array: T[], fromIndex: number, toIndex: number): void {
+export function moveItemInArray<T = any>(
+  array: T[],
+  fromIndex: number,
+  toIndex: number
+): void {
   const from = clamp(fromIndex, array.length - 1);
   const to = clamp(toIndex, array.length - 1);
 
@@ -38,16 +42,47 @@ export function moveItemInArray<T = any>(array: T[], fromIndex: number, toIndex:
  * @param currentIndex Index of the item in its current array.
  * @param targetIndex Index at which to insert the item.
  */
-export function transferArrayItem<T = any>(currentArray: T[],
-                                           targetArray: T[],
-                                           currentIndex: number,
-                                           targetIndex: number): void {
+export function transferArrayItem<T = any>(
+  currentArray: T[],
+  targetArray: T[],
+  currentIndex: number,
+  targetIndex: number
+): void {
 
   const from = clamp(currentIndex, currentArray.length - 1);
   const to = clamp(targetIndex, targetArray.length);
 
   if (currentArray.length) {
     targetArray.splice(to, 0, currentArray.splice(from, 1)[0]);
+  }
+}
+
+/**
+ * Copies item from one array to another. Modifying transferArrayItem from cdk utils found here
+ *
+ * https://github.com/angular/material2/blob/master/src/cdk/drag-drop/drag-utils.ts
+ *
+ * @param currentArray Array from which to clone the item.
+ * @param targetArray Array into which is cloned the item.
+ * @param currentIndex Index of the item in its current array.
+ * @param targetIndex Index at which to insert the item.
+ *
+ * PR NOTE: I followed the pattern of the other two functions here. It would be simpler and more
+ * straight forward to cut the currentIndex and currentArray arguments and replace with the
+ * array element instead of pulling the element by its index inside the function. We could call
+ * it `currentElement`.
+ *
+ */
+export function copyArrayItem<T = any>(
+  currentArray: T[],
+  targetArray: T[],
+  currentIndex: number,
+  targetIndex: number
+): void {
+  const to = clamp(targetIndex, targetArray.length);
+
+  if (currentArray.length ) {
+    targetArray.splice(to, 0, currentArray[currentIndex]);
   }
 }
 
