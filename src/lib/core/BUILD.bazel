@@ -124,5 +124,6 @@ ng_test_library(
 
 ng_web_test_suite(
   name = "unit_tests",
-  deps = [":core_test_sources"]
+  deps = [":core_test_sources"],
+  prebuilt_theme = True,
 )

@@ -73,5 +73,6 @@ ng_test_library(
 
 ng_web_test_suite(
   name = "unit_tests",
-  deps = [":stepper_test_sources"]
+  deps = [":stepper_test_sources"],
+  prebuilt_theme = True,
 )
