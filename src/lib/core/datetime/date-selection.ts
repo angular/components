@@ -28,7 +28,7 @@ export abstract class MatDateSelection<D> {
   abstract isSame(other: MatDateSelection<D>): boolean;
   abstract isValid(): boolean;
   abstract contains(value: D): boolean;
-  abstract within(range: DateRange<D>): boolean;
+  abstract overlaps(range: DateRange<D>): boolean;
 }
 
 export interface DateRange<D> {
@@ -86,7 +86,7 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
   }
 
   asDate(): D | null {
-    return (this.isValid()) ? this.adapter.deserialize(this.date) : null;
+    return this.isValid() ? this.adapter.deserialize(this.date) : null;
   }
 
   contains(value: D): boolean {
@@ -97,7 +97,7 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
    * Determines if the single date is within a given date range. Retuns false if either dates of
    * the range is null or if the selection is undefined.
    */
-  within(range: DateRange<D>): boolean {
+  overlaps(range: DateRange<D>): boolean {
     return !!(this.date && range.start && range.end &&
       this.adapter.compareDate(range.start, this.date) <= 0 &&
       this.adapter.compareDate(this.date, range.end) <= 0);
@@ -187,10 +187,27 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
     return false;
   }
 
-  within(range: DateRange<D>): boolean {
-    return !!(this.start && this.end && range.start && range.end &&
+  /**
+   * Returns true if the given range and the selection overlap in any way. False if otherwise, that
+   * includes incomplete selections or ranges.
+   */
+  overlaps(range: DateRange<D>): boolean {
+    if (!(this.start && this.end && range.start && range.end)) {
+      return false;
+    }
+
+    return (
+      this.inBetween(range.start, this.start, this.end) ||
+      this.inBetween(range.end, this.start, this.end) ||
+      (
         this.adapter.compareDate(range.start, this.start) <= 0 &&
-        this.adapter.compareDate(this.end, range.end) <= 0);
+        this.adapter.compareDate(this.end, range.end) <= 0
+      )
+    );
+  }
+
+  private inBetween(value: D, from: D, to: D): boolean {
+    return this.adapter.compareDate(from, value) <= 0 && this.adapter.compareDate(value, to) <= 0;
   }
 }
 

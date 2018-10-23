@@ -196,7 +196,9 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
       this.selectedChange.emit(selectedDate);
     }
 
-    this._userSelection.emit();
+    if (this._selected.isComplete()) {
+      this._userSelection.emit();
+    }
   }
 
   /** Handles keydown events on the calendar body when calendar is in month view. */

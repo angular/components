@@ -123,7 +123,7 @@ export class MatCalendarBody<D> {
   }
 
   _isSelected(item: MatCalendarCell<D>): boolean {
-    return this._selected.within(item.range);
+    return this._selected.overlaps(item.range);
   }
 
   /** Focuses the active cell after the microtask queue is empty. */
