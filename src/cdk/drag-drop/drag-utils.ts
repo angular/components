@@ -67,7 +67,7 @@ export function copyArrayItem<T = any>(currentArray: T[],
                                        targetIndex: number): void {
   const to = clamp(targetIndex, targetArray.length);
 
-  if (currentArray.length ) {
+  if (currentArray.length) {
     targetArray.splice(to, 0, currentArray[currentIndex]);
   }
 }
