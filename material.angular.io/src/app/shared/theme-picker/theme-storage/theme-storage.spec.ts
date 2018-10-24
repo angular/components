@@ -1,40 +1,39 @@
-import {ThemeStorage} from './theme-storage';
+import {ThemeStorage, DocsSiteTheme} from './theme-storage';
 
 
 const testStorageKey = ThemeStorage.storageKey;
-const testTheme = {
+const testTheme: DocsSiteTheme = {
   primary: '#000000',
   accent: '#ffffff',
-  href: 'test/path/to/theme'
-};
-const createTestData = () => {
-  window.localStorage[testStorageKey] = JSON.stringify(testTheme);
-};
-const clearTestData = () => {
-  window.localStorage.clear();
+  name: 'test-theme'
 };
 
 describe('ThemeStorage Service', () => {
   const service = new ThemeStorage();
-  const getCurrTheme = () => JSON.parse(window.localStorage.getItem(testStorageKey));
+  const getCurrTheme = () => window.localStorage.getItem(testStorageKey);
   const secondTestTheme = {
     primary: '#666666',
     accent: '#333333',
-    href: 'some/cool/path'
+    name: 'other-test-theme'
   };
 
-  beforeEach(createTestData);
-  afterEach(clearTestData);
-
-  it('should set the current theme', () => {
-    expect(getCurrTheme()).toEqual(testTheme);
-    service.storeTheme(secondTestTheme);
-    expect(getCurrTheme()).toEqual(secondTestTheme);
+  beforeEach(() => {
+    window.localStorage[testStorageKey] = testTheme.name;
   });
 
-  it('should get the current theme', () => {
-    const theme = service.getStoredTheme();
-    expect(theme).toEqual(testTheme);
+  afterEach(() => {
+    window.localStorage.clear();
+  });
+
+  it('should set the current theme name', () => {
+    expect(getCurrTheme()).toEqual(testTheme.name);
+    service.storeTheme(secondTestTheme);
+    expect(getCurrTheme()).toEqual(secondTestTheme.name);
+  });
+
+  it('should get the current theme name', () => {
+    const theme = service.getStoredThemeName();
+    expect(theme).toEqual(testTheme.name);
   });
 
   it('should clear the stored theme data', () => {
