@@ -7,7 +7,7 @@
 <mat-menu class="docs-theme-picker-menu" #themeMenu="matMenu" x-position="before">
   <mat-grid-list cols="2">
     <mat-grid-tile *ngFor="let theme of themes">
-      <div mat-menu-item (click)="installTheme(theme)">
+      <div mat-menu-item (click)="installTheme(theme.name)">
         <div class="docs-theme-picker-swatch">
           <mat-icon class="docs-theme-chosen-icon" *ngIf="currentTheme === theme">check_circle</mat-icon>
           <div class="docs-theme-picker-primary" [style.background]="theme.primary"></div>
