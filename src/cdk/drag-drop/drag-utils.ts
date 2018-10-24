@@ -51,10 +51,8 @@ export function transferArrayItem<T = any>(currentArray: T[],
 }
 
 /**
- * Copies item from one array to another.
- *
- * https://github.com/angular/material2/blob/master/src/cdk/drag-drop/drag-utils.ts
- *
+ * Copies item from one array to another, leaving copied item in its
+ * original position in current array
  * @param currentArray Array from which to copy the item.
  * @param targetArray Array into which is copy the item.
  * @param currentIndex Index of the item in its current array.
