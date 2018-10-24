@@ -72,13 +72,12 @@ def ng_test_library(deps = [], tsconfig = None, **kwargs):
     **kwargs
   )
 
-def ng_web_test_suite(deps = [], srcs = [], static_css = [], prebuilt_theme = False,
-                      bootstrap = [], **kwargs):
-
-  # We add a option for including a prebuilt theme in the test suite because otherwise there
-  # will be a lot of code duplication and it just requires more work to setup a test suite.
-  if prebuilt_theme:
-    static_css = static_css + ["//src/lib/prebuilt-themes:indigo-pink"]
+def ng_web_test_suite(deps = [], srcs = [], static_css = [], bootstrap = [], **kwargs):
+  # Always include a prebuilt theme in the test suite because otherwise tests, which depend on CSS
+  # that is needed for measuring, will unexpectedly fail. Also always adding a prebuilt theme
+  # reduces the amount of setup that is needed to create a test suite Bazel target. Note that the
+  # prebuilt theme will be also added to CDK test suites but shouldn't affect anything.
+  static_css = static_css + ["//src/lib/prebuilt-themes:indigo-pink"]
 
   # Workaround for https://github.com/bazelbuild/rules_typescript/issues/301
   # Since some of our tests depend on CSS files which are not part of the `ng_module` rule,
