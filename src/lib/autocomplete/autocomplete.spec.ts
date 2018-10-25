@@ -2239,7 +2239,7 @@ describe('MatAutocomplete', () => {
     fixture.detectChanges();
 
     // Switch to second autocomplete
-    fixture.componentInstance.selected = 1;
+    fixture.componentInstance.trigger.autocomplete = fixture.componentInstance.autoTow;
     fixture.detectChanges();
 
     // reopen agian
@@ -2642,16 +2642,18 @@ class InputWithoutAutocompleteAndDisabled {
 
 @Component({
   template: `
-    <input type="number" matInput [matAutocomplete]="selected ? auto1 : auto0">
-    <mat-autocomplete #auto0="matAutocomplete">
+    <input type="number" matInput [matAutocomplete]="autoOne">
+    <mat-autocomplete #autoOne>
       <mat-option [value]="0">First</mat-option>
     </mat-autocomplete>
 
-    <mat-autocomplete #auto1="matAutocomplete">
+    <mat-autocomplete #autoTow>
       <mat-option [value]="1">Second</mat-option>
     </mat-autocomplete>
   `,
 })
 class DynamicallyChangingAutocomplete {
-  selected = 0;
+  @ViewChild('autoOne') autoOne: MatAutocomplete;
+  @ViewChild('autoTow') autoTow: MatAutocomplete;
+  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
 }
