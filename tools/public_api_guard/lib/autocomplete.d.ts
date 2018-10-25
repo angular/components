@@ -22,12 +22,13 @@ export declare const MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 
 export declare const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any;
 
-export declare class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterContentInit, CanDisableRipple {
+export declare class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterContentInit, AfterViewInit, CanDisableRipple {
     _classList: {
         [key: string]: boolean;
     };
     _isOpen: boolean;
     _keyManager: ActiveDescendantKeyManager<MatOption>;
+    _portal: TemplatePortal;
     autoActiveFirstOption: boolean;
     classList: string;
     readonly closed: EventEmitter<void>;
@@ -42,12 +43,13 @@ export declare class MatAutocomplete extends _MatAutocompleteMixinBase implement
     panelWidth: string | number;
     showPanel: boolean;
     template: TemplateRef<any>;
-    constructor(_changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, defaults: MatAutocompleteDefaultOptions);
+    constructor(_changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, defaults: MatAutocompleteDefaultOptions, _viewContainerRef: ViewContainerRef);
     _emitSelectEvent(option: MatOption): void;
     _getScrollTop(): number;
     _setScrollTop(scrollTop: number): void;
     _setVisibility(): void;
     ngAfterContentInit(): void;
+    ngAfterViewInit(): void;
 }
 
 export declare class MatAutocompleteBase {
@@ -85,7 +87,7 @@ export declare class MatAutocompleteTrigger implements ControlValueAccessor, OnD
     readonly optionSelections: Observable<MatOptionSelectionChange>;
     readonly panelClosingActions: Observable<MatOptionSelectionChange | null>;
     readonly panelOpen: boolean;
-    constructor(_element: ElementRef<HTMLInputElement>, _overlay: Overlay, _viewContainerRef: ViewContainerRef, _zone: NgZone, _changeDetectorRef: ChangeDetectorRef, scrollStrategy: any, _dir: Directionality, _formField: MatFormField, _document: any, _viewportRuler?: ViewportRuler | undefined);
+    constructor(_element: ElementRef<HTMLInputElement>, _overlay: Overlay, _zone: NgZone, _changeDetectorRef: ChangeDetectorRef, scrollStrategy: any, _dir: Directionality, _formField: MatFormField, _document: any, _viewportRuler?: ViewportRuler | undefined);
     _handleFocus(): void;
     _handleInput(event: KeyboardEvent): void;
     _handleKeydown(event: KeyboardEvent): void;
