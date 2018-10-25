@@ -569,8 +569,15 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       throw getMatAutocompleteMissingPanelError();
     }
 
-    if (!this._overlayRef) {
+    if (!this._portal || this._portal.templateRef !== this.autocomplete.template) {
       this._portal = new TemplatePortal(this.autocomplete.template, this._viewContainerRef);
+
+      if (this._overlayRef && this._overlayRef.hasAttached()) {
+        this._overlayRef.detach();
+      }
+    }
+
+    if (!this._overlayRef) {
       this._overlayRef = this._overlay.create(this._getOverlayConfig());
 
       // Use the `keydownEvents` in order to take advantage of

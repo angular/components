@@ -2221,6 +2221,38 @@ describe('MatAutocomplete', () => {
     expect(formControl.value).toBe('Cal', 'Expected new value to be propagated to model');
   }));
 
+  it('should work when dynamically changing the autocomplete', () => {
+    const fixture = createComponent(DynamicallyChangingAutocomplete);
+    fixture.detectChanges();
+    const input = fixture.debugElement.query(By.css('input')).nativeElement;
+
+    dispatchFakeEvent(input, 'focusin');
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toContain('First',
+      `Expected panel to display the option of the first autocomplete.`);
+    expect(overlayContainerElement.textContent).not.toContain('Second',
+      `Expected panel to not display the option of the second autocomplete.`);
+
+    // close overlay
+    dispatchFakeEvent(document, 'click');
+    fixture.detectChanges();
+
+    // Switch to second autocomplete
+    fixture.componentInstance.selected = 1;
+    fixture.detectChanges();
+
+    // reopen agian
+    dispatchFakeEvent(input, 'focusin');
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).not.toContain('First',
+      `Expected panel to not display the option of the first autocomplete.`);
+    expect(overlayContainerElement.textContent).toContain('Second',
+      `Expected panel to display the option of the second autocomplete.`);
+
+  });
+
 });
 
 @Component({
@@ -2606,4 +2638,20 @@ class AutocompleteWithNativeAutocompleteAttribute {
   template: '<input [matAutocomplete]="null" matAutocompleteDisabled>'
 })
 class InputWithoutAutocompleteAndDisabled {
+}
+
+@Component({
+  template: `
+    <input type="number" matInput [matAutocomplete]="selected ? auto1 : auto0">
+    <mat-autocomplete #auto0="matAutocomplete">
+      <mat-option [value]="0">First</mat-option>
+    </mat-autocomplete>
+
+    <mat-autocomplete #auto1="matAutocomplete">
+      <mat-option [value]="1">Second</mat-option>
+    </mat-autocomplete>
+  `,
+})
+class DynamicallyChangingAutocomplete {
+  selected = 0;
 }
