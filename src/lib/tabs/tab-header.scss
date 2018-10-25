@@ -70,8 +70,15 @@
 .mat-tab-label-container {
   display: flex;
   flex-grow: 1;
-  overflow: hidden;
   z-index: 1;
+  
+  // Letting it slide will give users a very good experience. Fixation makes people feel stiff so much!
+  overflow-y: hidden;
+  overflow-x: scroll;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .mat-tab-list {
