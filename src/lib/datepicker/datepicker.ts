@@ -339,8 +339,8 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       throw Error('A MatDatepicker can only be associated with a single input.');
     }
     this._datepickerInput = input;
-    this._inputSubscription = this._datepickerInput._valueChange.subscribe(
-          (value: MatDateSelection<D>) => this._selected = value);
+    // this._inputSubscription = this._datepickerInput._valueChange.subscribe(
+    //       (value: MatDateSelection<D>) => this._selected = value);
   }
 
   /** Open the calendar. */

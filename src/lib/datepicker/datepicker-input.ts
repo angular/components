@@ -109,13 +109,13 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     this._datepicker = value;
     this._datepicker._registerInput(this);
     this._datepickerSubscription.unsubscribe();
-    this._value = this._datepicker._dateSelection;
+    this._selectionModel = this._datepicker._dateSelection;
 
-    this._formatValue(this._value.getFirstSelectedDate());
+    this._formatValue(this._selectionModel.getFirstSelectedDate());
 
     this._datepickerSubscription = this._datepicker._dateSelection.valueChanges.subscribe(() => {
-      this._formatValue(this._value.getFirstSelectedDate());
-      this._cvaOnChange(this._value.getFirstSelectedDate());
+      this._formatValue(this._selectionModel.getFirstSelectedDate());
+      this._cvaOnChange(this._selectionModel.getFirstSelectedDate());
       this._onTouched();
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
       this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
@@ -133,27 +133,31 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /** The value of the input. */
   @Input()
-  get value(): D | null { return this._value ? this._value.getFirstSelectedDate() : null; }
+  get value(): D | null {
+    return this._selectionModel ? this._selectionModel.getFirstSelectedDate() : null;
+  }
   set value(value: D | null) {
-    const oldDate = this._value.getFirstSelectedDate();
+    const oldDate = this._selectionModel.getFirstSelectedDate();
 
-    if (this._value && !this._dateAdapter.sameDate(value, this._value.getFirstSelectedDate())) {
-      this._value.add(value);
-    } else {
-      this._value = new MatSingleDateSelection(this._dateAdapter, value);
+    if (!this._selectionModel) {
+      throw new Error('Input has no MatDatePicker associated with it.');
     }
 
-    this._lastValueValid = !this._value || this._value.isValid();
+    if (!this._dateAdapter.sameDate(value, this._selectionModel.getFirstSelectedDate())) {
+      this._selectionModel.add(value);
+    }
 
-    if (this._value) {
-      this._formatValue(this._value.getFirstSelectedDate());
+    this._lastValueValid = !this._selectionModel || this._selectionModel.isValid();
+
+    if (this._selectionModel) {
+      this._formatValue(this._selectionModel.getFirstSelectedDate());
     }
 
     if (!this._dateAdapter.sameDate(value, oldDate)) {
       this._valueChange.emit(value);
     }
   }
-  private _value: MatDateSelection<D>;
+  private _selectionModel: MatDateSelection<D>;
 
   /** The minimum valid date. */
   @Input()
@@ -338,16 +342,16 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   _onInput(value: string) {
     const date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-    const current = this._value.getFirstSelectedDate();
+    const current = this._selectionModel.getFirstSelectedDate();
 
     if (!date) {
       return;
     }
 
     if (!this._dateAdapter.sameDate(current, date)) {
-      this._value.add(date);
-      this._cvaOnChange(this._value.getFirstSelectedDate());
-      this._valueChange.emit(this._value.getFirstSelectedDate());
+      this._selectionModel.add(date);
+      this._cvaOnChange(this._selectionModel.getFirstSelectedDate());
+      this._valueChange.emit(this._selectionModel.getFirstSelectedDate());
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
     }
   }

@@ -29,8 +29,9 @@ import {
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
  * @docs-private
+ * @breaking-change 9.0.0 remove default
  */
-export class MatCalendarCell<D> {
+export class MatCalendarCell<D = any> {
   constructor(public value: number,
               public displayValue: string,
               public ariaLabel: string,
@@ -95,14 +96,12 @@ export class MatCalendarBody<D> {
 
   constructor(private _elementRef: ElementRef<HTMLElement>,
               private _ngZone: NgZone,
-              private _selected: MatDateSelection<D>) { }
+              private _selectionModel: MatDateSelection<D>) { }
 
   _cellClicked(cell: MatCalendarCell<D>): void {
-    if (!cell.enabled) {
-      return;
+    if (cell.enabled) {
+      this.selectedValueChange.emit(cell.value);
     }
-
-    this.selectedValueChange.emit(cell.value);
   }
 
   /** The number of blank cells to put at the beginning for the first row. */
@@ -123,7 +122,7 @@ export class MatCalendarBody<D> {
   }
 
   _isSelected(item: MatCalendarCell<D>): boolean {
-    return this._selected.overlaps(item.range);
+    return this._selectionModel.overlaps(item.range);
   }
 
   /** Focuses the active cell after the microtask queue is empty. */

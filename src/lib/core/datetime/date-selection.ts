@@ -99,8 +99,8 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
    */
   overlaps(range: DateRange<D>): boolean {
     return !!(this.date && range.start && range.end &&
-      this.adapter.compareDate(range.start, this.date) <= 0 &&
-      this.adapter.compareDate(this.date, range.end) <= 0);
+        this.adapter.compareDate(range.start, this.date) <= 0 &&
+        this.adapter.compareDate(this.date, range.end) <= 0);
   }
 }
 
@@ -197,8 +197,8 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
     }
 
     return (
-      this.inBetween(range.start, this.start, this.end) ||
-      this.inBetween(range.end, this.start, this.end) ||
+      this.isBetween(range.start, this.start, this.end) ||
+      this.isBetween(range.end, this.start, this.end) ||
       (
         this.adapter.compareDate(range.start, this.start) <= 0 &&
         this.adapter.compareDate(this.end, range.end) <= 0
@@ -206,7 +206,7 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
     );
   }
 
-  private inBetween(value: D, from: D, to: D): boolean {
+  private isBetween(value: D, from: D, to: D): boolean {
     return this.adapter.compareDate(from, value) <= 0 && this.adapter.compareDate(value, to) <= 0;
   }
 }
@@ -219,5 +219,5 @@ export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY<D>(parent: MatSingleDate
 export const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
   provide: MatDateSelection,
   deps: [[new Optional(), new SkipSelf(), MatDateSelection], DateAdapter],
-  useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY
+  useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
 };
