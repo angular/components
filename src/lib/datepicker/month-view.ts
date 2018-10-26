@@ -84,13 +84,15 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   }
   private _activeDate: D;
 
-  /** The currently selected date. */
-  // TODO rever this to original API;
+  /**
+   * The currently selected date.
+   * @depricated Use `selectionModel`.
+   * @breaking-change 9.0.0 remove selected.
+   */
   @Input()
-  get selected(): MatDateSelection<D> { return this._selected; }
-  set selected(value: MatDateSelection<D>) {
-    this._selected = value;
-    // this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  get selected(): D | null { return this._selectionModel.getFirstSelectedDate(); }
+  set selected(value: D | null) {
+    this._selectionModel.add(value);
     this.extractDate();
   }
 
@@ -149,7 +151,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   private dateSubscription: Subscription;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef,
-              private _selected: MatDateSelection<D>,
+              readonly _selectionModel: MatDateSelection<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               @Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
@@ -173,7 +175,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
     this._activeDate = this._dateAdapter.today();
 
     this.extractDate();
-    this.dateSubscription = _selected.valueChanges.subscribe(() => this.extractDate());
+    this.dateSubscription = _selectionModel.valueChanges.subscribe(() => this.extractDate());
   }
 
   ngAfterContentInit() {
@@ -191,11 +193,11 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
       const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
       const selectedDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
 
-      this._selected.add(selectedDate);
+      this._selectionModel.add(selectedDate);
       this.selectedChange.emit(selectedDate);
     }
 
-    if (this._selected.isComplete()) {
+    if (this._selectionModel.isComplete()) {
       this._userSelection.emit();
     }
   }
@@ -266,7 +268,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
 
   /** Initializes this month view. */
   _init() {
-    this._selectedDate = this._getDateInCurrentMonth(this.selected.getFirstSelectedDate());
+    this._selectedDate = this._getDateInCurrentMonth(this._selectionModel.getFirstSelectedDate());
     this._todayDate = this._getDateInCurrentMonth(this._dateAdapter.today());
     this._monthLabel =
         this._dateAdapter.getMonthNames('short')[this._dateAdapter.getMonth(this.activeDate)]
@@ -310,7 +312,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
 
   /** Extract selected date from current selection */
   private extractDate() {
-    this._selectedDate = this._getDateInCurrentMonth(this._selected.getFirstSelectedDate());
+    this._selectedDate = this._getDateInCurrentMonth(this._selectionModel.getFirstSelectedDate());
   }
 
   /** Date filter for the month */
