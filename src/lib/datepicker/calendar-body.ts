@@ -73,8 +73,16 @@ export class MatCalendarBody<D> {
   /** The value in the table that corresponds to today. */
   @Input() todayValue: number;
 
-  /** The value in the table that is currently selected. */
-  @Input() selectedValue: MatDateSelection<D>;
+  /**
+   * The value in the table that is currently selected.
+   * @deprecated use `selectionModel`
+   * @breaking-change 9.0.0 remove selected value.
+   */
+  @Input()
+  get selectedValue(): D { return this._selectionModel.getFirstSelectedDate()!; }
+  set selectedValue(value: D) {
+    this._selectionModel.add(value);
+  }
 
   /** The minimum number of free cells needed to fit the label in the first row. */
   @Input() labelMinRequiredCells: number;
