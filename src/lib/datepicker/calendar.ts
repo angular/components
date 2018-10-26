@@ -31,8 +31,8 @@ import {
   MAT_DATE_FORMATS,
   MatDateFormats,
   MatDateSelection,
-  MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
-  MatSingleDateSelection
+  MatSingleDateSelection,
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER
 } from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -176,11 +176,7 @@ export class MatCalendarHeader<D> {
   exportAs: 'matCalendar',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{
-    provide: MatDateSelection,
-    deps: [[new Optional(), new SkipSelf(), MatDateSelection], DateAdapter],
-    useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
-  }],
+  providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER],
 })
 export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
   /** An input indicating the type of the header component, if set. */

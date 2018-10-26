@@ -157,7 +157,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
       this._valueChange.emit(value);
     }
   }
-  private _selectionModel: MatDateSelection<D>;
+  private _selectionModel: MatSingleDateSelection<D>;
 
   /** The minimum valid date. */
   @Input()

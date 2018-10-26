@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FactoryProvider, Optional, SkipSelf} from '@angular/core';
-import {DateAdapter} from '@angular/material/core';
+import {FactoryProvider, Optional, SkipSelf, Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
+import {DateAdapter} from './date-adapter';
 
 
 export abstract class MatDateSelection<D> {
@@ -39,14 +39,16 @@ export interface DateRange<D> {
 /**
  * Concrete implementation of a MatDateSelection that holds a single date.
  */
+@Injectable()
 export class MatSingleDateSelection<D> extends MatDateSelection<D> {
   private date: D | null = null;
 
-  constructor(adapter: DateAdapter<D>, date?: D | null) {
+  constructor(adapter: DateAdapter<D>) {
     super(adapter);
-    if (date) {
-      this.date = date;
-    }
+  }
+
+  setSelection(date: D | null) {
+    this.date = date;
   }
 
   add(date: D | null) {
@@ -65,7 +67,9 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
   }
 
   clone(): MatDateSelection<D> {
-    return new MatSingleDateSelection<D>(this.adapter, this.date);
+    const cloned = new MatSingleDateSelection<D>(this.adapter);
+    cloned.setSelection(this.date);
+    return cloned;
   }
 
   getFirstSelectedDate() { return this.date; }
@@ -108,20 +112,13 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
  * Concrete implementation of a MatDateSelection that holds a date range, represented by
  * a start date and an end date.
  */
+@Injectable()
 export class MatRangeDateSelection<D> extends MatDateSelection<D> {
   private start: D | null = null;
   private end: D | null = null;
 
-  constructor(adapter: DateAdapter<D>, start?: D | null, end?: D | null) {
+  constructor(adapter: DateAdapter<D>) {
     super(adapter);
-
-    if (start) {
-      this.start = start;
-    }
-
-    if (end) {
-      this.end = end;
-    }
   }
 
   /**
@@ -142,8 +139,15 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
     this.valueChanges.next();
   }
 
+  setSelection(range: DateRange<D>) {
+    this.start = range.start;
+    this.end = range.end;
+  }
+
   clone(): MatDateSelection<D> {
-    return new MatRangeDateSelection<D>(this.adapter, this.start, this.end);
+    const cloned = new MatRangeDateSelection<D>(this.adapter);
+    cloned.setSelection({start: this.start, end: this.end});
+    return cloned;
   }
 
   getFirstSelectedDate() { return this.start; }
