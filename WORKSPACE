@@ -36,7 +36,6 @@ http_archive(
   name = "io_bazel_rules_sass",
   url = "https://github.com/bazelbuild/rules_sass/archive/1.14.1.zip",
   strip_prefix = "rules_sass-1.14.1",
-  sha256 = "d8b89e47b05092a6eed3fa199f2de7cf671a4b9165d0bf38f12a0363dda928d3",
 )
 
 # Since we are explitly fetching @build_bazel_rules_typescript, we should explicly
