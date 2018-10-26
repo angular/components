@@ -15,15 +15,12 @@ import {
   Output,
   ViewEncapsulation,
   NgZone,
-  Optional,
-  SkipSelf,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
 import {
   MatDateSelection,
-  DateAdapter,
-  MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
-  DateRange
+  DateRange,
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER
 } from '@angular/material/core';
 
 /**
@@ -57,11 +54,7 @@ export class MatCalendarCell<D = any> {
   exportAs: 'matCalendarBody',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{
-    provide: MatDateSelection,
-    deps: [[new Optional(), new SkipSelf(), MatDateSelection], DateAdapter],
-    useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
-  }],
+  providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER],
 })
 export class MatCalendarBody<D> {
   /** The label for the table. (e.g. "Jan 2017"). */
