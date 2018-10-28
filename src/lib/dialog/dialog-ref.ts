@@ -47,6 +47,7 @@ export class MatDialogRef<T, R = any> {
     public _containerInstance: MatDialogContainer,
     // @breaking-change 8.0.0 `_location` parameter to be removed.
     _location?: Location,
+    /** Unique ID that is automatically being generated on instantiation. */
     readonly id: string = `mat-dialog-${uniqueId++}`) {
 
     // Pass the id along to the container.

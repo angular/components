@@ -79,6 +79,10 @@ export class MatDialogClose implements OnInit, OnChanges {
   },
 })
 export class MatDialogTitle implements OnInit {
+  /**
+   * Element ID of the dialog title HTML element. If no ID is specified,
+   * one is being generated automatically on instantiation.
+   */
   @Input() id = `mat-dialog-title-${dialogElementUid++}`;
 
   constructor(
