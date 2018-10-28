@@ -163,6 +163,7 @@ export class MatSelectBase {
               public _defaultErrorStateMatcher: ErrorStateMatcher,
               public _parentForm: NgForm,
               public _parentFormGroup: FormGroupDirective,
+              /** @docs-private */
               public ngControl: NgControl) {}
 }
 export const _MatSelectMixinBase:
