@@ -22,5 +22,9 @@ let nextUniqueId = 0;
   }
 })
 export class MatError {
+  /**
+   * Element ID of the dialog title HTML element. If no ID is specified,
+   * one is being generated automatically on instantiation.
+   */
   @Input() id: string = `mat-error-${nextUniqueId++}`;
 }
