@@ -65,6 +65,7 @@ export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
   private _parentChangeSubscription = Subscription.EMPTY;
 
   constructor(
+      /** Reference to the containing Expansion Panel instance. */
       @Host() public panel: MatExpansionPanel,
       private _element: ElementRef,
       private _focusMonitor: FocusMonitor,
