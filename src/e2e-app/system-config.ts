@@ -76,6 +76,7 @@ System.config({
     '@angular/material/menu': 'dist/bundles/material-menu.umd.js',
     '@angular/material/paginator': 'dist/bundles/material-paginator.umd.js',
     '@angular/material/progress-bar': 'dist/bundles/material-progress-bar.umd.js',
+    '@angular/material/progress-container': 'dist/bundles/material-progress-container.umd.js',
     '@angular/material/progress-spinner': 'dist/bundles/material-progress-spinner.umd.js',
     '@angular/material/radio': 'dist/bundles/material-radio.umd.js',
     '@angular/material/select': 'dist/bundles/material-select.umd.js',

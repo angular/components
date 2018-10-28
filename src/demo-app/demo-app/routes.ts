@@ -56,6 +56,7 @@ import {PaginatorDemo} from '../paginator/paginator-demo';
 import {ExamplesPage} from '../examples-page/examples-page';
 import {TableDemo} from '../table/table-demo';
 import {DragAndDropDemo} from '../drag-drop/drag-drop-demo';
+import {ProgressContainerDemo} from '../progress-container/progress-container-demo';
 
 export const DEMO_APP_ROUTES: Routes = [
   {path: '', component: DemoApp, children: [
@@ -86,6 +87,7 @@ export const DEMO_APP_ROUTES: Routes = [
     {path: 'platform', component: PlatformDemo},
     {path: 'portal', component: PortalDemo},
     {path: 'progress-bar', component: ProgressBarDemo},
+    {path: 'progress-container', component: ProgressContainerDemo},
     {path: 'progress-spinner', component: ProgressSpinnerDemo},
     {path: 'radio', component: RadioDemo},
     {path: 'ripple', component: RippleDemo},

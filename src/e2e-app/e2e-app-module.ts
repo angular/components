@@ -17,6 +17,7 @@ import {
   MatMenuModule,
   MatNativeDateModule,
   MatProgressBarModule,
+  MatProgressContainerModule,
   MatProgressSpinnerModule,
   MatRadioModule,
   MatSidenavModule,
@@ -45,6 +46,7 @@ import {SidenavE2E} from './sidenav/sidenav-e2e';
 import {SlideToggleE2E} from './slide-toggle/slide-toggle-e2e';
 import {BasicTabs} from './tabs/tabs-e2e';
 import {VirtualScrollE2E} from './virtual-scroll/virtual-scroll-e2e';
+import {ProgressContainerE2E} from './progress-container/progress-container-e2e';
 
 /**
  * NgModule that contains all Material modules that are required to serve the e2e-app.
@@ -62,6 +64,7 @@ import {VirtualScrollE2E} from './virtual-scroll/virtual-scroll-e2e';
     MatListModule,
     MatMenuModule,
     MatProgressBarModule,
+    MatProgressContainerModule,
     MatProgressSpinnerModule,
     MatRadioModule,
     MatSidenavModule,
@@ -97,6 +100,7 @@ export class E2eMaterialModule {}
     InputE2E,
     MenuE2E,
     ProgressBarE2E,
+    ProgressContainerE2E,
     ProgressSpinnerE2E,
     SidenavE2E,
     SimpleCheckboxes,

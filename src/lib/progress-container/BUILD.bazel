@@ -1,0 +1,36 @@
+package(default_visibility=["//visibility:public"])
+
+load("@io_bazel_rules_sass//sass:sass.bzl", "sass_library", "sass_binary")
+load("//tools:defaults.bzl", "ng_module")
+
+ng_module(
+  name = "progress-container",
+  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
+  module_name = "@angular/material/progress-container",
+  assets = [":progress-container.css"] + glob(["**/*.html"]),
+  deps = [
+    "@angular//packages/common",
+    "@angular//packages/core",
+    "@rxjs",
+    "//src/lib/core",
+    "//src/cdk/coercion"
+  ],
+)
+
+
+# TODO(jelbourn): replace this w/ sass_library when it supports acting like a filegroup
+filegroup(
+  name = "progress_container_scss_partials",
+  srcs = glob(["**/_*.scss"]),
+)
+
+sass_binary(
+  name = "progress_container_scss",
+  src = "progress-container.scss",
+  deps = ["//src/lib/core:core_scss_lib"],
+)
+
+sass_library(
+  name = "theme",
+  srcs = glob(["**/*-theme.scss"]),
+)

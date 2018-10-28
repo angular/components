@@ -85,6 +85,7 @@ System.config({
     '@angular/material/menu': 'dist/packages/material/menu/index.js',
     '@angular/material/paginator': 'dist/packages/material/paginator/index.js',
     '@angular/material/progress-bar': 'dist/packages/material/progress-bar/index.js',
+    '@angular/material/progress-container': 'dist/packages/material/progress-container/index.js',
     '@angular/material/progress-spinner': 'dist/packages/material/progress-spinner/index.js',
     '@angular/material/radio': 'dist/packages/material/radio/index.js',
     '@angular/material/select': 'dist/packages/material/select/index.js',

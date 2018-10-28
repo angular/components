@@ -28,6 +28,7 @@ export * from '@angular/material/list';
 export * from '@angular/material/menu';
 export * from '@angular/material/paginator';
 export * from '@angular/material/progress-bar';
+export * from '@angular/material/progress-container';
 export * from '@angular/material/progress-spinner';
 export * from '@angular/material/radio';
 export * from '@angular/material/select';

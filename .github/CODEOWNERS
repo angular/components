@@ -21,6 +21,7 @@
 /src/lib/paginator/**                              @andrewseguin
 /src/lib/prebuilt-themes/**                        @jelbourn
 /src/lib/progress-bar/**                           @jelbourn @crisbeto @josephperrott
+/src/lib/progress-container/**                     @jelbourn @crisbeto
 /src/lib/progress-spinner/**                       @jelbourn @crisbeto @josephperrott
 /src/lib/radio/**                                  @jelbourn @devversion
 /src/lib/schematics/**                             @devversion @jelbourn
@@ -129,6 +130,7 @@
 /src/demo-app/platform/**                          @jelbourn @devversion
 /src/demo-app/portal/**                            @jelbourn
 /src/demo-app/progress-bar/**                      @jelbourn @crisbeto @josephperrott
+/src/demo-app/progress-container/**                @jelbourn @crisbeto
 /src/demo-app/progress-spinner/**                  @jelbourn @crisbeto @josephperrott
 /src/demo-app/radio/**                             @jelbourn @devversion
 /src/demo-app/ripple/**                            @devversion
@@ -162,6 +164,7 @@
 /e2e/components/list-e2e.spec.ts                   @jelbourn @crisbeto @devversion
 /e2e/components/menu-e2e.spec.ts                   @crisbeto
 /e2e/components/progress-bar-e2e.spec.ts           @jelbourn @crisbeto @josephperrott
+/e2e/components/progress-container-e2e.spec.ts     @jelbourn @crisbeto
 /e2e/components/progress-spinner-e2e.spec.ts       @jelbourn @crisbeto @josephperrott
 /e2e/components/radio-e2e.spec.ts                  @jelbourn @devversion
 /e2e/components/sidenav-e2e.spec.ts                @mmalerba
@@ -182,6 +185,7 @@
 /src/e2e-app/input/**                              @mmalerba
 /src/e2e-app/menu/**                               @crisbeto
 /src/e2e-app/progress-bar/**                       @jelbourn @crisbeto @josephperrott
+/src/e2e-app/progress-container/**                 @jelbourn @crisbeto
 /src/e2e-app/progress-spinner/**                   @jelbourn @crisbeto @josephperrott
 /src/e2e-app/radio/**                              @jelbourn @devversion
 /src/e2e-app/sidenav/**                            @mmalerba

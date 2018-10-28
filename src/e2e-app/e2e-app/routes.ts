@@ -10,6 +10,7 @@ import {SimpleCheckboxes} from '../checkbox/checkbox-e2e';
 import {DialogE2E} from '../dialog/dialog-e2e';
 import {GridListE2E} from '../grid-list/grid-list-e2e';
 import {ProgressBarE2E} from '../progress-bar/progress-bar-e2e';
+import {ProgressContainerE2E} from '../progress-container/progress-container-e2e';
 import {ProgressSpinnerE2E} from '../progress-spinner/progress-spinner-e2e';
 import {SlideToggleE2E} from '../slide-toggle/slide-toggle-e2e';
 import {InputE2E} from '../input/input-e2e';
@@ -38,6 +39,7 @@ export const E2E_APP_ROUTES: Routes = [
   {path: 'list', component: ListOverviewExample},
   {path: 'menu', component: MenuE2E},
   {path: 'progress-bar', component: ProgressBarE2E},
+  {path: 'progress-container', component: ProgressContainerE2E},
   {path: 'progress-spinner', component: ProgressSpinnerE2E},
   {path: 'radio', component: SimpleRadioButtons},
   {path: 'sidenav', component: SidenavE2E},

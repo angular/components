@@ -76,6 +76,7 @@ export class DemoApp {
     {name: 'Platform', route: '/platform'},
     {name: 'Portal', route: '/portal'},
     {name: 'Progress Bar', route: '/progress-bar'},
+    {name: 'Progress Container', route: '/progress-container'},
     {name: 'Progress Spinner', route: '/progress-spinner'},
     {name: 'Radio', route: '/radio'},
     {name: 'Ripple', route: '/ripple'},

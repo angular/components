@@ -64,6 +64,7 @@ import {VirtualScrollDemo} from '../virtual-scroll/virtual-scroll-demo';
 import {DemoApp, Home} from './demo-app';
 import {DEMO_APP_ROUTES} from './routes';
 import {DragAndDropDemo} from '../drag-drop/drag-drop-demo';
+import {ProgressContainerDemo} from '../progress-container/progress-container-demo';
 
 @NgModule({
   imports: [
@@ -116,6 +117,7 @@ import {DragAndDropDemo} from '../drag-drop/drag-drop-demo';
     PlatformDemo,
     PortalDemo,
     ProgressBarDemo,
+    ProgressContainerDemo,
     ProgressSpinnerDemo,
     RadioDemo,
     RippleDemo,

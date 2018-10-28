@@ -53,6 +53,7 @@ MATERIAL_PACKAGES = [
   "menu",
   "paginator",
   "progress-bar",
+  "progress-container",
   "progress-spinner",
   "radio",
   "select",
