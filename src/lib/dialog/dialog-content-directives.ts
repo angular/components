@@ -43,6 +43,7 @@ export class MatDialogClose implements OnInit, OnChanges {
   @Input('matDialogClose') _matDialogClose: any;
 
   constructor(
+    /** Reference to the Dialog instance. */
     @Optional() public dialogRef: MatDialogRef<any>,
     private _elementRef: ElementRef<HTMLElement>,
     private _dialog: MatDialog) {}
