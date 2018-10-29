@@ -30,7 +30,6 @@ import {
   NgZone,
   OnDestroy,
   Optional,
-  ViewContainerRef,
 } from '@angular/core';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
@@ -117,7 +116,6 @@ export function getMatAutocompleteMissingPanelError(): Error {
 })
 export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   private _overlayRef: OverlayRef | null;
-  private _portal: TemplatePortal;
   private _componentDestroyed = false;
   private _autocompleteDisabled = false;
   private _scrollStrategy: () => ScrollStrategy;
@@ -132,7 +130,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   private _manuallyFloatingLabel = false;
 
   /** The subscription for closing actions (some are bound to document). */
-  private _closingActionsSubscription: Subscription;
+  private _closingActionsSubscription = Subscription.EMPTY;
 
   /** Subscription to viewport size changes. */
   private _viewportSubscription = Subscription.EMPTY;
@@ -143,6 +141,8 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    * comes back.
    */
   private _canOpenOnNextFocus = true;
+
+  private _currentPortalAttached: TemplatePortal;
 
   /** Stream of keyboard events that can close the panel. */
   private readonly _closeKeyEventStream = new Subject<void>();
@@ -190,8 +190,8 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     this._autocompleteDisabled = coerceBooleanProperty(value);
   }
 
-  constructor(private _element: ElementRef<HTMLInputElement>, private _overlay: Overlay,
-              private _viewContainerRef: ViewContainerRef,
+  constructor(private _element: ElementRef<HTMLInputElement>,
+              private _overlay: Overlay,
               private _zone: NgZone,
               private _changeDetectorRef: ChangeDetectorRef,
               @Inject(MAT_AUTOCOMPLETE_SCROLL_STRATEGY) scrollStrategy: any,
@@ -569,14 +569,6 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       throw getMatAutocompleteMissingPanelError();
     }
 
-    if (!this._portal || this._portal.templateRef !== this.autocomplete.template) {
-      this._portal = new TemplatePortal(this.autocomplete.template, this._viewContainerRef);
-
-      if (this._overlayRef && this._overlayRef.hasAttached()) {
-        this._overlayRef.detach();
-      }
-    }
-
     if (!this._overlayRef) {
       this._overlayRef = this._overlay.create(this._getOverlayConfig());
 
@@ -603,9 +595,18 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this._overlayRef.updateSize({width: this._getPanelWidth()});
     }
 
-    if (this._overlayRef && !this._overlayRef.hasAttached()) {
-      this._overlayRef.attach(this._portal);
+    if (this._currentPortalAttached !== this.autocomplete._portal) {
+      if (this._overlayRef.hasAttached()) {
+        // There might already be a portal attached, so detach first
+        this._overlayRef.detach();
+
+        // Need be unsubscribe of old portal subscriptions
+        this._closingActionsSubscription.unsubscribe();
+      }
+
+      this._overlayRef.attach(this.autocomplete._portal);
       this._closingActionsSubscription = this._subscribeToClosingActions();
+
     }
 
     const wasOpen = this.panelOpen;
