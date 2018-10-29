@@ -605,6 +605,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       }
 
       this._overlayRef.attach(this.autocomplete._portal);
+      this._currentPortalAttached = this.autocomplete._portal;
       this._closingActionsSubscription = this._subscribeToClosingActions();
 
     }
