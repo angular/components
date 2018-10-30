@@ -38,7 +38,7 @@ docsContentRepoUrl="https://github.com/angular/material2-docs-content"
 buildVersion=$(node -pe "require('./package.json').version")
 
 # Name of the branch that is currently being deployed.
-branchName=${TRAVIS_BRANCH:-'master'}
+branchName=${CIRCLE_BRANCH:-'master'}
 
 # Additional information about the last commit for docs-content commits.
 commitSha=$(git rev-parse --short HEAD)
