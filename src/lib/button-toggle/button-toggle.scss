@@ -15,7 +15,6 @@ $mat-button-toggle-legacy-border-radius: 2px !default;
   position: relative;
   display: inline-flex;
   flex-direction: row;
-  cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
   border-radius: $mat-button-toggle-legacy-border-radius;
@@ -85,6 +84,9 @@ $mat-button-toggle-legacy-border-radius: 2px !default;
   display: inline-block;
   line-height: $mat-button-toggle-legacy-height;
   padding: $mat-button-toggle-legacy-padding;
+
+  // Prevents IE from shifting the content on click.
+  position: relative;
 
   .mat-button-toggle-appearance-standard & {
     line-height: $mat-button-toggle-standard-height;

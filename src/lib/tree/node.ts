@@ -19,6 +19,7 @@ import {
   QueryList,
 } from '@angular/core';
 import {
+  _inheritCtorParametersMetadata,
   CanDisable, CanDisableCtor,
   HasTabIndex,
   HasTabIndexCtor,
@@ -26,9 +27,6 @@ import {
   mixinTabIndex,
 } from '@angular/material/core';
 import {MatTreeNodeOutlet} from './outlet';
-
-// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
-export const _CdkTreeNodeDef = CdkTreeNodeDef;
 
 export const _MatTreeNodeMixinBase: HasTabIndexCtor & CanDisableCtor & typeof CdkTreeNode =
     mixinTabIndex(mixinDisabled(CdkTreeNode));
@@ -75,9 +73,12 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
   ],
   providers: [{provide: CdkTreeNodeDef, useExisting: MatTreeNodeDef}]
 })
-export class MatTreeNodeDef<T> extends _CdkTreeNodeDef<T> {
+export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   @Input('matTreeNode') data: T;
 }
+
+// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
+_inheritCtorParametersMetadata(MatTreeNodeDef, CdkTreeNodeDef);
 
 /**
  * Wrapper for the CdkTree nested node with Material design styles.

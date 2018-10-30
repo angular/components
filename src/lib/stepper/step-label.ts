@@ -8,11 +8,12 @@
 
 import {Directive} from '@angular/core';
 import {CdkStepLabel} from '@angular/cdk/stepper';
-
-// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
-export const _CdkStepLabel = CdkStepLabel;
+import {_inheritCtorParametersMetadata} from '@angular/material/core';
 
 @Directive({
   selector: '[matStepLabel]',
 })
-export class MatStepLabel extends _CdkStepLabel {}
+export class MatStepLabel extends CdkStepLabel {}
+
+// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
+_inheritCtorParametersMetadata(MatStepLabel, CdkStepLabel);

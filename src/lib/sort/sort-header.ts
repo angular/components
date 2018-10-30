@@ -7,7 +7,6 @@
  */
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {CdkColumnDef} from '@angular/cdk/table';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -17,6 +16,7 @@ import {
   OnInit,
   Optional,
   ViewEncapsulation,
+  Inject,
 } from '@angular/core';
 import {CanDisable, CanDisableCtor, mixinDisabled} from '@angular/material/core';
 import {merge, Subscription} from 'rxjs';
@@ -52,6 +52,11 @@ export type ArrowViewState = SortDirection | 'hint' | 'active';
 export interface ArrowViewStateTransition {
   fromState?: ArrowViewState;
   toState: ArrowViewState;
+}
+
+/** Column definition associated with a `MatSortHeader`. */
+interface MatSortHeaderColumnDef {
+  name: string;
 }
 
 /**
@@ -154,8 +159,12 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
               changeDetectorRef: ChangeDetectorRef,
               @Optional() public _simpleSort: MatSort,
               @Optional() public _multiSort: MatMultiSort,
-              @Optional() public _cdkColumnDef: CdkColumnDef) {
-
+              @Inject('MAT_SORT_HEADER_COLUMN_DEF') @Optional()
+                  public _columnDef: MatSortHeaderColumnDef) {
+    // Note that we use a string token for the `_columnDef`, because the value is provided both by
+    // `material/table` and `cdk/table` and we can't have the CDK depending on Material,
+    // and we want to avoid having the sort header depending on the CDK table because
+    // of this single reference.
     super();
 
     if (_simpleSort) {
@@ -187,8 +196,8 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
   }
 
   ngOnInit() {
-    if (!this.id && this._cdkColumnDef) {
-      this.id = this._cdkColumnDef.name;
+    if (!this.id && this._columnDef) {
+      this.id = this._columnDef.name;
     }
 
     // Initialize the direction of the arrow and set the view state to be immediately that state.

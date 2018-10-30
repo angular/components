@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Platform, supportsPassiveEventListeners} from '@angular/cdk/platform';
+import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {
   Directive,
   ElementRef,
@@ -241,21 +241,30 @@ export class FocusMonitor implements OnDestroy {
       this._windowFocusTimeoutId = setTimeout(() => this._windowFocused = false);
     };
 
+    // Event listener options that enable capturing and also mark the the listener as passive
+    // if the browser supports it.
+    const captureEventListenerOptions = normalizePassiveListenerOptions({
+      passive: true,
+      capture: true
+    });
+
     // Note: we listen to events in the capture phase so we can detect them even if the user stops
     // propagation.
     this._ngZone.runOutsideAngular(() => {
-      document.addEventListener('keydown', documentKeydownListener, true);
-      document.addEventListener('mousedown', documentMousedownListener, true);
+      document.addEventListener('keydown', documentKeydownListener, captureEventListenerOptions);
+      document.addEventListener('mousedown', documentMousedownListener,
+        captureEventListenerOptions);
       document.addEventListener('touchstart', documentTouchstartListener,
-          supportsPassiveEventListeners() ? ({passive: true, capture: true} as any) : true);
+        captureEventListenerOptions);
       window.addEventListener('focus', windowFocusListener);
     });
 
     this._unregisterGlobalListeners = () => {
-      document.removeEventListener('keydown', documentKeydownListener, true);
-      document.removeEventListener('mousedown', documentMousedownListener, true);
+      document.removeEventListener('keydown', documentKeydownListener, captureEventListenerOptions);
+      document.removeEventListener('mousedown', documentMousedownListener,
+        captureEventListenerOptions);
       document.removeEventListener('touchstart', documentTouchstartListener,
-          supportsPassiveEventListeners() ? ({passive: true, capture: true} as any) : true);
+        captureEventListenerOptions);
       window.removeEventListener('focus', windowFocusListener);
 
       // Clear timeouts for all potentially pending timeouts to prevent the leaks.
@@ -445,13 +454,13 @@ export class CdkMonitorFocus implements OnDestroy {
   }
 }
 
-/** @docs-private @deprecated @breaking-change 7.0.0 */
+/** @docs-private @deprecated @breaking-change 8.0.0 */
 export function FOCUS_MONITOR_PROVIDER_FACTORY(
     parentDispatcher: FocusMonitor, ngZone: NgZone, platform: Platform) {
   return parentDispatcher || new FocusMonitor(ngZone, platform);
 }
 
-/** @docs-private @deprecated @breaking-change 7.0.0 */
+/** @docs-private @deprecated @breaking-change 8.0.0 */
 export const FOCUS_MONITOR_PROVIDER = {
   // If there is already a FocusMonitor available, use that. Otherwise, provide a new one.
   provide: FocusMonitor,

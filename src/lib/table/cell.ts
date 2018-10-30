@@ -14,11 +14,7 @@ import {
   CdkHeaderCell,
   CdkHeaderCellDef,
 } from '@angular/cdk/table';
-
-// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
-export const _CdkCellDef = CdkCellDef;
-export const _CdkHeaderCellDef = CdkHeaderCellDef;
-export const _CdkFooterCellDef = CdkFooterCellDef;
+import {_inheritCtorParametersMetadata} from '@angular/material/core';
 
 /**
  * Cell definition for the mat-table.
@@ -28,7 +24,7 @@ export const _CdkFooterCellDef = CdkFooterCellDef;
   selector: '[matCellDef]',
   providers: [{provide: CdkCellDef, useExisting: MatCellDef}]
 })
-export class MatCellDef extends _CdkCellDef {}
+export class MatCellDef extends CdkCellDef {}
 
 /**
  * Header cell definition for the mat-table.
@@ -38,7 +34,7 @@ export class MatCellDef extends _CdkCellDef {}
   selector: '[matHeaderCellDef]',
   providers: [{provide: CdkHeaderCellDef, useExisting: MatHeaderCellDef}]
 })
-export class MatHeaderCellDef extends _CdkHeaderCellDef {}
+export class MatHeaderCellDef extends CdkHeaderCellDef {}
 
 /**
  * Footer cell definition for the mat-table.
@@ -48,15 +44,22 @@ export class MatHeaderCellDef extends _CdkHeaderCellDef {}
   selector: '[matFooterCellDef]',
   providers: [{provide: CdkFooterCellDef, useExisting: MatFooterCellDef}]
 })
-export class MatFooterCellDef extends _CdkFooterCellDef {}
+export class MatFooterCellDef extends CdkFooterCellDef {}
 
+// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
+_inheritCtorParametersMetadata(MatCellDef, CdkCellDef);
+_inheritCtorParametersMetadata(MatHeaderCellDef, CdkHeaderCellDef);
+_inheritCtorParametersMetadata(MatFooterCellDef, CdkFooterCellDef);
 /**
  * Column definition for the mat-table.
  * Defines a set of cells available for a table column.
  */
 @Directive({
   selector: '[matColumnDef]',
-  providers: [{provide: CdkColumnDef, useExisting: MatColumnDef}],
+  providers: [
+    {provide: CdkColumnDef, useExisting: MatColumnDef},
+    {provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: MatColumnDef}
+  ],
 })
 export class MatColumnDef extends CdkColumnDef {
   /** Unique name for this column. */

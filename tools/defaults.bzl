@@ -32,6 +32,10 @@ def ng_module(deps = [], tsconfig = None, testonly = False, **kwargs):
     # Since we use the TypeScript import helpers (tslib) for each TypeScript configuration,
     # we declare TSLib as default dependency
     "@npm//tslib",
+
+    # Depend on the module typings for each `ng_module`. Since all components within the project
+    # need to use `module.id` when creating components, this is always a dependency.
+    "//src:module-typings"
   ] + deps
 
   _ng_module(
@@ -68,7 +72,40 @@ def ng_test_library(deps = [], tsconfig = None, **kwargs):
     **kwargs
   )
 
-def ng_web_test_suite(deps = [], srcs = [], **kwargs):
+def ng_web_test_suite(deps = [], srcs = [], static_css = [], bootstrap = [], **kwargs):
+  # Always include a prebuilt theme in the test suite because otherwise tests, which depend on CSS
+  # that is needed for measuring, will unexpectedly fail. Also always adding a prebuilt theme
+  # reduces the amount of setup that is needed to create a test suite Bazel target. Note that the
+  # prebuilt theme will be also added to CDK test suites but shouldn't affect anything.
+  static_css = static_css + ["//src/lib/prebuilt-themes:indigo-pink"]
+
+  # Workaround for https://github.com/bazelbuild/rules_typescript/issues/301
+  # Since some of our tests depend on CSS files which are not part of the `ng_module` rule,
+  # we need to somehow load static CSS files within Karma (e.g. overlay prebuilt). Those styles
+  # are required for successful test runs. Since the `ts_web_test_suite` rule currently only
+  # allows JS files to be included and served within Karma, we need to create a JS file that
+  # loads the given CSS file.
+  for css_label in static_css:
+    css_id = "static-css-file-%s" % (css_label.replace("/", "_").replace(":", "-"))
+    deps += [":%s" % css_id]
+
+    native.genrule(
+      name = css_id,
+      srcs = [css_label],
+      outs = ["%s.js" % css_id],
+      output_to_bindir = True,
+      cmd = """
+        files=($(locations %s))
+        css_content=$$(cat $${files[0]})
+        js_template="var cssElement = document.createElement('style'); \
+                    cssElement.type = 'text/css'; \
+                    cssElement.innerHTML = '$$css_content'; \
+                    document.head.appendChild(cssElement);"
+
+         echo $$js_template > $@
+      """ % css_label
+    )
+
   _ts_web_test_suite(
     # Required for running the compiled ng modules that use TypeScript import helpers.
     srcs = ["@npm//node_modules/tslib:tslib.js"] + srcs,
@@ -77,6 +114,7 @@ def ng_web_test_suite(deps = [], srcs = [], **kwargs):
     bootstrap = [
       "@npm//node_modules/zone.js:dist/zone-testing-bundle.js",
       "@npm//node_modules/reflect-metadata:Reflect.js",
-    ],
+      "@npm//node_modules/hammerjs:hammer.js",
+    ] + bootstrap,
     **kwargs
   )

@@ -1,6 +1,5 @@
 # Configuration file for https://circleci.com/gh/angular/material2
 
-#
 # Note: YAML anchors allow an object to be re-used, reducing duplication.
 # The ampersand declares an alias for an object, then later the `<<: *name`
 # syntax dereferences it.
@@ -8,8 +7,8 @@
 # To validate changes, use an online parser, eg.
 # http://yaml-online-parser.appspot.com/
 
-var_1: &docker_image angular/ngcontainer:0.6.0
-var_2: &cache_key v2-ng-mat-{{ .Branch }}-{{ checksum "yarn.lock" }}-0.6.0
+var_1: &docker_image angular/ngcontainer:0.7.0
+var_2: &cache_key v2-ng-mat-{{ .Branch }}-{{ checksum "yarn.lock" }}-0.7.0
 
 # Settings common to each job
 var_3: &job_defaults
@@ -53,6 +52,20 @@ var_8: &copy_bazel_config
   # Set up the CircleCI specific bazel configuration.
   run: sudo cp ./.circleci/bazel.rc /etc/bazel.bazelrc
 
+# Sets up a different Docker image that includes a moe recent Firefox version which
+# is needed for headless testing.
+var_9: &docker-firefox-image
+  # TODO(devversion): Temporarily use a image that includes Firefox 62 because the
+  # ngcontainer image does include an old Firefox version that does not support headless.
+  # See the PR that fixes this: https://github.com/angular/angular/pull/26435
+  - image: circleci/node:10.12-browsers
+
+# Attaches the release output which has been stored in the workspace to the current job.
+# https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
+var_10: &attach_release_output
+  attach_workspace:
+      at: dist/releases
+
 # -----------------------------
 # Container version of CircleCI
 # -----------------------------
@@ -76,10 +89,84 @@ jobs:
       - *copy_bazel_config
 
       # TODO(jelbourn): Update this command to run all tests if the Bazel issues have been fixed.
-      - run: bazel build src/cdk/...
-      - run: bazel test src/cdk/...
+      - run: bazel build src/...
+      - run: bazel test src/...
 
-      - *save_cache
+  # ------------------------------------------------------------------------------------------
+  # Job that runs the unit tests on locally installed browsers (Chrome and Firefox headless).
+  # The available browsers are installed through the angular/ngcontainer Docker image.
+  # ------------------------------------------------------------------------------------------
+  tests_local_browsers:
+    docker: *docker-firefox-image
+    resource_class: xlarge
+    environment:
+      TEST_PLATFORM: local
+    steps:
+      - *checkout_code
+      - *restore_cache
+      - *yarn_install
+
+      # Launches the unit tests. The platform is determined by the "TEST_PLATFORM" environment
+      # variable which has been configured above
+      - run: yarn gulp ci:test
+
+  # ----------------------------------------------------------------
+  # Job that runs the e2e tests with Protractor and Chrome Headless
+  # ----------------------------------------------------------------
+  e2e_tests:
+    <<: *job_defaults
+    resource_class: xlarge
+    steps:
+      - *checkout_code
+      - *restore_cache
+      - *yarn_install
+
+      - run: yarn gulp ci:e2e
+
+  # ----------------------------------------------------------------------------
+  # Job that runs the unit tests on Browserstack. The browsers that will be used
+  # to run the unit tests on Browserstack are set in: test/browser-providers.js
+  # ----------------------------------------------------------------------------
+  tests_browserstack:
+    <<: *job_defaults
+    resource_class: xlarge
+    environment:
+      BROWSER_STACK_USERNAME: "angularteam1"
+      BROWSER_STACK_ACCESS_KEY: "CaXMeMHD9pr5PHg8N7Jq"
+    parallelism: 2
+    steps:
+      - *checkout_code
+      - *restore_cache
+      - *yarn_install
+
+      - run: ./scripts/circleci/run-browserstack-tests.sh
+
+  # -----------------------------------------------------------------------------------------
+  # Job that builds the demo-app with AOT. In order to speed up this job, the release output
+  # from the workspace storage will be attached to this job.
+  # -----------------------------------------------------------------------------------------
+  build_demoapp_aot:
+    <<: *job_defaults
+    steps:
+      - *checkout_code
+      - *restore_cache
+      - *yarn_install
+      - *attach_release_output
+
+      - run: yarn gulp ci:aot
+
+  # -------------------------------------------------------------------------
+  # Job that pre-render's the universal app with `@angular/platform-server`.
+  # This verifies that Angular Material can be rendered within Node.
+  # -------------------------------------------------------------------------
+  prerender_build:
+    <<: *job_defaults
+    steps:
+    - *checkout_code
+    - *restore_cache
+    - *yarn_install
+
+    - run: yarn gulp ci:prerender
 
   # ----------------------------------
   # Lint job. Runs the gulp lint task.
@@ -91,13 +178,37 @@ jobs:
       - *restore_cache
       - *yarn_install
 
-      - run: yarn ci:lint
+      - run: yarn gulp ci:lint
+
+  # -------------------------------------------------------------------------------------------
+  # Job that builds all release packages with Gulp. The built packages can be then used in the
+  # same workflow to publish snapshot builds or test the demo-app with the release packages.
+  # -------------------------------------------------------------------------------------------
+  build_release_packages:
+    <<: *job_defaults
+    resource_class: xlarge
+    steps:
+      - *checkout_code
+      - *restore_cache
+      - *yarn_install
+
+      - run: yarn gulp ci:build-release-packages
+
+      # Store the release output in the workspace storage. This means that other jobs
+      # in the same workflow can attach the release output to their job.
+      - persist_to_workspace:
+          root: dist/releases
+          paths:
+            - "**/*"
 
       - *save_cache
 
 # ----------------------------------------------------------------------------------------
 # Workflow definitions. A workflow usually groups multiple jobs together. This is useful if
 # one job depends on another.
+#
+# NOTE: When updating this configuration section, make sure to update GitHub robot
+#       config to match the new workflow jobs.
 # ----------------------------------------------------------------------------------------
 workflows:
   version: 2
@@ -107,6 +218,23 @@ workflows:
   build_and_test:
     jobs:
       - bazel_build_test
+
+  unit_tests:
+    jobs:
+      - tests_local_browsers
+      - tests_browserstack
+
+  integration_tests:
+    jobs:
+      - e2e_tests
+      - prerender_build
+
+  release_output:
+    jobs:
+      - build_release_packages
+      - build_demoapp_aot:
+          requires:
+            - build_release_packages
 
   # Lint workflow. As we want to lint in one job, this is a workflow with just one job.
   lint:
